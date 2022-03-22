@@ -2,218 +2,163 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05046C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 10:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD613C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 10:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232033AbiCVKnn (ORCPT
+        id S233355AbiCVKpN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 06:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
+        Tue, 22 Mar 2022 06:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231174AbiCVKnl (ORCPT
+        with ESMTP id S233364AbiCVKpK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 06:43:41 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBE281186
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 03:42:13 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id o7-20020a05600c4fc700b0038c87edc21eso1395853wmq.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 03:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=vCQ8yvQZrq5DlVAWjFgARpvOjjNUPnfe4PnTinAQEg4=;
-        b=OSq+o0I6V4hvpejOocVKh4QvbV7PukShyPEtAAfowSaUdbtPIE+DDmHXFr9MCKbCID
-         f5swJriUB6SJnYMOOr9x7ilJzNHzbxkd7yoOeYPR5uI5ADkpAGWnchmWj6ozM63VjDux
-         CP1f3oaPfFN6FA+gjOQf6pPb3WAic3QoS3H3mujxo+Q+GHDJP+nVM0iGwCfBwELdt7It
-         K1c5j2f/PHj35YntxQBS+Z/C29OzupM5g33K7BTG6/w5NgFkZWddLKlCNgyAd36AjknK
-         vXfAJaTZLyUkLeqZi/2waAqALHoPQsOflDauHnpN8I3K9uMMbHy/FNUWO1d1rMKI803k
-         TBPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=vCQ8yvQZrq5DlVAWjFgARpvOjjNUPnfe4PnTinAQEg4=;
-        b=GVOb2OQYRqifs+qQ9WlidlNNXP1L5qgz3r4paUO5/GmGzb43SZbHA1e9+7PiAeBD6D
-         d4woganh/wyTmWNrJLSlJSAe09fCJMiWVWWLRZyPNGFkY+R4KwWOxCO/5gs08fL59Sti
-         Ef4htBCfQJ0L0753RL7xid5yePcRQpK4TGOYsNP7VFDw034GowP2GA5h3iJng0xUibXA
-         UYcZlv6sO+kqD3S3bOYqEf0QVstg6pCrsfDcaOR0JcpDAI0poAKkWsHLHQDm4kgeLPh/
-         FrDEUsBCTI0Jlw6T3IR+MWSbPJfJO/SN2KgQi8l2/mZ8dEqT41Qhfkl61oS+ePrhfaXm
-         NaQQ==
-X-Gm-Message-State: AOAM532IqG84Cr/rp3h1yKJON99zrcSBQRBKy8o+xSeqvckvsisLYMto
-        y+a6N5VkVOV0tOfhUfC5RwWGUw==
-X-Google-Smtp-Source: ABdhPJzBs9zqbxV4VovtzRunQCoQQapJqNzsmcJBCU0RZJ/hPmh0128AGwMJWw+sRlqnT96Om2IoMQ==
-X-Received: by 2002:a5d:5504:0:b0:203:e3be:518b with SMTP id b4-20020a5d5504000000b00203e3be518bmr21741803wrv.462.1647945732046;
-        Tue, 22 Mar 2022 03:42:12 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:15:13:3aa9:ba1f:ba59:87ba])
-        by smtp.gmail.com with ESMTPSA id q14-20020a1cf30e000000b0038986a18ec8sm1584774wmq.46.2022.03.22.03.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Mar 2022 03:42:11 -0700 (PDT)
-Date:   Tue, 22 Mar 2022 11:42:06 +0100
-From:   Marco Elver <elver@google.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: RFC: Use of user space handler vs. SIG_DFL on forced signals
-Message-ID: <Yjmn/kVblV3TdoAq@elver.google.com>
+        Tue, 22 Mar 2022 06:45:10 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 77F668166C;
+        Tue, 22 Mar 2022 03:43:30 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D95A1106F;
+        Tue, 22 Mar 2022 03:43:29 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A4C63F66F;
+        Tue, 22 Mar 2022 03:43:28 -0700 (PDT)
+Message-ID: <e890feb0-9f90-c0f2-e5f0-10ed5dbe6d81@arm.com>
+Date:   Tue, 22 Mar 2022 10:43:26 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/2.1.4 (2021-12-11)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH 00/10] coresight: Add new API to allocate trace source ID
+ values
+Content-Language: en-US
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, James Clark <james.clark@arm.com>
+References: <20220308205000.27646-1-mike.leach@linaro.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20220308205000.27646-1-mike.leach@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
++ Cc: James Clark
 
-Currently force_sig_info_to_task() will always unblock a blocked signal
-but deliver the signal to SIG_DFL:
+Hi Mike,
 
-	[...]
-	 * Note: If we unblock the signal, we always reset it to SIG_DFL,
-	 * since we do not want to have a signal handler that was blocked
-	 * be invoked when user space had explicitly blocked it.
-	[...]
+On 08/03/2022 20:49, Mike Leach wrote:
+> The current method for allocating trace source ID values to sources is
+> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+> The STM is allocated ID 0x1.
+> 
+> This fixed algorithm is used in both the CoreSight driver code, and by
+> perf when writing the trace metadata in the AUXTRACE_INFO record.
+> 
+> The method needs replacing as currently:-
+> 1. It is inefficient in using available IDs.
+> 2. Does not scale to larger systems with many cores and the algorithm
+> has no limits so will generate invalid trace IDs for cpu number > 44.
 
-Is this requirement part of the POSIX spec? Or is the intent simply to
-attempt to do the least-bad thing?
+Thanks for addressing this issue.
 
-The reason I'm asking is that we've encountered rare crashes with the
-new SIGTRAP on perf events, due to patterns like this:
+> 
+> Additionally requirements to allocate additional system IDs on some
+> systems have been seen.
+> 
+> This patch set  introduces an API that allows the allocation of trace IDs
+> in a dynamic manner.
+> 
+> Architecturally reserved IDs are never allocated, and the system is
+> limited to allocating only valid IDs.
+> 
+> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+> the new API.
+> 
+> perf handling is changed so that the ID associated with the CPU is read
+> from sysfs. The ID allocator is notified when perf events start and stop
+> so CPU based IDs are kept constant throughout any perf session.
+> 
+> For the ETMx.x devices IDs are allocated on certain events
+> a) When using sysfs, an ID will be allocated on hardware enable, and freed
+> when the sysfs reset is written.
+> b) When using perf, ID is allocated on hardware enable, and freed on
+> hardware disable.
+> 
+> For both cases the ID is allocated when sysfs is read to get the current
+> trace ID. This ensures that consistent decode metadata can be extracted
+> from the system where this read occurs before device enable.
 
-	<set up SIGTRAP on a perf event>
-	...
-	sigset_t s;
-	sigemptyset(&s);
-	sigaddset(&s, SIGTRAP | <and others>);
-	sigprocmask(SIG_BLOCK, &s, ...);
-	...
-	<perf event triggers>
 
-When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
-will force the signal, but revert back to the default handler, thus
-terminating the task.
+> 
+> Note: This patchset breaks backward compatibility for perf record.
+> Because the method for generating the AUXTRACE_INFO meta data has
+> changed, using an older perf record will result in metadata that
+> does not match the trace IDs used in the recorded trace data.
+> This mismatch will cause subsequent decode to fail. Older versions of
+> perf will still be able to decode data generated by the updated system.
 
-For other types of signals, is the assumption here that if user space
-blocked the signal, it might not be able to handle it in the first
-place?
+I have some concerns over this and the future plans for the dynamic
+allocation per sink. i.e., we are breaking/modifying the perf now to
+accommodate the dynamic nature of the trace id of a given CPU/ETM.
+The proposed approach of exposing this via sysfs may (am not sure if
+this would be the case) break for the trace-id per sink change, as a
+sink could assign different trace-id for a CPU depending.
 
-For SIGTRAP on perf events we found this makes the situation worse,
-since the cause of the signal wasn't an error condition, but explicitly
-requested monitoring. In this case, we do in fact want delivery of the
-signal to user space even if the signal is blocked, i.e.
-force_sig_perf() should be an unblockable forced synchronous signal to
-user space!
+So, instead if we make the trace-id available in the perf (say, an new
+record format, PERF_RECORD_CS_ETM_TRACEID ?) record, we can rely on the
+new packet for the trace-id, irrespective of how that is allocated and
+remove the locking/linking of the trace-id with that of the sysfs. This
+is not something that exists today. (Ideally it would have been nice to
+have some additional fields in RECORD_AUXINFO, but we don't. Instead of
+breaking/extending that, we could add a new RECORD).
 
-If there is no good reason to choose SIG_DFL, our preference would be to
-allow this kind of "unblockable forced" signal to the user space handler
-for force_sig_perf() -- with the caveat whoever requests SIGTRAP on perf
-events must be able to provide a handler that can always run safely. But
-we think that's better than crashing.
+I believe the packet may need to be generated only once for a session
+and that will also allow the flexibility of moving trace-id allocation
+around (to a sink in the future).
 
-The below patch would do what we want, but would like to first confirm
-if this is "within spec".
+Thoughts ?
 
-Thoughts?
+Kind regards
+Suzuki
 
-Thanks,
--- Marco
 
------- >8 ------
-
-From: Marco Elver <elver@google.com>
-Date: Mon, 21 Mar 2022 22:18:09 +0100
-Subject: [PATCH RFC] signal: Always unblock signal to user space for
- force_sig_perf()
-
-With SIGTRAP on perf events, we have encountered termination of
-processes due to user space attempting to block delivery of SIGTRAP.
-Consider this case:
-
-	<set up SIGTRAP on a perf event>
-	...
-	sigset_t s;
-	sigemptyset(&s);
-	sigaddset(&s, SIGTRAP | <and others>);
-	sigprocmask(SIG_BLOCK, &s, ...);
-	...
-	<perf event triggers>
-
-When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
-will force the signal, but revert back to the default handler, thus
-terminating the task.
-
-With forced signals, the whole premise of sigprocmask() is invalidated
-since the signal is still delivered, only to the default signal handler.
-The assumption here is that if user space blocked the signal, it might
-not be able to handle it in the first place.
-
-However, for SIGTRAP on perf events we found this makes the situation
-worse, since the cause of the signal wasn't an error condition, but
-explicitly requested monitoring. In this case, we do in fact want
-delivery of the signal to user space even if the signal is blocked, i.e.
-force_sig_perf() should be an unblockable forced synchronous signal to
-user space.
-
-Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/signal.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 38602738866e..04b7a178a5f3 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1303,6 +1303,7 @@ int do_send_sig_info(int sig, struct kernel_siginfo *info, struct task_struct *p
- 
- enum sig_handler {
- 	HANDLER_CURRENT, /* If reachable use the current handler */
-+	HANDLER_UNBLOCK, /* Use the current handler even if blocked */
- 	HANDLER_SIG_DFL, /* Always use SIG_DFL handler semantics */
- 	HANDLER_EXIT,	 /* Only visible as the process exit code */
- };
-@@ -1311,9 +1312,11 @@ enum sig_handler {
-  * Force a signal that the process can't ignore: if necessary
-  * we unblock the signal and change any SIG_IGN to SIG_DFL.
-  *
-- * Note: If we unblock the signal, we always reset it to SIG_DFL,
-- * since we do not want to have a signal handler that was blocked
-- * be invoked when user space had explicitly blocked it.
-+ * Note: If we unblock the signal and handler != HANDLER_UNBLOCK, we always
-+ * reset it to SIG_DFL, since we do not want to have a signal handler that was
-+ * blocked be invoked when user space had explicitly blocked it. If handler is
-+ * HANDLER_UNBLOCK, user space will always receive the signal and is expected to
-+ * provide a handler that is safe in all contexts.
-  *
-  * We don't want to have recursive SIGSEGV's etc, for example,
-  * that is why we also clear SIGNAL_UNKILLABLE.
-@@ -1332,7 +1335,8 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t,
- 	ignored = action->sa.sa_handler == SIG_IGN;
- 	blocked = sigismember(&t->blocked, sig);
- 	if (blocked || ignored || (handler != HANDLER_CURRENT)) {
--		action->sa.sa_handler = SIG_DFL;
-+		if (handler != HANDLER_UNBLOCK)
-+			action->sa.sa_handler = SIG_DFL;
- 		if (handler == HANDLER_EXIT)
- 			action->sa.sa_flags |= SA_IMMUTABLE;
- 		if (blocked) {
-@@ -1816,7 +1820,11 @@ int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
- 	info.si_perf_data = sig_data;
- 	info.si_perf_type = type;
- 
--	return force_sig_info(&info);
-+	/*
-+	 * Delivering SIGTRAP on perf events must unblock delivery to not
-+	 * kill the task, but attempt delivery to the user space handler.
-+	 */
-+	return force_sig_info_to_task(&info, current, HANDLER_UNBLOCK);
- }
- 
- /**
--- 
-2.35.1.894.gb6a874cedc-goog
+> 
+> 
+> Applies to coresight/next [b54f53bc11a5]
+> Tested on DB410c
+> 
+> Mike Leach (10):
+>    coresight: trace-id: Add API to dynamically assign trace ID values
+>    coresight: trace-id: Set up source trace ID map for system
+>    coresight: stm: Update STM driver to use Trace ID api
+>    coresight: etm4x: Use trace ID API to dynamically allocate trace ID
+>    coresight: etm3x: Use trace ID API to allocate IDs
+>    coresight: perf: traceid: Add perf notifiers for trace ID
+>    perf: cs-etm: Update event to read trace ID from sysfs
+>    coresight: Remove legacy Trace ID allocation mechanism
+>    coresight: etmX.X: stm: Remove unused legacy source trace ID ops
+>    coresight: trace-id: Add debug & test macros to trace id allocation
+> 
+>   drivers/hwtracing/coresight/Makefile          |   2 +-
+>   drivers/hwtracing/coresight/coresight-core.c  |  64 ++---
+>   .../hwtracing/coresight/coresight-etm-perf.c  |  16 +-
+>   drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+>   .../coresight/coresight-etm3x-core.c          |  93 ++++---
+>   .../coresight/coresight-etm3x-sysfs.c         |  28 +-
+>   .../coresight/coresight-etm4x-core.c          |  63 ++++-
+>   .../coresight/coresight-etm4x-sysfs.c         |  32 ++-
+>   drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+>   drivers/hwtracing/coresight/coresight-priv.h  |   1 +
+>   drivers/hwtracing/coresight/coresight-stm.c   |  49 +---
+>   .../hwtracing/coresight/coresight-trace-id.c  | 255 ++++++++++++++++++
+>   .../hwtracing/coresight/coresight-trace-id.h  |  69 +++++
+>   include/linux/coresight-pmu.h                 |  12 -
+>   include/linux/coresight.h                     |   3 -
+>   tools/perf/arch/arm/util/cs-etm.c             |  12 +-
+>   16 files changed, 530 insertions(+), 175 deletions(-)
+>   create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+>   create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+> 
 
