@@ -2,140 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBC6C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 07:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9EBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 07:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237269AbiCVHPP (ORCPT
+        id S237519AbiCVHdR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 03:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49804 "EHLO
+        Tue, 22 Mar 2022 03:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237320AbiCVHPN (ORCPT
+        with ESMTP id S237518AbiCVHdR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 03:15:13 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB0336320;
-        Tue, 22 Mar 2022 00:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647933226; x=1679469226;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Dgb3zGuH24ZT83Y0v1ZBxBUIyLa593GK3jKu3O8OKLY=;
-  b=Zohx89bqCoUxP3iXPP7lTFfG41o7vOolwoM7yrrI5EUoGgjHjVFZ1nWA
-   sBIyMkhDSIo26SlgMzG87PL/3URfFT+OlQDCdqQl7REUcBvoxNn5wJz3g
-   lS3tsvsns3QtKq8r91+t+yPqckyu2r5oamze+sn+JZPJAEYtVFInPac19
-   6CjcZhXCQ3IW7cp0sdlQtm08fj9OF5JO0dyWhDalsEjZict/dYS9r4bNt
-   VXBLWkDVq5UHR8PiHhrrfMjYxsUhzZEeZ9WXmV9dVqBfA3Nys8K2y/iKx
-   LZRtSRcY/5hMQAPbe3xVkUsqL+JTw4vZkgKLpcPZAFg9hE++1GZomi0ea
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10293"; a="344173871"
-X-IronPort-AV: E=Sophos;i="5.90,201,1643702400"; 
-   d="scan'208";a="344173871"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 00:13:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,201,1643702400"; 
-   d="scan'208";a="583156907"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.92]) ([10.237.72.92])
-  by orsmga001.jf.intel.com with ESMTP; 22 Mar 2022 00:13:43 -0700
-Message-ID: <e9126f11-177c-cc2f-7620-fdd7b3f363c0@intel.com>
-Date:   Tue, 22 Mar 2022 09:13:42 +0200
+        Tue, 22 Mar 2022 03:33:17 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E8EC1CFCD;
+        Tue, 22 Mar 2022 00:31:50 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id v4so14960610pjh.2;
+        Tue, 22 Mar 2022 00:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=r4xA4YpWvDAW9lMA2GfpmJRYpPh3E38DjIkUV0HV+uY=;
+        b=XNxhv4/i9m6xgW7eDDhyYG5Ouj06COWiugANv4Hkgo/bnHhuClzi/M1F8FtdhuUz1Z
+         /H3sM5jaLVfiRLC/RbTSr2MQt4XDfMmPFlyOQ2bXzz/wIGD+kba5AY4rDD04iDgxk7S0
+         WL+pt8MqZ22r8E9Y/WzOT3H84OufyyXg1FW8TJCB2VssakOsljaCIFdQZHDiklMp65cD
+         EG3mxmqPc6YnxE+zmv+JY/wbwJeEhliVwN5Eu8oXvTj15G5tjOkdatnEjOZA41ygJCdr
+         ZzqWfUrdxqcEyTQBWAcnr580fWrRaowZuJlqGQO4mY/jqp188491P3DmC9kikYcaYYGx
+         0AlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=r4xA4YpWvDAW9lMA2GfpmJRYpPh3E38DjIkUV0HV+uY=;
+        b=mnPvFZxGn86s33RQuh+Fcz9Yl3IMCHYJVKH54/1RSXju5fVsV/YOA3LnRhSXh/FwH/
+         KVH6cmAP15A4vORabc+jyxh4/Nk+Yuuc6g/bIAi/+X0bfqnKtuNV/SmWTAUz/b2phn8r
+         lCDZpgW7XuXX8UcFPSuUr4+FtlYMJlQfnG2a7TtJPtUVurZZeHP0z6Mr/Hl+7l01Csl0
+         SUHY8haU6mYeJRFdQWzX1eMfF9igQTA9CEpsCdJjGxL1OOA+gcdnx9rSpjFL+dfzxFRy
+         ai3Hw+x8kVS0RV8wA/1jGl77/dF0L0427pSiJeB9POXhHmEbdOAeU9OCQHzfeUhLo1Ix
+         nm7w==
+X-Gm-Message-State: AOAM533715zWRndaoS7zbx6CNL8NxDTabhZbyxEvvkmDAI1XMSibLvS6
+        CoQAIjXkyfA37GflXHY14zE=
+X-Google-Smtp-Source: ABdhPJw37CzyUc9LRpoPZhJ7Cqz1Vq5kO/UE+2fGyOYqk66Y101+bDEBftdrZmW6wzUiUmdiS8rH7w==
+X-Received: by 2002:a17:902:f683:b0:153:ee22:18b7 with SMTP id l3-20020a170902f68300b00153ee2218b7mr16451640plg.159.1647934310027;
+        Tue, 22 Mar 2022 00:31:50 -0700 (PDT)
+Received: from [192.168.255.10] ([203.205.141.112])
+        by smtp.gmail.com with ESMTPSA id t8-20020aa79468000000b004f764340d8bsm23806525pfq.92.2022.03.22.00.31.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Mar 2022 00:31:49 -0700 (PDT)
+Message-ID: <7c3c082c-2cad-44ae-1b66-6b1ab73dc11e@gmail.com>
+Date:   Tue, 22 Mar 2022 15:31:43 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.5.0
-Subject: Re: [PATCH v2] perf intel-pt: Synthesize cycle events
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.7.0
+Subject: Re: [PATCH 7/7] kvm: x86/cpuid: Fix Architectural Performance
+ Monitoring support
 Content-Language: en-US
-To:     "Steinar H. Gunderson" <sesse@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220321181447.1323742-1-sesse@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220321181447.1323742-1-sesse@google.com>
-Content-Type: text/plain; charset=UTF-8
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     peterz@infradead.org, bp@alien8.de, dave.hansen@linux.intel.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        pbonzini@redhat.com, jmattson@google.com, eranian@google.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, kvm list <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org
+References: <cover.1647498015.git.sandipan.das@amd.com>
+ <bc58ac02d642ea1fcbd04a525046dfe978e9f323.1647498015.git.sandipan.das@amd.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+Organization: Tencent
+In-Reply-To: <bc58ac02d642ea1fcbd04a525046dfe978e9f323.1647498015.git.sandipan.das@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/03/2022 20:14, Steinar H. Gunderson wrote:
-> There is no good reason why we cannot synthesize "cycle" events
-> from Intel PT just as we can synthesize "instruction" events,
-> in particular when CYC packets are available. This enables using
-> PT to getting much more accurate cycle profiles than regular sampling
-> (record -e cycles) when the work last for very short periods (<10 ms).
-> Thus, add support for this, based off of the existing IPC calculation
-> framework. The new option to --itrace is "y" (for cYcles), as c was
-> taken for calls. Cycle and instruction events can be synthesized
-> together, and are by default.
+On 17/3/2022 2:28 pm, Sandipan Das wrote:
+> CPUID 0xA provides information on Architectural Performance
+> Monitoring features on some x86 processors. It advertises a
+> PMU version which Qemu uses to determine the availability of
+> additional MSRs to manage the PMCs.
 > 
-> The only real caveat is that CYC packets are only emitted whenever
-> some other packet is, which in practice is when a branch instruction
-> is encountered (and not even all branches). Thus, even at no subsampling
-> (e.g. --itrace=y0ns), it is impossible to get more accuracy than
-> a single basic block, and all cycles spent executing that block
-> will get attributed to the branch instruction that ends the packet.
-> Thus, one cannot know whether the cycles came from e.g. a specific load,
-> a mispredicted branch, or something else. When subsampling (which
-> is the default), the cycle events will get smeared out even more,
-> but will still be generally useful to attribute cycle counts to functions.
+> Upon receiving a KVM_GET_SUPPORTED_CPUID ioctl request for
+> the same, the kernel constructs return values based on the
+> x86_pmu_capability irrespective of the vendor.
 > 
-> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> This CPUID function and additional MSRs are not supported on
+> AMD processors. If PerfMonV2 is detected, the PMU version is
+> set to 2 and guest startup breaks because of an attempt to
+> access a non-existent MSR. Return zeros to avoid this.
+> 
+> Fixes: a6c06ed1a60a ("KVM: Expose the architectural performance monitoring CPUID leaf")
+> Reported-by: Vasant Hegde <vasant.hegde@amd.com>
+
+The new 0003 patch introduces this issue (and more kvm issues)
+due to "x86_pmu.version = 2", so this is not a fix in the strictest sense.
+
+Btw, do you need my effort to virtualize AMD PerfMonV2 ?
+
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 > ---
->  tools/perf/Documentation/itrace.txt        |  3 +-
->  tools/perf/Documentation/perf-intel-pt.txt | 36 ++++++++----
->  tools/perf/util/auxtrace.c                 |  9 ++-
->  tools/perf/util/auxtrace.h                 |  7 ++-
->  tools/perf/util/intel-pt.c                 | 68 ++++++++++++++++++++--
->  5 files changed, 102 insertions(+), 21 deletions(-)
-
-Thanks for sending the patch.  There is one variable leftover from my
-earlier suggestions - see below.
-
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index e8613cbda331..364fdfe59828 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -5,6 +5,7 @@
->   */
->  
->  #include <inttypes.h>
-> +#include <linux/perf_event.h>
->  #include <stdio.h>
->  #include <stdbool.h>
->  #include <errno.h>
-> @@ -89,6 +90,10 @@ struct intel_pt {
->  	u64 instructions_sample_type;
->  	u64 instructions_id;
->  
-> +	bool sample_cycles;
-> +	u64 cycles_sample_type;
-> +	u64 cycles_id;
+>   arch/x86/kvm/cpuid.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b8f8d268d058..1d9ca5726167 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -865,6 +865,11 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>   		union cpuid10_eax eax;
+>   		union cpuid10_edx edx;
+>   
+> +		if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD) {
+> +			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
+> +			break;
+> +		}
 > +
->  	bool sample_branches;
->  	u32 branches_filter;
->  	u64 branches_sample_type;
-> @@ -191,10 +196,13 @@ struct intel_pt_queue {
->  	u32 flags;
->  	u16 insn_len;
->  	u64 last_insn_cnt;
-> +	u64 last_cyc_cnt;
-
-last_cyc_cnt is an unused
-
->  	u64 ipc_insn_cnt;
->  	u64 ipc_cyc_cnt;
->  	u64 last_in_insn_cnt;
->  	u64 last_in_cyc_cnt;
-> +	u64 last_cy_insn_cnt;
-> +	u64 last_cy_cyc_cnt;
->  	u64 last_br_insn_cnt;
->  	u64 last_br_cyc_cnt;
->  	unsigned int cbr_seen;
+>   		perf_get_x86_pmu_capability(&cap);
+>   
+>   		/*
