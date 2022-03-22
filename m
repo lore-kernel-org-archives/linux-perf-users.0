@@ -2,125 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9EBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 07:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621E6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 08:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237519AbiCVHdR (ORCPT
+        id S231149AbiCVIZp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 03:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
+        Tue, 22 Mar 2022 04:25:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237518AbiCVHdR (ORCPT
+        with ESMTP id S231142AbiCVIZd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 03:33:17 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E8EC1CFCD;
-        Tue, 22 Mar 2022 00:31:50 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id v4so14960610pjh.2;
-        Tue, 22 Mar 2022 00:31:50 -0700 (PDT)
+        Tue, 22 Mar 2022 04:25:33 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC1665D2
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 01:24:05 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id q8so12441049wrc.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 01:24:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=r4xA4YpWvDAW9lMA2GfpmJRYpPh3E38DjIkUV0HV+uY=;
-        b=XNxhv4/i9m6xgW7eDDhyYG5Ouj06COWiugANv4Hkgo/bnHhuClzi/M1F8FtdhuUz1Z
-         /H3sM5jaLVfiRLC/RbTSr2MQt4XDfMmPFlyOQ2bXzz/wIGD+kba5AY4rDD04iDgxk7S0
-         WL+pt8MqZ22r8E9Y/WzOT3H84OufyyXg1FW8TJCB2VssakOsljaCIFdQZHDiklMp65cD
-         EG3mxmqPc6YnxE+zmv+JY/wbwJeEhliVwN5Eu8oXvTj15G5tjOkdatnEjOZA41ygJCdr
-         ZzqWfUrdxqcEyTQBWAcnr580fWrRaowZuJlqGQO4mY/jqp188491P3DmC9kikYcaYYGx
-         0AlQ==
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=87Bh+QidxYMpsTYJqSrvJQ/cLDGkqP1N5aKJGexsbZ8=;
+        b=UntMI064I4h4ouP4KOJ7gqzkm7PmMH9vI17MKSNFgn3wq/uh0ECMIt0Wum/7pYQLIG
+         CF5qBREq7d7xNCgDHi+Ssg57wHI7f9XS9l2hCZ3FPmB/Y8Z7aC4BhUPhqVjCnfoZhOLm
+         CaKh/rBCwdFKiC7OokdIBLk11nGnzs+X/16vfiRfDNq7ikugOnBBSpW1pMOOlxZXFs8Z
+         w1yNrULd3jjat3CWVriijurqzl6TaditTbuVlTI3zuNc80i3PcLCZw1oCUfa32DelVTa
+         aFzFvd4SR41BRDH2prRLnHcPr/BoVrSe2MhkpDnMRxeEPk6Oyi5jgGA6Mz7oe+1Sbr8Y
+         xbUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=r4xA4YpWvDAW9lMA2GfpmJRYpPh3E38DjIkUV0HV+uY=;
-        b=mnPvFZxGn86s33RQuh+Fcz9Yl3IMCHYJVKH54/1RSXju5fVsV/YOA3LnRhSXh/FwH/
-         KVH6cmAP15A4vORabc+jyxh4/Nk+Yuuc6g/bIAi/+X0bfqnKtuNV/SmWTAUz/b2phn8r
-         lCDZpgW7XuXX8UcFPSuUr4+FtlYMJlQfnG2a7TtJPtUVurZZeHP0z6Mr/Hl+7l01Csl0
-         SUHY8haU6mYeJRFdQWzX1eMfF9igQTA9CEpsCdJjGxL1OOA+gcdnx9rSpjFL+dfzxFRy
-         ai3Hw+x8kVS0RV8wA/1jGl77/dF0L0427pSiJeB9POXhHmEbdOAeU9OCQHzfeUhLo1Ix
-         nm7w==
-X-Gm-Message-State: AOAM533715zWRndaoS7zbx6CNL8NxDTabhZbyxEvvkmDAI1XMSibLvS6
-        CoQAIjXkyfA37GflXHY14zE=
-X-Google-Smtp-Source: ABdhPJw37CzyUc9LRpoPZhJ7Cqz1Vq5kO/UE+2fGyOYqk66Y101+bDEBftdrZmW6wzUiUmdiS8rH7w==
-X-Received: by 2002:a17:902:f683:b0:153:ee22:18b7 with SMTP id l3-20020a170902f68300b00153ee2218b7mr16451640plg.159.1647934310027;
-        Tue, 22 Mar 2022 00:31:50 -0700 (PDT)
-Received: from [192.168.255.10] ([203.205.141.112])
-        by smtp.gmail.com with ESMTPSA id t8-20020aa79468000000b004f764340d8bsm23806525pfq.92.2022.03.22.00.31.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 00:31:49 -0700 (PDT)
-Message-ID: <7c3c082c-2cad-44ae-1b66-6b1ab73dc11e@gmail.com>
-Date:   Tue, 22 Mar 2022 15:31:43 +0800
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=87Bh+QidxYMpsTYJqSrvJQ/cLDGkqP1N5aKJGexsbZ8=;
+        b=WBezEGaNYdEP+8SseLuyeQD5uQMc9WM7NS3rIHmIvqjZemq/5PaO1P0d3DwnOczPMX
+         wy2d49RoVcz1UXAFkAHfOE7N/QC5LEjrPp0T2AXyUHMiFHnoh36LV+JP/SEgji8/AC8K
+         lbwC6oHCzQrOHsS0VdTIcxpaa0k3YKgmbK8akGZ23N0mUBtW/3tLqP0066bKQYc4Gi9n
+         gtrZPnOm4DhKDtSEfvf6qZ25hhzLrKyKod6jYc9cOvxzViZigwB3SZVo+C1IbWBZp2Wj
+         fc/hnJTeFy7ewwhA4QIfp1Gd1c8b6l/IyLZ/YYwpiW8WGku92sY+FC9gciH8NK5c+Ihu
+         GxPQ==
+X-Gm-Message-State: AOAM531GYNTUIG+13rX6VPJEoDfijYy0JLz2LUFo4kiw1rERaZuD62gr
+        YZUpkRHCqTwFc7BCXet8fuffpEFtVUCF+g==
+X-Google-Smtp-Source: ABdhPJzjZUCCluCimIHyo0ySg/7PluFhbVLtmTWABCnNMk1Pt/Gy63nrTht/rrm7cCmzgiESIIYd2w==
+X-Received: by 2002:a5d:6542:0:b0:203:da90:969f with SMTP id z2-20020a5d6542000000b00203da90969fmr20612878wrv.479.1647937443900;
+        Tue, 22 Mar 2022 01:24:03 -0700 (PDT)
+Received: from google.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id b3-20020adfd1c3000000b00203f94379a4sm10515962wrd.67.2022.03.22.01.24.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Mar 2022 01:24:02 -0700 (PDT)
+Date:   Tue, 22 Mar 2022 09:23:59 +0100
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf intel-pt: Synthesize cycle events
+Message-ID: <YjmHn7ewyUEQBzDj@google.com>
+References: <20220321181447.1323742-1-sesse@google.com>
+ <e9126f11-177c-cc2f-7620-fdd7b3f363c0@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [PATCH 7/7] kvm: x86/cpuid: Fix Architectural Performance
- Monitoring support
-Content-Language: en-US
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     peterz@infradead.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        pbonzini@redhat.com, jmattson@google.com, eranian@google.com,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com, kvm list <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org
-References: <cover.1647498015.git.sandipan.das@amd.com>
- <bc58ac02d642ea1fcbd04a525046dfe978e9f323.1647498015.git.sandipan.das@amd.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-Organization: Tencent
-In-Reply-To: <bc58ac02d642ea1fcbd04a525046dfe978e9f323.1647498015.git.sandipan.das@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9126f11-177c-cc2f-7620-fdd7b3f363c0@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 17/3/2022 2:28 pm, Sandipan Das wrote:
-> CPUID 0xA provides information on Architectural Performance
-> Monitoring features on some x86 processors. It advertises a
-> PMU version which Qemu uses to determine the availability of
-> additional MSRs to manage the PMCs.
-> 
-> Upon receiving a KVM_GET_SUPPORTED_CPUID ioctl request for
-> the same, the kernel constructs return values based on the
-> x86_pmu_capability irrespective of the vendor.
-> 
-> This CPUID function and additional MSRs are not supported on
-> AMD processors. If PerfMonV2 is detected, the PMU version is
-> set to 2 and guest startup breaks because of an attempt to
-> access a non-existent MSR. Return zeros to avoid this.
-> 
-> Fixes: a6c06ed1a60a ("KVM: Expose the architectural performance monitoring CPUID leaf")
-> Reported-by: Vasant Hegde <vasant.hegde@amd.com>
+On Tue, Mar 22, 2022 at 09:13:42AM +0200, Adrian Hunter wrote:
+> Thanks for sending the patch.  There is one variable leftover from my
+> earlier suggestions - see below.
 
-The new 0003 patch introduces this issue (and more kvm issues)
-due to "x86_pmu.version = 2", so this is not a fix in the strictest sense.
+That should be easy enough to fix. :-) By the way, I updated the
+documentation slightly in v2 to reflect what you said about when CYC
+packets are emitted, and the possible (partial) mitigation of noretcomp.
 
-Btw, do you need my effort to virtualize AMD PerfMonV2 ?
-
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> ---
->   arch/x86/kvm/cpuid.c | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index b8f8d268d058..1d9ca5726167 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -865,6 +865,11 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->   		union cpuid10_eax eax;
->   		union cpuid10_edx edx;
->   
-> +		if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD) {
-> +			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
-> +			break;
-> +		}
-> +
->   		perf_get_x86_pmu_capability(&cap);
->   
->   		/*
+/* Steinar */
