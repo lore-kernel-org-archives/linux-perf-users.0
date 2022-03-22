@@ -2,109 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8957EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 13:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18F7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 13:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234547AbiCVNkE (ORCPT
+        id S235901AbiCVNyt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 09:40:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48744 "EHLO
+        Tue, 22 Mar 2022 09:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235698AbiCVNkD (ORCPT
+        with ESMTP id S235905AbiCVNyr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 09:40:03 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16CCC1FA43
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 06:38:35 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id i184so1838966pgc.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 06:38:35 -0700 (PDT)
+        Tue, 22 Mar 2022 09:54:47 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9173312ABD
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 06:53:19 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id n35so9473530wms.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 06:53:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=3hBW2jq9rQv2PGQ7z4Xm8VijqZLc6qsdwGJm+DpeyK0=;
-        b=maGu3bj7QiYTNAQFKfvkcYWpIuUPj3nmsTaF8s/efLzEuhnH23mhLP3aEdqHLwKH+x
-         FLBm0J3/SkxwmbzBheQ5384GI6bOuybr+W76KaFFUgU5tS7nfWVdPILrU/DU9Y7SZAus
-         sTrKuka4J3v19x0k1LI85dd4rMgyzPbEkd6XHdjLhKbh2vdkuEg31Da2A0F3Mc2f0sNR
-         3bHEoJjkkU1GNxc6abAyJfzZnvVLjQMVNsL2Cajfl/BQEx0QyxA+aZ+vxmanpyQpxAOD
-         kKoIq8YQS0eY6maVmURqrBHIelP1F7iN0eUjnRLgOmtsI2RdnpRzfW4Ey8M0RzzorNJJ
-         IuZw==
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xz6ETfdcT64yZkSHXQnqh78ORnyr+ABN9mE88qOHoGU=;
+        b=is1bmGSnd06eZ5RsazEt0A81TS4JorkOSV4HeoSK+EbRmfC6HaaIEzM31RabQPgHWB
+         LE0sbXUGRMCFfXdcUWC5vO3YRLlU9Um+L+vAIV4Q8LY3VaJZUyJDbOxA5GohdWsFkhc6
+         JQFoN4n7CGwvLcIrSNqNXRwLXuJ8sit/Isb6HgWpRcmp/0SttrRheZ/ZTRscaFDdE3LK
+         w6L6cnbGtrWbaq9XoEd3l5BEWyoYEt/AlG4w5wRT4ju4+TzQBnphil2z2BqE3QXWcIuF
+         GwzuS3LxOhb+1fLtgZX+ueUQS10cmiQfHZ5UobY9vfDVz/KvbB1BU2PG9vdP2CcoIA17
+         9a/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=3hBW2jq9rQv2PGQ7z4Xm8VijqZLc6qsdwGJm+DpeyK0=;
-        b=e11KhF9B5J5shrWOSz9hIFhrBiP0lTbGxVi/FfMpX3EfoYL43piAp8SotDJLMuM2Zd
-         iYMpZy289L2v4RfRBuL65auyRdtjTk+vIHOnHFjlujqbdpNPwh1cItXzsUP2UrXo3hvO
-         CVnPjekkiLjytriO8i8MgWI5U9CxDFdig03eyhrSw1OUXqg3duoKx5u3+klftRpaNl7N
-         9UoLnFIWpWZsxC1wvUj7cA2AzpDRnR9spfWGfOmz8R/uRh6Ji3NDhVxG9oLFOyPTAKAK
-         Uk9WbAnS7fIgs+QxDZCpHx1I4Q+5gvFtnjdsPifpas5AJJIxUK2+wTW8B1VwXLZ1MPHf
-         5hUw==
-X-Gm-Message-State: AOAM533BvNWU8blai197+VdpfBNbhge7AqsT1yPOOre45My6NgIpE5KU
-        SJOYw4uGP5WhEmcwBiOR+eD114MKSN/0Sg==
-X-Google-Smtp-Source: ABdhPJw9VTBsVAskTxmV8drgozBswhR7Sk3zdW6yWS/yOBcMNJNiPdFLtlSIG+SuFq+NDKsL+Zaktw==
-X-Received: by 2002:a05:6a00:23cb:b0:4f7:872d:86eb with SMTP id g11-20020a056a0023cb00b004f7872d86ebmr29441308pfc.37.1647956314616;
-        Tue, 22 Mar 2022 06:38:34 -0700 (PDT)
-Received: from ?IPV6:2409:8a28:e62:3990:4de5:990f:881e:dd0e? ([2409:8a28:e62:3990:4de5:990f:881e:dd0e])
-        by smtp.gmail.com with ESMTPSA id e19-20020a637453000000b003821bdb8103sm13985352pgn.83.2022.03.22.06.38.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 06:38:34 -0700 (PDT)
-Message-ID: <b55676c3-07da-f4f1-e4c8-252cd9d4fac2@bytedance.com>
-Date:   Tue, 22 Mar 2022 21:38:21 +0800
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xz6ETfdcT64yZkSHXQnqh78ORnyr+ABN9mE88qOHoGU=;
+        b=kp0ZtgpOwdz5PArcI2J6LIYHUocboUBjQC+t5qBWCDSqQvaSPI12UqeyRejTZDEij+
+         75wX+O+5D1Sgxo0bAY10EaMdpkr7dPfZOwzIDJUoGzH/V7E7CaUNfi5ZnWhdFMJZRjnj
+         jGHkYZvln2iHj+g6SBT7Ura0HVDYbICrwj/3gvxbki28vrbKEbzxmfvjX17jZhOnVA/e
+         3DnhsVKXaAzyjAf88x5DoA+LNGK/6uT9fp0nQKdLJOOdu5UKIcwi/RHr+x5wwBeW18Eq
+         3ufvgri9lXKpxWFtyG3V7O3Fm5wzkSja//VhmUUbfzqVcMyjUKV5HXPx+otc+7XhwBVi
+         zeKA==
+X-Gm-Message-State: AOAM532pyYtz/yrkdf9QZe93bMwAXZ92HayQJEtameBrQqM45j4pSV7h
+        YKXfpIM2EnTScs6ErR6k2HQCLA==
+X-Google-Smtp-Source: ABdhPJzc8kXpf9OukhwcAWbyieLo7Sm+OLTBhptQ51EGYpDowm5kBt1P+hOCwz1it0wWfjn8hrw0oA==
+X-Received: by 2002:a5d:47a1:0:b0:204:9f5:e72f with SMTP id 1-20020a5d47a1000000b0020409f5e72fmr10683387wrb.656.1647957197813;
+        Tue, 22 Mar 2022 06:53:17 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:15:13:3aa9:ba1f:ba59:87ba])
+        by smtp.gmail.com with ESMTPSA id l13-20020a5d6d8d000000b00203d77cf7b0sm17027185wrs.74.2022.03.22.06.53.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Mar 2022 06:53:17 -0700 (PDT)
+Date:   Tue, 22 Mar 2022 14:53:10 +0100
+From:   Marco Elver <elver@google.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: RFC: Use of user space handler vs. SIG_DFL on forced signals
+Message-ID: <YjnUxv4JVqGLLVNe@elver.google.com>
+References: <Yjmn/kVblV3TdoAq@elver.google.com>
+ <CACT4Y+Zusg3dMaOZjexExcsyXUaU3Oo9MqgThWd2FG_Jzo=esQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [External] Re: [PATCH v2 1/6] perf/core: Fix incosistency between
- cgroup sched_out and sched_in
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, eranian@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        duanxiongchun@bytedance.com, songmuchun@bytedance.com
-References: <20220322120834.98637-1-zhouchengming@bytedance.com>
- <20220322120834.98637-2-zhouchengming@bytedance.com>
- <YjnIKCIRV+ePJVCN@hirez.programming.kicks-ass.net>
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <YjnIKCIRV+ePJVCN@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Zusg3dMaOZjexExcsyXUaU3Oo9MqgThWd2FG_Jzo=esQ@mail.gmail.com>
+User-Agent: Mutt/2.1.4 (2021-12-11)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/3/22 8:59 下午, Peter Zijlstra wrote:
-> On Tue, Mar 22, 2022 at 08:08:29PM +0800, Chengming Zhou wrote:
->> There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
->> in perf_cgroup_switch().
->>
->> CPU1					CPU2
->> (in context_switch)			(attach running task)
->> perf_cgroup_sched_out(prev, next)
->> 	cgrp1 == cgrp2 is True
->> 					next->cgroups = cgrp3
->> 					perf_cgroup_attach()
->> perf_cgroup_sched_in(prev, next)
->> 	cgrp1 == cgrp3 is False
->>
->> The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
->> context switch code") would save cpuctx switch out/in when the
->> perf_cgroup of "prev" and "next" are the same.
->>
->> But perf_cgroup of task can change in concurrent with context_switch.
+On Tue, Mar 22, 2022 at 02:25PM +0100, Dmitry Vyukov wrote:
+> On Tue, 22 Mar 2022 at 11:42, Marco Elver <elver@google.com> wrote:
+> >
+> > Hello,
+> >
+> > Currently force_sig_info_to_task() will always unblock a blocked signal
+> > but deliver the signal to SIG_DFL:
+> >
+> >         [...]
+> >          * Note: If we unblock the signal, we always reset it to SIG_DFL,
+> >          * since we do not want to have a signal handler that was blocked
+> >          * be invoked when user space had explicitly blocked it.
+> >         [...]
+> >
+> > Is this requirement part of the POSIX spec? Or is the intent simply to
+> > attempt to do the least-bad thing?
+> >
+> > The reason I'm asking is that we've encountered rare crashes with the
+> > new SIGTRAP on perf events, due to patterns like this:
+> >
+> >         <set up SIGTRAP on a perf event>
+> >         ...
+> >         sigset_t s;
+> >         sigemptyset(&s);
+> >         sigaddset(&s, SIGTRAP | <and others>);
+> >         sigprocmask(SIG_BLOCK, &s, ...);
+> >         ...
+> >         <perf event triggers>
+> >
+> > When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
+> > will force the signal, but revert back to the default handler, thus
+> > terminating the task.
+> >
+> > For other types of signals, is the assumption here that if user space
+> > blocked the signal, it might not be able to handle it in the first
+> > place?
+> >
+> > For SIGTRAP on perf events we found this makes the situation worse,
+> > since the cause of the signal wasn't an error condition, but explicitly
+> > requested monitoring. In this case, we do in fact want delivery of the
+> > signal to user space even if the signal is blocked, i.e.
+> > force_sig_perf() should be an unblockable forced synchronous signal to
+> > user space!
+> >
+> > If there is no good reason to choose SIG_DFL, our preference would be to
+> > allow this kind of "unblockable forced" signal to the user space handler
+> > for force_sig_perf() -- with the caveat whoever requests SIGTRAP on perf
+> > events must be able to provide a handler that can always run safely. But
+> > we think that's better than crashing.
+> >
+> > The below patch would do what we want, but would like to first confirm
+> > if this is "within spec".
+> >
+> > Thoughts?
+> >
+> > Thanks,
+> > -- Marco
+> >
+> > ------ >8 ------
+[...]
+> > @@ -1332,7 +1335,8 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t,
+> >         ignored = action->sa.sa_handler == SIG_IGN;
+> >         blocked = sigismember(&t->blocked, sig);
+> >         if (blocked || ignored || (handler != HANDLER_CURRENT)) {
+> > -               action->sa.sa_handler = SIG_DFL;
+> > +               if (handler != HANDLER_UNBLOCK)
+> > +                       action->sa.sa_handler = SIG_DFL;
+> >                 if (handler == HANDLER_EXIT)
+> >                         action->sa.sa_flags |= SA_IMMUTABLE;
+> >                 if (blocked) {
+> > @@ -1816,7 +1820,11 @@ int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
+> >         info.si_perf_data = sig_data;
+> >         info.si_perf_type = type;
+> >
+> > -       return force_sig_info(&info);
+> > +       /*
+> > +        * Delivering SIGTRAP on perf events must unblock delivery to not
+> > +        * kill the task, but attempt delivery to the user space handler.
+> > +        */
+> > +       return force_sig_info_to_task(&info, current, HANDLER_UNBLOCK);
 > 
-> Can you clarify? IIRC then a task changes cgroup it goes throught the
-> whole ->attach() dance, and that serializes against the context switch
-> code.
-> 
+> It seems that in this case we almost don't use any of the logic in
+> force_sig_info_to_task(). It effectively reduces to the call to
+> send_signal() protected by the lock. Maybe we should call something
+> like do_send_sig_info() directly?
 
-task->cgroups changed before perf_cgroup_attach(), and is not serialized
-against the context switch, since task->cgroups can be changed without
-rq lock held. (cgroup v1 or cgroup v2 with PSI disabled)
+Unfortunately not -- without this:
 
-So perf_cgroup_from_task() in perf_cgroup_switch() may see the old or
-new perf_cgroup when do context switch.
+	[...]
+	blocked = sigismember(&t->blocked, sig);
+	if (blocked || ignored || (handler != HANDLER_CURRENT)) {
+		[...]
+		if (blocked) {
+			sigdelset(&t->blocked, sig);
+			recalc_sigpending_and_wake(t);
+		}
+	}
+	[...]
 
-Thanks.
+, it doesn't work if blocked==true. The alternative is to introduce
+another helper, force_sig_info_unblockable() or something, but don't see
+the benefit.  Having it all in force_sig_info_to_task() seems cleaner
+and we avoid replicating any unblock logic for forced signals.
+
+Thanks,
+-- Marco
