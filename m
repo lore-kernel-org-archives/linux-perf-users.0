@@ -2,161 +2,146 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2DCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 16:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C32AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 16:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236484AbiCVQfe (ORCPT
+        id S239234AbiCVQqh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 12:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56056 "EHLO
+        Tue, 22 Mar 2022 12:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233778AbiCVQfd (ORCPT
+        with ESMTP id S235493AbiCVQqg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 12:35:33 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A9DBCD
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 09:34:06 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id p17so15914956plo.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 09:34:06 -0700 (PDT)
+        Tue, 22 Mar 2022 12:46:36 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D546B867
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 09:45:09 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id t33so27108967ybt.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 09:45:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=brcU2nO6QqDCnc/aKXyKE9+waR5SCKo3rxSe1BMuA1o=;
-        b=kiS1cCGL/REUt0zXeKlAJyrQljUCqBSXBlRoawnyoX2QZ4zSaq+sJGic9bWkowfZgq
-         v9qFMYULiQ9PJk0DPDmdVvuXBZ45Ph4HC+Dj2t4RebruXLVLcbWwixC5QMLFerdRlS4d
-         7CSd1BGXlwuMGR+Vhdf9qeuJbm70fKhq016LLnDZNkyRTdaltOEOQdfbxaoVJ0UoWAX0
-         y92Z5gbUxyq44KoBxb6dMh6Kl48MMbzHWsSXnrRE2hhYHchX1F9Jzn2z/FVIsB9UB4SM
-         lOUl+whpRZFKIuuBFJNa/4SImd6ANdsP2P7NZ9ZiyydfO39bVNoNsY+G2zowMvMojsw1
-         GIIg==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AEPKdfQLbwPTzKqThQDGwgj7kWss99Dn8po4pyO255s=;
+        b=ddWplO2lvUqvqxO14GRhtJiIcIil6ImSCV0lQvOyB6RhwfseAeO/f3MbwjXg0gB2AI
+         Y6wK6Z1zurAf8hSxxYyh5aO+O+vxAaoemeucwVmcGyYcyPCo1ko+7oQaiVttX2jLA/Gl
+         uABWSRhRigugKLHpvjeYnO1NzwOnJZJmZabgbd9pBfOzTCWhBhUMXEkS8wkosbIx40wn
+         7LaVEhfF7lNrRyEifBQcWvpUCYdPxhbyh0kHyJO/LVgH8nw7leDhZUbS8WB52AsELMI5
+         P3YeBG8ZJY0h4acRiqBgl5+sR7snJPYaA8UFnAo131KEGnUFAPbVlyKVonkYIZI+09Ie
+         Uqug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=brcU2nO6QqDCnc/aKXyKE9+waR5SCKo3rxSe1BMuA1o=;
-        b=g+hUJj2KbQgyaS//T74qbpfN5XWIo2W6OFybsba4TADwzVwqOmmTnsIJaYN0SjPydO
-         DZhPbclKQpr5x1sEerS8A9D+GpF9jgRupLZ16ES+gIkjBm9Qy9g9LI7aXQo0CrrVeTTj
-         I49m4QHti0qJFYtPjy1XxnR4Pr0KggDGS8Bw8IWa6DeBTZtPGl+48z0iV8LW7ClpB2/+
-         H2uWSKW+xWHoQMu48Z4j43rSz2ERNrm8TGugr44aLdS4o+wcZPRGbj7KZQIRV2/gKnLG
-         ELvaAaBtphfJheZL2sY7V/4FDSsZ5fV0mBL344434EXEsDCWAsYrmg/mscpGygReURQi
-         JDlg==
-X-Gm-Message-State: AOAM533tq43bjGky+L6mi4lTPSgGMrnH2iTKNNVsqH0rhxqWmO1/TVkl
-        WgcCGGHOIAeLDPRXx+0omX+Y0xlxovf+7g==
-X-Google-Smtp-Source: ABdhPJwoMM9MGKG2rXVenoOC5R+VXbKPwEtztHPeW46UMwsmabaAwA7Rr0HVo7PJYSn7B44Usq7fbw==
-X-Received: by 2002:a17:902:8f94:b0:14f:d9b3:52c2 with SMTP id z20-20020a1709028f9400b0014fd9b352c2mr18826905plo.103.1647966845737;
-        Tue, 22 Mar 2022 09:34:05 -0700 (PDT)
-Received: from ?IPV6:2409:8a28:e62:3990:a113:6fc:a7b4:4226? ([2409:8a28:e62:3990:a113:6fc:a7b4:4226])
-        by smtp.gmail.com with ESMTPSA id u10-20020a63b54a000000b00380ea901cd2sm17584716pgo.6.2022.03.22.09.33.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 09:34:05 -0700 (PDT)
-Message-ID: <0a7ebd49-cfdd-911e-3982-44f594320b0f@bytedance.com>
-Date:   Wed, 23 Mar 2022 00:33:51 +0800
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AEPKdfQLbwPTzKqThQDGwgj7kWss99Dn8po4pyO255s=;
+        b=3sFVmTPpQgC9Ky1quWSW/4diW5tA4ajzA8sKH7datNReGDNcqRuZCgWusnmBOcSt0R
+         bwRiEBVecvwsxejlWayn77yKB2296m1QLy9pSC1MjyXNXmm60458/uFaAC+hE1u1dRGb
+         mKw8vDvZo5lMp9mSBAqRpIvbDvkqbXwAhNjJ3T2pY/Cb4/x9xHhQc4kNqtkeGA8kXLLe
+         VyRa4JcWTGFMbum0hahyBrAjcsAAFxjP/G3f6UgmrplR3AYLLvotVF0rRVrO2FglyPCY
+         /jgjY4Vz/WvoMs+3siHsThaza7TZPXuQBeQp4MbjeXpwzY0k2Rr82PRDW1Lso3lNLUuX
+         7Ihw==
+X-Gm-Message-State: AOAM530/n+qeqCNH9rMxYSDq2XKcO9yE5x8e9+TG4UK9ZfIKJT2YNr++
+        6MkL6ycNgjij8cypvR/QYojgjnB7Rl5WYUAkJZmKBQ==
+X-Google-Smtp-Source: ABdhPJwNeDSZQOjU+JcF3GBLS/i9yWqJD8C5YRvGxuEpEvBXt9pPTbr55XtMe5XOsWg/E58B8eckCMecpnUUt1ZNU5U=
+X-Received: by 2002:a05:6902:203:b0:628:7b6f:2845 with SMTP id
+ j3-20020a056902020300b006287b6f2845mr28163313ybs.533.1647967508132; Tue, 22
+ Mar 2022 09:45:08 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [External] Re: [PATCH v2 2/6] perf/core: Introduce percpu
- perf_cgroup
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, eranian@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        duanxiongchun@bytedance.com, songmuchun@bytedance.com
-References: <20220322120834.98637-1-zhouchengming@bytedance.com>
- <20220322120834.98637-3-zhouchengming@bytedance.com>
- <YjnIpn/PCM6wKpOC@hirez.programming.kicks-ass.net>
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <YjnIpn/PCM6wKpOC@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <Yjmn/kVblV3TdoAq@elver.google.com> <87ee2uyr4z.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <87ee2uyr4z.fsf@email.froward.int.ebiederm.org>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 22 Mar 2022 17:44:31 +0100
+Message-ID: <CANpmjNN4UjUTB5x6-2T-+b7MY=oAYn37MKvQy-4jYh6JDeJuKg@mail.gmail.com>
+Subject: Re: RFC: Use of user space handler vs. SIG_DFL on forced signals
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/3/22 9:01 下午, Peter Zijlstra wrote:
-> On Tue, Mar 22, 2022 at 08:08:30PM +0800, Chengming Zhou wrote:
->> Although we don't have incosistency problem any more, we can
->> have other problem like:
->>
->> CPU1					CPU2
->> (in context_switch)			(attach running task)
->> 					prev->cgroups = cgrp2
->> perf_cgroup_sched_switch(prev, next)
->> 	cgrp2 == cgrp2 is True
->>
-> 
-> Again, I'm not following, how can you attach to a running task from
-> another CPU ?
+On Tue, 22 Mar 2022 at 15:54, Eric W. Biederman <ebiederm@xmission.com> wrote:
+> Marco Elver <elver@google.com> writes:
+>
+> > Hello,
+> >
+> > Currently force_sig_info_to_task() will always unblock a blocked signal
+> > but deliver the signal to SIG_DFL:
+> >
+> >       [...]
+> >        * Note: If we unblock the signal, we always reset it to SIG_DFL,
+> >        * since we do not want to have a signal handler that was blocked
+> >        * be invoked when user space had explicitly blocked it.
+> >       [...]
+> >
+> > Is this requirement part of the POSIX spec? Or is the intent simply to
+> > attempt to do the least-bad thing?
+>
+> I have not found any POSIX language about this.
+>
+> The options are either we terminate the application, or the application
+> spins forever re-triggering the trap.
 
-Hi Peter, I make a little testcase which can reproduce the race
-problem, on system with PSI disabled. Because when PSI enabled,
-cgroup_move_task() will hold rq lock to assign task->cgroups.
+Is this in case of things like SEGV? I think this doesn't quite apply
+to us. The cause of the signal (perf event) is rather benign, and the
+signal handler can deal with recursion.
 
-```
-#!/bin/bash
+[...]
+> > For SIGTRAP on perf events we found this makes the situation worse,
+> > since the cause of the signal wasn't an error condition, but explicitly
+> > requested monitoring. In this case, we do in fact want delivery of the
+> > signal to user space even if the signal is blocked, i.e.
+> > force_sig_perf() should be an unblockable forced synchronous signal to
+> > user space!
+>
+> Which is exactly what we have.  If you block it you get terminated.
 
-cd /sys/fs/cgroup/perf_event
+Right, however, in this case we want to monitor/trace memory accesses
+etc, and some 3rd party code such as a library being traced isn't
+under our control.
 
-mkdir cg1
-mkdir cg2
+What we can do instead is to intercept sigprocmask() and work around
+the issue, but libc interception is brittle. :-/
+We do just want to receive the signal, all the time.
 
-perf stat -e cycles --cgroup /cg1 &
+[...]
+> I think HANDLER_UNBLOCK is pretty much nonsense.
+>
+> A block signal very much means that userspace is not prepared to handle
+> the signal.  So calling something that is not ready to be called can't
+> work.  That is common sense, and I expect in POSIX as well.
 
-cg_run()
-{
-        cg=$1
-        shift
-        echo $BASHPID > $cg/cgroup.procs
-        $@
-}
+The fundamental question is, if we have a valid signal handler, but
+sigprocmask() is called, how do we still keep receiving signals for
+SIGTRAP despite sigprocmask()?
 
-cg_run cg1 schbench -r 100 &
-cg_run cg2 schbench -r 100 &
+Perhaps this is impossible without intercepting sigprocmask() in user
+space, in which we'll need to find a different solution.
 
-while true; do
-        for i in $(cat cg1/cgroup.procs); do
-                echo $i > cg2/cgroup.procs
-        done
-        for i in $(cat cg2/cgroup.procs); do
-                echo $i > cg1/cgroup.procs
-        done
-done
-```
+> I expect that either you are looking for something like what ptrace does
+> with signal interruptions where another process is notified, and
+> userspace does not need to be involved, or that this is a don't do that
+> then.
+>
+> Or possibly you have some weird asynchronous signal thing happening and
+> you are calling it synchronous.
 
-Some seconds later, dmesg will show the WARNING message:
+Not quite. We need it to be synchronous, because we need to know the
+precise instruction and potentially do some other stuff _before_
+subsequent instructions.
 
-[   51.777830] WARNING: CPU: 2 PID: 1849 at kernel/events/core.c:869 perf_cgroup_switch+0x246/0x290
-[   51.779167] Modules linked in:
-[   51.779696] CPU: 2 PID: 1849 Comm: schbench Not tainted 5.17.0-rc8 #28
-[   51.780691] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[   51.782353] RIP: 0010:perf_cgroup_switch+0x246/0x290
-[   51.783145] Code: 0f 0b e9 0b ff ff ff 48 83 7c 24 08 00 74 0c e8 00 7e f7 ff fb 66 0f 1f 44 00 00 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f c3 <0f> 0b e9 4f fe ff ff e8 be 7e f7 ff e8 a9 1f 93 00 89 c0 49 c7 c5
-[   51.785804] RSP: 0018:ffffba4440fcbd80 EFLAGS: 00010086
-[   51.786617] RAX: 0000000000000002 RBX: ffff8d78eb8b7200 RCX: 0000000000000000
-[   51.787696] RDX: 0000000000000000 RSI: ffffffffae1c83db RDI: ffffffffae185a69
-[   51.788777] RBP: ffff8d78eb8aad40 R08: 0000000000000001 R09: 0000000000000001
-[   51.789854] R10: 0000000000000000 R11: ffff8d78eb8b7220 R12: ffff8d78eb8b7208
-[   51.790929] R13: ffff8d78eb8aafa0 R14: ffff8d74cd6bb600 R15: 0000000000000000
-[   51.792006] FS:  00007fedaaffd700(0000) GS:ffff8d78eb880000(0000) knlGS:0000000000000000
-[   51.793223] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   51.794122] CR2: 000055e4bf2b696c CR3: 00000001128a2003 CR4: 0000000000370ee0
-[   51.795209] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   51.796292] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   51.797375] Call Trace:
-[   51.797828]  <TASK>
-[   51.798229]  __perf_event_task_sched_in+0x151/0x350
-[   51.799009]  ? lock_release+0x1ed/0x2e0
-[   51.799640]  finish_task_switch+0x1d3/0x2e0
-[   51.800328]  ? __switch_to+0x136/0x4b0
-[   51.800953]  __schedule+0x33e/0xae0
-[   51.801535]  schedule+0x4e/0xc0
-[   51.802080]  exit_to_user_mode_prepare+0x172/0x2a0
-[   51.802850]  ? asm_sysvec_apic_timer_interrupt+0xa/0x20
-[   51.803675]  irqentry_exit_to_user_mode+0x5/0x40
-[   51.804413]  sysvec_apic_timer_interrupt+0x5c/0xd0
-[   51.805183]  asm_sysvec_apic_timer_interrupt+0x12/0x20
+A compromise might be to deliver synchronously normally, but when
+blocked deliver asynchronously. But if the signal was delivered
+asynchronously, we need to let the signal handler know delivery was
+asynchronous, so that our tracing logic can recover and give up at
+that point.
 
-Thanks.
+To do this indication if it was asynchronous, we probably need to
+extend siginfo_t once more. Would that be reasonable?
 
+Thanks,
+-- Marco
