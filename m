@@ -2,159 +2,181 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4F5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 17:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAA7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 18:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236000AbiCVRdv (ORCPT
+        id S229520AbiCVSyH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 13:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49714 "EHLO
+        Tue, 22 Mar 2022 14:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239743AbiCVRdu (ORCPT
+        with ESMTP id S229470AbiCVSyG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 13:33:50 -0400
-X-Greylist: delayed 1546 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 22 Mar 2022 10:32:22 PDT
-Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCDC2275DE
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 10:32:22 -0700 (PDT)
-Received: from in02.mta.xmission.com ([166.70.13.52]:36584)
-        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1nWhxq-00Be9o-HU; Tue, 22 Mar 2022 11:06:34 -0600
-Received: from ip68-227-174-4.om.om.cox.net ([68.227.174.4]:39048 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1nWhxp-0006YH-5j; Tue, 22 Mar 2022 11:06:34 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <Yjmn/kVblV3TdoAq@elver.google.com>
-        <87ee2uyr4z.fsf@email.froward.int.ebiederm.org>
-        <CANpmjNN4UjUTB5x6-2T-+b7MY=oAYn37MKvQy-4jYh6JDeJuKg@mail.gmail.com>
-Date:   Tue, 22 Mar 2022 12:06:06 -0500
-In-Reply-To: <CANpmjNN4UjUTB5x6-2T-+b7MY=oAYn37MKvQy-4jYh6JDeJuKg@mail.gmail.com>
-        (Marco Elver's message of "Tue, 22 Mar 2022 17:44:31 +0100")
-Message-ID: <87k0clvrwh.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Tue, 22 Mar 2022 14:54:06 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 422E18CDB9;
+        Tue, 22 Mar 2022 11:52:35 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7477152B;
+        Tue, 22 Mar 2022 11:52:34 -0700 (PDT)
+Received: from [10.57.73.89] (unknown [10.57.73.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 242D13F66F;
+        Tue, 22 Mar 2022 11:52:32 -0700 (PDT)
+Message-ID: <17215ebc-dbf2-81ca-7ef4-b4ebc3cb9d28@arm.com>
+Date:   Tue, 22 Mar 2022 18:52:31 +0000
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1nWhxp-0006YH-5j;;;mid=<87k0clvrwh.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.174.4;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18zZgVo2V4Ymywh3u9tzrBhXMZipJ3gZDQ=
-X-SA-Exim-Connect-IP: 68.227.174.4
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: RFC: Use of user space handler vs. SIG_DFL on forced signals
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Subject: Re: [PATCH 00/10] coresight: Add new API to allocate trace source ID
+ values
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        James Clark <James.Clark@arm.com>
+References: <20220308205000.27646-1-mike.leach@linaro.org>
+ <e890feb0-9f90-c0f2-e5f0-10ed5dbe6d81@arm.com>
+ <CAJ9a7VhzwMri1Lz5mtO5um3-tT9=GUpGN3cHJhkW5TTsbOKbgQ@mail.gmail.com>
+ <639c902b-535e-8627-de04-9bcbbdc98ed5@arm.com>
+ <CAJ9a7VhyFj9vcUFjrwtqn47LbdqHp+gQCvtDBNX69-=Y5-2iag@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <CAJ9a7VhyFj9vcUFjrwtqn47LbdqHp+gQCvtDBNX69-=Y5-2iag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Marco Elver <elver@google.com> writes:
+Hi Mike
 
-> On Tue, 22 Mar 2022 at 15:54, Eric W. Biederman <ebiederm@xmission.com> wrote:
->> Marco Elver <elver@google.com> writes:
+On 22/03/2022 14:27, Mike Leach wrote:
+> Hi Suzuki
+> 
+> On Tue, 22 Mar 2022 at 12:35, Suzuki Kuruppassery Poulose
+> <suzuki.poulose@arm.com> wrote:
 >>
->> > Hello,
->> >
->> > Currently force_sig_info_to_task() will always unblock a blocked signal
->> > but deliver the signal to SIG_DFL:
->> >
->> >       [...]
->> >        * Note: If we unblock the signal, we always reset it to SIG_DFL,
->> >        * since we do not want to have a signal handler that was blocked
->> >        * be invoked when user space had explicitly blocked it.
->> >       [...]
->> >
->> > Is this requirement part of the POSIX spec? Or is the intent simply to
->> > attempt to do the least-bad thing?
+>> On 22/03/2022 11:38, Mike Leach wrote:
+>>> HI Suzuki,
+>>>
+>>> On Tue, 22 Mar 2022 at 10:43, Suzuki Kuruppassery Poulose
+>>> <suzuki.poulose@arm.com> wrote:
+>>>>
+>>>> + Cc: James Clark
+>>>>
+>>>> Hi Mike,
+>>>>
+>>>> On 08/03/2022 20:49, Mike Leach wrote:
+>>>>> The current method for allocating trace source ID values to sources is
+>>>>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+>>>>> The STM is allocated ID 0x1.
+>>>>>
+>>>>> This fixed algorithm is used in both the CoreSight driver code, and by
+>>>>> perf when writing the trace metadata in the AUXTRACE_INFO record.
+>>>>>
+>>>>> The method needs replacing as currently:-
+>>>>> 1. It is inefficient in using available IDs.
+>>>>> 2. Does not scale to larger systems with many cores and the algorithm
+>>>>> has no limits so will generate invalid trace IDs for cpu number > 44.
+>>>>
+>>>> Thanks for addressing this issue.
+>>>>
+>>>>>
+>>>>> Additionally requirements to allocate additional system IDs on some
+>>>>> systems have been seen.
+>>>>>
+>>>>> This patch set  introduces an API that allows the allocation of trace IDs
+>>>>> in a dynamic manner.
+>>>>>
+>>>>> Architecturally reserved IDs are never allocated, and the system is
+>>>>> limited to allocating only valid IDs.
+>>>>>
+>>>>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+>>>>> the new API.
+>>>>>
+>>>>> perf handling is changed so that the ID associated with the CPU is read
+>>>>> from sysfs. The ID allocator is notified when perf events start and stop
+>>>>> so CPU based IDs are kept constant throughout any perf session.
+>>>>>
+>>>>> For the ETMx.x devices IDs are allocated on certain events
+>>>>> a) When using sysfs, an ID will be allocated on hardware enable, and freed
+>>>>> when the sysfs reset is written.
+>>>>> b) When using perf, ID is allocated on hardware enable, and freed on
+>>>>> hardware disable.
+>>>>>
+>>>>> For both cases the ID is allocated when sysfs is read to get the current
+>>>>> trace ID. This ensures that consistent decode metadata can be extracted
+>>>>> from the system where this read occurs before device enable.
+>>>>
+>>>>
+>>>>>
+>>>>> Note: This patchset breaks backward compatibility for perf record.
+>>>>> Because the method for generating the AUXTRACE_INFO meta data has
+>>>>> changed, using an older perf record will result in metadata that
+>>>>> does not match the trace IDs used in the recorded trace data.
+>>>>> This mismatch will cause subsequent decode to fail. Older versions of
+>>>>> perf will still be able to decode data generated by the updated system.
+>>>>
+>>>> I have some concerns over this and the future plans for the dynamic
+>>>> allocation per sink. i.e., we are breaking/modifying the perf now to
+>>>> accommodate the dynamic nature of the trace id of a given CPU/ETM.
+>>>
+>>> I don't beleive we have a choice for this - we cannot retain what is
+>>> an essentially broken allocation mechanism.
+>>>
 >>
->> I have not found any POSIX language about this.
+>> I completely agree and I am happy with the current step by step approach
+>> of moving to a dynamic allocation scheme. Apologies, this wasn't
+>> conveyed appropriately.
 >>
->> The options are either we terminate the application, or the application
->> spins forever re-triggering the trap.
->
-> Is this in case of things like SEGV? I think this doesn't quite apply
-> to us. The cause of the signal (perf event) is rather benign, and the
-> signal handler can deal with recursion.
-
-Yes. Signals like SIGSEGV are what force_sig_info_to_task is used for.
-
-Signals where a userspace instruction causes a fault and the signal
-is delivered immediately (synchronously) with that fault.
-
-
-> [...]
->> > For SIGTRAP on perf events we found this makes the situation worse,
->> > since the cause of the signal wasn't an error condition, but explicitly
->> > requested monitoring. In this case, we do in fact want delivery of the
->> > signal to user space even if the signal is blocked, i.e.
->> > force_sig_perf() should be an unblockable forced synchronous signal to
->> > user space!
+>>>> The proposed approach of exposing this via sysfs may (am not sure if
+>>>> this would be the case) break for the trace-id per sink change, as a
+>>>> sink could assign different trace-id for a CPU depending.
+>>>>
+>>>
+>>> If a path exists between a CPU and a sink - the current framework as
+>>> far as I can tell would not allow for a new path to be set up between
+>>> the cpu and another sink.
 >>
->> Which is exactly what we have.  If you block it you get terminated.
->
-> Right, however, in this case we want to monitor/trace memory accesses
-> etc, and some 3rd party code such as a library being traced isn't
-> under our control.
->
-> What we can do instead is to intercept sigprocmask() and work around
-> the issue, but libc interception is brittle. :-/
-> We do just want to receive the signal, all the time.
->
-> [...]
->> I think HANDLER_UNBLOCK is pretty much nonsense.
+>> e.g, if we have concurrent perf sessions, in the future with sink  based
+>> allocation :
 >>
->> A block signal very much means that userspace is not prepared to handle
->> the signal.  So calling something that is not ready to be called can't
->> work.  That is common sense, and I expect in POSIX as well.
->
-> The fundamental question is, if we have a valid signal handler, but
-> sigprocmask() is called, how do we still keep receiving signals for
-> SIGTRAP despite sigprocmask()?
->
-> Perhaps this is impossible without intercepting sigprocmask() in user
-> space, in which we'll need to find a different solution.
-
-Or adding some kind of feature to the kernel where you can report that
-some signal is unblockable.
-
->> I expect that either you are looking for something like what ptrace does
->> with signal interruptions where another process is notified, and
->> userspace does not need to be involved, or that this is a don't do that
->> then.
+>> perf record -e cs_etm/@sink1/... payload1
+>> perf record -e cs_etm/@sink2/... payload2
+>> perf record -e cs_etm// ...      payload3
 >>
->> Or possibly you have some weird asynchronous signal thing happening and
->> you are calling it synchronous.
->
-> Not quite. We need it to be synchronous, because we need to know the
-> precise instruction and potentially do some other stuff _before_
-> subsequent instructions.
->
-> A compromise might be to deliver synchronously normally, but when
-> blocked deliver asynchronously. But if the signal was delivered
-> asynchronously, we need to let the signal handler know delivery was
-> asynchronous, so that our tracing logic can recover and give up at
-> that point.
->
-> To do this indication if it was asynchronous, we probably need to
-> extend siginfo_t once more. Would that be reasonable?
+>> The trace id allocated for first session for CPU0 *could* be different
+>> from that of the second or the third.
+> 
+> If these sessions run concurrently then the same Trace ID will be used
+> for CPU0 for all the sessions.
+> We ensure this by notifications that a cs_etm session is starting and
+> stopping - and keep a refcount.
 
-So the idea is to use normal signal delivery but to set a flag
-to indicate that the signal was blocked at the time it was sent?
+The scheme is fine now, with a global trace-id map. But with per-sink
+allocation, this could cause problems.
 
-It should be possible to add another field that takes a non-zero
-value.  On older kernels it should always have a value of zero so it
-should be safe.
+e.g., there could be a situation where:
 
-It might also be possible to simply ignore the signal if it is blocked.
+trace_id[CPU0][sink0] == trace_id[CPU1][sink1]
 
-In either case it will probably take a little bit of care to get the
-races out.
+So if we have a session where both CPU0 and CPU1 trace to a common sink,
+we get the trace mixed with no way of splitting them. As the perf will
+read the trace-id for CPU0 from that of sink0 and CPU1 from sink1.
 
-Eric
+So my point is, we are changing the ABI for perf to grab the TraceID
+with your patches. And clearly this approach could break easily when
+we extend to sink-based idmap. So, lets make the ABI change for perf
+scalable and bullet proof (as far as we can) by exposing this
+information via the perf RECORD. That way any future changes in the
+scheme won't affect the perf as long as it has a reliable information
+within each "record".
+
+
+My point is, let us fix this once and for all, so that we don't
+need to change this again. I understand this involves more work
+in the perf tool. I believe that is for better
+
+Thoughts ?
+
+Suzuki
