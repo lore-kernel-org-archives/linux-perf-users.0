@@ -2,106 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3D1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 22:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1E1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 22:17:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237467AbiCVWI2 convert rfc822-to-8bit (ORCPT
+        id S233174AbiCVWTJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 18:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56102 "EHLO
+        Tue, 22 Mar 2022 18:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237461AbiCVWIY (ORCPT
+        with ESMTP id S233046AbiCVWTJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 18:08:24 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA7AA6FA06;
-        Tue, 22 Mar 2022 15:06:52 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id 17so25878143lji.1;
-        Tue, 22 Mar 2022 15:06:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kDi0ElDfwv7raMtrGS6/o0GRWTFIadUpbRr6cdzN0hQ=;
-        b=r6BZW1Nzx9SlEgkpoMs34SSB1LJE3abPQNUsG6ixdiEuzQnQMmE5J57gF3iOLcdu9j
-         YZTwcfC9D5FcWRPcGDimLWnTToganm568seh/0bFUu5pY9tmeY8ywvQJOgGR+8ZSo+F+
-         gRNM2yKcEvncm0xi4yk9R+HpHyuIMLnyN+U0ofF2RFbpYHnhyKBOQvuw/QvaxwJKb0db
-         Iuhq7WaHZRy+i1b9Zdciqgwqcn87m2MrEFDiEECpxr6QJ+zlQOWFlsu97nLi9nt1QhCM
-         b0mxIDYOKnGY5gAEfNeKn5uqyHpNU3+GznbwCX0v6qJKhltsfTLkMZvEGpeEXyG+sdme
-         mN9g==
-X-Gm-Message-State: AOAM5315caVL+nlqqwZpPUMPr1nNPs8GYNZO5yh/1RwyE828wRh16AuP
-        7u6OPQxpl+DQhoJ0/PJYtKaIvqXKbR+Xu+RDgmxPseU5
-X-Google-Smtp-Source: ABdhPJy4/yQGyC8WGywWNtwTlaGRAtK/gK8etfico+dncZPNBBr/re+Z6ySrWQQfWRnAN1N9oQa8R3kERFjUwlNIDKU=
-X-Received: by 2002:a05:651c:1544:b0:249:8c80:4282 with SMTP id
- y4-20020a05651c154400b002498c804282mr5923865ljp.202.1647986811117; Tue, 22
- Mar 2022 15:06:51 -0700 (PDT)
+        Tue, 22 Mar 2022 18:19:09 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1BA12606;
+        Tue, 22 Mar 2022 15:17:40 -0700 (PDT)
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KNQly3HSxz67ZGL;
+        Wed, 23 Mar 2022 06:15:26 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 22 Mar 2022 23:17:38 +0100
+Received: from [10.47.85.68] (10.47.85.68) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 22 Mar
+ 2022 22:17:37 +0000
+Message-ID: <a2c46546-b828-353b-4b70-826a614b1594@huawei.com>
+Date:   Tue, 22 Mar 2022 22:17:36 +0000
 MIME-Version: 1.0
-References: <20220322120834.98637-1-zhouchengming@bytedance.com>
- <20220322120834.98637-2-zhouchengming@bytedance.com> <YjnIKCIRV+ePJVCN@hirez.programming.kicks-ass.net>
- <b55676c3-07da-f4f1-e4c8-252cd9d4fac2@bytedance.com> <YjnjHPuNjo8YTwiQ@hirez.programming.kicks-ass.net>
- <cdfb252e-9bfc-bee3-7ebe-b8ef401c85dd@bytedance.com> <1c9f2383-ec9f-f819-d7be-23aed2bf121a@bytedance.com>
-In-Reply-To: <1c9f2383-ec9f-f819-d7be-23aed2bf121a@bytedance.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 22 Mar 2022 15:06:39 -0700
-Message-ID: <CAM9d7chL6r=4Ay6udSv-heyH3pAdH=Cp+2mXU2-+Z7yHt+aH7w@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v2 1/6] perf/core: Fix incosistency between
- cgroup sched_out and sched_in
-To:     Chengming Zhou <zhouchengming@bytedance.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        duanxiongchun@bytedance.com, songmuchun@bytedance.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: perf version issues
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+References: <8a75f3b1-2b99-1233-3a70-070311b6ebc1@huawei.com>
+ <YjotZExyiwhnX6ev@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <YjotZExyiwhnX6ev@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.85.68]
+X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On 22/03/2022 20:11, Arnaldo Carvalho de Melo wrote:
+>> I have been finding that during my development that the output from "perf
+>> -v" may be incorrect in certain circumstances. I sent some patches to fix it
+>> up:
+>> https://lore.kernel.org/linux-perf-users/1645449409-158238-1-git-send-email-john.garry@huawei.com/T/#mf7234d2e331a53370c148eb4a0633d405a5c6832
+>>
+>> Is there some issue that these cannot be processed?
+> So, while testing it I noticed that if we use 'git cherry-pick' it
+> doesn't trigger a rebuild, even having a new head:-\
+> 
+> I.e. with the two patches in at the HEAD, try:
+> 
+>    $ git log --oneline -2
+>    cb66befccba18fac (HEAD -> perf/core) perf tools: Fix version kernel tag
+>    4e666cdb06eede20 perf tools: Fix dependency for version file creation
+>    $ make -C tools/perf O=/tmp/build/perf install-bin
+>    $ perf -v
+>    perf version 5.17.rc8.gcb66befccba1
+> 
+> Ok so far, now lets remove HEAD and leave just the first patch, that has
+> the ORIG_HEAD dependency to trigger a rebuild:
+> 
+>    $ git reset --hard HEAD~
+>    HEAD is now at 4e666cdb06eede20 perf tools: Fix dependency for version file creation
+>    $ make -C tools/perf O=/tmp/build/perf install-bin
+>    $ perf -v
+>    perf version 5.17.rc8.g4e666cdb06ee
+> 
+> Ok, detected and rebuilt, perf -v works as expected.
 
-On Tue, Mar 22, 2022 at 8:28 AM Chengming Zhou
-<zhouchengming@bytedance.com> wrote:
->
-> On 2022/3/22 11:16 下午, Chengming Zhou wrote:
-> > Hi peter,
-> >
-> > On 2022/3/22 10:54 下午, Peter Zijlstra wrote:
-> >> On Tue, Mar 22, 2022 at 09:38:21PM +0800, Chengming Zhou wrote:
-> >>> On 2022/3/22 8:59 下午, Peter Zijlstra wrote:
-> >>>> On Tue, Mar 22, 2022 at 08:08:29PM +0800, Chengming Zhou wrote:
-> >>>>> There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
-> >>>>> in perf_cgroup_switch().
-> >>>>>
-> >>>>> CPU1                                      CPU2
-> >>>>> (in context_switch)                       (attach running task)
-> >>>>> perf_cgroup_sched_out(prev, next)
-> >>>>>   cgrp1 == cgrp2 is True
-> >>>>>                                   next->cgroups = cgrp3
-> >>>>>                                   perf_cgroup_attach()
-> >>>>> perf_cgroup_sched_in(prev, next)
-> >>>>>   cgrp1 == cgrp3 is False
->
-> I see, you must have been misled by my wrong drawing above ;-)
-> I'm sorry, perf_cgroup_attach() on the right should be put at the bottom.
->
-> CPU1                                            CPU2
-> (in context_switch)                             (attach running task)
-> perf_cgroup_sched_out(prev, next)
->         cgrp1 == cgrp2 is True
->                                                 next->cgroups = cgrp3
-> perf_cgroup_sched_in(prev, next)
->         cgrp1 == cgrp3 is False
->                                                 __perf_cgroup_move()
->
+ok, good
 
-Yep, this is a real race and I saw the warnings reported sometimes.
-The perf_cgroup_attach() is called after the task's cgroup is changed.
+> 
+> Now lets try cherry picking your second patch:
+> 
+> $ git cherry-pick cb66befccba18fac
+>    [perf/core 8ff6a6c06a90a362] perf tools: Fix version kernel tag
+>     Author: John Garry<john.garry@huawei.com>
+>     Date: Mon Feb 21 21:16:49 2022 +0800
+>     1 file changed, 4 insertions(+), 9 deletions(-)
+>    $ make -C tools/perf O=/tmp/build/perf install-bin
+>    $ perf -v
+>    perf version 5.17.rc8.g4e666cdb06ee
+> 
+> Now it doesn´t notice it and there is no automatic rebuild triggered, we
+> stay with the cset from before the cherry-pick:-\
+> 
+> $ git log --oneline -2
+> 8ff6a6c06a90a362 (HEAD -> perf/core) perf tools: Fix version kernel tag
+> 4e666cdb06eede20 perf tools: Fix dependency for version file creation
+> $
+> 
+> Anyway, your patch works for some cases, so its an improvement and I'll
+> apply it, we can continue from there.
 
 Thanks,
-Namhyung
+
+I just noticed the "reset --hard HEAD^" problem and not cherry-pick'ing. 
+Let me check this tomorrow.
+
+john
+
