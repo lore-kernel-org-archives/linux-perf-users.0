@@ -2,235 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D405DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 14:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32066C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 15:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237866AbiCVO4Q (ORCPT
+        id S234842AbiCVPSO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 10:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38710 "EHLO
+        Tue, 22 Mar 2022 11:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237042AbiCVO4P (ORCPT
+        with ESMTP id S238360AbiCVPSK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 10:56:15 -0400
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92FDC85BEE;
-        Tue, 22 Mar 2022 07:54:46 -0700 (PDT)
-Received: from in01.mta.xmission.com ([166.70.13.51]:39214)
-        by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1nWfuG-001v8O-IA; Tue, 22 Mar 2022 08:54:44 -0600
-Received: from ip68-227-174-4.om.om.cox.net ([68.227.174.4]:38948 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1nWfuE-00C5OZ-Bk; Tue, 22 Mar 2022 08:54:44 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <Yjmn/kVblV3TdoAq@elver.google.com>
-Date:   Tue, 22 Mar 2022 09:54:20 -0500
-In-Reply-To: <Yjmn/kVblV3TdoAq@elver.google.com> (Marco Elver's message of
-        "Tue, 22 Mar 2022 11:42:06 +0100")
-Message-ID: <87ee2uyr4z.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Tue, 22 Mar 2022 11:18:10 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECD5888782
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 08:16:41 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id k6so8561795plg.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 08:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=6eZDvQ+GMABUTzr3i/57SRk9t3VJSQXjOSoM90PZFK0=;
+        b=WIvCRqy2V1PZqmzsPyNm6PjBpYgMhpmXdba3x+jvifvOfrBLOLkbGRRStyuRhGPXri
+         VI/G1FwyHAXPrQTFODvegxDlar810TOGe/NcB+OQQX3N/a7TGvBIXXxSZ+WOWD3oeNJK
+         qUnFXT+E7aHTKOhwhRPVLSIbHyAKOZV7+6WDg0HPr5SNXVXp5AGVQQsap/bE+Vx0t/D8
+         jW8C0qlLBLrLVUL9Gz7oZOe6dByXebJcDM4GgzYqP9hxc5B/XAAgB2XBtgDivcKv+MwZ
+         C/mngmCLksmEMuW9/FZ2InAm2RsKuVeZn9vRYA95QxYrQjd32Q3p+CaY//w8wMGQaoB9
+         E5UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=6eZDvQ+GMABUTzr3i/57SRk9t3VJSQXjOSoM90PZFK0=;
+        b=e/UKAB6rQ7pUDdFEAYPk89wRdx2c7utCIuDS0YUmy2/JWKoFQMcJH1NneTLBUEXPMY
+         losvoLQFXnbCB4FasbZrXAw8R5FXUjp8lshJZW9U+4ob6/PLQKrdBOIz0KNKVH27OxLw
+         K9N6LOZcDMvkD4WmhpGALylv/sPDNdFVmnDchXGjaR3zA491i/EAwyODy2M2MXWo8Ty3
+         soa5jMmYVaZUfnW5ZxhslSklC/KKWGmb1IkBfgyxouC9ilFQLuqFPmrUKwlxIOLi9gex
+         75+WaQRL4uXNORG4pJfnUxgkQij4RdU8E+vEVuyG+PQLdlHmsTclhNMG4IR3vzWAXG7r
+         z6wA==
+X-Gm-Message-State: AOAM530CVSz6tjqaiOsx4a0p8U1FmBjZ9FQnOrF3PEWFD+ZiljaBaLDO
+        NmalCTbxc9QdxDG75W6l7d38Fg==
+X-Google-Smtp-Source: ABdhPJz8/N3pPBCVjW4KumM1dBjgxdurrXl9yWeUv3TORFiiatViYg8ST6pSyxyQUy4yP6/GLJTUpA==
+X-Received: by 2002:a17:903:2343:b0:154:4a3e:6b24 with SMTP id c3-20020a170903234300b001544a3e6b24mr13341807plh.129.1647962201363;
+        Tue, 22 Mar 2022 08:16:41 -0700 (PDT)
+Received: from ?IPV6:2409:8a28:e62:3990:a113:6fc:a7b4:4226? ([2409:8a28:e62:3990:a113:6fc:a7b4:4226])
+        by smtp.gmail.com with ESMTPSA id k6-20020a17090a7f0600b001c63352cadbsm3171449pjl.29.2022.03.22.08.16.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Mar 2022 08:16:41 -0700 (PDT)
+Message-ID: <cdfb252e-9bfc-bee3-7ebe-b8ef401c85dd@bytedance.com>
+Date:   Tue, 22 Mar 2022 23:16:27 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1nWfuE-00C5OZ-Bk;;;mid=<87ee2uyr4z.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.174.4;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/Zf+DS0aeIFuu5GoMzm1PpJfqurEDGiuY=
-X-SA-Exim-Connect-IP: 68.227.174.4
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: RFC: Use of user space handler vs. SIG_DFL on forced signals
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.7.0
+Subject: Re: [External] Re: [PATCH v2 1/6] perf/core: Fix incosistency between
+ cgroup sched_out and sched_in
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, eranian@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        duanxiongchun@bytedance.com, songmuchun@bytedance.com
+References: <20220322120834.98637-1-zhouchengming@bytedance.com>
+ <20220322120834.98637-2-zhouchengming@bytedance.com>
+ <YjnIKCIRV+ePJVCN@hirez.programming.kicks-ass.net>
+ <b55676c3-07da-f4f1-e4c8-252cd9d4fac2@bytedance.com>
+ <YjnjHPuNjo8YTwiQ@hirez.programming.kicks-ass.net>
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <YjnjHPuNjo8YTwiQ@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Marco Elver <elver@google.com> writes:
+Hi peter,
 
-> Hello,
->
-> Currently force_sig_info_to_task() will always unblock a blocked signal
-> but deliver the signal to SIG_DFL:
->
-> 	[...]
-> 	 * Note: If we unblock the signal, we always reset it to SIG_DFL,
-> 	 * since we do not want to have a signal handler that was blocked
-> 	 * be invoked when user space had explicitly blocked it.
-> 	[...]
->
-> Is this requirement part of the POSIX spec? Or is the intent simply to
-> attempt to do the least-bad thing?
+On 2022/3/22 10:54 下午, Peter Zijlstra wrote:
+> On Tue, Mar 22, 2022 at 09:38:21PM +0800, Chengming Zhou wrote:
+>> On 2022/3/22 8:59 下午, Peter Zijlstra wrote:
+>>> On Tue, Mar 22, 2022 at 08:08:29PM +0800, Chengming Zhou wrote:
+>>>> There is a race problem that can trigger WARN_ON_ONCE(cpuctx->cgrp)
+>>>> in perf_cgroup_switch().
+>>>>
+>>>> CPU1					CPU2
+>>>> (in context_switch)			(attach running task)
+>>>> perf_cgroup_sched_out(prev, next)
+>>>> 	cgrp1 == cgrp2 is True
+>>>> 					next->cgroups = cgrp3
+>>>> 					perf_cgroup_attach()
+>>>> perf_cgroup_sched_in(prev, next)
+>>>> 	cgrp1 == cgrp3 is False
+>>>>
+>>>> The commit a8d757ef076f ("perf events: Fix slow and broken cgroup
+>>>> context switch code") would save cpuctx switch out/in when the
+>>>> perf_cgroup of "prev" and "next" are the same.
+>>>>
+>>>> But perf_cgroup of task can change in concurrent with context_switch.
+>>>
+>>> Can you clarify? IIRC then a task changes cgroup it goes throught the
+>>> whole ->attach() dance, and that serializes against the context switch
+>>> code.
+>>>
+>>
+>> task->cgroups changed before perf_cgroup_attach(), and is not serialized
+>> against the context switch, since task->cgroups can be changed without
+>> rq lock held. (cgroup v1 or cgroup v2 with PSI disabled)
+>>
+>> So perf_cgroup_sched_out() in perf_cgroup_switch() may see the old or
+>> new perf_cgroup when do context switch.
+> 
+> __schedule()
+>   local_irq_disable();				<--- IRQ disable
+>   rq_lock();
+> 
+>   ...
+> 
+>   context_switch()
+>     prepare_task_switch()
+>       perf_event_task_sched_out()
+>         __perf_event_task_sched_out()
+> 	  perf_cgroup_sched_out();
 
-I have not found any POSIX language about this.
+here compare perf_cgroup_from_task(prev) and perf_cgroup_from_task(next)
 
-The options are either we terminate the application, or the application
-spins forever re-triggering the trap.
+> 
+>   switch_to()
+>   finish_task_switch()
+>     perf_event_task_sched_in()
+>       __perf_event_task_sched_in()
+>         perf_cgroup_sched_in();
 
+here compare perf_cgroup_from_task(prev) and perf_cgroup_from_task(next)
 
-> The reason I'm asking is that we've encountered rare crashes with the
-> new SIGTRAP on perf events, due to patterns like this:
->
-> 	<set up SIGTRAP on a perf event>
-> 	...
-> 	sigset_t s;
-> 	sigemptyset(&s);
-> 	sigaddset(&s, SIGTRAP | <and others>);
-> 	sigprocmask(SIG_BLOCK, &s, ...);
-> 	...
-> 	<perf event triggers>
->
-> When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
-> will force the signal, but revert back to the default handler, thus
-> terminating the task.
->
-> For other types of signals, is the assumption here that if user space
-> blocked the signal, it might not be able to handle it in the first
-> place?
+>     finish_lock_switch()
+>       raw_spin_irq_unlock_irq();		<--- IRQ enable
+> 
+> 
+> vs
+> 
 
-The assumption is that the signals are synchronous and it is the
-actions of userspace that trigger the trap.
+rcu_assign_pointer(p->cgroups, to)		<--- task perf_cgroup changed
 
-> For SIGTRAP on perf events we found this makes the situation worse,
-> since the cause of the signal wasn't an error condition, but explicitly
-> requested monitoring. In this case, we do in fact want delivery of the
-> signal to user space even if the signal is blocked, i.e.
-> force_sig_perf() should be an unblockable forced synchronous signal to
-> user space!
+task->cgroups has changed before sending IPI
 
-Which is exactly what we have.  If you block it you get terminated.
+> perf_event_cgrp_subsys.attach = perf_cgroup_attach()
+>   cgroup_taskset_for_each()
+>     task_function_call(task, __perf_cgroup_move) <--- sends IPI
+> 
+> 
+> Please explain how this can interleave.
 
-> If there is no good reason to choose SIG_DFL, our preference would be to
-> allow this kind of "unblockable forced" signal to the user space handler
-> for force_sig_perf() -- with the caveat whoever requests SIGTRAP on perf
-> events must be able to provide a handler that can always run safely. But
-> we think that's better than crashing.
+__perf_cgroup_move in IPI is of course serialized against context switch,
+but the task->cgroups has changed before that, without rq lock held.
+So perf_cgroup_from_task() may see the old or new perf_cgroup.
 
-When the signal is blocked there is not user space signal handler.
-There is nothing reasonable the kernel can do.
+Thanks.
 
-
-> The below patch would do what we want, but would like to first confirm
-> if this is "within spec".
->
-> Thoughts?
-
-I think HANDLER_UNBLOCK is pretty much nonsense.
-
-A block signal very much means that userspace is not prepared to handle
-the signal.  So calling something that is not ready to be called can't
-work.  That is common sense, and I expect in POSIX as well.
-
-I expect that either you are looking for something like what ptrace does
-with signal interruptions where another process is notified, and
-userspace does not need to be involved, or that this is a don't do that
-then.
-
-Or possibly you have some weird asynchronous signal thing happening and
-you are calling it synchronous.
-
-
-Eric
-
->
-> Thanks,
-> -- Marco
->
-> ------ >8 ------
->
-> From: Marco Elver <elver@google.com>
-> Date: Mon, 21 Mar 2022 22:18:09 +0100
-> Subject: [PATCH RFC] signal: Always unblock signal to user space for
->  force_sig_perf()
->
-> With SIGTRAP on perf events, we have encountered termination of
-> processes due to user space attempting to block delivery of SIGTRAP.
-> Consider this case:
->
-> 	<set up SIGTRAP on a perf event>
-> 	...
-> 	sigset_t s;
-> 	sigemptyset(&s);
-> 	sigaddset(&s, SIGTRAP | <and others>);
-> 	sigprocmask(SIG_BLOCK, &s, ...);
-> 	...
-> 	<perf event triggers>
->
-> When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
-> will force the signal, but revert back to the default handler, thus
-> terminating the task.
->
-> With forced signals, the whole premise of sigprocmask() is invalidated
-> since the signal is still delivered, only to the default signal handler.
-> The assumption here is that if user space blocked the signal, it might
-> not be able to handle it in the first place.
->
-> However, for SIGTRAP on perf events we found this makes the situation
-> worse, since the cause of the signal wasn't an error condition, but
-> explicitly requested monitoring. In this case, we do in fact want
-> delivery of the signal to user space even if the signal is blocked, i.e.
-> force_sig_perf() should be an unblockable forced synchronous signal to
-> user space.
->
-> Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
->  kernel/signal.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 38602738866e..04b7a178a5f3 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1303,6 +1303,7 @@ int do_send_sig_info(int sig, struct kernel_siginfo *info, struct task_struct *p
->  
->  enum sig_handler {
->  	HANDLER_CURRENT, /* If reachable use the current handler */
-> +	HANDLER_UNBLOCK, /* Use the current handler even if blocked */
->  	HANDLER_SIG_DFL, /* Always use SIG_DFL handler semantics */
->  	HANDLER_EXIT,	 /* Only visible as the process exit code */
->  };
-> @@ -1311,9 +1312,11 @@ enum sig_handler {
->   * Force a signal that the process can't ignore: if necessary
->   * we unblock the signal and change any SIG_IGN to SIG_DFL.
->   *
-> - * Note: If we unblock the signal, we always reset it to SIG_DFL,
-> - * since we do not want to have a signal handler that was blocked
-> - * be invoked when user space had explicitly blocked it.
-> + * Note: If we unblock the signal and handler != HANDLER_UNBLOCK, we always
-> + * reset it to SIG_DFL, since we do not want to have a signal handler that was
-> + * blocked be invoked when user space had explicitly blocked it. If handler is
-> + * HANDLER_UNBLOCK, user space will always receive the signal and is expected to
-> + * provide a handler that is safe in all contexts.
->   *
->   * We don't want to have recursive SIGSEGV's etc, for example,
->   * that is why we also clear SIGNAL_UNKILLABLE.
-> @@ -1332,7 +1335,8 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t,
->  	ignored = action->sa.sa_handler == SIG_IGN;
->  	blocked = sigismember(&t->blocked, sig);
->  	if (blocked || ignored || (handler != HANDLER_CURRENT)) {
-> -		action->sa.sa_handler = SIG_DFL;
-> +		if (handler != HANDLER_UNBLOCK)
-> +			action->sa.sa_handler = SIG_DFL;
->  		if (handler == HANDLER_EXIT)
->  			action->sa.sa_flags |= SA_IMMUTABLE;
->  		if (blocked) {
-> @@ -1816,7 +1820,11 @@ int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
->  	info.si_perf_data = sig_data;
->  	info.si_perf_type = type;
->  
-> -	return force_sig_info(&info);
-> +	/*
-> +	 * Delivering SIGTRAP on perf events must unblock delivery to not
-> +	 * kill the task, but attempt delivery to the user space handler.
-> +	 */
-> +	return force_sig_info_to_task(&info, current, HANDLER_UNBLOCK);
->  }
->  
->  /**
