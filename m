@@ -2,147 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CABDC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Mar 2022 22:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35991C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 07:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbiCUWz0 (ORCPT
+        id S237196AbiCVHIs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Mar 2022 18:55:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
+        Tue, 22 Mar 2022 03:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230477AbiCUWzJ (ORCPT
+        with ESMTP id S237233AbiCVHIo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Mar 2022 18:55:09 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFD3386718
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2022 15:33:49 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id y10-20020a5b0d0a000000b00633b9765410so7910259ybp.18
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Mar 2022 15:33:49 -0700 (PDT)
+        Tue, 22 Mar 2022 03:08:44 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAAAF5A143;
+        Tue, 22 Mar 2022 00:07:16 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id w8so14685784pll.10;
+        Tue, 22 Mar 2022 00:07:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=SpMsyAVY3Ou4ayr2UUYCx6xfElQ9mcgAD2W4Le+nlxs=;
-        b=bxKFolBykFNwtGqa9A5Zv5QZ9Ai6Ja84JYVRKGk+yEJYFUgtKde7nioaqACjn8FG2G
-         tmv5I6Pm13yFLyrQhOoEW3XVEtflPeAjcShYbuWGFHRmh0cfao9cXbvNHclX4vYI5twx
-         JNzzvLk10AayW8KECkv/Nq2PgPL4870qnyxtnlxhOAGeW8oZhgXJHZK4g982LoK11iHx
-         X4ag52xx5xMBjQhkfIlRF+mmtK0/NJLrfi5/I1YLTtw0utBqzqj4m4vE2By+1YjcfGsu
-         wHOf7xkEHJHLEWXwGc1QwKTloyWocN5HuVM5SHn45E5vg/BRoO1BO1nwXnB0XdtGf2Bk
-         tSFA==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=rYikdF40SXf7xi+HwkY/x3YoTFSrAuyc/7qiBvixRb4=;
+        b=GSEHR0RLh04Nz7yeZGkTfKjhwk+vUEXMSOxUTFD+XpigilckpbzkhnwweQjBcneuRm
+         7SOmwnszgKNT7AbNYdg/8SPXTwYI/P6tkFA7PeXh1jQtE57uAkLxNriozHNklQSs3LYP
+         I1r/ZEi3+n+fvfm/p/G/1ZvGbM9Uqg38l96T962cUrjCpItKlNkczdwWt6/bCfhfjuA7
+         VezHs+eaMxp7ypZ6vl8VCBe1xcEBPYhw1jg5osO+FEw0xnoIjJLx1SyLH8hdYfUTjKzy
+         7hcZ0y2y4lR+UM/ISw7VLZc50jKdRJ5a3WJcS32AvrnmLmH8YIcYVkUIvMTyHbIPjBLP
+         i70A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=SpMsyAVY3Ou4ayr2UUYCx6xfElQ9mcgAD2W4Le+nlxs=;
-        b=hLNjR4vwxlcfDVfq8nGoWz2QWAtzXvEfdVdu6MlFKvTWUFnYZAlHvZ++NEn5FCsl39
-         piPI3LNf8Y/nXOI4gq8xP5DSPcuFUtF/GSegvvG5UQzIYuKbAa2QgUPh1F0KfA5XdoEd
-         WWvUgrC6Hw3AEV43w8DgmDLqXspZNMu6YINwhA2193oMjvAL11xkILuZEk4heaMb4cde
-         S4hk3fh5Vw4nPqvFGeWORv4ufeidMa/zS6F0KvLrCzQ0jjXYzl7SAjsY9ePRpKj8ciEe
-         T0/MNE7WJ8NccP5cREVZr0o0f8wfsr9PjeJ+5fKPsBWakfFrfVdTOckjWC5cGDb47jCF
-         E5JQ==
-X-Gm-Message-State: AOAM531Vo1pt61OWnWyCwpeIQX8sKfX+/0kGey1+YXYFLMhStGWHqji8
-        pzEIP9EjCC48lbDFZegoyRofwTCkrGrl
-X-Google-Smtp-Source: ABdhPJwNEOs7GijFSfW6DVg3FBLi7BK61nctdq2vDBs8q3qZjbfN2iuMK2ufFC13SQ9m3MWAcUhaH2beDQqF
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:1626:404f:eb8e:caae])
- (user=irogers job=sendgmr) by 2002:a81:1e95:0:b0:2e5:ad0d:b7fc with SMTP id
- e143-20020a811e95000000b002e5ad0db7fcmr26767986ywe.328.1647902028157; Mon, 21
- Mar 2022 15:33:48 -0700 (PDT)
-Date:   Mon, 21 Mar 2022 15:33:44 -0700
-Message-Id: <20220321223344.1034479-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.35.1.894.gb6a874cedc-goog
-Subject: [PATCH] perf parse-events: Move slots only with topdown
-From:   Ian Rogers <irogers@google.com>
-To:     Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=rYikdF40SXf7xi+HwkY/x3YoTFSrAuyc/7qiBvixRb4=;
+        b=PmN5yMM47jnzUmSfefE2lAa1DpR1xYhzyi9lRzcDIkqXwFhQB/aJk8yjkPco8bXkSl
+         UB1Be9BFYldScJAe5HISLuD/JGMLeXMj2YSqCSUF+WtKyLtIGF1NE5aO+7tfOiJBfvi7
+         LxTGlYuDPB1IkFb0BLz8t3+B5r9uj0XrFqoC42ysAy3B1zdlwgRt89/jbZr3yYDHYewv
+         mhdiW1K0RZp3SBYgouhIG2MUpmyu243i7/OAkyofSjEejJxxU25auY71AUqBG7Ergdt9
+         sdMYf6XF0fBsZyrTWgiigTb3cOgbXsmXQucqo2e9QSFwCRLBfE3yiEmvUeCf+lgmac+5
+         TN1Q==
+X-Gm-Message-State: AOAM531dpb0Qz9WNqdCn3O0goTh5KwiBW5eMJ3Ko8ksKRoSMbqz18zCT
+        9FiDF4NPr08lqShv4fEEJ2gDkG7+o4f+cg==
+X-Google-Smtp-Source: ABdhPJzMsUXrymkfFa2hfXPf1i775JeLSHHiUa7Acj12ZfZTZpnz6UgO9B9bugnEtqz0+OIyBvVAmA==
+X-Received: by 2002:a17:90b:3a8e:b0:1bf:7fb5:af06 with SMTP id om14-20020a17090b3a8e00b001bf7fb5af06mr3292555pjb.7.1647932836230;
+        Tue, 22 Mar 2022 00:07:16 -0700 (PDT)
+Received: from [192.168.255.10] ([203.205.141.118])
+        by smtp.gmail.com with ESMTPSA id fy9-20020a17090b020900b001c690bc05c4sm1574256pjb.0.2022.03.22.00.06.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Mar 2022 00:07:15 -0700 (PDT)
+Message-ID: <4bc9b537-f0de-5b75-5418-61c1d6dca849@gmail.com>
+Date:   Tue, 22 Mar 2022 15:06:49 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.7.0
+Subject: Re: [PATCH 6/7] perf/x86/amd/core: Add PerfMonV2 overflow handling
+Content-Language: en-US
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     peterz@infradead.org, bp@alien8.de, dave.hansen@linux.intel.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        pbonzini@redhat.com, jmattson@google.com, eranian@google.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org
+References: <cover.1647498015.git.sandipan.das@amd.com>
+ <7d43b4ba8a7c3c0833495f3fabfcfc6df8db3732.1647498015.git.sandipan.das@amd.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+Organization: Tencent
+In-Reply-To: <7d43b4ba8a7c3c0833495f3fabfcfc6df8db3732.1647498015.git.sandipan.das@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If slots isn't with a topdown event then moving it is unnecessary. For
-example {instructions, slots} is re-ordered:
+On 17/3/2022 2:28 pm, Sandipan Das wrote:
+> +		val = x86_perf_event_update(event);
 
-$ perf stat -e '{instructions,slots}' -a sleep 1
+The variable 'val' set but not used.
 
- Performance counter stats for 'system wide':
+> +		mask = BIT_ULL(idx);
+> +
+> +		if (!(status & mask))
 
-       936,600,825      slots
-       144,440,968      instructions
+Needed here ?
 
-       1.006061423 seconds time elapsed
-
-Which can break tools expecting the command line order to match the
-printed order. It is necessary to move the slots event first when it
-appears with topdown events. Add extra checking so that the slots event
-is only moved in the case of there being a topdown event like:
-
-$ perf stat -e '{instructions,slots,topdown-fe-bound}' -a sleep 1
-
- Performance counter stats for 'system wide':
-
-        2427568570      slots
-         300927614      instructions
-         551021649      topdown-fe-bound
-
-       1.001771803 seconds time elapsed
-
-Fixes: 94dbfd6781a0 ("perf parse-events: Architecture specific leader override")
-Reported-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/x86/util/evlist.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index 8d9b55959256..cfc208d71f00 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -20,17 +20,27 @@ int arch_evlist__add_default_attrs(struct evlist *evlist)
- 
- struct evsel *arch_evlist__leader(struct list_head *list)
- {
--	struct evsel *evsel, *first;
-+	struct evsel *evsel, *first, *slots = NULL;
-+	bool has_topdown = false;
- 
- 	first = list_first_entry(list, struct evsel, core.node);
- 
- 	if (!pmu_have_event("cpu", "slots"))
- 		return first;
- 
-+	/* If there is a slots event and a topdown event then the slots event comes first. */
- 	__evlist__for_each_entry(list, evsel) {
--		if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") &&
--			evsel->name && strcasestr(evsel->name, "slots"))
--			return evsel;
-+		if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") && evsel->name) {
-+			if (strcasestr(evsel->name, "slots")) {
-+				slots = evsel;
-+				if (slots == first)
-+					return first;
-+			}
-+			if (!strncasecmp(evsel->name, "topdown", 7))
-+				has_topdown = true;
-+			if (slots && has_topdown)
-+				return slots;
-+		}
- 	}
- 	return first;
- }
--- 
-2.35.1.894.gb6a874cedc-goog
-
+> +			continue;
