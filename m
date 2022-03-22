@@ -2,108 +2,225 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADBBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 20:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4A3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Mar 2022 21:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234358AbiCVUz3 (ORCPT
+        id S235020AbiCVVDC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 16:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
+        Tue, 22 Mar 2022 17:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234275AbiCVUz3 (ORCPT
+        with ESMTP id S235087AbiCVVCt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 16:55:29 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B7A91014;
-        Tue, 22 Mar 2022 13:54:01 -0700 (PDT)
+        Tue, 22 Mar 2022 17:02:49 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7472B52E0F;
+        Tue, 22 Mar 2022 14:01:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BB50DB81DAA;
-        Tue, 22 Mar 2022 20:53:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D891C340EC;
-        Tue, 22 Mar 2022 20:53:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C86DDB81DAB;
+        Tue, 22 Mar 2022 21:01:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 404D9C340EE;
+        Tue, 22 Mar 2022 21:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647982438;
-        bh=9jAuSLmCJPwj8SV8wuPWyMh09qiLPip8v2vrMjaG1os=;
+        s=k20201202; t=1647982875;
+        bh=mXcy1351Q+KX/ctUS80CaNY82irKPeqQR5GkcO7LZc0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oElMREgC1PdzF7SzFMF9dVMinsYT4Jbh17rKIRaWXonaPOmsbZDKIK8WjB+gay46/
-         HTrOKY2VN7UVHUYTg0PjJIkP6P/fjAwT5oFTjVKlJB0r6h+kbTfzRR8tnGl+HmcTpy
-         u4gDPhzDhjM7LJaHNE5RQnDjUSw0XZivfk8q99OYa7vjOH58ldN4D4biz8TYCTUwet
-         VLoTjQAJwFUkS+mtt8XeFWYhALEqT4zzYdREw2XXqvSp4KpTTDaAzIhwPFGIOMcbcR
-         Ao9K55BTL2Z/0aCAyZXXWGPep+U+Uq7VVXNbTp60/FTX+nxPZEylPyLFkD7B0ET66b
-         SJKbyrR08I3Xg==
+        b=rqryPQpq3tMfs6fciTQ6wuFbdyUwHo7e533740fhC+9QYD5iYeZzJVTdjxnZSZPPE
+         SDGiRA42cebAjEEtH9Z52TZjrFpEpZsvuOvsmut3LDPbMOcem8E+hWA69ZN/NbTPAJ
+         uLeet+4pdhrukGD8lhS2hO0iA8a+6W8NKYb4BEAbMMbYJkLicn3LBXV40BWwfQNmH3
+         xUBGifQhLXxxkZSvxwOPnvUsg3AKFeYQ7rKjVYnumRhtYAjnmQKBQUpVl8HgXFe4lQ
+         DVUlOTijR8RW2NuKvOlR4ei8Pu9syb5/LqEdSe85RnvVJVxmp84A4I0oa81PBN5DTU
+         cVWBAFrz/+z/Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E2A5940407; Tue, 22 Mar 2022 17:53:55 -0300 (-03)
-Date:   Tue, 22 Mar 2022 17:53:55 -0300
+        id 5659940407; Tue, 22 Mar 2022 18:01:12 -0300 (-03)
+Date:   Tue, 22 Mar 2022 18:01:12 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf parse-events: Move slots only with topdown
-Message-ID: <Yjo3Y+zLljKU1lVO@kernel.org>
-References: <20220321223344.1034479-1-irogers@google.com>
- <ffd440b7-fef9-a5ae-95b7-73c1f8a212ef@linux.intel.com>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, peterz@infradead.org, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        ahmad.yasin@intel.com, zhengjun.xing@linux.intel.com
+Subject: Re: [PATCH] perf script: Add 'brstackinsnlen' for branch stacks
+Message-ID: <Yjo5GGbRUcnzRoGI@kernel.org>
+References: <1647871212-184070-1-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ffd440b7-fef9-a5ae-95b7-73c1f8a212ef@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1647871212-184070-1-git-send-email-kan.liang@linux.intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Mar 22, 2022 at 07:48:48AM -0400, Liang, Kan escreveu:
-> On 3/21/2022 6:33 PM, Ian Rogers wrote:
-> > If slots isn't with a topdown event then moving it is unnecessary. For
-> > example {instructions, slots} is re-ordered:
-> > 
-> > $ perf stat -e '{instructions,slots}' -a sleep 1
-> > 
-> >   Performance counter stats for 'system wide':
-> > 
-> >         936,600,825      slots
-> >         144,440,968      instructions
-> > 
-> >         1.006061423 seconds time elapsed
-> > 
-> > Which can break tools expecting the command line order to match the
-> > printed order. It is necessary to move the slots event first when it
-> > appears with topdown events. Add extra checking so that the slots event
-> > is only moved in the case of there being a topdown event like:
-> > 
-> > $ perf stat -e '{instructions,slots,topdown-fe-bound}' -a sleep 1
-> > 
-> >   Performance counter stats for 'system wide':
-> > 
-> >          2427568570      slots
-> >           300927614      instructions
-> >           551021649      topdown-fe-bound
-> > 
-> >         1.001771803 seconds time elapsed
-> > 
-> > Fixes: 94dbfd6781a0 ("perf parse-events: Architecture specific leader override")
-> > Reported-by: Kan Liang <kan.liang@linux.intel.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+Em Mon, Mar 21, 2022 at 07:00:12AM -0700, kan.liang@linux.intel.com escreveu:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> Thanks Ian. The patch works well.
+> When analyzing with the perf script, it's useful to understand the
+> captured instruction and the next sequential instruction. To calculate
+> the address of the next sequential instruction, the length of the
+> captured instruction is required. For example, you can’t know the next
+> sequential instruction after an unconditional branch unless you
+> calculate that based on its length.
 > 
-> Tested-by: Kan Liang <kan.liang@linux.intel.com>
+> For branch stacks, the current perf script only prints the instruction
+> bytes with 'brstackinsn', but lack of instruction length.
+> 
+> Add 'brstackinsnlen' to print the instruction length.
+> 
+> $perf script -F ip,brstackinsn,brstackinsnlen --xed
+>      7fa555be8f75
+>         _start:
+>         00007fa555be8090        mov %rsp, %rdi          ilen: 3
+>         00007fa555be8093        callq  0x7fa555be8ea0   ilen: 5 # PRED
+> 102 cycles [102] 0.02 IPC
+>         _dl_start+38:
+>         00007fa555be8ec6        movq  %rdx,0x227853(%rip)       ilen: 7
+>         00007fa555be8ecd        leaq  0x227f94(%rip),%rdx       ilen: 7
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+
+You forgot to update tools/perf/Documentation/perf-script.txt, I added
+it this time.
 
 Thanks, applied.
 
 - Arnaldo
 
+> ---
+>  tools/perf/builtin-script.c | 44 ++++++++++++++++++++++++++++++++------------
+>  1 file changed, 32 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index fa478dd..5a7b2b0 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -124,6 +124,7 @@ enum perf_output_field {
+>  	PERF_OUTPUT_DATA_PAGE_SIZE  = 1ULL << 33,
+>  	PERF_OUTPUT_CODE_PAGE_SIZE  = 1ULL << 34,
+>  	PERF_OUTPUT_INS_LAT         = 1ULL << 35,
+> +	PERF_OUTPUT_BRSTACKINSNLEN  = 1ULL << 36,
+>  };
+>  
+>  struct perf_script {
+> @@ -191,6 +192,7 @@ struct output_option {
+>  	{.str = "data_page_size", .field = PERF_OUTPUT_DATA_PAGE_SIZE},
+>  	{.str = "code_page_size", .field = PERF_OUTPUT_CODE_PAGE_SIZE},
+>  	{.str = "ins_lat", .field = PERF_OUTPUT_INS_LAT},
+> +	{.str = "brstackinsnlen", .field = PERF_OUTPUT_BRSTACKINSNLEN},
+>  };
+>  
+>  enum {
+> @@ -488,7 +490,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+>  		       "selected. Hence, no address to lookup the source line number.\n");
+>  		return -EINVAL;
+>  	}
+> -	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
+> +	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN)) && !allow_user_set &&
+>  	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY)) {
+>  		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
+>  		       "Hint: run 'perf record -b ...'\n");
+> @@ -1122,10 +1124,17 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
+>  
+>  static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+>  			    struct perf_insn *x, u8 *inbuf, int len,
+> -			    int insn, FILE *fp, int *total_cycles)
+> +			    int insn, FILE *fp, int *total_cycles,
+> +			    struct perf_event_attr *attr)
+>  {
+> -	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t#%s%s%s%s", ip,
+> -			      dump_insn(x, ip, inbuf, len, NULL),
+> +	int ilen = 0;
+> +	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
+> +			      dump_insn(x, ip, inbuf, len, &ilen));
+> +
+> +	if (PRINT_FIELD(BRSTACKINSNLEN))
+> +		printed += fprintf(fp, "ilen: %d\t", ilen);
+> +
+> +	printed += fprintf(fp, "#%s%s%s%s",
+>  			      en->flags.predicted ? " PRED" : "",
+>  			      en->flags.mispred ? " MISPRED" : "",
+>  			      en->flags.in_tx ? " INTX" : "",
+> @@ -1211,7 +1220,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  		printed += ip__fprintf_sym(entries[nr - 1].from, thread,
+>  					   x.cpumode, x.cpu, &lastsym, attr, fp);
+>  		printed += ip__fprintf_jump(entries[nr - 1].from, &entries[nr - 1],
+> -					    &x, buffer, len, 0, fp, &total_cycles);
+> +					    &x, buffer, len, 0, fp, &total_cycles,
+> +					    attr);
+>  		if (PRINT_FIELD(SRCCODE))
+>  			printed += print_srccode(thread, x.cpumode, entries[nr - 1].from);
+>  	}
+> @@ -1242,14 +1252,17 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
+>  			if (ip == end) {
+>  				printed += ip__fprintf_jump(ip, &entries[i], &x, buffer + off, len - off, ++insn, fp,
+> -							    &total_cycles);
+> +							    &total_cycles, attr);
+>  				if (PRINT_FIELD(SRCCODE))
+>  					printed += print_srccode(thread, x.cpumode, ip);
+>  				break;
+>  			} else {
+>  				ilen = 0;
+> -				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
+> +				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
+>  						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
+> +				if (PRINT_FIELD(BRSTACKINSNLEN))
+> +					printed += fprintf(fp, "\tilen: %d", ilen);
+> +				printed += fprintf(fp, "\n");
+>  				if (ilen == 0)
+>  					break;
+>  				if (PRINT_FIELD(SRCCODE))
+> @@ -1292,16 +1305,23 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  			      machine, thread, &x.is64bit, &x.cpumode, false);
+>  		if (len <= 0)
+>  			goto out;
+> -		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", sample->ip,
+> -			dump_insn(&x, sample->ip, buffer, len, NULL));
+> +		ilen = 0;
+> +		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
+> +			dump_insn(&x, sample->ip, buffer, len, &ilen));
+> +		if (PRINT_FIELD(BRSTACKINSNLEN))
+> +			printed += fprintf(fp, "\tilen: %d", ilen);
+> +		printed += fprintf(fp, "\n");
+>  		if (PRINT_FIELD(SRCCODE))
+>  			print_srccode(thread, x.cpumode, sample->ip);
+>  		goto out;
+>  	}
+>  	for (off = 0; off <= end - start; off += ilen) {
+>  		ilen = 0;
+> -		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
+> +		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
+>  				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
+> +		if (PRINT_FIELD(BRSTACKINSNLEN))
+> +			printed += fprintf(fp, "\tilen: %d", ilen);
+> +		printed += fprintf(fp, "\n");
+>  		if (ilen == 0)
+>  			break;
+>  		if (arch_is_branch(buffer + off, len - off, x.is64bit) && start + off != sample->ip) {
+> @@ -1459,7 +1479,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>  		for (i = 0; i < sample->insn_len; i++)
+>  			printed += fprintf(fp, " %02x", (unsigned char)sample->insn[i]);
+>  	}
+> -	if (PRINT_FIELD(BRSTACKINSN))
+> +	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
+>  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
+>  
+>  	return printed;
+> @@ -3716,7 +3736,7 @@ int cmd_script(int argc, const char **argv)
+>  		     "Valid types: hw,sw,trace,raw,synth. "
+>  		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
+>  		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
+> -		     "brstacksym,flags,bpf-output,brstackinsn,brstackoff,"
+> +		     "brstacksym,flags,bpf-output,brstackinsn,brstackinsnlen,brstackoff,"
+>  		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc,tod,"
+>  		     "data_page_size,code_page_size,ins_lat",
+>  		     parse_output_fields),
+> -- 
+> 2.7.4
+
+-- 
+
+- Arnaldo
