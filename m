@@ -2,100 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE574C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 15:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 124EDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 18:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245205AbiCWPqk (ORCPT
+        id S1343933AbiCWSEd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Mar 2022 11:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40892 "EHLO
+        Wed, 23 Mar 2022 14:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245202AbiCWPqj (ORCPT
+        with ESMTP id S1343941AbiCWSEc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Mar 2022 11:46:39 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DA54A3E2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 08:45:09 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id t5so1795862pfg.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 08:45:09 -0700 (PDT)
+        Wed, 23 Mar 2022 14:04:32 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E0130E
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 11:03:01 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id a127so2342437vsa.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 11:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=1vTW3PCwU+T2pUtBqAx/4fRcqe+IVyWi5wPimWqOIX8=;
-        b=3hKXikPCM3UOeO1Tu9SgwrBM+ohjgXXLurHTCVrXZsVqaucksaMLNgQZ9Tq/4sWWe4
-         0iyOGqHTvUKFtGKg7QVaRIt+L8Log/adQ76trUIbWgcNA22CfgZdRWZj/eXkvw9YIEqi
-         MAV/x58FHuu4NdSV4GmavtJtbYx7DpSxSnXkbAk5nXLffxrwbXD5Vtg7NjWXqnpRr/lh
-         mj0KSGR1pdkgzJk3bBufqguGRKZEfscPXcUQHBmUPIN78U3r++JfxfijLHE1A24u5044
-         3BicnWwdm4OnRIijyf0tXa/aZE6s7oHEeauTevfqutItALhYt7XM3rFCyJWjTZ1/WzzB
-         /NMQ==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cxMCeIULouJWFlbLIQ6Xsyx6h4OQz2uZBzxppk94Ikc=;
+        b=QbQtUz6DXuztYjte6SDRrc4538jFfpZC0rdtF6513StXRQRfWLgGnYdyT4UXkiMSbd
+         ynIRXgiMljiWRZd76t5BcfRTGvjKOsBrypbnSVtDV557XbuVOaMqd0IS1P2yOIJwJ7o6
+         BFqOGFvtmimg+exBjGlG0wuWLxzth4DhWUn5HtzCDJaPScxDTjJuqYsk7uiVSm57tf0y
+         p+GruvrMF/lsgMJ4nzPXA6KF2auVMKjCoXA+oXTteM04pDzlxbPVqc+pzRuRDqRuYJ/f
+         ziDGV+V1kprtzjXudUmxExspYukRZY0sLSsElS8epeQn7z4g2C1wIiFt3Et+yE2XXcG0
+         xy8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=1vTW3PCwU+T2pUtBqAx/4fRcqe+IVyWi5wPimWqOIX8=;
-        b=yfZbtLDSv2EmNRyZbSJXJNYLX5Cm73jIJ8Slw8dJOE5VStVVHFK54Qqxn9NYDnqrsT
-         evI4bS4FM5I9aeVJ3j3gW4uBcja6f6tnNcvaJ/1VtXsAHweDMomea2x9Ikh3Yi00/k8l
-         leqNBedTPFXktoI2swnPUcGS/GiBmDZytuiKLdgML0HrUhTSI3I6E/eLGbt5gnxVcT3N
-         TtOHbsL+kp69JuHyJToVC9U/FC5DDZMmsaVNkOO7QV18p7Ben+gWx31HqT4wD/tYNyxx
-         p+H1Zf5hkP7TTMixoUFJ5ELPhb8NkWLeapQYEieCeT7MIuCYzY1qqkKqOHNk4L60ooE0
-         xOnQ==
-X-Gm-Message-State: AOAM533K7RC4iCh7bMVNtdYADFdNhSBvoRH1PCMl9rrN8x90P7ZzPc0m
-        kFAw6UyLIwXIS0wgN6xkCwzUBA==
-X-Google-Smtp-Source: ABdhPJyK0hPmqqzUM4OyZvHvejQRLOjBiBHz8HKHMyDfEP0z3oqLOwqgYAGNZo6s6nMCNoXpDj/z/A==
-X-Received: by 2002:a05:6a00:4107:b0:4fa:ac90:f299 with SMTP id bu7-20020a056a00410700b004faac90f299mr584289pfb.58.1648050309228;
-        Wed, 23 Mar 2022 08:45:09 -0700 (PDT)
-Received: from ?IPV6:2409:8a28:e62:3990:257e:c5d2:cab0:ca98? ([2409:8a28:e62:3990:257e:c5d2:cab0:ca98])
-        by smtp.gmail.com with ESMTPSA id l2-20020a637c42000000b003644cfa0dd1sm185069pgn.79.2022.03.23.08.45.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Mar 2022 08:45:08 -0700 (PDT)
-Message-ID: <cb2e81ac-a106-3162-7d93-936eb051e241@bytedance.com>
-Date:   Wed, 23 Mar 2022 23:44:56 +0800
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cxMCeIULouJWFlbLIQ6Xsyx6h4OQz2uZBzxppk94Ikc=;
+        b=7vkDmg7WVzQ14nbWQsj+sVFUVGzmGTd2eL6Oxfu+z8YCYxcz/CCoEEmzDEIXbMNXjK
+         2VkSW8CPdw1LU1oJSngK9JdQo33Uo7fAWYMbofwO1ccyJMIx00W2PL/hXz6rxblMSXA3
+         VecZe5zxZlf58Y7z5mps81CUweHHrcHi3EUyglnreSg1z+uAcinAuG3xPAaSrKMSf3hU
+         9bxUgi1jagy4vj4Tpf/cpqGne9ODpNnW83hVCk9LhUl8KhDpzkEgDUVsxbyZ4OrrgNqP
+         NvWvj+F7xiQs2/tdDsJr0s3BKGLgKDFROylsLFhrNFxkFAD9BBfRhnYYUFRtkFEeQKSl
+         3zNQ==
+X-Gm-Message-State: AOAM533MZiuemqIsF1Ncdp7i7jwozokECCfG0b6jnQQoCIzz1E6O+JR8
+        ia8aL6bwRaMmgNyAKgKH9UyKyUcDzqixyLdnnxkUUA==
+X-Google-Smtp-Source: ABdhPJzvlqgJVzCXyVx+Ntg85bJFPjty/OajMNVpc4KNHpEnCrgYCZaQkHW720tCHTfmcEJXo2BOsksezs3a1rWs98Y=
+X-Received: by 2002:a05:6102:3576:b0:325:46eb:fdde with SMTP id
+ bh22-20020a056102357600b0032546ebfddemr595430vsb.11.1648058580840; Wed, 23
+ Mar 2022 11:03:00 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [External] Re: [PATCH v2 2/6] perf/core: Introduce percpu
- perf_cgroup
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, eranian@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        duanxiongchun@bytedance.com, songmuchun@bytedance.com
-References: <20220322120834.98637-1-zhouchengming@bytedance.com>
- <20220322120834.98637-3-zhouchengming@bytedance.com>
- <20220323125116.GX8939@worktop.programming.kicks-ass.net>
- <f6a46509-a373-5c7a-8694-8eaf0ebc69ab@bytedance.com>
- <20220323131744.GY8939@worktop.programming.kicks-ass.net>
- <c4fea458-b0e1-9842-91ea-5a1c6f7e8387@bytedance.com>
- <YjspMR6gJ5AWjE8Q@hirez.programming.kicks-ass.net>
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <YjspMR6gJ5AWjE8Q@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CABPqkBSKMU-r+AbYvZ9e17nZ70idCyxBQ4sUhKzhkTn-1JaTDA@mail.gmail.com>
+ <CA+JHD90unShQ2pvEFRyr2FKD2+tDchrtBQHtZq+LEJxKQjLJ_Q@mail.gmail.com> <2febdfab-2b83-515a-ef73-0415c72a6fad@intel.com>
+In-Reply-To: <2febdfab-2b83-515a-ef73-0415c72a6fad@intel.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Wed, 23 Mar 2022 11:02:49 -0700
+Message-ID: <CABPqkBTK632bTz5hR_yHnYYCzEt=sdf-u_OxR80cjovwD=6Jgg@mail.gmail.com>
+Subject: Re: perf record crash with Intel PT
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/3/23 10:05 下午, Peter Zijlstra wrote:
-> On Wed, Mar 23, 2022 at 09:37:16PM +0800, Chengming Zhou wrote:
-> 
->> But you are right, having cpuctx->cgrp and cpu_perf_cgroup make things confused..
->> maybe we can delete cpuctx->cgrp, change to use percpu cpu_perf_cgroup?
-> 
-> I'm hoping to soon (*finally*!) have some time for this again:
-> 
->   https://lkml.kernel.org/r/20220113134743.1292-1-ravi.bangoria@amd.com
-> 
-> That should get us a single cpuctx.
+On Wed, Mar 23, 2022 at 8:31 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 23.3.2022 15.58, Arnaldo Carvalho de Melo wrote:
+> >> On Wed, Mar 23, 2022, 2:06 AM Stephane Eranian <eranian@google.com <mailto:eranian@google.com>> wrote:
+> >>
+> >>     Hi,
+> >>
+> >>     I was trying some simple command lines with perf record from tip.git tree
+> >>     and Intel PT and to my surprised I got an immediate crash with cmdline such as :
+> >>
+> >>     $ perf record -e intel_pt// -a -C 1 sleep 5
+> >>
+> >>     As soon as you specify -C you get a crash in:
+> >>
+> >
+> >
+> > I'll check that, but can you please try removing -a?
+>
+> Happens as far back as v5.9, also without -a
+>
+> Most likely the addition of "text poke" support because it is
+> always system-wide, and probably breaks the indexing by cpu.
+>
+> There is another issue though.  Even for a single CPU, side-band
+> should really be collected on all CPUs (like it is for text poke).
 
-I just seen the patch description, the new design is clearer than
-the current code. But it may take a long time to upstream and test
-since it changed the whole design and so much code.
-
-Anyway, I will reorganize this patchset, fix reviewed bugs, improve
-the commit message and send next version for review.
-
+In an effort to limit volume of data, it makes sense to only monitor a
+subset of the CPUs, i.e., where
+workload of interest is running. So I think this is a valid use case
+and there should be a way to
+configure it on the perf record cmdline.
 Thanks.
