@@ -2,134 +2,329 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D256C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 20:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1144C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 22:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344836AbiCWU4I (ORCPT
+        id S1343945AbiCWWKy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Mar 2022 16:56:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33086 "EHLO
+        Wed, 23 Mar 2022 18:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244002AbiCWU4I (ORCPT
+        with ESMTP id S238850AbiCWWKx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Mar 2022 16:56:08 -0400
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E21338BF15;
-        Wed, 23 Mar 2022 13:54:36 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id bt26so4744068lfb.3;
-        Wed, 23 Mar 2022 13:54:36 -0700 (PDT)
+        Wed, 23 Mar 2022 18:10:53 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD45414004
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 15:09:22 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id d7so4072171wrb.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 15:09:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ObE978HXyEgSQFsqvXjrKPb6MujhgttxcWer2JSVBR0=;
+        b=KAcKsQlyvwi6tghyjHcdc4xieDiBlngnz4t5NM+neMgOQG3MNLxYVQ+yYHK0Q1O+Hb
+         6Cl//LS653t10bORA278PHorYa2EMbQeHQ/lo4qsiTkmsB8V/5AiWx4ar04VHfCpNvhQ
+         S2w6ZR4TuK8a1Pdd5jc4Cjrkd48plAHRMmMhqTvSql8JDU28F4ioOMd892lBlQewJvQj
+         Tg1dmGyM/AbM0nn9rBtQOBOrs66EP36RckiERmE/oXuHPp1snTWBKBR8OR3DGXdZU/o1
+         PLt9rTRAgFcQz/50YWcaXWkMjQqolDCYqnx0NbPEq2AcXktjsacbmXsLudbCWYfq0duP
+         X+dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PsL8QsEp/CuRBHIlYfHFpv5xpQDqvATabhPlJFg6D18=;
-        b=w8A+ABiQz3SR3oWquM8y/Z4/b/F0HrS/YHNgSXf9TDUmIoTdK/gbGLYY+FeZQ44qmS
-         V9SeTeNnunzXekutPDl5oMUHA8YFNDQ18jUf6O7DFZDvD3bmZsUXDgwlNoTcFGUoa6Xo
-         h3pZfPljm1UaEFa4bomIs58GE0Ko6gokDYD94u5Hz0MGia0xZLs4DTDbb0JJYdU2jj6+
-         otwDV0ODsCSTltvtx+h5BUVX401GsxHQDSbreZolhurMnV1acRBRSA8fzASDR/WwqVz1
-         InBGPOdXlIuVoryzZnjYYxmxZ75+YDb9C7b07QqWq/wMj934uT/YPuFusxRWOXkSsdTP
-         JXWg==
-X-Gm-Message-State: AOAM5309KmARzUymRTanpS5LiRvPffVaXGGlSJ55ofOvVvgKS2TNb0Gu
-        Hu09TySEnRQyqtuf8LNjx+SSzakqsreaAdkFexaBHiL6
-X-Google-Smtp-Source: ABdhPJyx4RD0OigisgS3C9D66vjkzcPeC7rPv4U8Ard06XHOzvE+BtP6nvSHOEIPvkY9ldL4xFdwrixerGDN1jduk6Y=
-X-Received: by 2002:a05:6512:3404:b0:44a:310f:72f7 with SMTP id
- i4-20020a056512340400b0044a310f72f7mr1321451lfr.47.1648068875123; Wed, 23 Mar
- 2022 13:54:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ObE978HXyEgSQFsqvXjrKPb6MujhgttxcWer2JSVBR0=;
+        b=BsmLqDjrFY1nv5FX8sC6k9xXPoV4tFcijf9fhu5HM6i0NSJ8aoO+Q3/R7tFkULASMu
+         58M9SylFYEuaDdF9CxVx8KszzSj4Vt6eHGsYCBvVScA2zy3hFr2Ra5y6hZMndJhQjNaB
+         pU8dumcBSBvtbfUVbwetiLj4fx73whf8GgINNaxtF4FwcftVxO8SPu+Nbl7pXjM0I6ZM
+         mxcqkMRSwvkMvomCI5UuLrtqoSbUeb89uWXoYOSbhIz7aTAcCLR0SiCuR8lzyMIUb9rA
+         ESFS2VWyI7bUnYhaVTutf25SS3Z508w9KDHcuhCTBlmx0K8OyKVweZDT/+ykec+5RzdV
+         usdg==
+X-Gm-Message-State: AOAM533mzIQ/UYrYuODcVlWUE7vXZ/veaSVhK+Zgyq9fKkBJ98MMB6ez
+        s+d3C90S36Libat/+a9faeC4Cw==
+X-Google-Smtp-Source: ABdhPJzRu6wasOLMAct/2nVuCCfl1yC4egnZzMakLdvC6jTEXI33vSSkrch714zv7uuCA+xs4NMx1A==
+X-Received: by 2002:adf:ec41:0:b0:1ed:beee:6f8f with SMTP id w1-20020adfec41000000b001edbeee6f8fmr1792806wrn.110.1648073361146;
+        Wed, 23 Mar 2022 15:09:21 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:15:13:f72e:62ff:6724:9dc0])
+        by smtp.gmail.com with ESMTPSA id p19-20020a05600c359300b0038c7d1086a7sm4806134wmq.1.2022.03.23.15.09.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Mar 2022 15:09:20 -0700 (PDT)
+Date:   Wed, 23 Mar 2022 23:09:15 +0100
+From:   Marco Elver <elver@google.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: RFC: Use of user space handler vs. SIG_DFL on forced signals
+Message-ID: <Yjuai7yv7QrzgsZS@elver.google.com>
+References: <Yjmn/kVblV3TdoAq@elver.google.com>
+ <87ee2uyr4z.fsf@email.froward.int.ebiederm.org>
+ <CANpmjNN4UjUTB5x6-2T-+b7MY=oAYn37MKvQy-4jYh6JDeJuKg@mail.gmail.com>
+ <87k0clvrwh.fsf@email.froward.int.ebiederm.org>
 MIME-Version: 1.0
-References: <20220317155346.577384-1-tmricht@linux.ibm.com> <Yjr/X+Cuunyo84S3@krava>
-In-Reply-To: <Yjr/X+Cuunyo84S3@krava>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 23 Mar 2022 13:54:23 -0700
-Message-ID: <CAM9d7cgkwDQCEWRFT2G87fba7MLPR2OtEn6pvHDzpegpR-AMSA@mail.gmail.com>
-Subject: Re: [PATCH] perf/stat: Fix perf stat for forked applications
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        gor@linux.ibm.com, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sven Schnelle <svens@linux.ibm.com>, sumanthk@linux.ibm.com,
-        Heiko Carstens <hca@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k0clvrwh.fsf@email.froward.int.ebiederm.org>
+User-Agent: Mutt/2.1.4 (2021-12-11)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 23, 2022 at 4:07 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Thu, Mar 17, 2022 at 04:53:46PM +0100, Thomas Richter wrote:
-> > I have run into the following issue:
+On Tue, Mar 22, 2022 at 12:06PM -0500, Eric W. Biederman wrote:
+> Marco Elver <elver@google.com> writes:
+[...]
+> > Not quite. We need it to be synchronous, because we need to know the
+> > precise instruction and potentially do some other stuff _before_
+> > subsequent instructions.
 > >
-> >  # perf stat -a -e new_pmu/INSTRUCTION_7/ --  mytest -c1 7
+> > A compromise might be to deliver synchronously normally, but when
+> > blocked deliver asynchronously. But if the signal was delivered
+> > asynchronously, we need to let the signal handler know delivery was
+> > asynchronous, so that our tracing logic can recover and give up at
+> > that point.
 > >
-> >  Performance counter stats for 'system wide':
-> >
-> >                  0      new_pmu/INSTRUCTION_7/
-> >
-> >        0.000366428 seconds time elapsed
-> >  #
-> >
-> > The new PMU for s390 counts the execution of certain CPU instructions.
-> > The root cause is the extremely small run time of the
-> > mytest program. It just executes some assembly instructions
-> > and then exits. In above invocation the instruction is executed
-> > exactly one time (-c1 option). The PMU is expected to report this one
-> > time execution by a counter value of one, but fails to do so
-> > in some cases, not all.
-> >
-> > Debugging reveals the invocation of the child process is done
-> > *before* the counter events are installed and enabled. Tracing
-> > reveals that sometimes the child process starts and exits before
-> > the event is installed on all CPUs. The more CPUs the machine has,
-> > the more often this miscount happens.
-> >
-> > Fix this by reversing the start of the work load after the events
-> > have been installed on the specified CPUs. Now the comment also
-> > matches the code.
-> >
-> > Output after:
-> >  # perf stat -a -e new_pmu/INSTRUCTION_7/ --  mytest -c1 7
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> >                  1      new_pmu/INSTRUCTION_7/
-> >
-> >        0.000366428 seconds time elapsed
-> >  #
-> >
-> > Now the correct result is reported rock solid all the time regardless
-> > how many CPUs are online.
-> >
-> > Fixes:  acf2892270dc ("perf stat: Use perf_evlist__prepare/start_workload())
-> >
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/builtin-stat.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index 3f98689dd687..60baa3dadc4b 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -955,10 +955,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> >        * Enable counters and exec the command:
-> >        */
-> >       if (forks) {
-> > -             evlist__start_workload(evsel_list);
-> >               err = enable_counters();
-> >               if (err)
-> >                       return -1;
-> > +             evlist__start_workload(evsel_list);
->
-> right, without -a the event has enable_on_exec so the race does not
-> matter, but it's a problem for system wide with fork
+> > To do this indication if it was asynchronous, we probably need to
+> > extend siginfo_t once more. Would that be reasonable?
+> 
+> So the idea is to use normal signal delivery but to set a flag
+> to indicate that the signal was blocked at the time it was sent?
+> 
+> It should be possible to add another field that takes a non-zero
+> value.  On older kernels it should always have a value of zero so it
+> should be safe.
+> 
+> It might also be possible to simply ignore the signal if it is blocked.
+> 
+> In either case it will probably take a little bit of care to get the
+> races out.
 
-Agreed.  Also we may move the enable_counters() and the
-clock code out of the if block to be shared with the else block.
+So I gave the "synchronous if possible, but if async let handler know"
+version a shot (below). As long as we know if the signal being delivered
+is asynchronous we're good, and not terminating the process.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Does that look more reasonable?
 
 Thanks,
-Namhyung
+-- Marco
+
+------ >8 ------
+
+ arch/arm/kernel/signal.c           |  1 +
+ arch/arm64/kernel/signal.c         |  1 +
+ arch/arm64/kernel/signal32.c       |  1 +
+ arch/m68k/kernel/signal.c          |  1 +
+ arch/sparc/kernel/signal32.c       |  1 +
+ arch/sparc/kernel/signal_64.c      |  1 +
+ arch/x86/kernel/signal_compat.c    |  2 ++
+ include/linux/compat.h             |  1 +
+ include/linux/sched/signal.h       |  2 +-
+ include/uapi/asm-generic/siginfo.h |  2 ++
+ kernel/events/core.c               |  4 ++--
+ kernel/signal.c                    | 16 ++++++++++++++--
+ 12 files changed, 28 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/kernel/signal.c b/arch/arm/kernel/signal.c
+index c532a6041066..5ba4e1d0813d 100644
+--- a/arch/arm/kernel/signal.c
++++ b/arch/arm/kernel/signal.c
+@@ -708,6 +708,7 @@ static_assert(offsetof(siginfo_t, si_upper)	== 0x18);
+ static_assert(offsetof(siginfo_t, si_pkey)	== 0x14);
+ static_assert(offsetof(siginfo_t, si_perf_data)	== 0x10);
+ static_assert(offsetof(siginfo_t, si_perf_type)	== 0x14);
++static_assert(offsetof(siginfo_t, si_perf_async) == 0x18);
+ static_assert(offsetof(siginfo_t, si_band)	== 0x0c);
+ static_assert(offsetof(siginfo_t, si_fd)	== 0x10);
+ static_assert(offsetof(siginfo_t, si_call_addr)	== 0x0c);
+diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
+index d8aaf4b6f432..a6a3bf49ed53 100644
+--- a/arch/arm64/kernel/signal.c
++++ b/arch/arm64/kernel/signal.c
+@@ -1010,6 +1010,7 @@ static_assert(offsetof(siginfo_t, si_upper)	== 0x28);
+ static_assert(offsetof(siginfo_t, si_pkey)	== 0x20);
+ static_assert(offsetof(siginfo_t, si_perf_data)	== 0x18);
+ static_assert(offsetof(siginfo_t, si_perf_type)	== 0x20);
++static_assert(offsetof(siginfo_t, si_perf_async) == 0x24);
+ static_assert(offsetof(siginfo_t, si_band)	== 0x10);
+ static_assert(offsetof(siginfo_t, si_fd)	== 0x18);
+ static_assert(offsetof(siginfo_t, si_call_addr)	== 0x10);
+diff --git a/arch/arm64/kernel/signal32.c b/arch/arm64/kernel/signal32.c
+index d984282b979f..0f72cdadd43e 100644
+--- a/arch/arm64/kernel/signal32.c
++++ b/arch/arm64/kernel/signal32.c
+@@ -487,6 +487,7 @@ static_assert(offsetof(compat_siginfo_t, si_upper)	== 0x18);
+ static_assert(offsetof(compat_siginfo_t, si_pkey)	== 0x14);
+ static_assert(offsetof(compat_siginfo_t, si_perf_data)	== 0x10);
+ static_assert(offsetof(compat_siginfo_t, si_perf_type)	== 0x14);
++static_assert(offsetof(compat_siginfo_t, si_perf_async)	== 0x18);
+ static_assert(offsetof(compat_siginfo_t, si_band)	== 0x0c);
+ static_assert(offsetof(compat_siginfo_t, si_fd)		== 0x10);
+ static_assert(offsetof(compat_siginfo_t, si_call_addr)	== 0x0c);
+diff --git a/arch/m68k/kernel/signal.c b/arch/m68k/kernel/signal.c
+index 338817d0cb3f..c6332727f82f 100644
+--- a/arch/m68k/kernel/signal.c
++++ b/arch/m68k/kernel/signal.c
+@@ -625,6 +625,7 @@ static inline void siginfo_build_tests(void)
+ 	/* _sigfault._perf */
+ 	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_data) != 0x10);
+ 	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_type) != 0x14);
++	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_async) != 0x18);
+ 
+ 	/* _sigpoll */
+ 	BUILD_BUG_ON(offsetof(siginfo_t, si_band)   != 0x0c);
+diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
+index 6cc124a3bb98..b127649ac224 100644
+--- a/arch/sparc/kernel/signal32.c
++++ b/arch/sparc/kernel/signal32.c
+@@ -780,5 +780,6 @@ static_assert(offsetof(compat_siginfo_t, si_upper)	== 0x18);
+ static_assert(offsetof(compat_siginfo_t, si_pkey)	== 0x14);
+ static_assert(offsetof(compat_siginfo_t, si_perf_data)	== 0x10);
+ static_assert(offsetof(compat_siginfo_t, si_perf_type)	== 0x14);
++static_assert(offsetof(compat_siginfo_t, si_perf_async)	== 0x18);
+ static_assert(offsetof(compat_siginfo_t, si_band)	== 0x0c);
+ static_assert(offsetof(compat_siginfo_t, si_fd)		== 0x10);
+diff --git a/arch/sparc/kernel/signal_64.c b/arch/sparc/kernel/signal_64.c
+index 2a78d2af1265..dfa42d9347d8 100644
+--- a/arch/sparc/kernel/signal_64.c
++++ b/arch/sparc/kernel/signal_64.c
+@@ -590,5 +590,6 @@ static_assert(offsetof(siginfo_t, si_upper)	== 0x28);
+ static_assert(offsetof(siginfo_t, si_pkey)	== 0x20);
+ static_assert(offsetof(siginfo_t, si_perf_data)	== 0x18);
+ static_assert(offsetof(siginfo_t, si_perf_type)	== 0x20);
++static_assert(offsetof(siginfo_t, si_perf_async) == 0x24);
+ static_assert(offsetof(siginfo_t, si_band)	== 0x10);
+ static_assert(offsetof(siginfo_t, si_fd)	== 0x14);
+diff --git a/arch/x86/kernel/signal_compat.c b/arch/x86/kernel/signal_compat.c
+index b52407c56000..1f1ccbc476d1 100644
+--- a/arch/x86/kernel/signal_compat.c
++++ b/arch/x86/kernel/signal_compat.c
+@@ -149,8 +149,10 @@ static inline void signal_compat_build_tests(void)
+ 
+ 	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_data) != 0x18);
+ 	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_type) != 0x20);
++	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_async) != 0x24);
+ 	BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_data) != 0x10);
+ 	BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_type) != 0x14);
++	BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_async) != 0x18);
+ 
+ 	CHECK_CSI_OFFSET(_sigpoll);
+ 	CHECK_CSI_SIZE  (_sigpoll, 2*sizeof(int));
+diff --git a/include/linux/compat.h b/include/linux/compat.h
+index 1c758b0e0359..36684b97075d 100644
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -235,6 +235,7 @@ typedef struct compat_siginfo {
+ 				struct {
+ 					compat_ulong_t _data;
+ 					u32 _type;
++					u32 _async;
+ 				} _perf;
+ 			};
+ 		} _sigfault;
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index b6ecb9fc4cd2..9924fe7559a0 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -320,7 +320,7 @@ int send_sig_mceerr(int code, void __user *, short, struct task_struct *);
+ 
+ int force_sig_bnderr(void __user *addr, void __user *lower, void __user *upper);
+ int force_sig_pkuerr(void __user *addr, u32 pkey);
+-int force_sig_perf(void __user *addr, u32 type, u64 sig_data);
++int send_sig_perf(void __user *addr, u32 type, u64 sig_data);
+ 
+ int force_sig_ptrace_errno_trap(int errno, void __user *addr);
+ int force_sig_fault_trapno(int sig, int code, void __user *addr, int trapno);
+diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
+index 3ba180f550d7..835eea023630 100644
+--- a/include/uapi/asm-generic/siginfo.h
++++ b/include/uapi/asm-generic/siginfo.h
+@@ -99,6 +99,7 @@ union __sifields {
+ 			struct {
+ 				unsigned long _data;
+ 				__u32 _type;
++				__u32 _async;
+ 			} _perf;
+ 		};
+ 	} _sigfault;
+@@ -164,6 +165,7 @@ typedef struct siginfo {
+ #define si_pkey		_sifields._sigfault._addr_pkey._pkey
+ #define si_perf_data	_sifields._sigfault._perf._data
+ #define si_perf_type	_sifields._sigfault._perf._type
++#define si_perf_async	_sifields._sigfault._perf._async
+ #define si_band		_sifields._sigpoll._band
+ #define si_fd		_sifields._sigpoll._fd
+ #define si_call_addr	_sifields._sigsys._call_addr
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 57c7197838db..8f2f251465e9 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6533,8 +6533,8 @@ static void perf_sigtrap(struct perf_event *event)
+ 	if (current->flags & PF_EXITING)
+ 		return;
+ 
+-	force_sig_perf((void __user *)event->pending_addr,
+-		       event->attr.type, event->attr.sig_data);
++	send_sig_perf((void __user *)event->pending_addr,
++		      event->attr.type, event->attr.sig_data);
+ }
+ 
+ static void perf_pending_event_disable(struct perf_event *event)
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 38602738866e..9f8d1ed88dcb 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1804,7 +1804,7 @@ int force_sig_pkuerr(void __user *addr, u32 pkey)
+ }
+ #endif
+ 
+-int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
++int send_sig_perf(void __user *addr, u32 type, u64 sig_data)
+ {
+ 	struct kernel_siginfo info;
+ 
+@@ -1816,7 +1816,16 @@ int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
+ 	info.si_perf_data = sig_data;
+ 	info.si_perf_type = type;
+ 
+-	return force_sig_info(&info);
++	/*
++	 * Signals generated by perf events should not terminate the whole
++	 * process if SIGTRAP is blocked, however, delivering the signal
++	 * asynchronously is better than not delivering at all. But tell user
++	 * space if the signal was asynchronous, so it can clearly be
++	 * distinguished from normal synchronous ones.
++	 */
++	info.si_perf_async = sigismember(&current->blocked, info.si_signo);
++
++	return send_sig_info(info.si_signo, &info, current);
+ }
+ 
+ /**
+@@ -3429,6 +3438,7 @@ void copy_siginfo_to_external32(struct compat_siginfo *to,
+ 		to->si_addr = ptr_to_compat(from->si_addr);
+ 		to->si_perf_data = from->si_perf_data;
+ 		to->si_perf_type = from->si_perf_type;
++		to->si_perf_async = from->si_perf_async;
+ 		break;
+ 	case SIL_CHLD:
+ 		to->si_pid = from->si_pid;
+@@ -3506,6 +3516,7 @@ static int post_copy_siginfo_from_user32(kernel_siginfo_t *to,
+ 		to->si_addr = compat_ptr(from->si_addr);
+ 		to->si_perf_data = from->si_perf_data;
+ 		to->si_perf_type = from->si_perf_type;
++		to->si_perf_async = from->si_perf_async;
+ 		break;
+ 	case SIL_CHLD:
+ 		to->si_pid    = from->si_pid;
+@@ -4719,6 +4730,7 @@ static inline void siginfo_buildtime_checks(void)
+ 	CHECK_OFFSET(si_pkey);
+ 	CHECK_OFFSET(si_perf_data);
+ 	CHECK_OFFSET(si_perf_type);
++	CHECK_OFFSET(si_perf_async);
+ 
+ 	/* sigpoll */
+ 	CHECK_OFFSET(si_band);
+-- 
+2.35.1.894.gb6a874cedc-goog
+
