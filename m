@@ -2,208 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BD2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 13:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56545C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 14:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242689AbiCWNi7 (ORCPT
+        id S244645AbiCWOH2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Mar 2022 09:38:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42446 "EHLO
+        Wed, 23 Mar 2022 10:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244356AbiCWNi4 (ORCPT
+        with ESMTP id S244642AbiCWOH1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Mar 2022 09:38:56 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A48A7D01F
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 06:37:26 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id n7-20020a17090aab8700b001c6aa871860so1829901pjq.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 06:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=VfajTc7fN5/QBah8uryBe2x7PpPvgTkjk9FpVMqI2Is=;
-        b=X6L7caAs4D6yd3LFy3C0MVgkxhB2lTj6oP3oqntMlIMTMfzQatfRHNg76dn9Zhywgr
-         lTN3bw+JS0CpnCaFHZ9ncnFvuiYOjOyk/unztfnWeRNAKPvhKuxfwVdDMhKY0kGG7SQw
-         SiDpW9zIrRafwSn2ls4u8/ShuxVUMzjj5bTYrgF36nbsk6fR8TlwlyyquXi7t8C87uUd
-         SOgUWHmvpwTSlbh7XXsz/xFB5pvamxbGmVGei2A86copTP2wMAR/llzVqe1v82CsghAN
-         HXlpfN4dAQ6Pxmjei6ey8mseQgQbWTSmIwRQH+KgPH0Ur6zj79DenZ8n7mBCpnZJjPVB
-         I3TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=VfajTc7fN5/QBah8uryBe2x7PpPvgTkjk9FpVMqI2Is=;
-        b=QnRW6GQk5P/MGPaQpoRSElgMsB3b2tNuPtQNQNSsqSg/TTSUIUdDEmmpXKt1MBU5su
-         Z7MpTaFs6ltO82pA7p0zTiOYcHcIpbsBcJmr6lN1y86OFnpfKzPLq7ZfDjQtM43sEevy
-         2/COZhOW8VrPnec/ttuWG70MXFxYuZXH6CE17gVH6+tRCtJD/R8lgtbE2LewqMsh/DEO
-         X0ADwLbjjeuhRnHZ++3KnJTl/Sga+TCT4fGwK3o0yQHVMQJ1cEbIStATaJbq2ohFdk7t
-         y0f+mq0CIOfM/TFgVt181nznY5dcpCvw77AzobCIULf4+F7ZYsSkrDS286fpgIYXPAT2
-         3hBQ==
-X-Gm-Message-State: AOAM533RgU5FdAuSGOqXP1G8tYV6tcI2FRPGfYUecGGiJ4llxkkEHBlK
-        KDXd2hpD9QzRLSXmE4AoOt0IkQ==
-X-Google-Smtp-Source: ABdhPJx8aAdnXi3BFxQKrylXbbKyjkCLwLwRVVaqgAGr0C6HjAU/0fl68wSxOvKNF9RIEiMbH/ufuA==
-X-Received: by 2002:a17:90b:1d0e:b0:1bf:2a24:2716 with SMTP id on14-20020a17090b1d0e00b001bf2a242716mr11581372pjb.60.1648042645866;
-        Wed, 23 Mar 2022 06:37:25 -0700 (PDT)
-Received: from ?IPV6:2409:8a28:e62:3990:1de6:b89c:5d2d:b2d6? ([2409:8a28:e62:3990:1de6:b89c:5d2d:b2d6])
-        by smtp.gmail.com with ESMTPSA id o7-20020aa79787000000b004f8e44a02e2sm24747pfp.45.2022.03.23.06.37.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Mar 2022 06:37:25 -0700 (PDT)
-Message-ID: <c4fea458-b0e1-9842-91ea-5a1c6f7e8387@bytedance.com>
-Date:   Wed, 23 Mar 2022 21:37:16 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [External] Re: [PATCH v2 2/6] perf/core: Introduce percpu
- perf_cgroup
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
+        Wed, 23 Mar 2022 10:07:27 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65DC47EB10;
+        Wed, 23 Mar 2022 07:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wKhKVi5fr2eBNbfU4f/0JBSibQlWyP+cFs6PqFc8qm0=; b=SYOS9MKLR7UfPrQs2XV/TuRHnZ
+        P6N6DZr+Sfp9andljnhVuB9WeNOPJO1iLTXrkoNMzQGJvSKuAc7PFuFme0Cr+GePu24CcxrWdpVf6
+        tu2CtRbWfPziqVEmS6yP4clVx7ASMxPLE3xMAfhwGGqJydfbCyTcO81Z3btUMxue06n5A1qpANo89
+        GvhmaB9vg/pmjTEVh/uy7r/TuibLaEcvxzkwuifnHFgfoSV+Sj+tdRhDt2pz8CAnK8uxMgz/1B+IP
+        8heBXrDOMFSSTlzHPheULdPf+Ukl/4IgX9iSO4jysNm7tJ9hrzrYTdYPZGCwkvZNN7ntgCALvy1h6
+        RKs0BJpw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nX1cK-003mZh-Kx; Wed, 23 Mar 2022 14:05:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 271F630007E;
+        Wed, 23 Mar 2022 15:05:38 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 02AEF265BB5E2; Wed, 23 Mar 2022 15:05:37 +0100 (CET)
+Date:   Wed, 23 Mar 2022 15:05:37 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Chengming Zhou <zhouchengming@bytedance.com>
 Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
         namhyung@kernel.org, eranian@google.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         duanxiongchun@bytedance.com, songmuchun@bytedance.com
+Subject: Re: [External] Re: [PATCH v2 2/6] perf/core: Introduce percpu
+ perf_cgroup
+Message-ID: <YjspMR6gJ5AWjE8Q@hirez.programming.kicks-ass.net>
 References: <20220322120834.98637-1-zhouchengming@bytedance.com>
  <20220322120834.98637-3-zhouchengming@bytedance.com>
  <20220323125116.GX8939@worktop.programming.kicks-ass.net>
  <f6a46509-a373-5c7a-8694-8eaf0ebc69ab@bytedance.com>
  <20220323131744.GY8939@worktop.programming.kicks-ass.net>
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <20220323131744.GY8939@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+ <c4fea458-b0e1-9842-91ea-5a1c6f7e8387@bytedance.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4fea458-b0e1-9842-91ea-5a1c6f7e8387@bytedance.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/3/23 9:17 下午, Peter Zijlstra wrote:
-> On Wed, Mar 23, 2022 at 09:07:01PM +0800, Chengming Zhou wrote:
->> On 2022/3/23 8:51 下午, Peter Zijlstra wrote:
->>> On Tue, Mar 22, 2022 at 08:08:30PM +0800, Chengming Zhou wrote:
->>>
->>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>> index 8b5cf2aedfe6..848a3bfa9513 100644
->>>> --- a/kernel/events/core.c
->>>> +++ b/kernel/events/core.c
->>>
->>>> @@ -843,11 +845,21 @@ static void perf_cgroup_switch(struct task_struct *task)
->>>>  	 */
->>>>  	local_irq_save(flags);
->>>>  
->>>> +	cgrp = perf_cgroup_from_task(task, NULL);
->>>> +	if (cgrp == __this_cpu_read(cpu_perf_cgroup))
->>>> +		goto out;
-> 
-> So this compares the cpu thing against the task thing, if matching, we
-> bail.
-> 
->>>> +
->>>> +	__this_cpu_write(cpu_perf_cgroup, cgrp);
-> 
-> Then we set cpu thing.
-> 
->>>> +
->>>>  	list = this_cpu_ptr(&cgrp_cpuctx_list);
->>>>  	list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
->>>>  		WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
->>>>  
->>>>  		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->>>> +
->>>> +		if (cpuctx->cgrp == cgrp)
->>>> +			continue;
->>>> +
->>>>  		perf_pmu_disable(cpuctx->ctx.pmu);
->>>>  
->>>>  		cpu_ctx_sched_out(cpuctx, EVENT_ALL);
-> 
->>>> +		cpuctx->cgrp = cgrp
-> 
-> But here we already have exactly the same pattern, we match cpuctx thing
-> against task thing and skip/set etc.
+On Wed, Mar 23, 2022 at 09:37:16PM +0800, Chengming Zhou wrote:
 
-Yes, cpu_perf_cgroup is just "cache" which cgrp assigned to cpuctx->cgrp.
+> But you are right, having cpuctx->cgrp and cpu_perf_cgroup make things confused..
+> maybe we can delete cpuctx->cgrp, change to use percpu cpu_perf_cgroup?
 
-> 
->>> Also, I really don't see the point of cpu_perf_cgroup, cpuctx->cgrp
->>> should be able to do this.
->>
->> But the problem is that we have two cpuctx on the percpu list, do you
->> mean we should use perf_cgroup of the first cpuctx to compare with
->> the next task's perf_cgroup ?
->>
->> Or we should delete the cgrp in cpuctx, and use this new percpu cpu_perf_cgroup?
-> 
-> I'm a bit confused, per the above, you already do exactly what the new
-> cpu_perf_cgroup does on the cpuctx->cgrp variable. AFAICT the only think
-> the new per-cpu variable does is avoid a lock, howveer:
+I'm hoping to soon (*finally*!) have some time for this again:
 
-we have cgrp in cpuctx make me confused at first too.
+  https://lkml.kernel.org/r/20220113134743.1292-1-ravi.bangoria@amd.com
 
-perf_cgroup_event_enable()
-	if (ctx->is_active && !cpuctx->cgrp)
-		if ...
-			cpuctx->cgrp = cgrp;   -->  set cpuctx->cgrp when enable event
-
-	list_add(&cpuctx->cgrp_cpuctx_entry,
-			per_cpu_ptr(&cgrp_cpuctx_list, event->cpu))  --> add cpuctx on percpu list
-
-But we have two (hw and sw) cpuctx, so these two cpuctx->cgrp maybe different...
-
-This is the reason why I want to create a percpu cpu_perf_cgroup,
-just "cache" cgrp last scheduled, to compare with next task to decide
-whether perf_cgroup_switch() can be skipped.
-
-But you are right, having cpuctx->cgrp and cpu_perf_cgroup make things confused..
-maybe we can delete cpuctx->cgrp, change to use percpu cpu_perf_cgroup?
-
-> 
-> 
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -833,6 +833,7 @@ static DEFINE_PER_CPU(struct list_head,
->>>   */
->>>  static void perf_cgroup_switch(struct task_struct *task)
->>>  {
->>> +	struct perf_cgroup *cgrp;
->>>  	struct perf_cpu_context *cpuctx, *tmp;
->>>  	struct list_head *list;
->>>  	unsigned long flags;
->>> @@ -843,11 +844,20 @@ static void perf_cgroup_switch(struct ta
->>>  	 */
->>>  	local_irq_save(flags);
->>>  
->>> +	cgrp = perf_cgroup_from_task(task, NULL);
->>> +
->>>  	list = this_cpu_ptr(&cgrp_cpuctx_list);
->>>  	list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
->>>  		WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
->>>  
->>> +		if (READ_ONCE(cpuctx->cgrp == cgrp))
->>> +			continue
-> 
-> I think we can avoid that by doing an early check, hmm?
-
-perf_cgroup_switch() can be called from context_switch(), or __perf_cgroup_move() from IPI.
-Say if in context_switch() already set cpuctx->cgrp to the new task->cgroups, then context_switch()
-finish, handle IPI in __perf_cgroup_move(), we don't need to do sched_out/in again.
-
-Thanks.
-
-> 
->>> +
->>>  		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->>> +
->>> +		if (cpuctx->cgrp == cgrp)
->>> +			goto next;
->>> +
->>>  		perf_pmu_disable(cpuctx->ctx.pmu);
->>>  
->>>  		cpu_ctx_sched_out(cpuctx, EVENT_ALL);
->>> @@ -855,50 +865,22 @@ static void perf_cgroup_switch(struct ta
->>>  		 * must not be done before ctxswout due
->>>  		 * to event_filter_match() in event_sched_out()
->>>  		 */
->>> -		cpuctx->cgrp = perf_cgroup_from_task(task,
->>> -						     &cpuctx->ctx);
->>> +		WRITE_ONCE(cpuctx->cgrp, cgrp);
+That should get us a single cpuctx.
