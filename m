@@ -2,199 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB1CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 01:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3327C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 05:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231421AbiCWB3n (ORCPT
+        id S232445AbiCWFIF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Mar 2022 21:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48136 "EHLO
+        Wed, 23 Mar 2022 01:08:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234209AbiCWB3l (ORCPT
+        with ESMTP id S229696AbiCWFIE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Mar 2022 21:29:41 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6E927B3C
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 18:28:12 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id bx24-20020a17090af49800b001c6872a9e4eso294576pjb.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 18:28:12 -0700 (PDT)
+        Wed, 23 Mar 2022 01:08:04 -0400
+Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131FA13DCF
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 22:06:35 -0700 (PDT)
+Received: by mail-vk1-xa31.google.com with SMTP id q85so261468vkq.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Mar 2022 22:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=WV3eF61Zwnp61XzMLW09JKvh3rwrncLt1x2lt/Qi/H0=;
-        b=tuPDH7+hT1eh/++WptIX4DbzHnTISFrX/kxoy7IcSLM0jQhtTQCcEG303WkiaULr5t
-         4KC7VUkDRUjr5KB0KCO+5KwDq+LoDn6Ov5qEIjUBVHr0/Ph6IrCwfYSAei8055zKOFRI
-         rBjxG74o5GguXUb0l7zPgBeoXV/p6A1DOqJX8yIaniUFnGc0DWxJzhRG0QuLkJnONbor
-         GBMYd85VHVJjBXD+hTP6BVBh9O4O/jLFWy0lvmAycb7lwVsYtixcSfM7VTVnFRoOUexP
-         6H342G0bH8vFB9iXEOIjfcxsqt/W1YCrY1Zbuq3QmOoCRB72GxV44akEUK9wpg5Ku997
-         2z+Q==
+        d=google.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Z0naPi9sBPzKHeJh3b79UeAbKq9HOyCcYTBkfTEM5Vc=;
+        b=M7CL9q3qCLANaUrZZcTMfNgLOhJDGsVre7Bz/4cFv2aMDS+QTkb1l0lIdfwpMGAS9l
+         s2OuCUU6KhCcIEyLKOUnYJJNZq8WnB8Q8sRdIKvBCq7KsFZp8QwM0kaqLxXqMUZX3/Gt
+         +ce5lyugzLM7r9iN3GDFRN8PZfGRxDkf2Ul9o8gd1rp6ssXi/xw50Jv0r6sFoceWbhX9
+         i+w9kA8KZX5iQLm+VbR7tyNbOzqdUWVWKZdeUKDPPVkCeTNOjftyoEMFPiy3Zy7qVNeB
+         B6Bqc9DCCmt59p6FZaRJyi3460RtzpxGLNRsOJe+qdRhYvvxvCTcSDsf8cl5B6P9n0ZV
+         3LDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=WV3eF61Zwnp61XzMLW09JKvh3rwrncLt1x2lt/Qi/H0=;
-        b=1bjLFTxnSrAwptvGnEJSy3o4babwQyo5PixWRUzyTtepdnl7xQpdeuaSb1zjJ39fNg
-         I7jr+yGqPptU1A+z0vX9VYczyWusLszckokKBHPHWYaH7JxrzPSoRZyRMTQcrPUC4j1G
-         qqqzeDqhW8Tc3jYgd274VWvlzEW+jatC9Y1npWHPSw0W8YuQfJ80/C4fDO2W/fpRqcwc
-         LAaj1BGRpoqi8ftvN9prvRa2Gz8VBqXBlwjFQjOIw8CJ5/cFCEI0zWYxTind5E2F/QxG
-         rGzBoSp8JRCQ0iGZdm8+GyFys+8p4MOhbulVOLPBD1bwJvDE0N6xtPidp0eyMUu3WCvW
-         jM4w==
-X-Gm-Message-State: AOAM533qq/2LNKBHGYBQxXIdX5kE6H6NtG0W+GePAmpCjqPZs6V1R0cD
-        eIpVLbn5jql2yHhYaVxQ7lgcGQ==
-X-Google-Smtp-Source: ABdhPJydpCbrksD12KbKABOioDMiTAUiuGWNa5w3dwLs/rjk1S3g0ODcglHnDEVIQKUiS2FdM9ZAKg==
-X-Received: by 2002:a17:90a:541:b0:1c6:68cc:8b68 with SMTP id h1-20020a17090a054100b001c668cc8b68mr8354001pjf.172.1647998891500;
-        Tue, 22 Mar 2022 18:28:11 -0700 (PDT)
-Received: from ?IPV6:2409:8a28:e62:3990:2892:f403:3c99:a07? ([2409:8a28:e62:3990:2892:f403:3c99:a07])
-        by smtp.gmail.com with ESMTPSA id h11-20020a056a00170b00b004f7a83058d5sm26479285pfc.16.2022.03.22.18.28.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 18:28:11 -0700 (PDT)
-Message-ID: <e226cd02-005a-92c7-20bd-cf4fb9fb0071@bytedance.com>
-Date:   Wed, 23 Mar 2022 09:27:58 +0800
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Z0naPi9sBPzKHeJh3b79UeAbKq9HOyCcYTBkfTEM5Vc=;
+        b=GU52zE6RQzqT6mvRdSyxH68gnP2DR0YkEIGewpegj6KxrxwnxAvru2a0xWFJmc81gm
+         CeFYvBp82gl42RV83C5cuDAFuGgQtvbSNVHyi/XKAehcUZjhwG0Y5xUX6X3fvED3sLHH
+         LvthCULH2gNBbuNvpgigJnwtzfFORqq+tCFCoAClGaAxV40zEYHRnQXbt7pX9saATLRE
+         97YLn53U+VJPdYlo1tr36tMi+Boo5Y3ULlcppgHvguyPPP44R6wX7LZ4KFsEO7NmUZIW
+         BZ0ZIFxn0wLNOkKlfA7+dxJzk3gQGw/mra3PIo41CVDXgNRtOBNjLqB6QD+u+3NmPClw
+         cxpw==
+X-Gm-Message-State: AOAM531qq2nNVa4tPQbe3uPcBMaHDXKqVAgRXyT5GEATueih1ZYeeCpF
+        sOyLALpWhCsya8iqy95G71PKwKRkYHD+fzl7vsSRUNhttnzGyw==
+X-Google-Smtp-Source: ABdhPJwq7+16CLRKBQeYWyqsbOEQhS32CyKYBZG0YV/I6SfiyM7rDa//wJ2BDf1peTScZ+FP+7iSZo5NI2T4FthFb5E=
+X-Received: by 2002:a1f:b297:0:b0:33e:3d7f:cc0d with SMTP id
+ b145-20020a1fb297000000b0033e3d7fcc0dmr12002741vkf.13.1648011993899; Tue, 22
+ Mar 2022 22:06:33 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [Phishing Risk] [External] Re: [PATCH v2 2/6] perf/core:
- Introduce percpu perf_cgroup
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        duanxiongchun@bytedance.com, songmuchun@bytedance.com
-References: <20220322120834.98637-1-zhouchengming@bytedance.com>
- <20220322120834.98637-3-zhouchengming@bytedance.com>
- <CAM9d7cjwuQmuxwMG7HP3QDw0ckKcUqfT5A8JGg2JkcrZuQhWUg@mail.gmail.com>
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <CAM9d7cjwuQmuxwMG7HP3QDw0ckKcUqfT5A8JGg2JkcrZuQhWUg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Stephane Eranian <eranian@google.com>
+Date:   Tue, 22 Mar 2022 22:06:22 -0700
+Message-ID: <CABPqkBSKMU-r+AbYvZ9e17nZ70idCyxBQ4sUhKzhkTn-1JaTDA@mail.gmail.com>
+Subject: perf record crash with Intel PT
+To:     linux-perf-users@vger.kernel.org
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Namhyung,
+Hi,
 
-On 2022/3/23 6:18 上午, Namhyung Kim wrote:
-> On Tue, Mar 22, 2022 at 5:10 AM Chengming Zhou
-> <zhouchengming@bytedance.com> wrote:
->>
->> Although we don't have incosistency problem any more, we can
->> have other problem like:
->>
->> CPU1                                    CPU2
->> (in context_switch)                     (attach running task)
->>                                         prev->cgroups = cgrp2
->> perf_cgroup_sched_switch(prev, next)
->>         cgrp2 == cgrp2 is True
->>
->> If perf_cgroup of prev task changes from cgrp1 to cgrp2,
->> perf_cgroup_sched_switch() will skip perf_cgroup_switch(),
->> so the CPU would still schedule the cgrp1 events, but we should
->> schedule the cgrp2 events.
-> 
-> Ah ok, now I see the problem in changing prev->cgroup too.
-> 
->>
->> The reason of this problem is that we shouldn't use the changeable
->> prev->cgroups to decide whether skip perf_cgroup_switch().
->>
->> This patch introduces a percpu perf_cgroup to cache the perf_cgroup
->> that scheduled in cpuctxes, which later used to compare with the
->> perf_cgroup of next task to decide whether skip perf_cgroup_switch().
->>
->> Since the perf_cgroup_switch() can be called after the context switch,
->> the cgroup events might be scheduled already. So we put the comparison
->> of perf_cgroups in perf_cgroup_switch(), and delete the unused function
->> perf_cgroup_sched_switch().
->>
->> We must clear the percpu perf_cgroup cache when the last cgroup event
->> disabled.
->>
->> Fixes: a8d757ef076f ("perf events: Fix slow and broken cgroup context switch code")
->> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
->> ---
->>  kernel/events/core.c | 63 ++++++++++++++++----------------------------
->>  1 file changed, 22 insertions(+), 41 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 8b5cf2aedfe6..848a3bfa9513 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -826,6 +826,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
->>         }
->>  }
->>
->> +static DEFINE_PER_CPU(struct perf_cgroup *, cpu_perf_cgroup);
->>  static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
->>
->>  /*
->> @@ -833,6 +834,7 @@ static DEFINE_PER_CPU(struct list_head, cgrp_cpuctx_list);
->>   */
->>  static void perf_cgroup_switch(struct task_struct *task)
->>  {
->> +       struct perf_cgroup *cgrp;
->>         struct perf_cpu_context *cpuctx, *tmp;
->>         struct list_head *list;
->>         unsigned long flags;
->> @@ -843,11 +845,21 @@ static void perf_cgroup_switch(struct task_struct *task)
->>          */
->>         local_irq_save(flags);
->>
->> +       cgrp = perf_cgroup_from_task(task, NULL);
->> +       if (cgrp == __this_cpu_read(cpu_perf_cgroup))
->> +               goto out;
->> +
->> +       __this_cpu_write(cpu_perf_cgroup, cgrp);
->> +
->>         list = this_cpu_ptr(&cgrp_cpuctx_list);
->>         list_for_each_entry_safe(cpuctx, tmp, list, cgrp_cpuctx_entry) {
->>                 WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
->>
->>                 perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->> +
->> +               if (cpuctx->cgrp == cgrp)
-> 
-> Missing perf_ctx_unlock().
+I was trying some simple command lines with perf record from tip.git tree
+and Intel PT and to my surprised I got an immediate crash with cmdline such as :
 
-Thank you, will fix next version.
+$ perf record -e intel_pt// -a -C 1 sleep 5
 
-> 
-> Thanks,
-> Namhyung
-> 
->> +                       continue;
->> +
->>                 perf_pmu_disable(cpuctx->ctx.pmu);
->>
->>                 cpu_ctx_sched_out(cpuctx, EVENT_ALL);
->> @@ -855,14 +867,11 @@ static void perf_cgroup_switch(struct task_struct *task)
->>                  * must not be done before ctxswout due
->>                  * to event_filter_match() in event_sched_out()
->>                  */
->> -               cpuctx->cgrp = perf_cgroup_from_task(task,
->> -                                                    &cpuctx->ctx);
->> +               cpuctx->cgrp = cgrp;
->>                 /*
->>                  * set cgrp before ctxsw in to allow
->>                  * event_filter_match() to not have to pass
->>                  * task around
->> -                * we pass the cpuctx->ctx to perf_cgroup_from_task()
->> -                * because cgroup events are only per-cpu
->>                  */
->>                 cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
->>
->> @@ -870,35 +879,10 @@ static void perf_cgroup_switch(struct task_struct *task)
->>                 perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->>         }
->>
->> +out:
->>         local_irq_restore(flags);
->>  }
+As soon as you specify -C you get a crash in:
+
+Program received signal SIGSEGV, Segmentation fault.
+perf_evlist__id_add_fd (evlist=<optimized out>, evsel=<optimized out>,
+cpu=<optimized out>, thread=<optimized out>, fd=<optimized out>) at
+evlist.c:291
+291 evlist.c: No such file or directory.
+(gdb) bt
+#0  perf_evlist__id_add_fd (evlist=<optimized out>, evsel=<optimized
+out>, cpu=<optimized out>, thread=<optimized out>, fd=<optimized out>)
+at evlist.c:291
+#1  0x00000000005c6645 in mmap_per_evsel (evlist=0xfc1440,
+ops=0x7fffffff8d10, idx=0, mp=0x7fffffff8d30, cpu_idx=<optimized out>,
+thread=0, _output=0x7fffffff8cc0, _output_overwrite=0x7fffffff8cc4) at
+evlist.c:498
+#2  0x00000000005c6c67 in mmap_per_cpu (mp=0x7fffffff8d30,
+ops=0x7fffffff8d10, evlist=0xfc1440) at evlist.c:550
+#3  perf_evlist__mmap_ops (evlist=evlist@entry=0xfc1440,
+ops=ops@entry=0x7fffffff8d10, mp=mp@entry=0x7fffffff8d30) at
+evlist.c:602
+#4  0x00000000004b8969 in evlist__mmap_ex (evlist=0xfc1440,
+pages=<optimized out>, auxtrace_pages=1024,
+auxtrace_overwrite=auxtrace_overwrite@entry=false,
+nr_cblocks=<optimized out>, affinity=<optimized out>, flush=1,
+comp_level=0) at util/evlist.c:993
+#5  0x000000000041cfcf in record__mmap_evlist (rec=0xd9cc20 <record>,
+evlist=<optimized out>) at builtin-record.c:855
+#6  record__mmap (rec=0xd9cc20 <record>) at builtin-record.c:882
+#7  record__open (rec=0xd9cc20 <record>) at builtin-record.c:965
+#8  __cmd_record (rec=0xd9cc20 <record>, argv=<optimized out>,
+argc=<optimized out>) at builtin-record.c:1728
+#9  cmd_record (argc=<optimized out>, argv=<optimized out>) at
+builtin-record.c:2962
+#10 0x00000000004a0630 in run_builtin (p=p@entry=0xda71d8
+<commands+216>, argc=argc@entry=8, argv=argv@entry=0x7fffffffe380) at
+perf.c:313
+#11 0x0000000000402d5f in handle_internal_command
+(argv=0x7fffffffe380, argc=8) at perf.c:365
+#12 run_argv (argv=<synthetic pointer>, argcp=<synthetic pointer>) at perf.c:409
+#13 main (argc=8, argv=0x7fffffffe380) at perf.c:539
+
+Any fix for that?
+Thanks.
