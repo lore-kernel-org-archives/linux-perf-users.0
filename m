@@ -2,88 +2,266 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81479C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 08:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9230BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Mar 2022 10:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242519AbiCWIP6 (ORCPT
+        id S243429AbiCWKJQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Mar 2022 04:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58044 "EHLO
+        Wed, 23 Mar 2022 06:09:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242182AbiCWIPu (ORCPT
+        with ESMTP id S234811AbiCWKJN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Mar 2022 04:15:50 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722C66D386;
-        Wed, 23 Mar 2022 01:14:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=2ggSoRFKh0G1dKQFttVqUzAVwqtOX7Y3mA+081Turu8=; b=FKjxn9u6R6LAfSreq3RMO6doF6
-        A0j/KB+lvNGml3FUMTFXmgJkNs+r0bBuJaGeRAula1+PNsamC5OAg4qoenHSt9BP0/kXlo33UPnU/
-        nzp3dGtEb5IliJq2XCFNOnyciMB38Z7tkbeJYnZ9P/+xsMRKlWlbIeXUX2uo7VLopSCcygg7RVytp
-        X6RurDqZaEpj+EaawH2VrEMo1hPiS+4LsysZ41GUTLffegC6sp11jJRvrNloxBMEFsE+qDLdWk3oB
-        FjN92v/BMIgGIGSw1vLxLJM0NhHqRshwG/zZeL9meYjUIxlG7F914YxT1F+5mDGafJq+x4X1JF5nY
-        sMvY8e5Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nWw80-003hq3-9v; Wed, 23 Mar 2022 08:14:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 777D93000E6;
-        Wed, 23 Mar 2022 09:13:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 565EE20C5903E; Wed, 23 Mar 2022 09:13:58 +0100 (CET)
-Date:   Wed, 23 Mar 2022 09:13:58 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Chengming Zhou <zhouchengming@bytedance.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, eranian@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        duanxiongchun@bytedance.com, songmuchun@bytedance.com
-Subject: Re: [External] Re: [PATCH v2 2/6] perf/core: Introduce percpu
- perf_cgroup
-Message-ID: <YjrWxnnIZvn3PWoX@hirez.programming.kicks-ass.net>
-References: <20220322120834.98637-1-zhouchengming@bytedance.com>
- <20220322120834.98637-3-zhouchengming@bytedance.com>
- <YjnIpn/PCM6wKpOC@hirez.programming.kicks-ass.net>
- <0a7ebd49-cfdd-911e-3982-44f594320b0f@bytedance.com>
+        Wed, 23 Mar 2022 06:09:13 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139D27665A
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 03:07:43 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id r13so1330383wrr.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Mar 2022 03:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g7WQJHKJhwB7rR++S1inqPsF0o2XGOtyaubpx04iro8=;
+        b=ZIRWslzCqb7+4rHIY+FmR11GiDU62z/H7mV58XiZnoLAwK1U3d3OVg3gX/s7WFKSEC
+         BTDsQITmI+FyvdWPxj5fr1LADnAdKm1gwadqts88bjhedeiVx3Afpur6VGXzuke/C0l5
+         sgbNWZJIvOLG1kpWD+EHw6FWBo4ZFp3JXwSqN/+uUNUN3KFx0daz6yRuMgTgk16BNi3l
+         7WQia5ndpsVgbi1tkZPzbtDdrBlyFcV+jo1wfCefsSW//D/zFg1j4hhAi3sW2Yr/2ZBf
+         hjbJeg54EI/7ZybgAGMhmW9oYBDc5ba9UO57SeXkLKmpWUDAtqybxxbfcV3t+VnIqs78
+         tgCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g7WQJHKJhwB7rR++S1inqPsF0o2XGOtyaubpx04iro8=;
+        b=UV5b17/wsQ2Wo7FxD44F7IssaN+zBMWMTybkE/MK4qFOdfzDIxNiPnp0JsQIEj4d7R
+         BBmwIipLQoaXzv2mqIDl9TiUzsNAVBL549gxzT1/G6fc0yYFtmA+D85syo9RDHHZwYPR
+         6Oo/CDPiK2DEZ1r6pjwL+CAQq4q1pJEE7YEbOPMAy7c9RgPe31aipOjkSwyj9O9xN1pX
+         Wztu0pmxYECLl2lgM2ndilwfD4rNRXuQWd+1YPXFN/RdhE1APtNdLMC53+wHNpK2CUri
+         qrjWtjcfBtHJD0BvZ73zMTdsOWRFoWFXV7DKFaqWJFf2mziadX/qnoy1wuP1t5wa9mAM
+         ZntQ==
+X-Gm-Message-State: AOAM5306Eo/XMpEsOO/7OlLo596nlnZz2eS+I7CjbWAvfrVtMX/IPaBA
+        KTeoZvtrWla4wK39hYPw96RNaUriEaeGbtNaNy702g==
+X-Google-Smtp-Source: ABdhPJzkGCgR8ToYMOvLQPQrsw37alBoHFgg/BOdzHw1pXI5gYBIeCFigVtLOLN43oqR3PYP19ok/TQmP9VHwUAr7p8=
+X-Received: by 2002:adf:f5c4:0:b0:205:2836:f1e5 with SMTP id
+ k4-20020adff5c4000000b002052836f1e5mr6340011wrp.519.1648030061576; Wed, 23
+ Mar 2022 03:07:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0a7ebd49-cfdd-911e-3982-44f594320b0f@bytedance.com>
+References: <20220308205000.27646-1-mike.leach@linaro.org> <e890feb0-9f90-c0f2-e5f0-10ed5dbe6d81@arm.com>
+ <CAJ9a7VhzwMri1Lz5mtO5um3-tT9=GUpGN3cHJhkW5TTsbOKbgQ@mail.gmail.com>
+ <639c902b-535e-8627-de04-9bcbbdc98ed5@arm.com> <CAJ9a7VhyFj9vcUFjrwtqn47LbdqHp+gQCvtDBNX69-=Y5-2iag@mail.gmail.com>
+ <17215ebc-dbf2-81ca-7ef4-b4ebc3cb9d28@arm.com>
+In-Reply-To: <17215ebc-dbf2-81ca-7ef4-b4ebc3cb9d28@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Wed, 23 Mar 2022 10:07:30 +0000
+Message-ID: <CAJ9a7VjZm=QAKhPJwewO3i3Qyc3C-jbzJKSoCk+Gr+_FXGR9oQ@mail.gmail.com>
+Subject: Re: [PATCH 00/10] coresight: Add new API to allocate trace source ID values
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        James Clark <James.Clark@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 23, 2022 at 12:33:51AM +0800, Chengming Zhou wrote:
-> On 2022/3/22 9:01 下午, Peter Zijlstra wrote:
-> > On Tue, Mar 22, 2022 at 08:08:30PM +0800, Chengming Zhou wrote:
-> >> Although we don't have incosistency problem any more, we can
-> >> have other problem like:
-> >>
-> >> CPU1					CPU2
-> >> (in context_switch)			(attach running task)
-> >> 					prev->cgroups = cgrp2
-> >> perf_cgroup_sched_switch(prev, next)
-> >> 	cgrp2 == cgrp2 is True
-> >>
-> > 
-> > Again, I'm not following, how can you attach to a running task from
-> > another CPU ?
-> 
-> Hi Peter, I make a little testcase which can reproduce the race
-> problem, on system with PSI disabled. Because when PSI enabled,
-> cgroup_move_task() will hold rq lock to assign task->cgroups.
+Hi Suzuki,
 
-No, the problem is that you're talking about cgroup attach while I'm
-thinking of attaching a event to a task. And your picture has nothing to
-clarify.
+On Tue, 22 Mar 2022 at 18:52, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> Hi Mike
+>
+> On 22/03/2022 14:27, Mike Leach wrote:
+> > Hi Suzuki
+> >
+> > On Tue, 22 Mar 2022 at 12:35, Suzuki Kuruppassery Poulose
+> > <suzuki.poulose@arm.com> wrote:
+> >>
+> >> On 22/03/2022 11:38, Mike Leach wrote:
+> >>> HI Suzuki,
+> >>>
+> >>> On Tue, 22 Mar 2022 at 10:43, Suzuki Kuruppassery Poulose
+> >>> <suzuki.poulose@arm.com> wrote:
+> >>>>
+> >>>> + Cc: James Clark
+> >>>>
+> >>>> Hi Mike,
+> >>>>
+> >>>> On 08/03/2022 20:49, Mike Leach wrote:
+> >>>>> The current method for allocating trace source ID values to sources is
+> >>>>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+> >>>>> The STM is allocated ID 0x1.
+> >>>>>
+> >>>>> This fixed algorithm is used in both the CoreSight driver code, and by
+> >>>>> perf when writing the trace metadata in the AUXTRACE_INFO record.
+> >>>>>
+> >>>>> The method needs replacing as currently:-
+> >>>>> 1. It is inefficient in using available IDs.
+> >>>>> 2. Does not scale to larger systems with many cores and the algorithm
+> >>>>> has no limits so will generate invalid trace IDs for cpu number > 44.
+> >>>>
+> >>>> Thanks for addressing this issue.
+> >>>>
+> >>>>>
+> >>>>> Additionally requirements to allocate additional system IDs on some
+> >>>>> systems have been seen.
+> >>>>>
+> >>>>> This patch set  introduces an API that allows the allocation of trace IDs
+> >>>>> in a dynamic manner.
+> >>>>>
+> >>>>> Architecturally reserved IDs are never allocated, and the system is
+> >>>>> limited to allocating only valid IDs.
+> >>>>>
+> >>>>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+> >>>>> the new API.
+> >>>>>
+> >>>>> perf handling is changed so that the ID associated with the CPU is read
+> >>>>> from sysfs. The ID allocator is notified when perf events start and stop
+> >>>>> so CPU based IDs are kept constant throughout any perf session.
+> >>>>>
+> >>>>> For the ETMx.x devices IDs are allocated on certain events
+> >>>>> a) When using sysfs, an ID will be allocated on hardware enable, and freed
+> >>>>> when the sysfs reset is written.
+> >>>>> b) When using perf, ID is allocated on hardware enable, and freed on
+> >>>>> hardware disable.
+> >>>>>
+> >>>>> For both cases the ID is allocated when sysfs is read to get the current
+> >>>>> trace ID. This ensures that consistent decode metadata can be extracted
+> >>>>> from the system where this read occurs before device enable.
+> >>>>
+> >>>>
+> >>>>>
+> >>>>> Note: This patchset breaks backward compatibility for perf record.
+> >>>>> Because the method for generating the AUXTRACE_INFO meta data has
+> >>>>> changed, using an older perf record will result in metadata that
+> >>>>> does not match the trace IDs used in the recorded trace data.
+> >>>>> This mismatch will cause subsequent decode to fail. Older versions of
+> >>>>> perf will still be able to decode data generated by the updated system.
+> >>>>
+> >>>> I have some concerns over this and the future plans for the dynamic
+> >>>> allocation per sink. i.e., we are breaking/modifying the perf now to
+> >>>> accommodate the dynamic nature of the trace id of a given CPU/ETM.
+> >>>
+> >>> I don't beleive we have a choice for this - we cannot retain what is
+> >>> an essentially broken allocation mechanism.
+> >>>
+> >>
+> >> I completely agree and I am happy with the current step by step approach
+> >> of moving to a dynamic allocation scheme. Apologies, this wasn't
+> >> conveyed appropriately.
+> >>
+> >>>> The proposed approach of exposing this via sysfs may (am not sure if
+> >>>> this would be the case) break for the trace-id per sink change, as a
+> >>>> sink could assign different trace-id for a CPU depending.
+> >>>>
+> >>>
+> >>> If a path exists between a CPU and a sink - the current framework as
+> >>> far as I can tell would not allow for a new path to be set up between
+> >>> the cpu and another sink.
+> >>
+> >> e.g, if we have concurrent perf sessions, in the future with sink  based
+> >> allocation :
+> >>
+> >> perf record -e cs_etm/@sink1/... payload1
+> >> perf record -e cs_etm/@sink2/... payload2
+> >> perf record -e cs_etm// ...      payload3
+> >>
+> >> The trace id allocated for first session for CPU0 *could* be different
+> >> from that of the second or the third.
+> >
+> > If these sessions run concurrently then the same Trace ID will be used
+> > for CPU0 for all the sessions.
+> > We ensure this by notifications that a cs_etm session is starting and
+> > stopping - and keep a refcount.
+>
+> The scheme is fine now, with a global trace-id map. But with per-sink
+> allocation, this could cause problems.
+>
+> e.g., there could be a situation where:
+>
+> trace_id[CPU0][sink0] == trace_id[CPU1][sink1]
+>
+> So if we have a session where both CPU0 and CPU1 trace to a common sink,
+> we get the trace mixed with no way of splitting them. As the perf will
+> read the trace-id for CPU0 from that of sink0 and CPU1 from sink1.
 
-Those pictures of yours could really do with a few more function names
-in them, otherwise it's absolutely unclear what code is running where.
+I think we need to consider the CoreSight hardware topology here.
+
+Any CPUx that can trace to a sink reachable by another CPUy must
+always get trace IDs from the same pool as CPUy.
+
+Consider the options for multi sink topologies:-
+
+CPU0->funnel0->ETF->ETR
+CPU1--+^
+
+Clearly - in-line sinks can never have simultaneous independent
+sessions - the session into ETR traces through ETF
+
+Now we could have replicators / programmable replicators -
+
+ATB->Prog replicator->ETR0
+                                 +->ETR1
+
+however programmable replicators use trace ID for filtering - this is
+effectively a single sink on the input, so once again the Trace IDs
+must come from the same pool.
+
+Now, we could have independent per cluster / socket topology
+Cluster 0
+CPU0->funnel0->ETF0->ETR0
+CPU1--+^
+
+Cluster 1
+CPU2->funnel1->ETF1->ETR1
+CPU3--+^
+
+Here cluster 0 & 1 can have independent sets of trace IDs as their
+respective cores can never trace to the same sink.
+
+Finally we have the ETE+TRBE 1:1 type topologies. These could actually
+not bother allocating any trace ID when in 1:1 mode, which should
+probably be a follow on incremental addition to this initial set.
+
+So, my conclusion when I was considering all this is that "per-sink"
+trace Id allocation is in fact "per unique trace path set" allocation.
+
+
+
+>
+> So my point is, we are changing the ABI for perf to grab the TraceID
+> with your patches. And clearly this approach could break easily when
+> we extend to sink-based idmap. So, lets make the ABI change for perf
+> scalable and bullet proof (as far as we can) by exposing this
+> information via the perf RECORD. That way any future changes in the
+> scheme won't affect the perf as long as it has a reliable information
+> within each "record".
+>
+>
+> My point is, let us fix this once and for all, so that we don't
+> need to change this again. I understand this involves more work
+> in the perf tool. I believe that is for better
+>
+> Thoughts ?
+>
+
+My preference is the incremental approach.
+Fix the trace ID allocation issues that partners are having now, then
+update to the perf record approach in a separate follow up patchset.
+Then when we start to see systems that require it - update to using
+the per-unique-path trace ID pools.
+
+Regards
+
+Mike
+
+> Suzuki
+
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
