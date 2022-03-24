@@ -2,114 +2,303 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CA2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Mar 2022 17:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73D3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Mar 2022 18:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352113AbiCXRLI (ORCPT
+        id S238496AbiCXSfP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Mar 2022 13:11:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54364 "EHLO
+        Thu, 24 Mar 2022 14:35:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236380AbiCXRLI (ORCPT
+        with ESMTP id S1345326AbiCXSfO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Mar 2022 13:11:08 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F6ABB0D3C;
-        Thu, 24 Mar 2022 10:09:35 -0700 (PDT)
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KPWrk2K81z67yK4;
-        Fri, 25 Mar 2022 01:08:22 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 24 Mar 2022 18:09:33 +0100
-Received: from [10.202.227.197] (10.202.227.197) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 24 Mar 2022 17:09:32 +0000
-Message-ID: <85891cbd-e53c-89ac-6da2-40b5d56cd316@huawei.com>
-Date:   Thu, 24 Mar 2022 17:09:54 +0000
+        Thu, 24 Mar 2022 14:35:14 -0400
+Received: from smtp-fw-9103.amazon.com (smtp-fw-9103.amazon.com [207.171.188.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B911C2F385;
+        Thu, 24 Mar 2022 11:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1648146821; x=1679682821;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Ycy5aG5LCl4kh7BbnFyjRg5khliCe5RF7Pw8b0yT56M=;
+  b=haiOGX7JnJ9lxK36X3eO7jOvrk67wFI1p7oJ5dTcxRmutJLMtcWG3ZVb
+   D4tCVsrbCyT0RnN6K1eixpjQmXjt8sQE3O0PZQvS4y6EGi92B+9hECI7Z
+   kjl7DER0t/dVy6mz6xzYzk8dd1HpDNCn1rB4+vqLrwxQHL3TqtBqmx9iK
+   U=;
+X-IronPort-AV: E=Sophos;i="5.90,208,1643673600"; 
+   d="scan'208";a="1002150466"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-92ba9394.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 24 Mar 2022 18:33:40 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-pdx-2a-92ba9394.us-west-2.amazon.com (Postfix) with ESMTPS id 60F6D40D0B;
+        Thu, 24 Mar 2022 18:33:40 +0000 (UTC)
+Received: from EX13D02UWB002.ant.amazon.com (10.43.161.160) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Thu, 24 Mar 2022 18:33:39 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D02UWB002.ant.amazon.com (10.43.161.160) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Thu, 24 Mar 2022 18:33:39 +0000
+Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
+ (172.19.181.128) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1497.32 via Frontend Transport; Thu, 24 Mar 2022 18:33:38
+ +0000
+Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
+        id 0F1FA2554; Thu, 24 Mar 2022 18:33:39 +0000 (UTC)
+From:   Ali Saidi <alisaidi@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
+        <leo.yan@linaro.org>, <acme@kernel.org>
+CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
+        <Nick.Forrington@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <andrew.kilroy@arm.com>, <james.clark@arm.com>,
+        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
+        <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
+Subject: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse cores
+Date:   Thu, 24 Mar 2022 18:33:21 +0000
+Message-ID: <20220324183323.31414-3-alisaidi@amazon.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220324183323.31414-1-alisaidi@amazon.com>
+References: <20220324183323.31414-1-alisaidi@amazon.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: perf version issues
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <8a75f3b1-2b99-1233-3a70-070311b6ebc1@huawei.com>
- <YjotZExyiwhnX6ev@kernel.org>
- <d3829e58-a835-eeec-e1a5-d282a610b228@huawei.com>
-In-Reply-To: <d3829e58-a835-eeec-e1a5-d282a610b228@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.227.197]
-X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-+ Ingo
+When synthesizing data from SPE, augment the type with source information
+for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
+the same encoding. I can't find encoding information for any other SPE
+implementations to unify their choices with Arm's thus that is left for
+future work.
 
-On 23/03/2022 12:44, John Garry wrote:
->> $ git cherry-pick cb66befccba18fac
->>    [perf/core 8ff6a6c06a90a362] perf tools: Fix version kernel tag
->>     Author: John Garry<john.garry@huawei.com>
->>     Date: Mon Feb 21 21:16:49 2022 +0800
->>     1 file changed, 4 insertions(+), 9 deletions(-)
->>    $ make -C tools/perf O=/tmp/build/perf install-bin
->>    $ perf -v
->>    perf version 5.17.rc8.g4e666cdb06ee
->>
->> Now it doesn´t notice it and there is no automatic rebuild triggered, we
->> stay with the cset from before the cherry-pick:-\
->>
->> $ git log --oneline -2
->> 8ff6a6c06a90a362 (HEAD -> perf/core) perf tools: Fix version kernel tag
->> 4e666cdb06eede20 perf tools: Fix dependency for version file creation
->> $
->>
->> Anyway, your patch works for some cases, so its an improvement and I'll
->> apply it, we can continue from there.
-> 
-> After some experimentation, I find that only .git/HEAD changes for a 
-> cherry-pick depending on whether we're on a branch or not. As such, as 
-> you have seen, we may not rebuild after a cherry-pick, which is no good.
-> 
-> As far as I can see, only .git/index changes in all circumstances, but 
-> we don't have a dependency on that.
-> 
-> TBH, using .git files as Makefile dependencies doesn't seem to work well.
-> 
-> Maybe we should output "git log" and check versus what we have in 
-> PERF-VERSION-FILE and re-build depending on that.
-> 
-> Let me check this further now.
+This change populates the mem_lvl_num for Neoverse cores instead of the
+deprecated mem_lvl namespace.
 
-Just an update on this...
+Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+Tested-by: German Gomez <german.gomez@arm.com>
+Reviewed-by: German Gomez <german.gomez@arm.com>
+---
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 ++
+ tools/perf/util/arm-spe.c                     | 110 +++++++++++++++---
+ 3 files changed, 109 insertions(+), 14 deletions(-)
 
-I did some research and found that Ingo introduced the change to make 
-.git/HEAD a dependency as a build optimisation. See commit commit 
-c72e3f04b45fb2e50cdd81a50c3778c6a57251d8 ("tools/perf/build: Speed up 
-git-version test on re-make")
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index 5e390a1a79ab..091987dd3966 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -220,6 +220,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 
+ 			break;
+ 		case ARM_SPE_DATA_SOURCE:
++			decoder->record.source = payload;
+ 			break;
+ 		case ARM_SPE_BAD:
+ 			break;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+index 69b31084d6be..c81bf90c0996 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -29,6 +29,17 @@ enum arm_spe_op_type {
+ 	ARM_SPE_ST		= 1 << 1,
+ };
+ 
++enum arm_spe_neoverse_data_source {
++	ARM_SPE_NV_L1D        = 0x0,
++	ARM_SPE_NV_L2         = 0x8,
++	ARM_SPE_NV_PEER_CORE  = 0x9,
++	ARM_SPE_NV_LCL_CLSTR  = 0xa,
++	ARM_SPE_NV_SYS_CACHE  = 0xb,
++	ARM_SPE_NV_PEER_CLSTR = 0xc,
++	ARM_SPE_NV_REMOTE     = 0xd,
++	ARM_SPE_NV_DRAM       = 0xe,
++};
++
+ struct arm_spe_record {
+ 	enum arm_spe_sample_type type;
+ 	int err;
+@@ -40,6 +51,7 @@ struct arm_spe_record {
+ 	u64 virt_addr;
+ 	u64 phys_addr;
+ 	u64 context_id;
++	u16 source;
+ };
+ 
+ struct arm_spe_insn;
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index d2b64e3f588b..f92ebce88c6a 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -34,6 +34,7 @@
+ #include "arm-spe-decoder/arm-spe-decoder.h"
+ #include "arm-spe-decoder/arm-spe-pkt-decoder.h"
+ 
++#include "../../arch/arm64/include/asm/cputype.h"
+ #define MAX_TIMESTAMP (~0ULL)
+ 
+ struct arm_spe {
+@@ -45,6 +46,7 @@ struct arm_spe {
+ 	struct perf_session		*session;
+ 	struct machine			*machine;
+ 	u32				pmu_type;
++	u64				midr;
+ 
+ 	struct perf_tsc_conversion	tc;
+ 
+@@ -399,33 +401,110 @@ static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
+ 	return false;
+ }
+ 
+-static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
++static const struct midr_range neoverse_spe[] = {
++	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
++	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
++	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
++	{},
++};
++
++
++static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
++						union perf_mem_data_src *data_src)
+ {
+-	union perf_mem_data_src	data_src = { 0 };
++	/*
++	 * Even though four levels of cache hierarchy are possible, no known
++	 * production Neoverse systems currently include more than three levels
++	 * so for the time being we assume three exist. If a production system
++	 * is built with four the this function would have to be changed to
++	 * detect the number of levels for reporting.
++	 */
+ 
+-	if (record->op == ARM_SPE_LD)
+-		data_src.mem_op = PERF_MEM_OP_LOAD;
+-	else
+-		data_src.mem_op = PERF_MEM_OP_STORE;
++	switch (record->source) {
++	case ARM_SPE_NV_L1D:
++		data_src->mem_lvl = PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
++		break;
++	case ARM_SPE_NV_L2:
++		data_src->mem_lvl = PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
++		break;
++	case ARM_SPE_NV_PEER_CORE:
++		data_src->mem_lvl = PERF_MEM_LVL_HIT;
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
++		break;
++	/*
++	 * We don't know if this is L1, L2 but we do know it was a cache-2-cache
++	 * transfer, so set SNOOP_HITM
++	 */
++	case ARM_SPE_NV_LCL_CLSTR:
++	case ARM_SPE_NV_PEER_CLSTR:
++		data_src->mem_lvl = PERF_MEM_LVL_HIT;
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
++		break;
++	/*
++	 * System cache is assumed to be L3
++	 */
++	case ARM_SPE_NV_SYS_CACHE:
++		data_src->mem_lvl = PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
++		break;
++	/*
++	 * We don't know what level it hit in, except it came from the other
++	 * socket
++	 */
++	case ARM_SPE_NV_REMOTE:
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
++		break;
++	case ARM_SPE_NV_DRAM:
++		data_src->mem_lvl = PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_RAM;
++		break;
++	default:
++		break;
++	}
++}
+ 
++static void arm_spe__synth_data_source_generic(const struct arm_spe_record *record,
++						union perf_mem_data_src *data_src)
++{
+ 	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
+-		data_src.mem_lvl = PERF_MEM_LVL_L3;
++		data_src->mem_lvl = PERF_MEM_LVL_L3;
+ 
+ 		if (record->type & ARM_SPE_LLC_MISS)
+-			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
++			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+ 		else
+-			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
++			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+ 	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
+-		data_src.mem_lvl = PERF_MEM_LVL_L1;
++		data_src->mem_lvl = PERF_MEM_LVL_L1;
+ 
+ 		if (record->type & ARM_SPE_L1D_MISS)
+-			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
++			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+ 		else
+-			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
++			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+ 	}
+ 
+ 	if (record->type & ARM_SPE_REMOTE_ACCESS)
+-		data_src.mem_lvl |= PERF_MEM_LVL_REM_CCE1;
++		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
++}
++
++static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
++{
++	union perf_mem_data_src	data_src = { 0 };
++	bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
++
++	if (record->op & ARM_SPE_LD)
++		data_src.mem_op = PERF_MEM_OP_LOAD;
++	else
++		data_src.mem_op = PERF_MEM_OP_STORE;
++
++	if (is_neoverse)
++		arm_spe__synth_data_source_neoverse(record, &data_src);
++	else
++		arm_spe__synth_data_source_generic(record, &data_src);
+ 
+ 	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
+ 		data_src.mem_dtlb = PERF_MEM_TLB_WK;
+@@ -446,7 +525,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 	u64 data_src;
+ 	int err;
+ 
+-	data_src = arm_spe__synth_data_source(record);
++	data_src = arm_spe__synth_data_source(record, spe->midr);
+ 
+ 	if (spe->sample_flc) {
+ 		if (record->type & ARM_SPE_L1D_MISS) {
+@@ -1183,6 +1262,8 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+ 	size_t min_sz = sizeof(u64) * ARM_SPE_AUXTRACE_PRIV_MAX;
+ 	struct perf_record_time_conv *tc = &session->time_conv;
++	const char *cpuid = perf_env__cpuid(session->evlist->env);
++	u64 midr = strtol(cpuid, NULL, 16);
+ 	struct arm_spe *spe;
+ 	int err;
+ 
+@@ -1202,6 +1283,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	spe->machine = &session->machines.host; /* No kvm support */
+ 	spe->auxtrace_type = auxtrace_info->type;
+ 	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
++	spe->midr = midr;
+ 
+ 	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
+ 
+-- 
+2.32.0
 
-According to the commit log it's quicker to trigger a rebuild of the 
-version string depending on a change in a git internal file rather than 
-run "git describe" to see any change in tag/commit every times.
-
-However, I asked the git community about this approach, and their 
-general idea is that a dependency on .git/HEAD or other git internal 
-file is just not a good idea.
-
-See 
-https://lore.kernel.org/git/87wngkpddp.fsf@igel.home/T/#m4a4dd6de52fdbe21179306cd57b3761eb07f45f8
-
-So to get this working robustly we may need to roll back that named 
-commit in part.
-
-Thanks,
-John
