@@ -2,49 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51437C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Mar 2022 18:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65BFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Mar 2022 18:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352675AbiCXSfW (ORCPT
+        id S1345326AbiCXSfb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Mar 2022 14:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47948 "EHLO
+        Thu, 24 Mar 2022 14:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345326AbiCXSfV (ORCPT
+        with ESMTP id S1352687AbiCXSfa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Mar 2022 14:35:21 -0400
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85DAF32EC4;
-        Thu, 24 Mar 2022 11:33:49 -0700 (PDT)
+        Thu, 24 Mar 2022 14:35:30 -0400
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D233467B;
+        Thu, 24 Mar 2022 11:33:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1648146830; x=1679682830;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=F4XLeJkRXeQm1oTsqoQy/DIHpkva71gmVFFW70rGJ50=;
-  b=bMnZ8ce6WSGYB1vhTR9BEnBH/5jLlsi8EfLZ+/8kn+yKsOVtRISJh4Et
-   ibZr87mHiojf5SD3oBMwwQDWDJowVtKdgWuh84+/V1yWCDT/1GdK3p+yy
-   26KbjzFG8LXBH1/4umvCQqO/IvZT3yEmquqOpaGfNvcxGAF4DwentMhuN
+  t=1648146838; x=1679682838;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8YIluzwYSUomOcH0PCqAsR3TehTTHIumqCtmL6dHCMg=;
+  b=Go45o7bK/Ni3uVoSgPG2t0Ctej1eCTYEk4Q8gSm6Tc9B64XMJclsdn6z
+   iVEh1DHOZ263RD35RnzSi7iHEqJv2KgEJe77Qc9sd7WMIGTNR3eztL+Ci
+   KcGZE+tA/x6lagfznJzw0oa6qWACT0XH/zQge1+Wwk6Ixr2Men8q29OBg
    0=;
 X-IronPort-AV: E=Sophos;i="5.90,208,1643673600"; 
-   d="scan'208";a="205119688"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-b69ea591.us-east-1.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP; 24 Mar 2022 18:33:46 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-iad-1e-b69ea591.us-east-1.amazon.com (Postfix) with ESMTPS id 6522DC0944;
-        Thu, 24 Mar 2022 18:33:40 +0000 (UTC)
+   d="scan'208";a="187546947"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-iad-1e-8be8ed69.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP; 24 Mar 2022 18:33:56 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
+        by email-inbound-relay-iad-1e-8be8ed69.us-east-1.amazon.com (Postfix) with ESMTPS id C839EC091C;
+        Thu, 24 Mar 2022 18:33:50 +0000 (UTC)
 Received: from EX13D02UWC001.ant.amazon.com (10.43.162.243) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Thu, 24 Mar 2022 18:33:39 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Thu, 24 Mar 2022 18:33:40 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
  EX13D02UWC001.ant.amazon.com (10.43.162.243) with Microsoft SMTP Server (TLS)
  id 15.0.1497.32; Thu, 24 Mar 2022 18:33:39 +0000
 Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
- Server id 15.0.1497.32 via Frontend Transport; Thu, 24 Mar 2022 18:33:39
+ (172.19.181.128) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1497.32 via Frontend Transport; Thu, 24 Mar 2022 18:33:38
  +0000
 Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 08FDC2549; Thu, 24 Mar 2022 18:33:39 +0000 (UTC)
+        id 15E9C2573; Thu, 24 Mar 2022 18:33:39 +0000 (UTC)
 From:   Ali Saidi <alisaidi@amazon.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
@@ -56,10 +56,12 @@ CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
         <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
         <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
         <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
-Subject: [PATCH v4 0/4] perf: arm-spe: Decode SPE source and use for perf c2c
-Date:   Thu, 24 Mar 2022 18:33:19 +0000
-Message-ID: <20220324183323.31414-1-alisaidi@amazon.com>
+Subject: [PATCH v4 4/4] perf mem: Support HITM for when mem_lvl_num is any
+Date:   Thu, 24 Mar 2022 18:33:23 +0000
+Message-ID: <20220324183323.31414-5-alisaidi@amazon.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220324183323.31414-1-alisaidi@amazon.com>
+References: <20220324183323.31414-1-alisaidi@amazon.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -67,36 +69,43 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When synthesizing data from SPE, augment the type with source information
-for Arm Neoverse cores so we can detect situtions like cache line
-contention and transfers on Arm platforms. 
+For loads that hit in a the LLC snoop filter and are fulfilled from a
+higher level cache on arm64 Neoverse cores, it's not usually clear what
+the true level of the cache the data came from (i.e. a transfer from a
+core could come from it's L1 or L2). Instead of making an assumption of
+where the line came from, add support for incrementing HITM if the
+source is CACHE_ANY.
 
-This changes enables the expected behavior of perf c2c on a system with
-SPE where lines that are shared among multiple cores show up in perf c2c
-output. 
+Since other architectures don't seem to populate the mem_lvl_num field
+here there shouldn't be a change in functionality.
 
-These changes switch to use mem_lvl_num to encode the level information
-instead of mem_lvl which is being deprecated, but I haven't found other
-users of mem_lvl_num. 
+Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+Tested-by: German Gomez <german.gomez@arm.com>
+Reviewed-by: German Gomez <german.gomez@arm.com>
+---
+ tools/perf/util/mem-events.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Changes in v4:
-  * Bring-in the kernel's arch/arm64/include/asm/cputype.h into tools/ 
-  * Add neoverse-v1 to the neoverse cores list
-
-Ali Saidi (4):
-  tools: arm64: Import cputype.h
-  perf arm-spe: Use SPE data source for neoverse cores
-  perf mem: Support mem_lvl_num in c2c command
-  perf mem: Support HITM for when mem_lvl_num is any
-
- tools/arch/arm64/include/asm/cputype.h        | 258 ++++++++++++++++++
- .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 +
- tools/perf/util/arm-spe.c                     | 110 +++++++-
- tools/perf/util/mem-events.c                  |  20 +-
- 5 files changed, 383 insertions(+), 18 deletions(-)
- create mode 100644 tools/arch/arm64/include/asm/cputype.h
-
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index e5e405185498..084977cfebef 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -539,6 +539,15 @@ do {				\
+ 					stats->ld_llchit++;
+ 			}
+ 
++			/*
++			 * A hit in another cores cache must mean a llc snoop
++			 * filter hit
++			 */
++			if (lnum == P(LVLNUM, ANY_CACHE)) {
++				if (snoop & P(SNOOP, HITM))
++					HITM_INC(lcl_hitm);
++			}
++
+ 			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
+ 				stats->lcl_dram++;
+ 				if (snoop & P(SNOOP, HIT))
 -- 
 2.32.0
 
