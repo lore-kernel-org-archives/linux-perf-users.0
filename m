@@ -2,273 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3977C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Mar 2022 09:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A78C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Mar 2022 15:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356347AbiCYJNC (ORCPT
+        id S1358105AbiCYPP2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Mar 2022 05:13:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
+        Fri, 25 Mar 2022 11:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356321AbiCYJNC (ORCPT
+        with ESMTP id S1377315AbiCYPOK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Mar 2022 05:13:02 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8430ECF485;
-        Fri, 25 Mar 2022 02:11:27 -0700 (PDT)
-Received: from canpemm500002.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KPxCk3hfkzcc7J;
-        Fri, 25 Mar 2022 17:11:14 +0800 (CST)
-Received: from localhost.localdomain (10.175.103.91) by
- canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 25 Mar 2022 17:11:25 +0800
-From:   Wei Li <liwei391@huawei.com>
-To:     <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rui.xiang@huawei.com>, <guohanjun@huawei.com>
-Subject: [PATCH v2] perf tools: Enhance the matching of sub-commands
-Date:   Fri, 25 Mar 2022 17:20:32 +0800
-Message-ID: <20220325092032.2956161-1-liwei391@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 25 Mar 2022 11:14:10 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86529F53;
+        Fri, 25 Mar 2022 08:11:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648221091; x=1679757091;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9uyMwR8DOJr4uAYvr5QXiUFJVCNv0WP45q4Cbd6UBCI=;
+  b=lnzE7v4HEnj9dFlMWQT8e4xtvbFFMuQhQwKQ/ihVG75C2sM/vFhzUUoC
+   lGFebkpPiSmfj/s760XPdq7ctMmt2TbLRBnTx6CvVLehK9N+MLXyFHPoR
+   3rWag+J1OHEFCsfCPxUpOCHXkg/dIjr6OPzODOs4PiABGQFg8vavpHm9l
+   B3twk9/T2OBaaf6RHqgEC9U487leD/3W1VhGmPxBlXxjfE5AOTIHL/raY
+   QUbGLlC/jk3MpfLCGk5j5JUVZ+6TM/rfm3U4e+lxZdeDuRCUvoV/m9ocf
+   +SgHp1ezqGDgcnV11ERTDmYv7wPrm8fdo6hAxb6VilcCW++9G0PrIi5HK
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="283522801"
+X-IronPort-AV: E=Sophos;i="5.90,209,1643702400"; 
+   d="scan'208";a="283522801"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2022 08:11:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,209,1643702400"; 
+   d="scan'208";a="545111184"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 25 Mar 2022 08:11:31 -0700
+Received: from [10.209.4.108] (kliang2-MOBL.ccr.corp.intel.com [10.209.4.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id D20755807D2;
+        Fri, 25 Mar 2022 08:11:29 -0700 (PDT)
+Message-ID: <a1d1389f-b1f3-cd34-ccef-0657fc1fa4f4@linux.intel.com>
+Date:   Fri, 25 Mar 2022 11:11:28 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500002.china.huawei.com (7.192.104.244)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v3 3/5] perf/core: Don't need event_filter_match in
+ merge_sched_in()
+Content-Language: en-US
+To:     Chengming Zhou <zhouchengming@bytedance.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, eranian@google.com
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        duanxiongchun@bytedance.com, songmuchun@bytedance.com
+References: <20220325035318.42168-1-zhouchengming@bytedance.com>
+ <20220325035318.42168-4-zhouchengming@bytedance.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220325035318.42168-4-zhouchengming@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-We support short command 'rec*' for 'record' and 'rep*' for 'report' in
-lots of sub-commands, but the matching is not quite strict currnetly.
 
-It may be puzzling sometime, like we mis-type a 'recport' to report but
-it will perform 'record' in fact without any message.
 
-To fix this, add a check to ensure that the short cmd is valid prefix
-of the real command.
+On 3/24/2022 11:53 PM, Chengming Zhou wrote:
+> There is one obselete comment in perf_cgroup_switch(), since
+> we don't use event_filter_match() when event_sched_out().
+> 
+> Then found we needn't to use event_filter_match() in
+> merge_sched_in() too. Because now we use the perf_event groups
+> RB-tree to get the exact matched perf_events, don't need to
+> go through the event_filter_match() to check if matched again.
+> 
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> ---
+>   kernel/events/core.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index dd985c77bc37..225d408deb1a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -856,7 +856,8 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
+>   			cpu_ctx_sched_out(cpuctx, EVENT_ALL);
+>   			/*
+>   			 * must not be done before ctxswout due
+> -			 * to event_filter_match() in event_sched_out()
+> +			 * to update_cgrp_time_from_cpuctx() in
+> +			 * ctx_sched_out()
+>   			 */
+>   			cpuctx->cgrp = NULL;
+>   		}
+> @@ -3804,9 +3805,6 @@ static int merge_sched_in(struct perf_event *event, void *data)
+>   	if (event->state <= PERF_EVENT_STATE_OFF)
+>   		return 0;
+>   
+> -	if (!event_filter_match(event))
+> -		return 0;
+> -
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
----
- tools/perf/builtin-c2c.c       | 5 +++--
- tools/perf/builtin-kmem.c      | 2 +-
- tools/perf/builtin-kvm.c       | 9 +++++----
- tools/perf/builtin-lock.c      | 5 +++--
- tools/perf/builtin-mem.c       | 5 +++--
- tools/perf/builtin-sched.c     | 4 ++--
- tools/perf/builtin-script.c    | 4 ++--
- tools/perf/builtin-stat.c      | 4 ++--
- tools/perf/builtin-timechart.c | 3 ++-
- 9 files changed, 23 insertions(+), 18 deletions(-)
+Both X86 and Arm implemented PMU specific filter_match callback for the 
+hybrid system. I think the check is still required at least for the 
+hybrid system.
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 77dd4afacca4..04110ac9c956 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -44,6 +44,7 @@
- #include "../perf.h"
- #include "pmu.h"
- #include "pmu-hybrid.h"
-+#include "string2.h"
- 
- struct c2c_hists {
- 	struct hists		hists;
-@@ -3025,9 +3026,9 @@ int cmd_c2c(int argc, const char **argv)
- 	if (!argc)
- 		usage_with_options(c2c_usage, c2c_options);
- 
--	if (!strncmp(argv[0], "rec", 3)) {
-+	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
- 		return perf_c2c__record(argc, argv);
--	} else if (!strncmp(argv[0], "rep", 3)) {
-+	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
- 		return perf_c2c__report(argc, argv);
- 	} else {
- 		usage_with_options(c2c_usage, c2c_options);
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 99d7ff9a8eff..ebfab2ca1702 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -1946,7 +1946,7 @@ int cmd_kmem(int argc, const char **argv)
- 			kmem_page = 1;
- 	}
- 
--	if (!strncmp(argv[0], "rec", 3)) {
-+	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
- 		symbol__init(NULL);
- 		return __cmd_record(argc, argv);
- 	}
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index c6f352ee57e6..953cb8127a17 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -24,6 +24,7 @@
- #include "util/ordered-events.h"
- #include "util/kvm-stat.h"
- #include "ui/ui.h"
-+#include "util/string2.h"
- 
- #include <sys/prctl.h>
- #ifdef HAVE_TIMERFD_SUPPORT
-@@ -1500,10 +1501,10 @@ static int kvm_cmd_stat(const char *file_name, int argc, const char **argv)
- 		goto perf_stat;
- 	}
- 
--	if (!strncmp(argv[1], "rec", 3))
-+	if (strlen(argv[1]) > 2 && strstarts("record", argv[1]))
- 		return kvm_events_record(&kvm, argc - 1, argv + 1);
- 
--	if (!strncmp(argv[1], "rep", 3))
-+	if (strlen(argv[1]) > 2 && strstarts("report", argv[1]))
- 		return kvm_events_report(&kvm, argc - 1 , argv + 1);
- 
- #ifdef HAVE_TIMERFD_SUPPORT
-@@ -1631,9 +1632,9 @@ int cmd_kvm(int argc, const char **argv)
- 		}
- 	}
- 
--	if (!strncmp(argv[0], "rec", 3))
-+	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
- 		return __cmd_record(file_name, argc, argv);
--	else if (!strncmp(argv[0], "rep", 3))
-+	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
- 		return __cmd_report(file_name, argc, argv);
- 	else if (!strncmp(argv[0], "diff", 4))
- 		return cmd_diff(argc, argv);
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index d70131b7b1b1..24d402e84022 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -18,6 +18,7 @@
- #include "util/session.h"
- #include "util/tool.h"
- #include "util/data.h"
-+#include "util/string2.h"
- 
- #include <sys/types.h>
- #include <sys/prctl.h>
-@@ -997,9 +998,9 @@ int cmd_lock(int argc, const char **argv)
- 	if (!argc)
- 		usage_with_options(lock_usage, lock_options);
- 
--	if (!strncmp(argv[0], "rec", 3)) {
-+	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
- 		return __cmd_record(argc, argv);
--	} else if (!strncmp(argv[0], "report", 6)) {
-+	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
- 		trace_handler = &report_lock_ops;
- 		if (argc) {
- 			argc = parse_options(argc, argv,
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index fcf65a59bea2..9e435fd23503 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -20,6 +20,7 @@
- #include "util/symbol.h"
- #include "util/pmu.h"
- #include "util/pmu-hybrid.h"
-+#include "util/string2.h"
- #include <linux/err.h>
- 
- #define MEM_OPERATION_LOAD	0x1
-@@ -496,9 +497,9 @@ int cmd_mem(int argc, const char **argv)
- 			mem.input_name = "perf.data";
- 	}
- 
--	if (!strncmp(argv[0], "rec", 3))
-+	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
- 		return __cmd_record(argc, argv, &mem);
--	else if (!strncmp(argv[0], "rep", 3))
-+	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
- 		return report_events(argc, argv, &mem);
- 	else
- 		usage_with_options(mem_usage, mem_options);
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 72d446de9c60..646bd938927a 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -3561,7 +3561,7 @@ int cmd_sched(int argc, const char **argv)
- 	if (!strcmp(argv[0], "script"))
- 		return cmd_script(argc, argv);
- 
--	if (!strncmp(argv[0], "rec", 3)) {
-+	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
- 		return __cmd_record(argc, argv);
- 	} else if (!strncmp(argv[0], "lat", 3)) {
- 		sched.tp_handler = &lat_ops;
-@@ -3581,7 +3581,7 @@ int cmd_sched(int argc, const char **argv)
- 		sched.tp_handler = &map_ops;
- 		setup_sorting(&sched, latency_options, latency_usage);
- 		return perf_sched__map(&sched);
--	} else if (!strncmp(argv[0], "rep", 3)) {
-+	} else if (strlen(argv[0]) > 2 && strstarts("replay", argv[0])) {
- 		sched.tp_handler = &replay_ops;
- 		if (argc) {
- 			argc = parse_options(argc, argv, replay_options, replay_usage, 0);
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 23bc0fb5a381..e3f23a508aed 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3842,13 +3842,13 @@ int cmd_script(int argc, const char **argv)
- 	if (symbol__validate_sym_arguments())
- 		return -1;
- 
--	if (argc > 1 && !strncmp(argv[0], "rec", strlen("rec"))) {
-+	if (argc > 1 && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
- 		rec_script_path = get_script_path(argv[1], RECORD_SUFFIX);
- 		if (!rec_script_path)
- 			return cmd_record(argc, argv);
- 	}
- 
--	if (argc > 1 && !strncmp(argv[0], "rep", strlen("rep"))) {
-+	if (argc > 1 && strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
- 		rep_script_path = get_script_path(argv[1], REPORT_SUFFIX);
- 		if (!rep_script_path) {
- 			fprintf(stderr,
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 3f98689dd687..b33c92d00681 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2271,11 +2271,11 @@ int cmd_stat(int argc, const char **argv)
- 	} else
- 		stat_config.csv_sep = DEFAULT_SEPARATOR;
- 
--	if (argc && !strncmp(argv[0], "rec", 3)) {
-+	if (argc && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
- 		argc = __cmd_record(argc, argv);
- 		if (argc < 0)
- 			return -1;
--	} else if (argc && !strncmp(argv[0], "rep", 3))
-+	} else if (argc && strlen(argv[0]) > 2 && strstarts("report", argv[0]))
- 		return __cmd_report(argc, argv);
- 
- 	interval = stat_config.interval;
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 43bf4d67edb0..afce731cec16 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -35,6 +35,7 @@
- #include "util/tool.h"
- #include "util/data.h"
- #include "util/debug.h"
-+#include "util/string2.h"
- #include <linux/err.h>
- 
- #ifdef LACKS_OPEN_MEMSTREAM_PROTOTYPE
-@@ -1983,7 +1984,7 @@ int cmd_timechart(int argc, const char **argv)
- 		return -1;
- 	}
- 
--	if (argc && !strncmp(argv[0], "rec", 3)) {
-+	if (argc && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
- 		argc = parse_options(argc, argv, timechart_record_options,
- 				     timechart_record_usage,
- 				     PARSE_OPT_STOP_AT_NON_OPTION);
--- 
-2.25.1
 
+Thanks,
+Kan
+>   	if (group_can_go_on(event, cpuctx, *can_add_hw)) {
+>   		if (!group_sched_in(event, cpuctx, ctx))
+>   			list_add_tail(&event->active_list, get_event_list(event));
