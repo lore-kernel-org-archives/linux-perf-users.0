@@ -2,143 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B520CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Mar 2022 20:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5C2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Mar 2022 01:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244132AbiCXUi0 (ORCPT
+        id S234805AbiCYBoE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Mar 2022 16:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49194 "EHLO
+        Thu, 24 Mar 2022 21:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346156AbiCXUiZ (ORCPT
+        with ESMTP id S1356161AbiCYBks (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Mar 2022 16:38:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49622B0D37;
-        Thu, 24 Mar 2022 13:36:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D8DF760F88;
-        Thu, 24 Mar 2022 20:36:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B981C340EC;
-        Thu, 24 Mar 2022 20:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648154212;
-        bh=Kx6tBROKdcOdeiKP7X4AbU2NzC0vd6LCDCQ6b1g3bQk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SvPapQeGsj/0s8K1VaONuL2jEDQcMsPYMoapQ4/y5R3vHXZqkq3cpWbj4lY2BaTX1
-         eEIjoAH7+ICIjcDFwNx1vpv/yu5O/ju51k7VNa1kZhw5C/TfvFGdox6eC3CtCD7zBV
-         1lP9nAQU4U6OjjmvQmZX0U5aNXQRsKRhKmUwgw3nLrn+jCpmy+BrcpgLgY6CSBXhud
-         ViNkzdJsjcaEJJVcFVRxNlgVGTXlUAiEkw+PN4SQEJODMIFjHmyxUO3oiyIthH4VuV
-         lTfI4FGlB438hp4zx33DAfcgOsKkIV74Z5TkulgmVtPP8b3DyuO4D08qCMnaN96j3y
-         YchcITBpma4pQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 10E8C40407; Thu, 24 Mar 2022 17:36:50 -0300 (-03)
-Date:   Thu, 24 Mar 2022 17:36:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        gor@linux.ibm.com, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sven Schnelle <svens@linux.ibm.com>, sumanthk@linux.ibm.com,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [PATCH] perf/stat: Fix perf stat for forked applications
-Message-ID: <YjzWYjO06FwP6Mgy@kernel.org>
-References: <20220317155346.577384-1-tmricht@linux.ibm.com>
- <Yjr/X+Cuunyo84S3@krava>
- <CAM9d7cgkwDQCEWRFT2G87fba7MLPR2OtEn6pvHDzpegpR-AMSA@mail.gmail.com>
+        Thu, 24 Mar 2022 21:40:48 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D565517DF;
+        Thu, 24 Mar 2022 18:39:02 -0700 (PDT)
+Received: from kwepemi500021.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KPl7R4CLTzCrYt;
+        Fri, 25 Mar 2022 09:36:51 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ kwepemi500021.china.huawei.com (7.221.188.245) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 25 Mar 2022 09:39:00 +0800
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 25 Mar 2022 09:38:59 +0800
+Subject: Re: [PATCH] perf/x86: Unify format of events sysfs show
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <tglx@linutronix.de>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20220324031957.135595-1-yangjihong1@huawei.com>
+ <20220324101107.GC8939@worktop.programming.kicks-ass.net>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <a4a0758f-b183-8244-d59c-10d31d8e0a3a@huawei.com>
+Date:   Fri, 25 Mar 2022 09:38:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cgkwDQCEWRFT2G87fba7MLPR2OtEn6pvHDzpegpR-AMSA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20220324101107.GC8939@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 23, 2022 at 01:54:23PM -0700, Namhyung Kim escreveu:
-> On Wed, Mar 23, 2022 at 4:07 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Thu, Mar 17, 2022 at 04:53:46PM +0100, Thomas Richter wrote:
-> > > I have run into the following issue:
-> > >
-> > >  # perf stat -a -e new_pmu/INSTRUCTION_7/ --  mytest -c1 7
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >                  0      new_pmu/INSTRUCTION_7/
-> > >
-> > >        0.000366428 seconds time elapsed
-> > >  #
-> > >
-> > > The new PMU for s390 counts the execution of certain CPU instructions.
-> > > The root cause is the extremely small run time of the
-> > > mytest program. It just executes some assembly instructions
-> > > and then exits. In above invocation the instruction is executed
-> > > exactly one time (-c1 option). The PMU is expected to report this one
-> > > time execution by a counter value of one, but fails to do so
-> > > in some cases, not all.
-> > >
-> > > Debugging reveals the invocation of the child process is done
-> > > *before* the counter events are installed and enabled. Tracing
-> > > reveals that sometimes the child process starts and exits before
-> > > the event is installed on all CPUs. The more CPUs the machine has,
-> > > the more often this miscount happens.
-> > >
-> > > Fix this by reversing the start of the work load after the events
-> > > have been installed on the specified CPUs. Now the comment also
-> > > matches the code.
-> > >
-> > > Output after:
-> > >  # perf stat -a -e new_pmu/INSTRUCTION_7/ --  mytest -c1 7
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >                  1      new_pmu/INSTRUCTION_7/
-> > >
-> > >        0.000366428 seconds time elapsed
-> > >  #
-> > >
-> > > Now the correct result is reported rock solid all the time regardless
-> > > how many CPUs are online.
-> > >
-> > > Fixes:  acf2892270dc ("perf stat: Use perf_evlist__prepare/start_workload())
-> > >
-> > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > > Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/builtin-stat.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > > index 3f98689dd687..60baa3dadc4b 100644
-> > > --- a/tools/perf/builtin-stat.c
-> > > +++ b/tools/perf/builtin-stat.c
-> > > @@ -955,10 +955,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> > >        * Enable counters and exec the command:
-> > >        */
-> > >       if (forks) {
-> > > -             evlist__start_workload(evsel_list);
-> > >               err = enable_counters();
-> > >               if (err)
-> > >                       return -1;
-> > > +             evlist__start_workload(evsel_list);
-> >
-> > right, without -a the event has enable_on_exec so the race does not
-> > matter, but it's a problem for system wide with fork
+Hi Peter,
+
+On 2022/3/24 18:11, Peter Zijlstra wrote:
+> On Thu, Mar 24, 2022 at 11:19:57AM +0800, Yang Jihong wrote:
+>> Sysfs show formats of files in /sys/devices/cpu/events/ are not unified,
+>> some end with "\n", and some do not. Modify sysfs show format of events
+>> defined by EVENT_ATTR_STR to end with "\n".
 > 
-> Agreed.  Also we may move the enable_counters() and the
-> clock code out of the if block to be shared with the else block.
+> Did you test all the userspace that consumes these fields to make sure
+> none of them break? I suppose it's mostly perf tool, but I'm fairly sure
+> there's others out there as well.
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+Yes, I tested "perf record" and "perf stat" commands on my machine 
+against the modified events, and the results are as follows:
 
-Thanks, applied and added your comments as "Reviewer notes", and please
-consider using the Reviewed-by tag instead of the Acked-by ones.
+$ perf stat -e 
+topdown-fetch-bubbles,topdown-recovery-bubbles,topdown-slots-issued,topdown-slots-retired,topdown-total-slots 
+-a sleep 1
 
-Thanks anyways, as always!
+  Performance counter stats for 'system wide':
 
-- Arnaldo
+            2356235      topdown-fetch-bubbles     #   1211.9% frontend 
+bound
+             226132      topdown-recovery-bubbles  #    182.9% bad 
+speculation
+            1073595      topdown-slots-issued      #  -1780.4% backend bound
+             944133      topdown-slots-retired     #    485.6% retiring
+             194420      topdown-total-slots
+
+        0.987394388 seconds time elapsed
+
+
+$ perf record -e 
+topdown-fetch-bubbles,topdown-recovery-bubbles,topdown-slots-issued,topdown-slots-retired,topdown-total-slots 
+-a sleep 1
+Lowering default frequency rate from 4000 to 3000.
+Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
+Couldn't synthesize bpf events.
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.300 MB perf.data (2620 samples) ]
+
+$ perf evlist
+topdown-fetch-bubbles
+topdown-recovery-bubbles
+topdown-slots-issued
+topdown-slots-retired
+topdown-total-slots
+dummy:HG
+
+.
+
+
+Thanks,
+Jihong
+> .
+> 
