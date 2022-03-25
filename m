@@ -2,42 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C38C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Mar 2022 04:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A6CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Mar 2022 04:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358269AbiCYEpF (ORCPT
+        id S1347704AbiCYEpK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Mar 2022 00:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
+        Fri, 25 Mar 2022 00:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358265AbiCYEpE (ORCPT
+        with ESMTP id S1358276AbiCYEpH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Mar 2022 00:45:04 -0400
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F19673EE;
-        Thu, 24 Mar 2022 21:43:21 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="55449197"
+        Fri, 25 Mar 2022 00:45:07 -0400
+Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B3B6948B;
+        Thu, 24 Mar 2022 21:43:23 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="67012658"
 X-IronPort-AV: E=Sophos;i="5.90,209,1643641200"; 
-   d="scan'208";a="55449197"
+   d="scan'208";a="67012658"
 Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP; 25 Mar 2022 13:43:19 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 74EB3DB9FB;
-        Fri, 25 Mar 2022 13:43:18 +0900 (JST)
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP; 25 Mar 2022 13:43:17 +0900
+Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
+        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 7C768DB9F7;
+        Fri, 25 Mar 2022 13:43:16 +0900 (JST)
 Received: from oym-om3.fujitsu.com (oym-om3.o.css.fujitsu.com [10.85.58.163])
-        by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 88F9AC9296;
-        Fri, 25 Mar 2022 13:43:17 +0900 (JST)
+        by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id A5C51DACE8;
+        Fri, 25 Mar 2022 13:43:15 +0900 (JST)
 Received: from localhost.localdomain (bakeccha.fct.css.fujitsu.com [10.126.195.136])
-        by oym-om3.fujitsu.com (Postfix) with ESMTP id 51D91403F02E4;
-        Fri, 25 Mar 2022 13:43:17 +0900 (JST)
+        by oym-om3.fujitsu.com (Postfix) with ESMTP id 6F3BA403F02E4;
+        Fri, 25 Mar 2022 13:43:15 +0900 (JST)
 From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         jolsa@redhat.com, namhyung@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [RFC PATCH v2 3/7] libperf: Add perf_evsel__{refresh, period}() functions
-Date:   Fri, 25 Mar 2022 13:38:25 +0900
-Message-Id: <20220325043829.224045-4-nakamura.shun@fujitsu.com>
+Subject: [RFC PATCH v2 1/7] libperf tests: Fix typo in the error message
+Date:   Fri, 25 Mar 2022 13:38:23 +0900
+Message-Id: <20220325043829.224045-2-nakamura.shun@fujitsu.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220325043829.224045-1-nakamura.shun@fujitsu.com>
 References: <20220325043829.224045-1-nakamura.shun@fujitsu.com>
@@ -48,182 +48,53 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add the following functions:
-
-  perf_evsel__refresh()
-  perf_evsel__refresh_cpu()
-  perf_evsel__period()
-  perf_evsel__period_cpu()
-
-to set the over flow limit and period.
+This patch corrects a typo in the error message.
 
 Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 ---
- tools/lib/perf/Documentation/libperf.txt |  5 ++
- tools/lib/perf/evsel.c                   | 68 +++++++++++++++++++++---
- tools/lib/perf/include/perf/evsel.h      |  5 ++
- tools/lib/perf/libperf.map               |  4 ++
- 4 files changed, 76 insertions(+), 6 deletions(-)
+ tools/lib/perf/tests/test-evlist.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index 32c5051c24eb..ae55e62fc4ce 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -146,6 +146,11 @@ SYNOPSIS
-   int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-   int perf_evsel__disable(struct perf_evsel *evsel);
-   int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-+  int perf_evsel__refresh(struct perf_evsel *evsel, int refresh);
-+  int perf_evsel__refresh_cpu(struct perf_evsel *evsel, int refresh,
-+                              int cpu_map_idx);
-+  int perf_evsel__period(struct perf_evsel *evsel, int period);
-+  int perf_evsel__period_cpu(struct perf_evsel *evsel, int period, int cpu_map_idx);
-   struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
-   struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
-   struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 6640a333e6d9..b17842581dea 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -330,7 +330,7 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
- }
+diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
+index fa854c83b7e7..ed616fc19b4f 100644
+--- a/tools/lib/perf/tests/test-evlist.c
++++ b/tools/lib/perf/tests/test-evlist.c
+@@ -69,7 +69,7 @@ static int test_stat_cpu(void)
+ 	perf_evlist__set_maps(evlist, cpus, NULL);
  
- static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
--				 int ioc,  void *arg,
-+				 int ioc, unsigned long arg,
- 				 int cpu_map_idx)
- {
- 	int thread;
-@@ -353,7 +353,7 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
+ 	err = perf_evlist__open(evlist);
+-	__T("failed to open evsel", err == 0);
++	__T("failed to open evlist", err == 0);
  
- int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- {
--	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, cpu_map_idx);
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, cpu_map_idx);
- }
+ 	perf_evlist__for_each_evsel(evlist, evsel) {
+ 		cpus = perf_evsel__cpus(evsel);
+@@ -130,7 +130,7 @@ static int test_stat_thread(void)
+ 	perf_evlist__set_maps(evlist, NULL, threads);
  
- int perf_evsel__enable(struct perf_evsel *evsel)
-@@ -362,13 +362,13 @@ int perf_evsel__enable(struct perf_evsel *evsel)
- 	int err = 0;
+ 	err = perf_evlist__open(evlist);
+-	__T("failed to open evsel", err == 0);
++	__T("failed to open evlist", err == 0);
  
- 	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
--		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, i);
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, i);
- 	return err;
- }
+ 	perf_evlist__for_each_evsel(evlist, evsel) {
+ 		perf_evsel__read(evsel, 0, 0, &counts);
+@@ -187,7 +187,7 @@ static int test_stat_thread_enable(void)
+ 	perf_evlist__set_maps(evlist, NULL, threads);
  
- int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- {
--	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, cpu_map_idx);
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, cpu_map_idx);
- }
+ 	err = perf_evlist__open(evlist);
+-	__T("failed to open evsel", err == 0);
++	__T("failed to open evlist", err == 0);
  
- int perf_evsel__disable(struct perf_evsel *evsel)
-@@ -377,7 +377,63 @@ int perf_evsel__disable(struct perf_evsel *evsel)
- 	int err = 0;
+ 	perf_evlist__for_each_evsel(evlist, evsel) {
+ 		perf_evsel__read(evsel, 0, 0, &counts);
+@@ -507,7 +507,7 @@ static int test_stat_multiplexing(void)
+ 	perf_evlist__set_maps(evlist, NULL, threads);
  
- 	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
--		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, i);
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, i);
-+	return err;
-+}
-+
-+int perf_evsel__refresh_cpu(struct perf_evsel *evsel, int refresh, int cpu_map_idx)
-+{
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_REFRESH, refresh, cpu_map_idx);
-+}
-+
-+int perf_evsel__refresh(struct perf_evsel *evsel, int refresh)
-+{
-+	int i;
-+	int err = 0;
-+
-+	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_REFRESH, refresh, i);
-+	return err;
-+}
-+
-+int perf_evsel__period_cpu(struct perf_evsel *evsel, __u64 period, int cpu_map_idx)
-+{
-+	struct perf_event_attr *attr;
-+	int err = 0;
-+
-+	attr = perf_evsel__attr(evsel);
-+	if (!attr)
-+		return -EINVAL;
-+
-+	err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_PERIOD,
-+				    (unsigned long)&period, cpu_map_idx);
-+	if (err)
-+		return err;
-+
-+	attr->sample_period = period;
-+
-+	return err;
-+}
-+
-+int perf_evsel__period(struct perf_evsel *evsel, __u64 period)
-+{
-+	struct perf_event_attr *attr;
-+	int i;
-+	int err = 0;
-+
-+	attr = perf_evsel__attr(evsel);
-+	if (!attr)
-+		return -EINVAL;
-+
-+	for (i = 0; i < xyarray__max_x(evsel->fd); i++) {
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_PERIOD,
-+					    (unsigned long)&period, i);
-+		if (err)
-+			return err;
-+	}
-+
-+	attr->sample_period = period;
-+
- 	return err;
- }
+ 	err = perf_evlist__open(evlist);
+-	__T("failed to open evsel", err == 0);
++	__T("failed to open evlist", err == 0);
  
-@@ -388,7 +444,7 @@ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
- 	for (i = 0; i < perf_cpu_map__nr(evsel->cpus) && !err; i++)
- 		err = perf_evsel__run_ioctl(evsel,
- 				     PERF_EVENT_IOC_SET_FILTER,
--				     (void *)filter, i);
-+				     (unsigned long)filter, i);
- 	return err;
- }
+ 	perf_evlist__enable(evlist);
  
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 2a9516b42d15..360ced734add 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -38,6 +38,11 @@ LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
- LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
- LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
- LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-+LIBPERF_API int perf_evsel__refresh(struct perf_evsel *evsel, int refresh);
-+LIBPERF_API int perf_evsel__refresh_cpu(struct perf_evsel *evsel, int refresh,
-+					int cpu_map_idx);
-+LIBPERF_API int perf_evsel__period(struct perf_evsel *evsel, __u64 period);
-+LIBPERF_API int perf_evsel__period_cpu(struct perf_evsel *evsel, __u64 period, int cpu_map_idx);
- LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
- LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
- LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index 6fa0d651576b..ab0f44e9bb57 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -29,6 +29,10 @@ LIBPERF_0.0.1 {
- 		perf_evsel__munmap;
- 		perf_evsel__mmap_base;
- 		perf_evsel__read;
-+		perf_evsel__refresh;
-+		perf_evsel__refresh_cpu;
-+		perf_evsel__period;
-+		perf_evsel__period_cpu;
- 		perf_evsel__cpus;
- 		perf_evsel__threads;
- 		perf_evsel__attr;
 -- 
 2.25.1
 
