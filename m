@@ -2,390 +2,273 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5716EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Mar 2022 04:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3977C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Mar 2022 09:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358275AbiCYEpM (ORCPT
+        id S1356347AbiCYJNC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Mar 2022 00:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+        Fri, 25 Mar 2022 05:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358279AbiCYEpJ (ORCPT
+        with ESMTP id S1356321AbiCYJNC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Mar 2022 00:45:09 -0400
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765C969487;
-        Thu, 24 Mar 2022 21:43:23 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="55449200"
-X-IronPort-AV: E=Sophos;i="5.90,209,1643641200"; 
-   d="scan'208";a="55449200"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP; 25 Mar 2022 13:43:20 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-        by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 2E8F5CA247;
-        Fri, 25 Mar 2022 13:43:19 +0900 (JST)
-Received: from oym-om3.fujitsu.com (oym-om3.o.css.fujitsu.com [10.85.58.163])
-        by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 5F0AF141AB;
-        Fri, 25 Mar 2022 13:43:18 +0900 (JST)
-Received: from localhost.localdomain (bakeccha.fct.css.fujitsu.com [10.126.195.136])
-        by oym-om3.fujitsu.com (Postfix) with ESMTP id 28763403F02E6;
-        Fri, 25 Mar 2022 13:43:18 +0900 (JST)
-From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [RFC PATCH v2 4/7] libperf: Introduce perf_{evsel, evlist}__open_opt with extensible struct opts
-Date:   Fri, 25 Mar 2022 13:38:26 +0900
-Message-Id: <20220325043829.224045-5-nakamura.shun@fujitsu.com>
+        Fri, 25 Mar 2022 05:13:02 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8430ECF485;
+        Fri, 25 Mar 2022 02:11:27 -0700 (PDT)
+Received: from canpemm500002.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KPxCk3hfkzcc7J;
+        Fri, 25 Mar 2022 17:11:14 +0800 (CST)
+Received: from localhost.localdomain (10.175.103.91) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 25 Mar 2022 17:11:25 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rui.xiang@huawei.com>, <guohanjun@huawei.com>
+Subject: [PATCH v2] perf tools: Enhance the matching of sub-commands
+Date:   Fri, 25 Mar 2022 17:20:32 +0800
+Message-ID: <20220325092032.2956161-1-liwei391@huawei.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220325043829.224045-1-nakamura.shun@fujitsu.com>
-References: <20220325043829.224045-1-nakamura.shun@fujitsu.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500002.china.huawei.com (7.192.104.244)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Introduce perf_{evsel, evlist}__open_opt with extensible structure opts.
-The mechanism of the extensible structure opts imitates
-tools/lib/bpf/libbpf.h. This allows the user to set the open_flags
-specified in perf_event_open and a signal handler to receive overflow
-notifications for sampling events.
+We support short command 'rec*' for 'record' and 'rep*' for 'report' in
+lots of sub-commands, but the matching is not quite strict currnetly.
 
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+It may be puzzling sometime, like we mis-type a 'recport' to report but
+it will perform 'record' in fact without any message.
+
+To fix this, add a check to ensure that the short cmd is valid prefix
+of the real command.
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
 ---
- tools/lib/perf/Documentation/libperf.txt |  14 +++
- tools/lib/perf/evlist.c                  |  20 +++++
- tools/lib/perf/evsel.c                   | 105 +++++++++++++++++++++++
- tools/lib/perf/include/perf/evlist.h     |   3 +
- tools/lib/perf/include/perf/evsel.h      |  26 ++++++
- tools/lib/perf/internal.h                |  44 ++++++++++
- tools/lib/perf/libperf.map               |   2 +
- 7 files changed, 214 insertions(+)
+ tools/perf/builtin-c2c.c       | 5 +++--
+ tools/perf/builtin-kmem.c      | 2 +-
+ tools/perf/builtin-kvm.c       | 9 +++++----
+ tools/perf/builtin-lock.c      | 5 +++--
+ tools/perf/builtin-mem.c       | 5 +++--
+ tools/perf/builtin-sched.c     | 4 ++--
+ tools/perf/builtin-script.c    | 4 ++--
+ tools/perf/builtin-stat.c      | 4 ++--
+ tools/perf/builtin-timechart.c | 3 ++-
+ 9 files changed, 23 insertions(+), 18 deletions(-)
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index ae55e62fc4ce..700c1ce15159 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -131,6 +131,20 @@ SYNOPSIS
-           };
-   };
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 77dd4afacca4..04110ac9c956 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -44,6 +44,7 @@
+ #include "../perf.h"
+ #include "pmu.h"
+ #include "pmu-hybrid.h"
++#include "string2.h"
  
-+  struct perf_evsel_open_opts {
-+          /* size of this struct, for forward/backward compatibility */
-+          size_t sz;
-+
-+          unsigned long open_flags;       /* perf_event_open flags */
-+          int flags;                      /* fcntl flags */
-+          unsigned int signal;
-+          int owner_type;
-+          struct sigaction *sig;
-+  };
-+  #define perf_evsel_open_opts__last_field sig
-+
-+  #define LIBPERF_OPTS(TYPE, NAME, ...)
-+
-   struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr);
-   void perf_evsel__delete(struct perf_evsel *evsel);
-   int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 9a770bfdc804..6f136905d249 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -666,3 +666,23 @@ void perf_evlist__set_leader(struct perf_evlist *evlist)
- 		__perf_evlist__set_leader(&evlist->entries, first);
+ struct c2c_hists {
+ 	struct hists		hists;
+@@ -3025,9 +3026,9 @@ int cmd_c2c(int argc, const char **argv)
+ 	if (!argc)
+ 		usage_with_options(c2c_usage, c2c_options);
+ 
+-	if (!strncmp(argv[0], "rec", 3)) {
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		return perf_c2c__record(argc, argv);
+-	} else if (!strncmp(argv[0], "rep", 3)) {
++	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
+ 		return perf_c2c__report(argc, argv);
+ 	} else {
+ 		usage_with_options(c2c_usage, c2c_options);
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 99d7ff9a8eff..ebfab2ca1702 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -1946,7 +1946,7 @@ int cmd_kmem(int argc, const char **argv)
+ 			kmem_page = 1;
  	}
- }
-+
-+int perf_evlist__open_opts(struct perf_evlist *evlist,
-+			   struct perf_evsel_open_opts *opts)
-+{
-+	struct perf_evsel *evsel;
-+	int err;
-+
-+	perf_evlist__for_each_entry(evlist, evsel) {
-+		err = perf_evsel__open_opts(evsel, evsel->cpus,
-+					    evsel->threads, opts);
-+		if (err < 0)
-+			goto out_err;
-+	}
-+
-+	return 0;
-+
-+out_err:
-+	perf_evlist__close(evlist);
-+	return err;
-+}
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index b17842581dea..db9b7274feb5 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -1,4 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
-+#ifndef _GNU_SOURCE
-+#define _GNU_SOURCE
-+#endif
- #include <errno.h>
- #include <unistd.h>
- #include <sys/syscall.h>
-@@ -16,8 +19,12 @@
- #include <internal/lib.h>
- #include <linux/string.h>
- #include <sys/ioctl.h>
-+#include <signal.h>
-+#include <fcntl.h>
-+#include <sys/types.h>
- #include <sys/mman.h>
- #include <asm/bug.h>
-+#include "internal.h"
  
- void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
- 		      int idx)
-@@ -511,3 +518,101 @@ void perf_counts_values__scale(struct perf_counts_values *count,
- 	if (pscaled)
- 		*pscaled = scaled;
- }
-+
-+static int perf_evsel__run_fcntl(struct perf_evsel *evsel,
-+				 unsigned int cmd, unsigned long arg,
-+				 int cpu_map_idx)
-+{
-+	int thread;
-+
-+	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+		int err;
-+		int *fd = FD(evsel, cpu_map_idx, thread);
-+
-+		if (!fd || *fd < 0)
-+			return -1;
-+
-+		err = fcntl(*fd, cmd, arg);
-+
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int perf_evsel__set_signal_handler(struct perf_evsel *evsel,
-+					  struct perf_evsel_open_opts *opts)
-+{
-+	unsigned int flags;
-+	unsigned int signal;
-+	struct f_owner_ex owner;
-+	struct sigaction *sig;
-+	int cpu_map_idx;
-+	int err = 0;
-+
-+	flags = OPTS_GET(opts, flags, (O_RDWR | O_NONBLOCK | O_ASYNC));
-+	signal = OPTS_GET(opts, signal, SIGIO);
-+	owner.type = OPTS_GET(opts, owner_type, F_OWNER_PID);
-+	sig = OPTS_GET(opts, sig, NULL);
-+
-+	if (flags == 0 && signal == 0 && !owner.type == 0 && sig == 0)
-+		return err;
-+
-+	err = sigaction(signal, sig, NULL);
-+	if (err)
-+		return err;
-+
-+	switch (owner.type) {
-+	case F_OWNER_PID:
-+		owner.pid = getpid();
-+		break;
-+	case F_OWNER_TID:
-+		owner.pid = syscall(SYS_gettid);
-+		break;
-+	case F_OWNER_PGRP:
-+	default:
-+		return -1;
-+	}
-+
-+	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->fd); cpu_map_idx++) {
-+		err = perf_evsel__run_fcntl(evsel, F_SETFL, flags, cpu_map_idx);
-+		if (err)
-+			return err;
-+
-+		err = perf_evsel__run_fcntl(evsel, F_SETSIG, signal, cpu_map_idx);
-+		if (err)
-+			return err;
-+
-+		err = perf_evsel__run_fcntl(evsel, F_SETOWN_EX,
-+					    (unsigned long)&owner, cpu_map_idx);
-+		if (err)
-+			return err;
-+	}
-+
-+	return err;
-+}
-+
-+int perf_evsel__open_opts(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
-+			  struct perf_thread_map *threads,
-+			  struct perf_evsel_open_opts *opts)
-+{
-+	int err = 0;
-+
-+	if (!OPTS_VALID(opts, perf_evsel_open_opts)) {
-+		err = -EINVAL;
-+		return err;
-+	}
-+
-+	evsel->open_flags = OPTS_GET(opts, open_flags, 0);
-+
-+	err = perf_evsel__open(evsel, cpus, threads);
-+	if (err)
-+		return err;
-+
-+	err = perf_evsel__set_signal_handler(evsel, opts);
-+	if (err)
-+		return err;
-+
-+	return err;
-+}
-diff --git a/tools/lib/perf/include/perf/evlist.h b/tools/lib/perf/include/perf/evlist.h
-index 9ca399d49bb4..6eff1e9b3481 100644
---- a/tools/lib/perf/include/perf/evlist.h
-+++ b/tools/lib/perf/include/perf/evlist.h
-@@ -9,6 +9,7 @@ struct perf_evlist;
- struct perf_evsel;
- struct perf_cpu_map;
- struct perf_thread_map;
-+struct perf_evsel_open_opts;
+-	if (!strncmp(argv[0], "rec", 3)) {
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		symbol__init(NULL);
+ 		return __cmd_record(argc, argv);
+ 	}
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index c6f352ee57e6..953cb8127a17 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -24,6 +24,7 @@
+ #include "util/ordered-events.h"
+ #include "util/kvm-stat.h"
+ #include "ui/ui.h"
++#include "util/string2.h"
  
- LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
- 				  struct perf_evsel *evsel);
-@@ -47,4 +48,6 @@ LIBPERF_API struct perf_mmap *perf_evlist__next_mmap(struct perf_evlist *evlist,
- 	     (pos) = perf_evlist__next_mmap((evlist), (pos), overwrite))
+ #include <sys/prctl.h>
+ #ifdef HAVE_TIMERFD_SUPPORT
+@@ -1500,10 +1501,10 @@ static int kvm_cmd_stat(const char *file_name, int argc, const char **argv)
+ 		goto perf_stat;
+ 	}
  
- LIBPERF_API void perf_evlist__set_leader(struct perf_evlist *evlist);
-+LIBPERF_API int perf_evlist__open_opts(struct perf_evlist *evlist,
-+				       struct perf_evsel_open_opts *opts);
- #endif /* __LIBPERF_EVLIST_H */
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 360ced734add..ecf30bc6303f 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -5,6 +5,7 @@
- #include <stdint.h>
- #include <perf/core.h>
- #include <stdbool.h>
-+#include <signal.h>
- #include <linux/types.h>
+-	if (!strncmp(argv[1], "rec", 3))
++	if (strlen(argv[1]) > 2 && strstarts("record", argv[1]))
+ 		return kvm_events_record(&kvm, argc - 1, argv + 1);
  
- struct perf_evsel;
-@@ -23,6 +24,27 @@ struct perf_counts_values {
- 	};
- };
+-	if (!strncmp(argv[1], "rep", 3))
++	if (strlen(argv[1]) > 2 && strstarts("report", argv[1]))
+ 		return kvm_events_report(&kvm, argc - 1 , argv + 1);
  
-+struct perf_evsel_open_opts {
-+	/* size of this struct, for forward/backward compatibility */
-+	size_t sz;
-+
-+	unsigned long open_flags;	/* perf_event_open flags */
-+	int flags;			/* fcntl flags */
-+	unsigned int signal;
-+	int owner_type;
-+	struct sigaction *sig;
-+};
-+#define perf_evsel_open_opts__last_field sig
-+
-+#define LIBPERF_OPTS(TYPE, NAME, ...)			\
-+	struct TYPE NAME = ({				\
-+		memset(&NAME, 0, sizeof(struct TYPE));	\
-+		(struct TYPE) {				\
-+			.sz = sizeof(struct TYPE),	\
-+			__VA_ARGS__			\
-+		};					\
-+	})
-+
- LIBPERF_API struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr);
- LIBPERF_API void perf_evsel__delete(struct perf_evsel *evsel);
- LIBPERF_API int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
-@@ -48,5 +70,9 @@ LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel
- LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
- LIBPERF_API void perf_counts_values__scale(struct perf_counts_values *count,
- 					   bool scale, __s8 *pscaled);
-+LIBPERF_API int perf_evsel__open_opts(struct perf_evsel *evsel,
-+				      struct perf_cpu_map *cpus,
-+				      struct perf_thread_map *threads,
-+				      struct perf_evsel_open_opts *opts);
+ #ifdef HAVE_TIMERFD_SUPPORT
+@@ -1631,9 +1632,9 @@ int cmd_kvm(int argc, const char **argv)
+ 		}
+ 	}
  
- #endif /* __LIBPERF_EVSEL_H */
-diff --git a/tools/lib/perf/internal.h b/tools/lib/perf/internal.h
-index 2c27e158de6b..637bf6793c26 100644
---- a/tools/lib/perf/internal.h
-+++ b/tools/lib/perf/internal.h
-@@ -20,4 +20,48 @@ do {                            \
- #define pr_debug2(fmt, ...)     __pr(LIBPERF_DEBUG2, fmt, ##__VA_ARGS__)
- #define pr_debug3(fmt, ...)     __pr(LIBPERF_DEBUG3, fmt, ##__VA_ARGS__)
+-	if (!strncmp(argv[0], "rec", 3))
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
+ 		return __cmd_record(file_name, argc, argv);
+-	else if (!strncmp(argv[0], "rep", 3))
++	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
+ 		return __cmd_report(file_name, argc, argv);
+ 	else if (!strncmp(argv[0], "diff", 4))
+ 		return cmd_diff(argc, argv);
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index d70131b7b1b1..24d402e84022 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -18,6 +18,7 @@
+ #include "util/session.h"
+ #include "util/tool.h"
+ #include "util/data.h"
++#include "util/string2.h"
  
-+static inline bool libperf_is_mem_zeroed(const char *p, ssize_t len)
-+{
-+	while (len > 0) {
-+		if (*p)
-+			return false;
-+		p++;
-+		len--;
-+	}
-+	return true;
-+}
-+
-+static inline bool libperf_validate_opts(const char *opts,
-+					 size_t opts_sz, size_t user_sz,
-+					 const char *type_name)
-+{
-+	if (user_sz < sizeof(size_t)) {
-+		pr_warning("%s size (%zu) is too small\n", type_name, user_sz);
-+		return false;
-+	}
-+	if (!libperf_is_mem_zeroed(opts + opts_sz, (ssize_t)user_sz - opts_sz)) {
-+		pr_warning("%s has non-zero extra bytes\n", type_name);
-+		return false;
-+	}
-+	return true;
-+}
-+
-+# define offsetofend(TYPE, FIELD) \
-+	(offsetof(TYPE, FIELD) + sizeof(((TYPE *)0)->FIELD))
-+
-+#define OPTS_VALID(opts, type)							\
-+	(!(opts) || libperf_validate_opts((const char *)opts,			\
-+					  offsetofend(struct type,		\
-+						      type##__last_field),	\
-+						(opts)->sz, #type))
-+#define OPTS_HAS(opts, field) \
-+	((opts) && opts->sz >= offsetofend(typeof(*(opts)), field))
-+#define OPTS_GET(opts, field, fallback_value) \
-+	(OPTS_HAS(opts, field) ? (opts)->field : fallback_value)
-+#define OPTS_SET(opts, field, value)		\
-+	do {					\
-+		if (OPTS_HAS(opts, field))	\
-+			(opts)->field = value;	\
-+	} while (0)
-+
- #endif /* __LIBPERF_INTERNAL_H */
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index ab0f44e9bb57..534614fbbb26 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -24,6 +24,7 @@ LIBPERF_0.0.1 {
- 		perf_evsel__enable;
- 		perf_evsel__disable;
- 		perf_evsel__open;
-+		perf_evsel__open_opts;
- 		perf_evsel__close;
- 		perf_evsel__mmap;
- 		perf_evsel__munmap;
-@@ -39,6 +40,7 @@ LIBPERF_0.0.1 {
- 		perf_evlist__new;
- 		perf_evlist__delete;
- 		perf_evlist__open;
-+		perf_evlist__open_opts;
- 		perf_evlist__close;
- 		perf_evlist__enable;
- 		perf_evlist__disable;
+ #include <sys/types.h>
+ #include <sys/prctl.h>
+@@ -997,9 +998,9 @@ int cmd_lock(int argc, const char **argv)
+ 	if (!argc)
+ 		usage_with_options(lock_usage, lock_options);
+ 
+-	if (!strncmp(argv[0], "rec", 3)) {
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		return __cmd_record(argc, argv);
+-	} else if (!strncmp(argv[0], "report", 6)) {
++	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
+ 		trace_handler = &report_lock_ops;
+ 		if (argc) {
+ 			argc = parse_options(argc, argv,
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index fcf65a59bea2..9e435fd23503 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -20,6 +20,7 @@
+ #include "util/symbol.h"
+ #include "util/pmu.h"
+ #include "util/pmu-hybrid.h"
++#include "util/string2.h"
+ #include <linux/err.h>
+ 
+ #define MEM_OPERATION_LOAD	0x1
+@@ -496,9 +497,9 @@ int cmd_mem(int argc, const char **argv)
+ 			mem.input_name = "perf.data";
+ 	}
+ 
+-	if (!strncmp(argv[0], "rec", 3))
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
+ 		return __cmd_record(argc, argv, &mem);
+-	else if (!strncmp(argv[0], "rep", 3))
++	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
+ 		return report_events(argc, argv, &mem);
+ 	else
+ 		usage_with_options(mem_usage, mem_options);
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 72d446de9c60..646bd938927a 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3561,7 +3561,7 @@ int cmd_sched(int argc, const char **argv)
+ 	if (!strcmp(argv[0], "script"))
+ 		return cmd_script(argc, argv);
+ 
+-	if (!strncmp(argv[0], "rec", 3)) {
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		return __cmd_record(argc, argv);
+ 	} else if (!strncmp(argv[0], "lat", 3)) {
+ 		sched.tp_handler = &lat_ops;
+@@ -3581,7 +3581,7 @@ int cmd_sched(int argc, const char **argv)
+ 		sched.tp_handler = &map_ops;
+ 		setup_sorting(&sched, latency_options, latency_usage);
+ 		return perf_sched__map(&sched);
+-	} else if (!strncmp(argv[0], "rep", 3)) {
++	} else if (strlen(argv[0]) > 2 && strstarts("replay", argv[0])) {
+ 		sched.tp_handler = &replay_ops;
+ 		if (argc) {
+ 			argc = parse_options(argc, argv, replay_options, replay_usage, 0);
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 23bc0fb5a381..e3f23a508aed 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3842,13 +3842,13 @@ int cmd_script(int argc, const char **argv)
+ 	if (symbol__validate_sym_arguments())
+ 		return -1;
+ 
+-	if (argc > 1 && !strncmp(argv[0], "rec", strlen("rec"))) {
++	if (argc > 1 && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		rec_script_path = get_script_path(argv[1], RECORD_SUFFIX);
+ 		if (!rec_script_path)
+ 			return cmd_record(argc, argv);
+ 	}
+ 
+-	if (argc > 1 && !strncmp(argv[0], "rep", strlen("rep"))) {
++	if (argc > 1 && strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
+ 		rep_script_path = get_script_path(argv[1], REPORT_SUFFIX);
+ 		if (!rep_script_path) {
+ 			fprintf(stderr,
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 3f98689dd687..b33c92d00681 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2271,11 +2271,11 @@ int cmd_stat(int argc, const char **argv)
+ 	} else
+ 		stat_config.csv_sep = DEFAULT_SEPARATOR;
+ 
+-	if (argc && !strncmp(argv[0], "rec", 3)) {
++	if (argc && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		argc = __cmd_record(argc, argv);
+ 		if (argc < 0)
+ 			return -1;
+-	} else if (argc && !strncmp(argv[0], "rep", 3))
++	} else if (argc && strlen(argv[0]) > 2 && strstarts("report", argv[0]))
+ 		return __cmd_report(argc, argv);
+ 
+ 	interval = stat_config.interval;
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 43bf4d67edb0..afce731cec16 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -35,6 +35,7 @@
+ #include "util/tool.h"
+ #include "util/data.h"
+ #include "util/debug.h"
++#include "util/string2.h"
+ #include <linux/err.h>
+ 
+ #ifdef LACKS_OPEN_MEMSTREAM_PROTOTYPE
+@@ -1983,7 +1984,7 @@ int cmd_timechart(int argc, const char **argv)
+ 		return -1;
+ 	}
+ 
+-	if (argc && !strncmp(argv[0], "rec", 3)) {
++	if (argc && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		argc = parse_options(argc, argv, timechart_record_options,
+ 				     timechart_record_usage,
+ 				     PARSE_OPT_STOP_AT_NON_OPTION);
 -- 
 2.25.1
 
