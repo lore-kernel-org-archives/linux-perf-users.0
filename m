@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BBEC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Mar 2022 14:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D7AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Mar 2022 14:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232579AbiCZOBl (ORCPT
+        id S232620AbiCZOGi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 26 Mar 2022 10:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38150 "EHLO
+        Sat, 26 Mar 2022 10:06:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233182AbiCZOBi (ORCPT
+        with ESMTP id S231482AbiCZOGi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 26 Mar 2022 10:01:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 487B7E7287;
-        Sat, 26 Mar 2022 07:00:02 -0700 (PDT)
+        Sat, 26 Mar 2022 10:06:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C43166E2D;
+        Sat, 26 Mar 2022 07:05:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E2FB1B80092;
-        Sat, 26 Mar 2022 14:00:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CDACC340F0;
-        Sat, 26 Mar 2022 13:59:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 47E6C60EF5;
+        Sat, 26 Mar 2022 14:05:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F896C340EE;
+        Sat, 26 Mar 2022 14:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648303199;
-        bh=OtwUQSJIfqGM9pSzRByk+oWkJW2rmWs3VVB7YTz1NQY=;
+        s=k20201202; t=1648303500;
+        bh=YV78RkwSqUG0hLwgVwl5hr9tAbUXieZCvNBdqQm1qeE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TUfg2O3KFWxiG7Rmv+kKdymq+2eWH7ZgaIWHVqFV922+rsPsgzBacFGtkZWsY/IfG
-         La4L/S8E7+DIYrRaYq1OR3U9zLGE8iVj/fCxvxI93hNQSpAQZKwPz9H1N5jQ/5oUIa
-         +M/kMGtYuLYDCAOQYMOYazxCppd4GPQ7bhTpxsDvq0idwb1XlLyZ43pLK4qda0eT7H
-         AwAnQKUjh84d6VuQSHfrwje++GB9hGrXZaym2ZziUm/haUQ4ct8IeTfakm0awC0DrC
-         +KVVp6ARgLdtr9ZNmfuPRZ0rHxw84WkrL6/QGRcfGADSBKNtVjEIF4SFRZVNSuFGiH
-         wBixgZzoFUuEA==
+        b=T95ZysXDWz4DxLK2/bdoG2u1QAl1UMbT7gLNzWUboVeAHh7jV4bLRV+7JzYUWnhVn
+         2RXOBc7kF2oYb7VKWJi0rjrJGCCXpYO2D0DF8yaGNWQ6dI1IWiRoG8/ZJZARmAUe6c
+         LSuMIO8rhK6/YJYLAuAAm39D7HBhsO/esZNGlmXgUB0zi+Tv7o5/7kG/ShwleFC+JI
+         6WxUJhUBo/YVE/nHoXYCB/C8yin0zbjnDeGupOrvxXjpK37PYw57Ybed+JloBXKIu5
+         RM4pzu6u9qktN1YtmiGc4OScezfpAR1kXqfNj4y8EvHvTYhfrNofwopT2PIP8vuHQF
+         AE9Ts1e9JQf0g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4206640407; Sat, 26 Mar 2022 10:59:57 -0300 (-03)
-Date:   Sat, 26 Mar 2022 10:59:57 -0300
+        id 6AF8D40407; Sat, 26 Mar 2022 11:04:58 -0300 (-03)
+Date:   Sat, 26 Mar 2022 11:04:58 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
@@ -47,60 +47,59 @@ Cc:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
         kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
         mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
         peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v4 1/4] tools: arm64: Import cputype.h
-Message-ID: <Yj8cXWaQr1rXnvF8@kernel.org>
+Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
+ cores
+Message-ID: <Yj8ditXSBemA41Z3@kernel.org>
 References: <20220324183323.31414-1-alisaidi@amazon.com>
- <20220324183323.31414-2-alisaidi@amazon.com>
- <Yj4McMHsxtJ3PfKk@kernel.org>
- <Yj4bKHrmKhujZdpj@kernel.org>
- <20220326054956.GB20556@leoy-ThinkPad-X240s>
+ <20220324183323.31414-3-alisaidi@amazon.com>
+ <20220326134754.GD20556@leoy-ThinkPad-X240s>
+ <Yj8age/PSIouUiKy@kernel.org>
+ <20220326135653.GE20556@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220326054956.GB20556@leoy-ThinkPad-X240s>
+In-Reply-To: <20220326135653.GE20556@leoy-ThinkPad-X240s>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Mar 26, 2022 at 01:49:56PM +0800, Leo Yan escreveu:
-> Hi Arnaldo, Ali,
-> 
-> On Fri, Mar 25, 2022 at 04:42:32PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Mar 25, 2022 at 03:39:44PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Thu, Mar 24, 2022 at 06:33:20PM +0000, Ali Saidi escreveu:
-> > > > Bring-in the kernel's arch/arm64/include/asm/cputype.h into tools/
-> > > > for arm64 to make use of all the core-type definitions in perf.
-> > 
-> > > > Replace sysreg.h with the version already imported into tools/.
-> >  
-> > > You forgot to add it to tools/perf/check-headers.sh so that we get
-> > > notificed when the original file in the kernel sources gets updated, so
-> > > that we can check if this needs any tooling adjustments.
-> >  
-> > > I'll add the entry together with the waiver for this specific
-> > > difference.
-> > 
-> > This:
-> > 
-> > diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-> > index 30ecf3a0f68b6830..6ee44b18c6b57cf1 100755
-> > --- a/tools/perf/check-headers.sh
-> > +++ b/tools/perf/check-headers.sh
-> > @@ -146,6 +146,7 @@ done
-> >  check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memcpy_\(erms\|orig\))"'
-> >  check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
-> >  check arch/x86/include/asm/amd-ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
-> > +check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
-> >  check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
-> >  check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
-> >  check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
-> 
-> LGTM.  I did the testing on both my x86 and Arm64 platforms, thanks for
-> the fixing up.
+Em Sat, Mar 26, 2022 at 09:56:53PM +0800, Leo Yan escreveu:
+> On Sat, Mar 26, 2022 at 10:52:01AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Sat, Mar 26, 2022 at 09:47:54PM +0800, Leo Yan escreveu:
+> > > On Thu, Mar 24, 2022 at 06:33:21PM +0000, Ali Saidi wrote:
+> > > > +static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
+> > > > +						union perf_mem_data_src *data_src)
+> > > >  {
+> > > > -	union perf_mem_data_src	data_src = { 0 };
+> > > > +	/*
+> > > > +	 * Even though four levels of cache hierarchy are possible, no known
+> > > > +	 * production Neoverse systems currently include more than three levels
+> > > > +	 * so for the time being we assume three exist. If a production system
+> > > > +	 * is built with four the this function would have to be changed to
+> > > > +	 * detect the number of levels for reporting.
+> > > > +	 */
 
-Thanks, adding a:
+> > > > -	if (record->op == ARM_SPE_LD)
+> > > > -		data_src.mem_op = PERF_MEM_OP_LOAD;
+> > > > -	else
+> > > > -		data_src.mem_op = PERF_MEM_OP_STORE;
 
-Tested-by: Leo Yan <leo.yan@linaro.org>
+> > > Firstly, apologize that I didn't give clear idea when Ali sent patch sets
+> > > v2 and v3.
+
+> > Ok, removing this as well.
+
+> > Thanks for reviewing.
+
+> Thanks a lot, Arnaldo.  Yeah, it's good to give a bit more time to
+> dismiss the concerns in this patch.
+
+Sure, at least it was build tested on many distros/cross compilers and
+this part is ok 8-)
+ 
+> Sorry again for the inconvenience.
+
+np.
 
 - Arnaldo
