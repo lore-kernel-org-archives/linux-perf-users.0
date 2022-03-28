@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770AEC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Mar 2022 06:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C30C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Mar 2022 06:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238484AbiC1G0p (ORCPT
+        id S238449AbiC1G0w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Mar 2022 02:26:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58114 "EHLO
+        Mon, 28 Mar 2022 02:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238440AbiC1G0U (ORCPT
+        with ESMTP id S238451AbiC1G0V (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Mar 2022 02:26:20 -0400
+        Mon, 28 Mar 2022 02:26:21 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A332C522C5
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Mar 2022 23:24:30 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2e9ae7bd8deso60558167b3.9
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Mar 2022 23:24:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 147B8522D5
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Mar 2022 23:24:33 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2e9ae7bd8deso60558867b3.9
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Mar 2022 23:24:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=4TQ73I0e25XkGF6JYmSar5D4w+BV0D8V/TiHYSAl5KU=;
-        b=rAbswlnujk8SJmxLde3al3arUpI/R7w91Rzm7Im3FFbuzIfrwxc+ukwRg2ubEFbel6
-         u2xn9Xt+8UqLmVxVZDCy5Nby8rLxqJEd/CoGCk9U++oFpUs7RKCCFqA/YaPX4/GZKU5U
-         w4zDDyta0qWgGM0toE5CfiZ51VV7n22L7WUbX6ZP1pmQMpV/LmnyXyL6MsHIdCuXlyuX
-         z+SQAkei8tjNWFHynWVB1nY+gTAKs8lordMKynfqoAtLVgafdcegbc5TSy2occ4xSrIB
-         kBaLqdF9P69Scb/0cyCCr6sUxseIuHLDaguZgdN1KxkbJ9A16IZ+UtqU0aR+e7aNrEl8
-         vWTA==
+        bh=9DdBX2SnvA0xmL5taueohrnj4hozmwadyqsEuZMg/sA=;
+        b=JExcflpahLFCp46tCO+bVKhfqtpGsdrFCJs+A4n7LEj0S0oyM28aQpiH9N2I4o3EFq
+         qv6yOpmEB4FHmzEJDFtrlj5POsxwk7ymhkoAZGKLNsnrUMmG7PhVKT+rNPkl7WrEnsRG
+         r+DGYQwjH6ShFQ0BJbAPo3ulaNKd7bAJJW2F8mb0pcjRDO3zlwYg6zLaYLbBc17pLs+e
+         1PgB6LDqxrfexhWFD9UWMtQIlMqoh3dCxy7XUyejsjPNhj1KacYCvXPRwTBhF+BOCrYj
+         K0AonuWZtGaodLfoc3NG1ln7v73zS22G4J7e++zg1bmud/pqhRfzzj1pMmNSlD2pY85i
+         UZsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=4TQ73I0e25XkGF6JYmSar5D4w+BV0D8V/TiHYSAl5KU=;
-        b=gmLBVsJd9jLfpOYFKrmyFnrXpv+RNuD6PfnckR1o6whTRulK5xLaXdDasY0desD9Y2
-         N1kgemj1hKLk6KJ+3N5VHAQ5jf7q4x5vJXTVo4gPrSkS92SCbwEaoNn4VS8vxvapQU9+
-         LNeklIMkNa/gqZ0/XB8I/UJg+DnVpYAEbBcbsOlNUIpgmhxUUokE3Rd1zkodaf2FGabL
-         qEmLY9pCDGkhlHEJPR18o+VG9e1v6x31Gf1Ujyp+GFtOD6KcLWXVfsNiDgo1Ui9V9DZI
-         eJ1KevEkK5yfDZdkwQekdDmy+Htk9NPrdPPHnQg/48QomYrsbafT3k21Ma59lvxzBhtm
-         iH0Q==
-X-Gm-Message-State: AOAM5310RjBjOUECv+8oZpHC65o2COuvqUpCQQYnkD9pwAd7pr/QEecu
-        QPOyMtsAuN0XbFL7bjK6VXU6wUeAQdge
-X-Google-Smtp-Source: ABdhPJzzFACczXPpjcFkdPBG8L2RXqeBU42ZTsEkDl97YgxNOBZWCpXE1hi/ATJnf1wHmPGu6AqFFy8JjyPU
+        bh=9DdBX2SnvA0xmL5taueohrnj4hozmwadyqsEuZMg/sA=;
+        b=0aGGQDBXUbCa4Yw0+T5wkiiMH0ZEHnXh625rjVAtZYJBqBhjoV/KGfg7EO3NDN46pu
+         O6mgGtBRPuBLdxEkfcThZFisaMU7eubJcyHe/7clE07hG6PEWV6hsQbEZ3uHUqS9Dozn
+         PMoIiiEKu8Gd/L59p5qHUCmkeMkDFDngTgyj7pFbc6j4CF8Wv58YXuF0jByOiTrdvlgK
+         hCZZaRGlTRZAV/zCbx/UHfPNMMNz4uECit4gOTe6TZzllPBZer34LzVSMPqd0K4wN8FG
+         3IComFcBy/AVmyJzgdY65+y/Bkdp0hcuXltdDjqGtxEApykYSzS8B/pekaChs54zx03C
+         g9xA==
+X-Gm-Message-State: AOAM532HpLzkBLoye6+EupUQkru/2kACF78Go2W67zYG2ZW1wNbrWhsD
+        Ba4pQwNUOtxEvQjrLz5rQLP8/GgaYXOZ
+X-Google-Smtp-Source: ABdhPJxPf/g6psmSnbUpwgPJRs5+zV2W469Tco/QieQGsDIBSkUvRLgEjG1Y+RiHh3KzGowWDsrlmJTLCwDJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:ef08:ed1b:261f:77fa])
- (user=irogers job=sendgmr) by 2002:a81:3a52:0:b0:2d7:549a:50fc with SMTP id
- h79-20020a813a52000000b002d7549a50fcmr24269495ywa.85.1648448669800; Sun, 27
- Mar 2022 23:24:29 -0700 (PDT)
-Date:   Sun, 27 Mar 2022 23:24:13 -0700
+ (user=irogers job=sendgmr) by 2002:a25:ec08:0:b0:633:9106:b10b with SMTP id
+ j8-20020a25ec08000000b006339106b10bmr22130772ybh.62.1648448672235; Sun, 27
+ Mar 2022 23:24:32 -0700 (PDT)
+Date:   Sun, 27 Mar 2022 23:24:14 -0700
 In-Reply-To: <20220328062414.1893550-1-irogers@google.com>
-Message-Id: <20220328062414.1893550-5-irogers@google.com>
+Message-Id: <20220328062414.1893550-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20220328062414.1893550-1-irogers@google.com>
 X-Mailer: git-send-email 2.35.1.1021.g381101b075-goog
-Subject: [PATCH 4/5] perf stat: Avoid segv if core.user_cpus isn't set.
+Subject: [PATCH 5/5] perf evlist: Respect all_cpus when setting user_cpus
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -93,31 +93,93 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Passing null to perf_cpu_map__max doesn't make sense as there is no
-valid max. Avoid this problem by null checking in
-perf_stat_init_aggr_mode.
+If all_cpus is calculated it represents the merge/union of all
+evsel cpu maps. By default user_cpus is computed to be the online
+CPUs. For uncore events, it is often the case currently that
+all_cpus is a subset of user_cpus. Metrics printed without
+aggregation and with metric-only, in print_no_aggr_metric,
+iterate over user_cpus assuming every CPU has a metric to
+print. For each CPU the prefix is printed, but then if the
+evsel's cpus doesn't contain anything you get an empty line like
+the following on a SkylakeX:
+
+```
+$ perf stat -A -M DRAM_BW_Use -a --metric-only -I 1000
+     1.000453137 CPU0                       0.00
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137 CPU18                      0.00
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     1.000453137
+     2.003717143 CPU0                       0.00
+...
+```
+
+While it is possible to be lazier in printing the prefix and
+trailing newline, having user_cpus not be a subset of all_cpus is
+preferential so that wasted work isn't done elsewhere user_cpus
+is used. The change modifies user_cpus to be the intersection of
+user specified CPUs, or default all online CPUs, with the CPUs
+computed through the merge of all evsel cpu maps.
+
+New behavior:
+```
+$ perf stat -A -M DRAM_BW_Use -a --metric-only -I 1000
+     1.001086325 CPU0                       0.00
+     1.001086325 CPU18                      0.00
+     2.003671291 CPU0                       0.00
+     2.003671291 CPU18                      0.00
+...
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/evlist.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5bee529f7656..ecd5cf4fd872 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1472,7 +1472,10 @@ static int perf_stat_init_aggr_mode(void)
- 	 * taking the highest cpu number to be the size of
- 	 * the aggregation translate cpumap.
- 	 */
--	nr = perf_cpu_map__max(evsel_list->core.user_cpus).cpu;
-+	if (evsel_list->core.user_cpus)
-+		nr = perf_cpu_map__max(evsel_list->core.user_cpus).cpu;
-+	else
-+		nr = 0;
- 	stat_config.cpus_aggr_map = cpu_aggr_map__empty_new(nr + 1);
- 	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
- }
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index d335fb713f5e..91bbb66b7e9a 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1036,6 +1036,8 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
+ 	if (!cpus)
+ 		goto out_delete_threads;
+ 
++	if (evlist->core.all_cpus)
++		cpus = perf_cpu_map__intersect(cpus, evlist->core.all_cpus);
+ 	evlist->core.has_user_cpus = !!target->cpu_list && !target->hybrid;
+ 
+ 	perf_evlist__set_maps(&evlist->core, cpus, threads);
 -- 
 2.35.1.1021.g381101b075-goog
 
