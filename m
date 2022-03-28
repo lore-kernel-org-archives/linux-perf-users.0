@@ -2,375 +2,638 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C280DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Mar 2022 16:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3673AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Mar 2022 20:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241210AbiC1QJw (ORCPT
+        id S1344422AbiC1UUp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Mar 2022 12:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54190 "EHLO
+        Mon, 28 Mar 2022 16:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240772AbiC1QJv (ORCPT
+        with ESMTP id S1344410AbiC1UUo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Mar 2022 12:09:51 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD15D10FE5
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Mar 2022 09:08:09 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id r13so21075909wrr.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Mar 2022 09:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qBo//AratQ/1DR4fP0bzg4nenvyeP6GXlQbluV1BOhc=;
-        b=XoRtE3LbDm+CH0S0w1UL8cNidNH9c/yiiVgCMVGAYGVt6wIaqXs5FdiWCoF562dWHb
-         3pekg79/oC6tqHTtzwARttfPPgjkfulsqIjUa7PjeNY56A/nVuFnjwN0hLj7V0yk/koL
-         bbWXLvqHOXtwaAwituAHZcSoVTBP/UB1WWKhQJjObnlOYeW1Tnm8nhb45EfGswYQZtjY
-         xauWER2vWgr689WCR4KnXkmExxofg/HGDmJ98KsziH+zahgZwwnp7t16VBzhxNFtML1B
-         joEl9JQwS+1/wPjkKmIeucqGFjsPGi/EnyZY4hkHCjwiiafPuwVw+0zNJRsDgkFUlcL5
-         zfwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qBo//AratQ/1DR4fP0bzg4nenvyeP6GXlQbluV1BOhc=;
-        b=2Nl/53nKG99i445zSBxL70/bFWokG545SRDpsZHenjL+VGQJ+Ql8MpKSZKdmrcZRJv
-         AkKYXj/y3NAMclTisDELQK89r/z67Q7W5IHnexcA+5JW0dmY1oVCZnRHUYl3vLM5dq+9
-         fC5sUd//WAQRNJ0H1y538PpqxJ4WMK64Z0M6VwGUjwocYS4UvIvJaLac5M8n02fBMLDW
-         +1HUyjbmUwLfMuguumhCTs821hNQpPjGVyPdqMns2hFgGfoDJRXmlZumeRQ2xIGCAlzW
-         g+oFbc3vzyCWAfH04j/e8PTJVEj2meWHx/eHI8AoymOe+xEwocpbwyePJX4uIIfMJgEs
-         kinQ==
-X-Gm-Message-State: AOAM5318VOF2aXPqVAjN0qB7exRyFYmiMq5sVZrjFal+pb1wL+EiU/D7
-        A7MqFDrbsseoRtmGf75pPW+CVg==
-X-Google-Smtp-Source: ABdhPJyK9REe77DLeIxajDtvqKHCMURYiVy3a6Am75pmR8Q+amNcLv2gAzuJXfV2V9PcVgOxsy6klw==
-X-Received: by 2002:adf:f2c6:0:b0:203:f0ba:424c with SMTP id d6-20020adff2c6000000b00203f0ba424cmr24172746wrp.663.1648483687735;
-        Mon, 28 Mar 2022 09:08:07 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:15:13:3ffb:e284:5a57:b020])
-        by smtp.gmail.com with ESMTPSA id v14-20020a7bcb4e000000b0034492fa24c6sm12134887wmj.34.2022.03.28.09.08.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Mar 2022 09:08:07 -0700 (PDT)
-Date:   Mon, 28 Mar 2022 18:08:01 +0200
-From:   Marco Elver <elver@google.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Mon, 28 Mar 2022 16:20:44 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6894B30553;
+        Mon, 28 Mar 2022 13:19:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EA78BB81204;
+        Mon, 28 Mar 2022 20:18:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 509F3C340ED;
+        Mon, 28 Mar 2022 20:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648498738;
+        bh=Z31IcOD4vtDnhKzKBHCA6D5bDv5t+pf02YurmgTerjc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ucQQDCvPL587QiiN+VPJuM7vF9eirFTkxTHjut8cjDwYAYP6yxWj5jVckQlOb/eyv
+         dSM4/aLSdmTnuRuWJkxDjLXldDaNSaDtkpymaHDr7BsxKvim+rV1mTFOxyVQFy7Vun
+         jtwB+6Nl9kutOh1yELhmi763vDT0k+LMs7EOC7CTGL7Mca7Z0wpHaIzvfsvz3n42wq
+         0Xunnlxj5iwNZJwJCZLTcgH3Q5OH2F/fXOwkOLBDLbrKuMFBv/BnklGmUPmd7Q1F6H
+         X/H+RnKzLZMdcaX2tOp8F63VOsFmJc6U1n42X/cX6QuRIlFsb0P8UB40xDSnlss1LU
+         zj2ttxUqP6l4A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B357140407; Mon, 28 Mar 2022 17:18:54 -0300 (-03)
+Date:   Mon, 28 Mar 2022 17:18:54 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: RFC: Use of user space handler vs. SIG_DFL on forced signals
-Message-ID: <YkHdYZrfcH5FzhG3@elver.google.com>
-References: <Yjmn/kVblV3TdoAq@elver.google.com>
- <87ee2uyr4z.fsf@email.froward.int.ebiederm.org>
- <CANpmjNN4UjUTB5x6-2T-+b7MY=oAYn37MKvQy-4jYh6JDeJuKg@mail.gmail.com>
- <87k0clvrwh.fsf@email.froward.int.ebiederm.org>
- <Yjuai7yv7QrzgsZS@elver.google.com>
- <CACT4Y+ZxYfpTiTjoTUbyh7iDeAN9w0=RrKL40SU6nm187cTLow@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/5] perf evlist: Rename cpus to user_cpus
+Message-ID: <YkIYLk6Tvn7xxz0Z@kernel.org>
+References: <20220328062414.1893550-1-irogers@google.com>
+ <20220328062414.1893550-2-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZxYfpTiTjoTUbyh7iDeAN9w0=RrKL40SU6nm187cTLow@mail.gmail.com>
-User-Agent: Mutt/2.1.4 (2021-12-11)
+In-Reply-To: <20220328062414.1893550-2-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 08:15AM +0100, Dmitry Vyukov wrote:
-[...]
-> > +                                       u32 _async;
+Em Sun, Mar 27, 2022 at 11:24:10PM -0700, Ian Rogers escreveu:
+> evlist contains cpus and all_cpus. all_cpus is the union of the cpu maps
+> of all evsels. cpus is set to be cpus required from the command line,
+
+Can we replace "required" with "requested"?
+
+> defaulting to all online cpus if no cpus are specified.
+
+> For something like an uncore event, all_cpus may just be CPU 0,
+> however, all_cpus may be every online CPU.
+
+Can this be rephrased as:
+
+"For an uncore event, all_cpus may be just CPU 0 or every online CPU."
+
+?
+
+> This causes all_cpus to have fewer values than the cpus variable which
+> is confusing given the 'all' in the name. To try to make the behavior
+> clearer, rename cpus to user_cpus and add comments on the two struct
+> variables.
+
+"user_cpus" can as well mean CPUs where we should only sample user level
+events, so perhaps bite the bullet and rename it to the longer
+
+  'evlist->user_requested_cpus'
+
+?
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/evlist.c                  | 28 ++++++++++++------------
+>  tools/lib/perf/include/internal/evlist.h |  4 +++-
+>  tools/perf/arch/arm/util/cs-etm.c        |  8 +++----
+>  tools/perf/arch/arm64/util/arm-spe.c     |  2 +-
+>  tools/perf/arch/x86/util/intel-bts.c     |  2 +-
+>  tools/perf/arch/x86/util/intel-pt.c      |  4 ++--
+>  tools/perf/bench/evlist-open-close.c     |  2 +-
+>  tools/perf/builtin-ftrace.c              |  2 +-
+>  tools/perf/builtin-record.c              |  6 ++---
+>  tools/perf/builtin-stat.c                |  8 +++----
+>  tools/perf/builtin-top.c                 |  2 +-
+>  tools/perf/util/auxtrace.c               |  2 +-
+>  tools/perf/util/bpf_ftrace.c             |  4 ++--
+>  tools/perf/util/evlist.c                 | 14 ++++++------
+>  tools/perf/util/record.c                 |  6 ++---
+>  tools/perf/util/sideband_evlist.c        |  2 +-
+>  tools/perf/util/stat-display.c           |  2 +-
+>  tools/perf/util/synthetic-events.c       |  2 +-
+>  tools/perf/util/top.c                    |  7 +++---
+>  19 files changed, 55 insertions(+), 52 deletions(-)
 > 
-> Does it make sense to make this u8 and/or rename to flags? In case we
-> will need to shove move info here in future.
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index 9a770bfdc804..e29dc229768a 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -41,10 +41,10 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+>  	 */
+>  	if (!evsel->own_cpus || evlist->has_user_cpus) {
+>  		perf_cpu_map__put(evsel->cpus);
+> -		evsel->cpus = perf_cpu_map__get(evlist->cpus);
+> -	} else if (!evsel->system_wide && perf_cpu_map__empty(evlist->cpus)) {
+> +		evsel->cpus = perf_cpu_map__get(evlist->user_cpus);
+> +	} else if (!evsel->system_wide && perf_cpu_map__empty(evlist->user_cpus)) {
+>  		perf_cpu_map__put(evsel->cpus);
+> -		evsel->cpus = perf_cpu_map__get(evlist->cpus);
+> +		evsel->cpus = perf_cpu_map__get(evlist->user_cpus);
+>  	} else if (evsel->cpus != evsel->own_cpus) {
+>  		perf_cpu_map__put(evsel->cpus);
+>  		evsel->cpus = perf_cpu_map__get(evsel->own_cpus);
+> @@ -123,10 +123,10 @@ static void perf_evlist__purge(struct perf_evlist *evlist)
+>  
+>  void perf_evlist__exit(struct perf_evlist *evlist)
+>  {
+> -	perf_cpu_map__put(evlist->cpus);
+> +	perf_cpu_map__put(evlist->user_cpus);
+>  	perf_cpu_map__put(evlist->all_cpus);
+>  	perf_thread_map__put(evlist->threads);
+> -	evlist->cpus = NULL;
+> +	evlist->user_cpus = NULL;
+>  	evlist->all_cpus = NULL;
+>  	evlist->threads = NULL;
+>  	fdarray__exit(&evlist->pollfd);
+> @@ -155,9 +155,9 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
+>  	 * original reference count of 1.  If that is not the case it is up to
+>  	 * the caller to increase the reference count.
+>  	 */
+> -	if (cpus != evlist->cpus) {
+> -		perf_cpu_map__put(evlist->cpus);
+> -		evlist->cpus = perf_cpu_map__get(cpus);
+> +	if (cpus != evlist->user_cpus) {
+> +		perf_cpu_map__put(evlist->user_cpus);
+> +		evlist->user_cpus = perf_cpu_map__get(cpus);
+>  	}
+>  
+>  	if (threads != evlist->threads) {
+> @@ -294,7 +294,7 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+>  
+>  int perf_evlist__alloc_pollfd(struct perf_evlist *evlist)
+>  {
+> -	int nr_cpus = perf_cpu_map__nr(evlist->cpus);
+> +	int nr_cpus = perf_cpu_map__nr(evlist->user_cpus);
+>  	int nr_threads = perf_thread_map__nr(evlist->threads);
+>  	int nfds = 0;
+>  	struct perf_evsel *evsel;
+> @@ -426,7 +426,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  	       int idx, struct perf_mmap_param *mp, int cpu_idx,
+>  	       int thread, int *_output, int *_output_overwrite)
+>  {
+> -	struct perf_cpu evlist_cpu = perf_cpu_map__cpu(evlist->cpus, cpu_idx);
+> +	struct perf_cpu evlist_cpu = perf_cpu_map__cpu(evlist->user_cpus, cpu_idx);
+>  	struct perf_evsel *evsel;
+>  	int revent;
+>  
+> @@ -536,7 +536,7 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  	     struct perf_mmap_param *mp)
+>  {
+>  	int nr_threads = perf_thread_map__nr(evlist->threads);
+> -	int nr_cpus    = perf_cpu_map__nr(evlist->cpus);
+> +	int nr_cpus    = perf_cpu_map__nr(evlist->user_cpus);
+>  	int cpu, thread;
+>  
+>  	for (cpu = 0; cpu < nr_cpus; cpu++) {
+> @@ -564,8 +564,8 @@ static int perf_evlist__nr_mmaps(struct perf_evlist *evlist)
+>  {
+>  	int nr_mmaps;
+>  
+> -	nr_mmaps = perf_cpu_map__nr(evlist->cpus);
+> -	if (perf_cpu_map__empty(evlist->cpus))
+> +	nr_mmaps = perf_cpu_map__nr(evlist->user_cpus);
+> +	if (perf_cpu_map__empty(evlist->user_cpus))
+>  		nr_mmaps = perf_thread_map__nr(evlist->threads);
+>  
+>  	return nr_mmaps;
+> @@ -576,7 +576,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+>  			  struct perf_mmap_param *mp)
+>  {
+>  	struct perf_evsel *evsel;
+> -	const struct perf_cpu_map *cpus = evlist->cpus;
+> +	const struct perf_cpu_map *cpus = evlist->user_cpus;
+>  	const struct perf_thread_map *threads = evlist->threads;
+>  
+>  	if (!ops || !ops->get || !ops->mmap)
+> diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
+> index 4cefade540bd..5f95672662ae 100644
+> --- a/tools/lib/perf/include/internal/evlist.h
+> +++ b/tools/lib/perf/include/internal/evlist.h
+> @@ -19,7 +19,9 @@ struct perf_evlist {
+>  	int			 nr_entries;
+>  	int			 nr_groups;
+>  	bool			 has_user_cpus;
+> -	struct perf_cpu_map	*cpus;
+> +	/** The list of cpus passed from the command line. */
+> +	struct perf_cpu_map	*user_cpus;
+> +	/** The union of all evsel cpu maps. */
+>  	struct perf_cpu_map	*all_cpus;
+>  	struct perf_thread_map	*threads;
+>  	int			 nr_mmaps;
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index cbc555245959..405d58903d84 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -199,7 +199,7 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
+>  			     struct evsel *evsel, u32 option)
+>  {
+>  	int i, err = -EINVAL;
+> -	struct perf_cpu_map *event_cpus = evsel->evlist->core.cpus;
+> +	struct perf_cpu_map *event_cpus = evsel->evlist->core.user_cpus;
+>  	struct perf_cpu_map *online_cpus = perf_cpu_map__new(NULL);
+>  
+>  	/* Set option of each CPU we have */
+> @@ -299,7 +299,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>  				container_of(itr, struct cs_etm_recording, itr);
+>  	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+>  	struct evsel *evsel, *cs_etm_evsel = NULL;
+> -	struct perf_cpu_map *cpus = evlist->core.cpus;
+> +	struct perf_cpu_map *cpus = evlist->core.user_cpus;
+>  	bool privileged = perf_event_paranoid_check(-1);
+>  	int err = 0;
+>  
+> @@ -522,7 +522,7 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+>  {
+>  	int i;
+>  	int etmv3 = 0, etmv4 = 0, ete = 0;
+> -	struct perf_cpu_map *event_cpus = evlist->core.cpus;
+> +	struct perf_cpu_map *event_cpus = evlist->core.user_cpus;
+>  	struct perf_cpu_map *online_cpus = perf_cpu_map__new(NULL);
+>  
+>  	/* cpu map is not empty, we have specific CPUs to work with */
+> @@ -713,7 +713,7 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
+>  	u32 offset;
+>  	u64 nr_cpu, type;
+>  	struct perf_cpu_map *cpu_map;
+> -	struct perf_cpu_map *event_cpus = session->evlist->core.cpus;
+> +	struct perf_cpu_map *event_cpus = session->evlist->core.user_cpus;
+>  	struct perf_cpu_map *online_cpus = perf_cpu_map__new(NULL);
+>  	struct cs_etm_recording *ptr =
+>  			container_of(itr, struct cs_etm_recording, itr);
+> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+> index 5860bbaea95a..83ad05613321 100644
+> --- a/tools/perf/arch/arm64/util/arm-spe.c
+> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> @@ -144,7 +144,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>  			container_of(itr, struct arm_spe_recording, itr);
+>  	struct perf_pmu *arm_spe_pmu = sper->arm_spe_pmu;
+>  	struct evsel *evsel, *arm_spe_evsel = NULL;
+> -	struct perf_cpu_map *cpus = evlist->core.cpus;
+> +	struct perf_cpu_map *cpus = evlist->core.user_cpus;
+>  	bool privileged = perf_event_paranoid_check(-1);
+>  	struct evsel *tracking_evsel;
+>  	int err;
+> diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+> index 4a76d49d25d6..c9d73ecfd795 100644
+> --- a/tools/perf/arch/x86/util/intel-bts.c
+> +++ b/tools/perf/arch/x86/util/intel-bts.c
+> @@ -110,7 +110,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
+>  			container_of(itr, struct intel_bts_recording, itr);
+>  	struct perf_pmu *intel_bts_pmu = btsr->intel_bts_pmu;
+>  	struct evsel *evsel, *intel_bts_evsel = NULL;
+> -	const struct perf_cpu_map *cpus = evlist->core.cpus;
+> +	const struct perf_cpu_map *cpus = evlist->core.user_cpus;
+>  	bool privileged = perf_event_paranoid_check(-1);
+>  
+>  	if (opts->auxtrace_sample_mode) {
+> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+> index 8c31578d6f4a..58bf24960273 100644
+> --- a/tools/perf/arch/x86/util/intel-pt.c
+> +++ b/tools/perf/arch/x86/util/intel-pt.c
+> @@ -382,7 +382,7 @@ static int intel_pt_info_fill(struct auxtrace_record *itr,
+>  			ui__warning("Intel Processor Trace: TSC not available\n");
+>  	}
+>  
+> -	per_cpu_mmaps = !perf_cpu_map__empty(session->evlist->core.cpus);
+> +	per_cpu_mmaps = !perf_cpu_map__empty(session->evlist->core.user_cpus);
+>  
+>  	auxtrace_info->type = PERF_AUXTRACE_INTEL_PT;
+>  	auxtrace_info->priv[INTEL_PT_PMU_TYPE] = intel_pt_pmu->type;
+> @@ -632,7 +632,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+>  	struct perf_pmu *intel_pt_pmu = ptr->intel_pt_pmu;
+>  	bool have_timing_info, need_immediate = false;
+>  	struct evsel *evsel, *intel_pt_evsel = NULL;
+> -	const struct perf_cpu_map *cpus = evlist->core.cpus;
+> +	const struct perf_cpu_map *cpus = evlist->core.user_cpus;
+>  	bool privileged = perf_event_paranoid_check(-1);
+>  	u64 tsc_bit;
+>  	int err;
+> diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
+> index de56601f69ee..5bdc6b476a4d 100644
+> --- a/tools/perf/bench/evlist-open-close.c
+> +++ b/tools/perf/bench/evlist-open-close.c
+> @@ -151,7 +151,7 @@ static int bench_evlist_open_close__run(char *evstr)
+>  
+>  	init_stats(&time_stats);
+>  
+> -	printf("  Number of cpus:\t%d\n", perf_cpu_map__nr(evlist->core.cpus));
+> +	printf("  Number of cpus:\t%d\n", perf_cpu_map__nr(evlist->core.user_cpus));
+>  	printf("  Number of threads:\t%d\n", evlist->core.threads->nr);
+>  	printf("  Number of events:\t%d (%d fds)\n",
+>  		evlist->core.nr_entries, evlist__count_evsel_fds(evlist));
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index ad9ce1bfffa1..642cbc6fdfc5 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -301,7 +301,7 @@ static int set_tracing_cpumask(struct perf_cpu_map *cpumap)
+>  
+>  static int set_tracing_cpu(struct perf_ftrace *ftrace)
+>  {
+> -	struct perf_cpu_map *cpumap = ftrace->evlist->core.cpus;
+> +	struct perf_cpu_map *cpumap = ftrace->evlist->core.user_cpus;
+>  
+>  	if (!target__has_cpu(&ftrace->target))
+>  		return 0;
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 0b4abed555d8..28ab3866802c 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -987,7 +987,7 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
+>  	int m, tm, nr_mmaps = evlist->core.nr_mmaps;
+>  	struct mmap *mmap = evlist->mmap;
+>  	struct mmap *overwrite_mmap = evlist->overwrite_mmap;
+> -	struct perf_cpu_map *cpus = evlist->core.cpus;
+> +	struct perf_cpu_map *cpus = evlist->core.user_cpus;
+>  
+>  	thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
+>  					      thread_data->mask->maps.nbits);
+> @@ -1881,7 +1881,7 @@ static int record__synthesize(struct record *rec, bool tail)
+>  		return err;
+>  	}
+>  
+> -	err = perf_event__synthesize_cpu_map(&rec->tool, rec->evlist->core.cpus,
+> +	err = perf_event__synthesize_cpu_map(&rec->tool, rec->evlist->core.user_cpus,
+>  					     process_synthesized_event, NULL);
+>  	if (err < 0) {
+>  		pr_err("Couldn't synthesize cpu map.\n");
+> @@ -3675,7 +3675,7 @@ static int record__init_thread_default_masks(struct record *rec, struct perf_cpu
+>  static int record__init_thread_masks(struct record *rec)
+>  {
+>  	int ret = 0;
+> -	struct perf_cpu_map *cpus = rec->evlist->core.cpus;
+> +	struct perf_cpu_map *cpus = rec->evlist->core.user_cpus;
+>  
+>  	if (!record__threads_enabled(rec))
+>  		return record__init_thread_default_masks(rec, cpus);
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 4ee40de698a4..5bee529f7656 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -804,7 +804,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>  	if (group)
+>  		evlist__set_leader(evsel_list);
+>  
+> -	if (!cpu_map__is_dummy(evsel_list->core.cpus)) {
+> +	if (!cpu_map__is_dummy(evsel_list->core.user_cpus)) {
+>  		if (affinity__setup(&saved_affinity) < 0)
+>  			return -1;
+>  		affinity = &saved_affinity;
+> @@ -1458,7 +1458,7 @@ static int perf_stat_init_aggr_mode(void)
+>  	aggr_cpu_id_get_t get_id = aggr_mode__get_aggr(stat_config.aggr_mode);
+>  
+>  	if (get_id) {
+> -		stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.cpus,
+> +		stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_cpus,
+>  							 get_id, /*data=*/NULL);
+>  		if (!stat_config.aggr_map) {
+>  			pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
+> @@ -1472,7 +1472,7 @@ static int perf_stat_init_aggr_mode(void)
+>  	 * taking the highest cpu number to be the size of
+>  	 * the aggregation translate cpumap.
+>  	 */
+> -	nr = perf_cpu_map__max(evsel_list->core.cpus).cpu;
+> +	nr = perf_cpu_map__max(evsel_list->core.user_cpus).cpu;
+>  	stat_config.cpus_aggr_map = cpu_aggr_map__empty_new(nr + 1);
+>  	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
+>  }
+> @@ -1627,7 +1627,7 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
+>  	if (!get_id)
+>  		return 0;
+>  
+> -	stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.cpus, get_id, env);
+> +	stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_cpus, get_id, env);
+>  	if (!stat_config.aggr_map) {
+>  		pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
+>  		return -1;
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 9b08e44a31d9..4cfa112292d0 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1021,7 +1021,7 @@ static int perf_top__start_counters(struct perf_top *top)
+>  
+>  	evlist__for_each_entry(evlist, counter) {
+>  try_again:
+> -		if (evsel__open(counter, top->evlist->core.cpus,
+> +		if (evsel__open(counter, top->evlist->core.user_cpus,
+>  				     top->evlist->core.threads) < 0) {
+>  
+>  			/*
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 9e48652662d4..b138dd6bdefc 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -174,7 +174,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+>  	mp->idx = idx;
+>  
+>  	if (per_cpu) {
+> -		mp->cpu = perf_cpu_map__cpu(evlist->core.cpus, idx);
+> +		mp->cpu = perf_cpu_map__cpu(evlist->core.user_cpus, idx);
+>  		if (evlist->core.threads)
+>  			mp->tid = perf_thread_map__pid(evlist->core.threads, 0);
+>  		else
+> diff --git a/tools/perf/util/bpf_ftrace.c b/tools/perf/util/bpf_ftrace.c
+> index 4f4d3aaff37c..69481b28b885 100644
+> --- a/tools/perf/util/bpf_ftrace.c
+> +++ b/tools/perf/util/bpf_ftrace.c
+> @@ -38,7 +38,7 @@ int perf_ftrace__latency_prepare_bpf(struct perf_ftrace *ftrace)
+>  
+>  	/* don't need to set cpu filter for system-wide mode */
+>  	if (ftrace->target.cpu_list) {
+> -		ncpus = perf_cpu_map__nr(ftrace->evlist->core.cpus);
+> +		ncpus = perf_cpu_map__nr(ftrace->evlist->core.user_cpus);
+>  		bpf_map__set_max_entries(skel->maps.cpu_filter, ncpus);
+>  	}
+>  
+> @@ -63,7 +63,7 @@ int perf_ftrace__latency_prepare_bpf(struct perf_ftrace *ftrace)
+>  		fd = bpf_map__fd(skel->maps.cpu_filter);
+>  
+>  		for (i = 0; i < ncpus; i++) {
+> -			cpu = perf_cpu_map__cpu(ftrace->evlist->core.cpus, i).cpu;
+> +			cpu = perf_cpu_map__cpu(ftrace->evlist->core.user_cpus, i).cpu;
+>  			bpf_map_update_elem(fd, &cpu, &val, BPF_ANY);
+>  		}
+>  	}
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 9bb79e049957..d335fb713f5e 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -440,7 +440,7 @@ static void __evlist__disable(struct evlist *evlist, char *evsel_name)
+>  	bool has_imm = false;
+>  
+>  	// See explanation in evlist__close()
+> -	if (!cpu_map__is_dummy(evlist->core.cpus)) {
+> +	if (!cpu_map__is_dummy(evlist->core.user_cpus)) {
+>  		if (affinity__setup(&saved_affinity) < 0)
+>  			return;
+>  		affinity = &saved_affinity;
+> @@ -500,7 +500,7 @@ static void __evlist__enable(struct evlist *evlist, char *evsel_name)
+>  	struct affinity saved_affinity, *affinity = NULL;
+>  
+>  	// See explanation in evlist__close()
+> -	if (!cpu_map__is_dummy(evlist->core.cpus)) {
+> +	if (!cpu_map__is_dummy(evlist->core.user_cpus)) {
+>  		if (affinity__setup(&saved_affinity) < 0)
+>  			return;
+>  		affinity = &saved_affinity;
+> @@ -565,7 +565,7 @@ static int evlist__enable_event_cpu(struct evlist *evlist, struct evsel *evsel,
+>  static int evlist__enable_event_thread(struct evlist *evlist, struct evsel *evsel, int thread)
+>  {
+>  	int cpu;
+> -	int nr_cpus = perf_cpu_map__nr(evlist->core.cpus);
+> +	int nr_cpus = perf_cpu_map__nr(evlist->core.user_cpus);
+>  
+>  	if (!evsel->core.fd)
+>  		return -EINVAL;
+> @@ -580,7 +580,7 @@ static int evlist__enable_event_thread(struct evlist *evlist, struct evsel *evse
+>  
+>  int evlist__enable_event_idx(struct evlist *evlist, struct evsel *evsel, int idx)
+>  {
+> -	bool per_cpu_mmaps = !perf_cpu_map__empty(evlist->core.cpus);
+> +	bool per_cpu_mmaps = !perf_cpu_map__empty(evlist->core.user_cpus);
+>  
+>  	if (per_cpu_mmaps)
+>  		return evlist__enable_event_cpu(evlist, evsel, idx);
+> @@ -1301,10 +1301,10 @@ void evlist__close(struct evlist *evlist)
+>  	struct affinity affinity;
+>  
+>  	/*
+> -	 * With perf record core.cpus is usually NULL.
+> +	 * With perf record core.user_cpus is usually NULL.
+>  	 * Use the old method to handle this for now.
+>  	 */
+> -	if (!evlist->core.cpus || cpu_map__is_dummy(evlist->core.cpus)) {
+> +	if (!evlist->core.user_cpus || cpu_map__is_dummy(evlist->core.user_cpus)) {
+>  		evlist__for_each_entry_reverse(evlist, evsel)
+>  			evsel__close(evsel);
+>  		return;
+> @@ -1367,7 +1367,7 @@ int evlist__open(struct evlist *evlist)
+>  	 * Default: one fd per CPU, all threads, aka systemwide
+>  	 * as sys_perf_event_open(cpu = -1, thread = -1) is EINVAL
+>  	 */
+> -	if (evlist->core.threads == NULL && evlist->core.cpus == NULL) {
+> +	if (evlist->core.threads == NULL && evlist->core.user_cpus == NULL) {
+>  		err = evlist__create_syswide_maps(evlist);
+>  		if (err < 0)
+>  			goto out_err;
+> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+> index 007a64681416..ff326eba084f 100644
+> --- a/tools/perf/util/record.c
+> +++ b/tools/perf/util/record.c
+> @@ -106,7 +106,7 @@ void evlist__config(struct evlist *evlist, struct record_opts *opts, struct call
+>  	if (opts->group)
+>  		evlist__set_leader(evlist);
+>  
+> -	if (perf_cpu_map__cpu(evlist->core.cpus, 0).cpu < 0)
+> +	if (perf_cpu_map__cpu(evlist->core.user_cpus, 0).cpu < 0)
+>  		opts->no_inherit = true;
+>  
+>  	use_comm_exec = perf_can_comm_exec();
+> @@ -244,7 +244,7 @@ bool evlist__can_select_event(struct evlist *evlist, const char *str)
+>  
+>  	evsel = evlist__last(temp_evlist);
+>  
+> -	if (!evlist || perf_cpu_map__empty(evlist->core.cpus)) {
+> +	if (!evlist || perf_cpu_map__empty(evlist->core.user_cpus)) {
+>  		struct perf_cpu_map *cpus = perf_cpu_map__new(NULL);
+>  
+>  		if (cpus)
+> @@ -252,7 +252,7 @@ bool evlist__can_select_event(struct evlist *evlist, const char *str)
+>  
+>  		perf_cpu_map__put(cpus);
+>  	} else {
+> -		cpu = perf_cpu_map__cpu(evlist->core.cpus, 0);
+> +		cpu = perf_cpu_map__cpu(evlist->core.user_cpus, 0);
+>  	}
+>  
+>  	while (1) {
+> diff --git a/tools/perf/util/sideband_evlist.c b/tools/perf/util/sideband_evlist.c
+> index 748371ac22be..9f58c68a25f7 100644
+> --- a/tools/perf/util/sideband_evlist.c
+> +++ b/tools/perf/util/sideband_evlist.c
+> @@ -114,7 +114,7 @@ int evlist__start_sb_thread(struct evlist *evlist, struct target *target)
+>  	}
+>  
+>  	evlist__for_each_entry(evlist, counter) {
+> -		if (evsel__open(counter, evlist->core.cpus, evlist->core.threads) < 0)
+> +		if (evsel__open(counter, evlist->core.user_cpus, evlist->core.threads) < 0)
+>  			goto out_delete_evlist;
+>  	}
+>  
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 9cbe351b141f..634dd9ea2b35 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -929,7 +929,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>  	int all_idx;
+>  	struct perf_cpu cpu;
+>  
+> -	perf_cpu_map__for_each_cpu(cpu, all_idx, evlist->core.cpus) {
+> +	perf_cpu_map__for_each_cpu(cpu, all_idx, evlist->core.user_cpus) {
+>  		struct evsel *counter;
+>  		bool first = true;
+>  
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index b654de0841f8..591afc6c607b 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -2127,7 +2127,7 @@ int perf_event__synthesize_stat_events(struct perf_stat_config *config, struct p
+>  		return err;
+>  	}
+>  
+> -	err = perf_event__synthesize_cpu_map(tool, evlist->core.cpus, process, NULL);
+> +	err = perf_event__synthesize_cpu_map(tool, evlist->core.user_cpus, process, NULL);
+>  	if (err < 0) {
+>  		pr_err("Couldn't synthesize thread map.\n");
+>  		return err;
+> diff --git a/tools/perf/util/top.c b/tools/perf/util/top.c
+> index c1ebfc5d2e0c..e98422f3ff17 100644
+> --- a/tools/perf/util/top.c
+> +++ b/tools/perf/util/top.c
+> @@ -95,15 +95,16 @@ size_t perf_top__header_snprintf(struct perf_top *top, char *bf, size_t size)
+>  
+>  	if (target->cpu_list)
+>  		ret += SNPRINTF(bf + ret, size - ret, ", CPU%s: %s)",
+> -				perf_cpu_map__nr(top->evlist->core.cpus) > 1 ? "s" : "",
+> +				perf_cpu_map__nr(top->evlist->core.user_cpus) > 1 ? "s" : "",
+>  				target->cpu_list);
+>  	else {
+>  		if (target->tid)
+>  			ret += SNPRINTF(bf + ret, size - ret, ")");
+>  		else
+>  			ret += SNPRINTF(bf + ret, size - ret, ", %d CPU%s)",
+> -					perf_cpu_map__nr(top->evlist->core.cpus),
+> -					perf_cpu_map__nr(top->evlist->core.cpus) > 1 ? "s" : "");
+> +					perf_cpu_map__nr(top->evlist->core.user_cpus),
+> +					perf_cpu_map__nr(top->evlist->core.user_cpus) > 1
+> +					? "s" : "");
+>  	}
+>  
+>  	perf_top__reset_sample_counters(top);
+> -- 
+> 2.35.1.1021.g381101b075-goog
 
-See v0.3 below. I intend to send v1 next week after 5.18-rc1.
-
-If there are any comments in the meantime, please shout.
-
-Thanks,
--- Marco
-
------- >8 ------
-
-From: Marco Elver <elver@google.com>
-Date: Wed, 23 Mar 2022 13:36:45 +0100
-Subject: [PATCH RFC] signal: Deliver SIGTRAP on perf event asynchronously if
- blocked
-
-With SIGTRAP on perf events, we have encountered termination of
-processes due to user space attempting to block delivery of SIGTRAP.
-Consider this case:
-
-    <set up SIGTRAP on a perf event>
-    ...
-    sigset_t s;
-    sigemptyset(&s);
-    sigaddset(&s, SIGTRAP | <and others>);
-    sigprocmask(SIG_BLOCK, &s, ...);
-    ...
-    <perf event triggers>
-
-When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
-will force the signal, but revert back to the default handler, thus
-terminating the task.
-
-This makes sense for error conditions, but not so much for explicitly
-requested monitoring. However, the expectation is still that signals
-generated by perf events are synchronous, which will no longer be the
-case if the signal is blocked and delivered later.
-
-To give user space the ability to clearly distinguish synchronous from
-asynchronous signals, introduce siginfo_t::si_perf_flags and
-TRAP_PERF_FLAG_ASYNC (opted for flags in case more binary information is
-required in future).
-
-The resolution to the problem is then to (a) no longer force the signal
-(avoiding the terminations), but (b) tell user space via si_perf_flags
-if the signal was synchronous or not, so that such signals can be
-handled differently (e.g. let user space decide to ignore or consider
-the data imprecise).
-
-The alternative of making the kernel ignore SIGTRAP on perf events if
-the signal is blocked may work for some usecases, but likely causes
-issues in others that then have to revert back to interception of
-sigprocmask() (which we want to avoid). [ A concrete example: when using
-breakpoint perf events to track data-flow, in a region of code where
-signals are blocked, data-flow can no longer be tracked accurately.
-When a relevant asynchronous signal is received after unblocking the
-signal, the data-flow tracking logic needs to know its state is
-imprecise. ]
-
-Link: https://lore.kernel.org/all/Yjmn%2FkVblV3TdoAq@elver.google.com/
-Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Marco Elver <elver@google.com>
----
- arch/arm/kernel/signal.c           |  1 +
- arch/arm64/kernel/signal.c         |  1 +
- arch/arm64/kernel/signal32.c       |  1 +
- arch/m68k/kernel/signal.c          |  1 +
- arch/sparc/kernel/signal32.c       |  1 +
- arch/sparc/kernel/signal_64.c      |  1 +
- arch/x86/kernel/signal_compat.c    |  2 ++
- include/linux/compat.h             |  1 +
- include/linux/sched/signal.h       |  2 +-
- include/uapi/asm-generic/siginfo.h |  7 +++++++
- kernel/events/core.c               |  4 ++--
- kernel/signal.c                    | 18 ++++++++++++++++--
- 12 files changed, 35 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/kernel/signal.c b/arch/arm/kernel/signal.c
-index c532a6041066..8111147f7c42 100644
---- a/arch/arm/kernel/signal.c
-+++ b/arch/arm/kernel/signal.c
-@@ -708,6 +708,7 @@ static_assert(offsetof(siginfo_t, si_upper)	== 0x18);
- static_assert(offsetof(siginfo_t, si_pkey)	== 0x14);
- static_assert(offsetof(siginfo_t, si_perf_data)	== 0x10);
- static_assert(offsetof(siginfo_t, si_perf_type)	== 0x14);
-+static_assert(offsetof(siginfo_t, si_perf_flags) == 0x18);
- static_assert(offsetof(siginfo_t, si_band)	== 0x0c);
- static_assert(offsetof(siginfo_t, si_fd)	== 0x10);
- static_assert(offsetof(siginfo_t, si_call_addr)	== 0x0c);
-diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
-index d8aaf4b6f432..fd55d1848a2b 100644
---- a/arch/arm64/kernel/signal.c
-+++ b/arch/arm64/kernel/signal.c
-@@ -1010,6 +1010,7 @@ static_assert(offsetof(siginfo_t, si_upper)	== 0x28);
- static_assert(offsetof(siginfo_t, si_pkey)	== 0x20);
- static_assert(offsetof(siginfo_t, si_perf_data)	== 0x18);
- static_assert(offsetof(siginfo_t, si_perf_type)	== 0x20);
-+static_assert(offsetof(siginfo_t, si_perf_flags) == 0x24);
- static_assert(offsetof(siginfo_t, si_band)	== 0x10);
- static_assert(offsetof(siginfo_t, si_fd)	== 0x18);
- static_assert(offsetof(siginfo_t, si_call_addr)	== 0x10);
-diff --git a/arch/arm64/kernel/signal32.c b/arch/arm64/kernel/signal32.c
-index d984282b979f..4700f8522d27 100644
---- a/arch/arm64/kernel/signal32.c
-+++ b/arch/arm64/kernel/signal32.c
-@@ -487,6 +487,7 @@ static_assert(offsetof(compat_siginfo_t, si_upper)	== 0x18);
- static_assert(offsetof(compat_siginfo_t, si_pkey)	== 0x14);
- static_assert(offsetof(compat_siginfo_t, si_perf_data)	== 0x10);
- static_assert(offsetof(compat_siginfo_t, si_perf_type)	== 0x14);
-+static_assert(offsetof(compat_siginfo_t, si_perf_flags)	== 0x18);
- static_assert(offsetof(compat_siginfo_t, si_band)	== 0x0c);
- static_assert(offsetof(compat_siginfo_t, si_fd)		== 0x10);
- static_assert(offsetof(compat_siginfo_t, si_call_addr)	== 0x0c);
-diff --git a/arch/m68k/kernel/signal.c b/arch/m68k/kernel/signal.c
-index 338817d0cb3f..74ee1e3013d7 100644
---- a/arch/m68k/kernel/signal.c
-+++ b/arch/m68k/kernel/signal.c
-@@ -625,6 +625,7 @@ static inline void siginfo_build_tests(void)
- 	/* _sigfault._perf */
- 	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_data) != 0x10);
- 	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_type) != 0x14);
-+	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_flags) != 0x18);
- 
- 	/* _sigpoll */
- 	BUILD_BUG_ON(offsetof(siginfo_t, si_band)   != 0x0c);
-diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
-index 6cc124a3bb98..90ff7ff94ea7 100644
---- a/arch/sparc/kernel/signal32.c
-+++ b/arch/sparc/kernel/signal32.c
-@@ -780,5 +780,6 @@ static_assert(offsetof(compat_siginfo_t, si_upper)	== 0x18);
- static_assert(offsetof(compat_siginfo_t, si_pkey)	== 0x14);
- static_assert(offsetof(compat_siginfo_t, si_perf_data)	== 0x10);
- static_assert(offsetof(compat_siginfo_t, si_perf_type)	== 0x14);
-+static_assert(offsetof(compat_siginfo_t, si_perf_flags)	== 0x18);
- static_assert(offsetof(compat_siginfo_t, si_band)	== 0x0c);
- static_assert(offsetof(compat_siginfo_t, si_fd)		== 0x10);
-diff --git a/arch/sparc/kernel/signal_64.c b/arch/sparc/kernel/signal_64.c
-index 2a78d2af1265..6eeb766987d1 100644
---- a/arch/sparc/kernel/signal_64.c
-+++ b/arch/sparc/kernel/signal_64.c
-@@ -590,5 +590,6 @@ static_assert(offsetof(siginfo_t, si_upper)	== 0x28);
- static_assert(offsetof(siginfo_t, si_pkey)	== 0x20);
- static_assert(offsetof(siginfo_t, si_perf_data)	== 0x18);
- static_assert(offsetof(siginfo_t, si_perf_type)	== 0x20);
-+static_assert(offsetof(siginfo_t, si_perf_flags) == 0x24);
- static_assert(offsetof(siginfo_t, si_band)	== 0x10);
- static_assert(offsetof(siginfo_t, si_fd)	== 0x14);
-diff --git a/arch/x86/kernel/signal_compat.c b/arch/x86/kernel/signal_compat.c
-index b52407c56000..879ef8c72f5c 100644
---- a/arch/x86/kernel/signal_compat.c
-+++ b/arch/x86/kernel/signal_compat.c
-@@ -149,8 +149,10 @@ static inline void signal_compat_build_tests(void)
- 
- 	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_data) != 0x18);
- 	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_type) != 0x20);
-+	BUILD_BUG_ON(offsetof(siginfo_t, si_perf_flags) != 0x24);
- 	BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_data) != 0x10);
- 	BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_type) != 0x14);
-+	BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_flags) != 0x18);
- 
- 	CHECK_CSI_OFFSET(_sigpoll);
- 	CHECK_CSI_SIZE  (_sigpoll, 2*sizeof(int));
-diff --git a/include/linux/compat.h b/include/linux/compat.h
-index 1c758b0e0359..01fddf72a81f 100644
---- a/include/linux/compat.h
-+++ b/include/linux/compat.h
-@@ -235,6 +235,7 @@ typedef struct compat_siginfo {
- 				struct {
- 					compat_ulong_t _data;
- 					u32 _type;
-+					u32 _flags;
- 				} _perf;
- 			};
- 		} _sigfault;
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index b6ecb9fc4cd2..9924fe7559a0 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -320,7 +320,7 @@ int send_sig_mceerr(int code, void __user *, short, struct task_struct *);
- 
- int force_sig_bnderr(void __user *addr, void __user *lower, void __user *upper);
- int force_sig_pkuerr(void __user *addr, u32 pkey);
--int force_sig_perf(void __user *addr, u32 type, u64 sig_data);
-+int send_sig_perf(void __user *addr, u32 type, u64 sig_data);
- 
- int force_sig_ptrace_errno_trap(int errno, void __user *addr);
- int force_sig_fault_trapno(int sig, int code, void __user *addr, int trapno);
-diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
-index 3ba180f550d7..ffbe4cec9f32 100644
---- a/include/uapi/asm-generic/siginfo.h
-+++ b/include/uapi/asm-generic/siginfo.h
-@@ -99,6 +99,7 @@ union __sifields {
- 			struct {
- 				unsigned long _data;
- 				__u32 _type;
-+				__u32 _flags;
- 			} _perf;
- 		};
- 	} _sigfault;
-@@ -164,6 +165,7 @@ typedef struct siginfo {
- #define si_pkey		_sifields._sigfault._addr_pkey._pkey
- #define si_perf_data	_sifields._sigfault._perf._data
- #define si_perf_type	_sifields._sigfault._perf._type
-+#define si_perf_flags	_sifields._sigfault._perf._flags
- #define si_band		_sifields._sigpoll._band
- #define si_fd		_sifields._sigpoll._fd
- #define si_call_addr	_sifields._sigsys._call_addr
-@@ -270,6 +272,11 @@ typedef struct siginfo {
-  * that are of the form: ((PTRACE_EVENT_XXX << 8) | SIGTRAP)
-  */
- 
-+/*
-+ * Flags for si_perf_flags if SIGTRAP si_code is TRAP_PERF.
-+ */
-+#define TRAP_PERF_FLAG_ASYNC (1u << 0)
-+
- /*
-  * SIGCHLD si_codes
-  */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 57c7197838db..8f2f251465e9 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6533,8 +6533,8 @@ static void perf_sigtrap(struct perf_event *event)
- 	if (current->flags & PF_EXITING)
- 		return;
- 
--	force_sig_perf((void __user *)event->pending_addr,
--		       event->attr.type, event->attr.sig_data);
-+	send_sig_perf((void __user *)event->pending_addr,
-+		      event->attr.type, event->attr.sig_data);
- }
- 
- static void perf_pending_event_disable(struct perf_event *event)
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 38602738866e..c230a531b169 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1804,7 +1804,7 @@ int force_sig_pkuerr(void __user *addr, u32 pkey)
- }
- #endif
- 
--int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
-+int send_sig_perf(void __user *addr, u32 type, u64 sig_data)
- {
- 	struct kernel_siginfo info;
- 
-@@ -1816,7 +1816,18 @@ int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
- 	info.si_perf_data = sig_data;
- 	info.si_perf_type = type;
- 
--	return force_sig_info(&info);
-+	/*
-+	 * Signals generated by perf events should not terminate the whole
-+	 * process if SIGTRAP is blocked, however, delivering the signal
-+	 * asynchronously is better than not delivering at all. But tell user
-+	 * space if the signal was asynchronous, so it can clearly be
-+	 * distinguished from normal synchronous ones.
-+	 */
-+	info.si_perf_flags = sigismember(&current->blocked, info.si_signo) ?
-+				     TRAP_PERF_FLAG_ASYNC :
-+				     0;
-+
-+	return send_sig_info(info.si_signo, &info, current);
- }
- 
- /**
-@@ -3429,6 +3440,7 @@ void copy_siginfo_to_external32(struct compat_siginfo *to,
- 		to->si_addr = ptr_to_compat(from->si_addr);
- 		to->si_perf_data = from->si_perf_data;
- 		to->si_perf_type = from->si_perf_type;
-+		to->si_perf_flags = from->si_perf_flags;
- 		break;
- 	case SIL_CHLD:
- 		to->si_pid = from->si_pid;
-@@ -3506,6 +3518,7 @@ static int post_copy_siginfo_from_user32(kernel_siginfo_t *to,
- 		to->si_addr = compat_ptr(from->si_addr);
- 		to->si_perf_data = from->si_perf_data;
- 		to->si_perf_type = from->si_perf_type;
-+		to->si_perf_flags = from->si_perf_flags;
- 		break;
- 	case SIL_CHLD:
- 		to->si_pid    = from->si_pid;
-@@ -4719,6 +4732,7 @@ static inline void siginfo_buildtime_checks(void)
- 	CHECK_OFFSET(si_pkey);
- 	CHECK_OFFSET(si_perf_data);
- 	CHECK_OFFSET(si_perf_type);
-+	CHECK_OFFSET(si_perf_flags);
- 
- 	/* sigpoll */
- 	CHECK_OFFSET(si_band);
 -- 
-2.35.1.1021.g381101b075-goog
 
+- Arnaldo
