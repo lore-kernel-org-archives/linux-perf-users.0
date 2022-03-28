@@ -2,92 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3127DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Mar 2022 20:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CEFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Mar 2022 01:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236691AbiC0UzH (ORCPT
+        id S236729AbiC1B5S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Mar 2022 16:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35742 "EHLO
+        Sun, 27 Mar 2022 21:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236685AbiC0UzG (ORCPT
+        with ESMTP id S233127AbiC1B5R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Mar 2022 16:55:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B0119C3D;
-        Sun, 27 Mar 2022 13:53:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 92DBB60C7E;
-        Sun, 27 Mar 2022 20:53:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id ECB4EC340EC;
-        Sun, 27 Mar 2022 20:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648414406;
-        bh=87VxAPUC4MEYU50JY20QJEjmRmHn1sfWkM4LnungiO4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=kdC8uSLdvd38tZmeFZluZxXrCxcmU+asLsaarQBcqkmNNQ3WbAOf+gyq1IZQHA+b6
-         afkPIU3rov+aPRzISlxURgSVsZvKXiu5XnFcHsZ6SVJvngwrt4QKe5eaAIlSseRPFu
-         oLBsWdlpF0zz4qAUzSbHi6KPyp0AkqMVXPmUUWsuQp5yffU4AomM9+1751UcuiWTAI
-         ykNrn3sD/RBTiZOrQMIW+L7WZVXJd9Cwdvhhs2wx1FKkMwJgP0ruilgsWIlw0Dg25p
-         6XjIk3b48Crx0gvnNiESfLq5C+BvrXkNQs+yCOubLYBvZ+GFjFr28COvjhAkC2KacR
-         9LVql/nYVVjRA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D7403E6BBCA;
-        Sun, 27 Mar 2022 20:53:25 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools changes for v5.18: 1st batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220326155357.231739-1-acme@kernel.org>
-References: <20220326155357.231739-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220326155357.231739-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.18-2022-03-26
-X-PR-Tracked-Commit-Id: ab0809af0bee88b689ba289ec8c40aa2be3a17ec
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7b58b82b86c8b65a2b57a4c6cb96a460654f9e09
-Message-Id: <164841440587.12998.1081588827837875501.pr-tracker-bot@kernel.org>
-Date:   Sun, 27 Mar 2022 20:53:25 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Christy Lee <christylee@fb.com>,
-        Colin Ian King <colin.i.king@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mahmoud Mandour <ma.mandourr@gmail.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        tangmeng <tangmeng@uniontech.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        xaizek <xaizek@posteo.net>, Yury Norov <yury.norov@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Sun, 27 Mar 2022 21:57:17 -0400
+Received: from mail.meizu.com (edge07.meizu.com [112.91.151.210])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B050F22;
+        Sun, 27 Mar 2022 18:55:36 -0700 (PDT)
+Received: from IT-EXMB-1-125.meizu.com (172.16.1.125) by mz-mail11.meizu.com
+ (172.16.1.15) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 28 Mar
+ 2022 09:55:35 +0800
+Received: from meizu.meizu.com (172.16.137.70) by IT-EXMB-1-125.meizu.com
+ (172.16.1.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.14; Mon, 28 Mar
+ 2022 09:55:34 +0800
+From:   Haowen Bai <baihaowen@meizu.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <ast@kernel.org>,
+        <daniel@iogearbox.net>, <andrii@kernel.org>, <kafai@fb.com>,
+        <songliubraving@fb.com>, <yhs@fb.com>, <john.fastabend@gmail.com>,
+        <kpsingh@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>
+Subject: [PATCH] perf evlist: Directly return instead of using local ret variable
+Date:   Mon, 28 Mar 2022 09:55:32 +0800
+Message-ID: <1648432532-23151-1-git-send-email-baihaowen@meizu.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [172.16.137.70]
+X-ClientProxiedBy: IT-EXMB-1-125.meizu.com (172.16.1.125) To
+ IT-EXMB-1-125.meizu.com (172.16.1.125)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sat, 26 Mar 2022 12:53:57 -0300:
+fixes coccinelle warning:
+./tools/perf/util/evlist.c:1333:5-8: Unneeded variable: "err". Return
+"- ENOMEM" on line 1358
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.18-2022-03-26
+Signed-off-by: Haowen Bai <baihaowen@meizu.com>
+---
+ tools/perf/util/evlist.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7b58b82b86c8b65a2b57a4c6cb96a460654f9e09
-
-Thank you!
-
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 9bb79e0..1883278 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1330,7 +1330,6 @@ static int evlist__create_syswide_maps(struct evlist *evlist)
+ {
+ 	struct perf_cpu_map *cpus;
+ 	struct perf_thread_map *threads;
+-	int err = -ENOMEM;
+ 
+ 	/*
+ 	 * Try reading /sys/devices/system/cpu/online to get
+@@ -1355,7 +1354,7 @@ static int evlist__create_syswide_maps(struct evlist *evlist)
+ out_put:
+ 	perf_cpu_map__put(cpus);
+ out:
+-	return err;
++	return -ENOMEM;
+ }
+ 
+ int evlist__open(struct evlist *evlist)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.7.4
+
