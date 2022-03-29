@@ -2,59 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18812C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Mar 2022 23:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39BEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 09:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230401AbiC1X3E (ORCPT
+        id S234754AbiC2JdY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Mar 2022 19:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35766 "EHLO
+        Tue, 29 Mar 2022 05:33:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230451AbiC1X2t (ORCPT
+        with ESMTP id S232590AbiC2JdX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Mar 2022 19:28:49 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD0DA2DA89
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Mar 2022 16:27:07 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2e8216c4c46so85508747b3.23
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Mar 2022 16:27:07 -0700 (PDT)
+        Tue, 29 Mar 2022 05:33:23 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C92EC123BEE
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 02:31:39 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id u3so23925148wrg.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 02:31:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=62T0/TU1Sa4Wqe+eN5txv4UBeKWrByFVFuAcfl2TJUY=;
-        b=WuFWAPyS7pgyWDgjtlzsKpFPsxxPd9tgW0nM0IULEGbEsaEs5zE0BwR/iV0yiRyiUr
-         C9LzDD7OQikFacW2EZ3HgTOERW8ioeMdDmGtbxjGjdAvIgFqPAGlWSKO/Fo07kxOusQj
-         xXQTuUoN7COi2/I3yvyXPwYeetZ2hVDiAs6t36XmpeIj0N0pXu41bgEpHgFvTMqjwxGS
-         YkJ0glvboVcb8xY9ZZdbAAgSHoReMnojd0N4VWMYdi2aBcDvyxepEb8RTHF4ZzMUgt9m
-         qUiIro8106ztVL4WbMUEwnsQ0Z0mF/k9xEPBZD0X3XV3XPniYpCSNqCpBNG82OklWGGW
-         su1A==
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mol8cznyjFxndyug6ujfLFzjwVmzbwHtru6cjLlZhCo=;
+        b=GFSuTgep9fw97+Fe9X/KjoPCWdufLmIv+PeBPByVwYsOgJaC9oTfSCd0l7GqCL8Dcm
+         m8zb41DZm1P8YO9lq30AG64cwwH2zk/8ykqC8gqzu7Hsf40oNGcfSR81qWAWYRfISZuu
+         kEi0+Zl/BEb3r4oSa56Tx2xjTJSSjgeksL5cpVRBm/Om/fj1Tz+s3i1MvRmO4USSXKQl
+         tmiZWCxZxSKACyxnjDO+RyDOs++KxtODBeUci0HlujnEtxVOTnq3dMJ2kmXzhjXwLwir
+         IQ24gRhXr9v1dez+6wkgOVcTteaj4BCNTL8VOlNWam4nNG2tFQzn7QNIhUnqvC0OC5o9
+         uGZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=62T0/TU1Sa4Wqe+eN5txv4UBeKWrByFVFuAcfl2TJUY=;
-        b=7T2wDXPTH6vhte0eDg778cjY1OZtEIGGQZ6l7KR3cFTmkmfR3Rg6cWapEE38ZAh0g1
-         XAWKqVOzUlaagL18iwQ3/B/TgYDEy07DJG6wSWije64phcmlKeCS6bXWlR4Tq+GHDuac
-         QS46Ta39DJL/KJPQceFg+4u6B2a3B9wBcNfB1TlhqYcgo1OFPoA8MayArswdUaqi74En
-         izExTwPEgrPdoIUviHlu3G4azqL0/TM6+fer7yOwy5lDki3tTcccarzol8q5/k5bgMZ2
-         uVxtDnAd+YRVrcat+o/YtUbpM+AZ/uMnMXWNKhLc1ujc3a0Aogp/vWap/OfC6H9B0k1c
-         ON/Q==
-X-Gm-Message-State: AOAM532ITjP/sPVetx5ovlmCJOVGWLhRMlNRVWC16BmE2VGR9QEwzkgL
-        lUJNBA8gSaVEd8QECgn8PMSuxr0sRx8P
-X-Google-Smtp-Source: ABdhPJyGiiWxc4ARHStwB+ZXo/aW9HRYLxvc/de+ZQtJa8gJqpvKLIH6JBfkA9BFTOaLI3PuawSjmI+3PmmF
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9d6a:527d:cf46:71e2])
- (user=irogers job=sendgmr) by 2002:a25:ba04:0:b0:623:ed7a:701d with SMTP id
- t4-20020a25ba04000000b00623ed7a701dmr25269976ybg.209.1648510026853; Mon, 28
- Mar 2022 16:27:06 -0700 (PDT)
-Date:   Mon, 28 Mar 2022 16:26:48 -0700
-In-Reply-To: <20220328232648.2127340-1-irogers@google.com>
-Message-Id: <20220328232648.2127340-7-irogers@google.com>
-Mime-Version: 1.0
-References: <20220328232648.2127340-1-irogers@google.com>
-X-Mailer: git-send-email 2.35.1.1021.g381101b075-goog
-Subject: [PATCH v2 6/6] perf evlist: Respect all_cpus when setting user_requested_cpus
-From:   Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mol8cznyjFxndyug6ujfLFzjwVmzbwHtru6cjLlZhCo=;
+        b=t3OdotFlu2oSAL2XiDSnZy6cK6BaEjWvkDTTjnzoDXaxSqXixYVCXbKczkPFh5QPa9
+         1TlSFG62TTwtW3IbZB6Kn2Ja4cQ68/vksVxZCz3Um7E+LSmg8TPQUD4CN0M7BXpwSdjz
+         IOaMMvtpaFRPfYRC23zOcaq2h6attxcCW6DovvB6lCJSpyikT+bdZ5sw5WT661h6b5Z9
+         zAM4XOXDKKRSXpFU4CGHY+9Lgq2LRZ87QmzM0AvQgInncxfTwo2Hr/OnEedLlemJ9+W3
+         aFaPM5mfKsXTUHop72r2YiZk8Pt8FUs9YwULI0ohO2fki699SsAGkxu6OjDgZWAUc/ZB
+         4ilQ==
+X-Gm-Message-State: AOAM533uh9ImBlqHcq47YMdoNmEIeRqh9gDWEXYB4WipAIDTdMATMU3x
+        h8VkLjFQBy6QgKQ7fvJqxb1FrQ==
+X-Google-Smtp-Source: ABdhPJwTZJc+0rU8LMKH4R6JCPF3SK5AElUoxXMtiJSUpVgNsGc1NvdKq51N3f/Ghl14dUK4u7/0TA==
+X-Received: by 2002:a05:6000:181a:b0:205:9051:ab6d with SMTP id m26-20020a056000181a00b002059051ab6dmr29548959wrh.191.1648546298260;
+        Tue, 29 Mar 2022 02:31:38 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id y15-20020a056000168f00b002057a9f9f5csm17480711wrd.31.2022.03.29.02.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Mar 2022 02:31:37 -0700 (PDT)
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -62,124 +57,76 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        John Garry <john.garry@huawei.com>
+Cc:     mptcp@lists.linux.dev,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH perf] perf tools: .git/ORIG_HEAD might not exist
+Date:   Tue, 29 Mar 2022 11:31:20 +0200
+Message-Id: <20220329093120.4173283-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If all_cpus is calculated it represents the merge/union of all
-evsel cpu maps. By default user_requested_cpus is computed to be
-the online CPUs. For uncore events, it is often the case currently
-that all_cpus is a subset of user_requested_cpus. Metrics printed
-without aggregation and with metric-only, in print_no_aggr_metric,
-iterate over user_requested_cpus assuming every CPU has a metric to
-print. For each CPU the prefix is printed, but then if the
-evsel's cpus doesn't contain anything you get an empty line like
-the following on a 2 socket 36 core SkylakeX:
+It seems it cannot be assumed .git/ORIG_HEAD exists if .git/HEAD is
+there.
 
-```
-$ perf stat -A -M DRAM_BW_Use -a --metric-only -I 1000
-     1.000453137 CPU0                       0.00
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137 CPU18                      0.00
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     1.000453137
-     2.003717143 CPU0                       0.00
-...
-```
+Indeed, recently our public CI reported[1] the following error when
+compiling Perf tool:
 
-While it is possible to be lazier in printing the prefix and
-trailing newline, having user_requested_cpus not be a subset of
-all_cpus is preferential so that wasted work isn't done elsewhere
-user_requested_cpus is used. The change modifies user_requested_cpus
-to be the intersection of user specified CPUs, or default all online
-CPUs, with the CPUs computed through the merge of all evsel cpu maps.
+  $ cd tools/perf
+  $ make -j4 -l4 O=/tmp/(...)/perf DESTDIR=/usr install
+  (...)
+  make[2]: *** No rule to make target '../../.git/ORIG_HEAD', needed by '/tmp/(...)/perf/PERF-VERSION-FILE'.
 
-New behavior:
-```
-$ perf stat -A -M DRAM_BW_Use -a --metric-only -I 1000
-     1.001086325 CPU0                       0.00
-     1.001086325 CPU18                      0.00
-     2.003671291 CPU0                       0.00
-     2.003671291 CPU18                      0.00
-...
-```
+This is because apparently[2] Cirrus Ci uses a Git client implemented
+purely in Go[3] to perform a clone. Most likely, this tool doesn't
+create any .git/ORIG_HEAD file but .git/HEAD is there. The error can
+indeed be reproduced by renaming this .git/ORIG_HEAD file while keeping
+.git/HEAD. In other words, it means it is not enough to check the
+presence of .git/HEAD to assume .git/ORIG_HEAD exists as well.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+With the modification here, the version file is always regenerated if
+.git/ORIG_HEAD file is not present. But that is not an issue as kernel
+devs probably don't use such tools in their dev env and it can be
+assumed for them that they have both .git/HEAD and .git/ORIG_HEAD files.
+
+[1] https://cirrus-ci.com/task/5673396527693824?logs=test#L5026
+[2] https://cirrus-ci.org/guide/tips-and-tricks/
+[3] https://github.com/go-git/go-git
+
+Fixes: 4e666cdb06ee ("perf tools: Fix dependency for version file creation")
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/perf/util/evlist.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/Makefile.perf | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index cb2cf4463c08..1a3308ec35f1 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1036,6 +1036,8 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
- 	if (!cpus)
- 		goto out_delete_threads;
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 9c935f86d172..2f64e4904bbb 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1143,10 +1143,12 @@ endif
+ # Trick: if ../../.git does not exist - we are building out of tree for example,
+ # then force version regeneration:
+ #
++GIT-HEAD-PHONY =
+ ifeq ($(wildcard ../../.git/HEAD),)
+-    GIT-HEAD-PHONY = ../../.git/HEAD ../../.git/ORIG_HEAD
+-else
+-    GIT-HEAD-PHONY =
++    GIT-HEAD-PHONY += ../../.git/HEAD
++endif
++ifeq ($(wildcard ../../.git/ORIG_HEAD),)
++    GIT-HEAD-PHONY += ../../.git/ORIG_HEAD
+ endif
  
-+	if (evlist->core.all_cpus)
-+		cpus = perf_cpu_map__intersect(cpus, evlist->core.all_cpus);
- 	evlist->core.has_user_cpus = !!target->cpu_list && !target->hybrid;
- 
- 	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ FORCE:
+
+base-commit: ab0809af0bee88b689ba289ec8c40aa2be3a17ec
 -- 
-2.35.1.1021.g381101b075-goog
+2.34.1
 
