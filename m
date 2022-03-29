@@ -2,124 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55128C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 13:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1F9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 14:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237347AbiC2NgF (ORCPT
+        id S237802AbiC2OSK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Mar 2022 09:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40660 "EHLO
+        Tue, 29 Mar 2022 10:18:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230330AbiC2NgC (ORCPT
+        with ESMTP id S237585AbiC2OSJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Mar 2022 09:36:02 -0400
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2DB01F626;
-        Tue, 29 Mar 2022 06:34:18 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0V8ZK4JR_1648560852;
-Received: from 30.240.123.174(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0V8ZK4JR_1648560852)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 29 Mar 2022 21:34:14 +0800
-Message-ID: <48b2cf46-d96b-4d2d-5a56-97a88566edcc@linux.alibaba.com>
-Date:   Tue, 29 Mar 2022 21:34:11 +0800
+        Tue, 29 Mar 2022 10:18:09 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB71CE6143
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 07:16:26 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id w21so20482192wra.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 07:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ApZndiwJNJZl0SipZbpbx1y3pSTDGsI2OYESYfSgmRI=;
+        b=szLF4na2paIg1s4iZdbmJ8mCpPYLmW48qK3wdxRxIPWBTrhi0gaLJ1W1LAdCGuoVTA
+         p8eWWU9aJBFQbKIsvCydcMEpWAQZ+XWzoxxSi8UCOZGPTCFHnM1ry3jCNQIyyWZrT9dK
+         9nQL8s7AujVQyG0XZkaj8mW7qtEV+FyPmNNcnFZ9CSPz0Y9zUIyPiy5ViC8OfbMSdBly
+         4Jo6W73cr5FpJlTlcYbqFY4vkpk2Op+vUNsllbVrQle/JWpjB6MWoQewc9ySt/RthV1D
+         N/koCU1lPJthZdyVJbuh3RBJv8PkGy6KjvZiRcBXe3wMHPdKo03yAiYyuN2s+qN181D7
+         ZXZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ApZndiwJNJZl0SipZbpbx1y3pSTDGsI2OYESYfSgmRI=;
+        b=Qn6R19US9VahzXSc00BJ4TCSNMP9vYDFluHRioNQfmOTH1GUUUbu0asB23O5M6TSrj
+         u3X0hApnfTLenQdoL5lW/4Ji1ENL5sMkF1DK8Uix9d4jEaObL40bFegrTgdzWS6JKFUu
+         Qh9TVJDszL/OH9PIcEtwgI8t3QQY9P/rThcZBUhOfaY7RCvNqnJnbdZpWrzLuACAlZTk
+         w4fP0faKbjrHBOc5NTdl6Nv9y8tCky39gpPhyz9uWm7RYzUjq9B//FR1/yxZBVxrGcvx
+         Zpi3TXBULx7i2YHrb/6WZSWx/4lq+tY2iXAD0KWUX+SXpLgg/0s7RSkuyO8kdr73JaFr
+         9Enw==
+X-Gm-Message-State: AOAM533jlpv9xNgUN4EeYahCtyBERgj9eUANz9C5zCBjFmYjFgkU3T+F
+        syq4K8pq1P/u3YJGUToIk3b7dw==
+X-Google-Smtp-Source: ABdhPJzoCt9FnR7gH0jRnO98pHDPc8I6nVcblqa6U4wrKW0EyTEOFSa98+n1XELxAHldPTuzcpRVOQ==
+X-Received: by 2002:a5d:58f2:0:b0:205:7f1b:9dc7 with SMTP id f18-20020a5d58f2000000b002057f1b9dc7mr31327403wrd.109.1648563375739;
+        Tue, 29 Mar 2022 07:16:15 -0700 (PDT)
+Received: from google.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id n15-20020a05600c500f00b0038cfb1a43d6sm2371826wmr.24.2022.03.29.07.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Mar 2022 07:16:14 -0700 (PDT)
+Date:   Tue, 29 Mar 2022 16:16:11 +0200
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Message-ID: <YkMUq/qrzEg5Mj1N@google.com>
+References: <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
+ <YjGdoGy4Z2UUG9S9@google.com>
+ <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
+ <YjHfGrZovk3N/H0f@google.com>
+ <371faf0d-f794-4a2e-0a1c-9d454d7c8b12@intel.com>
+ <YjhUjotmo+kYvoNP@google.com>
+ <ffa56520-09b5-9c5d-7733-6767d2f8e350@intel.com>
+ <YjiuoEUL6jH32cBi@google.com>
+ <Yjm5stBpRC0g4G8s@google.com>
+ <YkL8EpWaeZ1US8t2@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
- cores
-To:     Leo Yan <leo.yan@linaro.org>, Ali Saidi <alisaidi@amazon.com>
-Cc:     Nick.Forrington@arm.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, german.gomez@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-References: <20220326194327.32239-1-alisaidi@amazon.com>
- <20220328030805.14175-1-alisaidi@amazon.com>
- <20220328130547.GA360814@leoy-ThinkPad-X240s>
-Content-Language: en-US
-In-Reply-To: <20220328130547.GA360814@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YkL8EpWaeZ1US8t2@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo, Ali,
+On Tue, Mar 29, 2022 at 02:31:14PM +0200, Steinar H. Gunderson wrote:
+>   int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
+>   {
+>           if (!sym_l || !sym_r)
+>                   return cmp_null(sym_l, sym_r);
+> 
+>           if (sym_l == sym_r)
+>                   return 0;
+> 
+>           if (sym_l->inlined || sym_r->inlined) {
+>                   int ret = strcmp(sym_l->name, sym_r->name);
+> 
+>                   if (ret)
+>                           return ret;
+>                   if ((sym_l->start <= sym_r->end) && (sym_l->end >= sym_r->start))
+>                           return 0;
+>           }
+> 
+>           if (sym_l->start != sym_r->start)
+>                   return (int64_t)(sym_r->start - sym_l->start);
 
-Thank you for your great work and valuable discussion.
+Even fixing <= to <, I do get nonsensical results like an inlined
+(and very small) destructor taking 50%+ of CPU time, and having a huge
+call chain under it. It largely goes away (I'm not sure if it's perfect)
+if I remove the entire if (sym_l->inlined || ... branch, but I guess
+it's there for a reason.
 
-在 2022/3/27 AM3:43, Ali Saidi 写道:> Hi Leo,
-> On Sat, 26 Mar 2022 21:47:54 +0800, Leo Yan wrote:
->> Hi Ali, German,
->>
->> On Thu, Mar 24, 2022 at 06:33:21PM +0000, Ali Saidi wrote:
->>
->> [...]
->>
->>> +static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
->>> +						union perf_mem_data_src *data_src)
->>>  {
->>> -	union perf_mem_data_src	data_src = { 0 };
->>> +	/*
->>> +	 * Even though four levels of cache hierarchy are possible, no known
->>> +	 * production Neoverse systems currently include more than three levels
->>> +	 * so for the time being we assume three exist. If a production system
->>> +	 * is built with four the this function would have to be changed to
->>> +	 * detect the number of levels for reporting.
->>> +	 */
->>>
->>> -	if (record->op == ARM_SPE_LD)
->>> -		data_src.mem_op = PERF_MEM_OP_LOAD;
->>> -	else
->>> -		data_src.mem_op = PERF_MEM_OP_STORE;
->>
->> Firstly, apologize that I didn't give clear idea when Ali sent patch sets
->> v2 and v3.
->>
->> IMHO, we need to consider two kinds of information which can guide us
->> for a reliable implementation.  The first thing is to summarize the data
->> source configuration for x86 PEBS, we can dive in more details for this
->> part; the second thing is we can refer to the AMBA architecture document
->> ARM IHI 0050E.b, section 11.1.2 'Crossing a chip-to-chip interface' and
->> its sub section 'Suggested DataSource values', which would help us
->> much for mapping the cache topology to Arm SPE data source.
->>
->> As a result, I summarized the data source configurations for PEBS and
->> Arm SPE Neoverse in the spreadsheet:
->> https://docs.google.com/spreadsheets/d/11YmjG0TyRjH7IXgvsREFgTg3AVtxh2dvLloRK1EdNjU/edit?usp=sharing
->
-> Thanks for putting this together and digging into the details, but you're making
-> assumptions in neoverse data sources about the core configurations that aren't
-> correct. The Neoverse cores have all have integrated L1 and L2 cache, so if the
-> line is coming from a peer-core we don't know which level it's actually coming
-> from.  Similarly, if it's coming from a local cluster, that could mean a cluster
-> l3, but it's not the L2.
+Thinking about it, I wonder if this code breaks the entire tree
+invariant of comparison being transitive. If left _or_ right is inlined,
+it compares them by name, but if not, it compares them by address. So
+you can have three symbols A, B (inline) and C, where A < B (on name),
+B < C (on name) but C < A (on address; assuming C has a lower start
+address than A). That doesn't look good to me.
 
-As far as I know, Neoverse N2 microarchitecture L3 Cache is non-inclusive, and L1
-and L2 are strictly inclusive, like  Intel Skylake SP (SKX), i.e., the L2 may
-or may not be in the L3 (no guarantee is made). That is to say, we can not tell
-it is from cluster L2 or L3. Could you confirm this?
+I'm wondering if the right fix would be something like replacing the
+entire if with something like
 
-[...]
+           if (sym_l->inlined && sym_r->inlined &&
+	       strcmp(sym_l->name, sym_r->name) == 0) &&
+	       <keep [start,end) overlap test here>) {
+                   return 0;
+	   }
 
+but I'm not sure.
 
-> I still think we should consider to extend the memory levels to
-> demonstrate clear momory hierarchy on Arm archs, I personally like the
-> definitions for "PEER_CORE", "LCL_CLSTR", "PEER_CLSTR" and "SYS_CACHE",
-> though these cache levels are not precise like L1/L2/L3 levels, they can
-> help us to map very well for the cache topology on Arm archs and without
-> any confusion.  We could take this as an enhancement if you don't want
-> to bother the current patch set's upstreaming.
-
-Agree. In my opinion, imprecise cache levels can lead to wrong conclusions.
-"PEER_CORE", "LCL_CLSTR", "PEER_CLSTR" and "SYS_CACHE" are more intuitive.
-
-Best Regards,
-Shuai
-
-
+/* Steinar */
