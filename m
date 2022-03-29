@@ -2,217 +2,173 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683FBC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 14:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEA0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 15:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237887AbiC2OeJ (ORCPT
+        id S238282AbiC2POA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Mar 2022 10:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
+        Tue, 29 Mar 2022 11:14:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237888AbiC2OeI (ORCPT
+        with ESMTP id S236641AbiC2POA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Mar 2022 10:34:08 -0400
-Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345371D0CE;
-        Tue, 29 Mar 2022 07:32:25 -0700 (PDT)
+        Tue, 29 Mar 2022 11:14:00 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C2722C8C4
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 08:12:15 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id b24so21056738edu.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 08:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1648564346; x=1680100346;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3JsFdDl+un7ffLUD/HA9lrhBJaTGqmFQNbp178PyeGw=;
-  b=o17MlotP6+UE/fzjTsT8g1Ju/Pe40KN6x1FeKtPZUbVRoVuNnL5e1IKQ
-   66XrmBec1m8SzL0jzf3ti4Wl3/bjfnHmg5hwe82xUmcwZp4O3fyr8C1Yc
-   mfZlfy/IWSM/6/WO9Jol8xX36+wT2PkoJIU/DEGhMMEEUnKmAoq76QSPN
-   8=;
-X-IronPort-AV: E=Sophos;i="5.90,220,1643673600"; 
-   d="scan'208";a="185081582"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-iad-1e-98691110.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP; 29 Mar 2022 14:32:23 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-        by email-inbound-relay-iad-1e-98691110.us-east-1.amazon.com (Postfix) with ESMTPS id C7F4D81268;
-        Tue, 29 Mar 2022 14:32:16 +0000 (UTC)
-Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Tue, 29 Mar 2022 14:32:15 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
- EX13D02UWC004.ant.amazon.com (10.43.162.236) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Tue, 29 Mar 2022 14:32:15 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
- Server id 15.0.1497.32 via Frontend Transport; Tue, 29 Mar 2022 14:32:14
- +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id CDB13254B; Tue, 29 Mar 2022 14:32:14 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <leo.yan@linaro.org>
-CC:     <Nick.Forrington@arm.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <alisaidi@amazon.com>,
-        <andrew.kilroy@arm.com>, <benh@kernel.crashing.org>,
-        <german.gomez@arm.com>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
-        <lihuafei1@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>
-Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse cores
-Date:   Tue, 29 Mar 2022 14:32:14 +0000
-Message-ID: <20220329143214.12707-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220328130547.GA360814@leoy-ThinkPad-X240s>
-References: <20220328130547.GA360814@leoy-ThinkPad-X240s>
+        d=tessares-net.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=AxdIJYFQ2HFyaWkSd6aH3B9KrL7/ps4UvmhKce2/pf4=;
+        b=g9siOZ1wQAd1DjJJBP0MTLpMqGR/555P38tKZJY0BVNM/BpJizrUnN5mAB7H5fNM+L
+         vnPkOsZ9BQ+6z0uEHi19RU5MbZG1E8e1CBpgSh9duinJB2AgBE56EjCVwSEyXyJWBurF
+         /P244D1UL9c+KzHdTU8Ttec2Tv2xQ6kENL0R+GZkbmAdyw/KjDZgzRN3Dc4p5C1eXy5v
+         YEgwiV4UZEESj25E5+zlEVygkTDjDeL0l4Ezl+NxQZEFidS1rmnFexjFMnXw9DHfeKax
+         eSXvo625Y4JoO6853tTDFftrxFQHjNVFYZSA1wuLIx0DA85416MfAVOZvQYtsVrrsqN+
+         2tsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=AxdIJYFQ2HFyaWkSd6aH3B9KrL7/ps4UvmhKce2/pf4=;
+        b=cToxIuXKT9fEYnn5iwAygDetD538y+Mt3xmyIN989lTD5QjYt7tvBK0KiiALwrN0u/
+         h7XlnQdjwvtU2/8Y1l6FTFgZ89RX0IHh/R+eappbcfPLI184lEhPEbTe1aM41ARd+Fvc
+         llleJ4lOoiukLSHaEy0WO53pEnjMGyT7UZeqavrKx6apPZ3dgtGaHRCBQZrq21g6MFOP
+         FZh0a8KLztaaP0efav2YgVaL2vOKKua+iVhuA0pc3uGCtNs6oK2rj4lFTMduGnNH29V5
+         pIi/TFRCyE0RfjX08Krrfpcrg3ydfeAKzTwY20BD3Q7Mw02f0Vp+5Af3bSWlIajq5ShF
+         iyCg==
+X-Gm-Message-State: AOAM532NxmqPTTw0Dj8yxsDPaha+GbgtasYGNmYJ5OneXlJpG3u2xQbv
+        QH2o2vcPAACqd47/JlAPQfMu1Q==
+X-Google-Smtp-Source: ABdhPJzeoiD4DWuA6XaK8Uj1ZpZ/FJGBZx6c64C3I7nEU56ECpuZhFAB7WG5VRNkFUOZ/WREWm2cJw==
+X-Received: by 2002:a05:6402:17dc:b0:418:efa5:f445 with SMTP id s28-20020a05640217dc00b00418efa5f445mr5082928edy.125.1648566733974;
+        Tue, 29 Mar 2022 08:12:13 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:505b:327f:c6b6:495c? ([2a02:578:8593:1200:505b:327f:c6b6:495c])
+        by smtp.gmail.com with ESMTPSA id dm8-20020a170907948800b006dfe5b317d3sm7486123ejc.75.2022.03.29.08.12.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Mar 2022 08:12:13 -0700 (PDT)
+Message-ID: <4675337e-d71d-2045-1cab-b81ba9fa2c25@tessares.net>
+Date:   Tue, 29 Mar 2022 17:12:12 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH perf] perf tools: .git/ORIG_HEAD might not exist
+Content-Language: en-GB
+To:     John Garry <john.garry@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     mptcp@lists.linux.dev, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220329093120.4173283-1-matthieu.baerts@tessares.net>
+ <e9969b97-3998-d7b2-9fd2-77ddd27969ef@huawei.com>
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <e9969b97-3998-d7b2-9fd2-77ddd27969ef@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi John,
 
-Hi Leo,
-
-On Mon, 28 Mar 2022 21:05:47 +0800, Leo Yan wrote:
-> Hi Ali,
+On 29/03/2022 12:32, John Garry wrote:
+> On 29/03/2022 10:31, Matthieu Baerts wrote:
 > 
-> On Mon, Mar 28, 2022 at 03:08:05AM +0000, Ali Saidi wrote:
+> Hi Matthieu,
 > 
-> [...]
+> Sorry for the breakage.
+
+That's alright, it happens.
+
+(...)
+
+> Could you please try this:
 > 
-> > > > > > +	case ARM_SPE_NV_PEER_CORE:
-> > > > > > +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> > > > > > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> > > > > > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-> > > > > 
-> > > > > Peer core contains its local L1 cache, so I think we can set the
-> > > > > memory level L1 to indicate this case.
-> > > > It could be either the L1 or the L2. All the neoverse cores have private L2
-> > > > caches and we don't know. 
-> > > 
-> > > How about set both L1 and L2 cache together for this case?
-> > > 
-> > > Although 'L1 | L2' cannot tell the exact cache level, I think it's
-> > > better than use ANY_CACHE, at least this can help us to distinguish
-> > > from other data source types if we avoid to use ANY_CACHE for all of
-> > > them.
-> > 
-> > This seems much more confusing then the ambiguity of where the line came from
-> > and is only possible with the deprecated mem_lvl enconding.  It will make
-> > perf_mem__lvl_scnprintf() print the wrong thing and anyone who is trying to
-> > attribute a line to a single cache will find that the sum of the number of hits
-> > is greater than the number of accesses which also seems terribly confusing.
+> ---->8------
 > 
-> Understand.  I considered the potential issue for
-> perf_mem__lvl_scnprintf(), actually it supports printing multipl cache
-> levels for 'mem_lvl', by conjuncting with 'or' it composes the multiple
-> cache levels.  We might need to extend a bit for another field
-> 'mem_lvlnum'.
 > 
-> Agreed that there would have inaccurate issue for statistics, it's fine
-> for me to use ANY_CACHE in this patch set.
-
-Thanks!
-
+> From 694964709a7fc2b46c995bb7b1967cc6b129def8 Mon Sep 17 00:00:00 2001
+> From: John Garry <john.garry@huawei.com>
+> Date: Tue, 29 Mar 2022 11:06:46 +0100
+> Subject: [PATCH] perf: Stop depending on .git internal files for
+> building PERF-VERSION-FILE
 > 
-> I still think we should consider to extend the memory levels to
-> demonstrate clear momory hierarchy on Arm archs, I personally like the
-> definitions for "PEER_CORE", "LCL_CLSTR", "PEER_CLSTR" and "SYS_CACHE",
-> though these cache levels are not precise like L1/L2/L3 levels, they can
-> help us to map very well for the cache topology on Arm archs and without
-> any confusion.  We could take this as an enhancement if you don't want
-> to bother the current patch set's upstreaming.
-
-I'd like to do this in a separate patch, but I have one other proposal. The
-Neoverse cores L2 is strictly inclusive of the L1, so even if it's in the L1,
-it's also in the L2. Given that the Graviton systems and afaik the Ampere
-systems don't have any cache between the L2 and the SLC, thus anything from
-PEER_CORE, LCL_CLSTR, or PEER_CLSTR would hit in the L2, perhaps we
-should just set L2 for these cases? German, are you good with this for now? 
-
-> > > > > For this data source type and below types, though they indicate
-> > > > > the snooping happens, but it doesn't mean the data in the cache line
-> > > > > is in 'modified' state.  If set flag PERF_MEM_SNOOP_HITM, I personally
-> > > > > think this will mislead users when report the result.
-> > > > 
-> > > > I'm of the opposite opinion. If the data wasn't modified, it will likely be
-> > > > found in the lower-level shared cache and the transaction wouldn't require a
-> > > > cache-to-cache transfer of the modified data, so the most common case when we
-> > > > source a line out of another cores cache will be if it was "modifiable" in that
-> > > > cache. 
-> > > 
-> > > Let's still use MOSI protocol as example.  I think there have two
-> > > cases: on case is the peer cache line is in 'Shared' state and another
-> > > case is the peer cache line is in 'Owned' state.
-> > > 
-> > > Quotes the wiki page for these two cases:
-> > > 
-> > > "When the cache block is in the Shared (S) state and there is a
-> > > snooped bus read (BusRd) transaction, then the block stays in the same
-> > > state and generates no more transactions as all the cache blocks have
-> > > the same value including the main memory and it is only being read,
-> > > not written into."
-> > > 
-> > > "While in the Owner (O) state and there is a snooped read request
-> > > (BusRd), the block remains in the same state while flushing (Flush)
-> > > the data for the other processor to read from it."
-> > > 
-> > > Seems to me, it's reasonable to set HTIM flag when the snooping happens
-> > > for the cache line line is in the Modified (M) state.
-> > > 
-> > > Again, my comment is based on the literal understanding; so please
-> > > correct if have any misunderstanding at here.
-> > 
-> > Per the CMN TRM, "The SLC allocation policy is exclusive for data lines, except
-> > where sharing patterns are detected," so if a line is shared among caches it
-> > will likely also be in the SLC (and thus we'd get an L3 hit). 
-> > 
-> > If there is one copy of the cache line and that cache line needs to transition
-> > from one core to another core, I don't believe it matters if it was truly
-> > modified or not because the core already had permission to modify it and the
-> > transaction is just as costly (ping ponging between core caches). This is the
-> > one thing I really want to be able to uniquely identify as any cacheline doing
-> > this that isn't a lock is a place where optimization is likely possible. 
+> This essentially reverts commit c72e3f04b45fb2e50cdd81a50c3778c6a57251d8
+> and commit 4e666cdb06eede2069a7b1a96a1359d1c441a3eb.
 > 
-> I understood that your point that if big amount of transitions within
-> multiple cores hit the same cache line, it would be very likely caused
-> by the cache line's Modified state so we set PERF_MEM_SNOOP_HITM flag
-> for easier reviewing.
-
-And that from a dataflow perspective if the line is owned (and could be
-modifiable) vs. was actually modified is really the less interesting bit. 
-
-> Alternatively, I think it's good to pick up the patch series "perf c2c:
-> Sort cacheline with all loads" [1], rather than relying on HITM tag, the
-> patch series extends a new option "-d all" for perf c2c, so it displays
-> the suspecious false sharing cache lines based on load/store ops and
-> thread infos.  The main reason for holding on th patch set is due to we
-> cannot verify it with Arm SPE at that time point, as the time being Arm
-> SPE trace data was absent both store ops and data source packets.
-
-Looking at examples I don't, at least from my system, data-source isn't set for
-stores, only for loads. 
-
-> I perfer to set PERF_MEM_SNOOP_HIT flag in this patch set and we can
-> upstream the patch series "perf c2c: Sort cacheline with all loads"
-> (only needs upstreaming patches 01, 02, 03, 10, 11, the rest patches
-> have been merged in the mainline kernel).
+> In commit c72e3f04b45f ("tools/perf/build: Speed up git-version test on
+> re-make"), a makefile dependency on .git/HEAD was added. The background
+> is that running PERF-VERSION-FILE is relatively slow, and commands like
+> "git describe" are particularly slow.
 > 
-> If this is fine for you, I can respin the patch series for "perf c2c".
-> Or any other thoughts?
+> In commit 4e666cdb06ee ("perf tools: Fix dependency for version file
+> creation"), an additional dependency on .git/ORIG_HEAD was added, as
+> .git/HEAD may not change for "git reset --hard HEAD^" command.
+> 
+> However, as discussed with the git community in [0], using git internal
+> files for dependencies is not reliable. Commit 4e666cdb06ee also breaks
+> some build scenarios [1].
+> 
+> As mentioned, c72e3f04b45f was added to speed up the build. However in
+> commit 7572733b8499 ("perf tools: Fix version kernel tag") we removed
+> the call to "git describe", so just revert Makefile.perf back to same as
+> pre c72e3f04b45f and the build should not be so slow, as below:
+> 
+> Pre 7572733b8499:
+> $> time util/PERF-VERSION-GEN
+>   PERF_VERSION = 5.17.rc8.g4e666cdb06ee
+> 
+> real    0m0.110s
+> user    0m0.091s
+> sys     0m0.019s
+> 
+> Post 7572733b8499:
+> $> time util/PERF-VERSION-GEN
+>   PERF_VERSION = 5.17.rc8.g7572733b8499
+> 
+> real    0m0.039s
+> user    0m0.036s
+> sys     0m0.007s
 
-I think this is a nice option to have in the tool-box, but from my point of
-view, I'd like someone who is familiar with c2c output on x86 to come to an
-arm64 system and be able to zero in on a ping-ponging line like they would
-otherwise. Highlighting a line that is moving between cores frequently which is
-likely in the exclusive state by tagging it an HITM accomplishes this and will
-make it easier to find these cases.  Your approach also has innaccurancies and
-wouldn't be able to differentiate between core X accessing a line a lot followed
-by core Y acessing a line alot vs the cores ping-ponging.  Yes, I agree that we
-will "overcount" HITM, but I don't think this is particularly bad and it does
-specifically highlight the core-2-core transfers that are likely a performance
-issue easily and it will result in easier identification of areas of false or
-true sharing and improve performance.
+Probably the optimisation to avoid calling this script is indeed no
+longer needed but it is not me to judge.
 
-Thanks,
-Ali
+What I know is that indeed, 'git describe' can be slow while just
+returning the current SHA is supposed to be always quick.
+
+(...)
+
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 9c935f86d172..ddd03b21bda2 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -691,9 +691,8 @@ $(OUTPUT)common-cmds.h: $(wildcard
+> Documentation/perf-*.txt)
+>  $(SCRIPTS) : % : %.sh
+>      $(QUIET_GEN)$(INSTALL) '$@.sh' '$(OUTPUT)$@'
+> 
+> -$(OUTPUT)PERF-VERSION-FILE: ../../.git/HEAD ../../.git/ORIG_HEAD
+> +$(OUTPUT)PERF-VERSION-FILE: .FORCE-PERF-VERSION-FILE
+
+Regarding my issue, removing the dependence to .git/ORIG_HEAD file fixes
+the issue. So I'm fine to drop my patch and revert the two commits you
+mentioned.
+
+If you send this patch, please do not forget to add a Fixes tag:
+
+  Fixes: 4e666cdb06ee ("perf tools: Fix dependency for version file
+creation")
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
