@@ -2,239 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69400C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 10:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D01C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 12:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233962AbiC2Kd7 (ORCPT
+        id S235037AbiC2MdJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Mar 2022 06:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53534 "EHLO
+        Tue, 29 Mar 2022 08:33:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231154AbiC2Kd6 (ORCPT
+        with ESMTP id S236465AbiC2MdE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Mar 2022 06:33:58 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240432B191;
-        Tue, 29 Mar 2022 03:32:15 -0700 (PDT)
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KSQmN2F6yz67bH2;
-        Tue, 29 Mar 2022 18:29:40 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Tue, 29 Mar 2022 12:32:12 +0200
-Received: from [10.47.83.59] (10.47.83.59) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 29 Mar
- 2022 11:32:11 +0100
-Message-ID: <e9969b97-3998-d7b2-9fd2-77ddd27969ef@huawei.com>
-Date:   Tue, 29 Mar 2022 11:32:10 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH perf] perf tools: .git/ORIG_HEAD might not exist
-To:     Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 29 Mar 2022 08:33:04 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C70E5EDCD
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 05:31:21 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id h4so24551350wrc.13
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 05:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=y9RUNc9u4NDcWzkzWpNKYsTxGVbukHkl4DrmNzDmOrM=;
+        b=hlBOatvIQkfNLpHHQsqkeaqrF/vl5iO2zvTCN65flMcbf741w5RUPcJZpqNmzIqriI
+         SsPAeScVhnDBFnt1AGXNEH5ugBtcSohfRpJyNFkpHSfeRBpSULLaclDOH/bzjt5ou+Q0
+         Qzmx25AMCN8bjeowkUU/mfrMZ6Scb8XW4lzm6SaK7QXadh7pb3Hm0lCm8Aa3Ezwy6Pjo
+         n2I2lYJ1wr+JC0NXQpfnrLRDDnw5Rl9KRh6Y0+OcJ307B79ikNOaPLv2/CzZVFTEi8Ru
+         IxiEf2TNJbt1f5oeUpPMPF9gy9uVwsVGxDG4jq1mRd11aXNsUS9tfOa7vus37KGgrP8L
+         ZMmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=y9RUNc9u4NDcWzkzWpNKYsTxGVbukHkl4DrmNzDmOrM=;
+        b=YDrU7c8I1opSvYd6C1lNXftd0lQxnfi4WBwH9Qk2pHHZBvPdQCUwOSnEEGiQ9Lwa2Z
+         OusnJy4wU/wW6Tm5l/GcyFFn2hF0IfY3HRTnG0mstOZO+zgMfKukhvAaURxshtnPGYJm
+         kNpckCyo24GukiDzjxDA7Iu4VrrD9QnvbQjnLDFhz0QjygYM+RWVHud2kHbEK/9BVF4D
+         HVsxqSXNS8KXO9cK18LO3Uu50QJH94f67PUkPCljLM0R+zJGaFgNYGRwuQExsNi9H9a6
+         JykNpaVXlNNtgDVBovhsYNNrWm3QmjU2D4PgmsQgFdTz5RqxCG3GsJ+8yJg4RbAAScxV
+         dTbQ==
+X-Gm-Message-State: AOAM5335VSQnzH4hUqgA3u2apWzAuaUD2pNU2VquEEr6S0vEy+473tb3
+        N9DAUqTe7ohNaVXbr3XGd/E0vg==
+X-Google-Smtp-Source: ABdhPJy72PAhTXZFXupmbBsCmVeopApvYCfXr8IgWNONOJ/JYSPSNiev16r0QIGal9vCCZsc/AI4yA==
+X-Received: by 2002:adf:e346:0:b0:205:97d0:50db with SMTP id n6-20020adfe346000000b0020597d050dbmr28982595wrj.257.1648557079428;
+        Tue, 29 Mar 2022 05:31:19 -0700 (PDT)
+Received: from google.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id m2-20020a1c2602000000b0038ca9ffac53sm2136981wmm.11.2022.03.29.05.31.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Mar 2022 05:31:18 -0700 (PDT)
+Date:   Tue, 29 Mar 2022 14:31:14 +0200
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-CC:     <mptcp@lists.linux.dev>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20220329093120.4173283-1-matthieu.baerts@tessares.net>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220329093120.4173283-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.83.59]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        He Kuang <hekuang@huawei.com>
+Subject: Re: [PATCH] perf intel-pt: Synthesize cycle events
+Message-ID: <YkL8EpWaeZ1US8t2@google.com>
+References: <YjDUO6bbyfGw/u0C@google.com>
+ <52903e58-e74c-5ea0-36b4-277ea3610af4@intel.com>
+ <YjGdoGy4Z2UUG9S9@google.com>
+ <ef780335-7dc6-3a23-54a8-b6fc9c8a2ed3@intel.com>
+ <YjHfGrZovk3N/H0f@google.com>
+ <371faf0d-f794-4a2e-0a1c-9d454d7c8b12@intel.com>
+ <YjhUjotmo+kYvoNP@google.com>
+ <ffa56520-09b5-9c5d-7733-6767d2f8e350@intel.com>
+ <YjiuoEUL6jH32cBi@google.com>
+ <Yjm5stBpRC0g4G8s@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yjm5stBpRC0g4G8s@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29/03/2022 10:31, Matthieu Baerts wrote:
+On Tue, Mar 22, 2022 at 12:57:38PM +0100, Steinar H. Gunderson wrote:
+> and this is evidently fatal. So for whatever reason, the sample address
+> is attributed to some symbol, and that symbol is assumed to have a
+> single range (is this even necessarily true?), we refuse the event,
+> and then we fail the entire report. (It doesn't happen with --stdio,
+> though!)
 
-Hi Matthieu,
+I think I traced this. The basic issue is this routine, which compares
+two symbols (to see if they should be combined for the sake of perf
+report):
 
-Sorry for the breakage.
+  int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
+  {
+          if (!sym_l || !sym_r)
+                  return cmp_null(sym_l, sym_r);
 
-About 4e666cdb06ee, I have since discussed this topic with the git 
-community and they think it is unreliable to use any git internal file 
-as a depenency, as mentioned here:
-https://lore.kernel.org/linux-perf-users/85891cbd-e53c-89ac-6da2-40b5d56cd316@huawei.com/T/#t
+          if (sym_l == sym_r)
+                  return 0;
 
-So I am not sure if it's better to fix that or just effectively back it 
-out with a (hopefully) proper fix.
+          if (sym_l->inlined || sym_r->inlined) {
+                  int ret = strcmp(sym_l->name, sym_r->name);
 
-> It seems it cannot be assumed .git/ORIG_HEAD exists if .git/HEAD is
-> there.
-> 
-> Indeed, recently our public CI reported[1] the following error when
-> compiling Perf tool:
-> 
->    $ cd tools/perf
->    $ make -j4 -l4 O=/tmp/(...)/perf DESTDIR=/usr install
->    (...)
->    make[2]: *** No rule to make target '../../.git/ORIG_HEAD', needed by '/tmp/(...)/perf/PERF-VERSION-FILE'.
-> 
-> This is because apparently[2] Cirrus Ci uses a Git client implemented
-> purely in Go[3] to perform a clone. Most likely, this tool doesn't
-> create any .git/ORIG_HEAD file but .git/HEAD is there. The error can
-> indeed be reproduced by renaming this .git/ORIG_HEAD file while keeping
-> .git/HEAD. In other words, it means it is not enough to check the
-> presence of .git/HEAD to assume .git/ORIG_HEAD exists as well.
-> 
-> With the modification here, the version file is always regenerated if
-> .git/ORIG_HEAD file is not present. But that is not an issue as kernel
-> devs probably don't use such tools in their dev env and it can be
-> assumed for them that they have both .git/HEAD and .git/ORIG_HEAD files.
+                  if (ret)
+                          return ret;
+                  if ((sym_l->start <= sym_r->end) && (sym_l->end >= sym_r->start))
+                          return 0;
+          }
 
-right
+          if (sym_l->start != sym_r->start)
+                  return (int64_t)(sym_r->start - sym_l->start);
 
-Could you please try this:
+          return (int64_t)(sym_r->end - sym_l->end);
+  }
 
----->8------
+The problem is that part comparing sym_l->start and sym_r->end. I'm not
+entirely sure what the logic here is, but it seems to me that the
+intention is that if sym_l is a subset of sym_r, it collapses them.
+However, it seems to assume that [start,end] is inclusive, whereas it is
+generally [start,end) in later code. This means that if you have e.g.
+a symbol [0x1000,0x1010) which is then inlined as the very first thing
+in the adjacent function [0x1010,0x1030) (say, sym_r is the inlined
+symbol [0x1010,0x1020)), _sort__sym_cmp will indeed collapse them.
+This causes the ERANGE problem later, as you can have 0x1005 being
+mapped to a hist_entry correpsonding to the symbol [0x1010,0x1030).
+It seems this logic was indeed added to fix ERANGE problems in 2019
+(see 7346195e8), but it is seemingly incomplete.
 
+If I change <= to < and >= to >, it stops erroring out; however, I'm
+still not sure whether this is actually right. Doesn't the collapsing
+then depend on what order the entries happen to be added in, ie.,
+whether the larger symbol comes first or last?
 
- From 694964709a7fc2b46c995bb7b1967cc6b129def8 Mon Sep 17 00:00:00 2001
-From: John Garry <john.garry@huawei.com>
-Date: Tue, 29 Mar 2022 11:06:46 +0100
-Subject: [PATCH] perf: Stop depending on .git internal files for 
-building PERF-VERSION-FILE
-
-This essentially reverts commit c72e3f04b45fb2e50cdd81a50c3778c6a57251d8
-and commit 4e666cdb06eede2069a7b1a96a1359d1c441a3eb.
-
-In commit c72e3f04b45f ("tools/perf/build: Speed up git-version test on
-re-make"), a makefile dependency on .git/HEAD was added. The background 
-is that running PERF-VERSION-FILE is relatively slow, and commands like
-"git describe" are particularly slow.
-
-In commit 4e666cdb06ee ("perf tools: Fix dependency for version file
-creation"), an additional dependency on .git/ORIG_HEAD was added, as
-.git/HEAD may not change for "git reset --hard HEAD^" command.
-
-However, as discussed with the git community in [0], using git internal
-files for dependencies is not reliable. Commit 4e666cdb06ee also breaks
-some build scenarios [1].
-
-As mentioned, c72e3f04b45f was added to speed up the build. However in
-commit 7572733b8499 ("perf tools: Fix version kernel tag") we removed 
-the call to "git describe", so just revert Makefile.perf back to same as 
-pre c72e3f04b45f and the build should not be so slow, as below:
-
-Pre 7572733b8499:
-$> time util/PERF-VERSION-GEN
-   PERF_VERSION = 5.17.rc8.g4e666cdb06ee
-
-real    0m0.110s
-user    0m0.091s
-sys     0m0.019s
-
-Post 7572733b8499:
-$> time util/PERF-VERSION-GEN
-   PERF_VERSION = 5.17.rc8.g7572733b8499
-
-real    0m0.039s
-user    0m0.036s
-sys     0m0.007s
-
-
-[0] 
-https://lore.kernel.org/git/87wngkpddp.fsf@igel.home/T/#m4a4dd6de52fdbe21179306cd57b3761eb07f45f8
-[1] 
-https://lore.kernel.org/linux-perf-users/20220329093120.4173283-1-matthieu.baerts@tessares.net/T/#u
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 9c935f86d172..ddd03b21bda2 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -691,9 +691,8 @@ $(OUTPUT)common-cmds.h: $(wildcard 
-Documentation/perf-*.txt)
-  $(SCRIPTS) : % : %.sh
-  	$(QUIET_GEN)$(INSTALL) '$@.sh' '$(OUTPUT)$@'
-
--$(OUTPUT)PERF-VERSION-FILE: ../../.git/HEAD ../../.git/ORIG_HEAD
-+$(OUTPUT)PERF-VERSION-FILE: .FORCE-PERF-VERSION-FILE
-  	$(Q)$(SHELL_PATH) util/PERF-VERSION-GEN $(OUTPUT)
--	$(Q)touch $(OUTPUT)PERF-VERSION-FILE
-
-  # These can record PERF_VERSION
-  perf.spec $(SCRIPTS) \
-@@ -1139,21 +1138,12 @@ else
-  	@echo "FEATURE-DUMP file available in $(OUTPUT)FEATURE-DUMP"
-  endif
-
--#
--# Trick: if ../../.git does not exist - we are building out of tree for 
-example,
--# then force version regeneration:
--#
--ifeq ($(wildcard ../../.git/HEAD),)
--    GIT-HEAD-PHONY = ../../.git/HEAD ../../.git/ORIG_HEAD
--else
--    GIT-HEAD-PHONY =
--endif
-
-  FORCE:
-
-  .PHONY: all install clean config-clean strip install-gtk
-  .PHONY: shell_compatibility_test 
-please_set_SHELL_PATH_to_a_more_modern_shell
--.PHONY: $(GIT-HEAD-PHONY) TAGS tags cscope FORCE prepare
-+.PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare
-  .PHONY: libtraceevent_plugins archheaders
-
-  endif # force_fixdep
--- 
-2.26.2
-
-
------8<------
-
-I need to test it more as I just wrote it up now.
-
-Thanks,
-John
-
-> 
-> [1] https://cirrus-ci.com/task/5673396527693824?logs=test#L5026
-> [2] https://cirrus-ci.org/guide/tips-and-tricks/
-> [3] https://github.com/go-git/go-git
-> 
-> Fixes: 4e666cdb06ee ("perf tools: Fix dependency for version file creation")
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->   tools/perf/Makefile.perf | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 9c935f86d172..2f64e4904bbb 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1143,10 +1143,12 @@ endif
->   # Trick: if ../../.git does not exist - we are building out of tree for example,
->   # then force version regeneration:
->   #
-> +GIT-HEAD-PHONY =
->   ifeq ($(wildcard ../../.git/HEAD),)
-> -    GIT-HEAD-PHONY = ../../.git/HEAD ../../.git/ORIG_HEAD
-> -else
-> -    GIT-HEAD-PHONY =
-> +    GIT-HEAD-PHONY += ../../.git/HEAD
-> +endif
-> +ifeq ($(wildcard ../../.git/ORIG_HEAD),)
-> +    GIT-HEAD-PHONY += ../../.git/ORIG_HEAD
->   endif
->   
->   FORCE:
-> 
-> base-commit: ab0809af0bee88b689ba289ec8c40aa2be3a17ec
-
+/* Steinar */
