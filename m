@@ -2,173 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEA0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 15:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07665C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Mar 2022 15:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238282AbiC2POA (ORCPT
+        id S237807AbiC2Pr3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Mar 2022 11:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
+        Tue, 29 Mar 2022 11:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236641AbiC2POA (ORCPT
+        with ESMTP id S235801AbiC2Pr2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Mar 2022 11:14:00 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C2722C8C4
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 08:12:15 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id b24so21056738edu.10
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 08:12:15 -0700 (PDT)
+        Tue, 29 Mar 2022 11:47:28 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D3B3A722
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 08:45:45 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id bx5so17884338pjb.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Mar 2022 08:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=AxdIJYFQ2HFyaWkSd6aH3B9KrL7/ps4UvmhKce2/pf4=;
-        b=g9siOZ1wQAd1DjJJBP0MTLpMqGR/555P38tKZJY0BVNM/BpJizrUnN5mAB7H5fNM+L
-         vnPkOsZ9BQ+6z0uEHi19RU5MbZG1E8e1CBpgSh9duinJB2AgBE56EjCVwSEyXyJWBurF
-         /P244D1UL9c+KzHdTU8Ttec2Tv2xQ6kENL0R+GZkbmAdyw/KjDZgzRN3Dc4p5C1eXy5v
-         YEgwiV4UZEESj25E5+zlEVygkTDjDeL0l4Ezl+NxQZEFidS1rmnFexjFMnXw9DHfeKax
-         eSXvo625Y4JoO6853tTDFftrxFQHjNVFYZSA1wuLIx0DA85416MfAVOZvQYtsVrrsqN+
-         2tsw==
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iBWbnx9nmzpAVk+ZjuUdTpMYBLq8k4If2dmnAQXSRqs=;
+        b=CAlgzMvhKAuMBP/KNFNTLpGMzTNRw/jYBSJHv9/OXpabr64KZM2xwneiShOr2va39m
+         CIxaq0Wp5DRppuVj+7eStv93DZ5PDZRXJdeCrNwy6O+U9acfEg2mC8/6/9KOCEESP1F2
+         2xn5DXtmr0vr1//0yuIcgFqgnd+/ldRQjqtPDcfKid+7a/er8uhKS+02120dtLnSRLuu
+         yBrjtK/0p4WQciARh/7hfX/qV49payYKLzPaXPBTv6QuLSu8Wx401aFUDWIzCpohRpjx
+         SmajDmBcOmDru3W6XB1xLty3R4BBBgn89IBHDNJNB9sibTsB1+x9OmvcaMMo29g/kGOR
+         Vn0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=AxdIJYFQ2HFyaWkSd6aH3B9KrL7/ps4UvmhKce2/pf4=;
-        b=cToxIuXKT9fEYnn5iwAygDetD538y+Mt3xmyIN989lTD5QjYt7tvBK0KiiALwrN0u/
-         h7XlnQdjwvtU2/8Y1l6FTFgZ89RX0IHh/R+eappbcfPLI184lEhPEbTe1aM41ARd+Fvc
-         llleJ4lOoiukLSHaEy0WO53pEnjMGyT7UZeqavrKx6apPZ3dgtGaHRCBQZrq21g6MFOP
-         FZh0a8KLztaaP0efav2YgVaL2vOKKua+iVhuA0pc3uGCtNs6oK2rj4lFTMduGnNH29V5
-         pIi/TFRCyE0RfjX08Krrfpcrg3ydfeAKzTwY20BD3Q7Mw02f0Vp+5Af3bSWlIajq5ShF
-         iyCg==
-X-Gm-Message-State: AOAM532NxmqPTTw0Dj8yxsDPaha+GbgtasYGNmYJ5OneXlJpG3u2xQbv
-        QH2o2vcPAACqd47/JlAPQfMu1Q==
-X-Google-Smtp-Source: ABdhPJzeoiD4DWuA6XaK8Uj1ZpZ/FJGBZx6c64C3I7nEU56ECpuZhFAB7WG5VRNkFUOZ/WREWm2cJw==
-X-Received: by 2002:a05:6402:17dc:b0:418:efa5:f445 with SMTP id s28-20020a05640217dc00b00418efa5f445mr5082928edy.125.1648566733974;
-        Tue, 29 Mar 2022 08:12:13 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:505b:327f:c6b6:495c? ([2a02:578:8593:1200:505b:327f:c6b6:495c])
-        by smtp.gmail.com with ESMTPSA id dm8-20020a170907948800b006dfe5b317d3sm7486123ejc.75.2022.03.29.08.12.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Mar 2022 08:12:13 -0700 (PDT)
-Message-ID: <4675337e-d71d-2045-1cab-b81ba9fa2c25@tessares.net>
-Date:   Tue, 29 Mar 2022 17:12:12 +0200
+        bh=iBWbnx9nmzpAVk+ZjuUdTpMYBLq8k4If2dmnAQXSRqs=;
+        b=ZFPOlO3zt9rKoUOsbwSkRoxqoXO2ExVoc53iH6OgBBJvEED6tstJCzeUnuhkmdIVMZ
+         2Lr1ybwvIcgx505a2xbZK+Xb9DZRAqBdGFUqnGwc1ClYLACQxGfmgievjzIUMXTwpmFy
+         /feH5T5T6Rr4s/kUv6QLPAXBu0CXF/o5OHUFQmvlQQb+rRPoqfg+zMg+P+LQZboSGCSP
+         norYD1JCEk0tMlKIRVmoOG+ZYnuMAebFYlaLvN+rZDu4wO9TCSqLSsIzdmpgiW/ngnlO
+         w58gUzmaz/PVcGKp+AAlFikNJWR+xDUNhZTRh1AMpAab2nxT0HI6E+tigX7pDEe+kvD5
+         /6bw==
+X-Gm-Message-State: AOAM531tgDEI4+skJaRQ3QCrztRMHTUcsvQginNimL4XpchianFah1No
+        V7M1bnqdxVysAx7WRTShECDCUw==
+X-Google-Smtp-Source: ABdhPJzz19Rg+Su10Np5HFxc79yFW1oMkdOJLvHJr7FrwyKx+yX7c483JS7yzqqD2oF7eq7kBNbMwg==
+X-Received: by 2002:a17:90b:4b89:b0:1c8:105a:2262 with SMTP id lr9-20020a17090b4b8900b001c8105a2262mr178749pjb.225.1648568744396;
+        Tue, 29 Mar 2022 08:45:44 -0700 (PDT)
+Received: from localhost.localdomain ([2409:8a28:e65:74c0:705b:241a:6dc0:a4ac])
+        by smtp.gmail.com with ESMTPSA id u19-20020a056a00125300b004fafa43330csm17930733pfi.163.2022.03.29.08.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Mar 2022 08:45:43 -0700 (PDT)
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, eranian@google.com
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        duanxiongchun@bytedance.com, songmuchun@bytedance.com,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [PATCH v4 0/4] perf/core: Fixes for cgroup events
+Date:   Tue, 29 Mar 2022 23:45:19 +0800
+Message-Id: <20220329154523.86438-1-zhouchengming@bytedance.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH perf] perf tools: .git/ORIG_HEAD might not exist
-Content-Language: en-GB
-To:     John Garry <john.garry@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     mptcp@lists.linux.dev, Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220329093120.4173283-1-matthieu.baerts@tessares.net>
- <e9969b97-3998-d7b2-9fd2-77ddd27969ef@huawei.com>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <e9969b97-3998-d7b2-9fd2-77ddd27969ef@huawei.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi John,
+Hi,
 
-On 29/03/2022 12:32, John Garry wrote:
-> On 29/03/2022 10:31, Matthieu Baerts wrote:
-> 
-> Hi Matthieu,
-> 
-> Sorry for the breakage.
+This patchset mainly fix a race problem between cgroup_migrate_execute()
+and perf_cgroup_sched_out/in().
 
-That's alright, it happens.
+v4:
+ - delete patch 3 in v3 that remove event_filter_match() in
+   merge_sched_in(), which is wrong since the hybrid system
+   implemented PMU specific filter_match callback. Thanks Kan.
 
-(...)
+v3:
+ - put two fix patches together in patch 4
+ - delete percpu cpu_perf_cgroup, just use cpuctx->cgrp to compare
+ - reorganize these patches' order
 
-> Could you please try this:
-> 
-> ---->8------
-> 
-> 
-> From 694964709a7fc2b46c995bb7b1967cc6b129def8 Mon Sep 17 00:00:00 2001
-> From: John Garry <john.garry@huawei.com>
-> Date: Tue, 29 Mar 2022 11:06:46 +0100
-> Subject: [PATCH] perf: Stop depending on .git internal files for
-> building PERF-VERSION-FILE
-> 
-> This essentially reverts commit c72e3f04b45fb2e50cdd81a50c3778c6a57251d8
-> and commit 4e666cdb06eede2069a7b1a96a1359d1c441a3eb.
-> 
-> In commit c72e3f04b45f ("tools/perf/build: Speed up git-version test on
-> re-make"), a makefile dependency on .git/HEAD was added. The background
-> is that running PERF-VERSION-FILE is relatively slow, and commands like
-> "git describe" are particularly slow.
-> 
-> In commit 4e666cdb06ee ("perf tools: Fix dependency for version file
-> creation"), an additional dependency on .git/ORIG_HEAD was added, as
-> .git/HEAD may not change for "git reset --hard HEAD^" command.
-> 
-> However, as discussed with the git community in [0], using git internal
-> files for dependencies is not reliable. Commit 4e666cdb06ee also breaks
-> some build scenarios [1].
-> 
-> As mentioned, c72e3f04b45f was added to speed up the build. However in
-> commit 7572733b8499 ("perf tools: Fix version kernel tag") we removed
-> the call to "git describe", so just revert Makefile.perf back to same as
-> pre c72e3f04b45f and the build should not be so slow, as below:
-> 
-> Pre 7572733b8499:
-> $> time util/PERF-VERSION-GEN
->   PERF_VERSION = 5.17.rc8.g4e666cdb06ee
-> 
-> real    0m0.110s
-> user    0m0.091s
-> sys     0m0.019s
-> 
-> Post 7572733b8499:
-> $> time util/PERF-VERSION-GEN
->   PERF_VERSION = 5.17.rc8.g7572733b8499
-> 
-> real    0m0.039s
-> user    0m0.036s
-> sys     0m0.007s
+v2:
+ - split into two patches to fix the race problem for easier review
+ - use cpuctx->cgrp when start ctx time and delete unused task argument
+ - use cpuctx->cgrp when update ctx time from cgroup perf_event
+ - always set cpuctx->cgrp when the first cgroup event enabled
+ - remove obselete comments
 
-Probably the optimisation to avoid calling this script is indeed no
-longer needed but it is not me to judge.
+v1:
+ - https://lore.kernel.org/lkml/20220308135948.55336-1-zhouchengming@bytedance.com/
 
-What I know is that indeed, 'git describe' can be slow while just
-returning the current SHA is supposed to be always quick.
 
-(...)
+Chengming Zhou (4):
+  perf/core: Don't pass task around when ctx sched in
+  perf/core: Use perf_cgroup_info->active to check if cgroup is active
+  perf/core: Fix perf_cgroup_switch()
+  perf/core: Always set cpuctx cgrp when enable cgroup event
 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 9c935f86d172..ddd03b21bda2 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -691,9 +691,8 @@ $(OUTPUT)common-cmds.h: $(wildcard
-> Documentation/perf-*.txt)
->  $(SCRIPTS) : % : %.sh
->      $(QUIET_GEN)$(INSTALL) '$@.sh' '$(OUTPUT)$@'
-> 
-> -$(OUTPUT)PERF-VERSION-FILE: ../../.git/HEAD ../../.git/ORIG_HEAD
-> +$(OUTPUT)PERF-VERSION-FILE: .FORCE-PERF-VERSION-FILE
+ kernel/events/core.c | 209 +++++++++++--------------------------------
+ 1 file changed, 52 insertions(+), 157 deletions(-)
 
-Regarding my issue, removing the dependence to .git/ORIG_HEAD file fixes
-the issue. So I'm fine to drop my patch and revert the two commits you
-mentioned.
-
-If you send this patch, please do not forget to add a Fixes tag:
-
-  Fixes: 4e666cdb06ee ("perf tools: Fix dependency for version file
-creation")
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.35.1
+
