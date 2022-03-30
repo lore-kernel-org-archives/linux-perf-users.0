@@ -2,139 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FC4C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Mar 2022 13:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F614C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Mar 2022 14:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346428AbiC3Nwr (ORCPT
+        id S1346647AbiC3OOp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Mar 2022 09:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59746 "EHLO
+        Wed, 30 Mar 2022 10:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346491AbiC3Nw1 (ORCPT
+        with ESMTP id S229816AbiC3OOp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Mar 2022 09:52:27 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94650133D8B;
-        Wed, 30 Mar 2022 06:50:40 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id r13so41661069ejd.5;
-        Wed, 30 Mar 2022 06:50:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1OLDSq/HMivImgf5vlU82yeV23lshpzhfTJKY95m+Z8=;
-        b=H5U9h4jAU0SRA9mYbThvS4qFeQ8C3Fh5k6/CLwP1tHEgS24U7HWxp3Rhc8iGRVKMCK
-         I1ZCFUP6d9M0osRXl6cH8kWr1vNURf1UbiOcGcBnElzuvap40sG70vKEWQ0wnKzLTcFL
-         sfXlsnTJg3VvtEVM83R0NkxJyYdQSEjmjb3Yeu0ENtDts6NRVZ42ToEYKDrvQPyG75uo
-         0yfLuTVULfTJS0O9XbNeNYfbP7D8njRJWNaQJavNva/IxnXW9yBkHi+5RaWmKtupPn9c
-         FjELMZie/femNx85sK+NcsQRKw87oGyV3JSAnpJ0lyUVt22guLpfW98gHDQq/QatWaeh
-         ogBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1OLDSq/HMivImgf5vlU82yeV23lshpzhfTJKY95m+Z8=;
-        b=Mo7BVCMhmfneoXFlWL/13Ze3Wrk0n84BKibUWRoid12uBX1w2CMzT4puGzCNlow3vB
-         irliaavrR53p7bnWM67Bck8Fgtx0JfnOWLHZD+/kCIuYlpUhoWLePFMrTdnD+7dwGezv
-         R0AQeoUCABNm9FbZ369BNERu78NWaPI6aIlDMILcZymGhDgzqnM1dICFfdHEdurqyOgM
-         enVjlWYl7ZF7lcqOG3yyBd5+uO2xT+ml4FxpBCclqxw3Zwpj6nNDLyvX4cjbGJ1H19gP
-         Xkhc41vzTW36P1VXNMSBbtcxQNR13ru3Lufcp9Z/aUpaulIx6k8COoLxKmXtZBGrzUkL
-         R7AQ==
-X-Gm-Message-State: AOAM533ng0F5mVolSzRgBWfCzxEoaTudWvtV58M8CIZqvNKop3u2CyGe
-        wNA43unHHQC5U2C7MBtuAai1jNyvnRoezw==
-X-Google-Smtp-Source: ABdhPJxMB3BHLF1VMfqbB7RLZ1Vx9XU6izABsdLNoOOTTt3yKeGFPBiGYxgg37i3B6C5OzIy24rRWw==
-X-Received: by 2002:a17:907:6d9e:b0:6df:bb09:10eb with SMTP id sb30-20020a1709076d9e00b006dfbb0910ebmr39394770ejc.409.1648648239003;
-        Wed, 30 Mar 2022 06:50:39 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id a1-20020a1709063e8100b006ce06ed8aa7sm8353128ejj.142.2022.03.30.06.50.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Mar 2022 06:50:38 -0700 (PDT)
-Date:   Wed, 30 Mar 2022 15:50:36 +0200
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v2 5/7] libperf: Add perf_evsel__check_overflow()
- functions
-Message-ID: <YkRgLBTHVQbdX8rK@krava>
-References: <20220325043829.224045-1-nakamura.shun@fujitsu.com>
- <20220325043829.224045-6-nakamura.shun@fujitsu.com>
+        Wed, 30 Mar 2022 10:14:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A09C1ED043;
+        Wed, 30 Mar 2022 07:13:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B22FD61465;
+        Wed, 30 Mar 2022 14:12:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B31C340EE;
+        Wed, 30 Mar 2022 14:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648649579;
+        bh=mzLs9jvJsYDXFkErQ/Szj/95kw/X1ivN1V9RDk1cSt4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Tfhw5qrkOTUc4XxiU8xrpRa74xdxucu3PckINi7hYBOXcRvkgksR1gJTPp358C7l/
+         gjyIaVrdL+HCsYmGQ6yClO2CZW6K1wOwbf1B2uR+KU4Ka6jk/W+W/cbeBWCDAyFxeY
+         zaTQe3AWvKPDHYojrJinnCyqStu8DCbt9cU64jduJoEk0oooNQcgCWI4CXlGRGUqpF
+         0ywiHYibYu87zrt3H8xIZHT1KNzPSuFp+pR4zhvVshnxBjBGuXkvx/hNm0tTxwoOiW
+         ZRZYDLicZIofvJQUcYmn4vkitkZ4VEtKrqwwdj+Ok5Hmqnm2YikdBffNTxPvfN9zDZ
+         7b4q0gaZUOwQQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F02CD40407; Wed, 30 Mar 2022 11:12:54 -0300 (-03)
+Date:   Wed, 30 Mar 2022 11:12:54 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Stop depending on .git files for building
+ PERF-VERSION-FILE
+Message-ID: <YkRlZhaEgmJ5Q4k/@kernel.org>
+References: <1648635774-14581-1-git-send-email-john.garry@huawei.com>
+ <3a72702f-6cf9-2b6e-0f9c-bf6857ab7ed2@tessares.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220325043829.224045-6-nakamura.shun@fujitsu.com>
+In-Reply-To: <3a72702f-6cf9-2b6e-0f9c-bf6857ab7ed2@tessares.net>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 25, 2022 at 01:38:27PM +0900, Shunsuke Nakamura wrote:
-> Add the following functions:
+Em Wed, Mar 30, 2022 at 03:22:37PM +0200, Matthieu Baerts escreveu:
+> Hi John,
 > 
->   perf_evsel__check_overflow
->   perf_evsel__check_overflow_cpu
+> On 30/03/2022 12:22, John Garry wrote:
+> > This essentially reverts commit c72e3f04b45fb2e50cdd81a50c3778c6a57251d8
+> > and commit 4e666cdb06eede2069a7b1a96a1359d1c441a3eb.
+> > 
+> > In commit c72e3f04b45f ("tools/perf/build: Speed up git-version test on
+> > re-make"), a makefile dependency on .git/HEAD was added. The background is
+> > that running PERF-VERSION-FILE is relatively slow, and commands like
+> > "git describe" are particularly slow.
+> > 
+> > In commit 4e666cdb06ee ("perf tools: Fix dependency for version file
+> > creation"), an additional dependency on .git/ORIG_HEAD was added, as
+> > .git/HEAD may not change for "git reset --hard HEAD^" command. However,
+> > depending on whether we're on a branch or not, a "git cherry-pick" may
+> > not lead to the version being updated.
+> > 
+> > As discussed with the git community in [0], using git internal files for
+> > dependencies is not reliable. Commit 4e666cdb06ee also breaks some build
+> > scenarios [1].
+> > 
+> > As mentioned, c72e3f04b45f was added to speed up the build. However in
+> > commit 7572733b8499 ("perf tools: Fix version kernel tag") we removed the
+> > call to "git describe", so just revert Makefile.perf back to same as pre
+> > c72e3f04b45f and the build should not be so slow, as below:
+> > 
+> > Pre 7572733b8499:
+> > $> time util/PERF-VERSION-GEN
+> >   PERF_VERSION = 5.17.rc8.g4e666cdb06ee
+> > 
+> > real    0m0.110s
+> > user    0m0.091s
+> > sys     0m0.019s
+> > 
+> > Post 7572733b8499:
+> > $> time util/PERF-VERSION-GEN
+> >   PERF_VERSION = 5.17.rc8.g7572733b8499
+> > 
+> > real    0m0.039s
+> > user    0m0.036s
+> > sys     0m0.007s
+> > 
+> > [0] https://lore.kernel.org/git/87wngkpddp.fsf@igel.home/T/#m4a4dd6de52fdbe21179306cd57b3761eb07f45f8
+> > [1] https://lore.kernel.org/linux-perf-users/20220329093120.4173283-1-matthieu.baerts@tessares.net/T/#u
+> > 
+> > Fixes: 4e666cdb06ee ("perf tools: Fix dependency for version file creation")
+> > Reported-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> > Signed-off-by: John Garry <john.garry@huawei.com>
 > 
-> to check for perf events with the file descriptor specified in the
-> argument.
-> These functions can be used in signal handlers to check overflow.
-> 
-> Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-> ---
->  tools/lib/perf/Documentation/libperf.txt |  3 +++
->  tools/lib/perf/evsel.c                   | 34 ++++++++++++++++++++++++
->  tools/lib/perf/include/perf/evsel.h      |  4 +++
->  tools/lib/perf/libperf.map               |  2 ++
->  4 files changed, 43 insertions(+)
-> 
-> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-> index 700c1ce15159..4ae8d738b948 100644
-> --- a/tools/lib/perf/Documentation/libperf.txt
-> +++ b/tools/lib/perf/Documentation/libperf.txt
-> @@ -165,6 +165,9 @@ SYNOPSIS
->                                int cpu_map_idx);
->    int perf_evsel__period(struct perf_evsel *evsel, int period);
->    int perf_evsel__period_cpu(struct perf_evsel *evsel, int period, int cpu_map_idx);
-> +  int perf_evsel__check_overflow(struct perf_evsel *evsel, int sig_fd, bool *overflow);
-> +  int perf_evsel__check_overflow_cpu(struct perf_evsel *evsel, int cpu_map_idx,
-> +                                     int sig_fd, bool *overflow);
+> Thank you for your patch, I just tested it and it also fixes the issue I
+> reported!
 
-should this be more like:
+I'm taking this as a:
 
-  perf_evsel__has_fd(struct perf_evsel *evsel, int fd)
+Tested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-also why do we need to export *_cpu version for this?
-I don't see it used in the test
+Ok?
 
->    struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
->    struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
->    struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> index db9b7274feb5..6ff3cf692df3 100644
-> --- a/tools/lib/perf/evsel.c
-> +++ b/tools/lib/perf/evsel.c
-> @@ -616,3 +616,37 @@ int perf_evsel__open_opts(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
->  
->  	return err;
->  }
-> +
-> +int perf_evsel__check_overflow_cpu(struct perf_evsel *evsel, int cpu_map_idx,
-> +				   int sig_fd, bool *overflow)
-> +{
-> +	int thread;
-> +	int *fd;
-> +	int err = 0;
-> +
-> +	if (!overflow)
-> +		return -EINVAL;
-> +
-> +	*overflow = false;
-> +
-> +	for (thread = 0; thread < xyarray__max_y(evsel->fd) && !err; ++thread) {
-> +		fd = FD(evsel, cpu_map_idx, thread);
-> +		if (sig_fd <= 0 || !fd || *fd < 0)
-> +			err = -EINVAL;
-
-sig_fd check should be before the loop
-
-jirka
+- Arnaldo
