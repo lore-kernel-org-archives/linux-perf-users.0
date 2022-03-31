@@ -2,59 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C6FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Mar 2022 08:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86691C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Mar 2022 11:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbiCaIQE (ORCPT
+        id S235307AbiCaLql (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Mar 2022 04:16:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41492 "EHLO
+        Thu, 31 Mar 2022 07:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232594AbiCaIQD (ORCPT
+        with ESMTP id S234928AbiCaLqk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Mar 2022 04:16:03 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D81A21A818;
-        Thu, 31 Mar 2022 01:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QsP+IlSxkL6NqvmArcUcnZSFybZOrqNvIwp1wgxlJIk=; b=bMyiaHaMN75EELHxtOPozcytje
-        4mR6+DKXg5nGbvJz+LCHWyRTSQj5FtRPk+9fPKTRB/YWeXnT7ELAMnzzKqEZ+vdYlsjCe/2jaMUBx
-        u9+oLraRrNsLGR+VbTmGpdtHrVVa+oOcIpDj20PBKajoAcuJV32ZPAQ6R5yMLjd/oieN2Jph2nPC/
-        /idfbV9iJI8w547jEKWLeqfGRr7fhb3755KXKnsmwsdvolNbv90nJf7E2j6yj4uvxaU7C60sjXm4P
-        WxqjADp849Kof3CgS28laWtVcWxQZQn/aBvZfgz9yc7hr4ysOZziw3bBPjSKHcgk2bTACUT07NHXG
-        ZRNb4Z3Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nZpwS-006PsI-JO; Thu, 31 Mar 2022 08:14:04 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9BC9D98695C; Thu, 31 Mar 2022 10:14:01 +0200 (CEST)
-Date:   Thu, 31 Mar 2022 10:14:01 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Chengming Zhou <zhouchengming@bytedance.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, eranian@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        duanxiongchun@bytedance.com, songmuchun@bytedance.com
-Subject: Re: [PATCH v4 0/4] perf/core: Fixes for cgroup events
-Message-ID: <20220331081401.GR8939@worktop.programming.kicks-ass.net>
-References: <20220329154523.86438-1-zhouchengming@bytedance.com>
+        Thu, 31 Mar 2022 07:46:40 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C51208315;
+        Thu, 31 Mar 2022 04:44:47 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id dr20so47473869ejc.6;
+        Thu, 31 Mar 2022 04:44:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AstwEy6sbT71FKbynsBECww/Cn1UAWSTeaB7mE9n2JA=;
+        b=UoZ1B7Y2nSEs+OkR/tohs4nJVjDmYy4rq3GKzxjfr1nr9iUkq3WujR9bMfdoUAhiLj
+         BOGootZflDZLs1Srx7wxbbrSjjKKmQrM7DI2I3h9OseiBb+Fnnmx96brtZebnxPjd093
+         uiS+W5Ipj75ZlXT62dNc9coMg+f37tj2GTmz0iM6915ocKZA0FUIq6tX2W1ZofV2tFfW
+         DwCE49g0KqP/E7sbcGqe26r85CxSD3+I3Hj9SdlPFuPknwnci2ni1aged8Pn0qBGbezS
+         xLp3C59vhqdrt8C3JXM1g45TGm/9P5kz+7ITuFoQ5+qt2lSOstQ3WvO8qv/V1lNPIEyg
+         3o+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AstwEy6sbT71FKbynsBECww/Cn1UAWSTeaB7mE9n2JA=;
+        b=AHNRYAJramd2kTr9xfSWh0eKqN4Y49D46iKYK+2T0HhhIdl1MHgGdY3Erx+5Wc/oLG
+         +M94ddXYjlr2U/xa4ZobpngUdaSkxUE3tLW0IVPZASS0BWpS+/bbrljZDJm4//v6POsV
+         pYlAXFlYLVMUQ9XeC6ym/nQJtKzAIh3jlhhxV10dL/Opmz0OR0I39G0hGVwFkOExC7uQ
+         aAbw/+wlAu3jyz1H2xgjMmQPrZIVXiQzAmwabnzmHEBxeaa9OzOgh9yNRtBoM3xL6SFO
+         UMoVVp+/7/41p+243uXkYfAvgJyP8EZtHkNxFe8wXT2XJadXu0Mbj/n+c/Nft8K/Elrr
+         MXHg==
+X-Gm-Message-State: AOAM530tZpz/jTtQyErJ/ZxfVh8bRxgS4iu00XcnH6IMD/6ZqphNNrs6
+        4o/mn0fdha0i2SA12gSeTXU=
+X-Google-Smtp-Source: ABdhPJzsMiSACkIutaukAiGPYkdDRxm1TnS7IAElimbeLAI9Hj9B7FlOKTQNBQdFgvowkOKxRyYkcg==
+X-Received: by 2002:a17:906:f857:b0:6df:ae2d:73a0 with SMTP id ks23-20020a170906f85700b006dfae2d73a0mr4576732ejb.614.1648727086080;
+        Thu, 31 Mar 2022 04:44:46 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id d23-20020aa7d5d7000000b00418f7b2f1dbsm11143598eds.71.2022.03.31.04.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Mar 2022 04:44:45 -0700 (PDT)
+Date:   Thu, 31 Mar 2022 13:44:43 +0200
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Denis Nikitin <denik@chromium.org>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        jolsa@kernel.org, alexey.budankov@linux.intel.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        james.clark@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf session: Remap buf if there is no space for event
+Message-ID: <YkWUK+1padnj2JB4@krava>
+References: <20220330031130.2152327-1-denik@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220329154523.86438-1-zhouchengming@bytedance.com>
+In-Reply-To: <20220330031130.2152327-1-denik@chromium.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 29, 2022 at 11:45:19PM +0800, Chengming Zhou wrote:
-> Chengming Zhou (4):
->   perf/core: Don't pass task around when ctx sched in
->   perf/core: Use perf_cgroup_info->active to check if cgroup is active
->   perf/core: Fix perf_cgroup_switch()
->   perf/core: Always set cpuctx cgrp when enable cgroup event
+On Tue, Mar 29, 2022 at 08:11:30PM -0700, Denis Nikitin wrote:
+> If a perf event doesn't fit into remaining buffer space return NULL to
+> remap buf and fetch the event again.
+> Keep the logic to error out on inadequate input from fuzzing.
+> 
+> This fixes perf failing on ChromeOS (with 32b userspace):
+> 
+>   $ perf report -v -i perf.data
+>   ...
+>   prefetch_event: head=0x1fffff8 event->header_size=0x30, mmap_size=0x2000000: fuzzed or compressed perf.data?
+>   Error:
+>   failed to process sample
+> 
+> Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid header.size")
+> Signed-off-by: Denis Nikitin <denik@chromium.org>
 
-Thanks, queued for post -rc1
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
+> ---
+>  tools/perf/util/session.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 3b8dfe603e50..45a30040ec8d 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -2095,6 +2095,7 @@ prefetch_event(char *buf, u64 head, size_t mmap_size,
+>  	       bool needs_swap, union perf_event *error)
+>  {
+>  	union perf_event *event;
+> +	u16 event_size;
+>  
+>  	/*
+>  	 * Ensure we have enough space remaining to read
+> @@ -2107,15 +2108,23 @@ prefetch_event(char *buf, u64 head, size_t mmap_size,
+>  	if (needs_swap)
+>  		perf_event_header__bswap(&event->header);
+>  
+> -	if (head + event->header.size <= mmap_size)
+> +	event_size = event->header.size;
+> +	if (head + event_size <= mmap_size)
+>  		return event;
+>  
+>  	/* We're not fetching the event so swap back again */
+>  	if (needs_swap)
+>  		perf_event_header__bswap(&event->header);
+>  
+> -	pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx:"
+> -		 " fuzzed or compressed perf.data?\n",__func__, head, event->header.size, mmap_size);
+> +	/* Check if the event fits into the next mmapped buf. */
+> +	if (event_size <= mmap_size - head % page_size) {
+> +		/* Remap buf and fetch again. */
+> +		return NULL;
+> +	}
+> +
+> +	/* Invalid input. Event size should never exceed mmap_size. */
+> +	pr_debug("%s: head=%#" PRIx64 " event->header.size=%#x, mmap_size=%#zx:"
+> +		 " fuzzed or compressed perf.data?\n", __func__, head, event_size, mmap_size);
+>  
+>  	return error;
+>  }
+> -- 
+> 2.35.1.1021.g381101b075-goog
+> 
