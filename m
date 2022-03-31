@@ -2,92 +2,71 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89961C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Mar 2022 12:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECABC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Mar 2022 12:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235291AbiCaMU7 (ORCPT
+        id S236132AbiCaMbA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Mar 2022 08:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
+        Thu, 31 Mar 2022 08:31:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234029AbiCaMU7 (ORCPT
+        with ESMTP id S236135AbiCaMa7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Mar 2022 08:20:59 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B3557169
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Mar 2022 05:19:12 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id r13so47706105ejd.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Mar 2022 05:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=D36Yn+ejM2DXUE0h/u3XBGcr71EqZPBwHQPlqRXqPLQ=;
-        b=QHu5Zs2xUoKvVhqkj6wK2uZrS/6gc4dA8wI5nKJoeTpLAEV7/ZXceJJ221pS1cMg9f
-         JvhK3PvxQVzRv7dq0DjzRKDmxiIw+EO0J69YGnn+qIoSTW0qYvPOkIiBSAJjk8B15a7h
-         P7ccVF8jQhjCPxRXwFsO8r8FAB/0zbZqthGqLAYOSZr602HiSFMaMWl1GbtEFc2nmyMc
-         yLphvLEmxLbJSyyPDwASg3ClI/q/NljTYoFCi0QfI5P9Wgt6oDDqIR/nMMjK/yGEaQ+p
-         CkWT6bniNj9VXnN/M6AkjI99lIp6DPKG/rLIE8cx7v5nPlHvZ7Eh6QC+lVQprxcs5FFI
-         47ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D36Yn+ejM2DXUE0h/u3XBGcr71EqZPBwHQPlqRXqPLQ=;
-        b=4BaZF5qD7xxGiSnWvKjAeb4S/ZqlORwOgzjWkPNTDmjukvtjPfCzLdvu1KtS0DBH4H
-         8yuiGhF2toQIvsP09AI1GPTMHVi1+AGVS4ffCsWkzntQZYy5V4AysJeGPkUnp9TIosba
-         Ns9/zKYXdSBL/NXIzaOn4sflHoxKN6d5+og0WAPEzHMhtu735/Fjz9J7BJn3Eef1r+oK
-         k+UNgrWCvnCc2D0yRkGNUTxUTI5j7E8iK5DtcHUluGkBcRCQPDpHBbjwb0p+IttSscn+
-         soHgpfolR9AV7YEDO2JwOoNqVbVEP3cRFKFuZwypNk+y8jsARVKPLmGVmgb3Qv5KMiin
-         L3vw==
-X-Gm-Message-State: AOAM532xQNB3OA+jyhEm0ME85OnjXh9f8tpj5zKRn+xb8vREPdJN+D/w
-        hooKp8Oj3Iq6gYFPyWVlP1pTpA==
-X-Google-Smtp-Source: ABdhPJxmJMnsTNRsdqZxrtv4RgtdwiawUFjBrcIQbDJn0VDT4ZfrbQnG4vIteN6+nqduvCgYCN/cYg==
-X-Received: by 2002:a17:907:3e0c:b0:6e0:7d7e:58 with SMTP id hp12-20020a1709073e0c00b006e07d7e0058mr4518430ejc.597.1648729150471;
-        Thu, 31 Mar 2022 05:19:10 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id gn1-20020a1709070d0100b006e012aaa918sm9351455ejc.139.2022.03.31.05.19.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Mar 2022 05:19:09 -0700 (PDT)
-Date:   Thu, 31 Mar 2022 20:19:02 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     Nick.Forrington@arm.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, german.gomez@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
+        Thu, 31 Mar 2022 08:30:59 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7C13E65789;
+        Thu, 31 Mar 2022 05:29:11 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 713D223A;
+        Thu, 31 Mar 2022 05:29:10 -0700 (PDT)
+Received: from [10.57.73.181] (unknown [10.57.73.181])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9B9A3F718;
+        Thu, 31 Mar 2022 05:29:06 -0700 (PDT)
 Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
  cores
-Message-ID: <20220331121902.GA1704284@leoy-ThinkPad-X240s>
+To:     Ali Saidi <alisaidi@amazon.com>, leo.yan@linaro.org
+Cc:     Nick.Forrington@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, james.clark@arm.com,
+        john.garry@huawei.com, jolsa@kernel.org, kjain@linux.ibm.com,
+        lihuafei1@huawei.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org, will@kernel.org
 References: <20220328130547.GA360814@leoy-ThinkPad-X240s>
  <20220329143214.12707-1-alisaidi@amazon.com>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <4710b4b2-5dcd-00a4-3976-1bd5340f401d@arm.com>
+Date:   Thu, 31 Mar 2022 13:28:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20220329143214.12707-1-alisaidi@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ali,
+Hi all,
 
-On Tue, Mar 29, 2022 at 02:32:14PM +0000, Ali Saidi wrote:
+It seems I gave the Review tags a bit too early this time. Apologies for
+the inconvenience. Indeed there was more interesting discussions to be
+had :)
 
-[...]
+(Probably best to remove by tags for the next re-spin)
 
-> > I still think we should consider to extend the memory levels to
-> > demonstrate clear momory hierarchy on Arm archs, I personally like the
-> > definitions for "PEER_CORE", "LCL_CLSTR", "PEER_CLSTR" and "SYS_CACHE",
-> > though these cache levels are not precise like L1/L2/L3 levels, they can
-> > help us to map very well for the cache topology on Arm archs and without
-> > any confusion.  We could take this as an enhancement if you don't want
-> > to bother the current patch set's upstreaming.
-> 
+On 29/03/2022 15:32, Ali Saidi wrote:
+> [...]
+>
+>> I still think we should consider to extend the memory levels to
+>> demonstrate clear momory hierarchy on Arm archs, I personally like the
+>> definitions for "PEER_CORE", "LCL_CLSTR", "PEER_CLSTR" and "SYS_CACHE",
+>> though these cache levels are not precise like L1/L2/L3 levels, they can
+>> help us to map very well for the cache topology on Arm archs and without
+>> any confusion.  We could take this as an enhancement if you don't want
+>> to bother the current patch set's upstreaming.
 > I'd like to do this in a separate patch, but I have one other proposal. The
 > Neoverse cores L2 is strictly inclusive of the L1, so even if it's in the L1,
 > it's also in the L2. Given that the Graviton systems and afaik the Ampere
@@ -95,37 +74,77 @@ On Tue, Mar 29, 2022 at 02:32:14PM +0000, Ali Saidi wrote:
 > PEER_CORE, LCL_CLSTR, or PEER_CLSTR would hit in the L2, perhaps we
 > should just set L2 for these cases? German, are you good with this for now? 
 
-If we use a single cache level (no matterh it's L2 or ANY_CACHE) for
-these data sources, it's hard for users to understand what's the cost
-for the memory operations.  So here I suggested for these new cache
-levels is not only about cache level, it's more about the information
-telling the memory operation's cost.
+Sorry for the delay. I'd like to also check this with someone. I'll try
+to get back asap. In the meantime, if this approach is also OK with Leo,
+I think it would be fine by me.
 
-[...]
+Thanks,
+German
 
-> > Alternatively, I think it's good to pick up the patch series "perf c2c:
-> > Sort cacheline with all loads" [1], rather than relying on HITM tag, the
-> > patch series extends a new option "-d all" for perf c2c, so it displays
-> > the suspecious false sharing cache lines based on load/store ops and
-> > thread infos.  The main reason for holding on th patch set is due to we
-> > cannot verify it with Arm SPE at that time point, as the time being Arm
-> > SPE trace data was absent both store ops and data source packets.
-> 
+>>>>>> For this data source type and below types, though they indicate
+>>>>>> the snooping happens, but it doesn't mean the data in the cache line
+>>>>>> is in 'modified' state.  If set flag PERF_MEM_SNOOP_HITM, I personally
+>>>>>> think this will mislead users when report the result.
+>>>>> I'm of the opposite opinion. If the data wasn't modified, it will likely be
+>>>>> found in the lower-level shared cache and the transaction wouldn't require a
+>>>>> cache-to-cache transfer of the modified data, so the most common case when we
+>>>>> source a line out of another cores cache will be if it was "modifiable" in that
+>>>>> cache. 
+>>>> Let's still use MOSI protocol as example.  I think there have two
+>>>> cases: on case is the peer cache line is in 'Shared' state and another
+>>>> case is the peer cache line is in 'Owned' state.
+>>>>
+>>>> Quotes the wiki page for these two cases:
+>>>>
+>>>> "When the cache block is in the Shared (S) state and there is a
+>>>> snooped bus read (BusRd) transaction, then the block stays in the same
+>>>> state and generates no more transactions as all the cache blocks have
+>>>> the same value including the main memory and it is only being read,
+>>>> not written into."
+>>>>
+>>>> "While in the Owner (O) state and there is a snooped read request
+>>>> (BusRd), the block remains in the same state while flushing (Flush)
+>>>> the data for the other processor to read from it."
+>>>>
+>>>> Seems to me, it's reasonable to set HTIM flag when the snooping happens
+>>>> for the cache line line is in the Modified (M) state.
+>>>>
+>>>> Again, my comment is based on the literal understanding; so please
+>>>> correct if have any misunderstanding at here.
+>>> Per the CMN TRM, "The SLC allocation policy is exclusive for data lines, except
+>>> where sharing patterns are detected," so if a line is shared among caches it
+>>> will likely also be in the SLC (and thus we'd get an L3 hit). 
+>>>
+>>> If there is one copy of the cache line and that cache line needs to transition
+>>> from one core to another core, I don't believe it matters if it was truly
+>>> modified or not because the core already had permission to modify it and the
+>>> transaction is just as costly (ping ponging between core caches). This is the
+>>> one thing I really want to be able to uniquely identify as any cacheline doing
+>>> this that isn't a lock is a place where optimization is likely possible. 
+>> I understood that your point that if big amount of transitions within
+>> multiple cores hit the same cache line, it would be very likely caused
+>> by the cache line's Modified state so we set PERF_MEM_SNOOP_HITM flag
+>> for easier reviewing.
+> And that from a dataflow perspective if the line is owned (and could be
+> modifiable) vs. was actually modified is really the less interesting bit. 
+>
+>> Alternatively, I think it's good to pick up the patch series "perf c2c:
+>> Sort cacheline with all loads" [1], rather than relying on HITM tag, the
+>> patch series extends a new option "-d all" for perf c2c, so it displays
+>> the suspecious false sharing cache lines based on load/store ops and
+>> thread infos.  The main reason for holding on th patch set is due to we
+>> cannot verify it with Arm SPE at that time point, as the time being Arm
+>> SPE trace data was absent both store ops and data source packets.
 > Looking at examples I don't, at least from my system, data-source isn't set for
-> stores, only for loads.
-
-Ouch ...  If data source is not set for store operation, then all store
-samples will absent cache level info.  Or should we set ANY_CACHE as
-cache level for store operations?
-
-> > I perfer to set PERF_MEM_SNOOP_HIT flag in this patch set and we can
-> > upstream the patch series "perf c2c: Sort cacheline with all loads"
-> > (only needs upstreaming patches 01, 02, 03, 10, 11, the rest patches
-> > have been merged in the mainline kernel).
-> > 
-> > If this is fine for you, I can respin the patch series for "perf c2c".
-> > Or any other thoughts?
-> 
+> stores, only for loads. 
+>
+>> I perfer to set PERF_MEM_SNOOP_HIT flag in this patch set and we can
+>> upstream the patch series "perf c2c: Sort cacheline with all loads"
+>> (only needs upstreaming patches 01, 02, 03, 10, 11, the rest patches
+>> have been merged in the mainline kernel).
+>>
+>> If this is fine for you, I can respin the patch series for "perf c2c".
+>> Or any other thoughts?
 > I think this is a nice option to have in the tool-box, but from my point of
 > view, I'd like someone who is familiar with c2c output on x86 to come to an
 > arm64 system and be able to zero in on a ping-ponging line like they would
@@ -138,25 +157,6 @@ cache level for store operations?
 > specifically highlight the core-2-core transfers that are likely a performance
 > issue easily and it will result in easier identification of areas of false or
 > true sharing and improve performance.
-
-I don't want to block this patch set by this part, and either I don't
-want to introduce any confusion for later users, especially I think
-users who in later use this tool but it's hard for them to be aware any
-assumptions in this discussion thread.  So two options would be fine
-for me:
-
-Option 1: if you and Arm mates can confirm that inaccuracy caused by
-setting HITM is low (e.g. 2%-3% inaccuracy that introduced by directly
-set HITM), I think this could be acceptable.  Otherwise, please
-consider option 2.
-
-Option 2: by default we set PERF_MEM_SNOOP_HIT flag since now actually
-we have no info to support HITM.  Then use a new patch to add an extra
-option (say '--coarse-hitm') for 'perf c2c' tool, a user can explictly
-specify this option for 'perf c2c' command; when a user specifies this
-option it means that the user understands and accepts inaccuracy by
-forcing to use PERF_MEM_SNOOP_HITM flag.  I think you could refer to
-the option '--stitch-lbr' for adding an option for 'perf c2c' tool.
-
-Thanks,
-Leo
+>
+> Thanks,
+> Ali
