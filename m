@@ -2,123 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91527C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Mar 2022 12:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03692C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Mar 2022 14:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232433AbiCaMqW (ORCPT
+        id S237455AbiCaOVw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Mar 2022 08:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58580 "EHLO
+        Thu, 31 Mar 2022 10:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231841AbiCaMqV (ORCPT
+        with ESMTP id S237487AbiCaOVv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Mar 2022 08:46:21 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D2D914864B
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Mar 2022 05:44:34 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id bq8so33893733ejb.10
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Mar 2022 05:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=u2E6iZH4vqaN/paASsb9/5JiTf0b1m5qdb10iYTnEXE=;
-        b=j+QhpYpfOQq+udSbmUsuT5Zz9iEk/cMj4q8EgU1QeOC8tH7Wwb+bEqgrw56SVAWKzw
-         KYMtAsUmWnwiN0VeTHkYPNk0YBE4qwcSds9UlUDw1pVDzWVRhMXTEnTQeQcOQLEqUdUh
-         LMG22ZPdk4wFqjuOLTEWmyB5q18f3VpGqSo6j6i5xIag1jDFZWOquvKBkOvvHHfcqPdr
-         kZJ0JUAwEZ0VwoeWNcV/KOU7DN8TEjY/ZG6hP/XcAdJIgxMGWKGsxO2zwXvQ3XoerZ/6
-         USYUmyqd8uRB4MpvGTcPUdEmHJannnS6zX6lco0AvHDdJw5qHE5FGSZw/8sAtGTgrM0O
-         p5rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u2E6iZH4vqaN/paASsb9/5JiTf0b1m5qdb10iYTnEXE=;
-        b=YtmiiFJ84OW5cySL5K1I05LKLNvqSvAttl5ocpaUdHA5jHxsX2LOPRT1ttN3rUccQP
-         180nC6jPhy3V+dVzTdrjKQNS/eldHwdw3vaJLxKBS5xi0ugEnqifbPzPO8Nk17Q2Ehgy
-         7AVPDUKGi/ep+0pH2+Js/vLtFrfq8C0nvN1lY+D8bj40I/oI9R3eP5OaBjVDjakT+/Ai
-         9Gpx5WoSokHmz2WBEtbuqFB7b+v+ugLZsOsk4j6TRv+XdwblgyIUZLpL4bHJE7ZxlozS
-         IcNKR5GVf0sSOA4JtRWQVyga45NG0vy4Rzr5zOfIAScBFTPXizGr8b2HTFeqdo1Jr9Rr
-         CONA==
-X-Gm-Message-State: AOAM530tmh03idv0B0qvg4S3cT5+9Puc9TxAy6PQdya4V65QQewmy0cQ
-        otPd1SdQLwdZRrvdDlI7pikkEg==
-X-Google-Smtp-Source: ABdhPJzC1TZHRiZ4ercOvfulsYZ7N2MPHEwfLnwj9lldpUf0NHaBY5GrDnEqN7tDPoDJJ1bO/1jAkw==
-X-Received: by 2002:a17:906:8301:b0:6e4:896d:59b1 with SMTP id j1-20020a170906830100b006e4896d59b1mr4706766ejx.396.1648730672768;
-        Thu, 31 Mar 2022 05:44:32 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id p24-20020a056402045800b0041614c8f79asm2935368edw.88.2022.03.31.05.44.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Mar 2022 05:44:32 -0700 (PDT)
-Date:   Thu, 31 Mar 2022 20:44:25 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Ali Saidi <alisaidi@amazon.com>, Nick.Forrington@arm.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andrew.kilroy@arm.com, benh@kernel.crashing.org,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
- cores
-Message-ID: <20220331124425.GB1704284@leoy-ThinkPad-X240s>
-References: <20220328130547.GA360814@leoy-ThinkPad-X240s>
- <20220329143214.12707-1-alisaidi@amazon.com>
- <4710b4b2-5dcd-00a4-3976-1bd5340f401d@arm.com>
+        Thu, 31 Mar 2022 10:21:51 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD62F1BE4D3;
+        Thu, 31 Mar 2022 07:20:03 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B5C81576;
+        Thu, 31 Mar 2022 07:20:03 -0700 (PDT)
+Received: from [10.57.8.37] (unknown [10.57.8.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 256FC3F73B;
+        Thu, 31 Mar 2022 07:20:02 -0700 (PDT)
+Message-ID: <77fa14e8-6630-c0e9-21fc-2603f7383f5f@arm.com>
+Date:   Thu, 31 Mar 2022 15:20:00 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4710b4b2-5dcd-00a4-3976-1bd5340f401d@arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH] perf session: Remap buf if there is no space for event
+Content-Language: en-US
+To:     Denis Nikitin <denik@chromium.org>, acme@kernel.org,
+        linux-perf-users@vger.kernel.org
+Cc:     jolsa@kernel.org, alexey.budankov@linux.intel.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220330031130.2152327-1-denik@chromium.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220330031130.2152327-1-denik@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 01:28:58PM +0100, German Gomez wrote:
-> Hi all,
+
+
+On 30/03/2022 04:11, Denis Nikitin wrote:
+> If a perf event doesn't fit into remaining buffer space return NULL to
+> remap buf and fetch the event again.
+> Keep the logic to error out on inadequate input from fuzzing.
 > 
-> It seems I gave the Review tags a bit too early this time. Apologies for
-> the inconvenience. Indeed there was more interesting discussions to be
-> had :)
+> This fixes perf failing on ChromeOS (with 32b userspace):
 > 
-> (Probably best to remove by tags for the next re-spin)
-
-Now worries, German.  Your review and testing are very helpful :)
-
-> On 29/03/2022 15:32, Ali Saidi wrote:
-> > [...]
-> >
-> >> I still think we should consider to extend the memory levels to
-> >> demonstrate clear momory hierarchy on Arm archs, I personally like the
-> >> definitions for "PEER_CORE", "LCL_CLSTR", "PEER_CLSTR" and "SYS_CACHE",
-> >> though these cache levels are not precise like L1/L2/L3 levels, they can
-> >> help us to map very well for the cache topology on Arm archs and without
-> >> any confusion.  We could take this as an enhancement if you don't want
-> >> to bother the current patch set's upstreaming.
-> > I'd like to do this in a separate patch, but I have one other proposal. The
-> > Neoverse cores L2 is strictly inclusive of the L1, so even if it's in the L1,
-> > it's also in the L2. Given that the Graviton systems and afaik the Ampere
-> > systems don't have any cache between the L2 and the SLC, thus anything from
-> > PEER_CORE, LCL_CLSTR, or PEER_CLSTR would hit in the L2, perhaps we
-> > should just set L2 for these cases? German, are you good with this for now? 
+>   $ perf report -v -i perf.data
+>   ...
+>   prefetch_event: head=0x1fffff8 event->header_size=0x30, mmap_size=0x2000000: fuzzed or compressed perf.data?
+>   Error:
+>   failed to process sample
 > 
-> Sorry for the delay. I'd like to also check this with someone. I'll try
-> to get back asap. In the meantime, if this approach is also OK with Leo,
-> I think it would be fine by me.
+> Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid header.size")
+> Signed-off-by: Denis Nikitin <denik@chromium.org>
+> ---
+>  tools/perf/util/session.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 3b8dfe603e50..45a30040ec8d 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -2095,6 +2095,7 @@ prefetch_event(char *buf, u64 head, size_t mmap_size,
+>  	       bool needs_swap, union perf_event *error)
+>  {
+>  	union perf_event *event;
+> +	u16 event_size;
+>  
+>  	/*
+>  	 * Ensure we have enough space remaining to read
+> @@ -2107,15 +2108,23 @@ prefetch_event(char *buf, u64 head, size_t mmap_size,
+>  	if (needs_swap)
+>  		perf_event_header__bswap(&event->header);
+>  
+> -	if (head + event->header.size <= mmap_size)
+> +	event_size = event->header.size;
+> +	if (head + event_size <= mmap_size)
+>  		return event;
+>  
+>  	/* We're not fetching the event so swap back again */
+>  	if (needs_swap)
+>  		perf_event_header__bswap(&event->header);
+>  
+> -	pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx:"
+> -		 " fuzzed or compressed perf.data?\n",__func__, head, event->header.size, mmap_size);
+> +	/* Check if the event fits into the next mmapped buf. */
+> +	if (event_size <= mmap_size - head % page_size) {
+> +		/* Remap buf and fetch again. */
+> +		return NULL;
 
-Thanks for the checking internally.  Let me just bring up my another
-thinking (sorry that my suggestion is float): another choice is we set
-ANY_CACHE as cache level if we are not certain the cache level, and
-extend snoop field to indicate the snooping logics, like:
+Hi Denis,
 
-  PERF_MEM_SNOOP_PEER_CORE
-  PERF_MEM_SNOOP_LCL_CLSTR
-  PERF_MEM_SNOOP_PEER_CLSTR
+I tested this and it does fix the issue with a 32bit build. One concern is that the calculation to
+see if it will fit in the next map is dependent on the implementation of reader__mmap(). I think it
+would be possible for that to change slightly and then you could still get an infinite loop.
 
-Seems to me, we doing this is not only for cache level, it's more
-important for users to know the variant cost for involving different
-snooping logics.
+But I can't really see a better way to do it, and it's unlikely for reader__mmap() to be modified
+to map data in a way to waste part of the buffer so it's probably fine.
 
-Thanks,
-Leo
+Maybe you could extract a function to calculate where the new offset would be in the buffer and share
+it between here and reader__mmap(). That would also make it more obvious what the 'head % page_size'
+bit is for.
+
+Either way:
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
+> +	}
+> +
+> +	/* Invalid input. Event size should never exceed mmap_size. */
+> +	pr_debug("%s: head=%#" PRIx64 " event->header.size=%#x, mmap_size=%#zx:"
+> +		 " fuzzed or compressed perf.data?\n", __func__, head, event_size, mmap_size);
+>  
+>  	return error;
+>  }
