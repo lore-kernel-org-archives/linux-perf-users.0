@@ -2,227 +2,184 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2695C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Apr 2022 18:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B951C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Apr 2022 19:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245406AbiDATBr (ORCPT
+        id S236439AbiDATOc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Apr 2022 15:01:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48038 "EHLO
+        Fri, 1 Apr 2022 15:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241935AbiDATBr (ORCPT
+        with ESMTP id S236407AbiDATOc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Apr 2022 15:01:47 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8085A160C33
-        for <linux-perf-users@vger.kernel.org>; Fri,  1 Apr 2022 11:59:57 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 231IPYZ1032809;
-        Fri, 1 Apr 2022 18:59:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=rYzBa0Q35Z0nbRZA3fgmjIQ5P4DWIwVibblGjOMpbWw=;
- b=m5Nbem7/ZBaM7ON91G58eKlLv0Nj2OJL+RnVoFZ/DOuZfq62xYagGfVx01XCNcycTe4Q
- RiZZTUSbNDiotBxsZYzCJyLGi70qJmpnYh43m5c2LmkhE4Vezz/aA8HzT9WxawQZtLtT
- znIZUokOPxvdhr3jkM9rRE5OwHKj/4VCKxlI3k6uuN69EFanG2uqTTXVIsZ9VlEaiCjk
- kAeXgVTdSC7UM/3GYa+rmQeJsYX2LKnhTKszh4H1UaL4+OIxLxq3qBDRamn/OXXZBc5d
- MPO3Qfu07PVKjZtOqwjVZLHltTACLZB6zdYKykaSe+sIU6s24vI/yL6tjiqLii9r0o5g 6A== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3f66nmrgny-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 Apr 2022 18:59:48 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 231IxaZq017423;
-        Fri, 1 Apr 2022 18:59:46 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06fra.de.ibm.com with ESMTP id 3f1t3j3j33-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 Apr 2022 18:59:46 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 231Ixhxe14745856
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 Apr 2022 18:59:43 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D001A4054;
-        Fri,  1 Apr 2022 18:59:43 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF195A405C;
-        Fri,  1 Apr 2022 18:59:38 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.211.128.246])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 Apr 2022 18:59:38 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com
-Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com
-Subject: [PATCH 4/4] tools/perf: Fix perf bench numa testcase to check if CPU used to bind task is online
-Date:   Sat,  2 Apr 2022 00:28:53 +0530
-Message-Id: <20220401185853.23912-5-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220401185853.23912-1-atrajeev@linux.vnet.ibm.com>
-References: <20220401185853.23912-1-atrajeev@linux.vnet.ibm.com>
+        Fri, 1 Apr 2022 15:14:32 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174E6617D;
+        Fri,  1 Apr 2022 12:12:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BB536B82604;
+        Fri,  1 Apr 2022 19:12:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C023C340F3;
+        Fri,  1 Apr 2022 19:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648840359;
+        bh=YApioM8rRksuAEkG5aeY8aT6WHhUt0SJ/cvtvDy3mIQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mq9ioClIwWzL8dm0dnfl9fxy3t4LppiDFcfjh+24Q3lbf5r5aI+7zIrT8zfKATY/q
+         nHZaT8suCYmK5RCUOlW0HGDkK1Gpifed4aFZVab0KxfKzX/wsA0Dq9JTKIBXeCV+nh
+         FxuJ6zg82piHE1mdtgXYUyUpzImSADdk7KMl4aktptJcxUDYyCQTO+UfjnIqJ9E7aw
+         NoO1GVnHIfT2tOSDLmQ6pK6M2bqd6lE9lx5sTGPiXQQK1/NcwxCYqxxgz7gXgzMz55
+         GS4yfivU4CP7GzH//pqv3av34vTRFUdxXzAbfn8HgNMFMldQr2J67V1qtKQ0WOo1RB
+         FtnUqAt+slLDg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5EE5040407; Fri,  1 Apr 2022 16:12:36 -0300 (-03)
+Date:   Fri, 1 Apr 2022 16:12:36 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 5/6] perf cpumap: Add intersect function.
+Message-ID: <YkdOpJDnknrOPq2t@kernel.org>
+References: <20220328232648.2127340-1-irogers@google.com>
+ <20220328232648.2127340-6-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7vR4fGg7F51MTFq7q3imnx3OUoyFjHHf
-X-Proofpoint-GUID: 7vR4fGg7F51MTFq7q3imnx3OUoyFjHHf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-04-01_05,2022-03-31_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 impostorscore=0 mlxscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204010088
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220328232648.2127340-6-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf numa bench test fails with error:
+Em Mon, Mar 28, 2022 at 04:26:47PM -0700, Ian Rogers escreveu:
+> The merge function gives the union of two cpu maps. Add an intersect
+> function which will be used in the next change.
 
-Testcase:
-./perf bench numa mem -p 2 -t 1 -P 1024 -C 0,8 -M 1,0 -s 20 -zZq
---thp  1 --no-data_rand_walk
+So I really don't think intersect() shouldn't modify the contents of any
+of its arguments, at most return one of them with a bumped refcount, as
+an optimization.
 
-Failure snippet:
-<<>>
- Running 'numa/mem' benchmark:
+The merge() operation is different in the sense that one expects that
+one of the operands will be inserted into the other, and even then it
+would be better to have a clearer semantic, i.e. merge(a, b) should mean
+get the contents of b and insert into a.
 
- # Running main, "perf bench numa numa-mem -p 2 -t 1 -P 1024 -C 0,8
--M 1,0 -s 20 -zZq --thp 1 --no-data_rand_walk"
+Since we're talking about CPUs, it doesn't make sense to have a CPU
+multiple times in the cpu_map, so we eliminate duplicates while doing
+it.
 
-perf: bench/numa.c:333: bind_to_cpumask: Assertion `!(ret)' failed.
-<<>>
+Also perhaps the merge() operation should not even change any of the
+operands, but instead return a new cpuset if one of the operands isn't
+contained in the other, in which case a bump in the reference count of
+the superset would be a valid optimization.
 
-The Testcases uses CPU’s 0 and 8. In function "parse_setup_cpu_list",
-There is check to see if cpu number is greater than max cpu’s possible
-in the system ie via "if (bind_cpu_0 >= g->p.nr_cpus ||
-bind_cpu_1 >= g->p.nr_cpus) {". But it could happen that system has
-say 48 CPU’s, but only number of online CPU’s is 0-7. Other CPU’s
-are offlined. Since "g->p.nr_cpus" is 48, so function will go ahead
-and set bit for CPU 8 also in cpumask ( td->bind_cpumask).
+But that boat has departed already, i.e. perf_cpu_map__merge() is
+already an exported libperf API, sigh.
 
-bind_to_cpumask function is called to set affinity using
-sched_setaffinity and the cpumask. Since the CPU8 is not present,
-set affinity will fail here with EINVAL. Fix this issue by adding a
-check to make sure that, CPU’s provided in the input argument values
-are online before proceeding further and skip the test. For this,
-include new helper function "is_cpu_online" in
-"tools/perf/util/header.c".
+This is something we're exporting, so I think this warrants further
+discussion, even with a fix depending on the merge of this new API.
 
-Since "BIT(x)" definition will get included from header.h, remove
-that from bench/numa.c
-
-Reported-by: Nageswara R Sastry <rnsastry@linux.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/bench/numa.c  |  8 ++++++--
- tools/perf/util/header.c | 43 ++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/header.h |  1 +
- 3 files changed, 50 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 333896907e45..42e2b2ed30c3 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -34,6 +34,7 @@
- #include <linux/numa.h>
- #include <linux/zalloc.h>
+- Arnaldo
  
-+#include "../util/header.h"
- #include <numa.h>
- #include <numaif.h>
- 
-@@ -624,6 +625,11 @@ static int parse_setup_cpu_list(void)
- 			return -1;
- 		}
- 
-+		if (is_cpu_online(bind_cpu_0) != 1 || is_cpu_online(bind_cpu_1) != 1) {
-+			printf("\nTest not applicable, bind_cpu_0 or bind_cpu_1 is offline\n");
-+			return -1;
-+		}
-+
- 		BUG_ON(bind_cpu_0 < 0 || bind_cpu_1 < 0);
- 		BUG_ON(bind_cpu_0 > bind_cpu_1);
- 
-@@ -794,8 +800,6 @@ static int parse_nodes_opt(const struct option *opt __maybe_unused,
- 	return parse_node_list(arg);
- }
- 
--#define BIT(x) (1ul << x)
--
- static inline uint32_t lfsr_32(uint32_t lfsr)
- {
- 	const uint32_t taps = BIT(1) | BIT(5) | BIT(6) | BIT(31);
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 6da12e522edc..3f5fcf5d4b3f 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -983,6 +983,49 @@ static int write_dir_format(struct feat_fd *ff,
- 	return do_write(ff, &data->dir.version, sizeof(data->dir.version));
- }
- 
-+#define SYSFS "/sys/devices/system/cpu/"
-+
-+/*
-+ * Check whether a CPU is online
-+ *
-+ * Returns:
-+ *     1 -> if CPU is online
-+ *     0 -> if CPU is offline
-+ *    -1 -> error case
-+ */
-+int is_cpu_online(unsigned int cpu)
-+{
-+	char sysfs_cpu[255];
-+	char buf[255];
-+	struct stat statbuf;
-+	size_t len;
-+	int fd;
-+
-+	snprintf(sysfs_cpu, sizeof(sysfs_cpu), SYSFS "cpu%u", cpu);
-+
-+	if (stat(sysfs_cpu, &statbuf) != 0)
-+		return 0;
-+
-+	/*
-+	 * Check if /sys/devices/system/cpu/cpux/online file
-+	 * exists. In kernels without CONFIG_HOTPLUG_CPU, this
-+	 * file won't exist.
-+	 */
-+	snprintf(sysfs_cpu, sizeof(sysfs_cpu), SYSFS "cpu%u/online", cpu);
-+	if (stat(sysfs_cpu, &statbuf) != 0)
-+		return 1;
-+
-+	fd = open(sysfs_cpu, O_RDONLY);
-+	if (fd == -1)
-+		return -1;
-+
-+	len = read(fd, buf, sizeof(buf) - 1);
-+	buf[len] = '\0';
-+	close(fd);
-+
-+	return strtoul(buf, NULL, 16);
-+}
-+
- #ifdef HAVE_LIBBPF_SUPPORT
- static int write_bpf_prog_info(struct feat_fd *ff,
- 			       struct evlist *evlist __maybe_unused)
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index c9e3265832d9..0eb4bc29a5a4 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -158,6 +158,7 @@ int do_write(struct feat_fd *fd, const void *buf, size_t size);
- int write_padded(struct feat_fd *fd, const void *bf,
- 		 size_t count, size_t count_aligned);
- 
-+int is_cpu_online(unsigned int cpu);
- /*
-  * arch specific callback
-  */
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/cpumap.c              | 38 ++++++++++++++++++++++++++++
+>  tools/lib/perf/include/perf/cpumap.h |  2 ++
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index 384d5e076ee4..60cccd05f243 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -390,3 +390,41 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+>  	perf_cpu_map__put(orig);
+>  	return merged;
+>  }
+> +
+> +struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
+> +					     struct perf_cpu_map *other)
+> +{
+> +	struct perf_cpu *tmp_cpus;
+> +	int tmp_len;
+> +	int i, j, k;
+> +	struct perf_cpu_map *merged = NULL;
+> +
+> +	if (perf_cpu_map__is_subset(other, orig))
+> +		return orig;
+> +	if (perf_cpu_map__is_subset(orig, other)) {
+> +		perf_cpu_map__put(orig);
+> +		return perf_cpu_map__get(other);
+> +	}
+> +
+> +	tmp_len = max(orig->nr, other->nr);
+> +	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+> +	if (!tmp_cpus)
+> +		return NULL;
+> +
+> +	i = j = k = 0;
+> +	while (i < orig->nr && j < other->nr) {
+> +		if (orig->map[i].cpu < other->map[j].cpu)
+> +			i++;
+> +		else if (orig->map[i].cpu > other->map[j].cpu)
+> +			j++;
+> +		else {
+> +			j++;
+> +			tmp_cpus[k++] = orig->map[i++];
+> +		}
+> +	}
+> +	if (k)
+> +		merged = cpu_map__trim_new(k, tmp_cpus);
+> +	free(tmp_cpus);
+> +	perf_cpu_map__put(orig);
+> +	return merged;
+> +}
+> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+> index 4a2edbdb5e2b..a2a7216c0b78 100644
+> --- a/tools/lib/perf/include/perf/cpumap.h
+> +++ b/tools/lib/perf/include/perf/cpumap.h
+> @@ -19,6 +19,8 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
+>  LIBPERF_API struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+>  						     struct perf_cpu_map *other);
+> +LIBPERF_API struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
+> +							 struct perf_cpu_map *other);
+>  LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
+>  LIBPERF_API struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
+>  LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
+> -- 
+> 2.35.1.1021.g381101b075-goog
+
 -- 
-2.35.1
 
+- Arnaldo
