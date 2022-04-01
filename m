@@ -2,171 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01760C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Apr 2022 08:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C440DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Apr 2022 13:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244241AbiDAIji (ORCPT
+        id S238464AbiDANIv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Apr 2022 04:39:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47624 "EHLO
+        Fri, 1 Apr 2022 09:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230512AbiDAIjh (ORCPT
+        with ESMTP id S234848AbiDANIv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Apr 2022 04:39:37 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2995324D998;
-        Fri,  1 Apr 2022 01:37:49 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h23-20020a17090a051700b001c9c1dd3acbso1874666pjh.3;
-        Fri, 01 Apr 2022 01:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C2ZIrzrEu1TFpqYxyQ0dZlhf84IbrKS0ewf8L2avMJM=;
-        b=owpFPbxS5cv785WPDwMLC8/CIbDqRFmgDc7Nycduk/Hhf+Y6CNlqLQHYjRVL2kj6Ds
-         P5Uznb0su5/YA/8EUJ2M3PfA/gVWy5oVJkP2yPLCTPWYD/ekzHVHKAIcLkivK0tbYJcf
-         +lRRO8tCj59oIjO0Fh7CTU7BcAv0jf9bBqmuEOyJTkKktUau02pXSwjO1tLyH2vZCxWg
-         U2zMkKuWqz0T7L2g+bbbntOCxwZOtNsKz/EQZ22MtftPatXDUIgKNp8GNExBz8Aeo96N
-         G2RsvE4N9jaGjcmqEnnrFZ/QbdsrMVBzTCLM15K6kUT94i5ZPfUBgLiaeI8uuZOwuSys
-         4ZaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C2ZIrzrEu1TFpqYxyQ0dZlhf84IbrKS0ewf8L2avMJM=;
-        b=YuaaDK/9LsYf2RdhvgtyJ7rmO1lJnaC8eKhbSVkahovYJ8wS9vtPVm1zF+4KXBBK4a
-         NIjh3t6akK3t3+LeqE/t+WbBuyu+FhZ7bqg/FBm+Lqtk4oCOl2J5dYkflC5chSR18X+b
-         KT83wX+ue5CS1OYVyFoI7QZwzgXeNOdMrgSfxqb5e1bc//th2UigbyOMjIRDfSzdwJZt
-         AUBAdd6A081pOmJZM+5jZwLZOZlZNlfBSvmOP84wXntNeSu0iM1PLgRVzPofc7c7tCV6
-         8DsYaPhusTD+RN3GyFNoYhxGVRWmVnOLXGIMiRbynHkv9RY/eRyrtO0xh+xuHVQQxLHo
-         Tccw==
-X-Gm-Message-State: AOAM532+dsbbxq2GdRI0qV2vdTRTeFxcj66Z6B9w11pE3tzAL9Tuh472
-        GEWigOyjOgIU34NCCWhMl4Y=
-X-Google-Smtp-Source: ABdhPJyuhFzNZZCSVVgPjdDJbR2FwY3ZfDhx4tSj4Nw2TTWTyLJW/s5Wz4yBBRvvrPthA7l59gJF2w==
-X-Received: by 2002:a17:902:6b44:b0:154:4bee:c434 with SMTP id g4-20020a1709026b4400b001544beec434mr9208094plt.43.1648802268572;
-        Fri, 01 Apr 2022 01:37:48 -0700 (PDT)
-Received: from localhost.localdomain ([103.149.162.115])
-        by smtp.gmail.com with ESMTPSA id l13-20020a056a00140d00b004e13da93eaasm2109374pfu.62.2022.04.01.01.37.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Apr 2022 01:37:48 -0700 (PDT)
-From:   Dongli Si <kvmx86@gmail.com>
-X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
-To:     peterz@infradead.org, joro@8bytes.org
-Cc:     liam.merwick@oracle.com, kim.phillips@amd.com, mingo@kernel.org,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86/amd: Don't touch the Host-Only/Guest-Only bit inside the guest
-Date:   Fri,  1 Apr 2022 16:36:59 +0800
-Message-Id: <20220401083659.2529658-1-sidongli1997@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        Fri, 1 Apr 2022 09:08:51 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EF023F3AF;
+        Fri,  1 Apr 2022 06:07:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=FqhmqTHZDYbK7rpDGzSEd7NaJE8qX/JOo+U6Wj3cPhc=; b=gD572FGLXukdLX5wsjLhBZQums
+        Vw2yIq5PeFtNs1Hf+w/pD1sYSLHK+IblSr01S9sgPzsDkDjnsOurqk9RxcIlRGgjpldqZfCbQrU6Q
+        LAa9ZOZD1uVz+kXVZ9x7/7VeSsCMuPyJkKRXjWlMzjcpBvk0jLvh98AZXS/2qT+bRxfRAnwKA2Psf
+        IMUsNk3JJVnd4E40psnXy0slMwvQ58HzZvGLbq/rX+TdTR5GJ1kSzHkf7M5aR5dCxQaJrMymcaMs9
+        fobwYvP6a02sRMluxfq1bL00bcCmrNW4nDBT1ZCtXbTs7OnILES+V92gkNN3BoNKPyxS8iR2gKoNS
+        BnopFHOg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1naGz1-003D4E-12; Fri, 01 Apr 2022 13:06:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3041C30027B;
+        Fri,  1 Apr 2022 15:06:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E49DA2008B7BF; Fri,  1 Apr 2022 15:06:27 +0200 (CEST)
+Date:   Fri, 1 Apr 2022 15:06:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dongli Si <kvmx86@gmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, jolsa@kernel.org,
+        joro@8bytes.org, kim.phillips@amd.com, liam.merwick@oracle.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@kernel.org, namhyung@kernel.org,
+        tglx@linutronix.de, x86@kernel.org
+Subject: Re: [PATCH v4] perf/x86/amd: Don't touch the Host-only bit inside
+ the guest hypervisor
+Message-ID: <Ykb400opkmZFsnVN@hirez.programming.kicks-ass.net>
+References: <20220328140358.GF8939@worktop.programming.kicks-ass.net>
+ <20220401082911.2527878-1-sidongli1997@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220401082911.2527878-1-sidongli1997@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Dongli Si <sidongli1997@gmail.com>
+On Fri, Apr 01, 2022 at 04:29:11PM +0800, Dongli Si wrote:
+> On 28/03/2022 14:03, Peter Zijlstra wrote:
+> > Better I suppose, but I think the comments can be improved by covering
+> > the 'why' of things. We can all read the code to see the what of it.
+> 
+> I will add comments to the code to explain 'why'.
+> 
+> > Anyway, doesn't this also affect behaviour? I'm guessing this HO bit is
+> > only set by perf-record for events it wants to record on the host. But
+> > by not setting it, we'll also record the activity of the guest.
+> 
+> I think the HO/GO bit can only be set on the host, and should only be set
+> if SVM is enabled.
+> 
+> When the SVM is disabled, set the HO/GO bit will cause the performance
+> counters to not work.
+> 
+> Set the HO/GO bit inside the guest will cause the guest emitted
+> "unchecked MSR access error" warning, can be triggered by running
+> "perf stat -e instructions:G ls" in the guest, because this will set
+> the GO bit in the guest, and perf_ctr_virt_mask just mask the HO bit.
+> 
+> My patch does not affect the host, it just fixes the bug in the guest.
+> 
+> > So suppose we create a CPU wide HO event, then it will only count L0
+> > activity, right? Any L1 (or higher) activite will be invisible.
+> 
+> I don't quite understand your question.
+> 
+> > But with this change on, the L1 HV doesn't provide these same semantics,
+> > it's guest will be included in that host counter.
+> 
+> I don't think applying this patch will cause L2 guests to be included in
+> the host counter.
+> 
+> > Or is there additional counter {dis,en}abling on virt enter,exit (resp.)
+> > to achieve these semantics?
+> 
+> I don't think there is such a counter.
 
-With nested virtualization on AMD Milan:
-
-If "perf record" is run in an L1 hypervisor with an L2 guest,
-the following warning is emitted in the L1 guest.
-
-[] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write 0x0000020000510076)
-at rIP: 0xffffffff81003a50 (x86_pmu_enable_all+0x60/0x100)
-[] Call Trace:
-[]  <IRQ>
-[]  ? x86_pmu_enable+0x146/0x300
-[]  __perf_install_in_context+0x150/0x170
-
-and
-
-If "perf record" is run in an L2 guest,
-the following warning is emitted in the L1 guest.
-
-[] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write 0x0000010000510076)
-at rIP: 0xffffffff81003a50 (x86_pmu_enable_all+0x60/0x100)
-[] Call Trace:
-[]  <TASK>
-[]  ? x86_pmu_enable+0x146/0x300
-[]  __perf_install_in_context+0x150/0x170
-
-The AMD64_EVENTSEL_HOSTONLY/AMD64_EVENTSEL_GUESTONLY bit is defined and
-used on the host (L0), while the L1 hypervisor Performance Monitor Unit
-should avoid such use.
-
-Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
-Signed-off-by: Dongli Si <sidongli1997@gmail.com>
----
- arch/x86/events/amd/core.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 9687a8aef01c..79bd60d6b0fd 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -8,6 +8,7 @@
- #include <linux/jiffies.h>
- #include <asm/apicdef.h>
- #include <asm/nmi.h>
-+#include <asm/hypervisor.h>
- 
- #include "../perf_event.h"
- 
-@@ -533,7 +534,15 @@ static void amd_pmu_cpu_starting(int cpu)
- 	struct amd_nb *nb;
- 	int i, nb_id;
- 
--	cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
-+	/*
-+	 * The Host-Only/Guest-Only bit can only be set on the host.
-+	 * When SVM is disabled, set the Host-Only bit will cause the
-+	 * performance counter to not work.
-+	 */
-+	if (hypervisor_is_type(X86_HYPER_NATIVE))
-+		cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
-+	else
-+		cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_GUESTONLY | AMD64_EVENTSEL_HOSTONLY;
- 
- 	if (!x86_pmu.amd_nb_constraints)
- 		return;
-@@ -1023,10 +1032,16 @@ __init int amd_pmu_init(void)
- 	return 0;
- }
- 
-+/*
-+ * Unmask the Host-only bit when virtualization is enabled on the Host Hypervisor
-+ */
- void amd_pmu_enable_virt(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
-+	if (!hypervisor_is_type(X86_HYPER_NATIVE))
-+		return;
-+
- 	cpuc->perf_ctr_virt_mask = 0;
- 
- 	/* Reload all events */
-@@ -1035,10 +1050,16 @@ void amd_pmu_enable_virt(void)
- }
- EXPORT_SYMBOL_GPL(amd_pmu_enable_virt);
- 
-+/*
-+ * Mask the Host-only bit when virtualization is disabled on the Host Hypervisor
-+ */
- void amd_pmu_disable_virt(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
-+	if (!hypervisor_is_type(X86_HYPER_NATIVE))
-+		return;
-+
- 	/*
- 	 * We only mask out the Host-only bit so that host-only counting works
- 	 * when SVM is disabled. If someone sets up a guest-only counter when
--- 
-2.32.0
-
+If SVM enter/exit don't twiddle with counter EN bits, how is all this
+supposed to work consistently then?
