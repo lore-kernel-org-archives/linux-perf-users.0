@@ -2,130 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9F7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 31 Mar 2022 18:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814CFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Apr 2022 05:47:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234237AbiCaS0R (ORCPT
+        id S242714AbiDAFt0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 31 Mar 2022 14:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46916 "EHLO
+        Fri, 1 Apr 2022 01:49:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234292AbiCaSZy (ORCPT
+        with ESMTP id S233956AbiDAFtZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 31 Mar 2022 14:25:54 -0400
-Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB6109FCF;
-        Thu, 31 Mar 2022 11:24:06 -0700 (PDT)
-Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-df22f50e0cso169322fac.3;
-        Thu, 31 Mar 2022 11:24:06 -0700 (PDT)
+        Fri, 1 Apr 2022 01:49:25 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E26247C2D
+        for <linux-perf-users@vger.kernel.org>; Thu, 31 Mar 2022 22:47:36 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id y10so1677154edv.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 31 Mar 2022 22:47:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=yesPU3SDbBcDd4ReUs2XnnvnmEg173VZaD473ojDehs=;
-        b=J0J4NOhkg5bdBbJzCSkDU3m/kcPRAx/ko4v97JVuN4KBTzB/lk09drXtP1I/evhksb
-         xsV2nY9EAeb8Ck2LhWxR8B8WthLKZpw17/jwnhgvyz7909q7HG5E3603VxBoZfeKk/Ce
-         HuYrn19XwIBo56eNMiglhWbZrLs4+e4Eu3If6wNWMyCg9NksCFQAIxhqccxLIA4RK3zX
-         Kp/d13W+xfe21KjuwkZo+gi332ipskuoFBU7Ap4tQYrK2mq4KnPu90aLe4+MnQbUCd3u
-         MbntmJtzDx4RVPVHITbwv8RgUWaYpqbz8uBzsUXV6CjMIK1cl5eV/WlmqS7ZEXIY8EU3
-         1i2A==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w92NLA3TMQsYKuR9CXX+L2Tvsy/pumxbCD/vKiNzt/8=;
+        b=RrGd6fDL+BlZgiJiYDlk1afYMuo/wxX5kFOVTYynem0oxFMrwjZb3hB7Bju7pz0WJ5
+         CqSl/I+qy0nKeqMCA+hHT115kgVy6EaTH1nxCOluYxe1hWv67AuVlYeTVsp1sMM3VP9z
+         tscXTUtG3PR+1Ts022kRGQCECRCRU8bq2GazE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=yesPU3SDbBcDd4ReUs2XnnvnmEg173VZaD473ojDehs=;
-        b=Oq0r8oL8PjywRqG4cZ1YsVVgaDgCFn+HwuZ70WG0GB0Qu59+s7zToDotRropzYlMSI
-         V2aYuFtUu+SCGmjLJX7voWuMCI0ykuPFrjXxEmbAv8BcCZ4FpHCrea6lBh6dlUuhbLpl
-         A68B2/bFMdIXK6MUCPfnR1JE20RBAJ5jo3vGH/0Fq+62NgbeytIPHhG3sRQuW6MdrVT1
-         eI9ZAiHizToFc7cwKw6fyCdI5igUMFgxSXnn26q9ZNSivf5FIYqGw8QAg9RsHbyDTsJo
-         ggnDBFlGfm4oDSTBszgsxpJCLorZk7JJmv/Lk4GERDIZ///fPXDiWmJ6NdJyzeext+qS
-         iW9w==
-X-Gm-Message-State: AOAM530cz9KRWDqTgbpAUy2SInw1XbDg1iiacKzCNBRSQh2AvTWlfMNE
-        UVZKD7EqRUcKoqN2K9BGaKoe1yM6nuA=
-X-Google-Smtp-Source: ABdhPJyyuVXBByD2St086u49lFqjEA8VvNAkZU4nudV0TshbJkvbacrg8Xqt6md4gM11vi23Y4VtfQ==
-X-Received: by 2002:a05:6871:728:b0:dd:c167:4393 with SMTP id f40-20020a056871072800b000ddc1674393mr3314045oap.108.1648751045900;
-        Thu, 31 Mar 2022 11:24:05 -0700 (PDT)
-Received: from [127.0.0.1] (187-24-193-62.3g.claro.net.br. [187.24.193.62])
-        by smtp.gmail.com with ESMTPSA id fl12-20020a056870494c00b000ddd5a37614sm61964oab.8.2022.03.31.11.24.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Mar 2022 11:24:05 -0700 (PDT)
-Date:   Thu, 31 Mar 2022 15:23:01 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Andres Freund <andres@anarazel.de>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>, mptcp@lists.linux.dev,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH perf] perf tools: .git/ORIG_HEAD might not exist
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20220331173344.xvhp4yi67fv6p6t5@alap3.anarazel.de>
-References: <20220329093120.4173283-1-matthieu.baerts@tessares.net> <20220331173344.xvhp4yi67fv6p6t5@alap3.anarazel.de>
-Message-ID: <5B37F7F6-CDFD-49B9-9BF6-CEA726E5F0CF@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w92NLA3TMQsYKuR9CXX+L2Tvsy/pumxbCD/vKiNzt/8=;
+        b=Yqjo3jqrJLJ2KFtOHjODVSdLfw0JjV6eR4HRkuPUd+CXmEPiXYzPKWKJd7Y4IutIZ0
+         IBxguMT1orX9hA3bUAe7ltwiCli5PE4JsrQ+yre4sew7adCsyGeGQJo6bxGVD/6arVak
+         sJ8WKkSpp4plUIuTUnKP6JS3rESPUduTNQpVhUnvlw8t6p18rIFIH2DghzEO7j16unpg
+         N33HNG/Vqdzu7UBBAGYpaqZowbADShAWY9HJTyKAaiVdsOtlNXSS6C4XS2bbOF2t61ds
+         GSaLqOAJanIzVQ8VoG4+ghtzKZk43Tdd/D+yU37DZ2slhMLF1oTbuGli0mbrgbUbvtk7
+         ENCA==
+X-Gm-Message-State: AOAM530prJpIkDDoAGhgrABlz5Nu5skTvlsFSqEBb6yAOr9Ffe12Ymb2
+        kRahH5facUB7byWAuGzzB76IKnwGZ4MdX0+I8g+kTQ==
+X-Google-Smtp-Source: ABdhPJyfuPxec2DZyNCbiEggRHvedTz2z7UWAXESzkgSyo7XF/dLiybkn0eMtMv3PKBjeTtUuvcfQlIL8phX0K382lo=
+X-Received: by 2002:a05:6402:350b:b0:419:1c11:23ed with SMTP id
+ b11-20020a056402350b00b004191c1123edmr19717204edd.8.1648792055453; Thu, 31
+ Mar 2022 22:47:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20220330031130.2152327-1-denik@chromium.org> <77fa14e8-6630-c0e9-21fc-2603f7383f5f@arm.com>
+In-Reply-To: <77fa14e8-6630-c0e9-21fc-2603f7383f5f@arm.com>
+From:   Denis Nikitin <denik@chromium.org>
+Date:   Thu, 31 Mar 2022 22:47:24 -0700
+Message-ID: <CADDJ8CVjOe4E-2uAP=vXdSFrn3+8cj4s6yDO-qqS2S0E55kjJw@mail.gmail.com>
+Subject: Re: [PATCH] perf session: Remap buf if there is no space for event
+To:     James Clark <james.clark@arm.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        jolsa@kernel.org, alexey.budankov@linux.intel.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi James,
 
+Thanks for your review.
 
-On March 31, 2022 2:33:44 PM GMT-03:00, Andres Freund <andres@anarazel=2Ed=
-e> wrote:
->Hi,
+On Thu, Mar 31, 2022 at 7:20 AM James Clark <james.clark@arm.com> wrote:
 >
->On 2022-03-29 11:31:20 +0200, Matthieu Baerts wrote:
->> It seems it cannot be assumed =2Egit/ORIG_HEAD exists if =2Egit/HEAD is
->> there=2E
->>=20
->> Indeed, recently our public CI reported[1] the following error when
->> compiling Perf tool:
->>=20
->>   $ cd tools/perf
->>   $ make -j4 -l4 O=3D/tmp/(=2E=2E=2E)/perf DESTDIR=3D/usr install
->>   (=2E=2E=2E)
->>   make[2]: *** No rule to make target '=2E=2E/=2E=2E/=2Egit/ORIG_HEAD',=
- needed by '/tmp/(=2E=2E=2E)/perf/PERF-VERSION-FILE'=2E
->>=20
->> This is because apparently[2] Cirrus Ci uses a Git client implemented
->> purely in Go[3] to perform a clone=2E Most likely, this tool doesn't
->> create any =2Egit/ORIG_HEAD file but =2Egit/HEAD is there=2E The error =
-can
->> indeed be reproduced by renaming this =2Egit/ORIG_HEAD file while keepi=
-ng
->> =2Egit/HEAD=2E In other words, it means it is not enough to check the
->> presence of =2Egit/HEAD to assume =2Egit/ORIG_HEAD exists as well=2E
 >
->FWIW, It's not just custom git implementations, stock git doesn't ensure =
-it's
->there either=2E I build a nightly VM image with Linus' kernel for postgre=
-s
->testing, and as part of that I do a minimal clone:
->  git clone --single-branch --depth 1 git://git=2Ekernel=2Eorg/pub/scm/li=
-nux/kernel/git/torvalds/linux=2Egit /usr/src/linux
->and then build the kernel=2E The build recently started failing like this=
-:
->https://cirrus-ci=2Ecom/task/4648999113195520?logs=3Dbuild_image#L3121
 >
->It's not a question of "--single-branch --depth 1" - ORIG_HEAD just isn't
->there in a new clone=2E Which makes sense, because there's no previous va=
-lue for
->HEAD=2E
+> On 30/03/2022 04:11, Denis Nikitin wrote:
+> > If a perf event doesn't fit into remaining buffer space return NULL to
+> > remap buf and fetch the event again.
+> > Keep the logic to error out on inadequate input from fuzzing.
+> >
+> > This fixes perf failing on ChromeOS (with 32b userspace):
+> >
+> >   $ perf report -v -i perf.data
+> >   ...
+> >   prefetch_event: head=0x1fffff8 event->header_size=0x30, mmap_size=0x2000000: fuzzed or compressed perf.data?
+> >   Error:
+> >   failed to process sample
+> >
+> > Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid header.size")
+> > Signed-off-by: Denis Nikitin <denik@chromium.org>
+>
+> Hi Denis,
+>
+> I tested this and it does fix the issue with a 32bit build. One concern is that the calculation to
+> see if it will fit in the next map is dependent on the implementation of reader__mmap(). I think it
+> would be possible for that to change slightly and then you could still get an infinite loop.
+>
+> But I can't really see a better way to do it, and it's unlikely for reader__mmap() to be modified
+> to map data in a way to waste part of the buffer so it's probably fine.
+>
+> Maybe you could extract a function to calculate where the new offset would be in the buffer and share
+> it between here and reader__mmap(). That would also make it more obvious what the 'head % page_size'
+> bit is for.
 
-I merged the patch that stops looking for =2Egit files, as soon as I fix a=
- libperl feature test with CC=3Dclang I'll send a pull req to Linus to get =
-rid of this =2Egit perf --version related regression=2E
+Good point. I will send a separate patch to handle this.
 
-- Arnaldo
+Thanks,
+Denis
+
 >
->Greetings,
+> Either way:
 >
->Andres Freund
+> Reviewed-by: James Clark <james.clark@arm.com>
+>
