@@ -2,108 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814CFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Apr 2022 05:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA293C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Apr 2022 08:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242714AbiDAFt0 (ORCPT
+        id S236682AbiDAIbm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Apr 2022 01:49:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38486 "EHLO
+        Fri, 1 Apr 2022 04:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233956AbiDAFtZ (ORCPT
+        with ESMTP id S230152AbiDAIbk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Apr 2022 01:49:25 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E26247C2D
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Mar 2022 22:47:36 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id y10so1677154edv.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Mar 2022 22:47:36 -0700 (PDT)
+        Fri, 1 Apr 2022 04:31:40 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EF950065;
+        Fri,  1 Apr 2022 01:29:51 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id w8so1862963pll.10;
+        Fri, 01 Apr 2022 01:29:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w92NLA3TMQsYKuR9CXX+L2Tvsy/pumxbCD/vKiNzt/8=;
-        b=RrGd6fDL+BlZgiJiYDlk1afYMuo/wxX5kFOVTYynem0oxFMrwjZb3hB7Bju7pz0WJ5
-         CqSl/I+qy0nKeqMCA+hHT115kgVy6EaTH1nxCOluYxe1hWv67AuVlYeTVsp1sMM3VP9z
-         tscXTUtG3PR+1Ts022kRGQCECRCRU8bq2GazE=
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qWznsXprF/OnvSyk1yhTzagarC839b5Xx3swcVECpVU=;
+        b=fwWpqRWYWLwLpj6BMB9fUCU5TvaDmvE4G0DJ++JX6xjrYi0gu8B5JDw0KmqipSp4pY
+         3nyw7Wfv1ZEOZv1eB851TbNJYJOrGQtAAS99zcKF5MmcC35vc4LvVdTMsz8LjQ907cYg
+         1V1JKqMR5+EE4rbf9qi+SRp7LQhoUkvGSGZwFwMJLvKXb5usK/txKokjM+L8Xz5SgI21
+         WD1Qjy6ImjV/rODg416U1IINRanR6xt9uvtxoWV9yJQmBqwerbG1vlzD5ykgCcQUmyFQ
+         zhK23r+yah0sV+HHULj+MDxA5XNIqJNweLdvTHQljAX0JCGpG7/LagMtI4B9Iic/VpBO
+         fHQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w92NLA3TMQsYKuR9CXX+L2Tvsy/pumxbCD/vKiNzt/8=;
-        b=Yqjo3jqrJLJ2KFtOHjODVSdLfw0JjV6eR4HRkuPUd+CXmEPiXYzPKWKJd7Y4IutIZ0
-         IBxguMT1orX9hA3bUAe7ltwiCli5PE4JsrQ+yre4sew7adCsyGeGQJo6bxGVD/6arVak
-         sJ8WKkSpp4plUIuTUnKP6JS3rESPUduTNQpVhUnvlw8t6p18rIFIH2DghzEO7j16unpg
-         N33HNG/Vqdzu7UBBAGYpaqZowbADShAWY9HJTyKAaiVdsOtlNXSS6C4XS2bbOF2t61ds
-         GSaLqOAJanIzVQ8VoG4+ghtzKZk43Tdd/D+yU37DZ2slhMLF1oTbuGli0mbrgbUbvtk7
-         ENCA==
-X-Gm-Message-State: AOAM530prJpIkDDoAGhgrABlz5Nu5skTvlsFSqEBb6yAOr9Ffe12Ymb2
-        kRahH5facUB7byWAuGzzB76IKnwGZ4MdX0+I8g+kTQ==
-X-Google-Smtp-Source: ABdhPJyfuPxec2DZyNCbiEggRHvedTz2z7UWAXESzkgSyo7XF/dLiybkn0eMtMv3PKBjeTtUuvcfQlIL8phX0K382lo=
-X-Received: by 2002:a05:6402:350b:b0:419:1c11:23ed with SMTP id
- b11-20020a056402350b00b004191c1123edmr19717204edd.8.1648792055453; Thu, 31
- Mar 2022 22:47:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qWznsXprF/OnvSyk1yhTzagarC839b5Xx3swcVECpVU=;
+        b=kqq11UdZm+u7AmP5rLfxse1+41NALGaWcj4KAofQ6S6yR5rLU+myu39CORFfkeCCaI
+         h3rkt74MG1Gats6aiWrcscAGx49JBswDaiwYio59Pqnro5pm0acvMSh0QFExjZuwQz4u
+         JXCBjgeoDVCZHJCDLrVfwOt1blskjmmYKQNkeZLR3WK9qtRfmqmo1eHxmzcWEi/AGPhB
+         TDRoxEDkqv462zQEW3yNWJkjADkoCevevqowL1Kp8UsP8VDCD7zvjVoFVa+gOFvSaDuj
+         +MIkI5tD9kxJj53aQ1PY0AuXm+yrkw1VC2D6Oss3iBMnzOY9y1VPdRuA6jTiqw/MuYDp
+         XPGg==
+X-Gm-Message-State: AOAM5300xt6hbkvfa7o3ts4ABehGec4d2ZZUZ+ogQNC5iJP1doQ0QX03
+        KFAsJmVpaI9YmyAMhbwxpwg=
+X-Google-Smtp-Source: ABdhPJyhlxVVBVlxI7UMs0Zly2MStHA2jWmvRYRSZ8uosfIhLVSm6mn3gkw0c0lj6u5v4/TLJOLDPQ==
+X-Received: by 2002:a17:902:d3d3:b0:154:8f89:7815 with SMTP id w19-20020a170902d3d300b001548f897815mr9043312plb.122.1648801790966;
+        Fri, 01 Apr 2022 01:29:50 -0700 (PDT)
+Received: from localhost.localdomain ([103.149.162.115])
+        by smtp.gmail.com with ESMTPSA id p10-20020a056a0026ca00b004fb266fb186sm2118108pfw.73.2022.04.01.01.29.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Apr 2022 01:29:50 -0700 (PDT)
+From:   Dongli Si <kvmx86@gmail.com>
+X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
+To:     peterz@infradead.org
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, jolsa@kernel.org,
+        joro@8bytes.org, kim.phillips@amd.com, kvmx86@gmail.com,
+        liam.merwick@oracle.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        x86@kernel.org
+Subject: Re: [PATCH v4] perf/x86/amd: Don't touch the Host-only bit inside the guest hypervisor
+Date:   Fri,  1 Apr 2022 16:29:11 +0800
+Message-Id: <20220401082911.2527878-1-sidongli1997@gmail.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220328140358.GF8939@worktop.programming.kicks-ass.net>
+References: <20220328140358.GF8939@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20220330031130.2152327-1-denik@chromium.org> <77fa14e8-6630-c0e9-21fc-2603f7383f5f@arm.com>
-In-Reply-To: <77fa14e8-6630-c0e9-21fc-2603f7383f5f@arm.com>
-From:   Denis Nikitin <denik@chromium.org>
-Date:   Thu, 31 Mar 2022 22:47:24 -0700
-Message-ID: <CADDJ8CVjOe4E-2uAP=vXdSFrn3+8cj4s6yDO-qqS2S0E55kjJw@mail.gmail.com>
-Subject: Re: [PATCH] perf session: Remap buf if there is no space for event
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
-        jolsa@kernel.org, alexey.budankov@linux.intel.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+On 28/03/2022 14:03, Peter Zijlstra wrote:
+> Better I suppose, but I think the comments can be improved by covering
+> the 'why' of things. We can all read the code to see the what of it.
 
-Thanks for your review.
+I will add comments to the code to explain 'why'.
 
-On Thu, Mar 31, 2022 at 7:20 AM James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 30/03/2022 04:11, Denis Nikitin wrote:
-> > If a perf event doesn't fit into remaining buffer space return NULL to
-> > remap buf and fetch the event again.
-> > Keep the logic to error out on inadequate input from fuzzing.
-> >
-> > This fixes perf failing on ChromeOS (with 32b userspace):
-> >
-> >   $ perf report -v -i perf.data
-> >   ...
-> >   prefetch_event: head=0x1fffff8 event->header_size=0x30, mmap_size=0x2000000: fuzzed or compressed perf.data?
-> >   Error:
-> >   failed to process sample
-> >
-> > Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid header.size")
-> > Signed-off-by: Denis Nikitin <denik@chromium.org>
->
-> Hi Denis,
->
-> I tested this and it does fix the issue with a 32bit build. One concern is that the calculation to
-> see if it will fit in the next map is dependent on the implementation of reader__mmap(). I think it
-> would be possible for that to change slightly and then you could still get an infinite loop.
->
-> But I can't really see a better way to do it, and it's unlikely for reader__mmap() to be modified
-> to map data in a way to waste part of the buffer so it's probably fine.
->
-> Maybe you could extract a function to calculate where the new offset would be in the buffer and share
-> it between here and reader__mmap(). That would also make it more obvious what the 'head % page_size'
-> bit is for.
+> Anyway, doesn't this also affect behaviour? I'm guessing this HO bit is
+> only set by perf-record for events it wants to record on the host. But
+> by not setting it, we'll also record the activity of the guest.
 
-Good point. I will send a separate patch to handle this.
+I think the HO/GO bit can only be set on the host, and should only be set
+if SVM is enabled.
 
-Thanks,
-Denis
+When the SVM is disabled, set the HO/GO bit will cause the performance
+counters to not work.
 
->
-> Either way:
->
-> Reviewed-by: James Clark <james.clark@arm.com>
->
+Set the HO/GO bit inside the guest will cause the guest emitted
+"unchecked MSR access error" warning, can be triggered by running
+"perf stat -e instructions:G ls" in the guest, because this will set
+the GO bit in the guest, and perf_ctr_virt_mask just mask the HO bit.
+
+My patch does not affect the host, it just fixes the bug in the guest.
+
+> So suppose we create a CPU wide HO event, then it will only count L0
+> activity, right? Any L1 (or higher) activite will be invisible.
+
+I don't quite understand your question.
+
+> But with this change on, the L1 HV doesn't provide these same semantics,
+> it's guest will be included in that host counter.
+
+I don't think applying this patch will cause L2 guests to be included in
+the host counter.
+
+> Or is there additional counter {dis,en}abling on virt enter,exit (resp.)
+> to achieve these semantics?
+
+I don't think there is such a counter.
+
+Also, I found that the L1 HV will emitted "unchecked MSR access error"
+warning when "perf record" is executed on L2,
+because the GO bit of L1 HV is set.
+
+I wrote a new patch to mask the HO/GO bit in the guest, I will send it later.
+
+Regards,
+Dongli
+
