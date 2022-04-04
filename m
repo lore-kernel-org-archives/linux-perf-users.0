@@ -2,171 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95CFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun,  3 Apr 2022 20:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A52C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Apr 2022 04:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236465AbiDCUfg (ORCPT
+        id S1377122AbiDDEoC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 3 Apr 2022 16:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56408 "EHLO
+        Mon, 4 Apr 2022 00:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235169AbiDCUfg (ORCPT
+        with ESMTP id S233038AbiDDEoB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 3 Apr 2022 16:35:36 -0400
-Received: from smtp-fw-9103.amazon.com (smtp-fw-9103.amazon.com [207.171.188.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D213BE04;
-        Sun,  3 Apr 2022 13:33:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1649018021; x=1680554021;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yry5sisjHSjsPl/LZLim4oE1RCo3IseEsv7pRzQuJcM=;
-  b=MtE+KqcODv2hDnvsy2caboegfQ3jUF7LCW43ZPjvUAZOiE5Jlor8Zq+f
-   TM7HfUUG/Cba1tpiJALLn6dmFib8Rz6DpTMK8Q03Vd7NwHT6wjprdDdoZ
-   G/TYST3+6uvSFv/e3rG9YI+UEcAMk7agcxtBIG1fC3v/rzKAM2zW/Ltqj
-   k=;
-X-IronPort-AV: E=Sophos;i="5.90,231,1643673600"; 
-   d="scan'208";a="1004483214"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2c-72dc3927.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 03 Apr 2022 20:33:40 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2c-72dc3927.us-west-2.amazon.com (Postfix) with ESMTPS id 42E444163F;
-        Sun,  3 Apr 2022 20:33:40 +0000 (UTC)
-Received: from EX13D02UWB004.ant.amazon.com (10.43.161.11) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Sun, 3 Apr 2022 20:33:39 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
- EX13D02UWB004.ant.amazon.com (10.43.161.11) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Sun, 3 Apr 2022 20:33:39 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
- Server id 15.0.1497.32 via Frontend Transport; Sun, 3 Apr 2022 20:33:38 +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 038A81760; Sun,  3 Apr 2022 20:33:38 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <leo.yan@linaro.org>
-CC:     <Nick.Forrington@arm.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <alisaidi@amazon.com>,
-        <andrew.kilroy@arm.com>, <benh@kernel.crashing.org>,
-        <german.gomez@arm.com>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
-        <lihuafei1@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>
-Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse cores
-Date:   Sun, 3 Apr 2022 20:33:37 +0000
-Message-ID: <20220403203337.18927-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220331124425.GB1704284@leoy-ThinkPad-X240s>
-References: <20220331124425.GB1704284@leoy-ThinkPad-X240s>
+        Mon, 4 Apr 2022 00:44:01 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 154F2329AA;
+        Sun,  3 Apr 2022 21:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649047326; x=1680583326;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2SWGyekWbm1WpT9pdBiZkc9bxDcv2hhKwhV12QIkak0=;
+  b=FfCePAS4GgE19J8eXjNppsRlQOfW75Vm1rabb6gaRzrkY5vk0tJTXwrY
+   8jLsfzN7BQ1/RX4NA+2q5SWHCCSqwlsf/NSd0ei0IxkfjJM0YHTsq6gY6
+   jJaU15s2g7f1wMDbhbCYFj2Y5urL57vHCDoRXmHv0lrxK6P6E26P+UV7a
+   Bx5XvSWiERJMZsjlOI0FWvv86zVM2dqPYlKL7tDdB3pgLgeeUzxqaUm6Z
+   wjvxs+prBcAIYMkI6NFOmmPObEGntn3o9deimyejnG1v1qXtHxmKw2B5S
+   7XOphqTRgMP9ua37JKHbfdVtNWotz6hlCur1T9jDXhVcHihe9JqhR2jhb
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10306"; a="258018007"
+X-IronPort-AV: E=Sophos;i="5.90,233,1643702400"; 
+   d="scan'208";a="258018007"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2022 21:42:05 -0700
+X-IronPort-AV: E=Sophos;i="5.90,233,1643702400"; 
+   d="scan'208";a="569228322"
+Received: from ysandami-mobl2.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.39.83])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2022 21:42:01 -0700
+Message-ID: <9914dba4-7ff0-b6a3-cf6e-bdc426bc594c@intel.com>
+Date:   Mon, 4 Apr 2022 07:41:59 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.7.0
+Subject: Re: [PATCH] perf test tsc: Fix error message report when not
+ supported.
+Content-Language: en-US
+To:     Chengdong Li <brytonlee01@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org
+Cc:     ak@linux.intel.com, likexu@tencent.com, chengdongli@tencent.com
+References: <20220402114218.14131-1-chengdongli@tencent.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220402114218.14131-1-chengdongli@tencent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On Thu, 31 Mar 2022 12:44:3 +0000, Leo Yan wrote:
+On 02/04/2022 14.42, Chengdong Li wrote:
+> By default `perf test tsc` does not return the error message
+> when child process detected kernel does not support. Instead, child
+> process print error message to stderr, unfortunately the stderr is
+> redirected to /dev/null when verbose <= 0.
+> This patch add a helper function test__perf_test_tsc_skip_reason() to
+> help parent process to get the appropriate error message and force child
+> process returns TEST_SKIP instead of TEST_OK.
 > 
-> On Thu, Mar 31, 2022 at 01:28:58PM +0100, German Gomez wrote:
-> > Hi all,
-> > 
-> > It seems I gave the Review tags a bit too early this time. Apologies for
-> > the inconvenience. Indeed there was more interesting discussions to be
-> > had :)
-> > 
-> > (Probably best to remove by tags for the next re-spin)
+> Signed-off-by: Chengdong Li <chengdongli@tencent.com>
+> ---
+>  tools/perf/tests/builtin-test.c     |  3 +++
+>  tools/perf/tests/perf-time-to-tsc.c | 17 +++++++++++------
+>  tools/perf/tests/tests.h            |  1 +
+>  3 files changed, 15 insertions(+), 6 deletions(-)
 > 
-> Now worries, German.  Your review and testing are very helpful :)
-> 
-> > On 29/03/2022 15:32, Ali Saidi wrote:
-> > > [...]
-> > >
-> > >> I still think we should consider to extend the memory levels to
-> > >> demonstrate clear momory hierarchy on Arm archs, I personally like the
-> > >> definitions for "PEER_CORE", "LCL_CLSTR", "PEER_CLSTR" and "SYS_CACHE",
-> > >> though these cache levels are not precise like L1/L2/L3 levels, they can
-> > >> help us to map very well for the cache topology on Arm archs and without
-> > >> any confusion.  We could take this as an enhancement if you don't want
-> > >> to bother the current patch set's upstreaming.
-> > > I'd like to do this in a separate patch, but I have one other proposal. The
-> > > Neoverse cores L2 is strictly inclusive of the L1, so even if it's in the L1,
-> > > it's also in the L2. Given that the Graviton systems and afaik the Ampere
-> > > systems don't have any cache between the L2 and the SLC, thus anything from
-> > > PEER_CORE, LCL_CLSTR, or PEER_CLSTR would hit in the L2, perhaps we
-> > > should just set L2 for these cases? German, are you good with this for now? 
-> > 
-> > Sorry for the delay. I'd like to also check this with someone. I'll try
-> > to get back asap. In the meantime, if this approach is also OK with Leo,
-> > I think it would be fine by me.
-> 
-> Thanks for the checking internally.  Let me just bring up my another
-> thinking (sorry that my suggestion is float): another choice is we set
-> ANY_CACHE as cache level if we are not certain the cache level, and
-> extend snoop field to indicate the snooping logics, like:
-> 
->   PERF_MEM_SNOOP_PEER_CORE
->   PERF_MEM_SNOOP_LCL_CLSTR
->   PERF_MEM_SNOOP_PEER_CLSTR
-> 
-> Seems to me, we doing this is not only for cache level, it's more
-> important for users to know the variant cost for involving different
-> snooping logics.
 
-I think we've come full circle :). Going back to what do we want to indicate to
-a user about the source of the cache line, I believe there are three things with
-an eye toward helping a user of the data improve the performance of their
-application:
+Please base on current source, for example perf/core branch of:
 
-1. The level below them in the hierarchy it it (L1, L2, LLC, local DRAM).
-Depending on the level this directly indicates the expense of the operation. 
-
-2. If it came from a peer of theirs on the same socket. I'm really of the
-opinion still that exactly which peer, doesn't matter much as it's a 2nd or 3rd
-order concern compared to, it it couldn't be sourced from a cache level below
-the originating core, had to come from a local peer and the request went to
-that lower levels and was eventually sourced from a peer.  Why it was sourced
-from the peer is still almost irrelevant to me. If it was truly modified or the
-core it was sourced from only had permission to modify it the snoop filter
-doesn't necessarily need to know the difference and the outcome is the same. 
-
-3. For multi-socket systems that it came from a different socket and there it is
-probably most interesting if it came from DRAM on the remote socket or a cache.
-
-I'm putting 3 aside for now since we've really been focusing on 1 and 2 in this
-discussion and I think the biggest hangup has been the definition of HIT vs
-HITM. If someone has a precise definition, that would be great, but AFAIK it
-goes back to the P6 bus where HIT was asserted by another core if it had a line
-(in any state) and HITM was additionally asserted if a core needed to inhibit
-another device (e.g. DDR controller) from providing that line to the requestor. 
-
-The latter logic is why I think it's perfectly acceptable to use HITM to
-indicate a peer cache-to-cache transfer, however since others don't feel that way
-let me propose a single additional snooping type PERF_MEM_SNOOP_PEER that
-indicates some peer of the hierarchy below the originating core sourced the
-data.  This clears up the definition that line came from from a peer and may or
-may not have been modified, but it doesn't add a lot of implementation dependant
-functionality into the SNOOP API. 
-
-We could use the mem-level to indicate the level of the cache hierarchy we had
-to get to before the snoop traveled upward, which seems like what x86 is doing
-here.
-
-PEER_CORE -> MEM_SNOOP_PEER + L2
-PEER_CLSTR -> MEM_SNOOP_PEER + L3
-PEER_LCL_CLSTR -> MEM_SNOOP_PEER + L3 (since newer neoverse cores don't support
-the clusters and the existing commercial implementations don't have them).
-
-Thanks,
-Ali
-
-
-
-
-
-
+	git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
