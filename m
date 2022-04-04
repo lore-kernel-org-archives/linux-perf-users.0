@@ -2,175 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F987C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Apr 2022 15:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00713C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Apr 2022 21:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378464AbiDDPO0 (ORCPT
+        id S236993AbiDDVUC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Apr 2022 11:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41262 "EHLO
+        Mon, 4 Apr 2022 17:20:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238740AbiDDPOZ (ORCPT
+        with ESMTP id S1379007AbiDDQRy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Apr 2022 11:14:25 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA33A3B3F0
-        for <linux-perf-users@vger.kernel.org>; Mon,  4 Apr 2022 08:12:28 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id bh17so20615341ejb.8
-        for <linux-perf-users@vger.kernel.org>; Mon, 04 Apr 2022 08:12:28 -0700 (PDT)
+        Mon, 4 Apr 2022 12:17:54 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F82C31922
+        for <linux-perf-users@vger.kernel.org>; Mon,  4 Apr 2022 09:15:57 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id f10so8550798plr.6
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Apr 2022 09:15:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ltdVIr5hib0+ak/jhu+JrlIb6MgeCdcOgL6iYru4NN8=;
-        b=dGNHzuEdI9Z2soncKftgc697gXjduv24OkaB/tZG9kZYBD7i61c5sGcz57Fokrhcpi
-         xJsjFdfQfQitpicNqmI+ujEeoVo6k4AwomQDVht0os6sDOZsfXEJujdRcP+EOpaGzUUu
-         jF8+yuYK/FYeSYTxhnAuNTQDG3goXouXX+nr7RTFOnkYC0150RpTnYiKCZorDYNtei6B
-         FEDi9wI+SKG2Haudn5ZiK7bY7OlKoic79yC8qP1ZKnPhDb4l9QBNp6xofa0BVYsbpR2F
-         E5/cCZ+DCbLDBBNzQBLYh/2dNE5eWCqHP24rmqF3oTa4LgjU5T5nBgAXwrValSVeGonw
-         /rsg==
+        bh=Ng6DcmM5tFKWfxali81J0mfMImmzHiLurj6u/+uziLk=;
+        b=HXOmZE1RtYgubAH+EbMo3I6hVyTda0n3RvWQxbxKNH9WsRFKu7ffxKRotQeemfaTy+
+         WG93q2P5TZkBtIjyvteBW1gY4EKU+e3KpS9DVwKTTVZTeml5hMnQUgt3bk5gpOBLemRS
+         ZIOtol1sPS1wc9qkY9x4s4R2dIVxjC141YGfSby1pY4lS6Ms5gekCEtxaIz1pKQ9j5Pn
+         WERkByf/F8DiINZ4MxSYYF2EIUnuJRY4SDLhGN3Ftl9xIe97pX/973mh2CqajJK+ufJa
+         9DW70uFOQ0kB5ih/FliBHjPYO9oXFC0gJGaxMmUtKDB2KuLJMmUWzCV2gqV6hEECZHQ5
+         SjUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ltdVIr5hib0+ak/jhu+JrlIb6MgeCdcOgL6iYru4NN8=;
-        b=Iv1usq0KnDEViHEonJum6SECYjCiRkg1TkjVPt0UaySdCmPpNEffo4NGea0UtU7M/x
-         aeL6X6bqER3zHkWnjFzIu4GEe/4mn9nH3aLHhe8DvjbjZe/F5wc4U4WK3QIj2UAKcgC9
-         4jApZVlzB6yfv/NzrXMoEMl6+1QTdPIwk9GD8ZUuFAmFw36Tlx11ykep7XIGakAJS0gR
-         bW8RdEAB2oJBX9Y94VTXmLjigZ3I/H15i96j7o2BxMT6kmEYTKWJvORIr2PRlPo7ceOb
-         SddiTwhH4F+LzdGABA2AdhKIyKaC1sGNIqkDhdMkiQ0Of7WIAbQUQ7GxB2vE/381rzR0
-         05fg==
-X-Gm-Message-State: AOAM530EzQgV1SumhaKgmObpsvhpwNS77itxCXHM4kqDqgtxX11r6wT3
-        pYXdR2Gvlsix66gzLwoYAotspg==
-X-Google-Smtp-Source: ABdhPJxQD8Njo17IzsiD3bfKEKw15dT8Rosm9yTKOGFbyCoTmFHNxteksl2NZVUZ/FV36zDfslA6/Q==
-X-Received: by 2002:a17:907:1c1b:b0:6e0:6618:8ac with SMTP id nc27-20020a1709071c1b00b006e0661808acmr573509ejc.82.1649085147161;
-        Mon, 04 Apr 2022 08:12:27 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id r16-20020a056402019000b00418ed60c332sm5456100edv.65.2022.04.04.08.12.21
+        bh=Ng6DcmM5tFKWfxali81J0mfMImmzHiLurj6u/+uziLk=;
+        b=lHQR8Unzs860NHQNN9cWu+6u094oPCJQnXezKrIaWicnu7vZVxpeCWXrm/WKOOTnP5
+         zD0T02mDlFhnqTWXLG1e/OuKhBKA7Fc2266cCDeFgfdvtUKlls1Z4maR7wjtIfQS/68W
+         HeGzD7xxXD+En9S/VJxCiRozT7x5V5a4tuZrv3gvHgok57SQQrgu6t36jhNKrlTENCra
+         k9Q2FTWf38PM+NNVklNPYg0m58XxnULryxTgzFxzL8DYDMRxL78tOjJFi0t98fimatml
+         glrl969GvdDUu7H9zMwU7urct2sraMekbMFzlieItTWBVgEIeLN/5T0bjsEHgcCX6GW0
+         nWIg==
+X-Gm-Message-State: AOAM533T2Dhfgiud36jqLQu4c8yE/5oNzu6cAndiG5rFWfF2GOpY4fPp
+        zM1vE1pgxjHm8g45GhWWY6FNag==
+X-Google-Smtp-Source: ABdhPJw0bHkRyQrMEI8u1Kx/EMowdX9JWrk1FT5MCnF8rKx/ah4P1uTx38JgRaEc8jLyOH5+qO/ukg==
+X-Received: by 2002:a17:90b:713:b0:1c6:c8f5:6138 with SMTP id s19-20020a17090b071300b001c6c8f56138mr27342669pjz.138.1649088957115;
+        Mon, 04 Apr 2022 09:15:57 -0700 (PDT)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id p4-20020a637404000000b00375948e63d6sm10641282pgc.91.2022.04.04.09.15.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Apr 2022 08:12:26 -0700 (PDT)
-Date:   Mon, 4 Apr 2022 23:12:18 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     Nick.Forrington@arm.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, german.gomez@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com,
+        Mon, 04 Apr 2022 09:15:56 -0700 (PDT)
+Date:   Mon, 4 Apr 2022 10:15:54 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
- cores
-Message-ID: <20220404151218.GA898573@leoy-ThinkPad-X240s>
-References: <20220331124425.GB1704284@leoy-ThinkPad-X240s>
- <20220403203337.18927-1-alisaidi@amazon.com>
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org
+Subject: Re: [PATCH 00/10] coresight: Add new API to allocate trace source ID
+ values
+Message-ID: <20220404161554.GA4079910@p14s>
+References: <20220308205000.27646-1-mike.leach@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220403203337.18927-1-alisaidi@amazon.com>
+In-Reply-To: <20220308205000.27646-1-mike.leach@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Apr 03, 2022 at 08:33:37PM +0000, Ali Saidi wrote:
+Good morning,
 
-[...]
-
-> > Let me just bring up my another
-> > thinking (sorry that my suggestion is float): another choice is we set
-> > ANY_CACHE as cache level if we are not certain the cache level, and
-> > extend snoop field to indicate the snooping logics, like:
-> > 
-> >   PERF_MEM_SNOOP_PEER_CORE
-> >   PERF_MEM_SNOOP_LCL_CLSTR
-> >   PERF_MEM_SNOOP_PEER_CLSTR
-> > 
-> > Seems to me, we doing this is not only for cache level, it's more
-> > important for users to know the variant cost for involving different
-> > snooping logics.
+On Tue, Mar 08, 2022 at 08:49:50PM +0000, Mike Leach wrote:
+> The current method for allocating trace source ID values to sources is
+> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+> The STM is allocated ID 0x1.
 > 
-> I think we've come full circle :).
-
-Not too bad, and I learned a lot :)
-
-> Going back to what do we want to indicate to
-> a user about the source of the cache line, I believe there are three things with
-> an eye toward helping a user of the data improve the performance of their
-> application:
-
-Thanks a lot for summary!
-
-> 1. The level below them in the hierarchy it it (L1, L2, LLC, local DRAM).
-> Depending on the level this directly indicates the expense of the operation. 
+> This fixed algorithm is used in both the CoreSight driver code, and by
+> perf when writing the trace metadata in the AUXTRACE_INFO record.
 > 
-> 2. If it came from a peer of theirs on the same socket. I'm really of the
-> opinion still that exactly which peer, doesn't matter much as it's a 2nd or 3rd
-> order concern compared to, it it couldn't be sourced from a cache level below
-> the originating core, had to come from a local peer and the request went to
-> that lower levels and was eventually sourced from a peer.  Why it was sourced
-> from the peer is still almost irrelevant to me. If it was truly modified or the
-> core it was sourced from only had permission to modify it the snoop filter
-> doesn't necessarily need to know the difference and the outcome is the same. 
-
-I think here the key information delivered is:
-
-For the peer snooping, you think there has big cost difference between
-L2 cache snooping and L3 cache snooping; for L3 cache snooping, we
-don't care about it's an internal cluster snooping or external cluster
-snooping, and we have no enough info to reason snooping type (HIT vs
-HITM).
-
-> 3. For multi-socket systems that it came from a different socket and there it is
-> probably most interesting if it came from DRAM on the remote socket or a cache.
->
-> I'm putting 3 aside for now since we've really been focusing on 1 and 2 in this
-> discussion and I think the biggest hangup has been the definition of HIT vs
-> HITM.
-
-Agree on the item 3.
-
-> If someone has a precise definition, that would be great, but AFAIK it
-> goes back to the P6 bus where HIT was asserted by another core if it had a line
-> (in any state) and HITM was additionally asserted if a core needed to inhibit
-> another device (e.g. DDR controller) from providing that line to the requestor. 
-
-Thanks for sharing the info for how the bus implements HIT/HITM.
-
-> The latter logic is why I think it's perfectly acceptable to use HITM to
-> indicate a peer cache-to-cache transfer, however since others don't feel that way
-> let me propose a single additional snooping type PERF_MEM_SNOOP_PEER that
-> indicates some peer of the hierarchy below the originating core sourced the
-> data.  This clears up the definition that line came from from a peer and may or
-> may not have been modified, but it doesn't add a lot of implementation dependant
-> functionality into the SNOOP API. 
+> The method needs replacing as currently:-
+> 1. It is inefficient in using available IDs.
+> 2. Does not scale to larger systems with many cores and the algorithm
+> has no limits so will generate invalid trace IDs for cpu number > 44.
 > 
-> We could use the mem-level to indicate the level of the cache hierarchy we had
-> to get to before the snoop traveled upward, which seems like what x86 is doing
-> here.
+> Additionally requirements to allocate additional system IDs on some
+> systems have been seen.
+> 
+> This patch set  introduces an API that allows the allocation of trace IDs
+> in a dynamic manner.
+> 
+> Architecturally reserved IDs are never allocated, and the system is
+> limited to allocating only valid IDs.
+> 
+> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+> the new API.
+> 
+> perf handling is changed so that the ID associated with the CPU is read
+> from sysfs. The ID allocator is notified when perf events start and stop
+> so CPU based IDs are kept constant throughout any perf session.
+> 
+> For the ETMx.x devices IDs are allocated on certain events
+> a) When using sysfs, an ID will be allocated on hardware enable, and freed
+> when the sysfs reset is written.
+> b) When using perf, ID is allocated on hardware enable, and freed on
+> hardware disable.
+> 
+> For both cases the ID is allocated when sysfs is read to get the current
+> trace ID. This ensures that consistent decode metadata can be extracted
+> from the system where this read occurs before device enable.
+> 
+> Note: This patchset breaks backward compatibility for perf record.
+> Because the method for generating the AUXTRACE_INFO meta data has
+> changed, using an older perf record will result in metadata that
+> does not match the trace IDs used in the recorded trace data.
+> This mismatch will cause subsequent decode to fail. Older versions of
+> perf will still be able to decode data generated by the updated system.
+> 
 
-It makes sense to me that to use the highest cache level as mem-level.
-Please add comments in the code for this, this would be useful for
-understanding the code.
-
-> PEER_CORE -> MEM_SNOOP_PEER + L2
-> PEER_CLSTR -> MEM_SNOOP_PEER + L3
-> PEER_LCL_CLSTR -> MEM_SNOOP_PEER + L3 (since newer neoverse cores don't support
-> the clusters and the existing commercial implementations don't have them).
-
-Generally, this idea is fine for me.
-
-Following your suggestion, if we connect the concepts PoC and PoU in Arm
-reference manual, we can extend the snooping mode with MEM_SNOOP_POU
-(for PoU) and MEM_SNOOP_POC (for PoC), so:
-
-PEER_CORE -> MEM_SNOOP_POU + L2
-PEER_LCL_CLSTR -> MEM_SNOOP_POU + L3
-PEER_CLSTR -> MEM_SNOOP_POC + L3
-
-Seems to me, we could consider for this.  If this is over complexity or
-even I said any wrong concepts for this, please use your method.
+I have started looking at this set, comments to follow shortly.
 
 Thanks,
-Leo
+Mathieu
+
+> 
+> Applies to coresight/next [b54f53bc11a5]
+> Tested on DB410c
+> 
+> Mike Leach (10):
+>   coresight: trace-id: Add API to dynamically assign trace ID values
+>   coresight: trace-id: Set up source trace ID map for system
+>   coresight: stm: Update STM driver to use Trace ID api
+>   coresight: etm4x: Use trace ID API to dynamically allocate trace ID
+>   coresight: etm3x: Use trace ID API to allocate IDs
+>   coresight: perf: traceid: Add perf notifiers for trace ID
+>   perf: cs-etm: Update event to read trace ID from sysfs
+>   coresight: Remove legacy Trace ID allocation mechanism
+>   coresight: etmX.X: stm: Remove unused legacy source trace ID ops
+>   coresight: trace-id: Add debug & test macros to trace id allocation
+> 
+>  drivers/hwtracing/coresight/Makefile          |   2 +-
+>  drivers/hwtracing/coresight/coresight-core.c  |  64 ++---
+>  .../hwtracing/coresight/coresight-etm-perf.c  |  16 +-
+>  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+>  .../coresight/coresight-etm3x-core.c          |  93 ++++---
+>  .../coresight/coresight-etm3x-sysfs.c         |  28 +-
+>  .../coresight/coresight-etm4x-core.c          |  63 ++++-
+>  .../coresight/coresight-etm4x-sysfs.c         |  32 ++-
+>  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+>  drivers/hwtracing/coresight/coresight-priv.h  |   1 +
+>  drivers/hwtracing/coresight/coresight-stm.c   |  49 +---
+>  .../hwtracing/coresight/coresight-trace-id.c  | 255 ++++++++++++++++++
+>  .../hwtracing/coresight/coresight-trace-id.h  |  69 +++++
+>  include/linux/coresight-pmu.h                 |  12 -
+>  include/linux/coresight.h                     |   3 -
+>  tools/perf/arch/arm/util/cs-etm.c             |  12 +-
+>  16 files changed, 530 insertions(+), 175 deletions(-)
+>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+> 
+> -- 
+> 2.17.1
+> 
