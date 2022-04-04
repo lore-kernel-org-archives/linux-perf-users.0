@@ -2,238 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC4C3526F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Apr 2022 14:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F987C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Apr 2022 15:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378004AbiDDOpl (ORCPT
+        id S1378464AbiDDPO0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Apr 2022 10:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45022 "EHLO
+        Mon, 4 Apr 2022 11:14:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379674AbiDDOpI (ORCPT
+        with ESMTP id S238740AbiDDPOZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Apr 2022 10:45:08 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA71A40A08;
-        Mon,  4 Apr 2022 07:41:15 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 8A4D11F381;
-        Mon,  4 Apr 2022 14:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1649083274; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=c1hUy9Z7t/TX9ZMrDfSqRcc30TzPK6DZa4A2U57uryQ=;
-        b=lb4vB1fhyBQGU3jebbX7RlDvjfDoGQEjomdeljJ0NfL0i9i42/cLNXiwdAyoDd+PKSUho8
-        gVfhBn9AMJMX6oAspaWNbNARQ59DJUbV+2pv/Nm2+Wd6yshafJFamigARCIieUqQvdx6BA
-        YKoS6VZzAyPqvvErJKMiyy/LRfVzeNg=
-Received: from suse.cz (pathway.suse.cz [10.100.12.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 07258A3B82;
-        Mon,  4 Apr 2022 14:41:14 +0000 (UTC)
-Date:   Mon, 4 Apr 2022 16:41:13 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc:     linux-kernel@vger.kernel.org, acme@kernel.org,
-        akpm@linux-foundation.org, alexander.shishkin@linux.intel.com,
-        catalin.marinas@arm.com, davem@davemloft.net, jolsa@redhat.com,
-        jthierry@redhat.com, keescook@chromium.org, kernelfans@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
+        Mon, 4 Apr 2022 11:14:25 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA33A3B3F0
+        for <linux-perf-users@vger.kernel.org>; Mon,  4 Apr 2022 08:12:28 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id bh17so20615341ejb.8
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Apr 2022 08:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ltdVIr5hib0+ak/jhu+JrlIb6MgeCdcOgL6iYru4NN8=;
+        b=dGNHzuEdI9Z2soncKftgc697gXjduv24OkaB/tZG9kZYBD7i61c5sGcz57Fokrhcpi
+         xJsjFdfQfQitpicNqmI+ujEeoVo6k4AwomQDVht0os6sDOZsfXEJujdRcP+EOpaGzUUu
+         jF8+yuYK/FYeSYTxhnAuNTQDG3goXouXX+nr7RTFOnkYC0150RpTnYiKCZorDYNtei6B
+         FEDi9wI+SKG2Haudn5ZiK7bY7OlKoic79yC8qP1ZKnPhDb4l9QBNp6xofa0BVYsbpR2F
+         E5/cCZ+DCbLDBBNzQBLYh/2dNE5eWCqHP24rmqF3oTa4LgjU5T5nBgAXwrValSVeGonw
+         /rsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ltdVIr5hib0+ak/jhu+JrlIb6MgeCdcOgL6iYru4NN8=;
+        b=Iv1usq0KnDEViHEonJum6SECYjCiRkg1TkjVPt0UaySdCmPpNEffo4NGea0UtU7M/x
+         aeL6X6bqER3zHkWnjFzIu4GEe/4mn9nH3aLHhe8DvjbjZe/F5wc4U4WK3QIj2UAKcgC9
+         4jApZVlzB6yfv/NzrXMoEMl6+1QTdPIwk9GD8ZUuFAmFw36Tlx11ykep7XIGakAJS0gR
+         bW8RdEAB2oJBX9Y94VTXmLjigZ3I/H15i96j7o2BxMT6kmEYTKWJvORIr2PRlPo7ceOb
+         SddiTwhH4F+LzdGABA2AdhKIyKaC1sGNIqkDhdMkiQ0Of7WIAbQUQ7GxB2vE/381rzR0
+         05fg==
+X-Gm-Message-State: AOAM530EzQgV1SumhaKgmObpsvhpwNS77itxCXHM4kqDqgtxX11r6wT3
+        pYXdR2Gvlsix66gzLwoYAotspg==
+X-Google-Smtp-Source: ABdhPJxQD8Njo17IzsiD3bfKEKw15dT8Rosm9yTKOGFbyCoTmFHNxteksl2NZVUZ/FV36zDfslA6/Q==
+X-Received: by 2002:a17:907:1c1b:b0:6e0:6618:8ac with SMTP id nc27-20020a1709071c1b00b006e0661808acmr573509ejc.82.1649085147161;
+        Mon, 04 Apr 2022 08:12:27 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([104.245.96.34])
+        by smtp.gmail.com with ESMTPSA id r16-20020a056402019000b00418ed60c332sm5456100edv.65.2022.04.04.08.12.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Apr 2022 08:12:26 -0700 (PDT)
+Date:   Mon, 4 Apr 2022 23:12:18 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     Nick.Forrington@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, german.gomez@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        kjain@linux.ibm.com, lihuafei1@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        masahiroy@kernel.org, matthias.bgg@gmail.com, maz@kernel.org,
-        mcgrof@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-        nixiaoming@huawei.com, peterz@infradead.org,
-        sparclinux@vger.kernel.org, sumit.garg@linaro.org,
-        wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
-Subject: Re: [PATCH v3 4/5] kernel/watchdog: Adapt the watchdog_hld interface
- for async model
-Message-ID: <20220404144113.GB26840@pathway.suse.cz>
-References: <20220324141405.10835-1-lecopzer.chen@mediatek.com>
- <20220324141405.10835-5-lecopzer.chen@mediatek.com>
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
+ cores
+Message-ID: <20220404151218.GA898573@leoy-ThinkPad-X240s>
+References: <20220331124425.GB1704284@leoy-ThinkPad-X240s>
+ <20220403203337.18927-1-alisaidi@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220324141405.10835-5-lecopzer.chen@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20220403203337.18927-1-alisaidi@amazon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu 2022-03-24 22:14:04, Lecopzer Chen wrote:
-> When lockup_detector_init()->watchdog_nmi_probe(), PMU may be not ready
-> yet. E.g. on arm64, PMU is not ready until
-> device_initcall(armv8_pmu_driver_init).  And it is deeply integrated
-> with the driver model and cpuhp. Hence it is hard to push this
-> initialization before smp_init().
+On Sun, Apr 03, 2022 at 08:33:37PM +0000, Ali Saidi wrote:
+
+[...]
+
+> > Let me just bring up my another
+> > thinking (sorry that my suggestion is float): another choice is we set
+> > ANY_CACHE as cache level if we are not certain the cache level, and
+> > extend snoop field to indicate the snooping logics, like:
+> > 
+> >   PERF_MEM_SNOOP_PEER_CORE
+> >   PERF_MEM_SNOOP_LCL_CLSTR
+> >   PERF_MEM_SNOOP_PEER_CLSTR
+> > 
+> > Seems to me, we doing this is not only for cache level, it's more
+> > important for users to know the variant cost for involving different
+> > snooping logics.
 > 
-> But it is easy to take an opposite approach and try to initialize
-> the watchdog once again later.
-> The delayed probe is called using workqueues. It need to allocate
-> memory and must be proceed in a normal context.
-> The delayed probe is queued only when the early one returns -EBUSY.
-> It is the return code returned when PMU is not ready yet.
+> I think we've come full circle :).
+
+Not too bad, and I learned a lot :)
+
+> Going back to what do we want to indicate to
+> a user about the source of the cache line, I believe there are three things with
+> an eye toward helping a user of the data improve the performance of their
+> application:
+
+Thanks a lot for summary!
+
+> 1. The level below them in the hierarchy it it (L1, L2, LLC, local DRAM).
+> Depending on the level this directly indicates the expense of the operation. 
 > 
-> Provide an API - retry_lockup_detector_init() for anyone who needs
-> to delayed init lockup detector.
+> 2. If it came from a peer of theirs on the same socket. I'm really of the
+> opinion still that exactly which peer, doesn't matter much as it's a 2nd or 3rd
+> order concern compared to, it it couldn't be sourced from a cache level below
+> the originating core, had to come from a local peer and the request went to
+> that lower levels and was eventually sourced from a peer.  Why it was sourced
+> from the peer is still almost irrelevant to me. If it was truly modified or the
+> core it was sourced from only had permission to modify it the snoop filter
+> doesn't necessarily need to know the difference and the outcome is the same. 
+
+I think here the key information delivered is:
+
+For the peer snooping, you think there has big cost difference between
+L2 cache snooping and L3 cache snooping; for L3 cache snooping, we
+don't care about it's an internal cluster snooping or external cluster
+snooping, and we have no enough info to reason snooping type (HIT vs
+HITM).
+
+> 3. For multi-socket systems that it came from a different socket and there it is
+> probably most interesting if it came from DRAM on the remote socket or a cache.
+>
+> I'm putting 3 aside for now since we've really been focusing on 1 and 2 in this
+> discussion and I think the biggest hangup has been the definition of HIT vs
+> HITM.
+
+Agree on the item 3.
+
+> If someone has a precise definition, that would be great, but AFAIK it
+> goes back to the P6 bus where HIT was asserted by another core if it had a line
+> (in any state) and HITM was additionally asserted if a core needed to inhibit
+> another device (e.g. DDR controller) from providing that line to the requestor. 
+
+Thanks for sharing the info for how the bus implements HIT/HITM.
+
+> The latter logic is why I think it's perfectly acceptable to use HITM to
+> indicate a peer cache-to-cache transfer, however since others don't feel that way
+> let me propose a single additional snooping type PERF_MEM_SNOOP_PEER that
+> indicates some peer of the hierarchy below the originating core sourced the
+> data.  This clears up the definition that line came from from a peer and may or
+> may not have been modified, but it doesn't add a lot of implementation dependant
+> functionality into the SNOOP API. 
 > 
-> The original assumption is: nobody should use delayed probe after
-> lockup_detector_check() which has __init attribute.
-> That is, anyone uses this API must call between lockup_detector_init()
-> and lockup_detector_check(), and the caller must have __init attribute
-> 
-> Co-developed-by: Pingfan Liu <kernelfans@gmail.com>
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
-> Suggested-by: Petr Mladek <pmladek@suse.com>
-> ---
->  include/linux/nmi.h |  3 ++
->  kernel/watchdog.c   | 69 +++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 70 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-> index b7bcd63c36b4..1d84c9a8b460 100644
-> --- a/include/linux/nmi.h
-> +++ b/include/linux/nmi.h
-> @@ -118,6 +118,9 @@ static inline int hardlockup_detector_perf_init(void) { return 0; }
->  
->  void watchdog_nmi_stop(void);
->  void watchdog_nmi_start(void);
-> +
-> +extern bool allow_lockup_detector_init_retry;
-> +void retry_lockup_detector_init(void);
->  int watchdog_nmi_probe(void);
->  void watchdog_nmi_enable(unsigned int cpu);
->  void watchdog_nmi_disable(unsigned int cpu);
-> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-> index b71d434cf648..308ba29f8f0f 100644
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -103,7 +103,13 @@ void __weak watchdog_nmi_disable(unsigned int cpu)
->  	hardlockup_detector_perf_disable();
->  }
->  
-> -/* Return 0, if a NMI watchdog is available. Error code otherwise */
-> +/*
-> + * Arch specific API.
-> + *
-> + * Return 0 when NMI watchdog is available, negative value otherwise.
-> + * The error code -EBUSY is special. It means that a deferred probe
-> + * might succeed later.
-> + */
->  int __weak __init watchdog_nmi_probe(void)
->  {
->  	return hardlockup_detector_perf_init();
-> @@ -839,16 +845,75 @@ static void __init watchdog_sysctl_init(void)
->  #define watchdog_sysctl_init() do { } while (0)
->  #endif /* CONFIG_SYSCTL */
->  
-> +static void lockup_detector_delay_init(struct work_struct *work);
-> +bool allow_lockup_detector_init_retry __initdata;
-> +
-> +static struct work_struct detector_work __initdata =
-> +		__WORK_INITIALIZER(detector_work, lockup_detector_delay_init);
-> +
-> +static void __init lockup_detector_delay_init(struct work_struct *work)
-> +{
-> +	int ret;
-> +
-> +	ret = watchdog_nmi_probe();
-> +	if (ret) {
-> +		pr_info("Delayed init of the lockup detector failed: %d\n", ret);
-> +		pr_info("Perf NMI watchdog permanently disabled\n");
-> +		return;
-> +	}
-> +
-> +	nmi_watchdog_available = true;
-> +	lockup_detector_setup();
+> We could use the mem-level to indicate the level of the cache hierarchy we had
+> to get to before the snoop traveled upward, which seems like what x86 is doing
+> here.
 
-The name of the variable "allow_lockup_detector_init_retry" is
-slightly confusing in this context. I suggest to add a comment:
+It makes sense to me that to use the highest cache level as mem-level.
+Please add comments in the code for this, this would be useful for
+understanding the code.
 
-	/* Retry is not needed any longer. */
-> +	allow_lockup_detector_init_retry = false;
+> PEER_CORE -> MEM_SNOOP_PEER + L2
+> PEER_CLSTR -> MEM_SNOOP_PEER + L3
+> PEER_LCL_CLSTR -> MEM_SNOOP_PEER + L3 (since newer neoverse cores don't support
+> the clusters and the existing commercial implementations don't have them).
 
+Generally, this idea is fine for me.
 
-> +}
-> +
-> +/*
-> + * retry_lockup_detector_init - retry init lockup detector if possible.
-> + *
-> + * Only take effect when allow_lockup_detector_init_retry is true, which
-> + * means it must call between lockup_detector_init() and lockup_detector_check().
-> + * Be aware that caller must have __init attribute, relative functions
-> + * will be freed after kernel initialization.
-> + */
-> +void __init retry_lockup_detector_init(void)
-> +{
-> +	if (!allow_lockup_detector_init_retry)
-> +		return;
-> +
-> +	queue_work_on(__smp_processor_id(), system_wq, &detector_work);
-> +}
-> +
-> +/* Ensure the check is called after the initialization of driver */
-> +static int __init lockup_detector_check(void)
-> +{
-> +	/* Make sure no work is pending. */
-> +	flush_work(&detector_work);
+Following your suggestion, if we connect the concepts PoC and PoU in Arm
+reference manual, we can extend the snooping mode with MEM_SNOOP_POU
+(for PoU) and MEM_SNOOP_POC (for PoC), so:
 
-This is racy. We should first disable
-"allow_lockup_detector_init_retry" to make sure
-that retry_lockup_detector_init() will not queue
-the work any longer.
+PEER_CORE -> MEM_SNOOP_POU + L2
+PEER_LCL_CLSTR -> MEM_SNOOP_POU + L3
+PEER_CLSTR -> MEM_SNOOP_POC + L3
 
-> +	if (!allow_lockup_detector_init_retry)
-> +		return 0;
-> +
-> +	allow_lockup_detector_init_retry = false;
-> +	pr_info("Delayed init checking failed, please check your driver.\n");
+Seems to me, we could consider for this.  If this is over complexity or
+even I said any wrong concepts for this, please use your method.
 
-This prints that the init failed without checking the state
-of the watchdog. I guess that it works but it is far from
-obvious and any further change might break it.
-
-Is the message really needed?
-Does it help?
-What exact driver needs checking?
-
-IMHO, it just makes the code more complicated and
-it is not worth it.
-
-I suggest to keep it simple:
-
-/*
- * Ensure the check is called after the initialization of driver
- * and before removing init code.
- */
-static int __init lockup_detector_check(void)
-{
-	allow_lockup_detector_init_retry = false;
-	flush_work(&detector_work);
-
-	return 0;
-}
-
-or if you really want that message then I would do:
-
-/*
- * Ensure the check is called after the initialization of driver
- * and before removing init code.
- */
-static int __init lockup_detector_check(void)
-{
-	bool delayed_init_allowed = allow_lockup_detector_init_retry;
-
-	allow_lockup_detector_init_retry = false;
-	flush_work(&detector_work);
-
-	if (delayed_init_allowed && !nmi_watchdog_available)
-		pr_info("Delayed init failed. Please, check your driver.\n");
-
-	return 0;
-}
-
-Best Regards,
-Petr
+Thanks,
+Leo
