@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3EEC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Apr 2022 14:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC4C3526F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Apr 2022 14:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357321AbiDDOTI (ORCPT
+        id S1378004AbiDDOpl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Apr 2022 10:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57416 "EHLO
+        Mon, 4 Apr 2022 10:45:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237149AbiDDOTI (ORCPT
+        with ESMTP id S1379674AbiDDOpI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Apr 2022 10:19:08 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC973B033;
-        Mon,  4 Apr 2022 07:17:12 -0700 (PDT)
+        Mon, 4 Apr 2022 10:45:08 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA71A40A08;
+        Mon,  4 Apr 2022 07:41:15 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id CE90D210E5;
-        Mon,  4 Apr 2022 14:17:10 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTP id 8A4D11F381;
+        Mon,  4 Apr 2022 14:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1649081830; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1649083274; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Rze0Jhi/DK5kWoGoABbHFZ2g0bO59w1puNqIyew0fbQ=;
-        b=NuRhmVsuuISJsd8BJFS2w0AHxAChlUR+Zs2Tk2CD2BmcBSysouRnrwBdtqDhwT9tV/yFRj
-        20+uWtwlHvQG33Dsa4yw9cZL/CaMGO65jV2JdiPcjTxITG45cXnXxWZTOcbkamzJ/CR1L7
-        VutDnw+unMqssuQ2wjCE1x4SPcCENTo=
+        bh=c1hUy9Z7t/TX9ZMrDfSqRcc30TzPK6DZa4A2U57uryQ=;
+        b=lb4vB1fhyBQGU3jebbX7RlDvjfDoGQEjomdeljJ0NfL0i9i42/cLNXiwdAyoDd+PKSUho8
+        gVfhBn9AMJMX6oAspaWNbNARQ59DJUbV+2pv/Nm2+Wd6yshafJFamigARCIieUqQvdx6BA
+        YKoS6VZzAyPqvvErJKMiyy/LRfVzeNg=
 Received: from suse.cz (pathway.suse.cz [10.100.12.24])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 38BECA3B82;
-        Mon,  4 Apr 2022 14:17:09 +0000 (UTC)
-Date:   Mon, 4 Apr 2022 16:17:09 +0200
+        by relay2.suse.de (Postfix) with ESMTPS id 07258A3B82;
+        Mon,  4 Apr 2022 14:41:14 +0000 (UTC)
+Date:   Mon, 4 Apr 2022 16:41:13 +0200
 From:   Petr Mladek <pmladek@suse.com>
 To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
 Cc:     linux-kernel@vger.kernel.org, acme@kernel.org,
@@ -47,91 +47,193 @@ Cc:     linux-kernel@vger.kernel.org, acme@kernel.org,
         nixiaoming@huawei.com, peterz@infradead.org,
         sparclinux@vger.kernel.org, sumit.garg@linaro.org,
         wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
-Subject: Re: [PATCH v3 5/5] arm64: Enable perf events based hard lockup
- detector
-Message-ID: <20220404141709.GA26840@pathway.suse.cz>
+Subject: Re: [PATCH v3 4/5] kernel/watchdog: Adapt the watchdog_hld interface
+ for async model
+Message-ID: <20220404144113.GB26840@pathway.suse.cz>
 References: <20220324141405.10835-1-lecopzer.chen@mediatek.com>
- <20220324141405.10835-6-lecopzer.chen@mediatek.com>
+ <20220324141405.10835-5-lecopzer.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220324141405.10835-6-lecopzer.chen@mediatek.com>
+In-Reply-To: <20220324141405.10835-5-lecopzer.chen@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu 2022-03-24 22:14:05, Lecopzer Chen wrote:
-> With the recent feature added to enable perf events to use pseudo NMIs
-> as interrupts on platforms which support GICv3 or later, its now been
-> possible to enable hard lockup detector (or NMI watchdog) on arm64
-> platforms. So enable corresponding support.
+On Thu 2022-03-24 22:14:04, Lecopzer Chen wrote:
+> When lockup_detector_init()->watchdog_nmi_probe(), PMU may be not ready
+> yet. E.g. on arm64, PMU is not ready until
+> device_initcall(armv8_pmu_driver_init).  And it is deeply integrated
+> with the driver model and cpuhp. Hence it is hard to push this
+> initialization before smp_init().
 > 
-> One thing to note here is that normally lockup detector is initialized
-> just after the early initcalls but PMU on arm64 comes up much later as
-> device_initcall(). To cope with that, overriding watchdog_nmi_probe() to
-> let the watchdog framework know PMU not ready, and inform the framework
-> to re-initialize lockup detection once PMU has been initialized.
+> But it is easy to take an opposite approach and try to initialize
+> the watchdog once again later.
+> The delayed probe is called using workqueues. It need to allocate
+> memory and must be proceed in a normal context.
+> The delayed probe is queued only when the early one returns -EBUSY.
+> It is the return code returned when PMU is not ready yet.
 > 
-> [1]: http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
+> Provide an API - retry_lockup_detector_init() for anyone who needs
+> to delayed init lockup detector.
 > 
-> --- /dev/null
-> +++ b/arch/arm64/kernel/watchdog_hld.c
-> @@ -0,0 +1,37 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/nmi.h>
-> +#include <linux/cpufreq.h>
-> +#include <linux/perf/arm_pmu.h>
+> The original assumption is: nobody should use delayed probe after
+> lockup_detector_check() which has __init attribute.
+> That is, anyone uses this API must call between lockup_detector_init()
+> and lockup_detector_check(), and the caller must have __init attribute
+> 
+> Co-developed-by: Pingfan Liu <kernelfans@gmail.com>
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+> Suggested-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  include/linux/nmi.h |  3 ++
+>  kernel/watchdog.c   | 69 +++++++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 70 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+> index b7bcd63c36b4..1d84c9a8b460 100644
+> --- a/include/linux/nmi.h
+> +++ b/include/linux/nmi.h
+> @@ -118,6 +118,9 @@ static inline int hardlockup_detector_perf_init(void) { return 0; }
+>  
+>  void watchdog_nmi_stop(void);
+>  void watchdog_nmi_start(void);
+> +
+> +extern bool allow_lockup_detector_init_retry;
+> +void retry_lockup_detector_init(void);
+>  int watchdog_nmi_probe(void);
+>  void watchdog_nmi_enable(unsigned int cpu);
+>  void watchdog_nmi_disable(unsigned int cpu);
+> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> index b71d434cf648..308ba29f8f0f 100644
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -103,7 +103,13 @@ void __weak watchdog_nmi_disable(unsigned int cpu)
+>  	hardlockup_detector_perf_disable();
+>  }
+>  
+> -/* Return 0, if a NMI watchdog is available. Error code otherwise */
+> +/*
+> + * Arch specific API.
+> + *
+> + * Return 0 when NMI watchdog is available, negative value otherwise.
+> + * The error code -EBUSY is special. It means that a deferred probe
+> + * might succeed later.
+> + */
+>  int __weak __init watchdog_nmi_probe(void)
+>  {
+>  	return hardlockup_detector_perf_init();
+> @@ -839,16 +845,75 @@ static void __init watchdog_sysctl_init(void)
+>  #define watchdog_sysctl_init() do { } while (0)
+>  #endif /* CONFIG_SYSCTL */
+>  
+> +static void lockup_detector_delay_init(struct work_struct *work);
+> +bool allow_lockup_detector_init_retry __initdata;
+> +
+> +static struct work_struct detector_work __initdata =
+> +		__WORK_INITIALIZER(detector_work, lockup_detector_delay_init);
+> +
+> +static void __init lockup_detector_delay_init(struct work_struct *work)
+> +{
+> +	int ret;
+> +
+> +	ret = watchdog_nmi_probe();
+> +	if (ret) {
+> +		pr_info("Delayed init of the lockup detector failed: %d\n", ret);
+> +		pr_info("Perf NMI watchdog permanently disabled\n");
+> +		return;
+> +	}
+> +
+> +	nmi_watchdog_available = true;
+> +	lockup_detector_setup();
+
+The name of the variable "allow_lockup_detector_init_retry" is
+slightly confusing in this context. I suggest to add a comment:
+
+	/* Retry is not needed any longer. */
+> +	allow_lockup_detector_init_retry = false;
+
+
+> +}
 > +
 > +/*
-> + * Safe maximum CPU frequency in case a particular platform doesn't implement
-> + * cpufreq driver. Although, architecture doesn't put any restrictions on
-> + * maximum frequency but 5 GHz seems to be safe maximum given the available
-> + * Arm CPUs in the market which are clocked much less than 5 GHz. On the other
-> + * hand, we can't make it much higher as it would lead to a large hard-lockup
-> + * detection timeout on parts which are running slower (eg. 1GHz on
-> + * Developerbox) and doesn't possess a cpufreq driver.
+> + * retry_lockup_detector_init - retry init lockup detector if possible.
+> + *
+> + * Only take effect when allow_lockup_detector_init_retry is true, which
+> + * means it must call between lockup_detector_init() and lockup_detector_check().
+> + * Be aware that caller must have __init attribute, relative functions
+> + * will be freed after kernel initialization.
 > + */
-> +#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
-> +u64 hw_nmi_get_sample_period(int watchdog_thresh)
-> +{
-> +	unsigned int cpu = smp_processor_id();
-> +	unsigned long max_cpu_freq;
-> +
-> +	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
-> +	if (!max_cpu_freq)
-> +		max_cpu_freq = SAFE_MAX_CPU_FREQ;
-> +
-> +	return (u64)max_cpu_freq * watchdog_thresh;
-> +}
-
-This change is not mentioned in the commit message.
-Please, put it into a separate patch.
-
-> +int __init watchdog_nmi_probe(void)
+> +void __init retry_lockup_detector_init(void)
 > +{
 > +	if (!allow_lockup_detector_init_retry)
-> +		return -EBUSY;
-
-How do you know that you should return -EBUSY
-when retry in not enabled?
-
-I guess that it is an optimization to make it fast
-during the first call. But the logic is far from
-obvious.
-
+> +		return;
 > +
-> +	if (!arm_pmu_irq_is_nmi())
-> +		return -ENODEV;
-> +
-> +	return hardlockup_detector_perf_init();
+> +	queue_work_on(__smp_processor_id(), system_wq, &detector_work);
 > +}
+> +
+> +/* Ensure the check is called after the initialization of driver */
+> +static int __init lockup_detector_check(void)
+> +{
+> +	/* Make sure no work is pending. */
+> +	flush_work(&detector_work);
 
-Is this just an optimization or is it really needed?
-Why this was not needed in v2 patchset?
+This is racy. We should first disable
+"allow_lockup_detector_init_retry" to make sure
+that retry_lockup_detector_init() will not queue
+the work any longer.
 
-If it is just an optimization then I would remove it.
-IMHO, it just adds confusion and it is not worth it.
+> +	if (!allow_lockup_detector_init_retry)
+> +		return 0;
+> +
+> +	allow_lockup_detector_init_retry = false;
+> +	pr_info("Delayed init checking failed, please check your driver.\n");
+
+This prints that the init failed without checking the state
+of the watchdog. I guess that it works but it is far from
+obvious and any further change might break it.
+
+Is the message really needed?
+Does it help?
+What exact driver needs checking?
+
+IMHO, it just makes the code more complicated and
+it is not worth it.
+
+I suggest to keep it simple:
+
+/*
+ * Ensure the check is called after the initialization of driver
+ * and before removing init code.
+ */
+static int __init lockup_detector_check(void)
+{
+	allow_lockup_detector_init_retry = false;
+	flush_work(&detector_work);
+
+	return 0;
+}
+
+or if you really want that message then I would do:
+
+/*
+ * Ensure the check is called after the initialization of driver
+ * and before removing init code.
+ */
+static int __init lockup_detector_check(void)
+{
+	bool delayed_init_allowed = allow_lockup_detector_init_retry;
+
+	allow_lockup_detector_init_retry = false;
+	flush_work(&detector_work);
+
+	if (delayed_init_allowed && !nmi_watchdog_available)
+		pr_info("Delayed init failed. Please, check your driver.\n");
+
+	return 0;
+}
 
 Best Regards,
 Petr
