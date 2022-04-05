@@ -2,429 +2,361 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0756FC433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240EFC433FE
 	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Apr 2022 21:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236514AbiDEVaC (ORCPT
+        id S235349AbiDEVaB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Apr 2022 17:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59092 "EHLO
+        Tue, 5 Apr 2022 17:30:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1458005AbiDERE3 (ORCPT
+        with ESMTP id S1384807AbiDEPPG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Apr 2022 13:04:29 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C934DF68
-        for <linux-perf-users@vger.kernel.org>; Tue,  5 Apr 2022 10:02:30 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id n8so4424233plh.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Apr 2022 10:02:30 -0700 (PDT)
+        Tue, 5 Apr 2022 11:15:06 -0400
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C27441601
+        for <linux-perf-users@vger.kernel.org>; Tue,  5 Apr 2022 06:30:39 -0700 (PDT)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-d39f741ba0so14325202fac.13
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Apr 2022 06:30:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yO8HbIMVJgMW92Isut2vOmUaNAYMH1DhCX86wHWJRSo=;
-        b=tHoByH669Szdsl21UDdyYcrAEwgfn57/nEFHCCWGLnAW2OsToxC+wap4hC2m2CFRAl
-         trycQUQ11z24buiTdAHPYeCPKgFs/eznc3xu2uup5hJvdlp8V5TL+7wPS6BC2um9unhf
-         hcxbB5j/9u+1OVIWDMCbW4ja+iO7sEReGDJMRvEUrrf5OxIz8J162VM/RHkwdfrY09qe
-         1PZoGUmeymn9j6UW/NDhiY91+amYrTrK9lWuaezy+Z3K/5uP2PX+aec19HC+1JaKIhaI
-         m23qxAgniw+XmquyPgw7G/AA79tqhnxEtc3x8BVu7uh314cN8NyFtUrFq5iAR0dBbb43
-         IzAQ==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9SUjbR6d0Hm/+GiUujjBnx6+L5jTOpdyMzjgCeWVv18=;
+        b=sY8UN9C1PHBoH0LvzHXIFdwX6MKoA35gbLCAShSgRkAbp8iWftwgDax7e93W769u1e
+         5X9YZGkOkmmAlD6LaJg70ZOrpL2jAQA473qlyP6Cgh+uH5VJpUMbGJtJ0FVxyDL7ARzV
+         lLD6TuoG/w//kxV2eLSYgVy56lG6gwfD696nmdNK0W/nDySoM8GedVz7GrRDUsDDnvoM
+         QeOB6se/YnanV8WDchwRKkwez2IjGwtnsaHcBG/AkXC+luyHDLzKPtuyHgybXQNk+7Ra
+         1tHz3b53Sn6tZlSfRcftDFTKqdhnbtWU9fwymXdFbZxLoXFdPVx25nY85Wwp9mfOLKq1
+         +v6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yO8HbIMVJgMW92Isut2vOmUaNAYMH1DhCX86wHWJRSo=;
-        b=euI3Dumw7NLkcFdP8dregReEuZ7+8PO2J1B/CjZiA+jHhCNJCFWommLYc3dQAXsgTK
-         9sfU8jEUGMF5BX7ZJ0ACCFcZ9RRvYlv9pqJMYyDxZRG/nTzacKU7HB9ns/eZhOEeU4FJ
-         VTbG21YthG5b9M/7ekdfWuTxU0jGsYNuH1EFGk0k95Dc3hDd0oSxG+IS8aeqOlzDW2g+
-         zXQqET03IW5Oasii865ethohg/calLfamr5E66+4LF/3WLOe9CY/cG6wp1bfDOvvHFW/
-         cniFvvKmIi985Sil7nFZr6Y5qwzrf+QAPk6t8uRTVDYDGepnstukkks5yR3d2qHBBmT3
-         vEtg==
-X-Gm-Message-State: AOAM533Rao5s/EUS8gyiQmhFN+xQ3j5fhT3JPhJHTGihJm0FMQseLxN/
-        1gVU/Ee2Vc+qZCyIgrq8TI62pQ==
-X-Google-Smtp-Source: ABdhPJzKSi5DdnjoR2l0Nmc2GMfO1SmhjMFV5BVTWYvenktsc0lHTuNfpNSQWBGXgTVrADjQczjokQ==
-X-Received: by 2002:a17:902:8306:b0:14f:a386:6a44 with SMTP id bd6-20020a170902830600b0014fa3866a44mr4455290plb.140.1649178149924;
-        Tue, 05 Apr 2022 10:02:29 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id z2-20020aa79902000000b004fb05c04b53sm17240460pff.103.2022.04.05.10.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Apr 2022 10:02:27 -0700 (PDT)
-Date:   Tue, 5 Apr 2022 11:02:23 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org
-Subject: Re: [PATCH 01/10] coresight: trace-id: Add API to dynamically assign
- trace ID values
-Message-ID: <20220405170223.GA4151723@p14s>
-References: <20220308205000.27646-1-mike.leach@linaro.org>
- <20220308205000.27646-2-mike.leach@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9SUjbR6d0Hm/+GiUujjBnx6+L5jTOpdyMzjgCeWVv18=;
+        b=wKFlrOTAuprLq7prr94QqbmQ7wspYv7WMLYy61vTZa93ejYI5Y1boqQu72B/H6sb6y
+         Gh4Ahz4qgZt2WPnhYNUbQevxIy/wFr8T7re0mXuHHjRUrGmlBM93XGfwpldYN27KX7/B
+         idtakRGJ3d0vI8REEtDGA3311Z7C5td2og2XIzplYK7y/lcd6lLeFQ/fEl2xdVclxVET
+         sCXv5j6m57XEvxZD1yeHLFgRhy1kUyVulVlekGkMPtUPZN03ZCQz7C2S3p7QCgjADL2u
+         L6749BaoQRXCm9DoDUunX9lbXdMCpInokitXmB2uiH1Qv2hxKFAW0GUwZH6sCH6egMs9
+         m+Aw==
+X-Gm-Message-State: AOAM5318qxn/C60+PLZYYaGfDoPUJ+fTJmCiaAPLytkxcK+xwSGRqmSg
+        a4Gqqqe4IEKbLz8kEWKIi7e1TtSmKuXN1Ln0hWS/MA==
+X-Google-Smtp-Source: ABdhPJwgxZbKTNmtpo4mT0qYfgd73+gzD+qfaMV68qcfH1OdXWhs2/TQa3kSn7Gi7xyKhVKfha3zBFRUnbqgNtZIEqg=
+X-Received: by 2002:a05:6870:e0d1:b0:e2:1c3b:cca2 with SMTP id
+ a17-20020a056870e0d100b000e21c3bcca2mr1459916oab.163.1649165437660; Tue, 05
+ Apr 2022 06:30:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220308205000.27646-2-mike.leach@linaro.org>
+References: <20220404111204.935357-1-elver@google.com>
+In-Reply-To: <20220404111204.935357-1-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 5 Apr 2022 15:30:26 +0200
+Message-ID: <CACT4Y+YiDhmKokuqD3dhtj67HxZpTumiQvvRp35X-sR735qjqQ@mail.gmail.com>
+Subject: Re: [PATCH] signal: Deliver SIGTRAP on perf event asynchronously if blocked
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Good morning,
+On Mon, 4 Apr 2022 at 13:12, Marco Elver <elver@google.com> wrote:
+>
+> With SIGTRAP on perf events, we have encountered termination of
+> processes due to user space attempting to block delivery of SIGTRAP.
+> Consider this case:
+>
+>     <set up SIGTRAP on a perf event>
+>     ...
+>     sigset_t s;
+>     sigemptyset(&s);
+>     sigaddset(&s, SIGTRAP | <and others>);
+>     sigprocmask(SIG_BLOCK, &s, ...);
+>     ...
+>     <perf event triggers>
+>
+> When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
+> will force the signal, but revert back to the default handler, thus
+> terminating the task.
+>
+> This makes sense for error conditions, but not so much for explicitly
+> requested monitoring. However, the expectation is still that signals
+> generated by perf events are synchronous, which will no longer be the
+> case if the signal is blocked and delivered later.
+>
+> To give user space the ability to clearly distinguish synchronous from
+> asynchronous signals, introduce siginfo_t::si_perf_flags and
+> TRAP_PERF_FLAG_ASYNC (opted for flags in case more binary information is
+> required in future).
+>
+> The resolution to the problem is then to (a) no longer force the signal
+> (avoiding the terminations), but (b) tell user space via si_perf_flags
+> if the signal was synchronous or not, so that such signals can be
+> handled differently (e.g. let user space decide to ignore or consider
+> the data imprecise).
+>
+> The alternative of making the kernel ignore SIGTRAP on perf events if
+> the signal is blocked may work for some usecases, but likely causes
+> issues in others that then have to revert back to interception of
+> sigprocmask() (which we want to avoid). [ A concrete example: when using
+> breakpoint perf events to track data-flow, in a region of code where
+> signals are blocked, data-flow can no longer be tracked accurately.
+> When a relevant asynchronous signal is received after unblocking the
+> signal, the data-flow tracking logic needs to know its state is
+> imprecise. ]
+>
+> Link: https://lore.kernel.org/all/Yjmn%2FkVblV3TdoAq@elver.google.com/
+> Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+> Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-To avoid getting tunnel vision, I haven't red any of the comments already posted
-about this set.  As such some of my observations may be redundant.
+Tested-by: Dmitry Vyukov <dvyukov@google.com>
 
-On Tue, Mar 08, 2022 at 08:49:51PM +0000, Mike Leach wrote:
-> The existing mechanism to assign Trace ID values to sources is limited
-> and does not scale for larger multicore / multi trace source systems.
-> 
-> The API introduces functions that reserve IDs based on availabilty
-> represented by a coresight_trace_id_map structure. This records the
-> used and free IDs in a bitmap.
-> 
-> CPU bound sources such as ETMs use the coresight_trace_id_get_cpu_id /
-> coresight_trace_id_put_cpu_id pair of functions. The API will record
-> the ID associated with the CPU. This ensures that the same ID will be
-> re-used while perf events are active on the CPU. The put_cpu_id function
-> will pend release of the ID until all perf cs_etm sessions are complete.
-> 
-> Non-cpu sources, such as the STM can use coresight_trace_id_get_system_id /
-> coresight_trace_id_put_system_id.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+I've tested delivery of SIGTRAPs when it's blocked with sigprocmask,
+it does not kill the process now.
+
+And tested the case where previously I was getting infinite recursion
+and stack overflow (SIGTRAP handler causes another SIGTRAP recursively
+before being able to detect recursion and return). With this patch it
+can be handled by blocking recursive SIGTRAPs (!SA_NODEFER).
+
+
 > ---
->  drivers/hwtracing/coresight/Makefile          |   2 +-
->  .../hwtracing/coresight/coresight-trace-id.c  | 222 ++++++++++++++++++
->  .../hwtracing/coresight/coresight-trace-id.h  |  69 ++++++
->  3 files changed, 292 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
->  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
-> 
-> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-> index b6c4a48140ec..329a0c704b87 100644
-> --- a/drivers/hwtracing/coresight/Makefile
-> +++ b/drivers/hwtracing/coresight/Makefile
-> @@ -6,7 +6,7 @@ obj-$(CONFIG_CORESIGHT) += coresight.o
->  coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
->  		coresight-sysfs.o coresight-syscfg.o coresight-config.o \
->  		coresight-cfg-preload.o coresight-cfg-afdo.o \
-> -		coresight-syscfg-configfs.o
-> +		coresight-syscfg-configfs.o coresight-trace-id.o
->  obj-$(CONFIG_CORESIGHT_LINK_AND_SINK_TMC) += coresight-tmc.o
->  coresight-tmc-y := coresight-tmc-core.o coresight-tmc-etf.o \
->  		      coresight-tmc-etr.o
-> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-> new file mode 100644
-> index 000000000000..ce6c7d7b55d6
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-> @@ -0,0 +1,222 @@
-> +// SPDX-License-Identifier: GPL-2.0
+>  arch/arm/kernel/signal.c           |  1 +
+>  arch/arm64/kernel/signal.c         |  1 +
+>  arch/arm64/kernel/signal32.c       |  1 +
+>  arch/m68k/kernel/signal.c          |  1 +
+>  arch/sparc/kernel/signal32.c       |  1 +
+>  arch/sparc/kernel/signal_64.c      |  1 +
+>  arch/x86/kernel/signal_compat.c    |  2 ++
+>  include/linux/compat.h             |  1 +
+>  include/linux/sched/signal.h       |  2 +-
+>  include/uapi/asm-generic/siginfo.h |  7 +++++++
+>  kernel/events/core.c               |  4 ++--
+>  kernel/signal.c                    | 18 ++++++++++++++++--
+>  12 files changed, 35 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/arm/kernel/signal.c b/arch/arm/kernel/signal.c
+> index 459abc5d1819..ea128e32e8ca 100644
+> --- a/arch/arm/kernel/signal.c
+> +++ b/arch/arm/kernel/signal.c
+> @@ -708,6 +708,7 @@ static_assert(offsetof(siginfo_t, si_upper) == 0x18);
+>  static_assert(offsetof(siginfo_t, si_pkey)     == 0x14);
+>  static_assert(offsetof(siginfo_t, si_perf_data)        == 0x10);
+>  static_assert(offsetof(siginfo_t, si_perf_type)        == 0x14);
+> +static_assert(offsetof(siginfo_t, si_perf_flags) == 0x18);
+>  static_assert(offsetof(siginfo_t, si_band)     == 0x0c);
+>  static_assert(offsetof(siginfo_t, si_fd)       == 0x10);
+>  static_assert(offsetof(siginfo_t, si_call_addr)        == 0x0c);
+> diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
+> index 4a4122ef6f39..41b5d9d3672a 100644
+> --- a/arch/arm64/kernel/signal.c
+> +++ b/arch/arm64/kernel/signal.c
+> @@ -1011,6 +1011,7 @@ static_assert(offsetof(siginfo_t, si_upper)       == 0x28);
+>  static_assert(offsetof(siginfo_t, si_pkey)     == 0x20);
+>  static_assert(offsetof(siginfo_t, si_perf_data)        == 0x18);
+>  static_assert(offsetof(siginfo_t, si_perf_type)        == 0x20);
+> +static_assert(offsetof(siginfo_t, si_perf_flags) == 0x24);
+>  static_assert(offsetof(siginfo_t, si_band)     == 0x10);
+>  static_assert(offsetof(siginfo_t, si_fd)       == 0x18);
+>  static_assert(offsetof(siginfo_t, si_call_addr)        == 0x10);
+> diff --git a/arch/arm64/kernel/signal32.c b/arch/arm64/kernel/signal32.c
+> index d984282b979f..4700f8522d27 100644
+> --- a/arch/arm64/kernel/signal32.c
+> +++ b/arch/arm64/kernel/signal32.c
+> @@ -487,6 +487,7 @@ static_assert(offsetof(compat_siginfo_t, si_upper)  == 0x18);
+>  static_assert(offsetof(compat_siginfo_t, si_pkey)      == 0x14);
+>  static_assert(offsetof(compat_siginfo_t, si_perf_data) == 0x10);
+>  static_assert(offsetof(compat_siginfo_t, si_perf_type) == 0x14);
+> +static_assert(offsetof(compat_siginfo_t, si_perf_flags)        == 0x18);
+>  static_assert(offsetof(compat_siginfo_t, si_band)      == 0x0c);
+>  static_assert(offsetof(compat_siginfo_t, si_fd)                == 0x10);
+>  static_assert(offsetof(compat_siginfo_t, si_call_addr) == 0x0c);
+> diff --git a/arch/m68k/kernel/signal.c b/arch/m68k/kernel/signal.c
+> index 49533f65958a..b9f6908a31bc 100644
+> --- a/arch/m68k/kernel/signal.c
+> +++ b/arch/m68k/kernel/signal.c
+> @@ -625,6 +625,7 @@ static inline void siginfo_build_tests(void)
+>         /* _sigfault._perf */
+>         BUILD_BUG_ON(offsetof(siginfo_t, si_perf_data) != 0x10);
+>         BUILD_BUG_ON(offsetof(siginfo_t, si_perf_type) != 0x14);
+> +       BUILD_BUG_ON(offsetof(siginfo_t, si_perf_flags) != 0x18);
+>
+>         /* _sigpoll */
+>         BUILD_BUG_ON(offsetof(siginfo_t, si_band)   != 0x0c);
+> diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
+> index f9fe502b81c6..dad38960d1a8 100644
+> --- a/arch/sparc/kernel/signal32.c
+> +++ b/arch/sparc/kernel/signal32.c
+> @@ -779,5 +779,6 @@ static_assert(offsetof(compat_siginfo_t, si_upper)  == 0x18);
+>  static_assert(offsetof(compat_siginfo_t, si_pkey)      == 0x14);
+>  static_assert(offsetof(compat_siginfo_t, si_perf_data) == 0x10);
+>  static_assert(offsetof(compat_siginfo_t, si_perf_type) == 0x14);
+> +static_assert(offsetof(compat_siginfo_t, si_perf_flags)        == 0x18);
+>  static_assert(offsetof(compat_siginfo_t, si_band)      == 0x0c);
+>  static_assert(offsetof(compat_siginfo_t, si_fd)                == 0x10);
+> diff --git a/arch/sparc/kernel/signal_64.c b/arch/sparc/kernel/signal_64.c
+> index 8b9fc76cd3e0..570e43e6fda5 100644
+> --- a/arch/sparc/kernel/signal_64.c
+> +++ b/arch/sparc/kernel/signal_64.c
+> @@ -590,5 +590,6 @@ static_assert(offsetof(siginfo_t, si_upper) == 0x28);
+>  static_assert(offsetof(siginfo_t, si_pkey)     == 0x20);
+>  static_assert(offsetof(siginfo_t, si_perf_data)        == 0x18);
+>  static_assert(offsetof(siginfo_t, si_perf_type)        == 0x20);
+> +static_assert(offsetof(siginfo_t, si_perf_flags) == 0x24);
+>  static_assert(offsetof(siginfo_t, si_band)     == 0x10);
+>  static_assert(offsetof(siginfo_t, si_fd)       == 0x14);
+> diff --git a/arch/x86/kernel/signal_compat.c b/arch/x86/kernel/signal_compat.c
+> index b52407c56000..879ef8c72f5c 100644
+> --- a/arch/x86/kernel/signal_compat.c
+> +++ b/arch/x86/kernel/signal_compat.c
+> @@ -149,8 +149,10 @@ static inline void signal_compat_build_tests(void)
+>
+>         BUILD_BUG_ON(offsetof(siginfo_t, si_perf_data) != 0x18);
+>         BUILD_BUG_ON(offsetof(siginfo_t, si_perf_type) != 0x20);
+> +       BUILD_BUG_ON(offsetof(siginfo_t, si_perf_flags) != 0x24);
+>         BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_data) != 0x10);
+>         BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_type) != 0x14);
+> +       BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_flags) != 0x18);
+>
+>         CHECK_CSI_OFFSET(_sigpoll);
+>         CHECK_CSI_SIZE  (_sigpoll, 2*sizeof(int));
+> diff --git a/include/linux/compat.h b/include/linux/compat.h
+> index 1c758b0e0359..01fddf72a81f 100644
+> --- a/include/linux/compat.h
+> +++ b/include/linux/compat.h
+> @@ -235,6 +235,7 @@ typedef struct compat_siginfo {
+>                                 struct {
+>                                         compat_ulong_t _data;
+>                                         u32 _type;
+> +                                       u32 _flags;
+>                                 } _perf;
+>                         };
+>                 } _sigfault;
+> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+> index 3c8b34876744..bab7cc56b13a 100644
+> --- a/include/linux/sched/signal.h
+> +++ b/include/linux/sched/signal.h
+> @@ -320,7 +320,7 @@ int send_sig_mceerr(int code, void __user *, short, struct task_struct *);
+>
+>  int force_sig_bnderr(void __user *addr, void __user *lower, void __user *upper);
+>  int force_sig_pkuerr(void __user *addr, u32 pkey);
+> -int force_sig_perf(void __user *addr, u32 type, u64 sig_data);
+> +int send_sig_perf(void __user *addr, u32 type, u64 sig_data);
+>
+>  int force_sig_ptrace_errno_trap(int errno, void __user *addr);
+>  int force_sig_fault_trapno(int sig, int code, void __user *addr, int trapno);
+> diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
+> index 3ba180f550d7..ffbe4cec9f32 100644
+> --- a/include/uapi/asm-generic/siginfo.h
+> +++ b/include/uapi/asm-generic/siginfo.h
+> @@ -99,6 +99,7 @@ union __sifields {
+>                         struct {
+>                                 unsigned long _data;
+>                                 __u32 _type;
+> +                               __u32 _flags;
+>                         } _perf;
+>                 };
+>         } _sigfault;
+> @@ -164,6 +165,7 @@ typedef struct siginfo {
+>  #define si_pkey                _sifields._sigfault._addr_pkey._pkey
+>  #define si_perf_data   _sifields._sigfault._perf._data
+>  #define si_perf_type   _sifields._sigfault._perf._type
+> +#define si_perf_flags  _sifields._sigfault._perf._flags
+>  #define si_band                _sifields._sigpoll._band
+>  #define si_fd          _sifields._sigpoll._fd
+>  #define si_call_addr   _sifields._sigsys._call_addr
+> @@ -270,6 +272,11 @@ typedef struct siginfo {
+>   * that are of the form: ((PTRACE_EVENT_XXX << 8) | SIGTRAP)
+>   */
+>
 > +/*
-> + * Copyright (c) 2022, Linaro Limited, All rights reserved.
-> + * Author: Mike Leach <mike.leach@linaro.org>
+> + * Flags for si_perf_flags if SIGTRAP si_code is TRAP_PERF.
 > + */
-> +#include <linux/kernel.h>
-> +#include <linux/types.h>
-> +#include <linux/spinlock.h>
+> +#define TRAP_PERF_FLAG_ASYNC (1u << 0)
 > +
-> +#include "coresight-trace-id.h"
+>  /*
+>   * SIGCHLD si_codes
+>   */
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index cfde994ce61c..6eafb1b0ad4a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6533,8 +6533,8 @@ static void perf_sigtrap(struct perf_event *event)
+>         if (current->flags & PF_EXITING)
+>                 return;
+>
+> -       force_sig_perf((void __user *)event->pending_addr,
+> -                      event->attr.type, event->attr.sig_data);
+> +       send_sig_perf((void __user *)event->pending_addr,
+> +                     event->attr.type, event->attr.sig_data);
+>  }
+>
+>  static void perf_pending_event_disable(struct perf_event *event)
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 30cd1ca43bcd..e43bc2a692f5 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1805,7 +1805,7 @@ int force_sig_pkuerr(void __user *addr, u32 pkey)
+>  }
+>  #endif
+>
+> -int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
+> +int send_sig_perf(void __user *addr, u32 type, u64 sig_data)
+>  {
+>         struct kernel_siginfo info;
+>
+> @@ -1817,7 +1817,18 @@ int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
+>         info.si_perf_data = sig_data;
+>         info.si_perf_type = type;
+>
+> -       return force_sig_info(&info);
+> +       /*
+> +        * Signals generated by perf events should not terminate the whole
+> +        * process if SIGTRAP is blocked, however, delivering the signal
+> +        * asynchronously is better than not delivering at all. But tell user
+> +        * space if the signal was asynchronous, so it can clearly be
+> +        * distinguished from normal synchronous ones.
+> +        */
+> +       info.si_perf_flags = sigismember(&current->blocked, info.si_signo) ?
+> +                                    TRAP_PERF_FLAG_ASYNC :
+> +                                    0;
 > +
-> +/* need to keep data on ids & association with cpus. */
-> +struct cpu_id_info {
-> +	int id;
-> +	bool pend_rel;
-> +};
-> +
-> +/* maintain a record of the current mapping of cpu IDs */
-> +static DEFINE_PER_CPU(struct cpu_id_info, cpu_ids);
-> +
-> +/* a list of currently used id_maps */
-> +static LIST_HEAD(id_map_list);
-> +
-> +/* perf session active flag */
-> +static int perf_cs_etm_session_active;
-> +
-> +/* lock to protect id_map list and cpu data  */
-> +static DEFINE_SPINLOCK(id_map_lock);
-> +
-> +/* ID 0 is reserved */
-> +#define CORESIGHT_TRACE_ID_RES_0 0
-> +
-> +/* ID 0x70 onwards are reserved */
-> +#define CORESIGHT_TRACE_ID_RES_RANGE_LO 0x70
-> +#define CORESIGHT_TRACE_ID_RES_RANGE_HI 0x7F
-> +
-> +#define IS_VALID_ID(id)	\
-> +	((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_RANGE_LO))
-> +
-> +static void coresight_trace_id_set_inuse(int id, struct coresight_trace_id_map *id_map)
-> +{
-> +	if (IS_VALID_ID(id))
-> +		set_bit(id, id_map->avail_ids);
-> +}
-> +
-> +static void coresight_trace_id_clear_inuse(int id, struct coresight_trace_id_map *id_map)
-> +{
-> +	if (IS_VALID_ID(id))
-> +		clear_bit(id, id_map->avail_ids);
-> +}
-> +
-> +static void coresight_trace_id_set_pend_rel(int id, struct coresight_trace_id_map *id_map)
-> +{
-> +	if (IS_VALID_ID(id))
-> +		set_bit(id, id_map->pend_rel_ids);
-> +}
-> +
-> +static void coresight_trace_id_clear_pend_rel(int id, struct coresight_trace_id_map *id_map)
-> +{
-> +	if (IS_VALID_ID(id))
-> +		clear_bit(id, id_map->pend_rel_ids);
-> +}
-> +
-> +static int coresight_trace_id_find_new_id(struct coresight_trace_id_map *id_map)
-> +{
-> +	int id;
-> +
-> +	id = find_first_zero_bit(id_map->avail_ids, CORESIGHT_TRACE_IDS_MAX);
-> +	if (id >= CORESIGHT_TRACE_IDS_MAX)
-> +		id = -EINVAL;
-> +	return id;
-> +}
-> +
-> +/* release all pending IDs for all current maps & clear CPU associations */
-> +static void coresight_trace_id_release_all_pending(void)
-> +{
-> +	struct coresight_trace_id_map *id_map;
-> +	int cpu, bit;
-> +
-> +	list_for_each_entry(id_map, &id_map_list, node) {
-> +		for_each_set_bit(bit, id_map->pend_rel_ids, CORESIGHT_TRACE_IDS_MAX) {
-> +			clear_bit(bit, id_map->avail_ids);
-> +			clear_bit(bit, id_map->pend_rel_ids);
-> +		}
-> +	}
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		if (per_cpu(cpu_ids, cpu).pend_rel) {
-> +			per_cpu(cpu_ids, cpu).pend_rel = false;
-> +			per_cpu(cpu_ids, cpu).id = 0;
-> +		}
-> +	}
-> +}
-> +
-> +int coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
-> +{
-> +	unsigned long flags;
-> +	int id;
-> +
-> +	spin_lock_irqsave(&id_map_lock, flags);
-> +	id = per_cpu(cpu_ids, cpu).id;
-> +	if (!id) {
-> +		id = coresight_trace_id_find_new_id(id_map);
-> +		if (id < 0)
-> +			goto get_cpu_id_out;
-> +	}
-> +
-> +	per_cpu(cpu_ids, cpu).id = id;
-> +	per_cpu(cpu_ids, cpu).pend_rel = false;
-> +	coresight_trace_id_set_inuse(id, id_map);
-> +	coresight_trace_id_clear_pend_rel(id, id_map);
-
-The above should have been done when the ID for this CPU has been set for the
-first time.  Therefore we should simply release the spinlock and return if an ID
-has already been set.
-
-> +
-> +get_cpu_id_out:
-> +	spin_unlock_irqrestore(&id_map_lock, flags);
-> +	return id;
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
-> +
-> +void coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
-> +{
-> +	unsigned long flags;
-> +	int id;
-> +
-> +	spin_lock_irqsave(&id_map_lock, flags);
-> +	id = per_cpu(cpu_ids, cpu).id;
-> +	if (!id)
-> +		goto put_cpu_id_out;
-> +
-> +	if (perf_cs_etm_session_active) {
-> +		/* set release at pending if perf still active */
-> +		coresight_trace_id_set_pend_rel(id, id_map);
-> +		per_cpu(cpu_ids, cpu).pend_rel = true;
-> +	} else {
-> +		/* otherwise clear id */
-> +		coresight_trace_id_clear_inuse(id, id_map);
-> +		per_cpu(cpu_ids, cpu).id = 0;
-> +	}
-> +
-> + put_cpu_id_out:
-> +	spin_unlock_irqrestore(&id_map_lock, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
-> +
-> +int coresight_trace_id_get_system_id(struct coresight_trace_id_map *id_map)
-> +{
-
-So far I have reviewed until patch 05 and I find passing the id_map every time
-we need an ID quite heavy, especially since it is always the same one. 
-
-> +	unsigned long flags;
-> +	int id;
-> +
-> +	spin_lock_irqsave(&id_map_lock, flags);
-> +	id = coresight_trace_id_find_new_id(id_map);
-> +	if (id > 0)
-> +		coresight_trace_id_set_inuse(id, id_map);
-> +	spin_unlock_irqrestore(&id_map_lock, flags);
-> +
-> +	return id;
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_system_id);
-> +
-> +void coresight_trace_id_put_system_id(struct coresight_trace_id_map *id_map, int id)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&id_map_lock, flags);
-> +	coresight_trace_id_clear_inuse(id, id_map);
-> +	spin_unlock_irqrestore(&id_map_lock, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
-> +
-> +void coresight_trace_id_perf_start(void)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&id_map_lock, flags);
-> +	perf_cs_etm_session_active++;
-> +	spin_unlock_irqrestore(&id_map_lock, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
-> +
-> +void coresight_trace_id_perf_stop(void)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&id_map_lock, flags);
-> +	perf_cs_etm_session_active--;
-> +	if (!perf_cs_etm_session_active)
-> +		coresight_trace_id_release_all_pending();
-> +	spin_unlock_irqrestore(&id_map_lock, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
-> +
-> +void coresight_trace_id_init_id_map(struct coresight_trace_id_map *id_map)
-> +{
-> +	unsigned long flags;
-> +	int bit;
-> +
-> +	/* set all reserved bits as in-use */
-> +	set_bit(CORESIGHT_TRACE_ID_RES_0, id_map->avail_ids);
-> +	for (bit = CORESIGHT_TRACE_ID_RES_RANGE_LO;
-> +	     bit <= CORESIGHT_TRACE_ID_RES_RANGE_HI; bit++)
-> +		set_bit(bit, id_map->avail_ids);
-> +
-> +	spin_lock_irqsave(&id_map_lock, flags);
-> +
-> +	/* add id_map to the list */
-> +	list_add(&id_map->node, &id_map_list);
-> +
-> +	spin_unlock_irqrestore(&id_map_lock, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_trace_id_init_id_map);
-> +
-> +void coresight_trace_id_release_id_map(struct coresight_trace_id_map *id_map)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&id_map_lock, flags);
-> +
-> +	/* remove id_map from list */
-> +	list_del(&id_map->node);
-> +
-> +	spin_unlock_irqrestore(&id_map_lock, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_trace_id_release_id_map);
-> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
-> new file mode 100644
-> index 000000000000..01db2441cee6
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
-> @@ -0,0 +1,69 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright(C) 2022 Linaro Limited. All rights reserved.
-> + * Author: Mike Leach <mike.leach@linaro.org>
-> + */
-> +
-> +#ifndef _CORESIGHT_TRACE_ID_H
-> +#define _CORESIGHT_TRACE_ID_H
-> +
-> +/*
-> + * Coresight trace ID allocation API
-> + *
-> + * With multi cpu systems, and more additional trace sources a scalable
-> + * trace ID reservation system is required.
-> + *
-> + * The system will allocate Ids on a demand basis, and allow them to be
-> + * released when done.
-> + *
-> + * In order to ensure that a consistent cpu / ID matching is maintained
-> + * throughout a perf cs_etm event session - a session in progress flag will
-> + * be maintained, and released IDs not cleared until the perf session is
-> + * complete. This allows the same CPU to be re-allocated its prior ID.
-> + *
-> + *
-> + * Trace ID maps will be created and initialised to prevent architecturally
-> + * reserved IDs from being allocated.
-> + *
-> + * API permits multiple maps to be maintained - for large systems where
-> + * different sets of cpus trace into different independent sinks.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/types.h>
-> +
-> +
-> +/* architecturally we have 128 IDs some of which are reserved */
-> +#define CORESIGHT_TRACE_IDS_MAX 128
-> +
-> +/**
-> + * Trace ID map.
-> + *
-> + * @avail_ids:	Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
-> + *		Initialised so that the reserved IDs are permanently marked as in use.
-> + * @pend_rel_ids: CPU IDs that have been released by the trace source but not yet marked
-> + *                as available, to allow re-allocation to the same CPU during a perf session.
-> + * @node:	List entry to add to list of managed trace id maps.
-> + */
-> +struct coresight_trace_id_map {
-> +	DECLARE_BITMAP(avail_ids, CORESIGHT_TRACE_IDS_MAX);
-> +	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
-> +	struct list_head node;
-> +};
-> +
-> +/* Allocate and release IDs */
-> +int coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map);
-> +int coresight_trace_id_get_system_id(struct coresight_trace_id_map *id_map);
-> +void coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map);
-> +void coresight_trace_id_put_system_id(struct coresight_trace_id_map *id_map, int id);
-> +
-> +/* initialise ID map - block reserved IDs, add to list of ID maps */
-> +void coresight_trace_id_init_id_map(struct coresight_trace_id_map *id_map);
-> +/* remove ID maps from list of maps */
-> +void coresight_trace_id_release_id_map(struct coresight_trace_id_map *id_map);
-> +
-> +/* notifiers for perf session start and stop */
-> +void coresight_trace_id_perf_start(void);
-> +void coresight_trace_id_perf_stop(void);
-> +
-> +#endif /* _CORESIGHT_TRACE_ID_H */
-> -- 
-> 2.17.1
-> 
+> +       return send_sig_info(info.si_signo, &info, current);
+>  }
+>
+>  /**
+> @@ -3432,6 +3443,7 @@ void copy_siginfo_to_external32(struct compat_siginfo *to,
+>                 to->si_addr = ptr_to_compat(from->si_addr);
+>                 to->si_perf_data = from->si_perf_data;
+>                 to->si_perf_type = from->si_perf_type;
+> +               to->si_perf_flags = from->si_perf_flags;
+>                 break;
+>         case SIL_CHLD:
+>                 to->si_pid = from->si_pid;
+> @@ -3509,6 +3521,7 @@ static int post_copy_siginfo_from_user32(kernel_siginfo_t *to,
+>                 to->si_addr = compat_ptr(from->si_addr);
+>                 to->si_perf_data = from->si_perf_data;
+>                 to->si_perf_type = from->si_perf_type;
+> +               to->si_perf_flags = from->si_perf_flags;
+>                 break;
+>         case SIL_CHLD:
+>                 to->si_pid    = from->si_pid;
+> @@ -4722,6 +4735,7 @@ static inline void siginfo_buildtime_checks(void)
+>         CHECK_OFFSET(si_pkey);
+>         CHECK_OFFSET(si_perf_data);
+>         CHECK_OFFSET(si_perf_type);
+> +       CHECK_OFFSET(si_perf_flags);
+>
+>         /* sigpoll */
+>         CHECK_OFFSET(si_band);
+> --
+> 2.35.1.1094.g7c7d902a7c-goog
+>
