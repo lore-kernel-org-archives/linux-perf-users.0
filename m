@@ -2,318 +2,353 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DA7C43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FD2C4167B
 	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Apr 2022 21:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243877AbiDEVaP (ORCPT
+        id S244661AbiDEVaV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Apr 2022 17:30:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53910 "EHLO
+        Tue, 5 Apr 2022 17:30:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1572951AbiDERYD (ORCPT
+        with ESMTP id S1573083AbiDERy5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Apr 2022 13:24:03 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F1E14013
-        for <linux-perf-users@vger.kernel.org>; Tue,  5 Apr 2022 10:22:05 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id nt14-20020a17090b248e00b001ca601046a4so3277638pjb.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Apr 2022 10:22:05 -0700 (PDT)
+        Tue, 5 Apr 2022 13:54:57 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D64B6DE098
+        for <linux-perf-users@vger.kernel.org>; Tue,  5 Apr 2022 10:52:57 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id j12so12909951wrb.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Apr 2022 10:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=laM1f/S71ICTL1TD1U0zhVuyMXNKqPVUGfM/offuIZM=;
-        b=v6TAHchqQbMhtlkYPAVee+zEOJ7r+t4eI6tYYWRuTywqS36cFphNgDrVD2Py6XO6JX
-         VqVqFyCEJAg2aw7CJslt3nqlFx81BF3E6tLmTlsaQjarngYqzmm8sT6g447AvBw77Z5K
-         I2PccuFl5jGkRBZHJDgt2sm12C++Pjc/9pFZck3PyK/KOXhyAbqf8fLn5Ua3qjdp37zM
-         Nc8eAAIpD6uTCyuozjMAAFaNufKrmpmr5eKyJ2rr8TfYTnwNMvTZS+FJLWLRQZl2Xhl/
-         sQk1Dip9c/vYXWFsv4jxalhD2V0TQAeUzvtvhCvCzMRbUfelvRrG6h5duA9+D/e8sF+z
-         8Ngw==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rfQvZQAVT5MbUjtOudkNp0xxDlMhGlQ+Xf2K1QkwOE0=;
+        b=qZ4GjDNJV/h/60dOw6GpN8omhAC5g1vtQbt421s+ZJboD4OP2tI/iQf7pfU5TkLm2p
+         C0pd8V6pxkfdDdiaKud41mh6hW6j38+YgVHknQjqXxW+5Amhg5XZmg4JJjeSyvNdAWFS
+         yVvoc5EKg75qAIaT8I7kP/j0fo0wLq7BYO5dn7qaGKiJYFxUlmYeqCUHRjekm0Kk3J5G
+         hfRV+aXUPKTt26J+I5lGqy2oeg63oy/Vz0jssiOkAcAIO/27qK4hFeKf0Pn/KAD+CJ5Y
+         yL2TtvXHE22+BleKJtNKui/7DtqpAWIsn6hX/V49j/waBBUmbyWnGO6+KapwAK0nfsdk
+         cSxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=laM1f/S71ICTL1TD1U0zhVuyMXNKqPVUGfM/offuIZM=;
-        b=XwOAYSuC7p/y+w5dxVYXZb2gVv00v1jOA6WzwUTgH6TPpuuCkGour/zyiVVEfDDcZS
-         bavE4DLgV3yNoLGHt6JTBopHNynGIEhN72g6I43C5mCG4KE2ktSgjHOcKCiMkPpceZAg
-         UpjfFh0QP34dW5J90uh+xkCExLTwH/TUQy0jho0Amnc4OB8hiJGEd27Pp7JayW7DWMAQ
-         zhBEDC9RnEJiX9xysPBjwR1geYC1PxHSX51SkB+fWSuIDHq+eMO402K/w8HIyC5vtgOJ
-         D+eSsJVnGe9um9E4gUXcenI2yGF3lIgLL9y11gmg+ktG5cgGPHo8lSOa1bP9FOdlB4br
-         cuLg==
-X-Gm-Message-State: AOAM532j4RvvjSLmcbseUZ7zxvZVTyiDFniWHz7XRlqmgFs+DtjwnU8x
-        unuyY+TLoSrlVnoINt1NlZtvpQ==
-X-Google-Smtp-Source: ABdhPJxEYOml8rHEZLl5woVjHpWk88FIVHHT7m9ZkuZBSDa3BCoF2H5aNhHmPrs6HKu5yGlfFr3kKA==
-X-Received: by 2002:a17:90b:3e8b:b0:1c7:852d:e843 with SMTP id rj11-20020a17090b3e8b00b001c7852de843mr5255268pjb.244.1649179324572;
-        Tue, 05 Apr 2022 10:22:04 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id d4-20020a17090ad3c400b001c65ba76911sm2989210pjw.3.2022.04.05.10.22.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Apr 2022 10:22:03 -0700 (PDT)
-Date:   Tue, 5 Apr 2022 11:22:00 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org
-Subject: Re: [PATCH 05/10] coresight: etm3x: Use trace ID API to allocate IDs
-Message-ID: <20220405172200.GB4151723@p14s>
-References: <20220308205000.27646-1-mike.leach@linaro.org>
- <20220308205000.27646-6-mike.leach@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rfQvZQAVT5MbUjtOudkNp0xxDlMhGlQ+Xf2K1QkwOE0=;
+        b=iXxUDFGeXFiPVYD/opXLztbHMtdDoNDIHhgxUOvvuH6aUTBnIuPlutuFpygTP0oa6h
+         zE5MofJON0qDMAGPHyjPyMBRrnqG8wr+ElbYFk+R3iSgoDgN1LvWb65bIFusJDdl2Fyt
+         EN654MOPdXuUYJPQFe7qA8QZUV1sutpFznf994mOjN6NxB/tLKLfZx80mRqW+UcYNVRd
+         3u1RPh9Kfs7IV205HVEUUi1IHj3Yqvtd+aTZ9mEv0zznxwyEbSAueP54OUvWIZtjgVRf
+         i3DUl1L0sT4Lm0d9lZn7QUADvP/RWo//MZFexGgKv9CXmCZ69n1tN29/JtKiiqbINjFi
+         iTDA==
+X-Gm-Message-State: AOAM531uPxIlKaLbjEcRwqgKutcjTrbYRsbmt+KFj5KOMoMpRMUPbh9o
+        bXfI70gjRThS1zvirqn0AJJociSQAjq8nVzAFDHYSg==
+X-Google-Smtp-Source: ABdhPJw3X0Yex6ZhSiSoN3kyUGsdkSsuWXqiOwUMcIHUzAwCI1i0OSioKpRdtv2iFVaqSH9kgCZYI3sTxr9nhekK79s=
+X-Received: by 2002:adf:8123:0:b0:206:1759:f164 with SMTP id
+ 32-20020adf8123000000b002061759f164mr3733847wrm.654.1649181175492; Tue, 05
+ Apr 2022 10:52:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220308205000.27646-6-mike.leach@linaro.org>
+References: <20220401185853.23912-1-atrajeev@linux.vnet.ibm.com> <20220401185853.23912-4-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20220401185853.23912-4-atrajeev@linux.vnet.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 5 Apr 2022 10:52:43 -0700
+Message-ID: <CAP-5=fX6n-VkQWAxLm4YHCkfUAvB+dwiaTJyD5Xpowv-OE9z8g@mail.gmail.com>
+Subject: Re: [PATCH 3/4] tools/perf: Fix perf numa bench to fix usage of
+ affinity for machines with #CPUs > 1K
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 08, 2022 at 08:49:55PM +0000, Mike Leach wrote:
-> Use the TraceID API to allocate ETM trace IDs dynamically.
-> 
-> As with the etm4x we allocate on enable / disable for perf,
-> allocate on enable / reset for sysfs.
-> 
-> Additionally we allocate on sysfs file read as both perf and sysfs
-> can read the ID before enabling the hardware.
-> 
-> Remove sysfs option to write trace ID - which is inconsistent with
-> both the dynamic allocation method and the fixed allocation method
-> previously used.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> ---
->  drivers/hwtracing/coresight/coresight-etm.h   |  2 +
->  .../coresight/coresight-etm3x-core.c          | 72 ++++++++++++++++---
->  .../coresight/coresight-etm3x-sysfs.c         | 28 +++-----
->  3 files changed, 71 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm.h b/drivers/hwtracing/coresight/coresight-etm.h
-> index f3ab96eaf44e..3667428d38b6 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm.h
-> +++ b/drivers/hwtracing/coresight/coresight-etm.h
-> @@ -287,4 +287,6 @@ int etm_get_trace_id(struct etm_drvdata *drvdata);
->  void etm_set_default(struct etm_config *config);
->  void etm_config_trace_mode(struct etm_config *config);
->  struct etm_config *get_etm_config(struct etm_drvdata *drvdata);
-> +int etm_read_alloc_trace_id(struct etm_drvdata *drvdata);
-> +void etm_release_trace_id(struct etm_drvdata *drvdata);
->  #endif
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> index 7d413ba8b823..98213503bd09 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> @@ -32,6 +32,7 @@
->  
->  #include "coresight-etm.h"
->  #include "coresight-etm-perf.h"
-> +#include "coresight-trace-id.h"
->  
->  /*
->   * Not really modular but using module_param is the easiest way to
-> @@ -490,18 +491,57 @@ static int etm_trace_id(struct coresight_device *csdev)
->  	return etm_get_trace_id(drvdata);
->  }
->  
-> +int etm_read_alloc_trace_id(struct etm_drvdata *drvdata)
-> +{
-> +	int trace_id;
-> +
-> +	/*
-> +	 * This will allocate a trace ID to the cpu,
-> +	 * or return the one currently allocated.
-> +	 */
-> +	trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu,
-> +						 coresight_get_trace_id_map());
-> +	if (trace_id > 0) {
-> +		spin_lock(&drvdata->spinlock);
-> +		drvdata->traceid = (u8)trace_id;
-> +		spin_unlock(&drvdata->spinlock);
-> +	} else {
-> +		pr_err("Failed to allocate trace ID for %s on CPU%d\n",
-> +		       dev_name(&drvdata->csdev->dev), drvdata->cpu);
-> +	}
-> +	return trace_id;
-> +}
-> +
-> +void etm_release_trace_id(struct etm_drvdata *drvdata)
-> +{
-> +	coresight_trace_id_put_cpu_id(drvdata->cpu,
-> +				      coresight_get_trace_id_map());
-> +	spin_lock(&drvdata->spinlock);
-> +	drvdata->traceid = 0;
-> +	spin_unlock(&drvdata->spinlock);
-> +}
-> +
->  static int etm_enable_perf(struct coresight_device *csdev,
->  			   struct perf_event *event)
->  {
->  	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> +	int ret;
->  
->  	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id()))
->  		return -EINVAL;
->  
-> +	ret = etm_read_alloc_trace_id(drvdata);
-> +	if (ret < 0)
-> +		return ret;
+On Fri, Apr 1, 2022 at 11:59 AM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
 >
-
-For etm4x, this was done after etm_parse_event_config().  Please do the same
-here.
-
-
->  	/* Configure the tracer based on the session's specifics */
->  	etm_parse_event_config(drvdata, event);
->  	/* And enable it */
-> -	return etm_enable_hw(drvdata);
-> +	ret = etm_enable_hw(drvdata);
-> +
-> +	if (ret)
-> +		etm_release_trace_id(drvdata);
-> +	return ret;
+> perf bench numa testcase fails on systems with CPU's
+> more than 1K.
+>
+> Testcase: perf bench numa mem -p 1 -t 3 -P 512 -s 100 -zZ0qcm --thp  1
+> Snippet of code:
+> <<>>
+> perf: bench/numa.c:302: bind_to_node: Assertion `!(ret)' failed.
+> Aborted (core dumped)
+> <<>>
+>
+> bind_to_node function uses "sched_getaffinity" to save the original
+> cpumask and this call is returning EINVAL ((invalid argument).
+> This happens because the default mask size in glibc is 1024.
+> To overcome this 1024 CPUs mask size limitation of cpu_set_t,
+> change the mask size using the CPU_*_S macros ie, use CPU_ALLOC to
+> allocate cpumask, CPU_ALLOC_SIZE for size. Apart from fixing this
+> for "orig_mask", apply same logic to "mask" as well which is used to
+> setaffinity so that mask size is large enough to represent number
+> of possible CPU's in the system.
+>
+> sched_getaffinity is used in one more place in perf numa bench. It
+> is in "bind_to_cpu" function. Apply the same logic there also. Though
+> currently no failure is reported from there, it is ideal to change
+> getaffinity to work with such system configurations having CPU's more
+> than default mask size supported by glibc.
+>
+> Also fix "sched_setaffinity" to use mask size which is large enough
+> to represent number of possible CPU's in the system.
+>
+> Fixed all places where "bind_cpumask" which is part of "struct
+> thread_data" is used such that bind_cpumask works in all configuration.
+>
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/bench/numa.c | 109 +++++++++++++++++++++++++++++-----------
+>  1 file changed, 81 insertions(+), 28 deletions(-)
+>
+> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+> index f2640179ada9..333896907e45 100644
+> --- a/tools/perf/bench/numa.c
+> +++ b/tools/perf/bench/numa.c
+> @@ -54,7 +54,7 @@
+>
+>  struct thread_data {
+>         int                     curr_cpu;
+> -       cpu_set_t               bind_cpumask;
+> +       cpu_set_t               *bind_cpumask;
+>         int                     bind_node;
+>         u8                      *process_data;
+>         int                     process_nr;
+> @@ -266,46 +266,75 @@ static bool node_has_cpus(int node)
+>         return ret;
 >  }
->  
->  static int etm_enable_sysfs(struct coresight_device *csdev)
-> @@ -510,6 +550,10 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
->  	struct etm_enable_arg arg = { };
->  	int ret;
->  
-> +	ret = etm_read_alloc_trace_id(drvdata);
-> +	if (ret < 0)
-> +		return ret;
-> +
-
-Please add the same comment as in etm4_disable_sysfs() in etm_disable_sysfs().
-
->  	spin_lock(&drvdata->spinlock);
->  
->  	/*
-> @@ -532,6 +576,8 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
->  
->  	if (!ret)
->  		dev_dbg(&csdev->dev, "ETM tracing enabled\n");
-> +	else
-> +		etm_release_trace_id(drvdata);
->  	return ret;
->  }
->  
-> @@ -611,6 +657,8 @@ static void etm_disable_perf(struct coresight_device *csdev)
->  	coresight_disclaim_device_unlocked(csdev);
->  
->  	CS_LOCK(drvdata->base);
-> +
-> +	etm_release_trace_id(drvdata);
->  }
->  
->  static void etm_disable_sysfs(struct coresight_device *csdev)
-> @@ -781,11 +829,6 @@ static void etm_init_arch_data(void *info)
->  	CS_LOCK(drvdata->base);
->  }
->  
-> -static void etm_init_trace_id(struct etm_drvdata *drvdata)
-> -{
-> -	drvdata->traceid = coresight_get_trace_id(drvdata->cpu);
-> -}
-> -
->  static int __init etm_hp_setup(void)
+>
+> -static cpu_set_t bind_to_cpu(int target_cpu)
+> +static cpu_set_t *bind_to_cpu(int target_cpu)
 >  {
->  	int ret;
-> @@ -871,7 +914,6 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->  	if (etm_arch_supported(drvdata->arch) == false)
->  		return -EINVAL;
->  
-> -	etm_init_trace_id(drvdata);
->  	etm_set_default(&drvdata->config);
->  
->  	pdata = coresight_get_platform_data(dev);
-> @@ -891,10 +933,12 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->  		return PTR_ERR(drvdata->csdev);
->  
->  	ret = etm_perf_symlink(drvdata->csdev, true);
-> -	if (ret) {
-> -		coresight_unregister(drvdata->csdev);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		goto cs_unregister;
+> -       cpu_set_t orig_mask, mask;
+> +       int nrcpus = numa_num_possible_cpus();
+> +       cpu_set_t *orig_mask, *mask;
+> +       size_t size;
+>         int ret;
+>
+> -       ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
+> -       BUG_ON(ret);
+> +       orig_mask = CPU_ALLOC(nrcpus);
+> +       BUG_ON(!orig_mask);
+> +       size = CPU_ALLOC_SIZE(nrcpus);
+> +       CPU_ZERO_S(size, orig_mask);
 > +
-> +	ret = etm_read_alloc_trace_id(drvdata);
-> +	if (ret < 0)
-> +		goto cs_unregister;
->  
->  	etmdrvdata[drvdata->cpu] = drvdata;
->  
-> @@ -907,6 +951,10 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->  	}
->  
->  	return 0;
+> +       ret = sched_getaffinity(0, size, orig_mask);
+> +       if (ret) {
+> +               CPU_FREE(orig_mask);
+> +               BUG_ON(ret);
+> +       }
+>
+> -       CPU_ZERO(&mask);
+> +       mask = CPU_ALLOC(nrcpus);
+> +       BUG_ON(!mask);
+> +       CPU_ZERO_S(size, mask);
+>
+>         if (target_cpu == -1) {
+>                 int cpu;
+>
+>                 for (cpu = 0; cpu < g->p.nr_cpus; cpu++)
+> -                       CPU_SET(cpu, &mask);
+> +                       CPU_SET_S(cpu, size, mask);
+>         } else {
+>                 BUG_ON(target_cpu < 0 || target_cpu >= g->p.nr_cpus);
+> -               CPU_SET(target_cpu, &mask);
+> +               CPU_SET_S(target_cpu, size, mask);
+>         }
+>
+> -       ret = sched_setaffinity(0, sizeof(mask), &mask);
+> -       BUG_ON(ret);
+> +       ret = sched_setaffinity(0, size, mask);
+> +       if (ret) {
+> +               CPU_FREE(mask);
+> +               BUG_ON(ret);
+> +       }
 > +
-> +cs_unregister:
-> +	coresight_unregister(drvdata->csdev);
-> +	return ret;
+> +       CPU_FREE(mask);
+
+This all looks good, a nit here it could it be a little shorter as:
+ret = sched_setaffinity(0, size, mask);
+CPU_FREE(mask);
+BUG_ON(ret);
+
+Thanks,
+Ian
+
+>
+>         return orig_mask;
 >  }
->  
->  static void clear_etmdrvdata(void *info)
-> @@ -922,6 +970,8 @@ static void etm_remove(struct amba_device *adev)
->  
->  	etm_perf_symlink(drvdata->csdev, false);
->  
-> +	etm_release_trace_id(drvdata);
-> +
->  	/*
->  	 * Taking hotplug lock here to avoid racing between etm_remove and
->  	 * CPU hotplug call backs.
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-> index e8c7649f123e..3ee70b174240 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-> @@ -86,6 +86,8 @@ static ssize_t reset_store(struct device *dev,
->  
->  		etm_set_default(config);
->  		spin_unlock(&drvdata->spinlock);
-> +		/* release trace id outside the spinlock as this fn uses it */
-> +		etm_release_trace_id(drvdata);
->  	}
->  
->  	return size;
-> @@ -1189,30 +1191,16 @@ static DEVICE_ATTR_RO(cpu);
->  static ssize_t traceid_show(struct device *dev,
->  			    struct device_attribute *attr, char *buf)
+>
+> -static cpu_set_t bind_to_node(int target_node)
+> +static cpu_set_t *bind_to_node(int target_node)
 >  {
-> -	unsigned long val;
-> -	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> -
-> -	val = etm_get_trace_id(drvdata);
-> -
-> -	return sprintf(buf, "%#lx\n", val);
-> -}
-> -
-> -static ssize_t traceid_store(struct device *dev,
-> -			     struct device_attribute *attr,
-> -			     const char *buf, size_t size)
-> -{
-> -	int ret;
-> -	unsigned long val;
-> +	int trace_id;
->  	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
->  
-> -	ret = kstrtoul(buf, 16, &val);
-> -	if (ret)
-> -		return ret;
-> +	trace_id = etm_read_alloc_trace_id(drvdata);
-> +	if (trace_id < 0)
-> +		return trace_id;
->  
-> -	drvdata->traceid = val & ETM_TRACEID_MASK;
-> -	return size;
-> +	return sprintf(buf, "%#x\n", trace_id);
+> -       cpu_set_t orig_mask, mask;
+> +       int nrcpus = numa_num_possible_cpus();
+> +       cpu_set_t *orig_mask, *mask;
+> +       size_t size;
+>         int cpu;
+>         int ret;
+>
+> -       ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
+> -       BUG_ON(ret);
+> +       orig_mask = CPU_ALLOC(nrcpus);
+> +       BUG_ON(!orig_mask);
+> +       size = CPU_ALLOC_SIZE(nrcpus);
+> +       CPU_ZERO_S(size, orig_mask);
+> +
+> +       ret = sched_getaffinity(0, size, orig_mask);
+> +       if (ret) {
+> +               CPU_FREE(orig_mask);
+> +               BUG_ON(ret);
+> +       }
+>
+> -       CPU_ZERO(&mask);
+> +       mask = CPU_ALLOC(nrcpus);
+> +       BUG_ON(!mask);
+> +       CPU_ZERO_S(size, mask);
+>
+>         if (target_node == NUMA_NO_NODE) {
+>                 for (cpu = 0; cpu < g->p.nr_cpus; cpu++)
+> -                       CPU_SET(cpu, &mask);
+> +                       CPU_SET_S(cpu, size, mask);
+>         } else {
+>                 struct bitmask *cpumask = numa_allocate_cpumask();
+>
+> @@ -313,24 +342,33 @@ static cpu_set_t bind_to_node(int target_node)
+>                 if (!numa_node_to_cpus(target_node, cpumask)) {
+>                         for (cpu = 0; cpu < (int)cpumask->size; cpu++) {
+>                                 if (numa_bitmask_isbitset(cpumask, cpu))
+> -                                       CPU_SET(cpu, &mask);
+> +                                       CPU_SET_S(cpu, size, mask);
+>                         }
+>                 }
+>                 numa_free_cpumask(cpumask);
+>         }
+>
+> -       ret = sched_setaffinity(0, sizeof(mask), &mask);
+> -       BUG_ON(ret);
+> +       ret = sched_setaffinity(0, size, mask);
+> +       if (ret) {
+> +               CPU_FREE(mask);
+> +               BUG_ON(ret);
+> +       }
+> +
+> +       CPU_FREE(mask);
+>
+>         return orig_mask;
 >  }
-> -static DEVICE_ATTR_RW(traceid);
-> +static DEVICE_ATTR_RO(traceid);
->  
->  static struct attribute *coresight_etm_attrs[] = {
->  	&dev_attr_nr_addr_cmp.attr,
-> -- 
-> 2.17.1
-> 
+>
+> -static void bind_to_cpumask(cpu_set_t mask)
+> +static void bind_to_cpumask(cpu_set_t *mask)
+>  {
+>         int ret;
+> +       size_t size = CPU_ALLOC_SIZE(numa_num_possible_cpus());
+>
+> -       ret = sched_setaffinity(0, sizeof(mask), &mask);
+> -       BUG_ON(ret);
+> +       ret = sched_setaffinity(0, size, mask);
+> +       if (ret) {
+> +               CPU_FREE(mask);
+> +               BUG_ON(ret);
+> +       }
+>  }
+>
+>  static void mempol_restore(void)
+> @@ -376,7 +414,7 @@ do {                                                        \
+>  static u8 *alloc_data(ssize_t bytes0, int map_flags,
+>                       int init_zero, int init_cpu0, int thp, int init_random)
+>  {
+> -       cpu_set_t orig_mask;
+> +       cpu_set_t *orig_mask;
+>         ssize_t bytes;
+>         u8 *buf;
+>         int ret;
+> @@ -434,6 +472,7 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
+>         /* Restore affinity: */
+>         if (init_cpu0) {
+>                 bind_to_cpumask(orig_mask);
+> +               CPU_FREE(orig_mask);
+>                 mempol_restore();
+>         }
+>
+> @@ -589,6 +628,7 @@ static int parse_setup_cpu_list(void)
+>                 BUG_ON(bind_cpu_0 > bind_cpu_1);
+>
+>                 for (bind_cpu = bind_cpu_0; bind_cpu <= bind_cpu_1; bind_cpu += step) {
+> +                       size_t size = CPU_ALLOC_SIZE(g->p.nr_cpus);
+>                         int i;
+>
+>                         for (i = 0; i < mul; i++) {
+> @@ -608,10 +648,12 @@ static int parse_setup_cpu_list(void)
+>                                         tprintf("%2d", bind_cpu);
+>                                 }
+>
+> -                               CPU_ZERO(&td->bind_cpumask);
+> +                               td->bind_cpumask = CPU_ALLOC(g->p.nr_cpus);
+> +                               BUG_ON(!td->bind_cpumask);
+> +                               CPU_ZERO_S(size, td->bind_cpumask);
+>                                 for (cpu = bind_cpu; cpu < bind_cpu+bind_len; cpu++) {
+>                                         BUG_ON(cpu < 0 || cpu >= g->p.nr_cpus);
+> -                                       CPU_SET(cpu, &td->bind_cpumask);
+> +                                       CPU_SET_S(cpu, size, td->bind_cpumask);
+>                                 }
+>                                 t++;
+>                         }
+> @@ -1241,7 +1283,7 @@ static void *worker_thread(void *__tdata)
+>                  * by migrating to CPU#0:
+>                  */
+>                 if (first_task && g->p.perturb_secs && (int)(stop.tv_sec - last_perturbance) >= g->p.perturb_secs) {
+> -                       cpu_set_t orig_mask;
+> +                       cpu_set_t *orig_mask;
+>                         int target_cpu;
+>                         int this_cpu;
+>
+> @@ -1265,6 +1307,7 @@ static void *worker_thread(void *__tdata)
+>                                 printf(" (injecting perturbalance, moved to CPU#%d)\n", target_cpu);
+>
+>                         bind_to_cpumask(orig_mask);
+> +                       CPU_FREE(orig_mask);
+>                 }
+>
+>                 if (details >= 3) {
+> @@ -1398,21 +1441,31 @@ static void init_thread_data(void)
+>
+>         for (t = 0; t < g->p.nr_tasks; t++) {
+>                 struct thread_data *td = g->threads + t;
+> +               size_t cpuset_size = CPU_ALLOC_SIZE(g->p.nr_cpus);
+>                 int cpu;
+>
+>                 /* Allow all nodes by default: */
+>                 td->bind_node = NUMA_NO_NODE;
+>
+>                 /* Allow all CPUs by default: */
+> -               CPU_ZERO(&td->bind_cpumask);
+> +               td->bind_cpumask = CPU_ALLOC(g->p.nr_cpus);
+> +               BUG_ON(!td->bind_cpumask);
+> +               CPU_ZERO_S(cpuset_size, td->bind_cpumask);
+>                 for (cpu = 0; cpu < g->p.nr_cpus; cpu++)
+> -                       CPU_SET(cpu, &td->bind_cpumask);
+> +                       CPU_SET_S(cpu, cpuset_size, td->bind_cpumask);
+>         }
+>  }
+>
+>  static void deinit_thread_data(void)
+>  {
+>         ssize_t size = sizeof(*g->threads)*g->p.nr_tasks;
+> +       int t;
+> +
+> +       /* Free the bind_cpumask allocated for thread_data */
+> +       for (t = 0; t < g->p.nr_tasks; t++) {
+> +               struct thread_data *td = g->threads + t;
+> +               CPU_FREE(td->bind_cpumask);
+> +       }
+>
+>         free_data(g->threads, size);
+>  }
+> --
+> 2.35.1
+>
