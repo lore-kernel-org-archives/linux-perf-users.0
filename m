@@ -2,191 +2,318 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F06C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DA7C43219
 	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Apr 2022 21:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238791AbiDEVaF (ORCPT
+        id S243877AbiDEVaP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Apr 2022 17:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38314 "EHLO
+        Tue, 5 Apr 2022 17:30:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1449985AbiDEPu7 (ORCPT
+        with ESMTP id S1572951AbiDERYD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Apr 2022 11:50:59 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5761C1700AD;
-        Tue,  5 Apr 2022 07:36:41 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id EA076210E5;
-        Tue,  5 Apr 2022 14:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1649169399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kSbep7KEvKMw5NA9dGHZ82B+/h6ENrK0h+ktGBnoonA=;
-        b=HkEw9NRuL/3L34R2MOn6s81P7RCjKI+svCy8UEL8/p1egYa/TLjM/Di4T8JbZ+JWkLZbbY
-        8KCdOqQyeK7SiD6m2NSd31cOFh+hO2QZg7v7aoibmkdtF5eErEqoWcx8YM6b9t+4AtAH2Q
-        6g6UQ1Lw5l0W97aLfm5OXZUcrL+Q3BI=
-Received: from suse.cz (unknown [10.100.224.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 17E6DA3B93;
-        Tue,  5 Apr 2022 14:36:38 +0000 (UTC)
-Date:   Tue, 5 Apr 2022 16:36:38 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc:     acme@kernel.org, akpm@linux-foundation.org,
-        alexander.shishkin@linux.intel.com, catalin.marinas@arm.com,
-        davem@davemloft.net, jolsa@redhat.com, jthierry@redhat.com,
-        keescook@chromium.org, kernelfans@gmail.com,
+        Tue, 5 Apr 2022 13:24:03 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F1E14013
+        for <linux-perf-users@vger.kernel.org>; Tue,  5 Apr 2022 10:22:05 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id nt14-20020a17090b248e00b001ca601046a4so3277638pjb.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Apr 2022 10:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=laM1f/S71ICTL1TD1U0zhVuyMXNKqPVUGfM/offuIZM=;
+        b=v6TAHchqQbMhtlkYPAVee+zEOJ7r+t4eI6tYYWRuTywqS36cFphNgDrVD2Py6XO6JX
+         VqVqFyCEJAg2aw7CJslt3nqlFx81BF3E6tLmTlsaQjarngYqzmm8sT6g447AvBw77Z5K
+         I2PccuFl5jGkRBZHJDgt2sm12C++Pjc/9pFZck3PyK/KOXhyAbqf8fLn5Ua3qjdp37zM
+         Nc8eAAIpD6uTCyuozjMAAFaNufKrmpmr5eKyJ2rr8TfYTnwNMvTZS+FJLWLRQZl2Xhl/
+         sQk1Dip9c/vYXWFsv4jxalhD2V0TQAeUzvtvhCvCzMRbUfelvRrG6h5duA9+D/e8sF+z
+         8Ngw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=laM1f/S71ICTL1TD1U0zhVuyMXNKqPVUGfM/offuIZM=;
+        b=XwOAYSuC7p/y+w5dxVYXZb2gVv00v1jOA6WzwUTgH6TPpuuCkGour/zyiVVEfDDcZS
+         bavE4DLgV3yNoLGHt6JTBopHNynGIEhN72g6I43C5mCG4KE2ktSgjHOcKCiMkPpceZAg
+         UpjfFh0QP34dW5J90uh+xkCExLTwH/TUQy0jho0Amnc4OB8hiJGEd27Pp7JayW7DWMAQ
+         zhBEDC9RnEJiX9xysPBjwR1geYC1PxHSX51SkB+fWSuIDHq+eMO402K/w8HIyC5vtgOJ
+         D+eSsJVnGe9um9E4gUXcenI2yGF3lIgLL9y11gmg+ktG5cgGPHo8lSOa1bP9FOdlB4br
+         cuLg==
+X-Gm-Message-State: AOAM532j4RvvjSLmcbseUZ7zxvZVTyiDFniWHz7XRlqmgFs+DtjwnU8x
+        unuyY+TLoSrlVnoINt1NlZtvpQ==
+X-Google-Smtp-Source: ABdhPJxEYOml8rHEZLl5woVjHpWk88FIVHHT7m9ZkuZBSDa3BCoF2H5aNhHmPrs6HKu5yGlfFr3kKA==
+X-Received: by 2002:a17:90b:3e8b:b0:1c7:852d:e843 with SMTP id rj11-20020a17090b3e8b00b001c7852de843mr5255268pjb.244.1649179324572;
+        Tue, 05 Apr 2022 10:22:04 -0700 (PDT)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id d4-20020a17090ad3c400b001c65ba76911sm2989210pjw.3.2022.04.05.10.22.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Apr 2022 10:22:03 -0700 (PDT)
+Date:   Tue, 5 Apr 2022 11:22:00 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        masahiroy@kernel.org, matthias.bgg@gmail.com, maz@kernel.org,
-        mcgrof@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-        nixiaoming@huawei.com, peterz@infradead.org,
-        sparclinux@vger.kernel.org, sumit.garg@linaro.org,
-        wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
-Subject: Re: [PATCH v3 5/5] arm64: Enable perf events based hard lockup
- detector
-Message-ID: <YkxT9plntP0VeMl4@alley>
-References: <20220404141709.GA26840@pathway.suse.cz>
- <20220405125304.3762-1-lecopzer.chen@mediatek.com>
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org
+Subject: Re: [PATCH 05/10] coresight: etm3x: Use trace ID API to allocate IDs
+Message-ID: <20220405172200.GB4151723@p14s>
+References: <20220308205000.27646-1-mike.leach@linaro.org>
+ <20220308205000.27646-6-mike.leach@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220405125304.3762-1-lecopzer.chen@mediatek.com>
+In-Reply-To: <20220308205000.27646-6-mike.leach@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue 2022-04-05 20:53:04, Lecopzer Chen wrote:
+On Tue, Mar 08, 2022 at 08:49:55PM +0000, Mike Leach wrote:
+> Use the TraceID API to allocate ETM trace IDs dynamically.
+> 
+> As with the etm4x we allocate on enable / disable for perf,
+> allocate on enable / reset for sysfs.
+> 
+> Additionally we allocate on sysfs file read as both perf and sysfs
+> can read the ID before enabling the hardware.
+> 
+> Remove sysfs option to write trace ID - which is inconsistent with
+> both the dynamic allocation method and the fixed allocation method
+> previously used.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
+>  drivers/hwtracing/coresight/coresight-etm.h   |  2 +
+>  .../coresight/coresight-etm3x-core.c          | 72 ++++++++++++++++---
+>  .../coresight/coresight-etm3x-sysfs.c         | 28 +++-----
+>  3 files changed, 71 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm.h b/drivers/hwtracing/coresight/coresight-etm.h
+> index f3ab96eaf44e..3667428d38b6 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm.h
+> +++ b/drivers/hwtracing/coresight/coresight-etm.h
+> @@ -287,4 +287,6 @@ int etm_get_trace_id(struct etm_drvdata *drvdata);
+>  void etm_set_default(struct etm_config *config);
+>  void etm_config_trace_mode(struct etm_config *config);
+>  struct etm_config *get_etm_config(struct etm_drvdata *drvdata);
+> +int etm_read_alloc_trace_id(struct etm_drvdata *drvdata);
+> +void etm_release_trace_id(struct etm_drvdata *drvdata);
+>  #endif
+> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> index 7d413ba8b823..98213503bd09 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> @@ -32,6 +32,7 @@
 >  
-> > On Thu 2022-03-24 22:14:05, Lecopzer Chen wrote:
-> > > With the recent feature added to enable perf events to use pseudo NMIs
-> > > as interrupts on platforms which support GICv3 or later, its now been
-> > > possible to enable hard lockup detector (or NMI watchdog) on arm64
-> > > platforms. So enable corresponding support.
-> > > 
-> > > One thing to note here is that normally lockup detector is initialized
-> > > just after the early initcalls but PMU on arm64 comes up much later as
-> > > device_initcall(). To cope with that, overriding watchdog_nmi_probe() to
-> > > let the watchdog framework know PMU not ready, and inform the framework
-> > > to re-initialize lockup detection once PMU has been initialized.
-> > > 
-> > > [1]: http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
-> > > 
-> > > --- /dev/null
-> > > +++ b/arch/arm64/kernel/watchdog_hld.c
-> > > @@ -0,0 +1,37 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +#include <linux/nmi.h>
-> > > +#include <linux/cpufreq.h>
-> > > +#include <linux/perf/arm_pmu.h>
-> > > +
-> > > +/*
-> > > + * Safe maximum CPU frequency in case a particular platform doesn't implement
-> > > + * cpufreq driver. Although, architecture doesn't put any restrictions on
-> > > + * maximum frequency but 5 GHz seems to be safe maximum given the available
-> > > + * Arm CPUs in the market which are clocked much less than 5 GHz. On the other
-> > > + * hand, we can't make it much higher as it would lead to a large hard-lockup
-> > > + * detection timeout on parts which are running slower (eg. 1GHz on
-> > > + * Developerbox) and doesn't possess a cpufreq driver.
-> > > + */
-> > > +#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
-> > > +u64 hw_nmi_get_sample_period(int watchdog_thresh)
-> > > +{
-> > > +	unsigned int cpu = smp_processor_id();
-> > > +	unsigned long max_cpu_freq;
-> > > +
-> > > +	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
-> > > +	if (!max_cpu_freq)
-> > > +		max_cpu_freq = SAFE_MAX_CPU_FREQ;
-> > > +
-> > > +	return (u64)max_cpu_freq * watchdog_thresh;
-> > > +}
-> > 
-> > This change is not mentioned in the commit message.
-> > Please, put it into a separate patch.
-> 
-> 
-> Actully, This cames from
-> [1]: http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
-> And I didn't touch the commit message from the origin patch.
-> But of course, I could imporve it with proper description if
-> anyone thinks it's not good enough.
-
-I see.
-
-> Would you mean put this function hw_nmi_get_sample_period() in patch
-> 6th?
-> In the view of "arm64 uses delayed init with all the functionality it need to set up",
-> IMO, this make sense for me to put into a single patch.
-
-Or you could split it in two patches and add
-hw_nmi_get_sample_period() in the earlier patch.
-
-
-> But if you still think this should put into a separate patch, I'll do it:)
-
-It is always better to split the changes whenever possible. It makes
-the review easier. And it also helps to find the real culprit of
-a regression using bisection.
-
-
-> > > +int __init watchdog_nmi_probe(void)
-> > > +{
-> > > +	if (!allow_lockup_detector_init_retry)
-> > > +		return -EBUSY;
-> > 
-> > How do you know that you should return -EBUSY
-> > when retry in not enabled?
-> > 
-> > I guess that it is an optimization to make it fast
-> > during the first call. But the logic is far from
-> > obvious.
-> > 
-> 
-> Yes, you can see this as an optimization, because arm64 PMU is not ready
-> during lockup_detector_init(), so the watchdog_nmi_probe() must fail.
+>  #include "coresight-etm.h"
+>  #include "coresight-etm-perf.h"
+> +#include "coresight-trace-id.h"
+>  
+>  /*
+>   * Not really modular but using module_param is the easiest way to
+> @@ -490,18 +491,57 @@ static int etm_trace_id(struct coresight_device *csdev)
+>  	return etm_get_trace_id(drvdata);
+>  }
+>  
+> +int etm_read_alloc_trace_id(struct etm_drvdata *drvdata)
+> +{
+> +	int trace_id;
+> +
+> +	/*
+> +	 * This will allocate a trace ID to the cpu,
+> +	 * or return the one currently allocated.
+> +	 */
+> +	trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu,
+> +						 coresight_get_trace_id_map());
+> +	if (trace_id > 0) {
+> +		spin_lock(&drvdata->spinlock);
+> +		drvdata->traceid = (u8)trace_id;
+> +		spin_unlock(&drvdata->spinlock);
+> +	} else {
+> +		pr_err("Failed to allocate trace ID for %s on CPU%d\n",
+> +		       dev_name(&drvdata->csdev->dev), drvdata->cpu);
+> +	}
+> +	return trace_id;
+> +}
+> +
+> +void etm_release_trace_id(struct etm_drvdata *drvdata)
+> +{
+> +	coresight_trace_id_put_cpu_id(drvdata->cpu,
+> +				      coresight_get_trace_id_map());
+> +	spin_lock(&drvdata->spinlock);
+> +	drvdata->traceid = 0;
+> +	spin_unlock(&drvdata->spinlock);
+> +}
+> +
+>  static int etm_enable_perf(struct coresight_device *csdev,
+>  			   struct perf_event *event)
+>  {
+>  	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+> +	int ret;
+>  
+>  	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id()))
+>  		return -EINVAL;
+>  
+> +	ret = etm_read_alloc_trace_id(drvdata);
+> +	if (ret < 0)
+> +		return ret;
 >
-> Thus we only want to do watchdog_nmi_probe() in delayed init,
-> so if not in the state (allow_lockup_detector_init_retry=true), just tell
+
+For etm4x, this was done after etm_parse_event_config().  Please do the same
+here.
+
+
+>  	/* Configure the tracer based on the session's specifics */
+>  	etm_parse_event_config(drvdata, event);
+>  	/* And enable it */
+> -	return etm_enable_hw(drvdata);
+> +	ret = etm_enable_hw(drvdata);
+> +
+> +	if (ret)
+> +		etm_release_trace_id(drvdata);
+> +	return ret;
+>  }
+>  
+>  static int etm_enable_sysfs(struct coresight_device *csdev)
+> @@ -510,6 +550,10 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
+>  	struct etm_enable_arg arg = { };
+>  	int ret;
+>  
+> +	ret = etm_read_alloc_trace_id(drvdata);
+> +	if (ret < 0)
+> +		return ret;
+> +
+
+Please add the same comment as in etm4_disable_sysfs() in etm_disable_sysfs().
+
+>  	spin_lock(&drvdata->spinlock);
+>  
+>  	/*
+> @@ -532,6 +576,8 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
+>  
+>  	if (!ret)
+>  		dev_dbg(&csdev->dev, "ETM tracing enabled\n");
+> +	else
+> +		etm_release_trace_id(drvdata);
+>  	return ret;
+>  }
+>  
+> @@ -611,6 +657,8 @@ static void etm_disable_perf(struct coresight_device *csdev)
+>  	coresight_disclaim_device_unlocked(csdev);
+>  
+>  	CS_LOCK(drvdata->base);
+> +
+> +	etm_release_trace_id(drvdata);
+>  }
+>  
+>  static void etm_disable_sysfs(struct coresight_device *csdev)
+> @@ -781,11 +829,6 @@ static void etm_init_arch_data(void *info)
+>  	CS_LOCK(drvdata->base);
+>  }
+>  
+> -static void etm_init_trace_id(struct etm_drvdata *drvdata)
+> -{
+> -	drvdata->traceid = coresight_get_trace_id(drvdata->cpu);
+> -}
+> -
+>  static int __init etm_hp_setup(void)
+>  {
+>  	int ret;
+> @@ -871,7 +914,6 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
+>  	if (etm_arch_supported(drvdata->arch) == false)
+>  		return -EINVAL;
+>  
+> -	etm_init_trace_id(drvdata);
+>  	etm_set_default(&drvdata->config);
+>  
+>  	pdata = coresight_get_platform_data(dev);
+> @@ -891,10 +933,12 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
+>  		return PTR_ERR(drvdata->csdev);
+>  
+>  	ret = etm_perf_symlink(drvdata->csdev, true);
+> -	if (ret) {
+> -		coresight_unregister(drvdata->csdev);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		goto cs_unregister;
+> +
+> +	ret = etm_read_alloc_trace_id(drvdata);
+> +	if (ret < 0)
+> +		goto cs_unregister;
+>  
+>  	etmdrvdata[drvdata->cpu] = drvdata;
+>  
+> @@ -907,6 +951,10 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
+>  	}
+>  
+>  	return 0;
+> +
+> +cs_unregister:
+> +	coresight_unregister(drvdata->csdev);
+> +	return ret;
+>  }
+>  
+>  static void clear_etmdrvdata(void *info)
+> @@ -922,6 +970,8 @@ static void etm_remove(struct amba_device *adev)
+>  
+>  	etm_perf_symlink(drvdata->csdev, false);
+>  
+> +	etm_release_trace_id(drvdata);
+> +
+>  	/*
+>  	 * Taking hotplug lock here to avoid racing between etm_remove and
+>  	 * CPU hotplug call backs.
+> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
+> index e8c7649f123e..3ee70b174240 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
+> @@ -86,6 +86,8 @@ static ssize_t reset_store(struct device *dev,
+>  
+>  		etm_set_default(config);
+>  		spin_unlock(&drvdata->spinlock);
+> +		/* release trace id outside the spinlock as this fn uses it */
+> +		etm_release_trace_id(drvdata);
+>  	}
+>  
+>  	return size;
+> @@ -1189,30 +1191,16 @@ static DEVICE_ATTR_RO(cpu);
+>  static ssize_t traceid_show(struct device *dev,
+>  			    struct device_attribute *attr, char *buf)
+>  {
+> -	unsigned long val;
+> -	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> -
+> -	val = etm_get_trace_id(drvdata);
+> -
+> -	return sprintf(buf, "%#lx\n", val);
+> -}
+> -
+> -static ssize_t traceid_store(struct device *dev,
+> -			     struct device_attribute *attr,
+> -			     const char *buf, size_t size)
+> -{
+> -	int ret;
+> -	unsigned long val;
+> +	int trace_id;
+>  	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+>  
+> -	ret = kstrtoul(buf, 16, &val);
+> -	if (ret)
+> -		return ret;
+> +	trace_id = etm_read_alloc_trace_id(drvdata);
+> +	if (trace_id < 0)
+> +		return trace_id;
+>  
+> -	drvdata->traceid = val & ETM_TRACEID_MASK;
+> -	return size;
+> +	return sprintf(buf, "%#x\n", trace_id);
+>  }
+> -static DEVICE_ATTR_RW(traceid);
+> +static DEVICE_ATTR_RO(traceid);
+>  
+>  static struct attribute *coresight_etm_attrs[] = {
+>  	&dev_attr_nr_addr_cmp.attr,
+> -- 
+> 2.17.1
 > 
-> if it's unclear
-
-Yes, it is far from obvious.
-
-> maybe a brief comment can be add like this:
-> 
-> +	/* arm64 is only able to initialize lockup detecor during delayed init */
-> +	if (!allow_lockup_detector_init_retry)
-> +		return -EBUSY;
-
-No, please, remove this optimization. It just makes problems:
-
-   + it requires a comment here because the logic is far from obvious.
-
-   + it is the reason why we need another variable to avoid the race in
-     lockup_detector_check(), see the discussion about the 4th patch.
-
-
-> > > +
-> > > +	if (!arm_pmu_irq_is_nmi())
-> > > +		return -ENODEV;
-> > > +
-> > > +	return hardlockup_detector_perf_init();
-> > > +}
-> > 
-> For arm_pmu_irq_is_nmi() checking, we do need it, becasue arm64 needs
-> explictly turns on Pseudo-NMI to support base function for NMI.
->
-> hardlockup_detector_perf_init() will success even if we haven't had
-> Pseudo-NMI turns on, however, the pmu interrupts will act like a
-> normal interrupt instead of NMI and the hardlockup detector would be broken.
-
-I see. Please, explain this in a comment. It is another thing
-that is far from obvious.
-
-Best Regards,
-Petr
