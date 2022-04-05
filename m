@@ -2,450 +2,429 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CABC43219
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Apr 2022 21:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0756FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Apr 2022 21:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235006AbiDEV35 (ORCPT
+        id S236514AbiDEVaC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Apr 2022 17:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43726 "EHLO
+        Tue, 5 Apr 2022 17:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1573701AbiDEToL (ORCPT
+        with ESMTP id S1458005AbiDERE3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Apr 2022 15:44:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948D5208;
-        Tue,  5 Apr 2022 12:42:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CB6D61899;
-        Tue,  5 Apr 2022 19:42:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360DAC385A0;
-        Tue,  5 Apr 2022 19:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649187731;
-        bh=QRne+Azt1yudtzqNCxOaZsJ8yGOCmzV842MNHsPauuw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r6l88UZMcm23sPnyz/AaiznGnSohV7AuktoJeNpiGTGk3QPWRKPX40zKBdMato0qr
-         vdPEFea/5HSqiwxv0akT27f80emds88gz+BHZ3UP05yFF9nsXR8ifCdpVV67q036l7
-         vVF2cdyeksivBV5KIzzzaq6AjR9egDLZT+Ia8qJdZQQVeaDmAzcJhSTVoVKfJdeXb7
-         Eas/gd4eEzpAuYsAEnbY2pQKn70A8HLs2QIgAcebPGG1sw0XCSgVo0SyoWyXutF6Kg
-         RU/Y+yxbqqSoJZFZSaSxv5U93Mc3rSy7F79UA6PzqWXozHhhVc03bh7pU8qBzE7jV+
-         JiLAl2Uey4Tag==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 096AE40407; Tue,  5 Apr 2022 16:42:06 -0300 (-03)
-Date:   Tue, 5 Apr 2022 16:42:06 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Florian Fischer <florian.fischer@muhq.space>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Florian Schmaus <flow@cs.fau.de>
-Subject: Re: [PATCH] perf stat: add rusage utime and stime events
-Message-ID: <YkybjsCKyWkDZGX+@kernel.org>
-References: <20220405174028.1675025-1-florian.fischer@muhq.space>
- <20220405174028.1675025-2-florian.fischer@muhq.space>
+        Tue, 5 Apr 2022 13:04:29 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C934DF68
+        for <linux-perf-users@vger.kernel.org>; Tue,  5 Apr 2022 10:02:30 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id n8so4424233plh.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Apr 2022 10:02:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yO8HbIMVJgMW92Isut2vOmUaNAYMH1DhCX86wHWJRSo=;
+        b=tHoByH669Szdsl21UDdyYcrAEwgfn57/nEFHCCWGLnAW2OsToxC+wap4hC2m2CFRAl
+         trycQUQ11z24buiTdAHPYeCPKgFs/eznc3xu2uup5hJvdlp8V5TL+7wPS6BC2um9unhf
+         hcxbB5j/9u+1OVIWDMCbW4ja+iO7sEReGDJMRvEUrrf5OxIz8J162VM/RHkwdfrY09qe
+         1PZoGUmeymn9j6UW/NDhiY91+amYrTrK9lWuaezy+Z3K/5uP2PX+aec19HC+1JaKIhaI
+         m23qxAgniw+XmquyPgw7G/AA79tqhnxEtc3x8BVu7uh314cN8NyFtUrFq5iAR0dBbb43
+         IzAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yO8HbIMVJgMW92Isut2vOmUaNAYMH1DhCX86wHWJRSo=;
+        b=euI3Dumw7NLkcFdP8dregReEuZ7+8PO2J1B/CjZiA+jHhCNJCFWommLYc3dQAXsgTK
+         9sfU8jEUGMF5BX7ZJ0ACCFcZ9RRvYlv9pqJMYyDxZRG/nTzacKU7HB9ns/eZhOEeU4FJ
+         VTbG21YthG5b9M/7ekdfWuTxU0jGsYNuH1EFGk0k95Dc3hDd0oSxG+IS8aeqOlzDW2g+
+         zXQqET03IW5Oasii865ethohg/calLfamr5E66+4LF/3WLOe9CY/cG6wp1bfDOvvHFW/
+         cniFvvKmIi985Sil7nFZr6Y5qwzrf+QAPk6t8uRTVDYDGepnstukkks5yR3d2qHBBmT3
+         vEtg==
+X-Gm-Message-State: AOAM533Rao5s/EUS8gyiQmhFN+xQ3j5fhT3JPhJHTGihJm0FMQseLxN/
+        1gVU/Ee2Vc+qZCyIgrq8TI62pQ==
+X-Google-Smtp-Source: ABdhPJzKSi5DdnjoR2l0Nmc2GMfO1SmhjMFV5BVTWYvenktsc0lHTuNfpNSQWBGXgTVrADjQczjokQ==
+X-Received: by 2002:a17:902:8306:b0:14f:a386:6a44 with SMTP id bd6-20020a170902830600b0014fa3866a44mr4455290plb.140.1649178149924;
+        Tue, 05 Apr 2022 10:02:29 -0700 (PDT)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id z2-20020aa79902000000b004fb05c04b53sm17240460pff.103.2022.04.05.10.02.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Apr 2022 10:02:27 -0700 (PDT)
+Date:   Tue, 5 Apr 2022 11:02:23 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org
+Subject: Re: [PATCH 01/10] coresight: trace-id: Add API to dynamically assign
+ trace ID values
+Message-ID: <20220405170223.GA4151723@p14s>
+References: <20220308205000.27646-1-mike.leach@linaro.org>
+ <20220308205000.27646-2-mike.leach@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220405174028.1675025-2-florian.fischer@muhq.space>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20220308205000.27646-2-mike.leach@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 05, 2022 at 07:40:28PM +0200, Florian Fischer escreveu:
-> It bothered me that during benchmarking using perf stat (to collect
-> for example CPU cache events) I could not simultaneously retrieve the
-> times spend in user or kernel mode in a machine readable format.
-> 
-> When running perf stat the output for humans contains the times
-> reported by rusage and wait4.
-> 
-> $ perf stat -e cache-misses:u -- true
-> 
->  Performance counter stats for 'true':
-> 
->              4,206      cache-misses:u
-> 
->        0.001113619 seconds time elapsed
-> 
->        0.001175000 seconds user
->        0.000000000 seconds sys
-> 
-> But using perf stats' machine-readable format does not provide this
-> information.
-> 
-> $ perf stat -x, -e cache-misses:u -- true
-> 4282,,cache-misses:u,492859,100.00,,
-> 
-> I found no way to retrieve this information using the available events
-> while using machine-readable output.
-> 
-> To solve this I added two new tool internal events 'rusage_user_time'
-> and 'rusage_system_time' as well as their aliases 'ru_utime' and
-> 'ru_stime', similarly to the already present 'duration_time' event.
-> 
-> Both events use the already collected rusage information obtained by wait4.
-> 
-> Examples presenting cache-misses and rusage information in both human and
-> machine-readable form:
-> 
-> $ ./perf stat -e duration_time,ru_utime,ru_stime,cache-misses -- grep -q -r duration_time .
-> 
->  Performance counter stats for 'grep -q -r duration_time .':
-> 
->         67,422,542 ns   duration_time:u
->             50,517 us   ru_utime:u
->             16,839 us   ru_stime:u
->             30,937      cache-misses:u
-> 
->        0.067422542 seconds time elapsed
-> 
->        0.050517000 seconds user
->        0.016839000 seconds sys
+Good morning,
 
-So, it looks useful indeed!
+To avoid getting tunnel vision, I haven't red any of the comments already posted
+about this set.  As such some of my observations may be redundant.
 
-I suggest you break this patch into a series, to reduce its size and
-help in reviewing.
-
-For instance, you introduce evsel__tool_names, please do it in a
-separate patch, initially only with the current "duration_time", then
-you go on adding one new metric, then the other one.
-
-More below.
- 
-> $ ./perf stat -x, -e duration_time,ru_utime,ru_stime,cache-misses -- grep -q -r duration_time .
-> 72134524,ns,duration_time:u,72134524,100.00,,
-> 65225,us,ru_utime:u,65225,100.00,,
-> 6865,us,ru_stime:u,6865,100.00,,
-> 38705,,cache-misses:u,71189328,100.00,,
+On Tue, Mar 08, 2022 at 08:49:51PM +0000, Mike Leach wrote:
+> The existing mechanism to assign Trace ID values to sources is limited
+> and does not scale for larger multicore / multi trace source systems.
 > 
-> Signed-off-by: Florian Fischer <florian.fischer@muhq.space>
+> The API introduces functions that reserve IDs based on availabilty
+> represented by a coresight_trace_id_map structure. This records the
+> used and free IDs in a bitmap.
+> 
+> CPU bound sources such as ETMs use the coresight_trace_id_get_cpu_id /
+> coresight_trace_id_put_cpu_id pair of functions. The API will record
+> the ID associated with the CPU. This ensures that the same ID will be
+> re-used while perf events are active on the CPU. The put_cpu_id function
+> will pend release of the ID until all perf cs_etm sessions are complete.
+> 
+> Non-cpu sources, such as the STM can use coresight_trace_id_get_system_id /
+> coresight_trace_id_put_system_id.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
 > ---
->  tools/perf/builtin-stat.c      | 41 ++++++++++++++++++++++++-------
->  tools/perf/util/evsel.c        | 19 +++++++++------
->  tools/perf/util/evsel.h        |  4 ++++
->  tools/perf/util/parse-events.c | 44 +++++++++++++++++++++++++++++-----
->  tools/perf/util/parse-events.l |  2 ++
->  tools/perf/util/stat-shadow.c  |  2 ++
->  tools/perf/util/stat.h         | 19 +++++++++++++++
->  7 files changed, 109 insertions(+), 22 deletions(-)
+>  drivers/hwtracing/coresight/Makefile          |   2 +-
+>  .../hwtracing/coresight/coresight-trace-id.c  | 222 ++++++++++++++++++
+>  .../hwtracing/coresight/coresight-trace-id.h  |  69 ++++++
+>  3 files changed, 292 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
 > 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index a96f106dc93a..c73afc8f6da5 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -216,6 +216,7 @@ static struct perf_stat_config stat_config = {
->  	.run_count		= 1,
->  	.metric_only_len	= METRIC_ONLY_LEN,
->  	.walltime_nsecs_stats	= &walltime_nsecs_stats,
-> +	.ru_stats		= &ru_stats,
->  	.big_num		= true,
->  	.ctl_fd			= -1,
->  	.ctl_fd_ack		= -1,
-> @@ -341,15 +342,35 @@ static int evsel__write_stat_event(struct evsel *counter, int cpu_map_idx, u32 t
->  static int read_single_counter(struct evsel *counter, int cpu_map_idx,
->  			       int thread, struct timespec *rs)
->  {
-> -	if (counter->tool_event == PERF_TOOL_DURATION_TIME) {
-> -		u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
-> -		struct perf_counts_values *count =
-> -			perf_counts(counter->counts, cpu_map_idx, thread);
-> -		count->ena = count->run = val;
-> -		count->val = val;
-> -		return 0;
-> +	switch(counter->tool_event) {
-> +		case PERF_TOOL_DURATION_TIME: {
-> +			u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
-> +			struct perf_counts_values *count =
-> +				perf_counts(counter->counts, cpu_map_idx, thread);
-> +			count->ena = count->run = val;
-> +			count->val = val;
-> +			return 0;
-> +		}
-> +		case PERF_TOOL_RU_UTIME:
-> +		case PERF_TOOL_RU_STIME: {
-> +			u64 val;
-> +			struct perf_counts_values *count =
-> +				perf_counts(counter->counts, cpu_map_idx, thread);
-> +			if (counter->tool_event == PERF_TOOL_RU_UTIME)
-> +				val = ru_stats.ru_utime_usec_stat.mean;
-> +			else
-> +				val = ru_stats.ru_stime_usec_stat.mean;
-> +			count->ena = count->run = val;
-> +			count->val = val;
-> +			return 0;
-> +		}
-> +		default:
-> +		case PERF_TOOL_NONE:
-> +			return evsel__read_counter(counter, cpu_map_idx, thread);
-> +		case PERF_TOOL_LAST:
-> +			/* this case should never be reached */
-> +			return 0;
->  	}
-> -	return evsel__read_counter(counter, cpu_map_idx, thread);
->  }
->  
->  /*
-> @@ -1010,8 +1031,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
->  		evlist__reset_prev_raw_counts(evsel_list);
->  		runtime_stat_reset(&stat_config);
->  		perf_stat__reset_shadow_per_stat(&rt_stat);
-> -	} else
-> +	} else {
->  		update_stats(&walltime_nsecs_stats, t1 - t0);
-> +		update_rusage_stats(&ru_stats, &stat_config.ru_data);
-> +	}
->  
->  	/*
->  	 * Closing a group leader splits the group, and as we only disable
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 2a1729e7aee4..26cf7e76698b 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -597,6 +597,17 @@ static int evsel__sw_name(struct evsel *evsel, char *bf, size_t size)
->  	return r + evsel__add_modifiers(evsel, bf + r, size - r);
->  }
->  
-> +const char *evsel__tool_names[PERF_TOOL_LAST] = {
-> +	"duration_time",
-> +	"rusage_user_time",
-> +	"rusage_system_time",
+> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> index b6c4a48140ec..329a0c704b87 100644
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+> @@ -6,7 +6,7 @@ obj-$(CONFIG_CORESIGHT) += coresight.o
+>  coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
+>  		coresight-sysfs.o coresight-syscfg.o coresight-config.o \
+>  		coresight-cfg-preload.o coresight-cfg-afdo.o \
+> -		coresight-syscfg-configfs.o
+> +		coresight-syscfg-configfs.o coresight-trace-id.o
+>  obj-$(CONFIG_CORESIGHT_LINK_AND_SINK_TMC) += coresight-tmc.o
+>  coresight-tmc-y := coresight-tmc-core.o coresight-tmc-etf.o \
+>  		      coresight-tmc-etr.o
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+> new file mode 100644
+> index 000000000000..ce6c7d7b55d6
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+> @@ -0,0 +1,222 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2022, Linaro Limited, All rights reserved.
+> + * Author: Mike Leach <mike.leach@linaro.org>
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/types.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include "coresight-trace-id.h"
+> +
+> +/* need to keep data on ids & association with cpus. */
+> +struct cpu_id_info {
+> +	int id;
+> +	bool pend_rel;
 > +};
 > +
-> +static int evsel__tool_name(enum perf_tool_event ev, char *bf, size_t size)
+> +/* maintain a record of the current mapping of cpu IDs */
+> +static DEFINE_PER_CPU(struct cpu_id_info, cpu_ids);
+> +
+> +/* a list of currently used id_maps */
+> +static LIST_HEAD(id_map_list);
+> +
+> +/* perf session active flag */
+> +static int perf_cs_etm_session_active;
+> +
+> +/* lock to protect id_map list and cpu data  */
+> +static DEFINE_SPINLOCK(id_map_lock);
+> +
+> +/* ID 0 is reserved */
+> +#define CORESIGHT_TRACE_ID_RES_0 0
+> +
+> +/* ID 0x70 onwards are reserved */
+> +#define CORESIGHT_TRACE_ID_RES_RANGE_LO 0x70
+> +#define CORESIGHT_TRACE_ID_RES_RANGE_HI 0x7F
+> +
+> +#define IS_VALID_ID(id)	\
+> +	((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_RANGE_LO))
+> +
+> +static void coresight_trace_id_set_inuse(int id, struct coresight_trace_id_map *id_map)
 > +{
-> +	return scnprintf(bf, size, "%s", evsel__tool_names[ev]);
+> +	if (IS_VALID_ID(id))
+> +		set_bit(id, id_map->avail_ids);
 > +}
 > +
->  static int __evsel__bp_name(char *bf, size_t size, u64 addr, u64 type)
->  {
->  	int r;
-> @@ -723,12 +734,6 @@ static int evsel__raw_name(struct evsel *evsel, char *bf, size_t size)
->  	return ret + evsel__add_modifiers(evsel, bf + ret, size - ret);
->  }
->  
-> -static int evsel__tool_name(char *bf, size_t size)
-> -{
-> -	int ret = scnprintf(bf, size, "duration_time");
-> -	return ret;
-> -}
-> -
->  const char *evsel__name(struct evsel *evsel)
->  {
->  	char bf[128];
-> @@ -754,7 +759,7 @@ const char *evsel__name(struct evsel *evsel)
->  
->  	case PERF_TYPE_SOFTWARE:
->  		if (evsel->tool_event)
-> -			evsel__tool_name(bf, sizeof(bf));
-> +			evsel__tool_name(evsel->tool_event, bf, sizeof(bf));
->  		else
->  			evsel__sw_name(evsel, bf, sizeof(bf));
->  		break;
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 041b42d33bf5..2adb97383952 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -30,6 +30,9 @@ typedef int (evsel__sb_cb_t)(union perf_event *event, void *data);
->  enum perf_tool_event {
->  	PERF_TOOL_NONE		= 0,
->  	PERF_TOOL_DURATION_TIME = 1,
-> +	PERF_TOOL_RU_UTIME = 2,
-> +	PERF_TOOL_RU_STIME = 3,
-> +	PERF_TOOL_LAST
->  };
->  
->  /** struct evsel - event selector
-> @@ -258,6 +261,7 @@ extern const char *evsel__hw_cache_op[PERF_COUNT_HW_CACHE_OP_MAX][EVSEL__MAX_ALI
->  extern const char *evsel__hw_cache_result[PERF_COUNT_HW_CACHE_RESULT_MAX][EVSEL__MAX_ALIASES];
->  extern const char *evsel__hw_names[PERF_COUNT_HW_MAX];
->  extern const char *evsel__sw_names[PERF_COUNT_SW_MAX];
-> +extern const char *evsel__tool_names[PERF_TOOL_LAST];
->  extern char *evsel__bpf_counter_events;
->  bool evsel__match_bpf_counter_events(const char *name);
->  
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 24997925ae00..13db69b71187 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -154,6 +154,21 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
->  	},
->  };
->  
-> +struct event_symbol event_symbols_tool[PERF_TOOL_LAST] = {
-> +	[PERF_TOOL_DURATION_TIME] = {
-> +		.symbol = "duration_time",
-> +		.alias  = "",
-> +	},
-> +	[PERF_TOOL_RU_UTIME] = {
-> +		.symbol = "rusage_user_time",
-> +		.alias  = "ru_utime",
-> +	},
-> +	[PERF_TOOL_RU_STIME] = {
-> +		.symbol = "rusage_system_time",
-> +		.alias  = "ru_stime",
-> +	},
+> +static void coresight_trace_id_clear_inuse(int id, struct coresight_trace_id_map *id_map)
+> +{
+> +	if (IS_VALID_ID(id))
+> +		clear_bit(id, id_map->avail_ids);
+> +}
+> +
+> +static void coresight_trace_id_set_pend_rel(int id, struct coresight_trace_id_map *id_map)
+> +{
+> +	if (IS_VALID_ID(id))
+> +		set_bit(id, id_map->pend_rel_ids);
+> +}
+> +
+> +static void coresight_trace_id_clear_pend_rel(int id, struct coresight_trace_id_map *id_map)
+> +{
+> +	if (IS_VALID_ID(id))
+> +		clear_bit(id, id_map->pend_rel_ids);
+> +}
+> +
+> +static int coresight_trace_id_find_new_id(struct coresight_trace_id_map *id_map)
+> +{
+> +	int id;
+> +
+> +	id = find_first_zero_bit(id_map->avail_ids, CORESIGHT_TRACE_IDS_MAX);
+> +	if (id >= CORESIGHT_TRACE_IDS_MAX)
+> +		id = -EINVAL;
+> +	return id;
+> +}
+> +
+> +/* release all pending IDs for all current maps & clear CPU associations */
+> +static void coresight_trace_id_release_all_pending(void)
+> +{
+> +	struct coresight_trace_id_map *id_map;
+> +	int cpu, bit;
+> +
+> +	list_for_each_entry(id_map, &id_map_list, node) {
+> +		for_each_set_bit(bit, id_map->pend_rel_ids, CORESIGHT_TRACE_IDS_MAX) {
+> +			clear_bit(bit, id_map->avail_ids);
+> +			clear_bit(bit, id_map->pend_rel_ids);
+> +		}
+> +	}
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		if (per_cpu(cpu_ids, cpu).pend_rel) {
+> +			per_cpu(cpu_ids, cpu).pend_rel = false;
+> +			per_cpu(cpu_ids, cpu).id = 0;
+> +		}
+> +	}
+> +}
+> +
+> +int coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+> +{
+> +	unsigned long flags;
+> +	int id;
+> +
+> +	spin_lock_irqsave(&id_map_lock, flags);
+> +	id = per_cpu(cpu_ids, cpu).id;
+> +	if (!id) {
+> +		id = coresight_trace_id_find_new_id(id_map);
+> +		if (id < 0)
+> +			goto get_cpu_id_out;
+> +	}
+> +
+> +	per_cpu(cpu_ids, cpu).id = id;
+> +	per_cpu(cpu_ids, cpu).pend_rel = false;
+> +	coresight_trace_id_set_inuse(id, id_map);
+> +	coresight_trace_id_clear_pend_rel(id, id_map);
+
+The above should have been done when the ID for this CPU has been set for the
+first time.  Therefore we should simply release the spinlock and return if an ID
+has already been set.
+
+> +
+> +get_cpu_id_out:
+> +	spin_unlock_irqrestore(&id_map_lock, flags);
+> +	return id;
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
+> +
+> +void coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+> +{
+> +	unsigned long flags;
+> +	int id;
+> +
+> +	spin_lock_irqsave(&id_map_lock, flags);
+> +	id = per_cpu(cpu_ids, cpu).id;
+> +	if (!id)
+> +		goto put_cpu_id_out;
+> +
+> +	if (perf_cs_etm_session_active) {
+> +		/* set release at pending if perf still active */
+> +		coresight_trace_id_set_pend_rel(id, id_map);
+> +		per_cpu(cpu_ids, cpu).pend_rel = true;
+> +	} else {
+> +		/* otherwise clear id */
+> +		coresight_trace_id_clear_inuse(id, id_map);
+> +		per_cpu(cpu_ids, cpu).id = 0;
+> +	}
+> +
+> + put_cpu_id_out:
+> +	spin_unlock_irqrestore(&id_map_lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
+> +
+> +int coresight_trace_id_get_system_id(struct coresight_trace_id_map *id_map)
+> +{
+
+So far I have reviewed until patch 05 and I find passing the id_map every time
+we need an ID quite heavy, especially since it is always the same one. 
+
+> +	unsigned long flags;
+> +	int id;
+> +
+> +	spin_lock_irqsave(&id_map_lock, flags);
+> +	id = coresight_trace_id_find_new_id(id_map);
+> +	if (id > 0)
+> +		coresight_trace_id_set_inuse(id, id_map);
+> +	spin_unlock_irqrestore(&id_map_lock, flags);
+> +
+> +	return id;
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_system_id);
+> +
+> +void coresight_trace_id_put_system_id(struct coresight_trace_id_map *id_map, int id)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&id_map_lock, flags);
+> +	coresight_trace_id_clear_inuse(id, id_map);
+> +	spin_unlock_irqrestore(&id_map_lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
+> +
+> +void coresight_trace_id_perf_start(void)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&id_map_lock, flags);
+> +	perf_cs_etm_session_active++;
+> +	spin_unlock_irqrestore(&id_map_lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
+> +
+> +void coresight_trace_id_perf_stop(void)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&id_map_lock, flags);
+> +	perf_cs_etm_session_active--;
+> +	if (!perf_cs_etm_session_active)
+> +		coresight_trace_id_release_all_pending();
+> +	spin_unlock_irqrestore(&id_map_lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
+> +
+> +void coresight_trace_id_init_id_map(struct coresight_trace_id_map *id_map)
+> +{
+> +	unsigned long flags;
+> +	int bit;
+> +
+> +	/* set all reserved bits as in-use */
+> +	set_bit(CORESIGHT_TRACE_ID_RES_0, id_map->avail_ids);
+> +	for (bit = CORESIGHT_TRACE_ID_RES_RANGE_LO;
+> +	     bit <= CORESIGHT_TRACE_ID_RES_RANGE_HI; bit++)
+> +		set_bit(bit, id_map->avail_ids);
+> +
+> +	spin_lock_irqsave(&id_map_lock, flags);
+> +
+> +	/* add id_map to the list */
+> +	list_add(&id_map->node, &id_map_list);
+> +
+> +	spin_unlock_irqrestore(&id_map_lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_init_id_map);
+> +
+> +void coresight_trace_id_release_id_map(struct coresight_trace_id_map *id_map)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&id_map_lock, flags);
+> +
+> +	/* remove id_map from list */
+> +	list_del(&id_map->node);
+> +
+> +	spin_unlock_irqrestore(&id_map_lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_release_id_map);
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+> new file mode 100644
+> index 000000000000..01db2441cee6
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+> @@ -0,0 +1,69 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright(C) 2022 Linaro Limited. All rights reserved.
+> + * Author: Mike Leach <mike.leach@linaro.org>
+> + */
+> +
+> +#ifndef _CORESIGHT_TRACE_ID_H
+> +#define _CORESIGHT_TRACE_ID_H
+> +
+> +/*
+> + * Coresight trace ID allocation API
+> + *
+> + * With multi cpu systems, and more additional trace sources a scalable
+> + * trace ID reservation system is required.
+> + *
+> + * The system will allocate Ids on a demand basis, and allow them to be
+> + * released when done.
+> + *
+> + * In order to ensure that a consistent cpu / ID matching is maintained
+> + * throughout a perf cs_etm event session - a session in progress flag will
+> + * be maintained, and released IDs not cleared until the perf session is
+> + * complete. This allows the same CPU to be re-allocated its prior ID.
+> + *
+> + *
+> + * Trace ID maps will be created and initialised to prevent architecturally
+> + * reserved IDs from being allocated.
+> + *
+> + * API permits multiple maps to be maintained - for large systems where
+> + * different sets of cpus trace into different independent sinks.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/types.h>
+> +
+> +
+> +/* architecturally we have 128 IDs some of which are reserved */
+> +#define CORESIGHT_TRACE_IDS_MAX 128
+> +
+> +/**
+> + * Trace ID map.
+> + *
+> + * @avail_ids:	Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
+> + *		Initialised so that the reserved IDs are permanently marked as in use.
+> + * @pend_rel_ids: CPU IDs that have been released by the trace source but not yet marked
+> + *                as available, to allow re-allocation to the same CPU during a perf session.
+> + * @node:	List entry to add to list of managed trace id maps.
+> + */
+> +struct coresight_trace_id_map {
+> +	DECLARE_BITMAP(avail_ids, CORESIGHT_TRACE_IDS_MAX);
+> +	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+> +	struct list_head node;
 > +};
 > +
->  #define __PERF_EVENT_FIELD(config, name) \
->  	((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
->  
-> @@ -406,6 +421,10 @@ static int add_event_tool(struct list_head *list, int *idx,
->  		free((char *)evsel->unit);
->  		evsel->unit = strdup("ns");
->  	}
-> +	else if (tool_event == PERF_TOOL_RU_UTIME || tool_event == PERF_TOOL_RU_STIME) {
-> +		free((char *)evsel->unit);
-> +		evsel->unit = strdup("us");
-> +	}
->  	return 0;
->  }
->  
-> @@ -3055,21 +3074,34 @@ int print_hwcache_events(const char *event_glob, bool name_only)
->  	return evt_num;
->  }
->  
-> -static void print_tool_event(const char *name, const char *event_glob,
-> +static void print_tool_event(const struct event_symbol *syms, const char *event_glob,
->  			     bool name_only)
->  {
-> -	if (event_glob && !strglobmatch(name, event_glob))
-> +	if (syms->symbol == NULL)
-> +		return;
+> +/* Allocate and release IDs */
+> +int coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map);
+> +int coresight_trace_id_get_system_id(struct coresight_trace_id_map *id_map);
+> +void coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map);
+> +void coresight_trace_id_put_system_id(struct coresight_trace_id_map *id_map, int id);
 > +
-> +	if (event_glob && !(strglobmatch(syms->symbol, event_glob) ||
-> +	      (syms->alias && strglobmatch(syms->alias, event_glob))))
->  		return;
+> +/* initialise ID map - block reserved IDs, add to list of ID maps */
+> +void coresight_trace_id_init_id_map(struct coresight_trace_id_map *id_map);
+> +/* remove ID maps from list of maps */
+> +void coresight_trace_id_release_id_map(struct coresight_trace_id_map *id_map);
 > +
->  	if (name_only)
-> -		printf("%s ", name);
-> -	else
-> +		printf("%s ", syms->symbol);
-> +	else {
-> +		char name[MAX_NAME_LEN];
-> +		if (syms->alias)
-> +			snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
-> +		else
-> +			strlcpy(name, syms->symbol, MAX_NAME_LEN);
->  		printf("  %-50s [%s]\n", name, "Tool event");
-> -
-> +	}
->  }
->  
->  void print_tool_events(const char *event_glob, bool name_only)
->  {
-> -	print_tool_event("duration_time", event_glob, name_only);
-> +	// Start at 1 because the first enum entry symbols no tool event
-> +	for (int i = 0; i < PERF_TOOL_LAST; ++i) {
-> +		print_tool_event(event_symbols_tool + i, event_glob, name_only);
-> +	}
->  	if (pager_in_use())
->  		printf("\n");
->  }
-> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-> index 5b6e4b5249cf..3c7227b8035c 100644
-> --- a/tools/perf/util/parse-events.l
-> +++ b/tools/perf/util/parse-events.l
-> @@ -353,6 +353,8 @@ alignment-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_AL
->  emulation-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_EMULATION_FAULTS); }
->  dummy						{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
->  duration_time					{ return tool(yyscanner, PERF_TOOL_DURATION_TIME); }
-> +rusage_user_time|ru_utime	{ return tool(yyscanner, PERF_TOOL_RU_UTIME); }
-> +rusage_system_time|ru_stime	{ return tool(yyscanner, PERF_TOOL_RU_STIME); }
->  bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUTPUT); }
->  cgroup-switches					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CGROUP_SWITCHES); }
->  
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index 10af7804e482..ea4c35e4f1da 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -26,6 +26,7 @@
->  
->  struct runtime_stat rt_stat;
->  struct stats walltime_nsecs_stats;
-> +struct rusage_stats ru_stats;
->  
->  struct saved_value {
->  	struct rb_node rb_node;
-> @@ -199,6 +200,7 @@ void perf_stat__reset_shadow_stats(void)
->  {
->  	reset_stat(&rt_stat);
->  	memset(&walltime_nsecs_stats, 0, sizeof(walltime_nsecs_stats));
-> +	memset(&ru_stats, 0, sizeof(ru_stats));
->  }
->  
->  void perf_stat__reset_shadow_per_stat(struct runtime_stat *st)
-> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> index 335d19cc3063..b14a45d8af63 100644
-> --- a/tools/perf/util/stat.h
-> +++ b/tools/perf/util/stat.h
-> @@ -108,6 +108,11 @@ struct runtime_stat {
->  	struct rblist value_list;
->  };
->  
-> +struct rusage_stats {
-> +	struct stats ru_utime_usec_stat;
-> +	struct stats ru_stime_usec_stat;
-> +};
+> +/* notifiers for perf session start and stop */
+> +void coresight_trace_id_perf_start(void);
+> +void coresight_trace_id_perf_stop(void);
 > +
-
-This could be added in a separate patch that introduces this struct, the
-global variable and the init/update rusage_stats.
-
-Then you add one of the new metrics, then the other one.
-
-Doing it in a granular way helps with reviewing and also when using 'git
-bisect' to find problems.
-
-Thanks for working on this!
-
-- Arnaldo
-
->  typedef struct aggr_cpu_id (*aggr_get_id_t)(struct perf_stat_config *config, struct perf_cpu cpu);
->  
->  struct perf_stat_config {
-> @@ -148,6 +153,7 @@ struct perf_stat_config {
->  	const char		*csv_sep;
->  	struct stats		*walltime_nsecs_stats;
->  	struct rusage		 ru_data;
-> +	struct rusage_stats		 *ru_stats;
->  	struct cpu_aggr_map	*aggr_map;
->  	aggr_get_id_t		 aggr_get_id;
->  	struct cpu_aggr_map	*cpus_aggr_map;
-> @@ -177,6 +183,18 @@ static inline void init_stats(struct stats *stats)
->  	stats->max  = 0;
->  }
->  
-> +static inline void init_rusage_stats(struct rusage_stats *ru_stats) {
-> +	init_stats(&ru_stats->ru_utime_usec_stat);
-> +	init_stats(&ru_stats->ru_stime_usec_stat);
-> +}
-> +
-> +static inline void update_rusage_stats(struct rusage_stats *ru_stats, struct rusage* rusage) {
-> +	update_stats(&ru_stats->ru_utime_usec_stat,
-> +	             (rusage->ru_utime.tv_usec + rusage->ru_utime.tv_sec * 1000000ULL));
-> +	update_stats(&ru_stats->ru_stime_usec_stat,
-> +	             (rusage->ru_stime.tv_usec + rusage->ru_stime.tv_sec * 1000000ULL));
-> +}
-> +
->  struct evsel;
->  struct evlist;
->  
-> @@ -196,6 +214,7 @@ bool __perf_stat_evsel__is(struct evsel *evsel, enum perf_stat_evsel_id id);
->  
->  extern struct runtime_stat rt_stat;
->  extern struct stats walltime_nsecs_stats;
-> +extern struct rusage_stats ru_stats;
->  
->  typedef void (*print_metric_t)(struct perf_stat_config *config,
->  			       void *ctx, const char *color, const char *unit,
+> +#endif /* _CORESIGHT_TRACE_ID_H */
 > -- 
-> 2.35.1
-
--- 
-
-- Arnaldo
+> 2.17.1
+> 
