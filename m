@@ -2,361 +2,230 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240EFC433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C348C4332F
 	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Apr 2022 21:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235349AbiDEVaB (ORCPT
+        id S243462AbiDEVaL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Apr 2022 17:30:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
+        Tue, 5 Apr 2022 17:30:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384807AbiDEPPG (ORCPT
+        with ESMTP id S1573096AbiDER6q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Apr 2022 11:15:06 -0400
-Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C27441601
-        for <linux-perf-users@vger.kernel.org>; Tue,  5 Apr 2022 06:30:39 -0700 (PDT)
-Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-d39f741ba0so14325202fac.13
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Apr 2022 06:30:39 -0700 (PDT)
+        Tue, 5 Apr 2022 13:58:46 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D877CE7F45
+        for <linux-perf-users@vger.kernel.org>; Tue,  5 Apr 2022 10:56:47 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id j12so12924945wrb.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Apr 2022 10:56:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9SUjbR6d0Hm/+GiUujjBnx6+L5jTOpdyMzjgCeWVv18=;
-        b=sY8UN9C1PHBoH0LvzHXIFdwX6MKoA35gbLCAShSgRkAbp8iWftwgDax7e93W769u1e
-         5X9YZGkOkmmAlD6LaJg70ZOrpL2jAQA473qlyP6Cgh+uH5VJpUMbGJtJ0FVxyDL7ARzV
-         lLD6TuoG/w//kxV2eLSYgVy56lG6gwfD696nmdNK0W/nDySoM8GedVz7GrRDUsDDnvoM
-         QeOB6se/YnanV8WDchwRKkwez2IjGwtnsaHcBG/AkXC+luyHDLzKPtuyHgybXQNk+7Ra
-         1tHz3b53Sn6tZlSfRcftDFTKqdhnbtWU9fwymXdFbZxLoXFdPVx25nY85Wwp9mfOLKq1
-         +v6Q==
+        bh=2XSThWl+PZUFMqLNS/uIAi3vardfLBgaW6ejdi55O/w=;
+        b=cUte+H4u04BPbzs34V5G9+eJ8SNIxiDkuEWGf9is+YEzzGQ1EQLCqjro2iuE13EjWj
+         gb3LzQki1bDzDpCyY2ius2D4+lnxAiWW0sYAG/aWFuf7fiKPERTTBngWGzHURX2T+Vbs
+         LDz6QTd04M8Pdo55/3O20fxWoUryj88TNBgE2RotkPuEP4q4mXu+WFb58s/tSt60V8hQ
+         O8aau9ebEUA0DSzTsDbDOs61Jts3776a+roSFGgfgfKKzIzgZBOb8JhvPWYaw/hvkwFM
+         n5Dd29H6nUhwPcIRceG5Qw6YgcZ/yJ9Q9a/n81R1KbqtUhR6cdZ6KVIXLgehN2oWrLKj
+         xPfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9SUjbR6d0Hm/+GiUujjBnx6+L5jTOpdyMzjgCeWVv18=;
-        b=wKFlrOTAuprLq7prr94QqbmQ7wspYv7WMLYy61vTZa93ejYI5Y1boqQu72B/H6sb6y
-         Gh4Ahz4qgZt2WPnhYNUbQevxIy/wFr8T7re0mXuHHjRUrGmlBM93XGfwpldYN27KX7/B
-         idtakRGJ3d0vI8REEtDGA3311Z7C5td2og2XIzplYK7y/lcd6lLeFQ/fEl2xdVclxVET
-         sCXv5j6m57XEvxZD1yeHLFgRhy1kUyVulVlekGkMPtUPZN03ZCQz7C2S3p7QCgjADL2u
-         L6749BaoQRXCm9DoDUunX9lbXdMCpInokitXmB2uiH1Qv2hxKFAW0GUwZH6sCH6egMs9
-         m+Aw==
-X-Gm-Message-State: AOAM5318qxn/C60+PLZYYaGfDoPUJ+fTJmCiaAPLytkxcK+xwSGRqmSg
-        a4Gqqqe4IEKbLz8kEWKIi7e1TtSmKuXN1Ln0hWS/MA==
-X-Google-Smtp-Source: ABdhPJwgxZbKTNmtpo4mT0qYfgd73+gzD+qfaMV68qcfH1OdXWhs2/TQa3kSn7Gi7xyKhVKfha3zBFRUnbqgNtZIEqg=
-X-Received: by 2002:a05:6870:e0d1:b0:e2:1c3b:cca2 with SMTP id
- a17-20020a056870e0d100b000e21c3bcca2mr1459916oab.163.1649165437660; Tue, 05
- Apr 2022 06:30:37 -0700 (PDT)
+        bh=2XSThWl+PZUFMqLNS/uIAi3vardfLBgaW6ejdi55O/w=;
+        b=Mrhk08CLGD/EraGWRa/oRCkm7VsH2yqzOOa0nGBg7p9yyaeb6W9vDtqD+GZieJ4gVA
+         AIV9bSG/njd+LbQz2zNBki2HTus0g9znfe1LXe7G7AY2EXunDawSlY7FYmmU2hztzqNP
+         rfGPxl0T7IDfaTqC46wPNq8ymjYThHbf4mFIaG4HiMny1dp1iOQq6en3BpuCA3FLwlT2
+         dNz5DlB5EUGK0OgZpQTgavLC6vi1vmjBZzNiZEcQs7kcrBWJw0V4NFPsXxHue1BzIRSR
+         ryYLQiDRHJbDWd5YvBVktBsrj96O/qYK+6g5TPLNFSeyMbDcIDsYsEXXZqzhFlM4qcQE
+         S5BA==
+X-Gm-Message-State: AOAM533ghzaboWdyPb/eXMTHgXt0mNS8m+7N37xGftTjhLRbUdI3O8R+
+        MZ0Pcg2BBA5UAIpv1/B4HwluqiSUFQelMQorr3maWA==
+X-Google-Smtp-Source: ABdhPJzgP8n462gwm0RE72/GPAAxZDwFiRP42trNQDTRiMZwhcAjJ/cAqmlG07N1+jK4G+ZtJKxhfg6D6nQqdMWrGK0=
+X-Received: by 2002:a5d:50c3:0:b0:206:179f:1143 with SMTP id
+ f3-20020a5d50c3000000b00206179f1143mr3674128wrt.343.1649181406206; Tue, 05
+ Apr 2022 10:56:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220404111204.935357-1-elver@google.com>
-In-Reply-To: <20220404111204.935357-1-elver@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 5 Apr 2022 15:30:26 +0200
-Message-ID: <CACT4Y+YiDhmKokuqD3dhtj67HxZpTumiQvvRp35X-sR735qjqQ@mail.gmail.com>
-Subject: Re: [PATCH] signal: Deliver SIGTRAP on perf event asynchronously if blocked
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+References: <20220401185853.23912-1-atrajeev@linux.vnet.ibm.com> <20220401185853.23912-3-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20220401185853.23912-3-atrajeev@linux.vnet.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 5 Apr 2022 10:56:34 -0700
+Message-ID: <CAP-5=fUi9f5V+kEgNJQyHDVxivxz-kEXY3-pdaLwf6wJhqyO5Q@mail.gmail.com>
+Subject: Re: [PATCH 2/4] tools/perf: Fix perf bench epoll to correct usage of
+ affinity for machines with #CPUs > 1K
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 4 Apr 2022 at 13:12, Marco Elver <elver@google.com> wrote:
+On Fri, Apr 1, 2022 at 12:00 PM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
 >
-> With SIGTRAP on perf events, we have encountered termination of
-> processes due to user space attempting to block delivery of SIGTRAP.
-> Consider this case:
+> perf bench epoll testcase fails on systems with CPU's
+> more than 1K.
 >
->     <set up SIGTRAP on a perf event>
->     ...
->     sigset_t s;
->     sigemptyset(&s);
->     sigaddset(&s, SIGTRAP | <and others>);
->     sigprocmask(SIG_BLOCK, &s, ...);
->     ...
->     <perf event triggers>
+> Testcase: perf bench epoll all
+> Result snippet:
+> <<>>
+> Run summary [PID 106497]: 1399 threads monitoring on 64 file-descriptors for 8 secs.
 >
-> When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
-> will force the signal, but revert back to the default handler, thus
-> terminating the task.
+> perf: pthread_create: No such file or directory
+> <<>>
 >
-> This makes sense for error conditions, but not so much for explicitly
-> requested monitoring. However, the expectation is still that signals
-> generated by perf events are synchronous, which will no longer be the
-> case if the signal is blocked and delivered later.
+> In epoll benchmarks (ctl, wait) pthread_create is invoked in do_threads
+> from respective bench_epoll_*  function. Though the logs shows direct
+> failure from pthread_create, the actual failure is from  "sched_setaffinity"
+> returning EINVAL (invalid argument). This happens because the default
+> mask size in glibc is 1024. To overcome this 1024 CPUs mask size
+> limitation of cpu_set_t, change the mask size using the CPU_*_S macros.
 >
-> To give user space the ability to clearly distinguish synchronous from
-> asynchronous signals, introduce siginfo_t::si_perf_flags and
-> TRAP_PERF_FLAG_ASYNC (opted for flags in case more binary information is
-> required in future).
+> Patch addresses this by fixing all the epoll benchmarks to use
+> CPU_ALLOC to allocate cpumask, CPU_ALLOC_SIZE for size, and
+> CPU_SET_S to set the mask.
 >
-> The resolution to the problem is then to (a) no longer force the signal
-> (avoiding the terminations), but (b) tell user space via si_perf_flags
-> if the signal was synchronous or not, so that such signals can be
-> handled differently (e.g. let user space decide to ignore or consider
-> the data imprecise).
->
-> The alternative of making the kernel ignore SIGTRAP on perf events if
-> the signal is blocked may work for some usecases, but likely causes
-> issues in others that then have to revert back to interception of
-> sigprocmask() (which we want to avoid). [ A concrete example: when using
-> breakpoint perf events to track data-flow, in a region of code where
-> signals are blocked, data-flow can no longer be tracked accurately.
-> When a relevant asynchronous signal is received after unblocking the
-> signal, the data-flow tracking logic needs to know its state is
-> imprecise. ]
->
-> Link: https://lore.kernel.org/all/Yjmn%2FkVblV3TdoAq@elver.google.com/
-> Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-> Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Marco Elver <elver@google.com>
-
-Tested-by: Dmitry Vyukov <dvyukov@google.com>
-
-I've tested delivery of SIGTRAPs when it's blocked with sigprocmask,
-it does not kill the process now.
-
-And tested the case where previously I was getting infinite recursion
-and stack overflow (SIGTRAP handler causes another SIGTRAP recursively
-before being able to detect recursion and return). With this patch it
-can be handled by blocking recursive SIGTRAPs (!SA_NODEFER).
-
-
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 > ---
->  arch/arm/kernel/signal.c           |  1 +
->  arch/arm64/kernel/signal.c         |  1 +
->  arch/arm64/kernel/signal32.c       |  1 +
->  arch/m68k/kernel/signal.c          |  1 +
->  arch/sparc/kernel/signal32.c       |  1 +
->  arch/sparc/kernel/signal_64.c      |  1 +
->  arch/x86/kernel/signal_compat.c    |  2 ++
->  include/linux/compat.h             |  1 +
->  include/linux/sched/signal.h       |  2 +-
->  include/uapi/asm-generic/siginfo.h |  7 +++++++
->  kernel/events/core.c               |  4 ++--
->  kernel/signal.c                    | 18 ++++++++++++++++--
->  12 files changed, 35 insertions(+), 5 deletions(-)
+>  tools/perf/bench/epoll-ctl.c  | 25 +++++++++++++++++++------
+>  tools/perf/bench/epoll-wait.c | 25 +++++++++++++++++++------
+>  2 files changed, 38 insertions(+), 12 deletions(-)
 >
-> diff --git a/arch/arm/kernel/signal.c b/arch/arm/kernel/signal.c
-> index 459abc5d1819..ea128e32e8ca 100644
-> --- a/arch/arm/kernel/signal.c
-> +++ b/arch/arm/kernel/signal.c
-> @@ -708,6 +708,7 @@ static_assert(offsetof(siginfo_t, si_upper) == 0x18);
->  static_assert(offsetof(siginfo_t, si_pkey)     == 0x14);
->  static_assert(offsetof(siginfo_t, si_perf_data)        == 0x10);
->  static_assert(offsetof(siginfo_t, si_perf_type)        == 0x14);
-> +static_assert(offsetof(siginfo_t, si_perf_flags) == 0x18);
->  static_assert(offsetof(siginfo_t, si_band)     == 0x0c);
->  static_assert(offsetof(siginfo_t, si_fd)       == 0x10);
->  static_assert(offsetof(siginfo_t, si_call_addr)        == 0x0c);
-> diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
-> index 4a4122ef6f39..41b5d9d3672a 100644
-> --- a/arch/arm64/kernel/signal.c
-> +++ b/arch/arm64/kernel/signal.c
-> @@ -1011,6 +1011,7 @@ static_assert(offsetof(siginfo_t, si_upper)       == 0x28);
->  static_assert(offsetof(siginfo_t, si_pkey)     == 0x20);
->  static_assert(offsetof(siginfo_t, si_perf_data)        == 0x18);
->  static_assert(offsetof(siginfo_t, si_perf_type)        == 0x20);
-> +static_assert(offsetof(siginfo_t, si_perf_flags) == 0x24);
->  static_assert(offsetof(siginfo_t, si_band)     == 0x10);
->  static_assert(offsetof(siginfo_t, si_fd)       == 0x18);
->  static_assert(offsetof(siginfo_t, si_call_addr)        == 0x10);
-> diff --git a/arch/arm64/kernel/signal32.c b/arch/arm64/kernel/signal32.c
-> index d984282b979f..4700f8522d27 100644
-> --- a/arch/arm64/kernel/signal32.c
-> +++ b/arch/arm64/kernel/signal32.c
-> @@ -487,6 +487,7 @@ static_assert(offsetof(compat_siginfo_t, si_upper)  == 0x18);
->  static_assert(offsetof(compat_siginfo_t, si_pkey)      == 0x14);
->  static_assert(offsetof(compat_siginfo_t, si_perf_data) == 0x10);
->  static_assert(offsetof(compat_siginfo_t, si_perf_type) == 0x14);
-> +static_assert(offsetof(compat_siginfo_t, si_perf_flags)        == 0x18);
->  static_assert(offsetof(compat_siginfo_t, si_band)      == 0x0c);
->  static_assert(offsetof(compat_siginfo_t, si_fd)                == 0x10);
->  static_assert(offsetof(compat_siginfo_t, si_call_addr) == 0x0c);
-> diff --git a/arch/m68k/kernel/signal.c b/arch/m68k/kernel/signal.c
-> index 49533f65958a..b9f6908a31bc 100644
-> --- a/arch/m68k/kernel/signal.c
-> +++ b/arch/m68k/kernel/signal.c
-> @@ -625,6 +625,7 @@ static inline void siginfo_build_tests(void)
->         /* _sigfault._perf */
->         BUILD_BUG_ON(offsetof(siginfo_t, si_perf_data) != 0x10);
->         BUILD_BUG_ON(offsetof(siginfo_t, si_perf_type) != 0x14);
-> +       BUILD_BUG_ON(offsetof(siginfo_t, si_perf_flags) != 0x18);
->
->         /* _sigpoll */
->         BUILD_BUG_ON(offsetof(siginfo_t, si_band)   != 0x0c);
-> diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
-> index f9fe502b81c6..dad38960d1a8 100644
-> --- a/arch/sparc/kernel/signal32.c
-> +++ b/arch/sparc/kernel/signal32.c
-> @@ -779,5 +779,6 @@ static_assert(offsetof(compat_siginfo_t, si_upper)  == 0x18);
->  static_assert(offsetof(compat_siginfo_t, si_pkey)      == 0x14);
->  static_assert(offsetof(compat_siginfo_t, si_perf_data) == 0x10);
->  static_assert(offsetof(compat_siginfo_t, si_perf_type) == 0x14);
-> +static_assert(offsetof(compat_siginfo_t, si_perf_flags)        == 0x18);
->  static_assert(offsetof(compat_siginfo_t, si_band)      == 0x0c);
->  static_assert(offsetof(compat_siginfo_t, si_fd)                == 0x10);
-> diff --git a/arch/sparc/kernel/signal_64.c b/arch/sparc/kernel/signal_64.c
-> index 8b9fc76cd3e0..570e43e6fda5 100644
-> --- a/arch/sparc/kernel/signal_64.c
-> +++ b/arch/sparc/kernel/signal_64.c
-> @@ -590,5 +590,6 @@ static_assert(offsetof(siginfo_t, si_upper) == 0x28);
->  static_assert(offsetof(siginfo_t, si_pkey)     == 0x20);
->  static_assert(offsetof(siginfo_t, si_perf_data)        == 0x18);
->  static_assert(offsetof(siginfo_t, si_perf_type)        == 0x20);
-> +static_assert(offsetof(siginfo_t, si_perf_flags) == 0x24);
->  static_assert(offsetof(siginfo_t, si_band)     == 0x10);
->  static_assert(offsetof(siginfo_t, si_fd)       == 0x14);
-> diff --git a/arch/x86/kernel/signal_compat.c b/arch/x86/kernel/signal_compat.c
-> index b52407c56000..879ef8c72f5c 100644
-> --- a/arch/x86/kernel/signal_compat.c
-> +++ b/arch/x86/kernel/signal_compat.c
-> @@ -149,8 +149,10 @@ static inline void signal_compat_build_tests(void)
->
->         BUILD_BUG_ON(offsetof(siginfo_t, si_perf_data) != 0x18);
->         BUILD_BUG_ON(offsetof(siginfo_t, si_perf_type) != 0x20);
-> +       BUILD_BUG_ON(offsetof(siginfo_t, si_perf_flags) != 0x24);
->         BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_data) != 0x10);
->         BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_type) != 0x14);
-> +       BUILD_BUG_ON(offsetof(compat_siginfo_t, si_perf_flags) != 0x18);
->
->         CHECK_CSI_OFFSET(_sigpoll);
->         CHECK_CSI_SIZE  (_sigpoll, 2*sizeof(int));
-> diff --git a/include/linux/compat.h b/include/linux/compat.h
-> index 1c758b0e0359..01fddf72a81f 100644
-> --- a/include/linux/compat.h
-> +++ b/include/linux/compat.h
-> @@ -235,6 +235,7 @@ typedef struct compat_siginfo {
->                                 struct {
->                                         compat_ulong_t _data;
->                                         u32 _type;
-> +                                       u32 _flags;
->                                 } _perf;
->                         };
->                 } _sigfault;
-> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-> index 3c8b34876744..bab7cc56b13a 100644
-> --- a/include/linux/sched/signal.h
-> +++ b/include/linux/sched/signal.h
-> @@ -320,7 +320,7 @@ int send_sig_mceerr(int code, void __user *, short, struct task_struct *);
->
->  int force_sig_bnderr(void __user *addr, void __user *lower, void __user *upper);
->  int force_sig_pkuerr(void __user *addr, u32 pkey);
-> -int force_sig_perf(void __user *addr, u32 type, u64 sig_data);
-> +int send_sig_perf(void __user *addr, u32 type, u64 sig_data);
->
->  int force_sig_ptrace_errno_trap(int errno, void __user *addr);
->  int force_sig_fault_trapno(int sig, int code, void __user *addr, int trapno);
-> diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
-> index 3ba180f550d7..ffbe4cec9f32 100644
-> --- a/include/uapi/asm-generic/siginfo.h
-> +++ b/include/uapi/asm-generic/siginfo.h
-> @@ -99,6 +99,7 @@ union __sifields {
->                         struct {
->                                 unsigned long _data;
->                                 __u32 _type;
-> +                               __u32 _flags;
->                         } _perf;
->                 };
->         } _sigfault;
-> @@ -164,6 +165,7 @@ typedef struct siginfo {
->  #define si_pkey                _sifields._sigfault._addr_pkey._pkey
->  #define si_perf_data   _sifields._sigfault._perf._data
->  #define si_perf_type   _sifields._sigfault._perf._type
-> +#define si_perf_flags  _sifields._sigfault._perf._flags
->  #define si_band                _sifields._sigpoll._band
->  #define si_fd          _sifields._sigpoll._fd
->  #define si_call_addr   _sifields._sigsys._call_addr
-> @@ -270,6 +272,11 @@ typedef struct siginfo {
->   * that are of the form: ((PTRACE_EVENT_XXX << 8) | SIGTRAP)
->   */
->
-> +/*
-> + * Flags for si_perf_flags if SIGTRAP si_code is TRAP_PERF.
-> + */
-> +#define TRAP_PERF_FLAG_ASYNC (1u << 0)
-> +
->  /*
->   * SIGCHLD si_codes
->   */
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cfde994ce61c..6eafb1b0ad4a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -6533,8 +6533,8 @@ static void perf_sigtrap(struct perf_event *event)
->         if (current->flags & PF_EXITING)
->                 return;
->
-> -       force_sig_perf((void __user *)event->pending_addr,
-> -                      event->attr.type, event->attr.sig_data);
-> +       send_sig_perf((void __user *)event->pending_addr,
-> +                     event->attr.type, event->attr.sig_data);
->  }
->
->  static void perf_pending_event_disable(struct perf_event *event)
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 30cd1ca43bcd..e43bc2a692f5 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1805,7 +1805,7 @@ int force_sig_pkuerr(void __user *addr, u32 pkey)
->  }
->  #endif
->
-> -int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
-> +int send_sig_perf(void __user *addr, u32 type, u64 sig_data)
+> diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+> index 1a17ec83d3c4..91c53f6c6d87 100644
+> --- a/tools/perf/bench/epoll-ctl.c
+> +++ b/tools/perf/bench/epoll-ctl.c
+> @@ -222,13 +222,20 @@ static void init_fdmaps(struct worker *w, int pct)
+>  static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
 >  {
->         struct kernel_siginfo info;
+>         pthread_attr_t thread_attr, *attrp = NULL;
+> -       cpu_set_t cpuset;
+> +       cpu_set_t *cpuset;
+>         unsigned int i, j;
+>         int ret = 0;
+> +       int nrcpus;
+> +       size_t size;
 >
-> @@ -1817,7 +1817,18 @@ int force_sig_perf(void __user *addr, u32 type, u64 sig_data)
->         info.si_perf_data = sig_data;
->         info.si_perf_type = type;
+>         if (!noaffinity)
+>                 pthread_attr_init(&thread_attr);
 >
-> -       return force_sig_info(&info);
-> +       /*
-> +        * Signals generated by perf events should not terminate the whole
-> +        * process if SIGTRAP is blocked, however, delivering the signal
-> +        * asynchronously is better than not delivering at all. But tell user
-> +        * space if the signal was asynchronous, so it can clearly be
-> +        * distinguished from normal synchronous ones.
-> +        */
-> +       info.si_perf_flags = sigismember(&current->blocked, info.si_signo) ?
-> +                                    TRAP_PERF_FLAG_ASYNC :
-> +                                    0;
+> +       nrcpus = perf_cpu_map__nr(cpu);
+> +       cpuset = CPU_ALLOC(nrcpus);
+> +       BUG_ON(!cpuset);
+> +       size = CPU_ALLOC_SIZE(nrcpus);
 > +
-> +       return send_sig_info(info.si_signo, &info, current);
->  }
+>         for (i = 0; i < nthreads; i++) {
+>                 struct worker *w = &worker[i];
 >
->  /**
-> @@ -3432,6 +3443,7 @@ void copy_siginfo_to_external32(struct compat_siginfo *to,
->                 to->si_addr = ptr_to_compat(from->si_addr);
->                 to->si_perf_data = from->si_perf_data;
->                 to->si_perf_type = from->si_perf_type;
-> +               to->si_perf_flags = from->si_perf_flags;
->                 break;
->         case SIL_CHLD:
->                 to->si_pid = from->si_pid;
-> @@ -3509,6 +3521,7 @@ static int post_copy_siginfo_from_user32(kernel_siginfo_t *to,
->                 to->si_addr = compat_ptr(from->si_addr);
->                 to->si_perf_data = from->si_perf_data;
->                 to->si_perf_type = from->si_perf_type;
-> +               to->si_perf_flags = from->si_perf_flags;
->                 break;
->         case SIL_CHLD:
->                 to->si_pid    = from->si_pid;
-> @@ -4722,6 +4735,7 @@ static inline void siginfo_buildtime_checks(void)
->         CHECK_OFFSET(si_pkey);
->         CHECK_OFFSET(si_perf_data);
->         CHECK_OFFSET(si_perf_type);
-> +       CHECK_OFFSET(si_perf_flags);
+> @@ -252,22 +259,28 @@ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
+>                         init_fdmaps(w, 50);
 >
->         /* sigpoll */
->         CHECK_OFFSET(si_band);
+>                 if (!noaffinity) {
+> -                       CPU_ZERO(&cpuset);
+> -                       CPU_SET(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu, &cpuset);
+> +                       CPU_ZERO_S(size, cpuset);
+> +                       CPU_SET_S(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu,
+> +                                       size, cpuset);
+>
+> -                       ret = pthread_attr_setaffinity_np(&thread_attr, sizeof(cpu_set_t), &cpuset);
+> -                       if (ret)
+> +                       ret = pthread_attr_setaffinity_np(&thread_attr, size, cpuset);
+> +                       if (ret) {
+> +                               CPU_FREE(cpuset);
+>                                 err(EXIT_FAILURE, "pthread_attr_setaffinity_np");
+> +                       }
+>
+>                         attrp = &thread_attr;
+>                 }
+>
+>                 ret = pthread_create(&w->thread, attrp, workerfn,
+>                                      (void *)(struct worker *) w);
+> -               if (ret)
+> +               if (ret) {
+> +                       CPU_FREE(cpuset);
+>                         err(EXIT_FAILURE, "pthread_create");
+> +               }
+>         }
+>
+> +       CPU_FREE(cpuset);
+
+A nit here you could CPU_FREE right after the ret = pthread_create...
+to make it a bit shorter.
+
+Thanks,
+Ian
+
+>         if (!noaffinity)
+>                 pthread_attr_destroy(&thread_attr);
+>
+> diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+> index 0d1dd8879197..9469a53ffab9 100644
+> --- a/tools/perf/bench/epoll-wait.c
+> +++ b/tools/perf/bench/epoll-wait.c
+> @@ -291,9 +291,11 @@ static void print_summary(void)
+>  static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
+>  {
+>         pthread_attr_t thread_attr, *attrp = NULL;
+> -       cpu_set_t cpuset;
+> +       cpu_set_t *cpuset;
+>         unsigned int i, j;
+>         int ret = 0, events = EPOLLIN;
+> +       int nrcpus;
+> +       size_t size;
+>
+>         if (oneshot)
+>                 events |= EPOLLONESHOT;
+> @@ -306,6 +308,11 @@ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
+>         if (!noaffinity)
+>                 pthread_attr_init(&thread_attr);
+>
+> +       nrcpus = perf_cpu_map__nr(cpu);
+> +       cpuset = CPU_ALLOC(nrcpus);
+> +       BUG_ON(!cpuset);
+> +       size = CPU_ALLOC_SIZE(nrcpus);
+> +
+>         for (i = 0; i < nthreads; i++) {
+>                 struct worker *w = &worker[i];
+>
+> @@ -341,22 +348,28 @@ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
+>                 }
+>
+>                 if (!noaffinity) {
+> -                       CPU_ZERO(&cpuset);
+> -                       CPU_SET(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu, &cpuset);
+> +                       CPU_ZERO_S(size, cpuset);
+> +                       CPU_SET_S(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu,
+> +                                       size, cpuset);
+>
+> -                       ret = pthread_attr_setaffinity_np(&thread_attr, sizeof(cpu_set_t), &cpuset);
+> -                       if (ret)
+> +                       ret = pthread_attr_setaffinity_np(&thread_attr, size, cpuset);
+> +                       if (ret) {
+> +                               CPU_FREE(cpuset);
+>                                 err(EXIT_FAILURE, "pthread_attr_setaffinity_np");
+> +                       }
+>
+>                         attrp = &thread_attr;
+>                 }
+>
+>                 ret = pthread_create(&w->thread, attrp, workerfn,
+>                                      (void *)(struct worker *) w);
+> -               if (ret)
+> +               if (ret) {
+> +                       CPU_FREE(cpuset);
+>                         err(EXIT_FAILURE, "pthread_create");
+> +               }
+>         }
+>
+> +       CPU_FREE(cpuset);
+>         if (!noaffinity)
+>                 pthread_attr_destroy(&thread_attr);
+>
 > --
-> 2.35.1.1094.g7c7d902a7c-goog
+> 2.35.1
 >
