@@ -2,172 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24259C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 14:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084D7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 16:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234628AbiDFOMX (ORCPT
+        id S237806AbiDFQql (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Apr 2022 10:12:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43160 "EHLO
+        Wed, 6 Apr 2022 12:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234577AbiDFOMP (ORCPT
+        with ESMTP id S238074AbiDFQqE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Apr 2022 10:12:15 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E372121A0DF;
-        Wed,  6 Apr 2022 03:06:28 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id p17so1511926plo.9;
-        Wed, 06 Apr 2022 03:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=57yP5txyEZyDXpbo8tIP1sloT8BEAgWzSMNPoATwlDg=;
-        b=ehDrXAaW3pMqUfx6zSCSo3ez2chyhCErGyezUVm9LK1/D0javYpCUbJcZIXfHfMvkN
-         8UIV/uwH0bb7zEJGYOseWq2ar1EmtgBpi8Gox+OQasCWLVzzBsysSGCPqZ7csA3+Td3B
-         dMru2IP9psWuiXdD27GLpcl1xK5YaKi5o5RfzDNfKouCSPisF0u0YDTQo/TtmxlmCNvR
-         I1PevTkDTfKigc4tGc7Gz67Yxo+M40RoOJfqCyycumlnyj3FL1bsLJ1kHzeIttwSzOLM
-         x9jMos0U8Pf4TpTu1/pxpqYsBWguWjQU56tBLryyJgVZR0EKx8yvXdBvYVnRMBKD41/W
-         UImw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=57yP5txyEZyDXpbo8tIP1sloT8BEAgWzSMNPoATwlDg=;
-        b=xA0DVpVJc7hrUhXdpCOlA/I6D0KEC/Y3ycaCU7ZiI36BrH7ZBJ6+wRBN1tKkMRMlQi
-         5KrheRv0/1b1I6ReksHd+OsH+vRhAPzh1gTkYFP4iUfzrEEtbfPBj5MxB/RROHuexlZR
-         c0eN6EbnogRSjhZrRoVApVzqXm4G08JBKYnh+Kas1f3AecO75BsD+uDIve8ym14iE6Fn
-         975twtJZNgEC8D5MwsHuL+rHZWG8dMQh1/b4MtAjUxq12JwCk1T5Sl0hWfotrJxBbAg4
-         JUbN6zhnml25FPrTgvCCyApH4jzgVbyt3EYopWInTZNbnPz7m1+DJNrba5NB94OOOe1b
-         y2DA==
-X-Gm-Message-State: AOAM533GIPrBITZBla72tDW7D/wuxvIctMjpsTDsVzpPN+/d3XwT7T9i
-        odc+UyJFJDK1eVXWl3FNqTk=
-X-Google-Smtp-Source: ABdhPJylhVZbCyCHSeSScbZqHALx+bT8I3PFeWGu4VLRdO069nloeoxBtQ1mNZowYRE80cEQdXbpCg==
-X-Received: by 2002:a17:90b:4c92:b0:1c7:a9a3:6274 with SMTP id my18-20020a17090b4c9200b001c7a9a36274mr8943122pjb.148.1649239587542;
-        Wed, 06 Apr 2022 03:06:27 -0700 (PDT)
-Received: from CHENGDONGLI-MB0.localdomain ([203.205.141.115])
-        by smtp.gmail.com with ESMTPSA id d16-20020a17090ad99000b001bcbc4247a0sm5144868pjv.57.2022.04.06.03.06.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Apr 2022 03:06:26 -0700 (PDT)
-From:   Chengdong Li <brytonlee01@gmail.com>
-X-Google-Original-From: Chengdong Li <chengdongli@tencent.com>
-Received: by CHENGDONGLI-MB0.localdomain (Postfix, from userid 501)
-        id 2E2286C7A19C; Wed,  6 Apr 2022 18:06:22 +0800 (CST)
-To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org
-Cc:     ak@linux.intel.com, likexu@tencent.com, chengdongli@tencent.com
-Subject: [PATCH v2] perf test tsc: Fix error message report when not supported.
-Date:   Wed,  6 Apr 2022 18:06:09 +0800
-Message-Id: <20220406100609.65239-1-chengdongli@tencent.com>
-X-Mailer: git-send-email 2.32.0
+        Wed, 6 Apr 2022 12:46:04 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E850E322815;
+        Wed,  6 Apr 2022 08:00:20 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D26C712FC;
+        Wed,  6 Apr 2022 08:00:19 -0700 (PDT)
+Received: from [10.57.10.15] (unknown [10.57.10.15])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFE863F73B;
+        Wed,  6 Apr 2022 08:00:18 -0700 (PDT)
+Message-ID: <718ca801-b9db-ac33-d224-9c569aab7446@arm.com>
+Date:   Wed, 6 Apr 2022 16:00:17 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: perf tool: About "perf arm64: Inject missing frames when using
+ 'perf record --call-graph=fp'"
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+To:     John Garry <john.garry@huawei.com>, alexandre.truong@arm.com
+Cc:     linux-perf-users@vger.kernel.org,
+        "jolsa@kernel.org >> Jiri Olsa" <jolsa@kernel.org>,
+        german.gomez@arm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <5f1d8b3f-0afa-2724-4ff1-f061939c68c5@huawei.com>
+ <2dc4266f-02b1-0937-a884-dfa037cc7ffd@arm.com>
+In-Reply-To: <2dc4266f-02b1-0937-a884-dfa037cc7ffd@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-By default `perf test tsc` does not return the error message
-when child process detected kernel does not support. Instead, child
-process print error message to stderr, unfortunately the stderr is
-redirected to /dev/null when verbose <= 0.
 
-This patch did three things:
-- returns TEST_SKIP to parent process instead of TEST_OK when
-  perf_read_tsc_conversion() is not supported.
-- add a new subtest of testing if TSC is supported on current
-  architecture by moving exist code to a separate function.
-- extended test suite definition to contain above two subtests.
 
-Changes since v1 (thanks for the feedback from Adrian Hunter):
-- rebase commit to current source.
+On 06/04/2022 10:08, James Clark wrote:
+> 
+> 
+> On 05/04/2022 15:04, John Garry wrote:
+>> Hi Alexandre,
+>>
+>> I notice that with commit b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf record --call-graph=fp'") that I get messages spewing the console when running perf record+report, as below:
+>>
+>> john@ubuntu:~/linux$sudo tools/perf/perf record -ag fio null12.fio
+>> john@ubuntu:~/linux$sudo tools/perf/perf report > report
+>> unwind: can't read reg 29
+>> unwind: can't read reg 29
+>> unwind: can't read reg 29
+>> unwind: can't read reg 29
+>> ...
+>>
+>> Do you know the possible cause? I haven't checked...
+> 
+> Hi John,
+> 
+> I'm going to look into this today. I expect the cause is because we only record
+> the link register for this change and then do a best effort unwind to see if
+> we can get the return address just from that. So I don't think this is a major issue,
+> probably the outcome will be that I mask any of these errors just for this call
+> to libunwind that we added. The other main call to libunwind should still print
+> these errors.
+> 
+> One thing that is interesting is why we didn't see this when we were testing
+> the patch before, and we've also found it a little bit difficult to reproduce here.
+> So there might be more to it than just masking the error, but I'm not sure yet.
+> 
+> Either way, I don't expect that any unwinding is broken, just that it's
+> printing an annoying message.
+> 
 
-Signed-off-by: Chengdong Li <chengdongli@tencent.com>
----
- tools/perf/tests/perf-time-to-tsc.c | 36 +++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+In my case it was showing the error because I'd installed libc debug symbols which
+explains why we might have missed it before. Also it's looking for the frame pointer
+register which doesn't make sense to save because that would be used to look into
+the stack which isn't recorded.
 
-diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
-index d12d0ad81801..fc7c380af5a0 100644
---- a/tools/perf/tests/perf-time-to-tsc.c
-+++ b/tools/perf/tests/perf-time-to-tsc.c
-@@ -47,6 +47,17 @@
- 	}					\
- }
- 
-+static int test__tsc_is_supported(struct test_suite *test __maybe_unused,
-+				  int subtest __maybe_unused)
-+{
-+	if (!TSC_IS_SUPPORTED) {
-+		pr_debug("Test not supported on this architecture");
-+		return TEST_SKIP;
-+	}
-+
-+	return TEST_OK;
-+}
-+
- /**
-  * test__perf_time_to_tsc - test converting perf time to TSC.
-  *
-@@ -70,7 +81,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	struct perf_cpu_map *cpus = NULL;
- 	struct evlist *evlist = NULL;
- 	struct evsel *evsel = NULL;
--	int err = -1, ret, i;
-+	int err = TEST_FAIL, ret, i;
- 	const char *comm1, *comm2;
- 	struct perf_tsc_conversion tc;
- 	struct perf_event_mmap_page *pc;
-@@ -79,10 +90,6 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	u64 test_time, comm1_time = 0, comm2_time = 0;
- 	struct mmap *md;
- 
--	if (!TSC_IS_SUPPORTED) {
--		pr_debug("Test not supported on this architecture");
--		return TEST_SKIP;
--	}
- 
- 	threads = thread_map__new(-1, getpid(), UINT_MAX);
- 	CHECK_NOT_NULL__(threads);
-@@ -124,8 +131,8 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	ret = perf_read_tsc_conversion(pc, &tc);
- 	if (ret) {
- 		if (ret == -EOPNOTSUPP) {
--			fprintf(stderr, " (not supported)");
--			return 0;
-+			pr_debug("perf_read_tsc_conversion is not supported in current kernel");
-+			err = TEST_SKIP;
- 		}
- 		goto out_err;
- 	}
-@@ -191,7 +198,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	    test_tsc >= comm2_tsc)
- 		goto out_err;
- 
--	err = 0;
-+	err = TEST_OK;
- 
- out_err:
- 	evlist__delete(evlist);
-@@ -200,4 +207,15 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	return err;
- }
- 
--DEFINE_SUITE("Convert perf time to TSC", perf_time_to_tsc);
-+static struct test_case time_to_tsc_tests[] = {
-+	TEST_CASE_REASON("TSC support", tsc_is_supported,
-+			 "This architecture does not support"),
-+	TEST_CASE_REASON("Perf time to TSC", perf_time_to_tsc,
-+			 "perf_read_tsc_conversion is not supported"),
-+	{ .name = NULL, }
-+};
-+
-+struct test_suite suite__perf_time_to_tsc = {
-+	.desc = "Convert perf time to TSC",
-+	.test_cases = time_to_tsc_tests,
-+};
--- 
-2.27.0
+So for that reason I think suppressing the error is the best thing to do. I've sent
+"[PATCH] perf: Don't show unwind error messages when augmenting frame pointer stack"
 
+> James
+> 
+>>
+>> Thanks,
+>> john
