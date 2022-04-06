@@ -2,21 +2,21 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20D9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 11:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD58EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 11:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230263AbiDFL6d (ORCPT
+        id S231638AbiDFL6j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Apr 2022 07:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35900 "EHLO
+        Wed, 6 Apr 2022 07:58:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232797AbiDFL6T (ORCPT
+        with ESMTP id S232870AbiDFL6U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Apr 2022 07:58:19 -0400
+        Wed, 6 Apr 2022 07:58:20 -0400
 Received: from euporie.uberspace.de (euporie.uberspace.de [185.26.156.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999523BE619
-        for <linux-perf-users@vger.kernel.org>; Wed,  6 Apr 2022 00:29:05 -0700 (PDT)
-Received: (qmail 8173 invoked by uid 989); 6 Apr 2022 07:29:03 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 262635282E4
+        for <linux-perf-users@vger.kernel.org>; Wed,  6 Apr 2022 00:29:20 -0700 (PDT)
+Received: (qmail 8294 invoked by uid 989); 6 Apr 2022 07:29:19 -0000
 Authentication-Results: euporie.uberspace.de;
         auth=pass (plain)
 From:   Florian Fischer <florian.fischer@muhq.space>
@@ -24,58 +24,133 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Florian Schmaus <flow@cs.fau.de>
-Subject: [RFC v2] perf stat: add rusage utime and stime events
-Date:   Wed,  6 Apr 2022 09:28:35 +0200
-Message-Id: <20220406072839.107519-1-florian.fischer@muhq.space>
+        Florian Schmaus <flow@cs.fau.de>,
+        Florian Fischer <florian.fischer@muhq.space>
+Subject: [PATCH v2 1/4] perf stat: introduce stats for the user and system rusage times
+Date:   Wed,  6 Apr 2022 09:28:36 +0200
+Message-Id: <20220406072839.107519-2-florian.fischer@muhq.space>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <YkybjsCKyWkDZGX+@kernel.org>
+In-Reply-To: <20220406072839.107519-1-florian.fischer@muhq.space>
 References: <YkybjsCKyWkDZGX+@kernel.org>
+ <20220406072839.107519-1-florian.fischer@muhq.space>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: +
-X-Rspamd-Report: R_MISSING_CHARSET(0.5) MIME_GOOD(-0.1) MID_CONTAINS_FROM(1) BAYES_HAM(-0.054225)
-X-Rspamd-Score: 1.345774
+X-Rspamd-Bar: -----
+X-Rspamd-Report: R_MISSING_CHARSET(0.5) MIME_GOOD(-0.1) REPLY(-4) MID_CONTAINS_FROM(1) BAYES_HAM(-2.999999)
+X-Rspamd-Score: -5.599999
 Received: from unknown (HELO unkown) (::1)
-        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Wed, 06 Apr 2022 09:29:03 +0200
+        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Wed, 06 Apr 2022 09:29:19 +0200
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch series adds new internal events to perf stat exposing the utime and
-stime reported by rusage.
+This is preparation for exporting rusage values as tool events.
 
-During some benchmarking using perf it bothered me that I could not easily
-retrieve the times spent in user or kernel mode from perf stat when using the
-machine readable output.
+Add new global stats tracking the values obtained via rusage.
+For now only ru_utime and ru_stime are part of the tracked stats.
+Both are stored as micro seconds because thats the finest resolution
+the struct timeval data in rusage provides.
+---
+ tools/perf/builtin-stat.c     |  5 ++++-
+ tools/perf/util/stat-shadow.c |  2 ++
+ tools/perf/util/stat.h        | 19 +++++++++++++++++++
+ 3 files changed, 25 insertions(+), 1 deletion(-)
 
-But perf definitely knows about those values because in the human readable output
-they are present.
-
-Therefore I exposed the times reported by rusage via the new tool events:
-rusage_user_time, rusage_system_time and their aliases ru_utime and ru_stime.
-
-This allows to retrieved them in machine-readable output:
-
-$ ./perf stat -x, -e duration_time,ru_utime,ru_stime,cache-misses -- grep -q -r duration_time tools/perf
-72134524,ns,duration_time:u,72134524,100.00,,
-65225,us,ru_utime:u,65225,100.00,,
-6865,us,ru_stime:u,6865,100.00,,
-38705,,cache-misses:u,71189328,100.00,,
-
-The changes are mostly inspired by the code for the only other available
-tool event: 'duration_time'.
-
-For now rusage_* events are not usable with metrics (as far as I understand).
-
-The patch applies cleanly on linux-next/next-20220405.
-
-[PATCH v2 1/4] perf stat: introduce stats for the user and system
-[PATCH v2 2/4] perf stat: add rusage utime and stime events
-[PATCH v2 3/4] perf list: print all available tool events
-[PATCH v2 4/4] perf util: add 'us' unit to the rusage time events
-
-[v2]: Split up the changes into separate commits.
-
-Florian Fischer
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index a96f106dc93a..61faffb535f5 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -216,6 +216,7 @@ static struct perf_stat_config stat_config = {
+ 	.run_count		= 1,
+ 	.metric_only_len	= METRIC_ONLY_LEN,
+ 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
++	.ru_stats		= &ru_stats,
+ 	.big_num		= true,
+ 	.ctl_fd			= -1,
+ 	.ctl_fd_ack		= -1,
+@@ -1010,8 +1011,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		evlist__reset_prev_raw_counts(evsel_list);
+ 		runtime_stat_reset(&stat_config);
+ 		perf_stat__reset_shadow_per_stat(&rt_stat);
+-	} else
++	} else {
+ 		update_stats(&walltime_nsecs_stats, t1 - t0);
++		update_rusage_stats(&ru_stats, &stat_config.ru_data);
++	}
+ 
+ 	/*
+ 	 * Closing a group leader splits the group, and as we only disable
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 10af7804e482..ea4c35e4f1da 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -26,6 +26,7 @@
+ 
+ struct runtime_stat rt_stat;
+ struct stats walltime_nsecs_stats;
++struct rusage_stats ru_stats;
+ 
+ struct saved_value {
+ 	struct rb_node rb_node;
+@@ -199,6 +200,7 @@ void perf_stat__reset_shadow_stats(void)
+ {
+ 	reset_stat(&rt_stat);
+ 	memset(&walltime_nsecs_stats, 0, sizeof(walltime_nsecs_stats));
++	memset(&ru_stats, 0, sizeof(ru_stats));
+ }
+ 
+ void perf_stat__reset_shadow_per_stat(struct runtime_stat *st)
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 335d19cc3063..b14a45d8af63 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -108,6 +108,11 @@ struct runtime_stat {
+ 	struct rblist value_list;
+ };
+ 
++struct rusage_stats {
++	struct stats ru_utime_usec_stat;
++	struct stats ru_stime_usec_stat;
++};
++
+ typedef struct aggr_cpu_id (*aggr_get_id_t)(struct perf_stat_config *config, struct perf_cpu cpu);
+ 
+ struct perf_stat_config {
+@@ -148,6 +153,7 @@ struct perf_stat_config {
+ 	const char		*csv_sep;
+ 	struct stats		*walltime_nsecs_stats;
+ 	struct rusage		 ru_data;
++	struct rusage_stats		 *ru_stats;
+ 	struct cpu_aggr_map	*aggr_map;
+ 	aggr_get_id_t		 aggr_get_id;
+ 	struct cpu_aggr_map	*cpus_aggr_map;
+@@ -177,6 +183,18 @@ static inline void init_stats(struct stats *stats)
+ 	stats->max  = 0;
+ }
+ 
++static inline void init_rusage_stats(struct rusage_stats *ru_stats) {
++	init_stats(&ru_stats->ru_utime_usec_stat);
++	init_stats(&ru_stats->ru_stime_usec_stat);
++}
++
++static inline void update_rusage_stats(struct rusage_stats *ru_stats, struct rusage* rusage) {
++	update_stats(&ru_stats->ru_utime_usec_stat,
++	             (rusage->ru_utime.tv_usec + rusage->ru_utime.tv_sec * 1000000ULL));
++	update_stats(&ru_stats->ru_stime_usec_stat,
++	             (rusage->ru_stime.tv_usec + rusage->ru_stime.tv_sec * 1000000ULL));
++}
++
+ struct evsel;
+ struct evlist;
+ 
+@@ -196,6 +214,7 @@ bool __perf_stat_evsel__is(struct evsel *evsel, enum perf_stat_evsel_id id);
+ 
+ extern struct runtime_stat rt_stat;
+ extern struct stats walltime_nsecs_stats;
++extern struct rusage_stats ru_stats;
+ 
+ typedef void (*print_metric_t)(struct perf_stat_config *config,
+ 			       void *ctx, const char *color, const char *unit,
+-- 
+2.35.1
 
