@@ -2,109 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F7EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 21:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACE3C43219
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 21:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234700AbiDFVSM (ORCPT
+        id S236965AbiDFVkW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Apr 2022 17:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33600 "EHLO
+        Wed, 6 Apr 2022 17:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236338AbiDFVRu (ORCPT
+        with ESMTP id S237885AbiDFVip (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Apr 2022 17:17:50 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AB72EF86F
-        for <linux-perf-users@vger.kernel.org>; Wed,  6 Apr 2022 13:05:47 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id k25so4313412iok.8
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Apr 2022 13:05:47 -0700 (PDT)
+        Wed, 6 Apr 2022 17:38:45 -0400
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED3A217982;
+        Wed,  6 Apr 2022 14:00:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vCgsdofueDzmclBeFxqo6aKHtjsWdXLi6JiPYoFCmoc=;
-        b=cR+5rsgYLkhZXAAFxLpza6qfB2xOzcJNUAIYelWplokZAKThWScNamgWLpMmkHBhgA
-         R1+F1qKd7EG/GEu8cxmj1P80ibmXO1V5w96lKod+E60ujDAa/xCZ0xLxp4Nsp/y1+zNj
-         pGI4QVenIIYqNlvjtSBl1t5pMtIx0NmwB3jyk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vCgsdofueDzmclBeFxqo6aKHtjsWdXLi6JiPYoFCmoc=;
-        b=yQ3CzpZcL1cxO4al4zu/JVPJBydGwn+PJtuvWjqiDkxOc+rRnvtrltRs4BsdXgRr6c
-         zV1L8U+sSn50LJuRcOia32Iu5c99O/uaOE2EhRj7zmzi4JV74+ctDabaXRA0pVK8+CRv
-         Sus91sHst658iAHhIVZK+tHy0fHzUWkPUoampn6tUmq5ePbI5ijtr9eg3xqejSPw8Dra
-         NjZh5JUtu8GUpkZlyTqJsshPTPZMNX41XRFT7ITtg/3fz26oQdty+MWbJA2mwP3Of9hq
-         LcOIxAuFlafoEs6WnD4T9d5CmD5RTrKoaM7AvTES6Hwh2odetZAqMc93yo0MgkD0t414
-         90NA==
-X-Gm-Message-State: AOAM5313kQz2tMx3O7rkvcVBT7rh1YnSSFh/NtXXLSyUMXSx3JW4kFXn
-        ht/BD04ShGebR3NzyjIE3CsiAg==
-X-Google-Smtp-Source: ABdhPJwZyiBF+1MJR1ViEYkDA/OLIZOqcFI6CqmqutLKLEchEzixjki5nX6+7D+OjxHw9lBwnsyheA==
-X-Received: by 2002:a05:6638:41a0:b0:323:d771:8146 with SMTP id az32-20020a05663841a000b00323d7718146mr5494354jab.193.1649275547223;
-        Wed, 06 Apr 2022 13:05:47 -0700 (PDT)
-Received: from [192.168.1.128] ([71.205.29.0])
-        by smtp.gmail.com with ESMTPSA id d14-20020a056602184e00b00649673c175asm11534641ioi.25.2022.04.06.13.05.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Apr 2022 13:05:46 -0700 (PDT)
-Subject: Re: [PATCH] testing/selftests/mqueue: Fix mq_perf_tests to free the
- allocated cpu set
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, disgoel@linux.vnet.ibm.com
-Cc:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, srikar@linux.vnet.ibm.com,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20220406175715.87937-1-atrajeev@linux.vnet.ibm.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <ad0648a9-0252-2d1f-cc48-7e14846fc0af@linuxfoundation.org>
-Date:   Wed, 6 Apr 2022 14:05:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1649278833; x=1680814833;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=S/RUYgJiJDHB7xj8zcZPP8Nba0qoMBr1iDzWuUq4ooM=;
+  b=BFG+AfrLxKrsTOM2H2eEXEg/F3vjones0/CYf+6wxFzUD1OvyS0Z7x55
+   QTUPQUHhuxe2SmUxBcGdRCN74gP/Jbe7bhFb6roVthpcmJFEEEGWiIho4
+   K0cF/w9eUBBn64D9cKCduvVWOe/ZLdvVRKEiUo/XixN0Dkvpr2rESB10s
+   U=;
+X-IronPort-AV: E=Sophos;i="5.90,240,1643673600"; 
+   d="scan'208";a="77373843"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-54c9d11f.us-east-1.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP; 06 Apr 2022 21:00:30 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+        by email-inbound-relay-iad-1e-54c9d11f.us-east-1.amazon.com (Postfix) with ESMTPS id BF0E7C0271;
+        Wed,  6 Apr 2022 21:00:24 +0000 (UTC)
+Received: from EX13D02UWB002.ant.amazon.com (10.43.161.160) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Wed, 6 Apr 2022 21:00:24 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D02UWB002.ant.amazon.com (10.43.161.160) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Wed, 6 Apr 2022 21:00:23 +0000
+Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
+ (172.19.181.128) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1497.32 via Frontend Transport; Wed, 6 Apr 2022 21:00:23 +0000
+Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
+        id 134A62510; Wed,  6 Apr 2022 21:00:22 +0000 (UTC)
+From:   Ali Saidi <alisaidi@amazon.com>
+To:     <leo.yan@linaro.org>
+CC:     <Nick.Forrington@arm.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <alisaidi@amazon.com>,
+        <andrew.kilroy@arm.com>, <benh@kernel.crashing.org>,
+        <german.gomez@arm.com>, <james.clark@arm.com>,
+        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
+        <lihuafei1@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <will@kernel.org>
+Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse cores
+Date:   Wed, 6 Apr 2022 21:00:17 +0000
+Message-ID: <20220406210017.11887-1-alisaidi@amazon.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220404151218.GA898573@leoy-ThinkPad-X240s>
+References: <20220404151218.GA898573@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-In-Reply-To: <20220406175715.87937-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/6/22 11:57 AM, Athira Rajeev wrote:
-> The selftest "mqueue/mq_perf_tests.c" use CPU_ALLOC to allocate
-> CPU set. This cpu set is used further in pthread_attr_setaffinity_np
-> and by pthread_create in the code. But in current code, allocated
-> cpu set is not freed. Fix this by adding CPU_FREE after its usage
-> is done.
+On Mon, 4 Apr 2022 15:12:18  +0000, Leo Yan wrote:
+> On Sun, Apr 03, 2022 at 08:33:37PM +0000, Ali Saidi wrote:
+
+[...]
+
+> > The latter logic is why I think it's perfectly acceptable to use HITM to
+> > indicate a peer cache-to-cache transfer, however since others don't feel that way
+> > let me propose a single additional snooping type PERF_MEM_SNOOP_PEER that
+> > indicates some peer of the hierarchy below the originating core sourced the
+> > data.  This clears up the definition that line came from from a peer and may or
+> > may not have been modified, but it doesn't add a lot of implementation dependant
+> > functionality into the SNOOP API. 
+> > 
+> > We could use the mem-level to indicate the level of the cache hierarchy we had
+> > to get to before the snoop traveled upward, which seems like what x86 is doing
+> > here.
 > 
+> It makes sense to me that to use the highest cache level as mem-level.
+> Please add comments in the code for this, this would be useful for
+> understanding the code.
 
-Good find.
+Ok.
 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->   tools/testing/selftests/mqueue/mq_perf_tests.c | 1 +
->   1 file changed, 1 insertion(+)
+> > PEER_CORE -> MEM_SNOOP_PEER + L2
+> > PEER_CLSTR -> MEM_SNOOP_PEER + L3
+> > PEER_LCL_CLSTR -> MEM_SNOOP_PEER + L3 (since newer neoverse cores don't support
+> > the clusters and the existing commercial implementations don't have them).
 > 
-> diff --git a/tools/testing/selftests/mqueue/mq_perf_tests.c b/tools/testing/selftests/mqueue/mq_perf_tests.c
-> index b019e0b8221c..17c41f216bef 100644
-> --- a/tools/testing/selftests/mqueue/mq_perf_tests.c
-> +++ b/tools/testing/selftests/mqueue/mq_perf_tests.c
-> @@ -732,6 +732,7 @@ int main(int argc, char *argv[])
->   		pthread_attr_destroy(&thread_attr);
->   	}
->   
-> +	CPU_FREE(cpu_set);
->   	if (!continuous_mode) {
->   		pthread_join(cpu_threads[0], &retval);
->   		shutdown((long)retval, "perf_test_thread()", __LINE__);
+> Generally, this idea is fine for me.
+
+Great.  
+
+Now the next tricky thing. Since we're not using HITM for recording the memory
+events, the question becomes for the c2c output should we output the SNOOP_PEER
+events as if they are HITM events with a clarification in the perf-c2c man page
+or effectively duplicate all the lcl_hitm logic, which is a fair amount,  in
+perf c2c to add a column and sort option? 
+
+> Following your suggestion, if we connect the concepts PoC and PoU in Arm
+> reference manual, we can extend the snooping mode with MEM_SNOOP_POU
+> (for PoU) and MEM_SNOOP_POC (for PoC), so:
 > 
+> PEER_CORE -> MEM_SNOOP_POU + L2
+> PEER_LCL_CLSTR -> MEM_SNOOP_POU + L3
+> PEER_CLSTR -> MEM_SNOOP_POC + L3
+> 
+> Seems to me, we could consider for this.  If this is over complexity or
+> even I said any wrong concepts for this, please use your method.
 
-CPU_ALLOC() is called very early on in main() and there are a
-few error paths that exit without calling CPU_FREE. This change
-doesn't fully fix the problem.
+I think this adds a lot of complexity and reduces clarity. Some systems
+implement coherent icaches and the PoU would be the L1 cache, others don't so
+that would be the L2 (or wherever there is a unified cache). Similarly, with the
+point of coherency, some systems would consider that dram, but other systems
+have transparent LLCs and it would be the LLC. 
 
-Review the other exit paths where CPU_FREE is needed.
+Thanks,
+Ali
 
-thanks,
--- Shuah
