@@ -2,98 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20431C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 13:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD90C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 13:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233908AbiDFNvt (ORCPT
+        id S233854AbiDFN5W (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Apr 2022 09:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58150 "EHLO
+        Wed, 6 Apr 2022 09:57:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233489AbiDFNvd (ORCPT
+        with ESMTP id S233934AbiDFN5M (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Apr 2022 09:51:33 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926B35F9ADD;
-        Wed,  6 Apr 2022 04:28:58 -0700 (PDT)
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KYMfk02mrz688JV;
-        Wed,  6 Apr 2022 19:26:54 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 6 Apr 2022 13:28:56 +0200
-Received: from [10.47.80.129] (10.47.80.129) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 6 Apr
- 2022 12:28:56 +0100
-Message-ID: <2139adb2-17be-761f-3c8d-e006fc2c4384@huawei.com>
-Date:   Wed, 6 Apr 2022 12:28:55 +0100
+        Wed, 6 Apr 2022 09:57:12 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AC6A35770F;
+        Wed,  6 Apr 2022 02:08:45 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 449E323A;
+        Wed,  6 Apr 2022 02:08:45 -0700 (PDT)
+Received: from [10.57.10.15] (unknown [10.57.10.15])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41F193F718;
+        Wed,  6 Apr 2022 02:08:44 -0700 (PDT)
+Message-ID: <2dc4266f-02b1-0937-a884-dfa037cc7ffd@arm.com>
+Date:   Wed, 6 Apr 2022 10:08:42 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
 Subject: Re: perf tool: About "perf arm64: Inject missing frames when using
  'perf record --call-graph=fp'"
-To:     James Clark <james.clark@arm.com>, <alexandre.truong@arm.com>
-CC:     <linux-perf-users@vger.kernel.org>,
+Content-Language: en-US
+To:     John Garry <john.garry@huawei.com>, alexandre.truong@arm.com
+Cc:     linux-perf-users@vger.kernel.org,
         "jolsa@kernel.org >> Jiri Olsa" <jolsa@kernel.org>,
-        <german.gomez@arm.com>,
+        german.gomez@arm.com,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
 References: <5f1d8b3f-0afa-2724-4ff1-f061939c68c5@huawei.com>
- <2dc4266f-02b1-0937-a884-dfa037cc7ffd@arm.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <2dc4266f-02b1-0937-a884-dfa037cc7ffd@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <5f1d8b3f-0afa-2724-4ff1-f061939c68c5@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.80.129]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 06/04/2022 10:08, James Clark wrote:
-> 
-> 
-> On 05/04/2022 15:04, John Garry wrote:
->> Hi Alexandre,
->>
->> I notice that with commit b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf record --call-graph=fp'") that I get messages spewing the console when running perf record+report, as below:
->>
->> john@ubuntu:~/linux$sudo tools/perf/perf record -ag fio null12.fio
->> john@ubuntu:~/linux$sudo tools/perf/perf report > report
->> unwind: can't read reg 29
->> unwind: can't read reg 29
->> unwind: can't read reg 29
->> unwind: can't read reg 29
->> ...
->>
->> Do you know the possible cause? I haven't checked...
-> 
-> Hi John,
-> 
-> I'm going to look into this today.
 
-Great
 
-  I expect the cause is because we only record
->> the link register for this change and then do a best effort unwind to see if
-> we can get the return address just from that. So I don't think this is a major issue,
-> probably the outcome will be that I mask any of these errors just for this call
-> to libunwind that we added. The other main call to libunwind should still print
-> these errors.
+On 05/04/2022 15:04, John Garry wrote:
+> Hi Alexandre,
 > 
-> One thing that is interesting is why we didn't see this when we were testing
-> the patch before, and we've also found it a little bit difficult to reproduce here.
-> So there might be more to it than just masking the error, but I'm not sure yet.
+> I notice that with commit b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf record --call-graph=fp'") that I get messages spewing the console when running perf record+report, as below:
 > 
-> Either way, I don't expect that any unwinding is broken, just that it's
-> printing an annoying message.
+> john@ubuntu:~/linux$sudo tools/perf/perf record -ag fio null12.fio
+> john@ubuntu:~/linux$sudo tools/perf/perf report > report
+> unwind: can't read reg 29
+> unwind: can't read reg 29
+> unwind: can't read reg 29
+> unwind: can't read reg 29
+> ...
+> 
+> Do you know the possible cause? I haven't checked...
 
-Yeah, the actual ouput looks ok at a glance. I really didn't check much.
+Hi John,
 
-Thanks,
-John
+I'm going to look into this today. I expect the cause is because we only record
+the link register for this change and then do a best effort unwind to see if
+we can get the return address just from that. So I don't think this is a major issue,
+probably the outcome will be that I mask any of these errors just for this call
+to libunwind that we added. The other main call to libunwind should still print
+these errors.
 
+One thing that is interesting is why we didn't see this when we were testing
+the patch before, and we've also found it a little bit difficult to reproduce here.
+So there might be more to it than just masking the error, but I'm not sure yet.
+
+Either way, I don't expect that any unwinding is broken, just that it's
+printing an annoying message.
+
+James
+
+> 
+> Thanks,
+> john
