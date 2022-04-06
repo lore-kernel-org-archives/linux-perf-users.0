@@ -2,136 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69478C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 19:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E6BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 19:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbiDFTow (ORCPT
+        id S232518AbiDFTqe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Apr 2022 15:44:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43344 "EHLO
+        Wed, 6 Apr 2022 15:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231150AbiDFToa (ORCPT
+        with ESMTP id S232677AbiDFTqZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Apr 2022 15:44:30 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697F519BE56
-        for <linux-perf-users@vger.kernel.org>; Wed,  6 Apr 2022 10:11:36 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id 66so2699156pga.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Apr 2022 10:11:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XD5ItTlj29WOcCS4owus3qC0hML8VkaRp6mT60P4fAs=;
-        b=kPmdnsx9LLguRvYL3Ro1Z3H/hbzqUOaaHSA6QYx4TnRIxubdNkfpl5NftPa6B3A32J
-         0mO2aM/7kIc7ajialM8F0oZMG/15whqn7iEi50wmKl74Rz00zFXIfOe0G6H6w7PuUxT1
-         ya1QYh2tvdEW3vXVvLy65KQgfaZwXcBOQXjWisRdiZox3pfzQ80wnCGPRPODglkZeAj+
-         /yegc92v07QiiihtAf04t1N+4o/gz2LOFVvZFKrnF3xashqkZofgO0c8cxzH8lb8BVIn
-         Sd/MNUh2/sRTP7K5lhLD1LibPJJl898v3LOYFGmmvvq5DgiAkne83x5VDbZs+dESUcyp
-         mIWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XD5ItTlj29WOcCS4owus3qC0hML8VkaRp6mT60P4fAs=;
-        b=m0v88GFQntTG+A6GkUMfJG/tQgzCvRWhpegG28mNW9M0ZWYIMPvOCBeXlvA3VJCX2Q
-         dlUj38fFr5N3x+ma9iSVIMNIW+lXXOQLn+jaUZ7f/BEwDj3CT+wZyaYlGF5Da/l1KdO/
-         B62pu0I6S+L4rZv5IsxNYpZGdOEM1GefBNLfcq2Y0yUV6BRRFVTztGoLzOfI3CpMO3Hw
-         b6rcHmS56gwJVlUSMNtrFRn9Mi3TXM8dpy+RXSvplzkluDYLcUV63OsYkd6GFUFhVl3K
-         WYplSnUtddbTYTT3pmk4HGwTIyDjOKYDckwKpq6T+uullrFj3g5Uv+v7YejvcVIkKHOn
-         tTpg==
-X-Gm-Message-State: AOAM533+Ait0wAZ1qGLGZZr1N+DBD5op4vMKshz4Z6tkPMrYyes0CW4r
-        FTu+Z9v0JV/ytSuzd/uj3hCM7g==
-X-Google-Smtp-Source: ABdhPJwJhqMpUBciUS7gBInD6rkTovC4c40eFaC1Tma7/9HSbIMAi+pqB0ASIGQskCxTS3WkV0FEGw==
-X-Received: by 2002:a05:6a00:2304:b0:4fa:dff2:88f5 with SMTP id h4-20020a056a00230400b004fadff288f5mr9944212pfh.11.1649265095918;
-        Wed, 06 Apr 2022 10:11:35 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id 83-20020a621556000000b004fe5d8c5cf3sm1868411pfv.156.2022.04.06.10.11.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 10:11:34 -0700 (PDT)
-Date:   Wed, 6 Apr 2022 11:11:32 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org
-Subject: Re: [PATCH 06/10] coresight: perf: traceid: Add perf notifiers for
- trace ID
-Message-ID: <20220406171132.GA16110@p14s>
-References: <20220308205000.27646-1-mike.leach@linaro.org>
- <20220308205000.27646-7-mike.leach@linaro.org>
+        Wed, 6 Apr 2022 15:46:25 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3683B5EBD5;
+        Wed,  6 Apr 2022 10:51:43 -0700 (PDT)
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 236G7JVc002986;
+        Wed, 6 Apr 2022 17:51:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=3qnoL3A32ViFstgzgjBXHDaitO7b7rpSfdz143vPKGk=;
+ b=TR8FU7aonqtxG8ouGzmoHP3dQUxqjUVdnYma1hjHXH/4/N80pNW6NSnTohIo8j9YJ/bw
+ q3omH4X6JNAjTIcbOI1R7LZFVMOCddMPkBTxNH92dpyxA/lGR3IROMIgf5NVnFh0WsfE
+ qe+tErwLLdf1HvOp75+xLKcmcvIBnt052pVcSXk2fP/yq9Q4FqxbQNhzjWb+xir2Ql2H
+ QLIbEZBpqDUa5f0V1MW2TsuMH43gbgOvrLJGtDGdN9nZh5fjgvjMV7fyyk9LB3RGoECa
+ 5giq59aatNv64mZimb/vcDUEFUYk0dG5y4KQ1J40E6clJ4OpHFeuBwKxB29pMemEEoGF vA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3f977buna9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Apr 2022 17:51:27 +0000
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 236HiFZe032736;
+        Wed, 6 Apr 2022 17:51:27 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3f977bun9m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Apr 2022 17:51:27 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 236Hh9TN018159;
+        Wed, 6 Apr 2022 17:51:25 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3f6e4908m5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Apr 2022 17:51:25 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 236HpMAW32899450
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Apr 2022 17:51:22 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 005A74C046;
+        Wed,  6 Apr 2022 17:51:22 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD8684C044;
+        Wed,  6 Apr 2022 17:51:16 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.211.90.125])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  6 Apr 2022 17:51:16 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com
+Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
+        linux-kernel@vger.kernel.org, srikar@linux.vnet.ibm.com,
+        irogers@google.com
+Subject: [PATCH v2 0/4] Fix perf bench numa, futex and epoll to work with machines having #CPUs > 1K
+Date:   Wed,  6 Apr 2022 23:21:09 +0530
+Message-Id: <20220406175113.87881-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220308205000.27646-7-mike.leach@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3dg8eNuLQnFlErqcy5KMkXzXKig2d57D
+X-Proofpoint-ORIG-GUID: ijgm-SApZVM232V8XJqSlbh0zK3Xg7-X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-04-06_09,2022-04-06_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0
+ clxscore=1011 phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204060087
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 08, 2022 at 08:49:56PM +0000, Mike Leach wrote:
-> Adds in notifier calls to the trace ID allocator that perf
-> events are starting and stopping.
-> 
-> This ensures that Trace IDs associated with CPUs remain the same
-> throughout the perf session, and are only release when all perf
-> sessions are complete.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> ---
->  drivers/hwtracing/coresight/coresight-etm-perf.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index c039b6ae206f..008f9dac429d 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -22,6 +22,7 @@
->  #include "coresight-etm-perf.h"
->  #include "coresight-priv.h"
->  #include "coresight-syscfg.h"
-> +#include "coresight-trace-id.h"
->  
->  static struct pmu etm_pmu;
->  static bool etm_perf_up;
-> @@ -223,11 +224,21 @@ static void free_event_data(struct work_struct *work)
->  		struct list_head **ppath;
->  
->  		ppath = etm_event_cpu_path_ptr(event_data, cpu);
-> -		if (!(IS_ERR_OR_NULL(*ppath)))
-> +		if (!(IS_ERR_OR_NULL(*ppath))) {
->  			coresight_release_path(*ppath);
-> +			/*
-> +			 * perf may have read a trace id for a cpu, but never actually
-> +			 * executed code on that cpu - which means the trace id would
-> +			 * not release on disable. Re-release here to be sure.
-> +			 */
-> +			coresight_trace_id_put_cpu_id(cpu, coresight_get_trace_id_map());
+The perf benchmark for collections: numa, futex and epoll
+hits failure in system configuration with CPU's more than 1024.
+These benchmarks uses "sched_getaffinity" and "sched_setaffinity"
+in the code to work with affinity.
 
-A CPU gets a traceID in event_etm_start() when the event is installed for
-running.  Do you see a scenario where etm_free_aux() is called without
-previously calling event_etm_stop()? 
+Example snippet from numa benchmark:
+<<>>
+perf: bench/numa.c:302: bind_to_node: Assertion `!(ret)' failed.
+Aborted (core dumped)
+<<>>
 
-> +		}
->  		*ppath = NULL;
->  	}
->  
-> +	/* mark perf event as done for trace id allocator */
-> +	coresight_trace_id_perf_stop();
-> +
->  	free_percpu(event_data->path);
->  	kfree(event_data);
->  }
-> @@ -314,6 +325,9 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
->  		sink = user_sink = coresight_get_sink_by_id(id);
->  	}
->  
-> +	/* tell the trace ID allocator that a perf event is starting up */
-> +	coresight_trace_id_perf_start();
-> +
->  	/* check if user wants a coresight configuration selected */
->  	cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
->  	if (cfg_hash) {
-> -- 
-> 2.17.1
-> 
+bind_to_node function uses "sched_getaffinity" to save the cpumask.
+This fails with EINVAL because the default mask size in glibc is 1024.
+
+Similarly in futex and epoll benchmark, uses sched_setaffinity during
+pthread_create with affinity. And since it returns EINVAL in such system
+configuration, benchmark doesn't run.
+
+To overcome this 1024 CPUs mask size limitation of cpu_set_t,
+change the mask size using the CPU_*_S macros ie, use CPU_ALLOC to
+allocate cpumask, CPU_ALLOC_SIZE for size, CPU_SET_S to set mask bit.
+
+Fix all the relevant places in the code to use mask size which is large
+enough to represent number of possible CPU's in the system.
+
+Fix parse_setup_cpu_list function in numa bench to check if input CPU
+is online before binding task to that CPU. This is to fix failures where,
+though CPU number is within max CPU, it could happen that CPU is offline.
+Here, sched_setaffinity will result in failure when using cpumask having
+that cpu bit set in the mask.
+
+Patch 1 and Patch 2 address fix for perf bench futex and perf bench
+epoll benchmark. Patch 3 and Patch 4 address fix in perf bench numa
+benchmark
+
+Athira Rajeev (4):
+  tools/perf: Fix perf bench futex to correct usage of affinity for
+    machines with #CPUs > 1K
+  tools/perf: Fix perf bench epoll to correct usage of affinity for
+    machines with #CPUs > 1K
+  tools/perf: Fix perf numa bench to fix usage of affinity for machines
+    with #CPUs > 1K
+  tools/perf: Fix perf bench numa testcase to check if CPU used to bind
+    task is online
+
+Changelog:
+From v1 -> v2:
+ Addressed review comment from Ian Rogers to do
+ CPU_FREE in a cleaner way.
+ Added Tested-by from Disha Goel
+
+ tools/perf/bench/epoll-ctl.c           |  25 ++++--
+ tools/perf/bench/epoll-wait.c          |  25 ++++--
+ tools/perf/bench/futex-hash.c          |  26 ++++--
+ tools/perf/bench/futex-lock-pi.c       |  21 +++--
+ tools/perf/bench/futex-requeue.c       |  21 +++--
+ tools/perf/bench/futex-wake-parallel.c |  21 +++--
+ tools/perf/bench/futex-wake.c          |  22 ++++--
+ tools/perf/bench/numa.c                | 105 ++++++++++++++++++-------
+ tools/perf/util/header.c               |  43 ++++++++++
+ tools/perf/util/header.h               |   1 +
+ 10 files changed, 242 insertions(+), 68 deletions(-)
+
+-- 
+2.35.1
+
