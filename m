@@ -2,246 +2,166 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DD2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 20:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2A3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 21:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233835AbiDFUPH (ORCPT
+        id S234892AbiDFVFe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Apr 2022 16:15:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43596 "EHLO
+        Wed, 6 Apr 2022 17:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236300AbiDFUNi (ORCPT
+        with ESMTP id S234936AbiDFVFT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Apr 2022 16:13:38 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18BB60040;
-        Wed,  6 Apr 2022 10:51:48 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 236G8xbb037207;
-        Wed, 6 Apr 2022 17:51:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=8ndA8c5xFaZF+V8VsYWe9PAD5wDhHWHh/EbZ2rHZ214=;
- b=J1kXuTffGRvpCogdFAz/cqTHO91bY3YQoyGr+A9+PQ8v6/3zKM1PQtzg4VtTOn/0kPW4
- LMhSxSnOhOj0J23TVSHMzoMXz/xuKlsCvb4zBUIH/5XEYvFUTT+SsVdWP1QciSfWhjnL
- 7jwpUjwWbX7toY6ELAY0q5bOJ/tqIzVVMVKaSLjC3ZJlfRN++rqS7zhMhKJOI6xUtjgY
- rG/fel4dhD1gOrlRWgXreGOGPehh3yLHMGzSMvhs942GWdREXN4Uwiihm9J85/JpOQaM
- GTKKglXiDfQDeA3gwDfJdBUiPE7xs3nkUy3x6wkAlBFnoRI32ww7MQxAkZfe1pj9j5ty Zw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3f9a9qft54-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Apr 2022 17:51:40 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 236Hgmsd019947;
-        Wed, 6 Apr 2022 17:51:39 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3f9a9qft4t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Apr 2022 17:51:39 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 236HicXB002932;
-        Wed, 6 Apr 2022 17:51:37 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 3f6drhpttb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Apr 2022 17:51:37 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 236HpYHG41026038
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Apr 2022 17:51:34 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 487404C040;
-        Wed,  6 Apr 2022 17:51:34 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E9C234C046;
-        Wed,  6 Apr 2022 17:51:28 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.211.90.125])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Apr 2022 17:51:28 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com
-Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        linux-kernel@vger.kernel.org, srikar@linux.vnet.ibm.com,
-        irogers@google.com
-Subject: [PATCH v2 2/4] tools/perf: Fix perf bench epoll to correct usage of affinity for machines with #CPUs > 1K
-Date:   Wed,  6 Apr 2022 23:21:11 +0530
-Message-Id: <20220406175113.87881-3-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220406175113.87881-1-atrajeev@linux.vnet.ibm.com>
-References: <20220406175113.87881-1-atrajeev@linux.vnet.ibm.com>
+        Wed, 6 Apr 2022 17:05:19 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8877BFABFC
+        for <linux-perf-users@vger.kernel.org>; Wed,  6 Apr 2022 12:38:21 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id c7so4812845wrd.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Apr 2022 12:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t/OlsO1FKFR5EhHV9ORO6nOTkIXhtzmPjFoAc9FJDKQ=;
+        b=XDKGV13OWuTcpHQtxWsO2pGZJRHijPeLw1lbRH7aQAqCra/Xto8IkoJy+FHPQBBqzl
+         n7QL7p9otGPG7HD1r3iEHoLODppCk6NYvyPIrrXGEJzDuN/b4mQJh7ucRV5HEKUG9oNX
+         LmU02pkmW3bRXIPADpVyIH8lyA8xNakFXmcSU0MVt6juSgKk2GIOOT3Wv7hM7jFXTwcp
+         MoGyktVuWPHTg1idcweYHQ6PYAy6d2mkF6g51Gfcpq7VazIXyEQHME2oWBciEYPZCqIu
+         YbUBiKzmhK6MF3zbUl0Iwf3vNgRGf90MPFj/K20OhRwOHesuZ2sAUeoYEcc7MasYFimx
+         rcGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t/OlsO1FKFR5EhHV9ORO6nOTkIXhtzmPjFoAc9FJDKQ=;
+        b=JAL/8qGGs/QtPejLw/8QY47wUVmrffYF/fRSgc+7whK1yzU0aXznI08/UJ/X3BDReU
+         6GEhkj/ZNI473iT7+Wias+Gm7XkG0Cr+1u7/FuHBV9nm+5dSFsoOgTUUHfNgCZInlvOe
+         4clhXq4umMJflyR6SyoUeQ8y5MuBSUlbk6Ld5y8W88mTz1qgqTKOXe2O97FToYKLUBp2
+         U4VLKt3UpHYQZDDQZXPviTov816NnPLQotMwYsWgfIKCO1xtaPYmTuQhqCbEExGbnq/t
+         Z3lh1LyYhUjxfd1W/utP0ohvgocnHJRpMcmcyi1FVh4ULFfOL7QEBR3rXPC+f9AdJHTh
+         JVwg==
+X-Gm-Message-State: AOAM5333hD9QzIsnuX3BBQHgankGg7UmAQn7rwMTW3igG6mG6+qCCKuk
+        rwfl/aMZt4IYNYqanqU52LPNnmqD0PCh56/e9Flt1Q==
+X-Google-Smtp-Source: ABdhPJykxlo2lmJKWzLIYXb1mqCY4+iNWrhFOThyodG19xkrBPGOHaSV5IhSMcQbjyGQs2xL+Y9Xi6Y+jdvxnUNKRqg=
+X-Received: by 2002:a05:6000:16cd:b0:207:81ed:b733 with SMTP id
+ h13-20020a05600016cd00b0020781edb733mr2507341wrf.111.1649273900001; Wed, 06
+ Apr 2022 12:38:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: OVMkAlE1clseF4f9BcFFTUoXeUPF5OVm
-X-Proofpoint-ORIG-GUID: rvF_PSZj4BgcGV26e9u35LXN93EfB-Vi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-04-06_09,2022-04-06_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204060087
+References: <20220308205000.27646-1-mike.leach@linaro.org> <20220308205000.27646-7-mike.leach@linaro.org>
+ <20220406171132.GA16110@p14s>
+In-Reply-To: <20220406171132.GA16110@p14s>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Wed, 6 Apr 2022 20:38:08 +0100
+Message-ID: <CAJ9a7Vjb0G4fSB6U33JruVWcBzpP459rYq+5CzMqxRcWeiJb0w@mail.gmail.com>
+Subject: Re: [PATCH 06/10] coresight: perf: traceid: Add perf notifiers for
+ trace ID
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf bench epoll testcase fails on systems with CPU's
-more than 1K.
+Hi Mathieu,
 
-Testcase: perf bench epoll all
-Result snippet:
-<<>>
-Run summary [PID 106497]: 1399 threads monitoring on 64 file-descriptors for 8 secs.
+On Wed, 6 Apr 2022 at 18:11, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
+>
+> On Tue, Mar 08, 2022 at 08:49:56PM +0000, Mike Leach wrote:
+> > Adds in notifier calls to the trace ID allocator that perf
+> > events are starting and stopping.
+> >
+> > This ensures that Trace IDs associated with CPUs remain the same
+> > throughout the perf session, and are only release when all perf
+> > sessions are complete.
+> >
+> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > ---
+> >  drivers/hwtracing/coresight/coresight-etm-perf.c | 16 +++++++++++++++-
+> >  1 file changed, 15 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > index c039b6ae206f..008f9dac429d 100644
+> > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > @@ -22,6 +22,7 @@
+> >  #include "coresight-etm-perf.h"
+> >  #include "coresight-priv.h"
+> >  #include "coresight-syscfg.h"
+> > +#include "coresight-trace-id.h"
+> >
+> >  static struct pmu etm_pmu;
+> >  static bool etm_perf_up;
+> > @@ -223,11 +224,21 @@ static void free_event_data(struct work_struct *work)
+> >               struct list_head **ppath;
+> >
+> >               ppath = etm_event_cpu_path_ptr(event_data, cpu);
+> > -             if (!(IS_ERR_OR_NULL(*ppath)))
+> > +             if (!(IS_ERR_OR_NULL(*ppath))) {
+> >                       coresight_release_path(*ppath);
+> > +                     /*
+> > +                      * perf may have read a trace id for a cpu, but never actually
+> > +                      * executed code on that cpu - which means the trace id would
+> > +                      * not release on disable. Re-release here to be sure.
+> > +                      */
+> > +                     coresight_trace_id_put_cpu_id(cpu, coresight_get_trace_id_map());
+>
+> A CPU gets a traceID in event_etm_start() when the event is installed for
+> running.  Do you see a scenario where etm_free_aux() is called without
+> previously calling event_etm_stop()?
+>
 
-perf: pthread_create: No such file or directory
-<<>>
+To ensure that IDs are obtained in a timely manner, they assign on
+read. Therefore when cs_etm.c::cs_etm_info_fill() is called,
+potentially the ID will be read for all CPUs - and dumped into the
+AUXINFO data at the top of the perf.data file.
+However, a --per-thread execution may actually only start the event on
+a subset of cpus, hence we ensure that all cpus are released.
+This was proven during testing when I ran both --per-thread and cpu
+wide tests with logging monitoring the ID assignments.
 
-In epoll benchmarks (ctl, wait) pthread_create is invoked in do_threads
-from respective bench_epoll_*  function. Though the logs shows direct
-failure from pthread_create, the actual failure is from  "sched_setaffinity"
-returning EINVAL (invalid argument). This happens because the default
-mask size in glibc is 1024. To overcome this 1024 CPUs mask size
-limitation of cpu_set_t, change the mask size using the CPU_*_S macros.
+I have programmed this deliberately defensively - on the basis that
+the timings and orderings of the code/callbacks in todays perf may not
+necessarily be the same in tomorrows. perf.
 
-Patch addresses this by fixing all the epoll benchmarks to use
-CPU_ALLOC to allocate cpumask, CPU_ALLOC_SIZE for size, and
-CPU_SET_S to set the mask.
+In future we may be able to use Suzuki's idea of embedding the ID into
+an alternative packet in the perf.data file. but I think that should
+be a separate change as it affects decode in a big way.
 
-Tested-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
----
- tools/perf/bench/epoll-ctl.c  | 25 +++++++++++++++++++------
- tools/perf/bench/epoll-wait.c | 25 +++++++++++++++++++------
- 2 files changed, 38 insertions(+), 12 deletions(-)
+Regards
 
-diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
-index 1a17ec83d3c4..91c53f6c6d87 100644
---- a/tools/perf/bench/epoll-ctl.c
-+++ b/tools/perf/bench/epoll-ctl.c
-@@ -222,13 +222,20 @@ static void init_fdmaps(struct worker *w, int pct)
- static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
- {
- 	pthread_attr_t thread_attr, *attrp = NULL;
--	cpu_set_t cpuset;
-+	cpu_set_t *cpuset;
- 	unsigned int i, j;
- 	int ret = 0;
-+	int nrcpus;
-+	size_t size;
- 
- 	if (!noaffinity)
- 		pthread_attr_init(&thread_attr);
- 
-+	nrcpus = perf_cpu_map__nr(cpu);
-+	cpuset = CPU_ALLOC(nrcpus);
-+	BUG_ON(!cpuset);
-+	size = CPU_ALLOC_SIZE(nrcpus);
-+
- 	for (i = 0; i < nthreads; i++) {
- 		struct worker *w = &worker[i];
- 
-@@ -252,22 +259,28 @@ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
- 			init_fdmaps(w, 50);
- 
- 		if (!noaffinity) {
--			CPU_ZERO(&cpuset);
--			CPU_SET(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu, &cpuset);
-+			CPU_ZERO_S(size, cpuset);
-+			CPU_SET_S(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu,
-+					size, cpuset);
- 
--			ret = pthread_attr_setaffinity_np(&thread_attr, sizeof(cpu_set_t), &cpuset);
--			if (ret)
-+			ret = pthread_attr_setaffinity_np(&thread_attr, size, cpuset);
-+			if (ret) {
-+				CPU_FREE(cpuset);
- 				err(EXIT_FAILURE, "pthread_attr_setaffinity_np");
-+			}
- 
- 			attrp = &thread_attr;
- 		}
- 
- 		ret = pthread_create(&w->thread, attrp, workerfn,
- 				     (void *)(struct worker *) w);
--		if (ret)
-+		if (ret) {
-+			CPU_FREE(cpuset);
- 			err(EXIT_FAILURE, "pthread_create");
-+		}
- 	}
- 
-+	CPU_FREE(cpuset);
- 	if (!noaffinity)
- 		pthread_attr_destroy(&thread_attr);
- 
-diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
-index 0d1dd8879197..9469a53ffab9 100644
---- a/tools/perf/bench/epoll-wait.c
-+++ b/tools/perf/bench/epoll-wait.c
-@@ -291,9 +291,11 @@ static void print_summary(void)
- static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
- {
- 	pthread_attr_t thread_attr, *attrp = NULL;
--	cpu_set_t cpuset;
-+	cpu_set_t *cpuset;
- 	unsigned int i, j;
- 	int ret = 0, events = EPOLLIN;
-+	int nrcpus;
-+	size_t size;
- 
- 	if (oneshot)
- 		events |= EPOLLONESHOT;
-@@ -306,6 +308,11 @@ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
- 	if (!noaffinity)
- 		pthread_attr_init(&thread_attr);
- 
-+	nrcpus = perf_cpu_map__nr(cpu);
-+	cpuset = CPU_ALLOC(nrcpus);
-+	BUG_ON(!cpuset);
-+	size = CPU_ALLOC_SIZE(nrcpus);
-+
- 	for (i = 0; i < nthreads; i++) {
- 		struct worker *w = &worker[i];
- 
-@@ -341,22 +348,28 @@ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
- 		}
- 
- 		if (!noaffinity) {
--			CPU_ZERO(&cpuset);
--			CPU_SET(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu, &cpuset);
-+			CPU_ZERO_S(size, cpuset);
-+			CPU_SET_S(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu,
-+					size, cpuset);
- 
--			ret = pthread_attr_setaffinity_np(&thread_attr, sizeof(cpu_set_t), &cpuset);
--			if (ret)
-+			ret = pthread_attr_setaffinity_np(&thread_attr, size, cpuset);
-+			if (ret) {
-+				CPU_FREE(cpuset);
- 				err(EXIT_FAILURE, "pthread_attr_setaffinity_np");
-+			}
- 
- 			attrp = &thread_attr;
- 		}
- 
- 		ret = pthread_create(&w->thread, attrp, workerfn,
- 				     (void *)(struct worker *) w);
--		if (ret)
-+		if (ret) {
-+			CPU_FREE(cpuset);
- 			err(EXIT_FAILURE, "pthread_create");
-+		}
- 	}
- 
-+	CPU_FREE(cpuset);
- 	if (!noaffinity)
- 		pthread_attr_destroy(&thread_attr);
- 
+Mike
+
+
+> > +             }
+> >               *ppath = NULL;
+> >       }
+> >
+> > +     /* mark perf event as done for trace id allocator */
+> > +     coresight_trace_id_perf_stop();
+> > +
+> >       free_percpu(event_data->path);
+> >       kfree(event_data);
+> >  }
+> > @@ -314,6 +325,9 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+> >               sink = user_sink = coresight_get_sink_by_id(id);
+> >       }
+> >
+> > +     /* tell the trace ID allocator that a perf event is starting up */
+> > +     coresight_trace_id_perf_start();
+> > +
+> >       /* check if user wants a coresight configuration selected */
+> >       cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
+> >       if (cfg_hash) {
+> > --
+> > 2.17.1
+> >
+
+
+
 -- 
-2.35.1
-
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
