@@ -2,266 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ABFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 16:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF2AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 17:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237770AbiDFQxD (ORCPT
+        id S238197AbiDFRDw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Apr 2022 12:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45070 "EHLO
+        Wed, 6 Apr 2022 13:03:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238333AbiDFQwr (ORCPT
+        with ESMTP id S238199AbiDFRDo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Apr 2022 12:52:47 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3A85233C;
-        Wed,  6 Apr 2022 07:57:02 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52C1212FC;
-        Wed,  6 Apr 2022 07:57:02 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.10.15])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 750D23F73B;
-        Wed,  6 Apr 2022 07:57:00 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, linux-perf-users@vger.kernel.org,
-        john.garry@huawei.com
-Cc:     alexandre.truong@arm.com, James Clark <james.clark@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        German Gomez <german.gomez@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf: Don't show unwind error messages when augmenting frame pointer stack
-Date:   Wed,  6 Apr 2022 15:56:51 +0100
-Message-Id: <20220406145651.1392529-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 6 Apr 2022 13:03:44 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0763447F01A
+        for <linux-perf-users@vger.kernel.org>; Wed,  6 Apr 2022 07:26:59 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id 7so2572004pfu.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Apr 2022 07:26:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BlaHLYunH8lWogXwwfxKssKzGVm1nfRpO2uSQYLbmK4=;
+        b=AycY1YVxDa54nJpBch0AKnr4fQqh/ofZJHis8/uZ7wWJOSQexNGu/TkhQXKuTapuXC
+         Oe0RTNTVoKpp9diugvrz243dFZbkcxw/T8tMGwStdU+fCK+j2Ng2TYLu1+PiyS/gV1Wv
+         pPHe7/3wW0TWlMBi2i4VpHd/+8ByOIIEpavuN48UycUL5rHNxoliDoxgMBz0j5xkeUby
+         u/USPSXfwuWum/duFYlfBDvSJTNM8tLjjX+o3LNlFaLkBgY9VeFNWY5BslVxu2rjmiln
+         9DUlBRuW4kl95PYl2NIQkQk0dmE9KaAMyNbVThROAJEVvAq7eOeUYsRJFkfyJywlASMs
+         oN7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BlaHLYunH8lWogXwwfxKssKzGVm1nfRpO2uSQYLbmK4=;
+        b=yJlTOF/YeAKcuc8DSAkPBoELVVVynSBDYpTHDTxuxROiz+VGrPZ4PY0Zu4Hyw24fPW
+         tko7ViEmQcJ8cry/n+1UtRbNU4aXBJTbIfea93OUqNr4bATEVLXVxt/ymyZtIOlaKMgj
+         kNHQP3y6wiIMx011RVcAAQE7A1HJDN/wI3eQnqkGDPNwoTskRuBlihCTzda0vxkNAMRm
+         1bQfDvs6yZNEqdvsqc5F3tt2VcBOde3hh/Ka000yHd3PMu57zlmIwiMpvNphahEcfdN0
+         M+b8GOMxhygORhlIe+oH8WMdQ8cp9nmJp8PCLQFU6ByB98gyGmejvQpbMJRPMCNm1/7i
+         /v1Q==
+X-Gm-Message-State: AOAM532hh/L/6lj3S2QLYL5UMzsXREcd0KHFBHlvqB8RpMenzox5Ifna
+        yQw4IicSNaWnkT/jWI2QBn7zPA==
+X-Google-Smtp-Source: ABdhPJwaAJtnGiRN+5RAf/ZIeJzHbeGqbgF7hWd3RWch1tryvglddvyOCvMokwbAKr+NAy0lWkH8pw==
+X-Received: by 2002:a63:f10c:0:b0:382:623b:3bb9 with SMTP id f12-20020a63f10c000000b00382623b3bb9mr7287904pgi.97.1649255218336;
+        Wed, 06 Apr 2022 07:26:58 -0700 (PDT)
+Received: from hsinchu16.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id k137-20020a633d8f000000b0039800918b00sm16424151pga.77.2022.04.06.07.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Apr 2022 07:26:57 -0700 (PDT)
+From:   Eric Lin <eric.lin@sifive.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, iii@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
+        Eric Lin <eric.lin@sifive.com>
+Subject: [PATCH 1/1] perf jitdump: Add riscv64 support.
+Date:   Wed,  6 Apr 2022 22:26:06 +0800
+Message-Id: <20220406142606.18464-2-eric.lin@sifive.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220406142606.18464-1-eric.lin@sifive.com>
+References: <20220406142606.18464-1-eric.lin@sifive.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Commit b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf
-record --call-graph=fp'") intended to add a 'best effort' Dwarf unwind
-that improved the frame pointer stack in most scenarios. It's expected
-that the unwind will fail sometimes, but this shouldn't be reported as
-an error. It only works when the return address can be determined from
-the contents of the link register alone.
-
-Fix the error shown when the unwinder requires extra registers by adding
-a new flag that suppresses error messages. This flag is not set in the
-normal --call-graph=dwarf unwind mode so that behavior is not changed.
-
-Reported-by: John Garry <john.garry@huawei.com>
-Fixes: b9f6fbb3b2c2 ("perf arm64: Inject missing frames when using 'perf record --call-graph=fp'")
-Signed-off-by: James Clark <james.clark@arm.com>
+Signed-off-by: Eric Lin <eric.lin@sifive.com>
 ---
- tools/perf/tests/dwarf-unwind.c                     |  2 +-
- .../perf/util/arm64-frame-pointer-unwind-support.c  |  2 +-
- tools/perf/util/machine.c                           |  2 +-
- tools/perf/util/unwind-libdw.c                      | 10 +++++++---
- tools/perf/util/unwind-libdw.h                      |  1 +
- tools/perf/util/unwind-libunwind-local.c            | 10 +++++++---
- tools/perf/util/unwind-libunwind.c                  |  6 ++++--
- tools/perf/util/unwind.h                            | 13 ++++++++++---
- 8 files changed, 32 insertions(+), 14 deletions(-)
+ tools/perf/arch/riscv/Makefile | 1 +
+ tools/perf/util/genelf.h       | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 2dab2d262060..afdca7f2959f 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -122,7 +122,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__thread(struct thread *thr
- 	}
- 
- 	err = unwind__get_entries(unwind_entry, &cnt, thread,
--				  &sample, MAX_STACK);
-+				  &sample, MAX_STACK, false);
- 	if (err)
- 		pr_debug("unwind failed\n");
- 	else if (cnt != MAX_STACK) {
-diff --git a/tools/perf/util/arm64-frame-pointer-unwind-support.c b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-index 2242a885fbd7..4940be4a0569 100644
---- a/tools/perf/util/arm64-frame-pointer-unwind-support.c
-+++ b/tools/perf/util/arm64-frame-pointer-unwind-support.c
-@@ -53,7 +53,7 @@ u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thr
- 		sample->user_regs.cache_regs[PERF_REG_ARM64_SP] = 0;
- 	}
- 
--	ret = unwind__get_entries(add_entry, &entries, thread, sample, 2);
-+	ret = unwind__get_entries(add_entry, &entries, thread, sample, 2, true);
- 	sample->user_regs = old_regs;
- 
- 	if (ret || entries.length != 2)
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index b80048546451..95391236f5f6 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2987,7 +2987,7 @@ static int thread__resolve_callchain_unwind(struct thread *thread,
- 		return 0;
- 
- 	return unwind__get_entries(unwind_entry, cursor,
--				   thread, sample, max_stack);
-+				   thread, sample, max_stack, false);
- }
- 
- int thread__resolve_callchain(struct thread *thread,
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index a74b517f7497..94aa40f6e348 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -200,7 +200,8 @@ frame_callback(Dwfl_Frame *state, void *arg)
- 	bool isactivation;
- 
- 	if (!dwfl_frame_pc(state, &pc, NULL)) {
--		pr_err("%s", dwfl_errmsg(-1));
-+		if (!ui->best_effort)
-+			pr_err("%s", dwfl_errmsg(-1));
- 		return DWARF_CB_ABORT;
- 	}
- 
-@@ -208,7 +209,8 @@ frame_callback(Dwfl_Frame *state, void *arg)
- 	report_module(pc, ui);
- 
- 	if (!dwfl_frame_pc(state, &pc, &isactivation)) {
--		pr_err("%s", dwfl_errmsg(-1));
-+		if (!ui->best_effort)
-+			pr_err("%s", dwfl_errmsg(-1));
- 		return DWARF_CB_ABORT;
- 	}
- 
-@@ -222,7 +224,8 @@ frame_callback(Dwfl_Frame *state, void *arg)
- int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 			struct thread *thread,
- 			struct perf_sample *data,
--			int max_stack)
-+			int max_stack,
-+			bool best_effort)
- {
- 	struct unwind_info *ui, ui_buf = {
- 		.sample		= data,
-@@ -231,6 +234,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 		.cb		= cb,
- 		.arg		= arg,
- 		.max_stack	= max_stack,
-+		.best_effort    = best_effort
- 	};
- 	Dwarf_Word ip;
- 	int err = -EINVAL, i;
-diff --git a/tools/perf/util/unwind-libdw.h b/tools/perf/util/unwind-libdw.h
-index 0cbd2650e280..8c88bc4f2304 100644
---- a/tools/perf/util/unwind-libdw.h
-+++ b/tools/perf/util/unwind-libdw.h
-@@ -20,6 +20,7 @@ struct unwind_info {
- 	void			*arg;
- 	int			max_stack;
- 	int			idx;
-+	bool			best_effort;
- 	struct unwind_entry	entries[];
- };
- 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 71a353349181..41e29fc7648a 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -96,6 +96,7 @@ struct unwind_info {
- 	struct perf_sample	*sample;
- 	struct machine		*machine;
- 	struct thread		*thread;
-+	bool			 best_effort;
- };
- 
- #define dw_read(ptr, type, end) ({	\
-@@ -553,7 +554,8 @@ static int access_reg(unw_addr_space_t __maybe_unused as,
- 
- 	ret = perf_reg_value(&val, &ui->sample->user_regs, id);
- 	if (ret) {
--		pr_err("unwind: can't read reg %d\n", regnum);
-+		if (!ui->best_effort)
-+			pr_err("unwind: can't read reg %d\n", regnum);
- 		return ret;
- 	}
- 
-@@ -666,7 +668,7 @@ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
- 			return -1;
- 
- 		ret = unw_init_remote(&c, addr_space, ui);
--		if (ret)
-+		if (ret && !ui->best_effort)
- 			display_error(ret);
- 
- 		while (!ret && (unw_step(&c) > 0) && i < max_stack) {
-@@ -704,12 +706,14 @@ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
- 
- static int _unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 			struct thread *thread,
--			struct perf_sample *data, int max_stack)
-+			struct perf_sample *data, int max_stack,
-+			bool best_effort)
- {
- 	struct unwind_info ui = {
- 		.sample       = data,
- 		.thread       = thread,
- 		.machine      = thread->maps->machine,
-+		.best_effort  = best_effort
- 	};
- 
- 	if (!data->user_regs.regs)
-diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
-index e89a5479b361..509c287ee762 100644
---- a/tools/perf/util/unwind-libunwind.c
-+++ b/tools/perf/util/unwind-libunwind.c
-@@ -80,9 +80,11 @@ void unwind__finish_access(struct maps *maps)
- 
- int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 			 struct thread *thread,
--			 struct perf_sample *data, int max_stack)
-+			 struct perf_sample *data, int max_stack,
-+			 bool best_effort)
- {
- 	if (thread->maps->unwind_libunwind_ops)
--		return thread->maps->unwind_libunwind_ops->get_entries(cb, arg, thread, data, max_stack);
-+		return thread->maps->unwind_libunwind_ops->get_entries(cb, arg, thread, data,
-+								       max_stack, best_effort);
- 	return 0;
- }
-diff --git a/tools/perf/util/unwind.h b/tools/perf/util/unwind.h
-index ab8ad469c8de..b2a03fa5289b 100644
---- a/tools/perf/util/unwind.h
-+++ b/tools/perf/util/unwind.h
-@@ -23,13 +23,19 @@ struct unwind_libunwind_ops {
- 	void (*finish_access)(struct maps *maps);
- 	int (*get_entries)(unwind_entry_cb_t cb, void *arg,
- 			   struct thread *thread,
--			   struct perf_sample *data, int max_stack);
-+			   struct perf_sample *data, int max_stack, bool best_effort);
- };
- 
- #ifdef HAVE_DWARF_UNWIND_SUPPORT
-+/*
-+ * When best_effort is set, don't report errors and fail silently. This could
-+ * be expanded in the future to be more permissive about things other than
-+ * error messages.
-+ */
- int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 			struct thread *thread,
--			struct perf_sample *data, int max_stack);
-+			struct perf_sample *data, int max_stack,
-+			bool best_effort);
- /* libunwind specific */
- #ifdef HAVE_LIBUNWIND_SUPPORT
- #ifndef LIBUNWIND__ARCH_REG_ID
-@@ -65,7 +71,8 @@ unwind__get_entries(unwind_entry_cb_t cb __maybe_unused,
- 		    void *arg __maybe_unused,
- 		    struct thread *thread __maybe_unused,
- 		    struct perf_sample *data __maybe_unused,
--		    int max_stack __maybe_unused)
-+		    int max_stack __maybe_unused,
-+		    bool best_effort __maybe_unused)
- {
- 	return 0;
- }
+diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
+index 1aa9dd772489..a8d25d005207 100644
+--- a/tools/perf/arch/riscv/Makefile
++++ b/tools/perf/arch/riscv/Makefile
+@@ -2,3 +2,4 @@ ifndef NO_DWARF
+ PERF_HAVE_DWARF_REGS := 1
+ endif
+ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
++PERF_HAVE_JITDUMP := 1
+diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
+index 3db3293213a9..ae138afe6c56 100644
+--- a/tools/perf/util/genelf.h
++++ b/tools/perf/util/genelf.h
+@@ -38,6 +38,9 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+ #elif defined(__s390x__)
+ #define GEN_ELF_ARCH	EM_S390
+ #define GEN_ELF_CLASS	ELFCLASS64
++#elif defined(__riscv) && __riscv_xlen == 64
++#define GEN_ELF_ARCH	EM_RISCV
++#define GEN_ELF_CLASS	ELFCLASS64
+ #else
+ #error "unsupported architecture"
+ #endif
 -- 
-2.28.0
+2.35.1
 
