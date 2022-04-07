@@ -2,173 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA17C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 19:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A09C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 23:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233576AbiDGTDM (ORCPT
+        id S232426AbiDGXHO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 15:03:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
+        Thu, 7 Apr 2022 19:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232441AbiDGTDM (ORCPT
+        with ESMTP id S232395AbiDGXHN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 15:03:12 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0D422C6E6
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 12:01:06 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id x4so7959860iop.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 12:01:06 -0700 (PDT)
+        Thu, 7 Apr 2022 19:07:13 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5860BCB57
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 16:05:12 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2eb4f03f212so60972517b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 16:05:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=keVkYj4cWaI4gay87MdL0AahO7PaN4KeF2eJUm3V5FQ=;
-        b=bJx6W9C91GXHZT9WZmR5uDci7uh5rihNKWqmcZX88RTvcFDWcennu7TEZgFHORE0o5
-         Sih/OiecaC+yPBT1oUXlgYv4Thkp3gG2s1+O1pF9KogW+eHi2GYSo6vwUN0wYrwPG3Ls
-         d0JJ9Qy1LuKY4eLK/uh5sCTBRurXSZkClGXzE=
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=3CKrl89DJ1eArw5yXg6yQJm2IzsI3jJzLx/oCvEr+S8=;
+        b=BrjbOvi97KBq0KuSeXgzYX1tREisnvDljjjcM8IUk4AN53vhK1IvuAn3yRruMRrqYy
+         3g8tROUFXw9m0hTNvLJgzpFLCUBAAclCy6ML8mp2d4I3f2V3AkAKvIrivoX00+2ccvQ4
+         NheSFFgmOa9YkswoPimT0npsnm69YRnvSitFxxI3b87Bgc6cjDJXSIeeDqcTlpAJiCXM
+         4QNjCI923pPwOOSmLgwM5PoDvfz0glZLUfsCI6mGrPb+03igLIrtnlPgu/s79iH3uUrD
+         ikA6M5hHtPnWc9IU+8E2hvIk8kWHeKU7xJ/39JkP077VMCe1sfdxRgHGYBdWa0bYXiTh
+         Mptw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=keVkYj4cWaI4gay87MdL0AahO7PaN4KeF2eJUm3V5FQ=;
-        b=UN9aQ/JWH1WP68oQc3RGcDDAtVTCQFvx++Crsmc7SoL3NAHfsIXp8PChpEcFeQrmZn
-         sfeEE3PA6S3FwUy0wpJLwYgyx+KoRVZU48mdc0BM++WZJldABgmTnlXnIKj9mlzZPQUJ
-         gOMwfebqYxyNz/ju09dwGEFZhPzTjl62OaYYzULhniCsjaUL+3gyAKR3L+pm1/M39uiO
-         z3q4RW1aEtVeTQtKQH9SKnbos7TQN1at1Kg4LOIRf3nt2TFmHGbFzS8UjWXsp5qyED3l
-         N7yD0LNYv+4ReRPePwrdbcfKMq64K7gOQgZDINsWY4qsvRe56O8484qH5K64iL18wo0g
-         vAMw==
-X-Gm-Message-State: AOAM530q/6Am7vmjx37NDvTGozYPW8rv9R1v1eD/y/H5QlTv+NcelVO7
-        mbK1/ZEirAibCXd8sIUOBB+0eg==
-X-Google-Smtp-Source: ABdhPJxGOZ2BJ+RHSzRcbdkCNemhvmf9CaBqWrCb2/N1joKqeDq2ON7aDkwhDmdeCC+ElIarNR2UwQ==
-X-Received: by 2002:a05:6638:d87:b0:323:c006:3650 with SMTP id l7-20020a0566380d8700b00323c0063650mr7872341jaj.64.1649358065787;
-        Thu, 07 Apr 2022 12:01:05 -0700 (PDT)
-Received: from [192.168.1.128] ([71.205.29.0])
-        by smtp.gmail.com with ESMTPSA id k5-20020a6bf705000000b00649a2634725sm13146036iog.17.2022.04.07.12.01.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Apr 2022 12:01:05 -0700 (PDT)
-Subject: Re: [PATCH V2] testing/selftests/mqueue: Fix mq_perf_tests to free
- the allocated cpu set
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, disgoel@linux.vnet.ibm.com
-Cc:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, srikar@linux.vnet.ibm.com,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20220407184008.93879-1-atrajeev@linux.vnet.ibm.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <e9c8a8c7-9a0d-09be-343d-038b7f791b98@linuxfoundation.org>
-Date:   Thu, 7 Apr 2022 13:01:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
-In-Reply-To: <20220407184008.93879-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=3CKrl89DJ1eArw5yXg6yQJm2IzsI3jJzLx/oCvEr+S8=;
+        b=y90XnAAV8wWff+5sTNoejiATMz6P0LDCBGBCvdo0/CEqEn9ir/4RP/UPkjO9mX3JOd
+         k0gI6GVQ8sjdHuz/2FMUELg8rhhfrLt7GT2S/2E0O1oJne2QNKKwFoQhzUQDzKH9XVTh
+         0oLT0oEOYxW73LYBYShbTK0WeAYfM7LG1/z58p7ZvF3edSRqVUU7QjnWG9KrwKQSclrs
+         tGFIhp7osAfnEBiJPSb7OPSaMvzrJ51NJ1xlrt/BdzcUNxOAhbjJPY4eXCmxRmOzcTgZ
+         eolTllB/rKfcMm25qrgfa+7g3oLPQBMVVfv3O2s8ajguumqvXxCBswn+F7zNWCVQ+NKt
+         +v3g==
+X-Gm-Message-State: AOAM532f6XsGn7DgOTG2rgcHsfATH/J9gD5WswtFRCkhmo3roCGr1cr+
+        wTsa72y5HdROfi4s0CdGbXQE/CoHT6u1
+X-Google-Smtp-Source: ABdhPJwy48FFOFhpFYLNupwB82gwpEN1VzGfu5MwTQeS3yqZlG6h0C+aNVT5PctDKFdcGIY5pViLbIEd3Eer
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:560:aa27:649e:a07d])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1107:b0:63d:e354:c541 with SMTP
+ id o7-20020a056902110700b0063de354c541mr13119837ybu.346.1649372711827; Thu,
+ 07 Apr 2022 16:05:11 -0700 (PDT)
+Date:   Thu,  7 Apr 2022 16:04:58 -0700
+Message-Id: <20220407230503.1265036-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
+Subject: [PATCH 0/5] Tidy up symbol end fixup
+From:   Ian Rogers <irogers@google.com>
+To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ian Rogers <irogers@google.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        "=?UTF-8?q?Martin=20Li=C5=A1ka?=" <mliska@suse.cz>,
+        William Cohen <wcohen@redhat.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Lexi Shao <shaolexi@huawei.com>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Denis Nikitin <denik@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/7/22 12:40 PM, Athira Rajeev wrote:
-> The selftest "mqueue/mq_perf_tests.c" use CPU_ALLOC to allocate
-> CPU set. This cpu set is used further in pthread_attr_setaffinity_np
-> and by pthread_create in the code. But in current code, allocated
-> cpu set is not freed.
-> 
-> Fix this issue by adding CPU_FREE in the "shutdown" function which
-> is called in most of the error/exit path for the cleanup. Also add
-> CPU_FREE in some of the error paths where shutdown is not called.
-> 
-> Fixes: 7820b0715b6f ("tools/selftests: add mq_perf_tests")
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
-> Changelog:
->  From v1 -> v2:
->   Addressed review comment from Shuah Khan to add
->   CPU_FREE in other exit paths where it is needed
-> 
+Fixing up more symbol ends as introduced in:
+https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
+caused perf annotate to run into memory limits - every symbol holds
+all the disassembled code in the annotation, and so making symbols
+ends further away dramatically increased memory usage (40MB to
+ >1GB). Modify the symbol end logic so that special kernel cases aren't
+applied in the common case.
 
-Thank you. I have a couple of comments on making the error
-paths simpler. Please see below.
+Minor fix to perf annotate to not stall when stderr is full.
 
->   tools/testing/selftests/mqueue/mq_perf_tests.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/mqueue/mq_perf_tests.c b/tools/testing/selftests/mqueue/mq_perf_tests.c
-> index b019e0b8221c..182434c7898d 100644
-> --- a/tools/testing/selftests/mqueue/mq_perf_tests.c
-> +++ b/tools/testing/selftests/mqueue/mq_perf_tests.c
-> @@ -180,6 +180,9 @@ void shutdown(int exit_val, char *err_cause, int line_no)
->   	if (in_shutdown++)
->   		return;
->   
-> +	/* Free the cpu_set allocated using CPU_ALLOC in main function */
-> +	CPU_FREE(cpu_set);
-> +
->   	for (i = 0; i < num_cpus_to_pin; i++)
->   		if (cpu_threads[i]) {
->   			pthread_kill(cpu_threads[i], SIGUSR1);
-> @@ -589,6 +592,7 @@ int main(int argc, char *argv[])
->   						cpu_set)) {
->   					fprintf(stderr, "Any given CPU may "
->   						"only be given once.\n");
-> +					CPU_FREE(cpu_set);
+Ian Rogers (5):
+  perf annotate: Drop objdump stderr
+  perf symbols: Always do architecture specific fixups
+  perf symbols: Add is_kernel argument to fixup end
+  perf symbol: By default only fix zero length symbols
+  perf symbols: More specific architecture end fixing
 
-This could be done in a common error path handling.
+ tools/perf/arch/arm64/util/machine.c   | 14 +++++++++-----
+ tools/perf/arch/powerpc/util/machine.c | 10 +++++++---
+ tools/perf/arch/s390/util/machine.c    | 12 ++++++++----
+ tools/perf/util/annotate.c             |  1 +
+ tools/perf/util/symbol-elf.c           |  2 +-
+ tools/perf/util/symbol.c               | 14 ++++++++------
+ tools/perf/util/symbol.h               |  4 ++--
+ 7 files changed, 36 insertions(+), 21 deletions(-)
 
->   					exit(1);
->   				} else
->   					CPU_SET_S(cpus_to_pin[cpu],
-> @@ -607,6 +611,7 @@ int main(int argc, char *argv[])
->   				queue_path = malloc(strlen(option) + 2);
->   				if (!queue_path) {
->   					perror("malloc()");
-> +					CPU_FREE(cpu_set);
+-- 
+2.35.1.1178.g4f1659d476-goog
 
-This could be done in a common error path handling.
-
->   					exit(1);
->   				}
->   				queue_path[0] = '/';
-> @@ -619,6 +624,7 @@ int main(int argc, char *argv[])
->   	}
->   
->   	if (continuous_mode && num_cpus_to_pin == 0) {
-> +		CPU_FREE(cpu_set);
-
-This could be done in a common error path handling.
-
->   		fprintf(stderr, "Must pass at least one CPU to continuous "
->   			"mode.\n");
->   		poptPrintUsage(popt_context, stderr, 0);
-> @@ -628,10 +634,12 @@ int main(int argc, char *argv[])
->   		cpus_to_pin[0] = cpus_online - 1;
->   	}
->   
-> -	if (getuid() != 0)
-> +	if (getuid() != 0) {
-> +		CPU_FREE(cpu_set);
->   		ksft_exit_skip("Not running as root, but almost all tests "
->   			"require root in order to modify\nsystem settings.  "
->   			"Exiting.\n");
-> +	}
->   
-
-Why not move this check before CPU_ALLOC and make this the very first
-check in main()?
-
-With this change the other places where CPU_FREE is added right before
-exit(1). Something like this:
-
-err_code:
-	CPU_FREE(cpu_set);
-	exit(code)
-
->   	max_msgs = fopen(MAX_MSGS, "r+");
->   	max_msgsize = fopen(MAX_MSGSIZE, "r+");
-> 
-
-thanks,
--- Shuah
