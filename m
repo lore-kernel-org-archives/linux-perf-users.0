@@ -2,54 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A09C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 23:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B596C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 23:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232426AbiDGXHO (ORCPT
+        id S232394AbiDGXHR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 19:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35924 "EHLO
+        Thu, 7 Apr 2022 19:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232395AbiDGXHN (ORCPT
+        with ESMTP id S232440AbiDGXHQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 19:07:13 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5860BCB57
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 16:05:12 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2eb4f03f212so60972517b3.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 16:05:12 -0700 (PDT)
+        Thu, 7 Apr 2022 19:07:16 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3059ABCB5B
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 16:05:15 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id i5-20020a258b05000000b006347131d40bso5278459ybl.17
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 16:05:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=3CKrl89DJ1eArw5yXg6yQJm2IzsI3jJzLx/oCvEr+S8=;
-        b=BrjbOvi97KBq0KuSeXgzYX1tREisnvDljjjcM8IUk4AN53vhK1IvuAn3yRruMRrqYy
-         3g8tROUFXw9m0hTNvLJgzpFLCUBAAclCy6ML8mp2d4I3f2V3AkAKvIrivoX00+2ccvQ4
-         NheSFFgmOa9YkswoPimT0npsnm69YRnvSitFxxI3b87Bgc6cjDJXSIeeDqcTlpAJiCXM
-         4QNjCI923pPwOOSmLgwM5PoDvfz0glZLUfsCI6mGrPb+03igLIrtnlPgu/s79iH3uUrD
-         ikA6M5hHtPnWc9IU+8E2hvIk8kWHeKU7xJ/39JkP077VMCe1sfdxRgHGYBdWa0bYXiTh
-         Mptw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=tors/41JgQKyqvse+O7pu0FFz6GUUhE6Y3Idh3XFdO4=;
+        b=VtpRPUeczstXHdV+zd2nTPGF6b/Tshh2qvyDNkCw3zgF3eb0ZPJZGb1X5aCh9Zaj51
+         ICqxxGu+bkOPrCcWpGJJTTOKpvrPE2Jy5xFSl3otZMHsLZfHoFMa5UwNMjaY1DfWaaP1
+         n7NAb651jlHirzvPUNVopB+Tan6HzXfzjcDbDT8I0TCJ4DExvHVXfxU8+BVu+3TNBncP
+         nnWg44VKdxqLINhxqbuhPBbPl6F/KpHCxEo4BhaCalVZGHo15rfrzSlHzazPfsnHACaR
+         Y925KpqG5uQcq+P/3MpWcU6CcgRGzSEKfNUeGTBW802evTkhoAcw1Q1Z2843XMItpK1A
+         6RzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=3CKrl89DJ1eArw5yXg6yQJm2IzsI3jJzLx/oCvEr+S8=;
-        b=y90XnAAV8wWff+5sTNoejiATMz6P0LDCBGBCvdo0/CEqEn9ir/4RP/UPkjO9mX3JOd
-         k0gI6GVQ8sjdHuz/2FMUELg8rhhfrLt7GT2S/2E0O1oJne2QNKKwFoQhzUQDzKH9XVTh
-         0oLT0oEOYxW73LYBYShbTK0WeAYfM7LG1/z58p7ZvF3edSRqVUU7QjnWG9KrwKQSclrs
-         tGFIhp7osAfnEBiJPSb7OPSaMvzrJ51NJ1xlrt/BdzcUNxOAhbjJPY4eXCmxRmOzcTgZ
-         eolTllB/rKfcMm25qrgfa+7g3oLPQBMVVfv3O2s8ajguumqvXxCBswn+F7zNWCVQ+NKt
-         +v3g==
-X-Gm-Message-State: AOAM532f6XsGn7DgOTG2rgcHsfATH/J9gD5WswtFRCkhmo3roCGr1cr+
-        wTsa72y5HdROfi4s0CdGbXQE/CoHT6u1
-X-Google-Smtp-Source: ABdhPJwy48FFOFhpFYLNupwB82gwpEN1VzGfu5MwTQeS3yqZlG6h0C+aNVT5PctDKFdcGIY5pViLbIEd3Eer
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=tors/41JgQKyqvse+O7pu0FFz6GUUhE6Y3Idh3XFdO4=;
+        b=fl5TF9sEqw64ktsi7ttDlmyw19+MiobqK/E5X66l94zrZicLuSrzIrH5m+vH0fTLrP
+         N3CRDT+hSApS5L3aEylNKmEXJr22e5p4g8XA65R4XmbIqkvy+BSYCnDEqLhs+vhqUQVj
+         7N53H5E0c6zi5l12g2wyEVlt8YIcyxWnJ8B4y1LjJZ9b+l5n28m2V0h377ddxBqwJJK7
+         N465BBIeF7v008g0CvB55xCbyHvlWAiuVi+JuOoZaJLA+GgnoHznJ4XrDe+O8e9TO1QA
+         /cx0OGkDP6Xczs8GJezHIBhxlC8u0Yw3rWH0EsroAYjmzNkCJY4NgC9J4BuEvQPrr6E9
+         L5YA==
+X-Gm-Message-State: AOAM533jDSLqTtH4JjBLbNOkeDyXjScgHLI75fmOykXbg3J+eRdQiZYF
+        jVWJ9W/AIrW6duerhuDoLeqRNzbMVzNa
+X-Google-Smtp-Source: ABdhPJyH022FsTnDX21QaHconZXhJnn/KzbIMrLAOb8OT7uonKFUv72/UXwSrles6plotzyo7qhEGeurC/8L
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:560:aa27:649e:a07d])
- (user=irogers job=sendgmr) by 2002:a05:6902:1107:b0:63d:e354:c541 with SMTP
- id o7-20020a056902110700b0063de354c541mr13119837ybu.346.1649372711827; Thu,
- 07 Apr 2022 16:05:11 -0700 (PDT)
-Date:   Thu,  7 Apr 2022 16:04:58 -0700
-Message-Id: <20220407230503.1265036-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:e70c:0:b0:63e:e00b:ecd5 with SMTP id
+ e12-20020a25e70c000000b0063ee00becd5mr1602174ybh.547.1649372714390; Thu, 07
+ Apr 2022 16:05:14 -0700 (PDT)
+Date:   Thu,  7 Apr 2022 16:04:59 -0700
+In-Reply-To: <20220407230503.1265036-1-irogers@google.com>
+Message-Id: <20220407230503.1265036-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220407230503.1265036-1-irogers@google.com>
 X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
-Subject: [PATCH 0/5] Tidy up symbol end fixup
+Subject: [PATCH 1/5] perf annotate: Drop objdump stderr
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -86,32 +90,27 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fixing up more symbol ends as introduced in:
-https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
-caused perf annotate to run into memory limits - every symbol holds
-all the disassembled code in the annotation, and so making symbols
-ends further away dramatically increased memory usage (40MB to
- >1GB). Modify the symbol end logic so that special kernel cases aren't
-applied in the common case.
+If objdump writes to stderr it can block waiting for it to be read. As
+perf doesn't read stderr then progress stops with perf waiting for
+stdout output.
 
-Minor fix to perf annotate to not stall when stderr is full.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/annotate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Ian Rogers (5):
-  perf annotate: Drop objdump stderr
-  perf symbols: Always do architecture specific fixups
-  perf symbols: Add is_kernel argument to fixup end
-  perf symbol: By default only fix zero length symbols
-  perf symbols: More specific architecture end fixing
-
- tools/perf/arch/arm64/util/machine.c   | 14 +++++++++-----
- tools/perf/arch/powerpc/util/machine.c | 10 +++++++---
- tools/perf/arch/s390/util/machine.c    | 12 ++++++++----
- tools/perf/util/annotate.c             |  1 +
- tools/perf/util/symbol-elf.c           |  2 +-
- tools/perf/util/symbol.c               | 14 ++++++++------
- tools/perf/util/symbol.h               |  4 ++--
- 7 files changed, 36 insertions(+), 21 deletions(-)
-
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index e4c641b240df..82cc396ef516 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2047,6 +2047,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	objdump_process.argv = objdump_argv;
+ 	objdump_process.out = -1;
+ 	objdump_process.err = -1;
++	objdump_process.no_stderr = 1;
+ 	if (start_command(&objdump_process)) {
+ 		pr_err("Failure starting to run %s\n", command);
+ 		err = -1;
 -- 
 2.35.1.1178.g4f1659d476-goog
 
