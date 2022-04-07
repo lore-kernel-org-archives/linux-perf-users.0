@@ -2,128 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACE3C43219
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Apr 2022 21:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9D1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 00:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236965AbiDFVkW (ORCPT
+        id S232778AbiDGAhm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Apr 2022 17:40:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57444 "EHLO
+        Wed, 6 Apr 2022 20:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237885AbiDFVip (ORCPT
+        with ESMTP id S232532AbiDGAhh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Apr 2022 17:38:45 -0400
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED3A217982;
-        Wed,  6 Apr 2022 14:00:32 -0700 (PDT)
+        Wed, 6 Apr 2022 20:37:37 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EA1C31E2
+        for <linux-perf-users@vger.kernel.org>; Wed,  6 Apr 2022 17:35:39 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id u3so5573561wrg.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Apr 2022 17:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1649278833; x=1680814833;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=S/RUYgJiJDHB7xj8zcZPP8Nba0qoMBr1iDzWuUq4ooM=;
-  b=BFG+AfrLxKrsTOM2H2eEXEg/F3vjones0/CYf+6wxFzUD1OvyS0Z7x55
-   QTUPQUHhuxe2SmUxBcGdRCN74gP/Jbe7bhFb6roVthpcmJFEEEGWiIho4
-   K0cF/w9eUBBn64D9cKCduvVWOe/ZLdvVRKEiUo/XixN0Dkvpr2rESB10s
-   U=;
-X-IronPort-AV: E=Sophos;i="5.90,240,1643673600"; 
-   d="scan'208";a="77373843"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-54c9d11f.us-east-1.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP; 06 Apr 2022 21:00:30 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-iad-1e-54c9d11f.us-east-1.amazon.com (Postfix) with ESMTPS id BF0E7C0271;
-        Wed,  6 Apr 2022 21:00:24 +0000 (UTC)
-Received: from EX13D02UWB002.ant.amazon.com (10.43.161.160) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Wed, 6 Apr 2022 21:00:24 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13D02UWB002.ant.amazon.com (10.43.161.160) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Wed, 6 Apr 2022 21:00:23 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
- Server id 15.0.1497.32 via Frontend Transport; Wed, 6 Apr 2022 21:00:23 +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 134A62510; Wed,  6 Apr 2022 21:00:22 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <leo.yan@linaro.org>
-CC:     <Nick.Forrington@arm.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <alisaidi@amazon.com>,
-        <andrew.kilroy@arm.com>, <benh@kernel.crashing.org>,
-        <german.gomez@arm.com>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
-        <lihuafei1@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>
-Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse cores
-Date:   Wed, 6 Apr 2022 21:00:17 +0000
-Message-ID: <20220406210017.11887-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220404151218.GA898573@leoy-ThinkPad-X240s>
-References: <20220404151218.GA898573@leoy-ThinkPad-X240s>
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b5w7pUYCbRdBoHa23cUuLdtaiZ1u8JBOmoeVCOxsIYc=;
+        b=lSGGwciFyhcHxHrK4MGsKqf6mYWIK7XeAV9X6Ge2D0VhNLhHx/gwJMXF5BH0DpP+GB
+         h73rtZ1tJpdS9PcVsl0FK+qGEKypM3oVDcY3ixChg8X9yh4eXf1lj9CRUJQK/Q7k931W
+         XbeoeUtd5dTImccrVaZWtNTL6d2CrdVolvKnTIkElTjmUweaJYw6yk4Wl+hv8gzYnmCF
+         P655omeQrQL24Ge/kIrFpnU1vYiYFb3YyZwkI1Y/jQxvEeRAcQaQpI0ziuKqLYRQYWW3
+         elSZl3U9nXUTl5715B+AfHf7fYqqQmGzgcinnHH2DekdU7jqdp9DfE5At+p1s5zM6sEl
+         5mKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b5w7pUYCbRdBoHa23cUuLdtaiZ1u8JBOmoeVCOxsIYc=;
+        b=T4AHvRIa9RwzBqniIgvDQUC4ZjxspVVrzr+mClpnlYejHrAJ22zarXfZ64gOc88/Ss
+         bvgXs6zb4XfprD43aagMq5eAsMdoqCI1odXN09gIaRc2DnyENm6c1paJDWESkhKAdxKz
+         pHw+nA90x/ZTQgzOF0SN1rEtAwRCWRBDcgnX3uNeeJZlebgCDL2n5po6EGbF1sNso+uT
+         G+OKUrG9DACd9ss87eoMm9zt0lwObQt7iZsxeA5NoHrZitw6mGHM/ies/2x7n2d4biyX
+         V4GLv8lVivy9IQYxWoj1BsYiF18ysKDNzWSHDSXP4idgxi6W60WQz0PuU/PzOwIHEcgI
+         HnbA==
+X-Gm-Message-State: AOAM530XDK5DrjUtO2LfWFgen84kTMv1YFR4mvi+63Fw2nhTAXTLY/S4
+        NzxjyAU8Z9MEwdtyBfXNx9AoQhfhmRKn7mhSr3IrlTXk4y0BeA==
+X-Google-Smtp-Source: ABdhPJxwQ7LbJWlplVesSThlFIU2SvtGMkR+Qg5qKG4mzVo/T1gr9HGXrn3Kr1VLtJhXRSOIM2LowYeaqh2FwAaDhCE=
+X-Received: by 2002:adf:8123:0:b0:206:1759:f164 with SMTP id
+ 32-20020adf8123000000b002061759f164mr8827189wrm.654.1649291738024; Wed, 06
+ Apr 2022 17:35:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20220406175113.87881-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20220406175113.87881-1-atrajeev@linux.vnet.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 6 Apr 2022 17:35:24 -0700
+Message-ID: <CAP-5=fXRphB0gU6CxAuj9Fy40sbwub23RbLLo=5LEY=-_D=3+g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Fix perf bench numa, futex and epoll to work with
+ machines having #CPUs > 1K
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
+        linux-kernel@vger.kernel.org, srikar@linux.vnet.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 4 Apr 2022 15:12:18  +0000, Leo Yan wrote:
-> On Sun, Apr 03, 2022 at 08:33:37PM +0000, Ali Saidi wrote:
+On Wed, Apr 6, 2022 at 10:51 AM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
+>
+> The perf benchmark for collections: numa, futex and epoll
+> hits failure in system configuration with CPU's more than 1024.
+> These benchmarks uses "sched_getaffinity" and "sched_setaffinity"
+> in the code to work with affinity.
+>
+> Example snippet from numa benchmark:
+> <<>>
+> perf: bench/numa.c:302: bind_to_node: Assertion `!(ret)' failed.
+> Aborted (core dumped)
+> <<>>
+>
+> bind_to_node function uses "sched_getaffinity" to save the cpumask.
+> This fails with EINVAL because the default mask size in glibc is 1024.
+>
+> Similarly in futex and epoll benchmark, uses sched_setaffinity during
+> pthread_create with affinity. And since it returns EINVAL in such system
+> configuration, benchmark doesn't run.
+>
+> To overcome this 1024 CPUs mask size limitation of cpu_set_t,
+> change the mask size using the CPU_*_S macros ie, use CPU_ALLOC to
+> allocate cpumask, CPU_ALLOC_SIZE for size, CPU_SET_S to set mask bit.
+>
+> Fix all the relevant places in the code to use mask size which is large
+> enough to represent number of possible CPU's in the system.
+>
+> Fix parse_setup_cpu_list function in numa bench to check if input CPU
+> is online before binding task to that CPU. This is to fix failures where,
+> though CPU number is within max CPU, it could happen that CPU is offline.
+> Here, sched_setaffinity will result in failure when using cpumask having
+> that cpu bit set in the mask.
+>
+> Patch 1 and Patch 2 address fix for perf bench futex and perf bench
+> epoll benchmark. Patch 3 and Patch 4 address fix in perf bench numa
+> benchmark
+>
+> Athira Rajeev (4):
+>   tools/perf: Fix perf bench futex to correct usage of affinity for
+>     machines with #CPUs > 1K
+>   tools/perf: Fix perf bench epoll to correct usage of affinity for
+>     machines with #CPUs > 1K
+>   tools/perf: Fix perf numa bench to fix usage of affinity for machines
+>     with #CPUs > 1K
+>   tools/perf: Fix perf bench numa testcase to check if CPU used to bind
+>     task is online
+>
+> Changelog:
+> From v1 -> v2:
+>  Addressed review comment from Ian Rogers to do
+>  CPU_FREE in a cleaner way.
+>  Added Tested-by from Disha Goel
 
-[...]
 
-> > The latter logic is why I think it's perfectly acceptable to use HITM to
-> > indicate a peer cache-to-cache transfer, however since others don't feel that way
-> > let me propose a single additional snooping type PERF_MEM_SNOOP_PEER that
-> > indicates some peer of the hierarchy below the originating core sourced the
-> > data.  This clears up the definition that line came from from a peer and may or
-> > may not have been modified, but it doesn't add a lot of implementation dependant
-> > functionality into the SNOOP API. 
-> > 
-> > We could use the mem-level to indicate the level of the cache hierarchy we had
-> > to get to before the snoop traveled upward, which seems like what x86 is doing
-> > here.
-> 
-> It makes sense to me that to use the highest cache level as mem-level.
-> Please add comments in the code for this, this would be useful for
-> understanding the code.
-
-Ok.
-
-> > PEER_CORE -> MEM_SNOOP_PEER + L2
-> > PEER_CLSTR -> MEM_SNOOP_PEER + L3
-> > PEER_LCL_CLSTR -> MEM_SNOOP_PEER + L3 (since newer neoverse cores don't support
-> > the clusters and the existing commercial implementations don't have them).
-> 
-> Generally, this idea is fine for me.
-
-Great.  
-
-Now the next tricky thing. Since we're not using HITM for recording the memory
-events, the question becomes for the c2c output should we output the SNOOP_PEER
-events as if they are HITM events with a clarification in the perf-c2c man page
-or effectively duplicate all the lcl_hitm logic, which is a fair amount,  in
-perf c2c to add a column and sort option? 
-
-> Following your suggestion, if we connect the concepts PoC and PoU in Arm
-> reference manual, we can extend the snooping mode with MEM_SNOOP_POU
-> (for PoU) and MEM_SNOOP_POC (for PoC), so:
-> 
-> PEER_CORE -> MEM_SNOOP_POU + L2
-> PEER_LCL_CLSTR -> MEM_SNOOP_POU + L3
-> PEER_CLSTR -> MEM_SNOOP_POC + L3
-> 
-> Seems to me, we could consider for this.  If this is over complexity or
-> even I said any wrong concepts for this, please use your method.
-
-I think this adds a lot of complexity and reduces clarity. Some systems
-implement coherent icaches and the PoU would be the L1 cache, others don't so
-that would be the L2 (or wherever there is a unified cache). Similarly, with the
-point of coherency, some systems would consider that dram, but other systems
-have transparent LLCs and it would be the LLC. 
+The whole set:
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Ali
+Ian
 
+>  tools/perf/bench/epoll-ctl.c           |  25 ++++--
+>  tools/perf/bench/epoll-wait.c          |  25 ++++--
+>  tools/perf/bench/futex-hash.c          |  26 ++++--
+>  tools/perf/bench/futex-lock-pi.c       |  21 +++--
+>  tools/perf/bench/futex-requeue.c       |  21 +++--
+>  tools/perf/bench/futex-wake-parallel.c |  21 +++--
+>  tools/perf/bench/futex-wake.c          |  22 ++++--
+>  tools/perf/bench/numa.c                | 105 ++++++++++++++++++-------
+>  tools/perf/util/header.c               |  43 ++++++++++
+>  tools/perf/util/header.h               |   1 +
+>  10 files changed, 242 insertions(+), 68 deletions(-)
+>
+> --
+> 2.35.1
+>
