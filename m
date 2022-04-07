@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0AFC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 23:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901C3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 23:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232501AbiDGXHY (ORCPT
+        id S232406AbiDGXHf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 19:07:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36594 "EHLO
+        Thu, 7 Apr 2022 19:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232495AbiDGXHX (ORCPT
+        with ESMTP id S232505AbiDGXH1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 19:07:23 -0400
+        Thu, 7 Apr 2022 19:07:27 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB03EECB20
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 16:05:22 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id n207-20020a25d6d8000000b0063bd7a74ae4so5249504ybg.21
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 16:05:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C001F47FF
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 16:05:25 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b11-20020a5b008b000000b00624ea481d55so5321551ybp.19
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 16:05:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=WfvJj1m2gyFhMYgsgYi4914wWZZ5tzxnbwOex5ZNN7c=;
-        b=G2lGhIKmig3u+8Ub/UZePe7b5WEYGKMuUAK5QddQmOTd95nRvbGk6CftAlO2mjIBqj
-         fPSTJsBbSAHeP0HU+7B2e4hekgOS6WUOmus9G4U8A5BKCccxPMQavp6ueLLXnIqrpp9W
-         k48zTkXZ7RDlkF66BC95dDcZ2Wi7Ya8X7ZEoLGq9dis2TED2GK/4KTYERmB/4bka3Vpt
-         A+GyNY9K5bb9rV/hMtmX6Li0uXHQiX6LBymKd2xC9/6FiRxau7bU9mnhkwPdullG+1P0
-         dnWNY0jWwl30VGEcSl3GzMVqsXYFzxW8rMiHlaWLZA3zi9RAXZ6VLuyDmmBR/YH9wwkp
-         OSgw==
+        bh=BlnS9L2b1HywEaYijfWcFOwOQSJE9EtkTs1ukixmBPw=;
+        b=ZoLWREi9IpzQjcNCRfvCg0QXxxgq/g/dr8q8lw6hiFwbYUfHDU1oOZdHzFe2C0x/Wj
+         +G6TEXOTNFkXW2gltwODOW5zukJ6c3lNHMPBcvQp5GI18h87PtXgxM98avfGpH8OyZ5u
+         nzT1o4ojmpF6V/vD2FRe+PGmy0ImyLDV3ZUqcR6ZYZaSKgCLKh4p5yqqe4XuvwTZxhV1
+         wKnssK5d/ODNrMayMxzcqVNtNCahdn67ngyBl7U3zRKpGFBBKd8ViX3vlJtwMuf7SlpI
+         f+UB8KrczQtgb/Md34bcUsQs03hgQY4AgrDM31NMENxStRmUWp+7sf0pLroD9Ku6pL1D
+         dq8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=WfvJj1m2gyFhMYgsgYi4914wWZZ5tzxnbwOex5ZNN7c=;
-        b=GbLwYP52RMn45wkJGx9AeRnc423jWcZFO+wKSl2AV4smKadbZZM7RUSwKRUP76ksQu
-         YxZTNpKOhLXgX+iadGFJHDl/4ZidquLJwVIvaKfibbZ0638qkaaz2B48jRHFO81s0dVx
-         yM/05qsXVgDWE6uQnOVqOzUg/O0aeCGTW8uuqM3rQX+Rb20k5bieg9jLvStTzIQnu47I
-         mlO6JS9H5+H+V7PrvINkw9E42sk1Mqj0CFnI991XdSXOEYRbUT3K0PbE7GVbysZOG2zS
-         x2E/u46E9RpVJ9BgLDIPqdwUhsbqhQwAUMsYAbAWUbpoLKIMNBx3oGGjuKqYSGr4+yik
-         eU5Q==
-X-Gm-Message-State: AOAM531bJEYEUPvFtbFwWeRUHpXSgThxqeRSOiJ8C/AzXWC4+5mGQPku
-        ys6bULHR3RtO5OTNQo4uXv0OXZCixwuk
-X-Google-Smtp-Source: ABdhPJzHPc5JHRaajp14gJSR1JqmyinEoG5M4+QbCs6ofW0PQZulXHx6/8KCUTfl6DQ+O36TSTdCFPTtU9uk
+        bh=BlnS9L2b1HywEaYijfWcFOwOQSJE9EtkTs1ukixmBPw=;
+        b=DhOBYF2Fhqvc1eBIXLROA6U5mESBNSy9gc4QVXcMWRluRdlvZVYZUxnqPy2CFlnu2S
+         9CbNg9EJ6lfHRH4maU155Rz5J7jU6+QPFUsfKkkytpuDYUHhs2eqUw6va+ffNP4Orsoy
+         /LDcYV3+4GIYsO/AVhuMt0jy8OqaxsadwVVmAPIH2ItuR0JwClpGIuLYm4kRpCFD/hUV
+         YJ3c9gpZlTQTpcyoZiKM/MEqBMCK0ut5M+ivbp+OZr0VGrm9S0KihWsZ1vjjW1hqeU/+
+         U8acyWjqsR+Trcd5RUc8YCfpTomL3fwScR1u3y8F17on3pxNt5Z2RO5qvvCrGpd6I+py
+         xdbA==
+X-Gm-Message-State: AOAM531y+kRA9YVLaQywQ+Rfn/W9tFyeSnmzxBn6/gcW5UnVb4RisMt4
+        jvrflZ3+K5PqK5YMy0SCVnnwdJJ1V4qU
+X-Google-Smtp-Source: ABdhPJwO6aQe2goGLlpoTWwXzoYnXPSLIf1haTI2XYvRcrDVlYdlMfH8R5T02DhVCFDBY/64pzF+0lrd295k
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:560:aa27:649e:a07d])
- (user=irogers job=sendgmr) by 2002:a25:8483:0:b0:63d:9504:8a14 with SMTP id
- v3-20020a258483000000b0063d95048a14mr11903156ybk.183.1649372721877; Thu, 07
- Apr 2022 16:05:21 -0700 (PDT)
-Date:   Thu,  7 Apr 2022 16:05:02 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:392:b0:633:621f:166f with SMTP id
+ f18-20020a056902039200b00633621f166fmr12458396ybs.166.1649372724286; Thu, 07
+ Apr 2022 16:05:24 -0700 (PDT)
+Date:   Thu,  7 Apr 2022 16:05:03 -0700
 In-Reply-To: <20220407230503.1265036-1-irogers@google.com>
-Message-Id: <20220407230503.1265036-5-irogers@google.com>
+Message-Id: <20220407230503.1265036-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20220407230503.1265036-1-irogers@google.com>
 X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
-Subject: [PATCH 4/5] perf symbol: By default only fix zero length symbols
+Subject: [PATCH 5/5] perf symbols: More specific architecture end fixing
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -90,32 +90,107 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-For architectures without a specific end fixup (ie not arm64, powerpc,
-s390) only fix up the end of zero length symbols. This reverts the
-behavior introduced by:
+Make the conditions used for symbol fixup closer to the comments. The
+logic aims to combine the current conditions as last modified in:
 https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
-where non-zero length symbols were expanded to the start of the current
-symbol.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/arch/arm64/util/machine.c   | 19 ++++++++++---------
+ tools/perf/arch/powerpc/util/machine.c | 18 +++++++++---------
+ tools/perf/arch/s390/util/machine.c    | 17 +++++++++--------
+ 3 files changed, 28 insertions(+), 26 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 087cdf2a58c9..59c562316d75 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -104,7 +104,8 @@ static int prefix_underscores_count(const char *str)
- void __weak arch__symbols__fixup_end(struct symbol *p, struct symbol *c,
- 				     bool is_kernel __maybe_unused)
- {
--	if (p->end == p->start || p->end != c->start)
-+	/* If the previous symbol is zero length, make its end the start of the current symbol. */
-+	if (p->end == p->start)
- 		p->end = c->start;
- }
+diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
+index 54fb41de9931..f258c1ebac03 100644
+--- a/tools/perf/arch/arm64/util/machine.c
++++ b/tools/perf/arch/arm64/util/machine.c
+@@ -18,16 +18,17 @@
  
+ #define SYMBOL_LIMIT (1 << 12) /* 4K */
+ 
+-void arch__symbols__fixup_end(struct symbol *p, struct symbol *c,
+-			      bool is_kernel __maybe_unused)
++void arch__symbols__fixup_end(struct symbol *p, struct symbol *c, bool is_kernel)
+ {
+-	if (p->end == p->start || p->end != c->start) {
+-		if ((strchr(p->name, '[') && strchr(c->name, '[') == NULL) ||
+-			(strchr(p->name, '[') == NULL && strchr(c->name, '[')))
+-			/* Limit range of last symbol in module and kernel */
+-			p->end += SYMBOL_LIMIT;
+-		else
+-			p->end = c->start;
++	if (is_kernel && (p->end == p->start || p->end != c->start) &&
++	    ((strchr(p->name, '[') && strchr(c->name, '[') == NULL) ||
++	     (strchr(p->name, '[') == NULL && strchr(c->name, '[')))) {
++		/* Limit range of last symbol in module and kernel */
++		p->end += SYMBOL_LIMIT;
++		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
++	} else if (p->end == p->start) {
++		/* Expand empty symbols. */
++		p->end = c->start;
+ 		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
+ 	}
+ }
+diff --git a/tools/perf/arch/powerpc/util/machine.c b/tools/perf/arch/powerpc/util/machine.c
+index a732601f951e..689a48040b64 100644
+--- a/tools/perf/arch/powerpc/util/machine.c
++++ b/tools/perf/arch/powerpc/util/machine.c
+@@ -14,16 +14,16 @@
+  * Therefore do not fill this gap and do not assign it to the kernel dso map.
+  */
+ 
+-void arch__symbols__fixup_end(struct symbol *p, struct symbol *c,
+-			      bool is_kernel __maybe_unused)
++void arch__symbols__fixup_end(struct symbol *p, struct symbol *c, bool is_kernel)
+ )
+ {
+-	if (p->end == p->start || p->end != c->start) {
+-		if (strchr(p->name, '[') == NULL && strchr(c->name, '['))
+-			/* Limit the range of last kernel symbol */
+-			p->end += page_size;
+-		else
+-			p->end = c->start;
+-		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
++	if (is_kernel && (p->end == p->start || p->end != c->start) &&
++	    strchr(p->name, '[') == NULL && strchr(c->name, '[')) {
++		/* Limit the range of last kernel symbol */
++		p->end += page_size;
++	} else if (p->end == p->start) {
++		/* Expand empty symbols. */
++		p->end = c->start;
+ 	}
++	pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
+ }
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index 8622a1b78748..790d98a39c83 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -42,15 +42,16 @@ int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
+  * and beginning of first module's text segment is very big.
+  * Therefore do not fill this gap and do not assign it to the kernel dso map.
+  */
+-void arch__symbols__fixup_end(struct symbol *p, struct symbol *c,
+-			      bool is_kernel __maybe_unused)
++void arch__symbols__fixup_end(struct symbol *p, struct symbol *c, bool is_kernel)
+ {
+-	if (p->end == p->start || p->end != c->start) {
+-		if (strchr(p->name, '[') == NULL && strchr(c->name, '['))
+-			/* Last kernel symbol mapped to end of page */
+-			p->end = roundup(p->end, page_size);
+-		else
+-			p->end = c->start;
++	if (is_kernel && (p->end == p->start || p->end != c->start) &&
++	    strchr(p->name, '[') == NULL && strchr(c->name, '[')) {
++		/* Last kernel symbol mapped to end of page */
++		p->end = roundup(p->end, page_size);
++		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
++	} else if (p->end == p->start) {
++		/* Expand empty symbols. */
++		p->end = c->start;
+ 		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
+ 	}
+ }
 -- 
 2.35.1.1178.g4f1659d476-goog
 
