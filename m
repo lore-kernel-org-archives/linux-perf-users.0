@@ -2,140 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71396C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 08:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F8BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 08:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243212AbiDGIom (ORCPT
+        id S243361AbiDGJA0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 04:44:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59448 "EHLO
+        Thu, 7 Apr 2022 05:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240566AbiDGIom (ORCPT
+        with ESMTP id S234575AbiDGJAZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 04:44:42 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E3846143;
-        Thu,  7 Apr 2022 01:42:40 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KYvwh6pJ9zgYQL;
-        Thu,  7 Apr 2022 16:40:52 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 7 Apr 2022 16:42:35 +0800
-CC:     <kbuild-all@lists.01.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>
-Subject: Re: [PATCH v6 4/7] hisi_ptt: Add tune function support for HiSilicon
- PCIe Tune and Trace device
-To:     kernel test robot <lkp@intel.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <john.garry@huawei.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-References: <20220406071730.41031-5-yangyicong@hisilicon.com>
- <202204071201.AcePULOR-lkp@intel.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <73483350-8df9-967f-ba35-d910aa39b635@huawei.com>
-Date:   Thu, 7 Apr 2022 16:42:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Thu, 7 Apr 2022 05:00:25 -0400
+Received: from euporie.uberspace.de (euporie.uberspace.de [185.26.156.232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C01694A0
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 01:58:21 -0700 (PDT)
+Received: (qmail 17897 invoked by uid 989); 7 Apr 2022 08:58:19 -0000
+Authentication-Results: euporie.uberspace.de;
+        auth=pass (plain)
+From:   Florian Fischer <florian.fischer@muhq.space>
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Florian Schmaus <flow@cs.fau.de>,
+        Florian Fischer <florian.fischer@muhq.space>
+Subject: [PATCH v3 1/3] perf stat: introduce stats for the user and system rusage times
+Date:   Thu,  7 Apr 2022 10:57:19 +0200
+Message-Id: <20220407085721.3289414-2-florian.fischer@muhq.space>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220407085721.3289414-1-florian.fischer@muhq.space>
+References: <69656438-8b9a-000b-0702-02dc480639f9@linux.intel.com>
+ <20220407085721.3289414-1-florian.fischer@muhq.space>
 MIME-Version: 1.0
-In-Reply-To: <202204071201.AcePULOR-lkp@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: -----
+X-Rspamd-Report: R_MISSING_CHARSET(0.5) MIME_GOOD(-0.1) REPLY(-4) MID_CONTAINS_FROM(1) BAYES_HAM(-2.999999)
+X-Rspamd-Score: -5.599999
+Received: from unknown (HELO unkown) (::1)
+        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Thu, 07 Apr 2022 10:58:19 +0200
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/4/7 12:28, kernel test robot wrote:
-> Hi Yicong,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on joro-iommu/next]
-> [also build test WARNING on linus/master linux/master v5.18-rc1 next-20220406]
-> [cannot apply to tip/perf/core]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Yicong-Yang/Add-support-for-HiSilicon-PCIe-Tune-and-Trace-device/20220406-200044
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
-> config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20220407/202204071201.AcePULOR-lkp@intel.com/config)
-> compiler: alpha-linux-gcc (GCC) 11.2.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/intel-lab-lkp/linux/commit/9400668b70cbcd5ec74a52f043c3a333b80135f8
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Yicong-Yang/Add-support-for-HiSilicon-PCIe-Tune-and-Trace-device/20220406-200044
->         git checkout 9400668b70cbcd5ec74a52f043c3a333b80135f8
->         # save the config file to linux build tree
->         mkdir build_dir
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=alpha SHELL=/bin/bash drivers/hwtracing/ptt/
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    drivers/hwtracing/ptt/hisi_ptt.c: In function 'hisi_ptt_tune_data_get':
->>> drivers/hwtracing/ptt/hisi_ptt.c:46:16: warning: conversion from 'long unsigned int' to 'u32' {aka 'unsigned int'} changes value from '18446744073709551615' to '4294967295' [-Woverflow]
->       46 |         writel(~0UL, hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
->          |                ^~~~
+This is preparation for exporting rusage values as tool events.
 
-Thanks for the report. using of ~0U will fix this.
+Add new global stats tracking the values obtained via rusage.
+For now only ru_utime and ru_stime are part of the tracked stats.
+Both are stored as nanoseconds to be consistent with 'duration_time',
+although the finest resolution the struct timeval data in rusage
+provides are microseconds.
 
->    drivers/hwtracing/ptt/hisi_ptt.c: At top level:
->    drivers/hwtracing/ptt/hisi_ptt.c:1131:6: warning: no previous prototype for 'hisi_ptt_remove' [-Wmissing-prototypes]
->     1131 | void hisi_ptt_remove(struct pci_dev *pdev)
->          |      ^~~~~~~~~~~~~~~
-> 
+Signed-off-by: Florian Fischer <florian.fischer@muhq.space>
+---
+ tools/perf/builtin-stat.c     |  5 ++++-
+ tools/perf/util/stat-shadow.c |  2 ++
+ tools/perf/util/stat.h        | 21 +++++++++++++++++++++
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-for here I missed the static identifier. will fix. thanks.
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index a96f106dc93a..61faffb535f5 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -216,6 +216,7 @@ static struct perf_stat_config stat_config = {
+ 	.run_count		= 1,
+ 	.metric_only_len	= METRIC_ONLY_LEN,
+ 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
++	.ru_stats		= &ru_stats,
+ 	.big_num		= true,
+ 	.ctl_fd			= -1,
+ 	.ctl_fd_ack		= -1,
+@@ -1010,8 +1011,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		evlist__reset_prev_raw_counts(evsel_list);
+ 		runtime_stat_reset(&stat_config);
+ 		perf_stat__reset_shadow_per_stat(&rt_stat);
+-	} else
++	} else {
+ 		update_stats(&walltime_nsecs_stats, t1 - t0);
++		update_rusage_stats(&ru_stats, &stat_config.ru_data);
++	}
+ 
+ 	/*
+ 	 * Closing a group leader splits the group, and as we only disable
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 10af7804e482..ea4c35e4f1da 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -26,6 +26,7 @@
+ 
+ struct runtime_stat rt_stat;
+ struct stats walltime_nsecs_stats;
++struct rusage_stats ru_stats;
+ 
+ struct saved_value {
+ 	struct rb_node rb_node;
+@@ -199,6 +200,7 @@ void perf_stat__reset_shadow_stats(void)
+ {
+ 	reset_stat(&rt_stat);
+ 	memset(&walltime_nsecs_stats, 0, sizeof(walltime_nsecs_stats));
++	memset(&ru_stats, 0, sizeof(ru_stats));
+ }
+ 
+ void perf_stat__reset_shadow_per_stat(struct runtime_stat *st)
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 335d19cc3063..e31c94d952e9 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -108,6 +108,11 @@ struct runtime_stat {
+ 	struct rblist value_list;
+ };
+ 
++struct rusage_stats {
++	struct stats ru_utime_usec_stat;
++	struct stats ru_stime_usec_stat;
++};
++
+ typedef struct aggr_cpu_id (*aggr_get_id_t)(struct perf_stat_config *config, struct perf_cpu cpu);
+ 
+ struct perf_stat_config {
+@@ -148,6 +153,7 @@ struct perf_stat_config {
+ 	const char		*csv_sep;
+ 	struct stats		*walltime_nsecs_stats;
+ 	struct rusage		 ru_data;
++	struct rusage_stats		 *ru_stats;
+ 	struct cpu_aggr_map	*aggr_map;
+ 	aggr_get_id_t		 aggr_get_id;
+ 	struct cpu_aggr_map	*cpus_aggr_map;
+@@ -177,6 +183,20 @@ static inline void init_stats(struct stats *stats)
+ 	stats->max  = 0;
+ }
+ 
++static inline void init_rusage_stats(struct rusage_stats *ru_stats) {
++	init_stats(&ru_stats->ru_utime_usec_stat);
++	init_stats(&ru_stats->ru_stime_usec_stat);
++}
++
++static inline void update_rusage_stats(struct rusage_stats *ru_stats, struct rusage* rusage) {
++	const u64 us_to_ns = 1000;
++	const u64 s_to_ns = 1000000000;
++	update_stats(&ru_stats->ru_utime_usec_stat,
++	             (rusage->ru_utime.tv_usec * us_to_ns + rusage->ru_utime.tv_sec * s_to_ns));
++	update_stats(&ru_stats->ru_stime_usec_stat,
++	             (rusage->ru_stime.tv_usec * us_to_ns + rusage->ru_stime.tv_sec * s_to_ns));
++}
++
+ struct evsel;
+ struct evlist;
+ 
+@@ -196,6 +216,7 @@ bool __perf_stat_evsel__is(struct evsel *evsel, enum perf_stat_evsel_id id);
+ 
+ extern struct runtime_stat rt_stat;
+ extern struct stats walltime_nsecs_stats;
++extern struct rusage_stats ru_stats;
+ 
+ typedef void (*print_metric_t)(struct perf_stat_config *config,
+ 			       void *ctx, const char *color, const char *unit,
+-- 
+2.35.1
 
-> 
-> vim +46 drivers/hwtracing/ptt/hisi_ptt.c
-> 
->     33	
->     34	static int hisi_ptt_tune_data_get(struct hisi_ptt *hisi_ptt,
->     35					  u32 event, u16 *data)
->     36	{
->     37		u32 reg;
->     38	
->     39		reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
->     40		reg &= ~(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB);
->     41		reg |= FIELD_PREP(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB,
->     42				  event);
->     43		writel(reg, hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
->     44	
->     45		/* Write all 1 to indicates it's the read process */
->   > 46		writel(~0UL, hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
->     47	
->     48		if (!hisi_ptt_wait_tuning_finish(hisi_ptt))
->     49			return -ETIMEDOUT;
->     50	
->     51		reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
->     52		reg &= HISI_PTT_TUNING_DATA_VAL_MASK;
->     53		*data = FIELD_GET(HISI_PTT_TUNING_DATA_VAL_MASK, reg);
->     54	
->     55		return 0;
->     56	}
->     57	
-> 
