@@ -2,195 +2,294 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDC2C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 12:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70759C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 13:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245232AbiDGMhI (ORCPT
+        id S236086AbiDGND2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 08:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59468 "EHLO
+        Thu, 7 Apr 2022 09:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235147AbiDGMhH (ORCPT
+        with ESMTP id S245696AbiDGNCa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 08:37:07 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD81193225;
-        Thu,  7 Apr 2022 05:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649334906; x=1680870906;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WRMFH2QsUAPJeUEDXnzJd2uSJbpbZ86SEGUkely7mPQ=;
-  b=mBR2yYYaMb/JqmpTOjRMDhgBeiCZ9wHY+qKvO3uy/uAPjqEdIrpDWnyu
-   VMKnFWSy/DBzlqE1n9LPsZxEq4w9JDG5n/S/HV18GzqqvvU6VAxoyQibz
-   P1Yv/oFKV40MWxiO1AQva+GfbX08cScmAtxtT7VZ8skAS5zy0p8iss8zu
-   PBYYjjDrz5OHJPrZjWw1t5SWqJX2fH5rvxPObCDk9eHv7Vdef22c06H2G
-   xtxCCNt4udXSZ3X4kphxRa04WLou+MB6B8sQexnxsdjfn5q9Mvsf4qj4w
-   eGq172zW+oknGQy0/2DEH/LFd0ql+Fj/Inen3zioDrffY4qRWoKahc3tG
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10309"; a="243443856"
-X-IronPort-AV: E=Sophos;i="5.90,242,1643702400"; 
-   d="scan'208";a="243443856"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2022 05:35:06 -0700
-X-IronPort-AV: E=Sophos;i="5.90,242,1643702400"; 
-   d="scan'208";a="571033517"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.40.48])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2022 05:35:02 -0700
-Message-ID: <676075ca-4d5d-7388-61ac-42a0b9f1ed50@intel.com>
-Date:   Thu, 7 Apr 2022 15:34:32 +0300
+        Thu, 7 Apr 2022 09:02:30 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22161AF50E;
+        Thu,  7 Apr 2022 06:00:15 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KZ1dw5RF8zgYWN;
+        Thu,  7 Apr 2022 20:58:28 +0800 (CST)
+Received: from localhost.localdomain (10.67.164.66) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 7 Apr 2022 21:00:13 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <john.garry@huawei.com>,
+        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
+        <yangyicong@hisilicon.com>
+Subject: [PATCH v7 4/7] hisi_ptt: Add tune function support for HiSilicon PCIe Tune and Trace device
+Date:   Thu, 7 Apr 2022 20:58:38 +0800
+Message-ID: <20220407125841.3678-5-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220407125841.3678-1-yangyicong@hisilicon.com>
+References: <20220407125841.3678-1-yangyicong@hisilicon.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.7.0
-Subject: Re: [PATCH v2] perf test tsc: Fix error message report when not
- supported.
-Content-Language: en-US
-To:     Bryton Lee <brytonlee01@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, ak@linux.intel.com,
-        likexu@tencent.com, chengdongli@tencent.com
-References: <20220406100609.65239-1-chengdongli@tencent.com>
- <ce2c3c4f-3751-312a-5fa6-0f98330067fe@intel.com>
- <CAC2pzGe0Kn9Vzyx7S5_5A338shYG-DXgY=CS38zpJYk3m3_N7A@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAC2pzGe0Kn9Vzyx7S5_5A338shYG-DXgY=CS38zpJYk3m3_N7A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 07/04/2022 14.34, Bryton Lee wrote:
-> On Thu, Apr 7, 2022 at 2:59 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 06/04/2022 13.06, Chengdong Li wrote:
->>> By default `perf test tsc` does not return the error message
->>> when child process detected kernel does not support. Instead, child
->>> process print error message to stderr, unfortunately the stderr is
->>> redirected to /dev/null when verbose <= 0.
->>>
->>> This patch did three things:
->>> - returns TEST_SKIP to parent process instead of TEST_OK when
->>>   perf_read_tsc_conversion() is not supported.
->>> - add a new subtest of testing if TSC is supported on current
->>>   architecture by moving exist code to a separate function.
->>> - extended test suite definition to contain above two subtests.
->>>
->>> Changes since v1 (thanks for the feedback from Adrian Hunter):
->>> - rebase commit to current source.
->>>
->>> Signed-off-by: Chengdong Li <chengdongli@tencent.com>
->>> ---
->>>  tools/perf/tests/perf-time-to-tsc.c | 36 +++++++++++++++++++++--------
->>>  1 file changed, 27 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
->>> index d12d0ad81801..fc7c380af5a0 100644
->>> --- a/tools/perf/tests/perf-time-to-tsc.c
->>> +++ b/tools/perf/tests/perf-time-to-tsc.c
->>> @@ -47,6 +47,17 @@
->>>       }                                       \
->>>  }
->>>
->>> +static int test__tsc_is_supported(struct test_suite *test __maybe_unused,
->>> +                               int subtest __maybe_unused)
->>> +{
->>> +     if (!TSC_IS_SUPPORTED) {
->>> +             pr_debug("Test not supported on this architecture");
->>
->> Message better ending with "\n" I think
-> OK, I will fix it.
->>
->>> +             return TEST_SKIP;
->>> +     }
->>> +
->>> +     return TEST_OK;
->>> +}
->>> +
->>>  /**
->>>   * test__perf_time_to_tsc - test converting perf time to TSC.
->>>   *
->>> @@ -70,7 +81,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
->>>       struct perf_cpu_map *cpus = NULL;
->>>       struct evlist *evlist = NULL;
->>>       struct evsel *evsel = NULL;
->>> -     int err = -1, ret, i;
->>> +     int err = TEST_FAIL, ret, i;
->>>       const char *comm1, *comm2;
->>>       struct perf_tsc_conversion tc;
->>>       struct perf_event_mmap_page *pc;
->>> @@ -79,10 +90,6 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
->>>       u64 test_time, comm1_time = 0, comm2_time = 0;
->>>       struct mmap *md;
->>>
->>> -     if (!TSC_IS_SUPPORTED) {
->>> -             pr_debug("Test not supported on this architecture");
->>> -             return TEST_SKIP;
->>> -     }
->>>
->>>       threads = thread_map__new(-1, getpid(), UINT_MAX);
->>>       CHECK_NOT_NULL__(threads);
->>> @@ -124,8 +131,8 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
->>>       ret = perf_read_tsc_conversion(pc, &tc);
->>>       if (ret) {
->>>               if (ret == -EOPNOTSUPP) {
->>> -                     fprintf(stderr, " (not supported)");
->>> -                     return 0;
->>> +                     pr_debug("perf_read_tsc_conversion is not supported in current kernel");
->>> +                     err = TEST_SKIP;
->>>               }
->>>               goto out_err;
->>>       }
->>> @@ -191,7 +198,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
->>>           test_tsc >= comm2_tsc)
->>>               goto out_err;
->>>
->>> -     err = 0;
->>> +     err = TEST_OK;
->>>
->>>  out_err:
->>>       evlist__delete(evlist);
->>> @@ -200,4 +207,15 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
->>>       return err;
->>>  }
->>>
->>> -DEFINE_SUITE("Convert perf time to TSC", perf_time_to_tsc);
->>> +static struct test_case time_to_tsc_tests[] = {
->>> +     TEST_CASE_REASON("TSC support", tsc_is_supported,
->>> +                      "This architecture does not support"),
->>
->> The 2nd test case runs anyway, so I am not sure another
->> test case is needed?
-> 
-> Yes. But, I think there are two reasons to add two subtests: 1).
-> Original TSC support test is embedded in test__perf_time_to_tsc(), and
-> returns TEST_SKIP
-> if current architecture doesn't support it.  Thus there are two places
-> that return TEST_SKIP in test__perf_time_to_tsc() if we don't move TSC
-> support
-> to another subtest. 2). Current test_suite and test_case structs don't
-> support printing skip_reason if there is no subtest. To print skip
-> reason we need more than 1 subtests.
+Add tune function for the HiSilicon Tune and Trace device. The interface
+of tune is exposed through sysfs attributes of PTT PMU device.
 
-Ok, can that explanation be added to the commit message
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/hwtracing/ptt/hisi_ptt.c | 154 +++++++++++++++++++++++++++++++
+ drivers/hwtracing/ptt/hisi_ptt.h |  20 ++++
+ 2 files changed, 174 insertions(+)
 
-> 
->>
->>> +     TEST_CASE_REASON("Perf time to TSC", perf_time_to_tsc,
->>> +                      "perf_read_tsc_conversion is not supported"),
->>> +     { .name = NULL, }
->>> +};
->>> +
->>> +struct test_suite suite__perf_time_to_tsc = {
->>> +     .desc = "Convert perf time to TSC",
->>> +     .test_cases = time_to_tsc_tests,
->>> +};
->>
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+index b1958ac20372..331c8e43cd17 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.c
++++ b/drivers/hwtracing/ptt/hisi_ptt.c
+@@ -21,6 +21,159 @@
+ 
+ #include "hisi_ptt.h"
+ 
++static bool hisi_ptt_wait_tuning_finish(struct hisi_ptt *hisi_ptt)
++{
++	u32 val;
++
++	return !readl_poll_timeout(hisi_ptt->iobase + HISI_PTT_TUNING_INT_STAT,
++				  val, !(val & HISI_PTT_TUNING_INT_STAT_MASK),
++				  HISI_PTT_WAIT_POLL_INTERVAL_US,
++				  HISI_PTT_WAIT_TUNE_TIMEOUT_US);
++}
++
++static int hisi_ptt_tune_data_get(struct hisi_ptt *hisi_ptt,
++				  u32 event, u16 *data)
++{
++	u32 reg;
++
++	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
++	reg &= ~(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB);
++	reg |= FIELD_PREP(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB,
++			  event);
++	writel(reg, hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
++
++	/* Write all 1 to indicates it's the read process */
++	writel(~0U, hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
++
++	if (!hisi_ptt_wait_tuning_finish(hisi_ptt))
++		return -ETIMEDOUT;
++
++	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
++	reg &= HISI_PTT_TUNING_DATA_VAL_MASK;
++	*data = FIELD_GET(HISI_PTT_TUNING_DATA_VAL_MASK, reg);
++
++	return 0;
++}
++
++static int hisi_ptt_tune_data_set(struct hisi_ptt *hisi_ptt,
++				  u32 event, u16 data)
++{
++	u32 reg;
++
++	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
++	reg &= ~(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB);
++	reg |= FIELD_PREP(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB,
++			  event);
++	writel(reg, hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
++
++	writel(FIELD_PREP(HISI_PTT_TUNING_DATA_VAL_MASK, data),
++	       hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
++
++	if (!hisi_ptt_wait_tuning_finish(hisi_ptt))
++		return -ETIMEDOUT;
++
++	return 0;
++}
++
++static ssize_t hisi_ptt_tune_attr_show(struct device *dev,
++				       struct device_attribute *attr,
++				       char *buf)
++{
++	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
++	struct dev_ext_attribute *ext_attr;
++	struct hisi_ptt_tune_desc *desc;
++	int ret;
++	u16 val;
++
++	ext_attr = container_of(attr, struct dev_ext_attribute, attr);
++	desc = ext_attr->var;
++
++	if (!mutex_trylock(&hisi_ptt->mutex))
++		return -EBUSY;
++
++	ret = hisi_ptt_tune_data_get(hisi_ptt, desc->event_code, &val);
++
++	mutex_unlock(&hisi_ptt->mutex);
++	return ret ? ret : sysfs_emit(buf, "%u\n", val);
++}
++
++static ssize_t hisi_ptt_tune_attr_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t count)
++{
++	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
++	struct dev_ext_attribute *ext_attr;
++	struct hisi_ptt_tune_desc *desc;
++	int ret;
++	u16 val;
++
++	ext_attr = container_of(attr, struct dev_ext_attribute, attr);
++	desc = ext_attr->var;
++
++	if (kstrtou16(buf, 10, &val))
++		return -EINVAL;
++
++	if (!mutex_trylock(&hisi_ptt->mutex))
++		return -EBUSY;
++
++	ret = hisi_ptt_tune_data_set(hisi_ptt, desc->event_code, val);
++
++	mutex_unlock(&hisi_ptt->mutex);
++	return ret ? ret : count;
++}
++
++#define HISI_PTT_TUNE_ATTR(_name, _val, _show, _store)			\
++	static struct hisi_ptt_tune_desc _name##_desc = {		\
++		.name = #_name,						\
++		.event_code = _val,					\
++	};								\
++	static struct dev_ext_attribute hisi_ptt_##_name##_attr = {	\
++		.attr	= __ATTR(_name, 0600, _show, _store),		\
++		.var	= &_name##_desc,				\
++	}
++
++#define HISI_PTT_TUNE_ATTR_COMMON(_name, _val)		\
++	HISI_PTT_TUNE_ATTR(_name, _val,			\
++			   hisi_ptt_tune_attr_show,	\
++			   hisi_ptt_tune_attr_store)
++
++/*
++ * The value of the tuning event are composed of two parts: main event code in bit[0,15] and
++ * subevent code in bit[16,23]. For example, qox_tx_cpl is a subevent of 'Tx path QoS control'
++ * which for tuning the weight of Tx completion TLPs. See hisi_ptt.rst documentation for
++ * more information.
++ */
++#define HISI_PTT_TUNE_QOS_TX_CPL				(0x4 | (3 << 16))
++#define HISI_PTT_TUNE_QOS_TX_NP					(0x4 | (4 << 16))
++#define HISI_PTT_TUNE_QOS_TX_P					(0x4 | (5 << 16))
++#define HISI_PTT_TUNE_TX_PATH_IOB_RX_REQ_ALLOC_BUF_LEVEL	(0x5 | (6 << 16))
++#define HISI_PTT_TUNE_TX_PATH_TX_REQ_ALLOC_BUF_LEVEL		(0x5 | (7 << 16))
++
++HISI_PTT_TUNE_ATTR_COMMON(qos_tx_cpl,
++			  HISI_PTT_TUNE_QOS_TX_CPL);
++HISI_PTT_TUNE_ATTR_COMMON(qos_tx_np,
++			  HISI_PTT_TUNE_QOS_TX_NP);
++HISI_PTT_TUNE_ATTR_COMMON(qos_tx_p,
++			  HISI_PTT_TUNE_QOS_TX_P);
++HISI_PTT_TUNE_ATTR_COMMON(tx_path_iob_rx_req_alloc_buf_level,
++			  HISI_PTT_TUNE_TX_PATH_IOB_RX_REQ_ALLOC_BUF_LEVEL);
++HISI_PTT_TUNE_ATTR_COMMON(tx_path_tx_req_alloc_buf_level,
++			  HISI_PTT_TUNE_TX_PATH_TX_REQ_ALLOC_BUF_LEVEL);
++
++static struct attribute *hisi_ptt_tune_attrs[] = {
++	&hisi_ptt_qos_tx_cpl_attr.attr.attr,
++	&hisi_ptt_qos_tx_np_attr.attr.attr,
++	&hisi_ptt_qos_tx_p_attr.attr.attr,
++	&hisi_ptt_tx_path_iob_rx_req_alloc_buf_level_attr.attr.attr,
++	&hisi_ptt_tx_path_tx_req_alloc_buf_level_attr.attr.attr,
++	NULL,
++};
++
++static struct attribute_group hisi_ptt_tune_group = {
++	.attrs	= hisi_ptt_tune_attrs,
++	.name	= "tune",
++};
++
+ static u16 hisi_ptt_get_filter_val(struct pci_dev *pdev)
+ {
+ 	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
+@@ -539,6 +692,7 @@ static struct attribute_group hisi_ptt_pmu_filter_group = {
+ static const struct attribute_group *hisi_ptt_pmu_groups[] = {
+ 	&hisi_ptt_pmu_format_group,
+ 	&hisi_ptt_pmu_filter_group,
++	&hisi_ptt_tune_group,
+ 	NULL
+ };
+ 
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
+index 53805f6c9bc2..d88c326e9289 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.h
++++ b/drivers/hwtracing/ptt/hisi_ptt.h
+@@ -25,6 +25,11 @@
+ /*
+  * The definition of the device registers and register fields.
+  */
++#define HISI_PTT_TUNING_CTRL		0x0000
++#define   HISI_PTT_TUNING_CTRL_CODE	GENMASK(15, 0)
++#define   HISI_PTT_TUNING_CTRL_SUB	GENMASK(23, 16)
++#define HISI_PTT_TUNING_DATA		0x0004
++#define   HISI_PTT_TUNING_DATA_VAL_MASK	GENMASK(15, 0)
+ #define HISI_PTT_TRACE_ADDR_SIZE	0x0800
+ #define HISI_PTT_TRACE_ADDR_BASE_LO_0	0x0810
+ #define HISI_PTT_TRACE_ADDR_BASE_HI_0	0x0814
+@@ -40,6 +45,8 @@
+ #define HISI_PTT_TRACE_INT_STAT		0x0890
+ #define   HISI_PTT_TRACE_INT_STAT_MASK	GENMASK(3, 0)
+ #define HISI_PTT_TRACE_INT_MASK		0x0894
++#define HISI_PTT_TUNING_INT_STAT	0x0898
++#define   HISI_PTT_TUNING_INT_STAT_MASK	BIT(0)
+ #define HISI_PTT_TRACE_WR_STS		0x08a0
+ #define   HISI_PTT_TRACE_WR_STS_WRITE	GENMASK(27, 0)
+ #define   HISI_PTT_TRACE_WR_STS_BUFFER	GENMASK(29, 28)
+@@ -68,11 +75,24 @@
+ /* Wait time for DMA hardware to reset */
+ #define HISI_PTT_RESET_WAIT_MS		1000UL
+ /* Poll timeout and interval for waiting hardware work to finish */
++#define HISI_PTT_WAIT_TUNE_TIMEOUT_US	1000000UL
+ #define HISI_PTT_WAIT_TRACE_TIMEOUT_US	100UL
+ #define HISI_PTT_WAIT_POLL_INTERVAL_US	10UL
+ 
+ #define HISI_PCIE_CORE_PORT_ID(devfn)	(PCI_FUNC(devfn) << 1)
+ 
++/**
++ * struct hisi_ptt_tune_desc - describe tune event for PTT tune
++ * @hisi_ptt:   PTT device this tune event belongs to
++ * @name:       name of this event
++ * @event_code: code of the event
++ */
++struct hisi_ptt_tune_desc {
++	struct hisi_ptt *hisi_ptt;
++	const char *name;
++	u32 event_code;
++};
++
+ /**
+  * struct hisi_ptt_dma_buffer - describe a single trace buffer of PTT trace.
+  *                              The detail of the data format is described
+-- 
+2.24.0
 
