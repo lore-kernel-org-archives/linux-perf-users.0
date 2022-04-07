@@ -2,203 +2,189 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC47C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 08:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1958C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 11:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232246AbiDGJA1 (ORCPT
+        id S244810AbiDGLhF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 05:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41764 "EHLO
+        Thu, 7 Apr 2022 07:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235244AbiDGJAZ (ORCPT
+        with ESMTP id S244808AbiDGLhE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 05:00:25 -0400
-Received: from euporie.uberspace.de (euporie.uberspace.de [185.26.156.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CA78020D
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 01:58:21 -0700 (PDT)
-Received: (qmail 17943 invoked by uid 989); 7 Apr 2022 08:58:20 -0000
-Authentication-Results: euporie.uberspace.de;
-        auth=pass (plain)
-From:   Florian Fischer <florian.fischer@muhq.space>
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Florian Schmaus <flow@cs.fau.de>,
-        Florian Fischer <florian.fischer@muhq.space>
-Subject: [PATCH v3 2/3] perf stat: add rusage utime and stime events
-Date:   Thu,  7 Apr 2022 10:57:20 +0200
-Message-Id: <20220407085721.3289414-3-florian.fischer@muhq.space>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220407085721.3289414-1-florian.fischer@muhq.space>
-References: <69656438-8b9a-000b-0702-02dc480639f9@linux.intel.com>
- <20220407085721.3289414-1-florian.fischer@muhq.space>
+        Thu, 7 Apr 2022 07:37:04 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABA62939AD;
+        Thu,  7 Apr 2022 04:35:04 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id r7so3333698wmq.2;
+        Thu, 07 Apr 2022 04:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BTjjsMviqQQ88WLrJjMAv2kpQcRNOPqMaJdVZGNwFqw=;
+        b=R6uglBK6TpnMEoqoBNx8c29PkXVIkYZqL8zEmxAyDQOx4Qfhz0/VqW93CLzJ4ukVFk
+         KKYL0xJNUJd23pXJPKzve/Idy2GbwLG6yto0nsijOBIBu1ZzQDHOokt2ow43HPy5HQ+P
+         +cGlEFYVBjXA/MFM8YTIcJFnvmfHxeEgxLrDizQaEfJU+zLI5RnXOfRzBJnMxt6nySQA
+         n+znckYRlJ2Ez5W7Mr6adfZFqxH1YnKa0sfngh5WvBQJbNGHPZiIZ7Fpx6Egr9rjKZ9x
+         VaFuRaRDguJygRF/SDEbNRDS6IzEFv4ScjRwxfyWLfAU+OYqNisWeCDFl1Z6FerMdCbH
+         TBsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BTjjsMviqQQ88WLrJjMAv2kpQcRNOPqMaJdVZGNwFqw=;
+        b=1obR7RqvGDKltHJKXmV0f2mITAD7XnyiaU7DNeR49DMHR7SXqJNYJ/lYiqqvx4SYiE
+         5smupt0/5/dsG8t3WRbBlM0Xegg2w+KLUGF88edbL1LS1HwoCe2/hh8JNNJ0/L/sUfYJ
+         tYc71brVJRtPyUR5VMbL6Rb3UUKINMYF80HpGBHwotOOv1ue3LpNZ2t5S3HoWveveMFt
+         kMb7j/9+q5ArU7zi4fagerFsx+XeMb+y9fRRC71PJLqjTE6g+SCkoTDLQYSLRTVuBxKc
+         L8mYAaaRydA73J4gTO6/bH0Nw9ubD/LvsCkdju/p/qK8860RlSJo0P/kmoZ0Q8OEl2cv
+         +q/A==
+X-Gm-Message-State: AOAM533TCR8D1sVUaHTsWKXV3MeMWsWFq7RNi7XVlM10TnS8pVpDMaX0
+        8nWO829+KcsPeNqP3pFzvi5Px3csrjgr4Irdzzw=
+X-Google-Smtp-Source: ABdhPJzR0oB2jVEk4x7pHKQdNCVRye2ERWW24d237Jq4XXJE7we9+a25pneCqZG5kOqKJUIfBhzIGCSgRC7/SRTwXko=
+X-Received: by 2002:a05:600c:4fce:b0:38d:a58:6d16 with SMTP id
+ o14-20020a05600c4fce00b0038d0a586d16mr12035867wmq.11.1649331303159; Thu, 07
+ Apr 2022 04:35:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: -----
-X-Rspamd-Report: R_MISSING_CHARSET(0.5) MIME_GOOD(-0.1) REPLY(-4) MID_CONTAINS_FROM(1) BAYES_HAM(-2.939353)
-X-Rspamd-Score: -5.539353
-Received: from unknown (HELO unkown) (::1)
-        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Thu, 07 Apr 2022 10:58:20 +0200
+References: <20220406100609.65239-1-chengdongli@tencent.com> <ce2c3c4f-3751-312a-5fa6-0f98330067fe@intel.com>
+In-Reply-To: <ce2c3c4f-3751-312a-5fa6-0f98330067fe@intel.com>
+From:   Bryton Lee <brytonlee01@gmail.com>
+Date:   Thu, 7 Apr 2022 19:34:51 +0800
+Message-ID: <CAC2pzGe0Kn9Vzyx7S5_5A338shYG-DXgY=CS38zpJYk3m3_N7A@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test tsc: Fix error message report when not supported.
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, ak@linux.intel.com,
+        likexu@tencent.com, chengdongli@tencent.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It bothered me that during benchmarking using perf stat (to collect
-for example CPU cache events) I could not simultaneously retrieve the
-times spend in user or kernel mode in a machine readable format.
+On Thu, Apr 7, 2022 at 2:59 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 06/04/2022 13.06, Chengdong Li wrote:
+> > By default `perf test tsc` does not return the error message
+> > when child process detected kernel does not support. Instead, child
+> > process print error message to stderr, unfortunately the stderr is
+> > redirected to /dev/null when verbose <= 0.
+> >
+> > This patch did three things:
+> > - returns TEST_SKIP to parent process instead of TEST_OK when
+> >   perf_read_tsc_conversion() is not supported.
+> > - add a new subtest of testing if TSC is supported on current
+> >   architecture by moving exist code to a separate function.
+> > - extended test suite definition to contain above two subtests.
+> >
+> > Changes since v1 (thanks for the feedback from Adrian Hunter):
+> > - rebase commit to current source.
+> >
+> > Signed-off-by: Chengdong Li <chengdongli@tencent.com>
+> > ---
+> >  tools/perf/tests/perf-time-to-tsc.c | 36 +++++++++++++++++++++--------
+> >  1 file changed, 27 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
+> > index d12d0ad81801..fc7c380af5a0 100644
+> > --- a/tools/perf/tests/perf-time-to-tsc.c
+> > +++ b/tools/perf/tests/perf-time-to-tsc.c
+> > @@ -47,6 +47,17 @@
+> >       }                                       \
+> >  }
+> >
+> > +static int test__tsc_is_supported(struct test_suite *test __maybe_unused,
+> > +                               int subtest __maybe_unused)
+> > +{
+> > +     if (!TSC_IS_SUPPORTED) {
+> > +             pr_debug("Test not supported on this architecture");
+>
+> Message better ending with "\n" I think
+OK, I will fix it.
+>
+> > +             return TEST_SKIP;
+> > +     }
+> > +
+> > +     return TEST_OK;
+> > +}
+> > +
+> >  /**
+> >   * test__perf_time_to_tsc - test converting perf time to TSC.
+> >   *
+> > @@ -70,7 +81,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+> >       struct perf_cpu_map *cpus = NULL;
+> >       struct evlist *evlist = NULL;
+> >       struct evsel *evsel = NULL;
+> > -     int err = -1, ret, i;
+> > +     int err = TEST_FAIL, ret, i;
+> >       const char *comm1, *comm2;
+> >       struct perf_tsc_conversion tc;
+> >       struct perf_event_mmap_page *pc;
+> > @@ -79,10 +90,6 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+> >       u64 test_time, comm1_time = 0, comm2_time = 0;
+> >       struct mmap *md;
+> >
+> > -     if (!TSC_IS_SUPPORTED) {
+> > -             pr_debug("Test not supported on this architecture");
+> > -             return TEST_SKIP;
+> > -     }
+> >
+> >       threads = thread_map__new(-1, getpid(), UINT_MAX);
+> >       CHECK_NOT_NULL__(threads);
+> > @@ -124,8 +131,8 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+> >       ret = perf_read_tsc_conversion(pc, &tc);
+> >       if (ret) {
+> >               if (ret == -EOPNOTSUPP) {
+> > -                     fprintf(stderr, " (not supported)");
+> > -                     return 0;
+> > +                     pr_debug("perf_read_tsc_conversion is not supported in current kernel");
+> > +                     err = TEST_SKIP;
+> >               }
+> >               goto out_err;
+> >       }
+> > @@ -191,7 +198,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+> >           test_tsc >= comm2_tsc)
+> >               goto out_err;
+> >
+> > -     err = 0;
+> > +     err = TEST_OK;
+> >
+> >  out_err:
+> >       evlist__delete(evlist);
+> > @@ -200,4 +207,15 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+> >       return err;
+> >  }
+> >
+> > -DEFINE_SUITE("Convert perf time to TSC", perf_time_to_tsc);
+> > +static struct test_case time_to_tsc_tests[] = {
+> > +     TEST_CASE_REASON("TSC support", tsc_is_supported,
+> > +                      "This architecture does not support"),
+>
+> The 2nd test case runs anyway, so I am not sure another
+> test case is needed?
 
-When running perf stat the output for humans contains the times
-reported by rusage and wait4.
+Yes. But, I think there are two reasons to add two subtests: 1).
+Original TSC support test is embedded in test__perf_time_to_tsc(), and
+returns TEST_SKIP
+if current architecture doesn't support it.  Thus there are two places
+that return TEST_SKIP in test__perf_time_to_tsc() if we don't move TSC
+support
+to another subtest. 2). Current test_suite and test_case structs don't
+support printing skip_reason if there is no subtest. To print skip
+reason we need more than 1 subtests.
 
-$ perf stat -e cache-misses:u -- true
-
- Performance counter stats for 'true':
-
-             4,206      cache-misses:u
-
-       0.001113619 seconds time elapsed
-
-       0.001175000 seconds user
-       0.000000000 seconds sys
-
-But perf stat's machine-readable format does not provide this information.
-
-$ perf stat -x, -e cache-misses:u -- true
-4282,,cache-misses:u,492859,100.00,,
-
-I found no way to retrieve this information using the available events
-while using machine-readable output.
-
-This patch adds two new tool internal events 'rusage_user_time'
-and 'rusage_system_time' as well as their aliases 'ru_utime' and
-'ru_stime', similarly to the already present 'duration_time' event.
-
-Both events use the already collected rusage information obtained by wait4
-and tracked in the global ru_stats.
-
-Examples presenting cache-misses and rusage information in both human and
-machine-readable form:
-
-$ ./perf stat -e duration_time,ru_utime,ru_stime,cache-misses -- grep -q -r duration_time .
-
- Performance counter stats for 'grep -q -r duration_time .':
-
-        67,422,542 ns   duration_time:u
-        50,517,000 ns   ru_utime:u
-        16,839,000 ns   ru_stime:u
-            30,937      cache-misses:u
-
-       0.067422542 seconds time elapsed
-
-       0.050517000 seconds user
-       0.016839000 seconds sys
-
-$ ./perf stat -x, -e duration_time,ru_utime,ru_stime,cache-misses -- grep -q -r duration_time .
-72134524,ns,duration_time:u,72134524,100.00,,
-65225000,ns,ru_utime:u,65225000,100.00,,
-6865000,ns,ru_stime:u,6865000,100.00,,
-38705,,cache-misses:u,71189328,100.00,,
-
-Signed-off-by: Florian Fischer <florian.fischer@muhq.space>
----
- tools/perf/builtin-stat.c      | 36 ++++++++++++++++++++++++++--------
- tools/perf/util/evsel.h        |  3 +++
- tools/perf/util/parse-events.c |  4 +++-
- tools/perf/util/parse-events.l |  2 ++
- 4 files changed, 36 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 61faffb535f5..c73afc8f6da5 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -342,15 +342,35 @@ static int evsel__write_stat_event(struct evsel *counter, int cpu_map_idx, u32 t
- static int read_single_counter(struct evsel *counter, int cpu_map_idx,
- 			       int thread, struct timespec *rs)
- {
--	if (counter->tool_event == PERF_TOOL_DURATION_TIME) {
--		u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
--		struct perf_counts_values *count =
--			perf_counts(counter->counts, cpu_map_idx, thread);
--		count->ena = count->run = val;
--		count->val = val;
--		return 0;
-+	switch(counter->tool_event) {
-+		case PERF_TOOL_DURATION_TIME: {
-+			u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
-+			struct perf_counts_values *count =
-+				perf_counts(counter->counts, cpu_map_idx, thread);
-+			count->ena = count->run = val;
-+			count->val = val;
-+			return 0;
-+		}
-+		case PERF_TOOL_RU_UTIME:
-+		case PERF_TOOL_RU_STIME: {
-+			u64 val;
-+			struct perf_counts_values *count =
-+				perf_counts(counter->counts, cpu_map_idx, thread);
-+			if (counter->tool_event == PERF_TOOL_RU_UTIME)
-+				val = ru_stats.ru_utime_usec_stat.mean;
-+			else
-+				val = ru_stats.ru_stime_usec_stat.mean;
-+			count->ena = count->run = val;
-+			count->val = val;
-+			return 0;
-+		}
-+		default:
-+		case PERF_TOOL_NONE:
-+			return evsel__read_counter(counter, cpu_map_idx, thread);
-+		case PERF_TOOL_LAST:
-+			/* this case should never be reached */
-+			return 0;
- 	}
--	return evsel__read_counter(counter, cpu_map_idx, thread);
- }
- 
- /*
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 041b42d33bf5..e89b1224ae61 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -30,6 +30,9 @@ typedef int (evsel__sb_cb_t)(union perf_event *event, void *data);
- enum perf_tool_event {
- 	PERF_TOOL_NONE		= 0,
- 	PERF_TOOL_DURATION_TIME = 1,
-+	PERF_TOOL_RU_UTIME = 2,
-+	PERF_TOOL_RU_STIME = 3,
-+	PERF_TOOL_LAST
- };
- 
- /** struct evsel - event selector
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 24997925ae00..e9d3d4404ea6 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -402,7 +402,9 @@ static int add_event_tool(struct list_head *list, int *idx,
- 	if (!evsel)
- 		return -ENOMEM;
- 	evsel->tool_event = tool_event;
--	if (tool_event == PERF_TOOL_DURATION_TIME) {
-+	if (tool_event == PERF_TOOL_DURATION_TIME
-+	    || tool_event == PERF_TOOL_RU_UTIME
-+	    || tool_event == PERF_TOOL_RU_STIME) {
- 		free((char *)evsel->unit);
- 		evsel->unit = strdup("ns");
- 	}
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 5b6e4b5249cf..3c7227b8035c 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -353,6 +353,8 @@ alignment-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_AL
- emulation-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_EMULATION_FAULTS); }
- dummy						{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
- duration_time					{ return tool(yyscanner, PERF_TOOL_DURATION_TIME); }
-+rusage_user_time|ru_utime	{ return tool(yyscanner, PERF_TOOL_RU_UTIME); }
-+rusage_system_time|ru_stime	{ return tool(yyscanner, PERF_TOOL_RU_STIME); }
- bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUTPUT); }
- cgroup-switches					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CGROUP_SWITCHES); }
- 
--- 
-2.35.1
-
+>
+> > +     TEST_CASE_REASON("Perf time to TSC", perf_time_to_tsc,
+> > +                      "perf_read_tsc_conversion is not supported"),
+> > +     { .name = NULL, }
+> > +};
+> > +
+> > +struct test_suite suite__perf_time_to_tsc = {
+> > +     .desc = "Convert perf time to TSC",
+> > +     .test_cases = time_to_tsc_tests,
+> > +};
+>
