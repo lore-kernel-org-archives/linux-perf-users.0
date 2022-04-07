@@ -2,21 +2,21 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF24C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 08:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33F1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 08:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243451AbiDGJA1 (ORCPT
+        id S243450AbiDGJA2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 05:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41642 "EHLO
+        Thu, 7 Apr 2022 05:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232246AbiDGJAZ (ORCPT
+        with ESMTP id S234575AbiDGJA1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 05:00:25 -0400
+        Thu, 7 Apr 2022 05:00:27 -0400
 Received: from euporie.uberspace.de (euporie.uberspace.de [185.26.156.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC043457B0
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 01:58:20 -0700 (PDT)
-Received: (qmail 17833 invoked by uid 989); 7 Apr 2022 08:58:18 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F2E7C90E5
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 01:58:24 -0700 (PDT)
+Received: (qmail 18008 invoked by uid 989); 7 Apr 2022 08:58:21 -0000
 Authentication-Results: euporie.uberspace.de;
         auth=pass (plain)
 From:   Florian Fischer <florian.fischer@muhq.space>
@@ -25,60 +25,157 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Florian Schmaus <flow@cs.fau.de>
-Subject: [RFC v3] perf stat: add rusage utime and stime events
-Date:   Thu,  7 Apr 2022 10:57:18 +0200
-Message-Id: <20220407085721.3289414-1-florian.fischer@muhq.space>
+        Florian Schmaus <flow@cs.fau.de>,
+        Florian Fischer <florian.fischer@muhq.space>
+Subject: [PATCH v3 3/3] perf list: print all available tool events
+Date:   Thu,  7 Apr 2022 10:57:21 +0200
+Message-Id: <20220407085721.3289414-4-florian.fischer@muhq.space>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <69656438-8b9a-000b-0702-02dc480639f9@linux.intel.com>
+In-Reply-To: <20220407085721.3289414-1-florian.fischer@muhq.space>
 References: <69656438-8b9a-000b-0702-02dc480639f9@linux.intel.com>
+ <20220407085721.3289414-1-florian.fischer@muhq.space>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: +
-X-Rspamd-Report: R_MISSING_CHARSET(0.5) MIME_GOOD(-0.1) MID_CONTAINS_FROM(1) BAYES_HAM(-0.001856)
-X-Rspamd-Score: 1.398143
+X-Rspamd-Bar: -----
+X-Rspamd-Report: R_MISSING_CHARSET(0.5) MIME_GOOD(-0.1) REPLY(-4) MID_CONTAINS_FROM(1) BAYES_HAM(-2.852212)
+X-Rspamd-Score: -5.452212
 Received: from unknown (HELO unkown) (::1)
-        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Thu, 07 Apr 2022 10:58:18 +0200
+        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Thu, 07 Apr 2022 10:58:21 +0200
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch series adds new internal events to perf stat exposing the utime and
-stime in nanoseconds reported by rusage.
+Introduce names and aliases for the new tool events 'rusage_user_time'
+and 'rusage_system_time'.
+---
+ tools/perf/util/evsel.c        | 19 ++++++++++------
+ tools/perf/util/evsel.h        |  1 +
+ tools/perf/util/parse-events.c | 40 +++++++++++++++++++++++++++++-----
+ 3 files changed, 47 insertions(+), 13 deletions(-)
 
-During some benchmarking using perf it bothered me that I could not easily
-retrieve the times spent in user or kernel mode from perf stat when using the
-machine readable output.
-
-But perf definitely knows about those values because in the human readable output
-they are present.
-
-Therefore I exposed the times reported by rusage via the new tool events:
-rusage_user_time, rusage_system_time and their aliases ru_utime and ru_stime.
-
-This allows to retrieved them in machine-readable output:
-
-$ ./perf stat -x, -e duration_time,ru_utime,ru_stime,cache-misses -- grep -q -r duration_time tools/perf
-72134524,ns,duration_time:u,72134524,100.00,,
-65225000,ns,ru_utime:u,65225000,100.00,,
-6865000,ns,ru_stime:u,6865000,100.00,,
-38705,,cache-misses:u,71189328,100.00,,
-
-The changes are mostly inspired by the code for the only other available
-tool event: 'duration_time'.
-
-For now rusage_* events are not usable with metrics (as far as I understand).
-
-The patch applies cleanly on linux-next/next-20220405.
-
-[PATCH v3 1/3] perf stat: introduce stats for the user and system
-[PATCH v3 2/3] perf stat: add rusage utime and stime events
-[PATCH v3 3/3] perf list: print all available tool events
-
-[v2]: Split up the changes into separate commits.
-
-[v3]: * Use nanoseconds as suggested by Xing Zhengjun.
-      * Squash [PATCH v2 2/4] and [PATCH v2 4/4], because it only adds the unit string 
-
-Florian Fischer
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 2a1729e7aee4..26cf7e76698b 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -597,6 +597,17 @@ static int evsel__sw_name(struct evsel *evsel, char *bf, size_t size)
+ 	return r + evsel__add_modifiers(evsel, bf + r, size - r);
+ }
+ 
++const char *evsel__tool_names[PERF_TOOL_LAST] = {
++	"duration_time",
++	"rusage_user_time",
++	"rusage_system_time",
++};
++
++static int evsel__tool_name(enum perf_tool_event ev, char *bf, size_t size)
++{
++	return scnprintf(bf, size, "%s", evsel__tool_names[ev]);
++}
++
+ static int __evsel__bp_name(char *bf, size_t size, u64 addr, u64 type)
+ {
+ 	int r;
+@@ -723,12 +734,6 @@ static int evsel__raw_name(struct evsel *evsel, char *bf, size_t size)
+ 	return ret + evsel__add_modifiers(evsel, bf + ret, size - ret);
+ }
+ 
+-static int evsel__tool_name(char *bf, size_t size)
+-{
+-	int ret = scnprintf(bf, size, "duration_time");
+-	return ret;
+-}
+-
+ const char *evsel__name(struct evsel *evsel)
+ {
+ 	char bf[128];
+@@ -754,7 +759,7 @@ const char *evsel__name(struct evsel *evsel)
+ 
+ 	case PERF_TYPE_SOFTWARE:
+ 		if (evsel->tool_event)
+-			evsel__tool_name(bf, sizeof(bf));
++			evsel__tool_name(evsel->tool_event, bf, sizeof(bf));
+ 		else
+ 			evsel__sw_name(evsel, bf, sizeof(bf));
+ 		break;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index e89b1224ae61..2adb97383952 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -261,6 +261,7 @@ extern const char *evsel__hw_cache_op[PERF_COUNT_HW_CACHE_OP_MAX][EVSEL__MAX_ALI
+ extern const char *evsel__hw_cache_result[PERF_COUNT_HW_CACHE_RESULT_MAX][EVSEL__MAX_ALIASES];
+ extern const char *evsel__hw_names[PERF_COUNT_HW_MAX];
+ extern const char *evsel__sw_names[PERF_COUNT_SW_MAX];
++extern const char *evsel__tool_names[PERF_TOOL_LAST];
+ extern char *evsel__bpf_counter_events;
+ bool evsel__match_bpf_counter_events(const char *name);
+ 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index e9d3d4404ea6..c232ab79d434 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -154,6 +154,21 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
+ 	},
+ };
+ 
++struct event_symbol event_symbols_tool[PERF_TOOL_LAST] = {
++	[PERF_TOOL_DURATION_TIME] = {
++		.symbol = "duration_time",
++		.alias  = "",
++	},
++	[PERF_TOOL_RU_UTIME] = {
++		.symbol = "rusage_user_time",
++		.alias  = "ru_utime",
++	},
++	[PERF_TOOL_RU_STIME] = {
++		.symbol = "rusage_system_time",
++		.alias  = "ru_stime",
++	},
++};
++
+ #define __PERF_EVENT_FIELD(config, name) \
+ 	((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
+ 
+@@ -3057,21 +3072,34 @@ int print_hwcache_events(const char *event_glob, bool name_only)
+ 	return evt_num;
+ }
+ 
+-static void print_tool_event(const char *name, const char *event_glob,
++static void print_tool_event(const struct event_symbol *syms, const char *event_glob,
+ 			     bool name_only)
+ {
+-	if (event_glob && !strglobmatch(name, event_glob))
++	if (syms->symbol == NULL)
++		return;
++
++	if (event_glob && !(strglobmatch(syms->symbol, event_glob) ||
++	      (syms->alias && strglobmatch(syms->alias, event_glob))))
+ 		return;
++
+ 	if (name_only)
+-		printf("%s ", name);
+-	else
++		printf("%s ", syms->symbol);
++	else {
++		char name[MAX_NAME_LEN];
++		if (syms->alias)
++			snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
++		else
++			strlcpy(name, syms->symbol, MAX_NAME_LEN);
+ 		printf("  %-50s [%s]\n", name, "Tool event");
+-
++	}
+ }
+ 
+ void print_tool_events(const char *event_glob, bool name_only)
+ {
+-	print_tool_event("duration_time", event_glob, name_only);
++	// Start at 1 because the first enum entry symbols no tool event
++	for (int i = 0; i < PERF_TOOL_LAST; ++i) {
++		print_tool_event(event_symbols_tool + i, event_glob, name_only);
++	}
+ 	if (pager_in_use())
+ 		printf("\n");
+ }
+-- 
+2.35.1
 
