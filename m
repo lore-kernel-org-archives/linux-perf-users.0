@@ -2,131 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB81FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 17:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F224C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 18:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234995AbiDHRRm (ORCPT
+        id S229822AbiDHSP2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Apr 2022 13:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
+        Fri, 8 Apr 2022 14:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238115AbiDHRRj (ORCPT
+        with ESMTP id S230479AbiDHSP0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Apr 2022 13:17:39 -0400
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8BFAE5F;
-        Fri,  8 Apr 2022 10:15:35 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id p10so16111777lfa.12;
-        Fri, 08 Apr 2022 10:15:35 -0700 (PDT)
+        Fri, 8 Apr 2022 14:15:26 -0400
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46EC3A73F;
+        Fri,  8 Apr 2022 11:13:21 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id b43so12488129ljr.10;
+        Fri, 08 Apr 2022 11:13:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BVoXI5fgim3/iK2/LX7lFIzEYssjRbCGQ7oINBoW+5Y=;
-        b=Ht5pw85XY7vbBclZjidb1ElcN4DNsKMK/Py8TmN0GOb3ms8KG91+OpK/BQgGBRj1//
-         TqY46wg0/szGeMpexa34JzuVScztna88l4dlHNojQrtrjyp9/LlQw0usBTuXMa/f39bz
-         0CiVvKgxtBR+pNQUDi7ScP5RTYC2BujhGv6bQB2ilc88WblW3H0MTqbFd4ssOddy6VFH
-         VHdxRVxin2ySla2Efx92uHk5xt2epWqKC493a6R/t4GvF7u+ia8HuOm1Nr/4A08tb8Ab
-         WWtEXtThHaSTgU3ZNVOOa1xVlbAua6bXDCn69Egqg9XsNWCTP9Kun6QE9vEoS8QbdMLx
-         f4rg==
-X-Gm-Message-State: AOAM533axevof8W2wKKnbbuKTnV4sfo9kUkmXEbTgdNFsMZT/aWKz+dm
-        4mstMq/+HpuCKOVhDKzzaf2+sPS0R6CV4HpLtyk=
-X-Google-Smtp-Source: ABdhPJwc51dJyE7Ya2f2tQc7Sxdh+v1i3t8ZfqPLAfkmC3RvJJIBUn1ad3Zk5J7iQrZoGX7O7ODyG9qRUtTRJhBVdpQ=
-X-Received: by 2002:a05:6512:3094:b0:44a:6dcc:42da with SMTP id
- z20-20020a056512309400b0044a6dcc42damr13479257lfd.454.1649438133504; Fri, 08
- Apr 2022 10:15:33 -0700 (PDT)
+        bh=UW/raEK33bMCD3gBOPjdzCnBvwCLiC4EtDuZoVDwoUo=;
+        b=BEi6l/+AVzYTy+p+eOrjTHN6l78Hhs+F4Qo4JFeLD+usf2WppmkjKWQ/Af4zh4EiuO
+         kvqzzObpjn1ilpB2QfF82MhfkPduuaMKlbc94Kv5W1tIrpzwvS8wUgWYHVVFXsIzM3zT
+         nrRzo6II5Dbf3TDVV6tgVCDm+Vm+60odmTohe3AdJndSl296q5q84D5IDQxt1c2alR+g
+         QtlmCenGdj1LQRxk894ERbXrvVtABM9RdiSAVi7dJ3gB/utBJNsbYOQX4WIeRnrnWvg7
+         kgj/L3ZLSuzfyPtaQmhN8fvLYHvM8hlMxNf7fuVzW2B4f1lUwlPyaqu2yAYoPbPQcuJo
+         v2lA==
+X-Gm-Message-State: AOAM531cPDKRJ2DwlYyNJl1Xu0qzs1r6BxKZMTtyVVyHZEJFJo4Wyrun
+        FhX0yq1fXPdWJeVpb9bcJgD0YYDKUGwy4fQCy6COC7Zq
+X-Google-Smtp-Source: ABdhPJxZz2QW83b88KtmPfLvVm/xo/NWOAt+tfuxfy6sASdOaHHrjCgrRzI54XMME2ryEQkX3IzV9X2KZ6g4D9kfQlg=
+X-Received: by 2002:a05:651c:248:b0:245:5b3d:9abb with SMTP id
+ x8-20020a05651c024800b002455b3d9abbmr12436620ljn.366.1649441600116; Fri, 08
+ Apr 2022 11:13:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220407230503.1265036-1-irogers@google.com>
-In-Reply-To: <20220407230503.1265036-1-irogers@google.com>
+References: <20220408144056.1955535-1-james.clark@arm.com>
+In-Reply-To: <20220408144056.1955535-1-james.clark@arm.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 8 Apr 2022 10:15:22 -0700
-Message-ID: <CAM9d7cjM5jpPfdWUvoezYYJoz_Sh1rHpGHVGAvxOqxzb=AKBVQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Tidy up symbol end fixup
-To:     Ian Rogers <irogers@google.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+Date:   Fri, 8 Apr 2022 11:13:09 -0700
+Message-ID: <CAM9d7cji=xSAy673sXGf2GXFsKKsR7=pNKJceLtHX1sFFUZcKg@mail.gmail.com>
+Subject: Re: [PATCH] perf: arm-spe: Fix perf report --mem-mode
+To:     James Clark <james.clark@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        leo.yan@linaro.com, German Gomez <German.Gomez@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Li Huafei <lihuafei1@huawei.com>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
-        William Cohen <wcohen@redhat.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Denis Nikitin <denik@chromium.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+Hello,
 
-On Thu, Apr 7, 2022 at 4:05 PM Ian Rogers <irogers@google.com> wrote:
+On Fri, Apr 8, 2022 at 7:41 AM James Clark <james.clark@arm.com> wrote:
 >
-> Fixing up more symbol ends as introduced in:
-> https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
-> caused perf annotate to run into memory limits - every symbol holds
-> all the disassembled code in the annotation, and so making symbols
-> ends further away dramatically increased memory usage (40MB to
->  >1GB). Modify the symbol end logic so that special kernel cases aren't
-> applied in the common case.
+> Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
+> is not available") "perf mem report" and "perf report --mem-mode" don't
+> allow opening the file unless one of the events has PERF_SAMPLE_DATA_SRC
+> set.
+>
+> SPE doesn't have this set even though synthetic memory data is generated
+> after it is decoded. Fix this issue by setting DATA_SRC on SPE events.
+> This has no effect on the data collected because the SPE driver doesn't
+> do anything with that flag and doesn't generate samples.
+>
+> Fixes: bb30acae4c4d ("perf report: Bail out --mem-mode if mem info is not available")
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-I'm not sure what was the actual problem the patch tried to solve.
-It seems like a specific problem on powerpc + kprobes and now
-it affects all other architectures.
-
-In the above commit, optinsn_slot and kprobe_optinsn_page will
-have the same address and optinsn_slot cannot be fixed up.
-But I guess the kprobe_optinsn_page still can be fixed up and
-you can use the symbol instead, no?
-
-To me, it'd be better to revert the change and add a special
-handling for the kprobe insn pages as they appear as
-modules.
-
-Also, all the arch symbols fixup routine seem to do the same
-then we might move it to the general logic.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+
+> ---
+>  tools/perf/arch/arm64/util/arm-spe.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 >
-> Minor fix to perf annotate to not stall when stderr is full.
+> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+> index 86e2e926aa0e..a1419e6341c0 100644
+> --- a/tools/perf/arch/arm64/util/arm-spe.c
+> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> @@ -239,6 +239,12 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>                 arm_spe_set_timestamp(itr, arm_spe_evsel);
+>         }
 >
-> Ian Rogers (5):
->   perf annotate: Drop objdump stderr
->   perf symbols: Always do architecture specific fixups
->   perf symbols: Add is_kernel argument to fixup end
->   perf symbol: By default only fix zero length symbols
->   perf symbols: More specific architecture end fixing
+> +       /*
+> +        * Set this only so that perf report knows that SPE generates memory info. It has no effect
+> +        * on the opening of the event or the SPE data produced.
+> +        */
+> +       evsel__set_sample_bit(arm_spe_evsel, DATA_SRC);
+> +
+>         /* Add dummy event to keep tracking */
+>         err = parse_events(evlist, "dummy:u", NULL);
+>         if (err)
+> @@ -523,6 +529,5 @@ struct perf_event_attr
 >
->  tools/perf/arch/arm64/util/machine.c   | 14 +++++++++-----
->  tools/perf/arch/powerpc/util/machine.c | 10 +++++++---
->  tools/perf/arch/s390/util/machine.c    | 12 ++++++++----
->  tools/perf/util/annotate.c             |  1 +
->  tools/perf/util/symbol-elf.c           |  2 +-
->  tools/perf/util/symbol.c               | 14 ++++++++------
->  tools/perf/util/symbol.h               |  4 ++--
->  7 files changed, 36 insertions(+), 21 deletions(-)
->
+>         arm_spe_pmu->selectable = true;
+>         arm_spe_pmu->is_uncore = false;
+> -
+>         return attr;
+>  }
 > --
-> 2.35.1.1178.g4f1659d476-goog
+> 2.28.0
 >
