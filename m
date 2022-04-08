@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBCDC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 19:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A925C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 19:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231140AbiDHT4K (ORCPT
+        id S239297AbiDHT4K (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Fri, 8 Apr 2022 15:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50826 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239286AbiDHT4J (ORCPT
+        with ESMTP id S239294AbiDHT4J (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 8 Apr 2022 15:56:09 -0400
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 092ED1A5D4E;
-        Fri,  8 Apr 2022 12:54:04 -0700 (PDT)
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2361A5D73;
+        Fri,  8 Apr 2022 12:54:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1649447646; x=1680983646;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=cQvZbOGfRySa1kgB4u+TLmXxiPqef8NnczamZP/eew8=;
-  b=Vxbpbf35ZZx9hgdkkXc7OQVsQr1dUH4zIsgi8gxvK/ptpQFRtPFSmoab
-   SwZYOwrwONivtbFF1uGDsmotA8kA6t6X/kePmFEpwT4GcBIHamlyskPav
-   8603jvo07B3Mr2vwGY4UG6UzlxhLUpZX4sTKxRTk2DsMnNqMOEsLSVHcM
-   g=;
+  t=1649447645; x=1680983645;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XbbHkB6cXBfuE9MzIxi7zYV+cwhUy0oQcVZcvwc+AYE=;
+  b=nrK58xvMTu8Crm4UtGJFvWa8UXY3mOFYa1/nsicU8HwuEdxmQXUgKzHY
+   J2mlAI/e1xInAqpejldb3Ye1SyI3F0lH507eNDPlWr0pCKc1Mj33V1ENi
+   wZ56gVu+YaI1xf+XVpWwvcgLdhJhTYNBZrkhh4cZtK2djQmYIzFm/Bde7
+   A=;
 X-IronPort-AV: E=Sophos;i="5.90,245,1643673600"; 
-   d="scan'208";a="209212596"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-6435a935.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP; 08 Apr 2022 19:54:04 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2a-6435a935.us-west-2.amazon.com (Postfix) with ESMTPS id 6C47A417C3;
-        Fri,  8 Apr 2022 19:53:58 +0000 (UTC)
-Received: from EX13D02UWC003.ant.amazon.com (10.43.162.199) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
+   d="scan'208";a="187479247"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-iad-1d-10222bbc.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP; 08 Apr 2022 19:54:03 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
+        by email-inbound-relay-iad-1d-10222bbc.us-east-1.amazon.com (Postfix) with ESMTPS id AD86E1A0BFE;
+        Fri,  8 Apr 2022 19:53:57 +0000 (UTC)
+Received: from EX13D02UWB002.ant.amazon.com (10.43.161.160) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
  id 15.0.1497.32; Fri, 8 Apr 2022 19:53:56 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D02UWC003.ant.amazon.com (10.43.162.199) with Microsoft SMTP Server (TLS)
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D02UWB002.ant.amazon.com (10.43.161.160) with Microsoft SMTP Server (TLS)
  id 15.0.1497.32; Fri, 8 Apr 2022 19:53:56 +0000
 Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
+ (172.19.181.128) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
  Server id 15.0.1497.32 via Frontend Transport; Fri, 8 Apr 2022 19:53:56 +0000
 Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 750242577; Fri,  8 Apr 2022 19:53:55 +0000 (UTC)
+        id 71D592C3F; Fri,  8 Apr 2022 19:53:55 +0000 (UTC)
 From:   Ali Saidi <alisaidi@amazon.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
@@ -55,12 +55,10 @@ CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
         <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
         <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
         <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
-Subject: [PATCH v5 3/5] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
-Date:   Fri, 8 Apr 2022 19:53:42 +0000
-Message-ID: <20220408195344.32764-4-alisaidi@amazon.com>
+Subject: [PATCH v4 0/4] perf: arm-spe: Decode SPE source and use for perf c2c
+Date:   Fri, 8 Apr 2022 19:53:39 +0000
+Message-ID: <20220408195344.32764-1-alisaidi@amazon.com>
 X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220408195344.32764-1-alisaidi@amazon.com>
-References: <20220408195344.32764-1-alisaidi@amazon.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -68,32 +66,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a flag to the perf mem data struct to signal that a request caused a
-cache-to-cache transfer of a line from a peer of the requestor and
-wasn't sourced from a lower cache level.  The line being moved from one
-peer cache to another has latency and performance implications. On Arm64
-Neoverse systems the data source can indicate a cache-to-cache transfer
-but not if the line is dirty or clean, so instead of overloading HITM
-define a new flag that indicates this type of transfer.
+When synthesizing data from SPE, augment the type with source information
+for Arm Neoverse cores so we can detect situtions like cache line
+contention and transfers on Arm platforms. 
 
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
----
- tools/include/uapi/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This changes enables the expected behavior of perf c2c on a system with
+SPE where lines that are shared among multiple cores show up in perf c2c
+output. 
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 82858b697c05..c9e58c79f3e5 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1308,7 +1308,7 @@ union perf_mem_data_src {
- #define PERF_MEM_SNOOP_SHIFT	19
- 
- #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
--/* 1 free */
-+#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
- #define PERF_MEM_SNOOPX_SHIFT  38
- 
- /* locked instruction */
+These changes switch to use mem_lvl_num to encode the level information
+instead of mem_lvl which is being deprecated, but I haven't found other
+users of mem_lvl_num. 
+
+Changes in v5:
+  * Add a new snooping type to disambiguate cache-to-cache transfers where
+    we don't know if the data is clean or dirty.
+  * Set snoop flags on all the data-source cases
+  * Special case stores as we have no information on them
+
+Changes in v4:
+  * Bring-in the kernel's arch/arm64/include/asm/cputype.h into tools/ 
+  * Add neoverse-v1 to the neoverse cores list
+
+Ali Saidi (4):
+  tools: arm64: Import cputype.h
+  perf arm-spe: Use SPE data source for neoverse cores
+  perf mem: Support mem_lvl_num in c2c command
+  perf mem: Support HITM for when mem_lvl_num is any
+
+ tools/arch/arm64/include/asm/cputype.h        | 258 ++++++++++++++++++
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 +
+ tools/perf/util/arm-spe.c                     | 110 +++++++-
+ tools/perf/util/mem-events.c                  |  20 +-
+ 5 files changed, 383 insertions(+), 18 deletions(-)
+ create mode 100644 tools/arch/arm64/include/asm/cputype.h
+
 -- 
 2.32.0
 
