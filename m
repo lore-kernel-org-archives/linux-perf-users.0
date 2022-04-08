@@ -2,195 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901C3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Apr 2022 23:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F84BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 01:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbiDGXHf (ORCPT
+        id S233288AbiDHBIu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 19:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36952 "EHLO
+        Thu, 7 Apr 2022 21:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232505AbiDGXH1 (ORCPT
+        with ESMTP id S233219AbiDHBIt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 19:07:27 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C001F47FF
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 16:05:25 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id b11-20020a5b008b000000b00624ea481d55so5321551ybp.19
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 16:05:25 -0700 (PDT)
+        Thu, 7 Apr 2022 21:08:49 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4942610FDF8
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 18:06:47 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id w7so7047213pfu.11
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 18:06:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=BlnS9L2b1HywEaYijfWcFOwOQSJE9EtkTs1ukixmBPw=;
-        b=ZoLWREi9IpzQjcNCRfvCg0QXxxgq/g/dr8q8lw6hiFwbYUfHDU1oOZdHzFe2C0x/Wj
-         +G6TEXOTNFkXW2gltwODOW5zukJ6c3lNHMPBcvQp5GI18h87PtXgxM98avfGpH8OyZ5u
-         nzT1o4ojmpF6V/vD2FRe+PGmy0ImyLDV3ZUqcR6ZYZaSKgCLKh4p5yqqe4XuvwTZxhV1
-         wKnssK5d/ODNrMayMxzcqVNtNCahdn67ngyBl7U3zRKpGFBBKd8ViX3vlJtwMuf7SlpI
-         f+UB8KrczQtgb/Md34bcUsQs03hgQY4AgrDM31NMENxStRmUWp+7sf0pLroD9Ku6pL1D
-         dq8w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L9V8khs2Pw9oU0MoU+h4vOiXzP1pcSaWg3ChFlkePHo=;
+        b=vo6sJW3cBrcN6VOxtEd/FAbg7J4ohvujEc1YI4GFeoJGmubYimrIMWVg4e0SLCS9Vj
+         spa5FKQkLJaElouFG7Eucrhp+SDVBXLSKlmpDfjUlhmkX0XEDlvcKuIi/POHIBlyJvAP
+         rmzeqAM+ByuXCtq4ZThmrWSVfq/N6otsXfCQaaK6Dw4IDAzpiIcze7d2mgQiZTTjkDQf
+         gNLQqaKqr0ui7cMTfO9SlJOub05PARpSUvGFFD95r0xmCzsewchhT4RCaRg9Zlya3V5V
+         Idc8Si5TdIz9d68/Gg7bJRcw6XR5iA9PKeJEXPIXVBlaHqTHcifguf2AeFl2C8rPyBVx
+         o4oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=BlnS9L2b1HywEaYijfWcFOwOQSJE9EtkTs1ukixmBPw=;
-        b=DhOBYF2Fhqvc1eBIXLROA6U5mESBNSy9gc4QVXcMWRluRdlvZVYZUxnqPy2CFlnu2S
-         9CbNg9EJ6lfHRH4maU155Rz5J7jU6+QPFUsfKkkytpuDYUHhs2eqUw6va+ffNP4Orsoy
-         /LDcYV3+4GIYsO/AVhuMt0jy8OqaxsadwVVmAPIH2ItuR0JwClpGIuLYm4kRpCFD/hUV
-         YJ3c9gpZlTQTpcyoZiKM/MEqBMCK0ut5M+ivbp+OZr0VGrm9S0KihWsZ1vjjW1hqeU/+
-         U8acyWjqsR+Trcd5RUc8YCfpTomL3fwScR1u3y8F17on3pxNt5Z2RO5qvvCrGpd6I+py
-         xdbA==
-X-Gm-Message-State: AOAM531y+kRA9YVLaQywQ+Rfn/W9tFyeSnmzxBn6/gcW5UnVb4RisMt4
-        jvrflZ3+K5PqK5YMy0SCVnnwdJJ1V4qU
-X-Google-Smtp-Source: ABdhPJwO6aQe2goGLlpoTWwXzoYnXPSLIf1haTI2XYvRcrDVlYdlMfH8R5T02DhVCFDBY/64pzF+0lrd295k
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:560:aa27:649e:a07d])
- (user=irogers job=sendgmr) by 2002:a05:6902:392:b0:633:621f:166f with SMTP id
- f18-20020a056902039200b00633621f166fmr12458396ybs.166.1649372724286; Thu, 07
- Apr 2022 16:05:24 -0700 (PDT)
-Date:   Thu,  7 Apr 2022 16:05:03 -0700
-In-Reply-To: <20220407230503.1265036-1-irogers@google.com>
-Message-Id: <20220407230503.1265036-6-irogers@google.com>
-Mime-Version: 1.0
-References: <20220407230503.1265036-1-irogers@google.com>
-X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
-Subject: [PATCH 5/5] perf symbols: More specific architecture end fixing
-From:   Ian Rogers <irogers@google.com>
-To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Li Huafei <lihuafei1@huawei.com>,
-        "=?UTF-8?q?Martin=20Li=C5=A1ka?=" <mliska@suse.cz>,
-        William Cohen <wcohen@redhat.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Denis Nikitin <denik@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L9V8khs2Pw9oU0MoU+h4vOiXzP1pcSaWg3ChFlkePHo=;
+        b=YIBiGIPjhgeP1KuO2jb5ngVGVrN93eQgGEjkGl7OEoWv6+QkpTBRCPKGDfsTJKRzoy
+         TrEJpN0zkcivG2fjPMXKpEEhQsu7rL29daeJc+dyw0lBkIF1EFQPaYAmZVhXCQ37s3ug
+         pckFz3Co2Hkr1GcchgcA4CoH1ukrUBEPDfZWzbG3xkVpYoHzhvUmXTQXzSdFFCwZB2Gz
+         1O+/8JBJkpatp8SKTXDJh/uxQOfclakO8r/TEAFjm11JSwNxrTy6eeHMSU+XL+qhcYo/
+         G9Tj1i2WnF5pbcRNaHJm75KzP3GAYpHOZ293e97ui4nUIHGovPPxcd5XkygOJcvLc5Nf
+         25eA==
+X-Gm-Message-State: AOAM53242rDDczk79yu3w5tNAtVKWHq1t1eQusdfPhEyyRjmX0nn1nVR
+        VrqUjVAsbwvyOMjP1AcLsrdLWg==
+X-Google-Smtp-Source: ABdhPJzbk8Fz0L2VMqW+YNbTDb7UYvDsO8em7MsCInr1vKUKjCrkwBfYbotqI1S94QdwLgc1/2hCpw==
+X-Received: by 2002:a05:6a00:3316:b0:4fa:80fd:f3f6 with SMTP id cq22-20020a056a00331600b004fa80fdf3f6mr16682002pfb.65.1649380006462;
+        Thu, 07 Apr 2022 18:06:46 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id a11-20020a056a000c8b00b004fade889fb3sm25226056pfv.18.2022.04.07.18.06.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Apr 2022 18:06:45 -0700 (PDT)
+Date:   Fri, 8 Apr 2022 09:06:35 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     Nick.Forrington@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, german.gomez@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        kjain@linux.ibm.com, lihuafei1@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
+ cores
+Message-ID: <20220408010635.GA973239@leoy-ThinkPad-X240s>
+References: <20220404151218.GA898573@leoy-ThinkPad-X240s>
+ <20220406210017.11887-1-alisaidi@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220406210017.11887-1-alisaidi@amazon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Make the conditions used for symbol fixup closer to the comments. The
-logic aims to combine the current conditions as last modified in:
-https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
+On Wed, Apr 06, 2022 at 09:00:17PM +0000, Ali Saidi wrote:
+> On Mon, 4 Apr 2022 15:12:18  +0000, Leo Yan wrote:
+> > On Sun, Apr 03, 2022 at 08:33:37PM +0000, Ali Saidi wrote:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/arm64/util/machine.c   | 19 ++++++++++---------
- tools/perf/arch/powerpc/util/machine.c | 18 +++++++++---------
- tools/perf/arch/s390/util/machine.c    | 17 +++++++++--------
- 3 files changed, 28 insertions(+), 26 deletions(-)
+[...]
 
-diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-index 54fb41de9931..f258c1ebac03 100644
---- a/tools/perf/arch/arm64/util/machine.c
-+++ b/tools/perf/arch/arm64/util/machine.c
-@@ -18,16 +18,17 @@
- 
- #define SYMBOL_LIMIT (1 << 12) /* 4K */
- 
--void arch__symbols__fixup_end(struct symbol *p, struct symbol *c,
--			      bool is_kernel __maybe_unused)
-+void arch__symbols__fixup_end(struct symbol *p, struct symbol *c, bool is_kernel)
- {
--	if (p->end == p->start || p->end != c->start) {
--		if ((strchr(p->name, '[') && strchr(c->name, '[') == NULL) ||
--			(strchr(p->name, '[') == NULL && strchr(c->name, '[')))
--			/* Limit range of last symbol in module and kernel */
--			p->end += SYMBOL_LIMIT;
--		else
--			p->end = c->start;
-+	if (is_kernel && (p->end == p->start || p->end != c->start) &&
-+	    ((strchr(p->name, '[') && strchr(c->name, '[') == NULL) ||
-+	     (strchr(p->name, '[') == NULL && strchr(c->name, '[')))) {
-+		/* Limit range of last symbol in module and kernel */
-+		p->end += SYMBOL_LIMIT;
-+		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
-+	} else if (p->end == p->start) {
-+		/* Expand empty symbols. */
-+		p->end = c->start;
- 		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
- 	}
- }
-diff --git a/tools/perf/arch/powerpc/util/machine.c b/tools/perf/arch/powerpc/util/machine.c
-index a732601f951e..689a48040b64 100644
---- a/tools/perf/arch/powerpc/util/machine.c
-+++ b/tools/perf/arch/powerpc/util/machine.c
-@@ -14,16 +14,16 @@
-  * Therefore do not fill this gap and do not assign it to the kernel dso map.
-  */
- 
--void arch__symbols__fixup_end(struct symbol *p, struct symbol *c,
--			      bool is_kernel __maybe_unused)
-+void arch__symbols__fixup_end(struct symbol *p, struct symbol *c, bool is_kernel)
- )
- {
--	if (p->end == p->start || p->end != c->start) {
--		if (strchr(p->name, '[') == NULL && strchr(c->name, '['))
--			/* Limit the range of last kernel symbol */
--			p->end += page_size;
--		else
--			p->end = c->start;
--		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
-+	if (is_kernel && (p->end == p->start || p->end != c->start) &&
-+	    strchr(p->name, '[') == NULL && strchr(c->name, '[')) {
-+		/* Limit the range of last kernel symbol */
-+		p->end += page_size;
-+	} else if (p->end == p->start) {
-+		/* Expand empty symbols. */
-+		p->end = c->start;
- 	}
-+	pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
- }
-diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
-index 8622a1b78748..790d98a39c83 100644
---- a/tools/perf/arch/s390/util/machine.c
-+++ b/tools/perf/arch/s390/util/machine.c
-@@ -42,15 +42,16 @@ int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
-  * and beginning of first module's text segment is very big.
-  * Therefore do not fill this gap and do not assign it to the kernel dso map.
-  */
--void arch__symbols__fixup_end(struct symbol *p, struct symbol *c,
--			      bool is_kernel __maybe_unused)
-+void arch__symbols__fixup_end(struct symbol *p, struct symbol *c, bool is_kernel)
- {
--	if (p->end == p->start || p->end != c->start) {
--		if (strchr(p->name, '[') == NULL && strchr(c->name, '['))
--			/* Last kernel symbol mapped to end of page */
--			p->end = roundup(p->end, page_size);
--		else
--			p->end = c->start;
-+	if (is_kernel && (p->end == p->start || p->end != c->start) &&
-+	    strchr(p->name, '[') == NULL && strchr(c->name, '[')) {
-+		/* Last kernel symbol mapped to end of page */
-+		p->end = roundup(p->end, page_size);
-+		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
-+	} else if (p->end == p->start) {
-+		/* Expand empty symbols. */
-+		p->end = c->start;
- 		pr_debug4("%s sym:%s end:%#" PRIx64 "\n", __func__, p->name, p->end);
- 	}
- }
--- 
-2.35.1.1178.g4f1659d476-goog
+> > > PEER_CORE -> MEM_SNOOP_PEER + L2
+> > > PEER_CLSTR -> MEM_SNOOP_PEER + L3
+> > > PEER_LCL_CLSTR -> MEM_SNOOP_PEER + L3 (since newer neoverse cores don't support
+> > > the clusters and the existing commercial implementations don't have them).
+> > 
+> > Generally, this idea is fine for me.
+> 
+> Great.  
+> 
+> Now the next tricky thing. Since we're not using HITM for recording the memory
+> events, the question becomes for the c2c output should we output the SNOOP_PEER
+> events as if they are HITM events with a clarification in the perf-c2c man page
+> or effectively duplicate all the lcl_hitm logic, which is a fair amount,  in
+> perf c2c to add a column and sort option? 
 
+I think we need to handle both load and store operations in 'perf c2c'
+tool.
+
+For the load operation, in the 'cache line details' view, we need to
+support 'snoop_peer' conlumn; and since Arm SPE doesn't give any data
+source info for store opeartion, so my plan is to add an extra conlumn
+'Other' based on the two existed conlumns 'L1 Hit' and 'L1 Miss'.
+
+Could you leave this part for me?  I will respin my patch set for
+extend 'perf c2c' for this (and hope can support the old Arm SPE trace
+data).
+
+Please note, when you spin new patch set, you need to take care for
+the store operations.  In the current patch set, it will wrongly
+always set L1 hit for all store operations due to the data source
+field is always zero.  My understanding is for all store operations,
+we need to set the cache level as PERF_MEM_LVLNUM_ANY_CACHE and snoop
+type as PERF_MEM_SNOOP_NA.
+
+> > Following your suggestion, if we connect the concepts PoC and PoU in Arm
+> > reference manual, we can extend the snooping mode with MEM_SNOOP_POU
+> > (for PoU) and MEM_SNOOP_POC (for PoC), so:
+> > 
+> > PEER_CORE -> MEM_SNOOP_POU + L2
+> > PEER_LCL_CLSTR -> MEM_SNOOP_POU + L3
+> > PEER_CLSTR -> MEM_SNOOP_POC + L3
+> > 
+> > Seems to me, we could consider for this.  If this is over complexity or
+> > even I said any wrong concepts for this, please use your method.
+> 
+> I think this adds a lot of complexity and reduces clarity. Some systems
+> implement coherent icaches and the PoU would be the L1 cache, others don't so
+> that would be the L2 (or wherever there is a unified cache). Similarly, with the
+> point of coherency, some systems would consider that dram, but other systems
+> have transparent LLCs and it would be the LLC. 
+
+Okay, it's fine for me to move forward to use MEM_SNOOP_PEER as the
+solution.
+
+Since German is looking into this part, @German, if you have any comment
+on this part, just let us know.
+
+Thanks,
+Leo
