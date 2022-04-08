@@ -2,179 +2,195 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04289C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 07:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEBDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 07:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230032AbiDHH2a (ORCPT
+        id S230371AbiDHIBT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Apr 2022 03:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56040 "EHLO
+        Fri, 8 Apr 2022 04:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230003AbiDHH1K (ORCPT
+        with ESMTP id S230164AbiDHIBG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Apr 2022 03:27:10 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBCC36C719;
-        Fri,  8 Apr 2022 00:24:54 -0700 (PDT)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2385QbLS011064;
-        Fri, 8 Apr 2022 07:24:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=lJdUtViZ+9WYK9MNV/wF5jy+0uPy4byFiA3RxmH2wm0=;
- b=K+VOtmnawi47OdFf+Qt8yn4/LWR4Y0m47nb+RNdHebRJh0J/jcj2TWpp6gsGX+sr/zlf
- uZLJwANDoAaUK8JXOpoJkyOJjbRvgg1JeeGeDR2nB+IfTaybXomlT1QRIxB6CPzbk1zL
- UbgbPKAt1Vv+kLUmokAbwwBWaY6DtPfo2gwOxk0+M7ekdhdaNW/EM83V8AQuJKxN1NW6
- IKBuASuq4mSAH0OxKbAsRrtouHGt2Bp511Uhi63zzpyOijePRr70B5lC7foQEv4nk2bO
- ymZ+G+BDuTmTfNxBkYPHG4QkaiTr9d3W6r5KGCow9DZk6z3yE/CXokdwFGSTiL7Wg4sK LA== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3faewhsxhj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Apr 2022 07:24:44 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2387CsSo024440;
-        Fri, 8 Apr 2022 07:24:41 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 3f6e49395m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Apr 2022 07:24:41 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2387Odjp39453024
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Apr 2022 07:24:39 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C9445204F;
-        Fri,  8 Apr 2022 07:24:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.211.146.176])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id EB6EF52051;
-        Fri,  8 Apr 2022 07:24:33 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
-        disgoel@linux.vnet.ibm.com
-Cc:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, srikar@linux.vnet.ibm.com
-Subject: [PATCH V3] testing/selftests/mqueue: Fix mq_perf_tests to free the allocated cpu set
-Date:   Fri,  8 Apr 2022 12:54:31 +0530
-Message-Id: <20220408072431.94947-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+        Fri, 8 Apr 2022 04:01:06 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B79296885;
+        Fri,  8 Apr 2022 00:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649404730; x=1680940730;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=EsIQwB623pK7LxQsrjuDZNk2FugTNnwaePVfitkTM8o=;
+  b=FWh2EXf8Fte5nHoLu4GAEzKo53KuutBEFxf2oS0oNj7A0g6me6NiJcaY
+   zxnFT87UQSn1NzXvCwNOgr1IS2FXSw00Jfh+aUCBBGzKs4kzto3W4lmlm
+   jE4UJONLH7cQEkP721o9L2NgPwhtqjEi040y0IbMUaZzMHBnrnihn/jYL
+   NWhRYIMIidVAlQvBpWHDQrHi5LQ7IzXFRIWvKcz1cBGbqqciOWdMITWVF
+   WkB+lnEh7BGfClOM92WAStQP0utMdlGQELdtUlz8eAGk9iE27pdk+sMvk
+   cbNB8C7p3fM9y3Fe0rY5huYlH+n6rbXGGgEAdeb1gP5vWUGxJ9nDI35xY
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10310"; a="261532712"
+X-IronPort-AV: E=Sophos;i="5.90,244,1643702400"; 
+   d="scan'208";a="261532712"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 00:58:50 -0700
+X-IronPort-AV: E=Sophos;i="5.90,244,1643702400"; 
+   d="scan'208";a="550415742"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.40.214])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 00:58:41 -0700
+Message-ID: <c4ce0947-e21f-d3b1-96b8-f2778a2e35e6@intel.com>
+Date:   Fri, 8 Apr 2022 10:58:35 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: oFSK29UBfSCeQZpUe-fbcXjKIGm8eMPU
-X-Proofpoint-GUID: oFSK29UBfSCeQZpUe-fbcXjKIGm8eMPU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-04-08_02,2022-04-07_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204080038
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.7.0
+Subject: Re: [PATCH v3] perf test tsc: Fix error message report when not
+ supported.
+Content-Language: en-US
+To:     Chengdong Li <brytonlee01@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org
+Cc:     ak@linux.intel.com, likexu@tencent.com, chengdongli@tencent.com
+References: <676075ca-4d5d-7388-61ac-42a0b9f1ed50@intel.com>
+ <20220408021428.18009-1-chengdongli@tencent.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220408021428.18009-1-chengdongli@tencent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The selftest "mqueue/mq_perf_tests.c" use CPU_ALLOC to allocate
-CPU set. This cpu set is used further in pthread_attr_setaffinity_np
-and by pthread_create in the code. But in current code, allocated
-cpu set is not freed.
+On 08/04/2022 5.14, Chengdong Li wrote:
+> By default `perf test tsc` does not return the error message
+> when the child process detected kernel does not support. Instead,
+> the child process print error message to stderr, unfortunately
+> the stderr is redirected to /dev/null when verbose <= 0.
+> 
+> This patch did three things:
+> - returns TEST_SKIP to the parent process instead of TEST_OK when
+>   perf_read_tsc_conversion() is not supported.
+> - add a new subtest of testing if TSC is supported on current
+>   architecture by moving exist code to a separate function.
+>   It avoids two places in test__perf_time_to_tsc() that return
+>   TEST_SKIP by doing this.
+> - extended test suite definition to contain above two subtests.
+>   Current test_suite and test_case structs do not support printing
+>   skip reason when the number of subtest less than 1. To print skip
+>   reason, it is necessary to extend current test suite definition.
+> 
+> Changes since v2:
+> - refine error message format.
+> - refine commit log message according to Adrian's review comments.
+> 
+> Changes since v1 (thanks for the feedback from Adrian Hunter):
+> - rebase commit to current source.
+> 
+> Signed-off-by: Chengdong Li <chengdongli@tencent.com>
 
-Fix this issue by adding CPU_FREE in the "shutdown" function which
-is called in most of the error/exit path for the cleanup. There are
-few error paths which exit without using shutdown. Add a common goto
-error path with CPU_FREE for these cases.
+It is better to try to consistently use the same email address
+for the same person for git logs, unless you have a sensible
+reason not to.
 
-Fixes: 7820b0715b6f ("tools/selftests: add mq_perf_tests")
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
-Changelog:
- From v2 -> v3:
-  Addressed review comment from Shuah Khan to add
-  common "goto" error path with CPU_FREE for few exit
-  cases.
- From v1 -> v2:
-  Addressed review comment from Shuah Khan to add
-  CPU_FREE in other exit paths where it is needed
+So in this case it looks like you should use the same email
+address for the "From:" and "Signed-off-by:".  Note you can
+optionally put the "From:" line before the commit message e.g.
 
- .../testing/selftests/mqueue/mq_perf_tests.c  | 25 +++++++++++++------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+From: Chengdong Li <chengdongli@tencent.com>
 
-diff --git a/tools/testing/selftests/mqueue/mq_perf_tests.c b/tools/testing/selftests/mqueue/mq_perf_tests.c
-index b019e0b8221c..84fda3b49073 100644
---- a/tools/testing/selftests/mqueue/mq_perf_tests.c
-+++ b/tools/testing/selftests/mqueue/mq_perf_tests.c
-@@ -180,6 +180,9 @@ void shutdown(int exit_val, char *err_cause, int line_no)
- 	if (in_shutdown++)
- 		return;
- 
-+	/* Free the cpu_set allocated using CPU_ALLOC in main function */
-+	CPU_FREE(cpu_set);
-+
- 	for (i = 0; i < num_cpus_to_pin; i++)
- 		if (cpu_threads[i]) {
- 			pthread_kill(cpu_threads[i], SIGUSR1);
-@@ -551,6 +554,12 @@ int main(int argc, char *argv[])
- 		perror("sysconf(_SC_NPROCESSORS_ONLN)");
- 		exit(1);
- 	}
-+
-+	if (getuid() != 0)
-+		ksft_exit_skip("Not running as root, but almost all tests "
-+			"require root in order to modify\nsystem settings.  "
-+			"Exiting.\n");
-+
- 	cpus_online = min(MAX_CPUS, sysconf(_SC_NPROCESSORS_ONLN));
- 	cpu_set = CPU_ALLOC(cpus_online);
- 	if (cpu_set == NULL) {
-@@ -589,7 +598,7 @@ int main(int argc, char *argv[])
- 						cpu_set)) {
- 					fprintf(stderr, "Any given CPU may "
- 						"only be given once.\n");
--					exit(1);
-+					goto err_code;
- 				} else
- 					CPU_SET_S(cpus_to_pin[cpu],
- 						  cpu_set_size, cpu_set);
-@@ -607,7 +616,7 @@ int main(int argc, char *argv[])
- 				queue_path = malloc(strlen(option) + 2);
- 				if (!queue_path) {
- 					perror("malloc()");
--					exit(1);
-+					goto err_code;
- 				}
- 				queue_path[0] = '/';
- 				queue_path[1] = 0;
-@@ -622,17 +631,12 @@ int main(int argc, char *argv[])
- 		fprintf(stderr, "Must pass at least one CPU to continuous "
- 			"mode.\n");
- 		poptPrintUsage(popt_context, stderr, 0);
--		exit(1);
-+		goto err_code;
- 	} else if (!continuous_mode) {
- 		num_cpus_to_pin = 1;
- 		cpus_to_pin[0] = cpus_online - 1;
- 	}
- 
--	if (getuid() != 0)
--		ksft_exit_skip("Not running as root, but almost all tests "
--			"require root in order to modify\nsystem settings.  "
--			"Exiting.\n");
--
- 	max_msgs = fopen(MAX_MSGS, "r+");
- 	max_msgsize = fopen(MAX_MSGSIZE, "r+");
- 	if (!max_msgs)
-@@ -740,4 +744,9 @@ int main(int argc, char *argv[])
- 			sleep(1);
- 	}
- 	shutdown(0, "", 0);
-+
-+err_code:
-+	CPU_FREE(cpu_set);
-+	exit(1);
-+
- }
--- 
-2.35.1
+By default `perf test tsc` does not return the error message
+...
+
+
+Otherwise you can add:
+
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+
+
+> ---
+>  tools/perf/tests/perf-time-to-tsc.c | 36 +++++++++++++++++++++--------
+>  1 file changed, 27 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
+> index d12d0ad81801..cc6df49a65a1 100644
+> --- a/tools/perf/tests/perf-time-to-tsc.c
+> +++ b/tools/perf/tests/perf-time-to-tsc.c
+> @@ -47,6 +47,17 @@
+>  	}					\
+>  }
+>  
+> +static int test__tsc_is_supported(struct test_suite *test __maybe_unused,
+> +				  int subtest __maybe_unused)
+> +{
+> +	if (!TSC_IS_SUPPORTED) {
+> +		pr_debug("Test not supported on this architecture\n");
+> +		return TEST_SKIP;
+> +	}
+> +
+> +	return TEST_OK;
+> +}
+> +
+>  /**
+>   * test__perf_time_to_tsc - test converting perf time to TSC.
+>   *
+> @@ -70,7 +81,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+>  	struct perf_cpu_map *cpus = NULL;
+>  	struct evlist *evlist = NULL;
+>  	struct evsel *evsel = NULL;
+> -	int err = -1, ret, i;
+> +	int err = TEST_FAIL, ret, i;
+>  	const char *comm1, *comm2;
+>  	struct perf_tsc_conversion tc;
+>  	struct perf_event_mmap_page *pc;
+> @@ -79,10 +90,6 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+>  	u64 test_time, comm1_time = 0, comm2_time = 0;
+>  	struct mmap *md;
+>  
+> -	if (!TSC_IS_SUPPORTED) {
+> -		pr_debug("Test not supported on this architecture");
+> -		return TEST_SKIP;
+> -	}
+>  
+>  	threads = thread_map__new(-1, getpid(), UINT_MAX);
+>  	CHECK_NOT_NULL__(threads);
+> @@ -124,8 +131,8 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+>  	ret = perf_read_tsc_conversion(pc, &tc);
+>  	if (ret) {
+>  		if (ret == -EOPNOTSUPP) {
+> -			fprintf(stderr, " (not supported)");
+> -			return 0;
+> +			pr_debug("perf_read_tsc_conversion is not supported in current kernel\n");
+> +			err = TEST_SKIP;
+>  		}
+>  		goto out_err;
+>  	}
+> @@ -191,7 +198,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+>  	    test_tsc >= comm2_tsc)
+>  		goto out_err;
+>  
+> -	err = 0;
+> +	err = TEST_OK;
+>  
+>  out_err:
+>  	evlist__delete(evlist);
+> @@ -200,4 +207,15 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+>  	return err;
+>  }
+>  
+> -DEFINE_SUITE("Convert perf time to TSC", perf_time_to_tsc);
+> +static struct test_case time_to_tsc_tests[] = {
+> +	TEST_CASE_REASON("TSC support", tsc_is_supported,
+> +			 "This architecture does not support"),
+> +	TEST_CASE_REASON("Perf time to TSC", perf_time_to_tsc,
+> +			 "perf_read_tsc_conversion is not supported"),
+> +	{ .name = NULL, }
+> +};
+> +
+> +struct test_suite suite__perf_time_to_tsc = {
+> +	.desc = "Convert perf time to TSC",
+> +	.test_cases = time_to_tsc_tests,
+> +};
 
