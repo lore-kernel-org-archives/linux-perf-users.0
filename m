@@ -2,137 +2,183 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6862C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 01:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C1AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 02:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233315AbiDHBVE (ORCPT
+        id S232058AbiDHCRN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 21:21:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
+        Thu, 7 Apr 2022 22:17:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbiDHBVD (ORCPT
+        with ESMTP id S231215AbiDHCRM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 21:21:03 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6329E5E32
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 18:19:01 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id r13so14339605ejd.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 18:19:01 -0700 (PDT)
+        Thu, 7 Apr 2022 22:17:12 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB94C268986;
+        Thu,  7 Apr 2022 19:15:09 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id n18so6676802plg.5;
+        Thu, 07 Apr 2022 19:15:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ZBbnVt+YQv3guhlNFNXJxYGqdHwC1mgzxEzBpvoB+SY=;
-        b=w0q8eVRm7h8rkmWA6aK++gCu1l3MsYOxmQ4NRzxqJmQPLXXIlRpBBIDfMzmDHECr7t
-         TtW7WfmaPG3TgJXIbeOvoAEpjAFJfTf6e8jkEM8/qC4/WqEzi5oVjtegKjbhJjdwaqfv
-         MQkSGt/u4A3k8V1cQDTccN7ypBxGvfg1BimSUF69kO0VkckMQJ2M37o6hp56SSyC8jmD
-         ublaU+qy3+GSGXDg6f9rWwoI4T46vRUMl5F46DQYG8RajzVrYxiQJsnil81wzJXoRYJh
-         K+w0IVmThRPv22Egt4dhG8A8BhD5shYjWWXo3tbE7zDIykX+0j47Ah+yAMNIerVOUfI/
-         3l+g==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eaTn1UD2941ACHdvLV5KXK7aQnz8AqsgTtEV29TgNb4=;
+        b=gfVls0S5RExmb2wfxxa8AxWIfLg/2ToNLqQRGizg8/ZyQK4LRK7mx/JJKPuowsjWPt
+         zaOCkoq69qZP5TyzLA57gha0z5qlcuqFL45g8sfVrpVcbDgtQOuF1pfiPr3rCmgKMb6H
+         6i8jngKHecSmLOP6j8REwui4ESfGri2JM0FuYE8CftXEJkT58iqZir4ubApNV6TVsIOa
+         pDaevCb934NI17jxM0fdyyHzquVIN8EQEeL1cu7vP5PBn0njbDcWHZm0O6b+N9myoKlN
+         wcriA5kv3wLIC+wPNlAp8Yee80m/u7vp+VCDXZ5AYGsGAn2/jq7jik0en+HC54uiTMil
+         eTRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZBbnVt+YQv3guhlNFNXJxYGqdHwC1mgzxEzBpvoB+SY=;
-        b=V4sBvedxyoGICExf45WFPt3Vo32+QxvvUQw7aSV5tjOzuet2aGgZOI/UIt4XbOkAwI
-         M5NoOP2zLKf3uDfQU9e+bgG2HSFFTGSmLxFWZ0Z2OjJCeBwZKDizVxkKJXaP6kKw64cp
-         TqzMbv+nJpzCYA/LXqRijagdjWviAf7stE7I5ofx6zKd4wAcQFUyi+TlVUJWxvA/qjJy
-         nVoz9NLjA78B2mGq7ayLuK5xtDY85fyXeydIqNQc6OtwYgHpC1JmYxQqAL+AZwlPx+fw
-         +Hrfy37MP6VzhXjYYFVl7Avxw94cnaDZAxt19bWzSWIjMs9uXs72ngAeWSnF8SEcIvu1
-         +tlg==
-X-Gm-Message-State: AOAM532nSBYO6BmrESccJRhfxbFNPJWbBXcnY+57pIBVpa/fYDFhMa08
-        0G3LJ6fe1erwDCM/dj/IvZ0hXA==
-X-Google-Smtp-Source: ABdhPJwjkYqFIWmuU4xWDx/TspNGWQHzwEtaxjVLRLgAWrEaj1cS5hqzQdLBd4FyyYZWUiMFo0jjAA==
-X-Received: by 2002:a17:907:c21:b0:6e6:f1f3:ba77 with SMTP id ga33-20020a1709070c2100b006e6f1f3ba77mr16565078ejc.686.1649380740204;
-        Thu, 07 Apr 2022 18:19:00 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id n6-20020aa7c786000000b00410d2403ccfsm9807040eds.21.2022.04.07.18.18.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Apr 2022 18:18:59 -0700 (PDT)
-Date:   Fri, 8 Apr 2022 09:18:52 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Ali Saidi <alisaidi@amazon.com>, Nick.Forrington@arm.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andrew.kilroy@arm.com, benh@kernel.crashing.org,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
- cores
-Message-ID: <20220408011852.GB973239@leoy-ThinkPad-X240s>
-References: <20220328130547.GA360814@leoy-ThinkPad-X240s>
- <20220329143214.12707-1-alisaidi@amazon.com>
- <4710b4b2-5dcd-00a4-3976-1bd5340f401d@arm.com>
- <20220331124425.GB1704284@leoy-ThinkPad-X240s>
- <da902ef2-df87-ed71-275b-f7b41d1afc9a@arm.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eaTn1UD2941ACHdvLV5KXK7aQnz8AqsgTtEV29TgNb4=;
+        b=myqcazGgBPcKCt2rK+AGq/jQeU2oP1Nyz8TEck2+PiwVrfKpP5DxOZJ3xLuMlb6+He
+         ZYVbjaq3YX4J7R6lCls5hX7bcAMiSp4syXnG+FsFBgYzrc1vDcZtI/49fkZFpn6onciC
+         5lRJhoEaFyvyokTNYWcKAu4m0R3eXDqcgDGKLQ7ocf63d5ryVU0DHtThp75iiOfwlurO
+         78tsHikQmp8JM9nM1TSlHOkDPXaIR4hky9YkJkr75P+JwbVA4+Ex5zCcUMWu1p1wiaYC
+         Bp6zUGUsTQr84Hcy37R/b2zCCtyXa40xqyJbL369oq6G9JqICpESotC6EkCSuNjdyhRS
+         uxhA==
+X-Gm-Message-State: AOAM532iUghcmi7hVGBJt/DVY2XdIJHgVCpiiWGCufQbis0AjwoqyXUr
+        ifUM/EATpF4fYdGRvIVBT3k=
+X-Google-Smtp-Source: ABdhPJwhDNKvqQnN8Er5QxbqbkFYHfAdgsWhosx8jFAdhg85i/qHK6nlIdPaPCzTm5rd9fRcujpPfw==
+X-Received: by 2002:a17:902:6acc:b0:149:8f60:a526 with SMTP id i12-20020a1709026acc00b001498f60a526mr16980935plt.25.1649384109413;
+        Thu, 07 Apr 2022 19:15:09 -0700 (PDT)
+Received: from CHENGDONGLI-MB0.localdomain ([203.205.141.113])
+        by smtp.gmail.com with ESMTPSA id s10-20020a056a00178a00b004fda49fb25dsm24069652pfg.9.2022.04.07.19.15.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Apr 2022 19:15:08 -0700 (PDT)
+From:   Chengdong Li <brytonlee01@gmail.com>
+X-Google-Original-From: Chengdong Li <chengdongli@tencent.com>
+Received: by CHENGDONGLI-MB0.localdomain (Postfix, from userid 501)
+        id 8E1836D5C455; Fri,  8 Apr 2022 10:15:05 +0800 (CST)
+To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org
+Cc:     ak@linux.intel.com, likexu@tencent.com, chengdongli@tencent.com
+Subject: [PATCH v3] perf test tsc: Fix error message report when not supported.
+Date:   Fri,  8 Apr 2022 10:14:28 +0800
+Message-Id: <20220408021428.18009-1-chengdongli@tencent.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <676075ca-4d5d-7388-61ac-42a0b9f1ed50@intel.com>
+References: <676075ca-4d5d-7388-61ac-42a0b9f1ed50@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <da902ef2-df87-ed71-275b-f7b41d1afc9a@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 07, 2022 at 04:24:35PM +0100, German Gomez wrote:
-> Hi,
-> 
-> On 31/03/2022 13:44, Leo Yan wrote:
-> > [...]
-> >>> I'd like to do this in a separate patch, but I have one other proposal. The
-> >>> Neoverse cores L2 is strictly inclusive of the L1, so even if it's in the L1,
-> >>> it's also in the L2. Given that the Graviton systems and afaik the Ampere
-> >>> systems don't have any cache between the L2 and the SLC, thus anything from
-> >>> PEER_CORE, LCL_CLSTR, or PEER_CLSTR would hit in the L2, perhaps we
-> >>> should just set L2 for these cases? German, are you good with this for now? 
-> >> Sorry for the delay. I'd like to also check this with someone. I'll try
-> >> to get back asap. In the meantime, if this approach is also OK with Leo,
-> >> I think it would be fine by me.
-> 
-> Sorry for the delay. Yeah setting it to L2 indeed looks reasonable for
-> now. Somebody brought up the case of running SPE in a heterogeneous 
-> system, but also we think might be beyond the scope of this change.
-> 
-> One very minor nit though. Would you be ok with renaming LCL to LOCAL 
-> and CLSTR to CLUSTER? I sometimes mistead the former as "LLC".
+By default `perf test tsc` does not return the error message
+when the child process detected kernel does not support. Instead,
+the child process print error message to stderr, unfortunately
+the stderr is redirected to /dev/null when verbose <= 0.
 
-Ali's suggestion is to use the format: highest_cache_level | MEM_SNOOP_PEER.
+This patch did three things:
+- returns TEST_SKIP to the parent process instead of TEST_OK when
+  perf_read_tsc_conversion() is not supported.
+- add a new subtest of testing if TSC is supported on current
+  architecture by moving exist code to a separate function.
+  It avoids two places in test__perf_time_to_tsc() that return
+  TEST_SKIP by doing this.
+- extended test suite definition to contain above two subtests.
+  Current test_suite and test_case structs do not support printing
+  skip reason when the number of subtest less than 1. To print skip
+  reason, it is necessary to extend current test suite definition.
 
-Simply to say, the highest cache level is where we snoop the cache
-data with the highest cache level.  And we use an extra snoop op
-MEM_SNOOP_PEER as the flag to indicate a peer snooping from the local
-cluster or peer cluster.
+Changes since v2:
+- refine error message format.
+- refine commit log message according to Adrian's review comments.
 
-Please review the more detailed discussion in another email.
+Changes since v1 (thanks for the feedback from Adrian Hunter):
+- rebase commit to current source.
 
-> > Thanks for the checking internally.  Let me just bring up my another
-> > thinking (sorry that my suggestion is float): another choice is we set
-> > ANY_CACHE as cache level if we are not certain the cache level, and
-> > extend snoop field to indicate the snooping logics, like:
-> >
-> >   PERF_MEM_SNOOP_PEER_CORE
-> >   PERF_MEM_SNOOP_LCL_CLSTR
-> >   PERF_MEM_SNOOP_PEER_CLSTR
-> >
-> > Seems to me, we doing this is not only for cache level, it's more
-> > important for users to know the variant cost for involving different
-> > snooping logics.
-> >
-> I see there's been some more messages I need to catch up with. Is the 
-> intention to extend the PERF_MEM_* flags for this cset, or will it be
-> left for a later change?
+Signed-off-by: Chengdong Li <chengdongli@tencent.com>
+---
+ tools/perf/tests/perf-time-to-tsc.c | 36 +++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
-The plan is to extend the PERF_MEM_* flags in this patch set.
+diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
+index d12d0ad81801..cc6df49a65a1 100644
+--- a/tools/perf/tests/perf-time-to-tsc.c
++++ b/tools/perf/tests/perf-time-to-tsc.c
+@@ -47,6 +47,17 @@
+ 	}					\
+ }
+ 
++static int test__tsc_is_supported(struct test_suite *test __maybe_unused,
++				  int subtest __maybe_unused)
++{
++	if (!TSC_IS_SUPPORTED) {
++		pr_debug("Test not supported on this architecture\n");
++		return TEST_SKIP;
++	}
++
++	return TEST_OK;
++}
++
+ /**
+  * test__perf_time_to_tsc - test converting perf time to TSC.
+  *
+@@ -70,7 +81,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+ 	struct perf_cpu_map *cpus = NULL;
+ 	struct evlist *evlist = NULL;
+ 	struct evsel *evsel = NULL;
+-	int err = -1, ret, i;
++	int err = TEST_FAIL, ret, i;
+ 	const char *comm1, *comm2;
+ 	struct perf_tsc_conversion tc;
+ 	struct perf_event_mmap_page *pc;
+@@ -79,10 +90,6 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+ 	u64 test_time, comm1_time = 0, comm2_time = 0;
+ 	struct mmap *md;
+ 
+-	if (!TSC_IS_SUPPORTED) {
+-		pr_debug("Test not supported on this architecture");
+-		return TEST_SKIP;
+-	}
+ 
+ 	threads = thread_map__new(-1, getpid(), UINT_MAX);
+ 	CHECK_NOT_NULL__(threads);
+@@ -124,8 +131,8 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+ 	ret = perf_read_tsc_conversion(pc, &tc);
+ 	if (ret) {
+ 		if (ret == -EOPNOTSUPP) {
+-			fprintf(stderr, " (not supported)");
+-			return 0;
++			pr_debug("perf_read_tsc_conversion is not supported in current kernel\n");
++			err = TEST_SKIP;
+ 		}
+ 		goto out_err;
+ 	}
+@@ -191,7 +198,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+ 	    test_tsc >= comm2_tsc)
+ 		goto out_err;
+ 
+-	err = 0;
++	err = TEST_OK;
+ 
+ out_err:
+ 	evlist__delete(evlist);
+@@ -200,4 +207,15 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+ 	return err;
+ }
+ 
+-DEFINE_SUITE("Convert perf time to TSC", perf_time_to_tsc);
++static struct test_case time_to_tsc_tests[] = {
++	TEST_CASE_REASON("TSC support", tsc_is_supported,
++			 "This architecture does not support"),
++	TEST_CASE_REASON("Perf time to TSC", perf_time_to_tsc,
++			 "perf_read_tsc_conversion is not supported"),
++	{ .name = NULL, }
++};
++
++struct test_suite suite__perf_time_to_tsc = {
++	.desc = "Convert perf time to TSC",
++	.test_cases = time_to_tsc_tests,
++};
+-- 
+2.27.0
 
-> In any case, I'd be keen to take another look at it and try to bring
-> some more eyes into this.
-
-Sure.  Please check at your side and thanks for confirmation.
-
-Thanks,
-Leo
