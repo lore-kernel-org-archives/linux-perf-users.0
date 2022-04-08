@@ -2,174 +2,201 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D68C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 03:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77404C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 07:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234060AbiDHD7J (ORCPT
+        id S230008AbiDHH21 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 23:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33434 "EHLO
+        Fri, 8 Apr 2022 03:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234088AbiDHD6l (ORCPT
+        with ESMTP id S230036AbiDHH2P (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 23:58:41 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45FB7E72A6
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 20:56:34 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id a143-20020a25ca95000000b0063d8415a03dso5720387ybg.23
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 20:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=xZ10IcINVF8NaTdbFdZL+w7KjQhTRKJQcz6epMPOOOM=;
-        b=J4qvkXu5Auw7V3C2S/vvXFegiHFo9mQHd6ao3pTChQVYX52sQr8dniWFYnHQm0j3st
-         bEHb9vfsR+oLWFuAcQDlvK2q3VkZl8tQz1YYKUO4LP7/LugavDcnOzpgkv3zYe6dVZWU
-         2gila+WXN4yuqAs0Y/8n5CcZVof5ozNa+BQYvOMd9I5gede5kj5HR53kdkNQRgAduvi9
-         GK/7tWnOc6YXNAc8OtiGBNX4Dx9baemHfXsWm3UpV3cEKIbPRr1uTbrXOndoU8gLi5HL
-         +EQ8BatF2gFnpVHfijt7yca9E1HUzPitJL5yYGKSHLpDVuWJuUNgZs4nUsNKC2CAMt0X
-         qV2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=xZ10IcINVF8NaTdbFdZL+w7KjQhTRKJQcz6epMPOOOM=;
-        b=m4kNd65vY6cRp9uAuINznv1us/lCxur6oSie6rLBqSi91WQVyVG/wI3cL6uoOBy4U9
-         z7VWIOLU+fvuBtvU6h8bS8knxwtXjrFea8RPCnjydYPbXBTYmt4TX0HCZg3D19iaRnJT
-         6sCeUaCO+37D4w1S5Jg3aoPQtdk9P6xNexRHGS597nBYL4HQb7qFZLHtOOw9UYUse2ga
-         VLGt9MRFyZCJ3Gj2hFhsPNo+wGmL7P27ZpD0gan06Bzd0k9aMKO9w3trdp4SpbPnZ8TC
-         HPTNYpeE+jcv13mXMQEm5ACxT7Z9989mTJEHZFbWU4aZNQNtxL0DphO4va2gRTLLh/9C
-         8TyA==
-X-Gm-Message-State: AOAM5316bhC+a3f+yHf6gf3WR0cG6mIVTuj6/2S+lx0uO9AQLc71qO/I
-        rY/Quo2g6Guhlf2h+KPvw4LGlVWaZJTS
-X-Google-Smtp-Source: ABdhPJy+FeSzHm3EOgknn5QLY35sfKLCgJaxnhbi0GFsA4RgFhAgYugNlhNtSIbfmK85JSq7ivRl2ioHGYzK
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:560:aa27:649e:a07d])
- (user=irogers job=sendgmr) by 2002:a25:8546:0:b0:61e:1d34:ec71 with SMTP id
- f6-20020a258546000000b0061e1d34ec71mr11434496ybn.259.1649390193853; Thu, 07
- Apr 2022 20:56:33 -0700 (PDT)
-Date:   Thu,  7 Apr 2022 20:56:16 -0700
-In-Reply-To: <20220408035616.1356953-1-irogers@google.com>
-Message-Id: <20220408035616.1356953-6-irogers@google.com>
-Mime-Version: 1.0
-References: <20220408035616.1356953-1-irogers@google.com>
-X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
-Subject: [PATCH v3 5/5] perf test: Combine cpu map tests into 1 suite
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 8 Apr 2022 03:28:15 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E5824BD4E;
+        Fri,  8 Apr 2022 00:26:09 -0700 (PDT)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2385R2GY012011;
+        Fri, 8 Apr 2022 07:26:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=iucbixVGgvNKncTrN9r2EzWUCoseJpaiWsweIa8blg8=;
+ b=HmxUC2RqOZPDYsnqmuZ+EEukjuHv/FT68sa9FX0g1Kvla6WyJ7I0eRx4WnLJrJkiqXbx
+ kTNBqBh3TmWDGPlCX8Gc/m0elFpNnZXEOljMxEcmgwQ1Rlv+6Ewa6eqzOt5lDQvV5M77
+ 5nrhDsOSWWZ7727wTq3MRSSESYhe4BfSHsm0AN2bl+zxmsnskK+v+gBQ7BSag+kYTHFD
+ yzpIn3AfXsUGEeuvugSVeGSdoVu7kx6wPtQDqy4b45h6rDDc9K/rqwPsiFwH/ui+xG6v
+ EMF01lIQVy0bIxsq0K60rmnjobPHuJBqn4IL54x+qwhWCGVsLxNfRBnA2UILogiY+bYx uw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3faewhsy8v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Apr 2022 07:26:01 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2387Ct8N024454;
+        Fri, 8 Apr 2022 07:25:58 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 3f6e493974-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Apr 2022 07:25:58 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2387Pu6a40304998
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Apr 2022 07:25:56 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A7C75204F;
+        Fri,  8 Apr 2022 07:25:56 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.211.146.176])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id CDEDC52052;
+        Fri,  8 Apr 2022 07:25:50 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: [PATCH V2] testing/selftests/mqueue: Fix mq_perf_tests to free
+ the allocated cpu set
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <e9c8a8c7-9a0d-09be-343d-038b7f791b98@linuxfoundation.org>
+Date:   Fri, 8 Apr 2022 12:55:46 +0530
+Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
+        disgoel@linux.vnet.ibm.com,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        maddy@linux.vnet.ibm.com, kajoljain <kjain@linux.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <03A2A043-D434-49F2-B5D0-0886493B6627@linux.vnet.ibm.com>
+References: <20220407184008.93879-1-atrajeev@linux.vnet.ibm.com>
+ <e9c8a8c7-9a0d-09be-343d-038b7f791b98@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: CgqWc5Pe_JWR8dyOqjNncH6J5mzPkgmv
+X-Proofpoint-GUID: CgqWc5Pe_JWR8dyOqjNncH6J5mzPkgmv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-04-08_02,2022-04-07_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204080038
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Combine related CPU map tests into 1 suite reducing global state.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/builtin-test.c |  5 +----
- tools/perf/tests/cpumap.c       | 16 ++++++++++++----
- tools/perf/tests/tests.h        |  5 +----
- 3 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index dffa41e7ee20..1941ae52e8b6 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -79,16 +79,13 @@ static struct test_suite *generic_tests[] = {
- 	&suite__bpf,
- 	&suite__thread_map_synthesize,
- 	&suite__thread_map_remove,
--	&suite__cpu_map_synthesize,
-+	&suite__cpu_map,
- 	&suite__synthesize_stat_config,
- 	&suite__synthesize_stat,
- 	&suite__synthesize_stat_round,
- 	&suite__event_update,
- 	&suite__event_times,
- 	&suite__backward_ring_buffer,
--	&suite__cpu_map_print,
--	&suite__cpu_map_merge,
--	&suite__cpu_map_intersect,
- 	&suite__sdt_event,
- 	&suite__is_printable_array,
- 	&suite__bitmap_print,
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 112331829414..fc124757a082 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -187,7 +187,15 @@ static int test__cpu_map_intersect(struct test_suite *test __maybe_unused, int s
- 	return ret;
- }
- 
--DEFINE_SUITE("Synthesize cpu map", cpu_map_synthesize);
--DEFINE_SUITE("Print cpu map", cpu_map_print);
--DEFINE_SUITE("Merge cpu map", cpu_map_merge);
--DEFINE_SUITE("Intersect cpu map", cpu_map_intersect);
-+static struct test_case cpu_map_tests[] = {
-+	TEST_CASE("Synthesize cpu map", cpu_map_synthesize),
-+	TEST_CASE("Print cpu map", cpu_map_print),
-+	TEST_CASE("Merge cpu map", cpu_map_merge),
-+	TEST_CASE("Intersect cpu map", cpu_map_intersect),
-+	{ .name = NULL, }
-+};
-+
-+struct test_suite suite__cpu_map = {
-+	.desc = "CPU map",
-+	.test_cases = cpu_map_tests,
-+};
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index f2823c4859b8..895803fdedc4 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -118,16 +118,13 @@ DECLARE_SUITE(bpf);
- DECLARE_SUITE(session_topology);
- DECLARE_SUITE(thread_map_synthesize);
- DECLARE_SUITE(thread_map_remove);
--DECLARE_SUITE(cpu_map_synthesize);
-+DECLARE_SUITE(cpu_map);
- DECLARE_SUITE(synthesize_stat_config);
- DECLARE_SUITE(synthesize_stat);
- DECLARE_SUITE(synthesize_stat_round);
- DECLARE_SUITE(event_update);
- DECLARE_SUITE(event_times);
- DECLARE_SUITE(backward_ring_buffer);
--DECLARE_SUITE(cpu_map_print);
--DECLARE_SUITE(cpu_map_merge);
--DECLARE_SUITE(cpu_map_intersect);
- DECLARE_SUITE(sdt_event);
- DECLARE_SUITE(is_printable_array);
- DECLARE_SUITE(bitmap_print);
--- 
-2.35.1.1178.g4f1659d476-goog
+> On 08-Apr-2022, at 12:31 AM, Shuah Khan <skhan@linuxfoundation.org> =
+wrote:
+>=20
+> On 4/7/22 12:40 PM, Athira Rajeev wrote:
+>> The selftest "mqueue/mq_perf_tests.c" use CPU_ALLOC to allocate
+>> CPU set. This cpu set is used further in pthread_attr_setaffinity_np
+>> and by pthread_create in the code. But in current code, allocated
+>> cpu set is not freed.
+>> Fix this issue by adding CPU_FREE in the "shutdown" function which
+>> is called in most of the error/exit path for the cleanup. Also add
+>> CPU_FREE in some of the error paths where shutdown is not called.
+>> Fixes: 7820b0715b6f ("tools/selftests: add mq_perf_tests")
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> Changelog:
+>> =46rom v1 -> v2:
+>>  Addressed review comment from Shuah Khan to add
+>>  CPU_FREE in other exit paths where it is needed
+>=20
+> Thank you. I have a couple of comments on making the error
+> paths simpler. Please see below.
+>=20
+>>  tools/testing/selftests/mqueue/mq_perf_tests.c | 10 +++++++++-
+>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>> diff --git a/tools/testing/selftests/mqueue/mq_perf_tests.c =
+b/tools/testing/selftests/mqueue/mq_perf_tests.c
+>> index b019e0b8221c..182434c7898d 100644
+>> --- a/tools/testing/selftests/mqueue/mq_perf_tests.c
+>> +++ b/tools/testing/selftests/mqueue/mq_perf_tests.c
+>> @@ -180,6 +180,9 @@ void shutdown(int exit_val, char *err_cause, int =
+line_no)
+>>  	if (in_shutdown++)
+>>  		return;
+>>  +	/* Free the cpu_set allocated using CPU_ALLOC in main function =
+*/
+>> +	CPU_FREE(cpu_set);
+>> +
+>>  	for (i =3D 0; i < num_cpus_to_pin; i++)
+>>  		if (cpu_threads[i]) {
+>>  			pthread_kill(cpu_threads[i], SIGUSR1);
+>> @@ -589,6 +592,7 @@ int main(int argc, char *argv[])
+>>  						cpu_set)) {
+>>  					fprintf(stderr, "Any given CPU =
+may "
+>>  						"only be given =
+once.\n");
+>> +					CPU_FREE(cpu_set);
+>=20
+> This could be done in a common error path handling.
+>=20
+>>  					exit(1);
+>>  				} else
+>>  					CPU_SET_S(cpus_to_pin[cpu],
+>> @@ -607,6 +611,7 @@ int main(int argc, char *argv[])
+>>  				queue_path =3D malloc(strlen(option) + =
+2);
+>>  				if (!queue_path) {
+>>  					perror("malloc()");
+>> +					CPU_FREE(cpu_set);
+>=20
+> This could be done in a common error path handling.
+>=20
+>>  					exit(1);
+>>  				}
+>>  				queue_path[0] =3D '/';
+>> @@ -619,6 +624,7 @@ int main(int argc, char *argv[])
+>>  	}
+>>    	if (continuous_mode && num_cpus_to_pin =3D=3D 0) {
+>> +		CPU_FREE(cpu_set);
+>=20
+> This could be done in a common error path handling.
+>=20
+>>  		fprintf(stderr, "Must pass at least one CPU to =
+continuous "
+>>  			"mode.\n");
+>>  		poptPrintUsage(popt_context, stderr, 0);
+>> @@ -628,10 +634,12 @@ int main(int argc, char *argv[])
+>>  		cpus_to_pin[0] =3D cpus_online - 1;
+>>  	}
+>>  -	if (getuid() !=3D 0)
+>> +	if (getuid() !=3D 0) {
+>> +		CPU_FREE(cpu_set);
+>>  		ksft_exit_skip("Not running as root, but almost all =
+tests "
+>>  			"require root in order to modify\nsystem =
+settings.  "
+>>  			"Exiting.\n");
+>> +	}
+>> =20
+>=20
+> Why not move this check before CPU_ALLOC and make this the very first
+> check in main()?
+>=20
+> With this change the other places where CPU_FREE is added right before
+> exit(1). Something like this:
+>=20
+> err_code:
+> 	CPU_FREE(cpu_set);
+> 	exit(code)
+Hi Shuah
+
+Thanks for the comments. Addressed these in V3
+
+Athira
+>=20
+>>  	max_msgs =3D fopen(MAX_MSGS, "r+");
+>>  	max_msgsize =3D fopen(MAX_MSGSIZE, "r+");
+>=20
+> thanks,
+> -- Shuah
 
