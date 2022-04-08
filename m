@@ -2,59 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F84BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 01:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6862C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 01:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233288AbiDHBIu (ORCPT
+        id S233315AbiDHBVE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 21:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
+        Thu, 7 Apr 2022 21:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233219AbiDHBIt (ORCPT
+        with ESMTP id S230169AbiDHBVD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 21:08:49 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4942610FDF8
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 18:06:47 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id w7so7047213pfu.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 18:06:47 -0700 (PDT)
+        Thu, 7 Apr 2022 21:21:03 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6329E5E32
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 18:19:01 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id r13so14339605ejd.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 18:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L9V8khs2Pw9oU0MoU+h4vOiXzP1pcSaWg3ChFlkePHo=;
-        b=vo6sJW3cBrcN6VOxtEd/FAbg7J4ohvujEc1YI4GFeoJGmubYimrIMWVg4e0SLCS9Vj
-         spa5FKQkLJaElouFG7Eucrhp+SDVBXLSKlmpDfjUlhmkX0XEDlvcKuIi/POHIBlyJvAP
-         rmzeqAM+ByuXCtq4ZThmrWSVfq/N6otsXfCQaaK6Dw4IDAzpiIcze7d2mgQiZTTjkDQf
-         gNLQqaKqr0ui7cMTfO9SlJOub05PARpSUvGFFD95r0xmCzsewchhT4RCaRg9Zlya3V5V
-         Idc8Si5TdIz9d68/Gg7bJRcw6XR5iA9PKeJEXPIXVBlaHqTHcifguf2AeFl2C8rPyBVx
-         o4oA==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ZBbnVt+YQv3guhlNFNXJxYGqdHwC1mgzxEzBpvoB+SY=;
+        b=w0q8eVRm7h8rkmWA6aK++gCu1l3MsYOxmQ4NRzxqJmQPLXXIlRpBBIDfMzmDHECr7t
+         TtW7WfmaPG3TgJXIbeOvoAEpjAFJfTf6e8jkEM8/qC4/WqEzi5oVjtegKjbhJjdwaqfv
+         MQkSGt/u4A3k8V1cQDTccN7ypBxGvfg1BimSUF69kO0VkckMQJ2M37o6hp56SSyC8jmD
+         ublaU+qy3+GSGXDg6f9rWwoI4T46vRUMl5F46DQYG8RajzVrYxiQJsnil81wzJXoRYJh
+         K+w0IVmThRPv22Egt4dhG8A8BhD5shYjWWXo3tbE7zDIykX+0j47Ah+yAMNIerVOUfI/
+         3l+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L9V8khs2Pw9oU0MoU+h4vOiXzP1pcSaWg3ChFlkePHo=;
-        b=YIBiGIPjhgeP1KuO2jb5ngVGVrN93eQgGEjkGl7OEoWv6+QkpTBRCPKGDfsTJKRzoy
-         TrEJpN0zkcivG2fjPMXKpEEhQsu7rL29daeJc+dyw0lBkIF1EFQPaYAmZVhXCQ37s3ug
-         pckFz3Co2Hkr1GcchgcA4CoH1ukrUBEPDfZWzbG3xkVpYoHzhvUmXTQXzSdFFCwZB2Gz
-         1O+/8JBJkpatp8SKTXDJh/uxQOfclakO8r/TEAFjm11JSwNxrTy6eeHMSU+XL+qhcYo/
-         G9Tj1i2WnF5pbcRNaHJm75KzP3GAYpHOZ293e97ui4nUIHGovPPxcd5XkygOJcvLc5Nf
-         25eA==
-X-Gm-Message-State: AOAM53242rDDczk79yu3w5tNAtVKWHq1t1eQusdfPhEyyRjmX0nn1nVR
-        VrqUjVAsbwvyOMjP1AcLsrdLWg==
-X-Google-Smtp-Source: ABdhPJzbk8Fz0L2VMqW+YNbTDb7UYvDsO8em7MsCInr1vKUKjCrkwBfYbotqI1S94QdwLgc1/2hCpw==
-X-Received: by 2002:a05:6a00:3316:b0:4fa:80fd:f3f6 with SMTP id cq22-20020a056a00331600b004fa80fdf3f6mr16682002pfb.65.1649380006462;
-        Thu, 07 Apr 2022 18:06:46 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id a11-20020a056a000c8b00b004fade889fb3sm25226056pfv.18.2022.04.07.18.06.38
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZBbnVt+YQv3guhlNFNXJxYGqdHwC1mgzxEzBpvoB+SY=;
+        b=V4sBvedxyoGICExf45WFPt3Vo32+QxvvUQw7aSV5tjOzuet2aGgZOI/UIt4XbOkAwI
+         M5NoOP2zLKf3uDfQU9e+bgG2HSFFTGSmLxFWZ0Z2OjJCeBwZKDizVxkKJXaP6kKw64cp
+         TqzMbv+nJpzCYA/LXqRijagdjWviAf7stE7I5ofx6zKd4wAcQFUyi+TlVUJWxvA/qjJy
+         nVoz9NLjA78B2mGq7ayLuK5xtDY85fyXeydIqNQc6OtwYgHpC1JmYxQqAL+AZwlPx+fw
+         +Hrfy37MP6VzhXjYYFVl7Avxw94cnaDZAxt19bWzSWIjMs9uXs72ngAeWSnF8SEcIvu1
+         +tlg==
+X-Gm-Message-State: AOAM532nSBYO6BmrESccJRhfxbFNPJWbBXcnY+57pIBVpa/fYDFhMa08
+        0G3LJ6fe1erwDCM/dj/IvZ0hXA==
+X-Google-Smtp-Source: ABdhPJwjkYqFIWmuU4xWDx/TspNGWQHzwEtaxjVLRLgAWrEaj1cS5hqzQdLBd4FyyYZWUiMFo0jjAA==
+X-Received: by 2002:a17:907:c21:b0:6e6:f1f3:ba77 with SMTP id ga33-20020a1709070c2100b006e6f1f3ba77mr16565078ejc.686.1649380740204;
+        Thu, 07 Apr 2022 18:19:00 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([104.245.96.34])
+        by smtp.gmail.com with ESMTPSA id n6-20020aa7c786000000b00410d2403ccfsm9807040eds.21.2022.04.07.18.18.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Apr 2022 18:06:45 -0700 (PDT)
-Date:   Fri, 8 Apr 2022 09:06:35 +0800
+        Thu, 07 Apr 2022 18:18:59 -0700 (PDT)
+Date:   Fri, 8 Apr 2022 09:18:52 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     Nick.Forrington@arm.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, german.gomez@arm.com,
+To:     German Gomez <german.gomez@arm.com>
+Cc:     Ali Saidi <alisaidi@amazon.com>, Nick.Forrington@arm.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, benh@kernel.crashing.org,
         james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
         kjain@linux.ibm.com, lihuafei1@huawei.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -63,79 +64,75 @@ Cc:     Nick.Forrington@arm.com, acme@kernel.org,
         peterz@infradead.org, will@kernel.org
 Subject: Re: [PATCH v4 2/4] perf arm-spe: Use SPE data source for neoverse
  cores
-Message-ID: <20220408010635.GA973239@leoy-ThinkPad-X240s>
-References: <20220404151218.GA898573@leoy-ThinkPad-X240s>
- <20220406210017.11887-1-alisaidi@amazon.com>
+Message-ID: <20220408011852.GB973239@leoy-ThinkPad-X240s>
+References: <20220328130547.GA360814@leoy-ThinkPad-X240s>
+ <20220329143214.12707-1-alisaidi@amazon.com>
+ <4710b4b2-5dcd-00a4-3976-1bd5340f401d@arm.com>
+ <20220331124425.GB1704284@leoy-ThinkPad-X240s>
+ <da902ef2-df87-ed71-275b-f7b41d1afc9a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220406210017.11887-1-alisaidi@amazon.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <da902ef2-df87-ed71-275b-f7b41d1afc9a@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 06, 2022 at 09:00:17PM +0000, Ali Saidi wrote:
-> On Mon, 4 Apr 2022 15:12:18  +0000, Leo Yan wrote:
-> > On Sun, Apr 03, 2022 at 08:33:37PM +0000, Ali Saidi wrote:
-
-[...]
-
-> > > PEER_CORE -> MEM_SNOOP_PEER + L2
-> > > PEER_CLSTR -> MEM_SNOOP_PEER + L3
-> > > PEER_LCL_CLSTR -> MEM_SNOOP_PEER + L3 (since newer neoverse cores don't support
-> > > the clusters and the existing commercial implementations don't have them).
-> > 
-> > Generally, this idea is fine for me.
+On Thu, Apr 07, 2022 at 04:24:35PM +0100, German Gomez wrote:
+> Hi,
 > 
-> Great.  
+> On 31/03/2022 13:44, Leo Yan wrote:
+> > [...]
+> >>> I'd like to do this in a separate patch, but I have one other proposal. The
+> >>> Neoverse cores L2 is strictly inclusive of the L1, so even if it's in the L1,
+> >>> it's also in the L2. Given that the Graviton systems and afaik the Ampere
+> >>> systems don't have any cache between the L2 and the SLC, thus anything from
+> >>> PEER_CORE, LCL_CLSTR, or PEER_CLSTR would hit in the L2, perhaps we
+> >>> should just set L2 for these cases? German, are you good with this for now? 
+> >> Sorry for the delay. I'd like to also check this with someone. I'll try
+> >> to get back asap. In the meantime, if this approach is also OK with Leo,
+> >> I think it would be fine by me.
 > 
-> Now the next tricky thing. Since we're not using HITM for recording the memory
-> events, the question becomes for the c2c output should we output the SNOOP_PEER
-> events as if they are HITM events with a clarification in the perf-c2c man page
-> or effectively duplicate all the lcl_hitm logic, which is a fair amount,  in
-> perf c2c to add a column and sort option? 
-
-I think we need to handle both load and store operations in 'perf c2c'
-tool.
-
-For the load operation, in the 'cache line details' view, we need to
-support 'snoop_peer' conlumn; and since Arm SPE doesn't give any data
-source info for store opeartion, so my plan is to add an extra conlumn
-'Other' based on the two existed conlumns 'L1 Hit' and 'L1 Miss'.
-
-Could you leave this part for me?  I will respin my patch set for
-extend 'perf c2c' for this (and hope can support the old Arm SPE trace
-data).
-
-Please note, when you spin new patch set, you need to take care for
-the store operations.  In the current patch set, it will wrongly
-always set L1 hit for all store operations due to the data source
-field is always zero.  My understanding is for all store operations,
-we need to set the cache level as PERF_MEM_LVLNUM_ANY_CACHE and snoop
-type as PERF_MEM_SNOOP_NA.
-
-> > Following your suggestion, if we connect the concepts PoC and PoU in Arm
-> > reference manual, we can extend the snooping mode with MEM_SNOOP_POU
-> > (for PoU) and MEM_SNOOP_POC (for PoC), so:
-> > 
-> > PEER_CORE -> MEM_SNOOP_POU + L2
-> > PEER_LCL_CLSTR -> MEM_SNOOP_POU + L3
-> > PEER_CLSTR -> MEM_SNOOP_POC + L3
-> > 
-> > Seems to me, we could consider for this.  If this is over complexity or
-> > even I said any wrong concepts for this, please use your method.
+> Sorry for the delay. Yeah setting it to L2 indeed looks reasonable for
+> now. Somebody brought up the case of running SPE in a heterogeneous 
+> system, but also we think might be beyond the scope of this change.
 > 
-> I think this adds a lot of complexity and reduces clarity. Some systems
-> implement coherent icaches and the PoU would be the L1 cache, others don't so
-> that would be the L2 (or wherever there is a unified cache). Similarly, with the
-> point of coherency, some systems would consider that dram, but other systems
-> have transparent LLCs and it would be the LLC. 
+> One very minor nit though. Would you be ok with renaming LCL to LOCAL 
+> and CLSTR to CLUSTER? I sometimes mistead the former as "LLC".
 
-Okay, it's fine for me to move forward to use MEM_SNOOP_PEER as the
-solution.
+Ali's suggestion is to use the format: highest_cache_level | MEM_SNOOP_PEER.
 
-Since German is looking into this part, @German, if you have any comment
-on this part, just let us know.
+Simply to say, the highest cache level is where we snoop the cache
+data with the highest cache level.  And we use an extra snoop op
+MEM_SNOOP_PEER as the flag to indicate a peer snooping from the local
+cluster or peer cluster.
+
+Please review the more detailed discussion in another email.
+
+> > Thanks for the checking internally.  Let me just bring up my another
+> > thinking (sorry that my suggestion is float): another choice is we set
+> > ANY_CACHE as cache level if we are not certain the cache level, and
+> > extend snoop field to indicate the snooping logics, like:
+> >
+> >   PERF_MEM_SNOOP_PEER_CORE
+> >   PERF_MEM_SNOOP_LCL_CLSTR
+> >   PERF_MEM_SNOOP_PEER_CLSTR
+> >
+> > Seems to me, we doing this is not only for cache level, it's more
+> > important for users to know the variant cost for involving different
+> > snooping logics.
+> >
+> I see there's been some more messages I need to catch up with. Is the 
+> intention to extend the PERF_MEM_* flags for this cset, or will it be
+> left for a later change?
+
+The plan is to extend the PERF_MEM_* flags in this patch set.
+
+> In any case, I'd be keen to take another look at it and try to bring
+> some more eyes into this.
+
+Sure.  Please check at your side and thanks for confirmation.
 
 Thanks,
 Leo
