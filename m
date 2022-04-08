@@ -2,183 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C1AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 02:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912A1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 03:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232058AbiDHCRN (ORCPT
+        id S234025AbiDHD61 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Apr 2022 22:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
+        Thu, 7 Apr 2022 23:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbiDHCRM (ORCPT
+        with ESMTP id S234010AbiDHD6Y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Apr 2022 22:17:12 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB94C268986;
-        Thu,  7 Apr 2022 19:15:09 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id n18so6676802plg.5;
-        Thu, 07 Apr 2022 19:15:09 -0700 (PDT)
+        Thu, 7 Apr 2022 23:58:24 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2164DEBA8
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Apr 2022 20:56:22 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2eb8c0ddcf6so65302787b3.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Apr 2022 20:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eaTn1UD2941ACHdvLV5KXK7aQnz8AqsgTtEV29TgNb4=;
-        b=gfVls0S5RExmb2wfxxa8AxWIfLg/2ToNLqQRGizg8/ZyQK4LRK7mx/JJKPuowsjWPt
-         zaOCkoq69qZP5TyzLA57gha0z5qlcuqFL45g8sfVrpVcbDgtQOuF1pfiPr3rCmgKMb6H
-         6i8jngKHecSmLOP6j8REwui4ESfGri2JM0FuYE8CftXEJkT58iqZir4ubApNV6TVsIOa
-         pDaevCb934NI17jxM0fdyyHzquVIN8EQEeL1cu7vP5PBn0njbDcWHZm0O6b+N9myoKlN
-         wcriA5kv3wLIC+wPNlAp8Yee80m/u7vp+VCDXZ5AYGsGAn2/jq7jik0en+HC54uiTMil
-         eTRQ==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=HxFczrqsspWyPdqTCif/D0IhzdUHRDLBzRRwTlKUif4=;
+        b=OpAiXGIhVTB/vTq+PHCL6R254gERCairQa9Ci41IeF1qLemf8XiEknJyK9Qj6Xs1GW
+         K7WpgXr2EA17KLl/s4ujXAp5fKXj6Xw078lOQwj1Q/BY5uq1kQT3b5ejYkJ5qqHiW0yK
+         aDjMN+hXma8v/A4lyggTad1UeC6FgVVVHzWbdfdzsvOb6vgvpXjsWygNGHBdBmop+AaA
+         o6CBjt20f1W7sJ77QjxsdVH8SloKdX922qn7sb64nBoukV1FFCcXuLm3tuKG+CljIAAM
+         mrt8cwt9D7X4gb1te5BnaS2qFjU3ZU6zqtUtJ3ij0eCLxZzpHO3OZoc+19JMxnnvTBOG
+         EHcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eaTn1UD2941ACHdvLV5KXK7aQnz8AqsgTtEV29TgNb4=;
-        b=myqcazGgBPcKCt2rK+AGq/jQeU2oP1Nyz8TEck2+PiwVrfKpP5DxOZJ3xLuMlb6+He
-         ZYVbjaq3YX4J7R6lCls5hX7bcAMiSp4syXnG+FsFBgYzrc1vDcZtI/49fkZFpn6onciC
-         5lRJhoEaFyvyokTNYWcKAu4m0R3eXDqcgDGKLQ7ocf63d5ryVU0DHtThp75iiOfwlurO
-         78tsHikQmp8JM9nM1TSlHOkDPXaIR4hky9YkJkr75P+JwbVA4+Ex5zCcUMWu1p1wiaYC
-         Bp6zUGUsTQr84Hcy37R/b2zCCtyXa40xqyJbL369oq6G9JqICpESotC6EkCSuNjdyhRS
-         uxhA==
-X-Gm-Message-State: AOAM532iUghcmi7hVGBJt/DVY2XdIJHgVCpiiWGCufQbis0AjwoqyXUr
-        ifUM/EATpF4fYdGRvIVBT3k=
-X-Google-Smtp-Source: ABdhPJwhDNKvqQnN8Er5QxbqbkFYHfAdgsWhosx8jFAdhg85i/qHK6nlIdPaPCzTm5rd9fRcujpPfw==
-X-Received: by 2002:a17:902:6acc:b0:149:8f60:a526 with SMTP id i12-20020a1709026acc00b001498f60a526mr16980935plt.25.1649384109413;
-        Thu, 07 Apr 2022 19:15:09 -0700 (PDT)
-Received: from CHENGDONGLI-MB0.localdomain ([203.205.141.113])
-        by smtp.gmail.com with ESMTPSA id s10-20020a056a00178a00b004fda49fb25dsm24069652pfg.9.2022.04.07.19.15.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Apr 2022 19:15:08 -0700 (PDT)
-From:   Chengdong Li <brytonlee01@gmail.com>
-X-Google-Original-From: Chengdong Li <chengdongli@tencent.com>
-Received: by CHENGDONGLI-MB0.localdomain (Postfix, from userid 501)
-        id 8E1836D5C455; Fri,  8 Apr 2022 10:15:05 +0800 (CST)
-To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org
-Cc:     ak@linux.intel.com, likexu@tencent.com, chengdongli@tencent.com
-Subject: [PATCH v3] perf test tsc: Fix error message report when not supported.
-Date:   Fri,  8 Apr 2022 10:14:28 +0800
-Message-Id: <20220408021428.18009-1-chengdongli@tencent.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <676075ca-4d5d-7388-61ac-42a0b9f1ed50@intel.com>
-References: <676075ca-4d5d-7388-61ac-42a0b9f1ed50@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=HxFczrqsspWyPdqTCif/D0IhzdUHRDLBzRRwTlKUif4=;
+        b=tOG3V/enlw+SASkS1gg1yNYBttkAkFPTfPo+VyhbWsg/6mqG0nrdRDS67TBjFXmWWf
+         omgucXHaZjaxycWleZMNLriNqtn/QCAfT4HhhcoOaP09mMYPLJstz+ePQu8OFnFN6VJ4
+         FIFMWq8mqsVr1PDQZXpPZjacWDxR1NjsR18Lz8SruNDYMDVISK5TMm0prMowK0RKx0gV
+         IVeTu3fTysseYYyYZ7xFjgYSfMrvrEKBpP7r4PTXFJ9RYf3ykHJ6QHt2UCnvxitDoMKU
+         q4rbQNQqBj8HpuDsa+F4xHiO0349DnCuKf/XlTiRaKAqoVcdfc1tbRVbx/O2VocBeCuf
+         rOAA==
+X-Gm-Message-State: AOAM531EUyUgFaBoJT/fx2qcVOCuctVxtiwvDAoflJkRh8LqujOtuP99
+        BXl4b0ZBrekVjJuARCILYbeFqjeIIIOL
+X-Google-Smtp-Source: ABdhPJxGss2gEVXU1qEfZ8LDHdcCgN0sHB3FaIVikPe2VRhZW0mD6pgY0SGsZRVMI8prYHhp9fSSBvfka1ac
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:560:aa27:649e:a07d])
+ (user=irogers job=sendgmr) by 2002:a25:dad1:0:b0:634:63aa:6ec2 with SMTP id
+ n200-20020a25dad1000000b0063463aa6ec2mr12250168ybf.159.1649390181920; Thu, 07
+ Apr 2022 20:56:21 -0700 (PDT)
+Date:   Thu,  7 Apr 2022 20:56:11 -0700
+Message-Id: <20220408035616.1356953-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
+Subject: [PATCH v3 0/5] Make evlist CPUs more accurate
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-By default `perf test tsc` does not return the error message
-when the child process detected kernel does not support. Instead,
-the child process print error message to stderr, unfortunately
-the stderr is redirected to /dev/null when verbose <= 0.
+evlist has all_cpus, computed to be the merge of all evsel CPU maps,
+and cpus. cpus may contain more CPUs than all_cpus, as by default cpus
+holds all online CPUs whilst all_cpus holds the merge/union from
+evsels. For an uncore event there may just be 1 CPU per socket, which
+will be a far smaller CPU map than all online CPUs.
 
-This patch did three things:
-- returns TEST_SKIP to the parent process instead of TEST_OK when
-  perf_read_tsc_conversion() is not supported.
-- add a new subtest of testing if TSC is supported on current
-  architecture by moving exist code to a separate function.
-  It avoids two places in test__perf_time_to_tsc() that return
-  TEST_SKIP by doing this.
-- extended test suite definition to contain above two subtests.
-  Current test_suite and test_case structs do not support printing
-  skip reason when the number of subtest less than 1. To print skip
-  reason, it is necessary to extend current test suite definition.
+The v1 patches changed cpus to be called user_requested_cpus, to
+reflect their potential user specified nature. The user_requested_cpus
+are set to be the current value intersected with all_cpus, so that
+user_requested_cpus is always a subset of all_cpus. This fixes
+printing code for metrics so that unnecessary blank lines aren't
+printed.
 
-Changes since v2:
-- refine error message format.
-- refine commit log message according to Adrian's review comments.
+To make the intersect function perform well, a perf_cpu_map__is_subset
+function is added. While adding this function, the v2 patches also
+used it in perf_cpu_map__merge to avoid creating a new CPU map for
+some currently missed patterns. The reference counts for these
+functions is simplified as discussed here:
+https://lore.kernel.org/lkml/YkdOpJDnknrOPq2t@kernel.org/ but this
+means users of perf_cpu_map__merge must now do a put on the 1st
+argument.
 
-Changes since v1 (thanks for the feedback from Adrian Hunter):
-- rebase commit to current source.
+v2. Reorders the "Avoid segv" patch and makes other adjustments
+    suggested by Arnaldo Carvalho de Melo <acme@kernel.org>.
+v3. Modify reference count behaviour for merge and intersect. Add
+    intersect tests and tidy thee cpu map tests suite.
 
-Signed-off-by: Chengdong Li <chengdongli@tencent.com>
----
- tools/perf/tests/perf-time-to-tsc.c | 36 +++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+Ian Rogers (5):
+  perf cpumap: Don't decrement refcnt on args to merge
+  perf tests: Additional cpumap merge tests
+  perf cpumap: Add intersect function.
+  perf evlist: Respect all_cpus when setting user_requested_cpus
+  perf test: Combine cpu map tests into 1 suite
 
-diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
-index d12d0ad81801..cc6df49a65a1 100644
---- a/tools/perf/tests/perf-time-to-tsc.c
-+++ b/tools/perf/tests/perf-time-to-tsc.c
-@@ -47,6 +47,17 @@
- 	}					\
- }
- 
-+static int test__tsc_is_supported(struct test_suite *test __maybe_unused,
-+				  int subtest __maybe_unused)
-+{
-+	if (!TSC_IS_SUPPORTED) {
-+		pr_debug("Test not supported on this architecture\n");
-+		return TEST_SKIP;
-+	}
-+
-+	return TEST_OK;
-+}
-+
- /**
-  * test__perf_time_to_tsc - test converting perf time to TSC.
-  *
-@@ -70,7 +81,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	struct perf_cpu_map *cpus = NULL;
- 	struct evlist *evlist = NULL;
- 	struct evsel *evsel = NULL;
--	int err = -1, ret, i;
-+	int err = TEST_FAIL, ret, i;
- 	const char *comm1, *comm2;
- 	struct perf_tsc_conversion tc;
- 	struct perf_event_mmap_page *pc;
-@@ -79,10 +90,6 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	u64 test_time, comm1_time = 0, comm2_time = 0;
- 	struct mmap *md;
- 
--	if (!TSC_IS_SUPPORTED) {
--		pr_debug("Test not supported on this architecture");
--		return TEST_SKIP;
--	}
- 
- 	threads = thread_map__new(-1, getpid(), UINT_MAX);
- 	CHECK_NOT_NULL__(threads);
-@@ -124,8 +131,8 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	ret = perf_read_tsc_conversion(pc, &tc);
- 	if (ret) {
- 		if (ret == -EOPNOTSUPP) {
--			fprintf(stderr, " (not supported)");
--			return 0;
-+			pr_debug("perf_read_tsc_conversion is not supported in current kernel\n");
-+			err = TEST_SKIP;
- 		}
- 		goto out_err;
- 	}
-@@ -191,7 +198,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	    test_tsc >= comm2_tsc)
- 		goto out_err;
- 
--	err = 0;
-+	err = TEST_OK;
- 
- out_err:
- 	evlist__delete(evlist);
-@@ -200,4 +207,15 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	return err;
- }
- 
--DEFINE_SUITE("Convert perf time to TSC", perf_time_to_tsc);
-+static struct test_case time_to_tsc_tests[] = {
-+	TEST_CASE_REASON("TSC support", tsc_is_supported,
-+			 "This architecture does not support"),
-+	TEST_CASE_REASON("Perf time to TSC", perf_time_to_tsc,
-+			 "perf_read_tsc_conversion is not supported"),
-+	{ .name = NULL, }
-+};
-+
-+struct test_suite suite__perf_time_to_tsc = {
-+	.desc = "Convert perf time to TSC",
-+	.test_cases = time_to_tsc_tests,
-+};
+ tools/lib/perf/cpumap.c              | 46 ++++++++++++++---
+ tools/lib/perf/evlist.c              |  6 ++-
+ tools/lib/perf/include/perf/cpumap.h |  2 +
+ tools/perf/tests/builtin-test.c      |  4 +-
+ tools/perf/tests/cpumap.c            | 74 +++++++++++++++++++++++++---
+ tools/perf/tests/tests.h             |  4 +-
+ tools/perf/util/evlist.c             |  7 +++
+ 7 files changed, 120 insertions(+), 23 deletions(-)
+
 -- 
-2.27.0
+2.35.1.1178.g4f1659d476-goog
 
