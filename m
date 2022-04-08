@@ -2,117 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F224C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 18:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7563FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 18:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbiDHSP2 (ORCPT
+        id S229691AbiDHSdP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Apr 2022 14:15:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
+        Fri, 8 Apr 2022 14:33:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230479AbiDHSP0 (ORCPT
+        with ESMTP id S238723AbiDHSca (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Apr 2022 14:15:26 -0400
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46EC3A73F;
-        Fri,  8 Apr 2022 11:13:21 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id b43so12488129ljr.10;
-        Fri, 08 Apr 2022 11:13:21 -0700 (PDT)
+        Fri, 8 Apr 2022 14:32:30 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F152C1834D
+        for <linux-perf-users@vger.kernel.org>; Fri,  8 Apr 2022 11:30:25 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id b16so11656162ioz.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Apr 2022 11:30:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8c4w2SqV3Zwtk6hjN9XQDs1ojn8rP0mcUHvQvhzuNaU=;
+        b=YpRUx5naQgJOrPJtNsmh78aDsmIIkswFS8lXDrNYheqXIeJEK2ARoLdZkPcn+nfw5T
+         oYiFN+5ZvBke8G2w+I4t1ThEG9QAMUoMMfn3SprosOFXtLJQ9uLglI+1t3LYKARK0RE9
+         fZFK0+HB8gFFQwUCeNj0/qHoPWD0MoYjgz6Nw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UW/raEK33bMCD3gBOPjdzCnBvwCLiC4EtDuZoVDwoUo=;
-        b=BEi6l/+AVzYTy+p+eOrjTHN6l78Hhs+F4Qo4JFeLD+usf2WppmkjKWQ/Af4zh4EiuO
-         kvqzzObpjn1ilpB2QfF82MhfkPduuaMKlbc94Kv5W1tIrpzwvS8wUgWYHVVFXsIzM3zT
-         nrRzo6II5Dbf3TDVV6tgVCDm+Vm+60odmTohe3AdJndSl296q5q84D5IDQxt1c2alR+g
-         QtlmCenGdj1LQRxk894ERbXrvVtABM9RdiSAVi7dJ3gB/utBJNsbYOQX4WIeRnrnWvg7
-         kgj/L3ZLSuzfyPtaQmhN8fvLYHvM8hlMxNf7fuVzW2B4f1lUwlPyaqu2yAYoPbPQcuJo
-         v2lA==
-X-Gm-Message-State: AOAM531cPDKRJ2DwlYyNJl1Xu0qzs1r6BxKZMTtyVVyHZEJFJo4Wyrun
-        FhX0yq1fXPdWJeVpb9bcJgD0YYDKUGwy4fQCy6COC7Zq
-X-Google-Smtp-Source: ABdhPJxZz2QW83b88KtmPfLvVm/xo/NWOAt+tfuxfy6sASdOaHHrjCgrRzI54XMME2ryEQkX3IzV9X2KZ6g4D9kfQlg=
-X-Received: by 2002:a05:651c:248:b0:245:5b3d:9abb with SMTP id
- x8-20020a05651c024800b002455b3d9abbmr12436620ljn.366.1649441600116; Fri, 08
- Apr 2022 11:13:20 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8c4w2SqV3Zwtk6hjN9XQDs1ojn8rP0mcUHvQvhzuNaU=;
+        b=AJDtlYC0LQfJfTQwI+xYNZw9YXE0HvH65gaWow71556kQjt6oFN04mpu5YUeXCFWiM
+         8AeRFAjjCiHBhorNBTz2PFN9WUcIdAm/VLytx+cGuLjhC8WR4l1GEx5P3en5IQ1V+MTc
+         EpfB3XsdMZ4Cr0iQS/4DBDg83fJLYvGnuztQw2TT6Y3hKQaY6dA8D43hyQt57UmybVyK
+         AOHB64nM1DK07pXlJShR58x4WnRBjRK6ixJu85nYI/MSH5e3S4/fLOWJ0ui1tz8/cJ3s
+         3s7UnBqfa8Ta5TGPRz3+YbN6iLDm6dlvFYtigtYhERcuWvaQv/c4QWzntlzMFvoQSkUx
+         qB5g==
+X-Gm-Message-State: AOAM533tgLUUGubeOrOyDL2QOWp1ML6Xqwg0G3prJ8C+FYUfiSZvQAB1
+        zWcGQM9chg6lclNa0uhOn8hcWQ==
+X-Google-Smtp-Source: ABdhPJz0knJI2EvKgFMOby7OjCoRi/HEQHXa7piPfbIdw92oEo/ocHWDiLbO7mI1s1H7DgX30ZuY4g==
+X-Received: by 2002:a05:6638:2643:b0:323:c3e3:fcec with SMTP id n3-20020a056638264300b00323c3e3fcecmr10003722jat.289.1649442625269;
+        Fri, 08 Apr 2022 11:30:25 -0700 (PDT)
+Received: from [192.168.1.128] ([71.205.29.0])
+        by smtp.gmail.com with ESMTPSA id y6-20020a056e02174600b002c7f247b3a7sm14985188ill.54.2022.04.08.11.30.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Apr 2022 11:30:24 -0700 (PDT)
+Subject: Re: [PATCH V3] testing/selftests/mqueue: Fix mq_perf_tests to free
+ the allocated cpu set
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, disgoel@linux.vnet.ibm.com
+Cc:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, srikar@linux.vnet.ibm.com,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20220408072431.94947-1-atrajeev@linux.vnet.ibm.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <1a1d119a-e68e-a590-a518-cfb3c78ed888@linuxfoundation.org>
+Date:   Fri, 8 Apr 2022 12:30:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-References: <20220408144056.1955535-1-james.clark@arm.com>
-In-Reply-To: <20220408144056.1955535-1-james.clark@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 8 Apr 2022 11:13:09 -0700
-Message-ID: <CAM9d7cji=xSAy673sXGf2GXFsKKsR7=pNKJceLtHX1sFFUZcKg@mail.gmail.com>
-Subject: Re: [PATCH] perf: arm-spe: Fix perf report --mem-mode
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        leo.yan@linaro.com, German Gomez <German.Gomez@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20220408072431.94947-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On Fri, Apr 8, 2022 at 7:41 AM James Clark <james.clark@arm.com> wrote:
->
-> Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
-> is not available") "perf mem report" and "perf report --mem-mode" don't
-> allow opening the file unless one of the events has PERF_SAMPLE_DATA_SRC
-> set.
->
-> SPE doesn't have this set even though synthetic memory data is generated
-> after it is decoded. Fix this issue by setting DATA_SRC on SPE events.
-> This has no effect on the data collected because the SPE driver doesn't
-> do anything with that flag and doesn't generate samples.
->
-> Fixes: bb30acae4c4d ("perf report: Bail out --mem-mode if mem info is not available")
-> Signed-off-by: James Clark <james.clark@arm.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
-
+On 4/8/22 1:24 AM, Athira Rajeev wrote:
+> The selftest "mqueue/mq_perf_tests.c" use CPU_ALLOC to allocate
+> CPU set. This cpu set is used further in pthread_attr_setaffinity_np
+> and by pthread_create in the code. But in current code, allocated
+> cpu set is not freed.
+> 
+> Fix this issue by adding CPU_FREE in the "shutdown" function which
+> is called in most of the error/exit path for the cleanup. There are
+> few error paths which exit without using shutdown. Add a common goto
+> error path with CPU_FREE for these cases.
+> 
+> Fixes: 7820b0715b6f ("tools/selftests: add mq_perf_tests")
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 > ---
->  tools/perf/arch/arm64/util/arm-spe.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> index 86e2e926aa0e..a1419e6341c0 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -239,6 +239,12 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->                 arm_spe_set_timestamp(itr, arm_spe_evsel);
->         }
->
-> +       /*
-> +        * Set this only so that perf report knows that SPE generates memory info. It has no effect
-> +        * on the opening of the event or the SPE data produced.
-> +        */
-> +       evsel__set_sample_bit(arm_spe_evsel, DATA_SRC);
-> +
->         /* Add dummy event to keep tracking */
->         err = parse_events(evlist, "dummy:u", NULL);
->         if (err)
-> @@ -523,6 +529,5 @@ struct perf_event_attr
->
->         arm_spe_pmu->selectable = true;
->         arm_spe_pmu->is_uncore = false;
-> -
->         return attr;
->  }
-> --
-> 2.28.0
->
+> Changelog:
+>   From v2 -> v3:
+>    Addressed review comment from Shuah Khan to add
+>    common "goto" error path with CPU_FREE for few exit
+>    cases.
+>   From v1 -> v2:
+>    Addressed review comment from Shuah Khan to add
+>    CPU_FREE in other exit paths where it is needed
+> 
+
+Thank you. I will queue this up for Linux 5.18-rc3
+
+thanks,
+-- Shuah
