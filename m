@@ -2,113 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77863C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Apr 2022 15:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B34AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Apr 2022 17:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232710AbiDIPrK (ORCPT
+        id S242811AbiDIRUa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 9 Apr 2022 11:47:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59806 "EHLO
+        Sat, 9 Apr 2022 13:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231217AbiDIPrK (ORCPT
+        with ESMTP id S231668AbiDIRU3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 9 Apr 2022 11:47:10 -0400
+        Sat, 9 Apr 2022 13:20:29 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DCBF7B;
-        Sat,  9 Apr 2022 08:45:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D461E68E4;
+        Sat,  9 Apr 2022 10:18:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 03EEEB80688;
-        Sat,  9 Apr 2022 15:45:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D50C385A4;
-        Sat,  9 Apr 2022 15:44:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0DD1EB80761;
+        Sat,  9 Apr 2022 17:18:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D644C385A0;
+        Sat,  9 Apr 2022 17:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649519098;
-        bh=MpiCpl1K2EcLuCQxwXCkDuh690V+U0S2LFvoqsVv5u4=;
+        s=k20201202; t=1649524697;
+        bh=U3jHc9UqvdL0OI4026ZW/QrRbZLIojegGMh2u9v87rE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PqzVJKdk6P/gOxqUCQ8Us8E6q+yTz8PRNUL8tbzGILdlUXfWNR5Zs58Cwv2ezMJmH
-         p3XfvMkDAsCqBFSraGqOJF9Yu5/hPLrgZPFX46pYqd4/gV63ND++nxu1ASRXfB8qiR
-         iY4GjtrYXArp0ElOOX2G5RMXcZ+0ul4an1RSfj1FWPrqmnpHXl6OK7H9D3bs8Xd+WT
-         0bgHuRC7hdubDvjoeXhflvXqdh/Fa8M9GGPM9TefROGjWGcdqRGOIfOK83TG2aOnvO
-         PLbFvFRqw1lZGaZILDJt/pqdM54G7nqv8EhiYEbWHJ0+zVejXSXOJjI1UIqBV5LlgJ
-         lY044ep8Wo9lg==
+        b=VgF5U5FjEyAQlfJ1rxZKa815KAiFoOPnF+WI8qDhFrWa2WC7XDhcoIAXwPJG1Zx26
+         hJoGd07p4baJpG+dOqtCqmukcgqQXq5bnbwqUoz+2/uz0qO8sWhY8g3sDOxvK+ELep
+         dJpHqxZ8G0xL0iptyCISOBOMwbaIL2boDtCuDcJEMuGlhkC3lZnv7UmF3LFbppEOd9
+         CqPM2gokNOjs8UcayPxAx6JMwWYMRe1i7lULZVHMQnvBFx3Ss0vsc6VPOrQJbUoBky
+         y5r5ug+QGtmoF2XzgPJQ7eVCUzxtSnbBLsz4BJcuCUx+aotpTEWDG8QIWqgoD/LHqw
+         3oUN+QGPun3yw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C88AE40407; Sat,  9 Apr 2022 12:44:56 -0300 (-03)
-Date:   Sat, 9 Apr 2022 12:44:56 -0300
+        id CC4CF40407; Sat,  9 Apr 2022 14:18:13 -0300 (-03)
+Date:   Sat, 9 Apr 2022 14:18:13 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Li Huafei <lihuafei1@huawei.com>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        William Cohen <wcohen@redhat.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Denis Nikitin <denik@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/5] perf annotate: Drop objdump stderr
-Message-ID: <YlGp+EVwne5QbjtY@kernel.org>
-References: <20220407230503.1265036-1-irogers@google.com>
- <20220407230503.1265036-2-irogers@google.com>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     jolsa@kernel.org, disgoel@linux.vnet.ibm.com, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, linux-kernel@vger.kernel.org,
+        srikar@linux.vnet.ibm.com, irogers@google.com
+Subject: Re: [PATCH v2 0/4] Fix perf bench numa, futex and epoll to work with
+ machines having #CPUs > 1K
+Message-ID: <YlG/1cegJ3Fh/zj/@kernel.org>
+References: <20220406175113.87881-1-atrajeev@linux.vnet.ibm.com>
+ <YlGmAd3LEh9He6Pg@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220407230503.1265036-2-irogers@google.com>
+In-Reply-To: <YlGmAd3LEh9He6Pg@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 07, 2022 at 04:04:59PM -0700, Ian Rogers escreveu:
-> If objdump writes to stderr it can block waiting for it to be read. As
-> perf doesn't read stderr then progress stops with perf waiting for
-> stdout output.
-
-Thanks, applied.
-
-- Arnaldo
-
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/annotate.c | 1 +
->  1 file changed, 1 insertion(+)
+Em Sat, Apr 09, 2022 at 12:28:01PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Apr 06, 2022 at 11:21:09PM +0530, Athira Rajeev escreveu:
+> > The perf benchmark for collections: numa, futex and epoll
+> > hits failure in system configuration with CPU's more than 1024.
+> > These benchmarks uses "sched_getaffinity" and "sched_setaffinity"
+> > in the code to work with affinity.
 > 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index e4c641b240df..82cc396ef516 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2047,6 +2047,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
->  	objdump_process.argv = objdump_argv;
->  	objdump_process.out = -1;
->  	objdump_process.err = -1;
-> +	objdump_process.no_stderr = 1;
->  	if (start_command(&objdump_process)) {
->  		pr_err("Failure starting to run %s\n", command);
->  		err = -1;
-> -- 
-> 2.35.1.1178.g4f1659d476-goog
+> Applied 1-3, 4 needs some reworking and can wait for v5.19, the first 3
+> are fixes, so can go now.
 
--- 
+Now trying to fix this:
+
+  26     7.89 debian:9                      : FAIL gcc version 6.3.0 20170516 (Debian 6.3.0-18+deb9u1)
+    bench/numa.c: In function 'alloc_data':
+    bench/numa.c:359:6: error: 'orig_mask' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+      ret = sched_setaffinity(0, size, mask);
+      ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    bench/numa.c:409:13: note: 'orig_mask' was declared here
+      cpu_set_t *orig_mask;
+                 ^~~~~~~~~
+    cc1: all warnings being treated as errors
+    /git/perf-5.18.0-rc1/tools/build/Makefile.build:139: recipe for target 'bench' failed
+    make[3]: *** [bench] Error 2
+
+
+Happened in several distros.
 
 - Arnaldo
