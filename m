@@ -2,92 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC04C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Apr 2022 15:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD79C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Apr 2022 15:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231827AbiDIPlM (ORCPT
+        id S233764AbiDIPop (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 9 Apr 2022 11:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37742 "EHLO
+        Sat, 9 Apr 2022 11:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233764AbiDIPlL (ORCPT
+        with ESMTP id S232792AbiDIPop (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 9 Apr 2022 11:41:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DD78F9A0
-        for <linux-perf-users@vger.kernel.org>; Sat,  9 Apr 2022 08:39:04 -0700 (PDT)
+        Sat, 9 Apr 2022 11:44:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEE6F7B;
+        Sat,  9 Apr 2022 08:42:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 53DAD60B1B
-        for <linux-perf-users@vger.kernel.org>; Sat,  9 Apr 2022 15:39:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89FECC385A4;
-        Sat,  9 Apr 2022 15:39:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3100E60B30;
+        Sat,  9 Apr 2022 15:42:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65700C385A0;
+        Sat,  9 Apr 2022 15:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649518743;
-        bh=H2s7g3yfAeIXcNaVW+MWwNNRD5YQpmxQ2lT62/S96Fk=;
+        s=k20201202; t=1649518956;
+        bh=+rpBJT4Nr106UTu9CJknKUAZU0Kx2GW1NeXF+/AE6HY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M0fKB0eXORywg7sLdZAJanMb+c3M86ZHmQpNKIq0IjT0W8BBGKbgJjKQ6E2H8PHqx
-         i7sdWVm3aQIhBeGKmWBgdBitgHilVYFGP0jNiEpJEwsp6gXZBgFKgxSSleOI+Tw0aS
-         02dGPZcuxBFI1rvIb3H+160zXBvdv8ZDCqTRWr63zLlE9CoAZRt2bYXV/omA227Ns8
-         i8Ax4w599srT9jSzdIjBljqQL4KNanqjpaf9a5IfzORneIoy3z48QIKBtClsDDFwlo
-         jsXSTtJuaUH46jrROVqSA0x024IOvKgW1e7jc1IBQHqgAQD0xsvwaehDTKk9HGfaMd
-         uhmi1C6qIkvYQ==
+        b=kuxzc3kC1dZwLLo2+vdIL998HYmOT5BBZtZowHF9rvw71FUvOlGCts+gX/kuWU4FF
+         ULfTYkDCZ/yzzchFwRbUEjY5x6+YNia4NrCbAbG7wSRMaGjqSTjB4Owsiy+3lEATRH
+         ldeSUCDsu9fOlhjOh9rH6a9mE3qezxAXcO7Z0xX6amHSbT283xh/U9/NqxLUXwY/8G
+         2mxForlA13tpnOSK2VlIz9UThjb25/AAKH02vmJct/5sXP3xHeP+1LBic0abMKfsp4
+         MFZGJPUvZZn+lChrHohxWv6bNuAI6Xl2SKTN1gZ+B8Zohv3oQXt3CNJOur/02pyMGJ
+         6Je4GwbBUKq1Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C94F240407; Sat,  9 Apr 2022 12:39:00 -0300 (-03)
-Date:   Sat, 9 Apr 2022 12:39:00 -0300
+        id 4FE7640407; Sat,  9 Apr 2022 12:42:33 -0300 (-03)
+Date:   Sat, 9 Apr 2022 12:42:33 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        linux-perf-users@vger.kernel.org, acme@redhat.com, jolsa@kernel.org
-Subject: Re: [PATCH 1/2] perf docs: Add perf-iostat link to manpages
-Message-ID: <YlGolJB0r1vZy3F1@kernel.org>
-References: <20220404221541.30312-1-mpetlan@redhat.com>
- <CAP-5=fVUs0rtEWsym4Sw7t83COvdOUFqGYi30_qX4zA=TMzJog@mail.gmail.com>
+To:     Eelco Chaudron <echaudro@redhat.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf scripting python: expose symbol offset and
+ source information
+Message-ID: <YlGpafg8aYyAylpC@kernel.org>
+References: <164554263724.752731.14651017093796049736.stgit@wsfd-netdev64.ntdv.lab.eng.bos.redhat.com>
+ <A0B24D47-90A5-41FC-8D24-8C1D3491CB71@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fVUs0rtEWsym4Sw7t83COvdOUFqGYi30_qX4zA=TMzJog@mail.gmail.com>
+In-Reply-To: <A0B24D47-90A5-41FC-8D24-8C1D3491CB71@redhat.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 05, 2022 at 01:53:59PM -0700, Ian Rogers escreveu:
-> On Mon, Apr 4, 2022 at 3:59 PM Michael Petlan <mpetlan@redhat.com> wrote:
-> >
-> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+Em Fri, Apr 08, 2022 at 04:18:38PM +0200, Eelco Chaudron escreveu:
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> On 22 Feb 2022, at 16:11, Eelco Chaudron wrote:
+> 
+> > This change adds the symbol offset to the data exported for each
+> > call-chain entry. This can not be calculated from the script and
+> > only the ip value, and no related mmap information.
+> >
+> > In addition, also export the source file and line information, if
+> > available, to avoid an external lookup if this information is needed.
+> >
+> > Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
+> 
+> Hi All, was wondering if this patch got lost?
 
-Thanks, applied.
+Applied now to perf/core, heading to 5.19,
 
 - Arnaldo
-
  
-> Thanks,
-> Ian
-> 
 > > ---
-> >  tools/perf/Documentation/perf.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > v2:
+> >  - Fixed small code nit
+> >  - Included new features in auto generated scripts
 > >
-> > diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-> > index 9c330cdfa973..71ebdf8125de 100644
-> > --- a/tools/perf/Documentation/perf.txt
-> > +++ b/tools/perf/Documentation/perf.txt
-> > @@ -83,7 +83,7 @@ linkperf:perf-buildid-list[1], linkperf:perf-c2c[1],
-> >  linkperf:perf-config[1], linkperf:perf-data[1], linkperf:perf-diff[1],
-> >  linkperf:perf-evlist[1], linkperf:perf-ftrace[1],
-> >  linkperf:perf-help[1], linkperf:perf-inject[1],
-> > -linkperf:perf-intel-pt[1], linkperf:perf-kallsyms[1],
-> > +linkperf:perf-intel-pt[1], linkperf:perf-iostat[1], linkperf:perf-kallsyms[1],
-> >  linkperf:perf-kmem[1], linkperf:perf-kvm[1], linkperf:perf-lock[1],
-> >  linkperf:perf-mem[1], linkperf:perf-probe[1], linkperf:perf-sched[1],
-> >  linkperf:perf-script[1], linkperf:perf-test[1],
-> > --
-> > 2.18.4
+> >  .../util/scripting-engines/trace-event-python.c    |   49 +++++++++++++++-----
+> >  1 file changed, 36 insertions(+), 13 deletions(-)
 > >
+> > diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> > index e752e1f4a5f0..86a9c8614231 100644
+> > --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> > +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> > @@ -392,6 +392,18 @@ static const char *get_dsoname(struct map *map)
+> >  	return dsoname;
+> >  }
+> >
+> > +static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
+> > +{
+> > +	unsigned long offset;
+> > +
+> > +	if (al->addr < sym->end)
+> > +		offset = al->addr - sym->start;
+> > +	else
+> > +		offset = al->addr - al->map->start - sym->start;
+> > +
+> > +	return offset;
+> > +}
+> > +
+> >  static PyObject *python_process_callchain(struct perf_sample *sample,
+> >  					 struct evsel *evsel,
+> >  					 struct addr_location *al)
+> > @@ -443,6 +455,25 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
+> >  					_PyUnicode_FromStringAndSize(node->ms.sym->name,
+> >  							node->ms.sym->namelen));
+> >  			pydict_set_item_string_decref(pyelem, "sym", pysym);
+> > +
+> > +			if (node->ms.map) {
+> > +				struct map *map = node->ms.map;
+> > +				struct addr_location node_al;
+> > +				unsigned long offset;
+> > +
+> > +				node_al.addr = map->map_ip(map, node->ip);
+> > +				node_al.map  = map;
+> > +				offset = get_offset(node->ms.sym, &node_al);
+> > +
+> > +				pydict_set_item_string_decref(
+> > +					pyelem, "sym_off",
+> > +					PyLong_FromUnsignedLongLong(offset));
+> > +			}
+> > +			if (node->srcline && strcmp(":0", node->srcline)) {
+> > +				pydict_set_item_string_decref(
+> > +					pyelem, "sym_srcline",
+> > +					_PyUnicode_FromString(node->srcline));
+> > +			}
+> >  		}
+> >
+> >  		if (node->ms.map) {
+> > @@ -520,18 +551,6 @@ static PyObject *python_process_brstack(struct perf_sample *sample,
+> >  	return pylist;
+> >  }
+> >
+> > -static unsigned long get_offset(struct symbol *sym, struct addr_location *al)
+> > -{
+> > -	unsigned long offset;
+> > -
+> > -	if (al->addr < sym->end)
+> > -		offset = al->addr - sym->start;
+> > -	else
+> > -		offset = al->addr - al->map->start - sym->start;
+> > -
+> > -	return offset;
+> > -}
+> > -
+> >  static int get_symoff(struct symbol *sym, struct addr_location *al,
+> >  		      bool print_off, char *bf, int size)
+> >  {
+> > @@ -2073,7 +2092,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
+> >
+> >  		fprintf(ofp, "\t\tfor node in common_callchain:");
+> >  		fprintf(ofp, "\n\t\t\tif 'sym' in node:");
+> > -		fprintf(ofp, "\n\t\t\t\tprint(\"\\t[%%x] %%s\" %% (node['ip'], node['sym']['name']))");
+> > +		fprintf(ofp, "\n\t\t\t\tprint(\"\t[%%x] %%s%%s%%s%%s\" %% (");
+> > +		fprintf(ofp, "\n\t\t\t\t\tnode['ip'], node['sym']['name'],");
+> > +		fprintf(ofp, "\n\t\t\t\t\t\"+0x{:x}\".format(node['sym_off']) if 'sym_off' in node else \"\",");
+> > +		fprintf(ofp, "\n\t\t\t\t\t\" ({})\".format(node['dso'])  if 'dso' in node else \"\",");
+> > +		fprintf(ofp, "\n\t\t\t\t\t\" \" + node['sym_srcline'] if 'sym_srcline' in node else \"\"))");
+> >  		fprintf(ofp, "\n\t\t\telse:");
+> >  		fprintf(ofp, "\n\t\t\t\tprint(\"\t[%%x]\" %% (node['ip']))\n\n");
+> >  		fprintf(ofp, "\t\tprint()\n\n");
 
 -- 
 
