@@ -2,186 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1934AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Apr 2022 14:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44240C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Apr 2022 15:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233975AbiDIOqD (ORCPT
+        id S235557AbiDIPHg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 9 Apr 2022 10:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38372 "EHLO
+        Sat, 9 Apr 2022 11:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230506AbiDIOqB (ORCPT
+        with ESMTP id S230339AbiDIPHc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 9 Apr 2022 10:46:01 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043A61F622;
-        Sat,  9 Apr 2022 07:43:53 -0700 (PDT)
+        Sat, 9 Apr 2022 11:07:32 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138DB35866;
+        Sat,  9 Apr 2022 08:05:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B064EB8075F;
-        Sat,  9 Apr 2022 14:43:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A67C385A4;
-        Sat,  9 Apr 2022 14:43:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AD4B2B80025;
+        Sat,  9 Apr 2022 15:05:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D0DAC385A4;
+        Sat,  9 Apr 2022 15:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649515431;
-        bh=LSsO7LPkMtldWiCiKMf+VYAQKsLfgroPVlxEg/sJGXo=;
+        s=k20201202; t=1649516722;
+        bh=3be73TMrg54OghDV9TLyvzEzdbPlioR/qzV9oy5L1IA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qVFdKrMxZAczZB294SkgrKI/S/OVT3OfW0dZTcRkmmLovolYNW6P2TT/2P9dyxLdK
-         yehEhNh3X5OKJ2vIgE4KjLUoOJWBz2J/RmVrauNopMkIXjBo0EePKTe2h3cSfOwL9/
-         5wCcOwNu53YaSdhVNSHEO5IPszvb8gtRqwudbnZGEq/SHNdkA9k2jkLtF43yEQW3XH
-         QEDFmOb7FCOymp7mDMQHRudvWj4GID/Bj/YB+BW8ZXnWs9qA1lGLlHVdiqHCdbRqGD
-         Mfiltx5iA39GCxxng9cwGQUqYdSONTTCo9PMM5KXzkC1ZYsjfvwyTMoSxQVcGYxMQg
-         NWAQPJLC6PadA==
+        b=bg3rUg6lx6E8XKHkNGW5ZHLhbjp7hp1Ywi5NadDxAi+hwW2MYz52DjTjOg5L08PGY
+         8k+B9TeLKJKvj1lHXMr5DwxNRtQhH9UUu/IE82cpVqC+9NjzL0vfk1Fm8NDCr96JO7
+         yb2T+w8wYzKbxceLN7g94iBk8ApOrulimKJX4z3nxUJsUfC78NIO5kSdmJUCfAtcF5
+         H6ONvedDxi7HlVLO+gFxulZp5+F1f0gciZqSuB+pR8QzdsB+enI478ydBRvJ/1UPL6
+         3bQD0zpgKGvjCopJEQyHQDv8v0fGKK+rxvXe6Y6V6zQ8FwMA80bV93it+AoTh0P+S9
+         CN/0Y8EMEUUew==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7024C40407; Sat,  9 Apr 2022 11:43:48 -0300 (-03)
-Date:   Sat, 9 Apr 2022 11:43:48 -0300
+        id CA50D40407; Sat,  9 Apr 2022 12:05:18 -0300 (-03)
+Date:   Sat, 9 Apr 2022 12:05:18 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Chengdong Li <brytonlee01@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, ak@linux.intel.com, likexu@tencent.com,
-        chengdongli@tencent.com
-Subject: Re: [PATCH v4] perf test tsc: Fix error message report when not
- supported.
-Message-ID: <YlGbpO8nP32Iqkwb@kernel.org>
-References: <CAC2pzGdMFmtV8YNR4DszoATjM80uYNwrnW5As6vgBsyXVcWueA@mail.gmail.com>
- <20220408084748.43707-1-chengdongli@tencent.com>
- <00e04618-f7ed-e016-cddf-0475fdc5fe91@intel.com>
+To:     Eric Lin <eric.lin@sifive.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        iii@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        paul.walmsley@sifive.com, greentime.hu@sifive.com
+Subject: Re: [PATCH 1/1] perf jitdump: Add riscv64 support.
+Message-ID: <YlGgro3TupbOEnJC@kernel.org>
+References: <20220406142606.18464-1-eric.lin@sifive.com>
+ <20220406142606.18464-2-eric.lin@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00e04618-f7ed-e016-cddf-0475fdc5fe91@intel.com>
+In-Reply-To: <20220406142606.18464-2-eric.lin@sifive.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Apr 08, 2022 at 12:16:36PM +0300, Adrian Hunter escreveu:
-> On 08/04/2022 11.47, Chengdong Li wrote:
-> > From: Chengdong Li <chengdongli@tencent.com>
-> > 
-> > By default `perf test tsc` does not return the error message
-> > when the child process detected kernel does not support. Instead,
-> > the child process print error message to stderr, unfortunately
-> > the stderr is redirected to /dev/null when verbose <= 0.
-> > 
-> > This patch did three things:
-> > - returns TEST_SKIP to the parent process instead of TEST_OK when
-> >   perf_read_tsc_conversion() is not supported.
-> > - add a new subtest of testing if TSC is supported on current
-> >   architecture by moving exist code to a separate function.
-> >   It avoids two places in test__perf_time_to_tsc() that return
-> >   TEST_SKIP by doing this.
-> > - extended test suite definition to contain above two subtests.
-> >   Current test_suite and test_case structs do not support printing
-> >   skip reason when the number of subtest less than 1. To print skip
-> >   reason, it is necessary to extend current test suite definition.
-> > 
-> > Changes since v3:
-> > - refine commit message again to make it clear. 
-> > 
-> > Changes since v2:
-> > - refine error message format.
-> > - refine commit log message according to Adrian's review comments.
-> > 
-> > Changes since v1 (thanks for the feedback from Adrian Hunter):
-> > - rebase commit to current source.
-> > 
-> > Signed-off-by: Chengdong Li <chengdongli@tencent.com>
-> 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Em Wed, Apr 06, 2022 at 10:26:06PM +0800, Eric Lin escreveu:
+> Signed-off-by: Eric Lin <eric.lin@sifive.com>
 
-Thanks, applied.
+Can you plese provide some series of commands demonstrating the usage of
+this functionality on riscv?
+
+A dump, for instance.
 
 - Arnaldo
 
- 
-> > ---
-> >  tools/perf/tests/perf-time-to-tsc.c | 36 +++++++++++++++++++++--------
-> >  1 file changed, 27 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
-> > index d12d0ad81801..cc6df49a65a1 100644
-> > --- a/tools/perf/tests/perf-time-to-tsc.c
-> > +++ b/tools/perf/tests/perf-time-to-tsc.c
-> > @@ -47,6 +47,17 @@
-> >  	}					\
-> >  }
-> >  
-> > +static int test__tsc_is_supported(struct test_suite *test __maybe_unused,
-> > +				  int subtest __maybe_unused)
-> > +{
-> > +	if (!TSC_IS_SUPPORTED) {
-> > +		pr_debug("Test not supported on this architecture\n");
-> > +		return TEST_SKIP;
-> > +	}
-> > +
-> > +	return TEST_OK;
-> > +}
-> > +
-> >  /**
-> >   * test__perf_time_to_tsc - test converting perf time to TSC.
-> >   *
-> > @@ -70,7 +81,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
-> >  	struct perf_cpu_map *cpus = NULL;
-> >  	struct evlist *evlist = NULL;
-> >  	struct evsel *evsel = NULL;
-> > -	int err = -1, ret, i;
-> > +	int err = TEST_FAIL, ret, i;
-> >  	const char *comm1, *comm2;
-> >  	struct perf_tsc_conversion tc;
-> >  	struct perf_event_mmap_page *pc;
-> > @@ -79,10 +90,6 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
-> >  	u64 test_time, comm1_time = 0, comm2_time = 0;
-> >  	struct mmap *md;
-> >  
-> > -	if (!TSC_IS_SUPPORTED) {
-> > -		pr_debug("Test not supported on this architecture");
-> > -		return TEST_SKIP;
-> > -	}
-> >  
-> >  	threads = thread_map__new(-1, getpid(), UINT_MAX);
-> >  	CHECK_NOT_NULL__(threads);
-> > @@ -124,8 +131,8 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
-> >  	ret = perf_read_tsc_conversion(pc, &tc);
-> >  	if (ret) {
-> >  		if (ret == -EOPNOTSUPP) {
-> > -			fprintf(stderr, " (not supported)");
-> > -			return 0;
-> > +			pr_debug("perf_read_tsc_conversion is not supported in current kernel\n");
-> > +			err = TEST_SKIP;
-> >  		}
-> >  		goto out_err;
-> >  	}
-> > @@ -191,7 +198,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
-> >  	    test_tsc >= comm2_tsc)
-> >  		goto out_err;
-> >  
-> > -	err = 0;
-> > +	err = TEST_OK;
-> >  
-> >  out_err:
-> >  	evlist__delete(evlist);
-> > @@ -200,4 +207,15 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
-> >  	return err;
-> >  }
-> >  
-> > -DEFINE_SUITE("Convert perf time to TSC", perf_time_to_tsc);
-> > +static struct test_case time_to_tsc_tests[] = {
-> > +	TEST_CASE_REASON("TSC support", tsc_is_supported,
-> > +			 "This architecture does not support"),
-> > +	TEST_CASE_REASON("Perf time to TSC", perf_time_to_tsc,
-> > +			 "perf_read_tsc_conversion is not supported"),
-> > +	{ .name = NULL, }
-> > +};
-> > +
-> > +struct test_suite suite__perf_time_to_tsc = {
-> > +	.desc = "Convert perf time to TSC",
-> > +	.test_cases = time_to_tsc_tests,
-> > +};
+> ---
+>  tools/perf/arch/riscv/Makefile | 1 +
+>  tools/perf/util/genelf.h       | 3 +++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
+> index 1aa9dd772489..a8d25d005207 100644
+> --- a/tools/perf/arch/riscv/Makefile
+> +++ b/tools/perf/arch/riscv/Makefile
+> @@ -2,3 +2,4 @@ ifndef NO_DWARF
+>  PERF_HAVE_DWARF_REGS := 1
+>  endif
+>  PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+> +PERF_HAVE_JITDUMP := 1
+> diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
+> index 3db3293213a9..ae138afe6c56 100644
+> --- a/tools/perf/util/genelf.h
+> +++ b/tools/perf/util/genelf.h
+> @@ -38,6 +38,9 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+>  #elif defined(__s390x__)
+>  #define GEN_ELF_ARCH	EM_S390
+>  #define GEN_ELF_CLASS	ELFCLASS64
+> +#elif defined(__riscv) && __riscv_xlen == 64
+> +#define GEN_ELF_ARCH	EM_RISCV
+> +#define GEN_ELF_CLASS	ELFCLASS64
+>  #else
+>  #error "unsupported architecture"
+>  #endif
+> -- 
+> 2.35.1
 
 -- 
 
