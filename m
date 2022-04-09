@@ -2,157 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FADC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Apr 2022 23:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Apr 2022 06:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236587AbiDHXyX (ORCPT
+        id S233998AbiDIG33 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Apr 2022 19:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59318 "EHLO
+        Sat, 9 Apr 2022 02:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234490AbiDHXyW (ORCPT
+        with ESMTP id S230444AbiDIG32 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Apr 2022 19:54:22 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB9E165BA1
-        for <linux-perf-users@vger.kernel.org>; Fri,  8 Apr 2022 16:52:14 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id e24so1135730wrc.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Apr 2022 16:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Z5lmTeyx84Yo2aB1/h1dMObiSZnUIdjrOa7dhn9z+0=;
-        b=bWrf8tXOOR8KJK7v9SrFzKCWzYyURowo3Mex/cgaWSy0JHDrBN5HbmpK0nYBuvar+5
-         hQbnXjbZsp7mu6M40ZDEUBVg+r0T1Muvri627DKFFIgkezlfeTJQSFF2kmDHiIP6xOxY
-         u6+ylUb+xzzk1Bm8UKJppu+9esqExyHMHhtxm389OAPwJ3q7fBzdS6qgiIRCClFTpixB
-         KupVRwkNVe5fcJDFhyxzRO0m/00vtg4zSw241C14U2jbyrzsCesen08pgQQjo2mIaoCV
-         jVQXPJhmzNIq/6XPeBz0GNrNQmnv834mZI9BFdU85VA6JI2Km9PSLYbsq3lZSfReDUvf
-         HISg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Z5lmTeyx84Yo2aB1/h1dMObiSZnUIdjrOa7dhn9z+0=;
-        b=cO9kNGsPsyD1JYgMWZReGfJJ5fL/C05BbgAJKBkUDWUWziSRVvRFDB5kH0T/jaP3es
-         oj90NSwZkLTHQFuBpRTE2t+WlhzP+DEFtBGGbsdgZasjzuMRQmpzj/FpH+BG1WqC5eNU
-         8Jxy71SpspU1YIV7fl2WYbq31OZZ43zP7c3GZNz4xHlh4t9UaTs4Jzz7zLdbYMgGswEa
-         N9WIFtBb6LANn79/uupInp4HY7NQIRYJocrdilnjFekRfgIZD2Mcz0T2nW87Vx8I75g9
-         L+5cFougGmir1tOF3fDZHMXmrj8Y3Nyb9yi9CzeMx+Jor1A8DrVXL5pGSPbu4JmeuB/1
-         hKwg==
-X-Gm-Message-State: AOAM530X0g9C/YAHt9W3ToxjY8Dn4L06qUk4uCV2WSL9qVtj0l36G3zs
-        7lTJ8rkrjL0C7zOo1kz42lMHQE2UbKc86ZC6QJQ9yg==
-X-Google-Smtp-Source: ABdhPJwhpFPHZ6T5uG1eJYKJykakLx69sYt54ZUlpc0GREa0vdDTuFMxX6xYub8+/m83iXAOcL9lfessfIuumOJOb78=
-X-Received: by 2002:adf:f6c4:0:b0:206:1581:dabc with SMTP id
- y4-20020adff6c4000000b002061581dabcmr16707057wrp.375.1649461933269; Fri, 08
- Apr 2022 16:52:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220407230503.1265036-1-irogers@google.com> <CAM9d7cjM5jpPfdWUvoezYYJoz_Sh1rHpGHVGAvxOqxzb=AKBVQ@mail.gmail.com>
-In-Reply-To: <CAM9d7cjM5jpPfdWUvoezYYJoz_Sh1rHpGHVGAvxOqxzb=AKBVQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 8 Apr 2022 16:52:00 -0700
-Message-ID: <CAP-5=fULT859R4-x4RRsvKEUSrGYySVVSxtWSWYUoKC0M0vCYg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Tidy up symbol end fixup
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sat, 9 Apr 2022 02:29:28 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F322DB8;
+        Fri,  8 Apr 2022 23:27:23 -0700 (PDT)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2391w3ba025898;
+        Sat, 9 Apr 2022 06:27:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=nYfBhDx5KHSviKmstdKzW4aGEpU3WaJk1veF4iMWIYQ=;
+ b=lZAT0Jq4ePVPHjzHWWjB/o3Q7pG2Y+j55Ob4S6hcGssB4c4DGDL3Ocis7aaMFms834EL
+ qNvd8ev4GvfzpWdZbTlpYZgHyaVov/Z4hTdNKio36DHg0dPmcdLW4BSow8PJZCDo7oKL
+ cJ1G2+duxuot+Q0jhrEBU96LZ0QRGs9hfTmtyOYO2PfmqJNZveV61+PhHOrmH8uqPwrF
+ VgOOvFdj0LX9Psu5+EcoH8rAT2Cdlt5o2pM1G/ZhGiAkOeFSsIGxvupCBcunMzm0IQdk
+ eWOlzA2jSnT6mgAKwpEmO8j4UHLUJfKha+bQdWAAEFa9Bhodh1jmupksovQ/9SDwDGY5 OQ== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fb0xs2r47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 09 Apr 2022 06:27:08 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2396OB1g017901;
+        Sat, 9 Apr 2022 06:27:05 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma01fra.de.ibm.com with ESMTP id 3fb1s8r5kr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 09 Apr 2022 06:27:05 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2396RBrd39911928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 9 Apr 2022 06:27:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C9A2AE051;
+        Sat,  9 Apr 2022 06:27:03 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75477AE04D;
+        Sat,  9 Apr 2022 06:26:57 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.211.90.23])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  9 Apr 2022 06:26:57 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: [PATCH V3] testing/selftests/mqueue: Fix mq_perf_tests to free
+ the allocated cpu set
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <1a1d119a-e68e-a590-a518-cfb3c78ed888@linuxfoundation.org>
+Date:   Sat, 9 Apr 2022 11:56:53 +0530
+Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
+        disgoel@linux.vnet.ibm.com,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Li Huafei <lihuafei1@huawei.com>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
-        William Cohen <wcohen@redhat.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Denis Nikitin <denik@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        maddy@linux.vnet.ibm.com, kajoljain <kjain@linux.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <4973403A-8E1A-4863-B5B1-C56BC2707B4A@linux.vnet.ibm.com>
+References: <20220408072431.94947-1-atrajeev@linux.vnet.ibm.com>
+ <1a1d119a-e68e-a590-a518-cfb3c78ed888@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: SQpAvJspqU78G8kAEF2mu5h6fMw24oIl
+X-Proofpoint-GUID: SQpAvJspqU78G8kAEF2mu5h6fMw24oIl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-04-08_09,2022-04-08_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ mlxscore=0 phishscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204090037
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 8, 2022 at 10:15 AM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hi Ian,
->
-> On Thu, Apr 7, 2022 at 4:05 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Fixing up more symbol ends as introduced in:
-> > https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
-> > caused perf annotate to run into memory limits - every symbol holds
-> > all the disassembled code in the annotation, and so making symbols
-> > ends further away dramatically increased memory usage (40MB to
-> >  >1GB). Modify the symbol end logic so that special kernel cases aren't
-> > applied in the common case.
->
-> I'm not sure what was the actual problem the patch tried to solve.
-> It seems like a specific problem on powerpc + kprobes and now
-> it affects all other architectures.
 
-Thanks Namhyung, this patch set reverts that.
 
-> In the above commit, optinsn_slot and kprobe_optinsn_page will
-> have the same address and optinsn_slot cannot be fixed up.
-> But I guess the kprobe_optinsn_page still can be fixed up and
-> you can use the symbol instead, no?
->
-> To me, it'd be better to revert the change and add a special
-> handling for the kprobe insn pages as they appear as
-> modules.
->
-> Also, all the arch symbols fixup routine seem to do the same
-> then we might move it to the general logic.
+> On 09-Apr-2022, at 12:00 AM, Shuah Khan <skhan@linuxfoundation.org> wrote:
+> 
+> On 4/8/22 1:24 AM, Athira Rajeev wrote:
+>> The selftest "mqueue/mq_perf_tests.c" use CPU_ALLOC to allocate
+>> CPU set. This cpu set is used further in pthread_attr_setaffinity_np
+>> and by pthread_create in the code. But in current code, allocated
+>> cpu set is not freed.
+>> Fix this issue by adding CPU_FREE in the "shutdown" function which
+>> is called in most of the error/exit path for the cleanup. There are
+>> few error paths which exit without using shutdown. Add a common goto
+>> error path with CPU_FREE for these cases.
+>> Fixes: 7820b0715b6f ("tools/selftests: add mq_perf_tests")
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> Changelog:
+>>  From v2 -> v3:
+>>   Addressed review comment from Shuah Khan to add
+>>   common "goto" error path with CPU_FREE for few exit
+>>   cases.
+>>  From v1 -> v2:
+>>   Addressed review comment from Shuah Khan to add
+>>   CPU_FREE in other exit paths where it is needed
+> 
+> Thank you. I will queue this up for Linux 5.18-rc3
 
-Agreed. It isn't possible for me to test that behavior and so the
-change tries to make the behavior clearer and to isolate Michael's
-change to PowerPC. I like the idea of removing the weak symbols and
-making the behavior common. I also don't know why we're trying to fix
-broken elf file symbols and don't just let the assembly/compiler
-writers fix that.
+Thanks Shuah
 
-Thanks,
-Ian
+Athira
+> 
+> thanks,
+> -- Shuah
 
-> Thanks,
-> Namhyung
->
-> >
-> > Minor fix to perf annotate to not stall when stderr is full.
-> >
-> > Ian Rogers (5):
-> >   perf annotate: Drop objdump stderr
-> >   perf symbols: Always do architecture specific fixups
-> >   perf symbols: Add is_kernel argument to fixup end
-> >   perf symbol: By default only fix zero length symbols
-> >   perf symbols: More specific architecture end fixing
-> >
-> >  tools/perf/arch/arm64/util/machine.c   | 14 +++++++++-----
-> >  tools/perf/arch/powerpc/util/machine.c | 10 +++++++---
-> >  tools/perf/arch/s390/util/machine.c    | 12 ++++++++----
-> >  tools/perf/util/annotate.c             |  1 +
-> >  tools/perf/util/symbol-elf.c           |  2 +-
-> >  tools/perf/util/symbol.c               | 14 ++++++++------
-> >  tools/perf/util/symbol.h               |  4 ++--
-> >  7 files changed, 36 insertions(+), 21 deletions(-)
-> >
-> > --
-> > 2.35.1.1178.g4f1659d476-goog
-> >
