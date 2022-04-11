@@ -2,143 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE31C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 19:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7693BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 19:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349422AbiDKTLD (ORCPT
+        id S237280AbiDKTnM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Apr 2022 15:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47472 "EHLO
+        Mon, 11 Apr 2022 15:43:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349421AbiDKTLC (ORCPT
+        with ESMTP id S231774AbiDKTnL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Apr 2022 15:11:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B21636179;
-        Mon, 11 Apr 2022 12:08:47 -0700 (PDT)
+        Mon, 11 Apr 2022 15:43:11 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66647205EB;
+        Mon, 11 Apr 2022 12:40:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0F49BB8182A;
-        Mon, 11 Apr 2022 19:08:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F43C385A3;
-        Mon, 11 Apr 2022 19:08:44 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 22A5BB817AA;
+        Mon, 11 Apr 2022 19:40:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73455C385A6;
+        Mon, 11 Apr 2022 19:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649704124;
-        bh=/uLswY1Ogxto367uh/Q5JyXgkYDtYi+G+fGwpDT12zw=;
+        s=k20201202; t=1649706053;
+        bh=AAe7VENFlNRV97ftvKBoz9pzHBOWQt+AmSLXbo397uc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lv5yWxFgnHyXNF8hO9MtQRITMaEdqiZ6WeCUnFHTIneWAGFK5TzAq2TCpwFz6p4Vh
-         a2D+hOGTQzTo5mPNUlslIHikcDc7Sd6GN/q/Owj1h1Q+l+4e6eSYtrPmZpFapLHD81
-         VrS/YYac2Bz+Hu7WqWAVcOO5xtpp1fW54A37k7PpU7Ohs3Eq1WQAw+e57ceXeBWecE
-         DqQqtidO4Ck7OX2ZJCSKw+cVrzFjvRXJhYVbXoZ3jDeYHQa7bRtfPjeHi3BHpIj/mj
-         otbRhsTKHT92y05qsO6ebTz8gudVQ6vTX9Y3PTobfRRUwY5Z2CVIGhMJBW4jPSCz/l
-         +xN7Hqtrgzefw==
+        b=RqJZbEOL0hke4a2uZ9heYUBogZKj7un4DgEqP7zAsyrg5LinDehxQJQZu6YgAmulQ
+         3LB6CEh53+Ge4IeGEjppoitRfwq9l0OyI2sRhRfionobQh/IIkQve9JqPifmAfCR/E
+         yVXfPNXaAt+BzD6Ca9VvtgetPKt0J1tRmMMyMfeNm4LGBvu6VtrmwzBr419jss7akL
+         xEL/K1/PaCpRs2dDXePL036Ap55UlLroUpUeV5+vabOhPVdnzFj4bkxFQbvFp+BOje
+         P6+R4adAxRiHpOn7hmq/H2hEC3fuZdWcMoOwyrdILzNCw4EnSNSFXDVQrMcWF4i+iS
+         i368QDm+hbZ0w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2A50B40407; Mon, 11 Apr 2022 16:08:42 -0300 (-03)
-Date:   Mon, 11 Apr 2022 16:08:42 -0300
+        id 12B1F40407; Mon, 11 Apr 2022 16:40:50 -0300 (-03)
+Date:   Mon, 11 Apr 2022 16:40:50 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     carsten.haitzler@foss.arm.com, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, suzuki.poulose@arm.com,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf test: Shell - Limit to only run executable
- scripts in tests
-Message-ID: <YlR8urE9UL99eBIv@kernel.org>
-References: <20220309122859.31487-1-carsten.haitzler@foss.arm.com>
- <20220410012410.GA14326@leoy-ThinkPad-X240s>
+To:     Eric Lin <eric.lin@sifive.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        iii@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        paul.walmsley@sifive.com
+Subject: Re: [PATCH v2 1/1] perf jitdump: Add riscv64 support.
+Message-ID: <YlSEQrbnbwNt7hNv@kernel.org>
+References: <20220411105438.21366-1-eric.lin@sifive.com>
+ <20220411105438.21366-2-eric.lin@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220410012410.GA14326@leoy-ThinkPad-X240s>
+In-Reply-To: <20220411105438.21366-2-eric.lin@sifive.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Apr 10, 2022 at 09:24:10AM +0800, Leo Yan escreveu:
-> On Wed, Mar 09, 2022 at 12:28:57PM +0000, carsten.haitzler@foss.arm.com wrote:
-> > From: Carsten Haitzler <carsten.haitzler@arm.com>
-> > 
-> > Perf test's shell runner will just run everything in the tests
-> > directory (as long as it's not another directory or does not begin
-> > with a dot), but sometimes you find files in there that are not shell
-> > scripts - perf.data output for example if you do some testing and then
-> > the next time you run perf test it tries to run these. Check the files
-> > are executable so they are actually intended to be test scripts and
-> > not just some "random junk" files there.
-> > 
-> > Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+Em Mon, Apr 11, 2022 at 06:54:38PM +0800, Eric Lin escreveu:
+> This patch enable perf jitdump for riscv64 and it tested with V8 on qemu rv64.
 > 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> Qemu rv64:
+> $ perf record -e cpu-clock -c 1000 -g -k mono ./d8_rv64 --perf-prof --no-write-protect-code-memory test.js
+> $ perf inject -j -i perf.data -o perf.data.jitted
+> $ perf report -i perf.data.jitted
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> > ---
-> >  tools/perf/tests/builtin-test.c |  4 +++-
-> >  tools/perf/util/path.c          | 14 +++++++++++++-
-> >  tools/perf/util/path.h          |  1 +
-> >  3 files changed, 17 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> > index fac3717d9ba1..3c34cb766724 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -296,7 +296,9 @@ static const char *shell_test__description(char *description, size_t size,
-> >  
-> >  #define for_each_shell_test(entlist, nr, base, ent)	                \
-> >  	for (int __i = 0; __i < nr && (ent = entlist[__i]); __i++)	\
-> > -		if (!is_directory(base, ent) && ent->d_name[0] != '.')
-> > +		if (!is_directory(base, ent) && \
-> > +			is_executable_file(base, ent) && \
-> > +			ent->d_name[0] != '.')
-> >  
-> >  static const char *shell_tests__dir(char *path, size_t size)
-> >  {
-> > diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
-> > index caed0336429f..ce80b79be103 100644
-> > --- a/tools/perf/util/path.c
-> > +++ b/tools/perf/util/path.c
-> > @@ -86,9 +86,21 @@ bool is_directory(const char *base_path, const struct dirent *dent)
-> >  	char path[PATH_MAX];
-> >  	struct stat st;
-> >  
-> > -	sprintf(path, "%s/%s", base_path, dent->d_name);
-> > +	snprintf(path, sizeof(path), "%s/%s", base_path, dent->d_name);
-> >  	if (stat(path, &st))
-> >  		return false;
-> >  
-> >  	return S_ISDIR(st.st_mode);
-> >  }
-> > +
-> > +bool is_executable_file(const char *base_path, const struct dirent *dent)
-> > +{
-> > +	char path[PATH_MAX];
-> > +	struct stat st;
-> > +
-> > +	snprintf(path, sizeof(path), "%s/%s", base_path, dent->d_name);
-> > +	if (stat(path, &st))
-> > +		return false;
-> > +
-> > +	return !S_ISDIR(st.st_mode) && (st.st_mode & S_IXUSR);
-> > +}
-> > diff --git a/tools/perf/util/path.h b/tools/perf/util/path.h
-> > index 083429b7efa3..d94902c22222 100644
-> > --- a/tools/perf/util/path.h
-> > +++ b/tools/perf/util/path.h
-> > @@ -12,5 +12,6 @@ int path__join3(char *bf, size_t size, const char *path1, const char *path2, con
-> >  
-> >  bool is_regular_file(const char *file);
-> >  bool is_directory(const char *base_path, const struct dirent *dent);
-> > +bool is_executable_file(const char *base_path, const struct dirent *dent);
-> >  
-> >  #endif /* _PERF_PATH_H */
-> > -- 
-> > 2.32.0
-> > 
+> Output:
+>  To display the perf.data header info, please use --header/--header-only options.
+> 
+>  Total Lost Samples: 0
+> 
+>  Samples: 87K of event 'cpu-clock'
+>  Event count (approx.): 87974000
+> 
+>  Children      Self  Command          Shared Object                Symbol
+> 
+> ....
+>      0.28%     0.06%  d8_rv64          d8_rv64                      [.] _ZN2v88i
+> nternal6WasmJs7InstallEPNS0_7IsolateEb
+>      0.28%     0.00%  d8_rv64          d8_rv64                      [.] _ZN2v88i
+> nternal10ParserBaseINS0_6ParserEE22ParseLogicalExpressionEv
+>      0.28%     0.03%  d8_rv64          jitted-112-76.so             [.] Builtin:
+> InterpreterEntryTrampoline
+>      0.12%     0.00%  d8_rv64          d8_rv64                      [.] _ZN2v88i
+> nternal19ContextDeserializer11DeserializeEPNS0_7IsolateENS0_6HandleINS0_13JSGlob
+> alProxyEEENS_33DeserializeInternalFieldsCallbackE
+>      0.12%     0.01%  d8_rv64          jitted-112-651.so            [.] Builtin:
+> CEntry_Return1_DontSaveFPRegs_ArgvOnStack_NoBuiltinExit
+> ....
+> 
+> Signed-off-by: Eric Lin <eric.lin@sifive.com>
+> ---
+>  tools/perf/arch/riscv/Makefile | 1 +
+>  tools/perf/util/genelf.h       | 3 +++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
+> index 1aa9dd772489..a8d25d005207 100644
+> --- a/tools/perf/arch/riscv/Makefile
+> +++ b/tools/perf/arch/riscv/Makefile
+> @@ -2,3 +2,4 @@ ifndef NO_DWARF
+>  PERF_HAVE_DWARF_REGS := 1
+>  endif
+>  PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+> +PERF_HAVE_JITDUMP := 1
+> diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
+> index 3db3293213a9..ae138afe6c56 100644
+> --- a/tools/perf/util/genelf.h
+> +++ b/tools/perf/util/genelf.h
+> @@ -38,6 +38,9 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+>  #elif defined(__s390x__)
+>  #define GEN_ELF_ARCH	EM_S390
+>  #define GEN_ELF_CLASS	ELFCLASS64
+> +#elif defined(__riscv) && __riscv_xlen == 64
+> +#define GEN_ELF_ARCH	EM_RISCV
+> +#define GEN_ELF_CLASS	ELFCLASS64
+>  #else
+>  #error "unsupported architecture"
+>  #endif
+> -- 
+> 2.35.1
 
 -- 
 
