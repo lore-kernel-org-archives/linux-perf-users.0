@@ -2,62 +2,63 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15914C4167D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 08:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50438C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 08:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343885AbiDKIg7 (ORCPT
+        id S239392AbiDKIi6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Apr 2022 04:36:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36468 "EHLO
+        Mon, 11 Apr 2022 04:38:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343859AbiDKIgd (ORCPT
+        with ESMTP id S232648AbiDKIi5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Apr 2022 04:36:33 -0400
-Received: from esa5.fujitsucc.c3s2.iphmx.com (esa5.fujitsucc.c3s2.iphmx.com [68.232.159.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C651A13EBE;
-        Mon, 11 Apr 2022 01:34:16 -0700 (PDT)
+        Mon, 11 Apr 2022 04:38:57 -0400
+X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Apr 2022 01:36:42 PDT
+Received: from esa17.fujitsucc.c3s2.iphmx.com (esa17.fujitsucc.c3s2.iphmx.com [216.71.158.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB34B3E5FF;
+        Mon, 11 Apr 2022 01:36:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1649666060; x=1681202060;
+  t=1649666204; x=1681202204;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=b72HxvR9xoGZZj49IuSlV7SRxZcVircGes1Z8uFduFU=;
-  b=k1S2ncHABIgVP063QKjs61xJdsFh9Xk6JYQtZvpXIcsRTauZIh9ekcR3
-   Gpc143za++n12HaoT22k3QILpoCnKs1ta9vxZVpHeW++EpmsCHRNXbF/d
-   3lIWtGCbx/rD0E3c89LKCODVvHmx8nW9yDFxHfOD6/h8+Ggn5yzTdvGJA
-   t2U1u888V+r6UfJ2xdvq0eebPwUvReAr8WCKAQvCtoSwzE1nuIDJjZHfi
-   gYUbaJWc0PxCLy6rwcUB9BhKnPIyyJUTt4O9aaXEwO5YDGTlqWWxRxnvH
-   85cK2PYywYxelhCS2j1FQhC7qkjvJANvOM51RjtVdi1SD/sUiSZyALGKu
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10313"; a="53758170"
+  bh=iGpKy+gBRMcunAFC+4qDTZMw/GK2nGQ5+qIaEY7qEFM=;
+  b=U3GRL3IuhDlXXVgndrfGm7TUDASlHPgH5mkDDdGeFYBzPMHkChRASEe5
+   wSFgnnz3CeW2STMG2b3nqTI6iqd/4OjHPayIK59GYS374YXNHqEA3tE/y
+   7GxnXeGB0h0ag8AwQiiieJa0p+Tm1xq4a5h08CiXO6w4d5CqNiEQFu5Ut
+   N67l3dBxpjhZW44RZbV/VSP4vv29yzVMDjCmDJmx5X+Nml45CuETLOMNa
+   iSQs2YiEFjcE2I9qAwg27zJRiOZlYxEQSHpJwqMv++xbhhHnIkV88ZoV5
+   Dg5q6JqWE3ld0fJ9sgAYjehe8/OAadxsWoIihc38Z6WfZVZ2Ezr6R5LWD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10313"; a="53631222"
 X-IronPort-AV: E=Sophos;i="5.90,251,1643641200"; 
-   d="scan'208";a="53758170"
-Received: from mail-tycjpn01lp2169.outbound.protection.outlook.com (HELO JPN01-TYC-obe.outbound.protection.outlook.com) ([104.47.23.169])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 17:34:13 +0900
+   d="scan'208";a="53631222"
+Received: from mail-os0jpn01lp2106.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.106])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2022 17:35:36 +0900
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Iz/Vi19kijVI0qM2vxcVcPaS0DsmzNnnhfvohZn92M77exfPgku+CXIug3zipY9l2b4/KhINncQik0sTjR2KgLcjbuj5tn20UdAy7m+YUPjD03i2DmmkF05ATbMZUbUs1RyeZdkwYtdwvwZmQ7kdpgyzGF9fKL+xEJfNioJoMb1HhSGgc/nQs7eUyYvJXjUJ2pc58Nz+pb9pZ4WW5M+Pfo33uWtLW8+4c2DiBkPHrM0oitCv+k3W679ov4EXw1G1gCzjrerx0DhfhpmfzESY+OdtbzU+g75t7EWYlvB7R4LjQML020mYTE7iIFsPX4+PQbVtiL2zdLBWY7b9RgaAzg==
+ b=FXbK0iJwgGU75yUkTq6UuVqQNZof391dTPX7Y5rT4laiYy1bBfgJC5NKKC16aXbaPGmB79Blx0AJqUZS8MAWxG0gwIthKn9UXwcu4Gma0hGDlXunVz0Ol7wUteA/RyH6SHq6RhD/FgA2LYvG5dhfm/K7rMzeoVcpo5l35joGorcidK6ZxfN8rrWd2x7BB97LHIKTHttipaB+QcJIbjoGTs/+FDWhZoRY1MW2xe1yuVbtfW/4o54FVDUR0VUzmh2nrpVEYJxmN+APqJeMwcrPfTsGBn6vEVTp39t0B+t8dsgcjOYr4akfh+B0qopq9ZFNUSnEzmt5ztg9ZHx9ob0UZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8e4PJykt1Xu0141KT95O1+wTtIzXwat0e63ayyce7Us=;
- b=e1v7FKyDPfILAw92wmyDAqWWBvA/2W8kmyjhmo9OksiXS1eudBJ7Rbj6Dbvf3Q7pvbBc6A/pN58laO5EuQ1Ho433gJVZvU6sZr6kJ7k4hxu3m6uNPKIt4u54O+/LgiwMGasEv1lCTEa9ZkwtwyS5TEhl+j2wi+RC9+kuOOF050RKEY/1wIk4uBXL1Eyrfj4Liq7AHLz4qK+E90e85JUv6Z5bpXkBWQ0uh11ApxE5TJEwe9r5YYWSbP+YXP0lKjL6iFYYuP/xVwK/rEj+4d8QuhRVjA/fqRvRHDAYWf5mPfPWJA1U7yw9Ru+3uHs5XnIQ/mADIHYOEPTVFWFZ7llKjQ==
+ bh=Vge4s+LA8h2jmrspqutVwtYQMpZpFt68IbiOK49GGuE=;
+ b=dUF6KKO1TBapxppb/PD+gwkALDP2pZWn3mNrP+0ir1A1OVqBtOispP5OZlypRTzasAsH+J4rjYaH4leSMaXdQj2WGc41L0tvhE+VIlPYInG82U3XOd5aikah5WllgZPCgrYVmbwv9Qvsxqdp4WZh7OaxU17aDL9CIOMXvwrfgIOp69vVAIKOT83bdA/drSDn0hgiacdlNukpIKP+i53eh07tGceTw/WYCkJA9TsS19+imqXE4jib5ypDPWtkbh0qKvvkuClvfOH8TgHgEF8MPHPp2zqBHGSj/ct0AOMjjE2kpxvDREV9HoAfq1k1NRnWIkevTMtgu999SZrjZOOLEg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
  dkim=pass header.d=fujitsu.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=fujitsu.onmicrosoft.com; s=selector2-fujitsu-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8e4PJykt1Xu0141KT95O1+wTtIzXwat0e63ayyce7Us=;
- b=kNxhBC1bPOk7a4Nsgoxj0sT7hq6fwiCiHbDy3bzF2zdswIAOCH0BD66FmWNfKUfKz/0bll3rRGAH5hysNLPYfSXW7O0nTaW7arsfGEYIjZTx2UoYnviwD4+l7ZDYDHBC9duonh7Xp2Iuib2FdKfkW4XEJY9M/k8nGZON9BrdPpk=
+ bh=Vge4s+LA8h2jmrspqutVwtYQMpZpFt68IbiOK49GGuE=;
+ b=eAP0L0CcY3ALxhZrUstqf0Zges1cNcIdQOtcDoumdLcRslFGf+XZT5fjNDbnqJjq4ped21ubIuDx6wYBwIp1dfSmteHmVIoWu9OAeXnL83LrRu6bOKGDSy8OabebLwyV4epsPvr78hS1mjZrSJBBEJC6ga+afS9+7sIer87DYoU=
 Received: from OSBPR01MB4600.jpnprd01.prod.outlook.com (2603:1096:604:7e::12)
  by OSAPR01MB3316.jpnprd01.prod.outlook.com (2603:1096:604:5b::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.29; Mon, 11 Apr
- 2022 08:34:09 +0000
+ 2022 08:35:32 +0000
 Received: from OSBPR01MB4600.jpnprd01.prod.outlook.com
  ([fe80::5db:a021:ce3e:8244]) by OSBPR01MB4600.jpnprd01.prod.outlook.com
  ([fe80::5db:a021:ce3e:8244%4]) with mapi id 15.20.5144.029; Mon, 11 Apr 2022
- 08:34:09 +0000
+ 08:35:32 +0000
 From:   "nakamura.shun@fujitsu.com" <nakamura.shun@fujitsu.com>
 To:     'Jiri Olsa' <olsajiri@gmail.com>
 CC:     "peterz@infradead.org" <peterz@infradead.org>,
@@ -70,16 +71,16 @@ CC:     "peterz@infradead.org" <peterz@infradead.org>,
         "namhyung@kernel.org" <namhyung@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: RE: [RFC PATCH v2 4/7] libperf: Introduce perf_{evsel,
- evlist}__open_opt with extensible struct opts
-Thread-Topic: [RFC PATCH v2 4/7] libperf: Introduce perf_{evsel,
- evlist}__open_opt with extensible struct opts
-Thread-Index: AQHYRD0mlfomz6jCoE+uLALkEGmIQ6zqdMUA
-Date:   Mon, 11 Apr 2022 08:34:09 +0000
-Message-ID: <OSBPR01MB46001064CFA2AF85C1D161B8F7EA9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
+Subject: RE: [RFC PATCH v2 5/7] libperf: Add perf_evsel__check_overflow()
+ functions
+Thread-Topic: [RFC PATCH v2 5/7] libperf: Add perf_evsel__check_overflow()
+ functions
+Thread-Index: AQHYRD0nCXA2T4GG5UGkrEtp9vrZWqzqdW1A
+Date:   Mon, 11 Apr 2022 08:35:32 +0000
+Message-ID: <OSBPR01MB460018BDE6C3F4ABDFE2CBD7F7EA9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
 References: <20220325043829.224045-1-nakamura.shun@fujitsu.com>
- <20220325043829.224045-5-nakamura.shun@fujitsu.com> <YkRgM1obkBQsY2FR@krava>
-In-Reply-To: <YkRgM1obkBQsY2FR@krava>
+ <20220325043829.224045-6-nakamura.shun@fujitsu.com> <YkRgLBTHVQbdX8rK@krava>
+In-Reply-To: <YkRgLBTHVQbdX8rK@krava>
 Accept-Language: ja-JP, en-US
 Content-Language: ja-JP
 X-MS-Has-Attach: 
@@ -87,71 +88,71 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=fujitsu.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d275daea-98a7-471f-cc59-08da1b960c9e
+x-ms-office365-filtering-correlation-id: 0aa849e7-6873-4a17-51b2-08da1b963df5
 x-ms-traffictypediagnostic: OSAPR01MB3316:EE_
-x-microsoft-antispam-prvs: <OSAPR01MB33164839B8E66857500D8450F7EA9@OSAPR01MB3316.jpnprd01.prod.outlook.com>
+x-microsoft-antispam-prvs: <OSAPR01MB33160F4EFA6124C086C52AFFF7EA9@OSAPR01MB3316.jpnprd01.prod.outlook.com>
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +GMKqXBw0KzRbG6MJtRfSIIipLRT/4FbbI91hZ3shJJwx/PCDqK8ztX16ZdOCpj7V5qZbtyN1vT+8AAVZjrgnR0iT0HqCEUdUL9ocCgBQl5rqIGJCeuW78ecbWLCHxx7bkav//1MiKuioeOic943l9LhEV5eFQ0tSOiqqcy/JxjC3SOqNbwrUHRMim0t1qrKtmfxr5QX00u7FBNk6GjXMW0u1eiV8zuABoJPESThgyyNpwKIsqO5iJA/SwyESCv0qe1XPBGmH9a/qW6+Sf3ODXRnayOk55ALPegVpT/bMX591lgUfNVZMWjf0z8ydLslzwyJMA16RwtR+vW8CHuzn8rwlUQLSdammxF+jFfIriRryqnxEj/C+x4hS865YG9r303QjzPBYVSxK2ExA6wvziISzTL2GZGU79qGhRRqIQjRXUnTBDIn0RbSWELkjd4PguIbhlHwgLJinp/0RYL3nIzD8ZtYzGa4ZIfnj2vxbU+Nay0eBsWeCvTsRsCdUy8Obt5VIUJHg1ld6iLEN2G1/zHbjUh9VsnXlZxO56zG12A2n9pgVO2phiHxTdopBEgwvwWYHzu/H9p59YQLhZYnur27naypOpbUVt2I9gjx9rKMJV6aKSHZMcvwT7ehullDH7UwtcWGvp7Hp/7rdctWK8SXPGTmq6AiuMMfGbCnH9dyjN1kGatrBaI61YBxGKKkwqdjIDNv6A30bVmDbsIFMQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB4600.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(7696005)(122000001)(9686003)(6506007)(82960400001)(2906002)(38100700002)(186003)(55016003)(26005)(33656002)(508600001)(316002)(52536014)(76116006)(66446008)(8936002)(66946007)(66556008)(64756008)(66476007)(8676002)(86362001)(38070700005)(6916009)(5660300002)(4326008)(85182001)(71200400001)(54906003)(7416002)(4744005);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: BbQZRbIwaw49hf/Op8kP2546OwhDyo7RLeNyUQ3DMsHCSx0GzjXG3aGERI90FsoiKLE9hzLgNTZ/WUCOUJZxR4cxlgIhazp4UQsvvW2XEot5exKlX4iqXA0z0az+39vWXzKCuvjODBF37BLIgWssLKf8KmOPaRKPBs51lQbpIyqKrJ2QtoUi7DVZdFzOG6gA5MTX5i6NG+xv6fhSNe15C7iAhoDo5uVXWhaLOgtqitED9Oy53TnE0s70VaOI5rBcJUPHKAocJUdgh3Isnw+nY02RoyaUY9d9nHlkw+ye33oUC3MUxBuj61+ZZUPZer1SEs3PifOLDfmtOdhm45qII1c3TWNKQrPt2MpV2f/zVpd4487K7t5WDdHAJe4cmHZf4HxGxbbGv1f7bHcKk0gTxiAvj52XHtP7bbZK6xlexN7PHi+ro5weNfCjDpjHgf8Ey2mwStk7KZgyG+m73DbVViXgUZT0fWULS4r1pvsbn1gTnGjOveuYSeSsI1YkWWQmcRZFAKqm3ryFOictpd6MhpHh0+wrnr0BsBs1xkC72WBVHsriVPb1obR0PU0Nwm8GTEnkr3Ed8eytTrg6u2nK54tg1QKAUgz0jb4+pwG7Vm0HXRQmqTfDOjBCBexVZ2O+M0pPJ+nGXtA8CceFCUGGvkoGnvz86nipvFHYqU7zrTCCRww2sfjG713atuI5HAzK3M3kE9BeE8i059rxVttYTDZQKwPQ4WpiqCwKtjk6YZJyO0z8XmgxB9cMK3cD7h89
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB4600.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(7696005)(122000001)(9686003)(6506007)(82960400001)(2906002)(38100700002)(186003)(55016003)(26005)(33656002)(508600001)(316002)(52536014)(76116006)(66446008)(8936002)(66946007)(66556008)(64756008)(66476007)(8676002)(86362001)(38070700005)(6916009)(5660300002)(4326008)(85182001)(71200400001)(54906003)(7416002)(101420200003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?enNqN3Rla2pBRWdON1ZCMlJ5TmNxemFhdjZ4QUlnWFpsQVBSMGszZEFi?=
- =?iso-2022-jp?B?V0N4S1JxSXUxd3NQOUk0WWVKVzBiWmh3WWVMR1VsSURjWWFhcUZWTWhR?=
- =?iso-2022-jp?B?R3MrN0owZzdIMGVxRGg0WDVuNW9sUEZHZDRaeW4zUW15b1RQSmpBK3BM?=
- =?iso-2022-jp?B?cWt4ZmFLRlE2Smp6ZnQ3dkdLVG8wVkVuK3NnVkNkWjJuSkM5TzBCWDVy?=
- =?iso-2022-jp?B?R0prZDhMQWRxekxDTTgrcmVPSlgxSkpDNlVOY1QrNU9hczNXSHVPcWlt?=
- =?iso-2022-jp?B?TW4zeFBVSEZoOGJmbTRoa2R1dE52QkU2cXBOU0xaZWI4V3dPeWNwK2RL?=
- =?iso-2022-jp?B?c1cwdTJvbjhSdVNzaThUMjJIMFZuM2ZFYmpPNlF0b3o2eXR3YWtubHN3?=
- =?iso-2022-jp?B?M1cwNjNlUTNSUDVsUTdJdkZmdnRuVHd1d1BPcFhnT0tQOEkrOExSbzBT?=
- =?iso-2022-jp?B?akxoQWc0OHJtUVFTTHpmMVYvZFdtcFFLenhtZ1ppdWdpUWFxVlI0QVhr?=
- =?iso-2022-jp?B?ODFNcFA3d2lueXMvL0dlV1pVNUY3YVFsdDcxOTNYRTNRRnF6MnA5S1ds?=
- =?iso-2022-jp?B?NW9uQnB4Z1BhSDVEQ2xxaU9TNnVWUWp1UnVEU1R1SU5lMzh6bDVqZGds?=
- =?iso-2022-jp?B?MWNhU242L002QVA2dVVIeUdCbFdzLzZFcFRGeGFPRWJpU3hJOWNyL2h1?=
- =?iso-2022-jp?B?UUtRajBITG0vZlV2dkUzb3pidDU2YVRCQkFrcDJva2xSWDEvdjQ1dGZp?=
- =?iso-2022-jp?B?czV6QWpSZkFoQVAveEJJRTNMNlc0RVJ1MWtIL29jbDl0ZFhuTG13bENV?=
- =?iso-2022-jp?B?R0xBRWRESit4WjlnRHZibktuQUpOUkpEbFJjSGFndUtITzdMOWJ2d2Ny?=
- =?iso-2022-jp?B?MmxLQzh0WEVPVitMdlZ4d2kxbWN4Mkg0UGdKVXRtQ3FSY1FRMnUwYVla?=
- =?iso-2022-jp?B?VUx2bHd2K0o1Nk5TUm42TEJua2NaY21mRk50UWhZOERSemd4WFd4MEJP?=
- =?iso-2022-jp?B?MUw4Y0tSa0NWV1ljby9GUC9KRFljb004R1JoRmpXZzNmdTlQcVU3THUz?=
- =?iso-2022-jp?B?MCtwM1NGQlhsekc5V3JMenFjbkJIQUlSZlAyYnVtUWN0TytPbHdvSFMx?=
- =?iso-2022-jp?B?K1V2ZkFsa2tpMmN1bE1FNHZIYThyRVpiR2FoUWNjbXpNajg2dSs4dzV1?=
- =?iso-2022-jp?B?eUgzNldxMjZKUDFiMUp0Z1NacEh4QUhaWk9KNUlzNkU2ZnRFbFVJMVkr?=
- =?iso-2022-jp?B?d2I4YTN1UzVJVFdoNzNHU3k4cmlRb3B1NXQ4WmdCUUUwUFcwR3VhemlP?=
- =?iso-2022-jp?B?Vjc1Nm9aeFcwdEpnS0hvUWdpRGpOS0g0ZCt1UWRhM3hBaE1FY3NqZitr?=
- =?iso-2022-jp?B?NjlGZ1BvSVBEWjduQUVuOFpVODhPT08rK3ZCOUdjSnVwaUhMbHYreUg2?=
- =?iso-2022-jp?B?T2hTd1N4VGxaS1dlaG84T1RSNHZ6bFRDWmIyK1oxdGI1R2MyVG9JUUJL?=
- =?iso-2022-jp?B?ZFVKWmxKRC9aUmhrZC9hWm4wM09zNStMUkRFaG9NYlRjSFByUWhLT0Fl?=
- =?iso-2022-jp?B?NnZGUG9raXdEdTI0Q0NKRHJ4N1Y4aGdDZ1ZnZmN0MlpEU2pDSE4zcW1P?=
- =?iso-2022-jp?B?N09WUmxGdkhGcXpsSG1hL1NDb0czdHpBVDU1MEEvZzZ6TjJDdVI4OHFx?=
- =?iso-2022-jp?B?WlhsdlhNVEhsbW1kTThZVXlDTmpSWjUveUFGTENwMFFqZUdYRHFRblVj?=
- =?iso-2022-jp?B?akdZZlA0a0d3b2V3amhTNXlleDhJL0ovcmNnUW5HV2dqUU53SjkwUUlP?=
- =?iso-2022-jp?B?UHJxK2o2alducVdpRkQveEtyKy94d1RKYnNLVHZJVzBNRGwrblRUN0RQ?=
- =?iso-2022-jp?B?ZE4ycTZNT01wWS94QXBBblA4dHpZWnNXUHlsRitOcit6M0pMYTVFV2Rh?=
- =?iso-2022-jp?B?VFVXR0YyWldkL0pldnd4a2Fua2FxbUlxcEpGRUQxRVVkTUJQWjkzajB2?=
- =?iso-2022-jp?B?YkpiaDRRVnBJNXpxMkYyMW15NEVqQmVlUnJYUXh4Z0RUYjRGc0l0V3Rr?=
- =?iso-2022-jp?B?aFFhSVQxOFYraWV0VEFYVENTcTNIamlJVVlXRWQ4VE4rSXRDNFdzNWMz?=
- =?iso-2022-jp?B?ZG5wSisxZ1R1MjBOU3ZiN3d0MVkrVlppWmoydnBFUzlydDNWYUJVdk5y?=
- =?iso-2022-jp?B?Zmp1bVpvcDZLYk5mcEVrVUpLOTBRTCtNNnNnem1ibXVrbEpXYk1hVzkz?=
- =?iso-2022-jp?B?cGs4ajhhTUpHdFFFUWM2RlpWTjJlbHNwUUpFOC9RU09vYWg3Tnp2UDVZ?=
- =?iso-2022-jp?B?OGZzMERoWHZ0VlpBZVJid250SGZETlJ3RXBqSHZiWlc5ald2QzhMRlRO?=
- =?iso-2022-jp?B?dThWMGF2VUZUUjJOQjJLL1FkaUZhYSt6M1VpR0xBV240bjAyS2JTQytJ?=
- =?iso-2022-jp?B?MDFKdmFhWlh5ZlZvV0o0T0pCdFRsYmNuaFVBTTMvRE83YUU2QmZ6NEla?=
- =?iso-2022-jp?B?OGFGaC85VWpsTHBhd0ZhZTBPdnpOUGZWUTRTRG5CSDZmdzZta2xVMDdR?=
- =?iso-2022-jp?B?aC8rL3U1OD0=?=
+x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?SUFlajUxYWRDTVdjTnlMZ1Bibys0MkZTOXVmUWdTRzg5bDJYNmRTbWVM?=
+ =?iso-2022-jp?B?eEd2Slo1VUNHbjNmVVpOSHdYOHNKQ1Bla2hNUkJteHBwTnpsQS90SGdn?=
+ =?iso-2022-jp?B?TytlOXg5TE11SVVWSk9hSmhBbkFjdkF3N2Q2NFNqdGNEK0k4NGJjbXBY?=
+ =?iso-2022-jp?B?bzJuem5DUFRHTHBGVERkc1k1dHRObmJQQi8vUXhXRGd3WUw5WDlXNjhn?=
+ =?iso-2022-jp?B?QjBqQnJUZXFNN0thWDlwV05jSUZyWUE5MlVZOWVKL1pIS3dvbHhjZmRk?=
+ =?iso-2022-jp?B?bFlvNFpvN1RLTVBkd1BpZ1lyMmN1QnRhektGTTkxM1ZOWnZkTkVPemdW?=
+ =?iso-2022-jp?B?QTc1dlVkZVc0SzE0VnZNeDVzTUkwUHFtdjAxUGZ1bnFwZnlnY3ZjOUxs?=
+ =?iso-2022-jp?B?dGhCc3YvZyt1U2VyclFrdGxxT1h5c0Q3T2g2STlsVTBCUHpSRm1ySVVU?=
+ =?iso-2022-jp?B?b1JJMmEzZTdNRlNiZzF2Y1FQa2h0dHFGdWRNZGdpTmhNaXZjaXk4NUNx?=
+ =?iso-2022-jp?B?OCtuWHN5SGMyR0JpdHpZZmtjazNxblhzNVVwNmtEaWpKSVVFa01SS2tu?=
+ =?iso-2022-jp?B?R2hCYm11ZlBsSWZ3R2haQ01CcXJRbjA3Yjg2bkVVc284V3JVSGt2N3pj?=
+ =?iso-2022-jp?B?Q0NXZ1granNVaU1UaEF5anNmUTUwMmtybU5rS20zSDFRN1Z2aFFzUkp1?=
+ =?iso-2022-jp?B?aVhwVjJPRmduQys0SDZyN2lEU25SaTB3ZDkzbkNJZHVJYXZFRGVXMzYr?=
+ =?iso-2022-jp?B?b2orbFZVMU5haFNRSDF0akpHb3UrRjhjT3FjNzJQa1YxM3R5VGFuMHpE?=
+ =?iso-2022-jp?B?Q2ZXYWZlaWlVemh4NUxWekVhYVEyYitwbjlPRWFOV2NXd3puSUtMeDdI?=
+ =?iso-2022-jp?B?TCtoZnB0d1hmUTJ3VHcvTWQ2SEVGcGltRjJSdDljTktOeXNuTHhjT2NH?=
+ =?iso-2022-jp?B?ejFCemZxaVRqWXhhYXpYdFEvNTE4M01obXRkVkRwQlV5WDRYM2k1bCt0?=
+ =?iso-2022-jp?B?TnRNNFBLYWYvaFFNdDFkVmJoQ3JGWkpoS0M2RnJodlZSUTEveERIbnNq?=
+ =?iso-2022-jp?B?eVZVVjFDZWQzZVovNzBqOFhzVUcreWhDaWNrTkQ2U3dOa05zdERyM0lT?=
+ =?iso-2022-jp?B?QnVEdTBWNTUvd0c1RkFqSzVwWUVoTFFMa2syU2dHTWxGU2N0R2ZEVHJs?=
+ =?iso-2022-jp?B?Rkw0b2tzMy8wa1V0V05xRUNkUmNEbmNYZzdreDNUOCtWVzZmZVZFZ0Fh?=
+ =?iso-2022-jp?B?TTkyN2Ztd09tQmFjTFlpUGtoaTNqZ0xQajFndFVSTHVQOTVsc0xXSm1w?=
+ =?iso-2022-jp?B?aGttaUtOYnp6NDlMQ1NyUFhSNFdoVWdTZWVnbFVCM3NCSFhiSHZWcHJj?=
+ =?iso-2022-jp?B?bFFIUW4xMFNqR3Z5azJqZ29OL2pSL3lqQWJ3anl6dW5wUDNhZEZUNjV4?=
+ =?iso-2022-jp?B?emsxR2tKc3FYMDdiUUR2QzBRL3Y1THZ6ZWtKM0JpTWZUQTVOSVlaWWJB?=
+ =?iso-2022-jp?B?anpEWVZKSG81b3hxWjA4OHNHd3VvZWJVNDVuZ3dQY2Y3RVBUOUdKL0M2?=
+ =?iso-2022-jp?B?KytwbUsxcTlJSHk0aHJjUE8wMUtZZjdRdVBwU2w5YWIySTBEWkZrMi80?=
+ =?iso-2022-jp?B?MzllcXQ0R0dLci9aaGNCdTRTV2QxQ3ZncFpFZitDZjhqbExkTFhETEJa?=
+ =?iso-2022-jp?B?WTlkaWVFZ3JEWE4yVTRHcVBTNjFCN29EdC9oN0ZtNWhqWHpGM3F6bW5a?=
+ =?iso-2022-jp?B?cGs2UVVwSnN4TDIyWWMvTTZDeHU4NU84ZzIwUm1abENnb2dOSVJQRjc0?=
+ =?iso-2022-jp?B?aEplWVBYdUIwUi9Qb1hqL2VaTWRFOHgzRERmZ2RDWG1ZS2lacklGNGhL?=
+ =?iso-2022-jp?B?MGdzWTlla2hDNndnOGdxRjlDTm9VSWZZM1VjMlpRTWluWFJNMUI2ZS8w?=
+ =?iso-2022-jp?B?RWpUZnFnUWIySlIwQTlwV2x1MFlXT01zZXE3VExUT1U1Z3A0VUFaNkFS?=
+ =?iso-2022-jp?B?YW5DRnpJYmZ6WVlmaXZkVGtJL2FnN0cvWW9oMWd2OE0vb0xpcW43NWsy?=
+ =?iso-2022-jp?B?Qk11TkF4VzhhZWlSTm5RMFdDTGpta2ZnOGp2RTlxajJpekxrajVISXZC?=
+ =?iso-2022-jp?B?b2l3VFhTclhnbFd3ODU4Q25qcVlEVThBRkFXTmtGRTFvdDFIREdSZ1Rl?=
+ =?iso-2022-jp?B?NEtLREYrb2lIL0l4Z01KeElqTWJiaWNyOHZUdVh5RkU2UmVkS0NBcUlU?=
+ =?iso-2022-jp?B?Mm5DQ2ZBNTdCUFAzSmM2THVvenRuR3J2NzE3YnRGOFZuTmd0TU1jeWZs?=
+ =?iso-2022-jp?B?TFRmNVJhRWFTMXJCRkh5MHBPVnhydFVmNTlSUW5mbC9iNEtVaTAva2FC?=
+ =?iso-2022-jp?B?UFBvT1pGTFhiZGxsQXpoblV6YnU4T2tXVXJXZEJlTENUNUNDVGpKU2pw?=
+ =?iso-2022-jp?B?NXphUVpuNXlVcmpNU3JrWmZPVkNYVmhiRVJGTGxralZQYVVFZUxKSXgw?=
+ =?iso-2022-jp?B?Wk40aGJMTFVuclBTeUcvMFFCSTkzMVNmME0rTGhNbklGMEtPYzAxZHNW?=
+ =?iso-2022-jp?B?eTFNYi9oYz0=?=
 Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: fujitsu.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: OSBPR01MB4600.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d275daea-98a7-471f-cc59-08da1b960c9e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2022 08:34:09.6343
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa849e7-6873-4a17-51b2-08da1b963df5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2022 08:35:32.4409
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J4cW/oWuRuePfUbW0jhtchO7pbfZoAgIchaEhuh2p3tdm/cT/633SXC9xw+L9RdNmjLzVwjaAvJzXlhfxa3SDuYGdfpcylftqT5bfy8OCSU=
+X-MS-Exchange-CrossTenant-userprincipalname: nJM4MUZY5Q7wRQ0aNn3+s6+oYV+j89XXRdmGJS5t3AKdReIH/EL3CsOrrmHTJybnQI/jpI8Retvg5vQyy6E095+tamaE8lrhkKLl/ccBXTE=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB3316
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -159,21 +160,88 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi jirka
 
-> On Fri, Mar 25, 2022 at 01:38:26PM +0900, Shunsuke Nakamura wrote:
+> On Fri, Mar 25, 2022 at 01:38:27PM +0900, Shunsuke Nakamura wrote:
+> > Add the following functions:
+> >
+> >   perf_evsel__check_overflow
+> >   perf_evsel__check_overflow_cpu
+> >
+> > to check for perf events with the file descriptor specified in the
+> > argument.
+> > These functions can be used in signal handlers to check overflow.
+> >
+> > Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+> > ---
+> >  tools/lib/perf/Documentation/libperf.txt |  3 +++
+> >  tools/lib/perf/evsel.c                   | 34
+> ++++++++++++++++++++++++
+> >  tools/lib/perf/include/perf/evsel.h      |  4 +++
+> >  tools/lib/perf/libperf.map               |  2 ++
+> >  4 files changed, 43 insertions(+)
+> >
+> > diff --git a/tools/lib/perf/Documentation/libperf.txt
+> > b/tools/lib/perf/Documentation/libperf.txt
+> > index 700c1ce15159..4ae8d738b948 100644
+> > --- a/tools/lib/perf/Documentation/libperf.txt
+> > +++ b/tools/lib/perf/Documentation/libperf.txt
+> > @@ -165,6 +165,9 @@ SYNOPSIS
+> >                                int cpu_map_idx);
+> >    int perf_evsel__period(struct perf_evsel *evsel, int period);
+> >    int perf_evsel__period_cpu(struct perf_evsel *evsel, int period,
+> > int cpu_map_idx);
+> > +  int perf_evsel__check_overflow(struct perf_evsel *evsel, int
+> > + sig_fd, bool *overflow);  int perf_evsel__check_overflow_cpu(struct
+> perf_evsel *evsel, int cpu_map_idx,
+> > +                                     int sig_fd, bool *overflow);
 >=20
-> SNIP
+> should this be more like:
 >=20
+>   perf_evsel__has_fd(struct perf_evsel *evsel, int fd)
+>=20
+I'll fix it.
+
+
+> also why do we need to export *_cpu version for this?
+> I don't see it used in the test
+>=20
+Sorry, not necessary.
+I'll fix it.
+
+> >    struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
+> >    struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel=
+);
+> >    struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
 > > diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c index
-> > b17842581dea..db9b7274feb5 100644
+> > db9b7274feb5..6ff3cf692df3 100644
 > > --- a/tools/lib/perf/evsel.c
 > > +++ b/tools/lib/perf/evsel.c
-> > @@ -1,4 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> > +#ifndef _GNU_SOURCE
-> > +#define _GNU_SOURCE
-> > +#endif
+> > @@ -616,3 +616,37 @@ int perf_evsel__open_opts(struct perf_evsel
+> > *evsel, struct perf_cpu_map *cpus,
+> >
+> >  	return err;
+> >  }
+> > +
+> > +int perf_evsel__check_overflow_cpu(struct perf_evsel *evsel, int
+> cpu_map_idx,
+> > +				   int sig_fd, bool *overflow)
+> > +{
+> > +	int thread;
+> > +	int *fd;
+> > +	int err =3D 0;
+> > +
+> > +	if (!overflow)
+> > +		return -EINVAL;
+> > +
+> > +	*overflow =3D false;
+> > +
+> > +	for (thread =3D 0; thread < xyarray__max_y(evsel->fd) && !err; ++thre=
+ad)
+> {
+> > +		fd =3D FD(evsel, cpu_map_idx, thread);
+> > +		if (sig_fd <=3D 0 || !fd || *fd < 0)
+> > +			err =3D -EINVAL;
 >=20
-> I think we can make this global set in Makefile, like we do in perf
+> sig_fd check should be before the loop
 >=20
 I'll fix it.
 
