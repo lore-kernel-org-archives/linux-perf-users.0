@@ -2,82 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8FFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 10:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9B8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 10:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345450AbiDKK3C (ORCPT
+        id S1344811AbiDKK5x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Apr 2022 06:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41192 "EHLO
+        Mon, 11 Apr 2022 06:57:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240659AbiDKK26 (ORCPT
+        with ESMTP id S243693AbiDKK5x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Apr 2022 06:28:58 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AFFD22CCB0;
-        Mon, 11 Apr 2022 03:26:44 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CCF2169C;
-        Mon, 11 Apr 2022 03:26:44 -0700 (PDT)
-Received: from [10.1.30.132] (e127744.cambridge.arm.com [10.1.30.132])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B34E3F5A1;
-        Mon, 11 Apr 2022 03:26:40 -0700 (PDT)
-Subject: Re: [PATCH v5 3/5] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
-To:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, leo.yan@linaro.org,
-        acme@kernel.org
-Cc:     benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-References: <20220408195344.32764-1-alisaidi@amazon.com>
- <20220408195344.32764-4-alisaidi@amazon.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <39448754-adf5-f1ba-25e7-8ee3d76f0159@arm.com>
-Date:   Mon, 11 Apr 2022 11:26:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Mon, 11 Apr 2022 06:57:53 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCFA3B2A8
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Apr 2022 03:55:39 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id c12-20020a17090a020c00b001cba1ebb20cso1364902pjc.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Apr 2022 03:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BBbu++vBSNayZTILSoy+5ZJkZ1mpzPQD8VHz8a8sGvY=;
+        b=XFXMbOusHesZHA6gwQAvFU7HTZpIvsbKmvIEG8F8zrsAIuW4QppeuRRX/AH70+9QbL
+         wwH+qqogb2oMVb58vJkBeFBKHZ87O4PwsLqWNAh2mxVWPHAdRUBquqmy/W2JBWlzSra6
+         ICrpFGApKTkyVje52v+ODM1+IMky3gMRw/OSVx3bjEl4uYyBO90j5ZcOQantpEpWEScl
+         bexqOzHRAKyG2ue79HiOBCWz0ql6Pxg/jh32KvzbeQWVKoeyxv7OhjAKiQhccBAJF5/8
+         5YXJ/541f6GllOEL2FtGZ28uWkTPPVdLoB3o3zn6SW+Lu/2MwAhiGjqS8ntRBr+3Y8jy
+         QCvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BBbu++vBSNayZTILSoy+5ZJkZ1mpzPQD8VHz8a8sGvY=;
+        b=l92H5ZL7a2dXEZmpBiENjuMJWucMLLky1V5mdWMc4sL2O3KoMmNScAAxpGMjw6MyLI
+         jAwNqzYK2pI0B9yV5UuS31jZkYfNAlYi0Wwqvuo+9y+DCbnMiNYF7f66doyLbU4ugj5M
+         Z03J1soaMd1qeAf9FtAPig4Fah10Ht6hACS3vOfy/BbQXIrLj8GMEXrpDf7CQtBCWsaI
+         fhcdw9iwXND1Lw2AimOdcwnqDOcTmc3uAd6jQPS4RJ4r6mO2jx1pnDU0iYX6IuRV00/S
+         tmeQyeiRS7gEv3uHeJu/rFM+c909YLwGXsQ95FXbbNnue4u0anHmJhjVqYPYzu+AVx+9
+         rQEQ==
+X-Gm-Message-State: AOAM532NVhny4Ww+Z+++H16o9sZ+75ZN0+Kel224b8vHtCiVxPuG6+4i
+        rnwfC+hWvoDmSKPm4fSZMm7m/A==
+X-Google-Smtp-Source: ABdhPJwARghM2rwkZJdJicDl1OJ5uhAhOFscb86n6xacLMoXCE0Z28GOKLMOOp6KjpmRJb30QFSQ4A==
+X-Received: by 2002:a17:902:ab8b:b0:156:16c0:dc6d with SMTP id f11-20020a170902ab8b00b0015616c0dc6dmr31826900plr.147.1649674539339;
+        Mon, 11 Apr 2022 03:55:39 -0700 (PDT)
+Received: from hsinchu16.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id v26-20020aa7809a000000b00505bf88a17bsm3496127pff.214.2022.04.11.03.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Apr 2022 03:55:38 -0700 (PDT)
+From:   Eric Lin <eric.lin@sifive.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, iii@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     paul.walmsley@sifive.com, Eric Lin <eric.lin@sifive.com>
+Subject: [PATCH v2 0/1] perf jitdump: Add riscv64 support
+Date:   Mon, 11 Apr 2022 18:54:37 +0800
+Message-Id: <20220411105438.21366-1-eric.lin@sifive.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-In-Reply-To: <20220408195344.32764-4-alisaidi@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This patch enable perf jitdump for riscv64 and it tested with V8 on qemu rv64.
 
-On 08/04/2022 20:53, Ali Saidi wrote:
-> Add a flag to the perf mem data struct to signal that a request caused a
-> cache-to-cache transfer of a line from a peer of the requestor and
-> wasn't sourced from a lower cache level.  The line being moved from one
-> peer cache to another has latency and performance implications. On Arm64
-> Neoverse systems the data source can indicate a cache-to-cache transfer
-> but not if the line is dirty or clean, so instead of overloading HITM
-> define a new flag that indicates this type of transfer.
+Qemu rv64:
+$ perf record -e cpu-clock -c 1000 -g -k mono ./d8_rv64 --perf-prof --no-write-protect-code-memory test.js
+$ perf inject -j -i perf.data -o perf.data.jitted
+$ perf report -i perf.data.jitted
 
-I think it's fine to merge this and the previous commit rather than have
-two commits with the same msg.
+Output:
+ To display the perf.data header info, please use --header/--header-only options.
 
->
-> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> ---
->  tools/include/uapi/linux/perf_event.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index 82858b697c05..c9e58c79f3e5 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -1308,7 +1308,7 @@ union perf_mem_data_src {
->  #define PERF_MEM_SNOOP_SHIFT	19
->  
->  #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
-> -/* 1 free */
-> +#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
->  #define PERF_MEM_SNOOPX_SHIFT  38
->  
->  /* locked instruction */
+ Total Lost Samples: 0
+
+ Samples: 87K of event 'cpu-clock'
+ Event count (approx.): 87974000
+
+ Children      Self  Command          Shared Object                Symbol
+
+....
+     0.28%     0.06%  d8_rv64          d8_rv64                      [.] _ZN2v88i
+nternal6WasmJs7InstallEPNS0_7IsolateEb
+     0.28%     0.00%  d8_rv64          d8_rv64                      [.] _ZN2v88i
+nternal10ParserBaseINS0_6ParserEE22ParseLogicalExpressionEv
+     0.28%     0.03%  d8_rv64          jitted-112-76.so             [.] Builtin:
+InterpreterEntryTrampoline
+     0.12%     0.00%  d8_rv64          d8_rv64                      [.] _ZN2v88i
+nternal19ContextDeserializer11DeserializeEPNS0_7IsolateENS0_6HandleINS0_13JSGlob
+alProxyEEENS_33DeserializeInternalFieldsCallbackE
+     0.12%     0.01%  d8_rv64          jitted-112-651.so            [.] Builtin:
+CEntry_Return1_DontSaveFPRegs_ArgvOnStack_NoBuiltinExit
+....
+
+Changed in v2:
+ - Rebase on tag v5.18-rc2
+ - Show perf jitdump commands and dump in the commit message.
+
+Eric Lin (1):
+  perf jitdump: Add riscv64 support.
+
+ tools/perf/arch/riscv/Makefile | 1 +
+ tools/perf/util/genelf.h       | 3 +++
+ 2 files changed, 4 insertions(+)
+
+-- 
+2.35.1
+
