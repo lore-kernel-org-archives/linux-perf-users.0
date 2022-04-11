@@ -2,286 +2,182 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59C3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 13:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF44BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 14:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbiDKN5B (ORCPT
+        id S1347127AbiDKObn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Apr 2022 09:57:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49422 "EHLO
+        Mon, 11 Apr 2022 10:31:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240988AbiDKN5A (ORCPT
+        with ESMTP id S1347269AbiDKObl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Apr 2022 09:57:00 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FCC3A194;
-        Mon, 11 Apr 2022 06:54:44 -0700 (PDT)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23BBmNck029660;
-        Mon, 11 Apr 2022 13:54:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=+Iy/HIohrX/LlMkpHMiv5rNz9NKrmXIlkCYkah9Ns6Q=;
- b=g5DVZHFfL0lthgzhQSJPW1z0g+gINC+sgLKoGEnhMWzJC5ZCU7aoWJD6CjSBmiwPbnCi
- gjsCR8ReSIvMAHGjlvfRbxFHGprCUBP3l2w0pVxaas+x4iNoMwlWxXdCGXdO1zu9LU6K
- /MqDNy4ut4wC25sjIMgw4VO7AR8EV3oTX58g2zpJl37yhQXo5gNTwa+YGVpVoW8UQgnW
- RQ5PAqqeofK7adUiVvbF/n2KJsJAYbG1arr7372teT3S6FPDCkyy/BNu3bO65nd0wAfl
- xIUx+dCex5qafVdScGp+ImRl/gn+qls7f3oYMiYMkiDLopT/tiQgpML3KUiHO8Yr8ktV yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fcks92qy0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Apr 2022 13:54:34 +0000
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23BD3TGt023845;
-        Mon, 11 Apr 2022 13:54:33 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fcks92qxc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Apr 2022 13:54:33 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23BDLNYH007810;
-        Mon, 11 Apr 2022 13:54:31 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3fb1s8u7u9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Apr 2022 13:54:31 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23BDsRhC38273346
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Apr 2022 13:54:27 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDD4EA405C;
-        Mon, 11 Apr 2022 13:54:27 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AEB05A4060;
-        Mon, 11 Apr 2022 13:54:22 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.211.96.87])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 11 Apr 2022 13:54:22 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: [PATCH v2 4/4] tools/perf: Fix perf bench numa testcase to check
- if CPU used to bind task is online
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <YlGkVPyn2/tpUZl2@kernel.org>
-Date:   Mon, 11 Apr 2022 19:24:18 +0530
-Cc:     Jiri Olsa <jolsa@kernel.org>, disgoel@linux.vnet.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        kajoljain <kjain@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <03FDBB52-5803-4254-81E5-875008E203A6@linux.vnet.ibm.com>
-References: <20220406175113.87881-1-atrajeev@linux.vnet.ibm.com>
- <20220406175113.87881-5-atrajeev@linux.vnet.ibm.com>
- <YlGkVPyn2/tpUZl2@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Sag1UoHIm_x-EVI_ndyEJwOcPsi4JjO5
-X-Proofpoint-ORIG-GUID: XnDDWDMkkMLdTzccFQfHpCohepFBLFZP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-04-11_05,2022-04-11_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
- clxscore=1015 bulkscore=0 impostorscore=0 lowpriorityscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204110074
+        Mon, 11 Apr 2022 10:31:41 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 019683B298;
+        Mon, 11 Apr 2022 07:29:26 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id s137so11614171pgs.5;
+        Mon, 11 Apr 2022 07:29:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=nDpC+8Nt8swqUMB30zr9ru/FTgIOVV9P8mvYZePDesw=;
+        b=q74U30l23iQBFOXwJd99wG6So4NW+6KP2zT4drdQum/6ZHAG0vZRFfTxxfEVmcPmoh
+         HN0uxLMme1J2cr9Ppfxp6outoLVGvJqmNcHwkbOem1ANKd/LzdO/67GFgoWNVUcjE4qZ
+         wBTvVsy+Ja40yrC/cjd1UmukAo+ul59ouTauVodXOgIjXiJqXJoT/7BKzbgq5+nIUEWj
+         tS/AGkUIiD2gim4F3z05Yix7N3nch3P04Lwuy9azXYLcosA8IOYZOQcMT/2WPJak18km
+         uuHpw+nCVoNwg9CV7x1UkuXvH62SgdxPtQltqz+w2/9TAl+BkM+UYsobhMH2UXEWG6bQ
+         o0ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=nDpC+8Nt8swqUMB30zr9ru/FTgIOVV9P8mvYZePDesw=;
+        b=SFVAIwO7omks/2iIYW2AcUfFGAM93jIsJiPfZYkHbc3nDhQKXg1D52LbvJW/3kivqX
+         AT4HbIGulonUSnevmgo99d5cRxKec/VxdfpePk2xjBs/IZa+kC3MDAnpHccQRiwB1LEA
+         QHYmJZ7VqrzGDs1kc2WocqGzLlJkBbsYx5Pu5PKzBSwtzs7WnLF/waKvkUVGASIKbxmc
+         7p6S9DpqHWdj/7QRFQaQoa2CukCCELjfhXVDwvgPNIynCE9H1V5YdfVrwtRdnnWaZ68+
+         aP9EwsKiaRoY00Ikthw9pJqyOn9E6dzvdKVuiomtQ4RLKfaiUkK7ZHfB9e+0D3uUt74y
+         8Fzw==
+X-Gm-Message-State: AOAM531DrAhlOenEO+U6ROrHmf/KSygvlAtA7d7BUBoGTSbOzK+NfF6T
+        NecE/2jTNNc4Wv717UIM5p4=
+X-Google-Smtp-Source: ABdhPJw9iDBfYSL0PEOCtTlMjeVbVl9sDVTg93cd/ps9BKiKmtZ1pLH4ZPrmN0a2qx4X0RDUStd63w==
+X-Received: by 2002:a05:6a00:1510:b0:4fa:f5fe:ffd5 with SMTP id q16-20020a056a00151000b004faf5feffd5mr32929048pfu.2.1649687365432;
+        Mon, 11 Apr 2022 07:29:25 -0700 (PDT)
+Received: from [192.168.255.10] ([203.205.141.115])
+        by smtp.gmail.com with ESMTPSA id d5-20020a17090acd0500b001b9c05b075dsm20756973pju.44.2022.04.11.07.29.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Apr 2022 07:29:25 -0700 (PDT)
+Message-ID: <edfc8bd1-8dc3-9e88-d9c3-6a427b039a98@gmail.com>
+Date:   Mon, 11 Apr 2022 22:29:18 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.8.0
+Subject: Re: [PATCH] perf/x86/amd: cpu_hw_events::perf_ctr_virt_mask should
+ only be used on host
+Content-Language: en-US
+To:     Dongli Si <kvmx86@gmail.com>
+Cc:     liam.merwick@oracle.com, kim.phillips@amd.com, mingo@kernel.org,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        jmattson@google.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Peter Zijlstra (Intel OTC, Netherlander)" <peterz@infradead.org>,
+        "Joerg Roedel (KVM HoF)" <joro@8bytes.org>
+References: <20220411134651.740234-1-sidongli1997@gmail.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+Organization: Tencent
+In-Reply-To: <20220411134651.740234-1-sidongli1997@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Dongli,
 
+On 11/4/2022 9:46 pm, Dongli Si wrote:
+> From: Dongli Si <sidongli1997@gmail.com>
+> 
+> perf_ctr_virt_mask is used to mask Host-Only bit when SVM is disabled,
+> Using it on a guest doesn't make sense and make things obscure.
 
-> On 09-Apr-2022, at 8:50 PM, Arnaldo Carvalho de Melo <acme@kernel.org> =
-wrote:
->=20
-> Em Wed, Apr 06, 2022 at 11:21:13PM +0530, Athira Rajeev escreveu:
->> Perf numa bench test fails with error:
->>=20
->> Testcase:
->> ./perf bench numa mem -p 2 -t 1 -P 1024 -C 0,8 -M 1,0 -s 20 -zZq
->> --thp  1 --no-data_rand_walk
->>=20
->> Failure snippet:
->> <<>>
->> Running 'numa/mem' benchmark:
->>=20
->> # Running main, "perf bench numa numa-mem -p 2 -t 1 -P 1024 -C 0,8
->> -M 1,0 -s 20 -zZq --thp 1 --no-data_rand_walk"
->>=20
->> perf: bench/numa.c:333: bind_to_cpumask: Assertion `!(ret)' failed.
->> <<>>
->>=20
->> The Testcases uses CPU=E2=80=99s 0 and 8. In function =
-"parse_setup_cpu_list",
->> There is check to see if cpu number is greater than max cpu=E2=80=99s =
-possible
->> in the system ie via "if (bind_cpu_0 >=3D g->p.nr_cpus ||
->> bind_cpu_1 >=3D g->p.nr_cpus) {". But it could happen that system has
->> say 48 CPU=E2=80=99s, but only number of online CPU=E2=80=99s is 0-7. =
-Other CPU=E2=80=99s
->> are offlined. Since "g->p.nr_cpus" is 48, so function will go ahead
->> and set bit for CPU 8 also in cpumask ( td->bind_cpumask).
->>=20
->> bind_to_cpumask function is called to set affinity using
->> sched_setaffinity and the cpumask. Since the CPU8 is not present,
->> set affinity will fail here with EINVAL. Fix this issue by adding a
->> check to make sure that, CPU=E2=80=99s provided in the input argument =
-values
->> are online before proceeding further and skip the test. For this,
->> include new helper function "is_cpu_online" in
->> "tools/perf/util/header.c".
->>=20
->> Since "BIT(x)" definition will get included from header.h, remove
->> that from bench/numa.c
->>=20
->> Tested-by: Disha Goel <disgoel@linux.vnet.ibm.com>
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
->> ---
->> tools/perf/bench/numa.c  |  8 ++++++--
->> tools/perf/util/header.c | 43 =
-++++++++++++++++++++++++++++++++++++++++
->> tools/perf/util/header.h |  1 +
->> 3 files changed, 50 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
->> index 29e41e32bd88..7992d79b3e41 100644
->> --- a/tools/perf/bench/numa.c
->> +++ b/tools/perf/bench/numa.c
->> @@ -34,6 +34,7 @@
->> #include <linux/numa.h>
->> #include <linux/zalloc.h>
->>=20
->> +#include "../util/header.h"
->> #include <numa.h>
->> #include <numaif.h>
->>=20
->> @@ -616,6 +617,11 @@ static int parse_setup_cpu_list(void)
->> 			return -1;
->> 		}
->>=20
->> +		if (is_cpu_online(bind_cpu_0) !=3D 1 || =
-is_cpu_online(bind_cpu_1) !=3D 1) {
->> +			printf("\nTest not applicable, bind_cpu_0 or =
-bind_cpu_1 is offline\n");
->> +			return -1;
->> +		}
->> +
->> 		BUG_ON(bind_cpu_0 < 0 || bind_cpu_1 < 0);
->> 		BUG_ON(bind_cpu_0 > bind_cpu_1);
->>=20
->> @@ -786,8 +792,6 @@ static int parse_nodes_opt(const struct option =
-*opt __maybe_unused,
->> 	return parse_node_list(arg);
->> }
->>=20
->> -#define BIT(x) (1ul << x)
->> -
->> static inline uint32_t lfsr_32(uint32_t lfsr)
->> {
->> 	const uint32_t taps =3D BIT(1) | BIT(5) | BIT(6) | BIT(31);
->> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
->> index 6da12e522edc..3f5fcf5d4b3f 100644
->> --- a/tools/perf/util/header.c
->> +++ b/tools/perf/util/header.c
->> @@ -983,6 +983,49 @@ static int write_dir_format(struct feat_fd *ff,
->> 	return do_write(ff, &data->dir.version, =
-sizeof(data->dir.version));
->> }
->>=20
->> +#define SYSFS "/sys/devices/system/cpu/"
->=20
-> Please use
->=20
-> int sysfs__read_str(const char *entry, char **buf, size_t *sizep)
+Or you can work it out to make nested vPMU functional on AMD.
 
-Hi Arnaldo,
+> 
+> Revert commit df51fe7ea1c1c
+> ("perf/x86/amd: Don't touch the AMD64_EVENTSEL_HOSTONLY bit inside the guest"),
 
-Sure, I will send a V3 for this separately which uses =
-=E2=80=9Csysfs__read_str=E2=80=9D
+This is not a typical revert commit.
 
-Thanks for the review
-Athira
->=20
-> See how to use it in the smt_on() function at tools/perf/util/smt.c, =
-for
-> example.
->=20
-> Now looking at the first patches in the series.
->=20
-> - Arnaldo
->=20
->> +/*
->> + * Check whether a CPU is online
->> + *
->> + * Returns:
->> + *     1 -> if CPU is online
->> + *     0 -> if CPU is offline
->> + *    -1 -> error case
->> + */
->> +int is_cpu_online(unsigned int cpu)
->> +{
->> +	char sysfs_cpu[255];
->> +	char buf[255];
->> +	struct stat statbuf;
->> +	size_t len;
->> +	int fd;
->> +
->> +	snprintf(sysfs_cpu, sizeof(sysfs_cpu), SYSFS "cpu%u", cpu);
->> +
->> +	if (stat(sysfs_cpu, &statbuf) !=3D 0)
->> +		return 0;
->> +
->> +	/*
->> +	 * Check if /sys/devices/system/cpu/cpux/online file
->> +	 * exists. In kernels without CONFIG_HOTPLUG_CPU, this
->> +	 * file won't exist.
->> +	 */
->> +	snprintf(sysfs_cpu, sizeof(sysfs_cpu), SYSFS "cpu%u/online", =
-cpu);
->> +	if (stat(sysfs_cpu, &statbuf) !=3D 0)
->> +		return 1;
->> +
->> +	fd =3D open(sysfs_cpu, O_RDONLY);
->> +	if (fd =3D=3D -1)
->> +		return -1;
->> +
->> +	len =3D read(fd, buf, sizeof(buf) - 1);
->> +	buf[len] =3D '\0';
->> +	close(fd);
->> +
->> +	return strtoul(buf, NULL, 16);
->> +}
->> +
->> #ifdef HAVE_LIBBPF_SUPPORT
->> static int write_bpf_prog_info(struct feat_fd *ff,
->> 			       struct evlist *evlist __maybe_unused)
->> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
->> index c9e3265832d9..0eb4bc29a5a4 100644
->> --- a/tools/perf/util/header.h
->> +++ b/tools/perf/util/header.h
->> @@ -158,6 +158,7 @@ int do_write(struct feat_fd *fd, const void *buf, =
-size_t size);
->> int write_padded(struct feat_fd *fd, const void *bf,
->> 		 size_t count, size_t count_aligned);
->>=20
->> +int is_cpu_online(unsigned int cpu);
->> /*
->>  * arch specific callback
->>  */
->> --=20
->> 2.35.1
->=20
-> --=20
->=20
-> - Arnaldo
+> Because it make things a little obscure and this #GP has been fixed in KVM.
 
+Please check the chronological order of the related commits and the motivations.
+
+> 
+> Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
+> Signed-off-by: Dongli Si <sidongli1997@gmail.com>
+> ---
+>   arch/x86/events/amd/core.c   | 19 ++++++++++++++++++-
+>   arch/x86/events/perf_event.h |  3 +--
+>   2 files changed, 19 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 9687a8aef01c..5ac7d9410d36 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -533,7 +533,12 @@ static void amd_pmu_cpu_starting(int cpu)
+>   	struct amd_nb *nb;
+>   	int i, nb_id;
+>   
+> -	cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
+> +	/*
+> +	 * When SVM is disabled, set the Host-Only bit will cause the
+> +	 * performance counter to not work.
+
+It's ridiculous. Based on the AMD APM Table 13-3. Host/Guest Only Bits,
+the performance counter would count "Host events" rather than "not work".
+
+Note, your proposal change should work on the L0, L1 and L2.
+
+> +	 */
+> +	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> +		cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
+>   
+>   	if (!x86_pmu.amd_nb_constraints)
+>   		return;
+> @@ -1023,10 +1028,16 @@ __init int amd_pmu_init(void)
+>   	return 0;
+>   }
+>   
+> +/*
+> + * Unmask the Host-only bit when SVM is enabled on the Host Hypervisor
+> + */
+>   void amd_pmu_enable_virt(void)
+>   {
+>   	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>   
+> +	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> +		return;
+> +
+>   	cpuc->perf_ctr_virt_mask = 0;
+>   
+>   	/* Reload all events */
+> @@ -1035,10 +1046,16 @@ void amd_pmu_enable_virt(void)
+>   }
+>   EXPORT_SYMBOL_GPL(amd_pmu_enable_virt);
+>   
+> +/*
+> + * Mask the Host-only bit when SVM is disabled on the Host Hypervisor
+> + */
+>   void amd_pmu_disable_virt(void)
+>   {
+>   	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>   
+> +	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> +		return;
+> +
+>   	/*
+>   	 * We only mask out the Host-only bit so that host-only counting works
+>   	 * when SVM is disabled. If someone sets up a guest-only counter when
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index 150261d929b9..fa1428ca60b6 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -1138,10 +1138,9 @@ void x86_pmu_stop(struct perf_event *event, int flags);
+>   
+>   static inline void x86_pmu_disable_event(struct perf_event *event)
+>   {
+> -	u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
+>   	struct hw_perf_event *hwc = &event->hw;
+>   
+> -	wrmsrl(hwc->config_base, hwc->config & ~disable_mask);
+> +	wrmsrl(hwc->config_base, hwc->config);
+>   
+>   	if (is_counter_pair(hwc))
+>   		wrmsrl(x86_pmu_config_addr(hwc->idx + 1), 0);
