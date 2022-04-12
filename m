@@ -2,81 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB76C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 16:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC0FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 16:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354000AbiDLQmT (ORCPT
+        id S237453AbiDLQnn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Apr 2022 12:42:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52470 "EHLO
+        Tue, 12 Apr 2022 12:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357738AbiDLQmS (ORCPT
+        with ESMTP id S230283AbiDLQnn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Apr 2022 12:42:18 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396594831E
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 09:39:55 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id c190-20020a1c35c7000000b0038e37907b5bso2214022wma.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 09:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MRKI7gKq0i/3bBlyNJYsi1bvRUvgpZxesLRuzQfX23Q=;
-        b=BxEMOAZvyD9qEhgyyLw5dmhi59nRAJ3cmwnhL2AONOvKIcWu3UdhSdYxxpoXdzg8d7
-         yqgcwnIF50iIhssYrNWGcKV76NILxkd9BL/nSlBdot1w0xQJf1tq1JMS3D8LEOSZR6p/
-         INDXy9fhbJKA5O6lqw5caQSahfB/5jENeZXS2dSPUuGJBw9jP1An9r2L5vkDk9BNr6ij
-         8REinqiAFtUEYMfyWvapYXH9FopfHQ9yENQnoTo7f084MrTsr3ZKRwdKMXpkjNesioCp
-         OUSK65PuXT7FHAqYe+NY+JFW+PXg2I5QMsB7iGu6bPfsdYexHAyRxmfoV5wh+oSC3jJ4
-         psDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MRKI7gKq0i/3bBlyNJYsi1bvRUvgpZxesLRuzQfX23Q=;
-        b=XF/t5n1y9L9t9txO0rJGJ6jdEINd3C4CZr+U+uRpD/BcKaK7Ac65gxI2rTvL7TRWnL
-         kVVjQVb0MMuAK+dGRjA4bnMd1B+Mbn+mvWkyNmtgf20D93587J1SGlaE6syrOepaqSij
-         M5X9h+iCJp1181kIfsHlPIR2X8zpt1Y9id/Y9xwbATLxuKq7ufW3MqsJ8aBwH00AZBfv
-         0IZGMkNVq7Cn16T/YOLJoN132CNE5/BvPEywRILISBMn1005WEb025od4L+J36FbN4P4
-         2jCYjmNhS4AbThuReYI9zlXISFaKRwNN62+OjLu3AZxW3pa/NOA6kYUB8ioqDQb8wxbe
-         VrDA==
-X-Gm-Message-State: AOAM5309fh3Z4MgkqQ1h6TZU49uCwI6FcZNp2+RkN1blenRZDIFVGm+X
-        T+3J7JitbY1pZQU+2IrmjMeej7lJutAkrQFD0GXR1A==
-X-Google-Smtp-Source: ABdhPJy4d+a/GIHQx4axrrgaeF/nr9A4FpnJ+CiRbFr3coct0+qSOgylwG8aQKV/4rtubv00y1S7A67qCo0KHtvHOVQ=
-X-Received: by 2002:a7b:cb56:0:b0:38e:7e24:33ab with SMTP id
- v22-20020a7bcb56000000b0038e7e2433abmr4973747wmj.182.1649781593060; Tue, 12
- Apr 2022 09:39:53 -0700 (PDT)
+        Tue, 12 Apr 2022 12:43:43 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4054831E;
+        Tue, 12 Apr 2022 09:41:25 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23CGDZsV029887;
+        Tue, 12 Apr 2022 16:41:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=LE535E2ZSsCYjUm2u5nT2c7n/KI2GcedAR+J8mt26M0=;
+ b=QWuD9R47mwcgpx7HgSp4Iy8/LMqHGvVm/tLCofzn9ZB/hIxQ148oV38PbuIrT3FicgFT
+ qcIIfLnUHP97n9hwZKku1OWew8fktqjaAb3Kv5vQomunudKAn6rUeNXZqUX97TXPCPP4
+ BFB4b5t1SHQweyMdOHBNo/5hA1g0iLvYgww/HogHjKwvd7I2TErOwosb8T/lGWUE2Jr+
+ fIc89Oletd9gJTiOtJKiCgknXJ3KS2lCZTTn6PqEz5sYF6Ew141/tFtqn/MOKroZEtLK
+ 0uaM1EeS62WLAU7zmD9fXdT7S29Mp9aO+4Wc8vJyO0zpJkUKhRFbKWG2rCNhAntYHG55 nw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3fdcrjrjc8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 16:41:14 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23CGZ3Fl031289;
+        Tue, 12 Apr 2022 16:41:14 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3fdcrjrjbn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 16:41:13 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23CGY5Ji009516;
+        Tue, 12 Apr 2022 16:41:12 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma02fra.de.ibm.com with ESMTP id 3fb1s8m8ck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 16:41:12 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23CGf86O40567142
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Apr 2022 16:41:08 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A22D8AE051;
+        Tue, 12 Apr 2022 16:41:08 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D72DAAE04D;
+        Tue, 12 Apr 2022 16:41:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.163.3.143])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Apr 2022 16:41:02 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com
+Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
+        linux-kernel@vger.kernel.org, srikar@linux.vnet.ibm.com,
+        irogers@google.com
+Subject: [PATCH V3 0/2] Fix perf bench numa to work with machines having #CPUs > 1K
+Date:   Tue, 12 Apr 2022 22:10:57 +0530
+Message-Id: <20220412164059.42654-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: isgCRUbZeKHNqvogx-vg97hrxlBbI9Is
+X-Proofpoint-ORIG-GUID: AkCToOTRQ7TrovAZmyLbaRPvbxiY0LVD
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-References: <CAPS78poKf3EF5y_AND3p7A_rc6SGbQtmBfQKnBzkqU+yq5TF6g@mail.gmail.com>
-In-Reply-To: <CAPS78poKf3EF5y_AND3p7A_rc6SGbQtmBfQKnBzkqU+yq5TF6g@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 12 Apr 2022 09:39:40 -0700
-Message-ID: <CAP-5=fXsLJ=mRq1wDn2f5Oc3x6K4=m3QFzBK9Z_5ZQzGm6aC-A@mail.gmail.com>
-Subject: Re: [Question about project size]Perf data converter is large project
- or medium project?
-To:     Tanusree Debnath <tanu235m@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        arnaldo.melo@gmail.com, mingo@redhat.com, acme@kernel.org,
-        peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-12_06,2022-04-12_02,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
+ mlxscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2202240000 definitions=main-2204120079
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 6:55 AM Tanusree Debnath <tanu235m@gmail.com> wrote:
->
-> Hi,
-> I am applying for GSoC. I wanted to know if "Perf data converter" is a
-> large project or a medium project as I have to mention that in the
-> google application form. Please let me know.
+The perf benchmark for collections: numa hits failure in system
+configuration with CPU's more than 1024. These benchmarks uses
+"sched_getaffinity" and "sched_setaffinity" in the code to
+work with affinity.
 
-I think it can be both, it is deliberately open ended so that you can
-keep contributing support for more formats as time allows. Does the
-selection have time or other implications? If not I'd say either
-choice should be fine.
+Example snippet from numa benchmark:
+<<>>
+perf: bench/numa.c:302: bind_to_node: Assertion `!(ret)' failed.
+Aborted (core dumped)
+<<>>
 
-Thanks,
-Ian
+bind_to_node function uses "sched_getaffinity" to save the cpumask.
+This fails with EINVAL because the default mask size in glibc is 1024
 
-> Thank you,
-> Tanusree Debnath
+To overcome this 1024 CPUs mask size limitation of cpu_set_t,
+change the mask size using the CPU_*_S macros ie, use CPU_ALLOC to
+allocate cpumask, CPU_ALLOC_SIZE for size, CPU_SET_S to set mask bit.
+
+Fix all the relevant places in the code to use mask size which is large
+enough to represent number of possible CPU's in the system.
+
+This patchset also address a fix for parse_setup_cpu_list function in
+numa bench to check if input CPU is online before binding task to
+that CPU. This is to fix failures where, though CPU number is within
+max CPU, it could happen that CPU is offline. Here, sched_setaffinity
+will result in failure when using cpumask having that cpu bit set
+in the mask.
+
+Patch 1 address fix for parse_setup_cpu_list to check if CPU used to bind
+task is online. Patch 2 has fix for bench numa to work with machines
+having #CPUs > 1K
+
+Athira Rajeev (2):
+  tools/perf: Fix perf bench numa testcase to check if CPU used to bind
+    task is online
+  perf bench: Fix numa bench to fix usage of affinity for machines with
+    #CPUs > 1K
+
+Changelog:
+v2 -> v3
+Link to the v2 version :
+https://lore.kernel.org/all/20220406175113.87881-1-atrajeev@linux.vnet.ibm.com/
+ - From the v2 version, patch 1 and patch 2 are now part of upstream.
+ - This v3 version separates patch 3 and patch 4 to address review
+   comments from arnaldo which includes using sysfs__read_str for reading
+   sysfs file and fixing the compilation issues observed in debian
+
+ tools/perf/bench/numa.c  | 136 +++++++++++++++++++++++++++++----------
+ tools/perf/util/header.c |  51 +++++++++++++++
+ tools/perf/util/header.h |   1 +
+ 3 files changed, 153 insertions(+), 35 deletions(-)
+
+-- 
+2.35.1
+
