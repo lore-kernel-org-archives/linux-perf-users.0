@@ -2,150 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF97AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 16:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1631C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 16:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357683AbiDLQgB (ORCPT
+        id S234647AbiDLQkp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Apr 2022 12:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40062 "EHLO
+        Tue, 12 Apr 2022 12:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351070AbiDLQgA (ORCPT
+        with ESMTP id S1357719AbiDLQkm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Apr 2022 12:36:00 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAEF65E774;
-        Tue, 12 Apr 2022 09:33:36 -0700 (PDT)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23CGPGkJ012260;
-        Tue, 12 Apr 2022 16:33:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=c9kdWw+POzaQW+fleidcvusNLGMoZpz2IqM3kYRaRSg=;
- b=FHG1G18Bs+P8aVfQEPV5AOxQ0Kp+5HIFLBoKAXJl7UfdS6MHzxFJVkZoqaoK+6AaamE3
- j4fNq1sILZ8AsrMYmj7rwMsGSlc41949zI/nZldEo5Tl69yoMAA9BdbO9cgtC/vyjTE2
- gbrXHJvO+9o/YqqUuYh0Ybol8YGhCga50F4NLxNCk5nMz431wFng4HBrZ9AbUg5b/RFR
- jqdvhxecLOymI6BDlUgCHnZ5eBlt9jAxYANwkvZb5AIPk69eI6tm/YeAQHLvUKiaetsA
- W3KOLH2fTKslTF1GQfkW5/QuisTNLeaprgYq555+SlNSJ2GHdoURXyX1JysqxGyaRr0m fQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3fdcx786us-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 16:33:29 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23CGPY5R012890;
-        Tue, 12 Apr 2022 16:33:29 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3fdcx786tq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 16:33:29 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23CGGDri006815;
-        Tue, 12 Apr 2022 16:33:27 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 3fb1dj582r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 16:33:27 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23CGXN3O43974992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Apr 2022 16:33:23 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8D57AE04D;
-        Tue, 12 Apr 2022 16:33:23 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 442C6AE045;
-        Tue, 12 Apr 2022 16:33:19 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.163.3.143])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 12 Apr 2022 16:33:18 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: [PATCH v2 0/4] Fix perf bench numa, futex and epoll to work with
- machines having #CPUs > 1K
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <YlG/1cegJ3Fh/zj/@kernel.org>
-Date:   Tue, 12 Apr 2022 22:03:14 +0530
-Cc:     Ian Rogers <irogers@google.com>, maddy@linux.vnet.ibm.com,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        kajoljain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <64B99006-B94E-485E-8382-91E50244A5E4@linux.vnet.ibm.com>
-References: <20220406175113.87881-1-atrajeev@linux.vnet.ibm.com>
- <YlGmAd3LEh9He6Pg@kernel.org> <YlG/1cegJ3Fh/zj/@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: iBl1BFr_njItt3Pb-ald9kpXGlfMjtih
-X-Proofpoint-ORIG-GUID: wPH9ZGI864VHPwR9yJmIplFR6L0lQuno
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-12_06,2022-04-12_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
- suspectscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204120079
+        Tue, 12 Apr 2022 12:40:42 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C403B1CB16
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 09:38:24 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id r7so12289172wmq.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 09:38:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Ai2FXsz1lpt5CfIxcPnvg2o3bfj4cEdKtHkGdr3+zI=;
+        b=imNfUf/wOpAGo1uNfQpoA2iEh1kGwTKLlDTs+2Yv+2jwGd1c17AaSDQ6DB+zMQkSsK
+         i/v57BtZOinugDf4u923xuMtsHWbMI+Wb3h9eVNrb4gVyi/nhH86Klv11pXYd58eEdPW
+         D9e6dpcgqLg0KxqqXwCLXF3Cu1cGMXWrbdcmbQYYVOCz0irJZcBLxJS6M16/6K3R16Jf
+         qJt0OGpWte4v2vH3lT/1evIK+iUpljcflDmzOPG8TAbpm/UDdZ2y2Dl7NhNo6s5xnUDG
+         AooQ9KV7uFH16AAbNBu901Jnbv4+sZyXDTfmqjAe9eJ5uvUoB+Nf1SFuAMv6dwGwy8j/
+         ofQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Ai2FXsz1lpt5CfIxcPnvg2o3bfj4cEdKtHkGdr3+zI=;
+        b=driJFnicy+E0SuhYpqjOyhMrfzsrYboXjN/PjZQX2xUboZdh/7BiRFRxhsSTHeXtT/
+         c4waIY14kx8kfCWKCTiCyqnHVsF9RgbqDJzlo8LBkxpDOWU3YYORJVjGrIkJAk+myDJg
+         NZ7BuU/U4nn/LHh7gBWMkQ8U8l4/Kxxx4FCcVzbtagucGS0/FPb/1OqMnX0opCovnHiY
+         5wFmvRDdNbo+lha1TDbuW5T2odYq0oIhE/7gpD66x/h3f22TmvlerYZyjwifgkjTV6Ca
+         OXKs5zZBtJOnAIJy7RJtjlDjCb8USZfisWcZwNiyPPtQfFsgwsnpaNUb/VsXsshYeCQh
+         FazA==
+X-Gm-Message-State: AOAM533M+AhTzSyGAiaPEQkVl/4P3C5EdJdPhNFAMUcwvLKQKEk3oyV8
+        kY8l6IJLswFSNyuYU6Qu6H7ooVvSWQDCMHxGE7t2Zw==
+X-Google-Smtp-Source: ABdhPJwNHGYzgZeCRDmI1E/jH3hxhARvf2Ltz+BaLth4rt9H5etkb227vDWbmsUtfeiaaAivFgb8yU6wQUyl1952Obk=
+X-Received: by 2002:a7b:c77a:0:b0:38c:2c33:d8f1 with SMTP id
+ x26-20020a7bc77a000000b0038c2c33d8f1mr4839993wmk.115.1649781503016; Tue, 12
+ Apr 2022 09:38:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAPS78prVW-RRgzpBoYONRvmZz5DotizX9t8U4aWd2qLb1x9D=w@mail.gmail.com>
+In-Reply-To: <CAPS78prVW-RRgzpBoYONRvmZz5DotizX9t8U4aWd2qLb1x9D=w@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 12 Apr 2022 09:38:10 -0700
+Message-ID: <CAP-5=fU0NEgdEwv1cGtvF2-cRLO=wOZ5UF0QCK3toJf2tnT3TQ@mail.gmail.com>
+Subject: Re: [GSoC] Applicant Introduction, project selection
+To:     Tanusree Debnath <tanu235m@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        arnaldo.melo@gmail.com, mingo@redhat.com, acme@kernel.org,
+        peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Apr 11, 2022 at 9:21 PM Tanusree Debnath <tanu235m@gmail.com> wrote:
+>
+> Hi,
+> I am Tanusree Debnath. I have graduated from San Jose State University
+> with a bachelor's degree in computer science. I love to program in
+> different programming languages. I like open source projects, and I
+> recently started contributing to open source projects. I have been
+> using the linux operating system for over 5 years now. I always wanted
+> to contribute to Linux and recently I started contributing to the
+> Linux operating system.
+>
+> I am interested in contributing to the "Perf data converter" project.
+> In preparation for this, I have already submitted three patches to
+> Linux perf out of which one was accepted.
 
+Awesome, thank you for your contributions!
 
-> On 09-Apr-2022, at 10:48 PM, Arnaldo Carvalho de Melo =
-<acme@kernel.org> wrote:
->=20
-> Em Sat, Apr 09, 2022 at 12:28:01PM -0300, Arnaldo Carvalho de Melo =
-escreveu:
->> Em Wed, Apr 06, 2022 at 11:21:09PM +0530, Athira Rajeev escreveu:
->>> The perf benchmark for collections: numa, futex and epoll
->>> hits failure in system configuration with CPU's more than 1024.
->>> These benchmarks uses "sched_getaffinity" and "sched_setaffinity"
->>> in the code to work with affinity.
->>=20
->> Applied 1-3, 4 needs some reworking and can wait for v5.19, the first =
-3
->> are fixes, so can go now.
->=20
-> Now trying to fix this:
->=20
->  26     7.89 debian:9                      : FAIL gcc version 6.3.0 =
-20170516 (Debian 6.3.0-18+deb9u1)
->    bench/numa.c: In function 'alloc_data':
->    bench/numa.c:359:6: error: 'orig_mask' may be used uninitialized in =
-this function [-Werror=3Dmaybe-uninitialized]
->      ret =3D sched_setaffinity(0, size, mask);
->      ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    bench/numa.c:409:13: note: 'orig_mask' was declared here
->      cpu_set_t *orig_mask;
->                 ^~~~~~~~~
->    cc1: all warnings being treated as errors
->    /git/perf-5.18.0-rc1/tools/build/Makefile.build:139: recipe for =
-target 'bench' failed
->    make[3]: *** [bench] Error 2
->=20
->=20
-> Happened in several distros.
+> My IRC nick is Tanusree.
 
-Hi Arnaldo
+Apologies, I'd dropped off but will try to make sure I'm on IRC for
+people who want to talk about GSoC.
 
-Thanks for pointing it. I could be able to recreate this compile error =
-in Debian.
-The reason for this issue is variable orig_mask which is used and =
-initialised in =E2=80=9Calloc_data"
-function within if condition for "init_cpu0=E2=80=9D. We can fix this =
-issue by initialising it to NULL since
-it is accessed conditionally. I also made some changes to CPU_FREE the =
-mask in other error paths.
-I will post a V3 with these changes.
+Thanks,
+Ian
 
-Athira
-
->=20
-> - Arnaldo
-
+> Thanks,
+> Tanusree Debnath
