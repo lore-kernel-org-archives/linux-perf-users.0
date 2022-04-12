@@ -2,130 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7693BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Apr 2022 19:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586CAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 01:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237280AbiDKTnM (ORCPT
+        id S233270AbiDLB17 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Apr 2022 15:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
+        Mon, 11 Apr 2022 21:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231774AbiDKTnL (ORCPT
+        with ESMTP id S232253AbiDLB16 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Apr 2022 15:43:11 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66647205EB;
-        Mon, 11 Apr 2022 12:40:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 22A5BB817AA;
-        Mon, 11 Apr 2022 19:40:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73455C385A6;
-        Mon, 11 Apr 2022 19:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649706053;
-        bh=AAe7VENFlNRV97ftvKBoz9pzHBOWQt+AmSLXbo397uc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RqJZbEOL0hke4a2uZ9heYUBogZKj7un4DgEqP7zAsyrg5LinDehxQJQZu6YgAmulQ
-         3LB6CEh53+Ge4IeGEjppoitRfwq9l0OyI2sRhRfionobQh/IIkQve9JqPifmAfCR/E
-         yVXfPNXaAt+BzD6Ca9VvtgetPKt0J1tRmMMyMfeNm4LGBvu6VtrmwzBr419jss7akL
-         xEL/K1/PaCpRs2dDXePL036Ap55UlLroUpUeV5+vabOhPVdnzFj4bkxFQbvFp+BOje
-         P6+R4adAxRiHpOn7hmq/H2hEC3fuZdWcMoOwyrdILzNCw4EnSNSFXDVQrMcWF4i+iS
-         i368QDm+hbZ0w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 12B1F40407; Mon, 11 Apr 2022 16:40:50 -0300 (-03)
-Date:   Mon, 11 Apr 2022 16:40:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Eric Lin <eric.lin@sifive.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        iii@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        paul.walmsley@sifive.com
-Subject: Re: [PATCH v2 1/1] perf jitdump: Add riscv64 support.
-Message-ID: <YlSEQrbnbwNt7hNv@kernel.org>
-References: <20220411105438.21366-1-eric.lin@sifive.com>
- <20220411105438.21366-2-eric.lin@sifive.com>
+        Mon, 11 Apr 2022 21:27:58 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B886A1A824;
+        Mon, 11 Apr 2022 18:25:42 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id h5so14790292pgc.7;
+        Mon, 11 Apr 2022 18:25:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TNhAr9IyPTBjGimzBz9nywCikjUEwdp04TPn/doIlVY=;
+        b=DQokl79QPCuTveZ0JPDhUGU2LZxaZUQ4bL40Op784Me21fu1M2W3ZAOi6lhhzqCjzL
+         4Lq6kGJ5sC4UzZH7Ji2QBZZpx/iZlRENsNY6F+d742sBmnwi54zZe3yxB5wuJjCXeALv
+         aHOMnFiMHhoGYBQ4JIuIMqLnAYdONA9vA+WKmiKgYeec0xcGgmq7N5Gv/dF7oyGWB5GO
+         rd2/InIjSIHlngKpYjenjEY6SlthUYLK+NE4vpN7rWgz7Gw0s7HojulaCyY8Xpqa4Lbt
+         LICU5/gv6RIk2AX8TdfeQ8XRU1YQ5O9ZKFKDejDZA85OQmyU6rsMvbF8gfjgBrv01rFw
+         klUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TNhAr9IyPTBjGimzBz9nywCikjUEwdp04TPn/doIlVY=;
+        b=sdfUkCrISTi38kbKj6to9xPbxDsJ47b2Fnc5WIWsWI3EIUXH8Ztt/ajPN/NsoB9pum
+         BmjjI7IP6gU7AEhG7WbLUpkrmRjKLS8Hg57OC1nev++a+qqfRmJ7YFjTgASSF95QFOCG
+         Ykr8btHKluWZvFK5XTbQ0IxaxEsj/uJjIpIK+0zLP7UxijhbQo4zKp9vwxoXQdfAGqmB
+         1/YpwwbzmePt4L/dS0K6sfGiUEEAhSjsWWA/ekIXE2kr5Hysur7yKU6UnuH8ceUMDiKr
+         JV0cHSTUvKEf77RjVzCuM5xCeQWQGd5e1QZaatyLOYKbEYtSJwU0VFDQ2qrur7a2FugS
+         OGhA==
+X-Gm-Message-State: AOAM532I6tzFw+kEU6RIUAUm52y1of2aXJ5klj8+uZFXrDDC2EdS0Iym
+        3R0YtJ/qSOoPqSxUO456nY8=
+X-Google-Smtp-Source: ABdhPJzq9/iX0tXOPjv+uevKkGpblIWdbUcvmdxEovaAZUO/l3DnrZBv16KOsMdG3HcPW+JUhBHgWA==
+X-Received: by 2002:a63:1061:0:b0:399:5cd:3ddf with SMTP id 33-20020a631061000000b0039905cd3ddfmr28131265pgq.271.1649726742096;
+        Mon, 11 Apr 2022 18:25:42 -0700 (PDT)
+Received: from localhost.localdomain ([103.149.162.115])
+        by smtp.gmail.com with ESMTPSA id o5-20020a17090a3d4500b001c97528521asm707461pjf.6.2022.04.11.18.25.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Apr 2022 18:25:41 -0700 (PDT)
+From:   Dongli Si <kvmx86@gmail.com>
+X-Google-Original-From: Dongli Si <sidongli1997@gmail.com>
+To:     like.xu.linux@gmail.com
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, jmattson@google.com,
+        jolsa@kernel.org, joro@8bytes.org, kim.phillips@amd.com,
+        kvmx86@gmail.com, liam.merwick@oracle.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@kernel.org, namhyung@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [PATCH] perf/x86/amd: cpu_hw_events::perf_ctr_virt_mask should only be used on host
+Date:   Tue, 12 Apr 2022 09:25:30 +0800
+Message-Id: <20220412012530.794790-1-sidongli1997@gmail.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <edfc8bd1-8dc3-9e88-d9c3-6a427b039a98@gmail.com>
+References: <edfc8bd1-8dc3-9e88-d9c3-6a427b039a98@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220411105438.21366-2-eric.lin@sifive.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 11, 2022 at 06:54:38PM +0800, Eric Lin escreveu:
-> This patch enable perf jitdump for riscv64 and it tested with V8 on qemu rv64.
-> 
-> Qemu rv64:
-> $ perf record -e cpu-clock -c 1000 -g -k mono ./d8_rv64 --perf-prof --no-write-protect-code-memory test.js
-> $ perf inject -j -i perf.data -o perf.data.jitted
-> $ perf report -i perf.data.jitted
+On Mon 11 Apr 2022 22:29:18 +0800, Like Xu wrote:
+> Or you can work it out to make nested vPMU functional on AMD.
+Unless in the future kvm wants to emulate on L1 HV the behavior of not
+count when HO bit is set and SVM is disabled, otherwise it doesn't make
+sense to use perf_ctr_virt_mask in the guest to mask HO bit. At least for
+now, this patch helps clarify what perf_ctr_virt_mask actually does.
 
-Thanks, applied.
+> This is not a typical revert commit.
+Thanks for pointing out the problem with my patch,
+I will write another patch specifically to revert this commit.
 
-- Arnaldo
+> Please check the chronological order of the related commits and the motivations.
+I know that commit df51fe7ea1c1c fixed the problem of use vPMU on old KVM,
+but I think it's a speculative way and make things a little obscure,
+because this #GP is actually a KVM problem rather than a guest problem,
+I think it is the user's responsibility to update their host kernel.
 
- 
-> Output:
->  To display the perf.data header info, please use --header/--header-only options.
-> 
->  Total Lost Samples: 0
-> 
->  Samples: 87K of event 'cpu-clock'
->  Event count (approx.): 87974000
-> 
->  Children      Self  Command          Shared Object                Symbol
-> 
-> ....
->      0.28%     0.06%  d8_rv64          d8_rv64                      [.] _ZN2v88i
-> nternal6WasmJs7InstallEPNS0_7IsolateEb
->      0.28%     0.00%  d8_rv64          d8_rv64                      [.] _ZN2v88i
-> nternal10ParserBaseINS0_6ParserEE22ParseLogicalExpressionEv
->      0.28%     0.03%  d8_rv64          jitted-112-76.so             [.] Builtin:
-> InterpreterEntryTrampoline
->      0.12%     0.00%  d8_rv64          d8_rv64                      [.] _ZN2v88i
-> nternal19ContextDeserializer11DeserializeEPNS0_7IsolateENS0_6HandleINS0_13JSGlob
-> alProxyEEENS_33DeserializeInternalFieldsCallbackE
->      0.12%     0.01%  d8_rv64          jitted-112-651.so            [.] Builtin:
-> CEntry_Return1_DontSaveFPRegs_ArgvOnStack_NoBuiltinExit
-> ....
-> 
-> Signed-off-by: Eric Lin <eric.lin@sifive.com>
-> ---
->  tools/perf/arch/riscv/Makefile | 1 +
->  tools/perf/util/genelf.h       | 3 +++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
-> index 1aa9dd772489..a8d25d005207 100644
-> --- a/tools/perf/arch/riscv/Makefile
-> +++ b/tools/perf/arch/riscv/Makefile
-> @@ -2,3 +2,4 @@ ifndef NO_DWARF
->  PERF_HAVE_DWARF_REGS := 1
->  endif
->  PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
-> +PERF_HAVE_JITDUMP := 1
-> diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
-> index 3db3293213a9..ae138afe6c56 100644
-> --- a/tools/perf/util/genelf.h
-> +++ b/tools/perf/util/genelf.h
-> @@ -38,6 +38,9 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
->  #elif defined(__s390x__)
->  #define GEN_ELF_ARCH	EM_S390
->  #define GEN_ELF_CLASS	ELFCLASS64
-> +#elif defined(__riscv) && __riscv_xlen == 64
-> +#define GEN_ELF_ARCH	EM_RISCV
-> +#define GEN_ELF_CLASS	ELFCLASS64
->  #else
->  #error "unsupported architecture"
->  #endif
-> -- 
-> 2.35.1
+> > +	/*
+> > +	 * When SVM is disabled, set the Host-Only bit will cause the
+> > +	 * performance counter to not work.
+> It's ridiculous. Based on the AMD APM Table 13-3. Host/Guest Only Bits,
+> the performance counter would count "Host events" rather than "not work".
+You are wrong, you can test it on the host, and the description of the
+commit 1018faa6cf23 also pointed out this problem, this is the result of an
+experiment, AMD APM has not documented this problem.
 
--- 
+I forgot to say this is the behavior on the host, I will improve this
+comment to specify 'why' more clearly, like this:
+	/*
+	 * It turns out that when SVM is disabled on the host (L0), set the
+	 * Host-Only bit will cause the performance counter to not count.
+	 */
 
-- Arnaldo
+> Note, your proposal change should work on the L0, L1 and L2.
+Yes, I tested it on L0, L1, L2 with 5.18-rc1 and it works as expected.
+
+There is a related discussion here:
+https://lore.kernel.org/all/20220320002106.1800166-1-sidongli1997@gmail.com/
+
+Regards,
+Dongli
+
