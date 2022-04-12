@@ -2,135 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9957AC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 12:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D97C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 12:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351610AbiDLMGk (ORCPT
+        id S236281AbiDLMgF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Apr 2022 08:06:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38624 "EHLO
+        Tue, 12 Apr 2022 08:36:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352372AbiDLMC5 (ORCPT
+        with ESMTP id S1348114AbiDLMft (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Apr 2022 08:02:57 -0400
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227038023B
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 04:00:09 -0700 (PDT)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-2ebd70a4cf5so138019147b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 04:00:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v2zi2giavZdO2HMDfrc7yK4A4aR/ngLsqIJD3W77LNs=;
-        b=b4v6GqYxeJjlJ1RbEQauF9GEIWimtem9DfI/ea+58BboREvflEEq0M6jErAnAoE93B
-         tYuy5mJ/r4ba02CczLRQd8TmQ7CK9KY/1RfIbv6VC/vU5FzAIsre+zMd2kHi6JeMfPOF
-         4fBT0F6bq2XsYtIaWNClXMgBpjhBJ9AS7/1/3qS47r77iP3+bY4fHCX9/uoSi8DAvTqG
-         k/jDnzm69qk4dXs/N7H146ttsPkrszUV5cVSdNFLc0OGWTX1yWcUZvfGu8L3L3E878+9
-         LZbWbMEWL706ypWKJhQXFIcNT9lcoZhbr2KfSuGPorip9ZdCMOWb/sRTFpPLw/dEIfsz
-         NCSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v2zi2giavZdO2HMDfrc7yK4A4aR/ngLsqIJD3W77LNs=;
-        b=mfW4P4VIpB8CN4jN6dHWglPWDZFu/hVvDShW6vgov4mM14WFP5SkNdXLiaQ/NUYvvW
-         n7cxZLvgGTfjIWCgp6yUM0DMiTgEHyDP+6AXcfbrIJputBcIh74bmNEvyBbmrthfZwlD
-         zSFRoZ7fmHVxg5EBl4Z4c/cmI8cpdR1hzqIlLzM9gQEDhd/6grIE2RE54nuANE0GbxnA
-         NmSt+9jVaeixO7/YXI5KI9hY2zrvYRm1Avmxij5CpVu3niBwErOh1Df0KY8nPmwXgaeB
-         i8orTHQvkkuPQTxIWk9gmB+C5tQ6im9RvNqDza8PNoMpEF8DHHGCnJ0Rtw98HxIx76gY
-         p77w==
-X-Gm-Message-State: AOAM532j2oKmL9VF59suPkh0de4JTJCzNE/b9toZpwWZNaI7Oytuq27f
-        1rucek1LSus5q0ZgfrGTm5tr+pa9/xV8+JpTCKHM/g==
-X-Google-Smtp-Source: ABdhPJwwqPNdGAbIJgV8Tw3Kjk4tMF7wq4HRILrI/52e/kefI6BLXOkH7KMdW6Q3t6UkDG+3QNDDwa3vKedsVrgXFAE=
-X-Received: by 2002:a0d:e743:0:b0:2eb:3106:9b32 with SMTP id
- q64-20020a0de743000000b002eb31069b32mr30496791ywe.512.1649761208158; Tue, 12
- Apr 2022 04:00:08 -0700 (PDT)
+        Tue, 12 Apr 2022 08:35:49 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 363E513FB4;
+        Tue, 12 Apr 2022 04:54:39 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3641A1424;
+        Tue, 12 Apr 2022 04:54:39 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.38.213])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E47C63F70D;
+        Tue, 12 Apr 2022 04:54:32 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [RFC V2 0/8] arm64/perf: Enable branch stack sampling
+Date:   Tue, 12 Apr 2022 17:24:47 +0530
+Message-Id: <20220412115455.293119-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220404111204.935357-1-elver@google.com> <CACT4Y+YiDhmKokuqD3dhtj67HxZpTumiQvvRp35X-sR735qjqQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+YiDhmKokuqD3dhtj67HxZpTumiQvvRp35X-sR735qjqQ@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 12 Apr 2022 13:00:00 +0200
-Message-ID: <CANpmjNPQ9DWzPRx4QWDnZatKGU96xLhb2qN-wgbD84zyZ6_Mig@mail.gmail.com>
-Subject: Re: [PATCH] signal: Deliver SIGTRAP on perf event asynchronously if blocked
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 5 Apr 2022 at 15:30, Dmitry Vyukov <dvyukov@google.com> wrote:
-> On Mon, 4 Apr 2022 at 13:12, Marco Elver <elver@google.com> wrote:
-> > With SIGTRAP on perf events, we have encountered termination of
-> > processes due to user space attempting to block delivery of SIGTRAP.
-> > Consider this case:
-> >
-> >     <set up SIGTRAP on a perf event>
-> >     ...
-> >     sigset_t s;
-> >     sigemptyset(&s);
-> >     sigaddset(&s, SIGTRAP | <and others>);
-> >     sigprocmask(SIG_BLOCK, &s, ...);
-> >     ...
-> >     <perf event triggers>
-> >
-> > When the perf event triggers, while SIGTRAP is blocked, force_sig_perf()
-> > will force the signal, but revert back to the default handler, thus
-> > terminating the task.
-> >
-> > This makes sense for error conditions, but not so much for explicitly
-> > requested monitoring. However, the expectation is still that signals
-> > generated by perf events are synchronous, which will no longer be the
-> > case if the signal is blocked and delivered later.
-> >
-> > To give user space the ability to clearly distinguish synchronous from
-> > asynchronous signals, introduce siginfo_t::si_perf_flags and
-> > TRAP_PERF_FLAG_ASYNC (opted for flags in case more binary information is
-> > required in future).
-> >
-> > The resolution to the problem is then to (a) no longer force the signal
-> > (avoiding the terminations), but (b) tell user space via si_perf_flags
-> > if the signal was synchronous or not, so that such signals can be
-> > handled differently (e.g. let user space decide to ignore or consider
-> > the data imprecise).
-> >
-> > The alternative of making the kernel ignore SIGTRAP on perf events if
-> > the signal is blocked may work for some usecases, but likely causes
-> > issues in others that then have to revert back to interception of
-> > sigprocmask() (which we want to avoid). [ A concrete example: when using
-> > breakpoint perf events to track data-flow, in a region of code where
-> > signals are blocked, data-flow can no longer be tracked accurately.
-> > When a relevant asynchronous signal is received after unblocking the
-> > signal, the data-flow tracking logic needs to know its state is
-> > imprecise. ]
-> >
-> > Link: https://lore.kernel.org/all/Yjmn%2FkVblV3TdoAq@elver.google.com/
-> > Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-> > Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> > Signed-off-by: Marco Elver <elver@google.com>
->
-> Tested-by: Dmitry Vyukov <dvyukov@google.com>
->
-> I've tested delivery of SIGTRAPs when it's blocked with sigprocmask,
-> it does not kill the process now.
->
-> And tested the case where previously I was getting infinite recursion
-> and stack overflow (SIGTRAP handler causes another SIGTRAP recursively
-> before being able to detect recursion and return). With this patch it
-> can be handled by blocking recursive SIGTRAPs (!SA_NODEFER).
+This series enables perf branch stack sampling support on arm64 platform
+via a new arch feature called Branch Record Buffer Extension (BRBE). All
+relevant register definitions could be accessed here.
 
-Thanks!
+https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 
+This series applies on v5.18-rc1 after the BRBE related perf ABI changes series
+(V5) that was posted earlier.
 
-Should there be any further comments, please shout.
+https://lore.kernel.org/all/20220404045046.634522-2-anshuman.khandual@arm.com/
 
-Thanks,
--- Marco
+Following issues remain inconclusive
+
+- Jame's concerns regarding permission inadequacy related to perfmon_capable()
+- Jame's concerns regarding using perf_event_paranoid along with perfmon_capable()
+- Rob's concerns regarding the series structure, arm_pmu callbacks based framework
+
+Changes in RFC V2:
+
+- Added branch_sample_priv() while consolidating other branch sample filter helpers
+- Changed all SYS_BRBXXXN_EL1 register definition encodings per Marc
+- Changed the BRBE driver as per proposed BRBE related perf ABI changes (V5)
+- Added documentation for struct arm_pmu changes, updated commit message
+- Updated commit message for BRBE detection infrastructure patch
+- PERF_SAMPLE_BRANCH_KERNEL gets checked during arm event init (outside the driver)
+- Branch privilege state capture mechanism has now moved inside the driver
+
+Changes in RFC V1:
+
+https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (8):
+  perf: Consolidate branch sample filter helpers
+  arm64/perf: Add register definitions for BRBE
+  arm64/perf: Update struct arm_pmu for BRBE
+  arm64/perf: Update struct pmu_hw_events for BRBE
+  driver/perf/arm_pmu_platform: Add support for BRBE attributes detection
+  arm64/perf: Drive BRBE from perf event states
+  arm64/perf: Add BRBE driver
+  arm64/perf: Enable branch stack sampling
+
+ arch/arm64/include/asm/sysreg.h | 222 +++++++++++++++++
+ arch/arm64/kernel/perf_event.c  |  48 ++++
+ drivers/perf/Kconfig            |  11 +
+ drivers/perf/Makefile           |   1 +
+ drivers/perf/arm_pmu.c          |  72 +++++-
+ drivers/perf/arm_pmu_brbe.c     | 425 ++++++++++++++++++++++++++++++++
+ drivers/perf/arm_pmu_brbe.h     | 259 +++++++++++++++++++
+ drivers/perf/arm_pmu_platform.c |  34 +++
+ include/linux/perf/arm_pmu.h    |  63 +++++
+ include/linux/perf_event.h      |  24 ++
+ kernel/events/core.c            |   9 +-
+ 11 files changed, 1158 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/perf/arm_pmu_brbe.c
+ create mode 100644 drivers/perf/arm_pmu_brbe.h
+
+-- 
+2.25.1
+
