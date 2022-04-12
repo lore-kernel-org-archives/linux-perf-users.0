@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93463C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 12:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72172C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 12:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235678AbiDLMhI (ORCPT
+        id S1356620AbiDLMkG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Apr 2022 08:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59082 "EHLO
+        Tue, 12 Apr 2022 08:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351898AbiDLMgO (ORCPT
+        with ESMTP id S1350598AbiDLMgE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Apr 2022 08:36:14 -0400
+        Tue, 12 Apr 2022 08:36:04 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 48C2B13F81;
-        Tue, 12 Apr 2022 04:55:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 88506C9;
+        Tue, 12 Apr 2022 04:55:12 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 133121424;
-        Tue, 12 Apr 2022 04:55:42 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5191E1570;
+        Tue, 12 Apr 2022 04:55:12 -0700 (PDT)
 Received: from a077893.arm.com (unknown [10.163.38.213])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B9AC33F70D;
-        Tue, 12 Apr 2022 04:55:35 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5939E3F70D;
+        Tue, 12 Apr 2022 04:55:06 -0700 (PDT)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
@@ -34,9 +34,9 @@ Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [RFC V2 8/8] arm64/perf: Enable branch stack sampling
-Date:   Tue, 12 Apr 2022 17:24:55 +0530
-Message-Id: <20220412115455.293119-9-anshuman.khandual@arm.com>
+Subject: [RFC V2 4/8] arm64/perf: Update struct pmu_hw_events for BRBE
+Date:   Tue, 12 Apr 2022 17:24:51 +0530
+Message-Id: <20220412115455.293119-5-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220412115455.293119-1-anshuman.khandual@arm.com>
 References: <20220412115455.293119-1-anshuman.khandual@arm.com>
@@ -46,63 +46,59 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that all the required pieces are already in place, just enable the perf
-branch stack sampling support on arm64 platform, by removing the gate which
-blocks it in armpmu_event_init().
+A single perf event instance BRBE related contexts and data will be tracked
+in struct pmu_hw_events. Hence update the structure to accommodate required
+details related to BRBE.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- drivers/perf/arm_pmu.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+ include/linux/perf/arm_pmu.h | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index ab187a3bcdab..8b08811f662a 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -539,9 +539,35 @@ static int armpmu_event_init(struct perf_event *event)
- 		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
- 		return -ENOENT;
+diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+index 3d427ac0ca45..18e519e4e658 100644
+--- a/include/linux/perf/arm_pmu.h
++++ b/include/linux/perf/arm_pmu.h
+@@ -43,6 +43,11 @@
+ 	},								\
+ }
  
--	/* does not support taken branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
-+	if (has_branch_stack(event)) {
-+		/*
-+		 * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
-+		 * in the config, before branch stack sampling events
-+		 * can be requested.
-+		 */
-+		if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
-+			pr_warn_once("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
-+			return -EOPNOTSUPP;
-+		}
++/*
++ * Maximum branch records in BRBE
++ */
++#define BRBE_MAX_ENTRIES 64
 +
-+		if (event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_KERNEL) {
-+			if (!perfmon_capable()) {
-+				pr_warn_once("does not have permission for kernel branch filter\n");
-+				return -EPERM;
-+			}
-+		}
-+
-+		/*
-+		 * Branch stack sampling event can not be supported in
-+		 * case either the required driver itself is absent or
-+		 * BRBE buffer, is not supported. Besides checking for
-+		 * the callback prevents a crash in case it's absent.
-+		 */
-+		if (!armpmu->brbe_supported || !armpmu->brbe_supported(event)) {
-+			pr_warn_once("BRBE is not supported\n");
-+			return -EOPNOTSUPP;
-+		}
-+	}
+ /* The events for a given PMU register set. */
+ struct pmu_hw_events {
+ 	/*
+@@ -69,6 +74,23 @@ struct pmu_hw_events {
+ 	struct arm_pmu		*percpu_pmu;
  
- 	if (armpmu->map_event(event) == -ENOENT)
- 		return -ENOENT;
+ 	int irq;
++
++	/* Detected BRBE attributes */
++	bool				v1p1;
++	int				brbe_cc;
++	int				brbe_nr;
++
++	/* Evaluated BRBE configuration */
++	u64				brbfcr;
++	u64				brbcr;
++
++	/* Tracked BRBE context */
++	unsigned int			brbe_users;
++	void				*brbe_context;
++
++	/* Captured BRBE buffer - copied as is into perf_sample_data */
++	struct perf_branch_stack	brbe_stack;
++	struct perf_branch_entry	brbe_entries[BRBE_MAX_ENTRIES];
+ };
+ 
+ enum armpmu_attr_groups {
 -- 
 2.25.1
 
