@@ -2,81 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FB0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 15:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2955C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 15:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353778AbiDLPrf (ORCPT
+        id S1350245AbiDLPun (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Apr 2022 11:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
+        Tue, 12 Apr 2022 11:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357287AbiDLPre (ORCPT
+        with ESMTP id S230352AbiDLPul (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Apr 2022 11:47:34 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C555DF25;
-        Tue, 12 Apr 2022 08:45:17 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15ED91424;
-        Tue, 12 Apr 2022 08:45:17 -0700 (PDT)
-Received: from [10.1.30.135] (e127744.cambridge.arm.com [10.1.30.135])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 218D23F70D;
-        Tue, 12 Apr 2022 08:45:15 -0700 (PDT)
-Subject: Re: [PATCH 1/1] perf tools: Use Python devtools for version
- autodetection rather than runtime
-From:   German Gomez <german.gomez@arm.com>
-To:     James Clark <james.clark@arm.com>, acme@kernel.org,
-        linux-perf-users@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Tue, 12 Apr 2022 11:50:41 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049EA5FF29
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 08:48:23 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id x10-20020a5b028a000000b0063f0cc26f1bso10304901ybl.16
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 08:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=8IZz/gMylCpP1gVOy3Mzg8c3y39Rz/6oTdnON/BPbbo=;
+        b=nozrEXfagyw88Rss5WjQoaW+QrAP05xY/u0NdTER42+HrNPzXBnVSeJMVV1t4f1tuk
+         blSVnwX63Ntsee0BrggFx1BX7hqrWUE+/lheMmBq4lLmaGVbOnNzrH3RMNh/aYIYEC7m
+         gkyaLUH7heh/Bagv6Tc7TIuyIYrzP9V8RZn/U4DS5KheteWxYjSJ7u/6J0we0EIJ0NC9
+         AsCP7aaf3Kb42hs6Lw2WxNxA8rsk6dSAiF1hRAoqmSeTeb13PJFeWlHtOGKWUJ5C2+Ue
+         xLJls2OFlXo9elbttQXMs1LNWl87IVZaVxDY+tNaz/W/C6bgwKop6uSP1HPb7zpVPwZ0
+         gtWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=8IZz/gMylCpP1gVOy3Mzg8c3y39Rz/6oTdnON/BPbbo=;
+        b=489Qa22k3lVMqipBY7NC3s8WRjxImxWWR77kRVURO1J9bFQpN4fhKWPs7EXnM5YoW4
+         PTIlzMgGwSn7Krh7+jA2LRz8wKy1nig3Yf3LryPO0Q3QOgjfXwUt47dtv+fDEOfuXNfg
+         XvV0jZunHWQbGbriJiMhvRtbZvUAwl6REkejYkdimt1TrlzVsWr/F7TKZ92LFxuFSOWx
+         iOau3jpLvPsRwfoZGKWpwTqIb3CuRxy1D4ooi2k2ovn1d3v577IySQglyl2VrQ43hP1I
+         oQc6JTxCq18RWTu6HxN9F8hebxdGZkDBkVJ2NXdHwZRMd7k+Pb3dNO42vJFTwD1n81mu
+         eJWg==
+X-Gm-Message-State: AOAM531C0s25kxi4Cmrza4redYlga2vkIMjcCdYtYKH36EvPrMBJPVMV
+        5BRg/9sl6XKXndhjD6cQVWl4mnz7vU6a
+X-Google-Smtp-Source: ABdhPJy450ML0VeLyDFpbPqaekYj5Wh+ytMVAvRr1v5nwfqBAHYtbYtXW7oIiYzIflTqKubXTCVh9Baufz9i
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:5f6f:a698:92a:5d45])
+ (user=irogers job=sendgmr) by 2002:a5b:cc:0:b0:63d:897a:ddab with SMTP id
+ d12-20020a5b00cc000000b0063d897addabmr25252581ybp.110.1649778502201; Tue, 12
+ Apr 2022 08:48:22 -0700 (PDT)
+Date:   Tue, 12 Apr 2022 08:48:13 -0700
+Message-Id: <20220412154817.2728324-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
+Subject: [PATCH v2 0/4] Tidy up symbol end fixup
+From:   Ian Rogers <irogers@google.com>
+To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20220309194313.3350126-1-james.clark@arm.com>
- <20220309194313.3350126-2-james.clark@arm.com>
- <1262ee1e-22dc-0cc6-3e60-257e17d9ed26@arm.com>
-Message-ID: <14df315d-7667-d80c-b58f-4ad6a6e1c93c@arm.com>
-Date:   Tue, 12 Apr 2022 16:45:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <1262ee1e-22dc-0cc6-3e60-257e17d9ed26@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        James Clark <james.clark@arm.com>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ian Rogers <irogers@google.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        "=?UTF-8?q?Martin=20Li=C5=A1ka?=" <mliska@suse.cz>,
+        William Cohen <wcohen@redhat.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Lexi Shao <shaolexi@huawei.com>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Denis Nikitin <denik@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Fixing up more symbol ends as introduced in:
+https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
+caused perf annotate to run into memory limits - every symbol holds
+all the disassembled code in the annotation, and so making symbols
+ends further away dramatically increased memory usage (40MB to
+ >1GB). Modify the symbol end logic so that special kernel cases aren't
+applied in the common case.
 
-On 12/04/2022 16:30, German Gomez wrote:
-> Hi James,
->
-> On 09/03/2022 19:43, James Clark wrote:
->> This fixes the issue where the build will fail if only the Python2
->> runtime is installed but the Python3 devtools are installed. Currently
->> the workaround is 'make PYTHON=python3'.
->>
->> Fix it by autodetecting Python based on whether python[x]-config exists
->> rather than just python[x] because both are needed for the build. Then
->> -config is stripped to find the Python runtime.
->>
->> Testing
->> =======
->>
->>  * Auto detect links with Python3 when the v3 devtools are installed
->>    and only Python 2 runtime is installed
->>  * Auto detect links with Python2 when both devtools are installed
->>  * Sensible warning is printed if no Python devtools are installed
->>  * 'make PYTHON=x' still automatically sets PYTHON_CONFIG=x-config
->>  * 'make PYTHON=x' fails if x-config doesn't exist
-> If x is a valid python but no x-config is found in the system, the build
-> fails, instead of printing a warning like before. If we use this approach
-> I think [1] in the Makefile is never hit and needs to be cleaned up.
+v2. Drops a merged patch. Fixes a build issue with libbfd enabled.
 
-Sorry, small correction:
+Ian Rogers (4):
+  perf symbols: Always do architecture specific fixups
+  perf symbols: Add is_kernel argument to fixup end
+  perf symbol: By default only fix zero length symbols
+  perf symbols: More specific architecture end fixing
 
-The line in the Makefile is never hit when PYTHON is explicitly defined (probably not a big deal).
+ tools/perf/arch/arm64/util/machine.c   | 14 +++++++++-----
+ tools/perf/arch/powerpc/util/machine.c | 10 +++++++---
+ tools/perf/arch/s390/util/machine.c    | 12 ++++++++----
+ tools/perf/util/symbol-elf.c           |  2 +-
+ tools/perf/util/symbol.c               | 16 +++++++++-------
+ tools/perf/util/symbol.h               |  4 ++--
+ 6 files changed, 36 insertions(+), 22 deletions(-)
 
-Still I wanted to point the small change in behaviour with the build warning vs. build fail.
+-- 
+2.35.1.1178.g4f1659d476-goog
+
