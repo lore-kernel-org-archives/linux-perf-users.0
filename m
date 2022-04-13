@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65EEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 21:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918F0C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 21:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238846AbiDMVIR (ORCPT
+        id S238873AbiDMVIT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 17:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49530 "EHLO
+        Wed, 13 Apr 2022 17:08:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238789AbiDMVIL (ORCPT
+        with ESMTP id S238835AbiDMVIM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 17:08:11 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F23765A6
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:27 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2ef53391dbaso13773947b3.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:27 -0700 (PDT)
+        Wed, 13 Apr 2022 17:08:12 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2155583B1B
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:30 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id d129-20020a254f87000000b006411bf3f331so2714341ybb.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=f2AT4ITYPFxsdOdurZGcIARH0DtMfQS5p3Gw/gDTrdU=;
-        b=hid61dedk9iGfRraAq8k0u8M9v8qBhUYnXHMiULz8qz+dmjXXzBzlKc5V9brm1oq5H
-         z7WpPGlQbu3dJ00ZNoB7edObLdsuGHGThhNVYJrWtrY/P7MXVkCEL0lkQsurFXOyBQn6
-         dxSESNjStGdRlOum3W+qR1YGEs7ty+3TF7BHteSMQ3WjGkGEI/985zjfRkHK+cxwG8OW
-         +J6cRLL8yATDNQKNCzlpO+WQ33xB6qDcIr/bf5gC/3e5n/428oK3CwovyTG+6tEHnpuU
-         U9mHyro1Lme6BWqHXqtU4uMOLYfr7k5AnTcu/U1TW8WdGSf2F0LHD14yVr0wWtWMBYwR
-         J1qw==
+        bh=YbrCAd0HTzm8nIYQbKISy9o9brmGYCkpuolMPrFO/E0=;
+        b=nyChMhsTgdMUn1iXKlSFVbjKsXDeEbTqQfWpiFh11D5qmybgKLmDVaVsPJbMnCjLc6
+         61ADOkEaA7YhpdWzy27F2Z3z0CEbT9iegk6w/LChX8Xfzjw9520i7lea9oc+dBJTWNMk
+         0fYT4QBwhW6AKDpFa2WVnvWRkYy29clnkDSl6kuzIEbWoPBtJxbpkwN96cQEMXB9c2NI
+         xUL6UQ9hC8tr5EYvBFfAMPqTrM7hgvywoH2BqEpG+uFD+Pif7XMPsiqw4hZejtMif9Op
+         +U16NVUYtZ6G2fNp3e+5BbJEpoUEK/ijqryPX6+oKj1CzvepRZyo1tic7xDp3mqZXGEg
+         Zkeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=f2AT4ITYPFxsdOdurZGcIARH0DtMfQS5p3Gw/gDTrdU=;
-        b=R/W45xnBcklz+mWu4RN4pBYV6CfhRNPo1yj8TGle96fCKPCDhXBt0ArU2nU+oPcQ1r
-         4uML4jt6fDgGViosBB25M8523vvVqU2B5cuu1arGzIDsad5VP1b6a7vfspXOOOmhpFv2
-         TVdxD3svpDcDhAlCv5ZQF5nTxRnsY0jhfyDHTL32t9Sw5kg0wkHj5uIOtwFIz5NNokrQ
-         nN3pQHIxnA7W3YnGFOIUcmlP3Igaxz1FhswGLW1Fmut1bHiuaunxgxlYro2caqOdl2dH
-         7QZG8LHc/MB3kIq4hWTZOk+cNmKjkSavkwPZzpQRzoioQPRxqb70+brSM2YOW8CHkwW3
-         GVSw==
-X-Gm-Message-State: AOAM533lRXZqm6nbPX9ttSaWYkfe2FPUpnVnQKGt+TmE5KOv+RxWq58m
-        TwJyaFb90QPETeqP9faRYcRB8ecDuqFV
-X-Google-Smtp-Source: ABdhPJy7dB5pZ5t1tJ3klcEWLFkfKfF0MQqcpByNUpfqLHZxhn0xsobf4f6As9YZV5bP7MRg8Jvr1CySYnWG
+        bh=YbrCAd0HTzm8nIYQbKISy9o9brmGYCkpuolMPrFO/E0=;
+        b=eJM/tLdRb8y7S5oS20QTUcGiNYq8iy1mfhc+FjG/XKUvwkQ0+HaAgSoP7Tt3peRCs+
+         Fbcs5H5ExlhG5DIYAdGhRY4rt5PcKDmkHtcRDkbD9f0pENhxHR6AtctYkl6G8nOjzOBB
+         gmwVFeTLMDTyjWpSy2/vUsQcBRliJoKt1MveG6lfi3FZrYPhTxJV6a5yOwUgTa+SoMJd
+         Qp6wqJhwiuTmcsFGAo+nQ8SMHVwoHMfv5xXQgvI5EnvhcampHGPcD/ss4E9Qxl05u8Ws
+         4ZZrE58Om+TZjkMTcaXEbMWJOngURoZKNpHcHIoMX7+TKIzsph9wkYODv/Xyu8f2cbt2
+         WLqQ==
+X-Gm-Message-State: AOAM533Hhv7prcuHO2EMbzx9Bn11N8zYykmu5mvJ8F+ttGSR1cU4VriA
+        8CohUroMRmbJn64fPXkGrdYXZQ+6UbY6
+X-Google-Smtp-Source: ABdhPJztFP7Zw7XFEYDHCtwvHmr4hehc+wkwsMIcT6Hl68294Na0xIN8Jze7tgHocr+v3lrQMNMmA1c7UnRv
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9135:da53:a8a2:bf11])
- (user=irogers job=sendgmr) by 2002:a81:1345:0:b0:2ec:31ea:dfdb with SMTP id
- 66-20020a811345000000b002ec31eadfdbmr717334ywt.351.1649883926710; Wed, 13 Apr
- 2022 14:05:26 -0700 (PDT)
-Date:   Wed, 13 Apr 2022 14:04:58 -0700
+ (user=irogers job=sendgmr) by 2002:a25:b0a5:0:b0:641:4c43:db00 with SMTP id
+ f37-20020a25b0a5000000b006414c43db00mr708820ybj.478.1649883929238; Wed, 13
+ Apr 2022 14:05:29 -0700 (PDT)
+Date:   Wed, 13 Apr 2022 14:04:59 -0700
 In-Reply-To: <20220413210503.3256922-1-irogers@google.com>
-Message-Id: <20220413210503.3256922-9-irogers@google.com>
+Message-Id: <20220413210503.3256922-10-irogers@google.com>
 Mime-Version: 1.0
 References: <20220413210503.3256922-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
-Subject: [PATCH 09/14] perf vendor events intel: Update westmereep-dp event topics
+Subject: [PATCH 10/14] perf vendor events intel: Update westmereep-sp event topics
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -81,14 +81,14 @@ https://github.com/intel/event-converter-for-linux-perf/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/westmereep-dp/other.json         | 66 +------------------
- .../arch/x86/westmereep-dp/pipeline.json      | 66 ++++++++++++++++++-
+ .../arch/x86/westmereep-sp/other.json         | 66 +------------------
+ .../arch/x86/westmereep-sp/pipeline.json      | 66 ++++++++++++++++++-
  2 files changed, 66 insertions(+), 66 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
 index 23dcd554728c..67bc34984fa8 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
 @@ -1,28 +1,4 @@
  [
 -    {
@@ -172,10 +172,10 @@ index 23dcd554728c..67bc34984fa8 100644
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/pipeline.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/pipeline.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/pipeline.json
 index 10140f460fbb..403fb2b87fc4 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-dp/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/pipeline.json
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/pipeline.json
 @@ -50,6 +50,30 @@
          "SampleAfterValue": "2000000",
          "UMask": "0x1"
