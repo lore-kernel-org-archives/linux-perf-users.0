@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C5BC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 21:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B498C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 21:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238787AbiDMVHq (ORCPT
+        id S236705AbiDMVHq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Wed, 13 Apr 2022 17:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48850 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236705AbiDMVHm (ORCPT
+        with ESMTP id S238784AbiDMVHo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 17:07:42 -0400
+        Wed, 13 Apr 2022 17:07:44 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE8B4BBA7
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:20 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2eb58f605aeso27169667b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B7E62BFB
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:22 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2ebfdbe01f6so26563827b3.10
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=zBJT5qUA6fubB4ngIOKWzZSS0DuDm2BYMw+xqeRm+9U=;
-        b=CaU7CZ8rlNsmhOy3ORyROr6ovh17zRQEHOU6ByJEk/0LofKkYyKfpqvXYu9GvOk2B8
-         qgRGXC7KVMHDVCP8GfKPI4Dcl+uoCzGLTvka5e6KsgLt0fsrJgP2E307gBOyDoyo6/69
-         epXp3DL8bk5G0iUcAvRSyT3Y5yECpnMAwctSWACX5ZiOq8Yg8LYvzpxY9s6APn+kvg4J
-         rQ7nSuNdZOcXaAOKD62jgbsQLhY0+HFYcA9VOR1gGeRwRUwrQmu0892hKWmVNW01KCOo
-         iaMTRjn5jO9aaSSPXnPuDmaO1J2xPUrgEq+N9h+b18Eo0pF6jDktMzxn9cs3hf9pNPEi
-         K4fQ==
+        bh=BiA1gzDs+n6vDGSyDdWYoxAvlHWpcqRt9LMJt+dwRlo=;
+        b=cT2sTaIMVLOPT74kFGHktC+icBAQMMitYlHTnse3U0c8GPNYtmaFOykm5+dUsmQk1o
+         E7ByyhyM2T+vI7F5+EbwtBDfslNdd/O/14Pb6bFQKCHqim9WuB/w2GJyOMSnjEd2xmFn
+         4z4Q4ivCrWe9efPlC4D91uOSeSKfetscyDVsxBddKBr2+EFLBa9o1/GxUsjYY+dXzb5s
+         Qv1fV0+t4V2RVDV1AhoiVUP8IuCgSYsPqceefoAO1k6XFDp6yJAMjuPP64yXaNZiNRRL
+         80/8Iv3K0wFx7DKw1Zg51uz2QpxX0zEAUnNHH0/Yqhe4DazToBI5KO6YdY/qEWpRL1Jq
+         8F6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=zBJT5qUA6fubB4ngIOKWzZSS0DuDm2BYMw+xqeRm+9U=;
-        b=MYdGgvR+ez/m5TUauJir6NreRGvqUsP1Ck9raZjY/sqbZiF+XFO1If61vomJVdYrE6
-         c7kxt1tVU6p0Yzlq5ztXI3FTwsBd09wWsf/482Wro8ht5dOgkjI0Y7fL7fQc1phKQ6om
-         +cA8N7H2PjxykS2t6LlLWajG8+FuFo+VNgSyMalBOrxphKQZ1C6DBNtbGqvsWjXNq0Ms
-         346p1Yu7Ga4XeL87w9m8MDaHRJCJN1yep318lnK5YHymyR4Na+Wnu06c7RqGZUeoupI0
-         itxcAMRZ3nah9qcIpOLeGZ2cXX+1GAk21ZYPipRluOiiLFGKrUSInJtiMwFpox66AcEe
-         Civg==
-X-Gm-Message-State: AOAM530a1L3tSeRQgbpj13xjo8QoKMcezqnkda2U7WkNeuFoUJWnlkzK
-        6cbCSJw2nYNHOqHfs5mkMG7BXg3/C+Jz
-X-Google-Smtp-Source: ABdhPJxCXUAcXZvuYi7lHfNPVjNT1oyoSQIqg7TURlcHXGWFxwNFr/U6rWx3n/h2iPaUIoOMI9BS1ljGl7QW
+        bh=BiA1gzDs+n6vDGSyDdWYoxAvlHWpcqRt9LMJt+dwRlo=;
+        b=ZN54X8mhslk5fAzXtEHNHt06wNnwwUaxDvP5zVDAOTSqfma5afI7X5Cc5HO4QdXz83
+         BGw+DBxXNX2ySNrtgg7oRvXIoqAvhXr9rL+3mchQuSKX4a9oOaTnwB1jEWjqhD7suT3k
+         FRLCzRq07IAjBjFjzUfsIRskl1XKm6GCSzME2CtnV3gm1/2ivzZfYjRydFCyBKfxwTlm
+         6Sso6+Qm3iVOJrwevX8JrkArZTi4SzgImZV4tv4XD1tlWGO7SGr0PJZO9WOdpGzYO0Ty
+         Pka1uEWZECQXJyRicTJMEDPb5aMa6xpc3k0k/Zjb0LoDG5tWz4Xt8/XsqTxdz9enbUs2
+         vFaQ==
+X-Gm-Message-State: AOAM531LawDlpNhQ70bCG/AIMcNzaYr7b4cQG07GrYPlcu3pmd9fGYIp
+        hKjrLVsyvPJqj9rvDQq1C/0Mx4ZQDXsD
+X-Google-Smtp-Source: ABdhPJwFBPwtEJ8LO4FnVSBHwBt8py7IEeV5kyVlIQSaAejZD+dkyKK7myVE9f6n8ZG1QrPX7ZylSPzEvt/U
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9135:da53:a8a2:bf11])
- (user=irogers job=sendgmr) by 2002:a25:1882:0:b0:63e:7c08:f570 with SMTP id
- 124-20020a251882000000b0063e7c08f570mr665679yby.487.1649883919205; Wed, 13
- Apr 2022 14:05:19 -0700 (PDT)
-Date:   Wed, 13 Apr 2022 14:04:55 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:8c8:0:b0:641:e8de:a6f4 with SMTP id
+ w8-20020a5b08c8000000b00641e8dea6f4mr667192ybq.533.1649883921739; Wed, 13 Apr
+ 2022 14:05:21 -0700 (PDT)
+Date:   Wed, 13 Apr 2022 14:04:56 -0700
 In-Reply-To: <20220413210503.3256922-1-irogers@google.com>
-Message-Id: <20220413210503.3256922-6-irogers@google.com>
+Message-Id: <20220413210503.3256922-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20220413210503.3256922-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
-Subject: [PATCH 06/14] perf vendor events intel: Update nehalemep event topics
+Subject: [PATCH 07/14] perf vendor events intel: Update tigerlake topic
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,187 +76,67 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Apply topic updates from:
+Update the topic of ASSISTS.ANY as per:
 https://github.com/intel/event-converter-for-linux-perf/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/nehalemep/other.json  | 66 +------------------
- .../arch/x86/nehalemep/pipeline.json          | 66 ++++++++++++++++++-
- 2 files changed, 66 insertions(+), 66 deletions(-)
+ tools/perf/pmu-events/arch/x86/tigerlake/other.json | 13 +------------
+ .../pmu-events/arch/x86/tigerlake/pipeline.json     | 13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemep/other.json b/tools/perf/pmu-events/arch/x86/nehalemep/other.json
-index 710b106ce12a..f6887b234b0e 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemep/other.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemep/other.json
-@@ -1,28 +1,4 @@
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/other.json b/tools/perf/pmu-events/arch/x86/tigerlake/other.json
+index 304cd09fe159..65539490e18f 100644
+--- a/tools/perf/pmu-events/arch/x86/tigerlake/other.json
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/other.json
+@@ -1,15 +1,4 @@
  [
 -    {
--        "BriefDescription": "Early Branch Prediciton Unit clears",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xE8",
--        "EventName": "BPU_CLEARS.EARLY",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Late Branch Prediction Unit clears",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xE8",
--        "EventName": "BPU_CLEARS.LATE",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x2"
--    },
--    {
--        "BriefDescription": "Branch prediction unit missed call or return",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xE5",
--        "EventName": "BPU_MISSED_CALL_RET",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x1"
+-        "BriefDescription": "Number of occurrences where a microcode assist is invoked by hardware.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3,4,5,6,7",
+-        "EventCode": "0xc1",
+-        "EventName": "ASSISTS.ANY",
+-        "PEBScounters": "0,1,2,3,4,5,6,7",
+-        "PublicDescription": "Counts the number of occurrences where a microcode assist is invoked by hardware Examples include AD (page Access Dirty), FP and AVX related assists.",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x7"
 -    },
      {
-         "BriefDescription": "ES segment renames",
-         "Counter": "0,1,2,3",
-@@ -119,46 +95,6 @@
-         "SampleAfterValue": "200000",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "All RAT stall cycles",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xD2",
--        "EventName": "RAT_STALLS.ANY",
--        "SampleAfterValue": "2000000",
--        "UMask": "0xf"
--    },
--    {
--        "BriefDescription": "Flag stall cycles",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xD2",
--        "EventName": "RAT_STALLS.FLAGS",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Partial register stall cycles",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xD2",
--        "EventName": "RAT_STALLS.REGISTERS",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x2"
--    },
--    {
--        "BriefDescription": "ROB read port stalls cycles",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xD2",
--        "EventName": "RAT_STALLS.ROB_READ_PORT",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x4"
--    },
--    {
--        "BriefDescription": "Scoreboard stall cycles",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xD2",
--        "EventName": "RAT_STALLS.SCOREBOARD",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x8"
--    },
-     {
-         "BriefDescription": "All Store buffer stall cycles",
-         "Counter": "0,1,2,3",
-@@ -207,4 +143,4 @@
-         "SampleAfterValue": "2000000",
+         "BriefDescription": "Core cycles where the core was running in a manner where Turbo may be clipped to the Non-AVX turbo schedule.",
+         "CollectPEBSRecord": "2",
+@@ -57,4 +46,4 @@
+         "SampleAfterValue": "100003",
          "UMask": "0x1"
      }
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemep/pipeline.json b/tools/perf/pmu-events/arch/x86/nehalemep/pipeline.json
-index e64d685c128a..6fc1a6efd8e8 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemep/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemep/pipeline.json
-@@ -50,6 +50,30 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x1"
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
+index d436775c80db..a8aa1b455c77 100644
+--- a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
+@@ -11,6 +11,17 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x9"
      },
 +    {
-+        "BriefDescription": "Early Branch Prediciton Unit clears",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xE8",
-+        "EventName": "BPU_CLEARS.EARLY",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Late Branch Prediction Unit clears",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xE8",
-+        "EventName": "BPU_CLEARS.LATE",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Branch prediction unit missed call or return",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xE5",
-+        "EventName": "BPU_MISSED_CALL_RET",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x1"
++        "BriefDescription": "Number of occurrences where a microcode assist is invoked by hardware.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc1",
++        "EventName": "ASSISTS.ANY",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Counts the number of occurrences where a microcode assist is invoked by hardware Examples include AD (page Access Dirty), FP and AVX related assists.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x7"
 +    },
      {
-         "BriefDescription": "Branch instructions decoded",
-         "Counter": "0,1,2,3",
-@@ -476,6 +500,46 @@
-         "SampleAfterValue": "20000",
-         "UMask": "0x4"
-     },
-+    {
-+        "BriefDescription": "All RAT stall cycles",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xD2",
-+        "EventName": "RAT_STALLS.ANY",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0xf"
-+    },
-+    {
-+        "BriefDescription": "Flag stall cycles",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xD2",
-+        "EventName": "RAT_STALLS.FLAGS",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Partial register stall cycles",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xD2",
-+        "EventName": "RAT_STALLS.REGISTERS",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "ROB read port stalls cycles",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xD2",
-+        "EventName": "RAT_STALLS.ROB_READ_PORT",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "Scoreboard stall cycles",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xD2",
-+        "EventName": "RAT_STALLS.SCOREBOARD",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x8"
-+    },
-     {
-         "BriefDescription": "Resource related stall cycles",
-         "Counter": "0,1,2,3",
-@@ -878,4 +942,4 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x1"
+         "BriefDescription": "All branch instructions retired.",
+         "CollectPEBSRecord": "2",
+@@ -1055,4 +1066,4 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x2"
      }
 -]
 \ No newline at end of file
