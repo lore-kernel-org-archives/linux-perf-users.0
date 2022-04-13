@@ -2,57 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F164CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 09:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459DEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 09:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbiDMJSg (ORCPT
+        id S234427AbiDMJZy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 05:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57438 "EHLO
+        Wed, 13 Apr 2022 05:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234347AbiDMJSd (ORCPT
+        with ESMTP id S232530AbiDMJZv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 05:18:33 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6214EDEC
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 02:16:11 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id lc2so2586712ejb.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 02:16:11 -0700 (PDT)
+        Wed, 13 Apr 2022 05:25:51 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1549C53728
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 02:23:30 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id 12so1424392pll.12
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 02:23:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hblV92aPuej0p7ID1pULy+QJqaua2alXaevi7dvbrUU=;
-        b=WIKXHBwkh+EhYN8jqtAXZe/Tyt8mlkW3bASrYOTKf1/6ge/9WE1nIcoqoLkLWZkPr+
-         FuERh7yZiwLbnv26+FajLXbbB75K2YiEWujiEgeWrDPIHmfIk8Ax23RC5q3WlZotvyTH
-         ZpUT2qdGpTeLuIP41ve4yDKHzRrKtA2+OmLRM/YD4Ae18UQh0LFx79dI3RociC1gS1MV
-         0GWLpcliTgiZZqqLFa3ItfdN0QMJhgbdBPT17kSAQJ3IPDziLjdvBNnmc/KVxUQ0y9T1
-         girU0IDsD5jSag+T+B44HWzEzy4TZ6vL8lA/M2EitPrzeX1Kg+Xh/zsoXobUjvPHLE3P
-         21ww==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wRXirUEKSPI6ru648JuWYPXw/sXNZVfeivfow6gXxCU=;
+        b=NSQWSk7KTjgR1R43JsBYQ1pozNWfaSSFh31fwZQJRY/JP0eqmDA4oV+tGsAdykD2UZ
+         uOhRQMH6sGK7PYixM4yd9JfnUZlo/Fvhe4Kc40ApShO3t4147mY0e28258Jvb1QRyrkf
+         XRWBeAQfIitmvcJGeRhFHMfaJQbQy5QvBslX0upT5e/VM2JcnHtDMCipGIG7g4PBxd1k
+         aM95mmBKUp+K6Y1ygBJTrdluHuatVEtlYJB7WNHlrv80hht0ytKkjUoXfbRcFL19/zu6
+         d//4NBZ+dPv7IBQrIRDAIKpmdAN+UY3N5N52oejxrZ4V7nShq6noho/95AFQtyDKYiUw
+         WqRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hblV92aPuej0p7ID1pULy+QJqaua2alXaevi7dvbrUU=;
-        b=U9wixnTVjIRNfwCMdr88qoBFkVqp8wViP06ECN0SMcAeQEZckXemRTp4yZACCd7XEJ
-         WoepXiEzyB4VZmkz5wotrFrFTutA1PJLKATb5xbbuvG7WloHBlVCSLepQyMQ3sepI0zy
-         gWEGNHeaVuMKUAmKPjrkiXRrYXMDOGJ+1nXBI8rw0CE/KqjlQOPiuSb7jPob49PiQY8n
-         JXMY90FKTeqJ0OrhHXu3WvzUq0KWtfFS6NtIiM9fWJ7Pc8gC/l4Y7/eRZMbBOYNAbkqk
-         WVMx65IGg+taO7UyE4IUwPpAzQ7cr6CD4Mo8WIUc7epmBUX5j2CAX8TfrPxDAxt2uwuK
-         9wOg==
-X-Gm-Message-State: AOAM533Z7xv+QXb1kyq6+ePYn5cKaMV/1KU1FlyF/ioCiCJVvekvg249
-        BiD9eD2Nz+o7e/sAx+FGuhbBmQ==
-X-Google-Smtp-Source: ABdhPJzxWtxkUmiepBnlWMtTjViNplCdRi9hB0wNwbQbHSHOc/I9rRLkD4QZgJDJkLGQcI1wZksGyw==
-X-Received: by 2002:a17:906:7111:b0:6e8:973a:1515 with SMTP id x17-20020a170906711100b006e8973a1515mr11383665ejj.308.1649841369670;
-        Wed, 13 Apr 2022 02:16:09 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id e12-20020a170906c00c00b006e66eff7584sm12637990ejz.102.2022.04.13.02.16.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wRXirUEKSPI6ru648JuWYPXw/sXNZVfeivfow6gXxCU=;
+        b=HTOYLRqjSOawpayX5zLWVYi56Lw5j4dFBizNO6jfTjhGp6TYH/hLqR3rOAYAgV3gVF
+         qm4ZK3JF2aFNDmNu0ppI9nEF2L4Mupekdqrf/Ixdqb/8nRsjUKKnHY1ION2aM2hVdExz
+         KjUQqgue2rlSaCOkZWF1m7Ap5VDS5Rq2qIioaNbs2td9dD14rju3vzwd+I0Hs0BCdMql
+         H8OlSRye4nwtYyhnlE3HsZBT5Am4nrjtdRQfEfSaFZRMaPdgvFOu72Ez2bL5dOLS1HeQ
+         sLi+q6VdlqGkcJIgP0UCNFnvLMgE6/xJjUEk46o5zxiMouCxA0545LPXlc39X8EUuhP5
+         XwlQ==
+X-Gm-Message-State: AOAM533gn7wYc0pl8arLFk8tSW804CX1ZU977FkMcc+4Gy3Nc6GbK442
+        CDcIzL8j4bf4341K0NXw4/wM/dP7hocr/DNR3RkYtg==
+X-Google-Smtp-Source: ABdhPJyZnbZbZZKVFPTF/SFu5yucL9hFbgSI04LlY+Sq49nPD/NAIJHwFuLlpA9dtv6xAvAk52XDFQ==
+X-Received: by 2002:a17:90b:1c88:b0:1b8:a77e:c9cb with SMTP id oo8-20020a17090b1c8800b001b8a77ec9cbmr9622873pjb.205.1649841809256;
+        Wed, 13 Apr 2022 02:23:29 -0700 (PDT)
+Received: from localhost.localdomain (111-250-44-108.dynamic-ip.hinet.net. [111.250.44.108])
+        by smtp.gmail.com with ESMTPSA id k62-20020a17090a4cc400b001c7ea7f487asm2363144pjh.39.2022.04.13.02.23.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Apr 2022 02:16:09 -0700 (PDT)
-Date:   Wed, 13 Apr 2022 17:16:04 +0800
+        Wed, 13 Apr 2022 02:23:28 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -61,47 +59,79 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE
- event
-Message-ID: <20220413091604.GD521036@leoy-ThinkPad-X240s>
-References: <20220413075124.635589-1-leo.yan@linaro.org>
- <c21b3409-a8a0-aae7-7634-5e648f0a49b1@arm.com>
- <20220413084941.GB521036@leoy-ThinkPad-X240s>
- <38078438-dbce-690b-ba79-5c3713f97816@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE event
+Date:   Wed, 13 Apr 2022 17:23:17 +0800
+Message-Id: <20220413092317.756022-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38078438-dbce-690b-ba79-5c3713f97816@arm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 10:14:00AM +0100, German Gomez wrote:
-> 
-> On 13/04/2022 09:49, Leo Yan wrote:
-> > On Wed, Apr 13, 2022 at 09:15:40AM +0100, German Gomez wrote:
-> >
-> > [...]
-> >
-> >>>  	if (sort__mode == SORT_MODE__MEMORY) {
-> >>> +		/*
-> >>> +		 * FIXUP: prior to kernel 5.18, Arm SPE missed to set
-> >>> +		 * PERF_SAMPLE_DATA_SRC bit in sample type.  For backward
-> >>> +		 * compatibility, set the bit if it's an old perf data file.
-> >>> +		 */
-> >>> +		evlist__for_each_entry(session->evlist, evsel) {
-> >>> +			if (strstr(evsel->name, "arm_spe_") &&
-> >> This didn't work for me when the file recorded "-e arm_spe//" instead of
-> >> "-e arm_spe_0//". Could you remove the trailing _? With that:
-> > Sure, will change to "arm_spe".  Just curious, if there any local
-> > change at your side so we have the different event name?
-> 
-> No local changes. I've always used "arm_spe//" and it always defaults to
-> "arm_spe_0//". But it's still stored as the former in the data file. I
-> haven't checked where this default happens though. Isn't it the same for
-> you?
+Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
+is not available") "perf mem report" and "perf report --mem-mode"
+don't report result if the PERF_SAMPLE_DATA_SRC bit is missed in sample
+type.
 
-Yeah, this is same with me.  Thanks for explanation.
+The commit ffab48705205 ("perf: arm-spe: Fix perf report --mem-mode")
+partially fixes the issue.  It adds PERF_SAMPLE_DATA_SRC bit for Arm SPE
+event, this allows the perf data file generated by kernel v5.18-rc1 or
+later version can be reported properly.
 
-Leo
+On the other hand, perf tool still fails to be backward compatibility
+for a data file recorded by an older version's perf which contains Arm
+SPE trace data.  This patch is a workaround in reporting phase, when
+detects ARM SPE PMU event and without PERF_SAMPLE_DATA_SRC bit, it will
+force to set the bit in the sample type and give a warning info.
+
+Fixes: bb30acae4c4d ("perf report: Bail out --mem-mode if mem info is not available")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: German Gomez <german.gomez@arm.com>
+---
+v2: Change event name from "arm_spe_" to "arm_spe";
+    Add German's test tag.
+
+ tools/perf/builtin-report.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 1ad75c7ba074..acb07a4a9b67 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -353,6 +353,7 @@ static int report__setup_sample_type(struct report *rep)
+ 	struct perf_session *session = rep->session;
+ 	u64 sample_type = evlist__combined_sample_type(session->evlist);
+ 	bool is_pipe = perf_data__is_pipe(session->data);
++	struct evsel *evsel;
+ 
+ 	if (session->itrace_synth_opts->callchain ||
+ 	    session->itrace_synth_opts->add_callchain ||
+@@ -407,6 +408,21 @@ static int report__setup_sample_type(struct report *rep)
+ 	}
+ 
+ 	if (sort__mode == SORT_MODE__MEMORY) {
++		/*
++		 * FIXUP: prior to kernel 5.18, Arm SPE missed to set
++		 * PERF_SAMPLE_DATA_SRC bit in sample type.  For backward
++		 * compatibility, set the bit if it's an old perf data file.
++		 */
++		evlist__for_each_entry(session->evlist, evsel) {
++			if (strstr(evsel->name, "arm_spe") &&
++				!(sample_type & PERF_SAMPLE_DATA_SRC)) {
++				ui__warning("PERF_SAMPLE_DATA_SRC bit is not set "
++					    "for Arm SPE event.\n");
++				evsel->core.attr.sample_type |= PERF_SAMPLE_DATA_SRC;
++				sample_type |= PERF_SAMPLE_DATA_SRC;
++			}
++		}
++
+ 		if (!is_pipe && !(sample_type & PERF_SAMPLE_DATA_SRC)) {
+ 			ui__error("Selected --mem-mode but no mem data. "
+ 				  "Did you call perf record without -d?\n");
+-- 
+2.25.1
+
