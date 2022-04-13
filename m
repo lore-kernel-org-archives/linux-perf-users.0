@@ -2,330 +2,293 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA65C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 09:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D03EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 10:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234562AbiDMJlI (ORCPT
+        id S233089AbiDMK22 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 05:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
+        Wed, 13 Apr 2022 06:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234564AbiDMJlF (ORCPT
+        with ESMTP id S229565AbiDMK20 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 05:41:05 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34EF654BF0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 02:38:44 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id s25so1180289edi.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 02:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aFCR1X5dl4TH+ZeLqsX/xngViyPlfkc2WJbdobahopg=;
-        b=tf3toI7aA2g5VAzh87d8G3g4HCa3rCZxOWjRNk4c/H+7XoPzDd08FEcSkrknGMkgb6
-         Ta+OtY+WVXHD9KeZ+MSSXQyKpeuHsaxx08XDDJ0BPaElo4vop78aHrCInqPHdZCmq2LE
-         iiXlyL367XH//npqq5yeUeTvS1Edph9BWXX/F8dhCsZgvtDwAwb/9pyGkMJJA8jHN70J
-         Gp+72CVd8BtGcxpSH3r1Sed4NeuV8TJOrPZNDEbmWP8WvkZk1uXHin3Diy4tqdc7bGvT
-         hGKGu+0rCtspN6uRN+unR4lawRhkP1elNprh5ZmyfKiycO10Qq8p/rK7eglE/mxRKkKP
-         huIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aFCR1X5dl4TH+ZeLqsX/xngViyPlfkc2WJbdobahopg=;
-        b=v8ngIWG8ify1gxKuHrz2Y3mjU66ftWhf+Hi5OJZe8Ui46ZwZ9Kts0qUbwdnc1wEB8q
-         +u6/xO5CSOK+wBWRNc/OUtO/MDPTBzFIX8J1ZBPu/1/ZbD9OlQYOHbRuN4RvW2KZM5WF
-         9uTNhvU4xpoFfBtkLJzCa2Hna7eJrOEQUAFNXO5WwyEK7MfVGnM6WLkElMmgAxnxAIzI
-         jygwXptBcKLBaeMMTA2wx3a3uO1ilscXJGLdVOZfrslwArNe5Z2KkhBtJmQDObw98anB
-         YrHofCUP4LwOAmDFYkEcCQvC01gBNrOqJeS4NVBGZYoemX3dsvk5S/4O7JVfXJy5fcAz
-         LlNA==
-X-Gm-Message-State: AOAM532EkMQL5xvJ/7HrZprNrj15JeC6iV0UJEsk1wc7t8WoGCD1Wmpm
-        EzGpTcIoGGulluQO1GId6RDraQ==
-X-Google-Smtp-Source: ABdhPJyvRVSTPcXHtAQ4UbS79WSEhRNCdoD8PYW3bwX5tQiJf/i63FprocYkMughWo4E4VlrOSyACQ==
-X-Received: by 2002:a05:6402:34b:b0:41d:7026:d9e3 with SMTP id r11-20020a056402034b00b0041d7026d9e3mr20045370edw.168.1649842722588;
-        Wed, 13 Apr 2022 02:38:42 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id gy10-20020a170906f24a00b006e894144707sm3237097ejb.53.2022.04.13.02.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Apr 2022 02:38:42 -0700 (PDT)
-Date:   Wed, 13 Apr 2022 17:38:37 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.com, German.Gomez@arm.com,
-        Luke Dare <Luke.Dare@arm.com>, Al Grant <al.grant@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: docs: Add man page entry for Arm SPE
-Message-ID: <20220413093837.GE521036@leoy-ThinkPad-X240s>
-References: <20220413084021.2556142-1-james.clark@arm.com>
+        Wed, 13 Apr 2022 06:28:26 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1471E23BE4;
+        Wed, 13 Apr 2022 03:26:05 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 8F579210EE;
+        Wed, 13 Apr 2022 10:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1649845563; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s1N2lMruCjm6zkDvjHsuYQUbe0JXiQfxmPa3xQRoZKQ=;
+        b=cBqsQtTA1B3e7l9GpKK0OU0KN43HmzKhGT6UDD2JOIyPEZH+MYJA5O6Ui5I3i280By7PHC
+        RqPCmtoKepRvvqW+TxbEQNlhtuglbZQA1Twmsk3Jk6bdIt+02t1PokApX+j3kWumJ8EGVR
+        pufAdbuu4Ru+N7UBd8i2KvmJmpq9awY=
+Received: from suse.cz (unknown [10.100.216.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 49199A3B8A;
+        Wed, 13 Apr 2022 10:26:00 +0000 (UTC)
+Date:   Wed, 13 Apr 2022 12:25:57 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc:     acme@kernel.org, akpm@linux-foundation.org,
+        alexander.shishkin@linux.intel.com, catalin.marinas@arm.com,
+        davem@davemloft.net, jolsa@redhat.com, jthierry@redhat.com,
+        keescook@chromium.org, kernelfans@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        masahiroy@kernel.org, matthias.bgg@gmail.com, maz@kernel.org,
+        mcgrof@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+        nixiaoming@huawei.com, peterz@infradead.org,
+        sparclinux@vger.kernel.org, sumit.garg@linaro.org,
+        wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
+Subject: Re: [PATCH v3 5/5] arm64: Enable perf events based hard lockup
+ detector
+Message-ID: <YlalNStoYOWqAHkP@alley>
+References: <YkxT9plntP0VeMl4@alley>
+ <20220407165949.1903-1-lecopzer.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220413084021.2556142-1-james.clark@arm.com>
+In-Reply-To: <20220407165949.1903-1-lecopzer.chen@mediatek.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 09:40:21AM +0100, James Clark wrote:
-> The SPE integration in Perf has quite a few usability quirks that
-> can't be found by just reading the reference manual. So document this
-> and at the same time add a summary of the feature that is also hard to
-> find elsewhere.
+On Fri 2022-04-08 00:59:49, Lecopzer Chen wrote:
 > 
-> Co-authored-by: Luke Dare <Luke.Dare@arm.com>
-> Co-authored-by: Al Grant <al.grant@arm.com>
-> Signed-off-by: James Clark <james.clark@arm.com>
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
-> ---
->  tools/perf/Documentation/perf-arm-spe.txt | 218 ++++++++++++++++++++++
->  tools/perf/Documentation/perf.txt         |   2 +-
->  2 files changed, 219 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/Documentation/perf-arm-spe.txt
+> > On Tue 2022-04-05 20:53:04, Lecopzer Chen wrote:
+> > >  
+> > > > On Thu 2022-03-24 22:14:05, Lecopzer Chen wrote:
+> > > > > With the recent feature added to enable perf events to use pseudo NMIs
+> > > > > as interrupts on platforms which support GICv3 or later, its now been
+> > > > > possible to enable hard lockup detector (or NMI watchdog) on arm64
+> > > > > platforms. So enable corresponding support.
+> > > > > 
+> > > > > One thing to note here is that normally lockup detector is initialized
+> > > > > just after the early initcalls but PMU on arm64 comes up much later as
+> > > > > device_initcall(). To cope with that, overriding watchdog_nmi_probe() to
+> > > > > let the watchdog framework know PMU not ready, and inform the framework
+> > > > > to re-initialize lockup detection once PMU has been initialized.
+> > > > > 
+> > > > > [1]: http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
+> > > > > 
+> > > > > --- /dev/null
+> > > > > +++ b/arch/arm64/kernel/watchdog_hld.c
+> > > > > @@ -0,0 +1,37 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +#include <linux/nmi.h>
+> > > > > +#include <linux/cpufreq.h>
+> > > > > +#include <linux/perf/arm_pmu.h>
+> > > > > +
+> > > > > +/*
+> > > > > + * Safe maximum CPU frequency in case a particular platform doesn't implement
+> > > > > + * cpufreq driver. Although, architecture doesn't put any restrictions on
+> > > > > + * maximum frequency but 5 GHz seems to be safe maximum given the available
+> > > > > + * Arm CPUs in the market which are clocked much less than 5 GHz. On the other
+> > > > > + * hand, we can't make it much higher as it would lead to a large hard-lockup
+> > > > > + * detection timeout on parts which are running slower (eg. 1GHz on
+> > > > > + * Developerbox) and doesn't possess a cpufreq driver.
+> > > > > + */
+> > > > > +#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
+> > > > > +u64 hw_nmi_get_sample_period(int watchdog_thresh)
+> > > > > +{
+> > > > > +	unsigned int cpu = smp_processor_id();
+> > > > > +	unsigned long max_cpu_freq;
+> > > > > +
+> > > > > +	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
+> > > > > +	if (!max_cpu_freq)
+> > > > > +		max_cpu_freq = SAFE_MAX_CPU_FREQ;
+> > > > > +
+> > > > > +	return (u64)max_cpu_freq * watchdog_thresh;
+> > > > > +}
+> > > > 
+> > > > This change is not mentioned in the commit message.
+> > > > Please, put it into a separate patch.
+> > > 
+> > > 
+> > > Actully, This cames from
+> > > [1]: http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
+> > > And I didn't touch the commit message from the origin patch.
+> > > But of course, I could imporve it with proper description if
+> > > anyone thinks it's not good enough.
+> > 
+> > I see.
+> > 
+> > > Would you mean put this function hw_nmi_get_sample_period() in patch
+> > > 6th?
+> > > In the view of "arm64 uses delayed init with all the functionality it need to set up",
+> > > IMO, this make sense for me to put into a single patch.
+> > 
+> > Or you could split it in two patches and add
+> > hw_nmi_get_sample_period() in the earlier patch.
+> > 
+> > 
+> > > But if you still think this should put into a separate patch, I'll do it:)
+> > 
+> > It is always better to split the changes whenever possible. It makes
+> > the review easier. And it also helps to find the real culprit of
+> > a regression using bisection.
 > 
-> diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
-> new file mode 100644
-> index 000000000000..bf03222e9a68
-> --- /dev/null
-> +++ b/tools/perf/Documentation/perf-arm-spe.txt
-> @@ -0,0 +1,218 @@
-> +perf-arm-spe(1)
-> +================
-> +
-> +NAME
-> +----
-> +perf-arm-spe - Support for Arm Statistical Profiling Extension within Perf tools
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'perf record' -e arm_spe//
-> +
-> +DESCRIPTION
-> +-----------
-> +
-> +The SPE (Statistical Profiling Extension) feature provides accurate attribution of latencies and
-> + events down to individual instructions. Rather than being interrupt-driven, it picks an
-> +instruction to sample and then captures data for it during execution. Data includes execution time
-> +in cycles. For loads and stores it also includes data address, cache miss events, and data origin.
-> +
-> +The sampling has 5 stages:
-> +
-> +  1. Choose an operation
-> +  2. Collect data about the operation
-> +  3. Optionally discard the record based on a filter
-> +  4. Write the record to memory
-> +  5. Interrupt when the buffer is full
-> +
-> +Choose an operation
-> +~~~~~~~~~~~~~~~~~~~
-> +
-> +This is chosen from a sample population, for SPE this is an IMPLEMENTATION DEFINED choice of all
-> +architectural instructions or all micro-ops. Sampling happens at a programmable interval. The
-> +architecture provides a mechanism for the SPE driver to infer the minimum interval at which it should
-> +sample. This minimum interval is used by the driver if no interval is specified. A pseudo-random
-> +perturbation is also added to the sampling interval by default.
-> +
-> +Collect data about the operation
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Program counter, PMU events, timings and data addresses related to the operation are recorded.
-> +Sampling ensures there is only one sampled operation is in flight.
-> +
-> +Optionally discard the record based on a filter
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Based on programmable criteria, choose whether to keep the record or discard it. If the record is
-> +discarded then the flow stops here for this sample.
-> +
-> +Write the record to memory
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +The record is appended to a memory buffer
-> +
-> +Interrupt when the buffer is full
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +When the buffer fills, an interrupt is sent and the driver signals Perf to collect the records.
-> +Perf saves the raw data in the perf.data file.
-> +
-> +Opening the file
-> +----------------
-> +
-> +Up until this point no decoding of the SPE data was done by either the kernel or Perf. Only when the
-> +recorded file is opened with 'perf report' or 'perf script' does the decoding happen. When decoding
-> +the data, Perf generates "synthetic samples" as if these were generated at the time of the
-> +recording. These samples are the same as if normal sampling was done by Perf without using SPE,
-> +although they may have more attributes associated with them. For example a normal sample may have
-> +just the instruction pointer, but an SPE sample can have data addresses and latency attributes.
-> +
-> +Why Sampling?
-> +-------------
-> +
-> + - Sampling, rather than tracing, cuts down the profiling problem to something more manageable for
-> + hardware. Only one sampled operation is in flight at a time.
-> +
-> + - Allows precise attribution data, including: Full PC of instruction, data virtual and physical
-> + addresses.
-> +
-> + - Allows correlation between an instruction and events, such as TLB and cache miss. (Data source
-> + indicates which particular cache was hit, but the meaning is implementation defined because
-> + different implementations can have different cache configurations.)
-> +
-> +However, SPE does not provide any call-graph information, and relies on statistical methods.
-> +
-> +Collisions
-> +----------
-> +
-> +When an operation is sampled while a previous sampled operation has not finished, a collision
-> +occurs. The new sample is dropped. Collisions affect the integrity of the data, so the sample rate
-> +should be set to avoid collisions.
-> +
-> +The 'sample_collision' PMU event can be used to determine the number of lost samples. Although this
-> +count is based on collisions _before_ filtering occurs. Therefore this can not be used as an exact
-> +number for samples dropped that would have made it through the filter, but can be a rough
-> +guide.
-> +
-> +The effect of microarchitectural sampling
-> +-----------------------------------------
-> +
-> +If an implementation samples micro-operations instead of instructions, the results of sampling must
-> +be weighted accordingly.
-> +
-> +For example, if a given instruction A is always converted into two micro-operations, A0 and A1, it
-> +becomes twice as likely to appear in the sample population.
-> +
-> +The coarse effect of conversions, and, if applicable, sampling of speculative operations, can be
-> +estimated from the 'sample_pop' and 'inst_retired' PMU events.
-> +
-> +Kernel Requirements
-> +-------------------
-> +
-> +The ARM_SPE_PMU config must be set to build as either a module or statically.
-> +
-> +Depending on CPU model, the kernel may need to be booted with page table isolation disabled
-> +(kpti=off). If KPTI needs to be disabled, this will fail with a console message "profiling buffer
-> +inaccessible. Try passing 'kpti=off' on the kernel command line".
-> +
-> +Capturing SPE with perf command-line tools
-> +------------------------------------------
-> +
-> +You can record a session with SPE samples:
-> +
-> +  perf record -e arm_spe// -- ./mybench
-> +
-> +The sample period is set from the -c option, and because the minimum interval is used by default
-> +it's recommended to set this to a higher value. The value is written to PMSIRR.INTERVAL.
-> +
-> +Config parameters
-> +~~~~~~~~~~~~~~~~~
-> +
-> +These are placed between the // in the event and comma separated. For example '-e
-> +arm_spe/load_filter=1,min_latency=10/'
-> +
-> +  branch_filter=1     - collect branches only (PMSFCR.B)
-> +  event_filter=<mask> - filter on specific events (PMSEVFR) - see bitfield description below
-> +  jitter=1            - use jitter to avoid resonance when sampling (PMSIRR.RND)
-> +  load_filter=1       - collect loads only (PMSFCR.LD)
-> +  min_latency=<n>     - collect only samples with this latency or higher* (PMSLATFR)
-> +  pa_enable=1         - collect physical address (as well as VA) of loads/stores (PMSCR.PA) - requires privilege
-> +  pct_enable=1        - collect physical timestamp instead of virtual timestamp (PMSCR.PCT) - requires privilege
-> +  store_filter=1      - collect stores only (PMSFCR.ST)
-> +  ts_enable=1         - enable timestamping with value of generic timer (PMSCR.TS)
-> +
-> ++++*+++ Latency is the total latency from the point at which sampling started on that instruction, rather
-> +than only the execution latency.
-> +
-> +Only some events can be filtered on; these include:
-> +
-> +  bit 1     - instruction retired (i.e. omit speculative instructions)
-> +  bit 3     - L1D refill
-> +  bit 5     - TLB refill
-> +  bit 7     - mispredict
-> +  bit 11    - misaligned access
-> +
-> +So to sample just retired instructions:
-> +
-> +  perf record -e arm_spe/event_filter=2/ -- ./mybench
-> +
-> +or just mispredicted branches:
-> +
-> +  perf record -e arm_spe/event_filter=0x80/ -- ./mybench
-> +
-> +Viewing the data
-> +~~~~~~~~~~~~~~~~~
-> +
-> +By default perf report and perf script will assign samples to separate groups depending on the
-> +attributes/events of the SPE record. Because instructions can have multiple events associated with
-> +them, the samples in these groups are not necessarily unique. For example perf report shows these
-> +groups:
-> +
-> +  Available samples
-> +  0 arm_spe//
-> +  0 dummy:u
-> +  21 l1d-miss
-> +  897 l1d-access
-> +  5 llc-miss
-> +  7 llc-access
-> +  2 tlb-miss
-> +  1K tlb-access
-> +  36 branch-miss
-> +  0 remote-access
-> +  900 memory
-> +
-> +The arm_spe// and dummy:u events are implementation details and are expected to be empty.
-> +
-> +To get a full list of unique samples that are not sorted into groups, set the itrace option to
-> +generate 'instruction' samples. The period option is also taken into account, so set it to 1
-> +instruction unless you want to further downsample the already sampled SPE data:
-> +
-> +  perf report --itrace=i1i
-> +
-> +Memory access details are also stored on the samples and this can be viewed with:
-> +
-> +  perf report --mem-mode
-> +
-> +Common errors
-> +~~~~~~~~~~~~~
-> +
-> + - "Cannot find PMU `arm_spe'. Missing kernel support?"
-> +
-> +   Module not built or loaded, KPTI not disabled (see above), or running on a VM
-> +
-> + - "Arm SPE CONTEXT packets not found in the traces."
-> +
-> +   Root privilege is required to collect context packets. But these only increase the accuracy of
-> +   assigning PIDs to kernel samples. For userspace sampling this can be ignored.
-> +
-> + - Excessively large perf.data file size
-> +
-> +   Increase sampling interval (see above)
-> +
-> +
-> +SEE ALSO
-> +--------
-> +
-> +linkperf:perf-record[1], linkperf:perf-script[1], linkperf:perf-report[1],
-> +linkperf:perf-inject[1]
-> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-> index 71ebdf8125de..ba3df49c169d 100644
-> --- a/tools/perf/Documentation/perf.txt
-> +++ b/tools/perf/Documentation/perf.txt
-> @@ -77,7 +77,7 @@ linkperf:perf-stat[1], linkperf:perf-top[1],
->  linkperf:perf-record[1], linkperf:perf-report[1],
->  linkperf:perf-list[1]
+> Okay, I'll split this part into another change, thanks.
+> 
+> 
+> > > > > +int __init watchdog_nmi_probe(void)
+> > > > > +{
+> > > > > +	if (!allow_lockup_detector_init_retry)
+> > > > > +		return -EBUSY;
+> > > > 
+> > > > How do you know that you should return -EBUSY
+> > > > when retry in not enabled?
+> > > > 
+> > > > I guess that it is an optimization to make it fast
+> > > > during the first call. But the logic is far from
+> > > > obvious.
+> > > > 
+> > > 
+> > > Yes, you can see this as an optimization, because arm64 PMU is not ready
+> > > during lockup_detector_init(), so the watchdog_nmi_probe() must fail.
+> > >
+> > > Thus we only want to do watchdog_nmi_probe() in delayed init,
+> > > so if not in the state (allow_lockup_detector_init_retry=true), just tell
+> > > 
+> > > if it's unclear
+> > 
+> > Yes, it is far from obvious.
+> > 
+> > > maybe a brief comment can be add like this:
+> > > 
+> > > +	/* arm64 is only able to initialize lockup detecor during delayed init */
+> > > +	if (!allow_lockup_detector_init_retry)
+> > > +		return -EBUSY;
+> > 
+> > No, please, remove this optimization. It just makes problems:
+> > 
+> >    + it requires a comment here because the logic is far from obvious.
+> > 
+> >    + it is the reason why we need another variable to avoid the race in
+> >      lockup_detector_check(), see the discussion about the 4th patch.
+> 
+> After some days studying, if I remove this if-condition which means the
+> following hardlockup_detector_perf_init() needs to return -EBUSY.
+> However, the default return value that if pmu is not ready is -ENOENT.
+
+I see.
+
+> The call path for hardlockup_detector_perf_init() is really complicated,
+> 
+> I have some approach about this:
+>   1. abstract second variable with Kconfig.
+>     a. Add a ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT
+>        (the naming is a little bit long, may have better naming)
+>        in "lib/Kconfig.debug" if ARCH knew they do need delayed init for
+>        lockup detector.
+> 
+>        + select ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT if HAVE_HARDLOCKUP_DETECTOR_PERF
+> 
+>     b. and the watchdog_nmi_probe would look like.
+> 
+>     +int __init watchdog_nmi_probe(void)
+>     +{
+>     +	int ret;
+>     +
+>     + /* comment here... */
+>     +	if (!arm_pmu_irq_is_nmi())
+>     +		return -ENODEV;
+>     +
+>     +	ret = hardlockup_detector_perf_init();
+>     +	if (ret &&
+>     +		  IS_ENABLED(ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT))
+>     +		return -EBUSY;
+>     +
+>     + return ret;
+>     +}
+> 
+>     and than we can have only one variable (allow_lockup_detector_init_retry)
+>     in 4th patch.
+> 
 >  
-> -linkperf:perf-annotate[1],linkperf:perf-archive[1],
-> +linkperf:perf-annotate[1],linkperf:perf-archive[1],linkperf:perf-arm-spe[1],
->  linkperf:perf-bench[1], linkperf:perf-buildid-cache[1],
->  linkperf:perf-buildid-list[1], linkperf:perf-c2c[1],
->  linkperf:perf-config[1], linkperf:perf-data[1], linkperf:perf-diff[1],
-> -- 
-> 2.28.0
+>   2. base on ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT, change
+>      inside hardlockup_detector_perf_init().
 > 
+> int __init hardlockup_detector_perf_init(void)
+> {
+> 	int ret = hardlockup_detector_event_create();
+> 
+> 	if (ret) {
+> 		pr_info("Perf NMI watchdog permanently disabled\n");
+> +
+> +		/* comment here... */
+> +		if (IS_ENABLED(ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT))
+> +			ret = -EBUSY;
+> 	} else {
+> 		perf_event_release_kernel(this_cpu_read(watchdog_ev));
+> 		this_cpu_write(watchdog_ev, NULL);
+> 	}
+> 	return ret;
+> }
+> 
+>   3. Don't add any other config, try to find a proper location
+>      to return -EBUSY in hardlockup_detector_event_create().
+>      IMHO, this may involve the PMU subsys and should be
+>      the hardest approach.
+
+Honestly, everything looks a bit ugly and complicated to me.
+
+OKAY, is the return value actually important?
+
+What about just introducing the API that will allow to try to
+initialize the hardlockup detector later:
+
+/*
+ * Retry hardlockup detector init. It is useful when it requires some
+ * functionality that has to be initialized later on a particular
+ * platform.
+ */
+void __init retry_lockup_detector_init(void)
+{
+	/* Must be called before late init calls. */
+	if (!allow_lockup_detector_init_retry)
+		return 0;
+
+	queue_work_on(__smp_processor_id(), system_wq, &detector_work);
+}
+
+/*
+ * Ensure that optional delayed hardlockup init is proceed before
+ * the init code and memory is freed.
+ */
+static int __init lockup_detector_check(void)
+{
+	/* Prevent any later retry. */
+	allow_lockup_detector_init_retry = false;
+
+	/* Make sure no work is pending. */
+	flush_work(&detector_work);
+}
+late_initcall_sync(lockup_detector_check);
+
+You could leave lockup_detector_init() as it is. It does not really
+matter what was the exact error value returned by watchdog_nmi_probe().
+
+Then you could call retry_lockup_detector_init() in
+armv8_pmu_driver_init() and be done with it.
+
+It will be universal API that might be used on any architecture
+for any reason. If nobody calls retry_lockup_detector_init()
+then nohing will happen and the code will work as before.
+
+It might make sense to provide the API only on architectures that
+really need it. We could hide it under
+
+   ARCH_NEED_DELAYED_HARDLOCKUP_DETECTOR_INIT
+
+, similar to ARCH_NEEDS_CPU_IDLE_COUPLE.
+
+Best Regards,
+Petr
