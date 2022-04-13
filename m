@@ -2,116 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4435DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 01:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0571AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 01:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbiDMBFB (ORCPT
+        id S231418AbiDMBoa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Apr 2022 21:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52726 "EHLO
+        Tue, 12 Apr 2022 21:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbiDMBFB (ORCPT
+        with ESMTP id S230430AbiDMBoa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Apr 2022 21:05:01 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4BA220E1
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 18:02:41 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id l7so912038ejn.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 18:02:41 -0700 (PDT)
+        Tue, 12 Apr 2022 21:44:30 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64699FF7;
+        Tue, 12 Apr 2022 18:42:10 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id w19so885696lfu.11;
+        Tue, 12 Apr 2022 18:42:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iHgRgX3+0ilVJ9YEz+Ro35NSCV1c4ZJEIy9ObWgb1b8=;
-        b=NUCfHE9xdZ9NzydGuze+K4FGrkTRWikvoUjVdKKEmj+51xkJonHOUtFyTKNZ8fE3k8
-         n2mvmJWCsJv2SuD0lN1+Ao+lt9oMDLmPksYpizz9qGjWMmSZjRdT014Qvq/AazOMe+lz
-         EWc3XnI6Ff08/IESsrCyfoQKheL6BpyxJrDZT3skcTlAm87BPKgTLJcu96KLQyBKwJe3
-         GvvglTGHlqgekGZWihpodT1+zUyXqRmDA5a6IGWeis9Ak8Y9aGxTXnCL/8TwIWwMMCjt
-         PZq1jN1OH0Q1TQfDXDPZVt1+pkwDFbksdGcMTMsJRNP6BTsIN9JtrwNWtYChVUbAd1RZ
-         2s1w==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=zOGSRiq7V6W6wTu4+wCWDwi0wGVo+ygFKUekXm7WFx4=;
+        b=mHUYcZl3AJxjv8p2fXXOHlHRE8eJNRrPn8BzZZogdrtuGu3v8K3Ptmn30fEt7WmVYj
+         24Tr7l+VPefHYYldfFT4LQSCIkuu89zQMOgLt7i/yUBC38EvkIToBQOvN4Kr5kC5G0pc
+         PfuUwJ6C2XyvFUi7Ma5nJ+97FKhiWKw9fNeLSIXhDJNyObT/Up0fyIHLxzQpIzmRVdV6
+         ym1084g4PT0Ppx07jN0kkcUBx7nsTxxMaHx1gVbHxzeWQ1fXuBKS0pxLBfEB9iGn6DSV
+         O9n/JxzhbuXinoHmpNxS2h8Ib9QQxAjxerX1uzs9UcGUAiUSS+So7zLYYeRM17RdXMkb
+         r+fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=iHgRgX3+0ilVJ9YEz+Ro35NSCV1c4ZJEIy9ObWgb1b8=;
-        b=Q8Kxc0x6+Zc/r6JSxocIBwZGA84NYG5HTdyGkkfF/1gqB2pBG70bPDA9vm0zUVRz50
-         PZROhheS5k0S4LD/Oij2TVW41hQd0PtvZfr0JLdrT79u6UcjFT6lxm0nFKm/mSlFMVRO
-         Kg/uBKy5NiTcsJ0xEtr6d5UZw46NUJYI+T1wjHxbbJT6iHi7Fzeu/Yk1EX8Kl3u6dCwT
-         MScbuxcpH9ILCZ1CYKkLzHfcNfMgZNr/pAEMosBKPkbmLAudZ4m/9dDtNFxorjBJtmHW
-         ofjUVIL4GDwKyZv1Ix9sWl56rrNaaWeEbw5mghsE86gxYZv/ghP2FFw85qUK1Zve3iAa
-         q5ZA==
-X-Gm-Message-State: AOAM5318dRUq2U7HQJ09gC7xrsk/taM7oPvtT2nah/y6D64exIY7UmX4
-        P7FbgfjUkRobTz4hHCdoGAVBig==
-X-Google-Smtp-Source: ABdhPJz6nR5gS7smVj1tOoFEo1ZKYCvXsj50KSC95aQgmU9VFWO11RjMevciiQIBq2XNa9yaSNR2HA==
-X-Received: by 2002:a17:907:97d4:b0:6e8:6b69:7120 with SMTP id js20-20020a17090797d400b006e86b697120mr17895555ejc.531.1649811759886;
-        Tue, 12 Apr 2022 18:02:39 -0700 (PDT)
-Received: from localhost.localdomain (111-250-44-108.dynamic-ip.hinet.net. [111.250.44.108])
-        by smtp.gmail.com with ESMTPSA id e11-20020a50becb000000b0041b64129200sm475834edk.50.2022.04.12.18.02.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 18:02:39 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        bh=zOGSRiq7V6W6wTu4+wCWDwi0wGVo+ygFKUekXm7WFx4=;
+        b=KzU+gnjCZuHVpQHOLgvw5mCBz3d9MG4IRheSgMvyyTR0OBK4VE3iWebZFDd9N6Jfxl
+         HC6tD2XlWsEJl3XlEV8CGXUXxqq9jjRZSAU3GE0KYh1j6GTvficzUUfcICitGkU+VW6X
+         TitHNUcFTYznfkuomTUjOaNxKY/W/x1c9cS7nBSBoAzPsWSwnkEOilyAzAvn3pcG2/X3
+         7jE+weS+123g+Ct8FH4nAy4nuZoNw9BglEm5C2TlBERAIP/IqHoIhBDMc6SaQMMIp8jw
+         hqZ7fh/T8uHN7mto9r59HJ2p0TYkAykqrW/WmGHAbkIQygPywKzEdBIYMjcK4bIgnKZ6
+         303Q==
+X-Gm-Message-State: AOAM531xMdK8+TvGn7092DTEqf8N5nnhFbqmheSZz4IlhMekPUtPBPCQ
+        UhwnED7BpW5eaCtW6r9bIcY=
+X-Google-Smtp-Source: ABdhPJwFJbmjsFhyL3o0ox0otvSX1b+ZzP/n06QIjuJQvMqB2dULvtRiLaD4qUwlMZeNnR+ETZOOMw==
+X-Received: by 2002:a05:6512:b28:b0:44a:9b62:3212 with SMTP id w40-20020a0565120b2800b0044a9b623212mr27197994lfu.320.1649814128929;
+        Tue, 12 Apr 2022 18:42:08 -0700 (PDT)
+Received: from [192.168.0.229] (213-177-122-2.dynamic.mts-nn.ru. [213.177.122.2])
+        by smtp.gmail.com with ESMTPSA id h8-20020ac24da8000000b0046b8a03301bsm1544300lfe.137.2022.04.12.18.42.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Apr 2022 18:42:08 -0700 (PDT)
+Message-ID: <e1ce0d93-88cc-af79-e67e-d3c79d166ca6@gmail.com>
+Date:   Wed, 13 Apr 2022 04:42:07 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH 1/3] perf record: Fix per-thread option.
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH] perf arm-spe: Test memory samples
-Date:   Wed, 13 Apr 2022 09:02:21 +0800
-Message-Id: <20220413010221.81332-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20220412062133.2546080-1-irogers@google.com>
+From:   Alexey Bayduraev <alexey.bayduraev@gmail.com>
+In-Reply-To: <20220412062133.2546080-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a new test to verify the Arm SPE synthesized memory samples with
-'perf mem report' command.
+On 12.04.2022 09:21, Ian Rogers wrote:
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/tests/shell/test_arm_spe.sh | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+> From: Alexey Bayduraev <alexey.bayduraev@gmail.com>
 
-diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
-index e59044edc406..b36125e127eb 100755
---- a/tools/perf/tests/shell/test_arm_spe.sh
-+++ b/tools/perf/tests/shell/test_arm_spe.sh
-@@ -62,6 +62,18 @@ perf_report_samples() {
- 		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
- }
- 
-+perf_mem_report_samples() {
-+	echo "Looking at perf.data file for reporting memory samples:"
-+
-+	# Below is an example of the memory samples reporting:
-+	#   20.71%    1696    27    L1 hit     [k] el0t_64_sync_handler    [kernel.kallsyms]    ...
-+	#   17.21%    1903    20    L1 hit     [k] el0t_64_sync            [kernel.kallsyms]    ...
-+	#    8.52%     897    21    L1 hit     [k] ksys_read               [kernel.kallsyms]    ...
-+	#    0.12%      16    17    L1 hit     [.] 0x0000000000004ce8      dd                   ...
-+	perf mem report --stdio -i ${perfdata} 2>&1 | \
-+		egrep " +[0-9]+\.[0-9]+% +[0-9]+ +[0-9]+ .* +$1 " > /dev/null 2>&1
-+}
-+
- arm_spe_snapshot_test() {
- 	echo "Recording trace with snapshot mode $perfdata"
- 	perf record -o ${perfdata} -e arm_spe// -S \
-@@ -79,7 +91,8 @@ arm_spe_snapshot_test() {
- 	wait $PERFPID
- 
- 	perf_script_samples dd &&
--	perf_report_samples dd
-+	perf_report_samples dd &&
-+	perf_mem_report_samples dd
- 
- 	err=$?
- 	arm_spe_report "SPE snapshot testing" $err
--- 
-2.25.1
+Thanks,
+
+The tag
+Signed-off-by: Alexey Bayduraev <alexey.bayduraev@gmail.com>
+can be added to this patch.
+
+Regards,
+Alexey
+
+> 
+> Per-thread mode doesn't have specific CPUs for events, add checks for
+> this case.
+> 
+> Minor fix to a pr_debug by Ian Rogers <irogers@google.com> to avoid an
+> out of bound array access.
+> 
+> Reported-by: Ian Rogers <irogers@google.com>
+> Fixes: 7954f71689f9 ("perf record: Introduce thread affinity and mmap masks")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-record.c | 22 +++++++++++++++++-----
+>  1 file changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index ba74fab02e62..069825c48d40 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -989,8 +989,11 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
+>  	struct mmap *overwrite_mmap = evlist->overwrite_mmap;
+>  	struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
+>  
+> -	thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
+> -					      thread_data->mask->maps.nbits);
+> +	if (cpu_map__is_dummy(cpus))
+> +		thread_data->nr_mmaps = nr_mmaps;
+> +	else
+> +		thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
+> +						      thread_data->mask->maps.nbits);
+>  	if (mmap) {
+>  		thread_data->maps = zalloc(thread_data->nr_mmaps * sizeof(struct mmap *));
+>  		if (!thread_data->maps)
+> @@ -1007,16 +1010,17 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
+>  		 thread_data->nr_mmaps, thread_data->maps, thread_data->overwrite_maps);
+>  
+>  	for (m = 0, tm = 0; m < nr_mmaps && tm < thread_data->nr_mmaps; m++) {
+> -		if (test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
+> +		if (cpu_map__is_dummy(cpus) ||
+> +		    test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
+>  			if (thread_data->maps) {
+>  				thread_data->maps[tm] = &mmap[m];
+>  				pr_debug2("thread_data[%p]: cpu%d: maps[%d] -> mmap[%d]\n",
+> -					  thread_data, cpus->map[m].cpu, tm, m);
+> +					  thread_data, perf_cpu_map__cpu(cpus, m).cpu, tm, m);
+>  			}
+>  			if (thread_data->overwrite_maps) {
+>  				thread_data->overwrite_maps[tm] = &overwrite_mmap[m];
+>  				pr_debug2("thread_data[%p]: cpu%d: ow_maps[%d] -> ow_mmap[%d]\n",
+> -					  thread_data, cpus->map[m].cpu, tm, m);
+> +					  thread_data, perf_cpu_map__cpu(cpus, m).cpu, tm, m);
+>  			}
+>  			tm++;
+>  		}
+> @@ -3329,6 +3333,9 @@ static void record__mmap_cpu_mask_init(struct mmap_cpu_mask *mask, struct perf_c
+>  {
+>  	int c;
+>  
+> +	if (cpu_map__is_dummy(cpus))
+> +		return;
+> +
+>  	for (c = 0; c < cpus->nr; c++)
+>  		set_bit(cpus->map[c].cpu, mask->bits);
+>  }
+> @@ -3680,6 +3687,11 @@ static int record__init_thread_masks(struct record *rec)
+>  	if (!record__threads_enabled(rec))
+>  		return record__init_thread_default_masks(rec, cpus);
+>  
+> +	if (cpu_map__is_dummy(cpus)) {
+> +		pr_err("--per-thread option is mutually exclusive to parallel streaming mode.\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	switch (rec->opts.threads_spec) {
+>  	case THREAD_SPEC__CPU:
+>  		ret = record__init_thread_cpu_masks(rec, cpus);
+> 
 
