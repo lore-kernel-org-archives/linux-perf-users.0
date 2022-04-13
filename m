@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C1AC43217
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 21:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C40C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 21:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238840AbiDMVI1 (ORCPT
+        id S238783AbiDMVIa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 17:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49766 "EHLO
+        Wed, 13 Apr 2022 17:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238822AbiDMVIS (ORCPT
+        with ESMTP id S238857AbiDMVIS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Wed, 13 Apr 2022 17:08:18 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DF0784EFB
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:40 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2ef53391dbaso13779507b3.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:40 -0700 (PDT)
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B93F85659
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:37 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id a16-20020a056902057000b00641c83f82f5so2655970ybt.22
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc:content-transfer-encoding;
-        bh=iCtYxWeRiXkRVvzMmnG/1dORtlkX4NiDuoUQ7y+x6Yw=;
-        b=sTqWDCnhDg1kvusCERg3S1p+UotXTb6G5qc8QCoqJU35GgUvt7PmFqXUYii4KKsgGP
-         txixbiqbIcFr7zOAzkaba9dTMQnBkAy0B9Hm7gR+sjZDqDe91q/tlecvGJgyj2FTumNY
-         DrVjDxbDxxVjUI7OUK9i+GFGmvVevsDxJp7pjfGDEeD/PjguGWgReYxGmbynqB+/wHQU
-         /LwmMvtGBocoMl8Qt11erRwoOt6wuJyA6eZrmCmgcwiP6jXr6sCocQBtCc7WfZIS4jPR
-         ebymgjbejD+ZFWQmc/3+SCb5HVgjgp0Ea2RfDkdV70DJToHoes311isCVkF/q4jo3Cak
-         nB+w==
+        bh=LyKxohxYFWz+xkAFcBS7lS5LRzEYPlTQWXTfn7sqhYQ=;
+        b=Nx7watmXyUrR4GYJ3PPJgGjbxfpPFfxk4xRwtM1yJbXh7/4nevOyjoEREH5PMLV3TC
+         Gjyn9uLVONZnYTCGvoGwCoDZxZ2J4nWgjwgLa2BVmgYCXxR55TcMraYg7W3OSsyF6e5y
+         pGDBEoZvqxSKFXW4XDREPeEqwKv3HKAQw1JQ1IiBqMwxzCn2B9VAYC4imNDRnr995EnD
+         DyQe2XsqSkFTjGb1boEzNKTEUX5mLAXOoGHgV9lr14kk3Tfe4y6Xwkz7xELOO7tLqA2v
+         1wU0P2Pzgs4u6pVPzM/HsSMNgAN5xVdSleuRIL7Inua9AzHGjlvGVuVyLRE8k5TOorJv
+         0cDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc:content-transfer-encoding;
-        bh=iCtYxWeRiXkRVvzMmnG/1dORtlkX4NiDuoUQ7y+x6Yw=;
-        b=FK//ih1p8LGx/lA74/n/WdGOlZC1tu0gF5ebZvcl+1RDjg5TmwW3VwWZ8vzot63zR0
-         fa80cqY2UEjUg6iG1uBWHnLc/QOST0Pzoz/MVkLeI2c5YeZAi/Z9DTLPbgSkuBHKMQZV
-         S+LOKCVwT28/6Qnt3Lav0GkdAa21uCNs+P1/NIboy5q2YPxM8cKzvQa8xtq+aCFco8gh
-         uL2JdglAYFEUjYxKKysvrSIIvWGR9oyNv1AEA4HoL0yLROrXWN7h9Z7DSkR5d1BRvBKu
-         BJrfDJa9qyComaIfPr5+GAckm5F16I3idJD3lWSI5nkVU6KPzHYPb14p2EiF/Jqnbo6J
-         CPlQ==
-X-Gm-Message-State: AOAM530XFLN/ledYlF1P5BLQVHcLTlI84S/5cV5132OtvHwRfmuffglY
-        +8EDwqgCFItR0pa9NiBh9hiuaEOnd9Vt
-X-Google-Smtp-Source: ABdhPJyMCnkObVJCsABGzTvEJ9jw1AYzRcbOT55/NGtFWlysIfK58pJXa4XpTcBrsvY3wnEZtUJ6+czut0a+
+        bh=LyKxohxYFWz+xkAFcBS7lS5LRzEYPlTQWXTfn7sqhYQ=;
+        b=gWgXGQCNAlgOW6gpNj9HqTj13GKzXUugm/LUvFN+PQslLZZMrMeLzkK3mM+KwfVPna
+         XRpZciqoyAHY50qZK3NbjGJ5dgeK0inp/7BemG1DbbJMh+wcYrFih1Y8w21x8ZAkCJcN
+         8gh5v0R28s2ppnWBeYDIfbTdyFcX1S8GdqnLtxfWPtRcN7gMMWWEje7T/vFWwYRuFSTA
+         C1OTupD0ooo27/f3IpSXIWZL8AXXBXzeupTRRFdMSGscTQMxsiK0QLIO7Wd41tRKhSA/
+         Xa6eqqKcLq8Dcj+F4tHBN1uCkJ1bXcrsUpViImlb4anDI6f3nHSyeqcszKoZc+WPR2Mr
+         bYlw==
+X-Gm-Message-State: AOAM5337dD75DVBjzLBh9Va66Pjm5vg8GM3W4Y+JV0IpfZ6nhnF5+O4b
+        b0zWf4IyBmCOAl5anLyAJPtv2EkuNJkD
+X-Google-Smtp-Source: ABdhPJyK6Nh2wX2uXt+tJg5ODBuAK9xGSuEdTA8pwtmv0AaWfOjqxjeN6A9lEvHI77IsSxwKp7b69nVXgUWp
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9135:da53:a8a2:bf11])
- (user=irogers job=sendgmr) by 2002:a05:690c:87:b0:2ea:20a7:a2c with SMTP id
- be7-20020a05690c008700b002ea20a70a2cmr784557ywb.500.1649883939332; Wed, 13
- Apr 2022 14:05:39 -0700 (PDT)
-Date:   Wed, 13 Apr 2022 14:05:03 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:c903:0:b0:2ef:5484:2224 with SMTP id
+ l3-20020a0dc903000000b002ef54842224mr728981ywd.365.1649883936638; Wed, 13 Apr
+ 2022 14:05:36 -0700 (PDT)
+Date:   Wed, 13 Apr 2022 14:05:02 -0700
 In-Reply-To: <20220413210503.3256922-1-irogers@google.com>
-Message-Id: <20220413210503.3256922-14-irogers@google.com>
+Message-Id: <20220413210503.3256922-13-irogers@google.com>
 Mime-Version: 1.0
 References: <20220413210503.3256922-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
-Subject: [PATCH 14/14] perf vendor events intel: Update goldmont event topics
+Subject: [PATCH 13/14] perf vendor events intel: Update goldmontplus event topics
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,16 +82,16 @@ https://github.com/intel/event-converter-for-linux-perf/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/goldmont/other.json   | 31 +------------------
- .../arch/x86/goldmont/pipeline.json           | 31 ++++++++++++++++++-
- 2 files changed, 31 insertions(+), 31 deletions(-)
+ .../arch/x86/goldmontplus/other.json          | 37 +------------------
+ .../arch/x86/goldmontplus/pipeline.json       | 37 ++++++++++++++++++-
+ 2 files changed, 37 insertions(+), 37 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/goldmont/other.json b/tools/per=
-f/pmu-events/arch/x86/goldmont/other.json
-index e4605e636447..d888f67aa2ea 100644
---- a/tools/perf/pmu-events/arch/x86/goldmont/other.json
-+++ b/tools/perf/pmu-events/arch/x86/goldmont/other.json
-@@ -47,34 +47,5 @@
+diff --git a/tools/perf/pmu-events/arch/x86/goldmontplus/other.json b/tools=
+/perf/pmu-events/arch/x86/goldmontplus/other.json
+index 3378f48cb818..92586fe4538a 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmontplus/other.json
++++ b/tools/perf/pmu-events/arch/x86/goldmontplus/other.json
+@@ -57,40 +57,5 @@
          "PublicDescription": "Counts hardware interrupts received by the p=
 rocessor.",
          "SampleAfterValue": "203",
@@ -103,6 +103,8 @@ rocessor.",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xCA",
 -        "EventName": "ISSUE_SLOTS_NOT_CONSUMED.ANY",
+-        "PDIR_COUNTER": "na",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Counts the number of issue slots per core cy=
 cle that were not consumed by the backend due to either a full resource  in=
  the backend (RESOURCE_FULL) or due to the processor recovering from some e=
@@ -115,6 +117,8 @@ vent (RECOVERY).",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xCA",
 -        "EventName": "ISSUE_SLOTS_NOT_CONSUMED.RECOVERY",
+-        "PDIR_COUNTER": "na",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Counts the number of issue slots per core cy=
 cle that were not consumed by the backend because allocation is stalled wai=
 ting for a mispredicted jump to retire or other branch-like conditions (e.g=
@@ -131,6 +135,8 @@ ull resource in the backend",
 -        "Counter": "0,1,2,3",
 -        "EventCode": "0xCA",
 -        "EventName": "ISSUE_SLOTS_NOT_CONSUMED.RESOURCE_FULL",
+-        "PDIR_COUNTER": "na",
+-        "PEBScounters": "0,1,2,3",
 -        "PublicDescription": "Counts the number of issue slots per core cy=
 cle that were not consumed because of a full resource in the backend.  Incl=
 uding but not limited to resources such as the Re-order Buffer (ROB), reser=
@@ -144,22 +150,16 @@ s not available (Instruction Queue is empty), this event will not count.",
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json b/tools/=
-perf/pmu-events/arch/x86/goldmont/pipeline.json
-index cb9155c3836d..5dba4313013f 100644
---- a/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json
-@@ -245,6 +245,35 @@
-         "PublicDescription": "Counts the number of instructions that retir=
-e execution. For instructions that consist of multiple uops, this event cou=
-nts the retirement of the last uop of the instruction. The event continues =
-counting during hardware interrupts, traps, and inside interrupt handlers. =
- This is an architectural performance event.  This event uses a (_P)rogramm=
-able general purpose performance counter. *This event is Precise Event capa=
-ble:  The EventingRIP field in the PEBS record is precise to the address of=
- the instruction which caused the event.  Note: Because PEBS records can be=
- collected only on IA32_PMC0, only one event can use the PEBS facility at a=
- time.",
+diff --git a/tools/perf/pmu-events/arch/x86/goldmontplus/pipeline.json b/to=
+ols/perf/pmu-events/arch/x86/goldmontplus/pipeline.json
+index 8305e2ecf617..4d7e3129e5ac 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmontplus/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/goldmontplus/pipeline.json
+@@ -290,6 +290,41 @@
+         "PublicDescription": "Counts INST_RETIRED.ANY using the Reduced Sk=
+id PEBS feature that reduces the shadow in which events aren't counted allo=
+wing for a more unbiased distribution of samples across instructions retire=
+d.",
          "SampleAfterValue": "2000003"
      },
 +    {
@@ -168,6 +168,8 @@ ble:  The EventingRIP field in the PEBS record is precise to the address of=
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xCA",
 +        "EventName": "ISSUE_SLOTS_NOT_CONSUMED.ANY",
++        "PDIR_COUNTER": "na",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Counts the number of issue slots per core cy=
 cle that were not consumed by the backend due to either a full resource  in=
  the backend (RESOURCE_FULL) or due to the processor recovering from some e=
@@ -180,6 +182,8 @@ vent (RECOVERY).",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xCA",
 +        "EventName": "ISSUE_SLOTS_NOT_CONSUMED.RECOVERY",
++        "PDIR_COUNTER": "na",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Counts the number of issue slots per core cy=
 cle that were not consumed by the backend because allocation is stalled wai=
 ting for a mispredicted jump to retire or other branch-like conditions (e.g=
@@ -196,6 +200,8 @@ ull resource in the backend",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0xCA",
 +        "EventName": "ISSUE_SLOTS_NOT_CONSUMED.RESOURCE_FULL",
++        "PDIR_COUNTER": "na",
++        "PEBScounters": "0,1,2,3",
 +        "PublicDescription": "Counts the number of issue slots per core cy=
 cle that were not consumed because of a full resource in the backend.  Incl=
 uding but not limited to resources such as the Re-order Buffer (ROB), reser=
@@ -210,7 +216,7 @@ s not available (Instruction Queue is empty), this event will not count.",
          "BriefDescription": "Loads blocked because address has 4k partial =
 address false dependence (Precise event capable)",
          "CollectPEBSRecord": "2",
-@@ -379,4 +408,4 @@
+@@ -456,4 +491,4 @@
          "SampleAfterValue": "2000003",
          "UMask": "0x1"
      }
