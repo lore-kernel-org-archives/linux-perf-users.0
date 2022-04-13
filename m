@@ -2,293 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D03EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 10:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F368C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 11:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233089AbiDMK22 (ORCPT
+        id S231678AbiDMLTP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 06:28:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
+        Wed, 13 Apr 2022 07:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbiDMK20 (ORCPT
+        with ESMTP id S229989AbiDMLTO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 06:28:26 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1471E23BE4;
-        Wed, 13 Apr 2022 03:26:05 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 8F579210EE;
-        Wed, 13 Apr 2022 10:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1649845563; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=s1N2lMruCjm6zkDvjHsuYQUbe0JXiQfxmPa3xQRoZKQ=;
-        b=cBqsQtTA1B3e7l9GpKK0OU0KN43HmzKhGT6UDD2JOIyPEZH+MYJA5O6Ui5I3i280By7PHC
-        RqPCmtoKepRvvqW+TxbEQNlhtuglbZQA1Twmsk3Jk6bdIt+02t1PokApX+j3kWumJ8EGVR
-        pufAdbuu4Ru+N7UBd8i2KvmJmpq9awY=
-Received: from suse.cz (unknown [10.100.216.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 Apr 2022 07:19:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4D24354BE3
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 04:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649848612;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=+7RzPlk3rkj283aD3rT5lMfAYKr641wYoaxQulPL3No=;
+        b=E2beIF64SPfqR8qrLECJ7D/ajbDcGJEas99FLz+F+Fzo7XlWV+99TD3W6j2/qnkpXjylPZ
+        qLB0VIN3EXyIWvKB4TFWIg5HkmHiwCjHcRoFWcQUDYnFtQ/xzfiVbkzfzRvd3yp+Bpy6bV
+        hh9n4zsjKtHgwc6lkvCmDnjDy4ewJ4U=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-328-8Rnal9EyNv-OMzzksh8YnA-1; Wed, 13 Apr 2022 07:16:50 -0400
+X-MC-Unique: 8Rnal9EyNv-OMzzksh8YnA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 49199A3B8A;
-        Wed, 13 Apr 2022 10:26:00 +0000 (UTC)
-Date:   Wed, 13 Apr 2022 12:25:57 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc:     acme@kernel.org, akpm@linux-foundation.org,
-        alexander.shishkin@linux.intel.com, catalin.marinas@arm.com,
-        davem@davemloft.net, jolsa@redhat.com, jthierry@redhat.com,
-        keescook@chromium.org, kernelfans@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        masahiroy@kernel.org, matthias.bgg@gmail.com, maz@kernel.org,
-        mcgrof@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-        nixiaoming@huawei.com, peterz@infradead.org,
-        sparclinux@vger.kernel.org, sumit.garg@linaro.org,
-        wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
-Subject: Re: [PATCH v3 5/5] arm64: Enable perf events based hard lockup
- detector
-Message-ID: <YlalNStoYOWqAHkP@alley>
-References: <YkxT9plntP0VeMl4@alley>
- <20220407165949.1903-1-lecopzer.chen@mediatek.com>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 811B6101AA45
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 11:16:50 +0000 (UTC)
+Received: from Diego (unknown [10.39.208.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F3CCC2024CB6
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 11:16:49 +0000 (UTC)
+Date:   Wed, 13 Apr 2022 13:16:47 +0200 (CEST)
+From:   Michael Petlan <mpetlan@redhat.com>
+X-X-Sender: Michael@Diego
+To:     linux-perf-users@vger.kernel.org
+Subject: perf :: intel hybrid events (fwd)
+Message-ID: <alpine.LRH.2.20.2204131302230.29735@Diego>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220407165949.1903-1-lecopzer.chen@mediatek.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2022-04-08 00:59:49, Lecopzer Chen wrote:
-> 
-> > On Tue 2022-04-05 20:53:04, Lecopzer Chen wrote:
-> > >  
-> > > > On Thu 2022-03-24 22:14:05, Lecopzer Chen wrote:
-> > > > > With the recent feature added to enable perf events to use pseudo NMIs
-> > > > > as interrupts on platforms which support GICv3 or later, its now been
-> > > > > possible to enable hard lockup detector (or NMI watchdog) on arm64
-> > > > > platforms. So enable corresponding support.
-> > > > > 
-> > > > > One thing to note here is that normally lockup detector is initialized
-> > > > > just after the early initcalls but PMU on arm64 comes up much later as
-> > > > > device_initcall(). To cope with that, overriding watchdog_nmi_probe() to
-> > > > > let the watchdog framework know PMU not ready, and inform the framework
-> > > > > to re-initialize lockup detection once PMU has been initialized.
-> > > > > 
-> > > > > [1]: http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
-> > > > > 
-> > > > > --- /dev/null
-> > > > > +++ b/arch/arm64/kernel/watchdog_hld.c
-> > > > > @@ -0,0 +1,37 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +#include <linux/nmi.h>
-> > > > > +#include <linux/cpufreq.h>
-> > > > > +#include <linux/perf/arm_pmu.h>
-> > > > > +
-> > > > > +/*
-> > > > > + * Safe maximum CPU frequency in case a particular platform doesn't implement
-> > > > > + * cpufreq driver. Although, architecture doesn't put any restrictions on
-> > > > > + * maximum frequency but 5 GHz seems to be safe maximum given the available
-> > > > > + * Arm CPUs in the market which are clocked much less than 5 GHz. On the other
-> > > > > + * hand, we can't make it much higher as it would lead to a large hard-lockup
-> > > > > + * detection timeout on parts which are running slower (eg. 1GHz on
-> > > > > + * Developerbox) and doesn't possess a cpufreq driver.
-> > > > > + */
-> > > > > +#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
-> > > > > +u64 hw_nmi_get_sample_period(int watchdog_thresh)
-> > > > > +{
-> > > > > +	unsigned int cpu = smp_processor_id();
-> > > > > +	unsigned long max_cpu_freq;
-> > > > > +
-> > > > > +	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
-> > > > > +	if (!max_cpu_freq)
-> > > > > +		max_cpu_freq = SAFE_MAX_CPU_FREQ;
-> > > > > +
-> > > > > +	return (u64)max_cpu_freq * watchdog_thresh;
-> > > > > +}
-> > > > 
-> > > > This change is not mentioned in the commit message.
-> > > > Please, put it into a separate patch.
-> > > 
-> > > 
-> > > Actully, This cames from
-> > > [1]: http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
-> > > And I didn't touch the commit message from the origin patch.
-> > > But of course, I could imporve it with proper description if
-> > > anyone thinks it's not good enough.
-> > 
-> > I see.
-> > 
-> > > Would you mean put this function hw_nmi_get_sample_period() in patch
-> > > 6th?
-> > > In the view of "arm64 uses delayed init with all the functionality it need to set up",
-> > > IMO, this make sense for me to put into a single patch.
-> > 
-> > Or you could split it in two patches and add
-> > hw_nmi_get_sample_period() in the earlier patch.
-> > 
-> > 
-> > > But if you still think this should put into a separate patch, I'll do it:)
-> > 
-> > It is always better to split the changes whenever possible. It makes
-> > the review easier. And it also helps to find the real culprit of
-> > a regression using bisection.
-> 
-> Okay, I'll split this part into another change, thanks.
-> 
-> 
-> > > > > +int __init watchdog_nmi_probe(void)
-> > > > > +{
-> > > > > +	if (!allow_lockup_detector_init_retry)
-> > > > > +		return -EBUSY;
-> > > > 
-> > > > How do you know that you should return -EBUSY
-> > > > when retry in not enabled?
-> > > > 
-> > > > I guess that it is an optimization to make it fast
-> > > > during the first call. But the logic is far from
-> > > > obvious.
-> > > > 
-> > > 
-> > > Yes, you can see this as an optimization, because arm64 PMU is not ready
-> > > during lockup_detector_init(), so the watchdog_nmi_probe() must fail.
-> > >
-> > > Thus we only want to do watchdog_nmi_probe() in delayed init,
-> > > so if not in the state (allow_lockup_detector_init_retry=true), just tell
-> > > 
-> > > if it's unclear
-> > 
-> > Yes, it is far from obvious.
-> > 
-> > > maybe a brief comment can be add like this:
-> > > 
-> > > +	/* arm64 is only able to initialize lockup detecor during delayed init */
-> > > +	if (!allow_lockup_detector_init_retry)
-> > > +		return -EBUSY;
-> > 
-> > No, please, remove this optimization. It just makes problems:
-> > 
-> >    + it requires a comment here because the logic is far from obvious.
-> > 
-> >    + it is the reason why we need another variable to avoid the race in
-> >      lockup_detector_check(), see the discussion about the 4th patch.
-> 
-> After some days studying, if I remove this if-condition which means the
-> following hardlockup_detector_perf_init() needs to return -EBUSY.
-> However, the default return value that if pmu is not ready is -ENOENT.
+Forwarding the questions to perf-users...
 
-I see.
+Also, I have found out that mem-stores:p event does not work on
+Intel Alderlake:
 
-> The call path for hardlockup_detector_perf_init() is really complicated,
-> 
-> I have some approach about this:
->   1. abstract second variable with Kconfig.
->     a. Add a ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT
->        (the naming is a little bit long, may have better naming)
->        in "lib/Kconfig.debug" if ARCH knew they do need delayed init for
->        lockup detector.
-> 
->        + select ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT if HAVE_HARDLOCKUP_DETECTOR_PERF
-> 
->     b. and the watchdog_nmi_probe would look like.
-> 
->     +int __init watchdog_nmi_probe(void)
->     +{
->     +	int ret;
->     +
->     + /* comment here... */
->     +	if (!arm_pmu_irq_is_nmi())
->     +		return -ENODEV;
->     +
->     +	ret = hardlockup_detector_perf_init();
->     +	if (ret &&
->     +		  IS_ENABLED(ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT))
->     +		return -EBUSY;
->     +
->     + return ret;
->     +}
-> 
->     and than we can have only one variable (allow_lockup_detector_init_retry)
->     in 4th patch.
-> 
->  
->   2. base on ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT, change
->      inside hardlockup_detector_perf_init().
-> 
-> int __init hardlockup_detector_perf_init(void)
-> {
-> 	int ret = hardlockup_detector_event_create();
-> 
-> 	if (ret) {
-> 		pr_info("Perf NMI watchdog permanently disabled\n");
-> +
-> +		/* comment here... */
-> +		if (IS_ENABLED(ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT))
-> +			ret = -EBUSY;
-> 	} else {
-> 		perf_event_release_kernel(this_cpu_read(watchdog_ev));
-> 		this_cpu_write(watchdog_ev, NULL);
-> 	}
-> 	return ret;
-> }
-> 
->   3. Don't add any other config, try to find a proper location
->      to return -EBUSY in hardlockup_detector_event_create().
->      IMHO, this may involve the PMU subsys and should be
->      the hardest approach.
+# perf record -e mem-stores -- ./examples/dummy > /dev/null
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.024 MB perf.data (64 samples) ]
 
-Honestly, everything looks a bit ugly and complicated to me.
+While with precise, it records nothing:
 
-OKAY, is the return value actually important?
+# perf record -e mem-stores:p -- ./examples/dummy > /dev/null
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.021 MB perf.data ]
 
-What about just introducing the API that will allow to try to
-initialize the hardlockup detector later:
+This makes the perf-mem and perf-c2c commands less useful.
 
-/*
- * Retry hardlockup detector init. It is useful when it requires some
- * functionality that has to be initialized later on a particular
- * platform.
- */
-void __init retry_lockup_detector_init(void)
-{
-	/* Must be called before late init calls. */
-	if (!allow_lockup_detector_init_retry)
-		return 0;
+Again, is this how it is supposed to work or do I miss some fixes?
+Or does upstream also miss some fixes?
 
-	queue_work_on(__smp_processor_id(), system_wq, &detector_work);
-}
+Thanks.
+Michael
 
-/*
- * Ensure that optional delayed hardlockup init is proceed before
- * the init code and memory is freed.
- */
-static int __init lockup_detector_check(void)
-{
-	/* Prevent any later retry. */
-	allow_lockup_detector_init_retry = false;
+---------- Forwarded message ----------
+Date: Tue, 12 Apr 2022 22:59:11
+From: Michael Petlan <mpetlan@redhat.com>
+To: yao.jin@linux.intel.com
+Subject: perf :: intel hybrid events
 
-	/* Make sure no work is pending. */
-	flush_work(&detector_work);
-}
-late_initcall_sync(lockup_detector_check);
+Hello Jin Yao,
 
-You could leave lockup_detector_init() as it is. It does not really
-matter what was the exact error value returned by watchdog_nmi_probe().
+I have a few questions/ideas about hybrid events on Alderlake...
 
-Then you could call retry_lockup_detector_init() in
-armv8_pmu_driver_init() and be done with it.
 
-It will be universal API that might be used on any architecture
-for any reason. If nobody calls retry_lockup_detector_init()
-then nohing will happen and the code will work as before.
+1) L1-{d,i}cache-load{,-misse}s supported partially
 
-It might make sense to provide the API only on architectures that
-really need it. We could hide it under
+Interestingly enough, perf offers the following events in the hwcache set:
 
-   ARCH_NEED_DELAYED_HARDLOCKUP_DETECTOR_INIT
+L1-dcache-load-misses
+L1-dcache-loads
+L1-icache-load-misses
+L1-icache-loads
 
-, similar to ARCH_NEEDS_CPU_IDLE_COUPLE.
+Of course, each expands to its cpu_core and cpu_atom version, as following:
 
-Best Regards,
-Petr
+# perf stat -e L1-icache-load-misses
+^C
+ Performance counter stats for 'system wide':
+           146,566      cpu_core/L1-icache-load-misses/
+           164,971      cpu_atom/L1-icache-load-misses/
+
+On my Alderlake testing box with RHEL-9 I see the following support pattern:
+
+                         |  cpu_core  |  cpu_atom  |
+L1-dcache-load-misses    |     OK     |     N/A    |
+L1-dcache-loads          |     OK     |     OK     |
+L1-icache-load-misses    |     OK     |     OK     |
+L1-icache-loads          |     N/A    |     OK     |
+
+For dcache, loads are supported on both, while misses do not work on atom.
+That can be, atom is simpler, thus I can expect it missing some events...
+
+For icache, misses are supported on both, while loads do not work on core.
+This looks weird, is that really the wanted behavior? Isn't there a bug in
+the drivers/event specifications?
+
+
+2) You added --cputype switch to perf-stat via e69dc84282fb474cb87097c6c94
+so one can restrict the expansion and keep only one cpu type used. Doesn't
+perf-record need the same?
+
+
+3) While perf-stat defaults to "use whatever we can" approach when not every
+event is supported, puts "<not supported>" into the results, perf-record
+fails. This is bad for the cases like above, since it fails when one of the
+events aren't supported. That might make sense if the unsupported event was
+specified explicitly by the user, e.g. `perf record -e AA -e BB -- ./load`
+and perf fails "sorry, I don't support event BB".
+
+However, what if the user just wants L1-dcache-load-misses and encounters
+perf-record failing just because the event is not supported on Atom?
+
+Shouldn't this behavior be fixed by some --tolerant switch that would ignore
+the problems and record what is going on on the Core at least?
+
+
+What are your ideas?
+Thanks...
+
+Michael
+
