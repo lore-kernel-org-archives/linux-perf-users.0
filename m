@@ -2,167 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F323C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Apr 2022 23:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4435DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 01:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229448AbiDLXvG (ORCPT
+        id S229968AbiDMBFB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Apr 2022 19:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57806 "EHLO
+        Tue, 12 Apr 2022 21:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229956AbiDLXvF (ORCPT
+        with ESMTP id S229463AbiDMBFB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Apr 2022 19:51:05 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60A302C1
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 16:48:44 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id r13so268360wrr.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 16:48:44 -0700 (PDT)
+        Tue, 12 Apr 2022 21:05:01 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4BA220E1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 18:02:41 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id l7so912038ejn.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Apr 2022 18:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lkI41JF3glGgO0AK4EpfNmpVmEtcA068KzSynd/K3x4=;
-        b=oYAIU3qZkT4Pqst1lJguZvTH6N4db91UNv7MKU3GzUFF64j1mV7XJt1y205deV2B30
-         I2Fw4+Nt5awZRI3KM1HxBEH2bzsn0ZEGupKWZ88CYy7Ke2/LqzvQFna0YrHaH9EMCEat
-         zRRlPrwoOJ7iOJvJfjgGG2tJYsBWlRNxlfux/fzEkelP+xLlQm3tZDV/QMQZ7/+VuTSb
-         PrafhvVzIHVxRSo0thUbZSxYrgNocxjo2ddpgiNZE5LCCGhesdQvj8MDKWkm0Ggqn/P9
-         3/hHke6hq+wvGuODOvToHjSbtlCEvGY5OCneLT2m3CconB9zolhd65BPJp56WjAFOD4h
-         Ympw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iHgRgX3+0ilVJ9YEz+Ro35NSCV1c4ZJEIy9ObWgb1b8=;
+        b=NUCfHE9xdZ9NzydGuze+K4FGrkTRWikvoUjVdKKEmj+51xkJonHOUtFyTKNZ8fE3k8
+         n2mvmJWCsJv2SuD0lN1+Ao+lt9oMDLmPksYpizz9qGjWMmSZjRdT014Qvq/AazOMe+lz
+         EWc3XnI6Ff08/IESsrCyfoQKheL6BpyxJrDZT3skcTlAm87BPKgTLJcu96KLQyBKwJe3
+         GvvglTGHlqgekGZWihpodT1+zUyXqRmDA5a6IGWeis9Ak8Y9aGxTXnCL/8TwIWwMMCjt
+         PZq1jN1OH0Q1TQfDXDPZVt1+pkwDFbksdGcMTMsJRNP6BTsIN9JtrwNWtYChVUbAd1RZ
+         2s1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lkI41JF3glGgO0AK4EpfNmpVmEtcA068KzSynd/K3x4=;
-        b=FGxsZzSPIELiaHzst3sTimvoHNDLlJR98NAy9ktfgQTsv39yusEsiZdf70srYLuWs/
-         Q/c213hF/e9ErwmKVz11BfeHP1BxarYD20bHUGvZu3eLi3FCfl7BwUF83HIxKlwpgQr1
-         GUi9LhQn7oa26MLMo6tg5ZQJ3sIENmB0f+039MmMtmxGRgPISYPqtRXpMSrwCo6bCcta
-         rHG7eWkjgSKwfvmA9md4kGGBmHdEXDdngEoffQJLTSDfLjKeKjkTiW2TckIKr7uEsT1a
-         5JuaLc3+EAFrbaAWAvCAi/XBQtzIRWM0qhSR7LT9BkLrHELTzOEq2bnsIabw6oCVcIbW
-         1KoQ==
-X-Gm-Message-State: AOAM5316r0Ji7KgA0em5vnRbVndVt6ESgYcGBzD29pG4Zvsl+UgEQPBP
-        64bwANbhoFm4XzAAuQ2/6gC/NYLsmEydHaxvoJgVaA==
-X-Google-Smtp-Source: ABdhPJzQEF6ln2cBWbRlqVbdVROYbIRp/hFzVIu8iG19W/gHz9aR6E8sJurCEHQLQxIb1Fye1sh4H66XW89c4fQUbuI=
-X-Received: by 2002:a5d:6241:0:b0:207:ac0e:3549 with SMTP id
- m1-20020a5d6241000000b00207ac0e3549mr6211995wrv.343.1649807322726; Tue, 12
- Apr 2022 16:48:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220412154817.2728324-1-irogers@google.com> <YlX5U+Qelf/rBdau@google.com>
-In-Reply-To: <YlX5U+Qelf/rBdau@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 12 Apr 2022 16:48:28 -0700
-Message-ID: <CAP-5=fUDQGtNn39xDSxagwVzN95dohNrfiU_a3pU8zkiv2-6tw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Tidy up symbol end fixup
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iHgRgX3+0ilVJ9YEz+Ro35NSCV1c4ZJEIy9ObWgb1b8=;
+        b=Q8Kxc0x6+Zc/r6JSxocIBwZGA84NYG5HTdyGkkfF/1gqB2pBG70bPDA9vm0zUVRz50
+         PZROhheS5k0S4LD/Oij2TVW41hQd0PtvZfr0JLdrT79u6UcjFT6lxm0nFKm/mSlFMVRO
+         Kg/uBKy5NiTcsJ0xEtr6d5UZw46NUJYI+T1wjHxbbJT6iHi7Fzeu/Yk1EX8Kl3u6dCwT
+         MScbuxcpH9ILCZ1CYKkLzHfcNfMgZNr/pAEMosBKPkbmLAudZ4m/9dDtNFxorjBJtmHW
+         ofjUVIL4GDwKyZv1Ix9sWl56rrNaaWeEbw5mghsE86gxYZv/ghP2FFw85qUK1Zve3iAa
+         q5ZA==
+X-Gm-Message-State: AOAM5318dRUq2U7HQJ09gC7xrsk/taM7oPvtT2nah/y6D64exIY7UmX4
+        P7FbgfjUkRobTz4hHCdoGAVBig==
+X-Google-Smtp-Source: ABdhPJz6nR5gS7smVj1tOoFEo1ZKYCvXsj50KSC95aQgmU9VFWO11RjMevciiQIBq2XNa9yaSNR2HA==
+X-Received: by 2002:a17:907:97d4:b0:6e8:6b69:7120 with SMTP id js20-20020a17090797d400b006e86b697120mr17895555ejc.531.1649811759886;
+        Tue, 12 Apr 2022 18:02:39 -0700 (PDT)
+Received: from localhost.localdomain (111-250-44-108.dynamic-ip.hinet.net. [111.250.44.108])
+        by smtp.gmail.com with ESMTPSA id e11-20020a50becb000000b0041b64129200sm475834edk.50.2022.04.12.18.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Apr 2022 18:02:39 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
         German Gomez <german.gomez@arm.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Li Huafei <lihuafei1@huawei.com>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
-        William Cohen <wcohen@redhat.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Denis Nikitin <denik@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] perf arm-spe: Test memory samples
+Date:   Wed, 13 Apr 2022 09:02:21 +0800
+Message-Id: <20220413010221.81332-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 3:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hi Ian,
->
-> On Tue, Apr 12, 2022 at 08:48:13AM -0700, Ian Rogers wrote:
-> > Fixing up more symbol ends as introduced in:
-> > https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
-> > caused perf annotate to run into memory limits - every symbol holds
-> > all the disassembled code in the annotation, and so making symbols
-> > ends further away dramatically increased memory usage (40MB to
-> >  >1GB). Modify the symbol end logic so that special kernel cases aren't
-> > applied in the common case.
-> >
-> > v2. Drops a merged patch. Fixes a build issue with libbfd enabled.
->
-> How about just like this?  We can get rid of arch functions as they
-> mostly do the same thing (kernel vs module boundary check).
->
-> Not tested. ;-)
->
-> Thanks,
-> Namhyung
->
-> --------------8<-------------
->
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index dea0fc495185..df41d7266d91 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -35,6 +35,7 @@
->  #include "path.h"
->  #include <linux/ctype.h>
->  #include <linux/zalloc.h>
-> +#include <internal/lib.h>  // page_size
->
->  #include <elf.h>
->  #include <limits.h>
-> @@ -231,8 +226,16 @@ void symbols__fixup_end(struct rb_root_cached *symbols)
->                 prev = curr;
->                 curr = rb_entry(nd, struct symbol, rb_node);
->
-> -               if (prev->end == prev->start || prev->end != curr->start)
-> -                       arch__symbols__fixup_end(prev, curr);
-> +               if (prev->end == prev->start) {
-> +                       /* Last kernel symbol mapped to end of page */
+Add a new test to verify the Arm SPE synthesized memory samples with
+'perf mem report' command.
 
-I like the simpler logic but don't like applying this in symbol-elf
-given the comment says it is kernel specific - so we could keep the
-is_kernel change.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/tests/shell/test_arm_spe.sh | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-> +                       if (!strchr(prev->name, '[') != !strchr(curr->name, '['))
+diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
+index e59044edc406..b36125e127eb 100755
+--- a/tools/perf/tests/shell/test_arm_spe.sh
++++ b/tools/perf/tests/shell/test_arm_spe.sh
+@@ -62,6 +62,18 @@ perf_report_samples() {
+ 		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
+ }
+ 
++perf_mem_report_samples() {
++	echo "Looking at perf.data file for reporting memory samples:"
++
++	# Below is an example of the memory samples reporting:
++	#   20.71%    1696    27    L1 hit     [k] el0t_64_sync_handler    [kernel.kallsyms]    ...
++	#   17.21%    1903    20    L1 hit     [k] el0t_64_sync            [kernel.kallsyms]    ...
++	#    8.52%     897    21    L1 hit     [k] ksys_read               [kernel.kallsyms]    ...
++	#    0.12%      16    17    L1 hit     [.] 0x0000000000004ce8      dd                   ...
++	perf mem report --stdio -i ${perfdata} 2>&1 | \
++		egrep " +[0-9]+\.[0-9]+% +[0-9]+ +[0-9]+ .* +$1 " > /dev/null 2>&1
++}
++
+ arm_spe_snapshot_test() {
+ 	echo "Recording trace with snapshot mode $perfdata"
+ 	perf record -o ${perfdata} -e arm_spe// -S \
+@@ -79,7 +91,8 @@ arm_spe_snapshot_test() {
+ 	wait $PERFPID
+ 
+ 	perf_script_samples dd &&
+-	perf_report_samples dd
++	perf_report_samples dd &&
++	perf_mem_report_samples dd
+ 
+ 	err=$?
+ 	arm_spe_report "SPE snapshot testing" $err
+-- 
+2.25.1
 
-I find this condition not to be intention revealing. On ARM there is
-also an || for the condition reversed. When this is in an is_kernel
-block then I think it is clear this is kernel hack, so I think it is
-good to comment on what the condition is for.
-
-> +                               prev->end = roundup(prev->end + 1, page_size);
-
-Currently the roundup varies per architecture, but it is not clear to
-me that it matters.
-
-> +                       else
-
-I think we should comment here that we're extending zero sized symbols
-to the start of the next symbol.
-
-> +                               prev->end = curr->start;
-> +
-> +                       pr_debug4("%s sym:%s end:%#" PRIx64 "\n",
-> +                                 __func__, prev->name, prev->end);
-> +               }
-
-Thanks,
-Ian
-
->         }
->
->         /* Last entry */
