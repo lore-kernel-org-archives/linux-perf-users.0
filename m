@@ -2,100 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44BEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 02:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B679C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 10:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239538AbiDNCkY (ORCPT
+        id S239798AbiDNKcU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 22:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57734 "EHLO
+        Thu, 14 Apr 2022 06:32:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239530AbiDNCkX (ORCPT
+        with ESMTP id S239652AbiDNKcS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 22:40:23 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBEAC32EFE
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 19:37:58 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id s18so7555483ejr.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 19:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uc7ry7HIsnf2r8nUN2XsM9Cr609Rg9Ev/nf0gRDdVjA=;
-        b=J0EA2TPN5DF45RPQJxsxLx9xc2kpvx4GDfs7GmNxtpSy3srw/qZOuOOnaLJe6pfBYu
-         nJ/8EahmmrlsMrZxJ/kmV6hFdQWckTo0h2YFcNcLs91EfnKG7MFj7PRJwvOvDAC+Qvt5
-         jdt70t/HBqRAc94klhFS82Q1W/wvvCUC9JARqYX130KlM26o7BehHtm056rttE2ManH2
-         2qs+554u0U5lgCRra3W/8vKH7jA61mqurSeavoBH4IQE3BSH2mBVDdWKGKH0Ex4wXrr+
-         IddfVTGZEU/Ef78FbKae3ynglEcgS+Q13QmkIoi0KIZKOiyE9B/6zeEiBRbZO5PsCWMz
-         vQxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uc7ry7HIsnf2r8nUN2XsM9Cr609Rg9Ev/nf0gRDdVjA=;
-        b=d+noaCy6xvY/9JpCoW6t4VxKCIovjbG0kIPe1JuBCXCp9UUduKybu7Cv9k+f/mibbr
-         RiN4lBVRnqh0MChO4Kek/VXyHSC5FTpCu7wgm7qR9Z4c8cVu59aVUlk4yAUtlaPmwNdE
-         rRtVIlMlVbKP3yD0TsBSplnGJIhR8LDjw99AU+kxCB/W9OzN+CDAVyDX78n0Y3y7x0Xy
-         Ed/Kz0NBrFt9IxyrfcwQGn1T4WEQj8vLAz6jz7kkma+TA4uBjmTFqVwvt+6C+fIj43Wv
-         VvH7qaqIFDJzprf+4/twGF1sU5LIiU2dFLc0z/bJ4A6IuPYVln+O9VRsBYhuaQbLo3Zs
-         hNKQ==
-X-Gm-Message-State: AOAM533TFtcqBN5vu9COOQSeBk8W7B39uZ1DPaBsDC5ph+eVn4S8lquY
-        K+fr3b/68Rq1toY3agQwNJ72nw==
-X-Google-Smtp-Source: ABdhPJykhBqOYl/1R7/tZiqUw1EGHPtXtHH5Em+FxWU65fkV7sCECnF78Jm7X+6uOY/+qCV0ESpJ6w==
-X-Received: by 2002:a17:906:7314:b0:6df:839f:af7 with SMTP id di20-20020a170906731400b006df839f0af7mr497470ejc.65.1649903877223;
-        Wed, 13 Apr 2022 19:37:57 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id lg4-20020a170906f88400b006e869103240sm193616ejb.131.2022.04.13.19.37.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Apr 2022 19:37:56 -0700 (PDT)
-Date:   Thu, 14 Apr 2022 10:37:51 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 14 Apr 2022 06:32:18 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0B93D3BA5F;
+        Thu, 14 Apr 2022 03:29:53 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71846139F;
+        Thu, 14 Apr 2022 03:29:53 -0700 (PDT)
+Received: from [10.32.36.25] (e121896.Emea.Arm.com [10.32.36.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8A723F5A1;
+        Thu, 14 Apr 2022 03:29:50 -0700 (PDT)
+Message-ID: <9ad30442-41f8-6e17-cb4a-ab102b3ebd69@arm.com>
+Date:   Thu, 14 Apr 2022 11:29:48 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v2] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE
+ event
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        German Gomez <german.gomez@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf arm-spe: Test memory samples
-Message-ID: <20220414023751.GA539224@leoy-ThinkPad-X240s>
-References: <20220413010221.81332-1-leo.yan@linaro.org>
- <21978774-356b-bc08-ba68-80d877e2b6b4@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <21978774-356b-bc08-ba68-80d877e2b6b4@arm.com>
+References: <20220413092317.756022-1-leo.yan@linaro.org>
+ <Yld4fzWWY07ksB+5@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <Yld4fzWWY07ksB+5@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 06:17:18PM +0100, German Gomez wrote:
+
+
+On 14/04/2022 02:27, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Apr 13, 2022 at 05:23:17PM +0800, Leo Yan escreveu:
+>> Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
+>> is not available") "perf mem report" and "perf report --mem-mode"
+>> don't report result if the PERF_SAMPLE_DATA_SRC bit is missed in sample
+>> type.
+>>
+>> The commit ffab48705205 ("perf: arm-spe: Fix perf report --mem-mode")
+>> partially fixes the issue.  It adds PERF_SAMPLE_DATA_SRC bit for Arm SPE
+>> event, this allows the perf data file generated by kernel v5.18-rc1 or
+>> later version can be reported properly.
+>>
+>> On the other hand, perf tool still fails to be backward compatibility
+>> for a data file recorded by an older version's perf which contains Arm
+>> SPE trace data.  This patch is a workaround in reporting phase, when
+>> detects ARM SPE PMU event and without PERF_SAMPLE_DATA_SRC bit, it will
+>> force to set the bit in the sample type and give a warning info.
+>>
+>> Fixes: bb30acae4c4d ("perf report: Bail out --mem-mode if mem info is not available")
+>> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+>> Tested-by: German Gomez <german.gomez@arm.com>
+>> ---
+>> v2: Change event name from "arm_spe_" to "arm_spe";
+>>     Add German's test tag.
 > 
-> On 13/04/2022 02:02, Leo Yan wrote:
-> > Add a new test to verify the Arm SPE synthesized memory samples with
-> > 'perf mem report' command.
-> >
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Tentatively applied, would be great to have James' and Ravi's
+> Acked-by/Reviewed-by, which I'll add before pushing this out if provided
+> in time.
 > 
-> Reviewed-by: German Gomez <german.gomez@arm.com>
+> - Arnaldo
+>  
+>>  tools/perf/builtin-report.c | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+>> index 1ad75c7ba074..acb07a4a9b67 100644
+>> --- a/tools/perf/builtin-report.c
+>> +++ b/tools/perf/builtin-report.c
+>> @@ -353,6 +353,7 @@ static int report__setup_sample_type(struct report *rep)
+>>  	struct perf_session *session = rep->session;
+>>  	u64 sample_type = evlist__combined_sample_type(session->evlist);
+>>  	bool is_pipe = perf_data__is_pipe(session->data);
+>> +	struct evsel *evsel;
+>>  
+>>  	if (session->itrace_synth_opts->callchain ||
+>>  	    session->itrace_synth_opts->add_callchain ||
+>> @@ -407,6 +408,21 @@ static int report__setup_sample_type(struct report *rep)
+>>  	}
+>>  
+>>  	if (sort__mode == SORT_MODE__MEMORY) {
+>> +		/*
+>> +		 * FIXUP: prior to kernel 5.18, Arm SPE missed to set
+>> +		 * PERF_SAMPLE_DATA_SRC bit in sample type.  For backward
+>> +		 * compatibility, set the bit if it's an old perf data file.
+>> +		 */
+>> +		evlist__for_each_entry(session->evlist, evsel) {
+>> +			if (strstr(evsel->name, "arm_spe") &&
+>> +				!(sample_type & PERF_SAMPLE_DATA_SRC)) {
+>> +				ui__warning("PERF_SAMPLE_DATA_SRC bit is not set "
+>> +					    "for Arm SPE event.\n");
 
-Thanks for reviewing.
+Looks ok to me. Personally I would remove the warning, otherwise people are going to start
+thinking that they need to do something about it or something bad has happened.
 
-> Thanks for the patch.
+But because we've fixed it up there shouldn't really need to be a warning or any action.
+
+I don't feel too strongly about this though, so I will leave it up to Leo to make the
+final decision:
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
+>> +				evsel->core.attr.sample_type |= PERF_SAMPLE_DATA_SRC;
+>> +				sample_type |= PERF_SAMPLE_DATA_SRC;
+>> +			}
+>> +		}
+>> +
+>>  		if (!is_pipe && !(sample_type & PERF_SAMPLE_DATA_SRC)) {
+>>  			ui__error("Selected --mem-mode but no mem data. "
+>>  				  "Did you call perf record without -d?\n");
+>> -- 
+>> 2.25.1
 > 
-> There are some tests for perf_event_attr fields. We added one for SPE
-> recently [1], but it's not checking the sample_type attribute yet.
-> 
-> We could update it from our side and send another patch, to test the
-> DATA_SRC bit is not missing.
-
-Agreed, it's better to update the patch for checking DATA_SRC bit and
-resend it.  Thanks!
-
-Leo
-
-> [1] https://lore.kernel.org/all/20220126160710.32983-1-german.gomez@arm.com/
