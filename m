@@ -2,57 +2,36 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521D5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 18:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B96C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 22:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245724AbiDNS2K (ORCPT
+        id S1347122AbiDNWrS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 14:28:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34724 "EHLO
+        Thu, 14 Apr 2022 18:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245321AbiDNS1a (ORCPT
+        with ESMTP id S1347120AbiDNWrR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 14:27:30 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CD1CA6EB;
-        Thu, 14 Apr 2022 11:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649960704; x=1681496704;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bxIt+MQ5euzHqb8H1P7gjRCbt4hKJ/40JyCSW+XYNfE=;
-  b=RULfNPKnV8ZDEmgtxagLFO1Ar/8WFaIp9T8Dz5djlsKjFZoTDLTKUJ/l
-   /DJyxUOgzhdhEULnD+V0PQ5A0sYfPRoyE2BGsYwxiWPAoPTvC2/HqN5py
-   eXhjo6+UtdKgB1T8iAwnu8gLRwaGtl5ScDxVkh8ooda4zd1qWxp5aL/4P
-   BBGVxAbxP4v54+mNlbclxkGm2v7xORzVkFOc68utBE6dj7+kCgRHyGyZU
-   BpgGzFix4hCZFfPA2CEidDfPX0tL9Rdvsi4mRW2+HTHChKH/EhGLUvfV9
-   ZmnvU9txqZIF4L/OligHQOR1PlXk20avZnXj8vXOCJzHW0E2GHqZtqfhI
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="288060358"
-X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
-   d="scan'208";a="288060358"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 11:25:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
-   d="scan'208";a="527500559"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 14 Apr 2022 11:25:03 -0700
-Received: from [10.209.96.223] (kliang2-MOBL.ccr.corp.intel.com [10.209.96.223])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 457AE5805BD;
-        Thu, 14 Apr 2022 11:25:02 -0700 (PDT)
-Message-ID: <28285c3a-a577-14ca-5e88-6101217ea73f@linux.intel.com>
-Date:   Thu, 14 Apr 2022 14:25:01 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 03/14] perf vendor events intel: Add sapphirerapids events
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
+        Thu, 14 Apr 2022 18:47:17 -0400
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E893EBB3;
+        Thu, 14 Apr 2022 15:44:50 -0700 (PDT)
+Date:   Thu, 14 Apr 2022 22:44:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+        s=protonmail2; t=1649976281;
+        bh=NbUyMRXU3YGyouZhFWR+9oe5iiAhaIN84BE7CsU16Zc=;
+        h=Date:To:From:Cc:Reply-To:Subject:Message-ID:From:To:Cc:Date:
+         Subject:Reply-To:Feedback-ID:Message-ID;
+        b=lE7nwooIHB/4IgEfwRdkbBZ7P0LpWSGdD9zZmqLTeCGJCVWDYrAoZljZGQSPtWUV6
+         rJCe1lEnjKjBgjsPGaNVXDv7io4kZN1nziWGF8tu+vJqa0Q2A5p6mX78pU1p85tLaP
+         gRicHZEM87UVPIsTECwtmhRiEDRP/PrGHKd/RmoALy738gTUed7bIpeMH7W5DuDyEv
+         RkEg0ckD6yNgDX7XsSrOdPmiKaX4CTS0cfWVCTWUuhCDP8aPojWmfXVMTqlPRaGTQc
+         ZM9U7wl49sykLy3ZzCyhAfu4WwftGEFkth+U4v0m4F4egi9Y4donykcb+azNwS6GEr
+         i86EhtsJVfp/g==
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>
+From:   Alexander Lobakin <alobakin@pm.me>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,58 +39,74 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20220413210503.3256922-1-irogers@google.com>
- <20220413210503.3256922-3-irogers@google.com>
- <368c5b92-f035-41cc-96a8-4908f1325462@linux.intel.com>
- <CAP-5=fWpECOtC8jc6up4LRFon1v0DBN1Y6LJsimEtuPfXcvJuA@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fWpECOtC8jc6up4LRFon1v0DBN1Y6LJsimEtuPfXcvJuA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        =?utf-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alexander Lobakin <alobakin@pm.me>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Chenbo Feng <fengc@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        Thomas Graf <tgraf@suug.ch>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: [PATCH bpf-next 00/11] bpf: random unpopular userspace fixes (32 bit et al.)
+Message-ID: <20220414223704.341028-1-alobakin@pm.me>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This mostly issues the cross build (1) errors for 32 bit (2)
+MIPS (3) with minimal configuration (4) on Musl (5). The majority
+of them aren't yesterday's, so it is a "who does need it outside
+of x86_64 or ARM64?" moment again.
+Trivial stuff in general, not counting the bpf_cookie build fix.
+
+Alexander Lobakin (11):
+  bpf, perf: fix bpftool compilation with !CONFIG_PERF_EVENTS
+  bpf: always emit struct bpf_perf_link BTF
+  tools, bpf: fix bpftool build with !CONFIG_BPF_EVENTS
+  samples: bpf: add 'asm/mach-generic' include path for every MIPS
+  samples: bpf: use host bpftool to generate vmlinux.h, not target
+  tools, bpf: fix fcntl.h include in bpftool
+  samples: bpf: fix uin64_t format literals
+  samples: bpf: fix shifting unsigned long by 32 positions
+  samples: bpf: fix include order for non-Glibc environments
+  samples: bpf: fix -Wsequence-point
+  samples: bpf: xdpsock: fix -Wmaybe-uninitialized
+
+ include/linux/perf_event.h              |  2 ++
+ kernel/bpf/syscall.c                    |  4 +++-
+ samples/bpf/Makefile                    |  7 ++++---
+ samples/bpf/cookie_uid_helper_example.c | 12 ++++++------
+ samples/bpf/lathist_kern.c              |  2 +-
+ samples/bpf/lwt_len_hist_kern.c         |  2 +-
+ samples/bpf/lwt_len_hist_user.c         |  4 ++--
+ samples/bpf/task_fd_query_user.c        |  2 +-
+ samples/bpf/test_lru_dist.c             |  3 ++-
+ samples/bpf/tracex2_kern.c              |  2 +-
+ samples/bpf/xdpsock_user.c              |  5 +++--
+ tools/bpf/bpftool/tracelog.c            |  2 +-
+ 12 files changed, 27 insertions(+), 20 deletions(-)
+
+--
+2.35.2
 
 
-On 4/14/2022 12:36 PM, Ian Rogers wrote:
-> On Thu, Apr 14, 2022 at 8:03 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 4/13/2022 5:04 PM, Ian Rogers wrote:
->>> Events were generated from 01.org using:
->>> https://github.com/intel/event-converter-for-linux-perf
->>>
->>> Signed-off-by: Ian Rogers<irogers@google.com>
->>> ---
->>>    tools/perf/pmu-events/arch/x86/mapfile.csv    |    1 +
->>>    .../arch/x86/sapphirerapids/cache.json        | 1083 ++++++++++++++
->>>    .../x86/sapphirerapids/floating-point.json    |  218 +++
->>>    .../arch/x86/sapphirerapids/frontend.json     |  471 ++++++
->>>    .../arch/x86/sapphirerapids/memory.json       |  415 ++++++
->>>    .../arch/x86/sapphirerapids/other.json        |  329 +++++
->>>    .../arch/x86/sapphirerapids/pipeline.json     | 1271 +++++++++++++++++
->>>    .../x86/sapphirerapids/virtual-memory.json    |  225 +++
->>
->> Thank you very much Ian for the patches. They all looks good to me.
->>
->>       Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->>
->> BTW: I think the uncore events for SPR are also published in 01.org.
->> Do you have plan to add them later?
-> 
-> Thanks Kan, we need to add the csv file to the github project to make
-> this work. I can make a basic one if that works?
-> 
-
-I think Zhengjun may already have one. Zhengjun?
-
-Thanks,
-Kan
