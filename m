@@ -2,201 +2,289 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75869C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 13:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6F1C43217
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 14:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244952AbiDNNgu (ORCPT
+        id S1350739AbiDNOYB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 09:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48280 "EHLO
+        Thu, 14 Apr 2022 10:24:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244645AbiDNN1y (ORCPT
+        with ESMTP id S1345128AbiDNNpJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 09:27:54 -0400
+        Thu, 14 Apr 2022 09:45:09 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAB2A0BF5;
-        Thu, 14 Apr 2022 06:20:32 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KfKlz56h8zgYFr;
-        Thu, 14 Apr 2022 21:18:39 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE6D5FD5;
+        Thu, 14 Apr 2022 06:42:40 -0700 (PDT)
+Received: from kwepemi100016.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KfLFW1Dt7zgYjT;
+        Thu, 14 Apr 2022 21:40:47 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ kwepemi100016.china.huawei.com (7.221.188.123) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 14 Apr 2022 21:20:29 +0800
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <john.garry@huawei.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH v7 0/7] Add support for HiSilicon PCIe Tune and Trace
- device
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20220407125841.3678-1-yangyicong@hisilicon.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <701892ee-de70-e15c-6d9e-083268e94b77@huawei.com>
-Date:   Thu, 14 Apr 2022 21:20:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+ 15.1.2375.24; Thu, 14 Apr 2022 21:42:37 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 14 Apr 2022 21:42:36 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <ast@kernel.org>,
+        <daniel@iogearbox.net>, <andrii@kernel.org>, <kafai@fb.com>,
+        <songliubraving@fb.com>, <yhs@fb.com>, <john.fastabend@gmail.com>,
+        <kpsingh@kernel.org>, <nathan@kernel.org>,
+        <ndesaulniers@google.com>, <trix@redhat.com>, <ak@linux.intel.com>,
+        <adrian.hunter@intel.com>, <james.clark@arm.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <llvm@lists.linux.dev>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf llvm: Fix compile bpf failed to cope with latest llvm
+Date:   Thu, 14 Apr 2022 21:41:34 +0800
+Message-ID: <20220414134134.247912-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-In-Reply-To: <20220407125841.3678-1-yangyicong@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500009.china.huawei.com (7.192.105.203)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Bjorn,
+Inline assembly used by asm/sysreg.h is incompatible with latest llvm,
+If bpf C program include "linux/ptrace.h" (which is common), compile will fail:
 
-Since it's a device about tuning and analyzing PCIe link in your realm and you've given
-helpful comments in RFC and v1 version, looking forward to see your opnion on this
-driver as the user interface has changed to perf. Also to confirm that the hotplug problem
-mentioned in RFC[1] has been resolved in a proper way.
+ # perf --debug verbose record -e bpf-output/no-inherit,name=evt/ \
+                              -e ./perf_bpf_test.c/map:channel.event=evt/ ls
+ [SNIP]
+ /lib/modules/5.17/build/./arch/x86/include/asm/arch_hweight.h:20:7: error: invalid output constraint '=a' in asm
+                          : "="REG_OUT (res)
+                           ^
+ /lib/modules/5.17/build/./arch/x86/include/asm/arch_hweight.h:48:7: error: invalid output constraint '=a' in asm
+                          : "="REG_OUT (res)
+                           ^
+ In file included from /root/projects/perf-bpf/perf_bpf_test.c:2:
+ In file included from /lib/modules/5.17/build/./include/linux/ptrace.h:6:
+ In file included from /lib/modules/5.17/build/./include/linux/sched.h:12:
+ In file included from /lib/modules/5.17/build/./arch/x86/include/asm/current.h:6:
+ In file included from /lib/modules/5.17/build/./arch/x86/include/asm/percpu.h:27:
+ In file included from /lib/modules/5.17/build/./include/linux/kernel.h:25:
+ In file included from /lib/modules/5.17/build/./include/linux/math.h:6:
+ /lib/modules/5.17.0/build/./arch/x86/include/asm/div64.h:85:28: error: invalid output constraint '=a' in asm
+         asm ("mulq %2; divq %3" : "=a" (q)
+ [SNIP]
+ # cat /root/projects/perf-bpf/perf_bpf_test.c
+ /************************ BEGIN **************************/
+ #include <uapi/linux/bpf.h>
+ #include <linux/ptrace.h>
+ #include <linux/types.h>
+ #define SEC(NAME) __attribute__((section(NAME), used))
 
-[1] https://lore.kernel.org/linux-pci/20200710230913.GA90375@bjorn-Precision-5520/
-Thanks.
+ struct bpf_map_def {
+         unsigned int type;
+         unsigned int key_size;
+         unsigned int value_size;
+         unsigned int max_entries;
+ };
 
-On 2022/4/7 20:58, Yicong Yang wrote:
-> HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
-> integrated Endpoint (RCiEP) device, providing the capability
-> to dynamically monitor and tune the PCIe traffic (tune),
-> and trace the TLP headers (trace).
-> 
-> PTT tune is designed for monitoring and adjusting PCIe link parameters.
-> We provide several parameters of the PCIe link. Through the driver,
-> user can adjust the value of certain parameter to affect the PCIe link
-> for the purpose of enhancing the performance in certian situation.
-> 
-> PTT trace is designed for dumping the TLP headers to the memory, which
-> can be used to analyze the transactions and usage condition of the PCIe
-> Link. Users can choose filters to trace headers, by either requester
-> ID, or those downstream of a set of Root Ports on the same core of the
-> PTT device. It's also supported to trace the headers of certain type and
-> of certain direction.
-> 
-> The driver registers a PMU device for each PTT device. The trace can
-> be used through `perf record` and the traced headers can be decoded
-> by `perf report`. The perf command support for the device is also
-> added in this patchset. The tune can be used through the sysfs
-> attributes of related PMU device. See the documentation for the
-> detailed usage.
-> 
-> Change since v6:
-> - Fix W=1 errors reported by lkp test, thanks
-> 
-> Change since v5:
-> - Squash the PMU patch into PATCH 2 suggested by John
-> - refine the commit message of PATCH 1 and some comments
-> Link: https://lore.kernel.org/lkml/20220308084930.5142-1-yangyicong@hisilicon.com/
-> 
-> Change since v4:
-> Address the comments from Jonathan, John and Ma Ca, thanks.
-> - Use devm* also for allocating the DMA buffers
-> - Remove the IRQ handler stub in Patch 2
-> - Make functions waiting for hardware state return boolean
-> - Manual remove the PMU device as it should be removed first
-> - Modifier the orders in probe and removal to make them matched well
-> - Make available {directions,type,format} array const and non-global
-> - Using the right filter list in filters show and well protect the
->   list with mutex
-> - Record the trace status with a boolean @started rather than enum
-> - Optimize the process of finding the PTT devices of the perf-tool
-> Link: https://lore.kernel.org/linux-pci/20220221084307.33712-1-yangyicong@hisilicon.com/
-> 
-> Change since v3:
-> Address the comments from Jonathan and John, thanks.
-> - drop members in the common struct which can be get on the fly
-> - reduce buffer struct and organize the buffers with array instead of list
-> - reduce the DMA reset wait time to avoid long time busy loop
-> - split the available_filters sysfs attribute into two files, for root port
->   and requester respectively. Update the documentation accordingly
-> - make IOMMU mapping check earlier in probe to avoid race condition. Also
->   make IOMMU quirk patch prior to driver in the series
-> - Cleanups and typos fixes from John and Jonathan
-> Link: https://lore.kernel.org/linux-pci/20220124131118.17887-1-yangyicong@hisilicon.com/
-> 
-> Change since v2:
-> - address the comments from Mathieu, thanks.
->   - rename the directory to ptt to match the function of the device
->   - spinoff the declarations to a separate header
->   - split the trace function to several patches
->   - some other comments.
-> - make default smmu domain type of PTT device to identity
->   Drop the RMR as it's not recommended and use an iommu_def_domain_type
->   quirk to passthrough the device DMA as suggested by Robin. 
-> Link: https://lore.kernel.org/linux-pci/20211116090625.53702-1-yangyicong@hisilicon.com/
-> 
-> Change since v1:
-> - switch the user interface of trace to perf from debugfs
-> - switch the user interface of tune to sysfs from debugfs
-> - add perf tool support to start trace and decode the trace data
-> - address the comments of documentation from Bjorn
-> - add RMR[1] support of the device as trace works in RMR mode or
->   direct DMA mode. RMR support is achieved by common APIs rather
->   than the APIs implemented in [1].
-> Link: https://lore.kernel.org/lkml/1618654631-42454-1-git-send-email-yangyicong@hisilicon.com/
-> [1] https://lore.kernel.org/linux-acpi/20210805080724.480-1-shameerali.kolothum.thodi@huawei.com/
-> 
-> Qi Liu (1):
->   perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
-> 
-> Yicong Yang (6):
->   iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to
->     identity
->   hwtracing: Add trace function support for HiSilicon PCIe Tune and
->     Trace device
->   hisi_ptt: Add support for dynamically updating the filter list
->   hisi_ptt: Add tune function support for HiSilicon PCIe Tune and Trace
->     device
->   docs: Add HiSilicon PTT device driver documentation
->   MAINTAINERS: Add maintainer for HiSilicon PTT driver
-> 
->  Documentation/trace/hisi-ptt.rst              |  303 +++++
->  MAINTAINERS                                   |    7 +
->  drivers/Makefile                              |    1 +
->  drivers/hwtracing/Kconfig                     |    2 +
->  drivers/hwtracing/ptt/Kconfig                 |   12 +
->  drivers/hwtracing/ptt/Makefile                |    2 +
->  drivers/hwtracing/ptt/hisi_ptt.c              | 1161 +++++++++++++++++
->  drivers/hwtracing/ptt/hisi_ptt.h              |  220 ++++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   16 +
->  tools/perf/arch/arm/util/auxtrace.c           |   76 +-
->  tools/perf/arch/arm/util/pmu.c                |    3 +
->  tools/perf/arch/arm64/util/Build              |    2 +-
->  tools/perf/arch/arm64/util/hisi_ptt.c         |  195 +++
->  tools/perf/util/Build                         |    2 +
->  tools/perf/util/auxtrace.c                    |    4 +
->  tools/perf/util/auxtrace.h                    |    1 +
->  tools/perf/util/hisi-ptt-decoder/Build        |    1 +
->  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   |  170 +++
->  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |   28 +
->  tools/perf/util/hisi_ptt.c                    |  218 ++++
->  tools/perf/util/hisi_ptt.h                    |   28 +
->  21 files changed, 2448 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/trace/hisi-ptt.rst
->  create mode 100644 drivers/hwtracing/ptt/Kconfig
->  create mode 100644 drivers/hwtracing/ptt/Makefile
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
->  create mode 100644 tools/perf/arch/arm64/util/hisi_ptt.c
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
->  create mode 100644 tools/perf/util/hisi_ptt.c
->  create mode 100644 tools/perf/util/hisi_ptt.h
-> 
+ static int (*perf_event_output)(void *, struct bpf_map_def *, int, void *,
+     unsigned long) = (void *)BPF_FUNC_perf_event_output;
+
+ struct bpf_map_def SEC("maps") channel = {
+         .type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
+         .key_size = sizeof(int),
+         .value_size = sizeof(__u32),
+         .max_entries = __NR_CPUS__,
+ };
+
+ #define MIN_BYTES 1024
+
+ SEC("func=vfs_read")
+ int bpf_myprog(struct pt_regs *ctx)
+ {
+         long bytes = ctx->dx;
+         if (bytes >= MIN_BYTES) {
+                 perf_event_output(ctx, &channel, BPF_F_CURRENT_CPU,
+                                   &bytes, sizeof(bytes));
+         }
+
+         return 0;
+ }
+
+char _license[] SEC("license") = "GPL";
+int _version SEC("version") = LINUX_VERSION_CODE;
+/************************* END ***************************/
+
+Compilation command is modified to be the same as that in samples/bpf/Makefile,
+use clang | opt | llvm-dis | llc chain of commands to solve the problem.
+see the comment in samples/bpf/Makefile.
+
+Modifications:
+1. Change "clang --target bpf" to chain of commands "clang | opt | llvm-dis | llc"
+2. Delete "CLANG_EMIT_LLVM" and "LLVM_OPTIONS_PIPE" macros from the compilation
+   command because the two macros are not defined and the content is empty.
+3. Add options llvm.llvm-opt-path, llvm.llvm-dis-path, and llvm.llc-path to
+   perf config for user-defined settings, which are similar to llvm.clang-path.
+4. Add "-Wno-address-of-packed-member" to resolve the compilation warning of
+   "/lib/modules/5.17/build/./arch/x86/include/asm/processor.h:552:17: \
+    warning: taking address of packed member 'sp0' of class or structure \
+    'x86_hw_tss' may result in an unaligned pointer value [-Waddress-of-packed-member]
+        this_cpu_write(cpu_tss_rw.x86_tss.sp0, sp0);
+                       ^~~~~~~~~~~~~~~~~~~~~~
+   /lib/modules/5.17/build/./include/linux/percpu-defs.h:508:68: note: \
+   expanded from macro 'this_cpu_write' \
+    #define this_cpu_write(pcp, val)        __pcpu_size_call(this_cpu_write_, pcp, val)",
+   which is similar to that of sample/bpf/Makefile.
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/Documentation/perf-config.txt | 16 ++++++++++-
+ tools/perf/util/llvm-utils.c             | 35 ++++++++++++++++++------
+ tools/perf/util/llvm-utils.h             |  4 +++
+ 3 files changed, 45 insertions(+), 10 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index 0420e71698ee..48f12bd6ca9a 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -655,6 +655,15 @@ llvm.*::
+ 	llvm.clang-path::
+ 		Path to clang. If omit, search it from $PATH.
+ 
++	llvm.llvm-opt-path::
++		Path to llvm opt. If omit, search it from $PATH.
++
++	llvm.llvm-dis-path::
++		Path to llvm-dis. If omit, search it from $PATH.
++
++	llvm.llc-path::
++		Path to llc. If omit, search it from $PATH.
++
+ 	llvm.clang-bpf-cmd-template::
+ 		Cmdline template. Below lines show its default value. Environment
+ 		variable is used to pass options.
+@@ -662,8 +671,13 @@ llvm.*::
+ 		"-DLINUX_VERSION_CODE=$LINUX_VERSION_CODE "	\
+ 		"$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
+ 		"-Wno-unused-value -Wno-pointer-sign "		\
++		"-Wno-address-of-packed-member "                \
+ 		"-working-directory $WORKING_DIR "		\
+-		"-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
++		"-c \"$CLANG_SOURCE\" "                               \
++		"-O2 -emit-llvm -Xclang -disable-llvm-passes -o - | " \
++		"$LLVM_OPT_EXEC -O2 -mtriple=bpf-pc-linux | "         \
++		"$LLVM_DIS_EXEC | "                                   \
++		"$LLC_EXEC -march=bpf -filetype=obj -o -"
+ 
+ 	llvm.clang-opt::
+ 		Options passed to clang.
+diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+index 96c8ef60f4f8..c939681dfafb 100644
+--- a/tools/perf/util/llvm-utils.c
++++ b/tools/perf/util/llvm-utils.c
+@@ -24,11 +24,18 @@
+ 		"-DLINUX_VERSION_CODE=$LINUX_VERSION_CODE "	\
+ 		"$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
+ 		"-Wno-unused-value -Wno-pointer-sign "		\
++		"-Wno-address-of-packed-member "		\
+ 		"-working-directory $WORKING_DIR "		\
+-		"-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
++		"-c \"$CLANG_SOURCE\" "				      \
++		"-O2 -emit-llvm -Xclang -disable-llvm-passes -o - | " \
++		"$LLVM_OPT_EXEC -O2 -mtriple=bpf-pc-linux | "	      \
++		"$LLVM_DIS_EXEC | "				      \
++		"$LLC_EXEC -march=bpf -filetype=obj -o -"
+ 
+ struct llvm_param llvm_param = {
+ 	.clang_path = "clang",
++	.llvm_opt_path = "opt",
++	.llvm_dis_path = "llvm-dis",
+ 	.llc_path = "llc",
+ 	.clang_bpf_cmd_template = CLANG_BPF_CMD_DEFAULT_TEMPLATE,
+ 	.clang_opt = NULL,
+@@ -48,6 +55,12 @@ int perf_llvm_config(const char *var, const char *value)
+ 
+ 	if (!strcmp(var, "clang-path"))
+ 		llvm_param.clang_path = strdup(value);
++	else if (!strcmp(var, "llvm-opt-path"))
++		llvm_param.llvm_opt_path = strdup(value);
++	else if (!strcmp(var, "llvm-dis-path"))
++		llvm_param.llvm_dis_path = strdup(value);
++	else if (!strcmp(var, "llc-path"))
++		llvm_param.llc_path = strdup(value);
+ 	else if (!strcmp(var, "clang-bpf-cmd-template"))
+ 		llvm_param.clang_bpf_cmd_template = strdup(value);
+ 	else if (!strcmp(var, "clang-opt"))
+@@ -456,6 +469,7 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+ 	char linux_version_code_str[64];
+ 	const char *clang_opt = llvm_param.clang_opt;
+ 	char clang_path[PATH_MAX], llc_path[PATH_MAX], abspath[PATH_MAX], nr_cpus_avail_str[64];
++	char llvm_opt_path[PATH_MAX], llvm_dis_path[PATH_MAX];
+ 	char serr[STRERR_BUFSIZE];
+ 	char *kbuild_dir = NULL, *kbuild_include_opts = NULL,
+ 	     *perf_bpf_include_opts = NULL;
+@@ -475,9 +489,10 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+ 	if (!template)
+ 		template = CLANG_BPF_CMD_DEFAULT_TEMPLATE;
+ 
+-	err = search_program_and_warn(llvm_param.clang_path,
+-			     "clang", clang_path);
+-	if (err)
++	if (search_program_and_warn(llvm_param.clang_path, "clang", clang_path) ||
++	    search_program_and_warn(llvm_param.llvm_opt_path, "opt", llvm_opt_path) ||
++	    search_program_and_warn(llvm_param.llvm_dis_path, "llvm-dis", llvm_dis_path) ||
++	    search_program_and_warn(llvm_param.llc_path, "llc", llc_path))
+ 		return -ENOENT;
+ 
+ 	/*
+@@ -495,21 +510,23 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+ 
+ 	snprintf(linux_version_code_str, sizeof(linux_version_code_str),
+ 		 "0x%x", kernel_version);
+-	if (asprintf(&perf_bpf_include_opts, "-I%s/bpf", perf_include_dir) < 0)
++	if (asprintf(&perf_bpf_include_opts, "-I%s/bpf", perf_include_dir) < 0) {
++		err = -ENOMEM;
+ 		goto errout;
++	}
++
+ 	force_set_env("NR_CPUS", nr_cpus_avail_str);
+ 	force_set_env("LINUX_VERSION_CODE", linux_version_code_str);
+ 	force_set_env("CLANG_EXEC", clang_path);
++	force_set_env("LLVM_OPT_EXEC", llvm_opt_path);
++	force_set_env("LLVM_DIS_EXEC", llvm_dis_path);
++	force_set_env("LLC_EXEC", llc_path);
+ 	force_set_env("CLANG_OPTIONS", clang_opt);
+ 	force_set_env("KERNEL_INC_OPTIONS", kbuild_include_opts);
+ 	force_set_env("PERF_BPF_INC_OPTIONS", perf_bpf_include_opts);
+ 	force_set_env("WORKING_DIR", kbuild_dir ? : ".");
+ 
+ 	if (opts) {
+-		err = search_program_and_warn(llvm_param.llc_path, "llc", llc_path);
+-		if (err)
+-			goto errout;
+-
+ 		err = -ENOMEM;
+ 		if (asprintf(&pipe_template, "%s -emit-llvm | %s -march=bpf %s -filetype=obj -o -",
+ 			      template, llc_path, opts) < 0) {
+diff --git a/tools/perf/util/llvm-utils.h b/tools/perf/util/llvm-utils.h
+index 7878a0e3fa98..e276d10f85b4 100644
+--- a/tools/perf/util/llvm-utils.h
++++ b/tools/perf/util/llvm-utils.h
+@@ -11,6 +11,10 @@
+ struct llvm_param {
+ 	/* Path of clang executable */
+ 	const char *clang_path;
++	/* Path of llvm opt executable */
++	const char *llvm_opt_path;
++	/* Path of llvm-dis executable */
++	const char *llvm_dis_path;
+ 	/* Path of llc executable */
+ 	const char *llc_path;
+ 	/*
+-- 
+2.30.GIT
+
