@@ -2,57 +2,43 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCDBC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 11:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECE6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 11:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239432AbiDNLD4 (ORCPT
+        id S240187AbiDNLyr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 07:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35100 "EHLO
+        Thu, 14 Apr 2022 07:54:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbiDNLDz (ORCPT
+        with ESMTP id S229990AbiDNLyq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 07:03:55 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B553C4B7
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 04:01:30 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id s25so5390748edi.13
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 04:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qVPWX0NcwYPADIuSMjN5vY8ZOKBiZLiUPYzVutSubY0=;
-        b=h32dmWUvdgZ9qgpE9bvZg9GQoBPG9oV8SxUqleymdkXJMcHKUmXFdOzXldZFMPB2pf
-         Y9Oj5UqPXfyR7/kXBaVqWOzHVtB3SuAbbOph9QrqCTCSxezSMK3J3I2ucT4V6wke1EDX
-         y2NbwAj2o8bG1cpkC4CN/E7teW9lxYQfsAq3pFHOVQZ6lutESB5218RbTCdh7aSEar8B
-         FBOMg9AQhpbJTdZaKcSZu+M2dx8XDlr6AZH9IJq+UUY/1Odxds0JGJTmc9DexM2yqDtm
-         khh2FUrYQIiWkCngjI9ZNXjW+x/Ma84Sb+OkxNb2QQfYSoQBwvzwPxvhuBVxojTz2SMH
-         sIfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qVPWX0NcwYPADIuSMjN5vY8ZOKBiZLiUPYzVutSubY0=;
-        b=FXZopH2etf+jj/Q9l3YptoeO5CIi6NA05eeyC6Da6rTIgVTaunbcrge7+eDrP6ELkH
-         WMQoyBZoI3ynw/kJiv5m4ZsJ/89WSlqEU34zVFHRuNdbDRsVuFw/rDa9Y1z+w8luakIF
-         iCsys1iru8BbID5yKbrf57Wz3nOAn39XznD10+0i4oLi0hlukaQc2K9J81ZwhVeIcDpQ
-         PVyG+NtJuWYsDVBtRJvSJbPgg09SGWPSzlgbSbPwzV4sA93WKkiNKpUZafY9GyUAbR19
-         vS9gkTzwXD15w7Mt5ZmH9hUj5t334ZkFl/8OiI8p4JXNNqSPQHHlW/acq0WBbY1jnY5Z
-         zZwQ==
-X-Gm-Message-State: AOAM531mqrE//hBNOWaeqQvGrT6Qy1kGl2NOANlY7shOme9nDRiE9n4I
-        eeq0Tw2lWX7dxrQofvPzeIa9Rw==
-X-Google-Smtp-Source: ABdhPJwb61LRI992HKv1xOAGxblCmB9FMrhAPcn3lxwB++HcuxKWM56ugynaBRppuJhRse1afygEJA==
-X-Received: by 2002:aa7:d497:0:b0:41d:6fed:9f90 with SMTP id b23-20020aa7d497000000b0041d6fed9f90mr2309569edr.325.1649934089340;
-        Thu, 14 Apr 2022 04:01:29 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id ah13-20020a1709069acd00b006e8a0b3e071sm523169ejc.110.2022.04.14.04.01.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Apr 2022 04:01:28 -0700 (PDT)
-Date:   Thu, 14 Apr 2022 19:01:24 +0800
-From:   Leo Yan <leo.yan@linaro.org>
+        Thu, 14 Apr 2022 07:54:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E8A6211D;
+        Thu, 14 Apr 2022 04:52:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 993D561896;
+        Thu, 14 Apr 2022 11:52:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC6CC385A1;
+        Thu, 14 Apr 2022 11:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649937141;
+        bh=WB7PfvcJeXvB4XqllL9QJvqkJ0Tac8DuyDc45w9vliY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QPSm2DurlaEc21S2pAeLWhY2fpbmKjl3Pg8G29ozFssKJBzfbufO82JgSwO1eNOVm
+         XQCwBwk0AbVb1FpHPcfUUGRfzqEU7fPoFxfmgOO9vH00OahEbbrlBktpEMBiUwvWdE
+         TaS3h6u6E/Qu3OsvPTMT5ujAQXNhN3BbtYWIQlb+fKoorxJHvf0oq8eAehTufXkr1H
+         jQt5zKsdH/lp7zh4vTE14+erKGI2KxBWcEHM2cj8GSE5SuHSiV7Jbnfp0vI8uJLx1z
+         iUzLs6xsxGGx/vM4938mkqdrYvRYN8Z6P8vZYROUGbyyAU4P78RPaqJWJFU67aDpCq
+         7G50vrCaKwiqw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B4FB540407; Thu, 14 Apr 2022 08:52:17 -0300 (-03)
+Date:   Thu, 14 Apr 2022 08:52:17 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+Cc:     Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,7 +50,7 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE
  event
-Message-ID: <20220414110124.GB598831@leoy-ThinkPad-X240s>
+Message-ID: <YlgK8dAY/mivWCD+@kernel.org>
 References: <20220413092317.756022-1-leo.yan@linaro.org>
  <Yld4fzWWY07ksB+5@kernel.org>
  <9ad30442-41f8-6e17-cb4a-ab102b3ebd69@arm.com>
@@ -72,11 +58,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <9ad30442-41f8-6e17-cb4a-ab102b3ebd69@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 11:29:48AM +0100, James Clark wrote:
+Em Thu, Apr 14, 2022 at 11:29:48AM +0100, James Clark escreveu:
+> 
+> 
 > On 14/04/2022 02:27, Arnaldo Carvalho de Melo wrote:
 > > Em Wed, Apr 13, 2022 at 05:23:17PM +0800, Leo Yan escreveu:
 > >> Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
@@ -142,18 +131,12 @@ On Thu, Apr 14, 2022 at 11:29:48AM +0100, James Clark wrote:
 > thinking that they need to do something about it or something bad has happened.
 > 
 > But because we've fixed it up there shouldn't really need to be a warning or any action.
-
-Understand.  The warning is not bad for developers but it might
-introduce confusion for users, and if we really want to check the sample
-type then we can use 'perf evlist' command, so it's not very useful for
-the warning.
-
-I will remove the warning and resend a new patch.
-
+> 
 > I don't feel too strongly about this though, so I will leave it up to Leo to make the
 > final decision:
 > 
 > Reviewed-by: James Clark <james.clark@arm.com>
 
-Thanks a lot for reviewing.
-Leo
+Thanks, collecting your review,
+
+- Arnaldo
