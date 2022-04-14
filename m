@@ -2,98 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7222C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 01:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE12C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 01:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239401AbiDNBXb (ORCPT
+        id S231431AbiDNB1O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 21:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
+        Wed, 13 Apr 2022 21:27:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236605AbiDNBXa (ORCPT
+        with ESMTP id S229875AbiDNB1N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 21:23:30 -0400
+        Wed, 13 Apr 2022 21:27:13 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0B150463;
-        Wed, 13 Apr 2022 18:21:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8568B17A9C;
+        Wed, 13 Apr 2022 18:24:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0F90CB8271B;
-        Thu, 14 Apr 2022 01:21:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51BBFC385A3;
-        Thu, 14 Apr 2022 01:21:00 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 291ECB8269B;
+        Thu, 14 Apr 2022 01:24:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D812C385A6;
+        Thu, 14 Apr 2022 01:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649899260;
-        bh=R03L3LDx0tIcm+BSCVo1s6eOzjl6+2OA8xlwc3fzCvw=;
+        s=k20201202; t=1649899486;
+        bh=dIFSmQFvO+u7t69e2aunIFG5AulvQBr/ncUxbYb4pcQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZItAT1Q+HPHZwPhbtTPEGOhnm8m9HDIXsWY1KcytYZ3U+Ue8jkdY7WJk99H8Ed9Cm
-         NLCIueHCyjsLEBxRAmakIFrdyrN3jt6dEPB6qby82znZCvjInF5UiQ05ABZiM4SJKM
-         H5eazO28HfvbHBDErCjj4kew6yAy4LBabfuwmdWOi5BlvVjrmdyJ/qh2CL4OVziHM5
-         90vX6ruhaf1p2Jg1W5tirJbmOgNTkPPhN/T807gvFPO1J4vVkQ66UtKNu8AqAkyvum
-         cBwW1jFDXpLhG9to57obHPERuEQRx0kKss80Hby76rsdhrDTyFs0qKCEllLlu3ZJR0
-         fsAXzpRVQun4w==
+        b=EenLTlV8oLBhvDxw/C5592woP0nHbx1g4nwECBVKHSC/o02vajjJANuWetn+Z/kQu
+         5ioz/SWtxy34O6ZJQme/aCO0BxQEEIsagqF721tnH1SaLdYs/dTSutV6qQnZvC7nFT
+         fCV8djjesWXIVBom7AxrOuIFP39jUjC7Fw/iL9YwwE9b6sNFgE8F8U8AGn8efJx4G4
+         vcZgEe5UByw4rdOpQeN6V1NJPvBesSBqj/wkgXvj7nqgSu2GqxWQ6924MjLmj/6w5c
+         c7c9SO1I1kFPA8SEzGYxciSLIC29AdrMZNGuAordDjm7JUqGDO1edku6S0j49aMc75
+         DeOA1UK6aboDg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9614440407; Wed, 13 Apr 2022 22:20:56 -0300 (-03)
-Date:   Wed, 13 Apr 2022 22:20:56 -0300
+        id 5A23140407; Wed, 13 Apr 2022 22:24:43 -0300 (-03)
+Date:   Wed, 13 Apr 2022 22:24:43 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     cgel.zte@gmail.com
-Cc:     mingo@redhat.com, mark.rutland@arm.com, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, james.clark@arm.com,
-        lv.ruyi@zte.com.cn, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH] perf stat: fix error check return value of hashmap__new()
-Message-ID: <Yld2+LwhYYe8XXmU@kernel.org>
-References: <20220413093302.2538128-1-lv.ruyi@zte.com.cn>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     German Gomez <german.gomez@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE
+ event
+Message-ID: <Yld324cGySbCPF9i@kernel.org>
+References: <20220413075124.635589-1-leo.yan@linaro.org>
+ <c21b3409-a8a0-aae7-7634-5e648f0a49b1@arm.com>
+ <20220413084941.GB521036@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220413093302.2538128-1-lv.ruyi@zte.com.cn>
+In-Reply-To: <20220413084941.GB521036@leoy-ThinkPad-X240s>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 13, 2022 at 09:33:02AM +0000, cgel.zte@gmail.com escreveu:
-> From: Lv Ruyi <lv.ruyi@zte.com.cn>
+Em Wed, Apr 13, 2022 at 04:49:41PM +0800, Leo Yan escreveu:
+> On Wed, Apr 13, 2022 at 09:15:40AM +0100, German Gomez wrote:
 > 
-> hashmap__new() returns ERR_PTR(-ENOMEM) when it fails, so we should use
-> IS_ERR() to check it in error handling path.
+> [...]
+> 
+> > >  	if (sort__mode == SORT_MODE__MEMORY) {
+> > > +		/*
+> > > +		 * FIXUP: prior to kernel 5.18, Arm SPE missed to set
+> > > +		 * PERF_SAMPLE_DATA_SRC bit in sample type.  For backward
+> > > +		 * compatibility, set the bit if it's an old perf data file.
+> > > +		 */
+> > > +		evlist__for_each_entry(session->evlist, evsel) {
+> > > +			if (strstr(evsel->name, "arm_spe_") &&
+> > 
+> > This didn't work for me when the file recorded "-e arm_spe//" instead of
+> > "-e arm_spe_0//". Could you remove the trailing _? With that:
+> 
+> Sure, will change to "arm_spe".  Just curious, if there any local
+> change at your side so we have the different event name?
 
-Thanks, applied.
-
-- Arnaldo
-
+Ok, waiting for v2
  
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: Lv Ruyi <lv.ruyi@zte.com.cn>
-> ---
->  tools/perf/util/stat.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> > Tested-by: German Gomez <german.gomez@arm.com>
 > 
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index ee6f03481215..817a2de264b4 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <errno.h>
-> +#include <linux/err.h>
->  #include <inttypes.h>
->  #include <math.h>
->  #include <string.h>
-> @@ -311,7 +312,7 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
->  
->  	if (!mask) {
->  		mask = hashmap__new(pkg_id_hash, pkg_id_equal, NULL);
-> -		if (!mask)
-> +		if (IS_ERR(mask))
->  			return -ENOMEM;
->  
->  		counter->per_pkg_mask = mask;
-> -- 
-> 2.25.1
+> Thanks a lot, German!
+> 
+> Leo
 
 -- 
 
