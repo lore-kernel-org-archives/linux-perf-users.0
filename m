@@ -2,121 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E08C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 12:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5D5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 12:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233651AbiDNMSn (ORCPT
+        id S242789AbiDNMew (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 08:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51400 "EHLO
+        Thu, 14 Apr 2022 08:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230491AbiDNMSn (ORCPT
+        with ESMTP id S243424AbiDNMet (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 08:18:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30835549C;
-        Thu, 14 Apr 2022 05:16:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6B4A461F1B;
-        Thu, 14 Apr 2022 12:16:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A300C385A1;
-        Thu, 14 Apr 2022 12:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649938577;
-        bh=FhgNB6nGbaSWR1zWFLwWKZoR5zU6ItbocIB/M0guKZs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u7cS44DIt07c6L3jcxE/iVa6IXQhSan6yRWtDkGh1YmxN4Gdrx0eJ1QAreNHEOyOY
-         DgJthEblm6HoCZddYZgv2uG8bOgkKQJ1awacUOuvnalwf07bmnxIP6OrA8h7X0Ccge
-         unClZKOikWRFVCSX/sljCl09QBdiGXQlohTPvtywJtOyyP/e+tQuehr4CbO5iVq1PN
-         t9pXbreKhwsNRIyNCwF+0ZPYaFgQtbWKWV8KkW6fulHsmgHSwSjbcW30l632jXHcDN
-         ut9CcnFPyYuwf/IQ1eDo02idh7baPZt9aY1fGQn71S/gJBjxWyW3CYdhcPsvweD1ur
-         I7kKPV0LsyWfw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 621BB40407; Thu, 14 Apr 2022 09:16:15 -0300 (-03)
-Date:   Thu, 14 Apr 2022 09:16:15 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     jolsa@kernel.org, disgoel@linux.vnet.ibm.com, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, linux-kernel@vger.kernel.org,
-        srikar@linux.vnet.ibm.com, irogers@google.com
-Subject: Re: [PATCH V3 0/2] Fix perf bench numa to work with machines having
- #CPUs > 1K
-Message-ID: <YlgQj40R3so8xz50@kernel.org>
-References: <20220412164059.42654-1-atrajeev@linux.vnet.ibm.com>
+        Thu, 14 Apr 2022 08:34:49 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0320390262
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 05:32:18 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id h23-20020a17090a051700b001c9c1dd3acbso5523668pjh.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 05:32:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Lb2k1BEpSa/+z3XM1HtbDM6QVDJOM+So55d/9ulxPRs=;
+        b=zXucu3uxOuHlgBIeFHXTZQcT0f1Nuj2wADtF8qNjEXDePKfd+pTSETelEAYNVGGNqX
+         cSNT0kjY+IZpN4B2azMgW2RVYC4oSo3VKi8nuBDzDfMTMVfzo6/LE1A09jYRYZeibCv+
+         C2sP2CL8XuyNyF5b3tt4E+w3JLurTe6nyqV4xnvVHw3q1LCBhtj2AT5ggSX6ked/ABq5
+         D7shBoM4tTHCpbzmYwilmV14zXLYn/gNKV5PTHSQ7bHjRrnhzjLJ7NJTyCm0TQHvU0MG
+         6x/1dVPvbCIYfWS4Z0gseji7+oynCbJzF34yLOKo+OjQSbpbCY2KwDmIY3MDsLRdXFrx
+         KN3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Lb2k1BEpSa/+z3XM1HtbDM6QVDJOM+So55d/9ulxPRs=;
+        b=AgOh/TfZZxYkX+PhBL7l3piOc+Vcvfe8qGi252fInifQjEXVn3z5vRMpfDYhviVNRb
+         EViUE1Xn3lzQINTZlOXmAYdAtfRSFaW1JvaPpFc1o6/cRj0A1CHngX+TCCWdMJZ+6g6v
+         f5JM+WBMMaWsHbiVWB8kJo5G87tDPBu+Gyeg088r0kjDh9kNYEkesN7UyOZZKRlwWkhR
+         kAJk/3B5j8wUAMgcO37WOw434VPJlYLSjImCfvWw4S198RmU98QvZKyirHYt3mSk7p/z
+         Q6fruLRpYLRK9wqBG4AJtNaNC4/X7LcAExfl8h6UgawghUgndzGfkEdC+g63l16EUCJQ
+         CNcQ==
+X-Gm-Message-State: AOAM531hVRGPUBIckZtb6xAhMQvd6rQ9zwrbXlklEy+zBCES10sc+gH1
+        AZ+HjVjXojrQZyzDRr7TpKtaHQ==
+X-Google-Smtp-Source: ABdhPJxG+RZpvYQH/Y35Vaw1qIbgIm9XNnhKiFxumxGNw7owul1/6rThV1N9MNc3Yq6dBawxaJONWQ==
+X-Received: by 2002:a17:90a:dd46:b0:1b8:8:7303 with SMTP id u6-20020a17090add4600b001b800087303mr4035808pjv.197.1649939537353;
+        Thu, 14 Apr 2022 05:32:17 -0700 (PDT)
+Received: from localhost.localdomain ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id t184-20020a625fc1000000b004fa3bd9bef0sm2160580pfb.110.2022.04.14.05.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Apr 2022 05:32:16 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v3] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE event
+Date:   Thu, 14 Apr 2022 20:32:01 +0800
+Message-Id: <20220414123201.842754-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220412164059.42654-1-atrajeev@linux.vnet.ibm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 12, 2022 at 10:10:57PM +0530, Athira Rajeev escreveu:
-> The perf benchmark for collections: numa hits failure in system
-> configuration with CPU's more than 1024. These benchmarks uses
-> "sched_getaffinity" and "sched_setaffinity" in the code to
-> work with affinity.
+Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
+is not available") "perf mem report" and "perf report --mem-mode"
+don't report result if the PERF_SAMPLE_DATA_SRC bit is missed in sample
+type.
 
-Thanks, applied.
+The commit ffab48705205 ("perf: arm-spe: Fix perf report --mem-mode")
+partially fixes the issue.  It adds PERF_SAMPLE_DATA_SRC bit for Arm SPE
+event, this allows the perf data file generated by kernel v5.18-rc1 or
+later version can be reported properly.
 
-- Arnaldo
+On the other hand, perf tool still fails to be backward compatibility
+for a data file recorded by an older version's perf which contains Arm
+SPE trace data.  This patch is a workaround in reporting phase, when
+detects ARM SPE PMU event and without PERF_SAMPLE_DATA_SRC bit, it will
+force to set the bit in the sample type and give a warning info.
 
+Fixes: bb30acae4c4d ("perf report: Bail out --mem-mode if mem info is not available")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: German Gomez <german.gomez@arm.com>
+Reviewed-by: James Clark <james.clark@arm.com>
+---
+v3: Remove warning log, add James' review tag.
+v2: Change event name from "arm_spe_" to "arm_spe";
+    Add German's test tag.
+
+ tools/perf/builtin-report.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 1ad75c7ba074..afe4a5539ecc 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -353,6 +353,7 @@ static int report__setup_sample_type(struct report *rep)
+ 	struct perf_session *session = rep->session;
+ 	u64 sample_type = evlist__combined_sample_type(session->evlist);
+ 	bool is_pipe = perf_data__is_pipe(session->data);
++	struct evsel *evsel;
  
-> Example snippet from numa benchmark:
-> <<>>
-> perf: bench/numa.c:302: bind_to_node: Assertion `!(ret)' failed.
-> Aborted (core dumped)
-> <<>>
-> 
-> bind_to_node function uses "sched_getaffinity" to save the cpumask.
-> This fails with EINVAL because the default mask size in glibc is 1024
-> 
-> To overcome this 1024 CPUs mask size limitation of cpu_set_t,
-> change the mask size using the CPU_*_S macros ie, use CPU_ALLOC to
-> allocate cpumask, CPU_ALLOC_SIZE for size, CPU_SET_S to set mask bit.
-> 
-> Fix all the relevant places in the code to use mask size which is large
-> enough to represent number of possible CPU's in the system.
-> 
-> This patchset also address a fix for parse_setup_cpu_list function in
-> numa bench to check if input CPU is online before binding task to
-> that CPU. This is to fix failures where, though CPU number is within
-> max CPU, it could happen that CPU is offline. Here, sched_setaffinity
-> will result in failure when using cpumask having that cpu bit set
-> in the mask.
-> 
-> Patch 1 address fix for parse_setup_cpu_list to check if CPU used to bind
-> task is online. Patch 2 has fix for bench numa to work with machines
-> having #CPUs > 1K
-> 
-> Athira Rajeev (2):
->   tools/perf: Fix perf bench numa testcase to check if CPU used to bind
->     task is online
->   perf bench: Fix numa bench to fix usage of affinity for machines with
->     #CPUs > 1K
-> 
-> Changelog:
-> v2 -> v3
-> Link to the v2 version :
-> https://lore.kernel.org/all/20220406175113.87881-1-atrajeev@linux.vnet.ibm.com/
->  - From the v2 version, patch 1 and patch 2 are now part of upstream.
->  - This v3 version separates patch 3 and patch 4 to address review
->    comments from arnaldo which includes using sysfs__read_str for reading
->    sysfs file and fixing the compilation issues observed in debian
-> 
->  tools/perf/bench/numa.c  | 136 +++++++++++++++++++++++++++++----------
->  tools/perf/util/header.c |  51 +++++++++++++++
->  tools/perf/util/header.h |   1 +
->  3 files changed, 153 insertions(+), 35 deletions(-)
-> 
-> -- 
-> 2.35.1
-
+ 	if (session->itrace_synth_opts->callchain ||
+ 	    session->itrace_synth_opts->add_callchain ||
+@@ -407,6 +408,19 @@ static int report__setup_sample_type(struct report *rep)
+ 	}
+ 
+ 	if (sort__mode == SORT_MODE__MEMORY) {
++		/*
++		 * FIXUP: prior to kernel 5.18, Arm SPE missed to set
++		 * PERF_SAMPLE_DATA_SRC bit in sample type.  For backward
++		 * compatibility, set the bit if it's an old perf data file.
++		 */
++		evlist__for_each_entry(session->evlist, evsel) {
++			if (strstr(evsel->name, "arm_spe") &&
++				!(sample_type & PERF_SAMPLE_DATA_SRC)) {
++				evsel->core.attr.sample_type |= PERF_SAMPLE_DATA_SRC;
++				sample_type |= PERF_SAMPLE_DATA_SRC;
++			}
++		}
++
+ 		if (!is_pipe && !(sample_type & PERF_SAMPLE_DATA_SRC)) {
+ 			ui__error("Selected --mem-mode but no mem data. "
+ 				  "Did you call perf record without -d?\n");
 -- 
+2.25.1
 
-- Arnaldo
