@@ -2,163 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473AAC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 01:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38468C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 01:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233922AbiDNBdl (ORCPT
+        id S239457AbiDNBtK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 21:33:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33454 "EHLO
+        Wed, 13 Apr 2022 21:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbiDNBdl (ORCPT
+        with ESMTP id S239436AbiDNBtJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 21:33:41 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C400522F1;
-        Wed, 13 Apr 2022 18:31:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 8077CCE27EB;
-        Thu, 14 Apr 2022 01:31:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849B7C385A3;
-        Thu, 14 Apr 2022 01:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649899874;
-        bh=pXA3UcvmQhe78Hg2wD2xtbuY0R4lUU4THOixPj3r68Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u++qsKMzV6jk9yB2AqTiqhYcOboL2TMX1glvdTxM+ZZuV40ix3zj7Z5NVRbaKq8oh
-         zO/LkfW63vSukVKzS2riw8V7/JSh24VvjQxi9EcS7zPtgEek91WxBC22N1+zFeaBns
-         hrArs1zAeWWpSbsljO2jibI8NDTzgT/UuQEX6AWxV852n6cVOlW9MsSC9l+da0BCp8
-         fj7xqjt/YCg9oQMPMbxGrBVkquwG9uwLVev3WBIx+Ws6ouvY0RGPMhl47TaVEYp5nw
-         Z6g4vaEFXPAQR7irwQJDL0d2Z9F00FXNQGGzgVaJsrQHn867iNXgabYjhf25rdiinH
-         DLx1ZtsJKeSOw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E76A740407; Wed, 13 Apr 2022 22:31:11 -0300 (-03)
-Date:   Wed, 13 Apr 2022 22:31:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alexey Bayduraev <alexey.bayduraev@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
+        Wed, 13 Apr 2022 21:49:09 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54D02E091
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 18:46:46 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id b65-20020a25e444000000b0063dd00480f8so3192356ybh.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 18:46:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=4qwvYVooM7YaW2143ob33/RDOtgCck3amy1lZ/qZ43Q=;
+        b=a82+8uScUFTY7UVOEcfN1mbnKXdw94mA5rNEPHiinFfjwaAc0yJbWi6EkFclTpOHst
+         EQL1MiawyR2AvJ120Nz3AyPXHpD7fj6H2vkVVeiLn7CkioUhXRh44RGbM4GC87nS8NPA
+         lPCfINqrWTnXWyoCGURkhfEoIgRsuARD3M+PNgy1+0IfXm2TMwdZj03N7A84wURImXGT
+         fq9jiy5h/gdZuBEOBQWpNYqGp7HnNDvyhN8sKkJLPJpcVx3OcmIRXB+KfGePEC7fpI77
+         DJt1T6AClZaJ5hrq6Cg0kDdHpfD+vtGtVuaOMnPtlZz7cpE0NRk5S+HzgKdy3jxIkJnO
+         INzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=4qwvYVooM7YaW2143ob33/RDOtgCck3amy1lZ/qZ43Q=;
+        b=xxCZ84UjAhFHVFR7Shw5vB6tQ2SH/n1KBog0qpKe3fhIFrx22UBy7ETedErFbrUovD
+         rNiMGXrfNK5p2DaE74XpGmx6YZ2wwRuwHHA5k0iBRsi/DAYHCfDfWctNZhetbiRphbsi
+         YjcEu6h2SzAMjsSdiBMlKCS9CE3+eCZWuZ14XtCZfH2pr/5yFLWXkjdSpy2YHR110JRx
+         X3y/msf9ECFMGrJgdqJBGW0f9Yq8NlrOAj67f4IqHwhJ6NeUe+YSwu3cG+rfMSOA0/GS
+         EXoY1HMZvOFwaf1wDtQKSIsqYuLJzDq4lJM3zyYF/B1RunFr2tEt7eNmFa8GWVN5gJCu
+         xkcg==
+X-Gm-Message-State: AOAM532Oh5Ks66YHwW9t8/vZwbi/wCqDgqoRMuBFEBTy/MiQl0lA9TPb
+        5o4gHXw/Tb2HZ6W5wX6CdGtrpog8zQ8V
+X-Google-Smtp-Source: ABdhPJy6OxalAJ2viaEkc8iVPXzpVO2fRlZPiZ/UHIAzZTkwwkgrTiWyCENuCg+wbC6JtsqCplrE96jWMF3e
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9135:da53:a8a2:bf11])
+ (user=irogers job=sendgmr) by 2002:a81:16cb:0:b0:2eb:f4c2:fadd with SMTP id
+ 194-20020a8116cb000000b002ebf4c2faddmr288000yww.475.1649900806080; Wed, 13
+ Apr 2022 18:46:46 -0700 (PDT)
+Date:   Wed, 13 Apr 2022 18:46:40 -0700
+Message-Id: <20220414014642.3308206-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
+Subject: [PATCH v2 1/3] perf record: Fix per-thread option.
+From:   Ian Rogers <irogers@google.com>
+To:     Alexey Bayduraev <alexey.bayduraev@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Riccardo Mancini <rickyman7@gmail.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf record: Fix per-thread option.
-Message-ID: <Yld5X7sPshUEUgBT@kernel.org>
-References: <20220412062133.2546080-1-irogers@google.com>
- <e1ce0d93-88cc-af79-e67e-d3c79d166ca6@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1ce0d93-88cc-af79-e67e-d3c79d166ca6@gmail.com>
-X-Url:  http://acmel.wordpress.com
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 13, 2022 at 04:42:07AM +0300, Alexey Bayduraev escreveu:
-> On 12.04.2022 09:21, Ian Rogers wrote:
-> 
-> > From: Alexey Bayduraev <alexey.bayduraev@gmail.com>
-> 
-> Thanks,
-> 
-> The tag
-> Signed-off-by: Alexey Bayduraev <alexey.bayduraev@gmail.com>
-> can be added to this patch.
+From: Alexey Bayduraev <alexey.bayduraev@gmail.com>
 
-Thanks, will add that to the cset,
+Per-thread mode doesn't have specific CPUs for events, add checks for
+this case.
 
-Best regards,
+Minor fix to a pr_debug by Ian Rogers <irogers@google.com> to avoid an
+out of bound array access.
 
-- Arnaldo
+Reported-by: Ian Rogers <irogers@google.com>
+Fixes: 7954f71689f9 ("perf record: Introduce thread affinity and mmap masks")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Alexey Bayduraev <alexey.bayduraev@gmail.com>
+---
+ tools/perf/builtin-record.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ba74fab02e62..069825c48d40 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -989,8 +989,11 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
+ 	struct mmap *overwrite_mmap = evlist->overwrite_mmap;
+ 	struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
  
-> Regards,
-> Alexey
-> 
-> > 
-> > Per-thread mode doesn't have specific CPUs for events, add checks for
-> > this case.
-> > 
-> > Minor fix to a pr_debug by Ian Rogers <irogers@google.com> to avoid an
-> > out of bound array access.
-> > 
-> > Reported-by: Ian Rogers <irogers@google.com>
-> > Fixes: 7954f71689f9 ("perf record: Introduce thread affinity and mmap masks")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-record.c | 22 +++++++++++++++++-----
-> >  1 file changed, 17 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index ba74fab02e62..069825c48d40 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -989,8 +989,11 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
-> >  	struct mmap *overwrite_mmap = evlist->overwrite_mmap;
-> >  	struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
-> >  
-> > -	thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
-> > -					      thread_data->mask->maps.nbits);
-> > +	if (cpu_map__is_dummy(cpus))
-> > +		thread_data->nr_mmaps = nr_mmaps;
-> > +	else
-> > +		thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
-> > +						      thread_data->mask->maps.nbits);
-> >  	if (mmap) {
-> >  		thread_data->maps = zalloc(thread_data->nr_mmaps * sizeof(struct mmap *));
-> >  		if (!thread_data->maps)
-> > @@ -1007,16 +1010,17 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
-> >  		 thread_data->nr_mmaps, thread_data->maps, thread_data->overwrite_maps);
-> >  
-> >  	for (m = 0, tm = 0; m < nr_mmaps && tm < thread_data->nr_mmaps; m++) {
-> > -		if (test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
-> > +		if (cpu_map__is_dummy(cpus) ||
-> > +		    test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
-> >  			if (thread_data->maps) {
-> >  				thread_data->maps[tm] = &mmap[m];
-> >  				pr_debug2("thread_data[%p]: cpu%d: maps[%d] -> mmap[%d]\n",
-> > -					  thread_data, cpus->map[m].cpu, tm, m);
-> > +					  thread_data, perf_cpu_map__cpu(cpus, m).cpu, tm, m);
-> >  			}
-> >  			if (thread_data->overwrite_maps) {
-> >  				thread_data->overwrite_maps[tm] = &overwrite_mmap[m];
-> >  				pr_debug2("thread_data[%p]: cpu%d: ow_maps[%d] -> ow_mmap[%d]\n",
-> > -					  thread_data, cpus->map[m].cpu, tm, m);
-> > +					  thread_data, perf_cpu_map__cpu(cpus, m).cpu, tm, m);
-> >  			}
-> >  			tm++;
-> >  		}
-> > @@ -3329,6 +3333,9 @@ static void record__mmap_cpu_mask_init(struct mmap_cpu_mask *mask, struct perf_c
-> >  {
-> >  	int c;
-> >  
-> > +	if (cpu_map__is_dummy(cpus))
-> > +		return;
-> > +
-> >  	for (c = 0; c < cpus->nr; c++)
-> >  		set_bit(cpus->map[c].cpu, mask->bits);
-> >  }
-> > @@ -3680,6 +3687,11 @@ static int record__init_thread_masks(struct record *rec)
-> >  	if (!record__threads_enabled(rec))
-> >  		return record__init_thread_default_masks(rec, cpus);
-> >  
-> > +	if (cpu_map__is_dummy(cpus)) {
-> > +		pr_err("--per-thread option is mutually exclusive to parallel streaming mode.\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> >  	switch (rec->opts.threads_spec) {
-> >  	case THREAD_SPEC__CPU:
-> >  		ret = record__init_thread_cpu_masks(rec, cpus);
-> > 
-
+-	thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
+-					      thread_data->mask->maps.nbits);
++	if (cpu_map__is_dummy(cpus))
++		thread_data->nr_mmaps = nr_mmaps;
++	else
++		thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
++						      thread_data->mask->maps.nbits);
+ 	if (mmap) {
+ 		thread_data->maps = zalloc(thread_data->nr_mmaps * sizeof(struct mmap *));
+ 		if (!thread_data->maps)
+@@ -1007,16 +1010,17 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
+ 		 thread_data->nr_mmaps, thread_data->maps, thread_data->overwrite_maps);
+ 
+ 	for (m = 0, tm = 0; m < nr_mmaps && tm < thread_data->nr_mmaps; m++) {
+-		if (test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
++		if (cpu_map__is_dummy(cpus) ||
++		    test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
+ 			if (thread_data->maps) {
+ 				thread_data->maps[tm] = &mmap[m];
+ 				pr_debug2("thread_data[%p]: cpu%d: maps[%d] -> mmap[%d]\n",
+-					  thread_data, cpus->map[m].cpu, tm, m);
++					  thread_data, perf_cpu_map__cpu(cpus, m).cpu, tm, m);
+ 			}
+ 			if (thread_data->overwrite_maps) {
+ 				thread_data->overwrite_maps[tm] = &overwrite_mmap[m];
+ 				pr_debug2("thread_data[%p]: cpu%d: ow_maps[%d] -> ow_mmap[%d]\n",
+-					  thread_data, cpus->map[m].cpu, tm, m);
++					  thread_data, perf_cpu_map__cpu(cpus, m).cpu, tm, m);
+ 			}
+ 			tm++;
+ 		}
+@@ -3329,6 +3333,9 @@ static void record__mmap_cpu_mask_init(struct mmap_cpu_mask *mask, struct perf_c
+ {
+ 	int c;
+ 
++	if (cpu_map__is_dummy(cpus))
++		return;
++
+ 	for (c = 0; c < cpus->nr; c++)
+ 		set_bit(cpus->map[c].cpu, mask->bits);
+ }
+@@ -3680,6 +3687,11 @@ static int record__init_thread_masks(struct record *rec)
+ 	if (!record__threads_enabled(rec))
+ 		return record__init_thread_default_masks(rec, cpus);
+ 
++	if (cpu_map__is_dummy(cpus)) {
++		pr_err("--per-thread option is mutually exclusive to parallel streaming mode.\n");
++		return -EINVAL;
++	}
++
+ 	switch (rec->opts.threads_spec) {
+ 	case THREAD_SPEC__CPU:
+ 		ret = record__init_thread_cpu_masks(rec, cpus);
 -- 
+2.36.0.rc0.470.gd361397f0d-goog
 
-- Arnaldo
