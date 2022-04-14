@@ -2,59 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC5DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 16:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521D5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 18:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240613AbiDNRCT (ORCPT
+        id S245724AbiDNS2K (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 13:02:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51418 "EHLO
+        Thu, 14 Apr 2022 14:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242755AbiDNRCL (ORCPT
+        with ESMTP id S245321AbiDNS1a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 13:02:11 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C52F8EDD
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 09:36:45 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id b19so7667231wrh.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 09:36:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=96fPVlK1lXCKBQ9aNMxEudacOmbrFnF0Sxztpz1AWoU=;
-        b=EPw8JEdoNFQdsqEx7a7hmQ08Cs1rfhEj7w+ySyqPbuSO1S5mV8ukQraAaasWq0v8lP
-         aK08wFxpPBwxUi4O0pBmL0nfnE0a7gF/xgbNGXth5IyIZsSjIKeoGCSJRLduP8XsPCIc
-         4O1ogodaUb4b0xhYtL+g0KDF7i0524YPvQlsAyEwx94+s/Oscu49ssE9Y6v3DDZUa4Ht
-         bMz6qLb9SDffuASIalPuP0vz6nQwNWCFz/c4giXJHUucdlEimILTHs81OzCe0VZDKeRN
-         osMIY9ybQ0ZOW02ob9V7BN8eFJVLHPu2+EsjP/idFrcz+wQga4AF5TW9oUWOcQdTCejq
-         loPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=96fPVlK1lXCKBQ9aNMxEudacOmbrFnF0Sxztpz1AWoU=;
-        b=0GHLSBRP3IqYPdLKQZHyUbBgY4gcE40IXRF+9Z3dJPeTTusycpBEJ0Sr7lUgviI+9b
-         Y5Wwzcm92S18C7sxhNL6o4vN7LvGb1rCal9iJtifBMO/TjX9UmBV6tXQOAWcyakPcf2W
-         k0jnnlbAu4F/25Rs4JVcfXZb2OT5c6g393ilNQ+3nd1pSwIWnF7cJe5BoHnmbU0FR5kp
-         ctO+4Dt9PkDdrGkEPmMRZO38hhn7f8GS+tR48v/7Fq7BYRrjAmtwKOtbYJ8IKKu7gAzu
-         +z0uHOlJSpENJDIYvRFHBcbnYSmQGU6HL2FPQIVFrJMNNFVvYgHUpM5olhuCxgluuxTf
-         5F8Q==
-X-Gm-Message-State: AOAM532vlC3DLHN+wGexI5fywBKiRAfF7PHXD6iP4pf8Dkc/Av3Ua1iR
-        yYSNSFxMmP9r8DqAmBIrw/ExHbb0dW4Lep23KZh7BQ==
-X-Google-Smtp-Source: ABdhPJxEk+6D4NBT2CYxRaGZ7sXfhIacfcv8utIq7A/mgOQxSO2+t7qGxwQcsrTbLSwHEmAgkbMvs8agbLDYyVZAt0Y=
-X-Received: by 2002:a5d:6350:0:b0:207:98d5:9bcf with SMTP id
- b16-20020a5d6350000000b0020798d59bcfmr2735752wrw.40.1649954204199; Thu, 14
- Apr 2022 09:36:44 -0700 (PDT)
+        Thu, 14 Apr 2022 14:27:30 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CD1CA6EB;
+        Thu, 14 Apr 2022 11:25:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649960704; x=1681496704;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bxIt+MQ5euzHqb8H1P7gjRCbt4hKJ/40JyCSW+XYNfE=;
+  b=RULfNPKnV8ZDEmgtxagLFO1Ar/8WFaIp9T8Dz5djlsKjFZoTDLTKUJ/l
+   /DJyxUOgzhdhEULnD+V0PQ5A0sYfPRoyE2BGsYwxiWPAoPTvC2/HqN5py
+   eXhjo6+UtdKgB1T8iAwnu8gLRwaGtl5ScDxVkh8ooda4zd1qWxp5aL/4P
+   BBGVxAbxP4v54+mNlbclxkGm2v7xORzVkFOc68utBE6dj7+kCgRHyGyZU
+   BpgGzFix4hCZFfPA2CEidDfPX0tL9Rdvsi4mRW2+HTHChKH/EhGLUvfV9
+   ZmnvU9txqZIF4L/OligHQOR1PlXk20avZnXj8vXOCJzHW0E2GHqZtqfhI
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="288060358"
+X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
+   d="scan'208";a="288060358"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 11:25:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
+   d="scan'208";a="527500559"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 14 Apr 2022 11:25:03 -0700
+Received: from [10.209.96.223] (kliang2-MOBL.ccr.corp.intel.com [10.209.96.223])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 457AE5805BD;
+        Thu, 14 Apr 2022 11:25:02 -0700 (PDT)
+Message-ID: <28285c3a-a577-14ca-5e88-6101217ea73f@linux.intel.com>
+Date:   Thu, 14 Apr 2022 14:25:01 -0400
 MIME-Version: 1.0
-References: <20220413210503.3256922-1-irogers@google.com> <20220413210503.3256922-3-irogers@google.com>
- <368c5b92-f035-41cc-96a8-4908f1325462@linux.intel.com>
-In-Reply-To: <368c5b92-f035-41cc-96a8-4908f1325462@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 14 Apr 2022 09:36:31 -0700
-Message-ID: <CAP-5=fWpECOtC8jc6up4LRFon1v0DBN1Y6LJsimEtuPfXcvJuA@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
 Subject: Re: [PATCH 03/14] perf vendor events intel: Add sapphirerapids events
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,47 +62,56 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         John Garry <john.garry@huawei.com>,
         James Clark <james.clark@arm.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20220413210503.3256922-1-irogers@google.com>
+ <20220413210503.3256922-3-irogers@google.com>
+ <368c5b92-f035-41cc-96a8-4908f1325462@linux.intel.com>
+ <CAP-5=fWpECOtC8jc6up4LRFon1v0DBN1Y6LJsimEtuPfXcvJuA@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fWpECOtC8jc6up4LRFon1v0DBN1Y6LJsimEtuPfXcvJuA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 8:03 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->
->
->
-> On 4/13/2022 5:04 PM, Ian Rogers wrote:
-> > Events were generated from 01.org using:
-> > https://github.com/intel/event-converter-for-linux-perf
-> >
-> > Signed-off-by: Ian Rogers<irogers@google.com>
-> > ---
-> >   tools/perf/pmu-events/arch/x86/mapfile.csv    |    1 +
-> >   .../arch/x86/sapphirerapids/cache.json        | 1083 ++++++++++++++
-> >   .../x86/sapphirerapids/floating-point.json    |  218 +++
-> >   .../arch/x86/sapphirerapids/frontend.json     |  471 ++++++
-> >   .../arch/x86/sapphirerapids/memory.json       |  415 ++++++
-> >   .../arch/x86/sapphirerapids/other.json        |  329 +++++
-> >   .../arch/x86/sapphirerapids/pipeline.json     | 1271 +++++++++++++++++
-> >   .../x86/sapphirerapids/virtual-memory.json    |  225 +++
->
-> Thank you very much Ian for the patches. They all looks good to me.
->
->      Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->
-> BTW: I think the uncore events for SPR are also published in 01.org.
-> Do you have plan to add them later?
 
-Thanks Kan, we need to add the csv file to the github project to make
-this work. I can make a basic one if that works?
+
+On 4/14/2022 12:36 PM, Ian Rogers wrote:
+> On Thu, Apr 14, 2022 at 8:03 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 4/13/2022 5:04 PM, Ian Rogers wrote:
+>>> Events were generated from 01.org using:
+>>> https://github.com/intel/event-converter-for-linux-perf
+>>>
+>>> Signed-off-by: Ian Rogers<irogers@google.com>
+>>> ---
+>>>    tools/perf/pmu-events/arch/x86/mapfile.csv    |    1 +
+>>>    .../arch/x86/sapphirerapids/cache.json        | 1083 ++++++++++++++
+>>>    .../x86/sapphirerapids/floating-point.json    |  218 +++
+>>>    .../arch/x86/sapphirerapids/frontend.json     |  471 ++++++
+>>>    .../arch/x86/sapphirerapids/memory.json       |  415 ++++++
+>>>    .../arch/x86/sapphirerapids/other.json        |  329 +++++
+>>>    .../arch/x86/sapphirerapids/pipeline.json     | 1271 +++++++++++++++++
+>>>    .../x86/sapphirerapids/virtual-memory.json    |  225 +++
+>>
+>> Thank you very much Ian for the patches. They all looks good to me.
+>>
+>>       Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> BTW: I think the uncore events for SPR are also published in 01.org.
+>> Do you have plan to add them later?
+> 
+> Thanks Kan, we need to add the csv file to the github project to make
+> this work. I can make a basic one if that works?
+> 
+
+I think Zhengjun may already have one. Zhengjun?
 
 Thanks,
-Ian
-
-> Thanks,
-> Kan
+Kan
