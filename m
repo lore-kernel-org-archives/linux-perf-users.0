@@ -2,87 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37412C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 15:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60447C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 15:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343898AbiDNQB2 (ORCPT
+        id S1346323AbiDNQBe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 12:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
+        Thu, 14 Apr 2022 12:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245224AbiDNPic (ORCPT
+        with ESMTP id S1352692AbiDNPRm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 11:38:32 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F097842480;
-        Thu, 14 Apr 2022 08:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ZsRcyfHgsom67rurNKLx6V9HZjclTS2jkLPhlClFRLs=; b=udaIYXxYUP+g4H6OzdvOVK++G9
-        qGQUmznF+HIBu36y0AXnja7i2BxxjdG/bdqJmsgmYEEkfUeYAUwEmKh55aPfmduuzbqX1GaRJ5dKI
-        r1f+HvFYyEpze2tmnfBFJLjuW5ItjPjlPei9QzXLHWjmv1AI4QT6fWPFf7sCBbuZZXtfQJnpvdSD7
-        D9+agEGq90Eo5AxANYUK1Je727HyMYrViIvTgnGJl33ruOCPffgCJjwFam1rvmDz/bbViZEXKmL5f
-        aLjAPgNuSix4ustrHw5HJuzbgZn3uIrJ1TAPXRj6Jromg0Gw3jyVch4Pt0J7Yx9aXwax0as1EZXty
-        00dEw7sQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nf1Ca-00FEFk-3H; Thu, 14 Apr 2022 15:16:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0403C3002DE;
-        Thu, 14 Apr 2022 17:16:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D346920173681; Thu, 14 Apr 2022 17:16:05 +0200 (CEST)
-Date:   Thu, 14 Apr 2022 17:16:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Zhipeng Xie <xiezhipeng1@huawei.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xiexiuqi@huawei.com,
-        fanwentao@huawei.com
-Subject: Re: [PATCH v2] perf/core: Fix perf_mmap fail when
- CONFIG_PERF_USE_VMALLOC enabled
-Message-ID: <Ylg6tU5d9JA/2anr@hirez.programming.kicks-ass.net>
-References: <20220209145417.6495-1-xiezhipeng1@huawei.com>
+        Thu, 14 Apr 2022 11:17:42 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B253939E4;
+        Thu, 14 Apr 2022 08:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649948586; x=1681484586;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=/VBlTs3jL1nxbmcrZIkwzXIXkP2p4Qd9Cgidy2UuOOY=;
+  b=Yn8zFvGHL+4eYN3VxM/LSQ0xlmE/L8jysmkHJMpv+RVGZGiiJyhbciZi
+   btaipoEOC0ISsh/d36HlUBc7Rn/WyuaRfymR52s6RwHT5ICm8DNFA9vwy
+   DxPEfRswD3sWYhO64PdAzA0OGtG5zpP2Nb029A6V0bxfbfdwOM11yCJnX
+   3cqBckhvcf7oFopQigkb6v+Ke+rGdAuOE8BIrD3f3Sshn1JUhnxcs9Tib
+   6gO7sFws0cnH0TE9kyjCvN5K6QzrUpe+tLQ7C19cyVA50m4oy/1MH8VvA
+   La+zdQYvjck+cDBnkeEDPgNP/xl7D/fql9B1voYeCKHasxfKJ3bPoNvPa
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="263126626"
+X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
+   d="scan'208";a="263126626"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 08:03:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
+   d="scan'208";a="725392121"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 14 Apr 2022 08:03:05 -0700
+Received: from [10.209.96.223] (kliang2-MOBL.ccr.corp.intel.com [10.209.96.223])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 811035805BD;
+        Thu, 14 Apr 2022 08:03:04 -0700 (PDT)
+Message-ID: <368c5b92-f035-41cc-96a8-4908f1325462@linux.intel.com>
+Date:   Thu, 14 Apr 2022 11:03:03 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220209145417.6495-1-xiezhipeng1@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 03/14] perf vendor events intel: Add sapphirerapids events
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20220413210503.3256922-1-irogers@google.com>
+ <20220413210503.3256922-3-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220413210503.3256922-3-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 09, 2022 at 09:54:17AM -0500, Zhipeng Xie wrote:
-> This problem can be reproduced with CONFIG_PERF_USE_VMALLOC enabled on both
-> x86_64 and aarch64 arch when using sysdig -B(using ebpf)[1].
-> sysdig -B works fine after rebuilding the kernel with CONFIG_PERF_USE_VMALLOC
-> disabled.
-> 
-> I tracked it down to the if condition event->rb->nr_pages != nr_pages in
-> perf_mmap is true when CONFIG_PERF_USE_VMALLOC is enabled where
-> event->rb->nr_pages = 1 and nr_pages = 2048 resulting perf_mmap to return
-> -EINVAL.This is because when CONFIG_PERF_USE_VMALLOC is enabled, rb->nr_pages
-> is always equal to 1.
-> 
-> Arch with CONFIG_PERF_USE_VMALLOC enabled by default:
-> 	arc/arm/csky/mips/sh/sparc/xtensa
-> Arch with CONFIG_PERF_USE_VMALLOC disabled by default:
-> 	x86_64/aarch64/...
-> 
-> Fix this problem by using data_page_nr.
-> 
-> [1] https://github.com/draios/sysdig
-> 
-> Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
 
-Right; sorry for being tardy. Fix looks ok, but I tihnk it needs:
 
-Fixes: 906010b2134e ("perf_event: Provide vmalloc() based mmap() backing")
+On 4/13/2022 5:04 PM, Ian Rogers wrote:
+> Events were generated from 01.org using:
+> https://github.com/intel/event-converter-for-linux-perf
+> 
+> Signed-off-by: Ian Rogers<irogers@google.com>
+> ---
+>   tools/perf/pmu-events/arch/x86/mapfile.csv    |    1 +
+>   .../arch/x86/sapphirerapids/cache.json        | 1083 ++++++++++++++
+>   .../x86/sapphirerapids/floating-point.json    |  218 +++
+>   .../arch/x86/sapphirerapids/frontend.json     |  471 ++++++
+>   .../arch/x86/sapphirerapids/memory.json       |  415 ++++++
+>   .../arch/x86/sapphirerapids/other.json        |  329 +++++
+>   .../arch/x86/sapphirerapids/pipeline.json     | 1271 +++++++++++++++++
+>   .../x86/sapphirerapids/virtual-memory.json    |  225 +++
 
-Will go queue.
+Thank you very much Ian for the patches. They all looks good to me.
 
+     Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+BTW: I think the uncore events for SPR are also published in 01.org.
+Do you have plan to add them later?
+
+Thanks,
+Kan
