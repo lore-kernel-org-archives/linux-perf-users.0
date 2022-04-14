@@ -2,134 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B18EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 01:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473AAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 01:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232555AbiDNB3y (ORCPT
+        id S233922AbiDNBdl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 21:29:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59310 "EHLO
+        Wed, 13 Apr 2022 21:33:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbiDNB3y (ORCPT
+        with ESMTP id S229580AbiDNBdl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 21:29:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE1E3A5C6;
-        Wed, 13 Apr 2022 18:27:31 -0700 (PDT)
+        Wed, 13 Apr 2022 21:33:41 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C400522F1;
+        Wed, 13 Apr 2022 18:31:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0DCE361B1C;
-        Thu, 14 Apr 2022 01:27:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C930C385A6;
-        Thu, 14 Apr 2022 01:27:30 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 8077CCE27EB;
+        Thu, 14 Apr 2022 01:31:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849B7C385A3;
+        Thu, 14 Apr 2022 01:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649899650;
-        bh=DM+RhHHgRt9NDXKpjEPjfHetpxStxcgkWnxG1axMwYg=;
+        s=k20201202; t=1649899874;
+        bh=pXA3UcvmQhe78Hg2wD2xtbuY0R4lUU4THOixPj3r68Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xne4aMBGcD/sbAiwcq7kWzVDdpalgxh0YRhXqTltrfxFAyMCT+4m0FkST7G9HSb2v
-         PzF/MGUQj3CAMixXe23nBYh/jDqyRL9O6GyS9e96FEbLgoiYlwGjV+fPy7Ja12+V+5
-         xnfDVusoNWSrHLkncCZRqW+M+C8YQMerg+HoFvEMSCBWxGI+uSEDu3ADFtIUw4avvb
-         XiS3JkrkyDuUuzGO12sd0lU1x4PON3/mIpFgMM7qy5OxnQ0ZohBC3RUg2HBQIJFVaA
-         0LEUxJlZ4aXFuLUGwCmX9zPe43T5kS/V9q3avRCe9KUkHmWgMM1DHi4pJRZ15rYueY
-         0VDF902PmVLKw==
+        b=u++qsKMzV6jk9yB2AqTiqhYcOboL2TMX1glvdTxM+ZZuV40ix3zj7Z5NVRbaKq8oh
+         zO/LkfW63vSukVKzS2riw8V7/JSh24VvjQxi9EcS7zPtgEek91WxBC22N1+zFeaBns
+         hrArs1zAeWWpSbsljO2jibI8NDTzgT/UuQEX6AWxV852n6cVOlW9MsSC9l+da0BCp8
+         fj7xqjt/YCg9oQMPMbxGrBVkquwG9uwLVev3WBIx+Ws6ouvY0RGPMhl47TaVEYp5nw
+         Z6g4vaEFXPAQR7irwQJDL0d2Z9F00FXNQGGzgVaJsrQHn867iNXgabYjhf25rdiinH
+         DLx1ZtsJKeSOw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 10ACC40407; Wed, 13 Apr 2022 22:27:27 -0300 (-03)
-Date:   Wed, 13 Apr 2022 22:27:27 -0300
+        id E76A740407; Wed, 13 Apr 2022 22:31:11 -0300 (-03)
+Date:   Wed, 13 Apr 2022 22:31:11 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Alexey Bayduraev <alexey.bayduraev@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE
- event
-Message-ID: <Yld4fzWWY07ksB+5@kernel.org>
-References: <20220413092317.756022-1-leo.yan@linaro.org>
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf record: Fix per-thread option.
+Message-ID: <Yld5X7sPshUEUgBT@kernel.org>
+References: <20220412062133.2546080-1-irogers@google.com>
+ <e1ce0d93-88cc-af79-e67e-d3c79d166ca6@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220413092317.756022-1-leo.yan@linaro.org>
+In-Reply-To: <e1ce0d93-88cc-af79-e67e-d3c79d166ca6@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 13, 2022 at 05:23:17PM +0800, Leo Yan escreveu:
-> Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
-> is not available") "perf mem report" and "perf report --mem-mode"
-> don't report result if the PERF_SAMPLE_DATA_SRC bit is missed in sample
-> type.
+Em Wed, Apr 13, 2022 at 04:42:07AM +0300, Alexey Bayduraev escreveu:
+> On 12.04.2022 09:21, Ian Rogers wrote:
 > 
-> The commit ffab48705205 ("perf: arm-spe: Fix perf report --mem-mode")
-> partially fixes the issue.  It adds PERF_SAMPLE_DATA_SRC bit for Arm SPE
-> event, this allows the perf data file generated by kernel v5.18-rc1 or
-> later version can be reported properly.
+> > From: Alexey Bayduraev <alexey.bayduraev@gmail.com>
 > 
-> On the other hand, perf tool still fails to be backward compatibility
-> for a data file recorded by an older version's perf which contains Arm
-> SPE trace data.  This patch is a workaround in reporting phase, when
-> detects ARM SPE PMU event and without PERF_SAMPLE_DATA_SRC bit, it will
-> force to set the bit in the sample type and give a warning info.
+> Thanks,
 > 
-> Fixes: bb30acae4c4d ("perf report: Bail out --mem-mode if mem info is not available")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Tested-by: German Gomez <german.gomez@arm.com>
-> ---
-> v2: Change event name from "arm_spe_" to "arm_spe";
->     Add German's test tag.
+> The tag
+> Signed-off-by: Alexey Bayduraev <alexey.bayduraev@gmail.com>
+> can be added to this patch.
 
-Tentatively applied, would be great to have James' and Ravi's
-Acked-by/Reviewed-by, which I'll add before pushing this out if provided
-in time.
+Thanks, will add that to the cset,
+
+Best regards,
 
 - Arnaldo
  
->  tools/perf/builtin-report.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> Regards,
+> Alexey
 > 
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 1ad75c7ba074..acb07a4a9b67 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -353,6 +353,7 @@ static int report__setup_sample_type(struct report *rep)
->  	struct perf_session *session = rep->session;
->  	u64 sample_type = evlist__combined_sample_type(session->evlist);
->  	bool is_pipe = perf_data__is_pipe(session->data);
-> +	struct evsel *evsel;
->  
->  	if (session->itrace_synth_opts->callchain ||
->  	    session->itrace_synth_opts->add_callchain ||
-> @@ -407,6 +408,21 @@ static int report__setup_sample_type(struct report *rep)
->  	}
->  
->  	if (sort__mode == SORT_MODE__MEMORY) {
-> +		/*
-> +		 * FIXUP: prior to kernel 5.18, Arm SPE missed to set
-> +		 * PERF_SAMPLE_DATA_SRC bit in sample type.  For backward
-> +		 * compatibility, set the bit if it's an old perf data file.
-> +		 */
-> +		evlist__for_each_entry(session->evlist, evsel) {
-> +			if (strstr(evsel->name, "arm_spe") &&
-> +				!(sample_type & PERF_SAMPLE_DATA_SRC)) {
-> +				ui__warning("PERF_SAMPLE_DATA_SRC bit is not set "
-> +					    "for Arm SPE event.\n");
-> +				evsel->core.attr.sample_type |= PERF_SAMPLE_DATA_SRC;
-> +				sample_type |= PERF_SAMPLE_DATA_SRC;
-> +			}
-> +		}
-> +
->  		if (!is_pipe && !(sample_type & PERF_SAMPLE_DATA_SRC)) {
->  			ui__error("Selected --mem-mode but no mem data. "
->  				  "Did you call perf record without -d?\n");
-> -- 
-> 2.25.1
+> > 
+> > Per-thread mode doesn't have specific CPUs for events, add checks for
+> > this case.
+> > 
+> > Minor fix to a pr_debug by Ian Rogers <irogers@google.com> to avoid an
+> > out of bound array access.
+> > 
+> > Reported-by: Ian Rogers <irogers@google.com>
+> > Fixes: 7954f71689f9 ("perf record: Introduce thread affinity and mmap masks")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-record.c | 22 +++++++++++++++++-----
+> >  1 file changed, 17 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index ba74fab02e62..069825c48d40 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -989,8 +989,11 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
+> >  	struct mmap *overwrite_mmap = evlist->overwrite_mmap;
+> >  	struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
+> >  
+> > -	thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
+> > -					      thread_data->mask->maps.nbits);
+> > +	if (cpu_map__is_dummy(cpus))
+> > +		thread_data->nr_mmaps = nr_mmaps;
+> > +	else
+> > +		thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
+> > +						      thread_data->mask->maps.nbits);
+> >  	if (mmap) {
+> >  		thread_data->maps = zalloc(thread_data->nr_mmaps * sizeof(struct mmap *));
+> >  		if (!thread_data->maps)
+> > @@ -1007,16 +1010,17 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
+> >  		 thread_data->nr_mmaps, thread_data->maps, thread_data->overwrite_maps);
+> >  
+> >  	for (m = 0, tm = 0; m < nr_mmaps && tm < thread_data->nr_mmaps; m++) {
+> > -		if (test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
+> > +		if (cpu_map__is_dummy(cpus) ||
+> > +		    test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
+> >  			if (thread_data->maps) {
+> >  				thread_data->maps[tm] = &mmap[m];
+> >  				pr_debug2("thread_data[%p]: cpu%d: maps[%d] -> mmap[%d]\n",
+> > -					  thread_data, cpus->map[m].cpu, tm, m);
+> > +					  thread_data, perf_cpu_map__cpu(cpus, m).cpu, tm, m);
+> >  			}
+> >  			if (thread_data->overwrite_maps) {
+> >  				thread_data->overwrite_maps[tm] = &overwrite_mmap[m];
+> >  				pr_debug2("thread_data[%p]: cpu%d: ow_maps[%d] -> ow_mmap[%d]\n",
+> > -					  thread_data, cpus->map[m].cpu, tm, m);
+> > +					  thread_data, perf_cpu_map__cpu(cpus, m).cpu, tm, m);
+> >  			}
+> >  			tm++;
+> >  		}
+> > @@ -3329,6 +3333,9 @@ static void record__mmap_cpu_mask_init(struct mmap_cpu_mask *mask, struct perf_c
+> >  {
+> >  	int c;
+> >  
+> > +	if (cpu_map__is_dummy(cpus))
+> > +		return;
+> > +
+> >  	for (c = 0; c < cpus->nr; c++)
+> >  		set_bit(cpus->map[c].cpu, mask->bits);
+> >  }
+> > @@ -3680,6 +3687,11 @@ static int record__init_thread_masks(struct record *rec)
+> >  	if (!record__threads_enabled(rec))
+> >  		return record__init_thread_default_masks(rec, cpus);
+> >  
+> > +	if (cpu_map__is_dummy(cpus)) {
+> > +		pr_err("--per-thread option is mutually exclusive to parallel streaming mode.\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> >  	switch (rec->opts.threads_spec) {
+> >  	case THREAD_SPEC__CPU:
+> >  		ret = record__init_thread_cpu_masks(rec, cpus);
+> > 
 
 -- 
 
