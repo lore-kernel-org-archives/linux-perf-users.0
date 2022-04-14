@@ -2,191 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357D9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 12:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E08C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 12:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234637AbiDNMOM (ORCPT
+        id S233651AbiDNMSn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 08:14:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
+        Thu, 14 Apr 2022 08:18:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232908AbiDNMOK (ORCPT
+        with ESMTP id S230491AbiDNMSn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 08:14:10 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9624E1DA7A;
-        Thu, 14 Apr 2022 05:11:45 -0700 (PDT)
+        Thu, 14 Apr 2022 08:18:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30835549C;
+        Thu, 14 Apr 2022 05:16:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4D8C7B82930;
-        Thu, 14 Apr 2022 12:11:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF48CC385A1;
-        Thu, 14 Apr 2022 12:11:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6B4A461F1B;
+        Thu, 14 Apr 2022 12:16:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A300C385A1;
+        Thu, 14 Apr 2022 12:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649938303;
-        bh=yq4Inui/1X0vvUnwwEOZAfKxPHOlTJEN4naHS4UCfpk=;
+        s=k20201202; t=1649938577;
+        bh=FhgNB6nGbaSWR1zWFLwWKZoR5zU6ItbocIB/M0guKZs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nq5AhZ8omX6oS/4LvhB4e+c8egQy/zKBFySE7dI7QkrvviOnT3TSmRUOTCmVRSact
-         5x6NoFFWv9/LMFC9a5xqvxzXqbLwoyoyKDaXP8jIb4VjskqGLPHVKROaWIdjM4fREE
-         Tmbr2eILYX+k7SyvhS8Tg49fKWjUph28lov2knBq2rg4Q9DjerXXvXaZOLqTvawNpn
-         nK17pHmL1wKa4qN075lFhT5V610etTpbnQZ3nJg4CKY1N814jP9cxsQlmyhp1NVDeI
-         eE0mibFc8xR22QokRWQL6sRXOB5tjJY7daJdrfw/grtIf98tOIG2MSTYXCzdYw11IC
-         VoC0dQxvUU2tQ==
+        b=u7cS44DIt07c6L3jcxE/iVa6IXQhSan6yRWtDkGh1YmxN4Gdrx0eJ1QAreNHEOyOY
+         DgJthEblm6HoCZddYZgv2uG8bOgkKQJ1awacUOuvnalwf07bmnxIP6OrA8h7X0Ccge
+         unClZKOikWRFVCSX/sljCl09QBdiGXQlohTPvtywJtOyyP/e+tQuehr4CbO5iVq1PN
+         t9pXbreKhwsNRIyNCwF+0ZPYaFgQtbWKWV8KkW6fulHsmgHSwSjbcW30l632jXHcDN
+         ut9CcnFPyYuwf/IQ1eDo02idh7baPZt9aY1fGQn71S/gJBjxWyW3CYdhcPsvweD1ur
+         I7kKPV0LsyWfw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C7B2E40407; Thu, 14 Apr 2022 09:11:40 -0300 (-03)
-Date:   Thu, 14 Apr 2022 09:11:40 -0300
+        id 621BB40407; Thu, 14 Apr 2022 09:16:15 -0300 (-03)
+Date:   Thu, 14 Apr 2022 09:16:15 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 01/14] perf vendor events intel: Fix icelake cstate
- metrics
-Message-ID: <YlgPfGlbnsmd6RJW@kernel.org>
-References: <20220413210503.3256922-1-irogers@google.com>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     jolsa@kernel.org, disgoel@linux.vnet.ibm.com, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, linux-kernel@vger.kernel.org,
+        srikar@linux.vnet.ibm.com, irogers@google.com
+Subject: Re: [PATCH V3 0/2] Fix perf bench numa to work with machines having
+ #CPUs > 1K
+Message-ID: <YlgQj40R3so8xz50@kernel.org>
+References: <20220412164059.42654-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220413210503.3256922-1-irogers@google.com>
+In-Reply-To: <20220412164059.42654-1-atrajeev@linux.vnet.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 13, 2022 at 02:04:50PM -0700, Ian Rogers escreveu:
-> Apply cstate fix from:
-> https://github.com/intel/event-converter-for-linux-perf/
-> so that metrics for cstates that exist on the particular architecture
-> are generated. This corrects issues with metric testing.
-> 
-> Also correct topic of ASSISTS.ANY event.
+Em Tue, Apr 12, 2022 at 10:10:57PM +0530, Athira Rajeev escreveu:
+> The perf benchmark for collections: numa hits failure in system
+> configuration with CPU's more than 1024. These benchmarks uses
+> "sched_getaffinity" and "sched_setaffinity" in the code to
+> work with affinity.
 
-I would really appreciate acks/reviewed-by tags for these,
-
-Thanks!
+Thanks, applied.
 
 - Arnaldo
+
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  .../arch/x86/icelake/icl-metrics.json         | 24 ++++++++++++++-----
->  .../pmu-events/arch/x86/icelake/other.json    | 14 +----------
->  .../pmu-events/arch/x86/icelake/pipeline.json | 14 ++++++++++-
->  3 files changed, 32 insertions(+), 20 deletions(-)
+> Example snippet from numa benchmark:
+> <<>>
+> perf: bench/numa.c:302: bind_to_node: Assertion `!(ret)' failed.
+> Aborted (core dumped)
+> <<>>
 > 
-> diff --git a/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json b/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-> index 4af23c04dc18..ea73bc1889ba 100644
-> --- a/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-> @@ -408,12 +408,6 @@
->          "MetricGroup": "Branches;OS",
->          "MetricName": "IpFarBranch"
->      },
-> -    {
-> -        "BriefDescription": "C3 residency percent per core",
-> -        "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
-> -        "MetricGroup": "Power",
-> -        "MetricName": "C3_Core_Residency"
-> -    },
->      {
->          "BriefDescription": "C6 residency percent per core",
->          "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
-> @@ -449,5 +443,23 @@
->          "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
->          "MetricGroup": "Power",
->          "MetricName": "C7_Pkg_Residency"
-> +    },
-> +    {
-> +        "BriefDescription": "C8 residency percent per package",
-> +        "MetricExpr": "(cstate_pkg@c8\\-residency@ / msr@tsc@) * 100",
-> +        "MetricGroup": "Power",
-> +        "MetricName": "C8_Pkg_Residency"
-> +    },
-> +    {
-> +        "BriefDescription": "C9 residency percent per package",
-> +        "MetricExpr": "(cstate_pkg@c9\\-residency@ / msr@tsc@) * 100",
-> +        "MetricGroup": "Power",
-> +        "MetricName": "C9_Pkg_Residency"
-> +    },
-> +    {
-> +        "BriefDescription": "C10 residency percent per package",
-> +        "MetricExpr": "(cstate_pkg@c10\\-residency@ / msr@tsc@) * 100",
-> +        "MetricGroup": "Power",
-> +        "MetricName": "C10_Pkg_Residency"
->      }
->  ]
-> diff --git a/tools/perf/pmu-events/arch/x86/icelake/other.json b/tools/perf/pmu-events/arch/x86/icelake/other.json
-> index 08f6321025e8..2e177f95a9cb 100644
-> --- a/tools/perf/pmu-events/arch/x86/icelake/other.json
-> +++ b/tools/perf/pmu-events/arch/x86/icelake/other.json
-> @@ -1,16 +1,4 @@
->  [
-> -    {
-> -        "BriefDescription": "Number of occurrences where a microcode assist is invoked by hardware.",
-> -        "CollectPEBSRecord": "2",
-> -        "Counter": "0,1,2,3,4,5,6,7",
-> -        "EventCode": "0xc1",
-> -        "EventName": "ASSISTS.ANY",
-> -        "PEBScounters": "0,1,2,3,4,5,6,7",
-> -        "PublicDescription": "Counts the number of occurrences where a microcode assist is invoked by hardware Examples include AD (page Access Dirty), FP and AVX related assists.",
-> -        "SampleAfterValue": "100003",
-> -        "Speculative": "1",
-> -        "UMask": "0x7"
-> -    },
->      {
->          "BriefDescription": "Core cycles where the core was running in a manner where Turbo may be clipped to the Non-AVX turbo schedule.",
->          "CollectPEBSRecord": "2",
-> @@ -407,4 +395,4 @@
->          "Speculative": "1",
->          "UMask": "0x1"
->      }
-> -]
-> \ No newline at end of file
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json b/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
-> index 573ac7ac8879..2b58cfaaaf39 100644
-> --- a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
-> +++ b/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
-> @@ -12,6 +12,18 @@
->          "Speculative": "1",
->          "UMask": "0x9"
->      },
-> +    {
-> +        "BriefDescription": "Number of occurrences where a microcode assist is invoked by hardware.",
-> +        "CollectPEBSRecord": "2",
-> +        "Counter": "0,1,2,3,4,5,6,7",
-> +        "EventCode": "0xc1",
-> +        "EventName": "ASSISTS.ANY",
-> +        "PEBScounters": "0,1,2,3,4,5,6,7",
-> +        "PublicDescription": "Counts the number of occurrences where a microcode assist is invoked by hardware Examples include AD (page Access Dirty), FP and AVX related assists.",
-> +        "SampleAfterValue": "100003",
-> +        "Speculative": "1",
-> +        "UMask": "0x7"
-> +    },
->      {
->          "BriefDescription": "All branch instructions retired.",
->          "CollectPEBSRecord": "2",
-> @@ -1102,4 +1114,4 @@
->          "SampleAfterValue": "1000003",
->          "UMask": "0x2"
->      }
-> -]
-> \ No newline at end of file
-> +]
+> bind_to_node function uses "sched_getaffinity" to save the cpumask.
+> This fails with EINVAL because the default mask size in glibc is 1024
+> 
+> To overcome this 1024 CPUs mask size limitation of cpu_set_t,
+> change the mask size using the CPU_*_S macros ie, use CPU_ALLOC to
+> allocate cpumask, CPU_ALLOC_SIZE for size, CPU_SET_S to set mask bit.
+> 
+> Fix all the relevant places in the code to use mask size which is large
+> enough to represent number of possible CPU's in the system.
+> 
+> This patchset also address a fix for parse_setup_cpu_list function in
+> numa bench to check if input CPU is online before binding task to
+> that CPU. This is to fix failures where, though CPU number is within
+> max CPU, it could happen that CPU is offline. Here, sched_setaffinity
+> will result in failure when using cpumask having that cpu bit set
+> in the mask.
+> 
+> Patch 1 address fix for parse_setup_cpu_list to check if CPU used to bind
+> task is online. Patch 2 has fix for bench numa to work with machines
+> having #CPUs > 1K
+> 
+> Athira Rajeev (2):
+>   tools/perf: Fix perf bench numa testcase to check if CPU used to bind
+>     task is online
+>   perf bench: Fix numa bench to fix usage of affinity for machines with
+>     #CPUs > 1K
+> 
+> Changelog:
+> v2 -> v3
+> Link to the v2 version :
+> https://lore.kernel.org/all/20220406175113.87881-1-atrajeev@linux.vnet.ibm.com/
+>  - From the v2 version, patch 1 and patch 2 are now part of upstream.
+>  - This v3 version separates patch 3 and patch 4 to address review
+>    comments from arnaldo which includes using sysfs__read_str for reading
+>    sysfs file and fixing the compilation issues observed in debian
+> 
+>  tools/perf/bench/numa.c  | 136 +++++++++++++++++++++++++++++----------
+>  tools/perf/util/header.c |  51 +++++++++++++++
+>  tools/perf/util/header.h |   1 +
+>  3 files changed, 153 insertions(+), 35 deletions(-)
+> 
 > -- 
-> 2.36.0.rc0.470.gd361397f0d-goog
+> 2.35.1
 
 -- 
 
