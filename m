@@ -2,145 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73383C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Apr 2022 21:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7222C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 01:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238830AbiDMVIb (ORCPT
+        id S239401AbiDNBXb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Apr 2022 17:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49708 "EHLO
+        Wed, 13 Apr 2022 21:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238845AbiDMVIR (ORCPT
+        with ESMTP id S236605AbiDNBXa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Apr 2022 17:08:17 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D591D84EE0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:34 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id z15-20020a25bb0f000000b00613388c7d99so2716304ybg.8
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Apr 2022 14:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=MKyIlb14kjoDwiTLRJoibK3zmQSI+f9RAOGtdQkGAb0=;
-        b=iWk8MWfFdHQTF1RiR2YiO0cAhgu+ekxQ/RJcrsUoAJ8Ehnuf78lwlXuLPJH1cl79Wr
-         71ibilE8ygIOj5S/4sjzDalWyaGjSQ9fCDItNRJUH46RpNBeQXikHuNUSEWJw64lqIGv
-         7C68DUU4diBt6nyVAEvRtqEz+VqebyNRfZakHJyrEVlhs3p81miawyCF6ULOs82LGV9N
-         YOxSMjMFUe+bvfpdnCywUx0qQbY8rByXJYvYgK7EkvIY2uPAPvtqPk4a/mDJwJnBA8vw
-         f02oEeIrXYs/+IX9wXr/2hc74Fu1vgJgZzO9VlQmQN+C3BT5SJnWbIw0ThgHn6e2FRl9
-         FWFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=MKyIlb14kjoDwiTLRJoibK3zmQSI+f9RAOGtdQkGAb0=;
-        b=HxSzfAUQHT5WNYBHq+wh/IHEWJzjHgRg4Z/NK7Xa+SVyq4wjPetDYw83K+V4hDhbDD
-         4i1xdOsXywht4Gt5GJdMJb0HSYTDoCmsV74Bb+xFf0q1uaimTQ9re3fA17vzFTE5Mnav
-         xJc3iwtx1UZjdyY80LkQiSTdqpRLL2P5QXu5zavyhf1RZMeR+XYk5qjpRwEQDYD2EkBi
-         sVovBsBDyUMdyi5GIIaxDHVgn/3FfoEOnAHh0VCU0OyxQetTVkz0CRaESXJwiXPfCTVY
-         jy0KBG1ZpVinCJZTbkArTPx285a99AF9hfGSkYAWPEUL484Jzr5Dvc8VrqSElQ93ChIQ
-         yskw==
-X-Gm-Message-State: AOAM532iU0yEpfVPpgkEOw1HGif3fT/x53q2RCS/fOg+bf6hmZL8RoeO
-        hRNHAtlfAC04CTfv3t6SnayWu8VNt7+p
-X-Google-Smtp-Source: ABdhPJxFqsuZ6qMuWLSeRtUQRg/LfuGdgV/QufIDf5GSiSd5CLkIj5yGvBrbm/lcWvEEsHtncDU2IpYzlR7h
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:9135:da53:a8a2:bf11])
- (user=irogers job=sendgmr) by 2002:a05:6902:13c1:b0:61d:969c:109c with SMTP
- id y1-20020a05690213c100b0061d969c109cmr675962ybu.133.1649883934046; Wed, 13
- Apr 2022 14:05:34 -0700 (PDT)
-Date:   Wed, 13 Apr 2022 14:05:01 -0700
-In-Reply-To: <20220413210503.3256922-1-irogers@google.com>
-Message-Id: <20220413210503.3256922-12-irogers@google.com>
-Mime-Version: 1.0
-References: <20220413210503.3256922-1-irogers@google.com>
-X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
-Subject: [PATCH 12/14] perf vendor events intel: Update elkhartlake event topics
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 Apr 2022 21:23:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0B150463;
+        Wed, 13 Apr 2022 18:21:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0F90CB8271B;
+        Thu, 14 Apr 2022 01:21:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51BBFC385A3;
+        Thu, 14 Apr 2022 01:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649899260;
+        bh=R03L3LDx0tIcm+BSCVo1s6eOzjl6+2OA8xlwc3fzCvw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZItAT1Q+HPHZwPhbtTPEGOhnm8m9HDIXsWY1KcytYZ3U+Ue8jkdY7WJk99H8Ed9Cm
+         NLCIueHCyjsLEBxRAmakIFrdyrN3jt6dEPB6qby82znZCvjInF5UiQ05ABZiM4SJKM
+         H5eazO28HfvbHBDErCjj4kew6yAy4LBabfuwmdWOi5BlvVjrmdyJ/qh2CL4OVziHM5
+         90vX6ruhaf1p2Jg1W5tirJbmOgNTkPPhN/T807gvFPO1J4vVkQ66UtKNu8AqAkyvum
+         cBwW1jFDXpLhG9to57obHPERuEQRx0kKss80Hby76rsdhrDTyFs0qKCEllLlu3ZJR0
+         fsAXzpRVQun4w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9614440407; Wed, 13 Apr 2022 22:20:56 -0300 (-03)
+Date:   Wed, 13 Apr 2022 22:20:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     cgel.zte@gmail.com
+Cc:     mingo@redhat.com, mark.rutland@arm.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, james.clark@arm.com,
+        lv.ruyi@zte.com.cn, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zeal Robot <zealci@zte.com.cn>
+Subject: Re: [PATCH] perf stat: fix error check return value of hashmap__new()
+Message-ID: <Yld2+LwhYYe8XXmU@kernel.org>
+References: <20220413093302.2538128-1-lv.ruyi@zte.com.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220413093302.2538128-1-lv.ruyi@zte.com.cn>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Apply topic updates from:
-https://github.com/intel/event-converter-for-linux-perf/
+Em Wed, Apr 13, 2022 at 09:33:02AM +0000, cgel.zte@gmail.com escreveu:
+> From: Lv Ruyi <lv.ruyi@zte.com.cn>
+> 
+> hashmap__new() returns ERR_PTR(-ENOMEM) when it fails, so we should use
+> IS_ERR() to check it in error handling path.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../perf/pmu-events/arch/x86/elkhartlake/other.json | 13 +------------
- .../pmu-events/arch/x86/elkhartlake/pipeline.json   | 13 ++++++++++++-
- 2 files changed, 13 insertions(+), 13 deletions(-)
+Thanks, applied.
 
-diff --git a/tools/perf/pmu-events/arch/x86/elkhartlake/other.json b/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
-index de55b199ba79..8692d4847476 100644
---- a/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
-+++ b/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
-@@ -1,15 +1,4 @@
- [
--    {
--        "BriefDescription": "Counts the total number of BTCLEARS.",
--        "CollectPEBSRecord": "2",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xe8",
--        "EventName": "BTCLEAR.ANY",
--        "PDIR_COUNTER": "na",
--        "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Counts the total number of BTCLEARS which occurs when the Branch Target Buffer (BTB) predicts a taken branch.",
--        "SampleAfterValue": "200003"
--    },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event BUS_LOCK.SELF_LOCKS",
-         "CollectPEBSRecord": "2",
-@@ -180,4 +169,4 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     }
--]
-\ No newline at end of file
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json b/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
-index 31816c6543a8..c18acb422145 100644
---- a/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
-@@ -153,6 +153,17 @@
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-+    {
-+        "BriefDescription": "Counts the total number of BTCLEARS.",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xe8",
-+        "EventName": "BTCLEAR.ANY",
-+        "PDIR_COUNTER": "na",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Counts the total number of BTCLEARS which occurs when the Branch Target Buffer (BTB) predicts a taken branch.",
-+        "SampleAfterValue": "200003"
-+    },
-     {
-         "BriefDescription": "Counts the number of unhalted core clock cycles. (Fixed event)",
-         "CollectPEBSRecord": "2",
-@@ -516,4 +527,4 @@
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     }
--]
-\ No newline at end of file
-+]
+- Arnaldo
+
+ 
+> Reported-by: Zeal Robot <zealci@zte.com.cn>
+> Signed-off-by: Lv Ruyi <lv.ruyi@zte.com.cn>
+> ---
+>  tools/perf/util/stat.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index ee6f03481215..817a2de264b4 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <errno.h>
+> +#include <linux/err.h>
+>  #include <inttypes.h>
+>  #include <math.h>
+>  #include <string.h>
+> @@ -311,7 +312,7 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
+>  
+>  	if (!mask) {
+>  		mask = hashmap__new(pkg_id_hash, pkg_id_equal, NULL);
+> -		if (!mask)
+> +		if (IS_ERR(mask))
+>  			return -ENOMEM;
+>  
+>  		counter->per_pkg_mask = mask;
+> -- 
+> 2.25.1
+
 -- 
-2.36.0.rc0.470.gd361397f0d-goog
 
+- Arnaldo
