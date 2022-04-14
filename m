@@ -2,136 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5D5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 12:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87557C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Apr 2022 12:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242789AbiDNMew (ORCPT
+        id S243666AbiDNNBh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 08:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
+        Thu, 14 Apr 2022 09:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243424AbiDNMet (ORCPT
+        with ESMTP id S238742AbiDNNBf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 08:34:49 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0320390262
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 05:32:18 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id h23-20020a17090a051700b001c9c1dd3acbso5523668pjh.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 05:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Lb2k1BEpSa/+z3XM1HtbDM6QVDJOM+So55d/9ulxPRs=;
-        b=zXucu3uxOuHlgBIeFHXTZQcT0f1Nuj2wADtF8qNjEXDePKfd+pTSETelEAYNVGGNqX
-         cSNT0kjY+IZpN4B2azMgW2RVYC4oSo3VKi8nuBDzDfMTMVfzo6/LE1A09jYRYZeibCv+
-         C2sP2CL8XuyNyF5b3tt4E+w3JLurTe6nyqV4xnvVHw3q1LCBhtj2AT5ggSX6ked/ABq5
-         D7shBoM4tTHCpbzmYwilmV14zXLYn/gNKV5PTHSQ7bHjRrnhzjLJ7NJTyCm0TQHvU0MG
-         6x/1dVPvbCIYfWS4Z0gseji7+oynCbJzF34yLOKo+OjQSbpbCY2KwDmIY3MDsLRdXFrx
-         KN3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Lb2k1BEpSa/+z3XM1HtbDM6QVDJOM+So55d/9ulxPRs=;
-        b=AgOh/TfZZxYkX+PhBL7l3piOc+Vcvfe8qGi252fInifQjEXVn3z5vRMpfDYhviVNRb
-         EViUE1Xn3lzQINTZlOXmAYdAtfRSFaW1JvaPpFc1o6/cRj0A1CHngX+TCCWdMJZ+6g6v
-         f5JM+WBMMaWsHbiVWB8kJo5G87tDPBu+Gyeg088r0kjDh9kNYEkesN7UyOZZKRlwWkhR
-         kAJk/3B5j8wUAMgcO37WOw434VPJlYLSjImCfvWw4S198RmU98QvZKyirHYt3mSk7p/z
-         Q6fruLRpYLRK9wqBG4AJtNaNC4/X7LcAExfl8h6UgawghUgndzGfkEdC+g63l16EUCJQ
-         CNcQ==
-X-Gm-Message-State: AOAM531hVRGPUBIckZtb6xAhMQvd6rQ9zwrbXlklEy+zBCES10sc+gH1
-        AZ+HjVjXojrQZyzDRr7TpKtaHQ==
-X-Google-Smtp-Source: ABdhPJxG+RZpvYQH/Y35Vaw1qIbgIm9XNnhKiFxumxGNw7owul1/6rThV1N9MNc3Yq6dBawxaJONWQ==
-X-Received: by 2002:a17:90a:dd46:b0:1b8:8:7303 with SMTP id u6-20020a17090add4600b001b800087303mr4035808pjv.197.1649939537353;
-        Thu, 14 Apr 2022 05:32:17 -0700 (PDT)
-Received: from localhost.localdomain ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id t184-20020a625fc1000000b004fa3bd9bef0sm2160580pfb.110.2022.04.14.05.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Apr 2022 05:32:16 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE event
-Date:   Thu, 14 Apr 2022 20:32:01 +0800
-Message-Id: <20220414123201.842754-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Thu, 14 Apr 2022 09:01:35 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF38F92865;
+        Thu, 14 Apr 2022 05:59:10 -0700 (PDT)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KfKGs19YDz688j4;
+        Thu, 14 Apr 2022 20:56:53 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Thu, 14 Apr 2022 14:59:06 +0200
+Received: from [10.47.27.241] (10.47.27.241) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 14 Apr
+ 2022 13:59:05 +0100
+Message-ID: <40f03ea6-1690-8a6f-2969-24c47f39c215@huawei.com>
+Date:   Thu, 14 Apr 2022 14:00:44 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v7 5/7] perf tool: Add support for HiSilicon PCIe Tune and
+ Trace device driver
+To:     Yicong Yang <yangyicong@huawei.com>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>
+References: <20220407125841.3678-1-yangyicong@hisilicon.com>
+ <20220407125841.3678-6-yangyicong@hisilicon.com>
+ <276c24d2-daf5-5eba-26b9-55edd4a45537@huawei.com>
+ <e2b7484b-eb15-029c-b1e1-4831368f61c9@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <e2b7484b-eb15-029c-b1e1-4831368f61c9@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.27.241]
+X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
-is not available") "perf mem report" and "perf report --mem-mode"
-don't report result if the PERF_SAMPLE_DATA_SRC bit is missed in sample
-type.
+On 12/04/2022 08:41, Yicong Yang wrote:
+>>> +    hisi_ptt_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_ptts));
+>>> +    if (!hisi_ptt_pmus) {
+>>> +        pr_err("hisi_ptt alloc failed\n");
+>>> +        *err = -ENOMEM;
+>> using PTR_ERR seems better, if possible
+>>
+> ok will change to that. *err = -ENOMEM is used here to keep consistence with
+> what spe does.
+> 
 
-The commit ffab48705205 ("perf: arm-spe: Fix perf report --mem-mode")
-partially fixes the issue.  It adds PERF_SAMPLE_DATA_SRC bit for Arm SPE
-event, this allows the perf data file generated by kernel v5.18-rc1 or
-later version can be reported properly.
-
-On the other hand, perf tool still fails to be backward compatibility
-for a data file recorded by an older version's perf which contains Arm
-SPE trace data.  This patch is a workaround in reporting phase, when
-detects ARM SPE PMU event and without PERF_SAMPLE_DATA_SRC bit, it will
-force to set the bit in the sample type and give a warning info.
-
-Fixes: bb30acae4c4d ("perf report: Bail out --mem-mode if mem info is not available")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: German Gomez <german.gomez@arm.com>
-Reviewed-by: James Clark <james.clark@arm.com>
----
-v3: Remove warning log, add James' review tag.
-v2: Change event name from "arm_spe_" to "arm_spe";
-    Add German's test tag.
-
- tools/perf/builtin-report.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1ad75c7ba074..afe4a5539ecc 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -353,6 +353,7 @@ static int report__setup_sample_type(struct report *rep)
- 	struct perf_session *session = rep->session;
- 	u64 sample_type = evlist__combined_sample_type(session->evlist);
- 	bool is_pipe = perf_data__is_pipe(session->data);
-+	struct evsel *evsel;
- 
- 	if (session->itrace_synth_opts->callchain ||
- 	    session->itrace_synth_opts->add_callchain ||
-@@ -407,6 +408,19 @@ static int report__setup_sample_type(struct report *rep)
- 	}
- 
- 	if (sort__mode == SORT_MODE__MEMORY) {
-+		/*
-+		 * FIXUP: prior to kernel 5.18, Arm SPE missed to set
-+		 * PERF_SAMPLE_DATA_SRC bit in sample type.  For backward
-+		 * compatibility, set the bit if it's an old perf data file.
-+		 */
-+		evlist__for_each_entry(session->evlist, evsel) {
-+			if (strstr(evsel->name, "arm_spe") &&
-+				!(sample_type & PERF_SAMPLE_DATA_SRC)) {
-+				evsel->core.attr.sample_type |= PERF_SAMPLE_DATA_SRC;
-+				sample_type |= PERF_SAMPLE_DATA_SRC;
-+			}
-+		}
-+
- 		if (!is_pipe && !(sample_type & PERF_SAMPLE_DATA_SRC)) {
- 			ui__error("Selected --mem-mode but no mem data. "
- 				  "Did you call perf record without -d?\n");
--- 
-2.25.1
-
+Ah, I see that we are contrained by the interface of 
+auxtrace_record_init() to pass err as a pointer, so I suppose the code 
+in this patch is ok to fit into that.
