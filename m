@@ -2,45 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E0FC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 12:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE2CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 13:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345991AbiDOMSG (ORCPT
+        id S244131AbiDONlG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Apr 2022 08:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47392 "EHLO
+        Fri, 15 Apr 2022 09:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353274AbiDOMR5 (ORCPT
+        with ESMTP id S1347472AbiDONlF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Apr 2022 08:17:57 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A83A04707F;
-        Fri, 15 Apr 2022 05:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650024929; x=1681560929;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2ffantDfDJF/384zKJkeiXccIRnCxuSDVGb4CQk+jZ0=;
-  b=Ies4O+s8AqZLnHEIZ0IJNPM6xfmPukfRgM85f9LxToE56MeaIh1KBdpu
-   TSGGT1njU1Ss+hw7bft5Ke9MaP382QymKYvuOSnSvm33IZvS3EU27uL5P
-   uJQ3WTq6ZodIhee57kXjd8jE2B1VDkjjrb+cw1tm5VYV1bYpRMy6swneO
-   TXh1YIBJOEucZX7OVG+Uo1owY9Swmzyb/AMlzMSP7sPrQD2emB6YotNpm
-   lOlsRpdlNF1cnnZJby+xEKcrEId1+C/A98rsOQNm2g9rNbOhi+s053gau
-   PoEsvUsv1uE+khi3heZdYls+I1WZr2K4Z0aX0IbQ5v8Hq8a4CmMRiOZo6
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="262587876"
-X-IronPort-AV: E=Sophos;i="5.90,262,1643702400"; 
-   d="scan'208";a="262587876"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2022 05:15:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,262,1643702400"; 
-   d="scan'208";a="553130943"
-Received: from boxer.igk.intel.com (HELO boxer) ([10.102.20.173])
-  by orsmga007.jf.intel.com with ESMTP; 15 Apr 2022 05:15:21 -0700
-Date:   Fri, 15 Apr 2022 14:15:15 +0200
-From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+        Fri, 15 Apr 2022 09:41:05 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6875DA7E;
+        Fri, 15 Apr 2022 06:38:37 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t12so7143165pll.7;
+        Fri, 15 Apr 2022 06:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M9rx3SpLFg0yQGkL9rFlw3lXIc0eurp55pdhU3Cwimk=;
+        b=RGBADwoDDLTNmBXMbPPibrgnThWpZsdF4Cg8GMAch+oDuOUbSPOHihCnEyOCg+oy/Y
+         DkhRQVGkJcFdrCPm09lm8TOAZNvcZGQkPX4n8dBT06wr1vADFyC21HiPtFn2hTL1HnES
+         abU1Ko956Xlvvz9jLdsPEtbJ/SU6jX1dh6iKCFyTdrIs3v/HbNKH+cFPIRSf2zZRa24O
+         ZEfC4RMNurOZGJb/r/+ef84a2La0Q+s2Np/TlM4/0hlOntv4+bmeRSBOoEM3ETbm2fwW
+         mZjkgkhHM2P2XWPVo0pqdgJD5xLGEApWRtVrzKbTNkND31RQKuCO8ulQZxqR698yl0a3
+         N29w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M9rx3SpLFg0yQGkL9rFlw3lXIc0eurp55pdhU3Cwimk=;
+        b=QPAYUiP21C3vp18Jl3voAsHSGJA9RgWV/mjc4Zge7R/eJ0JCnRqyN46oSpgWIOtJ5W
+         GAHhjs9eY0UY3OfOhgB0Uv8BjNYmcIKKM96Wc6hSfKqTENvEwuigOOHyg9AWJA4zOoZg
+         HZQ1PERw+RB4gEr9ljyy4vgSqTBCLhEuLOrb+0ZPRSqzcrjRAeA7unminiVT5HDKFERs
+         Mj4r7KyW+rPz32NXw7YE1dXyvwzZ9uNtksSz9SguRB1aNjUwoUQIheo9ankmw6W3ixsy
+         EHPnan0Ry7I0QXBjuywRxHLguj9lbtfUyW+g0jWLKS678fJUP7NVDSISO/7OvE6JMUfi
+         oO8g==
+X-Gm-Message-State: AOAM531bgYQuUOTvfqAGnoBb8wKfetu6SiJrGHWeR25jxqlWY6HAS4Pz
+        qAInzwEUFx58mLPCCab5G58=
+X-Google-Smtp-Source: ABdhPJxC2ecEADuDf7c9/EcF1MlqYrpbH2/Erq7cnCc7MBmBa0VIRIFj/M+p8QKuksJh7sWmOZCQQA==
+X-Received: by 2002:a17:902:7298:b0:158:3a08:3163 with SMTP id d24-20020a170902729800b001583a083163mr30186108pll.133.1650029916593;
+        Fri, 15 Apr 2022 06:38:36 -0700 (PDT)
+Received: from localhost ([112.79.142.104])
+        by smtp.gmail.com with ESMTPSA id 35-20020a631763000000b0039d93f8c2f0sm4541611pgx.24.2022.04.15.06.38.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Apr 2022 06:38:36 -0700 (PDT)
+Date:   Fri, 15 Apr 2022 19:08:39 +0530
+From:   Kumar Kartikeya Dwivedi <memxor@gmail.com>
 To:     Alexander Lobakin <alobakin@pm.me>
 Cc:     Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -59,7 +69,7 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
         Magnus Karlsson <magnus.karlsson@intel.com>,
         Jonathan Lemon <jonathan.lemon@gmail.com>,
         Nathan Chancellor <nathan@kernel.org>,
@@ -67,7 +77,6 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Dmitrii Dolgov <9erthalion6@gmail.com>,
         Quentin Monnet <quentin@isovalent.com>,
         Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
         Chenbo Feng <fengc@google.com>,
         Willem de Bruijn <willemb@google.com>,
         Daniel Wagner <daniel.wagner@bmw-carit.de>,
@@ -75,68 +84,60 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Ong Boon Leong <boon.leong.ong@intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH bpf-next 11/11] samples: bpf: xdpsock: fix
- -Wmaybe-uninitialized
-Message-ID: <Yllh08sX+ctbpNYg@boxer>
+Subject: Re: [PATCH bpf-next 05/11] samples: bpf: use host bpftool to
+ generate vmlinux.h, not target
+Message-ID: <20220415133839.y6tjf3ymbvbrntx4@apollo.legion>
 References: <20220414223704.341028-1-alobakin@pm.me>
- <20220414223704.341028-12-alobakin@pm.me>
+ <20220414223704.341028-6-alobakin@pm.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220414223704.341028-12-alobakin@pm.me>
+In-Reply-To: <20220414223704.341028-6-alobakin@pm.me>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 10:47:20PM +0000, Alexander Lobakin wrote:
-> Fix two sort-of-false-positives in the xdpsock userspace part:
-> 
-> samples/bpf/xdpsock_user.c: In function 'main':
-> samples/bpf/xdpsock_user.c:1531:47: warning: 'tv_usec' may be used uninitialized in this function [-Wmaybe-uninitialized]
->  1531 |                         pktgen_hdr->tv_usec = htonl(tv_usec);
->       |                                               ^~~~~~~~~~~~~~
-> samples/bpf/xdpsock_user.c:1500:26: note: 'tv_usec' was declared here
->  1500 |         u32 idx, tv_sec, tv_usec;
->       |                          ^~~~~~~
-> samples/bpf/xdpsock_user.c:1530:46: warning: 'tv_sec' may be used uninitialized in this function [-Wmaybe-uninitialized]
->  1530 |                         pktgen_hdr->tv_sec = htonl(tv_sec);
->       |                                              ^~~~~~~~~~~~~
-> samples/bpf/xdpsock_user.c:1500:18: note: 'tv_sec' was declared here
->  1500 |         u32 idx, tv_sec, tv_usec;
->       |                  ^~~~~~
-> 
-> Both variables are always initialized when @opt_tstamp == true and
-> they're being used also only when @opt_tstamp == true. However, that
-> variable comes from the BSS and is being toggled from another
-> function. They can't be executed simultaneously to actually trigger
-> undefined behaviour, but purely technically it is a correct warning.
-> Just initialize them with zeroes.
-> 
-> Fixes: eb68db45b747 ("samples/bpf: xdpsock: Add timestamp for Tx-only operation")
+On Fri, Apr 15, 2022 at 04:15:50AM IST, Alexander Lobakin wrote:
+> Use the host build of bpftool (bootstrap) instead of the target one
+> to generate vmlinux.h/skeletons for the BPF samples. Otherwise, when
+> host != target, samples compilation fails with:
+>
+> /bin/sh: line 1: samples/bpf/bpftool/bpftool: failed to exec: Exec
+> format error
+>
+> Fixes: 384b6b3bbf0d ("samples: bpf: Add vmlinux.h generation support")
 > Signed-off-by: Alexander Lobakin <alobakin@pm.me>
-
-Acked-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-
-Magnus would tell you that you should fix this on libxdp side instead :)
-
 > ---
->  samples/bpf/xdpsock_user.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/samples/bpf/xdpsock_user.c b/samples/bpf/xdpsock_user.c
-> index 399b999fcec2..1dc7ad5dbef4 100644
-> --- a/samples/bpf/xdpsock_user.c
-> +++ b/samples/bpf/xdpsock_user.c
-> @@ -1496,7 +1496,7 @@ static void rx_drop_all(void)
->  static int tx_only(struct xsk_socket_info *xsk, u32 *frame_nb,
->  		   int batch_size, unsigned long tx_ns)
->  {
-> -	u32 idx, tv_sec, tv_usec;
-> +	u32 idx, tv_sec = 0, tv_usec = 0;
->  	unsigned int i;
-> 
->  	while (xsk_ring_prod__reserve(&xsk->tx, batch_size, &idx) <
+
+Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+
+>  samples/bpf/Makefile | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+> index 97203c0de252..02f999a8ef84 100644
+> --- a/samples/bpf/Makefile
+> +++ b/samples/bpf/Makefile
+> @@ -291,12 +291,13 @@ $(LIBBPF): $(wildcard $(LIBBPF_SRC)/*.[ch] $(LIBBPF_SRC)/Makefile) | $(LIBBPF_OU
+>
+>  BPFTOOLDIR := $(TOOLS_PATH)/bpf/bpftool
+>  BPFTOOL_OUTPUT := $(abspath $(BPF_SAMPLES_PATH))/bpftool
+> -BPFTOOL := $(BPFTOOL_OUTPUT)/bpftool
+> +BPFTOOL := $(BPFTOOL_OUTPUT)/bootstrap/bpftool
+>  $(BPFTOOL): $(LIBBPF) $(wildcard $(BPFTOOLDIR)/*.[ch] $(BPFTOOLDIR)/Makefile) | $(BPFTOOL_OUTPUT)
+>  	    $(MAKE) -C $(BPFTOOLDIR) srctree=$(BPF_SAMPLES_PATH)/../../ \
+>  		OUTPUT=$(BPFTOOL_OUTPUT)/ \
+>  		LIBBPF_OUTPUT=$(LIBBPF_OUTPUT)/ \
+> -		LIBBPF_DESTDIR=$(LIBBPF_DESTDIR)/
+> +		LIBBPF_DESTDIR=$(LIBBPF_DESTDIR)/ \
+> +		bootstrap
+>
+>  $(LIBBPF_OUTPUT) $(BPFTOOL_OUTPUT):
+>  	$(call msg,MKDIR,$@)
 > --
 > 2.35.2
-> 
-> 
+>
+>
+
+--
+Kartikeya
