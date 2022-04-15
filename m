@@ -2,67 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7428CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 12:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E0FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 12:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240648AbiDOMFc (ORCPT
+        id S1345991AbiDOMSG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Apr 2022 08:05:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
+        Fri, 15 Apr 2022 08:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235553AbiDOMFc (ORCPT
+        with ESMTP id S1353274AbiDOMR5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Apr 2022 08:05:32 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64665BC849;
-        Fri, 15 Apr 2022 05:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eXz8h1scW9TaC95RrqC3BatEUPCpcyZHs+jeJJAB5lU=; b=gFOAcBhkj7dshNd/gESsgNytg4
-        +wU3qhVLguQMpX1gII8uGaCrIRVUdkQkAfLkT3dwLNwbnwuTisMgHOySrtixLlprqyVfkFiAUsORH
-        43AdiJFu1Ai8Sj5bW8xCX2MqmldYa1XgaLVw3ttgKBhJ91Sie2BTohqEt4ILH0OmXiXDsZmkGcv8I
-        h/5dVm+qBnH/miBdd9JQc1bWykYjsLqBmf6k7tkNHUJxH3OiT6Ili5cQ6FzcWHIY57PKvn4azoK4M
-        u5pqrj1WycrHDjjMq582HbDlTY5KWsTYk/ogus3h/OMZ/PnftoW5z2Nz5X1swJOJu2mm550vvBeyA
-        dYRI5J5Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nfKf2-005ND4-Tv; Fri, 15 Apr 2022 12:02:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 306643001AD;
-        Fri, 15 Apr 2022 14:02:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 21D7330A3B95B; Fri, 15 Apr 2022 14:02:48 +0200 (CEST)
-Date:   Fri, 15 Apr 2022 14:02:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org,
+        Fri, 15 Apr 2022 08:17:57 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A83A04707F;
+        Fri, 15 Apr 2022 05:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650024929; x=1681560929;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2ffantDfDJF/384zKJkeiXccIRnCxuSDVGb4CQk+jZ0=;
+  b=Ies4O+s8AqZLnHEIZ0IJNPM6xfmPukfRgM85f9LxToE56MeaIh1KBdpu
+   TSGGT1njU1Ss+hw7bft5Ke9MaP382QymKYvuOSnSvm33IZvS3EU27uL5P
+   uJQ3WTq6ZodIhee57kXjd8jE2B1VDkjjrb+cw1tm5VYV1bYpRMy6swneO
+   TXh1YIBJOEucZX7OVG+Uo1owY9Swmzyb/AMlzMSP7sPrQD2emB6YotNpm
+   lOlsRpdlNF1cnnZJby+xEKcrEId1+C/A98rsOQNm2g9rNbOhi+s053gau
+   PoEsvUsv1uE+khi3heZdYls+I1WZr2K4Z0aX0IbQ5v8Hq8a4CmMRiOZo6
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="262587876"
+X-IronPort-AV: E=Sophos;i="5.90,262,1643702400"; 
+   d="scan'208";a="262587876"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2022 05:15:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,262,1643702400"; 
+   d="scan'208";a="553130943"
+Received: from boxer.igk.intel.com (HELO boxer) ([10.102.20.173])
+  by orsmga007.jf.intel.com with ESMTP; 15 Apr 2022 05:15:21 -0700
+Date:   Fri, 15 Apr 2022 14:15:15 +0200
+From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+To:     Alexander Lobakin <alobakin@pm.me>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Chenbo Feng <fengc@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        Thomas Graf <tgraf@suug.ch>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@linux.intel.com,
-        artem.bityutskiy@linux.intel.com
-Subject: Re: [PATCH] perf/x86/cstate: Add SAPPHIRERAPIDS_X CPU support
-Message-ID: <Ylle6DyUaPRnwfvQ@hirez.programming.kicks-ass.net>
-References: <20220415104520.2737004-1-rui.zhang@intel.com>
+        netdev@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH bpf-next 11/11] samples: bpf: xdpsock: fix
+ -Wmaybe-uninitialized
+Message-ID: <Yllh08sX+ctbpNYg@boxer>
+References: <20220414223704.341028-1-alobakin@pm.me>
+ <20220414223704.341028-12-alobakin@pm.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220415104520.2737004-1-rui.zhang@intel.com>
+In-Reply-To: <20220414223704.341028-12-alobakin@pm.me>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 15, 2022 at 06:45:20PM +0800, Zhang Rui wrote:
-> From the perspective of Intel cstate residency counters,
-> SAPPHIRERAPIDS_X is the same as ICELAKE_X.
+On Thu, Apr 14, 2022 at 10:47:20PM +0000, Alexander Lobakin wrote:
+> Fix two sort-of-false-positives in the xdpsock userspace part:
 > 
-> Share the code with it. And update the comments for SAPPHIRERAPIDS_X.
+> samples/bpf/xdpsock_user.c: In function 'main':
+> samples/bpf/xdpsock_user.c:1531:47: warning: 'tv_usec' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>  1531 |                         pktgen_hdr->tv_usec = htonl(tv_usec);
+>       |                                               ^~~~~~~~~~~~~~
+> samples/bpf/xdpsock_user.c:1500:26: note: 'tv_usec' was declared here
+>  1500 |         u32 idx, tv_sec, tv_usec;
+>       |                          ^~~~~~~
+> samples/bpf/xdpsock_user.c:1530:46: warning: 'tv_sec' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>  1530 |                         pktgen_hdr->tv_sec = htonl(tv_sec);
+>       |                                              ^~~~~~~~~~~~~
+> samples/bpf/xdpsock_user.c:1500:18: note: 'tv_sec' was declared here
+>  1500 |         u32 idx, tv_sec, tv_usec;
+>       |                  ^~~~~~
 > 
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> Both variables are always initialized when @opt_tstamp == true and
+> they're being used also only when @opt_tstamp == true. However, that
+> variable comes from the BSS and is being toggled from another
+> function. They can't be executed simultaneously to actually trigger
+> undefined behaviour, but purely technically it is a correct warning.
+> Just initialize them with zeroes.
+> 
+> Fixes: eb68db45b747 ("samples/bpf: xdpsock: Add timestamp for Tx-only operation")
+> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
 
-Thanks!
+Acked-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+
+Magnus would tell you that you should fix this on libxdp side instead :)
+
+> ---
+>  samples/bpf/xdpsock_user.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/samples/bpf/xdpsock_user.c b/samples/bpf/xdpsock_user.c
+> index 399b999fcec2..1dc7ad5dbef4 100644
+> --- a/samples/bpf/xdpsock_user.c
+> +++ b/samples/bpf/xdpsock_user.c
+> @@ -1496,7 +1496,7 @@ static void rx_drop_all(void)
+>  static int tx_only(struct xsk_socket_info *xsk, u32 *frame_nb,
+>  		   int batch_size, unsigned long tx_ns)
+>  {
+> -	u32 idx, tv_sec, tv_usec;
+> +	u32 idx, tv_sec = 0, tv_usec = 0;
+>  	unsigned int i;
+> 
+>  	while (xsk_ring_prod__reserve(&xsk->tx, batch_size, &idx) <
+> --
+> 2.35.2
+> 
+> 
