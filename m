@@ -2,82 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C55EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 18:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B221C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 23:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347577AbiDOStc (ORCPT
+        id S231203AbiDOXKo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Apr 2022 14:49:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59052 "EHLO
+        Fri, 15 Apr 2022 19:10:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347317AbiDOStb (ORCPT
+        with ESMTP id S229560AbiDOXKn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Apr 2022 14:49:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA0B673FE;
-        Fri, 15 Apr 2022 11:47:02 -0700 (PDT)
+        Fri, 15 Apr 2022 19:10:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60006183BE;
+        Fri, 15 Apr 2022 16:08:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 491F460F02;
-        Fri, 15 Apr 2022 18:47:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A0778C385A8;
-        Fri, 15 Apr 2022 18:47:01 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0B0D3B831BB;
+        Fri, 15 Apr 2022 23:08:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D519C385AF;
+        Fri, 15 Apr 2022 23:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650048421;
-        bh=KxUn3iXY/tE0KNlXz3aeopklm2WuiRMtaEWQMBFgEb8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=RY8PEK4jUj92oSOpsTAXfislJLJUpdWbRqnMm6GBs5s79WsDwxWvH27/ShGtT6r4k
-         8AuzrDrPXJjbowjesc9fGRpfMJgqlW7UmGXTx/4Jm8WfYQoJJ9JL3xljLPymek8Rd6
-         frQyuJNnBkZz+rqwsMmAVC60a7l55Z5fbs/6Z4XaQhKAV/kbaXXqGZfFqUDfp3pYZR
-         SZ9B+Pf9TXkArxVs3t5lQujz/T9Ia/2Z6r2pWVffD4FGcRLFOvps1et336Ej1HBbI2
-         vGPDP1o3FTk75Td0HgtL+sNyo+E68IMllpGsW3ES+qxpSHvn3V70Gq159jr1oK4fc0
-         /35vo5ftJeqTQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8AF39E7399D;
-        Fri, 15 Apr 2022 18:47:01 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v5.18: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220414232954.237812-1-acme@kernel.org>
-References: <20220414232954.237812-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220414232954.237812-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-14
-X-PR-Tracked-Commit-Id: f58faed7fb3f784efdbf3b401368dcf51a6e28fa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e2dec4884454650a87d31206e7cfbc566665ebe6
-Message-Id: <165004842155.6717.2837954775260237359.pr-tracker-bot@kernel.org>
-Date:   Fri, 15 Apr 2022 18:47:01 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        s=k20201202; t=1650064090;
+        bh=bun1UW6dQN+eeylN7K4W70rNw5ZTuBxbCaji7Cqa870=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Kx2EbsKWUajlN+9EYTClzJvSsIYSC0HMbpGZJ+ViEb6kodJh4fqPQAafSm+RNgDyY
+         UD5s7AzJmqA4r/G5RGaG6yMqa+SBGNxlSotO8THxVSeIeEXnnf0ZuynU28sa3oicyC
+         IGc/GOGHFZe05gBPClMuGve0nkZ00NXKVv1beymT0WVvzlnXjIkCObGjHkboA+UfRL
+         j5UZsaRvZM1eY02Vv7aE+eaLwlkg30VQ2hybLCDwIDQTPH58qWHccOtOXCFTXbAyG9
+         JPBwM0TPIzODSx3pqPfRF7LEm6xYOSCceYrjHY/ZpDYJoOogFqwOTd4GCDI5eNOLfS
+         bEo9m5ZHCFNWw==
+Received: by mail-yb1-f173.google.com with SMTP id t67so16608290ybi.2;
+        Fri, 15 Apr 2022 16:08:10 -0700 (PDT)
+X-Gm-Message-State: AOAM530y8pse7f21Iqhf5l9O4k5JLtanBK0CPOKKp15Y1z9uw6DCGsvA
+        HUN+5VnOloum4YqU/Xq4BZmfDZLht1GBIV/dPqU=
+X-Google-Smtp-Source: ABdhPJzfao0cbhuAT+evsmpeKuZ23Th3dopsUfXigTn3uQNgTDcD+/N0ixKG3h8vTUKKSo+9oYfu8IiLwQdS0yiXQk8=
+X-Received: by 2002:a05:6902:1506:b0:63e:4f1b:40ae with SMTP id
+ q6-20020a056902150600b0063e4f1b40aemr1355690ybu.322.1650064089602; Fri, 15
+ Apr 2022 16:08:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220414223704.341028-1-alobakin@pm.me> <20220414223704.341028-2-alobakin@pm.me>
+In-Reply-To: <20220414223704.341028-2-alobakin@pm.me>
+From:   Song Liu <song@kernel.org>
+Date:   Fri, 15 Apr 2022 16:07:58 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7qrH6Fc-MSJSJzS0r_vDzTfHyaaRDGhrTjo9vijQwpWg@mail.gmail.com>
+Message-ID: <CAPhsuW7qrH6Fc-MSJSJzS0r_vDzTfHyaaRDGhrTjo9vijQwpWg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 01/11] bpf, perf: fix bpftool compilation with !CONFIG_PERF_EVENTS
+To:     Alexander Lobakin <alobakin@pm.me>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Chenbo Feng <fengc@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        Thomas Graf <tgraf@suug.ch>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
         linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Bayduraev <alexey.bayduraev@gmail.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>, Lv Ruyi <lv.ruyi@zte.com.cn>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Thu, 14 Apr 2022 20:29:54 -0300:
+On Thu, Apr 14, 2022 at 3:45 PM Alexander Lobakin <alobakin@pm.me> wrote:
+>
+> When CONFIG_PERF_EVENTS is not set, struct perf_event remains empty.
+> However, the structure is being used by bpftool indirectly via BTF.
+> This leads to:
+>
+> skeleton/pid_iter.bpf.c:49:30: error: no member named 'bpf_cookie' in 'struct perf_event'
+>         return BPF_CORE_READ(event, bpf_cookie);
+>                ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+>
+> ...
+>
+> skeleton/pid_iter.bpf.c:49:9: error: returning 'void' from a function with incompatible result type '__u64' (aka 'unsigned long long')
+>         return BPF_CORE_READ(event, bpf_cookie);
+>                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> Tools and samples can't use any CONFIG_ definitions, so the fields
+> used there should always be present.
+> Move CONFIG_BPF_SYSCALL block out of the CONFIG_PERF_EVENTS block
+> to make it available unconditionally.
+>
+> Fixes: cbdaf71f7e65 ("bpftool: Add bpf_cookie to link output")
+> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-14
+While I can't think of a real failure with this approach, it does feel
+weird to me. Can we fix this with bpf_core_field_exists()?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e2dec4884454650a87d31206e7cfbc566665ebe6
+Thanks,
+Song
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> ---
+>  include/linux/perf_event.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index af97dd427501..b1d5715b8b34 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -762,12 +762,14 @@ struct perf_event {
+>         u64                             (*clock)(void);
+>         perf_overflow_handler_t         overflow_handler;
+>         void                            *overflow_handler_context;
+> +#endif /* CONFIG_PERF_EVENTS */
+>  #ifdef CONFIG_BPF_SYSCALL
+>         perf_overflow_handler_t         orig_overflow_handler;
+>         struct bpf_prog                 *prog;
+>         u64                             bpf_cookie;
+>  #endif
+>
+> +#ifdef CONFIG_PERF_EVENTS
+>  #ifdef CONFIG_EVENT_TRACING
+>         struct trace_event_call         *tp_event;
+>         struct event_filter             *filter;
+> --
+> 2.35.2
+>
+>
