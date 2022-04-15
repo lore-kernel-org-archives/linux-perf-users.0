@@ -2,71 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5F4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 03:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696EDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 03:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347413AbiDODCZ (ORCPT
+        id S231276AbiDODQi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Apr 2022 23:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44330 "EHLO
+        Thu, 14 Apr 2022 23:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238082AbiDODCY (ORCPT
+        with ESMTP id S1349049AbiDODQg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Apr 2022 23:02:24 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6D75F8C1;
-        Thu, 14 Apr 2022 19:59:56 -0700 (PDT)
+        Thu, 14 Apr 2022 23:16:36 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BDB9D0E6
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Apr 2022 20:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649991596; x=1681527596;
+  t=1649992447; x=1681528447;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=/gELS1F9Pc4FaUsgUVWB4DvT6mJyZz4/VNgyHfEwsaM=;
-  b=QE/rpkGmZ2ZvRIVpahL8eYVTNCQM6V7QVSRlSmpp9wAhvoLZ0QxdFpoQ
-   l4FrFB2U0AKLgKiGxOpW84Qw+dOrJJZQ3ZubytW7WcKmlCdGHM85XkOgk
-   1I3tWppcKjl8YW3TDfLrMlftFjL0aPEMbDeDnCRyldIb07j/vENzhSyN2
-   YeaqUVEvqPPc3aasMC6otAn5MG4impUhihp9rs/Igc8Ow4ydp02Ys6Y4w
-   nwNn9vcVwGSurda76M3fpwT4p9qlO+s2eNYwXfGrm4MOeuykhPggax66P
-   lGuXwyN6XebBnYazrU3BkN6Zlop0VPxkMvcjA9OWHK6/O5X+CZR/Jaib0
+  bh=NTWPu8DICpIQoIWgcdTMt1fL2PvXCnUYMogJxeeK5Uc=;
+  b=a/iVwR9SvJyvugBwukcScgOrdtZ9FwoFLTMYH3iZT1yo0bD35sM8cp5r
+   2J0rBv+4dZwl+4b1xhxYtPcjwE/6Vtr0D/lSb0IbE3mdvH9DFNkQod0xC
+   RP/zRZDRKwKAM+ZC/Ks9VpfFysaIG/xuQnwH5coP+3vJLzCpSKzPRbB2B
+   IyjeSmlCqG2GdEk7K53KXH9p1ouos8QBYDc81+tKbSRHF5ElDT39mmMES
+   Aq7WUIcN7XM4f32NJIpNI1HZfKGGasxO8AeET2v7qvWvFwXqZ3zUAAhBU
+   cVbFGhiTYoaEe5orJ10d1CknkxYUB9lbFDg2XvDYakzyjHJpP92QVqHI9
    w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="262834129"
+X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="260679028"
 X-IronPort-AV: E=Sophos;i="5.90,261,1643702400"; 
-   d="scan'208";a="262834129"
+   d="scan'208";a="260679028"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 19:59:55 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 20:14:06 -0700
 X-IronPort-AV: E=Sophos;i="5.90,261,1643702400"; 
-   d="scan'208";a="574124475"
+   d="scan'208";a="574129606"
 Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.255.30.200]) ([10.255.30.200])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 19:59:52 -0700
-Message-ID: <b7b8c467-ccb2-913b-66b6-e02e081577e2@linux.intel.com>
-Date:   Fri, 15 Apr 2022 10:59:49 +0800
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 20:14:05 -0700
+Message-ID: <3ba5609b-2e39-8e22-d72d-e114adea9109@linux.intel.com>
+Date:   Fri, 15 Apr 2022 11:14:02 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH 03/14] perf vendor events intel: Add sapphirerapids events
+Subject: Re: Fwd: perf :: intel hybrid events (fwd)
 Content-Language: en-US
 To:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20220413210503.3256922-1-irogers@google.com>
- <20220413210503.3256922-3-irogers@google.com>
- <368c5b92-f035-41cc-96a8-4908f1325462@linux.intel.com>
- <CAP-5=fWpECOtC8jc6up4LRFon1v0DBN1Y6LJsimEtuPfXcvJuA@mail.gmail.com>
- <28285c3a-a577-14ca-5e88-6101217ea73f@linux.intel.com>
+        Michael Petlan <mpetlan@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>
+References: <alpine.LRH.2.20.2204131302230.29735@Diego>
+ <CA+JHD92zy1iOkok57goXrhjOmri+fZXRhOoNGzwBW+t_a84etw@mail.gmail.com>
+ <0dcc7164-bbfe-0ff0-7c84-24eb07017022@linux.intel.com>
 From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <28285c3a-a577-14ca-5e88-6101217ea73f@linux.intel.com>
+In-Reply-To: <0dcc7164-bbfe-0ff0-7c84-24eb07017022@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -75,49 +63,152 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 4/15/2022 2:25 AM, Liang, Kan wrote:
+On 4/13/2022 9:27 PM, Liang, Kan wrote:
 > 
+> Hi Michael,
 > 
-> On 4/14/2022 12:36 PM, Ian Rogers wrote:
->> On Thu, Apr 14, 2022 at 8:03 AM Liang, Kan <kan.liang@linux.intel.com> 
->> wrote:
->>>
->>>
->>>
->>> On 4/13/2022 5:04 PM, Ian Rogers wrote:
->>>> Events were generated from 01.org using:
->>>> https://github.com/intel/event-converter-for-linux-perf
->>>>
->>>> Signed-off-by: Ian Rogers<irogers@google.com>
->>>> ---
->>>>    tools/perf/pmu-events/arch/x86/mapfile.csv    |    1 +
->>>>    .../arch/x86/sapphirerapids/cache.json        | 1083 ++++++++++++++
->>>>    .../x86/sapphirerapids/floating-point.json    |  218 +++
->>>>    .../arch/x86/sapphirerapids/frontend.json     |  471 ++++++
->>>>    .../arch/x86/sapphirerapids/memory.json       |  415 ++++++
->>>>    .../arch/x86/sapphirerapids/other.json        |  329 +++++
->>>>    .../arch/x86/sapphirerapids/pipeline.json     | 1271 
->>>> +++++++++++++++++
->>>>    .../x86/sapphirerapids/virtual-memory.json    |  225 +++
->>>
->>> Thank you very much Ian for the patches. They all looks good to me.
->>>
->>>       Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->>>
->>> BTW: I think the uncore events for SPR are also published in 01.org.
->>> Do you have plan to add them later?
+> Thanks for reporting the issues.
 >>
->> Thanks Kan, we need to add the csv file to the github project to make
->> this work. I can make a basic one if that works?
+>>
+>> Forwarding the questions to perf-users...
+>>
+>> Also, I have found out that mem-stores:p event does not work on
+>> Intel Alderlake:
+>>
+>> # perf record -e mem-stores -- ./examples/dummy > /dev/null
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.024 MB perf.data (64 samples) ]
+>>
+>> While with precise, it records nothing:
+>>
+>> # perf record -e mem-stores:p -- ./examples/dummy > /dev/null
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.021 MB perf.data ]
+>>
+>> This makes the perf-mem and perf-c2c commands less useful.
+>>
+>> Again, is this how it is supposed to work or do I miss some fixes?
+>> Or does upstream also miss some fixes?
 >>
 > 
-> I think Zhengjun may already have one. Zhengjun?
-
-The CSV file for SPR has been added to the event convert tool, please 
-have a try.
+> It looks like a perf tool bug.
+> 
+> Actually, we did the support for the perf mem record with patch 
+> 4a9086adc329 ("perf mem: Support record for hybrid platform").
+> It seems we need some extra work for mem-stores:p as well.
+> 
+> 
+>> Thanks.
+>> Michael
+>>
+>> ---------- Forwarded message ----------
+>> Date: Tue, 12 Apr 2022 22:59:11
+>> From: Michael Petlan <mpetlan@redhat.com <mailto:mpetlan@redhat.com>>
+>> To: yao.jin@linux.intel.com <mailto:yao.jin@linux.intel.com>
+>> Subject: perf :: intel hybrid events
+>>
+>> Hello Jin Yao,
+>>
+>> I have a few questions/ideas about hybrid events on Alderlake...
+>>
+> 
+> Now, Zhengjun focus on the userspace perf tool enabling.
+> 
+> Zhengjun, could you please take a look all the issues?
+> 
+Sure. I will fix the issues.
+>>
+>> 1) L1-{d,i}cache-load{,-misse}s supported partially
+>>
+>> Interestingly enough, perf offers the following events in the hwcache 
+>> set:
+>>
+>> L1-dcache-load-misses
+>> L1-dcache-loads
+>> L1-icache-load-misses
+>> L1-icache-loads
+>>
+>> Of course, each expands to its cpu_core and cpu_atom version, as 
+>> following:
+>>
+>> # perf stat -e L1-icache-load-misses
+>> ^C
+>>   Performance counter stats for 'system wide':
+>>             146,566      cpu_core/L1-icache-load-misses/
+>>             164,971      cpu_atom/L1-icache-load-misses/
+>>
+>> On my Alderlake testing box with RHEL-9 I see the following support 
+>> pattern:
+>>
+>>                           |  cpu_core  |  cpu_atom  |
+>> L1-dcache-load-misses    |     OK     |     N/A    |
+>> L1-dcache-loads          |     OK     |     OK     |
+>> L1-icache-load-misses    |     OK     |     OK     |
+>> L1-icache-loads          |     N/A    |     OK     |
+>>
+>> For dcache, loads are supported on both, while misses do not work on 
+>> atom.
+>> That can be, atom is simpler, thus I can expect it missing some events...
+>>
+>> For icache, misses are supported on both, while loads do not work on 
+>> core.
+>> This looks weird, is that really the wanted behavior? Isn't there a 
+>> bug in
+>> the drivers/event specifications?
+> 
+> That's expected. We don't have a proper event for the L1-icache-loads on 
+> big core and L1-dcache-load-misses on Atom.
+> You can see the same behavior on the previous core platform SKL and atom 
+> platform GLP and TNT.
+> 
+>>
+>>
+>> 2) You added --cputype switch to perf-stat via 
+>> e69dc84282fb474cb87097c6c94
+>> so one can restrict the expansion and keep only one cpu type used. 
+>> Doesn't
+>> perf-record need the same?
+> 
+> Yes, I agree.
+> 
+>>
+>>
+>> 3) While perf-stat defaults to "use whatever we can" approach when not 
+>> every
+>> event is supported, puts "<not supported>" into the results, perf-record
+>> fails. This is bad for the cases like above, since it fails when one 
+>> of the
+>> events aren't supported. That might make sense if the unsupported 
+>> event was
+>> specified explicitly by the user, e.g. `perf record -e AA -e BB -- 
+>> ./load`
+>> and perf fails "sorry, I don't support event BB".
+>>
+>> However, what if the user just wants L1-dcache-load-misses and encounters
+>> perf-record failing just because the event is not supported on Atom?
+>>
+>> Shouldn't this behavior be fixed by some --tolerant switch that would 
+>> ignore
+>> the problems and record what is going on on the Core at least?
+>>
+>>
+> 
+> Yes, I agree. I think we should collect anything we can collect. For the 
+> unsupported event, a warning should be printed.
+> 
+> BTW: Besides the cache events, the topdown events also have some issues 
+> (perf stat --topdown and perf stat defaults) on the hybrid platforms. 
+> Zhengjun is working on it. Some Topdown related patches for the hybrid 
+> platforms will be posted soon.
+> 
 > 
 > Thanks,
 > Kan
+>> What are your ideas?
+>> Thanks...
+>>
+>> Michael
+>>
 
 -- 
 Zhengjun Xing
