@@ -2,142 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE2CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 13:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C55EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 18:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244131AbiDONlG (ORCPT
+        id S1347577AbiDOStc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Apr 2022 09:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48416 "EHLO
+        Fri, 15 Apr 2022 14:49:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347472AbiDONlF (ORCPT
+        with ESMTP id S1347317AbiDOStb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Apr 2022 09:41:05 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6875DA7E;
-        Fri, 15 Apr 2022 06:38:37 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t12so7143165pll.7;
-        Fri, 15 Apr 2022 06:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M9rx3SpLFg0yQGkL9rFlw3lXIc0eurp55pdhU3Cwimk=;
-        b=RGBADwoDDLTNmBXMbPPibrgnThWpZsdF4Cg8GMAch+oDuOUbSPOHihCnEyOCg+oy/Y
-         DkhRQVGkJcFdrCPm09lm8TOAZNvcZGQkPX4n8dBT06wr1vADFyC21HiPtFn2hTL1HnES
-         abU1Ko956Xlvvz9jLdsPEtbJ/SU6jX1dh6iKCFyTdrIs3v/HbNKH+cFPIRSf2zZRa24O
-         ZEfC4RMNurOZGJb/r/+ef84a2La0Q+s2Np/TlM4/0hlOntv4+bmeRSBOoEM3ETbm2fwW
-         mZjkgkhHM2P2XWPVo0pqdgJD5xLGEApWRtVrzKbTNkND31RQKuCO8ulQZxqR698yl0a3
-         N29w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M9rx3SpLFg0yQGkL9rFlw3lXIc0eurp55pdhU3Cwimk=;
-        b=QPAYUiP21C3vp18Jl3voAsHSGJA9RgWV/mjc4Zge7R/eJ0JCnRqyN46oSpgWIOtJ5W
-         GAHhjs9eY0UY3OfOhgB0Uv8BjNYmcIKKM96Wc6hSfKqTENvEwuigOOHyg9AWJA4zOoZg
-         HZQ1PERw+RB4gEr9ljyy4vgSqTBCLhEuLOrb+0ZPRSqzcrjRAeA7unminiVT5HDKFERs
-         Mj4r7KyW+rPz32NXw7YE1dXyvwzZ9uNtksSz9SguRB1aNjUwoUQIheo9ankmw6W3ixsy
-         EHPnan0Ry7I0QXBjuywRxHLguj9lbtfUyW+g0jWLKS678fJUP7NVDSISO/7OvE6JMUfi
-         oO8g==
-X-Gm-Message-State: AOAM531bgYQuUOTvfqAGnoBb8wKfetu6SiJrGHWeR25jxqlWY6HAS4Pz
-        qAInzwEUFx58mLPCCab5G58=
-X-Google-Smtp-Source: ABdhPJxC2ecEADuDf7c9/EcF1MlqYrpbH2/Erq7cnCc7MBmBa0VIRIFj/M+p8QKuksJh7sWmOZCQQA==
-X-Received: by 2002:a17:902:7298:b0:158:3a08:3163 with SMTP id d24-20020a170902729800b001583a083163mr30186108pll.133.1650029916593;
-        Fri, 15 Apr 2022 06:38:36 -0700 (PDT)
-Received: from localhost ([112.79.142.104])
-        by smtp.gmail.com with ESMTPSA id 35-20020a631763000000b0039d93f8c2f0sm4541611pgx.24.2022.04.15.06.38.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Apr 2022 06:38:36 -0700 (PDT)
-Date:   Fri, 15 Apr 2022 19:08:39 +0530
-From:   Kumar Kartikeya Dwivedi <memxor@gmail.com>
-To:     Alexander Lobakin <alobakin@pm.me>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Fri, 15 Apr 2022 14:49:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA0B673FE;
+        Fri, 15 Apr 2022 11:47:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 491F460F02;
+        Fri, 15 Apr 2022 18:47:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A0778C385A8;
+        Fri, 15 Apr 2022 18:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650048421;
+        bh=KxUn3iXY/tE0KNlXz3aeopklm2WuiRMtaEWQMBFgEb8=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=RY8PEK4jUj92oSOpsTAXfislJLJUpdWbRqnMm6GBs5s79WsDwxWvH27/ShGtT6r4k
+         8AuzrDrPXJjbowjesc9fGRpfMJgqlW7UmGXTx/4Jm8WfYQoJJ9JL3xljLPymek8Rd6
+         frQyuJNnBkZz+rqwsMmAVC60a7l55Z5fbs/6Z4XaQhKAV/kbaXXqGZfFqUDfp3pYZR
+         SZ9B+Pf9TXkArxVs3t5lQujz/T9Ia/2Z6r2pWVffD4FGcRLFOvps1et336Ej1HBbI2
+         vGPDP1o3FTk75Td0HgtL+sNyo+E68IMllpGsW3ES+qxpSHvn3V70Gq159jr1oK4fc0
+         /35vo5ftJeqTQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8AF39E7399D;
+        Fri, 15 Apr 2022 18:47:01 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v5.18: 2nd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220414232954.237812-1-acme@kernel.org>
+References: <20220414232954.237812-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220414232954.237812-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-14
+X-PR-Tracked-Commit-Id: f58faed7fb3f784efdbf3b401368dcf51a6e28fa
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e2dec4884454650a87d31206e7cfbc566665ebe6
+Message-Id: <165004842155.6717.2837954775260237359.pr-tracker-bot@kernel.org>
+Date:   Fri, 15 Apr 2022 18:47:01 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Chenbo Feng <fengc@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        Thomas Graf <tgraf@suug.ch>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH bpf-next 05/11] samples: bpf: use host bpftool to
- generate vmlinux.h, not target
-Message-ID: <20220415133839.y6tjf3ymbvbrntx4@apollo.legion>
-References: <20220414223704.341028-1-alobakin@pm.me>
- <20220414223704.341028-6-alobakin@pm.me>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220414223704.341028-6-alobakin@pm.me>
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexey Bayduraev <alexey.bayduraev@gmail.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        Ian Rogers <irogers@google.com>, Lv Ruyi <lv.ruyi@zte.com.cn>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 15, 2022 at 04:15:50AM IST, Alexander Lobakin wrote:
-> Use the host build of bpftool (bootstrap) instead of the target one
-> to generate vmlinux.h/skeletons for the BPF samples. Otherwise, when
-> host != target, samples compilation fails with:
->
-> /bin/sh: line 1: samples/bpf/bpftool/bpftool: failed to exec: Exec
-> format error
->
-> Fixes: 384b6b3bbf0d ("samples: bpf: Add vmlinux.h generation support")
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
-> ---
+The pull request you sent on Thu, 14 Apr 2022 20:29:54 -0300:
 
-Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-14
 
->  samples/bpf/Makefile | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 97203c0de252..02f999a8ef84 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -291,12 +291,13 @@ $(LIBBPF): $(wildcard $(LIBBPF_SRC)/*.[ch] $(LIBBPF_SRC)/Makefile) | $(LIBBPF_OU
->
->  BPFTOOLDIR := $(TOOLS_PATH)/bpf/bpftool
->  BPFTOOL_OUTPUT := $(abspath $(BPF_SAMPLES_PATH))/bpftool
-> -BPFTOOL := $(BPFTOOL_OUTPUT)/bpftool
-> +BPFTOOL := $(BPFTOOL_OUTPUT)/bootstrap/bpftool
->  $(BPFTOOL): $(LIBBPF) $(wildcard $(BPFTOOLDIR)/*.[ch] $(BPFTOOLDIR)/Makefile) | $(BPFTOOL_OUTPUT)
->  	    $(MAKE) -C $(BPFTOOLDIR) srctree=$(BPF_SAMPLES_PATH)/../../ \
->  		OUTPUT=$(BPFTOOL_OUTPUT)/ \
->  		LIBBPF_OUTPUT=$(LIBBPF_OUTPUT)/ \
-> -		LIBBPF_DESTDIR=$(LIBBPF_DESTDIR)/
-> +		LIBBPF_DESTDIR=$(LIBBPF_DESTDIR)/ \
-> +		bootstrap
->
->  $(LIBBPF_OUTPUT) $(BPFTOOL_OUTPUT):
->  	$(call msg,MKDIR,$@)
-> --
-> 2.35.2
->
->
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e2dec4884454650a87d31206e7cfbc566665ebe6
 
---
-Kartikeya
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
