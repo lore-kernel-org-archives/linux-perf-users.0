@@ -2,167 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF353C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Apr 2022 14:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C05C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Apr 2022 17:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232387AbiDPPCQ (ORCPT
+        id S232717AbiDPRxU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 16 Apr 2022 11:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46722 "EHLO
+        Sat, 16 Apr 2022 13:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232381AbiDPPCP (ORCPT
+        with ESMTP id S232450AbiDPRxT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 16 Apr 2022 11:02:15 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168693A193
-        for <linux-perf-users@vger.kernel.org>; Sat, 16 Apr 2022 07:59:42 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id x18so5889882wrc.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 16 Apr 2022 07:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OO1451Z/51EUQiODYQcioXNtAk5WDJClp+v1gsb4O+A=;
-        b=JsGelCQgSfft9VxIYkI97wbWG1Wnm7X9pfRoYqmEWOo9hpWdzwWLwiWQqwhnjSMUKt
-         Kc14Sh6fqshzpxMj6q2WvlyVH2SL7rZH0iSVd62N/WQulajBAf6BLXeaiPaNQ/MvJlHO
-         3s0/2yk8wxg0g7RgchbWU8lO9FupY6w+J/88Wl+mgkQwwQD5qJmpVQoZHMRB1etsUDUa
-         DBKpijfWSZs6SQjStJ5SBH1LnUW3WJH5iLErJhnltNlsks4HmlbGGaUhXm+y9fYD0okl
-         154Eh5cOsi2ONW+/sEeXldDTqdGXMjGX7e/S80TGZdqg+2c9JhJkl0/vZpOD6NrFy1fC
-         XOew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OO1451Z/51EUQiODYQcioXNtAk5WDJClp+v1gsb4O+A=;
-        b=lcTknsts1kM2CWbN7Cr/Z+2KaqtLRtnJhwt/yU98kZFIoGzckim1CnVa1dB/iWx3iW
-         ah/lI0aGUmVQ9963XbLrGsET0X1M+SOBYe3oYyesGrquANU3RDAzL5rxipULqqbNvMXV
-         oXp4u3hNPcrhtjpWp1N5S5Qsat2yf+q4ofx7gv/Rn3nJypWkQkmSZtHs5jpnMddlGaCf
-         115vOVpg+2HJJ0vLwyRqrRgIEjaLtNGD68fo/VqE9XYZztThre4lZHPQnhSeWNjm8uGh
-         kBs9l7NoChXrgIqYbts4Ypm4CNRqv1DjQqdCyExVc0B1AdAwu37LKzHssPBPeVz9u8uP
-         Cu0w==
-X-Gm-Message-State: AOAM533j6hEM1pmWDQ60gaHtfYn1mBQZzMLheuWPi27B30A5a2gLUs90
-        AVqr0IfssVVIpUUPf25R3eGkyk/UgfaJV7Y81ur7tA==
-X-Google-Smtp-Source: ABdhPJygSfQudGHNGaIYA8AF4RqP8bQ81BW1Wk85dVq6W4Vll53M5oge7GeBZ1IPlzfuBne9ZZ6kH4WkXvpz8agqIAU=
-X-Received: by 2002:adf:eb09:0:b0:207:bb77:9abb with SMTP id
- s9-20020adfeb09000000b00207bb779abbmr2770912wrn.375.1650121180438; Sat, 16
- Apr 2022 07:59:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220416004048.1514900-1-namhyung@kernel.org> <20220416004048.1514900-2-namhyung@kernel.org>
-In-Reply-To: <20220416004048.1514900-2-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 16 Apr 2022 10:59:27 -0400
-Message-ID: <CAP-5=fX5S2CR58REzAhXH4s8_27=D2LbKksS7mHoSoxYOOmN4g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf symbol: Pass is_kallsyms to symbols__fixup_end()
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Sat, 16 Apr 2022 13:53:19 -0400
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0690E34;
+        Sat, 16 Apr 2022 10:50:46 -0700 (PDT)
+Date:   Sat, 16 Apr 2022 17:50:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+        s=protonmail2; t=1650131444;
+        bh=dUBVYxJ9KjFGdWAPZ3BpuTxFmDw0xhV4VjL0SW5G2Cs=;
+        h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
+         References:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+         Message-ID;
+        b=amXLMAutJGPxMzbDaeGMyXFJX9zlX6dkXXT2t9TYkA46iUHC/JG9DfVb84E1JOr3v
+         5i7k7LSd6DCTZ9xQKZwi5NNgJfHv/MWn3SPTSbUKs5djHd6HpB83Jpha6uCFBEKI2S
+         ooJYv4Nu0+mGX154G/bDnvnCNY35Fs70h23GR1G3Q9iqkEV/9dfNmBjoz+J4sVs0EG
+         R3cAIWN/RYxouBCKNFFiV+kSnSqMug8na3JtHvmg/YEO5OSMTeVOeAAiKi/TnqiBIW
+         0lZthWkwvsFWIICVz4tefCNwyM0eB0/EOg5Tzqc/tR+5qvYDOiUyacvmPEMLFeeF5Q
+         1/fmwoe9vwpLw==
+To:     Song Liu <song@kernel.org>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Alexander Lobakin <alobakin@pm.me>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
-        Song Liu <songliubraving@fb.com>,
-        Will Deacon <will@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        =?utf-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Chenbo Feng <fengc@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Thomas Graf <tgraf@suug.ch>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        llvm@lists.linux.dev
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: Re: [PATCH bpf-next 02/11] bpf: always emit struct bpf_perf_link BTF
+Message-ID: <20220416174330.195496-1-alobakin@pm.me>
+In-Reply-To: <CAPhsuW42Sv2EkMzVoh2+i=2NN2yMRHOqDN8wmXGPax2-cz8ynA@mail.gmail.com>
+References: <20220414223704.341028-1-alobakin@pm.me> <20220414223704.341028-3-alobakin@pm.me> <CAPhsuW42Sv2EkMzVoh2+i=2NN2yMRHOqDN8wmXGPax2-cz8ynA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 15, 2022 at 8:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> The symbol fixup is necessary for symbols in kallsyms since they don't
-> have size info.  So we use the next symbol's address to calculate the
-> size.  Now it's also used for user binaries because sometimes they
-> miss size for hand-written asm functions.
->
-> There's a arch-specific function to handle kallsyms differently but
-> currently it cannot distinguish kallsyms from others.  Pass this
-> information explicitly to handle it properly.  Note that those arch
-> functions will be moved to the generic function so I didn't added it
-> to the arch-functions.
+From: Song Liu <song@kernel.org>
+Date: Fri, 15 Apr 2022 16:24:41 -0700
 
-Thanks Namhyung, in:
-https://lore.kernel.org/linux-perf-users/20220412154817.2728324-3-irogers@google.com/
-I used "dso->kernel != DSO_SPACE__USER" in symbol-elf to make this
-more than just kallsyms as presumably kernel code is the issue. Do we
-know elf kernel code has correctly sized symbols?
+> On Thu, Apr 14, 2022 at 3:45 PM Alexander Lobakin <alobakin@pm.me> wrote:
+> >
+> > When building bpftool with !CONFIG_PERF_EVENTS:
+> >
+> > skeleton/pid_iter.bpf.c:47:14: error: incomplete definition of type 'st=
+ruct bpf_perf_link'
+> >         perf_link =3D container_of(link, struct bpf_perf_link, link);
+> >                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > tools/bpf/bpftool/bootstrap/libbpf/include/bpf/bpf_helpers.h:74:22: not=
+e: expanded from macro 'container_of'
+> >                 ((type *)(__mptr - offsetof(type, member)));    \
+> >                                    ^~~~~~~~~~~~~~~~~~~~~~
+> > tools/bpf/bpftool/bootstrap/libbpf/include/bpf/bpf_helpers.h:68:60: not=
+e: expanded from macro 'offsetof'
+> >  #define offsetof(TYPE, MEMBER)  ((unsigned long)&((TYPE *)0)->MEMBER)
+> >                                                   ~~~~~~~~~~~^
+> > skeleton/pid_iter.bpf.c:44:9: note: forward declaration of 'struct bpf_=
+perf_link'
+> >         struct bpf_perf_link *perf_link;
+> >                ^
+> >
+> > &bpf_perf_link is being defined and used only under the ifdef.
+> > Move it out of the block and explicitly emit a BTF to fix
+> > compilation.
+> >
+> > Fixes: cbdaf71f7e65 ("bpftool: Add bpf_cookie to link output")
+> > Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+>
+> Similar to v1, this fix is weird to me. I hope we have can fix it in user
+> space.
+
+I've been thinking on this, but userspace is not provided with any
+autoconf.h definitions (only selftests have them), so its code must
+be sort of universal.
+Both this and 01/11 are compile time and due to imcomplete and/or
+absent BTF struct declarations. I'm not familiar with
+bpf_core_field_exists(), and it might be that it's able to solve
+01/11, but not this one. &bpf_perf_link must be present
+unconditionally, otherwise it won't be defined in the generated
+vmlinux.h at all.
 
 Thanks,
-Ian
+Al
 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/symbol-elf.c | 2 +-
->  tools/perf/util/symbol.c     | 7 ++++---
->  tools/perf/util/symbol.h     | 2 +-
->  3 files changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 31cd59a2b66e..ecd377938eea 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1290,7 +1290,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->          * For misannotated, zeroed, ASM function sizes.
->          */
->         if (nr > 0) {
-> -               symbols__fixup_end(&dso->symbols);
-> +               symbols__fixup_end(&dso->symbols, false);
->                 symbols__fixup_duplicate(&dso->symbols);
->                 if (kmap) {
->                         /*
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index dea0fc495185..1b85cc1422a9 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -217,7 +217,8 @@ void symbols__fixup_duplicate(struct rb_root_cached *symbols)
->         }
->  }
->
-> -void symbols__fixup_end(struct rb_root_cached *symbols)
-> +void symbols__fixup_end(struct rb_root_cached *symbols,
-> +                       bool is_kallsyms __maybe_unused)
->  {
->         struct rb_node *nd, *prevnd = rb_first_cached(symbols);
->         struct symbol *curr, *prev;
-> @@ -1467,7 +1468,7 @@ int __dso__load_kallsyms(struct dso *dso, const char *filename,
->         if (kallsyms__delta(kmap, filename, &delta))
->                 return -1;
->
-> -       symbols__fixup_end(&dso->symbols);
-> +       symbols__fixup_end(&dso->symbols, true);
->         symbols__fixup_duplicate(&dso->symbols);
->
->         if (dso->kernel == DSO_SPACE__KERNEL_GUEST)
-> @@ -1659,7 +1660,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
->  #undef bfd_asymbol_section
->  #endif
->
-> -       symbols__fixup_end(&dso->symbols);
-> +       symbols__fixup_end(&dso->symbols, false);
->         symbols__fixup_duplicate(&dso->symbols);
->         dso->adjust_symbols = 1;
->
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index fbf866d82dcc..5fcdd1f94c56 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -203,7 +203,7 @@ void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym,
->                        bool kernel);
->  void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
->  void symbols__fixup_duplicate(struct rb_root_cached *symbols);
-> -void symbols__fixup_end(struct rb_root_cached *symbols);
-> +void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms);
->  void maps__fixup_end(struct maps *maps);
->
->  typedef int (*mapfn_t)(u64 start, u64 len, u64 pgoff, void *data);
-> --
-> 2.36.0.rc0.470.gd361397f0d-goog
->
