@@ -2,142 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DC1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 15 Apr 2022 23:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F286C4167B
+	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Apr 2022 02:05:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356666AbiDPAAm (ORCPT
+        id S229446AbiDPCHn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 15 Apr 2022 20:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56048 "EHLO
+        Fri, 15 Apr 2022 22:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356668AbiDPAAi (ORCPT
+        with ESMTP id S229654AbiDPCGH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 15 Apr 2022 20:00:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83C498F51;
-        Fri, 15 Apr 2022 16:58:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7743FB831BC;
-        Fri, 15 Apr 2022 23:58:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BBDDC385AF;
-        Fri, 15 Apr 2022 23:58:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650067086;
-        bh=5uISNHkYs1nGeyc2gtdd+Tm04KE96qpSVHvbrefArMc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Jt1cEPvPZxAt277UsraKj/YntuLhptaIO0NeOoBBAJDmYF1z/mStui6jXWV0GMnqX
-         dyqYf1TMHxb7PWpzyRt3oSlha9fe5zBVnyqmlGednBX8P8ko8N0HTexKDk6c3tSBB3
-         6zqYAjjxPryXxFbyZorSqbmnRaq0y/GhyOhgo+j28OJ56+USX+9R9asuXC3wIvmnp6
-         kQQAaz0T2BsILtv3OkI/ql1VWrXFjGpJ6m9eu//RlLL/uJv8NQj6HCHVSVeuxz4yky
-         HTw0KcX6ibn7YJNAHwznAY8jC5kD2sPOO6N2ZOGx3cQooF71AT8R9zJnTj1DSKOrIU
-         mHkpoX9jMejVg==
-Received: by mail-yb1-f173.google.com with SMTP id g34so16776700ybj.1;
-        Fri, 15 Apr 2022 16:58:06 -0700 (PDT)
-X-Gm-Message-State: AOAM532Cg/Vb84C7a3lB+QOQ+68eRDpWdx+kRuKVIREfrIidwRT2FUQT
-        dsHtTUmnmzjDnWzIXTsyn8gC9HQd7RHWJ1g9KuU=
-X-Google-Smtp-Source: ABdhPJybxj+8d+7EJs75ezIJxY82zI1XIdOLEnfK0kcbWGxveLN8Fw6lKBxYoaZjVWq1p2nZnBaUqci3FtMl9NxCLmw=
-X-Received: by 2002:a25:8546:0:b0:61e:1d34:ec71 with SMTP id
- f6-20020a258546000000b0061e1d34ec71mr1262667ybn.259.1650067085117; Fri, 15
- Apr 2022 16:58:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220414223704.341028-1-alobakin@pm.me> <20220414223704.341028-12-alobakin@pm.me>
-In-Reply-To: <20220414223704.341028-12-alobakin@pm.me>
-From:   Song Liu <song@kernel.org>
-Date:   Fri, 15 Apr 2022 16:57:53 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7AV+RSqmH3WOSB6uvS2oiXH-Tgfx84H0rEC9_NyZ3SNA@mail.gmail.com>
-Message-ID: <CAPhsuW7AV+RSqmH3WOSB6uvS2oiXH-Tgfx84H0rEC9_NyZ3SNA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 11/11] samples: bpf: xdpsock: fix -Wmaybe-uninitialized
-To:     Alexander Lobakin <alobakin@pm.me>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Fri, 15 Apr 2022 22:06:07 -0400
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D23403D7;
+        Fri, 15 Apr 2022 18:55:56 -0700 (PDT)
+Received: by mail-vs1-xe2a.google.com with SMTP id v15so6785684vsm.5;
+        Fri, 15 Apr 2022 18:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=C/yp2SiPCDYhZ9QJZ/VkI3pUZmOOKH2y3TvYwr4r/ZY=;
+        b=KaItwtfz20xnWMtNTiOqG2T72TphlDwszWNLq4pqt1Jy2NZGmz4xPEv7EjGhIFMi2E
+         F9OgIDcC54Zx2zt/Hc+cI8xZuyo5DfmMAdWKoggxKdi7cqSaPSSOvQeZo4IkNe6FZqjW
+         766dPYHxy1CDcGyaM/Z80nLgd+sTo05wF5k6mWrg8+8FRzyf7bZpXhpKU1TmqG2iAc+T
+         trXclf97t/OX+AuOY1U0xx/4aO1cfsSbMRR8jpD1VLLVDXr57cYQeftuyZwU7l5NQ2uC
+         mmuQdoTbb24IrxRsmtippfaiePCKwvbxgOuSPIEYDge1N3I/qm3TPyMI9RYvYE1jdoL9
+         d4Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=C/yp2SiPCDYhZ9QJZ/VkI3pUZmOOKH2y3TvYwr4r/ZY=;
+        b=XMiXR3yNWGb8vqEqR+UFh4CrCQmBPAoy7n14Vx2KhSDBxB/Mr5lB/DtVd7g+MCG3B+
+         9Inv6fPOlpIKJdL9xwJfaoTHBCPt8XYh4MJwHDtPwT+olngQ6Nx+0/9Greptv0r67szn
+         3HCAltkmnCyeqQwfFss/9NhNDxmAHzGMAa9dzcM+IcIsd1bHmBX0FGjxX+08JlVrS7ET
+         FC6zF8R9yOKhfCwGUJJSJFOTGth0IlLf2qs720ptaLAbDBHSAxRWrT8vjQgZ5sNLGTYV
+         1ClpbzKeeJo6M/BShg4fscz21KCdKhXfGSc/gG4YAli+YZrYK6r0khO5dDaWicNRY9EQ
+         ei4w==
+X-Gm-Message-State: AOAM530aZlJi2+6QTqL6b09AvP0jyCB8jbEzwbtgwaePocnFyjz7OjvF
+        LtPK758f0NO6B9Ty/lrR5OHOABcSvaA=
+X-Google-Smtp-Source: ABdhPJzsACZqcMn+IVHVYYnMsaYkZAQYl/1YN2wyFMIwCE7NodBJ76t90Djj26qvoMib2GCP1YQ1Lg==
+X-Received: by 2002:a17:902:7884:b0:158:b5b6:572c with SMTP id q4-20020a170902788400b00158b5b6572cmr1452146pll.144.1650069656404;
+        Fri, 15 Apr 2022 17:40:56 -0700 (PDT)
+Received: from balhae.roam.corp.google.com ([2607:fb90:461:36d2:dba1:7530:2cda:19b1])
+        by smtp.gmail.com with ESMTPSA id j9-20020a056a00130900b004f73df40914sm3913537pfu.82.2022.04.15.17.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Apr 2022 17:40:55 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
+        Song Liu <songliubraving@fb.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Chenbo Feng <fengc@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        Thomas Graf <tgraf@suug.ch>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        John Garry <john.garry@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 1/3] perf symbol: Pass is_kallsyms to symbols__fixup_end()
+Date:   Fri, 15 Apr 2022 17:40:46 -0700
+Message-Id: <20220416004048.1514900-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
+In-Reply-To: <20220416004048.1514900-1-namhyung@kernel.org>
+References: <20220416004048.1514900-1-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 3:47 PM Alexander Lobakin <alobakin@pm.me> wrote:
->
-> Fix two sort-of-false-positives in the xdpsock userspace part:
->
-> samples/bpf/xdpsock_user.c: In function 'main':
-> samples/bpf/xdpsock_user.c:1531:47: warning: 'tv_usec' may be used uninitialized in this function [-Wmaybe-uninitialized]
->  1531 |                         pktgen_hdr->tv_usec = htonl(tv_usec);
->       |                                               ^~~~~~~~~~~~~~
-> samples/bpf/xdpsock_user.c:1500:26: note: 'tv_usec' was declared here
->  1500 |         u32 idx, tv_sec, tv_usec;
->       |                          ^~~~~~~
-> samples/bpf/xdpsock_user.c:1530:46: warning: 'tv_sec' may be used uninitialized in this function [-Wmaybe-uninitialized]
->  1530 |                         pktgen_hdr->tv_sec = htonl(tv_sec);
->       |                                              ^~~~~~~~~~~~~
-> samples/bpf/xdpsock_user.c:1500:18: note: 'tv_sec' was declared here
->  1500 |         u32 idx, tv_sec, tv_usec;
->       |                  ^~~~~~
->
-> Both variables are always initialized when @opt_tstamp == true and
-> they're being used also only when @opt_tstamp == true. However, that
-> variable comes from the BSS and is being toggled from another
-> function. They can't be executed simultaneously to actually trigger
-> undefined behaviour, but purely technically it is a correct warning.
-> Just initialize them with zeroes.
->
-> Fixes: eb68db45b747 ("samples/bpf: xdpsock: Add timestamp for Tx-only operation")
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+The symbol fixup is necessary for symbols in kallsyms since they don't
+have size info.  So we use the next symbol's address to calculate the
+size.  Now it's also used for user binaries because sometimes they
+miss size for hand-written asm functions.
 
-Acked-by: Song Liu <songliubraving@fb.com>
+There's a arch-specific function to handle kallsyms differently but
+currently it cannot distinguish kallsyms from others.  Pass this
+information explicitly to handle it properly.  Note that those arch
+functions will be moved to the generic function so I didn't added it
+to the arch-functions.
 
-> ---
->  samples/bpf/xdpsock_user.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/samples/bpf/xdpsock_user.c b/samples/bpf/xdpsock_user.c
-> index 399b999fcec2..1dc7ad5dbef4 100644
-> --- a/samples/bpf/xdpsock_user.c
-> +++ b/samples/bpf/xdpsock_user.c
-> @@ -1496,7 +1496,7 @@ static void rx_drop_all(void)
->  static int tx_only(struct xsk_socket_info *xsk, u32 *frame_nb,
->                    int batch_size, unsigned long tx_ns)
->  {
-> -       u32 idx, tv_sec, tv_usec;
-> +       u32 idx, tv_sec = 0, tv_usec = 0;
->         unsigned int i;
->
->         while (xsk_ring_prod__reserve(&xsk->tx, batch_size, &idx) <
-> --
-> 2.35.2
->
->
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/symbol-elf.c | 2 +-
+ tools/perf/util/symbol.c     | 7 ++++---
+ tools/perf/util/symbol.h     | 2 +-
+ 3 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 31cd59a2b66e..ecd377938eea 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1290,7 +1290,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 	 * For misannotated, zeroed, ASM function sizes.
+ 	 */
+ 	if (nr > 0) {
+-		symbols__fixup_end(&dso->symbols);
++		symbols__fixup_end(&dso->symbols, false);
+ 		symbols__fixup_duplicate(&dso->symbols);
+ 		if (kmap) {
+ 			/*
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index dea0fc495185..1b85cc1422a9 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -217,7 +217,8 @@ void symbols__fixup_duplicate(struct rb_root_cached *symbols)
+ 	}
+ }
+ 
+-void symbols__fixup_end(struct rb_root_cached *symbols)
++void symbols__fixup_end(struct rb_root_cached *symbols,
++			bool is_kallsyms __maybe_unused)
+ {
+ 	struct rb_node *nd, *prevnd = rb_first_cached(symbols);
+ 	struct symbol *curr, *prev;
+@@ -1467,7 +1468,7 @@ int __dso__load_kallsyms(struct dso *dso, const char *filename,
+ 	if (kallsyms__delta(kmap, filename, &delta))
+ 		return -1;
+ 
+-	symbols__fixup_end(&dso->symbols);
++	symbols__fixup_end(&dso->symbols, true);
+ 	symbols__fixup_duplicate(&dso->symbols);
+ 
+ 	if (dso->kernel == DSO_SPACE__KERNEL_GUEST)
+@@ -1659,7 +1660,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
+ #undef bfd_asymbol_section
+ #endif
+ 
+-	symbols__fixup_end(&dso->symbols);
++	symbols__fixup_end(&dso->symbols, false);
+ 	symbols__fixup_duplicate(&dso->symbols);
+ 	dso->adjust_symbols = 1;
+ 
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index fbf866d82dcc..5fcdd1f94c56 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -203,7 +203,7 @@ void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym,
+ 		       bool kernel);
+ void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
+ void symbols__fixup_duplicate(struct rb_root_cached *symbols);
+-void symbols__fixup_end(struct rb_root_cached *symbols);
++void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms);
+ void maps__fixup_end(struct maps *maps);
+ 
+ typedef int (*mapfn_t)(u64 start, u64 len, u64 pgoff, void *data);
+-- 
+2.36.0.rc0.470.gd361397f0d-goog
+
