@@ -2,105 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2CBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 16 Apr 2022 17:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C27C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Apr 2022 11:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232731AbiDPR54 (ORCPT
+        id S234002AbiDQLvc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 16 Apr 2022 13:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55980 "EHLO
+        Sun, 17 Apr 2022 07:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232727AbiDPR5z (ORCPT
+        with ESMTP id S229655AbiDQLvb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 16 Apr 2022 13:57:55 -0400
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7E02981B;
-        Sat, 16 Apr 2022 10:55:22 -0700 (PDT)
-Date:   Sat, 16 Apr 2022 17:55:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-        s=protonmail2; t=1650131721;
-        bh=hUYlD7EnN76aLL3sNghNfcRfJYl0D3zXzjY2HxeciRE=;
-        h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
-         References:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID;
-        b=p02unh3uNBwOhKDm96RTOSIcRDFBTNulK2v43wYugdd3yEd6K42QNMgN/XkI0xFYP
-         6M++ziLek6uiEisFq9RKvX6ywCoHcVNa5R0Ge6zU/R7b952ybwqu5ZFcFLKhYhjQXj
-         MsvNyMT6Lb0FhIkAz54KleAy3JB3byftO2qZ+KTe3ukyf1oUksxP3fWinySvrcGs2s
-         3Zp9MqMeiRkVrAbem36pS0LyabmgAVNxNwuO3578YQN53lwc9OrMyt9jbxTFHb28g2
-         m+/Xej+4j0H/TYSTJVi3qUsMS+1vuHwygS3eWkV0670qCkKJ89SLXa45fXKW1Z3mRJ
-         iOTT99LK9aXMA==
-To:     Song Liu <song@kernel.org>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
+        Sun, 17 Apr 2022 07:51:31 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0079D344E1
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Apr 2022 04:48:55 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id k23so22664142ejd.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Apr 2022 04:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4Sb5MwZlN2yMxpkxo8ReoYsChI1LsnLBd53l7qgtB8w=;
+        b=JTBU4huSWjw4WvyksFXfBs27pd8RjBvsyNEFTQzVek49lRGs1jiwoFrXWbVnlsBKlg
+         oCy71aLpG2lUS0ALxfq3/6RI6bCm7jOW3mDd9XMt2Iu0caeRjEv3AYCjvKpClOkK6gn2
+         1fOcnP9VGPe52CYu8TLDUmntewJg4pxf2GGVdJDp+cZt67aJmf/Z88hHYlVzwy9K7Z2i
+         nzvZ3MsP8HL1gIb61hhYbRsb+5n8xEe4/+H6LA9537ePpzyLTqy+9CxNPIlBGSVuJq1v
+         0JfILfnGGvUg0jm23ydC8fWxH+022UxHoHyqe+fOVWDl5xPGPrRcLwOycDC4Py4qEFq2
+         PVpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4Sb5MwZlN2yMxpkxo8ReoYsChI1LsnLBd53l7qgtB8w=;
+        b=ag4ZyEEIwwtagu6lkRS6J1po2M5nz+dvXBMRdNRD5pY50qlsL+UUIQ7lKg6T9VSBkv
+         CU9Dlf7krdoo040ItuWbhKUIZUgj66d9/vsjlsEz5EWgcDjuG3i5iwLv897DdnvdjkMf
+         qJGdANBF0B08JYnFU/xssFDPnE0fzBLCwHbY0p/+sh8+bfOGzHhQcdPKwvosjXcEKAXN
+         alj71D0NgkHnUh1Dy1KusWxRELPPJsBQkyq0IepmzLAsHHa8Yh2QNFN1k8gWxyF5hmGq
+         qjsLT3b7aNFPFIlaDaLsmoUGJA3bxEkzgXb2M/TV/t3SDiHYRla/jahpQG7JqdfMJDOk
+         kVrQ==
+X-Gm-Message-State: AOAM532MgrGUnpu6YhhVAb5+KVuBfU/xF9gzgFhW/lK8+nIxb3kg6zgQ
+        haHevvppmDlknvVP4ifeQsRoxezjkew2fbowRfwFDQ==
+X-Google-Smtp-Source: ABdhPJywdz0cASNHVewBWwUezqR/0l3LQF0BqQXVnJx7pQzrjX6eK/IeXLoBuBLaSaz4iyUJcASnDg==
+X-Received: by 2002:a17:906:dc93:b0:6e8:8d81:b4bb with SMTP id cs19-20020a170906dc9300b006e88d81b4bbmr5526764ejc.32.1650196134186;
+        Sun, 17 Apr 2022 04:48:54 -0700 (PDT)
+Received: from localhost.localdomain ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id w1-20020a1709064a0100b006e89334f5dfsm3510574eju.136.2022.04.17.04.48.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Apr 2022 04:48:53 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        =?utf-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Chenbo Feng <fengc@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        llvm@lists.linux.dev
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: Re: [PATCH bpf-next 07/11] samples: bpf: fix uin64_t format literals
-Message-ID: <20220416174816.198651-1-alobakin@pm.me>
-In-Reply-To: <CAPhsuW7FuAKX0fJ1XPfFWWwRS+wTW0qA49V-iQVzxv4jOb47MA@mail.gmail.com>
-References: <20220414223704.341028-1-alobakin@pm.me> <20220414223704.341028-8-alobakin@pm.me> <CAPhsuW7FuAKX0fJ1XPfFWWwRS+wTW0qA49V-iQVzxv4jOb47MA@mail.gmail.com>
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] perf script: Always allow field 'data_src' for auxtrace
+Date:   Sun, 17 Apr 2022 19:48:37 +0800
+Message-Id: <20220417114837.839896-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Song Liu <song@kernel.org>
-Date: Fri, 15 Apr 2022 16:52:13 -0700
+If use command 'perf script -F,+data_src' to dump memory samples with
+Arm SPE trace data, it reports error:
 
-> On Thu, Apr 14, 2022 at 3:46 PM Alexander Lobakin <alobakin@pm.me> wrote:
-> >
-> > There's a couple places where uin64_t is being passed as an %ld
-> > format argument, which is incorrect (should be %lld). Fix them.
->
-> This will cause some warning on some 64-bit compiler, no?
+  # perf script -F,+data_src
+  Samples for 'dummy:u' event do not have DATA_SRC attribute set. Cannot print 'data_src' field.
 
-Oh wait, I accidentially mentioned %ld and %lld although in fact I
-changed %lu to %llu. So there won't be any compiler warnings. I'll
-fix the commit message in v2.
+This is because the 'dummy:u' event is absent DATA_SRC bit in its sample
+type, so if a file contains AUX area tracing data then always allow
+field 'data_src' to be selected as an option for perf script.
 
->
-> Song
->
+Fixes: e55ed3423c1b ("perf arm-spe: Synthesize memory event")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- 8< ---
-
-> > --
-> > 2.35.2
-
-Thanks,
-Al
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index a2f117936188..cf5eab5431b4 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -461,7 +461,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(DATA_SRC) &&
+-	    evsel__check_stype(evsel, PERF_SAMPLE_DATA_SRC, "DATA_SRC", PERF_OUTPUT_DATA_SRC))
++	    evsel__do_check_stype(evsel, PERF_SAMPLE_DATA_SRC, "DATA_SRC", PERF_OUTPUT_DATA_SRC, allow_user_set))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(WEIGHT) &&
+-- 
+2.25.1
 
