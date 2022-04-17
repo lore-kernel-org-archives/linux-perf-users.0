@@ -2,69 +2,69 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C27C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Apr 2022 11:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25412C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 17 Apr 2022 12:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234002AbiDQLvc (ORCPT
+        id S234053AbiDQMsO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 17 Apr 2022 07:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59836 "EHLO
+        Sun, 17 Apr 2022 08:48:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229655AbiDQLvb (ORCPT
+        with ESMTP id S234017AbiDQMsN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 17 Apr 2022 07:51:31 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0079D344E1
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 Apr 2022 04:48:55 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id k23so22664142ejd.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 17 Apr 2022 04:48:55 -0700 (PDT)
+        Sun, 17 Apr 2022 08:48:13 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC732EA0
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Apr 2022 05:45:37 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id lc2so22719386ejb.12
+        for <linux-perf-users@vger.kernel.org>; Sun, 17 Apr 2022 05:45:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=4Sb5MwZlN2yMxpkxo8ReoYsChI1LsnLBd53l7qgtB8w=;
-        b=JTBU4huSWjw4WvyksFXfBs27pd8RjBvsyNEFTQzVek49lRGs1jiwoFrXWbVnlsBKlg
-         oCy71aLpG2lUS0ALxfq3/6RI6bCm7jOW3mDd9XMt2Iu0caeRjEv3AYCjvKpClOkK6gn2
-         1fOcnP9VGPe52CYu8TLDUmntewJg4pxf2GGVdJDp+cZt67aJmf/Z88hHYlVzwy9K7Z2i
-         nzvZ3MsP8HL1gIb61hhYbRsb+5n8xEe4/+H6LA9537ePpzyLTqy+9CxNPIlBGSVuJq1v
-         0JfILfnGGvUg0jm23ydC8fWxH+022UxHoHyqe+fOVWDl5xPGPrRcLwOycDC4Py4qEFq2
-         PVpQ==
+        bh=d0NpqGl1oKuCDKK6YqMWlHFLPk05EK6v3fjoJIR9AXE=;
+        b=fy3aoVSpwgXrwvuWPVrID/wRU5DAyDrjgPET4pnQzlQkWUzL/6IHK75YRxiU9gB8UK
+         eQMrqDymbyy58EHlQubtSZwd1rpkx919MmPUScKBpIJ4uzDACjv87qWFpE1Nzk393F6H
+         /eAg4/6fMcxBQIZTUgoE/oKtnlFL/whOe8X55JU84NZaPsIr9UqKOm4MLzi4nW0yVoTA
+         tcpAQO61px1Ub4W4ryNnzCmHd3fJCBj5wS11rLSjhHv1mscepcCAEeSweRoexjBHr55E
+         JeVKlFq7i6IjC3hhpxU+u8vpjCwvNKy8TIPU5kyXY1G9xmiaBLOFdxgyEhd2GCcai9wJ
+         9mmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=4Sb5MwZlN2yMxpkxo8ReoYsChI1LsnLBd53l7qgtB8w=;
-        b=ag4ZyEEIwwtagu6lkRS6J1po2M5nz+dvXBMRdNRD5pY50qlsL+UUIQ7lKg6T9VSBkv
-         CU9Dlf7krdoo040ItuWbhKUIZUgj66d9/vsjlsEz5EWgcDjuG3i5iwLv897DdnvdjkMf
-         qJGdANBF0B08JYnFU/xssFDPnE0fzBLCwHbY0p/+sh8+bfOGzHhQcdPKwvosjXcEKAXN
-         alj71D0NgkHnUh1Dy1KusWxRELPPJsBQkyq0IepmzLAsHHa8Yh2QNFN1k8gWxyF5hmGq
-         qjsLT3b7aNFPFIlaDaLsmoUGJA3bxEkzgXb2M/TV/t3SDiHYRla/jahpQG7JqdfMJDOk
-         kVrQ==
-X-Gm-Message-State: AOAM532MgrGUnpu6YhhVAb5+KVuBfU/xF9gzgFhW/lK8+nIxb3kg6zgQ
-        haHevvppmDlknvVP4ifeQsRoxezjkew2fbowRfwFDQ==
-X-Google-Smtp-Source: ABdhPJywdz0cASNHVewBWwUezqR/0l3LQF0BqQXVnJx7pQzrjX6eK/IeXLoBuBLaSaz4iyUJcASnDg==
-X-Received: by 2002:a17:906:dc93:b0:6e8:8d81:b4bb with SMTP id cs19-20020a170906dc9300b006e88d81b4bbmr5526764ejc.32.1650196134186;
-        Sun, 17 Apr 2022 04:48:54 -0700 (PDT)
+        bh=d0NpqGl1oKuCDKK6YqMWlHFLPk05EK6v3fjoJIR9AXE=;
+        b=BrYTGZJKo2CE/aoC4FfTCJlsC3posHCrmPdqAy7pcB3e6Ea6tsGUiDC/ZkS+5yzGXB
+         thQx6hwKxeVWk9LSWdJsSScqK/Iqn5fEh/tlsShmlx//TQWj4thzmrB4K72TbixCsyGE
+         F3QbHfj5AfCW8h8e+wIRy8rrk50LhOZo8fYX7kSGd3GloxSsuuMeOMXpN7gpAWH4y49t
+         95yhqtbl+RUaZmuL5Al3PDmOQ9fm7KQ6GRwIG1+DS2G9AEndFqZ4AeiNrNTlGdncibcB
+         cCAE90i6xaVS0yQKTsww/4y/rZ2XkSJhMtZVoKFonYEgYfXVfbEDkMFLx7+SNGYWzIqT
+         RcPQ==
+X-Gm-Message-State: AOAM530EE8XbSZ7sMih6gYYaGChGXSWg4IiaXdmFwd2Mm48XEjiFnCcY
+        Rnge8m5Ex61QGAiwi3e/6MSqCg==
+X-Google-Smtp-Source: ABdhPJw8J7hshp/T+PkBbUWSdEGyBv+bsgA/yAvMw1/l87P9f/Wd4fOR8sTbzNaiX4sjBSIbLxAwgQ==
+X-Received: by 2002:a17:907:6d10:b0:6e8:8fbc:310c with SMTP id sa16-20020a1709076d1000b006e88fbc310cmr5455154ejc.530.1650199536410;
+        Sun, 17 Apr 2022 05:45:36 -0700 (PDT)
 Received: from localhost.localdomain ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id w1-20020a1709064a0100b006e89334f5dfsm3510574eju.136.2022.04.17.04.48.48
+        by smtp.gmail.com with ESMTPSA id ee17-20020a056402291100b0041fe1e4e342sm5485527edb.27.2022.04.17.05.45.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Apr 2022 04:48:53 -0700 (PDT)
+        Sun, 17 Apr 2022 05:45:35 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        Ali Saidi <alisaidi@amazon.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH] perf script: Always allow field 'data_src' for auxtrace
-Date:   Sun, 17 Apr 2022 19:48:37 +0800
-Message-Id: <20220417114837.839896-1-leo.yan@linaro.org>
+Subject: [PATCH] perf mem: Print memory operation type
+Date:   Sun, 17 Apr 2022 20:45:24 +0800
+Message-Id: <20220417124524.901148-1-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,35 +72,74 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If use command 'perf script -F,+data_src' to dump memory samples with
-Arm SPE trace data, it reports error:
+The memory operation types are not only for load and store, for easier
+reviewing the memory operation type, this patch prints out it.
 
-  # perf script -F,+data_src
-  Samples for 'dummy:u' event do not have DATA_SRC attribute set. Cannot print 'data_src' field.
+Before:
+  ls 14753 [011]  3678.072400:          1      l1d-miss:         88000182 L1 miss|SNP N/A|TLB Walker hit|LCK No|BLK  N/A ffffa7c22b4b2a00 [unknown] ([kernel.kallsyms])
+  ls 14753 [011]  3678.072400:          1    l1d-access:         88000182 L1 miss|SNP N/A|TLB Walker hit|LCK No|BLK  N/A ffffa7c22b4b2a00 [unknown] ([kernel.kallsyms])
+  ls 14753 [011]  3678.072400:          1    tlb-access:         88000182 L1 miss|SNP N/A|TLB Walker hit|LCK No|BLK  N/A ffffa7c22b4b2a00 [unknown] ([kernel.kallsyms])
+  ls 14753 [011]  3678.072400:          1        memory:         88000182 L1 miss|SNP N/A|TLB Walker hit|LCK No|BLK  N/A ffffa7c22b4b2a00 [unknown] ([kernel.kallsyms])
 
-This is because the 'dummy:u' event is absent DATA_SRC bit in its sample
-type, so if a file contains AUX area tracing data then always allow
-field 'data_src' to be selected as an option for perf script.
+After:
 
-Fixes: e55ed3423c1b ("perf arm-spe: Synthesize memory event")
+  ls 14753 [011]  3678.072400:          1      l1d-miss:         88000182 |OP LOAD|LVL L1 miss|SNP N/A|TLB Walker hit|LCK No|BLK  N/A ffffa7c22b4b2a00 [unknown] ([kernel.kallsyms])
+  ls 14753 [011]  3678.072400:          1    l1d-access:         88000182 |OP LOAD|LVL L1 miss|SNP N/A|TLB Walker hit|LCK No|BLK  N/A ffffa7c22b4b2a00 [unknown] ([kernel.kallsyms])
+  ls 14753 [011]  3678.072400:          1    tlb-access:         88000182 |OP LOAD|LVL L1 miss|SNP N/A|TLB Walker hit|LCK No|BLK  N/A ffffa7c22b4b2a00 [unknown] ([kernel.kallsyms])
+  ls 14753 [011]  3678.072400:          1        memory:         88000182 |OP LOAD|LVL L1 miss|SNP N/A|TLB Walker hit|LCK No|BLK  N/A ffffa7c22b4b2a00 [unknown] ([kernel.kallsyms])
+
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/builtin-script.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/mem-events.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index a2f117936188..cf5eab5431b4 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -461,7 +461,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 		return -EINVAL;
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index e5e405185498..f8f234251f92 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -314,6 +314,30 @@ static const char * const mem_hops[] = {
+ 	"board",
+ };
  
- 	if (PRINT_FIELD(DATA_SRC) &&
--	    evsel__check_stype(evsel, PERF_SAMPLE_DATA_SRC, "DATA_SRC", PERF_OUTPUT_DATA_SRC))
-+	    evsel__do_check_stype(evsel, PERF_SAMPLE_DATA_SRC, "DATA_SRC", PERF_OUTPUT_DATA_SRC, allow_user_set))
- 		return -EINVAL;
++static int perf_mem__op_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
++{
++	u64 op = PERF_MEM_LOCK_NA;
++	int l;
++
++	if (mem_info)
++		op = mem_info->data_src.mem_op;
++
++	if (op & PERF_MEM_OP_NA)
++		l = scnprintf(out, sz, "N/A");
++	else if (op & PERF_MEM_OP_LOAD)
++		l = scnprintf(out, sz, "LOAD");
++	else if (op & PERF_MEM_OP_STORE)
++		l = scnprintf(out, sz, "STORE");
++	else if (op & PERF_MEM_OP_PFETCH)
++		l = scnprintf(out, sz, "PFETCH");
++	else if (op & PERF_MEM_OP_EXEC)
++		l = scnprintf(out, sz, "EXEC");
++	else
++		l = scnprintf(out, sz, "No");
++
++	return l;
++}
++
+ int perf_mem__lvl_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
+ {
+ 	size_t i, l = 0;
+@@ -466,7 +490,10 @@ int perf_script__meminfo_scnprintf(char *out, size_t sz, struct mem_info *mem_in
+ {
+ 	int i = 0;
  
- 	if (PRINT_FIELD(WEIGHT) &&
+-	i += perf_mem__lvl_scnprintf(out, sz, mem_info);
++	i += scnprintf(out, sz, "|OP ");
++	i += perf_mem__op_scnprintf(out + i, sz - i, mem_info);
++	i += scnprintf(out + i, sz - i, "|LVL ");
++	i += perf_mem__lvl_scnprintf(out + i, sz, mem_info);
+ 	i += scnprintf(out + i, sz - i, "|SNP ");
+ 	i += perf_mem__snp_scnprintf(out + i, sz - i, mem_info);
+ 	i += scnprintf(out + i, sz - i, "|TLB ");
 -- 
 2.25.1
 
