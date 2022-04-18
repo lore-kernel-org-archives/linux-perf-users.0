@@ -2,134 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69734C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Apr 2022 21:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB46FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Apr 2022 22:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbiDRV7N (ORCPT
+        id S229968AbiDRWCo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Apr 2022 17:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50636 "EHLO
+        Mon, 18 Apr 2022 18:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiDRV7N (ORCPT
+        with ESMTP id S230159AbiDRWCg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Apr 2022 17:59:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6D21EC70;
-        Mon, 18 Apr 2022 14:56:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6C675B8111D;
-        Mon, 18 Apr 2022 21:56:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78F5C385A1;
-        Mon, 18 Apr 2022 21:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650318990;
-        bh=Ort/FNyu5RR5bPKO5SkmLIei1JMdx3sTNHFkvt4S1T0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aEtAOzgRcoloXKlQhxJTzAhf/Q9xQsf+Kg/Pya/yy9CvwaqgLzNF+xyqjOKZG/t9P
-         HCpJMkSbIM3Xs/SHQ7BMwc0WY3vEmca7VRtU4tIz7fR2FWVIC4DLVze08PiEYbMj0f
-         AD6/XNm8tGPDuw1ZXU59Hu2m0ybh7om2jO788Fr1qPDTjQuiDlod9387ZDzT1lRQ2X
-         AHG8OTQWwt76sTcCF6x8N5PPGnpM0Y8jjbf6N9gjys4Wk3Bm+Ht4OtjtkFPX9kFOSD
-         3bysGTUbtvWvmVA0/yjn9rt3s73MBPs3TczIEr04iNVyJu6/qYVpDgkljwZXeSklrP
-         waDI7LAKc8Dpg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7120F40407; Mon, 18 Apr 2022 18:56:26 -0300 (-03)
-Date:   Mon, 18 Apr 2022 18:56:26 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE
- event
-Message-ID: <Yl3eisj26sHBjokV@kernel.org>
-References: <20220414123201.842754-1-leo.yan@linaro.org>
+        Mon, 18 Apr 2022 18:02:36 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589FE1A38E
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Apr 2022 14:59:55 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id s17so2590136plg.9
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Apr 2022 14:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cLLWAAHArn9WgPwOUwNflPPJDgjsRY1O3bHGAhIDsQw=;
+        b=LTURonE53ti9q/GT1aK7iRoPMpGAeCy1e4EeYMoQ5ND31pPzYRrBIuxOtS32aAiFM+
+         1XHlY0ymuxtf7KP5zzxh8j9ip4/ZkYqKkInt8TY5JnA0taa6ag1p6HhrtkPYOmL/X1BS
+         68H/ZEsyd88OXRqhJx4ed+KaxwMRzhvwF+Q30=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cLLWAAHArn9WgPwOUwNflPPJDgjsRY1O3bHGAhIDsQw=;
+        b=nbTZogvIXB3O8TKnZWF70/+SIO41eKh4tHKsE+qxebK6wZVQI24mMXtjNuTaT68xig
+         znFPwqh7IkZ2+nZaDP+RwCDudewVcotCzYMctLuKp1xt9yPks0WeuvwRsLRTVbCfJQnU
+         OvQl8/BiIxj6Yx0betG0kjNce6R6ND6VQp3fAlOxqohxo5jxxTOhz2UFb/7NjqckeF4m
+         KMvXDl+MpdMr32cLBVd9uj/32hOJWw/H+A7CUh7o8uX2JRpeP3zjSjuynwmSUt+l8Hox
+         m4QLgxAWnS697Xrqn0ET1/EtqtH0SDjHdAB2k7nouHv9ghV4IFWxzfcXW127iZ0z9fzK
+         ti3g==
+X-Gm-Message-State: AOAM533zMyduR1QpSvY9kg0X7LIJzbLVVVRf0JC30RVnDeaeyiQL8NVK
+        mgEdOAG4VD3V1WPYnFTXk4i56A==
+X-Google-Smtp-Source: ABdhPJysM2kkydsu6S512r9sNHn81bBvZQZwemOKp8WmD7sADc0kfHvR6/TUHLqhcn1MQ99fL/O1Og==
+X-Received: by 2002:a17:902:6bc2:b0:158:a26b:5884 with SMTP id m2-20020a1709026bc200b00158a26b5884mr12917161plt.38.1650319190427;
+        Mon, 18 Apr 2022 14:59:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z15-20020a056a001d8f00b004fda37855ddsm12953099pfw.168.2022.04.18.14.59.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Apr 2022 14:59:50 -0700 (PDT)
+Date:   Mon, 18 Apr 2022 14:59:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, benh@kernel.crashing.org, paulus@samba.org,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 2/8] arm64: stacktrace: Add arch_within_stack_frames
+Message-ID: <202204181457.9DE190CE@keescook>
+References: <20220418132217.1573072-1-zhe.he@windriver.com>
+ <20220418132217.1573072-3-zhe.he@windriver.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220414123201.842754-1-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20220418132217.1573072-3-zhe.he@windriver.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 14, 2022 at 08:32:01PM +0800, Leo Yan escreveu:
-> Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
-> is not available") "perf mem report" and "perf report --mem-mode"
-> don't report result if the PERF_SAMPLE_DATA_SRC bit is missed in sample
-> type.
-> 
-> The commit ffab48705205 ("perf: arm-spe: Fix perf report --mem-mode")
-> partially fixes the issue.  It adds PERF_SAMPLE_DATA_SRC bit for Arm SPE
-> event, this allows the perf data file generated by kernel v5.18-rc1 or
-> later version can be reported properly.
-> 
-> On the other hand, perf tool still fails to be backward compatibility
-> for a data file recorded by an older version's perf which contains Arm
-> SPE trace data.  This patch is a workaround in reporting phase, when
-> detects ARM SPE PMU event and without PERF_SAMPLE_DATA_SRC bit, it will
-> force to set the bit in the sample type and give a warning info.
+On Mon, Apr 18, 2022 at 09:22:11PM +0800, He Zhe wrote:
+> This function checks if the given address range crosses frame boundary.
+> It is based on the existing x86 algorithm, but implemented via stacktrace.
+> This can be tested by USERCOPY_STACK_FRAME_FROM and
+> USERCOPY_STACK_FRAME_TO in lkdtm.
 
-Thanks, applied.
+Hi,
 
-- Arnaldo
+Thanks for doing this implementation! One reason usercopy hardening
+didn't persue doing a "full" stacktrace was because it seemed relatively
+expensive. Did you do any usercopy-heavily workload testing to see if
+there was a noticeable performance impact?
 
- 
-> Fixes: bb30acae4c4d ("perf report: Bail out --mem-mode if mem info is not available")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Tested-by: German Gomez <german.gomez@arm.com>
-> Reviewed-by: James Clark <james.clark@arm.com>
-> ---
-> v3: Remove warning log, add James' review tag.
-> v2: Change event name from "arm_spe_" to "arm_spe";
->     Add German's test tag.
-> 
->  tools/perf/builtin-report.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 1ad75c7ba074..afe4a5539ecc 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -353,6 +353,7 @@ static int report__setup_sample_type(struct report *rep)
->  	struct perf_session *session = rep->session;
->  	u64 sample_type = evlist__combined_sample_type(session->evlist);
->  	bool is_pipe = perf_data__is_pipe(session->data);
-> +	struct evsel *evsel;
->  
->  	if (session->itrace_synth_opts->callchain ||
->  	    session->itrace_synth_opts->add_callchain ||
-> @@ -407,6 +408,19 @@ static int report__setup_sample_type(struct report *rep)
->  	}
->  
->  	if (sort__mode == SORT_MODE__MEMORY) {
-> +		/*
-> +		 * FIXUP: prior to kernel 5.18, Arm SPE missed to set
-> +		 * PERF_SAMPLE_DATA_SRC bit in sample type.  For backward
-> +		 * compatibility, set the bit if it's an old perf data file.
-> +		 */
-> +		evlist__for_each_entry(session->evlist, evsel) {
-> +			if (strstr(evsel->name, "arm_spe") &&
-> +				!(sample_type & PERF_SAMPLE_DATA_SRC)) {
-> +				evsel->core.attr.sample_type |= PERF_SAMPLE_DATA_SRC;
-> +				sample_type |= PERF_SAMPLE_DATA_SRC;
-> +			}
-> +		}
-> +
->  		if (!is_pipe && !(sample_type & PERF_SAMPLE_DATA_SRC)) {
->  			ui__error("Selected --mem-mode but no mem data. "
->  				  "Did you call perf record without -d?\n");
-> -- 
-> 2.25.1
+It would be nice to block the exposure of canaries and PAC bits, though,
+so I'm not opposed, but I'd like to get a better sense of how "heavy"
+this might be.
+
+Thanks!
+
+-Kees
 
 -- 
-
-- Arnaldo
+Kees Cook
