@@ -2,43 +2,43 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBFAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Apr 2022 14:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98334C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Apr 2022 14:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344439AbiDROkR (ORCPT
+        id S1345132AbiDROt3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Apr 2022 10:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60666 "EHLO
+        Mon, 18 Apr 2022 10:49:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345834AbiDROi4 (ORCPT
+        with ESMTP id S1345222AbiDROtB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Apr 2022 10:38:56 -0400
+        Mon, 18 Apr 2022 10:49:01 -0400
 Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA94F580CF;
-        Mon, 18 Apr 2022 06:24:37 -0700 (PDT)
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-        by mx0a-0064b401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23ICBBTB014126;
-        Mon, 18 Apr 2022 06:23:03 -0700
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CEA27B29;
+        Mon, 18 Apr 2022 06:36:23 -0700 (PDT)
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+        by mx0a-0064b401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23IC03fF017303;
+        Mon, 18 Apr 2022 06:22:53 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version; s=PPS06212021;
- bh=ri8NbMErtUsmIwZuPVcvvPn+8AwVXaNNfl5A5CVR35w=;
- b=lxDlMZFRz5HYi7JHEC5ub3JgynobxfsZLAAuzt4w2h7XfPqwQCGfjNRjy+Wq7lsKznHO
- vyKQ1NWCthctZoOJpsTHJNQ8EagempC00KiZheJYGKZHRqe3Qgh+MM6udijMqfFoudLh
- eI6mtPzKX03PgZj8TBUcs6ylbwuT52om2FJ6A3TgrhRoeC1xAGQwvl+001ExsTVr8u9Y
- 4160tEiqwfnlyb11T05PySTeY3m8/lFgJ6MqBpw4dckfiNEdUJSof5+Mtzt/vrQLaeNk
- EDkzb9G1Zwfa+7pRnYsmxxOFdNpIo5xxeOFoanzID9KGTdIijWk4N6is48W1E6Fw6kfo UQ== 
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2047.outbound.protection.outlook.com [104.47.56.47])
-        by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ffwah150s-1
+ bh=zbDgblK7RewJFoMTrbxTkPOFdnN0ql1h+vVBC3YB56s=;
+ b=li90JFSz9j8n4ca65kS5PF7ENAFQkXf37M4gcYUV72uiskH4cnK/UreWqsDCF2bAZssI
+ KoxKZuwG1A97q25TBl1SgHsxRSiVX+DI3USvkr5rL2MChcAfu3uOio8Op2KJeCLn1a2b
+ aMxi6bv9sj8UTclFbj85xu6YG5FSQ4PTZJ+yjDEVq0EMFj6SEotGHDncvX5b5D7KseSZ
+ cNQAr5kcBU8LlfXQ71nMa/G37ZTVOA/d3RyLu09aga3ZJiSiEH0dTE0wUAXQHNy7bNiC
+ iJnlpUdqvaX/3VIPl1Bp7hY9rZ+X1jvuMq2DpwRpWvmkTC6g+Jx8c/bLtFV4eesVtkAH xQ== 
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2048.outbound.protection.outlook.com [104.47.56.48])
+        by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3ffs3118r4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Apr 2022 06:23:03 -0700
+        Mon, 18 Apr 2022 06:22:52 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E5vYZsMq9+zKGI4vMTSzF3ijW2Ri3x4mdbVD3FMQGM6eOIEpK++PEEXtguqfuve8wogvpExNHLWgThmfNI+sUrx7/oAnFyTZOdOqHQA4O+bBB0qE++3XYhZwRusaEJi/gU4XzY7Rm+KIiLm9eG2yywRshejPVIeg9cmz4boBrrTY2haZhtdVX26IlR/UUQSm0qgoAoVofRvrfIvooAcIRcDxhSL/5gR9A902bCDelh2fzzwNEUhuz2ihUtnV4qMpIc/V5eEsBbju8GqFj6/MxjrfCT23VJm3jxPiDtASKikPAL0iLhSvXItCmaC8ZQRs0AH8Y2xqbG6rD46h6ke0Ig==
+ b=M8C3puzHERKphpID9gcNtI7rr3TqCG1JeGDvmQBHg+RoSI02gZQ3FbwSOp7GILjkgcobeHkuQi9inox6//Tig47yM2PODi1Zh8lVVNEMwtMOjJnkRhGNdUQcmbxc5rTjDjb5vUVLyvODfuPFNOIJf2QT3HztIbDxZWe18LZn3zAVYV6WZZakoCtUCS/wIBgxqBNVfSrQPxVApBOuv20AcRpHX1nzRSWCjYLiOaedO2NfEORE8w7CDtKFW/UvbI+IDjl8cdbg+kKJCoOP2UwoC9WVTEPO2ndizDuW8wzpYiqUeZ2qBVDB5IIfKGInPjVLUfhm231nCeBEWfwlPHGcmA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ri8NbMErtUsmIwZuPVcvvPn+8AwVXaNNfl5A5CVR35w=;
- b=B757VIUv5BtKqNkgirBKryovwveKkghjpzly7GPt7IPWbGE2c88qFwMEG5aZ4gksvUorGQ/uGd8lM8ON++xKhxFS6k0Ul3VMWYILWfzu+VBUL95/JU4JI9bIeasRQNXSKoETkuWxqiyIv1NyG4bn3N1GayFmvOYeQCJEOD11wGc7uYsjyO+UQwnB/84UCaoKAwGGVhXHR+A5Wfa3BPEsZvVQHvDyyG83J2H6VaLkj0Q3PAGvKdAFLLU34JotkZ4JQUUDK8i/eaVRHHUTObDx4SJq/z7qGdpkYNjeLC6V5bIeDQicd2zeFOY/RsOkiVIS8MoGAkAILhVs5D+DEmiHKw==
+ bh=zbDgblK7RewJFoMTrbxTkPOFdnN0ql1h+vVBC3YB56s=;
+ b=J5y/kZGvJq/O6IeWfsqlX5IWDF+PGmniftC4Tt1sn6DXvNT19U5OYY6fTQwEY8Cq3mhLVK22I7qWNr1lyLjsy/o50xqQCAggi0NZKu3VqP8nBkOTu7+Ms+rh3UP58Vj0AphfRIf6h8DCEjpoGDAOSqH+1kbype6lkfoWmjAfi9jn+l9vZU/HnGbGOsCTpcKIbUkKkFLpkxHoNtsNb/Vqc5q5XydRPwze7oaOSESlSkk7G8VTzTuIm0DC7i9l6wqEAwN0dWj6QQ5tUdjHMevyNUdWsQJuS6Dhu4cGhaLyEWOyg2HAfpJFdSaj4o3LkatdnRm6xzqJk9nUpUz24/AQ3w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
@@ -46,11 +46,11 @@ Received: from MWHPR11MB1358.namprd11.prod.outlook.com (2603:10b6:300:23::8)
  by DM6PR11MB2857.namprd11.prod.outlook.com (2603:10b6:5:cb::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.20; Mon, 18 Apr
- 2022 13:23:01 +0000
+ 2022 13:22:51 +0000
 Received: from MWHPR11MB1358.namprd11.prod.outlook.com
  ([fe80::1cd4:125:344:9fc]) by MWHPR11MB1358.namprd11.prod.outlook.com
  ([fe80::1cd4:125:344:9fc%7]) with mapi id 15.20.5164.025; Mon, 18 Apr 2022
- 13:23:01 +0000
+ 13:22:51 +0000
 From:   He Zhe <zhe.he@windriver.com>
 To:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
         tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
@@ -62,9 +62,9 @@ Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
         linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, zhe.he@windriver.com
-Subject: [PATCH RFC 5/8] riscv: stacktrace: Make callbacks use new prototype with frame info
-Date:   Mon, 18 Apr 2022 21:22:14 +0800
-Message-Id: <20220418132217.1573072-6-zhe.he@windriver.com>
+Subject: [PATCH RFC 3/8] arm64: stacktrace: Make callbacks use new prototype with frame info
+Date:   Mon, 18 Apr 2022 21:22:12 +0800
+Message-Id: <20220418132217.1573072-4-zhe.he@windriver.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220418132217.1573072-1-zhe.he@windriver.com>
 References: <20220418132217.1573072-1-zhe.he@windriver.com>
@@ -75,66 +75,66 @@ X-ClientProxiedBy: HK2PR02CA0133.apcprd02.prod.outlook.com
  (2603:10b6:300:23::8)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 33923727-9cb3-4956-9125-08da213e9022
+X-MS-Office365-Filtering-Correlation-Id: d60d8851-3b6b-4b3d-a9a4-08da213e89e7
 X-MS-TrafficTypeDiagnostic: DM6PR11MB2857:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR11MB285775ADDFB93E8CA0E44CC48FF39@DM6PR11MB2857.namprd11.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DM6PR11MB28570142CD083BA66C461DB18FF39@DM6PR11MB2857.namprd11.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: U1snG/qP8BEe2R6G9vcemDhtS38JSN4LEAtxjAy/cJ/YnLdm4iw1ZZslb3Y/T8UL3Hy1iW7uqOy15ezuhVvK9F2ySDvnE9f6Oe4iajP4/1eDIqj0F+q8O5IVk/t3VN741f3+ojRk3EJ3M/Ri+aDj1c0OmYUXdlV/Y3nWrzO5fvyCCeIC8zMAkbWfbDEEbxeHw6C0st2mbUhVC9oUTtseUFz9IY4ng/XUUgWmf3/8FIN5jPv2OcbBOxW+bQfUu4JyiBxtl2guHjEqTfHkFSUNndKvKs+rbdVlkJv+IhWHMkaoXNyIfNKz56ZIbjieSUJo+ADfuHF/D6PojMWmtN6Kw7NolgJXzZYyQvZGDfLJyif1KLiFOy0em01Td6gFWCXkOaw5RPgl+VquaNaSkROGujr1zkf3i7rr6yfdL1VRyNmX+TqqaefymH3GwqV72IsiPZ/yzCDhjodV/8+Y14V0nnp/UX/zjFkSfJjV2zy/i9Fpzai9rqqeRqH4gBSeAMwQ2aZ/48TfMeZhCBogCKFqQkY5/627Zzl2rmGF/k77bq/3dhHusTaabXYidzrpJX0XYM7lu2k+U+YmrvXeZFD555i9TlaZgGL/iAxYK/YBflRWVBUINhgiuMZlEFQYyw6J6pVi6Vps2NtAo6Uv6nH7Ig3svebCN/aq/QWxAwprtmTg3vb9SVuLEZ4jAQLimWF/b2Q4A4tokQKhXbW+F7EFDcgV6Hyc1QTX/65CBb0YOis=
+X-Microsoft-Antispam-Message-Info: R2OomJ1ud8x1JfD/EgMKQOtn0GBgI7M1gxYnmAtJZp3eDOWcyQFsWEUzkRdtlFqHTn0TRtih3ykpmsHqFCwaWPEdNZmMyjZ+Yg6xVlTInwIOYoeZRESxqaZfLT8ABZ6mXDJRn/sY/erzVAey6Ild7z/61Mv26EMMB5P/OMshd5LdkPffT3VatpPy1Jy8oGeEwONKBZcSWOJphRIJ6dbUfGURCv9lyKcdvc/yv+vtUkxqvZ2FnV9yI/LCqmzc+mxJ4v6ai/37A/817MuYIc2F2yGFMTCvMEIzMlnm1IUvLxRoF5c6959/P1znVF2JluAYdUMzje3neALwIZ/09SjRnYZV962LOAnVyO0L/oz4frXFpb4V4QZ0Ll99YcT8llYN81FKll+puYvE7bMOaSGPK2bFWSlqx7rpL9zbb++A4yum8nYtetvhmUQkITXS1kO5BDWc8Yp8M+Ng9h1OIGl6rRTlLIIna2XdUTiApIm73g+lH2yxtTNkO6kyKKw2VqETUP9WzHNAeN+hWQ5TLSjoPpkafQtsNHj7s7aWXUeQejfHmOdKedmWI+ToBmfR+Qgq8y9zxjH60rNJaHA7IWU+ZlpvFJoWTMeS+XQG5ZD3iskVTXsDB2M/re+eNnUOz5FzQFZR9gSO2d4wx7Ir+LfguoSAo3+A9f5ItgW3Po8O/PYZNH1iwIbAhZQ5PSRHfpaBd5WYdZMv/yV1AJd43z0h8AVY3NFj0lptredcBb67l6s=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1358.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66556008)(2616005)(186003)(86362001)(83380400001)(1076003)(38100700002)(66946007)(316002)(66476007)(7416002)(107886003)(8936002)(2906002)(4326008)(6506007)(38350700002)(5660300002)(508600001)(36756003)(52116002)(8676002)(26005)(6486002)(921005)(6512007)(6666004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0D2Nh60ZK0WbyVdl8tFNkd1FehpnekWO1HsUqM3vFift6JwoA00nfHEGD4GV?=
- =?us-ascii?Q?vRGOfMjmYqun6za+KsLDAZ4PwO3yDPRbBdXtdJOD+9T+nF1/OmvdUmSHFBYO?=
- =?us-ascii?Q?6Q2/o51m+IGvQMe+lLCHf1sc+/JflT858QuoFywkENmBH0hNpO7aPt32gPLK?=
- =?us-ascii?Q?c7cpl/aQjVhwjxa0804sQ1IAoP2ecZapxwTmcF4t6ai+2fIPZA2XPXZBD0ly?=
- =?us-ascii?Q?xrYi++NHHt1TSX/jp2iqu5KNmJLEttTixScru0sfsLHn51GbWIFeM0BjDB73?=
- =?us-ascii?Q?lq4fRzdH5FjHbG1Ze8yce8jUhhlpewixfoRJ6jAOR4L7dfxwlEnPWig48bEn?=
- =?us-ascii?Q?6pXxAeWmdRqyDpIvXZs+tHWIBfOV/KKsAatV7mLqXBTeTnaUKnIqGe8eI6V9?=
- =?us-ascii?Q?uAC4Li1DE8kSBT+j+DUrZYMyLzveI8H2wwXsaEnK2tiAnVgjcrztxnOwjZ7s?=
- =?us-ascii?Q?PLhAdLnvunBLAl6CC7fkO+uPYRDmRc1wVtIMcdhcsYJdZD8wglluOgVXcoc3?=
- =?us-ascii?Q?PHSouXzhdM24J55d4CVtBKwr++qqjQ/P/q+VfeG+fAHDZACGAnFVwnqfGqsP?=
- =?us-ascii?Q?m2pzRpUcozIcaJxy3W2PkPd3rBDeV+y1n6V3HQy2qSa4n1M8/tajEhdj/zjg?=
- =?us-ascii?Q?SN1nPRryu2YmlT3sk036adW4W4sbpPBwVSwG309///rsLMrmnEM9Njc7PGZG?=
- =?us-ascii?Q?DgVjyfe8pD7aNjm7mNiyus0YiR96R07rvyaUZvCEffuQsZXvTGCYhr06+53x?=
- =?us-ascii?Q?7SWvIBq38/XtLUx+nDwaT2XTK/YBGpvLh0RC0XK9Otzq0u3oLsXh6Z06fs6g?=
- =?us-ascii?Q?962pZdmAKTGIwQ51Sz//yZi2q6aNFiLXy6RbuJvKBjxVZEp6EA7BSEzMKmnp?=
- =?us-ascii?Q?BkdHQxGNlsJFWv3URFlWm0Xa6qwVqQ6dDvWymeSOmiJJC2GXjZiDu+62whG8?=
- =?us-ascii?Q?Wyb5KgUBmqHDP4tLHZtmJVZmh+a2bk74LpD8UGtjrIAsH8obHkS/19YILEfA?=
- =?us-ascii?Q?7CcUzBoI1tUdisDttXunA4vTXut8PGik/+3wljFPOZGDqanBmjinpLZKoLFQ?=
- =?us-ascii?Q?7Nn8vnlyicWDgoJOtNQNr4IH4Sh2YtVI04Eh6uX587eAXNnQJPOHz9Vkd4fB?=
- =?us-ascii?Q?j9HsWeWrgEeDlBziAhGhTFDWNWisb/vBBDFENUlO7WXhrtPuCy5n2bxrvK4n?=
- =?us-ascii?Q?bT4BLJa0832p1T33TjDW+f//dzZGmNyEdFepwLpa2Im+AHfPmbsDwR++za9u?=
- =?us-ascii?Q?ADo07M0DM06tl6UAJymvS37Mo1xgBVdQtGLFnjbJWO+hy5bXma2dVRK0YDWN?=
- =?us-ascii?Q?IUguhQdc5oD4cRnvvb60qT2z1pmxM2ehL+a5Pkx4jzXszfyclevfidemXqnh?=
- =?us-ascii?Q?QtEX35g50UYSWh4Wo0ENWKGT0TEtywVZSMBD9nKZ2QfABTa+EOB52i783NH3?=
- =?us-ascii?Q?Q9ctA4yJ5Unt759yEkN3Z7aNX95qRA1HBbugD1MKR5NADwlfrTaw+fz8KUGO?=
- =?us-ascii?Q?LLUngKtk/AqBzAx6lpvhghP7wcywSiWAxqXJWitpgPobEvnZmZrzQOYE8mXa?=
- =?us-ascii?Q?CeC9w0Tvmf2RLbLqebffAeNUz3yUEEABG5cmlDuvH1V6lPTXhbntKbtaxsbC?=
- =?us-ascii?Q?xLa6hqhTza9e8ODVZVvFka+Pasks5QF/hFUV+y4hjEMsLoxAGejJKsBDyti0?=
- =?us-ascii?Q?LxKem7dnRiJpRhyQu3d4IzP/Mn+8STwO4mFUR9zdInTTWP85iyMdUIqAWu+a?=
- =?us-ascii?Q?bFqBZiEMvQ=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ibstF8u78mMOLkjC+DkMbtk6BeGVIf2sN4/j11j5t9C07J8ntkXQNdwmng22?=
+ =?us-ascii?Q?9DnBAV5IWnDMfoqQkSSEC8uHaK/9kJjR0tpGrP8aViDjMsAbrmPOMTc59anO?=
+ =?us-ascii?Q?O1jS0NBNpwilMQZIUJCdJyWzT5htH/81jkty/zBVwDMz1V3GrIayD3QWCiO+?=
+ =?us-ascii?Q?X9gFBhdeFi2UbH5GGfm3YJsLaw5BdePN9XhVOqZXo+hvQkq2WY0Zll3JHXqR?=
+ =?us-ascii?Q?LCWWk3Sr/XMZMMoYEd+nprSvmVuMfr1R6BIxinMvkMcgpFcSq1/FiEfkMMU0?=
+ =?us-ascii?Q?37EmsZbG3gdG2DS3rqJ2RmTBi2zRJFWsCCw/TyDBu1wdNyswPRen6A6jbUsU?=
+ =?us-ascii?Q?7WDXIyDGL4XHDB1lhzmc/dcJfC5zhQShHRNrEGd6v1xtpeAB3qtAHBA7/Yug?=
+ =?us-ascii?Q?EHBYvRc1tps18LV6TopqTtVI6juRv1TvXTA2mmwHPUrAtVi3nyVpL5GLcb0u?=
+ =?us-ascii?Q?FoqJzHZvJAW/REZAxx/eYTqE/jQI7oi7L5GMSp7Ij3GoSw5dNSTWPg0bzRCJ?=
+ =?us-ascii?Q?6s6QRGQeBgrwTYnMT+7UEFuR1vW9LY9bIjLCfdD5fj/Zjc2T/dJ7qCBJX/dT?=
+ =?us-ascii?Q?D5oyULXCjLjFLkB2cYCj3G0mbINKet13c5ma9g7c4b5lSGOZ/mE4SX4FxiWP?=
+ =?us-ascii?Q?MxMc86P35lVanGri/LDnPgcfgxOIbDEmRpaRMlnFpldxnybIXbkrqpFelOt8?=
+ =?us-ascii?Q?c8sqzvxmZrCWw2MIg429izz2Bv1mEfIxQGSrpxwHLd+dR0P14dFs+k/R0EiR?=
+ =?us-ascii?Q?XSrD0wbYewpQYwwvtwQf2RcQp/0so3cMl3ye/PDUVG1qYqYWJ5lSuJHt6ldg?=
+ =?us-ascii?Q?HsnGvgV6fv+5yt8LVTTn86IAZlBywbbtY3ZSQowdEJyjuU5fNWEoErmTYCTM?=
+ =?us-ascii?Q?AS4ZJhUFfIJ7BbuL5Duj3Mq6TUz3knsWd8qcH7HhAoRq8XWT1NWT/aTHwE5M?=
+ =?us-ascii?Q?xEWK1aNeC9wAhplvRJsgTQc/pDE31oGPw0XEC44J7njhreTU4+K0HYdny9P7?=
+ =?us-ascii?Q?xylx2haCRAIWkVOKM0alzjKhevlBTwOBhtxIye9DDgZqog6QWv+rm+w9BX79?=
+ =?us-ascii?Q?e3baZJgF0C2qAL7PYrF3n0gNO3IMaNlGqAwGFLY2nOdiki21KZ96EoDoXQt3?=
+ =?us-ascii?Q?eAlJuUUVbackzHrKtXeHr05r1iaF1hq6j2vKCg31Hd4rVH4WTPnRJ7WqxkBS?=
+ =?us-ascii?Q?YWb+VeqUrr7kVGMGpFqah9EKx39RBKifffkuqPzNpe+9q7Xq0hR3HkX4U+Lm?=
+ =?us-ascii?Q?JpI+y98o+6BQm1n+l6iZ/RtTGDlfaCSviEAmMvsrXtqbEBBBLtvF5gIHCvtA?=
+ =?us-ascii?Q?Jl2ESLO2JfZcR681l7poou7w4xN/YAqMkobb9zL+vt59CBp8t1PLpRnXLN3E?=
+ =?us-ascii?Q?ZqPkGuEcnqF0STt6DvO03XNKE4wPPM74/LgVy7dZWtc0N6yJoHgpzDEtz6A9?=
+ =?us-ascii?Q?WaOzSsmxAFDdwhFQJ2wCHjmJcuza2h1E0W8fmulWWUAuGfMl9oL3uH56N4S+?=
+ =?us-ascii?Q?9Hlq2rxsWvvbdRzg50ejLz4cyhhrxP5zQLr4QrjqvrgUaMVVkacisxAYrwCv?=
+ =?us-ascii?Q?sYn5yEdrZqjIcXSO0jEyVTnWIraqy3q67sSlah6U1Wq/msR7ATZ+wWzm5Ui1?=
+ =?us-ascii?Q?sfe0FD1BTU4bmsNV1hwqWC0rzYaAmnxPoIpS6z+8SJYQy3yzWR8Vb27DfN8E?=
+ =?us-ascii?Q?qdrO6Dqf5iS4C1Jj20p96av7PKf/+qYdsyxZ5pPqhkf07UQnObvpriXv3KF3?=
+ =?us-ascii?Q?QGlZtV2vwA=3D=3D?=
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33923727-9cb3-4956-9125-08da213e9022
+X-MS-Exchange-CrossTenant-Network-Message-Id: d60d8851-3b6b-4b3d-a9a4-08da213e89e7
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1358.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2022 13:23:01.7469
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2022 13:22:51.2789
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oJurLbPzfQMbpwhQJv4oULxunsiuwEatCMQTq8cQ8SD9v64QM/Do8zLtADiNgHJSls/JNLsDp1p+3Z2RIZsBgA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5AM5bRFD8rqvRXLZ7tVS2yBZbLqXJMSQywW/01BsmIw3f7qLzsRtbDgsYtppCpm+bTtovIYSWNYU7gazJIHSVA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2857
-X-Proofpoint-ORIG-GUID: Aod_roRjV79KpNthk3_U2ND7CEqM04FS
-X-Proofpoint-GUID: Aod_roRjV79KpNthk3_U2ND7CEqM04FS
+X-Proofpoint-ORIG-GUID: A3MrDu8cp4c8-4S824gXgQ6jMmsr-U6w
+X-Proofpoint-GUID: A3MrDu8cp4c8-4S824gXgQ6jMmsr-U6w
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
  definitions=2022-04-18_02,2022-04-15_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- mlxlogscore=736 phishscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204180078
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=795 mlxscore=0
+ adultscore=0 clxscore=1015 spamscore=0 bulkscore=0 malwarescore=0
+ impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2202240000 definitions=main-2204180078
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -148,119 +148,89 @@ functinoal change.
 
 Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
- arch/riscv/include/asm/stacktrace.h |  2 +-
- arch/riscv/kernel/perf_callchain.c  |  4 ++--
- arch/riscv/kernel/stacktrace.c      | 22 +++++++++++++---------
- 3 files changed, 16 insertions(+), 12 deletions(-)
+ arch/arm64/kernel/perf_callchain.c | 4 ++--
+ arch/arm64/kernel/process.c        | 6 +++---
+ arch/arm64/kernel/return_address.c | 4 ++--
+ arch/arm64/kernel/time.c           | 6 +++---
+ 4 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm/stacktrace.h
-index 3450c1912afd..486ed6a96b89 100644
---- a/arch/riscv/include/asm/stacktrace.h
-+++ b/arch/riscv/include/asm/stacktrace.h
-@@ -12,7 +12,7 @@ struct stackframe {
- };
- 
- extern void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
--				    bool (*fn)(void *, unsigned long), void *arg);
-+				    stack_trace_consume_fn fn, void *arg);
- extern void dump_backtrace(struct pt_regs *regs, struct task_struct *task,
- 			   const char *loglvl);
- 
-diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-index 3348a61de7d9..413abf094818 100644
---- a/arch/riscv/kernel/perf_callchain.c
-+++ b/arch/riscv/kernel/perf_callchain.c
-@@ -66,9 +66,9 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
- 		fp = user_backtrace(entry, fp, 0);
+diff --git a/arch/arm64/kernel/perf_callchain.c b/arch/arm64/kernel/perf_callchain.c
+index 65b196e3ca6c..d32918b34c0c 100644
+--- a/arch/arm64/kernel/perf_callchain.c
++++ b/arch/arm64/kernel/perf_callchain.c
+@@ -132,10 +132,10 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+ 	}
  }
  
--static bool fill_callchain(void *entry, unsigned long pc)
-+static bool fill_callchain(void *entry, struct frame_info *fi)
+-static bool callchain_trace(void *data, unsigned long pc)
++static bool callchain_trace(void *data, struct frame_info *fi)
  {
+ 	struct perf_callchain_entry_ctx *entry = data;
 -	return perf_callchain_store(entry, pc) == 0;
 +	return perf_callchain_store(entry, fi->pc) == 0;
  }
  
  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index 08d11a53f39e..9cc5013a5ea4 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -17,10 +17,11 @@
- #ifdef CONFIG_FRAME_POINTER
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 7fa97df55e3a..e96a8a614a1a 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -527,12 +527,12 @@ struct wchan_info {
+ 	int		count;
+ };
  
- void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
--			     bool (*fn)(void *, unsigned long), void *arg)
-+			     stack_trace_consume_fn fn, void *arg)
+-static bool get_wchan_cb(void *arg, unsigned long pc)
++static bool get_wchan_cb(void *arg, struct frame_info *fi)
  {
- 	unsigned long fp, sp, pc;
- 	int level = 0;
-+	struct frame_info fi;
+ 	struct wchan_info *wchan_info = arg;
  
- 	if (regs) {
- 		fp = frame_pointer(regs);
-@@ -41,7 +42,8 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 		unsigned long low, high;
- 		struct stackframe *frame;
- 
--		if (unlikely(!__kernel_text_address(pc) || (level++ >= 1 && !fn(arg, pc))))
-+		fi.pc = pc;
-+		if (unlikely(!__kernel_text_address(pc) || (level++ >= 1 && !fn(arg, &fi))))
- 			break;
- 
- 		/* Validate frame pointer */
-@@ -67,10 +69,11 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- #else /* !CONFIG_FRAME_POINTER */
- 
- void notrace walk_stackframe(struct task_struct *task,
--	struct pt_regs *regs, bool (*fn)(void *, unsigned long), void *arg)
-+	struct pt_regs *regs, stack_trace_consume_fn fn, void *arg)
- {
- 	unsigned long sp, pc;
- 	unsigned long *ksp;
-+	struct frame_info fi;
- 
- 	if (regs) {
- 		sp = user_stack_pointer(regs);
-@@ -89,7 +92,8 @@ void notrace walk_stackframe(struct task_struct *task,
- 
- 	ksp = (unsigned long *)sp;
- 	while (!kstack_end(ksp)) {
--		if (__kernel_text_address(pc) && unlikely(!fn(arg, pc)))
-+		fi.pc = pc;
-+		if (__kernel_text_address(pc) && unlikely(!fn(arg, &fi)))
- 			break;
- 		pc = (*ksp++) - 0x4;
- 	}
-@@ -97,11 +101,11 @@ void notrace walk_stackframe(struct task_struct *task,
- 
- #endif /* CONFIG_FRAME_POINTER */
- 
--static bool print_trace_address(void *arg, unsigned long pc)
-+static bool print_trace_address(void *arg, struct frame_info *fi)
- {
- 	const char *loglvl = arg;
- 
--	print_ip_sym(loglvl, pc);
-+	print_ip_sym(loglvl, fi->pc);
- 	return true;
- }
- 
-@@ -117,11 +121,11 @@ void show_stack(struct task_struct *task, unsigned long *sp, const char *loglvl)
- 	dump_backtrace(NULL, task, loglvl);
- }
- 
--static bool save_wchan(void *arg, unsigned long pc)
-+static bool save_wchan(void *arg, struct frame_info *fi)
- {
 -	if (!in_sched_functions(pc)) {
+-		wchan_info->pc = pc;
 +	if (!in_sched_functions(fi->pc)) {
- 		unsigned long *p = arg;
--		*p = pc;
-+		*p = fi->pc;
++		wchan_info->pc = fi->pc;
  		return false;
  	}
- 	return true;
+ 	return wchan_info->count++ < 16;
+diff --git a/arch/arm64/kernel/return_address.c b/arch/arm64/kernel/return_address.c
+index 68330017d04f..ec9be91623c4 100644
+--- a/arch/arm64/kernel/return_address.c
++++ b/arch/arm64/kernel/return_address.c
+@@ -18,12 +18,12 @@ struct return_address_data {
+ 	void *addr;
+ };
+ 
+-static bool save_return_addr(void *d, unsigned long pc)
++static bool save_return_addr(void *d, struct frame_info *fi)
+ {
+ 	struct return_address_data *data = d;
+ 
+ 	if (!data->level) {
+-		data->addr = (void *)pc;
++		data->addr = (void *)fi->pc;
+ 		return false;
+ 	} else {
+ 		--data->level;
+diff --git a/arch/arm64/kernel/time.c b/arch/arm64/kernel/time.c
+index b5855eb7435d..6b1a9de7c852 100644
+--- a/arch/arm64/kernel/time.c
++++ b/arch/arm64/kernel/time.c
+@@ -32,13 +32,13 @@
+ #include <asm/thread_info.h>
+ #include <asm/paravirt.h>
+ 
+-static bool profile_pc_cb(void *arg, unsigned long pc)
++static bool profile_pc_cb(void *arg, struct frame_info *fi)
+ {
+ 	unsigned long *prof_pc = arg;
+ 
+-	if (in_lock_functions(pc))
++	if (in_lock_functions(fi->pc))
+ 		return true;
+-	*prof_pc = pc;
++	*prof_pc = fi->pc;
+ 	return false;
+ }
+ 
 -- 
 2.25.1
 
