@@ -2,94 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB46FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Apr 2022 22:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E95AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 01:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbiDRWCo (ORCPT
+        id S239115AbiDSBYF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Apr 2022 18:02:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52974 "EHLO
+        Mon, 18 Apr 2022 21:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230159AbiDRWCg (ORCPT
+        with ESMTP id S231862AbiDSBYC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Apr 2022 18:02:36 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589FE1A38E
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Apr 2022 14:59:55 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id s17so2590136plg.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Apr 2022 14:59:55 -0700 (PDT)
+        Mon, 18 Apr 2022 21:24:02 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D962717A
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Apr 2022 18:21:21 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id t11so29851334eju.13
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Apr 2022 18:21:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=cLLWAAHArn9WgPwOUwNflPPJDgjsRY1O3bHGAhIDsQw=;
-        b=LTURonE53ti9q/GT1aK7iRoPMpGAeCy1e4EeYMoQ5ND31pPzYRrBIuxOtS32aAiFM+
-         1XHlY0ymuxtf7KP5zzxh8j9ip4/ZkYqKkInt8TY5JnA0taa6ag1p6HhrtkPYOmL/X1BS
-         68H/ZEsyd88OXRqhJx4ed+KaxwMRzhvwF+Q30=
+        bh=zxbQ6TRPNn9gexb0jaIoX0c5WCAB0YeHHh5XcVddlu4=;
+        b=kUEg6N6xcZzu6vy23WArx+eRurR58Zws4VxetIoj7RYKnV/b97rc954MFQJvofcy6z
+         /v+kBQ2M2XVZHnrzej9b3KWSchdiXfLUXlRoebxpJR4Ud+JqzAMNPlZlIvloTDX9SvSs
+         goD3bIlVMMK0TecPMWAG/pVf/CGPh+Red09LmHLo8InfAzqkb51v3+VMcQp1Xlyp6QJO
+         E8goocgcYGWCi/0tPcoXu+fnBijeXF0P3mvWLRi/8yvo9bmrEdRhVRZdYHnqFOtSwkey
+         JQk6WdllD/yOUCd+6GRXnaGxLmws+bcUp96IOdozXA/N/BvSPmB+RqJHHMsqFn2X/9Ah
+         WEQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=cLLWAAHArn9WgPwOUwNflPPJDgjsRY1O3bHGAhIDsQw=;
-        b=nbTZogvIXB3O8TKnZWF70/+SIO41eKh4tHKsE+qxebK6wZVQI24mMXtjNuTaT68xig
-         znFPwqh7IkZ2+nZaDP+RwCDudewVcotCzYMctLuKp1xt9yPks0WeuvwRsLRTVbCfJQnU
-         OvQl8/BiIxj6Yx0betG0kjNce6R6ND6VQp3fAlOxqohxo5jxxTOhz2UFb/7NjqckeF4m
-         KMvXDl+MpdMr32cLBVd9uj/32hOJWw/H+A7CUh7o8uX2JRpeP3zjSjuynwmSUt+l8Hox
-         m4QLgxAWnS697Xrqn0ET1/EtqtH0SDjHdAB2k7nouHv9ghV4IFWxzfcXW127iZ0z9fzK
-         ti3g==
-X-Gm-Message-State: AOAM533zMyduR1QpSvY9kg0X7LIJzbLVVVRf0JC30RVnDeaeyiQL8NVK
-        mgEdOAG4VD3V1WPYnFTXk4i56A==
-X-Google-Smtp-Source: ABdhPJysM2kkydsu6S512r9sNHn81bBvZQZwemOKp8WmD7sADc0kfHvR6/TUHLqhcn1MQ99fL/O1Og==
-X-Received: by 2002:a17:902:6bc2:b0:158:a26b:5884 with SMTP id m2-20020a1709026bc200b00158a26b5884mr12917161plt.38.1650319190427;
-        Mon, 18 Apr 2022 14:59:50 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z15-20020a056a001d8f00b004fda37855ddsm12953099pfw.168.2022.04.18.14.59.49
+        bh=zxbQ6TRPNn9gexb0jaIoX0c5WCAB0YeHHh5XcVddlu4=;
+        b=A/Kq4IxK8uGaKCQSct9sGlk+3r9LNslFPhp0NOEOcT54xFf9VJFDvvtj43HjQYqN9F
+         Vgu91ux046mf9Bk601g9l4S0cu7dj2yyeVsK3tJKjFqZUykWBR7lTqCQQG83t9Cn7Ost
+         OLLNGNqBUreHAjd/ds/Hvv5fitjfUVHmifxNpn0nQzvIrNh0gcBWoQQxOEbBavyWGm2V
+         vANCspQD+18C8Iw26jm0US1bWAsqpuvDThxbwLWod+qreS6Cx7r755uOQB7uxxY9cs64
+         V2LTMmiyHjhG7edmXFEe2NyaGMG/2TqNjYvW4XUQRgsOGMrQ9EjjFXj/zxKe3X6p8EXO
+         DLDg==
+X-Gm-Message-State: AOAM5333jpxa0nW0aBlHlwU+9kOlsf3yq1ujTcwVSxCaTymqBumIkzFD
+        MNkN5lp1MbvaQ5O+L6EPBgmq+w==
+X-Google-Smtp-Source: ABdhPJziwyj2afz/fzBMlMpMXsEiyH76Q2F7T1jddYljRwBxHA9iyxPKtGshpN6XD5v9WsIB64K6zw==
+X-Received: by 2002:a17:907:7f88:b0:6ef:e068:f5aa with SMTP id qk8-20020a1709077f8800b006efe068f5aamr390588ejc.238.1650331279998;
+        Mon, 18 Apr 2022 18:21:19 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([104.245.96.34])
+        by smtp.gmail.com with ESMTPSA id b25-20020a056402139900b0041904036ab1sm7838317edv.5.2022.04.18.18.21.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Apr 2022 14:59:50 -0700 (PDT)
-Date:   Mon, 18 Apr 2022 14:59:49 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, benh@kernel.crashing.org, paulus@samba.org,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/8] arm64: stacktrace: Add arch_within_stack_frames
-Message-ID: <202204181457.9DE190CE@keescook>
-References: <20220418132217.1573072-1-zhe.he@windriver.com>
- <20220418132217.1573072-3-zhe.he@windriver.com>
+        Mon, 18 Apr 2022 18:21:19 -0700 (PDT)
+Date:   Tue, 19 Apr 2022 09:21:14 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE
+ event
+Message-ID: <20220419012114.GF166256@leoy-ThinkPad-X240s>
+References: <20220414123201.842754-1-leo.yan@linaro.org>
+ <Yl3eisj26sHBjokV@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220418132217.1573072-3-zhe.he@windriver.com>
+In-Reply-To: <Yl3eisj26sHBjokV@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 18, 2022 at 09:22:11PM +0800, He Zhe wrote:
-> This function checks if the given address range crosses frame boundary.
-> It is based on the existing x86 algorithm, but implemented via stacktrace.
-> This can be tested by USERCOPY_STACK_FRAME_FROM and
-> USERCOPY_STACK_FRAME_TO in lkdtm.
+On Mon, Apr 18, 2022 at 06:56:26PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Apr 14, 2022 at 08:32:01PM +0800, Leo Yan escreveu:
+> > Since commit bb30acae4c4d ("perf report: Bail out --mem-mode if mem info
+> > is not available") "perf mem report" and "perf report --mem-mode"
+> > don't report result if the PERF_SAMPLE_DATA_SRC bit is missed in sample
+> > type.
+> > 
+> > The commit ffab48705205 ("perf: arm-spe: Fix perf report --mem-mode")
+> > partially fixes the issue.  It adds PERF_SAMPLE_DATA_SRC bit for Arm SPE
+> > event, this allows the perf data file generated by kernel v5.18-rc1 or
+> > later version can be reported properly.
+> > 
+> > On the other hand, perf tool still fails to be backward compatibility
+> > for a data file recorded by an older version's perf which contains Arm
+> > SPE trace data.  This patch is a workaround in reporting phase, when
+> > detects ARM SPE PMU event and without PERF_SAMPLE_DATA_SRC bit, it will
+> > force to set the bit in the sample type and give a warning info.
+> 
+> Thanks, applied.
 
-Hi,
+Thank you, Arnaldo!
 
-Thanks for doing this implementation! One reason usercopy hardening
-didn't persue doing a "full" stacktrace was because it seemed relatively
-expensive. Did you do any usercopy-heavily workload testing to see if
-there was a noticeable performance impact?
-
-It would be nice to block the exposure of canaries and PAC bits, though,
-so I'm not opposed, but I'd like to get a better sense of how "heavy"
-this might be.
-
-Thanks!
-
--Kees
-
--- 
-Kees Cook
+Leo
