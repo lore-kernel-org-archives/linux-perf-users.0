@@ -2,32 +2,33 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BB8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 13:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E269EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 13:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbiDSN7V (ORCPT
+        id S233178AbiDSOAB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Apr 2022 09:59:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34636 "EHLO
+        Tue, 19 Apr 2022 10:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240005AbiDSN7N (ORCPT
+        with ESMTP id S235548AbiDSOAB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Apr 2022 09:59:13 -0400
+        Tue, 19 Apr 2022 10:00:01 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 414AF38BEA;
-        Tue, 19 Apr 2022 06:56:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C1CC838BEA;
+        Tue, 19 Apr 2022 06:57:18 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 047E31063;
-        Tue, 19 Apr 2022 06:56:30 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CCE71063;
+        Tue, 19 Apr 2022 06:57:18 -0700 (PDT)
 Received: from [10.32.36.25] (e121896.Emea.Arm.com [10.32.36.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC7023F766;
-        Tue, 19 Apr 2022 06:56:26 -0700 (PDT)
-Message-ID: <d73b0dbf-9878-2c1f-5246-79de08da97d4@arm.com>
-Date:   Tue, 19 Apr 2022 14:56:25 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 929F53F766;
+        Tue, 19 Apr 2022 06:57:15 -0700 (PDT)
+Message-ID: <35dfe8a7-c31a-3e28-7429-f81753d0089a@arm.com>
+Date:   Tue, 19 Apr 2022 14:57:14 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: [PATCH V5 2/8] perf: Extend branch type classification
+Subject: Re: [PATCH V5 4/8] perf: Add PERF_BR_NEW_ARCH_[N] map for BRBE on
+ arm64 platform
 Content-Language: en-US
 To:     Anshuman Khandual <anshuman.khandual@arm.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -43,9 +44,9 @@ Cc:     Robin Murphy <robin.murphy@arm.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org
 References: <20220404045046.634522-1-anshuman.khandual@arm.com>
- <20220404045046.634522-3-anshuman.khandual@arm.com>
+ <20220404045046.634522-5-anshuman.khandual@arm.com>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220404045046.634522-3-anshuman.khandual@arm.com>
+In-Reply-To: <20220404045046.634522-5-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -55,91 +56,39 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 04/04/2022 05:50, Anshuman Khandual wrote:
-> branch_entry.type now has ran out of space to accommodate more branch types
-> classification. This will prevent perf branch stack implementation on arm64
-> (via BRBE) to capture all available branch types. Extending this bit field
-> i.e branch_entry.type [4 bits] is not an option as it will break user space
-> ABI both for little and big endian perf tools.
+> BRBE captured branch types will overflow perf_branch_entry.type and generic
+> branch types in perf_branch_entry.new_type. So override each available arch
+> specific branch type in the following manner to comprehensively process all
+> reported branch types in BRBE.
 > 
-> Extend branch classification with a new field branch_entry.new_type via a
-> new branch type PERF_BR_EXTEND_ABI in branch_entry.type. Perf tools which
-> could decode PERF_BR_EXTEND_ABI, will then parse branch_entry.new_type as
-> well.
+> PERF_BR_ARM64_FIQ            PERF_BR_NEW_ARCH_1
+> PERF_BR_ARM64_DEBUG_HALT     PERF_BR_NEW_ARCH_2
+> PERF_BR_ARM64_DEBUG_EXIT     PERF_BR_NEW_ARCH_3
+> PERF_BR_ARM64_DEBUG_INST     PERF_BR_NEW_ARCH_4
+> PERF_BR_ARM64_DEBUG_DATA     PERF_BR_NEW_ARCH_5
 > 
-> branch_entry.new_type is a 4 bit field which can hold upto 16 branch types.
-> The first three branch types will hold various generic page faults followed
-> by five architecture specific branch types, which can be overridden by the
-> platform for specific use cases. These architecture specific branch types
-> gets overridden on arm64 platform for BRBE implementation.
-> 
-> New generic branch types
-> 
-> - PERF_BR_NEW_FAULT_ALGN
-> - PERF_BR_NEW_FAULT_DATA
-> - PERF_BR_NEW_FAULT_INST
-> 
-> New arch specific branch types
-> 
-> - PERF_BR_NEW_ARCH_1
-> - PERF_BR_NEW_ARCH_2
-> - PERF_BR_NEW_ARCH_3
-> - PERF_BR_NEW_ARCH_4
-> - PERF_BR_NEW_ARCH_5
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
 > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
 Reviewed-by: James Clark <james.clark@arm.com>
 
 > ---
->  include/uapi/linux/perf_event.h | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+>  include/uapi/linux/perf_event.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 26d8f0b5ac0d..d29280adc3c4 100644
+> index 193dba2ecdc1..4cf1c8e22cab 100644
 > --- a/include/uapi/linux/perf_event.h
 > +++ b/include/uapi/linux/perf_event.h
-> @@ -255,9 +255,22 @@ enum {
->  	PERF_BR_IRQ		= 12,	/* irq */
->  	PERF_BR_SERROR		= 13,	/* system error */
->  	PERF_BR_NO_TX		= 14,	/* not in transaction */
-> +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
->  	PERF_BR_MAX,
+> @@ -282,6 +282,12 @@ enum {
+>  	PERF_BR_PRIV_HV		= 3,
 >  };
 >  
-> +enum {
-> +	PERF_BR_NEW_FAULT_ALGN		= 0,    /* Alignment fault */
-> +	PERF_BR_NEW_FAULT_DATA		= 1,    /* Data fault */
-> +	PERF_BR_NEW_FAULT_INST		= 2,    /* Inst fault */
-> +	PERF_BR_NEW_ARCH_1		= 3,    /* Architecture specific */
-> +	PERF_BR_NEW_ARCH_2		= 4,    /* Architecture specific */
-> +	PERF_BR_NEW_ARCH_3		= 5,    /* Architecture specific */
-> +	PERF_BR_NEW_ARCH_4		= 6,    /* Architecture specific */
-> +	PERF_BR_NEW_ARCH_5		= 7,    /* Architecture specific */
-> +	PERF_BR_NEW_MAX,
-> +};
+> +#define PERF_BR_ARM64_FIQ		PERF_BR_NEW_ARCH_1
+> +#define PERF_BR_ARM64_DEBUG_HALT	PERF_BR_NEW_ARCH_2
+> +#define PERF_BR_ARM64_DEBUG_EXIT	PERF_BR_NEW_ARCH_3
+> +#define PERF_BR_ARM64_DEBUG_INST	PERF_BR_NEW_ARCH_4
+> +#define PERF_BR_ARM64_DEBUG_DATA	PERF_BR_NEW_ARCH_5
 > +
 >  #define PERF_SAMPLE_BRANCH_PLM_ALL \
 >  	(PERF_SAMPLE_BRANCH_USER|\
 >  	 PERF_SAMPLE_BRANCH_KERNEL|\
-> @@ -1372,7 +1385,8 @@ struct perf_branch_entry {
->  		abort:1,    /* transaction abort */
->  		cycles:16,  /* cycle count to last branch */
->  		type:4,     /* branch type */
-> -		reserved:40;
-> +		new_type:4, /* additional branch type */
-> +		reserved:36;
->  };
->  
->  union perf_sample_weight {
