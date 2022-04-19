@@ -2,327 +2,397 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB73C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 14:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C8CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 14:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346822AbiDSOTD (ORCPT
+        id S230116AbiDSOnr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Apr 2022 10:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34794 "EHLO
+        Tue, 19 Apr 2022 10:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346632AbiDSOTD (ORCPT
+        with ESMTP id S1351109AbiDSOng (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Apr 2022 10:19:03 -0400
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDBE75FE3;
-        Tue, 19 Apr 2022 07:16:18 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VAVirkf_1650377772;
-Received: from 30.39.169.99(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0VAVirkf_1650377772)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 19 Apr 2022 22:16:14 +0800
-Message-ID: <c33fd91c-8f8f-c82f-4e03-8799f3b8cd28@linux.alibaba.com>
-Date:   Tue, 19 Apr 2022 22:16:12 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.8.0
-Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
- avoid unnecessary pmu_stop/start
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>
-Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        mark rutland <mark.rutland@arm.com>,
-        jiri olsa <jolsa@redhat.com>,
-        namhyung kim <namhyung@kernel.org>,
-        borislav petkov <bp@alien8.de>, x86@kernel.org,
-        "h. peter anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        Tue, 19 Apr 2022 10:43:36 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 36AEA21819;
+        Tue, 19 Apr 2022 07:40:53 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1E041063;
+        Tue, 19 Apr 2022 07:40:52 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.75.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A597E3F766;
+        Tue, 19 Apr 2022 07:40:49 -0700 (PDT)
+Date:   Tue, 19 Apr 2022 15:40:45 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, keescook@chromium.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, benh@kernel.crashing.org, paulus@samba.org,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
- <20220304110351.47731-2-simon.wy@alibaba-inc.com>
- <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
- <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
- <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
- <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
- <Yi8fELo+k9gmkJIa@hirez.programming.kicks-ass.net>
- <05861b8c-2c7c-ae89-613a-41fcace6a174@linux.alibaba.com>
- <e50c5307-8b2d-9338-0acc-9375b76c211d@linux.alibaba.com>
-In-Reply-To: <e50c5307-8b2d-9338-0acc-9375b76c211d@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH RFC 2/8] arm64: stacktrace: Add arch_within_stack_frames
+Message-ID: <Yl7J7aVzKiWRtrGi@FVFF77S0Q05N>
+References: <20220418132217.1573072-1-zhe.he@windriver.com>
+ <20220418132217.1573072-3-zhe.he@windriver.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220418132217.1573072-3-zhe.he@windriver.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi,
 
+On Mon, Apr 18, 2022 at 09:22:11PM +0800, He Zhe wrote:
+> This function checks if the given address range crosses frame boundary.
 
-在 2022/4/17 下午11:06, Wen Yang 写道:
-> 
-> 
-> 在 2022/3/18 上午1:54, Wen Yang 写道:
->>
->>
->> 在 2022/3/14 下午6:55, Peter Zijlstra 写道:
->>> On Thu, Mar 10, 2022 at 11:50:33AM +0800, Wen Yang wrote:
->>>
->>>> As you pointed out, some non-compliant rdpmc can cause problems. But 
->>>> you
->>>> also know that linux is the foundation of cloud servers, and many
->>>> third-party programs run on it (we don't have any code for it), and 
->>>> we can
->>>> only observe that the monitoring data will jitter abnormally (the
->>>> probability of this issue is not high, about dozens of tens of 
->>>> thousands of
->>>> machines).
->>>
->>> This might be a novel insight, but I *really* don't give a crap about
->>> any of that. If they're not using it right, they get to keep the pieces.
->>>
->>> I'd almost make it reschedule more to force them to fix their stuff.
->>>
->>
->>
->> Thank you for your guidance.
->>
->> We also found a case in thousands of servers where the PMU counter is 
->> no longer updated due to frequent x86_pmu_stop/x86_pmu_start.
->>
->> We added logs in the kernel and found that a third-party program would 
->> cause the PMU counter to start/stop several times in just a few 
->> seconds, as follows:
->>
->>
->> [8993460.537776] XXX x86_pmu_stop line=1388 [cpu1] 
->> active_mask=100000001 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=3, 
->> hw.prev_count=0x802a877ef302, hw.period_left=0x7fd578810cfe, 
->> event.count=0x14db802a877ecab4, event.prev_count=0x14db802a877ecab4
->> [8993460.915873] XXX x86_pmu_start line=1312 [cpu1] 
->> active_mask=200000008 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=3, 
->> hw.prev_count=0xffff802a9cf6a166, hw.period_left=0x7fd563095e9a, 
->> event.count=0x14db802a9cf67918, event.prev_count=0x14db802a9cf67918
->> [8993461.104643] XXX x86_pmu_stop line=1388 [cpu1] 
->> active_mask=100000001 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=3, 
->> hw.prev_count=0xffff802a9cf6a166, hw.period_left=0x7fd563095e9a, 
->> event.count=0x14db802a9cf67918, event.prev_count=0x14db802a9cf67918
->> [8993461.442508] XXX x86_pmu_start line=1312 [cpu1] 
->> active_mask=200000004 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=2, 
->> hw.prev_count=0xffff802a9cf8492e, hw.period_left=0x7fd56307b6d2, 
->> event.count=0x14db802a9cf820e0, event.prev_count=0x14db802a9cf820e0
->> [8993461.736927] XXX x86_pmu_stop line=1388 [cpu1] 
->> active_mask=100000001 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=2, 
->> hw.prev_count=0xffff802a9cf8492e, hw.period_left=0x7fd56307b6d2, 
->> event.count=0x14db802a9cf820e0, event.prev_count=0x14db802a9cf820e0
->> [8993461.983135] XXX x86_pmu_start line=1312 [cpu1] 
->> active_mask=200000004 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=2, 
->> hw.prev_count=0xffff802a9cfc29ed, hw.period_left=0x7fd56303d613, 
->> event.count=0x14db802a9cfc019f, event.prev_count=0x14db802a9cfc019f
->> [8993462.274599] XXX x86_pmu_stop line=1388 [cpu1] 
->> active_mask=100000001 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=2, 
->> hw.prev_count=0x802a9d24040e, hw.period_left=0x7fd562dbfbf2, 
->> event.count=0x14db802a9d23dbc0, event.prev_count=0x14db802a9d23dbc0
->> [8993462.519488] XXX x86_pmu_start line=1312 [cpu1] 
->> active_mask=200000004 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=2, 
->> hw.prev_count=0xffff802ab0bb4719, hw.period_left=0x7fd54f44b8e7, 
->> event.count=0x14db802ab0bb1ecb, event.prev_count=0x14db802ab0bb1ecb
->> [8993462.726929] XXX x86_pmu_stop line=1388 [cpu1] 
->> active_mask=100000003 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=2, 
->> hw.prev_count=0xffff802ab0bb4719, hw.period_left=0x7fd54f44b8e7, 
->> event.count=0x14db802ab0bb1ecb, event.prev_count=0x14db802ab0bb1ecb
->> [8993463.035674] XXX x86_pmu_start line=1312 [cpu1] 
->> active_mask=200000008 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=3, 
->> hw.prev_count=0xffff802ab0bcd328, hw.period_left=0x7fd54f432cd8, 
->> event.count=0x14db802ab0bcaada, event.prev_count=0x14db802ab0bcaada
->>
->>
->> Then, the PMU counter will not be updated：
->>
->> [8993463.333622] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802abea31354
->> [8993463.359905] x86_perf_event_update [cpu1] active_mask=30000000f 
->> event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
->> hw.idx=3, hw.prev_count=0x802abea31354, hw.period_left=0x7fd5415cecac, 
->> event.count=0x14db802abea2eb06,
->> [8993463.504783] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802ad8760160
->> [8993463.521138] x86_perf_event_update [cpu1] active_mask=30000000f 
->> event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
->> hw.idx=3, hw.prev_count=0x802ad8760160, hw.period_left=0x7fd52789fea0, 
->> event.count=0x14db802ad875d912,
->> [8993463.638337] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802aecb4747b
->> [8993463.654441] x86_perf_event_update [cpu1] active_mask=30000000f 
->> event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
->> hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
->> event.count=0x14db802aecb44c2d,
->> [8993463.837321] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802aecb4747b
->> [8993463.861625] x86_perf_event_update [cpu1] active_mask=30000000f 
->> event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
->> hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
->> event.count=0x14db802aecb44c2d,
->> [8993464.012398] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802aecb4747b
->> [8993464.012402] x86_perf_event_update [cpu1] active_mask=30000000f 
->> event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
->> hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
->> event.count=0x14db802aecb44c2d,
->> [8993464.013676] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802aecb4747b
->> [8993464.013678] x86_perf_event_update [cpu1] active_mask=30000000f 
->> event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
->> hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
->> event.count=0x14db802aecb44c2d,
->> [8993464.016123] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802aecb4747b
->> [8993464.016125] x86_perf_event_update [cpu1] active_mask=30000000f 
->> event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
->> hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
->> event.count=0x14db802aecb44c2d,
->> [8993464.016196] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802aecb4747b
->> [8993464.016199] x86_perf_event_update [cpu1] active_mask=30000000f 
->> event=ffff880a53411000, state=1, attr.config=0x0, attr.pinned=1, 
->> hw.idx=3, hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
->> event.count=0x14db802aecb44c2d,
->>
->> ......
->>
->>
->> Until 6 seconds later, the counter is stopped/started again：
->>
->>
->> [8993470.243959] XXX x86_pmu_stop line=1388 [cpu1] 
->> active_mask=100000001 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=3, 
->> hw.prev_count=0x802aecb4747b, hw.period_left=0x7fd5134b8b85, 
->> event.count=0x14db802aecb44c2d, event.prev_count=0x14db802aecb44c2d
->> [8993470.243998] XXX x86_pmu_start line=1305 [cpu1] 
->> active_mask=200000000 event=ffff880a53411000, state=1, attr.type=0, 
->> attr.config=0x0, attr.pinned=1, hw.idx=3, 
->> hw.prev_count=0xffff802aecb4747b, hw.period_left=0x7fd5134b8b85, 
->> event.count=0x14db802aecb44c2d, event.prev_count=0x14db802aecb44c2d
->>
->> [8993470.245285] x86_perf_event_update, event=ffff880a53411000, 
->> new_raw_count=802aece1e6f6
->>
->> ...
->>
->> Such problems can be solved by avoiding unnecessary x86_pmu_{stop|start}.
->>
->> Please have a look again. Thanks.
->>
-> 
-> We recently tracked this issue again found that it may be related to the 
-> behavior of the third GP of  the Intel(R) Xeon(R) Platinum 8163 CPU:
-> 
-> 
-> [54511836.022997] CPU#1: ctrl:       000000070000000f
-> [54511836.022997] CPU#1: status:     0000000000000000
-> [54511836.022998] CPU#1: overflow:   0000000000000000
-> [54511836.022998] CPU#1: fixed:      00000000000000bb
-> [54511836.022998] CPU#1: pebs:       0000000000000000
-> [54511836.022999] CPU#1: debugctl:   0000000000000000
-> [54511836.022999] CPU#1: active:     000000030000000f
-> [54511836.023000] CPU#1:   gen-PMC0 ctrl:  000000000053412e
-> [54511836.023000] CPU#1:   gen-PMC0 count: 0000985b7d1a15e7
-> [54511836.023000] CPU#1:   gen-PMC0 left:  000067a483643939
-> [54511836.023001] CPU#1:   gen-PMC1 ctrl:  00000000005310d1
-> [54511836.023002] CPU#1:   gen-PMC1 count: 000080000016448e
-> [54511836.023002] CPU#1:   gen-PMC1 left:  00007ffffffffd37
-> [54511836.023003] CPU#1:   gen-PMC2 ctrl:  00000000005301d1
-> [54511836.023003] CPU#1:   gen-PMC2 count: 00008000e615b9ab
-> [54511836.023004] CPU#1:   gen-PMC2 left:  00007fffffffffff
-> [54511836.023005] CPU#1:   gen-PMC3 ctrl:  000000000053003c
-> [54511836.023005] CPU#1:   gen-PMC3 count: 0000801f6139b1e1
-> [54511836.023005] CPU#1:   gen-PMC3 left:  00007fe2a2dc14b7
-> [54511836.023006] CPU#1: fixed-PMC0 count: 00008e0fa307b34e
-> [54511836.023006] CPU#1: fixed-PMC1 count: 0000ffff3d01adb8
-> [54511836.023007] CPU#1: fixed-PMC2 count: 0000cf10d01b651e
-> 
-> 
-> The Gen-pmc3 Ctrl will be changed suddenly:
-> 
-> [54511836.023085] CPU#1: ctrl:       000000070000000f
-> [54511836.023085] CPU#1: status:     0000000000000000
-> [54511836.023085] CPU#1: overflow:   0000000000000000
-> [54511836.023086] CPU#1: fixed:      00000000000000bb
-> [54511836.023086] CPU#1: pebs:       0000000000000000
-> [54511836.023086] CPU#1: debugctl:   0000000000000000
-> [54511836.023087] CPU#1: active:     000000030000000f
-> [54511836.023087] CPU#1:   gen-PMC0 ctrl:  000000000053412e
-> [54511836.023088] CPU#1:   gen-PMC0 count: 0000985b7d1a183b
-> [54511836.023088] CPU#1:   gen-PMC0 left:  000067a483643939
-> [54511836.023089] CPU#1:   gen-PMC1 ctrl:  00000000005310d1
-> [54511836.023089] CPU#1:   gen-PMC1 count: 0000800000164ca8
-> [54511836.023090] CPU#1:   gen-PMC1 left:  00007ffffffffd37
-> [54511836.023091] CPU#1:   gen-PMC2 ctrl:  00000000005301d1
-> [54511836.023091] CPU#1:   gen-PMC2 count: 00008000e61634fd
-> [54511836.023092] CPU#1:   gen-PMC2 left:  00007fffffffffff
-> [54511836.023092] CPU#1:   gen-PMC3 ctrl:  000000010043003c
-> [54511836.023093] CPU#1:   gen-PMC3 count: 0000801f613b87d0
-> [54511836.023093] CPU#1:   gen-PMC3 left:  00007fe2a2dc14b7
-> [54511836.023094] CPU#1: fixed-PMC0 count: 00008e0fa309e091
-> [54511836.023095] CPU#1: fixed-PMC1 count: 0000ffff3d050901
-> [54511836.023095] CPU#1: fixed-PMC2 count: 0000cf10d01b651e
-> 
-> 
-> The gen-PMC3 ctrl changed,
-> 000000000053003c -> 000000010043003c
-> 
-> After that, the gen-PMC3 count remains 0000801f613b87d0 and will not be 
-> updated. A series of subsequent issues, such as abnormal CPI data, are 
-> generated.
-> 
-> However, the special value (000000010043003c) of the gen-pmc3 Ctrl is 
-> not actively set by the application. It is suspected that some special 
-> operation has caused the GP3 Ctrl to be changed, and it is still under 
-> discussion with Intel’s FAE.
-> > At present, only the above phenomenon has been observed, but the exact
-> cause has not yet been found.
+I don't think that's quite true, becuase arm64's procedure call standard
+(AAPCS64) doesn't give us enough information to determine this without
+additional metadata from the compiler, which we simply don't have today.
 
+Since there's a lot of confusion in this area, I've made a bit of an info dump
+below, before review on the patch itself, but TBH I'm struggling to see that
+this is all that useful.
 
-We finally found that TFA (TSX Force Abort) may affect PMC3's behavior, 
-refer to the following patch:
+On arm64, we use a calling convention called AAPCS64, (in full: "Procedure Call
+Standard for the Arm® 64-bit Architecture (AArch64)"). That's maintained at:
 
-400816f60c54 perf/x86/intel:  ("Implement support for TSX Force Abort")
+  https://github.com/ARM-software/abi-aa
 
-When the MSR gets set; the microcode will no longer use PMC3 but will
-Force Abort every TSX transaction (upon executing COMMIT).
+... with the latest release (as of today) at:
 
-When TSX Force Abort (TFA) is allowed (default); the MSR gets set when
-PMC3 gets scheduled and cleared when, after scheduling, PMC3 is
-unused.
+  https://github.com/ARM-software/abi-aa/blob/60a8eb8c55e999d74dac5e368fc9d7e36e38dda4/aapcs64/aapcs64.rst
+  https://github.com/ARM-software/abi-aa/releases/download/2022Q1/aapcs64.pdf
 
-When TFA is not allowed; clear PMC3 from all constraints such that it
-will not get used.
+In AAPCS64, there are two related but distinct things to be aware of:
 
+* The "stack frame" of a function, which is the entire contiguous region of
+  stack memory used by a function.
+
+* The "frame record", which is the saved FP and LR placed *somewhere* within
+  the function's stack frame. The FP points at the most recent frame record on
+  the stack, and at function call boundaries points at the caller's frame
+  record.
+
+AAPCS64 doesn't say *where* a frame record is placed within a stack frame, and
+there are reasons for compilers to place above and below it. So in genral, a
+functionss stack frame looks like:
+      
+        +=========+
+        |  above  |
+        |---------|
+        | FP | LR |
+        |---------|
+        |  below  |
+        +=========+
+
+... where the "above" or "below" portions might be any size (even 0 bytes).
+
+Typical code generation today means for most functions that the "below" portion
+is 0 bytes in size, but this is not guaranteed, and even today there are cases
+where this is not true.
+
+When one function calls another without a stack transition, that looks like:
+
+        +=========+ ___
+        |  above  |    \
+        |---------|    |
+     ,->| FP | LR |    +-- Caller's stack frame
+     |  |---------|    |
+     |  |  below  | ___/
+     |  +=========+ ___ 
+     |  |  above  |    \
+     |  |---------|    |
+     '--| FP | LR |    +-- Callee's stack frame
+        |---------|    |
+        |  below  | ___/
+        +=========+
+
+Where there's a stack transition, and the new stack is at a *lower* VA than the
+old stack, that looks like:
+
+        +=========+ ___
+        |  above  |    \
+        |---------|    |
+     ,->| FP | LR |    +-- Caller's stack frame
+     |  |---------|    |
+     |  |  below  | ___/
+     |  +=========+
+     | 
+     |  ~~~~~~~~~~~
+     |  Arbitrarily 
+     |  large gap,
+     |  potentially
+     |  including
+     |  other data
+     |  ~~~~~~~~~~~
+     |
+     |  +=========+ ___ 
+     |  |  above  |    \
+     |  |---------|    |
+     '--| FP | LR |    +-- Callee's stack frame
+        |---------|    |
+        |  below  | ___/
+        +=========+
+
+Where there's a stack transition, and the new stack is at a *higher* VA than
+the old stack, that looks like:
+
+        +=========+ ___ 
+        |  above  |    \
+        |---------|    |
+     ,--| FP | LR |    +-- Callee's stack frame
+     |  |---------|    |
+     |  |  below  | ___/
+     |  +=========+
+     |
+     |  ~~~~~~~~~~~
+     |  Arbitrarily 
+     |  large gap,
+     |  potentially
+     |  including
+     |  other data
+     |  ~~~~~~~~~~~
+     | 
+     |  +=========+ ___
+     |  |  above  |    \
+     |  |---------|    |
+     '->| FP | LR |    +-- Caller's stack frame
+        |---------|    |
+        |  below  | ___/
+        +=========+
+ 
+In all of these cases, we *cannot* identify the boundary between the two stack
+frames, we can *only* identify where something overlaps a frame record. That
+might itself be a good thing, but it's not the same thing as what you describe
+in the commit message.
+
+> It is based on the existing x86 algorithm, but implemented via stacktrace.
+> This can be tested by USERCOPY_STACK_FRAME_FROM and
+> USERCOPY_STACK_FRAME_TO in lkdtm.
+
+Can you please explain *why* we'd want this?
+
+Who do we expect to use this?
+
+What's the overhead in practice?
+
+Has this passed a more realistic stress test (e.g. running some userspace
+applications which make intensive use of copies to/from the kernel)?
 
 > 
-> However, this patch attempts to avoid the switching of the pmu counters 
-> in various perf_events, so the special behavior of a single pmu counter 
-> will not be propagated to other events.
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> ---
+>  arch/arm64/Kconfig                   |  1 +
+>  arch/arm64/include/asm/thread_info.h | 12 +++++
+>  arch/arm64/kernel/stacktrace.c       | 76 ++++++++++++++++++++++++++--
+>  3 files changed, 85 insertions(+), 4 deletions(-)
 > 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 57c4c995965f..0f52a83d7771 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -165,6 +165,7 @@ config ARM64
+>  	select HAVE_ARCH_TRACEHOOK
+>  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+>  	select HAVE_ARCH_VMAP_STACK
+> +	select HAVE_ARCH_WITHIN_STACK_FRAMES
+>  	select HAVE_ARM_SMCCC
+>  	select HAVE_ASM_MODVERSIONS
+>  	select HAVE_EBPF_JIT
+> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+> index e1317b7c4525..b839ad9f2248 100644
+> --- a/arch/arm64/include/asm/thread_info.h
+> +++ b/arch/arm64/include/asm/thread_info.h
+> @@ -58,6 +58,18 @@ void arch_setup_new_exec(void);
+>  void arch_release_task_struct(struct task_struct *tsk);
+>  int arch_dup_task_struct(struct task_struct *dst,
+>  				struct task_struct *src);
+> +/*
+> + * Walks up the stack frames to make sure that the specified object is
+> + * entirely contained by a single stack frame.
+> + *
+> + * Returns:
+> + *	GOOD_FRAME	if within a frame
 
-Since PMC3 may have special behaviors, the continuous switching of PMU 
-counters may not only affects the performance, but also may lead to 
-abnormal data, please consider this patch again.
+As above, we cannot identify this reliably.
 
-Thanks.
+> + *	BAD_STACK	if placed across a frame boundary (or outside stack)
+> + *	NOT_STACK	unable to determine (no frame pointers, etc)
 
+On arm64 we always have frame pointers enabled, so this is a confusing comment.
+Is this a copy-paste from x86?
+
+> + */
+> +int arch_within_stack_frames(const void * const stack,
+> +		const void * const stackend,
+> +		const void *obj, unsigned long len);
+>  
+>  #endif
+>  
+> diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
+> index e4103e085681..219b90c1de12 100644
+> --- a/arch/arm64/kernel/stacktrace.c
+> +++ b/arch/arm64/kernel/stacktrace.c
+> @@ -145,12 +145,17 @@ NOKPROBE_SYMBOL(unwind_frame);
+>  
+>  static void notrace walk_stackframe(struct task_struct *tsk,
+>  				    struct stackframe *frame,
+> -				    bool (*fn)(void *, unsigned long), void *data)
+> +				    stack_trace_consume_fn fn, void *data)
+>  {
+> +	struct frame_info fi;
+> +
+>  	while (1) {
+>  		int ret;
+>  
+> -		if (!fn(data, frame->pc))
+> +		fi.pc = frame->pc;
+> +		fi.fp = frame->fp;
+> +		fi.prev_fp = frame->prev_fp;
+> +		if (!fn(data, &fi))
+>  			break;
+>  		ret = unwind_frame(tsk, frame);
+>  		if (ret < 0)
+
+As on my prior comment, I don't think we want to alter our generic stack walker
+in this way. If we need more info, I'd prefer to expose this in layers, keeping
+arch_stack_walk unchanged, but having an arm64_stack_walk that can pass some
+arm64-specific data.
+
+> @@ -159,10 +164,10 @@ static void notrace walk_stackframe(struct task_struct
+> *tsk,
+>  }
+>  NOKPROBE_SYMBOL(walk_stackframe);
+>  
+> -static bool dump_backtrace_entry(void *arg, unsigned long where)
+> +static bool dump_backtrace_entry(void *arg, struct frame_info *fi)
+>  {
+>  	char *loglvl = arg;
+> -	printk("%s %pSb\n", loglvl, (void *)where);
+> +	printk("%s %pSb\n", loglvl, (void *)fi->pc);
+>  	return true;
+>  }
+>  
+> @@ -210,3 +215,66 @@ noinline notrace void arch_stack_walk(stack_trace_consume_fn consume_entry,
+>  
+>  	walk_stackframe(task, &frame, consume_entry, cookie);
+>  }
+> +
+> +struct arch_stack_object {
+> +	unsigned long start;
+> +	unsigned long len;
+> +	int flag;
+
+What is "flag" ?
+
+> +};
+> +
+> +static bool arch_stack_object_check(void *data, struct frame_info *fi)
+> +{
+> +	struct arch_stack_object *obj = (struct arch_stack_object *)data;
+> +
+> +	/* Skip the frame of arch_within_stack_frames itself */
+> +	if (fi->prev_fp == 0)
+> +		return true;
+
+That's not what this is skipping. The first time arch_stack_walk() is called,
+it gives the PC of its caller (i.e. arch_within_stack_frames), and it's own
+synthetic FP. The next time around it gives the FP of it's caller.
+
+> +
+> +	/*
+> +	 * low ----------------------------------------------> high
+> +	 * [saved bp][saved ip][args][local vars][saved bp][saved ip]
+> +	 *                     ^----------------^
+> +	 *               allow copies only within here
+> +	 */
+
+This diagram is not valid for arm64. There is no "bp" or "ip", and each stack
+frame can be laid out more arbitrarily relative to the frame record.
+
+> +	if (obj->start + obj->len <= fi->fp) {
+> +		obj->flag = obj->start >=
+> +			fi->prev_fp + 2 * sizeof(void *) ?
+> +			GOOD_FRAME : BAD_STACK;
+
+This check is broken in several ways if there's a stack transition, since the
+placement of fp and prev_fp is legitimately arbitrary.
+
+This would also be a lot clearer if you bailed out early rather than nesting
+checks.
+
+The best thing you can realistically do is check that the object falls entirely
+within a given stack, then check that that no frames intersect the object. You
+don't need prev_fp for that, since you can just check each frame record in
+turn, then bail out once the object has been passed (i.e. once we've hit the
+correct stack, and either seen an FP above it or transitioned to another
+stack).
+
+> +		return false;
+> +	} else
+> +		return true;
+> +}
+> +
+> +/*
+> + * Walks up the stack frames to make sure that the specified object is
+> + * entirely contained by a single stack frame.
+> + *
+> + * Returns:
+> + *	GOOD_FRAME	if within a frame
+> + *	BAD_STACK	if placed across a frame boundary (or outside stack)
+> + *	NOT_STACK	unable to determine (no frame pointers, etc)
+> + */
+
+This is the exact same comment as in the header. My comments from there apply
+here, and one of the two should disappear.
+
+> +int arch_within_stack_frames(const void * const stack,
+> +		const void * const stackend,
+> +		const void *obj, unsigned long len)
+> +{
+> +#if defined(CONFIG_FRAME_POINTER)
+
+As above, this *cannot* be selected on arm64.
+
+> +	struct arch_stack_object object;
+> +	struct pt_regs regs;
+> +
+> +	if (__builtin_frame_address(1) == 0)
+> +		return NOT_STACK;
+
+When do you expect this to happen?
+
+> +
+> +	object.start = (unsigned long)obj;
+> +	object.len = len;
+> +	object.flag = NOT_STACK;
+> +
+> +	regs.regs[29] = (u64)__builtin_frame_address(1);
+
+NAK to making a synthetic pt_regs like this. That an abuse of the existing API,
+and you don't need to do this in the first place.
+
+> +
+> +	arch_stack_walk(arch_stack_object_check, (void *)&object, NULL, &regs);
+
+A void pointer cast is not necessary.
+
+Thanks,
+Mark.
+
+> +
+> +	return object.flag;
+> +#else
+> +	return NOT_STACK;
+> +#endif
+> +}
 > -- 
-> Best wishes,
-> Wen
+> 2.25.1
 > 
