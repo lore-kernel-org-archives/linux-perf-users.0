@@ -2,33 +2,32 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F49C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 13:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AB5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 14:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242261AbiDSOAt (ORCPT
+        id S236243AbiDSOEU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Apr 2022 10:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36128 "EHLO
+        Tue, 19 Apr 2022 10:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235548AbiDSOAs (ORCPT
+        with ESMTP id S233080AbiDSOEU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Apr 2022 10:00:48 -0400
+        Tue, 19 Apr 2022 10:04:20 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DB85938D88;
-        Tue, 19 Apr 2022 06:58:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 650C539145;
+        Tue, 19 Apr 2022 07:01:37 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8170106F;
-        Tue, 19 Apr 2022 06:58:05 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2269E1063;
+        Tue, 19 Apr 2022 07:01:37 -0700 (PDT)
 Received: from [10.32.36.25] (e121896.Emea.Arm.com [10.32.36.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C76403F766;
-        Tue, 19 Apr 2022 06:58:02 -0700 (PDT)
-Message-ID: <cfd80315-ff94-1394-f194-be9eec0d9202@arm.com>
-Date:   Tue, 19 Apr 2022 14:58:01 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 250543F766;
+        Tue, 19 Apr 2022 07:01:33 -0700 (PDT)
+Message-ID: <bfd96c4a-ae39-da29-b785-76b2308cd4ff@arm.com>
+Date:   Tue, 19 Apr 2022 15:01:32 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: [PATCH V5 5/8] perf/tools: Add system error and not in
- transaction branch types
+Subject: Re: [PATCH V5 6/8] perf/tools: Extend branch type classification
 Content-Language: en-US
 To:     Anshuman Khandual <anshuman.khandual@arm.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -44,9 +43,9 @@ Cc:     Robin Murphy <robin.murphy@arm.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org
 References: <20220404045046.634522-1-anshuman.khandual@arm.com>
- <20220404045046.634522-6-anshuman.khandual@arm.com>
+ <20220404045046.634522-7-anshuman.khandual@arm.com>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220404045046.634522-6-anshuman.khandual@arm.com>
+In-Reply-To: <20220404045046.634522-7-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -56,10 +55,10 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 04/04/2022 05:50, Anshuman Khandual wrote:
-> This updates the perf tool with generic branch type classification with two
-> new branch types i.e system error (PERF_BR_SERROR) and not in transaction
-> (PERF_BR_NO_TX) which got updated earlier in the kernel. This also updates
-> corresponding branch type strings in branch_type_name().
+> This updates the perf tool with generic branch type classification with new
+> ABI extender place holder i.e PERF_BR_EXTEND_ABI, the new 4 bit branch type
+> field i.e perf_branch_entry.new_type, new generic page fault related branch
+> types and some arch specific branch types as added earlier in the kernel.
 > 
 > Cc: Peter Zijlstra <peterz@infradead.org>
 > Cc: Ingo Molnar <mingo@redhat.com>
@@ -74,38 +73,91 @@ On 04/04/2022 05:50, Anshuman Khandual wrote:
 > Cc: linux-perf-users@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
 > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Reviewed-by: James Clark <james.clark@arm.com>
-
 > ---
->  tools/include/uapi/linux/perf_event.h | 2 ++
->  tools/perf/util/branch.c              | 4 +++-
->  2 files changed, 5 insertions(+), 1 deletion(-)
+>  tools/include/uapi/linux/perf_event.h | 16 +++++++++++++++-
+>  tools/perf/util/branch.c              |  3 ++-
+>  tools/perf/util/branch.h              |  3 ++-
+>  3 files changed, 19 insertions(+), 3 deletions(-)
 > 
 > diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index d37629dbad72..26d8f0b5ac0d 100644
+> index 26d8f0b5ac0d..d29280adc3c4 100644
 > --- a/tools/include/uapi/linux/perf_event.h
 > +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -253,6 +253,8 @@ enum {
->  	PERF_BR_COND_RET	= 10,	/* conditional function return */
->  	PERF_BR_ERET		= 11,	/* exception return */
+> @@ -255,9 +255,22 @@ enum {
 >  	PERF_BR_IRQ		= 12,	/* irq */
-> +	PERF_BR_SERROR		= 13,	/* system error */
-> +	PERF_BR_NO_TX		= 14,	/* not in transaction */
+>  	PERF_BR_SERROR		= 13,	/* system error */
+>  	PERF_BR_NO_TX		= 14,	/* not in transaction */
+> +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
 >  	PERF_BR_MAX,
 >  };
 >  
+> +enum {
+> +	PERF_BR_NEW_FAULT_ALGN		= 0,    /* Alignment fault */
+> +	PERF_BR_NEW_FAULT_DATA		= 1,    /* Data fault */
+> +	PERF_BR_NEW_FAULT_INST		= 2,    /* Inst fault */
+> +	PERF_BR_NEW_ARCH_1		= 3,    /* Architecture specific */
+> +	PERF_BR_NEW_ARCH_2		= 4,    /* Architecture specific */
+> +	PERF_BR_NEW_ARCH_3		= 5,    /* Architecture specific */
+> +	PERF_BR_NEW_ARCH_4		= 6,    /* Architecture specific */
+> +	PERF_BR_NEW_ARCH_5		= 7,    /* Architecture specific */
+> +	PERF_BR_NEW_MAX,
+> +};
+> +
+>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>  	(PERF_SAMPLE_BRANCH_USER|\
+>  	 PERF_SAMPLE_BRANCH_KERNEL|\
+> @@ -1372,7 +1385,8 @@ struct perf_branch_entry {
+>  		abort:1,    /* transaction abort */
+>  		cycles:16,  /* cycle count to last branch */
+>  		type:4,     /* branch type */
+> -		reserved:40;
+> +		new_type:4, /* additional branch type */
+> +		reserved:36;
+>  };
+>  
+>  union perf_sample_weight {
 > diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-> index a9a909db8cc7..abc673347bee 100644
+> index abc673347bee..4bd52de0527c 100644
 > --- a/tools/perf/util/branch.c
 > +++ b/tools/perf/util/branch.c
-> @@ -51,7 +51,9 @@ const char *branch_type_name(int type)
->  		"COND_CALL",
->  		"COND_RET",
+> @@ -53,7 +53,8 @@ const char *branch_type_name(int type)
 >  		"ERET",
-> -		"IRQ"
-> +		"IRQ",
-> +		"SERROR",
-> +		"NO_TX"
+>  		"IRQ",
+>  		"SERROR",
+> -		"NO_TX"
+> +		"NO_TX",
+> +		"EXTEND_ABI"
+
+Hi Anshuman,
+
+I still think it's best to make this change a bit more transparent to the internals
+of perf and to users. For example if they dump the file, they'll see "EXTEND_ABI"
+printed out, but what they really want to see is whatever the branch type is,
+including the new types.
+
+The same goes for any function that accesses the branch type (if there is one),
+it should just return the final type and skip the details about EXTEND_ABI.
+
+If that was done I don't think you'd need to add that string because as it would
+never get printed.
+
+Thanks
+James
+
 >  	};
 >  
 >  	if (type >= 0 && type < PERF_BR_MAX)
+> diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
+> index 17b2ccc61094..37b6ed546c46 100644
+> --- a/tools/perf/util/branch.h
+> +++ b/tools/perf/util/branch.h
+> @@ -24,7 +24,8 @@ struct branch_flags {
+>  			u64 abort:1;
+>  			u64 cycles:16;
+>  			u64 type:4;
+> -			u64 reserved:40;
+> +			u64 new_type:4;
+> +			u64 reserved:36;
+>  		};
+>  	};
+>  };
