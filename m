@@ -2,135 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA46DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 09:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E35C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 13:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350284AbiDSJHf (ORCPT
+        id S242828AbiDSNMG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Apr 2022 05:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33958 "EHLO
+        Tue, 19 Apr 2022 09:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240297AbiDSJHd (ORCPT
+        with ESMTP id S239259AbiDSNMF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Apr 2022 05:07:33 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD82101D;
-        Tue, 19 Apr 2022 02:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tJv95mQg9EXcrt3p8ZvGMQTsakmmfw1AaQTwIhE1nnE=; b=Ib42ZfuGQhQogTNLh41qU+s7rN
-        BRAbnqQc1YebQu2SE8eJycbwM5rnxrVzV01lhWWogtc7YfXe/fFYOOfKul6INZN27AAxhe9cF4b6Y
-        kxe7Cp27gTncTOlOpfatmhDKqOzrjoG3bUGTaMJhWsb8S9YtpZbHjlOtOGIGoXOry9C6n83iBpSg6
-        sZV0VjTQqYvJg7uxZkk0kWg0ifqjNnMHZFF4jfCJ5RF4KXfuvH8Y9l7waFzBdNLDaqLfKytxkGozo
-        OIzVudh0DufesV21MGJcSWu6hmhsMtoQmfa3Fc0BVR5Bg0eFxc6+wJrPo03zB3mULzxQslLelWcjt
-        UrbiTiEQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ngjmA-006mQV-2G; Tue, 19 Apr 2022 09:03:58 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7D15998618A; Tue, 19 Apr 2022 11:03:55 +0200 (CEST)
-Date:   Tue, 19 Apr 2022 11:03:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Lobakin <alobakin@pm.me>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Chenbo Feng <fengc@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        Thomas Graf <tgraf@suug.ch>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH bpf-next 01/11] bpf, perf: fix bpftool compilation with
- !CONFIG_PERF_EVENTS
-Message-ID: <20220419090355.GP2731@worktop.programming.kicks-ass.net>
-References: <20220414223704.341028-1-alobakin@pm.me>
- <20220414223704.341028-2-alobakin@pm.me>
+        Tue, 19 Apr 2022 09:12:05 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB58335DC3;
+        Tue, 19 Apr 2022 06:09:22 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92A48106F;
+        Tue, 19 Apr 2022 06:09:22 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.75.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A73B3F766;
+        Tue, 19 Apr 2022 06:09:19 -0700 (PDT)
+Date:   Tue, 19 Apr 2022 14:09:14 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, keescook@chromium.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, benh@kernel.crashing.org, paulus@samba.org,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/8] stacktrace: Change callback prototype to pass
+ more information
+Message-ID: <Yl60euwfis+u92cA@FVFF77S0Q05N>
+References: <20220418132217.1573072-1-zhe.he@windriver.com>
+ <20220418132217.1573072-2-zhe.he@windriver.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220414223704.341028-2-alobakin@pm.me>
+In-Reply-To: <20220418132217.1573072-2-zhe.he@windriver.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 10:44:48PM +0000, Alexander Lobakin wrote:
-> When CONFIG_PERF_EVENTS is not set, struct perf_event remains empty.
-> However, the structure is being used by bpftool indirectly via BTF.
-> This leads to:
+On Mon, Apr 18, 2022 at 09:22:10PM +0800, He Zhe wrote:
+> Currently stack_trace_consume_fn can only have pc of each frame of the
+> stack. Copying-beyond-the-frame-detection also needs fp of current and
+> previous frame. Other detection algorithm in the future may need more
+> information of the frame.
 > 
-> skeleton/pid_iter.bpf.c:49:30: error: no member named 'bpf_cookie' in 'struct perf_event'
->         return BPF_CORE_READ(event, bpf_cookie);
->                ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+> We define a frame_info to include them all.
 > 
-> ...
 > 
-> skeleton/pid_iter.bpf.c:49:9: error: returning 'void' from a function with incompatible result type '__u64' (aka 'unsigned long long')
->         return BPF_CORE_READ(event, bpf_cookie);
->                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Tools and samples can't use any CONFIG_ definitions, so the fields
-> used there should always be present.
-> Move CONFIG_BPF_SYSCALL block out of the CONFIG_PERF_EVENTS block
-> to make it available unconditionally.
-
-Urgh, this is nasty.. did you verify nothing relies on that structure
-actually being empty?
-
-Also, why are we changing kernel headers to fix some daft userspace
-issue?
-
-> Fixes: cbdaf71f7e65 ("bpftool: Add bpf_cookie to link output")
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
 > ---
->  include/linux/perf_event.h | 2 ++
->  1 file changed, 2 insertions(+)
+>  include/linux/stacktrace.h |  9 ++++++++-
+>  kernel/stacktrace.c        | 10 +++++-----
+>  2 files changed, 13 insertions(+), 6 deletions(-)
 > 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index af97dd427501..b1d5715b8b34 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -762,12 +762,14 @@ struct perf_event {
->  	u64				(*clock)(void);
->  	perf_overflow_handler_t		overflow_handler;
->  	void				*overflow_handler_context;
-> +#endif /* CONFIG_PERF_EVENTS */
->  #ifdef CONFIG_BPF_SYSCALL
->  	perf_overflow_handler_t		orig_overflow_handler;
->  	struct bpf_prog			*prog;
->  	u64				bpf_cookie;
->  #endif
-> 
-> +#ifdef CONFIG_PERF_EVENTS
->  #ifdef CONFIG_EVENT_TRACING
->  	struct trace_event_call		*tp_event;
->  	struct event_filter		*filter;
-> --
-> 2.35.2
-> 
+> diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
+> index 97455880ac41..5a61bfafe6f0 100644
+> --- a/include/linux/stacktrace.h
+> +++ b/include/linux/stacktrace.h
+> @@ -10,15 +10,22 @@ struct pt_regs;
+>  
+>  #ifdef CONFIG_ARCH_STACKWALK
+>  
+> +struct frame_info {
+> +	unsigned long pc;
+> +	unsigned long fp;
+> +	unsigned long prev_fp;
+> +};
+
+I don't think this should be exposed through a generic interface; the `fp` and
+`prev_fp` values are only meaningful with arch-specific knowledge, and they're
+*very* easy to misuse (e.g. when transitioning from one stack to another).
+There's also a bunch of other information one may or may not want, depending on
+what you're trying to achieve.
+
+I am happy to have an arch-specific internal unwinder where we can access this
+information, and *maybe* it makes sense to have a generic API that passes some
+opaque token, but I don't think we should make the structure generic.
+
+Thanks,
+Mark.
+
+> +
+>  /**
+>   * stack_trace_consume_fn - Callback for arch_stack_walk()
+>   * @cookie:	Caller supplied pointer handed back by arch_stack_walk()
+>   * @addr:	The stack entry address to consume
+> + * @fi:	The frame information to consume
+>   *
+>   * Return:	True, if the entry was consumed or skipped
+>   *		False, if there is no space left to store
+>   */
+> -typedef bool (*stack_trace_consume_fn)(void *cookie, unsigned long addr);
+> +typedef bool (*stack_trace_consume_fn)(void *cookie, struct frame_info *fi);
+>  /**
+>   * arch_stack_walk - Architecture specific function to walk the stack
+>   * @consume_entry:	Callback which is invoked by the architecture code for
+> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+> index 9ed5ce989415..2d0a2812e92b 100644
+> --- a/kernel/stacktrace.c
+> +++ b/kernel/stacktrace.c
+> @@ -79,7 +79,7 @@ struct stacktrace_cookie {
+>  	unsigned int	len;
+>  };
+>  
+> -static bool stack_trace_consume_entry(void *cookie, unsigned long addr)
+> +static bool stack_trace_consume_entry(void *cookie, struct frame_info *fi)
+>  {
+>  	struct stacktrace_cookie *c = cookie;
+>  
+> @@ -90,15 +90,15 @@ static bool stack_trace_consume_entry(void *cookie, unsigned long addr)
+>  		c->skip--;
+>  		return true;
+>  	}
+> -	c->store[c->len++] = addr;
+> +	c->store[c->len++] = fi->pc;
+>  	return c->len < c->size;
+>  }
+>  
+> -static bool stack_trace_consume_entry_nosched(void *cookie, unsigned long addr)
+> +static bool stack_trace_consume_entry_nosched(void *cookie, struct frame_info *fi)
+>  {
+> -	if (in_sched_functions(addr))
+> +	if (in_sched_functions(fi->pc))
+>  		return true;
+> -	return stack_trace_consume_entry(cookie, addr);
+> +	return stack_trace_consume_entry(cookie, fi);
+>  }
+>  
+>  /**
+> -- 
+> 2.25.1
 > 
