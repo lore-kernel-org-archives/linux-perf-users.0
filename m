@@ -2,397 +2,176 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C8CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 14:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AC1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 20:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbiDSOnr (ORCPT
+        id S1345999AbiDSUSB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Apr 2022 10:43:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
+        Tue, 19 Apr 2022 16:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351109AbiDSOng (ORCPT
+        with ESMTP id S1354580AbiDSUR5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Apr 2022 10:43:36 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 36AEA21819;
-        Tue, 19 Apr 2022 07:40:53 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1E041063;
-        Tue, 19 Apr 2022 07:40:52 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.75.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A597E3F766;
-        Tue, 19 Apr 2022 07:40:49 -0700 (PDT)
-Date:   Tue, 19 Apr 2022 15:40:45 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, keescook@chromium.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, benh@kernel.crashing.org, paulus@samba.org,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/8] arm64: stacktrace: Add arch_within_stack_frames
-Message-ID: <Yl7J7aVzKiWRtrGi@FVFF77S0Q05N>
-References: <20220418132217.1573072-1-zhe.he@windriver.com>
- <20220418132217.1573072-3-zhe.he@windriver.com>
+        Tue, 19 Apr 2022 16:17:57 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCB27650;
+        Tue, 19 Apr 2022 13:15:13 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id t11so35142096eju.13;
+        Tue, 19 Apr 2022 13:15:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/HGzzr2HHaisSceOh/AMWaOfiAuPvIVMh7w0WX7B5no=;
+        b=ZmHYt7GD2+alkil4QEVPhPV3+tPVOx62sAQvqq0grr+A8PNSTTwRrNQQ+qtR2LP+is
+         kkXrhWyIsWx8Xr4JteJuYjExSoceb5Ix3JmW1sKTIHlqN6DmDz0YfJVvwAl2xcUIjfEU
+         +LHlpaoSp3y03ExycV+9qdSB4DafRkrPx5BgYgjhLe+ATk+yF3Wv0sWDlGYnB8JJbSdD
+         WQms7ceu8k0K7jKh6Ecu9d8msNlQ2VlZh18P7tCa9ny4psV3BXzPN7vvQRoU+RLvJnyj
+         9bVWhWMdxr22j4j1y8H4+mc1rVC1970rBg+IH/zTu14EVZu0AgCkIfql/a6X59uI1fh8
+         ugvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/HGzzr2HHaisSceOh/AMWaOfiAuPvIVMh7w0WX7B5no=;
+        b=UiaRZOQOW60awtQxq3mJQ9JVdHiiTKqInw2v1CbI3D7pysGMOz0fV5NlLy1mlal9rN
+         ECpZ3YNukds4JNRvPDugbDzGfm/xz0oEJCOnN3sVkrlRSEmbHSSdYhMVFXxA+TZPmXci
+         Ewh6bV1qUI9nKfaUQlw6PmEWuQ+ogxSV7tidRNfHZ0Km5aNlPRxV8Rnsgoc9hDlO1ndC
+         Eu8Yb+IgMfBjl8AHsDOmjem5XlqiAk6gZJ/kim9K7SC34HdBGzAq3rXFW62rhUy26zyj
+         RsojgWP1QQn8kt+R8feLYfpmV5pZA5wCPwKH4Tr4qIDlYQd1F4SZVXsSHMCcjh2wAe4M
+         0ZKw==
+X-Gm-Message-State: AOAM530cmUhjyFKj5PeKb+TU7v5cxJCxy1Mip59ZTCGOv7Mc3g51/Hc1
+        IbwZMqwKyRaZuPVPO8O3p8I=
+X-Google-Smtp-Source: ABdhPJw/dz59AB6QDCBQbugkMngVnNl0wLjvKrZCE13hM+Ww2ACQhWMLLIqR2y/j7ZHs21Q/aFvukw==
+X-Received: by 2002:a17:906:3707:b0:6e8:6bfe:da0e with SMTP id d7-20020a170906370700b006e86bfeda0emr15436465ejc.78.1650399312162;
+        Tue, 19 Apr 2022 13:15:12 -0700 (PDT)
+Received: from krava ([95.82.134.228])
+        by smtp.gmail.com with ESMTPSA id q7-20020a170906540700b006d5eca5c9cfsm6014525ejo.191.2022.04.19.13.15.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Apr 2022 13:15:11 -0700 (PDT)
+Date:   Tue, 19 Apr 2022 22:15:09 +0200
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     "nakamura.shun@fujitsu.com" <nakamura.shun@fujitsu.com>
+Cc:     "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 0/7] libperf: Add interface for overflow check of
+ sampling events
+Message-ID: <Yl8YTSXiC0yP4N3+@krava>
+References: <20220325043829.224045-1-nakamura.shun@fujitsu.com>
+ <YkRgDdI8PKH5C7lV@krava>
+ <OSBPR01MB460012B9516B2E67CBEEF0B1F7EA9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220418132217.1573072-3-zhe.he@windriver.com>
+In-Reply-To: <OSBPR01MB460012B9516B2E67CBEEF0B1F7EA9@OSBPR01MB4600.jpnprd01.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
-
-On Mon, Apr 18, 2022 at 09:22:11PM +0800, He Zhe wrote:
-> This function checks if the given address range crosses frame boundary.
-
-I don't think that's quite true, becuase arm64's procedure call standard
-(AAPCS64) doesn't give us enough information to determine this without
-additional metadata from the compiler, which we simply don't have today.
-
-Since there's a lot of confusion in this area, I've made a bit of an info dump
-below, before review on the patch itself, but TBH I'm struggling to see that
-this is all that useful.
-
-On arm64, we use a calling convention called AAPCS64, (in full: "Procedure Call
-Standard for the Arm® 64-bit Architecture (AArch64)"). That's maintained at:
-
-  https://github.com/ARM-software/abi-aa
-
-... with the latest release (as of today) at:
-
-  https://github.com/ARM-software/abi-aa/blob/60a8eb8c55e999d74dac5e368fc9d7e36e38dda4/aapcs64/aapcs64.rst
-  https://github.com/ARM-software/abi-aa/releases/download/2022Q1/aapcs64.pdf
-
-In AAPCS64, there are two related but distinct things to be aware of:
-
-* The "stack frame" of a function, which is the entire contiguous region of
-  stack memory used by a function.
-
-* The "frame record", which is the saved FP and LR placed *somewhere* within
-  the function's stack frame. The FP points at the most recent frame record on
-  the stack, and at function call boundaries points at the caller's frame
-  record.
-
-AAPCS64 doesn't say *where* a frame record is placed within a stack frame, and
-there are reasons for compilers to place above and below it. So in genral, a
-functionss stack frame looks like:
-      
-        +=========+
-        |  above  |
-        |---------|
-        | FP | LR |
-        |---------|
-        |  below  |
-        +=========+
-
-... where the "above" or "below" portions might be any size (even 0 bytes).
-
-Typical code generation today means for most functions that the "below" portion
-is 0 bytes in size, but this is not guaranteed, and even today there are cases
-where this is not true.
-
-When one function calls another without a stack transition, that looks like:
-
-        +=========+ ___
-        |  above  |    \
-        |---------|    |
-     ,->| FP | LR |    +-- Caller's stack frame
-     |  |---------|    |
-     |  |  below  | ___/
-     |  +=========+ ___ 
-     |  |  above  |    \
-     |  |---------|    |
-     '--| FP | LR |    +-- Callee's stack frame
-        |---------|    |
-        |  below  | ___/
-        +=========+
-
-Where there's a stack transition, and the new stack is at a *lower* VA than the
-old stack, that looks like:
-
-        +=========+ ___
-        |  above  |    \
-        |---------|    |
-     ,->| FP | LR |    +-- Caller's stack frame
-     |  |---------|    |
-     |  |  below  | ___/
-     |  +=========+
-     | 
-     |  ~~~~~~~~~~~
-     |  Arbitrarily 
-     |  large gap,
-     |  potentially
-     |  including
-     |  other data
-     |  ~~~~~~~~~~~
-     |
-     |  +=========+ ___ 
-     |  |  above  |    \
-     |  |---------|    |
-     '--| FP | LR |    +-- Callee's stack frame
-        |---------|    |
-        |  below  | ___/
-        +=========+
-
-Where there's a stack transition, and the new stack is at a *higher* VA than
-the old stack, that looks like:
-
-        +=========+ ___ 
-        |  above  |    \
-        |---------|    |
-     ,--| FP | LR |    +-- Callee's stack frame
-     |  |---------|    |
-     |  |  below  | ___/
-     |  +=========+
-     |
-     |  ~~~~~~~~~~~
-     |  Arbitrarily 
-     |  large gap,
-     |  potentially
-     |  including
-     |  other data
-     |  ~~~~~~~~~~~
-     | 
-     |  +=========+ ___
-     |  |  above  |    \
-     |  |---------|    |
-     '->| FP | LR |    +-- Caller's stack frame
-        |---------|    |
-        |  below  | ___/
-        +=========+
- 
-In all of these cases, we *cannot* identify the boundary between the two stack
-frames, we can *only* identify where something overlaps a frame record. That
-might itself be a good thing, but it's not the same thing as what you describe
-in the commit message.
-
-> It is based on the existing x86 algorithm, but implemented via stacktrace.
-> This can be tested by USERCOPY_STACK_FRAME_FROM and
-> USERCOPY_STACK_FRAME_TO in lkdtm.
-
-Can you please explain *why* we'd want this?
-
-Who do we expect to use this?
-
-What's the overhead in practice?
-
-Has this passed a more realistic stress test (e.g. running some userspace
-applications which make intensive use of copies to/from the kernel)?
-
+On Mon, Apr 11, 2022 at 08:23:54AM +0000, nakamura.shun@fujitsu.com wrote:
+> Hi jirka
 > 
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
-> ---
->  arch/arm64/Kconfig                   |  1 +
->  arch/arm64/include/asm/thread_info.h | 12 +++++
->  arch/arm64/kernel/stacktrace.c       | 76 ++++++++++++++++++++++++++--
->  3 files changed, 85 insertions(+), 4 deletions(-)
+> Sorry for the late reply.
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 57c4c995965f..0f52a83d7771 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -165,6 +165,7 @@ config ARM64
->  	select HAVE_ARCH_TRACEHOOK
->  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->  	select HAVE_ARCH_VMAP_STACK
-> +	select HAVE_ARCH_WITHIN_STACK_FRAMES
->  	select HAVE_ARM_SMCCC
->  	select HAVE_ASM_MODVERSIONS
->  	select HAVE_EBPF_JIT
-> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-> index e1317b7c4525..b839ad9f2248 100644
-> --- a/arch/arm64/include/asm/thread_info.h
-> +++ b/arch/arm64/include/asm/thread_info.h
-> @@ -58,6 +58,18 @@ void arch_setup_new_exec(void);
->  void arch_release_task_struct(struct task_struct *tsk);
->  int arch_dup_task_struct(struct task_struct *dst,
->  				struct task_struct *src);
-> +/*
-> + * Walks up the stack frames to make sure that the specified object is
-> + * entirely contained by a single stack frame.
-> + *
-> + * Returns:
-> + *	GOOD_FRAME	if within a frame
+> > >
+> > > Shunsuke Nakamura (7):
+> > >   libperf tests: Fix typo in the error message
+> > >   libperf: Move 'open_flags' from tools/perf to evsel::open_flags
+> > >   libperf: Add perf_evsel__{refresh, period}() functions
+> > >   libperf: Introduce perf_{evsel, evlist}__open_opt with extensible
+> > >     struct opts
+> > >   libperf: Add perf_evsel__check_overflow() functions
+> > >   libperf test: Add test_stat_overflow()
+> > >   libperf test: Add test_stat_overflow_event()
+> > 
+> > I'm getting:
+> > 
+> > [root@krava perf]# make tests
+> > running static:
+> > - running tests/test-cpumap.c...OK
+> > - running tests/test-threadmap.c...OK
+> > - running tests/test-evlist.c...OK
+> > - running tests/test-evsel.c...FAILED tests/test-evsel.c:286 failed to overflow
+> > count FAILED tests/test-evsel.c:286 failed to overflow count
+> >   FAILED (2)
+> > FAILED tests/main.c:13 test evsel
+> > make: *** [Makefile:162: tests] Error 255
+> > 
+> Thanks for telling me.
+> However, we could not reproduce the test failure in our environment.
+> Could you please tell me the results of your test with the addition of V=1?
 
-As above, we cannot identify this reliably.
+sorry, forgot to answer this one..
 
-> + *	BAD_STACK	if placed across a frame boundary (or outside stack)
-> + *	NOT_STACK	unable to determine (no frame pointers, etc)
+[root@krava perf]# LD_LIBRARY_PATH=. ./tests-shared -v
+- running tests/test-cpumap.c...OK
+- running tests/test-threadmap.c...OK
+- running tests/test-evlist.c...
+Event  0 -- Raw count = 231217013, run = 10196083, enable = 22183091
+         Scaled count = 503046909 (45.96%, 10196083/22183091)
+Event  1 -- Raw count = 247219790, run = 10946246, enable = 22182044
+         Scaled count = 500979080 (49.35%, 10946246/22182044)
+Event  2 -- Raw count = 268999685, run = 11943490, enable = 22180868
+         Scaled count = 499573115 (53.85%, 11943490/22180868)
+Event  3 -- Raw count = 291383974, run = 12941069, enable = 22179798
+         Scaled count = 499405241 (58.35%, 12941069/22179798)
+Event  4 -- Raw count = 314293846, run = 13938576, enable = 22178649
+         Scaled count = 500095052 (62.85%, 13938576/22178649)
+Event  5 -- Raw count = 337393782, run = 14935798, enable = 22177192
+         Scaled count = 500974014 (67.35%, 14935798/22177192)
+Event  6 -- Raw count = 360218294, run = 15933314, enable = 22175507
+         Scaled count = 501340982 (71.85%, 15933314/22175507)
+Event  7 -- Raw count = 365516630, run = 16179860, enable = 22173686
+         Scaled count = 500922194 (72.97%, 16179860/22173686)
+Event  8 -- Raw count = 365180177, run = 16178058, enable = 22171705
+         Scaled count = 500472130 (72.97%, 16178058/22171705)
+Event  9 -- Raw count = 341205844, run = 15233252, enable = 22169603
+         Scaled count = 496571454 (68.71%, 15233252/22169603)
+Event 10 -- Raw count = 318204949, run = 14234754, enable = 22167081
+         Scaled count = 495524887 (64.22%, 14234754/22167081)
+Event 11 -- Raw count = 296671131, run = 13236210, enable = 22164791
+         Scaled count = 496792783 (59.72%, 13236210/22164791)
+Event 12 -- Raw count = 276639189, run = 12237128, enable = 22162629
+         Scaled count = 501020477 (55.22%, 12237128/22162629)
+Event 13 -- Raw count = 255437518, run = 11238588, enable = 22160497
+         Scaled count = 503677361 (50.71%, 11238588/22160497)
+Event 14 -- Raw count = 232427791, run = 10239844, enable = 22158353
+         Scaled count = 502958545 (46.21%, 10239844/22158353)
+   Expected: 500221918
+   High: 503677361   Low:  231217013   Average:  500223614
+   Average Error = 0.00%
+Event  0 -- overflow flag = 0x1, POLL_UP = 1, other signal event = 0
+Event  1 -- overflow flag = 0x2, POLL_UP = 1, other signal event = 0
+Event  2 -- overflow flag = 0x4, POLL_UP = 1, other signal event = 0
+Event  3 -- overflow flag = 0x8, POLL_UP = 1, other signal event = 0
+OK
+- running tests/test-evsel.c...
+        loop = 65536, count = 328183
+        loop = 131072, count = 655863
+        loop = 262144, count = 1320613
+        loop = 524288, count = 2621943
+        loop = 1048576, count = 5243383
+        loop = 65536, count = 66349
+        loop = 131072, count = 131789
+        loop = 262144, count = 264697
+        loop = 524288, count = 528484
+        loop = 1048576, count = 1056485
+        period = 1000000
+        overflow limit = 3, overflow count = 2, POLL_IN = 2, POLL_UP = 0, other signal event = 0
+FAILED tests/test-evsel.c:286 failed to overflow count
+        period = 1000000
+        overflow limit = 3, overflow count = 5, POLL_IN = 4, POLL_UP = 1, other signal event = 0
+FAILED tests/test-evsel.c:286 failed to overflow count
+  FAILED (2)
+FAILED tests/main.c:13 test evsel
 
-On arm64 we always have frame pointers enabled, so this is a confusing comment.
-Is this a copy-paste from x86?
 
-> + */
-> +int arch_within_stack_frames(const void * const stack,
-> +		const void * const stackend,
-> +		const void *obj, unsigned long len);
->  
->  #endif
->  
-> diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-> index e4103e085681..219b90c1de12 100644
-> --- a/arch/arm64/kernel/stacktrace.c
-> +++ b/arch/arm64/kernel/stacktrace.c
-> @@ -145,12 +145,17 @@ NOKPROBE_SYMBOL(unwind_frame);
->  
->  static void notrace walk_stackframe(struct task_struct *tsk,
->  				    struct stackframe *frame,
-> -				    bool (*fn)(void *, unsigned long), void *data)
-> +				    stack_trace_consume_fn fn, void *data)
->  {
-> +	struct frame_info fi;
-> +
->  	while (1) {
->  		int ret;
->  
-> -		if (!fn(data, frame->pc))
-> +		fi.pc = frame->pc;
-> +		fi.fp = frame->fp;
-> +		fi.prev_fp = frame->prev_fp;
-> +		if (!fn(data, &fi))
->  			break;
->  		ret = unwind_frame(tsk, frame);
->  		if (ret < 0)
-
-As on my prior comment, I don't think we want to alter our generic stack walker
-in this way. If we need more info, I'd prefer to expose this in layers, keeping
-arch_stack_walk unchanged, but having an arm64_stack_walk that can pass some
-arm64-specific data.
-
-> @@ -159,10 +164,10 @@ static void notrace walk_stackframe(struct task_struct
-> *tsk,
->  }
->  NOKPROBE_SYMBOL(walk_stackframe);
->  
-> -static bool dump_backtrace_entry(void *arg, unsigned long where)
-> +static bool dump_backtrace_entry(void *arg, struct frame_info *fi)
->  {
->  	char *loglvl = arg;
-> -	printk("%s %pSb\n", loglvl, (void *)where);
-> +	printk("%s %pSb\n", loglvl, (void *)fi->pc);
->  	return true;
->  }
->  
-> @@ -210,3 +215,66 @@ noinline notrace void arch_stack_walk(stack_trace_consume_fn consume_entry,
->  
->  	walk_stackframe(task, &frame, consume_entry, cookie);
->  }
-> +
-> +struct arch_stack_object {
-> +	unsigned long start;
-> +	unsigned long len;
-> +	int flag;
-
-What is "flag" ?
-
-> +};
-> +
-> +static bool arch_stack_object_check(void *data, struct frame_info *fi)
-> +{
-> +	struct arch_stack_object *obj = (struct arch_stack_object *)data;
-> +
-> +	/* Skip the frame of arch_within_stack_frames itself */
-> +	if (fi->prev_fp == 0)
-> +		return true;
-
-That's not what this is skipping. The first time arch_stack_walk() is called,
-it gives the PC of its caller (i.e. arch_within_stack_frames), and it's own
-synthetic FP. The next time around it gives the FP of it's caller.
-
-> +
-> +	/*
-> +	 * low ----------------------------------------------> high
-> +	 * [saved bp][saved ip][args][local vars][saved bp][saved ip]
-> +	 *                     ^----------------^
-> +	 *               allow copies only within here
-> +	 */
-
-This diagram is not valid for arm64. There is no "bp" or "ip", and each stack
-frame can be laid out more arbitrarily relative to the frame record.
-
-> +	if (obj->start + obj->len <= fi->fp) {
-> +		obj->flag = obj->start >=
-> +			fi->prev_fp + 2 * sizeof(void *) ?
-> +			GOOD_FRAME : BAD_STACK;
-
-This check is broken in several ways if there's a stack transition, since the
-placement of fp and prev_fp is legitimately arbitrary.
-
-This would also be a lot clearer if you bailed out early rather than nesting
-checks.
-
-The best thing you can realistically do is check that the object falls entirely
-within a given stack, then check that that no frames intersect the object. You
-don't need prev_fp for that, since you can just check each frame record in
-turn, then bail out once the object has been passed (i.e. once we've hit the
-correct stack, and either seen an FP above it or transitioned to another
-stack).
-
-> +		return false;
-> +	} else
-> +		return true;
-> +}
-> +
-> +/*
-> + * Walks up the stack frames to make sure that the specified object is
-> + * entirely contained by a single stack frame.
-> + *
-> + * Returns:
-> + *	GOOD_FRAME	if within a frame
-> + *	BAD_STACK	if placed across a frame boundary (or outside stack)
-> + *	NOT_STACK	unable to determine (no frame pointers, etc)
-> + */
-
-This is the exact same comment as in the header. My comments from there apply
-here, and one of the two should disappear.
-
-> +int arch_within_stack_frames(const void * const stack,
-> +		const void * const stackend,
-> +		const void *obj, unsigned long len)
-> +{
-> +#if defined(CONFIG_FRAME_POINTER)
-
-As above, this *cannot* be selected on arm64.
-
-> +	struct arch_stack_object object;
-> +	struct pt_regs regs;
-> +
-> +	if (__builtin_frame_address(1) == 0)
-> +		return NOT_STACK;
-
-When do you expect this to happen?
-
-> +
-> +	object.start = (unsigned long)obj;
-> +	object.len = len;
-> +	object.flag = NOT_STACK;
-> +
-> +	regs.regs[29] = (u64)__builtin_frame_address(1);
-
-NAK to making a synthetic pt_regs like this. That an abuse of the existing API,
-and you don't need to do this in the first place.
-
-> +
-> +	arch_stack_walk(arch_stack_object_check, (void *)&object, NULL, &regs);
-
-A void pointer cast is not necessary.
-
-Thanks,
-Mark.
-
-> +
-> +	return object.flag;
-> +#else
-> +	return NOT_STACK;
-> +#endif
-> +}
-> -- 
-> 2.25.1
-> 
+jirka
