@@ -2,141 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E35C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 13:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB0DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Apr 2022 13:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242828AbiDSNMG (ORCPT
+        id S1352965AbiDSN6h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Apr 2022 09:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
+        Tue, 19 Apr 2022 09:58:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239259AbiDSNMF (ORCPT
+        with ESMTP id S1346094AbiDSN6a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Apr 2022 09:12:05 -0400
+        Tue, 19 Apr 2022 09:58:30 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB58335DC3;
-        Tue, 19 Apr 2022 06:09:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D65AF38BEC;
+        Tue, 19 Apr 2022 06:55:47 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92A48106F;
-        Tue, 19 Apr 2022 06:09:22 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.75.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A73B3F766;
-        Tue, 19 Apr 2022 06:09:19 -0700 (PDT)
-Date:   Tue, 19 Apr 2022 14:09:14 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, keescook@chromium.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, benh@kernel.crashing.org, paulus@samba.org,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/8] stacktrace: Change callback prototype to pass
- more information
-Message-ID: <Yl60euwfis+u92cA@FVFF77S0Q05N>
-References: <20220418132217.1573072-1-zhe.he@windriver.com>
- <20220418132217.1573072-2-zhe.he@windriver.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E88E1063;
+        Tue, 19 Apr 2022 06:55:47 -0700 (PDT)
+Received: from [10.32.36.25] (e121896.Emea.Arm.com [10.32.36.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F03B83F766;
+        Tue, 19 Apr 2022 06:55:43 -0700 (PDT)
+Message-ID: <d934c6a2-ecc3-48cb-a65f-99f7789af7bc@arm.com>
+Date:   Tue, 19 Apr 2022 14:55:42 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220418132217.1573072-2-zhe.he@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH V5 1/8] perf: Add system error and not in transaction
+ branch types
+Content-Language: en-US
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, acme@kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220404045046.634522-1-anshuman.khandual@arm.com>
+ <20220404045046.634522-2-anshuman.khandual@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220404045046.634522-2-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 18, 2022 at 09:22:10PM +0800, He Zhe wrote:
-> Currently stack_trace_consume_fn can only have pc of each frame of the
-> stack. Copying-beyond-the-frame-detection also needs fp of current and
-> previous frame. Other detection algorithm in the future may need more
-> information of the frame.
+
+
+On 04/04/2022 05:50, Anshuman Khandual wrote:
+> This expands generic branch type classification by adding two more entries
+> there in i.e system error and not in transaction. This also updates the x86
+> implementation to process X86_BR_NO_TX records as appropriate. This changes
+> branch types reported to user space on x86 platform but it should not be a
+> problem. The possible scenarios and impacts are enumerated here.
 > 
-> We define a frame_info to include them all.
+> --------------------------------------------------------------------------
+> | kernel | perf tool |                     Impact                        |
+> --------------------------------------------------------------------------
+> |   old  |    old    |  Works as before                                  |
+> --------------------------------------------------------------------------
+> |   old  |    new    |  PERF_BR_UNKNOWN is processed                     |
+> --------------------------------------------------------------------------
+> |   new  |    old    |  PERF_BR_NO_TX are blocked via old PERF_BR_MAX    |
+> --------------------------------------------------------------------------
+> |   new  |    new    |  NO_TX are recognized                             |
+> --------------------------------------------------------------------------
 > 
+> When PERF_BR_NO_TX is blocked via old PERF_BR_MAX (new kernel with old perf
+> tool) the user space might throw up an warning complaining about an
+> unrecognized branch types being reported, but it's expected. PERF_BR_SERROR
+> & PERF_BR_NO_TX branch types will be used for BRBE implementation on arm64
+> platform.
 > 
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> PERF_BR_NO_TX complements 'abort' and 'in_tx' elements in perf_branch_entry
+> which represent other transaction states for a given branch record. Because
+> this completes the transaction state classification.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
 > ---
->  include/linux/stacktrace.h |  9 ++++++++-
->  kernel/stacktrace.c        | 10 +++++-----
->  2 files changed, 13 insertions(+), 6 deletions(-)
+>  arch/x86/events/intel/lbr.c     | 2 +-
+>  include/uapi/linux/perf_event.h | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
-> index 97455880ac41..5a61bfafe6f0 100644
-> --- a/include/linux/stacktrace.h
-> +++ b/include/linux/stacktrace.h
-> @@ -10,15 +10,22 @@ struct pt_regs;
->  
->  #ifdef CONFIG_ARCH_STACKWALK
->  
-> +struct frame_info {
-> +	unsigned long pc;
-> +	unsigned long fp;
-> +	unsigned long prev_fp;
-> +};
-
-I don't think this should be exposed through a generic interface; the `fp` and
-`prev_fp` values are only meaningful with arch-specific knowledge, and they're
-*very* easy to misuse (e.g. when transitioning from one stack to another).
-There's also a bunch of other information one may or may not want, depending on
-what you're trying to achieve.
-
-I am happy to have an arch-specific internal unwinder where we can access this
-information, and *maybe* it makes sense to have a generic API that passes some
-opaque token, but I don't think we should make the structure generic.
-
-Thanks,
-Mark.
-
-> +
->  /**
->   * stack_trace_consume_fn - Callback for arch_stack_walk()
->   * @cookie:	Caller supplied pointer handed back by arch_stack_walk()
->   * @addr:	The stack entry address to consume
-> + * @fi:	The frame information to consume
->   *
->   * Return:	True, if the entry was consumed or skipped
->   *		False, if there is no space left to store
->   */
-> -typedef bool (*stack_trace_consume_fn)(void *cookie, unsigned long addr);
-> +typedef bool (*stack_trace_consume_fn)(void *cookie, struct frame_info *fi);
->  /**
->   * arch_stack_walk - Architecture specific function to walk the stack
->   * @consume_entry:	Callback which is invoked by the architecture code for
-> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-> index 9ed5ce989415..2d0a2812e92b 100644
-> --- a/kernel/stacktrace.c
-> +++ b/kernel/stacktrace.c
-> @@ -79,7 +79,7 @@ struct stacktrace_cookie {
->  	unsigned int	len;
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index fe1742c4ca49..30dcd18936d5 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
+> @@ -1336,7 +1336,7 @@ static int branch_map[X86_BR_TYPE_MAP_MAX] = {
+>  	PERF_BR_IND_CALL,	/* X86_BR_IND_CALL */
+>  	PERF_BR_UNKNOWN,	/* X86_BR_ABORT */
+>  	PERF_BR_UNKNOWN,	/* X86_BR_IN_TX */
+> -	PERF_BR_UNKNOWN,	/* X86_BR_NO_TX */
+> +	PERF_BR_NO_TX,		/* X86_BR_NO_TX */
+>  	PERF_BR_CALL,		/* X86_BR_ZERO_CALL */
+>  	PERF_BR_UNKNOWN,	/* X86_BR_CALL_STACK */
+>  	PERF_BR_IND,		/* X86_BR_IND_JMP */
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index d37629dbad72..26d8f0b5ac0d 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -253,6 +253,8 @@ enum {
+>  	PERF_BR_COND_RET	= 10,	/* conditional function return */
+>  	PERF_BR_ERET		= 11,	/* exception return */
+>  	PERF_BR_IRQ		= 12,	/* irq */
+> +	PERF_BR_SERROR		= 13,	/* system error */
+> +	PERF_BR_NO_TX		= 14,	/* not in transaction */
+>  	PERF_BR_MAX,
 >  };
 >  
-> -static bool stack_trace_consume_entry(void *cookie, unsigned long addr)
-> +static bool stack_trace_consume_entry(void *cookie, struct frame_info *fi)
->  {
->  	struct stacktrace_cookie *c = cookie;
->  
-> @@ -90,15 +90,15 @@ static bool stack_trace_consume_entry(void *cookie, unsigned long addr)
->  		c->skip--;
->  		return true;
->  	}
-> -	c->store[c->len++] = addr;
-> +	c->store[c->len++] = fi->pc;
->  	return c->len < c->size;
->  }
->  
-> -static bool stack_trace_consume_entry_nosched(void *cookie, unsigned long addr)
-> +static bool stack_trace_consume_entry_nosched(void *cookie, struct frame_info *fi)
->  {
-> -	if (in_sched_functions(addr))
-> +	if (in_sched_functions(fi->pc))
->  		return true;
-> -	return stack_trace_consume_entry(cookie, addr);
-> +	return stack_trace_consume_entry(cookie, fi);
->  }
->  
->  /**
-> -- 
-> 2.25.1
-> 
