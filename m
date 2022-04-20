@@ -2,181 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787FAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 10:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993B8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 11:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354580AbiDTK1W (ORCPT
+        id S1378100AbiDTLc7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 06:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56262 "EHLO
+        Wed, 20 Apr 2022 07:32:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357575AbiDTK1R (ORCPT
+        with ESMTP id S1378112AbiDTLc7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 06:27:17 -0400
-Received: from euporie.uberspace.de (euporie.uberspace.de [185.26.156.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4B73F881
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 03:24:31 -0700 (PDT)
-Received: (qmail 15788 invoked by uid 989); 20 Apr 2022 10:24:29 -0000
-Authentication-Results: euporie.uberspace.de;
-        auth=pass (plain)
-From:   Florian Fischer <florian.fischer@muhq.space>
-To:     linux-perf-users@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Florian Fischer <florian.fischer@muhq.space>
-Subject: [PATCH v4 3/3] perf list: print all available tool events
-Date:   Wed, 20 Apr 2022 12:23:54 +0200
-Message-Id: <20220420102354.468173-4-florian.fischer@muhq.space>
-X-Mailer: git-send-email 2.36.0
-In-Reply-To: <20220420102354.468173-1-florian.fischer@muhq.space>
-References: <20220420102354.468173-1-florian.fischer@muhq.space>
+        Wed, 20 Apr 2022 07:32:59 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6B0101C5;
+        Wed, 20 Apr 2022 04:30:11 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 7383D1F380;
+        Wed, 20 Apr 2022 11:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1650454210; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Gxj/xM+34AD8finRqcqGcd6F18GgFYTPW9Dp5jQsnqI=;
+        b=D4RovC5U+P8vMc2ol5oOFJUTywig1T0D0OQh9gaJ0JAkNnTyndf23rrEax63UQIiVLaH7A
+        O7ABIdKn+15UzOY29/iuueQWeWJAcwK5wnMUWmwzknYa0bvY0aQE0vcROl+GIikNJI19I+
+        wN+YgdfFkkjmuEeYE/bQuY7SSK2WSFE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1650454210;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Gxj/xM+34AD8finRqcqGcd6F18GgFYTPW9Dp5jQsnqI=;
+        b=kky0+Quo1sBYWRnxNCFVsuRWUcx6VsD1huh322JLNmWWtgZGEb+bC8kQHoQ2PFgbAX5KNg
+        kBN2juL1HS9jjHCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 56FB113AD5;
+        Wed, 20 Apr 2022 11:30:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id S037E8LuX2LZSAAAMHmgww
+        (envelope-from <mliska@suse.cz>); Wed, 20 Apr 2022 11:30:10 +0000
+Message-ID: <0d1c5ace-88e8-7102-1565-7c143f01a966@suse.cz>
+Date:   Wed, 20 Apr 2022 13:30:09 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: -----
-X-Rspamd-Report: R_MISSING_CHARSET(0.5) MIME_GOOD(-0.1) REPLY(-4) MID_CONTAINS_FROM(1) BAYES_HAM(-2.968525)
-X-Rspamd-Score: -5.568525
-Received: from unknown (HELO unkown) (::1)
-        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Wed, 20 Apr 2022 12:24:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
+Subject: [PATCH] Add HAVE_DEBUGINFOD_SUPPORT to built-in features.
+To:     gcc-patches@gcc.gnu.org
+Content-Language: en-US
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Introduce names for the new tool events 'user_time' and 'system_time'.
+The change adds debuginfod to ./perf -vv:
 
-Signed-off-by: Florian Fischer <florian.fischer@muhq.space>
+...
+debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
+...
+
+Signed-off-by: Martin Liska <mliska@suse.cz>
 ---
- tools/perf/util/evsel.c        | 19 ++++++++++------
- tools/perf/util/evsel.h        |  1 +
- tools/perf/util/parse-events.c | 40 +++++++++++++++++++++++++++++-----
- 3 files changed, 47 insertions(+), 13 deletions(-)
+  tools/perf/builtin-version.c | 1 +
+  1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 2a1729e7aee4..d38722560e80 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -597,6 +597,17 @@ static int evsel__sw_name(struct evsel *evsel, char *bf, size_t size)
- 	return r + evsel__add_modifiers(evsel, bf + r, size - r);
- }
- 
-+const char *evsel__tool_names[PERF_TOOL_MAX] = {
-+	"duration_time",
-+	"user_time",
-+	"system_time",
-+};
-+
-+static int evsel__tool_name(enum perf_tool_event ev, char *bf, size_t size)
-+{
-+	return scnprintf(bf, size, "%s", evsel__tool_names[ev]);
-+}
-+
- static int __evsel__bp_name(char *bf, size_t size, u64 addr, u64 type)
- {
- 	int r;
-@@ -723,12 +734,6 @@ static int evsel__raw_name(struct evsel *evsel, char *bf, size_t size)
- 	return ret + evsel__add_modifiers(evsel, bf + ret, size - ret);
- }
- 
--static int evsel__tool_name(char *bf, size_t size)
--{
--	int ret = scnprintf(bf, size, "duration_time");
--	return ret;
--}
--
- const char *evsel__name(struct evsel *evsel)
- {
- 	char bf[128];
-@@ -754,7 +759,7 @@ const char *evsel__name(struct evsel *evsel)
- 
- 	case PERF_TYPE_SOFTWARE:
- 		if (evsel->tool_event)
--			evsel__tool_name(bf, sizeof(bf));
-+			evsel__tool_name(evsel->tool_event, bf, sizeof(bf));
- 		else
- 			evsel__sw_name(evsel, bf, sizeof(bf));
- 		break;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 7e2209b47b39..45d674812239 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -262,6 +262,7 @@ extern const char *evsel__hw_cache_op[PERF_COUNT_HW_CACHE_OP_MAX][EVSEL__MAX_ALI
- extern const char *evsel__hw_cache_result[PERF_COUNT_HW_CACHE_RESULT_MAX][EVSEL__MAX_ALIASES];
- extern const char *evsel__hw_names[PERF_COUNT_HW_MAX];
- extern const char *evsel__sw_names[PERF_COUNT_SW_MAX];
-+extern const char *evsel__tool_names[PERF_TOOL_MAX];
- extern char *evsel__bpf_counter_events;
- bool evsel__match_bpf_counter_events(const char *name);
- 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 064ec368a90b..c0e88d3b3e3c 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -154,6 +154,21 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
- 	},
- };
- 
-+struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
-+	[PERF_TOOL_DURATION_TIME] = {
-+		.symbol = "duration_time",
-+		.alias  = "",
-+	},
-+	[PERF_TOOL_USER_TIME] = {
-+		.symbol = "user_time",
-+		.alias  = "",
-+	},
-+	[PERF_TOOL_SYSTEM_TIME] = {
-+		.symbol = "system_time",
-+		.alias  = "",
-+	},
-+};
-+
- #define __PERF_EVENT_FIELD(config, name) \
- 	((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
- 
-@@ -3058,21 +3073,34 @@ int print_hwcache_events(const char *event_glob, bool name_only)
- 	return evt_num;
- }
- 
--static void print_tool_event(const char *name, const char *event_glob,
-+static void print_tool_event(const struct event_symbol *syms, const char *event_glob,
- 			     bool name_only)
- {
--	if (event_glob && !strglobmatch(name, event_glob))
-+	if (syms->symbol == NULL)
-+		return;
-+
-+	if (event_glob && !(strglobmatch(syms->symbol, event_glob) ||
-+	      (syms->alias && strglobmatch(syms->alias, event_glob))))
- 		return;
-+
- 	if (name_only)
--		printf("%s ", name);
--	else
-+		printf("%s ", syms->symbol);
-+	else {
-+		char name[MAX_NAME_LEN];
-+		if (syms->alias)
-+			snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
-+		else
-+			strlcpy(name, syms->symbol, MAX_NAME_LEN);
- 		printf("  %-50s [%s]\n", name, "Tool event");
--
-+	}
- }
- 
- void print_tool_events(const char *event_glob, bool name_only)
- {
--	print_tool_event("duration_time", event_glob, name_only);
-+	// Start at 1 because the first enum entry symbols no tool event
-+	for (int i = 1; i < PERF_TOOL_MAX; ++i) {
-+		print_tool_event(event_symbols_tool + i, event_glob, name_only);
-+	}
- 	if (pager_in_use())
- 		printf("\n");
- }
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index 9cd074a3d825..a71f491224da 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -65,6 +65,7 @@ static void library_status(void)
+  #endif
+  	STATUS(HAVE_SYSCALL_TABLE_SUPPORT, syscall_table);
+  	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
++	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
+  	STATUS(HAVE_LIBELF_SUPPORT, libelf);
+  	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
+  	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
 -- 
-2.36.0
+2.35.3
 
