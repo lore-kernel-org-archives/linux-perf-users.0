@@ -2,375 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AD6C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 08:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA96C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 08:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376829AbiDTIpd (ORCPT
+        id S245069AbiDTIvS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 04:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40578 "EHLO
+        Wed, 20 Apr 2022 04:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355115AbiDTIpd (ORCPT
+        with ESMTP id S238704AbiDTIvR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 04:45:33 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E1931502
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:42:46 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id v15so1308155edb.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:42:46 -0700 (PDT)
+        Wed, 20 Apr 2022 04:51:17 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A122A246
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:48:32 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id s18so2158874ejr.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=MVCMmRDupWVNp3EektJX9PkYrpmkhE+GVak1SDvod4s=;
-        b=Z+Fg+M32NBiEVbQoBiuviPChWxOW0h+dqN5hlHC8pitQtK+k1M+fgW34j9uiVvIWEG
-         E5gBbUqeaBL6PhIWrlus/Fn90V+tVSvoRfC5RXK3GKiZuQ5yuoom618SH2AWzPowvKTm
-         Y9tevSi7LVtSfP/RCgn96XUAX4R7ZtPJpGrvomwprD0ARWN5vCvx9LSq3g7MGB2jJEd2
-         jkQnvi9xRkI7M5BTFhQRuzQTa2XUe+zu/7mU6dsAFOJ1z8MX0tn19rxmVS2UmD+ThaD/
-         yH1rojDNZIF6IBs/hvPHWbtZDXPR67OiqeSUGwchaEwhSqNkRNLvtgJsOhVPO1K2qpYu
-         Pa0A==
+        bh=qpUXxpkY1LQrTCewxX/BwK6Ql1sWiAOxr2avilSjOww=;
+        b=D5HHuJNPDcWp1NhI9j9oJPY7JJPhJj+u4XdYy1OxHt81Dn0FBmrtkeHQZMXe3qs7in
+         F5uWxg1sMMIckuW84/EW22jv0iNA9uPUNUpXhBgwaGBXD90wfqoVeAg5vD0JqA7Z6V7R
+         afuF9PVp7P5c3qnx7lTC/QrKKRVORLV0+dR8r5DdRSOj1wqhtdBcrRypRedRZAPBtWwy
+         SaH54loFCEpKBqpyIIQjPlk2f5KhSC5u2TKKbh624a6BsRP+Fseii00sZ3ehon6fl+Fb
+         NwXX7xs3MKYk8Fm1MGhuUZRKZPNDmxLf/pVUe+jps6uDt3Aywxj6szZxoi3F2pSjopHn
+         yMcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=MVCMmRDupWVNp3EektJX9PkYrpmkhE+GVak1SDvod4s=;
-        b=yVEIow/OeDvS2iFdhm6BH8O9EUpxfxSrMRX7gsAIHukPSDjC+HUkQC8u+5aBv7WP8B
-         J8YIQAjaWiQiGs0UZM7QxxlMiNjvIynFy6uZhFjJ0R0LKYg+d2aYGYzwunwgUXKZgTlq
-         S8EIToxgC/jfaqeUxQ+jA6iVtaJyJPLFpS+tsB/201wFRE0FNYrtViUDgTqB2bIfCW5z
-         Sc7vxTGQAh906PS0MmKaFIsK3KI3Yup4sisuRnw0lm6kWLVoJ3m06ZupNhzSrX97+FaP
-         XxGcdy/RShXX0WmpmGeEVzEdsXU3JcCD8theLd9yaQpnteJjxbIg354PRFGWatZVDRxi
-         8QRQ==
-X-Gm-Message-State: AOAM533TfPz0lk4dU6QqkOd/Z3V9eRCBUo9JZHLSDW4GwlouN/YtZL8W
-        hJ3iIdx9EVURWdRVjPoVU4cW5g==
-X-Google-Smtp-Source: ABdhPJzq+UmiGH73w3WVb5N/f0UxlU+a3ZjIu42E1R9z8JmIzVcN5CFnOiOVzq7f9t99+Tm82GSmzQ==
-X-Received: by 2002:a05:6402:34c9:b0:423:deb7:f69e with SMTP id w9-20020a05640234c900b00423deb7f69emr17014053edc.335.1650444165378;
-        Wed, 20 Apr 2022 01:42:45 -0700 (PDT)
+        bh=qpUXxpkY1LQrTCewxX/BwK6Ql1sWiAOxr2avilSjOww=;
+        b=zv+e2vdUjkDPqRoH1ZGlwpVghZjkjIXrTzZlXoPoupNEFzrq+7yV6HUuI6BjmmU2q1
+         r93o2Xu0VfVgrc+mStib+N0tiz88oNs7HM5O/thH0Pyoi0z/sRnyD23WrMWnIETwvshS
+         F5CZ11WELQ2ybZX/dLhYcJ/a/dNC2FDHz+1OC0DT261tve+8SKLWvOGEeYLbmRGmhg16
+         xhuE0wgRIkxY0yAlDAVMNevxmtGV/pIKmkbWmRtBJ/KzlVztC4DhBnvkBY0m1oR6edfB
+         4ukUo4NdGrQ9Xwyf/sfpXXJKFjTrz0meQJJb1wEkrwMRu4J7DKitfYvJoyTSezbckOce
+         1CiA==
+X-Gm-Message-State: AOAM530o+TQoPeQcrYp/rIPhc+Wawa4E9ORv5rKQNle699PzN2G3INT5
+        +zWSh1oWpueX8dW8WXa7Bp7Oaw==
+X-Google-Smtp-Source: ABdhPJw837T3cRO9mLC5fpo5UIyr0XVBpI4v0Nlm9M0zRzKPBvuTg9N+7xCZv7v5VIuNF5cHZ9SIrg==
+X-Received: by 2002:a17:907:7286:b0:6ef:f594:e063 with SMTP id dt6-20020a170907728600b006eff594e063mr2925426ejc.611.1650444510495;
+        Wed, 20 Apr 2022 01:48:30 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id s14-20020aa7cb0e000000b00410bf015567sm9529157edt.92.2022.04.20.01.42.39
+        by smtp.gmail.com with ESMTPSA id n25-20020a1709062bd900b006e8766b7907sm6490432ejg.223.2022.04.20.01.48.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 01:42:44 -0700 (PDT)
-Date:   Wed, 20 Apr 2022 16:42:37 +0800
+        Wed, 20 Apr 2022 01:48:29 -0700 (PDT)
+Date:   Wed, 20 Apr 2022 16:48:23 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
-        acme@kernel.org, benh@kernel.crashing.org, Nick.Forrington@arm.com,
+To:     German Gomez <german.gomez@arm.com>
+Cc:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, acme@kernel.org,
+        benh@kernel.crashing.org, Nick.Forrington@arm.com,
         alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
         james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
         kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
         mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
         peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v5 4/5] perf arm-spe: Use SPE data source for neoverse
- cores
-Message-ID: <20220420084237.GD843168@leoy-ThinkPad-X240s>
+Subject: Re: [PATCH v5 5/5] perf mem: Support mem_lvl_num in c2c command
+Message-ID: <20220420084823.GE843168@leoy-ThinkPad-X240s>
 References: <20220408195344.32764-1-alisaidi@amazon.com>
- <20220408195344.32764-5-alisaidi@amazon.com>
+ <20220408195344.32764-6-alisaidi@amazon.com>
+ <3ad0128a-1b3d-37a7-81f6-fd597b565b18@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220408195344.32764-5-alisaidi@amazon.com>
+In-Reply-To: <3ad0128a-1b3d-37a7-81f6-fd597b565b18@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 08, 2022 at 07:53:43PM +0000, Ali Saidi wrote:
-> When synthesizing data from SPE, augment the type with source information
-> for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
-> the same encoding. I can't find encoding information for any other SPE
-> implementations to unify their choices with Arm's thus that is left for
-> future work.
+On Mon, Apr 11, 2022 at 11:04:28AM +0100, German Gomez wrote:
 > 
-> This change populates the mem_lvl_num for Neoverse cores instead of the
-> deprecated mem_lvl namespace.
+> On 08/04/2022 20:53, Ali Saidi wrote:
+> > In addition to summarizing data encoded in mem_lvl also support data
+> > encoded in mem_lvl_num.
+> >
+> > Since other architectures don't seem to populate the mem_lvl_num field
+> > here there shouldn't be a change in functionality.
+> >
+> > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> > ---
+> >  tools/perf/util/mem-events.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+> > index ed0ab838bcc5..e5e405185498 100644
+> > --- a/tools/perf/util/mem-events.c
+> > +++ b/tools/perf/util/mem-events.c
+> > @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
+> >  	u64 daddr  = mi->daddr.addr;
+> >  	u64 op     = data_src->mem_op;
+> >  	u64 lvl    = data_src->mem_lvl;
+> > +	u64 lnum   = data_src->mem_lvl_num;
+> >  	u64 snoop  = data_src->mem_snoop;
+> >  	u64 lock   = data_src->mem_lock;
+> >  	u64 blk    = data_src->mem_blk;
+> > @@ -527,16 +528,18 @@ do {				\
+> >  			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
+> >  			if (lvl & P(LVL, IO))  stats->ld_io++;
+> >  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
 > 
-> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> ---
->  .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
->  .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 ++
->  tools/perf/util/arm-spe.c                     | 127 ++++++++++++++++--
->  3 files changed, 126 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> index 5e390a1a79ab..091987dd3966 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-> @@ -220,6 +220,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
->  
->  			break;
->  		case ARM_SPE_DATA_SOURCE:
-> +			decoder->record.source = payload;
->  			break;
->  		case ARM_SPE_BAD:
->  			break;
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> index 69b31084d6be..46a61df1145b 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> @@ -29,6 +29,17 @@ enum arm_spe_op_type {
->  	ARM_SPE_ST		= 1 << 1,
->  };
->  
-> +enum arm_spe_neoverse_data_source {
-> +	ARM_SPE_NV_L1D		 = 0x0,
-> +	ARM_SPE_NV_L2		 = 0x8,
-> +	ARM_SPE_NV_PEER_CORE	 = 0x9,
-> +	ARM_SPE_NV_LOCAL_CLUSTER = 0xa,
-> +	ARM_SPE_NV_SYS_CACHE	 = 0xb,
-> +	ARM_SPE_NV_PEER_CLUSTER	 = 0xc,
-> +	ARM_SPE_NV_REMOTE	 = 0xd,
-> +	ARM_SPE_NV_DRAM		 = 0xe,
-> +};
-> +
->  struct arm_spe_record {
->  	enum arm_spe_sample_type type;
->  	int err;
-> @@ -40,6 +51,7 @@ struct arm_spe_record {
->  	u64 virt_addr;
->  	u64 phys_addr;
->  	u64 context_id;
-> +	u16 source;
->  };
->  
->  struct arm_spe_insn;
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index d2b64e3f588b..a20285cf98e3 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -34,6 +34,7 @@
->  #include "arm-spe-decoder/arm-spe-decoder.h"
->  #include "arm-spe-decoder/arm-spe-pkt-decoder.h"
->  
-> +#include "../../arch/arm64/include/asm/cputype.h"
->  #define MAX_TIMESTAMP (~0ULL)
->  
->  struct arm_spe {
-> @@ -45,6 +46,7 @@ struct arm_spe {
->  	struct perf_session		*session;
->  	struct machine			*machine;
->  	u32				pmu_type;
-> +	u64				midr;
->  
->  	struct perf_tsc_conversion	tc;
->  
-> @@ -399,33 +401,127 @@ static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
->  	return false;
->  }
->  
-> -static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
-> +static const struct midr_range neoverse_spe[] = {
-> +	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
-> +	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
-> +	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
-> +	{},
-> +};
-> +
-> +
-> +static void arm_spe__synth_data_source_neoverse(const struct arm_spe_record *record,
-> +						union perf_mem_data_src *data_src)
->  {
-> -	union perf_mem_data_src	data_src = { 0 };
-> +	/*
-> +	 * Even though four levels of cache hierarchy are possible, no known
-> +	 * production Neoverse systems currently include more than three levels
-> +	 * so for the time being we assume three exist. If a production system
-> +	 * is built with four the this function would have to be changed to
-> +	 * detect the number of levels for reporting.
-> +	 */
->  
-> -	if (record->op == ARM_SPE_LD)
-> -		data_src.mem_op = PERF_MEM_OP_LOAD;
-> -	else
-> -		data_src.mem_op = PERF_MEM_OP_STORE;
-> +	/*
-> +	 * We have no data on the hit level or data source for stores in the
-> +	 * Neoverse SPE records.
-> +	 */
-> +	if (record->op & ARM_SPE_ST) {
-> +		data_src->mem_lvl = PERF_MEM_LVL_NA;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_NA;
-> +		return;
-> +	}
-> +
-> +
+> Just for completion, can we also handle LFB as it seems to be being set
+> in "/arch/x86/events/intel/ds.c"? (Sorry I missed this in the v4)
 
-Redundant new line.
-
-> +	switch (record->source) {
-> +	case ARM_SPE_NV_L1D:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> +		break;
-> +	case ARM_SPE_NV_L2:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> +		break;
-> +	case ARM_SPE_NV_PEER_CORE:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
-> +		break;
-> +	/*
-> +	 * We don't know if this is L1, L2 but we do know it was a cache-2-cache
-> +	 * transfer, so set SNOOPX_PEER
-> +	 */
-> +	case ARM_SPE_NV_LOCAL_CLUSTER:
-> +	case ARM_SPE_NV_PEER_CLUSTER:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-
-As a side topic, it's better to use a new patch to dump snooping flag
-PERF_MEM_SNOOPX_PEER, some code like below:
-
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index f8f234251f92..66d44280a4ea 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -410,6 +410,11 @@ static const char * const snoop_access[] = {
- 	"HitM",
- };
- 
-+static const char * const snoopx_access[] = {
-+	"Fwd",
-+	"Peer",
-+};
-+
- int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- {
- 	size_t i, l = 0;
-@@ -430,13 +435,18 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- 		}
- 		l += scnprintf(out + l, sz - l, snoop_access[i]);
- 	}
--	if (mem_info &&
--	     (mem_info->data_src.mem_snoopx & PERF_MEM_SNOOPX_FWD)) {
-+
-+	if (mem_info)
-+		m = mem_info->data_src.mem_snoopx;
-+
-+	for (i = 0; m && i < ARRAY_SIZE(snoopx_access); i++, m >>= 1) {
-+		if (!(m & 0x1))
-+			continue;
- 		if (l) {
- 			strcat(out, " or ");
- 			l += 4;
- 		}
--		l += scnprintf(out + l, sz - l, "Fwd");
-+		l += scnprintf(out + l, sz - l, snoopx_access[i]);
- 	}
- 
-
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +		break;
-> +	/*
-> +	 * System cache is assumed to be L3
-> +	 */
-> +	case ARM_SPE_NV_SYS_CACHE:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
-> +		break;
-> +	/*
-> +	 * We don't know what level it hit in, except it came from the other
-> +	 * socket
-> +	 */
-> +	case ARM_SPE_NV_REMOTE:
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
-> +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_NA;
-> +		break;
-> +	case ARM_SPE_NV_DRAM:
-> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_RAM;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +}
->
-> +static void arm_spe__synth_data_source_generic(const struct arm_spe_record *record,
-> +						union perf_mem_data_src *data_src)
-> +{
->  	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
-> -		data_src.mem_lvl = PERF_MEM_LVL_L3;
-> +		data_src->mem_lvl = PERF_MEM_LVL_L3;
->  
->  		if (record->type & ARM_SPE_LLC_MISS)
-> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
-> +			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
->  		else
-> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
-> +			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
->  	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
-> -		data_src.mem_lvl = PERF_MEM_LVL_L1;
-> +		data_src->mem_lvl = PERF_MEM_LVL_L1;
->  
->  		if (record->type & ARM_SPE_L1D_MISS)
-> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
-> +			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
->  		else
-> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
-> +			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
->  	}
->  
->  	if (record->type & ARM_SPE_REMOTE_ACCESS)
-> -		data_src.mem_lvl |= PERF_MEM_LVL_REM_CCE1;
-> +		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
-> +}
-> +
-> +static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
-> +{
-> +	union perf_mem_data_src	data_src = { 0 };
-> +	bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
-> +
-> +	if (record->op & ARM_SPE_LD)
-> +		data_src.mem_op = PERF_MEM_OP_LOAD;
-> +	else
-> +		data_src.mem_op = PERF_MEM_OP_STORE;
-> +
-> +	if (is_neoverse)
-> +		arm_spe__synth_data_source_neoverse(record, &data_src);
-> +	else
-> +		arm_spe__synth_data_source_generic(record, &data_src);
->  
->  	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
->  		data_src.mem_dtlb = PERF_MEM_TLB_WK;
-> @@ -446,7 +542,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
->  	u64 data_src;
->  	int err;
->  
-> -	data_src = arm_spe__synth_data_source(record);
-> +	data_src = arm_spe__synth_data_source(record, spe->midr);
->  
->  	if (spe->sample_flc) {
->  		if (record->type & ARM_SPE_L1D_MISS) {
-> @@ -1183,6 +1279,8 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->  	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
->  	size_t min_sz = sizeof(u64) * ARM_SPE_AUXTRACE_PRIV_MAX;
->  	struct perf_record_time_conv *tc = &session->time_conv;
-> +	const char *cpuid = perf_env__cpuid(session->evlist->env);
-> +	u64 midr = strtol(cpuid, NULL, 16);
->  	struct arm_spe *spe;
->  	int err;
->  
-> @@ -1202,6 +1300,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->  	spe->machine = &session->machines.host; /* No kvm support */
->  	spe->auxtrace_type = auxtrace_info->type;
->  	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
-> +	spe->midr = midr;
-
-Except the redundant line, the patch is good for me and I tested it at
-my side:
+With fixing LFB issue pointed by German, the change looks good to me:
 
 Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
 
->  
->  	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
->  
-> -- 
-> 2.32.0
-> 
+It would be appreciate if x86 or PowerPC maintainers could take a look
+for this patch.  Thanks!
+
+Leo
+
+> > -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
+> > -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
+> > -			if (lvl & P(LVL, L3 )) {
+> > +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
+> > +				stats->ld_l1hit++;
+> > +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
+> > +				stats->ld_l2hit++;
+> > +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L3)) {
+> >  				if (snoop & P(SNOOP, HITM))
+> >  					HITM_INC(lcl_hitm);
+> >  				else
+> >  					stats->ld_llchit++;
+> >  			}
+> >  
+> > -			if (lvl & P(LVL, LOC_RAM)) {
+> > +			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
+> >  				stats->lcl_dram++;
+> >  				if (snoop & P(SNOOP, HIT))
+> >  					stats->ld_shared++;
