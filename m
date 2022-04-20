@@ -2,131 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBCBC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 06:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E2AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 07:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343738AbiDTGc5 (ORCPT
+        id S1359842AbiDTHe7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 02:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57772 "EHLO
+        Wed, 20 Apr 2022 03:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241754AbiDTGc5 (ORCPT
+        with ESMTP id S1359831AbiDTHe4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 02:32:57 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF7F11C0A;
-        Tue, 19 Apr 2022 23:30:11 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23K5gAtK020335;
-        Wed, 20 Apr 2022 06:29:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=dwK7Jz5egacq4U7B1418c7gUMdrS3O8V298T2k9VQP4=;
- b=J2J0o+bvOeekQ8xyL1aXk6QUjgxUX1sfKcFY+I7D5txGRaHPr/+dqEKqhE8HvLe9Fwm8
- 5/f3n1ycG7sIfR9VNJfAsIh4ecqBGEq7g1KVFalp3FxZSb8E4agdhcXKyY4h7VQi6vKu
- lKnNMTXyK1BDLnvmWgG3osMFUK9H2lr+rlyYTV6kIDhZ7Uku3T/QaqBq40XuYRg97Y8C
- RwP5jvEmUryGft+0S6whI4WUq1y25cT/qY6gtsyODufpaLKMM3ld2EiNUa2+6fQvfC/R
- djef0jTv7B2/J0qWH15cVLmFvxRCFUzbujWVakWnoomRJboR5B5lnbnZmOLYqr7dgssR rw== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3fg75r3hp8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Apr 2022 06:29:37 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23K6HnUi024667;
-        Wed, 20 Apr 2022 06:29:35 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3ffn2hwra2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Apr 2022 06:29:34 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23K6TVIN16318904
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Apr 2022 06:29:31 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C8AC52059;
-        Wed, 20 Apr 2022 06:29:31 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 41B495204F;
-        Wed, 20 Apr 2022 06:29:31 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, chengdongli@tencent.com, adrian.hunter@intel.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/test: test case 71 fails on s390
-Date:   Wed, 20 Apr 2022 08:29:21 +0200
-Message-Id: <20220420062921.1211825-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
+        Wed, 20 Apr 2022 03:34:56 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5E3D3BA4C
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 00:32:07 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-165-jcx-0iaIPGatONrL5yGJ_Q-1; Wed, 20 Apr 2022 08:32:04 +0100
+X-MC-Unique: jcx-0iaIPGatONrL5yGJ_Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.32; Wed, 20 Apr 2022 08:32:02 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.033; Wed, 20 Apr 2022 08:32:02 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'He Zhe' <zhe.he@windriver.com>, Kees Cook <keescook@chromium.org>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+        "svens@linux.ibm.com" <svens@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH RFC 2/8] arm64: stacktrace: Add arch_within_stack_frames
+Thread-Topic: [PATCH RFC 2/8] arm64: stacktrace: Add arch_within_stack_frames
+Thread-Index: AQHYU/YpuaYuTiSSXEqj2VkDLnuG5qz4aD5A
+Date:   Wed, 20 Apr 2022 07:32:01 +0000
+Message-ID: <9e5c394e82ec44e1887ebebe777a97f2@AcuMS.aculab.com>
+References: <20220418132217.1573072-1-zhe.he@windriver.com>
+ <20220418132217.1573072-3-zhe.he@windriver.com>
+ <202204181457.9DE190CE@keescook>
+ <b328bed3-ebb9-6fba-9585-79946262c40f@windriver.com>
+In-Reply-To: <b328bed3-ebb9-6fba-9585-79946262c40f@windriver.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WnTCLPGNRju_nnAMgMIKkS4pxJafbQ3X
-X-Proofpoint-GUID: WnTCLPGNRju_nnAMgMIKkS4pxJafbQ3X
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-19_08,2022-04-15_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
- mlxlogscore=999 spamscore=0 suspectscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204200036
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Test case 71 'Convert perf time to TSC' is not supported on s390.
-Subtest 71.1 is skipped with the correct message, but
-subtest 71.2 is not skipped and fails.
-
-The root cause is function evlist__open() called from
-test__perf_time_to_tsc().  evlist__open() returns -ENOENT because the
-event cycles:u is not supported by the selected PMU, for example 
-platform s390 on z/VM or an x86_64 virtual machine.
-The PMU driver returns -ENOENT in this case. This error is leads to
-the failure.
-Fix this by returning TEST_SKIP on -ENOENT.
-
-Output before:
- 71: Convert perf time to TSC:
- 71.1: TSC support:             Skip (This architecture does not support)
- 71.2: Perf time to TSC:        FAILED!
-
-Output after:
- 71: Convert perf time to TSC:
- 71.1: TSC support:             Skip (This architecture does not support)
- 71.2: Perf time to TSC:        Skip (perf_read_tsc_conversion is not supported)
-
-This also happens on an x86_64 virtual machine:
-   # uname -m
-   x86_64
-   $ ./perf test -F 71
-    71: Convert perf time to TSC  :
-    71.1: TSC support             : Ok
-    71.2: Perf time to TSC        : FAILED!
-   $ 
-
-Fixes: 290fa68bdc45 ("perf test tsc: Fix error message when not supported")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- tools/perf/tests/perf-time-to-tsc.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
-index cc6df49a65a1..4ad0dfbc8b21 100644
---- a/tools/perf/tests/perf-time-to-tsc.c
-+++ b/tools/perf/tests/perf-time-to-tsc.c
-@@ -123,6 +123,10 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 		evsel->core.attr.enable_on_exec = 0;
- 	}
- 
-+	if (evlist__open(evlist) == -ENOENT) {
-+		err = TEST_SKIP;
-+		goto out_err;
-+	}
- 	CHECK__(evlist__open(evlist));
- 
- 	CHECK__(evlist__mmap(evlist, UINT_MAX));
--- 
-2.35.1
+PiA+IFRoYW5rcyBmb3IgZG9pbmcgdGhpcyBpbXBsZW1lbnRhdGlvbiEgT25lIHJlYXNvbiB1c2Vy
+Y29weSBoYXJkZW5pbmcNCj4gPiBkaWRuJ3QgcGVyc3VlIGRvaW5nIGEgImZ1bGwiIHN0YWNrdHJh
+Y2Ugd2FzIGJlY2F1c2UgaXQgc2VlbWVkIHJlbGF0aXZlbHkNCj4gPiBleHBlbnNpdmUuIERpZCB5
+b3UgZG8gYW55IHVzZXJjb3B5LWhlYXZpbHkgd29ya2xvYWQgdGVzdGluZyB0byBzZWUgaWYNCj4g
+PiB0aGVyZSB3YXMgYSBub3RpY2VhYmxlIHBlcmZvcm1hbmNlIGltcGFjdD8NCg0KTG9vayBhdCBh
+bnl0aGluZyB0aGF0IHVzZXMgc2VuZG1zZygpLg0KSXQgaXMgbm90aWNlYWJseSBtb3JlIGV4cGVu
+c2l2ZSB0aGFuIHNlbmR0bygpLg0KQWxsIHRoZSBleHRyYSBjb3B5X2Zyb21fdXNlcigpIGNhdXNl
+IG1lYXN1cmFibGUgc2xvdyBzbG93ZG93bnMuDQpVc2luZyBfX2NvcHlfZnJvbV91c2VyKCkodG8g
+YXZvaWQgJ2hhcmRlbmRpbmcnKSBpbiB0aGUgc29ja2V0IGNvZGUNCmFuZCB3aGVuIHJlYWRpbmcg
+dGhlIGlvdltdIGdpdmVzIGEgbWVhc3VyYWJsZSBpbXByb3ZlbWVudC4NCg0KCURhdmlkDQoNCi0N
+ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
+aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
+cykNCg==
 
