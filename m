@@ -2,135 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42755C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67E1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344581AbiDTQuj (ORCPT
+        id S1380711AbiDTQy7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 12:50:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34428 "EHLO
+        Wed, 20 Apr 2022 12:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239724AbiDTQui (ORCPT
+        with ESMTP id S234342AbiDTQy5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 12:50:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E69E4507F;
-        Wed, 20 Apr 2022 09:47:51 -0700 (PDT)
+        Wed, 20 Apr 2022 12:54:57 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFEFB3E0CD;
+        Wed, 20 Apr 2022 09:52:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 37FFBB81FB6;
-        Wed, 20 Apr 2022 16:47:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0C8C385A0;
-        Wed, 20 Apr 2022 16:47:48 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 20DE3CE1F35;
+        Wed, 20 Apr 2022 16:52:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BE9C385A1;
+        Wed, 20 Apr 2022 16:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650473269;
-        bh=ZFEnnoJ0V3bmUpNbtwzofwaKYze8ukC5EiqVvI8/chI=;
+        s=k20201202; t=1650473527;
+        bh=FC490u1W61U7N1WZsU8ZxxqqwdjaPJpwQjP4Ffy5Dec=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gFLKEXNI7atLTte+D+RjS5mY62ZGdhYdWUzcWdX5tyaAcvNeto4awO7jteIRXntTS
-         K+V+Lv9Fahx0ul8Hf49u5gf1QijaJunhK6dCn8ix/R7484RJtO+BlAH8/2JZyHXt5c
-         rb2w6FSwJg8xfPMBuiFLxZ6DehuBPrIFnhnn1fu7/Xys1nbMm+wb0X5e2hGZ8zyHHZ
-         he2IZVVKSzX/k3jYTPRbOn0XXJYeCjI0fcdiXWt2mBfA3QNd/w6uDWVN0yiavOwbIN
-         LzQiaqlQJuE4uHVZ0M5EUNULpQKbxiYTTL5cXMRPQmE8eSGZfXnFwIkzz86Wzi5tig
-         Gpz0prn917Acw==
+        b=VFfeqOvEoJa7DizXqbls1AKo0ueBd7D3h+OuaL+6LTQJFam8KtYRqkFcuYlbVKKs3
+         Nsmg6ZJKnI0dnNOTTNTPgN3OBLub9EknOVzRW+i6Yjh5kuuQjapnVNfx+PbEF+bh/e
+         RYxC4ITKgYEfkW1W7YhLNGi3EKI6jocd7W9sb+Ztxs7jAYa22Uu9TJOgLg8mxxiqOZ
+         102SepDDEHCtoEUJAD6/U9Mici9D056Bk+ocpQl73kvk90lsMYrr8KQQYBKjYGQSES
+         28VViaWhWCpfKX73xWb7RKu4jV4tXiO+5C/gPR+Cdykt4+KI2N/wJBcrsRSw/AtI8H
+         w//6zUTAkBI/A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 31D9F400B1; Wed, 20 Apr 2022 13:47:46 -0300 (-03)
-Date:   Wed, 20 Apr 2022 13:47:46 -0300
+        id 54752400B1; Wed, 20 Apr 2022 13:52:03 -0300 (-03)
+Date:   Wed, 20 Apr 2022 13:52:03 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     German Gomez <german.gomez@arm.com>,
-        Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, benh@kernel.crashing.org,
-        Nick.Forrington@arm.com, alexander.shishkin@linux.intel.com,
-        andrew.kilroy@arm.com, james.clark@arm.com, john.garry@huawei.com,
-        jolsa@kernel.org, kjain@linux.ibm.com, lihuafei1@huawei.com,
-        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v5 5/5] perf mem: Support mem_lvl_num in c2c command
-Message-ID: <YmA5MqWxxLCp1Nff@kernel.org>
-References: <20220408195344.32764-1-alisaidi@amazon.com>
- <20220408195344.32764-6-alisaidi@amazon.com>
- <3ad0128a-1b3d-37a7-81f6-fd597b565b18@arm.com>
- <20220420084823.GE843168@leoy-ThinkPad-X240s>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        chengdongli@tencent.com, adrian.hunter@intel.com,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: Re: [PATCH] perf/test: test case 71 fails on s390
+Message-ID: <YmA6M8mM44Hvv/jI@kernel.org>
+References: <20220420062921.1211825-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220420084823.GE843168@leoy-ThinkPad-X240s>
+In-Reply-To: <20220420062921.1211825-1-tmricht@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 20, 2022 at 04:48:23PM +0800, Leo Yan escreveu:
-> On Mon, Apr 11, 2022 at 11:04:28AM +0100, German Gomez wrote:
-> > 
-> > On 08/04/2022 20:53, Ali Saidi wrote:
-> > > In addition to summarizing data encoded in mem_lvl also support data
-> > > encoded in mem_lvl_num.
-> > >
-> > > Since other architectures don't seem to populate the mem_lvl_num field
-> > > here there shouldn't be a change in functionality.
-> > >
-> > > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> > > ---
-> > >  tools/perf/util/mem-events.c | 11 +++++++----
-> > >  1 file changed, 7 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> > > index ed0ab838bcc5..e5e405185498 100644
-> > > --- a/tools/perf/util/mem-events.c
-> > > +++ b/tools/perf/util/mem-events.c
-> > > @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
-> > >  	u64 daddr  = mi->daddr.addr;
-> > >  	u64 op     = data_src->mem_op;
-> > >  	u64 lvl    = data_src->mem_lvl;
-> > > +	u64 lnum   = data_src->mem_lvl_num;
-> > >  	u64 snoop  = data_src->mem_snoop;
-> > >  	u64 lock   = data_src->mem_lock;
-> > >  	u64 blk    = data_src->mem_blk;
-> > > @@ -527,16 +528,18 @@ do {				\
-> > >  			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
-> > >  			if (lvl & P(LVL, IO))  stats->ld_io++;
-> > >  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
-> > 
-> > Just for completion, can we also handle LFB as it seems to be being set
-> > in "/arch/x86/events/intel/ds.c"? (Sorry I missed this in the v4)
+Em Wed, Apr 20, 2022 at 08:29:21AM +0200, Thomas Richter escreveu:
+> Test case 71 'Convert perf time to TSC' is not supported on s390.
+> Subtest 71.1 is skipped with the correct message, but
+> subtest 71.2 is not skipped and fails.
 > 
-> With fixing LFB issue pointed by German, the change looks good to me:
+> The root cause is function evlist__open() called from
+> test__perf_time_to_tsc().  evlist__open() returns -ENOENT because the
+> event cycles:u is not supported by the selected PMU, for example 
+> platform s390 on z/VM or an x86_64 virtual machine.
+> The PMU driver returns -ENOENT in this case. This error is leads to
+> the failure.
+> Fix this by returning TEST_SKIP on -ENOENT.
 
-Waiting for a v6 then, please collect Leo's reviewed-by tag when
-submitting it.
+Thanks, applied and tested it on x86_64, where it continues to work.
 
 - Arnaldo
- 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> 
-> It would be appreciate if x86 or PowerPC maintainers could take a look
-> for this patch.  Thanks!
- 
 
-> Leo
+ 
+> Output before:
+>  71: Convert perf time to TSC:
+>  71.1: TSC support:             Skip (This architecture does not support)
+>  71.2: Perf time to TSC:        FAILED!
 > 
-> > > -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
-> > > -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-> > > -			if (lvl & P(LVL, L3 )) {
-> > > +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
-> > > +				stats->ld_l1hit++;
-> > > +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
-> > > +				stats->ld_l2hit++;
-> > > +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L3)) {
-> > >  				if (snoop & P(SNOOP, HITM))
-> > >  					HITM_INC(lcl_hitm);
-> > >  				else
-> > >  					stats->ld_llchit++;
-> > >  			}
-> > >  
-> > > -			if (lvl & P(LVL, LOC_RAM)) {
-> > > +			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
-> > >  				stats->lcl_dram++;
-> > >  				if (snoop & P(SNOOP, HIT))
-> > >  					stats->ld_shared++;
+> Output after:
+>  71: Convert perf time to TSC:
+>  71.1: TSC support:             Skip (This architecture does not support)
+>  71.2: Perf time to TSC:        Skip (perf_read_tsc_conversion is not supported)
+> 
+> This also happens on an x86_64 virtual machine:
+>    # uname -m
+>    x86_64
+>    $ ./perf test -F 71
+>     71: Convert perf time to TSC  :
+>     71.1: TSC support             : Ok
+>     71.2: Perf time to TSC        : FAILED!
+>    $ 
+> 
+> Fixes: 290fa68bdc45 ("perf test tsc: Fix error message when not supported")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> ---
+>  tools/perf/tests/perf-time-to-tsc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
+> index cc6df49a65a1..4ad0dfbc8b21 100644
+> --- a/tools/perf/tests/perf-time-to-tsc.c
+> +++ b/tools/perf/tests/perf-time-to-tsc.c
+> @@ -123,6 +123,10 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+>  		evsel->core.attr.enable_on_exec = 0;
+>  	}
+>  
+> +	if (evlist__open(evlist) == -ENOENT) {
+> +		err = TEST_SKIP;
+> +		goto out_err;
+> +	}
+>  	CHECK__(evlist__open(evlist));
+>  
+>  	CHECK__(evlist__mmap(evlist, UINT_MAX));
+> -- 
+> 2.35.1
 
 -- 
 
