@@ -2,103 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B8EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42755C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380746AbiDTQtb (ORCPT
+        id S1344581AbiDTQuj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 12:49:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
+        Wed, 20 Apr 2022 12:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380665AbiDTQtb (ORCPT
+        with ESMTP id S239724AbiDTQui (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 12:49:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C9943EC6;
-        Wed, 20 Apr 2022 09:46:44 -0700 (PDT)
+        Wed, 20 Apr 2022 12:50:38 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E69E4507F;
+        Wed, 20 Apr 2022 09:47:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 80ED761A5A;
-        Wed, 20 Apr 2022 16:46:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4640C385A0;
-        Wed, 20 Apr 2022 16:46:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 37FFBB81FB6;
+        Wed, 20 Apr 2022 16:47:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0C8C385A0;
+        Wed, 20 Apr 2022 16:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650473203;
-        bh=M/eh0tN0adhKymRZr8Sg04qzw3ToptEQdoWNVAjGWes=;
+        s=k20201202; t=1650473269;
+        bh=ZFEnnoJ0V3bmUpNbtwzofwaKYze8ukC5EiqVvI8/chI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q6w5Wosco2eQF0T3o3gv2Wdt+Fh5cOrvthXwclbS1+LtIjd9ELKM0x9yERkBeaAZ+
-         lmdmYmKs9HE1tGDcJLyqBceuucKKslN5tDhZdHvrxL6PbYuxO5m6ed6TyUGbeQ4mTP
-         5cr8Tg3GmLoQU6VK8f9Twv9LSb0VFv/WJd/nM4f2gdeEnxkc4jfY2wM+1cOwjCSBpP
-         MpTj1goiLkEMnd0HpEoI8gIHJ3L9u/5vo/d4In2sfxec3pE1pjx8FAGdstmFakJeHr
-         bv/BHU+ni2UzPOA/jhBNXulapVNkBxtgscBgnHki/08I+acpAGLtLNIjLBYLhO444d
-         z9gUruoYILcWg==
+        b=gFLKEXNI7atLTte+D+RjS5mY62ZGdhYdWUzcWdX5tyaAcvNeto4awO7jteIRXntTS
+         K+V+Lv9Fahx0ul8Hf49u5gf1QijaJunhK6dCn8ix/R7484RJtO+BlAH8/2JZyHXt5c
+         rb2w6FSwJg8xfPMBuiFLxZ6DehuBPrIFnhnn1fu7/Xys1nbMm+wb0X5e2hGZ8zyHHZ
+         he2IZVVKSzX/k3jYTPRbOn0XXJYeCjI0fcdiXWt2mBfA3QNd/w6uDWVN0yiavOwbIN
+         LzQiaqlQJuE4uHVZ0M5EUNULpQKbxiYTTL5cXMRPQmE8eSGZfXnFwIkzz86Wzi5tig
+         Gpz0prn917Acw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4CF42400B1; Wed, 20 Apr 2022 13:46:41 -0300 (-03)
-Date:   Wed, 20 Apr 2022 13:46:41 -0300
+        id 31D9F400B1; Wed, 20 Apr 2022 13:47:46 -0300 (-03)
+Date:   Wed, 20 Apr 2022 13:47:46 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Florian Fischer <florian.fischer@muhq.space>
-Cc:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCHSET v4 next 0/3] perf stat: add user_time and system_time
- tool events
-Message-ID: <YmA48V09iBbqy6su@kernel.org>
-References: <20220420102354.468173-1-florian.fischer@muhq.space>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     German Gomez <german.gomez@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, benh@kernel.crashing.org,
+        Nick.Forrington@arm.com, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, james.clark@arm.com, john.garry@huawei.com,
+        jolsa@kernel.org, kjain@linux.ibm.com, lihuafei1@huawei.com,
+        mark.rutland@arm.com, mathieu.poirier@linaro.org, mingo@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH v5 5/5] perf mem: Support mem_lvl_num in c2c command
+Message-ID: <YmA5MqWxxLCp1Nff@kernel.org>
+References: <20220408195344.32764-1-alisaidi@amazon.com>
+ <20220408195344.32764-6-alisaidi@amazon.com>
+ <3ad0128a-1b3d-37a7-81f6-fd597b565b18@arm.com>
+ <20220420084823.GE843168@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220420102354.468173-1-florian.fischer@muhq.space>
+In-Reply-To: <20220420084823.GE843168@leoy-ThinkPad-X240s>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 20, 2022 at 12:23:51PM +0200, Florian Fischer escreveu:
-> This patch series adds new internal events to perf stat exposing the times spend
-> in user and kernel mode in nanoseconds reported by rusage.
+Em Wed, Apr 20, 2022 at 04:48:23PM +0800, Leo Yan escreveu:
+> On Mon, Apr 11, 2022 at 11:04:28AM +0100, German Gomez wrote:
+> > 
+> > On 08/04/2022 20:53, Ali Saidi wrote:
+> > > In addition to summarizing data encoded in mem_lvl also support data
+> > > encoded in mem_lvl_num.
+> > >
+> > > Since other architectures don't seem to populate the mem_lvl_num field
+> > > here there shouldn't be a change in functionality.
+> > >
+> > > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> > > ---
+> > >  tools/perf/util/mem-events.c | 11 +++++++----
+> > >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+> > > index ed0ab838bcc5..e5e405185498 100644
+> > > --- a/tools/perf/util/mem-events.c
+> > > +++ b/tools/perf/util/mem-events.c
+> > > @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
+> > >  	u64 daddr  = mi->daddr.addr;
+> > >  	u64 op     = data_src->mem_op;
+> > >  	u64 lvl    = data_src->mem_lvl;
+> > > +	u64 lnum   = data_src->mem_lvl_num;
+> > >  	u64 snoop  = data_src->mem_snoop;
+> > >  	u64 lock   = data_src->mem_lock;
+> > >  	u64 blk    = data_src->mem_blk;
+> > > @@ -527,16 +528,18 @@ do {				\
+> > >  			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
+> > >  			if (lvl & P(LVL, IO))  stats->ld_io++;
+> > >  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
+> > 
+> > Just for completion, can we also handle LFB as it seems to be being set
+> > in "/arch/x86/events/intel/ds.c"? (Sorry I missed this in the v4)
 > 
-> During some benchmarking using perf it bothered me that I could not easily
-> retrieve those times from perf stat when using the machine readable output.
-> 
-> But perf definitely knows about those values because in the human readable output
-> they are present.
-> 
-> Therefore I exposed the times reported by rusage via the new tool events:
-> user_time and system_time.
-> 
-> This allows to retrieved them in machine-readable output:
-> 
-> $ ./perf stat -x, -e duration_time,user_time,system_time,cache-misses -- grep -q -r duration_time tools/perf
-> 72134524,ns,duration_time:u,72134524,100.00,,
-> 65225000,ns,user_time:u,65225000,100.00,,
-> 6865000,ns,ssystem_time:u,6865000,100.00,,
-> 38705,,cache-misses:u,71189328,100.00,,
-> 
-> The changes are mostly inspired by the code for the only other available
-> tool event: 'duration_time'.
-> 
-> For now the new user_time and system_time events are not usable with metrics
-> (as far as I understand).
-> 
-> The patch applies cleanly on linux-next/next-20220420.
+> With fixing LFB issue pointed by German, the change looks good to me:
 
-I tested and applied the first two patches, please take a look at that
-"OR" problem with patch 3.
+Waiting for a v6 then, please collect Leo's reviewed-by tag when
+submitting it.
 
 - Arnaldo
  
-> [PATCH v4 1/3] perf stat: introduce stats for the user and system
-> [PATCH v4 2/3] perf stat: add user_time and system_time events
-> [PATCH v4 3/3] perf list: print all available tool events
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
 > 
-> [v2]: Split up the changes into separate commits.
+> It would be appreciate if x86 or PowerPC maintainers could take a look
+> for this patch.  Thanks!
+ 
+
+> Leo
 > 
-> [v3]: * Use nanoseconds as suggested by Xing Zhengjun.
->       * Squash [PATCH v2 2/4] and [PATCH v2 4/4], because it only adds the unit string.
-> 
-> [v4]: * Simplify event names to only user_time and system_time as suggested by Ian Rogers.
-> 
-> Florian Fischer
+> > > -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
+> > > -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
+> > > -			if (lvl & P(LVL, L3 )) {
+> > > +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
+> > > +				stats->ld_l1hit++;
+> > > +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
+> > > +				stats->ld_l2hit++;
+> > > +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L3)) {
+> > >  				if (snoop & P(SNOOP, HITM))
+> > >  					HITM_INC(lcl_hitm);
+> > >  				else
+> > >  					stats->ld_llchit++;
+> > >  			}
+> > >  
+> > > -			if (lvl & P(LVL, LOC_RAM)) {
+> > > +			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
+> > >  				stats->lcl_dram++;
+> > >  				if (snoop & P(SNOOP, HIT))
+> > >  					stats->ld_shared++;
+
+-- 
+
+- Arnaldo
