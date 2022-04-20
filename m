@@ -2,172 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A421DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 14:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647D9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344885AbiDTOrZ (ORCPT
+        id S1380638AbiDTQf6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 10:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46270 "EHLO
+        Wed, 20 Apr 2022 12:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379751AbiDTOrX (ORCPT
+        with ESMTP id S1380629AbiDTQf5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 10:47:23 -0400
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C85F5427C6;
-        Wed, 20 Apr 2022 07:44:35 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VAaWWIp_1650465867;
-Received: from 30.30.111.41(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0VAaWWIp_1650465867)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 20 Apr 2022 22:44:30 +0800
-Message-ID: <9f137001-276d-0c7c-d0f3-1d0a34355f4c@linux.alibaba.com>
-Date:   Wed, 20 Apr 2022 22:44:27 +0800
+        Wed, 20 Apr 2022 12:35:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5709045059;
+        Wed, 20 Apr 2022 09:33:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E2B6461A15;
+        Wed, 20 Apr 2022 16:33:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D66C385A0;
+        Wed, 20 Apr 2022 16:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650472389;
+        bh=wr6KymuokZiq5D+EA0KfoyTNbKFzF4PNNrn62/cCrPE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mXbZZuE7srfXYXLTVeq34k2nN2rLZ277bSG+ipX5oi4lNxHIf9GlRETphFHHdF7Rz
+         ut4E/hh+qS3eTqb2IW39fxbVo7LWJr7eUGVgTFn+AdK6W9PeBbyluLWVFvm2zwl4oG
+         MjZVnZM7S4R+/xCHNDFESDAyYc56jx9gM8by4CNtArOWEbctFYDU8FkC9760MnOl1v
+         UrOHvwChWyEQW/5wAss1SzzoYqpR4EqcVwffzWdNUINLYl9Wm1hQgMCUrs31K/Dgol
+         HVx/wRBHbtWZCtKe69Xj3RbxDHpfInvawiImXdzwEcc6v6mPKkWKUg7P4hPgMl4bFe
+         ipnf81Wu9kvxg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2A438400B1; Wed, 20 Apr 2022 13:33:06 -0300 (-03)
+Date:   Wed, 20 Apr 2022 13:33:06 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
+Cc:     gcc-patches@gcc.gnu.org, linux-perf-users@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Add HAVE_DEBUGINFOD_SUPPORT to built-in features.
+Message-ID: <YmA1wvsHjKyjK6Mg@kernel.org>
+References: <0d1c5ace-88e8-7102-1565-7c143f01a966@suse.cz>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.8.0
-From:   Wen Yang <wenyang@linux.alibaba.com>
-Subject: Re: [RESEND PATCH 2/2] perf/x86: improve the event scheduling to
- avoid unnecessary pmu_stop/start
-To:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Wen Yang <simon.wy@alibaba-inc.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        mark rutland <mark.rutland@arm.com>,
-        jiri olsa <jolsa@redhat.com>,
-        namhyung kim <namhyung@kernel.org>,
-        borislav petkov <bp@alien8.de>, x86@kernel.org,
-        "h. peter anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220304110351.47731-1-simon.wy@alibaba-inc.com>
- <20220304110351.47731-2-simon.wy@alibaba-inc.com>
- <YiIyrFn7upPEouVt@hirez.programming.kicks-ass.net>
- <0c119da1-053b-a2d6-1579-8fb09dbe8e63@linux.alibaba.com>
- <YidREXNn2AtI3V1c@hirez.programming.kicks-ass.net>
- <271bc186-7ffb-33c8-4934-cda2beb94816@linux.alibaba.com>
- <Yi8fELo+k9gmkJIa@hirez.programming.kicks-ass.net>
- <05861b8c-2c7c-ae89-613a-41fcace6a174@linux.alibaba.com>
- <e50c5307-8b2d-9338-0acc-9375b76c211d@linux.alibaba.com>
- <c33fd91c-8f8f-c82f-4e03-8799f3b8cd28@linux.alibaba.com>
- <20220419205738.GZ2731@worktop.programming.kicks-ass.net>
- <CABPqkBSnJcioAeppPXtURu9+qSFpompWMrs-A=FdD76a6-+S8A@mail.gmail.com>
-In-Reply-To: <CABPqkBSnJcioAeppPXtURu9+qSFpompWMrs-A=FdD76a6-+S8A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0d1c5ace-88e8-7102-1565-7c143f01a966@suse.cz>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2022/4/20 上午5:18, Stephane Eranian 写道:
-> Hi,
+Em Wed, Apr 20, 2022 at 01:30:09PM +0200, Martin Liška escreveu:
+> The change adds debuginfod to ./perf -vv:
 > 
-> Going back to the original description of this patch 2/2, it seems the
-> problem was that you expected PINNED events to always remain in
-> the same counters. This is NOT what the interface guarantees. A pinned
-> event is guaranteed to either be on a counter or in error state if active.
-> But while active the event can change counters because of event scheduling
-> and this is fine. The kernel only computes deltas of the raw counter. If you
-> are using the read() syscall to extract a value, then this is totally
-> transparent
-> and you will see no jumps. If you are instead using RDPMC, then you cannot
-> assume the counter index of a pinned event remains the same. If you do, then
-> yes, you will see discrepancies in the count returned by RDPMC.  You cannot
-> just use RDPMC to read a counter from user space. You need kernel help.
-> The info you need is in the page you must mmap on the fd of the event. It
-> shows the current counter index of the event along with sequence number and
-> timing to help scale the count if necessary. This proper loop for
-> RDPMC is documented
-> in include/uapi/linux/perf_event.h inside the perf_event_mmap_page definition.
+> ...
+> debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
+> ...
+
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> Signed-off-by: Martin Liska <mliska@suse.cz>
+> ---
+>  tools/perf/builtin-version.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> As for TFA, it is not clear to me why this is a problem unless you
-> have the RDPMC problem
-> I described above.
-> 
+> diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+> index 9cd074a3d825..a71f491224da 100644
+> --- a/tools/perf/builtin-version.c
+> +++ b/tools/perf/builtin-version.c
+> @@ -65,6 +65,7 @@ static void library_status(void)
+>  #endif
+>  	STATUS(HAVE_SYSCALL_TABLE_SUPPORT, syscall_table);
+>  	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
+> +	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
+>  	STATUS(HAVE_LIBELF_SUPPORT, libelf);
+>  	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
+>  	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
+> -- 
+> 2.35.3
 
-Thank you for your comments.
+-- 
 
-Our scenario is: all four GP are used up, and the abnormal PMC3 counter 
-is observed on several machines. In addition, the kernel version is 
-4.9/4.19.
-
-After we encountered the problem of abnormal CPI data a few months ago, 
-we checked all kinds of applications according to your suggestions here 
-and finally determined that they all comply with the specifications in 
-include/uapi/linux/perf_event.h.
-
-After a long experiment, it was found that this problem was caused by TFA:
-
-When Restricted Transactional Memory (RTM) is supported 
-(CPUID.07H.EBX.RTM [bit 11] = 1) and CPUID.07H.EDX[bit 13]=1 and 
-TSX_FORCE_ABORT[RTM_FORCE_ABORT]=0 (described later in this document), 
-then Performance Monitor Unit (PMU) general purpose counter 3 
-(IA32_PMC3, MSR C4H and IA32_A_PMC3, MSR 4C4H) may contain unexpected 
-values. Specifically, IA32_PMC3 (MSR C4H), IA32_PERF_GLOBAL_CTRL[3] (MSR 
-38FH) and IA32_PERFEVTSEL3 (MSR 189H) may contain unexpected values, 
-which also affects IA32_A_PMC3 (MSR 4C4H) and IA32_PERF_GLOBAL_INUSE[3] 
-(MSR 392H).
---> from 
-https://www.intel.com/content/dam/support/us/en/documents/processors/Performance-Monitoring-Impact-of-TSX-Memory-Ordering-Issue-604224.pdf
-
-We also submitted an IPS to Intel:
-https://premiersupport.intel.com/IPS/5003b00001fqdhaAAA
-
-For the latest kernel, this issue could be handled by the following commit:
-400816f60c54 perf/x86/intel:  ("Implement support for TSX Force Abort")
-
-However, many production environments are 4.9, 4.19, or even 3.10 
-kernel, which do not contain the above commit, and it is difficult to 
-make hotfix from this commit, so these kernels will be affected by this 
-problem.
-
-This patch 2/2 attempts to avoid the switching of the pmu counters in 
-various perf_events, so the special behavior of a single pmu counter 
-(eg, PMC3 here) will not be propagated to other events. We also made 
-hotfix from it and verified it on some machines.
-
-Please have another look.
-Thanks
-
---
-Best wishes,
-Wen
-
-
-> 
-> On Tue, Apr 19, 2022 at 1:57 PM Peter Zijlstra <peterz@infradead.org> wrote:
->>
->> On Tue, Apr 19, 2022 at 10:16:12PM +0800, Wen Yang wrote:
->>> We finally found that TFA (TSX Force Abort) may affect PMC3's behavior,
->>> refer to the following patch:
->>>
->>> 400816f60c54 perf/x86/intel:  ("Implement support for TSX Force Abort")
->>>
->>> When the MSR gets set; the microcode will no longer use PMC3 but will
->>> Force Abort every TSX transaction (upon executing COMMIT).
->>>
->>> When TSX Force Abort (TFA) is allowed (default); the MSR gets set when
->>> PMC3 gets scheduled and cleared when, after scheduling, PMC3 is
->>> unused.
->>>
->>> When TFA is not allowed; clear PMC3 from all constraints such that it
->>> will not get used.
->>>
->>>
->>>>
->>>> However, this patch attempts to avoid the switching of the pmu counters
->>>> in various perf_events, so the special behavior of a single pmu counter
->>>> will not be propagated to other events.
->>>>
->>>
->>> Since PMC3 may have special behaviors, the continuous switching of PMU
->>> counters may not only affects the performance, but also may lead to abnormal
->>> data, please consider this patch again.
->>
->> I'm not following. How do you get abnormal data?
->>
->> Are you using RDPMC from userspace? If so, are you following the
->> prescribed logic using the self-monitoring interface?
+- Arnaldo
