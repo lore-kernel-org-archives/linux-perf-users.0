@@ -2,86 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647D9C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1A7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380638AbiDTQf6 (ORCPT
+        id S1355207AbiDTQhQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 12:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42302 "EHLO
+        Wed, 20 Apr 2022 12:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380629AbiDTQf5 (ORCPT
+        with ESMTP id S1351893AbiDTQhP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 12:35:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5709045059;
-        Wed, 20 Apr 2022 09:33:10 -0700 (PDT)
+        Wed, 20 Apr 2022 12:37:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E44DC44A14;
+        Wed, 20 Apr 2022 09:34:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E2B6461A15;
-        Wed, 20 Apr 2022 16:33:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D66C385A0;
-        Wed, 20 Apr 2022 16:33:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9997BB82043;
+        Wed, 20 Apr 2022 16:34:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A3DFC385A1;
+        Wed, 20 Apr 2022 16:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650472389;
-        bh=wr6KymuokZiq5D+EA0KfoyTNbKFzF4PNNrn62/cCrPE=;
+        s=k20201202; t=1650472466;
+        bh=6dOodVlqYYemmOJ8+Jo4pQMwH/KjxBbts+kyWpeDKbM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mXbZZuE7srfXYXLTVeq34k2nN2rLZ277bSG+ipX5oi4lNxHIf9GlRETphFHHdF7Rz
-         ut4E/hh+qS3eTqb2IW39fxbVo7LWJr7eUGVgTFn+AdK6W9PeBbyluLWVFvm2zwl4oG
-         MjZVnZM7S4R+/xCHNDFESDAyYc56jx9gM8by4CNtArOWEbctFYDU8FkC9760MnOl1v
-         UrOHvwChWyEQW/5wAss1SzzoYqpR4EqcVwffzWdNUINLYl9Wm1hQgMCUrs31K/Dgol
-         HVx/wRBHbtWZCtKe69Xj3RbxDHpfInvawiImXdzwEcc6v6mPKkWKUg7P4hPgMl4bFe
-         ipnf81Wu9kvxg==
+        b=Lif7pDUAWBG+r/5eb+R4QoGwfqcNYXeGVSwHqYGhoRm/Erol75XzYSXDdFcxXKVIV
+         YtBEdw+yKpH2B4AwYXZ8yHu0AbjZKaUSaYzBwnlYbvwiSqadtbM7mKAucLXNdhTyAQ
+         xatDZkVnlPQn95oe3DLIh21HKsQPLEW8ob7bkHo1GZ2ANIXUg6OjSA9o78LFjpuRvu
+         zoQjbCM886cG6Pg9mPfmnXYYV0tA98duqSIMe+qqx5Q/ajifsT35l/Ajdw2RGJhmaV
+         RNLtonTaMn9KAg4mnF45hf5ELW1MN/KZZyBkxaGVkC+CR9AnXHif84gRwl1TgsZ6a1
+         YP3RbAbeYb99A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2A438400B1; Wed, 20 Apr 2022 13:33:06 -0300 (-03)
-Date:   Wed, 20 Apr 2022 13:33:06 -0300
+        id 87F9A400B1; Wed, 20 Apr 2022 13:34:23 -0300 (-03)
+Date:   Wed, 20 Apr 2022 13:34:23 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
-Cc:     gcc-patches@gcc.gnu.org, linux-perf-users@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Add HAVE_DEBUGINFOD_SUPPORT to built-in features.
-Message-ID: <YmA1wvsHjKyjK6Mg@kernel.org>
-References: <0d1c5ace-88e8-7102-1565-7c143f01a966@suse.cz>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH] perf: print warning when HAVE_DEBUGINFOD_SUPPORT is not
+ set
+Message-ID: <YmA2D04uy5ijwe1c@kernel.org>
+References: <35bae747-3951-dc3d-a66b-abf4cebcd9cb@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0d1c5ace-88e8-7102-1565-7c143f01a966@suse.cz>
+In-Reply-To: <35bae747-3951-dc3d-a66b-abf4cebcd9cb@suse.cz>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 20, 2022 at 01:30:09PM +0200, Martin Liška escreveu:
-> The change adds debuginfod to ./perf -vv:
+Em Wed, Apr 20, 2022 at 03:32:55PM +0200, Martin Liška escreveu:
+> When one requests debuginfod, either via --debuginfod option, or
+> with a perf-config value, complain when perf is not built with it.
 > 
-> ...
-> debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
-> ...
-
-Thanks, applied.
-
-- Arnaldo
-
- 
 > Signed-off-by: Martin Liska <mliska@suse.cz>
+
+I'll go and apply this manually:
+
+⬢[acme@toolbox perf]$ am
+warning: Patch sent with format=flowed; space at the end of lines might be lost.
+Applying: perf: print warning when HAVE_DEBUGINFOD_SUPPORT is not set
+error: corrupt patch at line 19
+Patch failed at 0001 perf: print warning when HAVE_DEBUGINFOD_SUPPORT is not set
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+⬢[acme@toolbox perf]$ git am --abort
+⬢[acme@toolbox perf]$ vim ~/wb/1.patch
+⬢[acme@toolbox perf]$ patch -p1 < ~/wb/1.patch
+patching file tools/perf/util/util.c
+Hunk #1 FAILED at 430.
+1 out of 1 hunk FAILED -- saving rejects to file tools/perf/util/util.c.rej
+⬢[acme@toolbox perf]$ git diff
+⬢[acme@toolbox perf]$
+⬢[acme@toolbox perf]$ cat tools/perf/util/util.c.rej
+--- tools/perf/util/util.c
++++ tools/perf/util/util.c
+@@ -430,4 +430,9 @@ void perf_debuginfod_setup(struct perf_debuginfod *di)
+  		setenv("DEBUGINFOD_URLS", di->urls, 1);
+
+  	pr_debug("DEBUGINFOD_URLS=%s\n", getenv("DEBUGINFOD_URLS"));
++
++#ifndef HAVE_DEBUGINFOD_SUPPORT
++	if (di->set)
++		pr_warning("WARNING: debuginfod support requested, but perf is not built with it\n");
++#endif
+  }
+⬢[acme@toolbox perf]$
+
 > ---
->  tools/perf/builtin-version.c | 1 +
->  1 file changed, 1 insertion(+)
+>  tools/perf/util/util.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-> index 9cd074a3d825..a71f491224da 100644
-> --- a/tools/perf/builtin-version.c
-> +++ b/tools/perf/builtin-version.c
-> @@ -65,6 +65,7 @@ static void library_status(void)
->  #endif
->  	STATUS(HAVE_SYSCALL_TABLE_SUPPORT, syscall_table);
->  	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
-> +	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
->  	STATUS(HAVE_LIBELF_SUPPORT, libelf);
->  	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
->  	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
+> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+> index fb4f6616b5fa..289d83baaa2f 100644
+> --- a/tools/perf/util/util.c
+> +++ b/tools/perf/util/util.c
+> @@ -430,4 +430,9 @@ void perf_debuginfod_setup(struct perf_debuginfod *di)
+>  		setenv("DEBUGINFOD_URLS", di->urls, 1);
+>  	pr_debug("DEBUGINFOD_URLS=%s\n", getenv("DEBUGINFOD_URLS"));
+> +
+> +#ifndef HAVE_DEBUGINFOD_SUPPORT
+> +	if (di->set)
+> +		pr_warning("WARNING: debuginfod support requested, but perf is not built with it\n");
+> +#endif
+>  }
 > -- 
 > 2.35.3
 
