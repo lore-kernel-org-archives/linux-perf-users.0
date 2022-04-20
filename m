@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC14EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B8EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380745AbiDTQr2 (ORCPT
+        id S1380746AbiDTQtb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 12:47:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56114 "EHLO
+        Wed, 20 Apr 2022 12:49:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380737AbiDTQrX (ORCPT
+        with ESMTP id S1380665AbiDTQtb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 12:47:23 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECFB4666B;
-        Wed, 20 Apr 2022 09:44:36 -0700 (PDT)
+        Wed, 20 Apr 2022 12:49:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C9943EC6;
+        Wed, 20 Apr 2022 09:46:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 756ADB81FB6;
-        Wed, 20 Apr 2022 16:44:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBE9C385A1;
-        Wed, 20 Apr 2022 16:44:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 80ED761A5A;
+        Wed, 20 Apr 2022 16:46:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4640C385A0;
+        Wed, 20 Apr 2022 16:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650473074;
-        bh=y7SdXt71n1BDdaDOsWRdrF7usDyjXHRWkjywHnzgDqc=;
+        s=k20201202; t=1650473203;
+        bh=M/eh0tN0adhKymRZr8Sg04qzw3ToptEQdoWNVAjGWes=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mcYpeSpyz+Y5b9DgPgyl3EQQrzBuMqa9nlzseC6A5isszBQ3P7vvbNroi56n3uCfn
-         4l8x5tuRMQgIFg6XaWykmPEFvyF/I8Zv8Au3raRqYwL2zN4U4OjORKXUrdVYVLZr7p
-         eSRPrlTzt1bOVJiwj/ItdoIC6V/YA6wU6eWoGVZJjysVE59k2zZh4oKiZORL04RA/X
-         sqQW0pdn4k73AddP26D6v9EYusnGzsiqUkXpYrSxzll6FfQ0MGtwC2eZVqBOtzjaq3
-         DPbx5SySMY2w5WXzskYVWGv7ShQmKiej2hL7ealfSEZ/BConwtNTd+s0LR8DP5d9/c
-         FuHTkpFhC5XlA==
+        b=q6w5Wosco2eQF0T3o3gv2Wdt+Fh5cOrvthXwclbS1+LtIjd9ELKM0x9yERkBeaAZ+
+         lmdmYmKs9HE1tGDcJLyqBceuucKKslN5tDhZdHvrxL6PbYuxO5m6ed6TyUGbeQ4mTP
+         5cr8Tg3GmLoQU6VK8f9Twv9LSb0VFv/WJd/nM4f2gdeEnxkc4jfY2wM+1cOwjCSBpP
+         MpTj1goiLkEMnd0HpEoI8gIHJ3L9u/5vo/d4In2sfxec3pE1pjx8FAGdstmFakJeHr
+         bv/BHU+ni2UzPOA/jhBNXulapVNkBxtgscBgnHki/08I+acpAGLtLNIjLBYLhO444d
+         z9gUruoYILcWg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3208D400B1; Wed, 20 Apr 2022 13:44:31 -0300 (-03)
-Date:   Wed, 20 Apr 2022 13:44:31 -0300
+        id 4CF42400B1; Wed, 20 Apr 2022 13:46:41 -0300 (-03)
+Date:   Wed, 20 Apr 2022 13:46:41 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Florian Fischer <florian.fischer@muhq.space>
 Cc:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
@@ -43,172 +43,62 @@ Cc:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
         linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v4 3/3] perf list: print all available tool events
-Message-ID: <YmA4byoEa3QBNeST@kernel.org>
+Subject: Re: [PATCHSET v4 next 0/3] perf stat: add user_time and system_time
+ tool events
+Message-ID: <YmA48V09iBbqy6su@kernel.org>
 References: <20220420102354.468173-1-florian.fischer@muhq.space>
- <20220420102354.468173-4-florian.fischer@muhq.space>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220420102354.468173-4-florian.fischer@muhq.space>
+In-Reply-To: <20220420102354.468173-1-florian.fischer@muhq.space>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 20, 2022 at 12:23:54PM +0200, Florian Fischer escreveu:
-> Introduce names for the new tool events 'user_time' and 'system_time'.
+Em Wed, Apr 20, 2022 at 12:23:51PM +0200, Florian Fischer escreveu:
+> This patch series adds new internal events to perf stat exposing the times spend
+> in user and kernel mode in nanoseconds reported by rusage.
+> 
+> During some benchmarking using perf it bothered me that I could not easily
+> retrieve those times from perf stat when using the machine readable output.
+> 
+> But perf definitely knows about those values because in the human readable output
+> they are present.
+> 
+> Therefore I exposed the times reported by rusage via the new tool events:
+> user_time and system_time.
+> 
+> This allows to retrieved them in machine-readable output:
+> 
+> $ ./perf stat -x, -e duration_time,user_time,system_time,cache-misses -- grep -q -r duration_time tools/perf
+> 72134524,ns,duration_time:u,72134524,100.00,,
+> 65225000,ns,user_time:u,65225000,100.00,,
+> 6865000,ns,ssystem_time:u,6865000,100.00,,
+> 38705,,cache-misses:u,71189328,100.00,,
+> 
+> The changes are mostly inspired by the code for the only other available
+> tool event: 'duration_time'.
+> 
+> For now the new user_time and system_time events are not usable with metrics
+> (as far as I understand).
+> 
+> The patch applies cleanly on linux-next/next-20220420.
 
-Before:
-
-  duration_time                                      [Tool event]
-
-After:
-
-$ perf list | grep Tool
-  duration_time OR                                   [Tool event]
-  user_time OR                                       [Tool event]
-  system_time OR                                     [Tool event]
-$ 
-
-So now we have that extraneous "OR", can you please take a look?
-Probably needs to check if there is an alias?
+I tested and applied the first two patches, please take a look at that
+"OR" problem with patch 3.
 
 - Arnaldo
  
-> Signed-off-by: Florian Fischer <florian.fischer@muhq.space>
-> ---
->  tools/perf/util/evsel.c        | 19 ++++++++++------
->  tools/perf/util/evsel.h        |  1 +
->  tools/perf/util/parse-events.c | 40 +++++++++++++++++++++++++++++-----
->  3 files changed, 47 insertions(+), 13 deletions(-)
+> [PATCH v4 1/3] perf stat: introduce stats for the user and system
+> [PATCH v4 2/3] perf stat: add user_time and system_time events
+> [PATCH v4 3/3] perf list: print all available tool events
 > 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 2a1729e7aee4..d38722560e80 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -597,6 +597,17 @@ static int evsel__sw_name(struct evsel *evsel, char *bf, size_t size)
->  	return r + evsel__add_modifiers(evsel, bf + r, size - r);
->  }
->  
-> +const char *evsel__tool_names[PERF_TOOL_MAX] = {
-> +	"duration_time",
-> +	"user_time",
-> +	"system_time",
-> +};
-> +
-> +static int evsel__tool_name(enum perf_tool_event ev, char *bf, size_t size)
-> +{
-> +	return scnprintf(bf, size, "%s", evsel__tool_names[ev]);
-> +}
-> +
->  static int __evsel__bp_name(char *bf, size_t size, u64 addr, u64 type)
->  {
->  	int r;
-> @@ -723,12 +734,6 @@ static int evsel__raw_name(struct evsel *evsel, char *bf, size_t size)
->  	return ret + evsel__add_modifiers(evsel, bf + ret, size - ret);
->  }
->  
-> -static int evsel__tool_name(char *bf, size_t size)
-> -{
-> -	int ret = scnprintf(bf, size, "duration_time");
-> -	return ret;
-> -}
-> -
->  const char *evsel__name(struct evsel *evsel)
->  {
->  	char bf[128];
-> @@ -754,7 +759,7 @@ const char *evsel__name(struct evsel *evsel)
->  
->  	case PERF_TYPE_SOFTWARE:
->  		if (evsel->tool_event)
-> -			evsel__tool_name(bf, sizeof(bf));
-> +			evsel__tool_name(evsel->tool_event, bf, sizeof(bf));
->  		else
->  			evsel__sw_name(evsel, bf, sizeof(bf));
->  		break;
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 7e2209b47b39..45d674812239 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -262,6 +262,7 @@ extern const char *evsel__hw_cache_op[PERF_COUNT_HW_CACHE_OP_MAX][EVSEL__MAX_ALI
->  extern const char *evsel__hw_cache_result[PERF_COUNT_HW_CACHE_RESULT_MAX][EVSEL__MAX_ALIASES];
->  extern const char *evsel__hw_names[PERF_COUNT_HW_MAX];
->  extern const char *evsel__sw_names[PERF_COUNT_SW_MAX];
-> +extern const char *evsel__tool_names[PERF_TOOL_MAX];
->  extern char *evsel__bpf_counter_events;
->  bool evsel__match_bpf_counter_events(const char *name);
->  
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 064ec368a90b..c0e88d3b3e3c 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -154,6 +154,21 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
->  	},
->  };
->  
-> +struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
-> +	[PERF_TOOL_DURATION_TIME] = {
-> +		.symbol = "duration_time",
-> +		.alias  = "",
-> +	},
-> +	[PERF_TOOL_USER_TIME] = {
-> +		.symbol = "user_time",
-> +		.alias  = "",
-> +	},
-> +	[PERF_TOOL_SYSTEM_TIME] = {
-> +		.symbol = "system_time",
-> +		.alias  = "",
-> +	},
-> +};
-> +
->  #define __PERF_EVENT_FIELD(config, name) \
->  	((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
->  
-> @@ -3058,21 +3073,34 @@ int print_hwcache_events(const char *event_glob, bool name_only)
->  	return evt_num;
->  }
->  
-> -static void print_tool_event(const char *name, const char *event_glob,
-> +static void print_tool_event(const struct event_symbol *syms, const char *event_glob,
->  			     bool name_only)
->  {
-> -	if (event_glob && !strglobmatch(name, event_glob))
-> +	if (syms->symbol == NULL)
-> +		return;
-> +
-> +	if (event_glob && !(strglobmatch(syms->symbol, event_glob) ||
-> +	      (syms->alias && strglobmatch(syms->alias, event_glob))))
->  		return;
-> +
->  	if (name_only)
-> -		printf("%s ", name);
-> -	else
-> +		printf("%s ", syms->symbol);
-> +	else {
-> +		char name[MAX_NAME_LEN];
-> +		if (syms->alias)
-> +			snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
-> +		else
-> +			strlcpy(name, syms->symbol, MAX_NAME_LEN);
->  		printf("  %-50s [%s]\n", name, "Tool event");
-> -
-> +	}
->  }
->  
->  void print_tool_events(const char *event_glob, bool name_only)
->  {
-> -	print_tool_event("duration_time", event_glob, name_only);
-> +	// Start at 1 because the first enum entry symbols no tool event
-> +	for (int i = 1; i < PERF_TOOL_MAX; ++i) {
-> +		print_tool_event(event_symbols_tool + i, event_glob, name_only);
-> +	}
->  	if (pager_in_use())
->  		printf("\n");
->  }
-> -- 
-> 2.36.0
-
--- 
-
-- Arnaldo
+> [v2]: Split up the changes into separate commits.
+> 
+> [v3]: * Use nanoseconds as suggested by Xing Zhengjun.
+>       * Squash [PATCH v2 2/4] and [PATCH v2 4/4], because it only adds the unit string.
+> 
+> [v4]: * Simplify event names to only user_time and system_time as suggested by Ian Rogers.
+> 
+> Florian Fischer
