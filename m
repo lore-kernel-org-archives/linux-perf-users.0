@@ -2,169 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ECDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 05:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBCBC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 06:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351066AbiDTFds (ORCPT
+        id S1343738AbiDTGc5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 01:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
+        Wed, 20 Apr 2022 02:32:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231815AbiDTFdq (ORCPT
+        with ESMTP id S241754AbiDTGc5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 01:33:46 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEFF611C02;
-        Tue, 19 Apr 2022 22:31:01 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id e1so339542ile.2;
-        Tue, 19 Apr 2022 22:31:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nuxxapEs+M5yK26jsf4JOVoP3RaTp9CaYMXH3Qi7BnM=;
-        b=m6n3UDbwyYseWE0m3xwpSMxKMAQg7O+DYd9PY3jsVi5Vt8MdUMbWJ5BbMgjz0BLkQ1
-         6Osczxl3Rx/2WnIhaqf6d9NB5vc/zN8cbIgGWqTn3AEhUMtf7gayYr6k7Kz1HHAu+IDx
-         RryeOpN5H73JSax+jCknmY3/7vRPK+Dz/WFiARIiO5lNp9WGmRga4xIyGu5FbV0AYlrs
-         y+184FwL3curFzsFKWcKpxIWZG91jaRxAIL4HoWCbe0taLf3STJYeregu81oeOsa53GW
-         8YNXEdmBN9ENyp48LIRZ430fKDfP1u20700D9cvnx2hUbmxqf/2yb0g31yHtrM4o5TDI
-         QZBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nuxxapEs+M5yK26jsf4JOVoP3RaTp9CaYMXH3Qi7BnM=;
-        b=qP4w+zmwBtAzbpSnIjH8ahh3WsQRqj1vGEFjTYzff7TYEH6jeKXq7YKtXfhF7IrWmm
-         7SEESOPw90/MsHsPML0CgXuY+VeoCDHUE7CZNEg2ZjtPYljc9+GZ1AGmjtR4TYCzT0US
-         ZLenKkFvbtztsuOBopiRqEWX6h67IIFOWXsDpZXIChMtS2lK+ieFB9uRTsQmwEDn2xMW
-         2z6BUGHxZsgNlYm44CVHPwjta2GkmrWuSxpnPG623Jb2kwzp2JD1GHTSW0rI+yviq8Yl
-         fhjbbFRKXhDFWhwnnH+tgYxTBGvnU8DYh7pLI2G97ilzdSDM5coLeQ/lK0vzSi4KDekR
-         BDkA==
-X-Gm-Message-State: AOAM53106cEJs8qoVPhRDn2hmGr1skCd1yAGt5x4tjEryj4QhLyg5lVg
-        OmYdp98ZCQPczRmL10/Z8/yydvovYa1x5a9lX0k=
-X-Google-Smtp-Source: ABdhPJzzqRVICUIJZyiBou/6sakX22tJlgAFvBTlOQOgOFFGsk6sXr6KK0CLtFM+CVx9UoVb7o+5cVtuaFR3tpGT4Mg=
-X-Received: by 2002:a92:6406:0:b0:2bb:f1de:e13e with SMTP id
- y6-20020a926406000000b002bbf1dee13emr8064445ilb.305.1650432661257; Tue, 19
- Apr 2022 22:31:01 -0700 (PDT)
+        Wed, 20 Apr 2022 02:32:57 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF7F11C0A;
+        Tue, 19 Apr 2022 23:30:11 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23K5gAtK020335;
+        Wed, 20 Apr 2022 06:29:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=dwK7Jz5egacq4U7B1418c7gUMdrS3O8V298T2k9VQP4=;
+ b=J2J0o+bvOeekQ8xyL1aXk6QUjgxUX1sfKcFY+I7D5txGRaHPr/+dqEKqhE8HvLe9Fwm8
+ 5/f3n1ycG7sIfR9VNJfAsIh4ecqBGEq7g1KVFalp3FxZSb8E4agdhcXKyY4h7VQi6vKu
+ lKnNMTXyK1BDLnvmWgG3osMFUK9H2lr+rlyYTV6kIDhZ7Uku3T/QaqBq40XuYRg97Y8C
+ RwP5jvEmUryGft+0S6whI4WUq1y25cT/qY6gtsyODufpaLKMM3ld2EiNUa2+6fQvfC/R
+ djef0jTv7B2/J0qWH15cVLmFvxRCFUzbujWVakWnoomRJboR5B5lnbnZmOLYqr7dgssR rw== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3fg75r3hp8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Apr 2022 06:29:37 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23K6HnUi024667;
+        Wed, 20 Apr 2022 06:29:35 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 3ffn2hwra2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Apr 2022 06:29:34 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23K6TVIN16318904
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Apr 2022 06:29:31 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C8AC52059;
+        Wed, 20 Apr 2022 06:29:31 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 41B495204F;
+        Wed, 20 Apr 2022 06:29:31 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, chengdongli@tencent.com, adrian.hunter@intel.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/test: test case 71 fails on s390
+Date:   Wed, 20 Apr 2022 08:29:21 +0200
+Message-Id: <20220420062921.1211825-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20220414223704.341028-1-alobakin@pm.me> <20220414223704.341028-2-alobakin@pm.me>
- <20220419090355.GP2731@worktop.programming.kicks-ass.net>
-In-Reply-To: <20220419090355.GP2731@worktop.programming.kicks-ass.net>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 19 Apr 2022 22:30:50 -0700
-Message-ID: <CAEf4Bza=Ver5J-PYCceEohjgLSFVTCoYKXUEnc=uNkUC3rrZ5Q@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 01/11] bpf, perf: fix bpftool compilation with !CONFIG_PERF_EVENTS
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Chenbo Feng <fengc@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        Thomas Graf <tgraf@suug.ch>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WnTCLPGNRju_nnAMgMIKkS4pxJafbQ3X
+X-Proofpoint-GUID: WnTCLPGNRju_nnAMgMIKkS4pxJafbQ3X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-19_08,2022-04-15_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
+ mlxlogscore=999 spamscore=0 suspectscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204200036
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 19, 2022 at 2:04 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Apr 14, 2022 at 10:44:48PM +0000, Alexander Lobakin wrote:
-> > When CONFIG_PERF_EVENTS is not set, struct perf_event remains empty.
-> > However, the structure is being used by bpftool indirectly via BTF.
-> > This leads to:
-> >
-> > skeleton/pid_iter.bpf.c:49:30: error: no member named 'bpf_cookie' in 'struct perf_event'
-> >         return BPF_CORE_READ(event, bpf_cookie);
-> >                ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-> >
-> > ...
-> >
-> > skeleton/pid_iter.bpf.c:49:9: error: returning 'void' from a function with incompatible result type '__u64' (aka 'unsigned long long')
-> >         return BPF_CORE_READ(event, bpf_cookie);
-> >                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > Tools and samples can't use any CONFIG_ definitions, so the fields
-> > used there should always be present.
-> > Move CONFIG_BPF_SYSCALL block out of the CONFIG_PERF_EVENTS block
-> > to make it available unconditionally.
->
-> Urgh, this is nasty.. did you verify nothing relies on that structure
-> actually being empty?
->
-> Also, why are we changing kernel headers to fix some daft userspace
-> issue?
->
+Test case 71 'Convert perf time to TSC' is not supported on s390.
+Subtest 71.1 is skipped with the correct message, but
+subtest 71.2 is not skipped and fails.
 
-I agree, this is quite ugly. And I think it's not necessary at all.
+The root cause is function evlist__open() called from
+test__perf_time_to_tsc().  evlist__open() returns -ENOENT because the
+event cycles:u is not supported by the selected PMU, for example 
+platform s390 on z/VM or an x86_64 virtual machine.
+The PMU driver returns -ENOENT in this case. This error is leads to
+the failure.
+Fix this by returning TEST_SKIP on -ENOENT.
 
-BPF CO-RE, which bpftool relies on here, allows to have bpftool's own
-minimal definition of struct perf_event with bpf_cookie field and not
-rely on UAPI headers having full definition. Something like this:
+Output before:
+ 71: Convert perf time to TSC:
+ 71.1: TSC support:             Skip (This architecture does not support)
+ 71.2: Perf time to TSC:        FAILED!
 
-struct perf_event___local {
-    u64 bpf_cookie;
-} __attribute__((preserve_access_index));
+Output after:
+ 71: Convert perf time to TSC:
+ 71.1: TSC support:             Skip (This architecture does not support)
+ 71.2: Perf time to TSC:        Skip (perf_read_tsc_conversion is not supported)
 
-Then use `struct perf_event___local` (note the three underscores, they
-are important) instead of struct perf_event in BPF code.
+This also happens on an x86_64 virtual machine:
+   # uname -m
+   x86_64
+   $ ./perf test -F 71
+    71: Convert perf time to TSC  :
+    71.1: TSC support             : Ok
+    71.2: Perf time to TSC        : FAILED!
+   $ 
 
-And we'll have to do the same for struct bpf_perf_link, I presume?
+Fixes: 290fa68bdc45 ("perf test tsc: Fix error message when not supported")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ tools/perf/tests/perf-time-to-tsc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> > Fixes: cbdaf71f7e65 ("bpftool: Add bpf_cookie to link output")
-> > Signed-off-by: Alexander Lobakin <alobakin@pm.me>
-> > ---
-> >  include/linux/perf_event.h | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > index af97dd427501..b1d5715b8b34 100644
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -762,12 +762,14 @@ struct perf_event {
-> >       u64                             (*clock)(void);
-> >       perf_overflow_handler_t         overflow_handler;
-> >       void                            *overflow_handler_context;
-> > +#endif /* CONFIG_PERF_EVENTS */
-> >  #ifdef CONFIG_BPF_SYSCALL
-> >       perf_overflow_handler_t         orig_overflow_handler;
-> >       struct bpf_prog                 *prog;
-> >       u64                             bpf_cookie;
-> >  #endif
-> >
-> > +#ifdef CONFIG_PERF_EVENTS
-> >  #ifdef CONFIG_EVENT_TRACING
-> >       struct trace_event_call         *tp_event;
-> >       struct event_filter             *filter;
-> > --
-> > 2.35.2
-> >
-> >
+diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
+index cc6df49a65a1..4ad0dfbc8b21 100644
+--- a/tools/perf/tests/perf-time-to-tsc.c
++++ b/tools/perf/tests/perf-time-to-tsc.c
+@@ -123,6 +123,10 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
+ 		evsel->core.attr.enable_on_exec = 0;
+ 	}
+ 
++	if (evlist__open(evlist) == -ENOENT) {
++		err = TEST_SKIP;
++		goto out_err;
++	}
+ 	CHECK__(evlist__open(evlist));
+ 
+ 	CHECK__(evlist__mmap(evlist, UINT_MAX));
+-- 
+2.35.1
+
