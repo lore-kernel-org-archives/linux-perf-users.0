@@ -2,70 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19CCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 18:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF59C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 18:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348325AbiDTSVO (ORCPT
+        id S1381547AbiDTSqW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 14:21:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45366 "EHLO
+        Wed, 20 Apr 2022 14:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233570AbiDTSVN (ORCPT
+        with ESMTP id S238461AbiDTSqW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 14:21:13 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E488DE9A
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 11:18:26 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id 63so905728uaw.10
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 11:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=T4OnbBIIRRLL8pDWecOv4lSPdoePf0fvnRoJftJlAto=;
-        b=GjKzYl0YKgJ4yStv+yNFBVPiIDtiT+eFbi4v0pJ2IcXrsrm9fflua+J9Kh8zTVNNYv
-         s1WoZIoGgXCfQGS8VhTJJDUog+WytXzX51cenSf79y6M5+5/17ESqa5ZPGYVowyMhTvg
-         E/4h5ROjMQgUrJ2ftAwGMyTf27JHwarrzRPHJY5d/h+X0H1bRbmQltvCC9l2dPR7emS7
-         VYyCTkwlTrZZTsXjisQ9B876T+WinDC73Sxn182g0Im/iLVHjbEMUnoz6Gk3gTKOEqpz
-         fA975XfWGXaeAwt/7ZYBVRADDB7G52QCQ8wFn6te+3Jindk7YDuXRdPvYLD6ObKPJZvQ
-         Dvlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=T4OnbBIIRRLL8pDWecOv4lSPdoePf0fvnRoJftJlAto=;
-        b=nQuvRlZTlst79uIbmuer61UmKW4D0uUgqeoJo+0gx/N2V302ZYq19z7n0NK8dA0oeu
-         IPOlrp/1WxLpZ8UOTcrvWYZiin2x0E8B/3QAlZLfozbNpCQx9w5wUkOYs6683zz1BYZf
-         KNB/cxK7YgKwaQG3NHn7WYc4fC8/tL5w+Gl06Zcny97n38ivDuqBlHDF34dCAA9KWRAD
-         V9ULvsltaBeRuzhr2LB/wk79LeSe4H5hO90sfaV+oSjxKo2ttkt776L97sW6gqsfSbsU
-         uQH70monCrZ4fq34IplILmcjQh79BlpRqksLD0K0k6jFtyZ2Oauihe9QiPecswbjmdzP
-         GRpw==
-X-Gm-Message-State: AOAM533oZjv4PfSo22t+cGKlEO0hRfYkVCdPlqg1IxOcgE0ZPpkIZ5TO
-        jwuGtEPJakz/SXVuuuA/gorTYKAXA/7AaDsC+VjOcW0Mfi4=
-X-Google-Smtp-Source: ABdhPJy6ZqH9mQXsZi66/nQ16et2NWutNVrPnTS296itstE6KA1x6Kju2SjkLhvoWs9GMuxWVnqJgUEi1Q+9VRG+S84=
-X-Received: by 2002:a9f:3272:0:b0:359:eded:9c7e with SMTP id
- y47-20020a9f3272000000b00359eded9c7emr6136061uad.35.1650478705532; Wed, 20
- Apr 2022 11:18:25 -0700 (PDT)
+        Wed, 20 Apr 2022 14:46:22 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A4242A00;
+        Wed, 20 Apr 2022 11:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650480214; x=1682016214;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JVLsyYBZq1esqPxRCB4pCE4fLG7rN1RBuCQlNd7wmv0=;
+  b=Xjy2ON8gBz3ezQ1REB7LhkXSxEue78ykKHxAB3uH7dfKdIyv/a9hXAO6
+   ocIgpxKLI/8WFU/BCvDxExGLeaSCxvGxkCaQZ5Tv2gdijuxJDpPI0+/Sv
+   AIrA/dYw+txJl04vF2IEScCD9DvT4RAeMlHCXxDhUbb4mNdnqRNKkeCfH
+   OjUh2ERcaexbTaPpnX707yW6inyk/sSDFqVD0JbjdvxLOTtyScVGK5zjH
+   xUvNzNFPQRnxAYCNAAv1Yh/fpJSZicK8wqUUSPmSVE4GINi2NbVQic4r2
+   o8sbDTu1AXQtQSK2/Rxn/SRxXeZBmKRIHt5GxantFCMnZhSMO/IokmDuI
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="263886757"
+X-IronPort-AV: E=Sophos;i="5.90,276,1643702400"; 
+   d="scan'208";a="263886757"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 11:43:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,276,1643702400"; 
+   d="scan'208";a="647785859"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Apr 2022 11:43:31 -0700
+Received: from [10.209.97.182] (kliang2-MOBL.ccr.corp.intel.com [10.209.97.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id D8F01580AE2;
+        Wed, 20 Apr 2022 11:43:29 -0700 (PDT)
+Message-ID: <a96681b5-5532-470e-17d1-afe4c8d195ad@linux.intel.com>
+Date:   Wed, 20 Apr 2022 14:43:28 -0400
 MIME-Version: 1.0
-From:   Tanusree Debnath <tanu235m@gmail.com>
-Date:   Wed, 20 Apr 2022 11:18:15 -0700
-Message-ID: <CAPS78pr3gdfOzNPqvv8pMna1k3XD85jNFdsWf8qwFcL4RZyS8w@mail.gmail.com>
-Subject: [Feedback/Approval] Perf
-To:     linux-perf-users@vger.kernel.org
-Cc:     arnaldo.melo@gmail.com, mingo@redhat.com,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        peterz@infradead.org, acme@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
+Content-Language: en-US
+To:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
+        leo.yan@linaro.org, acme@kernel.org
+Cc:     benh@kernel.crashing.org, Nick.Forrington@arm.com,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+References: <20220408195344.32764-1-alisaidi@amazon.com>
+ <20220408195344.32764-3-alisaidi@amazon.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220408195344.32764-3-alisaidi@amazon.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Dear community,
-Two of my patches are still pending. I would love to get them approved
-or get some feedback.
-Patches:
-https://www.spinics.net/lists/linux-perf-users/msg18239.html
-https://www.spinics.net/lists/linux-perf-users/msg18185.html
 
-Signed-off-by: Tanusree Debnath
+
+On 4/8/2022 3:53 PM, Ali Saidi wrote:
+> Add a flag to the perf mem data struct to signal that a request caused a
+> cache-to-cache transfer of a line from a peer of the requestor and
+> wasn't sourced from a lower cache level.
+
+It sounds similar to the Forward state. Why can't the 
+PERF_MEM_SNOOPX_FWD be reused?
 
 Thanks,
-Tanusree Debnath
+Kan
+
+> The line being moved from one
+> peer cache to another has latency and performance implications. On Arm64
+> Neoverse systems the data source can indicate a cache-to-cache transfer
+> but not if the line is dirty or clean, so instead of overloading HITM
+> define a new flag that indicates this type of transfer.
+> 
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> ---
+>   include/uapi/linux/perf_event.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 82858b697c05..c9e58c79f3e5 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1308,7 +1308,7 @@ union perf_mem_data_src {
+>   #define PERF_MEM_SNOOP_SHIFT	19
+>   
+>   #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+> -/* 1 free */
+> +#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
+>   #define PERF_MEM_SNOOPX_SHIFT  38
+>   
+>   /* locked instruction */
