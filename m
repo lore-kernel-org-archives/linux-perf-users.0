@@ -2,137 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA96C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 08:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926E6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 10:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245069AbiDTIvS (ORCPT
+        id S229915AbiDTK1R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 04:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
+        Wed, 20 Apr 2022 06:27:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238704AbiDTIvR (ORCPT
+        with ESMTP id S1345121AbiDTK1Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 04:51:17 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A122A246
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:48:32 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id s18so2158874ejr.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qpUXxpkY1LQrTCewxX/BwK6Ql1sWiAOxr2avilSjOww=;
-        b=D5HHuJNPDcWp1NhI9j9oJPY7JJPhJj+u4XdYy1OxHt81Dn0FBmrtkeHQZMXe3qs7in
-         F5uWxg1sMMIckuW84/EW22jv0iNA9uPUNUpXhBgwaGBXD90wfqoVeAg5vD0JqA7Z6V7R
-         afuF9PVp7P5c3qnx7lTC/QrKKRVORLV0+dR8r5DdRSOj1wqhtdBcrRypRedRZAPBtWwy
-         SaH54loFCEpKBqpyIIQjPlk2f5KhSC5u2TKKbh624a6BsRP+Fseii00sZ3ehon6fl+Fb
-         NwXX7xs3MKYk8Fm1MGhuUZRKZPNDmxLf/pVUe+jps6uDt3Aywxj6szZxoi3F2pSjopHn
-         yMcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qpUXxpkY1LQrTCewxX/BwK6Ql1sWiAOxr2avilSjOww=;
-        b=zv+e2vdUjkDPqRoH1ZGlwpVghZjkjIXrTzZlXoPoupNEFzrq+7yV6HUuI6BjmmU2q1
-         r93o2Xu0VfVgrc+mStib+N0tiz88oNs7HM5O/thH0Pyoi0z/sRnyD23WrMWnIETwvshS
-         F5CZ11WELQ2ybZX/dLhYcJ/a/dNC2FDHz+1OC0DT261tve+8SKLWvOGEeYLbmRGmhg16
-         xhuE0wgRIkxY0yAlDAVMNevxmtGV/pIKmkbWmRtBJ/KzlVztC4DhBnvkBY0m1oR6edfB
-         4ukUo4NdGrQ9Xwyf/sfpXXJKFjTrz0meQJJb1wEkrwMRu4J7DKitfYvJoyTSezbckOce
-         1CiA==
-X-Gm-Message-State: AOAM530o+TQoPeQcrYp/rIPhc+Wawa4E9ORv5rKQNle699PzN2G3INT5
-        +zWSh1oWpueX8dW8WXa7Bp7Oaw==
-X-Google-Smtp-Source: ABdhPJw837T3cRO9mLC5fpo5UIyr0XVBpI4v0Nlm9M0zRzKPBvuTg9N+7xCZv7v5VIuNF5cHZ9SIrg==
-X-Received: by 2002:a17:907:7286:b0:6ef:f594:e063 with SMTP id dt6-20020a170907728600b006eff594e063mr2925426ejc.611.1650444510495;
-        Wed, 20 Apr 2022 01:48:30 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id n25-20020a1709062bd900b006e8766b7907sm6490432ejg.223.2022.04.20.01.48.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 01:48:29 -0700 (PDT)
-Date:   Wed, 20 Apr 2022 16:48:23 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, acme@kernel.org,
-        benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v5 5/5] perf mem: Support mem_lvl_num in c2c command
-Message-ID: <20220420084823.GE843168@leoy-ThinkPad-X240s>
-References: <20220408195344.32764-1-alisaidi@amazon.com>
- <20220408195344.32764-6-alisaidi@amazon.com>
- <3ad0128a-1b3d-37a7-81f6-fd597b565b18@arm.com>
+        Wed, 20 Apr 2022 06:27:16 -0400
+Received: from euporie.uberspace.de (euporie.uberspace.de [185.26.156.232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F9A3F32D
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 03:24:29 -0700 (PDT)
+Received: (qmail 15605 invoked by uid 989); 20 Apr 2022 10:24:26 -0000
+Authentication-Results: euporie.uberspace.de;
+        auth=pass (plain)
+From:   Florian Fischer <florian.fischer@muhq.space>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHSET v4 next 0/3] perf stat: add user_time and system_time tool events
+Date:   Wed, 20 Apr 2022 12:23:51 +0200
+Message-Id: <20220420102354.468173-1-florian.fischer@muhq.space>
+X-Mailer: git-send-email 2.36.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ad0128a-1b3d-37a7-81f6-fd597b565b18@arm.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: +
+X-Rspamd-Report: R_MISSING_CHARSET(0.5) MIME_GOOD(-0.1) MID_CONTAINS_FROM(1) BAYES_HAM(-0.151335)
+X-Rspamd-Score: 1.248664
+Received: from unknown (HELO unkown) (::1)
+        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Wed, 20 Apr 2022 12:24:26 +0200
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 11:04:28AM +0100, German Gomez wrote:
-> 
-> On 08/04/2022 20:53, Ali Saidi wrote:
-> > In addition to summarizing data encoded in mem_lvl also support data
-> > encoded in mem_lvl_num.
-> >
-> > Since other architectures don't seem to populate the mem_lvl_num field
-> > here there shouldn't be a change in functionality.
-> >
-> > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> > ---
-> >  tools/perf/util/mem-events.c | 11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> > index ed0ab838bcc5..e5e405185498 100644
-> > --- a/tools/perf/util/mem-events.c
-> > +++ b/tools/perf/util/mem-events.c
-> > @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
-> >  	u64 daddr  = mi->daddr.addr;
-> >  	u64 op     = data_src->mem_op;
-> >  	u64 lvl    = data_src->mem_lvl;
-> > +	u64 lnum   = data_src->mem_lvl_num;
-> >  	u64 snoop  = data_src->mem_snoop;
-> >  	u64 lock   = data_src->mem_lock;
-> >  	u64 blk    = data_src->mem_blk;
-> > @@ -527,16 +528,18 @@ do {				\
-> >  			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
-> >  			if (lvl & P(LVL, IO))  stats->ld_io++;
-> >  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
-> 
-> Just for completion, can we also handle LFB as it seems to be being set
-> in "/arch/x86/events/intel/ds.c"? (Sorry I missed this in the v4)
+This patch series adds new internal events to perf stat exposing the times spend
+in user and kernel mode in nanoseconds reported by rusage.
 
-With fixing LFB issue pointed by German, the change looks good to me:
+During some benchmarking using perf it bothered me that I could not easily
+retrieve those times from perf stat when using the machine readable output.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+But perf definitely knows about those values because in the human readable output
+they are present.
 
-It would be appreciate if x86 or PowerPC maintainers could take a look
-for this patch.  Thanks!
+Therefore I exposed the times reported by rusage via the new tool events:
+user_time and system_time.
 
-Leo
+This allows to retrieved them in machine-readable output:
 
-> > -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
-> > -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-> > -			if (lvl & P(LVL, L3 )) {
-> > +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
-> > +				stats->ld_l1hit++;
-> > +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
-> > +				stats->ld_l2hit++;
-> > +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L3)) {
-> >  				if (snoop & P(SNOOP, HITM))
-> >  					HITM_INC(lcl_hitm);
-> >  				else
-> >  					stats->ld_llchit++;
-> >  			}
-> >  
-> > -			if (lvl & P(LVL, LOC_RAM)) {
-> > +			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
-> >  				stats->lcl_dram++;
-> >  				if (snoop & P(SNOOP, HIT))
-> >  					stats->ld_shared++;
+$ ./perf stat -x, -e duration_time,user_time,system_time,cache-misses -- grep -q -r duration_time tools/perf
+72134524,ns,duration_time:u,72134524,100.00,,
+65225000,ns,user_time:u,65225000,100.00,,
+6865000,ns,ssystem_time:u,6865000,100.00,,
+38705,,cache-misses:u,71189328,100.00,,
+
+The changes are mostly inspired by the code for the only other available
+tool event: 'duration_time'.
+
+For now the new user_time and system_time events are not usable with metrics
+(as far as I understand).
+
+The patch applies cleanly on linux-next/next-20220420.
+
+[PATCH v4 1/3] perf stat: introduce stats for the user and system
+[PATCH v4 2/3] perf stat: add user_time and system_time events
+[PATCH v4 3/3] perf list: print all available tool events
+
+[v2]: Split up the changes into separate commits.
+
+[v3]: * Use nanoseconds as suggested by Xing Zhengjun.
+      * Squash [PATCH v2 2/4] and [PATCH v2 4/4], because it only adds the unit string.
+
+[v4]: * Simplify event names to only user_time and system_time as suggested by Ian Rogers.
+
+Florian Fischer
+
