@@ -2,117 +2,212 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1A7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC14EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 16:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355207AbiDTQhQ (ORCPT
+        id S1380745AbiDTQr2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 12:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44080 "EHLO
+        Wed, 20 Apr 2022 12:47:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351893AbiDTQhP (ORCPT
+        with ESMTP id S1380737AbiDTQrX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 12:37:15 -0400
+        Wed, 20 Apr 2022 12:47:23 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E44DC44A14;
-        Wed, 20 Apr 2022 09:34:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECFB4666B;
+        Wed, 20 Apr 2022 09:44:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9997BB82043;
-        Wed, 20 Apr 2022 16:34:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A3DFC385A1;
-        Wed, 20 Apr 2022 16:34:26 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 756ADB81FB6;
+        Wed, 20 Apr 2022 16:44:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBE9C385A1;
+        Wed, 20 Apr 2022 16:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650472466;
-        bh=6dOodVlqYYemmOJ8+Jo4pQMwH/KjxBbts+kyWpeDKbM=;
+        s=k20201202; t=1650473074;
+        bh=y7SdXt71n1BDdaDOsWRdrF7usDyjXHRWkjywHnzgDqc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lif7pDUAWBG+r/5eb+R4QoGwfqcNYXeGVSwHqYGhoRm/Erol75XzYSXDdFcxXKVIV
-         YtBEdw+yKpH2B4AwYXZ8yHu0AbjZKaUSaYzBwnlYbvwiSqadtbM7mKAucLXNdhTyAQ
-         xatDZkVnlPQn95oe3DLIh21HKsQPLEW8ob7bkHo1GZ2ANIXUg6OjSA9o78LFjpuRvu
-         zoQjbCM886cG6Pg9mPfmnXYYV0tA98duqSIMe+qqx5Q/ajifsT35l/Ajdw2RGJhmaV
-         RNLtonTaMn9KAg4mnF45hf5ELW1MN/KZZyBkxaGVkC+CR9AnXHif84gRwl1TgsZ6a1
-         YP3RbAbeYb99A==
+        b=mcYpeSpyz+Y5b9DgPgyl3EQQrzBuMqa9nlzseC6A5isszBQ3P7vvbNroi56n3uCfn
+         4l8x5tuRMQgIFg6XaWykmPEFvyF/I8Zv8Au3raRqYwL2zN4U4OjORKXUrdVYVLZr7p
+         eSRPrlTzt1bOVJiwj/ItdoIC6V/YA6wU6eWoGVZJjysVE59k2zZh4oKiZORL04RA/X
+         sqQW0pdn4k73AddP26D6v9EYusnGzsiqUkXpYrSxzll6FfQ0MGtwC2eZVqBOtzjaq3
+         DPbx5SySMY2w5WXzskYVWGv7ShQmKiej2hL7ealfSEZ/BConwtNTd+s0LR8DP5d9/c
+         FuHTkpFhC5XlA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 87F9A400B1; Wed, 20 Apr 2022 13:34:23 -0300 (-03)
-Date:   Wed, 20 Apr 2022 13:34:23 -0300
+        id 3208D400B1; Wed, 20 Apr 2022 13:44:31 -0300 (-03)
+Date:   Wed, 20 Apr 2022 13:44:31 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] perf: print warning when HAVE_DEBUGINFOD_SUPPORT is not
- set
-Message-ID: <YmA2D04uy5ijwe1c@kernel.org>
-References: <35bae747-3951-dc3d-a66b-abf4cebcd9cb@suse.cz>
+To:     Florian Fischer <florian.fischer@muhq.space>
+Cc:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v4 3/3] perf list: print all available tool events
+Message-ID: <YmA4byoEa3QBNeST@kernel.org>
+References: <20220420102354.468173-1-florian.fischer@muhq.space>
+ <20220420102354.468173-4-florian.fischer@muhq.space>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <35bae747-3951-dc3d-a66b-abf4cebcd9cb@suse.cz>
+In-Reply-To: <20220420102354.468173-4-florian.fischer@muhq.space>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 20, 2022 at 03:32:55PM +0200, Martin Liška escreveu:
-> When one requests debuginfod, either via --debuginfod option, or
-> with a perf-config value, complain when perf is not built with it.
-> 
-> Signed-off-by: Martin Liska <mliska@suse.cz>
+Em Wed, Apr 20, 2022 at 12:23:54PM +0200, Florian Fischer escreveu:
+> Introduce names for the new tool events 'user_time' and 'system_time'.
 
-I'll go and apply this manually:
+Before:
 
-⬢[acme@toolbox perf]$ am
-warning: Patch sent with format=flowed; space at the end of lines might be lost.
-Applying: perf: print warning when HAVE_DEBUGINFOD_SUPPORT is not set
-error: corrupt patch at line 19
-Patch failed at 0001 perf: print warning when HAVE_DEBUGINFOD_SUPPORT is not set
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-When you have resolved this problem, run "git am --continue".
-If you prefer to skip this patch, run "git am --skip" instead.
-To restore the original branch and stop patching, run "git am --abort".
-⬢[acme@toolbox perf]$ git am --abort
-⬢[acme@toolbox perf]$ vim ~/wb/1.patch
-⬢[acme@toolbox perf]$ patch -p1 < ~/wb/1.patch
-patching file tools/perf/util/util.c
-Hunk #1 FAILED at 430.
-1 out of 1 hunk FAILED -- saving rejects to file tools/perf/util/util.c.rej
-⬢[acme@toolbox perf]$ git diff
-⬢[acme@toolbox perf]$
-⬢[acme@toolbox perf]$ cat tools/perf/util/util.c.rej
---- tools/perf/util/util.c
-+++ tools/perf/util/util.c
-@@ -430,4 +430,9 @@ void perf_debuginfod_setup(struct perf_debuginfod *di)
-  		setenv("DEBUGINFOD_URLS", di->urls, 1);
+  duration_time                                      [Tool event]
 
-  	pr_debug("DEBUGINFOD_URLS=%s\n", getenv("DEBUGINFOD_URLS"));
-+
-+#ifndef HAVE_DEBUGINFOD_SUPPORT
-+	if (di->set)
-+		pr_warning("WARNING: debuginfod support requested, but perf is not built with it\n");
-+#endif
-  }
-⬢[acme@toolbox perf]$
+After:
 
+$ perf list | grep Tool
+  duration_time OR                                   [Tool event]
+  user_time OR                                       [Tool event]
+  system_time OR                                     [Tool event]
+$ 
+
+So now we have that extraneous "OR", can you please take a look?
+Probably needs to check if there is an alias?
+
+- Arnaldo
+ 
+> Signed-off-by: Florian Fischer <florian.fischer@muhq.space>
 > ---
->  tools/perf/util/util.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  tools/perf/util/evsel.c        | 19 ++++++++++------
+>  tools/perf/util/evsel.h        |  1 +
+>  tools/perf/util/parse-events.c | 40 +++++++++++++++++++++++++++++-----
+>  3 files changed, 47 insertions(+), 13 deletions(-)
 > 
-> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-> index fb4f6616b5fa..289d83baaa2f 100644
-> --- a/tools/perf/util/util.c
-> +++ b/tools/perf/util/util.c
-> @@ -430,4 +430,9 @@ void perf_debuginfod_setup(struct perf_debuginfod *di)
->  		setenv("DEBUGINFOD_URLS", di->urls, 1);
->  	pr_debug("DEBUGINFOD_URLS=%s\n", getenv("DEBUGINFOD_URLS"));
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 2a1729e7aee4..d38722560e80 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -597,6 +597,17 @@ static int evsel__sw_name(struct evsel *evsel, char *bf, size_t size)
+>  	return r + evsel__add_modifiers(evsel, bf + r, size - r);
+>  }
+>  
+> +const char *evsel__tool_names[PERF_TOOL_MAX] = {
+> +	"duration_time",
+> +	"user_time",
+> +	"system_time",
+> +};
 > +
-> +#ifndef HAVE_DEBUGINFOD_SUPPORT
-> +	if (di->set)
-> +		pr_warning("WARNING: debuginfod support requested, but perf is not built with it\n");
-> +#endif
+> +static int evsel__tool_name(enum perf_tool_event ev, char *bf, size_t size)
+> +{
+> +	return scnprintf(bf, size, "%s", evsel__tool_names[ev]);
+> +}
+> +
+>  static int __evsel__bp_name(char *bf, size_t size, u64 addr, u64 type)
+>  {
+>  	int r;
+> @@ -723,12 +734,6 @@ static int evsel__raw_name(struct evsel *evsel, char *bf, size_t size)
+>  	return ret + evsel__add_modifiers(evsel, bf + ret, size - ret);
+>  }
+>  
+> -static int evsel__tool_name(char *bf, size_t size)
+> -{
+> -	int ret = scnprintf(bf, size, "duration_time");
+> -	return ret;
+> -}
+> -
+>  const char *evsel__name(struct evsel *evsel)
+>  {
+>  	char bf[128];
+> @@ -754,7 +759,7 @@ const char *evsel__name(struct evsel *evsel)
+>  
+>  	case PERF_TYPE_SOFTWARE:
+>  		if (evsel->tool_event)
+> -			evsel__tool_name(bf, sizeof(bf));
+> +			evsel__tool_name(evsel->tool_event, bf, sizeof(bf));
+>  		else
+>  			evsel__sw_name(evsel, bf, sizeof(bf));
+>  		break;
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 7e2209b47b39..45d674812239 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -262,6 +262,7 @@ extern const char *evsel__hw_cache_op[PERF_COUNT_HW_CACHE_OP_MAX][EVSEL__MAX_ALI
+>  extern const char *evsel__hw_cache_result[PERF_COUNT_HW_CACHE_RESULT_MAX][EVSEL__MAX_ALIASES];
+>  extern const char *evsel__hw_names[PERF_COUNT_HW_MAX];
+>  extern const char *evsel__sw_names[PERF_COUNT_SW_MAX];
+> +extern const char *evsel__tool_names[PERF_TOOL_MAX];
+>  extern char *evsel__bpf_counter_events;
+>  bool evsel__match_bpf_counter_events(const char *name);
+>  
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 064ec368a90b..c0e88d3b3e3c 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -154,6 +154,21 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
+>  	},
+>  };
+>  
+> +struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
+> +	[PERF_TOOL_DURATION_TIME] = {
+> +		.symbol = "duration_time",
+> +		.alias  = "",
+> +	},
+> +	[PERF_TOOL_USER_TIME] = {
+> +		.symbol = "user_time",
+> +		.alias  = "",
+> +	},
+> +	[PERF_TOOL_SYSTEM_TIME] = {
+> +		.symbol = "system_time",
+> +		.alias  = "",
+> +	},
+> +};
+> +
+>  #define __PERF_EVENT_FIELD(config, name) \
+>  	((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
+>  
+> @@ -3058,21 +3073,34 @@ int print_hwcache_events(const char *event_glob, bool name_only)
+>  	return evt_num;
+>  }
+>  
+> -static void print_tool_event(const char *name, const char *event_glob,
+> +static void print_tool_event(const struct event_symbol *syms, const char *event_glob,
+>  			     bool name_only)
+>  {
+> -	if (event_glob && !strglobmatch(name, event_glob))
+> +	if (syms->symbol == NULL)
+> +		return;
+> +
+> +	if (event_glob && !(strglobmatch(syms->symbol, event_glob) ||
+> +	      (syms->alias && strglobmatch(syms->alias, event_glob))))
+>  		return;
+> +
+>  	if (name_only)
+> -		printf("%s ", name);
+> -	else
+> +		printf("%s ", syms->symbol);
+> +	else {
+> +		char name[MAX_NAME_LEN];
+> +		if (syms->alias)
+> +			snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
+> +		else
+> +			strlcpy(name, syms->symbol, MAX_NAME_LEN);
+>  		printf("  %-50s [%s]\n", name, "Tool event");
+> -
+> +	}
+>  }
+>  
+>  void print_tool_events(const char *event_glob, bool name_only)
+>  {
+> -	print_tool_event("duration_time", event_glob, name_only);
+> +	// Start at 1 because the first enum entry symbols no tool event
+> +	for (int i = 1; i < PERF_TOOL_MAX; ++i) {
+> +		print_tool_event(event_symbols_tool + i, event_glob, name_only);
+> +	}
+>  	if (pager_in_use())
+>  		printf("\n");
 >  }
 > -- 
-> 2.35.3
+> 2.36.0
 
 -- 
 
