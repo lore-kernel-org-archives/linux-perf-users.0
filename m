@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79107C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 08:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AD6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 08:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345834AbiDTIdv (ORCPT
+        id S1376829AbiDTIpd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 04:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54716 "EHLO
+        Wed, 20 Apr 2022 04:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237832AbiDTIdu (ORCPT
+        with ESMTP id S1355115AbiDTIpd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 04:33:50 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41C4DF5B
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:31:04 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id s25so1266458edi.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:31:04 -0700 (PDT)
+        Wed, 20 Apr 2022 04:45:33 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E1931502
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:42:46 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id v15so1308155edb.12
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Apr 2022 01:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=0MPlsVIHa8BfRUqIbrolSzIGPypi31fdCSpfcEmPSi0=;
-        b=kr5GBRGRcZ7DVvI09Sc0FjqP2Re0t6Z3qy6shVqUL96hpieIY6WBVd1edOREJuYmRa
-         ufJdWMDQZt5g+ZE/9f374NjfXkQO/WTWtP6Au/pZtN9gcmgkALnpCO7GL+TymaldswKN
-         A0hVu/hpwBeX3svdXGpEn6xke9Vt18Sa+P7592S2xUTLuN+itGu7ri79i+ZUNiJKcyH0
-         tPbGLUNgqPMgHu1LhiIxYg41aLw/nhMGRc/mljJoXOTo9ebMvVZi4Rk8fVDcw6KVi5bn
-         DaRKtvvdUkgSXCzDvLkTJkaqorVikJIH79prtEHWdwgl/2okLTM7v1dgurjnBmWrhytQ
-         AR6A==
+        bh=MVCMmRDupWVNp3EektJX9PkYrpmkhE+GVak1SDvod4s=;
+        b=Z+Fg+M32NBiEVbQoBiuviPChWxOW0h+dqN5hlHC8pitQtK+k1M+fgW34j9uiVvIWEG
+         E5gBbUqeaBL6PhIWrlus/Fn90V+tVSvoRfC5RXK3GKiZuQ5yuoom618SH2AWzPowvKTm
+         Y9tevSi7LVtSfP/RCgn96XUAX4R7ZtPJpGrvomwprD0ARWN5vCvx9LSq3g7MGB2jJEd2
+         jkQnvi9xRkI7M5BTFhQRuzQTa2XUe+zu/7mU6dsAFOJ1z8MX0tn19rxmVS2UmD+ThaD/
+         yH1rojDNZIF6IBs/hvPHWbtZDXPR67OiqeSUGwchaEwhSqNkRNLvtgJsOhVPO1K2qpYu
+         Pa0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=0MPlsVIHa8BfRUqIbrolSzIGPypi31fdCSpfcEmPSi0=;
-        b=THjIlANYH2Rou+jr5lDkem00gvR4TdN0RlamfWOWBTVlHuZzyQw97ykDBrxDZc2Mxn
-         RJRcHsEcVLZEh9P/diwcf1eMcsSqFQe8OdPVxCQ43iuCeayxQQuNV6bBrGzp7RUms4Pb
-         1aemYTHMV/xk5QG/cDUr0C59v6w8Z/XFnxtNazHqcp0+M6hYeQbtCtZ4fKqBu0f6fywU
-         DLTDfse4UA2qlnjMCPGED11nBttw8oXwu+XjPs3ApY7klkwzQO2qe6B5wvi1xXj7lLTb
-         q3M5rTsm0//m5WkLnq/QSG4QQ9jv200k+eGccq4zPyvN5r39KatTLXqLwQBQ2QbhkcBU
-         GRiQ==
-X-Gm-Message-State: AOAM532S2LoV5h/iB+rjbNIdsj09emXQBJLNuZnDi+FHUrNgLhDYwfAw
-        E3FXqeaPpjTPiPHvGT8cT88w5g==
-X-Google-Smtp-Source: ABdhPJwkgTC+K9x1O7OW1DdCPyq72UifPTcfM9PcKieEeJ3+r3IxciUJuOmBTCKPengBJoenJkCGTg==
-X-Received: by 2002:aa7:c6d7:0:b0:41d:8afe:4a6a with SMTP id b23-20020aa7c6d7000000b0041d8afe4a6amr21893519eds.281.1650443463278;
-        Wed, 20 Apr 2022 01:31:03 -0700 (PDT)
+        bh=MVCMmRDupWVNp3EektJX9PkYrpmkhE+GVak1SDvod4s=;
+        b=yVEIow/OeDvS2iFdhm6BH8O9EUpxfxSrMRX7gsAIHukPSDjC+HUkQC8u+5aBv7WP8B
+         J8YIQAjaWiQiGs0UZM7QxxlMiNjvIynFy6uZhFjJ0R0LKYg+d2aYGYzwunwgUXKZgTlq
+         S8EIToxgC/jfaqeUxQ+jA6iVtaJyJPLFpS+tsB/201wFRE0FNYrtViUDgTqB2bIfCW5z
+         Sc7vxTGQAh906PS0MmKaFIsK3KI3Yup4sisuRnw0lm6kWLVoJ3m06ZupNhzSrX97+FaP
+         XxGcdy/RShXX0WmpmGeEVzEdsXU3JcCD8theLd9yaQpnteJjxbIg354PRFGWatZVDRxi
+         8QRQ==
+X-Gm-Message-State: AOAM533TfPz0lk4dU6QqkOd/Z3V9eRCBUo9JZHLSDW4GwlouN/YtZL8W
+        hJ3iIdx9EVURWdRVjPoVU4cW5g==
+X-Google-Smtp-Source: ABdhPJzq+UmiGH73w3WVb5N/f0UxlU+a3ZjIu42E1R9z8JmIzVcN5CFnOiOVzq7f9t99+Tm82GSmzQ==
+X-Received: by 2002:a05:6402:34c9:b0:423:deb7:f69e with SMTP id w9-20020a05640234c900b00423deb7f69emr17014053edc.335.1650444165378;
+        Wed, 20 Apr 2022 01:42:45 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id g1-20020a170906348100b006efc26c7b1dsm2413337ejb.195.2022.04.20.01.30.58
+        by smtp.gmail.com with ESMTPSA id s14-20020aa7cb0e000000b00410bf015567sm9529157edt.92.2022.04.20.01.42.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 01:31:02 -0700 (PDT)
-Date:   Wed, 20 Apr 2022 16:30:56 +0800
+        Wed, 20 Apr 2022 01:42:44 -0700 (PDT)
+Date:   Wed, 20 Apr 2022 16:42:37 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Ali Saidi <alisaidi@amazon.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -62,7 +62,7 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         peterz@infradead.org, will@kernel.org
 Subject: Re: [PATCH v5 4/5] perf arm-spe: Use SPE data source for neoverse
  cores
-Message-ID: <20220420083056.GC843168@leoy-ThinkPad-X240s>
+Message-ID: <20220420084237.GD843168@leoy-ThinkPad-X240s>
 References: <20220408195344.32764-1-alisaidi@amazon.com>
  <20220408195344.32764-5-alisaidi@amazon.com>
 MIME-Version: 1.0
@@ -191,86 +191,186 @@ On Fri, Apr 08, 2022 at 07:53:43PM +0000, Ali Saidi wrote:
 > +		data_src->mem_snoop = PERF_MEM_SNOOP_NA;
 > +		return;
 > +	}
+> +
+> +
 
-For the store operation, I found we need to use more strictly criteria
-to check memory operations, otherwise, we might wrongly synthesize
-memory sample even for other types of operations.
+Redundant new line.
 
-To fix the issue, I think we need to add below patch; if this is okay
-for you, please consider to include it in the next patch set version.
+> +	switch (record->source) {
+> +	case ARM_SPE_NV_L1D:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+> +		break;
+> +	case ARM_SPE_NV_L2:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+> +		break;
+> +	case ARM_SPE_NV_PEER_CORE:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
+> +		break;
+> +	/*
+> +	 * We don't know if this is L1, L2 but we do know it was a cache-2-cache
+> +	 * transfer, so set SNOOPX_PEER
+> +	 */
+> +	case ARM_SPE_NV_LOCAL_CLUSTER:
+> +	case ARM_SPE_NV_PEER_CLUSTER:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
 
-Thanks,
-Leo
+As a side topic, it's better to use a new patch to dump snooping flag
+PERF_MEM_SNOOPX_PEER, some code like below:
 
-From 7f8499d4f44b400d217c01d42059f00e8a1697b0 Mon Sep 17 00:00:00 2001
-From: Leo Yan <leo.yan@linaro.org>
-Date: Wed, 20 Apr 2022 15:46:21 +0800
-Subject: [PATCH] perf arm-spe: Don't set data source if it's not a memory
- operation
-
-Except memory load and store operations, Arm SPE records also can
-support other operation types, bug when set the data source field the
-current code assumes a record is a either load operation or store
-operation, this leads to wrongly synthesize memory samples.
-
-This patch strictly checks the record operation type, it only sets data
-source only for the operation types ARM_SPE_LD and ARM_SPE_ST,
-otherwise, returns zero for data source.  Therefore, we can synthesize
-memory samples only when data source is a non-zero value, the function
-arm_spe__is_memory_event() is useless and removed.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/arm-spe.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
-
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index d2b64e3f588b..76251825c01d 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -387,26 +387,16 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
- 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
- }
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index f8f234251f92..66d44280a4ea 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -410,6 +410,11 @@ static const char * const snoop_access[] = {
+ 	"HitM",
+ };
  
--#define SPE_MEM_TYPE	(ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
--			 ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
--			 ARM_SPE_REMOTE_ACCESS)
--
--static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
--{
--	if (type & SPE_MEM_TYPE)
--		return true;
--
--	return false;
--}
--
- static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
++static const char * const snoopx_access[] = {
++	"Fwd",
++	"Peer",
++};
++
+ int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
  {
- 	union perf_mem_data_src	data_src = { 0 };
- 
- 	if (record->op == ARM_SPE_LD)
- 		data_src.mem_op = PERF_MEM_OP_LOAD;
--	else
-+	else if (record->op & ARM_SPE_ST)
- 		data_src.mem_op = PERF_MEM_OP_STORE;
-+	else
-+		return 0;
- 
- 	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
- 		data_src.mem_lvl = PERF_MEM_LVL_L3;
-@@ -510,7 +500,11 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 			return err;
+ 	size_t i, l = 0;
+@@ -430,13 +435,18 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
+ 		}
+ 		l += scnprintf(out + l, sz - l, snoop_access[i]);
+ 	}
+-	if (mem_info &&
+-	     (mem_info->data_src.mem_snoopx & PERF_MEM_SNOOPX_FWD)) {
++
++	if (mem_info)
++		m = mem_info->data_src.mem_snoopx;
++
++	for (i = 0; m && i < ARRAY_SIZE(snoopx_access); i++, m >>= 1) {
++		if (!(m & 0x1))
++			continue;
+ 		if (l) {
+ 			strcat(out, " or ");
+ 			l += 4;
+ 		}
+-		l += scnprintf(out + l, sz - l, "Fwd");
++		l += scnprintf(out + l, sz - l, snoopx_access[i]);
  	}
  
--	if (spe->sample_memory && arm_spe__is_memory_event(record->type)) {
-+	/*
-+	 * When data_src is zero it means the record is not a memory operation,
-+	 * skip to synthesize memory sample for this case.
-+	 */
-+	if (spe->sample_memory && data_src) {
- 		err = arm_spe__synth_mem_sample(speq, spe->memory_id, data_src);
- 		if (err)
- 			return err;
--- 
-2.25.1
 
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+> +		break;
+> +	/*
+> +	 * System cache is assumed to be L3
+> +	 */
+> +	case ARM_SPE_NV_SYS_CACHE:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
+> +		break;
+> +	/*
+> +	 * We don't know what level it hit in, except it came from the other
+> +	 * socket
+> +	 */
+> +	case ARM_SPE_NV_REMOTE:
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
+> +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_NA;
+> +		break;
+> +	case ARM_SPE_NV_DRAM:
+> +		data_src->mem_lvl = PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_RAM;
+> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+>
+> +static void arm_spe__synth_data_source_generic(const struct arm_spe_record *record,
+> +						union perf_mem_data_src *data_src)
+> +{
+>  	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
+> -		data_src.mem_lvl = PERF_MEM_LVL_L3;
+> +		data_src->mem_lvl = PERF_MEM_LVL_L3;
+>  
+>  		if (record->type & ARM_SPE_LLC_MISS)
+> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
+> +			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+>  		else
+> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
+> +			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+>  	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
+> -		data_src.mem_lvl = PERF_MEM_LVL_L1;
+> +		data_src->mem_lvl = PERF_MEM_LVL_L1;
+>  
+>  		if (record->type & ARM_SPE_L1D_MISS)
+> -			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
+> +			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+>  		else
+> -			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
+> +			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+>  	}
+>  
+>  	if (record->type & ARM_SPE_REMOTE_ACCESS)
+> -		data_src.mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+> +		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+> +}
+> +
+> +static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
+> +{
+> +	union perf_mem_data_src	data_src = { 0 };
+> +	bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
+> +
+> +	if (record->op & ARM_SPE_LD)
+> +		data_src.mem_op = PERF_MEM_OP_LOAD;
+> +	else
+> +		data_src.mem_op = PERF_MEM_OP_STORE;
+> +
+> +	if (is_neoverse)
+> +		arm_spe__synth_data_source_neoverse(record, &data_src);
+> +	else
+> +		arm_spe__synth_data_source_generic(record, &data_src);
+>  
+>  	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
+>  		data_src.mem_dtlb = PERF_MEM_TLB_WK;
+> @@ -446,7 +542,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+>  	u64 data_src;
+>  	int err;
+>  
+> -	data_src = arm_spe__synth_data_source(record);
+> +	data_src = arm_spe__synth_data_source(record, spe->midr);
+>  
+>  	if (spe->sample_flc) {
+>  		if (record->type & ARM_SPE_L1D_MISS) {
+> @@ -1183,6 +1279,8 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+>  	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+>  	size_t min_sz = sizeof(u64) * ARM_SPE_AUXTRACE_PRIV_MAX;
+>  	struct perf_record_time_conv *tc = &session->time_conv;
+> +	const char *cpuid = perf_env__cpuid(session->evlist->env);
+> +	u64 midr = strtol(cpuid, NULL, 16);
+>  	struct arm_spe *spe;
+>  	int err;
+>  
+> @@ -1202,6 +1300,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+>  	spe->machine = &session->machines.host; /* No kvm support */
+>  	spe->auxtrace_type = auxtrace_info->type;
+>  	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
+> +	spe->midr = midr;
+
+Except the redundant line, the patch is good for me and I tested it at
+my side:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
+
+>  
+>  	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
+>  
+> -- 
+> 2.32.0
+> 
