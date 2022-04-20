@@ -2,97 +2,63 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012BFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 11:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FBAC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 11:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378197AbiDTLld (ORCPT
+        id S1356687AbiDTLxl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 07:41:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47376 "EHLO
+        Wed, 20 Apr 2022 07:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378187AbiDTLld (ORCPT
+        with ESMTP id S1352702AbiDTLxk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 07:41:33 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1036441601;
-        Wed, 20 Apr 2022 04:38:45 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id A863F21115;
-        Wed, 20 Apr 2022 11:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1650454724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=07ddCTy31iWqzu2w3ATEUEla6+CUZWFYjXLLhVU25JE=;
-        b=NsEzrHym87dRqLZdHm9zjmy50aB2VETeUDmasiUdmVJRpWyP5115Oq/2VSMPRvdF4+9PP2
-        mMGflypdKXHtTAk+X9MbvZA5o6XZ0+gLznmA90DTyudhybdQJhhpIXPc3ydgcncyXpaQ3a
-        cTXE4JzMybSXV/Cvunq6Srwam+0FQxU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1650454724;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=07ddCTy31iWqzu2w3ATEUEla6+CUZWFYjXLLhVU25JE=;
-        b=o2AOWv0G20CzzZ6G+WC6scUZZcFMrzJtB7EWcibiigLacAjwHkDFDOcAQwBcbYE1kOXNE7
-        gxtJ15U32IhKrPAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8F28213A30;
-        Wed, 20 Apr 2022 11:38:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id yBfiIcTwX2K0TAAAMHmgww
-        (envelope-from <mliska@suse.cz>); Wed, 20 Apr 2022 11:38:44 +0000
-Message-ID: <2e8ea259-b77c-836a-2aea-d66eb47dd294@suse.cz>
-Date:   Wed, 20 Apr 2022 13:38:44 +0200
+        Wed, 20 Apr 2022 07:53:40 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F9CE1208A;
+        Wed, 20 Apr 2022 04:50:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=e//dGrepWn7jS9BGgfc47xqnbF5iiCNsWca8XJ9Scbo=; b=p9kNFmSNauYxhJ9ue+3HRA2/Sp
+        XglgEYEv2K81hgCmNw9FzjRwLCmmriyByATQynMDLwxN+oHlUqiXOXMcgYRBCVLWJ+52fE76Tinhx
+        VnNeWeM5BWo8VVwgnqLuV/jHvvLrRr5ZW0/FUCPNO+HNQ8W0qwlHW6+4plkO8+kEDJXWitJTf21q9
+        7IyYANdI1o0TwCKpmOY1HKx6kMjnt+H46NWFfPoi0m5UhbgF+UJ9SgeBNw56vkSxMbkBahKnZevRC
+        Yt5sl7cnLOOOWpY7CrGjPyogibKPnS17AafKmelx0F6mMt+06bSNNSWhEfVZzEcNCXsZgO1p0bgBQ
+        DFSXN5JQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nh8r4-0076rr-JF; Wed, 20 Apr 2022 11:50:42 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AFF899861A4; Wed, 20 Apr 2022 13:50:40 +0200 (CEST)
+Date:   Wed, 20 Apr 2022 13:50:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] signal: Deliver SIGTRAP on perf event asynchronously if
+ blocked
+Message-ID: <20220420115040.GE2731@worktop.programming.kicks-ass.net>
+References: <20220404111204.935357-1-elver@google.com>
+ <CACT4Y+YiDhmKokuqD3dhtj67HxZpTumiQvvRp35X-sR735qjqQ@mail.gmail.com>
+ <CANpmjNPQ9DWzPRx4QWDnZatKGU96xLhb2qN-wgbD84zyZ6_Mig@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] Add HAVE_DEBUGINFOD_SUPPORT to built-in features.
-Content-Language: en-US
-From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
-To:     linux-perf-users@vger.kernel.org
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <0d1c5ace-88e8-7102-1565-7c143f01a966@suse.cz>
-In-Reply-To: <0d1c5ace-88e8-7102-1565-7c143f01a966@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPQ9DWzPRx4QWDnZatKGU96xLhb2qN-wgbD84zyZ6_Mig@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-(removing gcc-patches ML that was accidentally included)
+On Tue, Apr 12, 2022 at 01:00:00PM +0200, Marco Elver wrote:
 
-On 4/20/22 13:30, Martin Liška wrote:
-> The change adds debuginfod to ./perf -vv:
-> 
-> ...
-> debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
-> ...
-> 
-> Signed-off-by: Martin Liska <mliska@suse.cz>
-> ---
->   tools/perf/builtin-version.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-> index 9cd074a3d825..a71f491224da 100644
-> --- a/tools/perf/builtin-version.c
-> +++ b/tools/perf/builtin-version.c
-> @@ -65,6 +65,7 @@ static void library_status(void)
->   #endif
->       STATUS(HAVE_SYSCALL_TABLE_SUPPORT, syscall_table);
->       STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
-> +    STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
->       STATUS(HAVE_LIBELF_SUPPORT, libelf);
->       STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
->       STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
+> Should there be any further comments, please shout.
+
+Barring objections, I'm going to queue this for perf/core.
 
