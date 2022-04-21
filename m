@@ -2,135 +2,186 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93106C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Apr 2022 19:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFF8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Apr 2022 05:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381485AbiDTTFf (ORCPT
+        id S1384529AbiDUFuH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Apr 2022 15:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48036 "EHLO
+        Thu, 21 Apr 2022 01:50:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240130AbiDTTFe (ORCPT
+        with ESMTP id S1384527AbiDUFuF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Apr 2022 15:05:34 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 435E42BE5;
-        Wed, 20 Apr 2022 12:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650481367; x=1682017367;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kKQBmPp1VZYcgCiUJsleCcUtBP4LxeMiM4JoNgp0U24=;
-  b=Lp1Wy1yrBVoud1ipzYG4d2cEALELLPYNVEl1/Zz5GtKCpqE112zZf9OE
-   wnZuMNOSS4+tLYBAN4nbXuxQ8ddPY4Gtff78GYbvfeAmIRwt6OksUvNat
-   c4oJyQpl/pVRa/HjcBNVxRNpaU4LSEAcfGz66/cicfDDrb+nuHbc0ue1I
-   Gbn4gLAjFP4XykYPyI4Q6FQMzWRxer1ZeKtvLlAM4htMzALOQkio3nvp9
-   LNvAvy5yw3RNOglNK6m0YqN7tvUq3dnZ24GsoD/Yfxez5witUpBYUlksb
-   YtrpQ5PnazMa5sc+osQQ0CkK3Kz0TDZAqYswPkbf/olBBX6asHgGS/87B
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10323"; a="263590874"
-X-IronPort-AV: E=Sophos;i="5.90,276,1643702400"; 
-   d="scan'208";a="263590874"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 12:02:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,276,1643702400"; 
-   d="scan'208";a="614545737"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 20 Apr 2022 12:02:45 -0700
-Received: from [10.209.97.182] (kliang2-MOBL.ccr.corp.intel.com [10.209.97.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 3F6DD580AE2;
-        Wed, 20 Apr 2022 12:02:43 -0700 (PDT)
-Message-ID: <f3aa49ff-958a-df73-f0cb-e48f73f70e8a@linux.intel.com>
-Date:   Wed, 20 Apr 2022 15:02:42 -0400
+        Thu, 21 Apr 2022 01:50:05 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2045.outbound.protection.outlook.com [40.107.243.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8037764D9;
+        Wed, 20 Apr 2022 22:47:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aSOulrohCeu1Pz5PIV0/LSP6uED1m+DPyt3Cf13Bg7qRK1J8NDJBj8v3dvDy+71tHbp5y9euYh/Snri/RS9y/5b1rzMxzf57C1DKUpj0ymIcaHw9oLnSVeUQ7EIdh9JnA1loMdnLp25CnUFTTKHPgmmr6fuLCgVfydF5VDtH6Q5GO40ozj/6EA4VfT94pcEtWH0fJj4Fa4a+KoFSdNQQ6/oDmrfeF1H9KKpsImSJ5Ni0OhPl8n/CL4sb3AHq+3oLuFma2Ld25+YyJGp9qIoR1nDxi/A9vDAngGUUyUHKZDa2ZdYHSTkF1l00p0mPDoGDkAQ2YOAxUmvTMTTymqPSMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+t1H3P+UVHz+rkIFFbFdl3BwP7sEgvFHrbzWQ/CTQeA=;
+ b=R/7G7P1zbnewFpGfA/YMUjTjzK2RCPpvOLr55ud3miunlNk1TnEG2uLZwADDYhwUpsUWPfuBQhW0zn/Dj5RiTT3oCnv28M20zXYZKFykRbnt2AVc9RkxBbyRM2b1iSoX5h6sP0DLD/3xDnfC6R53fJlOyEycB0WVR4Syo6+ZSyyxqsIOj9+f+DoYNhemCWbwcgtgplNd4UwZgstkFj4TRpqCnG4P7d/y2Nw8Dp1UPrQ6nDJ+xePClpJtpt8J7cWIPuybpws2dBFCMF2iSC73vB8MmNKLiTU1cbNACSmLZPzRbcI4xMK3bdfWRQ50gJuL7/JB+dbDkOTaqqiEKxp4Sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+t1H3P+UVHz+rkIFFbFdl3BwP7sEgvFHrbzWQ/CTQeA=;
+ b=PeVLI+qKlTC+Rk05zDawXvBF9ygmvb5zAs70fn4SiyU6iMZmLI2T4SCRC2+CD1nL4F8L6UrQijUuHA2V8D2EK3TZVpJR61Ry+ZohQK0fMhXXONcvMsA1nM5IpWFSLor+eEAgEllKsTAXyAAiPn9bGam8KIxwvO8ouC759TnYn4c=
+Received: from BN1PR10CA0010.namprd10.prod.outlook.com (2603:10b6:408:e0::15)
+ by BN6PR12MB1204.namprd12.prod.outlook.com (2603:10b6:404:1b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.13; Thu, 21 Apr
+ 2022 05:47:14 +0000
+Received: from BN8NAM11FT027.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e0:cafe::8f) by BN1PR10CA0010.outlook.office365.com
+ (2603:10b6:408:e0::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14 via Frontend
+ Transport; Thu, 21 Apr 2022 05:47:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT027.mail.protection.outlook.com (10.13.177.96) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5186.14 via Frontend Transport; Thu, 21 Apr 2022 05:47:14 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 21 Apr
+ 2022 00:47:07 -0500
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <x86@kernel.org>
+CC:     <peterz@infradead.org>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <namhyung@kernel.org>, <jolsa@kernel.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <pbonzini@redhat.com>, <jmattson@google.com>,
+        <like.xu.linux@gmail.com>, <eranian@google.com>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>
+Subject: [PATCH v2 0/7] perf/x86/amd/core: Add AMD PerfMonV2 support
+Date:   Thu, 21 Apr 2022 11:16:52 +0530
+Message-ID: <cover.1650515382.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v5 5/5] perf mem: Support mem_lvl_num in c2c command
-Content-Language: en-US
-To:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
-        leo.yan@linaro.org, acme@kernel.org
-Cc:     benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-References: <20220408195344.32764-1-alisaidi@amazon.com>
- <20220408195344.32764-6-alisaidi@amazon.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20220408195344.32764-6-alisaidi@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4e04f9fc-e7ac-4d18-7710-08da235a630f
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1204:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR12MB1204D0DD326A96F9B73672EF8BF49@BN6PR12MB1204.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EIGmriLgjA/mFSbpkpPxwptFO7XdVw0p5U3QqbJEfQGqKOQOawzj2VhTyHQkVr4gSeA4fhcVPKzvxnsomzTY95hI9r7SW3Qz+jFIhqrq217vdOVP6iovfr6IYJHbCyz88H1DjGHEZD0VaayX55WgTAm+gXzQ2lt01l8/bh1FpKrYs43fSMx189yiBxVqO6s9eREbs9FLgK466/FXRLN9Mze5VbGNmDX9QkOqut/y1Qtk+oxDoFCUjGBOTsNkIKok3x7eE2HHXdfGeYGq/8o5FXF3hSKOcxL+2LHNUMDLloyn/Rlq/VAFXvId9b470CodkU7M4dwjX5RvbL7pSHxyvmdfnZLzOAAryXWH4yVuS5nTEMiWoNg9/KhMkYYBq7l3Bn69MaSyUGvL4KrTB6JEyQzN1ORT1VhknaQ5oSrTzW1KIkGGQWYqsdEqngEOR/Qo4T1JHwJJh4d2GAJZp+ipmHsFNS/1hgxgE3yQChhIvzxwDl8s+BiC0uNlZnUtK79ACFLa+VIXcYCUWCHIeR2b4HNsRQudBVi6W+Wpe88lgbBl7AV4Gf6bJRY3E4v3r9WiDdlY1iB2KMXzwONC1XfRzDDRc/aAE+DGK/durGv2T2o95UYVSdcwz7tn9RBp5VUfc60J4f/1dKFrLY6mfQGjdT3p0n+IOo6FcYK5BGKxT0+e3FpTMbFiw3PbpTG6uJzmTzYjioyiUzQFT3gsTUM5NiJiBih2p7+TqlHEo3rKVQvx9VuWrLY+6cj6NUDmzDhi5eoJwPa3R/kWepCUc2Bl8VuAlmu1uIUNmY5nDdwHrFI=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(6666004)(356005)(26005)(81166007)(966005)(5660300002)(316002)(54906003)(4326008)(86362001)(70206006)(70586007)(8676002)(82310400005)(40460700003)(2616005)(47076005)(110136005)(508600001)(186003)(336012)(16526019)(36756003)(8936002)(7416002)(44832011)(83380400001)(426003)(36860700001)(2906002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2022 05:47:14.1551
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e04f9fc-e7ac-4d18-7710-08da235a630f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT027.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1204
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Add support for using AMD Performance Monitoring Version 2
+(PerfMonV2) features on upcoming processors. New CPU features
+are introduced for PerfMonV2 detection. New MSR definitions
+are added to make use of an alternative PMC management scheme
+based on the new PMC global control and status registers.
 
+The global control register provides the ability to start and
+stop multiple PMCs at the same time. This makes it possible
+to enable or disable all counters with a single MSR write
+instead of writing to the individual PMC control registers
+iteratively under x86_pmu_{enable,disable}(). The effects
+can be seen when counting the same events across multiple
+PMCs.
 
-On 4/8/2022 3:53 PM, Ali Saidi wrote:
-> In addition to summarizing data encoded in mem_lvl also support data
-> encoded in mem_lvl_num.
-> 
-> Since other architectures don't seem to populate the mem_lvl_num field
-> here there shouldn't be a change in functionality.
-> 
-> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> ---
->   tools/perf/util/mem-events.c | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index ed0ab838bcc5..e5e405185498 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -485,6 +485,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
->   	u64 daddr  = mi->daddr.addr;
->   	u64 op     = data_src->mem_op;
->   	u64 lvl    = data_src->mem_lvl;
-> +	u64 lnum   = data_src->mem_lvl_num;
->   	u64 snoop  = data_src->mem_snoop;
->   	u64 lock   = data_src->mem_lock;
->   	u64 blk    = data_src->mem_blk;
-> @@ -527,16 +528,18 @@ do {				\
->   			if (lvl & P(LVL, UNC)) stats->ld_uncache++;
->   			if (lvl & P(LVL, IO))  stats->ld_io++;
->   			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
-> -			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
-> -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-> -			if (lvl & P(LVL, L3 )) {
-> +			if (lvl & P(LVL, L1) || lnum == P(LVLNUM, L1))
-> +				stats->ld_l1hit++;
-> +			if (lvl & P(LVL, L2) || lnum == P(LVLNUM, L2))
-> +				stats->ld_l2hit++;
-> +			if (lvl & P(LVL, L3) || lnum == P(LVLNUM, L3)) {
->   				if (snoop & P(SNOOP, HITM))
->   					HITM_INC(lcl_hitm);
->   				else
->   					stats->ld_llchit++;
->   			}
->   
-> -			if (lvl & P(LVL, LOC_RAM)) {
-> +			if (lvl & P(LVL, LOC_RAM) || lnum == P(LVLNUM, RAM)) {
+E.g.
 
-I think the PERF_MEM_LVLNUM_RAM only means it's a DRAM.
-It doesn't contain the location information. To distinguish the local 
-and remote dram, X86 uses PERF_MEM_REMOTE_REMOTE.
-Here the remote dram will be mistakenly calculated if you only check the 
-PERF_MEM_LVLNUM_RAM.
+  $ sudo perf stat -e "{cycles,instructions,cycles,instructions}" sleep 1
 
-Actually, it looks like the mem_lvl_num fields supported in this patch 
-are also supported by the PERF_MEM_LVL*. Why don't you set both 
-PERF_MEM_LVLNUM_* and PERF_MEM_LVL* in your previous patch 4?
-Then you can drop this patch.
+Before:
 
-Thanks,
-Kan
->   				stats->lcl_dram++;
->   				if (snoop & P(SNOOP, HIT))
->   					stats->ld_shared++;
+   Performance counter stats for 'sleep 1':
+  
+             1013281      cycles
+             1452859      instructions              #    1.43  insn per cycle
+             1023462      cycles
+             1461724      instructions              #    1.43  insn per cycle
+
+         1.001644276 seconds time elapsed
+  
+         0.001948000 seconds user
+         0.000000000 seconds sys
+
+After:
+
+   Performance counter stats for 'sleep 1':
+  
+              999165      cycles
+             1440456      instructions              #    1.44  insn per cycle
+              999165      cycles
+             1440456      instructions              #    1.44  insn per cycle
+  
+         1.001879504 seconds time elapsed
+  
+         0.001817000 seconds user
+         0.000000000 seconds sys
+
+No additional failures are seen upon running the following:
+  * perf built-in test suite
+  * perf_event_tests suite
+  * rr test suite
+
+Previous versions can be found at:
+v1: https://lore.kernel.org/all/cover.1647498015.git.sandipan.das@amd.com/
+
+Changes in v2:
+- Sort PerfCntrGlobal* register definitions based on MSR index.
+- Use wrmsrl() in cpu_{starting,dead}().
+- Add enum to extract bitfields from CPUID leaf 0x80000022.
+- Remove static calls for counter management functions.
+- Stop counters before inspecting overflow status in NMI handler.
+- Save and restore PMU enabled state in NMI handler.
+- Remove unused variable in NMI handler.
+- Remove redundant write to APIC_LVTPC in NMI handler.
+- Add comment on APIC_LVTPC mask bit behaviour during counter overflow.
+
+Sandipan Das (7):
+  x86/cpufeatures: Add PerfMonV2 feature bit
+  x86/msr: Add PerfCntrGlobal* registers
+  perf/x86/amd/core: Detect PerfMonV2 support
+  perf/x86/amd/core: Detect available counters
+  perf/x86/amd/core: Add PerfMonV2 counter control
+  perf/x86/amd/core: Add PerfMonV2 overflow handling
+  kvm: x86/cpuid: Fix CPUID leaf 0xA
+
+ arch/x86/events/amd/core.c         | 227 +++++++++++++++++++++++++++--
+ arch/x86/include/asm/cpufeatures.h |   2 +-
+ arch/x86/include/asm/msr-index.h   |   5 +
+ arch/x86/include/asm/perf_event.h  |  17 +++
+ arch/x86/kernel/cpu/scattered.c    |   1 +
+ arch/x86/kvm/cpuid.c               |   5 +
+ 6 files changed, 240 insertions(+), 17 deletions(-)
+
+-- 
+2.32.0
+
