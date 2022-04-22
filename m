@@ -2,384 +2,222 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B32C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 10:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D06AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 10:10:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1446358AbiDVKEb (ORCPT
+        id S1446250AbiDVKMw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Apr 2022 06:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43334 "EHLO
+        Fri, 22 Apr 2022 06:12:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1446367AbiDVKEY (ORCPT
+        with ESMTP id S1352684AbiDVKMX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Apr 2022 06:04:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30FE7541A6;
-        Fri, 22 Apr 2022 03:01:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C26A861E25;
-        Fri, 22 Apr 2022 10:01:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE84C385A4;
-        Fri, 22 Apr 2022 10:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650621690;
-        bh=NUItUtsCwaH8t+rgiyagJdkrcn3JwgnJlI9AIhlyX/w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E5vy0r/5ruek8frwintwh371kfseVC78eJCayBE46YwgSBrztGM6UrenjSyocGDV2
-         sT99gi5e72Qa1fqGX3B7x7hY1wWHFTRuMv8pUpccDFzMoIbTEifgY476PA0PqV/2G7
-         CiJSCyOpo6GPNssBwEoopDPYvJXKGy/imYTrAekjyg/VA95qAb9cq7BFNa8LZi/oxP
-         R20XyZD5/sx9jiFY83YThYRbuu9x7mNCnRQMmhYD/e4J+VNIP/CdarSRszr3lS4SuW
-         eKfRjR0pZHrh0rP/f69KtrfykqZ3h2IkagyOFDhlvWVK/VxHGGYdfeA1c1A75xFOLF
-         sP2F18ns+z5VQ==
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: [PATCH perf/core 5/5] perf tools: Rework prologue generation code
-Date:   Fri, 22 Apr 2022 12:00:25 +0200
-Message-Id: <20220422100025.1469207-6-jolsa@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220422100025.1469207-1-jolsa@kernel.org>
-References: <20220422100025.1469207-1-jolsa@kernel.org>
+        Fri, 22 Apr 2022 06:12:23 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C164E53E28;
+        Fri, 22 Apr 2022 03:09:30 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85A341477;
+        Fri, 22 Apr 2022 03:09:30 -0700 (PDT)
+Received: from [10.57.11.218] (unknown [10.57.11.218])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2942F3F766;
+        Fri, 22 Apr 2022 03:09:28 -0700 (PDT)
+Message-ID: <4f4c5140-6631-a364-0ae3-4f9ba05f8fa9@arm.com>
+Date:   Fri, 22 Apr 2022 11:09:26 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v2 2/6] coresight: Fail to open with return stacks if they
+ are unavailable
+Content-Language: en-US
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mathieu.poirier@linaro.org, coresight@lists.linaro.org,
+        leo.yan@linaro.com, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20220113091056.1297982-1-james.clark@arm.com>
+ <20220113091056.1297982-3-james.clark@arm.com>
+ <50e5ff63-ae00-f04b-fc5b-f294742cb13a@arm.com>
+ <292386ee-cfa8-d849-57ce-156c76680e12@arm.com>
+ <CAJ9a7VjiYrnQKUBkcQPs-iJomxFUAJ9Wmq0A+JwN4O_bbqhX1A@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAJ9a7VjiYrnQKUBkcQPs-iJomxFUAJ9Wmq0A+JwN4O_bbqhX1A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some functions we use for bpf prologue generation are going to be
-deprecated. This change reworks current code not to use them.
 
-We need to replace following functions/struct:
-   bpf_program__set_prep
-   bpf_program__nth_fd
-   struct bpf_prog_prep_result
 
-We use bpf_program__set_prep to hook perf callback before program
-is loaded and provide new instructions with the prologue.
+On 11/03/2022 15:53, Mike Leach wrote:
+> Hi,
+> 
+> 
+> On Fri, 11 Mar 2022 at 14:52, James Clark <james.clark@arm.com> wrote:
+>>
+>>
+>>
+>> On 28/01/2022 11:24, Suzuki K Poulose wrote:
+>>> Hi James
+>>>
+>>> On 13/01/2022 09:10, James Clark wrote:
+>>>> Maintain consistency with the other options by failing to open when they
+>>>> aren't supported. For example ETM_OPT_TS, ETM_OPT_CTXTID2 and the newly
+>>>> added ETM_OPT_BRANCH_BROADCAST all return with -EINVAL if they are
+>>>> requested but not supported by hardware.
+>>>
+>>> Looking at this again (with similar comment to the Branch Broadcast),
+>>> won't it disable using retstack on all CPUs, even when some of them
+>>> support it ?
+>>>
+>>> i.e., CPU0 - supports retstack, CPU1 - doesn't
+>>>
+>>> A perf run with retstack will fail, as CPU1 doesn't support it (even
+>>> though we advertise it, unconditionally).
+>>>
+>>> So, if we ignore the failure, this would still allow CPU0 to use
+>>> the feature and as long as the OpenCSD is able to decode the trace
+>>> we should ignore the failure ?
+>>>
+>>> I think we may also need to tune the etm4x_enable_hw() to skip
+>>> updating the TRCCONFIGR with features not supported by the ETM
+>>>
+>>
+>> Hi Suzuki,
+>>
+>> I'm picking up this branch broadcast change again after the haitus.
+>>
+>> For this point, do you think it would be worth distinguishing between "no
+>> known CPUs that support the feature" vs "not currently running on a
+>> CPU that supports it but there are others that do"?
+>>
+>> Also would we want to distinguish between per-CPU or per-process events?
+>> For the former it actually is possible to fail to open because all of
+>> the information is known.
+>>
+>> I'm just thinking of the case where someone asks for a load of flags
+>> and thinks that they're getting them but get no feedback that they won't.
+>> But I understand having some complicated solution like I'm suggesting
+>> might be even more surprising to users.
+>>
+>> Maybe the cleanest solution is to ask users to supply a config that
+>> can work on anywhere the event could possibly be scheduled. It doesn't
+>> really make sense to have retstack on a per-process event on big-little
+>> and then getting half of one type of data and half of another. It would
+>> make more sense to fail to open in that case and they have the choice of
+>> either doing per-CPU events or disabling retstacks altogether.
+>>
+> 
+> return stack has no effect on the decoder output whatsoever. The only
+> effect is to reduce the amount of traced addresses at the input
+> (leaving more space for other trace),
+> so it is irrelevant if CPU0 supports it but CPU1 doesn't.
+> 
+> sequence:
+> 
+> BL r0 (return stack is used only on link instructions)
+> ...
+> RET
+> 
+> will output trace:-
+> ATOM E (BL r0)
+> ...
+> ADDR_ELEM <ret addr>
+> ATOM E (RET)
+> 
+> for no return stack,
+> 
+> ATOM E (BL r0)
+> ...
+> ATOM E (RET)
+> 
+> fior return stack.
+> 
+> In both cases the decoder will push the address after BL r0 onto its
+> return stack.
+> 
+> In the first case the decoder will use the supplied address, in the
+> second will pop the top of its return stack.
+> 
+> The decode output in both cases will be "branched to r0, ran code,
+> returned via link register"
+> 
+> The outcome is identical for the client. So the case for not tracing
+> on a core that does not have return stack if specified is weak.
+> 
+> Perhaps a warning will be sufficient?
+> 
+> Mike
+> 
+> 
+> 
+>> This seems like a similar problem to the issue causing the Coresight self
+>> test failure where a certain sink was picked that couldn't be reached and
+>> the test failed.
+>>
+>> In that case the change we made doesn't quite match up to my suggestion here:
+>>
+>>  * Per-cpu but an unreachable sink -> fail
+>>  * Per-process and potentially reachable sink in the future -> pass
+>>
+>> Maybe it would have been better to say that the sink always has to be
+>> reachable otherwise is the outcome predicatable?
 
-We workaround this by taking instructions for specific program,
-attaching prologue to them and load such new ebpf programs with
-prologue using separate bpf_prog_load calls (outside libbpf load
-machinery).
+Hi Mike,
 
-Before we can take program instructions, we need libbpf to actually
-load it. This way we get the final shape of its instructions (with
-all relocations and verifier adjustments).
+If it has no effect on the output then it makes sense to me to just drop this
+patch. I think even a warning would not add much and as far as I know they are
+discouraged.
 
-There's one glitch though.. perf kprobe program already assumes
-generated prologue code with proper values in argument registers,
-so loading such program directly will fail in the verifier.
+James
 
-That's where 'perfkprobe/' pre-load handler fits in and prepends
-the initialization code to the program. Once such program is loaded
-we take its instructions, cut off the initialization code and prepend
-the prologue.
-
-I know.. sorry ;-)
-
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/include/bpf/bpf.h                |   2 +-
- tools/perf/tests/bpf-script-example.c       |   2 +-
- tools/perf/tests/bpf-script-test-prologue.c |   2 +-
- tools/perf/util/bpf-loader.c                | 136 +++++++++++++++++---
- 4 files changed, 120 insertions(+), 22 deletions(-)
-
-diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
-index b422aeef5339..91869f6fb672 100644
---- a/tools/perf/include/bpf/bpf.h
-+++ b/tools/perf/include/bpf/bpf.h
-@@ -50,7 +50,7 @@ static void (*bpf_tail_call)(void *ctx, void *map, int index) = (void *)BPF_FUNC
- #define SEC(NAME) __attribute__((section(NAME),  used))
- 
- #define probe(function, vars) \
--	SEC(#function "=" #function " " #vars) function
-+	SEC("perfkprobe/" #function "=" #function " " #vars) function
- 
- #define syscall_enter(name) \
- 	SEC("syscalls:sys_enter_" #name) syscall_enter_ ## name
-diff --git a/tools/perf/tests/bpf-script-example.c b/tools/perf/tests/bpf-script-example.c
-index ab4b98b3165d..56673fa1f30d 100644
---- a/tools/perf/tests/bpf-script-example.c
-+++ b/tools/perf/tests/bpf-script-example.c
-@@ -32,7 +32,7 @@ struct bpf_map_def SEC("maps") flip_table = {
- 	.max_entries = 1,
- };
- 
--SEC("func=do_epoll_wait")
-+SEC("perfkprobe/func=do_epoll_wait")
- int bpf_func__SyS_epoll_pwait(void *ctx)
- {
- 	int ind =0;
-diff --git a/tools/perf/tests/bpf-script-test-prologue.c b/tools/perf/tests/bpf-script-test-prologue.c
-index bd83d364cf30..00dac5a23938 100644
---- a/tools/perf/tests/bpf-script-test-prologue.c
-+++ b/tools/perf/tests/bpf-script-test-prologue.c
-@@ -26,7 +26,7 @@
- static void (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
- 	(void *) 6;
- 
--SEC("func=null_lseek file->f_mode offset orig")
-+SEC("perfkprobe/func=null_lseek file->f_mode offset orig")
- int bpf_func__null_lseek(void *ctx, int err, unsigned long _f_mode,
- 			 unsigned long offset, unsigned long orig)
- {
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 92dd8cc18edb..10151da862c8 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -9,6 +9,7 @@
- #include <linux/bpf.h>
- #include <bpf/libbpf.h>
- #include <bpf/bpf.h>
-+#include <linux/filter.h>
- #include <linux/err.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-@@ -49,6 +50,7 @@ struct bpf_prog_priv {
- 	struct bpf_insn *insns_buf;
- 	int nr_types;
- 	int *type_mapping;
-+	int *proglogue_fds;
- };
- 
- struct bpf_perf_object {
-@@ -56,6 +58,11 @@ struct bpf_perf_object {
- 	struct bpf_object *obj;
- };
- 
-+struct bpf_preproc_result {
-+	struct bpf_insn *new_insn_ptr;
-+	int new_insn_cnt;
-+};
-+
- static LIST_HEAD(bpf_objects_list);
- static struct hashmap *bpf_program_hash;
- static struct hashmap *bpf_map_hash;
-@@ -238,14 +245,31 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
- 	return obj;
- }
- 
-+static void close_prologue_programs(struct bpf_prog_priv *priv)
-+{
-+	struct perf_probe_event *pev;
-+	int i, fd;
-+
-+	if (!priv->need_prologue)
-+		return;
-+	pev = &priv->pev;
-+	for (i = 0; i < pev->ntevs; i++) {
-+		fd = priv->proglogue_fds[i];
-+		if (fd != -1)
-+			close(fd);
-+	}
-+}
-+
- static void
- clear_prog_priv(const struct bpf_program *prog __maybe_unused,
- 		void *_priv)
- {
- 	struct bpf_prog_priv *priv = _priv;
- 
-+	close_prologue_programs(priv);
- 	cleanup_perf_probe_events(&priv->pev, 1);
- 	zfree(&priv->insns_buf);
-+	zfree(&priv->proglogue_fds);
- 	zfree(&priv->type_mapping);
- 	zfree(&priv->sys_name);
- 	zfree(&priv->evt_name);
-@@ -480,9 +504,15 @@ static int
- parse_prog_config(const char *config_str, const char **p_main_str,
- 		  bool *is_tp, struct perf_probe_event *pev)
- {
-+	const char *main_str, *parse_str;
- 	int err;
--	const char *main_str = parse_prog_config_kvpair(config_str, pev);
- 
-+	/* Make sure it's our section with 'perfkprobe/' prefix check. */
-+	if (!strstarts(config_str, LIBBPF_SEC_PREFIX))
-+		return -EINVAL;
-+
-+	parse_str = config_str + sizeof(LIBBPF_SEC_PREFIX) - 1;
-+	main_str  = parse_prog_config_kvpair(parse_str, pev);
- 	if (IS_ERR(main_str))
- 		return PTR_ERR(main_str);
- 
-@@ -608,8 +638,8 @@ static int bpf__prepare_probe(void)
- 
- static int
- preproc_gen_prologue(struct bpf_program *prog, int n,
--		     struct bpf_insn *orig_insns, int orig_insns_cnt,
--		     struct bpf_prog_prep_result *res)
-+		     const struct bpf_insn *orig_insns, int orig_insns_cnt,
-+		     struct bpf_preproc_result *res)
- {
- 	struct bpf_prog_priv *priv = program_priv(prog);
- 	struct probe_trace_event *tev;
-@@ -657,7 +687,6 @@ preproc_gen_prologue(struct bpf_program *prog, int n,
- 
- 	res->new_insn_ptr = buf;
- 	res->new_insn_cnt = prologue_cnt + orig_insns_cnt;
--	res->pfd = NULL;
- 	return 0;
- 
- errout:
-@@ -765,7 +794,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 	struct bpf_prog_priv *priv = program_priv(prog);
- 	struct perf_probe_event *pev;
- 	bool need_prologue = false;
--	int err, i;
-+	int i;
- 
- 	if (IS_ERR_OR_NULL(priv)) {
- 		pr_debug("Internal error when hook preprocessor\n");
-@@ -803,6 +832,13 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 		return -ENOMEM;
- 	}
- 
-+	priv->proglogue_fds = malloc(sizeof(int) * pev->ntevs);
-+	if (!priv->proglogue_fds) {
-+		pr_debug("Not enough memory: alloc prologue fds failed\n");
-+		return -ENOMEM;
-+	}
-+	memset(priv->proglogue_fds, -1, sizeof(int) * pev->ntevs);
-+
- 	priv->type_mapping = malloc(sizeof(int) * pev->ntevs);
- 	if (!priv->type_mapping) {
- 		pr_debug("Not enough memory: alloc type_mapping failed\n");
-@@ -811,13 +847,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 	memset(priv->type_mapping, -1,
- 	       sizeof(int) * pev->ntevs);
- 
--	err = map_prologue(pev, priv->type_mapping, &priv->nr_types);
--	if (err)
--		return err;
--
--	err = bpf_program__set_prep(prog, priv->nr_types,
--				    preproc_gen_prologue);
--	return err;
-+	return map_prologue(pev, priv->type_mapping, &priv->nr_types);
- }
- 
- int bpf__probe(struct bpf_object *obj)
-@@ -924,6 +954,77 @@ int bpf__unprobe(struct bpf_object *obj)
- 	return ret;
- }
- 
-+static int bpf_object__load_prologue(struct bpf_object *obj)
-+{
-+	int init_cnt = ARRAY_SIZE(prologue_init_insn);
-+	const struct bpf_insn *orig_insns;
-+	struct bpf_preproc_result res;
-+	struct perf_probe_event *pev;
-+	struct bpf_program *prog;
-+	int orig_insns_cnt;
-+
-+	bpf_object__for_each_program(prog, obj) {
-+		struct bpf_prog_priv *priv = program_priv(prog);
-+		int err, i, fd;
-+
-+		if (IS_ERR_OR_NULL(priv)) {
-+			pr_debug("bpf: failed to get private field\n");
-+			return -BPF_LOADER_ERRNO__INTERNAL;
-+		}
-+
-+		if (!priv->need_prologue)
-+			continue;
-+
-+		/*
-+		 * For each program that needs prologue we do following:
-+		 *
-+		 * - take its current instructions and use them
-+		 *   to generate the new code with prologue
-+		 * - load new instructions with bpf_prog_load
-+		 *   and keep the fd in proglogue_fds
-+		 * - new fd will be used in bpf__foreach_event
-+		 *   to connect this program with perf evsel
-+		 */
-+		orig_insns = bpf_program__insns(prog);
-+		orig_insns_cnt = bpf_program__insn_cnt(prog);
-+
-+		pev = &priv->pev;
-+		for (i = 0; i < pev->ntevs; i++) {
-+			/*
-+			 * Skipping artificall prologue_init_insn instructions
-+			 * (init_cnt), so the prologue can be generated instead
-+			 * of them.
-+			 */
-+			err = preproc_gen_prologue(prog, i,
-+						   orig_insns + init_cnt,
-+						   orig_insns_cnt - init_cnt,
-+						   &res);
-+			if (err)
-+				return err;
-+
-+			fd = bpf_prog_load(bpf_program__get_type(prog),
-+					   bpf_program__name(prog), "GPL",
-+					   res.new_insn_ptr,
-+					   res.new_insn_cnt, NULL);
-+			if (fd < 0) {
-+				char bf[128];
-+
-+				libbpf_strerror(-errno, bf, sizeof(bf));
-+				pr_debug("bpf: load objects with prologue failed: err=%d: (%s)\n",
-+					 -errno, bf);
-+				return -errno;
-+			}
-+			priv->proglogue_fds[i] = fd;
-+		}
-+		/*
-+		 * We no longer need the original program,
-+		 * we can unload it.
-+		 */
-+		bpf_program__unload(prog);
-+	}
-+	return 0;
-+}
-+
- int bpf__load(struct bpf_object *obj)
- {
- 	int err;
-@@ -935,7 +1036,7 @@ int bpf__load(struct bpf_object *obj)
- 		pr_debug("bpf: load objects failed: err=%d: (%s)\n", err, bf);
- 		return err;
- 	}
--	return 0;
-+	return bpf_object__load_prologue(obj);
- }
- 
- int bpf__foreach_event(struct bpf_object *obj,
-@@ -970,13 +1071,10 @@ int bpf__foreach_event(struct bpf_object *obj,
- 		for (i = 0; i < pev->ntevs; i++) {
- 			tev = &pev->tevs[i];
- 
--			if (priv->need_prologue) {
--				int type = priv->type_mapping[i];
--
--				fd = bpf_program__nth_fd(prog, type);
--			} else {
-+			if (priv->need_prologue)
-+				fd = priv->proglogue_fds[i];
-+			else
- 				fd = bpf_program__fd(prog);
--			}
- 
- 			if (fd < 0) {
- 				pr_debug("bpf: failed to get file descriptor\n");
--- 
-2.35.1
-
+>>
+>> James
+>>
+>>> Suzuki
+>>>
+>>>
+>>>>
+>>>> The consequence of not doing this is that the user may not be
+>>>> aware that they are not enabling the feature as it is silently disabled.
+>>>>
+>>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>>> ---
+>>>>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 13 +++++++++----
+>>>>   1 file changed, 9 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>> index 04669ecc0efa..a93c1a5fe045 100644
+>>>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>> @@ -674,10 +674,15 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+>>>>       }
+>>>>         /* return stack - enable if selected and supported */
+>>>> -    if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
+>>>> -        /* bit[12], Return stack enable bit */
+>>>> -        config->cfg |= BIT(12);
+>>>> -
+>>>> +    if (attr->config & BIT(ETM_OPT_RETSTK)) {
+>>>> +        if (!drvdata->retstack) {
+>>>> +            ret = -EINVAL;
+>>>> +            goto out;
+>>>> +        } else {
+>>>> +            /* bit[12], Return stack enable bit */
+>>>> +            config->cfg |= BIT(12);
+>>>> +        }
+>>>> +    }
+>>>>       /*
+>>>>        * Set any selected configuration and preset.
+>>>>        *
+>>>
+> 
+> 
+> 
