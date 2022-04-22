@@ -2,112 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22628C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 22:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AD6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 23:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233235AbiDVWhX (ORCPT
+        id S230301AbiDVXzI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Apr 2022 18:37:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59792 "EHLO
+        Fri, 22 Apr 2022 19:55:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233271AbiDVWhH (ORCPT
+        with ESMTP id S230060AbiDVXzI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Apr 2022 18:37:07 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A754024766C;
-        Fri, 22 Apr 2022 14:49:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7235EB831F5;
-        Fri, 22 Apr 2022 19:04:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 059E8C385A0;
-        Fri, 22 Apr 2022 19:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650654261;
-        bh=/hQTHTPZ+8EMV0t0+BWR+cNB6HkAVNSrcB0f4XxB0uo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e7W3PV+GoD7Ha2W0fT29yk3eI7sObxvOyea9pB3TA1nfeWcqBP30+4EL8qO0cddDL
-         1naoJHDmxy8N+1iTy+DK01hyZyG7fz0Pfl8lyLTvmXcJ5P6WtI/pXOrx6M2NqEUNW6
-         Nf7Rt5g13AQ71tnz7xlxL7k/vLzfMc6qetAcK1+7xVHwqYUcVsKHGe3ezcwCpn4j/1
-         2jvX2cOBgJ/tot0Yee12YrzrbowKIv+JPWSFbV55/P3oJqt/a69YITOULv1f7WtRGT
-         jJYEqX/oSDbivZ6hFmiZpsMCUeM8iRAkEAgWNRPpYvftLAIgEALjYJb9yzvv/mnck1
-         K+eT13/x+c1TA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CACD9400B1; Fri, 22 Apr 2022 16:04:18 -0300 (-03)
-Date:   Fri, 22 Apr 2022 16:04:18 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Milian Wolff <milian.wolff@kdab.com>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
-Subject: Re: [RFC 0/4] perf record: Implement off-cpu profiling with BPF (v1)
-Message-ID: <YmL8MlTX12zHtzbd@kernel.org>
-References: <20220422053401.208207-1-namhyung@kernel.org>
- <35121321.B44TWeBT9p@milian-workstation>
- <CAM9d7cjU6RGMStG4YOW5D50Sx4PRia2dfzcPKxb4JLh5Q668mw@mail.gmail.com>
+        Fri, 22 Apr 2022 19:55:08 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9AF13F4E;
+        Fri, 22 Apr 2022 16:52:13 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id p10so16852305lfa.12;
+        Fri, 22 Apr 2022 16:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xsvO2wMB3Qbk/iytHzkt7IglSjEYbp/i0Cu+gkwdE44=;
+        b=QTMnY2AJSnPps5jnuwUy0IP3g9WIU7vI2GX27pJHOpnbbtPaRa+vQEmZFfNUkXkmDZ
+         SEzwmZQtzHCI4fOj6Rjh3G6vnouUPLcSt5gjptd0b5YhvwnqttqFH4vV3YbpJocDAYBz
+         vCHo9u1/cYRJ28jtI3UdcqSgiZLI70n4L0+jNSCA65HWDTIm9Oh1u1jysrm9K0CtlJAd
+         f1Zpf4DJhQdpSFE/zC0JLnjNEoNIrGH4p8kZrGvZUO7n3KdfYAYeD6tZFnaB7AOE/9my
+         W6rMyEFemk/ePCVZGUbV9JWkbKQURYRc0u2BMqPoMVbDU3StBwVKyQeoR6rPfjkcO/up
+         bVxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xsvO2wMB3Qbk/iytHzkt7IglSjEYbp/i0Cu+gkwdE44=;
+        b=P8KOOZTYIQwmPLezcv1nL/Tkf+ZW/1ZfL5gzPtFqVzsTC70o+eDEHvCfR3vGAxdx/7
+         ey/xg4YgCRXK1P2eDY58GFxhtriPfqVaa3mGeJAsMo2z9vuTzh7m0qlQZSHQhyT7nBli
+         JOFws5eE/a3bRNQ6ChdYKX8h1UrZVvn3z8D5buEKTrt6uk/qNhKPS50tGJighl3JPwgP
+         SK6tkbqvtK0DTsg9uPAWah5vOKeMWKVbcp4HL1x9JbwU13UQ+qHd8p5S4Qmk58RKzi4s
+         McgInRYmf9LF7Qdkw0j6+zpJrrSpbhOTNSBGJZPLJFIggNZQ3I6TImuUSgLM8e4GxynO
+         izyg==
+X-Gm-Message-State: AOAM5315WGZYODyoo/+vdL9IPISmYCD0RjD+NDoTQsZVQMaCrONTIf6H
+        KqCUXmX4oX8Vu46ldA86ImgvZReKIrMg/n86Qck=
+X-Google-Smtp-Source: ABdhPJzyC9nBLD31XHA+XWLnKx0DQ/mq+sCUdsn6Cf/9Q2vs4h+vocDyxZ2AQeGXwHRGFcttUV1CKSXFg783SBx67Rc=
+X-Received: by 2002:ac2:5dd3:0:b0:471:f6fd:441e with SMTP id
+ x19-20020ac25dd3000000b00471f6fd441emr211405lfq.454.1650671531572; Fri, 22
+ Apr 2022 16:52:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cjU6RGMStG4YOW5D50Sx4PRia2dfzcPKxb4JLh5Q668mw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220420102354.468173-1-florian.fischer@muhq.space> <YmA48V09iBbqy6su@kernel.org>
+In-Reply-To: <YmA48V09iBbqy6su@kernel.org>
+From:   Namhyung Kim <namhyung@gmail.com>
+Date:   Fri, 22 Apr 2022 16:52:00 -0700
+Message-ID: <CAM9d7cjcA0aYC1otY4WvCJ_h71P9wiHu42GK7iyv3=i01rQ26Q@mail.gmail.com>
+Subject: Re: [PATCHSET v4 next 0/3] perf stat: add user_time and system_time
+ tool events
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Apr 22, 2022 at 08:01:15AM -0700, Namhyung Kim escreveu:
-> Hi Milian,
- 
-> On Fri, Apr 22, 2022 at 3:21 AM Milian Wolff <milian.wolff@kdab.com> wrote:
-> > On Freitag, 22. April 2022 07:33:57 CEST Namhyung Kim wrote:
-> > > This is the first version of off-cpu profiling support.  Together with
-> > > (PMU-based) cpu profiling, it can show holistic view of the performance
-> > > characteristics of your application or system.
+Hello,
 
-> > Hey Namhyung,
-
-> > this is awesome news! In hotspot, I've long done off-cpu profiling manually by
-> > looking at the time between --switch-events. The downside is that we also need
-> > to track the sched:sched_switch event to get a call stack. But this approach
-> > also works with dwarf based unwinding, and also includes kernel stacks.
-> 
-> Thanks, I've also briefly thought about the switch event based off-cpu
-> profiling as it doesn't require root.  But collecting call stacks is hard and
-> I'd like to do it in kernel/bpf to reduce the overhead.
-
-It would be great to have both in perf. Right now since we have one in
-hotspot that is working, perfecting the other method, Namhyung's, using
-BPF to reduce the amount of data to postprocess in userspace, looks
-great.
- 
-> > > With BPF, it can aggregate scheduling stats for interested tasks
-> > > and/or states and convert the data into a form of perf sample records.
-> > > I chose the bpf-output event which is a software event supposed to be
-> > > consumed by BPF programs and renamed it as "offcpu-time".  So it
-> > > requires no change on the perf report side except for setting sample
-> > > types of bpf-output event.
-> > >
-> > > Basically it collects userspace callstack for tasks as it's what users
-> > > want mostly.  Maybe we can add support for the kernel stacks but I'm
-> > > afraid that it'd cause more overhead.  So the offcpu-time event will
-> > > always have callchains regardless of the command line option, and it
-> > > enables the children mode in perf report by default.
+On Fri, Apr 22, 2022 at 3:05 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Wed, Apr 20, 2022 at 12:23:51PM +0200, Florian Fischer escreveu:
+> > This patch series adds new internal events to perf stat exposing the times spend
+> > in user and kernel mode in nanoseconds reported by rusage.
 > >
-> > Has anything changed wrt perf/bpf and user applications not compiled with `-
-> > fno-omit-frame-pointer`? I.e. does this new utility only work for specially
-> > compiled applications, or do we also get backtraces for "normal" binaries that
-> > we can install through package managers?
-> 
-> I am not aware of such changes, it still needs a frame pointer to get
-> backtraces.
+> > During some benchmarking using perf it bothered me that I could not easily
+> > retrieve those times from perf stat when using the machine readable output.
+> >
+> > But perf definitely knows about those values because in the human readable output
+> > they are present.
+> >
+> > Therefore I exposed the times reported by rusage via the new tool events:
+> > user_time and system_time.
+> >
+> > This allows to retrieved them in machine-readable output:
+> >
+> > $ ./perf stat -x, -e duration_time,user_time,system_time,cache-misses -- grep -q -r duration_time tools/perf
+> > 72134524,ns,duration_time:u,72134524,100.00,,
+> > 65225000,ns,user_time:u,65225000,100.00,,
+> > 6865000,ns,ssystem_time:u,6865000,100.00,,
 
-I see this as an initial limitation, one that we can lift later?
+ssystem?  Looks like a typo.
 
-- Arnaldo
+Anyway it looks a little bit strange to me if we can get
+system time in user mode only (the 'u' modifier).
+
+Thanks,
+Namhyung
+
+
+> > 38705,,cache-misses:u,71189328,100.00,,
+> >
+> > The changes are mostly inspired by the code for the only other available
+> > tool event: 'duration_time'.
