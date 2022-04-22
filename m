@@ -2,101 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C963C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 22:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22628C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 22:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232159AbiDVW2s (ORCPT
+        id S233235AbiDVWhX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Apr 2022 18:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
+        Fri, 22 Apr 2022 18:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234313AbiDVW2g (ORCPT
+        with ESMTP id S233271AbiDVWhH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Apr 2022 18:28:36 -0400
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7721A0B23;
-        Fri, 22 Apr 2022 14:22:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1650662580; x=1682198580;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pIf8XjvVOLM926gmhXXRBBK1J3Op2QCT6Rw8kAViYLM=;
-  b=n7DOI4VDYzR+FeJr/AzEpv/QIIzjQ9Nn9PxTsWFlWxh11NG5JXfc/f8Q
-   hKAhxt841hKGcu9DFnMfK7AZs5/cVzfTTmlQzQH/EYyyapUByYoCtzIQw
-   lxKRo99HXJzd6IRJTO5dhYuXuzmPYyfJM+mnG5uIGiqLVcWPRNt56JF3q
-   k=;
-X-IronPort-AV: E=Sophos;i="5.90,282,1643673600"; 
-   d="scan'208";a="195599088"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-b27d4a00.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP; 22 Apr 2022 21:22:58 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-        by email-inbound-relay-iad-1a-b27d4a00.us-east-1.amazon.com (Postfix) with ESMTPS id 9E8C68129B;
-        Fri, 22 Apr 2022 21:22:52 +0000 (UTC)
-Received: from EX13D02UWB001.ant.amazon.com (10.43.161.240) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Fri, 22 Apr 2022 21:22:51 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D02UWB001.ant.amazon.com (10.43.161.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Fri, 22 Apr 2022 21:22:51 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1497.32 via Frontend Transport; Fri, 22 Apr 2022 21:22:52
- +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 8D417D86; Fri, 22 Apr 2022 21:22:50 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <kan.liang@linux.intel.com>
-CC:     <Nick.Forrington@arm.com>, <acme@kernel.org>, <ak@linux.intel.com>,
-        <alexander.shishkin@linux.intel.com>, <alisaidi@amazon.com>,
-        <andrew.kilroy@arm.com>, <benh@kernel.crashing.org>,
-        <german.gomez@arm.com>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
-        <leo.yan@linaro.org>, <lihuafei1@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>
-Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
-Date:   Fri, 22 Apr 2022 21:22:49 +0000
-Message-ID: <20220422212249.22463-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <c17dedde-6ba8-db9b-4827-32477f039764@linux.intel.com>
-References: <c17dedde-6ba8-db9b-4827-32477f039764@linux.intel.com>
+        Fri, 22 Apr 2022 18:37:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A754024766C;
+        Fri, 22 Apr 2022 14:49:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7235EB831F5;
+        Fri, 22 Apr 2022 19:04:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 059E8C385A0;
+        Fri, 22 Apr 2022 19:04:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650654261;
+        bh=/hQTHTPZ+8EMV0t0+BWR+cNB6HkAVNSrcB0f4XxB0uo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e7W3PV+GoD7Ha2W0fT29yk3eI7sObxvOyea9pB3TA1nfeWcqBP30+4EL8qO0cddDL
+         1naoJHDmxy8N+1iTy+DK01hyZyG7fz0Pfl8lyLTvmXcJ5P6WtI/pXOrx6M2NqEUNW6
+         Nf7Rt5g13AQ71tnz7xlxL7k/vLzfMc6qetAcK1+7xVHwqYUcVsKHGe3ezcwCpn4j/1
+         2jvX2cOBgJ/tot0Yee12YrzrbowKIv+JPWSFbV55/P3oJqt/a69YITOULv1f7WtRGT
+         jJYEqX/oSDbivZ6hFmiZpsMCUeM8iRAkEAgWNRPpYvftLAIgEALjYJb9yzvv/mnck1
+         K+eT13/x+c1TA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CACD9400B1; Fri, 22 Apr 2022 16:04:18 -0300 (-03)
+Date:   Fri, 22 Apr 2022 16:04:18 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Milian Wolff <milian.wolff@kdab.com>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
+        bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Blake Jones <blakejones@google.com>
+Subject: Re: [RFC 0/4] perf record: Implement off-cpu profiling with BPF (v1)
+Message-ID: <YmL8MlTX12zHtzbd@kernel.org>
+References: <20220422053401.208207-1-namhyung@kernel.org>
+ <35121321.B44TWeBT9p@milian-workstation>
+ <CAM9d7cjU6RGMStG4YOW5D50Sx4PRia2dfzcPKxb4JLh5Q668mw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cjU6RGMStG4YOW5D50Sx4PRia2dfzcPKxb4JLh5Q668mw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Fri, Apr 22, 2022 at 08:01:15AM -0700, Namhyung Kim escreveu:
+> Hi Milian,
+ 
+> On Fri, Apr 22, 2022 at 3:21 AM Milian Wolff <milian.wolff@kdab.com> wrote:
+> > On Freitag, 22. April 2022 07:33:57 CEST Namhyung Kim wrote:
+> > > This is the first version of off-cpu profiling support.  Together with
+> > > (PMU-based) cpu profiling, it can show holistic view of the performance
+> > > characteristics of your application or system.
 
-On Fri, 22 Apr 2022 21:43:28, Kan Liang wrote:
-> On 4/22/2022 2:49 PM, Ali Saidi wrote:
-> > On Wed, 20 Apr 2022 18:43:28, Kan Liang wrote:
-> >> On 4/8/2022 3:53 PM, Ali Saidi wrote:
-> >>> Add a flag to the perf mem data struct to signal that a request caused a
-> >>> cache-to-cache transfer of a line from a peer of the requestor and
-> >>> wasn't sourced from a lower cache level.
-> >>
-> >> It sounds similar to the Forward state. Why can't the
-> >> PERF_MEM_SNOOPX_FWD be reused?
-> > 
-> > Is there a definition of SNOOPX_FWD i can refer to? Happy to use this instead if
-> > the semantics align between architectures.
-> > 
+> > Hey Namhyung,
+
+> > this is awesome news! In hotspot, I've long done off-cpu profiling manually by
+> > looking at the time between --switch-events. The downside is that we also need
+> > to track the sched:sched_switch event to get a call stack. But this approach
+> > also works with dwarf based unwinding, and also includes kernel stacks.
 > 
-> + Andi
+> Thanks, I've also briefly thought about the switch event based off-cpu
+> profiling as it doesn't require root.  But collecting call stacks is hard and
+> I'd like to do it in kernel/bpf to reduce the overhead.
+
+It would be great to have both in perf. Right now since we have one in
+hotspot that is working, perfecting the other method, Namhyung's, using
+BPF to reduce the amount of data to postprocess in userspace, looks
+great.
+ 
+> > > With BPF, it can aggregate scheduling stats for interested tasks
+> > > and/or states and convert the data into a form of perf sample records.
+> > > I chose the bpf-output event which is a software event supposed to be
+> > > consumed by BPF programs and renamed it as "offcpu-time".  So it
+> > > requires no change on the perf report side except for setting sample
+> > > types of bpf-output event.
+> > >
+> > > Basically it collects userspace callstack for tasks as it's what users
+> > > want mostly.  Maybe we can add support for the kernel stacks but I'm
+> > > afraid that it'd cause more overhead.  So the offcpu-time event will
+> > > always have callchains regardless of the command line option, and it
+> > > enables the children mode in perf report by default.
+> >
+> > Has anything changed wrt perf/bpf and user applications not compiled with `-
+> > fno-omit-frame-pointer`? I.e. does this new utility only work for specially
+> > compiled applications, or do we also get backtraces for "normal" binaries that
+> > we can install through package managers?
 > 
-> As my understanding, the SNOOPX_FWD means the Forward state, which is a 
-> non-modified (clean) cache-to-cache copy.
-> https://en.wikipedia.org/wiki/MESIF_protocol
-  
-In this case the semantics are different. We know the line was transferred from
-another peer cache, but don't know if it was clean, dirty, or if the receiving core
-now has exclusive ownership of it.
+> I am not aware of such changes, it still needs a frame pointer to get
+> backtraces.
 
-Thanks,
+I see this as an initial limitation, one that we can lift later?
 
-Ali
+- Arnaldo
