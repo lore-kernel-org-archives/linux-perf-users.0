@@ -2,173 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25362C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Apr 2022 21:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701B3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 02:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1392636AbiDUVFy (ORCPT
+        id S1443262AbiDVCko (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 21 Apr 2022 17:05:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
+        Thu, 21 Apr 2022 22:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239054AbiDUVFv (ORCPT
+        with ESMTP id S245153AbiDVCkn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Apr 2022 17:05:51 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F156550;
-        Thu, 21 Apr 2022 14:03:01 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id h1so6072412pfv.12;
-        Thu, 21 Apr 2022 14:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YbZbeehjOwa1zcwY7/oYQebGTo7GYWfHsvty5m0I7p4=;
-        b=O+3vHyiX4W74H7N7GTRRSTCVSR8YtG23oXnZzh7AKsq0UYc5wq7iVhVJ0dq38fwKC5
-         Q+iVqprnZ2mfFQvIJxv+doANHS5kX7z+wQKDGLeCqJfor6CIT9AJTgHQEK/u0Gez8NUT
-         tJ5T5rx6uSiTzRwTcfYPGuAX9nkjRRpqi9WinPzU/y3QYyOlZPZOFCjA9tMGD8u+mwre
-         GSijakJT7kJf8rYHD4gMX8G3zP0ZYwq5PdhteCrjVuiYf3KREk4Lpbzgw4GFI1PApEq9
-         CgKMlGQH9IBG+GAkqZMg7tjNbnqv37RX1wj9pE9ZTTlE6bLSn7o7c5KLaENbASwkDzjW
-         J2Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YbZbeehjOwa1zcwY7/oYQebGTo7GYWfHsvty5m0I7p4=;
-        b=1gf26iNwm6S0eFAzNAnKBF9WTjxTgTF2777EHC33KII6fbf6cd7NO/9mzK+j4oQTEj
-         yEpm5ZRjFQ2euLxOwAQ7Xzi8ouVl604aG5b63x7y0/rsWC2bqop0umVwRzzzM7TJ5Q/8
-         LAOOA52dMiei0b0sXG80ayNeUnfjRhj2//+K2oEOV2zMWX5x0yDOuLfMjbfzqGvpHd15
-         IZL2I52cmXGPo1y/6D+XCgOa/q5tilDxJdSshEMQgR7UuKks/yx7E05oZ3oskJnO2VKL
-         lqRES6IfxviF4/SlWyC4gKEniZt8HYJtYaKUNjSgls7s39UZO2smPpa4y5zXakTVPyYO
-         Q1rQ==
-X-Gm-Message-State: AOAM530OwBI4SNbdwf2KYMdkEYmaHksI7GQ/uYRQnddt1BB0e1vJRl8Q
-        Vc2ENInfzZxT7zl6M/nUFWiQIvmZjF7v+XqGiLg=
-X-Google-Smtp-Source: ABdhPJxp1M7qmfpyWXkSB2x+uDUtP7MA83fHYdjVtWi8W4pfLq1hF9eZzAQWErIBGlUwIylCwXjbDRnN/YIW33HYaX4=
-X-Received: by 2002:a05:6a00:1a11:b0:50a:6c39:4c1f with SMTP id
- g17-20020a056a001a1100b0050a6c394c1fmr1305895pfv.55.1650574980514; Thu, 21
- Apr 2022 14:03:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220415050003.3257645-1-mattst88@gmail.com> <YmA+DyEZJr1Eb8TA@kernel.org>
-In-Reply-To: <YmA+DyEZJr1Eb8TA@kernel.org>
-From:   Matt Turner <mattst88@gmail.com>
-Date:   Thu, 21 Apr 2022 14:02:49 -0700
-Message-ID: <CAEdQ38Ec8mWkoy7hDE1ew6vEtXmEMSWp6u2HBzqdqtCBX3jTtA@mail.gmail.com>
-Subject: Re: [PATCH] tools: port perf ui from GTK 2 to GTK 3
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 21 Apr 2022 22:40:43 -0400
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2092.outbound.protection.outlook.com [40.107.255.92])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88DC34B43C;
+        Thu, 21 Apr 2022 19:37:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CEPJQyGmeoCI8rPkBqvFfyB2id0b2H3xTPyuCRQfqA5HmIiM0R6lagnvarfNVGbz0DOKB7hNF+2BOR0fDPmmsVRBuAqs43PjUYKkAO6xOZQdj6MIYg/YcYle5p+KQHRj9fKfD8wkASoa41l001OcBB3jdwVcM5yqxzu2Khb98U99irmw+0uaDXajH7xOOL6wtZwHAZ9H/ii2IT5UCjlq3FmUg1sYoVkmCshQOJT3neVICRkJgMFglKso9L/eHKKCA34RD+/WnKoag9tD6otfhY17agdqg1kse5rjyUGxro7+2cgvj5kkKE6cd7Rpcdo2A5uOqCj+ENsmBUCpYPzabQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ch2oW9CXStX2NYswOXomEzSEMwJKWVqWtZ5mRZfXcoA=;
+ b=Mn+8ze5DQquerwJj9sDYtsnlNQ4O3EigtOeg/AJc0jhftnFiLoKe33v/obbVA3xQ3DL8xnb/9dnhmXWHJBsav2DPJ2LAzXTlVEIBfOQRypU05RJvIh6/o9KxDOgwC4uQNObkC6PC0zDIX3qw3Rkm3H+POowtyU8Fe/WgZJna3GVQmb0SRx9n8ALjRk4HrSFOSToZxzBy+k0gfckH1pRq6SIEUaU98rhHcBIzAni2vrgjH7DMeLAE/xa2+FL0tuXugO2H2wwipV/2t8sQAPuKmQmfaE4Nn3DvIFI8YS6SRiKTLCT6OXn/ndZnaACDGX/0OQpuB+/R75MzboDHEdd5gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
+ s=selector2-vivo0-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ch2oW9CXStX2NYswOXomEzSEMwJKWVqWtZ5mRZfXcoA=;
+ b=SF3sbkiYAvabPnOefqaOHE8mQUF8g9HjbsqyT6tJiuh2w3V1vCjvTqZk8Or49Und17H68+/g5csOqZwhsmW1szGIWKZxe+has1/U2MpwoeNrEyHJyLI8g6pwUHwj6wVapy8aXw11xwWuoechOefgBn5Kf8UcmfjrGL0xyda7eiU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com (2603:1096:4:78::19) by
+ TY2PR06MB3375.apcprd06.prod.outlook.com (2603:1096:404:96::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5164.25; Fri, 22 Apr 2022 02:37:45 +0000
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::4591:4f3e:f951:6c8c]) by SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::4591:4f3e:f951:6c8c%7]) with mapi id 15.20.5164.025; Fri, 22 Apr 2022
+ 02:37:45 +0000
+From:   Wan Jiabing <wanjiabing@vivo.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Jelle van der Waa <jvanderwaa@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kael_w@yeah.net, Wan Jiabing <wanjiabing@vivo.com>
+Subject: [PATCH] perf/x86/amd: Replace snprintf() with sysfs_emit()
+Date:   Fri, 22 Apr 2022 10:37:34 +0800
+Message-Id: <20220422023734.129114-1-wanjiabing@vivo.com>
+X-Mailer: git-send-email 2.35.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HKAPR04CA0015.apcprd04.prod.outlook.com
+ (2603:1096:203:d0::25) To SG2PR06MB3367.apcprd06.prod.outlook.com
+ (2603:1096:4:78::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 92935aa9-b484-47f1-838d-08da240914b3
+X-MS-TrafficTypeDiagnostic: TY2PR06MB3375:EE_
+X-Microsoft-Antispam-PRVS: <TY2PR06MB337522DFBAF843C71D780274ABF79@TY2PR06MB3375.apcprd06.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dIsgSkS7Ci7bqmhoRKy+Yp4rNRoIT946ZkQ1V8D4M7DWjZDO49XvKRx1NjGqUkRUs97YZ6eZBCdZ2mrA+ipQDxbsXnIaYtZ5xuDswEWguPKBfLx4vIdtNdJ8HVsSyVZOT/hKVavwvdYknu1TUCzkQFXtFh9v6AFA8W1WJlyBe+o/V7eIdgxQJPOVsLiPd42oyxMU1p6cwMo+aGmYGjQjOIL+7/HoQOzj4RnVrRxTISzMvzrd6zTwyN9/WkCLks4TqAf8uFCdPXMraL0g+MQ/UXAacoIYmwasvgHPjXH+nas/rYdHz7sf6KE2YVSJPat9mrIubhuNaPiTXDsAxOx0dIRWqxAq2v6VWoNm6BlVmF3kobD54aXbGlRLIlJH7iRZOlCCthfHGVwquRhPlVsIX5tbmnWUdR+57J42uPeR+X9bykRrwEu7hdoON7ylAApMcq4VkQuet6DCA+Bfn1YSW6BwJoW47V7rCZB7RBRgNl0oMRycTvPuR0f4ANE6PXorJn8WmpISjIg0JAiDORp9/P1tIa87myFvz61FhD8XNLHmLXXyXFystEHiasHIaIciC/T4j5RbHL4vxebN4TfEWVQaso6PSHubZhN89P/+0Owm40MOCv8jk5crUQiRNM0MXLwwQqJiitgTy+AEOGt8v1K4HW6zGhH7wdBq4BdTUoAORqM8nl+jsHp0ljAjQkRX4x9MzJoVLfY+3144/2hocxVrvboz9800j/Uw4U0vE04=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3367.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(36756003)(52116002)(186003)(5660300002)(8936002)(1076003)(110136005)(316002)(6506007)(7416002)(2906002)(508600001)(6486002)(4326008)(8676002)(38100700002)(38350700002)(107886003)(66556008)(66476007)(66946007)(921005)(6666004)(2616005)(83380400001)(86362001)(4744005)(6512007)(26005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AKpmWHsIx3XBpNn0ZzjlwZpTf9RScAhLvFrAKt6alN9X3NqTWUsVe+okhFKq?=
+ =?us-ascii?Q?2HJlestU+3ycvsaPrErNRtUbpm9hN5SJnG5vCDWy1ZC+ZrtBcbRCk43ACZrz?=
+ =?us-ascii?Q?HYI35d2ozJrGQ113VdjrkabWrcmCARa+s6m09KX71Au6neAoQFRIM10qg8xP?=
+ =?us-ascii?Q?l8Erp+uo34Wy8XvB/Q2XmlQFF7220Nn1AAt4WC+1STDiqgSEHImPEYhMjGSK?=
+ =?us-ascii?Q?gKbQvsfZX30i31WOFS8KFsb/lPY7GfcipQx477KKjDbSIrDWWX9yrkDBvJst?=
+ =?us-ascii?Q?G0u+tlNufq2BLLPTqdOCqX3j0FbdejPzezd5tRGT6Z/dq9iXJjVqGWcW8UkP?=
+ =?us-ascii?Q?b0mTQ6/zTDN1vJcMkbfTgtSMPiFWTmK2IsHPtmspOkNZhReqNb8aFdYaWrgA?=
+ =?us-ascii?Q?WlvhKsmdbCNQH5oYGoyotLbmuxLI9INaBBA00Q2uWNAEb5InJlqutb7dLFdO?=
+ =?us-ascii?Q?Vm9L3mZeQSb0b+yPsgJXn/JUFCVR/FdctBHhVu5kG1Vukdlp6RlnmX+6u1kv?=
+ =?us-ascii?Q?tS23LnPnmNyzF00Ih4BuPZGNFbbI8XIh/dSHKevcNXtWqQR2QWRcFxe44Obc?=
+ =?us-ascii?Q?0Q64q86/+nuENwD/ed8VKBYtyJLfKXkqM684p/cPfUOXCYbXa/uO9OGNbi8p?=
+ =?us-ascii?Q?c+fSzDYJVgxcBPXCVw2GYlS5499Fue4Mi1fmhi6oEMAPogRkAKSNXLWNOijh?=
+ =?us-ascii?Q?epMHDpM9Fz4OlpYJplpRLtSr1xaNA/coUDVIXi0rKH/OgGcs7XjkGD59qr4j?=
+ =?us-ascii?Q?TnB8H5x63T5ReT+TgLyrnjMDYk4MB0C/SJIAfMDJ73dCAed8TgdwPwyRa5Nj?=
+ =?us-ascii?Q?SUiRGsmaoUIBfubNYpOICbvmp+wCM6U9CLUFdTwwsHQ9c6OzleQkrYyqpgxV?=
+ =?us-ascii?Q?N1n+MHeJCXGcYtZSPCCGZ4sWLtYtdnX+MwxgFsSeF7v8x+sE/TncJEcNfM2I?=
+ =?us-ascii?Q?n7FVCMH1Pg6L2FkKSWa/tGtDgxrm5iFwFfilExzX8Na83oWxvLUd0O8Y0YGf?=
+ =?us-ascii?Q?ufUujUPUjuq7Mf9Hu/ocOKwCnwfKf9q3a5UvuOq18+n+d/496u8lB+NEYHH6?=
+ =?us-ascii?Q?N6Oc8UGiMP71LJENiqaSsMvD3nkvyPumwddAhE/ba1CAE18kEFqbveCh8y3h?=
+ =?us-ascii?Q?FcEg1hQBjE/pEgDVyj5w688R4hCOKbLUdOrLN08uWcY0JTEfZRYRNKHems4v?=
+ =?us-ascii?Q?PvYIImili2DN5BP5Uwpd3gPAlQYKjzEMMiiwrXI/mLjo7SjaLgDfreT++7aO?=
+ =?us-ascii?Q?lz5EGYqjOhoBUTeOv+yXRptLxWVcA7sqAf7GMFyYoz58lOQAkYB7gN+pz5p3?=
+ =?us-ascii?Q?1gB8B3yLrpgokdEMvR6Vt2dq34NDwhiMULlBCIlDG6tdmpHw0pJ3iukvD1Yt?=
+ =?us-ascii?Q?+mE3gwPqbTvqQWnD4TEtBYLlxcd7Wuj9dD9EcSXT0NQvOC01A7/QwMymldxH?=
+ =?us-ascii?Q?Cx9JIvQGqYAujCatb8AWzqB8NdaOTrUy/096749OVBt9BBkUjaMa8CqU3GML?=
+ =?us-ascii?Q?SvOJ8MBPVtV5yg8kW6q3x5h6W2XItUPq9Zmz8iu1tRjRNQwpdDMA9SHfXV5D?=
+ =?us-ascii?Q?SLZSYxZcgyj9o0+5mH3rs9kOAvX2N/2H+giBNakpt7RGtmezWaMiJmHLOp3B?=
+ =?us-ascii?Q?bzXvYd7/uklX3jZVoa5041WFV3IjtZv7Q3c8SrT2lm1BhIYT2YpRDb0zA/Em?=
+ =?us-ascii?Q?CW1EQc/toYEqHjSZv2vJoDvx81YHD7hOgXhrveb0XdQ8tetHsADlSlhgEA/x?=
+ =?us-ascii?Q?kM+QYsg1NQ=3D=3D?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92935aa9-b484-47f1-838d-08da240914b3
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3367.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2022 02:37:44.9304
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sU7as4HSJHjq25Uhk7lGUEZHdOg0+3yq/SE0gWHxQ/74DZjGjV1BISypeJ7fjvVyrpcR5abm7AOBiJRsTgihJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR06MB3375
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 10:08 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Thu, Apr 14, 2022 at 10:00:03PM -0700, Matt Turner escreveu:
-> > From: Jelle van der Waa <jvanderwaa@redhat.com>
-> >
-> > GTK 2 is a legacy API and the newer version is GTK 3 which changes a fe=
-w
-> > API functions. gtk_tree_view_set_rules_hint is no longer required since
-> > theme's are now responsible to handle this, gtk_vbox_new is deprecated
-> > and replaced by passing the orientation to gtk_box_new. Apart from thes=
-e
-> > changes the accessing of the screen changed in GTK which requires using
-> > new functions for getting geometry. Lastly the GTK_STOCK_OK define is
-> > deprecated in GTK 3.
-> >
-> > Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
-> > Signed-off-by: Matt Turner <mattst88@gmail.com>
-> > ---
-> > Originally sent in 2019. I've rebased it and given it a test.
-> >
-> > One problem I've noticed is that C++ symbol names are often broken.
-> > E.g.:
-> >
-> > (perf:3254940): Gtk-WARNING **: 21:47:46.663: Failed to set text from
-> > markup due to error parsing markup: Error on line 1 char 95:
-> > =E2=80=9Cstd::char_traits<char=E2=80=9D is not a valid name: =E2=80=9C<=
-=E2=80=9D
-> >
-> > Presumably we need to call g_markup_escape_text() somewhere, but I
-> > struggled to find the right place.
-> >
-> > Without the patch, the GTK-2 version repeatedly segfaults, so this is a=
-n
-> > improvement regardless.
->
-> I'm trying to test build this but failing:
->
-> 1. uninstalled gtk2-devel, which removed several other packages
->
-> 2. installed gtk3-devel, which installed several other packages
->
-> 3.:
->
-> Auto-detecting system features:
-> ...                         dwarf: [ on  ]
-> ...            dwarf_getlocations: [ on  ]
-> ...                         glibc: [ on  ]
-> ...                          gtk3: [ OFF ]
-> ...                        libbfd: [ on  ]
-> ...                libbfd-buildid: [ on  ]
->
-> Looking at how that OFF is deduced:
->
-> =E2=AC=A2[acme@toolbox perf]$ cat /tmp/build/perf/feature/test-
-> Display all 150 possibilities? (y or n)
-> =E2=AC=A2[acme@toolbox perf]$ cat /tmp/build/perf/feature/test-all.make.o=
-utput
-> In file included from test-all.c:74:
-> test-gtk3.c:3:10: fatal error: gtk/gtk.h: No such file or directory
->     3 | #include <gtk/gtk.h>
->       |          ^~~~~~~~~~~
-> compilation terminated.
-> =E2=AC=A2[acme@toolbox perf]$
->
-> =E2=AC=A2[acme@toolbox perf]$ find /usr/include -name gtk.h
-> /usr/include/gtk-3.0/gtk/gtk.h
-> =E2=AC=A2[acme@toolbox perf]$ rpm -qf /usr/include/gtk-3.0/gtk/gtk.h
-> gtk3-devel-3.24.31-2.fc35.x86_64
-> =E2=AC=A2[acme@toolbox perf]$
->
-> And that pkg-config line produces:
->
-> =E2=AC=A2[acme@toolbox perf]$ pkg-config --libs --cflags gtk+-3.0
-> -I/usr/include/gtk-3.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -=
-I/usr/lib64/glib-2.0/include -I/usr/include/sysprof-4 -I/usr/include/harfbu=
-zz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/libmount=
- -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/libxml2 -I/usr/=
-include/cairo -I/usr/include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/=
-include/gio-unix-2.0 -I/usr/include/cloudproviders -I/usr/include/atk-1.0 -=
-I/usr/include/at-spi2-atk/2.0 -I/usr/include/dbus-1.0 -I/usr/lib64/dbus-1.0=
-/include -I/usr/include/at-spi-2.0 -pthread -lgtk-3 -lgdk-3 -lz -lpangocair=
-o-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf=
--2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
-> =E2=AC=A2[acme@toolbox perf]$
->
-> I'm testing this on fedora 35 silverblue, in a perf build container:
->
-> =E2=AC=A2[acme@toolbox perf]$ rpm -qa | grep gtk
-> gtk-update-icon-cache-3.24.31-2.fc35.x86_64
-> libcanberra-gtk3-0.30-27.fc35.x86_64
-> gtk3-3.24.31-2.fc35.x86_64
-> libcanberra-gtk2-0.30-27.fc35.x86_64
-> gtk2-2.24.33-7.fc35.x86_64
-> gtk3-devel-3.24.31-2.fc35.x86_64
-> =E2=AC=A2[acme@toolbox perf]$
->
-> Ideas?
+Fix the following coccicheck warning:
+arch/x86/events/amd/core.c:1127:8-16: WARNING: use scnprintf or sprintf.
 
-Just to be clear, are you building with 'GTK3=3D1 make'? Since commit
-4751bddd3f98 ("perf tools: Make GTK2 support opt-in") it's required to
-enable GTK support explicitly. (IMO, leaving it disabled by default
-makes sense to me, given some of the problems)
+Use sysfs_emit() instead of snprintf().
+
+Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+---
+ arch/x86/events/amd/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 8e1e818f8195..c1ced265c824 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -1124,7 +1124,7 @@ static ssize_t branches_show(struct device *cdev,
+ 			      struct device_attribute *attr,
+ 			      char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
++	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
+ }
+ 
+ static DEVICE_ATTR_RO(branches);
+-- 
+2.35.1
+
