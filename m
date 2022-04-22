@@ -2,88 +2,202 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF256C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 19:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330E3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 19:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230123AbiDVTGi (ORCPT
+        id S229622AbiDVTfd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Apr 2022 15:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54066 "EHLO
+        Fri, 22 Apr 2022 15:35:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbiDVTGU (ORCPT
+        with ESMTP id S229446AbiDVTf3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Apr 2022 15:06:20 -0400
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B30225FFE;
-        Fri, 22 Apr 2022 11:55:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1650653734; x=1682189734;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lBEP3yfW+gSsSIiEuVGb2PQCOs59R1mC2rICVUQuKX8=;
-  b=odtqVycdQa0CbdYPLl5aXMLCjra7UODj8fg1TwswUYxC8w3Z77YkodY4
-   BHRctAxibDvMaTflS64zocXIcf0GvgOZwqkniuxgxSGM49WRCmGjATIUG
-   JvjKAgvirCSiaB0i/aMz2P3bHoAPalMtUBQ6EfRpZPh79++HRWfE4CWP/
-   8=;
-X-IronPort-AV: E=Sophos;i="5.90,282,1643673600"; 
-   d="scan'208";a="82236207"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-2dbf0206.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP; 22 Apr 2022 18:49:42 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2a-2dbf0206.us-west-2.amazon.com (Postfix) with ESMTPS id BC995A27D4;
-        Fri, 22 Apr 2022 18:49:40 +0000 (UTC)
-Received: from EX13D02UWB003.ant.amazon.com (10.43.161.48) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Fri, 22 Apr 2022 18:49:40 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D02UWB003.ant.amazon.com (10.43.161.48) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Fri, 22 Apr 2022 18:49:40 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1497.32 via Frontend Transport; Fri, 22 Apr 2022 18:49:39
- +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 80DBB1783; Fri, 22 Apr 2022 18:49:39 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <kan.liang@linux.intel.com>
-CC:     <Nick.Forrington@arm.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <alisaidi@amazon.com>,
-        <andrew.kilroy@arm.com>, <benh@kernel.crashing.org>,
-        <german.gomez@arm.com>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
-        <leo.yan@linaro.org>, <lihuafei1@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <will@kernel.org>
-Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
-Date:   Fri, 22 Apr 2022 18:49:34 +0000
-Message-ID: <20220422184934.29270-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <a96681b5-5532-470e-17d1-afe4c8d195ad@linux.intel.com>
-References: <a96681b5-5532-470e-17d1-afe4c8d195ad@linux.intel.com>
+        Fri, 22 Apr 2022 15:35:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A5A72715FB;
+        Fri, 22 Apr 2022 12:13:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BAC5C61772;
+        Fri, 22 Apr 2022 19:01:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4CA2C385A0;
+        Fri, 22 Apr 2022 19:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650654077;
+        bh=IppT2R5TmZBgoejAuAjih5UgAJJvNanNsyybwMJzd5I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fi6U9+IDQcTBxm+CXXQsZtee8+hWCRJ2lBwOi/utPqHiwVoNC3jg+eFCDsDJh7SrC
+         I5rz7bKmFt8Fp/ieoYCYEMpUeWMPAWcgWGCdO48gckmz/EXAFO/AwaZvv9Pe1qYU23
+         in0x9QlG2A198XJKZY5G9pbZWIHWCbv4727wa6+LITX0p0VWkFD2UhMFomRuu+cq87
+         aIlADhdG9f1py1ctOiM1BYNW3ZaW08d8nWZ0bINTh02KuaLqj1cgqZ63So9WOaHwDe
+         1rUq0ZLBS7AC5YHvDMWMxAgTaw9IiToqwv6P0BpCXKOueNrvDHhk2yhXOohgxkTCQu
+         GovpyAwYd13DQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AA394400B1; Fri, 22 Apr 2022 16:01:13 -0300 (-03)
+Date:   Fri, 22 Apr 2022 16:01:13 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Matt Turner <mattst88@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        linux-perf-users@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jelle van der Waa <jvanderwaa@redhat.com>
+Subject: Re: [PATCH] tools: port perf ui from GTK 2 to GTK 3
+Message-ID: <YmL7eQBtPHQn0GcD@kernel.org>
+References: <20220415050003.3257645-1-mattst88@gmail.com>
+ <YmA+DyEZJr1Eb8TA@kernel.org>
+ <CAEdQ38Ec8mWkoy7hDE1ew6vEtXmEMSWp6u2HBzqdqtCBX3jTtA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <CAEdQ38Ec8mWkoy7hDE1ew6vEtXmEMSWp6u2HBzqdqtCBX3jTtA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 20 Apr 2022 18:43:28, Kan Liang wrote:
-> On 4/8/2022 3:53 PM, Ali Saidi wrote:
-> > Add a flag to the perf mem data struct to signal that a request caused a
-> > cache-to-cache transfer of a line from a peer of the requestor and
-> > wasn't sourced from a lower cache level.
+Em Thu, Apr 21, 2022 at 02:02:49PM -0700, Matt Turner escreveu:
+> On Wed, Apr 20, 2022 at 10:08 AM Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+> >
+> > Em Thu, Apr 14, 2022 at 10:00:03PM -0700, Matt Turner escreveu:
+> > > From: Jelle van der Waa <jvanderwaa@redhat.com>
+> > >
+> > > GTK 2 is a legacy API and the newer version is GTK 3 which changes a few
+> > > API functions. gtk_tree_view_set_rules_hint is no longer required since
+> > > theme's are now responsible to handle this, gtk_vbox_new is deprecated
+> > > and replaced by passing the orientation to gtk_box_new. Apart from these
+> > > changes the accessing of the screen changed in GTK which requires using
+> > > new functions for getting geometry. Lastly the GTK_STOCK_OK define is
+> > > deprecated in GTK 3.
+> > >
+> > > Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
+> > > Signed-off-by: Matt Turner <mattst88@gmail.com>
+> > > ---
+> > > Originally sent in 2019. I've rebased it and given it a test.
+> > >
+> > > One problem I've noticed is that C++ symbol names are often broken.
+> > > E.g.:
+> > >
+> > > (perf:3254940): Gtk-WARNING **: 21:47:46.663: Failed to set text from
+> > > markup due to error parsing markup: Error on line 1 char 95:
+> > > “std::char_traits<char” is not a valid name: “<”
+> > >
+> > > Presumably we need to call g_markup_escape_text() somewhere, but I
+> > > struggled to find the right place.
+> > >
+> > > Without the patch, the GTK-2 version repeatedly segfaults, so this is an
+> > > improvement regardless.
+> >
+> > I'm trying to test build this but failing:
+> >
+> > 1. uninstalled gtk2-devel, which removed several other packages
+> >
+> > 2. installed gtk3-devel, which installed several other packages
+> >
+> > 3.:
+> >
+> > Auto-detecting system features:
+> > ...                         dwarf: [ on  ]
+> > ...            dwarf_getlocations: [ on  ]
+> > ...                         glibc: [ on  ]
+> > ...                          gtk3: [ OFF ]
+> > ...                        libbfd: [ on  ]
+> > ...                libbfd-buildid: [ on  ]
+> >
+> > Looking at how that OFF is deduced:
+> >
+> > ⬢[acme@toolbox perf]$ cat /tmp/build/perf/feature/test-
+> > Display all 150 possibilities? (y or n)
+> > ⬢[acme@toolbox perf]$ cat /tmp/build/perf/feature/test-all.make.output
+> > In file included from test-all.c:74:
+> > test-gtk3.c:3:10: fatal error: gtk/gtk.h: No such file or directory
+> >     3 | #include <gtk/gtk.h>
+> >       |          ^~~~~~~~~~~
+> > compilation terminated.
+> > ⬢[acme@toolbox perf]$
+> >
+> > ⬢[acme@toolbox perf]$ find /usr/include -name gtk.h
+> > /usr/include/gtk-3.0/gtk/gtk.h
+> > ⬢[acme@toolbox perf]$ rpm -qf /usr/include/gtk-3.0/gtk/gtk.h
+> > gtk3-devel-3.24.31-2.fc35.x86_64
+> > ⬢[acme@toolbox perf]$
+> >
+> > And that pkg-config line produces:
+> >
+> > ⬢[acme@toolbox perf]$ pkg-config --libs --cflags gtk+-3.0
+> > -I/usr/include/gtk-3.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/sysprof-4 -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/libxml2 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/gio-unix-2.0 -I/usr/include/cloudproviders -I/usr/include/atk-1.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/dbus-1.0 -I/usr/lib64/dbus-1.0/include -I/usr/include/at-spi-2.0 -pthread -lgtk-3 -lgdk-3 -lz -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+> > ⬢[acme@toolbox perf]$
+> >
+> > I'm testing this on fedora 35 silverblue, in a perf build container:
+> >
+> > ⬢[acme@toolbox perf]$ rpm -qa | grep gtk
+> > gtk-update-icon-cache-3.24.31-2.fc35.x86_64
+> > libcanberra-gtk3-0.30-27.fc35.x86_64
+> > gtk3-3.24.31-2.fc35.x86_64
+> > libcanberra-gtk2-0.30-27.fc35.x86_64
+> > gtk2-2.24.33-7.fc35.x86_64
+> > gtk3-devel-3.24.31-2.fc35.x86_64
+> > ⬢[acme@toolbox perf]$
+> >
+> > Ideas?
 > 
-> It sounds similar to the Forward state. Why can't the 
-> PERF_MEM_SNOOPX_FWD be reused?
+> Just to be clear, are you building with 'GTK3=1 make'? Since commit
 
-Is there a definition of SNOOPX_FWD i can refer to? Happy to use this instead if
-the semantics align between architectures.
+No, I'm not, as I first test without enabling it, and in that case
+test-all.c is now failing, since these lines were added there:
 
-Thanks,
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index 5ffafb967b6e..5ec093498cfc 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -70,6 +70,14 @@
+ # include "test-libslang.c"
+ #undef main
 
-Ali
++#define main main_test_gtk3
++# include "test-gtk3.c"
++#undef main
++
++#define main main_test_gtk3_infobar
++# include "test-gtk3-infobar.c"
++#undef main
++
+ #define main main_test_libbfd
+ # include "test-libbfd.c"
+ #undef main
+@@ -187,6 +195,8 @@ int main(int argc, char *argv[])
+        main_test_libelf_getshdrstrndx();
+        main_test_libunwind();
+        main_test_libslang();
++	main_test_gtk3(argc, argv);
++	main_test_gtk3_infobar(argc, argv);
+        main_test_libbfd();
+        main_test_libbfd_buildid();
+        main_test_backtrace();
+diff --git a/tools/build/feature/test-gtk2-infobar.c b/tools/build/feature/test-gtk3-infobar.c
 
+------------
+
+test-all.c is what we expect to be enabled in most places, i.e. that it
+will build successfully and we then don't have to test the features one
+by one, speeding up the process.
+
+So please don't add those entries in tools/build/feature/test-all.c.
+
+After the common case is tested and doesn't regress, we can move on to
+test with explicitely enabling the GTK code, ok?
+
+- Arnaldo
+
+
+> 4751bddd3f98 ("perf tools: Make GTK2 support opt-in") it's required to
+> enable GTK support explicitly. (IMO, leaving it disabled by default
+> makes sense to me, given some of the problems)
