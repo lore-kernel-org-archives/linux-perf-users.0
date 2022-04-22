@@ -2,220 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0349C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 09:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA3AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 10:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241100AbiDVJuM (ORCPT
+        id S1446343AbiDVKDa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Apr 2022 05:50:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34040 "EHLO
+        Fri, 22 Apr 2022 06:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232515AbiDVJuM (ORCPT
+        with ESMTP id S1348202AbiDVKD1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Apr 2022 05:50:12 -0400
-Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E79CDFBB
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Apr 2022 02:47:19 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="58751383"
-X-IronPort-AV: E=Sophos;i="5.90,281,1643641200"; 
-   d="scan'208";a="58751383"
-Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
-  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP; 22 Apr 2022 18:44:06 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-        by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id E8F6BD5027;
-        Fri, 22 Apr 2022 18:44:04 +0900 (JST)
-Received: from oym-om1.fujitsu.com (oym-om1.o.css.fujitsu.com [10.85.58.161])
-        by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id D4BD6E6743;
-        Fri, 22 Apr 2022 18:44:03 +0900 (JST)
-Received: from localhost.localdomain (bakeccha.fct.css.fujitsu.com [10.126.195.136])
-        by oym-om1.fujitsu.com (Postfix) with ESMTP id 8D0D240487FBD;
-        Fri, 22 Apr 2022 18:44:03 +0900 (JST)
-From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/7] libperf: Add support for overflow handling of sampling events
-Date:   Fri, 22 Apr 2022 18:38:29 +0900
-Message-Id: <20220422093833.340873-4-nakamura.shun@fujitsu.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220422093833.340873-1-nakamura.shun@fujitsu.com>
-References: <20220422093833.340873-1-nakamura.shun@fujitsu.com>
+        Fri, 22 Apr 2022 06:03:27 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C8FBAA;
+        Fri, 22 Apr 2022 03:00:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A1208B82BB3;
+        Fri, 22 Apr 2022 10:00:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 976B4C385A0;
+        Fri, 22 Apr 2022 10:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650621631;
+        bh=vmNcIN7ZM6D37SIWNSAEuPLtScbEabkD+cFkumM4MLI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RZu1N34z+KyqF0WYYZy3M/wNqFmSLNPiME86NwpBk6utFpbjRNsz1AGAXajFz+rfa
+         mlScEVq48P48XxU4RWXBplQxXBiiZFM69I8qKZUlQKmskCAvU6IO2srrVCXnuTHOh5
+         f/SupNLDk5qE3PZd2uKZbrbsm4/1F1WXTviEv3E7zFkISzUE0byzSPH7trsX3uOL4W
+         n6ln5LQ2BwLqZ2TiYLN+XjeM9wXIv1DVfVHui6KYxIp6jCDZb+ggbDW9WfBjifndT7
+         ab+lqV/OZv+51YgUMLRnO00B1R4wOSI4WhCyEDbc7IvNtSrNmMfjO33ZnxlSGnvmcU
+         ULqDHQOIyc09Q==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Subject: [PATCH perf/core 0/5] perf tools: Fix prologue generation
+Date:   Fri, 22 Apr 2022 12:00:20 +0200
+Message-Id: <20220422100025.1469207-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Extend the fields of the opts structure to set up overflow handling
-for sampling events. Also, add processing to set signal handlers in
-perf_evsel__open_opts.
+hi,
+sending change we discussed some time ago [1] to get rid of
+some deprecated functions we use in perf prologue code.
 
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+Despite the gloomy discussion I think the final code does
+not look that bad ;-)
+
+This patchset removes following libbpf functions from perf:
+  bpf_program__set_prep
+  bpf_program__nth_fd
+  struct bpf_prog_prep_result
+
+Also available in:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  perf/depre
+
+thanks,
+jirka
+
+
+[1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
 ---
- tools/lib/perf/Documentation/libperf.txt |  6 +-
- tools/lib/perf/Makefile                  |  1 +
- tools/lib/perf/evsel.c                   | 79 ++++++++++++++++++++++++
- tools/lib/perf/include/perf/evsel.h      |  6 +-
- tools/lib/perf/tests/test-evlist.c       |  1 -
- 5 files changed, 90 insertions(+), 3 deletions(-)
+Jiri Olsa (5):
+      libbpf: Add bpf_program__set_insns function
+      libbpf: Load prog's instructions after prog_prepare_load_fn callback
+      perf tools: Move libbpf init in libbpf_init function
+      perf tools: Register perfkprobe libbpf section handler
+      perf tools: Rework prologue generation code
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index 6ca91ca94e01..ec93b1c75ebe 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -137,8 +137,12 @@ SYNOPSIS
-           size_t sz;
- 
-           unsigned long open_flags;       /* perf_event_open flags */
-+          int flags;                      /* fcntl flags */
-+          unsigned int signal;
-+          int owner_type;
-+          struct sigaction *sig;
-   };
--  #define perf_evsel_open_opts__last_field open_flags
-+  #define perf_evsel_open_opts__last_field sig
- 
-   #define LIBPERF_OPTS(TYPE, NAME, ...)
- 
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 21df023a2103..4c8fae193cf5 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -75,6 +75,7 @@ override CFLAGS += -Werror -Wall
- override CFLAGS += -fPIC
- override CFLAGS += $(INCLUDES)
- override CFLAGS += -fvisibility=hidden
-+override CFLAGS += -D_GNU_SOURCE
- 
- all:
- 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 00c0cea43b52..a289f6c44d7c 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -460,6 +460,79 @@ void perf_counts_values__scale(struct perf_counts_values *count,
- 		*pscaled = scaled;
- }
- 
-+static int perf_evsel__run_fcntl(struct perf_evsel *evsel,
-+				 unsigned int cmd, unsigned long arg,
-+				 int cpu_map_idx)
-+{
-+	int thread;
-+
-+	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+		int err;
-+		int *fd = FD(evsel, cpu_map_idx, thread);
-+
-+		if (!fd || *fd < 0)
-+			return -1;
-+
-+		err = fcntl(*fd, cmd, arg);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int perf_evsel__set_signal_handler(struct perf_evsel *evsel,
-+					  struct perf_evsel_open_opts *opts)
-+{
-+	unsigned int flags;
-+	unsigned int signal;
-+	struct f_owner_ex owner;
-+	struct sigaction *sig;
-+	int cpu_map_idx;
-+	int err = 0;
-+
-+	flags = OPTS_GET(opts, flags, (O_RDWR | O_NONBLOCK | O_ASYNC));
-+	signal = OPTS_GET(opts, signal, SIGIO);
-+	owner.type = OPTS_GET(opts, owner_type, F_OWNER_PID);
-+	sig = OPTS_GET(opts, sig, NULL);
-+
-+	if (flags == 0 && signal == 0 && !owner.type == 0 && sig == 0)
-+		return err;
-+
-+	err = sigaction(signal, sig, NULL);
-+	if (err)
-+		return err;
-+
-+	switch (owner.type) {
-+	case F_OWNER_PID:
-+		owner.pid = getpid();
-+		break;
-+	case F_OWNER_TID:
-+		owner.pid = syscall(SYS_gettid);
-+		break;
-+	case F_OWNER_PGRP:
-+	default:
-+		return -1;
-+	}
-+
-+	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->fd); cpu_map_idx++) {
-+		err = perf_evsel__run_fcntl(evsel, F_SETFL, flags, cpu_map_idx);
-+		if (err)
-+			return err;
-+
-+		err = perf_evsel__run_fcntl(evsel, F_SETSIG, signal, cpu_map_idx);
-+		if (err)
-+			return err;
-+
-+		err = perf_evsel__run_fcntl(evsel, F_SETOWN_EX,
-+					    (unsigned long)&owner, cpu_map_idx);
-+		if (err)
-+			return err;
-+	}
-+
-+	return err;
-+}
-+
- int perf_evsel__open_opts(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 			  struct perf_thread_map *threads,
- 			  struct perf_evsel_open_opts *opts)
-@@ -474,6 +547,12 @@ int perf_evsel__open_opts(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 	evsel->open_flags = OPTS_GET(opts, open_flags, 0);
- 
- 	err = perf_evsel__open(evsel, cpus, threads);
-+	if (err)
-+		return err;
-+
-+	err = perf_evsel__set_signal_handler(evsel, opts);
-+	if (err)
-+		return err;
- 
- 	return err;
- }
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 1140df4d2578..50662babfe97 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -29,8 +29,12 @@ struct perf_evsel_open_opts {
- 	size_t sz;
- 
- 	unsigned long open_flags;	/* perf_event_open flags */
-+	int flags;			/* fcntl flags */
-+	unsigned int signal;
-+	int owner_type;
-+	struct sigaction *sig;
- };
--#define perf_evsel_open_opts__last_field open_flags
-+#define perf_evsel_open_opts__last_field sig
- 
- #define LIBPERF_OPTS(TYPE, NAME, ...)			\
- 	struct TYPE NAME = ({				\
-diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-index ed616fc19b4f..d8f9493cd4d1 100644
---- a/tools/lib/perf/tests/test-evlist.c
-+++ b/tools/lib/perf/tests/test-evlist.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#define _GNU_SOURCE // needed for sched.h to get sched_[gs]etaffinity and CPU_(ZERO,SET)
- #include <inttypes.h>
- #include <sched.h>
- #include <stdio.h>
--- 
-2.25.1
-
+ tools/lib/bpf/libbpf.c                      |  10 +++++
+ tools/lib/bpf/libbpf.h                      |  12 ++++++
+ tools/lib/bpf/libbpf.map                    |   3 +-
+ tools/perf/include/bpf/bpf.h                |   2 +-
+ tools/perf/tests/bpf-script-example.c       |   2 +-
+ tools/perf/tests/bpf-script-test-prologue.c |   2 +-
+ tools/perf/util/bpf-loader.c                | 213 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------
+ 7 files changed, 212 insertions(+), 32 deletions(-)
