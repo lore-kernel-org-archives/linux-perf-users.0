@@ -2,139 +2,853 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D980C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 17:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F06C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 17:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347184AbiDVRGZ (ORCPT
+        id S230044AbiDVR1w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Apr 2022 13:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
+        Fri, 22 Apr 2022 13:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241661AbiDVRGY (ORCPT
+        with ESMTP id S230140AbiDVR1u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Apr 2022 13:06:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F236FA04;
-        Fri, 22 Apr 2022 10:03:29 -0700 (PDT)
+        Fri, 22 Apr 2022 13:27:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 911C66EC60;
+        Fri, 22 Apr 2022 10:24:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 34347B8311D;
-        Fri, 22 Apr 2022 17:03:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3083C385A4;
-        Fri, 22 Apr 2022 17:03:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 550C5621B7;
+        Fri, 22 Apr 2022 17:22:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58409C385A0;
+        Fri, 22 Apr 2022 17:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650647007;
-        bh=Xo8DuXhvaecEdzq/s8yjTmStQeqLUDbXLz2tAC/LGqc=;
+        s=k20201202; t=1650648163;
+        bh=j+oLwkZGaeVuBZLFPAe7htnw+F0UycqrCTi4eoUm9i8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vmsk6spFqgx2kreMHrxlERhR0MBxeBvbV7QnMgMeCTIl5gO7NqR9d113MN3bGAM5e
-         1ELKycDB9FrZPBPi7ewwTgfYiSNnpfllnAL9+yjV0XHz0fZSomiFdG0BRZmX3raWiX
-         rGXxWZl4fO9k0sQJny2FaV0wEOaJpPg9nDEWKYyY496WG+tm3Aw5v184UYu6FZsVU2
-         +0l4ui3HX/8yuiUqjCEntLdjCLGmmpdFtuuRJ03BL5tl/HwILCVWjlzIhuLE+P+xBb
-         XVbkz4v55jIRBjLcu3U2Z+jlB4+kirXYz/9/CSmoLstcEwzSCSmg0GtHpnjoTLaSgp
-         RCZs/g4E3bVOA==
+        b=mEdZwQROd18RxnJdlbQ/AYYJybr/XoNFA8LmDka3IQvigpaMWuQcCvjf+wBtW4XIX
+         /x6bZPEzHz8l4DdeCIu36qeL8QeQ8Jqt0UfKOUI4Vjw1z+JHAwCTIKI8+mDl6ChhPN
+         brECdWLGg4ItoExlHfjFv+TwTKlfsk+QXydfwH02g6uNnDd+cge3FiMz3Dy8IDNh2U
+         wNbLiM5QDh6peSHE8JwLPNkwOAbF/Ez11hvmy5dBIh+ElWKdfqxZg8aszYzLqeJMVH
+         EJFTxIId6CM1Cs0ycg45KM3IFjD2cJKl79r+el8u8bZttbx7IoNY4nehbNX2Ng3Wmo
+         W2+D5U3nSDjYg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 35AD6400B1; Fri, 22 Apr 2022 14:03:24 -0300 (-03)
-Date:   Fri, 22 Apr 2022 14:03:24 -0300
+        id 08305400B1; Fri, 22 Apr 2022 14:22:41 -0300 (-03)
+Date:   Fri, 22 Apr 2022 14:22:40 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH perf/core 3/5] perf tools: Move libbpf init in
- libbpf_init function
-Message-ID: <YmLf3PQ9ws2C/Myu@kernel.org>
-References: <20220422100025.1469207-1-jolsa@kernel.org>
- <20220422100025.1469207-4-jolsa@kernel.org>
+To:     zhengjun.xing@linux.intel.com
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com
+Subject: Re: [PATCH] perf vendor events intel: Add metrics for Alderlake
+Message-ID: <YmLkYHxrzoH1s4TI@kernel.org>
+References: <20220422065336.767582-1-zhengjun.xing@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220422100025.1469207-4-jolsa@kernel.org>
+In-Reply-To: <20220422065336.767582-1-zhengjun.xing@linux.intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Apr 22, 2022 at 12:00:23PM +0200, Jiri Olsa escreveu:
-> Moving the libbpf init code into single function,
-> so we have single place doing that.
+Em Fri, Apr 22, 2022 at 02:53:35PM +0800, zhengjun.xing@linux.intel.com escreveu:
+> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> 
+> Add JSON metrics for Alderlake to perf.
+> 
+> It included both P-core and E-core metrics.
+> 
+> P-core metrics based on TMA 4.3-full (TMA_Metrics-full.csv)
+> E-core metrics based on E-core TMA 2.0 (E-core_TMA_Metrics.xlsx)
+> 
+> They are all downloaded from:
+>   https://download.01.org/perfmon/
+> 
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Cherry picked this one, waiting for Andrii to chime in wrt the libbpf
-changes, if its acceptable, how to proceed, i.e. in what tree to carry
-these?
+Thanks, applied.
 
 - Arnaldo
- 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/bpf-loader.c | 27 ++++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
+
+ ---
+>  .../arch/x86/alderlake/adl-metrics.json       | 761 ++++++++++++++++++
+>  1 file changed, 761 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
 > 
-> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> index b72cef1ae959..f8ad581ea247 100644
-> --- a/tools/perf/util/bpf-loader.c
-> +++ b/tools/perf/util/bpf-loader.c
-> @@ -99,16 +99,26 @@ static int bpf_perf_object__add(struct bpf_object *obj)
->  	return perf_obj ? 0 : -ENOMEM;
->  }
->  
-> +static int libbpf_init(void)
-> +{
-> +	if (libbpf_initialized)
-> +		return 0;
-> +
-> +	libbpf_set_print(libbpf_perf_print);
-> +	libbpf_initialized = true;
-> +	return 0;
-> +}
-> +
->  struct bpf_object *
->  bpf__prepare_load_buffer(void *obj_buf, size_t obj_buf_sz, const char *name)
->  {
->  	LIBBPF_OPTS(bpf_object_open_opts, opts, .object_name = name);
->  	struct bpf_object *obj;
-> +	int err;
->  
-> -	if (!libbpf_initialized) {
-> -		libbpf_set_print(libbpf_perf_print);
-> -		libbpf_initialized = true;
-> -	}
-> +	err = libbpf_init();
-> +	if (err)
-> +		return ERR_PTR(err);
->  
->  	obj = bpf_object__open_mem(obj_buf, obj_buf_sz, &opts);
->  	if (IS_ERR_OR_NULL(obj)) {
-> @@ -135,14 +145,13 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
->  {
->  	LIBBPF_OPTS(bpf_object_open_opts, opts, .object_name = filename);
->  	struct bpf_object *obj;
-> +	int err;
->  
-> -	if (!libbpf_initialized) {
-> -		libbpf_set_print(libbpf_perf_print);
-> -		libbpf_initialized = true;
-> -	}
-> +	err = libbpf_init();
-> +	if (err)
-> +		return ERR_PTR(err);
->  
->  	if (source) {
-> -		int err;
->  		void *obj_buf;
->  		size_t obj_buf_sz;
->  
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> new file mode 100644
+> index 000000000000..4d172687f936
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> @@ -0,0 +1,761 @@
+> +[
+> +    {
+> +        "BriefDescription": "Total pipeline cost of branch related instructions (used for program control-flow including function calls)",
+> +        "MetricExpr": "100 * (( BR_INST_RETIRED.COND + 3 * BR_INST_RETIRED.NEAR_CALL + (BR_INST_RETIRED.NEAR_TAKEN - BR_INST_RETIRED.COND_TAKEN - 2 * BR_INST_RETIRED.NEAR_CALL) ) / TOPDOWN.SLOTS)",
+> +        "MetricGroup": "Ret",
+> +        "MetricName": "Branching_Overhead",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+> +        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+> +        "MetricGroup": "Ret;Summary",
+> +        "MetricName": "IPC",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+> +        "MetricExpr": "1 / (INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD)",
+> +        "MetricGroup": "Pipeline;Mem",
+> +        "MetricName": "CPI",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+> +        "MetricGroup": "Pipeline",
+> +        "MetricName": "CLKS",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Total issue-pipeline slots (per-Physical Core till ICL; per-Logical Processor ICL onward)",
+> +        "MetricExpr": "TOPDOWN.SLOTS",
+> +        "MetricGroup": "TmaL1",
+> +        "MetricName": "SLOTS",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of Physical Core issue-slots utilized by this Logical Processor",
+> +        "MetricExpr": "TOPDOWN.SLOTS / ( TOPDOWN.SLOTS / 2 ) if #SMT_on else 1",
+> +        "MetricGroup": "SMT",
+> +        "MetricName": "Slots_Utilization",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "The ratio of Executed- by Issued-Uops",
+> +        "MetricExpr": "UOPS_EXECUTED.THREAD / UOPS_ISSUED.ANY",
+> +        "MetricGroup": "Cor;Pipeline",
+> +        "MetricName": "Execute_per_Issue",
+> +        "PublicDescription": "The ratio of Executed- by Issued-Uops. Ratio > 1 suggests high rate of uop micro-fusions. Ratio < 1 suggest high rate of \"execute\" at rename stage.",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions Per Cycle across hyper-threads (per physical core)",
+> +        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.DISTRIBUTED",
+> +        "MetricGroup": "Ret;SMT;TmaL1",
+> +        "MetricName": "CoreIPC",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Floating Point Operations Per Cycle",
+> +        "MetricExpr": "( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) / CPU_CLK_UNHALTED.DISTRIBUTED",
+> +        "MetricGroup": "Ret;Flops",
+> +        "MetricName": "FLOPc",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Actual per-core usage of the Floating Point execution units (regardless of the vector width)",
+> +        "MetricExpr": "( (FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE) + (FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE) ) / ( 2 * CPU_CLK_UNHALTED.DISTRIBUTED )",
+> +        "MetricGroup": "Cor;Flops;HPC",
+> +        "MetricName": "FP_Arith_Utilization",
+> +        "PublicDescription": "Actual per-core usage of the Floating Point execution units (regardless of the vector width). Values > 1 are possible due to Fused-Multiply Add (FMA) counting.",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+> +        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
+> +        "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
+> +        "MetricName": "ILP",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": "Bad;BadSpec;BrMispredicts",
+> +        "MetricName": "IpMispredict",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.DISTRIBUTED",
+> +        "MetricGroup": "SMT",
+> +        "MetricName": "CORE_CLKS",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Load (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_LOADS",
+> +        "MetricGroup": "InsType",
+> +        "MetricName": "IpLoad",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Store (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_STORES",
+> +        "MetricGroup": "InsType",
+> +        "MetricName": "IpStore",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Branch (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": "Branches;Fed;InsType",
+> +        "MetricName": "IpBranch",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per (near) call (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+> +        "MetricGroup": "Branches;Fed;PGO",
+> +        "MetricName": "IpCall",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instruction per taken branch",
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+> +        "MetricGroup": "Branches;Fed;FetchBW;Frontend;PGO",
+> +        "MetricName": "IpTB",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Branch instructions per taken branch. ",
+> +        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+> +        "MetricGroup": "Branches;Fed;PGO",
+> +        "MetricName": "BpTkBranch",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Floating Point (FP) Operation (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )",
+> +        "MetricGroup": "Flops;InsType",
+> +        "MetricName": "IpFLOP",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per FP Arithmetic instruction (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / ( (FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE) + (FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE) )",
+> +        "MetricGroup": "Flops;InsType",
+> +        "MetricName": "IpArith",
+> +        "PublicDescription": "Instructions per FP Arithmetic instruction (lower number means higher occurrence rate). May undercount due to FMA double counting. Approximated prior to BDW.",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per FP Arithmetic Scalar Single-Precision instruction (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / FP_ARITH_INST_RETIRED.SCALAR_SINGLE",
+> +        "MetricGroup": "Flops;FpScalar;InsType",
+> +        "MetricName": "IpArith_Scalar_SP",
+> +        "PublicDescription": "Instructions per FP Arithmetic Scalar Single-Precision instruction (lower number means higher occurrence rate). May undercount due to FMA double counting.",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per FP Arithmetic Scalar Double-Precision instruction (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / FP_ARITH_INST_RETIRED.SCALAR_DOUBLE",
+> +        "MetricGroup": "Flops;FpScalar;InsType",
+> +        "MetricName": "IpArith_Scalar_DP",
+> +        "PublicDescription": "Instructions per FP Arithmetic Scalar Double-Precision instruction (lower number means higher occurrence rate). May undercount due to FMA double counting.",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per FP Arithmetic AVX/SSE 128-bit instruction (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / ( FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE )",
+> +        "MetricGroup": "Flops;FpVector;InsType",
+> +        "MetricName": "IpArith_AVX128",
+> +        "PublicDescription": "Instructions per FP Arithmetic AVX/SSE 128-bit instruction (lower number means higher occurrence rate). May undercount due to FMA double counting.",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per FP Arithmetic AVX* 256-bit instruction (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / ( FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )",
+> +        "MetricGroup": "Flops;FpVector;InsType",
+> +        "MetricName": "IpArith_AVX256",
+> +        "PublicDescription": "Instructions per FP Arithmetic AVX* 256-bit instruction (lower number means higher occurrence rate). May undercount due to FMA double counting.",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Total number of retired Instructions, Sample with: INST_RETIRED.PREC_DIST",
+> +        "MetricExpr": "INST_RETIRED.ANY",
+> +        "MetricGroup": "Summary;TmaL1",
+> +        "MetricName": "Instructions",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average number of Uops issued by front-end when it issued something",
+> +        "MetricExpr": "UOPS_ISSUED.ANY / cpu_core@UOPS_ISSUED.ANY\\,cmask\\=1@",
+> +        "MetricGroup": "Fed;FetchBW",
+> +        "MetricName": "Fetch_UpC",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of Uops delivered by the LSD (Loop Stream Detector; aka Loop Cache)",
+> +        "MetricExpr": "LSD.UOPS / (IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS)",
+> +        "MetricGroup": "Fed;LSD",
+> +        "MetricName": "LSD_Coverage",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+> +        "MetricExpr": "IDQ.DSB_UOPS / (IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS)",
+> +        "MetricGroup": "DSB;Fed;FetchBW",
+> +        "MetricName": "DSB_Coverage",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Number of Instructions per non-speculative DSB miss",
+> +        "MetricExpr": "INST_RETIRED.ANY / FRONTEND_RETIRED.ANY_DSB_MISS",
+> +        "MetricGroup": "DSBmiss;Fed",
+> +        "MetricName": "IpDSB_Miss_Ret",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of branches that are non-taken conditionals",
+> +        "MetricExpr": "BR_INST_RETIRED.COND_NTAKEN / BR_INST_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": "Bad;Branches;CodeGen;PGO",
+> +        "MetricName": "Cond_NT",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of branches that are taken conditionals",
+> +        "MetricExpr": "BR_INST_RETIRED.COND_TAKEN / BR_INST_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": "Bad;Branches;CodeGen;PGO",
+> +        "MetricName": "Cond_TK",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of branches that are CALL or RET",
+> +        "MetricExpr": "( BR_INST_RETIRED.NEAR_CALL + BR_INST_RETIRED.NEAR_RETURN ) / BR_INST_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": "Bad;Branches",
+> +        "MetricName": "CallRet",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of branches that are unconditional (direct or indirect) jumps",
+> +        "MetricExpr": "(BR_INST_RETIRED.NEAR_TAKEN - BR_INST_RETIRED.COND_TAKEN - 2 * BR_INST_RETIRED.NEAR_CALL) / BR_INST_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": "Bad;Branches",
+> +        "MetricName": "Jump",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of branches of other types (not individually covered by other metrics in Info.Branches group)",
+> +        "MetricExpr": "1 - ( (BR_INST_RETIRED.COND_NTAKEN / BR_INST_RETIRED.ALL_BRANCHES) + (BR_INST_RETIRED.COND_TAKEN / BR_INST_RETIRED.ALL_BRANCHES) + (( BR_INST_RETIRED.NEAR_CALL + BR_INST_RETIRED.NEAR_RETURN ) / BR_INST_RETIRED.ALL_BRANCHES) + ((BR_INST_RETIRED.NEAR_TAKEN - BR_INST_RETIRED.COND_TAKEN - 2 * BR_INST_RETIRED.NEAR_CALL) / BR_INST_RETIRED.ALL_BRANCHES) )",
+> +        "MetricGroup": "Bad;Branches",
+> +        "MetricName": "Other_Branches",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Actual Average Latency for L1 data-cache miss demand load instructions (in core cycles)",
+> +        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
+> +        "MetricGroup": "Mem;MemoryBound;MemoryLat",
+> +        "MetricName": "Load_Miss_Real_Latency",
+> +        "PublicDescription": "Actual Average Latency for L1 data-cache miss demand load instructions (in core cycles). Latency may be overestimated for multi-load instructions - e.g. repeat strings.",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+> +        "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+> +        "MetricGroup": "Mem;MemoryBound;MemoryBW",
+> +        "MetricName": "MLP",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
+> +        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L1D_Cache_Fill_BW",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
+> +        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L2_Cache_Fill_BW",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
+> +        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L3_Cache_Fill_BW",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-core data access bandwidth to the L3 cache [GB / sec]",
+> +        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
+> +        "MetricGroup": "Mem;MemoryBW;Offcore",
+> +        "MetricName": "L3_Cache_Access_BW",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+> +        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;CacheMisses",
+> +        "MetricName": "L1MPKI",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "L1 cache true misses per kilo instruction for all demand loads (including speculative)",
+> +        "MetricExpr": "1000 * L2_RQSTS.ALL_DEMAND_DATA_RD / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;CacheMisses",
+> +        "MetricName": "L1MPKI_Load",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+> +        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;Backend;CacheMisses",
+> +        "MetricName": "L2MPKI",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+> +        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;CacheMisses;Offcore",
+> +        "MetricName": "L2MPKI_All",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "L2 cache misses per kilo instruction for all demand loads  (including speculative)",
+> +        "MetricExpr": "1000 * L2_RQSTS.DEMAND_DATA_RD_MISS / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;CacheMisses",
+> +        "MetricName": "L2MPKI_Load",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+> +        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;CacheMisses",
+> +        "MetricName": "L2HPKI_All",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "L2 cache hits per kilo instruction for all demand loads  (including speculative)",
+> +        "MetricExpr": "1000 * L2_RQSTS.DEMAND_DATA_RD_HIT / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;CacheMisses",
+> +        "MetricName": "L2HPKI_Load",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+> +        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;CacheMisses",
+> +        "MetricName": "L3MPKI",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fill Buffer (FB) true hits per kilo instructions for retired demand loads",
+> +        "MetricExpr": "1000 * MEM_LOAD_RETIRED.FB_HIT / INST_RETIRED.ANY",
+> +        "MetricGroup": "Mem;CacheMisses",
+> +        "MetricName": "FB_HPKI",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
+> +        "MetricConstraint": "NO_NMI_WATCHDOG",
+> +        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING ) / ( 4 * CPU_CLK_UNHALTED.DISTRIBUTED )",
+> +        "MetricGroup": "Mem;MemoryTLB",
+> +        "MetricName": "Page_Walks_Utilization",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average CPU Utilization",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+> +        "MetricGroup": "HPC;Summary",
+> +        "MetricName": "CPU_Utilization",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Measured Average Frequency for unhalted processors [GHz]",
+> +        "MetricExpr": "(CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC) * msr@tsc@ / 1000000000 / duration_time",
+> +        "MetricGroup": "Summary;Power",
+> +        "MetricName": "Average_Frequency",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Giga Floating Point Operations Per Second",
+> +        "MetricExpr": "( ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) / 1000000000 ) / duration_time",
+> +        "MetricGroup": "Cor;Flops;HPC",
+> +        "MetricName": "GFLOPs",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average Frequency Utilization relative nominal frequency",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "Turbo_Utilization",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+> +        "MetricExpr": "1 - CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_DISTRIBUTED if #SMT_on else 0",
+> +        "MetricGroup": "SMT",
+> +        "MetricName": "SMT_2T_Utilization",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of cycles spent in the Operating System (OS) Kernel mode",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD_P:k / CPU_CLK_UNHALTED.THREAD",
+> +        "MetricGroup": "OS",
+> +        "MetricName": "Kernel_Utilization",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Cycles Per Instruction for the Operating System (OS) Kernel mode",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD_P:k / INST_RETIRED.ANY_P:k",
+> +        "MetricGroup": "OS",
+> +        "MetricName": "Kernel_CPI",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
+> +        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+> +        "MetricGroup": "HPC;Mem;MemoryBW;SoC",
+> +        "MetricName": "DRAM_BW_Use",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average number of parallel requests to external memory. Accounts for all requests",
+> +        "MetricExpr": "UNC_ARB_TRK_OCCUPANCY.ALL / arb@event\\=0x81\\,umask\\=0x1@",
+> +        "MetricGroup": "Mem;SoC",
+> +        "MetricName": "MEM_Parallel_Requests",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Far Branch ( Far Branches apply upon transition from application to operating system, handling interrupts, exceptions) [lower number means higher occurrence rate]",
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.FAR_BRANCH:u",
+> +        "MetricGroup": "Branches;OS",
+> +        "MetricName": "IpFarBranch",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the number of issue slots  that were not consumed by the backend due to frontend stalls.",
+> +        "MetricExpr": "TOPDOWN_FE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)",
+> +        "MetricGroup": "TopdownL1",
+> +        "MetricName": "Frontend_Bound",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the total number of issue slots that were not consumed by the backend because allocation is stalled due to a mispredicted jump or a machine clear",
+> +        "MetricExpr": "TOPDOWN_BAD_SPECULATION.ALL / (5 * CPU_CLK_UNHALTED.CORE)",
+> +        "MetricGroup": "TopdownL1",
+> +        "MetricName": "Bad_Speculation",
+> +        "PublicDescription": "Counts the total number of issue slots that were not consumed by the backend because allocation is stalled due to a mispredicted jump or a machine clear. Only issue slots wasted due to fast nukes such as memory ordering nukes are counted. Other nukes are not accounted for. Counts all issue slots blocked during this recovery window including relevant microcode flows and while uops are not yet available in the instruction queue (IQ). Also includes the issue slots that were consumed by the backend but were thrown away because they were younger than the mispredict or machine clear.",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the total number of issue slots  that were not consumed by the backend due to backend stalls",
+> +        "MetricConstraint": "NO_NMI_WATCHDOG",
+> +        "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)",
+> +        "MetricGroup": "TopdownL1",
+> +        "MetricName": "Backend_Bound",
+> +        "PublicDescription": "Counts the total number of issue slots  that were not consumed by the backend due to backend stalls.  Note that uops must be available for consumption in order for this event to count.  If a uop is not available (IQ is empty), this event will not count.   The rest of these subevents count backend stalls, in cycles, due to an outstanding request which is memory bound vs core bound.   The subevents are not slot based events and therefore can not be precisely added or subtracted from the Backend_Bound_Aux subevents which are slot based.",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the total number of issue slots  that were not consumed by the backend due to backend stalls",
+> +        "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)",
+> +        "MetricGroup": "TopdownL1",
+> +        "MetricName": "Backend_Bound_Aux",
+> +        "PublicDescription": "Counts the total number of issue slots  that were not consumed by the backend due to backend stalls.  Note that UOPS must be available for consumption in order for this event to count.  If a uop is not available (IQ is empty), this event will not count.  All of these subevents count backend stalls, in slots, due to a resource limitation.   These are not cycle based events and therefore can not be precisely added or subtracted from the Backend_Bound subevents which are cycle based.  These subevents are supplementary to Backend_Bound and can be used to analyze results from a resource perspective at allocation.  ",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Counts the numer of issue slots  that result in retirement slots. ",
+> +        "MetricExpr": "TOPDOWN_RETIRING.ALL / (5 * CPU_CLK_UNHALTED.CORE)",
+> +        "MetricGroup": "TopdownL1",
+> +        "MetricName": "Retiring",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.CORE",
+> +        "MetricGroup": " ",
+> +        "MetricName": "CLKS",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.CORE_P",
+> +        "MetricGroup": " ",
+> +        "MetricName": "CLKS_P",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "",
+> +        "MetricExpr": "5 * CPU_CLK_UNHALTED.CORE",
+> +        "MetricGroup": " ",
+> +        "MetricName": "SLOTS",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions Per Cycle",
+> +        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.CORE",
+> +        "MetricGroup": " ",
+> +        "MetricName": "IPC",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Cycles Per Instruction",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.CORE / INST_RETIRED.ANY",
+> +        "MetricGroup": " ",
+> +        "MetricName": "CPI",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Uops Per Instruction",
+> +        "MetricExpr": "UOPS_RETIRED.ALL / INST_RETIRED.ANY",
+> +        "MetricGroup": " ",
+> +        "MetricName": "UPI",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percentage of total non-speculative loads with a store forward or unknown store address block",
+> +        "MetricExpr": "100 * LD_BLOCKS.DATA_UNKNOWN / MEM_UOPS_RETIRED.ALL_LOADS",
+> +        "MetricGroup": "",
+> +        "MetricName": "Store_Fwd_Blocks",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percentage of total non-speculative loads with a address aliasing block",
+> +        "MetricExpr": "100 * LD_BLOCKS.4K_ALIAS / MEM_UOPS_RETIRED.ALL_LOADS",
+> +        "MetricGroup": "",
+> +        "MetricName": "Address_Alias_Blocks",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percentage of total non-speculative loads that are splits",
+> +        "MetricExpr": "100 * MEM_UOPS_RETIRED.SPLIT_LOADS / MEM_UOPS_RETIRED.ALL_LOADS",
+> +        "MetricGroup": "",
+> +        "MetricName": "Load_Splits",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Branch (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": " ",
+> +        "MetricName": "IpBranch",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Instruction per (near) call (lower number means higher occurrence rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.CALL",
+> +        "MetricGroup": " ",
+> +        "MetricName": "IpCall",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Load",
+> +        "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_LOADS",
+> +        "MetricGroup": " ",
+> +        "MetricName": "IpLoad",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Store",
+> +        "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_STORES",
+> +        "MetricGroup": " ",
+> +        "MetricName": "IpStore",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction",
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": " ",
+> +        "MetricName": "IpMispredict",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per Far Branch",
+> +        "MetricExpr": "INST_RETIRED.ANY / ( BR_INST_RETIRED.FAR_BRANCH / 2 )",
+> +        "MetricGroup": " ",
+> +        "MetricName": "IpFarBranch",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Ratio of all branches which mispredict",
+> +        "MetricExpr": "BR_MISP_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Branch_Mispredict_Ratio",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Ratio between Mispredicted branches and unknown branches",
+> +        "MetricExpr": "BR_MISP_RETIRED.ALL_BRANCHES / BACLEARS.ANY",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Branch_Mispredict_to_Unknown_Branch_Ratio",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percentage of all uops which are ucode ops",
+> +        "MetricExpr": "100 * UOPS_RETIRED.MS / UOPS_RETIRED.ALL",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Microcode_Uop_Ratio",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percentage of all uops which are FPDiv uops",
+> +        "MetricExpr": "100 * UOPS_RETIRED.FPDIV / UOPS_RETIRED.ALL",
+> +        "MetricGroup": " ",
+> +        "MetricName": "FPDiv_Uop_Ratio",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percentage of all uops which are IDiv uops",
+> +        "MetricExpr": "100 * UOPS_RETIRED.IDIV / UOPS_RETIRED.ALL",
+> +        "MetricGroup": " ",
+> +        "MetricName": "IDiv_Uop_Ratio",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percentage of all uops which are x87 uops",
+> +        "MetricExpr": "100 * UOPS_RETIRED.X87 / UOPS_RETIRED.ALL",
+> +        "MetricGroup": " ",
+> +        "MetricName": "X87_Uop_Ratio",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Average Frequency Utilization relative nominal frequency",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.CORE / CPU_CLK_UNHALTED.REF_TSC",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Turbo_Utilization",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Fraction of cycles spent in Kernel mode",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.CORE:k / CPU_CLK_UNHALTED.CORE",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Kernel_Utilization",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Average CPU Utilization",
+> +        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+> +        "MetricGroup": " ",
+> +        "MetricName": "CPU_Utilization",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Estimated Pause cost. In percent",
+> +        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / ( 5 * CPU_CLK_UNHALTED.CORE )",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Estimated_Pause_Cost",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Cycle cost per L2 hit",
+> +        "MetricExpr": "MEM_BOUND_STALLS.LOAD_L2_HIT / MEM_LOAD_UOPS_RETIRED.L2_HIT",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Cycles_per_Demand_Load_L2_Hit",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Cycle cost per LLC hit",
+> +        "MetricExpr": "MEM_BOUND_STALLS.LOAD_LLC_HIT / MEM_LOAD_UOPS_RETIRED.L3_HIT",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Cycles_per_Demand_Load_L3_Hit",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Cycle cost per DRAM hit",
+> +        "MetricExpr": "MEM_BOUND_STALLS.LOAD_DRAM_HIT / MEM_LOAD_UOPS_RETIRED.DRAM_HIT",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Cycles_per_Demand_Load_DRAM_Hit",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percent of instruction miss cost that hit in the L2",
+> +        "MetricExpr": "100 * MEM_BOUND_STALLS.IFETCH_L2_HIT / ( MEM_BOUND_STALLS.IFETCH )",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Inst_Miss_Cost_L2Hit_Percent",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percent of instruction miss cost that hit in the L3",
+> +        "MetricExpr": "100 * MEM_BOUND_STALLS.IFETCH_LLC_HIT / ( MEM_BOUND_STALLS.IFETCH )",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Inst_Miss_Cost_L3Hit_Percent",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "Percent of instruction miss cost that hit in DRAM",
+> +        "MetricExpr": "100 * MEM_BOUND_STALLS.IFETCH_DRAM_HIT / ( MEM_BOUND_STALLS.IFETCH )",
+> +        "MetricGroup": " ",
+> +        "MetricName": "Inst_Miss_Cost_DRAMHit_Percent",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "load ops retired per 1000 instruction",
+> +        "MetricExpr": "1000 * MEM_UOPS_RETIRED.ALL_LOADS / INST_RETIRED.ANY",
+> +        "MetricGroup": " ",
+> +        "MetricName": "MemLoadPKI",
+> +        "Unit": "cpu_atom"
+> +    },
+> +    {
+> +        "BriefDescription": "C1 residency percent per core",
+> +        "MetricExpr": "(cstate_core@c1\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C1_Core_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C6 residency percent per core",
+> +        "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C6_Core_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C7 residency percent per core",
+> +        "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C7_Core_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C2 residency percent per package",
+> +        "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C2_Pkg_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C3 residency percent per package",
+> +        "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C3_Pkg_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C6 residency percent per package",
+> +        "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C6_Pkg_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C7 residency percent per package",
+> +        "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C7_Pkg_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C8 residency percent per package",
+> +        "MetricExpr": "(cstate_pkg@c8\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C8_Pkg_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C9 residency percent per package",
+> +        "MetricExpr": "(cstate_pkg@c9\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C9_Pkg_Residency"
+> +    },
+> +    {
+> +        "BriefDescription": "C10 residency percent per package",
+> +        "MetricExpr": "(cstate_pkg@c10\\-residency@ / msr@tsc@) * 100",
+> +        "MetricGroup": "Power",
+> +        "MetricName": "C10_Pkg_Residency"
+> +    }
+> +]
 > -- 
-> 2.35.1
+> 2.25.1
 
 -- 
 
