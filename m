@@ -2,42 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314E1C433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889EAC433EF
 	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Apr 2022 09:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1446170AbiDVJrD (ORCPT
+        id S1446175AbiDVJrF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Apr 2022 05:47:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58796 "EHLO
+        Fri, 22 Apr 2022 05:47:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1446166AbiDVJrC (ORCPT
+        with ESMTP id S1446167AbiDVJrC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 22 Apr 2022 05:47:02 -0400
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EFA853B5D;
+Received: from esa10.hc1455-7.c3s2.iphmx.com (esa10.hc1455-7.c3s2.iphmx.com [139.138.36.225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5976453B5F;
         Fri, 22 Apr 2022 02:44:09 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="70646198"
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="58614522"
 X-IronPort-AV: E=Sophos;i="5.90,281,1643641200"; 
-   d="scan'208";a="70646198"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP; 22 Apr 2022 18:44:07 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-        by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 06E2DC68B8;
+   d="scan'208";a="58614522"
+Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
+  by esa10.hc1455-7.c3s2.iphmx.com with ESMTP; 22 Apr 2022 18:44:06 +0900
+Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
+        by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id BF644D6478;
         Fri, 22 Apr 2022 18:44:05 +0900 (JST)
 Received: from oym-om1.fujitsu.com (oym-om1.o.css.fujitsu.com [10.85.58.161])
-        by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 1A32EE6747;
+        by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id CBC60D9462;
         Fri, 22 Apr 2022 18:44:04 +0900 (JST)
 Received: from localhost.localdomain (bakeccha.fct.css.fujitsu.com [10.126.195.136])
-        by oym-om1.fujitsu.com (Postfix) with ESMTP id C9C7F40483741;
-        Fri, 22 Apr 2022 18:44:03 +0900 (JST)
+        by oym-om1.fujitsu.com (Postfix) with ESMTP id 8B9E040483741;
+        Fri, 22 Apr 2022 18:44:04 +0900 (JST)
 From:   Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         jolsa@redhat.com, namhyung@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/7] libperf: Add perf_evsel__has_fd() functions
-Date:   Fri, 22 Apr 2022 18:38:30 +0900
-Message-Id: <20220422093833.340873-5-nakamura.shun@fujitsu.com>
+Subject: [PATCH 7/7] libperf test: Add test_stat_overflow_event()
+Date:   Fri, 22 Apr 2022 18:38:33 +0900
+Message-Id: <20220422093833.340873-8-nakamura.shun@fujitsu.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220422093833.340873-1-nakamura.shun@fujitsu.com>
 References: <20220422093833.340873-1-nakamura.shun@fujitsu.com>
@@ -48,83 +48,202 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add the following functions:
+Add a test to check overflowed events.
 
-  perf_evsel__has_fd
+Committer testing:
 
-to check for perf events with the file descriptor specified in the
-argument.
-This function can be used in signal handlers to check overflow.
+  $ sudo make tests -C ./tools/lib/perf V=1
+  make: Entering directory '/home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/perf'
+  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=. obj=libperf
+  make -C /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/api/ O= libapi.a
+  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./fd obj=libapi
+  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./fs obj=libapi
+  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=. obj=tests
+  make -f /home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/build/Makefile.build dir=./tests obj=tests
+  running static:
+  - running tests/test-cpumap.c...OK
+  - running tests/test-threadmap.c...OK
+  - running tests/test-evlist.c...
+
+  <SNIP>
+
+  Event  0 -- overflow flag = 0x1, POLL_UP = 1, other signal event = 0
+  Event  1 -- overflow flag = 0x2, POLL_UP = 1, other signal event = 0
+  Event  2 -- overflow flag = 0x4, POLL_UP = 1, other signal event = 0
+  Event  3 -- overflow flag = 0x8, POLL_UP = 1, other signal event = 0
+  OK
+  - running tests/test-evsel.c...
+
+  <SNIP>
+
+  OK
+  running dynamic:
+  - running tests/test-cpumap.c...OK
+  - running tests/test-threadmap.c...OK
+  - running tests/test-evlist.c...
+
+  <SNIP>
+
+  Event  0 -- overflow flag = 0x1, POLL_UP = 1, other signal event = 0
+  Event  1 -- overflow flag = 0x2, POLL_UP = 1, other signal event = 0
+  Event  2 -- overflow flag = 0x4, POLL_UP = 1, other signal event = 0
+  Event  3 -- overflow flag = 0x8, POLL_UP = 1, other signal event = 0
+  OK
+  - running tests/test-evsel.c...
+
+  <SNIP>
+
+  OK
+  make: Leaving directory '/home/nakamura/build_work/build_kernel/linux-kernel/linux/tools/lib/perf'
 
 Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 ---
- tools/lib/perf/Documentation/libperf.txt |  1 +
- tools/lib/perf/evsel.c                   | 18 ++++++++++++++++++
- tools/lib/perf/include/perf/evsel.h      |  1 +
- tools/lib/perf/libperf.map               |  1 +
- 4 files changed, 21 insertions(+)
+ tools/lib/perf/tests/test-evlist.c | 111 +++++++++++++++++++++++++++++
+ 1 file changed, 111 insertions(+)
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index ec93b1c75ebe..bc7881348c76 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -161,6 +161,7 @@ SYNOPSIS
-   int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-   int perf_evsel__disable(struct perf_evsel *evsel);
-   int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-+  bool perf_evsel__has_fd(struct perf_evsel *evsel, int fd);
-   struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
-   struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
-   struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index a289f6c44d7c..446934c0e5e5 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -556,3 +556,21 @@ int perf_evsel__open_opts(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
+index d8f9493cd4d1..587364851432 100644
+--- a/tools/lib/perf/tests/test-evlist.c
++++ b/tools/lib/perf/tests/test-evlist.c
+@@ -5,6 +5,8 @@
+ #include <stdarg.h>
+ #include <unistd.h>
+ #include <stdlib.h>
++#include <string.h>
++#include <fcntl.h>
+ #include <linux/perf_event.h>
+ #include <linux/limits.h>
+ #include <sys/types.h>
+@@ -24,6 +26,13 @@
+ #define EVENT_NUM 15
+ #define WAIT_COUNT 100000000UL
  
- 	return err;
++static unsigned int overflow_flag;
++static struct signal_counts {
++	int hup;
++	int others;
++} sig_count;
++static struct perf_evlist *s_evlist;
++
+ static int libperf_print(enum libperf_print_level level,
+ 			 const char *fmt, va_list ap)
+ {
+@@ -570,6 +579,107 @@ static int test_stat_multiplexing(void)
+ 	return 0;
  }
-+
-+bool perf_evsel__has_fd(struct perf_evsel *evsel, int fd)
+ 
++static void sig_handler(int signo, siginfo_t *info, void *uc)
 +{
-+	int cpu_map_idx;
-+	int thread;
-+	int *evsel_fd;
++	struct perf_evsel *evsel;
++	int i = 0;
 +
-+	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->fd); ++cpu_map_idx) {
-+		for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
-+			evsel_fd = FD(evsel, cpu_map_idx, thread);
++	perf_evlist__for_each_evsel(s_evlist, evsel) {
++		if (perf_evsel__has_fd(evsel, info->si_fd)) {
++			if (info->si_code == POLL_HUP)
++				sig_count.hup++;
++			else
++				sig_count.others++;
 +
-+			if (fd == *evsel_fd)
-+				return true;
++			overflow_flag = (1U << i);
++			return;
 +		}
++		i++;
 +	}
 +
-+	return false;
++	__T_VERBOSE("Failed to get fd of overflowed event");
 +}
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 50662babfe97..19a7993d9021 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -69,5 +69,6 @@ LIBPERF_API int perf_evsel__open_opts(struct perf_evsel *evsel,
- 				      struct perf_cpu_map *cpus,
- 				      struct perf_thread_map *threads,
- 				      struct perf_evsel_open_opts *opts);
-+LIBPERF_API bool perf_evsel__has_fd(struct perf_evsel *evsel, int fd);
++
++static int test_stat_overflow_event(void)
++{
++	static struct sigaction sig;
++
++	struct perf_thread_map *threads;
++	struct perf_evsel *evsel;
++	struct perf_event_attr attr = {
++		.type		= PERF_TYPE_SOFTWARE,
++		.config		= PERF_COUNT_SW_CPU_CLOCK,
++		.sample_type	= PERF_SAMPLE_PERIOD,
++		.sample_period	= 100000,
++		.disabled	= 1,
++	};
++	int err, i, event_num = 4;
++
++	LIBPERF_OPTS(perf_evsel_open_opts, opts,
++		     .open_flags = PERF_FLAG_FD_CLOEXEC,
++		     .flags	 = (O_RDWR | O_NONBLOCK | O_ASYNC),
++		     .signal	 = SIGRTMIN + 1,
++		     .owner_type = F_OWNER_PID,
++		     .sig	 = &sig);
++
++	/* setup signal handler */
++	memset(&sig, 0, sizeof(struct sigaction));
++	sig.sa_sigaction = (void *)sig_handler;
++	sig.sa_flags = SA_SIGINFO;
++
++	threads = perf_thread_map__new_dummy();
++	__T("failed to create threads", threads);
++
++	perf_thread_map__set_pid(threads, 0, 0);
++
++	s_evlist = perf_evlist__new();
++	__T("failed to create evlist", s_evlist);
++
++	for (i = 0; i < event_num; i++) {
++		evsel = perf_evsel__new(&attr);
++		__T("failed to create evsel", evsel);
++
++		perf_evlist__add(s_evlist, evsel);
++	}
++
++	perf_evlist__set_maps(s_evlist, NULL, threads);
++
++	err = perf_evlist__open_opts(s_evlist, &opts);
++	__T("failed to open evlist", err == 0);
++
++	i = 0;
++	perf_evlist__for_each_evsel(s_evlist, evsel) {
++		volatile unsigned int wait_count = WAIT_COUNT;
++
++		overflow_flag = 0;
++		sig_count.hup = 0;
++		sig_count.others = 0;
++
++		err = perf_evsel__refresh(evsel, 1);
++		__T("failed to refresh evsel", err == 0);
++
++		while (wait_count--)
++			;
++
++		__T_VERBOSE("Event %2d -- overflow flag = %#x, ",
++			    i, overflow_flag);
++		__T_VERBOSE("POLL_HUP = %d, other signal event = %d\n",
++			    sig_count.hup, sig_count.others);
++
++		__T("unexpected event overflow detected", overflow_flag && (1U << i));
++		__T("unexpected signal event detected",
++		    sig_count.hup == 1 && sig_count.others == 0);
++
++		i++;
++	}
++
++	perf_evlist__close(s_evlist);
++	perf_evlist__delete(s_evlist);
++	perf_thread_map__put(threads);
++
++	return 0;
++}
++
+ int test_evlist(int argc, char **argv)
+ {
+ 	__T_START;
+@@ -582,6 +692,7 @@ int test_evlist(int argc, char **argv)
+ 	test_mmap_thread();
+ 	test_mmap_cpus();
+ 	test_stat_multiplexing();
++	test_stat_overflow_event();
  
- #endif /* __LIBPERF_EVSEL_H */
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index eeeb3075e092..b2ace16bbc32 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -34,6 +34,7 @@ LIBPERF_0.0.1 {
- 		perf_evsel__cpus;
- 		perf_evsel__threads;
- 		perf_evsel__attr;
-+		perf_evsel__has_fd;
- 		perf_evlist__new;
- 		perf_evlist__delete;
- 		perf_evlist__open;
+ 	__T_END;
+ 	return tests_failed == 0 ? 0 : -1;
 -- 
 2.25.1
 
