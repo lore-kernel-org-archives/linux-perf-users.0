@@ -2,84 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2645C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 23 Apr 2022 12:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDECFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 23 Apr 2022 16:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233142AbiDWM4e (ORCPT
+        id S236545AbiDWQnh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 23 Apr 2022 08:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35020 "EHLO
+        Sat, 23 Apr 2022 12:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231196AbiDWM4c (ORCPT
+        with ESMTP id S236452AbiDWQmf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 23 Apr 2022 08:56:32 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E6B261;
-        Sat, 23 Apr 2022 05:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1650718415; x=1682254415;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OBOX3LfVl7XRiJUyCXwa9+7Ll3XU3H92WTMvH//IWQI=;
-  b=l7GWD2fnnI50zocnpRhEfFmFafQ/ut9XNgxakJkLaH0ArIUl9JXcYxys
-   VRoVKwSNSrL3LWkxIOsj9BL8pzfsZaueuOIg/wit1C9cRE/PbCwc6dnaj
-   VJZpd06k06CimVcsYAPFXYPCsznZ1LTHZDd5wWjmv27j/frxGxiv58cx5
-   sGMqZEW+aXbsz0bIpW6e0VUIfMXHKlL8OrhvGljwrgl8O3LSWcIxvQk4D
-   suy5h7qLz8uzKS40UKbohcGN1vD6M0lXGZlSYlh6VTXeF2X4Ts+GSWWDt
-   9SbPtBIv7cHH9i3qVTwPpBQQZKj1mWEICBSj1JzHxVFnP238lgMtY0pAM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="244818048"
-X-IronPort-AV: E=Sophos;i="5.90,284,1643702400"; 
-   d="scan'208";a="244818048"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2022 05:53:35 -0700
-X-IronPort-AV: E=Sophos;i="5.90,284,1643702400"; 
-   d="scan'208";a="556858428"
-Received: from vietqle-mobl1.amr.corp.intel.com (HELO [10.212.229.58]) ([10.212.229.58])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2022 05:53:33 -0700
-Message-ID: <8e09af67-a416-4ead-b406-6c8b998de344@linux.intel.com>
-Date:   Sat, 23 Apr 2022 05:53:28 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>, Ali Saidi <alisaidi@amazon.com>
-Cc:     kan.liang@linux.intel.com, Nick.Forrington@arm.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andrew.kilroy@arm.com, benh@kernel.crashing.org,
-        german.gomez@arm.com, james.clark@arm.com, john.garry@huawei.com,
-        jolsa@kernel.org, kjain@linux.ibm.com, lihuafei1@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-References: <c17dedde-6ba8-db9b-4827-32477f039764@linux.intel.com>
- <20220422212249.22463-1-alisaidi@amazon.com>
- <20220423063805.GA559531@leoy-ThinkPad-X240s>
-From:   Andi Kleen <ak@linux.intel.com>
-In-Reply-To: <20220423063805.GA559531@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Sat, 23 Apr 2022 12:42:35 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806113CA5B;
+        Sat, 23 Apr 2022 09:39:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 195B1B80CEE;
+        Sat, 23 Apr 2022 16:39:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C8885C385A5;
+        Sat, 23 Apr 2022 16:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650731974;
+        bh=UPG7CofSXFfKWK0ddl4zCS+NnflrUTaJGnwJWu5sThM=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=b01RdLach0P3csMy4cfwzbA7JIr4kCDQDm2BuhBsIegGI9YUhelPrNi1KTuQEmE9M
+         MoemXGTl0m0o+UdAWuQIofhFh2aEk12GLU1+1h0jN8j3MfZ4o7P9ePHVN9slXKTxU8
+         fcl2VWu8rrXstuWeqMr+PHm0SGk2F0CvNyAA0VFactcNtbPyl1ETp+sxAsiUPNTj8Z
+         aYgUCRs0y5jDX9fWSsEaUdNX1Z6AjLrJxECT+jML5sB7EUJ8XPRC8EFokBkOvI4zEi
+         9hz8DgctOI+LMOH32IC+7ln+K5e2ENkLDUm0gmUCyFI7D75xMeG/BlnhpPsvkqyMEz
+         tvKMIohaeB15A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B3706E8DBD4;
+        Sat, 23 Apr 2022 16:39:34 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v5.18: 3rd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220423010046.453630-1-acme@kernel.org>
+References: <20220423010046.453630-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220423010046.453630-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-22
+X-PR-Tracked-Commit-Id: 5bb017d4b97a0f135f43ef77091b7edcce4dcee6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 45ab9400e73f34103e73c18a73280c9aa1650e98
+Message-Id: <165073197472.16562.6185530869806202112.pr-tracker-bot@kernel.org>
+Date:   Sat, 23 Apr 2022 16:39:34 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        German Gomez <german.gomez@arm.com>,
+        Guilherme Amadio <amadio@gentoo.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The pull request you sent on Fri, 22 Apr 2022 22:00:46 -0300:
 
-> Except SNOOPX_FWD means a no modified cache snooping, it also means it's
-> a cache conherency from *remote* socket.  This is quite different from we
-> define SNOOPX_PEER, which only snoop from peer CPU or clusters.
->
-> If no objection, I prefer we could keep the new snoop type SNOOPX_PEER,
-> this would be easier for us to distinguish the semantics and support the
-> statistics for SNOOPX_FWD and SNOOPX_PEER separately.
->
-> I overlooked the flag SNOOPX_FWD, thanks a lot for Kan's reminding.
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-22
 
-Yes seems better to keep using a separate flag if they don't exactly match.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/45ab9400e73f34103e73c18a73280c9aa1650e98
 
-It's not that we're short on flags anyways.
+Thank you!
 
--Andi
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
