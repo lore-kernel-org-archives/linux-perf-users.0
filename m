@@ -2,106 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E1DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 23 Apr 2022 12:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2645C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 23 Apr 2022 12:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231537AbiDWMTI (ORCPT
+        id S233142AbiDWM4e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 23 Apr 2022 08:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57840 "EHLO
+        Sat, 23 Apr 2022 08:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235374AbiDWMTI (ORCPT
+        with ESMTP id S231196AbiDWM4c (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 23 Apr 2022 08:19:08 -0400
-Received: from euporie.uberspace.de (euporie.uberspace.de [185.26.156.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9AB97C16B
-        for <linux-perf-users@vger.kernel.org>; Sat, 23 Apr 2022 05:16:09 -0700 (PDT)
-Received: (qmail 10142 invoked by uid 989); 23 Apr 2022 12:16:07 -0000
-Authentication-Results: euporie.uberspace.de;
-        auth=pass (plain)
-Date:   Sat, 23 Apr 2022 14:15:57 +0200
-From:   Florian Fischer <florian.fischer@muhq.space>
-To:     Namhyung Kim <namhyung@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCHSET v4 next 0/3] perf stat: add user_time and system_time
- tool events
-Message-ID: <20220423121557.z5gzbqadonmrg6ef@pasture>
-References: <20220420102354.468173-1-florian.fischer@muhq.space>
- <YmA48V09iBbqy6su@kernel.org>
- <CAM9d7cjcA0aYC1otY4WvCJ_h71P9wiHu42GK7iyv3=i01rQ26Q@mail.gmail.com>
+        Sat, 23 Apr 2022 08:56:32 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E6B261;
+        Sat, 23 Apr 2022 05:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650718415; x=1682254415;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OBOX3LfVl7XRiJUyCXwa9+7Ll3XU3H92WTMvH//IWQI=;
+  b=l7GWD2fnnI50zocnpRhEfFmFafQ/ut9XNgxakJkLaH0ArIUl9JXcYxys
+   VRoVKwSNSrL3LWkxIOsj9BL8pzfsZaueuOIg/wit1C9cRE/PbCwc6dnaj
+   VJZpd06k06CimVcsYAPFXYPCsznZ1LTHZDd5wWjmv27j/frxGxiv58cx5
+   sGMqZEW+aXbsz0bIpW6e0VUIfMXHKlL8OrhvGljwrgl8O3LSWcIxvQk4D
+   suy5h7qLz8uzKS40UKbohcGN1vD6M0lXGZlSYlh6VTXeF2X4Ts+GSWWDt
+   9SbPtBIv7cHH9i3qVTwPpBQQZKj1mWEICBSj1JzHxVFnP238lgMtY0pAM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="244818048"
+X-IronPort-AV: E=Sophos;i="5.90,284,1643702400"; 
+   d="scan'208";a="244818048"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2022 05:53:35 -0700
+X-IronPort-AV: E=Sophos;i="5.90,284,1643702400"; 
+   d="scan'208";a="556858428"
+Received: from vietqle-mobl1.amr.corp.intel.com (HELO [10.212.229.58]) ([10.212.229.58])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2022 05:53:33 -0700
+Message-ID: <8e09af67-a416-4ead-b406-6c8b998de344@linux.intel.com>
+Date:   Sat, 23 Apr 2022 05:53:28 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cjcA0aYC1otY4WvCJ_h71P9wiHu42GK7iyv3=i01rQ26Q@mail.gmail.com>
-X-Rspamd-Bar: /
-X-Rspamd-Report: MIME_GOOD(-0.1) MID_RHS_NOT_FQDN(0.5) BAYES_HAM(-0.639367)
-X-Rspamd-Score: -0.239367
-Received: from unknown (HELO unkown) (::1)
-        by euporie.uberspace.de (Haraka/2.8.28) with ESMTPSA; Sat, 23 Apr 2022 14:16:07 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>, Ali Saidi <alisaidi@amazon.com>
+Cc:     kan.liang@linux.intel.com, Nick.Forrington@arm.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, benh@kernel.crashing.org,
+        german.gomez@arm.com, james.clark@arm.com, john.garry@huawei.com,
+        jolsa@kernel.org, kjain@linux.ibm.com, lihuafei1@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+References: <c17dedde-6ba8-db9b-4827-32477f039764@linux.intel.com>
+ <20220422212249.22463-1-alisaidi@amazon.com>
+ <20220423063805.GA559531@leoy-ThinkPad-X240s>
+From:   Andi Kleen <ak@linux.intel.com>
+In-Reply-To: <20220423063805.GA559531@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 22.04.2022 16:52, Namhyung Kim wrote:
-> Hello,
-> 
-> On Fri, Apr 22, 2022 at 3:05 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Wed, Apr 20, 2022 at 12:23:51PM +0200, Florian Fischer escreveu:
-> > > This patch series adds new internal events to perf stat exposing the times spend
-> > > in user and kernel mode in nanoseconds reported by rusage.
-> > >
-> > > During some benchmarking using perf it bothered me that I could not easily
-> > > retrieve those times from perf stat when using the machine readable output.
-> > >
-> > > But perf definitely knows about those values because in the human readable output
-> > > they are present.
-> > >
-> > > Therefore I exposed the times reported by rusage via the new tool events:
-> > > user_time and system_time.
-> > >
-> > > This allows to retrieved them in machine-readable output:
-> > >
-> > > $ ./perf stat -x, -e duration_time,user_time,system_time,cache-misses -- grep -q -r duration_time tools/perf
-> > > 72134524,ns,duration_time:u,72134524,100.00,,
-> > > 65225000,ns,user_time:u,65225000,100.00,,
-> > > 6865000,ns,ssystem_time:u,6865000,100.00,,
-> 
-> ssystem?  Looks like a typo.
 
-Yes thanks. Fortunately I fixed it in the commit that got applied [1].
+> Except SNOOPX_FWD means a no modified cache snooping, it also means it's
+> a cache conherency from *remote* socket.  This is quite different from we
+> define SNOOPX_PEER, which only snoop from peer CPU or clusters.
+>
+> If no objection, I prefer we could keep the new snoop type SNOOPX_PEER,
+> this would be easier for us to distinguish the semantics and support the
+> statistics for SNOOPX_FWD and SNOOPX_PEER separately.
+>
+> I overlooked the flag SNOOPX_FWD, thanks a lot for Kan's reminding.
 
-> 
-> Anyway it looks a little bit strange to me if we can get
-> system time in user mode only (the 'u' modifier).
+Yes seems better to keep using a separate flag if they don't exactly match.
 
-Sorry but I don't really understand what you mean.
-The system_time is reported to userspace via rusage filled by wait4(2).
-It will always report the value reported to the user space regardless of what
-counters perf has access to.
+It's not that we're short on flags anyways.
 
-If you run perf as user you get the same system_time (but with the ':u' suffix)
-as when you run perf as root or lower kernel.perf_event_paranoid to allow access
-to more counters.
+-Andi
 
-$ perf stat -x, -e system_time sync
-31246000,ns,system_time:u,31246000,100.00,,
-
-# perf stat -x, -e system_time sync
-33794000,ns,system_time,33794000,100.00,,
-
-> 
-> Thanks,
-> Namhyung
-> 
-
-Flo Fischer
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/core&id=b03b89b350034f220cc24fc77c56990a97a796b2
