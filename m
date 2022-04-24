@@ -2,96 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13151C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun, 24 Apr 2022 11:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DF9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 24 Apr 2022 12:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239297AbiDXLqM (ORCPT
+        id S229491AbiDXMbo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 24 Apr 2022 07:46:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39708 "EHLO
+        Sun, 24 Apr 2022 08:31:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233677AbiDXLqL (ORCPT
+        with ESMTP id S230425AbiDXMbn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 24 Apr 2022 07:46:11 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97AED17C2
-        for <linux-perf-users@vger.kernel.org>; Sun, 24 Apr 2022 04:43:10 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id z99so15394841ede.5
-        for <linux-perf-users@vger.kernel.org>; Sun, 24 Apr 2022 04:43:10 -0700 (PDT)
+        Sun, 24 Apr 2022 08:31:43 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18D615CF73
+        for <linux-perf-users@vger.kernel.org>; Sun, 24 Apr 2022 05:28:39 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id g6so1860715ejw.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 24 Apr 2022 05:28:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=vR6QyTXKzjneeimQgI3lYac2uhU+48R8rf60k+wC+NM=;
-        b=K+eVy8LHU3Vs4eoXT0+qrRxAlQ6jVP2PJ/1UCE45qSIvmR9J0w19LAWrPbrfpkKaP0
-         a+mfTOLAdPdmq8mtU1R407jZrmLBptYOTWYKm4bBBYVSCtMn7OkfZIC2UAev6uqZ/UZB
-         H7jus/W4yKHDqFintBj9nBAgEPyEzumxjlQ60xsqq+ZlAy6LQUA4sqBIHkaNsdvJDmx3
-         vq0hGl6iG3XztLrb9msBBk6+uHXoYQozfpjFsck/0mSWryAPPYzXSbPVGMopHvxPxQ51
-         sdV5GgJgA9Az7I4ciBT6YXFRMfraH2vZz5dEWsWdOiFW7IhTLhB7MtUoZies6/Gudw4a
-         6Ypw==
+        bh=Fr7QosuuW9SQrebSpuK4bC7h+uibB0pyqcA/ziRBKqg=;
+        b=wDqAK/awDKTxG86d2Hv/jTz4FeZaZUw01i76GmoeeKtCAf3h0SWhnrStgEtsscWK/Y
+         xQ4IpplVwZJcJhfGWSGM0kfZd+r4Uiw/VJg4RjtDKi621u9T48Sk5LGSGq9IjfaLJ7pJ
+         3uyOLgg/xL5KV32TYjwNY2jKSHvg54GFxbLlaC/Y+7nE+U9lvvw5IF+Z7rWChZby7dCp
+         eoY8fhdXkDmr/KopIV76f+kCk/fXd0SKbx7eoZdG1bvo96RprnWgAJ79LSGD5g1kduxm
+         hiWs/M+d5iK6dE4wWqcWl/doSXRrJz7YIbhUSrHvOZ/hfYDBiVeyYrfgvJYbsgx+iU6Z
+         fEDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=vR6QyTXKzjneeimQgI3lYac2uhU+48R8rf60k+wC+NM=;
-        b=6HBwD0zjJpodHh+hSkJhTxfl52k50l4Yi1eI8iwY44TemLnjfjxwQp2deGlBZkk30M
-         eUcbqY96LqZJ87qHLxphhQF5Ir4shKmRLALSSg85nWzS7cXuETvh1Mh+888pn/JvhY1Z
-         wNVokUBUM759m5lXfti4nobLcwFVDu29AboFgb3xl14Jo7ekxTzvWKM44ulJKNVaN6ld
-         EKRA5nuopOarQ2wvVvcnpEEefSDsbcyy42gP6ip8gmIGWUfKqdQfhvUTnaOSD5BpNUjY
-         2Vk9nhDm6NIaXRBSgLemqVoJvCw2OA9TdrEg7oYWH1uHzmPxHCGRri3wXnYxsahu9yAt
-         DxcQ==
-X-Gm-Message-State: AOAM530Ij7cbL0W3wYy6sd6U/EHz2jItMDK1uAJG9bzyu8H0srGWp1x6
-        VSds5LIe1Byfd6O9f9FnInRLCA==
-X-Google-Smtp-Source: ABdhPJxy5Rbwg1eY20BNgqRD5xxDnNA3PThlSvyPpivCD2BUoRplRnX1hWPmo7UhMrbaXgw37YMxHA==
-X-Received: by 2002:a50:baa8:0:b0:415:b0bc:6353 with SMTP id x37-20020a50baa8000000b00415b0bc6353mr13999510ede.220.1650800589299;
-        Sun, 24 Apr 2022 04:43:09 -0700 (PDT)
+        bh=Fr7QosuuW9SQrebSpuK4bC7h+uibB0pyqcA/ziRBKqg=;
+        b=dNnWlZFp1+sCjZRoWUnCVihXTNJMwFViQTNqOzle929J9E2u9r1FD1wgNYrlOK48qL
+         fx4qjwvO9C/IQ4aGfn2C9C79wJE9zfFl9xM8kO1VxbT/BjcF8IYkTv27w73Ob+KFTmgm
+         CDMzkBV7M6/FVUtAESNyNDHpVrjbZaeEKQlKEaMjmCUQLDbWPSGVOEZcKCqiFqAUkAGb
+         V/oca43JMVCNhpT2SS2e1Xt2oFzOoKdpHMb89W4wh36zLF33aNBAOuHAjcFOu51NX0kd
+         TWPpmK5EsIit2SmRHFnTTjwfXumpWbzCLs4wfyWlsWl/6xl8NAirqH6TKLQUmvF6v8f+
+         oLUw==
+X-Gm-Message-State: AOAM533Ndst2r2eD0KWrU2p7yymMja03EsxWFOttYo96v2wg1sVY4150
+        I4mmcSlxQkj4OH9/Tsn9wOn6JQ==
+X-Google-Smtp-Source: ABdhPJyJj411Lwp/zk86hhKPhNORe5GxM/fAa9YezBMGcJ0TrWLzbFVC5aU8st2zn1SfbMMaXbToig==
+X-Received: by 2002:a17:906:7946:b0:6f0:12ee:4418 with SMTP id l6-20020a170906794600b006f012ee4418mr12110290ejo.156.1650803318166;
+        Sun, 24 Apr 2022 05:28:38 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id o3-20020aa7c7c3000000b0042237eda622sm3189324eds.83.2022.04.24.04.43.04
+        by smtp.gmail.com with ESMTPSA id jl28-20020a17090775dc00b006e05cdf3a95sm2578909ejc.163.2022.04.24.05.28.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Apr 2022 04:43:08 -0700 (PDT)
-Date:   Sun, 24 Apr 2022 19:43:02 +0800
+        Sun, 24 Apr 2022 05:28:37 -0700 (PDT)
+Date:   Sun, 24 Apr 2022 20:28:31 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Ali Saidi <alisaidi@amazon.com>, kan.liang@linux.intel.com,
-        Nick.Forrington@arm.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        benh@kernel.crashing.org, german.gomez@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
-Message-ID: <20220424114302.GB978927@leoy-ThinkPad-X240s>
-References: <c17dedde-6ba8-db9b-4827-32477f039764@linux.intel.com>
- <20220422212249.22463-1-alisaidi@amazon.com>
- <20220423063805.GA559531@leoy-ThinkPad-X240s>
- <8e09af67-a416-4ead-b406-6c8b998de344@linux.intel.com>
+To:     Timothy Hayes <timothy.hayes@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf: arm-spe: Fix addresses of synthesized SPE
+ events
+Message-ID: <20220424122831.GC978927@leoy-ThinkPad-X240s>
+References: <20220421165205.117662-1-timothy.hayes@arm.com>
+ <20220421165205.117662-2-timothy.hayes@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8e09af67-a416-4ead-b406-6c8b998de344@linux.intel.com>
+In-Reply-To: <20220421165205.117662-2-timothy.hayes@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Apr 23, 2022 at 05:53:28AM -0700, Andi Kleen wrote:
+On Thu, Apr 21, 2022 at 05:52:03PM +0100, Timothy Hayes wrote:
+> This patch corrects a bug whereby synthesized events from SPE
+> samples are missing virtual addresses.
 > 
-> > Except SNOOPX_FWD means a no modified cache snooping, it also means it's
-> > a cache conherency from *remote* socket.  This is quite different from we
-> > define SNOOPX_PEER, which only snoop from peer CPU or clusters.
-> > 
-> > If no objection, I prefer we could keep the new snoop type SNOOPX_PEER,
-> > this would be easier for us to distinguish the semantics and support the
-> > statistics for SNOOPX_FWD and SNOOPX_PEER separately.
-> > 
-> > I overlooked the flag SNOOPX_FWD, thanks a lot for Kan's reminding.
-> 
-> Yes seems better to keep using a separate flag if they don't exactly match.
-> 
-> It's not that we're short on flags anyways.
+> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
 
-Thanks for confirmation.
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-Leo
+> ---
+>  tools/perf/util/arm-spe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index d2b64e3f588b..151cc38a171c 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -1036,7 +1036,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  	attr.sample_type = evsel->core.attr.sample_type & PERF_SAMPLE_MASK;
+>  	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
+>  			    PERF_SAMPLE_PERIOD | PERF_SAMPLE_DATA_SRC |
+> -			    PERF_SAMPLE_WEIGHT;
+> +			    PERF_SAMPLE_WEIGHT | PERF_SAMPLE_ADDR;
+>  	if (spe->timeless_decoding)
+>  		attr.sample_type &= ~(u64)PERF_SAMPLE_TIME;
+>  	else
+> -- 
+> 2.25.1
+> 
