@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334A6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 24 Apr 2022 13:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D05DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun, 24 Apr 2022 14:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231453AbiDXNDD (ORCPT
+        id S239477AbiDXO4T (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 24 Apr 2022 09:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36382 "EHLO
+        Sun, 24 Apr 2022 10:56:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231377AbiDXNDC (ORCPT
+        with ESMTP id S233183AbiDXO4S (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 24 Apr 2022 09:03:02 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7432E174430
-        for <linux-perf-users@vger.kernel.org>; Sun, 24 Apr 2022 06:00:00 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id a1so9874173edt.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 24 Apr 2022 06:00:00 -0700 (PDT)
+        Sun, 24 Apr 2022 10:56:18 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 202CADA6F9
+        for <linux-perf-users@vger.kernel.org>; Sun, 24 Apr 2022 07:53:17 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id kq17so1931819ejb.4
+        for <linux-perf-users@vger.kernel.org>; Sun, 24 Apr 2022 07:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=xiS7jXTGQnjBRoWj5ugUGTqfRqlbiuFUwXWLNi1EeJU=;
-        b=SoA9P8/6lxB7hLukKtbzsp9CZjR0hxa/1dGYCHYuHry7e1fzAxQ6TYBM8js3bDZUdT
-         iOm61Ysfp+VWCcf+9mqf0kUzLrJUYw7YuJ15uXa1Qg/j5yGudMfYL9/jYojurUwjC/PT
-         EF4eq9ZGJxtYkojhD+sVMg2nwuFOqrgxJSR6D5TaQWwjSD288Y4Ge6oKuMs4n8E7w6aM
-         xlBuR90SsvtbwqDUVbaqEvYNuhXy9uc6zPZnL2UfwXO7tlG42uwMzk9iwiMgihzm2CQo
-         Q3x7R66oab/+2CtRiaVN33ycNZmpYEmz8Y7GZZ01aEkb9YareOofyAESNR8hK7Nytuwx
-         horA==
+        bh=PljnxRUh81pT/VZFsSxpCxfxThaMnEo3K5gwtxML1T4=;
+        b=HPK1Fjl//ahLaP1lNA4NCbDVTK5dLYlXgM5pM42npxjQZKjO5L9/PdF8l7lGR+id0d
+         ZnvgI0tC1zbFtZrmiJK2y52v84g9Y+w0AF5Zt9IAPvXJ1gHzny119IxGNvrK+e3TYJ4u
+         Y8rptqx/qBwsXxnS7f3mTiPtWUBlHBlQ8JkfVLwxpVb/UrRFErhEaZRwiX5S5Rv6vPXW
+         VQNWs1UCCJCC+rblI5xV7mDQLGIlW1+IdMc9fRmwH3q4frHl5f/WsbO1PmH/Hc+HBLm+
+         UOmY6g+Q/jK77zTLxpstRUKCEecv/HgTLR/EgcdKccd6Gp1y71jMUnHcF/iHoANcNRBN
+         BFcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=xiS7jXTGQnjBRoWj5ugUGTqfRqlbiuFUwXWLNi1EeJU=;
-        b=M1+qX1X26CZDYg6I4FHLbrdMscHvgdG5+07kvbkjAxZMTmoX+mZWzcggHjtsh50Rpo
-         S/mDP134EY7k936oFkT4jdKC+m5m+cbSnG2MfvGV8nwfpHiYW8KHlIdALyj3Z+H8Hn7Z
-         WWAu1RD0ERB4C4erazMUp2R4QFiuO4mOdLVmUVIiXfxbVBxOsWWh41Lo8+otAanJpdIq
-         NOlUP9MWQ77Io126UcyfkYy/aDSClCPEKI0spEIE5+U7dFTekoC1HTMc1v7JYtLIzzLY
-         gKz3baQsnHbn39pbAtm2PN2b+T9Jfvj2gRbNrd43OGsBCLY2rvW2PagoZHZuroAjb2ab
-         et6w==
-X-Gm-Message-State: AOAM533qMst39jSpc1afrbBFonDCQ+IXcuqjM+XOP0/0nKfv7VdKgmU2
-        4ro1ZJTse5EknSz1gux8XlkuC0lLsfyOdXYel7Y=
-X-Google-Smtp-Source: ABdhPJzWd6TnX8cfWuoEpPnonVAdlLmH1faYJGpdsybfh5SgAIg5RUp8Wh3mjpXz0jixZJTcziCJFw==
-X-Received: by 2002:a05:6402:2985:b0:425:d51f:ae4 with SMTP id eq5-20020a056402298500b00425d51f0ae4mr6102711edb.379.1650805198838;
-        Sun, 24 Apr 2022 05:59:58 -0700 (PDT)
+        bh=PljnxRUh81pT/VZFsSxpCxfxThaMnEo3K5gwtxML1T4=;
+        b=fZdbpHCp5VJxwdPECGFE0Okzga34PBQWXWMWfxa7ExrkBlCvRuMnVu/NKmTsW0HFk4
+         jgwViGS7EwXG585bUr+g7m9J5rMaM01f/9aagjAuzcuQ7FqkONjSHavgKfkJFQ8mvcml
+         PmYIK66BREtN8/t0Zum4wZiowgf3tR7eA83hJvYHfpWnvaMImkDEegSjnQvz9z/lHQcN
+         6sYcRY0rFWgZUlubgYFJM1wQbyX5U5DjvNsZQUOAR9qpiA1J0h4PtIz4cXJgoSo6A+d+
+         HWv6BwE3nwVRo1p7L831l+f3kRGj7e4nkvV1RvHhcNCI1rz0JuQCb5hjszYECOUjXj1o
+         93jA==
+X-Gm-Message-State: AOAM530tK3YQvTqCyhm9achpAhflZmwQ6RQd+CDSkIxKUAIMs8ra3mp1
+        6XlH/P9TBJmpMUpzJGrnMdOzmw==
+X-Google-Smtp-Source: ABdhPJxP6gdki3QWyI62X0hWhCeuw+jp1SO/FmJ3sHN5jeLes6QLGVCoRpETcIf1m/9BtNHG/zYBEg==
+X-Received: by 2002:a17:907:6e25:b0:6f0:99d4:9711 with SMTP id sd37-20020a1709076e2500b006f099d49711mr12019128ejc.511.1650811995192;
+        Sun, 24 Apr 2022 07:53:15 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([104.245.96.34])
-        by smtp.gmail.com with ESMTPSA id y14-20020a056402440e00b00416046b623csm3408984eda.2.2022.04.24.05.59.53
+        by smtp.gmail.com with ESMTPSA id gz15-20020a170906f2cf00b006f3802a963fsm1161681ejb.21.2022.04.24.07.53.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Apr 2022 05:59:58 -0700 (PDT)
-Date:   Sun, 24 Apr 2022 20:59:51 +0800
+        Sun, 24 Apr 2022 07:53:14 -0700 (PDT)
+Date:   Sun, 24 Apr 2022 22:53:07 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Timothy Hayes <timothy.hayes@arm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -66,98 +66,64 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         KP Singh <kpsingh@kernel.org>,
         linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf: arm-spe: Fix SPE events with phys addresses
-Message-ID: <20220424125951.GD978927@leoy-ThinkPad-X240s>
+Subject: Re: [PATCH 3/3] perf test: Add perf_event_attr test for Arm SPE
+Message-ID: <20220424145307.GE978927@leoy-ThinkPad-X240s>
 References: <20220421165205.117662-1-timothy.hayes@arm.com>
- <20220421165205.117662-3-timothy.hayes@arm.com>
+ <20220421165205.117662-4-timothy.hayes@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220421165205.117662-3-timothy.hayes@arm.com>
+In-Reply-To: <20220421165205.117662-4-timothy.hayes@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Timothy,
-
-On Thu, Apr 21, 2022 at 05:52:04PM +0100, Timothy Hayes wrote:
-> This patch corrects a bug whereby SPE collection is invoked with
-> pa_enable=1 but synthesized events fail to show physical addresses.
+On Thu, Apr 21, 2022 at 05:52:05PM +0100, Timothy Hayes wrote:
+> Adds a perf_event_attr test for Arm SPE in which the presence of
+> physical addresses are checked when SPE unit is run with pa_enable=1.
 > 
 > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
+
 > ---
->  tools/perf/arch/arm64/util/arm-spe.c | 10 ++++++++++
->  tools/perf/util/arm-spe.c            |  3 ++-
->  2 files changed, 12 insertions(+), 1 deletion(-)
+>  tools/perf/tests/attr/README                         |  1 +
+>  .../perf/tests/attr/test-record-spe-physical-address | 12 ++++++++++++
+>  2 files changed, 13 insertions(+)
+>  create mode 100644 tools/perf/tests/attr/test-record-spe-physical-address
 > 
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> index af4d63af8072..e8b577d33e53 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -148,6 +148,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->  	bool privileged = perf_event_paranoid_check(-1);
->  	struct evsel *tracking_evsel;
->  	int err;
-> +	u64 bit;
->  
->  	sper->evlist = evlist;
->  
-> @@ -245,6 +246,15 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->  	 */
->  	evsel__set_sample_bit(arm_spe_evsel, DATA_SRC);
->  
-> +	/*
-> +	 * The PHYS_ADDR flag does not affect the driver behaviour, it is used to
-> +	 * inform that the resulting output's SPE samples contain physical addresses
-> +	 * where applicable.
-> +	 */
-> +	bit = perf_pmu__format_bits(&arm_spe_pmu->format, "pa_enable");
-> +	if (arm_spe_evsel->core.attr.config & bit)
-> +		evsel__set_sample_bit(arm_spe_evsel, PHYS_ADDR);
+> diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
+> index 454505d343fa..eb3f7d4bb324 100644
+> --- a/tools/perf/tests/attr/README
+> +++ b/tools/perf/tests/attr/README
+> @@ -60,6 +60,7 @@ Following tests are defined (with perf commands):
+>    perf record -R kill                           (test-record-raw)
+>    perf record -c 2 -e arm_spe_0// -- kill       (test-record-spe-period)
+>    perf record -e arm_spe_0/period=3/ -- kill    (test-record-spe-period-term)
+> +  perf record -e arm_spe_0/pa_enable=1/ -- kill (test-record-spe-physical-address)
+>    perf stat -e cycles kill                      (test-stat-basic)
+>    perf stat kill                                (test-stat-default)
+>    perf stat -d kill                             (test-stat-detailed-1)
+> diff --git a/tools/perf/tests/attr/test-record-spe-physical-address b/tools/perf/tests/attr/test-record-spe-physical-address
+> new file mode 100644
+> index 000000000000..7ebcf5012ce3
+> --- /dev/null
+> +++ b/tools/perf/tests/attr/test-record-spe-physical-address
+> @@ -0,0 +1,12 @@
+> +[config]
+> +command = record
+> +args    = --no-bpf-event -e arm_spe_0/pa_enable=1/ -- kill >/dev/null 2>&1
+> +ret     = 1
+> +arch    = aarch64
 > +
->  	/* Add dummy event to keep tracking */
->  	err = parse_events(evlist, "dummy:u", NULL);
->  	if (err)
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index 151cc38a171c..1a80151baed9 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -1033,7 +1033,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  	memset(&attr, 0, sizeof(struct perf_event_attr));
->  	attr.size = sizeof(struct perf_event_attr);
->  	attr.type = PERF_TYPE_HARDWARE;
-> -	attr.sample_type = evsel->core.attr.sample_type & PERF_SAMPLE_MASK;
-> +	attr.sample_type = evsel->core.attr.sample_type &
-> +				(PERF_SAMPLE_MASK | PERF_SAMPLE_PHYS_ADDR);
-
-I verified this patch and I can confirm the physical address can be
-dumped successfully.
-
-I have a more general question, seems to me, we need to change the
-macro PERF_SAMPLE_MASK in the file util/event.h as below, so
-here doesn't need to 'or' the flag PERF_SAMPLE_PHYS_ADDR anymore.
-
-@Arnaldo, @Jiri, could you confirm if this is the right way to move
-forward?  I am not sure why PERF_SAMPLE_MASK doesn't contain the bit
-PERF_SAMPLE_PHYS_ADDR in current code.
-
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index cdd72e05fd28..c905ac32ebad 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -39,7 +39,7 @@ struct perf_event_attr;
-         PERF_SAMPLE_TIME | PERF_SAMPLE_ADDR |          \
-        PERF_SAMPLE_ID | PERF_SAMPLE_STREAM_ID |        \
-         PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD |         \
--        PERF_SAMPLE_IDENTIFIER)
-+        PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_PHYS_ADDR)
-
-Thanks,
-Leo
-
->  	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
->  			    PERF_SAMPLE_PERIOD | PERF_SAMPLE_DATA_SRC |
->  			    PERF_SAMPLE_WEIGHT | PERF_SAMPLE_ADDR;
+> +[event-10:base-record-spe]
+> +# 622727 is the decimal of IP|TID|TIME|CPU|IDENTIFIER|DATA_SRC|PHYS_ADDR
+> +sample_type=622727
+> +
+> +# dummy event
+> +[event-1:base-record-spe]
+> \ No newline at end of file
 > -- 
 > 2.25.1
 > 
