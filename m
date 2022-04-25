@@ -2,169 +2,166 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2C9C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 07:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58708C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 09:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236064AbiDYH2S (ORCPT
+        id S230337AbiDYJQJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Apr 2022 03:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
+        Mon, 25 Apr 2022 05:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235487AbiDYH2P (ORCPT
+        with ESMTP id S238730AbiDYJPp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 03:28:15 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F9D65AB;
-        Mon, 25 Apr 2022 00:25:12 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id d5so4258921wrb.6;
-        Mon, 25 Apr 2022 00:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=I4GdfGITkr36llpJpIInQxdraUU1II/oE1T0iv3G4VM=;
-        b=kt8tPEascplqBcRqMIZPUokleiH73TFyzENUekQT2ZY0hxcfComv2pdVnREMWGy5k7
-         oG/kODXbpsClznvKqkQstzSUoHtHij7FCSV0bJ+rupr7lD6EkVKFU4UiGUgkiy07QYe5
-         JIVSYJ++1EkEK9O5VFTfPypRYXDPKPokQOISCmgnVKe6AuQ7Cv/Q7dN9tLBd/ZAvj1HE
-         EY66+1TrmiPiG0dzYxQNGxR3nI7lCl7f/JA2FY/N1wL5liJs7DRHX7UAwM/K241RQFoY
-         /fdQceJMCHNqdubMaAtsgm7H3WgXZYAsEG8bK9os4TEkNLyfLO8AGeRSlkxKuZAic8qC
-         RN+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I4GdfGITkr36llpJpIInQxdraUU1II/oE1T0iv3G4VM=;
-        b=pCJG0p7tOZUb8HUJD+HTzfkrI+IHky+YB71upLf/W10NALVoW3xf23FpIT7GVNVXRq
-         f/yjso+Ypp05N4HyW9vfvuUIlamZIvMs7d1U5Je00r76uTYsYuaF2pWTI7e64/P8cx/7
-         NOQqrHMXXHSMKb6XtrgO+d0iirfYjvoHXtiJKfgPX6NTmJiNTKp3kUCRyYKq1p+HDdXj
-         1wLiFr3ydwA+nUz33wDsGTljBTLAEhPKlDcYSvv4Dsuh3bHqfYilC6QUlA6XOTLJea2q
-         GQg+sJ6EUXGfMr90SBO+vuF28JfkVH/SooMR9zv69kSrgvvgrJu4jA4nFx0dfIGGrZsh
-         HUCw==
-X-Gm-Message-State: AOAM5331Ze+88IVtTn2w/s5S5ThnmWka4bLP42NERGJKsW48T+J8hwYY
-        DbbpFCSokrbqDjuDW/ViBqg=
-X-Google-Smtp-Source: ABdhPJzwu6NIqK4qIa/Z/Lzk1+YjbYusz1FbJEzKkF2kg31EiJ1+xROtealw6OxzM+timpeGyqiUHA==
-X-Received: by 2002:adf:e10a:0:b0:20a:86a3:d06f with SMTP id t10-20020adfe10a000000b0020a86a3d06fmr13416453wrz.249.1650871510393;
-        Mon, 25 Apr 2022 00:25:10 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id p2-20020a1c7402000000b0038159076d30sm10751668wmc.22.2022.04.25.00.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Apr 2022 00:25:08 -0700 (PDT)
-Date:   Mon, 25 Apr 2022 09:25:06 +0200
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Mon, 25 Apr 2022 05:15:45 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3092ADF2C;
+        Mon, 25 Apr 2022 02:12:41 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA9821FB;
+        Mon, 25 Apr 2022 02:12:40 -0700 (PDT)
+Received: from [10.57.13.137] (unknown [10.57.13.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0139C3F73B;
+        Mon, 25 Apr 2022 02:12:37 -0700 (PDT)
+Message-ID: <322009d2-330c-22d4-4075-eca2042f64e1@arm.com>
+Date:   Mon, 25 Apr 2022 10:12:36 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH 2/3] perf: arm-spe: Fix SPE events with phys addresses
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>, Timothy Hayes <timothy.hayes@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Martin KaFai Lau <kafai@fb.com>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
         John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH perf/core 3/5] perf tools: Move libbpf init in
- libbpf_init function
-Message-ID: <YmZM0kd7uWqPOu0x@krava>
-References: <20220422100025.1469207-1-jolsa@kernel.org>
- <20220422100025.1469207-4-jolsa@kernel.org>
- <YmLf3PQ9ws2C/Myu@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YmLf3PQ9ws2C/Myu@kernel.org>
+        KP Singh <kpsingh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20220421165205.117662-1-timothy.hayes@arm.com>
+ <20220421165205.117662-3-timothy.hayes@arm.com>
+ <20220424125951.GD978927@leoy-ThinkPad-X240s>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220424125951.GD978927@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 02:03:24PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Apr 22, 2022 at 12:00:23PM +0200, Jiri Olsa escreveu:
-> > Moving the libbpf init code into single function,
-> > so we have single place doing that.
+
+
+On 24/04/2022 13:59, Leo Yan wrote:
+> Hi Timothy,
 > 
-> Cherry picked this one, waiting for Andrii to chime in wrt the libbpf
-> changes, if its acceptable, how to proceed, i.e. in what tree to carry
-> these?
+> On Thu, Apr 21, 2022 at 05:52:04PM +0100, Timothy Hayes wrote:
+>> This patch corrects a bug whereby SPE collection is invoked with
+>> pa_enable=1 but synthesized events fail to show physical addresses.
+>>
+>> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+>> ---
+>>  tools/perf/arch/arm64/util/arm-spe.c | 10 ++++++++++
+>>  tools/perf/util/arm-spe.c            |  3 ++-
+>>  2 files changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+>> index af4d63af8072..e8b577d33e53 100644
+>> --- a/tools/perf/arch/arm64/util/arm-spe.c
+>> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+>> @@ -148,6 +148,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>>  	bool privileged = perf_event_paranoid_check(-1);
+>>  	struct evsel *tracking_evsel;
+>>  	int err;
+>> +	u64 bit;
+>>  
+>>  	sper->evlist = evlist;
+>>  
+>> @@ -245,6 +246,15 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>>  	 */
+>>  	evsel__set_sample_bit(arm_spe_evsel, DATA_SRC);
+>>  
+>> +	/*
+>> +	 * The PHYS_ADDR flag does not affect the driver behaviour, it is used to
+>> +	 * inform that the resulting output's SPE samples contain physical addresses
+>> +	 * where applicable.
+>> +	 */
+>> +	bit = perf_pmu__format_bits(&arm_spe_pmu->format, "pa_enable");
+>> +	if (arm_spe_evsel->core.attr.config & bit)
+>> +		evsel__set_sample_bit(arm_spe_evsel, PHYS_ADDR);
+>> +
+>>  	/* Add dummy event to keep tracking */
+>>  	err = parse_events(evlist, "dummy:u", NULL);
+>>  	if (err)
+>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>> index 151cc38a171c..1a80151baed9 100644
+>> --- a/tools/perf/util/arm-spe.c
+>> +++ b/tools/perf/util/arm-spe.c
+>> @@ -1033,7 +1033,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>>  	memset(&attr, 0, sizeof(struct perf_event_attr));
+>>  	attr.size = sizeof(struct perf_event_attr);
+>>  	attr.type = PERF_TYPE_HARDWARE;
+>> -	attr.sample_type = evsel->core.attr.sample_type & PERF_SAMPLE_MASK;
+>> +	attr.sample_type = evsel->core.attr.sample_type &
+>> +				(PERF_SAMPLE_MASK | PERF_SAMPLE_PHYS_ADDR);
+> 
+> I verified this patch and I can confirm the physical address can be
+> dumped successfully.
+> 
+> I have a more general question, seems to me, we need to change the
+> macro PERF_SAMPLE_MASK in the file util/event.h as below, so
+> here doesn't need to 'or' the flag PERF_SAMPLE_PHYS_ADDR anymore.
+> 
+> @Arnaldo, @Jiri, could you confirm if this is the right way to move
+> forward?  I am not sure why PERF_SAMPLE_MASK doesn't contain the bit
+> PERF_SAMPLE_PHYS_ADDR in current code.
 
-I think at this point it's ok with either yours perf/core or bpf-next/master,
-I waited for them to be in sync for this ;-)
+I think there is a reason that PERF_SAMPLE_MASK is a subset of all the
+bits. This comment below suggests it. Is it so the mask only includes fields
+that are 64bits? That makes the __evsel__sample_size() function a simple
+multiplication of a count of all the fields that are 64bits.
 
-but as you pointed out there's issue with perf linked with dynamic libbpf,
-because the current version does not have the libbpf_register_prog_handler
-api that perf needs now.. also it needs the fix and api introduced in this
-patchset
+  static int
+  perf_event__check_size(union perf_event *event, unsigned int sample_size)
+  {
+	/*
+	 * The evsel's sample_size is based on PERF_SAMPLE_MASK which includes
+	 * up to PERF_SAMPLE_PERIOD.  After that overflow() must be used to
+	 * check the format does not go past the end of the event.
+	 */
+	if (sample_size + sizeof(event->header) > event->header.size)
+		return -EFAULT;
 
-I'll check and perhaps we can temporirly disable perf/bpf prologue generation
-for dynamic linking..? until the libbpf release has all the needed changes
+	return 0;
+  }
 
-jirka
+Having said that, the mask was updated once to add PERF_SAMPLE_IDENTIFIER to
+it, so that comment is slightly out of date now.
+
 
 > 
-> - Arnaldo
->  
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/perf/util/bpf-loader.c | 27 ++++++++++++++++++---------
-> >  1 file changed, 18 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> > index b72cef1ae959..f8ad581ea247 100644
-> > --- a/tools/perf/util/bpf-loader.c
-> > +++ b/tools/perf/util/bpf-loader.c
-> > @@ -99,16 +99,26 @@ static int bpf_perf_object__add(struct bpf_object *obj)
-> >  	return perf_obj ? 0 : -ENOMEM;
-> >  }
-> >  
-> > +static int libbpf_init(void)
-> > +{
-> > +	if (libbpf_initialized)
-> > +		return 0;
-> > +
-> > +	libbpf_set_print(libbpf_perf_print);
-> > +	libbpf_initialized = true;
-> > +	return 0;
-> > +}
-> > +
-> >  struct bpf_object *
-> >  bpf__prepare_load_buffer(void *obj_buf, size_t obj_buf_sz, const char *name)
-> >  {
-> >  	LIBBPF_OPTS(bpf_object_open_opts, opts, .object_name = name);
-> >  	struct bpf_object *obj;
-> > +	int err;
-> >  
-> > -	if (!libbpf_initialized) {
-> > -		libbpf_set_print(libbpf_perf_print);
-> > -		libbpf_initialized = true;
-> > -	}
-> > +	err = libbpf_init();
-> > +	if (err)
-> > +		return ERR_PTR(err);
-> >  
-> >  	obj = bpf_object__open_mem(obj_buf, obj_buf_sz, &opts);
-> >  	if (IS_ERR_OR_NULL(obj)) {
-> > @@ -135,14 +145,13 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
-> >  {
-> >  	LIBBPF_OPTS(bpf_object_open_opts, opts, .object_name = filename);
-> >  	struct bpf_object *obj;
-> > +	int err;
-> >  
-> > -	if (!libbpf_initialized) {
-> > -		libbpf_set_print(libbpf_perf_print);
-> > -		libbpf_initialized = true;
-> > -	}
-> > +	err = libbpf_init();
-> > +	if (err)
-> > +		return ERR_PTR(err);
-> >  
-> >  	if (source) {
-> > -		int err;
-> >  		void *obj_buf;
-> >  		size_t obj_buf_sz;
-> >  
-> > -- 
-> > 2.35.1
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index cdd72e05fd28..c905ac32ebad 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -39,7 +39,7 @@ struct perf_event_attr;
+>          PERF_SAMPLE_TIME | PERF_SAMPLE_ADDR |          \
+>         PERF_SAMPLE_ID | PERF_SAMPLE_STREAM_ID |        \
+>          PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD |         \
+> -        PERF_SAMPLE_IDENTIFIER)
+> +        PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_PHYS_ADDR)
 > 
-> -- 
+> Thanks,
+> Leo
 > 
-> - Arnaldo
+>>  	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
+>>  			    PERF_SAMPLE_PERIOD | PERF_SAMPLE_DATA_SRC |
+>>  			    PERF_SAMPLE_WEIGHT | PERF_SAMPLE_ADDR;
+>> -- 
+>> 2.25.1
+>>
