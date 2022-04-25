@@ -2,142 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ECCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 04:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2C9C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 07:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239540AbiDYEtW (ORCPT
+        id S236064AbiDYH2S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Apr 2022 00:49:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60380 "EHLO
+        Mon, 25 Apr 2022 03:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241079AbiDYEsb (ORCPT
+        with ESMTP id S235487AbiDYH2P (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 00:48:31 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2069.outbound.protection.outlook.com [40.107.244.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A83630D;
-        Sun, 24 Apr 2022 21:44:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MiHVkB0snujOaga2BBIxeaU5A9wUuf4CVuX5t++Gf+M/LEUMDosxp0/GZjj4IMvxDn9YPgQiVSQvMWzADON5agJOnCkESo5RkImFPsVJfND+vXVffVaTX4GxVQ8TIJTk8LUoy4Dmk83u/QPHFiwDvInpFSE3HE06KCMFA2FwLkKUTjS0foZDxf17C2keReaRAiAXK3jePRwDJETZBlj0Q/ABDH+0NEhfFxcqmsVE4obZ8AP4i4KlygAqwOGUWAO2FuG3iU2+YiVgvx+3v7f4PwggyuvXTymEdm7e4MnhNfdittDR3CeL8SeuQuPzraL7wWLssu0SWXU6Ifx5ozraRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DpZZgnX2sIcP5d5uiWfKL9gkpNXUsInhcxxNKShHUL8=;
- b=C4ohQtPeIHhhPd4tMlKPvokagdV7SGCsPhDlshCBUIOdRzid0yxazDPvcIkN9hG95orX+gn88UjJcyX9rz3POP/GSlvzdHosiJ3nTtqPIdeu9l/howCUO+klOl91ZplkSvML6nsLlxLg05SQnl3sq7qFiEhi/ldCYQtVNYSsrWYjBN82kep4InXxrPFjCwf2rFqNu8DYuvZD2O7Oq3NmuGv81Cd9M3XOD1WmjVoYthf4p5EViyawrUXvE6KAgkvUAPmGrxOFpW4BDE1BJ9/+FUC++VW7kfOPCj1JEn9/PfSoDtg16V07W2Q8HOC+5TdVmtzX2fvT7PU0QBxvmjys/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DpZZgnX2sIcP5d5uiWfKL9gkpNXUsInhcxxNKShHUL8=;
- b=dIeZVTcB/LFQVMTEnu7QV2dFzpq5t6XnIFoDGi2vLZgnMxAQx1/IZ8mp8UAu7VLSB2oSr7e/TndCF2l8kX4vaT/GDrWMFeKA032CZOMa0RbA7BBpKCXSYiSKfcPgkuEY7ymSQPsUdaH6lGdcql0AClur9Ict0Zi9tQs2kz0Wh34=
-Received: from BN9PR03CA0152.namprd03.prod.outlook.com (2603:10b6:408:f4::7)
- by DM6PR12MB4530.namprd12.prod.outlook.com (2603:10b6:5:2aa::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15; Mon, 25 Apr
- 2022 04:44:55 +0000
-Received: from BN8NAM11FT021.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:f4:cafe::2a) by BN9PR03CA0152.outlook.office365.com
- (2603:10b6:408:f4::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15 via Frontend
- Transport; Mon, 25 Apr 2022 04:44:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT021.mail.protection.outlook.com (10.13.177.114) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5186.14 via Frontend Transport; Mon, 25 Apr 2022 04:44:55 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Sun, 24 Apr
- 2022 23:44:47 -0500
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <peterz@infradead.org>, <acme@kernel.org>
-CC:     <ravi.bangoria@amd.com>, <mingo@redhat.com>,
-        <mark.rutland@arm.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <tglx@linutronix.de>, <bp@alien8.de>, <irogers@google.com>,
-        <yao.jin@linux.intel.com>, <james.clark@arm.com>,
-        <leo.yan@linaro.org>, <kan.liang@linux.intel.com>,
-        <ak@linux.intel.com>, <eranian@google.com>,
-        <like.xu.linux@gmail.com>, <x86@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
-        <kim.phillips@amd.com>, <rrichter@amd.com>,
-        <santosh.shukla@amd.com>
-Subject: [PATCH 6/6] perf/tool/amd/ibs: Fix comment
-Date:   Mon, 25 Apr 2022 10:13:23 +0530
-Message-ID: <20220425044323.2830-7-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220425044323.2830-1-ravi.bangoria@amd.com>
-References: <20220425044323.2830-1-ravi.bangoria@amd.com>
+        Mon, 25 Apr 2022 03:28:15 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F9D65AB;
+        Mon, 25 Apr 2022 00:25:12 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id d5so4258921wrb.6;
+        Mon, 25 Apr 2022 00:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=I4GdfGITkr36llpJpIInQxdraUU1II/oE1T0iv3G4VM=;
+        b=kt8tPEascplqBcRqMIZPUokleiH73TFyzENUekQT2ZY0hxcfComv2pdVnREMWGy5k7
+         oG/kODXbpsClznvKqkQstzSUoHtHij7FCSV0bJ+rupr7lD6EkVKFU4UiGUgkiy07QYe5
+         JIVSYJ++1EkEK9O5VFTfPypRYXDPKPokQOISCmgnVKe6AuQ7Cv/Q7dN9tLBd/ZAvj1HE
+         EY66+1TrmiPiG0dzYxQNGxR3nI7lCl7f/JA2FY/N1wL5liJs7DRHX7UAwM/K241RQFoY
+         /fdQceJMCHNqdubMaAtsgm7H3WgXZYAsEG8bK9os4TEkNLyfLO8AGeRSlkxKuZAic8qC
+         RN+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I4GdfGITkr36llpJpIInQxdraUU1II/oE1T0iv3G4VM=;
+        b=pCJG0p7tOZUb8HUJD+HTzfkrI+IHky+YB71upLf/W10NALVoW3xf23FpIT7GVNVXRq
+         f/yjso+Ypp05N4HyW9vfvuUIlamZIvMs7d1U5Je00r76uTYsYuaF2pWTI7e64/P8cx/7
+         NOQqrHMXXHSMKb6XtrgO+d0iirfYjvoHXtiJKfgPX6NTmJiNTKp3kUCRyYKq1p+HDdXj
+         1wLiFr3ydwA+nUz33wDsGTljBTLAEhPKlDcYSvv4Dsuh3bHqfYilC6QUlA6XOTLJea2q
+         GQg+sJ6EUXGfMr90SBO+vuF28JfkVH/SooMR9zv69kSrgvvgrJu4jA4nFx0dfIGGrZsh
+         HUCw==
+X-Gm-Message-State: AOAM5331Ze+88IVtTn2w/s5S5ThnmWka4bLP42NERGJKsW48T+J8hwYY
+        DbbpFCSokrbqDjuDW/ViBqg=
+X-Google-Smtp-Source: ABdhPJzwu6NIqK4qIa/Z/Lzk1+YjbYusz1FbJEzKkF2kg31EiJ1+xROtealw6OxzM+timpeGyqiUHA==
+X-Received: by 2002:adf:e10a:0:b0:20a:86a3:d06f with SMTP id t10-20020adfe10a000000b0020a86a3d06fmr13416453wrz.249.1650871510393;
+        Mon, 25 Apr 2022 00:25:10 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id p2-20020a1c7402000000b0038159076d30sm10751668wmc.22.2022.04.25.00.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Apr 2022 00:25:08 -0700 (PDT)
+Date:   Mon, 25 Apr 2022 09:25:06 +0200
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH perf/core 3/5] perf tools: Move libbpf init in
+ libbpf_init function
+Message-ID: <YmZM0kd7uWqPOu0x@krava>
+References: <20220422100025.1469207-1-jolsa@kernel.org>
+ <20220422100025.1469207-4-jolsa@kernel.org>
+ <YmLf3PQ9ws2C/Myu@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f0b9f196-b21a-480f-fefc-08da26765826
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4530:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4530FDF5597348A4D8C2C468E0F89@DM6PR12MB4530.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MMPEcjpV2sCyHM8mL9/YRrAlCtqGxzkyan8vSfYgsaBZZU2ix4ZjrBvTgF2MPIPAqj2JkgiRctcQ6OUV9jDsvjtTJvLKf20vWsqKJbO619fvTPW9tNwipnFNBYxCJwyvvQzo2adAFPcZkQU/F8DSczqBxL0WQQR1o3m7KOWQS/iYagDIrhFmiU+7L1ZwKsY5l2VWBfmtqmh5ds9YCddyfjD4VAQU7b4MXeMaiAE46+5HMEGGb7Bbg9cS9qSl7FnHjHegAeHMGoabiNB+j8metVU1HZfohOkR0YJHXfgDbxjKIfUW63z1Z2yNZSxidWVTy7NYq9otgD2HwXq3rdSUNpPFj1fimmTwhPIUIu+Mw+ZSZ+qRnogmSOWlZ8B+ekm9Fyp6gYNsaL9DRXhEtCBcKq/cW8PrH/MwAF+pB2LyLn3q67AHz7meoourb0Ga1DbGMIz2YgSDue9Q3sVqTmn4ovM9u36dsEIllfvOLAo1pq5yecVtdzgEClKNPICBCK0rXmpslnQCaH2hvz3MWOvgp+dBBja9wePaMIfIgGvr3Y45VuA9iJrRRfrdQ6mGvFdhTn8p6HTJQWoj9EPN8E+lapG25Si4ilUXNzziPaH79ujCRm9Mx6L5U7O7VAIpvN29IF6xWjAC6ovytNiW2bsSAf4+7lplOSdmkU7CH9nxPDc73/zzdszVkdgIEVMMSQR477wAOl5YQcGln+Ofmv7DJA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(36860700001)(70586007)(70206006)(6666004)(26005)(86362001)(82310400005)(8936002)(4744005)(316002)(356005)(54906003)(36756003)(44832011)(110136005)(81166007)(40460700003)(8676002)(5660300002)(7416002)(508600001)(4326008)(2906002)(426003)(186003)(336012)(1076003)(47076005)(16526019)(83380400001)(2616005)(7696005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2022 04:44:55.2668
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0b9f196-b21a-480f-fefc-08da26765826
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT021.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4530
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YmLf3PQ9ws2C/Myu@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-s/IBS Op Data 2/IBS Op Data 1/ for MSR 0xc0011035.
+On Fri, Apr 22, 2022 at 02:03:24PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Apr 22, 2022 at 12:00:23PM +0200, Jiri Olsa escreveu:
+> > Moving the libbpf init code into single function,
+> > so we have single place doing that.
+> 
+> Cherry picked this one, waiting for Andrii to chime in wrt the libbpf
+> changes, if its acceptable, how to proceed, i.e. in what tree to carry
+> these?
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- arch/x86/include/asm/amd-ibs.h       | 2 +-
- tools/arch/x86/include/asm/amd-ibs.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I think at this point it's ok with either yours perf/core or bpf-next/master,
+I waited for them to be in sync for this ;-)
 
-diff --git a/arch/x86/include/asm/amd-ibs.h b/arch/x86/include/asm/amd-ibs.h
-index f55c299554a8..1a5dd23cf99d 100644
---- a/arch/x86/include/asm/amd-ibs.h
-+++ b/arch/x86/include/asm/amd-ibs.h
-@@ -52,7 +52,7 @@ union ibs_op_ctl {
- 	};
- };
- 
--/* MSR 0xc0011035: IBS Op Data 2 */
-+/* MSR 0xc0011035: IBS Op Data 1 */
- union ibs_op_data {
- 	__u64 val;
- 	struct {
-diff --git a/tools/arch/x86/include/asm/amd-ibs.h b/tools/arch/x86/include/asm/amd-ibs.h
-index 94b75721c3c8..0780c848fa6a 100644
---- a/tools/arch/x86/include/asm/amd-ibs.h
-+++ b/tools/arch/x86/include/asm/amd-ibs.h
-@@ -52,7 +52,7 @@ union ibs_op_ctl {
- 	};
- };
- 
--/* MSR 0xc0011035: IBS Op Data 2 */
-+/* MSR 0xc0011035: IBS Op Data 1 */
- union ibs_op_data {
- 	__u64 val;
- 	struct {
--- 
-2.27.0
+but as you pointed out there's issue with perf linked with dynamic libbpf,
+because the current version does not have the libbpf_register_prog_handler
+api that perf needs now.. also it needs the fix and api introduced in this
+patchset
 
+I'll check and perhaps we can temporirly disable perf/bpf prologue generation
+for dynamic linking..? until the libbpf release has all the needed changes
+
+jirka
+
+> 
+> - Arnaldo
+>  
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/util/bpf-loader.c | 27 ++++++++++++++++++---------
+> >  1 file changed, 18 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> > index b72cef1ae959..f8ad581ea247 100644
+> > --- a/tools/perf/util/bpf-loader.c
+> > +++ b/tools/perf/util/bpf-loader.c
+> > @@ -99,16 +99,26 @@ static int bpf_perf_object__add(struct bpf_object *obj)
+> >  	return perf_obj ? 0 : -ENOMEM;
+> >  }
+> >  
+> > +static int libbpf_init(void)
+> > +{
+> > +	if (libbpf_initialized)
+> > +		return 0;
+> > +
+> > +	libbpf_set_print(libbpf_perf_print);
+> > +	libbpf_initialized = true;
+> > +	return 0;
+> > +}
+> > +
+> >  struct bpf_object *
+> >  bpf__prepare_load_buffer(void *obj_buf, size_t obj_buf_sz, const char *name)
+> >  {
+> >  	LIBBPF_OPTS(bpf_object_open_opts, opts, .object_name = name);
+> >  	struct bpf_object *obj;
+> > +	int err;
+> >  
+> > -	if (!libbpf_initialized) {
+> > -		libbpf_set_print(libbpf_perf_print);
+> > -		libbpf_initialized = true;
+> > -	}
+> > +	err = libbpf_init();
+> > +	if (err)
+> > +		return ERR_PTR(err);
+> >  
+> >  	obj = bpf_object__open_mem(obj_buf, obj_buf_sz, &opts);
+> >  	if (IS_ERR_OR_NULL(obj)) {
+> > @@ -135,14 +145,13 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
+> >  {
+> >  	LIBBPF_OPTS(bpf_object_open_opts, opts, .object_name = filename);
+> >  	struct bpf_object *obj;
+> > +	int err;
+> >  
+> > -	if (!libbpf_initialized) {
+> > -		libbpf_set_print(libbpf_perf_print);
+> > -		libbpf_initialized = true;
+> > -	}
+> > +	err = libbpf_init();
+> > +	if (err)
+> > +		return ERR_PTR(err);
+> >  
+> >  	if (source) {
+> > -		int err;
+> >  		void *obj_buf;
+> >  		size_t obj_buf_sz;
+> >  
+> > -- 
+> > 2.35.1
+> 
+> -- 
+> 
+> - Arnaldo
