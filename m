@@ -2,100 +2,64 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A919EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 19:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0D9C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 20:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242232AbiDYTR4 (ORCPT
+        id S235083AbiDYUfs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Apr 2022 15:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47098 "EHLO
+        Mon, 25 Apr 2022 16:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242986AbiDYTR4 (ORCPT
+        with ESMTP id S233942AbiDYUfs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 15:17:56 -0400
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6399B2ED62;
-        Mon, 25 Apr 2022 12:14:51 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id w19so27934949lfu.11;
-        Mon, 25 Apr 2022 12:14:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dHw3bSR/H7CsKHNYVZ388J1hNpCRBRDwS8dgecfZChM=;
-        b=hicR/D69ANxKVPCF+DF7id9Artecst5j9WieldcfF6yVeaMpAHW6VxiUua7Otzi/qZ
-         c9WmgBjW8pnONB4M9Xqd4cKTl/I8nOegNHNZ9d8UGf44ToG3buIHAwO0ZRCokmF2TX7n
-         GFMEMWzJU84BAhiDZq5lbBsYjyt2GroP8f6UHniOmR0ICTx06dvJbwbqX9QxklEYItUo
-         xkWDwb5pBgRjUZckmlcVuvj10j0YfhKiUSbMTroBihMnXR3osaLmSegNLDyHVjQgl8Gd
-         B+xaHrKaZK8PEzEkRjUOm31DIr/A7WuRvpvj1RH9YeLzebQiJ60pRjOzpxfIjuRvIatX
-         R/vg==
-X-Gm-Message-State: AOAM533C4KkQnlExerDEwAtpOda7J2hl1v0cRji05/QQwMdACFtTdCvA
-        K8ClGO6hYIuq6Z6JIzqg69LY5tUIxXj+7BgQMCk=
-X-Google-Smtp-Source: ABdhPJyhIu6bV/7PCchygWQAOXBLRo+nw25DWy7AdnYXRE222Wbp82PwUfbfw5cBzUzTpTwxnu0Yw930jpFPtAOIVa8=
-X-Received: by 2002:ac2:4c4f:0:b0:44a:4357:c285 with SMTP id
- o15-20020ac24c4f000000b0044a4357c285mr13820828lfk.99.1650914089654; Mon, 25
- Apr 2022 12:14:49 -0700 (PDT)
+        Mon, 25 Apr 2022 16:35:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D03ECCEC;
+        Mon, 25 Apr 2022 13:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sFLxX7FTHxnDRDtuXAaHigLWyZS/TxESdyP0wbN+vMY=; b=ORlXX/IpGxwfgY4pZbZTssEEsT
+        +QSLfwPd6qmS3TrvRMB1zZ5rIy0khieIEYns1MPyCO89hjUuFh0rGAV6+WyHv9eWhyCFFElbDcRsJ
+        ccur8cvYESiHWtklixCMcBSKsB69T8L8TFqtlCarmAKRN6AhmK6N1XEW4I/s4PAWNEfAEL3BBaglt
+        ZLJg2XBgSi+r8Lz52aTW+G3KC+y5Jaq+48pbStPsKDVhbvQz1l5OXJr9kYJD2P1pI3RCihD1PrQNP
+        b5gLZRHqs35F2xf/uTL6XS6ijbfFs058J3akvNaLqye+vTLfmhLflICqP01IF4NnEF7h82D/Iojxi
+        V+dzbRfw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nj5Nh-0090VQ-0a; Mon, 25 Apr 2022 20:32:25 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 87460980DCD; Mon, 25 Apr 2022 22:32:22 +0200 (CEST)
+Date:   Mon, 25 Apr 2022 22:32:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, irogers@google.com, yao.jin@linux.intel.com,
+        james.clark@arm.com, leo.yan@linaro.org, kan.liang@linux.intel.com,
+        ak@linux.intel.com, eranian@google.com, like.xu.linux@gmail.com,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, kim.phillips@amd.com, rrichter@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH 0/6] perf/amd: Zen4 IBS extensions support
+Message-ID: <20220425203222.GN2731@worktop.programming.kicks-ass.net>
+References: <20220425044323.2830-1-ravi.bangoria@amd.com>
 MIME-Version: 1.0
-References: <20220416004048.1514900-1-namhyung@kernel.org> <20220416004048.1514900-2-namhyung@kernel.org>
- <CAP-5=fX5S2CR58REzAhXH4s8_27=D2LbKksS7mHoSoxYOOmN4g@mail.gmail.com>
-In-Reply-To: <CAP-5=fX5S2CR58REzAhXH4s8_27=D2LbKksS7mHoSoxYOOmN4g@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 25 Apr 2022 12:14:38 -0700
-Message-ID: <CAM9d7cgSZu43YLAWgJdw8d1TUS9geD9QrWqSQw1sWPU7ocVRtQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf symbol: Pass is_kallsyms to symbols__fixup_end()
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220425044323.2830-1-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+On Mon, Apr 25, 2022 at 10:13:17AM +0530, Ravi Bangoria wrote:
+> IBS support has been enhanced with two new features in upcoming uarch:
+> 1. DataSrc extension and 2. L3 Miss Filtering capability. Both are
+> indicated by CPUID_Fn8000001B_EAX bit 11.
 
-On Sat, Apr 16, 2022 at 7:59 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Fri, Apr 15, 2022 at 8:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The symbol fixup is necessary for symbols in kallsyms since they don't
-> > have size info.  So we use the next symbol's address to calculate the
-> > size.  Now it's also used for user binaries because sometimes they
-> > miss size for hand-written asm functions.
-> >
-> > There's a arch-specific function to handle kallsyms differently but
-> > currently it cannot distinguish kallsyms from others.  Pass this
-> > information explicitly to handle it properly.  Note that those arch
-> > functions will be moved to the generic function so I didn't added it
-> > to the arch-functions.
->
-> Thanks Namhyung, in:
-> https://lore.kernel.org/linux-perf-users/20220412154817.2728324-3-irogers@google.com/
-> I used "dso->kernel != DSO_SPACE__USER" in symbol-elf to make this
-> more than just kallsyms as presumably kernel code is the issue. Do we
-> know elf kernel code has correctly sized symbols?
+Hi Ravi, could you perhaps also look at fixing this existing IBS
+problem?
 
-Yeah, IIUC the whole point of the symbol end fixup is because the
-kallsyms doesn't have the symbol size info.  Every ELF binaries
-should have the size except for some hand-written asm functions
-which missed adding it manually.  I guess that's the reason it was
-added to other DSO loading paths.
-
-Also considering "[" (and "]") in the symbol name is specific to
-kallsyms which has both kernel and module symbols together.
-
-Thanks,
-Namhyung
+  https://lkml.kernel.org/r/YlVPpVC8chepOdzJ@hirez.programming.kicks-ass.net
