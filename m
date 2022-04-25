@@ -2,64 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0D9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 20:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B22CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 20:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235083AbiDYUfs (ORCPT
+        id S245303AbiDYVC2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Apr 2022 16:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59792 "EHLO
+        Mon, 25 Apr 2022 17:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233942AbiDYUfs (ORCPT
+        with ESMTP id S240584AbiDYVCX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 16:35:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D03ECCEC;
-        Mon, 25 Apr 2022 13:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sFLxX7FTHxnDRDtuXAaHigLWyZS/TxESdyP0wbN+vMY=; b=ORlXX/IpGxwfgY4pZbZTssEEsT
-        +QSLfwPd6qmS3TrvRMB1zZ5rIy0khieIEYns1MPyCO89hjUuFh0rGAV6+WyHv9eWhyCFFElbDcRsJ
-        ccur8cvYESiHWtklixCMcBSKsB69T8L8TFqtlCarmAKRN6AhmK6N1XEW4I/s4PAWNEfAEL3BBaglt
-        ZLJg2XBgSi+r8Lz52aTW+G3KC+y5Jaq+48pbStPsKDVhbvQz1l5OXJr9kYJD2P1pI3RCihD1PrQNP
-        b5gLZRHqs35F2xf/uTL6XS6ijbfFs058J3akvNaLqye+vTLfmhLflICqP01IF4NnEF7h82D/Iojxi
-        V+dzbRfw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nj5Nh-0090VQ-0a; Mon, 25 Apr 2022 20:32:25 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 87460980DCD; Mon, 25 Apr 2022 22:32:22 +0200 (CEST)
-Date:   Mon, 25 Apr 2022 22:32:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, irogers@google.com, yao.jin@linux.intel.com,
-        james.clark@arm.com, leo.yan@linaro.org, kan.liang@linux.intel.com,
-        ak@linux.intel.com, eranian@google.com, like.xu.linux@gmail.com,
-        x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, kim.phillips@amd.com, rrichter@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH 0/6] perf/amd: Zen4 IBS extensions support
-Message-ID: <20220425203222.GN2731@worktop.programming.kicks-ass.net>
-References: <20220425044323.2830-1-ravi.bangoria@amd.com>
+        Mon, 25 Apr 2022 17:02:23 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E0B2AE13
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Apr 2022 13:59:17 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id p7-20020a05600c358700b00393e80c59daso467834wmq.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Apr 2022 13:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m+0NQ0MbGYoEB5Jsr85JSxqkzHf5iQdh5cM2NyrsDis=;
+        b=BGex542dDfYT9HHYZfLCHcpHPGYA2/GNKIzZeosJgIywm2a3Tc6iL/Vtz2vWx7zjQc
+         EVZT+T3Xu2N4CqQCITrP+06X+HS178Z/m41youJ1Drv4CbDKwtXRfqEm+kAuaet77TA3
+         2QP5Wkh4qoafLDELvHmpJ2Uf/l9c6gHRn6YvMuq3QclOu4lKu121I0V/AVyvcx/Va5Wg
+         /lNJla5ZwrUfCRleKMpea1Tc5hSbbcjXAWI2MPhjhFRY1ntLQBiYgKGNSfyGdWeUc7+Q
+         eZu6TYEToZPYaZWgpoEC5Vz5FKdeAH7Y1gZfV/T6j40u+brBqffIhGmaocuLo+FinP0h
+         wTPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m+0NQ0MbGYoEB5Jsr85JSxqkzHf5iQdh5cM2NyrsDis=;
+        b=b4SciuAwmJiwCfGxLF7IdmmPehpl0YGBKXaHlWlhSMxybeypJtL9MNPCpTj5m6vuef
+         z8wZKUB/CCWw8VyimLr4UF3WdqtB4umSMY252OgOt8ZYADoSLCInTsrfPJtvWBPpQ+Pd
+         7J0mxrFO+0BmCDDeBUHNoPeGIRi4t9UP1moFXj8CE9JXX1DC40qXhXzMkHTNnVMQ+LYa
+         ZSokoeFQ9uhj2pS26yWrBxPdGb2GWrag1ydYqrXGJKR86fjbaKr6f2+nx3Mt/MHaQE/4
+         JhKHJKi3CtbKx92M6gCtHP0hOuFjfdIQo/58+oMGtq3In0SLIdT2poS+JlAMAFp56dLx
+         MFPg==
+X-Gm-Message-State: AOAM532WhFSiiQOO6ulNTpozphN+80C8NSxUbveAZwiMybACKfv+pzU9
+        /6VYfRzp2BbZzlTFGFr1WxBeUv6zd2j37Z0IA57YAQ==
+X-Google-Smtp-Source: ABdhPJwv8xGoKyyqY7JuRQboD78b5Wduxo+WwgNk1JdFTzVpIPkAlXaxUrQaqx469hajLw6aXoAByPWhfpp1OFNyuHw=
+X-Received: by 2002:a1c:4e19:0:b0:393:dc47:b808 with SMTP id
+ g25-20020a1c4e19000000b00393dc47b808mr15703552wmh.182.1650920355956; Mon, 25
+ Apr 2022 13:59:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220425044323.2830-1-ravi.bangoria@amd.com>
+References: <20220416004048.1514900-1-namhyung@kernel.org>
+In-Reply-To: <20220416004048.1514900-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 25 Apr 2022 13:59:03 -0700
+Message-ID: <CAP-5=fUUeqimTKoO9PQbm4yDWXZtTqxWm9ZAsNt1=K5N1Rq_Lg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] perf tools: Tidy up symbol end fixup (v3)
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
+        Song Liu <songliubraving@fb.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 10:13:17AM +0530, Ravi Bangoria wrote:
-> IBS support has been enhanced with two new features in upcoming uarch:
-> 1. DataSrc extension and 2. L3 Miss Filtering capability. Both are
-> indicated by CPUID_Fn8000001B_EAX bit 11.
+On Fri, Apr 15, 2022 at 5:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> This work is a follow-up of Ian's previous one at
+>   https://lore.kernel.org/all/20220412154817.2728324-1-irogers@google.com/
+>
+> Fixing up more symbol ends as introduced in:
+>   https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
+>
+> it caused perf annotate to run into memory limits - every symbol holds
+> all the disassembled code in the annotation, and so making symbols
+> ends further away dramatically increased memory usage (40MB to >1GB).
+>
+> Modify the symbol end fixup logic so that special kernel cases aren't
+> applied in the common case.
+>
+> v3 changes)
+>  * rename is_kernel to is_kallsyms
+>  * move the logic to generic function
+>  * remove arch-specific functions
+>
+> Thanks,
+> Namhyung
 
-Hi Ravi, could you perhaps also look at fixing this existing IBS
-problem?
+Thanks Namhyung! The series:
 
-  https://lkml.kernel.org/r/YlVPpVC8chepOdzJ@hirez.programming.kicks-ass.net
+Acked-by: Ian Rogers <irogers@google.com>
+
+> Namhyung Kim (3):
+>   perf symbol: Pass is_kallsyms to symbols__fixup_end()
+>   perf symbol: Update symbols__fixup_end()
+>   perf symbol: Remove arch__symbols__fixup_end()
+>
+>  tools/perf/arch/arm64/util/machine.c   | 21 ---------------
+>  tools/perf/arch/powerpc/util/Build     |  1 -
+>  tools/perf/arch/powerpc/util/machine.c | 25 -----------------
+>  tools/perf/arch/s390/util/machine.c    | 16 -----------
+>  tools/perf/util/symbol-elf.c           |  2 +-
+>  tools/perf/util/symbol.c               | 37 +++++++++++++++++++-------
+>  tools/perf/util/symbol.h               |  3 +--
+>  7 files changed, 29 insertions(+), 76 deletions(-)
+>  delete mode 100644 tools/perf/arch/powerpc/util/machine.c
+>
+>
+> base-commit: 41204da4c16071be9090940b18f566832d46becc
+> --
+> 2.36.0.rc0.470.gd361397f0d-goog
+>
