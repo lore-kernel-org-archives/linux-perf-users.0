@@ -2,223 +2,746 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA83C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 12:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287EFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 13:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231550AbiDYMrt (ORCPT
+        id S236930AbiDYNZN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Apr 2022 08:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46970 "EHLO
+        Mon, 25 Apr 2022 09:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241963AbiDYMpj (ORCPT
+        with ESMTP id S234078AbiDYNZL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 08:45:39 -0400
-Received: from mail.kdab.com (mail.kdab.com [176.9.126.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7488CDAFEF;
-        Mon, 25 Apr 2022 05:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
- content-type:content-type:mime-version:references:in-reply-to
- :organization:message-id:date:date:subject:subject:from:from; s=
- dkim; t=1650890549; x=1651754550; bh=6RwZ272qOSO3J/ESwbYEtug7mil
- g8wX5Ihj8m5FBI1M=; b=nLjpJaudLtE13zyUie1ncOjAO0e+PXWunmGMSA/kX0s
- cTDejh6gWixvLxbsOGIRDuYe5AqzaDfaYLV0I3bOl2XBNJFuE6NpxJ9T6TvD3H/Q
- lRqm3hdoM1SYzGN/Q4WJbVeAt7btL7L+PD+b8W9mPqnnHU9PBIkxIzlM35J4wCdw
- =
-X-Virus-Scanned: amavisd-new at kdab.com
-From:   Milian Wolff <milian.wolff@kdab.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
-Subject: Re: [RFC 0/4] perf record: Implement off-cpu profiling with BPF (v1)
-Date:   Mon, 25 Apr 2022 14:42:27 +0200
-Message-ID: <5616892.dGzqbEiDyy@milian-workstation>
-Organization: KDAB
-In-Reply-To: <CAM9d7cjU6RGMStG4YOW5D50Sx4PRia2dfzcPKxb4JLh5Q668mw@mail.gmail.com>
-References: <20220422053401.208207-1-namhyung@kernel.org>
- <35121321.B44TWeBT9p@milian-workstation>
- <CAM9d7cjU6RGMStG4YOW5D50Sx4PRia2dfzcPKxb4JLh5Q668mw@mail.gmail.com>
+        Mon, 25 Apr 2022 09:25:11 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC73B24951;
+        Mon, 25 Apr 2022 06:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650892926; x=1682428926;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TFt4WRRzaPGr6zTEzqGRYmfaZsGarY/aNmCbTV8G+G4=;
+  b=PLdMaE5U0KCNQvHs9/k9+tSAvb/wtyFkAVDX6FSkiTg0vQsA1fy5MUph
+   gIJ0haVl+CPV2EA63xHNRT2ahYfknaTRrvS0SOkimwW6Bs5miiE25F+d3
+   P+ZdyLrXIdqGoJ5+YWIk6ZlW+4kgjt0PHsRvNAQIaP1ERkk4thW9QQ5NL
+   KJuPCDTd16JTXpSXLqLuWKnIQim3Q/0cMIamByz+kZNDiSNgwxDa+A9BQ
+   z0CHjaCqZ0UvWqosPF/yXe/+CX/u1U2h0FR3a17gSoc/4iHpAJAkYMb9n
+   iTkJaOxSEV7rPj+tj/8AitaP30p7LJ8c+SIxwtcE/jlf09pf/4/1YUpTS
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10327"; a="328183589"
+X-IronPort-AV: E=Sophos;i="5.90,288,1643702400"; 
+   d="scan'208";a="328183589"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2022 06:22:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,288,1643702400"; 
+   d="scan'208";a="537509756"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by orsmga002.jf.intel.com with ESMTP; 25 Apr 2022 06:22:03 -0700
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
+Subject: [PATCH 1/2] perf vendor events intel: Update core event list for Sapphirerapids
+Date:   Mon, 25 Apr 2022 21:22:10 +0800
+Message-Id: <20220425132211.801228-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2573099.99G3eLAuUF";
- micalg="sha256"; protocol="application/pkcs7-signature"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---nextPart2573099.99G3eLAuUF
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-On Freitag, 22. April 2022 17:01:15 CEST Namhyung Kim wrote:
-> Hi Milian,
-> 
-> On Fri, Apr 22, 2022 at 3:21 AM Milian Wolff <milian.wolff@kdab.com> wrote:
-> > On Freitag, 22. April 2022 07:33:57 CEST Namhyung Kim wrote:
-> > > Hello,
-> > > 
-> > > This is the first version of off-cpu profiling support.  Together with
-> > > (PMU-based) cpu profiling, it can show holistic view of the performance
-> > > characteristics of your application or system.
-> > 
-> > Hey Namhyung,
-> > 
-> > this is awesome news! In hotspot, I've long done off-cpu profiling
-> > manually by looking at the time between --switch-events. The downside is
-> > that we also need to track the sched:sched_switch event to get a call
-> > stack. But this approach also works with dwarf based unwinding, and also
-> > includes kernel stacks.
->
-> Thanks, I've also briefly thought about the switch event based off-cpu
-> profiling as it doesn't require root.  But collecting call stacks is hard
-> and I'd like to do it in kernel/bpf to reduce the overhead.
+Update JSON core events for Sapphirerapids to perf.
 
-I'm all for reducing the overhead, I just wonder about the practicality. At 
-the very least, please make sure to note this limitation explicitly to end 
-users. As a preacher for perf, I have come across lots of people stumbling 
-over `perf record -g` not producing any sensible output because they are 
-simply not aware that this requires frame pointers which are basically non 
-existing on most "normal" distributions. Nowadays `man perf record` tries to 
-educate people, please do the same for the new `--off-cpu` switch.
+Based on JSON list v1.01:
 
-> > > With BPF, it can aggregate scheduling stats for interested tasks
-> > > and/or states and convert the data into a form of perf sample records.
-> > > I chose the bpf-output event which is a software event supposed to be
-> > > consumed by BPF programs and renamed it as "offcpu-time".  So it
-> > > requires no change on the perf report side except for setting sample
-> > > types of bpf-output event.
-> > > 
-> > > Basically it collects userspace callstack for tasks as it's what users
-> > > want mostly.  Maybe we can add support for the kernel stacks but I'm
-> > > afraid that it'd cause more overhead.  So the offcpu-time event will
-> > > always have callchains regardless of the command line option, and it
-> > > enables the children mode in perf report by default.
-> > 
-> > Has anything changed wrt perf/bpf and user applications not compiled with
-> > `- fno-omit-frame-pointer`? I.e. does this new utility only work for
-> > specially compiled applications, or do we also get backtraces for
-> > "normal" binaries that we can install through package managers?
-> 
-> I am not aware of such changes, it still needs a frame pointer to get
-> backtraces.
+https://download.01.org/perfmon/SPR/
 
-May I ask what kind of setup you are using this on? Do you use something like 
-Gentoo or yocto where you compile your whole system with `-fno-omit-frame-
-pointer`? Because otherwise, any kind of off-cpu time in system libraries will 
-not be resolved properly, no?
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ .../arch/x86/sapphirerapids/cache.json        | 36 ++++++-------
+ .../x86/sapphirerapids/floating-point.json    | 24 ++++-----
+ .../arch/x86/sapphirerapids/frontend.json     |  4 +-
+ .../arch/x86/sapphirerapids/memory.json       |  8 +--
+ .../arch/x86/sapphirerapids/other.json        | 53 +++++++++++++++----
+ .../arch/x86/sapphirerapids/pipeline.json     | 50 ++++++++++-------
+ 6 files changed, 110 insertions(+), 65 deletions(-)
 
-Thanks
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/cache.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/cache.json
+index 373b28348b57..6fa723c9a6f6 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/cache.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/cache.json
+@@ -90,7 +90,7 @@
+         "UMask": "0x1f"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "L2_LINES_OUT.NON_SILENT",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x26",
+@@ -298,7 +298,7 @@
+         "UMask": "0x28"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "LONGEST_LAT_CACHE.MISS",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2e",
+@@ -490,7 +490,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "MEM_LOAD_L3_MISS_RETIRED.REMOTE_DRAM",
+         "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd3",
+@@ -511,7 +511,7 @@
+         "UMask": "0x8"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "MEM_LOAD_L3_MISS_RETIRED.REMOTE_HITM",
+         "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd3",
+@@ -646,7 +646,7 @@
+         "UMask": "0x80"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "MEM_STORE_RETIRED.L2_HIT",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x44",
+@@ -853,7 +853,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that hit in the L3 or were snooped from another core's caches on the same socket.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that hit in the L3 or were snooped from another core's caches on the same socket.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.L3_HIT",
+@@ -864,7 +864,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that resulted in a snoop hit a modified line in another core's caches which forwarded the data.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that resulted in a snoop hit a modified line in another core's caches which forwarded the data.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HITM",
+@@ -875,7 +875,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that resulted in a snoop that hit in another core, which did not forward the data.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that resulted in a snoop that hit in another core, which did not forward the data.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HIT_NO_FWD",
+@@ -886,7 +886,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that resulted in a snoop hit in another core's caches which forwarded the unmodified data to the requesting core.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that resulted in a snoop hit in another core's caches which forwarded the unmodified data to the requesting core.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.L3_HIT.SNOOP_HIT_WITH_FWD",
+@@ -897,7 +897,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by a cache on a remote socket where a snoop was sent and data was returned (Modified or Not Modified).",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by a cache on a remote socket where a snoop was sent and data was returned (Modified or Not Modified).",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.REMOTE_CACHE.SNOOP_FWD",
+@@ -908,7 +908,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by a cache on a remote socket where a snoop hit a modified line in another core's caches which forwarded the data.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by a cache on a remote socket where a snoop hit a modified line in another core's caches which forwarded the data.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.REMOTE_CACHE.SNOOP_HITM",
+@@ -919,7 +919,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by a cache on a remote socket where a snoop hit in another core's caches which forwarded the unmodified data to the requesting core.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by a cache on a remote socket where a snoop hit in another core's caches which forwarded the unmodified data to the requesting core.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.REMOTE_CACHE.SNOOP_HIT_WITH_FWD",
+@@ -930,7 +930,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that hit a modified line in a distant L3 Cache or were snooped from a distant core's L1/L2 caches on this socket when the system is in SNC (sub-NUMA cluster) mode.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that hit a modified line in a distant L3 Cache or were snooped from a distant core's L1/L2 caches on this socket when the system is in SNC (sub-NUMA cluster) mode.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.SNC_CACHE.HITM",
+@@ -941,7 +941,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that either hit a non-modified line in a distant L3 Cache or were snooped from a distant core's L1/L2 caches on this socket when the system is in SNC (sub-NUMA cluster) mode.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that either hit a non-modified line in a distant L3 Cache or were snooped from a distant core's L1/L2 caches on this socket when the system is in SNC (sub-NUMA cluster) mode.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.SNC_CACHE.HIT_WITH_FWD",
+@@ -963,7 +963,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "OFFCORE_REQUESTS.ALL_REQUESTS",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x21",
+@@ -1005,7 +1005,7 @@
+         "UMask": "0x8"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "CounterMask": "1",
+@@ -1016,7 +1016,7 @@
+         "UMask": "0x8"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "CounterMask": "1",
+@@ -1027,7 +1027,7 @@
+         "UMask": "0x4"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "OFFCORE_REQUESTS_OUTSTANDING.DATA_RD",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x20",
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
+index 1281f293ca41..53d35dddd313 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/floating-point.json
+@@ -1,6 +1,6 @@
+ [
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "ARITH.FPDIV_ACTIVE",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+@@ -22,7 +22,7 @@
+         "UMask": "0x2"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "ASSISTS.SSE_AVX_MIX",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc1",
+@@ -32,7 +32,7 @@
+         "UMask": "0x10"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_0",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+@@ -42,7 +42,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_1",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+@@ -52,7 +52,7 @@
+         "UMask": "0x2"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FP_ARITH_DISPATCHED.PORT_5",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+@@ -150,7 +150,7 @@
+         "UMask": "0x2"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FP_ARITH_INST_RETIRED2.128B_PACKED_HALF",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xcf",
+         "EventName": "FP_ARITH_INST_RETIRED2.128B_PACKED_HALF",
+@@ -159,7 +159,7 @@
+         "UMask": "0x4"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FP_ARITH_INST_RETIRED2.256B_PACKED_HALF",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xcf",
+         "EventName": "FP_ARITH_INST_RETIRED2.256B_PACKED_HALF",
+@@ -168,7 +168,7 @@
+         "UMask": "0x8"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FP_ARITH_INST_RETIRED2.512B_PACKED_HALF",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xcf",
+@@ -178,7 +178,7 @@
+         "UMask": "0x10"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FP_ARITH_INST_RETIRED2.COMPLEX_SCALAR_HALF",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xcf",
+         "EventName": "FP_ARITH_INST_RETIRED2.COMPLEX_SCALAR_HALF",
+@@ -192,12 +192,12 @@
+         "EventCode": "0xcf",
+         "EventName": "FP_ARITH_INST_RETIRED2.SCALAR",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
+-        "PublicDescription": "TBD",
++        "PublicDescription": "FP_ARITH_INST_RETIRED2.SCALAR",
+         "SampleAfterValue": "100003",
+         "UMask": "0x3"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FP_ARITH_INST_RETIRED2.SCALAR_HALF",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xcf",
+         "EventName": "FP_ARITH_INST_RETIRED2.SCALAR_HALF",
+@@ -211,7 +211,7 @@
+         "EventCode": "0xcf",
+         "EventName": "FP_ARITH_INST_RETIRED2.VECTOR",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
+-        "PublicDescription": "TBD",
++        "PublicDescription": "FP_ARITH_INST_RETIRED2.VECTOR",
+         "SampleAfterValue": "100003",
+         "UMask": "0x1c"
+     }
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.json
+index 3b6fb14fc421..04ba0269c73c 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.json
+@@ -262,7 +262,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FRONTEND_RETIRED.MS_FLOWS",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+@@ -291,7 +291,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "FRONTEND_RETIRED.UNKNOWN_BRANCH",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/memory.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/memory.json
+index 4c385d05a0c7..7436ced3e04e 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/memory.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/memory.json
+@@ -44,7 +44,7 @@
+         "UMask": "0x3"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "MEMORY_ACTIVITY.STALLS_L2_MISS",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "CounterMask": "5",
+@@ -55,7 +55,7 @@
+         "UMask": "0x5"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "MEMORY_ACTIVITY.STALLS_L3_MISS",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "CounterMask": "9",
+@@ -259,7 +259,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were not supplied by the local socket's L1, L2, or L3 caches.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were not supplied by the local socket's L1, L2, or L3 caches.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.L3_MISS",
+@@ -270,7 +270,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that missed the L3 Cache and were supplied by the local socket (DRAM or PMM), whether or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts PMM or DRAM accesses that are controlled by the close or distant SNC Cluster.  It does not count misses to the L3 which go to Local CXL Type 2 Memory or Local Non DRAM.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that missed the L3 Cache and were supplied by the local socket (DRAM or PMM), whether or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts PMM or DRAM accesses that are controlled by the close or distant SNC Cluster.  It does not count misses to the L3 which go to Local CXL Type 2 Memory or Local Non DRAM.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.L3_MISS_LOCAL_SOCKET",
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
+index e6d4921a42cb..7d6f8e25bb10 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/other.json
+@@ -1,6 +1,6 @@
+ [
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "ASSISTS.PAGE_FAULT",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc1",
+@@ -206,7 +206,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that have any type of response.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that have any type of response.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.ANY_RESPONSE",
+@@ -217,7 +217,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.DRAM",
+@@ -228,7 +228,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM attached to this socket, unless in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts only those DRAM accesses that are controlled by the close SNC Cluster.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM attached to this socket, unless in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts only those DRAM accesses that are controlled by the close SNC Cluster.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.LOCAL_DRAM",
+@@ -239,7 +239,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM attached to this socket, whether or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts DRAM accesses that are controlled by the close or distant SNC Cluster.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM attached to this socket, whether or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts DRAM accesses that are controlled by the close or distant SNC Cluster.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.LOCAL_SOCKET_DRAM",
+@@ -250,7 +250,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by PMM attached to this socket, whether or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts PMM accesses that are controlled by the close or distant SNC Cluster.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by PMM attached to this socket, whether or not in Sub NUMA Cluster(SNC) Mode.  In SNC Mode counts PMM accesses that are controlled by the close or distant SNC Cluster.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.LOCAL_SOCKET_PMM",
+@@ -261,7 +261,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were not supplied by the local socket's L1, L2, or L3 caches and were supplied by a remote socket.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were not supplied by the local socket's L1, L2, or L3 caches and were supplied by a remote socket.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.REMOTE",
+@@ -272,7 +272,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM attached to another socket.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM attached to another socket.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.REMOTE_DRAM",
+@@ -283,7 +283,29 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts all data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM on a distant memory controller of this socket when the system is in SNC (sub-NUMA cluster) mode.",
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM or PMM attached to another socket.",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.READS_TO_CORE.REMOTE_MEMORY",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x733004477",
++        "Offcore": "1",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by PMM attached to another socket.",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.READS_TO_CORE.REMOTE_PMM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x703004477",
++        "Offcore": "1",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts all (cacheable) data read, code read and RFO requests including demands and prefetches to the core caches (L1 or L2) that were supplied by DRAM on a distant memory controller of this socket when the system is in SNC (sub-NUMA cluster) mode.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.READS_TO_CORE.SNC_DRAM",
+@@ -304,6 +326,17 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts Demand RFOs, ItoM's, PREFECTHW's, Hardware RFO Prefetches to the L1/L2 and Streaming stores that likely resulted in a store to Memory (DRAM or PMM)",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x2A,0x2B",
++        "EventName": "OCR.WRITE_ESTIMATE.MEMORY",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0xFBFF80822",
++        "Offcore": "1",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Cycles when Reservation Station (RS) is empty for the thread.",
+         "CollectPEBSRecord": "2",
+@@ -316,7 +349,7 @@
+         "UMask": "0x7"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "XQ.FULL_CYCLES",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "CounterMask": "1",
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
+index 25a12e03cb85..b0920f5b25ed 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
+@@ -1,13 +1,13 @@
+ [
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "AMX_OPS_RETIRED.BF16",
+         "EventCode": "0xce",
+         "EventName": "AMX_OPS_RETIRED.BF16",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x2"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "AMX_OPS_RETIRED.INT8",
+         "EventCode": "0xce",
+         "EventName": "AMX_OPS_RETIRED.INT8",
+         "SampleAfterValue": "1000003",
+@@ -54,6 +54,7 @@
+         "EventCode": "0xb0",
+         "EventName": "ARITH.IDIV_ACTIVE",
+         "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "ARITH.IDIV_ACTIVE",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x8"
+     },
+@@ -337,7 +338,7 @@
+         "UMask": "0x2"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "CPU_CLK_UNHALTED.PAUSE",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xec",
+@@ -347,7 +348,7 @@
+         "UMask": "0x40"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "CPU_CLK_UNHALTED.PAUSE_INST",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EdgeDetect": "1",
+@@ -530,6 +531,17 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x40"
+     },
++    {
++        "BriefDescription": "Cycles no uop executed while RS was not empty, the SB was not full and there was no outstanding load.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xa6",
++        "EventName": "EXE_ACTIVITY.EXE_BOUND_0_PORTS",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "PublicDescription": "Number of cycles total of 0 uops executed on all ports, Reservation Station (RS) was not empty, the Store Buffer (SB) was not full and there was no outstanding load.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x80"
++    },
+     {
+         "BriefDescription": "Instruction decoders utilized in a cycle",
+         "CollectPEBSRecord": "2",
+@@ -564,7 +576,7 @@
+         "SampleAfterValue": "2000003"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INST_RETIRED.MACRO_FUSED",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc0",
+@@ -595,7 +607,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INST_RETIRED.REP_ITERATION",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc0",
+@@ -616,7 +628,7 @@
+         "UMask": "0x80"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INT_MISC.MBA_STALLS",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xad",
+         "EventName": "INT_MISC.MBA_STALLS",
+@@ -636,7 +648,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INT_MISC.UNKNOWN_BRANCH_CYCLES",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xad",
+@@ -660,7 +672,7 @@
+         "UMask": "0x10"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INT_VEC_RETIRED.128BIT",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+@@ -670,7 +682,7 @@
+         "UMask": "0x13"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INT_VEC_RETIRED.256BIT",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+@@ -702,7 +714,7 @@
+         "UMask": "0xc"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INT_VEC_RETIRED.MUL_256",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+@@ -712,7 +724,7 @@
+         "UMask": "0x80"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INT_VEC_RETIRED.SHUFFLES",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+@@ -722,7 +734,7 @@
+         "UMask": "0x40"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INT_VEC_RETIRED.VNNI_128",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+@@ -732,7 +744,7 @@
+         "UMask": "0x10"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "INT_VEC_RETIRED.VNNI_256",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+@@ -845,7 +857,7 @@
+         "UMask": "0x4"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "MISC2_RETIRED.LFENCE",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe0",
+@@ -916,7 +928,7 @@
+         "UMask": "0x8"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "TOPDOWN.MEMORY_BOUND_SLOTS",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa4",
+@@ -947,7 +959,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "UOPS_DECODED.DEC0_UOPS",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x76",
+@@ -1210,7 +1222,7 @@
+         "UMask": "0x2"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "UOPS_RETIRED.HEAVY",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+@@ -1220,7 +1232,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "UOPS_RETIRED.MS",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
 -- 
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt, C++ and OpenGL Experts
---nextPart2573099.99G3eLAuUF
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEekw
-ggWBMIIEaaADAgECAhA5ckQ6+SK3UdfTbBDdMTWVMA0GCSqGSIb3DQEBDAUAMHsxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNV
-BAoMEUNvbW9kbyBDQSBMaW1pdGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMw
-HhcNMTkwMzEyMDAwMDAwWhcNMjgxMjMxMjM1OTU5WjCBiDELMAkGA1UEBhMCVVMxEzARBgNVBAgT
-Ck5ldyBKZXJzZXkxFDASBgNVBAcTC0plcnNleSBDaXR5MR4wHAYDVQQKExVUaGUgVVNFUlRSVVNU
-IE5ldHdvcmsxLjAsBgNVBAMTJVVTRVJUcnVzdCBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkw
-ggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCAEmUXNg7D2wiz0KxXDXbtzSfTTK1Qg2Hi
-qiBNCS1kCdzOiZ/MPans9s/B3PHTsdZ7NygRK0faOca8Ohm0X6a9fZ2jY0K2dvKpOyuR+OJv0OwW
-IJAJPuLodMkYtJHUYmTbf6MG8YgYapAiPLz+E/CHFHv25B+O1ORRxhFnRghRy4YUVD+8M/5+bJz/
-Fp0YvVGONaanZshyZ9shZrHUm3gDwFA66Mzw3LyeTP6vBZY1H1dat//O+T23LLb2VN3I5xI6Ta5M
-irdcmrS3ID3KfyI0rn47aGYBROcBTkZTmzNg95S+UzeQc0PzMsNT79uq/nROacdrjGCT3sTHDN/h
-Mq7MkztReJVni+49Vv4M0GkPGw/zJSZrM233bkf6c0Plfg6lZrEpfDKEY1WJxA3Bk1QwGROs0303
-p+tdOmw1XNtB1xLaqUkL39iAigmTYo61Zs8liM2EuLE/pDkP2QKe6xJMlXzzawWpXhaDzLhn4ugT
-ncxbgtNMs+1b/97lc6wjOy0AvzVVdAlJ2ElYGn+SNuZRkg7zJn0cTRe8yexDJtC/QV9AqURE9Jnn
-V4eeUB9XVKg+/XRjL7FQZQnmWEIuQxpMtPAlR1n6BB6T1CZGSlCBst6+eLf8ZxXhyVeEHg9j1uli
-utZfVS7qXMYoCAQlObgOK6nyTJccBz8NUvXt7y+CDwIDAQABo4HyMIHvMB8GA1UdIwQYMBaAFKAR
-CiM+lvEH7OKvKe+CpX/QMKS0MB0GA1UdDgQWBBRTeb9aqitKz1SA4dibwJ3ysgNmyzAOBgNVHQ8B
-Af8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zARBgNVHSAECjAIMAYGBFUdIAAwQwYDVR0fBDwwOjA4
-oDagNIYyaHR0cDovL2NybC5jb21vZG9jYS5jb20vQUFBQ2VydGlmaWNhdGVTZXJ2aWNlcy5jcmww
-NAYIKwYBBQUHAQEEKDAmMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
-KoZIhvcNAQEMBQADggEBABiHUdx0IT2ciuAntzPQLszs8ObLXhHeIm+bdY6ecv7k1v6qH5yWLe8D
-Sn6u9I1vcjxDO8A/67jfXKqpxq7y/Njuo3tD9oY2fBTgzfT3P/7euLSK8JGW/v1DZH79zNIBoX19
-+BkZyUIrE79Yi7qkomYEdoiRTgyJFM6iTckys7roFBq8cfFb8EELmAAKIgMQ5Qyx+c2SNxntO/Hk
-Orb5RRMmda+7qu8/e3c70sQCkT0ZANMXXDnbP3sYDUXNk4WWL13fWRZPP1G91UUYP+1KjugGYXQj
-FrUNUHMnREd/EF2JKmuFMRTE6KlqTIC8anjPuH+OdnKZDJ3+15EIFqGjX5UwggYQMIID+KADAgEC
-AhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQGEwJVUzETMBEGA1UE
-CBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJV
-U1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0
-eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UE
-CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdv
-IExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
-U2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyjztlApB/975
-Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUfItMltrMaXqcESJuK
-8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeWQcpGEGFUUd0kN+oH
-ox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YBrf24k5Ee1sLTHsLt
-piK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewDch/8kHPo5fZl5u1B
-0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAUU3m/WqorSs9UgOHY
-m8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1UdDwEB/wQEAwIBhjAS
-BgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDARBgNVHSAE
-CjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2VydHJ1c3QuY29tL1VT
-RVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUFBwEBBGowaDA/Bggr
-BgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJTQUFkZFRydXN0Q0Eu
-Y3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBDAUA
-A4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+xswhh2GqkW5JQrM8
-zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9IHk96VwsacIvBF8J
-fqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7kkmka2RQb9d90nmN
-HdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1eoYV7lNwNBKpeHdN
-uO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4KxaYIhvqPqUMWqRd
-Wyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL1Ygz3SBsyECa0waq
-4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQOZ1YL5ezMTX0ZSLw
-rymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qodx/PL+5jR87myx5uY
-dBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i5ZgtwCLXgAIe5W8m
-ybM2JzCCBkwwggU0oAMCAQICEHR8gsPqhWo7MMOepQh9ypIwDQYJKoZIhvcNAQELBQAwgZYxCzAJ
-BgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQx
-GDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1
-dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMjAwNTEyMDAwMDAwWhcNMjMwNTEy
-MjM1OTU5WjCCAVkxCzAJBgNVBAYTAlNFMQ8wDQYDVQQREwY2ODMgMzExEjAQBgNVBAgTCVZhZXJt
-bGFuZDEQMA4GA1UEBxMHSGFnZm9yczEYMBYGA1UECRMPTm9ycmluZ3MgdmFlZyAyMQ8wDQYDVQQS
-EwZCb3ggMzAxJjAkBgNVBAoMHUtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCMR0wGwYDVQQL
-ExRBIEtEQUIgR3JvdXAgQ29tcGFueTFDMEEGA1UECww6SXNzdWVkIHRocm91Z2ggS2xhcsOkbHZk
-YWxlbnMgRGF0YWtvbnN1bHQgQUIgRS1QS0kgTWFuYWdlcjEfMB0GA1UECxMWQ29ycG9yYXRlIFNl
-Y3VyZSBFbWFpbDEVMBMGA1UEAxMMTWlsaWFuIFdvbGZmMSQwIgYJKoZIhvcNAQkBFhVtaWxpYW4u
-d29sZmZAa2RhYi5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8vdk66W4eo0O1
-1Dh3zPXW/zrkwzzxRR0Air/VRxAIG5q/klE9mF2gsGBPXQpCtDMvkuvSLQ+5mR50Cb+V+4Y9n0W6
-98JoyQHYAo6uswLyTchcF6IVckkkZrm1RD1DXnlIHpCsacO7PDDxMslzFs5XZfRkH4F1SKkiVwup
-/Nsn0z12SGRzxSUUxr4VHZgIqgRGqVSbVJfjtTRigAu+fmXUXHs0bMRv8TonzrDRlN61m1UakrFu
-qvKAgXYfZULZ52IKNK/jq8nPHJDD9oOr5pVi4Yx9GyVeMM0qNPC74fJnGh7lOpJiAcqYBEis73lm
-U+RtH3Bj85Qdqvwxo3bf7s1zAgMBAAGjggHOMIIByjAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+o
-mULPyeCtADAdBgNVHQ4EFgQUMc6p+s2l6xbyh8jLYeP7fQrRiW4wDgYDVR0PAQH/BAQDAgWgMAwG
-A1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYM
-KwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1Ud
-HwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhl
-bnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcw
-AoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25h
-bmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20w
-IAYDVR0RBBkwF4EVbWlsaWFuLndvbGZmQGtkYWIuY29tMA0GCSqGSIb3DQEBCwUAA4IBAQBW3rFX
-47Cnu8JMNm8row/96V8xGwPzir9lEpnasNxi+GhvQjGzvoP5oxMoBJ+hgD8fMk5X15IDuKa9KVHb
-BzBG9kOPGB4h/89voWpzWIVy7Q3k+dPByfghbufR+83TvN20lV9VqXYjPeYypHlD/vJ4Z8iWn3s3
-0iUfYr1CCr8zoje1hijPM9A0wN7K8iCtIc4OAfJpwKsXMCNAv1SdxD196vCKrTnWiEmAw0g8FpDM
-GWIww0+2Qq+Peeoe53+34GetRPIbS5jPlCEy7xgC8c7qoJTNzhCyVENRByoA5dsLzK+Nv0IT1h2C
-gu2w5VxHo0DjlCmYddu46uwpWjKpNuhaMYICbTCCAmkCAQEwgaswgZYxCzAJBgNVBAYTAkdCMRsw
-GQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoTD1Nl
-Y3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9u
-IGFuZCBTZWN1cmUgRW1haWwgQ0ECEHR8gsPqhWo7MMOepQh9ypIwDQYJYIZIAWUDBAIBBQCggZMw
-GAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjIwNDI1MTI0MjI3WjAo
-BgkqhkiG9w0BCQ8xGzAZMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQg
-wO5Gh7SYng/YH3AcYH/vuUlid2pJ3wkNiHoimPwwQ+gwDQYJKoZIhvcNAQEBBQAEggEAKmH4oqSS
-3lrVn6/nriMo3+qE1/njiopbJlVsyhYQzKIjsvJRdw4vKo9HoqOGrJYcOxf2NfTXh83UP40Gd3Ep
-9jzu7H4NXUssR+fXfbHDvwsHzWcbd9CFjJ+nOABQZnNAtuPoiRwBp0NuQ1emcMnoFIIPx1JQs1Et
-uBXU4+JDRiLcRDfkv4P5jWYgZHWvi5uPUynd4qap3RfFeIhBObczqNCZ98v5nR9miWNEVi4iCVPh
-5g+6p1f9i2QE4PePaJG6YyRLmYhO9sr6KSQd+RPE3nQvjx3Sg7pNNZUXE+BktJJuTLPI32ObJKYE
-9ZQEvw4+iCJHQ4DPQMsMMuxe0MV/ogAAAAAAAA==
-
-
---nextPart2573099.99G3eLAuUF--
-
+2.25.1
 
