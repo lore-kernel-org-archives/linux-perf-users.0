@@ -2,175 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B568C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 16:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5217C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 17:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243584AbiDYQwv (ORCPT
+        id S243699AbiDYREu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Apr 2022 12:52:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46934 "EHLO
+        Mon, 25 Apr 2022 13:04:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243581AbiDYQwu (ORCPT
+        with ESMTP id S243634AbiDYREu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 12:52:50 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1931D2496A
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Apr 2022 09:49:46 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id q23so8860921wra.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Apr 2022 09:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ueXJpQvL2pfynfplxOLCcVOjZIcVvqpX+r8wn9uwNPI=;
-        b=DUfEXR7pB451R0llk/iDmWhUQZlHNJ4Q7zbGysozNMINnHO02Z1oMI/cNzFAgURFAA
-         QP2xDVa8DeLNMOZBzWIZoI2pQGQWvVHDA1Gm2oobaus+2DgI9SXWDtBp6k7M6efqB/D9
-         7SveUQi/xVbUVmcjj2fKMeoK6jsHUOxbCnX6wSrJcqGBv3IzZMi8rPa21fedfcjAi3sf
-         BoPIF6BKV4YCVRuM1ujSUan2bYvMfdFVKB0KPakipDEbrR3kN1vbw0HkV5sHPNenwlxb
-         qAlHUqg1UJXiGnsHH0uGwKyVX4RASGrJrxjo5oPm/gdJtGdhGmJ5mmovqxNDshBygKTJ
-         tIvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ueXJpQvL2pfynfplxOLCcVOjZIcVvqpX+r8wn9uwNPI=;
-        b=ryCQC/anuy9nUFUE+1aHu4R9J53c52fxCqLldM+G4d0MyWlMJ9QosbFEH3ijHVaY/w
-         l/dCQU2seaRqSXxWKCaM5r7ZB1CJ8mKZZEQJMOhSVfsPIojeN/UGOZ3t6TN1Pfvl92Cd
-         ulwz2Rcws/2tei32aVZ9DiHmgC9S3cU7a5oKhUmQ83ltU8rrxrzsx4gG8vuqGnif+wzj
-         8jPJhtfDouwD8zWM4hcR7j8YD1Cm1IwjtJsEvMMNm+EfOrpLdQ7nDKO5HQSYNOSXRAzT
-         wShLJUW6rGASKXqUP+iaD6wu0dU+ZlsSehD0SU2/JQiQuQCdl3TYcc+00HaKazsl/Nkc
-         HegA==
-X-Gm-Message-State: AOAM531/3myemTnnXLmvrmbSNBG6E7vG/gSLr9pesTKs/GICMEHFm2vV
-        gWkLMm3Uwl6IJnq//pIIBdDv58op5KjZ2h1PnRN8QQ==
-X-Google-Smtp-Source: ABdhPJxDeJE4fGjOcrWIwHWHvs3dKEYgZvAE18I/sclof3Uaf4ZHltoT9ZtbMTMJXPqkLtDAAyGDNTrbHVEN1oFWqYI=
-X-Received: by 2002:adf:f30a:0:b0:20a:e193:6836 with SMTP id
- i10-20020adff30a000000b0020ae1936836mr1153087wro.654.1650905384423; Mon, 25
- Apr 2022 09:49:44 -0700 (PDT)
+        Mon, 25 Apr 2022 13:04:50 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A8C1C113;
+        Mon, 25 Apr 2022 10:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650906105; x=1682442105;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dBjDeKCBG8dDb3+fTvZJG04zxqSAzT9opUo1LLEgCAE=;
+  b=jXwFriTyHgwnkFMhzLTyB23yoA3pIh98TYKewEkz8ctgUffiAEjsdTVh
+   kwiRcYOK82YKGXnaDQGnivHjy4+lMuaSkx3548giQm9640aGOE/dSwnxT
+   CL/UrpFSz3YHgomTf6kdCWBHj052E9bhoPM1h51d6xK3W9rZ8OVwPFHVK
+   n3azDazajNwMb0f/UWOf1AzIvQXwQnOODU75Fa+fFyr6IgH3jgauAH8NM
+   lF0ld0eIY26BxCffww5+J8jgQ+YF5oVCWnl5o4RB0SzWigvRzko16CC0c
+   Gz6BmUm6a9ExTs/6EOD3ChovIJhkDp3ky4chdIT2MjzbspeZnaBHLfGp7
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10328"; a="325795022"
+X-IronPort-AV: E=Sophos;i="5.90,289,1643702400"; 
+   d="scan'208";a="325795022"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2022 10:01:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,289,1643702400"; 
+   d="scan'208";a="564169148"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Apr 2022 10:01:44 -0700
+Received: from [10.209.9.159] (kliang2-MOBL.ccr.corp.intel.com [10.209.9.159])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id DEF1A5809EB;
+        Mon, 25 Apr 2022 10:01:41 -0700 (PDT)
+Message-ID: <b4aaf1ed-124d-1339-3e99-a120f6cc4d28@linux.intel.com>
+Date:   Mon, 25 Apr 2022 13:01:40 -0400
 MIME-Version: 1.0
-References: <20220422053401.208207-1-namhyung@kernel.org> <35121321.B44TWeBT9p@milian-workstation>
- <CAM9d7cjU6RGMStG4YOW5D50Sx4PRia2dfzcPKxb4JLh5Q668mw@mail.gmail.com> <5616892.dGzqbEiDyy@milian-workstation>
-In-Reply-To: <5616892.dGzqbEiDyy@milian-workstation>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 25 Apr 2022 09:49:31 -0700
-Message-ID: <CAP-5=fVKJ4dYRe288LhJ6B5A5aqkHYwF3VnK8CFv_0oiTvORqA@mail.gmail.com>
-Subject: Re: [RFC 0/4] perf record: Implement off-cpu profiling with BPF (v1)
-To:     Milian Wolff <milian.wolff@kdab.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>,
-        "michael@michaellarabel.com" <michael@michaellarabel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>
+Cc:     Ali Saidi <alisaidi@amazon.com>, Nick.Forrington@arm.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        andrew.kilroy@arm.com, benh@kernel.crashing.org,
+        german.gomez@arm.com, james.clark@arm.com, john.garry@huawei.com,
+        jolsa@kernel.org, kjain@linux.ibm.com, lihuafei1@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+References: <c17dedde-6ba8-db9b-4827-32477f039764@linux.intel.com>
+ <20220422212249.22463-1-alisaidi@amazon.com>
+ <20220423063805.GA559531@leoy-ThinkPad-X240s>
+ <8e09af67-a416-4ead-b406-6c8b998de344@linux.intel.com>
+ <20220424114302.GB978927@leoy-ThinkPad-X240s>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220424114302.GB978927@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 5:42 AM Milian Wolff <milian.wolff@kdab.com> wrote:
->
-> On Freitag, 22. April 2022 17:01:15 CEST Namhyung Kim wrote:
-> > Hi Milian,
-> >
-> > On Fri, Apr 22, 2022 at 3:21 AM Milian Wolff <milian.wolff@kdab.com> wrote:
-> > > On Freitag, 22. April 2022 07:33:57 CEST Namhyung Kim wrote:
-> > > > Hello,
-> > > >
-> > > > This is the first version of off-cpu profiling support.  Together with
-> > > > (PMU-based) cpu profiling, it can show holistic view of the performance
-> > > > characteristics of your application or system.
-> > >
-> > > Hey Namhyung,
-> > >
-> > > this is awesome news! In hotspot, I've long done off-cpu profiling
-> > > manually by looking at the time between --switch-events. The downside is
-> > > that we also need to track the sched:sched_switch event to get a call
-> > > stack. But this approach also works with dwarf based unwinding, and also
-> > > includes kernel stacks.
-> >
-> > Thanks, I've also briefly thought about the switch event based off-cpu
-> > profiling as it doesn't require root.  But collecting call stacks is hard
-> > and I'd like to do it in kernel/bpf to reduce the overhead.
->
-> I'm all for reducing the overhead, I just wonder about the practicality. At
-> the very least, please make sure to note this limitation explicitly to end
-> users. As a preacher for perf, I have come across lots of people stumbling
-> over `perf record -g` not producing any sensible output because they are
-> simply not aware that this requires frame pointers which are basically non
-> existing on most "normal" distributions. Nowadays `man perf record` tries to
-> educate people, please do the same for the new `--off-cpu` switch.
 
-I think documenting that off-cpu has a dependency on frame pointers
-makes sense. There has been work to make LBR work:
-https://lore.kernel.org/bpf/20210818012937.2522409-1-songliubraving@fb.com/
-DWARF unwinding is problematic and is probably something best kept in
-user land. There is also Intel's CET that may provide an alternate
-backtraces.
 
-More recent Intel and AMD cpus have techniques to turn memory
-locations into registers, an approach generally called memory
-renaming. There is some description here:
-https://www.agner.org/forum/viewtopic.php?t=41
-In LLVM there is a pass to promote memory locations into registers
-called mem2reg. Having the frame pointer as an extra register will
-help this pass as there will be 1 more register to replace something
-from memory. The memory renaming optimization is similar to mem2reg
-except done in the CPU's front-end. It would be interesting to see
-benchmark results on modern CPUs with and without omit-frame-pointer.
-My expectation is that the performance wins aren't as great, if any,
-as they used to be (cc-ed Michael Larabel as I Iove phoronix and it'd
-be awesome if someone could do an omit-frame-pointer shoot-out).
+On 4/24/2022 7:43 AM, Leo Yan wrote:
+> On Sat, Apr 23, 2022 at 05:53:28AM -0700, Andi Kleen wrote:
+>>
+>>> Except SNOOPX_FWD means a no modified cache snooping, it also means it's
+>>> a cache conherency from *remote* socket.  This is quite different from we
+>>> define SNOOPX_PEER, which only snoop from peer CPU or clusters.
+>>>
 
-> > > > With BPF, it can aggregate scheduling stats for interested tasks
-> > > > and/or states and convert the data into a form of perf sample records.
-> > > > I chose the bpf-output event which is a software event supposed to be
-> > > > consumed by BPF programs and renamed it as "offcpu-time".  So it
-> > > > requires no change on the perf report side except for setting sample
-> > > > types of bpf-output event.
-> > > >
-> > > > Basically it collects userspace callstack for tasks as it's what users
-> > > > want mostly.  Maybe we can add support for the kernel stacks but I'm
-> > > > afraid that it'd cause more overhead.  So the offcpu-time event will
-> > > > always have callchains regardless of the command line option, and it
-> > > > enables the children mode in perf report by default.
-> > >
-> > > Has anything changed wrt perf/bpf and user applications not compiled with
-> > > `- fno-omit-frame-pointer`? I.e. does this new utility only work for
-> > > specially compiled applications, or do we also get backtraces for
-> > > "normal" binaries that we can install through package managers?
-> >
-> > I am not aware of such changes, it still needs a frame pointer to get
-> > backtraces.
->
-> May I ask what kind of setup you are using this on? Do you use something like
-> Gentoo or yocto where you compile your whole system with `-fno-omit-frame-
-> pointer`? Because otherwise, any kind of off-cpu time in system libraries will
-> not be resolved properly, no?
+The FWD doesn't have to be *remote*. The definition you quoted is just 
+for the "L3 Miss", which is indeed a remote forward. But we still have 
+cross-core FWD. See Table 19-101.
 
-I agree with your point. Often in cloud environments binaries are
-static blobs linking in all their dependencies. This can aid
-deployment, bug compatibility, etc. Fwiw, all backtraces gathered in
-Google's profiling are frame pointer based. A large motivation for
-this is the security aspect of having a privileged application able to
-snapshot other threads stacks that happens with dwarf based unwinding.
+Actually, X86 uses the PERF_MEM_REMOTE_REMOTE + PERF_MEM_SNOOPX_FWD to 
+indicate the remote FWD, not just SNOOPX_FWD.
 
-In summary, your point is that frame pointer based unwinding is
-largely broken on all major distributions today limiting the utility
-of off-CPU as it is here. I agree, memory renaming in hardware could
-hopefully mean that this isn't the case in distributions in the
-future. Even if it isn't there are alternate backtraces from sources
-like LBR and CET that mean we can fix this other ways.
+>>> If no objection, I prefer we could keep the new snoop type SNOOPX_PEER,
+>>> this would be easier for us to distinguish the semantics and support the
+>>> statistics for SNOOPX_FWD and SNOOPX_PEER separately.
+>>>
+>>> I overlooked the flag SNOOPX_FWD, thanks a lot for Kan's reminding.
+>>
+>> Yes seems better to keep using a separate flag if they don't exactly match.
+>>
+
+Yes, I agree with Andi. If you still think the existing flag combination 
+doesn't match your requirement, a new separate flag should be 
+introduced. I'm not familiar with ARM. I think I will leave it to you 
+and the maintainer to decide.
 
 Thanks,
-Ian
-
-> Thanks
-> --
-> Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-> KDAB (Deutschland) GmbH, a KDAB Group company
-> Tel: +49-30-521325470
-> KDAB - The Qt, C++ and OpenGL Experts
+Kan
