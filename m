@@ -2,142 +2,170 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB26C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 02:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8F2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 06:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237027AbiDZCDY (ORCPT
+        id S244844AbiDZGWR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Apr 2022 22:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50756 "EHLO
+        Tue, 26 Apr 2022 02:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242318AbiDZCDS (ORCPT
+        with ESMTP id S232042AbiDZGWQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 22:03:18 -0400
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D88E65BC;
-        Mon, 25 Apr 2022 19:00:06 -0700 (PDT)
+        Tue, 26 Apr 2022 02:22:16 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CFF13CF4;
+        Mon, 25 Apr 2022 23:19:10 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id kq17so10775235ejb.4;
+        Mon, 25 Apr 2022 23:19:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1650938408; x=1682474408;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IC8noDBK4X51feo0Vpeik5XnaP2Xw/g4NSKwFbVg0tA=;
-  b=vLGPj0GrD4YPOPqIk+cZ3o+fPfIctF3EEat2gzPKIhz1aUf/sUMWyACX
-   3Fs7FW0YXELiL7hOrI1ETzGldjwQkjqVGe96mVX4RroEEJOjgo18aXwBi
-   Cg8C0WPykMLhVIK/PkBP69QNWe0cRiifkPmj612c0QIiIERW+0hc8hXuv
-   A=;
-X-IronPort-AV: E=Sophos;i="5.90,289,1643673600"; 
-   d="scan'208";a="213855622"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-828bd003.us-east-1.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP; 26 Apr 2022 02:00:05 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-iad-1a-828bd003.us-east-1.amazon.com (Postfix) with ESMTPS id 676398128D;
-        Tue, 26 Apr 2022 01:59:58 +0000 (UTC)
-Received: from EX13D02UWB001.ant.amazon.com (10.43.161.240) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Tue, 26 Apr 2022 01:59:34 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D02UWB001.ant.amazon.com (10.43.161.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Tue, 26 Apr 2022 01:59:34 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1497.32 via Frontend Transport; Tue, 26 Apr 2022 01:59:34
- +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id C5AFE20DB; Tue, 26 Apr 2022 01:59:33 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
-        <leo.yan@linaro.org>, <acme@kernel.org>
-CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
-        <Nick.Forrington@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <andrew.kilroy@arm.com>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
-        <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
-Subject: [PATCH v6 3/5] perf mem: Print snoop peer flag
-Date:   Tue, 26 Apr 2022 01:59:24 +0000
-Message-ID: <20220426015926.22011-4-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220426015926.22011-1-alisaidi@amazon.com>
-References: <20220426015926.22011-1-alisaidi@amazon.com>
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1h3A+2ACOk79wIDhtERlYmDZwFSMTfhWJdzUK1wRn0k=;
+        b=DcPALxPT7L9hw1cWhpXeR5/i2R4SmXKryIX2h4XFeGqw+MuI9oJ1IOxegzppwkw0GE
+         9ThFiSGyQCprWmFZfwrQ4qz73s4y4Hm1EdkYNloI7JmlEQ1WcyYFzttt+XDOgcvJN6JN
+         kd52/PMU7iIpW1w9NPUjesBAKuq3Z7CcmZbHuf7x+/ZTNeUB5cnDXP6ZDEyhApQ55j+j
+         oTupkVvAeOxcsNZJY2wo6J7wgBGXKkKQctv/+d4TxJeXJdVpjUZUO335CCrLAU9RTeFy
+         L3tduVLCLve0fYrSy1uxwhpufD0gRjVU2qTrZQvJUBEJeAc7shA7XRGaIm+PQ+/hLZ/J
+         KWYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1h3A+2ACOk79wIDhtERlYmDZwFSMTfhWJdzUK1wRn0k=;
+        b=plkjky9a9MGSJxINT/Ajz4TnV2B6B2xBCr40eShlqEUe/RtNPgJCl7g8Th8d1Sic3t
+         wuqi3Hz4LWg00MTP/ZxOGozFGqXe4gAco4x/apv0q2Fpa/JxeX9AxxOlj+sWj6uLUS4k
+         VIHmNnE4VUGx2Br8h/zvJMsW8Vv1E2UbtG1Sc6J7rnRhmacymHZnqT24o5mO9xp5CjEM
+         OHTZUCl42305q6QisZ6dZO63Upg+K4dVpAe5geK69b7Eo+nFlShu8lPYlH0t7b1K2Lgd
+         tII6sf1ri64fo3zssbUHdmHyfGyB43wEFRCjA2cSmcvaCqAaVwvI7I30H7jhYnPYEOQB
+         Aa9g==
+X-Gm-Message-State: AOAM5301Idarpb4uv7mu983SA8Uz8+5A1cs0NZp9ZpG2f3klQE3tSaZt
+        WBJqeRNsZkj1gZlhdrlTqQk=
+X-Google-Smtp-Source: ABdhPJyYeSjACawgXozOsLlD5PJmBpWMvkhibqBuvLt1NJF3+yDr/4kr/3LKOzaXiqNK3XADQmp4/A==
+X-Received: by 2002:a17:907:2159:b0:6f3:a307:d01d with SMTP id rk25-20020a170907215900b006f3a307d01dmr5218614ejb.760.1650953948694;
+        Mon, 25 Apr 2022 23:19:08 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id u6-20020a170906124600b006e843964f9asm4312058eja.55.2022.04.25.23.19.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Apr 2022 23:19:08 -0700 (PDT)
+Date:   Tue, 26 Apr 2022 08:19:05 +0200
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH perf/core 1/5] libbpf: Add bpf_program__set_insns function
+Message-ID: <YmeO2YOHv5jRu/ca@krava>
+References: <20220422100025.1469207-1-jolsa@kernel.org>
+ <20220422100025.1469207-2-jolsa@kernel.org>
+ <52f36e85-fea6-e307-344e-5bbb5b8431f7@iogearbox.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52f36e85-fea6-e307-344e-5bbb5b8431f7@iogearbox.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+On Mon, Apr 25, 2022 at 06:22:37PM +0200, Daniel Borkmann wrote:
+> On 4/22/22 12:00 PM, Jiri Olsa wrote:
+> > Adding bpf_program__set_insns that allows to set new
+> > instructions for program.
+> > 
+> > Also moving bpf_program__attach_kprobe_multi_opts on
+> > the proper name sorted place in map file.
+> > 
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >   tools/lib/bpf/libbpf.c   |  8 ++++++++
+> >   tools/lib/bpf/libbpf.h   | 12 ++++++++++++
+> >   tools/lib/bpf/libbpf.map |  3 ++-
+> >   3 files changed, 22 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > index 809fe209cdcc..284790d81c1b 100644
+> > --- a/tools/lib/bpf/libbpf.c
+> > +++ b/tools/lib/bpf/libbpf.c
+> > @@ -8457,6 +8457,14 @@ size_t bpf_program__insn_cnt(const struct bpf_program *prog)
+> >   	return prog->insns_cnt;
+> >   }
+> > +void bpf_program__set_insns(struct bpf_program *prog,
+> > +			    struct bpf_insn *insns, size_t insns_cnt)
+> > +{
+> > +	free(prog->insns);
+> > +	prog->insns = insns;
+> > +	prog->insns_cnt = insns_cnt;
+> > +}
+> > +
+> >   int bpf_program__set_prep(struct bpf_program *prog, int nr_instances,
+> >   			  bpf_program_prep_t prep)
+> >   {
+> > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> > index 05dde85e19a6..b31ad58d335f 100644
+> > --- a/tools/lib/bpf/libbpf.h
+> > +++ b/tools/lib/bpf/libbpf.h
+> > @@ -323,6 +323,18 @@ struct bpf_insn;
+> >    * different.
+> >    */
+> >   LIBBPF_API const struct bpf_insn *bpf_program__insns(const struct bpf_program *prog);
+> > +
+> > +/**
+> > + * @brief **bpf_program__set_insns()** can set BPF program's underlying
+> > + * BPF instructions.
+> > + * @param prog BPF program for which to return instructions
+> > + * @param insn a pointer to an array of BPF instructions
+> > + * @param insns_cnt number of `struct bpf_insn`'s that form
+> > + * specified BPF program
+> > + */
+> > +LIBBPF_API void bpf_program__set_insns(struct bpf_program *prog,
+> > +				       struct bpf_insn *insns, size_t insns_cnt);
+> > +
+> 
+> Iiuc, patch 2 should be squashed into this one given they logically belong to the
+> same change?
 
-Since PERF_MEM_SNOOPX_PEER flag is a new snoop type, print this flag if
-it is set.
+right, that's probably better
 
-Before:
-       memstress  3603 [020]   122.463754:          1            l1d-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          l1d-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1            llc-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          llc-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          tlb-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1              memory:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+> 
+> Fwiw, I think the API description should be elaborated a bit more, in particular that
+> the passed-in insns need to be from allocated dynamic memory which is later on passed
+> to free(), and maybe also constraints at which point in time bpf_program__set_insns()
+> may be called.. (as well as high-level description on potential use cases e.g. around
+> patch 4).
 
-After:
+ok, will add that
 
-       memstress  3603 [020]   122.463754:          1            l1d-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          l1d-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1            llc-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          llc-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          tlb-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1              memory:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+thanks,
+jirka
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Ali Saidi <alisaidi@amazon.com>
-Tested-by: Ali Saidi <alisaidi@amazon.com>
----
- tools/perf/util/mem-events.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index efaf263464b9..db5225caaabe 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -410,6 +410,11 @@ static const char * const snoop_access[] = {
- 	"HitM",
- };
- 
-+static const char * const snoopx_access[] = {
-+	"Fwd",
-+	"Peer",
-+};
-+
- int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- {
- 	size_t i, l = 0;
-@@ -430,13 +435,20 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- 		}
- 		l += scnprintf(out + l, sz - l, snoop_access[i]);
- 	}
--	if (mem_info &&
--	     (mem_info->data_src.mem_snoopx & PERF_MEM_SNOOPX_FWD)) {
-+
-+	m = 0;
-+	if (mem_info)
-+		m = mem_info->data_src.mem_snoopx;
-+
-+	for (i = 0; m && i < ARRAY_SIZE(snoopx_access); i++, m >>= 1) {
-+		if (!(m & 0x1))
-+			continue;
-+
- 		if (l) {
- 			strcat(out, " or ");
- 			l += 4;
- 		}
--		l += scnprintf(out + l, sz - l, "Fwd");
-+		l += scnprintf(out + l, sz - l, snoopx_access[i]);
- 	}
- 
- 	if (*out == '\0')
--- 
-2.32.0
-
+> 
+> >   /**
+> >    * @brief **bpf_program__insn_cnt()** returns number of `struct bpf_insn`'s
+> >    * that form specified BPF program.
+> > diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+> > index dd35ee58bfaa..afa10d24ab41 100644
+> > --- a/tools/lib/bpf/libbpf.map
+> > +++ b/tools/lib/bpf/libbpf.map
+> > @@ -444,7 +444,8 @@ LIBBPF_0.8.0 {
+> >   	global:
+> >   		bpf_object__destroy_subskeleton;
+> >   		bpf_object__open_subskeleton;
+> > +		bpf_program__attach_kprobe_multi_opts;
+> > +		bpf_program__set_insns;
+> >   		libbpf_register_prog_handler;
+> >   		libbpf_unregister_prog_handler;
+> > -		bpf_program__attach_kprobe_multi_opts;
+> >   } LIBBPF_0.7.0;
+> > 
+> 
