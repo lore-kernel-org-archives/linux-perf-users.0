@@ -2,204 +2,192 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A407C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 15:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD9DC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 16:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352697AbiDZQBg (ORCPT
+        id S1353038AbiDZQmA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Apr 2022 12:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57644 "EHLO
+        Tue, 26 Apr 2022 12:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352709AbiDZQBd (ORCPT
+        with ESMTP id S235466AbiDZQl7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Apr 2022 12:01:33 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C38415F5BE;
-        Tue, 26 Apr 2022 08:58:24 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id 79so20525532iou.7;
-        Tue, 26 Apr 2022 08:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d8FLyaN1lsrCzWPKXANEWACyzqrmLi1Yyh4Z8+MPj3M=;
-        b=ab0y09KjsgKm4bMjyedLySmbGf5nHdwS4JDBlHmnofM6W+bpJ6tYAGN5GYbMgFzLDf
-         eNbO2iftFU6sShQTTHGzekiztz2RG9gDfKzLPE1Xa8XvCNhpmqS7CwFhtMvb7xqhAmHU
-         rUxnKIcEqK+rsgycLTzoOqhrEHDFMRe3518MoZdhvgaQ9ntJYncGx+GLFTpfjcIYXIBG
-         RSrThPQhZSeEs5Rh0ICWc4a2O36rjRrZcGBYP61YDPV5lAeuqbIL78GP+cj5jdTmYluE
-         WVbzS5JS4hwfP5lvGu5T6N9rOcNAN5od771ouhWbfd4O/Yx/alxZcHffZ55z/9ISFcGB
-         MVQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d8FLyaN1lsrCzWPKXANEWACyzqrmLi1Yyh4Z8+MPj3M=;
-        b=348smgSHfFSkGS/rX4GYKgkwQDFB7gxbDXg4S2BfXfSQZuWY5Pf6pWFjjDyPnz8Akg
-         5N79ADUHOPPeMla/WrWCmco8LsZK41RcltFudOlimH/BwwkgI4UDtmDyoQi2499vl18P
-         bjXwM+V9kvemrlaRNocyVsk6Lu9/0YlkErCjYyS3abY0Kn4ikwBCVS3kk99S8VXlo9m9
-         SZAukVDd1uEIfBOeobXGQ8pWfFAzTmLtP5R4DrlzZmPNOR4jY79tBc9dZi5hInHsHO4s
-         ylefg2OYledgMx8ev8v7alH8HHETzA8iM7B+4XS4TlNJg1XVeQ2UrPEpZARRxZkWxEya
-         kmiw==
-X-Gm-Message-State: AOAM530omEp47rO65xPx12ocYa2aP6XG5nDa6MVcFj6HAjXyirGpi0ET
-        9BoVpX3Q+NIck65PdKJVQpoIZwvJ91BC2FH8GP4=
-X-Google-Smtp-Source: ABdhPJxlBp941tDGyA4ji5llToCTNpwkqcM1zPijWP6pE88/bFK42Tx/Y4oKZcA8+Yjc9x9zP66kzcBg24odBfuJiJw=
-X-Received: by 2002:a92:c247:0:b0:2cc:1798:74fe with SMTP id
- k7-20020a92c247000000b002cc179874femr9258731ilo.239.1650988703597; Tue, 26
- Apr 2022 08:58:23 -0700 (PDT)
+        Tue, 26 Apr 2022 12:41:59 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA831183B3;
+        Tue, 26 Apr 2022 09:38:46 -0700 (PDT)
+X-UUID: cea183affb84489b997e4120d009dd1d-20220427
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.4,REQID:c9cc3d3b-73c9-4588-84f3-2f2f0df50254,OB:0,LO
+        B:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACTI
+        ON:release,TS:0
+X-CID-META: VersionHash:faefae9,CLOUDID:9cbe8ec6-85ee-4ac1-ac05-bd3f1e72e732,C
+        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:-5,EDM:-3,File:nil,QS:0,BEC:ni
+        l
+X-UUID: cea183affb84489b997e4120d009dd1d-20220427
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <lecopzer.chen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1666426999; Wed, 27 Apr 2022 00:38:42 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Wed, 27 Apr 2022 00:38:40 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 27 Apr 2022 00:38:40 +0800
+From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
+To:     <lecopzer.chen@mediatek.com>, <pmladek@suse.com>
+CC:     <acme@kernel.org>, <akpm@linux-foundation.org>,
+        <alexander.shishkin@linux.intel.com>, <catalin.marinas@arm.com>,
+        <davem@davemloft.net>, <jolsa@redhat.com>, <jthierry@redhat.com>,
+        <keescook@chromium.org>, <kernelfans@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <mark.rutland@arm.com>,
+        <masahiroy@kernel.org>, <matthias.bgg@gmail.com>, <maz@kernel.org>,
+        <mcgrof@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <nixiaoming@huawei.com>, <peterz@infradead.org>,
+        <sparclinux@vger.kernel.org>, <sumit.garg@linaro.org>,
+        <wangqing@vivo.com>, <will@kernel.org>, <yj.chiang@mediatek.com>
+Subject: Re: [PATCH v3 5/5] arm64: Enable perf events based hard lockup detector
+Date:   Wed, 27 Apr 2022 00:38:40 +0800
+Message-ID: <20220426163840.18871-1-lecopzer.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20220421163035.26402-1-lecopzer.chen@mediatek.com>
+References: <20220421163035.26402-1-lecopzer.chen@mediatek.com>
 MIME-Version: 1.0
-References: <20220422100025.1469207-1-jolsa@kernel.org> <20220422100025.1469207-2-jolsa@kernel.org>
- <52f36e85-fea6-e307-344e-5bbb5b8431f7@iogearbox.net> <CAEf4BzZOKosYRHwK2CfZzpTUcDdrLXPXbYax++Q_PHCMcNdqCw@mail.gmail.com>
- <YmeXx0mfy4Nr5jEB@krava>
-In-Reply-To: <YmeXx0mfy4Nr5jEB@krava>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 26 Apr 2022 08:58:12 -0700
-Message-ID: <CAEf4Bza42-aN7dZAWsH1H5KNMhSZh6nUj0WQ5MkOkNjBq2At_A@mail.gmail.com>
-Subject: Re: [PATCH perf/core 1/5] libbpf: Add bpf_program__set_insns function
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 11:57 PM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Mon, Apr 25, 2022 at 11:19:09PM -0700, Andrii Nakryiko wrote:
-> > On Mon, Apr 25, 2022 at 9:22 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > >
-> > > On 4/22/22 12:00 PM, Jiri Olsa wrote:
-> > > > Adding bpf_program__set_insns that allows to set new
-> > > > instructions for program.
-> > > >
-> > > > Also moving bpf_program__attach_kprobe_multi_opts on
-> > > > the proper name sorted place in map file.
-> >
-> > would make sense to fix it as a separate patch, it has nothing to do
-> > with bpf_program__set_insns() API itself
->
-> np
->
-> >
-> > > >
-> > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > ---
-> > > >   tools/lib/bpf/libbpf.c   |  8 ++++++++
-> > > >   tools/lib/bpf/libbpf.h   | 12 ++++++++++++
-> > > >   tools/lib/bpf/libbpf.map |  3 ++-
-> > > >   3 files changed, 22 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > > > index 809fe209cdcc..284790d81c1b 100644
-> > > > --- a/tools/lib/bpf/libbpf.c
-> > > > +++ b/tools/lib/bpf/libbpf.c
-> > > > @@ -8457,6 +8457,14 @@ size_t bpf_program__insn_cnt(const struct bpf_program *prog)
-> > > >       return prog->insns_cnt;
-> > > >   }
-> > > >
-> > > > +void bpf_program__set_insns(struct bpf_program *prog,
-> > > > +                         struct bpf_insn *insns, size_t insns_cnt)
-> > > > +{
-> > > > +     free(prog->insns);
-> > > > +     prog->insns = insns;
-> > > > +     prog->insns_cnt = insns_cnt;
-> >
-> > let's not store user-provided pointer here. Please realloc prog->insns
-> > as necessary and copy over insns into it.
-> >
-> > Also let's at least add the check for prog->loaded and return -EBUSY
-> > in such a case. And of course this API should return int, not void.
->
-> ok, will change
->
-> >
-> > > > +}
-> > > > +
-> > > >   int bpf_program__set_prep(struct bpf_program *prog, int nr_instances,
-> > > >                         bpf_program_prep_t prep)
-> > > >   {
-> > > > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-> > > > index 05dde85e19a6..b31ad58d335f 100644
-> > > > --- a/tools/lib/bpf/libbpf.h
-> > > > +++ b/tools/lib/bpf/libbpf.h
-> > > > @@ -323,6 +323,18 @@ struct bpf_insn;
-> > > >    * different.
-> > > >    */
-> > > >   LIBBPF_API const struct bpf_insn *bpf_program__insns(const struct bpf_program *prog);
-> > > > +
-> > > > +/**
-> > > > + * @brief **bpf_program__set_insns()** can set BPF program's underlying
-> > > > + * BPF instructions.
-> > > > + * @param prog BPF program for which to return instructions
-> > > > + * @param insn a pointer to an array of BPF instructions
-> > > > + * @param insns_cnt number of `struct bpf_insn`'s that form
-> > > > + * specified BPF program
-> > > > + */
-> >
-> > This API makes me want to cry... but I can't come up with anything
-> > better for perf's use case.
-> >
+> > The call path for hardlockup_detector_perf_init() is really complicated,
+> > 
+> > I have some approach about this:
+> >   1. abstract second variable with Kconfig.
+> >     a. Add a ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT
+> >        (the naming is a little bit long, may have better naming)
+> >        in "lib/Kconfig.debug" if ARCH knew they do need delayed init for
+> >        lockup detector.
+> > 
+> >        + select ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT if HAVE_HARDLOCKUP_DETECTOR_PERF
+> > 
+> >     b. and the watchdog_nmi_probe would look like.
+> > 
+> >     +int __init watchdog_nmi_probe(void)
+> >     +{
+> >     +	int ret;
+> >     +
+> >     + /* comment here... */
+> >     +	if (!arm_pmu_irq_is_nmi())
+> >     +		return -ENODEV;
+> >     +
+> >     +	ret = hardlockup_detector_perf_init();
+> >     +	if (ret &&
+> >     +		  IS_ENABLED(ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT))
+> >     +		return -EBUSY;
+> >     +
+> >     + return ret;
+> >     +}
+> > 
+> >     and than we can have only one variable (allow_lockup_detector_init_retry)
+> >     in 4th patch.
+> > 
+> >  
+> >   2. base on ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT, change
+> >      inside hardlockup_detector_perf_init().
+> > 
+> > int __init hardlockup_detector_perf_init(void)
+> > {
+> > 	int ret = hardlockup_detector_event_create();
+> > 
+> > 	if (ret) {
+> > 		pr_info("Perf NMI watchdog permanently disabled\n");
+> > +
+> > +		/* comment here... */
+> > +		if (IS_ENABLED(ARCH_SUPPORTS_HARDLOCKUP_DETECTOR_DLAYED_INIT))
+> > +			ret = -EBUSY;
+> > 	} else {
+> > 		perf_event_release_kernel(this_cpu_read(watchdog_ev));
+> > 		this_cpu_write(watchdog_ev, NULL);
+> > 	}
+> > 	return ret;
+> > }
+> > 
+> >   3. Don't add any other config, try to find a proper location
+> >      to return -EBUSY in hardlockup_detector_event_create().
+> >      IMHO, this may involve the PMU subsys and should be
+> >      the hardest approach.
+> 
+> Honestly, everything looks a bit ugly and complicated to me.
+> 
+> OKAY, is the return value actually important?
+> 
+> What about just introducing the API that will allow to try to
+> initialize the hardlockup detector later:
+> 
+> /*
+>  * Retry hardlockup detector init. It is useful when it requires some
+>  * functionality that has to be initialized later on a particular
+>  * platform.
+>  */
+> void __init retry_lockup_detector_init(void)
+> {
+> 	/* Must be called before late init calls. */
+> 	if (!allow_lockup_detector_init_retry)
+> 		return 0;
+> 
+> 	queue_work_on(__smp_processor_id(), system_wq, &detector_work);
+> }
+> 
+> /*
+>  * Ensure that optional delayed hardlockup init is proceed before
+>  * the init code and memory is freed.
+>  */
+> static int __init lockup_detector_check(void)
+> {
+> 	/* Prevent any later retry. */
+> 	allow_lockup_detector_init_retry = false;
+> 
+> 	/* Make sure no work is pending. */
+> 	flush_work(&detector_work);
+> }
+> late_initcall_sync(lockup_detector_check);
+> 
+> You could leave lockup_detector_init() as it is. It does not really
+> matter what was the exact error value returned by watchdog_nmi_probe().
+> 
+> Then you could call retry_lockup_detector_init() in
+> armv8_pmu_driver_init() and be done with it.
+> 
+> It will be universal API that might be used on any architecture
+> for any reason. If nobody calls retry_lockup_detector_init()
+> then nohing will happen and the code will work as before.
+> 
+> It might make sense to provide the API only on architectures that
+> really need it. We could hide it under
+> 
+>    ARCH_NEED_DELAYED_HARDLOCKUP_DETECTOR_INIT
+> 
+> , similar to ARCH_NEEDS_CPU_IDLE_COUPLE.
+> 
 
-So thinking about this some more. If we make libbpf not to close maps
-and prog FDs on BPF program load failure automatically and instead
-doing it in bpf_object__close(), which would seem to be a totally fine
-semantics and won't break any reasonable application as they always
-have to call bpf_object__close() anyways to clean up all the
-resources; we wouldn't need this horror of bpf_program__set_insns().
-Your BPF program would fail to load, but you'll get its fully prepared
-instructions with bpf_program__insns(), then you can just append
-correct preamble. Meanwhile, all the maps will be created (they are
-always created before the first program load), so all the FDs will be
-correct.
+During implementation, if I add ARCH_NEED_DELAYED_..., there will contain
+many enclosed ifdef-endif and is a little bit ugly.
+Also, I didn't find a must-have reason to this Kconfig after I rebase from
+your suggestion.
 
-This is certainly advanced knowledge of libbpf behavior, but the use
-case you are trying to solve is also very unique and advanced (and I
-wouldn't recommend anyone trying to do this anyways). WDYT? Would that
-work?
+The one calls retry_lockup_detector_init() must fail at lockup_detector_init,
+so I think anyone who has aleady failed at lockup_detector_init() has right
+to retry no matter HW, SW or Arch reason.
+Thus I might not introduce a new Kconfig in v4, and I would be glad to see
+if any further commet on this.
 
-> > But it can only more or less safely and sanely be used from the
-> > prog_prepare_load_fn callback, so please add a big warning here saying
-> > that this is a very advanced libbpf API and the user needs to know
-> > what they are doing and this should be used from prog_prepare_load_fn
-> > callback only. If bpf_program__set_insns() is called before
-> > prog_prepare_load_fn any map/subprog/etc relocation will most probably
-> > fail or corrupt BPF program code.
->
-> will add the warnings
->
-> >
-> > > > +LIBBPF_API void bpf_program__set_insns(struct bpf_program *prog,
-> > > > +                                    struct bpf_insn *insns, size_t insns_cnt);
-> >
-> > s/insns_cnt/insn_cnt/
-> >
-> > > > +
-> > >
-> > > Iiuc, patch 2 should be squashed into this one given they logically belong to the
-> > > same change?
-> > >
-> > > Fwiw, I think the API description should be elaborated a bit more, in particular that
-> > > the passed-in insns need to be from allocated dynamic memory which is later on passed
-> > > to free(), and maybe also constraints at which point in time bpf_program__set_insns()
-> > > may be called.. (as well as high-level description on potential use cases e.g. around
-> > > patch 4).
-> >
-> > Yep, patch #1 is kind of broken without patch #2, so let's combine them.
->
-> ok
->
-> thanks,
-> jirka
+
+
+
+
+
