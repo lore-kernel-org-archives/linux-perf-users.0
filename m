@@ -2,100 +2,204 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06F7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 14:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A407C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 15:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237262AbiDZOFp (ORCPT
+        id S1352697AbiDZQBg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Apr 2022 10:05:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44350 "EHLO
+        Tue, 26 Apr 2022 12:01:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351375AbiDZODx (ORCPT
+        with ESMTP id S1352709AbiDZQBd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Apr 2022 10:03:53 -0400
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C2E1A82C;
-        Tue, 26 Apr 2022 07:00:37 -0700 (PDT)
+        Tue, 26 Apr 2022 12:01:33 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C38415F5BE;
+        Tue, 26 Apr 2022 08:58:24 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id 79so20525532iou.7;
+        Tue, 26 Apr 2022 08:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1650981647; x=1682517647;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2kGoDhwDDU4SUv0yonPrLgPdKoDB23uSHWFWBT2qSyo=;
-  b=ZyvvWUzNOp8iKFNsAEIBTB2cipSq4YEOVRY/9f57a1+CXJV75tgoo00b
-   OKQpQexRYzEiFE1/1sTKFOks4IH/tQdhlaKTJIXgGolUDWb56P6zwFovm
-   bCRnKLAdESugIo+3xLQ9FCvl+GuoBzVzmv9YzY9QKwiDaDHcjph4oQb1I
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.90,291,1643673600"; 
-   d="scan'208";a="83172134"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-4ba5c7da.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP; 26 Apr 2022 14:00:20 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-iad-1a-4ba5c7da.us-east-1.amazon.com (Postfix) with ESMTPS id 4F20630008C;
-        Tue, 26 Apr 2022 14:00:14 +0000 (UTC)
-Received: from EX13D02UWB001.ant.amazon.com (10.43.161.240) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Tue, 26 Apr 2022 13:59:47 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
- EX13D02UWB001.ant.amazon.com (10.43.161.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Tue, 26 Apr 2022 13:59:47 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
- Server id 15.0.1497.32 via Frontend Transport; Tue, 26 Apr 2022 13:59:46
- +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 5192F20ED; Tue, 26 Apr 2022 13:59:45 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
-        <leo.yan@linaro.org>, <acme@kernel.org>
-CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
-        <Nick.Forrington@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <andrew.kilroy@arm.com>, <james.clark@arm.com>,
-        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
-        <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
-Subject: [PATCH v7 1/5] perf: Add SNOOP_PEER flag to perf mem data struct
-Date:   Tue, 26 Apr 2022 13:59:33 +0000
-Message-ID: <20220426135937.18497-2-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220426135937.18497-1-alisaidi@amazon.com>
-References: <20220426135937.18497-1-alisaidi@amazon.com>
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d8FLyaN1lsrCzWPKXANEWACyzqrmLi1Yyh4Z8+MPj3M=;
+        b=ab0y09KjsgKm4bMjyedLySmbGf5nHdwS4JDBlHmnofM6W+bpJ6tYAGN5GYbMgFzLDf
+         eNbO2iftFU6sShQTTHGzekiztz2RG9gDfKzLPE1Xa8XvCNhpmqS7CwFhtMvb7xqhAmHU
+         rUxnKIcEqK+rsgycLTzoOqhrEHDFMRe3518MoZdhvgaQ9ntJYncGx+GLFTpfjcIYXIBG
+         RSrThPQhZSeEs5Rh0ICWc4a2O36rjRrZcGBYP61YDPV5lAeuqbIL78GP+cj5jdTmYluE
+         WVbzS5JS4hwfP5lvGu5T6N9rOcNAN5od771ouhWbfd4O/Yx/alxZcHffZ55z/9ISFcGB
+         MVQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d8FLyaN1lsrCzWPKXANEWACyzqrmLi1Yyh4Z8+MPj3M=;
+        b=348smgSHfFSkGS/rX4GYKgkwQDFB7gxbDXg4S2BfXfSQZuWY5Pf6pWFjjDyPnz8Akg
+         5N79ADUHOPPeMla/WrWCmco8LsZK41RcltFudOlimH/BwwkgI4UDtmDyoQi2499vl18P
+         bjXwM+V9kvemrlaRNocyVsk6Lu9/0YlkErCjYyS3abY0Kn4ikwBCVS3kk99S8VXlo9m9
+         SZAukVDd1uEIfBOeobXGQ8pWfFAzTmLtP5R4DrlzZmPNOR4jY79tBc9dZi5hInHsHO4s
+         ylefg2OYledgMx8ev8v7alH8HHETzA8iM7B+4XS4TlNJg1XVeQ2UrPEpZARRxZkWxEya
+         kmiw==
+X-Gm-Message-State: AOAM530omEp47rO65xPx12ocYa2aP6XG5nDa6MVcFj6HAjXyirGpi0ET
+        9BoVpX3Q+NIck65PdKJVQpoIZwvJ91BC2FH8GP4=
+X-Google-Smtp-Source: ABdhPJxlBp941tDGyA4ji5llToCTNpwkqcM1zPijWP6pE88/bFK42Tx/Y4oKZcA8+Yjc9x9zP66kzcBg24odBfuJiJw=
+X-Received: by 2002:a92:c247:0:b0:2cc:1798:74fe with SMTP id
+ k7-20020a92c247000000b002cc179874femr9258731ilo.239.1650988703597; Tue, 26
+ Apr 2022 08:58:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20220422100025.1469207-1-jolsa@kernel.org> <20220422100025.1469207-2-jolsa@kernel.org>
+ <52f36e85-fea6-e307-344e-5bbb5b8431f7@iogearbox.net> <CAEf4BzZOKosYRHwK2CfZzpTUcDdrLXPXbYax++Q_PHCMcNdqCw@mail.gmail.com>
+ <YmeXx0mfy4Nr5jEB@krava>
+In-Reply-To: <YmeXx0mfy4Nr5jEB@krava>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 26 Apr 2022 08:58:12 -0700
+Message-ID: <CAEf4Bza42-aN7dZAWsH1H5KNMhSZh6nUj0WQ5MkOkNjBq2At_A@mail.gmail.com>
+Subject: Re: [PATCH perf/core 1/5] libbpf: Add bpf_program__set_insns function
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a flag to the perf mem data struct to signal that a request caused a
-cache-to-cache transfer of a line from a peer of the requestor and
-wasn't sourced from a lower cache level.  The line being moved from one
-peer cache to another has latency and performance implications. On Arm64
-Neoverse systems the data source can indicate a cache-to-cache transfer
-but not if the line is dirty or clean, so instead of overloading HITM
-define a new flag that indicates this type of transfer.
+On Mon, Apr 25, 2022 at 11:57 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> On Mon, Apr 25, 2022 at 11:19:09PM -0700, Andrii Nakryiko wrote:
+> > On Mon, Apr 25, 2022 at 9:22 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > >
+> > > On 4/22/22 12:00 PM, Jiri Olsa wrote:
+> > > > Adding bpf_program__set_insns that allows to set new
+> > > > instructions for program.
+> > > >
+> > > > Also moving bpf_program__attach_kprobe_multi_opts on
+> > > > the proper name sorted place in map file.
+> >
+> > would make sense to fix it as a separate patch, it has nothing to do
+> > with bpf_program__set_insns() API itself
+>
+> np
+>
+> >
+> > > >
+> > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > > ---
+> > > >   tools/lib/bpf/libbpf.c   |  8 ++++++++
+> > > >   tools/lib/bpf/libbpf.h   | 12 ++++++++++++
+> > > >   tools/lib/bpf/libbpf.map |  3 ++-
+> > > >   3 files changed, 22 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > > > index 809fe209cdcc..284790d81c1b 100644
+> > > > --- a/tools/lib/bpf/libbpf.c
+> > > > +++ b/tools/lib/bpf/libbpf.c
+> > > > @@ -8457,6 +8457,14 @@ size_t bpf_program__insn_cnt(const struct bpf_program *prog)
+> > > >       return prog->insns_cnt;
+> > > >   }
+> > > >
+> > > > +void bpf_program__set_insns(struct bpf_program *prog,
+> > > > +                         struct bpf_insn *insns, size_t insns_cnt)
+> > > > +{
+> > > > +     free(prog->insns);
+> > > > +     prog->insns = insns;
+> > > > +     prog->insns_cnt = insns_cnt;
+> >
+> > let's not store user-provided pointer here. Please realloc prog->insns
+> > as necessary and copy over insns into it.
+> >
+> > Also let's at least add the check for prog->loaded and return -EBUSY
+> > in such a case. And of course this API should return int, not void.
+>
+> ok, will change
+>
+> >
+> > > > +}
+> > > > +
+> > > >   int bpf_program__set_prep(struct bpf_program *prog, int nr_instances,
+> > > >                         bpf_program_prep_t prep)
+> > > >   {
+> > > > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> > > > index 05dde85e19a6..b31ad58d335f 100644
+> > > > --- a/tools/lib/bpf/libbpf.h
+> > > > +++ b/tools/lib/bpf/libbpf.h
+> > > > @@ -323,6 +323,18 @@ struct bpf_insn;
+> > > >    * different.
+> > > >    */
+> > > >   LIBBPF_API const struct bpf_insn *bpf_program__insns(const struct bpf_program *prog);
+> > > > +
+> > > > +/**
+> > > > + * @brief **bpf_program__set_insns()** can set BPF program's underlying
+> > > > + * BPF instructions.
+> > > > + * @param prog BPF program for which to return instructions
+> > > > + * @param insn a pointer to an array of BPF instructions
+> > > > + * @param insns_cnt number of `struct bpf_insn`'s that form
+> > > > + * specified BPF program
+> > > > + */
+> >
+> > This API makes me want to cry... but I can't come up with anything
+> > better for perf's use case.
+> >
 
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
----
- include/uapi/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So thinking about this some more. If we make libbpf not to close maps
+and prog FDs on BPF program load failure automatically and instead
+doing it in bpf_object__close(), which would seem to be a totally fine
+semantics and won't break any reasonable application as they always
+have to call bpf_object__close() anyways to clean up all the
+resources; we wouldn't need this horror of bpf_program__set_insns().
+Your BPF program would fail to load, but you'll get its fully prepared
+instructions with bpf_program__insns(), then you can just append
+correct preamble. Meanwhile, all the maps will be created (they are
+always created before the first program load), so all the FDs will be
+correct.
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index d37629dbad72..7b88bfd097dc 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -1310,7 +1310,7 @@ union perf_mem_data_src {
- #define PERF_MEM_SNOOP_SHIFT	19
- 
- #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
--/* 1 free */
-+#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
- #define PERF_MEM_SNOOPX_SHIFT  38
- 
- /* locked instruction */
--- 
-2.32.0
+This is certainly advanced knowledge of libbpf behavior, but the use
+case you are trying to solve is also very unique and advanced (and I
+wouldn't recommend anyone trying to do this anyways). WDYT? Would that
+work?
 
+> > But it can only more or less safely and sanely be used from the
+> > prog_prepare_load_fn callback, so please add a big warning here saying
+> > that this is a very advanced libbpf API and the user needs to know
+> > what they are doing and this should be used from prog_prepare_load_fn
+> > callback only. If bpf_program__set_insns() is called before
+> > prog_prepare_load_fn any map/subprog/etc relocation will most probably
+> > fail or corrupt BPF program code.
+>
+> will add the warnings
+>
+> >
+> > > > +LIBBPF_API void bpf_program__set_insns(struct bpf_program *prog,
+> > > > +                                    struct bpf_insn *insns, size_t insns_cnt);
+> >
+> > s/insns_cnt/insn_cnt/
+> >
+> > > > +
+> > >
+> > > Iiuc, patch 2 should be squashed into this one given they logically belong to the
+> > > same change?
+> > >
+> > > Fwiw, I think the API description should be elaborated a bit more, in particular that
+> > > the passed-in insns need to be from allocated dynamic memory which is later on passed
+> > > to free(), and maybe also constraints at which point in time bpf_program__set_insns()
+> > > may be called.. (as well as high-level description on potential use cases e.g. around
+> > > patch 4).
+> >
+> > Yep, patch #1 is kind of broken without patch #2, so let's combine them.
+>
+> ok
+>
+> thanks,
+> jirka
