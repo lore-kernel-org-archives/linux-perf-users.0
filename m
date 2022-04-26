@@ -2,126 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B22CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Apr 2022 20:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F41C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 01:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245303AbiDYVC2 (ORCPT
+        id S241836AbiDZCCu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Apr 2022 17:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48866 "EHLO
+        Mon, 25 Apr 2022 22:02:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240584AbiDYVCX (ORCPT
+        with ESMTP id S241735AbiDZCCt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 17:02:23 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E0B2AE13
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Apr 2022 13:59:17 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id p7-20020a05600c358700b00393e80c59daso467834wmq.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Apr 2022 13:59:17 -0700 (PDT)
+        Mon, 25 Apr 2022 22:02:49 -0400
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3CE12197D;
+        Mon, 25 Apr 2022 18:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m+0NQ0MbGYoEB5Jsr85JSxqkzHf5iQdh5cM2NyrsDis=;
-        b=BGex542dDfYT9HHYZfLCHcpHPGYA2/GNKIzZeosJgIywm2a3Tc6iL/Vtz2vWx7zjQc
-         EVZT+T3Xu2N4CqQCITrP+06X+HS178Z/m41youJ1Drv4CbDKwtXRfqEm+kAuaet77TA3
-         2QP5Wkh4qoafLDELvHmpJ2Uf/l9c6gHRn6YvMuq3QclOu4lKu121I0V/AVyvcx/Va5Wg
-         /lNJla5ZwrUfCRleKMpea1Tc5hSbbcjXAWI2MPhjhFRY1ntLQBiYgKGNSfyGdWeUc7+Q
-         eZu6TYEToZPYaZWgpoEC5Vz5FKdeAH7Y1gZfV/T6j40u+brBqffIhGmaocuLo+FinP0h
-         wTPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m+0NQ0MbGYoEB5Jsr85JSxqkzHf5iQdh5cM2NyrsDis=;
-        b=b4SciuAwmJiwCfGxLF7IdmmPehpl0YGBKXaHlWlhSMxybeypJtL9MNPCpTj5m6vuef
-         z8wZKUB/CCWw8VyimLr4UF3WdqtB4umSMY252OgOt8ZYADoSLCInTsrfPJtvWBPpQ+Pd
-         7J0mxrFO+0BmCDDeBUHNoPeGIRi4t9UP1moFXj8CE9JXX1DC40qXhXzMkHTNnVMQ+LYa
-         ZSokoeFQ9uhj2pS26yWrBxPdGb2GWrag1ydYqrXGJKR86fjbaKr6f2+nx3Mt/MHaQE/4
-         JhKHJKi3CtbKx92M6gCtHP0hOuFjfdIQo/58+oMGtq3In0SLIdT2poS+JlAMAFp56dLx
-         MFPg==
-X-Gm-Message-State: AOAM532WhFSiiQOO6ulNTpozphN+80C8NSxUbveAZwiMybACKfv+pzU9
-        /6VYfRzp2BbZzlTFGFr1WxBeUv6zd2j37Z0IA57YAQ==
-X-Google-Smtp-Source: ABdhPJwv8xGoKyyqY7JuRQboD78b5Wduxo+WwgNk1JdFTzVpIPkAlXaxUrQaqx469hajLw6aXoAByPWhfpp1OFNyuHw=
-X-Received: by 2002:a1c:4e19:0:b0:393:dc47:b808 with SMTP id
- g25-20020a1c4e19000000b00393dc47b808mr15703552wmh.182.1650920355956; Mon, 25
- Apr 2022 13:59:15 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1650938384; x=1682474384;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=g7YWa84Ggc9PbBc2yEEwZ6f7hUrSoU1ylmKnDzAKmLc=;
+  b=RZyhxnA03enLNgj4Mu6mF9sn4hIt+Xtlm2JYgxD0vQVmw6VPiiK8h+iU
+   4ePh0ckETpD1H4LZ5k3eGr5xMyRi50bdMMHfCMGyfzkiudc8KB6oel/gd
+   qXWMy3BOaYtnLjH3A1rHsN3eEF3y3XxHz7dJkQFTUteoFml/ghzaexdQn
+   w=;
+X-IronPort-AV: E=Sophos;i="5.90,289,1643673600"; 
+   d="scan'208";a="196211016"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-pdx-2c-9ec26c6c.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP; 26 Apr 2022 01:59:41 +0000
+Received: from EX13MTAUWC002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-pdx-2c-9ec26c6c.us-west-2.amazon.com (Postfix) with ESMTPS id DCEFA414D1;
+        Tue, 26 Apr 2022 01:59:34 +0000 (UTC)
+Received: from EX13D02UWC001.ant.amazon.com (10.43.162.243) by
+ EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Tue, 26 Apr 2022 01:59:34 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D02UWC001.ant.amazon.com (10.43.162.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Tue, 26 Apr 2022 01:59:34 +0000
+Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
+ (172.19.181.128) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
+ Server id 15.0.1497.32 via Frontend Transport; Tue, 26 Apr 2022 01:59:34
+ +0000
+Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
+        id C263620CB; Tue, 26 Apr 2022 01:59:33 +0000 (UTC)
+From:   Ali Saidi <alisaidi@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
+        <leo.yan@linaro.org>, <acme@kernel.org>
+CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
+        <Nick.Forrington@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <andrew.kilroy@arm.com>, <james.clark@arm.com>,
+        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
+        <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
+Subject: [PATCH v6 2/5] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
+Date:   Tue, 26 Apr 2022 01:59:23 +0000
+Message-ID: <20220426015926.22011-3-alisaidi@amazon.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220426015926.22011-1-alisaidi@amazon.com>
+References: <20220426015926.22011-1-alisaidi@amazon.com>
 MIME-Version: 1.0
-References: <20220416004048.1514900-1-namhyung@kernel.org>
-In-Reply-To: <20220416004048.1514900-1-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 25 Apr 2022 13:59:03 -0700
-Message-ID: <CAP-5=fUUeqimTKoO9PQbm4yDWXZtTqxWm9ZAsNt1=K5N1Rq_Lg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf tools: Tidy up symbol end fixup (v3)
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
-        Song Liu <songliubraving@fb.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 15, 2022 at 5:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hello,
->
-> This work is a follow-up of Ian's previous one at
->   https://lore.kernel.org/all/20220412154817.2728324-1-irogers@google.com/
->
-> Fixing up more symbol ends as introduced in:
->   https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
->
-> it caused perf annotate to run into memory limits - every symbol holds
-> all the disassembled code in the annotation, and so making symbols
-> ends further away dramatically increased memory usage (40MB to >1GB).
->
-> Modify the symbol end fixup logic so that special kernel cases aren't
-> applied in the common case.
->
-> v3 changes)
->  * rename is_kernel to is_kallsyms
->  * move the logic to generic function
->  * remove arch-specific functions
->
-> Thanks,
-> Namhyung
+Add a flag to the perf mem data struct to signal that a request caused a
+cache-to-cache transfer of a line from a peer of the requestor and
+wasn't sourced from a lower cache level.  The line being moved from one
+peer cache to another has latency and performance implications. On Arm64
+Neoverse systems the data source can indicate a cache-to-cache transfer
+but not if the line is dirty or clean, so instead of overloading HITM
+define a new flag that indicates this type of transfer.
 
-Thanks Namhyung! The series:
+Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/include/uapi/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Ian Rogers <irogers@google.com>
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index d37629dbad72..7b88bfd097dc 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -1310,7 +1310,7 @@ union perf_mem_data_src {
+ #define PERF_MEM_SNOOP_SHIFT	19
+ 
+ #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+-/* 1 free */
++#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
+ #define PERF_MEM_SNOOPX_SHIFT  38
+ 
+ /* locked instruction */
+-- 
+2.32.0
 
-> Namhyung Kim (3):
->   perf symbol: Pass is_kallsyms to symbols__fixup_end()
->   perf symbol: Update symbols__fixup_end()
->   perf symbol: Remove arch__symbols__fixup_end()
->
->  tools/perf/arch/arm64/util/machine.c   | 21 ---------------
->  tools/perf/arch/powerpc/util/Build     |  1 -
->  tools/perf/arch/powerpc/util/machine.c | 25 -----------------
->  tools/perf/arch/s390/util/machine.c    | 16 -----------
->  tools/perf/util/symbol-elf.c           |  2 +-
->  tools/perf/util/symbol.c               | 37 +++++++++++++++++++-------
->  tools/perf/util/symbol.h               |  3 +--
->  7 files changed, 29 insertions(+), 76 deletions(-)
->  delete mode 100644 tools/perf/arch/powerpc/util/machine.c
->
->
-> base-commit: 41204da4c16071be9090940b18f566832d46becc
-> --
-> 2.36.0.rc0.470.gd361397f0d-goog
->
