@@ -2,157 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D48C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 10:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FE9C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 10:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238429AbiDZKcW (ORCPT
+        id S1348934AbiDZKdM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Apr 2022 06:32:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37848 "EHLO
+        Tue, 26 Apr 2022 06:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348808AbiDZKaf (ORCPT
+        with ESMTP id S1349080AbiDZKbu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Apr 2022 06:30:35 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86DFCEDB50;
-        Tue, 26 Apr 2022 03:07:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gl1gHbDUo7lTz2ZfpQgLhkdMuBK7nhPRxt/EDLeMc7k=; b=MRxtqzR2ciPl+7PgV511KoXRHd
-        lMdFk44jhEmKVk2PBTJf0z8HO6nNaUZGearlJu4XKgM/rvxzHgQYk1XX5ioetlZy01tFwlSxOmgjE
-        PEDcBg5cNoC9OXwrIs1cvjtx7Swp/GotK04YJn57NujG3iVrBsqM0SS8Mckwi0Cr8hmP3UY9TFHUd
-        MjC87to64sKQo2g4FQ3nAxDa+uuocpr8hGqO2eFlQe17A5OEQ3KWF/YpdvNLLErXL63i0nEyKUhqM
-        rwHC1D+pGtbb21VGal6kVe3RUw72iC8L2nRYTy/W8fHsI+CIF3rOCXxOruIy5siWc7WI61mKAiixC
-        kRg1D1yA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1njI69-009XAa-Tg; Tue, 26 Apr 2022 10:07:10 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 87D579819FC; Tue, 26 Apr 2022 12:07:07 +0200 (CEST)
-Date:   Tue, 26 Apr 2022 12:07:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+        Tue, 26 Apr 2022 06:31:50 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2087.outbound.protection.outlook.com [40.107.244.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CA3114F82;
+        Tue, 26 Apr 2022 03:10:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DqYib8/g7KbuUHzPvhUWe1fwqc3Iok6LLiIDTTQtjB6wlpD6Ql/2yYbWblCWKXTCP5/zVvTC2rskSxohdc66rdhrzI4jIxV3qRd7ehiOIfIYoMSisjRzbYoKHATNOWJ1AxXqUjtSjNKRAidSsuVf3Od9X5H2hqvwtOUhiP2/Smg/akZWJ3YZ312qaYybVYTspyWT+Ve7V5zed+Rae81ZuQ/9PSEp6bk7zZXfOqkg7O3utisR88AZhCbYNw5DoiAdBwxfCukyB1MBtGPoHj8+mbZsrFs60UM2a7Sl4mzbnribAEekdz7UaXkFe5ALEd6raz9IoQF1TS1rHdVS3Orp3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vAgj1g5Plfq+RXhzrxFlwpB9TVwD+WVrjXlS/8D/6CM=;
+ b=XVHCsaEUBw0hKahB/99Qn+klHfXxsAiE/Aj3+q/cqWm8NSBU8u6eBiz1YlI3Jgr1dinbOg1wIRuDFrgZyqvvVa5WADj3gzKKsPm8AayoheQxOQOacetDsKJWTQeCpvodKKIm87UFLusMS6aP40yr3JUB+ylv7yyiu9smy1jmn/VuaT5NqUpHtqqDakq/N/WsKJ/ZeoPmgYrq4kxL4NBcy7lYLhzjPgMOQnq2TDQmZU1hdn1r/NroPNUnyxBDbvx6u3Om3XeRiqaPhF5fV+SvnqBNFwIcbPLKxvREYZX5UROv/6+Kt+vxVOMHhwIkItPTHm+c79kN9bJ5MQv20bPMkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vAgj1g5Plfq+RXhzrxFlwpB9TVwD+WVrjXlS/8D/6CM=;
+ b=LK/fD1HsjLe1DJao8SSF7CgEmzOLEX584Tcs9WzN7B3Hzpjgr92YWVK8zvwFe47PKWpcxhXwpTUk5KecvjPUoW8bHZTQNmm7sx4yO3FI/dAJs/5stbAMNUfckQFyArk03VUoZmk8fLpw0CvLU6hE+hMhy2zzEoOOUnvTOg0HVSE=
+Received: from MW4P222CA0030.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::35)
+ by DM5PR1201MB0201.namprd12.prod.outlook.com (2603:10b6:4:5b::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Tue, 26 Apr
+ 2022 10:10:06 +0000
+Received: from CO1NAM11FT053.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:114:cafe::b) by MW4P222CA0030.outlook.office365.com
+ (2603:10b6:303:114::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15 via Frontend
+ Transport; Tue, 26 Apr 2022 10:10:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT053.mail.protection.outlook.com (10.13.175.63) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5186.14 via Frontend Transport; Tue, 26 Apr 2022 10:10:05 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 26 Apr
+ 2022 05:09:49 -0500
+Date:   Tue, 26 Apr 2022 12:09:47 +0200
+From:   Robert Richter <rrichter@amd.com>
 To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, irogers@google.com, yao.jin@linux.intel.com,
-        james.clark@arm.com, leo.yan@linaro.org, kan.liang@linux.intel.com,
-        ak@linux.intel.com, eranian@google.com, like.xu.linux@gmail.com,
-        x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, kim.phillips@amd.com, rrichter@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH 1/6] perf/amd/ibs: Add support for L3 miss filtering
-Message-ID: <20220426100707.GP2731@worktop.programming.kicks-ass.net>
+CC:     <peterz@infradead.org>, <acme@kernel.org>, <mingo@redhat.com>,
+        <mark.rutland@arm.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <tglx@linutronix.de>, <bp@alien8.de>, <irogers@google.com>,
+        <yao.jin@linux.intel.com>, <james.clark@arm.com>,
+        <leo.yan@linaro.org>, <kan.liang@linux.intel.com>,
+        <ak@linux.intel.com>, <eranian@google.com>,
+        <like.xu.linux@gmail.com>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <kim.phillips@amd.com>, <santosh.shukla@amd.com>
+Subject: Re: [PATCH 3/6] perf/tool/amd/ibs: Warn about sampling period skew
+Message-ID: <YmfE6wIA1Dbet1nX@rric.localdomain>
 References: <20220425044323.2830-1-ravi.bangoria@amd.com>
- <20220425044323.2830-2-ravi.bangoria@amd.com>
+ <20220425044323.2830-4-ravi.bangoria@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220425044323.2830-2-ravi.bangoria@amd.com>
+In-Reply-To: <20220425044323.2830-4-ravi.bangoria@amd.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6dd07ea0-5cb5-4a7d-a2f3-08da276cef62
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB0201:EE_
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB0201BB90E39931743B2679C99CFB9@DM5PR1201MB0201.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zhk+q4fD6Bj5ClEA6X85jC0/pr0II1lzEJE3s9OX4byD6Z6rkV1hvTjkWkucTw4zgH5ujY+pjzma8Va255AnkQ6Bzy+aOJF48Ob8JxeCMi6lN1BBoY1rBSKSekNbodiTXtx/9cALTTBVYGvGRZFIRHaeUFewLxzEcJcQkhmxKQNhezybHloHlPAJRXnwRrkf+qbn6Pn8WEVA0U7ypeIoE4p1wccGTGACA34mIs5FGYcNTFV7AdAzKabuGlX+O21UmvjrKo606hT95pxj4HOOBamze0i5jX8o+dX62rGkGTn8NdronnmL4+fDzbiDWPzdgKOVtcjZiJKOCWtUwaWnNQm5nyerpO6gdRLq7SYtCdC1EP/kihdmLLrPUcngC8mrIApwDgR1X2kJ6lpVPyyCAHK1GtE4o/om4XM7gf6MfEkrfs4+O8nSZG0h+RkixmgwqeezJ2GTPDc5HtsPiUQEMakD3tigqNO1qoDksLD596Iq+yZqcfFHSmyQqA8aezVzscTIE2j9vJsZgcJShuD+lGjGUWinxCz7Mc2Iwk1XP+nc+jquMQ4iYnVu9gj/6Tt0+cVGj7GO6Ae6u33PTBfdrv5+9xQNHpus2v+zskIKyZ1+c8OLkqxc9upEHAOlwp/CvqDnW8mYibifBYlE2F999ypEu0jYkIkPOadsYXCQp7dDrms2vIXGq4khlR4fmuJfgFeqeiJ9Dqwk1BRg/Vbrwg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(508600001)(55016003)(316002)(82310400005)(7416002)(8936002)(36860700001)(8676002)(6862004)(81166007)(40460700003)(6636002)(336012)(426003)(70586007)(53546011)(47076005)(54906003)(70206006)(186003)(16526019)(5660300002)(9686003)(4326008)(2906002)(83380400001)(356005)(7696005)(26005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2022 10:10:05.0797
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dd07ea0-5cb5-4a7d-a2f3-08da276cef62
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT053.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0201
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 10:13:18AM +0530, Ravi Bangoria wrote:
-> IBS L3 miss filtering works by tagging an instruction on IBS counter
-> overflow and generating an NMI if the tagged instruction causes an L3
-> miss. Samples without an L3 miss are discarded and counter is reset
-> with random value (between 1-15 for fetch pmu and 1-127 for op pmu).
-> This helps in reducing sampling overhead when user is interested only
-> in such samples. One of the use case of such filtered samples is to
-> feed data to page-migration daemon in tiered memory systems.
-> 
-> Add support for L3 miss filtering in IBS driver via new pmu attribute
-> "l3missonly". Example usage:
-> 
->   # perf record -a -e ibs_op/l3missonly=1/ --raw-samples sleep 5
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  arch/x86/events/amd/ibs.c         | 42 ++++++++++++++++++++++---------
->  arch/x86/include/asm/perf_event.h |  3 +++
->  2 files changed, 33 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 9739019d4b67..a5303d62060c 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -520,16 +520,12 @@ static void perf_ibs_read(struct perf_event *event) { }
+On 25.04.22 10:13:20, Ravi Bangoria wrote:
+
+> @@ -29,3 +31,32 @@ void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr)
 >  
->  PMU_FORMAT_ATTR(rand_en,	"config:57");
->  PMU_FORMAT_ATTR(cnt_ctl,	"config:19");
-> +PMU_EVENT_ATTR_STRING(l3missonly, fetch_l3missonly, "config:59");
-> +PMU_EVENT_ATTR_STRING(l3missonly, op_l3missonly, "config:16");
->  
-> -static struct attribute *ibs_fetch_format_attrs[] = {
-> -	&format_attr_rand_en.attr,
-> -	NULL,
-> -};
-> -
-> -static struct attribute *ibs_op_format_attrs[] = {
-> -	NULL,	/* &format_attr_cnt_ctl.attr if IBS_CAPS_OPCNT */
-> -	NULL,
-> -};
-> +/* size = nr attrs plus NULL at the end */
-> +static struct attribute *ibs_fetch_format_attrs[3];
-> +static struct attribute *ibs_op_format_attrs[3];
->  
->  static struct perf_ibs perf_ibs_fetch = {
->  	.pmu = {
-> @@ -759,9 +755,9 @@ static __init int perf_ibs_pmu_init(struct perf_ibs *perf_ibs, char *name)
->  	return ret;
+>  	free(env.cpuid);
 >  }
->  
-> -static __init void perf_event_ibs_init(void)
-> +static __init void perf_ibs_fetch_prepare(void)
->  {
-> -	struct attribute **attr = ibs_op_format_attrs;
-> +	struct attribute **format_attrs = perf_ibs_fetch.format_attrs;
->  
->  	/*
->  	 * Some chips fail to reset the fetch count when it is written; instead
-> @@ -773,11 +769,22 @@ static __init void perf_event_ibs_init(void)
->  	if (boot_cpu_data.x86 == 0x19 && boot_cpu_data.x86_model < 0x10)
->  		perf_ibs_fetch.fetch_ignore_if_zero_rip = 1;
->  
-> +	*format_attrs++ = &format_attr_rand_en.attr;
-> +	if (ibs_caps & IBS_CAPS_ZEN4IBSEXTENSIONS) {
-> +		perf_ibs_fetch.config_mask |= IBS_FETCH_L3MISSONLY;
-> +		*format_attrs++ = &fetch_l3missonly.attr.attr;
-> +	}
 > +
->  	perf_ibs_pmu_init(&perf_ibs_fetch, "ibs_fetch");
-> +}
-> +
-> +static __init void perf_ibs_op_prepare(void)
+> +void arch_evsel__warn_ambiguity(struct evsel *evsel, struct perf_event_attr *attr)
+
+Have an 'ibs_' string in the name?
+
 > +{
-> +	struct attribute **format_attrs = perf_ibs_op.format_attrs;
->  
->  	if (ibs_caps & IBS_CAPS_OPCNT) {
->  		perf_ibs_op.config_mask |= IBS_OP_CNT_CTL;
-> -		*attr++ = &format_attr_cnt_ctl.attr;
-> +		*format_attrs++ = &format_attr_cnt_ctl.attr;
->  	}
->  
->  	if (ibs_caps & IBS_CAPS_OPCNTEXT) {
-> @@ -786,7 +793,18 @@ static __init void perf_event_ibs_init(void)
->  		perf_ibs_op.cnt_mask    |= IBS_OP_MAX_CNT_EXT_MASK;
->  	}
->  
-> +	if (ibs_caps & IBS_CAPS_ZEN4IBSEXTENSIONS) {
-> +		perf_ibs_op.config_mask |= IBS_OP_L3MISSONLY;
-> +		*format_attrs++ = &op_l3missonly.attr.attr;
-> +	}
+> +	struct perf_env *env = evsel__env(evsel);
+> +	struct perf_pmu *evsel_pmu = evsel__find_pmu(evsel);
+> +	struct perf_pmu *ibs_fetch_pmu = perf_pmu__find("ibs_fetch");
+> +	struct perf_pmu *ibs_op_pmu = perf_pmu__find("ibs_op");
+> +	static int warned_once;
 > +
->  	perf_ibs_pmu_init(&perf_ibs_op, "ibs_op");
+> +	if (warned_once || !perf_env__cpuid(env) || !env->cpuid ||
+> +	    !strstarts(env->cpuid, "AuthenticAMD") || !evsel_pmu)
+> +		return;
+> +
+> +	if (ibs_fetch_pmu && ibs_fetch_pmu->type == evsel_pmu->type) {
+> +		if (attr->config & (1ULL << 59)) {
+> +			pr_warning(
+> +"WARNING: Hw internally resets sampling period when L3 Miss Filtering is enabled\n"
+> +"and tagged operation does not cause L3 Miss. This causes sampling period skew.\n");
+> +			warned_once = 1;
+> +		}
+> +	} else if (ibs_op_pmu && ibs_op_pmu->type == evsel_pmu->type) {
+> +		if (attr->config & (1ULL << 16)) {
+> +			pr_warning(
+> +"WARNING: Hw internally resets sampling period when L3 Miss Filtering is enabled\n"
+> +"and tagged operation does not cause L3 Miss. This causes sampling period skew.\n");
+
+Avoid duplicate code. You could move it to the end of the function and
+early return if the config bit is not set.
+
+> +			warned_once = 1;
+> +		}
+> +	}
 > +}
 
-Right, so Greg told us to stop doing silly things like this and use
-.is_visible, also see commits like:
-
-  b7c9b3927337 ("perf/x86/intel: Use ->is_visible callback for default group")
-
-There's quite a bit of that in the intel driver and some in the x86
-core code too. Please have a look.
+-Robert
