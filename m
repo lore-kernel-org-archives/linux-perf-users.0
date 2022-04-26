@@ -2,49 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF96C43217
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16EBC4332F
 	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 01:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241870AbiDZCCv (ORCPT
+        id S241864AbiDZCCv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Mon, 25 Apr 2022 22:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241806AbiDZCCu (ORCPT
+        with ESMTP id S241208AbiDZCCs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Apr 2022 22:02:50 -0400
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B3E51229CC;
-        Mon, 25 Apr 2022 18:59:45 -0700 (PDT)
+        Mon, 25 Apr 2022 22:02:48 -0400
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E241A120D3A;
+        Mon, 25 Apr 2022 18:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1650938386; x=1682474386;
+  t=1650938383; x=1682474383;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2kGoDhwDDU4SUv0yonPrLgPdKoDB23uSHWFWBT2qSyo=;
-  b=m6uScNj85j4uttDCIhRFL1MTX1ytFCkp2HSKgEPu+8pVO6+zLVUM5aKk
-   HduDF4L2kzH9n6iFtFdmlgTUBj6L7izCIHKbcn9tW6RFut8hZfRsImQzY
-   8NeZpxj5dymKNk1VLI6X743I7WF8xNgNsbb6Z19eHHcmuQunDiZVspp3a
-   4=;
+  bh=IkXE3XzeLNs8Xejw5dNihFYE8cF1SYN/jYLaBFVN9IQ=;
+  b=rVJ77i4dv1jPXqS8/gP5XA8+7lrARqKjWC0om2hFPM7tgIt3UVBow7kR
+   oZfJhJhHgX2fReRtof+ZQLZVg4QxAr35izi0C/uDzTQeUKfzdyQAXx59I
+   dg3AxlQTkBoFUdGbpW8uLdUFO3CVa0a9X/Hp6qrYUtpdtzoWrIbDOZtKE
+   8=;
 X-IronPort-AV: E=Sophos;i="5.90,289,1643673600"; 
-   d="scan'208";a="192942726"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-11a39b7d.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP; 26 Apr 2022 01:59:42 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-pdx-2a-11a39b7d.us-west-2.amazon.com (Postfix) with ESMTPS id C443F40FA6;
-        Tue, 26 Apr 2022 01:59:40 +0000 (UTC)
-Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
+   d="scan'208";a="190903486"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-iad-1e-54c9d11f.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP; 26 Apr 2022 01:59:40 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+        by email-inbound-relay-iad-1e-54c9d11f.us-east-1.amazon.com (Postfix) with ESMTPS id F0849C0430;
+        Tue, 26 Apr 2022 01:59:34 +0000 (UTC)
+Received: from EX13D02UWB002.ant.amazon.com (10.43.161.160) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
  id 15.0.1497.32; Tue, 26 Apr 2022 01:59:34 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
- EX13D02UWC004.ant.amazon.com (10.43.162.236) with Microsoft SMTP Server (TLS)
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D02UWB002.ant.amazon.com (10.43.161.160) with Microsoft SMTP Server (TLS)
  id 15.0.1497.32; Tue, 26 Apr 2022 01:59:34 +0000
 Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ (172.19.181.128) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
  Server id 15.0.1497.32 via Frontend Transport; Tue, 26 Apr 2022 01:59:33
  +0000
 Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id C166520BE; Tue, 26 Apr 2022 01:59:33 +0000 (UTC)
+        id C362820D6; Tue, 26 Apr 2022 01:59:33 +0000 (UTC)
 From:   Ali Saidi <alisaidi@amazon.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
@@ -56,9 +56,9 @@ CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
         <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
         <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
         <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
-Subject: [PATCH v6 1/5] perf: Add SNOOP_PEER flag to perf mem data struct
-Date:   Tue, 26 Apr 2022 01:59:22 +0000
-Message-ID: <20220426015926.22011-2-alisaidi@amazon.com>
+Subject: [PATCH v6 4/5] perf arm-spe: Don't set data source if it's not a memory operation
+Date:   Tue, 26 Apr 2022 01:59:25 +0000
+Message-ID: <20220426015926.22011-5-alisaidi@amazon.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220426015926.22011-1-alisaidi@amazon.com>
 References: <20220426015926.22011-1-alisaidi@amazon.com>
@@ -69,33 +69,73 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a flag to the perf mem data struct to signal that a request caused a
-cache-to-cache transfer of a line from a peer of the requestor and
-wasn't sourced from a lower cache level.  The line being moved from one
-peer cache to another has latency and performance implications. On Arm64
-Neoverse systems the data source can indicate a cache-to-cache transfer
-but not if the line is dirty or clean, so instead of overloading HITM
-define a new flag that indicates this type of transfer.
+From: Leo Yan <leo.yan@linaro.org>
 
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Except memory load and store operations, Arm SPE records also can
+support other operation types, bug when set the data source field the
+current code assumes a record is a either load operation or store
+operation, this leads to wrongly synthesize memory samples.
+
+This patch strictly checks the record operation type, it only sets data
+source only for the operation types ARM_SPE_LD and ARM_SPE_ST,
+otherwise, returns zero for data source.  Therefore, we can synthesize
+memory samples only when data source is a non-zero value, the function
+arm_spe__is_memory_event() is useless and removed.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Ali Saidi <alisaidi@amazon.com>
+Tested-by: Ali Saidi <alisaidi@amazon.com>
 ---
- include/uapi/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/arm-spe.c | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index d37629dbad72..7b88bfd097dc 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -1310,7 +1310,7 @@ union perf_mem_data_src {
- #define PERF_MEM_SNOOP_SHIFT	19
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index d2b64e3f588b..76251825c01d 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -387,26 +387,16 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+ 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+ }
  
- #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
--/* 1 free */
-+#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
- #define PERF_MEM_SNOOPX_SHIFT  38
+-#define SPE_MEM_TYPE	(ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
+-			 ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
+-			 ARM_SPE_REMOTE_ACCESS)
+-
+-static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
+-{
+-	if (type & SPE_MEM_TYPE)
+-		return true;
+-
+-	return false;
+-}
+-
+ static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
+ {
+ 	union perf_mem_data_src	data_src = { 0 };
  
- /* locked instruction */
+ 	if (record->op == ARM_SPE_LD)
+ 		data_src.mem_op = PERF_MEM_OP_LOAD;
+-	else
++	else if (record->op & ARM_SPE_ST)
+ 		data_src.mem_op = PERF_MEM_OP_STORE;
++	else
++		return 0;
+ 
+ 	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
+ 		data_src.mem_lvl = PERF_MEM_LVL_L3;
+@@ -510,7 +500,11 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 			return err;
+ 	}
+ 
+-	if (spe->sample_memory && arm_spe__is_memory_event(record->type)) {
++	/*
++	 * When data_src is zero it means the record is not a memory operation,
++	 * skip to synthesize memory sample for this case.
++	 */
++	if (spe->sample_memory && data_src) {
+ 		err = arm_spe__synth_mem_sample(speq, spe->memory_id, data_src);
+ 		if (err)
+ 			return err;
 -- 
 2.32.0
 
