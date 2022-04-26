@@ -2,62 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598B5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 06:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D87C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 06:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245070AbiDZG0M (ORCPT
+        id S1343534AbiDZHAY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Apr 2022 02:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45852 "EHLO
+        Tue, 26 Apr 2022 03:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233942AbiDZG0M (ORCPT
+        with ESMTP id S1343520AbiDZHAX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Apr 2022 02:26:12 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F481229E3;
-        Mon, 25 Apr 2022 23:23:05 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id g21so18282929iom.13;
-        Mon, 25 Apr 2022 23:23:05 -0700 (PDT)
+        Tue, 26 Apr 2022 03:00:23 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B9424ECEB;
+        Mon, 25 Apr 2022 23:57:16 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id r13so34093576ejd.5;
+        Mon, 25 Apr 2022 23:57:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LqVkyBIhzhNpiRN/LGuBXZr8SW/fdepd0hhgilnDnss=;
-        b=EvdE9fuftx7AR+GnsJwkucmF6PupS/0lpHf8VFilrthJvUcvR8507LZX6xzTIywxGh
-         ecgTac3ni12FBpL5SQJeSXzQZiTxvjIE51APnyhRhAnwqUvvbnc6UhIU4N6YnZ2SEP46
-         8Y5FxY6NLwZUQ4WI/7r7kYcONl789pWu4g5gtM+BVQy0itGU1Bj2GoxpKRHXg3ovyYK8
-         a2eu7g3UZiJBsFmbPkqNtuB8rEHbhSUUYUQ+wkXG6UGxaKHwD6CfZcjWjING3GdlY+sW
-         nh7BEoJq5z/eWLb+Zqt4+JZrM91hfwTxOL+iz5xg8wDrPZu9XV216x90Hkd3mkB6ItXO
-         OhHQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+D7xSiS0Km1eNdFEjShizW82VnmaVjxgZEwEZR3GerQ=;
+        b=PRig5ecewg8gI6OvCTVtRFvY4FJuZPuPazEFYXS4DxOY1ieso+OIDEaeGZrXxhlwTH
+         CrHDvPzekLD373DSewAalocKeODNUQ0XY+RokQf93EHJwhGGTyGfV04O0e81zyctmmgT
+         BKdgm+BgMSF/cc3LHf/3lpQhpx9ebi1KvwvGq0nqiYvbjbdExFgCYTNuQPURZepuMlxP
+         XyaK423H7fpfDdGKnoa3NYSCWrcVjeI6PFGpV+UeDaowm3KUrfISowgEj7Yh3whsDU3s
+         Kftm18ox8HZ83UEgDWQwHVa1gESow70Sncu/3qrEPbt4L+jkRcMQpvv2PUew7HjnADl3
+         xjnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LqVkyBIhzhNpiRN/LGuBXZr8SW/fdepd0hhgilnDnss=;
-        b=nCrQdMOOEqBPewB3TV+7+2J91BHcUrZPOkCUVzfcSFkLJJV4FTiOMcUH5cBnFMXO+G
-         xfjsQzscNyLEVzHMWBmQkUpaa599pyN5wkc552OwZEVDSWDTzPe92QYxClWiO7QZ151A
-         gvPsJ+0QcQemNXnvMISrCAB5URLJ+o+bnUkwbudl3EEv7l8t6ss0bJ+xC+LCHveYEPU7
-         JMK+4RA6XOSsDCrcx2wUovDki+/P9+1aPe0UMn6NOzB+TQ7OO/gkPhy0owdeVSPDRjGO
-         28EaV3ArzT8j6GnOusMLppgYjMroagc2g9ysy3lt9SHV5WO5rnudvDypE3umOK9977UM
-         cHBQ==
-X-Gm-Message-State: AOAM530cg5CmSQ96jtcfcQT9kbUODgVo2ugl4OmD9E68ridBJ+iMEREx
-        lpcUuRZHlb7BQ2pbjGpraO6KBqHrLch4vUZlTyU=
-X-Google-Smtp-Source: ABdhPJxQKC56jm4swRm708aaucl5EVjTQMEQqgnuwDr7H5d68yD2HZghCZ+5tWse+CQwF4OBTi/rimJa+/CHtskzdl0=
-X-Received: by 2002:a6b:4e09:0:b0:653:d046:b8cd with SMTP id
- c9-20020a6b4e09000000b00653d046b8cdmr8477977iob.112.1650954185410; Mon, 25
- Apr 2022 23:23:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220422100025.1469207-1-jolsa@kernel.org> <20220422100025.1469207-5-jolsa@kernel.org>
-In-Reply-To: <20220422100025.1469207-5-jolsa@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 25 Apr 2022 23:22:54 -0700
-Message-ID: <CAEf4BzaGLRYiQtT4_HV1ntAV0Br2yyRo5sZiebVAt9QJ8WVF5g@mail.gmail.com>
-Subject: Re: [PATCH perf/core 4/5] perf tools: Register perfkprobe libbpf
- section handler
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+D7xSiS0Km1eNdFEjShizW82VnmaVjxgZEwEZR3GerQ=;
+        b=EfXnnjx4N0fk5iPxf72eiRryXdM4yZnNApCz8lFEv5KsCCevEWaoelAXyloJhHrH52
+         k1H1lzBnB5igSj8pzongf4ZGXEY+kcOeAg3GXpfIALvGDNU/RgZaRbBDskLSTO6OcBrH
+         kBD8uD4ZgZS/ppANEHvONzX/FOMHZKJUPHeRH/OHXLEbAT37NgPcgImTTv4iqgZ/WA+V
+         gqUNlO2os2/JlPVJgecXKDXiA5bwaoxEJetGo++qbJ+WkGAJx9X/9uev8srZJefG1LqS
+         5PkU8TCps4mHDrg2YyA4fU5Ro9ranwRNNL8gzT+/Klveh8H9K8An4UZHJY67q6GKsx8l
+         WOOA==
+X-Gm-Message-State: AOAM533wkfn/BjiBlwag6/YSEdNSChBlA661X5eUtVqT4xMI8D+Yt06t
+        ACBtEggMEm2SFCTNXItzpVs=
+X-Google-Smtp-Source: ABdhPJx3N0/KiDIvzS/xzc1MJm7tOByvA6A8pJav9doTQhdBlDpra3yH5th/yvsTD2c21sgWiKsnNQ==
+X-Received: by 2002:a17:907:7ba6:b0:6f3:8f56:793b with SMTP id ne38-20020a1709077ba600b006f38f56793bmr9735258ejc.473.1650956235030;
+        Mon, 25 Apr 2022 23:57:15 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id i2-20020a1709061cc200b006f386217c6bsm2647668ejh.124.2022.04.25.23.57.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Apr 2022 23:57:14 -0700 (PDT)
+Date:   Tue, 26 Apr 2022 08:57:11 +0200
+From:   Jiri Olsa <olsajiri@gmail.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andrii@kernel.org>,
         "linux-perf-use." <linux-perf-users@vger.kernel.org>,
         Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
@@ -69,69 +67,124 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
         John Fastabend <john.fastabend@gmail.com>,
         Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH perf/core 1/5] libbpf: Add bpf_program__set_insns function
+Message-ID: <YmeXx0mfy4Nr5jEB@krava>
+References: <20220422100025.1469207-1-jolsa@kernel.org>
+ <20220422100025.1469207-2-jolsa@kernel.org>
+ <52f36e85-fea6-e307-344e-5bbb5b8431f7@iogearbox.net>
+ <CAEf4BzZOKosYRHwK2CfZzpTUcDdrLXPXbYax++Q_PHCMcNdqCw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZOKosYRHwK2CfZzpTUcDdrLXPXbYax++Q_PHCMcNdqCw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 3:01 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Perf is using section name to declare special kprobe arguments,
-> which no longer works with current libbpf, that either requires
-> certain form of the section name or allows to register custom
-> handler.
->
-> Adding support for 'perfkprobe/' section name handler to take
-> care of perf kprobe programs.
->
-> The handler servers two purposes:
->   - allows perf programs to have special arguments in section name
->   - allows perf to use pre-load callback where we can attach init
->     code (zeroing all argument registers) to each perf program
->
-> The second is essential part of new prologue generation code,
-> that's coming in following patch.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/bpf-loader.c | 50 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->
-> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> index f8ad581ea247..92dd8cc18edb 100644
-> --- a/tools/perf/util/bpf-loader.c
-> +++ b/tools/perf/util/bpf-loader.c
-> @@ -86,6 +86,7 @@ bpf_perf_object__next(struct bpf_perf_object *prev)
->              (perf_obj) = (tmp), (tmp) = bpf_perf_object__next(tmp))
->
->  static bool libbpf_initialized;
-> +static int libbpf_sec_handler;
->
->  static int bpf_perf_object__add(struct bpf_object *obj)
->  {
-> @@ -99,12 +100,61 @@ static int bpf_perf_object__add(struct bpf_object *obj)
->         return perf_obj ? 0 : -ENOMEM;
->  }
->
-> +static struct bpf_insn prologue_init_insn[] = {
-> +       BPF_MOV64_IMM(BPF_REG_0, 0),
-> +       BPF_MOV64_IMM(BPF_REG_1, 0),
-> +       BPF_MOV64_IMM(BPF_REG_2, 0),
-> +       BPF_MOV64_IMM(BPF_REG_3, 0),
-> +       BPF_MOV64_IMM(BPF_REG_4, 0),
-> +       BPF_MOV64_IMM(BPF_REG_5, 0),
-> +};
-> +
-> +#define LIBBPF_SEC_PREFIX "perfkprobe/"
+On Mon, Apr 25, 2022 at 11:19:09PM -0700, Andrii Nakryiko wrote:
+> On Mon, Apr 25, 2022 at 9:22 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> >
+> > On 4/22/22 12:00 PM, Jiri Olsa wrote:
+> > > Adding bpf_program__set_insns that allows to set new
+> > > instructions for program.
+> > >
+> > > Also moving bpf_program__attach_kprobe_multi_opts on
+> > > the proper name sorted place in map file.
+> 
+> would make sense to fix it as a separate patch, it has nothing to do
+> with bpf_program__set_insns() API itself
 
-libbpf allows to register fallback handler that will handle any SEC()
-definition besides the ones that libbpf handles. Would that work in
-this case instead of adding a custom prefix handler here? See
-prog_tests/custom_sec_handlers.c for example:
+np
 
-fallback_id = libbpf_register_prog_handler(NULL,
-BPF_PROG_TYPE_SYSCALL, 0, &opts);
+> 
+> > >
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >   tools/lib/bpf/libbpf.c   |  8 ++++++++
+> > >   tools/lib/bpf/libbpf.h   | 12 ++++++++++++
+> > >   tools/lib/bpf/libbpf.map |  3 ++-
+> > >   3 files changed, 22 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > > index 809fe209cdcc..284790d81c1b 100644
+> > > --- a/tools/lib/bpf/libbpf.c
+> > > +++ b/tools/lib/bpf/libbpf.c
+> > > @@ -8457,6 +8457,14 @@ size_t bpf_program__insn_cnt(const struct bpf_program *prog)
+> > >       return prog->insns_cnt;
+> > >   }
+> > >
+> > > +void bpf_program__set_insns(struct bpf_program *prog,
+> > > +                         struct bpf_insn *insns, size_t insns_cnt)
+> > > +{
+> > > +     free(prog->insns);
+> > > +     prog->insns = insns;
+> > > +     prog->insns_cnt = insns_cnt;
+> 
+> let's not store user-provided pointer here. Please realloc prog->insns
+> as necessary and copy over insns into it.
+> 
+> Also let's at least add the check for prog->loaded and return -EBUSY
+> in such a case. And of course this API should return int, not void.
 
-> +
+ok, will change
 
-[...]
+> 
+> > > +}
+> > > +
+> > >   int bpf_program__set_prep(struct bpf_program *prog, int nr_instances,
+> > >                         bpf_program_prep_t prep)
+> > >   {
+> > > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> > > index 05dde85e19a6..b31ad58d335f 100644
+> > > --- a/tools/lib/bpf/libbpf.h
+> > > +++ b/tools/lib/bpf/libbpf.h
+> > > @@ -323,6 +323,18 @@ struct bpf_insn;
+> > >    * different.
+> > >    */
+> > >   LIBBPF_API const struct bpf_insn *bpf_program__insns(const struct bpf_program *prog);
+> > > +
+> > > +/**
+> > > + * @brief **bpf_program__set_insns()** can set BPF program's underlying
+> > > + * BPF instructions.
+> > > + * @param prog BPF program for which to return instructions
+> > > + * @param insn a pointer to an array of BPF instructions
+> > > + * @param insns_cnt number of `struct bpf_insn`'s that form
+> > > + * specified BPF program
+> > > + */
+> 
+> This API makes me want to cry... but I can't come up with anything
+> better for perf's use case.
+> 
+> But it can only more or less safely and sanely be used from the
+> prog_prepare_load_fn callback, so please add a big warning here saying
+> that this is a very advanced libbpf API and the user needs to know
+> what they are doing and this should be used from prog_prepare_load_fn
+> callback only. If bpf_program__set_insns() is called before
+> prog_prepare_load_fn any map/subprog/etc relocation will most probably
+> fail or corrupt BPF program code.
+
+will add the warnings
+
+> 
+> > > +LIBBPF_API void bpf_program__set_insns(struct bpf_program *prog,
+> > > +                                    struct bpf_insn *insns, size_t insns_cnt);
+> 
+> s/insns_cnt/insn_cnt/
+> 
+> > > +
+> >
+> > Iiuc, patch 2 should be squashed into this one given they logically belong to the
+> > same change?
+> >
+> > Fwiw, I think the API description should be elaborated a bit more, in particular that
+> > the passed-in insns need to be from allocated dynamic memory which is later on passed
+> > to free(), and maybe also constraints at which point in time bpf_program__set_insns()
+> > may be called.. (as well as high-level description on potential use cases e.g. around
+> > patch 4).
+> 
+> Yep, patch #1 is kind of broken without patch #2, so let's combine them.
+
+ok
+
+thanks,
+jirka
