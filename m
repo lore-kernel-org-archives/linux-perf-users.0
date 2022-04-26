@@ -2,165 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95759C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 13:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4064C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Apr 2022 13:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350849AbiDZNXL (ORCPT
+        id S1351016AbiDZNiZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Apr 2022 09:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49794 "EHLO
+        Tue, 26 Apr 2022 09:38:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350837AbiDZNXI (ORCPT
+        with ESMTP id S1351028AbiDZNiX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Apr 2022 09:23:08 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDBB9DE8C
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Apr 2022 06:20:00 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id i24so17930516pfa.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Apr 2022 06:20:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HLmgdCeRQnlZPI0jqFO8y9T2xXc5m6qGLiOpaSM2FSM=;
-        b=jPCQfFTpQpV7n7pB7rQDJt9sEnkgB4WREXGbL8Dv7b1F2XbxwlGG9CjunEgd52tZNh
-         f7b7jRWcHwxnBXWkjhTIo5RsaLGht6e7tCbque3ut0TGd+K/JWFdBL3RoZ66gTg6AWOr
-         tt/4wyon5tX9Fj2AvW12rYJSMG5VjtoOlW++QPT8nwJk7gFXCOX3SrHat2epwpEjI8ww
-         AFCQ8Rn77o0zNND5MQZv31aCz2DUeV3FK9hPagKRgqmRKXpwU/XnLSgFUbHZhkfSHEkJ
-         o1Ok5lmOEVM5/v+cSqBQdoCuC+HiqBJ64GblVLjeciEYYmiEZfTWUZcMQfwIiTVE6i/p
-         J72w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HLmgdCeRQnlZPI0jqFO8y9T2xXc5m6qGLiOpaSM2FSM=;
-        b=ahB2OXq/L5FGUoGbGPGR8Gs3yZPGYoVfLnHXUG8HgXMFenx0DBxzj46qwejClpCvUu
-         Z2Ca2jpd/IRp0L0LapvCFlBLf7gPiBsg09HZGLKT+fzOE1iFzEC9o8aavafu/aMQgWxd
-         j21bBlSwP9go2o3plCdO/7gxSwtPMidfeCxcLLrhgM3vP21hffiD+3509jSJPmEU8p3H
-         HnLrDSPD+CAfMX0/ouOxpvZ4x1q5HttXBlfMGUxBu71Yiagy5VsmwMtkEi4SLLovipwc
-         3TuCwVcl4uqzsbSv3ZM/L+0uFesf98lg3b+iyDEvXz6+Ntaub/QJfw5gc2uAdBBLp85C
-         194w==
-X-Gm-Message-State: AOAM530m21NFsUs/XMT94glznOd9IrUewt0sI7WEdfwKItNJKGpNC+4z
-        lz6V1S3rMcZpHRmyV28a58ORTw==
-X-Google-Smtp-Source: ABdhPJywU6zSNw8eC6iZB0lW4cMNYVRUgoT39LY8hW7zbfiZnYq6dVsSlFGb05d66NZD5nCNmqfhWQ==
-X-Received: by 2002:a63:86c8:0:b0:3aa:fa50:b002 with SMTP id x191-20020a6386c8000000b003aafa50b002mr13427236pgd.570.1650979199932;
-        Tue, 26 Apr 2022 06:19:59 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (216.24.179.102.16clouds.com. [216.24.179.102])
-        by smtp.gmail.com with ESMTPSA id x22-20020a17090aa39600b001d95c09f877sm3120923pjp.35.2022.04.26.06.19.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Apr 2022 06:19:59 -0700 (PDT)
-Date:   Tue, 26 Apr 2022 21:19:52 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Timothy Hayes <timothy.hayes@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf: arm-spe: Fix SPE events with phys addresses
-Message-ID: <20220426131952.GA1923836@leoy-ThinkPad-X240s>
-References: <20220421165205.117662-1-timothy.hayes@arm.com>
- <20220421165205.117662-3-timothy.hayes@arm.com>
- <20220424125951.GD978927@leoy-ThinkPad-X240s>
- <322009d2-330c-22d4-4075-eca2042f64e1@arm.com>
+        Tue, 26 Apr 2022 09:38:23 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2040.outbound.protection.outlook.com [40.107.94.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4407245BC;
+        Tue, 26 Apr 2022 06:35:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vpxws5yPHhKtG+2xU8S4VemUvWGUy54yOwO/8aPTwPzDckKI0ctPAsaLBh63p5tZ1+v6+BnziuYAiHL9mSAdaFjOGj2fN3Iy84drqT3OcQlTouNxLkPMW/3OuOV084yLSIscl/9WGJh2hhBFbyeF75WAomXME/YOXFoneUY0uCecJWlEX21Mem32uM2QNpQB5PLSfJjVvRRdEI3p6LfhNBCUsNbMsRloiwNi9uPfwKis04TjKrROLPENxJIphkxXqlkWulgO1O7n5JJ0X0JbDbE14LMwLb4btYLW8ventVCQYGp9I+drbLG8yrjhntCYVEbDykjWdi1kVBE5z35ihQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X1J3W3wMYB2rvKkujRKoXf8jkLDH55OmBK2fzAeArl0=;
+ b=IgOZb1iiiE3Vk9y8bIScppO/gCij3SnNzt6qcrqCeNlRDmgdarqHBBOkzEx9zdKbBMAgGYLU7WPwq7j8YTWegD4hb2cQhTxRJK8JBK1Ez2Pvq0laQt5VYFDzVXI5SQhFsaRXqNaEiX/xKAhGtKBHs9htyUI9gfhuTTHgkU3u6fxqPDYonQf4hTddb9U2dy4IqeLvSI05dLzZazqS7UpfchPitOKCxfne9ytiVidtnhWHh09u+YXz3IoKjazyWqe1+uS+gEdMg2UPYO18135gUv4HNObpSUl7kLWCb7DtjOkbj60DpyX8aPAg60uzgNAfFDC3bgpMs6nGR/RmmG95qQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X1J3W3wMYB2rvKkujRKoXf8jkLDH55OmBK2fzAeArl0=;
+ b=IyWkDHQmVgdiolXJUuB/6PPeKJcpDgcjtMO7r2fQsevcmX21FND8kmucIPftl+81a0TfejfqmDk2Xb9WIiUL5aFqhUTeHX+3wIH7Og4GdLQwp2IfwOl+MH3BxmkSfKOPomu3BsryNUqc49GWajMyIHiMAYmOPO3ms616MFFv1+Y=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3053.namprd12.prod.outlook.com (2603:10b6:208:c7::24)
+ by DM5PR12MB2520.namprd12.prod.outlook.com (2603:10b6:4:b9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Tue, 26 Apr
+ 2022 13:35:11 +0000
+Received: from MN2PR12MB3053.namprd12.prod.outlook.com
+ ([fe80::6807:1261:8f60:2449]) by MN2PR12MB3053.namprd12.prod.outlook.com
+ ([fe80::6807:1261:8f60:2449%7]) with mapi id 15.20.5186.021; Tue, 26 Apr 2022
+ 13:35:11 +0000
+Message-ID: <66d766e6-2bd2-55a9-5d08-2335b44c0886@amd.com>
+Date:   Tue, 26 Apr 2022 19:04:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [PATCH 5/6] perf/tool/amd/ibs: Support new IBS bits in raw trace
+ dump
+Content-Language: en-US
+To:     Robert Richter <rrichter@amd.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        irogers@google.com, yao.jin@linux.intel.com, james.clark@arm.com,
+        leo.yan@linaro.org, kan.liang@linux.intel.com, ak@linux.intel.com,
+        eranian@google.com, like.xu.linux@gmail.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>,
+        acme@kernel.org, jolsa@kernel.org
+References: <20220425044323.2830-1-ravi.bangoria@amd.com>
+ <20220425044323.2830-6-ravi.bangoria@amd.com>
+ <YmfXC9KrsM0xTqY9@rric.localdomain>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <YmfXC9KrsM0xTqY9@rric.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0088.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:23::33) To MN2PR12MB3053.namprd12.prod.outlook.com
+ (2603:10b6:208:c7::24)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <322009d2-330c-22d4-4075-eca2042f64e1@arm.com>
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ddc80e17-14ce-49a2-3af6-08da278995f9
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2520:EE_
+X-Microsoft-Antispam-PRVS: <DM5PR12MB25201EFE6773FBC80BF28790E0FB9@DM5PR12MB2520.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QsKJKLiEsoZi+nb2sx/dLLsFkV0fDIqu1ym9a6QtExGbP42nxjUEL206Jf2Pd+ecRTYAhuz4u923Q1QNNVwjPLsnArnAz9zfGx2VCZMqThVpQLoUIgs6tt4FBdrzOoBxwCxY5X2W4i3qFcV0LRIGCONz24YMANikulIrEBc5MyTT/nzaLyu/zNgfR2HbjtKCzFR6bf9GxpXI4eh2QtR1qWHBVwnIx2qCrIhUDwj3g+2WqgNhKnAIDeCsiLkti7Xer8GPSkfNHB5+EYDcFN/rAboBNktd60CbX8BxgJdUBoBpqDfscTTIfl/W9bCzcSDEzTZZg1LtLwuZvMqo3Jy8pxVcSBOqlScggFlgVPAZozMMsvD95y99P+460MMsBZmzQKm7b38xbgg8HE34Yk46JJslVhb0nhHwGrz7hJ116oEFHWYLoLLplKQLsM1LDRP8m8Ck6f20Xe/eaFZfvUAGt/xPZoZ5t+jCXm8DhzLP/ETnqTdVGwH/0NTIiv6pfzXy6RTiFQyogxbLAgY4Rywfpjzg5HpCnvLsR9naltGVA7SQd6p9vKz1o7lu7qglVJv1sgjkRCsZmH2bxszm0gvrjmrjj2XLcFUeqO0HWMxbOQVCu7MJDKEW9w91kdlx2RwpiliyLqh8K8uHkO0TNdCEoENe9TxOdBJa9PpAczGSJElRIceOOqbC9PIlDIeQW/FQJAu4gks0jCErsIfgVLnpqHVfoUrvPGUywdn66GTO7dY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3053.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(53546011)(26005)(186003)(37006003)(6636002)(6506007)(6512007)(36756003)(31686004)(6486002)(508600001)(2616005)(5660300002)(86362001)(31696002)(316002)(38100700002)(2906002)(7416002)(6666004)(66946007)(6862004)(8676002)(66476007)(4326008)(8936002)(44832011)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a1UwT2R5TFdzZzI5M1dMVDVlSkdqdTRmS1p3UzBDUlk2YllyZVlWU3FRcFVX?=
+ =?utf-8?B?dzBKN0lnbVpDcUtTS3NOdysreEFwaE9Cc2ljVjAvTlhReEYzK21hRUxndWEr?=
+ =?utf-8?B?SHhGbWRnOEh5ZUpPMUVFcXlxLzNvVURrUXR5dFhlb2JQbUdtZW51VExSdEJp?=
+ =?utf-8?B?WWM2YVdwKysxOHlSWnRXSHVqUUtwUXpFRG1IUExRWUZPODZQZVptTWV1ZVlk?=
+ =?utf-8?B?ejBMd1JkZnV1L1RVMUR5UlV4RFZFR0VSbTNpTFlUT1dwVGRDckxmaHRBUnhS?=
+ =?utf-8?B?VUVFWEhGNklrZFpjcWlmeUs2enYzSWZrbFJ5WXhnRnYzR1VJQ0FwRUdvdGhh?=
+ =?utf-8?B?SUFQenhZQVpQcEFNeHZNUTY4V0pVTENWZXFVSlRjdTZDY0pjWVhOcjVkRWRv?=
+ =?utf-8?B?RTFvT1RySUZmaVFhZWtXMEgybTlEOFVGdlo5WXIwcktSeEJERGtoemNrdXp4?=
+ =?utf-8?B?WmNHVnBrQytrU3Noa1BWSjkwaExOSWVLUHZ0RU9ZNC9ObThLeDhzUEZwNzkv?=
+ =?utf-8?B?aXIrYnlwVnpoVjdxTlZVVXYyeGN1bGp6cEVsaklIK25WOWlTeEl5OFcwaGww?=
+ =?utf-8?B?dkxwV3l2b25Tam94UVhaT2Q2NkFXQkliY29CYUZJVlF6bDNjTDhTeERuUHRr?=
+ =?utf-8?B?cGw0b0x1dUNmeStyK0ZIbTRHam5sdURZSVBTQVV5TXJIL0xxOHA2RExuYUxN?=
+ =?utf-8?B?WktPeHVCT0FjRzd0dWtVSzZRUXZydVNWTTFtTmZHQXpnaFhOeThUdkNxWmF5?=
+ =?utf-8?B?SjY1ZVZzMUg3WkwweU9McGJkMFJpUUdpNGxDcWRkVkl6UTB6a1YxU3RUbWhs?=
+ =?utf-8?B?Q0JVeWZaNjFEWEpMU2xOR2crWGM0dEpOcGpaNmphSlMyNmNPV0F3bnQyTUJz?=
+ =?utf-8?B?WHFzRHU5SU55V0hDQTQrbDkzWHg2TDBWSVJLeGhrbjA1TXNwbDhDSWdpdFlI?=
+ =?utf-8?B?NHZ3WnJsSlFZWjdzVzE5T09NK0NTWk9yMUN3RGd2QmxWZGxZdDNiNTVwUkx3?=
+ =?utf-8?B?R2VpYmxZNzBsY050RDZiM2luR1pSbm5IWkxsNGhLekZqeGpqYlM0V3BiWFdx?=
+ =?utf-8?B?RGRYSUdaTk5pMHRTc1U1cjZvb0xKSUhhOUxOanNFVEhITWwwdk9QZG41dTVs?=
+ =?utf-8?B?cjVaWmU5TjBjekM0NS9jZWJCSGNmcjNBZjd4SE5tUi9vN1NCVTEzVXMvY2RY?=
+ =?utf-8?B?T3JsL2pQUG0wMzAzUVdCK0tCYVhGVlJOakN3OWN2dDdzaFJUdjR6bk5uUGVa?=
+ =?utf-8?B?Tk02NUgxamRMZjBSemp3MHJmUTd4bHdPRUp5Z25DOHhLQXVNUE9aU25GaFEx?=
+ =?utf-8?B?QmlFRTdTbTA0bm5uTlhiNS9uVHZmakJ6dnhPSlB6YklEQXZVSVg0Z1lPaWQ5?=
+ =?utf-8?B?cEltLzRsNkhTWURwS1IycHdVckZPVS9FV0RxZHV2UVk3VzJZN2F6RGlUS0NM?=
+ =?utf-8?B?VGhvNVBkQ1I1cTVlbFBFTmF1RTduc0JoZVZzdG4zT3pBWnNaOTB6aFlwOURl?=
+ =?utf-8?B?NnNRMTU1U09tNlZvYU9OR3VLSkhob0ZGcHJHNGpYVWIvemllQkIwcDlkSGlM?=
+ =?utf-8?B?SVhCNW80K0xyU0hjNlhuUEI2K29tRGdncU50V3dxVVZrT2l4dGo1YW5pNDUy?=
+ =?utf-8?B?UmZKZmZOd1FlaDYyNkRIcFJWSHNTQ1JwOXFzMUF6TUYxdlF4YTMzdHNzdDFN?=
+ =?utf-8?B?NDZHVjZpc1N2VnF4d1N4dnNERUF5TzBOV1IwV0Z6MENSTmVPRHRZRGZpaXo3?=
+ =?utf-8?B?b1Y0VDIzLzNLTWpDbUxzU0xJcHd1RkE5dUp5VUFFS09NTnhTc3VYbEFuRU96?=
+ =?utf-8?B?Vm9pZDY4NnJEaVo4cXUyNEhGdUVPT3J4d1g5L2VjNzU0SUl6S3VuUHNleEhx?=
+ =?utf-8?B?VjY2THExRjJyRXpYQnFQdGlBU25ISzZzNVZIeUFWTDQ2bmh1YlZSSlJEUExx?=
+ =?utf-8?B?RzZPSE1FaDVJQVorUFRhNVJhajgvem5KcVl1SnpjOGxnR056RGVRMFN2SlU3?=
+ =?utf-8?B?ajFBSGVoNlFGU1NFbGdrejNkV3U2T1BhTnAyN2FISS92b2kvOExhOWJnbUZ2?=
+ =?utf-8?B?WmdxdEpsZ2tlRmc4VXJ6ZjhXWklWL3F1TXJFMnU5WFZINUxoZ0tuNFc0T3RH?=
+ =?utf-8?B?QzVtWmZ6eldIaWxnd3Nkc2hBV2pnaEg5Q1N2VUQ3a0h2Sjg1TEdqYTUvdURD?=
+ =?utf-8?B?eHVFcW1lTlhKRmdweWF6ZlIyTmJ4anNBa0tDdEhFcEoyajVKOW9lKzdUUzAx?=
+ =?utf-8?B?cGlNUlhkdWpnQTZqV1E2Y3lyZkNZUkdSWHROekF3V2dQSUZ0cjd6Z1dCbzd5?=
+ =?utf-8?B?dnZ3SjBIcDlGY0xqME5ubk9Jc3lqSlVBT0hQVlZNa0hMbUE0ODh4UT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddc80e17-14ce-49a2-3af6-08da278995f9
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3053.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2022 13:35:11.1331
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9USBUKWvM78uXMQ52uwV780Yczf7wQgnkcZJRIhB2euBs4vYfBl2t5tSS/RGzytAEqdyJ5McvJl2IBUfs3IcyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2520
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 10:12:36AM +0100, James Clark wrote:
 
-[...]
 
-> >> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> >> index 151cc38a171c..1a80151baed9 100644
-> >> --- a/tools/perf/util/arm-spe.c
-> >> +++ b/tools/perf/util/arm-spe.c
-> >> @@ -1033,7 +1033,8 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
-> >>  	memset(&attr, 0, sizeof(struct perf_event_attr));
-> >>  	attr.size = sizeof(struct perf_event_attr);
-> >>  	attr.type = PERF_TYPE_HARDWARE;
-> >> -	attr.sample_type = evsel->core.attr.sample_type & PERF_SAMPLE_MASK;
-> >> +	attr.sample_type = evsel->core.attr.sample_type &
-> >> +				(PERF_SAMPLE_MASK | PERF_SAMPLE_PHYS_ADDR);
-> > 
-> > I verified this patch and I can confirm the physical address can be
-> > dumped successfully.
-> > 
-> > I have a more general question, seems to me, we need to change the
-> > macro PERF_SAMPLE_MASK in the file util/event.h as below, so
-> > here doesn't need to 'or' the flag PERF_SAMPLE_PHYS_ADDR anymore.
-> > 
-> > @Arnaldo, @Jiri, could you confirm if this is the right way to move
-> > forward?  I am not sure why PERF_SAMPLE_MASK doesn't contain the bit
-> > PERF_SAMPLE_PHYS_ADDR in current code.
+On 26-Apr-22 4:57 PM, Robert Richter wrote:
+> On 25.04.22 10:13:22, Ravi Bangoria wrote:
 > 
-> I think there is a reason that PERF_SAMPLE_MASK is a subset of all the
-> bits. This comment below suggests it. Is it so the mask only includes fields
-> that are 64bits? That makes the __evsel__sample_size() function a simple
-> multiplication of a count of all the fields that are 64bits.
-
-After reading code, seems the conclusion "a count of all the fields
-that are 64bits" is not valid.  PERF_SAMPLE_MASK contains bits
-PERF_SAMPLE_IP and PERF_SAMPLE_TID, the corresponding fields 'pid'
-and 'tid' in the structure perf_sample are u32 type.
-
->   static int
->   perf_event__check_size(union perf_event *event, unsigned int sample_size)
->   {
-> 	/*
-> 	 * The evsel's sample_size is based on PERF_SAMPLE_MASK which includes
-> 	 * up to PERF_SAMPLE_PERIOD.  After that overflow() must be used to
-> 	 * check the format does not go past the end of the event.
-> 	 */
-> 	if (sample_size + sizeof(event->header) > event->header.size)
-> 		return -EFAULT;
-
-Okay, thanks for sharing the info, it does show that it's deliberately to
-not contain all fields in PERF_SAMPLE_MASK.  If so, this patch is fine
-for me:
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
-
-> 	return 0;
->   }
+>> @@ -71,11 +74,12 @@ union ibs_op_data {
+>>  union ibs_op_data2 {
+>>  	__u64 val;
+>>  	struct {
+>> -		__u64	data_src:3,	/* 0-2: data source */
+>> +		__u64	data_src_lo:3,	/* 0-2: data source low */
+>>  			reserved0:1,	/* 3: reserved */
+>>  			rmt_node:1,	/* 4: destination node */
+>>  			cache_hit_st:1,	/* 5: cache hit state */
+>> -			reserved1:57;	/* 5-63: reserved */
+>> +			data_src_hi:2,	/* 6-7: data source high */
+>> +			reserved1:56;	/* 8-63: reserved */
 > 
-> Having said that, the mask was updated once to add PERF_SAMPLE_IDENTIFIER to
-> it, so that comment is slightly out of date now.
+> Good catch, bit 63 was not defined before.
+
+Thanks!
+
 > 
+>>  	};
+>>  };
 > 
-> > 
-> > diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-> > index cdd72e05fd28..c905ac32ebad 100644
-> > --- a/tools/perf/util/event.h
-> > +++ b/tools/perf/util/event.h
-> > @@ -39,7 +39,7 @@ struct perf_event_attr;
-> >          PERF_SAMPLE_TIME | PERF_SAMPLE_ADDR |          \
-> >         PERF_SAMPLE_ID | PERF_SAMPLE_STREAM_ID |        \
-> >          PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD |         \
-> > -        PERF_SAMPLE_IDENTIFIER)
-> > +        PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_PHYS_ADDR)
-> > 
-> > Thanks,
-> > Leo
-> > 
-> >>  	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
-> >>  			    PERF_SAMPLE_PERIOD | PERF_SAMPLE_DATA_SRC |
-> >>  			    PERF_SAMPLE_WEIGHT | PERF_SAMPLE_ADDR;
-> >> -- 
-> >> 2.25.1
-> >>
+>> @@ -279,6 +328,9 @@ bool evlist__has_amd_ibs(struct evlist *evlist)
+>>  		pmu_mapping += strlen(pmu_mapping) + 1 /* '\0' */;
+>>  	}
+>>  
+>> +	if (perf_env__find_pmu_cap(env, 0, "ibs_op", "zen4_ibs_extensions"))
+>> +		zen4_ibs_extensions = 1;
+>> +
+> 
+> This caps check should be moved to ibs_op and ibs_fetch pmu specific
+> code. Use the env of the specific pmu respectively in the sample
+> decoding.
+
+IIRC, we don't populate perf_pmu at 'perf report' time as we might not be
+running 'perf report' on the same machine or even same arch.
+
+Thanks for the review,
+Ravi
