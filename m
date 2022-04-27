@@ -2,130 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD8DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 16:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1091FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 16:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242467AbiD0QUN (ORCPT
+        id S242150AbiD0QZW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Apr 2022 12:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
+        Wed, 27 Apr 2022 12:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242589AbiD0QR1 (ORCPT
+        with ESMTP id S243578AbiD0QZG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Apr 2022 12:17:27 -0400
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2D137A28;
-        Wed, 27 Apr 2022 09:13:59 -0700 (PDT)
-X-UUID: 23e1612f64424da8a3669018aae4f734-20220428
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.4,REQID:447c4577-8a9b-4e91-af1e-669a4fd39e05,OB:0,LO
-        B:0,IP:0,URL:0,TC:0,Content:-20,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,AC
-        TION:release,TS:-20
-X-CID-META: VersionHash:faefae9,CLOUDID:143eec2e-6199-437e-8ab4-9920b4bc5b76,C
-        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,File:nil,QS:0,BEC:nil
-X-UUID: 23e1612f64424da8a3669018aae4f734-20220428
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <lecopzer.chen@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1925754874; Thu, 28 Apr 2022 00:13:54 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
- Thu, 28 Apr 2022 00:13:53 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 28 Apr 2022 00:13:53 +0800
-From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
-To:     <linux-kernel@vger.kernel.org>, <pmladek@suse.com>
-CC:     <lecopzer.chen@mediatek.com>, <acme@kernel.org>,
-        <akpm@linux-foundation.org>, <alexander.shishkin@linux.intel.com>,
-        <catalin.marinas@arm.com>, <davem@davemloft.net>,
-        <jolsa@redhat.com>, <jthierry@redhat.com>, <keescook@chromium.org>,
-        <kernelfans@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <mark.rutland@arm.com>,
-        <masahiroy@kernel.org>, <matthias.bgg@gmail.com>, <maz@kernel.org>,
-        <mcgrof@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <nixiaoming@huawei.com>, <peterz@infradead.org>,
-        <sparclinux@vger.kernel.org>, <sumit.garg@linaro.org>,
-        <wangqing@vivo.com>, <will@kernel.org>, <yj.chiang@mediatek.com>
-Subject: [PATCH v4 5/6] arm64: add hw_nmi_get_sample_period for preparation of lockup detector
-Date:   Thu, 28 Apr 2022 00:13:39 +0800
-Message-ID: <20220427161340.8518-6-lecopzer.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20220427161340.8518-1-lecopzer.chen@mediatek.com>
-References: <20220427161340.8518-1-lecopzer.chen@mediatek.com>
+        Wed, 27 Apr 2022 12:25:06 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAADC236E24
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 09:19:19 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id c23so2015296plo.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 09:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fB+D/7pJaYmPUCdn8kycmM+Ul0B8R84B43ZQd5gS8Kc=;
+        b=gIiaVIaQWTRSTYO0iYSxismgtGatUVsnHjsreouyLf2MOb9MUu/wnU4zqgB5cLTxgX
+         ROBO6loS1ZzQ9c3K4+heCtVCySqvO8yulB8m9PzGXIB80JNY8KbbYNf0ippFZ82sA0gW
+         Dfx6gtUdAp38Ae7mwl133SlUtYWxa+MBJe10b8PAcQ8PBooPuOOXu3rz/AEfDEobWEh9
+         emOr42AABxdRsOegkMJPUEAunHrf8V0foOoeiPEEPC95Uia/bPGuLK0w07ecNtOhrY0W
+         jjW5qiSbK66lahdI3MB20owZwmOdaksuGRcjSywwOeg17cTeppFGSbctYPFk0WMBgaxs
+         Z4lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fB+D/7pJaYmPUCdn8kycmM+Ul0B8R84B43ZQd5gS8Kc=;
+        b=ERjVawRRZEDiwfarQzbgOnmwZLBsF9M+7LQSaEc0+3ZWkc2ZCSZSZFVHKW0QmQRgtZ
+         udeowPtbPJ1R3zv+6k70BPilm3C9DGwYI/j8gIcbt+iU2QJDujomuhiVEvWF3Nklkg0F
+         9cNLBz034pNbQiwcGdvSLQGiSpU1AaIG1XDIGzcOY3b4q8CKOHH4JWSOBjFJ/NPgwJ5d
+         iCSOTXueYyIQ2wW8aFzkwU3Hteyyex5eYy10Edkc0J+OMh1YtvKOdy81Rix9PjckRs42
+         OuPRzcDeuoaZzebhNj/NpBpFXINiDVAIxCb3lG4R4vnabNvtGGTv5wyL08xEfO+/4o43
+         UYLg==
+X-Gm-Message-State: AOAM532+c6Jdr1Z3QmCOaKAmwdBD2d4/NxuRrWrrpvqPR6oGaJrGXwVO
+        fbdSxS0jMw3MqKkzMhf5PGYNEQ==
+X-Google-Smtp-Source: ABdhPJzQQPPVMZgiQeJ7XCwAvPLUZIpex/aF9/4xYQH7aShixtfieF9c2Ptwb0v2h8v8gaVdOZLevg==
+X-Received: by 2002:a17:902:cec4:b0:15d:50ba:d9bf with SMTP id d4-20020a170902cec400b0015d50bad9bfmr4430492plg.28.1651076358662;
+        Wed, 27 Apr 2022 09:19:18 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id f10-20020a63de0a000000b003aab55ad590sm17681133pgg.93.2022.04.27.09.19.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Apr 2022 09:19:18 -0700 (PDT)
+Date:   Thu, 28 Apr 2022 00:19:08 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Ali Saidi <alisaidi@amazon.com>,
+        Nick.Forrington@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, german.gomez@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        kjain@linux.ibm.com, lihuafei1@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
+Message-ID: <20220427161908.GE562576@leoy-ThinkPad-X240s>
+References: <c17dedde-6ba8-db9b-4827-32477f039764@linux.intel.com>
+ <20220422212249.22463-1-alisaidi@amazon.com>
+ <20220423063805.GA559531@leoy-ThinkPad-X240s>
+ <8e09af67-a416-4ead-b406-6c8b998de344@linux.intel.com>
+ <20220424114302.GB978927@leoy-ThinkPad-X240s>
+ <b4aaf1ed-124d-1339-3e99-a120f6cc4d28@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4aaf1ed-124d-1339-3e99-a120f6cc4d28@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Set safe maximum CPU frequency to 5 GHz in case a particular platform
-doesn't implement cpufreq driver.
-Although, architecture doesn't put any restrictions on
-maximum frequency but 5 GHz seems to be safe maximum given the available
-Arm CPUs in the market which are clocked much less than 5 GHz.
+Hi Kan,
 
-On the other hand, we can't make it much higher as it would lead to
-a large hard-lockup detection timeout on parts which are running
-slower (eg. 1GHz on Developerbox) and doesn't possess a cpufreq driver.
+On Mon, Apr 25, 2022 at 01:01:40PM -0400, Liang, Kan wrote:
+> 
+> 
+> On 4/24/2022 7:43 AM, Leo Yan wrote:
+> > On Sat, Apr 23, 2022 at 05:53:28AM -0700, Andi Kleen wrote:
+> > > 
+> > > > Except SNOOPX_FWD means a no modified cache snooping, it also means it's
+> > > > a cache conherency from *remote* socket.  This is quite different from we
+> > > > define SNOOPX_PEER, which only snoop from peer CPU or clusters.
+> > > > 
+> 
+> The FWD doesn't have to be *remote*. The definition you quoted is just for
+> the "L3 Miss", which is indeed a remote forward. But we still have
+> cross-core FWD. See Table 19-101.
+> 
+> Actually, X86 uses the PERF_MEM_REMOTE_REMOTE + PERF_MEM_SNOOPX_FWD to
+> indicate the remote FWD, not just SNOOPX_FWD.
 
-Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Co-developed-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
----
- arch/arm64/kernel/Makefile       |  1 +
- arch/arm64/kernel/watchdog_hld.c | 25 +++++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
- create mode 100644 arch/arm64/kernel/watchdog_hld.c
+Thanks a lot for the info.
 
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 986837d7ec82..cd238b92d6d3 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_MODULES)			+= module.o
- obj-$(CONFIG_ARM64_MODULE_PLTS)		+= module-plts.o
- obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o perf_callchain.o
- obj-$(CONFIG_HW_PERF_EVENTS)		+= perf_event.o
-+obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF)	+= watchdog_hld.o
- obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
- obj-$(CONFIG_CPU_PM)			+= sleep.o suspend.o
- obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
-diff --git a/arch/arm64/kernel/watchdog_hld.c b/arch/arm64/kernel/watchdog_hld.c
-new file mode 100644
-index 000000000000..de43318e4dd6
---- /dev/null
-+++ b/arch/arm64/kernel/watchdog_hld.c
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/cpufreq.h>
-+
-+/*
-+ * Safe maximum CPU frequency in case a particular platform doesn't implement
-+ * cpufreq driver. Although, architecture doesn't put any restrictions on
-+ * maximum frequency but 5 GHz seems to be safe maximum given the available
-+ * Arm CPUs in the market which are clocked much less than 5 GHz. On the other
-+ * hand, we can't make it much higher as it would lead to a large hard-lockup
-+ * detection timeout on parts which are running slower (eg. 1GHz on
-+ * Developerbox) and doesn't possess a cpufreq driver.
-+ */
-+#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
-+u64 hw_nmi_get_sample_period(int watchdog_thresh)
-+{
-+	unsigned int cpu = smp_processor_id();
-+	unsigned long max_cpu_freq;
-+
-+	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
-+	if (!max_cpu_freq)
-+		max_cpu_freq = SAFE_MAX_CPU_FREQ;
-+
-+	return (u64)max_cpu_freq * watchdog_thresh;
-+}
-+
--- 
-2.25.1
+> > > > If no objection, I prefer we could keep the new snoop type SNOOPX_PEER,
+> > > > this would be easier for us to distinguish the semantics and support the
+> > > > statistics for SNOOPX_FWD and SNOOPX_PEER separately.
+> > > > 
+> > > > I overlooked the flag SNOOPX_FWD, thanks a lot for Kan's reminding.
+> > > 
+> > > Yes seems better to keep using a separate flag if they don't exactly match.
+> > > 
+> 
+> Yes, I agree with Andi. If you still think the existing flag combination
+> doesn't match your requirement, a new separate flag should be introduced.
+> I'm not familiar with ARM. I think I will leave it to you and the maintainer
+> to decide.
 
+It's a bit difficult for me to make decision is because now SNOOPX_FWD
+is not used in the file util/mem-events.c, so I am not very sure if
+SNOOPX_FWD has the consistent usage across different arches.
+
+On the other hand, I sent a patch for 'peer' flag statistics [1], you
+could review it and it only stats for L2 and L3 cache level for local
+node.
+
+The main purpose for my sending this email is if you think the FWD can
+be the consistent for both arches, and even the new added display mode
+is also useful for x86 arch (we can rename it as 'fwd' display mode),
+then I am very glad to unify the flag.
+
+Thanks,
+Leo
+
+[1] https://lore.kernel.org/lkml/20220427155013.1833222-5-leo.yan@linaro.org/
