@@ -2,98 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF52C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 16:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9F5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 16:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241389AbiD0QDv (ORCPT
+        id S242328AbiD0QSb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Apr 2022 12:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56274 "EHLO
+        Wed, 27 Apr 2022 12:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241576AbiD0QDj (ORCPT
+        with ESMTP id S242803AbiD0QRP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Apr 2022 12:03:39 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C6F289378
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:59:50 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id j17so1938737pfi.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=B7bCPSAqni/eXnk1LqJkGqy1IOK7BdN/WKgexnP+sSs=;
-        b=wm5xTSYCz9ImGQOBbgtUP1ff6okO5z5MEKS4Ra9Q+9ZGRX4Sh2LozU7GiIrBErvXAR
-         3+Sv9iMqS+IT+wyhnbLG1cg59xi8BU96rjrfGqmrslU5A1fQ8/9xQpyxAsqScgLnvusw
-         haUA8dCRMZgbI5h2voBta7cefY4wYB+UQRRLm9fESog4XJpY0cjCQHVsNN+H7teOrdSU
-         SSajLEtZzEFwrOHv6JT22Qdii4pXDEzZwU5bxCebqkwdMdpJegLzdSOd3+GQUfjhqiSu
-         iGt31/fPbboUzAhv9SpTWYKuJ9HhuIu1o6fNCofEufP/1VaBAOrVOauzGH3I7cq+f0uv
-         EXnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=B7bCPSAqni/eXnk1LqJkGqy1IOK7BdN/WKgexnP+sSs=;
-        b=wz287CLY6Am8t0Io5DaUX/yRqBxIXxeXOIX97j8g/WIOMMr7FJeTItBakeHj7JAArN
-         L40GcZ8bplPHfX1oIYbPDYJenjGqoE7CLW6C04mAewlX0CSrgmWkKK/gXgXdZTkCs7Qa
-         QfYBB3L8MD76cD9DOGdiMGB9bx8jWt8V5ooYVojE7F+0FEeghDsS2Ds+h8sOneCEK70J
-         izvt/ZD1Z2Ose7MpJe98m5pfCJZBGrHnadiTJMwKoGxF/GjvizBcLN0W3Gd8083OnRZY
-         j45vbmSSxA/YjVmuQ9Jfm6QhtAg45/EG/8zE2urePoJOyJwTHNqSoHp2ApMO9S/ffyaG
-         mnhg==
-X-Gm-Message-State: AOAM533tpLk+KLEFQ+luD9E7ZQnjOoTsuhs31lrqvbPGLh+dDTKLld3C
-        PzooRd2FIctQ8jgA6E4I/4RqBg==
-X-Google-Smtp-Source: ABdhPJymOsPeD6HUMpzYXIRJtQHQErVz91u2xNJ09OSkyp0fxCsF6Ms6ClrJB2T8aUxViCrzVmZqNQ==
-X-Received: by 2002:a62:2742:0:b0:505:89a5:2023 with SMTP id n63-20020a622742000000b0050589a52023mr30923743pfn.18.1651075183688;
-        Wed, 27 Apr 2022 08:59:43 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id k198-20020a633dcf000000b003aa9116ba17sm16707374pga.35.2022.04.27.08.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 08:59:43 -0700 (PDT)
-Date:   Wed, 27 Apr 2022 23:59:34 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
-        acme@kernel.org, benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v7 5/5] perf arm-spe: Use SPE data source for neoverse
- cores
-Message-ID: <20220427155934.GC562576@leoy-ThinkPad-X240s>
-References: <20220426135937.18497-1-alisaidi@amazon.com>
- <20220426135937.18497-6-alisaidi@amazon.com>
+        Wed, 27 Apr 2022 12:17:15 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697D087221;
+        Wed, 27 Apr 2022 09:13:56 -0700 (PDT)
+X-UUID: c99560c8333e4a3fa33ecbd4019bf38c-20220428
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.4,REQID:dc987a9f-c4a8-4ad8-b364-42373311557d,OB:10,L
+        OB:10,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:95,FILE:0,RULE:Release_Ham,A
+        CTION:release,TS:95
+X-CID-INFO: VERSION:1.1.4,REQID:dc987a9f-c4a8-4ad8-b364-42373311557d,OB:10,LOB
+        :10,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:95,FILE:0,RULE:Spam_GS981B3D,A
+        CTION:quarantine,TS:95
+X-CID-META: VersionHash:faefae9,CLOUDID:543dec2e-6199-437e-8ab4-9920b4bc5b76,C
+        OID:77d687c33d2c,Recheck:0,SF:28|17|19|48,TC:nil,Content:0,EDM:-3,File:nil
+        ,QS:0,BEC:nil
+X-UUID: c99560c8333e4a3fa33ecbd4019bf38c-20220428
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <lecopzer.chen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 117207128; Thu, 28 Apr 2022 00:13:52 +0800
+Received: from mtkexhb02.mediatek.inc (172.21.101.103) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.792.15; Thu, 28 Apr 2022 00:13:50 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 28 Apr
+ 2022 00:13:50 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 28 Apr 2022 00:13:50 +0800
+From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
+To:     <linux-kernel@vger.kernel.org>, <pmladek@suse.com>
+CC:     <lecopzer.chen@mediatek.com>, <acme@kernel.org>,
+        <akpm@linux-foundation.org>, <alexander.shishkin@linux.intel.com>,
+        <catalin.marinas@arm.com>, <davem@davemloft.net>,
+        <jolsa@redhat.com>, <jthierry@redhat.com>, <keescook@chromium.org>,
+        <kernelfans@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <mark.rutland@arm.com>,
+        <masahiroy@kernel.org>, <matthias.bgg@gmail.com>, <maz@kernel.org>,
+        <mcgrof@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <nixiaoming@huawei.com>, <peterz@infradead.org>,
+        <sparclinux@vger.kernel.org>, <sumit.garg@linaro.org>,
+        <wangqing@vivo.com>, <will@kernel.org>, <yj.chiang@mediatek.com>
+Subject: [PATCH v4 1/6] kernel/watchdog: remove WATCHDOG_DEFAULT
+Date:   Thu, 28 Apr 2022 00:13:35 +0800
+Message-ID: <20220427161340.8518-2-lecopzer.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20220427161340.8518-1-lecopzer.chen@mediatek.com>
+References: <20220427161340.8518-1-lecopzer.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220426135937.18497-6-alisaidi@amazon.com>
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 26, 2022 at 01:59:37PM +0000, Ali Saidi wrote:
-> When synthesizing data from SPE, augment the type with source information
-> for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
-> the same encoding. I can't find encoding information for any other SPE
-> implementations to unify their choices with Arm's thus that is left for
-> future work.
-> 
-> This change populates the mem_lvl_num for Neoverse cores as well as the
-> deprecated mem_lvl namespace.
-> 
-> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+No reference to WATCHDOG_DEFAULT, remove it.
 
-I tested this patch and also did the integration testing with perf ć2c
-tool, this patch looks good to me:
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+---
+ kernel/watchdog.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 9166220457bc..e932331826eb 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -30,10 +30,8 @@
+ static DEFINE_MUTEX(watchdog_mutex);
+ 
+ #if defined(CONFIG_HARDLOCKUP_DETECTOR) || defined(CONFIG_HAVE_NMI_WATCHDOG)
+-# define WATCHDOG_DEFAULT	(SOFT_WATCHDOG_ENABLED | NMI_WATCHDOG_ENABLED)
+ # define NMI_WATCHDOG_DEFAULT	1
+ #else
+-# define WATCHDOG_DEFAULT	(SOFT_WATCHDOG_ENABLED)
+ # define NMI_WATCHDOG_DEFAULT	0
+ #endif
+ 
+-- 
+2.25.1
 
-James, German, it's better if this patch set can get the green light
-from you.  So please take a look, thanks!
-
-Leo
