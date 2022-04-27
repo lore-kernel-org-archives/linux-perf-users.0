@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709C1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 15:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E688C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 15:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240811AbiD0PzE (ORCPT
+        id S240410AbiD0Pzo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Apr 2022 11:55:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39738 "EHLO
+        Wed, 27 Apr 2022 11:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240863AbiD0PzD (ORCPT
+        with ESMTP id S240456AbiD0Pxu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Apr 2022 11:55:03 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A8256200
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:51:37 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id b12so1912964plg.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:51:37 -0700 (PDT)
+        Wed, 27 Apr 2022 11:53:50 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EAAD55342
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:50:33 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id t11-20020a17090ad50b00b001d95bf21996so5350018pju.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:50:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/vcydkgfwulbRdhsxwG26aGxHp6JHi+EQHDHh6atTeA=;
-        b=fN74pyEweV80SDfA8wca3NLHZxPoe0yH0glecZ2Atg//g8BQ5ztUXkT6gJ3oIcqUzK
-         Qp86QY1rL6mAUyRGPB9FvMG3g2RbR5TG41WnweAiRqqCCEFleSki/9dKSBvZ/1J0bpS+
-         n3nHNuxKHKu49Py8xK7sxs7fjhz7wQbkfBnUXjmC3P3y88N5YvPSrJIMIIXYzE1vpRqK
-         aUzmdlhfepQkk32i+Fsd8MhPQAtLxxVFn/oBOWcAB/O3lOy8ewaBHFBpaS1gk7BLzGk1
-         SR12K5AdIo2Qo4bK/CPmRxJedKhDOb6ptd6zTtRendbV2X62P766VlLa0PydKWqZgW72
-         IaVw==
+        bh=1ds190eK1hF3mnV/9rzLoVn8f2hvZpOofdeWPJk4Nig=;
+        b=DJ8WK8/MfkEWAxkzOYR0O+uGljGuI6lUvURUjar+hVr531fZ20WDuUUZoCCZUnDv3k
+         UulRnJtX6ZIljWuh2oGp8i20qQCW82/ZwrA65HUyfWT5Pg16UOBvSI2adM7DUc23OCu/
+         NVPvLaQakLyrfiBYxOy8p37SYYw3pjbdZn4gFXFKopiADnn4nScI4MIaXBT0j5V2534K
+         Bw31wIR0CDeGO1R/3jiwtLer56JFk1cbKjbEPVrn3xTVMDmg7+2ROzcz5BNBTmHrmw9b
+         ZOkRADL30ZX0l2qglgA+lvjDTBwCNCsNQsAZkz+sW1NJBWkvnwmr3QAISeSkQvsvYEny
+         j1Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/vcydkgfwulbRdhsxwG26aGxHp6JHi+EQHDHh6atTeA=;
-        b=2Le4O5sk/r8bjUEkSZP0k4jG7Ou4lqb9Ero1eTbEyQLYiP9dSl2Fzgm1Lm0DmV965j
-         nw2SRacmVUSQCpr3VvYJWCEouSVPYvq3+5UkUR5f5rJ4phFS5r2GmJpeL3b5HzneUByL
-         8VtA2MoIGsjoXuKXS2PVKVUXNyFtPkC4390BSI2tfM9DJvba9VZ7+CJBfUWb/VXBBhp9
-         M+j/2svBdx49bdnBniEh7Rr0N7NAjMOpuGFtqToPbqW9RZ7YfptYrnjCKjmsulwEtCBi
-         R4K9apUq7pv3SrFPbVlJcQK+ZA44yxPcz4YuJM0GebxCmzE2IbtWPE/YEmN8fB33kT3X
-         /IKg==
-X-Gm-Message-State: AOAM5301MRnrs5dlJ4fNidC2VwP+ag3jQ7Z99iH42uKSYRwA05Yxa08+
-        73m+RIS6/GxACcxDlWeRtULQlg==
-X-Google-Smtp-Source: ABdhPJxwW+VNwWrLgfTZFjDrwhfhezzHfN0FF+xjbEz0bjR7HP4PF9HzXsYU+tRWXR0wPggdekjaDA==
-X-Received: by 2002:a17:90a:488c:b0:1c7:b62e:8e8c with SMTP id b12-20020a17090a488c00b001c7b62e8e8cmr44056171pjh.157.1651074696628;
-        Wed, 27 Apr 2022 08:51:36 -0700 (PDT)
+        bh=1ds190eK1hF3mnV/9rzLoVn8f2hvZpOofdeWPJk4Nig=;
+        b=jTohPxqOSknGM5Fqmf98eiw4uAN2808TJSRaQhfAc0W7/t42rO6etmAQvZ72REEIp+
+         4nmCp/7sTD+s1XAllQq+Avgf4i6hMBOXLMMVorD/6yRk3iGoY1FYR/fWvRqsjAyi9tLw
+         JHWzPBfFRHhbKctXyXq9OCCxIGArVVX6auGsCFuk2T41Y6KAeeObBveZxVeocWqVfO+g
+         EgRrBtuVoEVKmHHkMu+CniVpr7ZweKemox8YQN2SdYCeO5G/DuEBvLuD9yFc6L5qWGlq
+         4oUf1nq2+T74N0aAPjgJojKYDxrvMStD8RJdDYhF3ge/beDScAQCJumVTWqs0c3rmQ63
+         rDug==
+X-Gm-Message-State: AOAM533EONRv7es0AlzJ3E7uuZsXuZKXy5dgZvq7D/9leYFOKx65kb2X
+        mKWRPg30Y0SfCW9z7kxTz5Ae0Q==
+X-Google-Smtp-Source: ABdhPJxs9q+KRD6xkQQHFqJA5vSQD4CDnrT/aXmHWfAnqz6ngaQaPxqetFe3TYdkynsX8FdMQojCRQ==
+X-Received: by 2002:a17:903:24f:b0:15c:e3b8:a640 with SMTP id j15-20020a170903024f00b0015ce3b8a640mr23410022plh.5.1651074632710;
+        Wed, 27 Apr 2022 08:50:32 -0700 (PDT)
 Received: from localhost.localdomain ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id v65-20020a626144000000b0050a839e490bsm19164127pfb.185.2022.04.27.08.51.31
+        by smtp.gmail.com with ESMTPSA id v65-20020a626144000000b0050a839e490bsm19164127pfb.185.2022.04.27.08.50.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 08:51:36 -0700 (PDT)
+        Wed, 27 Apr 2022 08:50:32 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -65,9 +65,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 11/11] perf c2c: Use 'peer' as default display for Arm64
-Date:   Wed, 27 Apr 2022 23:50:13 +0800
-Message-Id: <20220427155013.1833222-12-leo.yan@linaro.org>
+Subject: [PATCH v1 01/11] perf mem: Add any cache level statistics for store operation
+Date:   Wed, 27 Apr 2022 23:50:03 +0800
+Message-Id: <20220427155013.1833222-2-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220427155013.1833222-1-leo.yan@linaro.org>
 References: <20220427155013.1833222-1-leo.yan@linaro.org>
@@ -77,62 +77,63 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since Arm64 arch doesn't support HITMs flags, so use 'peer' as default
-if user doesn't specify display type; for other arches, it still uses
-'tot' as default display type if user doesn't specify it.
+Sometimes we don't know memory store operations happen on exactly which
+cache level, so set the memory level flag PERF_MEM_LVLNUM_ANY_CACHE for
+this case.  An usage case is that Arm SPE trace data sets this flag for
+all the store operations due to we have no sufficient info for cache
+level.
 
-Suggested-by: Ali Saidi <alisaidi@amazon.com>
+This patch is to add a new item "st_anylvl" in structure c2c_stats so
+that support any cache level statistics for store operations.
+
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Ali Saidi <alisaidi@amazon.com>
 ---
- tools/perf/builtin-c2c.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ tools/perf/util/mem-events.c | 4 ++++
+ tools/perf/util/mem-events.h | 1 +
+ 2 files changed, 5 insertions(+)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index bd4516e486c0..c944631fc505 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2787,7 +2787,7 @@ static int setup_callchain(struct evlist *evlist)
- 
- static int setup_display(const char *str)
- {
--	const char *display = str ?: "tot";
-+	const char *display = str;
- 
- 	if (!strcmp(display, "tot"))
- 		c2c.display = DISPLAY_TOT_HITM;
-@@ -2973,9 +2973,6 @@ static int perf_c2c__report(int argc, const char **argv)
- 	data.path  = input_name;
- 	data.force = symbol_conf.force;
- 
--	err = setup_display(display);
--	if (err)
--		goto out;
- 
- 	err = setup_coalesce(coalesce, no_source);
- 	if (err) {
-@@ -2996,6 +2993,22 @@ static int perf_c2c__report(int argc, const char **argv)
- 		goto out;
- 	}
- 
-+	/*
-+	 * Use the 'tot' as default display type if user doesn't specify it;
-+	 * since Arm64 platform doesn't support HITMs flag, use 'peer' as the
-+	 * default display type.
-+	 */
-+	if (!display) {
-+		if (!strcmp(perf_env__arch(&session->header.env), "arm64"))
-+			display = "peer";
-+		else
-+			display = "tot";
-+	}
-+
-+	err = setup_display(display);
-+	if (err)
-+		goto out_session;
-+
- 	session->itrace_synth_opts = &itrace_synth_opts;
- 
- 	err = setup_nodes(session);
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index db5225caaabe..bfbac365e1e4 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -527,6 +527,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
+ 	u64 snoop  = data_src->mem_snoop;
+ 	u64 lock   = data_src->mem_lock;
+ 	u64 blk    = data_src->mem_blk;
++	u64 lvl_num = data_src->mem_lvl_num;
+ 	/*
+ 	 * Skylake might report unknown remote level via this
+ 	 * bit, consider it when evaluating remote HITMs.
+@@ -621,6 +622,8 @@ do {				\
+ 		}
+ 		if (lvl & P(LVL, MISS))
+ 			if (lvl & P(LVL, L1)) stats->st_l1miss++;
++		if (lvl_num == P(LVLNUM, ANY_CACHE))
++			stats->st_anylvl++;
+ 	} else {
+ 		/* unparsable data_src? */
+ 		stats->noparse++;
+@@ -647,6 +650,7 @@ void c2c_add_stats(struct c2c_stats *stats, struct c2c_stats *add)
+ 	stats->st_noadrs	+= add->st_noadrs;
+ 	stats->st_l1hit		+= add->st_l1hit;
+ 	stats->st_l1miss	+= add->st_l1miss;
++	stats->st_anylvl	+= add->st_anylvl;
+ 	stats->load		+= add->load;
+ 	stats->ld_excl		+= add->ld_excl;
+ 	stats->ld_shared	+= add->ld_shared;
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index 916242f8020a..e0e8057c52e8 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -63,6 +63,7 @@ struct c2c_stats {
+ 	u32	st_noadrs;           /* cacheable store with no address */
+ 	u32	st_l1hit;            /* count of stores that hit L1D */
+ 	u32	st_l1miss;           /* count of stores that miss L1D */
++	u32	st_anylvl;           /* count of stores with any cache level */
+ 	u32	load;                /* count of all loads in trace */
+ 	u32	ld_excl;             /* exclusive loads, rmt/lcl DRAM - snp none/miss */
+ 	u32	ld_shared;           /* shared loads, rmt/lcl DRAM - snp hit */
 -- 
 2.25.1
 
