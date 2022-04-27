@@ -2,158 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123C4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 19:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D88C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 19:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234369AbiD0TbF (ORCPT
+        id S233288AbiD0TdR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Apr 2022 15:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
+        Wed, 27 Apr 2022 15:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233726AbiD0Ta6 (ORCPT
+        with ESMTP id S234440AbiD0Tcz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Apr 2022 15:30:58 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5EF1A39A;
-        Wed, 27 Apr 2022 12:26:48 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id t4so619092ilo.12;
-        Wed, 27 Apr 2022 12:26:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xPwl3B36r2cAnhKOklI7W5r9ku8U6ZGRu8H06ecsDmA=;
-        b=BjuIo11TFSHGVHxVxumbfBtSf8/SrNJ5SC/Xtue/hPWKa4HvDpapKHpH2L6yrPENpH
-         2OEaN0xGJdlqoxfc0DVjsqxTiZ8R5bPkyB+qiNr3huDg39Lsetol46LCwuW940laIqwf
-         LbzlCHbPy22J2HKPJ39VYopALdVPToXxpMj5gVW+fjtziRpo1gCbCVVZpWWfWygF+PCG
-         u9tyApFiaaMIlpEsxb6c3637itcFm+maFkB4K24+ToVSepQMG4t8SybAruTA07s54LCI
-         I6sdzHWpmJMyz40EX+iwKNtvW//cG/hteQwpeSn/y5CNx4XJoeB+aq7Hrjf+CcT+d5lN
-         ENWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xPwl3B36r2cAnhKOklI7W5r9ku8U6ZGRu8H06ecsDmA=;
-        b=Cu8VPT2JAFjtCiZiKVboR5MYTqAHrz5WnrpWEEJBPIQUGsbsVYllbc9gGZeRrJCBsa
-         cPENfqMvhi3te2Ulk2x+Emz0LkoB8g3+qvEQSnvb8Tzqpqing4ybbOiCmy9TNPQrqPMr
-         9LsDMt2YcN/fyBDBGN2KnUHFUuxClzFhL42ZlPsO7rwOytkVheQpsLv0F1PrU7T7q05R
-         76Br4kdn8TOcinU2OJ9Y/+ATrkk8aorGUoMkF/0uK/rB7Gsg1k7Zfj2JQDuAXAHypafn
-         H7T03ZLHNUWrOLWLV4vAnqA74JrwwdtOSE8de5fnsar9TtribFY3pmfrWuikb1QCCWCq
-         bwHw==
-X-Gm-Message-State: AOAM533/M00R5d3u7V7EmEftaB+h8R/E/peEF4TVYQVDH1tW/nFkAwxl
-        I4fa8g5caivHU/AiKMKI2byFPmV3yKLE4lQ1wX1/6lib620=
-X-Google-Smtp-Source: ABdhPJzA/MkwsJsuKT3AKg8Kx603QI4N2VDrpmZSAU9hfxKMztHgFoA7OVcNigYiHbBOLyuzfVf/oBw7/LFCsDUaGGg=
-X-Received: by 2002:a05:6e02:1ba3:b0:2cc:4158:d3ff with SMTP id
- n3-20020a056e021ba300b002cc4158d3ffmr11614731ili.98.1651087607619; Wed, 27
- Apr 2022 12:26:47 -0700 (PDT)
+        Wed, 27 Apr 2022 15:32:55 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C17CE;
+        Wed, 27 Apr 2022 12:29:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651087776; x=1682623776;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7DM3DwoVa43dxbl3zZEhqiJA/RQy10C5jWu7fExDLWg=;
+  b=XePA+Zw0OIw1HmjPLJvRtDW2CifXTnA45AB1dyPJfFhERYISgPTBFB0O
+   b+5krKVUln4iqpDsgnXaaiRjwdpeoQOIm7M1AdPmubRU4N1dRraxSK2jb
+   92ELijKTYa7fwhR0KdXRoRvcem24oDi47DwDQPcjMP1xZpEIaddpIkl3y
+   YRzVqAPcWTJOEhApsMeGZB9atY+csx1Q/mYAcc2RxM4BFxOp+7yLmfI3O
+   eVaNx2AmPcA1A+Zu0q76umSKTNd4XNeXhj7bDRo0vkjM7L9wqm2Z8vzRd
+   Qa54Svmz6ImWTxNXL3LojEbWLClqkmCTQk2xIS98wQp72unLKwpq1G0vo
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="246607217"
+X-IronPort-AV: E=Sophos;i="5.90,294,1643702400"; 
+   d="scan'208";a="246607217"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 12:29:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,294,1643702400"; 
+   d="scan'208";a="533389441"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2022 12:29:36 -0700
+Received: from [10.212.137.53] (kliang2-MOBL.ccr.corp.intel.com [10.212.137.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 90C1C58096C;
+        Wed, 27 Apr 2022 12:29:33 -0700 (PDT)
+Message-ID: <9923422f-2dd3-9951-5814-ab3972e67758@linux.intel.com>
+Date:   Wed, 27 Apr 2022 15:29:31 -0400
 MIME-Version: 1.0
-References: <20220422150507.222488-1-namhyung@kernel.org> <20220422150507.222488-5-namhyung@kernel.org>
- <CAEf4Bzbdh-wbQQLzoXGGKkqqE=+qz19C4tCq4Ynb-_PXzRYM1w@mail.gmail.com> <CAM9d7chos3xgxPMOMwgSh6nCNfqk8k2tXO=0JsdL4KgN_yngCA@mail.gmail.com>
-In-Reply-To: <CAM9d7chos3xgxPMOMwgSh6nCNfqk8k2tXO=0JsdL4KgN_yngCA@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 27 Apr 2022 12:26:36 -0700
-Message-ID: <CAEf4BzZ-RwXV8NoWk4rLyLWyxJhQ6b96ieVCy0kkjLCq8cVxqw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf record: Handle argument change in sched_switch
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH v5 2/5] perf: Add SNOOP_PEER flag to perf mem data struct
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Ali Saidi <alisaidi@amazon.com>,
+        Nick.Forrington@arm.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        benh@kernel.crashing.org, german.gomez@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        kjain@linux.ibm.com, lihuafei1@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+References: <c17dedde-6ba8-db9b-4827-32477f039764@linux.intel.com>
+ <20220422212249.22463-1-alisaidi@amazon.com>
+ <20220423063805.GA559531@leoy-ThinkPad-X240s>
+ <8e09af67-a416-4ead-b406-6c8b998de344@linux.intel.com>
+ <20220424114302.GB978927@leoy-ThinkPad-X240s>
+ <b4aaf1ed-124d-1339-3e99-a120f6cc4d28@linux.intel.com>
+ <20220427161908.GE562576@leoy-ThinkPad-X240s>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220427161908.GE562576@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 11:15 AM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hello,
->
-> On Tue, Apr 26, 2022 at 4:55 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Fri, Apr 22, 2022 at 3:49 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Recently sched_switch tracepoint added a new argument for prev_state,
-> > > but it's hard to handle the change in a BPF program.  Instead, we can
-> > > check the function prototype in BTF before loading the program.
-> > >
-> > > Thus I make two copies of the tracepoint handler and select one based
-> > > on the BTF info.
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/util/bpf_off_cpu.c          | 32 +++++++++++++++
-> > >  tools/perf/util/bpf_skel/off_cpu.bpf.c | 55 ++++++++++++++++++++------
-> > >  2 files changed, 76 insertions(+), 11 deletions(-)
-> > >
-> >
-> > [...]
-> >
-> > >
-> > > +SEC("tp_btf/sched_switch")
-> > > +int on_switch3(u64 *ctx)
-> > > +{
-> > > +       struct task_struct *prev, *next;
-> > > +       int state;
-> > > +
-> > > +       if (!enabled)
-> > > +               return 0;
-> > > +
-> > > +       /*
-> > > +        * TP_PROTO(bool preempt, struct task_struct *prev,
-> > > +        *          struct task_struct *next)
-> > > +        */
-> > > +       prev = (struct task_struct *)ctx[1];
-> > > +       next = (struct task_struct *)ctx[2];
-> >
-> >
-> > you don't have to have two BPF programs for this, you can use
-> > read-only variable to make this choice.
-> >
-> > On BPF side
-> >
-> > const volatile bool has_prev_state = false;
-> >
-> > ...
-> >
-> > if (has_prev_state) {
-> >     prev = (struct task_struct *)ctx[2];
-> >     next = (struct task_struct *)ctx[3];
-> > } else {
-> >     prev = (struct task_struct *)ctx[1];
-> >     next = (struct task_struct *)ctx[2];
-> > }
-> >
-> >
-> > And from user-space side you do your detection and before skeleton is loaded:
-> >
-> > skel->rodata->has_prev_state = <whatever you detected>
->
-> Nice, thanks for the tip!
->
-> Actually I tried something similar but it was with a variable (in bss)
-> so the verifier in an old kernel rejected it due to invalid arg access.
->
-> I guess now the const makes the verifier ignore the branch as if
-> it's dead but the compiler still generates the code, right?
 
 
-yes, exactly
+On 4/27/2022 12:19 PM, Leo Yan wrote:
+> Hi Kan,
+> 
+> On Mon, Apr 25, 2022 at 01:01:40PM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 4/24/2022 7:43 AM, Leo Yan wrote:
+>>> On Sat, Apr 23, 2022 at 05:53:28AM -0700, Andi Kleen wrote:
+>>>>
+>>>>> Except SNOOPX_FWD means a no modified cache snooping, it also means it's
+>>>>> a cache conherency from *remote* socket.  This is quite different from we
+>>>>> define SNOOPX_PEER, which only snoop from peer CPU or clusters.
+>>>>>
+>>
+>> The FWD doesn't have to be *remote*. The definition you quoted is just for
+>> the "L3 Miss", which is indeed a remote forward. But we still have
+>> cross-core FWD. See Table 19-101.
+>>
+>> Actually, X86 uses the PERF_MEM_REMOTE_REMOTE + PERF_MEM_SNOOPX_FWD to
+>> indicate the remote FWD, not just SNOOPX_FWD.
+> 
+> Thanks a lot for the info.
+> 
+>>>>> If no objection, I prefer we could keep the new snoop type SNOOPX_PEER,
+>>>>> this would be easier for us to distinguish the semantics and support the
+>>>>> statistics for SNOOPX_FWD and SNOOPX_PEER separately.
+>>>>>
+>>>>> I overlooked the flag SNOOPX_FWD, thanks a lot for Kan's reminding.
+>>>>
+>>>> Yes seems better to keep using a separate flag if they don't exactly match.
+>>>>
+>>
+>> Yes, I agree with Andi. If you still think the existing flag combination
+>> doesn't match your requirement, a new separate flag should be introduced.
+>> I'm not familiar with ARM. I think I will leave it to you and the maintainer
+>> to decide.
+> 
+> It's a bit difficult for me to make decision is because now SNOOPX_FWD
+> is not used in the file util/mem-events.c, so I am not very sure if
+> SNOOPX_FWD has the consistent usage across different arches.
 
->
-> >
-> > But I'm still hoping that this prev_state argument can be moved to the
-> > end ([0]) to make all this unnecessary.
-> >
-> >   [0] https://lore.kernel.org/lkml/93a20759600c05b6d9e4359a1517c88e06b44834.camel@fb.com/
->
-> Yeah, that would make life easier. :)
->
+No, it's used in the file util/mem-events.c
+See perf_mem__snp_scnprintf().
+
+> 
+> On the other hand, I sent a patch for 'peer' flag statistics [1], you
+> could review it and it only stats for L2 and L3 cache level for local
+> node.
+
+If it's for the local node, why don't you use the hop level which is 
+introduced recently by Power? The below seems a good fit.
+
+PERF_MEM_LVLNUM_ANY_CACHE | PERF_MEM_HOPS_0?
+
+/* hop level */
+#define PERF_MEM_HOPS_0		0x01 /* remote core, same node */
+#define PERF_MEM_HOPS_1		0x02 /* remote node, same socket */
+#define PERF_MEM_HOPS_2		0x03 /* remote socket, same board */
+#define PERF_MEM_HOPS_3		0x04 /* remote board */
+/* 5-7 available */
+#define PERF_MEM_HOPS_SHIFT	43
+
+Thanks,
+Kan
+
+> 
+> The main purpose for my sending this email is if you think the FWD can
+> be the consistent for both arches, and even the new added display mode
+> is also useful for x86 arch (we can rename it as 'fwd' display mode),
+> then I am very glad to unify the flag.
+> 
 > Thanks,
-> Namhyung
+> Leo
+> 
+> [1] https://lore.kernel.org/lkml/20220427155013.1833222-5-leo.yan@linaro.org/
+
+
+
