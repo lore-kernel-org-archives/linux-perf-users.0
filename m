@@ -2,154 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1027CC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 19:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123C4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 19:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbiD0THQ (ORCPT
+        id S234369AbiD0TbF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Apr 2022 15:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52346 "EHLO
+        Wed, 27 Apr 2022 15:31:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232434AbiD0THA (ORCPT
+        with ESMTP id S233726AbiD0Ta6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Apr 2022 15:07:00 -0400
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D00EBF71;
-        Wed, 27 Apr 2022 11:53:52 -0700 (PDT)
-Received: by mail-io1-xd35.google.com with SMTP id f2so3981801ioh.7;
-        Wed, 27 Apr 2022 11:53:52 -0700 (PDT)
+        Wed, 27 Apr 2022 15:30:58 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5EF1A39A;
+        Wed, 27 Apr 2022 12:26:48 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id t4so619092ilo.12;
+        Wed, 27 Apr 2022 12:26:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VJ91s6H07ClEByjQbgZruheBlPpsvHRlP6vfpPqzZKY=;
-        b=EKwxHil5G0kU+wbkmov0G1EaEobARTaBhSglDRm/pqjMlzyw2xWvkwLpGcmiuCwiWJ
-         At36hRwRARLjFsB0PsstrYFE9MGEZmMhqVj6IkdW1Qe3i77MufwhagvCIO3pyldfedH+
-         1L5FME3HrT5gXe+YfTuK1vScwvVdBBAvF3r85wZ4RSEairsG6Sl93FEnp+wFW9Lub42h
-         JoeSUxM+XtEzDhZiGXt0UT79mhVEXx13upi3pSqqFpUs393Ub5H4TEiurTeKxrq4SzOx
-         bx8DqZf4u4eSuipwPj4ZXSXZxkJ0PDwLmP82YCvAND/nMeSjVzccZu1gkgmHm97aBOf9
-         qsLA==
+        bh=xPwl3B36r2cAnhKOklI7W5r9ku8U6ZGRu8H06ecsDmA=;
+        b=BjuIo11TFSHGVHxVxumbfBtSf8/SrNJ5SC/Xtue/hPWKa4HvDpapKHpH2L6yrPENpH
+         2OEaN0xGJdlqoxfc0DVjsqxTiZ8R5bPkyB+qiNr3huDg39Lsetol46LCwuW940laIqwf
+         LbzlCHbPy22J2HKPJ39VYopALdVPToXxpMj5gVW+fjtziRpo1gCbCVVZpWWfWygF+PCG
+         u9tyApFiaaMIlpEsxb6c3637itcFm+maFkB4K24+ToVSepQMG4t8SybAruTA07s54LCI
+         I6sdzHWpmJMyz40EX+iwKNtvW//cG/hteQwpeSn/y5CNx4XJoeB+aq7Hrjf+CcT+d5lN
+         ENWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VJ91s6H07ClEByjQbgZruheBlPpsvHRlP6vfpPqzZKY=;
-        b=7DgfYkHZAWMo6vQgfeQRIq5cEzoy5ln7IM4WnC5QDK5RNvL4sWJhf8HfrdWkhFIOLV
-         hZwD88uaM1y7aZa5X4MtHbpN5H7ivchG2GjCDVFQTsjzbAoYSUehfkSZkAuaLDzYL56w
-         JYvz+MOw2q7H1gWClR1iaI273B5yOzpAZoRvmO87ppgdJHmi1VMNb/gTM48LlIBpGsJ1
-         f1IczIgT4Pmid1K7r44pCn0Pe6ahYFS9Gcl7BMy6PTzC5HKopCyfYL8vV1j5yTsBY1D+
-         vvrwmmCHmPwZF4vA2y8nGmx430i6yWvsbAA2wLJGFQdVflkg0Xb741PxTv7Q+CM3q14Y
-         CgCw==
-X-Gm-Message-State: AOAM532Bq7F0sbmi/E6zbD8SAY5HUkSBJ3uSyn/AWDmJS4Bj5awY7QNB
-        D8gF+4EQofjMuQ93QyuDwEl9BHTLQEPPi0DJ0N4=
-X-Google-Smtp-Source: ABdhPJzl9VUnx3Oh6fY4dpfEp3sorFTDo26fFd33NZFaIoxLMKHh9xEeNMXVp8dcrjOJt836MeA+18nprDrk4z78Bj8=
-X-Received: by 2002:a5d:9f4e:0:b0:652:2323:2eb8 with SMTP id
- u14-20020a5d9f4e000000b0065223232eb8mr12051724iot.79.1651085631636; Wed, 27
- Apr 2022 11:53:51 -0700 (PDT)
+        bh=xPwl3B36r2cAnhKOklI7W5r9ku8U6ZGRu8H06ecsDmA=;
+        b=Cu8VPT2JAFjtCiZiKVboR5MYTqAHrz5WnrpWEEJBPIQUGsbsVYllbc9gGZeRrJCBsa
+         cPENfqMvhi3te2Ulk2x+Emz0LkoB8g3+qvEQSnvb8Tzqpqing4ybbOiCmy9TNPQrqPMr
+         9LsDMt2YcN/fyBDBGN2KnUHFUuxClzFhL42ZlPsO7rwOytkVheQpsLv0F1PrU7T7q05R
+         76Br4kdn8TOcinU2OJ9Y/+ATrkk8aorGUoMkF/0uK/rB7Gsg1k7Zfj2JQDuAXAHypafn
+         H7T03ZLHNUWrOLWLV4vAnqA74JrwwdtOSE8de5fnsar9TtribFY3pmfrWuikb1QCCWCq
+         bwHw==
+X-Gm-Message-State: AOAM533/M00R5d3u7V7EmEftaB+h8R/E/peEF4TVYQVDH1tW/nFkAwxl
+        I4fa8g5caivHU/AiKMKI2byFPmV3yKLE4lQ1wX1/6lib620=
+X-Google-Smtp-Source: ABdhPJzA/MkwsJsuKT3AKg8Kx603QI4N2VDrpmZSAU9hfxKMztHgFoA7OVcNigYiHbBOLyuzfVf/oBw7/LFCsDUaGGg=
+X-Received: by 2002:a05:6e02:1ba3:b0:2cc:4158:d3ff with SMTP id
+ n3-20020a056e021ba300b002cc4158d3ffmr11614731ili.98.1651087607619; Wed, 27
+ Apr 2022 12:26:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220414223704.341028-1-alobakin@pm.me> <20220414223704.341028-9-alobakin@pm.me>
- <CAEf4BzZVohaHdCTz_KFVdEus2pndLTZvg=BHfujpgt29qbio3Q@mail.gmail.com> <05d21d85-7b59-a8f9-73dc-89189986db11@fb.com>
-In-Reply-To: <05d21d85-7b59-a8f9-73dc-89189986db11@fb.com>
+References: <20220422150507.222488-1-namhyung@kernel.org> <20220422150507.222488-5-namhyung@kernel.org>
+ <CAEf4Bzbdh-wbQQLzoXGGKkqqE=+qz19C4tCq4Ynb-_PXzRYM1w@mail.gmail.com> <CAM9d7chos3xgxPMOMwgSh6nCNfqk8k2tXO=0JsdL4KgN_yngCA@mail.gmail.com>
+In-Reply-To: <CAM9d7chos3xgxPMOMwgSh6nCNfqk8k2tXO=0JsdL4KgN_yngCA@mail.gmail.com>
 From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 27 Apr 2022 11:53:40 -0700
-Message-ID: <CAEf4BzYrEfkdvP+k+np0S9-Rtf=xnpgVhL25wFgPQ81bm-_h_Q@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 08/11] samples: bpf: fix shifting unsigned long
- by 32 positions
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
+Date:   Wed, 27 Apr 2022 12:26:36 -0700
+Message-ID: <CAEf4BzZ-RwXV8NoWk4rLyLWyxJhQ6b96ieVCy0kkjLCq8cVxqw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] perf record: Handle argument change in sched_switch
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Chenbo Feng <fengc@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        Thomas Graf <tgraf@suug.ch>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
+        bpf <bpf@vger.kernel.org>,
         "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        llvm@lists.linux.dev
+        Blake Jones <blakejones@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 8:55 AM Yonghong Song <yhs@fb.com> wrote:
+On Wed, Apr 27, 2022 at 11:15 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
+> Hello,
 >
->
-> On 4/20/22 10:18 AM, Andrii Nakryiko wrote:
-> > On Thu, Apr 14, 2022 at 3:46 PM Alexander Lobakin <alobakin@pm.me> wrote:
-> >>
-> >> On 32 bit systems, shifting an unsigned long by 32 positions
-> >> yields the following warning:
-> >>
-> >> samples/bpf/tracex2_kern.c:60:23: warning: shift count >= width of type [-Wshift-count-overflow]
-> >>          unsigned int hi = v >> 32;
-> >>                              ^  ~~
-> >>
+> On Tue, Apr 26, 2022 at 4:55 PM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
 > >
-> > long is always 64-bit in BPF, but I suspect this is due to
-> > samples/bpf/Makefile still using this clang + llc combo, where clang
-> > is called with native target and llc for -target bpf. Not sure if we
-> > are ready to ditch that complicated combination. Yonghong, do we still
-> > need that or can we just use -target bpf in samples/bpf?
->
-> Current most bpf programs in samples/bpf do not use vmlinux.h and CO-RE.
-> They direct use kernel header files. That is why clang C -> IR
-> compilation still needs to be native.
->
-> We could just use -target bpf for the whole compilation but that needs
-> to change the code to use vmlinux.h and CO-RE. There are already a
-> couple of sample bpf programs did this.
-
-Right, I guess I'm proposing to switch samples/bpf to vmlinux.h. Only
-purely networking BPF apps can get away with not using vmlinux.h
-because they might avoid dependency on kernel types. But even then a
-lot of modern networking apps seem to be gaining elements of more
-generic tracing and would rely on CO-RE for staying "portable" between
-kernels. So it might be totally fine to just use CO-RE universally in
-samples/bpf?
-
->
-> >
-> >
-> >> The usual way to avoid this is to shift by 16 two times (see
-> >> upper_32_bits() macro in the kernel). Use it across the BPF sample
-> >> code as well.
-> >>
-> >> Fixes: d822a1926849 ("samples/bpf: Add counting example for kfree_skb() function calls and the write() syscall")
-> >> Fixes: 0fb1170ee68a ("bpf: BPF based latency tracing")
-> >> Fixes: f74599f7c530 ("bpf: Add tests and samples for LWT-BPF")
-> >> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
-> >> ---
-> >>   samples/bpf/lathist_kern.c      | 2 +-
-> >>   samples/bpf/lwt_len_hist_kern.c | 2 +-
-> >>   samples/bpf/tracex2_kern.c      | 2 +-
-> >>   3 files changed, 3 insertions(+), 3 deletions(-)
-> >>
+> > On Fri, Apr 22, 2022 at 3:49 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > Recently sched_switch tracepoint added a new argument for prev_state,
+> > > but it's hard to handle the change in a BPF program.  Instead, we can
+> > > check the function prototype in BTF before loading the program.
+> > >
+> > > Thus I make two copies of the tracepoint handler and select one based
+> > > on the BTF info.
+> > >
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > ---
+> > >  tools/perf/util/bpf_off_cpu.c          | 32 +++++++++++++++
+> > >  tools/perf/util/bpf_skel/off_cpu.bpf.c | 55 ++++++++++++++++++++------
+> > >  2 files changed, 76 insertions(+), 11 deletions(-)
+> > >
 > >
 > > [...]
+> >
+> > >
+> > > +SEC("tp_btf/sched_switch")
+> > > +int on_switch3(u64 *ctx)
+> > > +{
+> > > +       struct task_struct *prev, *next;
+> > > +       int state;
+> > > +
+> > > +       if (!enabled)
+> > > +               return 0;
+> > > +
+> > > +       /*
+> > > +        * TP_PROTO(bool preempt, struct task_struct *prev,
+> > > +        *          struct task_struct *next)
+> > > +        */
+> > > +       prev = (struct task_struct *)ctx[1];
+> > > +       next = (struct task_struct *)ctx[2];
+> >
+> >
+> > you don't have to have two BPF programs for this, you can use
+> > read-only variable to make this choice.
+> >
+> > On BPF side
+> >
+> > const volatile bool has_prev_state = false;
+> >
+> > ...
+> >
+> > if (has_prev_state) {
+> >     prev = (struct task_struct *)ctx[2];
+> >     next = (struct task_struct *)ctx[3];
+> > } else {
+> >     prev = (struct task_struct *)ctx[1];
+> >     next = (struct task_struct *)ctx[2];
+> > }
+> >
+> >
+> > And from user-space side you do your detection and before skeleton is loaded:
+> >
+> > skel->rodata->has_prev_state = <whatever you detected>
+>
+> Nice, thanks for the tip!
+>
+> Actually I tried something similar but it was with a variable (in bss)
+> so the verifier in an old kernel rejected it due to invalid arg access.
+>
+> I guess now the const makes the verifier ignore the branch as if
+> it's dead but the compiler still generates the code, right?
+
+
+yes, exactly
+
+>
+> >
+> > But I'm still hoping that this prev_state argument can be moved to the
+> > end ([0]) to make all this unnecessary.
+> >
+> >   [0] https://lore.kernel.org/lkml/93a20759600c05b6d9e4359a1517c88e06b44834.camel@fb.com/
+>
+> Yeah, that would make life easier. :)
+>
+> Thanks,
+> Namhyung
