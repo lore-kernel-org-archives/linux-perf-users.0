@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF135C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 15:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70B2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 15:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240415AbiD0PyF (ORCPT
+        id S240462AbiD0PyS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Apr 2022 11:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
+        Wed, 27 Apr 2022 11:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240575AbiD0Pxy (ORCPT
+        with ESMTP id S240518AbiD0PyH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Apr 2022 11:53:54 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E290F53E05
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:50:40 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id k14so1809515pga.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:50:40 -0700 (PDT)
+        Wed, 27 Apr 2022 11:54:07 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC31254FBC
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:50:53 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id iq2-20020a17090afb4200b001d93cf33ae9so5328588pjb.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Apr 2022 08:50:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aieDGF3ATgEnI82WJMWvxFqEdxYytl3KzImFfmAMmUQ=;
-        b=jCr/M60V+FBlhcebtRtHMiB72UHOPoNvItJ6BMLencUYSJiLyNbcdbxCuude/Ciqz3
-         fBfnBcAUFsvReSwYws2ioC50mcvED3k3Fii1BeCdIaTopdAp+jtQuATMu4XqY5qwNvtF
-         bOXmmimMSnJa7C1v9JmSKzeiun1atq7WjmErsh4x2RglBe1gxEfwEkYPESfGERb7YsTa
-         3tVnk1vPIv8ce/EaITGV4ajqS9beHhNJGZqhtpMzYfpGBlDvKXhcJP3qWoj5Z1Wv0x+b
-         A1tq/YeIROIS80eVkOeA6vaCCwpt2OjgLvWJfgD1Xnzp2tyL/XUF5qpar10TlS8y+Bpx
-         VjLw==
+        bh=n9mbHgP4oIrBWKuBGSVuQJ/xfzioNAnEfGDPfU6omQE=;
+        b=xh5Sq2ByBdI49RmxJdtiP3Dj/LfrXSKDe1Mx1s+TvGy3fdHmeCb+HVLVL4DYOhWqc4
+         lQz9kni44Kfonad1tD4ZZVydqTOnhq9NijS4hD1ZGcC51OKntcIkpOsQej/5zN1LvGno
+         i+AFqLyM1bjfCLWiHpHDqEJvUTYEFA3sudeKCFzP6BtuyEXlok8cuC0bEAinhWja4SI8
+         PkqPuDfyK8IGfaWwI0l4cbENS7sBdDu/ioj5lBn/BIirfpO4UJUCR3S1rIeaEFiQtR6q
+         eaTLxy203vweB5gtzR+kZlyPDmpw/Qvf3Q6rrgwjWhO0vXH1bgFGUKCZaMTsPaXE+sz4
+         Iz9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aieDGF3ATgEnI82WJMWvxFqEdxYytl3KzImFfmAMmUQ=;
-        b=R+aYwdTAyIDwNbRzjJM3S0YgE2KRH9aP0hoALt8XCXAhPlYa7e4EA9l+YKUF7YYZiS
-         IX3ca74hZcWtf4LWa9LWeufsBREgsRFqgUHWyZxXOrMigimej9337a0AUTBt/BgR/0b1
-         EvnuwKJp3E/MLQB1N4jjCaha+XW4ZLozDF+Hiw8w1eoLJfY1xypebOltSdiesKLCyxUP
-         0InLuETZpdZscyJkB9wdZ52Yo4PLDcNscyy/g0U6oSs2q9xeBvFByuoMxWVNvQ7pXdCL
-         SW9QYz7hx642FDVyjU1cJuW0dKRYD//SSKqvnYg5L34wPgQriX+fl2y2mTCciQZE3Lam
-         fZNg==
-X-Gm-Message-State: AOAM532rqDxuQi6GHwjl960LP+/5PhrUs3ADchkW18C17AoS2n/mnQbc
-        64miPfyrwyX66Hs3YIJKp8j+hQ==
-X-Google-Smtp-Source: ABdhPJzVOF9wzr6ywu2PPLAQ5K6M66fSocQQABsWC21Fj3LpmoozyyAXJWu0H1yYoMpwozAp6gwZGA==
-X-Received: by 2002:a63:e355:0:b0:39d:7956:6d3c with SMTP id o21-20020a63e355000000b0039d79566d3cmr24649589pgj.385.1651074640263;
-        Wed, 27 Apr 2022 08:50:40 -0700 (PDT)
+        bh=n9mbHgP4oIrBWKuBGSVuQJ/xfzioNAnEfGDPfU6omQE=;
+        b=jGW8cqkwYu16MeTZYOUIjYy109GTrt5RAku0dcP/qkH0TcAxsw4u8zKa+Nzhzyz1He
+         b3/gTG/ATx0nZOyxeyke4vXBtDrTwSU959PryKdvwRQJ6RWY61qEBU5GQNhglmQcabJ9
+         /8o1GM4oE7nm6Sa3aoZIhFIJQ2zrZ785rPtFcnBR/oW/M059odl3JopDUO670H6BJf4k
+         sDiJ7dM/lE5PMlvrs9adbp4h6YPhR3/j3cEkoKIIKSG6RGyPpe3aRXc9XwH5cJyW96Je
+         VOZBfAEWUGchIV9ezEXuKI6tNIuNxPfYAylI8lXI3nQkeEaXn8NuK+JA8dTxDPX/ujO8
+         w6nw==
+X-Gm-Message-State: AOAM531UtROamrHx8T9uTq44JHQYEaBNwjBxqws4TVaWi2attLBtAERf
+        +2Rlei9nDH87h8wJeTbUUk+xHw==
+X-Google-Smtp-Source: ABdhPJxdZHLEK54DZhgcXwH5DrvFcLQ50XRUP/0XQ/Ogc+I/NhNqHONX0nS0LgGknwdiedirSifvkw==
+X-Received: by 2002:a17:90b:4ac4:b0:1da:26e3:b3a2 with SMTP id mh4-20020a17090b4ac400b001da26e3b3a2mr6224072pjb.49.1651074653010;
+        Wed, 27 Apr 2022 08:50:53 -0700 (PDT)
 Received: from localhost.localdomain ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id v65-20020a626144000000b0050a839e490bsm19164127pfb.185.2022.04.27.08.50.33
+        by smtp.gmail.com with ESMTPSA id v65-20020a626144000000b0050a839e490bsm19164127pfb.185.2022.04.27.08.50.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 08:50:39 -0700 (PDT)
+        Wed, 27 Apr 2022 08:50:52 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -65,9 +65,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 02/11] perf c2c: Add dimensions for 'anylvl' metrics of store operation
-Date:   Wed, 27 Apr 2022 23:50:04 +0800
-Message-Id: <20220427155013.1833222-3-leo.yan@linaro.org>
+Subject: [PATCH v1 04/11] perf mem: Add statistics for peer snooping
+Date:   Wed, 27 Apr 2022 23:50:06 +0800
+Message-Id: <20220427155013.1833222-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220427155013.1833222-1-leo.yan@linaro.org>
 References: <20220427155013.1833222-1-leo.yan@linaro.org>
@@ -77,224 +77,68 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since now we have the statistics 'st_anylvl' for store operations, add
-dimensions for the 'anylvl' metrics and also associated percentage
-calculation for the single cache line view.
+Since we have added the flag PERF_MEM_SNOOPX_PEER to support cache
+snooping from peer core or cluster, this patch is to add statistics for
+this new flag.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Tested-by: Ali Saidi <alisaidi@amazon.com>
 ---
- tools/perf/builtin-c2c.c | 80 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 73 insertions(+), 7 deletions(-)
+ tools/perf/util/mem-events.c | 11 ++++++++++-
+ tools/perf/util/mem-events.h |  1 +
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index fbbed434014f..9ef439610a2b 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -653,6 +653,7 @@ STAT_FN(lcl_hitm)
- STAT_FN(store)
- STAT_FN(st_l1hit)
- STAT_FN(st_l1miss)
-+STAT_FN(st_anylvl)
- STAT_FN(ld_fbhit)
- STAT_FN(ld_l1hit)
- STAT_FN(ld_l2hit)
-@@ -677,7 +678,8 @@ static uint64_t total_records(struct c2c_stats *stats)
- 
- 	total    = ldcnt +
- 		   stats->st_l1hit +
--		   stats->st_l1miss;
-+		   stats->st_l1miss +
-+		   stats->st_anylvl;
- 
- 	return total;
- }
-@@ -899,6 +901,7 @@ PERCENT_FN(rmt_hitm)
- PERCENT_FN(lcl_hitm)
- PERCENT_FN(st_l1hit)
- PERCENT_FN(st_l1miss)
-+PERCENT_FN(st_anylvl)
- 
- static int
- percent_rmt_hitm_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-@@ -1024,6 +1027,37 @@ percent_stores_l1miss_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	return per_left - per_right;
- }
- 
-+static int
-+percent_stores_anylvl_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+			   struct hist_entry *he)
-+{
-+	int width = c2c_width(fmt, hpp, he->hists);
-+	double per = PERCENT(he, st_anylvl);
-+	char buf[10];
-+
-+	return scnprintf(hpp->buf, hpp->size, "%*s", width, PERC_STR(buf, per));
-+}
-+
-+static int
-+percent_stores_anylvl_color(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+			    struct hist_entry *he)
-+{
-+	return percent_color(fmt, hpp, he, percent_st_anylvl);
-+}
-+
-+static int64_t
-+percent_stores_anylvl_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-+			  struct hist_entry *left, struct hist_entry *right)
-+{
-+	double per_left;
-+	double per_right;
-+
-+	per_left  = PERCENT(left, st_anylvl);
-+	per_right = PERCENT(right, st_anylvl);
-+
-+	return per_left - per_right;
-+}
-+
- STAT_FN(lcl_dram)
- STAT_FN(rmt_dram)
- 
-@@ -1351,7 +1385,7 @@ static struct c2c_dimension dim_tot_stores = {
- };
- 
- static struct c2c_dimension dim_stores_l1hit = {
--	.header		= HEADER_SPAN("---- Stores ----", "L1Hit", 1),
-+	.header		= HEADER_SPAN("--------- Stores --------", "L1Hit", 2),
- 	.name		= "stores_l1hit",
- 	.cmp		= st_l1hit_cmp,
- 	.entry		= st_l1hit_entry,
-@@ -1366,8 +1400,16 @@ static struct c2c_dimension dim_stores_l1miss = {
- 	.width		= 7,
- };
- 
-+static struct c2c_dimension dim_stores_anylvl = {
-+	.header		= HEADER_SPAN_LOW("Anylvl"),
-+	.name		= "stores_anylvl",
-+	.cmp		= st_anylvl_cmp,
-+	.entry		= st_anylvl_entry,
-+	.width		= 7,
-+};
-+
- static struct c2c_dimension dim_cl_stores_l1hit = {
--	.header		= HEADER_SPAN("-- Store Refs --", "L1 Hit", 1),
-+	.header		= HEADER_SPAN("------- Store Refs ------", "L1 Hit", 2),
- 	.name		= "cl_stores_l1hit",
- 	.cmp		= st_l1hit_cmp,
- 	.entry		= st_l1hit_entry,
-@@ -1382,6 +1424,14 @@ static struct c2c_dimension dim_cl_stores_l1miss = {
- 	.width		= 7,
- };
- 
-+static struct c2c_dimension dim_cl_stores_anylvl = {
-+	.header		= HEADER_SPAN_LOW("Any Lvl"),
-+	.name		= "cl_stores_anylvl",
-+	.cmp		= st_anylvl_cmp,
-+	.entry		= st_anylvl_entry,
-+	.width		= 7,
-+};
-+
- static struct c2c_dimension dim_ld_fbhit = {
- 	.header		= HEADER_SPAN("----- Core Load Hit -----", "FB", 2),
- 	.name		= "ld_fbhit",
-@@ -1471,7 +1521,7 @@ static struct c2c_dimension dim_percent_lcl_hitm = {
- };
- 
- static struct c2c_dimension dim_percent_stores_l1hit = {
--	.header		= HEADER_SPAN("-- Store Refs --", "L1 Hit", 1),
-+	.header		= HEADER_SPAN("------- Store Refs ------", "L1 Hit", 2),
- 	.name		= "percent_stores_l1hit",
- 	.cmp		= percent_stores_l1hit_cmp,
- 	.entry		= percent_stores_l1hit_entry,
-@@ -1488,6 +1538,15 @@ static struct c2c_dimension dim_percent_stores_l1miss = {
- 	.width		= 7,
- };
- 
-+static struct c2c_dimension dim_percent_stores_anylvl = {
-+	.header		= HEADER_SPAN_LOW("Any Lvl"),
-+	.name		= "percent_stores_anylvl",
-+	.cmp		= percent_stores_anylvl_cmp,
-+	.entry		= percent_stores_anylvl_entry,
-+	.color		= percent_stores_anylvl_color,
-+	.width		= 7,
-+};
-+
- static struct c2c_dimension dim_dram_lcl = {
- 	.header		= HEADER_SPAN("--- Load Dram ----", "Lcl", 1),
- 	.name		= "dram_lcl",
-@@ -1618,8 +1677,10 @@ static struct c2c_dimension *dimensions[] = {
- 	&dim_tot_stores,
- 	&dim_stores_l1hit,
- 	&dim_stores_l1miss,
-+	&dim_stores_anylvl,
- 	&dim_cl_stores_l1hit,
- 	&dim_cl_stores_l1miss,
-+	&dim_cl_stores_anylvl,
- 	&dim_ld_fbhit,
- 	&dim_ld_l1hit,
- 	&dim_ld_l2hit,
-@@ -1632,6 +1693,7 @@ static struct c2c_dimension *dimensions[] = {
- 	&dim_percent_lcl_hitm,
- 	&dim_percent_stores_l1hit,
- 	&dim_percent_stores_l1miss,
-+	&dim_percent_stores_anylvl,
- 	&dim_dram_lcl,
- 	&dim_dram_rmt,
- 	&dim_pid,
-@@ -2149,6 +2211,7 @@ static void print_c2c__display_stats(FILE *out)
- 	fprintf(out, "  Store - no mapping                : %10d\n", stats->st_noadrs);
- 	fprintf(out, "  Store L1D Hit                     : %10d\n", stats->st_l1hit);
- 	fprintf(out, "  Store L1D Miss                    : %10d\n", stats->st_l1miss);
-+	fprintf(out, "  Store Any cache Level             : %10d\n", stats->st_anylvl);
- 	fprintf(out, "  No Page Map Rejects               : %10d\n", stats->nomap);
- 	fprintf(out, "  Unable to parse data source       : %10d\n", stats->noparse);
- }
-@@ -2171,6 +2234,7 @@ static void print_shared_cacheline_info(FILE *out)
- 	fprintf(out, "  Blocked Access on shared lines    : %10d\n", stats->blk_data + stats->blk_addr);
- 	fprintf(out, "  Store HITs on shared lines        : %10d\n", stats->store);
- 	fprintf(out, "  Store L1D hits on shared lines    : %10d\n", stats->st_l1hit);
-+	fprintf(out, "  Store Any cache Level             : %10d\n", stats->st_anylvl);
- 	fprintf(out, "  Total Merged records              : %10d\n", hitm_cnt + stats->store);
- }
- 
-@@ -2193,10 +2257,10 @@ static void print_cacheline(struct c2c_hists *c2c_hists,
- 		fprintf(out, "\n");
- 	}
- 
--	fprintf(out, "  -------------------------------------------------------------\n");
-+	fprintf(out, "  ----------------------------------------------------------------------\n");
- 	__hist_entry__snprintf(he_cl, &hpp, hpp_list);
- 	fprintf(out, "%s\n", bf);
--	fprintf(out, "  -------------------------------------------------------------\n");
-+	fprintf(out, "  ----------------------------------------------------------------------\n");
- 
- 	hists__fprintf(&c2c_hists->hists, false, 0, 0, 0, out, false);
- }
-@@ -2213,6 +2277,7 @@ static void print_pareto(FILE *out)
- 		    "cl_lcl_hitm,"
- 		    "cl_stores_l1hit,"
- 		    "cl_stores_l1miss,"
-+		    "cl_stores_anylvl,"
- 		    "dcacheline";
- 
- 	perf_hpp_list__init(&hpp_list);
-@@ -2664,6 +2729,7 @@ static int build_cl_output(char *cl_sort, bool no_source)
- 		"percent_lcl_hitm,"
- 		"percent_stores_l1hit,"
- 		"percent_stores_l1miss,"
-+		"percent_stores_anylvl,"
- 		"offset,offset_node,dcacheline_count,",
- 		add_pid   ? "pid," : "",
- 		add_tid   ? "tid," : "",
-@@ -2850,7 +2916,7 @@ static int perf_c2c__report(int argc, const char **argv)
- 		     "tot_recs,"
- 		     "tot_loads,"
- 		     "tot_stores,"
--		     "stores_l1hit,stores_l1miss,"
-+		     "stores_l1hit,stores_l1miss,stores_anylvl,"
- 		     "ld_fbhit,ld_l1hit,ld_l2hit,"
- 		     "ld_lclhit,lcl_hitm,"
- 		     "ld_rmthit,rmt_hitm,"
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index bfbac365e1e4..2086f067359b 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -525,6 +525,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
+ 	u64 op     = data_src->mem_op;
+ 	u64 lvl    = data_src->mem_lvl;
+ 	u64 snoop  = data_src->mem_snoop;
++	u64 snoopx = data_src->mem_snoopx;
+ 	u64 lock   = data_src->mem_lock;
+ 	u64 blk    = data_src->mem_blk;
+ 	u64 lvl_num = data_src->mem_lvl_num;
+@@ -568,10 +569,17 @@ do {				\
+ 			if (lvl & P(LVL, IO))  stats->ld_io++;
+ 			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
+ 			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
+-			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
++			if (lvl & P(LVL, L2)) {
++				if (snoopx & P(SNOOPX, PEER))
++					stats->ld_peer++;
++				else
++					stats->ld_l2hit++;
++			}
+ 			if (lvl & P(LVL, L3 )) {
+ 				if (snoop & P(SNOOP, HITM))
+ 					HITM_INC(lcl_hitm);
++				else if (snoopx & P(SNOOPX, PEER))
++					stats->ld_peer++;
+ 				else
+ 					stats->ld_llchit++;
+ 			}
+@@ -662,6 +670,7 @@ void c2c_add_stats(struct c2c_stats *stats, struct c2c_stats *add)
+ 	stats->ld_l1hit		+= add->ld_l1hit;
+ 	stats->ld_l2hit		+= add->ld_l2hit;
+ 	stats->ld_llchit	+= add->ld_llchit;
++	stats->ld_peer		+= add->ld_peer;
+ 	stats->lcl_hitm		+= add->lcl_hitm;
+ 	stats->rmt_hitm		+= add->rmt_hitm;
+ 	stats->tot_hitm		+= add->tot_hitm;
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index e0e8057c52e8..7b6c74e74354 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -75,6 +75,7 @@ struct c2c_stats {
+ 	u32	ld_l1hit;            /* count of loads that hit L1D */
+ 	u32	ld_l2hit;            /* count of loads that hit L2D */
+ 	u32	ld_llchit;           /* count of loads that hit LLC */
++	u32	ld_peer;             /* count of loads that hit peer core or cluster cache */
+ 	u32	lcl_hitm;            /* count of loads with local HITM  */
+ 	u32	rmt_hitm;            /* count of loads with remote HITM */
+ 	u32	tot_hitm;            /* count of loads with local and remote HITM */
 -- 
 2.25.1
 
