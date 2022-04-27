@@ -2,213 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D572EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 18:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1027CC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 19:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231919AbiD0TBq (ORCPT
+        id S230456AbiD0THQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Apr 2022 15:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34362 "EHLO
+        Wed, 27 Apr 2022 15:07:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232137AbiD0TB3 (ORCPT
+        with ESMTP id S232434AbiD0THA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Apr 2022 15:01:29 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B64E7AF1C5;
-        Wed, 27 Apr 2022 11:47:53 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id g21so4172462iom.13;
-        Wed, 27 Apr 2022 11:47:53 -0700 (PDT)
+        Wed, 27 Apr 2022 15:07:00 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D00EBF71;
+        Wed, 27 Apr 2022 11:53:52 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id f2so3981801ioh.7;
+        Wed, 27 Apr 2022 11:53:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=14esCJF8oxhC7+SUFQUnNCY+R3HMTtAjg+iM+T6QmHk=;
-        b=lJ8lraGidTiZGaFNkBpA40MehmTR0OeN76envnFcftCuPAO9NuIE604PojZkr37zmY
-         yRLC8gzsrdjf0u1VQVd/auBX5c9k4QbrljzNimv/lR2bd3EDYNOMacCMubmOtmcnFa0Y
-         pVDk9UuRJIwdDQyX+FlE+PQAp1/w3ZJGgKcC/O6qOeEU5V/bxWN5l9jeCmM+dSUCa37Z
-         bAH9ek152wS7bBdrV4YpScdhOhlGiDRjo7DdyuwsiMkNSqbs3+OYDF0ORTRmXKc71T0s
-         M2ALp92icMvmDCAFORRGJE4IIeNAYLki1+ABv7DYmvrzJZHAO1otAm7Ol6cDzRgmZt6w
-         Uqew==
+        bh=VJ91s6H07ClEByjQbgZruheBlPpsvHRlP6vfpPqzZKY=;
+        b=EKwxHil5G0kU+wbkmov0G1EaEobARTaBhSglDRm/pqjMlzyw2xWvkwLpGcmiuCwiWJ
+         At36hRwRARLjFsB0PsstrYFE9MGEZmMhqVj6IkdW1Qe3i77MufwhagvCIO3pyldfedH+
+         1L5FME3HrT5gXe+YfTuK1vScwvVdBBAvF3r85wZ4RSEairsG6Sl93FEnp+wFW9Lub42h
+         JoeSUxM+XtEzDhZiGXt0UT79mhVEXx13upi3pSqqFpUs393Ub5H4TEiurTeKxrq4SzOx
+         bx8DqZf4u4eSuipwPj4ZXSXZxkJ0PDwLmP82YCvAND/nMeSjVzccZu1gkgmHm97aBOf9
+         qsLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=14esCJF8oxhC7+SUFQUnNCY+R3HMTtAjg+iM+T6QmHk=;
-        b=vC5YZguSxqefFjIA/Ab+bspCMeDzV6i6unfk2TlOPcyDqoUcB8Ga7ZzD+gA3N2p44V
-         69lRBT+RRiSFmSb75Z+0+Nf6jpVdwgB5oi3bBzdgdfhlaLrgPE1hdTAmA9YtnOmxo8fu
-         n7c5hBh3L1AVo14iB3xTdL5Lvie/rYbFQC82c8vsvP6LmTLAzAahFGrIhwINesq2Dowr
-         FFcfHZtCsx5aE+Ga/FTsZacFlv3QnD7g4ilE7JN/0wx0uqx/tAj6WxAz/2VYPJsVW7yj
-         cRNtM8TRcsEQfKZbfGVHJQJfnd+1w4E1KmyWKeASivfbka3I4Wso8RtcGf4QwcpXX/N4
-         Pm7Q==
-X-Gm-Message-State: AOAM532nHVnG88DeaXuGiPJAzo9Fisxita3RZ/mQ2DFDoZgm+/AwV2nw
-        N0xxS3a5cIvNTbfj55ltPaGWn8xydJREo1CODHoU3/s/
-X-Google-Smtp-Source: ABdhPJwctKhC+LoPa0yYdVmlkzCrYOu0J3MbwGtvBhbxBwPqYcmnpKbJoI/stCM52ACnkwmTAtKj8wAFtT5PZmAokBw=
-X-Received: by 2002:a05:6602:1683:b0:64f:ba36:d3cf with SMTP id
- s3-20020a056602168300b0064fba36d3cfmr12102330iow.144.1651085273075; Wed, 27
- Apr 2022 11:47:53 -0700 (PDT)
+        bh=VJ91s6H07ClEByjQbgZruheBlPpsvHRlP6vfpPqzZKY=;
+        b=7DgfYkHZAWMo6vQgfeQRIq5cEzoy5ln7IM4WnC5QDK5RNvL4sWJhf8HfrdWkhFIOLV
+         hZwD88uaM1y7aZa5X4MtHbpN5H7ivchG2GjCDVFQTsjzbAoYSUehfkSZkAuaLDzYL56w
+         JYvz+MOw2q7H1gWClR1iaI273B5yOzpAZoRvmO87ppgdJHmi1VMNb/gTM48LlIBpGsJ1
+         f1IczIgT4Pmid1K7r44pCn0Pe6ahYFS9Gcl7BMy6PTzC5HKopCyfYL8vV1j5yTsBY1D+
+         vvrwmmCHmPwZF4vA2y8nGmx430i6yWvsbAA2wLJGFQdVflkg0Xb741PxTv7Q+CM3q14Y
+         CgCw==
+X-Gm-Message-State: AOAM532Bq7F0sbmi/E6zbD8SAY5HUkSBJ3uSyn/AWDmJS4Bj5awY7QNB
+        D8gF+4EQofjMuQ93QyuDwEl9BHTLQEPPi0DJ0N4=
+X-Google-Smtp-Source: ABdhPJzl9VUnx3Oh6fY4dpfEp3sorFTDo26fFd33NZFaIoxLMKHh9xEeNMXVp8dcrjOJt836MeA+18nprDrk4z78Bj8=
+X-Received: by 2002:a5d:9f4e:0:b0:652:2323:2eb8 with SMTP id
+ u14-20020a5d9f4e000000b0065223232eb8mr12051724iot.79.1651085631636; Wed, 27
+ Apr 2022 11:53:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220422100025.1469207-1-jolsa@kernel.org> <20220422100025.1469207-2-jolsa@kernel.org>
- <52f36e85-fea6-e307-344e-5bbb5b8431f7@iogearbox.net> <CAEf4BzZOKosYRHwK2CfZzpTUcDdrLXPXbYax++Q_PHCMcNdqCw@mail.gmail.com>
- <YmeXx0mfy4Nr5jEB@krava> <CAEf4Bza42-aN7dZAWsH1H5KNMhSZh6nUj0WQ5MkOkNjBq2At_A@mail.gmail.com>
- <YmkB6XxM6avEZdSf@krava>
-In-Reply-To: <YmkB6XxM6avEZdSf@krava>
+References: <20220414223704.341028-1-alobakin@pm.me> <20220414223704.341028-9-alobakin@pm.me>
+ <CAEf4BzZVohaHdCTz_KFVdEus2pndLTZvg=BHfujpgt29qbio3Q@mail.gmail.com> <05d21d85-7b59-a8f9-73dc-89189986db11@fb.com>
+In-Reply-To: <05d21d85-7b59-a8f9-73dc-89189986db11@fb.com>
 From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 27 Apr 2022 11:47:42 -0700
-Message-ID: <CAEf4Bza2MGR9j5HL4eu_PP5UpZ49_8YPG=GLfxe0kHCYQWJWJw@mail.gmail.com>
-Subject: Re: [PATCH perf/core 1/5] libbpf: Add bpf_program__set_insns function
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+Date:   Wed, 27 Apr 2022 11:53:40 -0700
+Message-ID: <CAEf4BzYrEfkdvP+k+np0S9-Rtf=xnpgVhL25wFgPQ81bm-_h_Q@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 08/11] samples: bpf: fix shifting unsigned long
+ by 32 positions
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Alexander Lobakin <alobakin@pm.me>,
         Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Song Liu <songliubraving@fb.com>,
         John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
+        KP Singh <kpsingh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Chenbo Feng <fengc@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        Thomas Graf <tgraf@suug.ch>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 1:42 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, Apr 27, 2022 at 8:55 AM Yonghong Song <yhs@fb.com> wrote:
 >
-> On Tue, Apr 26, 2022 at 08:58:12AM -0700, Andrii Nakryiko wrote:
-> > On Mon, Apr 25, 2022 at 11:57 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > >
-> > > On Mon, Apr 25, 2022 at 11:19:09PM -0700, Andrii Nakryiko wrote:
-> > > > On Mon, Apr 25, 2022 at 9:22 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > > > >
-> > > > > On 4/22/22 12:00 PM, Jiri Olsa wrote:
-> > > > > > Adding bpf_program__set_insns that allows to set new
-> > > > > > instructions for program.
-> > > > > >
-> > > > > > Also moving bpf_program__attach_kprobe_multi_opts on
-> > > > > > the proper name sorted place in map file.
-> > > >
-> > > > would make sense to fix it as a separate patch, it has nothing to do
-> > > > with bpf_program__set_insns() API itself
-> > >
-> > > np
-> > >
-> > > >
-> > > > > >
-> > > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > > ---
-> > > > > >   tools/lib/bpf/libbpf.c   |  8 ++++++++
-> > > > > >   tools/lib/bpf/libbpf.h   | 12 ++++++++++++
-> > > > > >   tools/lib/bpf/libbpf.map |  3 ++-
-> > > > > >   3 files changed, 22 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > > > > > index 809fe209cdcc..284790d81c1b 100644
-> > > > > > --- a/tools/lib/bpf/libbpf.c
-> > > > > > +++ b/tools/lib/bpf/libbpf.c
-> > > > > > @@ -8457,6 +8457,14 @@ size_t bpf_program__insn_cnt(const struct bpf_program *prog)
-> > > > > >       return prog->insns_cnt;
-> > > > > >   }
-> > > > > >
-> > > > > > +void bpf_program__set_insns(struct bpf_program *prog,
-> > > > > > +                         struct bpf_insn *insns, size_t insns_cnt)
-> > > > > > +{
-> > > > > > +     free(prog->insns);
-> > > > > > +     prog->insns = insns;
-> > > > > > +     prog->insns_cnt = insns_cnt;
-> > > >
-> > > > let's not store user-provided pointer here. Please realloc prog->insns
-> > > > as necessary and copy over insns into it.
-> > > >
-> > > > Also let's at least add the check for prog->loaded and return -EBUSY
-> > > > in such a case. And of course this API should return int, not void.
-> > >
-> > > ok, will change
-> > >
-> > > >
-> > > > > > +}
-> > > > > > +
-> > > > > >   int bpf_program__set_prep(struct bpf_program *prog, int nr_instances,
-> > > > > >                         bpf_program_prep_t prep)
-> > > > > >   {
-> > > > > > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-> > > > > > index 05dde85e19a6..b31ad58d335f 100644
-> > > > > > --- a/tools/lib/bpf/libbpf.h
-> > > > > > +++ b/tools/lib/bpf/libbpf.h
-> > > > > > @@ -323,6 +323,18 @@ struct bpf_insn;
-> > > > > >    * different.
-> > > > > >    */
-> > > > > >   LIBBPF_API const struct bpf_insn *bpf_program__insns(const struct bpf_program *prog);
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * @brief **bpf_program__set_insns()** can set BPF program's underlying
-> > > > > > + * BPF instructions.
-> > > > > > + * @param prog BPF program for which to return instructions
-> > > > > > + * @param insn a pointer to an array of BPF instructions
-> > > > > > + * @param insns_cnt number of `struct bpf_insn`'s that form
-> > > > > > + * specified BPF program
-> > > > > > + */
-> > > >
-> > > > This API makes me want to cry... but I can't come up with anything
-> > > > better for perf's use case.
-> > > >
+>
+>
+> On 4/20/22 10:18 AM, Andrii Nakryiko wrote:
+> > On Thu, Apr 14, 2022 at 3:46 PM Alexander Lobakin <alobakin@pm.me> wrote:
+> >>
+> >> On 32 bit systems, shifting an unsigned long by 32 positions
+> >> yields the following warning:
+> >>
+> >> samples/bpf/tracex2_kern.c:60:23: warning: shift count >= width of type [-Wshift-count-overflow]
+> >>          unsigned int hi = v >> 32;
+> >>                              ^  ~~
+> >>
 > >
-> > So thinking about this some more. If we make libbpf not to close maps
-> > and prog FDs on BPF program load failure automatically and instead
-> > doing it in bpf_object__close(), which would seem to be a totally fine
-> > semantics and won't break any reasonable application as they always
-> > have to call bpf_object__close() anyways to clean up all the
-> > resources; we wouldn't need this horror of bpf_program__set_insns().
-> > Your BPF program would fail to load, but you'll get its fully prepared
-> > instructions with bpf_program__insns(), then you can just append
-> > correct preamble. Meanwhile, all the maps will be created (they are
-> > always created before the first program load), so all the FDs will be
-> > correct.
-> >
-> > This is certainly advanced knowledge of libbpf behavior, but the use
-> > case you are trying to solve is also very unique and advanced (and I
-> > wouldn't recommend anyone trying to do this anyways). WDYT? Would that
-> > work?
+> > long is always 64-bit in BPF, but I suspect this is due to
+> > samples/bpf/Makefile still using this clang + llc combo, where clang
+> > is called with native target and llc for -target bpf. Not sure if we
+> > are ready to ditch that complicated combination. Yonghong, do we still
+> > need that or can we just use -target bpf in samples/bpf?
 >
-> hm, so verifier will fail after all maps are set up during the walk
-> of the program instructions.. I guess that could work, I'll give it
-> a try, should be easy change in libbpf (like below) and also in perf
+> Current most bpf programs in samples/bpf do not use vmlinux.h and CO-RE.
+> They direct use kernel header files. That is why clang C -> IR
+> compilation still needs to be native.
 >
-> but still the bpf_program__set_insns seems less horror to me
+> We could just use -target bpf for the whole compilation but that needs
+> to change the code to use vmlinux.h and CO-RE. There are already a
+> couple of sample bpf programs did this.
 
-let's keep set_insns API then, but please do add a lot of warnings
-into the description to make it very-very scary :)
+Right, I guess I'm proposing to switch samples/bpf to vmlinux.h. Only
+purely networking BPF apps can get away with not using vmlinux.h
+because they might avoid dependency on kernel types. But even then a
+lot of modern networking apps seem to be gaining elements of more
+generic tracing and would rely on CO-RE for staying "portable" between
+kernels. So it might be totally fine to just use CO-RE universally in
+samples/bpf?
 
 >
-> jirka
->
->
-> ---
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index c8df74e5f658..1eb75d4231ff 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -7577,19 +7577,6 @@ static int bpf_object_load(struct bpf_object *obj, int extra_log_level, const ch
->         obj->btf_vmlinux = NULL;
->
->         obj->loaded = true; /* doesn't matter if successfully or not */
-> -
-> -       if (err)
-> -               goto out;
-> -
-> -       return 0;
-> -out:
-> -       /* unpin any maps that were auto-pinned during load */
-> -       for (i = 0; i < obj->nr_maps; i++)
-> -               if (obj->maps[i].pinned && !obj->maps[i].reused)
-> -                       bpf_map__unpin(&obj->maps[i], NULL);
-> -
-> -       bpf_object_unload(obj);
-> -       pr_warn("failed to load object '%s'\n", obj->path);
->         return libbpf_err(err);
->  }
->
+> >
+> >
+> >> The usual way to avoid this is to shift by 16 two times (see
+> >> upper_32_bits() macro in the kernel). Use it across the BPF sample
+> >> code as well.
+> >>
+> >> Fixes: d822a1926849 ("samples/bpf: Add counting example for kfree_skb() function calls and the write() syscall")
+> >> Fixes: 0fb1170ee68a ("bpf: BPF based latency tracing")
+> >> Fixes: f74599f7c530 ("bpf: Add tests and samples for LWT-BPF")
+> >> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+> >> ---
+> >>   samples/bpf/lathist_kern.c      | 2 +-
+> >>   samples/bpf/lwt_len_hist_kern.c | 2 +-
+> >>   samples/bpf/tracex2_kern.c      | 2 +-
+> >>   3 files changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >
+> > [...]
