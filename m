@@ -2,79 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BBCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 10:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DE8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Apr 2022 11:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232310AbiD0LDA (ORCPT
+        id S231553AbiD0LDY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Apr 2022 07:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43720 "EHLO
+        Wed, 27 Apr 2022 07:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232180AbiD0LCy (ORCPT
+        with ESMTP id S231977AbiD0LC7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Apr 2022 07:02:54 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5456022294;
-        Wed, 27 Apr 2022 03:45:20 -0700 (PDT)
+        Wed, 27 Apr 2022 07:02:59 -0400
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B863FBA95;
+        Wed, 27 Apr 2022 03:43:48 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id m14so1279412vsp.11;
+        Wed, 27 Apr 2022 03:43:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1651056320; x=1682592320;
-  h=from:to:cc:subject:date:message-id;
-  bh=grvj6tMyw3S/5nbVT6GQKTs8XupqF2xocGWEN8DyBms=;
-  b=Otq4jIWnc+3joBGa6If+Qwj3xK4vvTJFpOAsbm6JyaLikC3wOYYeN2wa
-   O9zmxO7UFxb6OETRCFEETYhHnPJvjbzeF/ZbAJntWJxnEUGVSWPcJI+QU
-   SsdrfWviZ+4WSmwRBBbHgwB9uGReVL9CZGgnrN2Gj9org/NPq3aBdD/6B
-   8=;
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 27 Apr 2022 02:53:17 -0700
-X-QCInternal: smtphost
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 27 Apr 2022 02:53:15 -0700
-X-QCInternal: smtphost
-Received: from hu-c-spathi-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.108.59])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 27 Apr 2022 15:22:59 +0530
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 212714)
-        id 271763B1A; Wed, 27 Apr 2022 15:22:58 +0530 (+0530)
-From:   Srinivasarao Pathipati <quic_spathi@quicinc.com>
-To:     will@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Srinivasarao Pathipati <quic_spathi@quicinc.com>
-Subject: [PATCH V1] arm64: perf: Change PMCR write to read-modify-write
-Date:   Wed, 27 Apr 2022 15:21:45 +0530
-Message-Id: <1651053105-11557-1-git-send-email-quic_spathi@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=mUxyvNhw8WOz4AnMY4MCjfkWROBHShr4sY5p+gR6VSc=;
+        b=oFYaMCXtHGQcZ9ME8vMm4BiCzb8QLkyFvbRnwGyry+kBqYwEb87C4VWsYTGUQFPqTU
+         Hib6iapsGkX49ee6mn/ocm0tE+q9VExuQtWZpPy9pKiD/R1jixkDYeXoAaDCBLVYIbD9
+         ChjezrvqowchRH1zTyf78eD1P2ttNYjFRpK0V0zQAR+6JrEgw7p0fDgxMV30tO391Pg9
+         CrAsL4L4SjtIAIXMIASiGvloafM7yfRFgvNqlISBB0i7mnuOutcfCBxha5jSgArNtz01
+         M6GXiU1SJ/PUmAlPAAJLx36YLgflckt7FaCxItNBM/dF0ji24lyYcMvgGwjWvwHNoB+F
+         kuQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=mUxyvNhw8WOz4AnMY4MCjfkWROBHShr4sY5p+gR6VSc=;
+        b=Q9H1Y6fx2tZR7JZG5aIQht/rv3EBVnNiXVV+4H4P2mIerPgVf+ju1Dbv+NTxe5j9fP
+         sl7if4s+wWxBo9nYCgFj09IMu/XHbttKwm87bLog1Nqf82CSO5CJDcFTAYYe52t/c3cE
+         RFG4eWiTQtvMQv0deiQzgqgdsK4ceQtIT4sZSAlYuIlJLO0XwWhddwTXjE07OD/2DQVe
+         Llb/Drmmtqvkzx8G6oVvQOUYniLzzLjcUUJOQ9fiiSP6O0cxE9pMyFS32s7gE4WTnhLJ
+         v8uOj0hZdWIuejc/qlDWq6o3MtMrtbZp/rTcTDkhck4XbRU+nssU3Cxyfx/ULNIDq2Bb
+         OApQ==
+X-Gm-Message-State: AOAM532b7LbRXHLyrPV6YxM/k6ZfAp6iPzzb0jTgfE1lZVllUzVp+Ivx
+        6KCBwucHXreVAV/2CK9IEI1LMKLEiQw=
+X-Google-Smtp-Source: ABdhPJyxYzwCq1uDHdjgt2isejxNcwWLbFn7lXEIErjaGYlcD6Ha5M5WNAXoBC6h4fwzjZgzojOUTw==
+X-Received: by 2002:a17:902:da81:b0:15d:37b9:70df with SMTP id j1-20020a170902da8100b0015d37b970dfmr7428157plx.34.1651051938953;
+        Wed, 27 Apr 2022 02:32:18 -0700 (PDT)
+Received: from [192.168.255.10] ([203.205.141.118])
+        by smtp.gmail.com with ESMTPSA id o34-20020a634e62000000b0039cc4376415sm15359587pgl.63.2022.04.27.02.32.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Apr 2022 02:32:18 -0700 (PDT)
+Message-ID: <da7e8eb6-e473-84ff-1c7b-4214a5233a9b@gmail.com>
+Date:   Wed, 27 Apr 2022 17:32:10 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.8.1
+Subject: Re: [PATCH v3 7/7] kvm: x86/cpuid: Fix CPUID leaf 0xA
+Content-Language: en-US
+To:     Sandipan Das <sandipan.das@amd.com>,
+        Vasant Hegde <vasant.hegde@amd.com>
+Cc:     peterz@infradead.org, bp@alien8.de, dave.hansen@linux.intel.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        pbonzini@redhat.com, jmattson@google.com, eranian@google.com,
+        puwen@hygon.cn, ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1650977962.git.sandipan.das@amd.com>
+ <476a0d6feef8016ed19e4911ac25abdd20aabeb3.1650977962.git.sandipan.das@amd.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+Organization: Tencent
+In-Reply-To: <476a0d6feef8016ed19e4911ac25abdd20aabeb3.1650977962.git.sandipan.das@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Preserve the bitfields of PMCR_EL0 during PMU reset.
-Reset routine should set only PMCR.C, PMCR.P and PMCR.LC fields only
-to reset the counters. Other fields should not be changed
-as they could be set before PMU initialization and their value must
-be preserved even after reset.
+On 26/4/2022 9:05 pm, Sandipan Das wrote:
+> On some x86 processors, CPUID leaf 0xA provides information
+> on Architectural Performance Monitoring features. It
+> advertises a PMU version which Qemu uses to determine the
+> availability of additional MSRs to manage the PMCs.
+> 
+> Upon receiving a KVM_GET_SUPPORTED_CPUID ioctl request for
+> the same, the kernel constructs return values based on the
+> x86_pmu_capability irrespective of the vendor.
+> 
+> This leaf and the additional MSRs are not supported on AMD
+> and Hygon processors. If AMD PerfMonV2 is detected, the PMU
 
-Signed-off-by: Srinivasarao Pathipati <quic_spathi@quicinc.com>
----
- arch/arm64/kernel/perf_event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So, why not:
 
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index cb69ff1..9e22326 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -1047,7 +1047,7 @@ static void armv8pmu_reset(void *info)
- 	if (armv8pmu_has_long_event(cpu_pmu))
- 		pmcr |= ARMV8_PMU_PMCR_LP;
- 
--	armv8pmu_pmcr_write(pmcr);
-+	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | pmcr);
- }
- 
- static int __armv8_pmuv3_map_event(struct perf_event *event,
--- 
-2.7.4
+		if (!static_cpu_has(X86_FEATURE_ARCH_PERFMON))
+			break;
+?
 
+> version is set to 2 and guest startup breaks because of an
+> attempt to access a non-existent MSR. Return zeros to avoid
+> this.
+> 
+> Fixes: a6c06ed1a60a ("KVM: Expose the architectural performance monitoring CPUID leaf")
+> Reported-by: Vasant Hegde <vasant.hegde@amd.com>
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> ---
+>   arch/x86/kvm/cpuid.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 4b62d80bb22f..d27d6a8f601a 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -872,6 +872,12 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>   		union cpuid10_eax eax;
+>   		union cpuid10_edx edx;
+>   
+> +		if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
+> +		    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
+> +			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
+> +			break;
+> +		}
+> +
+>   		perf_get_x86_pmu_capability(&cap);
+>   
+>   		/*
