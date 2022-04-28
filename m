@@ -2,126 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C40C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 12:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35877C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346171AbiD1Mbw (ORCPT
+        id S238516AbiD1NP4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 08:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
+        Thu, 28 Apr 2022 09:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344676AbiD1Mbv (ORCPT
+        with ESMTP id S1346881AbiD1NPz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 08:31:51 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB14A6E27;
-        Thu, 28 Apr 2022 05:28:36 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23SCS31j019643;
-        Thu, 28 Apr 2022 12:28:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=j992jBLdnEVxEWRsfXLWGJqpHZbrTc37PTAf4yOvcOQ=;
- b=my/SSP8VZ0A0f/qBz/VseFZTWUHwroawVPSE8QPKAEL9Q0eYbaGi/DouIA12b9DZxhrj
- sBfmD8Nh+mYETwxmbbTWzQg3ypCFOgTNaYEOZqWbVVpbSyeWUFx1d7roMVkx0FSG5zBD
- vt/3z+bEBbz2jHa4DPCCrvM/YXctAsCOfbz8pH167FKOV8HAngPq7NgGhGfN3DMku/t8
- wZhyHwr67EsRwbijneaTFLlqFMCE1kE9tpMaSoQt4CdoTqZ+TBUL4UwuyY/mkaZI7MmZ
- cfl5i9vhhTRpMLDSfBksmwoYDvVLo+XUSxViUvAR0aEQkgV5odItWmpVlw0GxdW37w3O 0g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqty480cx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Apr 2022 12:28:33 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 23SCSW76025950;
-        Thu, 28 Apr 2022 12:28:32 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqty480c9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Apr 2022 12:28:32 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23SCCg6Y017084;
-        Thu, 28 Apr 2022 12:28:31 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03fra.de.ibm.com with ESMTP id 3fm938wxa5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Apr 2022 12:28:30 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23SCSRU738994316
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Apr 2022 12:28:27 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A286242041;
-        Thu, 28 Apr 2022 12:28:27 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52C8F4203F;
-        Thu, 28 Apr 2022 12:28:27 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Apr 2022 12:28:27 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Fix test case 81 on s390x
-Date:   Thu, 28 Apr 2022 14:28:21 +0200
-Message-Id: <20220428122821.3652015-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
+        Thu, 28 Apr 2022 09:15:55 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2113B1D0E1;
+        Thu, 28 Apr 2022 06:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651151550; x=1682687550;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=Vked9xxCpT7BEnneGBx9LX5/jjKxi3vv+2X+ThsLAtU=;
+  b=SNH7xCYWbHhCWoHQf7S2npdfCCCjG3ysslAp84UBxduVFSXtZmQgJgvn
+   n9SqA8yir+bW0ojuNVgRtEtZ1CKn77yXivoqTzQ0+06OEw/g9bZ+wn/Fw
+   /l+R0sLZuamDwIgZERjXqIFZx7qz7vNHyCjyMfFWqwA0DieQApwpKko29
+   wtRZOSLZHlwvl4aDgNebV/f2iJaBbyznY6IoiZNHn9ce6z3QIG6GzK3Id
+   XV3P9kB2RGO48Dv628iIpoaElgkDpfbEdkgdXkgKaMc7YmmdNn6VoJyVo
+   y27zdFWungiV6rjpMAKXTlpXoj81DoWVBcb+RJWvztIIeyJtXqh8hKWuT
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="291446708"
+X-IronPort-AV: E=Sophos;i="5.91,295,1647327600"; 
+   d="scan'208";a="291446708"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 06:12:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,295,1647327600"; 
+   d="scan'208";a="541267358"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 28 Apr 2022 06:12:29 -0700
+Received: from [10.209.10.70] (kliang2-MOBL.ccr.corp.intel.com [10.209.10.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id DCE95580689;
+        Thu, 28 Apr 2022 06:12:27 -0700 (PDT)
+Message-ID: <96b5c9f4-f0a0-0019-8059-3e833c95b011@linux.intel.com>
+Date:   Thu, 28 Apr 2022 09:12:26 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4gxbpMNmol9wwTGSHgQLdKtPKeyR4Omu
-X-Proofpoint-GUID: wdFwYW-ReZ28epVU1zo2SpLRnlSxvmKM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-28_01,2022-04-28_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- mlxlogscore=999 bulkscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0
- adultscore=0 phishscore=0 impostorscore=0 priorityscore=1501 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204280075
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH 1/7] perf vendor events intel: Update CLX events to v1.15
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20220428075730.797727-1-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220428075730.797727-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf test -F 81 -v fails on s390x on the linux-next branch.
-The test case is x86 specific can not be executed on s390x.
-The test case depends on x86 register names such as
 
-  ... | egrep -q 'available registers: AX BX CX DX ....'
 
-Skip this test case on s390x.
+On 4/28/2022 3:57 AM, Ian Rogers wrote:
+> Events are generated for CascadeLake Server v1.15 with
+> events from:
+> https://download.01.org/perfmon/CLX/
+> 
+> Using the scripts at:
+> https://github.com/intel/event-converter-for-linux-perf/
+> 
+> This change updates descriptions, adds INST_DECODED.DECODERS and
+> corrects a counter mask in UOPS_RETIRED.TOTAL_CYCLES.
+> 
+> Signed-off-by: Ian Rogers<irogers@google.com>
 
-Output before:
- # perf test -F 81
- 81: perf record tests                       : FAILED!
- #
+Thanks Ian. For the whole series,
 
-Output after:
- # perf test -F 81
- 81: perf record tests                       : Skip
- #
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Fixes: 24f378e66021 ("perf test: Add basic perf record tests")
-Cc: Ian Rogers <irogers@google.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/record.sh | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks,
+Kan
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index cd1cf14259b8..d98f4d4a00e1 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -37,6 +37,8 @@ test_register_capture() {
-   echo "Register capture test [Success]"
- }
- 
-+# Test for platform support and return TEST_SKIP
-+[ $(uname -m) = s390x ] && exit 2
- test_per_thread
- test_register_capture
- exit $err
--- 
-2.35.1
-
+> ---
+>   .../arch/x86/cascadelakex/cache.json          | 1164 +----------------
+>   .../arch/x86/cascadelakex/memory.json         |  702 +---------
+>   .../arch/x86/cascadelakex/other.json          |  156 +--
+>   .../arch/x86/cascadelakex/pipeline.json       |   14 +-
+>   .../arch/x86/cascadelakex/uncore-other.json   |    4 +-
+>   5 files changed, 17 insertions(+), 2023 deletions(-)
