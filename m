@@ -2,132 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3E7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 08:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C40C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 12:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344146AbiD1Ia5 (ORCPT
+        id S1346171AbiD1Mbw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 04:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46892 "EHLO
+        Thu, 28 Apr 2022 08:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344138AbiD1Iau (ORCPT
+        with ESMTP id S1344676AbiD1Mbv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 04:30:50 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 769CBA0BD1;
-        Thu, 28 Apr 2022 01:27:35 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 893EE2186F;
-        Thu, 28 Apr 2022 08:27:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1651134453; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YIozUSFdjDnLnEJpNn98rpE1d2R0anAtFMrgIZeUiR4=;
-        b=kk0y2HUNWPQ6yurCu47RXpWICv/UYYHPEiBz2vwYJUQU92TGjP6YsUB3QW/6bksx3k5t/F
-        F/My4Vm3K9vGazCfRQnqYqYdnsZXWxKy4/0UkrWqH/AOJ7+7WlUXGP+sLpj9pHauw349c/
-        +8XoiuZlexn/SXMwfGzlxoxmq0EliWI=
-Received: from suse.cz (unknown [10.100.224.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id D7C5B2C141;
-        Thu, 28 Apr 2022 08:27:32 +0000 (UTC)
-Date:   Thu, 28 Apr 2022 10:27:32 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc:     acme@kernel.org, akpm@linux-foundation.org,
-        alexander.shishkin@linux.intel.com, catalin.marinas@arm.com,
-        davem@davemloft.net, jolsa@redhat.com, jthierry@redhat.com,
-        keescook@chromium.org, kernelfans@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        masahiroy@kernel.org, matthias.bgg@gmail.com, maz@kernel.org,
-        mcgrof@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-        nixiaoming@huawei.com, peterz@infradead.org,
-        sparclinux@vger.kernel.org, sumit.garg@linaro.org,
-        wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
-Subject: Re: [PATCH v3 5/5] arm64: Enable perf events based hard lockup
- detector
-Message-ID: <YmpP9PTa1/pSmuuQ@alley>
-References: <20220421163035.26402-1-lecopzer.chen@mediatek.com>
- <20220426163840.18871-1-lecopzer.chen@mediatek.com>
+        Thu, 28 Apr 2022 08:31:51 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB14A6E27;
+        Thu, 28 Apr 2022 05:28:36 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23SCS31j019643;
+        Thu, 28 Apr 2022 12:28:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=j992jBLdnEVxEWRsfXLWGJqpHZbrTc37PTAf4yOvcOQ=;
+ b=my/SSP8VZ0A0f/qBz/VseFZTWUHwroawVPSE8QPKAEL9Q0eYbaGi/DouIA12b9DZxhrj
+ sBfmD8Nh+mYETwxmbbTWzQg3ypCFOgTNaYEOZqWbVVpbSyeWUFx1d7roMVkx0FSG5zBD
+ vt/3z+bEBbz2jHa4DPCCrvM/YXctAsCOfbz8pH167FKOV8HAngPq7NgGhGfN3DMku/t8
+ wZhyHwr67EsRwbijneaTFLlqFMCE1kE9tpMaSoQt4CdoTqZ+TBUL4UwuyY/mkaZI7MmZ
+ cfl5i9vhhTRpMLDSfBksmwoYDvVLo+XUSxViUvAR0aEQkgV5odItWmpVlw0GxdW37w3O 0g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqty480cx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 12:28:33 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 23SCSW76025950;
+        Thu, 28 Apr 2022 12:28:32 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqty480c9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 12:28:32 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23SCCg6Y017084;
+        Thu, 28 Apr 2022 12:28:31 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03fra.de.ibm.com with ESMTP id 3fm938wxa5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 12:28:30 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23SCSRU738994316
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Apr 2022 12:28:27 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A286242041;
+        Thu, 28 Apr 2022 12:28:27 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52C8F4203F;
+        Thu, 28 Apr 2022 12:28:27 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Apr 2022 12:28:27 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, irogers@google.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Fix test case 81 on s390x
+Date:   Thu, 28 Apr 2022 14:28:21 +0200
+Message-Id: <20220428122821.3652015-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220426163840.18871-1-lecopzer.chen@mediatek.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 4gxbpMNmol9wwTGSHgQLdKtPKeyR4Omu
+X-Proofpoint-GUID: wdFwYW-ReZ28epVU1zo2SpLRnlSxvmKM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-28_01,2022-04-28_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ mlxlogscore=999 bulkscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0
+ adultscore=0 phishscore=0 impostorscore=0 priorityscore=1501 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2204280075
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed 2022-04-27 00:38:40, Lecopzer Chen wrote:
-> > What about just introducing the API that will allow to try to
-> > initialize the hardlockup detector later:
-> > 
-> > /*
-> >  * Retry hardlockup detector init. It is useful when it requires some
-> >  * functionality that has to be initialized later on a particular
-> >  * platform.
-> >  */
-> > void __init retry_lockup_detector_init(void)
-> > {
-> > 	/* Must be called before late init calls. */
-> > 	if (!allow_lockup_detector_init_retry)
-> > 		return 0;
-> > 
-> > 	queue_work_on(__smp_processor_id(), system_wq, &detector_work);
-> > }
-> > 
-> > /*
-> >  * Ensure that optional delayed hardlockup init is proceed before
-> >  * the init code and memory is freed.
-> >  */
-> > static int __init lockup_detector_check(void)
-> > {
-> > 	/* Prevent any later retry. */
-> > 	allow_lockup_detector_init_retry = false;
-> > 
-> > 	/* Make sure no work is pending. */
-> > 	flush_work(&detector_work);
-> > }
-> > late_initcall_sync(lockup_detector_check);
-> > 
-> > You could leave lockup_detector_init() as it is. It does not really
-> > matter what was the exact error value returned by watchdog_nmi_probe().
-> > 
-> > Then you could call retry_lockup_detector_init() in
-> > armv8_pmu_driver_init() and be done with it.
-> > 
-> > It will be universal API that might be used on any architecture
-> > for any reason. If nobody calls retry_lockup_detector_init()
-> > then nohing will happen and the code will work as before.
-> > 
-> > It might make sense to provide the API only on architectures that
-> > really need it. We could hide it under
-> > 
-> >    ARCH_NEED_DELAYED_HARDLOCKUP_DETECTOR_INIT
-> > 
-> > , similar to ARCH_NEEDS_CPU_IDLE_COUPLE.
-> > 
-> 
-> During implementation, if I add ARCH_NEED_DELAYED_..., there will contain
-> many enclosed ifdef-endif and is a little bit ugly.
-> Also, I didn't find a must-have reason to this Kconfig after I rebase from
-> your suggestion.
-> 
-> The one calls retry_lockup_detector_init() must fail at lockup_detector_init,
-> so I think anyone who has aleady failed at lockup_detector_init() has right
-> to retry no matter HW, SW or Arch reason.
-> Thus I might not introduce a new Kconfig in v4, and I would be glad to see
-> if any further commet on this.
+perf test -F 81 -v fails on s390x on the linux-next branch.
+The test case is x86 specific can not be executed on s390x.
+The test case depends on x86 register names such as
 
-Sounds reasonable from my POV. There is not much code. It will be removed
-after the init phase. It will be most likely removed even during
-compilation when linked with gcc LTE optimization and the symbols
-are not used.
+  ... | egrep -q 'available registers: AX BX CX DX ....'
 
-Best Regards,
-Petr
+Skip this test case on s390x.
 
-PS: It might take few days until I do the review of v4. I am a bit
-    overloaded at the moment.
+Output before:
+ # perf test -F 81
+ 81: perf record tests                       : FAILED!
+ #
+
+Output after:
+ # perf test -F 81
+ 81: perf record tests                       : Skip
+ #
+
+Fixes: 24f378e66021 ("perf test: Add basic perf record tests")
+Cc: Ian Rogers <irogers@google.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/record.sh | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index cd1cf14259b8..d98f4d4a00e1 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -37,6 +37,8 @@ test_register_capture() {
+   echo "Register capture test [Success]"
+ }
+ 
++# Test for platform support and return TEST_SKIP
++[ $(uname -m) = s390x ] && exit 2
+ test_per_thread
+ test_register_capture
+ exit $err
+-- 
+2.35.1
+
