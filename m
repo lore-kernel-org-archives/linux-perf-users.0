@@ -2,127 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E85EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6277BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 15:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235827AbiD1Nzt (ORCPT
+        id S240712AbiD1PMO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 09:55:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34012 "EHLO
+        Thu, 28 Apr 2022 11:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235821AbiD1Nzs (ORCPT
+        with ESMTP id S234234AbiD1PMM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 09:55:48 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE03694A2;
-        Thu, 28 Apr 2022 06:52:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C17B0B82D0B;
-        Thu, 28 Apr 2022 13:52:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5544CC385A9;
-        Thu, 28 Apr 2022 13:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651153951;
-        bh=ODsMq+Ft6dlX/IlXg4fQJ5/+B9MFbJhJJW4Q4ktgLxw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eAQ2tkW+noTloQZoa3bawPAwbQnElGK0hQb/COxBVytIy6TX2Ejj95XwXO+nGKI4V
-         a35LPeQNI3AIi+uz4Y2X02zHmwACwr/q+20eHNrLBfNE34fNxJ2KeHgsln3ygah9pt
-         vhlJAX11NIXY1yVt0UyfYUE9G4vJ9G1RSxC1sCkzDZuGtWCJji9+r52pOdC0Mijy9S
-         dzOH2OrF9bf3tm5tZARzRxaFs1rhiUgKa5f2T/po64gaLVpRdYVu+nYCGECuapIQbR
-         M8KBuFnmaSCBXBMpURObGEofM5FOAzBsH3evsgzBAR7rnlFndWKvQOtFKy9+0mykuQ
-         Lq6lRBWsKXJFA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D0F09400B1; Thu, 28 Apr 2022 10:52:28 -0300 (-03)
-Date:   Thu, 28 Apr 2022 10:52:28 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
-        Song Liu <songliubraving@fb.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 0/3] perf tools: Tidy up symbol end fixup (v3)
-Message-ID: <YmqcHFtVTfvCCbTW@kernel.org>
-References: <20220416004048.1514900-1-namhyung@kernel.org>
- <CAP-5=fUUeqimTKoO9PQbm4yDWXZtTqxWm9ZAsNt1=K5N1Rq_Lg@mail.gmail.com>
+        Thu, 28 Apr 2022 11:12:12 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E35BAF1F7
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 08:08:58 -0700 (PDT)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23SF76km008031;
+        Thu, 28 Apr 2022 15:08:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=ZvYUKIE/q3zlzDiQoig2sZJPK2f4lQnsmkod4T+qLtg=;
+ b=Ywfgs5ZIyk8FJ4H3gnKd1SCQrSyVOvq+fTxXt4UrlIW3HHwisM3SSk1zTJHazw8t9Scc
+ WqeQmv93aDWT8eMuX/M3NqGKc0kiTpN9Z/hE3ua3jelFQcIxTTbTK/ad7EtE1ZwGQ1yY
+ mfCrTwCgcDPTlEtCdKf5uuGhlDIOyF6DfZFt2B6kzKi3nWEP7GNvgF7dHAWze1lAfGac
+ yp7TDubK/ltPC8BOoV3qb8QUvhk5awZzO6uQ4GsANSeCwOi1DyrjOZXv+3rUiLDMRklK
+ sp7w6qtW99ENYZ2GguxlRyiubo1HasPLrd66jDLL55frZHCmmAUQBvslrSucBHwE3q0c bg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqu6nbp7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 15:08:44 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 23SF77w7008148;
+        Thu, 28 Apr 2022 15:08:44 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqu6nbp6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 15:08:44 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23SEubDa011031;
+        Thu, 28 Apr 2022 15:08:42 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 3fpuyga25h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 15:08:42 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23SF8cjP29098390
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Apr 2022 15:08:38 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FBBEA4054;
+        Thu, 28 Apr 2022 15:08:38 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8DF7A405B;
+        Thu, 28 Apr 2022 15:08:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.163.4.60])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Apr 2022 15:08:33 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com
+Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com, irogers@google.com
+Subject: [PATCH 0/2] Fix session topology test for powerpc and add utility function to get cpuinfo entries
+Date:   Thu, 28 Apr 2022 20:38:27 +0530
+Message-Id: <20220428150829.30733-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fUUeqimTKoO9PQbm4yDWXZtTqxWm9ZAsNt1=K5N1Rq_Lg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tTopQ51BCMirbN5EiQclu7mxQdcoqaWM
+X-Proofpoint-ORIG-GUID: lQwOMsyouRr1pcc7R0cQiGtqq-y_9Xvp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-28_02,2022-04-28_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 priorityscore=1501
+ suspectscore=0 phishscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2204280091
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 25, 2022 at 01:59:03PM -0700, Ian Rogers escreveu:
-> On Fri, Apr 15, 2022 at 5:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > This work is a follow-up of Ian's previous one at
-> >   https://lore.kernel.org/all/20220412154817.2728324-1-irogers@google.com/
-> >
-> > Fixing up more symbol ends as introduced in:
-> >   https://lore.kernel.org/lkml/20220317135536.805-1-mpetlan@redhat.com/
-> >
-> > it caused perf annotate to run into memory limits - every symbol holds
-> > all the disassembled code in the annotation, and so making symbols
-> > ends further away dramatically increased memory usage (40MB to >1GB).
-> >
-> > Modify the symbol end fixup logic so that special kernel cases aren't
-> > applied in the common case.
-> >
-> > v3 changes)
-> >  * rename is_kernel to is_kallsyms
-> >  * move the logic to generic function
-> >  * remove arch-specific functions
-> >
-> > Thanks,
-> > Namhyung
-> 
-> Thanks Namhyung! The series:
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+The session topology test fails in powerpc pSeries platform.
+Test logs:
+<<>>
+Session topology : FAILED!
+<<>>
 
-Thanks, applied to perf/urgent.
+This test uses cpu topology information and in powerpc,
+some of the topology info is restricted in environment
+like virtualized platform. Hence this test needs to be
+skipped in pSeries platform for powerpc. The information
+about platform is available in /proc/cpuinfo.
 
-- Arnaldo
+Patch 1 adds generic utility function in "util/header.c"
+to read /proc/cpuinfo for any entry. Though the testcase
+fix needs value from "platform" entry, making this as a
+generic function to return value for any entry from the
+/proc/cpuinfo file which can be used commonly in future
+usecases.
 
- 
-> > Namhyung Kim (3):
-> >   perf symbol: Pass is_kallsyms to symbols__fixup_end()
-> >   perf symbol: Update symbols__fixup_end()
-> >   perf symbol: Remove arch__symbols__fixup_end()
-> >
-> >  tools/perf/arch/arm64/util/machine.c   | 21 ---------------
-> >  tools/perf/arch/powerpc/util/Build     |  1 -
-> >  tools/perf/arch/powerpc/util/machine.c | 25 -----------------
-> >  tools/perf/arch/s390/util/machine.c    | 16 -----------
-> >  tools/perf/util/symbol-elf.c           |  2 +-
-> >  tools/perf/util/symbol.c               | 37 +++++++++++++++++++-------
-> >  tools/perf/util/symbol.h               |  3 +--
-> >  7 files changed, 29 insertions(+), 76 deletions(-)
-> >  delete mode 100644 tools/perf/arch/powerpc/util/machine.c
-> >
-> >
-> > base-commit: 41204da4c16071be9090940b18f566832d46becc
-> > --
-> > 2.36.0.rc0.470.gd361397f0d-goog
-> >
+Patch 2 uses the newly added utility function to look for
+platform and skip the test in pSeries platform for powerpc.
+
+Athira Rajeev (2):
+  tools/perf: Add utility function to read /proc/cpuinfo for any field
+  tools/perf/tests: Fix session topology test to skip the test in guest
+    environment
+
+ tools/perf/tests/topology.c | 17 ++++++++++++
+ tools/perf/util/header.c    | 54 +++++++++++++++++++++++++++++++++++++
+ tools/perf/util/header.h    |  1 +
+ 3 files changed, 72 insertions(+)
 
 -- 
+2.35.1
 
-- Arnaldo
