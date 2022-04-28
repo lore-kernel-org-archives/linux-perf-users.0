@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCE3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 07:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B65C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 07:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245613AbiD1IA7 (ORCPT
+        id S1343566AbiD1IBD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 04:00:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49570 "EHLO
+        Thu, 28 Apr 2022 04:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343619AbiD1IAy (ORCPT
+        with ESMTP id S1343638AbiD1IBB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 04:00:54 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9377A9D4DF
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 00:57:38 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2f16f3a7c34so39395267b3.17
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 00:57:38 -0700 (PDT)
+        Thu, 28 Apr 2022 04:01:01 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DBA9D4DF
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 00:57:47 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f7ddeb73c1so39928567b3.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 00:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=YJUrqLDRkW6XFs1LbuKzWxIFMP68m/VaBzEc39ALE+U=;
-        b=tiVmLpJYc9sLTq3hljAB9UeCbbmiRtZLd4AP6UgZbKHQT+ILZ5mJdvRU554UMkbcRB
-         XVTn/kgY1msKabcL8CxzLh0mKMrDKfB6fgtGuaoEiJjwjb5OYHoWbNZLILU461t3nVw6
-         0o88dzuLGTqEK1Y2upaJRZV1w9E3tSzphBJpY1cE+et1msozSnB6jZHT376GCj9xccry
-         Rd7urBIDCowMrub+uU99IgAE3kWfvSOR464wFTr/T673XQ5gyoPFWwXMmp+XiLPKXbTN
-         RLVEYBt0b4nOVKlgqSq10mE26kb4Jju2+Qrrmf+X+kNv9q3jKyULdJAceUtvZrN7FEzr
-         wWHw==
+        bh=SO+yjzYpVBUSmrI7QpCCrXS5LJfjCzTJ8nkeb3Mo8dU=;
+        b=Qa4x2xMtTBRaEBmnuV0W0tjeGml32zmd51Fa45Tjo2IT/6K5D6YbIsyaNK8VFmkOJ6
+         7+4sLWRsk/cwOft1kJzYjlLjpa0GLeKx84kDAoCU1tNRW9ebnoAULQY/knyDx4CWm9Ky
+         dOPSMhlfu9kKZ6X8bA314lg1ardMAZYesSNEvYM08sgOrzDJK65LxOv1aLJ6J7CGsFcV
+         fnnB0GJt2017adnSlPaGPkZy5E6ZtR2CCNOWmywZRkhpjUbh2i73iba9LboJnuYsfyav
+         RmgRH0LMqYlJNoInUo6Dgxp5QjQb6pZGU1GDbth2QOSGKuVeVUAMuUxyKdJNVU9jtj+L
+         mOjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=YJUrqLDRkW6XFs1LbuKzWxIFMP68m/VaBzEc39ALE+U=;
-        b=h0GHl1k2EVLoKK2AVbNQn0Mken70Cv/G8cEmnvddHlNBJ+D4HD1lqRroahr966nYS9
-         INS9OHqrEvRlD5AqwOSlphBOl2xbs9/gV1EXwfD7HrEIil6G6isrdJnrFyZpe2fRMVbh
-         GHBmQMf1yUr1x6pzC2IgI92eiHbNyJDaa7sDk0ExsfGf+zu6QU6F95q2vDio4IpSBw6K
-         1ehvLMarNa2FP83+ael1B6iL8mWY26lrHCg2mfalR40rNNEBNeLL1Y+abK7N4b3L9Nyi
-         lrVhr+kdnhuFxmy76vHTqw7enhW33v+qmwEBrOufuHk3RKZwEOvYXlySO4SbNsc1l6L1
-         IWAQ==
-X-Gm-Message-State: AOAM5331Tc9pvtxt3T7Fn4X/vVfzan7bsSgH3t5CxEygUlQH0yk2elBA
-        xT5mQPTU5H6EQKEZBehqkun/S07kdhco
-X-Google-Smtp-Source: ABdhPJzx0C734IUdOU5ceXOqZse08DmdcPmxgUK0lFcbnPRIHEkmYdfuAV00MGZOKjo3ttr/EjCe6OOIxIpL
+        bh=SO+yjzYpVBUSmrI7QpCCrXS5LJfjCzTJ8nkeb3Mo8dU=;
+        b=lwQMibRUUeIt7h3dWVdh6Eh4396T03Z3anbdlib11JuGnJ45LAow51pjLO5KIEDc4K
+         pCLIL3lJ9lVN5ogp2JTXGWc9WNE/GECs/JoBBr9LEV3ins/Y89Uto6LxH3uS2YDTSCIZ
+         7Vvnh6WnIsEpC5ulIOm6B+xfNLIGrxy/8fkQ+xhiZ3T6WgdvwgJHxs5ugnfFtkKcVJFn
+         Kaliwsy6wyN2KdMsHMAUIbiFUXe5Beo0hKANtOH9rl0PJVq+xASUGK7BpY0P3p02rIUe
+         S286wfowlT9OsdeJLEkylVWaQvhLBvjiLYil3OyZEMCumEhO96S/X08mPRa9b/+7o6t7
+         cHDw==
+X-Gm-Message-State: AOAM532NJIcBB3S05cQz/tAz6Q8kwxskABZigTeIT1TCF72l2x35DF2a
+        AcgYxaXVJB9jOOthOIodcUo9/1uCi0HG
+X-Google-Smtp-Source: ABdhPJxt2fweUwfCgwQBq2TPqBf3/1CLqWtr3RnM1E3AuQ+GloEy3fNJs4TFyN67Sj2RlB3Zr74itM2dMTRr
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:33c3:c9d8:c4fd:e75c])
- (user=irogers job=sendgmr) by 2002:a81:2514:0:b0:2f4:e0e6:d82f with SMTP id
- l20-20020a812514000000b002f4e0e6d82fmr30095090ywl.77.1651132657581; Thu, 28
- Apr 2022 00:57:37 -0700 (PDT)
-Date:   Thu, 28 Apr 2022 00:57:25 -0700
+ (user=irogers job=sendgmr) by 2002:a81:af59:0:b0:2f4:d869:b5df with SMTP id
+ x25-20020a81af59000000b002f4d869b5dfmr32015447ywj.367.1651132666673; Thu, 28
+ Apr 2022 00:57:46 -0700 (PDT)
+Date:   Thu, 28 Apr 2022 00:57:29 -0700
 In-Reply-To: <20220428075730.797727-1-irogers@google.com>
-Message-Id: <20220428075730.797727-2-irogers@google.com>
+Message-Id: <20220428075730.797727-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20220428075730.797727-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [PATCH 2/7] perf vendor events intel: Update ICL events to v1.13
+Subject: [PATCH 6/7] perf vendor events intel: Update WSM-EP-SP events to v3
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,663 +76,114 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Events are generated for Icelake v1.13 with events from:
-https://download.01.org/perfmon/ICL/
+Events are generated for Westmere EP-SP v3 with events from:
+https://download.01.org/perfmon/WSM-EP-SP/
 
 Using the scripts at:
 https://github.com/intel/event-converter-for-linux-perf/
 
-This change updates descriptions and adds INST_DECODED.DECODERS.
+This change updates descriptions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/icelake/cache.json    | 41 +------------------
- .../arch/x86/icelake/icl-metrics.json         | 12 ------
- .../pmu-events/arch/x86/icelake/memory.json   | 10 +----
- .../pmu-events/arch/x86/icelake/other.json    | 24 -----------
- .../pmu-events/arch/x86/icelake/pipeline.json | 12 ++++++
- 5 files changed, 14 insertions(+), 85 deletions(-)
+ .../pmu-events/arch/x86/westmereep-sp/cache.json   | 14 +++++++-------
+ .../pmu-events/arch/x86/westmereep-sp/memory.json  |  6 +++---
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/cache.json b/tools/perf/pmu-events/arch/x86/icelake/cache.json
-index 375ce490833c..9989f3338f0a 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/cache.json
-@@ -563,7 +563,6 @@
-         "MSRValue": "0x3FC03C0004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
+index 2ecd80f8fa67..c5f33fe2a3ce 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
+@@ -1769,7 +1769,7 @@
          "UMask": "0x1"
-@@ -578,7 +577,6 @@
-         "MSRValue": "0x10003C0004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
+     },
+     {
+-        "BriefDescription": "Offcore data reads, RFO's and prefetches satisfied by the IO, CSR, MMIO unit",
++        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the IO, CSR, MMIO unit",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+         "EventName": "OFFCORE_RESPONSE.DATA_IN.IO_CSR_MMIO",
+@@ -1780,7 +1780,7 @@
          "UMask": "0x1"
-@@ -593,7 +591,6 @@
-         "MSRValue": "0x4003C0004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
+     },
+     {
+-        "BriefDescription": "Offcore data reads, RFO's and prefetches statisfied by the LLC and not found in a sibling core",
++        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and not found in a sibling core",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_NO_OTHER_CORE",
+@@ -1791,7 +1791,7 @@
          "UMask": "0x1"
-@@ -608,7 +605,6 @@
-         "MSRValue": "0x2003C0004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
+     },
+     {
+-        "BriefDescription": "Offcore data reads, RFO's and prefetches satisfied by the LLC and HIT in a sibling core",
++        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and HIT in a sibling core",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HIT",
+@@ -1802,7 +1802,7 @@
          "UMask": "0x1"
-@@ -623,7 +619,6 @@
-         "MSRValue": "0x1003C0004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
+     },
+     {
+-        "BriefDescription": "Offcore data reads, RFO's and prefetches satisfied by the LLC  and HITM in a sibling core",
++        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC  and HITM in a sibling core",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HITM",
+@@ -1857,7 +1857,7 @@
          "UMask": "0x1"
-@@ -638,7 +633,6 @@
-         "MSRValue": "0x1E003C0004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
+     },
+     {
+-        "BriefDescription": "Offcore data reads, RFO's and prefetches that HIT in a remote cache",
++        "BriefDescription": "Offcore data reads, RFOs, and prefetches that HIT in a remote cache",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HIT",
+@@ -1868,7 +1868,7 @@
          "UMask": "0x1"
-@@ -653,7 +647,6 @@
-         "MSRValue": "0x3FC03C0001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -668,7 +661,6 @@
-         "MSRValue": "0x10003C0001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -683,7 +675,6 @@
-         "MSRValue": "0x4003C0001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -698,7 +689,6 @@
-         "MSRValue": "0x2003C0001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -713,7 +703,6 @@
-         "MSRValue": "0x1003C0001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -728,7 +717,6 @@
-         "MSRValue": "0x1E003C0001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -743,7 +731,6 @@
-         "MSRValue": "0x3FC03C0002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -758,7 +745,6 @@
-         "MSRValue": "0x10003C0002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -773,7 +759,6 @@
-         "MSRValue": "0x4003C0002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -788,7 +773,6 @@
-         "MSRValue": "0x2003C0002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -803,7 +787,6 @@
-         "MSRValue": "0x1003C0002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -818,7 +801,6 @@
-         "MSRValue": "0x1E003C0002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -833,7 +815,6 @@
-         "MSRValue": "0x3FC03C0400",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -848,7 +829,6 @@
-         "MSRValue": "0x2003C0400",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -863,7 +843,6 @@
-         "MSRValue": "0x1003C0400",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -878,7 +857,6 @@
-         "MSRValue": "0x3FC03C0010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -893,7 +871,6 @@
-         "MSRValue": "0x10003C0010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -908,7 +885,6 @@
-         "MSRValue": "0x4003C0010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -923,7 +899,6 @@
-         "MSRValue": "0x2003C0010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -938,7 +913,6 @@
-         "MSRValue": "0x1003C0010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -953,7 +927,6 @@
-         "MSRValue": "0x1E003C0010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -968,7 +941,6 @@
-         "MSRValue": "0x3FC03C0020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -983,7 +955,6 @@
-         "MSRValue": "0x10003C0020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -998,7 +969,6 @@
-         "MSRValue": "0x4003C0020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1013,7 +983,6 @@
-         "MSRValue": "0x2003C0020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1028,7 +997,6 @@
-         "MSRValue": "0x1003C0020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1043,7 +1011,6 @@
-         "MSRValue": "0x1E003C0020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1058,7 +1025,6 @@
-         "MSRValue": "0x3FC03C2380",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1073,7 +1039,6 @@
-         "MSRValue": "0x4003C8000",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1088,7 +1053,6 @@
-         "MSRValue": "0x2003C8000",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1103,7 +1067,6 @@
-         "MSRValue": "0x1003C8000",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1118,7 +1081,6 @@
-         "MSRValue": "0x1E003C8000",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1133,7 +1095,6 @@
-         "MSRValue": "0x3FC03C0800",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -1308,4 +1269,4 @@
-         "Speculative": "1",
-         "UMask": "0x4"
+     },
+     {
+-        "BriefDescription": "Offcore data reads, RFO's and prefetches that HITM in a remote cache",
++        "BriefDescription": "Offcore data reads, RFOs, and prefetches that HITM in a remote cache",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HITM",
+@@ -3230,4 +3230,4 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0x8"
      }
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json b/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-index ea73bc1889ba..622c392f59be 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-@@ -17,18 +17,6 @@
-         "MetricGroup": "Ret;Summary",
-         "MetricName": "IPC"
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
+index 623a0087c8f3..f14e760a9ddc 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
+@@ -286,7 +286,7 @@
+         "UMask": "0x1"
      },
--    {
--        "BriefDescription": "Uops Per Instruction",
--        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
--        "MetricGroup": "Pipeline;Ret;Retire",
--        "MetricName": "UPI"
--    },
--    {
--        "BriefDescription": "Instruction per taken branch",
--        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / BR_INST_RETIRED.NEAR_TAKEN",
--        "MetricGroup": "Branches;Fed;FetchBW",
--        "MetricName": "UpTB"
--    },
      {
-         "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
-         "MetricExpr": "1 / (INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD)",
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/memory.json b/tools/perf/pmu-events/arch/x86/icelake/memory.json
-index f045e1f6a868..a6f43cbc2d0a 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/memory.json
-@@ -239,7 +239,6 @@
-         "MSRValue": "0x3FFFC00004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
+-        "BriefDescription": "Offcore data reads, RFO's and prefetches statisfied by the local DRAM.",
++        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the local DRAM.",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+         "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_DRAM",
+@@ -297,7 +297,7 @@
          "UMask": "0x1"
-@@ -254,7 +253,6 @@
-         "MSRValue": "0x3FFFC00001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
+     },
+     {
+-        "BriefDescription": "Offcore data reads, RFO's and prefetches statisfied by the remote DRAM",
++        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the remote DRAM",
+         "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
+         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_DRAM",
+@@ -736,4 +736,4 @@
+         "SampleAfterValue": "100000",
          "UMask": "0x1"
-@@ -269,7 +267,6 @@
-         "MSRValue": "0x3FFFC00002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -284,7 +281,6 @@
-         "MSRValue": "0x3FFFC00400",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -299,7 +295,6 @@
-         "MSRValue": "0x3FFFC00010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -314,7 +309,6 @@
-         "MSRValue": "0x3FFFC00020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -329,7 +323,6 @@
-         "MSRValue": "0x3FFFC08000",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -344,7 +337,6 @@
-         "MSRValue": "0x3FFFC00800",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -570,4 +562,4 @@
-         "Speculative": "1",
-         "UMask": "0x40"
      }
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/other.json b/tools/perf/pmu-events/arch/x86/icelake/other.json
-index 2e177f95a9cb..3055710595c4 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/other.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/other.json
-@@ -45,7 +45,6 @@
-         "MSRValue": "0x10004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -60,7 +59,6 @@
-         "MSRValue": "0x184000004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -75,7 +73,6 @@
-         "MSRValue": "0x184000004",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -90,7 +87,6 @@
-         "MSRValue": "0x10001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -105,7 +101,6 @@
-         "MSRValue": "0x184000001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -120,7 +115,6 @@
-         "MSRValue": "0x184000001",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -135,7 +129,6 @@
-         "MSRValue": "0x10002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -150,7 +143,6 @@
-         "MSRValue": "0x184000002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -165,7 +157,6 @@
-         "MSRValue": "0x184000002",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -180,7 +171,6 @@
-         "MSRValue": "0x10400",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -195,7 +185,6 @@
-         "MSRValue": "0x184000400",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -210,7 +199,6 @@
-         "MSRValue": "0x184000400",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -225,7 +213,6 @@
-         "MSRValue": "0x10010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -240,7 +227,6 @@
-         "MSRValue": "0x184000010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -255,7 +241,6 @@
-         "MSRValue": "0x184000010",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -270,7 +255,6 @@
-         "MSRValue": "0x10020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -285,7 +269,6 @@
-         "MSRValue": "0x184000020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -300,7 +283,6 @@
-         "MSRValue": "0x184000020",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -315,7 +297,6 @@
-         "MSRValue": "0x18000",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -330,7 +311,6 @@
-         "MSRValue": "0x184008000",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -345,7 +325,6 @@
-         "MSRValue": "0x184008000",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -360,7 +339,6 @@
-         "MSRValue": "0x10800",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -375,7 +353,6 @@
-         "MSRValue": "0x184000800",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-@@ -390,7 +367,6 @@
-         "MSRValue": "0x184000800",
-         "Offcore": "1",
-         "PEBScounters": "0,1,2,3",
--        "PublicDescription": "Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
-         "SampleAfterValue": "100003",
-         "Speculative": "1",
-         "UMask": "0x1"
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json b/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
-index 2b58cfaaaf39..a017a4727050 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/pipeline.json
-@@ -452,6 +452,18 @@
-         "Speculative": "1",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Instruction decoders utilized in a cycle",
-+        "CollectPEBSRecord": "2",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x55",
-+        "EventName": "INST_DECODED.DECODERS",
-+        "PEBScounters": "0,1,2,3",
-+        "PublicDescription": "Number of decoders utilized in a cycle when the MITE (legacy decode pipeline) fetches instructions.",
-+        "SampleAfterValue": "2000003",
-+        "Speculative": "1",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Number of instructions retired. Fixed Counter - architectural event",
-         "CollectPEBSRecord": "2",
 -- 
 2.36.0.464.gb9c8b46e94-goog
 
