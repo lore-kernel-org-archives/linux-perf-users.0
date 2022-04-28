@@ -2,90 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22B7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A30C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347197AbiD1NeX (ORCPT
+        id S229589AbiD1Nn3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 09:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56190 "EHLO
+        Thu, 28 Apr 2022 09:43:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347167AbiD1NeW (ORCPT
+        with ESMTP id S241572AbiD1Nn2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 09:34:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584786378;
-        Thu, 28 Apr 2022 06:31:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A98A460DE9;
-        Thu, 28 Apr 2022 13:31:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E685DC385A9;
-        Thu, 28 Apr 2022 13:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651152667;
-        bh=DnP9exkGhsGYgxJxwNecTILtYI5DRDFnOujuiuYepj0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A0aH/+ToIT48OzvZCW1iw33zWkGyK4bwq/us6yc9vdyyWwlPjTM7SeMkSWT6GBDj8
-         ofsXran7qP2k2IaWgpA/aNvpQlSiKEqsjcEoBUumZMBBzoN466NLksAyIYcREiKs9i
-         QaQQW7Hp/1vx8yUH6LNjCFBne4DoL/3lNp0LrbNJVH+LNh/mqTvu4h0w4mkgz7BU/G
-         a9OD0ZZjhkSU7ButZS9w3C64i86mYgMHUnMKMLwTkjsD/DTHxwF5CHgGGSLDIQ+B5m
-         og97rBUTxFfb+H19gb8deojTOIQaOd8XzBBoL1jTm7PvoOp0iCpRC5v25YQlMdxgB7
-         EGXsIxd0StTMw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5C017400B1; Thu, 28 Apr 2022 10:31:04 -0300 (-03)
-Date:   Thu, 28 Apr 2022 10:31:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/7] perf vendor events intel: Update CLX events to v1.15
-Message-ID: <YmqXGCMbBOLcd261@kernel.org>
-References: <20220428075730.797727-1-irogers@google.com>
- <96b5c9f4-f0a0-0019-8059-3e833c95b011@linux.intel.com>
+        Thu, 28 Apr 2022 09:43:28 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148601FA49;
+        Thu, 28 Apr 2022 06:40:14 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id b12so4391966plg.4;
+        Thu, 28 Apr 2022 06:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=J6PdeDybWktJ3VOINyxTrk1DVabwU+Bt41DCAGyrJqw=;
+        b=IPsajGJEOyFy0KXi5MbqNqA+B6gzB8xNg++FY3nWAd50+XLHI3IiiXgHM0D0hOvAGP
+         NHzF/Fmjx3BKNr25mf0LCvUD+BlCo9/dmB2/lCRjW51Eam0ExUwFK3YH7YMSti0A4ZZd
+         xEcKqHyrldXKx9tcqf+yWyAzrg4cetWf1poIiq59krbuM8OrRi/cvudto62nFlc/aWbk
+         VsWQAj+C5W8ABz7FdqFhorEwMN6BDyPdq5A590Zmk4vzVVXSN0QQbskvoIT0LCXuVqwX
+         BMeO8voLLYnahizk2FNYrugh1ix+nJ07EM4TTaj80NJn1xQL7mAjorMIdiY2reS7pEos
+         TqYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=J6PdeDybWktJ3VOINyxTrk1DVabwU+Bt41DCAGyrJqw=;
+        b=pFIaISZuLVNtC9oxx6qyQW03KrRpszL4YwWPrup9S2I375shOfrNU1PasuPi9TBsQB
+         vTjP5KgAnk4UExzKfq8qtoZ2hAqEzV0jTkEwL72d/oAPs9ozAlrt7eaEuw8fBwgySe/t
+         +AxrgszU25SBZ1O8YWWPXZA34jUwU/c00itxH0gj4X1+yulErccQvZwfAS2SZ4exwrH3
+         6a2Hee55SdE55nBClST7qqF2cHXRFovItiONFJ1kKk2A6ELx1eHYgTNW8z8s7l18ita/
+         5i7PENJGUNcIiCE19VUpI4BRO38bVdIxTMd3fHww6latZ3oNBRDKErmu4QXTJSzeSqdF
+         ey1A==
+X-Gm-Message-State: AOAM530rQ6FMFwaDEFho/Ub9sSI1BgFXcl2xAZpZyj7OlHtP347SN9sr
+        MRqpHhScuduroFC+dkz87H0=
+X-Google-Smtp-Source: ABdhPJx25FcLG2JQe24kaXZecI9BCEFvz9z8SheCmciK7YDm8iNJkM8WfVpRJ48uQcNgOpHj2YG0Yw==
+X-Received: by 2002:a17:902:d54d:b0:15d:2ff:b0e2 with SMTP id z13-20020a170902d54d00b0015d02ffb0e2mr23275845plf.131.1651153213528;
+        Thu, 28 Apr 2022 06:40:13 -0700 (PDT)
+Received: from [192.168.255.10] ([203.205.141.119])
+        by smtp.gmail.com with ESMTPSA id z15-20020a056a001d8f00b004fda37855ddsm21177011pfw.168.2022.04.28.06.40.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Apr 2022 06:40:13 -0700 (PDT)
+Message-ID: <5c227ef8-72d2-9254-f061-128974a6dc7d@gmail.com>
+Date:   Thu, 28 Apr 2022 21:40:05 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96b5c9f4-f0a0-0019-8059-3e833c95b011@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.8.1
+Subject: Re: [PATCH v4 6/7] perf/x86/amd/core: Add PerfMonV2 overflow handling
+Content-Language: en-US
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     peterz@infradead.org, bp@alien8.de, dave.hansen@linux.intel.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        pbonzini@redhat.com, jmattson@google.com, eranian@google.com,
+        puwen@hygon.cn, ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org
+References: <cover.1651058600.git.sandipan.das@amd.com>
+ <6bb3a6de79afbdb1ebc1b804fb8c2002c00cbaee.1651058600.git.sandipan.das@amd.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+Organization: Tencent
+In-Reply-To: <6bb3a6de79afbdb1ebc1b804fb8c2002c00cbaee.1651058600.git.sandipan.das@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 28, 2022 at 09:12:26AM -0400, Liang, Kan escreveu:
-> 
-> 
-> On 4/28/2022 3:57 AM, Ian Rogers wrote:
-> > Events are generated for CascadeLake Server v1.15 with
-> > events from:
-> > https://download.01.org/perfmon/CLX/
-> > 
-> > Using the scripts at:
-> > https://github.com/intel/event-converter-for-linux-perf/
-> > 
-> > This change updates descriptions, adds INST_DECODED.DECODERS and
-> > corrects a counter mask in UOPS_RETIRED.TOTAL_CYCLES.
-> > 
-> > Signed-off-by: Ian Rogers<irogers@google.com>
-> 
-> Thanks Ian. For the whole series,
-> 
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+On 27/4/2022 7:31 pm, Sandipan Das wrote:
+> +static inline void amd_pmu_ack_global_status(u64 status)
+> +{
+> +	/*
+> +	 * PerfCntrGlobalStatus is read-only but an overflow acknowledgment
 
-Thanks, applied.
+If wrmsrl PerfCntrGlobalStatus, remain silent or report #GP ?
 
-- Arnaldo
+> +	 * mechanism exists; writing 1 to a bit in PerfCntrGlobalStatusClr
+> +	 * clears the same bit in PerfCntrGlobalStatus
+> +	 */
+> +
+> +	/* Only allow modifications to PerfCntrGlobalStatus.PerfCntrOvfl */
+> +	status &= amd_pmu_global_cntr_mask;
+> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, status);
 
+If rdmsrl PerfCntrGlobalStatusClr, does it return 0 or the value of 
+PerfCntrGlobalStatus ?
+
+> +}
