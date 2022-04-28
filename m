@@ -2,116 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA28C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A05C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345868AbiD1NrQ (ORCPT
+        id S231286AbiD1NtQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 09:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35944 "EHLO
+        Thu, 28 Apr 2022 09:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243244AbiD1NrQ (ORCPT
+        with ESMTP id S1347719AbiD1NtD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 09:47:16 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24CEBB3DDC;
-        Thu, 28 Apr 2022 06:44:01 -0700 (PDT)
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpxbT2CTMz6800p;
-        Thu, 28 Apr 2022 21:41:09 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 28 Apr 2022 15:43:58 +0200
-Received: from [10.47.91.78] (10.47.91.78) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Thu, 28 Apr
- 2022 14:43:57 +0100
-Message-ID: <72c6c1b4-5e83-02e3-6051-c11b3bfff452@huawei.com>
-Date:   Thu, 28 Apr 2022 14:43:56 +0100
+        Thu, 28 Apr 2022 09:49:03 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E75B4833B;
+        Thu, 28 Apr 2022 06:45:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B1060B82D69;
+        Thu, 28 Apr 2022 13:45:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EBF3C385A9;
+        Thu, 28 Apr 2022 13:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651153540;
+        bh=GFf+7ataLh/akwyJEGuI1nPoHc7tcslfjzG4dS/IkSs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y5gxzCkaMvsGrpAVemAcjJAs++OJz3RXrkXwC+ZSMVoT5nY20fWu6I59wgMPkdpk9
+         isVGfPkAHS0mCe514gliZlIPEFrCnFjYlhdJESN9XONKLGu6BzK0OmAmKIHokcc15F
+         hI86Pm+ePWdF3zRD6C4BuvFPrsqy5cn4FGI2JYBLIJ1kF82ST1ofEtALkB9YP0cpF2
+         tqV7bVVce3nprZ4Q9QkZMSX6KoW7tM7AUGU2dUqdsvTv8M3H8AH3APKtusRV2SMrcs
+         ZU4YhDrTTbIxz4wzX09lDjJRCjgm0+r+wDKOB3V/zzGNdrUdfEW/yswKWFTs/CrKcL
+         1abScLgpjb6pw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 327AD400B1; Thu, 28 Apr 2022 10:45:37 -0300 (-03)
+Date:   Thu, 28 Apr 2022 10:45:37 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, Robin Murphy <robin.murphy@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V5 0/8] perf: Expand perf_branch_entry
+Message-ID: <YmqagfywsvGXaIVl@kernel.org>
+References: <20220404045046.634522-1-anshuman.khandual@arm.com>
+ <f469f253-9ccc-d55b-731d-3ecc8d685104@arm.com>
+ <a304d9e4-2632-1ba9-249f-1d87c90f82de@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH] perf test: Fix test case 81 on s390x
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <irogers@google.com>, <svens@linux.ibm.com>, <gor@linux.ibm.com>,
-        <sumanthk@linux.ibm.com>, <hca@linux.ibm.com>
-References: <20220428122821.3652015-1-tmricht@linux.ibm.com>
- <YmqV5o0XFfewhNkC@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <YmqV5o0XFfewhNkC@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.91.78]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a304d9e4-2632-1ba9-249f-1d87c90f82de@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 28/04/2022 14:25, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Apr 28, 2022 at 02:28:21PM +0200, Thomas Richter escreveu:
->> perf test -F 81 -v fails on s390x on the linux-next branch.
->> The test case is x86 specific can not be executed on s390x.
->> The test case depends on x86 register names such as
->>
->>    ... | egrep -q 'available registers: AX BX CX DX ....'
+Em Mon, Apr 18, 2022 at 12:17:53PM +0530, Anshuman Khandual escreveu:
+> On 4/11/22 11:16, Anshuman Khandual wrote:
+> > On 4/4/22 10:20, Anshuman Khandual wrote:
+> >> - Rebased series on v5.18-rc1
+> > 
+> > Gentle ping, any updates on this series ?
 > 
-> Thanks,
+> Gentle ping, any updates on this series ?
 > 
-> Ian, I guess this will break on other !x86 arches as well.
-
-JFYI, arm64 gives on acme perf/core branch @ e0c1b8f9eb this:
-
-john@debian:~/acme/tools/perf$ sudo ./perf test -F 82
-  82: perf record tests     :Basic --per-thread mode test
-Basic --per-thread mode test [Success]
-Register capture test
-Register capture test [Skipped missing instruction]
-  Ok
-john@debian:~/acme/tools/perf$
-
-> Can you
-> please take a look?
+> I have posted BRBE RFC V2 accommodating all these new perf ABI changes being
+> proposed here. I would really appreciate reviews and/or suggestions on this
+> series, which is essential and also prerequisite for the BRBE driver itself.
 > 
-> - Arnaldo
->   
->> Skip this test case on s390x.
->>
->> Output before:
->>   # perf test -F 81
->>   81: perf record tests                       : FAILED!
->>   #
->>
->> Output after:
->>   # perf test -F 81
->>   81: perf record tests                       : Skip
->>   #
->>
->> Fixes: 24f378e66021 ("perf test: Add basic perf record tests")
->> Cc: Ian Rogers <irogers@google.com>
->> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->> ---
->>   tools/perf/tests/shell/record.sh | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index cd1cf14259b8..d98f4d4a00e1 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
->> @@ -37,6 +37,8 @@ test_register_capture() {
->>     echo "Register capture test [Success]"
->>   }
->>   
->> +# Test for platform support and return TEST_SKIP
->> +[ $(uname -m) = s390x ] && exit 2
->>   test_per_thread
->>   test_register_capture
->>   exit $err
->> -- 
->> 2.35.1
-> 
+> https://lore.kernel.org/all/20220412115455.293119-1-anshuman.khandual@arm.com/
 
+Has the kernel bits been merged? When that happens I'll cherry pick the
+tools/ ones.
+
+In future series, please, on the final patch submission, please send two
+series, one for the kernel and another for tooling.
+
+- Arnaldo
