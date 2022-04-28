@@ -2,100 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A30C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18369C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbiD1Nn3 (ORCPT
+        id S1347499AbiD1NpB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 09:43:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
+        Thu, 28 Apr 2022 09:45:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241572AbiD1Nn2 (ORCPT
+        with ESMTP id S241572AbiD1NpA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 09:43:28 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148601FA49;
-        Thu, 28 Apr 2022 06:40:14 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id b12so4391966plg.4;
-        Thu, 28 Apr 2022 06:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=J6PdeDybWktJ3VOINyxTrk1DVabwU+Bt41DCAGyrJqw=;
-        b=IPsajGJEOyFy0KXi5MbqNqA+B6gzB8xNg++FY3nWAd50+XLHI3IiiXgHM0D0hOvAGP
-         NHzF/Fmjx3BKNr25mf0LCvUD+BlCo9/dmB2/lCRjW51Eam0ExUwFK3YH7YMSti0A4ZZd
-         xEcKqHyrldXKx9tcqf+yWyAzrg4cetWf1poIiq59krbuM8OrRi/cvudto62nFlc/aWbk
-         VsWQAj+C5W8ABz7FdqFhorEwMN6BDyPdq5A590Zmk4vzVVXSN0QQbskvoIT0LCXuVqwX
-         BMeO8voLLYnahizk2FNYrugh1ix+nJ07EM4TTaj80NJn1xQL7mAjorMIdiY2reS7pEos
-         TqYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=J6PdeDybWktJ3VOINyxTrk1DVabwU+Bt41DCAGyrJqw=;
-        b=pFIaISZuLVNtC9oxx6qyQW03KrRpszL4YwWPrup9S2I375shOfrNU1PasuPi9TBsQB
-         vTjP5KgAnk4UExzKfq8qtoZ2hAqEzV0jTkEwL72d/oAPs9ozAlrt7eaEuw8fBwgySe/t
-         +AxrgszU25SBZ1O8YWWPXZA34jUwU/c00itxH0gj4X1+yulErccQvZwfAS2SZ4exwrH3
-         6a2Hee55SdE55nBClST7qqF2cHXRFovItiONFJ1kKk2A6ELx1eHYgTNW8z8s7l18ita/
-         5i7PENJGUNcIiCE19VUpI4BRO38bVdIxTMd3fHww6latZ3oNBRDKErmu4QXTJSzeSqdF
-         ey1A==
-X-Gm-Message-State: AOAM530rQ6FMFwaDEFho/Ub9sSI1BgFXcl2xAZpZyj7OlHtP347SN9sr
-        MRqpHhScuduroFC+dkz87H0=
-X-Google-Smtp-Source: ABdhPJx25FcLG2JQe24kaXZecI9BCEFvz9z8SheCmciK7YDm8iNJkM8WfVpRJ48uQcNgOpHj2YG0Yw==
-X-Received: by 2002:a17:902:d54d:b0:15d:2ff:b0e2 with SMTP id z13-20020a170902d54d00b0015d02ffb0e2mr23275845plf.131.1651153213528;
-        Thu, 28 Apr 2022 06:40:13 -0700 (PDT)
-Received: from [192.168.255.10] ([203.205.141.119])
-        by smtp.gmail.com with ESMTPSA id z15-20020a056a001d8f00b004fda37855ddsm21177011pfw.168.2022.04.28.06.40.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Apr 2022 06:40:13 -0700 (PDT)
-Message-ID: <5c227ef8-72d2-9254-f061-128974a6dc7d@gmail.com>
-Date:   Thu, 28 Apr 2022 21:40:05 +0800
+        Thu, 28 Apr 2022 09:45:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 313F45BE7C;
+        Thu, 28 Apr 2022 06:41:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C037861743;
+        Thu, 28 Apr 2022 13:41:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1704C385A0;
+        Thu, 28 Apr 2022 13:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651153305;
+        bh=P6NwmKSl37HKqsBkfsnaVlnnymPDnCBmzwPmXUQ33Ak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CRQtEPEgZg+qRGcXuTGCR3GNA6UcwMOAVM5UjNZO6BYVYP4pCCWk8i7fjs3sy2MEm
+         9TUgHoQvu1wpc0V/GlaXgT+e7VAOUAvVKrSPSh2DnJZ+vM9lqDNj0NqR+2zX0aomZC
+         LrxHktS11GBOa7o2PELLVIv2SCmVDmqiH53FrCdfw7haN6ceTrVIbPm6pszAq2B+8W
+         zUSS4VeV8oc6ZCZfl6jKqnDlHAcU7UAyuSyJQ+8Otb3scEn1AAkn2S3IjJzaSWcLNm
+         hGkcf2+6/BqhC5ST7vWg2bS2C1/Q0rphijrZ4y0hPfmi50jMKQhYVPtODDKEbYcRJC
+         G1cD58+d4XOKg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1AC44400B1; Thu, 28 Apr 2022 10:41:42 -0300 (-03)
+Date:   Thu, 28 Apr 2022 10:41:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Timothy Hayes <timothy.hayes@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf test: Add perf_event_attr test for Arm SPE
+Message-ID: <YmqZluTEKAgg4AU0@kernel.org>
+References: <20220421165205.117662-1-timothy.hayes@arm.com>
+ <20220421165205.117662-4-timothy.hayes@arm.com>
+ <20220424145307.GE978927@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.8.1
-Subject: Re: [PATCH v4 6/7] perf/x86/amd/core: Add PerfMonV2 overflow handling
-Content-Language: en-US
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     peterz@infradead.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        pbonzini@redhat.com, jmattson@google.com, eranian@google.com,
-        puwen@hygon.cn, ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org
-References: <cover.1651058600.git.sandipan.das@amd.com>
- <6bb3a6de79afbdb1ebc1b804fb8c2002c00cbaee.1651058600.git.sandipan.das@amd.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-Organization: Tencent
-In-Reply-To: <6bb3a6de79afbdb1ebc1b804fb8c2002c00cbaee.1651058600.git.sandipan.das@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220424145307.GE978927@leoy-ThinkPad-X240s>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 27/4/2022 7:31 pm, Sandipan Das wrote:
-> +static inline void amd_pmu_ack_global_status(u64 status)
-> +{
-> +	/*
-> +	 * PerfCntrGlobalStatus is read-only but an overflow acknowledgment
+Em Sun, Apr 24, 2022 at 10:53:07PM +0800, Leo Yan escreveu:
+> On Thu, Apr 21, 2022 at 05:52:05PM +0100, Timothy Hayes wrote:
+> > Adds a perf_event_attr test for Arm SPE in which the presence of
+> > physical addresses are checked when SPE unit is run with pa_enable=1.
+> > 
+> > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> Tested-by: Leo Yan <leo.yan@linaro.org>
 
-If wrmsrl PerfCntrGlobalStatus, remain silent or report #GP ?
+Thanks, applied the set to perf/urgent.
 
-> +	 * mechanism exists; writing 1 to a bit in PerfCntrGlobalStatusClr
-> +	 * clears the same bit in PerfCntrGlobalStatus
-> +	 */
-> +
-> +	/* Only allow modifications to PerfCntrGlobalStatus.PerfCntrOvfl */
-> +	status &= amd_pmu_global_cntr_mask;
-> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, status);
+- Arnaldo
+ 
+> > ---
+> >  tools/perf/tests/attr/README                         |  1 +
+> >  .../perf/tests/attr/test-record-spe-physical-address | 12 ++++++++++++
+> >  2 files changed, 13 insertions(+)
+> >  create mode 100644 tools/perf/tests/attr/test-record-spe-physical-address
+> > 
+> > diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
+> > index 454505d343fa..eb3f7d4bb324 100644
+> > --- a/tools/perf/tests/attr/README
+> > +++ b/tools/perf/tests/attr/README
+> > @@ -60,6 +60,7 @@ Following tests are defined (with perf commands):
+> >    perf record -R kill                           (test-record-raw)
+> >    perf record -c 2 -e arm_spe_0// -- kill       (test-record-spe-period)
+> >    perf record -e arm_spe_0/period=3/ -- kill    (test-record-spe-period-term)
+> > +  perf record -e arm_spe_0/pa_enable=1/ -- kill (test-record-spe-physical-address)
+> >    perf stat -e cycles kill                      (test-stat-basic)
+> >    perf stat kill                                (test-stat-default)
+> >    perf stat -d kill                             (test-stat-detailed-1)
+> > diff --git a/tools/perf/tests/attr/test-record-spe-physical-address b/tools/perf/tests/attr/test-record-spe-physical-address
+> > new file mode 100644
+> > index 000000000000..7ebcf5012ce3
+> > --- /dev/null
+> > +++ b/tools/perf/tests/attr/test-record-spe-physical-address
+> > @@ -0,0 +1,12 @@
+> > +[config]
+> > +command = record
+> > +args    = --no-bpf-event -e arm_spe_0/pa_enable=1/ -- kill >/dev/null 2>&1
+> > +ret     = 1
+> > +arch    = aarch64
+> > +
+> > +[event-10:base-record-spe]
+> > +# 622727 is the decimal of IP|TID|TIME|CPU|IDENTIFIER|DATA_SRC|PHYS_ADDR
+> > +sample_type=622727
+> > +
+> > +# dummy event
+> > +[event-1:base-record-spe]
+> > \ No newline at end of file
+> > -- 
+> > 2.25.1
+> > 
 
-If rdmsrl PerfCntrGlobalStatusClr, does it return 0 or the value of 
-PerfCntrGlobalStatus ?
+-- 
 
-> +}
+- Arnaldo
