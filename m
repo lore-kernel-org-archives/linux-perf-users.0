@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B65C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 07:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49ECC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 07:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343566AbiD1IBD (ORCPT
+        id S1343656AbiD1IBF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 04:01:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49636 "EHLO
+        Thu, 28 Apr 2022 04:01:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343638AbiD1IBB (ORCPT
+        with ESMTP id S1343638AbiD1IBE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 04:01:01 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DBA9D4DF
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 00:57:47 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f7ddeb73c1so39928567b3.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 00:57:47 -0700 (PDT)
+        Thu, 28 Apr 2022 04:01:04 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F4332046
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 00:57:49 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id p22-20020a254216000000b0064588c45fbaso3849758yba.16
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 00:57:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=SO+yjzYpVBUSmrI7QpCCrXS5LJfjCzTJ8nkeb3Mo8dU=;
-        b=Qa4x2xMtTBRaEBmnuV0W0tjeGml32zmd51Fa45Tjo2IT/6K5D6YbIsyaNK8VFmkOJ6
-         7+4sLWRsk/cwOft1kJzYjlLjpa0GLeKx84kDAoCU1tNRW9ebnoAULQY/knyDx4CWm9Ky
-         dOPSMhlfu9kKZ6X8bA314lg1ardMAZYesSNEvYM08sgOrzDJK65LxOv1aLJ6J7CGsFcV
-         fnnB0GJt2017adnSlPaGPkZy5E6ZtR2CCNOWmywZRkhpjUbh2i73iba9LboJnuYsfyav
-         RmgRH0LMqYlJNoInUo6Dgxp5QjQb6pZGU1GDbth2QOSGKuVeVUAMuUxyKdJNVU9jtj+L
-         mOjw==
+        bh=X9bgRRWSLcAukqJ4mLELbaH/aDHNmxGpnPZkabIKhXA=;
+        b=We/v/+8dcLIwYYT/FRMRibij0dpEMbg7npNYMDlYQaqsPBdaFcfC7RfC+i/suk2Ll4
+         3BPpw/+ONB0nmBN6br0J1w417y0sb6Qe4n4cbsDd2LXZLoN3BrMngZOp06hbfrH51/3v
+         88vz9K8SWDkCsyKvIJAT74NngWDP/TM+sXKB/0unSK5Fb4V+pH+kpTjmidbWuM6Lx4gZ
+         RRzQzXzxutIaJJRQZNJiU24fyNDYSG4wNz0IIdboJfg102ctIbdNBzz4BDY0SAfAiU0b
+         OHm9MR7zmNHWrjAeFCyPt57uCNqirh4dmR7CHHdIxXr9IFVosfsPK9tXrrk4bw/xz00/
+         /zZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=SO+yjzYpVBUSmrI7QpCCrXS5LJfjCzTJ8nkeb3Mo8dU=;
-        b=lwQMibRUUeIt7h3dWVdh6Eh4396T03Z3anbdlib11JuGnJ45LAow51pjLO5KIEDc4K
-         pCLIL3lJ9lVN5ogp2JTXGWc9WNE/GECs/JoBBr9LEV3ins/Y89Uto6LxH3uS2YDTSCIZ
-         7Vvnh6WnIsEpC5ulIOm6B+xfNLIGrxy/8fkQ+xhiZ3T6WgdvwgJHxs5ugnfFtkKcVJFn
-         Kaliwsy6wyN2KdMsHMAUIbiFUXe5Beo0hKANtOH9rl0PJVq+xASUGK7BpY0P3p02rIUe
-         S286wfowlT9OsdeJLEkylVWaQvhLBvjiLYil3OyZEMCumEhO96S/X08mPRa9b/+7o6t7
-         cHDw==
-X-Gm-Message-State: AOAM532NJIcBB3S05cQz/tAz6Q8kwxskABZigTeIT1TCF72l2x35DF2a
-        AcgYxaXVJB9jOOthOIodcUo9/1uCi0HG
-X-Google-Smtp-Source: ABdhPJxt2fweUwfCgwQBq2TPqBf3/1CLqWtr3RnM1E3AuQ+GloEy3fNJs4TFyN67Sj2RlB3Zr74itM2dMTRr
+        bh=X9bgRRWSLcAukqJ4mLELbaH/aDHNmxGpnPZkabIKhXA=;
+        b=bwXijt8J5P8CSgSJSzrXecyefumM3wjBh9Fcfpb9YJY7H+p4haqNM0rx9RDkBZ4C3e
+         nt16zffG8m9LAksCjwJm+HSUu07xYX5qfjKEgTcc/8uEkrVVaCex0xUKO4avYLhATnF1
+         iQ60TfAwow+EfA7p+syGje34G1CsYBICFrx5La3Xp6TQNsG3CJmy97Z4BgmzKlcFbxBA
+         gPmajiY3kKNEHJUrSl0IbURWVwnnjQExidk7tVPZ6i+mGRigfaQL6+M5kCIN/mIFKG2I
+         bTZjhqTbk6JOW3RvITxMvErvFcyu1/Titz3oJxkTUvNQAABrMUaRuj1MD1QWUsEwEbOP
+         HLtw==
+X-Gm-Message-State: AOAM5319RFE/54/OMAgA8biiZurOv+BqoUxMcNND/5iznsxQeh228bVU
+        kceWYWrDys79YO8Vkydh6zN2yIq8XTm8
+X-Google-Smtp-Source: ABdhPJzVTVFyue5D3sMnp/3yibmD5pXWptPH6nsDR2KhkoCq06whrpZ93n5G8eBsCkTszVH2ew2am2kAHTI9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:33c3:c9d8:c4fd:e75c])
- (user=irogers job=sendgmr) by 2002:a81:af59:0:b0:2f4:d869:b5df with SMTP id
- x25-20020a81af59000000b002f4d869b5dfmr32015447ywj.367.1651132666673; Thu, 28
- Apr 2022 00:57:46 -0700 (PDT)
-Date:   Thu, 28 Apr 2022 00:57:29 -0700
+ (user=irogers job=sendgmr) by 2002:a25:910e:0:b0:648:bdcc:ccc with SMTP id
+ v14-20020a25910e000000b00648bdcc0cccmr10426478ybl.636.1651132668890; Thu, 28
+ Apr 2022 00:57:48 -0700 (PDT)
+Date:   Thu, 28 Apr 2022 00:57:30 -0700
 In-Reply-To: <20220428075730.797727-1-irogers@google.com>
-Message-Id: <20220428075730.797727-6-irogers@google.com>
+Message-Id: <20220428075730.797727-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20220428075730.797727-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [PATCH 6/7] perf vendor events intel: Update WSM-EP-SP events to v3
+Subject: [PATCH 7/7] perf vendor events intel: Update WSM-EX events to v3
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,8 +76,8 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Events are generated for Westmere EP-SP v3 with events from:
-https://download.01.org/perfmon/WSM-EP-SP/
+Events are generated for Westmere EX v3 with events from:
+https://download.01.org/perfmon/WSM-EX/
 
 Using the scripts at:
 https://github.com/intel/event-converter-for-linux-perf/
@@ -86,98 +86,98 @@ This change updates descriptions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/westmereep-sp/cache.json   | 14 +++++++-------
- .../pmu-events/arch/x86/westmereep-sp/memory.json  |  6 +++---
+ .../perf/pmu-events/arch/x86/westmereex/cache.json | 14 +++++++-------
+ .../pmu-events/arch/x86/westmereex/memory.json     |  6 +++---
  2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
-index 2ecd80f8fa67..c5f33fe2a3ce 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
-@@ -1769,7 +1769,7 @@
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/cache.json b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
+index 23de93ea347a..d6243d008bfe 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/cache.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
+@@ -1761,7 +1761,7 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Offcore data reads, RFO's and prefetches satisfied by the IO, CSR, MMIO unit",
 +        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the IO, CSR, MMIO unit",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
+         "Counter": "2",
+         "EventCode": "0xB7",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.IO_CSR_MMIO",
-@@ -1780,7 +1780,7 @@
+@@ -1772,7 +1772,7 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Offcore data reads, RFO's and prefetches statisfied by the LLC and not found in a sibling core",
 +        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and not found in a sibling core",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
+         "Counter": "2",
+         "EventCode": "0xB7",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_NO_OTHER_CORE",
-@@ -1791,7 +1791,7 @@
+@@ -1783,7 +1783,7 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Offcore data reads, RFO's and prefetches satisfied by the LLC and HIT in a sibling core",
 +        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and HIT in a sibling core",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
+         "Counter": "2",
+         "EventCode": "0xB7",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HIT",
-@@ -1802,7 +1802,7 @@
+@@ -1794,7 +1794,7 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Offcore data reads, RFO's and prefetches satisfied by the LLC  and HITM in a sibling core",
 +        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC  and HITM in a sibling core",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
+         "Counter": "2",
+         "EventCode": "0xB7",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HITM",
-@@ -1857,7 +1857,7 @@
+@@ -1849,7 +1849,7 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Offcore data reads, RFO's and prefetches that HIT in a remote cache",
 +        "BriefDescription": "Offcore data reads, RFOs, and prefetches that HIT in a remote cache",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
+         "Counter": "2",
+         "EventCode": "0xB7",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HIT",
-@@ -1868,7 +1868,7 @@
+@@ -1860,7 +1860,7 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Offcore data reads, RFO's and prefetches that HITM in a remote cache",
 +        "BriefDescription": "Offcore data reads, RFOs, and prefetches that HITM in a remote cache",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
+         "Counter": "2",
+         "EventCode": "0xB7",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HITM",
-@@ -3230,4 +3230,4 @@
+@@ -3222,4 +3222,4 @@
          "SampleAfterValue": "200000",
          "UMask": "0x8"
      }
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
-index 623a0087c8f3..f14e760a9ddc 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
-@@ -286,7 +286,7 @@
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/memory.json b/tools/perf/pmu-events/arch/x86/westmereex/memory.json
+index a2132858b9c1..1f8cfabe08c0 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/memory.json
+@@ -294,7 +294,7 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Offcore data reads, RFO's and prefetches statisfied by the local DRAM.",
 +        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the local DRAM.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
+         "Counter": "2",
+         "EventCode": "0xB7",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_DRAM",
-@@ -297,7 +297,7 @@
+@@ -305,7 +305,7 @@
          "UMask": "0x1"
      },
      {
 -        "BriefDescription": "Offcore data reads, RFO's and prefetches statisfied by the remote DRAM",
 +        "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the remote DRAM",
-         "Counter": "0,1,2,3",
-         "EventCode": "0xB7, 0xBB",
+         "Counter": "2",
+         "EventCode": "0xB7",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_DRAM",
-@@ -736,4 +736,4 @@
+@@ -744,4 +744,4 @@
          "SampleAfterValue": "100000",
          "UMask": "0x1"
      }
