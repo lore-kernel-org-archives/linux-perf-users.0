@@ -2,106 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17556C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22B7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Apr 2022 13:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347330AbiD1N3Y (ORCPT
+        id S1347197AbiD1NeX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Apr 2022 09:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39552 "EHLO
+        Thu, 28 Apr 2022 09:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347337AbiD1N3W (ORCPT
+        with ESMTP id S1347167AbiD1NeW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Apr 2022 09:29:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926D3B0A7B;
-        Thu, 28 Apr 2022 06:26:03 -0700 (PDT)
+        Thu, 28 Apr 2022 09:34:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584786378;
+        Thu, 28 Apr 2022 06:31:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C16E86209C;
-        Thu, 28 Apr 2022 13:26:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01EACC385A9;
-        Thu, 28 Apr 2022 13:26:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A98A460DE9;
+        Thu, 28 Apr 2022 13:31:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E685DC385A9;
+        Thu, 28 Apr 2022 13:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651152362;
-        bh=09Hl6oSetqVN5HFGm8OzMmoV77aDSHC1Wz+qVhdohVc=;
+        s=k20201202; t=1651152667;
+        bh=DnP9exkGhsGYgxJxwNecTILtYI5DRDFnOujuiuYepj0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mrECKqx+fDChACFLciuZBFdjI81Hm5XjpSdrCdSLC4T0WvdaDbhhR6TD6kZDPxp/z
-         gqDsYrMSUjf9T1RMUHoy2S+GOo3B1l6x/Zz4uWKYukVLYQ9mjoiFb0HxC+DdDddmVC
-         fwccbFMKZhBPDkZYH7uS/gmSpRYbrGgBSUEDjLkrgKL+AGyCyhmUYOFrkCNzktkzUN
-         BmAF+Sfh4k3FH5PxHXbtifDjnN4nUPXi/3KpOATSOjCOw72oRKSejoSQZqYW8alal2
-         wSQSnCI2TIycDX4IVZ+jF0GFjuPU6wImTwwM8Q6pERI+Yb9sbMmirSdQ0yNpfodhHb
-         ny6wNM7Hn28Kw==
+        b=A0aH/+ToIT48OzvZCW1iw33zWkGyK4bwq/us6yc9vdyyWwlPjTM7SeMkSWT6GBDj8
+         ofsXran7qP2k2IaWgpA/aNvpQlSiKEqsjcEoBUumZMBBzoN466NLksAyIYcREiKs9i
+         QaQQW7Hp/1vx8yUH6LNjCFBne4DoL/3lNp0LrbNJVH+LNh/mqTvu4h0w4mkgz7BU/G
+         a9OD0ZZjhkSU7ButZS9w3C64i86mYgMHUnMKMLwTkjsD/DTHxwF5CHgGGSLDIQ+B5m
+         og97rBUTxFfb+H19gb8deojTOIQaOd8XzBBoL1jTm7PvoOp0iCpRC5v25YQlMdxgB7
+         EGXsIxd0StTMw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1178A400B1; Thu, 28 Apr 2022 10:25:58 -0300 (-03)
-Date:   Thu, 28 Apr 2022 10:25:58 -0300
+        id 5C017400B1; Thu, 28 Apr 2022 10:31:04 -0300 (-03)
+Date:   Thu, 28 Apr 2022 10:31:04 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf test: Fix test case 81 on s390x
-Message-ID: <YmqV5o0XFfewhNkC@kernel.org>
-References: <20220428122821.3652015-1-tmricht@linux.ibm.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/7] perf vendor events intel: Update CLX events to v1.15
+Message-ID: <YmqXGCMbBOLcd261@kernel.org>
+References: <20220428075730.797727-1-irogers@google.com>
+ <96b5c9f4-f0a0-0019-8059-3e833c95b011@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220428122821.3652015-1-tmricht@linux.ibm.com>
+In-Reply-To: <96b5c9f4-f0a0-0019-8059-3e833c95b011@linux.intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 28, 2022 at 02:28:21PM +0200, Thomas Richter escreveu:
-> perf test -F 81 -v fails on s390x on the linux-next branch.
-> The test case is x86 specific can not be executed on s390x.
-> The test case depends on x86 register names such as
+Em Thu, Apr 28, 2022 at 09:12:26AM -0400, Liang, Kan escreveu:
 > 
->   ... | egrep -q 'available registers: AX BX CX DX ....'
+> 
+> On 4/28/2022 3:57 AM, Ian Rogers wrote:
+> > Events are generated for CascadeLake Server v1.15 with
+> > events from:
+> > https://download.01.org/perfmon/CLX/
+> > 
+> > Using the scripts at:
+> > https://github.com/intel/event-converter-for-linux-perf/
+> > 
+> > This change updates descriptions, adds INST_DECODED.DECODERS and
+> > corrects a counter mask in UOPS_RETIRED.TOTAL_CYCLES.
+> > 
+> > Signed-off-by: Ian Rogers<irogers@google.com>
+> 
+> Thanks Ian. For the whole series,
+> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Thanks,
-
-Ian, I guess this will break on other !x86 arches as well. Can you
-please take a look?
-
-- Arnaldo
- 
-> Skip this test case on s390x.
-> 
-> Output before:
->  # perf test -F 81
->  81: perf record tests                       : FAILED!
->  #
-> 
-> Output after:
->  # perf test -F 81
->  81: perf record tests                       : Skip
->  #
-> 
-> Fixes: 24f378e66021 ("perf test: Add basic perf record tests")
-> Cc: Ian Rogers <irogers@google.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/tests/shell/record.sh | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index cd1cf14259b8..d98f4d4a00e1 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -37,6 +37,8 @@ test_register_capture() {
->    echo "Register capture test [Success]"
->  }
->  
-> +# Test for platform support and return TEST_SKIP
-> +[ $(uname -m) = s390x ] && exit 2
->  test_per_thread
->  test_register_capture
->  exit $err
-> -- 
-> 2.35.1
-
--- 
+Thanks, applied.
 
 - Arnaldo
+
