@@ -2,159 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474B3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Apr 2022 05:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD2CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Apr 2022 06:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237654AbiD2FSd (ORCPT
+        id S1352520AbiD2GRC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Apr 2022 01:18:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
+        Fri, 29 Apr 2022 02:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231154AbiD2FSc (ORCPT
+        with ESMTP id S1354431AbiD2GQ7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Apr 2022 01:18:32 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF0E1496B7;
-        Thu, 28 Apr 2022 22:15:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bgj2h747t2kBW3AtzgP4MGa6J65B6NTgsqJlSBKQ5yd4cFG4Vf01ZEgHZNBQcPs06oJPNzvWGuLZ7vM9IYmu84QGnW/HCot3IhlIaigyboLGVm+fKd03hR1zZiYEaCiZ6rBCJtjLnnEsMR5kbWk6UEMwguZl2qxgV1qjpCwA9GGOJcm3gnhlbqMQlvBGbfRVEhxobvyuK7AiAosbn2rXcerZL7C8oGBGAO6qnH/JQQtHy1kDdeM2BT3V552LoAGTxmDhDITz4VrNfTWWu//tGBmHKb1RUJqJxA0tSa7ubIfAZV+/0huWuhwOQhpWbnQ9sVyagD4TkK/8Dln4cc62HA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PlHqn8qyM9qtDv/VY3HRDGesglhBywtKft4AK6bF9Gs=;
- b=MeeV5B7heO3dMFS3nYlyh6AkqkWSz7sskLykeyyAUxEttFARi1aHB1kkhrwTAdWDarIzWA9C4wvCJAsu8gzWrlymiVhoFZBcHXIh38imRpN5TmqxWnfgU4DS0HHfnRkN3T+Ff/aIslLqytahjOp1O4NlAZlk8bfvOfCGqEyzmxTmW5BRj+/s9kz0j6AOwmZZfEqcPQHvSJWzJAbkLB19BtaM0uxdXKlHw4SBieR4/WzOUS8ek4HtpsY9a1TBtEGn/B9b11pCpgt9BqRJ2Ej6ulB3YSLdGVH3rhyD0iU/HHR9JbGC7eN8fHSHq67lLfnlAi0nuOQt6CjtcXTPEgEBoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PlHqn8qyM9qtDv/VY3HRDGesglhBywtKft4AK6bF9Gs=;
- b=kjD8oOOzB+DN3iMUH9FjGWUg3FrzrNDeJ+H0OJEl5S/b0/bQAsZSDR6NU06f9OY61nxghLTbVklvPFKjPiRMmwsmA6QPxxZy1wtoWGEuo4tmCxDVtY15POBfnPuLPk/qSOtX5giUGqmEOtd/gvQXYck0PvRw4FktG34QqJ6X2cY=
-Received: from MW4PR04CA0062.namprd04.prod.outlook.com (2603:10b6:303:6b::7)
- by BN8PR12MB3169.namprd12.prod.outlook.com (2603:10b6:408:69::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Fri, 29 Apr
- 2022 05:15:10 +0000
-Received: from CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:6b:cafe::f5) by MW4PR04CA0062.outlook.office365.com
- (2603:10b6:303:6b::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15 via Frontend
- Transport; Fri, 29 Apr 2022 05:15:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT040.mail.protection.outlook.com (10.13.174.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5206.12 via Frontend Transport; Fri, 29 Apr 2022 05:15:09 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 29 Apr
- 2022 00:15:00 -0500
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <peterz@infradead.org>, <dmtrmonakhov@yandex-team.ru>,
-        <jpoimboe@redhat.com>
-CC:     <ravi.bangoria@amd.com>, <acme@kernel.org>, <mingo@redhat.com>,
-        <mark.rutland@arm.com>, <jolsa@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
-        <tglx@linutronix.de>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <x86@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
-        <kim.phillips@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH] perf/amd/ibs: Use interrupt regs ip for stack unwinding
-Date:   Fri, 29 Apr 2022 10:44:41 +0530
-Message-ID: <20220429051441.14251-1-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <YlVPpVC8chepOdzJ@hirez.programming.kicks-ass.net>
-References: <YlVPpVC8chepOdzJ@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a6671e40-8837-4f92-d360-08da299f3b12
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3169:EE_
-X-Microsoft-Antispam-PRVS: <BN8PR12MB3169B5D7DF26EFC605AB99D5E0FC9@BN8PR12MB3169.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2zWZatlURgtNtkUKuip+kiAnODK9OP3/g5ihJ0ZVSXsb+onFvf4SSj9NaJxeFPvJ/a3XgmbsH4K5xN/e3mdK59JV+OucICp7qGZPz91ZEumPmYfyJFwzjl28DOmM3Afa+6Tp2ooKy4r2QxBBsLrTPCM1nNyUf/BF5ZKIhvyvqJ55PDqaBrgkk2KUWx9Q0f3+LXfd29JtutYspqTJgqriXnl4SuFHnoO4hIHrkluCD9o+4Oex+0jyJxrCdr+2TtejNubEM2MsPZA0GIrvnzXfx1lFKaIZZ+Gb0O+u5UDrNMNplH44acKf686wodk0OPitXt1Hk3ALLWKkbR/Q0tsML2Vap7xZjx/ldwdDd9Z5LW064GM32oSPdGVIacJt2+BUJ7aGKjptWRmna1CdEh9rSIis7P2WIhGaLzO9iFNGyuRR5aO3avYGVBQCwaN7xse/yPm+hdGzCQ/Z79MKpXDdPOHZqSVEbo2wZSi8jMp9qi9gQIG2Cw/iRmSTYOKhcl9G2JL4SgLLpBlr0GfUaY6xnMMqZE2Beb67pg/N+cLkO4VYSWGgyoWTrVTg/vvqzxCJdUbMXg37b+UghMcD/NQwwzKrNZlALoSiDPhS4v3R6/+CRxDiZD0DcJyiWkZsmPqVWYiuY6Obslc0/585bZEe9TUE5FZCDACRpwgOq8cKvqXWsOUTm76CLGkwbDR6ymOey2MFfa4n8xNsv9Gw94/IgA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(47076005)(81166007)(36860700001)(82310400005)(356005)(426003)(40460700003)(8936002)(44832011)(7416002)(5660300002)(86362001)(110136005)(316002)(54906003)(4326008)(8676002)(70586007)(26005)(70206006)(186003)(1076003)(16526019)(2616005)(508600001)(6666004)(7696005)(36756003)(2906002)(336012)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2022 05:15:09.2099
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6671e40-8837-4f92-d360-08da299f3b12
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3169
+        Fri, 29 Apr 2022 02:16:59 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAD2A0BE7
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 23:13:41 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id d134-20020a25e68c000000b006483b1adcc3so6550015ybh.11
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Apr 2022 23:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Kqo59qgKd1gaX20d6SNzOXicZIkv6urxzb/rb9AIZQ4=;
+        b=K1nJzgo8S7CyE26PvnGHw0Xo0cKbXQMzSTUbU4RZXQWNvthmXLa1Fa/55QdsRFbfMr
+         C0U9sTC1gbZi5m2tPBNzFFsY+eSUlaO32uAv0XIV5WzOS8FzgAzgVn8uotaI6Edqpc2Y
+         l2C+p6Vi4ZB5cdwz7MRyI67/bBYbF3MB2FZlT3rzV9hH5XXw7FeqZo0MXAaVxWGooE5+
+         DbOt5cGIh+LNg0O4OPhyQTwg2GYtKVPH69P0w3rQjbIMuhXpKyV002lZy3kZR25R850V
+         qJ67vs573N67W/vwECJO9fgtHh5GpxxkTJwOta3kSKPRdcGvTyQDIv5UA5fcrrwZgAXv
+         myuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Kqo59qgKd1gaX20d6SNzOXicZIkv6urxzb/rb9AIZQ4=;
+        b=EmBTWr2jiTDUUEU6A5Kn80MBHJ6t9+qeQZ952cNVktYDQQ2u2imqHMuJNHryG1y/Up
+         hxh/sZIYSqimRJRALuoLoqsUriHY9KKW5S6/2A+rgASaz+DSnAcYwrbys80fbkraeir6
+         QL/3VUXvHq7jz4pl9m9yFHA8haJmbruS19x+EXlzq4gUiogQfpgzXrrzuqwCwY9oKEwE
+         oNYrziRgv//5iZweVRdmzkCVByMlxe3GmKKv12XO2kspY8W1LJsi7aFaMv621VguidgV
+         hg5RpMgEM59VJK8k+WECN8cozCZg6qTF+On3m6h2a6kQCiPX515fgSEDmu7h6xxwTKXe
+         ib4A==
+X-Gm-Message-State: AOAM533VaVt6Oq+DeO9aQsj7cBKtfgNOUQ/k4eA+TC5qk6FEtlAMqZeT
+        QFxhFt0kBzU+Ga0Ol6oxMK7OxC7kHwdi
+X-Google-Smtp-Source: ABdhPJyHpmgogZV5669KSyoTmYzPXdpO4rHCuq4zduFqHlDxAwemPHgNsDQPhWVBwDMKZN+yfhhsTISvmoQE
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:3c33:ed69:1770:973e])
+ (user=irogers job=sendgmr) by 2002:a25:2553:0:b0:649:1c7e:51ee with SMTP id
+ l80-20020a252553000000b006491c7e51eemr3811092ybl.458.1651212820823; Thu, 28
+ Apr 2022 23:13:40 -0700 (PDT)
+Date:   Thu, 28 Apr 2022 23:13:36 -0700
+Message-Id: <20220429061336.1184848-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
+Subject: [PATCH] perf test: Add skip to --per-thread test
+From:   Ian Rogers <irogers@google.com>
+To:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-IbsOpRip is recorded when IBS interrupt is triggered. But there is
-a skid from the time IBS interrupt gets triggered to the time the
-interrupt is presented to the core. Meanwhile processor would have
-moved ahead and thus IbsOpRip will be inconsistent with rsp and rbp
-recorded as part of the interrupt regs. This causes issues while
-unwinding stack using the ORC unwinder as it needs consistent rip,
-rsp and rbp. Fix this by using rip from interrupt regs instead of
-IbsOpRip for stack unwinding.
+As reported in:
+https://lore.kernel.org/linux-perf-users/20220428122821.3652015-1-tmricht@linux.ibm.com/
+the 'instructions:u' event may not be supported. Add a skip using 'perf
+stat'.
 
-Fixes: ee9f8fce99640 ("x86/unwind: Add the ORC unwinder")
-Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Switch some code away from pipe to make the failures clearer.
+
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/x86/events/amd/ibs.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ tools/perf/tests/shell/record.sh | 44 +++++++++++++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 9739019d4b67..171941043f53 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -304,6 +304,16 @@ static int perf_ibs_init(struct perf_event *event)
- 	hwc->config_base = perf_ibs->msr;
- 	hwc->config = config;
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index cd1cf14259b8..efc0cb07a929 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -5,11 +5,43 @@
+ set -e
  
-+	/*
-+	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
-+	 * recorded as part of interrupt regs. Thus we need to use rip from
-+	 * interrupt regs while unwinding call stack. Setting _EARLY flag
-+	 * makes sure we unwind call-stack before perf sample rip is set to
-+	 * IbsOpRip.
-+	 */
-+	if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
-+		event->attr.sample_type |= __PERF_SAMPLE_CALLCHAIN_EARLY;
+ err=0
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
 +
- 	return 0;
++cleanup() {
++  rm -f ${perfdata}
++  rm -f ${perfdata}.old
++  trap - exit term int
++}
++
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup exit term int
++
+ test_per_thread() {
+   echo "Basic --per-thread mode test"
+-  perf record -e instructions:u --per-thread -o- true 2> /dev/null \
+-    | perf report -i- -q \
+-    | egrep -q true
++  if ! perf stat -e instructions:u --quiet true
++  then
++    echo "Per-thread record [Skipped instructions:u not supported]"
++    if [ $err -ne 1 ]
++    then
++      err=2
++    fi
++    return
++  fi
++  if ! perf record -e instructions:u --per-thread -o ${perfdata} true 2> /dev/null
++  then
++    echo "Per-thread record of instructions:u [Failed]"
++    err=1
++    return
++  fi
++  if ! perf report -i ${perfdata} -q | egrep -q true
++  then
++    echo "Per-thread record [Failed missing output]"
++    err=1
++    return
++  fi
+   echo "Basic --per-thread mode test [Success]"
  }
  
-@@ -687,6 +697,14 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		data.raw = &raw;
- 	}
+@@ -18,6 +50,10 @@ test_register_capture() {
+   if ! perf list | egrep -q 'br_inst_retired.near_call'
+   then
+     echo "Register capture test [Skipped missing instruction]"
++    if [ $err -ne 1 ]
++    then
++      err=2
++    fi
+     return
+   fi
+   if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
+@@ -39,4 +75,6 @@ test_register_capture() {
  
-+	/*
-+	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
-+	 * recorded as part of interrupt regs. Thus we need to use rip from
-+	 * interrupt regs while unwinding call stack.
-+	 */
-+	if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
-+		data.callchain = perf_callchain(event, iregs);
+ test_per_thread
+ test_register_capture
 +
- 	throttle = perf_event_overflow(event, &data, &regs);
- out:
- 	if (throttle) {
++cleanup
+ exit $err
 -- 
-2.27.0
+2.36.0.464.gb9c8b46e94-goog
 
