@@ -2,515 +2,1292 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EE2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Apr 2022 12:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBC4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Apr 2022 16:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359618AbiD2NAk (ORCPT
+        id S1378405AbiD2QEH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Apr 2022 09:00:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
+        Fri, 29 Apr 2022 12:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344014AbiD2NAk (ORCPT
+        with ESMTP id S1347604AbiD2QEG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Apr 2022 09:00:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AECBC9B78;
-        Fri, 29 Apr 2022 05:57:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EAF3062175;
-        Fri, 29 Apr 2022 12:57:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3709EC385A7;
-        Fri, 29 Apr 2022 12:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651237039;
-        bh=mnhHtahTyMyfdg8BqKE6S8Wu+5JRxfi6iavSLfvwnpQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Dl+EBOT7CzUgQJDGZmgcJnyPsTYG82cWKh2SDvCpl8Xmnueynl0lSXqstSwCDWJyQ
-         kz12oUwbNXKsVFsIfKRlgTUYtONobRw5iPdAvq5a7tSJUM2JB03LvPSwwU9A2iCyeX
-         /1e1bN/fw98YtMsUFPz5IhAnwJoM031XJSUlBdWlpVrtuJfS1Wzsa3aOaacMn+cBbw
-         Dz3M7+SHYzREnTKpo7kh9OCMI2G+VephTmrI1HZogGqLyr42P9W9RKysQBJpkfdZx7
-         qKHIDK+3AOvsaeYHzS6AmQn1IcuE6ORI9D4XBZC3HfRKjMqcGtVpF4um59peH46H2j
-         r0FIpLZdN+T0A==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Timothy Hayes <timothy.hayes@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v5.18: 4th batch
-Date:   Fri, 29 Apr 2022 09:57:12 -0300
-Message-Id: <20220429125712.527713-1-acme@kernel.org>
-X-Mailer: git-send-email 2.35.1
+        Fri, 29 Apr 2022 12:04:06 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523F13BF8C
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Apr 2022 09:00:46 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id r83so6865397pgr.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Apr 2022 09:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IAKM+whz/N0t2XsPvVl4LMbON8KN+/HMOMHq1IHo8nc=;
+        b=KvqwJzJ6Ka7NZ0qkVWeMKqzp+mBqG7UILub4/OOCsdtDNm93VnrYzKeKBs+e6T4pYq
+         6HTVLfbjICr+RpQi5qjb57R0kwTv1fTGtNwk5TVt5D9beM0niSBwD1AvNgwmhVbfGywx
+         hd0eR+Zpt+tf6RPitblFgqb+XhsaNYems2gE8dkaJOuNZWkaPI9AqBqu8WoOxTMbFXCu
+         eMbUwaPF87t1an7CFmdTwaDW5Gcp5+X7nlkTEH72F086wTV7A57KPC33yYGbR14ZXBFR
+         1EgVspBRGmxZ7sTdTxMBXUEN7zOuTHRC7n3vkC0e34g5cWg9q90aKZ+WCj/DP5nnapzx
+         JobQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IAKM+whz/N0t2XsPvVl4LMbON8KN+/HMOMHq1IHo8nc=;
+        b=NtN5GTHD3L3ymvwe4ngUBfYb/SCAfbUUwhwKSxopyRk+e4qBd8JwBNL2qlS1t+078m
+         8R7gwnlF1VNawnx/c1au5ovDjQHwcg8581Zbdpbv5u+v12B1wDGpq0feuWmTMKr2+sM4
+         1wfzUqCa3TKIdbx9WuDCxezyvTW3UwSKVIwz07WHSFKvb8UKIkKangCPWxZcRG/F/hEo
+         jT6jeE3H+vG+Csy0DSSWz6wCzTZa+7Xo3ai2Gikz4P7jMU6JBpiZF6R90YEUwkUA48Dh
+         YiTMebItRdUfSeGXCHVzo9bFVbtIbUU61mJwtKWMkaebs8ap1uHQewSdxlfujWkuR9AU
+         +fVw==
+X-Gm-Message-State: AOAM531CjU47dHISUaPKgzVQSUYod9jdv6WoojpcMbnq4LlEsCzYkpqa
+        mwV7rWmUv5mqLxyzyXXHNIG6WQ==
+X-Google-Smtp-Source: ABdhPJy+cms/BSnCgVUGvfa2sixjbP5SnzyJC1dIYA4xQXVOMf7cWvXd3XRaD4wo6a0oM7HWU/vL1A==
+X-Received: by 2002:a63:ec50:0:b0:39d:2d53:76e7 with SMTP id r16-20020a63ec50000000b0039d2d5376e7mr78794pgj.338.1651248045038;
+        Fri, 29 Apr 2022 09:00:45 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id i23-20020a056a00225700b0050d38d0f58dsm3385438pfu.213.2022.04.29.09.00.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Apr 2022 09:00:44 -0700 (PDT)
+Date:   Sat, 30 Apr 2022 00:00:33 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     gregkh@linuxfoundation.org, helgaas@kernel.org,
+        alexander.shishkin@linux.intel.com, lorenzo.pieralisi@arm.com,
+        will@kernel.org, mark.rutland@arm.com, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, mike.leach@linaro.org,
+        jonathan.cameron@huawei.com, daniel.thompson@linaro.org,
+        joro@8bytes.org, john.garry@huawei.com,
+        shameerali.kolothum.thodi@huawei.com, robin.murphy@arm.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        coresight@lists.linaro.org, linux-pci@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
+        zhangshaokun@hisilicon.com, liuqi115@huawei.com,
+        linuxarm@huawei.com, prime.zeng@huawei.com
+Subject: Re: [PATCH v7 2/7] hwtracing: Add trace function support for
+ HiSilicon PCIe Tune and Trace device
+Message-ID: <20220429160033.GA650111@leoy-ThinkPad-X240s>
+References: <20220407125841.3678-1-yangyicong@hisilicon.com>
+ <20220407125841.3678-3-yangyicong@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220407125841.3678-3-yangyicong@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+On Thu, Apr 07, 2022 at 08:58:36PM +0800, Yicong Yang via iommu wrote:
+> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex integrated
+> Endpoint(RCiEP) device, providing the capability to dynamically monitor and
+> tune the PCIe traffic, and trace the TLP headers.
+> 
+> Add the driver for the device to enable the trace function. Register PMU
+> device of PTT trace, then users can use trace through perf command. The
+> driver makes use of perf AUX trace and support following events to
+> configure the trace:
+> 
+> - filter: select Root port or Endpoint to trace
+> - type: select the type of traced TLP headers
+> - direction: select the direction of traced TLP headers
+> - format: select the data format of the traced TLP headers
+> 
+> This patch adds the driver part of PTT trace. The perf command support of
+> PTT trace is added in the following patch.
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/Makefile                 |   1 +
+>  drivers/hwtracing/Kconfig        |   2 +
+>  drivers/hwtracing/ptt/Kconfig    |  12 +
+>  drivers/hwtracing/ptt/Makefile   |   2 +
+>  drivers/hwtracing/ptt/hisi_ptt.c | 874 +++++++++++++++++++++++++++++++
+>  drivers/hwtracing/ptt/hisi_ptt.h | 166 ++++++
+>  6 files changed, 1057 insertions(+)
+>  create mode 100644 drivers/hwtracing/ptt/Kconfig
+>  create mode 100644 drivers/hwtracing/ptt/Makefile
+>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+> 
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index 020780b6b4d2..662d50599467 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -175,6 +175,7 @@ obj-$(CONFIG_USB4)		+= thunderbolt/
+>  obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
+>  obj-y				+= hwtracing/intel_th/
+>  obj-$(CONFIG_STM)		+= hwtracing/stm/
+> +obj-$(CONFIG_HISI_PTT)		+= hwtracing/ptt/
+>  obj-$(CONFIG_ANDROID)		+= android/
+>  obj-$(CONFIG_NVMEM)		+= nvmem/
+>  obj-$(CONFIG_FPGA)		+= fpga/
+> diff --git a/drivers/hwtracing/Kconfig b/drivers/hwtracing/Kconfig
+> index 13085835a636..911ee977103c 100644
+> --- a/drivers/hwtracing/Kconfig
+> +++ b/drivers/hwtracing/Kconfig
+> @@ -5,4 +5,6 @@ source "drivers/hwtracing/stm/Kconfig"
+>  
+>  source "drivers/hwtracing/intel_th/Kconfig"
+>  
+> +source "drivers/hwtracing/ptt/Kconfig"
+> +
+>  endmenu
+> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
+> new file mode 100644
+> index 000000000000..8902a6f27563
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/Kconfig
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config HISI_PTT
+> +	tristate "HiSilicon PCIe Tune and Trace Device"
+> +	depends on ARM64 || (COMPILE_TEST && 64BIT)
+> +	depends on PCI && HAS_DMA && HAS_IOMEM && PERF_EVENTS
+> +	help
+> +	  HiSilicon PCIe Tune and Trace Device exists as a PCIe RCiEP
+> +	  device, and it provides support for PCIe traffic tuning and
+> +	  tracing TLP headers to the memory.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called hisi_ptt.
+> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
+> new file mode 100644
+> index 000000000000..908c09a98161
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+> new file mode 100644
+> index 000000000000..242b41870380
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+> @@ -0,0 +1,874 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for HiSilicon PCIe tune and trace device
+> + *
+> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-iommu.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/iommu.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/vmalloc.h>
+> +
+> +#include "hisi_ptt.h"
+> +
+> +static u16 hisi_ptt_get_filter_val(struct pci_dev *pdev)
+> +{
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
+> +		return BIT(HISI_PCIE_CORE_PORT_ID(PCI_SLOT(pdev->devfn)));
+> +
+> +	return PCI_DEVID(pdev->bus->number, pdev->devfn);
+> +}
+> +
+> +static bool hisi_ptt_wait_trace_hw_idle(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u32 val;
+> +
+> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_STS,
+> +					  val, val & HISI_PTT_TRACE_IDLE,
+> +					  HISI_PTT_WAIT_POLL_INTERVAL_US,
+> +					  HISI_PTT_WAIT_TRACE_TIMEOUT_US);
+> +}
+> +
+> +static bool hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u32 val;
+> +
+> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS,
+> +					  val, !val, HISI_PTT_RESET_POLL_INTERVAL_US,
+> +					  HISI_PTT_RESET_TIMEOUT_US);
+> +}
+> +
+> +static void hisi_ptt_free_trace_buf(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	struct device *dev = &hisi_ptt->pdev->dev;
+> +	int i;
+> +
+> +	if (!ctrl->trace_buf)
+> +		return;
+> +
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
+> +		if (ctrl->trace_buf[i].addr)
+> +			dmam_free_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+> +					   ctrl->trace_buf[i].addr,
+> +					   ctrl->trace_buf[i].dma);
+> +	}
+> +
+> +	devm_kfree(dev, ctrl->trace_buf);
+> +	ctrl->trace_buf = NULL;
+> +}
+> +
+> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	struct device *dev = &hisi_ptt->pdev->dev;
+> +	int i;
+> +
+> +	hisi_ptt->trace_ctrl.buf_index = 0;
+> +
+> +	/* If the trace buffer has already been allocated, zero it. */
+> +	if (ctrl->trace_buf) {
+> +		for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
+> +			memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
+> +		return 0;
+> +	}
+> +
+> +	ctrl->trace_buf = devm_kcalloc(dev, HISI_PTT_TRACE_BUF_CNT,
+> +				       sizeof(struct hisi_ptt_dma_buffer), GFP_KERNEL);
+> +	if (!ctrl->trace_buf)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
+> +		ctrl->trace_buf[i].addr = dmam_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+> +							     &ctrl->trace_buf[i].dma,
+> +							     GFP_KERNEL);
+> +		if (!ctrl->trace_buf[i].addr) {
+> +			hisi_ptt_free_trace_buf(hisi_ptt);
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+> +{
+> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	hisi_ptt->trace_ctrl.started = false;
+> +}
+> +
+> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	u32 val;
+> +	int i;
+> +
+> +	/* Check device idle before start trace */
+> +	if (!hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
+> +		pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	ctrl->started = true;
+> +
+> +	/* Reset the DMA before start tracing */
+> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	val |= HISI_PTT_TRACE_CTRL_RST;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	hisi_ptt_wait_dma_reset_done(hisi_ptt);
+> +
+> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	val &= ~HISI_PTT_TRACE_CTRL_RST;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	/* Clear the interrupt status */
+> +	writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
+> +
+> +	/* Configure the trace DMA buffer */
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
+> +		writel(lower_32_bits(ctrl->trace_buf[i].dma),
+> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
+> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+> +		writel(upper_32_bits(ctrl->trace_buf[i].dma),
+> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
+> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+> +	}
+> +	writel(HISI_PTT_TRACE_BUF_SIZE, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
+> +
+> +	/* Set the trace control register */
+> +	val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
+> +	if (!hisi_ptt->trace_ctrl.is_port)
+> +		val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
+> +
+> +	/* Start the Trace */
+> +	val |= HISI_PTT_TRACE_CTRL_EN;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_ptt_update_aux(struct hisi_ptt *hisi_ptt, int index, bool stop)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	struct perf_output_handle *handle = &ctrl->handle;
+> +	struct perf_event *event = handle->event;
+> +	struct hisi_ptt_pmu_buf *buf;
+> +	void *addr;
+> +
+> +	buf = perf_get_aux(handle);
+> +	if (!buf || !handle->size)
+> +		return -EINVAL;
+> +
+> +	addr = ctrl->trace_buf[ctrl->buf_index].addr;
+> +
+> +	memcpy(buf->base + buf->pos, addr, HISI_PTT_TRACE_BUF_SIZE);
+> +	memset(addr, 0, HISI_PTT_TRACE_BUF_SIZE);
 
-	Please consider pulling,
+I am a bit worry buffer usages, at least for below aspects:
 
-Best regards,
+The first thing is for memset(), which cleans up the buffer and the
+buffer size is 4MiB, this means it will consume much CPU time to
+cleanup the buffer, and trace_buf is mapped as non-cacheable, the
+performance would be get worse.
 
-- Arnaldo
+The second thing is here it always copies the trace data with size
+HISI_PTT_TRACE_BUF_SIZE, usually, the trace module can provide a read
+pointer register, so you can know the trace data length based on the
+delta value between write and read pointers.
 
-Test results at the end of this message.
+The last thing is the ctrl->trace_buf[] works as bounce buffer, so it
+means actually there have an extra copy from bounce buffer to AUX
+buffer, is it possible to directly output PTT trace data to AUX buffer?
 
-The following changes since commit 8f4dd16603ce834d1c5c4da67803ea82dd282511:
+Sorry if I bring up duplicate questions and before have the simliar
+discussion when reviewed the patch.
 
-  Merge branch 'akpm' (patches from Andrew) (2022-04-27 13:44:37 -0700)
+> +	buf->pos += HISI_PTT_TRACE_BUF_SIZE;
+> +
+> +	if (stop) {
+> +		perf_aux_output_end(handle, buf->pos);
+> +	} else if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
+> +		perf_aux_output_skip(handle, buf->length - buf->pos);
+> +		perf_aux_output_end(handle, buf->pos);
+> +
+> +		buf = perf_aux_output_begin(handle, event);
+> +		if (!buf)
+> +			return -EINVAL;
+> +
+> +		buf->pos = handle->head % buf->length;
+> +		if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
+> +			perf_aux_output_end(handle, 0);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t hisi_ptt_isr(int irq, void *context)
+> +{
+> +	struct hisi_ptt *hisi_ptt = context;
+> +	u32 status, buf_idx;
+> +
+> +	status = readl(hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +	buf_idx = ffs(status) - 1;
+> +
+> +	/* Clear the interrupt status of buffer @buf_idx */
+> +	writel(status, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +
+> +	/*
+> +	 * Update the AUX buffer and cache the current buffer index,
+> +	 * as we need to know this and save the data when the trace
+> +	 * is ended out of the interrupt handler. End the trace
+> +	 * if the updating fails.
+> +	 */
+> +	if (hisi_ptt_update_aux(hisi_ptt, buf_idx, false))
+> +		hisi_ptt_trace_end(hisi_ptt);
+> +	else
+> +		hisi_ptt->trace_ctrl.buf_index = (buf_idx + 1) % HISI_PTT_TRACE_BUF_CNT;
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t hisi_ptt_irq(int irq, void *context)
+> +{
+> +	struct hisi_ptt *hisi_ptt = context;
+> +	u32 status;
+> +
+> +	status = readl(hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +	if (!(status & HISI_PTT_TRACE_INT_STAT_MASK))
+> +		return IRQ_NONE;
+> +
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static void hisi_ptt_irq_free_vectors(void *pdev)
+> +{
+> +	pci_free_irq_vectors(pdev);
+> +}
+> +
+> +static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct pci_dev *pdev = hisi_ptt->pdev;
+> +	int ret;
+> +
+> +	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
+> +	if (ret < 0) {
+> +		pci_err(pdev, "failed to allocate irq vector, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_irq_free_vectors, pdev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev,
+> +					pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ),
+> +					hisi_ptt_irq, hisi_ptt_isr, 0,
+> +					DRV_NAME, hisi_ptt);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to request irq %d, ret = %d\n",
+> +			pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ), ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
+> +{
+> +	struct hisi_ptt_filter_desc *filter;
+> +	struct hisi_ptt *hisi_ptt = data;
+> +	struct list_head *target_list;
+> +
+> +	target_list = pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ?
+> +		      &hisi_ptt->port_filters : &hisi_ptt->req_filters;
+> +
+> +	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
+> +	if (!filter) {
+> +		pci_err(hisi_ptt->pdev, "failed to add filter %s\n", pci_name(pdev));
+> +		return -ENOMEM;
+> +	}
+> +
+> +	filter->pdev = pdev;
+> +	list_add_tail(&filter->list, target_list);
+> +
+> +	/* Update the available port mask */
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
+> +		hisi_ptt->port_mask |= hisi_ptt_get_filter_val(pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_release_filters(void *data)
+> +{
+> +	struct hisi_ptt_filter_desc *filter, *tfilter;
+> +	struct hisi_ptt *hisi_ptt = data;
+> +
+> +	list_for_each_entry_safe(filter, tfilter, &hisi_ptt->req_filters, list) {
+> +		list_del(&filter->list);
+> +		kfree(filter);
+> +	}
+> +
+> +	list_for_each_entry_safe(filter, tfilter, &hisi_ptt->port_filters, list) {
+> +		list_del(&filter->list);
+> +		kfree(filter);
+> +	}
+> +}
+> +
+> +static int hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct pci_dev *pdev = hisi_ptt->pdev;
+> +	struct pci_bus *bus;
+> +	int ret;
+> +	u32 reg;
+> +
+> +	INIT_LIST_HEAD(&hisi_ptt->port_filters);
+> +	INIT_LIST_HEAD(&hisi_ptt->req_filters);
+> +
+> +	/*
+> +	 * The device range register provides the information about the
+> +	 * root ports which the RCiEP can control and trace. The RCiEP
+> +	 * and the root ports it support are on the same PCIe core, with
+> +	 * same domain number but maybe different bus number. The device
+> +	 * range register will tell us which root ports we can support,
+> +	 * Bit[31:16] indicates the upper BDF numbers of the root port,
+> +	 * while Bit[15:0] indicates the lower.
+> +	 */
+> +	reg = readl(hisi_ptt->iobase + HISI_PTT_DEVICE_RANGE);
+> +	hisi_ptt->upper = FIELD_GET(HISI_PTT_DEVICE_RANGE_UPPER, reg);
+> +	hisi_ptt->lower = FIELD_GET(HISI_PTT_DEVICE_RANGE_LOWER, reg);
+> +
+> +	bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper));
+> +	if (bus)
+> +		pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_release_filters, hisi_ptt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	hisi_ptt->trace_ctrl.default_cpu = cpumask_first(cpumask_of_node(dev_to_node(&pdev->dev)));
+> +
+> +	return 0;
+> +}
+> +
+> +#define HISI_PTT_PMU_FILTER_IS_PORT	BIT(19)
+> +#define HISI_PTT_PMU_FILTER_VAL_MASK	GENMASK(15, 0)
+> +#define HISI_PTT_PMU_DIRECTION_MASK	GENMASK(23, 20)
+> +#define HISI_PTT_PMU_TYPE_MASK		GENMASK(31, 24)
+> +#define HISI_PTT_PMU_FORMAT_MASK	GENMASK(35, 32)
+> +
+> +static ssize_t available_root_port_filters_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int pos = 0;
+> +
+> +	mutex_lock(&hisi_ptt->mutex);
+> +	if (list_empty(&hisi_ptt->port_filters)) {
+> +		pos = sysfs_emit(buf, "\n");
+> +		goto out;
+> +	}
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->port_filters, list)
+> +		pos += sysfs_emit_at(buf, pos, "%s	0x%05lx\n",
+> +				     pci_name(filter->pdev),
+> +				     hisi_ptt_get_filter_val(filter->pdev) |
+> +				     HISI_PTT_PMU_FILTER_IS_PORT);
+> +
+> +out:
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +	return pos;
+> +}
+> +static DEVICE_ATTR_ADMIN_RO(available_root_port_filters);
+> +
+> +static ssize_t available_requester_filters_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int pos = 0;
+> +
+> +	mutex_lock(&hisi_ptt->mutex);
+> +	if (list_empty(&hisi_ptt->req_filters)) {
+> +		pos = sysfs_emit(buf, "\n");
+> +		goto out;
+> +	}
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->req_filters, list)
+> +		pos += sysfs_emit_at(buf, pos, "%s	0x%05x\n",
+> +				     pci_name(filter->pdev),
+> +				     hisi_ptt_get_filter_val(filter->pdev));
+> +
+> +out:
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +	return pos;
+> +}
+> +static DEVICE_ATTR_ADMIN_RO(available_requester_filters);
+> +
+> +PMU_FORMAT_ATTR(filter,		"config:0-19");
+> +PMU_FORMAT_ATTR(direction,	"config:20-23");
+> +PMU_FORMAT_ATTR(type,		"config:24-31");
+> +PMU_FORMAT_ATTR(format,		"config:32-35");
+> +
+> +static struct attribute *hisi_ptt_pmu_format_attrs[] = {
+> +	&format_attr_filter.attr,
+> +	&format_attr_direction.attr,
+> +	&format_attr_type.attr,
+> +	&format_attr_format.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group hisi_ptt_pmu_format_group = {
+> +	.name = "format",
+> +	.attrs = hisi_ptt_pmu_format_attrs,
+> +};
+> +
+> +static struct attribute *hisi_ptt_pmu_filter_attrs[] = {
+> +	&dev_attr_available_root_port_filters.attr,
+> +	&dev_attr_available_requester_filters.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group hisi_ptt_pmu_filter_group = {
+> +	.attrs = hisi_ptt_pmu_filter_attrs,
+> +};
+> +
+> +static const struct attribute_group *hisi_ptt_pmu_groups[] = {
+> +	&hisi_ptt_pmu_format_group,
+> +	&hisi_ptt_pmu_filter_group,
+> +	NULL
+> +};
+> +
+> +/*
+> + * Check whether the config is valid or not. Some configs are multi-selectable
+> + * and can be set simultaneously, while some are single selectable (onehot).
+> + * Use this function to check the non-onehot configs while
+> + * hisi_ptt_trace_valid_config_onehot() for the onehot ones.
+> + */
+> +static int hisi_ptt_trace_valid_config(u32 val, const u32 *available_list, u32 list_size)
+> +{
+> +	int i;
+> +
+> +	/* The non-onehot configs cannot be 0. */
+> +	if (!val)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Walk the available list and clear the valid bits of
+> +	 * the config. If there is any resident bit after the
+> +	 * walk then the config is invalid.
+> +	 */
+> +	for (i = 0; i < list_size; i++)
+> +		val &= ~available_list[i];
+> +
+> +	return val ? -EINVAL : 0;
+> +}
+> +
+> +static int hisi_ptt_trace_valid_config_onehot(u32 val, const u32 *available_list, u32 list_size)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < list_size; i++)
+> +		if (val == available_list[i])
+> +			return 0;
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int hisi_ptt_trace_init_filter(struct hisi_ptt *hisi_ptt, u64 config)
+> +{
+> +	unsigned long val, port_mask = hisi_ptt->port_mask;
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int ret = -EINVAL;
+> +
+> +	hisi_ptt->trace_ctrl.is_port = FIELD_GET(HISI_PTT_PMU_FILTER_IS_PORT, config);
+> +	val = FIELD_GET(HISI_PTT_PMU_FILTER_VAL_MASK, config);
+> +
+> +	/*
+> +	 * Port filters are defined as bit mask. For port filters, check
+> +	 * the bits in the @val are within the range of hisi_ptt->port_mask
+> +	 * and whether it's empty or not, otherwise user has specified
+> +	 * some unsupported root ports.
+> +	 *
+> +	 * For Requester ID filters, walk the available filter list to see
+> +	 * whether we have one matched.
+> +	 */
+> +	if (!hisi_ptt->trace_ctrl.is_port) {
+> +		list_for_each_entry(filter, &hisi_ptt->req_filters, list)
+> +			if (val == hisi_ptt_get_filter_val(filter->pdev)) {
+> +				ret = 0;
+> +				break;
+> +			}
+> +	} else if (bitmap_subset(&val, &port_mask, BITS_PER_LONG)) {
+> +		ret = 0;
+> +	}
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	hisi_ptt->trace_ctrl.filter = val;
+> +	return 0;
+> +}
+> +
+> +static int hisi_ptt_pmu_event_init(struct perf_event *event)
+> +{
+> +	/*
+> +	 * The supported value of the direction parameter. See hisi_ptt.rst
+> +	 * documentation for more details.
+> +	 */
+> +	static const u32 hisi_ptt_trace_available_direction[] = {
+> +		0,
+> +		1,
+> +		2,
+> +		3,
+> +	};
+> +	/* Different types can be set simultaneously */
+> +	static const u32 hisi_ptt_trace_available_type[] = {
+> +		1,	/* posted_request */
+> +		2,	/* non-posted_request */
+> +		4,	/* completion */
+> +	};
+> +	static const u32 hisi_ptt_trace_availble_format[] = {
+> +		0,	/* 4DW */
+> +		1,	/* 8DW */
+> +	};
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
+> +		return -ENOENT;
 
-are available in the Git repository at:
+Does PTT support per-task mode?  Usually PMU not binding to CPU
+cannot support per-task mode, if this is the case, please add checking
+like below (copied code from arm_smmuv3_pmu.c):
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-29
+         if (event->cpu < 0) {
+                 dev_dbg(dev, "Per-task mode not supported\n");
+                 return -EOPNOTSUPP;
+         }
 
-for you to fetch changes up to a5d20d42a2f2dc2b2f9e9361912062732414090d:
+> +
+> +	mutex_lock(&hisi_ptt->mutex);
 
-  perf symbol: Remove arch__symbols__fixup_end() (2022-04-28 10:51:40 -0300)
+Here really need mutex for protection?  I think the question can be
+extended as "if the mutex is necessary for the whole driver"?
 
-----------------------------------------------------------------
-perf tools fixes for v5.18: 4th batch
+The reason is the perf core layer has provided the APIs
+perf_event_ctx_lock() and perf_event_ctx_unlock() to protect event
+context, and perf core layer has the mutex 'event->mmap_mutex' to
+protect setup_aux().
 
-- Fix Intel PT (Processor Trace) timeless decoding with perf.data directory.
+Please note, I think init_event() callback is not protected by lock,
+so you could see many PMU drivers use init_event() callback to
+validate if the event parameters (e.g. if can work as group events
+with other hardware events, support stack track, etc).
 
-- ARM SPE (Statistical Profiling Extensions) address fixes, for synthesized
-  events and for SPE events with physical addresses.  Add a simple 'perf test'
-  entry to make sure this doesn't regress.
+This means below initialise functions should be moved to add()
+or setup_aux() callbacks, since these functions have been protected by
+mutex in perf core layer.
 
-- Remove arch specific processing of kallsyms data to fixup symbol end address,
-  fixing excessive memory consumption in the annotation code.
+> +
+> +	ret = hisi_ptt_trace_init_filter(hisi_ptt, event->attr.config);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_config_onehot(val, hisi_ptt_trace_available_direction,
+> +						 ARRAY_SIZE(hisi_ptt_trace_available_direction));
+> +	if (ret < 0)
+> +		goto out;
+> +	ctrl->direction = val;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_config(val, hisi_ptt_trace_available_type,
+> +					  ARRAY_SIZE(hisi_ptt_trace_available_type));
+> +	if (ret < 0)
+> +		goto out;
+> +	ctrl->type = val;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_config_onehot(val, hisi_ptt_trace_availble_format,
+> +						 ARRAY_SIZE(hisi_ptt_trace_availble_format));
+> +	if (ret < 0)
+> +		goto out;
+> +	ctrl->format = val;
+> +
+> +out:
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +	return ret;
+> +}
+> +
+> +static void *hisi_ptt_pmu_setup_aux(struct perf_event *event, void **pages,
+> +				    int nr_pages, bool overwrite)
+> +{
+> +	struct hisi_ptt_pmu_buf *buf;
+> +	struct page **pagelist;
+> +	int i;
+> +
+> +	if (overwrite) {
+> +		dev_warn(event->pmu->dev, "Overwrite mode is not supported\n");
+> +		return NULL;
+> +	}
+> +
+> +	/* If the pages size less than buffers, we cannot start trace */
+> +	if (nr_pages < HISI_PTT_TRACE_TOTAL_BUF_SIZE / PAGE_SIZE)
+> +		return NULL;
+> +
+> +	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+> +	if (!buf)
+> +		return NULL;
+> +
+> +	pagelist = kcalloc(nr_pages, sizeof(*pagelist), GFP_KERNEL);
+> +	if (!pagelist) {
+> +		kfree(buf);
+> +		return NULL;
+> +	}
+> +
+> +	for (i = 0; i < nr_pages; i++)
+> +		pagelist[i] = virt_to_page(pages[i]);
+> +
+> +	buf->base = vmap(pagelist, nr_pages, VM_MAP, PAGE_KERNEL);
+> +	if (!buf->base) {
+> +		kfree(pagelist);
+> +		kfree(buf);
+> +		return NULL;
+> +	}
+> +
+> +	buf->nr_pages = nr_pages;
+> +	buf->length = nr_pages * PAGE_SIZE;
+> +	buf->pos = 0;
+> +
+> +	kfree(pagelist);
+> +	return buf;
+> +}
+> +
+> +static void hisi_ptt_pmu_free_aux(void *aux)
+> +{
+> +	struct hisi_ptt_pmu_buf *buf = aux;
+> +
+> +	vunmap(buf->base);
+> +	kfree(buf);
+> +}
+> +
+> +static void hisi_ptt_pmu_start(struct perf_event *event, int flags)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct perf_output_handle *handle = &hisi_ptt->trace_ctrl.handle;
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	struct hisi_ptt_pmu_buf *buf;
+> +	int cpu = event->cpu;
+> +	int ret;
+> +
+> +	hwc->state = 0;
+> +	mutex_lock(&hisi_ptt->mutex);
+> +	if (hisi_ptt->trace_ctrl.started) {
+> +		pci_dbg(hisi_ptt->pdev, "trace has already started\n");
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Essentialy this is not a PCI driver, it's good to use dev_dbg()
+variant in the whole driver.
 
-----------------------------------------------------------------
-Adrian Hunter (1):
-      perf intel-pt: Fix timeless decoding with perf.data directory
+> +		goto stop;
+> +	}
+> +
+> +	if (cpu == -1)
+> +		cpu = hisi_ptt->trace_ctrl.default_cpu;
+> +
+> +	/*
+> +	 * Handle the interrupt on the same cpu which starts the trace to avoid
+> +	 * context mismatch. Otherwise we'll trigger the WARN from the perf
+> +	 * core in event_function_local().
+> +	 */
+> +	WARN_ON(irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+> +				 cpumask_of(cpu)));
 
-Namhyung Kim (3):
-      perf symbol: Pass is_kallsyms to symbols__fixup_end()
-      perf symbol: Update symbols__fixup_end()
-      perf symbol: Remove arch__symbols__fixup_end()
+Nitpick: Can set the irq affinity in the probe phase?  Seems to me,
+the driver has enough info to set irq affinity in the probe phase,
+it's not very necessary to defer to set irq affinity at here.
 
-Timothy Hayes (3):
-      perf arm-spe: Fix addresses of synthesized SPE events
-      perf arm-spe: Fix SPE events with phys addresses
-      perf test: Add perf_event_attr test for Arm SPE
+> +
+> +	ret = hisi_ptt_alloc_trace_buf(hisi_ptt);
+> +	if (ret) {
+> +		pci_dbg(hisi_ptt->pdev, "alloc trace buf failed, ret = %d\n", ret);
+> +		goto stop;
+> +	}
 
- tools/perf/arch/arm64/util/arm-spe.c               | 10 ++++++
- tools/perf/arch/arm64/util/machine.c               | 21 ------------
- tools/perf/arch/powerpc/util/Build                 |  1 -
- tools/perf/arch/powerpc/util/machine.c             | 25 ---------------
- tools/perf/arch/s390/util/machine.c                | 16 ----------
- tools/perf/tests/attr/README                       |  1 +
- .../tests/attr/test-record-spe-physical-address    | 12 +++++++
- tools/perf/util/arm-spe.c                          |  5 +--
- tools/perf/util/session.c                          |  2 +-
- tools/perf/util/symbol-elf.c                       |  2 +-
- tools/perf/util/symbol.c                           | 37 ++++++++++++++++------
- tools/perf/util/symbol.h                           |  3 +-
- 12 files changed, 56 insertions(+), 79 deletions(-)
- delete mode 100644 tools/perf/arch/powerpc/util/machine.c
- create mode 100644 tools/perf/tests/attr/test-record-spe-physical-address
+It's not a good idea to allocate buffer in the start().  The reason is
+start() function might be invoked for multiple times in a perf
+session.  I understand the PTT driver doesn't support per-thread mode
+and snapshot mode, so the start() callback will be not invoked for
+multiple times, but you might need to consider if later support snapshot
+mode.
 
-Test results:
+I think it's better to move the buffer allocation into setup_aux().
 
-The first ones are container based builds of tools/perf with and without libelf
-support.  Where clang is available, it is also used to build perf with/without
-libelf, and building with LIBCLANGLLVM=1 (built-in clang) with gcc and clang
-when clang and its devel libraries are installed.
+Will continue to review the perf userspace patch.
 
-Several are cross builds, the ones with -x-ARCH and the android one, and those
-may not have all the features built, due to lack of multi-arch devel packages,
-available and being used so far on just a few, like
-debian:experimental-x-{arm64,mipsel}.
+Thanks,
+Leo
 
-The 'perf test' one will perform a variety of tests exercising
-tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
-with a variety of command line event specifications to then intercept the
-sys_perf_event syscall to check that the perf_event_attr fields are set up as
-expected, among a variety of other unit tests.
-
-Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
-Gwith a variety of feature sets, exercising the build with an incomplete set of
-features as well as with a complete one.
-
-There is still the mageia:7 distro + clang 8 failure, seemingly unrelated to
-the patches in this series, it'll be investigated. It builds just fine with gcc
-8.4.
-
-There is also a strange one with openmandriva:4.2 and openmandriva:cooker,
-where on the feature build test it doesn't manage to find libpthread, because
-the pthread functions (and the ones in librt, IIRC) are on the main libc, so a
-test for that is needed to avoid adding '-lpthread and -lrt' in distros where
-this is the case. It's in the TODO list.
-
-Ubuntu 20.04 is failing on a corner case where perf links with libllvm and libclang,
-which isn't the default perf build.
-
-And finally there is a problem when linking with libtraceevent-devel dynamicly on
-fedora:36, will be investigated.
-
-  $ grep -m1 'model name' /proc/cpuinfo
-  model name	: AMD Ryzen 9 5950X 16-Core Processor
-  $ export BUILD_TARBALL=http://192.168.100.2/perf/perf-5.18.0-rc4.tar.xz
-  $ time dm
-   1   117.46 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4) , clang version 12.0.1 (Red Hat 12.0.1-4.module_el8.5.0+1025+93159d6c)
-   2    69.22 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0 , clang version 3.8.0 (tags/RELEASE_380/final)
-   3    68.52 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822 , clang version 3.8.1 (tags/RELEASE_381/final)
-   4    71.93 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0 , clang version 4.0.0 (tags/RELEASE_400/final)
-   5    76.74 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.0 (tags/RELEASE_500/final) (based on LLVM 5.0.0)
-   6    76.54 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.1 (tags/RELEASE_501/final) (based on LLVM 5.0.1)
-   7    79.57 alpine:3.9                    : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 5.0.1 (tags/RELEASE_502/final) (based on LLVM 5.0.1)
-   8   107.73 alpine:3.10                   : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 8.0.0 (tags/RELEASE_800/final) (based on LLVM 8.0.0)
-   9   120.38 alpine:3.11                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 9.0.0 (https://git.alpinelinux.org/aports f7f0d2c2b8bcd6a5843401a9a702029556492689) (based on LLVM 9.0.0)
-  10   126.20 alpine:3.12                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 10.0.0 (https://gitlab.alpinelinux.org/alpine/aports.git 7445adce501f8473efdb93b17b5eaf2f1445ed4c)
-  11   137.15 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1 
-  12   124.58 alpine:3.14                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
-  13   129.53 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1
-  14   117.58 alpine:edge                   : Ok   gcc (Alpine 11.2.1_git20220219) 11.2.1 20220219 , Alpine clang version 13.0.1
-  15    62.79 alt:p8                        : Ok   x86_64-alt-linux-gcc (GCC) 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1) , clang version 3.8.0 (tags/RELEASE_380/final)
-  16    90.88 alt:p9                        : Ok   x86_64-alt-linux-gcc (GCC) 8.4.1 20200305 (ALT p9 8.4.1-alt0.p9.1) , clang version 10.0.0 
-  17    90.90 alt:p10                       : Ok   x86_64-alt-linux-gcc (GCC) 10.3.1 20210703 (ALT Sisyphus 10.3.1-alt2) , clang version 11.0.1
-  18    91.30 alt:sisyphus                  : Ok   x86_64-alt-linux-gcc (GCC) 11.2.1 20211202 (ALT Sisyphus 11.2.1-alt2) , ALT Linux Team clang version 12.0.1
-  19    66.01 amazonlinux:1                 : Ok   gcc (GCC) 7.2.1 20170915 (Red Hat 7.2.1-2) , clang version 3.6.2 (tags/RELEASE_362/final)
-  20   101.82 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-13) , clang version 11.1.0 (Amazon Linux 2 11.1.0-1.amzn2.0.2)
-  21   119.86 amazonlinux:devel             : Ok   gcc (GCC) 11.2.1 20210728 (Red Hat 11.2.1-2) , clang version 12.0.1 (Fedora 12.0.1-1.amzn2022)
-  22   106.71 archlinux:base                : Ok   gcc (GCC) 11.2.0 , clang version 13.0.1
-  23   101.01 centos:8                      : Ok   gcc (GCC) 8.4.1 20200928 (Red Hat 8.4.1-1) , clang version 11.0.1 (Red Hat 11.0.1-1.module_el8.4.0+966+2995ef20)
-  24   111.25 centos:stream                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-10) , clang version 13.0.0 (Red Hat 13.0.0-3.module_el8.6.0+1074+380cef3f)
-  25    87.22 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 12.0.1 20220414 (experimental) releases/gcc-11.2.0-1079-g537dca0ff5 , clang version 13.0.0
-  26    85.99 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516 , clang version 3.8.1-24 (tags/RELEASE_381/final)
-  27    86.88 debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0 , Debian clang version 11.0.1-2~deb10u1
-  28   102.92 debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 11.0.1-2
-  29   123.21 debian:experimental           : Ok   gcc (Debian 11.2.0-20) 11.2.0 , Debian clang version 13.0.1-3+b2
-  30    25.07 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 11.2.0-18) 11.2.0 
-  31    20.65 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 11.2.0-18) 11.2.0 
-  32    22.45 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 10.2.1-6) 10.2.1 20210110 
-  33    23.26 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 11.2.0-18) 11.2.0 
-  34    33.18 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6) , clang version 3.5.0 (tags/RELEASE_350/final)
-  35    69.62 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6) , clang version 3.7.0 (tags/RELEASE_370/final)
-  36    83.67 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1) , clang version 3.8.1 (tags/RELEASE_381/final)
-  37    18.35 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710 
-  38    83.25 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1) , clang version 3.9.1 (tags/RELEASE_391/final)
-  39    93.59 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2) , clang version 4.0.1 (tags/RELEASE_401/final)
-  40    96.38 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6) , clang version 5.0.2 (tags/RELEASE_502/final)
-  41   107.82 fedora:28                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2) , clang version 6.0.1 (tags/RELEASE_601/final)
-  42   115.15 fedora:29                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2) , clang version 7.0.1 (Fedora 7.0.1-6.fc29)
-  43   118.65 fedora:30                     : Ok   gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2) , clang version 8.0.0 (Fedora 8.0.0-3.fc30)
-  44   110.53 fedora:31                     : Ok   gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2) , clang version 9.0.1 (Fedora 9.0.1-4.fc31)
-  45   107.36 fedora:32                     : Ok   gcc (GCC) 10.3.1 20210422 (Red Hat 10.3.1-1) , clang version 10.0.1 (Fedora 10.0.1-3.fc32)
-  46   104.83 fedora:33                     : Ok   gcc (GCC) 10.3.1 20210422 (Red Hat 10.3.1-1) , clang version 11.0.0 (Fedora 11.0.0-3.fc33)
-  47   111.76 fedora:34                     : Ok   gcc (GCC) 11.2.1 20220127 (Red Hat 11.2.1-9) , clang version 12.0.1 (Fedora 12.0.1-1.fc34)
-  48    20.44 fedora:34-x-ARC-glibc         : Ok   arc-linux-gcc (ARC HS GNU/Linux glibc toolchain 2019.03-rc1) 8.3.1 20190225 
-  49    18.53 fedora:34-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225 
-  50   113.57 fedora:35                     : Ok   gcc (GCC) 11.2.1 20220127 (Red Hat 11.2.1-9) , clang version 13.0.0 (Fedora 13.0.0-3.fc35)
-  51    31.17 fedora:36                     : FAIL gcc version 12.0.1 20220413 (Red Hat 12.0.1-0) (GCC) 
-    + make PYTHON=python3 ARCH= CROSS_COMPILE= EXTRA_CFLAGS= LIBTRACEEVENT_DYNAMIC=1 -C tools/perf O=/tmp/build/perf
-    make: Entering directory '/git/perf-5.18.0-rc4/tools/perf'
-      BUILD:   Doing 'make -j32' parallel build
-    Makefile.config:728: No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev
-    Makefile.config:1011: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-    Makefile.config:1118: *** Error: No libtraceevent devel library found, please install libtraceevent-devel.  Stop.
-
-  52   126.51 fedora:rawhide                : Ok   gcc (GCC) 12.0.1 20220413 (Red Hat 12.0.1-0) , clang version 14.0.0 (Fedora 14.0.0-1.fc37)
-  53    97.82 gentoo-stage3:latest          : Ok   gcc (Gentoo 11.2.0 p1) 11.2.0 , clang version 13.0.0
-  54    82.85 mageia:6                      : Ok   gcc (Mageia 5.5.0-1.mga6) 5.5.0 , clang version 3.9.1 (tags/RELEASE_391/final)
-  55    43.42 mageia:7                      : FAIL clang version 8.0.0 (Mageia 8.0.0-1.mga7)
-          yychar = yylex (&yylval, &yylloc, scanner);
-                   ^
-    #define yylex           parse_events_lex
-                            ^
-    1 error generated.
-    make[3]: *** [/git/perf-5.18.0-rc4/tools/build/Makefile.build:139: util] Error 2
-  56   107.75 manjaro:base                  : Ok   gcc (GCC) 11.1.0 , clang version 13.0.0
-  57     6.48 openmandriva:4.2              : FAIL gcc version 11.2.0 20210728 (OpenMandriva) (GCC) 
-    In file included from builtin-bench.c:22:
-    bench/bench.h:66:19: error: conflicting types for 'pthread_attr_setaffinity_np'; have 'int(pthread_attr_t *, size_t,  cpu_set_t *)' {aka 'int(pthread_attr_t *, long unsigned int,  cpu_set_t *)'}
-       66 | static inline int pthread_attr_setaffinity_np(pthread_attr_t *attr __maybe_unused,
-          |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-    In file included from bench/bench.h:64,
-                     from builtin-bench.c:22:
-    /usr/include/pthread.h:394:12: note: previous declaration of 'pthread_attr_setaffinity_np' with type 'int(pthread_attr_t *, size_t,  const cpu_set_t *)' {aka 'int(pthread_attr_t *, long unsigned int,  const cpu_set_t *)'}
-      394 | extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
-          |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ld: warning: -r and --gc-sections may not be used together, disabling --gc-sections
-    ld: warning: -r and --icf may not be used together, disabling --icf
-  58     6.48 openmandriva:cooker           : FAIL gcc version 11.2.0 20210728 (OpenMandriva) (GCC) 
-    In file included from builtin-bench.c:22:
-    bench/bench.h:66:19: error: conflicting types for 'pthread_attr_setaffinity_np'; have 'int(pthread_attr_t *, size_t,  cpu_set_t *)' {aka 'int(pthread_attr_t *, long unsigned int,  cpu_set_t *)'}
-       66 | static inline int pthread_attr_setaffinity_np(pthread_attr_t *attr __maybe_unused,
-          |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-    In file included from bench/bench.h:64,
-                     from builtin-bench.c:22:
-    /usr/include/pthread.h:394:12: note: previous declaration of 'pthread_attr_setaffinity_np' with type 'int(pthread_attr_t *, size_t,  const cpu_set_t *)' {aka 'int(pthread_attr_t *, long unsigned int,  const cpu_set_t *)'}
-      394 | extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
-          |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ld: warning: -r and --gc-sections may not be used together, disabling --gc-sections
-    ld: warning: -r and --icf may not be used together, disabling --icf
-  59   114.64 opensuse:15.0                 : Ok   gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407] , clang version 5.0.1 (tags/RELEASE_501/final 312548)
-  60   121.05 opensuse:15.1                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 7.0.1 (tags/RELEASE_701/final 349238)
-  61   117.54 opensuse:15.2                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 9.0.1 
-  62   131.60 opensuse:15.3                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 11.0.1
-  63   130.78 opensuse:15.4                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 11.0.1
-  64   153.08 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 11.2.1 20220316 [revision 6a1150d1524aeda3381b2171712e1a6611d441d6] , clang version 13.0.1
-  65   113.76 oraclelinux:8                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4.0.1) , clang version 12.0.1 (Red Hat 12.0.1-4.0.1.module+el8.5.0+20428+2b4ecd47)
-  66   117.17 rockylinux:8                  : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-4) , clang version 12.0.1 (Red Hat 12.0.1-4.module+el8.5.0+715+58f51d49)
-  67    84.36 ubuntu:16.04                  : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609 , clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
-  68    19.65 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-  69    19.75 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-  70    24.66 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-  71    19.74 ubuntu:16.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-  72    19.94 ubuntu:16.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-  73    19.74 ubuntu:16.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
-  74    88.76 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 , clang version 6.0.0-1ubuntu2 (tags/RELEASE_600/final)
-  75    21.15 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0 
-  76    21.75 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0 
-  77    17.33 ubuntu:18.04-x-m68k           : Ok   m68k-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-  78    20.85 ubuntu:18.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-  79    22.35 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-  80    22.75 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-  81   103.47 ubuntu:18.04-x-riscv64        : Ok   riscv64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-  82    19.03 ubuntu:18.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-  83    20.24 ubuntu:18.04-x-sh4            : Ok   sh4-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-  84    19.34 ubuntu:18.04-x-sparc64        : Ok   sparc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
-  85    89.07 ubuntu:20.04                  : FAIL clang version 10.0.0-4ubuntu1 
-      LINK    /tmp/build/perf/perf
-    /usr/bin/ld: /usr/lib/llvm-10/lib/libclangCodeGen.a(BackendUtil.cpp.o): in function `(anonymous namespace)::EmitAssemblyHelper::EmitAssemblyWithNewPassManager(clang::BackendAction, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream> >)':
-    (.text._ZN12_GLOBAL__N_118EmitAssemblyHelper30EmitAssemblyWithNewPassManagerEN5clang13BackendActionESt10unique_ptrIN4llvm17raw_pwrite_streamESt14default_deleteIS5_EE+0x1f15): undefined reference to `getPollyPluginInfo()'
-    clang: error: linker command failed with exit code 1 (use -v to see invocation)
-    make[2]: *** [Makefile.perf:677: /tmp/build/perf/perf] Error 1
-    make[1]: *** [Makefile.perf:240: sub-make] Error 2
-
-  86    23.06 ubuntu:20.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 10.3.0-1ubuntu1~20.04) 10.3.0 
-  87    86.97 ubuntu:20.10                  : Ok   gcc (Ubuntu 10.3.0-1ubuntu1~20.10) 10.3.0 , Ubuntu clang version 11.0.0-2
-  88   101.22 ubuntu:21.04                  : Ok   gcc (Ubuntu 10.3.0-1ubuntu1) 10.3.0 , Ubuntu clang version 12.0.0-3ubuntu1~21.04.2
-  89   105.13 ubuntu:21.10                  : Ok   gcc (Ubuntu 11.2.0-7ubuntu2) 11.2.0 , Ubuntu clang version 13.0.0-2
-  90   126.71 ubuntu:22.04                  : Ok   gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0 , Ubuntu clang version 14.0.0-1ubuntu1
-BUILD_TARBALL_HEAD=a5d20d42a2f2dc2b2f9e9361912062732414090d
-91 6969.13
-
-real	117m57.209s
-user	1m4.634s
-sys	0m58.710s
-[perfbuilder@five ~]$ 
-
-[acme@quaco perf]$ uname -a
-Linux quaco 5.16.13-200.fc35.x86_64 #1 SMP PREEMPT Tue Mar 8 22:50:58 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
-[acme@quaco perf]$ git log --oneline -1
-a5d20d42a2f2dc2b (HEAD -> perf/urgent, seventh/perf/urgent, five/perf/urgent) perf symbol: Remove arch__symbols__fixup_end()
-[acme@quaco perf]$ perf -v
-perf version 5.18.rc4.ga5d20d42a2f2
-[acme@quaco perf]$ sudo su -
-[sudo] password for acme: 
-[root@quaco ~]# perf -vv
-perf version 5.18.rc4.ga5d20d42a2f2
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-               libpfm4: [ OFF ]  # HAVE_LIBPFM
-[root@quaco ~]# perf test
-  1: vmlinux symtab matches kallsyms                                 : Ok
-  2: Detect openat syscall event                                     : Ok
-  3: Detect openat syscall event on all cpus                         : Ok
-  4: Read samples using the mmap interface                           : Ok
-  5: Test data source output                                         : Ok
-  6: Parse event definition strings                                  : Ok
-  7: Simple expression parser                                        : Ok
-  8: PERF_RECORD_* events & perf_sample fields                       : Ok
-  9: Parse perf pmu format                                           : Ok
- 10: PMU events                                                      :
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
- 10.3: Parsing of PMU event table metrics                            : Ok
- 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
- 11: DSO data read                                                   : Ok
- 12: DSO data cache                                                  : Ok
- 13: DSO data reopen                                                 : Ok
- 14: Roundtrip evsel->name                                           : Ok
- 15: Parse sched tracepoints fields                                  : Ok
- 16: syscalls:sys_enter_openat event fields                          : Ok
- 17: Setup struct perf_event_attr                                    : Ok
- 18: Match and link multiple hists                                   : Ok
- 19: 'import perf' in python                                         : Ok
- 20: Breakpoint overflow signal handler                              : Ok
- 21: Breakpoint overflow sampling                                    : Ok
- 22: Breakpoint accounting                                           : Ok
- 23: Watchpoint                                                      :
- 23.1: Read Only Watchpoint                                          : Skip (missing hardware support)
- 23.2: Write Only Watchpoint                                         : Ok
- 23.3: Read / Write Watchpoint                                       : Ok
- 23.4: Modify Watchpoint                                             : Ok
- 24: Number of exit events of a simple workload                      : Ok
- 25: Software clock events period values                             : Ok
- 26: Object code reading                                             : Ok
- 27: Sample parsing                                                  : Ok
- 28: Use a dummy software event to keep tracking                     : Ok
- 29: Parse with no sample_id_all bit set                             : Ok
- 30: Filter hist entries                                             : Ok
- 31: Lookup mmap thread                                              : Ok
- 32: Share thread maps                                               : Ok
- 33: Sort output of hist entries                                     : Ok
- 34: Cumulate child hist entries                                     : Ok
- 35: Track with sched_switch                                         : Ok
- 36: Filter fds with revents mask in a fdarray                       : Ok
- 37: Add fd to a fdarray, making it autogrow                         : Ok
- 38: kmod_path__parse                                                : Ok
- 39: Thread map                                                      : Ok
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        : Ok
- 40.2: kbuild searching                                              : Ok
- 40.3: Compile source for BPF prologue generation                    : Ok
- 40.4: Compile source for BPF relocation                             : Ok
- 41: Session topology                                                : Ok
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           : Ok
- 42.2: BPF pinning                                                   : Ok
- 42.3: BPF prologue generation                                       : Ok
- 43: Synthesize thread map                                           : Ok
- 44: Remove thread map                                               : Ok
- 45: Synthesize cpu map                                              : Ok
- 46: Synthesize stat config                                          : Ok
- 47: Synthesize stat                                                 : Ok
- 48: Synthesize stat round                                           : Ok
- 49: Synthesize attr update                                          : Ok
- 50: Event times                                                     : Ok
- 51: Read backward ring buffer                                       : Ok
- 52: Print cpu map                                                   : Ok
- 53: Merge cpu map                                                   : Ok
- 54: Probe SDT events                                                : Ok
- 55: is_printable_array                                              : Ok
- 56: Print bitmap                                                    : Ok
- 57: perf hooks                                                      : Ok
- 58: builtin clang support                                           :
- 58.1: builtin clang compile C source to IR                          : Skip (not compiled in)
- 58.2: builtin clang compile C source to ELF object                  : Skip (not compiled in)
- 59: unit_number__scnprintf                                          : Ok
- 60: mem2node                                                        : Ok
- 61: time utils                                                      : Ok
- 62: Test jit_write_elf                                              : Ok
- 63: Test libpfm4 support                                            :
- 63.1: test of individual --pfm-events                               : Skip (not compiled in)
- 63.2: test groups of --pfm-events                                   : Skip (not compiled in)
- 64: Test api io                                                     : Ok
- 65: maps__merge_in                                                  : Ok
- 66: Demangle Java                                                   : Ok
- 67: Demangle OCaml                                                  : Ok
- 68: Parse and process metrics                                       : Ok
- 69: PE file support                                                 : Ok
- 70: Event expansion for cgroups                                     : Ok
- 71: Convert perf time to TSC                                        :
- 71.1: TSC support                                                   : Ok
- 71.2: Perf time to TSC                                              : Ok
- 72: dlfilter C API                                                  : Ok
- 73: Sigtrap                                                         : Ok
- 74: x86 rdpmc                                                       : Ok
- 75: Test dwarf unwind                                               : Ok
- 76: x86 instruction decoder - new instructions                      : Ok
- 77: Intel PT packet decoder                                         : Ok
- 78: x86 bp modify                                                   : Ok
- 79: x86 Sample parsing                                              : Ok
- 80: build id cache operations                                       : Ok
- 81: daemon operations                                               : Ok
- 82: perf pipe recording and injection test                          : Ok
- 83: Add vfs_getname probe to get syscall args filenames             : Ok
- 84: probe libc's inet_pton & backtrace it with ping                 : Ok
- 85: Use vfs_getname probe to get syscall args filenames             : Ok
- 86: Zstd perf.data compression/decompression                        : Ok
- 87: perf record tests                                               : Ok
- 88: perf stat csv summary test                                      : Ok
- 89: perf stat metrics (shadow stat) test                            : Ok
- 90: perf all metricgroups test                                      : Ok
- 91: perf all metrics test                                           : FAILED!
- 92: perf all PMU test                                               : Ok
- 93: perf stat --bpf-counters test                                   : Ok
- 94: Check Arm64 callgraphs are complete in fp mode                  : Skip
- 95: Check Arm CoreSight trace data recording and synthesized samples: Skip
- 96: Check Arm SPE trace data recording and synthesized samples      : Skip
- 97: Check open filename arg using perf trace + vfs_getname          : Ok
-[root@quaco ~]#
-
-⬢[acme@toolbox perf]$ git log --oneline -1 ; time make -C tools/perf build-test
-a5d20d42a2f2dc2b (HEAD -> perf/urgent) perf symbol: Remove arch__symbols__fixup_end()
-make: Entering directory '/var/home/acme/git/perf/tools/perf'
-- tarpkg: ./tests/perf-targz-src-pkg .
-                 make_static: cd . && make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 -j32  DESTDIR=/tmp/tmp.CUHJOlfBnq
-              make_with_gtk2: cd . && make GTK2=1 -j32  DESTDIR=/tmp/tmp.cMmJ9FESFE
-- /var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP: cd . && make FEATURE_DUMP_COPY=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP  feature-dump
-cd . && make FEATURE_DUMP_COPY=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP feature-dump
-         make_no_libpython_O: cd . && make NO_LIBPYTHON=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.YAPzmdwWz1 DESTDIR=/tmp/tmp.mpxGJzfDil
-make_no_libdw_dwarf_unwind_O: cd . && make NO_LIBDW_DWARF_UNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.SKlehWzpDZ DESTDIR=/tmp/tmp.umOtUR8ffM
-                make_no_ui_O: cd . && make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.LTJzMYo5nj DESTDIR=/tmp/tmp.zWlErYNUdI
-                 make_help_O: cd . && make help FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.nJLRRr6r9b DESTDIR=/tmp/tmp.odOd3FkKZK
-              make_no_newt_O: cd . && make NO_NEWT=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.B6yKVRCw13 DESTDIR=/tmp/tmp.wJ64ijxIBQ
-               make_perf_o_O: cd . && make perf.o FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.r8CqZ0vNJP DESTDIR=/tmp/tmp.kiWOG61ssL
-         make_no_libbionic_O: cd . && make NO_LIBBIONIC=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.6Niv8UBZOl DESTDIR=/tmp/tmp.RzoSq7H720
-          make_install_bin_O: cd . && make install-bin FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.YmY2LMUbtM DESTDIR=/tmp/tmp.CUreMpIvvC
-           make_util_map_o_O: cd . && make util/map.o FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.4ZKG55243x DESTDIR=/tmp/tmp.niVQIqBylZ
-       make_no_syscall_tbl_O: cd . && make NO_SYSCALL_TABLE=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.z7hE122NPo DESTDIR=/tmp/tmp.3arzy7wTsK
-                make_debug_O: cd . && make DEBUG=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.Lpr1DTZ9b9 DESTDIR=/tmp/tmp.pzKkyrNJ8I
-            make_clean_all_O: cd . && make clean all FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.CmmxCyIacx DESTDIR=/tmp/tmp.avCsNs8XRZ
-                 make_tags_O: cd . && make tags FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.NBM7FpbAXq DESTDIR=/tmp/tmp.lIzV6nQ7ep
-              make_install_O: cd . && make install FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.IrCTnF327v DESTDIR=/tmp/tmp.6HsTuEflfn
- make_install_prefix_slash_O: cd . && make install prefix=/tmp/krava/ FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.YKm6N9fZ7P DESTDIR=/tmp/tmp.rQJryoLckb
-          make_no_libaudit_O: cd . && make NO_LIBAUDIT=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.STHxXtPKHf DESTDIR=/tmp/tmp.WZV6ESpkfi
-      make_with_babeltrace_O: cd . && make LIBBABELTRACE=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.9e3mvv0ykN DESTDIR=/tmp/tmp.oxMoFDIg67
-          make_no_demangle_O: cd . && make NO_DEMANGLE=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.mjcp6kBS60 DESTDIR=/tmp/tmp.bUiQDSE3IS
-             make_no_slang_O: cd . && make NO_SLANG=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.zNCWJ4ZI03 DESTDIR=/tmp/tmp.qPJrxfnVD2
-         make_no_backtrace_O: cd . && make NO_BACKTRACE=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.6o2D0WISPG DESTDIR=/tmp/tmp.BUDTr8U6X9
-     make_util_pmu_bison_o_O: cd . && make util/pmu-bison.o FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.4YV3Qzg1fh DESTDIR=/tmp/tmp.r2RKukr51M
-          make_no_auxtrace_O: cd . && make NO_AUXTRACE=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.MJtzE0TGkV DESTDIR=/tmp/tmp.lSC7McN6xC
-            make_no_libelf_O: cd . && make NO_LIBELF=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.UNl6QVULKp DESTDIR=/tmp/tmp.5G7rJaqyzm
-       make_install_prefix_O: cd . && make install prefix=/tmp/krava FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.N2SJqL05Hq DESTDIR=/tmp/tmp.7giKofpFsb
-         make_with_libpfm4_O: cd . && make LIBPFM4=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.xsdj17zaQW DESTDIR=/tmp/tmp.b66f3ida1A
-              make_minimal_O: cd . && make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1 NO_LIBCAP=1 NO_SYSCALL_TABLE=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.PtYYGEroH9 DESTDIR=/tmp/tmp.OKSgqBc2J1
-                 make_pure_O: cd . && make FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.kJf2U4Gl8O DESTDIR=/tmp/tmp.lhWKghuFtg
-           make_no_libnuma_O: cd . && make NO_LIBNUMA=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.yBmxj7omrX DESTDIR=/tmp/tmp.MguWlWoVfH
-       make_libbpf_dynamic_O: cd . && make LIBBPF_DYNAMIC=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.KyAq9r5my0 DESTDIR=/tmp/tmp.1yMdnthLz0
-            make_no_libbpf_O: cd . && make NO_LIBBPF=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.KqXNOfr9eH DESTDIR=/tmp/tmp.eGW9b7E4lR
-              make_no_gtk2_O: cd . && make NO_GTK2=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.F43w8rrvQr DESTDIR=/tmp/tmp.mz9NKGdAN4
-         make_no_libunwind_O: cd . && make NO_LIBUNWIND=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.6jxfIxcls2 DESTDIR=/tmp/tmp.xhYbkTsKpB
-           make_no_libperl_O: cd . && make NO_LIBPERL=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.077gsxpPYh DESTDIR=/tmp/tmp.AGtf7Fv6Ik
-           make_no_scripts_O: cd . && make NO_LIBPYTHON=1 NO_LIBPERL=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.JjRPGVHTDV DESTDIR=/tmp/tmp.HlzG9aa4JZ
-       make_with_coresight_O: cd . && make CORESIGHT=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.7TWETpCrg2 DESTDIR=/tmp/tmp.V49IqYitAe
-                  make_doc_O: cd . && make doc FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.8WlSYNo8v0 DESTDIR=/tmp/tmp.olMYi5nXLS
-       make_with_clangllvm_O: cd . && make LIBCLANGLLVM=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.HOQWy9mDcJ DESTDIR=/tmp/tmp.ctmsWCOrcJ
-         make_no_libcrypto_O: cd . && make NO_LIBCRYPTO=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.ZB9aFVtcYE DESTDIR=/tmp/tmp.CkFRSkrLSv
-      make_no_libbpf_DEBUG_O: cd . && make NO_LIBBPF=1 DEBUG=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.pyg4fpX4le DESTDIR=/tmp/tmp.LddACVrr0q
-               make_no_sdt_O: cd . && make NO_SDT=1 FEATURES_DUMP=/var/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.1k2Iwtk3Wa DESTDIR=/tmp/tmp.dlFLlGNfix
-OK
-make: Leaving directory '/var/home/acme/git/perf/tools/perf'
-
-real	4m29.117s
-user	55m41.705s
-sys	13m3.120s
-⬢[acme@toolbox perf]$
-
+> +
+> +	buf = perf_aux_output_begin(handle, event);
+> +	if (!buf) {
+> +		pci_dbg(hisi_ptt->pdev, "aux output begin failed\n");
+> +		goto stop;
+> +	}
+> +
+> +	buf->pos = handle->head % buf->length;
+> +
+> +	ret = hisi_ptt_trace_start(hisi_ptt);
+> +	if (ret) {
+> +		pci_dbg(hisi_ptt->pdev, "trace start failed, ret = %d\n", ret);
+> +		perf_aux_output_end(handle, 0);
+> +		goto stop;
+> +	}
+> +
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +	return;
+> +stop:
+> +	event->hw.state |= PERF_HES_STOPPED;
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +}
+> +
+> +static void hisi_ptt_pmu_stop(struct perf_event *event, int flags)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +
+> +	if (hwc->state & PERF_HES_STOPPED)
+> +		return;
+> +
+> +	mutex_lock(&hisi_ptt->mutex);
+> +	if (hisi_ptt->trace_ctrl.started) {
+> +		hisi_ptt_trace_end(hisi_ptt);
+> +		WARN(!hisi_ptt_wait_trace_hw_idle(hisi_ptt), "Device is still busy");
+> +		hisi_ptt_update_aux(hisi_ptt, hisi_ptt->trace_ctrl.buf_index, true);
+> +	}
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +
+> +	hwc->state |= PERF_HES_STOPPED;
+> +	perf_event_update_userpage(event);
+> +	hwc->state |= PERF_HES_UPTODATE;
+> +}
+> +
+> +static int hisi_ptt_pmu_add(struct perf_event *event, int flags)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	int cpu = event->cpu;
+> +
+> +	/*
+> +	 * Only allow the default cpu to add the event if user doesn't specify
+> +	 * the cpus.
+> +	 */
+> +	if (cpu == -1 && smp_processor_id() != hisi_ptt->trace_ctrl.default_cpu)
+> +		return 0;
+> +
+> +	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> +
+> +	if (flags & PERF_EF_START) {
+> +		hisi_ptt_pmu_start(event, PERF_EF_RELOAD);
+> +		if (hwc->state & PERF_HES_STOPPED)
+> +			return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_pmu_del(struct perf_event *event, int flags)
+> +{
+> +	hisi_ptt_pmu_stop(event, PERF_EF_UPDATE);
+> +}
+> +
+> +static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u16 core_id, sicl_id;
+> +	char *pmu_name;
+> +	u32 reg;
+> +
+> +	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
+> +		.module		= THIS_MODULE,
+> +		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
+> +		.task_ctx_nr	= perf_sw_context,
+> +		.attr_groups	= hisi_ptt_pmu_groups,
+> +		.event_init	= hisi_ptt_pmu_event_init,
+> +		.setup_aux	= hisi_ptt_pmu_setup_aux,
+> +		.free_aux	= hisi_ptt_pmu_free_aux,
+> +		.start		= hisi_ptt_pmu_start,
+> +		.stop		= hisi_ptt_pmu_stop,
+> +		.add		= hisi_ptt_pmu_add,
+> +		.del		= hisi_ptt_pmu_del,
+> +	};
+> +
+> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
+> +	core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
+> +	sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
+> +
+> +	pmu_name = devm_kasprintf(&hisi_ptt->pdev->dev, GFP_KERNEL, "hisi_ptt%u_%u",
+> +				  sicl_id, core_id);
+> +	if (!pmu_name)
+> +		return -ENOMEM;
+> +
+> +	return perf_pmu_register(&hisi_ptt->hisi_ptt_pmu, pmu_name, -1);
+> +}
+> +
+> +/*
+> + * The DMA of PTT trace can only use direct mapping, due to some
+> + * hardware restriction. Check whether there is an IOMMU or the
+> + * policy of the IOMMU domain is passthrough, otherwise the trace
+> + * cannot work.
+> + *
+> + * The PTT device is supposed to behind the ARM SMMUv3, which
+> + * should have passthrough the device by a quirk.
+> + */
+> +static int hisi_ptt_check_iommu_mapping(struct pci_dev *pdev)
+> +{
+> +	struct iommu_domain *iommu_domain;
+> +
+> +	iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
+> +	if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
+> +		return 0;
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int hisi_ptt_probe(struct pci_dev *pdev,
+> +			  const struct pci_device_id *id)
+> +{
+> +	struct hisi_ptt *hisi_ptt;
+> +	int ret;
+> +
+> +	ret = hisi_ptt_check_iommu_mapping(pdev);
+> +	if (ret) {
+> +		pci_err(pdev, "requires direct DMA mappings\n");
+> +		return ret;
+> +	}
+> +
+> +	hisi_ptt = devm_kzalloc(&pdev->dev, sizeof(*hisi_ptt), GFP_KERNEL);
+> +	if (!hisi_ptt)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&hisi_ptt->mutex);
+> +	hisi_ptt->pdev = pdev;
+> +	pci_set_drvdata(pdev, hisi_ptt);
+> +
+> +	ret = pcim_enable_device(pdev);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to enable device, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = pcim_iomap_regions(pdev, BIT(2), DRV_NAME);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to remap io memory, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	hisi_ptt->iobase = pcim_iomap_table(pdev)[2];
+> +
+> +	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
+> +	if (ret) {
+> +		pci_err(pdev, "failed to set 64 bit dma mask, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	pci_set_master(pdev);
+> +
+> +	ret = hisi_ptt_register_irq(hisi_ptt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = hisi_ptt_init_ctrls(hisi_ptt);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to init controls, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = hisi_ptt_register_pmu(hisi_ptt);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to register PMU device, ret = %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_remove(struct pci_dev *pdev)
+> +{
+> +	struct hisi_ptt *hisi_ptt = pci_get_drvdata(pdev);
+> +
+> +	/*
+> +	 * We have to manually unregister the PMU device rather than make it
+> +	 * devres managed to keep order that the PMU device's unregistration
+> +	 * is prior to the release of DMA buffers. As the DMA buffers are
+> +	 * devm allocated when necessary which is after the registration of
+> +	 * the PMU device.
+> +	 */
+> +	perf_pmu_unregister(&hisi_ptt->hisi_ptt_pmu);
+> +}
+> +
+> +static const struct pci_device_id hisi_ptt_id_tbl[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, 0xa12e) },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(pci, hisi_ptt_id_tbl);
+> +
+> +static struct pci_driver hisi_ptt_driver = {
+> +	.name = DRV_NAME,
+> +	.id_table = hisi_ptt_id_tbl,
+> +	.probe = hisi_ptt_probe,
+> +	.remove = hisi_ptt_remove,
+> +};
+> +module_pci_driver(hisi_ptt_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Yicong Yang <yangyicong@hisilicon.com>");
+> +MODULE_DESCRIPTION("Driver for HiSilicon PCIe tune and trace device");
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
+> new file mode 100644
+> index 000000000000..29b6d6293d6c
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.h
+> @@ -0,0 +1,166 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Driver for HiSilicon PCIe tune and trace device
+> + *
+> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+> + */
+> +
+> +#ifndef _HISI_PTT_H
+> +#define _HISI_PTT_H
+> +
+> +#include <linux/bits.h>
+> +#include <linux/list.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pci.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/types.h>
+> +
+> +#define DRV_NAME "hisi_ptt"
+> +
+> +/*
+> + * The definition of the device registers and register fields.
+> + */
+> +#define HISI_PTT_TRACE_ADDR_SIZE	0x0800
+> +#define HISI_PTT_TRACE_ADDR_BASE_LO_0	0x0810
+> +#define HISI_PTT_TRACE_ADDR_BASE_HI_0	0x0814
+> +#define HISI_PTT_TRACE_ADDR_STRIDE	0x8
+> +#define HISI_PTT_TRACE_CTRL		0x0850
+> +#define   HISI_PTT_TRACE_CTRL_EN	BIT(0)
+> +#define   HISI_PTT_TRACE_CTRL_RST	BIT(1)
+> +#define   HISI_PTT_TRACE_CTRL_RXTX_SEL	GENMASK(3, 2)
+> +#define   HISI_PTT_TRACE_CTRL_TYPE_SEL	GENMASK(7, 4)
+> +#define   HISI_PTT_TRACE_CTRL_DATA_FORMAT	BIT(14)
+> +#define   HISI_PTT_TRACE_CTRL_FILTER_MODE	BIT(15)
+> +#define   HISI_PTT_TRACE_CTRL_TARGET_SEL	GENMASK(31, 16)
+> +#define HISI_PTT_TRACE_INT_STAT		0x0890
+> +#define   HISI_PTT_TRACE_INT_STAT_MASK	GENMASK(3, 0)
+> +#define HISI_PTT_TRACE_INT_MASK		0x0894
+> +#define HISI_PTT_TRACE_WR_STS		0x08a0
+> +#define   HISI_PTT_TRACE_WR_STS_WRITE	GENMASK(27, 0)
+> +#define   HISI_PTT_TRACE_WR_STS_BUFFER	GENMASK(29, 28)
+> +#define HISI_PTT_TRACE_STS		0x08b0
+> +#define   HISI_PTT_TRACE_IDLE		BIT(0)
+> +#define HISI_PTT_DEVICE_RANGE		0x0fe0
+> +#define   HISI_PTT_DEVICE_RANGE_UPPER	GENMASK(31, 16)
+> +#define   HISI_PTT_DEVICE_RANGE_LOWER	GENMASK(15, 0)
+> +#define HISI_PTT_LOCATION		0x0fe8
+> +#define   HISI_PTT_CORE_ID		GENMASK(15, 0)
+> +#define   HISI_PTT_SICL_ID		GENMASK(31, 16)
+> +
+> +/* Parameters of PTT trace DMA part. */
+> +#define HISI_PTT_TRACE_DMA_IRQ			0
+> +#define HISI_PTT_TRACE_BUF_CNT			4
+> +#define HISI_PTT_TRACE_BUF_SIZE			SZ_4M
+> +#define HISI_PTT_TRACE_TOTAL_BUF_SIZE		(HISI_PTT_TRACE_BUF_SIZE * \
+> +						 HISI_PTT_TRACE_BUF_CNT)
+> +/* Wait time for hardware DMA to reset */
+> +#define HISI_PTT_RESET_TIMEOUT_US	10UL
+> +#define HISI_PTT_RESET_POLL_INTERVAL_US	1UL
+> +/* Poll timeout and interval for waiting hardware work to finish */
+> +#define HISI_PTT_WAIT_TRACE_TIMEOUT_US	100UL
+> +#define HISI_PTT_WAIT_POLL_INTERVAL_US	10UL
+> +
+> +#define HISI_PCIE_CORE_PORT_ID(devfn)	(PCI_FUNC(devfn) << 1)
+> +
+> +/**
+> + * struct hisi_ptt_dma_buffer - describe a single trace buffer of PTT trace.
+> + *                              The detail of the data format is described
+> + *                              in the documentation of PTT device.
+> + * @dma:   DMA address of this buffer visible to the device
+> + * @addr:  virtual address of this buffer visible to the cpu
+> + */
+> +struct hisi_ptt_dma_buffer {
+> +	dma_addr_t dma;
+> +	void *addr;
+> +};
+> +
+> +/**
+> + * struct hisi_ptt_trace_ctrl - control and status of PTT trace
+> + * @trace_buf:   array of the trace buffers for holding the trace data.
+> + *               the length will be HISI_PTT_TRACE_BUF_CNT.
+> + * @handle:      perf output handle of current trace session
+> + * @default_cpu: default cpu to start the trace session
+> + * @buf_index:   the index of current using trace buffer
+> + * @started:     current trace status, true for started
+> + * @is_port:     whether we're tracing root port or not
+> + * @direction:   direction of the TLP headers to trace
+> + * @filter:      filter value for tracing the TLP headers
+> + * @format:      format of the TLP headers to trace
+> + * @type:        type of the TLP headers to trace
+> + */
+> +struct hisi_ptt_trace_ctrl {
+> +	struct hisi_ptt_dma_buffer *trace_buf;
+> +	struct perf_output_handle handle;
+> +	int default_cpu;
+> +	u32 buf_index;
+> +	bool started;
+> +	bool is_port;
+> +	u32 direction:2;
+> +	u32 filter:16;
+> +	u32 format:1;
+> +	u32 type:4;
+> +};
+> +
+> +/**
+> + * struct hisi_ptt_filter_desc - descriptor of the PTT trace filter
+> + * @list: entry of this descriptor in the filter list
+> + * @pdev: pci_dev related to this filter
+> + */
+> +struct hisi_ptt_filter_desc {
+> +	struct list_head list;
+> +	struct pci_dev *pdev;
+> +};
+> +
+> +
+> +/**
+> + * struct hisi_ptt_pmu_buf - descriptor of the AUX buffer of PTT trace
+> + * @length:   size of the AUX buffer
+> + * @nr_pages: number of pages of the AUX buffer
+> + * @base:     start address of AUX buffer
+> + * @pos:      position in the AUX buffer to commit traced data
+> + */
+> +struct hisi_ptt_pmu_buf {
+> +	size_t length;
+> +	int nr_pages;
+> +	void *base;
+> +	long pos;
+> +};
+> +
+> +/**
+> + * struct hisi_ptt - per PTT device data
+> + * @trace_ctrl:   the control information of PTT trace
+> + * @hisi_ptt_pmu: the pum device of trace
+> + * @iobase:       base IO address of the device
+> + * @pdev:         pci_dev of this PTT device
+> + * @mutex:        mutex to protect the filter list and serialize the perf process.
+> + * @upper:        the upper BDF range of the PCI devices managed by this PTT device
+> + * @lower:        the lower BDF range of the PCI devices managed by this PTT device
+> + * @port_filters: the filter list of root ports
+> + * @req_filters:  the filter list of requester ID
+> + * @port_mask:    port mask of the managed root ports
+> + */
+> +struct hisi_ptt {
+> +	struct hisi_ptt_trace_ctrl trace_ctrl;
+> +	struct pmu hisi_ptt_pmu;
+> +	void __iomem *iobase;
+> +	struct pci_dev *pdev;
+> +	struct mutex mutex;
+> +	u32 upper;
+> +	u32 lower;
+> +
+> +	/*
+> +	 * The trace TLP headers can either be filtered by certain
+> +	 * root port, or by the requester ID. Organize the filters
+> +	 * by @port_filters and @req_filters here. The mask of all
+> +	 * the valid ports is also cached for doing sanity check
+> +	 * of user input.
+> +	 */
+> +	struct list_head port_filters;
+> +	struct list_head req_filters;
+> +	u16 port_mask;
+> +};
+> +
+> +#define to_hisi_ptt(pmu) container_of(pmu, struct hisi_ptt, hisi_ptt_pmu)
+> +
+> +#endif /* _HISI_PTT_H */
+> -- 
+> 2.24.0
+> 
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
