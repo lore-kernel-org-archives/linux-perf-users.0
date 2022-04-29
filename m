@@ -2,108 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A019C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Apr 2022 17:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B6EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Apr 2022 18:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379635AbiD2RcH (ORCPT
+        id S1380110AbiD2Srr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Apr 2022 13:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        Fri, 29 Apr 2022 14:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379613AbiD2Ray (ORCPT
+        with ESMTP id S1378784AbiD2Srq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Apr 2022 13:30:54 -0400
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB65D347D;
-        Fri, 29 Apr 2022 10:27:35 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id c15so11309278ljr.9;
-        Fri, 29 Apr 2022 10:27:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7D+3I+t+Bjx7AMKWUHFNEPdjcA8rwqba3c0NxnUB1Ig=;
-        b=kBtsUOObhlN8E18kG1QnGHGpezp6+3VVhlE++hcP0TcLxqTmSnNnO824fRj73SRiVo
-         ugJ317qV+fzm7qOXFDCc5bzxaqypEhAE2xy4LbOqxnOyqvll19nYYIT+XVQLbt/yM5jn
-         4OZZH+jy9OUbv4TVOOYjuNulSXoBzcKlIL5UyUMrYaFMIMkeU68/c+sZdj7QinEl0dra
-         lHm7rhNNa8thbHoCcUYKvSp6v3wGj+TDtRw9OBUVZs2iAowGmpGiB6X8vhjNtQ9eZ1UL
-         gL+WQBz9GEBBxCUW3vA6V/p03Aag/YsQ4+zhINc8ybxKi04OaUP8vmHptYlhlJrX13Jj
-         K8Gw==
-X-Gm-Message-State: AOAM533Ck5DlIyycpJn4EEmYu+PTncOhM0ps4zurQiLVYs4QqkmkuQI8
-        6yEP3FOYZrqN3hzFsTJjQ0f7p5jBq0O0QmiMr25ymok9
-X-Google-Smtp-Source: ABdhPJwGsWqOXKrdEp28MJBR1YmmNLpGT2LFnM8lpsYHWSfz03w7N1XefoFp1yb+g2fwHgrueil2ICAo0Rrh7Kd9KWA=
-X-Received: by 2002:a2e:1613:0:b0:24f:2ee0:351a with SMTP id
- w19-20020a2e1613000000b0024f2ee0351amr189180ljd.180.1651253254034; Fri, 29
- Apr 2022 10:27:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220422150507.222488-1-namhyung@kernel.org> <20220422150507.222488-3-namhyung@kernel.org>
- <CA+khW7gvDaDiA458StkOEvUfvr1Rx4d65+530z2tq52VkJqaoA@mail.gmail.com>
-In-Reply-To: <CA+khW7gvDaDiA458StkOEvUfvr1Rx4d65+530z2tq52VkJqaoA@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 29 Apr 2022 10:27:23 -0700
-Message-ID: <CAM9d7cjytSO9chTZBnKLnNsOz4LtwZo4G1LbEBJbLGGpPieaxA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] perf record: Enable off-cpu analysis with BPF
-To:     Hao Luo <haoluo@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 29 Apr 2022 14:47:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B9DCE650;
+        Fri, 29 Apr 2022 11:44:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A0722B83775;
+        Fri, 29 Apr 2022 18:44:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 539CFC385A7;
+        Fri, 29 Apr 2022 18:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651257865;
+        bh=/BheFzTV8YEtMZHnftdKshC1GQr6usshhH99m78+kWQ=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=gN8jqTPdeKs1vqBo0cd2cTdAS+SCHQJ6Un8nAk0IDomdC6X0/otKlzXjmBXYmDJNt
+         +jCHsIjpYGV8WjNAtZ3+tI8ABdyjoqzSzPQK20KseLrZHrsS2yfNTf3KYgPEX4KsBq
+         OmvB2+Tdb6j1xPhddHc9IM+qeYpnpdpcrH+BbCaAbSVATFfj1sumCSI3LOjBfihukc
+         eD1GsoCvm5q6sJw+Cp7X0BlmxIm+vYjvkfi+wNsu+vjogqvgox3XUQn/zdootcuI+1
+         a/MDsmPy25B9q+tyFqUb45IjF68HTkLFOTdg8rU6nUL+KDfXkYajh2nYNBxdUzsIxQ
+         BHvYRVyDEMDVQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3E5E8E5D087;
+        Fri, 29 Apr 2022 18:44:25 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v5.18: 4th batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220429125712.527713-1-acme@kernel.org>
+References: <20220429125712.527713-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220429125712.527713-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-29
+X-PR-Tracked-Commit-Id: a5d20d42a2f2dc2b2f9e9361912062732414090d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3e71713c9e75c34fc03f55ea86b381856ca952ee
+Message-Id: <165125786524.12833.3296469943421128066.pr-tracker-bot@kernel.org>
+Date:   Fri, 29 Apr 2022 18:44:25 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Timothy Hayes <timothy.hayes@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Hao,
+The pull request you sent on Fri, 29 Apr 2022 09:57:12 -0300:
 
-On Wed, Apr 27, 2022 at 4:07 PM Hao Luo <haoluo@google.com> wrote:
->
-> Hi Namhyung,
->
-> On Fri, Apr 22, 2022 at 8:05 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
->
-> [...]
->
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/Makefile.perf               |   1 +
-> >  tools/perf/builtin-record.c            |  21 +++
-> >  tools/perf/util/Build                  |   1 +
-> >  tools/perf/util/bpf_off_cpu.c          | 208 +++++++++++++++++++++++++
-> >  tools/perf/util/bpf_skel/off_cpu.bpf.c | 137 ++++++++++++++++
-> >  tools/perf/util/off_cpu.h              |  22 +++
-> >  6 files changed, 390 insertions(+)
-> >  create mode 100644 tools/perf/util/bpf_off_cpu.c
-> >  create mode 100644 tools/perf/util/bpf_skel/off_cpu.bpf.c
-> >  create mode 100644 tools/perf/util/off_cpu.h
-> >
->
-> [...]
->
-> > diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > new file mode 100644
-> > index 000000000000..2bc6f7cc59ea
-> > --- /dev/null
-> > +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> >
-> > +struct {
-> > +       __uint(type, BPF_MAP_TYPE_HASH);
-> > +       __uint(key_size, sizeof(__u32));
-> > +       __uint(value_size, sizeof(struct tstamp_data));
-> > +       __uint(max_entries, MAX_ENTRIES);
-> > +} tstamp SEC(".maps");
->
-> I think using task local storage for this tstamp would be more
-> efficient. There is an example in
-> tools/bpf/runqslower/runqslower.bpf.c
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.18-2022-04-29
 
-Right, will change in v2.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3e71713c9e75c34fc03f55ea86b381856ca952ee
 
-Thanks,
-Namhyung
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
