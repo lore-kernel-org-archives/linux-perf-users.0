@@ -2,100 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8961FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 30 Apr 2022 15:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C9BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun,  1 May 2022 18:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352852AbiD3PiS (ORCPT
+        id S1349658AbiEASPe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 30 Apr 2022 11:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33650 "EHLO
+        Sun, 1 May 2022 14:15:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238146AbiD3PiR (ORCPT
+        with ESMTP id S1349569AbiEASPd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 30 Apr 2022 11:38:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420D480223;
-        Sat, 30 Apr 2022 08:34:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CDB6260DEF;
-        Sat, 30 Apr 2022 15:34:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0436AC385AA;
-        Sat, 30 Apr 2022 15:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651332895;
-        bh=mHqTfyw1rl5o0qunHYn2UM5Ou+e7UGSlfQd4cbqtYV0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n1RThICwPSkH8Fe4YfZtPOzVvtPKBQQ4yZWdx+z8HGgO6jOajbL6JKq06/QQc7Aru
-         BT9SSU89N6aglReKaHj0NoUTE8p1XUquR+9qHjjLbkKdbegd2qNuUT6rDbqdlirv9X
-         MaLjns8EVN46ni1wJmOYr1L6R7Ow74mMvhSLWbP6hlf2I1C14it0MXXpeT6xXL2MTd
-         CGzrj4zBW8fEEIXuV/q/0S7NXrDKTTd4KIH7SanakJKP/aMFsMYMF6udcZWvGIY1FM
-         0xfUVujzwEEp03O2f9v3wuWX2ndWMUOtZl8ivqxpHxnfw2yPztSFt6LcwxlGZMTuI4
-         5j6FWVoXMxTQQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A3641400B1; Sat, 30 Apr 2022 12:34:52 -0300 (-03)
-Date:   Sat, 30 Apr 2022 12:34:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, leo.yan@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tests: Fix coresight `perf test` failure.
-Message-ID: <Ym1XHMSoPHZicbTa@kernel.org>
-References: <20220428151947.290146-1-jeremy.linton@arm.com>
- <93e36dac-47d4-1e2b-6cb1-0092a5371810@arm.com>
+        Sun, 1 May 2022 14:15:33 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A3F6BE05
+        for <linux-perf-users@vger.kernel.org>; Sun,  1 May 2022 11:12:06 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id a14-20020a7bc1ce000000b00393fb52a386so9101269wmj.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 01 May 2022 11:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=G4HcF6wKFm/ylz0uJ8szLwtvNM8PQrC+7fSPzMXSh5o=;
+        b=nmL+ezpo4jXh1X6e0ABW05f3V//xlF6rHUH5pANgiuVcjMHVir0OSjqZ90UVUzHHea
+         nZk3hIKZOxMerTyrCh+VJO/jaheXrjHS0ExtAGzcsvhEJFfkB7B3wAQ45ObCdwGJQWrV
+         r6HjfpY7s72ve3EnODQORbB3rSTbqz9eRuoHI0Jy+PydhNuhuX52EpdYH/eJiEGoUV8a
+         +hBV2VkuoqCTR11RIU+jOYL6W4TMkkt6gA+Cd3suGUuyT/pj1+sefBgtMWHwmQrHwOrq
+         y7pcpamQHb+0J/Fr0mYwrTMtN8qUYnbwdksGeNlszBOOFzzPuskbBSs+pe60kGCnw/3V
+         EyHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=G4HcF6wKFm/ylz0uJ8szLwtvNM8PQrC+7fSPzMXSh5o=;
+        b=bxDpqI5v/YIu/DXwu+DUj6dYy6fKqfpPUIxWNO5t5TvMTTwgQhHx+jaRXknS2BN9m2
+         worvARi0vEDUpJh0LbCVI7mxcRDjHDT6vqSwwj1qQuxzV1XMb+CeSebeJxKUmlVTypud
+         8JZ2jZ9SK3fceNXHkJkjFMokn3E0aw8fWBMVcB8PWhOikSFWTe+KmEF53MKcTmZm/Sir
+         WKiyCjUyrDqA5gW7sz8jQhh3jrEbKdUQdn4GXoX53zRPEZG/qg7d66loMv/u8pjv1ShI
+         FGTZqLf1ijq/mAvRmpS1uPOcW6ZeCzOgK2t5xRV47ojrqs0Iamt/2zqT6edjJ2pqFNrY
+         fsDw==
+X-Gm-Message-State: AOAM531+ttgX9oJVg80ZYd79qeWBKgnkdE4mrMe/EcqWen27QlatgrYY
+        PNQCyz3tC3WijonDQ+GoG7+RQ9izCC4GK3VNeCJleI3s7sveVQ==
+X-Google-Smtp-Source: ABdhPJynlq7AnBti1C7bkGbG6lG879VJKwNABalEtnGZgdnfBGt3KYrfsC5GOxIFW908bOat0ttaBP4VNnyUoDnfDmU=
+X-Received: by 2002:a05:600c:27c6:b0:394:783:2077 with SMTP id
+ l6-20020a05600c27c600b0039407832077mr12450992wmb.182.1651428723710; Sun, 01
+ May 2022 11:12:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93e36dac-47d4-1e2b-6cb1-0092a5371810@arm.com>
-X-Url:  http://acmel.wordpress.com
+From:   Ian Rogers <irogers@google.com>
+Date:   Sun, 1 May 2022 11:11:51 -0700
+Message-ID: <CAP-5=fWkxtm5-Ebwkh4pzA83prvuAJ5yy6CKQYatdkKWu3Tgeg@mail.gmail.com>
+Subject: Linux Perf Tool Office Hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 28, 2022 at 05:14:09PM +0100, James Clark escreveu:
-> 
-> 
-> On 28/04/2022 16:19, Jeremy Linton wrote:
-> > Currently the `perf test` always fails the coresight test like:
-> > 
-> > 89: Check Arm CoreSight trace data recording and synthesized samples: FAILED!
-> > 
-> > That is because the test_arm_coresight.sh is attempting to SIGINT the
-> > parent but is using $$ rather than $PPID and it sigint's itself when
-> > run under the perf test framework. Since this is done in a trap clause
-> > it ends up returning a non zero return. Since $PPID is a bash ism and
-> > not all distros are linking /bin/sh to bash, the alternative
-> > parent pid lookups are uglier than just dropping the kill, and its
-> > not strictly needed, lets pick the simple solution and drop the sigint.
-> > 
-> > Fixes: 133fe2e617e4 ("perf tests: Improve temp file cleanup in test_arm_coresight.sh")
-> > Cc: James Clark <james.clark@arm.com>
-> > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> > ---
-> >  tools/perf/tests/shell/test_arm_coresight.sh | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-> > index 6de53b7ef5ff..e4cb4f1806ff 100755
-> > --- a/tools/perf/tests/shell/test_arm_coresight.sh
-> > +++ b/tools/perf/tests/shell/test_arm_coresight.sh
-> > @@ -29,7 +29,6 @@ cleanup_files()
-> >  	rm -f ${file}
-> >  	rm -f "${perfdata}.old"
-> >  	trap - exit term int
-> > -	kill -2 $$
-> >  	exit $glb_err
-> >  }
-> >  
-> 
-> Reviewed-by: James Clark <james.clark@arm.com>
+Hi,
 
-Thanks, applied.
+We have multiple Google summer-of-code applicants this year, and we'd
+like to have a forum where they can discuss their proposal, work,
+problems, etc. with the wider developer community. As such we're
+proposing to set up biweekly office hours. It could be that these
+office hours provide useful for other discussions too. To work out the
+best time and video conference tool for this I've created an anonymous
+Google form:
 
-- Arnaldo
+https://forms.gle/WCN19uMjp15bNRJV6
 
+Please help determine the best time and tool by entering what works
+best for you.
+
+Thanks!
+Ian
