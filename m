@@ -2,211 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3B4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 09:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C7DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 16:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384369AbiEBJnx (ORCPT
+        id S240751AbiEBQMv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 May 2022 05:43:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46624 "EHLO
+        Mon, 2 May 2022 12:12:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352101AbiEBJng (ORCPT
+        with ESMTP id S240612AbiEBQMu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 May 2022 05:43:36 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE14213D2E;
-        Mon,  2 May 2022 02:39:53 -0700 (PDT)
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2426twBr021004;
-        Mon, 2 May 2022 09:39:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=OEvhbqOZ9NwoylHOvcW5vWY09m40+BG8RWO2gTnZi4s=;
- b=jI3puI/95AKcbgfr5LE/2yipPVyQad875KxQXVlSpzmh069GItF5WeHT67goQfmpjjJ+
- JJOVHxc0ExPQ2f35VG7pJtGoP4oTI0F5ds/hclD5r5zrCcRSYsa0xXNV3y8+kN/xkp3r
- fK3q27wN5oIB5QTSUHWSAp8joXj5LddLJ7yPx7HmxR1WeTgupm2zuEWxR3parXc4EhPn
- F4fuA+/9ImO8U+fmEngw1XVbeqyL7Om8NE5pdxbjmQbEoKxn+qUb/2+XgOzAffuwE/Hl
- y2/IsA1MQglMytDpLhGbr6AfjYKaGLt+ffb3NaV3vUtYhQGEqh+DvoBSNX3/pPxwoFSa xQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ftafd2udj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 May 2022 09:39:50 +0000
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2429dovX019565;
-        Mon, 2 May 2022 09:39:50 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ftafd2ud5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 May 2022 09:39:49 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2429c8vB005324;
-        Mon, 2 May 2022 09:39:48 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04fra.de.ibm.com with ESMTP id 3frvr8t19g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 May 2022 09:39:47 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2429di5A53871014
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 May 2022 09:39:44 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93A6911C052;
-        Mon,  2 May 2022 09:39:44 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46C8011C04C;
-        Mon,  2 May 2022 09:39:44 +0000 (GMT)
-Received: from [9.152.212.236] (unknown [9.152.212.236])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 May 2022 09:39:44 +0000 (GMT)
-Message-ID: <d36e7dc7-e063-365f-2bf4-8cac590b5802@linux.ibm.com>
-Date:   Mon, 2 May 2022 11:39:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] perf test: Add skip to --per-thread test
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-References: <20220429061336.1184848-1-irogers@google.com>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20220429061336.1184848-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vX0SZHQjo7c5Jqw1tTa1HPzvVp5p12dK
-X-Proofpoint-GUID: GXEDPIT1L1tULqZMTAWKd65zblM7M8ak
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 2 May 2022 12:12:50 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF88CDEFB;
+        Mon,  2 May 2022 09:09:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651507761; x=1683043761;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HIEm6DHONqf1fh3RVxZ900oiPNIDtiHGMYYJWK8XUcg=;
+  b=Q4w7ye9PAR2TVYI9BijEFAPzOy/MfHnyE2ylzEfcl0PBTbv2obfr7TeG
+   TvXyF1oWFrZunnfULG/p91ktPcxB+owr5lxrvdEgL6zC5AFP9I7CYdSyJ
+   3SuOIkvVF6fXCfJ3LFqskXgklXcGOZD4o27VCQDxFqWb5OYRHlLWxoy0/
+   /EySVOxmwbI0Dn5kVmYzUtpr7k5yzPw11kVggf8hZh5oNYA2OqQTJ0vh8
+   +teExmAEehtd8JwQL4WJN+yOTlM+FrOxgkeGrh5tEtoCvc4IiH6qW89ir
+   nQ6C/RjeLX7VEV2tXr6qov7f5I6y58OEEZYxdNyM5BoyjLWCQNZzJHXNr
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="330241183"
+X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
+   d="scan'208";a="330241183"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:09:21 -0700
+X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
+   d="scan'208";a="583770530"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.59.59])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:09:13 -0700
+Message-ID: <8510a140-e2e2-39ce-b344-b456f069a9d0@intel.com>
+Date:   Mon, 2 May 2022 19:09:08 +0300
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-02_03,2022-04-28_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1011 spamscore=0 bulkscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205020074
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.8.1
+Subject: Re: [PATCH v4 3/6] perf stat: Avoid printing cpus with no counters
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220430062324.1565215-1-irogers@google.com>
+ <20220430062324.1565215-4-irogers@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220430062324.1565215-4-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/29/22 08:13, Ian Rogers wrote:
-> As reported in:
-> https://lore.kernel.org/linux-perf-users/20220428122821.3652015-1-tmricht@linux.ibm.com/
-> the 'instructions:u' event may not be supported. Add a skip using 'perf
-> stat'.
+On 30/04/22 09:23, Ian Rogers wrote:
+> perf_evlist's user_requested_cpus can contain CPUs not present in any
+> evsel's cpus, for example uncore counters. Avoid printing the prefix and
+> trailing \n until the first valid counter is encountered.
 > 
-> Switch some code away from pipe to make the failures clearer.
-> 
-> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
 > Signed-off-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->  tools/perf/tests/shell/record.sh | 44 +++++++++++++++++++++++++++++---
->  1 file changed, 41 insertions(+), 3 deletions(-)
+>  tools/perf/util/stat-display.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index cd1cf14259b8..efc0cb07a929 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -5,11 +5,43 @@
->  set -e
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index d9629a83aa78..13f705737367 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -948,8 +948,6 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>  		struct evsel *counter;
+>  		bool first = true;
 >  
->  err=0
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +
-> +cleanup() {
-> +  rm -f ${perfdata}
-> +  rm -f ${perfdata}.old
-> +  trap - exit term int
-> +}
-> +
-> +trap_cleanup() {
-> +  cleanup
-> +  exit 1
-> +}
-> +trap trap_cleanup exit term int
-> +
->  test_per_thread() {
->    echo "Basic --per-thread mode test"
-> -  perf record -e instructions:u --per-thread -o- true 2> /dev/null \
-> -    | perf report -i- -q \
-> -    | egrep -q true
-> +  if ! perf stat -e instructions:u --quiet true
-> +  then
-> +    echo "Per-thread record [Skipped instructions:u not supported]"
-> +    if [ $err -ne 1 ]
-> +    then
-> +      err=2
-> +    fi
-> +    return
-> +  fi
-> +  if ! perf record -e instructions:u --per-thread -o ${perfdata} true 2> /dev/null
-> +  then
-> +    echo "Per-thread record of instructions:u [Failed]"
-> +    err=1
-> +    return
-> +  fi
-> +  if ! perf report -i ${perfdata} -q | egrep -q true
-> +  then
-> +    echo "Per-thread record [Failed missing output]"
-> +    err=1
-> +    return
-> +  fi
->    echo "Basic --per-thread mode test [Success]"
+> -		if (prefix)
+> -			fputs(prefix, config->output);
+>  		evlist__for_each_entry(evlist, counter) {
+>  			u64 ena, run, val;
+>  			double uval;
+> @@ -961,6 +959,8 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>  
+>  			id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+>  			if (first) {
+> +				if (prefix)
+> +					fputs(prefix, config->output);
+>  				aggr_printout(config, counter, id, 0);
+>  				first = false;
+>  			}
+> @@ -972,7 +972,8 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>  			printout(config, id, 0, counter, uval, prefix,
+>  				 run, ena, 1.0, &rt_stat);
+>  		}
+> -		fputc('\n', config->output);
+> +		if (!first)
+> +			fputc('\n', config->output);
+>  	}
 >  }
 >  
-> @@ -18,6 +50,10 @@ test_register_capture() {
->    if ! perf list | egrep -q 'br_inst_retired.near_call'
->    then
->      echo "Register capture test [Skipped missing instruction]"
-> +    if [ $err -ne 1 ]
-> +    then
-> +      err=2
-> +    fi
->      return
->    fi
->    if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
-> @@ -39,4 +75,6 @@ test_register_capture() {
->  
->  test_per_thread
->  test_register_capture
-> +
-> +cleanup
->  exit $err
 
-Ian,
-
-thanks very much for looking into this.
-I have tested your patch on several configurations and to be perfect, please
-change this line:
-# git diff
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index efc0cb07a929..9cb8494f314d 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -21,7 +21,7 @@ trap trap_cleanup exit term int
- 
- test_per_thread() {
-   echo "Basic --per-thread mode test"
--  if ! perf stat -e instructions:u --quiet true
-+  if ! perf record -e instructions:u --quiet true 2> /dev/null
-   then
-     echo "Per-thread record [Skipped instructions:u not supported]"
-     if [ $err -ne 1 ]
-# 
-
-This runs fine, just use record instead of stat, you use perf record later
-on anyway.
-
-With this change you have my
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
