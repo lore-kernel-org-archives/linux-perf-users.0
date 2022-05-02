@@ -2,132 +2,211 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB93C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 06:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3B4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 09:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383492AbiEBGLi (ORCPT
+        id S1384369AbiEBJnx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 May 2022 02:11:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53958 "EHLO
+        Mon, 2 May 2022 05:43:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383562AbiEBGLX (ORCPT
+        with ESMTP id S1352101AbiEBJng (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 May 2022 02:11:23 -0400
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A4E57B02;
-        Sun,  1 May 2022 23:07:26 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id j4so23598740lfh.8;
-        Sun, 01 May 2022 23:07:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k/APYmYxk61kZdXntHMEICTz/dMuoCskS3mvYdYDNX0=;
-        b=CneDfyv0OGkr3LedF4KXXtzgyL0BksvUhZZ1ZDEG0SVxDhUjUcVsIaxRVzOOFWR3lq
-         yLKvvj6EpG5yiQQ0yrHzp6pXHVmjo/1rDLxQP9I9cZxsk6rIe3IwK75F0hbM1qHQSSJ6
-         KsY/CWok/qvyDhAbmOhhyg/cfSuSdCA5dkR+j/vuX/J8r8Hax6YNVtYQZDFM79Wx1W0Q
-         BC52gtWMLxkhv8Q0wMZKuqCV5elAZyRYp7zi+Bt2Od/dmEOMQaKR1UmLC/sDegEtMDFi
-         zHm1n5CukttsX60HmvO2caO2MswG4SMbkzFkkwGuvt0YLkGK1N9HSYoRlSD7RB3L/jLo
-         1CFg==
-X-Gm-Message-State: AOAM532XXU5ang2TitASfSoX096SgjfL5pYJP3MtDGe4g7PKY/Kox+JM
-        mihzw53vZzTpUn1vIV7qJmTT1gchdiZsv5od6HojBY3W
-X-Google-Smtp-Source: ABdhPJzykar8cnzxKVegJteK2VScoMzQLyopyXa0r7EehaGZZadwoCcJX006pkDn+sB42e7Thl5BhEfMoXWzs1WtEto=
-X-Received: by 2002:a05:6512:39d3:b0:472:4920:96d7 with SMTP id
- k19-20020a05651239d300b00472492096d7mr8236899lfu.47.1651471645095; Sun, 01
- May 2022 23:07:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <YlVPpVC8chepOdzJ@hirez.programming.kicks-ass.net> <20220429051441.14251-1-ravi.bangoria@amd.com>
-In-Reply-To: <20220429051441.14251-1-ravi.bangoria@amd.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sun, 1 May 2022 23:07:14 -0700
-Message-ID: <CAM9d7cjksVPHYJEjqckotqzC62dBNW9frsMQaBECngMopU4znw@mail.gmail.com>
-Subject: Re: [PATCH] perf/amd/ibs: Use interrupt regs ip for stack unwinding
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 2 May 2022 05:43:36 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE14213D2E;
+        Mon,  2 May 2022 02:39:53 -0700 (PDT)
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2426twBr021004;
+        Mon, 2 May 2022 09:39:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=OEvhbqOZ9NwoylHOvcW5vWY09m40+BG8RWO2gTnZi4s=;
+ b=jI3puI/95AKcbgfr5LE/2yipPVyQad875KxQXVlSpzmh069GItF5WeHT67goQfmpjjJ+
+ JJOVHxc0ExPQ2f35VG7pJtGoP4oTI0F5ds/hclD5r5zrCcRSYsa0xXNV3y8+kN/xkp3r
+ fK3q27wN5oIB5QTSUHWSAp8joXj5LddLJ7yPx7HmxR1WeTgupm2zuEWxR3parXc4EhPn
+ F4fuA+/9ImO8U+fmEngw1XVbeqyL7Om8NE5pdxbjmQbEoKxn+qUb/2+XgOzAffuwE/Hl
+ y2/IsA1MQglMytDpLhGbr6AfjYKaGLt+ffb3NaV3vUtYhQGEqh+DvoBSNX3/pPxwoFSa xQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ftafd2udj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 May 2022 09:39:50 +0000
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2429dovX019565;
+        Mon, 2 May 2022 09:39:50 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ftafd2ud5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 May 2022 09:39:49 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2429c8vB005324;
+        Mon, 2 May 2022 09:39:48 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 3frvr8t19g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 May 2022 09:39:47 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2429di5A53871014
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 May 2022 09:39:44 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 93A6911C052;
+        Mon,  2 May 2022 09:39:44 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 46C8011C04C;
+        Mon,  2 May 2022 09:39:44 +0000 (GMT)
+Received: from [9.152.212.236] (unknown [9.152.212.236])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 May 2022 09:39:44 +0000 (GMT)
+Message-ID: <d36e7dc7-e063-365f-2bf4-8cac590b5802@linux.ibm.com>
+Date:   Mon, 2 May 2022 11:39:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH] perf test: Add skip to --per-thread test
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
         Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        Kim Phillips <kim.phillips@amd.com>, santosh.shukla@amd.com,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+References: <20220429061336.1184848-1-irogers@google.com>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20220429061336.1184848-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: vX0SZHQjo7c5Jqw1tTa1HPzvVp5p12dK
+X-Proofpoint-GUID: GXEDPIT1L1tULqZMTAWKd65zblM7M8ak
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-02_03,2022-04-28_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 clxscore=1011 spamscore=0 bulkscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205020074
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On Thu, Apr 28, 2022 at 10:15 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->
-> IbsOpRip is recorded when IBS interrupt is triggered. But there is
-> a skid from the time IBS interrupt gets triggered to the time the
-> interrupt is presented to the core. Meanwhile processor would have
-> moved ahead and thus IbsOpRip will be inconsistent with rsp and rbp
-> recorded as part of the interrupt regs. This causes issues while
-> unwinding stack using the ORC unwinder as it needs consistent rip,
-> rsp and rbp. Fix this by using rip from interrupt regs instead of
-> IbsOpRip for stack unwinding.
->
-> Fixes: ee9f8fce99640 ("x86/unwind: Add the ORC unwinder")
-> Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
-
+On 4/29/22 08:13, Ian Rogers wrote:
+> As reported in:
+> https://lore.kernel.org/linux-perf-users/20220428122821.3652015-1-tmricht@linux.ibm.com/
+> the 'instructions:u' event may not be supported. Add a skip using 'perf
+> stat'.
+> 
+> Switch some code away from pipe to make the failures clearer.
+> 
+> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  arch/x86/events/amd/ibs.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 9739019d4b67..171941043f53 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -304,6 +304,16 @@ static int perf_ibs_init(struct perf_event *event)
->         hwc->config_base = perf_ibs->msr;
->         hwc->config = config;
->
-> +       /*
-> +        * rip recorded by IbsOpRip will not be consistent with rsp and rbp
-> +        * recorded as part of interrupt regs. Thus we need to use rip from
-> +        * interrupt regs while unwinding call stack. Setting _EARLY flag
-> +        * makes sure we unwind call-stack before perf sample rip is set to
-> +        * IbsOpRip.
-> +        */
-> +       if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
-> +               event->attr.sample_type |= __PERF_SAMPLE_CALLCHAIN_EARLY;
+>  tools/perf/tests/shell/record.sh | 44 +++++++++++++++++++++++++++++---
+>  1 file changed, 41 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index cd1cf14259b8..efc0cb07a929 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -5,11 +5,43 @@
+>  set -e
+>  
+>  err=0
+> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
 > +
->         return 0;
+> +cleanup() {
+> +  rm -f ${perfdata}
+> +  rm -f ${perfdata}.old
+> +  trap - exit term int
+> +}
+> +
+> +trap_cleanup() {
+> +  cleanup
+> +  exit 1
+> +}
+> +trap trap_cleanup exit term int
+> +
+>  test_per_thread() {
+>    echo "Basic --per-thread mode test"
+> -  perf record -e instructions:u --per-thread -o- true 2> /dev/null \
+> -    | perf report -i- -q \
+> -    | egrep -q true
+> +  if ! perf stat -e instructions:u --quiet true
+> +  then
+> +    echo "Per-thread record [Skipped instructions:u not supported]"
+> +    if [ $err -ne 1 ]
+> +    then
+> +      err=2
+> +    fi
+> +    return
+> +  fi
+> +  if ! perf record -e instructions:u --per-thread -o ${perfdata} true 2> /dev/null
+> +  then
+> +    echo "Per-thread record of instructions:u [Failed]"
+> +    err=1
+> +    return
+> +  fi
+> +  if ! perf report -i ${perfdata} -q | egrep -q true
+> +  then
+> +    echo "Per-thread record [Failed missing output]"
+> +    err=1
+> +    return
+> +  fi
+>    echo "Basic --per-thread mode test [Success]"
 >  }
->
-> @@ -687,6 +697,14 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
->                 data.raw = &raw;
->         }
->
-> +       /*
-> +        * rip recorded by IbsOpRip will not be consistent with rsp and rbp
-> +        * recorded as part of interrupt regs. Thus we need to use rip from
-> +        * interrupt regs while unwinding call stack.
-> +        */
-> +       if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
-> +               data.callchain = perf_callchain(event, iregs);
+>  
+> @@ -18,6 +50,10 @@ test_register_capture() {
+>    if ! perf list | egrep -q 'br_inst_retired.near_call'
+>    then
+>      echo "Register capture test [Skipped missing instruction]"
+> +    if [ $err -ne 1 ]
+> +    then
+> +      err=2
+> +    fi
+>      return
+>    fi
+>    if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
+> @@ -39,4 +75,6 @@ test_register_capture() {
+>  
+>  test_per_thread
+>  test_register_capture
 > +
->         throttle = perf_event_overflow(event, &data, &regs);
->  out:
->         if (throttle) {
-> --
-> 2.27.0
->
+> +cleanup
+>  exit $err
+
+Ian,
+
+thanks very much for looking into this.
+I have tested your patch on several configurations and to be perfect, please
+change this line:
+# git diff
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index efc0cb07a929..9cb8494f314d 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -21,7 +21,7 @@ trap trap_cleanup exit term int
+ 
+ test_per_thread() {
+   echo "Basic --per-thread mode test"
+-  if ! perf stat -e instructions:u --quiet true
++  if ! perf record -e instructions:u --quiet true 2> /dev/null
+   then
+     echo "Per-thread record [Skipped instructions:u not supported]"
+     if [ $err -ne 1 ]
+# 
+
+This runs fine, just use record instead of stat, you use perf record later
+on anyway.
+
+With this change you have my
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
