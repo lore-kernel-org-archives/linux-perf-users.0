@@ -2,148 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5113DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 16:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8549CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 16:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346095AbiEBQRF (ORCPT
+        id S242745AbiEBQim (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 May 2022 12:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59014 "EHLO
+        Mon, 2 May 2022 12:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357459AbiEBQRE (ORCPT
+        with ESMTP id S241337AbiEBQim (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 May 2022 12:17:04 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA7B2DF90;
-        Mon,  2 May 2022 09:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651508015; x=1683044015;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=T51mlRRi96dsufwk/s91k182O3qd8tVYt8XcdmiuPww=;
-  b=NEj2CmfSIjsLUJGGDaG8bdT1KngZfC45stPBu+x01AWTLqpPBY+YePOx
-   4RrXDO4jUzPOrtFXl146enQiDSFjw0o19rGVHz97G3lQ9QWFi8TQOmzxs
-   zmUlnX8HJOU5RkqDk+cjKSwgyvQDismYff6zWbZaxaTIeGpkxrvWqYmFN
-   eH+c1gFSfS6J29H9ikbvoA+kr7iABjmChue1f4ptCq2J2yB8pW/vLxn7E
-   FPRkXoUJb1/E+H6x645S+IIWnBJ6n20kaW2qDI96ElT7cUpUJzuZRpbLA
-   2D3cns5tLTarHfgfTd78ezqo68mHs72KCQ7s6CsWtEDhoImjh5EgA7BwJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="327795722"
-X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="327795722"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:13:35 -0700
-X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="583772313"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.59.59])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:13:27 -0700
-Message-ID: <b0551170-f559-4801-1cb4-3653b9685474@intel.com>
-Date:   Mon, 2 May 2022 19:13:22 +0300
+        Mon, 2 May 2022 12:38:42 -0400
+Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63ED2315
+        for <linux-perf-users@vger.kernel.org>; Mon,  2 May 2022 09:35:12 -0700 (PDT)
+Received: by mail-vs1-xe2f.google.com with SMTP id v139so14133832vsv.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 May 2022 09:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z6DJ90ODhfcrzyxsdSLI1aufmTQv+nQ7WMbPe23N6Co=;
+        b=IMs055+hzcvDtAmdZ5LYj6ofVg4Kzj2Dv3sASjpv/mR2QreDifjaqAWAOkNoeVGhfZ
+         j9y+hz/ctlaWLs2hf5DLh1FOZ8lOoV+B3zl6Twix2XSPjb18M8qc5e09sXtZ4WkdAciO
+         fNXa/pb2T2aLkIJ8HOTvGZW3X6D/YWyvgTAnfuIkts80lYVSm7N70pgtNeRK2DSlC/MG
+         KRkzWHaoq/bmUrPWSQ6/fBmHMAwuu96FJflRoyUvEdZ6W9XqQLAMQxhaDRdy/4et9pBg
+         EVzCKmclmEni69hLHuDLW2Qxjgfy9mPB3Xk9TcjvNbhCZMaBHgbWyKejgf7uUHQNNKNv
+         RBLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z6DJ90ODhfcrzyxsdSLI1aufmTQv+nQ7WMbPe23N6Co=;
+        b=GucmlFeXUvZQP9Qg64xsMFMUl03RgsPvPDbpTqTfgWqFHE3jiGG9o20ASj0/mkop0J
+         olssVWZ4PP9ZUQAm7wujMjVYKFnagHueT9qDfv3JpccOZkkf4ptc6iySIKbplHhuXp3G
+         PVXH1FHbBnCmaxvjuXqWRcAN96hq8COVWd7qfjqWwIQuJTmnMWAZDlU+F4jDqYhW98p4
+         acMTu04rLcLjGNPzkcgwyCbuWF8F32XosqRbdSelZaFczJVCQaWNcMINfWpshE7vutTF
+         3+nBKdC6JlRE0lRT8nYGPFXoZWj/ghbaZV5cErO5neCpXxcfvNQj374h+aNVZmrntHyP
+         Np7w==
+X-Gm-Message-State: AOAM531kS4DAIgo8PnVTHJ+b7XQVE7Q1uOVLVKM2a367pwWbN4Io2N+i
+        6G8b4zbPAG2gn0eAD8JwQh+RDYo9SGPcEIBE70i/HcLd
+X-Google-Smtp-Source: ABdhPJztJ2W1embJo/kImZ8RMr4shTPaBiZfLWrRMdF0d8ya0QG0GH0z2pTqcyg/lCTQQ/psSYZgdp53+oe4lXy2v40=
+X-Received: by 2002:a05:6102:3091:b0:32d:204b:d489 with SMTP id
+ l17-20020a056102309100b0032d204bd489mr1302449vsb.4.1651509311559; Mon, 02 May
+ 2022 09:35:11 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.8.1
-Subject: Re: [PATCH v4 4/6] perf cpumap: Handle dummy maps as empty in subset
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220430062324.1565215-1-irogers@google.com>
- <20220430062324.1565215-5-irogers@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220430062324.1565215-5-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAP-5=fWkxtm5-Ebwkh4pzA83prvuAJ5yy6CKQYatdkKWu3Tgeg@mail.gmail.com>
+In-Reply-To: <CAP-5=fWkxtm5-Ebwkh4pzA83prvuAJ5yy6CKQYatdkKWu3Tgeg@mail.gmail.com>
+From:   Tanusree Debnath <tanu235m@gmail.com>
+Date:   Mon, 2 May 2022 09:35:00 -0700
+Message-ID: <CAPS78pqVdNLWD1bAm6ds7D==+sOaL4amLYZ4wiQgT79zC5xprg@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 30/04/22 09:23, Ian Rogers wrote:
-> perf_cpu_map__empty is true for empty and dummy maps. Make is_subset
-> respect that.
+Hi,
+Thanks for the email. I have taken the survey and selected the times.
+Regards,
+Tanu
 
-I think this might be the opposite of what I am trying to do, which is
-enable all_cpus to represent all the "cpu" values (3rd parameter of
-perf_event_open()) to iterate over including -1 so that per-thread and
-per-cpu events can be mixed.
-
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/perf/cpumap.c   |  4 ++--
->  tools/perf/tests/cpumap.c | 10 +++++++++-
->  2 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> index 384d5e076ee4..9c83675788c2 100644
-> --- a/tools/lib/perf/cpumap.c
-> +++ b/tools/lib/perf/cpumap.c
-> @@ -322,9 +322,9 @@ struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
->  /** Is 'b' a subset of 'a'. */
->  bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b)
->  {
-> -	if (a == b || !b)
-> +	if (a == b || perf_cpu_map__empty(b))
->  		return true;
-> -	if (!a || b->nr > a->nr)
-> +	if (perf_cpu_map__empty(a) || b->nr > a->nr)
->  		return false;
->  
->  	for (int i = 0, j = 0; i < a->nr; i++) {
-> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> index f94929ebb54b..d52b58395385 100644
-> --- a/tools/perf/tests/cpumap.c
-> +++ b/tools/perf/tests/cpumap.c
-> @@ -128,13 +128,21 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
->  	struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
->  	struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
->  	struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
-> +	struct perf_cpu_map *d = perf_cpu_map__dummy_new();
-> +	struct perf_cpu_map *e = perf_cpu_map__merge(b, d);
->  	char buf[100];
->  
->  	TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
->  	cpu_map__snprint(c, buf, sizeof(buf));
->  	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
-> -	perf_cpu_map__put(b);
-> +
-> +	TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(e) == 3);
-> +	cpu_map__snprint(e, buf, sizeof(buf));
-> +	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "4-5,7"));
-> +
->  	perf_cpu_map__put(c);
-> +	perf_cpu_map__put(d);
-> +	perf_cpu_map__put(e);
->  	return 0;
->  }
->  
-
+On Sun, May 1, 2022 at 11:12 AM Ian Rogers <irogers@google.com> wrote:
+>
+> Hi,
+>
+> We have multiple Google summer-of-code applicants this year, and we'd
+> like to have a forum where they can discuss their proposal, work,
+> problems, etc. with the wider developer community. As such we're
+> proposing to set up biweekly office hours. It could be that these
+> office hours provide useful for other discussions too. To work out the
+> best time and video conference tool for this I've created an anonymous
+> Google form:
+>
+> https://forms.gle/WCN19uMjp15bNRJV6
+>
+> Please help determine the best time and tool by entering what works
+> best for you.
+>
+> Thanks!
+> Ian
