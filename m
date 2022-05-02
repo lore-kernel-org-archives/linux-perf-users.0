@@ -2,159 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B149C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 17:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D863C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 23:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386489AbiEBRIm (ORCPT
+        id S232444AbiEBXZ0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 May 2022 13:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
+        Mon, 2 May 2022 19:25:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238261AbiEBRIl (ORCPT
+        with ESMTP id S233374AbiEBXYC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 May 2022 13:08:41 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6390027B
-        for <linux-perf-users@vger.kernel.org>; Mon,  2 May 2022 10:05:11 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id c11so10503358wrn.8
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 May 2022 10:05:11 -0700 (PDT)
+        Mon, 2 May 2022 19:24:02 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1691C10C;
+        Mon,  2 May 2022 16:20:30 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id p12so13485706pfn.0;
+        Mon, 02 May 2022 16:20:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ILRP524+2fdLDTShu4hSsO+6dehNvYTua716YzeA9Fg=;
-        b=YDWfLX1xSIUwsEMnssgIoCHQO8OLl2q81ADfKyheoORpJWFFKfJBcZNs8cOj83RvXy
-         31erF0OeLY0X5e2EhHdMzi09UQNQgxuAiAaP1aKGjsflBTGPEjKXLnNcdjdpQ328cwxd
-         i+6YiDC7OMst6lOmjI8msSGBFxio8+XY4fEu8oHviRF9yG3QufHYzpoMtYWWUt6ieB4m
-         KodYbVNfW83VJ00k/LeDcrDRb+kuEDRXc/+3am4mBrBGa1uZwbG8e5/gWuytzgFgeyYR
-         y8JFiIwQe5GmA8Q7np9BTS9tZiTlgFfEBA3BYB4W+tcqvvfd84jUfhGepDb3Cz6DItSA
-         z4eA==
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QDpDR9wAUTORHbMw+Bx24K6jMVk7XvcBry4ZGUpvw4A=;
+        b=TWHFN0kgWl3KN6BOSZtk3AJnAJPyFyVXrG+zjy7Hp3i2mwEVWukpaeZTfztSuCveXQ
+         5D4lzoh8vP3qFWYfySI7VneE4TIiE/F6ws5kjEsHd9Fc1WwiJg6rApmE0V5ZjNCxztWc
+         0ViBwKr1R/zWhJyOqL5tUCi77tdMSFkYrl0aKdRYrOU3uTW7VyF8LDgOV8FwCmiScxsN
+         t1S6pJ/ofgG1lzozGX71Bgo6d31bSn9syx2W1pAOD9Hx+xsplfaMa5//z6vcvQAIPgDB
+         FSpLhx3J5/D7sfG3UGyKCWOSf5/7ly5L09t6/knm32IF1bGu/Z1ZBQIafCHESlV5KyXe
+         lCFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ILRP524+2fdLDTShu4hSsO+6dehNvYTua716YzeA9Fg=;
-        b=InjwgcQCvAfShr0ZOTj9/ZZsw8GHbEA3ZHtadBEQddfoj6uyBWHBi2/iFLNJl+OPGn
-         8sGSwYR1RQ2eBKYKELJyBt/ewys6YSjIN4IMHny+iFyrZPwacAGBVpRa9TB0m5uiKJBU
-         hfhJgocBnZMSL0oUOgg/6RtXKrtlKWxrYGPWHC4x5A3QfhYoRFyJh8AOSt+wNmHVE+DT
-         D3jVJr7/rZhWinx26Q4+BilVzOJjNlyFDyZ+ZO4kP4ojI0ikQu9jXIZKD7UE738cA02q
-         pRnHEaOBmTKFUjwcPBYJp5mZZ9XIXkcYZmHIZL7/jm30dFoIEUXFIOTveE4rwxdzia8E
-         mfXg==
-X-Gm-Message-State: AOAM533Z4aVd8dtYLh5WJ5Zx7e/LLfdj/dHLWOe1g3STz+FSta9EJRmw
-        f5GBXjUk/2WIoerwvuYTsy9f3I2dl+fYVLnLO33kXQ==
-X-Google-Smtp-Source: ABdhPJwapNE9nWFgzhKYpaQKNHhqIs/ouKZtT/FIYeoMKh13aLfp0xSWPQA3PWYkrL+UK68ul/j7zF71aSSPTfuVTlY=
-X-Received: by 2002:adf:f30a:0:b0:20a:e193:6836 with SMTP id
- i10-20020adff30a000000b0020ae1936836mr10089318wro.654.1651511109668; Mon, 02
- May 2022 10:05:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220430062324.1565215-1-irogers@google.com> <20220430062324.1565215-5-irogers@google.com>
- <b0551170-f559-4801-1cb4-3653b9685474@intel.com>
-In-Reply-To: <b0551170-f559-4801-1cb4-3653b9685474@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 2 May 2022 10:04:57 -0700
-Message-ID: <CAP-5=fWwDEW=Vhw1B9i3JN9wr1FJ_+dfaWXjJ7vXeKWfZNaz0g@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] perf cpumap: Handle dummy maps as empty in subset
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=QDpDR9wAUTORHbMw+Bx24K6jMVk7XvcBry4ZGUpvw4A=;
+        b=N9Ef05e+Sx63f5/udZcCV7EbD7/ZFIRLGBlhSGHpbQYi90Yh46axCjnbfC6y/u2QV+
+         rrgiKgtYvOrSwwcQc5BKeafVwRU1Zj9FlZweKbpAq5ZPEdo0n0MbYAfLXARpieRotVaj
+         mfnIsi8l03E26P4jTOpbDSrLz4eCxi7k6y+46lAKRHB89Yq7pNvmCEy0ScnK06hLjk+W
+         ruJsSY3Q6GqJzXOefYLkpMT7P17RS+BdG0ZTcas7Z8vYw6jCLBXNMtDhgnwScZGBAoqP
+         ecnDCtUZNdWFqzk/Zk+hbRxYY7LkemqUN9UUyz+fI4au0cDyeGpFTyN8tbSrA/Mku/tc
+         vC9Q==
+X-Gm-Message-State: AOAM5333jZ4yq/JIB21EpAAnLjlKaajvPpYVUUXnlT8pgw4+dbYOijuz
+        IsbJYXArk8hKeZzt+sV3ofo=
+X-Google-Smtp-Source: ABdhPJw8rU3MsmiYAdp4cC8oRvGFVWP3lDoAc5iK0zmhY30ODH6xO4CeJaWX2nhzcw/0gtjEC4awJA==
+X-Received: by 2002:aa7:938c:0:b0:50d:418a:cdfb with SMTP id t12-20020aa7938c000000b0050d418acdfbmr13646250pfe.72.1651533617615;
+        Mon, 02 May 2022 16:20:17 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:4f00:3590:4f92:5746:ebb:6bda])
+        by smtp.gmail.com with ESMTPSA id 12-20020a170902c14c00b0015e8d4eb1eesm5176029plj.56.2022.05.02.16.20.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 May 2022 16:20:17 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf annotate: Add --percent-limit option
+Date:   Mon,  2 May 2022 16:20:15 -0700
+Message-Id: <20220502232015.697243-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 2, 2022 at 9:13 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 30/04/22 09:23, Ian Rogers wrote:
-> > perf_cpu_map__empty is true for empty and dummy maps. Make is_subset
-> > respect that.
->
-> I think this might be the opposite of what I am trying to do, which is
-> enable all_cpus to represent all the "cpu" values (3rd parameter of
-> perf_event_open()) to iterate over including -1 so that per-thread and
-> per-cpu events can be mixed.
+Like in perf report and perf top, Add this option to limit the number
+of functions it displays based on the overhead value in percent.
 
-Wouldn't you iterate over the cpus of the evsel? I'm not sure using
-all_cpus in that way makes sense, it also violates the definition of
-empty.
+This affects only stdio and stdio2 output modes.  Without this, it
+shows very long disassembly lines for every function in the data
+file.  If users don't want this behavior, they can set a value in
+percent to suppress that.
 
-Thanks,
-Ian
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-annotate.txt |  5 +++++
+ tools/perf/builtin-annotate.c              | 24 ++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/perf/cpumap.c   |  4 ++--
-> >  tools/perf/tests/cpumap.c | 10 +++++++++-
-> >  2 files changed, 11 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > index 384d5e076ee4..9c83675788c2 100644
-> > --- a/tools/lib/perf/cpumap.c
-> > +++ b/tools/lib/perf/cpumap.c
-> > @@ -322,9 +322,9 @@ struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
-> >  /** Is 'b' a subset of 'a'. */
-> >  bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b)
-> >  {
-> > -     if (a == b || !b)
-> > +     if (a == b || perf_cpu_map__empty(b))
-> >               return true;
-> > -     if (!a || b->nr > a->nr)
-> > +     if (perf_cpu_map__empty(a) || b->nr > a->nr)
-> >               return false;
-> >
-> >       for (int i = 0, j = 0; i < a->nr; i++) {
-> > diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> > index f94929ebb54b..d52b58395385 100644
-> > --- a/tools/perf/tests/cpumap.c
-> > +++ b/tools/perf/tests/cpumap.c
-> > @@ -128,13 +128,21 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
-> >       struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-> >       struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
-> >       struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
-> > +     struct perf_cpu_map *d = perf_cpu_map__dummy_new();
-> > +     struct perf_cpu_map *e = perf_cpu_map__merge(b, d);
-> >       char buf[100];
-> >
-> >       TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
-> >       cpu_map__snprint(c, buf, sizeof(buf));
-> >       TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
-> > -     perf_cpu_map__put(b);
-> > +
-> > +     TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(e) == 3);
-> > +     cpu_map__snprint(e, buf, sizeof(buf));
-> > +     TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "4-5,7"));
-> > +
-> >       perf_cpu_map__put(c);
-> > +     perf_cpu_map__put(d);
-> > +     perf_cpu_map__put(e);
-> >       return 0;
-> >  }
-> >
->
+diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
+index 33c2521cba4a..18fcc52809fb 100644
+--- a/tools/perf/Documentation/perf-annotate.txt
++++ b/tools/perf/Documentation/perf-annotate.txt
+@@ -147,6 +147,11 @@ include::itrace.txt[]
+ 	The period/hits keywords set the base the percentage is computed
+ 	on - the samples period or the number of samples (hits).
+ 
++--percent-limit::
++	Do not show functions which have an overhead under that percent on
++	stdio or stdio2 (Default: 0).  Note that this is about selection of
++	functions to display, not about lines within the function.
++
+ SEE ALSO
+ --------
+ linkperf:perf-record[1], linkperf:perf-report[1]
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index e65dc380be15..2ffe071dbcff 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -54,6 +54,7 @@ struct perf_annotate {
+ 	bool	   skip_missing;
+ 	bool	   has_br_stack;
+ 	bool	   group_set;
++	float	   min_percent;
+ 	const char *sym_hist_filter;
+ 	const char *cpu_list;
+ 	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+@@ -324,6 +325,17 @@ static void hists__find_annotations(struct hists *hists,
+ 		    (strcmp(he->ms.sym->name, ann->sym_hist_filter) != 0))
+ 			goto find_next;
+ 
++		if (ann->min_percent) {
++			float percent = 0;
++			u64 total = hists__total_period(hists);
++
++			if (total)
++				percent = 100.0 * he->stat.period / total;
++
++			if (percent < ann->min_percent)
++				goto find_next;
++		}
++
+ 		notes = symbol__annotation(he->ms.sym);
+ 		if (notes->src == NULL) {
+ find_next:
+@@ -457,6 +469,16 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 	return ret;
+ }
+ 
++static int parse_percent_limit(const struct option *opt, const char *str,
++			       int unset __maybe_unused)
++{
++	struct perf_annotate *ann = opt->value;
++	double pcnt = strtof(str, NULL);
++
++	ann->min_percent = pcnt;
++	return 0;
++}
++
+ static const char * const annotate_usage[] = {
+ 	"perf annotate [<options>]",
+ 	NULL
+@@ -557,6 +579,8 @@ int cmd_annotate(int argc, const char **argv)
+ 	OPT_CALLBACK(0, "percent-type", &annotate.opts, "local-period",
+ 		     "Set percent type local/global-period/hits",
+ 		     annotate_parse_percent_type),
++	OPT_CALLBACK(0, "percent-limit", &annotate, "percent",
++		     "Don't show entries under that percent", parse_percent_limit),
+ 	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
+ 			    "Instruction Tracing options\n" ITRACE_HELP,
+ 			    itrace_parse_synth_opts),
+-- 
+2.36.0.464.gb9c8b46e94-goog
+
