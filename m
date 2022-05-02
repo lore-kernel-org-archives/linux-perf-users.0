@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C7DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 16:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5113DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 16:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240751AbiEBQMv (ORCPT
+        id S1346095AbiEBQRF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 May 2022 12:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53278 "EHLO
+        Mon, 2 May 2022 12:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240612AbiEBQMu (ORCPT
+        with ESMTP id S1357459AbiEBQRE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 May 2022 12:12:50 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF88CDEFB;
-        Mon,  2 May 2022 09:09:21 -0700 (PDT)
+        Mon, 2 May 2022 12:17:04 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA7B2DF90;
+        Mon,  2 May 2022 09:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651507761; x=1683043761;
+  t=1651508015; x=1683044015;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=HIEm6DHONqf1fh3RVxZ900oiPNIDtiHGMYYJWK8XUcg=;
-  b=Q4w7ye9PAR2TVYI9BijEFAPzOy/MfHnyE2ylzEfcl0PBTbv2obfr7TeG
-   TvXyF1oWFrZunnfULG/p91ktPcxB+owr5lxrvdEgL6zC5AFP9I7CYdSyJ
-   3SuOIkvVF6fXCfJ3LFqskXgklXcGOZD4o27VCQDxFqWb5OYRHlLWxoy0/
-   /EySVOxmwbI0Dn5kVmYzUtpr7k5yzPw11kVggf8hZh5oNYA2OqQTJ0vh8
-   +teExmAEehtd8JwQL4WJN+yOTlM+FrOxgkeGrh5tEtoCvc4IiH6qW89ir
-   nQ6C/RjeLX7VEV2tXr6qov7f5I6y58OEEZYxdNyM5BoyjLWCQNZzJHXNr
+  bh=T51mlRRi96dsufwk/s91k182O3qd8tVYt8XcdmiuPww=;
+  b=NEj2CmfSIjsLUJGGDaG8bdT1KngZfC45stPBu+x01AWTLqpPBY+YePOx
+   4RrXDO4jUzPOrtFXl146enQiDSFjw0o19rGVHz97G3lQ9QWFi8TQOmzxs
+   zmUlnX8HJOU5RkqDk+cjKSwgyvQDismYff6zWbZaxaTIeGpkxrvWqYmFN
+   eH+c1gFSfS6J29H9ikbvoA+kr7iABjmChue1f4ptCq2J2yB8pW/vLxn7E
+   FPRkXoUJb1/E+H6x645S+IIWnBJ6n20kaW2qDI96ElT7cUpUJzuZRpbLA
+   2D3cns5tLTarHfgfTd78ezqo68mHs72KCQ7s6CsWtEDhoImjh5EgA7BwJ
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="330241183"
+X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="327795722"
 X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="330241183"
+   d="scan'208";a="327795722"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:09:21 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:13:35 -0700
 X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="583770530"
+   d="scan'208";a="583772313"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.59.59])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:09:13 -0700
-Message-ID: <8510a140-e2e2-39ce-b344-b456f069a9d0@intel.com>
-Date:   Mon, 2 May 2022 19:09:08 +0300
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 09:13:27 -0700
+Message-ID: <b0551170-f559-4801-1cb4-3653b9685474@intel.com>
+Date:   Mon, 2 May 2022 19:13:22 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.8.1
-Subject: Re: [PATCH v4 3/6] perf stat: Avoid printing cpus with no counters
+Subject: Re: [PATCH v4 4/6] perf cpumap: Handle dummy maps as empty in subset
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -76,11 +76,11 @@ To:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Stephane Eranian <eranian@google.com>
 References: <20220430062324.1565215-1-irogers@google.com>
- <20220430062324.1565215-4-irogers@google.com>
+ <20220430062324.1565215-5-irogers@google.com>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220430062324.1565215-4-irogers@google.com>
+In-Reply-To: <20220430062324.1565215-5-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -88,48 +88,62 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 30/04/22 09:23, Ian Rogers wrote:
-> perf_evlist's user_requested_cpus can contain CPUs not present in any
-> evsel's cpus, for example uncore counters. Avoid printing the prefix and
-> trailing \n until the first valid counter is encountered.
+> perf_cpu_map__empty is true for empty and dummy maps. Make is_subset
+> respect that.
+
+I think this might be the opposite of what I am trying to do, which is
+enable all_cpus to represent all the "cpu" values (3rd parameter of
+perf_event_open()) to iterate over including -1 so that per-thread and
+per-cpu events can be mixed.
+
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
-
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
 > ---
->  tools/perf/util/stat-display.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  tools/lib/perf/cpumap.c   |  4 ++--
+>  tools/perf/tests/cpumap.c | 10 +++++++++-
+>  2 files changed, 11 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index d9629a83aa78..13f705737367 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -948,8 +948,6 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
->  		struct evsel *counter;
->  		bool first = true;
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index 384d5e076ee4..9c83675788c2 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -322,9 +322,9 @@ struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
+>  /** Is 'b' a subset of 'a'. */
+>  bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b)
+>  {
+> -	if (a == b || !b)
+> +	if (a == b || perf_cpu_map__empty(b))
+>  		return true;
+> -	if (!a || b->nr > a->nr)
+> +	if (perf_cpu_map__empty(a) || b->nr > a->nr)
+>  		return false;
 >  
-> -		if (prefix)
-> -			fputs(prefix, config->output);
->  		evlist__for_each_entry(evlist, counter) {
->  			u64 ena, run, val;
->  			double uval;
-> @@ -961,6 +959,8 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>  	for (int i = 0, j = 0; i < a->nr; i++) {
+> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+> index f94929ebb54b..d52b58395385 100644
+> --- a/tools/perf/tests/cpumap.c
+> +++ b/tools/perf/tests/cpumap.c
+> @@ -128,13 +128,21 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
+>  	struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
+>  	struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
+>  	struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
+> +	struct perf_cpu_map *d = perf_cpu_map__dummy_new();
+> +	struct perf_cpu_map *e = perf_cpu_map__merge(b, d);
+>  	char buf[100];
 >  
->  			id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
->  			if (first) {
-> +				if (prefix)
-> +					fputs(prefix, config->output);
->  				aggr_printout(config, counter, id, 0);
->  				first = false;
->  			}
-> @@ -972,7 +972,8 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
->  			printout(config, id, 0, counter, uval, prefix,
->  				 run, ena, 1.0, &rt_stat);
->  		}
-> -		fputc('\n', config->output);
-> +		if (!first)
-> +			fputc('\n', config->output);
->  	}
+>  	TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
+>  	cpu_map__snprint(c, buf, sizeof(buf));
+>  	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
+> -	perf_cpu_map__put(b);
+> +
+> +	TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(e) == 3);
+> +	cpu_map__snprint(e, buf, sizeof(buf));
+> +	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "4-5,7"));
+> +
+>  	perf_cpu_map__put(c);
+> +	perf_cpu_map__put(d);
+> +	perf_cpu_map__put(e);
+>  	return 0;
 >  }
 >  
 
