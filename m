@@ -2,53 +2,62 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81539C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 May 2022 23:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C759C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 May 2022 04:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbiEBXzZ (ORCPT
+        id S230492AbiECEVg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 May 2022 19:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
+        Tue, 3 May 2022 00:21:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231294AbiEBXzO (ORCPT
+        with ESMTP id S230478AbiECEVf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 May 2022 19:55:14 -0400
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7596B3AE;
-        Mon,  2 May 2022 16:51:43 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id w1so27845181lfa.4;
-        Mon, 02 May 2022 16:51:43 -0700 (PDT)
+        Tue, 3 May 2022 00:21:35 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59A9938D89
+        for <linux-perf-users@vger.kernel.org>; Mon,  2 May 2022 21:18:03 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b33-20020a25aea1000000b0064588c45fbaso9435245ybj.16
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 May 2022 21:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ee22ixTfu/Bo012jZkIOZL6TsTz0iHERQm9vZ3yNsWA=;
+        b=c8+KF+puppDi7Lwvw69cneahhD++zr4NEDsXpTi/mbLS2AKKBkP449Kc0H39TfyusD
+         rGS7nYvVmd0IO++AvCmX3pwBA21d4FbnMDE+VHfCtJDbnWAzYuehEE/jD28a+rtTw1WS
+         ux/R151hvTK6KMNEpsZMRByIeNXPleMidgeoi1A26GnIOX77Jrfjr+7cAmoaykr/XiGb
+         hCCw7mEmiFsufy129uTPQh49ZFjArF4+VwTzMUBr3swQ7kiyI1lU+H6YmfdN+Q1dH0TX
+         iaEeKu8mDoIgeZXpn8zCMLnup4qF04jTxjPmo/dPc/jwWPFaEaMHkx9CJXsKFdbdgtkt
+         Hcvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J29Au43aNgTC2idscwYSuOnypyhEFy3S2IpBzMhtJu8=;
-        b=hFXmcdNO9Dljl6vTrXrDBYgDNBc2n3evdWTar9hfyDx8TcpBuZm2zbaT4ylH70IDV3
-         zULYrifwyk+EIQZtWamBeZDdGmFyBlA4qa+aGqguoFJoMWE7T5gFAVkeij8QnNs8gO9C
-         J+ApentCN59ebdptNvRrXwrGy93z0K+T+2zIltfshNB9/xsT/rxiz3cBvdT56e+UZcoV
-         +fz/gyrIkBgZ+4W2zfNjLYk6xiroZtM4++jv6jb3Il7WDcHlKJhgk+7d2fIIPutO3bEq
-         dpQwh/cuW8L1xggAIEfHpwawswXH9gVNWXxaIqY/FGsLE/6MYDrhFoGKZGFPq9gy+2e/
-         9GsA==
-X-Gm-Message-State: AOAM5300diEbL1xkMN95W08mBY7+U8+kT5lFKA+O5zkO2IoTbiw4wz1J
-        ykTFXaQonszev8KVt9HMvWYirMomBlYxgu0hnk0=
-X-Google-Smtp-Source: ABdhPJx5aX46r2P23k0oblcmvYiBeg+7gTYoL+kgEnKuNqbORvogt3vqtN/xaIWH+8ccELy5XxyZixyEYt7Se/ytq8Y=
-X-Received: by 2002:a05:6512:39d3:b0:472:4920:96d7 with SMTP id
- k19-20020a05651239d300b00472492096d7mr10369364lfu.47.1651535501462; Mon, 02
- May 2022 16:51:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220430062324.1565215-1-irogers@google.com> <20220430062324.1565215-2-irogers@google.com>
-In-Reply-To: <20220430062324.1565215-2-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 2 May 2022 16:51:30 -0700
-Message-ID: <CAM9d7cir7=okKG0gNDkCKQQYNWRNA2aUz9+o3vtJFK+xKNjYew@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] perf cpumap: Switch to using perf_cpu_map API
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ee22ixTfu/Bo012jZkIOZL6TsTz0iHERQm9vZ3yNsWA=;
+        b=g4zMJmm+vXhbla0fzNFwr9dytH6p1vyDVpMbLEBzbDf8oXNMUTN6zbZmzfWfFyc7cX
+         xeV58GQ/zEgDzH/uOzuy0WASx3UG2TzJ3R4OzpD3PJnsUdH6YkaDJJMiqOwXRAVJAr04
+         zierzyzfrTu0UA/N4N7j2PNgrbAckoVOuObrRXiLZXme6cwDZDpvJrBHydlSD1StLaz+
+         9nJgJ4rY8u3bTk4Ajel91q2FtiWtL2+8STYgduz9Unfk/Rc3lC0V57+QtyYl+fi2OlKY
+         C64B3bWCQMCmLjYNlCB8pXl3qQ+CV6/jANdgfpKqhwFpXckw33dppGkxVO4PW1EYHtHA
+         fzGw==
+X-Gm-Message-State: AOAM530o+P0f7Ys2WotPDW7OhaXQPKG1shpSPpLg9KAn/OvxHFnF/fMx
+        QEiPS2TGtILt/Xx5a23ILXqrfUWFfQq3
+X-Google-Smtp-Source: ABdhPJxBNoT4Bgk+Mh2KRGQMD1T6e9TCCImbP6hv4oF9fx/eapszNDXOvROriMl8LV1gxKC/gKQTBSZfJQws
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:dd4b:52bb:771d:7bb4])
+ (user=irogers job=sendgmr) by 2002:a25:4944:0:b0:648:a796:a2 with SMTP id
+ w65-20020a254944000000b00648a79600a2mr13187740yba.123.1651551482390; Mon, 02
+ May 2022 21:18:02 -0700 (PDT)
+Date:   Mon,  2 May 2022 21:17:51 -0700
+Message-Id: <20220503041757.2365696-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
+Subject: [PATCH v5 0/6] Make evlist CPUs more accurate
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -70,121 +79,51 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Andi Kleen <ak@linux.intel.com>,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+Based on the thread:
+https://lore.kernel.org/linux-perf-users/CAP-5=fVMHzTfKdpWMXtbtx7t14u2f4WzNak+F0Q93cQ7CZfhbg@mail.gmail.com/
 
-On Fri, Apr 29, 2022 at 11:23 PM Ian Rogers <irogers@google.com> wrote:
->
-> Switch some raw accesses to the cpu map to using the library API. This
-> can help with reference count checking.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-[...]
-> diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
-> index ac60c08e8e2a..a4b676920da0 100644
-> --- a/tools/perf/util/bpf_counter_cgroup.c
-> +++ b/tools/perf/util/bpf_counter_cgroup.c
-> @@ -47,7 +47,7 @@ static int bperf_load_program(struct evlist *evlist)
->         struct evsel *evsel;
->         struct cgroup *cgrp, *leader_cgrp;
->         __u32 i, cpu;
-> -       __u32 nr_cpus = evlist->core.all_cpus->nr;
-> +       __u32 nr_cpus = perf_cpu_map__nr(evlist->core.all_cpus);
->         int total_cpus = cpu__max_cpu().cpu;
->         int map_size, map_fd;
->         int prog_fd, err;
-> @@ -125,7 +125,7 @@ static int bperf_load_program(struct evlist *evlist)
->                         for (cpu = 0; cpu < nr_cpus; cpu++) {
->                                 int fd = FD(evsel, cpu);
->                                 __u32 idx = evsel->core.idx * total_cpus +
-> -                                       evlist->core.all_cpus->map[cpu].cpu;
-> +                                       perf_cpu_map__cpu(evlist->core.all_cpus, cpu).cpu;
->
->                                 err = bpf_map_update_elem(map_fd, &idx, &fd,
->                                                           BPF_ANY);
-> @@ -207,13 +207,13 @@ static int bperf_cgrp__install_pe(struct evsel *evsel __maybe_unused,
->   */
->  static int bperf_cgrp__sync_counters(struct evlist *evlist)
->  {
-> -       int i, cpu;
-> -       int nr_cpus = evlist->core.all_cpus->nr;
-> +       struct perf_cpu cpu;
-> +       int idx;
->         int prog_fd = bpf_program__fd(skel->progs.trigger_read);
->
-> -       for (i = 0; i < nr_cpus; i++) {
-> -               cpu = evlist->core.all_cpus->map[i].cpu;
-> -               bperf_trigger_reading(prog_fd, cpu);
-> +       perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+First patch is a cherry-pick to avoid a conflict of:
+https://lore.kernel.org/linux-perf-users/20220414014642.3308206-2-irogers@google.com/
+Second patch makes all_cpus more accurate when there are command line CPUs.
+The third patch fixes perf stat metric-only output for uncore metrics.
+The fourth patch makes cleans up merging of dummy CPU maps.
+The fifth and sixth patch try to make user_requested_cpus and all_cpus
+clearer with documentation and by renaming all_cpus.
 
-s/cpus/evlist->core.all_cpus/?
+The code no longer needs to add an intersect function and so the API
+is removed and the merged API left unchanged.
 
-> +               cpu = perf_cpu_map__cpu(evlist->core.all_cpus, i);
+v5. Fixes the 1st patch as pointed out by Namhyung Kim
+    <namhyung@kernel.org>, adds some further clean-up to it and adds
+    reviewed-by Adrian Hunter <adrian.hunter@intel.com> to patch 3.
 
-I don't think we need this line anymore.
+Ian Rogers (6):
+  perf cpumap: Switch to using perf_cpu_map API
+  perf evlist: Clear all_cpus before propagating
+  perf stat: Avoid printing cpus with no counters
+  perf cpumap: Handle dummy maps as empty in subset
+  perf evlist: Add to user_requested_cpus documentation
+  perf evlist: Rename all_cpus
 
-> +               bperf_trigger_reading(prog_fd, cpu.cpu);
->         }
->
->         return 0;
-> @@ -244,12 +244,10 @@ static int bperf_cgrp__disable(struct evsel *evsel)
->  static int bperf_cgrp__read(struct evsel *evsel)
->  {
->         struct evlist *evlist = evsel->evlist;
-> -       int i, cpu, nr_cpus = evlist->core.all_cpus->nr;
->         int total_cpus = cpu__max_cpu().cpu;
->         struct perf_counts_values *counts;
->         struct bpf_perf_event_value *values;
->         int reading_map_fd, err = 0;
-> -       __u32 idx;
->
->         if (evsel->core.idx)
->                 return 0;
-> @@ -263,7 +261,10 @@ static int bperf_cgrp__read(struct evsel *evsel)
->         reading_map_fd = bpf_map__fd(skel->maps.cgrp_readings);
->
->         evlist__for_each_entry(evlist, evsel) {
-> -               idx = evsel->core.idx;
-> +               __u32 idx = evsel->core.idx;
-> +               int i;
-> +               struct perf_cpu_map cpu;
-> +
->                 err = bpf_map_lookup_elem(reading_map_fd, &idx, values);
->                 if (err) {
->                         pr_err("bpf map lookup failed: idx=%u, event=%s, cgrp=%s\n",
-> @@ -271,13 +272,11 @@ static int bperf_cgrp__read(struct evsel *evsel)
->                         goto out;
->                 }
->
-> -               for (i = 0; i < nr_cpus; i++) {
-> -                       cpu = evlist->core.all_cpus->map[i].cpu;
-> -
-> +               perf_cpu_map__for_each_cpu(cpu, i, evlist->core.all_cpu) {
+ tools/lib/perf/cpumap.c                  |  4 +--
+ tools/lib/perf/evlist.c                  | 14 +++++---
+ tools/lib/perf/include/internal/evlist.h |  5 +--
+ tools/perf/builtin-record.c              | 13 +++----
+ tools/perf/tests/cpumap.c                | 10 +++++-
+ tools/perf/util/bpf_counter_cgroup.c     | 46 +++++++++++-------------
+ tools/perf/util/evlist.c                 |  6 ++--
+ tools/perf/util/evlist.h                 |  4 +--
+ tools/perf/util/stat-display.c           |  7 ++--
+ 9 files changed, 60 insertions(+), 49 deletions(-)
 
-evlist->core.all_cpus ?
+-- 
+2.36.0.464.gb9c8b46e94-goog
 
-Thanks,
-Namhyung
-
-
->                         counts = perf_counts(evsel->counts, i, 0);
-> -                       counts->val = values[cpu].counter;
-> -                       counts->ena = values[cpu].enabled;
-> -                       counts->run = values[cpu].running;
-> +                       counts->val = values[cpu.cpu].counter;
-> +                       counts->ena = values[cpu.cpu].enabled;
-> +                       counts->run = values[cpu.cpu].running;
->                 }
->         }
->
-> --
-> 2.36.0.464.gb9c8b46e94-goog
->
