@@ -2,188 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AD7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 May 2022 14:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2417EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 May 2022 14:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236645AbiECOH3 (ORCPT
+        id S233662AbiECOLc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 May 2022 10:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50760 "EHLO
+        Tue, 3 May 2022 10:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236614AbiECOHT (ORCPT
+        with ESMTP id S236354AbiECOLb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 May 2022 10:07:19 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88551EAD3
-        for <linux-perf-users@vger.kernel.org>; Tue,  3 May 2022 07:03:45 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id e24so23492520wrc.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 May 2022 07:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4yiLw/VEdaYl/NlOASUjlFdrhZcltSNhm4gz6dSd34k=;
-        b=kCtauluC6RPbNDvBY/JRShpAYoymIwgUaaCYj9BWRXXiDuSIf815m2lptCT+0twyJN
-         X4OB7viRH2mwmEUlxrFWYCtI9+2svNvzxoIR3GJPkMGlaeyd1pssEWQ2N//CeWRcYzvA
-         0JBUfSyzB7M6zvr8T+fT6HLcpFP1uJ4hL92VDWdFWZzB623LS1Uqvn3mXeH5MhvrDaDG
-         5cPmHZUfOd8THiO3Re830/MRm8rHK1nY9fEGJiq7uw4JN7EXPGRuN8jQBitKt/YDjzAU
-         ZwcIXfUnN7qeNVhXUSKi3QdJJc7JWbobyEF9Te24ClW2Ok8MDJW+1Daa+WBHTIByn3xS
-         QVeQ==
+        Tue, 3 May 2022 10:11:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A5772FFEF
+        for <linux-perf-users@vger.kernel.org>; Tue,  3 May 2022 07:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651586878;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MOZQR3NgpnivklRl2WE+IkvBWljH5ijZ+KhrlyE76Oo=;
+        b=hPdnUuXM4xiNPjwIYk5Q+LyHh9hx60xGkzMCyF831pLmcGhEeev1UFZgW5OI5X5tGIUgPv
+        etsd8fw1ZDtFtHBP5L+xUunWGmYHizwlVXUzXvHrlnnVK5Ki6sQP1Rsx2C439ANw1hf2/6
+        ySDB8BotUQR1RZev9QZEWYEAbPP8fGM=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-620-XVs-NrLfNuOKXM8HtAF0Yg-1; Tue, 03 May 2022 10:03:12 -0400
+X-MC-Unique: XVs-NrLfNuOKXM8HtAF0Yg-1
+Received: by mail-qk1-f198.google.com with SMTP id 27-20020a05620a041b00b0069fd7a60a43so4432964qkp.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 May 2022 07:03:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4yiLw/VEdaYl/NlOASUjlFdrhZcltSNhm4gz6dSd34k=;
-        b=ILD2trEvRld8LdFpxALlQ9fH1lqkGA5NpppZFPf01nKCwg+0VBKgytXlSLKVlXpFET
-         /fTKWRsq5IRBOZTZ7sk46QBN5D8naiUH0oWdeksqJSO2y2fAwGPNesraedilZlCHceZo
-         xnaBR+rfCCYDNj7SToYVkV5pH53r0dQMQXJ/LKo94+ViqYG6txhguh76EI6JtSM9o++1
-         RHujnTk59AXR7Fveg4eIYziWmiWFtVD+7PYp0NX8IfeNpzeZ+N9j0KbweCa1zNyjr4x/
-         6XOtqEXQGs2kPy50YGWOEFcHReVmuLOG+lFfCJveyAHb95yPEl1LNyjuaCRgpHAf6YMk
-         3zdw==
-X-Gm-Message-State: AOAM532eeY8iB5sFPjvnHW4Btjw+yi11IK6WAUtplOQ0JFQGL9FC5FzD
-        k8kMLFF6u5IadgXd14GNfIWlBeMhmLmx+S29+DwrOQ==
-X-Google-Smtp-Source: ABdhPJxIIXls0cRITSkASA+TT9aqYlg/XlcuvPUcKW+mcEfUrgFZ/oTWBOFcSD7nbqFc8D8kKLu+Cze+GzwbCbeog/c=
-X-Received: by 2002:adf:f30a:0:b0:20a:e193:6836 with SMTP id
- i10-20020adff30a000000b0020ae1936836mr13028706wro.654.1651586623927; Tue, 03
- May 2022 07:03:43 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=MOZQR3NgpnivklRl2WE+IkvBWljH5ijZ+KhrlyE76Oo=;
+        b=jsSv9Us+4WQCJr7mMvx9GOkPewTip/hRjnB9GBqGTdBesadmYPSY8kzO3L7yQNrZsW
+         IX+sZHCpd0ZdN/LKFArYD+boIZ/K82JBN3mskziGfs7QIafMKJbyI0Qij13QRw73YiUJ
+         DJa3QQm3j3w/2zQIL6ej2Dir9zXgkaqfMOQsmkBC5DJoKQ7c9DcQkqOYRP9tAY5WX7XJ
+         ZrHcPHnByH3esNKHvyutnMdwBwYzyWkp6PBHdVJgBwCK1LpN0WhVUWwWQeSO6E/RharS
+         9ur3Yuj73kZ4mbpn3ItJ2O1ZRWzOSLORA4oYozaOPlZuBZU86b+N5KHIHWFN+xU6BnA5
+         v8cA==
+X-Gm-Message-State: AOAM530bIpxXg3WjLDruo9DSUBRabSAYpWd/ENBWSL9rHbpk0psXnYo2
+        O9caTI0CEpvAUcZm8CQ+Cjf/4+X7VEJUjDkKOyv0KZCzbnULaHmJLGUdyQ1jw9gLtU9/USNyJhM
+        Oq0V6IaLCeZYtTEuRbb7uoONNk79VSA==
+X-Received: by 2002:a05:620a:1a04:b0:69f:e7f3:187 with SMTP id bk4-20020a05620a1a0400b0069fe7f30187mr5880474qkb.184.1651579284439;
+        Tue, 03 May 2022 05:01:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzC/8kQQ52ivaf4XcEzs5fZ/zZdcgmA1eHs6x4CXVw9nobVuQf45WCIWHqdlFql/e8rZ8Fe2A==
+X-Received: by 2002:a05:620a:1a04:b0:69f:e7f3:187 with SMTP id bk4-20020a05620a1a0400b0069fe7f30187mr5880433qkb.184.1651579284037;
+        Tue, 03 May 2022 05:01:24 -0700 (PDT)
+Received: from [10.32.181.74] (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.googlemail.com with ESMTPSA id b9-20020a05620a04e900b0069fc13ce20bsm5788682qkh.60.2022.05.03.05.01.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 May 2022 05:01:22 -0700 (PDT)
+Message-ID: <f97cb2e3-9b53-6206-4523-8b15b0ee83e4@redhat.com>
+Date:   Tue, 3 May 2022 14:01:18 +0200
 MIME-Version: 1.0
-References: <20220503041757.2365696-1-irogers@google.com> <20220503041757.2365696-5-irogers@google.com>
- <b94f3863-c690-e0f7-5cde-18fbf24143e5@intel.com>
-In-Reply-To: <b94f3863-c690-e0f7-5cde-18fbf24143e5@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 3 May 2022 07:03:31 -0700
-Message-ID: <CAP-5=fWfs2td9nZLGdEBD+C5s=upa_7SORab8tQ7qH=jX--F7w@mail.gmail.com>
-Subject: Re: [PATCH v5 4/6] perf cpumap: Handle dummy maps as empty in subset
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v4 7/7] kvm: x86/cpuid: Fix CPUID leaf 0xA
+Content-Language: en-US
+To:     Jim Mattson <jmattson@google.com>,
+        Sandipan Das <sandipan.das@amd.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, peterz@infradead.org, bp@alien8.de,
+        dave.hansen@linux.intel.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        like.xu.linux@gmail.com, eranian@google.com, puwen@hygon.cn,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+References: <cover.1651058600.git.sandipan.das@amd.com>
+ <3fef83d9c2b2f7516e8ff50d60851f29a4bcb716.1651058600.git.sandipan.das@amd.com>
+ <CALMp9eSdUW6et2Us1if-j2Do6cv9ssyT4C2KPiyomFd7i_Dc1Q@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <CALMp9eSdUW6et2Us1if-j2Do6cv9ssyT4C2KPiyomFd7i_Dc1Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 3, 2022 at 12:43 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 3/05/22 07:17, Ian Rogers wrote:
-> > perf_cpu_map__empty is true for empty and dummy maps. Make is_subset
-> > respect that.
->
-> As I wrote before, I am not keen on this because it prevents -1, as a
-> valid 3rd parameter to perf_event_open(), from being represented
-> in merged evsel cpu maps.
->
-> Why do you want this?
+On 5/3/22 01:50, Jim Mattson wrote:
+> On Wed, Apr 27, 2022 at 4:34 AM Sandipan Das <sandipan.das@amd.com> wrote:
+>>
+>> On some x86 processors, CPUID leaf 0xA provides information
+>> on Architectural Performance Monitoring features. It
+>> advertises a PMU version which Qemu uses to determine the
+>> availability of additional MSRs to manage the PMCs.
+>>
+>> Upon receiving a KVM_GET_SUPPORTED_CPUID ioctl request for
+>> the same, the kernel constructs return values based on the
+>> x86_pmu_capability irrespective of the vendor.
+>>
+>> This leaf and the additional MSRs are not supported on AMD
+>> and Hygon processors. If AMD PerfMonV2 is detected, the PMU
+>> version is set to 2 and guest startup breaks because of an
+>> attempt to access a non-existent MSR. Return zeros to avoid
+>> this.
+>>
+>> Fixes: a6c06ed1a60a ("KVM: Expose the architectural performance monitoring CPUID leaf")
+>> Reported-by: Vasant Hegde <vasant.hegde@amd.com>
+>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+>> ---
+>>   arch/x86/kvm/cpuid.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>> index 4b62d80bb22f..e66ebb747084 100644
+>> --- a/arch/x86/kvm/cpuid.c
+>> +++ b/arch/x86/kvm/cpuid.c
+>> @@ -872,6 +872,11 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>>                  union cpuid10_eax eax;
+>>                  union cpuid10_edx edx;
+>>
+>> +               if (!static_cpu_has(X86_FEATURE_ARCH_PERFMON)) {
+> 
+> Should this be checking kvm_cpu_cap_has(X86_FEATURE_ARCH_PERFMON) instead?
 
-Thanks Adrian, could you give me a test case (command line) where the
-differing dummy and empty behavior matters? Normally cpus/own_cpus are
-set to null during parsing. They may get replaced with
-user_requested_cpus:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evlist.c?h=perf/core#n44
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evlist.c?h=perf/core#n45
-(should it be on line 45 that !empty is expected?)
+Yes, it should.  I have queued this patch for 5.18.
 
-During merge the null/empty all_cpus drops this value, which doesn't
-matter as the behavior with empty is the same as dummy:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evsel.c?h=perf/core#n119
+Paolo
 
-What's concerning me is the definition of empty:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/cpumap.c?h=perf/core#n279
-```
-return map ? map->map[0].cpu == -1 : true;
-```
-If the first entry can be -1 and there can be other CPUs merged after
-then that cpu map will be empty by the definition above. Perhaps it
-should be:
-```
-return map ? (map->nr == 1 && map->map[0].cpu == -1) : true;
-```
-but it seems you prefer:
-```
-return (map == NULL) ? true : false;
-```
-
-You'd asked what the behavior with a dummy is and clearly it is
-somewhat muddy. That is what this patch and unit test is trying to
-clean up.
-
-Thanks,
-Ian
-
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/perf/cpumap.c   |  4 ++--
-> >  tools/perf/tests/cpumap.c | 10 +++++++++-
-> >  2 files changed, 11 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > index 384d5e076ee4..9c83675788c2 100644
-> > --- a/tools/lib/perf/cpumap.c
-> > +++ b/tools/lib/perf/cpumap.c
-> > @@ -322,9 +322,9 @@ struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
-> >  /** Is 'b' a subset of 'a'. */
-> >  bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b)
-> >  {
-> > -     if (a == b || !b)
-> > +     if (a == b || perf_cpu_map__empty(b))
-> >               return true;
-> > -     if (!a || b->nr > a->nr)
-> > +     if (perf_cpu_map__empty(a) || b->nr > a->nr)
-> >               return false;
-> >
-> >       for (int i = 0, j = 0; i < a->nr; i++) {
-> > diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> > index f94929ebb54b..d52b58395385 100644
-> > --- a/tools/perf/tests/cpumap.c
-> > +++ b/tools/perf/tests/cpumap.c
-> > @@ -128,13 +128,21 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
-> >       struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-> >       struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
-> >       struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
-> > +     struct perf_cpu_map *d = perf_cpu_map__dummy_new();
-> > +     struct perf_cpu_map *e = perf_cpu_map__merge(b, d);
-> >       char buf[100];
-> >
-> >       TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
-> >       cpu_map__snprint(c, buf, sizeof(buf));
-> >       TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
-> > -     perf_cpu_map__put(b);
-> > +
-> > +     TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(e) == 3);
-> > +     cpu_map__snprint(e, buf, sizeof(buf));
-> > +     TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "4-5,7"));
-> > +
-> >       perf_cpu_map__put(c);
-> > +     perf_cpu_map__put(d);
-> > +     perf_cpu_map__put(e);
-> >       return 0;
-> >  }
-> >
->
