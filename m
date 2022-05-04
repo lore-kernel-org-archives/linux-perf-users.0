@@ -2,175 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C880C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 02:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AF9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 09:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344115AbiEDC4H (ORCPT
+        id S1347692AbiEDJuB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 May 2022 22:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59942 "EHLO
+        Wed, 4 May 2022 05:50:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344127AbiEDC4G (ORCPT
+        with ESMTP id S1346296AbiEDJuA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 May 2022 22:56:06 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741F7183BE
-        for <linux-perf-users@vger.kernel.org>; Tue,  3 May 2022 19:52:31 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2f8bbaa6b16so2250667b3.14
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 May 2022 19:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=/Q4saw0fsQI0XrMOLhFqHHv+cO7ddF3QCmobj7JaRns=;
-        b=XDSsX88KFKTwe5aZ2ZygvEyfXf6FHBoUmIND30OXzKzox6Yo4WbD+Pib1a8WASGJFc
-         VKoB+1qEoxW/ocNGMHpCSJdqwB/kxMi5PpKlNqoHCck12QUuGBsjRJ2RwQNNnNRz28MI
-         L/i68IP34jt0MDy22Q02kFVBboJ23S/jl5UKdFJDmAEYQiG0cxfOdP7IrG3S48MBshm3
-         WfamIMCBPifcEb0cMcK4AIWAnq7MpTyxpE/siLw7uDH6Y6r0z1+cLIqVyElVlDvd/Y+l
-         lUHv7iKG6inlf+ZCzt3F1xpivIkgtJJprPHKeUwi/d1h02ZZN/0Z6CfFppt6C2jh5wnW
-         as5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=/Q4saw0fsQI0XrMOLhFqHHv+cO7ddF3QCmobj7JaRns=;
-        b=amYiJcg3Sb8KKMpqeOk7pBmIKVjzx3vQFt+k+RC0WLVEQ0d2EOjyIPQHIzGmL30ORr
-         FMEZsZaIr/Hw2r6YkNOsiFXLKQcKxNuDXOafMmO6hUMPEm+4SYqfMViuEU7/99J/FKoc
-         l8Q4HGIOsKbw2rM2EyJq2ctos+nBUE7hXWWeqTwnPfAXeFAzk5ocSmnQ8GfnfW26QwQU
-         kVcWyoSj4vo4r8eQP16DeRPc9H3Lgn1/jy3DbN/S8yrUBgU6V3urHSY1BnKx0Rm40kVz
-         d12W5RL9YnuPhUgrY+Zts81xVDB4/y5dUjypWiKkWSyZIq81nCp8qpfc5FvjRgf5K+Tx
-         bJBg==
-X-Gm-Message-State: AOAM533eQhX+YNSixrbIpBv583lkAtgJOAxtVRXPynSukT8/DqhI1S/c
-        46KLkjREQoMLqSF+Jva9d+UH0bT0KUq7
-X-Google-Smtp-Source: ABdhPJwgqMmO3z4Ub4tTjcRRDmxDpIXiHM0sdXbEV85BmMgIbTmhyi4FKMfTTz6HgzM6dTN9ZPEFS8XrY+W9
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:51c7:3b17:aa10:ed9b])
- (user=irogers job=sendgmr) by 2002:a81:78ce:0:b0:2f8:fbad:c446 with SMTP id
- t197-20020a8178ce000000b002f8fbadc446mr6711945ywc.498.1651632750619; Tue, 03
- May 2022 19:52:30 -0700 (PDT)
-Date:   Tue,  3 May 2022 19:52:20 -0700
-In-Reply-To: <20220504025220.2754910-1-irogers@google.com>
-Message-Id: <20220504025220.2754910-3-irogers@google.com>
-Mime-Version: 1.0
-References: <20220504025220.2754910-1-irogers@google.com>
-X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [PATCH 3/3] perf vendor events: Update events for Jaketown to v21
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 4 May 2022 05:50:00 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2BC81D0F0;
+        Wed,  4 May 2022 02:46:24 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9070FED1;
+        Wed,  4 May 2022 02:46:24 -0700 (PDT)
+Received: from [10.57.1.74] (unknown [10.57.1.74])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D1D03FA50;
+        Wed,  4 May 2022 02:46:22 -0700 (PDT)
+Message-ID: <e19b1b96-f5b0-b4c0-00ab-2d793d6476fe@arm.com>
+Date:   Wed, 4 May 2022 10:46:20 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.8.1
+Subject: Re: [PATCH v2 1/6] coresight: Add config flag to enable branch
+ broadcast
+To:     James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     coresight@lists.linaro.org, leo.yan@linaro.com,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20220113091056.1297982-1-james.clark@arm.com>
+ <20220113091056.1297982-2-james.clark@arm.com>
+ <b3545a88-4743-db95-4676-b0b193cbea78@arm.com>
+ <CAJ9a7Vi584BcY49TaRn5CJT=wcpafMf-3cA0R+sZ54p6iUKmeQ@mail.gmail.com>
+ <7fae6630-fdec-3f95-9eac-3f7a5c789272@arm.com>
+ <CAJ9a7VjTJ4E7=qdPgfTTVjoW01rCzd-f1mFYHjtA3BHk25saMA@mail.gmail.com>
+ <ae5a3464-1f07-e7b4-0f25-c3774c0e5922@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <ae5a3464-1f07-e7b4-0f25-c3774c0e5922@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Events are version 21:
-    https://download.01.org/perfmon/JKT
-Json files generated by the latest code at:
-    https://github.com/intel/event-converter-for-linux-perf
+On 22/04/2022 11:18, James Clark wrote:
+> 
+> 
+> On 11/03/2022 15:56, Mike Leach wrote:
+>> Hi James,
+>>
+>> On Fri, 11 Mar 2022 at 14:58, James Clark <james.clark@arm.com> wrote:
+>>>
+>>>
+>>>
+>>> On 02/02/2022 20:25, Mike Leach wrote:
+>>>> Hi James, Suzuki
+>>>>
+>>>> On Fri, 28 Jan 2022 at 11:19, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>>>>
+>>>>> On 13/01/2022 09:10, James Clark wrote:
+>>>>>> When enabled, all taken branch addresses are output, even if the branch
+>>>>>> was because of a direct branch instruction. This enables reconstruction
+>>>>>> of the program flow without having access to the memory image of the
+>>>>>> code being executed.
+>>>>>>
+>>>>>> Use bit 8 for the config option which would be the correct bit for
+>>>>>> programming ETMv3. Although branch broadcast can't be enabled on ETMv3
+>>>>>> because it's not in the define ETM3X_SUPPORTED_OPTIONS, using the
+>>>>>> correct bit might help prevent future collisions or allow it to be
+>>>>>> enabled if needed.
+>>>>>>
+>>>>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>>>>> ---
+>>>>>>    drivers/hwtracing/coresight/coresight-etm-perf.c   |  2 ++
+>>>>>>    drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 ++++++++++
+>>>>>>    include/linux/coresight-pmu.h                      |  2 ++
+>>>>>>    3 files changed, 14 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+>>>>>> index c039b6ae206f..43bbd5dc3d3b 100644
+>>>>>> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+>>>>>> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+>>>>>> @@ -52,6 +52,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
+>>>>>>     * The PMU formats were orignally for ETMv3.5/PTM's ETMCR 'config';
+>>>>>>     * now take them as general formats and apply on all ETMs.
+>>>>>>     */
+>>>>>> +PMU_FORMAT_ATTR(branch_broadcast, "config:"__stringify(ETM_OPT_BRANCH_BROADCAST));
+>>>>>>    PMU_FORMAT_ATTR(cycacc,             "config:" __stringify(ETM_OPT_CYCACC));
+>>>>>>    /* contextid1 enables tracing CONTEXTIDR_EL1 for ETMv4 */
+>>>>>>    PMU_FORMAT_ATTR(contextid1, "config:" __stringify(ETM_OPT_CTXTID));
+>>>>>> @@ -97,6 +98,7 @@ static struct attribute *etm_config_formats_attr[] = {
+>>>>>>        &format_attr_sinkid.attr,
+>>>>>>        &format_attr_preset.attr,
+>>>>>>        &format_attr_configid.attr,
+>>>>>> +     &format_attr_branch_broadcast.attr,
+>>>>>
+>>>>> Does it make sense to hide the option if the bb is not supported ? I
+>>>>> guess it will be tricky as we don't track the common feature set. So,
+>>>>> that said...>>>>
+>>>>>>        NULL,
+>>>>>>    };
+>>>>>>
+>>>>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>>>> index bf18128cf5de..04669ecc0efa 100644
+>>>>>> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+>>>>>> @@ -692,6 +692,16 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+>>>>>>                ret = cscfg_csdev_enable_active_config(csdev, cfg_hash, preset);
+>>>>>>        }
+>>>>>>
+>>>>>> +     /* branch broadcast - enable if selected and supported */
+>>>>>> +     if (attr->config & BIT(ETM_OPT_BRANCH_BROADCAST)) {
+>>>>>> +             if (!drvdata->trcbb) {
+>>>>>> +                     ret = -EINVAL;
+>>>>>
+>>>>> Should we fail here ? We could simply ignore this and generate the trace
+>>>>> normally. This would work on a big.LITTLE system with one set missing
+>>>>> the branch broadcast, while the others support.
+> 
+> Hi Suzuki,
+> 
+> I think if the user really needs branch broadcast because they've modified their
+> binaries then they would want feedback that one of the cores doesn't support it.
+> Otherwise their decode would silently go wrong and they could get stuck.
+> 
+> Perf already opens an event per core, so it wouldn't be much effort to manually
+> modify the command line to only select cores where it is supported.
+> 
+> I think for that scenario the current patch already works that way because the
+> feature is checked on the active core when the event is enabled?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../pmu-events/arch/x86/jaketown/pipeline.json   | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Fair enough. We could let the user pin the perf to the CPUs where this
+is supported. This information is available to the user via sysfs.
 
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json b/tools/=
-perf/pmu-events/arch/x86/jaketown/pipeline.json
-index 87737c92c067..61a3db4d67d5 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
-@@ -410,8 +410,8 @@
-     },
-     {
-         "BriefDescription": "Reference cycles when the core is not in halt=
- state.",
--        "Counter": "Fixed counter 3",
--        "CounterHTOff": "Fixed counter 3",
-+        "Counter": "Fixed counter 2",
-+        "CounterHTOff": "Fixed counter 2",
-         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-         "PublicDescription": "This event counts the number of reference cy=
-cles when the core is not in a halt state. The core enters the halt state w=
-hen it is running the HLT instruction or the MWAIT instruction. This event =
-is not affected by core frequency changes (for example, P states, TM2 trans=
-itions) but has the same incrementing frequency as the time stamp counter. =
-This event can approximate elapsed time while the core was not in a halt st=
-ate. This event has a constant ratio with the CPU_CLK_UNHALTED.REF_XCLK eve=
-nt. It is counted on a dedicated fixed counter, leaving the four (eight whe=
-n Hyperthreading is disabled) programmable counters available for other eve=
-nts.",
-         "SampleAfterValue": "2000003",
-@@ -439,8 +439,8 @@
-     },
-     {
-         "BriefDescription": "Core cycles when the thread is not in halt st=
-ate.",
--        "Counter": "Fixed counter 2",
--        "CounterHTOff": "Fixed counter 2",
-+        "Counter": "Fixed counter 1",
-+        "CounterHTOff": "Fixed counter 1",
-         "EventName": "CPU_CLK_UNHALTED.THREAD",
-         "PublicDescription": "This event counts the number of core cycles =
-while the thread is not in a halt state. The thread enters the halt state w=
-hen it is running the HLT instruction. This event is a component in many ke=
-y event ratios. The core frequency may change from time to time due to tran=
-sitions associated with Enhanced Intel SpeedStep Technology or TM2. For thi=
-s reason this event may have a changing ratio with regards to time. When th=
-e core frequency is constant, this event can approximate elapsed time while=
- the core was not in the halt state. It is counted on a dedicated fixed cou=
-nter, leaving the four (eight when Hyperthreading is disabled) programmable=
- counters available for other events.",
-         "SampleAfterValue": "2000003",
-@@ -542,8 +542,8 @@
-     },
-     {
-         "BriefDescription": "Instructions retired from execution.",
--        "Counter": "Fixed counter 1",
--        "CounterHTOff": "Fixed counter 1",
-+        "Counter": "Fixed counter 0",
-+        "CounterHTOff": "Fixed counter 0",
-         "EventName": "INST_RETIRED.ANY",
-         "PublicDescription": "This event counts the number of instructions=
- retired from execution. For instructions that consist of multiple micro-op=
-s, this event counts the retirement of the last micro-op of the instruction=
-. Counting continues during hardware interrupts, traps, and inside interrup=
-t handlers.",
-         "SampleAfterValue": "2000003",
-@@ -599,7 +599,7 @@
-         "UMask": "0x3"
-     },
-     {
--        "BriefDescription": "Number of occurences waiting for the checkpoi=
-nts in Resource Allocation Table (RAT) to be recovered after Nuke due to al=
-l other cases except JEClear (e.g. whenever a ucode assist is needed like S=
-SE exception, memory disambiguation, etc...).",
-+        "BriefDescription": "Number of occurrences waiting for the checkpo=
-ints in Resource Allocation Table (RAT) to be recovered after Nuke due to a=
-ll other cases except JEClear (e.g. whenever a ucode assist is needed like =
-SSE exception, memory disambiguation, etc...).",
-         "Counter": "0,1,2,3",
-         "CounterHTOff": "0,1,2,3,4,5,6,7",
-         "CounterMask": "1",
-@@ -1199,4 +1199,4 @@
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     }
--]
-\ No newline at end of file
-+]
---=20
-2.36.0.464.gb9c8b46e94-goog
+So, let us proceed with the changes here.
 
+Cheers
+Suzuki
