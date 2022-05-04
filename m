@@ -2,206 +2,243 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D12C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 13:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4E9C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 13:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236891AbiEDNux (ORCPT
+        id S1351061AbiEDOC5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 May 2022 09:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40034 "EHLO
+        Wed, 4 May 2022 10:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350707AbiEDNuw (ORCPT
+        with ESMTP id S1350862AbiEDOCx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 May 2022 09:50:52 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D4F1EC40
-        for <linux-perf-users@vger.kernel.org>; Wed,  4 May 2022 06:47:16 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 244Da7pv020599;
-        Wed, 4 May 2022 13:47:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=9O4NHsy2Aflkkz1h4753zGCEqCzmFogt0f6i14qhZDc=;
- b=de4hYoRL272EDytHwrAVefJX41ttqjq78DP4gGFF4AmYbn9wzHlqvIacIcNfsReZGxuz
- 7QMHk1QUnj8y/jJ5nWsj3SZj1AqmMbQYTZXuo950kFTV/FwS7TL2GHozfavSmeEFpaF3
- wN9rZswd+9XXRe1yjHsVx3JQn69xYSi+ot8ke9qqUq3MovAeMroFdPWYyXLEuN036MXp
- cUnfo7VMZeIAY8cgdKPE3Pl8XDJa6qCkTy/dKQ4lqtYUzeDbDuVwUUdpbqwPbckLqfUa
- /iTglI9wvmuUk+iezNv3cHwA7p2h7n5hhqNMrHpSyZaW580WB5Hk+6jz9TfYqOdJ41uH oQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3futa6gaw0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 May 2022 13:47:01 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 244DdChR029234;
-        Wed, 4 May 2022 13:47:01 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3futa6gavg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 May 2022 13:47:00 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 244DcTMA025862;
-        Wed, 4 May 2022 13:46:58 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 3frvr8wrgd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 May 2022 13:46:58 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 244DXaTg52429256
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 May 2022 13:33:36 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DE224C044;
-        Wed,  4 May 2022 13:46:56 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D8BB4C046;
-        Wed,  4 May 2022 13:46:53 +0000 (GMT)
-Received: from [9.43.86.197] (unknown [9.43.86.197])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 May 2022 13:46:53 +0000 (GMT)
-Message-ID: <731c0038-a14c-8c13-1a98-c07fb0298a84@linux.ibm.com>
-Date:   Wed, 4 May 2022 19:16:52 +0530
+        Wed, 4 May 2022 10:02:53 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7B24133F
+        for <linux-perf-users@vger.kernel.org>; Wed,  4 May 2022 06:59:16 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id p189so918251wmp.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 May 2022 06:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mFqD13h4DdEbrcwcMZezbebSSUTg4ODI3AEZjhdBnJo=;
+        b=C3gJIISQGKpGwD5Uo4+zbm+rTWry5xThpDoIGPNlp5cbWX32T1RNUtN1amj3QDVh1B
+         TCXS2oZJxLVDuAKZdB7JPd+jsuqFUraet3XEvALiNc3PUzb37XfAI/8F5Jc5TG7sTVkc
+         lhZI5ESvf6mMWgoj9jtkABu0WCdcNgFZrbfuvryasULrHZGkiI+nqgLa8SoaBm8Zyyzs
+         eu8ttQotSzZ+olfMRwXlzEcQIoo8h1e76N8Co88HyBPpa/FKHEOE8Pce0+4CRMxQR2qw
+         9GSKy/bthfIHmvKrVPPcsN4L3VnYYKpMZSFYvSXKU2L5/Mdihghe8ByyPIVsWJ4gldla
+         atSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mFqD13h4DdEbrcwcMZezbebSSUTg4ODI3AEZjhdBnJo=;
+        b=4d04xr0LxMvm1UNy8/hUl+bhVVwr7k4h5Bj0KsItuZEmpeqvvRHmWJs1AbN5GsZpS3
+         CjuF/nkUiu2+PaL4ZB8kdUIMvNHUJ6nj4uvbq8V8InlpZVdSAOeRLg4ivslCBEndInyi
+         oyPFkio8lkzyKMrFA/BAJ/vDF6ksVHPLA0YLbOUyVrq0b/Nj5qQ0MSz3ht6EcXNBcLxC
+         NBq/zjBTj7O7G1DlUjyWkUbvEaQeATkOBSE4W/T73XHmGOw6FJM/GurKUeGdVzPC5EJa
+         SFuFD/fRTVzNa8umznk1SWFhv2sMdV73zdA/vpA07d4kuxNz1tgm5WXRAPUeO67osIGR
+         vIHA==
+X-Gm-Message-State: AOAM531/Pe/IrxL56B6v/DX0WUW6F7gsWacDcNxpCcDtwVTH0dboKz+l
+        KwrJxYr1Kruw+BBVSc/9/w46DFueD37x23foUC7POw==
+X-Google-Smtp-Source: ABdhPJyl78M9m8Ok2I2KXHYCTWh5Tm0JqrbFxuW8XjLXJ+r+TmWyE1aOYBRGGrp5HAGImVd4KosxmdZIs3IshZNQqsY=
+X-Received: by 2002:a1c:a301:0:b0:392:9bc5:203c with SMTP id
+ m1-20020a1ca301000000b003929bc5203cmr7762038wme.67.1651672755125; Wed, 04 May
+ 2022 06:59:15 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 1/2] tools/perf: Add utility function to read
- /proc/cpuinfo for any field
-Content-Language: en-US
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, disgoel@linux.vnet.ibm.com
-Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, irogers@google.com
-References: <20220428150829.30733-1-atrajeev@linux.vnet.ibm.com>
- <20220428150829.30733-2-atrajeev@linux.vnet.ibm.com>
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <20220428150829.30733-2-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Q9NEUHSnl_P29iHQUFxpnqXOWTGc9jOR
-X-Proofpoint-GUID: j6y5ID5sGO_H27CZJ-JvoY2so_6Ukwnn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-04_04,2022-05-04_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1011 malwarescore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 mlxscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205040086
+References: <20220503041757.2365696-1-irogers@google.com> <20220503041757.2365696-5-irogers@google.com>
+ <b94f3863-c690-e0f7-5cde-18fbf24143e5@intel.com> <CAP-5=fWfs2td9nZLGdEBD+C5s=upa_7SORab8tQ7qH=jX--F7w@mail.gmail.com>
+ <1e13c738-3460-ef7f-8b4b-5169e16b0b06@intel.com>
+In-Reply-To: <1e13c738-3460-ef7f-8b4b-5169e16b0b06@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 4 May 2022 06:59:01 -0700
+Message-ID: <CAP-5=fWEdLV6Jf5q=MSQyVSL0Q3-KxSvCWgXGjhexezx9AJAdA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] perf cpumap: Handle dummy maps as empty in subset
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, May 4, 2022 at 5:54 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 3/05/22 17:03, Ian Rogers wrote:
+> > On Tue, May 3, 2022 at 12:43 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>
+> >> On 3/05/22 07:17, Ian Rogers wrote:
+> >>> perf_cpu_map__empty is true for empty and dummy maps. Make is_subset
+> >>> respect that.
+> >>
+> >> As I wrote before, I am not keen on this because it prevents -1, as a
+> >> valid 3rd parameter to perf_event_open(), from being represented
+> >> in merged evsel cpu maps.
+> >>
+> >> Why do you want this?
+> >
+> > Thanks Adrian, could you give me a test case (command line) where the
+> > differing dummy and empty behavior matters?
+>
+> perf record --per-thread -e intel_pt// uname
+>
+> With patchset "perf intel-pt: Better support for perf record --cpu"
+> the above will have (assuming 8-CPUs):
+>         user_requested_cpus = {-1}
+>         intel_pt evsel->cpus = {-1}
+>         text_poke dummy evsel->cpus = {0-7}
+> which when merged would result in:
+>         before this patch: all_cpus = {-1-7}
+>         after this patch:  all_cpus = {0-7}
+>
+> The absence of -1 will mean that the intel_pt event does not get
+> mmapped.
 
+Thanks, so what's the right fix? To make this work we should:
+ - remove language of dummy being a singular cpu_map
+ - change perf_cpu_map__empty to be something like
+perf_cpu_map__empty_or_just_dummy
+ - change cpu_map__is_dummy to be something llike cpu_map__singular_dummy
+ - add tests on cpu map code for things like the evlist affiinity
+iterator as I'm not clear what will happen when it encounters a -1 CPU
+Note, I'm proposing changing function names rather than implementation
+behavior, as we don't have enough tests to give me confidence that
+changing the existing behavior wouldn't break something. For example,
+--per-thread mode was recently broken:
+https://lore.kernel.org/lkml/e1ce0d93-88cc-af79-e67e-d3c79d166ca6@gmail.com/
+Do we also need to fix up parse events for software events (e.g.
+faults) where the cpu map is empty but really should be dummy? This
+will likely need a propagate fix as during the parsing propagation
+user_requested_cpus is empty and we want to keep dummy cpu maps, not
+overwrite them with empty.
 
-On 4/28/22 20:38, Athira Rajeev wrote:
-> /proc/cpuinfo provides information about type of processor, number
-> of CPU's etc. Reading /proc/cpuinfo file outputs useful information
-> by field name like cpu, platform, model (depending on architecture)
-> and its value separated by colon.
-> 
-> Add new utility function "cpuinfo_field" in "util/header.c" which
-> accepts field name as input string to search in /proc/cpuinfo content.
-> This returns the first matching value as resulting string. Example,
-> calling the function "cpuinfo_field(platform)" in powerpc returns
-> the platform value. This can be used to fetch processor information
-> from "cpuinfo" by other utilities/testcases.
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/util/header.c | 54 ++++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/header.h |  1 +
->  2 files changed, 55 insertions(+)
-> 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index a27132e5a5ef..0c8dfd0c1e78 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -983,6 +983,60 @@ static int write_dir_format(struct feat_fd *ff,
->  	return do_write(ff, &data->dir.version, sizeof(data->dir.version));
->  }
->  
-> +/*
-> + * Return entry from /proc/cpuinfo
-> + * indicated by "search" parameter.
-> + */
-> +char *cpuinfo_field(const char *search)
-> +{
-> +	FILE *file;
-> +	char *buf = NULL;
-> +	char *copy_buf = NULL, *p;
-> +	size_t len = 0;
-> +	int ret = -1;
-> +
-> +	if (!search)
-> +		return NULL;
-> +
-> +	file = fopen("/proc/cpuinfo", "r");
-> +	if (!file)
-> +		return NULL;
-> +
-> +	while (getline(&buf, &len, file) > 0) {
-> +		ret = strncmp(buf, search, strlen(search));
-> +		if (!ret)
-> +			break;
-Hi Athira,
-	Do we need ret variable. Since we will come out of the loop only when
-we reach EOF.
+I see a fair amount of clean up here, which isn't bad. My assumed
+alternative was that the intel_pt code could look for dummy cpu maps
+on the evsels, but then why have dummy cpu maps at all and just use
+empty throughout the code base? We could also add a flag to the evlist
+to say whether any evsel cpu maps contain a dummy/empty map. API wise
+I'm tempted to say that the dummy CPU map should be removed and empty
+just used in its place (less is more, keep it simple).
 
-> +	}
-> +
-> +	if (ret)
-> +		goto done;
-> +
-> +	/*
-> +	 * Trim the new line and separate
-> +	 * value for search field from ":"
-> +	 * in cpuinfo line output.
-> +	 * Example output line:
-> +	 * platform : <value>
-> +	 */
-> +	copy_buf = buf;
-> +	p = strchr(copy_buf, ':');
-> +	if (p && *(p+1) == ' ' && *(p+2))
+Something that would help with clarity, I think, would be to land the fix in:
+https://lore.kernel.org/lkml/20220503041757.2365696-3-irogers@google.com/
+as currently all_cpus contains cpus not in the evsel cpu maps, but are
+residue from when the evsels were parsed.
 
+Thanks,
+Ian
 
-Can you try using strim instead to remove whitespaces. This function
-will remove leading and trailing whitespaces from the string.
-
-> +		copy_buf = p + 2;
-> +	p = strchr(copy_buf, '\n');
-
-do we need to replace `\n` here ?
-
-
-> +	if (p)
-> +		*p = '\0';
-> +
-> +	/* Copy the filtered string to buf */
-> +	strcpy(buf, copy_buf)
-
-You are initializing buf to NULL. So do we need to do fclose and return
-buf separately here? Can you move free(buf) in above condition and reuse
-`done` code.
-> +
-> +	fclose(file);
-> +	return buf;> +
-> +done:
-> +	free(buf);
-> +	fclose(file);
-> +	return NULL;
-> +}
->  /*
->   * Check whether a CPU is online
->   *
-> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-> index 0eb4bc29a5a4..b0f754364bd4 100644
-> --- a/tools/perf/util/header.h
-> +++ b/tools/perf/util/header.h
-> @@ -166,4 +166,5 @@ int get_cpuid(char *buffer, size_t sz);
->  
->  char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused);
->  int strcmp_cpuid_str(const char *s1, const char *s2);
-> +char *cpuinfo_field(const char *search);
->  #endif /* __PERF_HEADER_H */
+> >                                             Normally cpus/own_cpus are
+> > set to null during parsing. They may get replaced with
+> > user_requested_cpus:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evlist.c?h=perf/core#n44
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evlist.c?h=perf/core#n45
+> > (should it be on line 45 that !empty is expected?)
+> >
+> > During merge the null/empty all_cpus drops this value, which doesn't
+> > matter as the behavior with empty is the same as dummy:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evsel.c?h=perf/core#n119
+> >
+> > What's concerning me is the definition of empty:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/cpumap.c?h=perf/core#n279
+> > ```
+> > return map ? map->map[0].cpu == -1 : true;
+> > ```
+> > If the first entry can be -1 and there can be other CPUs merged after
+> > then that cpu map will be empty by the definition above. Perhaps it
+> > should be:
+> > ```
+> > return map ? (map->nr == 1 && map->map[0].cpu == -1) : true;
+> > ```
+> > but it seems you prefer:
+> > ```
+> > return (map == NULL) ? true : false;
+> > ```
+> >
+> > You'd asked what the behavior with a dummy is and clearly it is
+> > somewhat muddy. That is what this patch and unit test is trying to
+> > clean up.
+> >
+> > Thanks,
+> > Ian
+> >
+> >>>
+> >>> Signed-off-by: Ian Rogers <irogers@google.com>
+> >>> ---
+> >>>  tools/lib/perf/cpumap.c   |  4 ++--
+> >>>  tools/perf/tests/cpumap.c | 10 +++++++++-
+> >>>  2 files changed, 11 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> >>> index 384d5e076ee4..9c83675788c2 100644
+> >>> --- a/tools/lib/perf/cpumap.c
+> >>> +++ b/tools/lib/perf/cpumap.c
+> >>> @@ -322,9 +322,9 @@ struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
+> >>>  /** Is 'b' a subset of 'a'. */
+> >>>  bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b)
+> >>>  {
+> >>> -     if (a == b || !b)
+> >>> +     if (a == b || perf_cpu_map__empty(b))
+> >>>               return true;
+> >>> -     if (!a || b->nr > a->nr)
+> >>> +     if (perf_cpu_map__empty(a) || b->nr > a->nr)
+> >>>               return false;
+> >>>
+> >>>       for (int i = 0, j = 0; i < a->nr; i++) {
+> >>> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+> >>> index f94929ebb54b..d52b58395385 100644
+> >>> --- a/tools/perf/tests/cpumap.c
+> >>> +++ b/tools/perf/tests/cpumap.c
+> >>> @@ -128,13 +128,21 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
+> >>>       struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
+> >>>       struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
+> >>>       struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
+> >>> +     struct perf_cpu_map *d = perf_cpu_map__dummy_new();
+> >>> +     struct perf_cpu_map *e = perf_cpu_map__merge(b, d);
+> >>>       char buf[100];
+> >>>
+> >>>       TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
+> >>>       cpu_map__snprint(c, buf, sizeof(buf));
+> >>>       TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
+> >>> -     perf_cpu_map__put(b);
+> >>> +
+> >>> +     TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(e) == 3);
+> >>> +     cpu_map__snprint(e, buf, sizeof(buf));
+> >>> +     TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "4-5,7"));
+> >>> +
+> >>>       perf_cpu_map__put(c);
+> >>> +     perf_cpu_map__put(d);
+> >>> +     perf_cpu_map__put(e);
+> >>>       return 0;
+> >>>  }
+> >>>
+> >>
+>
