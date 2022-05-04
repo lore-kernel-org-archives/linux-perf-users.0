@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE1DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 18:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DAEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 18:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377404AbiEDSw6 (ORCPT
+        id S1377350AbiEDSw7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 May 2022 14:52:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51070 "EHLO
+        Wed, 4 May 2022 14:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377364AbiEDSwr (ORCPT
+        with ESMTP id S1377377AbiEDSwv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 May 2022 14:52:47 -0400
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC5318E14;
-        Wed,  4 May 2022 11:49:09 -0700 (PDT)
+        Wed, 4 May 2022 14:52:51 -0400
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB45919281;
+        Wed,  4 May 2022 11:49:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
   t=1651690151; x=1683226151;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IC8noDBK4X51feo0Vpeik5XnaP2Xw/g4NSKwFbVg0tA=;
-  b=ClmrFYz8Ws4yY+f5MV0Rip9TS5ezKWNQGVEZ9uqs+cfsF0EXENrJSHgL
-   kKfY4NpaazJbg6+jLJx0gk0m+3MJQAgkVEHe51RN/OjXPxxMFe7ny8p1a
-   Vo4plL/KhmG71ELWkV5Fukhri6O18bb3jfaK2uu9x4DsR9Vso/8sQe1FR
-   I=;
+  bh=2kGoDhwDDU4SUv0yonPrLgPdKoDB23uSHWFWBT2qSyo=;
+  b=neYsWIVc9H1X9JujwkMHWfMJJYQ0k2PastVvSPvy5VekKcLVqNA2S7yd
+   xC/qGLUpUhrTFP5IhbobbqPA9P8Bt+nDnQYYRo3uUNgJvbJHP/3ZXeutj
+   4jYhQYcY0uGapHOBrmG1NHXqw7JC+LcnyxTlfSdxIEBft1dEwinjdtCV5
+   8=;
 X-IronPort-AV: E=Sophos;i="5.91,198,1647302400"; 
-   d="scan'208";a="85413890"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-5feb294a.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP; 04 May 2022 18:49:09 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2a-5feb294a.us-west-2.amazon.com (Postfix) with ESMTPS id 7FE8D821E9;
-        Wed,  4 May 2022 18:49:08 +0000 (UTC)
-Received: from EX13D02UWC003.ant.amazon.com (10.43.162.199) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
+   d="scan'208";a="198648650"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-iad-1e-90d70b14.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP; 04 May 2022 18:49:10 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
+        by email-inbound-relay-iad-1e-90d70b14.us-east-1.amazon.com (Postfix) with ESMTPS id 70258C0428;
+        Wed,  4 May 2022 18:49:04 +0000 (UTC)
+Received: from EX13D02UWC002.ant.amazon.com (10.43.162.6) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
  id 15.0.1497.32; Wed, 4 May 2022 18:48:59 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
- EX13D02UWC003.ant.amazon.com (10.43.162.199) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Wed, 4 May 2022 18:48:58 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D02UWC002.ant.amazon.com (10.43.162.6) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Wed, 4 May 2022 18:48:59 +0000
 Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ (172.19.181.128) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
  Server id 15.0.1497.32 via Frontend Transport; Wed, 4 May 2022 18:48:58 +0000
 Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 786EB181A; Wed,  4 May 2022 18:48:57 +0000 (UTC)
+        id 7754C20BB; Wed,  4 May 2022 18:48:57 +0000 (UTC)
 From:   Ali Saidi <alisaidi@amazon.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
@@ -55,9 +55,9 @@ CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
         <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
         <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
         <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
-Subject: [PATCH v8 3/5] perf mem: Print snoop peer flag
-Date:   Wed, 4 May 2022 18:48:48 +0000
-Message-ID: <20220504184850.24986-4-alisaidi@amazon.com>
+Subject: [PATCH v8 1/5] perf: Add SNOOP_PEER flag to perf mem data struct
+Date:   Wed, 4 May 2022 18:48:46 +0000
+Message-ID: <20220504184850.24986-2-alisaidi@amazon.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220504184850.24986-1-alisaidi@amazon.com>
 References: <20220504184850.24986-1-alisaidi@amazon.com>
@@ -68,75 +68,33 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+Add a flag to the perf mem data struct to signal that a request caused a
+cache-to-cache transfer of a line from a peer of the requestor and
+wasn't sourced from a lower cache level.  The line being moved from one
+peer cache to another has latency and performance implications. On Arm64
+Neoverse systems the data source can indicate a cache-to-cache transfer
+but not if the line is dirty or clean, so instead of overloading HITM
+define a new flag that indicates this type of transfer.
 
-Since PERF_MEM_SNOOPX_PEER flag is a new snoop type, print this flag if
-it is set.
-
-Before:
-       memstress  3603 [020]   122.463754:          1            l1d-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          l1d-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1            llc-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          llc-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          tlb-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1              memory:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-
-After:
-
-       memstress  3603 [020]   122.463754:          1            l1d-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          l1d-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1            llc-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          llc-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1          tlb-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-       memstress  3603 [020]   122.463754:          1              memory:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Ali Saidi <alisaidi@amazon.com>
-Tested-by: Ali Saidi <alisaidi@amazon.com>
+Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/mem-events.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ include/uapi/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index efaf263464b9..db5225caaabe 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -410,6 +410,11 @@ static const char * const snoop_access[] = {
- 	"HitM",
- };
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index d37629dbad72..7b88bfd097dc 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1310,7 +1310,7 @@ union perf_mem_data_src {
+ #define PERF_MEM_SNOOP_SHIFT	19
  
-+static const char * const snoopx_access[] = {
-+	"Fwd",
-+	"Peer",
-+};
-+
- int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- {
- 	size_t i, l = 0;
-@@ -430,13 +435,20 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- 		}
- 		l += scnprintf(out + l, sz - l, snoop_access[i]);
- 	}
--	if (mem_info &&
--	     (mem_info->data_src.mem_snoopx & PERF_MEM_SNOOPX_FWD)) {
-+
-+	m = 0;
-+	if (mem_info)
-+		m = mem_info->data_src.mem_snoopx;
-+
-+	for (i = 0; m && i < ARRAY_SIZE(snoopx_access); i++, m >>= 1) {
-+		if (!(m & 0x1))
-+			continue;
-+
- 		if (l) {
- 			strcat(out, " or ");
- 			l += 4;
- 		}
--		l += scnprintf(out + l, sz - l, "Fwd");
-+		l += scnprintf(out + l, sz - l, snoopx_access[i]);
- 	}
+ #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+-/* 1 free */
++#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
+ #define PERF_MEM_SNOOPX_SHIFT  38
  
- 	if (*out == '\0')
+ /* locked instruction */
 -- 
 2.32.0
 
