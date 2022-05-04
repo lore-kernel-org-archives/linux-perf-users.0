@@ -2,289 +2,950 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60118C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 May 2022 21:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6BFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 02:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242975AbiECVkz (ORCPT
+        id S1344129AbiEDC4G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 May 2022 17:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53380 "EHLO
+        Tue, 3 May 2022 22:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242971AbiECVky (ORCPT
+        with ESMTP id S1344115AbiEDC4F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 May 2022 17:40:54 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F82632988
-        for <linux-perf-users@vger.kernel.org>; Tue,  3 May 2022 14:37:21 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id s68-20020a637747000000b003aaff19b95bso8990042pgc.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 May 2022 14:37:21 -0700 (PDT)
+        Tue, 3 May 2022 22:56:05 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ACC01A3AD
+        for <linux-perf-users@vger.kernel.org>; Tue,  3 May 2022 19:52:29 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id g26-20020a25b11a000000b0064984a4ffb7so163063ybj.7
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 May 2022 19:52:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=PGYU0nW8LJveDdJBlNtzADM9jDyH0JnoYUFg7J1RGr0=;
-        b=eo4MPZeko/VswpaQqNoK94w/pDKrjxTMBbPGqYsNHJuY4qIm2xOoPGFzibW95nWQ8q
-         6EYB6faix2uyoeF/pqgQtqNPuKM5nbikSVx+TNGYZuNP4xNuyYCe0z1IntO3IRiwhm6T
-         XY/rHVUpAesTcoGvXXpYf/2E9nIc5DoWsNDMdmUGGDSGbRSoma3AGJHOPe0wSzJlEh6Q
-         mGc+rdWsMGE+94uN2WujH1PicDoj63Ep41OCFrExw26SIVZp8MRp2GPtFiC+bsy5RXNx
-         X7SrdZzmfF7sYoyV0mWCn2f1L+YWaP89IK+qbRkznnPvcQnXEZNI0B9fv50O/6iAm6PU
-         3SBA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=7r5RqE4sd1zS9sJRxaFDR6zDwpqcY4irsfhFJp2MHdE=;
+        b=hXqL5xB4bwbyh0dBc5TvcGedotp9Cc89J6CUPjw/65RUx9qdA/QWJF+Xh2AgHo/JEW
+         sbDy2hbaIJj5NKqscHmat6iJV+cAtTg+Elp7qLLH+v4nLRnRtLX0b5R4g+oKK+Qos6m8
+         jzduawXpzXJ1IvbuXKDo5MxZwI2+iy6wIKie3HwIx8JP5P3TEsD4EfZM4Xb6rbK8G7m1
+         S43zHDYvkxNHO8V95r/7sicz1WW3OR0zKyRuhC96iD1ukuBDpJ7g37Y/GqGU1/ieb2jN
+         JPHJUZusbs8OWHjrydzoLMLiy7lohGN6Gf5GObz11AkmhzRvCEbEmtGbD9Tx2Nkn/lGa
+         EooA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=PGYU0nW8LJveDdJBlNtzADM9jDyH0JnoYUFg7J1RGr0=;
-        b=tK6giwG8pC8PiggqY3+60Rdg1cgnvnCvMkUlEVyaN8ubZ+KEPneFadCYEVDalfZ5OB
-         KYostrIBAwGayP3jJh4u0MRcOrfgZDFU+W7SRyInSgwOjVt9cuGTtdyRO2cViBchy5aD
-         vJsqziSJbHvnXDLSUIfq4HRBfULMheH+fF9HGFgpDIJ6WAVz8YtKQc6iy97SLFv4+cbA
-         IN7Ys+wk9AuZ8kmjem5o8kQ0DkFbmbWfNsOfVbNidITq7VWAjl+pM58f3EZwaDi1KuCD
-         2Ep1+xeXQNKIIxlDzjZ+ArMJ5ZAjhOk7HLJHwh8kD9iej+iWk8ZmoT5uULnjQ1biJjZ0
-         oMUw==
-X-Gm-Message-State: AOAM530g1Eeh0QROUx1rsxYRdfBFdik82y4wgpjHoIIWOiN8ICR7u/TI
-        24NqDlw2X8ibhu3SpMKfotcAIVSge7VEut1w
-X-Google-Smtp-Source: ABdhPJzgQvwW7F4F0ZNcWjFmA78kNk409gKHTxMMcmGsODW5timNYtJsVum+iW2jMqRrwYAAJ/2gZv1dx7Y+v88P
-X-Received: from blakejones.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:411c])
- (user=blakejones job=sendgmr) by 2002:aa7:8104:0:b0:50d:374b:4568 with SMTP
- id b4-20020aa78104000000b0050d374b4568mr17935843pfi.45.1651613840682; Tue, 03
- May 2022 14:37:20 -0700 (PDT)
-Date:   Tue,  3 May 2022 14:37:04 -0700
-Message-Id: <20220503213704.2524229-1-blakejones@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=7r5RqE4sd1zS9sJRxaFDR6zDwpqcY4irsfhFJp2MHdE=;
+        b=urqGQmy6uVdz87z733ZxUKGKuLCuuVoddO0L061arMwpp4Y646v9O57sAV5W4D06Gf
+         rgzSNfKcsM8Fc6Yn6Fjb9vxjCdH4W+1LaL/toTiPtyoVHdqoEtZLwyDa1+KLm86shbni
+         kf4jO5SxLorKY7VCEZlohiE6YdMoslrVP1TwIC65nAHaZAI8OX5gUZqK4sABzQbmh+na
+         bKDRPuJaftKEjUN6hw6jNLEE5GhGxbsfaRQ+lM54J/i/FBHXWI+jFUxoG6ymbyBhKsrC
+         4ZqvNFAVoocd0OY4CJN00UxWApA7VT4tGVgquc4bfmdsqQYkcgZDjkMU+gnv9+FmaScW
+         ZiIQ==
+X-Gm-Message-State: AOAM531JYWFnc/FgCOqvv4V7yHEFp7WBiWD7Cqg9zBeeX91gwE/lvJje
+        vHShBggKfkMdWkIAnhwOfRjvrSAw7F+K
+X-Google-Smtp-Source: ABdhPJwSVwiuxpslJ+w+AY4CiHJf4xTzp7MS/WUvspfhLau/jOL1s1XsaIGFelj164FeIYtms0zqrMPZATdc
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:51c7:3b17:aa10:ed9b])
+ (user=irogers job=sendgmr) by 2002:a25:ba45:0:b0:648:4989:d505 with SMTP id
+ z5-20020a25ba45000000b006484989d505mr15985350ybj.304.1651632748672; Tue, 03
+ May 2022 19:52:28 -0700 (PDT)
+Date:   Tue,  3 May 2022 19:52:19 -0700
+In-Reply-To: <20220504025220.2754910-1-irogers@google.com>
+Message-Id: <20220504025220.2754910-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220504025220.2754910-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [PATCH] Add an "-m" option to "perf buildid-list".
-From:   Blake Jones <blakejones@google.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
+Subject: [PATCH 2/3] perf vendor events: Update alderlake to v1.10
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Blake Jones <blakejones@google.com>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This new option displays all of the information needed to do external
-BuildID-based symbolization of kernel stack traces, such as those collected
-by bpf_get_stackid(). For each kernel module plus the main kernel, it
-displays the BuildID, the start and end virtual addresses of that module's
-text range (rounded out to page boundaries), and the pathname of the
-module.
+Events from:
+https://download.01.org/perfmon/ADL/
 
-When run as a non-privileged user, the actual addresses of the modules'
-text ranges are not available, so the tools displays "0, <text length>" for
-kernel modules and "0, ffffffffffffffff" for the kernel itself.
+Converted to perf json using:
+https://github.com/intel/event-converter-for-linux-perf/pull/11
 
-Sample output:
-
-root# perf buildid-list -m
-cf6df852fd4da122d616153353cc8f560fd12fe0 ffffffffa5400000 ffffffffa6001e27 [kernel.kallsyms]
-1aa7209aa2acb067d66ed6cf7676d65066384d61 ffffffffc0087000 ffffffffc008b000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/sha512_generic.ko
-3857815b5bf0183697b68f8fe0ea06121644041e ffffffffc008c000 ffffffffc0098000 /lib/modules/5.15.15-1rodete2-amd64/kernel/arch/x86/crypto/sha512-ssse3.ko
-4081fde0bca2bc097cb3e9d1efcb836047d485f1 ffffffffc0099000 ffffffffc009f000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/acpi/button.ko
-1ef81ba4890552ea6b0314f9635fc43fc8cef568 ffffffffc00a4000 ffffffffc00aa000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/cryptd.ko
-cc5c985506cb240d7d082b55ed260cbb851f983e ffffffffc00af000 ffffffffc00b6000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/i2c/busses/i2c-piix4.ko
-[...]
-
-Signed-off-by: Blake Jones <blakejones@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../perf/Documentation/perf-buildid-list.txt  |  3 ++
- tools/perf/builtin-buildid-list.c             | 33 ++++++++++++++++++-
- tools/perf/util/dso.c                         | 23 +++++++++++++
- tools/perf/util/dso.h                         |  2 ++
- tools/perf/util/machine.c                     | 13 ++++++++
- tools/perf/util/machine.h                     |  5 +++
- 6 files changed, 78 insertions(+), 1 deletion(-)
+ .../arch/x86/alderlake/adl-metrics.json       | 70 ++++++++++++++--
+ .../pmu-events/arch/x86/alderlake/cache.json  | 42 ++++++----
+ .../arch/x86/alderlake/frontend.json          | 17 +++-
+ .../pmu-events/arch/x86/alderlake/memory.json | 22 ++---
+ .../pmu-events/arch/x86/alderlake/other.json  | 27 ++-----
+ .../arch/x86/alderlake/pipeline.json          | 81 +++++++++++++++++--
+ .../arch/x86/alderlake/uncore-other.json      |  4 +-
+ .../arch/x86/alderlake/virtual-memory.json    |  4 +-
+ 8 files changed, 205 insertions(+), 62 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-buildid-list.txt b/tools/perf/Documentation/perf-buildid-list.txt
-index 25c52efcc7f0..a82e92c2667d 100644
---- a/tools/perf/Documentation/perf-buildid-list.txt
-+++ b/tools/perf/Documentation/perf-buildid-list.txt
-@@ -33,6 +33,9 @@ OPTIONS
- -k::
- --kernel::
- 	Show running kernel build id.
-+-m::
-+--modules::
-+	Show buildid, start/end text address, and path of kernel and modules.
- -v::
- --verbose::
- 	Be more verbose.
-diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-index cebadd632234..9a5587de8fd0 100644
---- a/tools/perf/builtin-buildid-list.c
-+++ b/tools/perf/builtin-buildid-list.c
-@@ -12,6 +12,7 @@
- #include "util/build-id.h"
- #include "util/debug.h"
- #include "util/dso.h"
-+#include "util/map.h"
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
- #include "util/session.h"
-@@ -20,6 +21,29 @@
- #include <errno.h>
- #include <linux/err.h>
- 
-+static int buildid__map_cb(struct map *map, void *arg __maybe_unused)
-+{
-+	struct build_id build_id;
-+	char bid_buf[SBUILD_ID_SIZE];
-+	char modpath[255];
-+
-+	dso__get_build_id(map->dso, &build_id);
-+	build_id__sprintf(&build_id, bid_buf);
-+	dso__get_long_name(map->dso, modpath, sizeof(modpath));
-+	printf("%s %16lx %16lx %s\n", bid_buf, map->start, map->end, modpath);
-+
-+	return 0;
-+}
-+
-+static void buildid__show_kernel_modules(void)
-+{
-+	struct machine *machine;
-+
-+	machine = machine__new_host();
-+	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
-+	machine__delete(machine);
-+}
-+
- static int sysfs__fprintf_build_id(FILE *fp)
- {
- 	char sbuild_id[SBUILD_ID_SIZE];
-@@ -99,6 +123,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
- int cmd_buildid_list(int argc, const char **argv)
- {
- 	bool show_kernel = false;
-+	bool show_modules = false;
- 	bool with_hits = false;
- 	bool force = false;
- 	const struct option options[] = {
-@@ -106,6 +131,8 @@ int cmd_buildid_list(int argc, const char **argv)
- 	OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
- 	OPT_BOOLEAN('k', "kernel", &show_kernel, "Show current kernel build id"),
-+	OPT_BOOLEAN('m', "modules", &show_modules,
-+	    "Show build id of current kernel + modules"),
- 	OPT_INCR('v', "verbose", &verbose, "be more verbose"),
- 	OPT_END()
- 	};
-@@ -117,8 +144,12 @@ int cmd_buildid_list(int argc, const char **argv)
- 	argc = parse_options(argc, argv, options, buildid_list_usage, 0);
- 	setup_pager();
- 
--	if (show_kernel)
-+	if (show_kernel) {
- 		return !(sysfs__fprintf_build_id(stdout) > 0);
-+	} else if (show_modules) {
-+		buildid__show_kernel_modules();
-+		return 0;
-+	}
- 
- 	return perf_session__list_build_ids(force, with_hits);
- }
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 5ac13958d1bd..7c490b5ce449 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1227,6 +1227,19 @@ void dso__set_long_name(struct dso *dso, const char *name, bool name_allocated)
- 	dso__set_long_name_id(dso, name, NULL, name_allocated);
- }
- 
-+void dso__get_long_name(const struct dso *dso, char *name, size_t len)
-+{
-+	if (len == 0)
-+		return;
-+	if (dso->long_name == NULL) {
-+		name[0] = '\0';
-+		return;
-+	}
-+
-+	strncpy(name, dso->long_name, len);
-+	name[len - 1] = '\0';
-+}
-+
- void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated)
- {
- 	if (name == NULL)
-@@ -1359,6 +1372,16 @@ void dso__set_build_id(struct dso *dso, struct build_id *bid)
- 	dso->has_build_id = 1;
- }
- 
-+void dso__get_build_id(struct dso *dso, struct build_id *bid)
-+{
-+	if (dso->has_build_id) {
-+		*bid = dso->bid;
-+	} else {
-+		bid->size = 0;
-+		memset(bid->data, 0, sizeof(*bid->data));
-+	}
-+}
-+
- bool dso__build_id_equal(const struct dso *dso, struct build_id *bid)
- {
- 	if (dso->bid.size > bid->size && dso->bid.size == BUILD_ID_SIZE) {
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 3a9fd4d389b5..896ed335b562 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -237,6 +237,7 @@ void dso__delete(struct dso *dso);
- int dso__cmp_id(struct dso *a, struct dso *b);
- void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated);
- void dso__set_long_name(struct dso *dso, const char *name, bool name_allocated);
-+void dso__get_long_name(const struct dso *dso, char *name, size_t len);
- 
- int dso__name_len(const struct dso *dso);
- 
-@@ -263,6 +264,7 @@ void dso__set_sorted_by_name(struct dso *dso);
- void dso__sort_by_name(struct dso *dso);
- 
- void dso__set_build_id(struct dso *dso, struct build_id *bid);
-+void dso__get_build_id(struct dso *dso, struct build_id *bid);
- bool dso__build_id_equal(const struct dso *dso, struct build_id *bid);
- void dso__read_running_kernel_build_id(struct dso *dso,
- 				       struct machine *machine);
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 95391236f5f6..78e84eb037a6 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3232,3 +3232,16 @@ int machine__for_each_dso(struct machine *machine, machine__dso_t fn, void *priv
- 	}
- 	return err;
- }
-+
-+int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, void *priv)
-+{
-+	struct maps *maps = machine__kernel_maps(machine);
-+	struct map *map;
-+	int err = 0;
-+
-+	for (map = maps__first(maps); map != NULL; map = map__next(map)) {
-+		if (fn(map, priv))
-+			err = -1;
-+	}
-+	return err;
-+}
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 0023165422aa..2a022259d373 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -259,6 +259,11 @@ typedef int (*machine__dso_t)(struct dso *dso, struct machine *machine, void *pr
- 
- int machine__for_each_dso(struct machine *machine, machine__dso_t fn,
- 			  void *priv);
-+
-+typedef int (*machine__map_t)(struct map *map, void *priv);
-+int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn,
-+				 void *priv);
-+
- int machine__for_each_thread(struct machine *machine,
- 			     int (*fn)(struct thread *thread, void *p),
- 			     void *priv);
-
-base-commit: e0c1b8f9eba88173b30ba42eb492fd20582cf376
--- 
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/to=
+ols/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+index 4d172687f936..27a60e183c61 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+@@ -190,7 +190,7 @@
+     },
+     {
+         "BriefDescription": "Average number of Uops issued by front-end wh=
+en it issued something",
+-        "MetricExpr": "UOPS_ISSUED.ANY / cpu_core@UOPS_ISSUED.ANY\\,cmask\=
+\=3D1@",
++        "MetricExpr": "UOPS_ISSUED.ANY / cpu@UOPS_ISSUED.ANY\\,cmask\\=3D1=
+@",
+         "MetricGroup": "Fed;FetchBW",
+         "MetricName": "Fetch_UpC",
+         "Unit": "cpu_core"
+@@ -435,6 +435,66 @@
+         "MetricName": "IpFarBranch",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "C1 residency percent per core",
++        "MetricExpr": "(cstate_core@c1\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C1_Core_Residency"
++    },
++    {
++        "BriefDescription": "C6 residency percent per core",
++        "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C6_Core_Residency"
++    },
++    {
++        "BriefDescription": "C7 residency percent per core",
++        "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C7_Core_Residency"
++    },
++    {
++        "BriefDescription": "C2 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C2_Pkg_Residency"
++    },
++    {
++        "BriefDescription": "C3 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C3_Pkg_Residency"
++    },
++    {
++        "BriefDescription": "C6 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C6_Pkg_Residency"
++    },
++    {
++        "BriefDescription": "C7 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C7_Pkg_Residency"
++    },
++    {
++        "BriefDescription": "C8 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c8\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C8_Pkg_Residency"
++    },
++    {
++        "BriefDescription": "C9 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c9\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C9_Pkg_Residency"
++    },
++    {
++        "BriefDescription": "C10 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c10\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C10_Pkg_Residency"
++    },
+     {
+         "BriefDescription": "Counts the number of issue slots  that were n=
+ot consumed by the backend due to frontend stalls.",
+         "MetricExpr": "TOPDOWN_FE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
+,
+@@ -461,7 +521,7 @@
+     },
+     {
+         "BriefDescription": "Counts the total number of issue slots  that =
+were not consumed by the backend due to backend stalls",
+-        "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
+,
++        "MetricExpr": "(TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)=
+)",
+         "MetricGroup": "TopdownL1",
+         "MetricName": "Backend_Bound_Aux",
+         "PublicDescription": "Counts the total number of issue slots  that=
+ were not consumed by the backend due to backend stalls.  Note that UOPS mu=
+st be available for consumption in order for this event to count.  If a uop=
+ is not available (IQ is empty), this event will not count.  All of these s=
+ubevents count backend stalls, in slots, due to a resource limitation.   Th=
+ese are not cycle based events and therefore can not be precisely added or =
+subtracted from the Backend_Bound subevents which are cycle based.  These s=
+ubevents are supplementary to Backend_Bound and can be used to analyze resu=
+lts from a resource perspective at allocation.  ",
+@@ -538,14 +598,14 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Instructions per Branch (lower number means h=
+igher occurrence rate)",
++        "BriefDescription": "Instructions per Branch (lower number means h=
+igher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+         "MetricGroup": " ",
+         "MetricName": "IpBranch",
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Instruction per (near) call (lower number mea=
+ns higher occurrence rate)",
++        "BriefDescription": "Instruction per (near) call (lower number mea=
+ns higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.CALL",
+         "MetricGroup": " ",
+         "MetricName": "IpCall",
+@@ -644,7 +704,7 @@
+     },
+     {
+         "BriefDescription": "Estimated Pause cost. In percent",
+-        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / ( 5 * CPU_CLK_=
+UNHALTED.CORE )",
++        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / (5 * CPU_CLK_U=
+NHALTED.CORE)",
+         "MetricGroup": " ",
+         "MetricName": "Estimated_Pause_Cost",
+         "Unit": "cpu_atom"
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/cache.json b/tools/pe=
+rf/pmu-events/arch/x86/alderlake/cache.json
+index b83ed129c454..ea973ff5a216 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
+@@ -1,6 +1,6 @@
+ [
+     {
+-        "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or tlb miss which hit in the L2, LLC, DRAM o=
+r MMIO (Non-DRAM).",
++        "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or TLB miss which hit in the L2, LLC, DRAM o=
+r MMIO (Non-DRAM).",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x34",
+@@ -11,7 +11,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or tlb miss which hit in DRAM or MMIO (Non-D=
+RAM).",
++        "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or TLB miss which hit in DRAM or MMIO (Non-D=
+RAM).",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x34",
+@@ -22,7 +22,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or tlb miss which hit in the L2 cache.",
++        "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or TLB miss which hit in the L2 cache.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x34",
+@@ -33,7 +33,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or tlb miss which hit in the last level cach=
+e or other core with HITE/F/M.",
++        "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or TLB miss which hit in the LLC or other co=
+re with HITE/F/M.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x34",
+@@ -88,7 +88,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of load ops retired that hi=
+t in DRAM.",
++        "BriefDescription": "Counts the number of load uops retired that h=
+it in DRAM.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "Data_LA": "1",
+@@ -101,7 +101,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of load ops retired that hi=
+t in the L2 cache.",
++        "BriefDescription": "Counts the number of load uops retired that h=
+it in the L2 cache.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "Data_LA": "1",
+@@ -114,7 +114,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of load ops retired that hi=
+t in the L3 cache.",
++        "BriefDescription": "Counts the number of load uops retired that h=
+it in the L3 cache.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xd1",
+@@ -202,6 +202,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
++        "L1_Hit_Indication": "1",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x80",
+         "PEBS": "2",
+@@ -218,6 +219,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
++        "L1_Hit_Indication": "1",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x10",
+         "PEBS": "2",
+@@ -234,6 +236,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
++        "L1_Hit_Indication": "1",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x100",
+         "PEBS": "2",
+@@ -250,6 +253,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
++        "L1_Hit_Indication": "1",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x20",
+         "PEBS": "2",
+@@ -266,6 +270,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
++        "L1_Hit_Indication": "1",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x4",
+         "PEBS": "2",
+@@ -282,6 +287,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
++        "L1_Hit_Indication": "1",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x200",
+         "PEBS": "2",
+@@ -298,6 +304,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
++        "L1_Hit_Indication": "1",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x40",
+         "PEBS": "2",
+@@ -314,6 +321,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
++        "L1_Hit_Indication": "1",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x8",
+         "PEBS": "2",
+@@ -324,7 +332,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts all the retired split loads.",
++        "BriefDescription": "Counts the number of retired split load uops.=
+",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "Data_LA": "1",
+@@ -338,11 +346,13 @@
+     },
+     {
+         "BriefDescription": "Counts the number of stores uops retired. Cou=
+nts with or without PEBS enabled.",
+-        "CollectPEBSRecord": "2",
++        "CollectPEBSRecord": "3",
+         "Counter": "0,1,2,3,4,5",
++        "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
+-        "PEBS": "1",
++        "L1_Hit_Indication": "1",
++        "PEBS": "2",
+         "PEBScounters": "0,1,2,3,4,5",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x6",
+@@ -350,7 +360,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
+y the L3 cache where a snoop was sent, the snoop hit, and modified data was=
+ forwarded.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -983,7 +993,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that resulted in a s=
+noop hit in another cores caches, data forwarding is required as the data i=
+s modified.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -993,8 +1003,8 @@
+         "Unit": "cpu_core"
+     },
+     {
+-        "BriefDescription": "DEMAND_DATA_RD & L3_HIT & SNOOP_HIT_WITH_FWD"=
+,
+-        "Counter": "0,1,2,3",
++        "BriefDescription": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD"=
+,
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1005,7 +1015,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that resulte=
+d in a snoop hit in another cores caches, data forwarding is required as th=
+e data is modified.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1137,4 +1147,4 @@
+         "UMask": "0x4",
+         "Unit": "cpu_core"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/frontend.json b/tools=
+/perf/pmu-events/arch/x86/alderlake/frontend.json
+index 908588f63314..2c27d5806625 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/frontend.json
+@@ -294,6 +294,21 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "TBD",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc6",
++        "EventName": "FRONTEND_RETIRED.MS_FLOWS",
++        "MSRIndex": "0x3F7",
++        "MSRValue": "0x8",
++        "PEBS": "1",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "SampleAfterValue": "100007",
++        "TakenAlone": "1",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Retired Instructions who experienced STLB (2n=
+d level TLB) true miss.",
+         "CollectPEBSRecord": "2",
+@@ -488,4 +503,4 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/memory.json b/tools/p=
+erf/pmu-events/arch/x86/alderlake/memory.json
+index 1d4d1ebe2a74..95ff71c9b176 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/memory.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/memory.json
+@@ -1,24 +1,28 @@
+ [
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to any number of reasons, incl=
+uding an L1 miss, WCB full, pagewalk, store address block or store data blo=
+ck, on a load that retires.",
++        "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.ANY_AT_RET",
++        "PEBScounters": "0,1,2,3,4,5",
+         "SampleAfterValue": "1000003",
+         "UMask": "0xff",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to a core bound stall includin=
+g a store address match, a DTLB miss or a page walk that detains the load f=
+rom retiring.",
+-        "Counter": "0,1,2,3",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.L1_BOUND_AT_RET",
++        "PEBScounters": "0,1,2,3,4,5",
+         "SampleAfterValue": "1000003",
+         "UMask": "0xf4",
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to other block cases when load=
+ subsequently retires when load subsequently retires.",
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to other =
+block cases.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x05",
+@@ -29,7 +33,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to a pagewalk when load subseq=
+uently retires.",
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a page=
+walk.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x05",
+@@ -40,7 +44,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to a store address match when =
+load subsequently retires.",
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a stor=
+e address match.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x05",
+@@ -63,7 +67,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -74,7 +78,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
+ed by the L3 cache.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_RFO.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -295,7 +299,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -306,7 +310,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that were no=
+t supplied by the L3 cache.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_RFO.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -315,4 +319,4 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/other.json b/tools/pe=
+rf/pmu-events/arch/x86/alderlake/other.json
+index dc810f093fb0..7a03b6bc0d44 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/other.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/other.json
+@@ -1,7 +1,7 @@
+ [
+     {
+         "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -12,7 +12,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
+f response.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -23,7 +23,7 @@
+     },
+     {
+         "BriefDescription": "Counts streaming stores that have any type of=
+ response.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xB7",
+         "EventName": "OCR.STREAMING_WR.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -33,18 +33,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Number of occurrences where a microcode assis=
+t is invoked by hardware.",
+-        "CollectPEBSRecord": "2",
+-        "Counter": "0,1,2,3,4,5,6,7",
+-        "EventCode": "0xc1",
+-        "EventName": "ASSISTS.ANY",
+-        "PEBScounters": "0,1,2,3,4,5,6,7",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1f",
+-        "Unit": "cpu_core"
+-    },
+-    {
+-        "BriefDescription": "Count all other microcode assist beyond FP, A=
+VX_TILE_MIX and A/D assists (counted by their own sub-events). This include=
+s assists at uop writeback like AVX* load/store (non-FP) assists, Null Assi=
+st in SNC (due to lack of FP precision format convert with FMA3x3 uarch) or=
+ assists generated by ROB (like assists to due to Missprediction for FSW re=
+gister - fixed in SNC)",
++        "BriefDescription": "TBD",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc1",
+@@ -100,7 +89,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -111,7 +100,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
+y type of response.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -122,7 +111,7 @@
+     },
+     {
+         "BriefDescription": "Counts streaming stores that have any type of=
+ response.",
+-        "Counter": "0,1,2,3",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.STREAMING_WR.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -143,4 +132,4 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/alderlake/pipeline.json
+index de2c6e0ef654..eb5e5a889eed 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
+@@ -23,7 +23,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of far branch instructions =
+retired, includes far jump, far call and return, and Interrupt call and ret=
+urn.",
++        "BriefDescription": "Counts the number of far branch instructions =
+retired, includes far jump, far call and return, and interrupt call and ret=
+urn.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xc4",
+@@ -108,7 +108,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of instructions retired. (F=
+ixed event)",
++        "BriefDescription": "Counts the total number of instructions retir=
+ed. (Fixed event)",
+         "CollectPEBSRecord": "2",
+         "Counter": "32",
+         "EventName": "INST_RETIRED.ANY",
+@@ -182,7 +182,6 @@
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.PAGE_FAULT",
+-        "PEBS": "1",
+         "PEBScounters": "0,1,2,3,4,5",
+         "SampleAfterValue": "20003",
+         "UMask": "0x20",
+@@ -211,7 +210,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of issue slots not consumed=
+ due to a micro-sequencer (MS) scoreboard, which stalls the front-end from =
+issuing uops from the UROM until a specified older uop retires.",
++        "BriefDescription": "Counts the number of issue slots not consumed=
+ by the backend due to a micro-sequencer (MS) scoreboard, which stalls the =
+front-end from issuing from the UROM until a specified older uop retires.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x75",
+@@ -555,7 +554,18 @@
+         "Unit": "cpu_core"
+     },
+     {
+-        "BriefDescription": "TBD",
++        "BriefDescription": "This event counts the cycles the integer divi=
+der is busy.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb0",
++        "EventName": "ARITH.IDIV_ACTIVE",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "This event is deprecated. Refer to new event =
+ARITH.IDIV_ACTIVE",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+@@ -566,6 +576,17 @@
+         "UMask": "0x8",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Number of occurrences where a microcode assis=
+t is invoked by hardware.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc1",
++        "EventName": "ASSISTS.ANY",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1f",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "All branch instructions retired.",
+         "CollectPEBSRecord": "2",
+@@ -756,6 +777,39 @@
+         "UMask": "0x8",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Core clocks when the thread is in the C0.1 li=
+ght-weight slower wakeup time but more power saving optimized state.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xec",
++        "EventName": "CPU_CLK_UNHALTED.C01",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x10",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Core clocks when the thread is in the C0.2 li=
+ght-weight faster wakeup time but less power saving optimized state.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xec",
++        "EventName": "CPU_CLK_UNHALTED.C02",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x20",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Core clocks when the thread is in the C0.1 or=
+ C0.2 or running a PAUSE in C0 ACPI state.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xec",
++        "EventName": "CPU_CLK_UNHALTED.C0_WAIT",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x70",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Cycle counts are evenly distributed between a=
+ctive threads in the Core.",
+         "CollectPEBSRecord": "2",
+@@ -981,6 +1035,17 @@
+         "UMask": "0x40",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Cycles no uop executed while RS was not empty=
+, the SB was not full and there was no outstanding load.",
++        "CollectPEBSRecord": "2",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xa6",
++        "EventName": "EXE_ACTIVITY.EXE_BOUND_0_PORTS",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x80",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Instruction decoders utilized in a cycle",
+         "CollectPEBSRecord": "2",
+@@ -1244,7 +1309,7 @@
+         "CounterMask": "1",
+         "EventCode": "0xa8",
+         "EventName": "LSD.CYCLES_ACTIVE",
+-        "PEBScounters": "0,1,2,3",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+@@ -1256,7 +1321,7 @@
+         "CounterMask": "6",
+         "EventCode": "0xa8",
+         "EventName": "LSD.CYCLES_OK",
+-        "PEBScounters": "0,1,2,3",
++        "PEBScounters": "0,1,2,3,4,5,6,7",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+@@ -1718,4 +1783,4 @@
+         "UMask": "0x2",
+         "Unit": "cpu_core"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/uncore-other.json b/t=
+ools/perf/pmu-events/arch/x86/alderlake/uncore-other.json
+index 50de82c29944..acc6cab7ab3c 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/uncore-other.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/uncore-other.json
+@@ -3,10 +3,10 @@
+         "BriefDescription": "This 48-bit fixed counter counts the UCLK cyc=
+les",
+         "Counter": "Fixed",
+         "CounterType": "PGMABLE",
+-	"EventCode": "0xff",
+         "EventName": "UNC_CLOCK.SOCKET",
+         "PerPkg": "1",
+-        "Unit": "CLOCK"
++        "UMask": "0x01",
++        "Unit": "NCU"
+     },
+     {
+         "BriefDescription": "Counts the number of coherent and in-coherent=
+ requests initiated by IA cores, processor graphic units, or LLC",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/virtual-memory.json b=
+/tools/perf/pmu-events/arch/x86/alderlake/virtual-memory.json
+index 1cc39aa032e1..85516c64b9c0 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/virtual-memory.json
+@@ -22,7 +22,7 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to a DTLB miss when load subse=
+quently retires.",
++        "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a DTLB=
+ miss.",
+         "CollectPEBSRecord": "2",
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x05",
+@@ -255,4 +255,4 @@
+         "UMask": "0x10",
+         "Unit": "cpu_core"
+     }
+-]
+\ No newline at end of file
++]
+--=20
 2.36.0.464.gb9c8b46e94-goog
 
