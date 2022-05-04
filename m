@@ -2,248 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B00C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 18:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBF3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 18:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376771AbiEDSWT (ORCPT
+        id S1377315AbiEDSwj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 May 2022 14:22:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
+        Wed, 4 May 2022 14:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376787AbiEDSWM (ORCPT
+        with ESMTP id S1377329AbiEDSwh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 May 2022 14:22:12 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEAD19419A;
-        Wed,  4 May 2022 10:44:55 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id 16so2566280lju.13;
-        Wed, 04 May 2022 10:44:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Q6SqrbYZWFx128//isZIV7PZCyMyA/oWJ4+i+1SqpQ=;
-        b=SJR3L8zR+8d5bvgbzKtIzYLsLn8vbBLACQi5XNP5Oe0LL5pb8Jj0iVXOS9WzKkLLo8
-         R7L46ho6bcD4h8A0eHDiReXAhwQl2V90VUA4hLlt50WpaPGXDZPcB+qt8aYRHhoD9N6Z
-         SB3AcjlfJVv9FZzLnfKsdN7ayNQAqNybVCMS/KoytSs9kFHomRhOFm14NSEuEhckHf2Y
-         84VYHeBADSymMa9q6bLzp7Dxs3QuAIO68LjuMNjtrStwpl/RfT4VFqTyK9eLmr8mwMnj
-         7qzDFp02DCO7Z2OpeZ8nZosRR51fVboyJq2Dbl8Igk91/P6l45f6BfBRrSVVjp28WMBN
-         fU4g==
-X-Gm-Message-State: AOAM530PR/s5mLu4x5BloR8zWeH/1la9AOAntgCwKKjdT32ezH+VKpoq
-        LBmlZVJHWNsPOz7GBNm3Cxnt4WvKNbywVeWX/gI=
-X-Google-Smtp-Source: ABdhPJw5AG2YrsW1npAHOjDJcRGDqpWprXLTivDEJBhDfskMirP6cXddjRw+ysx5IcErE5BpV0J65ztG3PNK5JqfwJs=
-X-Received: by 2002:a2e:7e05:0:b0:24f:12e3:6602 with SMTP id
- z5-20020a2e7e05000000b0024f12e36602mr12689874ljc.202.1651686293418; Wed, 04
- May 2022 10:44:53 -0700 (PDT)
+        Wed, 4 May 2022 14:52:37 -0400
+Received: from smtp-fw-9103.amazon.com (smtp-fw-9103.amazon.com [207.171.188.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9CF718E10;
+        Wed,  4 May 2022 11:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1651690140; x=1683226140;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=g7YWa84Ggc9PbBc2yEEwZ6f7hUrSoU1ylmKnDzAKmLc=;
+  b=h1Jyue9WmAQ2MfnLE4gcS0lFIdYAkAl+c4xNbYbUYBWS0D19HKgM3AKM
+   B2lqdlBXooYiPooXEVCbGEeAqQIilBVGxwmx6nIHdxq6Xwwa6V8biBxjm
+   jnZsXkgSuW75Caiok4MiEuhoJUv7Xgu9he6ZisBRNUrJDWnRX6HTghK9B
+   E=;
+X-IronPort-AV: E=Sophos;i="5.91,198,1647302400"; 
+   d="scan'208";a="1012911869"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2c-7d0c7241.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 04 May 2022 18:48:59 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-pdx-2c-7d0c7241.us-west-2.amazon.com (Postfix) with ESMTPS id 30E3C41AFE;
+        Wed,  4 May 2022 18:48:59 +0000 (UTC)
+Received: from EX13D02UWB003.ant.amazon.com (10.43.161.48) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Wed, 4 May 2022 18:48:59 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D02UWB003.ant.amazon.com (10.43.161.48) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.32; Wed, 4 May 2022 18:48:58 +0000
+Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
+ (172.19.181.128) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
+ Server id 15.0.1497.32 via Frontend Transport; Wed, 4 May 2022 18:48:58 +0000
+Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
+        id 766BD17AC; Wed,  4 May 2022 18:48:57 +0000 (UTC)
+From:   Ali Saidi <alisaidi@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <german.gomez@arm.com>,
+        <leo.yan@linaro.org>, <acme@kernel.org>
+CC:     <alisaidi@amazon.com>, <benh@kernel.crashing.org>,
+        <Nick.Forrington@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <andrew.kilroy@arm.com>, <james.clark@arm.com>,
+        <john.garry@huawei.com>, <jolsa@kernel.org>, <kjain@linux.ibm.com>,
+        <lihuafei1@huawei.com>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>, <will@kernel.org>
+Subject: [PATCH v8 2/5] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
+Date:   Wed, 4 May 2022 18:48:47 +0000
+Message-ID: <20220504184850.24986-3-alisaidi@amazon.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220504184850.24986-1-alisaidi@amazon.com>
+References: <20220504184850.24986-1-alisaidi@amazon.com>
 MIME-Version: 1.0
-References: <20220503041757.2365696-1-irogers@google.com> <20220503041757.2365696-2-irogers@google.com>
-In-Reply-To: <20220503041757.2365696-2-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 4 May 2022 10:44:42 -0700
-Message-ID: <CAM9d7cia6OT5Mk13R36CwZW8iwVWtsyQVBE7s1+NKhh+dT93Vg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] perf cpumap: Switch to using perf_cpu_map API
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+Add a flag to the perf mem data struct to signal that a request caused a
+cache-to-cache transfer of a line from a peer of the requestor and
+wasn't sourced from a lower cache level.  The line being moved from one
+peer cache to another has latency and performance implications. On Arm64
+Neoverse systems the data source can indicate a cache-to-cache transfer
+but not if the line is dirty or clean, so instead of overloading HITM
+define a new flag that indicates this type of transfer.
 
-On Mon, May 2, 2022 at 9:18 PM Ian Rogers <irogers@google.com> wrote:
->
-> Switch some raw accesses to the cpu map to using the library API. This
-> can help with reference count checking. Some BPF cases switch from index
-> to CPU for consistency, this shouldn't matter as the CPU map is full.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/include/uapi/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index d37629dbad72..7b88bfd097dc 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -1310,7 +1310,7 @@ union perf_mem_data_src {
+ #define PERF_MEM_SNOOP_SHIFT	19
+ 
+ #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+-/* 1 free */
++#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
+ #define PERF_MEM_SNOOPX_SHIFT  38
+ 
+ /* locked instruction */
+-- 
+2.32.0
 
-Thanks,
-Namhyung
-
-
-> ---
->  tools/perf/builtin-record.c          | 13 +++++----
->  tools/perf/util/bpf_counter_cgroup.c | 42 +++++++++++++---------------
->  2 files changed, 26 insertions(+), 29 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 069825c48d40..a5cf6a99d67f 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1011,7 +1011,7 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
->
->         for (m = 0, tm = 0; m < nr_mmaps && tm < thread_data->nr_mmaps; m++) {
->                 if (cpu_map__is_dummy(cpus) ||
-> -                   test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
-> +                   test_bit(perf_cpu_map__cpu(cpus, m).cpu, thread_data->mask->maps.bits)) {
->                         if (thread_data->maps) {
->                                 thread_data->maps[tm] = &mmap[m];
->                                 pr_debug2("thread_data[%p]: cpu%d: maps[%d] -> mmap[%d]\n",
-> @@ -3331,13 +3331,14 @@ struct option *record_options = __record_options;
->
->  static void record__mmap_cpu_mask_init(struct mmap_cpu_mask *mask, struct perf_cpu_map *cpus)
->  {
-> -       int c;
-> +       struct perf_cpu cpu;
-> +       int idx;
->
->         if (cpu_map__is_dummy(cpus))
->                 return;
->
-> -       for (c = 0; c < cpus->nr; c++)
-> -               set_bit(cpus->map[c].cpu, mask->bits);
-> +       perf_cpu_map__for_each_cpu(cpu, idx, cpus)
-> +               set_bit(cpu.cpu, mask->bits);
->  }
->
->  static int record__mmap_cpu_mask_init_spec(struct mmap_cpu_mask *mask, const char *mask_spec)
-> @@ -3404,8 +3405,8 @@ static int record__init_thread_cpu_masks(struct record *rec, struct perf_cpu_map
->         pr_debug("nr_threads: %d\n", rec->nr_threads);
->
->         for (t = 0; t < rec->nr_threads; t++) {
-> -               set_bit(cpus->map[t].cpu, rec->thread_masks[t].maps.bits);
-> -               set_bit(cpus->map[t].cpu, rec->thread_masks[t].affinity.bits);
-> +               set_bit(perf_cpu_map__cpu(cpus, t).cpu, rec->thread_masks[t].maps.bits);
-> +               set_bit(perf_cpu_map__cpu(cpus, t).cpu, rec->thread_masks[t].affinity.bits);
->                 if (verbose) {
->                         pr_debug("thread_masks[%d]: ", t);
->                         mmap_cpu_mask__scnprintf(&rec->thread_masks[t].maps, "maps");
-> diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
-> index ac60c08e8e2a..63b9db657442 100644
-> --- a/tools/perf/util/bpf_counter_cgroup.c
-> +++ b/tools/perf/util/bpf_counter_cgroup.c
-> @@ -46,8 +46,8 @@ static int bperf_load_program(struct evlist *evlist)
->         struct bpf_link *link;
->         struct evsel *evsel;
->         struct cgroup *cgrp, *leader_cgrp;
-> -       __u32 i, cpu;
-> -       __u32 nr_cpus = evlist->core.all_cpus->nr;
-> +       int i, j;
-> +       struct perf_cpu cpu;
->         int total_cpus = cpu__max_cpu().cpu;
->         int map_size, map_fd;
->         int prog_fd, err;
-> @@ -93,9 +93,9 @@ static int bperf_load_program(struct evlist *evlist)
->                 goto out;
->         }
->
-> -       for (i = 0; i < nr_cpus; i++) {
-> +       perf_cpu_map__for_each_cpu(cpu, i, evlist->core.all_cpus) {
->                 link = bpf_program__attach_perf_event(skel->progs.on_cgrp_switch,
-> -                                                     FD(cgrp_switch, i));
-> +                                                     FD(cgrp_switch, cpu.cpu));
->                 if (IS_ERR(link)) {
->                         pr_err("Failed to attach cgroup program\n");
->                         err = PTR_ERR(link);
-> @@ -122,10 +122,9 @@ static int bperf_load_program(struct evlist *evlist)
->                         }
->
->                         map_fd = bpf_map__fd(skel->maps.events);
-> -                       for (cpu = 0; cpu < nr_cpus; cpu++) {
-> -                               int fd = FD(evsel, cpu);
-> -                               __u32 idx = evsel->core.idx * total_cpus +
-> -                                       evlist->core.all_cpus->map[cpu].cpu;
-> +                       perf_cpu_map__for_each_cpu(cpu, j, evlist->core.all_cpus) {
-> +                               int fd = FD(evsel, cpu.cpu);
-> +                               __u32 idx = evsel->core.idx * total_cpus + cpu.cpu;
->
->                                 err = bpf_map_update_elem(map_fd, &idx, &fd,
->                                                           BPF_ANY);
-> @@ -207,14 +206,12 @@ static int bperf_cgrp__install_pe(struct evsel *evsel __maybe_unused,
->   */
->  static int bperf_cgrp__sync_counters(struct evlist *evlist)
->  {
-> -       int i, cpu;
-> -       int nr_cpus = evlist->core.all_cpus->nr;
-> +       struct perf_cpu cpu;
-> +       int idx;
->         int prog_fd = bpf_program__fd(skel->progs.trigger_read);
->
-> -       for (i = 0; i < nr_cpus; i++) {
-> -               cpu = evlist->core.all_cpus->map[i].cpu;
-> -               bperf_trigger_reading(prog_fd, cpu);
-> -       }
-> +       perf_cpu_map__for_each_cpu(cpu, idx, evlist->core.all_cpus)
-> +               bperf_trigger_reading(prog_fd, cpu.cpu);
->
->         return 0;
->  }
-> @@ -244,12 +241,10 @@ static int bperf_cgrp__disable(struct evsel *evsel)
->  static int bperf_cgrp__read(struct evsel *evsel)
->  {
->         struct evlist *evlist = evsel->evlist;
-> -       int i, cpu, nr_cpus = evlist->core.all_cpus->nr;
->         int total_cpus = cpu__max_cpu().cpu;
->         struct perf_counts_values *counts;
->         struct bpf_perf_event_value *values;
->         int reading_map_fd, err = 0;
-> -       __u32 idx;
->
->         if (evsel->core.idx)
->                 return 0;
-> @@ -263,7 +258,10 @@ static int bperf_cgrp__read(struct evsel *evsel)
->         reading_map_fd = bpf_map__fd(skel->maps.cgrp_readings);
->
->         evlist__for_each_entry(evlist, evsel) {
-> -               idx = evsel->core.idx;
-> +               __u32 idx = evsel->core.idx;
-> +               int i;
-> +               struct perf_cpu cpu;
-> +
->                 err = bpf_map_lookup_elem(reading_map_fd, &idx, values);
->                 if (err) {
->                         pr_err("bpf map lookup failed: idx=%u, event=%s, cgrp=%s\n",
-> @@ -271,13 +269,11 @@ static int bperf_cgrp__read(struct evsel *evsel)
->                         goto out;
->                 }
->
-> -               for (i = 0; i < nr_cpus; i++) {
-> -                       cpu = evlist->core.all_cpus->map[i].cpu;
-> -
-> +               perf_cpu_map__for_each_cpu(cpu, i, evlist->core.all_cpus) {
->                         counts = perf_counts(evsel->counts, i, 0);
-> -                       counts->val = values[cpu].counter;
-> -                       counts->ena = values[cpu].enabled;
-> -                       counts->run = values[cpu].running;
-> +                       counts->val = values[cpu.cpu].counter;
-> +                       counts->ena = values[cpu.cpu].enabled;
-> +                       counts->run = values[cpu.cpu].running;
->                 }
->         }
->
-> --
-> 2.36.0.464.gb9c8b46e94-goog
->
