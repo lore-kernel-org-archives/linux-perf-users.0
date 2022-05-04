@@ -2,61 +2,51 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4E9C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 13:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22055C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 14:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351061AbiEDOC5 (ORCPT
+        id S1343689AbiEDOTs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 May 2022 10:02:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50670 "EHLO
+        Wed, 4 May 2022 10:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350862AbiEDOCx (ORCPT
+        with ESMTP id S1346912AbiEDOTr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 May 2022 10:02:53 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7B24133F
-        for <linux-perf-users@vger.kernel.org>; Wed,  4 May 2022 06:59:16 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id p189so918251wmp.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 May 2022 06:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mFqD13h4DdEbrcwcMZezbebSSUTg4ODI3AEZjhdBnJo=;
-        b=C3gJIISQGKpGwD5Uo4+zbm+rTWry5xThpDoIGPNlp5cbWX32T1RNUtN1amj3QDVh1B
-         TCXS2oZJxLVDuAKZdB7JPd+jsuqFUraet3XEvALiNc3PUzb37XfAI/8F5Jc5TG7sTVkc
-         lhZI5ESvf6mMWgoj9jtkABu0WCdcNgFZrbfuvryasULrHZGkiI+nqgLa8SoaBm8Zyyzs
-         eu8ttQotSzZ+olfMRwXlzEcQIoo8h1e76N8Co88HyBPpa/FKHEOE8Pce0+4CRMxQR2qw
-         9GSKy/bthfIHmvKrVPPcsN4L3VnYYKpMZSFYvSXKU2L5/Mdihghe8ByyPIVsWJ4gldla
-         atSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mFqD13h4DdEbrcwcMZezbebSSUTg4ODI3AEZjhdBnJo=;
-        b=4d04xr0LxMvm1UNy8/hUl+bhVVwr7k4h5Bj0KsItuZEmpeqvvRHmWJs1AbN5GsZpS3
-         CjuF/nkUiu2+PaL4ZB8kdUIMvNHUJ6nj4uvbq8V8InlpZVdSAOeRLg4ivslCBEndInyi
-         oyPFkio8lkzyKMrFA/BAJ/vDF6ksVHPLA0YLbOUyVrq0b/Nj5qQ0MSz3ht6EcXNBcLxC
-         NBq/zjBTj7O7G1DlUjyWkUbvEaQeATkOBSE4W/T73XHmGOw6FJM/GurKUeGdVzPC5EJa
-         SFuFD/fRTVzNa8umznk1SWFhv2sMdV73zdA/vpA07d4kuxNz1tgm5WXRAPUeO67osIGR
-         vIHA==
-X-Gm-Message-State: AOAM531/Pe/IrxL56B6v/DX0WUW6F7gsWacDcNxpCcDtwVTH0dboKz+l
-        KwrJxYr1Kruw+BBVSc/9/w46DFueD37x23foUC7POw==
-X-Google-Smtp-Source: ABdhPJyl78M9m8Ok2I2KXHYCTWh5Tm0JqrbFxuW8XjLXJ+r+TmWyE1aOYBRGGrp5HAGImVd4KosxmdZIs3IshZNQqsY=
-X-Received: by 2002:a1c:a301:0:b0:392:9bc5:203c with SMTP id
- m1-20020a1ca301000000b003929bc5203cmr7762038wme.67.1651672755125; Wed, 04 May
- 2022 06:59:15 -0700 (PDT)
+        Wed, 4 May 2022 10:19:47 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52736BE2E;
+        Wed,  4 May 2022 07:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651673771; x=1683209771;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MWohxTGSYgiw+QLiiSWOsACclXShwViZvjP92qdVJmo=;
+  b=mO3pgXA/k0owI8ahsvfx4y2Y5jwySnFahkLSqJt968yEFnPS8OyC43rx
+   L7cj446ERnI9CMdHkGC5xxRas5aFpJq5ejo2m6YP/uBd8u2NdFAisyJ6n
+   RlF/5+dw7MQuqvti391hhJSP3HiLYdaIP2uuBRmBRapH15vVgCjzNudXA
+   nZIVay2R3yX5QLXv2GjuI2XO7FRNcxUPJ54+YMaeYqQYFEgeMNsF8Z0IN
+   YYAzsDaxdgyDCih9PvixtqjeI7KL6rhAYdGtQmv1CeLEhFdJOODhWGJrQ
+   nXLkrqxXuvHXdsASxLD036a/yXNifHPLDoXCQODFPHX7KTBsumJi68Nm5
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10337"; a="292966698"
+X-IronPort-AV: E=Sophos;i="5.91,198,1647327600"; 
+   d="scan'208";a="292966698"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 07:16:11 -0700
+X-IronPort-AV: E=Sophos;i="5.91,198,1647327600"; 
+   d="scan'208";a="584757563"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.90])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 07:16:02 -0700
+Message-ID: <9e862a01-b955-70c0-25ae-2efc03f636bf@intel.com>
+Date:   Wed, 4 May 2022 17:15:57 +0300
 MIME-Version: 1.0
-References: <20220503041757.2365696-1-irogers@google.com> <20220503041757.2365696-5-irogers@google.com>
- <b94f3863-c690-e0f7-5cde-18fbf24143e5@intel.com> <CAP-5=fWfs2td9nZLGdEBD+C5s=upa_7SORab8tQ7qH=jX--F7w@mail.gmail.com>
- <1e13c738-3460-ef7f-8b4b-5169e16b0b06@intel.com>
-In-Reply-To: <1e13c738-3460-ef7f-8b4b-5169e16b0b06@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 4 May 2022 06:59:01 -0700
-Message-ID: <CAP-5=fWEdLV6Jf5q=MSQyVSL0Q3-KxSvCWgXGjhexezx9AJAdA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/6] perf cpumap: Handle dummy maps as empty in subset
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.8.1
+Subject: Re: [PATCH v5 2/6] perf evlist: Clear all_cpus before propagating
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -83,162 +73,49 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Andi Kleen <ak@linux.intel.com>,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220503041757.2365696-1-irogers@google.com>
+ <20220503041757.2365696-3-irogers@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220503041757.2365696-3-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 4, 2022 at 5:54 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 3/05/22 17:03, Ian Rogers wrote:
-> > On Tue, May 3, 2022 at 12:43 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>
-> >> On 3/05/22 07:17, Ian Rogers wrote:
-> >>> perf_cpu_map__empty is true for empty and dummy maps. Make is_subset
-> >>> respect that.
-> >>
-> >> As I wrote before, I am not keen on this because it prevents -1, as a
-> >> valid 3rd parameter to perf_event_open(), from being represented
-> >> in merged evsel cpu maps.
-> >>
-> >> Why do you want this?
-> >
-> > Thanks Adrian, could you give me a test case (command line) where the
-> > differing dummy and empty behavior matters?
->
-> perf record --per-thread -e intel_pt// uname
->
-> With patchset "perf intel-pt: Better support for perf record --cpu"
-> the above will have (assuming 8-CPUs):
->         user_requested_cpus = {-1}
->         intel_pt evsel->cpus = {-1}
->         text_poke dummy evsel->cpus = {0-7}
-> which when merged would result in:
->         before this patch: all_cpus = {-1-7}
->         after this patch:  all_cpus = {0-7}
->
-> The absence of -1 will mean that the intel_pt event does not get
-> mmapped.
+On 3/05/22 07:17, Ian Rogers wrote:
+> all_cpus is merged into during propagation. Initially all_cpus is set
+> from PMU sysfs. perf_evlist__set_maps will recompute it and change
+> evsel->cpus to user_requested_cpus if they are given. If all_cpus isn't
+> cleared then the union of the user_requested_cpus and PMU sysfs values
+> is set to all_cpus, whereas just user_requested_cpus is necessary. To
+> avoid this make all_cpus empty prior to propagation.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Thanks, so what's the right fix? To make this work we should:
- - remove language of dummy being a singular cpu_map
- - change perf_cpu_map__empty to be something like
-perf_cpu_map__empty_or_just_dummy
- - change cpu_map__is_dummy to be something llike cpu_map__singular_dummy
- - add tests on cpu map code for things like the evlist affiinity
-iterator as I'm not clear what will happen when it encounters a -1 CPU
-Note, I'm proposing changing function names rather than implementation
-behavior, as we don't have enough tests to give me confidence that
-changing the existing behavior wouldn't break something. For example,
---per-thread mode was recently broken:
-https://lore.kernel.org/lkml/e1ce0d93-88cc-af79-e67e-d3c79d166ca6@gmail.com/
-Do we also need to fix up parse events for software events (e.g.
-faults) where the cpu map is empty but really should be dummy? This
-will likely need a propagate fix as during the parsing propagation
-user_requested_cpus is empty and we want to keep dummy cpu maps, not
-overwrite them with empty.
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-I see a fair amount of clean up here, which isn't bad. My assumed
-alternative was that the intel_pt code could look for dummy cpu maps
-on the evsels, but then why have dummy cpu maps at all and just use
-empty throughout the code base? We could also add a flag to the evlist
-to say whether any evsel cpu maps contain a dummy/empty map. API wise
-I'm tempted to say that the dummy CPU map should be removed and empty
-just used in its place (less is more, keep it simple).
+> ---
+>  tools/lib/perf/evlist.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index a09315538a30..974b4585f93e 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -59,6 +59,10 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+>  {
+>  	struct perf_evsel *evsel;
+>  
+> +	/* Recomputing all_cpus, so start with a blank slate. */
+> +	perf_cpu_map__put(evlist->all_cpus);
+> +	evlist->all_cpus = NULL;
+> +
+>  	perf_evlist__for_each_evsel(evlist, evsel)
+>  		__perf_evlist__propagate_maps(evlist, evsel);
+>  }
 
-Something that would help with clarity, I think, would be to land the fix in:
-https://lore.kernel.org/lkml/20220503041757.2365696-3-irogers@google.com/
-as currently all_cpus contains cpus not in the evsel cpu maps, but are
-residue from when the evsels were parsed.
-
-Thanks,
-Ian
-
-> >                                             Normally cpus/own_cpus are
-> > set to null during parsing. They may get replaced with
-> > user_requested_cpus:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evlist.c?h=perf/core#n44
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evlist.c?h=perf/core#n45
-> > (should it be on line 45 that !empty is expected?)
-> >
-> > During merge the null/empty all_cpus drops this value, which doesn't
-> > matter as the behavior with empty is the same as dummy:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evsel.c?h=perf/core#n119
-> >
-> > What's concerning me is the definition of empty:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/cpumap.c?h=perf/core#n279
-> > ```
-> > return map ? map->map[0].cpu == -1 : true;
-> > ```
-> > If the first entry can be -1 and there can be other CPUs merged after
-> > then that cpu map will be empty by the definition above. Perhaps it
-> > should be:
-> > ```
-> > return map ? (map->nr == 1 && map->map[0].cpu == -1) : true;
-> > ```
-> > but it seems you prefer:
-> > ```
-> > return (map == NULL) ? true : false;
-> > ```
-> >
-> > You'd asked what the behavior with a dummy is and clearly it is
-> > somewhat muddy. That is what this patch and unit test is trying to
-> > clean up.
-> >
-> > Thanks,
-> > Ian
-> >
-> >>>
-> >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> >>> ---
-> >>>  tools/lib/perf/cpumap.c   |  4 ++--
-> >>>  tools/perf/tests/cpumap.c | 10 +++++++++-
-> >>>  2 files changed, 11 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> >>> index 384d5e076ee4..9c83675788c2 100644
-> >>> --- a/tools/lib/perf/cpumap.c
-> >>> +++ b/tools/lib/perf/cpumap.c
-> >>> @@ -322,9 +322,9 @@ struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
-> >>>  /** Is 'b' a subset of 'a'. */
-> >>>  bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b)
-> >>>  {
-> >>> -     if (a == b || !b)
-> >>> +     if (a == b || perf_cpu_map__empty(b))
-> >>>               return true;
-> >>> -     if (!a || b->nr > a->nr)
-> >>> +     if (perf_cpu_map__empty(a) || b->nr > a->nr)
-> >>>               return false;
-> >>>
-> >>>       for (int i = 0, j = 0; i < a->nr; i++) {
-> >>> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> >>> index f94929ebb54b..d52b58395385 100644
-> >>> --- a/tools/perf/tests/cpumap.c
-> >>> +++ b/tools/perf/tests/cpumap.c
-> >>> @@ -128,13 +128,21 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
-> >>>       struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-> >>>       struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
-> >>>       struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
-> >>> +     struct perf_cpu_map *d = perf_cpu_map__dummy_new();
-> >>> +     struct perf_cpu_map *e = perf_cpu_map__merge(b, d);
-> >>>       char buf[100];
-> >>>
-> >>>       TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
-> >>>       cpu_map__snprint(c, buf, sizeof(buf));
-> >>>       TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
-> >>> -     perf_cpu_map__put(b);
-> >>> +
-> >>> +     TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(e) == 3);
-> >>> +     cpu_map__snprint(e, buf, sizeof(buf));
-> >>> +     TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "4-5,7"));
-> >>> +
-> >>>       perf_cpu_map__put(c);
-> >>> +     perf_cpu_map__put(d);
-> >>> +     perf_cpu_map__put(e);
-> >>>       return 0;
-> >>>  }
-> >>>
-> >>
->
