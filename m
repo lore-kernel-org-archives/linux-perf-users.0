@@ -2,67 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6488DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 16:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B00C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 May 2022 18:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353291AbiEDQhR (ORCPT
+        id S1376771AbiEDSWT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 May 2022 12:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40560 "EHLO
+        Wed, 4 May 2022 14:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353501AbiEDQhP (ORCPT
+        with ESMTP id S1376787AbiEDSWM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 May 2022 12:37:15 -0400
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F3C46B15
-        for <linux-perf-users@vger.kernel.org>; Wed,  4 May 2022 09:33:38 -0700 (PDT)
-Received: by mail-vk1-xa35.google.com with SMTP id q136so851612vke.10
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 May 2022 09:33:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cDS60C9u9x/RdVDHtiuQuEezTlcmXpM3XmuMpJAIU/w=;
-        b=FBACWb6L4uACoKf5d+lBPnBDMnAuVmO0g/VTi20YqdWXU/SIdR6noqRlxG9pAcrSks
-         NTXWZuntm0ZBlMn8cp5AJKVWphl8cZF3RVpkz3KjgPW1NXCcjRPe3V4AN4BBS79RvDTU
-         iZ7VMsQMz9d0Ecs3+dwHxUAjBJFUqdSQiCxTUPklrmxGHtEXUgT5f/kj8Gy7dbELVB3F
-         JXkNDgLU/P2BHij4IVv103IBUqyNCEblJyJDADGubnkzbH2GhNMKXML2tqNjZsxlblGW
-         dMNXgdPyPCa7Y7Fg/kf0PDzsLHGBHsjFZWPbiL2XJMsHJ5cA5+/nBzFT3NYlktwPBtfY
-         q0Kg==
+        Wed, 4 May 2022 14:22:12 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEAD19419A;
+        Wed,  4 May 2022 10:44:55 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 16so2566280lju.13;
+        Wed, 04 May 2022 10:44:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cDS60C9u9x/RdVDHtiuQuEezTlcmXpM3XmuMpJAIU/w=;
-        b=mWPrxM/j2kxkfo94u8HiMJpjlL3SjwOuytr3Fj9hWXv9RVr56Ym2I19fo9IR+yDMn+
-         2qipS/MZxAx0Qx2BFW8+lcVxtVIVoadspqwUofRAK9IAqIazgMofTdaEXvBU7rxwvkvq
-         ZWYXTVEP0O1Qajg56uJGzo/KQy/GqqKfCzb1Sz3MLNpYougpy6YMJP5OkDvn4/jSJGCX
-         mNvvqY1ZvY+6PwWWcQLslk1jxs3DykXr5W57aFuyVqPSEZMPDZCjin4bLLz17wB0sRBE
-         mfsHKTOcMtTSASXMRYllA7e0FtMbdjDm6eWkULLxZfwt4db5ezaBlBTV5IBfAP2hnQLw
-         vuNg==
-X-Gm-Message-State: AOAM531+P5uDsiLLXkE4D27f/mnYCrzeH8Kjbzc0kpc+GFLOR8eLg4JR
-        M2aAMayeDYM1aSOrfP2JfhYsGMnbIhwSaEUJM9zHPg==
-X-Google-Smtp-Source: ABdhPJxQi3X3gPnVQrMnPtXtXyKZMxnl8Ptd10D7i/81kk1ZzlLNsEkDikqXR5JlfpSGIKsO58Lyiu0eCOd3erRaK/c=
-X-Received: by 2002:a1f:9fc4:0:b0:345:5848:4f44 with SMTP id
- i187-20020a1f9fc4000000b0034558484f44mr6836751vke.2.1651682017788; Wed, 04
- May 2022 09:33:37 -0700 (PDT)
+        bh=+Q6SqrbYZWFx128//isZIV7PZCyMyA/oWJ4+i+1SqpQ=;
+        b=SJR3L8zR+8d5bvgbzKtIzYLsLn8vbBLACQi5XNP5Oe0LL5pb8Jj0iVXOS9WzKkLLo8
+         R7L46ho6bcD4h8A0eHDiReXAhwQl2V90VUA4hLlt50WpaPGXDZPcB+qt8aYRHhoD9N6Z
+         SB3AcjlfJVv9FZzLnfKsdN7ayNQAqNybVCMS/KoytSs9kFHomRhOFm14NSEuEhckHf2Y
+         84VYHeBADSymMa9q6bLzp7Dxs3QuAIO68LjuMNjtrStwpl/RfT4VFqTyK9eLmr8mwMnj
+         7qzDFp02DCO7Z2OpeZ8nZosRR51fVboyJq2Dbl8Igk91/P6l45f6BfBRrSVVjp28WMBN
+         fU4g==
+X-Gm-Message-State: AOAM530PR/s5mLu4x5BloR8zWeH/1la9AOAntgCwKKjdT32ezH+VKpoq
+        LBmlZVJHWNsPOz7GBNm3Cxnt4WvKNbywVeWX/gI=
+X-Google-Smtp-Source: ABdhPJw5AG2YrsW1npAHOjDJcRGDqpWprXLTivDEJBhDfskMirP6cXddjRw+ysx5IcErE5BpV0J65ztG3PNK5JqfwJs=
+X-Received: by 2002:a2e:7e05:0:b0:24f:12e3:6602 with SMTP id
+ z5-20020a2e7e05000000b0024f12e36602mr12689874ljc.202.1651686293418; Wed, 04
+ May 2022 10:44:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220503041757.2365696-1-irogers@google.com> <20220503041757.2365696-5-irogers@google.com>
- <b94f3863-c690-e0f7-5cde-18fbf24143e5@intel.com> <CAP-5=fWfs2td9nZLGdEBD+C5s=upa_7SORab8tQ7qH=jX--F7w@mail.gmail.com>
- <1e13c738-3460-ef7f-8b4b-5169e16b0b06@intel.com> <CAP-5=fWEdLV6Jf5q=MSQyVSL0Q3-KxSvCWgXGjhexezx9AJAdA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWEdLV6Jf5q=MSQyVSL0Q3-KxSvCWgXGjhexezx9AJAdA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 4 May 2022 09:33:25 -0700
-Message-ID: <CAP-5=fWaN-tuk4oODVT+6Nezz0B7BKpQf7X0LLhSwHJ=6_Sz=w@mail.gmail.com>
-Subject: Re: [PATCH v5 4/6] perf cpumap: Handle dummy maps as empty in subset
-To:     Adrian Hunter <adrian.hunter@intel.com>
+References: <20220503041757.2365696-1-irogers@google.com> <20220503041757.2365696-2-irogers@google.com>
+In-Reply-To: <20220503041757.2365696-2-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 4 May 2022 10:44:42 -0700
+Message-ID: <CAM9d7cia6OT5Mk13R36CwZW8iwVWtsyQVBE7s1+NKhh+dT93Vg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] perf cpumap: Switch to using perf_cpu_map API
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -79,200 +65,185 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Kajol Jain <kjain@linux.ibm.com>,
         James Clark <james.clark@arm.com>,
         German Gomez <german.gomez@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Riccardo Mancini <rickyman7@gmail.com>,
         Andi Kleen <ak@linux.intel.com>,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 4, 2022 at 6:59 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Wed, May 4, 2022 at 5:54 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >
-> > On 3/05/22 17:03, Ian Rogers wrote:
-> > > On Tue, May 3, 2022 at 12:43 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> > >>
-> > >> On 3/05/22 07:17, Ian Rogers wrote:
-> > >>> perf_cpu_map__empty is true for empty and dummy maps. Make is_subset
-> > >>> respect that.
-> > >>
-> > >> As I wrote before, I am not keen on this because it prevents -1, as a
-> > >> valid 3rd parameter to perf_event_open(), from being represented
-> > >> in merged evsel cpu maps.
-> > >>
-> > >> Why do you want this?
-> > >
-> > > Thanks Adrian, could you give me a test case (command line) where the
-> > > differing dummy and empty behavior matters?
-> >
-> > perf record --per-thread -e intel_pt// uname
-> >
-> > With patchset "perf intel-pt: Better support for perf record --cpu"
-> > the above will have (assuming 8-CPUs):
-> >         user_requested_cpus = {-1}
-> >         intel_pt evsel->cpus = {-1}
-> >         text_poke dummy evsel->cpus = {0-7}
-> > which when merged would result in:
-> >         before this patch: all_cpus = {-1-7}
-> >         after this patch:  all_cpus = {0-7}
-> >
-> > The absence of -1 will mean that the intel_pt event does not get
-> > mmapped.
->
-> Thanks, so what's the right fix? To make this work we should:
->  - remove language of dummy being a singular cpu_map
->  - change perf_cpu_map__empty to be something like
-> perf_cpu_map__empty_or_just_dummy
->  - change cpu_map__is_dummy to be something llike cpu_map__singular_dummy
->  - add tests on cpu map code for things like the evlist affiinity
-> iterator as I'm not clear what will happen when it encounters a -1 CPU
-> Note, I'm proposing changing function names rather than implementation
-> behavior, as we don't have enough tests to give me confidence that
-> changing the existing behavior wouldn't break something. For example,
-> --per-thread mode was recently broken:
-> https://lore.kernel.org/lkml/e1ce0d93-88cc-af79-e67e-d3c79d166ca6@gmail.com/
-> Do we also need to fix up parse events for software events (e.g.
-> faults) where the cpu map is empty but really should be dummy? This
-> will likely need a propagate fix as during the parsing propagation
-> user_requested_cpus is empty and we want to keep dummy cpu maps, not
-> overwrite them with empty.
->
-> I see a fair amount of clean up here, which isn't bad. My assumed
-> alternative was that the intel_pt code could look for dummy cpu maps
-> on the evsels, but then why have dummy cpu maps at all and just use
-> empty throughout the code base? We could also add a flag to the evlist
-> to say whether any evsel cpu maps contain a dummy/empty map. API wise
-> I'm tempted to say that the dummy CPU map should be removed and empty
-> just used in its place (less is more, keep it simple).
->
-> Something that would help with clarity, I think, would be to land the fix in:
-> https://lore.kernel.org/lkml/20220503041757.2365696-3-irogers@google.com/
-> as currently all_cpus contains cpus not in the evsel cpu maps, but are
-> residue from when the evsels were parsed.
+Hi Ian,
 
-Just to think out loud on this a bit more. If we imagine the CPU in
-the CPU map is going to be consumed by perf_event_open then the
-definition of CPU there is:
-cpu == -1: Any CPU
-cpu >= 0: Specified CPU
-A CPU map of {-1-7} would mean any CPU and CPUs 0-7, which for an
-evsel would be something of a contradiction. We also have the
-contradiction that no CPUs is turned into -1, which means any CPU.
-This leads me to think:
- - let's rename dummy to any CPU, this is more intention revealing and
-may avoid confusion with the dummy event;
- - let's make empty really mean empty, no specified or any CPU values.
-If an evsel is opened, .. with an empty CPU map it is a failure (this
-will need parse-event fixes, etc.);
- - let's allow {-1-7} as a CPU map, ie allow any with specified CPUS,
-and document that it comes about from merging CPU maps;
- - let's try to push the cleaned up API into libperf and get rid of
-leftover bits in tools/perf/util/cpumap.h.
+On Mon, May 2, 2022 at 9:18 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Switch some raw accesses to the cpu map to using the library API. This
+> can help with reference count checking. Some BPF cases switch from index
+> to CPU for consistency, this shouldn't matter as the CPU map is full.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-In terms of scheduling I think we can land what's in this series
-except this patch and the rename of all_cpus in patch 6/6. This avoids
-merge conflicts to more easily land the intel_pt --cpu fixes in:
-https://lore.kernel.org/lkml/20220422162402.147958-1-adrian.hunter@intel.com/
-With that landed then I can do the function rename and cleanup work.
-Things like making sure the evlist affinity iterator works an any CPU
-in the CPU map.
-
-What do you think?
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
-Ian
+Namhyung
 
-> Thanks,
-> Ian
+
+> ---
+>  tools/perf/builtin-record.c          | 13 +++++----
+>  tools/perf/util/bpf_counter_cgroup.c | 42 +++++++++++++---------------
+>  2 files changed, 26 insertions(+), 29 deletions(-)
 >
-> > >                                             Normally cpus/own_cpus are
-> > > set to null during parsing. They may get replaced with
-> > > user_requested_cpus:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evlist.c?h=perf/core#n44
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evlist.c?h=perf/core#n45
-> > > (should it be on line 45 that !empty is expected?)
-> > >
-> > > During merge the null/empty all_cpus drops this value, which doesn't
-> > > matter as the behavior with empty is the same as dummy:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/evsel.c?h=perf/core#n119
-> > >
-> > > What's concerning me is the definition of empty:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/cpumap.c?h=perf/core#n279
-> > > ```
-> > > return map ? map->map[0].cpu == -1 : true;
-> > > ```
-> > > If the first entry can be -1 and there can be other CPUs merged after
-> > > then that cpu map will be empty by the definition above. Perhaps it
-> > > should be:
-> > > ```
-> > > return map ? (map->nr == 1 && map->map[0].cpu == -1) : true;
-> > > ```
-> > > but it seems you prefer:
-> > > ```
-> > > return (map == NULL) ? true : false;
-> > > ```
-> > >
-> > > You'd asked what the behavior with a dummy is and clearly it is
-> > > somewhat muddy. That is what this patch and unit test is trying to
-> > > clean up.
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > >>>
-> > >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >>> ---
-> > >>>  tools/lib/perf/cpumap.c   |  4 ++--
-> > >>>  tools/perf/tests/cpumap.c | 10 +++++++++-
-> > >>>  2 files changed, 11 insertions(+), 3 deletions(-)
-> > >>>
-> > >>> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > >>> index 384d5e076ee4..9c83675788c2 100644
-> > >>> --- a/tools/lib/perf/cpumap.c
-> > >>> +++ b/tools/lib/perf/cpumap.c
-> > >>> @@ -322,9 +322,9 @@ struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
-> > >>>  /** Is 'b' a subset of 'a'. */
-> > >>>  bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b)
-> > >>>  {
-> > >>> -     if (a == b || !b)
-> > >>> +     if (a == b || perf_cpu_map__empty(b))
-> > >>>               return true;
-> > >>> -     if (!a || b->nr > a->nr)
-> > >>> +     if (perf_cpu_map__empty(a) || b->nr > a->nr)
-> > >>>               return false;
-> > >>>
-> > >>>       for (int i = 0, j = 0; i < a->nr; i++) {
-> > >>> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> > >>> index f94929ebb54b..d52b58395385 100644
-> > >>> --- a/tools/perf/tests/cpumap.c
-> > >>> +++ b/tools/perf/tests/cpumap.c
-> > >>> @@ -128,13 +128,21 @@ static int test__cpu_map_merge(struct test_suite *test __maybe_unused, int subte
-> > >>>       struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-> > >>>       struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
-> > >>>       struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
-> > >>> +     struct perf_cpu_map *d = perf_cpu_map__dummy_new();
-> > >>> +     struct perf_cpu_map *e = perf_cpu_map__merge(b, d);
-> > >>>       char buf[100];
-> > >>>
-> > >>>       TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(c) == 5);
-> > >>>       cpu_map__snprint(c, buf, sizeof(buf));
-> > >>>       TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
-> > >>> -     perf_cpu_map__put(b);
-> > >>> +
-> > >>> +     TEST_ASSERT_VAL("failed to merge map: bad nr", perf_cpu_map__nr(e) == 3);
-> > >>> +     cpu_map__snprint(e, buf, sizeof(buf));
-> > >>> +     TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "4-5,7"));
-> > >>> +
-> > >>>       perf_cpu_map__put(c);
-> > >>> +     perf_cpu_map__put(d);
-> > >>> +     perf_cpu_map__put(e);
-> > >>>       return 0;
-> > >>>  }
-> > >>>
-> > >>
-> >
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 069825c48d40..a5cf6a99d67f 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1011,7 +1011,7 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
+>
+>         for (m = 0, tm = 0; m < nr_mmaps && tm < thread_data->nr_mmaps; m++) {
+>                 if (cpu_map__is_dummy(cpus) ||
+> -                   test_bit(cpus->map[m].cpu, thread_data->mask->maps.bits)) {
+> +                   test_bit(perf_cpu_map__cpu(cpus, m).cpu, thread_data->mask->maps.bits)) {
+>                         if (thread_data->maps) {
+>                                 thread_data->maps[tm] = &mmap[m];
+>                                 pr_debug2("thread_data[%p]: cpu%d: maps[%d] -> mmap[%d]\n",
+> @@ -3331,13 +3331,14 @@ struct option *record_options = __record_options;
+>
+>  static void record__mmap_cpu_mask_init(struct mmap_cpu_mask *mask, struct perf_cpu_map *cpus)
+>  {
+> -       int c;
+> +       struct perf_cpu cpu;
+> +       int idx;
+>
+>         if (cpu_map__is_dummy(cpus))
+>                 return;
+>
+> -       for (c = 0; c < cpus->nr; c++)
+> -               set_bit(cpus->map[c].cpu, mask->bits);
+> +       perf_cpu_map__for_each_cpu(cpu, idx, cpus)
+> +               set_bit(cpu.cpu, mask->bits);
+>  }
+>
+>  static int record__mmap_cpu_mask_init_spec(struct mmap_cpu_mask *mask, const char *mask_spec)
+> @@ -3404,8 +3405,8 @@ static int record__init_thread_cpu_masks(struct record *rec, struct perf_cpu_map
+>         pr_debug("nr_threads: %d\n", rec->nr_threads);
+>
+>         for (t = 0; t < rec->nr_threads; t++) {
+> -               set_bit(cpus->map[t].cpu, rec->thread_masks[t].maps.bits);
+> -               set_bit(cpus->map[t].cpu, rec->thread_masks[t].affinity.bits);
+> +               set_bit(perf_cpu_map__cpu(cpus, t).cpu, rec->thread_masks[t].maps.bits);
+> +               set_bit(perf_cpu_map__cpu(cpus, t).cpu, rec->thread_masks[t].affinity.bits);
+>                 if (verbose) {
+>                         pr_debug("thread_masks[%d]: ", t);
+>                         mmap_cpu_mask__scnprintf(&rec->thread_masks[t].maps, "maps");
+> diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+> index ac60c08e8e2a..63b9db657442 100644
+> --- a/tools/perf/util/bpf_counter_cgroup.c
+> +++ b/tools/perf/util/bpf_counter_cgroup.c
+> @@ -46,8 +46,8 @@ static int bperf_load_program(struct evlist *evlist)
+>         struct bpf_link *link;
+>         struct evsel *evsel;
+>         struct cgroup *cgrp, *leader_cgrp;
+> -       __u32 i, cpu;
+> -       __u32 nr_cpus = evlist->core.all_cpus->nr;
+> +       int i, j;
+> +       struct perf_cpu cpu;
+>         int total_cpus = cpu__max_cpu().cpu;
+>         int map_size, map_fd;
+>         int prog_fd, err;
+> @@ -93,9 +93,9 @@ static int bperf_load_program(struct evlist *evlist)
+>                 goto out;
+>         }
+>
+> -       for (i = 0; i < nr_cpus; i++) {
+> +       perf_cpu_map__for_each_cpu(cpu, i, evlist->core.all_cpus) {
+>                 link = bpf_program__attach_perf_event(skel->progs.on_cgrp_switch,
+> -                                                     FD(cgrp_switch, i));
+> +                                                     FD(cgrp_switch, cpu.cpu));
+>                 if (IS_ERR(link)) {
+>                         pr_err("Failed to attach cgroup program\n");
+>                         err = PTR_ERR(link);
+> @@ -122,10 +122,9 @@ static int bperf_load_program(struct evlist *evlist)
+>                         }
+>
+>                         map_fd = bpf_map__fd(skel->maps.events);
+> -                       for (cpu = 0; cpu < nr_cpus; cpu++) {
+> -                               int fd = FD(evsel, cpu);
+> -                               __u32 idx = evsel->core.idx * total_cpus +
+> -                                       evlist->core.all_cpus->map[cpu].cpu;
+> +                       perf_cpu_map__for_each_cpu(cpu, j, evlist->core.all_cpus) {
+> +                               int fd = FD(evsel, cpu.cpu);
+> +                               __u32 idx = evsel->core.idx * total_cpus + cpu.cpu;
+>
+>                                 err = bpf_map_update_elem(map_fd, &idx, &fd,
+>                                                           BPF_ANY);
+> @@ -207,14 +206,12 @@ static int bperf_cgrp__install_pe(struct evsel *evsel __maybe_unused,
+>   */
+>  static int bperf_cgrp__sync_counters(struct evlist *evlist)
+>  {
+> -       int i, cpu;
+> -       int nr_cpus = evlist->core.all_cpus->nr;
+> +       struct perf_cpu cpu;
+> +       int idx;
+>         int prog_fd = bpf_program__fd(skel->progs.trigger_read);
+>
+> -       for (i = 0; i < nr_cpus; i++) {
+> -               cpu = evlist->core.all_cpus->map[i].cpu;
+> -               bperf_trigger_reading(prog_fd, cpu);
+> -       }
+> +       perf_cpu_map__for_each_cpu(cpu, idx, evlist->core.all_cpus)
+> +               bperf_trigger_reading(prog_fd, cpu.cpu);
+>
+>         return 0;
+>  }
+> @@ -244,12 +241,10 @@ static int bperf_cgrp__disable(struct evsel *evsel)
+>  static int bperf_cgrp__read(struct evsel *evsel)
+>  {
+>         struct evlist *evlist = evsel->evlist;
+> -       int i, cpu, nr_cpus = evlist->core.all_cpus->nr;
+>         int total_cpus = cpu__max_cpu().cpu;
+>         struct perf_counts_values *counts;
+>         struct bpf_perf_event_value *values;
+>         int reading_map_fd, err = 0;
+> -       __u32 idx;
+>
+>         if (evsel->core.idx)
+>                 return 0;
+> @@ -263,7 +258,10 @@ static int bperf_cgrp__read(struct evsel *evsel)
+>         reading_map_fd = bpf_map__fd(skel->maps.cgrp_readings);
+>
+>         evlist__for_each_entry(evlist, evsel) {
+> -               idx = evsel->core.idx;
+> +               __u32 idx = evsel->core.idx;
+> +               int i;
+> +               struct perf_cpu cpu;
+> +
+>                 err = bpf_map_lookup_elem(reading_map_fd, &idx, values);
+>                 if (err) {
+>                         pr_err("bpf map lookup failed: idx=%u, event=%s, cgrp=%s\n",
+> @@ -271,13 +269,11 @@ static int bperf_cgrp__read(struct evsel *evsel)
+>                         goto out;
+>                 }
+>
+> -               for (i = 0; i < nr_cpus; i++) {
+> -                       cpu = evlist->core.all_cpus->map[i].cpu;
+> -
+> +               perf_cpu_map__for_each_cpu(cpu, i, evlist->core.all_cpus) {
+>                         counts = perf_counts(evsel->counts, i, 0);
+> -                       counts->val = values[cpu].counter;
+> -                       counts->ena = values[cpu].enabled;
+> -                       counts->run = values[cpu].running;
+> +                       counts->val = values[cpu.cpu].counter;
+> +                       counts->ena = values[cpu.cpu].enabled;
+> +                       counts->run = values[cpu.cpu].running;
+>                 }
+>         }
+>
+> --
+> 2.36.0.464.gb9c8b46e94-goog
+>
