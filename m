@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C13C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 19:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896BBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 20:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385225AbiEETrt (ORCPT
+        id S1384900AbiEEUa5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 15:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58230 "EHLO
+        Thu, 5 May 2022 16:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234514AbiEETrr (ORCPT
+        with ESMTP id S1384863AbiEEUa5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 15:47:47 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2309351591;
-        Thu,  5 May 2022 12:44:01 -0700 (PDT)
+        Thu, 5 May 2022 16:30:57 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DBA32BB37;
+        Thu,  5 May 2022 13:27:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651779841; x=1683315841;
+  t=1651782436; x=1683318436;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=1tZDI2BmnNsfncpfUFvMhYgdDZVYfF1pMiersQPZT2c=;
-  b=EMyYHBB7EI4oOw79unV/wDMtUTxtBq0MbpF9kkjJen/LDT8yK7+qCSnC
-   yxsDvwSXLgRomIAyKuyuPj9tFZspgT1eb7ymJQ5IRrdBniPFdgEpqRBcw
-   J/P1+jw/9qb1gWx2ML2bYnBHz5li9rkIHmXSFpAJzTJn21hjc8PsWgEVG
-   gn8UWgIvUZt/tfBc2I4D3vyQEWCgZR7KMSr2Q7DWK39VmTCCyv6uvLz/D
-   EEs1yVvtiFwLd0/PbF4V6rLWoLWeSbMR9I4sbJ/eJTtv4JQbX1UI2oUGL
-   NBu5yXpRwEkwWLJINLc9CbWUUFBYmsfp4QOqS3IFjVOiysn+ndEtaUM+i
+  bh=7CEnqxibNRVUdp/GgjeTzmjH1M+XSXCHZAEWsycer/E=;
+  b=jutqGZKDN/1tp9ZztpuLkU2bqpdK3cVpACBV/Yp1Wus+jxjonGWWtP60
+   cWwtdrWora8108yWJMrFoFDFgXx6u+NYHLoAknTNqxumb9WfmhgrOxHjj
+   E+zoDJS6JQqQSzdhFWQj2QJV0qf/h1u4tIcsqv9/D9du4OiHGRihApgGW
+   9Isb2daic7lGv9Wl54wDxfmZ54aD410Ryo/HTVqiviAzi+4GZNMmwFlPf
+   2QxMdFR6r3k9wgs/CkFOH8PI/h/yxeVHeYXU8+q7TcTbQylpNq1PKae1j
+   2CAmpad+BNgic/BZyyc388j+Y7quJSrz8hRC3bmy0Vv14F5gL1Kclx1nh
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="265825419"
+X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="248777171"
 X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="265825419"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 12:44:00 -0700
+   d="scan'208";a="248777171"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 13:27:16 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
-   d="scan'208";a="537502503"
+   d="scan'208";a="568760994"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 05 May 2022 12:44:00 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 05 May 2022 13:27:15 -0700
 Received: from [10.252.209.228] (kliang2-MOBL.ccr.corp.intel.com [10.252.209.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id D2B7D5806C8;
-        Thu,  5 May 2022 12:43:57 -0700 (PDT)
-Message-ID: <83417b72-4872-072a-2328-a88d2bb90858@linux.intel.com>
-Date:   Thu, 5 May 2022 15:43:56 -0400
+        by linux.intel.com (Postfix) with ESMTPS id 0DD3A5808EF;
+        Thu,  5 May 2022 13:27:12 -0700 (PDT)
+Message-ID: <f1c212e3-c1fd-4a2d-0dfe-bc913d4f4f36@linux.intel.com>
+Date:   Thu, 5 May 2022 16:27:11 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.1
-Subject: Re: [PATCH 1/2] perf evlist: Keep topdown counters in weak group
+Subject: Re: [PATCH 2/2] perf test: Add basic stat and topdown group test
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>
 Cc:     Caleb Biggers <caleb.biggers@intel.com>,
@@ -71,15 +71,16 @@ Cc:     Caleb Biggers <caleb.biggers@intel.com>,
         Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
         Florian Fischer <florian.fischer@muhq.space>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>
 References: <20220505043846.3165303-1-irogers@google.com>
- <87b89e2c-da5c-52c3-40dc-448e874cb5d8@linux.intel.com>
- <CAP-5=fVHhWu1uJHnTfFYWvM02_F-bFBZaaOYo8zPRiA=ODRxGQ@mail.gmail.com>
- <12c03e85-cb48-d264-5f04-e9bf9faaf739@linux.intel.com>
- <CAP-5=fW9Cp3ShO=tTQddDWXz+nrSip99HrNW7Wv5_Qsy1UT7bw@mail.gmail.com>
+ <20220505043846.3165303-2-irogers@google.com>
+ <cb6065af-7e3f-53fa-5d82-67be04ca833f@linux.intel.com>
+ <CAP-5=fV6Sj3PMjVBYtCRZUXXrwOJC9ETffQYscvcgJZ7gm2tFw@mail.gmail.com>
+ <e11e873c-6e61-5d50-ba6a-a99045e486bc@linux.intel.com>
+ <CAP-5=fUGDkVS6zYUkeYWHMrgkX50Fao0iSKs95Yvyts+wUxpxQ@mail.gmail.com>
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fW9Cp3ShO=tTQddDWXz+nrSip99HrNW7Wv5_Qsy1UT7bw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUGDkVS6zYUkeYWHMrgkX50Fao0iSKs95Yvyts+wUxpxQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -88,61 +89,213 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 5/5/2022 2:31 PM, Ian Rogers wrote:
->>> So I think fixing all of these should be a follow up. I am working to
->>> get access to an Alderlake system, could we land this first?
+On 5/5/2022 2:35 PM, Ian Rogers wrote:
+> On Thu, May 5, 2022 at 11:19 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>> On 5/5/2022 11:22 AM, Ian Rogers wrote:
+>>> On Thu, May 5, 2022 at 5:12 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>
+>>>> On 5/5/2022 12:38 AM, Ian Rogers wrote:
+>>>>> Add a basic stat test.
+>>>>> Add two tests of grouping behavior for topdown events. Topdown events
+>>>>> are special as they must be grouped with the slots event first.
+>>>>>
+>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>>>> ---
+>>>>>     tools/perf/tests/shell/stat.sh | 65 ++++++++++++++++++++++++++++++++++
+>>>>>     1 file changed, 65 insertions(+)
+>>>>>     create mode 100755 tools/perf/tests/shell/stat.sh
+>>>>>
+>>>>> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+>>>>> new file mode 100755
+>>>>> index 000000000000..80869ea6debc
+>>>>> --- /dev/null
+>>>>> +++ b/tools/perf/tests/shell/stat.sh
+>>>>> @@ -0,0 +1,65 @@
+>>>>> +#!/bin/sh
+>>>>> +# perf stat tests
+>>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>>> +
+>>>>> +set -e
+>>>>> +
+>>>>> +err=0
+>>>>> +test_default_stat() {
+>>>>> +  echo "Basic stat command test"
+>>>>> +  if ! perf stat true 2>&1 | egrep -q "Performance counter stats for 'true':"
+>>>>> +  then
+>>>>> +    echo "Basic stat command test [Failed]"
+>>>>> +    err=1
+>>>>> +    return
+>>>>> +  fi
+>>>>> +  echo "Basic stat command test [Success]"
+>>>>> +}
+>>>>> +
+>>>>> +test_topdown_groups() {
+>>>>> +  # Topdown events must be grouped with the slots event first. Test that
+>>>>> +  # parse-events reorders this.
+>>>>> +  echo "Topdown event group test"
+>>>>> +  if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
+>>>>> +  then
+>>>>> +    echo "Topdown event group test [Skipped event parsing failed]"
+>>>>> +    return
+>>>>> +  fi
+>>>>> +  if perf stat -e '{slots,topdown-retiring}' true 2>&1 | egrep -q "<not supported>"
+>>>>> +  then
+>>>>> +    echo "Topdown event group test [Failed events not supported]"
+>>>>> +    err=1
+>>>>> +    return
+>>>>> +  fi
+>>>>> +  if perf stat -e '{topdown-retiring,slots}' true 2>&1 | egrep -q "<not supported>"
+>>>>> +  then
+>>>>> +    echo "Topdown event group test [Failed slots not reordered first]"
+>>>>> +    err=1
+>>>>> +    return
+>>>>> +  fi
+>>>>> +  echo "Topdown event group test [Success]"
+>>>>> +}
+>>>>> +
+>>>>> +test_topdown_weak_groups() {
+>>>>> +  # Weak groups break if the perf_event_open of multiple grouped events
+>>>>> +  # fails. Breaking a topdown group causes the events to fail. Test a very large
+>>>>> +  # grouping to see that the topdown events aren't broken out.
+>>>>> +  echo "Topdown weak groups test"
+>>>>> +  if ! perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-fe-bound,topdown-retiring},branch-instructions,branch-misses,bus-cycles,cache-misses,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cycles,baclears.any,ARITH.DIVIDER_ACTIVE' true > /dev/null 2>&1
+>>>>> +  then
+>>>>> +    echo "Topdown weak groups test [Skipped event parsing failed]"
+>>>>> +    return
+>>>>> +  fi
+>>>>> +  if perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-fe-bound,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cache-misses,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cycles,baclears.any,ARITH.DIVIDER_ACTIVE}:W' true 2>&1 | egrep -q "<not supported>"
+>>>>> +  then
+>>>>> +    echo "Topdown weak groups test [Failed events not supported]"
+>>>>> +    err=1
+>>>>> +    return
+>>>>> +  fi
+>>>>> +  echo "Topdown weak groups test [Success]"
+>>>>> +}
+>>>>> +
+>>>>
+>>>> Should we check the existence of the slots event before the test?
+>>>> The perf metrics feature only be available on the new platform after
+>>>> ICL. It doesn't work on Atom.
+>>>>
+>>>> Also, I think the test may fails on the hybrid platform, since big core
+>>>> and small core have different formula for the topdown. I think we should
+>>>> avoid the test for the hybrid platform for now.
+>>>> +Zhengjun, who is fixing the topdown gap for the hybrid platform. I
+>>>> think he may take care of the hybrid support later.
 >>>
->> I think we can use pmu_name to replace the "cpu" to fix the issue for
->> the hybrid platform. For a hybrid platform, the pmu_name is either
->> cpu_atom or cpu_core.
+>>> Thanks Kan, the test filters out systems that don't support the events
+>>> and silently skips the test. The main purpose of the test is to make
+>>> sure the somewhat complicated grouping operations for Icelake have
+>>> some coverage. Adding more coverage for hybrid would be great, but not
+>>> something I think gates this change.
+>>>
 >>
->> Besides, the topdown events may have a PMU prefix, e.g.,
->> cpu_core/topdown-be-bound/. The strcasecmp may not work well for this case.
+>> Sure, we can add the coverage for hybrid later. But please make sure the
+>> test can filter out both the systems which doesn't support perf metircs
+>> and the hybrid system.
 >>
->> How about the below patch?
->> If it's OK for you, could you please merge it into your V2 patch set?
->> I can do the test on a ADL system.
->>
->> diff --git a/tools/perf/arch/x86/util/evsel.c
->> b/tools/perf/arch/x86/util/evsel.c
->> index 40b171de2086..551ae2bab70e 100644
->> --- a/tools/perf/arch/x86/util/evsel.c
->> +++ b/tools/perf/arch/x86/util/evsel.c
->> @@ -33,11 +33,12 @@ void arch_evsel__fixup_new_cycles(struct
->> perf_event_attr *attr)
->>
->>    bool arch_evsel__must_be_in_group(const struct evsel *evsel)
->>    {
->> -       if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
->> -           !pmu_have_event("cpu", "slots"))
->> +       const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
->> +
->> +       if (!pmu_have_event(pmu_name, "slots"))
->>                  return false;
-> Hmm. The idea with this test is to see if the architecture supports
-> topdown events before going further. There's a similar test in all the
-> arch_evlist functions. I think with cpu_core this needs to become:
->
-
-The case is a little bit different here. For the arch_evlist functions, 
-the input is the evlist, not the specific evsel. So we have to check all 
-the possible PMU names which are "cpu" and "cpu_core". Then we decide 
-whether going further.
-
-The input of the evsel__must_be_in_group() is the evsel. The PMU name is 
-stored in the evsel->pmu_name. I don't think we need to check all the 
-possible PMU names. Using evsel->pmu_name should be good enough.
-
-> if (!pmu_have_event("cpu", "slots") && !pmu_have_event("cpu_core", "slots") )
+>> Thanks,
+>> Kan
 > 
-> But we should add a helper function for this. It is odd to have this
-> change supporting Alderlake but the existing evlist work not. Perhaps
-> we should just wait until Zhengjun's patches land.
+> If the test fails on hybrid then that feels like value add :-) 
 
-Yes, a helper function is good for the arch_evlist functions. But I 
-don't think this patch needs the helper function. Zhengjun's patches are 
-to fix the other topdown issues on ADL. There is no dependency between 
-this patch and zhengjun's patches.
+Indeed. The test case is valid.
+
+Could you please use architecture events to replace the 
+baclears.any,ARITH.DIVIDER_ACTIVE?
+It's not guaranteed that the two events are supported for the future 
+platforms.
+
+I use the duplicated cache-misses,cache-references events to replace 
+baclears.any,ARITH.DIVIDER_ACTIVE and tested on the ADL. The results 
+look good.
+
+./perf stat -e 
+'{slots,topdown-bad-spec,topdown-be-bound,topdown-fe-bound,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cache-misses,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cycles,cache-misses,cache-references}:W' 
+true
+WARNING: events in group from different hybrid PMUs!
+
+  Performance counter stats for 'true':
+
+          3,603,798      cpu_core/slots/
+            480,506      cpu_core/topdown-bad-spec/ #     13.3% bad 
+speculation
+      <not counted>      cpu_atom/topdown-bad-spec/ 
+                 (0.00%)
+            833,819      cpu_core/topdown-be-bound/ #     23.0% backend 
+bound
+      <not counted>      cpu_atom/topdown-be-bound/ 
+                 (0.00%)
+          1,483,916      cpu_core/topdown-fe-bound/ #     41.0% frontend 
+bound
+      <not counted>      cpu_atom/topdown-fe-bound/ 
+                 (0.00%)
+            819,687      cpu_core/topdown-retiring/ #     22.7% retiring
+      <not counted>      cpu_atom/topdown-retiring/ 
+                 (0.00%)
+            151,010      cpu_core/branch-instructions/
+      <not counted>      cpu_atom/branch-instructions/ 
+                    (0.00%)
+              4,402      cpu_core/branch-misses/
+      <not counted>      cpu_atom/branch-misses/ 
+                (0.00%)
+          1,456,308      cpu_core/bus-cycles/
+      <not counted>      cpu_atom/bus-cycles/ 
+                (0.00%)
+              1,132      cpu_core/cache-misses/
+      <not counted>      cpu_atom/cache-misses/ 
+                (0.00%)
+             14,226      cpu_core/cache-references/
+      <not counted>      cpu_atom/cache-references/ 
+                 (0.00%)
+            600,633      cpu_core/cpu-cycles/
+      <not counted>      cpu_atom/cpu-cycles/ 
+                (0.00%)
+            737,806      cpu_core/instructions/
+      <not counted>      cpu_atom/instructions/ 
+                (0.00%)
+                  0      cpu_core/mem-loads/
+      <not counted>      cpu_atom/mem-loads/ 
+                (0.00%)
+            120,151      cpu_core/mem-stores/
+      <not counted>      cpu_atom/mem-stores/ 
+                (0.00%)
+          1,456,308      cpu_core/ref-cycles/
+      <not counted>      cpu_atom/ref-cycles/ 
+                (0.00%)
+      <not counted>      cpu_core/cache-misses/ 
+                (0.00%)
+      <not counted>      cpu_atom/cache-misses/ 
+                (0.00%)
+      <not counted>      cpu_core/cache-references/ 
+                 (0.00%)
+      <not counted>      cpu_atom/cache-references/ 
+                 (0.00%)
+
+        0.001518955 seconds time elapsed
+
+        0.001531000 seconds user
+        0.000000000 seconds sys
 
 Thanks,
 Kan
+> We
+> genuinely have broken grouping functions. We could just add to the
+> test a skip if /sys/devices/cpu_core and /sys/devices/cpu_atom
+> directories exist (making assumptions on where sysfs is mounted). I'm
+> not yet able to test on Alderlake hence not wanting to have a lot of
+> untested code.
+> 
+> Thanks,
+> Ian
+> 
+>>> Thanks,
+>>> Ian
+>>>
+>>>> Thanks,
+>>>> Kan
+>>>>> +test_default_stat
+>>>>> +test_topdown_groups
+>>>>> +test_topdown_weak_groups
+>>>>> +exit $err
