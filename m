@@ -2,108 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973F9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 13:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6187AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 15:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359536AbiEEOBY (ORCPT
+        id S1343500AbiEEPH0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 10:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
+        Thu, 5 May 2022 11:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238597AbiEEOBX (ORCPT
+        with ESMTP id S1380994AbiEEPHZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 10:01:23 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71ADE220E4;
-        Thu,  5 May 2022 06:57:44 -0700 (PDT)
-Received: from canpemm500007.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KvFc53K4NzfbJY;
-        Thu,  5 May 2022 21:56:37 +0800 (CST)
-Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
- (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 5 May
- 2022 21:57:42 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <ast@kernel.org>,
-        <daniel@iogearbox.net>, <andrii@kernel.org>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@kernel.org>, <christylee@fb.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] perf: Fix pass 0 to PTR_ERR
-Date:   Thu, 5 May 2022 21:57:13 +0800
-Message-ID: <20220505135713.18496-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 5 May 2022 11:07:25 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EEBE56430
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 08:03:45 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d25so3849931pfo.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2022 08:03:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=p0XNlCKvooGrV6ZMU6Sx6KooJcpJYfdyWRaV1ZQKDyw=;
+        b=j2gOTIjdhU49vCuH4bvANW0D2xEdXz+Hv/xxPwPfVz4er/W7q6MoZtuCLs9FH8B7c2
+         9eN79nbubAVfalNtMVdlpOiZ2beCpSG8pFgmafwf3UsHhlR2nf7Hy74UZJk+fZSRFBe2
+         rz+wsblLYwIjouA3h9ozwqgbmfUoB3qYhcefaDReX1vKY1ZqxMYX9BWuWfF3CEzCi0Qi
+         zVJqg15YYfX4rvtdRIQT8Q7JGReHpgJeHnywMZ89S8M1TQhCCHOEGWPKFbgVHywm/cME
+         mBim89F5oTeIjiiuhMHwg3AIEkkrRYeInzeeZPktcY1yZr9uMtyGaDHc74UxB5zbgZLm
+         hOSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=p0XNlCKvooGrV6ZMU6Sx6KooJcpJYfdyWRaV1ZQKDyw=;
+        b=IAX80SZPmEXBaxLZgGbkqm1K7C6u56SeHCgOYVSAI2embC+xbZ3xksS3IbWyZUaXYq
+         mE/xDK6N7svtrA5beyKu2hIm9BWAiyJs+IVAyONL8CGwqo/Rz574toDuAo5U9EI7luJZ
+         bSuVI3cYtOWrAcfAvO6VIilSXF+q0qxz5IajcY8uAiqDVytnhp7u/zu8j5x5uRNugz80
+         mRLCsCFoI27d5r4waHJGCbthhVC3HYV3dJiggA8qNy1n3SOq2vY6PlVtdxBG8ZuMYCDX
+         ILbv2hH8wlgEP/jZfnWZhWK0HxSlSGpO5SiK688HfcpFdQqVu8o1YM5fcr7tJSUVl4Tl
+         RX7w==
+X-Gm-Message-State: AOAM5317XLxfoJ+qlhSmMz8yUAgb8pOupI8Pu+TLrJLHihI+oKSc0ui4
+        m7EEQk7dZtisQ74TFlJvuDNRSw==
+X-Google-Smtp-Source: ABdhPJxiH+FkIAuJwVrFmog9f4EK41Ai/cvuej2w2ZV659GETH3wON3TUUEyR6MODJaxPaGqJUwKBw==
+X-Received: by 2002:a62:be14:0:b0:505:a43b:cf6e with SMTP id l20-20020a62be14000000b00505a43bcf6emr26439454pff.33.1651763024375;
+        Thu, 05 May 2022 08:03:44 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([134.195.101.46])
+        by smtp.gmail.com with ESMTPSA id bb10-20020a170902bc8a00b0015e8d4eb2c5sm1620624plb.271.2022.05.05.08.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 08:03:43 -0700 (PDT)
+Date:   Thu, 5 May 2022 23:03:30 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
+        acme@kernel.org, benh@kernel.crashing.org, Nick.Forrington@arm.com,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH v8 5/5] perf arm-spe: Use SPE data source for neoverse
+ cores
+Message-ID: <20220505150330.GB136333@leoy-ThinkPad-X240s>
+References: <20220504184850.24986-1-alisaidi@amazon.com>
+ <20220504184850.24986-6-alisaidi@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.215]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500007.china.huawei.com (7.192.104.62)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220504184850.24986-6-alisaidi@amazon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Passing NULL to PTR_ERR will result in 0 (success), also move
-evlist__find_evsel_by_str() behind for minor optimization.
+On Wed, May 04, 2022 at 06:48:50PM +0000, Ali Saidi wrote:
+> When synthesizing data from SPE, augment the type with source information
+> for Arm Neoverse cores. The field is IMPLDEF but the Neoverse cores all use
+> the same encoding. I can't find encoding information for any other SPE
+> implementations to unify their choices with Arm's thus that is left for
+> future work.
+> 
+> This change populates the mem_lvl_num for Neoverse cores as well as the
+> deprecated mem_lvl namespace.
+> 
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> Reviewed-by: German Gomez <german.gomez@arm.com>
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> Tested-by: Leo Yan <leo.yan@linaro.org>
 
-Fixes: 924b1cd61148 ("perf: Stop using bpf_map__def() API")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- tools/perf/util/bpf-loader.c | 15 ++++++++-------
- tools/perf/util/bpf_map.c    |  2 +-
- 2 files changed, 9 insertions(+), 8 deletions(-)
+Thanks for updating, Ali.  It looks good to me.
 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index f8ad581ea247..b301ffc8c6e7 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -1253,21 +1253,22 @@ __bpf_map__config_event(struct bpf_map *map,
- 			struct parse_events_term *term,
- 			struct evlist *evlist)
- {
--	struct bpf_map_op *op;
- 	const char *map_name = bpf_map__name(map);
--	struct evsel *evsel = evlist__find_evsel_by_str(evlist, term->val.str);
-+	struct bpf_map_op *op;
-+	struct evsel *evsel;
- 
-+	if (!map) {
-+		pr_debug("Map '%s' is invalid\n", map_name);
-+		return -BPF_LOADER_ERRNO__INTERNAL;
-+	}
-+
-+	evsel = evlist__find_evsel_by_str(evlist, term->val.str);
- 	if (!evsel) {
- 		pr_debug("Event (for '%s') '%s' doesn't exist\n",
- 			 map_name, term->val.str);
- 		return -BPF_LOADER_ERRNO__OBJCONF_MAP_NOEVT;
- 	}
- 
--	if (!map) {
--		pr_debug("Map '%s' is invalid\n", map_name);
--		return PTR_ERR(map);
--	}
--
- 	/*
- 	 * No need to check key_size and value_size:
- 	 * kernel has already checked them.
-diff --git a/tools/perf/util/bpf_map.c b/tools/perf/util/bpf_map.c
-index c863ae0c5cb5..c72aee6a91ee 100644
---- a/tools/perf/util/bpf_map.c
-+++ b/tools/perf/util/bpf_map.c
-@@ -36,7 +36,7 @@ int bpf_map__fprintf(struct bpf_map *map, FILE *fp)
- 		return fd;
- 
- 	if (!map)
--		return PTR_ERR(map);
-+		return -EINVAL;
- 
- 	err = -ENOMEM;
- 	key = malloc(bpf_map__key_size(map));
--- 
-2.17.1
+Since the store operations have been set as PERF_MEM_LVL_NA and
+PERF_MEM_LVLNUM_NA, this is right thing for me, I will update perf c2c
+patch set for statistics of store operations with PERF_MEM_LVL_NA.
 
+Thanks,
+Leo
