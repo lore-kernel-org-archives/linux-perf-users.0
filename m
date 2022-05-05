@@ -2,231 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C605FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 18:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A1BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 19:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236493AbiEESqu (ORCPT
+        id S244549AbiEETVb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 14:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54586 "EHLO
+        Thu, 5 May 2022 15:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358366AbiEESqh (ORCPT
+        with ESMTP id S231905AbiEETVa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 14:46:37 -0400
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4566102B
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 11:35:17 -0700 (PDT)
-Received: by mail-vk1-xa35.google.com with SMTP id y27so2516792vkl.8
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2022 11:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JufbdLt+SWfkYpTCJFhIgk7esk5wdurajt/xNIS8xPY=;
-        b=Qu2w4rFzXy/2R1G5811MRpp76vihYyyBHhn0BmMDGdCm4ddX1nnKpSKuXxelwrYetI
-         p0NEa+GDbKeznpP+OtMD8I4dYD+AzVv9CpXny+htAdSFqEwCQCYRXH9MEW0FXxvCsHF8
-         mn43RtA3ObRe3RSSXKk1pKOX/qyrJBoS3kNBwUztpIU8mkq3NBO31vyaLqfb8wXpl8Ig
-         txRrylOYynvYtRCM5nDFK6Iw3h5YcbfjZdfflCQkUQakbURAcEtSOA5+bZMdq8KZ6VVy
-         7SZZx0McNjZ0tvNSkDhBPRfy6WMULQqh4Zv40BGHYphuiJ8ZJVYrpbwv0mP/ws13iHd5
-         eeRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JufbdLt+SWfkYpTCJFhIgk7esk5wdurajt/xNIS8xPY=;
-        b=UzbZYOnBhuwDusL78ixp6JFwvfV27mZ4s5WcE43KUozMmnxXyNdAt0V9rmwFSq4jAu
-         djbFQ0yUmknmvembrspeoW1MInLl45xQbo8eyPugb/3YeXB6prLe8TLev/g83CwFfpn8
-         pt2YXyjXocd/GIOFwRKewbUvEUrDRA3HYe5V3jz1yWBXLy363bZqPmNFzslHGAtPHrVm
-         XJVVB8FkGYWwtiIxCmmuwaxCv/66nv3Y7w77OLcYcrCls+NiIC2akTQz1zhf7mzEtaV1
-         6lv8g1B7WlSpxtNPtcFMQSdP5debwpHVM5U0SSu2E8wLjMEbj0i60eCJp/lto+PCix9Q
-         HcxA==
-X-Gm-Message-State: AOAM530p/X6SBtxoXESrmWHO7sQNbJHt7qaVJvUiYsot5n8vDy+P0/nl
-        Xmmxbx6V9exfX/tbIjd+gGtLkShsz9DGIPlzzDKPEw==
-X-Google-Smtp-Source: ABdhPJypVe9Pe0paMzSMAvDCyrSNjXlEgOxD3XeX+Ux7c5JlavGbQh16rbe7I4ef5S2MwY0NzzxsoqxgVrD4LCstJT0=
-X-Received: by 2002:a05:6122:1810:b0:34e:8f1c:749d with SMTP id
- ay16-20020a056122181000b0034e8f1c749dmr8271054vkb.20.1651775716626; Thu, 05
- May 2022 11:35:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220505043846.3165303-1-irogers@google.com> <20220505043846.3165303-2-irogers@google.com>
- <cb6065af-7e3f-53fa-5d82-67be04ca833f@linux.intel.com> <CAP-5=fV6Sj3PMjVBYtCRZUXXrwOJC9ETffQYscvcgJZ7gm2tFw@mail.gmail.com>
- <e11e873c-6e61-5d50-ba6a-a99045e486bc@linux.intel.com>
-In-Reply-To: <e11e873c-6e61-5d50-ba6a-a99045e486bc@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 5 May 2022 11:35:03 -0700
-Message-ID: <CAP-5=fUGDkVS6zYUkeYWHMrgkX50Fao0iSKs95Yvyts+wUxpxQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Add basic stat and topdown group test
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thu, 5 May 2022 15:21:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98BE83585B;
+        Thu,  5 May 2022 12:17:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4F95AB82E60;
+        Thu,  5 May 2022 19:17:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58367C385A8;
+        Thu,  5 May 2022 19:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651778268;
+        bh=S2VlxsKlNheP/UaljF4jK7i69JWNXtFiU1ZWtep/VvM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nl8guXmqkeqn8U0uP7nQcR6bT/b9QTUvlNCqHwCwe5Xh6gRXOCpq8g81dvZSYTfmL
+         tFQfiK7MKkf0nC38lNniKXVg7vMuDxmAzR4zNiaA10VUWd7t0+tMz4sCcN0xDV6enG
+         ZhD0D50LhOG9uAIuQ8VIBRlM5XYSgZlxMJPWQw8Qb3hm1F0Uay8X9gCsUBmyn2u5zh
+         Dp44orNE87kfByd8GqNu3fHsco9lG+hbLb+GrI8sHn1sYuYFEz97mGIy6Y5KlyHr+d
+         6FphjRfllmG7jCgrQ/XKdVRIVg319jWQW88Z3YDRzS2kSc2cLxBRo4CgLo1BMVVkaj
+         beVeazmC3ARRA==
+From:   Miguel Ojeda <ojeda@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
-        Haowen Bai <baihaowen@meizu.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        David Vernet <void@manifault.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Kosina <jikos@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        live-patching@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
+Subject: [PATCH v1 0/3] kallsyms: Rust requirements
+Date:   Thu,  5 May 2022 21:16:42 +0200
+Message-Id: <20220505191704.22812-1-ojeda@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 5, 2022 at 11:19 AM Liang, Kan <kan.liang@linux.intel.com> wrot=
-e:
->
-> On 5/5/2022 11:22 AM, Ian Rogers wrote:
-> > On Thu, May 5, 2022 at 5:12 AM Liang, Kan <kan.liang@linux.intel.com> w=
-rote:
-> >>
-> >> On 5/5/2022 12:38 AM, Ian Rogers wrote:
-> >>> Add a basic stat test.
-> >>> Add two tests of grouping behavior for topdown events. Topdown events
-> >>> are special as they must be grouped with the slots event first.
-> >>>
-> >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> >>> ---
-> >>>    tools/perf/tests/shell/stat.sh | 65 ++++++++++++++++++++++++++++++=
-++++
-> >>>    1 file changed, 65 insertions(+)
-> >>>    create mode 100755 tools/perf/tests/shell/stat.sh
-> >>>
-> >>> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/=
-stat.sh
-> >>> new file mode 100755
-> >>> index 000000000000..80869ea6debc
-> >>> --- /dev/null
-> >>> +++ b/tools/perf/tests/shell/stat.sh
-> >>> @@ -0,0 +1,65 @@
-> >>> +#!/bin/sh
-> >>> +# perf stat tests
-> >>> +# SPDX-License-Identifier: GPL-2.0
-> >>> +
-> >>> +set -e
-> >>> +
-> >>> +err=3D0
-> >>> +test_default_stat() {
-> >>> +  echo "Basic stat command test"
-> >>> +  if ! perf stat true 2>&1 | egrep -q "Performance counter stats for=
- 'true':"
-> >>> +  then
-> >>> +    echo "Basic stat command test [Failed]"
-> >>> +    err=3D1
-> >>> +    return
-> >>> +  fi
-> >>> +  echo "Basic stat command test [Success]"
-> >>> +}
-> >>> +
-> >>> +test_topdown_groups() {
-> >>> +  # Topdown events must be grouped with the slots event first. Test =
-that
-> >>> +  # parse-events reorders this.
-> >>> +  echo "Topdown event group test"
-> >>> +  if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
-> >>> +  then
-> >>> +    echo "Topdown event group test [Skipped event parsing failed]"
-> >>> +    return
-> >>> +  fi
-> >>> +  if perf stat -e '{slots,topdown-retiring}' true 2>&1 | egrep -q "<=
-not supported>"
-> >>> +  then
-> >>> +    echo "Topdown event group test [Failed events not supported]"
-> >>> +    err=3D1
-> >>> +    return
-> >>> +  fi
-> >>> +  if perf stat -e '{topdown-retiring,slots}' true 2>&1 | egrep -q "<=
-not supported>"
-> >>> +  then
-> >>> +    echo "Topdown event group test [Failed slots not reordered first=
-]"
-> >>> +    err=3D1
-> >>> +    return
-> >>> +  fi
-> >>> +  echo "Topdown event group test [Success]"
-> >>> +}
-> >>> +
-> >>> +test_topdown_weak_groups() {
-> >>> +  # Weak groups break if the perf_event_open of multiple grouped eve=
-nts
-> >>> +  # fails. Breaking a topdown group causes the events to fail. Test =
-a very large
-> >>> +  # grouping to see that the topdown events aren't broken out.
-> >>> +  echo "Topdown weak groups test"
-> >>> +  if ! perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdow=
-n-fe-bound,topdown-retiring},branch-instructions,branch-misses,bus-cycles,c=
-ache-misses,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,r=
-ef-cycles,baclears.any,ARITH.DIVIDER_ACTIVE' true > /dev/null 2>&1
-> >>> +  then
-> >>> +    echo "Topdown weak groups test [Skipped event parsing failed]"
-> >>> +    return
-> >>> +  fi
-> >>> +  if perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-=
-fe-bound,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cach=
-e-misses,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-=
-cycles,baclears.any,ARITH.DIVIDER_ACTIVE}:W' true 2>&1 | egrep -q "<not sup=
-ported>"
-> >>> +  then
-> >>> +    echo "Topdown weak groups test [Failed events not supported]"
-> >>> +    err=3D1
-> >>> +    return
-> >>> +  fi
-> >>> +  echo "Topdown weak groups test [Success]"
-> >>> +}
-> >>> +
-> >>
-> >> Should we check the existence of the slots event before the test?
-> >> The perf metrics feature only be available on the new platform after
-> >> ICL. It doesn't work on Atom.
-> >>
-> >> Also, I think the test may fails on the hybrid platform, since big cor=
-e
-> >> and small core have different formula for the topdown. I think we shou=
-ld
-> >> avoid the test for the hybrid platform for now.
-> >> +Zhengjun, who is fixing the topdown gap for the hybrid platform. I
-> >> think he may take care of the hybrid support later.
-> >
-> > Thanks Kan, the test filters out systems that don't support the events
-> > and silently skips the test. The main purpose of the test is to make
-> > sure the somewhat complicated grouping operations for Icelake have
-> > some coverage. Adding more coverage for hybrid would be great, but not
-> > something I think gates this change.
-> >
->
-> Sure, we can add the coverage for hybrid later. But please make sure the
-> test can filter out both the systems which doesn't support perf metircs
-> and the hybrid system.
->
-> Thanks,
-> Kan
+These are the kallsyms patches we carry on the Rust patch series as
+prerequisites. We were requested to submit them independently, so
+here they are!
 
-If the test fails on hybrid then that feels like value add :-) We
-genuinely have broken grouping functions. We could just add to the
-test a skip if /sys/devices/cpu_core and /sys/devices/cpu_atom
-directories exist (making assumptions on where sysfs is mounted). I'm
-not yet able to test on Alderlake hence not wanting to have a lot of
-untested code.
+  - The first one is an improvement that may be applied even without
+    the big symbol support.
 
-Thanks,
-Ian
+  - The second adds support for "big" symbols without actually
+    increasing the limit.
 
-> > Thanks,
-> > Ian
-> >
-> >> Thanks,
-> >> Kan
-> >>> +test_default_stat
-> >>> +test_topdown_groups
-> >>> +test_topdown_weak_groups
-> >>> +exit $err
+  - The third performs the actual increase.
+
+Thanks!
+
+Boqun Feng (1):
+  kallsyms: avoid hardcoding the buffer size
+
+Miguel Ojeda (2):
+  kallsyms: support "big" kernel symbols
+  kallsyms: increase maximum kernel symbol length to 512
+
+ include/linux/kallsyms.h            |  2 +-
+ kernel/kallsyms.c                   | 26 +++++++++++++---
+ kernel/livepatch/core.c             |  4 +--
+ scripts/kallsyms.c                  | 47 ++++++++++++++++++++++++-----
+ tools/include/linux/kallsyms.h      |  2 +-
+ tools/lib/perf/include/perf/event.h |  2 +-
+ tools/lib/symbol/kallsyms.h         |  2 +-
+ 7 files changed, 68 insertions(+), 17 deletions(-)
+
+
+base-commit: 672c0c5173427e6b3e2a9bbb7be51ceeec78093a
+-- 
+2.35.3
+
