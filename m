@@ -2,149 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB99C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 09:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886FBC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 09:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349082AbiEEJoX (ORCPT
+        id S237764AbiEEKA1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 05:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57942 "EHLO
+        Thu, 5 May 2022 06:00:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240726AbiEEJoS (ORCPT
+        with ESMTP id S230073AbiEEKA0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 05:44:18 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19164AE3F
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 02:40:38 -0700 (PDT)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2457jTxs031007;
-        Thu, 5 May 2022 09:40:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=BCEFBshtjfRBdcHBltoVd2W8qtTwpP2gTUulwHU5C+A=;
- b=Z2s8NzWCucQDoXqAGE11g/TosispnanEx1lUdhFjpmm27O7ImuvicTO7v3t/HD32/ivN
- huMMJa2D1lDzzZs99sWVMDtaS7jBmH7FG9C3JYaFSSJ6030o4xRnrJynKp6mfsoY0N7z
- hkpOmwEGdYRsjtUM8XbL80X/jI+qUoRxJ5vSWNDBDuPITWnEkwAPR60MgmtL7UqfXXsX
- SuNsnY+NYegeJ44WfBEGQtitOpWbRJS2I9TLjnAACZX08SIpBKL+a5a2PzgR3plJpZDR
- XG0dH9FL4Q9MzVirG+dtKi29ns+iA2azUNi7OJJjm/sMIagTvCpZl+9GXqykPe6SlLnF tg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fvafnhvkt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 May 2022 09:40:29 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2459ZWOt009249;
-        Thu, 5 May 2022 09:40:28 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fvafnhvkc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 May 2022 09:40:28 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2459Xag9008933;
-        Thu, 5 May 2022 09:40:26 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma02fra.de.ibm.com with ESMTP id 3fuyn78p8h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 May 2022 09:40:26 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2459eNAq54591942
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 May 2022 09:40:23 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D750A404D;
-        Thu,  5 May 2022 09:40:23 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1AECA4040;
-        Thu,  5 May 2022 09:40:18 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.211.80.15])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 May 2022 09:40:18 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com
-Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com, irogers@google.com
-Subject: [PATCH V2 2/2] tools/perf/tests: Fix session topology test to skip the test in guest environment
-Date:   Thu,  5 May 2022 15:10:00 +0530
-Message-Id: <20220505094000.58220-3-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220505094000.58220-1-atrajeev@linux.vnet.ibm.com>
-References: <20220505094000.58220-1-atrajeev@linux.vnet.ibm.com>
+        Thu, 5 May 2022 06:00:26 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B57C49920
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 02:56:47 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id m23so4900132ljb.8
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2022 02:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n4DEU3H+LT7BYKo9sox1btQzO0smkBlR+Qye4B8ebu0=;
+        b=Ks4SKxTnUKVKUwVXv/z6D06GzDmx2q3+rx//xHOeMzoAOuewAqwVt9ua6bENTrVz+R
+         0JIegRcTRyiASQxRg0+uyHbQOiDNfULwFvH5tPA0VKRGpsfe5tecjoOb/Y6oILbVoBH3
+         NrvWEGkrpZd2fxj68loUCGXxDwOZH0prJs4nv5Q3n623HV9JjnMcueFPUeRwP2SXkMqg
+         tlD0SwMM3+X2vkQCFV2KcsjrC74qdHjgIViwO734yBdWzOzRoIzDAGpUu/iTUfkCW4QW
+         eZC2sx543Goog7czQmR5IfMxfUWCki+7tIS2k+bxHfFA6L/4h7BthEETlGL9VaIMUUG0
+         o1Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n4DEU3H+LT7BYKo9sox1btQzO0smkBlR+Qye4B8ebu0=;
+        b=BT4XKqPDwc0O86GNvwQ3+2W5nLUcENP5ivkeyNU7Z0GyptFF1uz9vv1PRE3hiV64zB
+         19AQnPiOiisXXuJ7bcrb7jC8YX00dtYhKkjt/H6sLbQhuOvtijBygsjgI+cQ66gGwd3Z
+         9fw568PCmdoRH5nCk/LD4EtdDrVlwGFtIql2ebS4capyaV6JPu/iOqwM4vW43PMzMAYZ
+         0uLExFUWQ26gntnII/xPCkmZa6axdb3DL/Jt5+yd9NuSYVJ44+tq1wSQ9i6bWjbSqlpt
+         zyn4lmH2i+YJFk2A+s6gldtBEO33rMf+NLesYLN5iZFbbDz6ZlDO0mEy4WDQ8vdR92dG
+         7hog==
+X-Gm-Message-State: AOAM531cT7T5HSjz/Qit4m/buM2iD2x0g/iaDpesVHSKboN8gFjZFiNg
+        5YrD3XsNXS5EcqG3biWZCyagmn0qUi2CgYlrCc4t0A==
+X-Google-Smtp-Source: ABdhPJyppKvZANHxf8tddUkLILvHRxFY8BNe6nPqZN5wceuCAun9Tn1bbcKNTCAmougN0uypJjJfA0e0pqPz5vjCgWg=
+X-Received: by 2002:a2e:93d0:0:b0:24f:255d:4bb1 with SMTP id
+ p16-20020a2e93d0000000b0024f255d4bb1mr15515548ljh.525.1651744605509; Thu, 05
+ May 2022 02:56:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: KIF772insSkP7gzEtQprOFZ5lQOIRECa
-X-Proofpoint-ORIG-GUID: jZTslHMPKe65Smu4Sl0JbVjPLbitsyy3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-05_03,2022-05-05_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 mlxscore=0 bulkscore=0 spamscore=0 malwarescore=0
- adultscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205050063
+References: <20220504150216.581281-1-german.gomez@arm.com>
+In-Reply-To: <20220504150216.581281-1-german.gomez@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Thu, 5 May 2022 10:56:38 +0100
+Message-ID: <CAJ9a7Vhrm2=1H_LLkh+j0uK8yRc7vi2yLmtDMJvVekfhvHUdPQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf cs_etm: Basic support for virtual/kernel timestamps
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The session topology test fails in powerpc pSeries platform.
-Test logs:
-<<>>
-Session topology : FAILED!
-<<>>
+Hi German,
 
-This testcases tests cpu topology by checking the core_id and
-socket_id stored in perf_env from perf session. The data from
-perf session is compared with the cpu topology information
-from "/sys/devices/system/cpu/cpuX/topology" like core_id,
-physical_package_id. In case of virtual environment, detail
-like physical_package_id is restricted to be exposed. Hence
-physical_package_id is set to -1. The testcase fails on such
-platforms since socket_id can't be fetched from topology info.
+On Wed, 4 May 2022 at 16:02, German Gomez <german.gomez@arm.com> wrote:
+>
+> Hi,
+>
+> This change has a soft dependency on [1], but assuming the name/location
+> of the new sysfs interface (ts_source) doesn't change, it should be safe
+> to apply.
+>
+> The new 'ts_source' interface allows perf to detect if the timestamps in
+> the trace correspond to the value of CNTVCT_EL0, which we can convert to
+> a perf timestamp and store it in the instruction and branch samples.
+>
+> Due to the way the trace is compressed and decoded by OpenCSD, we only
+> know the precise time of the first instruction in a range, but I think
+> for now this is better than not having timestamps at all...
+>
 
-Skip the testcase in powerpc for pSeries. Use the utility
-function "cpuinfo_field" to check platform from /proc/cpuinfo.
+The output of OpenCSD is reflective of the architecture of the trace hardware.
 
-Results:
+Timestamps in the trace are always associated with waypoint elements -
+primarily branches.
+Hardware trace compression results in only these elements being
+output, i.e. E / N atoms representing branches taken or not taken.
+Instructions between branches have no explicit element appearing in
+the trace.
+The decode process implies all the instructions between these elements
+to form a range of executed instructions, hence the timestamp being
+associated with the first instruction in a range.
+Moreover, even though we may request a high timestamp rate, output of
+other trace is prioritised over timestamp trace, so there is never any
+guarantee that we can force timestamps to appear at the start of every
+range.
 
- After the patch:
- ----------------
- # ./perf test 41
- 41: Session topology                  : Skip
+Any attempt to increase number of timestamps in a trace range would
+have to be done by some software interpolation mechanism
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/topology.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Regards
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index ee1e3dcbc0bd..036143928023 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -109,6 +109,23 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 			&& strncmp(session->header.env.arch, "aarch64", 7))
- 		return TEST_SKIP;
- 
-+	/*
-+	 * In powerpc pSeries platform, not all the topology information
-+	 * are exposed via sysfs. Due to restriction, detail like
-+	 * physical_package_id will be set to -1. Hence skip this
-+	 * test for pSeries.
-+	 */
-+	if (strncmp(session->header.env.arch, "powerpc", 7)) {
-+		char *cpuinfo_platform = NULL;
-+
-+		cpuinfo_platform = cpuinfo_field("platform");
-+		if (cpuinfo_platform && !strcmp(cpuinfo_platform, "pSeries")) {
-+			free(cpuinfo_platform);
-+			return TEST_SKIP;
-+		}
-+		free(cpuinfo_platform);
-+	}
-+
- 	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
- 
- 	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
--- 
-2.35.1
+Mike
 
+
+> Thanks,
+> German
+>
+> [1] https://lore.kernel.org/all/20220503123537.1003035-1-german.gomez@arm.com/
+>
+> German Gomez (4):
+>   perf pmu: Add function to check if a pmu file exists
+>   perf cs_etm: Keep separate symbols for ETMv4 and ETE parameters
+>   perf cs_etm: Record ts_source in AUXTRACE_INFO for ETMv4 and ETE
+>   perf cs_etm: Set the time field in the synthetic samples
+>
+>  tools/perf/arch/arm/util/cs-etm.c |  89 +++++++++++++++++++--
+>  tools/perf/util/cs-etm.c          | 126 +++++++++++++++++++++++++-----
+>  tools/perf/util/cs-etm.h          |  13 ++-
+>  tools/perf/util/pmu.c             |  17 ++++
+>  tools/perf/util/pmu.h             |   2 +
+>  5 files changed, 221 insertions(+), 26 deletions(-)
+>
+> --
+> 2.25.1
+>
+
+
+--
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
