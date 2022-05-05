@@ -2,99 +2,310 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D03C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 15:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A35C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 15:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381127AbiEEPQm (ORCPT
+        id S1381237AbiEEPWe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 11:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
+        Thu, 5 May 2022 11:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349974AbiEEPQl (ORCPT
+        with ESMTP id S1347238AbiEEPWc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 11:16:41 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175A4340DA
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 08:13:01 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id c1-20020a17090a558100b001dca2694f23so4235466pji.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2022 08:13:01 -0700 (PDT)
+        Thu, 5 May 2022 11:22:32 -0400
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409C2527D9
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 08:18:52 -0700 (PDT)
+Received: by mail-vs1-xe2c.google.com with SMTP id y74so4490737vsy.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2022 08:18:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2wlYERcgnCLAaGqsbd7fOqZETRKFZxGs9XvcdQRYFMs=;
-        b=geKVNTNybY/+Px2TIQnqPrDLrg1uBwMBSLGE63bW3i0sNfKa3mK3gWax7DeNsunYtm
-         hSOxNTEc26AJDT2ECSyByFzApv+60AcKRxp2wR4PFZej2jd6D9mUAJMo23d5DU11haGO
-         UD4iP9anlo0EqdPJigsRRshmq0G2BnYFzeVbOeZNa5uO+m2oafjNk8FdQuXpfgz+zXjy
-         5M9dKwvPEaZuitQ3EN+bdVyC9l8ND5rvSg8jB8q0xKmrmDCE6HOnazl4yvEaUAKvCQdN
-         b8L4RI6//Pm84428VhysfgaRtAy2xtzY3NyGt1SrjMn3W2zc8dFVlrV6fjNMIa/AeBw7
-         +fwQ==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VEJvhDTHgb2ZulVOAAJhKz6Jc03RLtxcq5aCbH9WWeY=;
+        b=j1u4JRqE0T4SVMIg+AnVjJG4bpeAcNQ8r28TQQCEoBem0faWP3HUYUunyVqm18IJ5e
+         ebEVhRRZdck8iORa80Zv88pohYSBuueqlPEP56cjnQ1Fy5XTSor3vdYe+2+CzvRGHyHG
+         r3rDn0d4Den+5w/niYqUlM9FOlKcOVWbx1wCwSmRkHQ2maxehSDNo1RiXffSupC0jKrc
+         azzAdoAw4+YJl76QVuBF131DOVUGq/MPenQ5XP+LTtC4SDLFG98bghO3IsFS6ghEArVw
+         Hpm2UFrXhR3NrH3dsj+oGFxgSvH37BfTILroP0I8bveA/k1EXiJTzZojylzhfJovO3O0
+         v9Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2wlYERcgnCLAaGqsbd7fOqZETRKFZxGs9XvcdQRYFMs=;
-        b=LrbWK2gtWVMLYua44H97uW927yAb/Y6QDe22iCZkmf2bPox4UbsUvPr/nkVicjVOwd
-         wyOZGP4UHdgjOODvNz49CQ4aZzozCx1ULUtTLPDGBeOElbVuxWVQXc8TuTMYUit0NkTW
-         e7DGhVPhMC3tq/LgBcOS5aDHMsSiqKX3qUk8t7LHQuPW+bisuzOU5gz/8wIsfA6/6bNX
-         /P26IuvhvPbn4ETaIur5O2kT0yey+pXcIzq4pScHF7wQNe421i8kcFgd7zvBdPh33Ame
-         vF8lBEt79r7qtiTUWfPS1rA2MoGNsO6vBbxss/tAcHBe+MqHXyc8zWNV3L7PINVYEIxx
-         PKIA==
-X-Gm-Message-State: AOAM530lLmP1cTUrsqE1HcIW2EF7eHsaWHQNp3sSxKvHvuHQVGVYVzyQ
-        U1VU3pmcT8nVzg/QNEvP03THOnFvbao9ePNU
-X-Google-Smtp-Source: ABdhPJzh79O/u5pjw8Y1QV9h1YnDrFnPoODtYCbRorbI8cztRbFTiFVP2Lawy8XaqC/QmEMUvVHglA==
-X-Received: by 2002:a17:90a:4898:b0:1d9:50aa:2a62 with SMTP id b24-20020a17090a489800b001d950aa2a62mr6704326pjh.115.1651763580458;
-        Thu, 05 May 2022 08:13:00 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([134.195.101.46])
-        by smtp.gmail.com with ESMTPSA id c17-20020a63ef51000000b003c2f9540127sm1414485pgk.93.2022.05.05.08.12.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 08:12:59 -0700 (PDT)
-Date:   Thu, 5 May 2022 23:12:50 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     German Gomez <german.gomez@arm.com>
-Cc:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, acme@kernel.org,
-        benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v7 5/5] perf arm-spe: Use SPE data source for neoverse
- cores
-Message-ID: <20220505151250.GC136333@leoy-ThinkPad-X240s>
-References: <20220426135937.18497-1-alisaidi@amazon.com>
- <20220426135937.18497-6-alisaidi@amazon.com>
- <458a2de1-dc93-7e2d-5dc5-fbcd670572b6@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VEJvhDTHgb2ZulVOAAJhKz6Jc03RLtxcq5aCbH9WWeY=;
+        b=JSyJjUlnTcNlUBno9+l0/AOSqIKAtIMGabhcNfaTOE77voq7g4xlNSaV2Gn8FJv5Qb
+         NHXTPWkv+lo1eMHR2QT9SHBh7hSexPozjuU07mGcDa/6Q9NZuCxvsCjkCZIAt4jBLVcx
+         1Awogc9ZKurdOEWHc2OVro7DLU7xOUBGfl2YGUvB/zBG9szK+IoRQRxdcsVD2JPyyYaj
+         /D0ZUJ4GH35dI9QzepIOAc0qe99TM9P/jQ0h8jUq0ZkEfg6BIQlQf8ZWpz4SWaLooOgF
+         2mXIFhfOMrrMQuXh/T2d0zFw1ctC7rk6RPf5nKxeNI6vBu3KylpsS5/jNG6mAxSIUOXG
+         JjEg==
+X-Gm-Message-State: AOAM530EFulOx7SgZxeizIORhI4IBLKmRWTR5d+s9s8Dn9IuzEfhv5AV
+        AfGaP+YVLX7BlijBd/w1/3zTgAKIIvtOX3JYj+TTbg==
+X-Google-Smtp-Source: ABdhPJyqX+1rBuUp0/qNBO/cKB+nFdFM/lyWAibJ4OcZwGFjF2PFkKGoIE1oz55aHIsFCsqfF7pKrfK/7xC2NiOHFII=
+X-Received: by 2002:a67:cf49:0:b0:32d:1bea:c7b8 with SMTP id
+ f9-20020a67cf49000000b0032d1beac7b8mr8916826vsm.39.1651763923180; Thu, 05 May
+ 2022 08:18:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <458a2de1-dc93-7e2d-5dc5-fbcd670572b6@arm.com>
+References: <20220505043846.3165303-1-irogers@google.com> <87b89e2c-da5c-52c3-40dc-448e874cb5d8@linux.intel.com>
+In-Reply-To: <87b89e2c-da5c-52c3-40dc-448e874cb5d8@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 5 May 2022 08:18:30 -0700
+Message-ID: <CAP-5=fVHhWu1uJHnTfFYWvM02_F-bFBZaaOYo8zPRiA=ODRxGQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf evlist: Keep topdown counters in weak group
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haowen Bai <baihaowen@meizu.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 03, 2022 at 10:58:15AM +0100, German Gomez wrote:
-
-[...]
-
-> > +static void arm_spe__synth_data_source_generic(const struct arm_spe_record *record,
-> > +					       union perf_mem_data_src *data_src)
+On Thu, May 5, 2022 at 4:56 AM Liang, Kan <kan.liang@linux.intel.com> wrote=
+:
+>
+> Hi Ian,
+>
+> Thanks for the patches.
+>
+> On 5/5/2022 12:38 AM, Ian Rogers wrote:
+> > On Intel Icelake, topdown events must always be grouped with a slots
+> > event as leader. When a metric is parsed a weak group is formed and
+> > retried if perf_event_open fails. The retried events aren't grouped
+> > breaking the slots leader requirement. This change modifies the weak
+> > group "reset" behavior so that topdown events aren't broken from the
+> > group for the retry.
+> >
+> > $ perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-fe-bou=
+nd,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cache-miss=
+es,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cycles=
+,baclears.any,ARITH.DIVIDER_ACTIVE}:W' -a sleep 1
+> >
+> >   Performance counter stats for 'system wide':
+> >
+> >      47,867,188,483      slots                                         =
+                (92.27%)
+> >     <not supported>      topdown-bad-spec
+> >     <not supported>      topdown-be-bound
+> >     <not supported>      topdown-fe-bound
+> >     <not supported>      topdown-retiring
+> >       2,173,346,937      branch-instructions                           =
+                (92.27%)
+> >          10,540,253      branch-misses             #    0.48% of all br=
+anches          (92.29%)
+> >          96,291,140      bus-cycles                                    =
+                (92.29%)
+> >           6,214,202      cache-misses              #   20.120 % of all =
+cache refs      (92.29%)
+> >          30,886,082      cache-references                              =
+                (76.91%)
+> >      11,773,726,641      cpu-cycles                                    =
+                (84.62%)
+> >      11,807,585,307      instructions              #    1.00  insn per =
+cycle           (92.31%)
+> >                   0      mem-loads                                     =
+                (92.32%)
+> >       2,212,928,573      mem-stores                                    =
+                (84.69%)
+> >      10,024,403,118      ref-cycles                                    =
+                (92.35%)
+> >          16,232,978      baclears.any                                  =
+                (92.35%)
+> >          23,832,633      ARITH.DIVIDER_ACTIVE                          =
+                (84.59%)
+> >
+> >         0.981070734 seconds time elapsed
+> >
+> > After:
+> >
+> > $ perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-fe-bou=
+nd,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cache-miss=
+es,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cycles=
+,baclears.any,ARITH.DIVIDER_ACTIVE}:W' -a sleep 1
+> >
+> >   Performance counter stats for 'system wide':
+> >
+> >         31040189283      slots                                         =
+                (92.27%)
+> >          8997514811      topdown-bad-spec          #     28.2% bad spec=
+ulation         (92.27%)
+> >         10997536028      topdown-be-bound          #     34.5% backend =
+bound           (92.27%)
+> >          4778060526      topdown-fe-bound          #     15.0% frontend=
+ bound          (92.27%)
+> >          7086628768      topdown-retiring          #     22.2% retiring=
+                (92.27%)
+> >          1417611942      branch-instructions                           =
+                (92.26%)
+> >             5285529      branch-misses             #    0.37% of all br=
+anches          (92.28%)
+> >            62922469      bus-cycles                                    =
+                (92.29%)
+> >             1440708      cache-misses              #    8.292 % of all =
+cache refs      (92.30%)
+> >            17374098      cache-references                              =
+                (76.94%)
+> >          8040889520      cpu-cycles                                    =
+                (84.63%)
+> >          7709992319      instructions              #    0.96  insn per =
+cycle           (92.32%)
+> >                   0      mem-loads                                     =
+                (92.32%)
+> >          1515669558      mem-stores                                    =
+                (84.68%)
+> >          6542411177      ref-cycles                                    =
+                (92.35%)
+> >             4154149      baclears.any                                  =
+                (92.35%)
+> >            20556152      ARITH.DIVIDER_ACTIVE                          =
+                (84.59%)
+> >
+> >         1.010799593 seconds time elapsed
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   tools/perf/arch/x86/util/evsel.c | 12 ++++++++++++
+> >   tools/perf/util/evlist.c         | 16 ++++++++++++++--
+> >   tools/perf/util/evsel.c          | 10 ++++++++++
+> >   tools/perf/util/evsel.h          |  3 +++
+> >   4 files changed, 39 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/uti=
+l/evsel.c
+> > index ac2899a25b7a..40b171de2086 100644
+> > --- a/tools/perf/arch/x86/util/evsel.c
+> > +++ b/tools/perf/arch/x86/util/evsel.c
+> > @@ -3,6 +3,7 @@
+> >   #include <stdlib.h>
+> >   #include "util/evsel.h"
+> >   #include "util/env.h"
+> > +#include "util/pmu.h"
+> >   #include "linux/string.h"
+> >
+> >   void arch_evsel__set_sample_weight(struct evsel *evsel)
+> > @@ -29,3 +30,14 @@ void arch_evsel__fixup_new_cycles(struct perf_event_=
+attr *attr)
+> >
+> >       free(env.cpuid);
+> >   }
+> > +
+> > +bool arch_evsel__must_be_in_group(const struct evsel *evsel)
 > > +{
-> >  	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
-> > -		data_src.mem_lvl = PERF_MEM_LVL_L3;
-> > +		data_src->mem_lvl = PERF_MEM_LVL_L3;
-> 
-> Thanks for addressing my previous comment about filling both mem_lvl and mem_lvl_num.
-> 
-> I wonder if it's also worth updating for the non-Neoverse cores as well while we're at it. I'll let Leo decide since this patchset is only focused on Neoverse.
+> > +     if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
+> > +         !pmu_have_event("cpu", "slots"))
+> > +             return false;
+> > +
+>
+> The big core of ADL also supports Perf_metrics. At least, we should
+> check both "cpu" and "cpu_core" here.
+>
+> Thanks,
+> Kan
 
-Thanks for pointing out this.  Yeah, Let's use this patch set for
-enabling Neoverse data source.
-
-We can use a new patch to updating cache level for non-Neoverse cores
-(it's better also set store cache level as LVL_NA for non-Neoverse cores).
+Thanks Kan, we have the same problem for
+arch_evlist__add_default_attrs and arch_evlist__leader:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/arch/x86/util/evlist.c?h=3Dperf/core
+So I think fixing all of these should be a follow up. I am working to
+get access to an Alderlake system, could we land this first?
 
 Thanks,
-Leo
+Ian
+
+> > +     return evsel->name &&
+> > +             (!strcasecmp(evsel->name, "slots") ||
+> > +              !strncasecmp(evsel->name, "topdown", 7));
+> > +}
+> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > index 52ea004ba01e..dfa65a383502 100644
+> > --- a/tools/perf/util/evlist.c
+> > +++ b/tools/perf/util/evlist.c
+> > @@ -1790,8 +1790,17 @@ struct evsel *evlist__reset_weak_group(struct ev=
+list *evsel_list, struct evsel *
+> >               if (evsel__has_leader(c2, leader)) {
+> >                       if (is_open && close)
+> >                               perf_evsel__close(&c2->core);
+> > -                     evsel__set_leader(c2, c2);
+> > -                     c2->core.nr_members =3D 0;
+> > +                     /*
+> > +                      * We want to close all members of the group and =
+reopen
+> > +                      * them. Some events, like Intel topdown, require=
+ being
+> > +                      * in a group and so keep these in the group.
+> > +                      */
+> > +                     if (!evsel__must_be_in_group(c2) && c2 !=3D leade=
+r) {
+> > +                             evsel__set_leader(c2, c2);
+> > +                             c2->core.nr_members =3D 0;
+> > +                             leader->core.nr_members--;
+> > +                     }
+> > +
+> >                       /*
+> >                        * Set this for all former members of the group
+> >                        * to indicate they get reopened.
+> > @@ -1799,6 +1808,9 @@ struct evsel *evlist__reset_weak_group(struct evl=
+ist *evsel_list, struct evsel *
+> >                       c2->reset_group =3D true;
+> >               }
+> >       }
+> > +     /* Reset the leader count if all entries were removed. */
+> > +     if (leader->core.nr_members)
+> > +             leader->core.nr_members =3D 0;
+> >       return leader;
+> >   }
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index d38722560e80..b7c0c9775673 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -3082,3 +3082,13 @@ int evsel__source_count(const struct evsel *evse=
+l)
+> >       }
+> >       return count;
+> >   }
+> > +
+> > +bool __weak arch_evsel__must_be_in_group(const struct evsel *evsel __m=
+aybe_unused)
+> > +{
+> > +     return false;
+> > +}
+> > +
+> > +bool evsel__must_be_in_group(const struct evsel *evsel)
+> > +{
+> > +     return arch_evsel__must_be_in_group(evsel);
+> > +}
+> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> > index 45d674812239..0ed2850b7ebb 100644
+> > --- a/tools/perf/util/evsel.h
+> > +++ b/tools/perf/util/evsel.h
+> > @@ -488,6 +488,9 @@ bool evsel__has_leader(struct evsel *evsel, struct =
+evsel *leader);
+> >   bool evsel__is_leader(struct evsel *evsel);
+> >   void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
+> >   int evsel__source_count(const struct evsel *evsel);
+> > +bool evsel__must_be_in_group(const struct evsel *evsel);
+> > +
+> > +bool arch_evsel__must_be_in_group(const struct evsel *evsel);
+> >
+> >   /*
+> >    * Macro to swap the bit-field postition and size.
