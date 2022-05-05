@@ -2,122 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F91EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 17:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63A5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 17:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244971AbiEERnX (ORCPT
+        id S1382889AbiEERsa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 13:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33824 "EHLO
+        Thu, 5 May 2022 13:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359669AbiEERnX (ORCPT
+        with ESMTP id S1382959AbiEERsZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 13:43:23 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293235AA71;
-        Thu,  5 May 2022 10:39:43 -0700 (PDT)
+        Thu, 5 May 2022 13:48:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D37CA3DDEF;
+        Thu,  5 May 2022 10:44:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D862CB82E0F;
-        Thu,  5 May 2022 17:39:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 650BAC385A4;
-        Thu,  5 May 2022 17:39:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C17B61EF3;
+        Thu,  5 May 2022 17:44:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94A9DC385A4;
+        Thu,  5 May 2022 17:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651772380;
-        bh=MP4FGxU0cT0HKuYaYoJR7vQCDWINocb0Kh7IqE1yM/k=;
+        s=k20201202; t=1651772683;
+        bh=Teb3Q304BRPr9GHaFHkSX1FTTJZAg7bcpJ2gS2O1gUk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A0d8mDv8eQS0cy+QeEcpBQjV+h0XnRDsth6FV/0cU4rTUsFS90MtfPDWCvD1zzeWJ
-         0Eh89QRxK4r0SyGanFAYF5NluizqIdtRhYpcmm44vcROBIhDDtnLK3nIm7BwIXvPLA
-         jlJUgE56vDtRnVUsp2FTt7lZu543uMxDThIEi4VgGp5mmb+3IuSl9F4uBmV8nO4yiG
-         fsFzoLELM6BHmncThff+rKHvKxTIi7PW3DpsbC3I1IRVkWN+TTj7AGZvFCwtlXZQCS
-         dVh/K4WlHKPoxQrANlUuiU0oN5YGc/MaRb/7FhcSvwDDkAdbuL2OwXmsxtRIlLDB9r
-         VY2ZvibPScFNA==
+        b=fyZnxm6EmNhd5VkUQQOadMjjpQ3ZBsdNhvPIKRNH4I5RMAV8E9Y1HXwvdEGjpIlqh
+         4GVvJuLTsrIJzQAMFNH3w+IfFdmWXZ1az03YUcBOqfhX24h05OMFWpH1v+qJui1jA3
+         ylJzkoL959AO0ibK/zq7NkKOqM1qNwTk8Rq1uXyguOFfnMNDmuCmjMPH0GIB51jZOP
+         yuSXZxVa0NYmIOEK8b2XuftHhl0CCUiXgOVl6zlqxtm/SaSy/c7tgiuUUdU7z/qwji
+         IpWT3/L2clXQVeV5K/Kq85QY/PbfG1wW8NRbt/KWCDBDJUaKh3GhIWE0uKK6h4sYBk
+         1aLgQvUMCafdg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 35EB1400B1; Thu,  5 May 2022 14:39:38 -0300 (-03)
-Date:   Thu, 5 May 2022 14:39:38 -0300
+        id 08FED400B1; Thu,  5 May 2022 14:44:40 -0300 (-03)
+Date:   Thu, 5 May 2022 14:44:40 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v5 2/6] perf evlist: Clear all_cpus before propagating
-Message-ID: <YnQL2rHZhvZPDeEZ@kernel.org>
-References: <20220503041757.2365696-1-irogers@google.com>
- <20220503041757.2365696-3-irogers@google.com>
- <9e862a01-b955-70c0-25ae-2efc03f636bf@intel.com>
+        Namhyung Kim <namhyung@kernel.org>, svens@linux.ibm.com,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
+Subject: Re: [PATCH v2] perf test: Add skip to --per-thread test
+Message-ID: <YnQNCN2qbCBvkyqr@kernel.org>
+References: <20220503043400.2374052-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9e862a01-b955-70c0-25ae-2efc03f636bf@intel.com>
+In-Reply-To: <20220503043400.2374052-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 04, 2022 at 05:15:57PM +0300, Adrian Hunter escreveu:
-> On 3/05/22 07:17, Ian Rogers wrote:
-> > all_cpus is merged into during propagation. Initially all_cpus is set
-> > from PMU sysfs. perf_evlist__set_maps will recompute it and change
-> > evsel->cpus to user_requested_cpus if they are given. If all_cpus isn't
-> > cleared then the union of the user_requested_cpus and PMU sysfs values
-> > is set to all_cpus, whereas just user_requested_cpus is necessary. To
-> > avoid this make all_cpus empty prior to propagation.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+Em Mon, May 02, 2022 at 09:34:00PM -0700, Ian Rogers escreveu:
+> As reported in:
+> https://lore.kernel.org/linux-perf-users/20220428122821.3652015-1-tmricht@linux.ibm.com/
+> the 'instructions:u' event may not be supported. Add a skip using 'perf
+> record'.
 > 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> Switch some code away from pipe to make the failures clearer.
 
-Thanks, applied.
+Can you please resubmit this on top of my perf/core branch? I had
+already applied Thomas fix and published perf/core publicly, so I rather
+not rebase at this point.
+
+Basically get your current tools/perf/tests/shell/record.sh file, with
+this fix, copy it, clone my perf/core branch, copy
+tools/perf/tests/shell/record.sh there and commit, then please resubmit
+:-)
 
 - Arnaldo
-
  
-> > ---
-> >  tools/lib/perf/evlist.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> > index a09315538a30..974b4585f93e 100644
-> > --- a/tools/lib/perf/evlist.c
-> > +++ b/tools/lib/perf/evlist.c
-> > @@ -59,6 +59,10 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
-> >  {
-> >  	struct perf_evsel *evsel;
-> >  
-> > +	/* Recomputing all_cpus, so start with a blank slate. */
-> > +	perf_cpu_map__put(evlist->all_cpus);
-> > +	evlist->all_cpus = NULL;
-> > +
-> >  	perf_evlist__for_each_evsel(evlist, evsel)
-> >  		__perf_evlist__propagate_maps(evlist, evsel);
-> >  }
+> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/shell/record.sh | 44 +++++++++++++++++++++++++++++---
+>  1 file changed, 41 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index cd1cf14259b8..00c7285ce1ac 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -5,11 +5,43 @@
+>  set -e
+>  
+>  err=0
+> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +
+> +cleanup() {
+> +  rm -f ${perfdata}
+> +  rm -f ${perfdata}.old
+> +  trap - exit term int
+> +}
+> +
+> +trap_cleanup() {
+> +  cleanup
+> +  exit 1
+> +}
+> +trap trap_cleanup exit term int
+> +
+>  test_per_thread() {
+>    echo "Basic --per-thread mode test"
+> -  perf record -e instructions:u --per-thread -o- true 2> /dev/null \
+> -    | perf report -i- -q \
+> -    | egrep -q true
+> +  if ! perf record -e instructions:u -o ${perfdata} --quiet true 2> /dev/null
+> +  then
+> +    echo "Per-thread record [Skipped instructions:u not supported]"
+> +    if [ $err -ne 1 ]
+> +    then
+> +      err=2
+> +    fi
+> +    return
+> +  fi
+> +  if ! perf record -e instructions:u --per-thread -o ${perfdata} true 2> /dev/null
+> +  then
+> +    echo "Per-thread record of instructions:u [Failed]"
+> +    err=1
+> +    return
+> +  fi
+> +  if ! perf report -i ${perfdata} -q | egrep -q true
+> +  then
+> +    echo "Per-thread record [Failed missing output]"
+> +    err=1
+> +    return
+> +  fi
+>    echo "Basic --per-thread mode test [Success]"
+>  }
+>  
+> @@ -18,6 +50,10 @@ test_register_capture() {
+>    if ! perf list | egrep -q 'br_inst_retired.near_call'
+>    then
+>      echo "Register capture test [Skipped missing instruction]"
+> +    if [ $err -ne 1 ]
+> +    then
+> +      err=2
+> +    fi
+>      return
+>    fi
+>    if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
+> @@ -39,4 +75,6 @@ test_register_capture() {
+>  
+>  test_per_thread
+>  test_register_capture
+> +
+> +cleanup
+>  exit $err
+> -- 
+> 2.36.0.464.gb9c8b46e94-goog
 
 -- 
 
