@@ -2,57 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A35C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 15:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42E1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 15:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381237AbiEEPWe (ORCPT
+        id S1381255AbiEEP0J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 11:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
+        Thu, 5 May 2022 11:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347238AbiEEPWc (ORCPT
+        with ESMTP id S232495AbiEEP0I (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 11:22:32 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409C2527D9
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 08:18:52 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id y74so4490737vsy.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2022 08:18:52 -0700 (PDT)
+        Thu, 5 May 2022 11:26:08 -0400
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33034522D0
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 08:22:29 -0700 (PDT)
+Received: by mail-ua1-x92f.google.com with SMTP id p1so1780596uak.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2022 08:22:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=VEJvhDTHgb2ZulVOAAJhKz6Jc03RLtxcq5aCbH9WWeY=;
-        b=j1u4JRqE0T4SVMIg+AnVjJG4bpeAcNQ8r28TQQCEoBem0faWP3HUYUunyVqm18IJ5e
-         ebEVhRRZdck8iORa80Zv88pohYSBuueqlPEP56cjnQ1Fy5XTSor3vdYe+2+CzvRGHyHG
-         r3rDn0d4Den+5w/niYqUlM9FOlKcOVWbx1wCwSmRkHQ2maxehSDNo1RiXffSupC0jKrc
-         azzAdoAw4+YJl76QVuBF131DOVUGq/MPenQ5XP+LTtC4SDLFG98bghO3IsFS6ghEArVw
-         Hpm2UFrXhR3NrH3dsj+oGFxgSvH37BfTILroP0I8bveA/k1EXiJTzZojylzhfJovO3O0
-         v9Pw==
+        bh=qPfQvLyUbmHVNZw+TAo0YgVkjOr4uX9NXBiJG8Mn/l8=;
+        b=nSfw2fQyJsl7DKOxKW4Xwy1DGfVltFyP9da0IbVvD2QTVqa2245czWi4oGozeeV5qY
+         muiUUE2Mk5D90HSE+fDn6+18Tadnbpo8/T1JZJYR+AVL+rNFYDZpOucN/CDQtp8ZdBbA
+         zYBIpc6HV4mAijPIpD3Lp+XzeuRJ8PLG/eHB0Dq5vTCYNJaTLJ4NkpSodbziqJ/pt/V7
+         oNSrkph6Gy8FioTleMP/T5SCdSZCDArNgB8++d908AQ+NplA90o3txi8RPspfg5N7gQ+
+         KDj8tVGWLqkjZqOZDXHF+E6DdL4IYiTAcd8yzwhl3GJir9Ex88PV8p9THc/WNygKqrb4
+         tQRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VEJvhDTHgb2ZulVOAAJhKz6Jc03RLtxcq5aCbH9WWeY=;
-        b=JSyJjUlnTcNlUBno9+l0/AOSqIKAtIMGabhcNfaTOE77voq7g4xlNSaV2Gn8FJv5Qb
-         NHXTPWkv+lo1eMHR2QT9SHBh7hSexPozjuU07mGcDa/6Q9NZuCxvsCjkCZIAt4jBLVcx
-         1Awogc9ZKurdOEWHc2OVro7DLU7xOUBGfl2YGUvB/zBG9szK+IoRQRxdcsVD2JPyyYaj
-         /D0ZUJ4GH35dI9QzepIOAc0qe99TM9P/jQ0h8jUq0ZkEfg6BIQlQf8ZWpz4SWaLooOgF
-         2mXIFhfOMrrMQuXh/T2d0zFw1ctC7rk6RPf5nKxeNI6vBu3KylpsS5/jNG6mAxSIUOXG
-         JjEg==
-X-Gm-Message-State: AOAM530EFulOx7SgZxeizIORhI4IBLKmRWTR5d+s9s8Dn9IuzEfhv5AV
-        AfGaP+YVLX7BlijBd/w1/3zTgAKIIvtOX3JYj+TTbg==
-X-Google-Smtp-Source: ABdhPJyqX+1rBuUp0/qNBO/cKB+nFdFM/lyWAibJ4OcZwGFjF2PFkKGoIE1oz55aHIsFCsqfF7pKrfK/7xC2NiOHFII=
-X-Received: by 2002:a67:cf49:0:b0:32d:1bea:c7b8 with SMTP id
- f9-20020a67cf49000000b0032d1beac7b8mr8916826vsm.39.1651763923180; Thu, 05 May
- 2022 08:18:43 -0700 (PDT)
+        bh=qPfQvLyUbmHVNZw+TAo0YgVkjOr4uX9NXBiJG8Mn/l8=;
+        b=H+sIxhqbVi2IVKp2KVHnj03Cvb/LvNPblWGEuJq5ZR5h9pZjcBQMQw+QNkpkhjsADS
+         14gnAE9q+EVuSpGJ/A6jOSZINdoedK13BR33omRTsltXVc88alBbhVOeaA6xAFfUTnZQ
+         W7eewwhM4ZA9j1gVcknd+T4JbfO5JZUpxlB/q9rTcbxdDufWGb1U44qY9NmH6+0jst/E
+         WfQxA9FAqnLonvNe5agUS2AW/H2fBTvxmTLk7ZR86WizKhrADTrNhe1tMvCuZ2pBaZpb
+         UyIZXTj9FiiuVo28F433ThLBS4/RJJiI03uINN9MX/04wdZkZ3Mqacav/07+UzKAT1sn
+         YtYg==
+X-Gm-Message-State: AOAM533wK4eFhTBVoza8J7g08V0Wc3q8X2a6g3wl4gogeRvtLKZ8cwHR
+        h/bNkPaefwMEtEJZa2XYlWvOdYv7gTjNdqEElHulCg==
+X-Google-Smtp-Source: ABdhPJwbz5sQPxXCrjImAmPsDa2i0PbxuSSm2hbm+OVphjRIsqQavkMTrDIRP76ZbM2Z5EMeVcHLlAVg3qndoBvXNpA=
+X-Received: by 2002:a9f:2048:0:b0:352:9b4f:ac98 with SMTP id
+ 66-20020a9f2048000000b003529b4fac98mr8489353uam.12.1651764148121; Thu, 05 May
+ 2022 08:22:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220505043846.3165303-1-irogers@google.com> <87b89e2c-da5c-52c3-40dc-448e874cb5d8@linux.intel.com>
-In-Reply-To: <87b89e2c-da5c-52c3-40dc-448e874cb5d8@linux.intel.com>
+References: <20220505043846.3165303-1-irogers@google.com> <20220505043846.3165303-2-irogers@google.com>
+ <cb6065af-7e3f-53fa-5d82-67be04ca833f@linux.intel.com>
+In-Reply-To: <cb6065af-7e3f-53fa-5d82-67be04ca833f@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 5 May 2022 08:18:30 -0700
-Message-ID: <CAP-5=fVHhWu1uJHnTfFYWvM02_F-bFBZaaOYo8zPRiA=ODRxGQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf evlist: Keep topdown counters in weak group
+Date:   Thu, 5 May 2022 08:22:15 -0700
+Message-ID: <CAP-5=fV6Sj3PMjVBYtCRZUXXrwOJC9ETffQYscvcgJZ7gm2tFw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf test: Add basic stat and topdown group test
 To:     "Liang, Kan" <kan.liang@linux.intel.com>
 Cc:     Caleb Biggers <caleb.biggers@intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
@@ -73,6 +74,7 @@ Cc:     Caleb Biggers <caleb.biggers@intel.com>,
         Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
         Florian Fischer <florian.fischer@muhq.space>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -80,232 +82,125 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 5, 2022 at 4:56 AM Liang, Kan <kan.liang@linux.intel.com> wrote=
+On Thu, May 5, 2022 at 5:12 AM Liang, Kan <kan.liang@linux.intel.com> wrote=
 :
 >
-> Hi Ian,
->
-> Thanks for the patches.
->
 > On 5/5/2022 12:38 AM, Ian Rogers wrote:
-> > On Intel Icelake, topdown events must always be grouped with a slots
-> > event as leader. When a metric is parsed a weak group is formed and
-> > retried if perf_event_open fails. The retried events aren't grouped
-> > breaking the slots leader requirement. This change modifies the weak
-> > group "reset" behavior so that topdown events aren't broken from the
-> > group for the retry.
-> >
-> > $ perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-fe-bou=
-nd,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cache-miss=
-es,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cycles=
-,baclears.any,ARITH.DIVIDER_ACTIVE}:W' -a sleep 1
-> >
-> >   Performance counter stats for 'system wide':
-> >
-> >      47,867,188,483      slots                                         =
-                (92.27%)
-> >     <not supported>      topdown-bad-spec
-> >     <not supported>      topdown-be-bound
-> >     <not supported>      topdown-fe-bound
-> >     <not supported>      topdown-retiring
-> >       2,173,346,937      branch-instructions                           =
-                (92.27%)
-> >          10,540,253      branch-misses             #    0.48% of all br=
-anches          (92.29%)
-> >          96,291,140      bus-cycles                                    =
-                (92.29%)
-> >           6,214,202      cache-misses              #   20.120 % of all =
-cache refs      (92.29%)
-> >          30,886,082      cache-references                              =
-                (76.91%)
-> >      11,773,726,641      cpu-cycles                                    =
-                (84.62%)
-> >      11,807,585,307      instructions              #    1.00  insn per =
-cycle           (92.31%)
-> >                   0      mem-loads                                     =
-                (92.32%)
-> >       2,212,928,573      mem-stores                                    =
-                (84.69%)
-> >      10,024,403,118      ref-cycles                                    =
-                (92.35%)
-> >          16,232,978      baclears.any                                  =
-                (92.35%)
-> >          23,832,633      ARITH.DIVIDER_ACTIVE                          =
-                (84.59%)
-> >
-> >         0.981070734 seconds time elapsed
-> >
-> > After:
-> >
-> > $ perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-fe-bou=
-nd,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cache-miss=
-es,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cycles=
-,baclears.any,ARITH.DIVIDER_ACTIVE}:W' -a sleep 1
-> >
-> >   Performance counter stats for 'system wide':
-> >
-> >         31040189283      slots                                         =
-                (92.27%)
-> >          8997514811      topdown-bad-spec          #     28.2% bad spec=
-ulation         (92.27%)
-> >         10997536028      topdown-be-bound          #     34.5% backend =
-bound           (92.27%)
-> >          4778060526      topdown-fe-bound          #     15.0% frontend=
- bound          (92.27%)
-> >          7086628768      topdown-retiring          #     22.2% retiring=
-                (92.27%)
-> >          1417611942      branch-instructions                           =
-                (92.26%)
-> >             5285529      branch-misses             #    0.37% of all br=
-anches          (92.28%)
-> >            62922469      bus-cycles                                    =
-                (92.29%)
-> >             1440708      cache-misses              #    8.292 % of all =
-cache refs      (92.30%)
-> >            17374098      cache-references                              =
-                (76.94%)
-> >          8040889520      cpu-cycles                                    =
-                (84.63%)
-> >          7709992319      instructions              #    0.96  insn per =
-cycle           (92.32%)
-> >                   0      mem-loads                                     =
-                (92.32%)
-> >          1515669558      mem-stores                                    =
-                (84.68%)
-> >          6542411177      ref-cycles                                    =
-                (92.35%)
-> >             4154149      baclears.any                                  =
-                (92.35%)
-> >            20556152      ARITH.DIVIDER_ACTIVE                          =
-                (84.59%)
-> >
-> >         1.010799593 seconds time elapsed
+> > Add a basic stat test.
+> > Add two tests of grouping behavior for topdown events. Topdown events
+> > are special as they must be grouped with the slots event first.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >   tools/perf/arch/x86/util/evsel.c | 12 ++++++++++++
-> >   tools/perf/util/evlist.c         | 16 ++++++++++++++--
-> >   tools/perf/util/evsel.c          | 10 ++++++++++
-> >   tools/perf/util/evsel.h          |  3 +++
-> >   4 files changed, 39 insertions(+), 2 deletions(-)
+> >   tools/perf/tests/shell/stat.sh | 65 +++++++++++++++++++++++++++++++++=
++
+> >   1 file changed, 65 insertions(+)
+> >   create mode 100755 tools/perf/tests/shell/stat.sh
 > >
-> > diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/uti=
-l/evsel.c
-> > index ac2899a25b7a..40b171de2086 100644
-> > --- a/tools/perf/arch/x86/util/evsel.c
-> > +++ b/tools/perf/arch/x86/util/evsel.c
-> > @@ -3,6 +3,7 @@
-> >   #include <stdlib.h>
-> >   #include "util/evsel.h"
-> >   #include "util/env.h"
-> > +#include "util/pmu.h"
-> >   #include "linux/string.h"
-> >
-> >   void arch_evsel__set_sample_weight(struct evsel *evsel)
-> > @@ -29,3 +30,14 @@ void arch_evsel__fixup_new_cycles(struct perf_event_=
-attr *attr)
-> >
-> >       free(env.cpuid);
-> >   }
+> > diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/st=
+at.sh
+> > new file mode 100755
+> > index 000000000000..80869ea6debc
+> > --- /dev/null
+> > +++ b/tools/perf/tests/shell/stat.sh
+> > @@ -0,0 +1,65 @@
+> > +#!/bin/sh
+> > +# perf stat tests
+> > +# SPDX-License-Identifier: GPL-2.0
 > > +
-> > +bool arch_evsel__must_be_in_group(const struct evsel *evsel)
-> > +{
-> > +     if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
-> > +         !pmu_have_event("cpu", "slots"))
-> > +             return false;
+> > +set -e
+> > +
+> > +err=3D0
+> > +test_default_stat() {
+> > +  echo "Basic stat command test"
+> > +  if ! perf stat true 2>&1 | egrep -q "Performance counter stats for '=
+true':"
+> > +  then
+> > +    echo "Basic stat command test [Failed]"
+> > +    err=3D1
+> > +    return
+> > +  fi
+> > +  echo "Basic stat command test [Success]"
+> > +}
+> > +
+> > +test_topdown_groups() {
+> > +  # Topdown events must be grouped with the slots event first. Test th=
+at
+> > +  # parse-events reorders this.
+> > +  echo "Topdown event group test"
+> > +  if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
+> > +  then
+> > +    echo "Topdown event group test [Skipped event parsing failed]"
+> > +    return
+> > +  fi
+> > +  if perf stat -e '{slots,topdown-retiring}' true 2>&1 | egrep -q "<no=
+t supported>"
+> > +  then
+> > +    echo "Topdown event group test [Failed events not supported]"
+> > +    err=3D1
+> > +    return
+> > +  fi
+> > +  if perf stat -e '{topdown-retiring,slots}' true 2>&1 | egrep -q "<no=
+t supported>"
+> > +  then
+> > +    echo "Topdown event group test [Failed slots not reordered first]"
+> > +    err=3D1
+> > +    return
+> > +  fi
+> > +  echo "Topdown event group test [Success]"
+> > +}
+> > +
+> > +test_topdown_weak_groups() {
+> > +  # Weak groups break if the perf_event_open of multiple grouped event=
+s
+> > +  # fails. Breaking a topdown group causes the events to fail. Test a =
+very large
+> > +  # grouping to see that the topdown events aren't broken out.
+> > +  echo "Topdown weak groups test"
+> > +  if ! perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-=
+fe-bound,topdown-retiring},branch-instructions,branch-misses,bus-cycles,cac=
+he-misses,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref=
+-cycles,baclears.any,ARITH.DIVIDER_ACTIVE' true > /dev/null 2>&1
+> > +  then
+> > +    echo "Topdown weak groups test [Skipped event parsing failed]"
+> > +    return
+> > +  fi
+> > +  if perf stat -e '{slots,topdown-bad-spec,topdown-be-bound,topdown-fe=
+-bound,topdown-retiring,branch-instructions,branch-misses,bus-cycles,cache-=
+misses,cache-references,cpu-cycles,instructions,mem-loads,mem-stores,ref-cy=
+cles,baclears.any,ARITH.DIVIDER_ACTIVE}:W' true 2>&1 | egrep -q "<not suppo=
+rted>"
+> > +  then
+> > +    echo "Topdown weak groups test [Failed events not supported]"
+> > +    err=3D1
+> > +    return
+> > +  fi
+> > +  echo "Topdown weak groups test [Success]"
+> > +}
 > > +
 >
-> The big core of ADL also supports Perf_metrics. At least, we should
-> check both "cpu" and "cpu_core" here.
+> Should we check the existence of the slots event before the test?
+> The perf metrics feature only be available on the new platform after
+> ICL. It doesn't work on Atom.
 >
-> Thanks,
-> Kan
+> Also, I think the test may fails on the hybrid platform, since big core
+> and small core have different formula for the topdown. I think we should
+> avoid the test for the hybrid platform for now.
+> +Zhengjun, who is fixing the topdown gap for the hybrid platform. I
+> think he may take care of the hybrid support later.
 
-Thanks Kan, we have the same problem for
-arch_evlist__add_default_attrs and arch_evlist__leader:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
-erf/arch/x86/util/evlist.c?h=3Dperf/core
-So I think fixing all of these should be a follow up. I am working to
-get access to an Alderlake system, could we land this first?
+Thanks Kan, the test filters out systems that don't support the events
+and silently skips the test. The main purpose of the test is to make
+sure the somewhat complicated grouping operations for Icelake have
+some coverage. Adding more coverage for hybrid would be great, but not
+something I think gates this change.
 
 Thanks,
 Ian
 
-> > +     return evsel->name &&
-> > +             (!strcasecmp(evsel->name, "slots") ||
-> > +              !strncasecmp(evsel->name, "topdown", 7));
-> > +}
-> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > index 52ea004ba01e..dfa65a383502 100644
-> > --- a/tools/perf/util/evlist.c
-> > +++ b/tools/perf/util/evlist.c
-> > @@ -1790,8 +1790,17 @@ struct evsel *evlist__reset_weak_group(struct ev=
-list *evsel_list, struct evsel *
-> >               if (evsel__has_leader(c2, leader)) {
-> >                       if (is_open && close)
-> >                               perf_evsel__close(&c2->core);
-> > -                     evsel__set_leader(c2, c2);
-> > -                     c2->core.nr_members =3D 0;
-> > +                     /*
-> > +                      * We want to close all members of the group and =
-reopen
-> > +                      * them. Some events, like Intel topdown, require=
- being
-> > +                      * in a group and so keep these in the group.
-> > +                      */
-> > +                     if (!evsel__must_be_in_group(c2) && c2 !=3D leade=
-r) {
-> > +                             evsel__set_leader(c2, c2);
-> > +                             c2->core.nr_members =3D 0;
-> > +                             leader->core.nr_members--;
-> > +                     }
-> > +
-> >                       /*
-> >                        * Set this for all former members of the group
-> >                        * to indicate they get reopened.
-> > @@ -1799,6 +1808,9 @@ struct evsel *evlist__reset_weak_group(struct evl=
-ist *evsel_list, struct evsel *
-> >                       c2->reset_group =3D true;
-> >               }
-> >       }
-> > +     /* Reset the leader count if all entries were removed. */
-> > +     if (leader->core.nr_members)
-> > +             leader->core.nr_members =3D 0;
-> >       return leader;
-> >   }
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index d38722560e80..b7c0c9775673 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -3082,3 +3082,13 @@ int evsel__source_count(const struct evsel *evse=
-l)
-> >       }
-> >       return count;
-> >   }
-> > +
-> > +bool __weak arch_evsel__must_be_in_group(const struct evsel *evsel __m=
-aybe_unused)
-> > +{
-> > +     return false;
-> > +}
-> > +
-> > +bool evsel__must_be_in_group(const struct evsel *evsel)
-> > +{
-> > +     return arch_evsel__must_be_in_group(evsel);
-> > +}
-> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> > index 45d674812239..0ed2850b7ebb 100644
-> > --- a/tools/perf/util/evsel.h
-> > +++ b/tools/perf/util/evsel.h
-> > @@ -488,6 +488,9 @@ bool evsel__has_leader(struct evsel *evsel, struct =
-evsel *leader);
-> >   bool evsel__is_leader(struct evsel *evsel);
-> >   void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
-> >   int evsel__source_count(const struct evsel *evsel);
-> > +bool evsel__must_be_in_group(const struct evsel *evsel);
-> > +
-> > +bool arch_evsel__must_be_in_group(const struct evsel *evsel);
-> >
-> >   /*
-> >    * Macro to swap the bit-field postition and size.
+> Thanks,
+> Kan
+> > +test_default_stat
+> > +test_topdown_groups
+> > +test_topdown_weak_groups
+> > +exit $err
