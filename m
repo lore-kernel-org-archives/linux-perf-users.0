@@ -2,43 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D239CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 19:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C13C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 19:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343951AbiEETWX (ORCPT
+        id S1385225AbiEETrt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 15:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37946 "EHLO
+        Thu, 5 May 2022 15:47:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384991AbiEETWU (ORCPT
+        with ESMTP id S234514AbiEETrr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 15:22:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2406527FF;
-        Thu,  5 May 2022 12:18:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 5 May 2022 15:47:47 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2309351591;
+        Thu,  5 May 2022 12:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651779841; x=1683315841;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1tZDI2BmnNsfncpfUFvMhYgdDZVYfF1pMiersQPZT2c=;
+  b=EMyYHBB7EI4oOw79unV/wDMtUTxtBq0MbpF9kkjJen/LDT8yK7+qCSnC
+   yxsDvwSXLgRomIAyKuyuPj9tFZspgT1eb7ymJQ5IRrdBniPFdgEpqRBcw
+   J/P1+jw/9qb1gWx2ML2bYnBHz5li9rkIHmXSFpAJzTJn21hjc8PsWgEVG
+   gn8UWgIvUZt/tfBc2I4D3vyQEWCgZR7KMSr2Q7DWK39VmTCCyv6uvLz/D
+   EEs1yVvtiFwLd0/PbF4V6rLWoLWeSbMR9I4sbJ/eJTtv4JQbX1UI2oUGL
+   NBu5yXpRwEkwWLJINLc9CbWUUFBYmsfp4QOqS3IFjVOiysn+ndEtaUM+i
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10338"; a="265825419"
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="265825419"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2022 12:44:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,203,1647327600"; 
+   d="scan'208";a="537502503"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 05 May 2022 12:44:00 -0700
+Received: from [10.252.209.228] (kliang2-MOBL.ccr.corp.intel.com [10.252.209.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 84DD7B82F20;
-        Thu,  5 May 2022 19:18:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D26AC385A4;
-        Thu,  5 May 2022 19:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651778315;
-        bh=b4na20hsT5ooewQtEeVBDpf7ktvKIX8Bkd9Cwxc5Fdo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ehq7P/Mk2srOHLiAvrZro1oPyRHE8jK83T71M14VMyYyEua18EAo5CBkIVdvCKTTV
-         Tvx4soTEMk6Zj607XuBMs+g/26TAU3zftYNXzmMnyVGD+u8b6B4pKk1/kmBZACEXGs
-         Jyho6kodSWIS5gm5pWTSa7Cl8jP2IYR3EIcu7y6Y9P4oo+Er7kVQKVkHjRhJOYaqxQ
-         HNG+JfcTdviT1iaoaeqewagu7vk8IUvnJQuLK9NLAFoR3IR+3kkKllYwOnMR3KiuGv
-         ir4gbXUrlnC0Mu5mdv7sv/pqd6+5OUlUekeBQfjKX0nQR9tyISUO0i7hVfQe1snrFe
-         4PVj0+W0aeTSg==
-From:   Miguel Ojeda <ojeda@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
+        by linux.intel.com (Postfix) with ESMTPS id D2B7D5806C8;
+        Thu,  5 May 2022 12:43:57 -0700 (PDT)
+Message-ID: <83417b72-4872-072a-2328-a88d2bb90858@linux.intel.com>
+Date:   Thu, 5 May 2022 15:43:56 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH 1/2] perf evlist: Keep topdown counters in weak group
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -46,173 +62,87 @@ To:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Helge Deller <deller@gmx.de>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Cc:     rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Gary Guo <gary@garyguo.net>, Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH v1 3/3] kallsyms: increase maximum kernel symbol length to 512
-Date:   Thu,  5 May 2022 21:16:45 +0200
-Message-Id: <20220505191704.22812-4-ojeda@kernel.org>
-In-Reply-To: <20220505191704.22812-1-ojeda@kernel.org>
-References: <20220505191704.22812-1-ojeda@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Haowen Bai <baihaowen@meizu.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>
+References: <20220505043846.3165303-1-irogers@google.com>
+ <87b89e2c-da5c-52c3-40dc-448e874cb5d8@linux.intel.com>
+ <CAP-5=fVHhWu1uJHnTfFYWvM02_F-bFBZaaOYo8zPRiA=ODRxGQ@mail.gmail.com>
+ <12c03e85-cb48-d264-5f04-e9bf9faaf739@linux.intel.com>
+ <CAP-5=fW9Cp3ShO=tTQddDWXz+nrSip99HrNW7Wv5_Qsy1UT7bw@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fW9Cp3ShO=tTQddDWXz+nrSip99HrNW7Wv5_Qsy1UT7bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rust symbols can become quite long due to namespacing introduced
-by modules, types, traits, generics, etc. For instance,
-the following code:
 
-    pub mod my_module {
-        pub struct MyType;
-        pub struct MyGenericType<T>(T);
 
-        pub trait MyTrait {
-            fn my_method() -> u32;
-        }
+On 5/5/2022 2:31 PM, Ian Rogers wrote:
+>>> So I think fixing all of these should be a follow up. I am working to
+>>> get access to an Alderlake system, could we land this first?
+>>>
+>> I think we can use pmu_name to replace the "cpu" to fix the issue for
+>> the hybrid platform. For a hybrid platform, the pmu_name is either
+>> cpu_atom or cpu_core.
+>>
+>> Besides, the topdown events may have a PMU prefix, e.g.,
+>> cpu_core/topdown-be-bound/. The strcasecmp may not work well for this case.
+>>
+>> How about the below patch?
+>> If it's OK for you, could you please merge it into your V2 patch set?
+>> I can do the test on a ADL system.
+>>
+>> diff --git a/tools/perf/arch/x86/util/evsel.c
+>> b/tools/perf/arch/x86/util/evsel.c
+>> index 40b171de2086..551ae2bab70e 100644
+>> --- a/tools/perf/arch/x86/util/evsel.c
+>> +++ b/tools/perf/arch/x86/util/evsel.c
+>> @@ -33,11 +33,12 @@ void arch_evsel__fixup_new_cycles(struct
+>> perf_event_attr *attr)
+>>
+>>    bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+>>    {
+>> -       if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
+>> -           !pmu_have_event("cpu", "slots"))
+>> +       const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
+>> +
+>> +       if (!pmu_have_event(pmu_name, "slots"))
+>>                  return false;
+> Hmm. The idea with this test is to see if the architecture supports
+> topdown events before going further. There's a similar test in all the
+> arch_evlist functions. I think with cpu_core this needs to become:
+>
 
-        impl MyTrait for MyGenericType<MyType> {
-            fn my_method() -> u32 {
-                42
-            }
-        }
-    }
+The case is a little bit different here. For the arch_evlist functions, 
+the input is the evlist, not the specific evsel. So we have to check all 
+the possible PMU names which are "cpu" and "cpu_core". Then we decide 
+whether going further.
 
-generates a symbol of length 96 when using the upcoming v0 mangling scheme:
+The input of the evsel__must_be_in_group() is the evsel. The PMU name is 
+stored in the evsel->pmu_name. I don't think we need to check all the 
+possible PMU names. Using evsel->pmu_name should be good enough.
 
-    _RNvXNtCshGpAVYOtgW1_7example9my_moduleINtB2_13MyGenericTypeNtB2_6MyTypeENtB2_7MyTrait9my_method
+> if (!pmu_have_event("cpu", "slots") && !pmu_have_event("cpu_core", "slots") )
+> 
+> But we should add a helper function for this. It is odd to have this
+> change supporting Alderlake but the existing evlist work not. Perhaps
+> we should just wait until Zhengjun's patches land.
 
-At the moment, Rust symbols may reach up to 300 in length.
-Setting 512 as the maximum seems like a reasonable choice to
-keep some headroom.
+Yes, a helper function is good for the arch_evlist functions. But I 
+don't think this patch needs the helper function. Zhengjun's patches are 
+to fix the other topdown issues on ADL. There is no dependency between 
+this patch and zhengjun's patches.
 
-Co-developed-by: Alex Gaynor <alex.gaynor@gmail.com>
-Signed-off-by: Alex Gaynor <alex.gaynor@gmail.com>
-Co-developed-by: Wedson Almeida Filho <wedsonaf@google.com>
-Signed-off-by: Wedson Almeida Filho <wedsonaf@google.com>
-Co-developed-by: Gary Guo <gary@garyguo.net>
-Signed-off-by: Gary Guo <gary@garyguo.net>
-Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- include/linux/kallsyms.h            | 2 +-
- kernel/livepatch/core.c             | 4 ++--
- scripts/kallsyms.c                  | 4 ++--
- tools/include/linux/kallsyms.h      | 2 +-
- tools/lib/perf/include/perf/event.h | 2 +-
- tools/lib/symbol/kallsyms.h         | 2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/kallsyms.h b/include/linux/kallsyms.h
-index ce1bd2fbf23e..e5ad6e31697d 100644
---- a/include/linux/kallsyms.h
-+++ b/include/linux/kallsyms.h
-@@ -15,7 +15,7 @@
- 
- #include <asm/sections.h>
- 
--#define KSYM_NAME_LEN 128
-+#define KSYM_NAME_LEN 512
- #define KSYM_SYMBOL_LEN (sizeof("%s+%#lx/%#lx [%s %s]") + \
- 			(KSYM_NAME_LEN - 1) + \
- 			2*(BITS_PER_LONG*3/10) + (MODULE_NAME_LEN - 1) + \
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index bc475e62279d..ec06ce59d728 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -213,7 +213,7 @@ static int klp_resolve_symbols(Elf_Shdr *sechdrs, const char *strtab,
- 	 * we use the smallest/strictest upper bound possible (56, based on
- 	 * the current definition of MODULE_NAME_LEN) to prevent overflows.
- 	 */
--	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 128);
-+	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 512);
- 
- 	relas = (Elf_Rela *) relasec->sh_addr;
- 	/* For each rela in this klp relocation section */
-@@ -227,7 +227,7 @@ static int klp_resolve_symbols(Elf_Shdr *sechdrs, const char *strtab,
- 
- 		/* Format: .klp.sym.sym_objname.sym_name,sympos */
- 		cnt = sscanf(strtab + sym->st_name,
--			     ".klp.sym.%55[^.].%127[^,],%lu",
-+			     ".klp.sym.%55[^.].%511[^,],%lu",
- 			     sym_objname, sym_name, &sympos);
- 		if (cnt != 3) {
- 			pr_err("symbol %s has an incorrectly formatted name\n",
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index c4e85eec2b4b..f9d07f9eb709 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -30,10 +30,10 @@
- #define _stringify_1(x)	#x
- #define _stringify(x)	_stringify_1(x)
- 
--#define KSYM_NAME_LEN		128
-+#define KSYM_NAME_LEN		512
- 
- /* A substantially bigger size than the current maximum. */
--#define KSYM_NAME_LEN_BUFFER	512
-+#define KSYM_NAME_LEN_BUFFER	2048
- _Static_assert(
- 	KSYM_NAME_LEN_BUFFER == KSYM_NAME_LEN * 4,
- 	"Please keep KSYM_NAME_LEN_BUFFER in sync with KSYM_NAME_LEN"
-diff --git a/tools/include/linux/kallsyms.h b/tools/include/linux/kallsyms.h
-index efb6c3f5f2a9..5a37ccbec54f 100644
---- a/tools/include/linux/kallsyms.h
-+++ b/tools/include/linux/kallsyms.h
-@@ -6,7 +6,7 @@
- #include <stdio.h>
- #include <unistd.h>
- 
--#define KSYM_NAME_LEN 128
-+#define KSYM_NAME_LEN 512
- 
- struct module;
- 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index e7758707cadd..116a80c31675 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -95,7 +95,7 @@ struct perf_record_throttle {
- };
- 
- #ifndef KSYM_NAME_LEN
--#define KSYM_NAME_LEN 256
-+#define KSYM_NAME_LEN 512
- #endif
- 
- struct perf_record_ksymbol {
-diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
-index 72ab9870454b..542f9b059c3b 100644
---- a/tools/lib/symbol/kallsyms.h
-+++ b/tools/lib/symbol/kallsyms.h
-@@ -7,7 +7,7 @@
- #include <linux/types.h>
- 
- #ifndef KSYM_NAME_LEN
--#define KSYM_NAME_LEN 256
-+#define KSYM_NAME_LEN 512
- #endif
- 
- static inline u8 kallsyms2elf_binding(char type)
--- 
-2.35.3
-
+Thanks,
+Kan
