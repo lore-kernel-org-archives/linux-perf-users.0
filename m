@@ -2,137 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104C1C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 May 2022 23:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6D1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 May 2022 02:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386927AbiEEXwO (ORCPT
+        id S1348538AbiEFCo0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 May 2022 19:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
+        Thu, 5 May 2022 22:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233478AbiEEXwN (ORCPT
+        with ESMTP id S234479AbiEFCoZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 May 2022 19:52:13 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39C26006F
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 16:48:31 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id 15so4805357pgf.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 May 2022 16:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LrHk44z4rhr+J8P+Rl2yRgTdAt0a5Ds6zMRJmsPQsTg=;
-        b=lQJ3Otq3nhLCj2W3ISX1HqEVDcuEnYnmPTO2Pgahhtp8IXa34EJPxmIYEqq3XrYBy2
-         YWir2n7uRXVITSB/iPQkhoCc8FBMwguoEEmXqXJH+I4z01cOaXd3ou1YYRykm5ixBmnj
-         h6CfFExsGoX5saQ2m8W196HLuEvfUG7vH9ykc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LrHk44z4rhr+J8P+Rl2yRgTdAt0a5Ds6zMRJmsPQsTg=;
-        b=DxlmI64t8hFtTldJIZLw2wtNxmnpG9j9oFWScd9fiPpIb9xssTA78zHq3iaK/Jxk0j
-         2Si+W0vK5VN8uor7YM/wq9YDK2wW7amnjj4LVkEPc/efYflVvjDKuAzxf0waftMeRyLS
-         4vXFr+QnYJkac4YxumBYDIkxt/Ig4omS2ggJncN9xQL+Ud3pICWC3Re6SbPaIzGk8dsn
-         iCjZ5I60qaSfW6n1MNOjSu9Dj6YRZk+dcZLHLqWDHBN+6oyg5S4w5SzrEmaJnNZloOIz
-         DsnmsF030Vuur5iaBvYkZpIadRlh3TtaiujHtqZdprFLqmFQharkpxfbFgMNKbp3NeSK
-         jwmQ==
-X-Gm-Message-State: AOAM531P7SDto9fpIAJ14/CGqdHDP+wrjml+3k0YRchzzW/vHUyRbRTE
-        T1xTPRWOi/8zV1kjji0/IUhEwQ==
-X-Google-Smtp-Source: ABdhPJwZzdK0aRzo196BP9xtL6rZgazn73Kt6i9jFhMZ+TkZuwzvzHY0agoDbi6KbW7R7hmyS02nWQ==
-X-Received: by 2002:a62:d415:0:b0:50d:baaf:4156 with SMTP id a21-20020a62d415000000b0050dbaaf4156mr804485pfh.28.1651794511222;
-        Thu, 05 May 2022 16:48:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a6-20020a636606000000b003c60b1f0dbasm1903053pgc.35.2022.05.05.16.48.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 16:48:30 -0700 (PDT)
-Date:   Thu, 5 May 2022 16:48:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Miguel Ojeda <ojeda@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Helge Deller <deller@gmx.de>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Gary Guo <gary@garyguo.net>, Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH v1 3/3] kallsyms: increase maximum kernel symbol length
- to 512
-Message-ID: <202205051647.184C8B2@keescook>
-References: <20220505191704.22812-1-ojeda@kernel.org>
- <20220505191704.22812-4-ojeda@kernel.org>
+        Thu, 5 May 2022 22:44:25 -0400
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DFF2AE3C
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 May 2022 19:40:43 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4KvZYj580jz4x7Y;
+        Fri,  6 May 2022 12:40:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1651804842;
+        bh=OZR46u3Sin209gHTa7HOBQ6+AD+YHBHgUHJTbOAwzOw=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=llMPp7+KgH5XSjyOxoDfc3h6x932RKETWwtX4KtrWETMUxqZ60KMj6dDzncQn96Bx
+         FE4QVONeCzrxC1TVJBqeO487ak5SZdZeyW6FNN9/5+E94W17jlfOz5joqM3xBSet+h
+         Bdq1acqm3K8cTKkGp0JWgTi+PVJUXbrs9FN+PS/R6Zb3bcb5MBhSP6DDM3620lHfeZ
+         Td76ezE56cWbHELxx06PCd9zhuMwPmA237m3M84L6ZKur5T6FJP4JN63efpl2+UjDr
+         kHAGRJJJp+VJfF3mNXwr1muUlUGPwihlGk4KcHGnM5BtiV+6j7qjZky5vhp2m9K7rp
+         Dwgb7mwZQyCcA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, disgoel@linux.vnet.ibm.com
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, irogers@google.com
+Subject: Re: [PATCH V2 2/2] tools/perf/tests: Fix session topology test to
+ skip the test in guest environment
+In-Reply-To: <20220505094000.58220-3-atrajeev@linux.vnet.ibm.com>
+References: <20220505094000.58220-1-atrajeev@linux.vnet.ibm.com>
+ <20220505094000.58220-3-atrajeev@linux.vnet.ibm.com>
+Date:   Fri, 06 May 2022 12:40:38 +1000
+Message-ID: <87r157tmc9.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220505191704.22812-4-ojeda@kernel.org>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 05, 2022 at 09:16:45PM +0200, Miguel Ojeda wrote:
-> Rust symbols can become quite long due to namespacing introduced
-> by modules, types, traits, generics, etc. For instance,
-> the following code:
-> 
->     pub mod my_module {
->         pub struct MyType;
->         pub struct MyGenericType<T>(T);
-> 
->         pub trait MyTrait {
->             fn my_method() -> u32;
->         }
-> 
->         impl MyTrait for MyGenericType<MyType> {
->             fn my_method() -> u32 {
->                 42
->             }
->         }
->     }
-> 
-> generates a symbol of length 96 when using the upcoming v0 mangling scheme:
-> 
->     _RNvXNtCshGpAVYOtgW1_7example9my_moduleINtB2_13MyGenericTypeNtB2_6MyTypeENtB2_7MyTrait9my_method
-> 
-> At the moment, Rust symbols may reach up to 300 in length.
-> Setting 512 as the maximum seems like a reasonable choice to
-> keep some headroom.
-> 
-> Co-developed-by: Alex Gaynor <alex.gaynor@gmail.com>
-> Signed-off-by: Alex Gaynor <alex.gaynor@gmail.com>
-> Co-developed-by: Wedson Almeida Filho <wedsonaf@google.com>
-> Signed-off-by: Wedson Almeida Filho <wedsonaf@google.com>
-> Co-developed-by: Gary Guo <gary@garyguo.net>
-> Signed-off-by: Gary Guo <gary@garyguo.net>
-> Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+Athira Rajeev <atrajeev@linux.vnet.ibm.com> writes:
+> The session topology test fails in powerpc pSeries platform.
+> Test logs:
+> <<>>
+> Session topology : FAILED!
+> <<>>
+>
+> This testcases tests cpu topology by checking the core_id and
+> socket_id stored in perf_env from perf session. The data from
+> perf session is compared with the cpu topology information
+> from "/sys/devices/system/cpu/cpuX/topology" like core_id,
+> physical_package_id. In case of virtual environment, detail
+> like physical_package_id is restricted to be exposed. Hence
+> physical_package_id is set to -1. The testcase fails on such
+> platforms since socket_id can't be fetched from topology info.
+>
+> Skip the testcase in powerpc for pSeries. Use the utility
+> function "cpuinfo_field" to check platform from /proc/cpuinfo.
 
-I look forward to aiming my demangler at /proc/kallsyms. ;)
+I don't think that's the right way to fix it.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+If we ever had a "pseries" machine that did expose physical_package_id
+then this test would continue to skip, even when it could succeed.
 
--- 
-Kees Cook
+So if physical_package_id being -1 is the problem then you should skip
+the test based on that.
+
+cheers
