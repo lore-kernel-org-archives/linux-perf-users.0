@@ -2,428 +2,666 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB00AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 May 2022 07:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBFEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 May 2022 08:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1389787AbiEFIC4 (ORCPT
+        id S1390086AbiEFI34 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 May 2022 04:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50748 "EHLO
+        Fri, 6 May 2022 04:29:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1389790AbiEFICv (ORCPT
+        with ESMTP id S1359351AbiEFI3z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 May 2022 04:02:51 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AB967D1B
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 00:59:06 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id v65so6753214oig.10
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 00:59:06 -0700 (PDT)
+        Fri, 6 May 2022 04:29:55 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033E9220CE
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 01:26:12 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id v12so8991445wrv.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 01:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4bsYKjag5VlFujE08QulXFGTrbxe+KEq9nUHUz7fus8=;
-        b=o8BZaTzQMIFN0g1ffgXPs8MsxWSNzsy9rf+73aWRGQnMg0taoxGjg9TY4wVYW/zVhV
-         70XQkkYbpVENrQ7a4A7/r7AwwqrRygptD+GNgBFPwwXYfJIe/o3rLUkLvA+QrP9xr1Cs
-         ja0/SAfT11JkrgBM5b1S7J3EY/Q8IMjc7IyzEqh4QOA0Ga4i8TSjmPG8HuOS0IvdNQWg
-         pD/XE3+7aZYLXwefgVro4EvmNB8BYC9+n3gI1FO/wYFy7Yxi7LZvtMQVvrMEImkGuUtM
-         igC+0go/nu5/6+AAOmwEpk/Fs1prA6G5kH5b4ulNYsv+6gZqVDXsrI4vok2gGNRQ6v51
-         gUYA==
+        bh=mYwIzNoMi321fc6+LFvWiqKKnlid1m02QLQ+k5Rhfi8=;
+        b=FoZz1VNajao5NtajXZjq05AbQy6dvqXMKX7S7Fk9uCFUBEibsqo6kl87ZjSgUnV2/Y
+         /WAETgetvyiHNx1ZQ2dJQmHZHFcCJ9SyS9oBGxUH9ZgSTxUwnBHP3w5aF3LiYP37BdgN
+         S4VIeYyE2AMSCnt33J6CfLxkCxVMMnAUPAhE6Myq9oAAOWE8gy3xQHIGyR7Ns94f59UG
+         3PzzNhjKErLOdiwNIcQkCX6Hp/WRuYfemhLcX+Y1Yiqd0bVAZ/SdPMa2ohjd0rCOV4Dq
+         0MpMjS8TKc4wIv7ZQnDEmZOa1FGlh0x/gtZUJRlOctWuEaRUPL9nGYLTRfg9/uLU4Mpn
+         xx9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4bsYKjag5VlFujE08QulXFGTrbxe+KEq9nUHUz7fus8=;
-        b=c75HECZDaPNGwRyQDkSXODKCKyYpJjBt1meaHZiumXXo7HfzlQjn1rmfbS91SwsrwX
-         X9VX92M5Dt2HPF+axd4zUssIFsWTpowaocvFhLzo9Af2g+QRiMgDkNn5gxU7GbLVaa/g
-         F/fqFaNekce4Nu7e0LHn/rKkDZGMcCRV+3dwFKnK23h0EiZJGbaDrtL6cxc4gR7rpznL
-         KxEGixFNnSGAEyNUxUwe9ntrin6kNaTnW8+k8SS2jxuqKkiXqPYpLimNTOb3X58aPUwa
-         nlAQC462kYjMb25BgJj6RICxpaVLSRwR0aJ2hpAWJB9dNz7GwiGlSDDYXM0tYKWqf5Dc
-         Rjhw==
-X-Gm-Message-State: AOAM533dDZxNr2dTxgM190x+chfBfDEoYznXmrJPLTzWN5VMn9+60IOi
-        mDT/W3s1k0W2YUG5K3KGtDYxmFKBio3DEzeWkGXIuQ==
-X-Google-Smtp-Source: ABdhPJye7hxFUHbk/xq21kzlNwbBU42arepyU85rZ1q/VpJEQJyOQAZ4bBV2TqgLyKFQOT110p/e3fQUc2NBOWFG0jQ=
-X-Received: by 2002:a05:6808:16a4:b0:2f7:1fd1:f48 with SMTP id
- bb36-20020a05680816a400b002f71fd10f48mr900746oib.163.1651823945463; Fri, 06
- May 2022 00:59:05 -0700 (PDT)
+        bh=mYwIzNoMi321fc6+LFvWiqKKnlid1m02QLQ+k5Rhfi8=;
+        b=GPHY+CCttaGZoyUmCuqpaRkfxVvM8JBMNNWIIBWCzmud5kiwITLqCPdit/PjY/ire+
+         lYaHsWE5/G2KIW2G0+bmit4cegFzpQ6ud5y5tVq002ejw3wtRmLXn06KQFT1i3zBZdH6
+         LBsXdhJT82QSoppnG/2MTD71hhAUddlBfH1D2KkYHtFBFXRArdNGPGcTWJVgiFf9zaRZ
+         9vf1khBq+3Hg49TpEePHFzT/xYCOTp1ErTtmGYKQTf1WvrueI8XeGwPc59fduCQbupKM
+         S6nWKoZxewFN2sybT/gQGAS/0lSUbOGcha+ve51MVVTeLJA9HL4iuIHuArjPJhMycSXG
+         hAdA==
+X-Gm-Message-State: AOAM531GNfJGHK689TrmxR1wl/3UZtkZDJtPQCwdD6TIFaq607eVMfDQ
+        tWmo/9OpJD69Gde5XVZP+o9MhAz2JD+xt/9/bhJOWQ==
+X-Google-Smtp-Source: ABdhPJyYMjfawUFWHrVjsxf7lIylSBXc511b6FLIoGQq2IKDhXmwya/3OMx8iJkPIbj0MTPflcmub1tHmu+ndAa3I+4=
+X-Received: by 2002:adf:f30a:0:b0:20a:e193:6836 with SMTP id
+ i10-20020adff30a000000b0020ae1936836mr1727271wro.654.1651825570093; Fri, 06
+ May 2022 01:26:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220505155745.1690906-1-dvyukov@google.com>
-In-Reply-To: <20220505155745.1690906-1-dvyukov@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 6 May 2022 09:58:54 +0200
-Message-ID: <CACT4Y+aSF2+mQzMuP6ej-sKt0a8JKjduWH6f0-+a6fvXe=o6Ng@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf: add breakpoint benchmarks
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org
-Cc:     elver@google.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20220422065635.767648-1-zhengjun.xing@linux.intel.com>
+In-Reply-To: <20220422065635.767648-1-zhengjun.xing@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 6 May 2022 01:25:55 -0700
+Message-ID: <CAP-5=fVAPGqbQigSDvvgzPap2shLJ=QPT4GE9oeGv-N0Awz5cA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf stat: Support metrics with hybrid events
+To:     zhengjun.xing@linux.intel.com
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 5 May 2022 at 17:57, Dmitry Vyukov <dvyukov@google.com> wrote:
+ and should be beefor eit.
+On Thu, Apr 21, 2022 at 11:56 PM <zhengjun.xing@linux.intel.com> wrote:
 >
-> Add 2 benchmarks:
-> 1. Performance of thread creation/exiting in presence of breakpoints.
-> 2. Performance of breakpoint modification in presence of threads.
+> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 >
-> The benchmarks capture use cases that we are interested in:
-> using inheritable breakpoints in large highly-threaded applications.
-> The benchmarks show significant slowdown imposed by breakpoints
-> (even when they don't fire).
+> One metric such as 'Kernel_Utilization' may be from different PMUs and
+> consists of different events.
+>
+> For core,
+> Kernel_Utilization = cpu_clk_unhalted.thread:k / cpu_clk_unhalted.thread
+>
+> For atom,
+> Kernel_Utilization = cpu_clk_unhalted.core:k / cpu_clk_unhalted.core
+>
+> The metric group string for core is:
+> '{cpu_clk_unhalted.thread/metric-id=cpu_clk_unhalted.thread:k/k,cpu_clk_unhalted.thread/metric-id=cpu_clk_unhalted.thread/}:W'
+> It's internally expanded to:
+> '{cpu_clk_unhalted.thread_p/metric-id=cpu_clk_unhalted.thread_p:k/k,cpu_clk_unhalted.thread/metric-id=cpu_clk_unhalted.thread/}:W#cpu_core'
+>
+> The metric group string for atom is:
+> '{cpu_clk_unhalted.core/metric-id=cpu_clk_unhalted.core:k/k,cpu_clk_unhalted.core/metric-id=cpu_clk_unhalted.core/}:W'
+> It's internally expanded to:
+> '{cpu_clk_unhalted.core/metric-id=cpu_clk_unhalted.core:k/k,cpu_clk_unhalted.core/metric-id=cpu_clk_unhalted.core/}:W#cpu_atom'
+>
+> That means the group "{cpu_clk_unhalted.thread:k,cpu_clk_unhalted.thread}:W"
+> is from cpu_core PMU and the group "{cpu_clk_unhalted.core:k,cpu_clk_unhalted.core}"
+> is from cpu_atom PMU. And then next, check if the events in the group are
+> valid on that PMU. If one event is not valid on that PMU, the associated
+> group would be removed internally.
+>
+> In this example, cpu_clk_unhalted.thread is valid on cpu_core and
+> cpu_clk_unhalted.core is valid on cpu_atom. So the checks for these two
+> groups are passed.
+>
+> Before:
+>
+>   # ./perf stat -M Kernel_Utilization -a sleep 1
+> WARNING: events in group from different hybrid PMUs!
+> WARNING: grouped events cpus do not match, disabling group:
+>   anon group { CPU_CLK_UNHALTED.THREAD_P:k, CPU_CLK_UNHALTED.THREAD_P:k, CPU_CLK_UNHALTED.THREAD, CPU_CLK_UNHALTED.THREAD }
+>
+>  Performance counter stats for 'system wide':
+>
+>         17,639,501      cpu_atom/CPU_CLK_UNHALTED.CORE/ #     1.00 Kernel_Utilization
+>         17,578,757      cpu_atom/CPU_CLK_UNHALTED.CORE:k/
+>      1,005,350,226 ns   duration_time
+>         43,012,352      cpu_core/CPU_CLK_UNHALTED.THREAD_P:k/ #     0.99 Kernel_Utilization
+>         17,608,010      cpu_atom/CPU_CLK_UNHALTED.THREAD_P:k/
+>         43,608,755      cpu_core/CPU_CLK_UNHALTED.THREAD/
+>         17,630,838      cpu_atom/CPU_CLK_UNHALTED.THREAD/
+>      1,005,350,226 ns   duration_time
+>
+>        1.005350226 seconds time elapsed
+>
+> After:
+>
+>   # ./perf stat -M Kernel_Utilization -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>         17,981,895      CPU_CLK_UNHALTED.CORE [cpu_atom] #     1.00 Kernel_Utilization
+>         17,925,405      CPU_CLK_UNHALTED.CORE:k [cpu_atom]
+>      1,004,811,366 ns   duration_time
+>         41,246,425      CPU_CLK_UNHALTED.THREAD_P:k [cpu_core] #     0.99 Kernel_Utilization
+>         41,819,129      CPU_CLK_UNHALTED.THREAD [cpu_core]
+>      1,004,811,366 ns   duration_time
+>
+>        1.004811366 seconds time elapsed
+>
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Question to perf maintainers:
-Do you know any low-hanging fruits re breakpoint performance? Or did
-you want to improve something, but never got to actually implementing
-it?
+Sorry for the late review, this arrived April 21st and was added to
+acme/perf/core on April 22nd - I was on vacation those days. There is
+substantial complexity added here and I'm confused by the all too
+frequent is_hybrid paths. There is nothing wrong in my eyes with
+making the metric code sensitive to a PMU type, why does hybrid need
+to be special? More comments below.
 
-Do you know what would be a good way to remove the global nr_bp_mutex?
-Do you know of any opportunities to reduce the number of IPIs on
-breakpoint modifications?
-
-Thanks in advance
-
-> Testing on Intel 8173M with 112 HW threads show:
->
-> perf bench --repeat=56 breakpoint thread --breakpoints=0 --parallelism=56 --threads=20
->       78.675000 usecs/op
-> perf bench --repeat=56 breakpoint thread --breakpoints=4 --parallelism=56 --threads=20
->    12967.135714 usecs/op
-> That's 165x slowdown due to presence of the breakpoints.
->
-> perf bench --repeat=20000 breakpoint enable --passive=0 --active=0
->        1.433250 usecs/op
-> perf bench --repeat=20000 breakpoint enable --passive=224 --active=0
->      585.318400 usecs/op
-> perf bench --repeat=20000 breakpoint enable --passive=0 --active=111
->      635.953000 usecs/op
-> That's 408x and 444x slowdown due to presence of threads.
->
-> Profiles show some overhead in toggle_bp_slot,
-> but also very high contention:
->
->     90.83%  breakpoint-thre  [kernel.kallsyms]  [k] osq_lock
->      4.69%  breakpoint-thre  [kernel.kallsyms]  [k] mutex_spin_on_owner
->      2.06%  breakpoint-thre  [kernel.kallsyms]  [k] __reserve_bp_slot
->      2.04%  breakpoint-thre  [kernel.kallsyms]  [k] toggle_bp_slot
->
->     79.01%  breakpoint-enab  [kernel.kallsyms]  [k] smp_call_function_single
->      9.94%  breakpoint-enab  [kernel.kallsyms]  [k] llist_add_batch
->      5.70%  breakpoint-enab  [kernel.kallsyms]  [k] _raw_spin_lock_irq
->      1.84%  breakpoint-enab  [kernel.kallsyms]  [k] event_function_call
->      1.12%  breakpoint-enab  [kernel.kallsyms]  [k] send_call_function_single_ipi
->      0.37%  breakpoint-enab  [kernel.kallsyms]  [k] generic_exec_single
->      0.24%  breakpoint-enab  [kernel.kallsyms]  [k] __perf_event_disable
->      0.20%  breakpoint-enab  [kernel.kallsyms]  [k] _perf_event_enable
->      0.18%  breakpoint-enab  [kernel.kallsyms]  [k] toggle_bp_slot
->
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
 > ---
->  tools/perf/bench/Build        |   1 +
->  tools/perf/bench/bench.h      |   2 +
->  tools/perf/bench/breakpoint.c | 235 ++++++++++++++++++++++++++++++++++
->  tools/perf/builtin-bench.c    |   8 ++
->  4 files changed, 246 insertions(+)
->  create mode 100644 tools/perf/bench/breakpoint.c
+>  tools/perf/util/metricgroup.c  | 263 ++++++++++++++++++++++++++++++---
+>  tools/perf/util/stat-display.c |   8 +-
+>  2 files changed, 249 insertions(+), 22 deletions(-)
 >
-> diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
-> index 61d45fcb4057c..6b6155a8ad096 100644
-> --- a/tools/perf/bench/Build
-> +++ b/tools/perf/bench/Build
-> @@ -14,6 +14,7 @@ perf-y += kallsyms-parse.o
->  perf-y += find-bit-bench.o
->  perf-y += inject-buildid.o
->  perf-y += evlist-open-close.o
-> +perf-y += breakpoint.o
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index d8492e339521..126a43a8917e 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -141,6 +141,11 @@ struct metric {
+>          * output.
+>          */
+>         const char *metric_unit;
+> +       /**
+> +        * The name of the CPU such as "cpu_core" or "cpu_atom" in hybrid systems
+> +        * and "NULL" in non-hybrid systems.
+> +        */
+> +       const char *pmu_name;
+
+Thanks for the comment. CPU and PMU don't align, but I think PMU is
+the better name. I think this is an optional PMU name used for opening
+the metric's events. For example, on hybrid it can be cpu_core or
+cpu_atom. This is confusing when we have a metric that mixes say core
+and uncore events.
+
+>         /** Optional null terminated array of referenced metrics. */
+>         struct metric_ref *metric_refs;
+>         /**
+> @@ -215,6 +220,7 @@ static struct metric *metric__new(const struct pmu_event *pe,
+>         }
+>         m->metric_expr = pe->metric_expr;
+>         m->metric_unit = pe->unit;
+> +       m->pmu_name = pe->pmu;
+
+Well this explains why we have a pmu_name. I'm not a fan of metrics
+being the same as events. Reading the PMU here feels a bit of a hack.
+
+>         m->pctx->runtime = runtime;
+>         m->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+>         m->metric_refs = NULL;
+> @@ -250,10 +256,12 @@ static bool contains_metric_id(struct evsel **metric_events, int num_events,
+>   * @ids: the metric IDs to match.
+>   * @metric_evlist: the list of perf events.
+>   * @out_metric_events: holds the created metric events array.
+> + * @pmu_name: the name of the CPU.
+
+Could pmu_name just be an optional PMU to be used for the events? We
+don't need to be specific it is a CPU here?
+
+>   */
+>  static int setup_metric_events(struct hashmap *ids,
+>                                struct evlist *metric_evlist,
+> -                              struct evsel ***out_metric_events)
+> +                              struct evsel ***out_metric_events,
+> +                              const char *pmu_name)
+>  {
+>         struct evsel **metric_events;
+>         const char *metric_id;
+> @@ -286,6 +294,10 @@ static int setup_metric_events(struct hashmap *ids,
+>                  * about this event.
+>                  */
+>                 if (hashmap__find(ids, metric_id, (void **)&val_ptr)) {
+> +                       if (evsel__is_hybrid(ev) && pmu_name &&
+
+The evsel__is_hybrid looks unnecessary here.
+
+> +                           strcmp(pmu_name, ev->pmu_name)) {
+> +                               continue;
+> +                       }
+>                         metric_events[matched_events++] = ev;
 >
->  perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
->  perf-$(CONFIG_X86_64) += mem-memset-x86-64-asm.o
-> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-> index b3480bc33fe84..6cefb4315d75e 100644
-> --- a/tools/perf/bench/bench.h
-> +++ b/tools/perf/bench/bench.h
-> @@ -49,6 +49,8 @@ int bench_synthesize(int argc, const char **argv);
->  int bench_kallsyms_parse(int argc, const char **argv);
->  int bench_inject_build_id(int argc, const char **argv);
->  int bench_evlist_open_close(int argc, const char **argv);
-> +int bench_breakpoint_thread(int argc, const char **argv);
-> +int bench_breakpoint_enable(int argc, const char **argv);
+>                         if (matched_events >= ids_size)
+> @@ -724,7 +736,8 @@ static int decode_all_metric_ids(struct evlist *perf_evlist, const char *modifie
+>  static int metricgroup__build_event_string(struct strbuf *events,
+>                                            const struct expr_parse_ctx *ctx,
+>                                            const char *modifier,
+> -                                          bool has_constraint)
+> +                                          bool has_constraint,
+> +                                          const char *pmu_name)
+>  {
+>         struct hashmap_entry *cur;
+>         size_t bkt;
+> @@ -806,12 +819,18 @@ static int metricgroup__build_event_string(struct strbuf *events,
+>                 if (no_group) {
+>                         /* Strange case of a metric of just duration_time. */
+>                         ret = strbuf_addf(events, "duration_time");
+> -               } else if (!has_constraint)
+> -                       ret = strbuf_addf(events, "}:W,duration_time");
+> -               else
+> +               } else if (!has_constraint) {
+> +                       ret = strbuf_addf(events, "}:W");
+> +                       if (pmu_name)
+> +                               ret = strbuf_addf(events, "#%s", pmu_name);
+>                         ret = strbuf_addf(events, ",duration_time");
+> -       } else if (!no_group && !has_constraint)
+> +               } else
+> +                       ret = strbuf_addf(events, ",duration_time");
+> +       } else if (!no_group && !has_constraint) {
+>                 ret = strbuf_addf(events, "}:W");
+> +               if (pmu_name)
+> +                       ret = strbuf_addf(events, "#%s", pmu_name);
+> +       }
+
+Why add the # and then expand it when you could just expand here?
+
+>         return ret;
+>  #undef RETURN_IF_NON_ZERO
+> @@ -1150,11 +1169,13 @@ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
+>   * @metric_list: The list that the metric or metric group are added to.
+>   * @map: The map that is searched for metrics, most commonly the table for the
+>   *       architecture perf is running upon.
+> + * @pmu_name: the name of the CPU.
+>   */
+> -static int metricgroup__add_metric(const char *metric_name, const char *modifier,
+> -                                  bool metric_no_group,
+> +static int metricgroup__add_metric(const char *metric_name,
+> +                                  const char *modifier, bool metric_no_group,
+
+This is a whitespace only change.
+
+>                                    struct list_head *metric_list,
+> -                                  const struct pmu_events_map *map)
+> +                                  const struct pmu_events_map *map,
+> +                                  const char *pmu_name)
+>  {
+>         const struct pmu_event *pe;
+>         LIST_HEAD(list);
+> @@ -1167,6 +1188,8 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
+>          */
+>         map_for_each_metric(pe, i, map, metric_name) {
+>                 has_match = true;
+> +               if (pmu_name && pe->pmu && strcmp(pmu_name, pe->pmu))
+> +                       continue;
+>                 ret = add_metric(&list, pe, modifier, metric_no_group,
+>                                  /*root_metric=*/NULL,
+>                                  /*visited_metrics=*/NULL, map);
+> @@ -1215,10 +1238,12 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
+>   * @metric_list: The list that metrics are added to.
+>   * @map: The map that is searched for metrics, most commonly the table for the
+>   *       architecture perf is running upon.
+> + * @pmu_name: the name of the CPU.
+>   */
+>  static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+>                                         struct list_head *metric_list,
+> -                                       const struct pmu_events_map *map)
+> +                                       const struct pmu_events_map *map,
+> +                                       const char *pmu_name)
+>  {
+>         char *list_itr, *list_copy, *metric_name, *modifier;
+>         int ret, count = 0;
+> @@ -1235,7 +1260,7 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
 >
->  #define BENCH_FORMAT_DEFAULT_STR       "default"
->  #define BENCH_FORMAT_DEFAULT           0
-> diff --git a/tools/perf/bench/breakpoint.c b/tools/perf/bench/breakpoint.c
-> new file mode 100644
-> index 0000000000000..56936fea246d7
-> --- /dev/null
-> +++ b/tools/perf/bench/breakpoint.c
-> @@ -0,0 +1,235 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <subcmd/parse-options.h>
-> +#include <linux/hw_breakpoint.h>
-> +#include <linux/perf_event.h>
-> +#include <linux/time64.h>
-> +#include <sys/syscall.h>
-> +#include <sys/ioctl.h>
-> +#include <sys/time.h>
-> +#include <pthread.h>
-> +#include <stddef.h>
-> +#include <stdlib.h>
-> +#include <unistd.h>
-> +#include <stdio.h>
-> +#include <errno.h>
-> +#include "bench.h"
-> +#include "futex.h"
-> +
-> +struct {
-> +       unsigned int nbreakpoints;
-> +       unsigned int nparallel;
-> +       unsigned int nthreads;
-> +} thread_params = {
-> +       .nbreakpoints = 1,
-> +       .nparallel = 1,
-> +       .nthreads = 1,
-> +};
-> +
-> +static const struct option thread_options[] = {
-> +       OPT_UINTEGER('b', "breakpoints", &thread_params.nbreakpoints,
-> +               "Specify amount of breakpoints"),
-> +       OPT_UINTEGER('p', "parallelism", &thread_params.nparallel, "Specify amount of parallelism"),
-> +       OPT_UINTEGER('t', "threads", &thread_params.nthreads, "Specify amount of threads"),
-> +       OPT_END()
-> +};
-> +
-> +static const char * const thread_usage[] = {
-> +       "perf bench breakpoint thread <options>",
-> +       NULL
-> +};
-> +
-> +struct breakpoint {
-> +       int fd;
-> +       char watched;
-> +};
-> +
-> +static int breakpoint_setup(void *addr)
+>                 ret = metricgroup__add_metric(metric_name, modifier,
+>                                               metric_no_group, metric_list,
+> -                                             map);
+> +                                             map, pmu_name);
+>                 if (ret == -EINVAL)
+>                         pr_err("Cannot find metric or group `%s'\n", metric_name);
+>
+> @@ -1310,6 +1335,183 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+>         return ret;
+>  }
+>
+> +static char *get_metric_pmus(char *orig_str, struct strbuf *metric_pmus)
+
+Could you add an example here. A metric is coming with an associated
+PMU so what are we pulling out here? Why are the events modified? What
+is the metric_pmus out argument doing?
+
 > +{
-> +       struct perf_event_attr attr = {0};
+> +       char *llist, *nlist, *p1, *p2, *new_str = NULL;
+> +       int ret;
+> +       struct strbuf new_events;
 > +
-> +       attr.type = PERF_TYPE_BREAKPOINT;
-> +       attr.size = sizeof(attr);
-> +       attr.inherit = 1;
-> +       attr.exclude_kernel = 1;
-> +       attr.exclude_hv = 1;
-> +       attr.bp_addr = (uint64_t)addr;
-> +       attr.bp_type = HW_BREAKPOINT_RW;
-> +       attr.bp_len = HW_BREAKPOINT_LEN_1;
-> +       return syscall(SYS_perf_event_open, &attr, 0, -1, -1, 0);
-> +}
+> +       if (!strchr(orig_str, '#')) {
+> +               /*
+> +                * pmu name is added after '#'. If no '#' found,
+> +                * don't need to process pmu.
+> +                */
+> +               return strdup(orig_str);
+> +       }
 > +
-> +static void *passive_thread(void *arg)
-> +{
-> +       unsigned int *done = (unsigned int *)arg;
+> +       nlist = strdup(orig_str);
+> +       if (!nlist)
+> +               return new_str;
 > +
-> +       while (!__atomic_load_n(done, __ATOMIC_RELAXED))
-> +               futex_wait(done, 0, NULL, 0);
-> +       return NULL;
-> +}
+> +       ret = strbuf_init(&new_events, 100);
+> +       if (ret)
+> +               goto err_out;
 > +
-> +static void *active_thread(void *arg)
-> +{
-> +       unsigned int *done = (unsigned int *)arg;
+> +       ret = strbuf_grow(metric_pmus, 100);
+> +       if (ret)
+> +               goto err_out;
 > +
-> +       while (!__atomic_load_n(done, __ATOMIC_RELAXED));
-> +       return NULL;
-> +}
+> +       llist = nlist;
+> +       while ((p1 = strsep(&llist, ",")) != NULL) {
+> +               p2 = strchr(p1, '#');
+> +               if (p2) {
+> +                       *p2 = 0;
+> +                       ret = strbuf_addf(&new_events, "%s,", p1);
+> +                       if (ret)
+> +                               goto err_out;
 > +
-> +static void *breakpoint_thread(void *arg)
-> +{
-> +       unsigned int i, done;
-> +       int *repeat = (int *)arg;
-> +       pthread_t *threads;
+> +                       ret = strbuf_addf(metric_pmus, "%s,", p2 + 1);
+> +                       if (ret)
+> +                               goto err_out;
 > +
-> +       threads = calloc(thread_params.nthreads, sizeof(threads[0]));
-> +       while (__atomic_fetch_sub(repeat, 1, __ATOMIC_RELAXED) > 0) {
-> +               done = 0;
-> +               for (i = 0; i < thread_params.nthreads; i++) {
-> +                       if (pthread_create(&threads[i], NULL, passive_thread, &done))
-> +                               exit((perror("pthread_create"), EXIT_FAILURE));
+> +               } else {
+> +                       ret = strbuf_addf(&new_events, "%s,", p1);
+> +                       if (ret)
+> +                               goto err_out;
 > +               }
-> +               __atomic_store_n(&done, 1, __ATOMIC_RELAXED);
-> +               futex_wake(&done, thread_params.nthreads, 0);
-> +               for (i = 0; i < thread_params.nthreads; i++)
-> +                       pthread_join(threads[i], NULL);
 > +       }
-> +       free(threads);
-> +       return NULL;
+> +
+> +       new_str = strdup(new_events.buf);
+> +       if (new_str) {
+> +               /* Remove last ',' */
+> +               new_str[strlen(new_str) - 1] = 0;
+> +       }
+> +err_out:
+> +       free(nlist);
+> +       strbuf_release(&new_events);
+> +       return new_str;
 > +}
 > +
-> +// The benchmark creates nbreakpoints inheritable breakpoints,
-> +// then starts nparallel threads which create and join bench_repeat batches of nthreads threads.
-> +int bench_breakpoint_thread(int argc, const char **argv)
+> +static void set_pmu_unmatched_events(struct evlist *evlist, int group_idx,
+> +                                    char *pmu_name,
+> +                                    unsigned long *evlist_removed)
 > +{
-> +       unsigned int i, result_usec;
-> +       int repeat = bench_repeat;
-> +       struct breakpoint *breakpoints;
-> +       pthread_t *parallel;
-> +       struct timeval start, stop, diff;
+> +       struct evsel *evsel, *pos;
+> +       int i = 0, j = 0;
 > +
-> +       if (parse_options(argc, argv, thread_options, thread_usage, 0)) {
-> +               usage_with_options(thread_usage, thread_options);
-> +               exit(EXIT_FAILURE);
+> +       /*
+> +        * Move to the first evsel of a given group
+> +        */
+> +       evlist__for_each_entry(evlist, evsel) {
+> +               if (evsel__is_group_leader(evsel) &&
+> +                   evsel->core.nr_members >= 1) {
+> +                       if (i < group_idx) {
+> +                               j += evsel->core.nr_members;
+> +                               i++;
+> +                               continue;
+> +                       }
+> +               }
 > +       }
-> +       breakpoints = calloc(thread_params.nbreakpoints, sizeof(breakpoints[0]));
-> +       parallel = calloc(thread_params.nparallel, sizeof(parallel[0]));
-> +       for (i = 0; i < thread_params.nbreakpoints; i++) {
-> +               breakpoints[i].fd = breakpoint_setup(&breakpoints[i].watched);
-> +               if (breakpoints[i].fd == -1)
-> +                       exit((perror("perf_event_open"), EXIT_FAILURE));
-> +       }
-> +       gettimeofday(&start, NULL);
-> +       for (i = 0; i < thread_params.nparallel; i++) {
-> +               if (pthread_create(&parallel[i], NULL, breakpoint_thread, &repeat))
-> +                       exit((perror("pthread_create"), EXIT_FAILURE));
-> +       }
-> +       for (i = 0; i < thread_params.nparallel; i++)
-> +               pthread_join(parallel[i], NULL);
-> +       gettimeofday(&stop, NULL);
-> +       timersub(&stop, &start, &diff);
-> +       for (i = 0; i < thread_params.nbreakpoints; i++)
-> +               close(breakpoints[i].fd);
-> +       free(parallel);
-> +       free(breakpoints);
-> +       switch (bench_format) {
-> +       case BENCH_FORMAT_DEFAULT:
-> +               printf("# Created/joined %d threads with %d breakpoints and %d parallelism\n",
-> +                       bench_repeat, thread_params.nbreakpoints, thread_params.nparallel);
-> +               printf(" %14s: %lu.%03lu [sec]\n\n", "Total time",
-> +                       (long)diff.tv_sec, (long)(diff.tv_usec / USEC_PER_MSEC));
-> +               result_usec = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-> +               printf(" %14lf usecs/op\n",
-> +                       (double)result_usec / bench_repeat / thread_params.nthreads);
-> +               printf(" %14lf usecs/op/cpu\n",
-> +                       (double)result_usec / bench_repeat /
-> +                       thread_params.nthreads * thread_params.nparallel);
+> +
+> +       i = 0;
+> +       evlist__for_each_entry(evlist, evsel) {
+> +               if (i < j) {
+> +                       i++;
+> +                       continue;
+> +               }
+> +
+> +               /*
+> +                * Now we are at the first evsel in the group
+> +                */
+> +               for_each_group_evsel(pos, evsel) {
+> +                       if (evsel__is_hybrid(pos) &&
+> +                           strcmp(pos->pmu_name, pmu_name)) {
+> +                               set_bit(pos->core.idx, evlist_removed);
+> +                       }
+> +               }
 > +               break;
-> +       case BENCH_FORMAT_SIMPLE:
-> +               printf("%lu.%03lu\n", (long)diff.tv_sec, (long)(diff.tv_usec / USEC_PER_MSEC));
-> +               break;
-> +       default:
-> +               fprintf(stderr, "Unknown format: %d\n", bench_format);
-> +               exit(EXIT_FAILURE);
 > +       }
-> +       return 0;
 > +}
 > +
-> +struct {
-> +       unsigned int npassive;
-> +       unsigned int nactive;
-> +} enable_params = {
-> +       .nactive = 0,
-> +       .npassive = 0,
-> +};
-> +
-> +static const struct option enable_options[] = {
-> +       OPT_UINTEGER('p', "passive", &enable_params.npassive, "Specify amount of passive threads"),
-> +       OPT_UINTEGER('a', "active", &enable_params.nactive, "Specify amount of active threads"),
-> +       OPT_END()
-> +};
-> +
-> +static const char * const enable_usage[] = {
-> +       "perf bench breakpoint enable <options>",
-> +       NULL
-> +};
-> +
-> +// The benchmark creates an inheritable breakpoint,
-> +// then starts npassive threads that block and nactive threads that actively spin
-> +// and then disables and enables the breakpoint bench_repeat times.
-> +int bench_breakpoint_enable(int argc, const char **argv)
+> +static void remove_pmu_umatched_events(struct evlist *evlist, char *metric_pmus)
+
+Is it possible here that we have an evlist being used by >1 metric.
+We've decided one of the metrics is invalid and set about removing the
+events thereby breaking the other metric? In general this code treads
+lightly around the evlist as previously it has been the source of
+bugs:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/tools/perf/util/metricgroup.c?h=perf/core&id=5ecd5a0c7d1cca79f1431093d12e4cd9893b0331
+
 > +{
-> +       unsigned int i, nthreads, result_usec, done = 0;
-> +       char watched;
-> +       int fd;
-> +       pthread_t *threads;
-> +       struct timeval start, stop, diff;
+> +       struct evsel *evsel, *tmp, *new_leader = NULL;
+> +       unsigned long *evlist_removed;
+> +       char *llist, *nlist, *p1;
+
+Is there a better name than nlist and llist? Could you explain what they mean?
+
+> +       bool need_new_leader = false;
+> +       int i = 0, new_nr_members = 0;
 > +
-> +       if (parse_options(argc, argv, enable_options, enable_usage, 0)) {
-> +               usage_with_options(enable_usage, enable_options);
-> +               exit(EXIT_FAILURE);
+> +       nlist = strdup(metric_pmus);
+> +       if (!nlist)
+> +               return;
+> +
+> +       evlist_removed = bitmap_zalloc(evlist->core.nr_entries);
+> +       if (!evlist_removed) {
+> +               free(nlist);
+> +               return;
 > +       }
-> +       fd = breakpoint_setup(&watched);
-> +       if (fd == -1)
-> +               exit((perror("perf_event_open"), EXIT_FAILURE));
-> +       nthreads = enable_params.npassive + enable_params.nactive;
-> +       threads = calloc(nthreads, sizeof(threads[0]));
-> +       for (i = 0; i < nthreads; i++) {
-> +               if (pthread_create(&threads[i], NULL,
-> +                       i < enable_params.npassive ? passive_thread : active_thread, &done))
-> +                       exit((perror("pthread_create"), EXIT_FAILURE));
+> +
+> +       llist = nlist;
+> +       while ((p1 = strsep(&llist, ",")) != NULL) {
+> +               if (strlen(p1) > 0) {
+> +                       /*
+> +                        * p1 points to the string of pmu name, e.g. "cpu_atom".
+> +                        * The metric group string has pmu suffixes, e.g.
+> +                        * "{inst_retired.any,cpu_clk_unhalted.thread}:W#cpu_core,
+> +                        *  {cpu_clk_unhalted.core,inst_retired.any_p}:W#cpu_atom"
+> +                        * By counting the pmu name, we can know the index of
+> +                        * group.
+> +                        */
+> +                       set_pmu_unmatched_events(evlist, i++, p1,
+> +                                                evlist_removed);
+> +               }
 > +       }
-> +       usleep(10000);  // let the threads block
-> +       gettimeofday(&start, NULL);
-> +       for (i = 0; i < bench_repeat; i++) {
-> +               if (ioctl(fd, PERF_EVENT_IOC_DISABLE, 0))
-> +                       exit((perror("ioctl(PERF_EVENT_IOC_DISABLE)"), EXIT_FAILURE));
-> +               if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0))
-> +                       exit((perror("ioctl(PERF_EVENT_IOC_ENABLE)"), EXIT_FAILURE));
+> +
+> +       evlist__for_each_entry_safe(evlist, tmp, evsel) {
+> +               if (test_bit(evsel->core.idx, evlist_removed)) {
+> +                       if (!evsel__is_group_leader(evsel)) {
+> +                               if (!need_new_leader) {
+> +                                       if (new_leader)
+> +                                               new_leader->core.leader->nr_members--;
+> +                                       else
+> +                                               evsel->core.leader->nr_members--;
+> +                               } else
+> +                                       new_nr_members--;
+> +                       } else {
+> +                               /*
+> +                                * If group leader is to remove, we need to
+> +                                * prepare a new leader and adjust all group
+> +                                * members.
+> +                                */
+> +                               need_new_leader = true;
+> +                               new_nr_members =
+> +                                   evsel->core.leader->nr_members - 1;
+> +                       }
+> +
+> +                       evlist__remove(evlist, evsel);
+> +                       evsel__delete(evsel);
+> +               } else {
+> +                       if (!evsel__is_group_leader(evsel)) {
+> +                               if (need_new_leader) {
+> +                                       need_new_leader = false;
+> +                                       new_leader = evsel;
+> +                                       new_leader->core.leader =
+> +                                           &new_leader->core;
+> +                                       new_leader->core.nr_members =
+> +                                           new_nr_members;
+> +                               } else if (new_leader)
+> +                                       evsel->core.leader = &new_leader->core;
+> +                       } else {
+> +                               need_new_leader = false;
+> +                               new_leader = NULL;
+> +                       }
+> +               }
 > +       }
-> +       gettimeofday(&stop, NULL);
-> +       timersub(&stop, &start, &diff);
-> +       __atomic_store_n(&done, 1, __ATOMIC_RELAXED);
-> +       futex_wake(&done, enable_params.npassive, 0);
-> +       for (i = 0; i < nthreads; i++)
-> +               pthread_join(threads[i], NULL);
-> +       free(threads);
-> +       close(fd);
-> +       switch (bench_format) {
-> +       case BENCH_FORMAT_DEFAULT:
-> +               printf("# Enabled/disabled breakpoint %d time with %d passive and %d active threads\n",
-> +                       bench_repeat, enable_params.npassive, enable_params.nactive);
-> +               printf(" %14s: %lu.%03lu [sec]\n\n", "Total time",
-> +                       (long)diff.tv_sec, (long)(diff.tv_usec / USEC_PER_MSEC));
-> +               result_usec = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-> +               printf(" %14lf usecs/op\n", (double)result_usec / bench_repeat);
-> +               break;
-> +       case BENCH_FORMAT_SIMPLE:
-> +               printf("%lu.%03lu\n", (long)diff.tv_sec, (long)(diff.tv_usec / USEC_PER_MSEC));
-> +               break;
-> +       default:
-> +               fprintf(stderr, "Unknown format: %d\n", bench_format);
-> +               exit(EXIT_FAILURE);
-> +       }
-> +       return 0;
+> +
+> +       bitmap_free(evlist_removed);
+> +       free(nlist);
 > +}
-> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-> index d291f3a8af5f2..334ab897aae3b 100644
-> --- a/tools/perf/builtin-bench.c
-> +++ b/tools/perf/builtin-bench.c
-> @@ -92,6 +92,13 @@ static struct bench internals_benchmarks[] = {
->         { NULL,         NULL,                                   NULL                    }
->  };
->
-> +static struct bench breakpoint_benchmarks[] = {
-> +       { "thread", "Benchmark thread start/finish with breakpoints", bench_breakpoint_thread},
-> +       { "enable", "Benchmark breakpoint enable/disable", bench_breakpoint_enable},
-> +       { "all", "Run all breakpoint benchmarks", NULL},
-> +       { NULL, NULL, NULL },
-> +};
 > +
->  struct collection {
->         const char      *name;
->         const char      *summary;
-> @@ -110,6 +117,7 @@ static struct collection collections[] = {
->         {"epoll",       "Epoll stressing benchmarks",                   epoll_benchmarks        },
->  #endif
->         { "internals",  "Perf-internals benchmarks",                    internals_benchmarks    },
-> +       { "breakpoint", "Breakpoint benchmarks",                        breakpoint_benchmarks   },
->         { "all",        "All benchmarks",                               NULL                    },
->         { NULL,         NULL,                                           NULL                    }
->  };
+>  /**
+>   * parse_ids - Build the event string for the ids and parse them creating an
+>   *             evlist. The encoded metric_ids are decoded.
+> @@ -1319,14 +1521,18 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+>   * @modifier: any modifiers added to the events.
+>   * @has_constraint: false if events should be placed in a weak group.
+>   * @out_evlist: the created list of events.
+> + * @pmu_name: the name of the CPU.
+>   */
+>  static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+>                      struct expr_parse_ctx *ids, const char *modifier,
+> -                    bool has_constraint, struct evlist **out_evlist)
+> +                    bool has_constraint, struct evlist **out_evlist,
+> +                    const char *pmu_name)
+>  {
+>         struct parse_events_error parse_error;
+>         struct evlist *parsed_evlist;
+>         struct strbuf events = STRBUF_INIT;
+> +       struct strbuf metric_pmus = STRBUF_INIT;
+> +       char *nlist = NULL;
+>         int ret;
 >
-> base-commit: bd24325684029a48f20a188b899eb84900d0bc9c
+>         *out_evlist = NULL;
+> @@ -1353,7 +1559,7 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+>                 ids__insert(ids->ids, tmp);
+>         }
+>         ret = metricgroup__build_event_string(&events, ids, modifier,
+> -                                             has_constraint);
+> +                                             has_constraint, pmu_name);
+>         if (ret)
+>                 return ret;
+>
+> @@ -1364,11 +1570,20 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+>         }
+>         pr_debug("Parsing metric events '%s'\n", events.buf);
+>         parse_events_error__init(&parse_error);
+> -       ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu);
+> +       nlist = get_metric_pmus(events.buf, &metric_pmus);
+> +       if (!nlist) {
+> +               ret = -ENOMEM;
+> +               goto err_out;
+> +       }
+> +       ret = __parse_events(parsed_evlist, nlist, &parse_error, fake_pmu);
+>         if (ret) {
+>                 parse_events_error__print(&parse_error, events.buf);
+>                 goto err_out;
+>         }
+> +
+> +       if (metric_pmus.alloc)
+> +               remove_pmu_umatched_events(parsed_evlist, metric_pmus.buf);
+> +
+>         ret = decode_all_metric_ids(parsed_evlist, modifier);
+>         if (ret)
+>                 goto err_out;
+> @@ -1376,9 +1591,12 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+>         *out_evlist = parsed_evlist;
+>         parsed_evlist = NULL;
+>  err_out:
+> +       if (nlist)
+> +               free(nlist);
+>         parse_events_error__exit(&parse_error);
+>         evlist__delete(parsed_evlist);
+>         strbuf_release(&events);
+> +       strbuf_release(&metric_pmus);
+>         return ret;
+>  }
+>
+> @@ -1397,7 +1615,8 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+>         if (metric_events_list->nr_entries == 0)
+>                 metricgroup__rblist_init(metric_events_list);
+>         ret = metricgroup__add_metric_list(str, metric_no_group,
+> -                                          &metric_list, map);
+> +                                          &metric_list, map,
+> +                                          perf_evlist->hybrid_pmu_name);
+
+This confuses me. perf_evlist is an out argument that we build the
+list of evsels for the metrics into, yet here you are reading it for
+the hybrid_pmu_name. Why is this? What values can hybrid_pmu_name be
+here?
+
+>         if (ret)
+>                 goto out;
+>
+> @@ -1413,7 +1632,8 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+>                         ret = parse_ids(metric_no_merge, fake_pmu, combined,
+>                                         /*modifier=*/NULL,
+>                                         /*has_constraint=*/true,
+> -                                       &combined_evlist);
+> +                                       &combined_evlist,
+> +                                       perf_evlist->hybrid_pmu_name);
+
+I don't understand this. combined is a set of event names, it seems
+now we need to combine the event name with the PMU to form an id.
+
+>                 }
+>                 if (combined)
+>                         expr__ctx_free(combined);
+> @@ -1450,6 +1670,9 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+>                                         continue;
+>
+>                                 if (expr__subset_of_ids(n->pctx, m->pctx)) {
+> +                                       if (m->pmu_name && n->pmu_name
+> +                                           && strcmp(m->pmu_name, n->pmu_name))
+> +                                               continue;
+
+This test is cheaper than expr__subset_of_ids and should be before it.
+
+>                                         pr_debug("Events in '%s' fully contained within '%s'\n",
+>                                                  m->metric_name, n->metric_name);
+>                                         metric_evlist = n->evlist;
+> @@ -1459,14 +1682,16 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+>                         }
+>                 }
+>                 if (!metric_evlist) {
+> -                       ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
+> -                                       m->has_constraint, &m->evlist);
+> +                       ret = parse_ids(metric_no_merge, fake_pmu, m->pctx,
+> +                                     m->modifier, m->has_constraint,
+> +                                     &m->evlist, m->pmu_name);
+>                         if (ret)
+>                                 goto out;
+>
+>                         metric_evlist = m->evlist;
+>                 }
+> -               ret = setup_metric_events(m->pctx->ids, metric_evlist, &metric_events);
+> +               ret = setup_metric_events(m->pctx->ids, metric_evlist,
+> +                                         &metric_events, m->pmu_name);
+>                 if (ret) {
+>                         pr_debug("Cannot resolve IDs for %s: %s\n",
+>                                 m->metric_name, m->metric_expr);
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 138e3ab9d638..46b3dd134656 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -539,7 +539,8 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+>         }
+>  }
+>
+> -static void uniquify_event_name(struct evsel *counter)
+> +static void uniquify_event_name(struct evsel *counter,
+> +                               struct perf_stat_config *stat_config)
+>  {
+>         char *new_name;
+>         char *config;
+> @@ -558,7 +559,8 @@ static void uniquify_event_name(struct evsel *counter)
+>                         counter->name = new_name;
+>                 }
+>         } else {
+> -               if (perf_pmu__has_hybrid()) {
+> +               if (perf_pmu__has_hybrid() &&
+> +                   stat_config->metric_events.nr_entries == 0) {
+>                         ret = asprintf(&new_name, "%s/%s/",
+>                                        counter->pmu_name, counter->name);
+>                 } else {
+> @@ -619,7 +621,7 @@ static bool collect_data(struct perf_stat_config *config, struct evsel *counter,
+>                 return false;
+>         cb(config, counter, data, true);
+>         if (config->no_merge || hybrid_uniquify(counter))
+> -               uniquify_event_name(counter);
+> +               uniquify_event_name(counter, config);
+>         else if (counter->auto_merge_stats)
+>                 collect_all_aliases(config, counter, cb, data);
+>         return true;
 > --
-> 2.36.0.464.gb9c8b46e94-goog
+> 2.25.1
 >
