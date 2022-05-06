@@ -2,247 +2,178 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70FAC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 May 2022 09:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC7BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 May 2022 09:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236331AbiEFJl6 (ORCPT
+        id S237012AbiEFJ7n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 May 2022 05:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53598 "EHLO
+        Fri, 6 May 2022 05:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235627AbiEFJlz (ORCPT
+        with ESMTP id S236473AbiEFJ7l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 May 2022 05:41:55 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC115DA15
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 02:38:12 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2468lHEv003940;
-        Fri, 6 May 2022 09:38:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=LWgBO7yJaS0z8Gd/WSnEZ1KfUGlpGPg1Lr57MuahqEM=;
- b=NDZinXc2VUvFTiFO8kzypZEqF2dVFa/FbmaZw+OLCnmycxV9zFTfGdreiFgTxD95z504
- wVsA3PibLK/xFPVZab0YS5XZrOcuTFDHaEJIo/BjrPLZiMXVcgm49hZy8pIXNLybUH2H
- AOFe6plykla/AxGSH7TjwqLomSZSu/JZnCzLA371ILubNaQUz1r5gwZ9QR2eVi+geKtc
- wWD1K9wqtW6LW8ibGWEVBxaLzhvGm/l1kFP6103JJv/dA70uctNQotcRNsuXeclMOs9C
- rOzYnVrrgWriNLw85HDkCFx9FUQ0gDvz4wa4H5+X0t/ZW41t3SbxFDE+XZPD7SDohm1p nA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fw0fk123e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 May 2022 09:38:06 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2468u6nN004981;
-        Fri, 6 May 2022 09:38:05 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fw0fk122d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 May 2022 09:38:05 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2469WZPn018727;
-        Fri, 6 May 2022 09:38:03 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 3fscdk64t6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 May 2022 09:38:02 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2469bx7f27001168
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 May 2022 09:37:59 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AAC2A5205A;
-        Fri,  6 May 2022 09:37:59 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.211.85.201])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 6AE6B52067;
-        Fri,  6 May 2022 09:37:55 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: [PATCH] tools/perf/tests: Skip perf BPF test if clang is not
- present
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <YnQHi5Mhvs2p7BG8@kernel.org>
-Date:   Fri, 6 May 2022 15:07:51 +0530
-Cc:     Jiri Olsa <jolsa@kernel.org>, disgoel@linux.vnet.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, irogers@google.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A0479956-31B6-41F1-9940-9ED95CC59E08@linux.vnet.ibm.com>
-References: <20220505100039.58287-1-atrajeev@linux.vnet.ibm.com>
- <YnQHi5Mhvs2p7BG8@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: TvZ7XpMCkZHHl46xXx55ZGt709TSnFza
-X-Proofpoint-ORIG-GUID: b0B8A5v8q_e3Z1K2SUf12mX7TrtfpN3U
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-06_03,2022-05-05_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 spamscore=0 impostorscore=0 bulkscore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205060052
+        Fri, 6 May 2022 05:59:41 -0400
+X-Greylist: delayed 433 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 06 May 2022 02:55:57 PDT
+Received: from rosa.stappers.it (rosa.stappers.it [77.72.145.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5E3B24754F;
+        Fri,  6 May 2022 02:55:56 -0700 (PDT)
+Received: by rosa.stappers.it (Postfix, from userid 1000)
+        id 5B06F2014; Fri,  6 May 2022 11:45:36 +0200 (CEST)
+Date:   Fri, 6 May 2022 11:45:36 +0200
+From:   Geert Stappers <stappers@stappers.nl>
+To:     Miguel Ojeda <ojeda@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Helge Deller <deller@gmx.de>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Gary Guo <gary@garyguo.net>, Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [PATCH v1 3/3] kallsyms: increase maximum kernel symbol length
+ to 512
+Message-ID: <20220506094536.GL1551@rosa.stappers.it>
+References: <20220505191704.22812-1-ojeda@kernel.org>
+ <20220505191704.22812-4-ojeda@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220505191704.22812-4-ojeda@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, May 05, 2022 at 09:16:45PM +0200, Miguel Ojeda wrote:
+> 
+> generates a symbol of length 96 when using the upcoming v0 mangling scheme:
+> 
+>     _RNvXNtCshGpAVYOtgW1_7example9my_moduleINtB2_13MyGenericTypeNtB2_6MyTypeENtB2_7MyTrait9my_method
+> 
+> At the moment, Rust symbols may reach up to 300 in length.
+> Setting 512 as the maximum seems like a reasonable choice to
+> keep some headroom.
+> 
+> diff --git a/include/linux/kallsyms.h b/include/linux/kallsyms.h
+> index ce1bd2fbf23e..e5ad6e31697d 100644
+> --- a/include/linux/kallsyms.h
+> +++ b/include/linux/kallsyms.h
+> @@ -15,7 +15,7 @@
+>  
+>  #include <asm/sections.h>
+>  
+> -#define KSYM_NAME_LEN 128
+> +#define KSYM_NAME_LEN 512
+
+multiplication factor is four
 
 
-> On 05-May-2022, at 10:51 PM, Arnaldo Carvalho de Melo =
-<acme@kernel.org> wrote:
->=20
-> Em Thu, May 05, 2022 at 03:30:39PM +0530, Athira Rajeev escreveu:
->> Perf BPF filter test fails in environment where "clang"
->> is not installed.
->>=20
->> Test failure logs:
->>=20
->> <<>>
->> 42: BPF filter                    :
->> 42.1: Basic BPF filtering         : Skip
->> 42.2: BPF pinning                 : FAILED!
->> 42.3: BPF prologue generation     : FAILED!
->> <<>>
->>=20
->> Enabling verbose option provided debug logs which says
->> clang/llvm needs to be installed. Snippet of verbose logs:
->>=20
->> <<>>
->> 42.2: BPF pinning                  :
->> --- start ---
->> test child forked, pid 61423
->> ERROR:	unable to find clang.
->> Hint:	Try to install latest clang/llvm to support BPF.
->>        Check your $PATH
->>=20
->> <<logs_here>>
->>=20
->> Failed to compile test case: 'Basic BPF llvm compile'
->> Unable to get BPF object, fix kbuild first
->> test child finished with -1
->> ---- end ----
->> BPF filter subtest 2: FAILED!
->> <<>>
->>=20
->> Here subtests, "BPF pinning" and "BPF prologue generation"
->> failed and logs shows clang/llvm is needed. After installing
->> clang, testcase passes.
->>=20
->> Reason on why subtest failure happens though logs has proper
->> debug information:
->> Main function __test__bpf calls test_llvm__fetch_bpf_obj by
->> passing 4th argument as true ( 4th arguments maps to parameter
->> "force" in test_llvm__fetch_bpf_obj ). But this will cause
->> test_llvm__fetch_bpf_obj to skip the check for clang/llvm.
->>=20
->> Snippet of code part which checks for clang based on
->> parameter "force" in test_llvm__fetch_bpf_obj:
->>=20
->> <<>>
->> if (!force && (!llvm_param.user_set_param &&
->> <<>>
->>=20
->> Since force is set to "false", test won't get skipped and
->> fails to compile test case. The BPF code compilation needs
->> clang, So pass the fourth argument as "false" and also skip
->> the test if reason for return is "TEST_SKIP"
->>=20
->> After the patch:
->>=20
->> <<>>
->> 42: BPF filter                    :
->> 42.1: Basic BPF filtering         : Skip
->> 42.2: BPF pinning                 : Skip
->> 42.3: BPF prologue generation     : Skip
->> <<>>
->=20
-> Wouldn't it be better to add the reason for the skip, like other tests
-> do?
->=20
-> E.g.:
->=20
-> 23: Watchpoint                                                      :
-> 23.1: Read Only Watchpoint                                          : =
-Skip (missing hardware support)
-> 23.2: Write Only Watchpoint                                         : =
-Ok
-> 23.3: Read / Write Watchpoint                                       : =
-Ok
-> 23.4: Modify Watchpoint
->=20
-> Something like:
->=20
-> After the patch:
->=20
-> <<>>
-> 42: BPF filter                    :
-> 42.1: Basic BPF filtering         : Skip (clang not installed)
-> 42.2: BPF pinning                 : Skip (clang not installed)
-> 42.3: BPF prologue generation     : Skip (clang not installed)
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -213,7 +213,7 @@ static int klp_resolve_symbols(Elf_Shdr *sechdrs, const char *strtab,
+>  	 * we use the smallest/strictest upper bound possible (56, based on
+>  	 * the current definition of MODULE_NAME_LEN) to prevent overflows.
+>  	 */
+> -	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 128);
+> +	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 512);
+
+factor four
 
 
-Hi Arnaldo,
+> @@ -227,7 +227,7 @@ static int klp_resolve_symbols(Elf_Shdr *sechdrs, const char *strtab,
+>  
+>  		/* Format: .klp.sym.sym_objname.sym_name,sympos */
+>  		cnt = sscanf(strtab + sym->st_name,
+> -			     ".klp.sym.%55[^.].%127[^,],%lu",
+> +			     ".klp.sym.%55[^.].%511[^,],%lu",
 
-I tried to use TEST_CASE_REASON("BPF pinning", bpf_pinning, "clang not =
-installed")
+4 * ( 127 + 1 )  =  511 + 1
 
-The clang check is done in test_llvm__fetch_bpf_obj under some condition =
-checks:
 
-<<>>
-         /*
-         * Skip this test if user's .perfconfig doesn't set [llvm] =
-section
-         * and clang is not found in $PATH
-         */
-        if (!force && (!llvm_param.user_set_param &&
-                       llvm__search_clang())) {
-                pr_debug("No clang, skip this test\n");
-                return TEST_SKIP;
-        }
-<<>>
+> --- a/scripts/kallsyms.c
+> +++ b/scripts/kallsyms.c
+> @@ -30,10 +30,10 @@
+>  #define _stringify_1(x)	#x
+>  #define _stringify(x)	_stringify_1(x)
+>  
+> -#define KSYM_NAME_LEN		128
+> +#define KSYM_NAME_LEN		512
 
-But the reason for BPF skip could happen at other places also ie =
-non-root user, bpf support checks from check_env.
-So can't exactly print the skip reason to be clang since It could get =
-skipped from other environment checks too. Any suggestions Arnaldo ?
+factor four
 
-Thanks
-Athira
 
-> <<>>
->=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/tests/bpf.c | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
->> index 57b9591f7cbb..ae62f01239e3 100644
->> --- a/tools/perf/tests/bpf.c
->> +++ b/tools/perf/tests/bpf.c
->> @@ -222,11 +222,11 @@ static int __test__bpf(int idx)
->>=20
->> 	ret =3D test_llvm__fetch_bpf_obj(&obj_buf, &obj_buf_sz,
->> 				       bpf_testcase_table[idx].prog_id,
->> -				       true, NULL);
->> +				       false, NULL);
->> 	if (ret !=3D TEST_OK || !obj_buf || !obj_buf_sz) {
->> 		pr_debug("Unable to get BPF object, %s\n",
->> 			 bpf_testcase_table[idx].msg_compile_fail);
->> -		if (idx =3D=3D 0)
->> +		if ((idx =3D=3D 0) || (ret =3D=3D TEST_SKIP))
->> 			return TEST_SKIP;
->> 		else
->> 			return TEST_FAIL;
->> --=20
->> 2.35.1
->=20
-> --=20
->=20
-> - Arnaldo
+> --- a/tools/include/linux/kallsyms.h
+> +++ b/tools/include/linux/kallsyms.h
+> @@ -6,7 +6,7 @@
+>  #include <stdio.h>
+>  #include <unistd.h>
+>  
+> -#define KSYM_NAME_LEN 128
+> +#define KSYM_NAME_LEN 512
 
+factor four
+
+
+> --- a/tools/lib/perf/include/perf/event.h
+> +++ b/tools/lib/perf/include/perf/event.h
+> @@ -95,7 +95,7 @@ struct perf_record_throttle {
+>  };
+>  
+>  #ifndef KSYM_NAME_LEN
+> -#define KSYM_NAME_LEN 256
+> +#define KSYM_NAME_LEN 512
+
+Here is the multiplication factor  two.
+
+
+> --- a/tools/lib/symbol/kallsyms.h
+> +++ b/tools/lib/symbol/kallsyms.h
+> @@ -7,7 +7,7 @@
+>  #include <linux/types.h>
+>  
+>  #ifndef KSYM_NAME_LEN
+> -#define KSYM_NAME_LEN 256
+> +#define KSYM_NAME_LEN 512
+
+Another  "factor two"
+
+
+
+It feels good to unify all the KSYM_NAME_LEN to 512.
+
+Thing that feels less good is doubling 256 versus quadrupling 128.
+
+I felt the need to report that.
+
+
+Feel free to ignore this remark.
+
+
+
+Groeten
+Geert Stappers
+-- 
+Silence is hard to parse
