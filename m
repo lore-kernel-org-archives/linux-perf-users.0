@@ -2,155 +2,186 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF457C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 May 2022 18:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2E7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 May 2022 20:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350883AbiEFSTf (ORCPT
+        id S1442154AbiEFUUS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 May 2022 14:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41622 "EHLO
+        Fri, 6 May 2022 16:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233843AbiEFSTf (ORCPT
+        with ESMTP id S1442115AbiEFUUR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 May 2022 14:19:35 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B084A4D9FE;
-        Fri,  6 May 2022 11:15:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D03B1B83882;
-        Fri,  6 May 2022 18:15:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52452C385A8;
-        Fri,  6 May 2022 18:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651860947;
-        bh=HZhuEiXqbxhd9fR3VaMws+c8YgJggiG/REZXjlbhj18=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SbmKMuE4NMYBwSFmCjQO0fmQYNuHL4sHqBwee1oxEcLsDZ/hLL8UAq2s3MUOr5Z8w
-         y565I0qstxIOWuzcW428eNk1WunYU+neAu+5eCwcn0oKMEZZo6lVrQddWyqoYal8Hg
-         umu5w8HFMKhvDtlMucA3qqav0ZNVhO9KWViRPaUreU4K9ZfQOu5H+/2IGJmUw5D1qs
-         p9mdDlhuBa3He8mklEiSWFIP0VCuEyRo2MVwKKNdgpWYzsYm/w0tO/Jr/mUW/rQfrU
-         LctRvFwD3/xgvQ/l5sF5TU4e/ORTOmmDLQE5Uup1xLrrvqGemKRykhaJYPGtxuKPLo
-         9OOjWq+J5IJRg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8796F400B1; Fri,  6 May 2022 15:15:44 -0300 (-03)
-Date:   Fri, 6 May 2022 15:15:44 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, svens@linux.ibm.com,
-        gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH v3] perf test: Add skip to --per-thread test
-Message-ID: <YnVl0PxKboCxuke4@kernel.org>
-References: <20220505182505.3313191-1-irogers@google.com>
+        Fri, 6 May 2022 16:20:17 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED2684D624;
+        Fri,  6 May 2022 13:16:30 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id z5-20020a17090a468500b001d2bc2743c4so7797811pjf.0;
+        Fri, 06 May 2022 13:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PnVTOmeWJdCW14+Uuj8JCfjLjJAP80qHcxM/0JW5PeM=;
+        b=Q17S6sSUCOxqpIi7tYiyZjfz/LZE9iOczEusYqcnh/qTIAK4z0g9ba9B+ZHC7cDO8h
+         zdq7bfUqSyiVYofBGVGAcjLSI68sWnISGiF9a7BEKSumngEivjgm+q+x0QenAq/PMmMg
+         Cb/9QYkw7lV/497WBHacu+BsKwpResU+vEFAh6vOMLYxBY1DbSI2OpdfyPNrhp2f0p2R
+         pEWnZJJZw0ZlcL0IMesBmRB4aKCXeaLwaKv9QAVA9AKp7MzcMQEAyAI6oB0+oPMT7dW3
+         koscAj6DLcFGofqU9ZtIWnn9oj4n/DII3dhxUWbWH6c4J4HGbCejSZot50hydHNxh1Xo
+         s8AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=PnVTOmeWJdCW14+Uuj8JCfjLjJAP80qHcxM/0JW5PeM=;
+        b=uBPS7eINyPamvFqvEm4FlBcwDJ+ktE673cLD7D35zkO4DmXso65SVEmk0EYfJXcOYi
+         xESFhBfE5FuDgCZ+04mBfmu0wzEGWM+DSxVva4tOdHaPpuczXENy1R/PsXnWBRM7UMrS
+         jdQVSU+fTtSA+6Vw0qKugArjxHbjwA6XIzIkAOFu45V2wWdaWCjpLYuM8NW4U6cZGJAk
+         i+++rBty+J0hf6cQiraGvpyvlP7x7LZpsCaoNJ3imQcCWDNxGa2ro7OECXPFY/JzBJQc
+         1axBkCprBLeXCqNkLKD8FLXA958VWCKLYeoViAIX+o+ekKR161WH1h/X0QiYczvjBKNS
+         ISoA==
+X-Gm-Message-State: AOAM530MWxqufp+rceDV6hGV3janPIA5amccaap46z+FuKnRnKlrSw8U
+        FwaMSDiWyyFu1YMRRXp3sYI=
+X-Google-Smtp-Source: ABdhPJyLVsfwZY95sq/VCjUFwjdh4dXE1f5LgZRey1ziDDJSCSZVuoavnF4ICtShwhNrA4pGt/6a0w==
+X-Received: by 2002:a17:90b:4b0d:b0:1dc:3d21:72c1 with SMTP id lx13-20020a17090b4b0d00b001dc3d2172c1mr14403583pjb.21.1651868190390;
+        Fri, 06 May 2022 13:16:30 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:4f00:3590:a5d1:d7b7:dd61:c87b])
+        by smtp.gmail.com with ESMTPSA id m2-20020a170902db8200b0015e8d4eb268sm2160156pld.178.2022.05.06.13.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 May 2022 13:16:29 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
+        Milian Wolff <milian.wolff@kdab.com>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Blake Jones <blakejones@google.com>
+Subject: [RFC 0/4] perf record: Implement off-cpu profiling with BPF (v2)
+Date:   Fri,  6 May 2022 13:16:23 -0700
+Message-Id: <20220506201627.85598-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.36.0.512.ge40c2bad7a-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220505182505.3313191-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, May 05, 2022 at 11:25:05AM -0700, Ian Rogers escreveu:
-> As reported in:
-> https://lore.kernel.org/linux-perf-users/20220428122821.3652015-1-tmricht@linux.ibm.com/
-> the 'instructions:u' event may not be supported. Add a skip using 'perf
-> record'.
-> 
-> Switch some code away from pipe to make the failures clearer.
+Hello,
 
-Thanks, applied.
+This is the second version of off-cpu profiling support.  Together with
+(PMU-based) cpu profiling, it can show holistic view of the performance
+characteristics of your application or system.
 
-- Arnaldo
-
+Changes in v2)
+ * change sched_switch argument handling (Andrii)
+ * use task local storage (Hao)
+ * fix build error on !BUILD_BPF_SKEL (kernel test robot)
+ * add documentation regard fp callstack (Milian)
  
-> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/shell/record.sh | 46 ++++++++++++++++++++++++++++----
->  1 file changed, 41 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index d98f4d4a00e1..00c7285ce1ac 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -5,11 +5,43 @@
->  set -e
->  
->  err=0
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +
-> +cleanup() {
-> +  rm -f ${perfdata}
-> +  rm -f ${perfdata}.old
-> +  trap - exit term int
-> +}
-> +
-> +trap_cleanup() {
-> +  cleanup
-> +  exit 1
-> +}
-> +trap trap_cleanup exit term int
-> +
->  test_per_thread() {
->    echo "Basic --per-thread mode test"
-> -  perf record -e instructions:u --per-thread -o- true 2> /dev/null \
-> -    | perf report -i- -q \
-> -    | egrep -q true
-> +  if ! perf record -e instructions:u -o ${perfdata} --quiet true 2> /dev/null
-> +  then
-> +    echo "Per-thread record [Skipped instructions:u not supported]"
-> +    if [ $err -ne 1 ]
-> +    then
-> +      err=2
-> +    fi
-> +    return
-> +  fi
-> +  if ! perf record -e instructions:u --per-thread -o ${perfdata} true 2> /dev/null
-> +  then
-> +    echo "Per-thread record of instructions:u [Failed]"
-> +    err=1
-> +    return
-> +  fi
-> +  if ! perf report -i ${perfdata} -q | egrep -q true
-> +  then
-> +    echo "Per-thread record [Failed missing output]"
-> +    err=1
-> +    return
-> +  fi
->    echo "Basic --per-thread mode test [Success]"
->  }
->  
-> @@ -18,6 +50,10 @@ test_register_capture() {
->    if ! perf list | egrep -q 'br_inst_retired.near_call'
->    then
->      echo "Register capture test [Skipped missing instruction]"
-> +    if [ $err -ne 1 ]
-> +    then
-> +      err=2
-> +    fi
->      return
->    fi
->    if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
-> @@ -37,8 +73,8 @@ test_register_capture() {
->    echo "Register capture test [Success]"
->  }
->  
-> -# Test for platform support and return TEST_SKIP
-> -[ $(uname -m) = s390x ] && exit 2
->  test_per_thread
->  test_register_capture
-> +
-> +cleanup
->  exit $err
-> -- 
-> 2.36.0.512.ge40c2bad7a-goog
+ 
+With BPF, it can aggregate scheduling stats for interested tasks
+and/or states and convert the data into a form of perf sample records.
+I chose the bpf-output event which is a software event supposed to be
+consumed by BPF programs and renamed it as "offcpu-time".  So it
+requires no change on the perf report side except for setting sample
+types of bpf-output event.
 
+Basically it collects userspace callstack for tasks as it's what users
+want mostly.  Maybe we can add support for the kernel stacks but I'm
+afraid that it'd cause more overhead.  So the offcpu-time event will
+always have callchains regardless of the command line option, and it
+enables the children mode in perf report by default.
+
+It adds --off-cpu option to perf record like below:
+
+  $ sudo perf record -a --off-cpu -- perf bench sched messaging -l 1000
+  # Running 'sched/messaging' benchmark:
+  # 20 sender and receiver processes per group
+  # 10 groups == 400 processes run
+
+     Total time: 1.518 [sec]
+  [ perf record: Woken up 9 times to write data ]
+  [ perf record: Captured and wrote 5.313 MB perf.data (53341 samples) ]
+
+Then we can run perf report as usual.  The below is just to skip less
+important parts.
+
+  $ sudo perf report --stdio --call-graph=no --percent-limit=2
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 52K of event 'cycles'
+  # Event count (approx.): 42522453276
+  #
+  # Children      Self  Command          Shared Object     Symbol                            
+  # ........  ........  ...............  ................  ..................................
+  #
+       9.58%     9.58%  sched-messaging  [kernel.vmlinux]  [k] audit_filter_rules.constprop.0
+       8.46%     8.46%  sched-messaging  [kernel.vmlinux]  [k] audit_filter_syscall
+       4.54%     4.54%  sched-messaging  [kernel.vmlinux]  [k] copy_user_enhanced_fast_string
+       2.94%     2.94%  sched-messaging  [kernel.vmlinux]  [k] unix_stream_read_generic
+       2.45%     2.45%  sched-messaging  [kernel.vmlinux]  [k] memcg_slab_free_hook
+  
+  
+  # Samples: 983  of event 'offcpu-time'
+  # Event count (approx.): 684538813464
+  #
+  # Children      Self  Command          Shared Object         Symbol                    
+  # ........  ........  ...............  ....................  ..........................
+  #
+      83.86%     0.00%  sched-messaging  libc-2.33.so          [.] __libc_start_main
+      83.86%     0.00%  sched-messaging  perf                  [.] cmd_bench
+      83.86%     0.00%  sched-messaging  perf                  [.] main
+      83.86%     0.00%  sched-messaging  perf                  [.] run_builtin
+      83.64%     0.00%  sched-messaging  perf                  [.] bench_sched_messaging
+      41.35%    41.35%  sched-messaging  libpthread-2.33.so    [.] __read
+      38.88%    38.88%  sched-messaging  libpthread-2.33.so    [.] __write
+       3.41%     3.41%  sched-messaging  libc-2.33.so          [.] __poll
+
+The perf bench sched messaging created 400 processes to send/receive
+messages through unix sockets.  It spent a large portion of cpu cycles
+for audit filter and read/copy the messages while most of the
+offcpu-time was in read and write calls.
+
+You can get the code from 'perf/offcpu-v2' branch in my tree at
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Enjoy! :)
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (4):
+  perf report: Do not extend sample type of bpf-output event
+  perf record: Enable off-cpu analysis with BPF
+  perf record: Implement basic filtering for off-cpu
+  perf record: Handle argument change in sched_switch
+
+ tools/perf/Documentation/perf-record.txt |  10 +
+ tools/perf/Makefile.perf                 |   1 +
+ tools/perf/builtin-record.c              |  21 ++
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/bpf_off_cpu.c            | 298 +++++++++++++++++++++++
+ tools/perf/util/bpf_skel/off_cpu.bpf.c   | 209 ++++++++++++++++
+ tools/perf/util/evsel.c                  |   4 +-
+ tools/perf/util/off_cpu.h                |  24 ++
+ 8 files changed, 566 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/util/bpf_off_cpu.c
+ create mode 100644 tools/perf/util/bpf_skel/off_cpu.bpf.c
+ create mode 100644 tools/perf/util/off_cpu.h
+
+
+base-commit: 33cd6928039c6bf18cf0baec936924d908e6c89b
 -- 
+2.36.0.512.ge40c2bad7a-goog
 
-- Arnaldo
