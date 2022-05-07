@@ -2,99 +2,206 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6DEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 00:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218DAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 04:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1445046AbiEGAS1 (ORCPT
+        id S1376672AbiEGEHT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 May 2022 20:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34030 "EHLO
+        Sat, 7 May 2022 00:07:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235557AbiEGAS0 (ORCPT
+        with ESMTP id S1350796AbiEGEHS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 May 2022 20:18:26 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 626A7193D5;
-        Fri,  6 May 2022 17:14:38 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id r27so9747262iot.1;
-        Fri, 06 May 2022 17:14:38 -0700 (PDT)
+        Sat, 7 May 2022 00:07:18 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765534B877
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 21:03:32 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id e2so12446359wrh.7
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 21:03:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oYHoqrW62bDSXtF7FVIR7Ce1mBN8BG4H8G3uYkKai+M=;
-        b=oqfp3V8h26v18VZIi2Ugg2P0nVNPUi7Aal2Ctl1ZLnK2pYUBxojPPv3lGexF0I+caO
-         0kkK7AFdAeMrc8UQeViEh+4tCmHU4NNvblhuqBWhDZj0EdX/51JGAgxsQNY9s3KvSv0J
-         Gej1/ktNWNuD26jhXCcDAWBHgmfhhpLXsNKCDBwhtB5neYxy/YInL798GOSRGN2+fHar
-         2iBy8mA1rAz0AkzK5lHusLtZQFsF0qXovs3sqHLKJCoVnFvWUSm1TXIm4JZPyx6q3/cx
-         l08+TbVNxmBr64wUETW1ma7zxO+DPxJ/nJVGxnebVQklUg2MI9UzSNEwLuOlqiGKQa2o
-         lWhw==
+        bh=uTZy0JhvpeCTmJ44qDmPx7aAp4p0CEczqW37irds05A=;
+        b=lxQc4VPVYtBy3u8Fzk8Wb6oB2xPX2Wu1hbns261iN7inG4MlM1F2LRSH4ddrhjhdxW
+         WPIryjYrVozfLnHMRTxjaWueS22LPxt/jRLJc5YTtHTT6lqkJj3dtsQY7HWLKNy4B7Mo
+         hqzPPOK8b9/boruzobqeg8OIkAoEue8DpUChCweaIPGtU6+Mdopi/uu7YmkmO0XEn43f
+         Qcv1tDfOAhPr3XGMKp1Kn/9yFnU028cEMLnTNp1uEsjNZMjvOff65MfCBirSIq7iFaoC
+         7mVmSM49Cf9pdpd5wLEJGOpVT+E+S1gURTRLpadgDFFfdtxDVZOzHNUfzuOxupTAe0qv
+         tiKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oYHoqrW62bDSXtF7FVIR7Ce1mBN8BG4H8G3uYkKai+M=;
-        b=k/o1WTEkCBvl5V0LQYV2kwQwu847eVbLFIn2vBlqCgDmlqmRLQSHLZuPHCOgYz74aO
-         Syg5TG9uqnQcJ/vmVPlJ90f0pZ+lejB8nKJ7ER478zXsJR7EQPKwZkyIYdhUc+Xxzoui
-         VLk0dyLWO/UWhFFrxtzWbFqPHrc1fHKB6MD+5X5jAjja3NMwLCjbxIxuWM0QDsqF+jtA
-         b22oLdSK/5U27lSfcpGmZSVpWWRoeSNfDbewLLQe0CaN7aFjusZWcxw0orzyUo+ePPdG
-         dI/7S/4pofB1m+5UPkFIEtWQhgS6TIaOOoTmTah+MIytfqLj15qH561tcBGcasz72sLT
-         zx9A==
-X-Gm-Message-State: AOAM531AdQuDaPdcFOn0B+cUysEJIhKQLNH5x+pv4u21P8RCkHRAfv/w
-        1lGM0RlUkaTgBolsSb3iw7GdnlVc6YmtBBVO3fY=
-X-Google-Smtp-Source: ABdhPJxXr2yP4eX/1ylZ/7D6mybucRQwBj1ZlfFn3LMQWSNvaM6XZ++qu+ySgovKRNTp2eOd3RBDB7gNkk7VX+TkePw=
-X-Received: by 2002:a05:6638:2104:b0:326:1e94:efa6 with SMTP id
- n4-20020a056638210400b003261e94efa6mr2620154jaj.234.1651882477804; Fri, 06
- May 2022 17:14:37 -0700 (PDT)
+        bh=uTZy0JhvpeCTmJ44qDmPx7aAp4p0CEczqW37irds05A=;
+        b=hrb3vyyFPJ14Vp9DHqI/IwfiQ4ng83U/+azloutIqaKmHRIfpmCsFCLSWLUM3Hr5OK
+         22SqxxwbBSYtWSM8jsEWFcZJAdCvMWlfDeNhJYdnA44oM4RuIGs3Iw7xKwnMWvpOojhe
+         ByG7QAdg6l4SOHLHSHGlGMBLpIuhyT8UwhHAvtnUK1Akyk2gb4r/gkU1E+ZBYMGDD9Sz
+         kLjh1MZWwZdmEGicBNDdPrZYVoOYzZLDh0VqSawxsbq8hBKWilThtmPCbdDSQo2jeRIb
+         KOYqcmTAgqZ4d6f96nv4M/IPKZ0PSFzTesb6XXggewkNS2fbwJi5MPYyBed0qKVw/3eC
+         o2cQ==
+X-Gm-Message-State: AOAM532gZRhceuqxm/iZcbCc4BF7vBjDY5p0H+sQVhsr2ZrX9hWLbmFq
+        MVFpelNlb1q2Xx6FLcjNjUJDBtvizXzaA9uorqduKg==
+X-Google-Smtp-Source: ABdhPJy3rt5s9KGGukMgNaV6YUo/+be9kSuGuUnbzhAT1LWo+ymX2vGI2xhI4ITemIMbTy1+NEkDR7nBYCH/BeaN54w=
+X-Received: by 2002:a5d:598f:0:b0:20c:83c9:b05b with SMTP id
+ n15-20020a5d598f000000b0020c83c9b05bmr5048233wri.343.1651896210784; Fri, 06
+ May 2022 21:03:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220422150507.222488-1-namhyung@kernel.org> <20220422150507.222488-5-namhyung@kernel.org>
- <CAEf4Bzbdh-wbQQLzoXGGKkqqE=+qz19C4tCq4Ynb-_PXzRYM1w@mail.gmail.com>
- <CAM9d7chos3xgxPMOMwgSh6nCNfqk8k2tXO=0JsdL4KgN_yngCA@mail.gmail.com>
- <CAEf4BzZ-RwXV8NoWk4rLyLWyxJhQ6b96ieVCy0kkjLCq8cVxqw@mail.gmail.com> <CAM9d7ciZcsTD7oK5JQA5PJ3gDHcN+Fzon=gVoPvyRb4yLzVF7w@mail.gmail.com>
-In-Reply-To: <CAM9d7ciZcsTD7oK5JQA5PJ3gDHcN+Fzon=gVoPvyRb4yLzVF7w@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 6 May 2022 17:14:27 -0700
-Message-ID: <CAEf4Bzb0SHV7O7iDkYg0ad6JQcOii7jdLLHj5NW9dB+H=vD_kw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf record: Handle argument change in sched_switch
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
+References: <20220422065635.767648-1-zhengjun.xing@linux.intel.com> <20220422065635.767648-2-zhengjun.xing@linux.intel.com>
+In-Reply-To: <20220422065635.767648-2-zhengjun.xing@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 6 May 2022 21:03:16 -0700
+Message-ID: <CAP-5=fWaU4d90zkqqokp-sCau5DNX_VNVb-Yz3vdqEdkkRYegw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf stat: Merge event counts from all hybrid PMUs
+To:     zhengjun.xing@linux.intel.com
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 4:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, Apr 21, 2022 at 11:57 PM <zhengjun.xing@linux.intel.com> wrote:
 >
-> On Wed, Apr 27, 2022 at 12:26 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Wed, Apr 27, 2022 at 11:15 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > Actually I tried something similar but it was with a variable (in bss)
-> > > so the verifier in an old kernel rejected it due to invalid arg access.
-> > >
-> > > I guess now the const makes the verifier ignore the branch as if
-> > > it's dead but the compiler still generates the code, right?
-> >
-> >
-> > yes, exactly
+> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 >
-> Then I'm curious how it'd work on newer kernels.
-> The verifier sees the false branch and detects type mismatch
-> for the second argument then it'd reject the program?
+> For hybrid events, by default stat aggregates and reports the event counts
+> per pmu.
 >
+>   # ./perf stat -e cycles -a  sleep 1
+>
+>    Performance counter stats for 'system wide':
+>
+>       14,066,877,268      cpu_core/cycles/
+>        6,814,443,147      cpu_atom/cycles/
+>
+>          1.002760625 seconds time elapsed
+>
+> Sometimes, it's also useful to aggregate event counts from all PMUs.
+> Create a new option '--hybrid-merge' to enable that behavior and report
+> the counts without PMUs.
+>
+>   # ./perf stat -e cycles -a --hybrid-merge  sleep 1
+>
+>    Performance counter stats for 'system wide':
+>
+>       20,732,982,512      cycles
+>
+>          1.002776793 seconds time elapsed
+>
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Verifier will know which branch is never taken, and will just ignore
-and remove any code in it as dead code.
+This feels related to aggregation, but aggregation is for a single
+evsel on a single PMU. What happens if you have both instructions and
+cycles with --hybrid-merge? Normally we aggregate all counts for each
+CPU into a the two evsels and then compute a metric:
+```
+$ perf stat -e instructions,cycles /bin/true
 
+ Performance counter stats for '/bin/true':
 
-> Thanks,
-> Namhyung
+         1,830,554      instructions              #    1.17  insn per
+cycle
+         1,561,415      cycles
+```
+This kind of aggregation behavior may be needed more widely for metrics.
+
+Thanks,
+Ian
+
+> ---
+>  tools/perf/Documentation/perf-stat.txt | 10 ++++++++++
+>  tools/perf/builtin-stat.c              |  2 ++
+>  tools/perf/util/stat-display.c         | 17 +++++++++++++++--
+>  tools/perf/util/stat.h                 |  1 +
+>  4 files changed, 28 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index c06c341e72b9..8d1cde00b8d6 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -454,6 +454,16 @@ Multiple events are created from a single event specification when:
+>  2. Aliases, which are listed immediately after the Kernel PMU events
+>     by perf list, are used.
+>
+> +--hybrid-merge::
+> +Merge the hybrid event counts from all PMUs.
+> +
+> +For hybrid events, by default, the stat aggregates and reports the event
+> +counts per PMU. But sometimes, it's also useful to aggregate event counts
+> +from all PMUs. This option enables that behavior and reports the counts
+> +without PMUs.
+> +
+> +For non-hybrid events, it should be no effect.
+> +
+>  --smi-cost::
+>  Measure SMI cost if msr/aperf/ and msr/smi/ events are supported.
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index a96f106dc93a..ea88ac5bed2d 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1235,6 +1235,8 @@ static struct option stat_options[] = {
+>         OPT_SET_UINT('A', "no-aggr", &stat_config.aggr_mode,
+>                     "disable CPU count aggregation", AGGR_NONE),
+>         OPT_BOOLEAN(0, "no-merge", &stat_config.no_merge, "Do not merge identical named events"),
+> +       OPT_BOOLEAN(0, "hybrid-merge", &stat_config.hybrid_merge,
+> +                   "Merge identical named hybrid events"),
+>         OPT_STRING('x', "field-separator", &stat_config.csv_sep, "separator",
+>                    "print counts with custom separator"),
+>         OPT_CALLBACK('G', "cgroup", &evsel_list, "name",
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 46b3dd134656..d9629a83aa78 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -612,6 +612,19 @@ static bool hybrid_uniquify(struct evsel *evsel)
+>         return perf_pmu__has_hybrid() && !is_uncore(evsel);
+>  }
+>
+> +static bool hybrid_merge(struct evsel *counter, struct perf_stat_config *config,
+> +                        bool check)
+> +{
+> +       if (hybrid_uniquify(counter)) {
+> +               if (check)
+> +                       return config && config->hybrid_merge;
+> +               else
+> +                       return config && !config->hybrid_merge;
+> +       }
+> +
+> +       return false;
+> +}
+> +
+>  static bool collect_data(struct perf_stat_config *config, struct evsel *counter,
+>                             void (*cb)(struct perf_stat_config *config, struct evsel *counter, void *data,
+>                                        bool first),
+> @@ -620,9 +633,9 @@ static bool collect_data(struct perf_stat_config *config, struct evsel *counter,
+>         if (counter->merged_stat)
+>                 return false;
+>         cb(config, counter, data, true);
+> -       if (config->no_merge || hybrid_uniquify(counter))
+> +       if (config->no_merge || hybrid_merge(counter, config, false))
+>                 uniquify_event_name(counter, config);
+> -       else if (counter->auto_merge_stats)
+> +       else if (counter->auto_merge_stats || hybrid_merge(counter, config, true))
+>                 collect_all_aliases(config, counter, cb, data);
+>         return true;
+>  }
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 335d19cc3063..91d989dfeca4 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -122,6 +122,7 @@ struct perf_stat_config {
+>         bool                     ru_display;
+>         bool                     big_num;
+>         bool                     no_merge;
+> +       bool                     hybrid_merge;
+>         bool                     walltime_run_table;
+>         bool                     all_kernel;
+>         bool                     all_user;
+> --
+> 2.25.1
+>
