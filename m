@@ -2,280 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5CFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 05:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7502EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 08:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1445721AbiEGFiT (ORCPT
+        id S1383638AbiEGIKN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 7 May 2022 01:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36798 "EHLO
+        Sat, 7 May 2022 04:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1445663AbiEGFiK (ORCPT
+        with ESMTP id S1359089AbiEGIKI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 7 May 2022 01:38:10 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A5B23BFC
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 22:34:24 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 192-20020a250cc9000000b0064a5bbea6a7so4757176ybm.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 22:34:24 -0700 (PDT)
+        Sat, 7 May 2022 04:10:08 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 483A621E10
+        for <linux-perf-users@vger.kernel.org>; Sat,  7 May 2022 01:06:20 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 7so7899926pga.12
+        for <linux-perf-users@vger.kernel.org>; Sat, 07 May 2022 01:06:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=7BccLGFbnzxgEz6sHuW6w+xF3bfVrTq5a9IERbkhU7Q=;
-        b=RkL0pa87fsjXuMFKkX4QrTiVPsgv3eVh3ignPmfTAqCB4NGjec3442fQ9T7slD2j28
-         zTWog8mY+oEByKHjcDyzKCs3NL/AqstetnUe2NVPiS/0YwgMtElYPYULCAAY886Zd+oT
-         XDJrPS1YeSBMp8ScLBQGJ3o7HW3U9vngEwXbhXJhKP65F7wq+WybP2MyCczffaXuj07v
-         JGLhWFYSFFttYWTAhzCJgiYQxAi/zs3WF37aMVOccmnR3Te3lhOpSSJ8CpZ5oTCqFgAy
-         rBH0V+yE8mXwzDdDxdqPn0fjrsnukboahKOKWuOO1E52lg4Yo5aKgMYnzYqro+qUnvMo
-         dLGg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aWQfnp8p3Sa/CZYziUv8sJFvgH/DhWMow1Ki0jzKInQ=;
+        b=d7sa/vJyLfF9BR72n72H6iTcORw0kbeaXS21B2+FXdbG66FYCW7FBC02LCRup2bO0T
+         VbztyRzKE447Dsr5bQyIcT/N6Q1+c4/IXMaJT3GrJsKz9ltWgOCmeIOcoalYl/8o+V6Q
+         JCxhKqmLoYC0fCUjLs/ACK38p33kuWfTfdyYo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=7BccLGFbnzxgEz6sHuW6w+xF3bfVrTq5a9IERbkhU7Q=;
-        b=mG8VzSOO40axbMJm0w5pALbrEX+O2knYvxdTo+sA3soIhv5axNRyaqVfVHkV3qtkcx
-         mn6q7NTG9MsZFavQKZ7zkrsya1YtvMH76sYgdxvUagHNyB28WTYYqmtEjw6lYCDftGdW
-         +AWxVSdhtuHG3VpCxpuD/NcaHPoR+Wn/hdCyeCF1q2aAn3Z1dag4HunJrY2Eda4WYdZ5
-         k/gpDyPbAC+9ugRY8o41bV1yu4Hh0EgWk5pg6DGYHJJvwVOpLdktzVkctAdeG09I16B4
-         ggMOE9WvCigA2CVr4iAUsbSxZa1X7g/OSQplWcH6tRVFrmu7/8f8YHtfh/5FKSiKDvk6
-         9iwg==
-X-Gm-Message-State: AOAM5332ANfbIrhdhGcLQ6H4kuu16YONwTlI84zjWzV4SdnOjeU9r+OB
-        JwpaJV/T1HiBydG73hgL3ZJ00J9XHsJd
-X-Google-Smtp-Source: ABdhPJwHS2vHsogko5eYvlKiFMT2M+HKgGmnh026VsFjlc0DEeLQohnX5ZX/K1VEx7OwEJkQoUUg0+gjBcPk
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:bf2a:2f64:a273:3573])
- (user=irogers job=sendgmr) by 2002:a25:ba07:0:b0:64a:1a32:6ef6 with SMTP id
- t7-20020a25ba07000000b0064a1a326ef6mr4915646ybg.308.1651901664027; Fri, 06
- May 2022 22:34:24 -0700 (PDT)
-Date:   Fri,  6 May 2022 22:34:09 -0700
-In-Reply-To: <20220507053410.3798748-1-irogers@google.com>
-Message-Id: <20220507053410.3798748-5-irogers@google.com>
-Mime-Version: 1.0
-References: <20220507053410.3798748-1-irogers@google.com>
-X-Mailer: git-send-email 2.36.0.512.ge40c2bad7a-goog
-Subject: [PATCH 4/5] perf metrics: Support all tool events
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aWQfnp8p3Sa/CZYziUv8sJFvgH/DhWMow1Ki0jzKInQ=;
+        b=wP9KbCUsRC7MBb0RegfUx7RHg5DCbNysGhXWct16foGTIiPKyIqq+hZh+wqgAdvFfc
+         ZWNkyIBNgGYrowqPXo/9v5tu3SqLUIXhQui6FjfQkdQu5sUJL7AYzbAZbVHB1HhiA3Bc
+         /vWIkDiYLEvD8ual45CrW40IHWxGM+Nd6igsIh/xBb+1v02UhV+i5w7YRVd++a7d9FjF
+         DAK4OKphml0J4G+R7wSRxPklXvd60V/bDmccKzY03254VEPAGyPBf90/tJJvxPkNbTnQ
+         YVDl8QKUhE9p1PIqxhoZ6F+OkmIuaXRfak13uOYaZzsLaRGuQZgyZIdc7y8SI8pS5PxT
+         oKqw==
+X-Gm-Message-State: AOAM531Of/pm34P+2KCNDsDJeOds7/zmb4Avil8+moPae7wL7UAOWqUn
+        CobFOfdElPZytEFTaH/6ZkIk2Q==
+X-Google-Smtp-Source: ABdhPJyPh1ezOw2sy0EQ6kjmLgD1rSsrITTXAJHnhVIq/PJRePuQKh9Kel3rSaI68O428UlbxAszUg==
+X-Received: by 2002:a63:6fc4:0:b0:393:9567:16dc with SMTP id k187-20020a636fc4000000b00393956716dcmr5757855pgc.593.1651910779774;
+        Sat, 07 May 2022 01:06:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j192-20020a638bc9000000b003c14af505fcsm4564376pge.20.2022.05.07.01.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 May 2022 01:06:19 -0700 (PDT)
+Date:   Sat, 7 May 2022 01:06:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Miguel Ojeda <ojeda@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v6 00/23] Rust support
+Message-ID: <202205070056.ACC3C3D@keescook>
+References: <20220507052451.12890-1-ojeda@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220507052451.12890-1-ojeda@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Previously duration_time was hard coded, which was ok until
-commit b03b89b35003 ("perf stat: Add user_time and system_time events")
-added additional tool events. Do for all tool events what was previously
-done just for duration_time.
+On Sat, May 07, 2022 at 07:23:58AM +0200, Miguel Ojeda wrote:
+> ## Patch series status
+> 
+> The Rust support is still to be considered experimental. However,
+> support is good enough that kernel developers can start working on the
+> Rust abstractions for subsystems and write drivers and other modules.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/metricgroup.c | 87 ++++++++++++++++++++---------------
- tools/perf/util/stat-shadow.c | 27 +++++++++--
- 2 files changed, 75 insertions(+), 39 deletions(-)
+I'd really like to see this landed for a few reasons:
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index d8492e339521..7a5f488aef02 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -728,22 +728,23 @@ static int metricgroup__build_event_string(struct strbuf *events,
- {
- 	struct hashmap_entry *cur;
- 	size_t bkt;
--	bool no_group = true, has_duration = false;
-+	bool no_group = true, has_tool_events = false;
-+	bool tool_events[PERF_TOOL_MAX] = {false};
- 	int ret = 0;
- 
- #define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
- 
- 	hashmap__for_each_entry(ctx->ids, cur, bkt) {
- 		const char *sep, *rsep, *id = cur->key;
-+		enum perf_tool_event ev;
- 
- 		pr_debug("found event %s\n", id);
--		/*
--		 * Duration time maps to a software event and can make
--		 * groups not count. Always use it outside a
--		 * group.
--		 */
--		if (!strcmp(id, "duration_time")) {
--			has_duration = true;
-+
-+		/* Always move tool events outside of the group. */
-+		ev = perf_tool_event__from_str(id);
-+		if (ev != PERF_TOOL_NONE) {
-+			has_tool_events = true;
-+			tool_events[ev] = true;
- 			continue;
- 		}
- 		/* Separate events with commas and open the group if necessary. */
-@@ -802,16 +803,25 @@ static int metricgroup__build_event_string(struct strbuf *events,
- 			RETURN_IF_NON_ZERO(ret);
- 		}
- 	}
--	if (has_duration) {
--		if (no_group) {
--			/* Strange case of a metric of just duration_time. */
--			ret = strbuf_addf(events, "duration_time");
--		} else if (!has_constraint)
--			ret = strbuf_addf(events, "}:W,duration_time");
--		else
--			ret = strbuf_addf(events, ",duration_time");
--	} else if (!no_group && !has_constraint)
-+	if (!no_group && !has_constraint) {
- 		ret = strbuf_addf(events, "}:W");
-+		RETURN_IF_NON_ZERO(ret);
-+	}
-+	if (has_tool_events) {
-+		int i;
-+
-+		perf_tool_event__for_each_event(i) {
-+			if (tool_events[i]) {
-+				if (!no_group) {
-+					ret = strbuf_addch(events, ',');
-+					RETURN_IF_NON_ZERO(ret);
-+				}
-+				no_group = false;
-+				ret = strbuf_addstr(events, perf_tool_event__to_str(i));
-+				RETURN_IF_NON_ZERO(ret);
-+			}
-+		}
-+	}
- 
- 	return ret;
- #undef RETURN_IF_NON_ZERO
-@@ -1117,7 +1127,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_event *pe,
- 
- /**
-  * metric_list_cmp - list_sort comparator that sorts metrics with more events to
-- *                   the front. duration_time is excluded from the count.
-+ *                   the front. tool events are excluded from the count.
-  */
- static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
- 			   const struct list_head *r)
-@@ -1125,15 +1135,19 @@ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
- 	const struct metric *left = container_of(l, struct metric, nd);
- 	const struct metric *right = container_of(r, struct metric, nd);
- 	struct expr_id_data *data;
--	int left_count, right_count;
-+	int i, left_count, right_count;
- 
- 	left_count = hashmap__size(left->pctx->ids);
--	if (!expr__get_id(left->pctx, "duration_time", &data))
--		left_count--;
-+	perf_tool_event__for_each_event(i) {
-+		if (!expr__get_id(left->pctx, perf_tool_event__to_str(i), &data))
-+			left_count--;
-+	}
- 
- 	right_count = hashmap__size(right->pctx->ids);
--	if (!expr__get_id(right->pctx, "duration_time", &data))
--		right_count--;
-+	perf_tool_event__for_each_event(i) {
-+		if (!expr__get_id(right->pctx, perf_tool_event__to_str(i), &data))
-+			right_count--;
-+	}
- 
- 	return right_count - left_count;
- }
-@@ -1331,26 +1345,27 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 
- 	*out_evlist = NULL;
- 	if (!metric_no_merge || hashmap__size(ids->ids) == 0) {
--		char *tmp;
-+		int i;
- 		/*
--		 * We may fail to share events between metrics because
--		 * duration_time isn't present in one metric. For example, a
--		 * ratio of cache misses doesn't need duration_time but the same
--		 * events may be used for a misses per second. Events without
--		 * sharing implies multiplexing, that is best avoided, so place
--		 * duration_time in every group.
-+		 * We may fail to share events between metrics because a tool
-+		 * event isn't present in one metric. For example, a ratio of
-+		 * cache misses doesn't need duration_time but the same events
-+		 * may be used for a misses per second. Events without sharing
-+		 * implies multiplexing, that is best avoided, so place
-+		 * all tool events in every group.
- 		 *
- 		 * Also, there may be no ids/events in the expression parsing
- 		 * context because of constant evaluation, e.g.:
- 		 *    event1 if #smt_on else 0
--		 * Add a duration_time event to avoid a parse error on an empty
--		 * string.
-+		 * Add a tool event to avoid a parse error on an empty string.
- 		 */
--		tmp = strdup("duration_time");
--		if (!tmp)
--			return -ENOMEM;
-+		perf_tool_event__for_each_event(i) {
-+			char *tmp = strdup(perf_tool_event__to_str(i));
- 
--		ids__insert(ids->ids, tmp);
-+			if (!tmp)
-+				return -ENOMEM;
-+			ids__insert(ids->ids, tmp);
-+		}
- 	}
- 	ret = metricgroup__build_event_string(&events, ids, modifier,
- 					      has_constraint);
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index ea4c35e4f1da..979c8cb918f7 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -833,10 +833,31 @@ static int prepare_metric(struct evsel **metric_events,
- 		u64 metric_total = 0;
- 		int source_count;
- 
--		if (!strcmp(metric_events[i]->name, "duration_time")) {
--			stats = &walltime_nsecs_stats;
--			scale = 1e-9;
-+		if (evsel__is_tool(metric_events[i])) {
- 			source_count = 1;
-+			switch (metric_events[i]->tool_event) {
-+			case PERF_TOOL_DURATION_TIME:
-+				stats = &walltime_nsecs_stats;
-+				scale = 1e-9;
-+				break;
-+			case PERF_TOOL_USER_TIME:
-+				stats = &ru_stats.ru_utime_usec_stat;
-+				scale = 1e-6;
-+				break;
-+			case PERF_TOOL_SYSTEM_TIME:
-+				stats = &ru_stats.ru_stime_usec_stat;
-+				scale = 1e-6;
-+				break;
-+			case PERF_TOOL_NONE:
-+				pr_err("Invalid tool event 'none'");
-+				abort();
-+			case PERF_TOOL_MAX:
-+				pr_err("Invalid tool event 'max'");
-+				abort();
-+			default:
-+				pr_err("Unknown tool event '%s'", evsel__name(metric_events[i]));
-+				abort();
-+			}
- 		} else {
- 			v = saved_value_lookup(metric_events[i], cpu_map_idx, false,
- 					       STAT_NONE, 0, st,
+- It's under active development, and I'd rather review the changes
+  "normally", incrementally, etc. Right now it can be hard to re-review
+  some of the "mostly the same each version" patches in the series.
+
+- I'd like to break the catch-22 of "ask for a new driver to be
+  written in rust but the rust support isn't landed" vs "the rust
+  support isn't landed because there aren't enough drivers". It
+  really feels like "release early, release often" is needed here;
+  it's hard to develop against -next. :)
+
+Should we give it a try for this coming merge window?
+
 -- 
-2.36.0.512.ge40c2bad7a-goog
-
+Kees Cook
