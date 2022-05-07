@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBCCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 05:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A255C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 05:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1445717AbiEGFiQ (ORCPT
+        id S1445655AbiEGFiR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 7 May 2022 01:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
+        Sat, 7 May 2022 01:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1445655AbiEGFiI (ORCPT
+        with ESMTP id S1445701AbiEGFiP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 7 May 2022 01:38:08 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE5D71AF2C
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 22:34:22 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f8bbaa6b16so81326907b3.14
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 22:34:22 -0700 (PDT)
+        Sat, 7 May 2022 01:38:15 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D46366AB
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 22:34:27 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id j11-20020a05690212cb00b006454988d225so7864696ybu.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 22:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=bC1QHjSh76vc80FlT0i5N7y28Ax7j34T16/yRj6HA+0=;
-        b=oWrrJYfi4mSyNnigslp/Ljzj5jwsZOXef5S2Xitv76+Yg4pNuRBkjeHnBnRYrzOiRj
-         olpfao1Dj1bvWXUUb+Rb5ZD/dxl5QMZiDdY9s3nbgdaYMCXD1kvEsSgg9EL9hUaATDr9
-         LaAgNz6aCcSUD4jhpvLCHibTz833BzVq50KeRbJphbEoarx0hnAuPxIa4qd3Zld9o1yc
-         EOfr2lEj5hS3ZaPjsfKSp+FZkXXZ9Xl6K7f4R7pOFq6jdD9lMT3cZ0IZi/21X7vNqA9y
-         gwJ3it3T6hdGx7tECRS+elHiRkg9Cz6gjMc7fTGR+wFoa4bBmB+MH/tdNxsgEPD0sBBU
-         9usQ==
+        bh=gcYqxh5Opd0xAIFhaLkZah3tm02tWS5shPMbttMBo+g=;
+        b=OnrkBF4dkwel0INnFUUcNVkb1EKQgMi0hW09jwwmgo7gvI6olx/BA6l1AI6K++mpdA
+         DYmcc8BR+m+PzPqydc2PH/dNeYUrtqeF59dozpzYMjXLemLHEz20g44T5v4fVVJ6xlT+
+         2qanIV7H5X/ebzeKqG0pbmOx0mW/X1I9JQVxucBNiuoA+Ae3YwByERX6W9Puwy2Ib3l7
+         oZqjjXAzSb/dyIjAm9DiWXrbmLwm8xkeduwne8gpSd21D17SFAzfiAIMOy4vEoLm74+E
+         7v/GiEVs1lRzthBjIF5ISeRvBQ+KjnyWhgXxY5CPeWwRpxI9uLg2gmfh2QshX0HRueMR
+         n2Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=bC1QHjSh76vc80FlT0i5N7y28Ax7j34T16/yRj6HA+0=;
-        b=QZP8YTQFPkawMLcNfR4kaAuIvBSeuyQnIf7W1Qr0ykrBLejXPKNE7LwgYSKNSiLplv
-         oEmU9uKZBYpylEsF83uEgEMxcP1dzMnrAjUXH1phA5jy9k5bYD0UttCWHYcRFyADWNOj
-         MYp/BrBbJ+3cT1MAQoBQFe6mhF6uJzilpf9zBlRhwp2Z8n5xJtVdTA/N1u5eleUltOaw
-         eDmrilBIQuSwLJBYpIVQ/tS7yAn+sJvgqPxNpcWwzkOvEavw2oPELN2IlkW4a4J1eeVJ
-         4SeDdMAJrfmj2Gta3LsaOCXF7RnXDH+L1zAaJskqu6Tc7bMhPunWIZj2EjoCkVlNLUKU
-         Awzw==
-X-Gm-Message-State: AOAM532kHtVqDlgDWc5eRvJyVOJYEywCb67OY92yv9PrTiT4il9CVISj
-        HXQOLuRcrvX2uBPOMku9kRAdCAvTVoXv
-X-Google-Smtp-Source: ABdhPJwO7GsLd8OXvckEIq11DT8kc48Y/O5PqTlQpGkNGjd49wNqJ814A7t8+kvYK0vJusFrrAlr0gi4e/LQ
+        bh=gcYqxh5Opd0xAIFhaLkZah3tm02tWS5shPMbttMBo+g=;
+        b=RqJbBpLoIwdbufd5bX9DzlBHr/6hZFuBZ9wRIPA0A27l3++uV2JyNJiXpgqxYsvAey
+         9EpyinV5YOv9q8nVg0iKbV6t7ymSE+0PIjoJHXN2+hEefwCipjhCP9KfbMKZvumUGGUn
+         AkDXvTZ/qAilqEEcuVl3KVE7g0Gm8E2yfCL82TAPCCRA+6V20/cJCm75rkG2CfkHxeYB
+         e4IbI2cgLabnr1CLo+YZmukSpJmFuYVm0nJw0fv7FIgGlO/GEZ4mXV6uyo5A11NavPpY
+         VobiINDG+maj/ZL+EAVQ+NzefkNGQ9zkxkwf9YrzKCFV3UZqBlZauH7p/SM6BUiK1xQH
+         fzig==
+X-Gm-Message-State: AOAM532qNwV366wM2hbwh8bt1joqBa1UDrrR+smhZ/YxcWA7l1S8RH1w
+        ZSS38Jb2FgDx5aK6bP+eUlP7aIyYkiO2
+X-Google-Smtp-Source: ABdhPJy+ol5pg1dvBrK0DPVgxRFflJxJDWSHXGQ63hSGPzT5cMTf0CHJZqkefT5JBX8KkSYr5hUeEYIGSCgn
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:bf2a:2f64:a273:3573])
- (user=irogers job=sendgmr) by 2002:a81:4754:0:b0:2f9:1974:5fa7 with SMTP id
- u81-20020a814754000000b002f919745fa7mr5517646ywa.513.1651901661720; Fri, 06
- May 2022 22:34:21 -0700 (PDT)
-Date:   Fri,  6 May 2022 22:34:08 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:603:0:b0:648:507a:b9f8 with SMTP id
+ d3-20020a5b0603000000b00648507ab9f8mr4905887ybq.497.1651901666173; Fri, 06
+ May 2022 22:34:26 -0700 (PDT)
+Date:   Fri,  6 May 2022 22:34:10 -0700
 In-Reply-To: <20220507053410.3798748-1-irogers@google.com>
-Message-Id: <20220507053410.3798748-4-irogers@google.com>
+Message-Id: <20220507053410.3798748-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20220507053410.3798748-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.512.ge40c2bad7a-goog
-Subject: [PATCH 3/5] perf evsel: Add tool event helpers
+Subject: [PATCH 5/5] perf metrics: Don't add all tool events for sharing
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -80,118 +80,118 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Convert to and from a string. Fix evsel__tool_name as array is off-by-1.
-Support more than just duration_time as a metric-id.
+Tool events are added to the set of events for parsing so that having a
+tool event in a metric doesn't inhibit event sharing of events between
+metrics. All tool events were added but this meant unused tool events
+would be counted. Reduce this set of tool events to just those present
+in the overall metric list.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 41 +++++++++++++++++++++++++++++++----------
- tools/perf/util/evsel.h | 11 +++++++++++
- 2 files changed, 42 insertions(+), 10 deletions(-)
+ tools/perf/util/metricgroup.c | 45 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 39 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index cdeace24d9be..5fd7924f8eb3 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -59,6 +59,33 @@ struct perf_missing_features perf_missing_features;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 7a5f488aef02..ee8fcfa115e5 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1283,6 +1283,30 @@ static void metricgroup__free_metrics(struct list_head *metric_list)
+ 	}
+ }
  
- static clockid_t clockid;
- 
-+static const char *const perf_tool_event__tool_names[PERF_TOOL_MAX] = {
-+	NULL,
-+	"duration_time",
-+	"user_time",
-+	"system_time",
-+};
-+
-+const char *perf_tool_event__to_str(enum perf_tool_event ev)
++/**
++ * find_tool_events - Search for the pressence of tool events in metric_list.
++ * @metric_list: List to take metrics from.
++ * @tool_events: Array of false values, indices corresponding to tool events set
++ *               to true if tool event is found.
++ */
++static void find_tool_events(const struct list_head *metric_list,
++			     bool tool_events[PERF_TOOL_MAX])
 +{
-+	if (ev > PERF_TOOL_NONE && ev < PERF_TOOL_MAX)
-+		return perf_tool_event__tool_names[ev];
++	struct metric *m;
 +
-+	return NULL;
-+}
++	list_for_each_entry(m, metric_list, nd) {
++		int i;
 +
-+enum perf_tool_event perf_tool_event__from_str(const char *str)
-+{
-+	int i;
++		perf_tool_event__for_each_event(i) {
++			struct expr_id_data *data;
 +
-+	perf_tool_event__for_each_event(i) {
-+		if (!strcmp(str, perf_tool_event__tool_names[i]))
-+			return i;
++			if (!tool_events[i] &&
++			    !expr__get_id(m->pctx, perf_tool_event__to_str(i), &data))
++				tool_events[i] = true;
++		}
 +	}
-+	return PERF_TOOL_NONE;
 +}
 +
-+
- static int evsel__no_extra_init(struct evsel *evsel __maybe_unused)
+ /**
+  * build_combined_expr_ctx - Make an expr_parse_ctx with all has_constraint
+  *                           metric IDs, as the IDs are held in a set,
+@@ -1332,11 +1356,14 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+  * @ids: the event identifiers parsed from a metric.
+  * @modifier: any modifiers added to the events.
+  * @has_constraint: false if events should be placed in a weak group.
++ * @tool_events: entries set true if the tool event of index could be present in
++ *               the overall list of metrics.
+  * @out_evlist: the created list of events.
+  */
+ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+ 		     struct expr_parse_ctx *ids, const char *modifier,
+-		     bool has_constraint, struct evlist **out_evlist)
++		     bool has_constraint, const bool tool_events[PERF_TOOL_MAX],
++		     struct evlist **out_evlist)
  {
- 	return 0;
-@@ -597,15 +624,9 @@ static int evsel__sw_name(struct evsel *evsel, char *bf, size_t size)
- 	return r + evsel__add_modifiers(evsel, bf + r, size - r);
- }
+ 	struct parse_events_error parse_error;
+ 	struct evlist *parsed_evlist;
+@@ -1360,11 +1387,13 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+ 		 * Add a tool event to avoid a parse error on an empty string.
+ 		 */
+ 		perf_tool_event__for_each_event(i) {
+-			char *tmp = strdup(perf_tool_event__to_str(i));
++			if (tool_events[i]) {
++				char *tmp = strdup(perf_tool_event__to_str(i));
  
--static const char *const evsel__tool_names[PERF_TOOL_MAX] = {
--	"duration_time",
--	"user_time",
--	"system_time",
--};
--
- static int evsel__tool_name(enum perf_tool_event ev, char *bf, size_t size)
- {
--	return scnprintf(bf, size, "%s", evsel__tool_names[ev]);
-+	return scnprintf(bf, size, "%s", perf_tool_event__to_str(ev));
- }
+-			if (!tmp)
+-				return -ENOMEM;
+-			ids__insert(ids->ids, tmp);
++				if (!tmp)
++					return -ENOMEM;
++				ids__insert(ids->ids, tmp);
++			}
+ 		}
+ 	}
+ 	ret = metricgroup__build_event_string(&events, ids, modifier,
+@@ -1407,6 +1436,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 	struct evlist *combined_evlist = NULL;
+ 	LIST_HEAD(metric_list);
+ 	struct metric *m;
++	bool tool_events[PERF_TOOL_MAX] = {false};
+ 	int ret;
  
- static int __evsel__bp_name(char *bf, size_t size, u64 addr, u64 type)
-@@ -758,7 +779,7 @@ const char *evsel__name(struct evsel *evsel)
- 		break;
+ 	if (metric_events_list->nr_entries == 0)
+@@ -1422,12 +1452,15 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 	if (!metric_no_merge) {
+ 		struct expr_parse_ctx *combined = NULL;
  
- 	case PERF_TYPE_SOFTWARE:
--		if (evsel->tool_event)
-+		if (evsel__is_tool(evsel))
- 			evsel__tool_name(evsel->tool_event, bf, sizeof(bf));
- 		else
- 			evsel__sw_name(evsel, bf, sizeof(bf));
-@@ -791,8 +812,8 @@ const char *evsel__metric_id(const struct evsel *evsel)
- 	if (evsel->metric_id)
- 		return evsel->metric_id;
- 
--	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE && evsel->tool_event)
--		return "duration_time";
-+	if (evsel__is_tool(evsel))
-+		return perf_tool_event__to_str(evsel->tool_event);
- 
- 	return "unknown";
- }
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index a017781cdd47..d4b04537ce6d 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -36,6 +36,12 @@ enum perf_tool_event {
- 	PERF_TOOL_MAX,
- };
- 
-+const char *perf_tool_event__to_str(enum perf_tool_event ev);
-+enum perf_tool_event perf_tool_event__from_str(const char *str);
++		find_tool_events(&metric_list, tool_events);
 +
-+#define perf_tool_event__for_each_event(ev)		\
-+	for ((ev) = PERF_TOOL_DURATION_TIME; (ev) < PERF_TOOL_MAX; ev++)
-+
- /** struct evsel - event selector
-  *
-  * @evlist - evlist this evsel is in, if it is in one.
-@@ -269,6 +275,11 @@ int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char *bf, size
- const char *evsel__name(struct evsel *evsel);
- const char *evsel__metric_id(const struct evsel *evsel);
+ 		ret = build_combined_expr_ctx(&metric_list, &combined);
  
-+static inline bool evsel__is_tool(const struct evsel *evsel)
-+{
-+	return evsel->tool_event != PERF_TOOL_NONE;
-+}
-+
- const char *evsel__group_name(struct evsel *evsel);
- int evsel__group_desc(struct evsel *evsel, char *buf, size_t size);
+ 		if (!ret && combined && hashmap__size(combined->ids)) {
+ 			ret = parse_ids(metric_no_merge, fake_pmu, combined,
+ 					/*modifier=*/NULL,
+ 					/*has_constraint=*/true,
++					tool_events,
+ 					&combined_evlist);
+ 		}
+ 		if (combined)
+@@ -1475,7 +1508,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 		}
+ 		if (!metric_evlist) {
+ 			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
+-					m->has_constraint, &m->evlist);
++					m->has_constraint, tool_events, &m->evlist);
+ 			if (ret)
+ 				goto out;
  
 -- 
 2.36.0.512.ge40c2bad7a-goog
