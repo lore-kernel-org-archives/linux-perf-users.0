@@ -2,213 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43258C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 05:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF30C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 05:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1445554AbiEGF36 (ORCPT
+        id S1445578AbiEGFiD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 7 May 2022 01:29:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55890 "EHLO
+        Sat, 7 May 2022 01:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382363AbiEGF3w (ORCPT
+        with ESMTP id S1445538AbiEGFiC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 7 May 2022 01:29:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B2D3B553;
-        Fri,  6 May 2022 22:26:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8FF8F6009B;
-        Sat,  7 May 2022 05:26:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D0DC385A9;
-        Sat,  7 May 2022 05:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651901166;
-        bh=fs8ew1xMDkCcOW8ud/tq/1eNfZxyonp0dSdztdOdG88=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PDawO5UpEZd5zCE2QyOOlrbCFiSnNUQ22QszEz99vcG/g8VRuRDSkr/BXFB5Ih0jo
-         mKfuz9RuB/c+gVwYAHQwm2btrdcp2S1p6jWv4SomDkKHyIdHNAlDkyMkwiOkkG7Tic
-         Z9aKU80c3Y5v7+VihmOz+TTrZevhC6eipj02uQHunTZPmbyAirVATKVFuSDCakemFV
-         koaphLJsubogBkmIba6UYDEksnj0FYw6TRfeGDvOiZGxU15wSsobBAwoFy5+srQNn+
-         ZLQ9sfC3YifC0Ibqissgsd2ownmpxFjr9crjGm2TrhQTnh3dBsrcYwy8XAlQ5nqwkT
-         q2Xh4VDSdLmhQ==
-From:   Miguel Ojeda <ojeda@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Gary Guo <gary@garyguo.net>, Boqun Feng <boqun.feng@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Sat, 7 May 2022 01:38:02 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB6B6C7B
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 22:34:15 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id y26-20020a25ad1a000000b0064a54b86bbaso5035773ybi.6
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 22:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=4vU3lvK+Ux0QY/uX6Xb/Zo/8TNbKrXUBowbL674xebA=;
+        b=EJfGPXf4V43SOAkVj7IEaHwyPoCqo8HnabnxDHTITOmrAJnUVkotxRGGvwuwm6a0kP
+         2NTKScu8lx+m+vkE3E9kkXWbuNrroe4uRBLjrNmSQ3I3CuM+q85cB2To/mRvRGDNuYRd
+         h7X5F5LLVmYxmZslAp+PLW/1fZRmoCw4fwpbaa9mOT0xV1gUdzrTrSiD0OTeTkXxhJw/
+         LyGUbv4m6ZiUXhc4Sb9bkvDb2c8z6OhHyZgHVIpd1+gemgZ7paQ3H6zGSmQv7DPZt+CB
+         6h9sqxMUjdscust4kMKqHTZHDJ1BCPpBqFmWpw0/P70QwhyHhi46GMQPl2GGMCDeAmND
+         SZnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=4vU3lvK+Ux0QY/uX6Xb/Zo/8TNbKrXUBowbL674xebA=;
+        b=Ghhhtp+lzDStNn7/H9lGKSmkCSB/lDCG7PRxMR6vwOVXxOO4kY5xKlo3miRTInJ/Ui
+         WwA5ZFXBKU5+ktIUyuZawiONQKmYRgJJALd6qP5kneWCq7ANaNteFs5CpP6+54UHyoyt
+         z+0nGFkayTdl3BckWHAuhRmiZHw9PnbCth6x8SsARVlcrSYYVDSs5GuKuJcSu+wWZty/
+         eBQNpDSCCbEW66QHwA/LQBUDtmeAp1TOCTFkOhr7eVcj55c7e/F33vURO1vzM37sQenc
+         5KMVY1k2GgWC2I2bFf5bCzoX3txSVdCoErzXFFbmHmtKKBbkdkQ1xfx2qRWmyK3zWdt4
+         m7KQ==
+X-Gm-Message-State: AOAM5302bprWGnb0peU0fcznUV3c0ippRtmu6DW3oJvULP3kLW2wiN79
+        CT/8Xt2MQuDsc7M6Xhs/JmJYEbFDTu6s
+X-Google-Smtp-Source: ABdhPJwlXvELF76l4UyZUOrNj/gJNZHeOGYaQ2tuGMaLKJ8K/78md0LxRjuwZ+v8RFNe3GV3QwzGrqG/EiAn
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:bf2a:2f64:a273:3573])
+ (user=irogers job=sendgmr) by 2002:a5b:f41:0:b0:64a:7639:3bab with SMTP id
+ y1-20020a5b0f41000000b0064a76393babmr4424411ybr.138.1651901655099; Fri, 06
+ May 2022 22:34:15 -0700 (PDT)
+Date:   Fri,  6 May 2022 22:34:05 -0700
+Message-Id: <20220507053410.3798748-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.512.ge40c2bad7a-goog
+Subject: [PATCH 0/5] Revert metric hybrid events, fix tools events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        live-patching@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 03/23] kallsyms: increase maximum kernel symbol length to 512
-Date:   Sat,  7 May 2022 07:24:01 +0200
-Message-Id: <20220507052451.12890-4-ojeda@kernel.org>
-In-Reply-To: <20220507052451.12890-1-ojeda@kernel.org>
-References: <20220507052451.12890-1-ojeda@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rust symbols can become quite long due to namespacing introduced
-by modules, types, traits, generics, etc. For instance,
-the following code:
+Hybrid metrics place a PMU at the end of the parse string. This is
+also where tool events are placed. The behavior of the parse string
+isn't clear and so revert the change for now.
 
-    pub mod my_module {
-        pub struct MyType;
-        pub struct MyGenericType<T>(T);
+commit 75eafc970bd9 ("perf list: Print all available tool events") had
+an off-by-1 error. Try to separate the tool event enum logic from
+evsels. Also add a for loop helper to simplify working with a variety
+of tool events.
 
-        pub trait MyTrait {
-            fn my_method() -> u32;
-        }
+Add support to metrics for more tool events than just
+duration_time. Make the sharing logic only look to add for sharing
+potentially used tool events, found by scanning the list of metrics.
 
-        impl MyTrait for MyGenericType<MyType> {
-            fn my_method() -> u32 {
-                42
-            }
-        }
-    }
+Ian Rogers (5):
+  Revert "perf stat: Support metrics with hybrid events"
+  perf evsel: Constify a few arrays
+  perf evsel: Add tool event helpers
+  perf metrics: Support all tool events
+  perf metrics: Don't add all tool events for sharing
 
-generates a symbol of length 96 when using the upcoming v0 mangling scheme:
+ tools/perf/tests/evsel-roundtrip-name.c |   2 +-
+ tools/perf/util/evsel.c                 |  53 +++-
+ tools/perf/util/evsel.h                 |  22 +-
+ tools/perf/util/metricgroup.c           | 373 +++++++-----------------
+ tools/perf/util/parse-events.c          |   2 +-
+ tools/perf/util/stat-display.c          |   8 +-
+ tools/perf/util/stat-shadow.c           |  27 +-
+ 7 files changed, 180 insertions(+), 307 deletions(-)
 
-    _RNvXNtCshGpAVYOtgW1_7example9my_moduleINtB2_13MyGenericTypeNtB2_6MyTypeENtB2_7MyTrait9my_method
-
-At the moment, Rust symbols may reach up to 300 in length.
-Setting 512 as the maximum seems like a reasonable choice to
-keep some headroom.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Co-developed-by: Alex Gaynor <alex.gaynor@gmail.com>
-Signed-off-by: Alex Gaynor <alex.gaynor@gmail.com>
-Co-developed-by: Wedson Almeida Filho <wedsonaf@google.com>
-Signed-off-by: Wedson Almeida Filho <wedsonaf@google.com>
-Co-developed-by: Gary Guo <gary@garyguo.net>
-Signed-off-by: Gary Guo <gary@garyguo.net>
-Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
-This is a prerequisite patch, independently submitted at:
-
-    https://lore.kernel.org/lkml/20220506203443.24721-4-ojeda@kernel.org/
-
- include/linux/kallsyms.h            | 2 +-
- kernel/livepatch/core.c             | 4 ++--
- scripts/kallsyms.c                  | 4 ++--
- tools/include/linux/kallsyms.h      | 2 +-
- tools/lib/perf/include/perf/event.h | 2 +-
- tools/lib/symbol/kallsyms.h         | 2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/kallsyms.h b/include/linux/kallsyms.h
-index ce1bd2fbf23e..e5ad6e31697d 100644
---- a/include/linux/kallsyms.h
-+++ b/include/linux/kallsyms.h
-@@ -15,7 +15,7 @@
- 
- #include <asm/sections.h>
- 
--#define KSYM_NAME_LEN 128
-+#define KSYM_NAME_LEN 512
- #define KSYM_SYMBOL_LEN (sizeof("%s+%#lx/%#lx [%s %s]") + \
- 			(KSYM_NAME_LEN - 1) + \
- 			2*(BITS_PER_LONG*3/10) + (MODULE_NAME_LEN - 1) + \
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index bc475e62279d..ec06ce59d728 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -213,7 +213,7 @@ static int klp_resolve_symbols(Elf_Shdr *sechdrs, const char *strtab,
- 	 * we use the smallest/strictest upper bound possible (56, based on
- 	 * the current definition of MODULE_NAME_LEN) to prevent overflows.
- 	 */
--	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 128);
-+	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 512);
- 
- 	relas = (Elf_Rela *) relasec->sh_addr;
- 	/* For each rela in this klp relocation section */
-@@ -227,7 +227,7 @@ static int klp_resolve_symbols(Elf_Shdr *sechdrs, const char *strtab,
- 
- 		/* Format: .klp.sym.sym_objname.sym_name,sympos */
- 		cnt = sscanf(strtab + sym->st_name,
--			     ".klp.sym.%55[^.].%127[^,],%lu",
-+			     ".klp.sym.%55[^.].%511[^,],%lu",
- 			     sym_objname, sym_name, &sympos);
- 		if (cnt != 3) {
- 			pr_err("symbol %s has an incorrectly formatted name\n",
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 7e99799aa7b9..275044b840dc 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -30,10 +30,10 @@
- #define _stringify_1(x)	#x
- #define _stringify(x)	_stringify_1(x)
- 
--#define KSYM_NAME_LEN		128
-+#define KSYM_NAME_LEN		512
- 
- /* A substantially bigger size than the current maximum. */
--#define KSYM_NAME_LEN_BUFFER	512
-+#define KSYM_NAME_LEN_BUFFER	2048
- _Static_assert(
- 	KSYM_NAME_LEN_BUFFER == KSYM_NAME_LEN * 4,
- 	"Please keep KSYM_NAME_LEN_BUFFER in sync with KSYM_NAME_LEN"
-diff --git a/tools/include/linux/kallsyms.h b/tools/include/linux/kallsyms.h
-index efb6c3f5f2a9..5a37ccbec54f 100644
---- a/tools/include/linux/kallsyms.h
-+++ b/tools/include/linux/kallsyms.h
-@@ -6,7 +6,7 @@
- #include <stdio.h>
- #include <unistd.h>
- 
--#define KSYM_NAME_LEN 128
-+#define KSYM_NAME_LEN 512
- 
- struct module;
- 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index e7758707cadd..116a80c31675 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -95,7 +95,7 @@ struct perf_record_throttle {
- };
- 
- #ifndef KSYM_NAME_LEN
--#define KSYM_NAME_LEN 256
-+#define KSYM_NAME_LEN 512
- #endif
- 
- struct perf_record_ksymbol {
-diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
-index 72ab9870454b..542f9b059c3b 100644
---- a/tools/lib/symbol/kallsyms.h
-+++ b/tools/lib/symbol/kallsyms.h
-@@ -7,7 +7,7 @@
- #include <linux/types.h>
- 
- #ifndef KSYM_NAME_LEN
--#define KSYM_NAME_LEN 256
-+#define KSYM_NAME_LEN 512
- #endif
- 
- static inline u8 kallsyms2elf_binding(char type)
 -- 
-2.35.3
+2.36.0.512.ge40c2bad7a-goog
 
