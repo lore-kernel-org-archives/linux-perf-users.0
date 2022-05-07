@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A255C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 05:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5CFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  7 May 2022 05:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1445655AbiEGFiR (ORCPT
+        id S1445721AbiEGFiT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 7 May 2022 01:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
+        Sat, 7 May 2022 01:38:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1445701AbiEGFiP (ORCPT
+        with ESMTP id S1445663AbiEGFiK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 7 May 2022 01:38:15 -0400
+        Sat, 7 May 2022 01:38:10 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D46366AB
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 22:34:27 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id j11-20020a05690212cb00b006454988d225so7864696ybu.10
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 22:34:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A5B23BFC
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 May 2022 22:34:24 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 192-20020a250cc9000000b0064a5bbea6a7so4757176ybm.9
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 May 2022 22:34:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=gcYqxh5Opd0xAIFhaLkZah3tm02tWS5shPMbttMBo+g=;
-        b=OnrkBF4dkwel0INnFUUcNVkb1EKQgMi0hW09jwwmgo7gvI6olx/BA6l1AI6K++mpdA
-         DYmcc8BR+m+PzPqydc2PH/dNeYUrtqeF59dozpzYMjXLemLHEz20g44T5v4fVVJ6xlT+
-         2qanIV7H5X/ebzeKqG0pbmOx0mW/X1I9JQVxucBNiuoA+Ae3YwByERX6W9Puwy2Ib3l7
-         oZqjjXAzSb/dyIjAm9DiWXrbmLwm8xkeduwne8gpSd21D17SFAzfiAIMOy4vEoLm74+E
-         7v/GiEVs1lRzthBjIF5ISeRvBQ+KjnyWhgXxY5CPeWwRpxI9uLg2gmfh2QshX0HRueMR
-         n2Vg==
+        bh=7BccLGFbnzxgEz6sHuW6w+xF3bfVrTq5a9IERbkhU7Q=;
+        b=RkL0pa87fsjXuMFKkX4QrTiVPsgv3eVh3ignPmfTAqCB4NGjec3442fQ9T7slD2j28
+         zTWog8mY+oEByKHjcDyzKCs3NL/AqstetnUe2NVPiS/0YwgMtElYPYULCAAY886Zd+oT
+         XDJrPS1YeSBMp8ScLBQGJ3o7HW3U9vngEwXbhXJhKP65F7wq+WybP2MyCczffaXuj07v
+         JGLhWFYSFFttYWTAhzCJgiYQxAi/zs3WF37aMVOccmnR3Te3lhOpSSJ8CpZ5oTCqFgAy
+         rBH0V+yE8mXwzDdDxdqPn0fjrsnukboahKOKWuOO1E52lg4Yo5aKgMYnzYqro+qUnvMo
+         dLGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=gcYqxh5Opd0xAIFhaLkZah3tm02tWS5shPMbttMBo+g=;
-        b=RqJbBpLoIwdbufd5bX9DzlBHr/6hZFuBZ9wRIPA0A27l3++uV2JyNJiXpgqxYsvAey
-         9EpyinV5YOv9q8nVg0iKbV6t7ymSE+0PIjoJHXN2+hEefwCipjhCP9KfbMKZvumUGGUn
-         AkDXvTZ/qAilqEEcuVl3KVE7g0Gm8E2yfCL82TAPCCRA+6V20/cJCm75rkG2CfkHxeYB
-         e4IbI2cgLabnr1CLo+YZmukSpJmFuYVm0nJw0fv7FIgGlO/GEZ4mXV6uyo5A11NavPpY
-         VobiINDG+maj/ZL+EAVQ+NzefkNGQ9zkxkwf9YrzKCFV3UZqBlZauH7p/SM6BUiK1xQH
-         fzig==
-X-Gm-Message-State: AOAM532qNwV366wM2hbwh8bt1joqBa1UDrrR+smhZ/YxcWA7l1S8RH1w
-        ZSS38Jb2FgDx5aK6bP+eUlP7aIyYkiO2
-X-Google-Smtp-Source: ABdhPJy+ol5pg1dvBrK0DPVgxRFflJxJDWSHXGQ63hSGPzT5cMTf0CHJZqkefT5JBX8KkSYr5hUeEYIGSCgn
+        bh=7BccLGFbnzxgEz6sHuW6w+xF3bfVrTq5a9IERbkhU7Q=;
+        b=mG8VzSOO40axbMJm0w5pALbrEX+O2knYvxdTo+sA3soIhv5axNRyaqVfVHkV3qtkcx
+         mn6q7NTG9MsZFavQKZ7zkrsya1YtvMH76sYgdxvUagHNyB28WTYYqmtEjw6lYCDftGdW
+         +AWxVSdhtuHG3VpCxpuD/NcaHPoR+Wn/hdCyeCF1q2aAn3Z1dag4HunJrY2Eda4WYdZ5
+         k/gpDyPbAC+9ugRY8o41bV1yu4Hh0EgWk5pg6DGYHJJvwVOpLdktzVkctAdeG09I16B4
+         ggMOE9WvCigA2CVr4iAUsbSxZa1X7g/OSQplWcH6tRVFrmu7/8f8YHtfh/5FKSiKDvk6
+         9iwg==
+X-Gm-Message-State: AOAM5332ANfbIrhdhGcLQ6H4kuu16YONwTlI84zjWzV4SdnOjeU9r+OB
+        JwpaJV/T1HiBydG73hgL3ZJ00J9XHsJd
+X-Google-Smtp-Source: ABdhPJwHS2vHsogko5eYvlKiFMT2M+HKgGmnh026VsFjlc0DEeLQohnX5ZX/K1VEx7OwEJkQoUUg0+gjBcPk
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:bf2a:2f64:a273:3573])
- (user=irogers job=sendgmr) by 2002:a5b:603:0:b0:648:507a:b9f8 with SMTP id
- d3-20020a5b0603000000b00648507ab9f8mr4905887ybq.497.1651901666173; Fri, 06
- May 2022 22:34:26 -0700 (PDT)
-Date:   Fri,  6 May 2022 22:34:10 -0700
+ (user=irogers job=sendgmr) by 2002:a25:ba07:0:b0:64a:1a32:6ef6 with SMTP id
+ t7-20020a25ba07000000b0064a1a326ef6mr4915646ybg.308.1651901664027; Fri, 06
+ May 2022 22:34:24 -0700 (PDT)
+Date:   Fri,  6 May 2022 22:34:09 -0700
 In-Reply-To: <20220507053410.3798748-1-irogers@google.com>
-Message-Id: <20220507053410.3798748-6-irogers@google.com>
+Message-Id: <20220507053410.3798748-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20220507053410.3798748-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.512.ge40c2bad7a-goog
-Subject: [PATCH 5/5] perf metrics: Don't add all tool events for sharing
+Subject: [PATCH 4/5] perf metrics: Support all tool events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -80,119 +80,202 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Tool events are added to the set of events for parsing so that having a
-tool event in a metric doesn't inhibit event sharing of events between
-metrics. All tool events were added but this meant unused tool events
-would be counted. Reduce this set of tool events to just those present
-in the overall metric list.
+Previously duration_time was hard coded, which was ok until
+commit b03b89b35003 ("perf stat: Add user_time and system_time events")
+added additional tool events. Do for all tool events what was previously
+done just for duration_time.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 45 ++++++++++++++++++++++++++++++-----
- 1 file changed, 39 insertions(+), 6 deletions(-)
+ tools/perf/util/metricgroup.c | 87 ++++++++++++++++++++---------------
+ tools/perf/util/stat-shadow.c | 27 +++++++++--
+ 2 files changed, 75 insertions(+), 39 deletions(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 7a5f488aef02..ee8fcfa115e5 100644
+index d8492e339521..7a5f488aef02 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -1283,6 +1283,30 @@ static void metricgroup__free_metrics(struct list_head *metric_list)
- 	}
- }
+@@ -728,22 +728,23 @@ static int metricgroup__build_event_string(struct strbuf *events,
+ {
+ 	struct hashmap_entry *cur;
+ 	size_t bkt;
+-	bool no_group = true, has_duration = false;
++	bool no_group = true, has_tool_events = false;
++	bool tool_events[PERF_TOOL_MAX] = {false};
+ 	int ret = 0;
  
-+/**
-+ * find_tool_events - Search for the pressence of tool events in metric_list.
-+ * @metric_list: List to take metrics from.
-+ * @tool_events: Array of false values, indices corresponding to tool events set
-+ *               to true if tool event is found.
-+ */
-+static void find_tool_events(const struct list_head *metric_list,
-+			     bool tool_events[PERF_TOOL_MAX])
-+{
-+	struct metric *m;
+ #define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
+ 
+ 	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+ 		const char *sep, *rsep, *id = cur->key;
++		enum perf_tool_event ev;
+ 
+ 		pr_debug("found event %s\n", id);
+-		/*
+-		 * Duration time maps to a software event and can make
+-		 * groups not count. Always use it outside a
+-		 * group.
+-		 */
+-		if (!strcmp(id, "duration_time")) {
+-			has_duration = true;
 +
-+	list_for_each_entry(m, metric_list, nd) {
++		/* Always move tool events outside of the group. */
++		ev = perf_tool_event__from_str(id);
++		if (ev != PERF_TOOL_NONE) {
++			has_tool_events = true;
++			tool_events[ev] = true;
+ 			continue;
+ 		}
+ 		/* Separate events with commas and open the group if necessary. */
+@@ -802,16 +803,25 @@ static int metricgroup__build_event_string(struct strbuf *events,
+ 			RETURN_IF_NON_ZERO(ret);
+ 		}
+ 	}
+-	if (has_duration) {
+-		if (no_group) {
+-			/* Strange case of a metric of just duration_time. */
+-			ret = strbuf_addf(events, "duration_time");
+-		} else if (!has_constraint)
+-			ret = strbuf_addf(events, "}:W,duration_time");
+-		else
+-			ret = strbuf_addf(events, ",duration_time");
+-	} else if (!no_group && !has_constraint)
++	if (!no_group && !has_constraint) {
+ 		ret = strbuf_addf(events, "}:W");
++		RETURN_IF_NON_ZERO(ret);
++	}
++	if (has_tool_events) {
 +		int i;
 +
 +		perf_tool_event__for_each_event(i) {
-+			struct expr_id_data *data;
-+
-+			if (!tool_events[i] &&
-+			    !expr__get_id(m->pctx, perf_tool_event__to_str(i), &data))
-+				tool_events[i] = true;
++			if (tool_events[i]) {
++				if (!no_group) {
++					ret = strbuf_addch(events, ',');
++					RETURN_IF_NON_ZERO(ret);
++				}
++				no_group = false;
++				ret = strbuf_addstr(events, perf_tool_event__to_str(i));
++				RETURN_IF_NON_ZERO(ret);
++			}
 +		}
 +	}
-+}
-+
- /**
-  * build_combined_expr_ctx - Make an expr_parse_ctx with all has_constraint
-  *                           metric IDs, as the IDs are held in a set,
-@@ -1332,11 +1356,14 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
-  * @ids: the event identifiers parsed from a metric.
-  * @modifier: any modifiers added to the events.
-  * @has_constraint: false if events should be placed in a weak group.
-+ * @tool_events: entries set true if the tool event of index could be present in
-+ *               the overall list of metrics.
-  * @out_evlist: the created list of events.
-  */
- static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 		     struct expr_parse_ctx *ids, const char *modifier,
--		     bool has_constraint, struct evlist **out_evlist)
-+		     bool has_constraint, const bool tool_events[PERF_TOOL_MAX],
-+		     struct evlist **out_evlist)
- {
- 	struct parse_events_error parse_error;
- 	struct evlist *parsed_evlist;
-@@ -1360,11 +1387,13 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 		 * Add a tool event to avoid a parse error on an empty string.
- 		 */
- 		perf_tool_event__for_each_event(i) {
--			char *tmp = strdup(perf_tool_event__to_str(i));
-+			if (tool_events[i]) {
-+				char *tmp = strdup(perf_tool_event__to_str(i));
  
--			if (!tmp)
--				return -ENOMEM;
--			ids__insert(ids->ids, tmp);
-+				if (!tmp)
-+					return -ENOMEM;
-+				ids__insert(ids->ids, tmp);
-+			}
- 		}
+ 	return ret;
+ #undef RETURN_IF_NON_ZERO
+@@ -1117,7 +1127,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_event *pe,
+ 
+ /**
+  * metric_list_cmp - list_sort comparator that sorts metrics with more events to
+- *                   the front. duration_time is excluded from the count.
++ *                   the front. tool events are excluded from the count.
+  */
+ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
+ 			   const struct list_head *r)
+@@ -1125,15 +1135,19 @@ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
+ 	const struct metric *left = container_of(l, struct metric, nd);
+ 	const struct metric *right = container_of(r, struct metric, nd);
+ 	struct expr_id_data *data;
+-	int left_count, right_count;
++	int i, left_count, right_count;
+ 
+ 	left_count = hashmap__size(left->pctx->ids);
+-	if (!expr__get_id(left->pctx, "duration_time", &data))
+-		left_count--;
++	perf_tool_event__for_each_event(i) {
++		if (!expr__get_id(left->pctx, perf_tool_event__to_str(i), &data))
++			left_count--;
++	}
+ 
+ 	right_count = hashmap__size(right->pctx->ids);
+-	if (!expr__get_id(right->pctx, "duration_time", &data))
+-		right_count--;
++	perf_tool_event__for_each_event(i) {
++		if (!expr__get_id(right->pctx, perf_tool_event__to_str(i), &data))
++			right_count--;
++	}
+ 
+ 	return right_count - left_count;
+ }
+@@ -1331,26 +1345,27 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+ 
+ 	*out_evlist = NULL;
+ 	if (!metric_no_merge || hashmap__size(ids->ids) == 0) {
+-		char *tmp;
++		int i;
+ 		/*
+-		 * We may fail to share events between metrics because
+-		 * duration_time isn't present in one metric. For example, a
+-		 * ratio of cache misses doesn't need duration_time but the same
+-		 * events may be used for a misses per second. Events without
+-		 * sharing implies multiplexing, that is best avoided, so place
+-		 * duration_time in every group.
++		 * We may fail to share events between metrics because a tool
++		 * event isn't present in one metric. For example, a ratio of
++		 * cache misses doesn't need duration_time but the same events
++		 * may be used for a misses per second. Events without sharing
++		 * implies multiplexing, that is best avoided, so place
++		 * all tool events in every group.
+ 		 *
+ 		 * Also, there may be no ids/events in the expression parsing
+ 		 * context because of constant evaluation, e.g.:
+ 		 *    event1 if #smt_on else 0
+-		 * Add a duration_time event to avoid a parse error on an empty
+-		 * string.
++		 * Add a tool event to avoid a parse error on an empty string.
+ 		 */
+-		tmp = strdup("duration_time");
+-		if (!tmp)
+-			return -ENOMEM;
++		perf_tool_event__for_each_event(i) {
++			char *tmp = strdup(perf_tool_event__to_str(i));
+ 
+-		ids__insert(ids->ids, tmp);
++			if (!tmp)
++				return -ENOMEM;
++			ids__insert(ids->ids, tmp);
++		}
  	}
  	ret = metricgroup__build_event_string(&events, ids, modifier,
-@@ -1407,6 +1436,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 	struct evlist *combined_evlist = NULL;
- 	LIST_HEAD(metric_list);
- 	struct metric *m;
-+	bool tool_events[PERF_TOOL_MAX] = {false};
- 	int ret;
+ 					      has_constraint);
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index ea4c35e4f1da..979c8cb918f7 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -833,10 +833,31 @@ static int prepare_metric(struct evsel **metric_events,
+ 		u64 metric_total = 0;
+ 		int source_count;
  
- 	if (metric_events_list->nr_entries == 0)
-@@ -1422,12 +1452,15 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 	if (!metric_no_merge) {
- 		struct expr_parse_ctx *combined = NULL;
- 
-+		find_tool_events(&metric_list, tool_events);
-+
- 		ret = build_combined_expr_ctx(&metric_list, &combined);
- 
- 		if (!ret && combined && hashmap__size(combined->ids)) {
- 			ret = parse_ids(metric_no_merge, fake_pmu, combined,
- 					/*modifier=*/NULL,
- 					/*has_constraint=*/true,
-+					tool_events,
- 					&combined_evlist);
- 		}
- 		if (combined)
-@@ -1475,7 +1508,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 		}
- 		if (!metric_evlist) {
- 			ret = parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
--					m->has_constraint, &m->evlist);
-+					m->has_constraint, tool_events, &m->evlist);
- 			if (ret)
- 				goto out;
- 
+-		if (!strcmp(metric_events[i]->name, "duration_time")) {
+-			stats = &walltime_nsecs_stats;
+-			scale = 1e-9;
++		if (evsel__is_tool(metric_events[i])) {
+ 			source_count = 1;
++			switch (metric_events[i]->tool_event) {
++			case PERF_TOOL_DURATION_TIME:
++				stats = &walltime_nsecs_stats;
++				scale = 1e-9;
++				break;
++			case PERF_TOOL_USER_TIME:
++				stats = &ru_stats.ru_utime_usec_stat;
++				scale = 1e-6;
++				break;
++			case PERF_TOOL_SYSTEM_TIME:
++				stats = &ru_stats.ru_stime_usec_stat;
++				scale = 1e-6;
++				break;
++			case PERF_TOOL_NONE:
++				pr_err("Invalid tool event 'none'");
++				abort();
++			case PERF_TOOL_MAX:
++				pr_err("Invalid tool event 'max'");
++				abort();
++			default:
++				pr_err("Unknown tool event '%s'", evsel__name(metric_events[i]));
++				abort();
++			}
+ 		} else {
+ 			v = saved_value_lookup(metric_events[i], cpu_map_idx, false,
+ 					       STAT_NONE, 0, st,
 -- 
 2.36.0.512.ge40c2bad7a-goog
 
