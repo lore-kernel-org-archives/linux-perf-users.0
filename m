@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603D2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun,  8 May 2022 09:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC67C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun,  8 May 2022 09:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232359AbiEHJ3g (ORCPT
+        id S238400AbiEHJ3o (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 8 May 2022 05:29:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54660 "EHLO
+        Sun, 8 May 2022 05:29:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232815AbiEHJ2z (ORCPT
+        with ESMTP id S233153AbiEHJ3b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 8 May 2022 05:28:55 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F21E0F8
-        for <linux-perf-users@vger.kernel.org>; Sun,  8 May 2022 02:24:52 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id g3so9679660pgg.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 May 2022 02:24:52 -0700 (PDT)
+        Sun, 8 May 2022 05:29:31 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712E8117A
+        for <linux-perf-users@vger.kernel.org>; Sun,  8 May 2022 02:25:34 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id a191so9688631pge.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 May 2022 02:25:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5BXrzgVYvBGmdSlnVtQEfhW9GvqhlJo5cHBeUasgrT0=;
-        b=m/cdnGfmFdCyz4qMJ0TDedpp4hXKvP4FdzdgVPwdRA1JPMyl3HH2PXSs/zqmjUK8Yj
-         j8LLh7IwZZE2asbvtbREP1KYtwMzE8ZaIAOZHKe13HpEeROLSUxD29VQZ753AAcupuPr
-         4WXZeM+Agimptk0ri1iS7S/VTB5ON/yhUDfGxeGixUP8diFW0gPYwMd94tk3VDrpDsHp
-         fclXv5S2hWlTszfCAm+rHAUmOqVkXBPbcAvKR7bHveM+VZ4yw+kgDE8nEojKhPZ2R+R4
-         HY4/stC/o9G1CJPbZ3bIZabeWDJTmg5ddkgT7zoW+JEn2QGhfID6UE+FGnJr0Agy67zo
-         8mWw==
+        bh=bmjRmkqfDoOUpRbHbH9T/ypo7ZLWljJQ+MADxCAiDDg=;
+        b=RlanBAIYEgm91wbA7cPRQpYBtqM6dgSI3Omo6TW7eQu17rOGJa1Udyp4fkVS5XyGSG
+         OXjUV6btwYGN3gKeJqaxJ8PjIK0jPh2nLOxHZAH7BYFtA+8LzNqnpi8+0UpGLBD97A5m
+         qjX3AWq9PEqTtM1bEQZWiQ8cJzxXvdU8KqLcRdLeHXTaj0HrPz4uHkOCamFZWbIzVlnk
+         Vz+KDViYs7iDygYOrqrSQMUH3ZFEiBzD5+cRK71zhpeomAcXD+JedXqFPMjOWRkqn7Jn
+         9kV4SAoA532c5a5oytRcHxxEmPaqEyMDsg+DkffMl7rACs1FTgPQpuD2EZJqMwBgWqlz
+         IQ6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5BXrzgVYvBGmdSlnVtQEfhW9GvqhlJo5cHBeUasgrT0=;
-        b=XWtgngAyta2nXKkFzjPF3+zylBVwOnjtMHmx2xxTvZRvxyA0rLSJpXH84/mgdWPOcZ
-         EqJeiwUPugd/dntktUsEGMjSWFYU+yhMED0Ez+/eEMmMyk4X/X+rTbZzh7OJwTiKwBsh
-         6JOOW3pGvpdgX+KxdMddoS1WjFQOic8ZqYr4bI0hHE67lz5WHAweSmrXvDF0oCrdqlCE
-         f2yRup51LTHgWsRSPwu11M3IqmjflVQ/nMXYKT7Lcfghiz02K5AcALocgHE6bBlC0+mZ
-         LzOVB+hZ+QrGvOerfaYQh0mdzmmn2wbA02sPTW6H2IwZPDyKD1yMPUHY5qeFnMlV4Cqy
-         w/9A==
-X-Gm-Message-State: AOAM531UAhVcIwojLL318pvIP+FYpNRAmtk5aSLcSbtjKRqBnY3sRVdc
-        c5l/sNS0vAtPwfmpu2AmtJBBGw==
-X-Google-Smtp-Source: ABdhPJxOaWtOaVBRUtO1R715aj1dzFF6MiY8rXICAcPeEyvZK4qcijUvkS/3X+ACJ2ULeHrFJ0ha7Q==
-X-Received: by 2002:a05:6a00:ad0:b0:4e1:2d96:2ab0 with SMTP id c16-20020a056a000ad000b004e12d962ab0mr11095296pfl.3.1652001891834;
-        Sun, 08 May 2022 02:24:51 -0700 (PDT)
+        bh=bmjRmkqfDoOUpRbHbH9T/ypo7ZLWljJQ+MADxCAiDDg=;
+        b=3+aCvRni1a6te2uqB8YFmGzOM96Iw01u6yQG3FA0KCqQfUoEFc7/5NXOFS0j3CR0fS
+         3TRHM/2ivT5YcsNzTL6wkcG0PW32ryd6L6L3g/dWgGNJbM7HBKsgR4E8sjFts62xOU5z
+         heezLbTXiOt0KEnWTKIHqtPtPbgp3C+aCFfNRiPuvt78dCSBC+zV0qsdAVTEKxMk/py8
+         Doreeoz54aFOPuh4FkC9fariebZsG5EU7JR+OHfDrDUmxJ3XbL7d3Leqdik66EgMz5O4
+         deN9r9vYDuku7xsz+6jVSuCcvfVyqAZV2EtqsvNO1a9YSv+hrhOnpv9wCCUN4alqqTb5
+         hvEw==
+X-Gm-Message-State: AOAM532DPq1apgf5UeU30qxpQB/s411ZXap2MfiRPTO695PrcPkfZ6eL
+        iNPEiRhPuzyAaHD66z8mKyA76w==
+X-Google-Smtp-Source: ABdhPJzxDAEpKJE6XYr9T37crKPOq7CmaQRZLLlvIFev06vHXGfHLsSbInljeBNGWnb6qwwYnOhxdQ==
+X-Received: by 2002:a05:6a00:cc4:b0:50d:e9db:6145 with SMTP id b4-20020a056a000cc400b0050de9db6145mr11046427pfv.56.1652001933348;
+        Sun, 08 May 2022 02:25:33 -0700 (PDT)
 Received: from localhost.localdomain (104-237-153-19.ip.linodeusercontent.com. [104.237.153.19])
-        by smtp.gmail.com with ESMTPSA id t63-20020a638142000000b003c14af505f7sm6155088pgd.15.2022.05.08.02.24.42
+        by smtp.gmail.com with ESMTPSA id t63-20020a638142000000b003c14af505f7sm6155088pgd.15.2022.05.08.02.25.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 May 2022 02:24:51 -0700 (PDT)
+        Sun, 08 May 2022 02:25:33 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -66,9 +66,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ali Saidi <alisaidi@amazon.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 04/11] perf mem: Add statistics for peer snooping
-Date:   Sun,  8 May 2022 17:23:39 +0800
-Message-Id: <20220508092346.255826-5-leo.yan@linaro.org>
+Subject: [PATCH v2 08/11] perf c2c: Refactor node header
+Date:   Sun,  8 May 2022 17:23:43 +0800
+Message-Id: <20220508092346.255826-9-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220508092346.255826-1-leo.yan@linaro.org>
 References: <20220508092346.255826-1-leo.yan@linaro.org>
@@ -78,68 +78,68 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since we have added the flag PERF_MEM_SNOOPX_PEER to support cache
-snooping from peer core or cluster, this patch is to add statistics for
-this new flag.
+The node header array contains 3 items, each item is used for one of
+the 3 flavors for node accessing info.  To extend sorting on other
+snooping type and not always stick to HITMs, the second header string
+"Node{cpus %hitms %stores}" should be adjusted (e.g. it's changed as
+"Node{cpus %peer %stores}").
+
+For this reason, this patch changes the node header array to three
+flat variables and uses switch-case in function setup_nodes_header(),
+thus it is easier for altering the header string.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Tested-by: Ali Saidi <alisaidi@amazon.com>
 ---
- tools/perf/util/mem-events.c | 11 ++++++++++-
- tools/perf/util/mem-events.h |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ tools/perf/builtin-c2c.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 5dca1882c284..6cd2b6ffb4a4 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -525,6 +525,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
- 	u64 op     = data_src->mem_op;
- 	u64 lvl    = data_src->mem_lvl;
- 	u64 snoop  = data_src->mem_snoop;
-+	u64 snoopx = data_src->mem_snoopx;
- 	u64 lock   = data_src->mem_lock;
- 	u64 blk    = data_src->mem_blk;
- 	/*
-@@ -567,10 +568,17 @@ do {				\
- 			if (lvl & P(LVL, IO))  stats->ld_io++;
- 			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
- 			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
--			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-+			if (lvl & P(LVL, L2)) {
-+				if (snoopx & P(SNOOPX, PEER))
-+					stats->ld_peer++;
-+				else
-+					stats->ld_l2hit++;
-+			}
- 			if (lvl & P(LVL, L3 )) {
- 				if (snoop & P(SNOOP, HITM))
- 					HITM_INC(lcl_hitm);
-+				else if (snoopx & P(SNOOPX, PEER))
-+					stats->ld_peer++;
- 				else
- 					stats->ld_llchit++;
- 			}
-@@ -661,6 +669,7 @@ void c2c_add_stats(struct c2c_stats *stats, struct c2c_stats *add)
- 	stats->ld_l1hit		+= add->ld_l1hit;
- 	stats->ld_l2hit		+= add->ld_l2hit;
- 	stats->ld_llchit	+= add->ld_llchit;
-+	stats->ld_peer		+= add->ld_peer;
- 	stats->lcl_hitm		+= add->lcl_hitm;
- 	stats->rmt_hitm		+= add->rmt_hitm;
- 	stats->tot_hitm		+= add->tot_hitm;
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 8a8b568baeee..4879b841c841 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -75,6 +75,7 @@ struct c2c_stats {
- 	u32	ld_l1hit;            /* count of loads that hit L1D */
- 	u32	ld_l2hit;            /* count of loads that hit L2D */
- 	u32	ld_llchit;           /* count of loads that hit LLC */
-+	u32	ld_peer;             /* count of loads that hit peer core or cluster cache */
- 	u32	lcl_hitm;            /* count of loads with local HITM  */
- 	u32	rmt_hitm;            /* count of loads with remote HITM */
- 	u32	tot_hitm;            /* count of loads with local and remote HITM */
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 1e1565e5d396..04f33dc8ca0f 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -1653,12 +1653,6 @@ static struct c2c_dimension dim_dso = {
+ 	.se		= &sort_dso,
+ };
+ 
+-static struct c2c_header header_node[3] = {
+-	HEADER_LOW("Node"),
+-	HEADER_LOW("Node{cpus %hitms %stores}"),
+-	HEADER_LOW("Node{cpu list}"),
+-};
+-
+ static struct c2c_dimension dim_node = {
+ 	.name		= "node",
+ 	.cmp		= empty_cmp,
+@@ -2146,9 +2140,27 @@ static int resort_cl_cb(struct hist_entry *he, void *arg __maybe_unused)
+ 	return 0;
+ }
+ 
++static struct c2c_header header_node_0 = HEADER_LOW("Node");
++static struct c2c_header header_node_1 = HEADER_LOW("Node{cpus %hitms %stores}");
++static struct c2c_header header_node_2 = HEADER_LOW("Node{cpu list}");
++
+ static void setup_nodes_header(void)
+ {
+-	dim_node.header = header_node[c2c.node_info];
++	switch (c2c.node_info) {
++	case 0:
++		dim_node.header = header_node_0;
++		break;
++	case 1:
++		dim_node.header = header_node_1;
++		break;
++	case 2:
++		dim_node.header = header_node_2;
++		break;
++	default:
++		break;
++	}
++
++	return;
+ }
+ 
+ static int setup_nodes(struct perf_session *session)
 -- 
 2.25.1
 
