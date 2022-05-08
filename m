@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7F7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sun,  8 May 2022 09:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223EAC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun,  8 May 2022 09:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233043AbiEHJaK (ORCPT
+        id S238721AbiEHJaX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 8 May 2022 05:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56612 "EHLO
+        Sun, 8 May 2022 05:30:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245168AbiEHJaB (ORCPT
+        with ESMTP id S233328AbiEHJaG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 8 May 2022 05:30:01 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF232101C1
-        for <linux-perf-users@vger.kernel.org>; Sun,  8 May 2022 02:25:54 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id w17-20020a17090a529100b001db302efed6so10409936pjh.4
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 May 2022 02:25:54 -0700 (PDT)
+        Sun, 8 May 2022 05:30:06 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEFB10FD1
+        for <linux-perf-users@vger.kernel.org>; Sun,  8 May 2022 02:26:05 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d22so11327053plr.9
+        for <linux-perf-users@vger.kernel.org>; Sun, 08 May 2022 02:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pA8VGKLqfC1iE6+6bQ/jXfFhVZ9BK9x1Q5PgdGMEwUw=;
-        b=o1kaOjdAJXoA13wgpRDroI+Fl8hHKaQs8EhTo0Yqb7MGBx3xgv0bq0MaA0WYAINjvy
-         d0ecuNyvqQUFk9BwrUWfyaRVDgcFZEXDAr8+ioN8A1h7BTEGumwApLqPI+LqNpexhxtm
-         4n7J2YAzfOYzL/6rpES13/6ZVJFmMTuU3xu+Lx9RjNwmY/MnWLgdFPRJt6LO8s+TthXE
-         sb/hg9cvw4QIq0ke0WFfpVu6qBk0cOF7PWXftlL8kPqKck1kwe8AKbd4zbdEQpfzUvik
-         hyWX64JrYWKCImRlljyFN5r06WXO1oLkNlZyCE560hCYy4nzm9nLM1mINYTPvmTIsP9u
-         z6tQ==
+        bh=sv1aE7FqnI8CKL/sxONnHhH4U4DVSrjLXubYrt9Z0fU=;
+        b=PNObX5zzmqLePczW+hBwWlq1W7MvUHr0f52SYFReY+/Ki1myeXly338eeRZantdZr5
+         RQb9ALEOb9P3wyOUaltvW77ApV7chGgjxSjGheF9qb17aZ4OortrEWjtaYV+dF5RpuG/
+         s1dZ67CG45dMetd/1fYblcyEzV96vF0rJxR1MomaQDJB+HBydIpfb5IpgV8QCtqd1918
+         LDPy/hJUGMLY7PNjU8DGJLQ/na+V/WEkUBaHQYoiNzj+APLOJit/z3McF9A5MmWxZy38
+         4iyN4kDHz8AIh425Y7cdU8SHM0PMl+yLGjW+oFVL0PPT9yrJ5rKAtoir0tmQXb26seeR
+         wglQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pA8VGKLqfC1iE6+6bQ/jXfFhVZ9BK9x1Q5PgdGMEwUw=;
-        b=aBpp1hLrQnCAP9RkgFPKJOT7jh28iiuT2aFcH53PgmkXYbE07hMojlboV/qjWNVtDZ
-         mQIipsX6wvSAaxjkuXnr4NWkmEi++l+Hkss7UrSqvHVvNAOVDnQZ0u11lSB8aRmxUN8I
-         SZifYacbzQS35/NpEa3Q5rFa7s/2D2rb5fMkqzryoWAuDYU9JPxy/Bxilc/ojdPaX8wB
-         sS1E+a9nQ4ox0QU710P4Q2FYcLYEufEMsCOefnE0ppn0Aly4wKNV7+xpyKeIIdR/jM7r
-         pJm/jJIokXLfdIZH3qgyZAZ/YrIYerG2jMwcyiSEGsRzXB5iNak0Wg7xYu0ui8CJ9FlL
-         pD2Q==
-X-Gm-Message-State: AOAM531Drp2xMT7kNGHS4Fdv5fdePwChBT6qJD9OJzORJlj87JLRR/vP
-        KYM603ykRLbDpPEOoQy13ZhMug==
-X-Google-Smtp-Source: ABdhPJwui8DZgaze6hcC7r2eMntLFZnk7YtY0J3c/fZHAndBTbFAsu+eMqOuEbIA9rE2ygup7hbe5w==
-X-Received: by 2002:a17:903:41c9:b0:15e:b449:ce9a with SMTP id u9-20020a17090341c900b0015eb449ce9amr11289572ple.136.1652001954095;
-        Sun, 08 May 2022 02:25:54 -0700 (PDT)
+        bh=sv1aE7FqnI8CKL/sxONnHhH4U4DVSrjLXubYrt9Z0fU=;
+        b=s577aoOX3GgFkcS72TJ0cQRuCAuEw5EGBX5ONFRdk9I3KWt/N2sInncPExh/EW9nQa
+         BF1uL7MhQkU1wkQW0F4pE/48AoNCuNkAgh1bmH3FREna9+Pa/JXnRJ94NDCyTSWqmrPd
+         ZH/Z/9Tg/AI1DytRxiINJRrkNGPH3JSLlKvvxd7kTkESn842YFYowM/JsmC50nP1Cjng
+         FQI37nzcv39GragwsCaRnWvpkA/5hOokJPYT3owflZZTOycidsNsQDRZT1dGYgQ5PA6P
+         hr31R/9BFX/exJCRzOHuiwxHWctRFFr8a/M4LtLVOhTt2+9xYrqMXXt+qvqoPCct7GrZ
+         GKgA==
+X-Gm-Message-State: AOAM532M8smMm/3yrxldsp3rxN4SZklq2Rd4nVPHfFFq6j2FWVSSaSy+
+        f9i12hNrLST1UtDOThUj8RZImw==
+X-Google-Smtp-Source: ABdhPJyY4JJvoKWLet/PsVWyBKDJibBPszt7mSL4y2hyFxP/9UiEh7EcnVn8+VjkDGeDqa8ZDURHVA==
+X-Received: by 2002:a17:90b:3903:b0:1dc:8fe0:df4d with SMTP id ob3-20020a17090b390300b001dc8fe0df4dmr12804471pjb.191.1652001964510;
+        Sun, 08 May 2022 02:26:04 -0700 (PDT)
 Received: from localhost.localdomain (104-237-153-19.ip.linodeusercontent.com. [104.237.153.19])
-        by smtp.gmail.com with ESMTPSA id t63-20020a638142000000b003c14af505f7sm6155088pgd.15.2022.05.08.02.25.44
+        by smtp.gmail.com with ESMTPSA id t63-20020a638142000000b003c14af505f7sm6155088pgd.15.2022.05.08.02.25.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 May 2022 02:25:53 -0700 (PDT)
+        Sun, 08 May 2022 02:26:04 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -66,9 +66,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ali Saidi <alisaidi@amazon.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 10/11] perf c2c: Update documentation for new display option 'peer'
-Date:   Sun,  8 May 2022 17:23:45 +0800
-Message-Id: <20220508092346.255826-11-leo.yan@linaro.org>
+Subject: [PATCH v2 11/11] perf c2c: Use 'peer' as default display for Arm64
+Date:   Sun,  8 May 2022 17:23:46 +0800
+Message-Id: <20220508092346.255826-12-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220508092346.255826-1-leo.yan@linaro.org>
 References: <20220508092346.255826-1-leo.yan@linaro.org>
@@ -78,81 +78,62 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the new display option 'peer' is introduced, this patch is to
-update the documentation to reflect it.
+Since Arm64 arch doesn't support HITMs flags, so use 'peer' as default
+if user doesn't specify display type; for other arches, it still uses
+'tot' as default display type if user doesn't specify it.
 
+Suggested-by: Ali Saidi <alisaidi@amazon.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Ali Saidi <alisaidi@amazon.com>
 ---
- tools/perf/Documentation/perf-c2c.txt | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ tools/perf/builtin-c2c.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index 6f69173731aa..cc98a7e774f6 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -109,7 +109,8 @@ REPORT OPTIONS
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 9b6d2a9553e1..774da4a60c08 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2787,7 +2787,7 @@ static int setup_callchain(struct evlist *evlist)
  
- -d::
- --display::
--	Switch to HITM type (rmt, lcl) to display and sort on. Total HITMs as default.
-+	Switch to HITM type (rmt, lcl) or peer snooping type (peer) to display
-+	and sort on. Total HITMs (tot) as default.
+ static int setup_display(const char *str)
+ {
+-	const char *display = str ?: "tot";
++	const char *display = str;
  
- --stitch-lbr::
- 	Show callgraph with stitched LBRs, which may have more complete
-@@ -174,12 +175,18 @@ For each cacheline in the 1) list we display following data:
-   Cacheline
-   - cacheline address (hex number)
+ 	if (!strcmp(display, "tot"))
+ 		c2c.display = DISPLAY_TOT_HITM;
+@@ -2973,9 +2973,6 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	data.path  = input_name;
+ 	data.force = symbol_conf.force;
  
--  Rmt/Lcl Hitm
-+  Rmt/Lcl Hitm (For display with HITM types)
-   - cacheline percentage of all Remote/Local HITM accesses
+-	err = setup_display(display);
+-	if (err)
+-		goto out;
  
-+  Snoop Peer (For display with peer type)
-+  - cacheline percentage of peer access
+ 	err = setup_coalesce(coalesce, no_source);
+ 	if (err) {
+@@ -2996,6 +2993,22 @@ static int perf_c2c__report(int argc, const char **argv)
+ 		goto out;
+ 	}
+ 
++	/*
++	 * Use the 'tot' as default display type if user doesn't specify it;
++	 * since Arm64 platform doesn't support HITMs flag, use 'peer' as the
++	 * default display type.
++	 */
++	if (!display) {
++		if (!strcmp(perf_env__arch(&session->header.env), "arm64"))
++			display = "peer";
++		else
++			display = "tot";
++	}
 +
-   LLC Load Hitm - Total, LclHitm, RmtHitm
-   - count of Total/Local/Remote load HITMs
- 
-+  Snoop Peer
-+  - count of peer access
++	err = setup_display(display);
++	if (err)
++		goto out_session;
 +
-   Total records
-   - sum of all cachelines accesses
+ 	session->itrace_synth_opts = &itrace_synth_opts;
  
-@@ -211,6 +218,9 @@ For each offset in the 2) list we display following data:
-   HITM - Rmt, Lcl
-   - % of Remote/Local HITM accesses for given offset within cacheline
- 
-+  Snoop Peer
-+  - % of peer accesses for given offset within cacheline
-+
-   Store Refs - L1 Hit, L1 Miss, N/A
-   - % of store accesses that hit L1, missed L1 and N/A (no available) memory
-     level for given offset within cacheline
-@@ -227,8 +237,9 @@ For each offset in the 2) list we display following data:
-   Code address
-   - code address responsible for the accesses
- 
--  cycles - rmt hitm, lcl hitm, load
--    - sum of cycles for given accesses - Remote/Local HITM and generic load
-+  cycles - rmt hitm, lcl hitm, load, peer
-+    - sum of cycles for given accesses - Remote/Local HITM, generic load and
-+      peer access
- 
-   cpu cnt
-     - number of cpus that participated on the access
-@@ -251,7 +262,8 @@ The 'Node' field displays nodes that accesses given cacheline
- offset. Its output comes in 3 flavors:
-   - node IDs separated by ','
-   - node IDs with stats for each ID, in following format:
--      Node{cpus %hitms %stores}
-+      Node{cpus %hitms %stores} (For display with HITM types)
-+      Node{cpus %peers %stores} (For display with "peer" type)
-   - node IDs with list of affected CPUs in following format:
-       Node{cpu list}
- 
+ 	err = setup_nodes(session);
 -- 
 2.25.1
 
