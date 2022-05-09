@@ -2,38 +2,38 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A52C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 May 2022 15:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBA4C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 May 2022 15:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238551AbiEIPtv (ORCPT
+        id S238494AbiEIPwR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 May 2022 11:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43836 "EHLO
+        Mon, 9 May 2022 11:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238523AbiEIPtt (ORCPT
+        with ESMTP id S238529AbiEIPwQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 May 2022 11:49:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033291573E;
-        Mon,  9 May 2022 08:45:51 -0700 (PDT)
+        Mon, 9 May 2022 11:52:16 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B92FA2D76C5;
+        Mon,  9 May 2022 08:48:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 750AA611CA;
-        Mon,  9 May 2022 15:45:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 134F6C385B1;
-        Mon,  9 May 2022 15:45:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6B4E3B8172F;
+        Mon,  9 May 2022 15:48:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BF9C385B1;
+        Mon,  9 May 2022 15:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652111149;
-        bh=5C2gAycAYfH3AorYV+ZVZig2Mkz2fhCTBkA4i45e2sM=;
+        s=k20201202; t=1652111300;
+        bh=0o6i/khs9xGoGHyAd0bai2xuSS3ZhiI169q7SJoXynE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yyq26cyETefivwltGGCi4Lgq3PfyAW4KN70HsE+JWAq2Rki2ctu27vtNCsto1jU9z
-         oMNH/RFae2XQpOHJwM4Jybv/n4dtHzK5Y0iPQJPDL4VIY7qOHgI8pUJhD9ZOyYZoh8
-         qNsfsXETPNMprtMjniIP9lPiVxAwgSitLMBwGArYOSuvCU+AXYIm/MgjrM3z6HdbOp
-         x6qzpsSl8jgFxfpfzDMOXPv52qaetCkOl3ii7d9Kvv33CI79TU1Ks08vWTtZUqD2Z/
-         LIyQx4MYBsG+6gW8HpRnFMFFRAffYZyVRpB41PzdfvFpSArIvbwB58ex+F6UIs0mKa
-         w2iShoB5Lau2w==
-Date:   Mon, 9 May 2022 16:45:43 +0100
+        b=Cbu2djXI9wVzfcyzyXWhowzZSI35BvSYN9w6wCzFM8roanq/3vKuNROqDkVIBTAGu
+         eXP6CqSGs5FmDULU/Q0p4wVTAcXr5wlO+E1lFH7mqpNyRL2mVNzWp9TZI/8nfcqlAq
+         3/Stty+uMXoX+YqU8Yb4SPD8xFh/MY8VGaP+EWkN9x94aVDC6rz56H0sF74vmZ+YIj
+         H1JFQofijaLpQXKFRlhAB6F9H6h62jgTuwmobir0V23+NOnijTbwdMD0L4CUqcu80P
+         zL2uO/iqgFZn0O2I+pwBdnNrs9NhKPdRMcHaJrnjhIOj9fU/kAmvIvDKz2wHkDEWjS
+         28vSzOlWkhe2w==
+Date:   Mon, 9 May 2022 16:48:13 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -46,49 +46,66 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v1 2/6] arm64/sve: Add Perf extensions documentation
-Message-ID: <Ynk3J2Gfnm4LkHn0@sirena.org.uk>
+Subject: Re: [PATCH v1 1/6] perf: arm64: Add SVE vector granule register to
+ user regs
+Message-ID: <Ynk3vTtJApO13peb@sirena.org.uk>
 References: <20220509144257.1623063-1-james.clark@arm.com>
- <20220509144257.1623063-3-james.clark@arm.com>
+ <20220509144257.1623063-2-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mk/wbO/L6mmEEdnA"
+        protocol="application/pgp-signature"; boundary="kWHxwAIOcGn9XJL6"
 Content-Disposition: inline
-In-Reply-To: <20220509144257.1623063-3-james.clark@arm.com>
+In-Reply-To: <20220509144257.1623063-2-james.clark@arm.com>
 X-Cookie: Boycott meat -- suck your thumb.
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
---mk/wbO/L6mmEEdnA
+--kWHxwAIOcGn9XJL6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 09, 2022 at 03:42:50PM +0100, James Clark wrote:
+On Mon, May 09, 2022 at 03:42:49PM +0100, James Clark wrote:
+> Dwarf based unwinding in a function that pushes SVE registers onto
+> the stack requires the unwinder to know the length of the SVE register
+> to calculate the stack offsets correctly. This was added to the Arm
+> specific Dwarf spec as the VG pseudo register[1].
+>=20
+> Add the vector length at position 46 if it's requested by userspace and
+> SVE is supported. If it's not supported then fail to open the event.
+>=20
+> The vector length must be on each sample because it can be changed
+> at runtime via a prctl or ptrace call. Also by adding it as a register
+> rather than a separate attribute, minimal changes will be required in an
+> unwinder that already indexes into the register list.
 
-> +* Its value is equivalent to the current vector length (VL) in bits divided by
-> +  64.
+> +static u64 perf_ext_regs_value(int idx)
+> +{
+> +	switch (idx) {
+> +	case PERF_REG_ARM64_VG:
+> +		if (WARN_ON_ONCE(!system_supports_sve()))
+> +			return 0;
 
-Please explicitly say that this is the current *SVE* vector length,
-given that with SME entering streaming mode means we have SVE registers
-with the current streaming vector length which may be different to the
-SVE vector length it is possible that someone may read the above as
-referring to the vector length that applies to the current Z/P registers.
+These WARN_ON_ONCE()s seem a bit loud but I do see they are idiomatic
+for this code so
 
---mk/wbO/L6mmEEdnA
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+--kWHxwAIOcGn9XJL6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmJ5NycACgkQJNaLcl1U
-h9Dbdwf+PcSNippPQhwEFZ7lU/qxZTpSVBuoGp0Z1YUpzKhv2UgfZEbPz6WHtW89
-W2jmtd52nfsNTc6old7JvHErzT3sdhrD5cdlNmZ8e5La/GS1NOwcLZKinXEarsqY
-3nJPHYmKvSXCZCFuSMmnHB1xpTCZFou8dxgruNczu1DONbfXU0uil0bXHchEOYxa
-Z3Bk5WdShpD67OwH9hgX4ub2ML5XEXpSmQnhKBZSGs4UIOETKvmraf7TYYZBWkZy
-2RW6BJ4yE8/ZzWVx/HLPKzIlO9XPZN5Hl5gVsTQsk1uRK1fAPQNydQfITl3PPX7R
-kmOKG0EK5Ov5rfaVdR8OQqXvIw/iMw==
-=saF4
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmJ5N70ACgkQJNaLcl1U
+h9ARVQf9G0mw/2Bx5k3Bh/9t98gHB+qEtoXMXhzgkJjMUiXzj3E9uwkUmvKNR58B
+PkM4MMWPCy3pQAP/Pc0zgLSKyOM30z54SdCucVVRP+ma8+y4+cBUnxvp5462F8x7
+mKMbLjp3E1D1vl+4y/nqCOEKctytWfJEMUvMPd36n3Hwt4fg/7gzv14wCaJzZMrk
+TZJe/W8LsNFr/pQMpPA5yKgonJKP8QCC97028L1BUq8tNWNMSWp1rtStgwDm6f7d
+ZeuCqrHHljaqY9/3QuuX5LBXMr3b3WyrzVdguH1xSDChvnKQHHUpneY0oNUvDFCh
+O7zct9SC04onTfuDNr1orFH6uAliQg==
+=TX9r
 -----END PGP SIGNATURE-----
 
---mk/wbO/L6mmEEdnA--
+--kWHxwAIOcGn9XJL6--
