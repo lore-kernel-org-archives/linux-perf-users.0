@@ -2,94 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12879C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 May 2022 13:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BF3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 May 2022 13:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235038AbiEINFg (ORCPT
+        id S235080AbiEINMX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 May 2022 09:05:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47208 "EHLO
+        Mon, 9 May 2022 09:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235016AbiEINFe (ORCPT
+        with ESMTP id S235149AbiEINMS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 May 2022 09:05:34 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA8A23276A;
-        Mon,  9 May 2022 06:01:41 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id v11so12186586pff.6;
-        Mon, 09 May 2022 06:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Y1VOSZIWCzEJ86cq6oZntFD5lbrlVmxkCTqvxbTsuTg=;
-        b=jgUIdCH57g47g1kCfaLFMEKd8m5jeXbyVawyaJj232M3GU+h8G3dL1Gk9v7nrMMpO2
-         nn7aJa8eFXLCk5tZgGSnluGzwjVN7ZheU0rl8a/Ukt9+s2pknnBXAi4xVYXmkpNQmydg
-         TeJjI/uce80Nd582K7gKB8G2av4nig3agDO/v6hJcHvfNCyeeUbxBeSZp5lkgnRwBalE
-         q8VzetIqmsiXy+wmKubGCBPEa04ZjxSk9gUYSjqfYaa95+vPAPfu3u9jpS9lnU5lm0v3
-         L1bOvrHFJzwCKQovFTQz/liWQ3pugbSfn5WPvY+/A1mgVs66yvqjhDT5tBygAs/Ej+1E
-         6t2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Y1VOSZIWCzEJ86cq6oZntFD5lbrlVmxkCTqvxbTsuTg=;
-        b=oxXYZd9P3gqy+Coy0L/kr6LPnNpDT6Qolb23/WTx6d5H0QflgJicZqdyoHRh4gEA5E
-         8LhCchq/goQZSqlw6ScvHg5pcppyY9L9twuQf6Ejuf8LgQblqesRixkwAkJ9pDU/LAGm
-         HZcSwMgJLfvNHqQOsNoxUdHRGiIlEUrZSVVGfoX+Yr3dwEmgv/H4RnlD+TD2iaaM9m5H
-         nUIAHs+dohBqAhP5/UpCjVrJ1uLuB0BKfgDHwajzT9hNZa8A9qnPEDM3u6XitX/WS419
-         qanA0xPb7mMOxWlVGV7XKSMlvkPizT0yhv6lPMI6hf4mqI2MSqZeTDa4GlKqTylK0mPz
-         39Ig==
-X-Gm-Message-State: AOAM533E6TgqmyQSdnhpH8PCfvhb6TVnMefOCT/y0rBNJafzzKELRVWc
-        8QmLRUCBajyWBbtUuUH8zOA=
-X-Google-Smtp-Source: ABdhPJwu0d4G31B2Ybkf88smk0c0f/5f3pumQ7oaxiA37CVPclKAOlLQKZhUVG8BH35wkrDcOq0vsQ==
-X-Received: by 2002:a05:6a00:234f:b0:4f6:f0c0:ec68 with SMTP id j15-20020a056a00234f00b004f6f0c0ec68mr16349283pfj.14.1652101300366;
-        Mon, 09 May 2022 06:01:40 -0700 (PDT)
-Received: from [192.168.255.10] ([203.205.141.89])
-        by smtp.gmail.com with ESMTPSA id y16-20020a63b510000000b003c6ab6ba06csm2891487pge.79.2022.05.09.06.01.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 May 2022 06:01:39 -0700 (PDT)
-Message-ID: <78e001bd-42bd-5481-5a19-1a0bcca9a63c@gmail.com>
-Date:   Mon, 9 May 2022 21:01:33 +0800
+        Mon, 9 May 2022 09:12:18 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 203EA23F3A1;
+        Mon,  9 May 2022 06:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0yNOraBv1neVOBjF4rkQmGA1UClv6oQqF7sKwICGE3I=; b=Z7V1jYDJDcZyxzkkJvsA6Rj/A7
+        ZFep02+0m2gHdW8PQqrUQRCt9yzI5iYf4UsAOeD/NQVAsGXBAxj47alVWFjiTQQ4we618L0hmE2bf
+        /iXZAcSyy4VPeAgQLDMSfiwvo10xAdBZklFk3FW1/eqH9RpfEfFCb0alyQROJh9Gsza4x8c/VQv67
+        cKvuwwQXZW3McI2jZ39xAsTJw4G3XSudWOwFruL7RuoSFTl72KhSWDZQaf2eJEdKizCV3cAJiMc7R
+        HrFIkAi2SVsxbx4XCO9+o+J46KFGR6bA9kyP5A7QeBjwKrnE1P4cM4aCWOJdGVmrNCnhNND71LGyy
+        7SmbKzsA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1no37K-003SfG-0r; Mon, 09 May 2022 13:08:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D6940300385;
+        Mon,  9 May 2022 15:07:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BE4F42026963D; Mon,  9 May 2022 15:07:59 +0200 (CEST)
+Date:   Mon, 9 May 2022 15:07:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     acme@kernel.org, rrichter@amd.com, mingo@redhat.com,
+        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, irogers@google.com,
+        yao.jin@linux.intel.com, james.clark@arm.com, leo.yan@linaro.org,
+        kan.liang@linux.intel.com, ak@linux.intel.com, eranian@google.com,
+        like.xu.linux@gmail.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v2 3/8] perf/amd/ibs: Add support for L3 miss filtering
+Message-ID: <YnkSL5QwwFxnWM/0@hirez.programming.kicks-ass.net>
+References: <20220509044914.1473-1-ravi.bangoria@amd.com>
+ <20220509044914.1473-4-ravi.bangoria@amd.com>
+ <YnkDfRIRyztvXv6o@hirez.programming.kicks-ass.net>
+ <d4486cd1-e4dc-3120-97ec-dad922bd8430@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.9.0
-Subject: Re: [PATCH v4 3/7] perf/x86/amd/core: Detect PerfMonV2 support
-Content-Language: en-US
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     peterz@infradead.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        pbonzini@redhat.com, jmattson@google.com, eranian@google.com,
-        puwen@hygon.cn, ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org
-References: <cover.1651058600.git.sandipan.das@amd.com>
- <8d3e23760726cf6647a98999e1fcd12a37f36a42.1651058600.git.sandipan.das@amd.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-In-Reply-To: <8d3e23760726cf6647a98999e1fcd12a37f36a42.1651058600.git.sandipan.das@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4486cd1-e4dc-3120-97ec-dad922bd8430@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 27/4/2022 7:31 pm, Sandipan Das wrote:
+On Mon, May 09, 2022 at 06:05:53PM +0530, Ravi Bangoria wrote:
+> 
+> On 09-May-22 5:35 PM, Peter Zijlstra wrote:
+> > On Mon, May 09, 2022 at 10:19:09AM +0530, Ravi Bangoria wrote:
+> >> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+> >> index b06e4c573add..a24b637a6e1d 100644
+> >> --- a/arch/x86/include/asm/perf_event.h
+> >> +++ b/arch/x86/include/asm/perf_event.h
+> >> @@ -391,6 +391,7 @@ struct pebs_xmm {
+> >>  #define IBS_CAPS_OPBRNFUSE		(1U<<8)
+> >>  #define IBS_CAPS_FETCHCTLEXTD		(1U<<9)
+> >>  #define IBS_CAPS_OPDATA4		(1U<<10)
+> >> +#define IBS_CAPS_ZEN4IBSEXTENSIONS	(1U<<11)
+> >>  
+> >>  #define IBS_CAPS_DEFAULT		(IBS_CAPS_AVAIL		\
+> >>  					 | IBS_CAPS_FETCHSAM	\
+> > 
+> > Would you mind terribly if I do:
+> > 
+> >   's/IBS_CAPS_ZEN4IBSEXTENSIONS/IBS_CAPS_ZEN4/'
+> > 
+> > on it? Per the IBS_ suffix, we're already talking about IBS, per the
+> > CAPS thing we're talking about capabilities and I'm thinking that makes
+> > EXTENTION somewhat redundant, which then leaves:
+> > 
+> >   IBS_CAPS_ZEN4
+> 
+> Yeah, IBS_CAPS_ZEN4 is better. Let me know if you want me to respin.
 
->   	x86_pmu.num_counters	= AMD64_NUM_COUNTERS_CORE;
-
-Thus boot_cpu_has(X86_FEATURE_PERFCTR_CORE) is true.
-
-> +
-> +	/* Check for Performance Monitoring v2 support */
-> +	if (boot_cpu_has(X86_FEATURE_PERFMON_V2)) {
-> +		/* Update PMU version for later usage */
-> +		x86_pmu.version = 2;
-
-Is it safe to assume that once AMD CPU has the PERFMON_V2 (or further) bit,
-
-it must also have the PERFCTR_CORE bit set ?
-
+Nah, I just edited the patch, all good.
