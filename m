@@ -2,30 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BAAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 May 2022 14:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A52C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 May 2022 15:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237588AbiEIOrw (ORCPT
+        id S238551AbiEIPtv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 May 2022 10:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
+        Mon, 9 May 2022 11:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237572AbiEIOru (ORCPT
+        with ESMTP id S238523AbiEIPtt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 May 2022 10:47:50 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA989219346;
-        Mon,  9 May 2022 07:43:56 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95490153B;
-        Mon,  9 May 2022 07:43:56 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.4.213])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 435393F73D;
-        Mon,  9 May 2022 07:43:54 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, broonie@kernel.org
-Cc:     german.gomez@arm.com, James Clark <james.clark@arm.com>,
+        Mon, 9 May 2022 11:49:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033291573E;
+        Mon,  9 May 2022 08:45:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 750AA611CA;
+        Mon,  9 May 2022 15:45:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 134F6C385B1;
+        Mon,  9 May 2022 15:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652111149;
+        bh=5C2gAycAYfH3AorYV+ZVZig2Mkz2fhCTBkA4i45e2sM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Yyq26cyETefivwltGGCi4Lgq3PfyAW4KN70HsE+JWAq2Rki2ctu27vtNCsto1jU9z
+         oMNH/RFae2XQpOHJwM4Jybv/n4dtHzK5Y0iPQJPDL4VIY7qOHgI8pUJhD9ZOyYZoh8
+         qNsfsXETPNMprtMjniIP9lPiVxAwgSitLMBwGArYOSuvCU+AXYIm/MgjrM3z6HdbOp
+         x6qzpsSl8jgFxfpfzDMOXPv52qaetCkOl3ii7d9Kvv33CI79TU1Ks08vWTtZUqD2Z/
+         LIyQx4MYBsG+6gW8HpRnFMFFRAffYZyVRpB41PzdfvFpSArIvbwB58ex+F6UIs0mKa
+         w2iShoB5Lau2w==
+Date:   Mon, 9 May 2022 16:45:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, german.gomez@arm.com,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -34,102 +46,49 @@ Cc:     german.gomez@arm.com, James Clark <james.clark@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH v1 6/6] perf tools: arm64: Add support for VG register
-Date:   Mon,  9 May 2022 15:42:54 +0100
-Message-Id: <20220509144257.1623063-7-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20220509144257.1623063-1-james.clark@arm.com>
+Subject: Re: [PATCH v1 2/6] arm64/sve: Add Perf extensions documentation
+Message-ID: <Ynk3J2Gfnm4LkHn0@sirena.org.uk>
 References: <20220509144257.1623063-1-james.clark@arm.com>
+ <20220509144257.1623063-3-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mk/wbO/L6mmEEdnA"
+Content-Disposition: inline
+In-Reply-To: <20220509144257.1623063-3-james.clark@arm.com>
+X-Cookie: Boycott meat -- suck your thumb.
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add the name of the VG register so it can be used in --user-regs
 
-The event will fail to open if the register is requested but not
-available so only add it to the mask if the kernel supports sve and also
-if it supports that specific register.
+--mk/wbO/L6mmEEdnA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/arch/arm64/util/perf_regs.c | 34 ++++++++++++++++++++++++++
- tools/perf/util/perf_regs.c            |  2 ++
- 2 files changed, 36 insertions(+)
+On Mon, May 09, 2022 at 03:42:50PM +0100, James Clark wrote:
 
-diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
-index 476b037eea1c..c0a921512a90 100644
---- a/tools/perf/arch/arm64/util/perf_regs.c
-+++ b/tools/perf/arch/arm64/util/perf_regs.c
-@@ -2,9 +2,11 @@
- #include <errno.h>
- #include <regex.h>
- #include <string.h>
-+#include <sys/auxv.h>
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
- 
-+#include "../../../perf-sys.h"
- #include "../../../util/debug.h"
- #include "../../../util/event.h"
- #include "../../../util/perf_regs.h"
-@@ -43,6 +45,7 @@ const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG(lr, PERF_REG_ARM64_LR),
- 	SMPL_REG(sp, PERF_REG_ARM64_SP),
- 	SMPL_REG(pc, PERF_REG_ARM64_PC),
-+	SMPL_REG(vg, PERF_REG_ARM64_VG),
- 	SMPL_REG_END
- };
- 
-@@ -131,3 +134,34 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
- 
- 	return SDT_ARG_VALID;
- }
-+
-+uint64_t arch__user_reg_mask(void)
-+{
-+	struct perf_event_attr attr = {
-+		.type                   = PERF_TYPE_HARDWARE,
-+		.config                 = PERF_COUNT_HW_CPU_CYCLES,
-+		.sample_type            = PERF_SAMPLE_REGS_USER,
-+		.disabled               = 1,
-+		.exclude_kernel         = 1,
-+		.sample_period		= 1,
-+		.sample_regs_user	= PERF_REGS_MASK
-+	};
-+	int fd;
-+
-+	if (getauxval(AT_HWCAP) & HWCAP_SVE)
-+		attr.sample_regs_user |= SMPL_REG_MASK(PERF_REG_ARM64_VG);
-+
-+	/*
-+	 * Check if the pmu supports perf extended regs, before
-+	 * returning the register mask to sample.
-+	 */
-+	if (attr.sample_regs_user != PERF_REGS_MASK) {
-+		event_attr_init(&attr);
-+		fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
-+		if (fd != -1) {
-+			close(fd);
-+			return attr.sample_regs_user;
-+		}
-+	}
-+	return PERF_REGS_MASK;
-+}
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index a982e40ee5a9..872dd3d38782 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -103,6 +103,8 @@ static const char *__perf_reg_name_arm64(int id)
- 		return "lr";
- 	case PERF_REG_ARM64_PC:
- 		return "pc";
-+	case PERF_REG_ARM64_VG:
-+		return "vg";
- 	default:
- 		return NULL;
- 	}
--- 
-2.28.0
+> +* Its value is equivalent to the current vector length (VL) in bits divided by
+> +  64.
 
+Please explicitly say that this is the current *SVE* vector length,
+given that with SME entering streaming mode means we have SVE registers
+with the current streaming vector length which may be different to the
+SVE vector length it is possible that someone may read the above as
+referring to the vector length that applies to the current Z/P registers.
+
+--mk/wbO/L6mmEEdnA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmJ5NycACgkQJNaLcl1U
+h9Dbdwf+PcSNippPQhwEFZ7lU/qxZTpSVBuoGp0Z1YUpzKhv2UgfZEbPz6WHtW89
+W2jmtd52nfsNTc6old7JvHErzT3sdhrD5cdlNmZ8e5La/GS1NOwcLZKinXEarsqY
+3nJPHYmKvSXCZCFuSMmnHB1xpTCZFou8dxgruNczu1DONbfXU0uil0bXHchEOYxa
+Z3Bk5WdShpD67OwH9hgX4ub2ML5XEXpSmQnhKBZSGs4UIOETKvmraf7TYYZBWkZy
+2RW6BJ4yE8/ZzWVx/HLPKzIlO9XPZN5Hl5gVsTQsk1uRK1fAPQNydQfITl3PPX7R
+kmOKG0EK5Ov5rfaVdR8OQqXvIw/iMw==
+=saF4
+-----END PGP SIGNATURE-----
+
+--mk/wbO/L6mmEEdnA--
