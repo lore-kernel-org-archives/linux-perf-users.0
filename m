@@ -2,64 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D18BC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 09:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6244EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 09:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235005AbiEJJbL (ORCPT
+        id S235229AbiEJJcz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 05:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47792 "EHLO
+        Tue, 10 May 2022 05:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236548AbiEJJa6 (ORCPT
+        with ESMTP id S238848AbiEJJcx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 05:30:58 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F2FD4269EDD;
-        Tue, 10 May 2022 02:27:00 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86A8112FC;
-        Tue, 10 May 2022 02:27:00 -0700 (PDT)
-Received: from [10.57.80.111] (unknown [10.57.80.111])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FB2F3F66F;
-        Tue, 10 May 2022 02:26:58 -0700 (PDT)
-Message-ID: <3b07bd45-42e7-0298-70d5-60d950e27304@arm.com>
-Date:   Tue, 10 May 2022 10:26:52 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH V3] arm64: perf: Retain PMCR.X of PMCR_EL0 during reset
-Content-Language: en-GB
-To:     Srinivasarao Pathipati <quic_c_spathi@quicinc.com>,
-        will@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, catalin.marinas@arm.com,
+        Tue, 10 May 2022 05:32:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B81F328D4F5;
+        Tue, 10 May 2022 02:28:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DE3BC611C1;
+        Tue, 10 May 2022 09:28:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CF8DC385C9;
+        Tue, 10 May 2022 09:28:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652174931;
+        bh=e453tsqNEiBTDG4J5o9LjYD7il3/hz8Pgpd2NEFg2So=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a3U5w4CpPkiUi5qAbhUDdydANAnIQusOm8Snz2IVg+gHBZAMP/Wo/c/n4o4JKX2XG
+         BTSjr2n00ge84L22bFjEIM013CmRh/xeJU0KaRL2tcL1Qb2Ijl9aZvN9DYlDyOeCAs
+         oPejToArvVU8FLb/NKuQeI6fQ2y7r0tqr4dLjX/nn7w4F+WllpV9HelOR2rZ8XJGqn
+         IZDaLecUSt1vVWVHQQLJIAgFZt0mHhC77Fb4cJnjQaQ7frTGjNYCXATwC8+mxW3Zrf
+         +sm3QMrW2e8gQSQuA/RChF1DQF4ivIMqN8eZrivGqcOVWMHNZdG2FDI/xjojZLVU40
+         2wBDnR8TzTIwQ==
+Date:   Tue, 10 May 2022 10:28:44 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+Cc:     mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, catalin.marinas@arm.com,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] arm64: perf: Retain PMCR.X of PMCR_EL0 during reset
+Message-ID: <20220510092843.GB27219@willie-the-truck>
 References: <1652117330-21976-1-git-send-email-quic_c_spathi@quicinc.com>
-From:   Robin Murphy <robin.murphy@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <1652117330-21976-1-git-send-email-quic_c_spathi@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022-05-09 18:28, Srinivasarao Pathipati wrote:
+On Mon, May 09, 2022 at 10:58:50PM +0530, Srinivasarao Pathipati wrote:
 > Preserve the bit PMCR.X of PMCR_EL0 during PMU reset to export
 > PMU events. as it could be set before PMU initialization.
-
-Reiterating my previous comment, if there are use-cases for enabling the 
-event export bus under Linux, then it makes most sense to have an option 
-to enable the event export bus. It shouldn't have to depend on whatever 
-the bootloader may or may not have done.
-
-What would it even mean to preserve a value of 0 instead of resetting it 
-to 0?
-
-Thanks,
-Robin.
-
+> 
 > Exporting events could result in additional power consumption
 > so making it configurable.
 > 
@@ -73,60 +70,23 @@ Robin.
 > Changes since V1:
 > 	- Preserving only PMCR_X bit as per Robin Murphy's comment.
 > ---
->   Documentation/admin-guide/kernel-parameters.txt |  4 ++++
->   arch/arm64/kernel/perf_event.c                  | 13 +++++++++++++
->   2 files changed, 17 insertions(+)
+>  Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+>  arch/arm64/kernel/perf_event.c                  | 13 +++++++++++++
+>  2 files changed, 17 insertions(+)
 > 
 > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
 > index de3da15..cf3410e 100644
 > --- a/Documentation/admin-guide/kernel-parameters.txt
 > +++ b/Documentation/admin-guide/kernel-parameters.txt
 > @@ -5150,6 +5150,10 @@
->   			Useful for devices that are detected asynchronously
->   			(e.g. USB and MMC devices).
->   
+>  			Useful for devices that are detected asynchronously
+>  			(e.g. USB and MMC devices).
+>  
 > +	retain_pmcr_x
 > +			[KNL] Retain export bit of PMCR_EL0 that is getting reset
 > +			during pmu reset.
-> +
->   	retain_initrd	[RAM] Keep initrd memory after extraction
->   
->   	rfkill.default_state=
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index cb69ff1..1ac251f 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -34,6 +34,7 @@
->   #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_ACCESS		0xEC
->   #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_MISS		0xED
->   
-> +static int export_pmu_events  __read_mostly;
->   /*
->    * ARMv8 Architectural defined events, not all of these may
->    * be supported on any given implementation. Unsupported events will
-> @@ -1025,6 +1026,14 @@ static int armv8pmu_filter_match(struct perf_event *event)
->   	return evtype != ARMV8_PMUV3_PERFCTR_CHAIN;
->   }
->   
-> +static int __init retain_pmcr_x(char *str)
-> +{
-> +	export_pmu_events = 1;
-> +	return 0;
-> +}
-> +
-> +early_param("retain_pmcr_x", retain_pmcr_x);
-> +
->   static void armv8pmu_reset(void *info)
->   {
->   	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
-> @@ -1047,6 +1056,10 @@ static void armv8pmu_reset(void *info)
->   	if (armv8pmu_has_long_event(cpu_pmu))
->   		pmcr |= ARMV8_PMU_PMCR_LP;
->   
-> +	/* Preserve PMCR_X to export PMU events */
-> +	if (export_pmu_events)
-> +		pmcr |= (armv8pmu_pmcr_read() & ARMV8_PMU_PMCR_X);
-> +
->   	armv8pmu_pmcr_write(pmcr);
->   }
->   
+
+I think it would be better to build this as a sysctl so that it can be
+toggled at runtime as well.
+
+Will
