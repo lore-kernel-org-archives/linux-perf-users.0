@@ -2,211 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE3EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 17:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC9DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 17:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347771AbiEJRMk (ORCPT
+        id S245632AbiEJRnS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 13:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60162 "EHLO
+        Tue, 10 May 2022 13:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245368AbiEJRMk (ORCPT
+        with ESMTP id S245615AbiEJRnR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 13:12:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A24703F1
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 10:08:42 -0700 (PDT)
+        Tue, 10 May 2022 13:43:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FAE52764D2;
+        Tue, 10 May 2022 10:39:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1754FB81E6F
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 17:08:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 340E3C385A6;
-        Tue, 10 May 2022 17:08:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C5B1B619E2;
+        Tue, 10 May 2022 17:39:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1EDAC385A6;
+        Tue, 10 May 2022 17:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652202519;
-        bh=OGZczu6d5IJs645tGhia4PbZWhqVEjtZ7gypyXT4Y9A=;
+        s=k20201202; t=1652204358;
+        bh=cpGX1kgRy3el9acV31jAE9GzbuFSlL1gBzdae8nD62I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VRfrjksu+qPbAt/IqAtadM8EyQcMwlxg+pXN8J8i/HbI9AKHDHAaN/FNgtQPY4tpC
-         wJLkgzYGIfuWVRd+tvXDdcteAjIf0W4FPbCtF73GQ6w0VlHC6b9ojFXoIzpfqMKhXo
-         BsEpTC6lecEZl2RXLu7Jg8lzp3JQitBmfNjq9IAcz/b4mICjH0uHVXbuELqHmk/Kci
-         sFH9Xk7JLtZ0DUGRtO3lQbX0JVxmu3gORsqeFuXIZPUYOUdTOkmWD/UR6Te9KLPxme
-         02HscDK/odE+wZhDTnsv67cMnQKxa/WhQj/JEbUT6bTBaSJQjLL1f41jyV8/4+7TLg
-         zR0yV5mLoSgIg==
+        b=vMvrTdgU9As8GpHkd4gSyW+f0NV7kjDPvAMFPdLV7HI2a70KGkYNieWz0su6D0oxZ
+         4OZOgkNt6xTFX+i2jEswPW5kAxqkUXuyxHrFSWb/K1gyQAVaEm8w3gXs4ydSfXJGBE
+         GVlP9CBymHgdFkF4/OWYOu3dC7nSUzvh0WbmeyIYAI7rgaHwSnlM5CeAQv1XL5qQvj
+         rO/gPYQlf0rTJQXpdvjTvkMyskqfRmm7afbz20GTwQQHcTjONqZZwgl/M8TnL9RO8S
+         MFuhcvU/HVPy45tNmaXJS0BiJx136K8GRrolB82foWpZuJiD3DXsQMpHt06kvnYyIn
+         APJb4NK1GPAlQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3E329400B1; Tue, 10 May 2022 14:08:37 -0300 (-03)
-Date:   Tue, 10 May 2022 14:08:37 -0300
+        id EFF16400B1; Tue, 10 May 2022 14:39:14 -0300 (-03)
+Date:   Tue, 10 May 2022 14:39:14 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        kajoljain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH V2 1/2] tools/perf: Add utility function to read
- /proc/cpuinfo for any field
-Message-ID: <YnqcFZwtay4180Yj@kernel.org>
-References: <20220505094000.58220-1-atrajeev@linux.vnet.ibm.com>
- <20220505094000.58220-2-atrajeev@linux.vnet.ibm.com>
- <YnQIYdqh9VsKm2aX@kernel.org>
- <460BE4F4-9748-40E4-94F3-B4263FD34D5F@linux.vnet.ibm.com>
- <BC9A38D1-E972-4F9B-8C76-8EBDC03FA6F1@linux.vnet.ibm.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf annotate: Add --percent-limit option
+Message-ID: <YnqjQmgXebK4itXj@kernel.org>
+References: <20220502232015.697243-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BC9A38D1-E972-4F9B-8C76-8EBDC03FA6F1@linux.vnet.ibm.com>
+In-Reply-To: <20220502232015.697243-1-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 10, 2022 at 07:08:47PM +0530, Athira Rajeev escreveu:
+Em Mon, May 02, 2022 at 04:20:15PM -0700, Namhyung Kim escreveu:
+> Like in perf report and perf top, Add this option to limit the number
+> of functions it displays based on the overhead value in percent.
 > 
-> 
-> > On 06-May-2022, at 3:03 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> wrote:
-> > 
-> > 
-> > 
-> >> On 05-May-2022, at 10:54 PM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >> 
-> >> Em Thu, May 05, 2022 at 03:09:59PM +0530, Athira Rajeev escreveu:
-> >>> /proc/cpuinfo provides information about type of processor, number
-> >>> of CPU's etc. Reading /proc/cpuinfo file outputs useful information
-> >>> by field name like cpu, platform, model (depending on architecture)
-> >>> and its value separated by colon.
-> >>> 
-> >>> Add new utility function "cpuinfo_field" in "util/header.c" which
-> >>> accepts field name as input string to search in /proc/cpuinfo content.
-> >>> This returns the first matching value as resulting string. Example,
-> >>> calling the function "cpuinfo_field(platform)" in powerpc returns
-> >>> the platform value. This can be used to fetch processor information
-> >>> from "cpuinfo" by other utilities/testcases.
-> >>> 
-> >>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> >>> ---
-> >>> tools/perf/util/header.c | 53 ++++++++++++++++++++++++++++++++++++++++
-> >>> tools/perf/util/header.h |  1 +
-> >>> 2 files changed, 54 insertions(+)
-> >>> 
-> >>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> >>> index a27132e5a5ef..f08857f96606 100644
-> >>> --- a/tools/perf/util/header.c
-> >>> +++ b/tools/perf/util/header.c
-> >>> @@ -983,6 +983,59 @@ static int write_dir_format(struct feat_fd *ff,
-> >>> 	return do_write(ff, &data->dir.version, sizeof(data->dir.version));
-> >>> }
-> >>> 
-> >>> +/*
-> >>> + * Return entry from /proc/cpuinfo
-> >>> + * indicated by "search" parameter.
-> >>> + */
-> >>> +char *cpuinfo_field(const char *search)
-> >>> +{
-> >>> +	FILE *file;
-> >>> +	char *buf = NULL;
-> >>> +	char *copy_buf = NULL, *p;
-> >>> +	size_t len = 0;
-> >>> +
-> >>> +	if (!search)
-> >>> +		return NULL;
-> >>> +
-> >>> +	file = fopen("/proc/cpuinfo", "r");
-> >>> +	if (!file)
-> >>> +		return NULL;
-> >>> +
-> >>> +	while (getline(&buf, &len, file) > 0) {
-> >>> +		if (!strncmp(buf, search, strlen(search)))
-> >> 
-> >> Can you save the search string lenght in a variable and use it instead
-> >> of calling strlen() for the same buffer for each line in /proc/cpuinfo?
-> > 
-> > 
-> > Hi Arnaldo, Michael
-> > 
-> > Thanks for review comments. Based on suggestion from Michael, I am reworking on patch 2 to SKIP the test
-> > if physical_id is set to -1 irrespective of value from cpuinfo.
-> > 
-> > In this patch, I had written "cpuinfo_field " function as generic function for retrieving any entry from /proc/cpuinfo.
-> > But it won't be used in patch 2 now. Do you think this function is useful to keep ? Otherwise, I will drop patch 1
+> This affects only stdio and stdio2 output modes.  Without this, it
+> shows very long disassembly lines for every function in the data
+> file.  If users don't want this behavior, they can set a value in
+> percent to suppress that.
 
-Lets add it when the need arises.
+Thanks, applied.
 
 - Arnaldo
+
  
-> Hi,
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Documentation/perf-annotate.txt |  5 +++++
+>  tools/perf/builtin-annotate.c              | 24 ++++++++++++++++++++++
+>  2 files changed, 29 insertions(+)
 > 
-> Requesting for suggestions on this change
-> 
-> Thanks
-> Athira
-> > 
-> > Thanks
-> > Athira Rajeev
-> > 
-> >> 
-> >>> +			break;
-> >>> +	}
-> >>> +
-> >>> +	if (feof(file))
-> >>> +		goto done;
-> >>> +
-> >>> +	/*
-> >>> +	 * Trim the new line and separate
-> >>> +	 * value for search field from ":"
-> >>> +	 * in cpuinfo line output.
-> >>> +	 * Example output line:
-> >>> +	 * platform : <value>
-> >>> +	 */
-> >>> +	copy_buf = buf;
-> >>> +	p = strchr(copy_buf, ':');
-> >> 
-> >> So you assume that this will always be there, right? Shouldn't we not
-> >> assume that and check if p is NULL and bail out instead?
-> >> 
-> >>> +
-> >>> +	/* Go to string after ":" */
-> >>> +	copy_buf = p + 1;
-> >>> +	p = strchr(copy_buf, '\n');
-> >> 
-> >> Ditto.
-> >> 
-> >>> +	if (p)
-> >>> +		*p = '\0';
-> >>> +
-> >>> +	/* Copy the filtered string after removing space to buf */
-> >>> +	strcpy(buf, strim(copy_buf));
-> >>> +
-> >>> +	fclose(file);
-> >>> +	return buf;
-> >>> +
-> >>> +done:
-> >> 
-> >> Please rename this goto label to "not_found", "done" isn't intention
-> >> revealing.
-> >> 
-> >>> +	free(buf);
-> >>> +	fclose(file);
-> >>> +	return NULL;
-> >>> +}
-> >>> /*
-> >>> * Check whether a CPU is online
-> >>> *
-> >>> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-> >>> index 0eb4bc29a5a4..b0f754364bd4 100644
-> >>> --- a/tools/perf/util/header.h
-> >>> +++ b/tools/perf/util/header.h
-> >>> @@ -166,4 +166,5 @@ int get_cpuid(char *buffer, size_t sz);
-> >>> 
-> >>> char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused);
-> >>> int strcmp_cpuid_str(const char *s1, const char *s2);
-> >>> +char *cpuinfo_field(const char *search);
-> >>> #endif /* __PERF_HEADER_H */
-> >>> -- 
-> >>> 2.35.1
-> >> 
-> >> -- 
-> >> 
-> >> - Arnaldo
+> diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
+> index 33c2521cba4a..18fcc52809fb 100644
+> --- a/tools/perf/Documentation/perf-annotate.txt
+> +++ b/tools/perf/Documentation/perf-annotate.txt
+> @@ -147,6 +147,11 @@ include::itrace.txt[]
+>  	The period/hits keywords set the base the percentage is computed
+>  	on - the samples period or the number of samples (hits).
+>  
+> +--percent-limit::
+> +	Do not show functions which have an overhead under that percent on
+> +	stdio or stdio2 (Default: 0).  Note that this is about selection of
+> +	functions to display, not about lines within the function.
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-record[1], linkperf:perf-report[1]
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index e65dc380be15..2ffe071dbcff 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -54,6 +54,7 @@ struct perf_annotate {
+>  	bool	   skip_missing;
+>  	bool	   has_br_stack;
+>  	bool	   group_set;
+> +	float	   min_percent;
+>  	const char *sym_hist_filter;
+>  	const char *cpu_list;
+>  	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+> @@ -324,6 +325,17 @@ static void hists__find_annotations(struct hists *hists,
+>  		    (strcmp(he->ms.sym->name, ann->sym_hist_filter) != 0))
+>  			goto find_next;
+>  
+> +		if (ann->min_percent) {
+> +			float percent = 0;
+> +			u64 total = hists__total_period(hists);
+> +
+> +			if (total)
+> +				percent = 100.0 * he->stat.period / total;
+> +
+> +			if (percent < ann->min_percent)
+> +				goto find_next;
+> +		}
+> +
+>  		notes = symbol__annotation(he->ms.sym);
+>  		if (notes->src == NULL) {
+>  find_next:
+> @@ -457,6 +469,16 @@ static int __cmd_annotate(struct perf_annotate *ann)
+>  	return ret;
+>  }
+>  
+> +static int parse_percent_limit(const struct option *opt, const char *str,
+> +			       int unset __maybe_unused)
+> +{
+> +	struct perf_annotate *ann = opt->value;
+> +	double pcnt = strtof(str, NULL);
+> +
+> +	ann->min_percent = pcnt;
+> +	return 0;
+> +}
+> +
+>  static const char * const annotate_usage[] = {
+>  	"perf annotate [<options>]",
+>  	NULL
+> @@ -557,6 +579,8 @@ int cmd_annotate(int argc, const char **argv)
+>  	OPT_CALLBACK(0, "percent-type", &annotate.opts, "local-period",
+>  		     "Set percent type local/global-period/hits",
+>  		     annotate_parse_percent_type),
+> +	OPT_CALLBACK(0, "percent-limit", &annotate, "percent",
+> +		     "Don't show entries under that percent", parse_percent_limit),
+>  	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
+>  			    "Instruction Tracing options\n" ITRACE_HELP,
+>  			    itrace_parse_synth_opts),
+> -- 
+> 2.36.0.464.gb9c8b46e94-goog
 
 -- 
 
