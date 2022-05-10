@@ -2,236 +2,690 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C0DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 16:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B4AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 17:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346514AbiEJRCS (ORCPT
+        id S241346AbiEJRG5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 13:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50530 "EHLO
+        Tue, 10 May 2022 13:06:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233268AbiEJRCS (ORCPT
+        with ESMTP id S238571AbiEJRG4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 13:02:18 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172572A4A2E
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 09:58:20 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id q2so17516612vsr.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 09:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yBZ8yzXWBGsOpOpeLa5W0W9gRThAtsIA/zK3DproKJI=;
-        b=SC248B+drte04xKdlQ70/zo28TnMIDVRKbL6KdxKVvaTy+BJw6zg7/mjEXaavzrMmj
-         1JPdB5mZLYfVCMfUys8sAc1VSknImedaRwvCFYWR7QglbUeYtJwgU88cZ9KbJgKgHQU4
-         8azFzw1r/SamSGo2j/cf8Kk+jUSConbdAdQoh2O0kfmIsBMFaVG87w1CWx7/tgjje34H
-         OCcmQ1XISmveOhDYocRsXWU+5HTir+riALOgCy+DzwqA+0UrUDbr1ATTezC5coRfvtKy
-         mzZl2m+DSXh1EKdRX3r0aV5XtvIN8kTKYAum+qzE4F/daR2EWznYHnilxlp/r9++r+Dv
-         n1uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yBZ8yzXWBGsOpOpeLa5W0W9gRThAtsIA/zK3DproKJI=;
-        b=M2HxRUQ54+p3OYiEuT5+Gh2nDJqtjjT7W2q1RBrfLhEAV/6qU8Qc35sd0+oq1oHaoX
-         57yUCckLgGB428Y+jB4UsFUI4/PXyYXYMcX/PmZwzW+a7HhI0YZIeXqoAqvgbAmnMOmd
-         /Jrf/2f/85w1dIkSTgbUSw3S5dk25Eg1kp1I6etfPEUfnbz2+TMySlo0mViFejhJ8y9d
-         UigY/J7eU/+qFDxjPaIL/KySHLjLViKW09zO+ExCpuVpn5VhxaXFfaHP3FBRZFYzKf9L
-         96jkFuz1SaC/+UeA8w1NR4PGOkTXMCRCNnM9eDIsvitoppbpPS/ySSyFn8fGChXh2vHt
-         j8Yw==
-X-Gm-Message-State: AOAM533/2sUY0yDcsECOH6DUvHgOOP3nj96XRtzfZsVmWiXiq4zgR+3m
-        kjC1DOiagRiijarHs5sWhN3u+lwnzsJB0sSHu+mO/Q==
-X-Google-Smtp-Source: ABdhPJwoFonBDxjusEqLqiTK0uVTTNt5Xf4FZQwxFLlkjsdpB74jRGEf2PVrPcKre2Q7qsqcT2Rww1gU6SvfHRGAcp8=
-X-Received: by 2002:a05:6102:244d:b0:32c:dfc4:d818 with SMTP id
- g13-20020a056102244d00b0032cdfc4d818mr12312772vss.74.1652201898969; Tue, 10
- May 2022 09:58:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220505043846.3165303-1-irogers@google.com> <87b89e2c-da5c-52c3-40dc-448e874cb5d8@linux.intel.com>
- <CAP-5=fVHhWu1uJHnTfFYWvM02_F-bFBZaaOYo8zPRiA=ODRxGQ@mail.gmail.com>
- <12c03e85-cb48-d264-5f04-e9bf9faaf739@linux.intel.com> <CAP-5=fW9Cp3ShO=tTQddDWXz+nrSip99HrNW7Wv5_Qsy1UT7bw@mail.gmail.com>
- <83417b72-4872-072a-2328-a88d2bb90858@linux.intel.com> <CAP-5=fXnYUnbT89q9W0Ax3d-26jbL5Mcd7O5X=JcXq9FnOUm7Q@mail.gmail.com>
- <0c8da8b4-4f77-4329-9e63-721d05fd258d@linux.intel.com>
-In-Reply-To: <0c8da8b4-4f77-4329-9e63-721d05fd258d@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 10 May 2022 09:58:07 -0700
-Message-ID: <CAP-5=fUwSkikUiLpXURYKM4FEf=0zMW9a3Q5h8=Wg08ht5KXHw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf evlist: Keep topdown counters in weak group
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Tue, 10 May 2022 13:06:56 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699361E1228;
+        Tue, 10 May 2022 10:02:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E4330B81DC3;
+        Tue, 10 May 2022 17:02:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17403C385C9;
+        Tue, 10 May 2022 17:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652202173;
+        bh=bCGj8PLiibH/p9Tx45xlzoz11ALnJn8s7PSqJCsvHow=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m3mK34GlyoymFBDzA0dReqaI/fJ7a3GhKS5gB6TYM870pYQfJC/J+Lu8tZ7MT0O3t
+         FoId5E6WYeypYA64PmKN8399uHH5hI1nyoBSNpQozu9fqJO/2kDPnRz5gdEO5p3O/4
+         SPbXvtNxWXcY0OHjFWdxnTKAYNuNgdX4WV7DOAdL+j+zhv6jhOdEzArF/HkOKqGQ77
+         V2U348iu5kG03ZJoouqXkeAFhKWdXjjUXKpptu90+S6A1ugMytFXb8O0H1+qN2n8ZT
+         jRmeXLINC+g/lHvxTOzWPEV4QDvVeBORB2/OnE09Y2pSLEiOB9Wq4lFUBOIiTrEJtQ
+         Zwmntw21cg3nQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 51806400B1; Tue, 10 May 2022 14:02:50 -0300 (-03)
+Date:   Tue, 10 May 2022 14:02:50 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
-        Haowen Bai <baihaowen@meizu.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
+        Milian Wolff <milian.wolff@kdab.com>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Blake Jones <blakejones@google.com>
+Subject: Re: [PATCH 2/4] perf record: Enable off-cpu analysis with BPF
+Message-ID: <YnqauukLMUqfv15K@kernel.org>
+References: <20220506201627.85598-1-namhyung@kernel.org>
+ <20220506201627.85598-3-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220506201627.85598-3-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 9, 2022 at 2:01 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->
-> On 5/9/2022 1:28 PM, Ian Rogers wrote:
-> > On Thu, May 5, 2022 at 12:44 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
-> >>
-> >>
-> >>
-> >> On 5/5/2022 2:31 PM, Ian Rogers wrote:
-> >>>>> So I think fixing all of these should be a follow up. I am working to
-> >>>>> get access to an Alderlake system, could we land this first?
-> >>>>>
-> >>>> I think we can use pmu_name to replace the "cpu" to fix the issue for
-> >>>> the hybrid platform. For a hybrid platform, the pmu_name is either
-> >>>> cpu_atom or cpu_core.
-> >>>>
-> >>>> Besides, the topdown events may have a PMU prefix, e.g.,
-> >>>> cpu_core/topdown-be-bound/. The strcasecmp may not work well for this case.
-> >>>>
-> >>>> How about the below patch?
-> >>>> If it's OK for you, could you please merge it into your V2 patch set?
-> >>>> I can do the test on a ADL system.
-> >>>>
-> >>>> diff --git a/tools/perf/arch/x86/util/evsel.c
-> >>>> b/tools/perf/arch/x86/util/evsel.c
-> >>>> index 40b171de2086..551ae2bab70e 100644
-> >>>> --- a/tools/perf/arch/x86/util/evsel.c
-> >>>> +++ b/tools/perf/arch/x86/util/evsel.c
-> >>>> @@ -33,11 +33,12 @@ void arch_evsel__fixup_new_cycles(struct
-> >>>> perf_event_attr *attr)
-> >>>>
-> >>>>     bool arch_evsel__must_be_in_group(const struct evsel *evsel)
-> >>>>     {
-> >>>> -       if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
-> >>>> -           !pmu_have_event("cpu", "slots"))
-> >>>> +       const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
-> >>>> +
-> >>>> +       if (!pmu_have_event(pmu_name, "slots"))
-> >>>>                   return false;
-> >>> Hmm. The idea with this test is to see if the architecture supports
-> >>> topdown events before going further. There's a similar test in all the
-> >>> arch_evlist functions. I think with cpu_core this needs to become:
-> >>>
-> >>
-> >> The case is a little bit different here. For the arch_evlist functions,
-> >> the input is the evlist, not the specific evsel. So we have to check all
-> >> the possible PMU names which are "cpu" and "cpu_core". Then we decide
-> >> whether going further.
-> >>
-> >> The input of the evsel__must_be_in_group() is the evsel. The PMU name is
-> >> stored in the evsel->pmu_name. I don't think we need to check all the
-> >> possible PMU names. Using evsel->pmu_name should be good enough.
-> >>
-> >>> if (!pmu_have_event("cpu", "slots") && !pmu_have_event("cpu_core", "slots") )
-> >>>
-> >>> But we should add a helper function for this. It is odd to have this
-> >>> change supporting Alderlake but the existing evlist work not. Perhaps
-> >>> we should just wait until Zhengjun's patches land.
-> >>
-> >> Yes, a helper function is good for the arch_evlist functions. But I
-> >> don't think this patch needs the helper function. Zhengjun's patches are
-> >> to fix the other topdown issues on ADL. There is no dependency between
-> >> this patch and zhengjun's patches.
-> >>
-> >> Thanks,
-> >> Kan
-> >
-> > TL;DR I think we can move forward with landing these patches to fix Icelake.
->
-> This patch doesn't work with the hybrid platform for sure. I can send
-> you a fix for the hybrid part if you prefer this way? Then I guess you
-> may append it as the patch 3 for V2.
->
-> Besides the hybrid thing, the patch set also has other two issues I
-> mentioned in the previous reply.
-> - I don't think the strcasecmp() can handle the case like
-> cpu/topdown-bad-spec/ or cpu/slots/. It should be an issue for both
-> hybrid and non-hybrid platforms.
-> - It's better not to use non-architecture events, e.g., baclears.any,
-> ARITH.DIVIDER_ACTIVE, even in the test case. The non-architecture events
-> may be disappear in the future platforms. If so, you have to update the
-> test case again for the future platforms.
-> IMHO, I don't think the patch set is ready.
+Em Fri, May 06, 2022 at 01:16:25PM -0700, Namhyung Kim escreveu:
+> Add --off-cpu option to enable the off-cpu profiling with BPF.  It'd
+> use a bpf_output event and rename it to "offcpu-time".  Samples will
+> be synthesized at the end of the record session using data from a BPF
+> map which contains the aggregated off-cpu time at context switches.
+> So it needs root privilege to get the off-cpu profiling.
+> 
+> Each sample will have a separate user stacktrace so it will skip
+> kernel threads.  The sample ip will be set from the stacktrace and
+> other sample data will be updated accordingly.  Currently it only
+> handles some basic sample types.
+> 
+> The sample timestamp is set to a dummy value just not to bother with
+> other events during the sorting.  So it has a very big initial value
+> and increase it on processing each samples.
+> 
+> Good thing is that it can be used together with regular profiling like
+> cpu cycles.  If you don't want to that, you can use a dummy event to
+> enable off-cpu profiling only.
+> 
+> Example output:
+>   $ sudo perf record --off-cpu perf bench sched messaging -l 1000
+> 
+>   $ sudo perf report --stdio --call-graph=no
+>   # Total Lost Samples: 0
+>   #
+>   # Samples: 41K of event 'cycles'
+>   # Event count (approx.): 42137343851
+>   ...
+> 
+>   # Samples: 1K of event 'offcpu-time'
+>   # Event count (approx.): 587990831640
+>   #
+>   # Children      Self  Command          Shared Object       Symbol
+>   # ........  ........  ...............  ..................  .........................
+>   #
+>       81.66%     0.00%  sched-messaging  libc-2.33.so        [.] __libc_start_main
+>       81.66%     0.00%  sched-messaging  perf                [.] cmd_bench
+>       81.66%     0.00%  sched-messaging  perf                [.] main
+>       81.66%     0.00%  sched-messaging  perf                [.] run_builtin
+>       81.43%     0.00%  sched-messaging  perf                [.] bench_sched_messaging
+>       40.86%    40.86%  sched-messaging  libpthread-2.33.so  [.] __read
+>       37.66%    37.66%  sched-messaging  libpthread-2.33.so  [.] __write
+>        2.91%     2.91%  sched-messaging  libc-2.33.so        [.] __poll
+>   ...
+> 
+> As you can see it spent most of off-cpu time in read and write in
+> bench_sched_messaging().  The --call-graph=no was added just to make
+> the output concise here.
+> 
+> It uses perf hooks facility to control BPF program during the record
+> session rather than adding new BPF/off-cpu specific calls.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Documentation/perf-record.txt |  10 ++
+>  tools/perf/Makefile.perf                 |   1 +
+>  tools/perf/builtin-record.c              |  21 +++
+>  tools/perf/util/Build                    |   1 +
+>  tools/perf/util/bpf_off_cpu.c            | 208 +++++++++++++++++++++++
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c   | 139 +++++++++++++++
+>  tools/perf/util/off_cpu.h                |  22 +++
+>  7 files changed, 402 insertions(+)
+>  create mode 100644 tools/perf/util/bpf_off_cpu.c
+>  create mode 100644 tools/perf/util/bpf_skel/off_cpu.bpf.c
+>  create mode 100644 tools/perf/util/off_cpu.h
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 465be4e62a17..8084e3fb73a1 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -758,6 +758,16 @@ include::intel-hybrid.txt[]
+>  	If the URLs is not specified, the value of DEBUGINFOD_URLS
+>  	system environment variable is used.
+>  
+> +--off-cpu::
+> +	Enable off-cpu profiling with BPF.  The BPF program will collect
+> +	task scheduling information with (user) stacktrace and save them
+> +	as sample data of a software event named "offcpu-time".  The
+> +	sample period will have the time the task slept in nano-second.
 
-So all the stated objections are that I'm checking cpu/slots/ for an
-indication of topdown support and this doesn't work for hybrid? This
-is identical to the arch evlist code:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/arch/x86/util/evlist.c?h=perf/core#n10
-both in the functions arch_evlist__add_default_attrs and
-arch_evlist__leader (one I wrote and one I didn't). So the patch set
-isn't ready because I haven't fixed alderlake, but alderlake already
-isn't working? And there is no example of how to make this work for
-alderlake. So basically your ask is that I bring up alderlake. I think
-this is stretching things for a patch fixing icelake. The value here
-is in fixing icelake and alderlake will have to be the next problem.
+							nanoseconds.
+> +
+> +	Note that BPF can collect stacktrace using frame pointer ("fp")
 
-> >
-> > For Alderlake/hybrid we have a problem. To determine what happens with
-> > grouping we need to know does the CPU have topdown events? This is a
-> > runtime question for doing perf_event_open and so an arch test and
-> > weak symbol are appropriate. For Icelake we are determining the
-> > presence of topdown events by looking at the special PMU cpu. For
-> > Alderlake the same information can be found by looking at the PMUs
-> > cpu_core and cpu_atom, but how to discover those PMU names?
->
-> The PMU name can be retrieved either from the event list or perf command.
-> For the non-hybrid, the PMU name is hard code to "cpu" for the core
-> events. So users/event files don't need to specify the PMU name.
-> For the hybrid platform, a PMU name is required and stored in the
-> evsel->pmu_name. If the evsel->pmu_name is NULL, we can assume that it's
-> a non-hybrid PMU, CPU.
+				stack traces
 
-This doesn't make sense. Hybrid implies more than 1 CPU type, how can
-more than one be the same as 1 type to be used for the PMU? Again, you
-are asking I make all the alderlake logic work and I think that should
-be follow up. As shown above the arch evlist code also needs fixing as
-follow up.
+> +	only, as of now.  So the applications built without the frame
+> +	pointer might see bogus addresses.
 
-Thanks,
-Ian
+One possible improvement is to check if debugging info is available in
+the traced program and check if -fnoomit-frame-pointer is present:
 
-> > It is
-> > already somewhat concerning that we've hard coded "cpu" and we don't
-> > want to have an ever growing list of PMU names.
-> >
-> > We have similarly hard coded "cpu" in the topology code here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/cputopo.c?h=tmp.perf/core#n18
-> > Is this unreasonable given cpu is already supposed to be ABI stable:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/Documentation/ABI/stable/sysfs-devices-system-cpu?h=tmp.perf/core
->
-> I don't think there is a stable ABI for a PMU name.
-> The PMU name may be changed generation by generation because of the
-> different micro arch. We will try our best to keep it unchanged in X86
-> but it's not guaranteed especially when the hybrid is introduced.
->
->
-> >
-> > It is hard to say what the right hybrid fix is here. I should get a
-> > system I can poke shortly. I'd also like to compare what's in sysfs
-> > for Alderlake with ARM's big.little approach. I can imagine we need a
-> > function that returns a list of CPU like PMUs for probing. Ideally we
-> > could work this out from sysfs and use some stable ABI.
-> >
->
-> I don't think there is a standard PMU naming rule for all the ARCHs. For
-> X86, it may be possible. You can assume that the name like "cpu" or
-> "cpu_*" are for core PMUs. But for other ARCH e.g., ARM, AFAIK, they use
-> a quite different naming rule.
->
->
-> Thanks,
-> Kan
+⬢[acme@toolbox perf]$ readelf -wi ~/bin/perf | grep DW_AT_producer -m1
+    <d>   DW_AT_producer    : (indirect string, offset: 0x6627): GNU C99 11.2.1 20220127 (Red Hat 11.2.1-9) -mtune=generic -march=x86-64 -ggdb3 -O6 -std=gnu99 -fno-omit-frame-pointer -funwind-tables -fstack-protector-all
+⬢[acme@toolbox perf]$ 
+
+If debugging info is available and -fno-omit-frame-pointer isn't in the
+DW_AT_producer string, then we can print a flashing warning and even
+don't use the stack traces.
+
+That or some other more robust method to detect that frame pointers are
+valid.
+
+Some more comments below.
+
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 6e5aded855cc..8f738e11356d 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -1038,6 +1038,7 @@ SKEL_TMP_OUT := $(abspath $(SKEL_OUT)/.tmp)
+>  SKELETONS := $(SKEL_OUT)/bpf_prog_profiler.skel.h
+>  SKELETONS += $(SKEL_OUT)/bperf_leader.skel.h $(SKEL_OUT)/bperf_follower.skel.h
+>  SKELETONS += $(SKEL_OUT)/bperf_cgroup.skel.h $(SKEL_OUT)/func_latency.skel.h
+> +SKELETONS += $(SKEL_OUT)/off_cpu.skel.h
+>  
+>  $(SKEL_TMP_OUT) $(LIBBPF_OUTPUT):
+>  	$(Q)$(MKDIR) -p $@
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index a5cf6a99d67f..4e0285ca9a2d 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -49,6 +49,7 @@
+>  #include "util/clockid.h"
+>  #include "util/pmu-hybrid.h"
+>  #include "util/evlist-hybrid.h"
+> +#include "util/off_cpu.h"
+>  #include "asm/bug.h"
+>  #include "perf.h"
+>  #include "cputopo.h"
+> @@ -162,6 +163,7 @@ struct record {
+>  	bool			buildid_mmap;
+>  	bool			timestamp_filename;
+>  	bool			timestamp_boundary;
+> +	bool			off_cpu;
+>  	struct switch_output	switch_output;
+>  	unsigned long long	samples;
+>  	unsigned long		output_max_size;	/* = 0: unlimited */
+> @@ -903,6 +905,11 @@ static int record__config_text_poke(struct evlist *evlist)
+>  	return 0;
+>  }
+>  
+> +static int record__config_off_cpu(struct record *rec)
+> +{
+> +	return off_cpu_prepare(rec->evlist);
+> +}
+> +
+>  static bool record__kcore_readable(struct machine *machine)
+>  {
+>  	char kcore[PATH_MAX];
+> @@ -2600,6 +2607,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  	} else
+>  		status = err;
+>  
+> +	if (rec->off_cpu)
+> +		rec->bytes_written += off_cpu_write(rec->session);
+> +
+>  	record__synthesize(rec, true);
+>  	/* this will be recalculated during process_buildids() */
+>  	rec->samples = 0;
+> @@ -3324,6 +3334,9 @@ static struct option __record_options[] = {
+>  	OPT_CALLBACK_OPTARG(0, "threads", &record.opts, NULL, "spec",
+>  			    "write collected trace data into several data files using parallel threads",
+>  			    record__parse_threads),
+> +#ifdef HAVE_BPF_SKEL
+> +	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
+> +#endif
+
+
+Since this is in the documentation, I think we should have an #else
+clause and state that --off-cpu needs building with some specific make
+command line.
+
+>  	OPT_END()
+>  };
+>  
+> @@ -3981,6 +3994,14 @@ int cmd_record(int argc, const char **argv)
+>  		}
+>  	}
+>  
+> +	if (rec->off_cpu) {
+> +		err = record__config_off_cpu(rec);
+> +		if (err) {
+> +			pr_err("record__config_off_cpu failed, error %d\n", err);
+> +			goto out;
+> +		}
+> +	}
+> +
+>  	if (record_opts__config(&rec->opts)) {
+>  		err = -EINVAL;
+>  		goto out;
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 9a7209a99e16..a51267d88ca9 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -147,6 +147,7 @@ perf-$(CONFIG_LIBBPF) += bpf_map.o
+>  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
+>  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter_cgroup.o
+>  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_ftrace.o
+> +perf-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
+>  perf-$(CONFIG_BPF_PROLOGUE) += bpf-prologue.o
+>  perf-$(CONFIG_LIBELF) += symbol-elf.o
+>  perf-$(CONFIG_LIBELF) += probe-file.o
+> diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+> new file mode 100644
+> index 000000000000..1f87d2a9b86d
+> --- /dev/null
+> +++ b/tools/perf/util/bpf_off_cpu.c
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "util/bpf_counter.h"
+> +#include "util/debug.h"
+> +#include "util/evsel.h"
+> +#include "util/evlist.h"
+> +#include "util/off_cpu.h"
+> +#include "util/perf-hooks.h"
+> +#include "util/session.h"
+> +#include <bpf/bpf.h>
+> +
+> +#include "bpf_skel/off_cpu.skel.h"
+> +
+> +#define MAX_STACKS  32
+> +/* we don't need actual timestamp, just want to put the samples at last */
+> +#define OFF_CPU_TIMESTAMP  (~0ull << 32)
+> +
+> +static struct off_cpu_bpf *skel;
+> +
+> +struct off_cpu_key {
+> +	u32 pid;
+> +	u32 tgid;
+> +	u32 stack_id;
+> +	u32 state;
+> +	u64 cgroup_id;
+> +};
+> +
+> +union off_cpu_data {
+> +	struct perf_event_header hdr;
+> +	u64 array[1024 / sizeof(u64)];
+> +};
+> +
+> +static int off_cpu_config(struct evlist *evlist)
+> +{
+> +	struct evsel *evsel;
+> +	struct perf_event_attr attr = {
+> +		.type	= PERF_TYPE_SOFTWARE,
+> +		.config = PERF_COUNT_SW_BPF_OUTPUT,
+> +		.size	= sizeof(attr), /* to capture ABI version */
+> +	};
+> +
+> +	evsel = evsel__new(&attr);
+> +	if (!evsel)
+> +		return -ENOMEM;
+> +
+> +	evsel->core.attr.freq = 1;
+> +	evsel->core.attr.sample_period = 1;
+> +	/* off-cpu analysis depends on stack trace */
+> +	evsel->core.attr.sample_type = PERF_SAMPLE_CALLCHAIN;
+> +
+> +	evlist__add(evlist, evsel);
+> +
+> +	free(evsel->name);
+> +	evsel->name = strdup("offcpu-time");
+> +	if (evsel->name == NULL)
+> +		return -ENOMEM;
+
+But at this point the evsel was left in the evlist? Shouldn't we start
+it all by trying to allocate this string and don't bother to call
+evsel__new() on failure, etc?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void off_cpu_start(void *arg __maybe_unused)
+> +{
+> +	skel->bss->enabled = 1;
+> +}
+> +
+> +static void off_cpu_finish(void *arg __maybe_unused)
+> +{
+> +	skel->bss->enabled = 0;
+> +	off_cpu_bpf__destroy(skel);
+> +}
+> +
+> +int off_cpu_prepare(struct evlist *evlist)
+> +{
+> +	int err;
+> +
+> +	if (off_cpu_config(evlist) < 0) {
+> +		pr_err("Failed to config off-cpu BPF event\n");
+> +		return -1;
+> +	}
+> +
+> +	set_max_rlimit();
+> +
+> +	skel = off_cpu_bpf__open_and_load();
+> +	if (!skel) {
+> +		pr_err("Failed to open off-cpu skeleton\n");
+
+"BPF sleketon", to give a bit more context to users?
+
+> +		return -1;
+> +	}
+> +
+> +	err = off_cpu_bpf__attach(skel);
+> +	if (err) {
+> +		pr_err("Failed to attach off-cpu skeleton\n");
+
+Ditto.
+
+> +		goto out;
+> +	}
+> +
+> +	if (perf_hooks__set_hook("record_start", off_cpu_start, NULL) ||
+> +	    perf_hooks__set_hook("record_end", off_cpu_finish, NULL)) {
+> +		pr_err("Failed to attach off-cpu skeleton\n");
+> +		goto out;
+> +	}
+> +
+> +	return 0;
+> +
+> +out:
+> +	off_cpu_bpf__destroy(skel);
+> +	return -1;
+> +}
+> +
+> +int off_cpu_write(struct perf_session *session)
+> +{
+> +	int bytes = 0, size;
+> +	int fd, stack;
+> +	bool found = false;
+> +	u64 sample_type, val, sid = 0;
+> +	struct evsel *evsel;
+> +	struct perf_data_file *file = &session->data->file;
+> +	struct off_cpu_key prev, key;
+> +	union off_cpu_data data = {
+> +		.hdr = {
+> +			.type = PERF_RECORD_SAMPLE,
+> +			.misc = PERF_RECORD_MISC_USER,
+> +		},
+> +	};
+> +	u64 tstamp = OFF_CPU_TIMESTAMP;
+> +
+> +	skel->bss->enabled = 0;
+> +
+> +	evlist__for_each_entry(session->evlist, evsel) {
+> +		if (!strcmp(evsel__name(evsel), "offcpu-time")) {
+> +			found = true;
+> +			break;
+> +		}
+> +	}
+
+Don't we have some evlist__find_evsel function?
+
+struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str)
+{
+        struct evsel *evsel;
+
+        evlist__for_each_entry(evlist, evsel) {
+                if (!evsel->name)
+                        continue;
+                if (strcmp(str, evsel->name) == 0)
+                        return evsel;
+        }
+
+        return NULL;
+}
+
+> +
+> +	if (!found) {
+> +		pr_err("offcpu-time evsel not found\n");
+> +		return 0;
+> +	}
+> +
+> +	sample_type = evsel->core.attr.sample_type;
+> +
+> +	if (sample_type & (PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER)) {
+> +		if (evsel->core.id)
+> +			sid = evsel->core.id[0];
+> +	}
+> +
+> +	fd = bpf_map__fd(skel->maps.off_cpu);
+> +	stack = bpf_map__fd(skel->maps.stacks);
+> +	memset(&prev, 0, sizeof(prev));
+> +
+> +	while (!bpf_map_get_next_key(fd, &prev, &key)) {
+> +		int n = 1;  /* start from perf_event_header */
+> +		int ip_pos = -1;
+> +
+> +		bpf_map_lookup_elem(fd, &key, &val);
+> +
+> +		if (sample_type & PERF_SAMPLE_IDENTIFIER)
+> +			data.array[n++] = sid;
+> +		if (sample_type & PERF_SAMPLE_IP) {
+> +			ip_pos = n;
+> +			data.array[n++] = 0;  /* will be updated */
+> +		}
+> +		if (sample_type & PERF_SAMPLE_TID)
+> +			data.array[n++] = (u64)key.pid << 32 | key.tgid;
+> +		if (sample_type & PERF_SAMPLE_TIME)
+> +			data.array[n++] = tstamp;
+> +		if (sample_type & PERF_SAMPLE_ID)
+> +			data.array[n++] = sid;
+> +		if (sample_type & PERF_SAMPLE_CPU)
+> +			data.array[n++] = 0;
+> +		if (sample_type & PERF_SAMPLE_PERIOD)
+> +			data.array[n++] = val;
+> +		if (sample_type & PERF_SAMPLE_CALLCHAIN) {
+> +			int len = 0;
+> +
+> +			/* data.array[n] is callchain->nr (updated later) */
+> +			data.array[n + 1] = PERF_CONTEXT_USER;
+> +			data.array[n + 2] = 0;
+> +
+> +			bpf_map_lookup_elem(stack, &key.stack_id, &data.array[n + 2]);
+> +			while (data.array[n + 2 + len])
+> +				len++;
+> +
+> +			/* update length of callchain */
+> +			data.array[n] = len + 1;
+> +
+> +			/* update sample ip with the first callchain entry */
+> +			if (ip_pos >= 0)
+> +				data.array[ip_pos] = data.array[n + 2];
+> +
+> +			/* calculate sample callchain data array length */
+> +			n += len + 2;
+> +		}
+> +		/* TODO: handle more sample types */
+> +
+> +		size = n * sizeof(u64);
+> +		data.hdr.size = size;
+> +		bytes += size;
+> +
+> +		if (perf_data_file__write(file, &data, size) < 0) {
+> +			pr_err("failed to write perf data, error: %m\n");
+> +			return bytes;
+> +		}
+> +
+> +		prev = key;
+> +		/* increase dummy timestamp to sort later samples */
+> +		tstamp++;
+> +	}
+> +	return bytes;
+> +}
+> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> new file mode 100644
+> index 000000000000..5173ed882fdf
+> --- /dev/null
+> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> @@ -0,0 +1,139 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +// Copyright (c) 2022 Google
+> +#include "vmlinux.h"
+> +#include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+> +#include <bpf/bpf_core_read.h>
+> +
+> +/* task->flags for off-cpu analysis */
+> +#define PF_KTHREAD   0x00200000  /* I am a kernel thread */
+> +
+> +/* task->state for off-cpu analysis */
+> +#define TASK_INTERRUPTIBLE	0x0001
+> +#define TASK_UNINTERRUPTIBLE	0x0002
+> +
+> +#define MAX_STACKS   32
+> +#define MAX_ENTRIES  102400
+> +
+> +struct tstamp_data {
+> +	__u32 stack_id;
+> +	__u32 state;
+> +	__u64 timestamp;
+> +};
+> +
+> +struct offcpu_key {
+> +	__u32 pid;
+> +	__u32 tgid;
+> +	__u32 stack_id;
+> +	__u32 state;
+> +};
+> +
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
+> +	__uint(key_size, sizeof(__u32));
+> +	__uint(value_size, MAX_STACKS * sizeof(__u64));
+> +	__uint(max_entries, MAX_ENTRIES);
+> +} stacks SEC(".maps");
+> +
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
+> +	__uint(map_flags, BPF_F_NO_PREALLOC);
+> +	__type(key, int);
+> +	__type(value, struct tstamp_data);
+> +} tstamp SEC(".maps");
+> +
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_HASH);
+> +	__uint(key_size, sizeof(struct offcpu_key));
+> +	__uint(value_size, sizeof(__u64));
+> +	__uint(max_entries, MAX_ENTRIES);
+> +} off_cpu SEC(".maps");
+> +
+> +/* old kernel task_struct definition */
+> +struct task_struct___old {
+> +	long state;
+> +} __attribute__((preserve_access_index));
+> +
+> +int enabled = 0;
+> +
+> +/*
+> + * Old kernel used to call it task_struct->state and now it's '__state'.
+> + * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
+> + *
+> + * https://nakryiko.com/posts/bpf-core-reference-guide/#handling-incompatible-field-and-type-changes
+> + */
+> +static inline int get_task_state(struct task_struct *t)
+> +{
+> +	if (bpf_core_field_exists(t->__state))
+> +		return BPF_CORE_READ(t, __state);
+> +
+> +	/* recast pointer to capture task_struct___old type for compiler */
+> +	struct task_struct___old *t_old = (void *)t;
+> +
+> +	/* now use old "state" name of the field */
+> +	return BPF_CORE_READ(t_old, state);
+> +}
+> +
+> +SEC("tp_btf/sched_switch")
+> +int on_switch(u64 *ctx)
+> +{
+> +	__u64 ts;
+> +	int state;
+> +	__u32 stack_id;
+> +	struct task_struct *prev, *next;
+> +	struct tstamp_data *pelem;
+> +
+> +	if (!enabled)
+> +		return 0;
+> +
+> +	prev = (struct task_struct *)ctx[1];
+> +	next = (struct task_struct *)ctx[2];
+> +	state = get_task_state(prev);
+> +
+> +	ts = bpf_ktime_get_ns();
+> +
+> +	if (prev->flags & PF_KTHREAD)
+> +		goto next;
+> +	if (state != TASK_INTERRUPTIBLE &&
+> +	    state != TASK_UNINTERRUPTIBLE)
+> +		goto next;
+> +
+> +	stack_id = bpf_get_stackid(ctx, &stacks,
+> +				   BPF_F_FAST_STACK_CMP | BPF_F_USER_STACK);
+> +
+> +	pelem = bpf_task_storage_get(&tstamp, prev, NULL,
+> +				     BPF_LOCAL_STORAGE_GET_F_CREATE);
+> +	if (!pelem)
+> +		goto next;
+> +
+> +	pelem->timestamp = ts;
+> +	pelem->state = state;
+> +	pelem->stack_id = stack_id;
+> +
+> +next:
+> +	pelem = bpf_task_storage_get(&tstamp, next, NULL, 0);
+> +
+> +	if (pelem && pelem->timestamp) {
+> +		struct offcpu_key key = {
+> +			.pid = next->pid,
+> +			.tgid = next->tgid,
+> +			.stack_id = pelem->stack_id,
+> +			.state = pelem->state,
+> +		};
+> +		__u64 delta = ts - pelem->timestamp;
+> +		__u64 *total;
+> +
+> +		total = bpf_map_lookup_elem(&off_cpu, &key);
+> +		if (total)
+> +			*total += delta;
+> +		else
+> +			bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
+> +
+> +		/* prevent to reuse the timestamp later */
+> +		pelem->timestamp = 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +char LICENSE[] SEC("license") = "Dual BSD/GPL";
+> diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
+> new file mode 100644
+> index 000000000000..4113bd19a2e4
+> --- /dev/null
+> +++ b/tools/perf/util/off_cpu.h
+> @@ -0,0 +1,22 @@
+> +#ifndef PERF_UTIL_OFF_CPU_H
+> +#define PERF_UTIL_OFF_CPU_H
+> +
+> +struct evlist;
+> +struct perf_session;
+> +
+> +#ifdef HAVE_BPF_SKEL
+> +int off_cpu_prepare(struct evlist *evlist);
+> +int off_cpu_write(struct perf_session *session);
+> +#else
+> +static inline int off_cpu_prepare(struct evlist *evlist __maybe_unused)
+> +{
+> +	return -1;
+> +}
+> +
+> +static inline int off_cpu_write(struct perf_session *session __maybe_unused)
+> +{
+> +	return -1;
+> +}
+> +#endif
+> +
+> +#endif  /* PERF_UTIL_OFF_CPU_H */
+> -- 
+> 2.36.0.512.ge40c2bad7a-goog
+
+-- 
+
+- Arnaldo
