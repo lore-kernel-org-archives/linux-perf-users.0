@@ -2,618 +2,390 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F384C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 10:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23967C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 11:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240304AbiEJKzH (ORCPT
+        id S234540AbiEJLWW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 06:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40326 "EHLO
+        Tue, 10 May 2022 07:22:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240363AbiEJKyF (ORCPT
+        with ESMTP id S232406AbiEJLWV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 06:54:05 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BCF7F2AACF6;
-        Tue, 10 May 2022 03:49:38 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9905D1684;
-        Tue, 10 May 2022 03:49:38 -0700 (PDT)
-Received: from hype-n1-sdp.warwick.arm.com (hype-n1-sdp.warwick.arm.com [10.32.33.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2E7DD3F66F;
-        Tue, 10 May 2022 03:49:36 -0700 (PDT)
-From:   Nick Forrington <nick.forrington@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     Nick Forrington <nick.forrington@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>
-Subject: [PATCH 19/20] perf vendors events arm64: Arm Cortex-X2
-Date:   Tue, 10 May 2022 11:47:57 +0100
-Message-Id: <20220510104758.64677-20-nick.forrington@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220510104758.64677-1-nick.forrington@arm.com>
-References: <20220510104758.64677-1-nick.forrington@arm.com>
+        Tue, 10 May 2022 07:22:21 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088571868CB;
+        Tue, 10 May 2022 04:18:24 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KyFrg0FHYzhYfG;
+        Tue, 10 May 2022 19:17:55 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 10 May 2022 19:18:21 +0800
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <john.garry@huawei.com>,
+        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH v7 2/7] hwtracing: Add trace function support for
+ HiSilicon PCIe Tune and Trace device
+To:     James Clark <james.clark@arm.com>
+References: <20220407125841.3678-1-yangyicong@hisilicon.com>
+ <20220407125841.3678-3-yangyicong@hisilicon.com>
+ <e56c02c5-3696-c8d5-89e0-050bfe9edaa8@arm.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <ad518edf-425b-f2ab-08e9-5a00b712508c@huawei.com>
+Date:   Tue, 10 May 2022 19:18:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e56c02c5-3696-c8d5-89e0-050bfe9edaa8@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add PMU events for Arm Cortex-X2
-Update mapfile.csv
+On 2022/5/10 17:46, James Clark wrote:
+> 
+> 
+> On 07/04/2022 13:58, Yicong Yang wrote:
+>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex integrated
+>> Endpoint(RCiEP) device, providing the capability to dynamically monitor and
+>> tune the PCIe traffic, and trace the TLP headers.
+>>
+>> Add the driver for the device to enable the trace function. Register PMU
+>> device of PTT trace, then users can use trace through perf command. The
+>> driver makes use of perf AUX trace and support following events to
+>> configure the trace:
+>>
+>> - filter: select Root port or Endpoint to trace
+>> - type: select the type of traced TLP headers
+>> - direction: select the direction of traced TLP headers
+>> - format: select the data format of the traced TLP headers
+>>
+>> This patch adds the driver part of PTT trace. The perf command support of
+>> PTT trace is added in the following patch.
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>  drivers/Makefile                 |   1 +
+>>  drivers/hwtracing/Kconfig        |   2 +
+>>  drivers/hwtracing/ptt/Kconfig    |  12 +
+>>  drivers/hwtracing/ptt/Makefile   |   2 +
+>>  drivers/hwtracing/ptt/hisi_ptt.c | 874 +++++++++++++++++++++++++++++++
+>>  drivers/hwtracing/ptt/hisi_ptt.h | 166 ++++++
+>>  6 files changed, 1057 insertions(+)
+>>  create mode 100644 drivers/hwtracing/ptt/Kconfig
+>>  create mode 100644 drivers/hwtracing/ptt/Makefile
+>>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+>>
+>> diff --git a/drivers/Makefile b/drivers/Makefile
+>> index 020780b6b4d2..662d50599467 100644
+>> --- a/drivers/Makefile
+>> +++ b/drivers/Makefile
+>> @@ -175,6 +175,7 @@ obj-$(CONFIG_USB4)		+= thunderbolt/
+>>  obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
+>>  obj-y				+= hwtracing/intel_th/
+>>  obj-$(CONFIG_STM)		+= hwtracing/stm/
+>> +obj-$(CONFIG_HISI_PTT)		+= hwtracing/ptt/
+>>  obj-$(CONFIG_ANDROID)		+= android/
+>>  obj-$(CONFIG_NVMEM)		+= nvmem/
+>>  obj-$(CONFIG_FPGA)		+= fpga/
+>> diff --git a/drivers/hwtracing/Kconfig b/drivers/hwtracing/Kconfig
+>> index 13085835a636..911ee977103c 100644
+>> --- a/drivers/hwtracing/Kconfig
+>> +++ b/drivers/hwtracing/Kconfig
+>> @@ -5,4 +5,6 @@ source "drivers/hwtracing/stm/Kconfig"
+>>  
+>>  source "drivers/hwtracing/intel_th/Kconfig"
+>>  
+>> +source "drivers/hwtracing/ptt/Kconfig"
+>> +
+>>  endmenu
+>> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
+>> new file mode 100644
+>> index 000000000000..8902a6f27563
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/Kconfig
+>> @@ -0,0 +1,12 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +config HISI_PTT
+>> +	tristate "HiSilicon PCIe Tune and Trace Device"
+>> +	depends on ARM64 || (COMPILE_TEST && 64BIT)
+>> +	depends on PCI && HAS_DMA && HAS_IOMEM && PERF_EVENTS
+>> +	help
+>> +	  HiSilicon PCIe Tune and Trace Device exists as a PCIe RCiEP
+>> +	  device, and it provides support for PCIe traffic tuning and
+>> +	  tracing TLP headers to the memory.
+>> +
+>> +	  This driver can also be built as a module. If so, the module
+>> +	  will be called hisi_ptt.
+>> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
+>> new file mode 100644
+>> index 000000000000..908c09a98161
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/Makefile
+>> @@ -0,0 +1,2 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
+>> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+>> new file mode 100644
+>> index 000000000000..242b41870380
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+>> @@ -0,0 +1,874 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Driver for HiSilicon PCIe tune and trace device
+>> + *
+>> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+>> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+>> + */
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/bitops.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/dma-iommu.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/iommu.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/module.h>
+>> +#include <linux/sysfs.h>
+>> +#include <linux/vmalloc.h>
+>> +
+>> +#include "hisi_ptt.h"
+>> +
+>> +static u16 hisi_ptt_get_filter_val(struct pci_dev *pdev)
+>> +{
+>> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
+>> +		return BIT(HISI_PCIE_CORE_PORT_ID(PCI_SLOT(pdev->devfn)));
+>> +
+>> +	return PCI_DEVID(pdev->bus->number, pdev->devfn);
+>> +}
+>> +
+>> +static bool hisi_ptt_wait_trace_hw_idle(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	u32 val;
+>> +
+>> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_STS,
+>> +					  val, val & HISI_PTT_TRACE_IDLE,
+>> +					  HISI_PTT_WAIT_POLL_INTERVAL_US,
+>> +					  HISI_PTT_WAIT_TRACE_TIMEOUT_US);
+>> +}
+>> +
+>> +static bool hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	u32 val;
+>> +
+>> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS,
+>> +					  val, !val, HISI_PTT_RESET_POLL_INTERVAL_US,
+>> +					  HISI_PTT_RESET_TIMEOUT_US);
+>> +}
+>> +
+>> +static void hisi_ptt_free_trace_buf(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	struct device *dev = &hisi_ptt->pdev->dev;
+>> +	int i;
+>> +
+>> +	if (!ctrl->trace_buf)
+>> +		return;
+>> +
+>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
+>> +		if (ctrl->trace_buf[i].addr)
+>> +			dmam_free_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+>> +					   ctrl->trace_buf[i].addr,
+>> +					   ctrl->trace_buf[i].dma);
+>> +	}
+>> +
+>> +	devm_kfree(dev, ctrl->trace_buf);
+>> +	ctrl->trace_buf = NULL;
+>> +}
+>> +
+>> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	struct device *dev = &hisi_ptt->pdev->dev;
+>> +	int i;
+>> +
+>> +	hisi_ptt->trace_ctrl.buf_index = 0;
+>> +
+>> +	/* If the trace buffer has already been allocated, zero it. */
+>> +	if (ctrl->trace_buf) {
+>> +		for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
+>> +			memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
+>> +		return 0;
+>> +	}
+>> +
+>> +	ctrl->trace_buf = devm_kcalloc(dev, HISI_PTT_TRACE_BUF_CNT,
+>> +				       sizeof(struct hisi_ptt_dma_buffer), GFP_KERNEL);
+>> +	if (!ctrl->trace_buf)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
+>> +		ctrl->trace_buf[i].addr = dmam_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+>> +							     &ctrl->trace_buf[i].dma,
+>> +							     GFP_KERNEL);
+>> +		if (!ctrl->trace_buf[i].addr) {
+>> +			hisi_ptt_free_trace_buf(hisi_ptt);
+>> +			return -ENOMEM;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	hisi_ptt->trace_ctrl.started = false;
+>> +}
+>> +
+>> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	u32 val;
+>> +	int i;
+>> +
+>> +	/* Check device idle before start trace */
+>> +	if (!hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
+>> +		pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	ctrl->started = true;
+>> +
+>> +	/* Reset the DMA before start tracing */
+>> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	val |= HISI_PTT_TRACE_CTRL_RST;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	hisi_ptt_wait_dma_reset_done(hisi_ptt);
+>> +
+>> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	val &= ~HISI_PTT_TRACE_CTRL_RST;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	/* Clear the interrupt status */
+>> +	writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+>> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
+>> +
+>> +	/* Configure the trace DMA buffer */
+>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
+>> +		writel(lower_32_bits(ctrl->trace_buf[i].dma),
+>> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
+>> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+>> +		writel(upper_32_bits(ctrl->trace_buf[i].dma),
+>> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
+>> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+>> +	}
+>> +	writel(HISI_PTT_TRACE_BUF_SIZE, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
+>> +
+>> +	/* Set the trace control register */
+>> +	val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
+>> +	if (!hisi_ptt->trace_ctrl.is_port)
+>> +		val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
+>> +
+>> +	/* Start the Trace */
+>> +	val |= HISI_PTT_TRACE_CTRL_EN;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_ptt_update_aux(struct hisi_ptt *hisi_ptt, int index, bool stop)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	struct perf_output_handle *handle = &ctrl->handle;
+>> +	struct perf_event *event = handle->event;
+>> +	struct hisi_ptt_pmu_buf *buf;
+>> +	void *addr;
+>> +
+>> +	buf = perf_get_aux(handle);
+>> +	if (!buf || !handle->size)
+>> +		return -EINVAL;
+>> +
+>> +	addr = ctrl->trace_buf[ctrl->buf_index].addr;
+>> +
+>> +	memcpy(buf->base + buf->pos, addr, HISI_PTT_TRACE_BUF_SIZE);
+>> +	memset(addr, 0, HISI_PTT_TRACE_BUF_SIZE);
+> 
+> Hi Kicong,
+> 
+> I also have the same comment as Leo here, I don't think the memset is
+> required.
+> 
 
-Event data based on:
-https://github.com/ARM-software/data/tree/master/pmu/cortex-x2.json
+It's necessary in the current approach as we always commit HISI_PTT_TRACE_BUF_SIZE
+data but the buffer maybe partly filled (called when perf going to stopp, not by the
+interrupt). The buffer is cleared so the unfilled part of the buffer will have
+empty data (normal traced TLP headers won't be all 0), then the user can distinguish
+the valid part of the data.
 
-which is based on PMU event descriptions from the Arm Cortex-X2 Technical
-Reference Manual.
+I'm trying to only copy the traced data rather than the whole buffer then the
+clear operation here will be unnecessary. The hardware provide a register indicating
+which offset of which buffer it's currently writing to and it canbe used here.
 
-Mapping data (for mapfile.csv) based on:
-https://github.com/ARM-software/data/blob/master/cpus.json
+>> +	buf->pos += HISI_PTT_TRACE_BUF_SIZE;
+>> +
+>> +	if (stop) {
+>> +		perf_aux_output_end(handle, buf->pos);
+>> +	} else if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
+>> +		perf_aux_output_skip(handle, buf->length - buf->pos);
+> 
+> perf_aux_output_skip() can also return an error so should probably also
+> be checked like perf_aux_output_begin()
+> 
 
-which is based on Main ID Register (MIDR) information found in the Arm
-Technical Reference Manuals for individual CPUs.
+ok it should be checked.
 
-Signed-off-by: Nick Forrington <nick.forrington@arm.com>
----
- .../arch/arm64/arm/cortex-x2/branch.json      |  17 ++
- .../arch/arm64/arm/cortex-x2/bus.json         |  20 +++
- .../arch/arm64/arm/cortex-x2/cache.json       | 155 ++++++++++++++++++
- .../arch/arm64/arm/cortex-x2/exception.json   |  47 ++++++
- .../arch/arm64/arm/cortex-x2/instruction.json | 134 +++++++++++++++
- .../arch/arm64/arm/cortex-x2/memory.json      |  41 +++++
- .../arch/arm64/arm/cortex-x2/pipeline.json    |  23 +++
- .../arch/arm64/arm/cortex-x2/trace.json       |  29 ++++
- tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
- 9 files changed, 467 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json
+> I'm also wondering why there is a skip for every output_end()? Is that
+> to avoid having two memcpy calls to handle the wrap around if the data
+> to be copied goes past the end of the aux buffer?
+> 
+> For example if your buffers are 4MB each and the aux buffer that the
+> user picked isn't a multiple of 4 I can see you needing to write the
+> first part of the 4MB to the end of the aux buffer and then the last
+> part to the beginning which would be two memcpy() calls. And then a
+> skip wouldn't be required.
+> 
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json
-new file mode 100644
-index 000000000000..2f2d137f5f55
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json
-@@ -0,0 +1,17 @@
-+[
-+    {
-+        "ArchStdEvent": "BR_MIS_PRED"
-+    },
-+    {
-+        "ArchStdEvent": "BR_PRED"
-+    },
-+    {
-+        "ArchStdEvent": "BR_IMMED_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "BR_RETURN_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "BR_INDIRECT_SPEC"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json
-new file mode 100644
-index 000000000000..579c1c993d17
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json
-@@ -0,0 +1,20 @@
-+[
-+    {
-+        "ArchStdEvent": "CPU_CYCLES"
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS"
-+    },
-+    {
-+        "ArchStdEvent": "BUS_CYCLES"
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_RD"
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_WR"
-+    },
-+    {
-+        "ArchStdEvent": "CNT_CYCLES"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json
-new file mode 100644
-index 000000000000..0141f749bff3
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json
-@@ -0,0 +1,155 @@
-+[
-+    {
-+        "ArchStdEvent": "L1I_CACHE_REFILL"
-+    },
-+    {
-+        "ArchStdEvent": "L1I_TLB_REFILL"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL"
-+    },
-+    {
-+        "ArchStdEvent": "L1I_CACHE"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_ALLOCATE"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB"
-+    },
-+    {
-+        "ArchStdEvent": "L1I_TLB"
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_ALLOCATE"
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_REFILL"
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_TLB_REFILL"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_TLB"
-+    },
-+    {
-+        "ArchStdEvent": "DTLB_WALK"
-+    },
-+    {
-+        "ArchStdEvent": "ITLB_WALK"
-+    },
-+    {
-+        "ArchStdEvent": "LL_CACHE_RD"
-+    },
-+    {
-+        "ArchStdEvent": "LL_CACHE_MISS_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_LMISS_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WR"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_WR"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_INNER"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB_VICTIM"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB_CLEAN"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_INVAL"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL_WR"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_WR"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WR"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_VICTIM"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_CLEAN"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_INVAL"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_TLB_REFILL_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_TLB_REFILL_WR"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_TLB_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_TLB_WR"
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L1I_CACHE_LMISS"
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_LMISS_RD"
-+    },
-+    {
-+        "ArchStdEvent": "L3D_CACHE_LMISS_RD"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json
-new file mode 100644
-index 000000000000..344a2d552ad5
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json
-@@ -0,0 +1,47 @@
-+[
-+    {
-+        "ArchStdEvent": "EXC_TAKEN"
-+    },
-+    {
-+        "ArchStdEvent": "MEMORY_ERROR"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_UNDEF"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_SVC"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_PABORT"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_DABORT"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_IRQ"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_FIQ"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_SMC"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_HVC"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_PABORT"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_DABORT"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_OTHER"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_IRQ"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_FIQ"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json
-new file mode 100644
-index 000000000000..964f47c6b099
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json
-@@ -0,0 +1,134 @@
-+[
-+    {
-+        "ArchStdEvent": "SW_INCR"
-+    },
-+    {
-+        "ArchStdEvent": "INST_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "EXC_RETURN"
-+    },
-+    {
-+        "ArchStdEvent": "CID_WRITE_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "INST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "TTBR_WRITE_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "BR_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "BR_MIS_PRED_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "OP_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "OP_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "LDREX_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "STREX_PASS_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "STREX_FAIL_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "STREX_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "LD_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "DP_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ASE_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "VFP_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "PC_WRITE_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "CRYPTO_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ISB_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "DSB_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "DMB_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "RC_LD_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "RC_ST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ASE_INST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_INST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "FP_HP_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "FP_SP_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "FP_DP_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_EMPTY_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_FULL_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_PARTIAL_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_NOT_FULL_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_LDFF_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_LDFF_FAULT_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "FP_SCALE_OPS_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "FP_FIXED_OPS_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ASE_SVE_INT8_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ASE_SVE_INT16_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ASE_SVE_INT32_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ASE_SVE_INT64_SPEC"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json
-new file mode 100644
-index 000000000000..7b2b21ac150f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json
-@@ -0,0 +1,41 @@
-+[
-+    {
-+        "ArchStdEvent": "MEM_ACCESS"
-+    },
-+    {
-+        "ArchStdEvent": "REMOTE_ACCESS"
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_RD"
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_WR"
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_LD_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_ST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "LDST_ALIGN_LAT"
-+    },
-+    {
-+        "ArchStdEvent": "LD_ALIGN_LAT"
-+    },
-+    {
-+        "ArchStdEvent": "ST_ALIGN_LAT"
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_CHECKED"
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_CHECKED_RD"
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_CHECKED_WR"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json
-new file mode 100644
-index 000000000000..f9fae15f7555
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json
-@@ -0,0 +1,23 @@
-+[
-+    {
-+        "ArchStdEvent": "STALL_FRONTEND"
-+    },
-+    {
-+        "ArchStdEvent": "STALL_BACKEND"
-+    },
-+    {
-+        "ArchStdEvent": "STALL"
-+    },
-+    {
-+        "ArchStdEvent": "STALL_SLOT_BACKEND"
-+    },
-+    {
-+        "ArchStdEvent": "STALL_SLOT_FRONTEND"
-+    },
-+    {
-+        "ArchStdEvent": "STALL_SLOT"
-+    },
-+    {
-+        "ArchStdEvent": "STALL_BACKEND_MEM"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json
-new file mode 100644
-index 000000000000..3116135c59e2
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json
-@@ -0,0 +1,29 @@
-+[
-+    {
-+        "ArchStdEvent": "TRB_WRAP"
-+    },
-+    {
-+        "ArchStdEvent": "TRCEXTOUT0"
-+    },
-+    {
-+        "ArchStdEvent": "TRCEXTOUT1"
-+    },
-+    {
-+        "ArchStdEvent": "TRCEXTOUT2"
-+    },
-+    {
-+        "ArchStdEvent": "TRCEXTOUT3"
-+    },
-+    {
-+        "ArchStdEvent": "CTI_TRIGOUT4"
-+    },
-+    {
-+        "ArchStdEvent": "CTI_TRIGOUT5"
-+    },
-+    {
-+        "ArchStdEvent": "CTI_TRIGOUT6"
-+    },
-+    {
-+        "ArchStdEvent": "CTI_TRIGOUT7"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index 4ff43a1da161..eeed048e407b 100644
---- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -37,6 +37,7 @@
- 0x00000000410fd440,v1,arm/cortex-x1,core
- 0x00000000410fd460,v1,arm/cortex-a510,core
- 0x00000000410fd470,v1,arm/cortex-a710,core
-+0x00000000410fd480,v1,arm/cortex-x2,core
- 0x00000000410fd490,v1,arm/neoverse-n2,core
- 0x00000000420f5160,v1,cavium/thunderx2,core
- 0x00000000430f0af0,v1,cavium/thunderx2,core
--- 
-2.25.1
+I intended to handle the case that AUX buffer is not a multiple of 4 MiB.
+When the resident AUX buffer size is less than 4MiB, we're not going to
+commit data to it and will apply a new AUX buffer instead. I think you're
+right that the perf_aux_output_skip() is unnecessary here. Thanks for
+catching this.
 
+> I looked at all the other uses of perf_output_end() and perf_output_skip()
+> in the kernel and didn't see a pattern like yours so it seems suspicous to
+> me. Maybe at least some comments around this section are needed.
+> 
+
+Will add some comments of the handling here.
+
+Regards,
+Yicong
