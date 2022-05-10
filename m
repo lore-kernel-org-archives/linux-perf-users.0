@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990FAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 10:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DF9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 10:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238581AbiEJKyR (ORCPT
+        id S240231AbiEJKyX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 06:54:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37426 "EHLO
+        Tue, 10 May 2022 06:54:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240222AbiEJKxa (ORCPT
+        with ESMTP id S240341AbiEJKxb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 06:53:30 -0400
+        Tue, 10 May 2022 06:53:31 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 68EB32AF628;
-        Tue, 10 May 2022 03:49:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3BD042B032B;
+        Tue, 10 May 2022 03:49:28 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E33D015BF;
-        Tue, 10 May 2022 03:49:22 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2877E1650;
+        Tue, 10 May 2022 03:49:28 -0700 (PDT)
 Received: from hype-n1-sdp.warwick.arm.com (hype-n1-sdp.warwick.arm.com [10.32.33.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 786C93F66F;
-        Tue, 10 May 2022 03:49:20 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AECB03F66F;
+        Tue, 10 May 2022 03:49:25 -0700 (PDT)
 From:   Nick Forrington <nick.forrington@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
@@ -40,9 +40,9 @@ Cc:     Nick Forrington <nick.forrington@arm.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         James Clark <james.clark@arm.com>,
         Andrew Kilroy <andrew.kilroy@arm.com>
-Subject: [PATCH 13/20] perf vendors events arm64: Arm Cortex-A73
-Date:   Tue, 10 May 2022 11:47:51 +0100
-Message-Id: <20220510104758.64677-14-nick.forrington@arm.com>
+Subject: [PATCH 15/20] perf vendors events arm64: Arm Cortex-A77
+Date:   Tue, 10 May 2022 11:47:53 +0100
+Message-Id: <20220510104758.64677-16-nick.forrington@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220510104758.64677-1-nick.forrington@arm.com>
 References: <20220510104758.64677-1-nick.forrington@arm.com>
@@ -52,13 +52,13 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add PMU events for Arm Cortex-A73
+Add PMU events for Arm Cortex-A77
 Update mapfile.csv
 
 Event data based on:
-https://github.com/ARM-software/data/tree/master/pmu/cortex-a73.json
+https://github.com/ARM-software/data/tree/master/pmu/cortex-a77.json
 
-which is based on PMU event descriptions from the Arm Cortex-A73 Technical
+which is based on PMU event descriptions from the Arm Cortex-A77 Technical
 Reference Manual.
 
 Mapping data (for mapfile.csv) based on:
@@ -69,33 +69,29 @@ Technical Reference Manuals for individual CPUs.
 
 Signed-off-by: Nick Forrington <nick.forrington@arm.com>
 ---
- .../arch/arm64/arm/cortex-a73/branch.json     |  11 ++
- .../arch/arm64/arm/cortex-a73/bus.json        |  23 ++++
- .../arch/arm64/arm/cortex-a73/cache.json      | 107 ++++++++++++++++++
- .../arch/arm64/arm/cortex-a73/etm.json        |  14 +++
- .../arch/arm64/arm/cortex-a73/exception.json  |  14 +++
- .../arm64/arm/cortex-a73/instruction.json     |  65 +++++++++++
- .../arch/arm64/arm/cortex-a73/memory.json     |  14 +++
- .../arch/arm64/arm/cortex-a73/mmu.json        |  44 +++++++
- .../arch/arm64/arm/cortex-a73/pipeline.json   |  38 +++++++
+ .../arch/arm64/arm/cortex-a77/branch.json     |  17 +++
+ .../arch/arm64/arm/cortex-a77/bus.json        |  17 +++
+ .../arch/arm64/arm/cortex-a77/cache.json      | 143 ++++++++++++++++++
+ .../arch/arm64/arm/cortex-a77/exception.json  |  47 ++++++
+ .../arm64/arm/cortex-a77/instruction.json     |  77 ++++++++++
+ .../arch/arm64/arm/cortex-a77/memory.json     |  23 +++
+ .../arch/arm64/arm/cortex-a77/pipeline.json   |   8 +
  tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
- 10 files changed, 331 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/branch.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/bus.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/etm.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/exception.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/instruction.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/memory.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/mmu.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/pipeline.json
+ 8 files changed, 333 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/bus.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/exception.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/instruction.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/pipeline.json
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/branch.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/branch.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/branch.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/branch.json
 new file mode 100644
-index 000000000000..ece201718284
+index 000000000000..2f2d137f5f55
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/branch.json
-@@ -0,0 +1,11 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/branch.json
+@@ -0,0 +1,17 @@
 +[
 +    {
 +        "ArchStdEvent": "BR_MIS_PRED"
@@ -104,15 +100,21 @@ index 000000000000..ece201718284
 +        "ArchStdEvent": "BR_PRED"
 +    },
 +    {
++        "ArchStdEvent": "BR_IMMED_SPEC"
++    },
++    {
++        "ArchStdEvent": "BR_RETURN_SPEC"
++    },
++    {
 +        "ArchStdEvent": "BR_INDIRECT_SPEC"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/bus.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/bus.json
 new file mode 100644
-index 000000000000..103bb2535775
+index 000000000000..75d850b781ac
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/bus.json
-@@ -0,0 +1,23 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/bus.json
+@@ -0,0 +1,17 @@
 +[
 +    {
 +        "ArchStdEvent": "CPU_CYCLES"
@@ -124,24 +126,18 @@ index 000000000000..103bb2535775
 +        "ArchStdEvent": "BUS_CYCLES"
 +    },
 +    {
-+        "ArchStdEvent": "BUS_ACCESS_SHARED"
++        "ArchStdEvent": "BUS_ACCESS_RD"
 +    },
 +    {
-+        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED"
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_NORMAL"
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_PERIPH"
++        "ArchStdEvent": "BUS_ACCESS_WR"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/cache.json
 new file mode 100644
-index 000000000000..b9b3d3fb07b2
+index 000000000000..cbb365f5091f
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/cache.json
-@@ -0,0 +1,107 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/cache.json
+@@ -0,0 +1,143 @@
 +[
 +    {
 +        "ArchStdEvent": "L1I_CACHE_REFILL"
@@ -174,16 +170,91 @@ index 000000000000..b9b3d3fb07b2
 +        "ArchStdEvent": "L2D_CACHE_WB"
 +    },
 +    {
++        "ArchStdEvent": "L2D_CACHE_ALLOCATE"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB"
++    },
++    {
++        "ArchStdEvent": "L1I_TLB"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE_ALLOCATE"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE_REFILL"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_REFILL"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB"
++    },
++    {
++        "ArchStdEvent": "DTLB_WALK"
++    },
++    {
++        "ArchStdEvent": "ITLB_WALK"
++    },
++    {
++        "ArchStdEvent": "LL_CACHE_RD"
++    },
++    {
++        "ArchStdEvent": "LL_CACHE_MISS_RD"
++    },
++    {
 +        "ArchStdEvent": "L1D_CACHE_RD"
 +    },
 +    {
 +        "ArchStdEvent": "L1D_CACHE_WR"
 +    },
 +    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_INNER"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_INVAL"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_WR"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_WR"
++    },
++    {
 +        "ArchStdEvent": "L2D_CACHE_RD"
 +    },
 +    {
 +        "ArchStdEvent": "L2D_CACHE_WR"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
 +    },
 +    {
 +        "ArchStdEvent": "L2D_CACHE_WB_VICTIM"
@@ -195,106 +266,80 @@ index 000000000000..b9b3d3fb07b2
 +        "ArchStdEvent": "L2D_CACHE_INVAL"
 +    },
 +    {
-+        "PublicDescription": "Number of ways read in the instruction cache - Tag RAM",
-+        "EventCode": "0xC2",
-+        "EventName": "I_TAG_RAM_RD",
-+        "BriefDescription": "Number of ways read in the instruction cache - Tag RAM"
++        "ArchStdEvent": "L2D_TLB_REFILL_RD"
 +    },
 +    {
-+        "PublicDescription": "Number of ways read in the instruction cache - Data RAM",
-+        "EventCode": "0xC3",
-+        "EventName": "I_DATA_RAM_RD",
-+        "BriefDescription": "Number of ways read in the instruction cache - Data RAM"
++        "ArchStdEvent": "L2D_TLB_REFILL_WR"
 +    },
 +    {
-+        "PublicDescription": "Number of ways read in the instruction BTAC RAM",
-+        "EventCode": "0xC4",
-+        "EventName": "I_BTAC_RAM_RD",
-+        "BriefDescription": "Number of ways read in the instruction BTAC RAM"
++        "ArchStdEvent": "L2D_TLB_RD"
 +    },
 +    {
-+        "PublicDescription": "Level 1 PLD TLB refill",
-+        "EventCode": "0xE7",
-+        "EventName": "PLD_UTLB_REFILL",
-+        "BriefDescription": "Level 1 PLD TLB refill"
++        "ArchStdEvent": "L2D_TLB_WR"
 +    },
 +    {
-+        "PublicDescription": "Level 1 CP15 TLB refill",
-+        "EventCode": "0xE8",
-+        "EventName": "CP15_UTLB_REFILL",
-+        "BriefDescription": "Level 1 CP15 TLB refill"
-+    },
-+    {
-+        "PublicDescription": "Level 1 TLB flush",
-+        "EventCode": "0xE9",
-+        "EventName": "UTLB_FLUSH",
-+        "BriefDescription": "Level 1 TLB flush"
-+    },
-+    {
-+        "PublicDescription": "Level 2 TLB access",
-+        "EventCode": "0xEA",
-+        "EventName": "TLB_ACCESS",
-+        "BriefDescription": "Level 2 TLB access"
-+    },
-+    {
-+        "PublicDescription": "Level 2 TLB miss",
-+        "EventCode": "0xEB",
-+        "EventName": "TLB_MISS",
-+        "BriefDescription": "Level 2 TLB miss"
-+    },
-+    {
-+        "PublicDescription": "Data cache hit in itself due to VIPT aliasing",
-+        "EventCode": "0xEC",
-+        "EventName": "DCACHE_SELF_HIT_VIPT",
-+        "BriefDescription": "Data cache hit in itself due to VIPT aliasing"
++        "ArchStdEvent": "L3D_CACHE_RD"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/etm.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/etm.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/exception.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/exception.json
 new file mode 100644
-index 000000000000..fce852e82369
+index 000000000000..344a2d552ad5
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/etm.json
-@@ -0,0 +1,14 @@
-+[
-+    {
-+        "PublicDescription": "ETM trace unit output 0",
-+        "EventCode": "0xDE",
-+        "EventName": "ETM_EXT_OUT0",
-+        "BriefDescription": "ETM trace unit output 0"
-+    },
-+    {
-+        "PublicDescription": "ETM trace unit output 1",
-+        "EventCode": "0xDF",
-+        "EventName": "ETM_EXT_OUT1",
-+        "BriefDescription": "ETM trace unit output 1"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/exception.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/exception.json
-new file mode 100644
-index 000000000000..b77f1228873d
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/exception.json
-@@ -0,0 +1,14 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/exception.json
+@@ -0,0 +1,47 @@
 +[
 +    {
 +        "ArchStdEvent": "EXC_TAKEN"
 +    },
 +    {
++        "ArchStdEvent": "MEMORY_ERROR"
++    },
++    {
++        "ArchStdEvent": "EXC_UNDEF"
++    },
++    {
++        "ArchStdEvent": "EXC_SVC"
++    },
++    {
++        "ArchStdEvent": "EXC_PABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_DABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_IRQ"
++    },
++    {
++        "ArchStdEvent": "EXC_FIQ"
++    },
++    {
++        "ArchStdEvent": "EXC_SMC"
++    },
++    {
 +        "ArchStdEvent": "EXC_HVC"
 +    },
 +    {
-+        "PublicDescription": "Number of Traps to hypervisor",
-+        "EventCode": "0xDC",
-+        "EventName": "EXC_TRAP_HYP",
-+        "BriefDescription": "Number of Traps to hypervisor"
++        "ArchStdEvent": "EXC_TRAP_PABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_DABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_OTHER"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_IRQ"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_FIQ"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/instruction.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/instruction.json
 new file mode 100644
-index 000000000000..91a7863ddc9a
+index 000000000000..1a74786271d4
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/instruction.json
-@@ -0,0 +1,65 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/instruction.json
+@@ -0,0 +1,77 @@
 +[
 +    {
 +        "ArchStdEvent": "SW_INCR"
@@ -309,25 +354,28 @@ index 000000000000..91a7863ddc9a
 +        "ArchStdEvent": "CID_WRITE_RETIRED"
 +    },
 +    {
-+        "ArchStdEvent": "PC_WRITE_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "BR_IMMED_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "BR_RETURN_RETIRED"
-+    },
-+    {
 +        "ArchStdEvent": "INST_SPEC"
 +    },
 +    {
 +        "ArchStdEvent": "TTBR_WRITE_RETIRED"
 +    },
 +    {
++        "ArchStdEvent": "BR_RETIRED"
++    },
++    {
++        "ArchStdEvent": "BR_MIS_PRED_RETIRED"
++    },
++    {
 +        "ArchStdEvent": "LDREX_SPEC"
 +    },
 +    {
++        "ArchStdEvent": "STREX_PASS_SPEC"
++    },
++    {
 +        "ArchStdEvent": "STREX_FAIL_SPEC"
++    },
++    {
++        "ArchStdEvent": "STREX_SPEC"
 +    },
 +    {
 +        "ArchStdEvent": "LD_SPEC"
@@ -348,6 +396,9 @@ index 000000000000..91a7863ddc9a
 +        "ArchStdEvent": "VFP_SPEC"
 +    },
 +    {
++        "ArchStdEvent": "PC_WRITE_SPEC"
++    },
++    {
 +        "ArchStdEvent": "CRYPTO_SPEC"
 +    },
 +    {
@@ -358,17 +409,26 @@ index 000000000000..91a7863ddc9a
 +    },
 +    {
 +        "ArchStdEvent": "DMB_SPEC"
++    },
++    {
++        "ArchStdEvent": "RC_LD_SPEC"
++    },
++    {
++        "ArchStdEvent": "RC_ST_SPEC"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/memory.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/memory.json
 new file mode 100644
-index 000000000000..34e9cab7f0b9
+index 000000000000..5aff6e93c1ad
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/memory.json
-@@ -0,0 +1,14 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/memory.json
+@@ -0,0 +1,23 @@
 +[
 +    {
 +        "ArchStdEvent": "MEM_ACCESS"
++    },
++    {
++        "ArchStdEvent": "REMOTE_ACCESS"
 +    },
 +    {
 +        "ArchStdEvent": "MEM_ACCESS_RD"
@@ -377,115 +437,41 @@ index 000000000000..34e9cab7f0b9
 +        "ArchStdEvent": "MEM_ACCESS_WR"
 +    },
 +    {
++        "ArchStdEvent": "UNALIGNED_LD_SPEC"
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_ST_SPEC"
++    },
++    {
 +        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/mmu.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/mmu.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/pipeline.json
 new file mode 100644
-index 000000000000..b85c9cc81f23
+index 000000000000..eeac798d403a
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/mmu.json
-@@ -0,0 +1,44 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a77/pipeline.json
+@@ -0,0 +1,8 @@
 +[
 +    {
-+        "PublicDescription": "Duration of a translation table walk handled by the MMU",
-+        "EventCode": "0xE0",
-+        "EventName": "MMU_PTW",
-+        "BriefDescription": "Duration of a translation table walk handled by the MMU"
++        "ArchStdEvent": "STALL_FRONTEND"
 +    },
 +    {
-+        "PublicDescription": "Duration of a Stage 1 translation table walk handled by the MMU",
-+        "EventCode": "0xE1",
-+        "EventName": "MMU_PTW_ST1",
-+        "BriefDescription": "Duration of a Stage 1 translation table walk handled by the MMU"
-+    },
-+    {
-+        "PublicDescription": "Duration of a Stage 2 translation table walk handled by the MMU",
-+        "EventCode": "0xE2",
-+        "EventName": "MMU_PTW_ST2",
-+        "BriefDescription": "Duration of a Stage 2 translation table walk handled by the MMU"
-+    },
-+    {
-+        "PublicDescription": "Duration of a translation table walk requested by the LSU",
-+        "EventCode": "0xE3",
-+        "EventName": "MMU_PTW_LSU",
-+        "BriefDescription": "Duration of a translation table walk requested by the LSU"
-+    },
-+    {
-+        "PublicDescription": "Duration of a translation table walk requested by the Instruction Side",
-+        "EventCode": "0xE4",
-+        "EventName": "MMU_PTW_ISIDE",
-+        "BriefDescription": "Duration of a translation table walk requested by the Instruction Side"
-+    },
-+    {
-+        "PublicDescription": "Duration of a translation table walk requested by a Preload instruction or Prefetch request",
-+        "EventCode": "0xE5",
-+        "EventName": "MMU_PTW_PLD",
-+        "BriefDescription": "Duration of a translation table walk requested by a Preload instruction or Prefetch request"
-+    },
-+    {
-+        "PublicDescription": "Duration of a translation table walk requested by a CP15 operation (maintenance by MVA and VA to PA operations)",
-+        "EventCode": "0xE6",
-+        "EventName": "MMU_PTW_CP15",
-+        "BriefDescription": "Duration of a translation table walk requested by a CP15 operation (maintenance by MVA and VA to PA operations)"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/pipeline.json
-new file mode 100644
-index 000000000000..1730969e49f7
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a73/pipeline.json
-@@ -0,0 +1,38 @@
-+[
-+    {
-+        "PublicDescription": "A linefill caused an instruction side stall",
-+        "EventCode": "0xC0",
-+        "EventName": "LF_STALL",
-+        "BriefDescription": "A linefill caused an instruction side stall"
-+    },
-+    {
-+        "PublicDescription": "A translation table walk caused an instruction side stall",
-+        "EventCode": "0xC1",
-+        "EventName": "PTW_STALL",
-+        "BriefDescription": "A translation table walk caused an instruction side stall"
-+    },
-+    {
-+        "PublicDescription": "Duration for which all slots in the Load-Store Unit are busy",
-+        "EventCode": "0xD3",
-+        "EventName": "D_LSU_SLOT_FULL",
-+        "BriefDescription": "Duration for which all slots in the Load-Store Unit are busy"
-+    },
-+    {
-+        "PublicDescription": "Duration for which all slots in the load-store issue queue are busy",
-+        "EventCode": "0xD8",
-+        "EventName": "LS_IQ_FULL",
-+        "BriefDescription": "Duration for which all slots in the load-store issue queue are busy"
-+    },
-+    {
-+        "PublicDescription": "Duration for which all slots in the data processing issue queue are busy",
-+        "EventCode": "0xD9",
-+        "EventName": "DP_IQ_FULL",
-+        "BriefDescription": "Duration for which all slots in the data processing issue queue are busy"
-+    },
-+    {
-+        "PublicDescription": "Duration for which all slots in the Data Engine issue queue are busy",
-+        "EventCode": "0xDA",
-+        "EventName": "DE_IQ_FULL",
-+        "BriefDescription": "Duration for which all slots in the Data Engine issue queue are busy"
++        "ArchStdEvent": "STALL_BACKEND"
 +    }
 +]
 diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index 3ad4e991d62b..f413d8b629de 100644
+index 43cdeae3f1b6..1fa58d247132 100644
 --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -27,6 +27,7 @@
- 0x00000000410fd060,v1,arm/cortex-a65,core
- 0x00000000410fd070,v1,arm/cortex-a57-a72,core
- 0x00000000410fd080,v1,arm/cortex-a57-a72,core
-+0x00000000410fd090,v1,arm/cortex-a73,core
+@@ -31,6 +31,7 @@
+ 0x00000000410fd0a0,v1,arm/cortex-a75,core
  0x00000000410fd0b0,v1,arm/cortex-a76-n1,core
  0x00000000410fd0c0,v1,arm/cortex-a76-n1,core
++0x00000000410fd0d0,v1,arm/cortex-a77,core
  0x00000000410fd400,v1,arm/neoverse-v1,core
+ 0x00000000410fd460,v1,arm/cortex-a510,core
+ 0x00000000410fd490,v1,arm/neoverse-n2,core
 -- 
 2.25.1
 
