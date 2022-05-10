@@ -2,102 +2,236 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C10C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 16:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C0DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 16:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245636AbiEJQx7 (ORCPT
+        id S1346514AbiEJRCS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 12:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
+        Tue, 10 May 2022 13:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244384AbiEJQx6 (ORCPT
+        with ESMTP id S233268AbiEJRCS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 12:53:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A11E2A3758;
-        Tue, 10 May 2022 09:50:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9618961804;
-        Tue, 10 May 2022 16:50:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF5F6C385C2;
-        Tue, 10 May 2022 16:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652201400;
-        bh=M5QlxoH55WD/dwJ1iirbL6SNOGHKFz/MZjqGMi+xavk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EOKP1K6rfZvBHmsOOwXh7XNzawOps+q79FTJopyppI3vp1RQ6CGtNAhQFRPH72XbZ
-         DVLZyV6B5KRwmvC0B/ZshHEufxFm1DOA1s2v1rQtuL3hsMUxDK5oIlTlGpNzJZBk/r
-         80uBtr/+idUwwRhfOrD8nJ5ckI1KDBdFhwPmEHI1NX3hMh51zBpHlJLIA/VQd+CzRI
-         7V+mWaIgqkoMzfYrPHohEmY/pS0wNK+uWaFI90mUV89hzfs41KrhdgJPklUNM0y5pZ
-         3QjLkLe4wN6QpC4Xr7UoyABNw5UOFnk+SocVY4EN2QuM3e83gRsPbzXG/CbuTWVqno
-         h5gSJcl414+hQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 993EF400B1; Tue, 10 May 2022 13:49:57 -0300 (-03)
-Date:   Tue, 10 May 2022 13:49:57 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        Milian Wolff <milian.wolff@kdab.com>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Blake Jones <blakejones@google.com>
-Subject: Re: [PATCH 1/4] perf report: Do not extend sample type of bpf-output
- event
-Message-ID: <YnqXtRqW1phdtc7a@kernel.org>
-References: <20220506201627.85598-1-namhyung@kernel.org>
- <20220506201627.85598-2-namhyung@kernel.org>
+        Tue, 10 May 2022 13:02:18 -0400
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172572A4A2E
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 09:58:20 -0700 (PDT)
+Received: by mail-vs1-xe2a.google.com with SMTP id q2so17516612vsr.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 09:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yBZ8yzXWBGsOpOpeLa5W0W9gRThAtsIA/zK3DproKJI=;
+        b=SC248B+drte04xKdlQ70/zo28TnMIDVRKbL6KdxKVvaTy+BJw6zg7/mjEXaavzrMmj
+         1JPdB5mZLYfVCMfUys8sAc1VSknImedaRwvCFYWR7QglbUeYtJwgU88cZ9KbJgKgHQU4
+         8azFzw1r/SamSGo2j/cf8Kk+jUSConbdAdQoh2O0kfmIsBMFaVG87w1CWx7/tgjje34H
+         OCcmQ1XISmveOhDYocRsXWU+5HTir+riALOgCy+DzwqA+0UrUDbr1ATTezC5coRfvtKy
+         mzZl2m+DSXh1EKdRX3r0aV5XtvIN8kTKYAum+qzE4F/daR2EWznYHnilxlp/r9++r+Dv
+         n1uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yBZ8yzXWBGsOpOpeLa5W0W9gRThAtsIA/zK3DproKJI=;
+        b=M2HxRUQ54+p3OYiEuT5+Gh2nDJqtjjT7W2q1RBrfLhEAV/6qU8Qc35sd0+oq1oHaoX
+         57yUCckLgGB428Y+jB4UsFUI4/PXyYXYMcX/PmZwzW+a7HhI0YZIeXqoAqvgbAmnMOmd
+         /Jrf/2f/85w1dIkSTgbUSw3S5dk25Eg1kp1I6etfPEUfnbz2+TMySlo0mViFejhJ8y9d
+         UigY/J7eU/+qFDxjPaIL/KySHLjLViKW09zO+ExCpuVpn5VhxaXFfaHP3FBRZFYzKf9L
+         96jkFuz1SaC/+UeA8w1NR4PGOkTXMCRCNnM9eDIsvitoppbpPS/ySSyFn8fGChXh2vHt
+         j8Yw==
+X-Gm-Message-State: AOAM533/2sUY0yDcsECOH6DUvHgOOP3nj96XRtzfZsVmWiXiq4zgR+3m
+        kjC1DOiagRiijarHs5sWhN3u+lwnzsJB0sSHu+mO/Q==
+X-Google-Smtp-Source: ABdhPJwoFonBDxjusEqLqiTK0uVTTNt5Xf4FZQwxFLlkjsdpB74jRGEf2PVrPcKre2Q7qsqcT2Rww1gU6SvfHRGAcp8=
+X-Received: by 2002:a05:6102:244d:b0:32c:dfc4:d818 with SMTP id
+ g13-20020a056102244d00b0032cdfc4d818mr12312772vss.74.1652201898969; Tue, 10
+ May 2022 09:58:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220506201627.85598-2-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20220505043846.3165303-1-irogers@google.com> <87b89e2c-da5c-52c3-40dc-448e874cb5d8@linux.intel.com>
+ <CAP-5=fVHhWu1uJHnTfFYWvM02_F-bFBZaaOYo8zPRiA=ODRxGQ@mail.gmail.com>
+ <12c03e85-cb48-d264-5f04-e9bf9faaf739@linux.intel.com> <CAP-5=fW9Cp3ShO=tTQddDWXz+nrSip99HrNW7Wv5_Qsy1UT7bw@mail.gmail.com>
+ <83417b72-4872-072a-2328-a88d2bb90858@linux.intel.com> <CAP-5=fXnYUnbT89q9W0Ax3d-26jbL5Mcd7O5X=JcXq9FnOUm7Q@mail.gmail.com>
+ <0c8da8b4-4f77-4329-9e63-721d05fd258d@linux.intel.com>
+In-Reply-To: <0c8da8b4-4f77-4329-9e63-721d05fd258d@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 10 May 2022 09:58:07 -0700
+Message-ID: <CAP-5=fUwSkikUiLpXURYKM4FEf=0zMW9a3Q5h8=Wg08ht5KXHw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf evlist: Keep topdown counters in weak group
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haowen Bai <baihaowen@meizu.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, May 06, 2022 at 01:16:24PM -0700, Namhyung Kim escreveu:
-> Currently evsel__new_idx() sets more sample_type bits when it finds a
-> BPF-output event.  But it should honor what's recorded in the perf
-> data file rather than blindly sets the bits.  Otherwise it could lead
-> to a parse error when it recorded with a modified sample_type.
+On Mon, May 9, 2022 at 2:01 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>
+> On 5/9/2022 1:28 PM, Ian Rogers wrote:
+> > On Thu, May 5, 2022 at 12:44 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> >>
+> >>
+> >>
+> >> On 5/5/2022 2:31 PM, Ian Rogers wrote:
+> >>>>> So I think fixing all of these should be a follow up. I am working to
+> >>>>> get access to an Alderlake system, could we land this first?
+> >>>>>
+> >>>> I think we can use pmu_name to replace the "cpu" to fix the issue for
+> >>>> the hybrid platform. For a hybrid platform, the pmu_name is either
+> >>>> cpu_atom or cpu_core.
+> >>>>
+> >>>> Besides, the topdown events may have a PMU prefix, e.g.,
+> >>>> cpu_core/topdown-be-bound/. The strcasecmp may not work well for this case.
+> >>>>
+> >>>> How about the below patch?
+> >>>> If it's OK for you, could you please merge it into your V2 patch set?
+> >>>> I can do the test on a ADL system.
+> >>>>
+> >>>> diff --git a/tools/perf/arch/x86/util/evsel.c
+> >>>> b/tools/perf/arch/x86/util/evsel.c
+> >>>> index 40b171de2086..551ae2bab70e 100644
+> >>>> --- a/tools/perf/arch/x86/util/evsel.c
+> >>>> +++ b/tools/perf/arch/x86/util/evsel.c
+> >>>> @@ -33,11 +33,12 @@ void arch_evsel__fixup_new_cycles(struct
+> >>>> perf_event_attr *attr)
+> >>>>
+> >>>>     bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+> >>>>     {
+> >>>> -       if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
+> >>>> -           !pmu_have_event("cpu", "slots"))
+> >>>> +       const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
+> >>>> +
+> >>>> +       if (!pmu_have_event(pmu_name, "slots"))
+> >>>>                   return false;
+> >>> Hmm. The idea with this test is to see if the architecture supports
+> >>> topdown events before going further. There's a similar test in all the
+> >>> arch_evlist functions. I think with cpu_core this needs to become:
+> >>>
+> >>
+> >> The case is a little bit different here. For the arch_evlist functions,
+> >> the input is the evlist, not the specific evsel. So we have to check all
+> >> the possible PMU names which are "cpu" and "cpu_core". Then we decide
+> >> whether going further.
+> >>
+> >> The input of the evsel__must_be_in_group() is the evsel. The PMU name is
+> >> stored in the evsel->pmu_name. I don't think we need to check all the
+> >> possible PMU names. Using evsel->pmu_name should be good enough.
+> >>
+> >>> if (!pmu_have_event("cpu", "slots") && !pmu_have_event("cpu_core", "slots") )
+> >>>
+> >>> But we should add a helper function for this. It is odd to have this
+> >>> change supporting Alderlake but the existing evlist work not. Perhaps
+> >>> we should just wait until Zhengjun's patches land.
+> >>
+> >> Yes, a helper function is good for the arch_evlist functions. But I
+> >> don't think this patch needs the helper function. Zhengjun's patches are
+> >> to fix the other topdown issues on ADL. There is no dependency between
+> >> this patch and zhengjun's patches.
+> >>
+> >> Thanks,
+> >> Kan
+> >
+> > TL;DR I think we can move forward with landing these patches to fix Icelake.
+>
+> This patch doesn't work with the hybrid platform for sure. I can send
+> you a fix for the hybrid part if you prefer this way? Then I guess you
+> may append it as the patch 3 for V2.
+>
+> Besides the hybrid thing, the patch set also has other two issues I
+> mentioned in the previous reply.
+> - I don't think the strcasecmp() can handle the case like
+> cpu/topdown-bad-spec/ or cpu/slots/. It should be an issue for both
+> hybrid and non-hybrid platforms.
+> - It's better not to use non-architecture events, e.g., baclears.any,
+> ARITH.DIVIDER_ACTIVE, even in the test case. The non-architecture events
+> may be disappear in the future platforms. If so, you have to update the
+> test case again for the future platforms.
+> IMHO, I don't think the patch set is ready.
 
-Can you please try to provide a Fixes: tag for this? This way reviewing
-gets simpler by looking at who introduced this, if there was some reason
-or if it was a plain oversight.
+So all the stated objections are that I'm checking cpu/slots/ for an
+indication of topdown support and this doesn't work for hybrid? This
+is identical to the arch evlist code:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/arch/x86/util/evlist.c?h=perf/core#n10
+both in the functions arch_evlist__add_default_attrs and
+arch_evlist__leader (one I wrote and one I didn't). So the patch set
+isn't ready because I haven't fixed alderlake, but alderlake already
+isn't working? And there is no example of how to make this work for
+alderlake. So basically your ask is that I bring up alderlake. I think
+this is stretching things for a patch fixing icelake. The value here
+is in fixing icelake and alderlake will have to be the next problem.
 
-It also helps to get this fix propabated to the stable trees.
+> >
+> > For Alderlake/hybrid we have a problem. To determine what happens with
+> > grouping we need to know does the CPU have topdown events? This is a
+> > runtime question for doing perf_event_open and so an arch test and
+> > weak symbol are appropriate. For Icelake we are determining the
+> > presence of topdown events by looking at the special PMU cpu. For
+> > Alderlake the same information can be found by looking at the PMUs
+> > cpu_core and cpu_atom, but how to discover those PMU names?
+>
+> The PMU name can be retrieved either from the event list or perf command.
+> For the non-hybrid, the PMU name is hard code to "cpu" for the core
+> events. So users/event files don't need to specify the PMU name.
+> For the hybrid platform, a PMU name is required and stored in the
+> evsel->pmu_name. If the evsel->pmu_name is NULL, we can assume that it's
+> a non-hybrid PMU, CPU.
 
-- Arnaldo
- 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/evsel.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index d38722560e80..63a8b832b822 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -269,8 +269,8 @@ struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
->  		return NULL;
->  	evsel__init(evsel, attr, idx);
->  
-> -	if (evsel__is_bpf_output(evsel)) {
-> -		evsel->core.attr.sample_type |= (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
-> +	if (evsel__is_bpf_output(evsel) && !attr->sample_type) {
-> +		evsel->core.attr.sample_type = (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
->  					    PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD),
->  		evsel->core.attr.sample_period = 1;
->  	}
-> -- 
-> 2.36.0.512.ge40c2bad7a-goog
+This doesn't make sense. Hybrid implies more than 1 CPU type, how can
+more than one be the same as 1 type to be used for the PMU? Again, you
+are asking I make all the alderlake logic work and I think that should
+be follow up. As shown above the arch evlist code also needs fixing as
+follow up.
 
--- 
+Thanks,
+Ian
 
-- Arnaldo
+> > It is
+> > already somewhat concerning that we've hard coded "cpu" and we don't
+> > want to have an ever growing list of PMU names.
+> >
+> > We have similarly hard coded "cpu" in the topology code here:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/cputopo.c?h=tmp.perf/core#n18
+> > Is this unreasonable given cpu is already supposed to be ABI stable:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/Documentation/ABI/stable/sysfs-devices-system-cpu?h=tmp.perf/core
+>
+> I don't think there is a stable ABI for a PMU name.
+> The PMU name may be changed generation by generation because of the
+> different micro arch. We will try our best to keep it unchanged in X86
+> but it's not guaranteed especially when the hybrid is introduced.
+>
+>
+> >
+> > It is hard to say what the right hybrid fix is here. I should get a
+> > system I can poke shortly. I'd also like to compare what's in sysfs
+> > for Alderlake with ARM's big.little approach. I can imagine we need a
+> > function that returns a list of CPU like PMUs for probing. Ideally we
+> > could work this out from sysfs and use some stable ABI.
+> >
+>
+> I don't think there is a standard PMU naming rule for all the ARCHs. For
+> X86, it may be possible. You can assume that the name like "cpu" or
+> "cpu_*" are for core PMUs. But for other ARCH e.g., ARM, AFAIK, they use
+> a quite different naming rule.
+>
+>
+> Thanks,
+> Kan
