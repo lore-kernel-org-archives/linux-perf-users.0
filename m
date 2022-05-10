@@ -2,483 +2,249 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1AAC352AA
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 13:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F96C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 13:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243033AbiEJN2L (ORCPT
+        id S242302AbiEJODR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 09:28:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47058 "EHLO
+        Tue, 10 May 2022 10:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242805AbiEJNYs (ORCPT
+        with ESMTP id S245300AbiEJN50 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 09:24:48 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B58FA1D620C;
-        Tue, 10 May 2022 06:17:31 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KyJTG3l3Sz1JC0h;
-        Tue, 10 May 2022 21:16:18 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 10 May 2022 21:17:29 +0800
-CC:     <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <gregkh@linuxfoundation.org>,
-        <helgaas@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <lorenzo.pieralisi@arm.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <john.garry@huawei.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH v7 2/7] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-To:     James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>
-References: <20220407125841.3678-1-yangyicong@hisilicon.com>
- <20220407125841.3678-3-yangyicong@hisilicon.com>
- <e56c02c5-3696-c8d5-89e0-050bfe9edaa8@arm.com>
- <ad518edf-425b-f2ab-08e9-5a00b712508c@huawei.com>
- <30ad6a53-1f4a-a88e-c239-fdd6d80ca4e1@arm.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <1d0ce530-f30b-23f0-a133-4571599f8a79@huawei.com>
-Date:   Tue, 10 May 2022 21:17:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
-MIME-Version: 1.0
-In-Reply-To: <30ad6a53-1f4a-a88e-c239-fdd6d80ca4e1@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+        Tue, 10 May 2022 09:57:26 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355BA8FD51
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 06:39:09 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24ACfZOG019034;
+        Tue, 10 May 2022 13:39:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=YF6myPAayCBnBVmWei8iPhGyU8lb2wIlzZNK29UirrA=;
+ b=dOAbDwDicnLidKgQt5x4tLt+wFN0KCW8aTxUrU4gDfbIDYz/vjVZOxzgBmSCJXxmOb6n
+ mwKnNJyLC7LUbFSdxnvCPK1GWODP7B/OkaliHVIMwDvns6t0eGB1XAvEZwYvBbrAERpB
+ dFSpYE8c73qiiafbZFc+9CVOn3ur7+yNCaPLNqCJV6xt5ez6kUndNHqBK63Ng8RgINKc
+ Wl4g/x34pljVikzvFvMf5Q2L24K7C9a2QxrRSIEObDYSjZ393kQmerb2BV7GrXzprm2d
+ 0somMbHGM/98fCgf7UQAS6lb2Gxy7zRsz8mA0fLlLQxPCucrD6F7s+9PENna56m7704G nw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fyncevqjt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 May 2022 13:39:01 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24ACgBp9019693;
+        Tue, 10 May 2022 13:39:01 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fyncevqhy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 May 2022 13:39:01 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24ADcRxN013025;
+        Tue, 10 May 2022 13:38:59 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 3fwgd8v53q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 May 2022 13:38:59 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24ADcuhi44630410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 May 2022 13:38:56 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79C08AE04D;
+        Tue, 10 May 2022 13:38:56 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C930AE045;
+        Tue, 10 May 2022 13:38:52 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.163.24.192])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 10 May 2022 13:38:52 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: [PATCH V2 1/2] tools/perf: Add utility function to read
+ /proc/cpuinfo for any field
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <460BE4F4-9748-40E4-94F3-B4263FD34D5F@linux.vnet.ibm.com>
+Date:   Tue, 10 May 2022 19:08:47 +0530
+Cc:     Ian Rogers <irogers@google.com>, maddy@linux.vnet.ibm.com,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        kajoljain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BC9A38D1-E972-4F9B-8C76-8EBDC03FA6F1@linux.vnet.ibm.com>
+References: <20220505094000.58220-1-atrajeev@linux.vnet.ibm.com>
+ <20220505094000.58220-2-atrajeev@linux.vnet.ibm.com>
+ <YnQIYdqh9VsKm2aX@kernel.org>
+ <460BE4F4-9748-40E4-94F3-B4263FD34D5F@linux.vnet.ibm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: hgeqLEwAJ84NmTonXvVm4i7Y2RCNcYkz
+X-Proofpoint-ORIG-GUID: NBoUvxidtotvfsAzBZYxG2ZBbdYg9-hd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-10_01,2022-05-10_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2205100060
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/5/10 20:54, James Clark wrote:
-> 
-> 
-> On 10/05/2022 12:18, Yicong Yang wrote:
->> On 2022/5/10 17:46, James Clark wrote:
->>>
->>>
->>> On 07/04/2022 13:58, Yicong Yang wrote:
->>>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex integrated
->>>> Endpoint(RCiEP) device, providing the capability to dynamically monitor and
->>>> tune the PCIe traffic, and trace the TLP headers.
->>>>
->>>> Add the driver for the device to enable the trace function. Register PMU
->>>> device of PTT trace, then users can use trace through perf command. The
->>>> driver makes use of perf AUX trace and support following events to
->>>> configure the trace:
->>>>
->>>> - filter: select Root port or Endpoint to trace
->>>> - type: select the type of traced TLP headers
->>>> - direction: select the direction of traced TLP headers
->>>> - format: select the data format of the traced TLP headers
->>>>
->>>> This patch adds the driver part of PTT trace. The perf command support of
->>>> PTT trace is added in the following patch.
->>>>
->>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>> ---
->>>>  drivers/Makefile                 |   1 +
->>>>  drivers/hwtracing/Kconfig        |   2 +
->>>>  drivers/hwtracing/ptt/Kconfig    |  12 +
->>>>  drivers/hwtracing/ptt/Makefile   |   2 +
->>>>  drivers/hwtracing/ptt/hisi_ptt.c | 874 +++++++++++++++++++++++++++++++
->>>>  drivers/hwtracing/ptt/hisi_ptt.h | 166 ++++++
->>>>  6 files changed, 1057 insertions(+)
->>>>  create mode 100644 drivers/hwtracing/ptt/Kconfig
->>>>  create mode 100644 drivers/hwtracing/ptt/Makefile
->>>>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
->>>>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
->>>>
->>>> diff --git a/drivers/Makefile b/drivers/Makefile
->>>> index 020780b6b4d2..662d50599467 100644
->>>> --- a/drivers/Makefile
->>>> +++ b/drivers/Makefile
->>>> @@ -175,6 +175,7 @@ obj-$(CONFIG_USB4)		+= thunderbolt/
->>>>  obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
->>>>  obj-y				+= hwtracing/intel_th/
->>>>  obj-$(CONFIG_STM)		+= hwtracing/stm/
->>>> +obj-$(CONFIG_HISI_PTT)		+= hwtracing/ptt/
->>>>  obj-$(CONFIG_ANDROID)		+= android/
->>>>  obj-$(CONFIG_NVMEM)		+= nvmem/
->>>>  obj-$(CONFIG_FPGA)		+= fpga/
->>>> diff --git a/drivers/hwtracing/Kconfig b/drivers/hwtracing/Kconfig
->>>> index 13085835a636..911ee977103c 100644
->>>> --- a/drivers/hwtracing/Kconfig
->>>> +++ b/drivers/hwtracing/Kconfig
->>>> @@ -5,4 +5,6 @@ source "drivers/hwtracing/stm/Kconfig"
->>>>  
->>>>  source "drivers/hwtracing/intel_th/Kconfig"
->>>>  
->>>> +source "drivers/hwtracing/ptt/Kconfig"
->>>> +
->>>>  endmenu
->>>> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
->>>> new file mode 100644
->>>> index 000000000000..8902a6f27563
->>>> --- /dev/null
->>>> +++ b/drivers/hwtracing/ptt/Kconfig
->>>> @@ -0,0 +1,12 @@
->>>> +# SPDX-License-Identifier: GPL-2.0-only
->>>> +config HISI_PTT
->>>> +	tristate "HiSilicon PCIe Tune and Trace Device"
->>>> +	depends on ARM64 || (COMPILE_TEST && 64BIT)
->>>> +	depends on PCI && HAS_DMA && HAS_IOMEM && PERF_EVENTS
->>>> +	help
->>>> +	  HiSilicon PCIe Tune and Trace Device exists as a PCIe RCiEP
->>>> +	  device, and it provides support for PCIe traffic tuning and
->>>> +	  tracing TLP headers to the memory.
->>>> +
->>>> +	  This driver can also be built as a module. If so, the module
->>>> +	  will be called hisi_ptt.
->>>> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
->>>> new file mode 100644
->>>> index 000000000000..908c09a98161
->>>> --- /dev/null
->>>> +++ b/drivers/hwtracing/ptt/Makefile
->>>> @@ -0,0 +1,2 @@
->>>> +# SPDX-License-Identifier: GPL-2.0
->>>> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
->>>> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
->>>> new file mode 100644
->>>> index 000000000000..242b41870380
->>>> --- /dev/null
->>>> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
->>>> @@ -0,0 +1,874 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Driver for HiSilicon PCIe tune and trace device
->>>> + *
->>>> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
->>>> + * Author: Yicong Yang <yangyicong@hisilicon.com>
->>>> + */
->>>> +
->>>> +#include <linux/bitfield.h>
->>>> +#include <linux/bitops.h>
->>>> +#include <linux/delay.h>
->>>> +#include <linux/dma-iommu.h>
->>>> +#include <linux/dma-mapping.h>
->>>> +#include <linux/interrupt.h>
->>>> +#include <linux/io.h>
->>>> +#include <linux/iommu.h>
->>>> +#include <linux/iopoll.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/sysfs.h>
->>>> +#include <linux/vmalloc.h>
->>>> +
->>>> +#include "hisi_ptt.h"
->>>> +
->>>> +static u16 hisi_ptt_get_filter_val(struct pci_dev *pdev)
->>>> +{
->>>> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
->>>> +		return BIT(HISI_PCIE_CORE_PORT_ID(PCI_SLOT(pdev->devfn)));
->>>> +
->>>> +	return PCI_DEVID(pdev->bus->number, pdev->devfn);
->>>> +}
->>>> +
->>>> +static bool hisi_ptt_wait_trace_hw_idle(struct hisi_ptt *hisi_ptt)
->>>> +{
->>>> +	u32 val;
->>>> +
->>>> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_STS,
->>>> +					  val, val & HISI_PTT_TRACE_IDLE,
->>>> +					  HISI_PTT_WAIT_POLL_INTERVAL_US,
->>>> +					  HISI_PTT_WAIT_TRACE_TIMEOUT_US);
->>>> +}
->>>> +
->>>> +static bool hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
->>>> +{
->>>> +	u32 val;
->>>> +
->>>> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS,
->>>> +					  val, !val, HISI_PTT_RESET_POLL_INTERVAL_US,
->>>> +					  HISI_PTT_RESET_TIMEOUT_US);
->>>> +}
->>>> +
->>>> +static void hisi_ptt_free_trace_buf(struct hisi_ptt *hisi_ptt)
->>>> +{
->>>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
->>>> +	struct device *dev = &hisi_ptt->pdev->dev;
->>>> +	int i;
->>>> +
->>>> +	if (!ctrl->trace_buf)
->>>> +		return;
->>>> +
->>>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
->>>> +		if (ctrl->trace_buf[i].addr)
->>>> +			dmam_free_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
->>>> +					   ctrl->trace_buf[i].addr,
->>>> +					   ctrl->trace_buf[i].dma);
->>>> +	}
->>>> +
->>>> +	devm_kfree(dev, ctrl->trace_buf);
->>>> +	ctrl->trace_buf = NULL;
->>>> +}
->>>> +
->>>> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
->>>> +{
->>>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
->>>> +	struct device *dev = &hisi_ptt->pdev->dev;
->>>> +	int i;
->>>> +
->>>> +	hisi_ptt->trace_ctrl.buf_index = 0;
->>>> +
->>>> +	/* If the trace buffer has already been allocated, zero it. */
->>>> +	if (ctrl->trace_buf) {
->>>> +		for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
->>>> +			memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
->>>> +		return 0;
->>>> +	}
->>>> +
->>>> +	ctrl->trace_buf = devm_kcalloc(dev, HISI_PTT_TRACE_BUF_CNT,
->>>> +				       sizeof(struct hisi_ptt_dma_buffer), GFP_KERNEL);
->>>> +	if (!ctrl->trace_buf)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
->>>> +		ctrl->trace_buf[i].addr = dmam_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
->>>> +							     &ctrl->trace_buf[i].dma,
->>>> +							     GFP_KERNEL);
->>>> +		if (!ctrl->trace_buf[i].addr) {
->>>> +			hisi_ptt_free_trace_buf(hisi_ptt);
->>>> +			return -ENOMEM;
->>>> +		}
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
->>>> +{
->>>> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
->>>> +	hisi_ptt->trace_ctrl.started = false;
->>>> +}
->>>> +
->>>> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
->>>> +{
->>>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
->>>> +	u32 val;
->>>> +	int i;
->>>> +
->>>> +	/* Check device idle before start trace */
->>>> +	if (!hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
->>>> +		pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy\n");
->>>> +		return -EBUSY;
->>>> +	}
->>>> +
->>>> +	ctrl->started = true;
->>>> +
->>>> +	/* Reset the DMA before start tracing */
->>>> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
->>>> +	val |= HISI_PTT_TRACE_CTRL_RST;
->>>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
->>>> +
->>>> +	hisi_ptt_wait_dma_reset_done(hisi_ptt);
->>>> +
->>>> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
->>>> +	val &= ~HISI_PTT_TRACE_CTRL_RST;
->>>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
->>>> +
->>>> +	/* Clear the interrupt status */
->>>> +	writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
->>>> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
->>>> +
->>>> +	/* Configure the trace DMA buffer */
->>>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
->>>> +		writel(lower_32_bits(ctrl->trace_buf[i].dma),
->>>> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
->>>> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
->>>> +		writel(upper_32_bits(ctrl->trace_buf[i].dma),
->>>> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
->>>> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
->>>> +	}
->>>> +	writel(HISI_PTT_TRACE_BUF_SIZE, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
->>>> +
->>>> +	/* Set the trace control register */
->>>> +	val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
->>>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
->>>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
->>>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
->>>> +	if (!hisi_ptt->trace_ctrl.is_port)
->>>> +		val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
->>>> +
->>>> +	/* Start the Trace */
->>>> +	val |= HISI_PTT_TRACE_CTRL_EN;
->>>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int hisi_ptt_update_aux(struct hisi_ptt *hisi_ptt, int index, bool stop)
->>>> +{
->>>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
->>>> +	struct perf_output_handle *handle = &ctrl->handle;
->>>> +	struct perf_event *event = handle->event;
->>>> +	struct hisi_ptt_pmu_buf *buf;
->>>> +	void *addr;
->>>> +
->>>> +	buf = perf_get_aux(handle);
->>>> +	if (!buf || !handle->size)
->>>> +		return -EINVAL;
->>>> +
->>>> +	addr = ctrl->trace_buf[ctrl->buf_index].addr;
->>>> +
->>>> +	memcpy(buf->base + buf->pos, addr, HISI_PTT_TRACE_BUF_SIZE);
->>>> +	memset(addr, 0, HISI_PTT_TRACE_BUF_SIZE);
->>>
->>> Hi Kicong,
->>>
->>> I also have the same comment as Leo here, I don't think the memset is
->>> required.
->>>
->>
->> It's necessary in the current approach as we always commit HISI_PTT_TRACE_BUF_SIZE
->> data but the buffer maybe partly filled (called when perf going to stopp, not by the
->> interrupt). The buffer is cleared so the unfilled part of the buffer will have
->> empty data (normal traced TLP headers won't be all 0), then the user can distinguish
->> the valid part of the data.
->>
->> I'm trying to only copy the traced data rather than the whole buffer then the
->> clear operation here will be unnecessary. The hardware provide a register indicating
->> which offset of which buffer it's currently writing to and it canbe used here.
-> 
-> If only the traced data is copied rather than the full buffer, isn't that what
-> perf_aux_output_end() is for? Perf will only read up to the point where you
-> say the buffer is filled to, it won't go and read the zeros if you didn't tell
-> it to by emitting perf_aux_output_end() for more data than was written.
-> 
-> If you are having to write zeros to detect which bits of the buffer is filled
-> or not it sounds like those zero parts are making it into the perf file and are
-> wasting disk space and CPU cycles to copy them.
-> 
 
-For the approach in this version, you're right that we'll waste CPU cycles to copy
-them. But this will only happens when the perf session is going stop, as in the
-updating from interrupts we'll always have data of full buffer size (interrupt only
-comes when the buffer is filled fully). The data will be like (perf report -D):
 
-[...]
-.  00000004: 00 00 00 00                                 Prefix
-.  00000008: 01 80 00 60                                 Header DW0
-.  0000000c: 0f 1e 00 01                                 Header DW1
-.  00000010: c6 00 00 00                                 Header DW2
-.  00000014: 40 00 01 60                                 Header DW3
-.  0000001c: c5 94 d1 00                                 Time
-.  0000005c: 14 00 00 00                                 Time
-.  00000064: 00 00 00 00                                 Prefix
-.  00000068: 00 00 00 00                                 Header DW0
-.  0000006c: 00 00 00 00                                 Header DW1
-.  00000070: 00 00 00 00                                 Header DW2
-.  0000005c: 00 00 00 00                                 Time
-[...zeroed data]
+> On 06-May-2022, at 3:03 PM, Athira Rajeev =
+<atrajeev@linux.vnet.ibm.com> wrote:
+>=20
+>=20
+>=20
+>> On 05-May-2022, at 10:54 PM, Arnaldo Carvalho de Melo =
+<acme@kernel.org> wrote:
+>>=20
+>> Em Thu, May 05, 2022 at 03:09:59PM +0530, Athira Rajeev escreveu:
+>>> /proc/cpuinfo provides information about type of processor, number
+>>> of CPU's etc. Reading /proc/cpuinfo file outputs useful information
+>>> by field name like cpu, platform, model (depending on architecture)
+>>> and its value separated by colon.
+>>>=20
+>>> Add new utility function "cpuinfo_field" in "util/header.c" which
+>>> accepts field name as input string to search in /proc/cpuinfo =
+content.
+>>> This returns the first matching value as resulting string. Example,
+>>> calling the function "cpuinfo_field(platform)" in powerpc returns
+>>> the platform value. This can be used to fetch processor information
+>>> from "cpuinfo" by other utilities/testcases.
+>>>=20
+>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>> ---
+>>> tools/perf/util/header.c | 53 =
+++++++++++++++++++++++++++++++++++++++++
+>>> tools/perf/util/header.h |  1 +
+>>> 2 files changed, 54 insertions(+)
+>>>=20
+>>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+>>> index a27132e5a5ef..f08857f96606 100644
+>>> --- a/tools/perf/util/header.c
+>>> +++ b/tools/perf/util/header.c
+>>> @@ -983,6 +983,59 @@ static int write_dir_format(struct feat_fd *ff,
+>>> 	return do_write(ff, &data->dir.version, =
+sizeof(data->dir.version));
+>>> }
+>>>=20
+>>> +/*
+>>> + * Return entry from /proc/cpuinfo
+>>> + * indicated by "search" parameter.
+>>> + */
+>>> +char *cpuinfo_field(const char *search)
+>>> +{
+>>> +	FILE *file;
+>>> +	char *buf =3D NULL;
+>>> +	char *copy_buf =3D NULL, *p;
+>>> +	size_t len =3D 0;
+>>> +
+>>> +	if (!search)
+>>> +		return NULL;
+>>> +
+>>> +	file =3D fopen("/proc/cpuinfo", "r");
+>>> +	if (!file)
+>>> +		return NULL;
+>>> +
+>>> +	while (getline(&buf, &len, file) > 0) {
+>>> +		if (!strncmp(buf, search, strlen(search)))
+>>=20
+>> Can you save the search string lenght in a variable and use it =
+instead
+>> of calling strlen() for the same buffer for each line in =
+/proc/cpuinfo?
+>=20
+>=20
+> Hi Arnaldo, Michael
+>=20
+> Thanks for review comments. Based on suggestion from Michael, I am =
+reworking on patch 2 to SKIP the test
+> if physical_id is set to -1 irrespective of value from cpuinfo.
+>=20
+> In this patch, I had written "cpuinfo_field " function as generic =
+function for retrieving any entry from /proc/cpuinfo.
+> But it won't be used in patch 2 now. Do you think this function is =
+useful to keep ? Otherwise, I will drop patch 1
 
-I'll change to only copy the valid data like below in next version. Then we won't
-waste disk space and cpu time to copy it.
+Hi,
 
-static int hisi_ptt_update_aux(struct hisi_ptt *hisi_ptt, int index, bool stop)
-{
-	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
-	struct perf_output_handle *handle = &ctrl->handle;
-	struct perf_event *event = handle->event;
-	struct hisi_ptt_pmu_buf *buf;
-	void *addr;
-	size_t sz;
+Requesting for suggestions on this change
 
-	buf = perf_get_aux(handle);
-	if (!buf || !handle->size)
-		return -EINVAL;
+Thanks
+Athira
+>=20
+> Thanks
+> Athira Rajeev
+>=20
+>>=20
+>>> +			break;
+>>> +	}
+>>> +
+>>> +	if (feof(file))
+>>> +		goto done;
+>>> +
+>>> +	/*
+>>> +	 * Trim the new line and separate
+>>> +	 * value for search field from ":"
+>>> +	 * in cpuinfo line output.
+>>> +	 * Example output line:
+>>> +	 * platform : <value>
+>>> +	 */
+>>> +	copy_buf =3D buf;
+>>> +	p =3D strchr(copy_buf, ':');
+>>=20
+>> So you assume that this will always be there, right? Shouldn't we not
+>> assume that and check if p is NULL and bail out instead?
+>>=20
+>>> +
+>>> +	/* Go to string after ":" */
+>>> +	copy_buf =3D p + 1;
+>>> +	p =3D strchr(copy_buf, '\n');
+>>=20
+>> Ditto.
+>>=20
+>>> +	if (p)
+>>> +		*p =3D '\0';
+>>> +
+>>> +	/* Copy the filtered string after removing space to buf */
+>>> +	strcpy(buf, strim(copy_buf));
+>>> +
+>>> +	fclose(file);
+>>> +	return buf;
+>>> +
+>>> +done:
+>>=20
+>> Please rename this goto label to "not_found", "done" isn't intention
+>> revealing.
+>>=20
+>>> +	free(buf);
+>>> +	fclose(file);
+>>> +	return NULL;
+>>> +}
+>>> /*
+>>> * Check whether a CPU is online
+>>> *
+>>> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+>>> index 0eb4bc29a5a4..b0f754364bd4 100644
+>>> --- a/tools/perf/util/header.h
+>>> +++ b/tools/perf/util/header.h
+>>> @@ -166,4 +166,5 @@ int get_cpuid(char *buffer, size_t sz);
+>>>=20
+>>> char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused);
+>>> int strcmp_cpuid_str(const char *s1, const char *s2);
+>>> +char *cpuinfo_field(const char *search);
+>>> #endif /* __PERF_HEADER_H */
+>>> --=20
+>>> 2.35.1
+>>=20
+>> --=20
+>>=20
+>> - Arnaldo
 
-	addr = ctrl->trace_buf[ctrl->buf_index].addr;
-
-	if (stop) {
-		u32 reg;
-
-		reg = readl(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS);
-		sz = FIELD_GET(HISI_PTT_TRACE_WR_STS_WRITE, reg);
-	} else {
-		sz = HISI_PTT_TRACE_BUF_SIZE;
-	}
-
-	memcpy(buf->base + buf->pos, addr, sz);
-	buf->pos += sz;
-
-	/*
-	 * Just commit the traced data if we're going to stop. Otherwise if the
-	 * resident AUX buffer cannot contain data of next trace buffer, apply
-	 * a new one.
-	 */
-	if (stop) {
-		perf_aux_output_end(handle, buf->pos);
-	} else if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
-		perf_aux_output_end(handle, buf->pos);
-
-		buf = perf_aux_output_begin(handle, event);
-		if (!buf)
-			return -EINVAL;
-
-		buf->pos = handle->head % buf->length;
-		if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
-			perf_aux_output_end(handle, 0);
-			return -EINVAL;
-		}
-	}
-
-	return 0;
-}
-
->>
->>>> +	buf->pos += HISI_PTT_TRACE_BUF_SIZE;
->>>> +
->>>> +	if (stop) {
->>>> +		perf_aux_output_end(handle, buf->pos);
->>>> +	} else if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
->>>> +		perf_aux_output_skip(handle, buf->length - buf->pos);
->>>
->>> perf_aux_output_skip() can also return an error so should probably also
->>> be checked like perf_aux_output_begin()
->>>
->>
->> ok it should be checked.
->>
->>> I'm also wondering why there is a skip for every output_end()? Is that
->>> to avoid having two memcpy calls to handle the wrap around if the data
->>> to be copied goes past the end of the aux buffer?
->>>
->>> For example if your buffers are 4MB each and the aux buffer that the
->>> user picked isn't a multiple of 4 I can see you needing to write the
->>> first part of the 4MB to the end of the aux buffer and then the last
->>> part to the beginning which would be two memcpy() calls. And then a
->>> skip wouldn't be required.
->>>
->>
->> I intended to handle the case that AUX buffer is not a multiple of 4 MiB.
->> When the resident AUX buffer size is less than 4MiB, we're not going to
->> commit data to it and will apply a new AUX buffer instead. I think you're
->> right that the perf_aux_output_skip() is unnecessary here. Thanks for
->> catching this.
->>
->>> I looked at all the other uses of perf_output_end() and perf_output_skip()
->>> in the kernel and didn't see a pattern like yours so it seems suspicous to
->>> me. Maybe at least some comments around this section are needed.
->>>
->>
->> Will add some comments of the handling here.
->>
->> Regards,
->> Yicong
-> .
-> 
