@@ -2,155 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC9DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 17:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8799C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 18:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245632AbiEJRnS (ORCPT
+        id S1344030AbiEJSRH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 13:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
+        Tue, 10 May 2022 14:17:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245615AbiEJRnR (ORCPT
+        with ESMTP id S237826AbiEJSRF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 13:43:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FAE52764D2;
-        Tue, 10 May 2022 10:39:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C5B1B619E2;
-        Tue, 10 May 2022 17:39:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1EDAC385A6;
-        Tue, 10 May 2022 17:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652204358;
-        bh=cpGX1kgRy3el9acV31jAE9GzbuFSlL1gBzdae8nD62I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vMvrTdgU9As8GpHkd4gSyW+f0NV7kjDPvAMFPdLV7HI2a70KGkYNieWz0su6D0oxZ
-         4OZOgkNt6xTFX+i2jEswPW5kAxqkUXuyxHrFSWb/K1gyQAVaEm8w3gXs4ydSfXJGBE
-         GVlP9CBymHgdFkF4/OWYOu3dC7nSUzvh0WbmeyIYAI7rgaHwSnlM5CeAQv1XL5qQvj
-         rO/gPYQlf0rTJQXpdvjTvkMyskqfRmm7afbz20GTwQQHcTjONqZZwgl/M8TnL9RO8S
-         MFuhcvU/HVPy45tNmaXJS0BiJx136K8GRrolB82foWpZuJiD3DXsQMpHt06kvnYyIn
-         APJb4NK1GPAlQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EFF16400B1; Tue, 10 May 2022 14:39:14 -0300 (-03)
-Date:   Tue, 10 May 2022 14:39:14 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf annotate: Add --percent-limit option
-Message-ID: <YnqjQmgXebK4itXj@kernel.org>
-References: <20220502232015.697243-1-namhyung@kernel.org>
+        Tue, 10 May 2022 14:17:05 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65BF587A07
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 11:13:06 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id bq30so30746505lfb.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 May 2022 11:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N+mhbUG8PMDB8QXSseDQwzEe01Khv6i9dx48j8lmtdY=;
+        b=VYL9j4eEhQi+y5jroNsekGGDgbHvK7gBY2RS5tr5c3cJkqy9ODxmTeYuY3+r+6f8/w
+         eafQ2ivjlBXqswOgGzsGHGnflJnHCXk3DUJMiGvX2AW+dbAUMsHyo+1VoZZJUPQNXS9W
+         PogVEThUknDYF9kmc6Y8HnbQ3tpVTPWtTLbvyYXW3hWpfiTorKr+RS2FV0Z+nk2FQpVV
+         dolMATi5dThlZtLi4gGg1BWjYI7oPdCzQ9+mD4sz0cASszscxWcHjbRqiYFIvtFbGYpp
+         49Q8bkQlaIg9iDlJ1nstNphpmoJDXr0RNyQogChGWb1MEbN4vxyT/KvgRcXWjO/U8aqp
+         04UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N+mhbUG8PMDB8QXSseDQwzEe01Khv6i9dx48j8lmtdY=;
+        b=AoV12c8qtW4jbOj3lbeyanZTOAiKHuD8kxUugsLlRsIrnIC1x/ozIeKKuVEX6kohkc
+         IEO3DLzgdDCt0mu6FyOj7q7dsTJgVkVmDjIfFqAgFjE9LS0OCIcdXbwEVRX9Kc7lzGGa
+         XZMQz9B4JgZRdlTtTdUg733/KtNMygqv/ZUubELzx9bCY/hz0oupvTGxsarRnpjCbbpi
+         bM6QkrVmDnrjvfSVriBL6z7p/oAKX9hN876oYvBzUnN89ptlBu3UvIlZy8Tqkx8dj942
+         uflD8I9HRkcP/QRgyNbBWVyA+lkevncqcCE1gbAygGd/ormn8ddhYkeJrvUGc+gOx0kX
+         b1XQ==
+X-Gm-Message-State: AOAM530sGawgwP1oqlk5Cpk4e56DNorznleeVRR/jR6wjWfewLkCALy7
+        OYAS0z0Nd8tlh/lVQo+4P7WQLpbJO/gKL3ODEpoHTg==
+X-Google-Smtp-Source: ABdhPJzflSbkOIVfh3BfhcfU3qBsFSUkT8A9ZRNLjuHTUKPrO6sSQhGwP4fCX9UKcjPngmjO5g8FetAXbFrAFELGW1Q=
+X-Received: by 2002:a05:6512:1048:b0:473:c648:c5c3 with SMTP id
+ c8-20020a056512104800b00473c648c5c3mr17114682lfb.487.1652206384534; Tue, 10
+ May 2022 11:13:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220502232015.697243-1-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20220503213704.2524229-1-blakejones@google.com> <YnqW68rLssWA8uba@kernel.org>
+In-Reply-To: <YnqW68rLssWA8uba@kernel.org>
+From:   Blake Jones <blakejones@google.com>
+Date:   Tue, 10 May 2022 11:12:53 -0700
+Message-ID: <CAP_z_CjM=xdogE7YMhwPj25rG7cvK6=TS_0O_bJ22+SgW6pxhQ@mail.gmail.com>
+Subject: Re: [PATCH] Add an "-m" option to "perf buildid-list".
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, May 02, 2022 at 04:20:15PM -0700, Namhyung Kim escreveu:
-> Like in perf report and perf top, Add this option to limit the number
-> of functions it displays based on the overhead value in percent.
-> 
-> This affects only stdio and stdio2 output modes.  Without this, it
-> shows very long disassembly lines for every function in the data
-> file.  If users don't want this behavior, they can set a value in
-> percent to suppress that.
+Thanks for taking a look at this!
 
-Thanks, applied.
+On Tue, May 10, 2022 at 9:46 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+> Em Tue, May 03, 2022 at 02:37:04PM -0700, Blake Jones escreveu:
+> > +-m::
+> > +--modules::
+> > +     Show buildid, start/end text address, and path of kernel and modules.
+>
+> Hi,
+>
+>         Wouldn't it be better to have -m show just modules, name +
+> buildid, then have -v show more verbose info, i.e. the start, end and
+> switch from just the module name to its full path?
+>
+>         Then to get what your patch produces now one would use:
+>
+>         $ perf buildid-list -kmv
+>
+>         That would be more flexible, wdyt?
 
-- Arnaldo
+I'm open to using "-v" like this if you think it would be useful; is
+there a use case you have in mind for the non-verbose mode? For doing
+external symbolization of stack traces, the BuildID isn't useful without
+also knowing the starting and ending addresses.
 
- 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Documentation/perf-annotate.txt |  5 +++++
->  tools/perf/builtin-annotate.c              | 24 ++++++++++++++++++++++
->  2 files changed, 29 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-> index 33c2521cba4a..18fcc52809fb 100644
-> --- a/tools/perf/Documentation/perf-annotate.txt
-> +++ b/tools/perf/Documentation/perf-annotate.txt
-> @@ -147,6 +147,11 @@ include::itrace.txt[]
->  	The period/hits keywords set the base the percentage is computed
->  	on - the samples period or the number of samples (hits).
->  
-> +--percent-limit::
-> +	Do not show functions which have an overhead under that percent on
-> +	stdio or stdio2 (Default: 0).  Note that this is about selection of
-> +	functions to display, not about lines within the function.
-> +
->  SEE ALSO
->  --------
->  linkperf:perf-record[1], linkperf:perf-report[1]
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index e65dc380be15..2ffe071dbcff 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -54,6 +54,7 @@ struct perf_annotate {
->  	bool	   skip_missing;
->  	bool	   has_br_stack;
->  	bool	   group_set;
-> +	float	   min_percent;
->  	const char *sym_hist_filter;
->  	const char *cpu_list;
->  	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-> @@ -324,6 +325,17 @@ static void hists__find_annotations(struct hists *hists,
->  		    (strcmp(he->ms.sym->name, ann->sym_hist_filter) != 0))
->  			goto find_next;
->  
-> +		if (ann->min_percent) {
-> +			float percent = 0;
-> +			u64 total = hists__total_period(hists);
-> +
-> +			if (total)
-> +				percent = 100.0 * he->stat.period / total;
-> +
-> +			if (percent < ann->min_percent)
-> +				goto find_next;
-> +		}
-> +
->  		notes = symbol__annotation(he->ms.sym);
->  		if (notes->src == NULL) {
->  find_next:
-> @@ -457,6 +469,16 @@ static int __cmd_annotate(struct perf_annotate *ann)
->  	return ret;
->  }
->  
-> +static int parse_percent_limit(const struct option *opt, const char *str,
-> +			       int unset __maybe_unused)
-> +{
-> +	struct perf_annotate *ann = opt->value;
-> +	double pcnt = strtof(str, NULL);
-> +
-> +	ann->min_percent = pcnt;
-> +	return 0;
-> +}
-> +
->  static const char * const annotate_usage[] = {
->  	"perf annotate [<options>]",
->  	NULL
-> @@ -557,6 +579,8 @@ int cmd_annotate(int argc, const char **argv)
->  	OPT_CALLBACK(0, "percent-type", &annotate.opts, "local-period",
->  		     "Set percent type local/global-period/hits",
->  		     annotate_parse_percent_type),
-> +	OPT_CALLBACK(0, "percent-limit", &annotate, "percent",
-> +		     "Don't show entries under that percent", parse_percent_limit),
->  	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
->  			    "Instruction Tracing options\n" ITRACE_HELP,
->  			    itrace_parse_synth_opts),
-> -- 
-> 2.36.0.464.gb9c8b46e94-goog
+If "-m" only showed information about modules and not about the kernel,
+then "perf buildid-list -km" (without "-v") would have different output
+formats for the kernel and for the modules. So I'm inclined to have "-m"
+include information about the kernel as well as the modules.
 
--- 
+How does that sound?
 
-- Arnaldo
+Blake
