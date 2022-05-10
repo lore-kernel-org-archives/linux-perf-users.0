@@ -2,198 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FECC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 04:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A68C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 07:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236533AbiEJEtJ (ORCPT
+        id S233161AbiEJHvE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 00:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59224 "EHLO
+        Tue, 10 May 2022 03:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236529AbiEJEtI (ORCPT
+        with ESMTP id S229513AbiEJHvE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 00:49:08 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1C86293B79
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 May 2022 21:45:10 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id j15so22082399wrb.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 May 2022 21:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9s1dagxJlyBeoN8vXdOpsPpdS8AD1RWVJWE0n8ehmas=;
-        b=OrctmfTVDCxyYdwcxCtO+PuFgHBDMDC7Bjk3TGUWyuOKGBhKLCCiUkxtYUOPWSujka
-         /OoqstAYhrGXcYieyOQKBFbwQ9tdHrrlfAgfjS6rNqvPEA5JdQz3D4E5NS7VzL5WOf+E
-         ppcl6vbGTOThxdSbDLD0FF3VNmQjZYs0YaRKW2LrfcKbI7iiYsOvdodP6Nf3qoZXPgQF
-         Um1ef/9fJDTkVoHV63EAahHnEkdwxgxf/Hc8y1wACrWcQPfhb2xVBIshPVinpye5CGSN
-         DoHok7Lf+NgFTiQMqtYLLj/aSoKi0RaOM3+EWbBDgDeG8Kjhw/dRvI6d3AEZbIIqfLAr
-         UHxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9s1dagxJlyBeoN8vXdOpsPpdS8AD1RWVJWE0n8ehmas=;
-        b=MzF9GfNTslPHAQ63g+TTQFMIaJIKkt8IsF/rbkZEVXlOArzdS8CArOLdzP2hLeyHbc
-         mY30RQE+abhtpMjeMEpMhv4V1xgDxnphHmV3RBdH87+8ho7GXt1xdNUCuZDEPK5qWOsq
-         zalwRFtYq9hXCadZ8tbtWRDQrMQLt5RZjnw+VrLuifJDVMlaW84Qrnbe/pARsLTcW3ZX
-         7uk5JhjazzSaMlhYmnszMvF+CyG+bffyiu7vzJgCB0o0xslNsQAzFy2fr9qJ3j4Yh+Hu
-         cyNotxQ7KlAzA1mbjY1EaleoVt+5kKRBpZ69rHFFfNI7N8g7yZbb/mKzuqkWZG09Ibmf
-         rtGA==
-X-Gm-Message-State: AOAM533Ag3wNZ7yCe0CX43ecZDAD4a6IjQHAtUlf/gjPblrcf05YhajV
-        M797mYn/etuw4ehA3RCWv0NXPTHCn9k2nhH7I5s/lQ==
-X-Google-Smtp-Source: ABdhPJzfNwaPy5xjCTvC86K51nEH3yemeJZ1erUUa4xvtvCZqXN7MOjD5hnH0ntxxTlSOXapkot4g5ZMqXe6px9AH2Q=
-X-Received: by 2002:a5d:4806:0:b0:20a:da03:711b with SMTP id
- l6-20020a5d4806000000b0020ada03711bmr16582569wrq.395.1652157908998; Mon, 09
- May 2022 21:45:08 -0700 (PDT)
+        Tue, 10 May 2022 03:51:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B200189E6C;
+        Tue, 10 May 2022 00:47:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 22D5960C11;
+        Tue, 10 May 2022 07:47:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B127DC385C8;
+        Tue, 10 May 2022 07:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652168826;
+        bh=k1qHqMw8XlQub7Epu9Rj6/6HIjdS2deXd99AuNOhZWk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XSNGQz8vUy49BegzIrwUEtrjqi/8AWrG2IhO6CZGpu5Q74BpsRqoOZ1dutd9QQReJ
+         NRJXMAlqe7jjf1vYZemzVtZUTbHsIvX/5CIlBL/jv32AatzR+qQzqc916q4bF5OYXw
+         vDlQPN3YzW42LapeOLSzF8pjgmrRiPY9cOxcMIRykk3PwLHCmIDCxiWVFFWQRZtV2m
+         lwoL4uUPvSYXwh+31dqulIpIoOIF7qUuedS6jiAvFmNd0Ad0fWiIxQXHL5wV4fPjem
+         TDACK+8WulJg0SALGSUnwoJY6WQ+Mt0fCaTSg1nzReugs/FCdEVbJat0wGcKn4jMDs
+         y4jE3d18xEUgg==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Subject: [PATCHv2 0/3] perf tools: Fix prologue generation
+Date:   Tue, 10 May 2022 09:46:56 +0200
+Message-Id: <20220510074659.2557731-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-References: <20220507052451.12890-1-ojeda@kernel.org> <CABVgOSm5S2=QYnHJ+B0JbYtFYKBDRZiOhE5YMKKUKZU56d17HQ@mail.gmail.com>
- <CANiq72=0ft6+QLbdwWD6cLm4FhWfv53GSg6HKEwxQ-q2N-UkOw@mail.gmail.com>
-In-Reply-To: <CANiq72=0ft6+QLbdwWD6cLm4FhWfv53GSg6HKEwxQ-q2N-UkOw@mail.gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Tue, 10 May 2022 12:44:57 +0800
-Message-ID: <CABVgOSkrvfvA7Ay4GC5wg64S1gibvm5_U5VGBog3sw4_UFo8Cg@mail.gmail.com>
-Subject: Re: [PATCH v6 00/23] Rust support
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, May 7, 2022 at 11:03 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Hi David,
->
-> On Sat, May 7, 2022 at 11:29 AM David Gow <davidgow@google.com> wrote:
-> >
-> > It's great to see some KUnit support here!
->
-> Thanks!
->
-> > It's also possible to run these tests using the KUnit wrapper tool with:
-> > $ ./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_RUST=y
-> > --make_options LLVM=1 --arch x86_64 'rust_kernel_doctests'
-> >
-> > That also nicely formats the results.
->
-> Indeed!
->
->     [16:55:52] ============ rust_kernel_doctests (70 subtests) ============
->     [16:55:52] [PASSED] rust_kernel_doctest_build_assert_rs_12_0
->     [16:55:52] [PASSED] rust_kernel_doctest_build_assert_rs_55_0
->     ...
->     [16:55:52] [PASSED] rust_kernel_doctest_types_rs_445_0
->     [16:55:52] [PASSED] rust_kernel_doctest_types_rs_509_0
->     [16:55:52] ============== [PASSED] rust_kernel_doctests ===============
->     [16:55:52] ============================================================
->     [16:55:52] Testing complete. Passed: 70, Failed: 0, Crashed: 0,
->     Skipped: 0, Errors: 0
->
+hi,
+sending change we discussed some time ago [1] to get rid of
+some deprecated functions we use in perf prologue code.
 
-I've just sent out a pull request to get this working under UML as
-well, which would simplify running these further:
-https://github.com/Rust-for-Linux/linux/pull/766
+Despite the gloomy discussion I think the final code does
+not look that bad ;-)
 
-> > That all being said, I can't say I'm thrilled with the test names
-> > here: none of them are particularly descriptive, and they'll probably
-> > not be static (which would make it difficult to track results /
-> > regressions / etc between kernel versions). Neither of those are
->
-> Yeah, the names are not great and would change from time to time
-> across kernel versions.
->
-> We could ask example writers to give each example a name, but that
-> would make them fairly less convenient. For instance, sometimes they
-> may be very small snippets interleaved with docs' prose (where giving
-> a name may feel a bit of a burden, and people may end writing
-> `foo_example1`, `foo_example2` etc. for each small "step" of an
-> explanation). In other cases they may be very long, testing a wide API
-> surface (e.g. when describing a module or type), where it is also hard
-> to give non-generic names like `rbtree_doctest`. In those kind of
-> cases, I think we would end up with not much better names than
-> automatically generated ones.
->
-> The other aspect is that, given they are part of the documentation,
-> the prose or how things are explained/split may change, thus the
-> doctests as well. For instance, one may need to split a very long
-> `rbtree_doctest` in pieces, and then the name would need to change
-> anyway.
->
-> So I think we should avoid asking documentation writers to add a
-> manual name, even if that means a bit ugly test names. Also this way
-> they are consistently named. What do you think?
+This patchset removes following libbpf functions from perf:
+  bpf_program__set_prep
+  bpf_program__nth_fd
+  struct bpf_prog_prep_result
 
-Yeah, these are all fair points: particularly for small doctests.
+v2 changes:
+  - use fallback section prog handler, so we don't need to
+    use section prefix [Andrii]
+  - realloc prog->insns array in bpf_program__set_insns [Andrii]
+  - squash patch 1 from previous version with
+    bpf_program__set_insns change [Daniel]
+  - patch 3 already merged [Arnaldo]
+  - added more comments
 
-Maybe having an optional name, which more significant tests could use
-to override the file:line names? That could be useful for a few of the
-larger, more often referenced tests.
+  meanwhile.. perf/core and bpf-next diverged, so:
+    - libbpf bpf_program__set_insns change is based on bpf-next/master
+    - perf changes do not apply on bpf-next/master so they are based on
+      perf/core ... however they can be merged only after we release
+      libbpf 0.8.0 with bpf_program__set_insns change, so we don't break
+      the dynamic linking
+      I'm sending perf changes now just for review, I'll resend them
+      once libbpf 0.8.0 is released
 
-> One idea could be giving them a name based on the hash of the content
-> and avoiding the line number, so that there is a higher chance for the
-> name to stay the same even when the file gets modified for other
-> reasons.
+thanks,
+jirka
 
-Ugh: it's a bit ugly either way. I suspect that file:line is still
-probably better, if only because we need some way of looking up the
-test in the code if it fails. I'd hate for people to be randomly
-hashing bits of just to find out what test is failing.
 
-> > necessarily deal breakers, though it might make sense to hide them
-> > behind a kernel option (like all other KUnit tests) so that they can
-> > easily be excluded where they would otherwise clutter up results. (And
->
-> Currently they are under `CONFIG_RUST_KERNEL_KUNIT_TEST` -- or do you
-> mean something else?
->
+[1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
+---
+Jiri Olsa (1):
+      libbpf: Add bpf_program__set_insns function
 
-Oops: I missed that (one of the issues with testing this on a
-different machine which had a rust toolchain). Looks good to me.
+ tools/lib/bpf/libbpf.c   | 22 ++++++++++++++++++++++
+ tools/lib/bpf/libbpf.h   | 18 ++++++++++++++++++
+ tools/lib/bpf/libbpf.map |  1 +
+ 3 files changed, 41 insertions(+)
 
-> > if there's a way to properly name them, or maybe even split them into
-> > per-file or per-module suites, that would make them a bit easier to
-> > deal.) Additionally, there are some plans to taint the kernel[1] when
->
-> Yeah, splitting them further is definitely possible. We are also
-> likely splitting the `kernel` crate into several, which would also
-> make the suites smaller etc. so perhaps further splits may not be
-> needed.
+Jiri Olsa (2):
+      perf tools: Register fallback libbpf section handler
+      perf tools: Rework prologue generation code
 
-Ah: I didn't realise the plan was always to have crate-specific
-suites, and possibly to split things up.
-
-The KTAP output specification does actually support arbitrary nesting
-(though KUnit itself doesn't at the moment), which would potentially
-be an option if (e.g.) providing the complete module nesting made
-sense. I'm not convinced that'd make things easier to read, though.
-
-> > Regardless, this is very neat, and I'm looking forward to taking a
-> > closer look at it.
->
-> Thanks again for taking a look and playing with it, I am glad you
-> liked it! (even if it is just a first approximation, and only supports
-> the `kernel` crate, etc.).
->
-> Cheers,
-> Miguel
-
-Thanks,
--- David
+ tools/perf/util/bpf-loader.c | 175 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 157 insertions(+), 18 deletions(-)
