@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A215C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 10:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F384C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 10:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240215AbiEJKzF (ORCPT
+        id S240304AbiEJKzH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 06:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40366 "EHLO
+        Tue, 10 May 2022 06:55:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240377AbiEJKyM (ORCPT
+        with ESMTP id S240363AbiEJKyF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 06:54:12 -0400
+        Tue, 10 May 2022 06:54:05 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 808812AC6D7;
-        Tue, 10 May 2022 03:49:41 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C8A41688;
-        Tue, 10 May 2022 03:49:41 -0700 (PDT)
-Received: from hype-n1-sdp.warwick.arm.com (hype-n1-sdp.warwick.arm.com [10.32.33.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C40753F66F;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BCF7F2AACF6;
         Tue, 10 May 2022 03:49:38 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9905D1684;
+        Tue, 10 May 2022 03:49:38 -0700 (PDT)
+Received: from hype-n1-sdp.warwick.arm.com (hype-n1-sdp.warwick.arm.com [10.32.33.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2E7DD3F66F;
+        Tue, 10 May 2022 03:49:36 -0700 (PDT)
 From:   Nick Forrington <nick.forrington@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
@@ -40,9 +40,9 @@ Cc:     Nick Forrington <nick.forrington@arm.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         James Clark <james.clark@arm.com>,
         Andrew Kilroy <andrew.kilroy@arm.com>
-Subject: [PATCH 20/20] perf vendors events arm64: Arm Neoverse E1
-Date:   Tue, 10 May 2022 11:47:58 +0100
-Message-Id: <20220510104758.64677-21-nick.forrington@arm.com>
+Subject: [PATCH 19/20] perf vendors events arm64: Arm Cortex-X2
+Date:   Tue, 10 May 2022 11:47:57 +0100
+Message-Id: <20220510104758.64677-20-nick.forrington@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220510104758.64677-1-nick.forrington@arm.com>
 References: <20220510104758.64677-1-nick.forrington@arm.com>
@@ -52,13 +52,13 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add PMU events for Arm Neoverse E1
+Add PMU events for Arm Cortex-X2
 Update mapfile.csv
 
 Event data based on:
-https://github.com/ARM-software/data/tree/master/pmu/neoverse-e1.json
+https://github.com/ARM-software/data/tree/master/pmu/cortex-x2.json
 
-which is based on PMU event descriptions from the Arm Neoverse E1 Technical
+which is based on PMU event descriptions from the Arm Cortex-X2 Technical
 Reference Manual.
 
 Mapping data (for mapfile.csv) based on:
@@ -69,30 +69,30 @@ Technical Reference Manuals for individual CPUs.
 
 Signed-off-by: Nick Forrington <nick.forrington@arm.com>
 ---
- .../arch/arm64/arm/neoverse-e1/branch.json    |  17 +++
- .../arch/arm64/arm/neoverse-e1/bus.json       |  17 +++
- .../arch/arm64/arm/neoverse-e1/cache.json     | 107 ++++++++++++++++++
- .../arch/arm64/arm/neoverse-e1/exception.json |  14 +++
- .../arm64/arm/neoverse-e1/instruction.json    |  65 +++++++++++
- .../arch/arm64/arm/neoverse-e1/memory.json    |  23 ++++
- .../arch/arm64/arm/neoverse-e1/pipeline.json  |   8 ++
- .../arch/arm64/arm/neoverse-e1/spe.json       |  14 +++
+ .../arch/arm64/arm/cortex-x2/branch.json      |  17 ++
+ .../arch/arm64/arm/cortex-x2/bus.json         |  20 +++
+ .../arch/arm64/arm/cortex-x2/cache.json       | 155 ++++++++++++++++++
+ .../arch/arm64/arm/cortex-x2/exception.json   |  47 ++++++
+ .../arch/arm64/arm/cortex-x2/instruction.json | 134 +++++++++++++++
+ .../arch/arm64/arm/cortex-x2/memory.json      |  41 +++++
+ .../arch/arm64/arm/cortex-x2/pipeline.json    |  23 +++
+ .../arch/arm64/arm/cortex-x2/trace.json       |  29 ++++
  tools/perf/pmu-events/arch/arm64/mapfile.csv  |   1 +
- 9 files changed, 266 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json
+ 9 files changed, 467 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json
 new file mode 100644
 index 000000000000..2f2d137f5f55
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json
 @@ -0,0 +1,17 @@
 +[
 +    {
@@ -111,12 +111,12 @@ index 000000000000..2f2d137f5f55
 +        "ArchStdEvent": "BR_INDIRECT_SPEC"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json
 new file mode 100644
-index 000000000000..75d850b781ac
+index 000000000000..579c1c993d17
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json
-@@ -0,0 +1,17 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json
+@@ -0,0 +1,20 @@
 +[
 +    {
 +        "ArchStdEvent": "CPU_CYCLES"
@@ -132,14 +132,17 @@ index 000000000000..75d850b781ac
 +    },
 +    {
 +        "ArchStdEvent": "BUS_ACCESS_WR"
++    },
++    {
++        "ArchStdEvent": "CNT_CYCLES"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json
 new file mode 100644
-index 000000000000..3ad15e3a93a9
+index 000000000000..0141f749bff3
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json
-@@ -0,0 +1,107 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json
+@@ -0,0 +1,155 @@
 +[
 +    {
 +        "ArchStdEvent": "L1I_CACHE_REFILL"
@@ -170,9 +173,6 @@ index 000000000000..3ad15e3a93a9
 +    },
 +    {
 +        "ArchStdEvent": "L2D_CACHE_WB"
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_ALLOCATE"
 +    },
 +    {
 +        "ArchStdEvent": "L2D_CACHE_ALLOCATE"
@@ -211,6 +211,9 @@ index 000000000000..3ad15e3a93a9
 +        "ArchStdEvent": "LL_CACHE_MISS_RD"
 +    },
 +    {
++        "ArchStdEvent": "L1D_CACHE_LMISS_RD"
++    },
++    {
 +        "ArchStdEvent": "L1D_CACHE_RD"
 +    },
 +    {
@@ -229,6 +232,27 @@ index 000000000000..3ad15e3a93a9
 +        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER"
 +    },
 +    {
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN"
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_INVAL"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_WR"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_RD"
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_WR"
++    },
++    {
 +        "ArchStdEvent": "L2D_CACHE_RD"
 +    },
 +    {
@@ -241,18 +265,45 @@ index 000000000000..3ad15e3a93a9
 +        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
 +    },
 +    {
++        "ArchStdEvent": "L2D_CACHE_WB_VICTIM"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_CLEAN"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_INVAL"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_REFILL_RD"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_REFILL_WR"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_RD"
++    },
++    {
++        "ArchStdEvent": "L2D_TLB_WR"
++    },
++    {
 +        "ArchStdEvent": "L3D_CACHE_RD"
 +    },
 +    {
-+        "ArchStdEvent": "L3D_CACHE_REFILL_RD"
++        "ArchStdEvent": "L1I_CACHE_LMISS"
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_LMISS_RD"
++    },
++    {
++        "ArchStdEvent": "L3D_CACHE_LMISS_RD"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json
 new file mode 100644
-index 000000000000..27c3fe9c831a
+index 000000000000..344a2d552ad5
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json
-@@ -0,0 +1,14 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json
+@@ -0,0 +1,47 @@
 +[
 +    {
 +        "ArchStdEvent": "EXC_TAKEN"
@@ -261,27 +312,54 @@ index 000000000000..27c3fe9c831a
 +        "ArchStdEvent": "MEMORY_ERROR"
 +    },
 +    {
++        "ArchStdEvent": "EXC_UNDEF"
++    },
++    {
++        "ArchStdEvent": "EXC_SVC"
++    },
++    {
++        "ArchStdEvent": "EXC_PABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_DABORT"
++    },
++    {
 +        "ArchStdEvent": "EXC_IRQ"
 +    },
 +    {
 +        "ArchStdEvent": "EXC_FIQ"
++    },
++    {
++        "ArchStdEvent": "EXC_SMC"
++    },
++    {
++        "ArchStdEvent": "EXC_HVC"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_PABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_DABORT"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_OTHER"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_IRQ"
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_FIQ"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json
 new file mode 100644
-index 000000000000..6c3b8f772e7f
+index 000000000000..964f47c6b099
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json
-@@ -0,0 +1,65 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json
+@@ -0,0 +1,134 @@
 +[
 +    {
 +        "ArchStdEvent": "SW_INCR"
-+    },
-+    {
-+        "ArchStdEvent": "LD_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "ST_RETIRED"
 +    },
 +    {
 +        "ArchStdEvent": "INST_RETIRED"
@@ -291,15 +369,6 @@ index 000000000000..6c3b8f772e7f
 +    },
 +    {
 +        "ArchStdEvent": "CID_WRITE_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "PC_WRITE_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "BR_IMMED_RETIRED"
-+    },
-+    {
-+        "ArchStdEvent": "BR_RETURN_RETIRED"
 +    },
 +    {
 +        "ArchStdEvent": "INST_SPEC"
@@ -314,13 +383,28 @@ index 000000000000..6c3b8f772e7f
 +        "ArchStdEvent": "BR_MIS_PRED_RETIRED"
 +    },
 +    {
++        "ArchStdEvent": "OP_RETIRED"
++    },
++    {
++        "ArchStdEvent": "OP_SPEC"
++    },
++    {
++        "ArchStdEvent": "LDREX_SPEC"
++    },
++    {
++        "ArchStdEvent": "STREX_PASS_SPEC"
++    },
++    {
++        "ArchStdEvent": "STREX_FAIL_SPEC"
++    },
++    {
++        "ArchStdEvent": "STREX_SPEC"
++    },
++    {
 +        "ArchStdEvent": "LD_SPEC"
 +    },
 +    {
 +        "ArchStdEvent": "ST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "LDST_SPEC"
 +    },
 +    {
 +        "ArchStdEvent": "DP_SPEC"
@@ -332,24 +416,93 @@ index 000000000000..6c3b8f772e7f
 +        "ArchStdEvent": "VFP_SPEC"
 +    },
 +    {
++        "ArchStdEvent": "PC_WRITE_SPEC"
++    },
++    {
 +        "ArchStdEvent": "CRYPTO_SPEC"
 +    },
 +    {
 +        "ArchStdEvent": "ISB_SPEC"
++    },
++    {
++        "ArchStdEvent": "DSB_SPEC"
++    },
++    {
++        "ArchStdEvent": "DMB_SPEC"
++    },
++    {
++        "ArchStdEvent": "RC_LD_SPEC"
++    },
++    {
++        "ArchStdEvent": "RC_ST_SPEC"
++    },
++    {
++        "ArchStdEvent": "ASE_INST_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_INST_SPEC"
++    },
++    {
++        "ArchStdEvent": "FP_HP_SPEC"
++    },
++    {
++        "ArchStdEvent": "FP_SP_SPEC"
++    },
++    {
++        "ArchStdEvent": "FP_DP_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_EMPTY_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_FULL_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_PARTIAL_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_NOT_FULL_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_LDFF_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_LDFF_FAULT_SPEC"
++    },
++    {
++        "ArchStdEvent": "FP_SCALE_OPS_SPEC"
++    },
++    {
++        "ArchStdEvent": "FP_FIXED_OPS_SPEC"
++    },
++    {
++        "ArchStdEvent": "ASE_SVE_INT8_SPEC"
++    },
++    {
++        "ArchStdEvent": "ASE_SVE_INT16_SPEC"
++    },
++    {
++        "ArchStdEvent": "ASE_SVE_INT32_SPEC"
++    },
++    {
++        "ArchStdEvent": "ASE_SVE_INT64_SPEC"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json
 new file mode 100644
-index 000000000000..78ed6dfcedc1
+index 000000000000..7b2b21ac150f
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json
-@@ -0,0 +1,23 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json
+@@ -0,0 +1,41 @@
 +[
 +    {
 +        "ArchStdEvent": "MEM_ACCESS"
 +    },
 +    {
-+        "ArchStdEvent": "REMOTE_ACCESS_RD"
++        "ArchStdEvent": "REMOTE_ACCESS"
 +    },
 +    {
 +        "ArchStdEvent": "MEM_ACCESS_RD"
@@ -365,54 +518,102 @@ index 000000000000..78ed6dfcedc1
 +    },
 +    {
 +        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
++    },
++    {
++        "ArchStdEvent": "LDST_ALIGN_LAT"
++    },
++    {
++        "ArchStdEvent": "LD_ALIGN_LAT"
++    },
++    {
++        "ArchStdEvent": "ST_ALIGN_LAT"
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_CHECKED"
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_CHECKED_RD"
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_CHECKED_WR"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json
 new file mode 100644
-index 000000000000..eeac798d403a
+index 000000000000..f9fae15f7555
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json
-@@ -0,0 +1,8 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json
+@@ -0,0 +1,23 @@
 +[
 +    {
 +        "ArchStdEvent": "STALL_FRONTEND"
 +    },
 +    {
 +        "ArchStdEvent": "STALL_BACKEND"
++    },
++    {
++        "ArchStdEvent": "STALL"
++    },
++    {
++        "ArchStdEvent": "STALL_SLOT_BACKEND"
++    },
++    {
++        "ArchStdEvent": "STALL_SLOT_FRONTEND"
++    },
++    {
++        "ArchStdEvent": "STALL_SLOT"
++    },
++    {
++        "ArchStdEvent": "STALL_BACKEND_MEM"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json
 new file mode 100644
-index 000000000000..20f2165c85fe
+index 000000000000..3116135c59e2
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json
-@@ -0,0 +1,14 @@
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json
+@@ -0,0 +1,29 @@
 +[
 +    {
-+        "ArchStdEvent": "SAMPLE_POP"
++        "ArchStdEvent": "TRB_WRAP"
 +    },
 +    {
-+        "ArchStdEvent": "SAMPLE_FEED"
++        "ArchStdEvent": "TRCEXTOUT0"
 +    },
 +    {
-+        "ArchStdEvent": "SAMPLE_FILTRATE"
++        "ArchStdEvent": "TRCEXTOUT1"
 +    },
 +    {
-+        "ArchStdEvent": "SAMPLE_COLLISION"
++        "ArchStdEvent": "TRCEXTOUT2"
++    },
++    {
++        "ArchStdEvent": "TRCEXTOUT3"
++    },
++    {
++        "ArchStdEvent": "CTI_TRIGOUT4"
++    },
++    {
++        "ArchStdEvent": "CTI_TRIGOUT5"
++    },
++    {
++        "ArchStdEvent": "CTI_TRIGOUT6"
++    },
++    {
++        "ArchStdEvent": "CTI_TRIGOUT7"
 +    }
 +]
 diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index eeed048e407b..9ff3b8065370 100644
+index 4ff43a1da161..eeed048e407b 100644
 --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -39,6 +39,7 @@
+@@ -37,6 +37,7 @@
+ 0x00000000410fd440,v1,arm/cortex-x1,core
+ 0x00000000410fd460,v1,arm/cortex-a510,core
  0x00000000410fd470,v1,arm/cortex-a710,core
- 0x00000000410fd480,v1,arm/cortex-x2,core
++0x00000000410fd480,v1,arm/cortex-x2,core
  0x00000000410fd490,v1,arm/neoverse-n2,core
-+0x00000000410fd4a0,v1,arm/neoverse-e1,core
  0x00000000420f5160,v1,cavium/thunderx2,core
  0x00000000430f0af0,v1,cavium/thunderx2,core
- 0x00000000460f0010,v1,fujitsu/a64fx,core
 -- 
 2.25.1
 
