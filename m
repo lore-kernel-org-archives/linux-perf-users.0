@@ -2,118 +2,152 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F8CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 11:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF4CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 11:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233496AbiEKLmB (ORCPT
+        id S233767AbiEKLtc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 07:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
+        Wed, 11 May 2022 07:49:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241691AbiEKLl5 (ORCPT
+        with ESMTP id S233701AbiEKLtb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 07:41:57 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D362267D34;
-        Wed, 11 May 2022 04:41:53 -0700 (PDT)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KytDK07y5z67Wgc;
-        Wed, 11 May 2022 19:37:05 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 11 May 2022 13:41:51 +0200
-Received: from [10.47.91.186] (10.47.91.186) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 11 May
- 2022 12:41:49 +0100
-Message-ID: <cee3177d-458f-e61c-d38f-08965eb79eb6@huawei.com>
-Date:   Wed, 11 May 2022 12:42:02 +0100
+        Wed, 11 May 2022 07:49:31 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 115E62438C7;
+        Wed, 11 May 2022 04:49:27 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E882ED1;
+        Wed, 11 May 2022 04:49:27 -0700 (PDT)
+Received: from [10.57.65.69] (unknown [10.57.65.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDE243F73D;
+        Wed, 11 May 2022 04:49:24 -0700 (PDT)
+Subject: Re: [PATCH 1/4] perf pmu: Add function to check if a pmu file exists
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20220504150216.581281-1-german.gomez@arm.com>
+ <20220504150216.581281-2-german.gomez@arm.com> <YnqVqq5QW/b14oPZ@kernel.org>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <c738398a-d512-6a4d-9d62-b67b0aac091a@arm.com>
+Date:   Wed, 11 May 2022 12:49:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v7 1/7] iommu/arm-smmu-v3: Make default domain type of
- HiSilicon PTT device to identity
-To:     Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>
-References: <20220407125841.3678-1-yangyicong@hisilicon.com>
- <20220407125841.3678-2-yangyicong@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220407125841.3678-2-yangyicong@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+In-Reply-To: <YnqVqq5QW/b14oPZ@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.91.186]
-X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 07/04/2022 13:58, Yicong Yang wrote:
-> The DMA operations of HiSilicon PTT device can only work properly with
-> identical mappings. So add a quirk for the device to force the domain
+Hi Arnaldo, thanks for the review
 
-I'm not sure if you meant to write "identity mappings".
+On 10/05/2022 17:41, Arnaldo Carvalho de Melo wrote:
+> Em Wed, May 04, 2022 at 04:02:12PM +0100, German Gomez escreveu:
+>> Add a utility function perf_pmu__file_exists() to check if a given pmu
+>> file exists in the sysfs filesystem.
+> While reviewing this I noticed:
+>
+> int perf_pmu__caps_parse(struct perf_pmu *pmu)
+> {
+>         struct stat st;
+>         char caps_path[PATH_MAX];
+>         const char *sysfs = sysfs__mountpoint();
+>         DIR *caps_dir;
+>         struct dirent *evt_ent;
+>         int nr_caps = 0;
+>
+>         if (!sysfs)
+>                 return -1;
+>
+>         snprintf(caps_path, PATH_MAX,
+>                  "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
+>
+>         if (stat(caps_path, &st) < 0)
+>                 return 0;       /* no error if caps does not exist */
+>
+>
+> ------------------------
+>
+> Shouldn't we introduce a:
+>
+> const int perf__pmu_pathname_scnprintf(struct perf_pmu *pmu, char *pathname, size_t size, char *filename)
+> {
+>
+> 	return scnprintf(pathname, size, "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, filename);
+> }
+>
+> And use in your perf_pmu__file_exists() and in the other places where
+> this open coded pattern appears?
 
-> as passthrough.
-> 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+I agree. If nobody else has done it before me, I will send the refactor
+in the next respin.
 
-FWIW,
+Thanks,
+German
 
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-> ---
->   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index 627a3ed5ee8f..5ec15ae2a9b1 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -2839,6 +2839,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
->   	}
->   }
->   
-> +#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
-> +					 (pdev)->device == 0xa12e)
-> +
-> +static int arm_smmu_def_domain_type(struct device *dev)
-> +{
-> +	if (dev_is_pci(dev)) {
-> +		struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +		if (IS_HISI_PTT_DEVICE(pdev))
-> +			return IOMMU_DOMAIN_IDENTITY;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static struct iommu_ops arm_smmu_ops = {
->   	.capable		= arm_smmu_capable,
->   	.domain_alloc		= arm_smmu_domain_alloc,
-> @@ -2856,6 +2871,7 @@ static struct iommu_ops arm_smmu_ops = {
->   	.sva_unbind		= arm_smmu_sva_unbind,
->   	.sva_get_pasid		= arm_smmu_sva_get_pasid,
->   	.page_response		= arm_smmu_page_response,
-> +	.def_domain_type	= arm_smmu_def_domain_type,
->   	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
->   	.owner			= THIS_MODULE,
->   	.default_domain_ops = &(const struct iommu_domain_ops) {
-
+>
+> I'm waiting for reviews for the ARM specific bits.
+>
+> - Arnaldo
+>  
+>> Signed-off-by: German Gomez <german.gomez@arm.com>
+>> ---
+>>  tools/perf/util/pmu.c | 17 +++++++++++++++++
+>>  tools/perf/util/pmu.h |  2 ++
+>>  2 files changed, 19 insertions(+)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 9a1c7e63e663..9479e9a4da54 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -1854,6 +1854,23 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
+>>  	return ret;
+>>  }
+>>  
+>> +bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name)
+>> +{
+>> +	char path[PATH_MAX];
+>> +	struct stat statbuf;
+>> +	const char *sysfs = sysfs__mountpoint();
+>> +
+>> +	if (!sysfs)
+>> +		return false;
+>> +
+>> +	snprintf(path, PATH_MAX,
+>> +		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
+>> +	if (!file_available(path))
+>> +		return false;
+>> +
+>> +	return stat(path, &statbuf) == 0;
+>> +}
+>> +
+>>  static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
+>>  {
+>>  	struct perf_pmu_caps *caps = zalloc(sizeof(*caps));
+>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>> index 541889fa9f9c..ab728eaf13b6 100644
+>> --- a/tools/perf/util/pmu.h
+>> +++ b/tools/perf/util/pmu.h
+>> @@ -120,6 +120,8 @@ bool pmu_have_event(const char *pname, const char *name);
+>>  
+>>  int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...) __scanf(3, 4);
+>>  
+>> +bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name);
+>> +
+>>  int perf_pmu__test(void);
+>>  
+>>  struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
+>> -- 
+>> 2.25.1
