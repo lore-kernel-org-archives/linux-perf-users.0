@@ -2,191 +2,326 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655EFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 07:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 590A7C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 07:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243038AbiEKHgi (ORCPT
+        id S231521AbiEKHnj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 03:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55536 "EHLO
+        Wed, 11 May 2022 03:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243126AbiEKHgR (ORCPT
+        with ESMTP id S243037AbiEKHnh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 03:36:17 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420BE37AB1;
-        Wed, 11 May 2022 00:36:16 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id i27so2240283ejd.9;
-        Wed, 11 May 2022 00:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EMXOqXwZoRTd9O6dThkFs+3JKTEe2otLzDM0Lar53MM=;
-        b=TY7mRuR+2Shnh3rYZ+Hrjt4CrYk+i3FBDt3Fk/2PUI/+Movxhpx2cRIgbVCfbGjFHb
-         4LyouVv2PYLZyrjbY7PgZ6m1CwignXX7PARzT9J/fjsRKInqxpKL+FWEKFNIXYmku5WU
-         pNN/n78gSGO41Dbvdob3kY8yEh3smDAZJidkDZuErfLyTVW6dQNPO8W4An6F7dCB/P64
-         mHNnOHT2z6Itjloc/ya32j+KvmWXUUIZ5tt7uhBO/J5N4Afb16+DTm07lrlH56BvcUtQ
-         RvOWok9Ik+D8zCttwrXpo1bc1bfe9RsrE0gE0XDlVxQ23Hph6WAnkE9PhvuwpOYp34NH
-         1Jyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EMXOqXwZoRTd9O6dThkFs+3JKTEe2otLzDM0Lar53MM=;
-        b=dHPK9HD8NmteydrYD4zsf+hiG8B/aVtAY8w8HWWC3o/J77l+2UPq0UsIQMYCQF9uEJ
-         KGD6gi2PK+sSTgkjFr1v/PaQiIoq4EV38jaMmF8TM1p6nB5n4TaYDfYtK8ZtY7FSrmxG
-         sd00CTIGgy9dhrR8bE2AlTaJeZxwpdlf21JlTdsMYqbgM5/2hO8zYtYcR9Lc9Z3BSiLx
-         iReh6du0XCBN6vu5kVhA2y3IvwMo5Hxusssfn53zVwKOLqsYsextvA4FzcK8uxiFrfpi
-         dEDy/FrV1TQfHBoxw70Ry3XMNkgMaqCmTmYN6Aiy/3zx3VVSrubd5K9yDRuReFFBrNW9
-         f2Kw==
-X-Gm-Message-State: AOAM532bk/0FJb0DylZl4mCdCPNOCXDePxGBmQtoSBX67XouP4afU4g/
-        nzXWxWCfz2To6xd6Sex+ajk=
-X-Google-Smtp-Source: ABdhPJxytIXbPPDCYqAMQhbZeZPptlGDvZH1yJ2RLxPRdNqHTYocowERsJVev8gD46c0oCYW24MwyA==
-X-Received: by 2002:a17:906:974c:b0:6fa:8c68:62a8 with SMTP id o12-20020a170906974c00b006fa8c6862a8mr10459751ejy.293.1652254574671;
-        Wed, 11 May 2022 00:36:14 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id hw10-20020a170907a0ca00b006f3ef214e05sm602188ejc.107.2022.05.11.00.36.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 May 2022 00:36:14 -0700 (PDT)
-Date:   Wed, 11 May 2022 09:36:12 +0200
-From:   Jiri Olsa <olsajiri@gmail.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv2 perf/core 2/3] perf tools: Register fallback libbpf
- section handler
-Message-ID: <YntnbEzE1LeIKXk4@krava>
-References: <20220510074659.2557731-1-jolsa@kernel.org>
- <20220510074659.2557731-3-jolsa@kernel.org>
- <CAEf4Bzav8he-_fD=D5KMFW7s=PkJoZG9cUr+BOTuV54KKOC70A@mail.gmail.com>
+        Wed, 11 May 2022 03:43:37 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 285136CF5C;
+        Wed, 11 May 2022 00:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652255015; x=1683791015;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/5VJ1YvJmkQmRDjgppLi3zE6xrLgD7i0RdleleuK6ao=;
+  b=MGvK35cyDywZR7VYZ+Z4Rli5EbUSWBFWOjDUWvlT158xqRrya3LAEYnA
+   +bClM2YA+ZO0kfI4FNSh9rfpoJpDCUVit3vCqcl80XKBBBFPfEtpsKkiV
+   Y97QR1vV3wOwS1eJYfc8C7suHfBH4/DQZ+lhc1M/lc/5DyehsrRkzGZld
+   Zf45LAMOZNiAUM/fDEca36NDuqVml6ZnE9UN5d5ExIG2BVNoUSnukV5E0
+   yINfOK/3yZyHhockKhcgIWimVtF2U5alImq9PbUiRqIgm8CHGM5NCj+bU
+   S1HI7a0gvg+UjcQLB+9EDX6TYzq9qFxo/IMm1xO2WbyxqrLoWS0/Xqivy
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="251671618"
+X-IronPort-AV: E=Sophos;i="5.91,216,1647327600"; 
+   d="scan'208";a="251671618"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 00:43:33 -0700
+X-IronPort-AV: E=Sophos;i="5.91,216,1647327600"; 
+   d="scan'208";a="739101444"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.249.171.178]) ([10.249.171.178])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 00:43:26 -0700
+Message-ID: <35c5833b-6974-e40d-f4b3-a3b36d11d06c@linux.intel.com>
+Date:   Wed, 11 May 2022 15:43:23 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4Bzav8he-_fD=D5KMFW7s=PkJoZG9cUr+BOTuV54KKOC70A@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 4/7] perf jevents: Modify match field
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Felix Fietkau <nbd@nbd.name>,
+        Qi Liu <liuqi115@huawei.com>, Like Xu <likexu@tencent.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, sandipan.das@amd.com,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220511070133.710721-1-irogers@google.com>
+ <20220511070133.710721-5-irogers@google.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <20220511070133.710721-5-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 10, 2022 at 04:45:01PM -0700, Andrii Nakryiko wrote:
-> On Tue, May 10, 2022 at 12:47 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Perf is using section name to declare special kprobe arguments,
-> > which no longer works with current libbpf, that either requires
-> > certain form of the section name or allows to register custom
-> > handler.
-> >
-> > Adding perf support to register 'fallback' section handler to take
-> > care of perf kprobe programs. The fallback means that it handles
-> > any section definition besides the ones that libbpf handles.
-> >
-> > The handler serves two purposes:
-> >   - allows perf programs to have special arguments in section name
-> >   - allows perf to use pre-load callback where we can attach init
-> >     code (zeroing all argument registers) to each perf program
-> >
-> > The second is essential part of new prologue generation code,
-> > that's coming in following patch.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/perf/util/bpf-loader.c | 47 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> >
-> > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> > index f8ad581ea247..2a2c9512c4e8 100644
-> > --- a/tools/perf/util/bpf-loader.c
-> > +++ b/tools/perf/util/bpf-loader.c
-> > @@ -86,6 +86,7 @@ bpf_perf_object__next(struct bpf_perf_object *prev)
-> >              (perf_obj) = (tmp), (tmp) = bpf_perf_object__next(tmp))
-> >
-> >  static bool libbpf_initialized;
-> > +static int libbpf_sec_handler;
-> >
-> >  static int bpf_perf_object__add(struct bpf_object *obj)
-> >  {
-> > @@ -99,12 +100,58 @@ static int bpf_perf_object__add(struct bpf_object *obj)
-> >         return perf_obj ? 0 : -ENOMEM;
-> >  }
-> >
-> > +static struct bpf_insn prologue_init_insn[] = {
-> > +       BPF_MOV64_IMM(BPF_REG_0, 0),
-> > +       BPF_MOV64_IMM(BPF_REG_1, 0),
+
+
+On 5/11/2022 3:01 PM, Ian Rogers wrote:
+> The match_field function looks for json values to append to the event
+> string. As the C code processes these in order the output order matches
+> that in the json dictionary. Python json readers read the entire
+> dictionary and lose the ordering. To make the python and C output
+> comparable makee the C code first read the extra fields then append them
+
+The "makee" should be a typo.
+
+> to the event in an order not determined by their order in the file.
 > 
-> R0 should be initialized before exit anyway. R1 contains context, so
-> doesn't need initialization, so I think you only need R2-R5?
-
-ah right, I'll remove that
-
-thanks,
-jirka
-
+> Modify the pmu-events test so that test expectations match the new
+> order.
 > 
-> > +       BPF_MOV64_IMM(BPF_REG_2, 0),
-> > +       BPF_MOV64_IMM(BPF_REG_3, 0),
-> > +       BPF_MOV64_IMM(BPF_REG_4, 0),
-> > +       BPF_MOV64_IMM(BPF_REG_5, 0),
-> > +};
-> > +
-> > +static int libbpf_prog_prepare_load_fn(struct bpf_program *prog,
-> > +                                      struct bpf_prog_load_opts *opts __maybe_unused,
-> > +                                      long cookie __maybe_unused)
-> > +{
-> > +       size_t init_size_cnt = ARRAY_SIZE(prologue_init_insn);
-> > +       size_t orig_insn_cnt, insn_cnt, init_size, orig_size;
-> > +       const struct bpf_insn *orig_insn;
-> > +       struct bpf_insn *insn;
-> > +
-> > +       /* prepend initialization code to program instructions */
-> > +       orig_insn = bpf_program__insns(prog);
-> > +       orig_insn_cnt = bpf_program__insn_cnt(prog);
-> > +       init_size = init_size_cnt * sizeof(*insn);
-> > +       orig_size = orig_insn_cnt * sizeof(*insn);
-> > +
-> > +       insn_cnt = orig_insn_cnt + init_size_cnt;
-> > +       insn = malloc(insn_cnt * sizeof(*insn));
-> > +       if (!insn)
-> > +               return -ENOMEM;
-> > +
-> > +       memcpy(insn, prologue_init_insn, init_size);
-> > +       memcpy((char *) insn + init_size, orig_insn, orig_size);
-> > +       bpf_program__set_insns(prog, insn, insn_cnt);
-> > +       return 0;
-> > +}
-> > +
-> >  static int libbpf_init(void)
-> >  {
-> > +       LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
-> > +               .prog_prepare_load_fn = libbpf_prog_prepare_load_fn,
-> > +       );
-> > +
-> >         if (libbpf_initialized)
-> >                 return 0;
-> >
-> >         libbpf_set_print(libbpf_perf_print);
-> > +       libbpf_sec_handler = libbpf_register_prog_handler(NULL, BPF_PROG_TYPE_KPROBE,
-> > +                                                         0, &handler_opts);
-> > +       if (libbpf_sec_handler < 0) {
-> > +               pr_debug("bpf: failed to register libbpf section handler: %d\n",
-> > +                        libbpf_sec_handler);
-> > +               return -BPF_LOADER_ERRNO__INTERNAL;
-> > +       }
-> >         libbpf_initialized = true;
-> >         return 0;
-> >  }
-> > --
-> > 2.35.3
-> >
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>   tools/perf/pmu-events/jevents.c | 82 ++++++++++++++++++++-------------
+>   tools/perf/tests/pmu-events.c   | 24 +++++-----
+>   2 files changed, 62 insertions(+), 44 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index e1f7c7afd435..cee61c4ed59e 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -207,21 +207,6 @@ static struct msrmap {
+>   	{ NULL, NULL }
+>   };
+>   
+> -static struct field {
+> -	const char *field;
+> -	const char *kernel;
+> -} fields[] = {
+> -	{ "UMask",	"umask=" },
+> -	{ "CounterMask", "cmask=" },
+> -	{ "Invert",	"inv=" },
+> -	{ "AnyThread",	"any=" },
+> -	{ "EdgeDetect",	"edge=" },
+> -	{ "SampleAfterValue", "period=" },
+> -	{ "FCMask",	"fc_mask=" },
+> -	{ "PortMask",	"ch_mask=" },
+> -	{ NULL, NULL }
+> -};
+> -
+>   static void cut_comma(char *map, jsmntok_t *newval)
+>   {
+>   	int i;
+> @@ -233,21 +218,6 @@ static void cut_comma(char *map, jsmntok_t *newval)
+>   	}
+>   }
+>   
+> -static int match_field(char *map, jsmntok_t *field, int nz,
+> -		       char **event, jsmntok_t *val)
+> -{
+> -	struct field *f;
+> -	jsmntok_t newval = *val;
+> -
+> -	for (f = fields; f->field; f++)
+> -		if (json_streq(map, field, f->field) && nz) {
+> -			cut_comma(map, &newval);
+> -			addfield(map, event, ",", f->kernel, &newval);
+> -			return 1;
+> -		}
+> -	return 0;
+> -}
+> -
+>   static struct msrmap *lookup_msr(char *map, jsmntok_t *val)
+>   {
+>   	jsmntok_t newval = *val;
+> @@ -581,6 +551,14 @@ static int json_events(const char *fn,
+>   		jsmntok_t *precise = NULL;
+>   		jsmntok_t *obj = tok++;
+>   		bool configcode_present = false;
+> +		char *umask = NULL;
+> +		char *cmask = NULL;
+> +		char *inv = NULL;
+> +		char *any = NULL;
+> +		char *edge = NULL;
+> +		char *period = NULL;
+> +		char *fc_mask = NULL;
+> +		char *ch_mask = NULL;
+>   
+>   		EXPECT(obj->type == JSMN_OBJECT, obj, "expected object");
+>   		for (j = 0; j < obj->size; j += 2) {
+> @@ -596,8 +574,23 @@ static int json_events(const char *fn,
+>   			       "Expected string value");
+>   
+>   			nz = !json_streq(map, val, "0");
+> -			if (match_field(map, field, nz, &event, val)) {
+> -				/* ok */
+> +			/* match_field */
+> +			if (json_streq(map, field, "UMask") && nz) {
+> +				addfield(map, &umask, "", "umask=", val);
+> +			} else if (json_streq(map, field, "CounterMask") && nz) {
+> +				addfield(map, &cmask, "", "cmask=", val);
+> +			} else if (json_streq(map, field, "Invert") && nz) {
+> +				addfield(map, &inv, "", "inv=", val);
+> +			} else if (json_streq(map, field, "AnyThread") && nz) {
+> +				addfield(map, &any, "", "any=", val);
+> +			} else if (json_streq(map, field, "EdgeDetect") && nz) {
+> +				addfield(map, &edge, "", "edge=", val);
+> +			} else if (json_streq(map, field, "SampleAfterValue") && nz) {
+> +				addfield(map, &period, "", "period=", val);
+> +			} else if (json_streq(map, field, "FCMask") && nz) {
+> +				addfield(map, &fc_mask, "", "fc_mask=", val);
+> +			} else if (json_streq(map, field, "PortMask") && nz) {
+> +				addfield(map, &ch_mask, "", "ch_mask=", val);
+>   			} else if (json_streq(map, field, "EventCode")) {
+>   				char *code = NULL;
+>   				addfield(map, &code, "", "", val);
+> @@ -690,6 +683,23 @@ static int json_events(const char *fn,
+>   		else
+>   			snprintf(buf, sizeof buf, "event=%#llx", eventcode);
+>   		addfield(map, &event, ",", buf, NULL);
+> +		if (any)
+> +			addfield(map, &event, ",", any, NULL);
+> +		if (ch_mask)
+> +			addfield(map, &event, ",", ch_mask, NULL);
+> +		if (cmask)
+> +			addfield(map, &event, ",", cmask, NULL);
+> +		if (edge)
+> +			addfield(map, &event, ",", edge, NULL);
+> +		if (fc_mask)
+> +			addfield(map, &event, ",", fc_mask, NULL);
+> +		if (inv)
+> +			addfield(map, &event, ",", inv, NULL);
+> +		if (period)
+> +			addfield(map, &event, ",", period, NULL);
+> +		if (umask)
+> +			addfield(map, &event, ",", umask, NULL);
+> +
+>   		if (je.desc && extra_desc)
+>   			addfield(map, &je.desc, " ", extra_desc, NULL);
+>   		if (je.long_desc && extra_desc)
+> @@ -718,6 +728,14 @@ static int json_events(const char *fn,
+>   		je.event = real_event(je.name, event);
+>   		err = func(data, &je);
+>   free_strings:
+> +		free(umask);
+> +		free(cmask);
+> +		free(inv);
+> +		free(any);
+> +		free(edge);
+> +		free(period);
+> +		free(fc_mask);
+> +		free(ch_mask);
+>   		free(event);
+>   		free(je.desc);
+>   		free(je.name);
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index b74c6ef59e51..f13368569d8b 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -63,33 +63,33 @@ static const struct perf_pmu_test_event bp_l2_btb_correct = {
+>   static const struct perf_pmu_test_event segment_reg_loads_any = {
+>   	.event = {
+>   		.name = "segment_reg_loads.any",
+> -		.event = "umask=0x80,period=200000,event=0x6",
+> +		.event = "event=0x6,period=200000,umask=0x80",
+>   		.desc = "Number of segment register loads",
+>   		.topic = "other",
+>   	},
+> -	.alias_str = "umask=0x80,period=0x30d40,event=0x6",
+> +	.alias_str = "event=0x6,period=0x30d40,umask=0x80",
+>   	.alias_long_desc = "Number of segment register loads",
+>   };
+>   
+>   static const struct perf_pmu_test_event dispatch_blocked_any = {
+>   	.event = {
+>   		.name = "dispatch_blocked.any",
+> -		.event = "umask=0x20,period=200000,event=0x9",
+> +		.event = "event=0x9,period=200000,umask=0x20",
+>   		.desc = "Memory cluster signals to block micro-op dispatch for any reason",
+>   		.topic = "other",
+>   	},
+> -	.alias_str = "umask=0x20,period=0x30d40,event=0x9",
+> +	.alias_str = "event=0x9,period=0x30d40,umask=0x20",
+>   	.alias_long_desc = "Memory cluster signals to block micro-op dispatch for any reason",
+>   };
+>   
+>   static const struct perf_pmu_test_event eist_trans = {
+>   	.event = {
+>   		.name = "eist_trans",
+> -		.event = "umask=0x0,period=200000,event=0x3a",
+> +		.event = "event=0x3a,period=200000,umask=0x0",
+>   		.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+>   		.topic = "other",
+>   	},
+> -	.alias_str = "umask=0,period=0x30d40,event=0x3a",
+> +	.alias_str = "event=0x3a,period=0x30d40,umask=0",
+>   	.alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+>   };
+>   
+> @@ -132,13 +132,13 @@ static const struct perf_pmu_test_event uncore_hisi_ddrc_flux_wcmd = {
+>   static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
+>   	.event = {
+>   		.name = "unc_cbo_xsnp_response.miss_eviction",
+> -		.event = "umask=0x81,event=0x22",
+> +		.event = "event=0x22,umask=0x81",
+>   		.desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core. Unit: uncore_cbox ",
+>   		.topic = "uncore",
+>   		.long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
+>   		.pmu = "uncore_cbox",
+>   	},
+> -	.alias_str = "umask=0x81,event=0x22",
+> +	.alias_str = "event=0x22,umask=0x81",
+>   	.alias_long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
+>   	.matching_pmu = "uncore_cbox_0",
+>   };
+> @@ -146,13 +146,13 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
+>   static const struct perf_pmu_test_event uncore_hyphen = {
+>   	.event = {
+>   		.name = "event-hyphen",
+> -		.event = "umask=0x00,event=0xe0",
+> +		.event = "event=0xe0,umask=0x00",
+>   		.desc = "UNC_CBO_HYPHEN. Unit: uncore_cbox ",
+>   		.topic = "uncore",
+>   		.long_desc = "UNC_CBO_HYPHEN",
+>   		.pmu = "uncore_cbox",
+>   	},
+> -	.alias_str = "umask=0,event=0xe0",
+> +	.alias_str = "event=0xe0,umask=0",
+>   	.alias_long_desc = "UNC_CBO_HYPHEN",
+>   	.matching_pmu = "uncore_cbox_0",
+>   };
+> @@ -160,13 +160,13 @@ static const struct perf_pmu_test_event uncore_hyphen = {
+>   static const struct perf_pmu_test_event uncore_two_hyph = {
+>   	.event = {
+>   		.name = "event-two-hyph",
+> -		.event = "umask=0x00,event=0xc0",
+> +		.event = "event=0xc0,umask=0x00",
+>   		.desc = "UNC_CBO_TWO_HYPH. Unit: uncore_cbox ",
+>   		.topic = "uncore",
+>   		.long_desc = "UNC_CBO_TWO_HYPH",
+>   		.pmu = "uncore_cbox",
+>   	},
+> -	.alias_str = "umask=0,event=0xc0",
+> +	.alias_str = "event=0xc0,umask=0",
+>   	.alias_long_desc = "UNC_CBO_TWO_HYPH",
+>   	.matching_pmu = "uncore_cbox_0",
+>   };
+
+-- 
+Zhengjun Xing
