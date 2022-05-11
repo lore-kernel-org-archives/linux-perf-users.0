@@ -2,54 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C100CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 21:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D03EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 21:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348060AbiEKVPe (ORCPT
+        id S1348067AbiEKVPj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 17:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
+        Wed, 11 May 2022 17:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347978AbiEKVPc (ORCPT
+        with ESMTP id S1348066AbiEKVPf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 17:15:32 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB202297D1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 14:15:31 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id v8-20020a170902b7c800b0015e927ee201so1656054plz.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 14:15:31 -0700 (PDT)
+        Wed, 11 May 2022 17:15:35 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E2E2297D1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 14:15:33 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id v64-20020a25abc6000000b0064a22f2a1e7so2925788ybi.17
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 14:15:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=sKtjMHsY05r5Ju8O5pD25dxn5ZC74mq9R1+/d5sMQD0=;
-        b=SVfEFYxpuijqaeCdH+yZDzht+Z/H+7bjJfqbtxOTlBgVSjQdcE384BGETvZWge95bu
-         EK8b9NlYlW6FjwnYXKa7PmatW4ABPI3BsxmWPrL3a/Ou4JdM2f4Y31UcGa4AzM8DM7kY
-         McFxc8ksLp47xyZZDTNqoKefN0oS+W7ws2nyqchWLePlKA2FpU1tMWAAr9qk6Q5iH3sR
-         THC+yRJuLov65/sL42xnI/Xw6Zz27BUWu28FNS1iKP5Wtvkdau61V29Dzn/cYidoLFPB
-         yHEH81lP9cNN1foROdDMdm59PQ0fZQ+m0Lt1VQ22ClyXsNLNo9dirdduHCiqg5yyrV/H
-         dzKw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=GOl/dDyiic3CHN6RpwyPiPKb1wU0VPhBRck28P7ZCHk=;
+        b=kzk7n6/Ux8w6Q7p+lVKpurlLg4loE3fRbaAJQsK8SoczAzxQ+T4aTpgw9yoLRIoOKG
+         RJG2I41HbbMYcGUQ5B7ScmXAOS/3coPyTDkaG48KYyz6NjdfeibUFsF74pfsnmzH1+lG
+         gaqnEUIJxweJVYJ181xcSdFxcGpvAiM1ez3iRpTVtqArIE5IXHwuFvuT2miNv4ogIm22
+         +N6nb5jK9fXcXZ+FoFE4Y+fpsO/BbDpDIbgzN8cQsUblTXTVx6TbISDmSPdSYJzSr7h9
+         Ke8+2Vxr9HBI8+G+zAzJpodqLkGyEr6VJV7Kr6ngk8jGtE9hkf4rNUqtEvn56pza0c8O
+         WVfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=sKtjMHsY05r5Ju8O5pD25dxn5ZC74mq9R1+/d5sMQD0=;
-        b=NDskKTDykr6++DtJEVevunBKQHtJfa6O/OvZI2EVVyiRb8qftQMCwQ6RqeK0iCDmKz
-         nI64/LKOgIIOO0G4a+dxQ/0tmzkRxN6t2GCZjTAVY1NM3fLYUNSOsXX4EH76VUknM9If
-         wp2oJpYn/YNok2YNcVh+ncblf0ncvX12damvREUhkXIklcLE7qLP2tGyzsWXCNg4jQf7
-         /6iC3dq/6Ys6OpEb/dokhCIBrbdYH0/uoRBxNaEQQ2Hf/njUPbSTYYLyjBTa8+wKrTQi
-         QBE4vfBUEmCh4pJH+1xf5CpJxdiPjIP8Mctx7Gasv/0hyKMca+moJBL37ZzIRqbltwle
-         lIMA==
-X-Gm-Message-State: AOAM531cThH+eeBXz7S22MFGcx2naMyTKDw7UGXMbGb7pgflzuCrqlTi
-        0w0fdXa3+V5X5o5YmQMu1bAiMb8z3iem
-X-Google-Smtp-Source: ABdhPJwrUmqA1QXCOuStvCO4jdvm38keaf5yQw+J7mAJ9wWyzBE63FrRRy0lugXyzLjjh5FeeNryFdDBLRV2
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=GOl/dDyiic3CHN6RpwyPiPKb1wU0VPhBRck28P7ZCHk=;
+        b=ntTc0tkATJsng0DAMZ+WSPOsPtKV+3PYroHZjU1qQzj1Ex9WqVTB2jexNd27p8zpMX
+         McxBao9KfWo7iBl6zexslaYClooGj8/QdWdnChAuTLKchFt+NCLe6mGIvsTJdMMm9GJl
+         JZAE8MmvkQmglPA3mGEPHAYeB8tkLirX5bFk/YwTSjBERYMfw+o+6hadiljkM2NU/rqa
+         aGhR/67jxXOVoPxeXlQW55A6ghYNX8aojp0hHIdNgjiALgvN1Ko/9qygsOGlO90eQIjd
+         xLy22VvrdNG1Zx/teJeEgLKVP6c+GY057YDfSeJEmPoAFGyaz6Uq5zO+6OdYHZdPF3mD
+         ETzQ==
+X-Gm-Message-State: AOAM530/nUku9LR9ydCx4AKtrtKRezQzXU34mzTJU7LbfV8Btmf8vAOy
+        6IHkmwgH2iWz5CH3szPYJMQwj/FkSe5D
+X-Google-Smtp-Source: ABdhPJyoqro8S0Ed4YjfQ1udYJK0lU53Cjn5f7G/UpvgJpoCAse+sptoQwIh+xpmoPM5MGsChn3BDN8nIxe1
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:5993:294b:7b62:54cb])
- (user=irogers job=sendgmr) by 2002:a17:90a:4983:b0:1d9:ef5:29f with SMTP id
- d3-20020a17090a498300b001d90ef5029fmr7376388pjh.67.1652303730579; Wed, 11 May
- 2022 14:15:30 -0700 (PDT)
-Date:   Wed, 11 May 2022 14:15:19 -0700
-Message-Id: <20220511211526.1021908-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:578a:0:b0:2f8:ec0e:2205 with SMTP id
+ l132-20020a81578a000000b002f8ec0e2205mr25750235ywb.408.1652303732927; Wed, 11
+ May 2022 14:15:32 -0700 (PDT)
+Date:   Wed, 11 May 2022 14:15:20 -0700
+In-Reply-To: <20220511211526.1021908-1-irogers@google.com>
+Message-Id: <20220511211526.1021908-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220511211526.1021908-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.512.ge40c2bad7a-goog
-Subject: [PATCH v2 0/7] Rewrite jevents program in python
+Subject: [PATCH v2 1/7] perf jevents: Append PMU description later
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,69 +87,77 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-New architectures bring new complexity, such as Intel's hybrid
-models. jevents provides an alternative to specifying events in the
-kernel and exposing them through sysfs, however, it is difficult to
-work with. For example, an error in the json input would yield an
-error message but no json file or location. It is also a challenge to
-update jsmn.c given its forked nature.
+Append the PMU information from "Unit" to the description later. This
+avoids a problem when "Unit" appears early in a json event and the
+information prepends the description rather than being the expected
+suffix.
 
-The changes here switch from jevents.c to a rewrite in python called
-jevents.py. This means there is a build time dependency on python, but
-such a dependency already exists for asciidoc (used to generate perf's
-man pages). If the build detects that python isn't present or is older
-than version 3.5 (released Sept. 2015) then an empty file is
-substituted for the generated one.
+Update the pmu-events test so that expectations now match the improved
+output.
 
-A challenge with this code is in avoiding regressions. For this reason
-the jevents.py produces identical output to jevents.c, validated with a
-test script and build target.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/jevents.c | 8 +++++---
+ tools/perf/tests/pmu-events.c   | 6 +++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-A difference in the python to the C approach is that the python loads
-an entire json file in to memory, while the C code works from token to
-token. In some cases the C approach was sensitive to the order of
-dictionary items in the json file. To ensure matching output there are
-two changes made to jevents.c to cause it to read all values before
-creating output.
-
-The changes also found a bug in Ivytown's UNC_M_ACT_COUNT.RD event
-encoding, as well as unnecessary whitespace introduced in Alderlake's
-metrics. In these cases the json input is fixed.
-
-v2. Fixes the build for architectures that don't have pmu-events json
-    (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
-    build for python not being present or too old (Suggested-by: Peter
-    Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
-
-Ian Rogers (7):
-  perf jevents: Append PMU description later
-  perf vendor events: Fix Alderlake metric groups
-  perf vendor events: Fix Ivytown UNC_M_ACT_COUNT.RD umask
-  perf jevents: Modify match field
-  perf jevents: Add python converter script
-  perf jevents: Switch build to use jevents.py
-  perf jevents: Remove jevents.c
-
- tools/perf/Makefile.config                    |   19 +
- tools/perf/Makefile.perf                      |   16 +-
- tools/perf/pmu-events/Build                   |   15 +-
- .../arch/x86/alderlake/adl-metrics.json       |   32 -
- .../arch/x86/ivytown/uncore-memory.json       |    3 +-
- tools/perf/pmu-events/empty-pmu-events.c      |   21 +
- tools/perf/pmu-events/jevents.c               | 1322 -----------------
- tools/perf/pmu-events/jevents.py              |  392 +++++
- tools/perf/pmu-events/jsmn.h                  |   68 -
- tools/perf/pmu-events/json.c                  |  162 --
- tools/perf/pmu-events/json.h                  |   39 -
- tools/perf/tests/pmu-events.c                 |   30 +-
- 12 files changed, 460 insertions(+), 1659 deletions(-)
- create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
- delete mode 100644 tools/perf/pmu-events/jevents.c
- create mode 100755 tools/perf/pmu-events/jevents.py
- delete mode 100644 tools/perf/pmu-events/jsmn.h
- delete mode 100644 tools/perf/pmu-events/json.c
- delete mode 100644 tools/perf/pmu-events/json.h
-
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 159d9eab6e79..e1f7c7afd435 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -652,9 +652,6 @@ static int json_events(const char *fn,
+ 					for (s = je.pmu; *s; s++)
+ 						*s = tolower(*s);
+ 				}
+-				addfield(map, &je.desc, ". ", "Unit: ", NULL);
+-				addfield(map, &je.desc, "", je.pmu, NULL);
+-				addfield(map, &je.desc, "", " ", NULL);
+ 			} else if (json_streq(map, field, "Filter")) {
+ 				addfield(map, &filter, "", "", val);
+ 			} else if (json_streq(map, field, "ScaleUnit")) {
+@@ -697,6 +694,11 @@ static int json_events(const char *fn,
+ 			addfield(map, &je.desc, " ", extra_desc, NULL);
+ 		if (je.long_desc && extra_desc)
+ 			addfield(map, &je.long_desc, " ", extra_desc, NULL);
++		if (je.pmu) {
++			addfield(map, &je.desc, ". ", "Unit: ", NULL);
++			addfield(map, &je.desc, "", je.pmu, NULL);
++			addfield(map, &je.desc, "", " ", NULL);
++		}
+ 		if (filter)
+ 			addfield(map, &event, ",", filter, NULL);
+ 		if (msr != NULL)
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 299a215eb54c..b74c6ef59e51 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -133,7 +133,7 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
+ 	.event = {
+ 		.name = "unc_cbo_xsnp_response.miss_eviction",
+ 		.event = "umask=0x81,event=0x22",
+-		.desc = "Unit: uncore_cbox A cross-core snoop resulted from L3 Eviction which misses in some processor core",
++		.desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core. Unit: uncore_cbox ",
+ 		.topic = "uncore",
+ 		.long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
+ 		.pmu = "uncore_cbox",
+@@ -147,7 +147,7 @@ static const struct perf_pmu_test_event uncore_hyphen = {
+ 	.event = {
+ 		.name = "event-hyphen",
+ 		.event = "umask=0x00,event=0xe0",
+-		.desc = "Unit: uncore_cbox UNC_CBO_HYPHEN",
++		.desc = "UNC_CBO_HYPHEN. Unit: uncore_cbox ",
+ 		.topic = "uncore",
+ 		.long_desc = "UNC_CBO_HYPHEN",
+ 		.pmu = "uncore_cbox",
+@@ -161,7 +161,7 @@ static const struct perf_pmu_test_event uncore_two_hyph = {
+ 	.event = {
+ 		.name = "event-two-hyph",
+ 		.event = "umask=0x00,event=0xc0",
+-		.desc = "Unit: uncore_cbox UNC_CBO_TWO_HYPH",
++		.desc = "UNC_CBO_TWO_HYPH. Unit: uncore_cbox ",
+ 		.topic = "uncore",
+ 		.long_desc = "UNC_CBO_TWO_HYPH",
+ 		.pmu = "uncore_cbox",
 -- 
 2.36.0.512.ge40c2bad7a-goog
 
