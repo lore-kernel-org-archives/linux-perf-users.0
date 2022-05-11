@@ -2,228 +2,419 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3ADC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 01:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD626C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 02:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240468AbiEKBfm (ORCPT
+        id S231162AbiEKCDA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 21:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
+        Tue, 10 May 2022 22:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230440AbiEKBfl (ORCPT
+        with ESMTP id S229823AbiEKCC4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 21:35:41 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D885AE;
-        Tue, 10 May 2022 18:35:39 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id h16so198670wrb.2;
-        Tue, 10 May 2022 18:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XlMoWf+WcK7FsmAzwI9Eo6ALWogmpghWPuTvTMBTBJw=;
-        b=evSf+lRM97X/jQOFLYOZVyXgJeez+rbkfQSUwKKBpMBA9AanvyIkbd/DPd4DDGF0CW
-         F2p63Qvw8Vl8Xh0UdwglVwReVpDPQm5BSapTgEhUhDdUbadwggKppY0g39uD8Bfoc/aM
-         G68Ra6kaBmLbkDZRYUSh0nuoGfD3anj5168F2jJ2oXZsgoSeXx7U429vIMJCu/KCXjHu
-         +zjdoPSHSPwknobhuBbVMRY92faQdJBnEQ0TAQdTUtodbvAddNy2F0Uv0b0vmoex+2/t
-         0MIWf31jgT8PMBS3wkLPaQRfcqIHwyfs90hHDFOVP1qTsvW6bbbrk9x1JmLu85H7xVth
-         p7NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XlMoWf+WcK7FsmAzwI9Eo6ALWogmpghWPuTvTMBTBJw=;
-        b=rpfMHcYJpOvnNQLQ3kpJyFc5xIKmx77uanzIZw4K83pa7LsgU6FDbl8tRXQGy0W873
-         z23XeAvNM7K7n1zK+95HcYnZd16HIgQOM0Eau7iYafb4cm+Ese8uesObS8Zsp6SQF5wK
-         HDcFjf7TOKNUS7mT1xYK+Fj23iM4af3RIUJ9uOfTCXUpDvB1YVC7+IluTn7l22CZ1zoh
-         wtO2bG0mzZEGOiiv9E0cfpRFRO3CnPAi/uBDNspGPQyt8+eBcI1bL8b7AaOEy4f5X/Zf
-         kykPGJ/3wlPPo3xiPEy7jC+NL4HGvFYLO1xznjbzdHOlT5Ncivsl/Ck8MbVfKzpbGjLI
-         02xg==
-X-Gm-Message-State: AOAM533Mhhtf0it6uCwOQz1+4BKSmmSqAPvW+66u8cmYJrNtu1M4RCr2
-        lLF5RNdfhEntwliYefzbugNTgO0SroWv0TbRi/4=
-X-Google-Smtp-Source: ABdhPJwGAbd3O30QasDeDkOpiVbiH5Mxwc+d8N6dOkladkWmXa1L/P8SnKwcpnV08NjmcnGx2dezoWjEbFvylBndiuQ=
-X-Received: by 2002:a5d:6ac4:0:b0:20a:dd04:81da with SMTP id
- u4-20020a5d6ac4000000b0020add0481damr19947871wrw.705.1652232938013; Tue, 10
- May 2022 18:35:38 -0700 (PDT)
+        Tue, 10 May 2022 22:02:56 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85C864E3BB;
+        Tue, 10 May 2022 19:02:54 -0700 (PDT)
+Received: from kwepemi100001.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KydSN3Xktz1JC00;
+        Wed, 11 May 2022 10:01:40 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ kwepemi100001.china.huawei.com (7.221.188.215) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 11 May 2022 10:02:52 +0800
+Received: from [10.67.101.67] (10.67.101.67) by kwepemm600003.china.huawei.com
+ (7.193.23.202) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 11 May
+ 2022 10:02:51 +0800
+Subject: Re: [PATCH v7 5/7] perf tool: Add support for HiSilicon PCIe Tune and
+ Trace device driver
+To:     James Clark <james.clark@arm.com>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Leo Yan <leo.yan@linaro.org>
+CC:     <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <gregkh@linuxfoundation.org>,
+        <helgaas@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <lorenzo.pieralisi@arm.com>, <will@kernel.org>,
+        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
+        <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <john.garry@huawei.com>,
+        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+References: <20220407125841.3678-1-yangyicong@hisilicon.com>
+ <20220407125841.3678-6-yangyicong@hisilicon.com>
+ <ace5aa71-a7f9-cb3a-ee80-b56c71df343b@arm.com>
+From:   "liuqi (BA)" <liuqi115@huawei.com>
+Message-ID: <7fe57ed2-c583-1ada-ea5d-324d8de078bc@huawei.com>
+Date:   Wed, 11 May 2022 10:02:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <Ynka4u+jCvFefgwJ@krava> <20220510004057.68284-1-chengdongli@tencent.com>
-In-Reply-To: <20220510004057.68284-1-chengdongli@tencent.com>
-From:   Bryton Lee <brytonlee01@gmail.com>
-Date:   Wed, 11 May 2022 09:35:26 +0800
-Message-ID: <CAC2pzGdkXz+wJsiSLOV5quMugXDvbMbF-WpiJshXfMM9Qt3FRQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf tools: fix callstack entries and nr print message
-To:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, likexu@tencent.com, chengdongli@tencent.com,
-        mark.rutland@arm.com, mingo@redhat.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        alexander.shishkin@linux.intel.com, irogers@google.com,
-        german.gomez@arm.com, rickyman7@gmail.com,
-        Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
-        alexey.v.bayduraev@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ace5aa71-a7f9-cb3a-ee80-b56c71df343b@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.101.67]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri,
 
-Could you kindly review my patch again? I sent out my updates
-yesterday. I am happy to know your guidance.
+Hi James,
 
-Thanks,
-Chengdong
+On 2022/5/10 18:14, James Clark wrote:
+> 
+> 
+> On 07/04/2022 13:58, Yicong Yang wrote:
+>> From: Qi Liu <liuqi115@huawei.com>
+>>
+[...]
+>>   struct auxtrace_record
+>>   *auxtrace_record__init(struct evlist *evlist, int *err)
+>>   {
+>> @@ -57,8 +112,12 @@ struct auxtrace_record
+>>   	struct evsel *evsel;
+>>   	bool found_etm = false;
+>>   	struct perf_pmu *found_spe = NULL;
+>> +	struct perf_pmu *found_ptt = NULL;
+>>   	struct perf_pmu **arm_spe_pmus = NULL;
+>> +	struct perf_pmu **hisi_ptt_pmus = NULL;
+>> +
+>>   	int nr_spes = 0;
+>> +	int nr_ptts = 0;
+>>   	int i = 0;
+>>   
+>>   	if (!evlist)
+>> @@ -66,13 +125,14 @@ struct auxtrace_record
+>>   
+>>   	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
+>>   	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+>> +	hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
+>>   
+>>   	evlist__for_each_entry(evlist, evsel) {
+>>   		if (cs_etm_pmu &&
+>>   		    evsel->core.attr.type == cs_etm_pmu->type)
+>>   			found_etm = true;
+>>   
+>> -		if (!nr_spes || found_spe)
+>> +		if ((!nr_spes || found_spe) && (!nr_ptts || found_ptt))
+>>   			continue;
+>>   
+>>   		for (i = 0; i < nr_spes; i++) {
+>> @@ -81,11 +141,18 @@ struct auxtrace_record
+>>   				break;
+>>   			}
+>>   		}
+>> +
+>> +		for (i = 0; i < nr_ptts; i++) {
+>> +			if (evsel->core.attr.type == hisi_ptt_pmus[i]->type) {
+>> +				found_ptt = hisi_ptt_pmus[i];
+>> +				break;
+>> +			}
+>> +		}
+>>   	}
+>>   	free(arm_spe_pmus);
+>>   
+>> -	if (found_etm && found_spe) {
+>> -		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+>> +	if (found_etm && found_spe && found_ptt) {
+>> +		pr_err("Concurrent ARM Coresight ETM ,SPE and HiSilicon PCIe Trace operation not currently supported\n");
+> 
+> Hi Yicong,
+> 
+> Is that actually a limitation? I don't see why they couldn't work concurrently.
 
-On Tue, May 10, 2022 at 8:41 AM Chengdong Li <brytonlee01@gmail.com> wrote:
->
-> From: Chengdong Li <chengdongli@tencent.com>
->
-> when generating callstack information from branch_stack(Intel LBR),
-> the actual number of callstack entry should be bigger than the number
-> of branch_stack, for example:
->
->         branch_stack records:
->                 B() -> C()
->                 A() -> B()
->         converted callstack records should be:
->                 C()
->                 B()
->                 A()
-> though, the number of callstack equals
-> to the number of branch stack plus 1.
->
-> This patch fixes above issue in branch_stack__printf(). For example,
->
->         # echo 'scale=2000; 4*a(1)' > cmd
->         # perf record --call-graph lbr bc -l < cmd
->
-> Before applying this patch, `perf script -D` output:
->
->         1220022677386876 0x2a40 [0xd8]: PERF_RECORD_SAMPLE(IP, 0x4002): 17990/17990: 0x40a6d6 period: 894172 addr: 0
->         ... LBR call chain: nr:8
->         .....  0: fffffffffffffe00
->         .....  1: 000000000040a410
->         .....  2: 000000000040573c
->         .....  3: 0000000000408650
->         .....  4: 00000000004022f2
->         .....  5: 00000000004015f5
->         .....  6: 00007f5ed6dcb553
->         .....  7: 0000000000401698
->         ... FP chain: nr:2
->         .....  0: fffffffffffffe00
->         .....  1: 000000000040a6d8
->         ... branch callstack: nr:6    # which is not consistent with LBR records.
->         .....  0: 000000000040a410
->         .....  1: 0000000000408650    # ditto
->         .....  2: 00000000004022f2
->         .....  3: 00000000004015f5
->         .....  4: 00007f5ed6dcb553
->         .....  5: 0000000000401698
->          ... thread: bc:17990
->          ...... dso: /usr/bin/bc
->         bc 17990 1220022.677386:     894172 cycles:
->                           40a410 [unknown] (/usr/bin/bc)
->                           40573c [unknown] (/usr/bin/bc)
->                           408650 [unknown] (/usr/bin/bc)
->                           4022f2 [unknown] (/usr/bin/bc)
->                           4015f5 [unknown] (/usr/bin/bc)
->                     7f5ed6dcb553 __libc_start_main+0xf3 (/usr/lib64/libc-2.17.so)
->                           401698 [unknown] (/usr/bin/bc)
->
-> After applied:
->
->         1220022677386876 0x2a40 [0xd8]: PERF_RECORD_SAMPLE(IP, 0x4002): 17990/17990: 0x40a6d6 period: 894172 addr: 0
->         ... LBR call chain: nr:8
->         .....  0: fffffffffffffe00
->         .....  1: 000000000040a410
->         .....  2: 000000000040573c
->         .....  3: 0000000000408650
->         .....  4: 00000000004022f2
->         .....  5: 00000000004015f5
->         .....  6: 00007f5ed6dcb553
->         .....  7: 0000000000401698
->         ... FP chain: nr:2
->         .....  0: fffffffffffffe00
->         .....  1: 000000000040a6d8
->         ... branch callstack: nr:7
->         .....  0: 000000000040a410
->         .....  1: 000000000040573c
->         .....  2: 0000000000408650
->         .....  3: 00000000004022f2
->         .....  4: 00000000004015f5
->         .....  5: 00007f5ed6dcb553
->         .....  6: 0000000000401698
->          ... thread: bc:17990
->          ...... dso: /usr/bin/bc
->         bc 17990 1220022.677386:     894172 cycles:
->                           40a410 [unknown] (/usr/bin/bc)
->                           40573c [unknown] (/usr/bin/bc)
->                           408650 [unknown] (/usr/bin/bc)
->                           4022f2 [unknown] (/usr/bin/bc)
->                           4015f5 [unknown] (/usr/bin/bc)
->                     7f5ed6dcb553 __libc_start_main+0xf3 (/usr/lib64/libc-2.17.so)
->                           401698 [unknown] (/usr/bin/bc)
->
-> Change from v1:
->         - refined code style according to Jiri's review comments.
->
-> Signed-off-by: Chengdong Li <chengdongli@tencent.com>
-> ---
->  tools/perf/util/session.c | 26 +++++++++++++++++++++-----
->  1 file changed, 21 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index f9a320694b85..a7f93f5a1ac8 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1151,9 +1151,20 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
->         struct branch_entry *entries = perf_sample__branch_entries(sample);
->         uint64_t i;
->
-> -       printf("%s: nr:%" PRIu64 "\n",
-> -               !callstack ? "... branch stack" : "... branch callstack",
-> -               sample->branch_stack->nr);
-> +       if (!callstack) {
-> +               printf("%s: nr:%" PRIu64 "\n", "... branch stack", sample->branch_stack->nr);
-> +       } else {
-> +               /* the reason of adding 1 to nr is because after expanding
-> +                * branch stack it generates nr + 1 callstack records. e.g.,
-> +                *         B()->C()
-> +                *         A()->B()
-> +                * the final callstack should be:
-> +                *         C()
-> +                *         B()
-> +                *         A()
-> +                */
-> +               printf("%s: nr:%" PRIu64 "\n", "... branch callstack", sample->branch_stack->nr+1);
-> +       }
->
->         for (i = 0; i < sample->branch_stack->nr; i++) {
->                 struct branch_entry *e = &entries[i];
-> @@ -1169,8 +1180,13 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
->                                 (unsigned)e->flags.reserved,
->                                 e->flags.type ? branch_type_name(e->flags.type) : "");
->                 } else {
-> -                       printf("..... %2"PRIu64": %016" PRIx64 "\n",
-> -                               i, i > 0 ? e->from : e->to);
-> +                       if (i == 0) {
-> +                               printf("..... %2"PRIu64": %016" PRIx64 "\n"
-> +                                      "..... %2"PRIu64": %016" PRIx64 "\n",
-> +                                               i, e->to, i+1, e->from);
-> +                       } else {
-> +                               printf("..... %2"PRIu64": %016" PRIx64 "\n", i+1, e->from);
-> +                       }
->                 }
->         }
->  }
-> --
-> 2.27.0
->
+As Leo said, the logic here should be like this:
+
+         int auxtrace_event_cnt = 0;
+         if (found_etm)
+                 auxtrace_event_cnt++;
+         if (found_spe)
+                 auxtrace_event_cnt++;
+         if (found_ptt)
+                 auxtrace_event_cnt++;
+
+         if (auxtrace_event_cnt > 1) {
+                 pr_err("Concurrent AUX trace operation isn't supported: 
+found etm %d spe %d ptt %d\n",
+                        found_etm, found_spe, found_ptt);
+                 *err = -EOPNOTSUPP;
+                 return NULL;
+         }
+
+which means perf doesn't allow more than one auxtrace event recording at 
+the same time.
+
+> 
+> 
+>>   		*err = -EOPNOTSUPP;
+>>   		return NULL;
+>>   	}
+>> @@ -96,6 +163,9 @@ struct auxtrace_record
+>>   #if defined(__aarch64__)
+>>   	if (found_spe)
+>>   		return arm_spe_recording_init(err, found_spe);
+>> +
+>> +	if (found_ptt)
+>> +		return hisi_ptt_recording_init(err, found_ptt);
+>>   #endif
+>>   
+>>   	/*
+
+[...]
+>> +
+>> +static int hisi_ptt_recording_options(struct auxtrace_record *itr,
+>> +				      struct evlist *evlist,
+>> +				      struct record_opts *opts)
+>> +{
+>> +	struct hisi_ptt_recording *pttr =
+>> +			container_of(itr, struct hisi_ptt_recording, itr);
+>> +	struct perf_pmu *hisi_ptt_pmu = pttr->hisi_ptt_pmu;
+>> +	struct perf_cpu_map *cpus = evlist->core.cpus;
+>> +	struct evsel *evsel, *hisi_ptt_evsel = NULL;
+>> +	struct evsel *tracking_evsel;
+>> +	int err;
+>> +
+>> +	pttr->evlist = evlist;
+>> +	evlist__for_each_entry(evlist, evsel) {
+>> +		if (evsel->core.attr.type == hisi_ptt_pmu->type) {
+>> +			if (hisi_ptt_evsel) {
+>> +				pr_err("There may be only one " HISI_PTT_PMU_NAME "x event\n");
+>> +				return -EINVAL;
+>> +			}
+>> +			evsel->core.attr.freq = 0;
+>> +			evsel->core.attr.sample_period = 1;
+>> +			hisi_ptt_evsel = evsel;
+>> +			opts->full_auxtrace = true;
+>> +		}
+>> +	}
+>> +
+>> +	err = hisi_ptt_set_auxtrace_mmap_page(opts);
+>> +	if (err)
+>> +		return err;
+>> +	/*
+>> +	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
+>> +	 * must come first.
+>> +	 */
+>> +	evlist__to_front(evlist, hisi_ptt_evsel);
+>> +
+>> +	if (!perf_cpu_map__empty(cpus)) {
+>> +		evsel__set_sample_bit(hisi_ptt_evsel, TIME);
+>> +		evsel__set_sample_bit(hisi_ptt_evsel, CPU);
+>> +	}
+> 
+> Similar to Leo's comment: CPU isn't required if it's uncore,
+> and if TIME is useful then add it regardless of whether the
+> event is opened per-cpu or on a task.
+> 
+got it, will fix this next time.
+
+>> +
+>> +	/* Add dummy event to keep tracking */
+>> +	err = parse_events(evlist, "dummy:u", NULL);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	tracking_evsel = evlist__last(evlist);
+>> +	evlist__set_tracking_event(evlist, tracking_evsel);
+>> +
+>> +	tracking_evsel->core.attr.freq = 0;
+>> +	tracking_evsel->core.attr.sample_period = 1;
+>> +
+>> +	if (!perf_cpu_map__empty(cpus))
+>> +		evsel__set_sample_bit(tracking_evsel, TIME);
+> 
+> Same comment as above.
+> 
+got it, thanks.
+>> +
+>> +	return 0;
+>> +}
+>> +
 
 
--- 
-Best Regards
+>> +
+>> +static int hisi_ptt_process_auxtrace_event(struct perf_session *session,
+>> +					   union perf_event *event,
+>> +					   struct perf_tool *tool __maybe_unused)
+>> +{
+>> +	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
+>> +					    auxtrace);
+>> +	struct auxtrace_buffer *buffer;
+>> +	off_t data_offset;
+>> +	int fd = perf_data__fd(session->data);
+>> +	int err;
+>> +
+>> +	if (perf_data__is_pipe(session->data)) {
+>> +		data_offset = 0;
+>> +	} else {
+>> +		data_offset = lseek(fd, 0, SEEK_CUR);
+>> +		if (data_offset == -1)
+>> +			return -errno;
+>> +	}
+>> +
+>> +	err = auxtrace_queues__add_event(&ptt->queues, session, event,
+>> +					 data_offset, &buffer);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	if (dump_trace) {
+>> +		if (auxtrace_buffer__get_data(buffer, fd)) {
+>> +			hisi_ptt_dump_event(ptt, buffer->data, buffer->size);
+>> +			auxtrace_buffer__put_data(buffer);
+>> +		}
+> 
+> Technically auxtrace_queues aren't required here because they are more for
+> supporting trace from multiple CPUs and sorting and re-ordering between them.
+> 
+> If this is new device is uncore and always from a single source you could
+> just go straight to  hisi_ptt_dump_event() with data_offset and size of the
+> auxtrace event.
+> 
+> But I suppose it also doesn't hurt to use some of the existing framework
+> like you have done.
+> 
+ok, I'll delete the auxtrace_queues next time, thanks.
 
-Bryton.Lee
+Qi
+
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_ptt_flush(struct perf_session *session __maybe_unused,
+>> +			  struct perf_tool *tool __maybe_unused)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static void hisi_ptt_free_events(struct perf_session *session)
+>> +{
+>> +	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
+>> +					    auxtrace);
+>> +	struct auxtrace_queues *queues = &ptt->queues;
+>> +	unsigned int i;
+>> +
+>> +	for (i = 0; i < queues->nr_queues; i++) {
+>> +		free(queues->queue_array[i].priv);
+>> +		queues->queue_array[i].priv = NULL;
+>> +	}
+>> +	auxtrace_queues__free(queues);
+>> +}
+>> +
+>> +static void hisi_ptt_free(struct perf_session *session)
+>> +{
+>> +	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
+>> +					    auxtrace);
+>> +
+>> +	hisi_ptt_free_events(session);
+>> +	session->auxtrace = NULL;
+>> +	free(ptt);
+>> +}
+>> +
+>> +static bool hisi_ptt_evsel_is_auxtrace(struct perf_session *session,
+>> +				       struct evsel *evsel)
+>> +{
+>> +	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt, auxtrace);
+>> +
+>> +	return evsel->core.attr.type == ptt->pmu_type;
+>> +}
+>> +
+>> +static const char * const hisi_ptt_info_fmts[] = {
+>> +	[HISI_PTT_PMU_TYPE]		= "  PMU Type           %" PRId64 "\n",
+>> +};
+>> +
+>> +static void hisi_ptt_print_info(__u64 *arr)
+>> +{
+>> +	if (!dump_trace)
+>> +		return;
+>> +
+>> +	fprintf(stdout, hisi_ptt_info_fmts[HISI_PTT_PMU_TYPE], arr[HISI_PTT_PMU_TYPE]);
+>> +}
+>> +
+>> +int hisi_ptt_process_auxtrace_info(union perf_event *event,
+>> +				   struct perf_session *session)
+>> +{
+>> +	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+>> +	struct hisi_ptt *ptt;
+>> +	int err;
+>> +
+>> +	if (auxtrace_info->header.size < HISI_PTT_AUXTRACE_PRIV_SIZE +
+>> +				sizeof(struct perf_record_auxtrace_info))
+>> +		return -EINVAL;
+>> +
+>> +	ptt = zalloc(sizeof(struct hisi_ptt));
+>> +	if (!ptt)
+>> +		return -ENOMEM;
+>> +
+>> +	err = auxtrace_queues__init(&ptt->queues);
+>> +	if (err)
+>> +		goto err_free;
+>> +
+>> +	ptt->session = session;
+>> +	ptt->machine = &session->machines.host; /* No kvm support */
+>> +	ptt->auxtrace_type = auxtrace_info->type;
+>> +	ptt->pmu_type = auxtrace_info->priv[HISI_PTT_PMU_TYPE];
+>> +
+>> +	ptt->auxtrace.process_event = hisi_ptt_process_event;
+>> +	ptt->auxtrace.process_auxtrace_event = hisi_ptt_process_auxtrace_event;
+>> +	ptt->auxtrace.flush_events = hisi_ptt_flush;
+>> +	ptt->auxtrace.free_events = hisi_ptt_free_events;
+>> +	ptt->auxtrace.free = hisi_ptt_free;
+>> +	ptt->auxtrace.evsel_is_auxtrace = hisi_ptt_evsel_is_auxtrace;
+>> +	session->auxtrace = &ptt->auxtrace;
+>> +
+>> +	hisi_ptt_print_info(&auxtrace_info->priv[0]);
+>> +
+>> +	return 0;
+>> +
+>> +err_free:
+>> +	free(ptt);
+>> +	return err;
+>> +}
+>> diff --git a/tools/perf/util/hisi_ptt.h b/tools/perf/util/hisi_ptt.h
+>> new file mode 100644
+>> index 000000000000..c0b6cbde1221
+>> --- /dev/null
+>> +++ b/tools/perf/util/hisi_ptt.h
+>> @@ -0,0 +1,28 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * HiSilicon PCIe Trace and Tuning (PTT) support
+>> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+>> + */
+>> +
+>> +#ifndef INCLUDE__PERF_HISI_PTT_H__
+>> +#define INCLUDE__PERF_HISI_PTT_H__
+>> +
+>> +#define HISI_PTT_PMU_NAME "hisi_ptt"
+>> +enum {
+>> +	HISI_PTT_PMU_TYPE,
+>> +	HISI_PTT_PER_CPU_MMAPS,
+>> +	HISI_PTT_AUXTRACE_PRIV_MAX,
+>> +};
+>> +
+>> +#define HISI_PTT_AUXTRACE_PRIV_SIZE (HISI_PTT_AUXTRACE_PRIV_MAX * sizeof(u64))
+>> +union perf_event;
+>> +struct perf_session;
+>> +struct perf_pmu;
+>> +
+>> +struct auxtrace_record *hisi_ptt_recording_init(int *err,
+>> +						struct perf_pmu *hisi_ptt_pmu);
+>> +
+>> +int hisi_ptt_process_auxtrace_info(union perf_event *event,
+>> +				   struct perf_session *session);
+>> +
+>> +#endif
+> .
+> 
