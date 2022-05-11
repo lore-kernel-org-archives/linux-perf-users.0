@@ -2,326 +2,413 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590A7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 07:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCB1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 09:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231521AbiEKHnj (ORCPT
+        id S238505AbiEKJSN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 03:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56724 "EHLO
+        Wed, 11 May 2022 05:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243037AbiEKHnh (ORCPT
+        with ESMTP id S238072AbiEKJSK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 03:43:37 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 285136CF5C;
-        Wed, 11 May 2022 00:43:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652255015; x=1683791015;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/5VJ1YvJmkQmRDjgppLi3zE6xrLgD7i0RdleleuK6ao=;
-  b=MGvK35cyDywZR7VYZ+Z4Rli5EbUSWBFWOjDUWvlT158xqRrya3LAEYnA
-   +bClM2YA+ZO0kfI4FNSh9rfpoJpDCUVit3vCqcl80XKBBBFPfEtpsKkiV
-   Y97QR1vV3wOwS1eJYfc8C7suHfBH4/DQZ+lhc1M/lc/5DyehsrRkzGZld
-   Zf45LAMOZNiAUM/fDEca36NDuqVml6ZnE9UN5d5ExIG2BVNoUSnukV5E0
-   yINfOK/3yZyHhockKhcgIWimVtF2U5alImq9PbUiRqIgm8CHGM5NCj+bU
-   S1HI7a0gvg+UjcQLB+9EDX6TYzq9qFxo/IMm1xO2WbyxqrLoWS0/Xqivy
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="251671618"
-X-IronPort-AV: E=Sophos;i="5.91,216,1647327600"; 
-   d="scan'208";a="251671618"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 00:43:33 -0700
-X-IronPort-AV: E=Sophos;i="5.91,216,1647327600"; 
-   d="scan'208";a="739101444"
-Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.249.171.178]) ([10.249.171.178])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 00:43:26 -0700
-Message-ID: <35c5833b-6974-e40d-f4b3-a3b36d11d06c@linux.intel.com>
-Date:   Wed, 11 May 2022 15:43:23 +0800
+        Wed, 11 May 2022 05:18:10 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1A5AF201300;
+        Wed, 11 May 2022 02:18:08 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D244A1FB;
+        Wed, 11 May 2022 02:18:07 -0700 (PDT)
+Received: from [10.57.2.55] (unknown [10.57.2.55])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B9613F73D;
+        Wed, 11 May 2022 02:18:03 -0700 (PDT)
+Message-ID: <1b6d1ed3-fdec-3fef-cbf6-735ba5104a94@arm.com>
+Date:   Wed, 11 May 2022 10:18:02 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 4/7] perf jevents: Modify match field
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v7 5/7] perf tool: Add support for HiSilicon PCIe Tune and
+ Trace device driver
 Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Felix Fietkau <nbd@nbd.name>,
-        Qi Liu <liuqi115@huawei.com>, Like Xu <likexu@tencent.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com, sandipan.das@amd.com,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220511070133.710721-1-irogers@google.com>
- <20220511070133.710721-5-irogers@google.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <20220511070133.710721-5-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To:     "liuqi (BA)" <liuqi115@huawei.com>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     prime.zeng@huawei.com, zhangshaokun@hisilicon.com,
+        linuxarm@huawei.com, gregkh@linuxfoundation.org,
+        helgaas@kernel.org, alexander.shishkin@linux.intel.com,
+        lorenzo.pieralisi@arm.com, will@kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        mike.leach@linaro.org, jonathan.cameron@huawei.com,
+        daniel.thompson@linaro.org, joro@8bytes.org, john.garry@huawei.com,
+        shameerali.kolothum.thodi@huawei.com, robin.murphy@arm.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        coresight@lists.linaro.org, linux-pci@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org
+References: <20220407125841.3678-1-yangyicong@hisilicon.com>
+ <20220407125841.3678-6-yangyicong@hisilicon.com>
+ <ace5aa71-a7f9-cb3a-ee80-b56c71df343b@arm.com>
+ <7fe57ed2-c583-1ada-ea5d-324d8de078bc@huawei.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <7fe57ed2-c583-1ada-ea5d-324d8de078bc@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 5/11/2022 3:01 PM, Ian Rogers wrote:
-> The match_field function looks for json values to append to the event
-> string. As the C code processes these in order the output order matches
-> that in the json dictionary. Python json readers read the entire
-> dictionary and lose the ordering. To make the python and C output
-> comparable makee the C code first read the extra fields then append them
-
-The "makee" should be a typo.
-
-> to the event in an order not determined by their order in the file.
+On 11/05/2022 03:02, liuqi (BA) wrote:
 > 
-> Modify the pmu-events test so that test expectations match the new
-> order.
+> Hi James,
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/pmu-events/jevents.c | 82 ++++++++++++++++++++-------------
->   tools/perf/tests/pmu-events.c   | 24 +++++-----
->   2 files changed, 62 insertions(+), 44 deletions(-)
+> On 2022/5/10 18:14, James Clark wrote:
+>>
+>>
+>> On 07/04/2022 13:58, Yicong Yang wrote:
+>>> From: Qi Liu <liuqi115@huawei.com>
+>>>
+> [...]
+>>>   struct auxtrace_record
+>>>   *auxtrace_record__init(struct evlist *evlist, int *err)
+>>>   {
+>>> @@ -57,8 +112,12 @@ struct auxtrace_record
+>>>       struct evsel *evsel;
+>>>       bool found_etm = false;
+>>>       struct perf_pmu *found_spe = NULL;
+>>> +    struct perf_pmu *found_ptt = NULL;
+>>>       struct perf_pmu **arm_spe_pmus = NULL;
+>>> +    struct perf_pmu **hisi_ptt_pmus = NULL;
+>>> +
+>>>       int nr_spes = 0;
+>>> +    int nr_ptts = 0;
+>>>       int i = 0;
+>>>         if (!evlist)
+>>> @@ -66,13 +125,14 @@ struct auxtrace_record
+>>>         cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
+>>>       arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+>>> +    hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
+>>>         evlist__for_each_entry(evlist, evsel) {
+>>>           if (cs_etm_pmu &&
+>>>               evsel->core.attr.type == cs_etm_pmu->type)
+>>>               found_etm = true;
+>>>   -        if (!nr_spes || found_spe)
+>>> +        if ((!nr_spes || found_spe) && (!nr_ptts || found_ptt))
+>>>               continue;
+>>>             for (i = 0; i < nr_spes; i++) {
+>>> @@ -81,11 +141,18 @@ struct auxtrace_record
+>>>                   break;
+>>>               }
+>>>           }
+>>> +
+>>> +        for (i = 0; i < nr_ptts; i++) {
+>>> +            if (evsel->core.attr.type == hisi_ptt_pmus[i]->type) {
+>>> +                found_ptt = hisi_ptt_pmus[i];
+>>> +                break;
+>>> +            }
+>>> +        }
+>>>       }
+>>>       free(arm_spe_pmus);
+>>>   -    if (found_etm && found_spe) {
+>>> -        pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+>>> +    if (found_etm && found_spe && found_ptt) {
+>>> +        pr_err("Concurrent ARM Coresight ETM ,SPE and HiSilicon PCIe Trace operation not currently supported\n");
+>>
+>> Hi Yicong,
+>>
+>> Is that actually a limitation? I don't see why they couldn't work concurrently.
 > 
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index e1f7c7afd435..cee61c4ed59e 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -207,21 +207,6 @@ static struct msrmap {
->   	{ NULL, NULL }
->   };
->   
-> -static struct field {
-> -	const char *field;
-> -	const char *kernel;
-> -} fields[] = {
-> -	{ "UMask",	"umask=" },
-> -	{ "CounterMask", "cmask=" },
-> -	{ "Invert",	"inv=" },
-> -	{ "AnyThread",	"any=" },
-> -	{ "EdgeDetect",	"edge=" },
-> -	{ "SampleAfterValue", "period=" },
-> -	{ "FCMask",	"fc_mask=" },
-> -	{ "PortMask",	"ch_mask=" },
-> -	{ NULL, NULL }
-> -};
-> -
->   static void cut_comma(char *map, jsmntok_t *newval)
->   {
->   	int i;
-> @@ -233,21 +218,6 @@ static void cut_comma(char *map, jsmntok_t *newval)
->   	}
->   }
->   
-> -static int match_field(char *map, jsmntok_t *field, int nz,
-> -		       char **event, jsmntok_t *val)
-> -{
-> -	struct field *f;
-> -	jsmntok_t newval = *val;
-> -
-> -	for (f = fields; f->field; f++)
-> -		if (json_streq(map, field, f->field) && nz) {
-> -			cut_comma(map, &newval);
-> -			addfield(map, event, ",", f->kernel, &newval);
-> -			return 1;
-> -		}
-> -	return 0;
-> -}
-> -
->   static struct msrmap *lookup_msr(char *map, jsmntok_t *val)
->   {
->   	jsmntok_t newval = *val;
-> @@ -581,6 +551,14 @@ static int json_events(const char *fn,
->   		jsmntok_t *precise = NULL;
->   		jsmntok_t *obj = tok++;
->   		bool configcode_present = false;
-> +		char *umask = NULL;
-> +		char *cmask = NULL;
-> +		char *inv = NULL;
-> +		char *any = NULL;
-> +		char *edge = NULL;
-> +		char *period = NULL;
-> +		char *fc_mask = NULL;
-> +		char *ch_mask = NULL;
->   
->   		EXPECT(obj->type == JSMN_OBJECT, obj, "expected object");
->   		for (j = 0; j < obj->size; j += 2) {
-> @@ -596,8 +574,23 @@ static int json_events(const char *fn,
->   			       "Expected string value");
->   
->   			nz = !json_streq(map, val, "0");
-> -			if (match_field(map, field, nz, &event, val)) {
-> -				/* ok */
-> +			/* match_field */
-> +			if (json_streq(map, field, "UMask") && nz) {
-> +				addfield(map, &umask, "", "umask=", val);
-> +			} else if (json_streq(map, field, "CounterMask") && nz) {
-> +				addfield(map, &cmask, "", "cmask=", val);
-> +			} else if (json_streq(map, field, "Invert") && nz) {
-> +				addfield(map, &inv, "", "inv=", val);
-> +			} else if (json_streq(map, field, "AnyThread") && nz) {
-> +				addfield(map, &any, "", "any=", val);
-> +			} else if (json_streq(map, field, "EdgeDetect") && nz) {
-> +				addfield(map, &edge, "", "edge=", val);
-> +			} else if (json_streq(map, field, "SampleAfterValue") && nz) {
-> +				addfield(map, &period, "", "period=", val);
-> +			} else if (json_streq(map, field, "FCMask") && nz) {
-> +				addfield(map, &fc_mask, "", "fc_mask=", val);
-> +			} else if (json_streq(map, field, "PortMask") && nz) {
-> +				addfield(map, &ch_mask, "", "ch_mask=", val);
->   			} else if (json_streq(map, field, "EventCode")) {
->   				char *code = NULL;
->   				addfield(map, &code, "", "", val);
-> @@ -690,6 +683,23 @@ static int json_events(const char *fn,
->   		else
->   			snprintf(buf, sizeof buf, "event=%#llx", eventcode);
->   		addfield(map, &event, ",", buf, NULL);
-> +		if (any)
-> +			addfield(map, &event, ",", any, NULL);
-> +		if (ch_mask)
-> +			addfield(map, &event, ",", ch_mask, NULL);
-> +		if (cmask)
-> +			addfield(map, &event, ",", cmask, NULL);
-> +		if (edge)
-> +			addfield(map, &event, ",", edge, NULL);
-> +		if (fc_mask)
-> +			addfield(map, &event, ",", fc_mask, NULL);
-> +		if (inv)
-> +			addfield(map, &event, ",", inv, NULL);
-> +		if (period)
-> +			addfield(map, &event, ",", period, NULL);
-> +		if (umask)
-> +			addfield(map, &event, ",", umask, NULL);
-> +
->   		if (je.desc && extra_desc)
->   			addfield(map, &je.desc, " ", extra_desc, NULL);
->   		if (je.long_desc && extra_desc)
-> @@ -718,6 +728,14 @@ static int json_events(const char *fn,
->   		je.event = real_event(je.name, event);
->   		err = func(data, &je);
->   free_strings:
-> +		free(umask);
-> +		free(cmask);
-> +		free(inv);
-> +		free(any);
-> +		free(edge);
-> +		free(period);
-> +		free(fc_mask);
-> +		free(ch_mask);
->   		free(event);
->   		free(je.desc);
->   		free(je.name);
-> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> index b74c6ef59e51..f13368569d8b 100644
-> --- a/tools/perf/tests/pmu-events.c
-> +++ b/tools/perf/tests/pmu-events.c
-> @@ -63,33 +63,33 @@ static const struct perf_pmu_test_event bp_l2_btb_correct = {
->   static const struct perf_pmu_test_event segment_reg_loads_any = {
->   	.event = {
->   		.name = "segment_reg_loads.any",
-> -		.event = "umask=0x80,period=200000,event=0x6",
-> +		.event = "event=0x6,period=200000,umask=0x80",
->   		.desc = "Number of segment register loads",
->   		.topic = "other",
->   	},
-> -	.alias_str = "umask=0x80,period=0x30d40,event=0x6",
-> +	.alias_str = "event=0x6,period=0x30d40,umask=0x80",
->   	.alias_long_desc = "Number of segment register loads",
->   };
->   
->   static const struct perf_pmu_test_event dispatch_blocked_any = {
->   	.event = {
->   		.name = "dispatch_blocked.any",
-> -		.event = "umask=0x20,period=200000,event=0x9",
-> +		.event = "event=0x9,period=200000,umask=0x20",
->   		.desc = "Memory cluster signals to block micro-op dispatch for any reason",
->   		.topic = "other",
->   	},
-> -	.alias_str = "umask=0x20,period=0x30d40,event=0x9",
-> +	.alias_str = "event=0x9,period=0x30d40,umask=0x20",
->   	.alias_long_desc = "Memory cluster signals to block micro-op dispatch for any reason",
->   };
->   
->   static const struct perf_pmu_test_event eist_trans = {
->   	.event = {
->   		.name = "eist_trans",
-> -		.event = "umask=0x0,period=200000,event=0x3a",
-> +		.event = "event=0x3a,period=200000,umask=0x0",
->   		.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
->   		.topic = "other",
->   	},
-> -	.alias_str = "umask=0,period=0x30d40,event=0x3a",
-> +	.alias_str = "event=0x3a,period=0x30d40,umask=0",
->   	.alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
->   };
->   
-> @@ -132,13 +132,13 @@ static const struct perf_pmu_test_event uncore_hisi_ddrc_flux_wcmd = {
->   static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
->   	.event = {
->   		.name = "unc_cbo_xsnp_response.miss_eviction",
-> -		.event = "umask=0x81,event=0x22",
-> +		.event = "event=0x22,umask=0x81",
->   		.desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core. Unit: uncore_cbox ",
->   		.topic = "uncore",
->   		.long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
->   		.pmu = "uncore_cbox",
->   	},
-> -	.alias_str = "umask=0x81,event=0x22",
-> +	.alias_str = "event=0x22,umask=0x81",
->   	.alias_long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
->   	.matching_pmu = "uncore_cbox_0",
->   };
-> @@ -146,13 +146,13 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
->   static const struct perf_pmu_test_event uncore_hyphen = {
->   	.event = {
->   		.name = "event-hyphen",
-> -		.event = "umask=0x00,event=0xe0",
-> +		.event = "event=0xe0,umask=0x00",
->   		.desc = "UNC_CBO_HYPHEN. Unit: uncore_cbox ",
->   		.topic = "uncore",
->   		.long_desc = "UNC_CBO_HYPHEN",
->   		.pmu = "uncore_cbox",
->   	},
-> -	.alias_str = "umask=0,event=0xe0",
-> +	.alias_str = "event=0xe0,umask=0",
->   	.alias_long_desc = "UNC_CBO_HYPHEN",
->   	.matching_pmu = "uncore_cbox_0",
->   };
-> @@ -160,13 +160,13 @@ static const struct perf_pmu_test_event uncore_hyphen = {
->   static const struct perf_pmu_test_event uncore_two_hyph = {
->   	.event = {
->   		.name = "event-two-hyph",
-> -		.event = "umask=0x00,event=0xc0",
-> +		.event = "event=0xc0,umask=0x00",
->   		.desc = "UNC_CBO_TWO_HYPH. Unit: uncore_cbox ",
->   		.topic = "uncore",
->   		.long_desc = "UNC_CBO_TWO_HYPH",
->   		.pmu = "uncore_cbox",
->   	},
-> -	.alias_str = "umask=0,event=0xc0",
-> +	.alias_str = "event=0xc0,umask=0",
->   	.alias_long_desc = "UNC_CBO_TWO_HYPH",
->   	.matching_pmu = "uncore_cbox_0",
->   };
+> As Leo said, the logic here should be like this:
+> 
+>         int auxtrace_event_cnt = 0;
+>         if (found_etm)
+>                 auxtrace_event_cnt++;
+>         if (found_spe)
+>                 auxtrace_event_cnt++;
+>         if (found_ptt)
+>                 auxtrace_event_cnt++;
+> 
+>         if (auxtrace_event_cnt > 1) {
+>                 pr_err("Concurrent AUX trace operation isn't supported: found etm %d spe %d ptt %d\n",
+>                        found_etm, found_spe, found_ptt);
+>                 *err = -EOPNOTSUPP;
+>                 return NULL;
+>         }
+> 
+> which means perf doesn't allow more than one auxtrace event recording at the same time.
 
--- 
-Zhengjun Xing
+Oh I see that the limitation is actually in perf when decoding the data. I thought it meant
+that it wasn't possible to open multiple aux events at the same time, which I think should
+work in theory. Makes sense.
+
+> 
+>>
+>>
+>>>           *err = -EOPNOTSUPP;
+>>>           return NULL;
+>>>       }
+>>> @@ -96,6 +163,9 @@ struct auxtrace_record
+>>>   #if defined(__aarch64__)
+>>>       if (found_spe)
+>>>           return arm_spe_recording_init(err, found_spe);
+>>> +
+>>> +    if (found_ptt)
+>>> +        return hisi_ptt_recording_init(err, found_ptt);
+>>>   #endif
+>>>         /*
+> 
+> [...]
+>>> +
+>>> +static int hisi_ptt_recording_options(struct auxtrace_record *itr,
+>>> +                      struct evlist *evlist,
+>>> +                      struct record_opts *opts)
+>>> +{
+>>> +    struct hisi_ptt_recording *pttr =
+>>> +            container_of(itr, struct hisi_ptt_recording, itr);
+>>> +    struct perf_pmu *hisi_ptt_pmu = pttr->hisi_ptt_pmu;
+>>> +    struct perf_cpu_map *cpus = evlist->core.cpus;
+>>> +    struct evsel *evsel, *hisi_ptt_evsel = NULL;
+>>> +    struct evsel *tracking_evsel;
+>>> +    int err;
+>>> +
+>>> +    pttr->evlist = evlist;
+>>> +    evlist__for_each_entry(evlist, evsel) {
+>>> +        if (evsel->core.attr.type == hisi_ptt_pmu->type) {
+>>> +            if (hisi_ptt_evsel) {
+>>> +                pr_err("There may be only one " HISI_PTT_PMU_NAME "x event\n");
+>>> +                return -EINVAL;
+>>> +            }
+>>> +            evsel->core.attr.freq = 0;
+>>> +            evsel->core.attr.sample_period = 1;
+>>> +            hisi_ptt_evsel = evsel;
+>>> +            opts->full_auxtrace = true;
+>>> +        }
+>>> +    }
+>>> +
+>>> +    err = hisi_ptt_set_auxtrace_mmap_page(opts);
+>>> +    if (err)
+>>> +        return err;
+>>> +    /*
+>>> +     * To obtain the auxtrace buffer file descriptor, the auxtrace event
+>>> +     * must come first.
+>>> +     */
+>>> +    evlist__to_front(evlist, hisi_ptt_evsel);
+>>> +
+>>> +    if (!perf_cpu_map__empty(cpus)) {
+>>> +        evsel__set_sample_bit(hisi_ptt_evsel, TIME);
+>>> +        evsel__set_sample_bit(hisi_ptt_evsel, CPU);
+>>> +    }
+>>
+>> Similar to Leo's comment: CPU isn't required if it's uncore,
+>> and if TIME is useful then add it regardless of whether the
+>> event is opened per-cpu or on a task.
+>>
+> got it, will fix this next time.
+> 
+>>> +
+>>> +    /* Add dummy event to keep tracking */
+>>> +    err = parse_events(evlist, "dummy:u", NULL);
+>>> +    if (err)
+>>> +        return err;
+>>> +
+>>> +    tracking_evsel = evlist__last(evlist);
+>>> +    evlist__set_tracking_event(evlist, tracking_evsel);
+>>> +
+>>> +    tracking_evsel->core.attr.freq = 0;
+>>> +    tracking_evsel->core.attr.sample_period = 1;
+>>> +
+>>> +    if (!perf_cpu_map__empty(cpus))
+>>> +        evsel__set_sample_bit(tracking_evsel, TIME);
+>>
+>> Same comment as above.
+>>
+> got it, thanks.
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+> 
+> 
+>>> +
+>>> +static int hisi_ptt_process_auxtrace_event(struct perf_session *session,
+>>> +                       union perf_event *event,
+>>> +                       struct perf_tool *tool __maybe_unused)
+>>> +{
+>>> +    struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
+>>> +                        auxtrace);
+>>> +    struct auxtrace_buffer *buffer;
+>>> +    off_t data_offset;
+>>> +    int fd = perf_data__fd(session->data);
+>>> +    int err;
+>>> +
+>>> +    if (perf_data__is_pipe(session->data)) {
+>>> +        data_offset = 0;
+>>> +    } else {
+>>> +        data_offset = lseek(fd, 0, SEEK_CUR);
+>>> +        if (data_offset == -1)
+>>> +            return -errno;
+>>> +    }
+>>> +
+>>> +    err = auxtrace_queues__add_event(&ptt->queues, session, event,
+>>> +                     data_offset, &buffer);
+>>> +    if (err)
+>>> +        return err;
+>>> +
+>>> +    if (dump_trace) {
+>>> +        if (auxtrace_buffer__get_data(buffer, fd)) {
+>>> +            hisi_ptt_dump_event(ptt, buffer->data, buffer->size);
+>>> +            auxtrace_buffer__put_data(buffer);
+>>> +        }
+>>
+>> Technically auxtrace_queues aren't required here because they are more for
+>> supporting trace from multiple CPUs and sorting and re-ordering between them.
+>>
+>> If this is new device is uncore and always from a single source you could
+>> just go straight to  hisi_ptt_dump_event() with data_offset and size of the
+>> auxtrace event.
+>>
+>> But I suppose it also doesn't hurt to use some of the existing framework
+>> like you have done.
+>>
+> ok, I'll delete the auxtrace_queues next time, thanks.
+
+It's up to you, it might be more work and it's best to leave it as it is now
+that you have it working already.
+
+James
+
+> 
+> Qi
+> 
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int hisi_ptt_flush(struct perf_session *session __maybe_unused,
+>>> +              struct perf_tool *tool __maybe_unused)
+>>> +{
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static void hisi_ptt_free_events(struct perf_session *session)
+>>> +{
+>>> +    struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
+>>> +                        auxtrace);
+>>> +    struct auxtrace_queues *queues = &ptt->queues;
+>>> +    unsigned int i;
+>>> +
+>>> +    for (i = 0; i < queues->nr_queues; i++) {
+>>> +        free(queues->queue_array[i].priv);
+>>> +        queues->queue_array[i].priv = NULL;
+>>> +    }
+>>> +    auxtrace_queues__free(queues);
+>>> +}
+>>> +
+>>> +static void hisi_ptt_free(struct perf_session *session)
+>>> +{
+>>> +    struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
+>>> +                        auxtrace);
+>>> +
+>>> +    hisi_ptt_free_events(session);
+>>> +    session->auxtrace = NULL;
+>>> +    free(ptt);
+>>> +}
+>>> +
+>>> +static bool hisi_ptt_evsel_is_auxtrace(struct perf_session *session,
+>>> +                       struct evsel *evsel)
+>>> +{
+>>> +    struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt, auxtrace);
+>>> +
+>>> +    return evsel->core.attr.type == ptt->pmu_type;
+>>> +}
+>>> +
+>>> +static const char * const hisi_ptt_info_fmts[] = {
+>>> +    [HISI_PTT_PMU_TYPE]        = "  PMU Type           %" PRId64 "\n",
+>>> +};
+>>> +
+>>> +static void hisi_ptt_print_info(__u64 *arr)
+>>> +{
+>>> +    if (!dump_trace)
+>>> +        return;
+>>> +
+>>> +    fprintf(stdout, hisi_ptt_info_fmts[HISI_PTT_PMU_TYPE], arr[HISI_PTT_PMU_TYPE]);
+>>> +}
+>>> +
+>>> +int hisi_ptt_process_auxtrace_info(union perf_event *event,
+>>> +                   struct perf_session *session)
+>>> +{
+>>> +    struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+>>> +    struct hisi_ptt *ptt;
+>>> +    int err;
+>>> +
+>>> +    if (auxtrace_info->header.size < HISI_PTT_AUXTRACE_PRIV_SIZE +
+>>> +                sizeof(struct perf_record_auxtrace_info))
+>>> +        return -EINVAL;
+>>> +
+>>> +    ptt = zalloc(sizeof(struct hisi_ptt));
+>>> +    if (!ptt)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    err = auxtrace_queues__init(&ptt->queues);
+>>> +    if (err)
+>>> +        goto err_free;
+>>> +
+>>> +    ptt->session = session;
+>>> +    ptt->machine = &session->machines.host; /* No kvm support */
+>>> +    ptt->auxtrace_type = auxtrace_info->type;
+>>> +    ptt->pmu_type = auxtrace_info->priv[HISI_PTT_PMU_TYPE];
+>>> +
+>>> +    ptt->auxtrace.process_event = hisi_ptt_process_event;
+>>> +    ptt->auxtrace.process_auxtrace_event = hisi_ptt_process_auxtrace_event;
+>>> +    ptt->auxtrace.flush_events = hisi_ptt_flush;
+>>> +    ptt->auxtrace.free_events = hisi_ptt_free_events;
+>>> +    ptt->auxtrace.free = hisi_ptt_free;
+>>> +    ptt->auxtrace.evsel_is_auxtrace = hisi_ptt_evsel_is_auxtrace;
+>>> +    session->auxtrace = &ptt->auxtrace;
+>>> +
+>>> +    hisi_ptt_print_info(&auxtrace_info->priv[0]);
+>>> +
+>>> +    return 0;
+>>> +
+>>> +err_free:
+>>> +    free(ptt);
+>>> +    return err;
+>>> +}
+>>> diff --git a/tools/perf/util/hisi_ptt.h b/tools/perf/util/hisi_ptt.h
+>>> new file mode 100644
+>>> index 000000000000..c0b6cbde1221
+>>> --- /dev/null
+>>> +++ b/tools/perf/util/hisi_ptt.h
+>>> @@ -0,0 +1,28 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + * HiSilicon PCIe Trace and Tuning (PTT) support
+>>> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+>>> + */
+>>> +
+>>> +#ifndef INCLUDE__PERF_HISI_PTT_H__
+>>> +#define INCLUDE__PERF_HISI_PTT_H__
+>>> +
+>>> +#define HISI_PTT_PMU_NAME "hisi_ptt"
+>>> +enum {
+>>> +    HISI_PTT_PMU_TYPE,
+>>> +    HISI_PTT_PER_CPU_MMAPS,
+>>> +    HISI_PTT_AUXTRACE_PRIV_MAX,
+>>> +};
+>>> +
+>>> +#define HISI_PTT_AUXTRACE_PRIV_SIZE (HISI_PTT_AUXTRACE_PRIV_MAX * sizeof(u64))
+>>> +union perf_event;
+>>> +struct perf_session;
+>>> +struct perf_pmu;
+>>> +
+>>> +struct auxtrace_record *hisi_ptt_recording_init(int *err,
+>>> +                        struct perf_pmu *hisi_ptt_pmu);
+>>> +
+>>> +int hisi_ptt_process_auxtrace_info(union perf_event *event,
+>>> +                   struct perf_session *session);
+>>> +
+>>> +#endif
+>> .
+>>
