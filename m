@@ -2,58 +2,38 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D557C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 13:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A8FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 13:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231345AbiEKNvX (ORCPT
+        id S244231AbiEKN5R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 09:51:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48354 "EHLO
+        Wed, 11 May 2022 09:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244270AbiEKNvV (ORCPT
+        with ESMTP id S244327AbiEKN5N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 09:51:21 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D871EAD0
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 06:51:16 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id j25so2080632wrc.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 06:51:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E/fOcrZZUcmh5mqkQ0xhNdrjRyLvkxvBijB4Co29OaA=;
-        b=eWpvmm8nTNmezqjSaRFWnvip2x3d5DxnHqGvOIUljx8Jy6SQVavMXugmtwNNhfWkUv
-         FpP1Y8b/GiLgfC6DThIGtJ6aH7E5m7gJJA1E3jO6tS5V+m6JGg8dcysecRsMrT7/J8pC
-         k1MCcN+M3dSMkggl4Pz3alt0nRClV+kiWbTmI7xKpexBpZseNotBoJpySUAJ8KRd6KGg
-         6t7m+jNQGvGitOOWyeaLMbstCZtPdHNnBCvosp8PuMh+LxqnIkRNySBJzFVgNVT+KFwk
-         RAOp1GBYpuC6oBV9wFifmz2WRjc4JpFmVvj9VR4FQ8gyfXkQEc4Qn/o9cvrXMbVH/ODN
-         pD5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E/fOcrZZUcmh5mqkQ0xhNdrjRyLvkxvBijB4Co29OaA=;
-        b=swFZQjsIzqpDT5m157WJkQg+l3128DbId9RoofqMnbu8EtTbb8gFRcMRpcfQGPCEXL
-         NJTNUVlwtwLHYN/SGQ9KT8min4QajLSM2S09S/R3cmeFH9ojqpO+BLv2tFV4z1Xw7mkD
-         FkgXHro2j0lnwvn/K2V+v16VhlrSX+1hwNwHMrYBurYToC2QcwngI9GVd4yEGiFXMNtr
-         cq+BR8M89Kw7R3DrBB7npDaZKg/Vd/THx5YHCU8d9YU6hu8YdqAsDEKJmmrJSc6oTdli
-         T4GX0QTPgQtL1ZDfn+NrblsIoquFKj14Sd75mfbOrfQy0tfd9fNNpYtnBX70ZQ5N1ZGm
-         d5tA==
-X-Gm-Message-State: AOAM531EukBt+X5DnEgYQdIsvQDQl7i4zKpF4eYvmIBeQzTXV08m3soR
-        bW67oXK8m1GDGUoM/b0zFcwqCYP3a9HH7ftsA9/19g==
-X-Google-Smtp-Source: ABdhPJzv3SW5s3y10HDMfCOw3Hp7XbPNRrhqe0ZKmIoLMqb7I4GfSVmBOpBfNQC3HiMb7+YS8i2tqFHvZYWDI6205Gc=
-X-Received: by 2002:a05:6000:1f1b:b0:20c:9ea8:b650 with SMTP id
- bv27-20020a0560001f1b00b0020c9ea8b650mr22571279wrb.300.1652277074370; Wed, 11
- May 2022 06:51:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220511070133.710721-1-irogers@google.com> <20220511073501.GW76023@worktop.programming.kicks-ass.net>
-In-Reply-To: <20220511073501.GW76023@worktop.programming.kicks-ass.net>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 11 May 2022 06:50:59 -0700
-Message-ID: <CAP-5=fVoZSusNWfpYDpHvbxF=J0-a2jF+TpxEYLxmtWx6QFZ7A@mail.gmail.com>
-Subject: Re: [PATCH 0/7] Rewrite jevents program in python
-To:     Peter Zijlstra <peterz@infradead.org>
+        Wed, 11 May 2022 09:57:13 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5978D4755F;
+        Wed, 11 May 2022 06:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8bafPVpeXgttnp0NnvgkWAZnnHNGWJEw+q1LuEA1XVE=; b=PgtUhcQVkIAqRO3ULeZVr6yhOc
+        wbqqsexomZ6YO/UDSDcR6QdG4PWCjGeBfHnk7Z5/OuUccmJGygI+1sPteJruESD5+f6ql6e1jMmO9
+        rcO1nQjJdVkiOYpjKvlbrWWw04gD5r2eiwmgOJ5sBgc6Ees+sS78Pvo2hHqR2oFyoMI8cNOTYbizB
+        EJjBmeWHyDpAwTgSQFsORs6149JstbAP8DCjV3ef1O4mcir+lDt4wZNrkBN2k5TSa8VJtZUigAEuf
+        MR7fHiL4nwGs2Qc4r157vdGRY6rGA2nsegya5rPg6uCY7KQwXhKvX4CmyhmH6qcWdKVrxfTeP7wsz
+        O4Tx9Tpw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nomox-005UpG-Qv; Wed, 11 May 2022 13:56:07 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 69200980E5D; Wed, 11 May 2022 15:56:05 +0200 (CEST)
+Date:   Wed, 11 May 2022 15:56:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ian Rogers <irogers@google.com>
 Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -79,34 +59,47 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Perry Taylor <perry.taylor@intel.com>,
         Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
         Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 0/7] Rewrite jevents program in python
+Message-ID: <20220511135605.GA76023@worktop.programming.kicks-ass.net>
+References: <20220511070133.710721-1-irogers@google.com>
+ <20220511073501.GW76023@worktop.programming.kicks-ass.net>
+ <CAP-5=fVoZSusNWfpYDpHvbxF=J0-a2jF+TpxEYLxmtWx6QFZ7A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVoZSusNWfpYDpHvbxF=J0-a2jF+TpxEYLxmtWx6QFZ7A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 11, 2022 at 12:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, May 11, 2022 at 12:01:26AM -0700, Ian Rogers wrote:
->
-> > The changes here switch from jevents.c to a rewrite in python called
-> > jevents.py. This means there is a build time dependency on python, but
-> > such a dependency already exists for asciidoc (used to generate perf's
-> > man pages).
->
-> You mean just building perf (not the docs) will now require snake stuff?
->
-> That's very tedious :/ I don't typically have snakes on my machines.
+On Wed, May 11, 2022 at 06:50:59AM -0700, Ian Rogers wrote:
+> On Wed, May 11, 2022 at 12:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Wed, May 11, 2022 at 12:01:26AM -0700, Ian Rogers wrote:
+> >
+> > > The changes here switch from jevents.c to a rewrite in python called
+> > > jevents.py. This means there is a build time dependency on python, but
+> > > such a dependency already exists for asciidoc (used to generate perf's
+> > > man pages).
+> >
+> > You mean just building perf (not the docs) will now require snake stuff?
+> >
+> > That's very tedious :/ I don't typically have snakes on my machines.
+> 
+> Hi Peter,
+> 
+> You're right that after these changes python is a build requirement
+> for jevents. We could keep the C code around for the case that python
+> isn't there, but I want to do things like remove the string
+> relocations, sort the events by name so we don't linearly search, etc.
+> which would be a massive chore to keep alive on the C side. An
+> alternative would be to have an empty pmu-events.c file that is used
+> for this case. If you wanted to keep things in C and have jevents like
+> event names, you could use the empty version and link in libpfm4.
 
-Hi Peter,
+I'm not normally linking to libpfm4. All I really care about is that I
+can still build a bare cli perf (not even tui). If all the snake stuff
+is purely optional and it just disables some features, but I do get a
+perf out at the end, then I'm all good.
 
-You're right that after these changes python is a build requirement
-for jevents. We could keep the C code around for the case that python
-isn't there, but I want to do things like remove the string
-relocations, sort the events by name so we don't linearly search, etc.
-which would be a massive chore to keep alive on the C side. An
-alternative would be to have an empty pmu-events.c file that is used
-for this case. If you wanted to keep things in C and have jevents like
-event names, you could use the empty version and link in libpfm4.
 
-Thanks,
-Ian
