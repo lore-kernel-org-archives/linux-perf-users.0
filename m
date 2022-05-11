@@ -2,36 +2,36 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA56BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 03:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD419C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 04:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233572AbiEKDsJ (ORCPT
+        id S229863AbiEKE1y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 23:48:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
+        Wed, 11 May 2022 00:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230296AbiEKDsI (ORCPT
+        with ESMTP id S229829AbiEKE1w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 23:48:08 -0400
+        Wed, 11 May 2022 00:27:52 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0217816ABC5;
-        Tue, 10 May 2022 20:48:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1F9023B558;
+        Tue, 10 May 2022 21:27:51 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71BB9106F;
-        Tue, 10 May 2022 20:48:07 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E33E2106F;
+        Tue, 10 May 2022 21:27:50 -0700 (PDT)
 Received: from [192.168.0.8] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2029B3F5A1;
-        Tue, 10 May 2022 20:48:00 -0700 (PDT)
-Message-ID: <6322e2d1-eaa0-e5ee-84b1-5c4a5ce522f3@arm.com>
-Date:   Wed, 11 May 2022 09:19:00 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDDF33F5A1;
+        Tue, 10 May 2022 21:27:45 -0700 (PDT)
+Message-ID: <e207966e-ffb4-a79c-42c6-3fed92fb9669@arm.com>
+Date:   Wed, 11 May 2022 09:58:49 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
 Subject: Re: [PATCH V5 0/8] perf: Expand perf_branch_entry
 Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, Robin Murphy <robin.murphy@arm.com>,
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, acme@kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
         Suzuki Poulose <suzuki.poulose@arm.com>,
         James Clark <james.clark@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
@@ -43,10 +43,8 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org
 References: <20220404045046.634522-1-anshuman.khandual@arm.com>
- <f469f253-9ccc-d55b-731d-3ecc8d685104@arm.com>
- <a304d9e4-2632-1ba9-249f-1d87c90f82de@arm.com> <YmqagfywsvGXaIVl@kernel.org>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <YmqagfywsvGXaIVl@kernel.org>
+In-Reply-To: <20220404045046.634522-1-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -55,31 +53,33 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 4/28/22 19:15, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Apr 18, 2022 at 12:17:53PM +0530, Anshuman Khandual escreveu:
->> On 4/11/22 11:16, Anshuman Khandual wrote:
->>> On 4/4/22 10:20, Anshuman Khandual wrote:
->>>> - Rebased series on v5.18-rc1
->>>
->>> Gentle ping, any updates on this series ?
->>
->> Gentle ping, any updates on this series ?
->>
->> I have posted BRBE RFC V2 accommodating all these new perf ABI changes being
->> proposed here. I would really appreciate reviews and/or suggestions on this
->> series, which is essential and also prerequisite for the BRBE driver itself.
->>
->> https://lore.kernel.org/all/20220412115455.293119-1-anshuman.khandual@arm.com/
+On 4/4/22 10:20, Anshuman Khandual wrote:
+> Branch Record Buffer Extension (BRBE) implementation on arm64 captures more
+> branch type classification which cannot be accommodated in the current perf
+> branch record format via perf_branch_entry.type element (4 bit field). Also
+> it captures privilege information which does not have a corresponding slot
+> in perf_branch_entry. This series expands struct perf_branch_entry, to meet
+> both these requirements without breaking the existing user space ABI for
+> perf tools.
 > 
-> Has the kernel bits been merged? When that happens I'll cherry pick the
-No, this series is still waiting for reviews for the kernel changes.
-
-> tools/ ones.
-
-Sure.
-
+> All architecture specific branch types added via perf_branch_entry.new_type
+> field in [PATCH 3/4] will be used in BRBE implementation on arm64 platform
+> later on with the following map.
 > 
-> In future series, please, on the final patch submission, please send two
-> series, one for the kernel and another for tooling.
+> #ifdef CONFIG_ARM64
+> #define PERF_BR_FIQ		PERF_BR_NEW_ARCH_1
+> #define PERF_BR_DEBUG_HALT	PERF_BR_NEW_ARCH_2
+> #define PERF_BR_DEBUG_EXIT	PERF_BR_NEW_ARCH_3
+> #define PERF_BR_DEBUG_INST	PERF_BR_NEW_ARCH_4
+> #define PERF_BR_DEBUG_DATA	PERF_BR_NEW_ARCH_5
+> #endif
+> 
+> This actually combines following patches and series into a single series.
+> 
+> - https://lore.kernel.org/all/1642998653-21377-12-git-send-email-anshuman.khandual@arm.com/
+> - https://lore.kernel.org/all/1643348653-24367-1-git-send-email-anshuman.khandual@arm.com/
+> - https://lore.kernel.org/all/1645681014-3346-1-git-send-email-anshuman.khandual@arm.com/
+> 
+> This series applies on v5.18-rc1
 
-Sure, will do.
+Gentle ping, any updates on this series ?
