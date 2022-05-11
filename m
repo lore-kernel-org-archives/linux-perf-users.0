@@ -2,133 +2,238 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7F3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 18:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB78C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 18:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346199AbiEKSWp (ORCPT
+        id S236899AbiEKS2K (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 14:22:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
+        Wed, 11 May 2022 14:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346198AbiEKSWo (ORCPT
+        with ESMTP id S231776AbiEKS2J (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 14:22:44 -0400
+        Wed, 11 May 2022 14:28:09 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CE2166475;
-        Wed, 11 May 2022 11:22:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD8F6AA4F;
+        Wed, 11 May 2022 11:28:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 17577B825E9;
-        Wed, 11 May 2022 18:22:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8235FC340EE;
-        Wed, 11 May 2022 18:22:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D367FB825EE;
+        Wed, 11 May 2022 18:28:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B492C340EE;
+        Wed, 11 May 2022 18:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652293360;
-        bh=xTkJ7hCldhqfQm7/paFj5vKnMjCleEcRs+asiWSm+T0=;
+        s=k20201202; t=1652293684;
+        bh=/VvwCFsR4qa2pGVRNBWXPPb4KRFIFDVjGE8YFXWvrkI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u4c2lZE0GGyxKdOs+mCCjcLY3HibLrQzdFO+bmtL7XnBggFtrDiBtup6R7fxe9dxT
-         1rdX6cnFRJx4aLhybBk9e2PgQbuD8xI5hUz4ehupQzsAjF7F93kD4cIWciyOQqJ8pF
-         WSawUtJi6rLL/eY69RQ0yKoDnRwb/W2uNb/EmfdooJjNW67jjmhrhwuJFYezQovfdp
-         99RMxjD/aOgO8Bi2D3K8smUKAaDkdiyko4blIpV+Kc23Tw2mTKC1eZarHmH/c6gwGt
-         PlKbs6gVcimaPpVPXvfuL78EhjDhhaBborMmSb6hW71qh2zah4gRO8Q4DOS9lkrKyS
-         ZXwOvYbl6ONmA==
+        b=qJEciWN6ZTobAQcS3uVzrxRXBQQGYa/SotmpKnjpv9Gt4AFGGz7YaMkvt/cB2rPPB
+         4G3/eHuwZc7Jfm+uUddV/qTbbJYDUwF5Y3RpJ0G6joXKYXORQCmReqWOMwflIcmIRi
+         wIMJzaZjh222kDiphBkCrEFqlGZdpRqchr8CbvYZmBU2e0OK1A0tnfZ5lKNx7/dTnC
+         goWjvxD6FKBKOGHcYDLHR5jk4pl835EE1Iy/DFCOWiLqez0XDoFlWd06oIfVMz4k3K
+         WxaclYUgj3i+CBMWtLKt+VI4MtMCnkoBwjGdGuEPbZmpqzpZHWekuOTJFyWXkGxnH9
+         Ntk8yCWBXJGzg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 42EC1400B1; Wed, 11 May 2022 15:22:38 -0300 (-03)
-Date:   Wed, 11 May 2022 15:22:38 -0300
+        id DFAC5400B1; Wed, 11 May 2022 15:28:00 -0300 (-03)
+Date:   Wed, 11 May 2022 15:28:00 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv2 0/3] perf tools: Fix prologue generation
-Message-ID: <Ynv+7iaaAbyM38B6@kernel.org>
-References: <20220510074659.2557731-1-jolsa@kernel.org>
- <CAEf4BzbK9zgetgE1yKkCANTZqizUrXgamJa2X0f0XmzQUdFrCQ@mail.gmail.com>
- <YntnRixbfQ1HCm9T@krava>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
+        benh@kernel.crashing.org, Nick.Forrington@arm.com,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+Subject: Re: [PATCH v8 2/5] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
+Message-ID: <YnwAMNLN/538ggJd@kernel.org>
+References: <20220504184850.24986-1-alisaidi@amazon.com>
+ <20220504184850.24986-3-alisaidi@amazon.com>
+ <YnqStjaWInPqLnsX@kernel.org>
+ <20220511022004.GA956170@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YntnRixbfQ1HCm9T@krava>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220511022004.GA956170@leoy-ThinkPad-X240s>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 11, 2022 at 09:35:34AM +0200, Jiri Olsa escreveu:
-> On Tue, May 10, 2022 at 04:48:55PM -0700, Andrii Nakryiko wrote:
-> > On Tue, May 10, 2022 at 12:47 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > >
-> > > hi,
-> > > sending change we discussed some time ago [1] to get rid of
-> > > some deprecated functions we use in perf prologue code.
-> > >
-> > > Despite the gloomy discussion I think the final code does
-> > > not look that bad ;-)
-> > >
-> > > This patchset removes following libbpf functions from perf:
-> > >   bpf_program__set_prep
-> > >   bpf_program__nth_fd
-> > >   struct bpf_prog_prep_result
-> > >
-> > > v2 changes:
-> > >   - use fallback section prog handler, so we don't need to
-> > >     use section prefix [Andrii]
-> > >   - realloc prog->insns array in bpf_program__set_insns [Andrii]
-> > >   - squash patch 1 from previous version with
-> > >     bpf_program__set_insns change [Daniel]
-> > >   - patch 3 already merged [Arnaldo]
-> > >   - added more comments
-> > >
-> > >   meanwhile.. perf/core and bpf-next diverged, so:
-> > >     - libbpf bpf_program__set_insns change is based on bpf-next/master
-> > >     - perf changes do not apply on bpf-next/master so they are based on
-> > >       perf/core ... however they can be merged only after we release
-> > >       libbpf 0.8.0 with bpf_program__set_insns change, so we don't break
-> > >       the dynamic linking
-> > >       I'm sending perf changes now just for review, I'll resend them
-> > >       once libbpf 0.8.0 is released
-> > >
-> > > thanks,
-> > > jirka
-> > >
-> > >
-> > > [1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
-> > > ---
-> > > Jiri Olsa (1):
-> > >       libbpf: Add bpf_program__set_insns function
-> > >
+Em Wed, May 11, 2022 at 10:20:04AM +0800, Leo Yan escreveu:
+> On Tue, May 10, 2022 at 01:28:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, May 04, 2022 at 06:48:47PM +0000, Ali Saidi escreveu:
+> > > Add a flag to the perf mem data struct to signal that a request caused a
+> > > cache-to-cache transfer of a line from a peer of the requestor and
+> > > wasn't sourced from a lower cache level.  The line being moved from one
+> > > peer cache to another has latency and performance implications. On Arm64
+> > > Neoverse systems the data source can indicate a cache-to-cache transfer
+> > > but not if the line is dirty or clean, so instead of overloading HITM
+> > > define a new flag that indicates this type of transfer.
+> > > 
+> > > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
 > > 
-> > The first patch looks good to me. The rest I can't really review and
-> > test properly, so I'll leave it up to Arnaldo.
-> > 
-> > Arnaldo, how do we coordinate these patches? Should they go through
-> > bpf-next (after you Ack them) or you want them in your tree?
-> > 
-> > I'd like to get the bpf_program__set_insns() patch into bpf-next so
-> > that I can do libbpf v0.8 release, having it in a separate tree is
-> > extremely inconvenient. Please let me know how you think we should
-> > proceed?
+> > Was this already merged on the ARM kernel tree?
 > 
-> we need to wait with perf changes after the libbpf is merged and
-> libbpf 0.8.0 is released.. so we don't break dynamic linking for
-> perf
+> No, I don't think this patch has been merged on Arm kernel tree.  I searched
+> Arm and Arm64 git repos, none of them has merged this patch.
 > 
-> at the moment please just take libbpf change and I'll resend the
-> perf change later if needed
+> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?qt=author&q=Ali+Saidi
+> http://git.armlinux.org.uk/cgit/linux-arm.git/log/?qt=author&q=Ali+Saidi
+> 
+> P.s. Ali missed to include German's review tag, see:
+> https://lore.kernel.org/lkml/458a2de1-dc93-7e2d-5dc5-fbcd670572b6@arm.com/
+> 
+> Do you want us to resend the patch set for adding tags?
 
-Ok.
+I use b4 and it should collect Reviewed-by, Acked-by, etc tags, for
+instance, if I use the message-id in your message:
+
+⬢[acme@toolbox perf]$ b4 am -ctsl --cc-trailers 20220511022004.GA956170@leoy-ThinkPad-X240s
+Looking up https://lore.kernel.org/r/20220511022004.GA956170%40leoy-ThinkPad-X240s
+Grabbing thread from lore.kernel.org/all/20220511022004.GA956170%40leoy-ThinkPad-X240s/t.mbox.gz
+Checking for newer revisions on https://lore.kernel.org/all/
+Analyzing 12 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  ✓ [PATCH v8 1/5] perf: Add SNOOP_PEER flag to perf mem data struct
+    + Reviewed-By: Kajol Jain<kjain@linux.ibm.com> (✓ DKIM/ibm.com)
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    + Link: https://lore.kernel.org/r/20220504184850.24986-2-alisaidi@amazon.com
+    + Cc: Nick.Forrington@arm.com
+    + Cc: andrew.kilroy@arm.com
+    + Cc: german.gomez@arm.com
+    + Cc: james.clark@arm.com
+    + Cc: mark.rutland@arm.com
+    + Cc: john.garry@huawei.com
+    + Cc: lihuafei1@huawei.com
+    + Cc: peterz@infradead.org
+    + Cc: benh@kernel.crashing.org
+    + Cc: acme@kernel.org
+    + Cc: jolsa@kernel.org
+    + Cc: namhyung@kernel.org
+    + Cc: will@kernel.org
+    + Cc: mathieu.poirier@linaro.org
+    + Cc: alexander.shishkin@linux.intel.com
+    + Cc: linux-arm-kernel@lists.infradead.org
+    + Cc: mingo@redhat.com
+    + Cc: linux-kernel@vger.kernel.org
+    + Cc: linux-perf-users@vger.kernel.org
+  ✓ [PATCH v8 2/5] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
+    + Reviewed-By: Kajol Jain<kjain@linux.ibm.com> (✓ DKIM/ibm.com)
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    + Link: https://lore.kernel.org/r/20220504184850.24986-3-alisaidi@amazon.com
+    + Cc: Nick.Forrington@arm.com
+    + Cc: andrew.kilroy@arm.com
+    + Cc: german.gomez@arm.com
+    + Cc: james.clark@arm.com
+    + Cc: mark.rutland@arm.com
+    + Cc: john.garry@huawei.com
+    + Cc: lihuafei1@huawei.com
+    + Cc: peterz@infradead.org
+    + Cc: benh@kernel.crashing.org
+    + Cc: acme@kernel.org
+    + Cc: jolsa@kernel.org
+    + Cc: namhyung@kernel.org
+    + Cc: will@kernel.org
+    + Cc: mathieu.poirier@linaro.org
+    + Cc: alexander.shishkin@linux.intel.com
+    + Cc: linux-arm-kernel@lists.infradead.org
+    + Cc: mingo@redhat.com
+    + Cc: linux-kernel@vger.kernel.org
+    + Cc: linux-perf-users@vger.kernel.org
+  ✓ [PATCH v8 3/5] perf mem: Print snoop peer flag
+    + Reviewed-By: Kajol Jain<kjain@linux.ibm.com> (✓ DKIM/ibm.com)
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    + Link: https://lore.kernel.org/r/20220504184850.24986-4-alisaidi@amazon.com
+    + Cc: Nick.Forrington@arm.com
+    + Cc: andrew.kilroy@arm.com
+    + Cc: german.gomez@arm.com
+    + Cc: james.clark@arm.com
+    + Cc: mark.rutland@arm.com
+    + Cc: john.garry@huawei.com
+    + Cc: lihuafei1@huawei.com
+    + Cc: peterz@infradead.org
+    + Cc: benh@kernel.crashing.org
+    + Cc: acme@kernel.org
+    + Cc: jolsa@kernel.org
+    + Cc: namhyung@kernel.org
+    + Cc: will@kernel.org
+    + Cc: mathieu.poirier@linaro.org
+    + Cc: alexander.shishkin@linux.intel.com
+    + Cc: linux-arm-kernel@lists.infradead.org
+    + Cc: mingo@redhat.com
+    + Cc: linux-kernel@vger.kernel.org
+    + Cc: linux-perf-users@vger.kernel.org
+  ✓ [PATCH v8 4/5] perf arm-spe: Don't set data source if it's not a memory operation
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    + Link: https://lore.kernel.org/r/20220504184850.24986-5-alisaidi@amazon.com
+    + Cc: Nick.Forrington@arm.com
+    + Cc: andrew.kilroy@arm.com
+    + Cc: james.clark@arm.com
+    + Cc: mark.rutland@arm.com
+    + Cc: john.garry@huawei.com
+    + Cc: lihuafei1@huawei.com
+    + Cc: peterz@infradead.org
+    + Cc: benh@kernel.crashing.org
+    + Cc: acme@kernel.org
+    + Cc: jolsa@kernel.org
+    + Cc: namhyung@kernel.org
+    + Cc: will@kernel.org
+    + Cc: mathieu.poirier@linaro.org
+    + Cc: kjain@linux.ibm.com
+    + Cc: alexander.shishkin@linux.intel.com
+    + Cc: linux-arm-kernel@lists.infradead.org
+    + Cc: mingo@redhat.com
+    + Cc: linux-kernel@vger.kernel.org
+    + Cc: linux-perf-users@vger.kernel.org
+  ✓ [PATCH v8 5/5] perf arm-spe: Use SPE data source for neoverse cores
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    + Link: https://lore.kernel.org/r/20220504184850.24986-6-alisaidi@amazon.com
+    + Cc: Nick.Forrington@arm.com
+    + Cc: andrew.kilroy@arm.com
+    + Cc: james.clark@arm.com
+    + Cc: mark.rutland@arm.com
+    + Cc: john.garry@huawei.com
+    + Cc: lihuafei1@huawei.com
+    + Cc: peterz@infradead.org
+    + Cc: benh@kernel.crashing.org
+    + Cc: acme@kernel.org
+    + Cc: jolsa@kernel.org
+    + Cc: namhyung@kernel.org
+    + Cc: will@kernel.org
+    + Cc: mathieu.poirier@linaro.org
+    + Cc: kjain@linux.ibm.com
+    + Cc: alexander.shishkin@linux.intel.com
+    + Cc: linux-arm-kernel@lists.infradead.org
+    + Cc: mingo@redhat.com
+    + Cc: linux-kernel@vger.kernel.org
+    + Cc: linux-perf-users@vger.kernel.org
+  ---
+  ✓ Signed: DKIM/amazon.com
+---
+Total patches: 5
+---
+Cover: ./v8_20220504_alisaidi_perf_arm_spe_decode_spe_source_and_use_for_perf_c2c.cover
+ Link: https://lore.kernel.org/r/20220504184850.24986-1-alisaidi@amazon.com
+ Base: not specified
+       git am ./v8_20220504_alisaidi_perf_arm_spe_decode_spe_source_and_use_for_perf_c2c.mbx
+⬢[acme@toolbox perf]$
+
+Somehow it is not being collected... :-\
+
+Not even when I use:
+
+> P.s. Ali missed to include German's review tag, see:
+> https://lore.kernel.org/lkml/458a2de1-dc93-7e2d-5dc5-fbcd670572b6@arm.com/
+
+
+458a2de1-dc93-7e2d-5dc5-fbcd670572b6@arm.com
+
+Will try updating b4...
 
 - Arnaldo
