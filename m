@@ -2,150 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25E6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 18:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C100CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 21:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346243AbiEKS3s (ORCPT
+        id S1348060AbiEKVPe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 14:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
+        Wed, 11 May 2022 17:15:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345408AbiEKS3s (ORCPT
+        with ESMTP id S1347978AbiEKVPc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 14:29:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F35197F67;
-        Wed, 11 May 2022 11:29:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0E8B761E1A;
-        Wed, 11 May 2022 18:29:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45FF0C340EE;
-        Wed, 11 May 2022 18:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652293786;
-        bh=HBOd0ZkMSEn+UOVug8AD28JH1CWrZPyRrZIw2S8yaqk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e1rE47TZWdU10CTV8JdlpQPDrq0zqBnMut8MBRlunF2eoj12wiyNOBPWwcQcrg2Z9
-         qZsKJDwxKdJUn8GaRwj9VTqFp0lvcXkcrER7KO+9NbMHcQgrdzOgYhtWJhuo6oMW7r
-         S1CWo+W6GN2gjlL/ei/BVXKs9Uvqj+rVKzf9mj+UD2RA+QAGIRokZmXayj3AFO8fXN
-         R2YhRsIx1Lr9eVBbLwLmfoxll+zKCLDJi/tKJLtpLtswPYsOKOf4YMAhAUX2hEnsro
-         FStY3fQHuRS0t0cyL+MBMHVB2oJh+64YkImNUU6uNjDJxM7WK/Wx83ne5jTaazRPFg
-         8TaV+qUdc8LkQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 23FF6400B1; Wed, 11 May 2022 15:29:44 -0300 (-03)
-Date:   Wed, 11 May 2022 15:29:44 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
+        Wed, 11 May 2022 17:15:32 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB202297D1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 14:15:31 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id v8-20020a170902b7c800b0015e927ee201so1656054plz.12
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 14:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=sKtjMHsY05r5Ju8O5pD25dxn5ZC74mq9R1+/d5sMQD0=;
+        b=SVfEFYxpuijqaeCdH+yZDzht+Z/H+7bjJfqbtxOTlBgVSjQdcE384BGETvZWge95bu
+         EK8b9NlYlW6FjwnYXKa7PmatW4ABPI3BsxmWPrL3a/Ou4JdM2f4Y31UcGa4AzM8DM7kY
+         McFxc8ksLp47xyZZDTNqoKefN0oS+W7ws2nyqchWLePlKA2FpU1tMWAAr9qk6Q5iH3sR
+         THC+yRJuLov65/sL42xnI/Xw6Zz27BUWu28FNS1iKP5Wtvkdau61V29Dzn/cYidoLFPB
+         yHEH81lP9cNN1foROdDMdm59PQ0fZQ+m0Lt1VQ22ClyXsNLNo9dirdduHCiqg5yyrV/H
+         dzKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=sKtjMHsY05r5Ju8O5pD25dxn5ZC74mq9R1+/d5sMQD0=;
+        b=NDskKTDykr6++DtJEVevunBKQHtJfa6O/OvZI2EVVyiRb8qftQMCwQ6RqeK0iCDmKz
+         nI64/LKOgIIOO0G4a+dxQ/0tmzkRxN6t2GCZjTAVY1NM3fLYUNSOsXX4EH76VUknM9If
+         wp2oJpYn/YNok2YNcVh+ncblf0ncvX12damvREUhkXIklcLE7qLP2tGyzsWXCNg4jQf7
+         /6iC3dq/6Ys6OpEb/dokhCIBrbdYH0/uoRBxNaEQQ2Hf/njUPbSTYYLyjBTa8+wKrTQi
+         QBE4vfBUEmCh4pJH+1xf5CpJxdiPjIP8Mctx7Gasv/0hyKMca+moJBL37ZzIRqbltwle
+         lIMA==
+X-Gm-Message-State: AOAM531cThH+eeBXz7S22MFGcx2naMyTKDw7UGXMbGb7pgflzuCrqlTi
+        0w0fdXa3+V5X5o5YmQMu1bAiMb8z3iem
+X-Google-Smtp-Source: ABdhPJwrUmqA1QXCOuStvCO4jdvm38keaf5yQw+J7mAJ9wWyzBE63FrRRy0lugXyzLjjh5FeeNryFdDBLRV2
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:5993:294b:7b62:54cb])
+ (user=irogers job=sendgmr) by 2002:a17:90a:4983:b0:1d9:ef5:29f with SMTP id
+ d3-20020a17090a498300b001d90ef5029fmr7376388pjh.67.1652303730579; Wed, 11 May
+ 2022 14:15:30 -0700 (PDT)
+Date:   Wed, 11 May 2022 14:15:19 -0700
+Message-Id: <20220511211526.1021908-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.512.ge40c2bad7a-goog
+Subject: [PATCH v2 0/7] Rewrite jevents program in python
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
-        benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
-        kjain@linux.ibm.com, lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v8 2/5] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
-Message-ID: <YnwAmMl7Yaz/qwrI@kernel.org>
-References: <20220504184850.24986-1-alisaidi@amazon.com>
- <20220504184850.24986-3-alisaidi@amazon.com>
- <YnqStjaWInPqLnsX@kernel.org>
- <20220511022004.GA956170@leoy-ThinkPad-X240s>
- <YnwAMNLN/538ggJd@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YnwAMNLN/538ggJd@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, sandipan.das@amd.com,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 11, 2022 at 03:28:00PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, May 11, 2022 at 10:20:04AM +0800, Leo Yan escreveu:
-> > On Tue, May 10, 2022 at 01:28:38PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Wed, May 04, 2022 at 06:48:47PM +0000, Ali Saidi escreveu:
-> > > > Add a flag to the perf mem data struct to signal that a request caused a
-> > > > cache-to-cache transfer of a line from a peer of the requestor and
-> > > > wasn't sourced from a lower cache level.  The line being moved from one
-> > > > peer cache to another has latency and performance implications. On Arm64
-> > > > Neoverse systems the data source can indicate a cache-to-cache transfer
-> > > > but not if the line is dirty or clean, so instead of overloading HITM
-> > > > define a new flag that indicates this type of transfer.
-> > > > 
-> > > > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> > > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> > > 
-> > > Was this already merged on the ARM kernel tree?
-> > 
-> > No, I don't think this patch has been merged on Arm kernel tree.  I searched
-> > Arm and Arm64 git repos, none of them has merged this patch.
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?qt=author&q=Ali+Saidi
-> > http://git.armlinux.org.uk/cgit/linux-arm.git/log/?qt=author&q=Ali+Saidi
-> > 
-> > P.s. Ali missed to include German's review tag, see:
-> > https://lore.kernel.org/lkml/458a2de1-dc93-7e2d-5dc5-fbcd670572b6@arm.com/
-> > 
-> > Do you want us to resend the patch set for adding tags?
-> 
-> I use b4 and it should collect Reviewed-by, Acked-by, etc tags, for
-> instance, if I use the message-id in your message:
-> 
-> ⬢[acme@toolbox perf]$ b4 am -ctsl --cc-trailers 20220511022004.GA956170@leoy-ThinkPad-X240s
-> Looking up https://lore.kernel.org/r/20220511022004.GA956170%40leoy-ThinkPad-X240s
-> Grabbing thread from lore.kernel.org/all/20220511022004.GA956170%40leoy-ThinkPad-X240s/t.mbox.gz
-> Checking for newer revisions on https://lore.kernel.org/all/
-> Analyzing 12 messages in the thread
-<SNIP>
->   ✓ [PATCH v8 5/5] perf arm-spe: Use SPE data source for neoverse cores
->     + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->     + Link: https://lore.kernel.org/r/20220504184850.24986-6-alisaidi@amazon.com
->     + Cc: Nick.Forrington@arm.com
->     + Cc: andrew.kilroy@arm.com
->     + Cc: james.clark@arm.com
->     + Cc: mark.rutland@arm.com
->     + Cc: john.garry@huawei.com
->     + Cc: lihuafei1@huawei.com
->     + Cc: peterz@infradead.org
->     + Cc: benh@kernel.crashing.org
->     + Cc: acme@kernel.org
->     + Cc: jolsa@kernel.org
->     + Cc: namhyung@kernel.org
->     + Cc: will@kernel.org
->     + Cc: mathieu.poirier@linaro.org
->     + Cc: kjain@linux.ibm.com
->     + Cc: alexander.shishkin@linux.intel.com
->     + Cc: linux-arm-kernel@lists.infradead.org
->     + Cc: mingo@redhat.com
->     + Cc: linux-kernel@vger.kernel.org
->     + Cc: linux-perf-users@vger.kernel.org
->   ---
->   ✓ Signed: DKIM/amazon.com
-> ---
-> Total patches: 5
-> ---
-> Cover: ./v8_20220504_alisaidi_perf_arm_spe_decode_spe_source_and_use_for_perf_c2c.cover
->  Link: https://lore.kernel.org/r/20220504184850.24986-1-alisaidi@amazon.com
->  Base: not specified
->        git am ./v8_20220504_alisaidi_perf_arm_spe_decode_spe_source_and_use_for_perf_c2c.mbx
-> ⬢[acme@toolbox perf]$
-> 
-> Somehow it is not being collected... :-\
-> 
-> Not even when I use:
-> 
-> > P.s. Ali missed to include German's review tag, see:
-> > https://lore.kernel.org/lkml/458a2de1-dc93-7e2d-5dc5-fbcd670572b6@arm.com/
-> 
-> 
-> 458a2de1-dc93-7e2d-5dc5-fbcd670572b6@arm.com
-> 
-> Will try updating b4...
+New architectures bring new complexity, such as Intel's hybrid
+models. jevents provides an alternative to specifying events in the
+kernel and exposing them through sysfs, however, it is difficult to
+work with. For example, an error in the json input would yield an
+error message but no json file or location. It is also a challenge to
+update jsmn.c given its forked nature.
 
-Didn't help, so please collect the new tags and resubmit.
+The changes here switch from jevents.c to a rewrite in python called
+jevents.py. This means there is a build time dependency on python, but
+such a dependency already exists for asciidoc (used to generate perf's
+man pages). If the build detects that python isn't present or is older
+than version 3.5 (released Sept. 2015) then an empty file is
+substituted for the generated one.
 
-- Arnaldo
+A challenge with this code is in avoiding regressions. For this reason
+the jevents.py produces identical output to jevents.c, validated with a
+test script and build target.
+
+A difference in the python to the C approach is that the python loads
+an entire json file in to memory, while the C code works from token to
+token. In some cases the C approach was sensitive to the order of
+dictionary items in the json file. To ensure matching output there are
+two changes made to jevents.c to cause it to read all values before
+creating output.
+
+The changes also found a bug in Ivytown's UNC_M_ACT_COUNT.RD event
+encoding, as well as unnecessary whitespace introduced in Alderlake's
+metrics. In these cases the json input is fixed.
+
+v2. Fixes the build for architectures that don't have pmu-events json
+    (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
+    build for python not being present or too old (Suggested-by: Peter
+    Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
+
+Ian Rogers (7):
+  perf jevents: Append PMU description later
+  perf vendor events: Fix Alderlake metric groups
+  perf vendor events: Fix Ivytown UNC_M_ACT_COUNT.RD umask
+  perf jevents: Modify match field
+  perf jevents: Add python converter script
+  perf jevents: Switch build to use jevents.py
+  perf jevents: Remove jevents.c
+
+ tools/perf/Makefile.config                    |   19 +
+ tools/perf/Makefile.perf                      |   16 +-
+ tools/perf/pmu-events/Build                   |   15 +-
+ .../arch/x86/alderlake/adl-metrics.json       |   32 -
+ .../arch/x86/ivytown/uncore-memory.json       |    3 +-
+ tools/perf/pmu-events/empty-pmu-events.c      |   21 +
+ tools/perf/pmu-events/jevents.c               | 1322 -----------------
+ tools/perf/pmu-events/jevents.py              |  392 +++++
+ tools/perf/pmu-events/jsmn.h                  |   68 -
+ tools/perf/pmu-events/json.c                  |  162 --
+ tools/perf/pmu-events/json.h                  |   39 -
+ tools/perf/tests/pmu-events.c                 |   30 +-
+ 12 files changed, 460 insertions(+), 1659 deletions(-)
+ create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
+ delete mode 100644 tools/perf/pmu-events/jevents.c
+ create mode 100755 tools/perf/pmu-events/jevents.py
+ delete mode 100644 tools/perf/pmu-events/jsmn.h
+ delete mode 100644 tools/perf/pmu-events/json.c
+ delete mode 100644 tools/perf/pmu-events/json.h
+
+-- 
+2.36.0.512.ge40c2bad7a-goog
+
