@@ -2,138 +2,228 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A74C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 May 2022 23:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3ADC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 01:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236563AbiEJXtJ (ORCPT
+        id S240468AbiEKBfm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 May 2022 19:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47768 "EHLO
+        Tue, 10 May 2022 21:35:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232867AbiEJXtJ (ORCPT
+        with ESMTP id S230440AbiEKBfl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 May 2022 19:49:09 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBC5D7982A;
-        Tue, 10 May 2022 16:49:06 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id m6so449651iob.4;
-        Tue, 10 May 2022 16:49:06 -0700 (PDT)
+        Tue, 10 May 2022 21:35:41 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D885AE;
+        Tue, 10 May 2022 18:35:39 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id h16so198670wrb.2;
+        Tue, 10 May 2022 18:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9pcB5jys6dNcZue2nxpSEaqmzI5+cJi/9C2vrddSdtA=;
-        b=YN05Rdb6bf94IudrameYyHKfVdI7l3D3mdbXpF+GDB8xcSKSQK2Wtd2sSPKKcEgeRj
-         1P1rc/oKs3SMYYjf5hC0+9dgtgcyXJ9JRcKGMxRxyG4enp3UgZ5gTrPoFMg1aM7Qk8ES
-         HgCTdaI11+cHSY1EEoOXv/bFtRhP8CDwTVkhYtwp8UBpT8+lGrCGxrNq+Eh2CVtHloPn
-         aH4gkw8LftVB+y1ZwZS6kxvH9X/V7dxc4YK9V4jBX0y80GhxvTiNHHck4e/Lhh42z2KP
-         HQU0gD22zJAw9489JdCHdHwhkyV28LMIH1s+oZLMvtkozJZzD+fuXeliR2yBMTh/ohpH
-         Zzmg==
+        bh=XlMoWf+WcK7FsmAzwI9Eo6ALWogmpghWPuTvTMBTBJw=;
+        b=evSf+lRM97X/jQOFLYOZVyXgJeez+rbkfQSUwKKBpMBA9AanvyIkbd/DPd4DDGF0CW
+         F2p63Qvw8Vl8Xh0UdwglVwReVpDPQm5BSapTgEhUhDdUbadwggKppY0g39uD8Bfoc/aM
+         G68Ra6kaBmLbkDZRYUSh0nuoGfD3anj5168F2jJ2oXZsgoSeXx7U429vIMJCu/KCXjHu
+         +zjdoPSHSPwknobhuBbVMRY92faQdJBnEQ0TAQdTUtodbvAddNy2F0Uv0b0vmoex+2/t
+         0MIWf31jgT8PMBS3wkLPaQRfcqIHwyfs90hHDFOVP1qTsvW6bbbrk9x1JmLu85H7xVth
+         p7NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9pcB5jys6dNcZue2nxpSEaqmzI5+cJi/9C2vrddSdtA=;
-        b=ajyZWOstt0Eyv0wksO+j3gYaHrQXnRu15BC3Wq7/sQEOiI49n4phcBBmZDnNLMG2ba
-         UyhXQoeLCSmVOzadw/b+TNw51BFzRXryt1FQwhFHdMB+Yrb2B8ascSecvYv4C5KX6XzE
-         qFGOlSti55VF0q2YMMZzLW0sigHB/fBsDh8huExv4x5O6wIVymRqMd9hgcYYDQRgIL8C
-         JdmrIMp3iZPl0UgpwoWCVjJdcXPoLzZAHMYkAKieW5yBedsh0Nc60V49ZB648vZfZ+dE
-         uq7GlfoXCpR9NRQOG5NIMMMBTPtVCDi8H9Dj5VamDhaRoEu7j36Be3McrZIjGGsaJbWA
-         n4iw==
-X-Gm-Message-State: AOAM530CL2a31vqhtreRnRCRNG576StGXH9NlWEYwAEvNKcu/31pGpMQ
-        86CYoQIJiAULaSiixLPsa2JOVELhJm/vB9YcWQA=
-X-Google-Smtp-Source: ABdhPJwnOiHQnfoYzQ4Ulsm9ONZgM9YlTtOsQb2tM1auygLlB1Fk20jk2kfhBgZ+9xdYTn1XvyjX3CM3Gehh9KksPDc=
-X-Received: by 2002:a05:6602:1683:b0:64f:ba36:d3cf with SMTP id
- s3-20020a056602168300b0064fba36d3cfmr9640442iow.144.1652226546288; Tue, 10
- May 2022 16:49:06 -0700 (PDT)
+        bh=XlMoWf+WcK7FsmAzwI9Eo6ALWogmpghWPuTvTMBTBJw=;
+        b=rpfMHcYJpOvnNQLQ3kpJyFc5xIKmx77uanzIZw4K83pa7LsgU6FDbl8tRXQGy0W873
+         z23XeAvNM7K7n1zK+95HcYnZd16HIgQOM0Eau7iYafb4cm+Ese8uesObS8Zsp6SQF5wK
+         HDcFjf7TOKNUS7mT1xYK+Fj23iM4af3RIUJ9uOfTCXUpDvB1YVC7+IluTn7l22CZ1zoh
+         wtO2bG0mzZEGOiiv9E0cfpRFRO3CnPAi/uBDNspGPQyt8+eBcI1bL8b7AaOEy4f5X/Zf
+         kykPGJ/3wlPPo3xiPEy7jC+NL4HGvFYLO1xznjbzdHOlT5Ncivsl/Ck8MbVfKzpbGjLI
+         02xg==
+X-Gm-Message-State: AOAM533Mhhtf0it6uCwOQz1+4BKSmmSqAPvW+66u8cmYJrNtu1M4RCr2
+        lLF5RNdfhEntwliYefzbugNTgO0SroWv0TbRi/4=
+X-Google-Smtp-Source: ABdhPJwGAbd3O30QasDeDkOpiVbiH5Mxwc+d8N6dOkladkWmXa1L/P8SnKwcpnV08NjmcnGx2dezoWjEbFvylBndiuQ=
+X-Received: by 2002:a5d:6ac4:0:b0:20a:dd04:81da with SMTP id
+ u4-20020a5d6ac4000000b0020add0481damr19947871wrw.705.1652232938013; Tue, 10
+ May 2022 18:35:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220510074659.2557731-1-jolsa@kernel.org>
-In-Reply-To: <20220510074659.2557731-1-jolsa@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 10 May 2022 16:48:55 -0700
-Message-ID: <CAEf4BzbK9zgetgE1yKkCANTZqizUrXgamJa2X0f0XmzQUdFrCQ@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] perf tools: Fix prologue generation
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
+References: <Ynka4u+jCvFefgwJ@krava> <20220510004057.68284-1-chengdongli@tencent.com>
+In-Reply-To: <20220510004057.68284-1-chengdongli@tencent.com>
+From:   Bryton Lee <brytonlee01@gmail.com>
+Date:   Wed, 11 May 2022 09:35:26 +0800
+Message-ID: <CAC2pzGdkXz+wJsiSLOV5quMugXDvbMbF-WpiJshXfMM9Qt3FRQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf tools: fix callstack entries and nr print message
+To:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, likexu@tencent.com, chengdongli@tencent.com,
+        mark.rutland@arm.com, mingo@redhat.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        alexander.shishkin@linux.intel.com, irogers@google.com,
+        german.gomez@arm.com, rickyman7@gmail.com,
+        Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
+        alexey.v.bayduraev@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 10, 2022 at 12:47 AM Jiri Olsa <jolsa@kernel.org> wrote:
+Hi Jiri,
+
+Could you kindly review my patch again? I sent out my updates
+yesterday. I am happy to know your guidance.
+
+Thanks,
+Chengdong
+
+On Tue, May 10, 2022 at 8:41 AM Chengdong Li <brytonlee01@gmail.com> wrote:
 >
-> hi,
-> sending change we discussed some time ago [1] to get rid of
-> some deprecated functions we use in perf prologue code.
+> From: Chengdong Li <chengdongli@tencent.com>
 >
-> Despite the gloomy discussion I think the final code does
-> not look that bad ;-)
+> when generating callstack information from branch_stack(Intel LBR),
+> the actual number of callstack entry should be bigger than the number
+> of branch_stack, for example:
 >
-> This patchset removes following libbpf functions from perf:
->   bpf_program__set_prep
->   bpf_program__nth_fd
->   struct bpf_prog_prep_result
+>         branch_stack records:
+>                 B() -> C()
+>                 A() -> B()
+>         converted callstack records should be:
+>                 C()
+>                 B()
+>                 A()
+> though, the number of callstack equals
+> to the number of branch stack plus 1.
 >
-> v2 changes:
->   - use fallback section prog handler, so we don't need to
->     use section prefix [Andrii]
->   - realloc prog->insns array in bpf_program__set_insns [Andrii]
->   - squash patch 1 from previous version with
->     bpf_program__set_insns change [Daniel]
->   - patch 3 already merged [Arnaldo]
->   - added more comments
+> This patch fixes above issue in branch_stack__printf(). For example,
 >
->   meanwhile.. perf/core and bpf-next diverged, so:
->     - libbpf bpf_program__set_insns change is based on bpf-next/master
->     - perf changes do not apply on bpf-next/master so they are based on
->       perf/core ... however they can be merged only after we release
->       libbpf 0.8.0 with bpf_program__set_insns change, so we don't break
->       the dynamic linking
->       I'm sending perf changes now just for review, I'll resend them
->       once libbpf 0.8.0 is released
+>         # echo 'scale=2000; 4*a(1)' > cmd
+>         # perf record --call-graph lbr bc -l < cmd
 >
-> thanks,
-> jirka
+> Before applying this patch, `perf script -D` output:
 >
+>         1220022677386876 0x2a40 [0xd8]: PERF_RECORD_SAMPLE(IP, 0x4002): 17990/17990: 0x40a6d6 period: 894172 addr: 0
+>         ... LBR call chain: nr:8
+>         .....  0: fffffffffffffe00
+>         .....  1: 000000000040a410
+>         .....  2: 000000000040573c
+>         .....  3: 0000000000408650
+>         .....  4: 00000000004022f2
+>         .....  5: 00000000004015f5
+>         .....  6: 00007f5ed6dcb553
+>         .....  7: 0000000000401698
+>         ... FP chain: nr:2
+>         .....  0: fffffffffffffe00
+>         .....  1: 000000000040a6d8
+>         ... branch callstack: nr:6    # which is not consistent with LBR records.
+>         .....  0: 000000000040a410
+>         .....  1: 0000000000408650    # ditto
+>         .....  2: 00000000004022f2
+>         .....  3: 00000000004015f5
+>         .....  4: 00007f5ed6dcb553
+>         .....  5: 0000000000401698
+>          ... thread: bc:17990
+>          ...... dso: /usr/bin/bc
+>         bc 17990 1220022.677386:     894172 cycles:
+>                           40a410 [unknown] (/usr/bin/bc)
+>                           40573c [unknown] (/usr/bin/bc)
+>                           408650 [unknown] (/usr/bin/bc)
+>                           4022f2 [unknown] (/usr/bin/bc)
+>                           4015f5 [unknown] (/usr/bin/bc)
+>                     7f5ed6dcb553 __libc_start_main+0xf3 (/usr/lib64/libc-2.17.so)
+>                           401698 [unknown] (/usr/bin/bc)
 >
-> [1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
+> After applied:
+>
+>         1220022677386876 0x2a40 [0xd8]: PERF_RECORD_SAMPLE(IP, 0x4002): 17990/17990: 0x40a6d6 period: 894172 addr: 0
+>         ... LBR call chain: nr:8
+>         .....  0: fffffffffffffe00
+>         .....  1: 000000000040a410
+>         .....  2: 000000000040573c
+>         .....  3: 0000000000408650
+>         .....  4: 00000000004022f2
+>         .....  5: 00000000004015f5
+>         .....  6: 00007f5ed6dcb553
+>         .....  7: 0000000000401698
+>         ... FP chain: nr:2
+>         .....  0: fffffffffffffe00
+>         .....  1: 000000000040a6d8
+>         ... branch callstack: nr:7
+>         .....  0: 000000000040a410
+>         .....  1: 000000000040573c
+>         .....  2: 0000000000408650
+>         .....  3: 00000000004022f2
+>         .....  4: 00000000004015f5
+>         .....  5: 00007f5ed6dcb553
+>         .....  6: 0000000000401698
+>          ... thread: bc:17990
+>          ...... dso: /usr/bin/bc
+>         bc 17990 1220022.677386:     894172 cycles:
+>                           40a410 [unknown] (/usr/bin/bc)
+>                           40573c [unknown] (/usr/bin/bc)
+>                           408650 [unknown] (/usr/bin/bc)
+>                           4022f2 [unknown] (/usr/bin/bc)
+>                           4015f5 [unknown] (/usr/bin/bc)
+>                     7f5ed6dcb553 __libc_start_main+0xf3 (/usr/lib64/libc-2.17.so)
+>                           401698 [unknown] (/usr/bin/bc)
+>
+> Change from v1:
+>         - refined code style according to Jiri's review comments.
+>
+> Signed-off-by: Chengdong Li <chengdongli@tencent.com>
 > ---
-> Jiri Olsa (1):
->       libbpf: Add bpf_program__set_insns function
+>  tools/perf/util/session.c | 26 +++++++++++++++++++++-----
+>  1 file changed, 21 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index f9a320694b85..a7f93f5a1ac8 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1151,9 +1151,20 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
+>         struct branch_entry *entries = perf_sample__branch_entries(sample);
+>         uint64_t i;
+>
+> -       printf("%s: nr:%" PRIu64 "\n",
+> -               !callstack ? "... branch stack" : "... branch callstack",
+> -               sample->branch_stack->nr);
+> +       if (!callstack) {
+> +               printf("%s: nr:%" PRIu64 "\n", "... branch stack", sample->branch_stack->nr);
+> +       } else {
+> +               /* the reason of adding 1 to nr is because after expanding
+> +                * branch stack it generates nr + 1 callstack records. e.g.,
+> +                *         B()->C()
+> +                *         A()->B()
+> +                * the final callstack should be:
+> +                *         C()
+> +                *         B()
+> +                *         A()
+> +                */
+> +               printf("%s: nr:%" PRIu64 "\n", "... branch callstack", sample->branch_stack->nr+1);
+> +       }
+>
+>         for (i = 0; i < sample->branch_stack->nr; i++) {
+>                 struct branch_entry *e = &entries[i];
+> @@ -1169,8 +1180,13 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
+>                                 (unsigned)e->flags.reserved,
+>                                 e->flags.type ? branch_type_name(e->flags.type) : "");
+>                 } else {
+> -                       printf("..... %2"PRIu64": %016" PRIx64 "\n",
+> -                               i, i > 0 ? e->from : e->to);
+> +                       if (i == 0) {
+> +                               printf("..... %2"PRIu64": %016" PRIx64 "\n"
+> +                                      "..... %2"PRIu64": %016" PRIx64 "\n",
+> +                                               i, e->to, i+1, e->from);
+> +                       } else {
+> +                               printf("..... %2"PRIu64": %016" PRIx64 "\n", i+1, e->from);
+> +                       }
+>                 }
+>         }
+>  }
+> --
+> 2.27.0
 >
 
-The first patch looks good to me. The rest I can't really review and
-test properly, so I'll leave it up to Arnaldo.
 
-Arnaldo, how do we coordinate these patches? Should they go through
-bpf-next (after you Ack them) or you want them in your tree?
+-- 
+Best Regards
 
-I'd like to get the bpf_program__set_insns() patch into bpf-next so
-that I can do libbpf v0.8 release, having it in a separate tree is
-extremely inconvenient. Please let me know how you think we should
-proceed?
-
->  tools/lib/bpf/libbpf.c   | 22 ++++++++++++++++++++++
->  tools/lib/bpf/libbpf.h   | 18 ++++++++++++++++++
->  tools/lib/bpf/libbpf.map |  1 +
->  3 files changed, 41 insertions(+)
->
-> Jiri Olsa (2):
->       perf tools: Register fallback libbpf section handler
->       perf tools: Rework prologue generation code
->
->  tools/perf/util/bpf-loader.c | 175 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------
->  1 file changed, 157 insertions(+), 18 deletions(-)
+Bryton.Lee
