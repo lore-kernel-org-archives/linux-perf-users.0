@@ -2,84 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD419C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 04:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4447C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 05:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229863AbiEKE1y (ORCPT
+        id S237694AbiEKFmq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 00:27:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32932 "EHLO
+        Wed, 11 May 2022 01:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229829AbiEKE1w (ORCPT
+        with ESMTP id S234318AbiEKFmo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 00:27:52 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1F9023B558;
-        Tue, 10 May 2022 21:27:51 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E33E2106F;
-        Tue, 10 May 2022 21:27:50 -0700 (PDT)
-Received: from [192.168.0.8] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDDF33F5A1;
-        Tue, 10 May 2022 21:27:45 -0700 (PDT)
-Message-ID: <e207966e-ffb4-a79c-42c6-3fed92fb9669@arm.com>
-Date:   Wed, 11 May 2022 09:58:49 +0530
+        Wed, 11 May 2022 01:42:44 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830DD244F1C;
+        Tue, 10 May 2022 22:42:43 -0700 (PDT)
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24B5JEu6014884;
+        Wed, 11 May 2022 05:42:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=emyIR3ECpntnmKkZx+mZMYKk5M6gQg/7DfvRafIfLcI=;
+ b=oTGAQ6/M02Wf6Gh0o81+eMhJs56uM3si/7Km5F13UIKjHPTdceqrDI8uOu1pYVCwiCiZ
+ ahyJ+mvXhW3xyqzTyoCdN9ZjJfTt2HU3oV+Dzgz6ntoqcXxIWADEhY2tNWarpYezK0Ry
+ OPKIVJb8dCWSE2bWJM5O55+v0NeaGAOkdkDQ7WZ44laRllHICnuycBseylIYW683ABTF
+ xkuhB3+5ggEbM2QixjsVz4XdogeO45l92M4SimCMw3Ml3MhV+QXAi3tX9U43rsncTk8G
+ fWq4bzecAN2VGqqQp0XSe/o51yoXRhzI8NhUHqRqbQDZR6S4wlpYCV4/dCkGR4oEW3fj dw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3g06w3rapa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 May 2022 05:42:11 +0000
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24B5ZJRT014418;
+        Wed, 11 May 2022 05:42:11 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3g06w3ranp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 May 2022 05:42:11 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24B5XdVZ030825;
+        Wed, 11 May 2022 05:42:09 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 3fwgd8vxwu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 May 2022 05:42:09 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24B5g6EG47644940
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 May 2022 05:42:06 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9744A4C046;
+        Wed, 11 May 2022 05:42:06 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 33F4F4C04A;
+        Wed, 11 May 2022 05:41:59 +0000 (GMT)
+Received: from [9.43.104.77] (unknown [9.43.104.77])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 11 May 2022 05:41:58 +0000 (GMT)
+Message-ID: <ce9bf61d-cf64-1f14-5388-f4bf903b5c50@linux.ibm.com>
+Date:   Wed, 11 May 2022 11:11:57 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH V5 0/8] perf: Expand perf_branch_entry
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v8 1/5] perf: Add SNOOP_PEER flag to perf mem data struct
 Content-Language: en-US
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, acme@kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220404045046.634522-1-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20220404045046.634522-1-anshuman.khandual@arm.com>
+To:     Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
+        leo.yan@linaro.org, acme@kernel.org
+Cc:     benh@kernel.crashing.org, Nick.Forrington@arm.com,
+        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
+        james.clark@arm.com, john.garry@huawei.com, jolsa@kernel.org,
+        lihuafei1@huawei.com, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, will@kernel.org
+References: <20220504184850.24986-1-alisaidi@amazon.com>
+ <20220504184850.24986-2-alisaidi@amazon.com>
+From:   kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <20220504184850.24986-2-alisaidi@amazon.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Npea4B33pMI1rdMHvCsM_6o12Cbi2eZ0
+X-Proofpoint-GUID: t80z1TXx5J7GTnh8EFjWwZ0xJNhaLB5h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-11_01,2022-05-10_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ suspectscore=0 impostorscore=0 mlxscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1011 adultscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2205110025
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 4/4/22 10:20, Anshuman Khandual wrote:
-> Branch Record Buffer Extension (BRBE) implementation on arm64 captures more
-> branch type classification which cannot be accommodated in the current perf
-> branch record format via perf_branch_entry.type element (4 bit field). Also
-> it captures privilege information which does not have a corresponding slot
-> in perf_branch_entry. This series expands struct perf_branch_entry, to meet
-> both these requirements without breaking the existing user space ABI for
-> perf tools.
+On 5/5/22 00:18, Ali Saidi wrote:
+> Add a flag to the perf mem data struct to signal that a request caused a
+> cache-to-cache transfer of a line from a peer of the requestor and
+> wasn't sourced from a lower cache level.  The line being moved from one
+> peer cache to another has latency and performance implications. On Arm64
+> Neoverse systems the data source can indicate a cache-to-cache transfer
+> but not if the line is dirty or clean, so instead of overloading HITM
+> define a new flag that indicates this type of transfer.
 > 
-> All architecture specific branch types added via perf_branch_entry.new_type
-> field in [PATCH 3/4] will be used in BRBE implementation on arm64 platform
-> later on with the following map.
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  include/uapi/linux/perf_event.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> #ifdef CONFIG_ARM64
-> #define PERF_BR_FIQ		PERF_BR_NEW_ARCH_1
-> #define PERF_BR_DEBUG_HALT	PERF_BR_NEW_ARCH_2
-> #define PERF_BR_DEBUG_EXIT	PERF_BR_NEW_ARCH_3
-> #define PERF_BR_DEBUG_INST	PERF_BR_NEW_ARCH_4
-> #define PERF_BR_DEBUG_DATA	PERF_BR_NEW_ARCH_5
-> #endif
-> 
-> This actually combines following patches and series into a single series.
-> 
-> - https://lore.kernel.org/all/1642998653-21377-12-git-send-email-anshuman.khandual@arm.com/
-> - https://lore.kernel.org/all/1643348653-24367-1-git-send-email-anshuman.khandual@arm.com/
-> - https://lore.kernel.org/all/1645681014-3346-1-git-send-email-anshuman.khandual@arm.com/
-> 
-> This series applies on v5.18-rc1
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index d37629dbad72..7b88bfd097dc 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1310,7 +1310,7 @@ union perf_mem_data_src {
+>  #define PERF_MEM_SNOOP_SHIFT	19
+>  
+>  #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+> -/* 1 free */
+> +#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
+>  #define PERF_MEM_SNOOPX_SHIFT  38
+>  
+>  /* locked instruction */
 
-Gentle ping, any updates on this series ?
+Patch looks good to me.
+
+Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
+
+Thanks,
+Kajol Jain
