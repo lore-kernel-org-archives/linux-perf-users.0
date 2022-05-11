@@ -2,336 +2,431 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46342C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 17:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2F3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 18:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245180AbiEKR1N (ORCPT
+        id S1346051AbiEKSIJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 13:27:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58346 "EHLO
+        Wed, 11 May 2022 14:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345532AbiEKR1M (ORCPT
+        with ESMTP id S233707AbiEKSII (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 13:27:12 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC6E38D85
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 10:27:10 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id o12-20020a1c4d0c000000b00393fbe2973dso3678074wmh.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 10:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5OBqBsoJ/TxRsSFzQqMPW/kr9BMkFs7GUmU5KHrm7/4=;
-        b=DUZVTRT+yyDo7DUHH/QJg0TSEiL5v/fqE4I86EydXciRkX9DP98TpJ/16H1Y4s6Rhh
-         QvOkoWxXOt5d0v0SxH9gf/049yEJs9CNRU4pQcPySAQn/T7n24H2GawGplBllMf+NKAd
-         0YJ89dnaMevZxiu/2rtMhkQaiW1Ihpl01jnpm3g9AADQ6ZSN/tBW71BpOAPt3PaNlKKD
-         TP3+RQLx1B/4Ux2QbxuealCBvzD+n62BEMiUeLIYNgyBI2rFVaAKgen+AO7Jh2AFiMGC
-         32ccWgWuK+xvz8L641IFqS4z8ptXVVYws857SADKx2/OINFQGb+kruPL+0g/1lZJgVNW
-         WQ3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5OBqBsoJ/TxRsSFzQqMPW/kr9BMkFs7GUmU5KHrm7/4=;
-        b=1GtoFyxk9KLgVxMvJ8RVKtUgzzWV3fJeREp23HpoXQFXTdh4WeGAjd+fsrOn1wtsXx
-         JZZ1xjDajDaNfPYBBCvrGPFgsWyU/zJ43wLHiQDEKv8YD3Hk1LJQThG6GNPa4Zx3ZIqV
-         o24upNmH3H/VHh/HHr2mnDrtyNkERvhYnVnU/vYmAomd7jxWaeS29+W0Sv+qQsPM69B3
-         vLBc/xOx+oqxS1ByH2AwCDyk0f/X7s5MG/w8qcwp47hnng1nfrplV+QoTjWgievsxP5S
-         nNJp0m/JJ/q+Xjmj3FOq2z1CcGrtxke92RIJ9lftjMEli1hBEamYYMEQ55X9mEyXa7Fd
-         qozA==
-X-Gm-Message-State: AOAM5332qdd+xbINhhXHG/nFB8FTF1aG6bKLLCB+/XLDo1y4e563XVJt
-        6ouPVXK59K9V7AS2uj10/8iKHjs1BHsdQjpuDMPvvg==
-X-Google-Smtp-Source: ABdhPJykX8HqwOyGovzZA/NwJlbix4JvMk8CETGmkdnSAnhe/gWGei1l8Yy1LKthlTjnxvE5Zv8hHQ4cEnwCR9wN1BU=
-X-Received: by 2002:a1c:19c1:0:b0:393:a19f:8f95 with SMTP id
- 184-20020a1c19c1000000b00393a19f8f95mr5962936wmz.149.1652290028915; Wed, 11
- May 2022 10:27:08 -0700 (PDT)
+        Wed, 11 May 2022 14:08:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982584C42E;
+        Wed, 11 May 2022 11:08:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2195461DE9;
+        Wed, 11 May 2022 18:08:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADE8C340EE;
+        Wed, 11 May 2022 18:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652292485;
+        bh=s3Uj5z2jK9360nVzQqgYKlZfc8dFQIlZtVcyCHnD0f8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IoRFSR/Jj011J0pJjrks+MzcCEegnPeU0pButN0H/HMcp9yITFz4KPR0g7FKWmwyj
+         w3DslEiyLTAeek2djBqm9iVGlMQMLzUZOLYlQ+Mu5rU3kKgFzIufewyqQhISuWnk/D
+         ImPeiYK2zcBuZiXk6feVbDnYAwGOOR181AEBDEA3l7dW1SDPWwdfmkF4e5zsfXY/03
+         +p9ASMfxZCETJliApJLQ9tC31MpFtsRUxlShs2KqiJZHbGJSXEaEp5iZ2D2++82wqu
+         0nIfq58pjJZ8WGBdfvVsHzi+UB8ro2/G5Hvrvy78g6s2NFKX1yZYau9omPKsflQMeg
+         BXQGu6ALRYvzg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0E982400B1; Wed, 11 May 2022 15:08:02 -0300 (-03)
+Date:   Wed, 11 May 2022 15:08:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, elver@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools/perf: add breakpoint benchmarks
+Message-ID: <Ynv7gkbBVd9dlJRh@kernel.org>
+References: <20220505155745.1690906-1-dvyukov@google.com>
+ <CAP-5=fVDs-AQvhXbZM9ksRqMdfS00Mpn8LDRZUppJb76TCkrAg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220511070133.710721-1-irogers@google.com> <20220511070133.710721-5-irogers@google.com>
- <35c5833b-6974-e40d-f4b3-a3b36d11d06c@linux.intel.com>
-In-Reply-To: <35c5833b-6974-e40d-f4b3-a3b36d11d06c@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 11 May 2022 10:26:56 -0700
-Message-ID: <CAP-5=fU3vs6c1ViZTxZECNi4jNKX0p47Lk1thTH8U_s6sQVSig@mail.gmail.com>
-Subject: Re: [PATCH 4/7] perf jevents: Modify match field
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Felix Fietkau <nbd@nbd.name>,
-        Qi Liu <liuqi115@huawei.com>, Like Xu <likexu@tencent.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com, sandipan.das@amd.com,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVDs-AQvhXbZM9ksRqMdfS00Mpn8LDRZUppJb76TCkrAg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 11, 2022 at 12:43 AM Xing Zhengjun
-<zhengjun.xing@linux.intel.com> wrote:
->
->
->
-> On 5/11/2022 3:01 PM, Ian Rogers wrote:
-> > The match_field function looks for json values to append to the event
-> > string. As the C code processes these in order the output order matches
-> > that in the json dictionary. Python json readers read the entire
-> > dictionary and lose the ordering. To make the python and C output
-> > comparable makee the C code first read the extra fields then append them
->
-> The "makee" should be a typo.
-
-Good catch, fixed in v2. Thanks,
-Ian
-
-> > to the event in an order not determined by their order in the file.
+Em Wed, May 11, 2022 at 08:34:58AM -0700, Ian Rogers escreveu:
+> On Thu, May 5, 2022 at 8:58 AM Dmitry Vyukov <dvyukov@google.com> wrote:
 > >
-> > Modify the pmu-events test so that test expectations match the new
-> > order.
+> > Add 2 benchmarks:
+> > 1. Performance of thread creation/exiting in presence of breakpoints.
+> > 2. Performance of breakpoint modification in presence of threads.
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > The benchmarks capture use cases that we are interested in:
+> > using inheritable breakpoints in large highly-threaded applications.
+> > The benchmarks show significant slowdown imposed by breakpoints
+> > (even when they don't fire).
+> >
+> > Testing on Intel 8173M with 112 HW threads show:
+> >
+> > perf bench --repeat=56 breakpoint thread --breakpoints=0 --parallelism=56 --threads=20
+> >       78.675000 usecs/op
+> > perf bench --repeat=56 breakpoint thread --breakpoints=4 --parallelism=56 --threads=20
+> >    12967.135714 usecs/op
+> > That's 165x slowdown due to presence of the breakpoints.
+> >
+> > perf bench --repeat=20000 breakpoint enable --passive=0 --active=0
+> >        1.433250 usecs/op
+> > perf bench --repeat=20000 breakpoint enable --passive=224 --active=0
+> >      585.318400 usecs/op
+> > perf bench --repeat=20000 breakpoint enable --passive=0 --active=111
+> >      635.953000 usecs/op
+> > That's 408x and 444x slowdown due to presence of threads.
+> >
+> > Profiles show some overhead in toggle_bp_slot,
+> > but also very high contention:
+> >
+> >     90.83%  breakpoint-thre  [kernel.kallsyms]  [k] osq_lock
+> >      4.69%  breakpoint-thre  [kernel.kallsyms]  [k] mutex_spin_on_owner
+> >      2.06%  breakpoint-thre  [kernel.kallsyms]  [k] __reserve_bp_slot
+> >      2.04%  breakpoint-thre  [kernel.kallsyms]  [k] toggle_bp_slot
+> >
+> >     79.01%  breakpoint-enab  [kernel.kallsyms]  [k] smp_call_function_single
+> >      9.94%  breakpoint-enab  [kernel.kallsyms]  [k] llist_add_batch
+> >      5.70%  breakpoint-enab  [kernel.kallsyms]  [k] _raw_spin_lock_irq
+> >      1.84%  breakpoint-enab  [kernel.kallsyms]  [k] event_function_call
+> >      1.12%  breakpoint-enab  [kernel.kallsyms]  [k] send_call_function_single_ipi
+> >      0.37%  breakpoint-enab  [kernel.kallsyms]  [k] generic_exec_single
+> >      0.24%  breakpoint-enab  [kernel.kallsyms]  [k] __perf_event_disable
+> >      0.20%  breakpoint-enab  [kernel.kallsyms]  [k] _perf_event_enable
+> >      0.18%  breakpoint-enab  [kernel.kallsyms]  [k] toggle_bp_slot
+> >
+> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> > Cc: linux-perf-users@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
 > > ---
-> >   tools/perf/pmu-events/jevents.c | 82 ++++++++++++++++++++-------------
-> >   tools/perf/tests/pmu-events.c   | 24 +++++-----
-> >   2 files changed, 62 insertions(+), 44 deletions(-)
+> >  tools/perf/bench/Build        |   1 +
+> >  tools/perf/bench/bench.h      |   2 +
+> >  tools/perf/bench/breakpoint.c | 235 ++++++++++++++++++++++++++++++++++
+> >  tools/perf/builtin-bench.c    |   8 ++
+> >  4 files changed, 246 insertions(+)
+> >  create mode 100644 tools/perf/bench/breakpoint.c
 > >
-> > diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> > index e1f7c7afd435..cee61c4ed59e 100644
-> > --- a/tools/perf/pmu-events/jevents.c
-> > +++ b/tools/perf/pmu-events/jevents.c
-> > @@ -207,21 +207,6 @@ static struct msrmap {
-> >       { NULL, NULL }
-> >   };
+> > diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+> > index 61d45fcb4057c..6b6155a8ad096 100644
+> > --- a/tools/perf/bench/Build
+> > +++ b/tools/perf/bench/Build
+> > @@ -14,6 +14,7 @@ perf-y += kallsyms-parse.o
+> >  perf-y += find-bit-bench.o
+> >  perf-y += inject-buildid.o
+> >  perf-y += evlist-open-close.o
+> > +perf-y += breakpoint.o
 > >
-> > -static struct field {
-> > -     const char *field;
-> > -     const char *kernel;
-> > -} fields[] = {
-> > -     { "UMask",      "umask=" },
-> > -     { "CounterMask", "cmask=" },
-> > -     { "Invert",     "inv=" },
-> > -     { "AnyThread",  "any=" },
-> > -     { "EdgeDetect", "edge=" },
-> > -     { "SampleAfterValue", "period=" },
-> > -     { "FCMask",     "fc_mask=" },
-> > -     { "PortMask",   "ch_mask=" },
-> > -     { NULL, NULL }
-> > -};
-> > -
-> >   static void cut_comma(char *map, jsmntok_t *newval)
-> >   {
-> >       int i;
-> > @@ -233,21 +218,6 @@ static void cut_comma(char *map, jsmntok_t *newval)
-> >       }
-> >   }
+> >  perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
+> >  perf-$(CONFIG_X86_64) += mem-memset-x86-64-asm.o
+> > diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> > index b3480bc33fe84..6cefb4315d75e 100644
+> > --- a/tools/perf/bench/bench.h
+> > +++ b/tools/perf/bench/bench.h
+> > @@ -49,6 +49,8 @@ int bench_synthesize(int argc, const char **argv);
+> >  int bench_kallsyms_parse(int argc, const char **argv);
+> >  int bench_inject_build_id(int argc, const char **argv);
+> >  int bench_evlist_open_close(int argc, const char **argv);
+> > +int bench_breakpoint_thread(int argc, const char **argv);
+> > +int bench_breakpoint_enable(int argc, const char **argv);
 > >
-> > -static int match_field(char *map, jsmntok_t *field, int nz,
-> > -                    char **event, jsmntok_t *val)
-> > -{
-> > -     struct field *f;
-> > -     jsmntok_t newval = *val;
-> > -
-> > -     for (f = fields; f->field; f++)
-> > -             if (json_streq(map, field, f->field) && nz) {
-> > -                     cut_comma(map, &newval);
-> > -                     addfield(map, event, ",", f->kernel, &newval);
-> > -                     return 1;
-> > -             }
-> > -     return 0;
-> > -}
-> > -
-> >   static struct msrmap *lookup_msr(char *map, jsmntok_t *val)
-> >   {
-> >       jsmntok_t newval = *val;
-> > @@ -581,6 +551,14 @@ static int json_events(const char *fn,
-> >               jsmntok_t *precise = NULL;
-> >               jsmntok_t *obj = tok++;
-> >               bool configcode_present = false;
-> > +             char *umask = NULL;
-> > +             char *cmask = NULL;
-> > +             char *inv = NULL;
-> > +             char *any = NULL;
-> > +             char *edge = NULL;
-> > +             char *period = NULL;
-> > +             char *fc_mask = NULL;
-> > +             char *ch_mask = NULL;
-> >
-> >               EXPECT(obj->type == JSMN_OBJECT, obj, "expected object");
-> >               for (j = 0; j < obj->size; j += 2) {
-> > @@ -596,8 +574,23 @@ static int json_events(const char *fn,
-> >                              "Expected string value");
-> >
-> >                       nz = !json_streq(map, val, "0");
-> > -                     if (match_field(map, field, nz, &event, val)) {
-> > -                             /* ok */
-> > +                     /* match_field */
-> > +                     if (json_streq(map, field, "UMask") && nz) {
-> > +                             addfield(map, &umask, "", "umask=", val);
-> > +                     } else if (json_streq(map, field, "CounterMask") && nz) {
-> > +                             addfield(map, &cmask, "", "cmask=", val);
-> > +                     } else if (json_streq(map, field, "Invert") && nz) {
-> > +                             addfield(map, &inv, "", "inv=", val);
-> > +                     } else if (json_streq(map, field, "AnyThread") && nz) {
-> > +                             addfield(map, &any, "", "any=", val);
-> > +                     } else if (json_streq(map, field, "EdgeDetect") && nz) {
-> > +                             addfield(map, &edge, "", "edge=", val);
-> > +                     } else if (json_streq(map, field, "SampleAfterValue") && nz) {
-> > +                             addfield(map, &period, "", "period=", val);
-> > +                     } else if (json_streq(map, field, "FCMask") && nz) {
-> > +                             addfield(map, &fc_mask, "", "fc_mask=", val);
-> > +                     } else if (json_streq(map, field, "PortMask") && nz) {
-> > +                             addfield(map, &ch_mask, "", "ch_mask=", val);
-> >                       } else if (json_streq(map, field, "EventCode")) {
-> >                               char *code = NULL;
-> >                               addfield(map, &code, "", "", val);
-> > @@ -690,6 +683,23 @@ static int json_events(const char *fn,
-> >               else
-> >                       snprintf(buf, sizeof buf, "event=%#llx", eventcode);
-> >               addfield(map, &event, ",", buf, NULL);
-> > +             if (any)
-> > +                     addfield(map, &event, ",", any, NULL);
-> > +             if (ch_mask)
-> > +                     addfield(map, &event, ",", ch_mask, NULL);
-> > +             if (cmask)
-> > +                     addfield(map, &event, ",", cmask, NULL);
-> > +             if (edge)
-> > +                     addfield(map, &event, ",", edge, NULL);
-> > +             if (fc_mask)
-> > +                     addfield(map, &event, ",", fc_mask, NULL);
-> > +             if (inv)
-> > +                     addfield(map, &event, ",", inv, NULL);
-> > +             if (period)
-> > +                     addfield(map, &event, ",", period, NULL);
-> > +             if (umask)
-> > +                     addfield(map, &event, ",", umask, NULL);
+> >  #define BENCH_FORMAT_DEFAULT_STR       "default"
+> >  #define BENCH_FORMAT_DEFAULT           0
+> > diff --git a/tools/perf/bench/breakpoint.c b/tools/perf/bench/breakpoint.c
+> > new file mode 100644
+> > index 0000000000000..56936fea246d7
+> > --- /dev/null
+> > +++ b/tools/perf/bench/breakpoint.c
+> > @@ -0,0 +1,235 @@
+> > +// SPDX-License-Identifier: GPL-2.0
 > > +
-> >               if (je.desc && extra_desc)
-> >                       addfield(map, &je.desc, " ", extra_desc, NULL);
-> >               if (je.long_desc && extra_desc)
-> > @@ -718,6 +728,14 @@ static int json_events(const char *fn,
-> >               je.event = real_event(je.name, event);
-> >               err = func(data, &je);
-> >   free_strings:
-> > +             free(umask);
-> > +             free(cmask);
-> > +             free(inv);
-> > +             free(any);
-> > +             free(edge);
-> > +             free(period);
-> > +             free(fc_mask);
-> > +             free(ch_mask);
-> >               free(event);
-> >               free(je.desc);
-> >               free(je.name);
-> > diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> > index b74c6ef59e51..f13368569d8b 100644
-> > --- a/tools/perf/tests/pmu-events.c
-> > +++ b/tools/perf/tests/pmu-events.c
-> > @@ -63,33 +63,33 @@ static const struct perf_pmu_test_event bp_l2_btb_correct = {
-> >   static const struct perf_pmu_test_event segment_reg_loads_any = {
-> >       .event = {
-> >               .name = "segment_reg_loads.any",
-> > -             .event = "umask=0x80,period=200000,event=0x6",
-> > +             .event = "event=0x6,period=200000,umask=0x80",
-> >               .desc = "Number of segment register loads",
-> >               .topic = "other",
-> >       },
-> > -     .alias_str = "umask=0x80,period=0x30d40,event=0x6",
-> > +     .alias_str = "event=0x6,period=0x30d40,umask=0x80",
-> >       .alias_long_desc = "Number of segment register loads",
-> >   };
+> > +#include <subcmd/parse-options.h>
+> > +#include <linux/hw_breakpoint.h>
+> > +#include <linux/perf_event.h>
+> > +#include <linux/time64.h>
+> > +#include <sys/syscall.h>
+> > +#include <sys/ioctl.h>
+> > +#include <sys/time.h>
+> > +#include <pthread.h>
+> > +#include <stddef.h>
+> > +#include <stdlib.h>
+> > +#include <unistd.h>
+> > +#include <stdio.h>
+> > +#include <errno.h>
+> > +#include "bench.h"
+> > +#include "futex.h"
+> > +
+> > +struct {
+> > +       unsigned int nbreakpoints;
+> > +       unsigned int nparallel;
+> > +       unsigned int nthreads;
+> > +} thread_params = {
+> > +       .nbreakpoints = 1,
+> > +       .nparallel = 1,
+> > +       .nthreads = 1,
+> > +};
+> > +
+> > +static const struct option thread_options[] = {
+> > +       OPT_UINTEGER('b', "breakpoints", &thread_params.nbreakpoints,
+> > +               "Specify amount of breakpoints"),
+> > +       OPT_UINTEGER('p', "parallelism", &thread_params.nparallel, "Specify amount of parallelism"),
+> > +       OPT_UINTEGER('t', "threads", &thread_params.nthreads, "Specify amount of threads"),
+> > +       OPT_END()
+> > +};
+> > +
+> > +static const char * const thread_usage[] = {
+> > +       "perf bench breakpoint thread <options>",
+> > +       NULL
+> > +};
+> > +
+> > +struct breakpoint {
+> > +       int fd;
+> > +       char watched;
+> > +};
+> > +
+> > +static int breakpoint_setup(void *addr)
+> > +{
+> > +       struct perf_event_attr attr = {0};
+> > +
+> > +       attr.type = PERF_TYPE_BREAKPOINT;
+> > +       attr.size = sizeof(attr);
+> > +       attr.inherit = 1;
+> > +       attr.exclude_kernel = 1;
+> > +       attr.exclude_hv = 1;
+> > +       attr.bp_addr = (uint64_t)addr;
+> > +       attr.bp_type = HW_BREAKPOINT_RW;
+> > +       attr.bp_len = HW_BREAKPOINT_LEN_1;
+> > +       return syscall(SYS_perf_event_open, &attr, 0, -1, -1, 0);
+> > +}
+> > +
+> > +static void *passive_thread(void *arg)
+> > +{
+> > +       unsigned int *done = (unsigned int *)arg;
+> > +
+> > +       while (!__atomic_load_n(done, __ATOMIC_RELAXED))
+> 
+> Note, this may be the first change with atomics since Linux moved to
+> C11 which may make the use of stdatomic.h more idiomatic. Just
+> flagging for potential future cleanup.
+> 
+> Thanks,
+> Ian
+> 
+> > +               futex_wait(done, 0, NULL, 0);
+> > +       return NULL;
+> > +}
+> > +
+> > +static void *active_thread(void *arg)
+> > +{
+> > +       unsigned int *done = (unsigned int *)arg;
+> > +
+> > +       while (!__atomic_load_n(done, __ATOMIC_RELAXED));
+> > +       return NULL;
+> > +}
+> > +
+> > +static void *breakpoint_thread(void *arg)
+> > +{
+> > +       unsigned int i, done;
+> > +       int *repeat = (int *)arg;
+> > +       pthread_t *threads;
+> > +
+> > +       threads = calloc(thread_params.nthreads, sizeof(threads[0]));
+> > +       while (__atomic_fetch_sub(repeat, 1, __ATOMIC_RELAXED) > 0) {
+> > +               done = 0;
+> > +               for (i = 0; i < thread_params.nthreads; i++) {
+> > +                       if (pthread_create(&threads[i], NULL, passive_thread, &done))
+> > +                               exit((perror("pthread_create"), EXIT_FAILURE));
+> > +               }
+> > +               __atomic_store_n(&done, 1, __ATOMIC_RELAXED);
+> > +               futex_wake(&done, thread_params.nthreads, 0);
+> > +               for (i = 0; i < thread_params.nthreads; i++)
+> > +                       pthread_join(threads[i], NULL);
+> > +       }
+> > +       free(threads);
+> > +       return NULL;
+> > +}
+> > +
+> > +// The benchmark creates nbreakpoints inheritable breakpoints,
+> > +// then starts nparallel threads which create and join bench_repeat batches of nthreads threads.
+> > +int bench_breakpoint_thread(int argc, const char **argv)
+> > +{
+> > +       unsigned int i, result_usec;
+> > +       int repeat = bench_repeat;
+> > +       struct breakpoint *breakpoints;
+> > +       pthread_t *parallel;
+> > +       struct timeval start, stop, diff;
+> > +
+> > +       if (parse_options(argc, argv, thread_options, thread_usage, 0)) {
+> > +               usage_with_options(thread_usage, thread_options);
+> > +               exit(EXIT_FAILURE);
+> > +       }
+> > +       breakpoints = calloc(thread_params.nbreakpoints, sizeof(breakpoints[0]));
+> > +       parallel = calloc(thread_params.nparallel, sizeof(parallel[0]));
+> > +       for (i = 0; i < thread_params.nbreakpoints; i++) {
+> > +               breakpoints[i].fd = breakpoint_setup(&breakpoints[i].watched);
+> > +               if (breakpoints[i].fd == -1)
+> > +                       exit((perror("perf_event_open"), EXIT_FAILURE));
+> > +       }
+> > +       gettimeofday(&start, NULL);
+> > +       for (i = 0; i < thread_params.nparallel; i++) {
+> > +               if (pthread_create(&parallel[i], NULL, breakpoint_thread, &repeat))
+> > +                       exit((perror("pthread_create"), EXIT_FAILURE));
+> > +       }
+> > +       for (i = 0; i < thread_params.nparallel; i++)
+> > +               pthread_join(parallel[i], NULL);
+> > +       gettimeofday(&stop, NULL);
+> > +       timersub(&stop, &start, &diff);
+> > +       for (i = 0; i < thread_params.nbreakpoints; i++)
+> > +               close(breakpoints[i].fd);
+> > +       free(parallel);
+> > +       free(breakpoints);
+> > +       switch (bench_format) {
+> > +       case BENCH_FORMAT_DEFAULT:
+> > +               printf("# Created/joined %d threads with %d breakpoints and %d parallelism\n",
+> > +                       bench_repeat, thread_params.nbreakpoints, thread_params.nparallel);
+> > +               printf(" %14s: %lu.%03lu [sec]\n\n", "Total time",
+> > +                       (long)diff.tv_sec, (long)(diff.tv_usec / USEC_PER_MSEC));
+> > +               result_usec = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+> > +               printf(" %14lf usecs/op\n",
+> > +                       (double)result_usec / bench_repeat / thread_params.nthreads);
+> > +               printf(" %14lf usecs/op/cpu\n",
+> > +                       (double)result_usec / bench_repeat /
+> > +                       thread_params.nthreads * thread_params.nparallel);
+> > +               break;
+> > +       case BENCH_FORMAT_SIMPLE:
+> > +               printf("%lu.%03lu\n", (long)diff.tv_sec, (long)(diff.tv_usec / USEC_PER_MSEC));
+> > +               break;
+> > +       default:
+> > +               fprintf(stderr, "Unknown format: %d\n", bench_format);
+> > +               exit(EXIT_FAILURE);
+> > +       }
+> > +       return 0;
+> > +}
+> > +
+> > +struct {
+> > +       unsigned int npassive;
+> > +       unsigned int nactive;
+> > +} enable_params = {
+> > +       .nactive = 0,
+> > +       .npassive = 0,
+> > +};
+> > +
+> > +static const struct option enable_options[] = {
+> > +       OPT_UINTEGER('p', "passive", &enable_params.npassive, "Specify amount of passive threads"),
+> > +       OPT_UINTEGER('a', "active", &enable_params.nactive, "Specify amount of active threads"),
+> > +       OPT_END()
+> > +};
+> > +
+> > +static const char * const enable_usage[] = {
+> > +       "perf bench breakpoint enable <options>",
+> > +       NULL
+> > +};
+> > +
+> > +// The benchmark creates an inheritable breakpoint,
+> > +// then starts npassive threads that block and nactive threads that actively spin
+> > +// and then disables and enables the breakpoint bench_repeat times.
+> > +int bench_breakpoint_enable(int argc, const char **argv)
+> > +{
+> > +       unsigned int i, nthreads, result_usec, done = 0;
+> > +       char watched;
+> > +       int fd;
+> > +       pthread_t *threads;
+> > +       struct timeval start, stop, diff;
+> > +
+> > +       if (parse_options(argc, argv, enable_options, enable_usage, 0)) {
+> > +               usage_with_options(enable_usage, enable_options);
+> > +               exit(EXIT_FAILURE);
+> > +       }
+> > +       fd = breakpoint_setup(&watched);
+> > +       if (fd == -1)
+> > +               exit((perror("perf_event_open"), EXIT_FAILURE));
+> > +       nthreads = enable_params.npassive + enable_params.nactive;
+> > +       threads = calloc(nthreads, sizeof(threads[0]));
+> > +       for (i = 0; i < nthreads; i++) {
+> > +               if (pthread_create(&threads[i], NULL,
+> > +                       i < enable_params.npassive ? passive_thread : active_thread, &done))
+> > +                       exit((perror("pthread_create"), EXIT_FAILURE));
+> > +       }
+> > +       usleep(10000);  // let the threads block
+> > +       gettimeofday(&start, NULL);
+> > +       for (i = 0; i < bench_repeat; i++) {
+> > +               if (ioctl(fd, PERF_EVENT_IOC_DISABLE, 0))
+> > +                       exit((perror("ioctl(PERF_EVENT_IOC_DISABLE)"), EXIT_FAILURE));
+> > +               if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0))
+> > +                       exit((perror("ioctl(PERF_EVENT_IOC_ENABLE)"), EXIT_FAILURE));
+> > +       }
+> > +       gettimeofday(&stop, NULL);
+> > +       timersub(&stop, &start, &diff);
+> > +       __atomic_store_n(&done, 1, __ATOMIC_RELAXED);
+> > +       futex_wake(&done, enable_params.npassive, 0);
+> > +       for (i = 0; i < nthreads; i++)
+> > +               pthread_join(threads[i], NULL);
+> > +       free(threads);
+> > +       close(fd);
+> > +       switch (bench_format) {
+> > +       case BENCH_FORMAT_DEFAULT:
+> > +               printf("# Enabled/disabled breakpoint %d time with %d passive and %d active threads\n",
+> > +                       bench_repeat, enable_params.npassive, enable_params.nactive);
+> > +               printf(" %14s: %lu.%03lu [sec]\n\n", "Total time",
+> > +                       (long)diff.tv_sec, (long)(diff.tv_usec / USEC_PER_MSEC));
+> > +               result_usec = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+> > +               printf(" %14lf usecs/op\n", (double)result_usec / bench_repeat);
+> > +               break;
+> > +       case BENCH_FORMAT_SIMPLE:
+> > +               printf("%lu.%03lu\n", (long)diff.tv_sec, (long)(diff.tv_usec / USEC_PER_MSEC));
+> > +               break;
+> > +       default:
+> > +               fprintf(stderr, "Unknown format: %d\n", bench_format);
+> > +               exit(EXIT_FAILURE);
+> > +       }
+> > +       return 0;
+> > +}
+> > diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> > index d291f3a8af5f2..334ab897aae3b 100644
+> > --- a/tools/perf/builtin-bench.c
+> > +++ b/tools/perf/builtin-bench.c
+> > @@ -92,6 +92,13 @@ static struct bench internals_benchmarks[] = {
+> >         { NULL,         NULL,                                   NULL                    }
+> >  };
 > >
-> >   static const struct perf_pmu_test_event dispatch_blocked_any = {
-> >       .event = {
-> >               .name = "dispatch_blocked.any",
-> > -             .event = "umask=0x20,period=200000,event=0x9",
-> > +             .event = "event=0x9,period=200000,umask=0x20",
-> >               .desc = "Memory cluster signals to block micro-op dispatch for any reason",
-> >               .topic = "other",
-> >       },
-> > -     .alias_str = "umask=0x20,period=0x30d40,event=0x9",
-> > +     .alias_str = "event=0x9,period=0x30d40,umask=0x20",
-> >       .alias_long_desc = "Memory cluster signals to block micro-op dispatch for any reason",
-> >   };
+> > +static struct bench breakpoint_benchmarks[] = {
+> > +       { "thread", "Benchmark thread start/finish with breakpoints", bench_breakpoint_thread},
+> > +       { "enable", "Benchmark breakpoint enable/disable", bench_breakpoint_enable},
+> > +       { "all", "Run all breakpoint benchmarks", NULL},
+> > +       { NULL, NULL, NULL },
+> > +};
+> > +
+> >  struct collection {
+> >         const char      *name;
+> >         const char      *summary;
+> > @@ -110,6 +117,7 @@ static struct collection collections[] = {
+> >         {"epoll",       "Epoll stressing benchmarks",                   epoll_benchmarks        },
+> >  #endif
+> >         { "internals",  "Perf-internals benchmarks",                    internals_benchmarks    },
+> > +       { "breakpoint", "Breakpoint benchmarks",                        breakpoint_benchmarks   },
+> >         { "all",        "All benchmarks",                               NULL                    },
+> >         { NULL,         NULL,                                           NULL                    }
+> >  };
 > >
-> >   static const struct perf_pmu_test_event eist_trans = {
-> >       .event = {
-> >               .name = "eist_trans",
-> > -             .event = "umask=0x0,period=200000,event=0x3a",
-> > +             .event = "event=0x3a,period=200000,umask=0x0",
-> >               .desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
-> >               .topic = "other",
-> >       },
-> > -     .alias_str = "umask=0,period=0x30d40,event=0x3a",
-> > +     .alias_str = "event=0x3a,period=0x30d40,umask=0",
-> >       .alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
-> >   };
+> > base-commit: bd24325684029a48f20a188b899eb84900d0bc9c
+> > --
+> > 2.36.0.464.gb9c8b46e94-goog
 > >
-> > @@ -132,13 +132,13 @@ static const struct perf_pmu_test_event uncore_hisi_ddrc_flux_wcmd = {
-> >   static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
-> >       .event = {
-> >               .name = "unc_cbo_xsnp_response.miss_eviction",
-> > -             .event = "umask=0x81,event=0x22",
-> > +             .event = "event=0x22,umask=0x81",
-> >               .desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core. Unit: uncore_cbox ",
-> >               .topic = "uncore",
-> >               .long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
-> >               .pmu = "uncore_cbox",
-> >       },
-> > -     .alias_str = "umask=0x81,event=0x22",
-> > +     .alias_str = "event=0x22,umask=0x81",
-> >       .alias_long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
-> >       .matching_pmu = "uncore_cbox_0",
-> >   };
-> > @@ -146,13 +146,13 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
-> >   static const struct perf_pmu_test_event uncore_hyphen = {
-> >       .event = {
-> >               .name = "event-hyphen",
-> > -             .event = "umask=0x00,event=0xe0",
-> > +             .event = "event=0xe0,umask=0x00",
-> >               .desc = "UNC_CBO_HYPHEN. Unit: uncore_cbox ",
-> >               .topic = "uncore",
-> >               .long_desc = "UNC_CBO_HYPHEN",
-> >               .pmu = "uncore_cbox",
-> >       },
-> > -     .alias_str = "umask=0,event=0xe0",
-> > +     .alias_str = "event=0xe0,umask=0",
-> >       .alias_long_desc = "UNC_CBO_HYPHEN",
-> >       .matching_pmu = "uncore_cbox_0",
-> >   };
-> > @@ -160,13 +160,13 @@ static const struct perf_pmu_test_event uncore_hyphen = {
-> >   static const struct perf_pmu_test_event uncore_two_hyph = {
-> >       .event = {
-> >               .name = "event-two-hyph",
-> > -             .event = "umask=0x00,event=0xc0",
-> > +             .event = "event=0xc0,umask=0x00",
-> >               .desc = "UNC_CBO_TWO_HYPH. Unit: uncore_cbox ",
-> >               .topic = "uncore",
-> >               .long_desc = "UNC_CBO_TWO_HYPH",
-> >               .pmu = "uncore_cbox",
-> >       },
-> > -     .alias_str = "umask=0,event=0xc0",
-> > +     .alias_str = "event=0xc0,umask=0",
-> >       .alias_long_desc = "UNC_CBO_TWO_HYPH",
-> >       .matching_pmu = "uncore_cbox_0",
-> >   };
->
-> --
-> Zhengjun Xing
+
+-- 
+
+- Arnaldo
