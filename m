@@ -2,399 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4100BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 06:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876E5C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 08:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350153AbiELGNq convert rfc822-to-8bit (ORCPT
+        id S1351273AbiELIDR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 May 2022 02:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40698 "EHLO
+        Thu, 12 May 2022 04:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350189AbiELGNp (ORCPT
+        with ESMTP id S242321AbiELIDP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 May 2022 02:13:45 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26663102772;
-        Wed, 11 May 2022 23:13:44 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id e189so5262168oia.8;
-        Wed, 11 May 2022 23:13:44 -0700 (PDT)
+        Thu, 12 May 2022 04:03:15 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D479A2016CB
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 May 2022 01:03:13 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id v65so5485335oig.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 May 2022 01:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ow3N/Wt3SjcXP2XMyxq5Q92GuEvGsl/1ipojjcBl5+8=;
+        b=S1WtSL3bYyWs8HcGVZnIZ0MYBrIQB6thgqa2Nr6B9NSnnXspGr5wNa8llV9dvbFoCb
+         RDGPz9qzI/W0a8x7keH53oOK/fXQHp+cWXIlIxz2G1OauMh25+xmagfmsqllJlNF0Np4
+         kL8znIwyld7pa6aE+HxO64gT0sStjPa3pk3b6AX3zjyR8FJtmOmOsLKt0+urWblJjTqX
+         kTXBUE2DLHCxpXXV1Z3tJgaIaYGMsHFl2M5K4lSfT2YyyX7DvBS0D5zJ0p2cmuEguXDT
+         d2pONBe7tYaNDyns3NiDMYSneziSiVrma65fLIrZ1mg+S1CmjmHicuH1XcF/q1v1piIg
+         Bqfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IphMtluPUV077NPW9fGrQJ/ioqshojCJHF+7J59USws=;
-        b=hHqgQoWkE4nAlLp2a9wLZ17xgtDxD8ce4tPUM/kUe/SbbEXYHpXKDhFIY1gePH5rIg
-         FYRNF+kH8acv0+DNYKvdhrmDpcRaxlHHFU3Z0uWpgUhM5G9zZwAHAPJc+mjdob5UcT0a
-         MwFTThkMfHPiON31WDD6LmDkTR/4a+2BOZ+CcMsBWERmSCSg3Lqf6qWxOklW7kS1zh+i
-         oWtmNTO3d6UroPicelRGotyO9X++L5osgE1ZmiwlRHWWXLqE01MFhet0TQ5UwjlSmIjJ
-         MfsSWOJV4D17NfdMKU7oEFMHtWKxEKocYZKrOLetM8DiIV/ZE/pfkI5yHvY+ZVp5JFZ/
-         NrKg==
-X-Gm-Message-State: AOAM531vQmCAQhnIP5kNnWSxbK0mRxYFU3S6kc1R/IhjM2vJDwu6AMHt
-        4J3oE2P2tnMec0/o0qdT10zzMtZUYhE+Vc0aH34=
-X-Google-Smtp-Source: ABdhPJyA7TI+pfyx3yaWvxo/Xix9L9LjfEullFnK1Xse0argI2OAyw6dSGEtP4tzXetHvq6Wfweo3BpPgFiOC25Hhhs=
-X-Received: by 2002:a05:6808:2218:b0:326:bd8c:d044 with SMTP id
- bd24-20020a056808221800b00326bd8cd044mr4399366oib.92.1652336023390; Wed, 11
- May 2022 23:13:43 -0700 (PDT)
+        bh=Ow3N/Wt3SjcXP2XMyxq5Q92GuEvGsl/1ipojjcBl5+8=;
+        b=pbbNljbIZt5zMO2QcwtVN69tzEmUQo9XSh/P32WgyfKvOGgUQaD4tr+7AHi7BKlV37
+         LxaMzE/UEVOULEiy8pcBBM/L5DdYikLEvY8/MTAn2cwiRlNAW9qqKGYvIgJiUoOPBMrQ
+         fqS68UKOLdHbVYHEREeK007T9uwJaHTIQWnT7aIL3L636qO1esHvrTaWkZ1CLISGMwCB
+         tXq8G8BB/IXzYVXdqgy4AjQhmfI7gkvK2mGcsjijhS7419OoFBUTTvAfaofqiCACTOI2
+         mWtZB1yud+qN0unKgOj/ikChTpQccQ7XvSelnqGsh/ogdpsbNUDzTs1F/ot10S6eMtNB
+         uCfA==
+X-Gm-Message-State: AOAM533mOQrkLS1d89+ANQA53lTaCbYT0fyk7bK8hga7gxhGsJ96Moyr
+        0dcS7CVmxdg43lrmzI9yUIIM9BrEQrXN2jaG/fJOMw==
+X-Google-Smtp-Source: ABdhPJxxyn4CuW2shuA+dA8BmKhULsK5X1UjrwEngz4hZeTipgbkYH5ob75IqgwtRmfTpGVUe7f8mgkHfT1WhGFP0ss=
+X-Received: by 2002:a05:6808:a93:b0:326:4a90:5e2a with SMTP id
+ q19-20020a0568080a9300b003264a905e2amr4511379oij.211.1652342592843; Thu, 12
+ May 2022 01:03:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220506201627.85598-1-namhyung@kernel.org> <20220506201627.85598-3-namhyung@kernel.org>
- <YnqauukLMUqfv15K@kernel.org>
-In-Reply-To: <YnqauukLMUqfv15K@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 11 May 2022 23:13:32 -0700
-Message-ID: <CAM9d7cie0UpnpQG6AhsXYE8gowkfa4LpDF88Vh8MemjO-3fmug@mail.gmail.com>
-Subject: Re: [PATCH 2/4] perf record: Enable off-cpu analysis with BPF
+References: <20220505155745.1690906-1-dvyukov@google.com> <CAP-5=fVDs-AQvhXbZM9ksRqMdfS00Mpn8LDRZUppJb76TCkrAg@mail.gmail.com>
+ <Ynv7gkbBVd9dlJRh@kernel.org> <Ynv9mm4w9YfEU5j8@kernel.org>
+In-Reply-To: <Ynv9mm4w9YfEU5j8@kernel.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 12 May 2022 10:03:01 +0200
+Message-ID: <CACT4Y+YQ==eY6B264Sdugf-RH8EOtywzD=4qLxwcYkJfSXT21Q@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf: add breakpoint benchmarks
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
+Cc:     Ian Rogers <irogers@google.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, elver@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 10, 2022 at 10:02 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, May 06, 2022 at 01:16:25PM -0700, Namhyung Kim escreveu:
-[SNIP]
-> > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> > index 465be4e62a17..8084e3fb73a1 100644
-> > --- a/tools/perf/Documentation/perf-record.txt
-> > +++ b/tools/perf/Documentation/perf-record.txt
-> > @@ -758,6 +758,16 @@ include::intel-hybrid.txt[]
-> >       If the URLs is not specified, the value of DEBUGINFOD_URLS
-> >       system environment variable is used.
+On Wed, 11 May 2022 at 20:17, Arnaldo Carvalho de Melo <acme@kernel.org> wr=
+ote:
+> > >
+> > > Acked-by: Ian Rogers <irogers@google.com>
 > >
-> > +--off-cpu::
-> > +     Enable off-cpu profiling with BPF.  The BPF program will collect
-> > +     task scheduling information with (user) stacktrace and save them
-> > +     as sample data of a software event named "offcpu-time".  The
-> > +     sample period will have the time the task slept in nano-second.
+> > Thanks, applied.
 >
->                                                         nanoseconds.
+> But I'll add some error checks, etc, running as !root, in a toolbox in
+> Fedora Silverblue produces:
 
-ok
+Thanks!
 
-> > +
-> > +     Note that BPF can collect stacktrace using frame pointer ("fp")
+> =E2=AC=A2[acme@toolbox perf]$ perf bench breakpoint all
+> # Running breakpoint/thread benchmark...
+> # Created/joined 10 threads with 1 breakpoints and 1 parallelism
+>      Total time: 0.000 [sec]
 >
->                                 stack traces
-
-ok
-
+>       54.600000 usecs/op
+>       54.600000 usecs/op/cpu
 >
-> > +     only, as of now.  So the applications built without the frame
-> > +     pointer might see bogus addresses.
+> # Running breakpoint/enable benchmark...
+> # Enabled/disabled breakpoint 10 time with 0 passive and 0 active threads
+>      Total time: 0.000 [sec]
 >
-> One possible improvement is to check if debugging info is available in
-> the traced program and check if -fnoomit-frame-pointer is present:
+>        1.100000 usecs/op
 >
-> ⬢[acme@toolbox perf]$ readelf -wi ~/bin/perf | grep DW_AT_producer -m1
->     <d>   DW_AT_producer    : (indirect string, offset: 0x6627): GNU C99 11.2.1 20220127 (Red Hat 11.2.1-9) -mtune=generic -march=x86-64 -ggdb3 -O6 -std=gnu99 -fno-omit-frame-pointer -funwind-tables -fstack-protector-all
-> ⬢[acme@toolbox perf]$
+> =E2=AC=A2[acme@toolbox perf]$
 >
-> If debugging info is available and -fno-omit-frame-pointer isn't in the
-> DW_AT_producer string, then we can print a flashing warning and even
-> don't use the stack traces.
-
-Yeah, but checking the binary only would not be enough as it will
-call other libraries.  Also the libc would be the most frequent user of
-any sleeping syscalls, I guess.
-
+> =E2=AC=A2[acme@toolbox perf]$ perf bench --repeat=3D20000 breakpoint enab=
+le --passive=3D224 --active=3D0
+> # Running 'breakpoint/enable' benchmark:
+> # Enabled/disabled breakpoint 20000 time with 224 passive and 0 active th=
+reads
+>      Total time: 8.933 [sec]
 >
-> That or some other more robust method to detect that frame pointers are
-> valid.
+>      446.674950 usecs/op
+> =E2=AC=A2[acme@toolbox perf]$
 >
-> Some more comments below.
+> $ grep -m1 "model name" /proc/cpuinfo
+> model name      : AMD Ryzen 9 5950X 16-Core Processor
 >
-> > +
-> >  SEE ALSO
-> >  --------
-> >  linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index 6e5aded855cc..8f738e11356d 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -1038,6 +1038,7 @@ SKEL_TMP_OUT := $(abspath $(SKEL_OUT)/.tmp)
-> >  SKELETONS := $(SKEL_OUT)/bpf_prog_profiler.skel.h
-> >  SKELETONS += $(SKEL_OUT)/bperf_leader.skel.h $(SKEL_OUT)/bperf_follower.skel.h
-> >  SKELETONS += $(SKEL_OUT)/bperf_cgroup.skel.h $(SKEL_OUT)/func_latency.skel.h
-> > +SKELETONS += $(SKEL_OUT)/off_cpu.skel.h
-> >
-> >  $(SKEL_TMP_OUT) $(LIBBPF_OUTPUT):
-> >       $(Q)$(MKDIR) -p $@
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index a5cf6a99d67f..4e0285ca9a2d 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -49,6 +49,7 @@
-> >  #include "util/clockid.h"
-> >  #include "util/pmu-hybrid.h"
-> >  #include "util/evlist-hybrid.h"
-> > +#include "util/off_cpu.h"
-> >  #include "asm/bug.h"
-> >  #include "perf.h"
-> >  #include "cputopo.h"
-> > @@ -162,6 +163,7 @@ struct record {
-> >       bool                    buildid_mmap;
-> >       bool                    timestamp_filename;
-> >       bool                    timestamp_boundary;
-> > +     bool                    off_cpu;
-> >       struct switch_output    switch_output;
-> >       unsigned long long      samples;
-> >       unsigned long           output_max_size;        /* = 0: unlimited */
-> > @@ -903,6 +905,11 @@ static int record__config_text_poke(struct evlist *evlist)
-> >       return 0;
-> >  }
-> >
-> > +static int record__config_off_cpu(struct record *rec)
-> > +{
-> > +     return off_cpu_prepare(rec->evlist);
-> > +}
-> > +
-> >  static bool record__kcore_readable(struct machine *machine)
-> >  {
-> >       char kcore[PATH_MAX];
-> > @@ -2600,6 +2607,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
-> >       } else
-> >               status = err;
-> >
-> > +     if (rec->off_cpu)
-> > +             rec->bytes_written += off_cpu_write(rec->session);
-> > +
-> >       record__synthesize(rec, true);
-> >       /* this will be recalculated during process_buildids() */
-> >       rec->samples = 0;
-> > @@ -3324,6 +3334,9 @@ static struct option __record_options[] = {
-> >       OPT_CALLBACK_OPTARG(0, "threads", &record.opts, NULL, "spec",
-> >                           "write collected trace data into several data files using parallel threads",
-> >                           record__parse_threads),
-> > +#ifdef HAVE_BPF_SKEL
-> > +     OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
-> > +#endif
+> Diff:
 >
+> diff --git a/tools/perf/bench/breakpoint.c b/tools/perf/bench/breakpoint.=
+c
+> index 56936fea246d73c2..d2c074bba06a3d1f 100644
+> --- a/tools/perf/bench/breakpoint.c
+> +++ b/tools/perf/bench/breakpoint.c
+> @@ -83,6 +83,9 @@ static void *breakpoint_thread(void *arg)
+>         pthread_t *threads;
 >
-> Since this is in the documentation, I think we should have an #else
-> clause and state that --off-cpu needs building with some specific make
-> command line.
-
-I'd rather remove the #ifdef here and put it after parse_options
-to show the warning.
-
->
-> >       OPT_END()
-> >  };
-> >
-> > @@ -3981,6 +3994,14 @@ int cmd_record(int argc, const char **argv)
-> >               }
-> >       }
-> >
-> > +     if (rec->off_cpu) {
-> > +             err = record__config_off_cpu(rec);
-> > +             if (err) {
-> > +                     pr_err("record__config_off_cpu failed, error %d\n", err);
-> > +                     goto out;
-> > +             }
-> > +     }
-> > +
-> >       if (record_opts__config(&rec->opts)) {
-> >               err = -EINVAL;
-> >               goto out;
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 9a7209a99e16..a51267d88ca9 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -147,6 +147,7 @@ perf-$(CONFIG_LIBBPF) += bpf_map.o
-> >  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
-> >  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter_cgroup.o
-> >  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_ftrace.o
-> > +perf-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
-> >  perf-$(CONFIG_BPF_PROLOGUE) += bpf-prologue.o
-> >  perf-$(CONFIG_LIBELF) += symbol-elf.o
-> >  perf-$(CONFIG_LIBELF) += probe-file.o
-> > diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-> > new file mode 100644
-> > index 000000000000..1f87d2a9b86d
-> > --- /dev/null
-> > +++ b/tools/perf/util/bpf_off_cpu.c
-> > @@ -0,0 +1,208 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include "util/bpf_counter.h"
-> > +#include "util/debug.h"
-> > +#include "util/evsel.h"
-> > +#include "util/evlist.h"
-> > +#include "util/off_cpu.h"
-> > +#include "util/perf-hooks.h"
-> > +#include "util/session.h"
-> > +#include <bpf/bpf.h>
-> > +
-> > +#include "bpf_skel/off_cpu.skel.h"
-> > +
-> > +#define MAX_STACKS  32
-> > +/* we don't need actual timestamp, just want to put the samples at last */
-> > +#define OFF_CPU_TIMESTAMP  (~0ull << 32)
-> > +
-> > +static struct off_cpu_bpf *skel;
-> > +
-> > +struct off_cpu_key {
-> > +     u32 pid;
-> > +     u32 tgid;
-> > +     u32 stack_id;
-> > +     u32 state;
-> > +     u64 cgroup_id;
-> > +};
-> > +
-> > +union off_cpu_data {
-> > +     struct perf_event_header hdr;
-> > +     u64 array[1024 / sizeof(u64)];
-> > +};
-> > +
-> > +static int off_cpu_config(struct evlist *evlist)
-> > +{
-> > +     struct evsel *evsel;
-> > +     struct perf_event_attr attr = {
-> > +             .type   = PERF_TYPE_SOFTWARE,
-> > +             .config = PERF_COUNT_SW_BPF_OUTPUT,
-> > +             .size   = sizeof(attr), /* to capture ABI version */
-> > +     };
-> > +
-> > +     evsel = evsel__new(&attr);
-> > +     if (!evsel)
-> > +             return -ENOMEM;
-> > +
-> > +     evsel->core.attr.freq = 1;
-> > +     evsel->core.attr.sample_period = 1;
-> > +     /* off-cpu analysis depends on stack trace */
-> > +     evsel->core.attr.sample_type = PERF_SAMPLE_CALLCHAIN;
-> > +
-> > +     evlist__add(evlist, evsel);
-> > +
-> > +     free(evsel->name);
-> > +     evsel->name = strdup("offcpu-time");
-> > +     if (evsel->name == NULL)
-> > +             return -ENOMEM;
->
-> But at this point the evsel was left in the evlist? Shouldn't we start
-> it all by trying to allocate this string and don't bother to call
-> evsel__new() on failure, etc?
-
-Sounds good, will change.
-
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void off_cpu_start(void *arg __maybe_unused)
-> > +{
-> > +     skel->bss->enabled = 1;
-> > +}
-> > +
-> > +static void off_cpu_finish(void *arg __maybe_unused)
-> > +{
-> > +     skel->bss->enabled = 0;
-> > +     off_cpu_bpf__destroy(skel);
-> > +}
-> > +
-> > +int off_cpu_prepare(struct evlist *evlist)
-> > +{
-> > +     int err;
-> > +
-> > +     if (off_cpu_config(evlist) < 0) {
-> > +             pr_err("Failed to config off-cpu BPF event\n");
-> > +             return -1;
-> > +     }
-> > +
-> > +     set_max_rlimit();
-> > +
-> > +     skel = off_cpu_bpf__open_and_load();
-> > +     if (!skel) {
-> > +             pr_err("Failed to open off-cpu skeleton\n");
->
-> "BPF sleketon", to give a bit more context to users?
-
-ok
-
->
-> > +             return -1;
-> > +     }
-> > +
-> > +     err = off_cpu_bpf__attach(skel);
-> > +     if (err) {
-> > +             pr_err("Failed to attach off-cpu skeleton\n");
->
-> Ditto.
-
-ok
-
->
-> > +             goto out;
-> > +     }
-> > +
-> > +     if (perf_hooks__set_hook("record_start", off_cpu_start, NULL) ||
-> > +         perf_hooks__set_hook("record_end", off_cpu_finish, NULL)) {
-> > +             pr_err("Failed to attach off-cpu skeleton\n");
-> > +             goto out;
-> > +     }
-> > +
-> > +     return 0;
-> > +
-> > +out:
-> > +     off_cpu_bpf__destroy(skel);
-> > +     return -1;
-> > +}
-> > +
-> > +int off_cpu_write(struct perf_session *session)
-> > +{
-> > +     int bytes = 0, size;
-> > +     int fd, stack;
-> > +     bool found = false;
-> > +     u64 sample_type, val, sid = 0;
-> > +     struct evsel *evsel;
-> > +     struct perf_data_file *file = &session->data->file;
-> > +     struct off_cpu_key prev, key;
-> > +     union off_cpu_data data = {
-> > +             .hdr = {
-> > +                     .type = PERF_RECORD_SAMPLE,
-> > +                     .misc = PERF_RECORD_MISC_USER,
-> > +             },
-> > +     };
-> > +     u64 tstamp = OFF_CPU_TIMESTAMP;
-> > +
-> > +     skel->bss->enabled = 0;
-> > +
-> > +     evlist__for_each_entry(session->evlist, evsel) {
-> > +             if (!strcmp(evsel__name(evsel), "offcpu-time")) {
-> > +                     found = true;
-> > +                     break;
-> > +             }
-> > +     }
->
-> Don't we have some evlist__find_evsel function?
->
-> struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str)
-> {
->         struct evsel *evsel;
->
->         evlist__for_each_entry(evlist, evsel) {
->                 if (!evsel->name)
->                         continue;
->                 if (strcmp(str, evsel->name) == 0)
->                         return evsel;
+>         threads =3D calloc(thread_params.nthreads, sizeof(threads[0]));
+> +       if (!threads)
+> +               exit((perror("calloc"), EXIT_FAILURE));
+> +
+>         while (__atomic_fetch_sub(repeat, 1, __ATOMIC_RELAXED) > 0) {
+>                 done =3D 0;
+>                 for (i =3D 0; i < thread_params.nthreads; i++) {
+> @@ -114,6 +117,9 @@ int bench_breakpoint_thread(int argc, const char **ar=
+gv)
 >         }
->
->         return NULL;
-> }
-
-Nice, I'll use it instead.
-
-Thanks for your review!
-Namhyung
+>         breakpoints =3D calloc(thread_params.nbreakpoints, sizeof(breakpo=
+ints[0]));
+>         parallel =3D calloc(thread_params.nparallel, sizeof(parallel[0]))=
+;
+> +       if (!breakpoints || !parallel)
+> +               exit((perror("calloc"), EXIT_FAILURE));
+> +
+>         for (i =3D 0; i < thread_params.nbreakpoints; i++) {
+>                 breakpoints[i].fd =3D breakpoint_setup(&breakpoints[i].wa=
+tched);
+>                 if (breakpoints[i].fd =3D=3D -1)
+> @@ -194,6 +200,9 @@ int bench_breakpoint_enable(int argc, const char **ar=
+gv)
+>                 exit((perror("perf_event_open"), EXIT_FAILURE));
+>         nthreads =3D enable_params.npassive + enable_params.nactive;
+>         threads =3D calloc(nthreads, sizeof(threads[0]));
+> +       if (!threads)
+> +               exit((perror("calloc"), EXIT_FAILURE));
+> +
+>         for (i =3D 0; i < nthreads; i++) {
+>                 if (pthread_create(&threads[i], NULL,
+>                         i < enable_params.npassive ? passive_thread : act=
+ive_thread, &done))
