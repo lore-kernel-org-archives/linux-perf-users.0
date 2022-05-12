@@ -2,136 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E6AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 01:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF5BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 04:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349818AbiELBPd (ORCPT
+        id S1348279AbiELErn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 21:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46962 "EHLO
+        Thu, 12 May 2022 00:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349816AbiELBPc (ORCPT
+        with ESMTP id S1348152AbiELErL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 21:15:32 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163AF76283
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 18:15:30 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id n126-20020a1c2784000000b0038e8af3e788so2146940wmn.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 18:15:30 -0700 (PDT)
+        Thu, 12 May 2022 00:47:11 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 065762A72A
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 21:47:10 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id a19so3359068pgw.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 21:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y2A0EBKn71mKby0gJZVmQ9LYT/Q3ibTennNPxPhFKz4=;
-        b=BhsNfnjMuykg2rURTpjphNVbp0mbBupv+C7OqP7Vj4RURQ0i0JS2M2qvTXYveHfc9d
-         REq3DhhkgUB7dMO61c3hXm8NYbNFkFHOhMWjZqw5UFpRUm9Hvd6FV0aehpWYcuml7zeK
-         agQ7uygQ8AllM7IIHh+de0M7Cv+1Na5rTv0GCbqiMT02HwRhJk+HOXZBZXTvh5Y7zKY3
-         YW9W7+qVpS3VSfuD85xgCSXipgQBL1jkHeroBTmPMclUVY30U4NYPXnAZtOkjtFZEB3E
-         UgkT9ioKvvWRKBcTsbvPBLwo22PqFYXLdQBCU1N2irg4Aa8zDBbNt0+5oBMbk4RRZvrN
-         8yPQ==
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/pTgPhGOi/9d6Q/oqwaxhfFkmjeH4PVid+OZ0dZHdSw=;
+        b=HvhsyDv1TuH2yCE9PXc22mXXi4RP3ENuXk44vilMbhfXZAh3usDN+q7UYC4Qg+hkbD
+         ZW2CKXaScrpCanbEd7qxTPf1kXPgl9QX8PbgfaG4a5jGRByg/9RvP66UvSti/F/eerne
+         9zZlmrit2DsqjneYnmSf5DYy2mgQT4UVh++EH5K5BS7KJ8FBUg++vX3SFWV0debV1ZGZ
+         hQulKyeZYRi6+uBqZiVSot2SpRBP/ubpK3I7T7r3VT5dOzEHe1FjUbIYr5VsapkkoWXL
+         XKFqIcpMeCvJy5i5+IKJlG02P/U1Fg7p5E8+zKZGAkfwuK2GfX+G3gQbW7uvquoMjGln
+         ZY5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y2A0EBKn71mKby0gJZVmQ9LYT/Q3ibTennNPxPhFKz4=;
-        b=RmcXk13bmO11gfP4lI+miBoXOVtit901H6dbUhYRmYEi3SToI7EJqyICRsM5+mWF3S
-         R2lKgJsD9pmsBVU3qVdeNMRegZsIc47rwueyKHNGNuo2ExMyO58DabKbAC20G1Ts0wlt
-         Pu8yFsWdAexF6OxVev8fpbxDnAOPalIZumf1vnRY97m41Eq1HsPbp2nFwb4INz1e+Ll3
-         mOzChrLGNtP9QWm2RLivRlg6ckjGwWSzHDXFdXPWJLm45E5t0YUdVz6GZt7ICQbnnRMa
-         lU6PB58FJCeyWnjEPGWk2vkPfUbeO4wpxA080JNfNJ564hgIEYl4xIjn8kjwryCohYuI
-         ee5Q==
-X-Gm-Message-State: AOAM531tf2+4MGEyISGReF3lc5dkXQLB8KNVLujJ/I4puVqbqjAAqgzg
-        qB23E4r8zXR8hsT73rx7yXRKDbhG1XhcsDnQOlU9Yg==
-X-Google-Smtp-Source: ABdhPJy7UDUuVaNfoFpYjbdNMJfbbAZ8dx+pDby5a3aABdQb9g97tsYsKyiDviy1vULG5cN2+2xA9htqI5Kf602Ppt0=
-X-Received: by 2002:a1c:19c1:0:b0:393:a19f:8f95 with SMTP id
- 184-20020a1c19c1000000b00393a19f8f95mr7508353wmz.149.1652318128439; Wed, 11
- May 2022 18:15:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220511211526.1021908-1-irogers@google.com> <20220511211526.1021908-6-irogers@google.com>
- <96ad6825-7607-92ef-566c-3e7a54c397bb@linux.intel.com>
-In-Reply-To: <96ad6825-7607-92ef-566c-3e7a54c397bb@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 11 May 2022 18:15:13 -0700
-Message-ID: <CAP-5=fWRRZsyJZ-gky-FOFz79zW_3r78d_0APpj5sf66HqTpLw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] perf jevents: Add python converter script
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
-        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/pTgPhGOi/9d6Q/oqwaxhfFkmjeH4PVid+OZ0dZHdSw=;
+        b=TUZo3ZLSpTj8CioBOwTddjJQOsp7ngJVz01kek8+Mb6nPfxJNhJYwXSGEhPL8RpU/U
+         PbQXudo8KfTvHZNK9tjTP8DtaIjDMJ5wg063ZFB0WlOJn3indQeQOC6gKfKVF/lkYVyZ
+         yySLFq0Z2WcRiiqruPdTj69xoySlWrBUatK+1C/koftWOL8c6NL6LT3EQOzTZkcVznFH
+         QJEvumCXsB96BxBoK+cIxvRx8dQcN9IuLxoZhbM62rR0lA2PsF9InfbYR0Rcrh79x6ik
+         cbcM5KmOhaGskSfW3wqq63BnG584itQxBfaDw+iPtZZc6Ff52vWsWGIC6lH+TbOvfw3t
+         NnMA==
+X-Gm-Message-State: AOAM5316i6P/BPrv+0s4Ux1b0DvDJZPkhPUQ97PlH1YUXYovFXtlPasr
+        dtGj5AEXbRi5mLK+vuB2a1V4Ng==
+X-Google-Smtp-Source: ABdhPJxVJxgprVu7WxtZqidhH+r8VEa6XOk7al5eXrOJrdSve9mLiQ3pEAj3JyiqY7GAMCjs7fxFtg==
+X-Received: by 2002:a63:d842:0:b0:3c6:ab6b:5f3c with SMTP id k2-20020a63d842000000b003c6ab6b5f3cmr16180665pgj.148.1652330829556;
+        Wed, 11 May 2022 21:47:09 -0700 (PDT)
+Received: from localhost.localdomain ([139.177.225.253])
+        by smtp.gmail.com with ESMTPSA id 5-20020a170902e9c500b0015edc07dcf3sm2790824plk.21.2022.05.11.21.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 May 2022 21:47:08 -0700 (PDT)
+From:   Gang Li <ligang.bdlg@bytedance.com>
+To:     akpm@linux-foundation.org
+Cc:     songmuchun@bytedance.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ebiederm@xmission.com, keescook@chromium.org,
+        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
+        apopple@nvidia.com, adobriyan@gmail.com,
+        stephen.s.brennan@oracle.com, ohoono.kwon@samsung.com,
+        haolee.swjtu@gmail.com, kaleshsingh@google.com,
+        zhengqi.arch@bytedance.com, peterx@redhat.com, shy828301@gmail.com,
+        surenb@google.com, ccross@google.com, vincent.whitchurch@axis.com,
+        tglx@linutronix.de, bigeasy@linutronix.de, fenghua.yu@intel.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com, sandipan.das@amd.com,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Gang Li <ligang.bdlg@bytedance.com>
+Subject: [PATCH 0/5 v1] mm, oom: Introduce per numa node oom for CONSTRAINT_MEMORY_POLICY
+Date:   Thu, 12 May 2022 12:46:29 +0800
+Message-Id: <20220512044634.63586-1-ligang.bdlg@bytedance.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 11, 2022 at 2:47 PM Andi Kleen <ak@linux.intel.com> wrote:
->
->
-> On 5/11/2022 2:15 PM, Ian Rogers wrote:
-> > jevents.c is large, has a dependency on an old forked version of jsmn,
-> > and is challenging to work upon. A lot of jevents.c's complexity comes
-> > from needing to write json and csv parsing from first principles. In
-> > contrast python has this functionality in standard libraries and is
-> > already a build pre-requisite for tools like asciidoc (that builds all
-> > of the perf man pages).
->
->
-> Well I was still hoping at some point we could have run time loading of
-> events. But yes if that's not
->
-> happening then this probably the right approach.
+TLDR:
+If a mempolicy is in effect(oc->constraint == CONSTRAINT_MEMORY_POLICY), out_of_memory() will
+select victim on specific node to kill. So that kernel can avoid accidental killing on NUMA system.
 
-Thanks Andi, some thinking out loud below:
+Problem:
+Before this patch series, oom will only kill the process with the highest memory usage.
+by selecting process with the highest oom_badness on the entire system to kill.
 
-The perf tool already discovers events from sysfs, so could we have
-runtime loading by turning the sysfs mount point into a list of
-directories?
+This works fine on UMA system, but may have some accidental killing on NUMA system.
 
-I'm thinking that for consistency the jevents API inside of the perf
-code should look more like sysfs. There's then a question of how we
-resolve events, perhaps we can have a config value something like
-"sysfs,runtime=/home/me/my-events,jevents" where we treat the list as
-setting up something like a unionfs in the tool. So if you ask for
-instructions.retired, the tool would first check sysfs, then any
-runtime events specified sysfs like directories, then jevents (or a
-different order if you set a different config value). If the event is
-defined more than once for the same PMU then the ordering says which
-one has priority. If a PMU isn't specified for an event then we search
-all PMUs and for jevents you'd only see PMUs relevant to the cpuid(s).
+As shown below, if process c.out is bind to Node1 and keep allocating pages from Node1,
+a.out will be killed first. But killing a.out did't free any mem on Node1, so c.out
+will be killed then.
 
-I'm hoping something like this will allow hybrid to work without all
-the "if...hybrid" code that's getting added, and with a behavior
-that's obvious and will allow us to debug errors. Maybe a runtime
-sysfs like directory implies too many files so we could make a json
-file to replace that directory, or use a zip file, etc. I'd prefer it
-if the mappings were as 1-to-1 as possible (ie have a new json format
-whose structure matches sysfs) and so I wouldn't like to use the
-current jevents.c code for it.
+A lot of our AMD machines have 8 numa nodes. In these systems, there is a greater chance
+of triggering this problem.
 
-Thanks,
-Ian
+OOM before patches:
+```
+Per-node process memory usage (in MBs)
+PID             Node 0        Node 1      Total
+----------- ---------- ------------- ----------
+3095 a.out     3073.34          0.11    3073.45(Killed first. Maximum memory consumption)
+3199 b.out      501.35       1500.00    2001.35
+3805 c.out        1.52 (grow)2248.00    2249.52(Killed then. Node1 is full)
+----------- ---------- ------------- ----------
+Total          3576.21       3748.11    7324.31
+```
 
-> -Andi
->
->
+Solution:
+We store per node rss in mm_rss_stat for each process.
+
+If a page allocation with mempolicy in effect(oc->constraint == CONSTRAINT_MEMORY_POLICY)
+triger oom. We will calculate oom_badness with rss counter for the corresponding node. Then
+select the process with the highest oom_badness on the corresponding node to kill.
+
+OOM after patches:
+```
+Per-node process memory usage (in MBs)
+PID             Node 0        Node 1     Total
+----------- ---------- ------------- ----------
+3095 a.out     3073.34          0.11    3073.45
+3199 b.out      501.35       1500.00    2001.35
+3805 c.out        1.52 (grow)2248.00    2249.52(killed)
+----------- ---------- ------------- ----------
+Total          3576.21       3748.11    7324.31
+```
+
+Gang Li (5):
+  mm: add a new parameter `node` to `get/add/inc/dec_mm_counter`
+  mm: add numa_count field for rss_stat
+  mm: add numa fields for tracepoint rss_stat
+  mm: enable per numa node rss_stat count
+  mm, oom: enable per numa node oom for CONSTRAINT_MEMORY_POLICY
+
+ arch/s390/mm/pgtable.c        |   4 +-
+ fs/exec.c                     |   2 +-
+ fs/proc/base.c                |   6 +-
+ fs/proc/task_mmu.c            |  14 ++--
+ include/linux/mm.h            |  59 ++++++++++++-----
+ include/linux/mm_types_task.h |  16 +++++
+ include/linux/oom.h           |   2 +-
+ include/trace/events/kmem.h   |  27 ++++++--
+ kernel/events/uprobes.c       |   6 +-
+ kernel/fork.c                 |  70 +++++++++++++++++++-
+ mm/huge_memory.c              |  13 ++--
+ mm/khugepaged.c               |   4 +-
+ mm/ksm.c                      |   2 +-
+ mm/madvise.c                  |   2 +-
+ mm/memory.c                   | 116 ++++++++++++++++++++++++----------
+ mm/migrate.c                  |   2 +
+ mm/migrate_device.c           |   2 +-
+ mm/oom_kill.c                 |  59 ++++++++++++-----
+ mm/rmap.c                     |  16 ++---
+ mm/swapfile.c                 |   4 +-
+ mm/userfaultfd.c              |   2 +-
+ 21 files changed, 317 insertions(+), 111 deletions(-)
+
+-- 
+2.20.1
+
