@@ -2,51 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCD1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 May 2022 21:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E6AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 01:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233530AbiEKVrb (ORCPT
+        id S1349818AbiELBPd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 May 2022 17:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51900 "EHLO
+        Wed, 11 May 2022 21:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232214AbiEKVra (ORCPT
+        with ESMTP id S1349816AbiELBPc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 May 2022 17:47:30 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EDC2286F3;
-        Wed, 11 May 2022 14:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652305649; x=1683841649;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K5vUYX7cPworJBAWBFM83vOSyWXHdl4K9zNHAtvVvDI=;
-  b=QTdDc/sNEhHY4m7vFFOpM9uyOKll4nqK9JpqvS+Gx3I33A0RogtgCyH8
-   hxLxeGMyExisGfF81KxOwONn0W8XexAii6+Vvh8JxNj2PPE891sJEnn+R
-   4tAYcq0yhfnlIlnpxlyfHwcKEE+IwpIdnN+nTGs9zl2MbI8ykpfMSn9Wn
-   fl/SQs5ur3O6dPypsZ/27I3LtpNfFDOFhRCWoMFLHY6Yg3yVCjW8Mn4kc
-   urVBnMpumiBI+uOGfv/n2FZZpInns9OennrRsevh0q3uubVuupfwHjvw2
-   l2hQeYEVeQvPw/dfnp8Q0Waeng+ZrcgIMupklArWOawHLpYNLUvJKCa/X
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="269493744"
-X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="269493744"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 14:47:28 -0700
-X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="636586943"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.212.146.202]) ([10.212.146.202])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 14:47:26 -0700
-Message-ID: <96ad6825-7607-92ef-566c-3e7a54c397bb@linux.intel.com>
-Date:   Wed, 11 May 2022 14:47:22 -0700
+        Wed, 11 May 2022 21:15:32 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163AF76283
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 18:15:30 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id n126-20020a1c2784000000b0038e8af3e788so2146940wmn.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 18:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y2A0EBKn71mKby0gJZVmQ9LYT/Q3ibTennNPxPhFKz4=;
+        b=BhsNfnjMuykg2rURTpjphNVbp0mbBupv+C7OqP7Vj4RURQ0i0JS2M2qvTXYveHfc9d
+         REq3DhhkgUB7dMO61c3hXm8NYbNFkFHOhMWjZqw5UFpRUm9Hvd6FV0aehpWYcuml7zeK
+         agQ7uygQ8AllM7IIHh+de0M7Cv+1Na5rTv0GCbqiMT02HwRhJk+HOXZBZXTvh5Y7zKY3
+         YW9W7+qVpS3VSfuD85xgCSXipgQBL1jkHeroBTmPMclUVY30U4NYPXnAZtOkjtFZEB3E
+         UgkT9ioKvvWRKBcTsbvPBLwo22PqFYXLdQBCU1N2irg4Aa8zDBbNt0+5oBMbk4RRZvrN
+         8yPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y2A0EBKn71mKby0gJZVmQ9LYT/Q3ibTennNPxPhFKz4=;
+        b=RmcXk13bmO11gfP4lI+miBoXOVtit901H6dbUhYRmYEi3SToI7EJqyICRsM5+mWF3S
+         R2lKgJsD9pmsBVU3qVdeNMRegZsIc47rwueyKHNGNuo2ExMyO58DabKbAC20G1Ts0wlt
+         Pu8yFsWdAexF6OxVev8fpbxDnAOPalIZumf1vnRY97m41Eq1HsPbp2nFwb4INz1e+Ll3
+         mOzChrLGNtP9QWm2RLivRlg6ckjGwWSzHDXFdXPWJLm45E5t0YUdVz6GZt7ICQbnnRMa
+         lU6PB58FJCeyWnjEPGWk2vkPfUbeO4wpxA080JNfNJ564hgIEYl4xIjn8kjwryCohYuI
+         ee5Q==
+X-Gm-Message-State: AOAM531tf2+4MGEyISGReF3lc5dkXQLB8KNVLujJ/I4puVqbqjAAqgzg
+        qB23E4r8zXR8hsT73rx7yXRKDbhG1XhcsDnQOlU9Yg==
+X-Google-Smtp-Source: ABdhPJy7UDUuVaNfoFpYjbdNMJfbbAZ8dx+pDby5a3aABdQb9g97tsYsKyiDviy1vULG5cN2+2xA9htqI5Kf602Ppt0=
+X-Received: by 2002:a1c:19c1:0:b0:393:a19f:8f95 with SMTP id
+ 184-20020a1c19c1000000b00393a19f8f95mr7508353wmz.149.1652318128439; Wed, 11
+ May 2022 18:15:28 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
+References: <20220511211526.1021908-1-irogers@google.com> <20220511211526.1021908-6-irogers@google.com>
+ <96ad6825-7607-92ef-566c-3e7a54c397bb@linux.intel.com>
+In-Reply-To: <96ad6825-7607-92ef-566c-3e7a54c397bb@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 11 May 2022 18:15:13 -0700
+Message-ID: <CAP-5=fWRRZsyJZ-gky-FOFz79zW_3r78d_0APpj5sf66HqTpLw@mail.gmail.com>
 Subject: Re: [PATCH v2 5/7] perf jevents: Add python converter script
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -69,33 +78,60 @@ To:     Ian Rogers <irogers@google.com>,
         santosh.shukla@amd.com, sandipan.das@amd.com,
         Caleb Biggers <caleb.biggers@intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220511211526.1021908-1-irogers@google.com>
- <20220511211526.1021908-6-irogers@google.com>
-From:   Andi Kleen <ak@linux.intel.com>
-In-Reply-To: <20220511211526.1021908-6-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, May 11, 2022 at 2:47 PM Andi Kleen <ak@linux.intel.com> wrote:
+>
+>
+> On 5/11/2022 2:15 PM, Ian Rogers wrote:
+> > jevents.c is large, has a dependency on an old forked version of jsmn,
+> > and is challenging to work upon. A lot of jevents.c's complexity comes
+> > from needing to write json and csv parsing from first principles. In
+> > contrast python has this functionality in standard libraries and is
+> > already a build pre-requisite for tools like asciidoc (that builds all
+> > of the perf man pages).
+>
+>
+> Well I was still hoping at some point we could have run time loading of
+> events. But yes if that's not
+>
+> happening then this probably the right approach.
 
-On 5/11/2022 2:15 PM, Ian Rogers wrote:
-> jevents.c is large, has a dependency on an old forked version of jsmn,
-> and is challenging to work upon. A lot of jevents.c's complexity comes
-> from needing to write json and csv parsing from first principles. In
-> contrast python has this functionality in standard libraries and is
-> already a build pre-requisite for tools like asciidoc (that builds all
-> of the perf man pages).
+Thanks Andi, some thinking out loud below:
 
+The perf tool already discovers events from sysfs, so could we have
+runtime loading by turning the sysfs mount point into a list of
+directories?
 
-Well I was still hoping at some point we could have run time loading of 
-events. But yes if that's not
+I'm thinking that for consistency the jevents API inside of the perf
+code should look more like sysfs. There's then a question of how we
+resolve events, perhaps we can have a config value something like
+"sysfs,runtime=/home/me/my-events,jevents" where we treat the list as
+setting up something like a unionfs in the tool. So if you ask for
+instructions.retired, the tool would first check sysfs, then any
+runtime events specified sysfs like directories, then jevents (or a
+different order if you set a different config value). If the event is
+defined more than once for the same PMU then the ordering says which
+one has priority. If a PMU isn't specified for an event then we search
+all PMUs and for jevents you'd only see PMUs relevant to the cpuid(s).
 
-happening then this probably the right approach.
+I'm hoping something like this will allow hybrid to work without all
+the "if...hybrid" code that's getting added, and with a behavior
+that's obvious and will allow us to debug errors. Maybe a runtime
+sysfs like directory implies too many files so we could make a json
+file to replace that directory, or use a zip file, etc. I'd prefer it
+if the mappings were as 1-to-1 as possible (ie have a new json format
+whose structure matches sysfs) and so I wouldn't like to use the
+current jevents.c code for it.
 
--Andi
+Thanks,
+Ian
 
-
+> -Andi
+>
+>
