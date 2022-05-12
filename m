@@ -2,212 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31D0C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 04:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7D5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 06:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348914AbiELEtI (ORCPT
+        id S1350073AbiELGAV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 May 2022 00:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38962 "EHLO
+        Thu, 12 May 2022 02:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348535AbiELEsO (ORCPT
+        with ESMTP id S1350074AbiELGAU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 May 2022 00:48:14 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25332E690
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 21:48:12 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d17so3852947plg.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 May 2022 21:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PAkVk8BocAZi8xx5Bbj7xf1f4YzNOFw5okdpKa0iEI4=;
-        b=4bvOJsiJ7H+iMwovOmEJ5MKB1IDLljeiHiJiueX8hJKXz5TRqTUl6cs8YEF5NwkuBJ
-         y/Q476QhqxIldjs/AjjGbcleQyJW7zI5MJOwIcluYLylkV+G5mDdMb4Rwv3732ttjN1H
-         nkkHr15gXUytyH61fQ3gR2anIT8xtgAsjlGqO6IoH9B9A4FvV+ZD5gr9x6WFG64JyrSD
-         HMXC0xlyyXElKGcmcTWZG5JuxuKg1+q6aChs29bRPgrR6ILFtmfzFo/Y9JStvIUNx8Vl
-         UfFlivFPn5pW5Gmr1/B0HO4TNaZtyo6LVt4B4K2nQ3uxbBY2F/2TBU+ebJFIYC8ym15D
-         qgaQ==
+        Thu, 12 May 2022 02:00:20 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B86D21B16F;
+        Wed, 11 May 2022 23:00:20 -0700 (PDT)
+Received: by mail-oi1-f169.google.com with SMTP id w130so5324178oig.0;
+        Wed, 11 May 2022 23:00:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PAkVk8BocAZi8xx5Bbj7xf1f4YzNOFw5okdpKa0iEI4=;
-        b=31JWSu/EWXROnlj5JPiZoM0/paIkNDE7y5PubwPhqWeUWmR4AXEA3cZMG2oV5o3iXx
-         3LyF2rFK03qCWHUJmT8eoaSim9H3XbdLjOUfmEc9bck6ysgReH6ld7n5y96LK7b7vBtL
-         e3xfDewe24udnbcxxLNbu/JBU96RMpvquc/ZX0n+C/G77R1NivX/D26lxEOrB8RziJqr
-         oZijaiMk0ITzc1Kx/mNVYIu1H85rdi9q7sUQ3cvISHDwh2AannOgUP/JtqEiRPUTT7mP
-         Sk0opkgJWRQVURd8nr41KZNAlaULFac4oAQBnV1F4t/sc5yARgJgq729O1D7VlBe995p
-         d9pA==
-X-Gm-Message-State: AOAM530kYSXpFZhE05XJ2v4gIlz/KdZTLJMINmYWBdJuz51aZ/J4mRjy
-        BiQOEDAGBYfdR7Uoc86RrYBWxw==
-X-Google-Smtp-Source: ABdhPJwtlc8Y2778hioM4oj564Xo0tmJ8W2pJn6pGvZxfL4ENesOAjEz5OnGrxBVyxU0aRv0Y9pRzA==
-X-Received: by 2002:a17:902:cec7:b0:15e:b8b0:b9c8 with SMTP id d7-20020a170902cec700b0015eb8b0b9c8mr29329217plg.155.1652330891750;
-        Wed, 11 May 2022 21:48:11 -0700 (PDT)
-Received: from localhost.localdomain ([139.177.225.253])
-        by smtp.gmail.com with ESMTPSA id 5-20020a170902e9c500b0015edc07dcf3sm2790824plk.21.2022.05.11.21.47.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 May 2022 21:48:11 -0700 (PDT)
-From:   Gang Li <ligang.bdlg@bytedance.com>
-To:     akpm@linux-foundation.org
-Cc:     songmuchun@bytedance.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ebiederm@xmission.com, keescook@chromium.org,
-        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
-        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
-        apopple@nvidia.com, adobriyan@gmail.com,
-        stephen.s.brennan@oracle.com, ohoono.kwon@samsung.com,
-        haolee.swjtu@gmail.com, kaleshsingh@google.com,
-        zhengqi.arch@bytedance.com, peterx@redhat.com, shy828301@gmail.com,
-        surenb@google.com, ccross@google.com, vincent.whitchurch@axis.com,
-        tglx@linutronix.de, bigeasy@linutronix.de, fenghua.yu@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Gang Li <ligang.bdlg@bytedance.com>
-Subject: [PATCH 4/5 v1] mm: enable per numa node rss_stat count
-Date:   Thu, 12 May 2022 12:46:33 +0800
-Message-Id: <20220512044634.63586-5-ligang.bdlg@bytedance.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220512044634.63586-1-ligang.bdlg@bytedance.com>
-References: <20220512044634.63586-1-ligang.bdlg@bytedance.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a7v3kpgCHL4lSPtmaodDrwClQXTFc2Us+lIP9tOf/jQ=;
+        b=r1wBYnZ3YexOTa1Uvyh3dbiO2bRf21R35Pue8W4pa7ZwzFhYZmiHh6Vnh6wzhu6va6
+         U9UhsHsLGyVZXimMIpZ0tSD8hIomG8SKf6qe0ovDVqT1TMOUUNxDTT84WcTYyV2FJqsO
+         KMvbuDgoloSTwj0K1YWiF+TgjuCkORpmfeBwguWnKHMzvUk7OSODg33RhP4APxwRN3+s
+         OidWRobzOhKbIhYSJ2DXg4HsbLmdF3F8lT+8Qi+Ay25fYGh74Y60AXXzP+lBoUSF89yK
+         lgwCwEUZgH1YHOjzoeuttr5V6f7dZt2SWcStrPnr/uyffBsdbjeO6PxZIjQROujsdni0
+         Xh7g==
+X-Gm-Message-State: AOAM531TIHhUfYflW86Cj8MUVgYaIIxC5We9BEPF3GF+snQrUu0s5jv9
+        +c6zYUokhWRf9SrzFkQUpwTLYaCt/z7TkZ5HNqM=
+X-Google-Smtp-Source: ABdhPJyyBK4NyiBn8Ll0K1mCMENvb6ThGjHNjyRBEf/Xzfb0SAwxmYsMpV46GgZhL4lFgleEeXpO5qU3fqMNetLr3Nc=
+X-Received: by 2002:a05:6808:2218:b0:326:bd8c:d044 with SMTP id
+ bd24-20020a056808221800b00326bd8cd044mr4376782oib.92.1652335219320; Wed, 11
+ May 2022 23:00:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220506201627.85598-1-namhyung@kernel.org> <20220506201627.85598-2-namhyung@kernel.org>
+ <YnqXtRqW1phdtc7a@kernel.org>
+In-Reply-To: <YnqXtRqW1phdtc7a@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 11 May 2022 23:00:08 -0700
+Message-ID: <CAM9d7cjDxNx42oxyL5A0TA+b6tJXtSgAP6eVvHOGwz55rZ7piw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] perf report: Do not extend sample type of bpf-output event
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
+        Milian Wolff <milian.wolff@kdab.com>,
+        bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Blake Jones <blakejones@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now we have all the infrastructure ready. Modify `get/add/inc/dec_mm_counter`,
-`sync_mm_rss`, `add_mm_counter_fast` and `add_mm_rss_vec` to enable per numa
-node rss_stat count.
+Hi Arnaldo,
 
-Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
----
- include/linux/mm.h | 42 +++++++++++++++++++++++++++++++++++-------
- mm/memory.c        | 20 ++++++++++++++++++--
- 2 files changed, 53 insertions(+), 9 deletions(-)
+On Tue, May 10, 2022 at 9:50 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, May 06, 2022 at 01:16:24PM -0700, Namhyung Kim escreveu:
+> > Currently evsel__new_idx() sets more sample_type bits when it finds a
+> > BPF-output event.  But it should honor what's recorded in the perf
+> > data file rather than blindly sets the bits.  Otherwise it could lead
+> > to a parse error when it recorded with a modified sample_type.
+>
+> Can you please try to provide a Fixes: tag for this? This way reviewing
+> gets simpler by looking at who introduced this, if there was some reason
+> or if it was a plain oversight.
+>
+> It also helps to get this fix propabated to the stable trees.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index cde5529285d6..f0f21065b81b 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1994,8 +1994,18 @@ static inline bool get_user_page_fast_only(unsigned long addr,
-  */
- static inline unsigned long get_mm_counter(struct mm_struct *mm, int member, int node)
- {
--	long val = atomic_long_read(&mm->rss_stat.count[member]);
-+	long val;
- 
-+	WARN_ON(node == NUMA_NO_NODE && member == MM_NO_TYPE);
-+
-+	if (node == NUMA_NO_NODE)
-+		val = atomic_long_read(&mm->rss_stat.count[member]);
-+	else
-+#ifdef CONFIG_NUMA
-+		val = atomic_long_read(&mm->rss_stat.numa_count[node]);
-+#else
-+		val = 0;
-+#endif
- #ifdef SPLIT_RSS_COUNTING
- 	/*
- 	 * counter is updated in asynchronous manner and may go to minus.
-@@ -2012,23 +2022,41 @@ void mm_trace_rss_stat(struct mm_struct *mm, int member, long member_count, int
- 
- static inline void add_mm_counter(struct mm_struct *mm, int member, long value, int node)
- {
--	long count = atomic_long_add_return(value, &mm->rss_stat.count[member]);
-+	long member_count = 0, numa_count = 0;
- 
--	mm_trace_rss_stat(mm, member, count, NUMA_NO_NODE, 0, value);
-+	if (member != MM_NO_TYPE)
-+		member_count = atomic_long_add_return(value, &mm->rss_stat.count[member]);
-+#ifdef CONFIG_NUMA
-+	if (node != NUMA_NO_NODE)
-+		numa_count = atomic_long_add_return(value, &mm->rss_stat.numa_count[node]);
-+#endif
-+	mm_trace_rss_stat(mm, member, member_count, node, numa_count, value);
- }
- 
- static inline void inc_mm_counter(struct mm_struct *mm, int member, int node)
- {
--	long count = atomic_long_inc_return(&mm->rss_stat.count[member]);
-+	long member_count = 0, numa_count = 0;
- 
--	mm_trace_rss_stat(mm, member, count, NUMA_NO_NODE, 0, 1);
-+	if (member != MM_NO_TYPE)
-+		member_count = atomic_long_inc_return(&mm->rss_stat.count[member]);
-+#ifdef CONFIG_NUMA
-+	if (node != NUMA_NO_NODE)
-+		numa_count = atomic_long_inc_return(&mm->rss_stat.numa_count[node]);
-+#endif
-+	mm_trace_rss_stat(mm, member, member_count, node, numa_count, 1);
- }
- 
- static inline void dec_mm_counter(struct mm_struct *mm, int member, int node)
- {
--	long count = atomic_long_dec_return(&mm->rss_stat.count[member]);
-+	long member_count = 0, numa_count = 0;
- 
--	mm_trace_rss_stat(mm, member, count, NUMA_NO_NODE, 0, -1);
-+	if (member != MM_NO_TYPE)
-+		member_count = atomic_long_dec_return(&mm->rss_stat.count[member]);
-+#ifdef CONFIG_NUMA
-+	if (node != NUMA_NO_NODE)
-+		numa_count = atomic_long_dec_return(&mm->rss_stat.numa_count[node]);
-+#endif
-+	mm_trace_rss_stat(mm, member, member_count, node, numa_count, -1);
- }
- 
- /* Optimized variant when page is already known not to be PageAnon */
-diff --git a/mm/memory.c b/mm/memory.c
-index 2d3040a190f6..f7b67da772b2 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -188,6 +188,14 @@ void sync_mm_rss(struct mm_struct *mm)
- 			current->rss_stat.count[i] = 0;
- 		}
- 	}
-+#ifdef CONFIG_NUMA
-+	for_each_node(i) {
-+		if (current->rss_stat.numa_count[i]) {
-+			add_mm_counter(mm, MM_NO_TYPE, current->rss_stat.numa_count[i], i);
-+			current->rss_stat.numa_count[i] = 0;
-+		}
-+	}
-+#endif
- 	current->rss_stat.events = 0;
- }
- 
-@@ -195,9 +203,12 @@ static void add_mm_counter_fast(struct mm_struct *mm, int member, int val, int n
- {
- 	struct task_struct *task = current;
- 
--	if (likely(task->mm == mm))
-+	if (likely(task->mm == mm)) {
- 		task->rss_stat.count[member] += val;
--	else
-+#ifdef CONFIG_NUMA
-+		task->rss_stat.numa_count[node] += val;
-+#endif
-+	} else
- 		add_mm_counter(mm, member, val, node);
- }
- #define inc_mm_counter_fast(mm, member, node) add_mm_counter_fast(mm, member, 1, node)
-@@ -508,6 +519,11 @@ static inline void add_mm_rss_vec(struct mm_struct *mm, int *rss, int *numa_rss)
- 	for (i = 0; i < NR_MM_COUNTERS; i++)
- 		if (rss[i])
- 			add_mm_counter(mm, i, rss[i], NUMA_NO_NODE);
-+#ifdef CONFIG_NUMA
-+	for_each_node(i)
-+		if (numa_rss[i] != 0)
-+			add_mm_counter(mm, MM_NO_TYPE, numa_rss[i], i);
-+#endif
- }
- 
- /*
--- 
-2.20.1
+Well.. actually this is not a fix.  I've realized it adds some
+sample types when it creates a new evsel regardless of
+the perf_event_attr.
 
+This was not a problem so far (as nobody touched it),
+but when I changed some sample types during record
+for this change, perf report sees a different value and
+rejects the data.
+
+Thanks,
+namhyung
