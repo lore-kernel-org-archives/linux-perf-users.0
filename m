@@ -2,210 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E29C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 11:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4C1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 May 2022 13:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241924AbiELLV1 (ORCPT
+        id S1352867AbiELNB2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 May 2022 07:21:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37106 "EHLO
+        Thu, 12 May 2022 09:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343673AbiELLUx (ORCPT
+        with ESMTP id S1354067AbiELNBY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 May 2022 07:20:53 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D824036152
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 May 2022 04:19:01 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24C9OkrA002859;
-        Thu, 12 May 2022 11:18:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=DZyfJa3n27KzJhHC/Rvftu3DdF0ZhWMkGVgoCsPghkE=;
- b=alhbp/ZJSwkBSEz5PfMHdwyqeildNjZ0qdnTVTif1u+vDk2GL3Xwyuk+a4zIJIGX9efw
- zwNO39P6CM1frXO70AgILPOoiQuv+EGp3ObW3Yhcq2n6ndAJ2T60v1po8NrOH0SYqduZ
- jmwQby1qbsAbFik7flRaOA23C6igsMdxlzSYvlyKbG4uRefyWP1VKxfP2JBnbFYvNxm1
- OzqcPEgJQuBmvBsRLAbBRgf2FxbzhWPEy+Z97EK1aMtmxGYl8L1Mk2dcDnqg0MMGZClM
- PqNKrytdVoXDqTdG1zfXS5uSj7VjmjUfzMWmWApp5txES368vjwx0StQ4nbY4KD2my/e dw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g0y3kk11k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 May 2022 11:18:54 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24CBGu2f006741;
-        Thu, 12 May 2022 11:18:54 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g0y3kk115-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 May 2022 11:18:54 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24CB7x9M000944;
-        Thu, 12 May 2022 11:18:51 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04fra.de.ibm.com with ESMTP id 3g0ma1gqu1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 May 2022 11:18:51 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24CBInEH50004398
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 May 2022 11:18:49 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F5E7A405C;
-        Thu, 12 May 2022 11:18:49 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52C50A4054;
-        Thu, 12 May 2022 11:18:46 +0000 (GMT)
-Received: from [9.43.85.52] (unknown [9.43.85.52])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 12 May 2022 11:18:46 +0000 (GMT)
-Message-ID: <cc8b7337-b494-87a6-ecfc-b8301304f7f2@linux.ibm.com>
-Date:   Thu, 12 May 2022 16:48:44 +0530
+        Thu, 12 May 2022 09:01:24 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 57B0662214;
+        Thu, 12 May 2022 06:01:22 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1001723A;
+        Thu, 12 May 2022 06:01:22 -0700 (PDT)
+Received: from [10.57.2.11] (unknown [10.57.2.11])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B5623F66F;
+        Thu, 12 May 2022 06:01:19 -0700 (PDT)
+Message-ID: <eec03f0d-d491-511c-d9b0-694c6d527b38@arm.com>
+Date:   Thu, 12 May 2022 14:01:17 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH V2] tools/perf/tests: Skip perf BPF test if clang is not
- present
-Content-Language: en-US
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org
-Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        irogers@google.com
-References: <20220511115438.84032-1-atrajeev@linux.vnet.ibm.com>
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <20220511115438.84032-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.9.0
+Subject: Re: [PATCH 00/20] perf vendors events arm64: Multiple Arm CPUs
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20220510104758.64677-1-nick.forrington@arm.com>
+ <YnqJwMfi/bcDmN4H@kernel.org>
+ <b1081013-2cd9-f223-8125-d7e51d784f90@huawei.com>
+From:   Nick Forrington <nick.forrington@arm.com>
+In-Reply-To: <b1081013-2cd9-f223-8125-d7e51d784f90@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Lx5Mqe2oibMsUnFluQ10817RJvLB8_ce
-X-Proofpoint-GUID: NeXzPWFaVpdvirhNe23w-hoOfD3fNBaI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-12_02,2022-05-12_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 spamscore=0 adultscore=0 suspectscore=0
- clxscore=1015 priorityscore=1501 mlxscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2205120050
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 10/05/2022 16:55, John Garry wrote:
+> On 10/05/2022 16:50, Arnaldo Carvalho de Melo wrote:
+>> Em Tue, May 10, 2022 at 11:47:38AM +0100, Nick Forrington escreveu:
+>>> Add Performance Monitoring Unit event data for the Arm CPUs listed
+>>> below.
+>>>
+>>> Changesets are dependent due to incremental updates to the common 
+>>> events
+>>> file and mapfile.csv.
+>>>
+>>> Data is sourced fromhttps://github.com/ARM-software/data
+>> Waiting for reviews to merge this.
+>>
+>
+> I'll have a closer look this week.
+>
+> @Nick, Just curious, do you have some tool/script to convert from the 
+> JSON format @ https://github.com/ARM-software/data/blob/master/pmu/ to 
+> the "linux" format?
 
+Thanks John.
 
-On 5/11/22 17:24, Athira Rajeev wrote:
-> Perf BPF filter test fails in environment where "clang"
-> is not installed.
-> 
-> Test failure logs:
-> 
-> <<>>
->  42: BPF filter                    :
->  42.1: Basic BPF filtering         : Skip
->  42.2: BPF pinning                 : FAILED!
->  42.3: BPF prologue generation     : FAILED!
-> <<>>
-> 
-> Enabling verbose option provided debug logs which says
-> clang/llvm needs to be installed. Snippet of verbose logs:
-> 
-> <<>>
->  42.2: BPF pinning                  :
->  --- start ---
-> test child forked, pid 61423
-> ERROR:	unable to find clang.
-> Hint:	Try to install latest clang/llvm to support BPF.
->         Check your $PATH
-> 
-> <<logs_here>>
-> 
-> Failed to compile test case: 'Basic BPF llvm compile'
-> Unable to get BPF object, fix kbuild first
-> test child finished with -1
->  ---- end ----
-> BPF filter subtest 2: FAILED!
-> <<>>
-> 
-> Here subtests, "BPF pinning" and "BPF prologue generation"
-> failed and logs shows clang/llvm is needed. After installing
-> clang, testcase passes.
-> 
-> Reason on why subtest failure happens though logs has proper
-> debug information:
-> Main function __test__bpf calls test_llvm__fetch_bpf_obj by
-> passing 4th argument as true ( 4th arguments maps to parameter
-> "force" in test_llvm__fetch_bpf_obj ). But this will cause
-> test_llvm__fetch_bpf_obj to skip the check for clang/llvm.
-> 
-> Snippet of code part which checks for clang based on
-> parameter "force" in test_llvm__fetch_bpf_obj:
-> 
-> <<>>
-> if (!force && (!llvm_param.user_set_param &&
-> <<>>
-> 
-> Since force is set to "false", test won't get skipped and
-> fails to compile test case. The BPF code compilation needs
-> clang, So pass the fourth argument as "false" and also skip
-> the test if reason for return is "TEST_SKIP"
-> 
-> After the patch:
-> 
-> <<>>
->  42: BPF filter                    :
->  42.1: Basic BPF filtering         : Skip
->  42.2: BPF pinning                 : Skip
->  42.3: BPF prologue generation     : Skip
-> <<>>
-> 
-> Fixes: ba1fae431e74 ("perf test: Add 'perf test BPF'")
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
-> Changelog:
->  Addressed review comments from Arnaldo by adding
->  reason for skipping of testcase.
-> 
->  tools/perf/tests/bpf.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-Patch looks fine to me.
-
-Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+We do have a conversion script, although it isn't publically available 
+anywhere at the moment.
 
 Thanks,
-Kajol Jain
+Nick
 
-> 
-> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-> index 57b9591f7cbb..17c023823713 100644
-> --- a/tools/perf/tests/bpf.c
-> +++ b/tools/perf/tests/bpf.c
-> @@ -222,11 +222,11 @@ static int __test__bpf(int idx)
->  
->  	ret = test_llvm__fetch_bpf_obj(&obj_buf, &obj_buf_sz,
->  				       bpf_testcase_table[idx].prog_id,
-> -				       true, NULL);
-> +				       false, NULL);
->  	if (ret != TEST_OK || !obj_buf || !obj_buf_sz) {
->  		pr_debug("Unable to get BPF object, %s\n",
->  			 bpf_testcase_table[idx].msg_compile_fail);
-> -		if (idx == 0)
-> +		if ((idx == 0) || (ret == TEST_SKIP))
->  			return TEST_SKIP;
->  		else
->  			return TEST_FAIL;
-> @@ -364,9 +364,11 @@ static int test__bpf_prologue_test(struct test_suite *test __maybe_unused,
->  static struct test_case bpf_tests[] = {
->  #ifdef HAVE_LIBBPF_SUPPORT
->  	TEST_CASE("Basic BPF filtering", basic_bpf_test),
-> -	TEST_CASE("BPF pinning", bpf_pinning),
-> +	TEST_CASE_REASON("BPF pinning", bpf_pinning,
-> +			"clang isn't installed or environment missing BPF support"),
->  #ifdef HAVE_BPF_PROLOGUE
-> -	TEST_CASE("BPF prologue generation", bpf_prologue_test),
-> +	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test,
-> +			"clang isn't installed or environment missing BPF support"),
->  #else
->  	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
->  #endif
