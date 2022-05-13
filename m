@@ -2,120 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBF8C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 14:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574A4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 14:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358346AbiEMO0x (ORCPT
+        id S1350754AbiEMOrQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 10:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
+        Fri, 13 May 2022 10:47:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380911AbiEMO0P (ORCPT
+        with ESMTP id S1381642AbiEMOq7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 10:26:15 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB644506E3;
-        Fri, 13 May 2022 07:25:44 -0700 (PDT)
+        Fri, 13 May 2022 10:46:59 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E09488A9;
+        Fri, 13 May 2022 07:46:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652451944; x=1683987944;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=9MO4Cg9SWuQ3cY0TApzliKOPUlU3hZ6Zqzm0n1CSgmQ=;
-  b=jH37YUvTNIG8JhrJm8Z5bHHrMhGG/C7fJaIw75GrtL1ASiVim3V4mbLn
-   BpF3DnCuXgwuskJ4XhVD6zj1RW4Bc6NjJoKL5AN9hzatXhzBkOlKbx2an
-   t4RT5HLnFqrb+23ZNBavV/3aUNrP4p7awv9z5ZXxkHOGvp1reY0WVBrDn
-   oAaESy5EpiTfmvpDowcqWJKwgyplXT9ypGro8QKpZ0ihWDVxaTtQml3y5
-   +j5lDjEH68foidrwCH77ZL47L8NWWPYM/aostHFyyI7hLKZWb+SIH0MFt
-   Uw30eyXx7PtXvSekBMEsB0FPitpZXNlXA7ZIYHDmlaNsObziLrW/jmB4V
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="295575088"
+  t=1652453195; x=1683989195;
+  h=from:to:cc:subject:references:date:in-reply-to:
+   message-id:mime-version;
+  bh=7M550510N4y+k5TC74sJtTjxH6gUaD3AaC0jMB7il0c=;
+  b=c8kqHpiXGnee5eyvcW9QOI3eq3yK4FwTnEPhzpG/VHtfyPnEVILq6Wjq
+   1NZPF46qpW3pFwOR9w2PWlf2dNgLaNSF1nMYBdrckysnR4lf9vautoRrb
+   N8hhw4G2wel7WTsE1sYWv6/kQFqwbYlaBMFWX+P8xQTaKo7uBAFNNla/K
+   M4O7vNYraBveiSafKNiq9LL4SXZtj41kTLfxKpxo+PpXWLhKW+2cOTrqh
+   CXCG0p7BRmoY4NRVNCvGQ69nv0Rf7g2GGGeYYwQa8hCSZjUgCMpGxqN1Z
+   yCePrir7l0MpCAh24wsHhuwYPV6sHjrQyK/h5SUPFNg+F91WWJZUvSPWR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="267913222"
 X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="295575088"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 07:25:44 -0700
+   d="scan'208";a="267913222"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 07:46:34 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="659107033"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 May 2022 07:25:43 -0700
-Received: from [10.252.212.211] (kliang2-MOBL.ccr.corp.intel.com [10.252.212.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id C7C4C580A88;
-        Fri, 13 May 2022 07:25:40 -0700 (PDT)
-Message-ID: <8ba20985-8116-c7f7-a082-ec30152d9adb@linux.intel.com>
-Date:   Fri, 13 May 2022 10:25:39 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH v2 0/2] Fix topdown event weak grouping
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+   d="scan'208";a="543285030"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.74.11])
+  by orsmga006.jf.intel.com with ESMTP; 13 May 2022 07:46:34 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 55F43301AB6; Fri, 13 May 2022 07:46:34 -0700 (PDT)
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220512061308.1152233-1-irogers@google.com>
-Content-Language: en-US
-In-Reply-To: <20220512061308.1152233-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH 6/6] perf intel-pt: Add guest_code support
+References: <20220513090237.10444-1-adrian.hunter@intel.com>
+        <20220513090237.10444-7-adrian.hunter@intel.com>
+Date:   Fri, 13 May 2022 07:46:34 -0700
+In-Reply-To: <20220513090237.10444-7-adrian.hunter@intel.com> (Adrian Hunter's
+        message of "Fri, 13 May 2022 12:02:37 +0300")
+Message-ID: <875ym9h4mt.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Adrian Hunter <adrian.hunter@intel.com> writes:
 
+> A common case for KVM test programs is that the guest object code can be
+> found in the hypervisor process (i.e. the test program running on the
+> host). To support that, a new option "--guest-code" has been added in
+> previous patches.
+>
+> In this patch, add support also to Intel PT.
+>
+> In particular, ensure guest_code thread is set up before attempting to
+> walk object code or synthesize samples.
 
-On 5/12/2022 2:13 AM, Ian Rogers wrote:
-> Keep topdown events within a group when a weak group is broken. This
-> is a requirement as topdown events must form a group.
-> 
-> Add perf stat testing including for required topdown event group
-> behaviors.
-> 
-> Note: as with existing topdown evsel/evlist code topdown events are
-> assumed to be on the PMU "cpu". On Alderlake the PMU "cpu_core" should
-> also be tested. Future changes can fix Alderlake.
+Can you make it clear in the documentation what parts runs on the host
+and what parts on the guest? 
 
-I will send a follow-up patch to fix the weak grouping for the hybrid 
-platform shortly.
+I'm still not fully sure how it exactly finds the code on the host,
+how is the code transferred?
 
-For the non-hybrid platform, the patch set looks good to me.
+Other than that more support for this use case is very useful.
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
-> 
-> v2. Correct behavior wrt pmu prefixed events and avoid the test using
->      deprecated events: Suggested-by: Liang, Kan <kan.liang@linux.intel.com>
-> 
-> Ian Rogers (2):
->    perf evlist: Keep topdown counters in weak group
->    perf test: Add basic stat and topdown group test
-> 
->   tools/perf/arch/x86/util/evsel.c | 12 ++++++
->   tools/perf/tests/shell/stat.sh   | 67 ++++++++++++++++++++++++++++++++
->   tools/perf/util/evlist.c         | 16 +++++++-
->   tools/perf/util/evsel.c          | 10 +++++
->   tools/perf/util/evsel.h          |  3 ++
->   5 files changed, 106 insertions(+), 2 deletions(-)
->   create mode 100755 tools/perf/tests/shell/stat.sh
-> 
+-Andi
