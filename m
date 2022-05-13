@@ -2,85 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574A4C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 14:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0BEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350754AbiEMOrQ (ORCPT
+        id S1345267AbiEMPPJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 10:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57464 "EHLO
+        Fri, 13 May 2022 11:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381642AbiEMOq7 (ORCPT
+        with ESMTP id S1381809AbiEMPPB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 10:46:59 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E09488A9;
-        Fri, 13 May 2022 07:46:35 -0700 (PDT)
+        Fri, 13 May 2022 11:15:01 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7402656C18;
+        Fri, 13 May 2022 08:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652453195; x=1683989195;
-  h=from:to:cc:subject:references:date:in-reply-to:
-   message-id:mime-version;
-  bh=7M550510N4y+k5TC74sJtTjxH6gUaD3AaC0jMB7il0c=;
-  b=c8kqHpiXGnee5eyvcW9QOI3eq3yK4FwTnEPhzpG/VHtfyPnEVILq6Wjq
-   1NZPF46qpW3pFwOR9w2PWlf2dNgLaNSF1nMYBdrckysnR4lf9vautoRrb
-   N8hhw4G2wel7WTsE1sYWv6/kQFqwbYlaBMFWX+P8xQTaKo7uBAFNNla/K
-   M4O7vNYraBveiSafKNiq9LL4SXZtj41kTLfxKpxo+PpXWLhKW+2cOTrqh
-   CXCG0p7BRmoY4NRVNCvGQ69nv0Rf7g2GGGeYYwQa8hCSZjUgCMpGxqN1Z
-   yCePrir7l0MpCAh24wsHhuwYPV6sHjrQyK/h5SUPFNg+F91WWJZUvSPWR
+  t=1652454900; x=1683990900;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=px2gXoFjNpJE9vOVgtdtDq3mf97BJY5Gb4Y2uSDouZw=;
+  b=HWfBYkHhyoEDXP/HX92XHIFqjRjQx9eTA6iwEHu9e6gmIxNGbJOVNEk/
+   H0MspkSI4vk8FALQFMuRBtQ7ZVipp4z2VABUgRTGga6m1wnNN4i0eszbz
+   mZNtA6I4PW4hZlI9HvP1y3KBTmKgfKpB3de+vdfYhR59acxsI3W/0Nfdl
+   O248/ibzZVeP8Wx3NLNnI+g15UNlP8eYKF5btBkoP1E4jf+lKLaYyNsVB
+   XFKWJGSDDfYs4cZw7rt+fACbg+IFtIxYO1qT+B+Ktm2r0dEWMYC2JdnjZ
+   7i1XjKaAi/BOYnSf0G+PNrWRdOQ0sEHkifWXdQzVE1guznxyN7sLL+G7O
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="267913222"
+X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="252373500"
 X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="267913222"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 07:46:34 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="252373500"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 08:14:56 -0700
 X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="543285030"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.74.11])
-  by orsmga006.jf.intel.com with ESMTP; 13 May 2022 07:46:34 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 55F43301AB6; Fri, 13 May 2022 07:46:34 -0700 (PDT)
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
+   d="scan'208";a="595263034"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.36.190])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 08:14:53 -0700
+Message-ID: <df56f04b-cb25-5a47-ffef-b2e2ee0f6b74@intel.com>
+Date:   Fri, 13 May 2022 18:14:49 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.8.1
+Subject: Re: [PATCH 6/6] perf intel-pt: Add guest_code support
+Content-Language: en-US
+To:     Andi Kleen <ak@linux.intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         kvm@vger.kernel.org
-Subject: Re: [PATCH 6/6] perf intel-pt: Add guest_code support
 References: <20220513090237.10444-1-adrian.hunter@intel.com>
-        <20220513090237.10444-7-adrian.hunter@intel.com>
-Date:   Fri, 13 May 2022 07:46:34 -0700
-In-Reply-To: <20220513090237.10444-7-adrian.hunter@intel.com> (Adrian Hunter's
-        message of "Fri, 13 May 2022 12:02:37 +0300")
-Message-ID: <875ym9h4mt.fsf@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+ <20220513090237.10444-7-adrian.hunter@intel.com>
+ <875ym9h4mt.fsf@linux.intel.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <875ym9h4mt.fsf@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Adrian Hunter <adrian.hunter@intel.com> writes:
+On 13/05/22 17:46, Andi Kleen wrote:
+> Adrian Hunter <adrian.hunter@intel.com> writes:
+> 
+>> A common case for KVM test programs is that the guest object code can be
+>> found in the hypervisor process (i.e. the test program running on the
+>> host). To support that, a new option "--guest-code" has been added in
+>> previous patches.
+>>
+>> In this patch, add support also to Intel PT.
+>>
+>> In particular, ensure guest_code thread is set up before attempting to
+>> walk object code or synthesize samples.
+> 
+> Can you make it clear in the documentation what parts runs on the host
+> and what parts on the guest? 
 
-> A common case for KVM test programs is that the guest object code can be
-> found in the hypervisor process (i.e. the test program running on the
-> host). To support that, a new option "--guest-code" has been added in
-> previous patches.
->
-> In this patch, add support also to Intel PT.
->
-> In particular, ensure guest_code thread is set up before attempting to
-> walk object code or synthesize samples.
+That is up to the test program.  All the host thread maps are
+copied, so perf tools doesn't have to know.
 
-Can you make it clear in the documentation what parts runs on the host
-and what parts on the guest? 
+> 
+> I'm still not fully sure how it exactly finds the code on the host,
+> how is the code transferred?
 
-I'm still not fully sure how it exactly finds the code on the host,
-how is the code transferred?
+I don't know.  From a quick look at the code in
+tools/testing/selftests/kvm/lib/kvm_util.c it seems to be using
+KVM_SET_USER_MEMORY_REGION IOCTL.
 
-Other than that more support for this use case is very useful.
+> 
+> Other than that more support for this use case is very useful.
+> 
+> -Andi
 
--Andi
