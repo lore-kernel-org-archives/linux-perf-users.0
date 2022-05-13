@@ -2,98 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0BEC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73859C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345267AbiEMPPJ (ORCPT
+        id S1381220AbiEMPQH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 11:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57018 "EHLO
+        Fri, 13 May 2022 11:16:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381809AbiEMPPB (ORCPT
+        with ESMTP id S1377700AbiEMPQG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 11:15:01 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7402656C18;
-        Fri, 13 May 2022 08:14:57 -0700 (PDT)
+        Fri, 13 May 2022 11:16:06 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD415A0AE;
+        Fri, 13 May 2022 08:16:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652454900; x=1683990900;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=px2gXoFjNpJE9vOVgtdtDq3mf97BJY5Gb4Y2uSDouZw=;
-  b=HWfBYkHhyoEDXP/HX92XHIFqjRjQx9eTA6iwEHu9e6gmIxNGbJOVNEk/
-   H0MspkSI4vk8FALQFMuRBtQ7ZVipp4z2VABUgRTGga6m1wnNN4i0eszbz
-   mZNtA6I4PW4hZlI9HvP1y3KBTmKgfKpB3de+vdfYhR59acxsI3W/0Nfdl
-   O248/ibzZVeP8Wx3NLNnI+g15UNlP8eYKF5btBkoP1E4jf+lKLaYyNsVB
-   XFKWJGSDDfYs4cZw7rt+fACbg+IFtIxYO1qT+B+Ktm2r0dEWMYC2JdnjZ
-   7i1XjKaAi/BOYnSf0G+PNrWRdOQ0sEHkifWXdQzVE1guznxyN7sLL+G7O
+  t=1652454963; x=1683990963;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=24oKuYXEcnWrp4B5Kh3zaIWR0+FTuDd0VrQkGRVBuc8=;
+  b=Zli9crThxZTE1+om0dNbqy2cGf66DQff5k/c/2j647Jf1pHXO4BwvGFW
+   kNpTojiraQgyntFjeikTfQyaBl4HoBGfuh9gPUTF5hInX2Mum++f2aWEH
+   Q/Rb94QmCT3bTZKnb9cv7Y+2YF2Up+bqGx1MlTV7WTR4tvavY8TvLhU5f
+   dSTg4ytSTJwdPcOw2f+v1wzJzzK4WKSZSalTN/dOMLZYn06SYOj/XAczC
+   Max2/PN89n8cxD9SPqA6X0E5XGoJhpUFGULg77qn62/ZYDe+HFMqhjS/q
+   q/TvwPSVeu1vLCHSLtlX5XiQV+84kbDHYymvks4xZ+thMSWpCZDc5dBqd
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="252373500"
+X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="269160146"
 X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="252373500"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 08:14:56 -0700
+   d="scan'208";a="269160146"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 08:16:02 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="595263034"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.36.190])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 08:14:53 -0700
-Message-ID: <df56f04b-cb25-5a47-ffef-b2e2ee0f6b74@intel.com>
-Date:   Fri, 13 May 2022 18:14:49 +0300
+   d="scan'208";a="698518050"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orsmga004.jf.intel.com with ESMTP; 13 May 2022 08:16:02 -0700
+From:   kan.liang@linux.intel.com
+To:     acme@kernel.org, mingo@redhat.com, irogers@google.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     peterz@infradead.org, zhengjun.xing@linux.intel.com,
+        adrian.hunter@intel.com, ak@linux.intel.com, eranian@google.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 1/4] perf evsel: Fixes topdown events in a weak group for the hybrid platform
+Date:   Fri, 13 May 2022 08:15:51 -0700
+Message-Id: <20220513151554.1054452-2-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220513151554.1054452-1-kan.liang@linux.intel.com>
+References: <20220513151554.1054452-1-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.8.1
-Subject: Re: [PATCH 6/6] perf intel-pt: Add guest_code support
-Content-Language: en-US
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20220513090237.10444-1-adrian.hunter@intel.com>
- <20220513090237.10444-7-adrian.hunter@intel.com>
- <875ym9h4mt.fsf@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <875ym9h4mt.fsf@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 13/05/22 17:46, Andi Kleen wrote:
-> Adrian Hunter <adrian.hunter@intel.com> writes:
-> 
->> A common case for KVM test programs is that the guest object code can be
->> found in the hypervisor process (i.e. the test program running on the
->> host). To support that, a new option "--guest-code" has been added in
->> previous patches.
->>
->> In this patch, add support also to Intel PT.
->>
->> In particular, ensure guest_code thread is set up before attempting to
->> walk object code or synthesize samples.
-> 
-> Can you make it clear in the documentation what parts runs on the host
-> and what parts on the guest? 
+From: Kan Liang <kan.liang@linux.intel.com>
 
-That is up to the test program.  All the host thread maps are
-copied, so perf tools doesn't have to know.
+The patch ("perf evlist: Keep topdown counters in weak group") fixes the
+perf metrics topdown event issue when the topdown events are in a weak
+group on a non-hybrid platform. However, it doesn't work for the hybrid
+platform.
 
-> 
-> I'm still not fully sure how it exactly finds the code on the host,
-> how is the code transferred?
+$./perf stat -e '{cpu_core/slots/,cpu_core/topdown-bad-spec/,
+cpu_core/topdown-be-bound/,cpu_core/topdown-fe-bound/,
+cpu_core/topdown-retiring/,cpu_core/branch-instructions/,
+cpu_core/branch-misses/,cpu_core/bus-cycles/,cpu_core/cache-misses/,
+cpu_core/cache-references/,cpu_core/cpu-cycles/,cpu_core/instructions/,
+cpu_core/mem-loads/,cpu_core/mem-stores/,cpu_core/ref-cycles/,
+cpu_core/cache-misses/,cpu_core/cache-references/}:W' -a sleep 1
 
-I don't know.  From a quick look at the code in
-tools/testing/selftests/kvm/lib/kvm_util.c it seems to be using
-KVM_SET_USER_MEMORY_REGION IOCTL.
+ Performance counter stats for 'system wide':
 
-> 
-> Other than that more support for this use case is very useful.
-> 
-> -Andi
+       751,765,068      cpu_core/slots/                                               (84.07%)
+   <not supported>      cpu_core/topdown-bad-spec/
+   <not supported>      cpu_core/topdown-be-bound/
+   <not supported>      cpu_core/topdown-fe-bound/
+   <not supported>      cpu_core/topdown-retiring/
+        12,398,197      cpu_core/branch-instructions/                                     (84.07%)
+         1,054,218      cpu_core/branch-misses/                                       (84.24%)
+       539,764,637      cpu_core/bus-cycles/                                          (84.64%)
+            14,683      cpu_core/cache-misses/                                        (84.87%)
+         7,277,809      cpu_core/cache-references/                                     (77.30%)
+       222,299,439      cpu_core/cpu-cycles/                                          (77.28%)
+        63,661,714      cpu_core/instructions/                                        (84.85%)
+                 0      cpu_core/mem-loads/                                           (77.29%)
+        12,271,725      cpu_core/mem-stores/                                          (77.30%)
+       542,241,102      cpu_core/ref-cycles/                                          (84.85%)
+             8,854      cpu_core/cache-misses/                                        (76.71%)
+         7,179,013      cpu_core/cache-references/                                     (76.31%)
+
+       1.003245250 seconds time elapsed
+
+A hybrid platform has a different PMU name for the core PMUs, while
+the current perf hard code the PMU name "cpu".
+
+The evsel->pmu_name can be used to replace the "cpu" to fix the issue.
+For a hybrid platform, the pmu_name must be non-NULL. Because there are
+at least two core PMUs. The PMU has to be specified.
+For a non-hybrid platform, the pmu_name may be NULL. Because there is
+only one core PMU, "cpu". For a NULL pmu_name, we can safely assume that
+it is a "cpu" PMU.
+
+With the patch,
+
+$perf stat -e '{cpu_core/slots/,cpu_core/topdown-bad-spec/,
+cpu_core/topdown-be-bound/,cpu_core/topdown-fe-bound/,
+cpu_core/topdown-retiring/,cpu_core/branch-instructions/,
+cpu_core/branch-misses/,cpu_core/bus-cycles/,cpu_core/cache-misses/,
+cpu_core/cache-references/,cpu_core/cpu-cycles/,cpu_core/instructions/,
+cpu_core/mem-loads/,cpu_core/mem-stores/,cpu_core/ref-cycles/,
+cpu_core/cache-misses/,cpu_core/cache-references/}:W' -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       766,620,266      cpu_core/slots/                                               (84.06%)
+        73,172,129      cpu_core/topdown-bad-spec/ #      9.5% bad speculation         (84.06%)
+       193,443,341      cpu_core/topdown-be-bound/ #     25.0% backend bound           (84.06%)
+       403,940,929      cpu_core/topdown-fe-bound/ #     52.3% frontend bound          (84.06%)
+       102,070,237      cpu_core/topdown-retiring/ #     13.2% retiring                (84.06%)
+        12,364,429      cpu_core/branch-instructions/                                     (84.03%)
+         1,080,124      cpu_core/branch-misses/                                       (84.24%)
+       564,120,383      cpu_core/bus-cycles/                                          (84.65%)
+            36,979      cpu_core/cache-misses/                                        (84.86%)
+         7,298,094      cpu_core/cache-references/                                     (77.30%)
+       227,174,372      cpu_core/cpu-cycles/                                          (77.31%)
+        63,886,523      cpu_core/instructions/                                        (84.87%)
+                 0      cpu_core/mem-loads/                                           (77.31%)
+        12,208,782      cpu_core/mem-stores/                                          (77.31%)
+       566,409,738      cpu_core/ref-cycles/                                          (84.87%)
+            23,118      cpu_core/cache-misses/                                        (76.71%)
+         7,212,602      cpu_core/cache-references/                                     (76.29%)
+
+       1.003228667 seconds time elapsed
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/arch/x86/util/evsel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+index 00cb4466b4ca..24510bcb4bf4 100644
+--- a/tools/perf/arch/x86/util/evsel.c
++++ b/tools/perf/arch/x86/util/evsel.c
+@@ -33,8 +33,9 @@ void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr)
+ 
+ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+ {
+-	if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
+-	    !pmu_have_event("cpu", "slots"))
++	const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
++
++	if (!pmu_have_event(pmu_name, "slots"))
+ 		return false;
+ 
+ 	return evsel->name &&
+-- 
+2.35.1
 
