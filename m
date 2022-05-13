@@ -2,219 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF11EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE79C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354892AbiEMPjW (ORCPT
+        id S1381595AbiEMPmc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 11:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
+        Fri, 13 May 2022 11:42:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344003AbiEMPjT (ORCPT
+        with ESMTP id S1382163AbiEMPma (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 11:39:19 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903979FF1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 08:39:18 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id p189so5010701wmp.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 08:39:18 -0700 (PDT)
+        Fri, 13 May 2022 11:42:30 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0853122E
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 08:42:18 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id j25so10947966wrc.9
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 08:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=T6bZ/xVZVyhHfpTj1/RFkfJuWOYY5J7jvetTIMpfAHI=;
-        b=cl8mZMCAnVKSmYbg70t8wSfq1nrIAWG4QSTh6Dx+RLjDxiqKckRCDgtfx8LNttXSdM
-         8zVElb394roQNKfA6fi9gaCRpaDoyugVbeF9BgGsuKbKX+UNIS+0e2zKvv/49VA2hgae
-         Fz/mUfwGkT9OVBP+HCaRrPyf8NvXhVMh6NzU+14ceZbkQfWRkzBMWTvug3fsofEYqsnQ
-         /xnH5mi39wr93cnE2eSHKplELh49at3gE7QhYolNr7EPdRHoIa+d9V8llK/AiWDILwxu
-         SFhdDaXlS94Q7SDNa7cW4ER7tBlurSEbL7vlrNxC+2o8SeZIrKeEnOqXuuXC+0OGLmkK
-         GtsA==
+        bh=v5/uoQI8/5f91IWn7HyX+VbvfqchZrWzzvoEosENEnw=;
+        b=TMh1gbWYvFcu4PyqxycGL+5ZJihf+935oScy1aDp44PO6uDK/f1Mcbp8ELoJO5Q+2z
+         NO/bvDwGsdVCEl3u8pioB/pVA/sZIoVbSwmZD/PQ2Z/Nov73hYo4/irGTpE26R+kJY/e
+         6sNnSTAIGfmCuaqwkyGAKf969LrASgS+BUXts1SUyh4TYdWscvLAS9iNChlMyYm3ZYmO
+         S7dQL3Qnhhb/Jk/eABywE17OMn7/mRXAdKwJ6Fnh2IetHkCSBTnsanXGTfjbhbYtpwBS
+         yFZ13bcNTCWq/lg5sxvMUnHmf7h5B9qKFcX0ZbA9EUOhbOvHTEDWsy95cMJWzSzEgt79
+         PEMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=T6bZ/xVZVyhHfpTj1/RFkfJuWOYY5J7jvetTIMpfAHI=;
-        b=ZQ9a0fQmd9DkdHPPj5oUnSn92Nt6sF21pPzOdHjBIRHVGnjmD2LNtv0/1JaaciuaU0
-         aYuPsitCfkjP+sjKobPxi6450+rjr/v4hzl+uWFn1Makz80kQqA7BGF7LNVrBCvV9MJE
-         gex8E2cg6NjeaPF7b6ONxw7FKw3nvNZ9Xi3wJTIrOjzUi1K6b7qARGFaIZtbi7Wwg4MS
-         jR0nshesdETzILM380e4DyR8GstvzG5xfWkArzkO4ElNu06cgVdpCamQ82EdcGTyYn0Z
-         3o4rvY4D0VWyr4YT51jGTXHAObgvUXB94gg7hsGGYtoIl/0eSceBHEnVl7Uak2NIhC6e
-         HEXg==
-X-Gm-Message-State: AOAM532JM0Pfg6pu8MuuhdmTgDkZJsQ/yzOvrecm6lE2phxZYiw6q3xN
-        fo7dAv+/rh+2qHk77R8qczN9NQndKRLL5u9cQ9G1pJZPzp4yQg==
-X-Google-Smtp-Source: ABdhPJzGmeYG6vHQRG7kp+u24+mSoF2BVMnPjwxhcg+KjWkAPEDz6AokinwgBzRd3BmDNIVpspazSE35okXZpBjsI+o=
-X-Received: by 2002:a05:600c:19cc:b0:394:8dc2:a23b with SMTP id
- u12-20020a05600c19cc00b003948dc2a23bmr15553975wmq.182.1652456356868; Fri, 13
- May 2022 08:39:16 -0700 (PDT)
+        bh=v5/uoQI8/5f91IWn7HyX+VbvfqchZrWzzvoEosENEnw=;
+        b=vpAcXhVlMxqv4jH2YzjSYvenny0qa3po2nznWn5eOuC6xHRwMgGDlsj/y/8SBP6dPY
+         TArvpUnKjoxA0W3P8PkAtMnvUrP3OXTRCTPm5uWfK5Kj7ltdcMhoVIBakYgR4Ak9mGl8
+         AZnhdLeP6pAHxwGP2yPbcT/U1PX9x/H33FGajFZ5WYRwpKQyRXra0BR/Es/6Pb10vOJj
+         Yz89RAf0xrHtOVSB+dQutCR5QVuaDoVH5GVPJ3tgx+X+3GM97f8xYe6nvNnPReDpNx0P
+         OJXnTmAL+vwjuP0uopgZ2Z31Wd4gjcMBr2ZWfIgJUydDLjr0qT+wgy11sQPgIenw0YcJ
+         pnhg==
+X-Gm-Message-State: AOAM531GqDVvjyjuHmhX4LVvjjAouG1zd5GaH86keYA0BgIV1QhGJNnK
+        HTj68QeMiHf4K3K1bNx0FbJvrMMLv9UjvbLcn7l6Gw==
+X-Google-Smtp-Source: ABdhPJzszfA1XvQWtTBZcFgsXr9ZUTHASL4KfmRbzxaiIZmS0P3iO9wEA7gsX7fBDbKX/UcnyuA06xQ129+Br36Q9+w=
+X-Received: by 2002:adf:dd0e:0:b0:20a:c689:f44a with SMTP id
+ a14-20020adfdd0e000000b0020ac689f44amr4538143wrm.40.1652456537266; Fri, 13
+ May 2022 08:42:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220513151554.1054452-1-kan.liang@linux.intel.com> <20220513151554.1054452-2-kan.liang@linux.intel.com>
-In-Reply-To: <20220513151554.1054452-2-kan.liang@linux.intel.com>
+References: <20220513040519.1499333-1-irogers@google.com> <20220513040519.1499333-2-irogers@google.com>
+ <6341384c-b3e6-fbe5-f29f-e0db114bd439@huawei.com>
+In-Reply-To: <6341384c-b3e6-fbe5-f29f-e0db114bd439@huawei.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 13 May 2022 08:39:03 -0700
-Message-ID: <CAP-5=fUO+ag5_HWeYn+_Q4vMtFGSux7sdEEbWm1xFp_HZKfJ1g@mail.gmail.com>
-Subject: Re: [PATCH 1/4] perf evsel: Fixes topdown events in a weak group for
- the hybrid platform
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        zhengjun.xing@linux.intel.com, adrian.hunter@intel.com,
-        ak@linux.intel.com, eranian@google.com
+Date:   Fri, 13 May 2022 08:42:04 -0700
+Message-ID: <CAP-5=fX+PfnyHRc=-sQMo1_mGLzCJ77pSfzXXHVUEOHtVFGwxA@mail.gmail.com>
+Subject: Re: [PATCH 1/7] perf test: Skip reason for suites with 1 test
+To:     John Garry <john.garry@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
+        Marco Elver <elver@google.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 13, 2022 at 8:16 AM <kan.liang@linux.intel.com> wrote:
+On Fri, May 13, 2022 at 8:29 AM John Garry <john.garry@huawei.com> wrote:
 >
-> From: Kan Liang <kan.liang@linux.intel.com>
+> On 13/05/2022 05:05, Ian Rogers wrote:
+> > When a suite has just 1 subtest, the subtest number is given as -1 to
+> > avoid indented printing. When this subtest number is seen for the skip
+> > reason, use the reason of the first test.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   tools/perf/tests/builtin-test.c | 6 +++---
+> >   1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > index fac3717d9ba1..33fcafa0fa79 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -137,10 +137,10 @@ static bool has_subtests(const struct test_suite *t)
+> >
+> >   static const char *skip_reason(const struct test_suite *t, int subtest)
+> >   {
+> > -     if (t->test_cases && subtest >= 0)
+> > -             return t->test_cases[subtest].skip_reason;
+> > +     if (!t->test_cases)
+> > +             return NULL;
+> >
+> > -     return NULL;
+> > +     return t->test_cases[subtest >= 0 ? subtest : 0].skip_reason;
+> >   }
 >
-> The patch ("perf evlist: Keep topdown counters in weak group") fixes the
-> perf metrics topdown event issue when the topdown events are in a weak
-> group on a non-hybrid platform. However, it doesn't work for the hybrid
-> platform.
+> I was not sure which suite has a single tastcase, so I experimented for
+> libpfm4 by deleting a testcase so it has only 1x remaining, I get:
 >
-> $./perf stat -e '{cpu_core/slots/,cpu_core/topdown-bad-spec/,
-> cpu_core/topdown-be-bound/,cpu_core/topdown-fe-bound/,
-> cpu_core/topdown-retiring/,cpu_core/branch-instructions/,
-> cpu_core/branch-misses/,cpu_core/bus-cycles/,cpu_core/cache-misses/,
-> cpu_core/cache-references/,cpu_core/cpu-cycles/,cpu_core/instructions/,
-> cpu_core/mem-loads/,cpu_core/mem-stores/,cpu_core/ref-cycles/,
-> cpu_core/cache-misses/,cpu_core/cache-references/}:W' -a sleep 1
+> before your change:
+> john@localhost:~/acme/tools/perf> sudo ./perf test 63
+> 63: Test libpfm4 support : Skip
 >
->  Performance counter stats for 'system wide':
+> after:
 >
->        751,765,068      cpu_core/slots/                                               (84.07%)
->    <not supported>      cpu_core/topdown-bad-spec/
->    <not supported>      cpu_core/topdown-be-bound/
->    <not supported>      cpu_core/topdown-fe-bound/
->    <not supported>      cpu_core/topdown-retiring/
->         12,398,197      cpu_core/branch-instructions/                                     (84.07%)
->          1,054,218      cpu_core/branch-misses/                                       (84.24%)
->        539,764,637      cpu_core/bus-cycles/                                          (84.64%)
->             14,683      cpu_core/cache-misses/                                        (84.87%)
->          7,277,809      cpu_core/cache-references/                                     (77.30%)
->        222,299,439      cpu_core/cpu-cycles/                                          (77.28%)
->         63,661,714      cpu_core/instructions/                                        (84.85%)
->                  0      cpu_core/mem-loads/                                           (77.29%)
->         12,271,725      cpu_core/mem-stores/                                          (77.30%)
->        542,241,102      cpu_core/ref-cycles/                                          (84.85%)
->              8,854      cpu_core/cache-misses/                                        (76.71%)
->          7,179,013      cpu_core/cache-references/                                     (76.31%)
+> john@localhost:~/acme/tools/perf> sudo ./perf test 63
+> 63: Test libpfm4 support : Skip (not compiled in)
 >
->        1.003245250 seconds time elapsed
->
-> A hybrid platform has a different PMU name for the core PMUs, while
-> the current perf hard code the PMU name "cpu".
->
-> The evsel->pmu_name can be used to replace the "cpu" to fix the issue.
-> For a hybrid platform, the pmu_name must be non-NULL. Because there are
-> at least two core PMUs. The PMU has to be specified.
-> For a non-hybrid platform, the pmu_name may be NULL. Because there is
-> only one core PMU, "cpu". For a NULL pmu_name, we can safely assume that
-> it is a "cpu" PMU.
->
-> With the patch,
->
-> $perf stat -e '{cpu_core/slots/,cpu_core/topdown-bad-spec/,
-> cpu_core/topdown-be-bound/,cpu_core/topdown-fe-bound/,
-> cpu_core/topdown-retiring/,cpu_core/branch-instructions/,
-> cpu_core/branch-misses/,cpu_core/bus-cycles/,cpu_core/cache-misses/,
-> cpu_core/cache-references/,cpu_core/cpu-cycles/,cpu_core/instructions/,
-> cpu_core/mem-loads/,cpu_core/mem-stores/,cpu_core/ref-cycles/,
-> cpu_core/cache-misses/,cpu_core/cache-references/}:W' -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->        766,620,266      cpu_core/slots/                                               (84.06%)
->         73,172,129      cpu_core/topdown-bad-spec/ #      9.5% bad speculation         (84.06%)
->        193,443,341      cpu_core/topdown-be-bound/ #     25.0% backend bound           (84.06%)
->        403,940,929      cpu_core/topdown-fe-bound/ #     52.3% frontend bound          (84.06%)
->        102,070,237      cpu_core/topdown-retiring/ #     13.2% retiring                (84.06%)
->         12,364,429      cpu_core/branch-instructions/                                     (84.03%)
->          1,080,124      cpu_core/branch-misses/                                       (84.24%)
->        564,120,383      cpu_core/bus-cycles/                                          (84.65%)
->             36,979      cpu_core/cache-misses/                                        (84.86%)
->          7,298,094      cpu_core/cache-references/                                     (77.30%)
->        227,174,372      cpu_core/cpu-cycles/                                          (77.31%)
->         63,886,523      cpu_core/instructions/                                        (84.87%)
->                  0      cpu_core/mem-loads/                                           (77.31%)
->         12,208,782      cpu_core/mem-stores/                                          (77.31%)
->        566,409,738      cpu_core/ref-cycles/                                          (84.87%)
->             23,118      cpu_core/cache-misses/                                        (76.71%)
->          7,212,602      cpu_core/cache-references/                                     (76.29%)
->
->        1.003228667 seconds time elapsed
->
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/arch/x86/util/evsel.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-> index 00cb4466b4ca..24510bcb4bf4 100644
-> --- a/tools/perf/arch/x86/util/evsel.c
-> +++ b/tools/perf/arch/x86/util/evsel.c
-> @@ -33,8 +33,9 @@ void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr)
->
->  bool arch_evsel__must_be_in_group(const struct evsel *evsel)
->  {
-> -       if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
-> -           !pmu_have_event("cpu", "slots"))
-> +       const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
-> +
-> +       if (!pmu_have_event(pmu_name, "slots"))
+> Although it is odd to have a single sub-test, is there a reason for
+> which we don't print its name? We print the name when there are multiple
+> sub-tests.
 
-Playing devil's advocate, if I have a PMU for my network accelerator
-and it has an event called "slots" then this test will also be true.
-
-The property that is being tested here is "does this CPU have topdown
-events" and so allowing any PMU removes the "does this CPU" part of
-the equation. I think ideally we'd have an arch functions something
-like:
-
-bool arch_pmu__has_intel_topdown_events(void)
-{
-  static bool has_topdown_events = pmu_have_event("cpu", "slots") ||
-pmu_have_event("cpu_core", "slots");
-
-  return has_topdown_events;
-}
-
-bool arch_pmu__supports_intel_topdown_events(const char *pmu_name)
-{
-  if (!pmu_name)
-    return false;
-  return arch_pmu__has_intel_topdown_events() && (!strncmp(pmu_name,
-"cpu") || !strncmp(pmu_name, "cpu_core"));
-}
-
-bool arch_evsel__is_intel_topdown_event(struct evsel *evsel)
-{
-  if (!arch_pmu__supports_intel_topdown_events(evsel->pmu))
-    return false;
-
-  return strcasestr(evsel->name, "slots") || strcasestr(evsel->name, "topdown");
-}
-
-This then gives us:
-
-bool arch_evsel__must_be_in_group(const struct evsel *evsel)
-{
-  return  arch_evsel__is_intel_topdown_event(evsel);
-}
-
-These functions can then be reused for the arch_evlist topdown code,
-etc. What I don't see in these functions is use of any hybrid
-abstraction and so it isn't clear to me how with hybrid something like
-this would be plumbed in.
+The reason was to replicate the existing "perf test" behavior before
+the kunit style transition. The main place we get tests with a single
+sub-test is from the DEFINE_SUITE macro:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/tests.h?h=perf/core#n67
+I agree it looks kind of weird and was inheriting the data structures
+from kunit and the format of the output from perf test.
 
 Thanks,
 Ian
 
->                 return false;
->
->         return evsel->name &&
-> --
-> 2.35.1
->
+> Thanks,
+> John
