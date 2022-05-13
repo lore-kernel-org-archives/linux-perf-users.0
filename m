@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E43C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E112C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381849AbiEMPTd (ORCPT
+        id S1378041AbiEMPTk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 11:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38362 "EHLO
+        Fri, 13 May 2022 11:19:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381851AbiEMPTa (ORCPT
+        with ESMTP id S1381924AbiEMPTe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 11:19:30 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2879A67D3A
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 08:19:14 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id a14-20020a7bc1ce000000b00393fb52a386so7131025wmj.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 08:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mvr9XHdx0qxVi7/a69y2j5WI3jpk5pCGizGaQ78gnbw=;
-        b=cXAdYjghbJB5VyDatvmZoHYYnDnaq49xRZFmRneNHVhMdWj2qOXJ1vyMyPn6YsDl6f
-         QL2ObYAUbDPzwmzk+loqUOaBSoz0fu1xFp24wWBNQeuC4gB8faHQpmXdFi1SCDklvbHO
-         qyD7LuoU2d0mM06yiMH4VMsnosL64M4hayJfjgY3V9RKS/wKlVT5fljAhvTdsZYCASp1
-         85U8AIiflnUsnnVGzd2RHvd+2UkfP9t+o+bZuFBn2Ty/lpHq69IF+Z8Jd60dmYQCwSlI
-         5+D11n48Jh3d6UyJGAJFgvx1TXjGBp42x8tD1WNUl8gsv7nbbHbFHAtF7Sk5/yxjTO3g
-         6SoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mvr9XHdx0qxVi7/a69y2j5WI3jpk5pCGizGaQ78gnbw=;
-        b=mpI7UBONF4BsjhVZmr1sUGLJYFEH+fqzVtxugZzDX/HVGGSebZgy/V1DSZTPzpNa9J
-         yXsAgzuneVRGw8YQUZmeCiYIySVXJ6biM1kxtUK4yFb3/YdITstzjhRF/rIIxTpQlJl7
-         ToFebe8g+HPWwk7wkfpYLcQjUu6EY2MgnjSKQYkbvYQOJOOqhU8jNuRVsVGplZJpaYTn
-         H8F64VkVSvE6N3sq36xFviKtYuqAwgU+FDKvRXr5KfIfn/ww6Mp6oWn4HEa8PQeenSQu
-         ETIBShM/gVaecUA+wFUNthkcZH6dAI4WNGNoPIOpvAmXFFpRiUolyPvKm4v6AZ7SVrYS
-         /nhQ==
-X-Gm-Message-State: AOAM5324p0sbpIaD17pMUXBbuZIJsvLyDs9GC/KUyKPzW5Vir0H8Wrcx
-        cq1gbA9uLLVRmBSlWAuvSsUz0hfNV0qy0uM/H6bPew==
-X-Google-Smtp-Source: ABdhPJzPkrGoy4a/xoVw8mWXDb0nSGCHP4Ckc0NEY1vte+swInqwionk6DZRJZGCJvzDy95WRyC597CPmsjvhpAdJU0=
-X-Received: by 2002:a05:600c:19cc:b0:394:8dc2:a23b with SMTP id
- u12-20020a05600c19cc00b003948dc2a23bmr15471129wmq.182.1652455152508; Fri, 13
- May 2022 08:19:12 -0700 (PDT)
+        Fri, 13 May 2022 11:19:34 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38BCD66C8A;
+        Fri, 13 May 2022 08:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652455169; x=1683991169;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=ILnv32Y4KW3e6en/eXkF78JI0qhV509E/SOG9iNNSsQ=;
+  b=ema3e628yuMvYOqfQGeJTTpISsKWwd7AG60LxdLRDin/lnTpHj7K7nBh
+   m52Tphe3FtXDRwR7VaH3mZlxNxc4zeGUkGTockLzRcF/ADl2mP9/kF1+R
+   4weVt7y06txYlnIbRLlFMsEzITQ4lvmuTsj9w5T0iOJEYhfj0tG6jPcYW
+   6nYal4vLjbfgm2aYKlCNBfA11FlU0xeZSvxQWiUd6vEpDAENQUBu/RmmO
+   za7xplQbL7Kls4c285rFp2Ob8KbsruSYG06GFy1eJE4abQ/JGg4C1GOnG
+   Saig9BlcHOcS2tE2CfQLdb6/HstSadpnkGx5aTBoN3lxiUmPpL2OQJVga
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="270461295"
+X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
+   d="scan'208";a="270461295"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 08:19:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
+   d="scan'208";a="637320487"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 13 May 2022 08:19:28 -0700
+Received: from [10.252.212.211] (kliang2-MOBL.ccr.corp.intel.com [10.252.212.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id EBC78580A88;
+        Fri, 13 May 2022 08:19:25 -0700 (PDT)
+Message-ID: <200b08cf-bdae-3d14-011e-fe2ae8173926@linux.intel.com>
+Date:   Fri, 13 May 2022 11:19:24 -0400
 MIME-Version: 1.0
-References: <20220512061308.1152233-1-irogers@google.com> <8ba20985-8116-c7f7-a082-ec30152d9adb@linux.intel.com>
-In-Reply-To: <8ba20985-8116-c7f7-a082-ec30152d9adb@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 13 May 2022 08:18:59 -0700
-Message-ID: <CAP-5=fXS2r245frPSdzjkQUPMQK_Yrm5+g_cfKQRFiAkoi7Ocg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
 Subject: Re: [PATCH v2 0/2] Fix topdown event weak grouping
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -71,95 +70,64 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220512061308.1152233-1-irogers@google.com>
+ <8ba20985-8116-c7f7-a082-ec30152d9adb@linux.intel.com>
+In-Reply-To: <8ba20985-8116-c7f7-a082-ec30152d9adb@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 13, 2022 at 7:25 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->
+
+
+On 5/13/2022 10:25 AM, Liang, Kan wrote:
+> 
+> 
 > On 5/12/2022 2:13 AM, Ian Rogers wrote:
-> > Keep topdown events within a group when a weak group is broken. This
-> > is a requirement as topdown events must form a group.
-> >
-> > Add perf stat testing including for required topdown event group
-> > behaviors.
-> >
-> > Note: as with existing topdown evsel/evlist code topdown events are
-> > assumed to be on the PMU "cpu". On Alderlake the PMU "cpu_core" should
-> > also be tested. Future changes can fix Alderlake.
->
-> I will send a follow-up patch to fix the weak grouping for the hybrid
+>> Keep topdown events within a group when a weak group is broken. This
+>> is a requirement as topdown events must form a group.
+>>
+>> Add perf stat testing including for required topdown event group
+>> behaviors.
+>>
+>> Note: as with existing topdown evsel/evlist code topdown events are
+>> assumed to be on the PMU "cpu". On Alderlake the PMU "cpu_core" should
+>> also be tested. Future changes can fix Alderlake.
+> 
+> I will send a follow-up patch to fix the weak grouping for the hybrid 
 > platform shortly.
->
-> For the non-hybrid platform, the patch set looks good to me.
+> 
 
-Thanks. I was looking into things like perf_pmu__for_each_hybrid_pmu:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu-hybrid.h?h=perf/core#n13
-
-The issue is that we only really care about "cpu_core" and "cpu" for
-topdown events, so using a loop isn't clearly beneficial as it'll
-include "cpu_atom". Also, the hybrid parsing code only works for
-Intel:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu-hybrid.c?h=perf/core#n28
-so I have a hard time seeing this kind of code as making things more generic.
-
-What we really want in this case is some way of iterating over PMUs
-for CPU like things (note the property is CPU like, not hybrid). There
-is an unfortunate naming for ARM where this property got called core:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu.c?h=perf/core#n679
-
-The PMUs iterated are architecture specific and should probably be set
-up via a function on a weak symbol - the default to just use "cpu".
-Unfortunately Intel uses a cpus file in sysfs to indicate hybrid and
-that is set up differently on ARM.
-
-So with all that said my hybrid support code is to change:
-
-if (pmu_have_event("cpu", "slots"))
-
-to:
-
-if (pmu_have_event("cpu", "slots")) || pmu_have_event("cpu_core", "slots"))
-
-Longer term I think we need to rethink hybrid. I'm not sure hybrid is
-the correct term, we want all hard coded "cpu" to be a set of things
-like "cpu", "cpu_core", "cpu_atom" or the appropriate PMU on ARM. As I
-said in:
-https://lore.kernel.org/lkml/CAP-5=fWRRZsyJZ-gky-FOFz79zW_3r78d_0APpj5sf66HqTpLw@mail.gmail.com/
-I think the sane way to do this is to turn all "event sources" into a
-sysfs like file system and to have clear discovery rules. The problem
-right now is to clean up and transition to that, while maintaining
-existing code working. Let me know if there's a better way to have
-this conversation. My own work pushing in that direction is currently
-gated by these changes landing:
-https://lore.kernel.org/lkml/20220511211526.1021908-1-irogers@google.com/
+Here it is.
+https://lore.kernel.org/all/20220513151554.1054452-1-kan.liang@linux.intel.com/
 
 Thanks,
-Ian
+Kan
 
-
-
+> For the non-hybrid platform, the patch set looks good to me.
+> 
 > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->
+> 
 > Thanks,
 > Kan
->
-> >
-> > v2. Correct behavior wrt pmu prefixed events and avoid the test using
-> >      deprecated events: Suggested-by: Liang, Kan <kan.liang@linux.intel.com>
-> >
-> > Ian Rogers (2):
-> >    perf evlist: Keep topdown counters in weak group
-> >    perf test: Add basic stat and topdown group test
-> >
-> >   tools/perf/arch/x86/util/evsel.c | 12 ++++++
-> >   tools/perf/tests/shell/stat.sh   | 67 ++++++++++++++++++++++++++++++++
-> >   tools/perf/util/evlist.c         | 16 +++++++-
-> >   tools/perf/util/evsel.c          | 10 +++++
-> >   tools/perf/util/evsel.h          |  3 ++
-> >   5 files changed, 106 insertions(+), 2 deletions(-)
-> >   create mode 100755 tools/perf/tests/shell/stat.sh
-> >
+> 
+>>
+>> v2. Correct behavior wrt pmu prefixed events and avoid the test using
+>>      deprecated events: Suggested-by: Liang, Kan 
+>> <kan.liang@linux.intel.com>
+>>
+>> Ian Rogers (2):
+>>    perf evlist: Keep topdown counters in weak group
+>>    perf test: Add basic stat and topdown group test
+>>
+>>   tools/perf/arch/x86/util/evsel.c | 12 ++++++
+>>   tools/perf/tests/shell/stat.sh   | 67 ++++++++++++++++++++++++++++++++
+>>   tools/perf/util/evlist.c         | 16 +++++++-
+>>   tools/perf/util/evsel.c          | 10 +++++
+>>   tools/perf/util/evsel.h          |  3 ++
+>>   5 files changed, 106 insertions(+), 2 deletions(-)
+>>   create mode 100755 tools/perf/tests/shell/stat.sh
+>>
