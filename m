@@ -2,39 +2,39 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E49C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 16:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A358C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 17:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359461AbiEMQqv (ORCPT
+        id S1382616AbiEMRBS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 12:46:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
+        Fri, 13 May 2022 13:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353194AbiEMQqu (ORCPT
+        with ESMTP id S1382843AbiEMRBP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 12:46:50 -0400
+        Fri, 13 May 2022 13:01:15 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2029517C0;
-        Fri, 13 May 2022 09:46:49 -0700 (PDT)
-Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L0DxN2RFvz67Dl8;
-        Sat, 14 May 2022 00:43:52 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2AA15729;
+        Fri, 13 May 2022 10:01:14 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L0FG04w18z67n0t;
+        Sat, 14 May 2022 00:58:16 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 13 May 2022 18:46:47 +0200
+ 15.1.2375.24; Fri, 13 May 2022 19:01:12 +0200
 Received: from [10.47.25.226] (10.47.25.226) by lhreml724-chm.china.huawei.com
  (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 13 May
- 2022 17:46:46 +0100
-Message-ID: <0461c8ea-a872-2581-55ec-0e2ed4912b21@huawei.com>
-Date:   Fri, 13 May 2022 17:46:43 +0100
+ 2022 18:01:10 +0100
+Message-ID: <cd8f8fca-a1e0-e4de-92e4-536dcb2c1f7c@huawei.com>
+Date:   Fri, 13 May 2022 18:01:08 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
-Subject: Re: [PATCH 1/7] perf test: Skip reason for suites with 1 test
-To:     Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
+Subject: Re: [PATCH 2/7] perf test: Use skip in vmlinux kallsyms
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -46,16 +46,12 @@ CC:     Peter Zijlstra <peterz@infradead.org>,
         Carsten Haitzler <carsten.haitzler@arm.com>,
         Marco Elver <elver@google.com>,
         Michael Petlan <mpetlan@redhat.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Stephane Eranian <eranian@google.com>
 References: <20220513040519.1499333-1-irogers@google.com>
- <20220513040519.1499333-2-irogers@google.com>
- <6341384c-b3e6-fbe5-f29f-e0db114bd439@huawei.com>
- <CAP-5=fX+PfnyHRc=-sQMo1_mGLzCJ77pSfzXXHVUEOHtVFGwxA@mail.gmail.com>
- <b6e28614-e348-b490-bf33-af5810a60722@huawei.com>
- <CAP-5=fVA+x_sNuWCOMj9ASBpFanms8DkAvLkbs5URDvcBW1itg@mail.gmail.com>
+ <20220513040519.1499333-3-irogers@google.com>
 From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <CAP-5=fVA+x_sNuWCOMj9ASBpFanms8DkAvLkbs5URDvcBW1itg@mail.gmail.com>
+In-Reply-To: <20220513040519.1499333-3-irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.47.25.226]
@@ -66,29 +62,17 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 13/05/2022 17:34, Ian Rogers wrote:
->>>> john@localhost:~/acme/tools/perf> sudo ./perf test 63
->>>> 63: Test libpfm4 support : Skip (not compiled in)
->>>>
->>>> Although it is odd to have a single sub-test, is there a reason for
->>>> which we don't print its name? We print the name when there are multiple
->>>> sub-tests.
->>> The reason was to replicate the existing "perf test" behavior before
->>> the kunit style transition. The main place we get tests with a single
->>> sub-test is from the DEFINE_SUITE macro:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/tests.h?h=perf/core#n67
->>> I agree it looks kind of weird and was inheriting the data structures
->>> from kunit and the format of the output from perf test.
->> Out of curiosity, which suite is this that you find only has a single
->> subtest? Does it possibly only have a single subtest as some others may
->> be compiled out?
-> I was getting it when I added a skip message to the openat syscall
-> tests in patch 3:
-> https://lore.kernel.org/lkml/20220513040519.1499333-4-irogers@google.com/
+On 13/05/2022 05:05, Ian Rogers wrote:
+> Currently failures in reading vmlinux or kallsyms result in a test
+> failure. However, the failure is typically permission related. 
+
+If the user requires root priviledges then should we just mention this 
+would be a problem for this test?
+
+> Prefer to
+> flag these failures as skip.
 > 
-> I didn't see any changes with any existing tests.
+> Signed-off-by: Ian Rogers<irogers@google.com>
 
-I suppose it works when the suite has the same name as the subtest, so, 
-FWIW:
-
-Reviewed-by: John Garry <john.garry@huawei.com>
+Thanks,
+John
