@@ -2,82 +2,283 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6B7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 18:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95542C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 18:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241000AbiEMSNx (ORCPT
+        id S1383323AbiEMSdB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 14:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48114 "EHLO
+        Fri, 13 May 2022 14:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232992AbiEMSNw (ORCPT
+        with ESMTP id S1383352AbiEMSdA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 14:13:52 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB07219CEF6;
-        Fri, 13 May 2022 11:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652465630; x=1684001630;
-  h=from:to:cc:subject:references:date:in-reply-to:
-   message-id:mime-version;
-  bh=BWYV+Oi9Z/0NNbOFw08aSu8Ir6Eg+66KwQpMi+GhjdE=;
-  b=OxmfL+GJC3tvEHYQulZ/RA3UbR2vhyc5DDkcArAsfO6HJhBNZlsZxyR8
-   kWyONr+nTfihd/Y8WFvYjQDgGtOJF1Tyu0GHbKBR9NOT8UzS8LM30Xw7f
-   52Dr9/kmh00B/VMptZm+WuVHPmn8+/ua5XXJNB8MHVjhUOunPyLXc2SFO
-   ACEjeyKdKOvEM99hGoizI/UU9AORyXnlwAi+X+AevqwGqJTlBv6qEU1ro
-   4CPCXB0ke4KRXaE+NdjtPP3oJTJ7kvtyTPe4NJb9q8UyWvdsZ5n5L4lrQ
-   nDzBvhZxChy7iOPzOhmk2stRW+YIg2LTGtqPY55z42iJHeZn5a9K1btni
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="270048382"
-X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="270048382"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 11:13:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="712512622"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.74.11])
-  by fmsmga001.fm.intel.com with ESMTP; 13 May 2022 11:13:49 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id C84F9301AB6; Fri, 13 May 2022 11:13:49 -0700 (PDT)
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH 6/6] perf intel-pt: Add guest_code support
-References: <20220513090237.10444-1-adrian.hunter@intel.com>
-        <20220513090237.10444-7-adrian.hunter@intel.com>
-        <875ym9h4mt.fsf@linux.intel.com>
-        <df56f04b-cb25-5a47-ffef-b2e2ee0f6b74@intel.com>
-Date:   Fri, 13 May 2022 11:13:49 -0700
-In-Reply-To: <df56f04b-cb25-5a47-ffef-b2e2ee0f6b74@intel.com> (Adrian Hunter's
-        message of "Fri, 13 May 2022 18:14:49 +0300")
-Message-ID: <871qwxgv1e.fsf@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+        Fri, 13 May 2022 14:33:00 -0400
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D677828E3B
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 11:32:58 -0700 (PDT)
+Received: by mail-vk1-xa2d.google.com with SMTP id t12so4617006vkt.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 11:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UFf5Q+rPZWFlwxbruD9mEK3GGUJ5TDV+dFP9Ogo+EEY=;
+        b=nmRRtC83/FAP/XCofwyh9YtCWj24sUP7ZHPXBO4+gp3Qsj4xnqTuGQkgYm51zkVlE1
+         bnaQXVkreD/u27e7d6c2f/NaYoXesUMcal397EsLm6IloZzshUWIiBniyzHaLF6FJ99/
+         A3QY610WzlPl3Hhic4Nur8/VNFGwOH3/1bHFcca6Jnhb7IgBY2MtaEDJlP/gT9FlQVfm
+         04zkq/xWEAehEymHgiz/w9z7ESizM4iToF++RTyQT9QlhWjJ9Zy7tyWDJKilT9ytL9lu
+         DGlutkahdBnxVbc9NYyz/0jS5e2iG76yesrqTrbOEAM42/+7HwhSCMLD0O8NJZCJH5R8
+         MUiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UFf5Q+rPZWFlwxbruD9mEK3GGUJ5TDV+dFP9Ogo+EEY=;
+        b=ZscJRGN7aZChjRAECMF1Dl/j9MgAuOWAbj3IYxwwDbT4HiiV5aRk1WLHpjtmBPp+Xb
+         xzePcU7fEOLOaydFydRPE+jbj3zj6eb08KHf75aucn/xsOY9P1nlCTLgliViKGBYfcUg
+         //uJqPXR/zursU9c6S3ONtOb2Dgubo3Uw4vrZ8++piC5S2XGa0tA+S2W7C/l7Jc2v0YO
+         EQ66WZaV7EcK+7ZIGUrXcCRvHAcbKtNPeFreZzukvu8rhm5OdR+cGb6aj+LuBD3U6ldB
+         7kKlfRAz9vnQh6lHHVIeG/UCL7DLpRtPZi4e+/nxWq7uwzq6PZpGDzPs1uWd92Z2Wz/7
+         muGQ==
+X-Gm-Message-State: AOAM532KRLlNR1Ru6trf3TBGbP2fGm2uPA7/3Eod0Ok7v4GQqnG0KZ1E
+        R+ETmANeGpbQKftbIN/ipu7L0q0OVEjJWEdxiG3mpRXpJQ2y4g==
+X-Google-Smtp-Source: ABdhPJx7MS1mGT06m/TZc33QRflyBrwzQPiiU9PrGQlrymD/eEqsWLY7m+a09rLOoqeE5sqfIW2M4EKnmu5mTftpzkk=
+X-Received: by 2002:a1f:9fc4:0:b0:345:5848:4f44 with SMTP id
+ i187-20020a1f9fc4000000b0034558484f44mr2919556vke.2.1652466777767; Fri, 13
+ May 2022 11:32:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20220511115438.84032-1-atrajeev@linux.vnet.ibm.com> <be9726bc462d3b00243bd2161fb8e153b919db1e.camel@linux.vnet.ibm.com>
+In-Reply-To: <be9726bc462d3b00243bd2161fb8e153b919db1e.camel@linux.vnet.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 13 May 2022 11:32:45 -0700
+Message-ID: <CAP-5=fX7XXHUzQvKQf-bmWxkJpMUTaRSca8oOo4w-3TgF_mHYQ@mail.gmail.com>
+Subject: Re: [PATCH V2] tools/perf/tests: Skip perf BPF test if clang is not present
+To:     Disha Goel <disgoel@linux.vnet.ibm.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Adrian Hunter <adrian.hunter@intel.com> writes:
->> 
->> I'm still not fully sure how it exactly finds the code on the host,
->> how is the code transferred?
+On Thu, May 12, 2022 at 11:16 PM Disha Goel <disgoel@linux.vnet.ibm.com> wrote:
 >
-> I don't know.  From a quick look at the code in
-> tools/testing/selftests/kvm/lib/kvm_util.c it seems to be using
-> KVM_SET_USER_MEMORY_REGION IOCTL.
+>
+>
+> -----Original Message-----
+> From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> To: acme@kernel.org, jolsa@kernel.org
+> Cc: mpe@ellerman.id.au, linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, irogers@google.com
+> Subject: [PATCH V2] tools/perf/tests: Skip perf BPF test if clang is not present
+> Date: Wed, 11 May 2022 17:24:38 +0530
+>
+> Perf BPF filter test fails in environment where "clang"
+>
+> is not installed.
+>
+>
+> Test failure logs:
+>
+>
+> <<>>
+>
+>  42: BPF filter                    :
+>
+>  42.1: Basic BPF filtering         : Skip
+>
+>  42.2: BPF pinning                 : FAILED!
+>
+>  42.3: BPF prologue generation     : FAILED!
+>
+> <<>>
+>
+>
+> Enabling verbose option provided debug logs which says
+>
+> clang/llvm needs to be installed. Snippet of verbose logs:
+>
+>
+> <<>>
+>
+>  42.2: BPF pinning                  :
+>
+>  --- start ---
+>
+> test child forked, pid 61423
+>
+> ERROR: unable to find clang.
+>
+> Hint: Try to install latest clang/llvm to support BPF.
+>
+>         Check your $PATH
+>
+>
+> <<logs_here>>
+>
+>
+> Failed to compile test case: 'Basic BPF llvm compile'
+>
+> Unable to get BPF object, fix kbuild first
+>
+> test child finished with -1
+>
+>  ---- end ----
+>
+> BPF filter subtest 2: FAILED!
+>
+> <<>>
+>
+>
+> Here subtests, "BPF pinning" and "BPF prologue generation"
+>
+> failed and logs shows clang/llvm is needed. After installing
+>
+> clang, testcase passes.
+>
+>
+> Reason on why subtest failure happens though logs has proper
+>
+> debug information:
+>
+> Main function __test__bpf calls test_llvm__fetch_bpf_obj by
+>
+> passing 4th argument as true ( 4th arguments maps to parameter
+>
+> "force" in test_llvm__fetch_bpf_obj ). But this will cause
+>
+> test_llvm__fetch_bpf_obj to skip the check for clang/llvm.
+>
+>
+> Snippet of code part which checks for clang based on
+>
+> parameter "force" in test_llvm__fetch_bpf_obj:
+>
+>
+> <<>>
+>
+> if (!force && (!llvm_param.user_set_param &&
+>
+> <<>>
+>
+>
+> Since force is set to "false", test won't get skipped and
+>
+> fails to compile test case. The BPF code compilation needs
+>
+> clang, So pass the fourth argument as "false" and also skip
+>
+> the test if reason for return is "TEST_SKIP"
+>
+>
+> After the patch:
+>
+>
+> <<>>
+>
+>  42: BPF filter                    :
+>
+>  42.1: Basic BPF filtering         : Skip
+>
+>  42.2: BPF pinning                 : Skip
+>
+>  42.3: BPF prologue generation     : Skip
+>
+> <<>>
+>
+>
+> Fixes: ba1fae431e74 ("perf test: Add 'perf test BPF'")
+>
+> Signed-off-by: Athira Rajeev <
+>
+> atrajeev@linux.vnet.ibm.com
+>
+> >
+>
+> ---
+>
+> Changelog:
+>
+>  Addressed review comments from Arnaldo by adding
+>
+>  reason for skipping of testcase.
+>
+>
+>  tools/perf/tests/bpf.c | 10 ++++++----
+>
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+>
+> Tested the patch on powerpc and powernv, perf BPF test works fine with the patch.
+>
+> Tested-by: Disha Goel <disgoel@linux.vnet.ibm.com>
 
-Okay so it assumes that the pages with code on the guest are still intact: that is
-you cannot quit the traced program, or at least not do something that would
-fill it with other data?. Is that correct?
+Acked-by: Ian Rogers <irogers@google.com>
 
-It sounds like with that restriction it's more useful for kernel traces.
+Thanks!
+Ian
 
--Andi
+> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+>
+> index 57b9591f7cbb..17c023823713 100644
+>
+> --- a/tools/perf/tests/bpf.c
+>
+> +++ b/tools/perf/tests/bpf.c
+>
+> @@ -222,11 +222,11 @@ static int __test__bpf(int idx)
+>
+>
+>   ret = test_llvm__fetch_bpf_obj(&obj_buf, &obj_buf_sz,
+>
+>         bpf_testcase_table[idx].prog_id,
+>
+> -       true, NULL);
+>
+> +       false, NULL);
+>
+>   if (ret != TEST_OK || !obj_buf || !obj_buf_sz) {
+>
+>   pr_debug("Unable to get BPF object, %s\n",
+>
+>   bpf_testcase_table[idx].msg_compile_fail);
+>
+> - if (idx == 0)
+>
+> + if ((idx == 0) || (ret == TEST_SKIP))
+>
+>   return TEST_SKIP;
+>
+>   else
+>
+>   return TEST_FAIL;
+>
+> @@ -364,9 +364,11 @@ static int test__bpf_prologue_test(struct test_suite *test __maybe_unused,
+>
+>  static struct test_case bpf_tests[] = {
+>
+>  #ifdef HAVE_LIBBPF_SUPPORT
+>
+>   TEST_CASE("Basic BPF filtering", basic_bpf_test),
+>
+> - TEST_CASE("BPF pinning", bpf_pinning),
+>
+> + TEST_CASE_REASON("BPF pinning", bpf_pinning,
+>
+> + "clang isn't installed or environment missing BPF support"),
+>
+>  #ifdef HAVE_BPF_PROLOGUE
+>
+> - TEST_CASE("BPF prologue generation", bpf_prologue_test),
+>
+> + TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test,
+>
+> + "clang isn't installed or environment missing BPF support"),
+>
+>  #else
+>
+>   TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
+>
+>  #endif
