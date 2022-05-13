@@ -2,121 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E63C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E43C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381824AbiEMPQM (ORCPT
+        id S1381849AbiEMPTd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 11:16:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
+        Fri, 13 May 2022 11:19:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381173AbiEMPQH (ORCPT
+        with ESMTP id S1381851AbiEMPTa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 11:16:07 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC2C5A141;
-        Fri, 13 May 2022 08:16:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652454966; x=1683990966;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WaaPZTGXGvvrIUYYvLuGheNzDThV1e0SRqk9uhMThso=;
-  b=XHLubT2k7LVqpMqjG5th6UYYjvI7PXog8AEIZp3dqYCTJ4qugsFLh2BG
-   EcQzBqPnPV41rmFK2TgRv9Mr9a0yYAWg6aOVWxi2lF6A38cpWIP3PfauP
-   NJclxEdsgo0FALOFRSbmqFWVAZiTjoKU6liYjdxBSqiXN80fo3UykobBK
-   x9z/QnnTUb+YT4vnClpxsrYCeaEK7VMONMwhSPRqLwBbpgaL8dhgV7YaY
-   pWgD7g0s8VsRFKYBiE2vvvNOy1+piFNAmgFpAEf9Mr/Q53iUEnU754Cvy
-   fBZV9Bip2RiF5naH8t1ui2WWZCFG7ztdOyROmPcEos9+Gog0TfUTvt/I3
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="269160154"
-X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="269160154"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 08:16:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="698518059"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orsmga004.jf.intel.com with ESMTP; 13 May 2022 08:16:02 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, mingo@redhat.com, irogers@google.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     peterz@infradead.org, zhengjun.xing@linux.intel.com,
-        adrian.hunter@intel.com, ak@linux.intel.com, eranian@google.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 3/4] perf parse-events: Support different format of the topdown event name
-Date:   Fri, 13 May 2022 08:15:53 -0700
-Message-Id: <20220513151554.1054452-4-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220513151554.1054452-1-kan.liang@linux.intel.com>
-References: <20220513151554.1054452-1-kan.liang@linux.intel.com>
+        Fri, 13 May 2022 11:19:30 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2879A67D3A
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 08:19:14 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id a14-20020a7bc1ce000000b00393fb52a386so7131025wmj.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 08:19:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mvr9XHdx0qxVi7/a69y2j5WI3jpk5pCGizGaQ78gnbw=;
+        b=cXAdYjghbJB5VyDatvmZoHYYnDnaq49xRZFmRneNHVhMdWj2qOXJ1vyMyPn6YsDl6f
+         QL2ObYAUbDPzwmzk+loqUOaBSoz0fu1xFp24wWBNQeuC4gB8faHQpmXdFi1SCDklvbHO
+         qyD7LuoU2d0mM06yiMH4VMsnosL64M4hayJfjgY3V9RKS/wKlVT5fljAhvTdsZYCASp1
+         85U8AIiflnUsnnVGzd2RHvd+2UkfP9t+o+bZuFBn2Ty/lpHq69IF+Z8Jd60dmYQCwSlI
+         5+D11n48Jh3d6UyJGAJFgvx1TXjGBp42x8tD1WNUl8gsv7nbbHbFHAtF7Sk5/yxjTO3g
+         6SoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mvr9XHdx0qxVi7/a69y2j5WI3jpk5pCGizGaQ78gnbw=;
+        b=mpI7UBONF4BsjhVZmr1sUGLJYFEH+fqzVtxugZzDX/HVGGSebZgy/V1DSZTPzpNa9J
+         yXsAgzuneVRGw8YQUZmeCiYIySVXJ6biM1kxtUK4yFb3/YdITstzjhRF/rIIxTpQlJl7
+         ToFebe8g+HPWwk7wkfpYLcQjUu6EY2MgnjSKQYkbvYQOJOOqhU8jNuRVsVGplZJpaYTn
+         H8F64VkVSvE6N3sq36xFviKtYuqAwgU+FDKvRXr5KfIfn/ww6Mp6oWn4HEa8PQeenSQu
+         ETIBShM/gVaecUA+wFUNthkcZH6dAI4WNGNoPIOpvAmXFFpRiUolyPvKm4v6AZ7SVrYS
+         /nhQ==
+X-Gm-Message-State: AOAM5324p0sbpIaD17pMUXBbuZIJsvLyDs9GC/KUyKPzW5Vir0H8Wrcx
+        cq1gbA9uLLVRmBSlWAuvSsUz0hfNV0qy0uM/H6bPew==
+X-Google-Smtp-Source: ABdhPJzPkrGoy4a/xoVw8mWXDb0nSGCHP4Ckc0NEY1vte+swInqwionk6DZRJZGCJvzDy95WRyC597CPmsjvhpAdJU0=
+X-Received: by 2002:a05:600c:19cc:b0:394:8dc2:a23b with SMTP id
+ u12-20020a05600c19cc00b003948dc2a23bmr15471129wmq.182.1652455152508; Fri, 13
+ May 2022 08:19:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220512061308.1152233-1-irogers@google.com> <8ba20985-8116-c7f7-a082-ec30152d9adb@linux.intel.com>
+In-Reply-To: <8ba20985-8116-c7f7-a082-ec30152d9adb@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 13 May 2022 08:18:59 -0700
+Message-ID: <CAP-5=fXS2r245frPSdzjkQUPMQK_Yrm5+g_cfKQRFiAkoi7Ocg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Fix topdown event weak grouping
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Fri, May 13, 2022 at 7:25 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>
+> On 5/12/2022 2:13 AM, Ian Rogers wrote:
+> > Keep topdown events within a group when a weak group is broken. This
+> > is a requirement as topdown events must form a group.
+> >
+> > Add perf stat testing including for required topdown event group
+> > behaviors.
+> >
+> > Note: as with existing topdown evsel/evlist code topdown events are
+> > assumed to be on the PMU "cpu". On Alderlake the PMU "cpu_core" should
+> > also be tested. Future changes can fix Alderlake.
+>
+> I will send a follow-up patch to fix the weak grouping for the hybrid
+> platform shortly.
+>
+> For the non-hybrid platform, the patch set looks good to me.
 
-The evsel->name may have a different format for a topdown event, a pure
-topdown name (e.g., topdown-fe-bound), or a PMU name + a topdown name
-(e.g., cpu/topdown-fe-bound/). The cpu/topdown-fe-bound/ kind format
-isn't supported by the arch_evlist__leader(). This format is a very
-common format for a hybrid platform, which requires specifying the PMU
-name for each event.
+Thanks. I was looking into things like perf_pmu__for_each_hybrid_pmu:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu-hybrid.h?h=perf/core#n13
 
-Without the patch,
+The issue is that we only really care about "cpu_core" and "cpu" for
+topdown events, so using a loop isn't clearly beneficial as it'll
+include "cpu_atom". Also, the hybrid parsing code only works for
+Intel:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu-hybrid.c?h=perf/core#n28
+so I have a hard time seeing this kind of code as making things more generic.
 
-$perf stat -e '{instructions,slots,cpu/topdown-fe-bound/}' -a sleep 1
+What we really want in this case is some way of iterating over PMUs
+for CPU like things (note the property is CPU like, not hybrid). There
+is an unfortunate naming for ARM where this property got called core:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu.c?h=perf/core#n679
 
- Performance counter stats for 'system wide':
+The PMUs iterated are architecture specific and should probably be set
+up via a function on a weak symbol - the default to just use "cpu".
+Unfortunately Intel uses a cpus file in sysfs to indicate hybrid and
+that is set up differently on ARM.
 
-     <not counted>      instructions
-     <not counted>      slots
-   <not supported>      cpu/topdown-fe-bound/
+So with all that said my hybrid support code is to change:
 
-       1.003482041 seconds time elapsed
+if (pmu_have_event("cpu", "slots"))
 
-Some events weren't counted. Try disabling the NMI watchdog:
-        echo 0 > /proc/sys/kernel/nmi_watchdog
-        perf stat ...
-        echo 1 > /proc/sys/kernel/nmi_watchdog
-The events in group usually have to be from the same PMU. Try reorganizing the group.
+to:
+
+if (pmu_have_event("cpu", "slots")) || pmu_have_event("cpu_core", "slots"))
+
+Longer term I think we need to rethink hybrid. I'm not sure hybrid is
+the correct term, we want all hard coded "cpu" to be a set of things
+like "cpu", "cpu_core", "cpu_atom" or the appropriate PMU on ARM. As I
+said in:
+https://lore.kernel.org/lkml/CAP-5=fWRRZsyJZ-gky-FOFz79zW_3r78d_0APpj5sf66HqTpLw@mail.gmail.com/
+I think the sane way to do this is to turn all "event sources" into a
+sysfs like file system and to have clear discovery rules. The problem
+right now is to clean up and transition to that, while maintaining
+existing code working. Let me know if there's a better way to have
+this conversation. My own work pushing in that direction is currently
+gated by these changes landing:
+https://lore.kernel.org/lkml/20220511211526.1021908-1-irogers@google.com/
+
+Thanks,
+Ian
 
 
-With the patch,
 
-perf stat -e '{instructions,slots,cpu/topdown-fe-bound/}' -a sleep 1
-
- Performance counter stats for 'system wide':
-
-       157,383,996      slots
-        25,011,711      instructions
-        27,441,686      cpu/topdown-fe-bound/
-
-       1.003530890 seconds time elapsed
-
-Fixes: bc355822f0d9 ("perf parse-events: Move slots only with topdown")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/arch/x86/util/evlist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index cfc208d71f00..75564a7df15b 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -36,7 +36,7 @@ struct evsel *arch_evlist__leader(struct list_head *list)
- 				if (slots == first)
- 					return first;
- 			}
--			if (!strncasecmp(evsel->name, "topdown", 7))
-+			if (strcasestr(evsel->name, "topdown"))
- 				has_topdown = true;
- 			if (slots && has_topdown)
- 				return slots;
--- 
-2.35.1
-
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+>
+> Thanks,
+> Kan
+>
+> >
+> > v2. Correct behavior wrt pmu prefixed events and avoid the test using
+> >      deprecated events: Suggested-by: Liang, Kan <kan.liang@linux.intel.com>
+> >
+> > Ian Rogers (2):
+> >    perf evlist: Keep topdown counters in weak group
+> >    perf test: Add basic stat and topdown group test
+> >
+> >   tools/perf/arch/x86/util/evsel.c | 12 ++++++
+> >   tools/perf/tests/shell/stat.sh   | 67 ++++++++++++++++++++++++++++++++
+> >   tools/perf/util/evlist.c         | 16 +++++++-
+> >   tools/perf/util/evsel.c          | 10 +++++
+> >   tools/perf/util/evsel.h          |  3 ++
+> >   5 files changed, 106 insertions(+), 2 deletions(-)
+> >   create mode 100755 tools/perf/tests/shell/stat.sh
+> >
