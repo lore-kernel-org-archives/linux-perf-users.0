@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11160C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFE4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 15:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382036AbiEMP3T (ORCPT
+        id S1382103AbiEMPiD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 11:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60792 "EHLO
+        Fri, 13 May 2022 11:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382012AbiEMP3N (ORCPT
+        with ESMTP id S1382118AbiEMPh5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 11:29:13 -0400
+        Fri, 13 May 2022 11:37:57 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03C76A009;
-        Fri, 13 May 2022 08:29:10 -0700 (PDT)
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L0C9V3WMHz6H6vZ;
-        Fri, 13 May 2022 23:24:14 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFA670902;
+        Fri, 13 May 2022 08:37:53 -0700 (PDT)
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L0CPq4ns3z67x0m;
+        Fri, 13 May 2022 23:34:55 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 13 May 2022 17:29:07 +0200
+ 15.1.2375.24; Fri, 13 May 2022 17:37:51 +0200
 Received: from [10.47.25.226] (10.47.25.226) by lhreml724-chm.china.huawei.com
  (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 13 May
- 2022 16:29:06 +0100
-Message-ID: <6341384c-b3e6-fbe5-f29f-e0db114bd439@huawei.com>
-Date:   Fri, 13 May 2022 16:29:03 +0100
+ 2022 16:37:49 +0100
+Message-ID: <d08b3d43-b02a-5aeb-e05e-f2f91d6a8f7a@huawei.com>
+Date:   Fri, 13 May 2022 16:37:48 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
-Subject: Re: [PATCH 1/7] perf test: Skip reason for suites with 1 test
+Subject: Re: [PATCH v2 6/7] perf jevents: Switch build to use jevents.py
 To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -41,17 +41,28 @@ To:     Ian Rogers <irogers@google.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         "Namhyung Kim" <namhyung@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        "Sohaib Mohamed" <sohaib.amhmd@gmail.com>,
-        Carsten Haitzler <carsten.haitzler@arm.com>,
-        Marco Elver <elver@google.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
 CC:     Stephane Eranian <eranian@google.com>
-References: <20220513040519.1499333-1-irogers@google.com>
- <20220513040519.1499333-2-irogers@google.com>
+References: <20220511211526.1021908-1-irogers@google.com>
+ <20220511211526.1021908-7-irogers@google.com>
 From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220513040519.1499333-2-irogers@google.com>
+In-Reply-To: <20220511211526.1021908-7-irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.47.25.226]
@@ -62,48 +73,24 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 13/05/2022 05:05, Ian Rogers wrote:
-> When a suite has just 1 subtest, the subtest number is given as -1 to
-> avoid indented printing. When this subtest number is seen for the skip
-> reason, use the reason of the first test.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/tests/builtin-test.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index fac3717d9ba1..33fcafa0fa79 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -137,10 +137,10 @@ static bool has_subtests(const struct test_suite *t)
->   
->   static const char *skip_reason(const struct test_suite *t, int subtest)
->   {
-> -	if (t->test_cases && subtest >= 0)
-> -		return t->test_cases[subtest].skip_reason;
-> +	if (!t->test_cases)
-> +		return NULL;
->   
-> -	return NULL;
-> +	return t->test_cases[subtest >= 0 ? subtest : 0].skip_reason;
->   }
+On 11/05/2022 22:15, Ian Rogers wrote:
+>    # jevents.py uses os.scandir and type hints present in Python 3.5 released in Sept. 2015.
+> +    JEVENTS_PYTHON_GOOD := $(shell $(PYTHON) -c 'import sys;print("1" if(sys.version_info.major >= 3 and sys.version_info.minor >= 5) else "0")')
 
-I was not sure which suite has a single tastcase, so I experimented for 
-libpfm4 by deleting a testcase so it has only 1x remaining, I get:
+I think that many - like me - will have python 2.7, so now will find no 
+pmu-events generated any longer after missing this message in the build :(
 
-before your change:
-john@localhost:~/acme/tools/perf> sudo ./perf test 63
-63: Test libpfm4 support : Skip
+Maybe many will have python >= 3.5 - but I don't know...
 
-after:
+ > + ifneq ($(JEVENTS_PYTHON_GOOD), 1)
+ > + $(warning Python interpreter too old (older than 3.5) disabling 
+jevent generation)
+ > + NO_JEVENTS := 1
 
-john@localhost:~/acme/tools/perf> sudo ./perf test 63
-63: Test libpfm4 support : Skip (not compiled in)
+It is possible to flip NO_JEVENTS to be JEVENTS, i.e. no 
+double-negatives, like NO_JEVENTS := 0
 
-Although it is odd to have a single sub-test, is there a reason for 
-which we don't print its name? We print the name when there are multiple 
-sub-tests.
+ > + endif
 
 Thanks,
 John
