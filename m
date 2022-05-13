@@ -2,191 +2,313 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C91C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 17:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB36C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 May 2022 17:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382306AbiEMRH4 (ORCPT
+        id S1382227AbiEMRZF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 May 2022 13:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58602 "EHLO
+        Fri, 13 May 2022 13:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352197AbiEMRHz (ORCPT
+        with ESMTP id S1378250AbiEMRZE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 May 2022 13:07:55 -0400
-Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1110B6128C
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 10:07:52 -0700 (PDT)
-Received: by mail-ua1-x92b.google.com with SMTP id n8so165859uaj.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 May 2022 10:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SO6cZ4vcFdH6Gw26Rsfe2kTJJS3GLmvIu7jUCMoqB/c=;
-        b=tEwwqEf/QAgZncrVrgI1PvCqCEVehtgalfmgsWRT4PqAixI+ItZ5QYDRJpav5HHIJ9
-         cXOftSG5RIM+jYbU4H7IYYvM2O+tHSiu8S4J9hV7tr2ZT9tzf6reIf9IUtXz0myUFmot
-         cElfczSxUQilGQgTbatodWYMDYHplQjDCW42vrcFSaCImCcPcHc9Zsm5M+NFqPIZr96z
-         6XhxP2RNLl6+epuZKn1Sk2latVMfA7D/BkMo65zjP9/GMCU61+EIRcFOfLFM0qSiCrT7
-         zieWnrn+8idxl91BE8ZF5GGnvYvQs5h8hhsBb4FBwgOOkgP+HX/fjmA+4wkLZo6pTL9q
-         AvDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SO6cZ4vcFdH6Gw26Rsfe2kTJJS3GLmvIu7jUCMoqB/c=;
-        b=AM7ma3A0yKmUw4FxkFzo906PaxV44Ak/fkKDgbuUF7KCP7rYcx0KuMHt5Qcfck2wOI
-         NEbb1i4lqEdVxW7B5ObrfTv93YMlZJg+8gZH4JQV+VjIr5STn0QbkQIeQzrCbU/nXVYl
-         IhTd0FcLJbHHRO0p68e9358EbS01dkSe+Ol135+g/SMa7iqeLo/lVqwEuA5ctKfVR7Gw
-         TX8feJ/Z60tZXMQBX/GYnJNXFRDClDmBLG4Gerj3bbTC2raQ8sg15lU58m9mQ0aQiaSo
-         9RqSceLr5DVhtRgHpot3ju8PGfZlViEO+aSPwEaucehVs7FD2szrZrrS8FT7QnRSH8UD
-         k4UA==
-X-Gm-Message-State: AOAM532onrxDMHOT5yTamLk6zGaWIUU82wCbUCIZ1BMmeiFzampFO72K
-        OcCFtyD6KUoIKYAdi9x0fIHiKBUKQnPnpY1/zoRRrA==
-X-Google-Smtp-Source: ABdhPJxpH83FSHQPHQczwK/rOF+Gbj+oCuJ9KL9UX9oGm665pOLLR/ZVftQEO8pC79yumKEkXBXmgL3qcw0OP7CcI1w=
-X-Received: by 2002:ab0:240a:0:b0:360:7c96:2f8c with SMTP id
- f10-20020ab0240a000000b003607c962f8cmr2718694uan.48.1652461671005; Fri, 13
- May 2022 10:07:51 -0700 (PDT)
+        Fri, 13 May 2022 13:25:04 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 717B355213;
+        Fri, 13 May 2022 10:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652462702; x=1683998702;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lmPz4ZDO2BV2qlOpkASkdHV7oAWWdHMmwLCSXNMydaw=;
+  b=LZNl1FcCGO/mG1H+QYTm4slH44SjkdZlOHtJ1mf3Mxyw6HCLtiV5Rkq6
+   pedoe8yhE78KZ1uiTHRLiABKY5qXgbIP7pqDwF5HTMkiT1mHuuhtholOb
+   8oaMgh7Xpzirxhhyr7thzF72BrFWSTrkcJjToBZej4/nX4iErKm5JWkL3
+   e27e63af8NJHphIHuz3ixuxNMgVm5Ru0RPMdQH+TRbTBgp6S9DsIe2MB0
+   g+DfTrxF2la5hE0KgovllTtFYUdmt5EyDiufXhV8WvH6m78wg4Qa+GFxT
+   zT+HV2ZFuQBIhdGQ4AVC4Zax13rtBBvdUMdNm0d/G1mJ2gWyVX8rEPHUV
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="270295789"
+X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
+   d="scan'208";a="270295789"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 10:25:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
+   d="scan'208";a="595327785"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 13 May 2022 10:25:01 -0700
+Received: from [10.252.212.211] (kliang2-MOBL.ccr.corp.intel.com [10.252.212.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 40B215808F1;
+        Fri, 13 May 2022 10:25:00 -0700 (PDT)
+Message-ID: <49e62a8b-ae3a-00db-f665-00ee235e8827@linux.intel.com>
+Date:   Fri, 13 May 2022 13:24:58 -0400
 MIME-Version: 1.0
-References: <20220513151554.1054452-1-kan.liang@linux.intel.com> <20220513151554.1054452-5-kan.liang@linux.intel.com>
-In-Reply-To: <20220513151554.1054452-5-kan.liang@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 13 May 2022 10:07:39 -0700
-Message-ID: <CAP-5=fUv1LRnMg7PvfvtN1rhc5BXfv_W181LovXe4nptDmwLmQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf parse-events: Move slots event for the hybrid
- platform too
-To:     kan.liang@linux.intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 1/4] perf evsel: Fixes topdown events in a weak group for
+ the hybrid platform
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
 Cc:     acme@kernel.org, mingo@redhat.com, jolsa@kernel.org,
         namhyung@kernel.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, peterz@infradead.org,
         zhengjun.xing@linux.intel.com, adrian.hunter@intel.com,
         ak@linux.intel.com, eranian@google.com
-Content-Type: text/plain; charset="UTF-8"
+References: <20220513151554.1054452-1-kan.liang@linux.intel.com>
+ <20220513151554.1054452-2-kan.liang@linux.intel.com>
+ <CAP-5=fUO+ag5_HWeYn+_Q4vMtFGSux7sdEEbWm1xFp_HZKfJ1g@mail.gmail.com>
+ <018aaf83-fb2a-2b74-7fc1-412f90cccb1b@linux.intel.com>
+ <CAP-5=fXdWKjvZL_Yh95Ghqg+ZQSkoNniprV3w+4NV2Ca-Vrqcw@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fXdWKjvZL_Yh95Ghqg+ZQSkoNniprV3w+4NV2Ca-Vrqcw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 13, 2022 at 8:16 AM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> The commit 94dbfd6781a0 ("perf parse-events: Architecture specific
-> leader override") introduced a feature to reorder the slots event to
-> fulfill the restriction of the perf metrics topdown group. But the
-> feature doesn't work on the hybrid machine.
->
-> $perf stat -e "{cpu_core/instructions/,cpu_core/slots/,cpu_core/topdown-retiring/}" -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->      <not counted>      cpu_core/instructions/
->      <not counted>      cpu_core/slots/
->    <not supported>      cpu_core/topdown-retiring/
->
->        1.002871801 seconds time elapsed
->
-> A hybrid platform has a different PMU name for the core PMUs, while
-> current perf hard code the PMU name "cpu".
->
-> Introduce a new function to check whether the system supports the perf
-> metrics feature. The result is cached for the future usage.
->
-> For X86, the core PMU name always has "cpu" prefix.
->
-> With the patch,
->
-> $perf stat -e "{cpu_core/instructions/,cpu_core/slots/,cpu_core/topdown-retiring/}" -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->         76,337,010      cpu_core/slots/
->         10,416,809      cpu_core/instructions/
->         11,692,372      cpu_core/topdown-retiring/
->
->        1.002805453 seconds time elapsed
->
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/arch/x86/util/evlist.c  |  5 +++--
->  tools/perf/arch/x86/util/topdown.c | 18 ++++++++++++++++++
->  tools/perf/arch/x86/util/topdown.h |  7 +++++++
->  3 files changed, 28 insertions(+), 2 deletions(-)
->  create mode 100644 tools/perf/arch/x86/util/topdown.h
->
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> index 75564a7df15b..68f681ad54c1 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -3,6 +3,7 @@
->  #include "util/pmu.h"
->  #include "util/evlist.h"
->  #include "util/parse-events.h"
-> +#include "topdown.h"
->
->  #define TOPDOWN_L1_EVENTS      "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
->  #define TOPDOWN_L2_EVENTS      "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,topdown-fetch-lat,topdown-mem-bound}"
-> @@ -25,12 +26,12 @@ struct evsel *arch_evlist__leader(struct list_head *list)
->
->         first = list_first_entry(list, struct evsel, core.node);
->
-> -       if (!pmu_have_event("cpu", "slots"))
-> +       if (!topdown_sys_has_perf_metrics())
->                 return first;
->
->         /* If there is a slots event and a topdown event then the slots event comes first. */
->         __evlist__for_each_entry(list, evsel) {
-> -               if (evsel->pmu_name && !strcmp(evsel->pmu_name, "cpu") && evsel->name) {
-> +               if (evsel->pmu_name && !strncmp(evsel->pmu_name, "cpu", 3) && evsel->name) {
->                         if (strcasestr(evsel->name, "slots")) {
->                                 slots = evsel;
->                                 if (slots == first)
-> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-> index 2f3d96aa92a5..95b9fdef59ab 100644
-> --- a/tools/perf/arch/x86/util/topdown.c
-> +++ b/tools/perf/arch/x86/util/topdown.c
-> @@ -3,6 +3,24 @@
->  #include "api/fs/fs.h"
->  #include "util/pmu.h"
->  #include "util/topdown.h"
-> +#include "topdown.h"
-> +
-> +bool topdown_sys_has_perf_metrics(void)
-> +{
-> +       static bool has_perf_metrics;
-> +       static bool cached;
-> +       struct perf_pmu *pmu;
-> +
-> +       if (cached)
-> +               return has_perf_metrics;
-> +
 
-Worth a comment here for the meaning of looking up PERF_TYPE_RAW.
+
+On 5/13/2022 12:43 PM, Ian Rogers wrote:
+> On Fri, May 13, 2022 at 9:24 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 5/13/2022 11:39 AM, Ian Rogers wrote:
+>>> On Fri, May 13, 2022 at 8:16 AM <kan.liang@linux.intel.com> wrote:
+>>>>
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> The patch ("perf evlist: Keep topdown counters in weak group") fixes the
+>>>> perf metrics topdown event issue when the topdown events are in a weak
+>>>> group on a non-hybrid platform. However, it doesn't work for the hybrid
+>>>> platform.
+>>>>
+>>>> $./perf stat -e '{cpu_core/slots/,cpu_core/topdown-bad-spec/,
+>>>> cpu_core/topdown-be-bound/,cpu_core/topdown-fe-bound/,
+>>>> cpu_core/topdown-retiring/,cpu_core/branch-instructions/,
+>>>> cpu_core/branch-misses/,cpu_core/bus-cycles/,cpu_core/cache-misses/,
+>>>> cpu_core/cache-references/,cpu_core/cpu-cycles/,cpu_core/instructions/,
+>>>> cpu_core/mem-loads/,cpu_core/mem-stores/,cpu_core/ref-cycles/,
+>>>> cpu_core/cache-misses/,cpu_core/cache-references/}:W' -a sleep 1
+>>>>
+>>>>    Performance counter stats for 'system wide':
+>>>>
+>>>>          751,765,068      cpu_core/slots/                                               (84.07%)
+>>>>      <not supported>      cpu_core/topdown-bad-spec/
+>>>>      <not supported>      cpu_core/topdown-be-bound/
+>>>>      <not supported>      cpu_core/topdown-fe-bound/
+>>>>      <not supported>      cpu_core/topdown-retiring/
+>>>>           12,398,197      cpu_core/branch-instructions/                                     (84.07%)
+>>>>            1,054,218      cpu_core/branch-misses/                                       (84.24%)
+>>>>          539,764,637      cpu_core/bus-cycles/                                          (84.64%)
+>>>>               14,683      cpu_core/cache-misses/                                        (84.87%)
+>>>>            7,277,809      cpu_core/cache-references/                                     (77.30%)
+>>>>          222,299,439      cpu_core/cpu-cycles/                                          (77.28%)
+>>>>           63,661,714      cpu_core/instructions/                                        (84.85%)
+>>>>                    0      cpu_core/mem-loads/                                           (77.29%)
+>>>>           12,271,725      cpu_core/mem-stores/                                          (77.30%)
+>>>>          542,241,102      cpu_core/ref-cycles/                                          (84.85%)
+>>>>                8,854      cpu_core/cache-misses/                                        (76.71%)
+>>>>            7,179,013      cpu_core/cache-references/                                     (76.31%)
+>>>>
+>>>>          1.003245250 seconds time elapsed
+>>>>
+>>>> A hybrid platform has a different PMU name for the core PMUs, while
+>>>> the current perf hard code the PMU name "cpu".
+>>>>
+>>>> The evsel->pmu_name can be used to replace the "cpu" to fix the issue.
+>>>> For a hybrid platform, the pmu_name must be non-NULL. Because there are
+>>>> at least two core PMUs. The PMU has to be specified.
+>>>> For a non-hybrid platform, the pmu_name may be NULL. Because there is
+>>>> only one core PMU, "cpu". For a NULL pmu_name, we can safely assume that
+>>>> it is a "cpu" PMU.
+>>>>
+>>>> With the patch,
+>>>>
+>>>> $perf stat -e '{cpu_core/slots/,cpu_core/topdown-bad-spec/,
+>>>> cpu_core/topdown-be-bound/,cpu_core/topdown-fe-bound/,
+>>>> cpu_core/topdown-retiring/,cpu_core/branch-instructions/,
+>>>> cpu_core/branch-misses/,cpu_core/bus-cycles/,cpu_core/cache-misses/,
+>>>> cpu_core/cache-references/,cpu_core/cpu-cycles/,cpu_core/instructions/,
+>>>> cpu_core/mem-loads/,cpu_core/mem-stores/,cpu_core/ref-cycles/,
+>>>> cpu_core/cache-misses/,cpu_core/cache-references/}:W' -a sleep 1
+>>>>
+>>>>    Performance counter stats for 'system wide':
+>>>>
+>>>>          766,620,266      cpu_core/slots/                                               (84.06%)
+>>>>           73,172,129      cpu_core/topdown-bad-spec/ #      9.5% bad speculation         (84.06%)
+>>>>          193,443,341      cpu_core/topdown-be-bound/ #     25.0% backend bound           (84.06%)
+>>>>          403,940,929      cpu_core/topdown-fe-bound/ #     52.3% frontend bound          (84.06%)
+>>>>          102,070,237      cpu_core/topdown-retiring/ #     13.2% retiring                (84.06%)
+>>>>           12,364,429      cpu_core/branch-instructions/                                     (84.03%)
+>>>>            1,080,124      cpu_core/branch-misses/                                       (84.24%)
+>>>>          564,120,383      cpu_core/bus-cycles/                                          (84.65%)
+>>>>               36,979      cpu_core/cache-misses/                                        (84.86%)
+>>>>            7,298,094      cpu_core/cache-references/                                     (77.30%)
+>>>>          227,174,372      cpu_core/cpu-cycles/                                          (77.31%)
+>>>>           63,886,523      cpu_core/instructions/                                        (84.87%)
+>>>>                    0      cpu_core/mem-loads/                                           (77.31%)
+>>>>           12,208,782      cpu_core/mem-stores/                                          (77.31%)
+>>>>          566,409,738      cpu_core/ref-cycles/                                          (84.87%)
+>>>>               23,118      cpu_core/cache-misses/                                        (76.71%)
+>>>>            7,212,602      cpu_core/cache-references/                                     (76.29%)
+>>>>
+>>>>          1.003228667 seconds time elapsed
+>>>>
+>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>>> ---
+>>>>    tools/perf/arch/x86/util/evsel.c | 5 +++--
+>>>>    1 file changed, 3 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+>>>> index 00cb4466b4ca..24510bcb4bf4 100644
+>>>> --- a/tools/perf/arch/x86/util/evsel.c
+>>>> +++ b/tools/perf/arch/x86/util/evsel.c
+>>>> @@ -33,8 +33,9 @@ void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr)
+>>>>
+>>>>    bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+>>>>    {
+>>>> -       if ((evsel->pmu_name && strcmp(evsel->pmu_name, "cpu")) ||
+>>>> -           !pmu_have_event("cpu", "slots"))
+>>>> +       const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
+>>>> +
+>>>> +       if (!pmu_have_event(pmu_name, "slots"))
+>>>
+>>> Playing devil's advocate, if I have a PMU for my network accelerator
+>>> and it has an event called "slots" then this test will also be true.
+>>>
+>>
+>> IIRC, the pmu_have_event should only check the event which is exposed by
+>> the kernel. It's very unlikely that another PMU expose the exact same name.
+>>
+>> If you still worry about it, I think we can check the PMU type
+>> PERF_TYPE_RAW here, which is reserved for the core PMU. Others cannot
+>> use it.
+> 
+> That's cool, this isn't documented behavior though:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/include/uapi/linux/perf_event.h?h=perf/core#n34
+> and PERF_TYPE_HARDWARE wouldn't seem a wholly unreasonable type. It
+> kind of feels like depending on a quirk, and so we should bury the
+> quirk in a helper function and document it :-)
+
+The PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE are aliases for the 
+PERF_TYPE_RAW. The PERF_TYPE_HARDWARE is used for the 10 common hardware 
+events and The PERF_TYPE_HW_CACHE is used for the hardware cache events.
+Other core events (not include the atom core events in a hybrid machine) 
+should have the PERF_TYPE_RAW type.
+
+Since the perf metrics is a big core only feature, checking both the 
+PERF_TYPE_RAW type and the slots event should be good enough here.
+
+I will add more comments in V2.
+
+> 
+>> It looks like arch_evsel__must_be_in_group() is the only user for the
+>> evsel__sys_has_perf_metrics() for now, so I make it static.
+>>
+>> The other pmu_have_event("cpu", "slots") is in evlist.c.
+>> topdown_sys_has_perf_metrics() in patch 4 should be used to replace it.
+>> I think Zhengjun will post patches for the changes for the evlist.c
+> 
+> Ok, is Zhengjun putting his changes on top of this and fixing up the
+> APIs or is he waiting on these changes landing? Let me know how to
+> help. I'm guessing landing my changes is the first step.
+
+Right. Your changes is the first step. Then this patch set. Zhengjun's 
+will be on top of us.
 
 Thanks,
-Ian
+Kan
 
-> +       pmu = perf_pmu__find_by_type(PERF_TYPE_RAW);
-> +       if (pmu && pmu_have_event(pmu->name, "slots"))
-> +               has_perf_metrics = true;
-> +
-> +       cached = true;
-> +       return has_perf_metrics;
-> +}
->
->  /*
->   * Check whether we can use a group for top down.
-> diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
-> new file mode 100644
-> index 000000000000..46bf9273e572
-> --- /dev/null
-> +++ b/tools/perf/arch/x86/util/topdown.h
-> @@ -0,0 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _TOPDOWN_H
-> +#define _TOPDOWN_H 1
-> +
-> +bool topdown_sys_has_perf_metrics(void);
-> +
-> +#endif
-> --
-> 2.35.1
->
+> 
+> Thanks,
+> Ian
+> 
+>> diff --git a/tools/perf/arch/x86/util/evsel.c
+>> b/tools/perf/arch/x86/util/evsel.c
+>> index 24510bcb4bf4..a4714174e30f 100644
+>> --- a/tools/perf/arch/x86/util/evsel.c
+>> +++ b/tools/perf/arch/x86/util/evsel.c
+>> @@ -31,11 +31,20 @@ void arch_evsel__fixup_new_cycles(struct
+>> perf_event_attr *attr)
+>>           free(env.cpuid);
+>>    }
+>>
+>> -bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+>> +static bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
+>>    {
+>>           const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
+>>
+>> -       if (!pmu_have_event(pmu_name, "slots"))
+>> +       if ((evsel->core.attr.type == PERF_TYPE_RAW) &&
+>> +           pmu_have_event(pmu_name, "slots"))
+>> +               return true;
+>> +
+>> +       return false;
+>> +}
+>> +
+>> +bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+>> +{
+>> +       if (!evsel__sys_has_perf_metrics(evsel))
+>>                   return false;
+>>
+>>           return evsel->name &&
+>>
+>> Thanks,
+>> Kan
+>>
+>>> The property that is being tested here is "does this CPU have topdown
+>>> events" and so allowing any PMU removes the "does this CPU" part of
+>>> the equation. I think ideally we'd have an arch functions something
+>>> like:
+>>>
+>>> bool arch_pmu__has_intel_topdown_events(void)
+>>> {
+>>>     static bool has_topdown_events = pmu_have_event("cpu", "slots") ||
+>>> pmu_have_event("cpu_core", "slots");
+>>>
+>>>     return has_topdown_events;
+>>> }
+>>>
+>>> bool arch_pmu__supports_intel_topdown_events(const char *pmu_name)
+>>> {
+>>>     if (!pmu_name)
+>>>       return false;
+>>>     return arch_pmu__has_intel_topdown_events() && (!strncmp(pmu_name,
+>>> "cpu") || !strncmp(pmu_name, "cpu_core"));
+>>> }
+>>>
+>>> bool arch_evsel__is_intel_topdown_event(struct evsel *evsel)
+>>> {
+>>>     if (!arch_pmu__supports_intel_topdown_events(evsel->pmu))
+>>>       return false;
+>>>
+>>>     return strcasestr(evsel->name, "slots") || strcasestr(evsel->name, "topdown");
+>>> }
+>>>
+>>> This then gives us:
+>>>
+>>> bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+>>> {
+>>>     return  arch_evsel__is_intel_topdown_event(evsel);
+>>> }
+>>>
+>>> These functions can then be reused for the arch_evlist topdown code,
+>>> etc. What I don't see in these functions is use of any hybrid
+>>> abstraction and so it isn't clear to me how with hybrid something like
+>>> this would be plumbed in.
+>>>
+>>> Thanks,
+>>> Ian
+>>>
+>>>>                   return false;
+>>>>
+>>>>           return evsel->name &&
+>>>> --
+>>>> 2.35.1
+>>>>
