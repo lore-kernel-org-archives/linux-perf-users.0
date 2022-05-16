@@ -2,117 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FF6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 May 2022 16:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B30C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 May 2022 18:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234847AbiEPQpK (ORCPT
+        id S1344528AbiEPSFh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 May 2022 12:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56614 "EHLO
+        Mon, 16 May 2022 14:05:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343776AbiEPQpG (ORCPT
+        with ESMTP id S1344587AbiEPSFg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 May 2022 12:45:06 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936303C4BB;
-        Mon, 16 May 2022 09:45:05 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 12F2722023;
-        Mon, 16 May 2022 16:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1652719504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T1cuhmg/5wnGfWVCfJ3OzVK0K9C2gJVK76XQYPz6KqI=;
-        b=Llq6vrw2FLzDd7Ehr6QLl+N0BoHmma0XEANDL72UpqofMZMo5j2CDuWWJLYok6jijOAu+c
-        aaQ7lVgOZe5+suqo7db8fp+u52SFsfKuJrznCh8rc45nwrXUcRol8JxokYILkGhRfWZ4ej
-        u8Lqds9e+S0nLT6TtjeqOuuwKyZyRHM=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 134102C141;
-        Mon, 16 May 2022 16:45:01 +0000 (UTC)
-Date:   Mon, 16 May 2022 18:44:58 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Gang Li <ligang.bdlg@bytedance.com>
-Cc:     akpm@linux-foundation.org, songmuchun@bytedance.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        ebiederm@xmission.com, keescook@chromium.org,
-        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
-        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
-        apopple@nvidia.com, adobriyan@gmail.com,
-        stephen.s.brennan@oracle.com, ohoono.kwon@samsung.com,
-        haolee.swjtu@gmail.com, kaleshsingh@google.com,
-        zhengqi.arch@bytedance.com, peterx@redhat.com, shy828301@gmail.com,
-        surenb@google.com, ccross@google.com, vincent.whitchurch@axis.com,
-        tglx@linutronix.de, bigeasy@linutronix.de, fenghua.yu@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/5 v1] mm, oom: Introduce per numa node oom for
- CONSTRAINT_MEMORY_POLICY
-Message-ID: <YoJ/ioXwGTdCywUE@dhcp22.suse.cz>
-References: <20220512044634.63586-1-ligang.bdlg@bytedance.com>
+        Mon, 16 May 2022 14:05:36 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4CDCD3A5FC;
+        Mon, 16 May 2022 11:05:31 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 579DBED1;
+        Mon, 16 May 2022 11:05:31 -0700 (PDT)
+Received: from [10.57.4.89] (unknown [10.57.4.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E369A3F66F;
+        Mon, 16 May 2022 11:05:28 -0700 (PDT)
+Message-ID: <61141530-7d4a-ed6a-f8b7-933bd550f3c2@arm.com>
+Date:   Mon, 16 May 2022 19:05:27 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220512044634.63586-1-ligang.bdlg@bytedance.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.9.0
+Subject: Re: [PATCH 00/20] perf vendors events arm64: Multiple Arm CPUs
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20220510104758.64677-1-nick.forrington@arm.com>
+ <YnqJwMfi/bcDmN4H@kernel.org>
+ <b1081013-2cd9-f223-8125-d7e51d784f90@huawei.com>
+ <eec03f0d-d491-511c-d9b0-694c6d527b38@arm.com>
+ <1062b28d-9c7b-89fb-d3bf-519f84029b96@huawei.com>
+ <CAP-5=fWYU1hzhGTc6q_u9r82g+rbn18+-i9o0W8sUVyk+t694w@mail.gmail.com>
+From:   Nick Forrington <nick.forrington@arm.com>
+In-Reply-To: <CAP-5=fWYU1hzhGTc6q_u9r82g+rbn18+-i9o0W8sUVyk+t694w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu 12-05-22 12:46:29, Gang Li wrote:
-> TLDR:
-> If a mempolicy is in effect(oc->constraint == CONSTRAINT_MEMORY_POLICY), out_of_memory() will
-> select victim on specific node to kill. So that kernel can avoid accidental killing on NUMA system.
-> 
-> Problem:
-> Before this patch series, oom will only kill the process with the highest memory usage.
-> by selecting process with the highest oom_badness on the entire system to kill.
-> 
-> This works fine on UMA system, but may have some accidental killing on NUMA system.
-> 
-> As shown below, if process c.out is bind to Node1 and keep allocating pages from Node1,
-> a.out will be killed first. But killing a.out did't free any mem on Node1, so c.out
-> will be killed then.
-> 
-> A lot of our AMD machines have 8 numa nodes. In these systems, there is a greater chance
-> of triggering this problem.
+On 15/05/2022 23:03, Ian Rogers wrote:
+> On Thu, May 12, 2022 at 8:53 AM John Garry <john.garry@huawei.com> wrote:
+>
+> Generally this looks ok:
+>
+> Reviewed-by: John Garry <john.garry@huawei.com>
+>
+> If you are feeling particularly helpful then you can add support for any
+> events missing to pre-existing core support, like a57-a72.
+>
+> I'll raise John's "ok" and say this looks great! :-D Some thoughts:
 
-Sorry, I have only now found this email thread. The limitation of the
-NUMA constrained oom is well known and long standing. Basically the
-whole thing is a best effort as we are lacking per numa node memory
-stats. I can see that you are trying to fill up that gap but this is
-not really free. Have you measured the runtime overhead? Accounting is
-done in a very performance sensitive paths and it would be rather
-unfortunate to make everybody pay the overhead while binding to a
-specific node or sets of nodes is not the most common usecase.
+Thanks Ian!
 
-Also have you tried to have a look at cpusets? Those should be easier to
-make a proper selection as it should be possible to iterate over tasks
-belonging to a specific cpuset much more easier - essentialy something
-similar to memcg oom killer. We do not do that right now and by a very
-brief look at the CONSTRAINT_CPUSET it seems that this code is not
-really doing much these days. Maybe that would be a more appropriate way
-to deal with more precise node aware oom killing?
+> The mapfile.csv cpuid values don't directly align with:
+> https://github.com/ARM-software/data/blob/master/cpus.json
+> but this definitely looks deliberate.
 
-[...]
->  21 files changed, 317 insertions(+), 111 deletions(-)
+Correct - they use different formats.
 
-The code footprint is not free either. And more importantnly does this
-even work much more reliably? I can see quite some NUMA_NO_NODE
-accounting (e.g. copy_pte_range!).Is this somehow fixable?
+mapfile.csv uses the MIDR format
 
-Also how do those numbers add up. Let's say you increase the counter as
-NUMA_NO_NODE but later on during the clean up you decrease based on the
-page node?
+https://developer.arm.com/documentation/100442/0100/register-descriptions/aarch64-system-registers/midr-el1--main-id-register--el1
 
-Last but not least I am really not following MM_NO_TYPE concept. I can
-only see add_mm_counter users without any decrements. What is going on
-there?
--- 
-Michal Hocko
-SUSE Labs
+The cpus.json "cpuid" is the implementer and part number from the MIDR 
+(the other fields are always fixed in mapfile.csv)
+> The new events lack the PMU "Unit" value. The current perf json is
+> pretty free form and leads to problems if two PMUs are present.
+> Context is here:
+> https://lore.kernel.org/lkml/CAP-5=fWRRZsyJZ-gky-FOFz79zW_3r78d_0APpj5sf66HqTpLw@mail.gmail.com/
+>
+> My idea to rationalize this is to mirror what is already done in
+> sysfs, that is the event data is specific to a PMU. As a lot of "Unit"
+> values are missing from events on x86 a reasonable guess if the "Unit"
+> is missing is to use "cpu". Poking a Google Pixel 4a, I see that all
+> PMU data is in "armv8_pmuv3". So for ARM I could guess this is always
+> the case, ie all events should belong to armv8_pmuv3. This may not be
+> right and could lead to confusion like an event BR_COND_MIS_PRED
+> having an alias of "armv8_pmuv3/BR_COND_MIS_PRED/" but it really
+> should have some other PMU name in there. I just raise this in case
+> there is a fix for this we could incorporate into this patch series,
+> maybe "armv8_pmuv3" is always the PMU and my life is easy.
+
+My understanding is that all JSON events under arm64/arm apply to the 
+CPU PMU, although there could be 2 (or more) armv8_pmuv3 devices in a 
+herterogeneous system (armv8_pmuv3_0, armv8_pmuv3_1, ...) - each with 
+different events.
+
+So I don't think static "Unit" data would be helpful, but it should be 
+possible to map JSON events to appropriate CPUs with existing data.
+
+e.g. /sys/bus/event_source/devices/armv8_pmuv3_0/cpus shows the CPUs 
+associated with a PMU device, and each CPU can be mapped to JSON events 
+via the MIDR (as is done already)
+
+Thanks,
+Nick
+
