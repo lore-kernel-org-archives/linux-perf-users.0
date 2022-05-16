@@ -2,191 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB0C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 May 2022 12:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB63C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 May 2022 13:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235249AbiEPM4r (ORCPT
+        id S229835AbiEPNWG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 May 2022 08:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
+        Mon, 16 May 2022 09:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243894AbiEPM4E (ORCPT
+        with ESMTP id S236163AbiEPNWF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 May 2022 08:56:04 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11C9393E3;
-        Mon, 16 May 2022 05:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1652705759; x=1684241759;
-  h=from:to:cc:subject:date:message-id;
-  bh=NujqjRizuBf3cIzWf3CK7LJlKgLj8HX9ToWEqxFAgBQ=;
-  b=XFebXXwUCmcFM4xpYaz3gYOlAz+BalUsYfNe2dsflo7Us7Ym2uWC/Dbf
-   rzSkPuW+lY3ujztS5ZIoXmFDS3YeLi76BjoXwV5oKNr6B8JExB7uax57n
-   QZcu2DB3Os2o1Sy8v/PNxO8HLAsFJak+lYULr6uZPsO61QztGS6Wl3eZ/
-   0=;
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 16 May 2022 05:55:58 -0700
-X-QCInternal: smtphost
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 16 May 2022 05:55:57 -0700
-X-QCInternal: smtphost
-Received: from hu-c-spathi-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.108.59])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 16 May 2022 18:25:41 +0530
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 212714)
-        id E44573DC6; Mon, 16 May 2022 18:25:39 +0530 (+0530)
-From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-To:     will@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-Subject: [PATCH V4] arm64: perf: Set PMCR.X of PMCR_EL0 during pmu reset
-Date:   Mon, 16 May 2022 18:25:38 +0530
-Message-Id: <1652705738-1628-1-git-send-email-quic_c_spathi@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 16 May 2022 09:22:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D87D27CDA;
+        Mon, 16 May 2022 06:22:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EFDA161300;
+        Mon, 16 May 2022 13:22:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D08C385B8;
+        Mon, 16 May 2022 13:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652707323;
+        bh=rJUa9Z2ztgeXMpnrq0kYK0VeLhOi4oFlO/D1bnHvnHA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TqB+7EnFlYfugsZ70Yc80l4qYQfY1LYlTcBF2STzQsMyL6Et1HhCGmmfbbRAolYfs
+         gn6xKNclbyqLA8Ts6jFv328bYVTVcYhw7I8FRLwvLlpN2wx0KaxrWRtjFLgRpaSSY+
+         eIyVQiXouVZDLW9PKfYYz8AKDLAJ9l1rpj7drQIBKLskACBBA7AFldBWrZk0m1tPgZ
+         I3cKnaZA3Way1vmXjRrI36X3lblUWvSetWPgM7zUNDcHeveGoycS41OmFpbJ9fR3JB
+         Z/ZZpvp4QP5+C0Uo4moid5kAU5krSnXQ+e8prEaCKUIG6Ne22jH38BwN2YFG1S6Lgg
+         5te0JIt+gmgSQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F30F8400B1; Mon, 16 May 2022 10:22:00 -0300 (-03)
+Date:   Mon, 16 May 2022 10:22:00 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     peterz@infradead.org, rrichter@amd.com, mingo@redhat.com,
+        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, irogers@google.com,
+        yao.jin@linux.intel.com, james.clark@arm.com, leo.yan@linaro.org,
+        kan.liang@linux.intel.com, ak@linux.intel.com, eranian@google.com,
+        like.xu.linux@gmail.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v2 5/8] perf record ibs: Warn about sampling period skew
+Message-ID: <YoJP+JqI2M1i647y@kernel.org>
+References: <20220509044914.1473-1-ravi.bangoria@amd.com>
+ <20220509044914.1473-6-ravi.bangoria@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220509044914.1473-6-ravi.bangoria@amd.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Enable exporting of events over PMU event export bus by setting
-PMCR.X of PMCR_EL0 during pmu reset.
+Em Mon, May 09, 2022 at 10:19:11AM +0530, Ravi Bangoria escreveu:
+> Samples without an L3 miss are discarded and counter is reset with
+> random value (between 1-15 for fetch pmu and 1-127 for op pmu) when
+> IBS L3 miss filtering is enabled. This causes a sampling period skew
+> but there is no way to reconstruct aggregated sampling period. So
+> print a warning at perf record if user sets l3missonly=1.
+> 
+> Ex:
+>   # perf record -c 10000 -C 0 -e ibs_op/l3missonly=1/
+>   WARNING: Hw internally resets sampling period when L3 Miss Filtering is enabled
+>   and tagged operation does not cause L3 Miss. This causes sampling period skew.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  tools/perf/arch/x86/util/evsel.c | 34 ++++++++++++++++++++++++++++++++
+>  tools/perf/util/evsel.c          |  7 +++++++
+>  tools/perf/util/evsel.h          |  1 +
+>  3 files changed, 42 insertions(+)
+> 
+> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+> index ac2899a25b7a..6399faa70a88 100644
+> --- a/tools/perf/arch/x86/util/evsel.c
+> +++ b/tools/perf/arch/x86/util/evsel.c
+> @@ -4,6 +4,8 @@
+>  #include "util/evsel.h"
+>  #include "util/env.h"
+>  #include "linux/string.h"
+> +#include "util/pmu.h"
+> +#include "util/debug.h"
+>  
+>  void arch_evsel__set_sample_weight(struct evsel *evsel)
+>  {
+> @@ -29,3 +31,35 @@ void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr)
+>  
+>  	free(env.cpuid);
+>  }
+> +
+> +static void ibs_l3miss_warn(void)
+> +{
+> +	pr_warning(
+> +"WARNING: Hw internally resets sampling period when L3 Miss Filtering is enabled\n"
+> +"and tagged operation does not cause L3 Miss. This causes sampling period skew.\n");
+> +}
+> +
+> +void arch_evsel__warn_ambiguity(struct evsel *evsel, struct perf_event_attr *attr)
+> +{
+> +	struct perf_env *env = evsel__env(evsel);
+> +	struct perf_pmu *evsel_pmu = evsel__find_pmu(evsel);
+> +	struct perf_pmu *ibs_fetch_pmu = perf_pmu__find("ibs_fetch");
+> +	struct perf_pmu *ibs_op_pmu = perf_pmu__find("ibs_op");
+> +	static int warned_once;
 
-As it impacts power consumption make it configurable at bootup
-with kernel arguments and at runtime with sysctl.
+Please check first if the warning was emitted (warned_once is true)
+before calling all the find routines above.
 
-Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
----
-Changes since V3:
-	- export bit is now configurable with sysctl
-	- enabling export bit on reset instead of retaining
+> +	if (warned_once || !perf_env__cpuid(env) || !env->cpuid ||
+> +	    !strstarts(env->cpuid, "AuthenticAMD") || !evsel_pmu)
+> +		return;
+> +
+> +	if (ibs_fetch_pmu && ibs_fetch_pmu->type == evsel_pmu->type) {
+> +		if (attr->config & (1ULL << 59)) {
+> +			ibs_l3miss_warn();
+> +			warned_once = 1;
+> +		}
+> +	} else if (ibs_op_pmu && ibs_op_pmu->type == evsel_pmu->type) {
+> +		if (attr->config & (1ULL << 16)) {
+> +			ibs_l3miss_warn();
+> +			warned_once = 1;
+> +		}
+> +	}
+> +}
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 2a1729e7aee4..4f8b72d4a521 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1064,6 +1064,11 @@ void __weak arch_evsel__fixup_new_cycles(struct perf_event_attr *attr __maybe_un
+>  {
+>  }
+>  
+> +void __weak arch_evsel__warn_ambiguity(struct evsel *evsel __maybe_unused,
+> +				       struct perf_event_attr *attr __maybe_unused)
+> +{
+> +}
+> +
+>  static void evsel__set_default_freq_period(struct record_opts *opts,
+>  					   struct perf_event_attr *attr)
+>  {
+> @@ -1339,6 +1344,8 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+>  	 */
+>  	if (evsel__is_dummy_event(evsel))
+>  		evsel__reset_sample_bit(evsel, BRANCH_STACK);
+> +
+> +	arch_evsel__warn_ambiguity(evsel, attr);
 
-Changes since V2:
-	Done below changes as per Will's comments
-	- enabling pmcr_x now configurable with kernel parameters and
-	  by default it is disabled.
-	
-Changes since V1:
-	- Preserving only PMCR_X bit as per Robin Murphy's comment.
----
- Documentation/admin-guide/kernel-parameters.txt |  4 ++++
- Documentation/admin-guide/sysctl/kernel.rst     |  8 ++++++++
- arch/arm64/kernel/perf_event.c                  | 15 +++++++++++++++
- include/linux/perf_event.h                      |  1 +
- kernel/sysctl.c                                 | 12 ++++++++++++
- 5 files changed, 40 insertions(+)
+Wouldn't this be better as a single arch__post_evsel_config() function that
+could do arch specific fixups or emit such warnings _after_ (thus the
+"post") the common code evsel__config() does its thing?
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index de3da15..2139b81 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5150,6 +5150,10 @@
- 			Useful for devices that are detected asynchronously
- 			(e.g. USB and MMC devices).
- 
-+	export_pmu_events
-+			[KNL] Sets export bit of PMCR_EL0 to enable the exporting of
-+			events over PMU event export bus.
-+
- 	retain_initrd	[RAM] Keep initrd memory after extraction
- 
- 	rfkill.default_state=
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index ddccd10..8fbc3a0 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -892,6 +892,14 @@ The default value is 0 (access disabled).
- 
- See Documentation/arm64/perf.rst for more information.
- 
-+export_pmu_events
-+=================
-+Controls the export bit(4th bit) of PMCR_EL0 which enables the exporting of
-+events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
-+
-+0: disables exporting of events
-+
-+1: enables exporting of events
- 
- pid_max
- =======
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index cb69ff1..271a8c6 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -34,6 +34,7 @@
- #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_ACCESS		0xEC
- #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_MISS		0xED
- 
-+int sysctl_export_pmu_events __read_mostly;
- /*
-  * ARMv8 Architectural defined events, not all of these may
-  * be supported on any given implementation. Unsupported events will
-@@ -1025,6 +1026,17 @@ static int armv8pmu_filter_match(struct perf_event *event)
- 	return evtype != ARMV8_PMUV3_PERFCTR_CHAIN;
- }
- 
-+static int __init export_pmu_events(char *str)
-+{
-+	/* Exporting of events can be enabled at runtime with sysctl or
-+	 * statically at bootup with kernel parameters.
-+	 */
-+	sysctl_export_pmu_events = 1;
-+	return 0;
-+}
-+
-+early_param("export_pmu_events", export_pmu_events);
-+
- static void armv8pmu_reset(void *info)
- {
- 	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
-@@ -1047,6 +1059,9 @@ static void armv8pmu_reset(void *info)
- 	if (armv8pmu_has_long_event(cpu_pmu))
- 		pmcr |= ARMV8_PMU_PMCR_LP;
- 
-+	if (sysctl_export_pmu_events)
-+		pmcr |= ARMV8_PMU_PMCR_X;
-+
- 	armv8pmu_pmcr_write(pmcr);
- }
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index da75956..7790328 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1311,6 +1311,7 @@ extern void put_callchain_entry(int rctx);
- 
- extern int sysctl_perf_event_max_stack;
- extern int sysctl_perf_event_max_contexts_per_stack;
-+extern int sysctl_export_pmu_events;
- 
- static inline int perf_callchain_store_context(struct perf_callchain_entry_ctx *ctx, u64 ip)
- {
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index e52b6e3..3b751a2e 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2008,6 +2008,18 @@ static struct ctl_table kern_table[] = {
- 		.extra2		= SYSCTL_ONE_THOUSAND,
- 	},
- #endif
-+#ifdef CONFIG_HW_PERF_EVENTS
-+	{
-+		.procname       = "export_pmu_events",
-+		.data           = &sysctl_export_pmu_events,
-+		.maxlen         = sizeof(int),
-+		.mode           = 0644,
-+		.proc_handler   = proc_dointvec_minmax,
-+		.extra1         = SYSCTL_ZERO,
-+		.extra2         = SYSCTL_ONE,
-+
-+	},
-+#endif
- 	{
- 		.procname	= "panic_on_warn",
- 		.data		= &panic_on_warn,
+>  }
+>  
+>  int evsel__set_filter(struct evsel *evsel, const char *filter)
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 041b42d33bf5..195ae30ec45b 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -281,6 +281,7 @@ void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
+>  
+>  void arch_evsel__set_sample_weight(struct evsel *evsel);
+>  void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr);
+> +void arch_evsel__warn_ambiguity(struct evsel *evsel, struct perf_event_attr *attr);
+>  
+>  int evsel__set_filter(struct evsel *evsel, const char *filter);
+>  int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
+> -- 
+> 2.27.0
+
 -- 
-2.7.4
 
+- Arnaldo
