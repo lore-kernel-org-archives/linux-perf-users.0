@@ -2,35 +2,64 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B30C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 May 2022 18:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12398C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 May 2022 20:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344528AbiEPSFh (ORCPT
+        id S1348718AbiEPUzE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 May 2022 14:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44642 "EHLO
+        Mon, 16 May 2022 16:55:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344587AbiEPSFg (ORCPT
+        with ESMTP id S1348605AbiEPUyy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 May 2022 14:05:36 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4CDCD3A5FC;
-        Mon, 16 May 2022 11:05:31 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 579DBED1;
-        Mon, 16 May 2022 11:05:31 -0700 (PDT)
-Received: from [10.57.4.89] (unknown [10.57.4.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E369A3F66F;
-        Mon, 16 May 2022 11:05:28 -0700 (PDT)
-Message-ID: <61141530-7d4a-ed6a-f8b7-933bd550f3c2@arm.com>
-Date:   Mon, 16 May 2022 19:05:27 +0100
+        Mon, 16 May 2022 16:54:54 -0400
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E0457156
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 May 2022 13:29:20 -0700 (PDT)
+Received: by mail-vs1-xe2c.google.com with SMTP id y74so16738478vsy.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 May 2022 13:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SXP8Pdn4swKo5tR3y0TOzZaHISelDqwht4aRHyxNClY=;
+        b=AACI2GiJOFOIcU4Swf9BMoWDbD7G214VTGB/oShtsLdyACcNk2u5ToNhA7s3Ua347K
+         q/xzEO0N9nmmS3YETwvjSBKi9EGMIEt+HEyswTNoCVSvVbdg0lWrD8bVbOepoNH86qpP
+         cDVbx9+YMxggvnC8wVCgRgR1JKUI3KXx7T4iSPncl/0MI6D+20329Km3QYguglzYTGaU
+         924MJC4kj3Qi/gQ78ZU2CAnBxceT+fAE6Nz+UcEF4ZZXoFylgKWRsGrW4V/H9dgqzsGi
+         uEywUSk4vrJgbzrsOc0Qu+pk4toyyPAi5U/W6s5fVsoToShLpuQUKXqPZgmhyBGUMk2u
+         nbdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SXP8Pdn4swKo5tR3y0TOzZaHISelDqwht4aRHyxNClY=;
+        b=ogznR83NsZX7mKuRZc5PwTYxPALI7PQePbGJYmKJX+Z4d3alCAaIWh8oWjPM8xGWw0
+         GhieQMYt7LrSplxsnNxzXDQIBr3wYhBFCkrz9RjRAU1ElXZ8plIYNd02fdizZhbq65AE
+         yQNOeCNCNIFsF84Ll6A6JEiTuk9Vb6pemf4EG3f8FEliNWK3FTti2r5X1ZILjAC8TC9S
+         FsAzNGvj3eKfuFUTNz8ddXOG8P5SAHnBqQ7mLxm8XLxawtk7HaCK7i6MbGonpiJ6ToT3
+         DQl7tBwoAY36gMhE6IKS3cJAx/ZensEZbSpGW8aVKq1o51dWHMWkMi4e93ooYk+vcN4e
+         YrNQ==
+X-Gm-Message-State: AOAM530XoDCxgHoIj7sFi755OcFweYQJeoPHRpTkvNDLWFvSayxb++9r
+        Nk7+PZGEg9475v0ORp11YNMRuX/4d4ofQ7ezcXEfBw==
+X-Google-Smtp-Source: ABdhPJyOlJkER0OOVa22lBHY2Cyeb/wFo1paXddAfzmhSV4LVd0Q777CmlGKp7rx/sui2cn+1Nr6gW7kocWII7gMCDI=
+X-Received: by 2002:a67:af01:0:b0:32d:3d57:cff with SMTP id
+ v1-20020a67af01000000b0032d3d570cffmr7507996vsl.8.1652732956652; Mon, 16 May
+ 2022 13:29:16 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.9.0
+References: <20220510104758.64677-1-nick.forrington@arm.com>
+ <YnqJwMfi/bcDmN4H@kernel.org> <b1081013-2cd9-f223-8125-d7e51d784f90@huawei.com>
+ <eec03f0d-d491-511c-d9b0-694c6d527b38@arm.com> <1062b28d-9c7b-89fb-d3bf-519f84029b96@huawei.com>
+ <CAP-5=fWYU1hzhGTc6q_u9r82g+rbn18+-i9o0W8sUVyk+t694w@mail.gmail.com> <f1f932f1-1b0b-120d-f082-f9df32b7b9c4@huawei.com>
+In-Reply-To: <f1f932f1-1b0b-120d-f082-f9df32b7b9c4@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 16 May 2022 13:29:04 -0700
+Message-ID: <CAP-5=fUUBezhJG3kXM04axK5jhsZpA_U6dXNEHYd07q-DOLBJQ@mail.gmail.com>
 Subject: Re: [PATCH 00/20] perf vendors events arm64: Multiple Arm CPUs
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+To:     John Garry <john.garry@huawei.com>
+Cc:     Nick Forrington <nick.forrington@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -43,76 +72,84 @@ Cc:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
         Kajol Jain <kjain@linux.ibm.com>,
         James Clark <james.clark@arm.com>,
         Andrew Kilroy <andrew.kilroy@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20220510104758.64677-1-nick.forrington@arm.com>
- <YnqJwMfi/bcDmN4H@kernel.org>
- <b1081013-2cd9-f223-8125-d7e51d784f90@huawei.com>
- <eec03f0d-d491-511c-d9b0-694c6d527b38@arm.com>
- <1062b28d-9c7b-89fb-d3bf-519f84029b96@huawei.com>
- <CAP-5=fWYU1hzhGTc6q_u9r82g+rbn18+-i9o0W8sUVyk+t694w@mail.gmail.com>
-From:   Nick Forrington <nick.forrington@arm.com>
-In-Reply-To: <CAP-5=fWYU1hzhGTc6q_u9r82g+rbn18+-i9o0W8sUVyk+t694w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Qi Liu <liuqi115@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15/05/2022 23:03, Ian Rogers wrote:
-> On Thu, May 12, 2022 at 8:53 AM John Garry <john.garry@huawei.com> wrote:
+On Mon, May 16, 2022 at 4:10 AM John Garry <john.garry@huawei.com> wrote:
 >
-> Generally this looks ok:
+> On 15/05/2022 23:03, Ian Rogers wrote:
+> > I'll raise John's "ok" and say this looks great!:-D  Some thoughts:
+> >
+> > The mapfile.csv cpuid values don't directly align with:
+> > https://github.com/ARM-software/data/blob/master/cpus.json
+> > but this definitely looks deliberate.
+> >
 >
-> Reviewed-by: John Garry <john.garry@huawei.com>
+> Hi Ian,
 >
-> If you are feeling particularly helpful then you can add support for any
-> events missing to pre-existing core support, like a57-a72.
+> > The new events lack the PMU "Unit" value.
 >
-> I'll raise John's "ok" and say this looks great! :-D Some thoughts:
-
-Thanks Ian!
-
-> The mapfile.csv cpuid values don't directly align with:
-> https://github.com/ARM-software/data/blob/master/cpus.json
-> but this definitely looks deliberate.
-
-Correct - they use different formats.
-
-mapfile.csv uses the MIDR format
-
-https://developer.arm.com/documentation/100442/0100/register-descriptions/aarch64-system-registers/midr-el1--main-id-register--el1
-
-The cpus.json "cpuid" is the implementer and part number from the MIDR 
-(the other fields are always fixed in mapfile.csv)
-> The new events lack the PMU "Unit" value. The current perf json is
-> pretty free form and leads to problems if two PMUs are present.
-> Context is here:
-> https://lore.kernel.org/lkml/CAP-5=fWRRZsyJZ-gky-FOFz79zW_3r78d_0APpj5sf66HqTpLw@mail.gmail.com/
+> For arm support we work on the basis that no "Unit" means CPU PMU. I
+> assume the same for other archs, but maybe this hybrid PMU support
+> changes that.
 >
-> My idea to rationalize this is to mirror what is already done in
-> sysfs, that is the event data is specific to a PMU. As a lot of "Unit"
-> values are missing from events on x86 a reasonable guess if the "Unit"
-> is missing is to use "cpu". Poking a Google Pixel 4a, I see that all
-> PMU data is in "armv8_pmuv3". So for ARM I could guess this is always
-> the case, ie all events should belong to armv8_pmuv3. This may not be
-> right and could lead to confusion like an event BR_COND_MIS_PRED
-> having an alias of "armv8_pmuv3/BR_COND_MIS_PRED/" but it really
-> should have some other PMU name in there. I just raise this in case
-> there is a fix for this we could incorporate into this patch series,
-> maybe "armv8_pmuv3" is always the PMU and my life is easy.
+> > The current perf json is
+> > pretty free form and leads to problems if two PMUs are present.
+>
+> Can you clarify - for my benefit - exactly what you mean by "two PMUs
+> are present"?
 
-My understanding is that all JSON events under arm64/arm apply to the 
-CPU PMU, although there could be 2 (or more) armv8_pmuv3 devices in a 
-herterogeneous system (armv8_pmuv3_0, armv8_pmuv3_1, ...) - each with 
-different events.
+On Alderlake there is a cpu_core and cpu_atom. The event codes, etc.
+vary between them - there is no notion of architecture standard
+events.
 
-So I don't think static "Unit" data would be helpful, but it should be 
-possible to map JSON events to appropriate CPUs with existing data.
+> > Context is here:
+> > https://lore.kernel.org/lkml/CAP-5=fWRRZsyJZ-gky-FOFz79zW_3r78d_0APpj5sf66HqTpLw@mail.gmail.com/
+> >
+>
+> We have another problem but I am not sure if exactly the same.
+>
+> The issue is that if we have an event alias "cycles" for an uncore PMU,
+> then if we use "stat" command then perf tool matches "cycles" to CPU
+> cycles and not the uncore PMU, which we would not want.
+>
+> We have ways to work around it, though.
 
-e.g. /sys/bus/event_source/devices/armv8_pmuv3_0/cpus shows the CPUs 
-associated with a PMU device, and each CPU can be mapped to JSON events 
-via the MIDR (as is done already)
+Ack.
+
+> > My idea to rationalize this is to mirror what is already done in
+> > sysfs, that is the event data is specific to a PMU. As a lot of "Unit"
+> > values are missing from events on x86 a reasonable guess if the "Unit"
+> > is missing is to use "cpu".
+>
+> This sounds like what I mentioned in the reply to 1/20:
+>
+> "I had a patch series which makes perf read the armv8 pmu
+> sysfs event file to learn all the events which the core supports and
+> create the aliases from that. So, in this, we don't require the JSONs to
+> list these events explicitly. "
+>
+> Is this like what Andi was talking about in terms of runtime loading?
+
+I think Andi is talking about loading the json style events at
+runtime. The existing jevents.c code could be linked into the perf
+tool whereas the jevents.py rewrite would be harder.
 
 Thanks,
-Nick
+Ian
 
+> > Poking a Google Pixel 4a, I see that all
+> > PMU data is in "armv8_pmuv3". So for ARM I could guess this is always
+> > the case, ie all events should belong to armv8_pmuv3. This may not be
+> > right and could lead to confusion like an event BR_COND_MIS_PRED
+> > having an alias of "armv8_pmuv3/BR_COND_MIS_PRED/" but it really
+> > should have some other PMU name in there. I just raise this in case
+> > there is a fix for this we could incorporate into this patch series,
+> > maybe "armv8_pmuv3" is always the PMU and my life is easy.
+>
+> Thanks,
+> John
