@@ -2,149 +2,475 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE9FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 May 2022 13:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290A9C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 May 2022 14:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236081AbiEPNsD (ORCPT
+        id S242140AbiEPODs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 May 2022 09:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60186 "EHLO
+        Mon, 16 May 2022 10:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229890AbiEPNsB (ORCPT
+        with ESMTP id S243947AbiEPODm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 May 2022 09:48:01 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2077.outbound.protection.outlook.com [40.107.236.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A30439147;
-        Mon, 16 May 2022 06:48:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OeLXfw9kJCvgOQ2OKQq3E/nuLDZx2i0nXVKyJAsTn6fgrNz311HIxM2ODzVInd8mwvGLo4xjhlAB7fmDBzTf3pFec6Wq133V+KyjpO7RSZbjWFdlfD6ZvH3ROYSmf3MEpJJ+Q0I02yqQDpjURRipSFTHC5+GcdHJYLQi4bUoWj6oeHgoTukUySzGZ57es6q3TgSKQnWhw0bzAvpyW7V7Mx+wvqcamzEVU2mk+tPFXFWxA2jWIAsrIzz2Rki4K2V8Pm9W3rYFJ2xFJKGRQEE+G+UvJDXlPK1ZvKVtmAIbtawbImX80n5GWzlRYaREUXmKl1YPh0MPr8EvAi265lfGDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3P692o4zGrRNIWcGNgggwVih2ktoX9VC5vRS1ih3j2o=;
- b=TGrKq/GBcm+ff1bhofFdC2RBxTcUw1eVbcRGXorxnVZ/yeZGFn5wTyAMNNN3NQSEQWrwXR0ggyVD7VUhCy3fO073njlDiA22CJvd8NfciN+v7J4cg6BPrKZggG9UAAeNg3er7QcscQiq252lw3hWyHc2n+W8FwXU1X5TlRojXjZ2JELX4qQe/TM378GCDbS4lXPYxI+QmFbLFEPFGqRnOUT211k4yZ3RHCW7US4hoFTCVnHNI6PvuU6P8C6y//VJp31FcTq3lAHH2FEbEVkbxaVPc9vtetIeeWGsxJ09lFdiBX0Hy81ezjLHYpJMlxABncfd4YgmI8mBmduNa/fOmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3P692o4zGrRNIWcGNgggwVih2ktoX9VC5vRS1ih3j2o=;
- b=yAK90SHtbtwa5sqv5Bj0ijyVqp560h8FWNvkCMHzmUOWNpYUpgd+ctjx+m3FHnUlfRmWMUlMGdphPyGBIG4QauDUqmTC+y6BZe4U26JIhBlqPv6JOaX6FpW0xUMnVFWm69LxkVrMlz+cJiQ04nh84qPGqZbzzbc21j9YrtXwgBM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by PH7PR12MB5709.namprd12.prod.outlook.com (2603:10b6:510:1e0::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.13; Mon, 16 May
- 2022 13:47:56 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::f1f6:dd2c:7e78:9770]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::f1f6:dd2c:7e78:9770%6]) with mapi id 15.20.5250.013; Mon, 16 May 2022
- 13:47:56 +0000
-Message-ID: <712c1aa2-c44d-5b32-b5fd-f6b2316b965a@amd.com>
-Date:   Mon, 16 May 2022 19:17:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: [PATCH v2 7/8] perf script ibs: Support new IBS bits in raw trace
- dump
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     peterz@infradead.org, rrichter@amd.com, mingo@redhat.com,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, irogers@google.com,
-        yao.jin@linux.intel.com, james.clark@arm.com, leo.yan@linaro.org,
-        kan.liang@linux.intel.com, ak@linux.intel.com, eranian@google.com,
-        like.xu.linux@gmail.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20220509044914.1473-1-ravi.bangoria@amd.com>
- <20220509044914.1473-8-ravi.bangoria@amd.com> <YoJRnfASHY+uq1f/@kernel.org>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <YoJRnfASHY+uq1f/@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0015.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:95::19) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Mon, 16 May 2022 10:03:42 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80483A1B5;
+        Mon, 16 May 2022 07:03:39 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L219d4xX2z67h1V;
+        Mon, 16 May 2022 22:00:37 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 16 May 2022 16:03:37 +0200
+Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 16 May
+ 2022 15:03:35 +0100
+Date:   Mon, 16 May 2022 15:03:33 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
+        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <acme@kernel.org>, <john.garry@huawei.com>,
+        <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mark.rutland@arm.com>, <joro@8bytes.org>,
+        <shameerali.kolothum.thodi@huawei.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>
+Subject: Re: [PATCH v8 2/8] hwtracing: hisi_ptt: Add trace function support
+ for HiSilicon PCIe Tune and Trace device
+Message-ID: <20220516150333.000031d7@Huawei.com>
+In-Reply-To: <20220516125223.32012-3-yangyicong@hisilicon.com>
+References: <20220516125223.32012-1-yangyicong@hisilicon.com>
+        <20220516125223.32012-3-yangyicong@hisilicon.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d29c9b69-9368-4e08-5ee5-08da3742ae77
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5709:EE_
-X-Microsoft-Antispam-PRVS: <PH7PR12MB5709E6E3D07035199F5DE24CE0CF9@PH7PR12MB5709.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RmmLUC/3mf5yFCjHK/sq7v7Pk125PER+SrYHHVht47M42QWrAD/CeFoMAPrEbaOmhF0x+MVbOhyqJryyFnsU6jY2RsOcOepNBfkkoyw+R2Ere7+mxTZO0Sv+/TIpuqeRoiKl98oz8ewtUWkGmINBYqumRt2lNkTuSNr9MEv0VkKj/rd80O3wV7seIgCP03myvwQIFfIDXUcam3VjT9NpSE7fegnw/PxfEgQrCJDtgNU04mNaW2sNXnKozKF8Sjue9bOvtLT5VbwzzA6lrxn9Ml389QW4NM9hoOOKp8Nq0etjv/7xFA2rQSgQJir2W0/gTaV8xCSsnZzf87qv3fymcDexfcKLCZk7XkjpFyittiiP9Ws+Ydz/vmjF6x9IFJntS8X6VaaM3O0Fs3dlu388kqLwHq29wLRWfP5QnALE+7vnMLEmf8RnYq0qPtKIlbsmagbryKu6ItrFh7ByYvb7HxBqFLH2OBjYCqsTvtfg0X8LYzcuGtt4CS0r8NJyOI2aafF3YBCafWoV6Oq9VjnDLvoiy17X+ELwmS5HmGK0N23SOvXEAdZJE26xdYK9dxFWZkZu8s39sTuD9DJmqLXeJ7D21yPWrDqvRr/V0G8NZ6sEKmfp80E0CeoykUZb6yAGcM9iNyf8r4Jz3Zz+zgVtezaIlQSZNb3kaIU9jVxOujLzoRvmo8X8cHcGlbFVrW1W9j/kENNR9kioPrKG6OX4JW5uJSpiDybDCTI8MVlQ4vU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(5660300002)(83380400001)(186003)(7416002)(8676002)(8936002)(44832011)(316002)(66476007)(66946007)(6506007)(86362001)(66556008)(6666004)(31696002)(26005)(6512007)(4326008)(2906002)(2616005)(4744005)(6916009)(36756003)(6486002)(508600001)(53546011)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MjZwRmVuYzlPc2tvVERhMjBYelV6bkc3TUpqSFJnUDB3N0pIaVNFVGhlMkhP?=
- =?utf-8?B?TWViOHVPQkhmQURzU3Y2YlQ4OHRIVnVMd3RIWGM3dHAyc2NObUxiRnBmd21Z?=
- =?utf-8?B?U0kvdysvV1ZnTXFVK1JzUnpjNjJxSVBGeXpyZ2xmbUdWNGVmSUx3Uy9KY0RG?=
- =?utf-8?B?eDE4dDJvTVUrTDM1akhGWUZaKzJlbVhBZTBIZWVJaFlqcVhqV1MydFMzandi?=
- =?utf-8?B?eFVGQno0VW91TmhHSGozTldNbUR4NE1SV1NQV2Y5eUM1UFl3U2JIWTYrMzIz?=
- =?utf-8?B?T0dHUm9PTXNLdXlHa0VkWVNaSXdvbFptUFhUVkdnNVVUMkFSc0VXRzRZMWZG?=
- =?utf-8?B?MldlS0c5SjVaSm5mSC9jUGpIZ3luK2FKNUZQTjBJbUNQOFNYOTRDdjJ3T2VZ?=
- =?utf-8?B?NGhWSElnN0NzV2VWM0RNQUcxcEx3akxiZEZyNjA4OXBJRnZrREd3SC9NOFlD?=
- =?utf-8?B?OVZUUUQwYjA0OW5KYXZwZDFVV0pqK1ZkWDJyd0c4bDlHMTZHM0pXRFdUcHNW?=
- =?utf-8?B?SUpoZ2NaeTZPb0JyZ3AyS3JSbzk0UlhieGtsdFRucmdiVnRsdUkwbTV0bEZr?=
- =?utf-8?B?cjhJTVdBeldoZWM5cmdDRExpSUZ6NGpPenh0TGpFZllvQnVVYVo4MnZDbzZx?=
- =?utf-8?B?cDhrWTYyRml1SzZuUFN1aTZUSjBidHd0YVhWTGtSK25aempPdlFYemtHdUNF?=
- =?utf-8?B?SWVtZUk5WHR5K0NyR2thczVtZjNpc3RlY1doeXhUanM4OVg0VXJBcnJVcmRJ?=
- =?utf-8?B?aDNFNVhWOUVFaExyRDFRZWtucXlRdUorZzFOeitVLzdJZy9XUjVtMHR4S0dQ?=
- =?utf-8?B?MWtxQWZFSGVMYnZTVFdZc1RLYVgyMWI2a1RkcUFyQ0t6WTFhYUlXTFVtWEZr?=
- =?utf-8?B?bGxLUENybU9uaGlad0dyUjZNUE5Gc2EwYTFoV0tqNGg2dHRKNTlrTzlrZTds?=
- =?utf-8?B?UHh6TElwd3AxSmZEeWtBNWt1clIvdlBOVVlOSWVWWU5JK3JoNnlSQStXZGJs?=
- =?utf-8?B?aDVteHVIRUg2MkNMV09YRE1KcVRVdmNVbDk2S1A2YS83WVpWeTA3RTR1Y1d3?=
- =?utf-8?B?RHB5UnBlZ0lYd0xkN0tWUnRlY3NPK1NncDlqZSt2QjRHTUREbEhDR2FjSjRn?=
- =?utf-8?B?d0NVb0NyVnlVZ2l3bllPKzVjWkQ2WGlQanUydFlNblVVQW9qMVo3N1BDaHE4?=
- =?utf-8?B?bC9VaUxzRnE3OG5Zazd4R1doMDJPc1hQMnZvaWM4V0lMUjdRSHg5U0R5dnRy?=
- =?utf-8?B?UG9mcmdiNUIzOGE1V0xpQjVHYUJtZkhNQ0cxd1BRREJUU1FZWCt2RkNaWHA2?=
- =?utf-8?B?bUlaLzBuR0pMWU1rdDRyWDlOa01PNFJwVFpHUkhyNTRyeUxoRFd1bTMrd2N5?=
- =?utf-8?B?WGFGN3pjWGs4dlllYjhNOHkwY29YK0xVUXNZdEk4MDdxNW45WUJEZzYrZndJ?=
- =?utf-8?B?VmFxRkRqUW0wNnRrRUpKdDBhaWtvUlQySndKeStwVHpLZUhvQ3pvVFBFUEpT?=
- =?utf-8?B?L3REUk1BcXJzRFZ5MW5sMlpKZHd2dHpacVVURGtSc29melo0blEveStBQkdz?=
- =?utf-8?B?NlpyT2d5aGFjdTlhcGd2d1ZlMlM5MGhPUU5nbXBnaFAvc1k1eitHYmZEMWIr?=
- =?utf-8?B?clNsc0lldjFQaTdpZU4xUUk0WUpiaVlWaU9xTHpVYjlZVG1lM3hTa2dxMncz?=
- =?utf-8?B?WXVjYWt1VEl5blczWDRVaEVCb0pWTUN2ZWp5eXduTnNlRlVnbVU2S1JDK3NH?=
- =?utf-8?B?KzNSZUoyODZ4OEIzMW9SdFhlOGhNYm5nOG45YzlKRmJ5aUtBbUd0bG5uSmlw?=
- =?utf-8?B?M1pEUEtuT3YzK2xwdkdQNGF5WVRCQXNjaEVOMWw4VFVONVM5QWxyNHphM2Zi?=
- =?utf-8?B?ZmloeXFuYW1QRW8vNDZPQzMvU2d3Z1o2ZVpmQVVSZlltbC9waXFBZTNqelRD?=
- =?utf-8?B?Q2NPd0dxMjUxTkhZWFBKUjFBZ2xnTVlDV201REZTYkdpQ0NZaElQMW8wdjYx?=
- =?utf-8?B?ajd1czVRMUpPSDhieWs0cWtXSk0wdGN2NzBXYWpIZWNjMUppYnRwc3I5S2Rk?=
- =?utf-8?B?N2M3RGlGTHFKREo3ZWt4OTlqbk8vZ29UTkZGcnhSbjdnWElWSlBNZHh3Wm5D?=
- =?utf-8?B?bG9NWnVQdTVaTUUrY05Yek80R09nemlqc2U5c0JEUVRPM3ppNmFUUnNDOGcv?=
- =?utf-8?B?VE5xclJ0UVlYVXRlcEZnQmtHbXFZSVNGNHh5SHlVSjYxalRtUm4zZ3Q4NWJE?=
- =?utf-8?B?dnRsOWhnREpsZVdMd1RWT1I5MDg2Tkx6bVdOcml1VlUrYkhuaU1JcEpRaUYw?=
- =?utf-8?B?MGFsOU5hK0dyUU1DcldUUk1mdHI2elpHQTQxK25Gb3J6dGpoQVo4QT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d29c9b69-9368-4e08-5ee5-08da3742ae77
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2022 13:47:56.4523
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EuAq9pCCO5myXxHl/7tU+PiYBcCWTXR/EkpdBLPAADV4T5ICRnhK+z8iUuQfXMAcOHIA5ZY44OwAKeF0XwRBNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5709
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16-May-22 6:59 PM, Arnaldo Carvalho de Melo wrote:
-> Em Mon, May 09, 2022 at 10:19:13AM +0530, Ravi Bangoria escreveu:
->>
->> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
->> ---
->>  arch/x86/include/asm/amd-ibs.h       | 16 ++++---
->>  tools/arch/x86/include/asm/amd-ibs.h | 16 ++++---
->>  tools/perf/util/amd-sample-raw.c     | 68 ++++++++++++++++++++++++----
->>  3 files changed, 80 insertions(+), 20 deletions(-)
+On Mon, 16 May 2022 20:52:17 +0800
+Yicong Yang <yangyicong@hisilicon.com> wrote:
+
+> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex integrated
+> Endpoint(RCiEP) device, providing the capability to dynamically monitor and
+> tune the PCIe traffic and trace the TLP headers.
 > 
-> Please separate the tooling part on a separate patch.
+> Add the driver for the device to enable the trace function. Register PMU
+> device of PTT trace, then users can use trace through perf command. The
+> driver makes use of perf AUX trace function and support the following
+> events to configure the trace:
+> 
+> - filter: select Root port or Endpoint to trace
+> - type: select the type of traced TLP headers
+> - direction: select the direction of traced TLP headers
+> - format: select the data format of the traced TLP headers
+> 
+> This patch initially add a basic driver of PTT trace.
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-Sure.
+Hi Yicong,
 
-Thanks,
-Ravi
+It's been a while since I looked at this driver, so I'll admit
+I can't remember if any of the things I've raised below were
+previously discussed. 
+
+All minor stuff (biggest is question of failing cleanly in unlikely
+case of failing the allocation in the filter addition vs carrying
+on anyway), so feel free to add
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
+> new file mode 100644
+> index 000000000000..908c09a98161
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+> new file mode 100644
+> index 000000000000..ef25ce98f664
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+
+
+...
+
+
+> +
+> +static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
+> +{
+> +	struct hisi_ptt_filter_desc *filter;
+> +	struct hisi_ptt *hisi_ptt = data;
+> +
+> +	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
+> +	if (!filter) {
+> +		pci_err(hisi_ptt->pdev, "failed to add filter %s\n", pci_name(pdev));
+
+If this fails we carry on anyway (no error checking on the bus_walk).
+I think we should error out in that case (would need to use a flag placed
+somewhere in hisi_ptt to tell we had an error).
+
+That would complicate the unwind though.
+Easiest way to do that unwind is probably to register a separate
+devm_add_action_or_reset() callback for each filter.
+
+If you prefer to carry on even with this allocation error, then maybe add a comment
+here somewhere to make it clear that will happen.
+
+> +		return -ENOMEM;
+> +	}
+> +
+> +	filter->devid = PCI_DEVID(pdev->bus->number, pdev->devfn);
+> +
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		filter->is_port = true;
+> +		list_add_tail(&filter->list, &hisi_ptt->port_filters);
+> +
+> +		/* Update the available port mask */
+> +		hisi_ptt->port_mask |= hisi_ptt_get_filter_val(filter->devid, true);
+> +	} else {
+> +		list_add_tail(&filter->list, &hisi_ptt->req_filters);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_release_filters(void *data)
+> +{
+> +	struct hisi_ptt_filter_desc *filter, *tmp;
+> +	struct hisi_ptt *hisi_ptt = data;
+> +
+> +	list_for_each_entry_safe(filter, tmp, &hisi_ptt->req_filters, list) {
+> +		list_del(&filter->list);
+> +		kfree(filter);
+
+I think with separate release per entry above, this bit become simpler as
+we walk all the elements in the devm_ callback list rather than two lists here.
+
+> +	}
+> +
+> +	list_for_each_entry_safe(filter, tmp, &hisi_ptt->port_filters, list) {
+> +		list_del(&filter->list);
+> +		kfree(filter);
+> +	}
+> +}
+> +
+
+...
+
+> +
+> +static int hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct pci_dev *pdev = hisi_ptt->pdev;
+> +	struct pci_bus *bus;
+> +	int ret;
+> +	u32 reg;
+> +
+> +	INIT_LIST_HEAD(&hisi_ptt->port_filters);
+> +	INIT_LIST_HEAD(&hisi_ptt->req_filters);
+> +
+> +	ret = hisi_ptt_config_trace_buf(hisi_ptt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * The device range register provides the information about the
+> +	 * root ports which the RCiEP can control and trace. The RCiEP
+> +	 * and the root ports it support are on the same PCIe core, with
+> +	 * same domain number but maybe different bus number. The device
+> +	 * range register will tell us which root ports we can support,
+> +	 * Bit[31:16] indicates the upper BDF numbers of the root port,
+> +	 * while Bit[15:0] indicates the lower.
+> +	 */
+> +	reg = readl(hisi_ptt->iobase + HISI_PTT_DEVICE_RANGE);
+> +	hisi_ptt->upper_bdf = FIELD_GET(HISI_PTT_DEVICE_RANGE_UPPER, reg);
+> +	hisi_ptt->lower_bdf = FIELD_GET(HISI_PTT_DEVICE_RANGE_LOWER, reg);
+> +
+> +	bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper_bdf));
+> +	if (bus)
+> +		pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_release_filters, hisi_ptt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	hisi_ptt->trace_ctrl.on_cpu = -1;
+> +	return 0;
+> +}
+> +
+> +static ssize_t available_root_port_filters_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int pos = 0;
+> +
+> +	if (list_empty(&hisi_ptt->port_filters)) {
+> +		pos = sysfs_emit(buf, "\n");
+> +		goto out;
+> +	}
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->port_filters, list) {
+> +		u16 devid = filter->devid;
+> +		pos += sysfs_emit_at(buf, pos, "%04x:%02x:%02x.%d\t0x%05lx\n",
+> +				     pci_domain_nr(hisi_ptt->pdev->bus),
+> +				     PCI_BUS_NUM(devid),
+> +				     PCI_SLOT(devid & 0xff),
+> +				     PCI_FUNC(devid & 0xff),
+> +				     hisi_ptt_get_filter_val(devid, true) |
+> +				     HISI_PTT_PMU_FILTER_IS_PORT);
+> +	}
+> +
+> +out:
+
+As below. I'd directly return in the empty case and drop the label.
+
+> +	return pos;
+> +}
+> +static DEVICE_ATTR_ADMIN_RO(available_root_port_filters);
+> +
+> +static ssize_t available_requester_filters_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int pos = 0;
+> +
+> +	if (list_empty(&hisi_ptt->req_filters)) {
+> +		pos = sysfs_emit(buf, "\n");
+> +		goto out;
+> +	}
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+> +		u16 devid = filter->devid;
+> +		pos += sysfs_emit_at(buf, pos, "%04x:%02x:%02x.%d\t0x%05x\n",
+> +				     pci_domain_nr(hisi_ptt->pdev->bus),
+> +				     PCI_BUS_NUM(devid),
+> +				     PCI_SLOT(devid & 0xff),
+> +				     PCI_FUNC(devid & 0xff),
+> +				     hisi_ptt_get_filter_val(devid, false));
+> +	}
+> +
+> +out:
+
+Why bother with the label?  Given empty is a special case, you can
+just do
+	return sysfs_emit(buf, "\n");
+
+above.
+
+> +	return pos;
+> +}
+> +static DEVICE_ATTR_ADMIN_RO(available_requester_filters);
+
+
+> +static int hisi_ptt_trace_valid_filter(struct hisi_ptt *hisi_ptt, u64 config)
+> +{
+> +	unsigned long val, port_mask = hisi_ptt->port_mask;
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int ret = -EINVAL;
+> +
+> +	hisi_ptt->trace_ctrl.is_port = FIELD_GET(HISI_PTT_PMU_FILTER_IS_PORT, config);
+> +	val = FIELD_GET(HISI_PTT_PMU_FILTER_VAL_MASK, config);
+> +
+> +	/*
+> +	 * Port filters are defined as bit mask. For port filters, check
+> +	 * the bits in the @val are within the range of hisi_ptt->port_mask
+> +	 * and whether it's empty or not, otherwise user has specified
+> +	 * some unsupported root ports.
+> +	 *
+> +	 * For Requester ID filters, walk the available filter list to see
+> +	 * whether we have one matched.
+> +	 */
+> +	if (!hisi_ptt->trace_ctrl.is_port) {
+> +		list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+> +			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port)) {
+> +				ret = 0;
+				return 0; ?
+
+Unless someone has previously requested this particular form...
+
+
+> +				break;
+> +			}
+> +		}
+> +	} else if (bitmap_subset(&val, &port_mask, BITS_PER_LONG)) {
+> +		ret = 0;
+
+		return 0;
+
+> +	}
+> +
+> +	if (ret)
+> +		return ret;
+
+If you get here, return -EINVAL;
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_pmu_init_configs(struct hisi_ptt *hisi_ptt, struct perf_event *event)
+
+> +static int hisi_ptt_pmu_event_init(struct perf_event *event)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (event->cpu < 0) {
+> +		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
+> +		return -ENOENT;
+> +
+> +	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_direction(val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_type(val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_format(val);
+You could do
+
+	return hisi_ptt_trace_valid_format(val);
+
+Up to you on this one.
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+
+
+
+
+> +/*
+> + * The DMA of PTT trace can only use direct mapping, due to some
+> + * hardware restriction. Check whether there is an IOMMU or the
+
+"Check whether there is no IOMMU or the policy of the IOMMU domain
+is passthrough, otherwise the trace cannot work."
+
+(need the "no" for the IOMMU presence)
+
+> + * policy of the IOMMU domain is passthrough, otherwise the trace
+> + * cannot work.
+> + *
+> + * The PTT device is supposed to behind an ARM SMMUv3, which
+> + * should have passthrough the device by a quirk.
+> + */
+> +static int hisi_ptt_check_iommu_mapping(struct pci_dev *pdev)
+> +{
+> +	struct iommu_domain *iommu_domain;
+> +
+> +	iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
+> +	if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
+> +		return 0;
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+
+...
+
+> +
+> +static int hisi_ptt_cpu_teardown(unsigned int cpu, struct hlist_node *node)
+> +{
+> +	struct hisi_ptt *hisi_ptt;
+> +	int target, src;
+> +
+> +	hisi_ptt = hlist_entry_safe(node, struct hisi_ptt, hotplug_node);
+> +	src = hisi_ptt->trace_ctrl.on_cpu;
+> +
+> +	if (!hisi_ptt->trace_ctrl.started || src != cpu)
+> +		return 0;
+> +
+> +	target = cpumask_any(cpumask_of_node(dev_to_node(&hisi_ptt->pdev->dev)));
+> +	if (target < nr_cpumask_bits) {
+> +		dev_err(hisi_ptt->hisi_ptt_pmu.dev, "no available cpu for perf context migration\n");
+
+Very long line, and not obvious disadvantage in splitting it before the string.
+
+> +		return 0;
+> +	}
+> +
+> +	perf_pmu_migrate_context(&hisi_ptt->hisi_ptt_pmu, src, target);
+> +	WARN_ON(irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+> +				 cpumask_of(cpu)));
+> +	hisi_ptt->trace_ctrl.on_cpu = target;
+> +
+> +	return 0;
+> +}
+> +
+
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
+> new file mode 100644
+> index 000000000000..2344e4195648
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.h
+
+
+> +/**
+> + * struct hisi_ptt_filter_desc - Descriptor of the PTT trace filter
+> + * @list:    entry of this descriptor in the filter list
+> + * @is_port: the PCI device of the filter is a Root Port or not
+> + * @devid:   the PCI device's devid of the filter
+> + */
+> +struct hisi_ptt_filter_desc {
+> +	struct list_head list;
+> +	bool is_port;
+> +	u16 devid;
+> +};
+> +
+> +
+
+Trivial if you are doing a v9: one blank line only.
+
+> +/**
+> + * struct hisi_ptt_pmu_buf - Descriptor of the AUX buffer of PTT trace
+> + * @length:   size of the AUX buffer
+> + * @nr_pages: number of pages of the AUX buffer
+> + * @base:     start address of AUX buffer
+> + * @pos:      position in the AUX buffer to commit traced data
+> + */
+> +struct hisi_ptt_pmu_buf {
+> +	size_t length;
+> +	int nr_pages;
+> +	void *base;
+> +	long pos;
+> +};
+> +
+
