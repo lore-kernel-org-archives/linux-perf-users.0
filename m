@@ -2,214 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D7BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 13:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DCFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 13:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346998AbiEQNIf (ORCPT
+        id S238783AbiEQNK3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 09:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
+        Tue, 17 May 2022 09:10:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244361AbiEQNIe (ORCPT
+        with ESMTP id S232762AbiEQNK2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 09:08:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D235F35262;
-        Tue, 17 May 2022 06:08:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6B96361460;
-        Tue, 17 May 2022 13:08:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922AEC385B8;
-        Tue, 17 May 2022 13:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652792908;
-        bh=8Cyf4GoLJYIxjStrlVirMdV2e3KN0kCdHlgFZMnClfc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KNkvxPWsgEj6I8hGcmVi1y/dFSIrjLT5rJ4/qQH2mQDomf/Lcm9aOSL9KGuA68AYA
-         39bZCNbFe4TkNDVNbM7BkzyCFBSztrbmSC7ST4H8YvAcWPLCoRyMJQjz1wPnyZa9cY
-         rU1jG6Z0mV6sBwtDR2rsbbYi4yF8Ura1oNdPC2r+ZBrl0HEIpZ7a4+MRTQr4+G32Mm
-         9DUcwJrnxb194U6Z+l7itzO0p3tZfI3WxPYziSAut36etUmLB1Vtbtv2hBndrGFkyI
-         r99BOcj2d39U3cidcnf1L6KLCay226aE9H9ppLTMjWfg5iSYE59LWlsvxg3Vn+dKdQ
-         l3OuK/muTRw0A==
-Date:   Tue, 17 May 2022 14:08:22 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-Cc:     mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4] arm64: perf: Set PMCR.X of PMCR_EL0 during pmu reset
-Message-ID: <20220517130822.GA3369@willie-the-truck>
-References: <1652705738-1628-1-git-send-email-quic_c_spathi@quicinc.com>
+        Tue, 17 May 2022 09:10:28 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97DB03526C;
+        Tue, 17 May 2022 06:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652793027; x=1684329027;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1nPBQlk1v0spoAKW3hSYWBBd7Hx4xf2A2nxLzd0Qt44=;
+  b=L/J/iUliUtVzMk0MZT1OvXnLD/k6FBVA240ycFVKdRT97IIKNrBEEEml
+   VGCPK+SwZx0jTCkrQ3c/Z9z8l9wb0Y58bIXD2veuvHSVZKk+0lZWJPBmm
+   myUTRUvZP+qichDbQF3bTpYKwdCfljK20Hqhpgpie2Be4GZk9bi1bLZDf
+   Od1LLz5FksL0lYaZSnzYBxoJ6nfpRPy8ZZNthDUZMndoJ4LlIbi1TRB57
+   ScGjnRZx2ooHKGzUmEGLPv+ThynycWvnnbPGlovE11slNlCT1V4947ti6
+   C7vaaWCg0lX7PX4pTo9qbunSBsIYdE48/zI3/1gzqBdwPmvyD3NFuRTYJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10349"; a="271300094"
+X-IronPort-AV: E=Sophos;i="5.91,232,1647327600"; 
+   d="scan'208";a="271300094"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 06:10:27 -0700
+X-IronPort-AV: E=Sophos;i="5.91,232,1647327600"; 
+   d="scan'208";a="713844207"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.52.217])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 06:10:24 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH V2 0/6] perf intel-pt: Add support for tracing KVM test programs
+Date:   Tue, 17 May 2022 16:10:05 +0300
+Message-Id: <20220517131011.6117-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.25.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1652705738-1628-1-git-send-email-quic_c_spathi@quicinc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 16, 2022 at 06:25:38PM +0530, Srinivasarao Pathipati wrote:
-> Enable exporting of events over PMU event export bus by setting
-> PMCR.X of PMCR_EL0 during pmu reset.
-> 
-> As it impacts power consumption make it configurable at bootup
-> with kernel arguments and at runtime with sysctl.
-> 
-> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-> ---
-> Changes since V3:
-> 	- export bit is now configurable with sysctl
-> 	- enabling export bit on reset instead of retaining
-> 
-> Changes since V2:
-> 	Done below changes as per Will's comments
-> 	- enabling pmcr_x now configurable with kernel parameters and
-> 	  by default it is disabled.
-> 	
-> Changes since V1:
-> 	- Preserving only PMCR_X bit as per Robin Murphy's comment.
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |  4 ++++
->  Documentation/admin-guide/sysctl/kernel.rst     |  8 ++++++++
->  arch/arm64/kernel/perf_event.c                  | 15 +++++++++++++++
->  include/linux/perf_event.h                      |  1 +
->  kernel/sysctl.c                                 | 12 ++++++++++++
->  5 files changed, 40 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index de3da15..2139b81 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5150,6 +5150,10 @@
->  			Useful for devices that are detected asynchronously
->  			(e.g. USB and MMC devices).
->  
-> +	export_pmu_events
-> +			[KNL] Sets export bit of PMCR_EL0 to enable the exporting of
-> +			events over PMU event export bus.
+Hi
 
-Sorry, I should've been clearer ahbout this before: if you add a sysctl,
-then you get the kernel cmdline option for free via something like
-"sysctl.kernel.export_pmu_events=foo", so I think you can drop this and
-the early_param().
+A common case for KVM test programs is that the guest object code can be
+found in the hypervisor process (i.e. the test program running on the
+host).  Add support for that.
 
-> +
->  	retain_initrd	[RAM] Keep initrd memory after extraction
->  
->  	rfkill.default_state=
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index ddccd10..8fbc3a0 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -892,6 +892,14 @@ The default value is 0 (access disabled).
->  
->  See Documentation/arm64/perf.rst for more information.
->  
-> +export_pmu_events
-> +=================
+For some more details refer the 3rd patch "perf tools: Add guest_code
+support"
 
-You should add something like "(arm64 only)" to the title.
+For an example, see the last patch "perf intel-pt: Add guest_code support"
 
-> +Controls the export bit(4th bit) of PMCR_EL0 which enables the exporting of
+For more information about Perf tools support for Intel® Processor Trace
+refer:
 
-Just say "Controls the PMU export bit (PMCR_EL0.X), which enables ...".
-
-> +events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
-> +
-> +0: disables exporting of events
-> +
-> +1: enables exporting of events
-
-Please state that the default value is 0.
-
->  pid_max
->  =======
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index cb69ff1..271a8c6 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -34,6 +34,7 @@
->  #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_ACCESS		0xEC
->  #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_MISS		0xED
->  
-> +int sysctl_export_pmu_events __read_mostly;
->  /*
->   * ARMv8 Architectural defined events, not all of these may
->   * be supported on any given implementation. Unsupported events will
-> @@ -1025,6 +1026,17 @@ static int armv8pmu_filter_match(struct perf_event *event)
->  	return evtype != ARMV8_PMUV3_PERFCTR_CHAIN;
->  }
->  
-> +static int __init export_pmu_events(char *str)
-> +{
-> +	/* Exporting of events can be enabled at runtime with sysctl or
-> +	 * statically at bootup with kernel parameters.
-> +	 */
-> +	sysctl_export_pmu_events = 1;
-> +	return 0;
-> +}
-> +
-> +early_param("export_pmu_events", export_pmu_events);
-> +
->  static void armv8pmu_reset(void *info)
->  {
->  	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
-> @@ -1047,6 +1059,9 @@ static void armv8pmu_reset(void *info)
->  	if (armv8pmu_has_long_event(cpu_pmu))
->  		pmcr |= ARMV8_PMU_PMCR_LP;
->  
-> +	if (sysctl_export_pmu_events)
-> +		pmcr |= ARMV8_PMU_PMCR_X;
-> +
->  	armv8pmu_pmcr_write(pmcr);
+  https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
 
 
-Hmm, I think this reset path only runs when initialising/onlining a CPU,
-so it's not a great user interface where the sysctl is concerned. It's
-probably better to hook armv8pmu_start() for this.
+Changes in V2:
+	Add more explanation to commits, comments and documentation.
 
->  }
->  
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index da75956..7790328 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1311,6 +1311,7 @@ extern void put_callchain_entry(int rctx);
->  
->  extern int sysctl_perf_event_max_stack;
->  extern int sysctl_perf_event_max_contexts_per_stack;
-> +extern int sysctl_export_pmu_events;
->  
->  static inline int perf_callchain_store_context(struct perf_callchain_entry_ctx *ctx, u64 ip)
->  {
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index e52b6e3..3b751a2e 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -2008,6 +2008,18 @@ static struct ctl_table kern_table[] = {
->  		.extra2		= SYSCTL_ONE_THOUSAND,
->  	},
->  #endif
-> +#ifdef CONFIG_HW_PERF_EVENTS
-> +	{
-> +		.procname       = "export_pmu_events",
-> +		.data           = &sysctl_export_pmu_events,
-> +		.maxlen         = sizeof(int),
-> +		.mode           = 0644,
-> +		.proc_handler   = proc_dointvec_minmax,
-> +		.extra1         = SYSCTL_ZERO,
-> +		.extra2         = SYSCTL_ONE,
-> +
-> +	},
-> +#endif
 
-Since this is arm64-specific, it should live in the arm64 code and not
-here. See how we already register 'armv8_pmu_sysctl_table' for the ARMv8
-PMU.
+Adrian Hunter (6):
+      perf tools: Add machine to machines back pointer
+      perf tools: Factor out thread__set_guest_comm()
+      perf tools: Add guest_code support
+      perf script: Add guest_code support
+      perf kvm report: Add guest_code support
+      perf intel-pt: Add guest_code support
 
-Will
+ tools/perf/Documentation/perf-intel-pt.txt |  70 ++++++++++++++++++++
+ tools/perf/Documentation/perf-kvm.txt      |   3 +
+ tools/perf/Documentation/perf-script.txt   |   4 ++
+ tools/perf/builtin-kvm.c                   |   2 +
+ tools/perf/builtin-script.c                |   5 +-
+ tools/perf/util/event.c                    |   7 +-
+ tools/perf/util/intel-pt.c                 |  20 +++++-
+ tools/perf/util/machine.c                  | 101 ++++++++++++++++++++++++++++-
+ tools/perf/util/machine.h                  |   4 ++
+ tools/perf/util/session.c                  |   7 ++
+ tools/perf/util/symbol_conf.h              |   3 +-
+ 11 files changed, 217 insertions(+), 9 deletions(-)
+
+
+Regards
+Adrian
