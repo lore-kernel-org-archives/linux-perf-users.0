@@ -2,123 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C472C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 21:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0001C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 21:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbiEQVUL (ORCPT
+        id S229810AbiEQV7Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 17:20:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51530 "EHLO
+        Tue, 17 May 2022 17:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229743AbiEQVUK (ORCPT
+        with ESMTP id S229706AbiEQV7X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 17:20:10 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B57C5373D;
-        Tue, 17 May 2022 14:20:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 169ECB81C9A;
-        Tue, 17 May 2022 21:20:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727E0C385B8;
-        Tue, 17 May 2022 21:20:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652822406;
-        bh=aX1+u5HBdpWoig4ZwAPYlKgTcAPJ21XxVvwtnQz2jbA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eHMPGBTGSfBXoLopt0wrrmclau7vQDAWu7hpWA1/jp38l1+fm8t4iS//LscbKhR2q
-         EqC19rIFIWIsQAwDFVqhTYNbPejFfKR2HpGKt0rK6uK+WqTdjVoPJRQVIg+BcIE0Iw
-         3NKQmiJKBAUQq8bIU5PqqrUaua/zxWRJvQ6dkeUuIHINp5lrIILVyUwVoqPVVrZftq
-         uUPfgvImA3KXWYi2XtAQluTwD1Sf/3aLHcet/L0yyqycsBSdwStLtf2ZrNbXkx/kdL
-         3N8AXCHVMMP/P5X9hIWixtR7FzFR2/NT1x0j6atMaB8En/0va76rYNxCkxzTzTLVnd
-         1f/CBQWE7Tw5Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E4364400B1; Tue, 17 May 2022 18:20:03 -0300 (-03)
-Date:   Tue, 17 May 2022 18:20:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
-        leo.yan@linaro.org, benh@kernel.crashing.org,
-        Nick.Forrington@arm.com, alexander.shishkin@linux.intel.com,
-        andrew.kilroy@arm.com, james.clark@arm.com, john.garry@huawei.com,
-        Jiri Olsa <jolsa@kernel.org>, kjain@linux.ibm.com,
-        lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v8 0/4] perf: arm-spe: Decode SPE source and use for perf
- c2c
-Message-ID: <YoQRg1r7HuwiO3bZ@kernel.org>
-References: <20220517020326.18580-1-alisaidi@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220517020326.18580-1-alisaidi@amazon.com>
-X-Url:  http://acmel.wordpress.com
+        Tue, 17 May 2022 17:59:23 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F398350E2D
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 14:59:21 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f7dbceab08so4288267b3.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 14:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=87brBgMZyYr2KZM5gqgOZ1FKoktrRC3RtBsl96TyHFk=;
+        b=OWZ1xxTAzR+DWRYf1pCTH/HydXSZArPwWEXY2qmEPGNHV4KEvfWQONU/80zcaaMoQT
+         UxIQd5HwISoRC1LniAQjieSp5FjKdd321vE7mx1xHK6ameQFtpXLHzcENSi6qXlvN+zI
+         SLtUWnjDn5hPEiQ+jNsY2Baj5rsbvSq1Z4BF4AY8H6pyHdBTJOF6wiimFd4x3T5QFBm9
+         wcVinFed7dxUOKfUcLy/8iy+/adRfOdwTprKzMntkMJA67QbD9olRsPqwnxYhVqGtkez
+         HxixWrlGWMqQsvO3N9pMov6EcTUmbxfa/YbDearvZO9bwRXgHu2Iow6t6c9C7/uwNpFT
+         XhoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=87brBgMZyYr2KZM5gqgOZ1FKoktrRC3RtBsl96TyHFk=;
+        b=fCetC19+/VFTHibA4x6RGSjhRpqmMR8jMMQrv7blrmwFd8QOOVdp/ihri/0PiQQRXY
+         kLzIs2e0c1wVcETQUMLb3ceSU0wLidGgyG0hplxTTUr4wFI8EnuD0fubrTSce8KVLADr
+         R79uWhWkKzlF8m2cJp2jKuSdzrBatv9s1lAJy8JF3bfP0hduIXvsIJ+BwHqH5S8Drdmc
+         aOZnZVzsA/h8d4jRmyaCJNR4CETQqoCroWXgNFxwaY8U00wcuhXqjZWo+X5ZhGEBpNOJ
+         BGu10yA8fUdl8sgdCjoC23vhBQ3ZqPWSoKGTzSuKMJ86xRkWIl83yf1bL8jJ9aoXP5Z/
+         43MA==
+X-Gm-Message-State: AOAM532sG5EOBfpyZeKOLK0PcZqbQww5BYcpidcaTaO5vq+rWx7ElLyB
+        itWJr+nKIw2cyqgSBUxKSybsIVAFifVl
+X-Google-Smtp-Source: ABdhPJyxEk2HSbePnkp7Cg+Zed5QyldoSY6BiLKeR0+bUCh9h22z7R6MWypZH/tO2eEHsxTwuCUlguFzn2Su
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a5a1:af73:fe09:fd5])
+ (user=irogers job=sendgmr) by 2002:a25:4091:0:b0:64d:6dd1:db7d with SMTP id
+ n139-20020a254091000000b0064d6dd1db7dmr16261350yba.191.1652824761121; Tue, 17
+ May 2022 14:59:21 -0700 (PDT)
+Date:   Tue, 17 May 2022 14:59:14 -0700
+Message-Id: <20220517215917.692906-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
+Subject: [PATCH v3 0/3] JSON output for perf stat
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
+        Like Xu <likexu@tencent.com>,
+        James Clark <james.clark@arm.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Claire Jensen <clairej735@gmail.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 17, 2022 at 02:03:21AM +0000, Ali Saidi escreveu:
-> When synthesizing data from SPE, augment the type with source information
-> for Arm Neoverse cores so we can detect situtions like cache line
-> contention and transfers on Arm platforms. 
-> 
-> This changes enables future changes to c2c on a system with SPE where lines that
-> are shared among multiple cores show up in perf c2c output. 
-> 
-> Changes is v9:
->  * Change reporting of remote socket data which should make Leo's upcomping
->    patch set for c2c make sense on multi-socket platforms  
+Parsing the CSV or text output of perf stat can be problematic when
+new output is added (columns in CSV format). JSON names values and
+simplifies the job of parsing. Add a JSON output option to perf-stat
+then add unit test that parses and validates the output.
 
-Hey,
+This is a resend of two v2 patches:
+https://lore.kernel.org/lkml/20210813220754.2104922-1-cjense@google.com/
+https://lore.kernel.org/lkml/20210813220936.2105426-1-cjense@google.com/
+with a few formatting changes and improvements to the linter.
 
-	Joe Mario, who is one of 'perf c2c' authors asked me about some
-git tree he could clone from for both building the kernel and
-tools/perf/ so that he could do tests, can you please provide that?
+The CSV test/linter is also added to ensure that CSV output doesn't regress:
+https://lore.kernel.org/lkml/20210813192108.2087512-1-cjense@google.com/
 
-thanks!
+v3. There is some tidy up of CSV code including a potential memory
+    over run in the os.nfields set up caught by sanitizers. To
+    facilitate this an AGGR_MAX value is added. v3 also adds the CSV
+    testing.
 
-- Arnaldo
- 
-> Changes in v8:
->  * Report NA for both mem_lvl and mem_lvl_num for stores where we have no
->    information
-> 
-> Changes in v7:
->  * Minor change requested by Leo Yan
-> 
-> Changes in v6:
->   * Drop changes to c2c command which will come from Leo Yan
-> 
-> Changes in v5:
->   * Add a new snooping type to disambiguate cache-to-cache transfers where
->     we don't know if the data is clean or dirty.
->   * Set snoop flags on all the data-source cases
->   * Special case stores as we have no information on them
-> 
-> Changes in v4:
->   * Bring-in the kernel's arch/arm64/include/asm/cputype.h into tools/ 
->   * Add neoverse-v1 to the neoverse cores list
-> 
-> Ali Saidi (4):
->   tools: arm64: Import cputype.h
->   perf arm-spe: Use SPE data source for neoverse cores
->   perf mem: Support mem_lvl_num in c2c command
->   perf mem: Support HITM for when mem_lvl_num is any
-> 
->  tools/arch/arm64/include/asm/cputype.h        | 258 ++++++++++++++++++
->  .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
->  .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 +
->  tools/perf/util/arm-spe.c                     | 110 +++++++-
->  tools/perf/util/mem-events.c                  |  20 +-
->  5 files changed, 383 insertions(+), 18 deletions(-)
->  create mode 100644 tools/arch/arm64/include/asm/cputype.h
-> 
-> -- 
-> 2.32.0
+v2. Fixes the system wide no aggregation test to not run if the
+    paranoia is wrong. It also makes the counter-value check handle
+    the "<not counted>" and "<not supported>" cases.
+
+Claire Jensen (3):
+  perf test: Add checking for perf stat CSV output.
+  perf stat: Add JSON output option
+  perf test: Json format checking
+
+ tools/perf/Documentation/perf-stat.txt        |  21 +
+ tools/perf/builtin-stat.c                     |   6 +
+ .../tests/shell/lib/perf_csv_output_lint.py   |  48 +++
+ .../tests/shell/lib/perf_json_output_lint.py  |  91 +++++
+ tools/perf/tests/shell/stat+csv_output.sh     | 147 +++++++
+ tools/perf/tests/shell/stat+json_output.sh    | 147 +++++++
+ tools/perf/util/stat-display.c                | 384 +++++++++++++-----
+ tools/perf/util/stat.c                        |   1 +
+ tools/perf/util/stat.h                        |   2 +
+ 9 files changed, 741 insertions(+), 106 deletions(-)
+ create mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
+ create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
+ create mode 100755 tools/perf/tests/shell/stat+csv_output.sh
+ create mode 100755 tools/perf/tests/shell/stat+json_output.sh
 
 -- 
+2.36.0.550.gb090851708-goog
 
-- Arnaldo
