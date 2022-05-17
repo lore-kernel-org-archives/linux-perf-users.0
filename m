@@ -2,108 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F636C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 15:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006E4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 16:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245663AbiEQPDT (ORCPT
+        id S1351217AbiEQQvn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 11:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40580 "EHLO
+        Tue, 17 May 2022 12:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243507AbiEQPDR (ORCPT
+        with ESMTP id S1351212AbiEQQvm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 11:03:17 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98BF96410;
-        Tue, 17 May 2022 08:03:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DBECDB818FF;
-        Tue, 17 May 2022 15:03:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630F4C385B8;
-        Tue, 17 May 2022 15:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652799793;
-        bh=byrQErYFQlhTfmVu1YurdHSZ08z5LZgcXvlnYcs4SNQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PfOhPDT8JZh+i0Zzmvh43u+bFH15pqQHxC336x4IG8IhA0fOYeHf7sozb4ZDErIe4
-         +BuRy6sTNNOHxYJAJJP/LF6A6UqAPJxrmZxVSmV5EoQpTLODj+ITlUA0yS9YOPcuUF
-         vEcEEQlHoIxpS/HGtKxEILNFjDVjqYYaweWKzVg7yQMb/vE7lMhuYl+ehVfAi/gkaH
-         T+LWH1Ze8q2tUdEGk41szWe12+t9IMlcBTxH75eEMAZTm8NO76MIdiko3l0yGiPAb4
-         jXkliKItJblCTFEjnuPzGqGca7eZMhXtIniJZKFv9uBhhYKAPdNkKgWX7Rd4yat+rc
-         MiiVMevf0KThA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 07C8F400B1; Tue, 17 May 2022 12:03:10 -0300 (-03)
-Date:   Tue, 17 May 2022 12:03:10 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 17 May 2022 12:51:42 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA12403E6
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 09:51:41 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2fee45054e4so63259427b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 09:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=g2f4uvZg1OcpFGX2p8frlvTRX1+Tckj3KS/ktxrHk0U=;
+        b=KBtLDSOQDN4CFp4UIghgcQ3ZBvT6TcmYf/vyAAE00IVbD8yOelUIzlITkm2MKrJhVg
+         EuQZsVUoCNk/2XD7/A7mN6pUw1Sb5tvJGl10A5Hvodn/A5p5RGqaQGn7epS3fk2/dd8p
+         wARMBv0ZqnZIXVGmuv1xOPpbgUozdHYDCNSpzf8FM/nOIqf4m6RDY+YJZr817HfMOI71
+         gsqB0p1zGCP+Syyhu66PGxrra2f2/FUTGFHtKMmMQhjJuMiEpluBooZiw4DyPWGaTQXv
+         q5bS5VYrVdwFHrDR3DmDEWmpmKdJUffZrdYCPLdxuB0zYeGxTtQl6STIU3QFhmqiXlls
+         M7dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=g2f4uvZg1OcpFGX2p8frlvTRX1+Tckj3KS/ktxrHk0U=;
+        b=yWwUT/5opZICloeBCbeV4Rbx5rqyVoDqzJH+qikhHhcQlURyCQhRuGwuJ3tfn/vYwy
+         7iEC5R93I2HKaHbXicOU5pxrNvuKPv11FmYkmbuGPkB555LgeHsrzyPUAgMneQ62Jukt
+         OtwpC3WtxmhMOWwZYAN6+rlyH94fkNCJwuwl1Mmqtn+xM69p1vbIhRaTLKB9nd9Q7lUm
+         WUIKmKCPCtjBw1kgfkIQ78yn/2xMkUu8Nn/QdvSSbreV3Qrdlp+ZI9H07F/3ZPlhF99t
+         daYahzjx+WKtXQvYz4QAi0WcQPclFEfyPal442QH0ITvD/knY1Fg0z6aTnhwMMOYfrAY
+         uCyw==
+X-Gm-Message-State: AOAM532RA5inE4U43Ls9GDHkfvhpn2CaYqTBOeBkcRAmUqsHt0q69qKg
+        j8cOxOKvsEIJMHYXwp8dLbKT4u9Irbav
+X-Google-Smtp-Source: ABdhPJxnIXgI1cz6JmZ4YxDm1wQ3taF1Gug1SeXiL9AUaVPryKXUYqnzY8V+X518Ny5XwSUKJivzkTnhHYkw
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a5a1:af73:fe09:fd5])
+ (user=irogers job=sendgmr) by 2002:a05:6902:114d:b0:644:ba0d:e95c with SMTP
+ id p13-20020a056902114d00b00644ba0de95cmr24868885ybu.516.1652806300551; Tue,
+ 17 May 2022 09:51:40 -0700 (PDT)
+Date:   Tue, 17 May 2022 09:51:34 -0700
+Message-Id: <20220517165136.479226-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
+Subject: [PATCH v2 0/2] JSON output for perf stat
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
+        Like Xu <likexu@tencent.com>,
         James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 0/2] Fix topdown event weak grouping
-Message-ID: <YoO5Lp1UHMowHLmH@kernel.org>
-References: <20220517052724.283874-1-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220517052724.283874-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Claire Jensen <clairej735@gmail.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, May 16, 2022 at 10:27:22PM -0700, Ian Rogers escreveu:
-> Keep topdown events within a group when a weak group is broken. This
-> is a requirement as topdown events must form a group.
-> 
-> Add perf stat testing including for required topdown event group
-> behaviors.
-> 
-> Note: as with existing topdown evsel/evlist code topdown events are
-> assumed to be on the PMU "cpu". On Alderlake the PMU "cpu_core" should
-> also be tested. Future changes can fix Alderlake.
+Parsing the CSV or text output of perf stat can be problematic when
+new output is added (columns in CSV format). JSON names values and
+simplifies the job of parsing. Add a JSON output option to perf-stat
+then add unit test that parses and validates the output.
 
-Thanks, applied.
+This is a resend of two v2 patches:
+https://lore.kernel.org/lkml/20210813220754.2104922-1-cjense@google.com/
+https://lore.kernel.org/lkml/20210813220936.2105426-1-cjense@google.com/
+with a few formatting changes and improvements to the linter.
 
-- Arnaldo
+v2. Fixes the system wide no aggregation test to not run if the
+    paranoia is wrong. It also makes the counter-value check handle
+    the "<not counted>" and "<not supported>" cases.
 
- 
-> v3. Fix computation of number of events in leader's group.
->     Adds reviewed-by: Liang, Kan <kan.liang@linux.intel.com
-> v2. Correct behavior wrt pmu prefixed events and avoid the test using
->     deprecated events: Suggested-by: Liang, Kan <kan.liang@linux.intel.com>
-> 
-> Ian Rogers (2):
->   perf evlist: Keep topdown counters in weak group
->   perf test: Add basic stat and topdown group test
-> 
->  tools/perf/arch/x86/util/evsel.c | 12 ++++++
->  tools/perf/tests/shell/stat.sh   | 67 ++++++++++++++++++++++++++++++++
->  tools/perf/util/evlist.c         | 16 +++++++-
->  tools/perf/util/evsel.c          | 10 +++++
->  tools/perf/util/evsel.h          |  3 ++
->  5 files changed, 106 insertions(+), 2 deletions(-)
->  create mode 100755 tools/perf/tests/shell/stat.sh
-> 
-> -- 
-> 2.36.0.550.gb090851708-goog
+Claire Jensen (2):
+  perf stat: Add JSON output option
+  perf test: Json format checking
+
+ tools/perf/Documentation/perf-stat.txt        |  21 +
+ tools/perf/builtin-stat.c                     |   2 +
+ .../tests/shell/lib/perf_json_output_lint.py  |  92 +++++
+ tools/perf/tests/shell/stat+json_output.sh    | 147 +++++++
+ tools/perf/util/stat-display.c                | 365 +++++++++++++-----
+ tools/perf/util/stat.h                        |   1 +
+ 6 files changed, 542 insertions(+), 86 deletions(-)
+ create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
+ create mode 100755 tools/perf/tests/shell/stat+json_output.sh
 
 -- 
+2.36.0.550.gb090851708-goog
 
-- Arnaldo
