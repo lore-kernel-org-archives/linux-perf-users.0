@@ -2,176 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6948C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 13:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DF2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 13:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347447AbiEQNUC (ORCPT
+        id S239619AbiEQNXK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 09:20:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51928 "EHLO
+        Tue, 17 May 2022 09:23:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347449AbiEQNUA (ORCPT
+        with ESMTP id S243824AbiEQNXI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 09:20:00 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DB941F94
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 06:19:59 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id k16so10095568pff.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 06:19:59 -0700 (PDT)
+        Tue, 17 May 2022 09:23:08 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBC742EFC
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 06:23:07 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id kq17so34700324ejb.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 06:23:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=60d3oJvctUxP/oTDei+2vsfAh7UJD05S6Mlxv1MfLJs=;
-        b=sLa33qxuX7UQPweU8Gv5f68rW3IohaL9w81Io56m7BktAWuiQeYya2euk/CRddIg6X
-         3dUMKSAN5oRPQe2+cL2YOeJFF57TqPja5oIE3IiMQSEDjAga6E6avBr+UBhtiRxbw1YH
-         JbtcVjFjaTjJ0JN4CFvqiXDRBBu4Krsv6FtL0SikHC1nFxQKABO9wiCn2suidjv/4AH7
-         FrbhUw9goNTqOserN4X52WYNhiU25LGiEC2RAe0OMcicYmMPvO13wwX89VoEfLXpVfQl
-         C9gKhthX4plG4zN6Wg1otxB4fLsmZXvh3Ux12IumMnOIA8SJUw6uvyK/EMdz51rmxKFP
-         TETA==
+        d=scylladb-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=7/rK2aVAsHwMrIQcWS8rWb/RzzGbuxUEumy+JTCBUiw=;
+        b=nGbh7oLtmyjLXFQ3yL1bjr85DuoEkFUXBURb8QXnSb1msTwKjTsof4P2zkOuYWzt2g
+         6dNd8qwTYPMh7Z/yI/SqrCEEoViorzJt17G8USXfvz0/BKc2X/0M33THXiMAWwVXfbv5
+         DPIElxxjZMBv5SVD1EDDDuqwluzi2Qy1yB/gjHKMZWe5XjSMnMpDO7wndNdfgu4rmeUE
+         UFYvEEwv7qzjQltuduGPyxNXkf09MNlUIxugHbhyq/zZpCOWYAS8tOA8MWRNZJJTGIWi
+         HY0VRNYDgbd34yX7TrM1SIO+xKqXEql78iNVLvlyCb4JShztkIoqIKRW9l60rXA9bwDD
+         oInw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=60d3oJvctUxP/oTDei+2vsfAh7UJD05S6Mlxv1MfLJs=;
-        b=ANhK/9pHQYZhM1Kfjxt8UXpNsd35RQN3vgbva+2vT8NcscZZRZ8zSPdM7B6mt2uzWN
-         7hvGIcCNoCE4uEqS/Ar+73tJhm3bjicnFAdnr4kmnFc+SzP1Stt7k1cUWAso/2qgpOoG
-         lvhxi5FlwKoElBaZ89AmAK0jzcG9bN44U8xJ1qSdoJXuiej46eO8p8dp8fYrcA2DpdKD
-         orzCmi58qL4GK+U0BKARN3AWawQKyv2vyzFDkwk6DsmC9TRS5zFHTVoNd6fxLdwz8LQf
-         +nN0EuVZ7L4GGCqyeGXmBqYzXKk19K8pnuy0zvCAxmBFCb0UgsUfFsMLJkEImslDIaL9
-         DlOg==
-X-Gm-Message-State: AOAM531n4nD40AzNsKKOOobKUmHD84c/mGXsoisAr+LemHlobNVX5k9b
-        nxTvkqP2CXAKiiZ0g7q4waEErg==
-X-Google-Smtp-Source: ABdhPJwB9iU6V3h6T0XlcmvIfaDGUz0JvPDf0l9LKZih5qd1PFE8NwDzdbfnm0ljbPBHqRWK4ehk4w==
-X-Received: by 2002:a05:6a00:174a:b0:50d:44ca:4b with SMTP id j10-20020a056a00174a00b0050d44ca004bmr22671394pfc.0.1652793598742;
-        Tue, 17 May 2022 06:19:58 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([46.249.98.195])
-        by smtp.gmail.com with ESMTPSA id k3-20020a17090a910300b001df71667c3asm1569744pjo.54.2022.05.17.06.19.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 06:19:58 -0700 (PDT)
-Date:   Tue, 17 May 2022 21:19:52 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        broonie@kernel.org, acme@kernel.org, german.gomez@arm.com,
-        mathieu.poirier@linaro.org, john.garry@huawei.com,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] perf tools: arm64: Add support for VG register
-Message-ID: <20220517131952.GE153558@leoy-ThinkPad-X240s>
-References: <20220517102005.3022017-1-james.clark@arm.com>
- <20220517102005.3022017-5-james.clark@arm.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=7/rK2aVAsHwMrIQcWS8rWb/RzzGbuxUEumy+JTCBUiw=;
+        b=cqEOzRL79sxR4jdVyAVOwZqN/CnqF71sJTMProUW9L0mpUhJ0VtHeBmRoz1KMs5G5S
+         KaM2xAbCh18ZwueP7X3TjfhcuwMoHIwyEcihvfmAOfrUi1iQZW0CZSlfqVri0swUFOLL
+         DkJOBv84e43Wa9vWkpSK1YfQo5YYSZ3k2ECidelO1+1MYHYxaL1P/exNiB4MpHtlXatH
+         aUfFm2KEh+IZjpj1bIXANJ26nQAVNbHdRYTXQVw9Mr6TNZI5jvCqEzLLuFyG2LHtnT5D
+         YfGgt2pCsDhiN6No83BZgjiCjUMo8veYAKIIz++qASvjqboqmL87SaS9Sk0JHfQPKuqU
+         nDWA==
+X-Gm-Message-State: AOAM530gCBMyMQe+HmGH7tML7tcVUS706dSuNjVM4I08qcKzDMs21Nw9
+        NXxA5W5ZT4t/u6/6t8We52Lw94eXwLOYOVID
+X-Google-Smtp-Source: ABdhPJyuzMkoQH6fNkas9Hd5n0W8XafwwSSx48Cyik5wpw9KeB9uDGU4mw291MS47nmsocE93KpaIw==
+X-Received: by 2002:a17:907:3e8e:b0:6f4:ff62:a399 with SMTP id hs14-20020a1709073e8e00b006f4ff62a399mr20869929ejc.298.1652793786005;
+        Tue, 17 May 2022 06:23:06 -0700 (PDT)
+Received: from [10.0.0.1] (system.cloudius-systems.com. [199.203.229.89])
+        by smtp.gmail.com with ESMTPSA id t20-20020a056402525400b0042617ba63ccsm7138612edd.86.2022.05.17.06.23.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 May 2022 06:23:05 -0700 (PDT)
+Message-ID: <659c01ac-7c99-a50b-b52e-9f565f3892f0@scylladb.com>
+Date:   Tue, 17 May 2022 16:23:03 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220517102005.3022017-5-james.clark@arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: Infinite recursion in `perf record`
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org
+References: <f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com>
+ <CAP-5=fV0rXit7BqBxghE=zK=ao_GYhwkCbu+GhJZebzhVCxq0g@mail.gmail.com>
+From:   Avi Kivity <avi@scylladb.com>
+Organization: ScyllaDB
+In-Reply-To: <CAP-5=fV0rXit7BqBxghE=zK=ao_GYhwkCbu+GhJZebzhVCxq0g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 17, 2022 at 11:20:05AM +0100, James Clark wrote:
-> Add the name of the VG register so it can be used in --user-regs
-> 
-> The event will fail to open if the register is requested but not
-> available so only add it to the mask if the kernel supports sve and also
-> if it supports that specific register.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/arch/arm64/util/perf_regs.c | 34 ++++++++++++++++++++++++++
->  tools/perf/util/perf_regs.c            |  2 ++
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
-> index 476b037eea1c..c0a921512a90 100644
-> --- a/tools/perf/arch/arm64/util/perf_regs.c
-> +++ b/tools/perf/arch/arm64/util/perf_regs.c
-> @@ -2,9 +2,11 @@
->  #include <errno.h>
->  #include <regex.h>
->  #include <string.h>
-> +#include <sys/auxv.h>
->  #include <linux/kernel.h>
->  #include <linux/zalloc.h>
->  
-> +#include "../../../perf-sys.h"
->  #include "../../../util/debug.h"
->  #include "../../../util/event.h"
->  #include "../../../util/perf_regs.h"
-> @@ -43,6 +45,7 @@ const struct sample_reg sample_reg_masks[] = {
->  	SMPL_REG(lr, PERF_REG_ARM64_LR),
->  	SMPL_REG(sp, PERF_REG_ARM64_SP),
->  	SMPL_REG(pc, PERF_REG_ARM64_PC),
-> +	SMPL_REG(vg, PERF_REG_ARM64_VG),
->  	SMPL_REG_END
->  };
->  
-> @@ -131,3 +134,34 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
->  
->  	return SDT_ARG_VALID;
->  }
-> +
-> +uint64_t arch__user_reg_mask(void)
-> +{
-> +	struct perf_event_attr attr = {
-> +		.type                   = PERF_TYPE_HARDWARE,
-> +		.config                 = PERF_COUNT_HW_CPU_CYCLES,
-> +		.sample_type            = PERF_SAMPLE_REGS_USER,
-> +		.disabled               = 1,
-> +		.exclude_kernel         = 1,
-> +		.sample_period		= 1,
-> +		.sample_regs_user	= PERF_REGS_MASK
-> +	};
-> +	int fd;
-> +
-> +	if (getauxval(AT_HWCAP) & HWCAP_SVE)
-> +		attr.sample_regs_user |= SMPL_REG_MASK(PERF_REG_ARM64_VG);
-> +
-> +	/*
-> +	 * Check if the pmu supports perf extended regs, before
-> +	 * returning the register mask to sample.
-> +	 */
-> +	if (attr.sample_regs_user != PERF_REGS_MASK) {
-> +		event_attr_init(&attr);
-> +		fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
-> +		if (fd != -1) {
-> +			close(fd);
-> +			return attr.sample_regs_user;
-> +		}
-> +	}
 
-Just curious, since we can know SVE is supported from reading
-auxiliary value, can we directly return the register mask as below?
+On 17/05/2022 01.04, Ian Rogers wrote:
+>
+>> perf-5.17.6-300.fc36.x86_64
+>>
+> Hi, could you provide more details of the build? I have a bazel based
+> build and weak symbols are a problem for me too. For example, arm and
+> arm64 code needs building and linking together on an arm64 build for
+> the symbols to work properly - normally we just need 1 arch. There
+> have also been issues with constant propagation. I'd prefer if we
+> could use #ifdefs where we explicitly say what we expect to happen on
+> each architecture. Weak symbols' implicit behavior is troublesome.
+> With #ifdefs if things are broken then linking fails, which provides
+> useful signal.
 
-  PERF_REGS_MASK | SMPL_REG_MASK(PERF_REG_ARM64_VG);
 
-Except this question, this patch looks good to me.
+I'm not sure what details you want. The full build log is available here 
+[1].
 
-Thanks,
-Leo
 
-> +	return PERF_REGS_MASK;
-> +}
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index a982e40ee5a9..872dd3d38782 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -103,6 +103,8 @@ static const char *__perf_reg_name_arm64(int id)
->  		return "lr";
->  	case PERF_REG_ARM64_PC:
->  		return "pc";
-> +	case PERF_REG_ARM64_VG:
-> +		return "vg";
->  	default:
->  		return NULL;
->  	}
-> -- 
-> 2.28.0
-> 
+[1] 
+https://kojipkgs.fedoraproject.org//packages/kernel/5.17.6/300.fc36/data/logs/x86_64/build.log
+
