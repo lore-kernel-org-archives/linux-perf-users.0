@@ -2,96 +2,214 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE71C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 12:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D7BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 13:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234090AbiEQMys (ORCPT
+        id S1346998AbiEQNIf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 08:54:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56954 "EHLO
+        Tue, 17 May 2022 09:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346762AbiEQMyi (ORCPT
+        with ESMTP id S244361AbiEQNIe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 08:54:38 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FEA94D9D1
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 05:54:13 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id fw21-20020a17090b129500b001df9f62edd6so220710pjb.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 05:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tjiV1xKHbPTP8VkdWgv75f9elF2yNt/M/Hgxyubwsvs=;
-        b=jJAeyDDGVYAM6anJp5eoX+Bdo0+J99EROle8FXnCYomSg/lbrcKJLLjd6hcvwzDvUm
-         6zr4/avmcBBW6EM5X3wFV/U9Ynp8o4RUuago9cZIMUpj55YnxmTwlBg3M+h97wI0fOiW
-         49eJ9lwL8F26LCUDhVAeljV8Hs6OWpTO/V3DqQv1co1K45gP1DEyjY4J8OIac6KE3CY+
-         /KjuLFXew+595Z8SpuJCTvFRgpYCLioPegnwmdHFMe8E8DcQGmo9mfKH2xHfuWJ4LNFn
-         2BAwRhWXavX2UiGRAsGVfYBH2NLdqOAgqwTokZNJjG5RkOtC6E7gJuy4CpCBcNCc3NLg
-         IQdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tjiV1xKHbPTP8VkdWgv75f9elF2yNt/M/Hgxyubwsvs=;
-        b=mRQZluc9MapbS3eu+YsdiIUBys8VzOEERNjjsjUOlb39ZO6ZmFT2zGqYgUoOJ3248p
-         Qrbwa0LOHAJcwxm56KdW94uD/K/Q0pMo5Ca0Qld/mz1/teN2bRnjWXo4zzAuTcZ8TIeD
-         +qJed0ZfI4y8z5YiOD+TGVKVMpMlChGmfJYpnOTVwV4q9yWv9R8sndEUoFxfP5biAK8+
-         0Vx8TkrBQHGjKBxKYyiq2fuQNjBnCRFWrgLQQMzJDI4oeaDGv0KPMo5cLHtWgT1+G6aU
-         1XnfFridMxbCZ73IGnADFUQYjNHQRVBu5MkFAMFXnf6IRLE5er1Ur3sHrMA4KXfmo0Ld
-         BCiQ==
-X-Gm-Message-State: AOAM533QbrDFJp93F/xBaLBBMwJXhLfVcgqiRfY9wcrsBG53NMtvHI20
-        HVAIhRHTjh2ZPMP2jkPcnP+EcQ==
-X-Google-Smtp-Source: ABdhPJyipCIyJ38tRbhMT94MHL3O0NMmglFB3vvh77tC+0eyDQ2a4pEKSzIHKnqG3HbX+LeUaMee2g==
-X-Received: by 2002:a17:90b:1a8b:b0:1dc:e565:3238 with SMTP id ng11-20020a17090b1a8b00b001dce5653238mr24998790pjb.64.1652792052892;
-        Tue, 17 May 2022 05:54:12 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([46.249.98.195])
-        by smtp.gmail.com with ESMTPSA id gt13-20020a17090af2cd00b001df4b919937sm1598571pjb.16.2022.05.17.05.54.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 05:54:12 -0700 (PDT)
-Date:   Tue, 17 May 2022 20:54:04 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        broonie@kernel.org, acme@kernel.org, german.gomez@arm.com,
-        mathieu.poirier@linaro.org, john.garry@huawei.com,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/4] perf tools: arm64: Decouple Libunwind register
- names from Perf
-Message-ID: <20220517125404.GD153558@leoy-ThinkPad-X240s>
-References: <20220517102005.3022017-1-james.clark@arm.com>
- <20220517102005.3022017-4-james.clark@arm.com>
+        Tue, 17 May 2022 09:08:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D235F35262;
+        Tue, 17 May 2022 06:08:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6B96361460;
+        Tue, 17 May 2022 13:08:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922AEC385B8;
+        Tue, 17 May 2022 13:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652792908;
+        bh=8Cyf4GoLJYIxjStrlVirMdV2e3KN0kCdHlgFZMnClfc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KNkvxPWsgEj6I8hGcmVi1y/dFSIrjLT5rJ4/qQH2mQDomf/Lcm9aOSL9KGuA68AYA
+         39bZCNbFe4TkNDVNbM7BkzyCFBSztrbmSC7ST4H8YvAcWPLCoRyMJQjz1wPnyZa9cY
+         rU1jG6Z0mV6sBwtDR2rsbbYi4yF8Ura1oNdPC2r+ZBrl0HEIpZ7a4+MRTQr4+G32Mm
+         9DUcwJrnxb194U6Z+l7itzO0p3tZfI3WxPYziSAut36etUmLB1Vtbtv2hBndrGFkyI
+         r99BOcj2d39U3cidcnf1L6KLCay226aE9H9ppLTMjWfg5iSYE59LWlsvxg3Vn+dKdQ
+         l3OuK/muTRw0A==
+Date:   Tue, 17 May 2022 14:08:22 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+Cc:     mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4] arm64: perf: Set PMCR.X of PMCR_EL0 during pmu reset
+Message-ID: <20220517130822.GA3369@willie-the-truck>
+References: <1652705738-1628-1-git-send-email-quic_c_spathi@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220517102005.3022017-4-james.clark@arm.com>
+In-Reply-To: <1652705738-1628-1-git-send-email-quic_c_spathi@quicinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 17, 2022 at 11:20:04AM +0100, James Clark wrote:
-> Dwarf register numbers and real register numbers on aarch64 are
-> equivalent. Remove the references to the register names from
-> Libunwind so that new registers are supported without having to
-> add build time feature checks for each new register.
+On Mon, May 16, 2022 at 06:25:38PM +0530, Srinivasarao Pathipati wrote:
+> Enable exporting of events over PMU event export bus by setting
+> PMCR.X of PMCR_EL0 during pmu reset.
 > 
-> The unwinder won't ask for a register that it doesn't know about
-> and Perf will already report an error for an unknown or unrecorded
-> register in the perf_reg_value() function so extra validation
-> isn't needed.
+> As it impacts power consumption make it configurable at bootup
+> with kernel arguments and at runtime with sysctl.
 > 
-> After this change the new VG register can be read by libunwind.
+> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+> ---
+> Changes since V3:
+> 	- export bit is now configurable with sysctl
+> 	- enabling export bit on reset instead of retaining
 > 
-> Signed-off-by: James Clark <james.clark@arm.com>
+> Changes since V2:
+> 	Done below changes as per Will's comments
+> 	- enabling pmcr_x now configurable with kernel parameters and
+> 	  by default it is disabled.
+> 	
+> Changes since V1:
+> 	- Preserving only PMCR_X bit as per Robin Murphy's comment.
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+>  Documentation/admin-guide/sysctl/kernel.rst     |  8 ++++++++
+>  arch/arm64/kernel/perf_event.c                  | 15 +++++++++++++++
+>  include/linux/perf_event.h                      |  1 +
+>  kernel/sysctl.c                                 | 12 ++++++++++++
+>  5 files changed, 40 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index de3da15..2139b81 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5150,6 +5150,10 @@
+>  			Useful for devices that are detected asynchronously
+>  			(e.g. USB and MMC devices).
+>  
+> +	export_pmu_events
+> +			[KNL] Sets export bit of PMCR_EL0 to enable the exporting of
+> +			events over PMU event export bus.
 
-Looks good to me:
+Sorry, I should've been clearer ahbout this before: if you add a sysctl,
+then you get the kernel cmdline option for free via something like
+"sysctl.kernel.export_pmu_events=foo", so I think you can drop this and
+the early_param().
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> +
+>  	retain_initrd	[RAM] Keep initrd memory after extraction
+>  
+>  	rfkill.default_state=
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index ddccd10..8fbc3a0 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -892,6 +892,14 @@ The default value is 0 (access disabled).
+>  
+>  See Documentation/arm64/perf.rst for more information.
+>  
+> +export_pmu_events
+> +=================
+
+You should add something like "(arm64 only)" to the title.
+
+> +Controls the export bit(4th bit) of PMCR_EL0 which enables the exporting of
+
+Just say "Controls the PMU export bit (PMCR_EL0.X), which enables ...".
+
+> +events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
+> +
+> +0: disables exporting of events
+> +
+> +1: enables exporting of events
+
+Please state that the default value is 0.
+
+>  pid_max
+>  =======
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index cb69ff1..271a8c6 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -34,6 +34,7 @@
+>  #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_ACCESS		0xEC
+>  #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_MISS		0xED
+>  
+> +int sysctl_export_pmu_events __read_mostly;
+>  /*
+>   * ARMv8 Architectural defined events, not all of these may
+>   * be supported on any given implementation. Unsupported events will
+> @@ -1025,6 +1026,17 @@ static int armv8pmu_filter_match(struct perf_event *event)
+>  	return evtype != ARMV8_PMUV3_PERFCTR_CHAIN;
+>  }
+>  
+> +static int __init export_pmu_events(char *str)
+> +{
+> +	/* Exporting of events can be enabled at runtime with sysctl or
+> +	 * statically at bootup with kernel parameters.
+> +	 */
+> +	sysctl_export_pmu_events = 1;
+> +	return 0;
+> +}
+> +
+> +early_param("export_pmu_events", export_pmu_events);
+> +
+>  static void armv8pmu_reset(void *info)
+>  {
+>  	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
+> @@ -1047,6 +1059,9 @@ static void armv8pmu_reset(void *info)
+>  	if (armv8pmu_has_long_event(cpu_pmu))
+>  		pmcr |= ARMV8_PMU_PMCR_LP;
+>  
+> +	if (sysctl_export_pmu_events)
+> +		pmcr |= ARMV8_PMU_PMCR_X;
+> +
+>  	armv8pmu_pmcr_write(pmcr);
+
+
+Hmm, I think this reset path only runs when initialising/onlining a CPU,
+so it's not a great user interface where the sysctl is concerned. It's
+probably better to hook armv8pmu_start() for this.
+
+>  }
+>  
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index da75956..7790328 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1311,6 +1311,7 @@ extern void put_callchain_entry(int rctx);
+>  
+>  extern int sysctl_perf_event_max_stack;
+>  extern int sysctl_perf_event_max_contexts_per_stack;
+> +extern int sysctl_export_pmu_events;
+>  
+>  static inline int perf_callchain_store_context(struct perf_callchain_entry_ctx *ctx, u64 ip)
+>  {
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index e52b6e3..3b751a2e 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -2008,6 +2008,18 @@ static struct ctl_table kern_table[] = {
+>  		.extra2		= SYSCTL_ONE_THOUSAND,
+>  	},
+>  #endif
+> +#ifdef CONFIG_HW_PERF_EVENTS
+> +	{
+> +		.procname       = "export_pmu_events",
+> +		.data           = &sysctl_export_pmu_events,
+> +		.maxlen         = sizeof(int),
+> +		.mode           = 0644,
+> +		.proc_handler   = proc_dointvec_minmax,
+> +		.extra1         = SYSCTL_ZERO,
+> +		.extra2         = SYSCTL_ONE,
+> +
+> +	},
+> +#endif
+
+Since this is arm64-specific, it should live in the arm64 code and not
+here. See how we already register 'armv8_pmu_sysctl_table' for the ARMv8
+PMU.
+
+Will
