@@ -2,171 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846CEC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 03:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EB1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 03:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239630AbiEQDN1 (ORCPT
+        id S231868AbiEQDWD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 May 2022 23:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
+        Mon, 16 May 2022 23:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239648AbiEQDNV (ORCPT
+        with ESMTP id S229512AbiEQDWC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 May 2022 23:13:21 -0400
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5E440A13;
-        Mon, 16 May 2022 20:13:20 -0700 (PDT)
-Received: by mail-oi1-f176.google.com with SMTP id e189so20910737oia.8;
-        Mon, 16 May 2022 20:13:20 -0700 (PDT)
+        Mon, 16 May 2022 23:22:02 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C20422BEA;
+        Mon, 16 May 2022 20:22:01 -0700 (PDT)
+Received: by mail-ot1-f46.google.com with SMTP id m6-20020a05683023a600b0060612720715so11385498ots.10;
+        Mon, 16 May 2022 20:22:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PWhv8SUJ7Zi/KQsr7OOR1d8BfvT5pK75grSbAtZ3mLs=;
-        b=l0nfXAAVQbga+lEfnM7gmAl2xbS58DEieZl9riWRs02jOjfjdZ9/o3t+JCx//KnStW
-         DmG73SRzvvxnmvh4oBZ48nxHeCHQEFUUVsU7mqWQgial8ELwN+41LsqbXQxLl8o5ekyt
-         jI9yF4999oThvsWikeEEY+3H3C81hMDtXjOSbsTnR3h7feSB11ERI6pKS7P2UmnbdBcn
-         VgqBxoLPcgRW15cFtDnvY9Yt3j8MwPdxdwi2Bqw9ynyNBLqyTDCMLwtMunZ5SxhilMsu
-         ziThsoytp7G7LQdaLKtIfXxrrgVPcFKDQ5ljFi8cnj2dyPNVwTaIEya+sDJUgsyCXV7u
-         sSPQ==
-X-Gm-Message-State: AOAM5304WRnHaz+yLl/CTaGMarLq/LTWwx18S1BvIs/D22dTgEK56fEC
-        hkvxPA9lcFjZ2FDwYYxuCviQJQW9ACERv83Pt8U=
-X-Google-Smtp-Source: ABdhPJw/s9VGkv+VwVcVjajwVKXNJB//UKWE7QSo6EgoadpgYV01Q+mpv6cZ6Ihl1BzegtnGy0ujzQO2o8Qcz0bYTjc=
-X-Received: by 2002:a05:6808:2218:b0:326:bd8c:d044 with SMTP id
- bd24-20020a056808221800b00326bd8cd044mr9426742oib.92.1652757199897; Mon, 16
- May 2022 20:13:19 -0700 (PDT)
+        bh=A08l/5aP6P9j7WRUh17MSeLG9NFDcdB6Muobd8lBirk=;
+        b=jVnNGa/Hvxc+R1DD4u0YQdeqeoqNhO6SdBI0G0gsClx5yVuHiOMA1y4cah8UN8ardJ
+         xuPcgQ7Uw5a3cruAtRhECrdza+TjRhL5eDr7C9oTjGU04PKx0lgZp+qCvxw8GLajg5cp
+         oR+9LgTQBHjjrCqUBnGd+cZx8PDv7rMIXLSuYMfdYnHtKTABQ6dIRcbkqbD4M39R/f5J
+         11JXE7Kz355AVoePh2S5ix+caYQgzg8XlrDr1XzgdfME6h3q8LG3caOtNiDcG7GcpKKh
+         JFKnvBl6BhJOxvZU3hDK3cZ8K1po+bT/2bagSN2v2B19UWPrpIg/hGjl0Jko+gxP0RRB
+         oRhA==
+X-Gm-Message-State: AOAM533tKnhRV2LzrYoiF5Mq6ScbcG6v4/owYEPQuLIleTxEosEJBSMf
+        ZW2ko5he42lP2ShlUnF+i8Ybqs+lKpgiBVkO8jPP550o
+X-Google-Smtp-Source: ABdhPJyc/7AwXkKRqa7UJCSwE3+Y5NN/M8iCai20U8PsugpDA61eA9gT989mptYBaLC7AQn3SsRepzXBL4GAyIriXZs=
+X-Received: by 2002:a9d:6645:0:b0:605:fb52:3739 with SMTP id
+ q5-20020a9d6645000000b00605fb523739mr7309946otm.124.1652757720856; Mon, 16
+ May 2022 20:22:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220513090237.10444-1-adrian.hunter@intel.com> <20220513090237.10444-4-adrian.hunter@intel.com>
-In-Reply-To: <20220513090237.10444-4-adrian.hunter@intel.com>
+References: <20220513040519.1499333-1-irogers@google.com> <20220513040519.1499333-3-irogers@google.com>
+In-Reply-To: <20220513040519.1499333-3-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 16 May 2022 20:13:08 -0700
-Message-ID: <CAM9d7chFeVZNm_WTqrLzv74U13RPQtTvezxbP41GLte+ir6P_A@mail.gmail.com>
-Subject: Re: [PATCH 3/6] perf tools: Add guest_code support
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+Date:   Mon, 16 May 2022 20:21:49 -0700
+Message-ID: <CAM9d7ch6Xg+gGLsuJ_=X7=wSMRpo324YfRtfHG1=+YD8oG+7vQ@mail.gmail.com>
+Subject: Re: [PATCH 2/7] perf test: Use skip in vmlinux kallsyms
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
+        Marco Elver <elver@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Michael Petlan <mpetlan@redhat.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        KVM <kvm@vger.kernel.org>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrian,
+Hi Ian,
 
-On Fri, May 13, 2022 at 2:03 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Thu, May 12, 2022 at 9:05 PM Ian Rogers <irogers@google.com> wrote:
 >
-> A common case for KVM test programs is that the guest object code can be
-> found in the hypervisor process (i.e. the test program running on the
-> host). To support that, copy the host thread's maps to the guest thread's
-> maps. Note, we do not discover the guest until we encounter a guest event,
-> which works well because it is not until then that we know that the host
-> thread's maps have been set up.
+> Currently failures in reading vmlinux or kallsyms result in a test
+> failure. However, the failure is typically permission related. Prefer to
+> flag these failures as skip.
 >
-> Typically the main function for the guest object code is called
-> "guest_code", hence the name chosen for this feature.
-
-Ok, so that's just a convention and there's no hard-coded
-support for the "guest_code" function in this code, right?
-
->
-> This is primarily aimed at supporting Intel PT, or similar, where trace
-> data can be recorded for a guest. Refer to the final patch in this series
-> "perf intel-pt: Add guest_code support" for an example.
->
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/event.c       |  7 +++-
->  tools/perf/util/machine.c     | 70 +++++++++++++++++++++++++++++++++++
->  tools/perf/util/machine.h     |  2 +
->  tools/perf/util/session.c     |  7 ++++
->  tools/perf/util/symbol_conf.h |  3 +-
->  5 files changed, 86 insertions(+), 3 deletions(-)
+>  tools/perf/tests/vmlinux-kallsyms.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
 >
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index 6439c888ae38..0476bb3a4188 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -683,9 +683,12 @@ static bool check_address_range(struct intlist *addr_list, int addr_range,
->  int machine__resolve(struct machine *machine, struct addr_location *al,
->                      struct perf_sample *sample)
+> diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+> index 93dee542a177..983f32964749 100644
+> --- a/tools/perf/tests/vmlinux-kallsyms.c
+> +++ b/tools/perf/tests/vmlinux-kallsyms.c
+> @@ -114,7 +114,7 @@ static bool is_ignored_symbol(const char *name, char type)
+>  static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused,
+>                                         int subtest __maybe_unused)
 >  {
-> -       struct thread *thread = machine__findnew_thread(machine, sample->pid,
-> -                                                       sample->tid);
-> +       struct thread *thread;
+> -       int err = -1;
+> +       int err = TEST_FAIL;
+>         struct rb_node *nd;
+>         struct symbol *sym;
+>         struct map *kallsyms_map, *vmlinux_map, *map;
+> @@ -142,7 +142,8 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
+>          * and find the .ko files that match them in /lib/modules/`uname -r`/.
+>          */
+>         if (machine__create_kernel_maps(&kallsyms) < 0) {
+> -               pr_debug("machine__create_kernel_maps ");
+> +               pr_info("machine__create_kernel_maps failed");
+> +               err = TEST_SKIP;
+>                 goto out;
+>         }
 >
-> +       if (symbol_conf.guest_code && !machine__is_host(machine))
-> +               thread = machine__findnew_guest_code(machine, sample->pid);
-> +       else
-> +               thread = machine__findnew_thread(machine, sample->pid, sample->tid);
->         if (thread == NULL)
->                 return -1;
->
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index e67b5a7670f3..ae2e1fb422e2 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -392,6 +392,76 @@ struct machine *machines__find_guest(struct machines *machines, pid_t pid)
->         return machine;
->  }
->
-> +/*
-> + * A common case for KVM test programs is that the guest object code can be
-> + * found in the hypervisor process (i.e. the test program running on the host).
-> + * To support that, copy the host thread's maps to the guest thread's maps.
-> + * Note, we do not discover the guest until we encounter a guest event,
-> + * which works well because it is not until then that we know that the host
-> + * thread's maps have been set up.
-> + */
-> +static struct thread *findnew_guest_code(struct machine *machine,
+> @@ -158,7 +159,8 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
+>          * code and with the one got from /proc/modules from the "kallsyms" code.
+>          */
+>         if (machine__load_kallsyms(&kallsyms, "/proc/kallsyms") <= 0) {
+> -               pr_debug("dso__load_kallsyms ");
+> +               pr_debug("machine__load_kallsyms failed");
 
-But this function returns a thread and IIUC that's the task which
-does the host to guest transition.  Then why not calling it just
-findnew__hypervisor() ?
+For consistency, you might want to use pr_info() here.
 
 Thanks,
 Namhyung
 
 
-> +                                        struct machine *host_machine,
-> +                                        pid_t pid)
-> +{
-> +       struct thread *host_thread;
-> +       struct thread *thread;
-> +       int err;
-> +
-> +       if (!machine)
-> +               return NULL;
-> +
-> +       thread = machine__findnew_thread(machine, -1, pid);
-> +       if (!thread)
-> +               return NULL;
-> +
-> +       /* Assume maps are set up if there are any */
-> +       if (thread->maps->nr_maps)
-> +               return thread;
-> +
-> +       host_thread = machine__find_thread(host_machine, -1, pid);
-> +       if (!host_thread)
-> +               goto out_err;
-> +
-> +       thread__set_guest_comm(thread, pid);
-> +
-> +       /*
-> +        * Guest code can be found in hypervisor process at the same address
-> +        * so copy host maps.
-> +        */
-> +       err = maps__clone(thread, host_thread->maps);
-> +       thread__put(host_thread);
-> +       if (err)
-> +               goto out_err;
-> +
-> +       return thread;
-> +
-> +out_err:
-> +       thread__zput(thread);
-> +       return NULL;
-> +}
-> +
+> +               err = TEST_SKIP;
+>                 goto out;
+>         }
+>
+> @@ -178,7 +180,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
+>          * Now repeat step 2, this time for the vmlinux file we'll auto-locate.
+>          */
+>         if (machine__create_kernel_maps(&vmlinux) < 0) {
+> -               pr_debug("machine__create_kernel_maps ");
+> +               pr_info("machine__create_kernel_maps failed");
+>                 goto out;
+>         }
+>
+> @@ -196,7 +198,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
+>          * to fixup the symbols.
+>          */
+>         if (machine__load_vmlinux_path(&vmlinux) <= 0) {
+> -               pr_debug("Couldn't find a vmlinux that matches the kernel running on this machine, skipping test\n");
+> +               pr_info("Couldn't find a vmlinux that matches the kernel running on this machine, skipping test\n");
+>                 err = TEST_SKIP;
+>                 goto out;
+>         }
+> --
+> 2.36.0.550.gb090851708-goog
+>
