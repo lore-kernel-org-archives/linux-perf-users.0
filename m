@@ -2,95 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DF2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 13:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5564EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 13:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239619AbiEQNXK (ORCPT
+        id S1347823AbiEQN26 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 09:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60828 "EHLO
+        Tue, 17 May 2022 09:28:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243824AbiEQNXI (ORCPT
+        with ESMTP id S1347745AbiEQN2n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 09:23:08 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBC742EFC
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 06:23:07 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id kq17so34700324ejb.4
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 06:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=scylladb-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=7/rK2aVAsHwMrIQcWS8rWb/RzzGbuxUEumy+JTCBUiw=;
-        b=nGbh7oLtmyjLXFQ3yL1bjr85DuoEkFUXBURb8QXnSb1msTwKjTsof4P2zkOuYWzt2g
-         6dNd8qwTYPMh7Z/yI/SqrCEEoViorzJt17G8USXfvz0/BKc2X/0M33THXiMAWwVXfbv5
-         DPIElxxjZMBv5SVD1EDDDuqwluzi2Qy1yB/gjHKMZWe5XjSMnMpDO7wndNdfgu4rmeUE
-         UFYvEEwv7qzjQltuduGPyxNXkf09MNlUIxugHbhyq/zZpCOWYAS8tOA8MWRNZJJTGIWi
-         HY0VRNYDgbd34yX7TrM1SIO+xKqXEql78iNVLvlyCb4JShztkIoqIKRW9l60rXA9bwDD
-         oInw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=7/rK2aVAsHwMrIQcWS8rWb/RzzGbuxUEumy+JTCBUiw=;
-        b=cqEOzRL79sxR4jdVyAVOwZqN/CnqF71sJTMProUW9L0mpUhJ0VtHeBmRoz1KMs5G5S
-         KaM2xAbCh18ZwueP7X3TjfhcuwMoHIwyEcihvfmAOfrUi1iQZW0CZSlfqVri0swUFOLL
-         DkJOBv84e43Wa9vWkpSK1YfQo5YYSZ3k2ECidelO1+1MYHYxaL1P/exNiB4MpHtlXatH
-         aUfFm2KEh+IZjpj1bIXANJ26nQAVNbHdRYTXQVw9Mr6TNZI5jvCqEzLLuFyG2LHtnT5D
-         YfGgt2pCsDhiN6No83BZgjiCjUMo8veYAKIIz++qASvjqboqmL87SaS9Sk0JHfQPKuqU
-         nDWA==
-X-Gm-Message-State: AOAM530gCBMyMQe+HmGH7tML7tcVUS706dSuNjVM4I08qcKzDMs21Nw9
-        NXxA5W5ZT4t/u6/6t8We52Lw94eXwLOYOVID
-X-Google-Smtp-Source: ABdhPJyuzMkoQH6fNkas9Hd5n0W8XafwwSSx48Cyik5wpw9KeB9uDGU4mw291MS47nmsocE93KpaIw==
-X-Received: by 2002:a17:907:3e8e:b0:6f4:ff62:a399 with SMTP id hs14-20020a1709073e8e00b006f4ff62a399mr20869929ejc.298.1652793786005;
-        Tue, 17 May 2022 06:23:06 -0700 (PDT)
-Received: from [10.0.0.1] (system.cloudius-systems.com. [199.203.229.89])
-        by smtp.gmail.com with ESMTPSA id t20-20020a056402525400b0042617ba63ccsm7138612edd.86.2022.05.17.06.23.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 May 2022 06:23:05 -0700 (PDT)
-Message-ID: <659c01ac-7c99-a50b-b52e-9f565f3892f0@scylladb.com>
-Date:   Tue, 17 May 2022 16:23:03 +0300
+        Tue, 17 May 2022 09:28:43 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0830E434B4;
+        Tue, 17 May 2022 06:28:36 -0700 (PDT)
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L2cLj0P3xz6896F;
+        Tue, 17 May 2022 21:25:33 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Tue, 17 May 2022 15:28:34 +0200
+Received: from [10.47.88.19] (10.47.88.19) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 17 May
+ 2022 14:28:32 +0100
+Message-ID: <b518a021-25b9-c378-4c7e-add1b92f5b5e@huawei.com>
+Date:   Tue, 17 May 2022 14:28:30 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: Infinite recursion in `perf record`
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org
-References: <f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com>
- <CAP-5=fV0rXit7BqBxghE=zK=ao_GYhwkCbu+GhJZebzhVCxq0g@mail.gmail.com>
-From:   Avi Kivity <avi@scylladb.com>
-Organization: ScyllaDB
-In-Reply-To: <CAP-5=fV0rXit7BqBxghE=zK=ao_GYhwkCbu+GhJZebzhVCxq0g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v2 1/7] perf jevents: Append PMU description later
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+CC:     Stephane Eranian <eranian@google.com>
+References: <20220511211526.1021908-1-irogers@google.com>
+ <20220511211526.1021908-2-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220511211526.1021908-2-irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.88.19]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 11/05/2022 22:15, Ian Rogers wrote:
+> Append the PMU information from "Unit" to the description later. This
+> avoids a problem when "Unit" appears early in a json event and the
+> information prepends the description rather than being the expected
+> suffix.
+> 
+> Update the pmu-events test so that expectations now match the improved
+> output.
+> 
+> Signed-off-by: Ian Rogers<irogers@google.com>
 
-On 17/05/2022 01.04, Ian Rogers wrote:
->
->> perf-5.17.6-300.fc36.x86_64
->>
-> Hi, could you provide more details of the build? I have a bazel based
-> build and weak symbols are a problem for me too. For example, arm and
-> arm64 code needs building and linking together on an arm64 build for
-> the symbols to work properly - normally we just need 1 arch. There
-> have also been issues with constant propagation. I'd prefer if we
-> could use #ifdefs where we explicitly say what we expect to happen on
-> each architecture. Weak symbols' implicit behavior is troublesome.
-> With #ifdefs if things are broken then linking fails, which provides
-> useful signal.
-
-
-I'm not sure what details you want. The full build log is available here 
-[1].
-
-
-[1] 
-https://kojipkgs.fedoraproject.org//packages/kernel/5.17.6/300.fc36/data/logs/x86_64/build.log
-
+Reviewed-by: John Garry <john.garry@huawei.com>
