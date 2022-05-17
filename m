@@ -2,147 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C8FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 22:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8959DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 22:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229965AbiEQWDH (ORCPT
+        id S231518AbiEQW6X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 18:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56592 "EHLO
+        Tue, 17 May 2022 18:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbiEQWDG (ORCPT
+        with ESMTP id S231343AbiEQW6W (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 18:03:06 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5C749F29;
-        Tue, 17 May 2022 15:03:05 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id e3so316646ios.6;
-        Tue, 17 May 2022 15:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XaC+lg6kNQzOzaKvEQSXtHYYtU/iVFLlFJMpbBidkyY=;
-        b=U8SshjRqyuJ0JDF7+pse2WF/4zZzkDbrUbLXQDjLV3woV7Yj/FO1pn84lB2hKYA6Lt
-         QmkagHD9wQtPXp/UzV656XNbhU69Yb5ErY6dff/okGI887Cxd5igB1pYkrSDArmAb8ck
-         u2blXKRMqoPX/6Utx7yconobN8YW2pBfCkHcX+CjOr8j0CSVMR1WpBdvNA54fi84pFY8
-         N62xoyKcNj6zLjPQMIsuUcjyauP6zZEUzVT9GOG6r+oFn8cBsavlrx+ERy0INKOVUSI1
-         YCYQsE46WvYCqNmTHjPZK1xsJlpu9ruP980xc2uf7Jqp9Vubrcs9/nemqaa58DqXXA6u
-         8+mA==
+        Tue, 17 May 2022 18:58:22 -0400
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5015C53A5E;
+        Tue, 17 May 2022 15:58:21 -0700 (PDT)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-f18e6ff0f6so482779fac.11;
+        Tue, 17 May 2022 15:58:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XaC+lg6kNQzOzaKvEQSXtHYYtU/iVFLlFJMpbBidkyY=;
-        b=tXu1yCZvp/VCfsSz6j38YhiWW7QmSjQMs6rj2yl4JSNL4ACI4y7t9Sj1fhrV9ofS7A
-         CC4q80y7iud/ZZHkwepCPZoZK+nAv5kDhQNv8wT/hbRzUt9DoDf/3F1WaliGMPCSeNud
-         AFpzuy7dVxxyayorNOtbsZ0ppUYyaEGi59q5Yx+jUqAN0Hrv1kl+XF2OJRe2KEkps6km
-         orWYIdpKaEJotlhX5TvBE7Q4OY8WeBo5tI2PHhWD++U2iDKIQHXoJupsYJusWlI5CPNx
-         BP7fiQFPwZhe0IAwyUqKoSWCTkFsSNkwExuQW8MR2fyi2nkkku6o82r8s5xFBBcspFf2
-         TOOQ==
-X-Gm-Message-State: AOAM532IslX6Z6g9rBdUm9rRx1dEezmGTYOFeHMArfQQIesi+tsNNeqw
-        H0iCQjac9W3anXlfOSy++T69RRZdrMyFfO/CB/m04ZJG
-X-Google-Smtp-Source: ABdhPJz93sSJZvqwk5VRamRjZVgYfX4V2m91cPHae8WLkjVHmh+raHAi608yU8TchEaHxDgQgsnXz4kp8F4oYj8XT7s=
-X-Received: by 2002:a02:9f87:0:b0:32e:69ae:23df with SMTP id
- a7-20020a029f87000000b0032e69ae23dfmr489970jam.237.1652824984799; Tue, 17 May
- 2022 15:03:04 -0700 (PDT)
+        bh=8VerKdajGLgiom5BBcxHow8XQ3WsZoMjD4MRMsB3DgA=;
+        b=pHQ1W6IZkl17L9NiNJNl8Mcru2fbK8xpMKkEF9N7Z1WKG5ha9I/lcNGX/i5TpG9hUy
+         4iR7jw9nLhb/w0tsPTYLHFkWINmaNZ3F74dVaaaIwV/gA6DdswHnV0dm7XNUraxzHKxk
+         gzY7LijJMUVbm/DWV9bocsrLOyqIoImMlfFBEW9Tu+bx8CnhTmNeTWf+hX+lvAKx+YG8
+         EUIoqboZenB7hphjOE3YmWYM2EnPVfXOb60p9xHqPsbhe8NKteahHsKTBxlg/B/EIpCf
+         BzVFM3fl29UvZHP6O8OATr5yScdFwu4dJzngFuGrTE9iv14ZUS35pfPqnowcDg1/U66y
+         QFCA==
+X-Gm-Message-State: AOAM532qJP5F6TNGgRJR+cZuB0CFAzwm8DNM1TjKTpBJaIOe0Bl4zGPg
+        rAEfXMAz5+CSB65p/mUvT0yq5YFo0KkgtIj6yQQ=
+X-Google-Smtp-Source: ABdhPJwp0qfpu3x8pSF2vTWRph9seOUvT9YBdyquSufD9IMMa/IKMzSku1/kNKYUR1+ZPIocGMcQPaFptOaWFXf6dq8=
+X-Received: by 2002:a05:6871:215:b0:f1:8bf5:23ab with SMTP id
+ t21-20020a056871021500b000f18bf523abmr8865887oad.92.1652828300542; Tue, 17
+ May 2022 15:58:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220510074659.2557731-1-jolsa@kernel.org> <CAEf4BzbK9zgetgE1yKkCANTZqizUrXgamJa2X0f0XmzQUdFrCQ@mail.gmail.com>
- <YntnRixbfQ1HCm9T@krava> <Ynv+7iaaAbyM38B6@kernel.org>
-In-Reply-To: <Ynv+7iaaAbyM38B6@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 17 May 2022 15:02:53 -0700
-Message-ID: <CAEf4BzaQsF31f3WuU32wDCzo6bw7eY8E9zF6Lo218jfw-VQmcA@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] perf tools: Fix prologue generation
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+References: <20220507053410.3798748-1-irogers@google.com> <20220507053410.3798748-2-irogers@google.com>
+ <YnkTIwiVBEGUJRKn@kernel.org> <b01a66c4-ec4d-ccb7-8ca7-130d93855177@linux.intel.com>
+ <708fab8f-b5c5-8f34-4322-3e337c56b869@linux.intel.com>
+In-Reply-To: <708fab8f-b5c5-8f34-4322-3e337c56b869@linux.intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 17 May 2022 15:58:09 -0700
+Message-ID: <CAM9d7cgEc9o9y-fH==avzucigmMVw0AwooGw0eufb2+D568-_g@mail.gmail.com>
+Subject: Re: [PATCH 1/5] Revert "perf stat: Support metrics with hybrid events"
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 11, 2022 at 11:22 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+Hello,
+
+On Tue, May 10, 2022 at 2:31 AM Xing Zhengjun
+<zhengjun.xing@linux.intel.com> wrote:
 >
-> Em Wed, May 11, 2022 at 09:35:34AM +0200, Jiri Olsa escreveu:
-> > On Tue, May 10, 2022 at 04:48:55PM -0700, Andrii Nakryiko wrote:
-> > > On Tue, May 10, 2022 at 12:47 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > >
-> > > > hi,
-> > > > sending change we discussed some time ago [1] to get rid of
-> > > > some deprecated functions we use in perf prologue code.
-> > > >
-> > > > Despite the gloomy discussion I think the final code does
-> > > > not look that bad ;-)
-> > > >
-> > > > This patchset removes following libbpf functions from perf:
-> > > >   bpf_program__set_prep
-> > > >   bpf_program__nth_fd
-> > > >   struct bpf_prog_prep_result
-> > > >
-> > > > v2 changes:
-> > > >   - use fallback section prog handler, so we don't need to
-> > > >     use section prefix [Andrii]
-> > > >   - realloc prog->insns array in bpf_program__set_insns [Andrii]
-> > > >   - squash patch 1 from previous version with
-> > > >     bpf_program__set_insns change [Daniel]
-> > > >   - patch 3 already merged [Arnaldo]
-> > > >   - added more comments
-> > > >
-> > > >   meanwhile.. perf/core and bpf-next diverged, so:
-> > > >     - libbpf bpf_program__set_insns change is based on bpf-next/master
-> > > >     - perf changes do not apply on bpf-next/master so they are based on
-> > > >       perf/core ... however they can be merged only after we release
-> > > >       libbpf 0.8.0 with bpf_program__set_insns change, so we don't break
-> > > >       the dynamic linking
-> > > >       I'm sending perf changes now just for review, I'll resend them
-> > > >       once libbpf 0.8.0 is released
-> > > >
-> > > > thanks,
-> > > > jirka
-> > > >
-> > > >
-> > > > [1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
-> > > > ---
-> > > > Jiri Olsa (1):
-> > > >       libbpf: Add bpf_program__set_insns function
-> > > >
-> > >
-> > > The first patch looks good to me. The rest I can't really review and
-> > > test properly, so I'll leave it up to Arnaldo.
-> > >
-> > > Arnaldo, how do we coordinate these patches? Should they go through
-> > > bpf-next (after you Ack them) or you want them in your tree?
-> > >
-> > > I'd like to get the bpf_program__set_insns() patch into bpf-next so
-> > > that I can do libbpf v0.8 release, having it in a separate tree is
-> > > extremely inconvenient. Please let me know how you think we should
-> > > proceed?
+>
+>
+> On 5/10/2022 5:55 AM, Liang, Kan wrote:
 > >
-> > we need to wait with perf changes after the libbpf is merged and
-> > libbpf 0.8.0 is released.. so we don't break dynamic linking for
-> > perf
 > >
-> > at the moment please just take libbpf change and I'll resend the
-> > perf change later if needed
+> > On 5/9/2022 9:12 AM, Arnaldo Carvalho de Melo wrote:
+> >> Em Fri, May 06, 2022 at 10:34:06PM -0700, Ian Rogers escreveu:
+> >>> This reverts commit 60344f1a9a597f2e0efcd57df5dad0b42da15e21.
+> >>
+> >> I picked this from the cover letter and added to this revert, to justify
+> >> it:
+> >>
+> >> "Hybrid metrics place a PMU at the end of the parse string. This is
+> >> also where tool events are placed. The behavior of the parse string
+> >> isn't clear and so revert the change for now."
+> >>
+> >
+> > I think the original patch used a "#" to indicate the PMU name, which
+> > can be used to distinguish between the tool events and the PMU name.
+> > To be honest, I'm not sure what's unclear here. Could you please clarify?
+> >
+> > With this revert, the issue mentioned in the original patch must be
+> > broken on ADL. I don't see a replacement fix in this patch series.
+> > Could you please propose a solution for the issue to replace the #PMU
+> > name solution?
+> >
+> > Thanks,
+> > Kan
 >
-> Ok.
+> I am surprised the origin patch is reverted during discussion and though
+> the discussion still has no conclusion.
+> Let me introduce the purpose of the origin patch.
+> For a hybrid system such as ADL, if both the metrics and the formula are
+> different for the different PMUs, without this patch, the metric and
+> event parser should work ok, nothing should be special for the hybrid.
+> In fact, both "cpu_core" and "cpu_atom" may have the same metrics--the
+> same metric name, even the same formula for the metrics. For example,
+> both "cpu_core" and "cpu_atom" have metrics "IpBranch" and "IPC", For
+> "IpBranch", both "cpu_core" and "cpu_atom" has the same metric name and
+> their formula also is the same, the event name is the same though they
+> belong to different PMUs. The old metric and event parser can not handle
+> this kind of metric, that's why we need this patch.
 >
+>      "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+>      "MetricName": "IpBranch",
+>      "Unit": "cpu_core"
+>
+>      "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+>      "MetricName": "IpBranch",
+>      "Unit": "cpu_atom"
+>
+>
+>     "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+>     "MetricName": "IPC",
+>     "Unit": "cpu_core"
+>
+>     "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.CORE",
+>     "MetricName": "IPC",
+>     "Unit": "cpu_atom"
+>
+> Except for the above two metrics, there are still a lot of similar
+> metrics, "CPU_Utilization"...
+>
+> The original patch expanded the metric group string by adding
+> "#PMU_name" to indicate the PMU name, which can be used to distinguish
+> between the tool events and the PMU name, then the metric and event
+> parser can parse the right PMU for the events.
+>
+> With the patch all the ADL metrics can pass, without the patch, a lot of
+> metrics will fail. I don't think it's a good idea to revert it before
+> the new solution is proposed.
 
-Jiri, libbpf v0.8 is out, can you please re-send your perf patches?
+Just an idea.  Can we add a pmu prefix when it resolves the event
+for a metric if it has the "Unit"?  It seems we can support something
+like "cpu_core@INST_RETIRED.ANY@" already..
 
+Or could it be done when creating JSON files?
 
-> - Arnaldo
+Thanks,
+Namhyung
