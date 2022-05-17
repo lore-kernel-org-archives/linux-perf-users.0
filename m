@@ -2,46 +2,46 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B251C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 03:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55D8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 03:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbiEQDnF (ORCPT
+        id S232533AbiEQDx1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 May 2022 23:43:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45460 "EHLO
+        Mon, 16 May 2022 23:53:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbiEQDnF (ORCPT
+        with ESMTP id S231433AbiEQDx0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 May 2022 23:43:05 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 654CB23BCE;
-        Mon, 16 May 2022 20:43:01 -0700 (PDT)
-Received: by mail-oi1-f178.google.com with SMTP id v65so20931448oig.10;
-        Mon, 16 May 2022 20:43:01 -0700 (PDT)
+        Mon, 16 May 2022 23:53:26 -0400
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB3D2E0B5;
+        Mon, 16 May 2022 20:53:25 -0700 (PDT)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-e93bbb54f9so22711301fac.12;
+        Mon, 16 May 2022 20:53:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EfCcbYh50CkyfYSUX07YnV+CadQTQKAbHumUgKo7SVY=;
-        b=8AgL+Yn5KK4F3OBDEv3/9cujAWYiuhkqLMmWQztrvkMjjB8ogDmdykhFRBjO2SxWhC
-         cslC1rSwIM5wGHleNQZQl6A3Ywns/i4sDNK+pUX/OgwE+qo32z8DyVRf8uAsGDpQEIK0
-         5h7/3RE+r9GRcMyFuhyo1Vofpd8JPbjGjm8zQiYFleRQHYn0sjFZrRRlDsJPwaHCUc5L
-         ET6KvNX2O6XazHdLL+/RbkAB00MxoLBfbdlLJ+r64ZJ22d0Lq6jqknJqSoNxgsOJilBu
-         eNzQjiQNEsK1n+ORJTGxtpLRPdJn/HcIeNyghiJlawz847aImlqdoaaakeuI4bR/Dg6x
-         F0Ww==
-X-Gm-Message-State: AOAM533CVyan4S47jfejSk8hFv/o1wIrVI6JLJFPMrrLA46dngnmyriy
-        avf4Dw5xB25lUkz7oVFh7PHvbMirIOUlynNMca8=
-X-Google-Smtp-Source: ABdhPJzPxl7PLeTa0zBb28kzCLiPRofRnTZ7ipEja5DIYHSk9s5VA51aEmUHdDYoLRr3+bHtCPTr9trfpKN1nQW+siQ=
-X-Received: by 2002:a05:6808:16ac:b0:2f9:52e5:da90 with SMTP id
- bb44-20020a05680816ac00b002f952e5da90mr14951433oib.5.1652758980720; Mon, 16
- May 2022 20:43:00 -0700 (PDT)
+        bh=nD103x5fG+vRGXoi7A4nPbMr2Eg2Wxzgpc5qUXVp5jI=;
+        b=RRpgskJCNxhqaARNCxhStVb+aI0xR+VZMvRpA8Nw68C3SwMOKSp4keJ3fs0/erXMpM
+         tYX2r5DDNZvuSWCPK/bfOAzgAWBGOoQBzQy7n4lIM910aGUkNeS91j0yQv+LKokbDvsr
+         lIZhOZrHa9LysAQPhjFCBqHYiWPKkwA9gXcVKDyGf29zozemnyZEvYLrIQcGXJr/KI6+
+         rkNJCIeTFSMe42jZlnqRgZEoT06CfhGeVhXS9OZs1vB7h4XiYiS0cxwPj3X+NgAX+cqs
+         /mN8++gU6di0N8GOq5H6VAf9NAR7CrEAjCXDrRHFSlZBBpX1ijgHJfkLDoK6SrkYKjPw
+         0FQQ==
+X-Gm-Message-State: AOAM532gIr9uOEDmbRNXUc1xgOXYX5YK3iq1WRdbqCwfIWDZ5cNKnB9O
+        r7oRShZ+tjjtRgut5r1mIOpzXZNz2qGyxXszrSUyx6wL
+X-Google-Smtp-Source: ABdhPJxz9J36HewhEH+fLy18JPu2xXLtQpHjd2qWD7qMIeXAWkkGIq8Jh338fRYZeHSZiT3ccS1kfIGpg5DzOmcCAtA=
+X-Received: by 2002:a05:6870:d1cd:b0:e1:e7ee:faa0 with SMTP id
+ b13-20020a056870d1cd00b000e1e7eefaa0mr17153127oac.5.1652759605259; Mon, 16
+ May 2022 20:53:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220513040519.1499333-1-irogers@google.com> <20220513040519.1499333-5-irogers@google.com>
-In-Reply-To: <20220513040519.1499333-5-irogers@google.com>
+References: <20220513040519.1499333-1-irogers@google.com> <20220513040519.1499333-2-irogers@google.com>
+In-Reply-To: <20220513040519.1499333-2-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 16 May 2022 20:42:49 -0700
-Message-ID: <CAM9d7ciD=uH7rNSmK5oJEksPYsagwpQA1J-MC3N0RpzLaakscg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] perf test: Basic mmap use skip
+Date:   Mon, 16 May 2022 20:53:14 -0700
+Message-ID: <CAM9d7cjfCF+9SUGrO-WQ_OSAyq0U+idS8SCNFv+CoL6A+0RKGQ@mail.gmail.com>
+Subject: Re: [PATCH 1/7] perf test: Skip reason for suites with 1 test
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -65,71 +65,40 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, May 12, 2022 at 9:05 PM Ian Rogers <irogers@google.com> wrote:
 >
-> If opening the first event fails for basic mmap it is more likely
-> permission related that a true error. Mark the test as skip in this
-> case and add a skip reason.
+> When a suite has just 1 subtest, the subtest number is given as -1 to
+> avoid indented printing. When this subtest number is seen for the skip
+> reason, use the reason of the first test.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/mmap-basic.c | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-> index c3c17600f29c..32f0a63fa157 100644
-> --- a/tools/perf/tests/mmap-basic.c
-> +++ b/tools/perf/tests/mmap-basic.c
-> @@ -31,7 +31,7 @@
->   */
->  static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
->  {
-> -       int err = -1;
-> +       int err = TEST_FAIL;
->         union perf_event *event;
->         struct perf_thread_map *threads;
->         struct perf_cpu_map *cpus;
-> @@ -83,6 +83,14 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
->                 evsels[i] = evsel__newtp("syscalls", name);
->                 if (IS_ERR(evsels[i])) {
->                         pr_debug("evsel__new(%s)\n", name);
-> +                       if (i == 0) {
-> +                               /*
-> +                                * Failure to open first event is more likely
-> +                                * related to permissions so flag the failure as
-> +                                * a skip.
-> +                                */
-> +                               err = TEST_SKIP;
 
-This is not about perf_event_open() but it accesses
-tracefs to get the type number of the trace event.
-
-The evsel__newtp() seems to return the errno in a
-negative number.  It'd be better to check if it's
--EACCES actually.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
 
-> +                       }
->                         goto out_delete_evlist;
->                 }
+> ---
+>  tools/perf/tests/builtin-test.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> @@ -166,4 +174,14 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
->         return err;
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index fac3717d9ba1..33fcafa0fa79 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -137,10 +137,10 @@ static bool has_subtests(const struct test_suite *t)
+>
+>  static const char *skip_reason(const struct test_suite *t, int subtest)
+>  {
+> -       if (t->test_cases && subtest >= 0)
+> -               return t->test_cases[subtest].skip_reason;
+> +       if (!t->test_cases)
+> +               return NULL;
+>
+> -       return NULL;
+> +       return t->test_cases[subtest >= 0 ? subtest : 0].skip_reason;
 >  }
 >
-> -DEFINE_SUITE("Read samples using the mmap interface", basic_mmap);
-> +static struct test_case tests__basic_mmap[] = {
-> +       TEST_CASE_REASON("Read samples using the mmap interface",
-> +                        basic_mmap,
-> +                        "permissions"),
-> +       {       .name = NULL, }
-> +};
-> +
-> +struct test_suite suite__basic_mmap = {
-> +       .desc = "Read samples using the mmap interface",
-> +       .test_cases = tests__basic_mmap,
-> +};
+>  static const char *test_description(const struct test_suite *t, int subtest)
 > --
 > 2.36.0.550.gb090851708-goog
 >
