@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AC5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 21:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C2BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 21:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbiEQV71 (ORCPT
+        id S229818AbiEQV7q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 17:59:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45644 "EHLO
+        Tue, 17 May 2022 17:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229812AbiEQV7Z (ORCPT
+        with ESMTP id S229850AbiEQV7a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 17:59:25 -0400
+        Tue, 17 May 2022 17:59:30 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8C251336
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 14:59:24 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2d11b6259adso4028517b3.19
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 14:59:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B3F5133F
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 14:59:28 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2fecfc7a95aso3896847b3.22
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 14:59:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=fvU+Gi72lI7UuLvKQmm5tyEVTfbTBpYfMrJxtkdVrUA=;
-        b=f30fLm4axkE9Tg2UZ4RPiyaL8QLq/igCFboReOI+Xd0A+ZEmX6UdxDREvFF21Ahj+S
-         bFMyeP9vQ1EFFBvrVPai28qTk91yjFPBIGSpEeOVt6qACSpiylxyVuUy8wXRnT0Diekq
-         ujisnbkf2WUZWU3UbctpU4nI1lhUGOOIlhUHemo+/aL1+EiJ9cmr56DQlmRx05j5buid
-         ZtDE6pkRkFd457nS2oaO/vHK1uF86MJd8kPjuiBrmfb+KJvYwcs1ro4yZN+H0uT56paD
-         gWtbMfYpnI3ce6dp3nTnSVWspwpboLShcSEQgdpcC086q/1mjsvl+OvL8tFf7oQI7ka8
-         qJOw==
+        bh=bHIfvp4h5+ssKuj8eNqRd5kt2hjUb/pDEBzybkniKr0=;
+        b=Xr6OSICeeW3nG+Y6QMPT7KOMogW9es5BLqnQs017TEHoLAU0f67AFrjOhcZ+Iosxgx
+         TIxeNDdvIyhcNB0W6vy1dnfQC7Wozuglb3StACTeorBLL3SQxGcljpMA74L0LgqNZStE
+         ubB1I0A27dMDisMm4HlP7sAXuicN7EUq2w3PHhAZ76IrA3hhkpybDL/LOsSo9wlpb6+j
+         qze9bol4YVEoHT2idSbfQmkEI+hTLAvvq5h+6ZgDwCnWrZHsbDCGZBAkTpQoSE15BEVX
+         iS3yUr1Q8LbBtDDnESCeuwoqodbSR0zEn/ZITEuTF/25UatsyyBE4UdpE1LYPmCYy15I
+         2WJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=fvU+Gi72lI7UuLvKQmm5tyEVTfbTBpYfMrJxtkdVrUA=;
-        b=Wu6ZQwwMJACZPKLjHSqjcKpBUCErkeMv25Y14HuI3yZ0RY70pywSzlOZf9EUgL1fF7
-         wN915dp3js2IAVL4GGvfXOdOagBPXBrWLrwx6NVwR6/BOtL6qQ0k+Y/K2ngSV0w1d4Gy
-         0AFYOmc/DYkPBeY4WLq7Rnuu86x//wJ9jHnBv9FrYOhCF9bE5+VvqZ5Cv8TyqJn4CcxU
-         HDwx0BbFfKpXj8QcO6AU/7ySMeDCbA4ZVZSNpyp1t2dWg3mbyEZwqetc75WjX+7BHBjJ
-         zkycivnZOknkZ2N0gstV3Xtg+de+NDXD58Ld2b4Var28Mh+MaKTSAqA80dnV+Q2XBgBQ
-         aZnA==
-X-Gm-Message-State: AOAM533ia0/jseQHmEiCsZzBQqISNr6+nPamfV7NQMoyWcMYcBDoXqTd
-        o9S7GdxurGWME26FHllJV9uPMfRVuJEd
-X-Google-Smtp-Source: ABdhPJxrhKe03q6UYtG7QGmmWThKSCqDwWK021ZpxxRnLkqz8+7Root0CcPncxPBetdy58cTIHxg2DNdpx0s
+        bh=bHIfvp4h5+ssKuj8eNqRd5kt2hjUb/pDEBzybkniKr0=;
+        b=JX5+GpzQ/VUAIsg1eLpkR9QieV7Co72tr7kKES8G6fOGkIwiRDvEvJoaaviM6CIAur
+         mnqM8YieRxllkWbMjsFinhzDAqfuDIoz6uNArpFWRFHwpOHAqvg3v6z0qwKtZBR7DVs+
+         WeJZnFv47t3sm7JANjxjEU6jmPB/9ECefJcB+E1cac1wk6rSLE006LH/GxG7WbGFUQ10
+         8q99NlEjTwywfyKEgGPR5bLatBF3dE/PqcQRi1Z37TZUIkkSKCU9sCzmdJ71Sn8esIwR
+         0LiRHVN8VmeYwKgSKswmKalzdeZIUGUjAQ7LB+zn8VAsl77uxiN99EzqpdI+tPnohFrl
+         vP9Q==
+X-Gm-Message-State: AOAM531bgF8xN2ximWpc/kW3cVenvT1LxAnhmfQaGcNKdE6X4c0uc3Dh
+        yzoKiPDTP1cwHdpkWLmWnYlugeaBev4e
+X-Google-Smtp-Source: ABdhPJw3JcqolGpOdZgevIZVMTmUfmg4eTYIvxXlWvKMxmhlJTlifkppTSD2lsZQjr/E4mc3ncVBvk64P0hR
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a5a1:af73:fe09:fd5])
- (user=irogers job=sendgmr) by 2002:a0d:d801:0:b0:2fe:feb2:242a with SMTP id
- a1-20020a0dd801000000b002fefeb2242amr13162823ywe.127.1652824763346; Tue, 17
- May 2022 14:59:23 -0700 (PDT)
-Date:   Tue, 17 May 2022 14:59:15 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:2c5:0:b0:64b:1219:9156 with SMTP id
+ h5-20020a5b02c5000000b0064b12199156mr24485524ybp.115.1652824767738; Tue, 17
+ May 2022 14:59:27 -0700 (PDT)
+Date:   Tue, 17 May 2022 14:59:17 -0700
 In-Reply-To: <20220517215917.692906-1-irogers@google.com>
-Message-Id: <20220517215917.692906-2-irogers@google.com>
+Message-Id: <20220517215917.692906-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20220517215917.692906-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [PATCH v3 1/3] perf test: Add checking for perf stat CSV output.
+Subject: [PATCH v3 3/3] perf test: Json format checking
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -80,45 +80,32 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Claire Jensen <cjense@google.com>
 
-Counts expected fields for various commands. No testing added for
-summary mode since it is broken.
-
-An example of the summary output is:
-
-         summary,263831,,instructions:u,1435072,100.0,0.46,insn per cycle
-,,,,,1.37,stalled cycles per insn
-
-This should be:
-
-         summary,263831,,instructions:u,1435072,100.0,0.46,insn per cycle
-         summary,,,,,,1.37,stalled cycles per insn
-
-The output has 7 fields when it should have 8. Additionally, the newline
-spacing is wrong, so it was excluded from testing until a fix is made.
+Add field checking tests for perf stat JSON output.
+Sanity checks the expected number of fields are present, that the
+expected keys are present and they have the correct values.
 
 Signed-off-by: Claire Jensen <cjense@google.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../tests/shell/lib/perf_csv_output_lint.py   |  48 ++++++
- tools/perf/tests/shell/stat+csv_output.sh     | 147 ++++++++++++++++++
- 2 files changed, 195 insertions(+)
- create mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
- create mode 100755 tools/perf/tests/shell/stat+csv_output.sh
+ .../tests/shell/lib/perf_json_output_lint.py  |  91 +++++++++++
+ tools/perf/tests/shell/stat+json_output.sh    | 147 ++++++++++++++++++
+ 2 files changed, 238 insertions(+)
+ create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
+ create mode 100755 tools/perf/tests/shell/stat+json_output.sh
 
-diff --git a/tools/perf/tests/shell/lib/perf_csv_output_lint.py b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
 new file mode 100644
-index 000000000000..714f283cfb1b
+index 000000000000..c3ed2624f8f5
 --- /dev/null
-+++ b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
-@@ -0,0 +1,48 @@
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -0,0 +1,91 @@
 +#!/usr/bin/python
-+# SPDX-License-Identifier: GPL-2.0
++# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++# Basic sanity check of perf JSON output as specified in the man page.
 +
 +import argparse
 +import sys
-+
-+# Basic sanity check of perf CSV output as specified in the man page.
-+# Currently just checks the number of fields per line in output.
++import json
 +
 +ap = argparse.ArgumentParser()
 +ap.add_argument('--no-args', action='store_true')
@@ -131,18 +118,63 @@ index 000000000000..714f283cfb1b
 +ap.add_argument('--per-die', action='store_true')
 +ap.add_argument('--per-node', action='store_true')
 +ap.add_argument('--per-socket', action='store_true')
-+ap.add_argument('--separator', default=',', nargs='?')
 +args = ap.parse_args()
 +
 +Lines = sys.stdin.readlines()
 +
-+def check_csv_output(exp):
-+  for line in Lines:
-+    if 'failed' not in line:
-+      count = line.count(args.separator)
-+      if count != exp:
-+        sys.stdout.write(''.join(Lines))
-+        raise RuntimeError(f'wrong number of fields. expected {exp} in {line}')
++def isfloat(num):
++  try:
++    float(num)
++    return True
++  except ValueError:
++    return False
++
++
++def isint(num):
++  try:
++    int(num)
++    return True
++  except ValueError:
++    return False
++
++def is_counter_value(num):
++  return isfloat(num) or num == '<not counted>' or num == '<not supported>'
++
++def check_json_output(expected_items):
++  if expected_items != -1:
++    for line in Lines:
++      if 'failed' not in line:
++        count = 0
++        count = line.count(',')
++        if count != expected_items:
++          raise RuntimeError('wrong number of fields. counted {0}'
++                             ' expected {1} in {2}\n'.format(count, exp, line))
++  checks = {
++      'aggregate-number': lambda x: isfloat(x),
++      'core': lambda x: True,
++      'counter-value': lambda x: is_counter_value(x),
++      'cgroup': lambda x: True,
++      'cpu': lambda x: isint(x),
++      'die': lambda x: True,
++      'event': lambda x: True,
++      'event-runtime': lambda x: isfloat(x),
++      'interval': lambda x: isfloat(x),
++      'metric-unit': lambda x: True,
++      'metric-value': lambda x: isfloat(x),
++      'node': lambda x: True,
++      'pcnt-running': lambda x: isfloat(x),
++      'socket': lambda x: True,
++      'thread': lambda x: True,
++      'unit': lambda x: True,
++  }
++  input = '[\n' + ','.join(Lines) + '\n]'
++  for item in json.loads(input):
++    for key, value in item.items():
++      if key not in checks:
++        raise RuntimeError(f'Unexpected key: key={key} value={value}')
++      if not checks[key](value):
++        raise RuntimeError(f'Check failed for: key={key} value={value}')
++
 +
 +try:
 +  if args.no_args or args.system_wide or args.event:
@@ -152,28 +184,27 @@ index 000000000000..714f283cfb1b
 +  elif args.per_core or args.per_socket or args.per_node or args.per_die:
 +    expected_items = 8
 +  else:
-+    ap.print_help()
-+    raise RuntimeError('No checking option specified')
-+  check_csv_output(expected_items)
-+
++    # If no option is specified, don't check the number of items.
++    expected_items = -1
++  check_json_output(expected_items)
 +except:
-+  sys.stdout.write('Test failed for input: ' + ''.join(Lines))
++  print('Test failed for input:\n' + '\n'.join(Lines))
 +  raise
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
 new file mode 100755
-index 000000000000..82c25e9c7f21
+index 000000000000..7748b677f2f9
 --- /dev/null
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
++++ b/tools/perf/tests/shell/stat+json_output.sh
 @@ -0,0 +1,147 @@
 +#!/bin/bash
-+# perf stat CSV output linter
++# perf stat JSON output linter
 +# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+# Tests various perf stat CSV output commands for the
-+# correct number of fields and the CSV separator set to ','.
++# Checks various perf stat JSON output commands for the
++# correct number of fields.
 +
 +set -e
 +
-+pythonchecker=$(dirname $0)/lib/perf_csv_output_lint.py
++pythonchecker=$(dirname $0)/lib/perf_json_output_lint.py
 +if [ "x$PYTHON" == "x" ]
 +then
 +	if which python3 > /dev/null
@@ -196,108 +227,108 @@ index 000000000000..82c25e9c7f21
 +
 +check_no_args()
 +{
-+	echo -n "Checking CSV output: no args "
-+	perf stat -x, true 2>&1 | $PYTHON $pythonchecker --no-args
++	echo -n "Checking json output: no args "
++	perf stat -j true 2>&1 | $PYTHON $pythonchecker --no-args
 +	echo "[Success]"
 +}
 +
 +check_system_wide()
 +{
-+	echo -n "Checking CSV output: system wide "
++	echo -n "Checking json output: system wide "
 +	if ParanoidAndNotRoot 0
 +	then
 +		echo "[Skip] parnoia and not root"
 +		return
 +	fi
-+	perf stat -x, -a true 2>&1 | $PYTHON $pythonchecker --system-wide
++	perf stat -j -a true 2>&1 | $PYTHON $pythonchecker --system-wide
 +	echo "[Success]"
 +}
 +
 +check_system_wide_no_aggr()
 +{
-+	echo -n "Checking CSV output: system wide "
++	echo -n "Checking json output: system wide "
 +	if ParanoidAndNotRoot 0
 +	then
 +		echo "[Skip] parnoia and not root"
 +		return
 +	fi
-+	echo -n "Checking CSV output: system wide no aggregation "
-+	perf stat -x, -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
++	echo -n "Checking json output: system wide no aggregation "
++	perf stat -j -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
 +	echo "[Success]"
 +}
 +
 +check_interval()
 +{
-+	echo -n "Checking CSV output: interval "
-+	perf stat -x, -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
++	echo -n "Checking json output: interval "
++	perf stat -j -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
 +	echo "[Success]"
 +}
 +
 +
 +check_event()
 +{
-+	echo -n "Checking CSV output: event "
-+	perf stat -x, -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
++	echo -n "Checking json output: event "
++	perf stat -j -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
 +	echo "[Success]"
 +}
 +
 +check_per_core()
 +{
-+	echo -n "Checking CSV output: per core "
++	echo -n "Checking json output: per core "
 +	if ParanoidAndNotRoot 0
 +	then
 +		echo "[Skip] parnoia and not root"
 +		return
 +	fi
-+	perf stat -x, --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
++	perf stat -j --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
 +	echo "[Success]"
 +}
 +
 +check_per_thread()
 +{
-+	echo -n "Checking CSV output: per thread "
++	echo -n "Checking json output: per thread "
 +	if ParanoidAndNotRoot 0
 +	then
 +		echo "[Skip] parnoia and not root"
 +		return
 +	fi
-+	perf stat -x, --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
++	perf stat -j --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
 +	echo "[Success]"
 +}
 +
 +check_per_die()
 +{
-+	echo -n "Checking CSV output: per die "
++	echo -n "Checking json output: per die "
 +	if ParanoidAndNotRoot 0
 +	then
 +		echo "[Skip] parnoia and not root"
 +		return
 +	fi
-+	perf stat -x, --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
++	perf stat -j --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
 +	echo "[Success]"
 +}
 +
 +check_per_node()
 +{
-+	echo -n "Checking CSV output: per node "
++	echo -n "Checking json output: per node "
 +	if ParanoidAndNotRoot 0
 +	then
 +		echo "[Skip] parnoia and not root"
 +		return
 +	fi
-+	perf stat -x, --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
++	perf stat -j --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
 +	echo "[Success]"
 +}
 +
 +check_per_socket()
 +{
-+	echo -n "Checking CSV output: per socket "
++	echo -n "Checking json output: per socket "
 +	if ParanoidAndNotRoot 0
 +	then
 +		echo "[Skip] parnoia and not root"
 +		return
 +	fi
-+	perf stat -x, --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
++	perf stat -j --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
 +	echo "[Success]"
 +}
 +
