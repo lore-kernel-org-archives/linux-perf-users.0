@@ -2,196 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61E3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 04:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1925C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 05:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230267AbiEQEyh (ORCPT
+        id S236991AbiEQF1c (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 00:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
+        Tue, 17 May 2022 01:27:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229569AbiEQEyg (ORCPT
+        with ESMTP id S229553AbiEQF1a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 00:54:36 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FB603F8A5;
-        Mon, 16 May 2022 21:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652763275; x=1684299275;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BSqwOUbYppupXsN7qYjzHGq5o7sy9483GsNVLho0/Vo=;
-  b=EI8+zkD3BZKGPPckk8ylzjGs2tuWzmV9GQAW17DA4GDbUcVXkwraqICp
-   GzCLJC2x/QxiqvdQpJCbTewMPdP9ME0l/NwXiTLGbvXhPeuhv4Pt2GV17
-   rwsWO0XQi5G1ucEyefsKzOtWegX0awZWxW9T57xERipSjshhT8w0DtUhO
-   JbhCROM98xr+QRxDCHgmm6uxsvX0fg6YKQ+RFQnK48CO+WdV3iixZeAZJ
-   YujkWZycYnh2Yb+gYwVob0VYngBKbd7arBfZhqewC0CzTIdBsPeI6EsNi
-   QDaYeZZ9T6/0rX/z0pKojM9FUex20cfqbxMVWzWhhRUFLilF2HKv48IG9
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10349"; a="253109292"
-X-IronPort-AV: E=Sophos;i="5.91,231,1647327600"; 
-   d="scan'208";a="253109292"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 21:54:34 -0700
-X-IronPort-AV: E=Sophos;i="5.91,231,1647327600"; 
-   d="scan'208";a="596917734"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.217])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 21:54:32 -0700
-Message-ID: <cedfc68b-a15e-045e-747d-29d8c2218bd9@intel.com>
-Date:   Tue, 17 May 2022 07:54:28 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.8.1
-Subject: Re: [PATCH 3/6] perf tools: Add guest_code support
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        KVM <kvm@vger.kernel.org>
-References: <20220513090237.10444-1-adrian.hunter@intel.com>
- <20220513090237.10444-4-adrian.hunter@intel.com>
- <CAM9d7chFeVZNm_WTqrLzv74U13RPQtTvezxbP41GLte+ir6P_A@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAM9d7chFeVZNm_WTqrLzv74U13RPQtTvezxbP41GLte+ir6P_A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Tue, 17 May 2022 01:27:30 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D41A1EEE0
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 May 2022 22:27:28 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2fecfc7a95aso63483047b3.22
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 May 2022 22:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=fhyPdQWeqDloOKkKqTz1ZyQ6igO44pea09Y6oXJ4klY=;
+        b=oMRiADXfrP4QBwGawTd1L5SwFNv8CHzhSSsJDawBVeWwP1hjzKwNSdHcMag0nDJJ/n
+         GXv5QsF//jdR0Q7QbSm9UWgt06i36tZIkrb7AZwSm9jEfm6GQhUElKUb7fojaDVaNfVk
+         1gOJzZgeRgUI8Nn2fl2bn8nwPJZIS4W2RcjOaXWTshcGeKtNnPQK6bi7zUuE3h81/ef+
+         /0/T2pb7TSSYTtCIuUwrSkqUkkPyIX0rJmsukU8PG7GnmlGTysFxlRwmJ432VFWk7hIS
+         36zP+bKKG+ksXei8Fb9P26HV7Mu0sIIjdvpKd8rJRd7hWUiyjDn5IiK7w1qx5HdUMQrt
+         kugA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=fhyPdQWeqDloOKkKqTz1ZyQ6igO44pea09Y6oXJ4klY=;
+        b=v8RCBdyGsk8ncPn9NBXiLM1AULvcNWtXfAKkAsSDL3NqjF1Jn5EdriL+nePCV0n5AG
+         eKQIeOVUYMWa3MbaaLp/5tgojOIU+6l89rryZ3pRiwn8Z/hII4ztir+shujDgmflL75p
+         hMnnA9f8anS0rY5DyQqIBptoWiV63LEhKZsu+szqNIi0jP5wgLgUAMVT3WJ7DqPXe7im
+         1iUk9+HFEtIrGyNfIPm41xd20r13pnZ8gX1QX8BwVsP0dG/Af24WnsXifHEbIOV65OCo
+         SuNyeSTxceMsbQ9il0ufyOc9YBfX8QI3EL19a23DtfX7cFwuktP6Fhgmzt5t7rt78yEh
+         zTQw==
+X-Gm-Message-State: AOAM531R1Febwy9IiArZ7znTLqjefaH0XhlnSvIepgyJTlTQc36wRn3L
+        9eNV9JYIWBaFzREA8tKeJdwqkiKWiIUx
+X-Google-Smtp-Source: ABdhPJzK5gioy2Ufu8Nvw+w5uXCwY7XPZoxsENMWp8krL0HptQF/mdYlJn+xPergrvZ8ZFgsEtAxEMrD/+Xs
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:d585:282c:3f88:36e3])
+ (user=irogers job=sendgmr) by 2002:a81:9d5:0:b0:2f4:dd93:4513 with SMTP id
+ 204-20020a8109d5000000b002f4dd934513mr23671440ywj.54.1652765247839; Mon, 16
+ May 2022 22:27:27 -0700 (PDT)
+Date:   Mon, 16 May 2022 22:27:22 -0700
+Message-Id: <20220517052724.283874-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
+Subject: [PATCH v3 0/2] Fix topdown event weak grouping
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 17/05/22 06:13, Namhyung Kim wrote:
-> Hi Adrian,
-> 
-> On Fri, May 13, 2022 at 2:03 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> A common case for KVM test programs is that the guest object code can be
->> found in the hypervisor process (i.e. the test program running on the
->> host). To support that, copy the host thread's maps to the guest thread's
->> maps. Note, we do not discover the guest until we encounter a guest event,
->> which works well because it is not until then that we know that the host
->> thread's maps have been set up.
->>
->> Typically the main function for the guest object code is called
->> "guest_code", hence the name chosen for this feature.
-> 
-> Ok, so that's just a convention and there's no hard-coded
-> support for the "guest_code" function in this code, right?
+Keep topdown events within a group when a weak group is broken. This
+is a requirement as topdown events must form a group.
 
-That is correct.
+Add perf stat testing including for required topdown event group
+behaviors.
 
-> 
->>
->> This is primarily aimed at supporting Intel PT, or similar, where trace
->> data can be recorded for a guest. Refer to the final patch in this series
->> "perf intel-pt: Add guest_code support" for an example.
->>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>  tools/perf/util/event.c       |  7 +++-
->>  tools/perf/util/machine.c     | 70 +++++++++++++++++++++++++++++++++++
->>  tools/perf/util/machine.h     |  2 +
->>  tools/perf/util/session.c     |  7 ++++
->>  tools/perf/util/symbol_conf.h |  3 +-
->>  5 files changed, 86 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
->> index 6439c888ae38..0476bb3a4188 100644
->> --- a/tools/perf/util/event.c
->> +++ b/tools/perf/util/event.c
->> @@ -683,9 +683,12 @@ static bool check_address_range(struct intlist *addr_list, int addr_range,
->>  int machine__resolve(struct machine *machine, struct addr_location *al,
->>                      struct perf_sample *sample)
->>  {
->> -       struct thread *thread = machine__findnew_thread(machine, sample->pid,
->> -                                                       sample->tid);
->> +       struct thread *thread;
->>
->> +       if (symbol_conf.guest_code && !machine__is_host(machine))
->> +               thread = machine__findnew_guest_code(machine, sample->pid);
->> +       else
->> +               thread = machine__findnew_thread(machine, sample->pid, sample->tid);
->>         if (thread == NULL)
->>                 return -1;
->>
->> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
->> index e67b5a7670f3..ae2e1fb422e2 100644
->> --- a/tools/perf/util/machine.c
->> +++ b/tools/perf/util/machine.c
->> @@ -392,6 +392,76 @@ struct machine *machines__find_guest(struct machines *machines, pid_t pid)
->>         return machine;
->>  }
->>
->> +/*
->> + * A common case for KVM test programs is that the guest object code can be
->> + * found in the hypervisor process (i.e. the test program running on the host).
->> + * To support that, copy the host thread's maps to the guest thread's maps.
->> + * Note, we do not discover the guest until we encounter a guest event,
->> + * which works well because it is not until then that we know that the host
->> + * thread's maps have been set up.
->> + */
->> +static struct thread *findnew_guest_code(struct machine *machine,
-> 
-> But this function returns a thread and IIUC that's the task which
-> does the host to guest transition.  Then why not calling it just
-> findnew__hypervisor() ?
+Note: as with existing topdown evsel/evlist code topdown events are
+assumed to be on the PMU "cpu". On Alderlake the PMU "cpu_core" should
+also be tested. Future changes can fix Alderlake.
 
-The thread returned is in the guest machine.  While the code comes
-from the hypervisor, it is in the guest VM when it runs.
+v3. Fix computation of number of events in leader's group.
+    Adds reviewed-by: Liang, Kan <kan.liang@linux.intel.com
+v2. Correct behavior wrt pmu prefixed events and avoid the test using
+    deprecated events: Suggested-by: Liang, Kan <kan.liang@linux.intel.com>
 
-From Intel PT point of view, this function allows finding the guest
-object code by setting up the guest thread and its maps.
+Ian Rogers (2):
+  perf evlist: Keep topdown counters in weak group
+  perf test: Add basic stat and topdown group test
 
-I will try to improve on the explanation in V2.
+ tools/perf/arch/x86/util/evsel.c | 12 ++++++
+ tools/perf/tests/shell/stat.sh   | 67 ++++++++++++++++++++++++++++++++
+ tools/perf/util/evlist.c         | 16 +++++++-
+ tools/perf/util/evsel.c          | 10 +++++
+ tools/perf/util/evsel.h          |  3 ++
+ 5 files changed, 106 insertions(+), 2 deletions(-)
+ create mode 100755 tools/perf/tests/shell/stat.sh
 
-> 
-> Thanks,
-> Namhyung
-> 
-> 
->> +                                        struct machine *host_machine,
->> +                                        pid_t pid)
->> +{
->> +       struct thread *host_thread;
->> +       struct thread *thread;
->> +       int err;
->> +
->> +       if (!machine)
->> +               return NULL;
->> +
->> +       thread = machine__findnew_thread(machine, -1, pid);
->> +       if (!thread)
->> +               return NULL;
->> +
->> +       /* Assume maps are set up if there are any */
->> +       if (thread->maps->nr_maps)
->> +               return thread;
->> +
->> +       host_thread = machine__find_thread(host_machine, -1, pid);
->> +       if (!host_thread)
->> +               goto out_err;
->> +
->> +       thread__set_guest_comm(thread, pid);
->> +
->> +       /*
->> +        * Guest code can be found in hypervisor process at the same address
->> +        * so copy host maps.
->> +        */
->> +       err = maps__clone(thread, host_thread->maps);
->> +       thread__put(host_thread);
->> +       if (err)
->> +               goto out_err;
->> +
->> +       return thread;
->> +
->> +out_err:
->> +       thread__zput(thread);
->> +       return NULL;
->> +}
->> +
+-- 
+2.36.0.550.gb090851708-goog
 
