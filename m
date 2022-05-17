@@ -2,103 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55D8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 03:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9718DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 03:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232533AbiEQDx1 (ORCPT
+        id S230274AbiEQD45 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 May 2022 23:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44026 "EHLO
+        Mon, 16 May 2022 23:56:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231433AbiEQDx0 (ORCPT
+        with ESMTP id S236957AbiEQD4t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 May 2022 23:53:26 -0400
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB3D2E0B5;
-        Mon, 16 May 2022 20:53:25 -0700 (PDT)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-e93bbb54f9so22711301fac.12;
-        Mon, 16 May 2022 20:53:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nD103x5fG+vRGXoi7A4nPbMr2Eg2Wxzgpc5qUXVp5jI=;
-        b=RRpgskJCNxhqaARNCxhStVb+aI0xR+VZMvRpA8Nw68C3SwMOKSp4keJ3fs0/erXMpM
-         tYX2r5DDNZvuSWCPK/bfOAzgAWBGOoQBzQy7n4lIM910aGUkNeS91j0yQv+LKokbDvsr
-         lIZhOZrHa9LysAQPhjFCBqHYiWPKkwA9gXcVKDyGf29zozemnyZEvYLrIQcGXJr/KI6+
-         rkNJCIeTFSMe42jZlnqRgZEoT06CfhGeVhXS9OZs1vB7h4XiYiS0cxwPj3X+NgAX+cqs
-         /mN8++gU6di0N8GOq5H6VAf9NAR7CrEAjCXDrRHFSlZBBpX1ijgHJfkLDoK6SrkYKjPw
-         0FQQ==
-X-Gm-Message-State: AOAM532gIr9uOEDmbRNXUc1xgOXYX5YK3iq1WRdbqCwfIWDZ5cNKnB9O
-        r7oRShZ+tjjtRgut5r1mIOpzXZNz2qGyxXszrSUyx6wL
-X-Google-Smtp-Source: ABdhPJxz9J36HewhEH+fLy18JPu2xXLtQpHjd2qWD7qMIeXAWkkGIq8Jh338fRYZeHSZiT3ccS1kfIGpg5DzOmcCAtA=
-X-Received: by 2002:a05:6870:d1cd:b0:e1:e7ee:faa0 with SMTP id
- b13-20020a056870d1cd00b000e1e7eefaa0mr17153127oac.5.1652759605259; Mon, 16
- May 2022 20:53:25 -0700 (PDT)
+        Mon, 16 May 2022 23:56:49 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164E933E36;
+        Mon, 16 May 2022 20:56:47 -0700 (PDT)
+Received: from kwepemi500022.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4L2Mhs2tGsz1JCVx;
+        Tue, 17 May 2022 11:55:25 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ kwepemi500022.china.huawei.com (7.221.188.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 17 May 2022 11:56:44 +0800
+Received: from [10.67.101.67] (10.67.101.67) by kwepemm600003.china.huawei.com
+ (7.193.23.202) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 17 May
+ 2022 11:56:44 +0800
+Subject: Re: [PATCH 08/10] coresight: Remove legacy Trace ID allocation
+ mechanism
+To:     Mike Leach <mike.leach@linaro.org>, <suzuki.poulose@arm.com>,
+        <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mathieu.poirier@linaro.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <leo.yan@linaro.org>
+References: <20220308205000.27646-1-mike.leach@linaro.org>
+ <20220308205000.27646-9-mike.leach@linaro.org>
+From:   "liuqi (BA)" <liuqi115@huawei.com>
+Message-ID: <71c11820-433d-755d-0eb4-797313d693f9@huawei.com>
+Date:   Tue, 17 May 2022 11:56:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20220513040519.1499333-1-irogers@google.com> <20220513040519.1499333-2-irogers@google.com>
-In-Reply-To: <20220513040519.1499333-2-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 16 May 2022 20:53:14 -0700
-Message-ID: <CAM9d7cjfCF+9SUGrO-WQ_OSAyq0U+idS8SCNFv+CoL6A+0RKGQ@mail.gmail.com>
-Subject: Re: [PATCH 1/7] perf test: Skip reason for suites with 1 test
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
-        Carsten Haitzler <carsten.haitzler@arm.com>,
-        Marco Elver <elver@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20220308205000.27646-9-mike.leach@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.101.67]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 12, 2022 at 9:05 PM Ian Rogers <irogers@google.com> wrote:
->
-> When a suite has just 1 subtest, the subtest number is given as -1 to
-> avoid indented printing. When this subtest number is seen for the skip
-> reason, use the reason of the first test.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hi Mike,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+On 2022/3/9 4:49, Mike Leach wrote:
+> This static 'cpu * 2 + seed' was outdated and broken for systems with high
+> core counts (>46).
+> 
+> This has been replaced by a dynamic allocation system.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
+>   include/linux/coresight-pmu.h | 12 ------------
+>   1 file changed, 12 deletions(-)
+
+Seems coresight_get_trace_id() in tools/include/linux/coresight-pmu.h 
+need to be deleted too.
 
 Thanks,
-Namhyung
+Qi
 
-
-> ---
->  tools/perf/tests/builtin-test.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index fac3717d9ba1..33fcafa0fa79 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -137,10 +137,10 @@ static bool has_subtests(const struct test_suite *t)
->
->  static const char *skip_reason(const struct test_suite *t, int subtest)
->  {
-> -       if (t->test_cases && subtest >= 0)
-> -               return t->test_cases[subtest].skip_reason;
-> +       if (!t->test_cases)
-> +               return NULL;
->
-> -       return NULL;
-> +       return t->test_cases[subtest >= 0 ? subtest : 0].skip_reason;
->  }
->
->  static const char *test_description(const struct test_suite *t, int subtest)
-> --
-> 2.36.0.550.gb090851708-goog
->
+> 
+> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> index 4ac5c081af93..bb4eb4de3c77 100644
+> --- a/include/linux/coresight-pmu.h
+> +++ b/include/linux/coresight-pmu.h
+> @@ -8,7 +8,6 @@
+>   #define _LINUX_CORESIGHT_PMU_H
+>   
+>   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
+> -#define CORESIGHT_ETM_PMU_SEED  0x10
+>   
+>   /*
+>    * Below are the definition of bit offsets for perf option, and works as
+> @@ -32,15 +31,4 @@
+>   #define ETM4_CFG_BIT_RETSTK	12
+>   #define ETM4_CFG_BIT_VMID_OPT	15
+>   
+> -static inline int coresight_get_trace_id(int cpu)
+> -{
+> -	/*
+> -	 * A trace ID of value 0 is invalid, so let's start at some
+> -	 * random value that fits in 7 bits and go from there.  Since
+> -	 * the common convention is to have data trace IDs be I(N) + 1,
+> -	 * set instruction trace IDs as a function of the CPU number.
+> -	 */
+> -	return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
+> -}
+> -
+>   #endif
+> 
