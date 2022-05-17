@@ -2,120 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4568FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 20:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690E8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 21:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243450AbiEQUlw (ORCPT
+        id S240732AbiEQVRM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 16:41:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51302 "EHLO
+        Tue, 17 May 2022 17:17:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232072AbiEQUlu (ORCPT
+        with ESMTP id S231875AbiEQVRL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 16:41:50 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0790F1AF30
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 13:41:50 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 135-20020a25058d000000b0064dd6bc9cfdso118433ybf.23
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 13:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=F1aO125Yx/obUzt176koWYfMkjjCHKow9Xi2uikrxmo=;
-        b=OJLu59Z9I7+iGu+w6BJz1flN1H7Lq37JKIIeBhbkkFE8lxwJAcd/Y/JolCT4Ugw/iR
-         UX7ZzX+kGoIr4PYaVPUDfI9TPmcQwGYT3K4cFHDHxvGpv9uhLQ911/69VKgjOK5i3nXr
-         kj0Oids4J4EhXyiwHl09Qv27HCg/SVpM/axA6QWi25KpJUQqd7mvLYAc5M15X82T1UqV
-         prVRY7nSuQv+oVsMriq1Qvuv0eiUsKBv/dXhppuPU3zL9sWGAdQkk8+WP13fBdA+Djt1
-         0BywV737AySz9ad0tMGXs3m+ujJGzptV38gDEfLJyh1unXHrUsd+RyLLXte2O7DiujVz
-         yR1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=F1aO125Yx/obUzt176koWYfMkjjCHKow9Xi2uikrxmo=;
-        b=0nJ2HYhxo86HQgl1/A5FyCOIODGS8zrMwED6Yu/mWPakjsmMkKP80R9pp9z7R6WBAY
-         0WErQcShFK7IAr7ltjxP1o/XCnQ45KEIEIbaaa72EnAxq4A/WCsLUVjz1NtMiwTdUinn
-         NgkAbLf1p5XSs7PTaErGcps0P7fJVdZiQuzQFTz1qqEhEEvumyFdF/BJmfZLIbZmGPRC
-         iwqOPKDH0cXyhsUL6vrq4A6m08jwSuoyy0uu4PQ1JMDXfZEahYzZtX90OL2gfHqSOdRV
-         6UsJ+Uw7fc+f0+XvIO66rFYwzXjXfdLFVoULh/dXbgY8zaSEVoEVf8gesiWJ1s3HN/PN
-         C1Dg==
-X-Gm-Message-State: AOAM5335iF737vVUKEUcxAFn5pqmDdw7hhZCMl6AnkULujVy9BPz3+Yo
-        fk93uRQoo32apGUke5rRCRMR8hutl4JM
-X-Google-Smtp-Source: ABdhPJzQbMHxPnHyCRWSpO1aAxJUO3kNUrzA0+BiWBnhXCydxYORM5RkoFxZ684mR8ROIS9ddQIxi/TLLKND
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a5a1:af73:fe09:fd5])
- (user=irogers job=sendgmr) by 2002:a0d:c4c2:0:b0:2f1:6c00:9eb4 with SMTP id
- g185-20020a0dc4c2000000b002f16c009eb4mr29222866ywd.448.1652820108545; Tue, 17
- May 2022 13:41:48 -0700 (PDT)
-Date:   Tue, 17 May 2022 13:41:44 -0700
-Message-Id: <20220517204144.645913-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [PATCH] perf test: Avoid shell test description infinite loop
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Tue, 17 May 2022 17:17:11 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17C233EB3
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 14:17:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 65466B81C5E
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:17:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6A6C385B8;
+        Tue, 17 May 2022 21:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652822226;
+        bh=zUaU6xab8UhL+tNHApsBPJeMtDxA7d/J5bMjZqlD9X0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H6r3Ou8bovH3VbJUYZtkmd6KwJz4KSL7atpUXni6sYrbAxizvtt6F3zO4C+o6/b5s
+         C7NLNhXPd8Qsd9Cy1VMItEglyeHLvO7S/fDAVVuyNoKRGA8SKQC/d+VCpEDXXZZ78O
+         gE/JRJqfv89sW/AVRR6TPBKMFoPQsZ9b+qwFxW1xoo4G5717jitkd0tCPa221x/hWV
+         85Z+kjb1btI2kM3xT4mwwR3GdE6gKFl3KebFLHypZR8zkc5TskbH8OpyDCKbvVkh4S
+         pKp3MO3Cy72/jMXjJdCsg2/d5f5mNgdFJqj8jW10SlFiDkmToR3+5xufV8yrSUMgm/
+         ag7h3K6f3GJfA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C9333400B1; Tue, 17 May 2022 18:17:02 -0300 (-03)
+Date:   Tue, 17 May 2022 18:17:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Avi Kivity <avi@scylladb.com>
+Cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Marco Elver <elver@google.com>,
-        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: Infinite recursion in `perf record`
+Message-ID: <YoQQzm3b1kGkEeVQ@kernel.org>
+References: <f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com>
+ <YoO2wrQ41W1lO88T@kernel.org>
+ <9f21cc03-f411-828d-7817-5d9570d43ba1@scylladb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9f21cc03-f411-828d-7817-5d9570d43ba1@scylladb.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-for_each_shell_test is already strict in expecting tests to be files and
-executable. It is sometimes possible when it iterates over all files
-that it finds one that is executable and lacks a newline character. When
-this happens the loop never terminates as it doesn't check for EOF. Add
-the EOF check to make this loop at least bounded by the file size.
+Em Tue, May 17, 2022 at 05:59:17PM +0300, Avi Kivity escreveu:
+> 
+> On 17/05/2022 17.52, Arnaldo Carvalho de Melo wrote:
+> > Em Mon, May 16, 2022 at 06:22:35PM +0300, Avi Kivity escreveu:
+> > > In bpf-event.c we have:
+> > > 
+> > > 
+> > > struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
+> > > {
+> > >         struct btf *btf;
+> > > #pragma GCC diagnostic push
+> > > #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > >         int err = btf__get_from_id(id, &btf);
+> > > #pragma GCC diagnostic pop
+> > > 
+> > >         return err ? ERR_PTR(err) : btf;
+> > > }
+> > > 
+> > > and in btf.c we have:
+> > > int btf__get_from_id(__u32 id, struct btf **btf)
+> > > {
+> > >          struct btf *res;
+> > >          int err;
+> > > 
+> > >          *btf = NULL;
+> > >          res = btf__load_from_kernel_by_id(id);
+> > >          err = libbpf_get_error(res);
+> > > 
+> > >          if (err)
+> > >                  return libbpf_err(err);
+> > > 
+> > >          *btf = res;
+> > >          return 0;
+> > > }
+> > > 
+> > > Obviously, if the first weak symbol isn't overridden we get into an infinite
+> > > recursion, which is what I see immediately on running perf record:
+> > So the intent was to be able to dynamicly link with older and newer
+> > libbpf versions, as btf__get_from_id() is being deprecated and
+> > btf__load_from_kernel_by_id() isn't available in older libbpf versions.
+> > 
+> > This is all only when linking with the system's libbpf, not with the one
+> > in tools/lib/bpf/, when perf does a static link.
+> > 
+> > So I think (will check) that your build is using LIBBPF_DYNAMIC=1, and
+> > while there is a test build for that in 'make -C tools/perf build-test'.
+> > 
+> >           make_libbpf_dynamic_O: make LIBBPF_DYNAMIC=1
+> > 
+> > It will cover testing just with the libbpf-devel installed on the
+> > tester's machine/container.
+> > 
+> > I couldn't find the perf build log, the link you provided:
+> > 
+> > https://kojipkgs.fedoraproject.org//packages/kernel/5.17.6/300.fc36/data/logs/x86_64/build.log
+> 
+> 
+> This link should work:
 
-If the description is returned as NULL then also skip the test.
+> https://kojipkgs.fedoraproject.org//packages/kernel-tools/5.17.6/300.fc36/data/logs/x86_64/build.log
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/builtin-test.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Thanks, I'll check.
+ 
+> > is for the kernel, not tools/perf.
+> > 
+> > I agree with Ian I should have done this using ifdef, a
+> > tools/build/feature check that tries to build a test app linking against
+> > libbpf-devel with btf__load_from_kernel_by_id(), if it is there, then
+> > use it directly, if not, implement it in terms of btf__get_from_id().
+> > 
+> > I'll try to use my unbroken fingers to do that 8-)
+ 
+> Thanks, I hope it doesn't cause more damage.
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 3c34cb766724..aa40eae1c9cf 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -279,6 +279,7 @@ static const char *shell_test__description(char *description, size_t size,
- {
- 	FILE *fp;
- 	char filename[PATH_MAX];
-+	int ch;
- 
- 	path__join(filename, sizeof(filename), path, name);
- 	fp = fopen(filename, "r");
-@@ -286,7 +287,9 @@ static const char *shell_test__description(char *description, size_t size,
- 		return NULL;
- 
- 	/* Skip shebang */
--	while (fgetc(fp) != '\n');
-+	do {
-+		ch = fgetc(fp);
-+	} while (ch != EOF && ch != '\n');
- 
- 	description = fgets(description, size, fp);
- 	fclose(fp);
-@@ -419,7 +422,8 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
- 			.priv = &st,
- 		};
- 
--		if (!perf_test__matches(test_suite.desc, curr, argc, argv))
-+		if (test_suite.desc == NULL ||
-+		    !perf_test__matches(test_suite.desc, curr, argc, argv))
- 			continue;
- 
- 		st.file = ent->d_name;
--- 
-2.36.0.550.gb090851708-goog
+Hopefully not :-)
 
+- Arnaldo
