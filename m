@@ -2,77 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93455C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 10:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B99C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 10:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343673AbiEQKWw (ORCPT
+        id S1344275AbiEQKcP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 06:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
+        Tue, 17 May 2022 06:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344810AbiEQKV6 (ORCPT
+        with ESMTP id S1343866AbiEQKcM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 06:21:58 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E22084BFD0;
-        Tue, 17 May 2022 03:20:19 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF2B912FC;
-        Tue, 17 May 2022 03:20:19 -0700 (PDT)
-Received: from e121896.warwick.arm.com (e121896.warwick.arm.com [10.32.33.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3F8EC3F66F;
-        Tue, 17 May 2022 03:20:17 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        broonie@kernel.org, acme@kernel.org
-Cc:     german.gomez@arm.com, leo.yan@linaro.org,
-        mathieu.poirier@linaro.org, john.garry@huawei.com,
-        James Clark <james.clark@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 17 May 2022 06:32:12 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D16A23BF0;
+        Tue, 17 May 2022 03:32:09 -0700 (PDT)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L2XR56gmMz67Prk;
+        Tue, 17 May 2022 18:29:05 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 17 May 2022 12:32:06 +0200
+Received: from [10.47.88.19] (10.47.88.19) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 17 May
+ 2022 11:32:04 +0100
+Message-ID: <1e9d2bce-b967-dccb-e6af-241830e5b38e@huawei.com>
+Date:   Tue, 17 May 2022 11:32:04 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v2 6/7] perf jevents: Switch build to use jevents.py
+To:     Ian Rogers <irogers@google.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/4] perf tools: arm64: Copy perf_regs.h from the kernel
-Date:   Tue, 17 May 2022 11:20:02 +0100
-Message-Id: <20220517102005.3022017-2-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20220517102005.3022017-1-james.clark@arm.com>
-References: <20220517102005.3022017-1-james.clark@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20220511211526.1021908-1-irogers@google.com>
+ <20220511211526.1021908-7-irogers@google.com>
+ <d08b3d43-b02a-5aeb-e05e-f2f91d6a8f7a@huawei.com>
+ <CAP-5=fUAXLL0CXrfrzYV2TT_31kouvJV-FWrZsipR27tT3i+uQ@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <CAP-5=fUAXLL0CXrfrzYV2TT_31kouvJV-FWrZsipR27tT3i+uQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.88.19]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Get the updated header for the newly added VG register.
+On 13/05/2022 16:58, Ian Rogers wrote:
+> On Fri, May 13, 2022 at 8:38 AM John Garry <john.garry@huawei.com> wrote:
+>>
+>> On 11/05/2022 22:15, Ian Rogers wrote:
+>>>     # jevents.py uses os.scandir and type hints present in Python 3.5 released in Sept. 2015.
+>>> +    JEVENTS_PYTHON_GOOD := $(shell $(PYTHON) -c 'import sys;print("1" if(sys.version_info.major >= 3 and sys.version_info.minor >= 5) else "0")')
+>>
+>> I think that many - like me - will have python 2.7, so now will find no
+>> pmu-events generated any longer after missing this message in the build :(
+>>
+>> Maybe many will have python >= 3.5 - but I don't know...
+> 
+> So Python 2 has been end-of-life for over 2 years now:
+> https://www.python.org/doc/sunset-python-2/
+> There have been a number of LKML patches upgrading python to version 3.
+> 
+> Python 3.5 has some very nice features of os.scandir and type hints,
+> so if I set the bar lower than this it hurts the code quality. It is
+> also at least 6 years old at this point, and so hopefully not
+> unreasonable for a distribution to have picked it up :-) Looking at
+> the change to C11 thread:
+> https://lore.kernel.org/lkml/20220228103142.3301082-1-arnd@kernel.org/
+> It seems the motivation for picking a language version is the features
+> it provides and compatibility. If we choose pre-Python 3.5 we get more
+> compatibility but we lose language features.
+> 
+> My feeling is that we shouldn't need to support things that are no
+> longer maintained (like Python 2) but I'm less clear if Python 3.5 is
+> sufficiently compatible for everyone's needs. I kind of hope so, hence
+> making the patches this way.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/arch/arm64/include/uapi/asm/perf_regs.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Fine, I just think that you need to make this transition as seamless as 
+possible, otherwise it can be judged as a regression.
 
-diff --git a/tools/arch/arm64/include/uapi/asm/perf_regs.h b/tools/arch/arm64/include/uapi/asm/perf_regs.h
-index d54daafa89e3..fd157f46727e 100644
---- a/tools/arch/arm64/include/uapi/asm/perf_regs.h
-+++ b/tools/arch/arm64/include/uapi/asm/perf_regs.h
-@@ -36,6 +36,11 @@ enum perf_event_arm_regs {
- 	PERF_REG_ARM64_LR,
- 	PERF_REG_ARM64_SP,
- 	PERF_REG_ARM64_PC,
--	PERF_REG_ARM64_MAX,
-+
-+	/* Extended/pseudo registers */
-+	PERF_REG_ARM64_VG = 46, // SVE Vector Granule
-+
-+	PERF_REG_ARM64_MAX = PERF_REG_ARM64_PC + 1,
-+	PERF_REG_ARM64_EXTENDED_MAX = PERF_REG_ARM64_VG + 1
- };
- #endif /* _ASM_ARM64_PERF_REGS_H */
--- 
-2.28.0
+For example, I have now python 3.6 (default) and 2.7 but it still 
+doesn't seem to work:
 
+john@localhost:~/acme/tools/perf> make
+   BUILD:   Doing 'make -j4' parallel build
+Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h' 
+differs from latest version at 'include/linux/coresight-pmu.h'
+diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
+Makefile.config:593: No sys/sdt.h found, no SDT events are defined, 
+please install systemtap-sdt-devel or systemtap-sdt-dev
+Makefile.config:871: Python interpreter too old (older than 3.5) 
+disabling jevent generation
+Makefile.config:904: Old version of libbfd/binutils things like PE 
+executable profiling will not be available
+Makefile.config:1092: No openjdk development package found, please 
+install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+
+Auto-detecting system features:
+...                         dwarf: [ on  ]
+...            dwarf_getlocations: [ on  ]
+...                         glibc: [ on  ]
+...                        libbfd: [ OFF ]
+...                libbfd-buildid: [ OFF ]
+...                        libcap: [ on  ]
+...                        libelf: [ on  ]
+...                       libnuma: [ on  ]
+...        numa_num_possible_cpus: [ on  ]
+...                       libperl: [ on  ]
+...                     libpython: [ on  ]
+...                     libcrypto: [ on  ]
+...                     libunwind: [ on  ]
+...            libdw-dwarf-unwind: [ on  ]
+...                          zlib: [ on  ]
+...                          lzma: [ on  ]
+...                     get_cpuid: [ on  ]
+...                           bpf: [ on  ]
+...                        libaio: [ on  ]
+...                       libzstd: [ on  ]
+...        disassembler-four-args: [ on  ]
+
+
+make[3]: Nothing to be done for 'install_headers'.
+john@localhost:~/acme/tools/perf> python --version
+Python 3.6.12
+john@localhost:~/acme/tools/perf>
+
+which I need to figure out...
+
+> 
+>>   > + ifneq ($(JEVENTS_PYTHON_GOOD), 1)
+>>   > + $(warning Python interpreter too old (older than 3.5) disabling
+>> jevent generation)
+>>   > + NO_JEVENTS := 1
+>>
+>> It is possible to flip NO_JEVENTS to be JEVENTS, i.e. no
+>> double-negatives, like NO_JEVENTS := 0
+> 
+> Agreed that double negatives are bad. The NO_... pattern is kind of
+> throughout the make files and build files. I preferred the NO_... for
+> consistency but if there's a consensus I'm happy to change.
+> 
+
+I have no strong preference. I just find that double negatives boggle 
+the mind.
+
+Thanks,
+john
