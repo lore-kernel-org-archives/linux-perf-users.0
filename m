@@ -2,79 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7712EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 08:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DC4C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 08:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242830AbiEQIVu (ORCPT
+        id S243853AbiEQI7W (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 04:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36886 "EHLO
+        Tue, 17 May 2022 04:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243111AbiEQIV1 (ORCPT
+        with ESMTP id S240348AbiEQI7U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 04:21:27 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D046BCB1;
-        Tue, 17 May 2022 01:21:25 -0700 (PDT)
-Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L2TXG147Gz67x9g;
-        Tue, 17 May 2022 16:18:22 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 17 May 2022 10:21:22 +0200
-Received: from [10.47.88.19] (10.47.88.19) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 17 May
- 2022 09:21:21 +0100
-Message-ID: <f1e5309d-d330-faf1-32c5-78962b125f66@huawei.com>
-Date:   Tue, 17 May 2022 09:21:21 +0100
+        Tue, 17 May 2022 04:59:20 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C3C2ED73
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 01:59:19 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24H8va7v027087;
+        Tue, 17 May 2022 08:59:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=URcsjrjOBlUkdjGoyePQAASt2Q4JVsxnTRwYlRLZGQ0=;
+ b=NVhkmseY5SEBnM3yahkphfAI8hmynkXRYR2L6RSxj9E7DWJ2U2r/KuxJdKwSUQFVWVjM
+ 7CGQK5tY9VT4Vf2uRWBmRN6lucxFKSlvjfrNObOLlLs0kOzKYQKSg8qg3KK2btTpYFt6
+ 8EgCNfyrWLY/XBPU1IaMpjq84PSq9lXVl+TrUvbxW7ujdMtiLzx4yWjigAh8Yo4lcHEe
+ 6cwkr7HhAjMgH0xbl0mrhnXrwJ+T1EDf7uZQOWuWMtuB83cpgqprlhLiKd86lK7wY4gO
+ iCiil93MxMiMFrFHk1RvDmthAzA+m4jjzPbooZ4XMuZZ+/q6btIOA9ciRYpdvuhoy7m/ 8A== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3g48nfr0yt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 May 2022 08:59:15 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24H8w2Sp015070;
+        Tue, 17 May 2022 08:59:14 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 3g23pjbws1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 May 2022 08:59:13 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24H8xBn226935618
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 May 2022 08:59:11 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB3E75204F;
+        Tue, 17 May 2022 08:59:11 +0000 (GMT)
+Received: from [9.152.212.236] (unknown [9.152.212.236])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 93B3E5204E;
+        Tue, 17 May 2022 08:59:11 +0000 (GMT)
+Message-ID: <626c38d8-ce7c-51f0-5f2e-094192809d5c@linux.ibm.com>
+Date:   Tue, 17 May 2022 10:59:11 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v8 2/8] hwtracing: hisi_ptt: Add trace function support
- for HiSilicon PCIe Tune and Trace device
-To:     Yicong Yang <yangyicong@huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
-        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <acme@kernel.org>,
-        <jonathan.cameron@huawei.com>
-CC:     <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mark.rutland@arm.com>, <joro@8bytes.org>,
-        <shameerali.kolothum.thodi@huawei.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>
-References: <20220516125223.32012-1-yangyicong@hisilicon.com>
- <20220516125223.32012-3-yangyicong@hisilicon.com>
- <90aafbc1-b7f6-1cc9-8f94-c72f05150f70@huawei.com>
- <31113797-29c5-1400-f7ac-bff79853b3fe@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <31113797-29c5-1400-f7ac-bff79853b3fe@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: File bench/numa.c compiler error on s390
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>
+References: <00a443b1-92e0-8992-18ae-10e0e8489658@linux.ibm.com>
+ <YoJItiE0xWDutZKR@kernel.org>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <YoJItiE0xWDutZKR@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.88.19]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: if7NdP-Gn4wvX_L9LlkKL0tL4EvOBfRY
+X-Proofpoint-ORIG-GUID: if7NdP-Gn4wvX_L9LlkKL0tL4EvOBfRY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-17_01,2022-05-16_02,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ clxscore=1015 suspectscore=0 adultscore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205170051
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 17/05/2022 09:09, Yicong Yang wrote:
->>> +    target = cpumask_any(cpumask_of_node(dev_to_node(&hisi_ptt->pdev->dev)));
->>> +    if (target < nr_cpumask_bits) {
->> the comment for cpumask_any() hints to check against nr_cpu_ids - any specific reason to check against nr_cpumask_bits?
+On 5/16/22 14:51, Arnaldo Carvalho de Melo wrote:
+> Em Mon, May 16, 2022 at 09:24:52AM +0200, Thomas Richter escreveu:
+>> Hi all,
 >>
-> here should be:
-> 	if (target >= nr_cpumask_bits) {
+>> I just upgraded to Fedora 36 and gcc version 12.0.1 20220308 (Red Hat 12.0.1-0) (GCC) 
+>> and run into this compiler error:
 > 
-> will fix this up.
+> Humm, I regularly build on fedora 36 and didn't catch this :-\
 > 
 
-I am still not sure that using nr_cpumask_bits is correct.
+Thanks for your feedback, Arnaldo.
+
+I talk to our compiler guys about this.
+Looks like this is a s390 thing.
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
