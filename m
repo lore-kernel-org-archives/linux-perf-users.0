@@ -2,377 +2,301 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EF1C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 14:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1D5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 14:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244882AbiEQOcf (ORCPT
+        id S244139AbiEQOx2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 10:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
+        Tue, 17 May 2022 10:53:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbiEQOcf (ORCPT
+        with ESMTP id S1349501AbiEQOxX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 10:32:35 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3BA8726136;
-        Tue, 17 May 2022 07:32:33 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04C951042;
-        Tue, 17 May 2022 07:32:33 -0700 (PDT)
-Received: from [10.57.82.55] (unknown [10.57.82.55])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 271193F718;
-        Tue, 17 May 2022 07:32:30 -0700 (PDT)
-Message-ID: <f523b0fe-1262-c1e5-c587-15842ccf0fcf@arm.com>
-Date:   Tue, 17 May 2022 15:32:25 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 00/20] perf vendors events arm64: Multiple Arm CPUs
-Content-Language: en-GB
-To:     Nick Forrington <nick.forrington@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Tue, 17 May 2022 10:53:23 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D1845005D
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 07:52:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A0418B81902
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 14:52:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E13F5C385B8;
+        Tue, 17 May 2022 14:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652799174;
+        bh=PWmAL6u/Fitq0XjDLkCwebn0CLqgf2tYqAoWgozHXrI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rmBPtWMgDc5kjeTxRd7XGA+0nBjr0biz/Ix25grUW3Cu08Hf2cwkCev37GSfAE/SP
+         bpK+MpP8oGCG4aJSX73wcAoUTewZYi283So+F9unpvzqHy2q5LutbUmXNwto8Umgwm
+         998TJzdoznkkczckgrmDJAMvU9Z+CkIP0O5cM9ribF8Kvf1E4ZCPnJWqrPRm9JEYJm
+         L1TQVh1j5GrTFjmGKs7aTLI3L7fIUbixwGcujufYvElK+ybTgYtxPxF5VzgrJvA0ck
+         lq8TIN+sB0ZR3fhDCxhpAZ2aVYfPHNJmh2suaM9p++DW8TGd34c9VXsL5i0qHuaQYq
+         lrp4ZpyLvMmEA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6D2A6400B1; Tue, 17 May 2022 11:52:50 -0300 (-03)
+Date:   Tue, 17 May 2022 11:52:50 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Avi Kivity <avi@scylladb.com>
+Cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>
-References: <20220510104758.64677-1-nick.forrington@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20220510104758.64677-1-nick.forrington@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: Infinite recursion in `perf record`
+Message-ID: <YoO2wrQ41W1lO88T@kernel.org>
+References: <f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Nick,
+Em Mon, May 16, 2022 at 06:22:35PM +0300, Avi Kivity escreveu:
+> In bpf-event.c we have:
+> 
+> 
+> struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
+> {
+>        struct btf *btf;
+> #pragma GCC diagnostic push
+> #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+>        int err = btf__get_from_id(id, &btf);
+> #pragma GCC diagnostic pop
+> 
+>        return err ? ERR_PTR(err) : btf;
+> }
+> 
+> and in btf.c we have:
 
-On 2022-05-10 11:47, Nick Forrington wrote:
-> Add Performance Monitoring Unit event data for the Arm CPUs listed
-> below.
+> int btf__get_from_id(__u32 id, struct btf **btf)
+> {
+>         struct btf *res;
+>         int err;
 > 
-> Changesets are dependent due to incremental updates to the common events
-> file and mapfile.csv.
+>         *btf = NULL;
+>         res = btf__load_from_kernel_by_id(id);
+>         err = libbpf_get_error(res);
 > 
-> Data is sourced from https://github.com/ARM-software/data
+>         if (err)
+>                 return libbpf_err(err);
 > 
-> Nick Forrington (20):
->    perf vendors events arm64: Arm Cortex-A5
->    perf vendors events arm64: Arm Cortex-A7
->    perf vendors events arm64: Arm Cortex-A8
->    perf vendors events arm64: Arm Cortex-A9
->    perf vendors events arm64: Arm Cortex-A15
->    perf vendors events arm64: Arm Cortex-A17
->    perf vendors events arm64: Arm Cortex-A32
+>         *btf = res;
+>         return 0;
+> }
+> 
+> Obviously, if the first weak symbol isn't overridden we get into an infinite
+> recursion, which is what I see immediately on running perf record:
 
-Obligatory question over anything relating to the above CPUs being in an 
-"arch/arm64" directory... ;)
+So the intent was to be able to dynamicly link with older and newer
+libbpf versions, as btf__get_from_id() is being deprecated and
+btf__load_from_kernel_by_id() isn't available in older libbpf versions.
 
-Cheers,
-Robin.
+This is all only when linking with the system's libbpf, not with the one
+in tools/lib/bpf/, when perf does a static link.
 
->    perf vendors events arm64: Arm Cortex-A34
->    perf vendors events arm64: Arm Cortex-A35
->    perf vendors events arm64: Arm Cortex-A55
->    perf vendors events arm64: Arm Cortex-A510
->    perf vendors events arm64: Arm Cortex-A65
->    perf vendors events arm64: Arm Cortex-A73
->    perf vendors events arm64: Arm Cortex-A75
->    perf vendors events arm64: Arm Cortex-A77
->    perf vendors events arm64: Arm Cortex-A78
->    perf vendors events arm64: Arm Cortex-A710
->    perf vendors events arm64: Arm Cortex-X1
->    perf vendors events arm64: Arm Cortex-X2
->    perf vendors events arm64: Arm Neoverse E1
+So I think (will check) that your build is using LIBBPF_DYNAMIC=1, and
+while there is a test build for that in 'make -C tools/perf build-test'.
+
+         make_libbpf_dynamic_O: make LIBBPF_DYNAMIC=1
+
+It will cover testing just with the libbpf-devel installed on the
+tester's machine/container.
+
+I couldn't find the perf build log, the link you provided:
+
+https://kojipkgs.fedoraproject.org//packages/kernel/5.17.6/300.fc36/data/logs/x86_64/build.log
+
+is for the kernel, not tools/perf.
+
+I agree with Ian I should have done this using ifdef, a
+tools/build/feature check that tries to build a test app linking against
+libbpf-devel with btf__load_from_kernel_by_id(), if it is there, then
+use it directly, if not, implement it in terms of btf__get_from_id().
+
+I'll try to use my unbroken fingers to do that 8-)
+
+- Arnaldo
+
+
+ 
+> (gdb) bt
+> #0  0x00007f3d94c26d76 in btf__get_from_id (id=282,
+> btf=btf@entry=0x7ffc1dab4010) at btf.c:1410
+> #1  0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #2  0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4060) at btf.c:1411
+> #3  0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #4  0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab40b0) at btf.c:1411
+> #5  0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #6  0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4100) at btf.c:1411
+> #7  0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #8  0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4150) at btf.c:1411
+> #9  0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #10 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab41a0) at btf.c:1411
+> #11 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #12 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab41f0) at btf.c:1411
+> #13 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #14 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4240) at btf.c:1411
+> #15 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #16 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4290) at btf.c:1411
+> #17 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #18 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab42e0) at btf.c:1411
+> #19 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #20 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4330) at btf.c:1411
+> #21 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #22 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4380) at btf.c:1411
+> #23 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #24 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab43d0) at btf.c:1411
+> #25 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #26 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4420) at btf.c:1411
+> #27 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #28 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4470) at btf.c:1411
+> #29 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #30 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab44c0) at btf.c:1411
+> #31 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #32 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4510) at btf.c:1411
+> #33 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #34 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4560) at btf.c:1411
+> #35 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #36 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab45b0) at btf.c:1411
+> #37 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #38 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4600) at btf.c:1411
+> #39 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #40 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4650) at btf.c:1411
+> #41 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #42 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab46a0) at btf.c:1411
+> #43 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #44 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab46f0) at btf.c:1411
+> #45 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #46 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4740) at btf.c:1411
+> #47 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #48 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4790) at btf.c:1411
+> #49 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #50 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab47e0) at btf.c:1411
+> #51 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #52 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4830) at btf.c:1411
+> #53 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #54 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4880) at btf.c:1411
+> #55 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #56 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab48d0) at btf.c:1411
+> #57 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #58 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4920) at btf.c:1411
+> #59 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #60 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4970) at btf.c:1411
+> #61 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #62 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab49c0) at btf.c:1411
+> #63 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #64 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4a10) at btf.c:1411
+> #65 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #66 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4a60) at btf.c:1411
+> #67 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #68 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4ab0) at btf.c:1411
+> #69 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #70 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4b00) at btf.c:1411
+> #71 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #72 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4b50) at btf.c:1411
+> #73 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #74 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4ba0) at btf.c:1411
+> #75 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #76 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4bf0) at btf.c:1411
+> #77 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> #78 0x00007f3d94c26d8d in btf__get_from_id (id=<optimized out>,
+> btf=btf@entry=0x7ffc1dab4c40) at btf.c:1411
+> #79 0x000055f3ff6d5004 in btf__load_from_kernel_by_id (id=<optimized out>)
+> at util/bpf-event.c:30
+> --Type <RET> for more, q to quit, c to continue without paging--
 > 
->   .../arch/arm64/arm/cortex-a15/branch.json     |  17 ++
->   .../arch/arm64/arm/cortex-a15/bus.json        |  29 +++
->   .../arch/arm64/arm/cortex-a15/cache.json      |  80 ++++++
->   .../arch/arm64/arm/cortex-a15/exception.json  |   8 +
->   .../arm64/arm/cortex-a15/instruction.json     |  59 +++++
->   .../arch/arm64/arm/cortex-a15/memory.json     |  20 ++
->   .../arch/arm64/arm/cortex-a17/branch.json     |  17 ++
->   .../arch/arm64/arm/cortex-a17/bus.json        |  26 ++
->   .../arch/arm64/arm/cortex-a17/cache.json      |  53 ++++
->   .../arch/arm64/arm/cortex-a17/exception.json  |  11 +
->   .../arm64/arm/cortex-a17/instruction.json     |  56 +++++
->   .../arch/arm64/arm/cortex-a17/memory.json     |  20 ++
->   .../arch/arm64/arm/cortex-a32/branch.json     |  11 +
->   .../arch/arm64/arm/cortex-a32/bus.json        |  17 ++
->   .../arch/arm64/arm/cortex-a32/cache.json      |  32 +++
->   .../arch/arm64/arm/cortex-a32/exception.json  |  14 ++
->   .../arm64/arm/cortex-a32/instruction.json     |  29 +++
->   .../arch/arm64/arm/cortex-a32/memory.json     |   8 +
->   .../arch/arm64/arm/cortex-a34/branch.json     |  11 +
->   .../arch/arm64/arm/cortex-a34/bus.json        |  17 ++
->   .../arch/arm64/arm/cortex-a34/cache.json      |  32 +++
->   .../arch/arm64/arm/cortex-a34/exception.json  |  14 ++
->   .../arm64/arm/cortex-a34/instruction.json     |  29 +++
->   .../arch/arm64/arm/cortex-a34/memory.json     |   8 +
->   .../arch/arm64/arm/cortex-a35/branch.json     |  11 +
->   .../arch/arm64/arm/cortex-a35/bus.json        |  17 ++
->   .../arch/arm64/arm/cortex-a35/cache.json      |  32 +++
->   .../arch/arm64/arm/cortex-a35/exception.json  |  14 ++
->   .../arm64/arm/cortex-a35/instruction.json     |  44 ++++
->   .../arch/arm64/arm/cortex-a35/memory.json     |   8 +
->   .../arch/arm64/arm/cortex-a5/branch.json      |   8 +
->   .../arch/arm64/arm/cortex-a5/cache.json       |  23 ++
->   .../arch/arm64/arm/cortex-a5/exception.json   |  11 +
->   .../arch/arm64/arm/cortex-a5/instruction.json |  29 +++
->   .../arch/arm64/arm/cortex-a5/memory.json      |   8 +
->   .../arch/arm64/arm/cortex-a510/branch.json    |  59 +++++
->   .../arch/arm64/arm/cortex-a510/bus.json       |  17 ++
->   .../arch/arm64/arm/cortex-a510/cache.json     | 182 ++++++++++++++
->   .../arch/arm64/arm/cortex-a510/exception.json |  14 ++
->   .../arm64/arm/cortex-a510/instruction.json    |  95 +++++++
->   .../arch/arm64/arm/cortex-a510/memory.json    |  32 +++
->   .../arch/arm64/arm/cortex-a510/pipeline.json  | 107 ++++++++
->   .../arch/arm64/arm/cortex-a510/pmu.json       |   8 +
->   .../arch/arm64/arm/cortex-a510/trace.json     |  32 +++
->   .../arch/arm64/arm/cortex-a55/branch.json     |  59 +++++
->   .../arch/arm64/arm/cortex-a55/bus.json        |  17 ++
->   .../arch/arm64/arm/cortex-a55/cache.json      | 188 ++++++++++++++
->   .../arch/arm64/arm/cortex-a55/exception.json  |  20 ++
->   .../arm64/arm/cortex-a55/instruction.json     |  65 +++++
->   .../arch/arm64/arm/cortex-a55/memory.json     |  17 ++
->   .../arch/arm64/arm/cortex-a55/pipeline.json   |  80 ++++++
->   .../arch/arm64/arm/cortex-a65/branch.json     |  17 ++
->   .../arch/arm64/arm/cortex-a65/bus.json        |  17 ++
->   .../arch/arm64/arm/cortex-a65/cache.json      | 236 ++++++++++++++++++
->   .../arch/arm64/arm/cortex-a65/dpu.json        |  32 +++
->   .../arch/arm64/arm/cortex-a65/exception.json  |  14 ++
->   .../arch/arm64/arm/cortex-a65/ifu.json        | 122 +++++++++
->   .../arm64/arm/cortex-a65/instruction.json     |  71 ++++++
->   .../arch/arm64/arm/cortex-a65/memory.json     |  35 +++
->   .../arch/arm64/arm/cortex-a65/pipeline.json   |   8 +
->   .../arch/arm64/arm/cortex-a7/branch.json      |   8 +
->   .../arch/arm64/arm/cortex-a7/bus.json         |  17 ++
->   .../arch/arm64/arm/cortex-a7/cache.json       |  32 +++
->   .../arch/arm64/arm/cortex-a7/exception.json   |  11 +
->   .../arch/arm64/arm/cortex-a7/instruction.json |  29 +++
->   .../arch/arm64/arm/cortex-a7/memory.json      |   8 +
->   .../arch/arm64/arm/cortex-a710/branch.json    |  17 ++
->   .../arch/arm64/arm/cortex-a710/bus.json       |  20 ++
->   .../arch/arm64/arm/cortex-a710/cache.json     | 155 ++++++++++++
->   .../arch/arm64/arm/cortex-a710/exception.json |  47 ++++
->   .../arm64/arm/cortex-a710/instruction.json    | 134 ++++++++++
->   .../arch/arm64/arm/cortex-a710/memory.json    |  41 +++
->   .../arch/arm64/arm/cortex-a710/pipeline.json  |  23 ++
->   .../arch/arm64/arm/cortex-a710/trace.json     |  29 +++
->   .../arch/arm64/arm/cortex-a73/branch.json     |  11 +
->   .../arch/arm64/arm/cortex-a73/bus.json        |  23 ++
->   .../arch/arm64/arm/cortex-a73/cache.json      | 107 ++++++++
->   .../arch/arm64/arm/cortex-a73/etm.json        |  14 ++
->   .../arch/arm64/arm/cortex-a73/exception.json  |  14 ++
->   .../arm64/arm/cortex-a73/instruction.json     |  65 +++++
->   .../arch/arm64/arm/cortex-a73/memory.json     |  14 ++
->   .../arch/arm64/arm/cortex-a73/mmu.json        |  44 ++++
->   .../arch/arm64/arm/cortex-a73/pipeline.json   |  38 +++
->   .../arch/arm64/arm/cortex-a75/branch.json     |  11 +
->   .../arch/arm64/arm/cortex-a75/bus.json        |  17 ++
->   .../arch/arm64/arm/cortex-a75/cache.json      | 164 ++++++++++++
->   .../arch/arm64/arm/cortex-a75/etm.json        |  14 ++
->   .../arch/arm64/arm/cortex-a75/exception.json  |  17 ++
->   .../arm64/arm/cortex-a75/instruction.json     |  74 ++++++
->   .../arch/arm64/arm/cortex-a75/memory.json     |  17 ++
->   .../arch/arm64/arm/cortex-a75/mmu.json        |  44 ++++
->   .../arch/arm64/arm/cortex-a75/pipeline.json   |  44 ++++
->   .../arch/arm64/arm/cortex-a77/branch.json     |  17 ++
->   .../arch/arm64/arm/cortex-a77/bus.json        |  17 ++
->   .../arch/arm64/arm/cortex-a77/cache.json      | 143 +++++++++++
->   .../arch/arm64/arm/cortex-a77/exception.json  |  47 ++++
->   .../arm64/arm/cortex-a77/instruction.json     |  77 ++++++
->   .../arch/arm64/arm/cortex-a77/memory.json     |  23 ++
->   .../arch/arm64/arm/cortex-a77/pipeline.json   |   8 +
->   .../arch/arm64/arm/cortex-a78/branch.json     |  17 ++
->   .../arch/arm64/arm/cortex-a78/bus.json        |  20 ++
->   .../arch/arm64/arm/cortex-a78/cache.json      | 155 ++++++++++++
->   .../arch/arm64/arm/cortex-a78/exception.json  |  47 ++++
->   .../arm64/arm/cortex-a78/instruction.json     |  80 ++++++
->   .../arch/arm64/arm/cortex-a78/memory.json     |  23 ++
->   .../arch/arm64/arm/cortex-a78/pipeline.json   |  23 ++
->   .../arch/arm64/arm/cortex-a8/branch.json      |   8 +
->   .../arch/arm64/arm/cortex-a8/cache.json       |  77 ++++++
->   .../arch/arm64/arm/cortex-a8/exception.json   |   5 +
->   .../arch/arm64/arm/cortex-a8/instruction.json |  38 +++
->   .../arch/arm64/arm/cortex-a8/memory.json      |   5 +
->   .../arch/arm64/arm/cortex-a9/branch.json      |   8 +
->   .../arch/arm64/arm/cortex-a9/cache.json       |  17 ++
->   .../arch/arm64/arm/cortex-a9/exception.json   |   5 +
->   .../arch/arm64/arm/cortex-a9/instruction.json |  29 +++
->   .../arch/arm64/arm/cortex-a9/memory.json      |   5 +
->   .../arch/arm64/arm/cortex-x1/branch.json      |  17 ++
->   .../arch/arm64/arm/cortex-x1/bus.json         |  20 ++
->   .../arch/arm64/arm/cortex-x1/cache.json       | 155 ++++++++++++
->   .../arch/arm64/arm/cortex-x1/exception.json   |  47 ++++
->   .../arch/arm64/arm/cortex-x1/instruction.json |  80 ++++++
->   .../arch/arm64/arm/cortex-x1/memory.json      |  23 ++
->   .../arch/arm64/arm/cortex-x1/pipeline.json    |  23 ++
->   .../arch/arm64/arm/cortex-x2/branch.json      |  17 ++
->   .../arch/arm64/arm/cortex-x2/bus.json         |  20 ++
->   .../arch/arm64/arm/cortex-x2/cache.json       | 155 ++++++++++++
->   .../arch/arm64/arm/cortex-x2/exception.json   |  47 ++++
->   .../arch/arm64/arm/cortex-x2/instruction.json | 134 ++++++++++
->   .../arch/arm64/arm/cortex-x2/memory.json      |  41 +++
->   .../arch/arm64/arm/cortex-x2/pipeline.json    |  23 ++
->   .../arch/arm64/arm/cortex-x2/trace.json       |  29 +++
->   .../arch/arm64/arm/neoverse-e1/branch.json    |  17 ++
->   .../arch/arm64/arm/neoverse-e1/bus.json       |  17 ++
->   .../arch/arm64/arm/neoverse-e1/cache.json     | 107 ++++++++
->   .../arch/arm64/arm/neoverse-e1/exception.json |  14 ++
->   .../arm64/arm/neoverse-e1/instruction.json    |  65 +++++
->   .../arch/arm64/arm/neoverse-e1/memory.json    |  23 ++
->   .../arch/arm64/arm/neoverse-e1/pipeline.json  |   8 +
->   .../arch/arm64/arm/neoverse-e1/spe.json       |  14 ++
->   .../arch/arm64/common-and-microarch.json      |  66 +++++
->   tools/perf/pmu-events/arch/arm64/mapfile.csv  |  20 ++
->   141 files changed, 5746 insertions(+)
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a15/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a15/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a15/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a15/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a15/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a15/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a17/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a17/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a17/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a17/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a17/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a17/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a32/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a32/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a32/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a32/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a32/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a32/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a34/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a34/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a34/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a34/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a34/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a34/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a35/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a35/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a35/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a35/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a35/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a35/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a5/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a5/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a5/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a5/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a5/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/pmu.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a510/trace.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a55/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a55/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a55/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a55/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a55/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a55/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a55/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/dpu.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/ifu.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a65/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a7/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a7/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a7/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a7/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a7/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a7/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a710/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a710/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a710/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a710/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a710/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a710/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a710/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a710/trace.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/etm.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/mmu.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a73/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/etm.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/mmu.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a75/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a77/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a78/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a78/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a78/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a78/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a78/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a78/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a78/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a8/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a8/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a8/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a8/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a8/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a9/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a9/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a9/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a9/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a9/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x1/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x1/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x1/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x1/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x1/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x1/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x1/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-x2/trace.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json
->   create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json
 > 
+> (rest of infinite stack trace omitted)
+> 
+> 
+> I guess I should load some library or other, but I have no idea which, and
+> in any case this is quite a fragile interface.
+> 
+> 
+> perf-5.17.6-300.fc36.x86_64
+> 
+
+-- 
+
+- Arnaldo
