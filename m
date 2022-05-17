@@ -2,106 +2,196 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9718DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 03:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61E3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 04:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230274AbiEQD45 (ORCPT
+        id S230267AbiEQEyh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 May 2022 23:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
+        Tue, 17 May 2022 00:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236957AbiEQD4t (ORCPT
+        with ESMTP id S229569AbiEQEyg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 May 2022 23:56:49 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164E933E36;
-        Mon, 16 May 2022 20:56:47 -0700 (PDT)
-Received: from kwepemi500022.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4L2Mhs2tGsz1JCVx;
-        Tue, 17 May 2022 11:55:25 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- kwepemi500022.china.huawei.com (7.221.188.64) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 17 May 2022 11:56:44 +0800
-Received: from [10.67.101.67] (10.67.101.67) by kwepemm600003.china.huawei.com
- (7.193.23.202) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 17 May
- 2022 11:56:44 +0800
-Subject: Re: [PATCH 08/10] coresight: Remove legacy Trace ID allocation
- mechanism
-To:     Mike Leach <mike.leach@linaro.org>, <suzuki.poulose@arm.com>,
-        <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mathieu.poirier@linaro.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <leo.yan@linaro.org>
-References: <20220308205000.27646-1-mike.leach@linaro.org>
- <20220308205000.27646-9-mike.leach@linaro.org>
-From:   "liuqi (BA)" <liuqi115@huawei.com>
-Message-ID: <71c11820-433d-755d-0eb4-797313d693f9@huawei.com>
-Date:   Tue, 17 May 2022 11:56:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 17 May 2022 00:54:36 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FB603F8A5;
+        Mon, 16 May 2022 21:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652763275; x=1684299275;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BSqwOUbYppupXsN7qYjzHGq5o7sy9483GsNVLho0/Vo=;
+  b=EI8+zkD3BZKGPPckk8ylzjGs2tuWzmV9GQAW17DA4GDbUcVXkwraqICp
+   GzCLJC2x/QxiqvdQpJCbTewMPdP9ME0l/NwXiTLGbvXhPeuhv4Pt2GV17
+   rwsWO0XQi5G1ucEyefsKzOtWegX0awZWxW9T57xERipSjshhT8w0DtUhO
+   JbhCROM98xr+QRxDCHgmm6uxsvX0fg6YKQ+RFQnK48CO+WdV3iixZeAZJ
+   YujkWZycYnh2Yb+gYwVob0VYngBKbd7arBfZhqewC0CzTIdBsPeI6EsNi
+   QDaYeZZ9T6/0rX/z0pKojM9FUex20cfqbxMVWzWhhRUFLilF2HKv48IG9
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10349"; a="253109292"
+X-IronPort-AV: E=Sophos;i="5.91,231,1647327600"; 
+   d="scan'208";a="253109292"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 21:54:34 -0700
+X-IronPort-AV: E=Sophos;i="5.91,231,1647327600"; 
+   d="scan'208";a="596917734"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.217])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 21:54:32 -0700
+Message-ID: <cedfc68b-a15e-045e-747d-29d8c2218bd9@intel.com>
+Date:   Tue, 17 May 2022 07:54:28 +0300
 MIME-Version: 1.0
-In-Reply-To: <20220308205000.27646-9-mike.leach@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.8.1
+Subject: Re: [PATCH 3/6] perf tools: Add guest_code support
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>
+References: <20220513090237.10444-1-adrian.hunter@intel.com>
+ <20220513090237.10444-4-adrian.hunter@intel.com>
+ <CAM9d7chFeVZNm_WTqrLzv74U13RPQtTvezxbP41GLte+ir6P_A@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAM9d7chFeVZNm_WTqrLzv74U13RPQtTvezxbP41GLte+ir6P_A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.67]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Mike,
-
-On 2022/3/9 4:49, Mike Leach wrote:
-> This static 'cpu * 2 + seed' was outdated and broken for systems with high
-> core counts (>46).
+On 17/05/22 06:13, Namhyung Kim wrote:
+> Hi Adrian,
 > 
-> This has been replaced by a dynamic allocation system.
+> On Fri, May 13, 2022 at 2:03 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> A common case for KVM test programs is that the guest object code can be
+>> found in the hypervisor process (i.e. the test program running on the
+>> host). To support that, copy the host thread's maps to the guest thread's
+>> maps. Note, we do not discover the guest until we encounter a guest event,
+>> which works well because it is not until then that we know that the host
+>> thread's maps have been set up.
+>>
+>> Typically the main function for the guest object code is called
+>> "guest_code", hence the name chosen for this feature.
 > 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> ---
->   include/linux/coresight-pmu.h | 12 ------------
->   1 file changed, 12 deletions(-)
+> Ok, so that's just a convention and there's no hard-coded
+> support for the "guest_code" function in this code, right?
 
-Seems coresight_get_trace_id() in tools/include/linux/coresight-pmu.h 
-need to be deleted too.
-
-Thanks,
-Qi
+That is correct.
 
 > 
-> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-> index 4ac5c081af93..bb4eb4de3c77 100644
-> --- a/include/linux/coresight-pmu.h
-> +++ b/include/linux/coresight-pmu.h
-> @@ -8,7 +8,6 @@
->   #define _LINUX_CORESIGHT_PMU_H
->   
->   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
-> -#define CORESIGHT_ETM_PMU_SEED  0x10
->   
->   /*
->    * Below are the definition of bit offsets for perf option, and works as
-> @@ -32,15 +31,4 @@
->   #define ETM4_CFG_BIT_RETSTK	12
->   #define ETM4_CFG_BIT_VMID_OPT	15
->   
-> -static inline int coresight_get_trace_id(int cpu)
-> -{
-> -	/*
-> -	 * A trace ID of value 0 is invalid, so let's start at some
-> -	 * random value that fits in 7 bits and go from there.  Since
-> -	 * the common convention is to have data trace IDs be I(N) + 1,
-> -	 * set instruction trace IDs as a function of the CPU number.
-> -	 */
-> -	return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
-> -}
-> -
->   #endif
+>>
+>> This is primarily aimed at supporting Intel PT, or similar, where trace
+>> data can be recorded for a guest. Refer to the final patch in this series
+>> "perf intel-pt: Add guest_code support" for an example.
+>>
+>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>> ---
+>>  tools/perf/util/event.c       |  7 +++-
+>>  tools/perf/util/machine.c     | 70 +++++++++++++++++++++++++++++++++++
+>>  tools/perf/util/machine.h     |  2 +
+>>  tools/perf/util/session.c     |  7 ++++
+>>  tools/perf/util/symbol_conf.h |  3 +-
+>>  5 files changed, 86 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+>> index 6439c888ae38..0476bb3a4188 100644
+>> --- a/tools/perf/util/event.c
+>> +++ b/tools/perf/util/event.c
+>> @@ -683,9 +683,12 @@ static bool check_address_range(struct intlist *addr_list, int addr_range,
+>>  int machine__resolve(struct machine *machine, struct addr_location *al,
+>>                      struct perf_sample *sample)
+>>  {
+>> -       struct thread *thread = machine__findnew_thread(machine, sample->pid,
+>> -                                                       sample->tid);
+>> +       struct thread *thread;
+>>
+>> +       if (symbol_conf.guest_code && !machine__is_host(machine))
+>> +               thread = machine__findnew_guest_code(machine, sample->pid);
+>> +       else
+>> +               thread = machine__findnew_thread(machine, sample->pid, sample->tid);
+>>         if (thread == NULL)
+>>                 return -1;
+>>
+>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+>> index e67b5a7670f3..ae2e1fb422e2 100644
+>> --- a/tools/perf/util/machine.c
+>> +++ b/tools/perf/util/machine.c
+>> @@ -392,6 +392,76 @@ struct machine *machines__find_guest(struct machines *machines, pid_t pid)
+>>         return machine;
+>>  }
+>>
+>> +/*
+>> + * A common case for KVM test programs is that the guest object code can be
+>> + * found in the hypervisor process (i.e. the test program running on the host).
+>> + * To support that, copy the host thread's maps to the guest thread's maps.
+>> + * Note, we do not discover the guest until we encounter a guest event,
+>> + * which works well because it is not until then that we know that the host
+>> + * thread's maps have been set up.
+>> + */
+>> +static struct thread *findnew_guest_code(struct machine *machine,
 > 
+> But this function returns a thread and IIUC that's the task which
+> does the host to guest transition.  Then why not calling it just
+> findnew__hypervisor() ?
+
+The thread returned is in the guest machine.  While the code comes
+from the hypervisor, it is in the guest VM when it runs.
+
+From Intel PT point of view, this function allows finding the guest
+object code by setting up the guest thread and its maps.
+
+I will try to improve on the explanation in V2.
+
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>> +                                        struct machine *host_machine,
+>> +                                        pid_t pid)
+>> +{
+>> +       struct thread *host_thread;
+>> +       struct thread *thread;
+>> +       int err;
+>> +
+>> +       if (!machine)
+>> +               return NULL;
+>> +
+>> +       thread = machine__findnew_thread(machine, -1, pid);
+>> +       if (!thread)
+>> +               return NULL;
+>> +
+>> +       /* Assume maps are set up if there are any */
+>> +       if (thread->maps->nr_maps)
+>> +               return thread;
+>> +
+>> +       host_thread = machine__find_thread(host_machine, -1, pid);
+>> +       if (!host_thread)
+>> +               goto out_err;
+>> +
+>> +       thread__set_guest_comm(thread, pid);
+>> +
+>> +       /*
+>> +        * Guest code can be found in hypervisor process at the same address
+>> +        * so copy host maps.
+>> +        */
+>> +       err = maps__clone(thread, host_thread->maps);
+>> +       thread__put(host_thread);
+>> +       if (err)
+>> +               goto out_err;
+>> +
+>> +       return thread;
+>> +
+>> +out_err:
+>> +       thread__zput(thread);
+>> +       return NULL;
+>> +}
+>> +
+
