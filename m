@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23224C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 10:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A7AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 10:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234407AbiEQKWf (ORCPT
+        id S241535AbiEQKWk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 06:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41498 "EHLO
+        Tue, 17 May 2022 06:22:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344825AbiEQKV7 (ORCPT
+        with ESMTP id S1344852AbiEQKWA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 06:21:59 -0400
+        Tue, 17 May 2022 06:22:00 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 269AA4BFDA;
-        Tue, 17 May 2022 03:20:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 66EAC4BFF7;
+        Tue, 17 May 2022 03:20:29 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E270213D5;
-        Tue, 17 May 2022 03:20:22 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38CE312FC;
+        Tue, 17 May 2022 03:20:29 -0700 (PDT)
 Received: from e121896.warwick.arm.com (e121896.warwick.arm.com [10.32.33.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6B5003F66F;
-        Tue, 17 May 2022 03:20:20 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C5C413F66F;
+        Tue, 17 May 2022 03:20:26 -0700 (PDT)
 From:   James Clark <james.clark@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         broonie@kernel.org, acme@kernel.org
@@ -37,9 +37,9 @@ Cc:     german.gomez@arm.com, leo.yan@linaro.org,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 2/4] perf tools: Use dynamic register set for Dwarf unwind
-Date:   Tue, 17 May 2022 11:20:03 +0100
-Message-Id: <20220517102005.3022017-3-james.clark@arm.com>
+Subject: [PATCH v2 4/4] perf tools: arm64: Add support for VG register
+Date:   Tue, 17 May 2022 11:20:05 +0100
+Message-Id: <20220517102005.3022017-5-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20220517102005.3022017-1-james.clark@arm.com>
 References: <20220517102005.3022017-1-james.clark@arm.com>
@@ -49,31 +49,90 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Architectures can detect availability of extra registers at
-runtime so use this more complete set for unwinding. This
-will include the VG register on arm64 in a later commit.
+Add the name of the VG register so it can be used in --user-regs
 
-If the function isn't implemented then PERF_REGS_MASK is
-returned and there is no change.
+The event will fail to open if the register is requested but not
+available so only add it to the mask if the kernel supports sve and also
+if it supports that specific register.
 
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/util/evsel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/arch/arm64/util/perf_regs.c | 34 ++++++++++++++++++++++++++
+ tools/perf/util/perf_regs.c            |  2 ++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 5fd7924f8eb3..787bbcbcd2ae 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -896,7 +896,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
- 					   "specifying a subset with --user-regs may render DWARF unwinding unreliable, "
- 					   "so the minimal registers set (IP, SP) is explicitly forced.\n");
- 			} else {
--				attr->sample_regs_user |= PERF_REGS_MASK;
-+				attr->sample_regs_user |= arch__user_reg_mask();
- 			}
- 			attr->sample_stack_user = param->dump_size;
- 			attr->exclude_callchain_user = 1;
+diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
+index 476b037eea1c..c0a921512a90 100644
+--- a/tools/perf/arch/arm64/util/perf_regs.c
++++ b/tools/perf/arch/arm64/util/perf_regs.c
+@@ -2,9 +2,11 @@
+ #include <errno.h>
+ #include <regex.h>
+ #include <string.h>
++#include <sys/auxv.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+ 
++#include "../../../perf-sys.h"
+ #include "../../../util/debug.h"
+ #include "../../../util/event.h"
+ #include "../../../util/perf_regs.h"
+@@ -43,6 +45,7 @@ const struct sample_reg sample_reg_masks[] = {
+ 	SMPL_REG(lr, PERF_REG_ARM64_LR),
+ 	SMPL_REG(sp, PERF_REG_ARM64_SP),
+ 	SMPL_REG(pc, PERF_REG_ARM64_PC),
++	SMPL_REG(vg, PERF_REG_ARM64_VG),
+ 	SMPL_REG_END
+ };
+ 
+@@ -131,3 +134,34 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+ 
+ 	return SDT_ARG_VALID;
+ }
++
++uint64_t arch__user_reg_mask(void)
++{
++	struct perf_event_attr attr = {
++		.type                   = PERF_TYPE_HARDWARE,
++		.config                 = PERF_COUNT_HW_CPU_CYCLES,
++		.sample_type            = PERF_SAMPLE_REGS_USER,
++		.disabled               = 1,
++		.exclude_kernel         = 1,
++		.sample_period		= 1,
++		.sample_regs_user	= PERF_REGS_MASK
++	};
++	int fd;
++
++	if (getauxval(AT_HWCAP) & HWCAP_SVE)
++		attr.sample_regs_user |= SMPL_REG_MASK(PERF_REG_ARM64_VG);
++
++	/*
++	 * Check if the pmu supports perf extended regs, before
++	 * returning the register mask to sample.
++	 */
++	if (attr.sample_regs_user != PERF_REGS_MASK) {
++		event_attr_init(&attr);
++		fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
++		if (fd != -1) {
++			close(fd);
++			return attr.sample_regs_user;
++		}
++	}
++	return PERF_REGS_MASK;
++}
+diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+index a982e40ee5a9..872dd3d38782 100644
+--- a/tools/perf/util/perf_regs.c
++++ b/tools/perf/util/perf_regs.c
+@@ -103,6 +103,8 @@ static const char *__perf_reg_name_arm64(int id)
+ 		return "lr";
+ 	case PERF_REG_ARM64_PC:
+ 		return "pc";
++	case PERF_REG_ARM64_VG:
++		return "vg";
+ 	default:
+ 		return NULL;
+ 	}
 -- 
 2.28.0
 
