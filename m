@@ -2,54 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8497EC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 04:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180B7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 04:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbiEREUh (ORCPT
+        id S229685AbiEREUj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 00:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44840 "EHLO
+        Wed, 18 May 2022 00:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbiEREUf (ORCPT
+        with ESMTP id S229669AbiEREUi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 00:20:35 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABF421251
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:34 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2fef1441caaso10456417b3.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:34 -0700 (PDT)
+        Wed, 18 May 2022 00:20:38 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763DC6393
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:36 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 135-20020a25058d000000b0064dd6bc9cfdso861241ybf.23
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ud9QzbIsCb5APT2y97Edpxaxa+OkwW1AX4JBgjdYyqw=;
-        b=ktS1a4chIOxiRYGlAbnl4hJ7+f4on9RqrrtLmCCSodmdkFq3XAFzIdr8PBWDBamj23
-         9xic/o495qLyAi8eHdAplNEadZu+jd1bUT9LeBUpHRJ6fX/akKIqZ7THje4ej7QSzJ8X
-         AhGQriUKKK7bAXF8F0WPMiDPSFcpRdAEvy/sicJgjiqgNtlVahdgz69IgSv5QNNXGygA
-         6sIIKjbfjqCniay96RgSZbx9KJNgV1Ggm43noXPrBzvp4z72wCTBj3EuYgRbsxCCJYUp
-         eT9MC312QwDc1m+tRZSjZIxBZn9aa1Isjom4TAutC5QedjbH1d57mnOJf7UnDB+J0HcQ
-         Xqhg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=LvpJiUnSFpCiFAKE98nz9J5XPUyrNRc2U9N5mJnm5Hg=;
+        b=Oju5r4aDWZ9Zqud5nYsTAl9JheS1ktMe0jzOrH9p2XeVTlhAYnaTONZuQnfO+3bjYp
+         X12uYnhd/xGMi6E9AoSxjGdshhG1nM2sP2HCK8KnCu6Qdv1eLHfGgchPUcUgMzrMzm20
+         hQ2pXes2b6MoGLLnjMAWEcCYiB8/Poy7ITRbwbIoX4qU4sLyZUF+ZcZ8m/Tg75C61Nw7
+         W7867SE05iBb4gL3GcZ9Ro5E527A/V1EdYVfuvZikEFN8anOJ+r0b27zabd+GC0Qt3NF
+         sD+xZrmcBXLBQ0lwBW0oc1lFNkPi+yTU4z1BD+LvMGfrJ3AKw/PUDMGl87JZTnaVO5HT
+         f6dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ud9QzbIsCb5APT2y97Edpxaxa+OkwW1AX4JBgjdYyqw=;
-        b=Fx0HknfU+bLbS1kiW1Ii2cYn+J0h2EplVtbbWW0Qx6P0mFEpkCw1mIz8qQ9r9m9xzF
-         C/cE6w0lw31JrodxZg7vnXq0TmIQvpMA6aTzdZi7/EkxLuWRKFlU1KSKAmtRvCbyKfkG
-         eZfH5EaUoZBuyPvEvA71o9NtEmUyFYQqvixSf241dOtr162L7q0f3V0/ick4SvYLWDMM
-         pMKUKxFAHNlpZohWJS9I9AAU/IezujtPzPsJXuWSBb2MCNnwvMtS094axqpWx4czLMQK
-         SqxE49WlMJm5kSyNVTvTJYDzrjH5c27GylPaslKsdad/ojOTEVd5oBa+NHgUpBSzmBk9
-         VzyA==
-X-Gm-Message-State: AOAM530RTtaT6x+QkV19M6mQL3yXT1iMunwYrGN0JIzqyBJYYA8isiBT
-        7siyzvb3BmrCjrapt0cJ4fHKblvIrvs/
-X-Google-Smtp-Source: ABdhPJxbk/iG19iu/TMh87CdvQmpnxmoXa2dXZ21datK80WssvHarwN0ufAmeh0tBgq0XaQ3hcJfZh1zUJTY
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=LvpJiUnSFpCiFAKE98nz9J5XPUyrNRc2U9N5mJnm5Hg=;
+        b=lrxWlGkx3YgCiODV2fzmvG5zFJPPAzUDOkhYwCRzmkK/G6SRpbB1Knr37Z/C0cFXAs
+         S997rnBDSn/Uxdpgo3Nmdk5ub6UGojRaXViZf+WsU4veqieZveVXmaOLA8VpRnZoiKGl
+         OHNpvrU9/fHMPYlI9CKUZHwKn8V7a2FEI4Owf/Qq3dfyy48qcggLWLu1SF5kX2of+tRQ
+         epTeukvDY5jjb7k3cmCOSH9MBRmPLp2L/WaXuWgoQL0iIiJe1XolRVS+PEST1SryLSDM
+         NgxWvUXDrQLS4Q2tUqHYtwJBPbg/RQwjogvEhrsJiM+vR3dmmC1j+hpiMqut0pQ8bQEA
+         XSYw==
+X-Gm-Message-State: AOAM530H5tZBR2edc49vZ7lEm7WTYsuWzwVtgrzonyzpzmh8P8TuqFxM
+        BpWxo5z1/U6syA2QjGbyqur6kE6wr911
+X-Google-Smtp-Source: ABdhPJxa786aBoSAGP95NfMFnlI9dLOPTNSKBMoSDyj9KewGk9Xm9VagNfnviFtvuciptpIl68JDMEXQG9Go
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a5a1:af73:fe09:fd5])
- (user=irogers job=sendgmr) by 2002:a5b:101:0:b0:64d:ae10:3d26 with SMTP id
- 1-20020a5b0101000000b0064dae103d26mr13128289ybx.103.1652847633483; Tue, 17
- May 2022 21:20:33 -0700 (PDT)
-Date:   Tue, 17 May 2022 21:20:19 -0700
-Message-Id: <20220518042027.836799-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:bd05:0:b0:64d:6ee0:f503 with SMTP id
+ f5-20020a25bd05000000b0064d6ee0f503mr17703514ybk.415.1652847635670; Tue, 17
+ May 2022 21:20:35 -0700 (PDT)
+Date:   Tue, 17 May 2022 21:20:20 -0700
+In-Reply-To: <20220518042027.836799-1-irogers@google.com>
+Message-Id: <20220518042027.836799-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220518042027.836799-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [PATCH v2 0/8] Make more tests skip rather than fail
+Subject: [PATCH v2 1/8] perf test: Skip reason for suites with 1 test
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -72,37 +76,35 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A long standing niggle has been that tests that cannot pass are marked
-as failing rather than skip.  John Garry mentioned a similar concern
-in [1]. These changes fix this behavior so that as root, or not, at
-least the first 10 tests are passing or skipping.
+When a suite has just 1 subtest, the subtest number is given as -1 to
+avoid indented printing. When this subtest number is seen for the skip
+reason, use the reason of the first test.
 
-[1] https://lore.kernel.org/lkml/d32376b5-5538-ff00-6620-e74ad4b4abf2@huawei.com/
+Reviewed-by: John Garry <john.garry@huawei.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/builtin-test.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-v2. Updates reviewed-by and acked-by. It addresses review comments
-    from Namhyung Kim <namhyung@kernel.org>. An extra fix is now
-    included for PERF_RECORD_* which can fail as a user because of
-    perf_event_paranoid.
-
-Ian Rogers (8):
-  perf test: Skip reason for suites with 1 test
-  perf test: Use skip in vmlinux kallsyms
-  perf test: Use skip in openat syscall
-  perf test: Basic mmap use skip
-  perf test: Parse events tidy terms_test
-  perf test: Parse events tidy evlist_test
-  perf test: Parse events break apart tests
-  perf test: Use skip in PERF_RECORD_*
-
- tools/perf/tests/builtin-test.c            |   6 +-
- tools/perf/tests/mmap-basic.c              |  18 +-
- tools/perf/tests/openat-syscall-all-cpus.c |  23 +-
- tools/perf/tests/openat-syscall.c          |  20 +-
- tools/perf/tests/parse-events.c            | 492 +++++++++++----------
- tools/perf/tests/perf-record.c             |  18 +-
- tools/perf/tests/vmlinux-kallsyms.c        |  12 +-
- 7 files changed, 341 insertions(+), 248 deletions(-)
-
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index fac3717d9ba1..33fcafa0fa79 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -137,10 +137,10 @@ static bool has_subtests(const struct test_suite *t)
+ 
+ static const char *skip_reason(const struct test_suite *t, int subtest)
+ {
+-	if (t->test_cases && subtest >= 0)
+-		return t->test_cases[subtest].skip_reason;
++	if (!t->test_cases)
++		return NULL;
+ 
+-	return NULL;
++	return t->test_cases[subtest >= 0 ? subtest : 0].skip_reason;
+ }
+ 
+ static const char *test_description(const struct test_suite *t, int subtest)
 -- 
 2.36.0.550.gb090851708-goog
 
