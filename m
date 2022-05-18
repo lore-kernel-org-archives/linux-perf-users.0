@@ -2,224 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10264C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 14:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D54C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 14:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231321AbiERORQ (ORCPT
+        id S229562AbiEROjG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 10:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58158 "EHLO
+        Wed, 18 May 2022 10:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238611AbiERORQ (ORCPT
+        with ESMTP id S238681AbiEROjG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 10:17:16 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC322019C;
-        Wed, 18 May 2022 07:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1652883434; x=1684419434;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RFGAGelgq/QkQ2F/v3PyHI0+fFIxwAPIU2tigz7ul+g=;
-  b=egyrfij24dBHlSGps3Sr0pX+zU660u1uuQw9GqFT7wKMGmM+jdMlJtS5
-   e7ewtbqGzY2jC4Py6OIK30rUCnQBHI3g2En/UAoeZNbHF8g2nDJ0tEWqE
-   OLsT/Ewp+Ns4/0iEKc1TLcuBFGTWIEX0BjQFZ6jQluXStTHSFKxUxBiz7
-   s=;
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 18 May 2022 07:17:13 -0700
-X-QCInternal: smtphost
-Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
-  by ironmsg03-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 07:17:12 -0700
-Received: from [10.242.59.11] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 18 May
- 2022 07:17:08 -0700
-Message-ID: <7c9074ef-46c2-08b8-ab1d-410953145570@quicinc.com>
-Date:   Wed, 18 May 2022 19:47:05 +0530
+        Wed, 18 May 2022 10:39:06 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C58F1C0F19;
+        Wed, 18 May 2022 07:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652884745; x=1684420745;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UUIPLdOolmuMVgiLBbElltq3r2rvu+uGXiWi7YQ1CF4=;
+  b=cJHc8zsCWxn4wDUMq71MLG/cS6iZe9bAv6kavX3kmM/tfJD6F28XtC5R
+   DnNKIk161U2SlFD1xnzFRr7mWwhGzAnoepYHe2w0e+v8Dkd7AbJz9dA+t
+   VKPaFKl3uJy9awiGpm/STvrF0GaqBDYYTxyIqqiKMeZjZsiB3ejit1ZtD
+   JjkXab/ZbBGKk+aT2ycKLaHAiv/ByaAEszwakn5HkY4vFifPqa7Cggn6T
+   tKEIpwCerr4y4S9V7lbMG6pdR1T1VlBG8ms8grRVdgg/27qv8ZH91yDQV
+   EJV2cc4o3ed2/9sYGRGGVW7XmVf+D795U0n41ip7L/y/8tis4zE+NDV4H
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="332321833"
+X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
+   d="scan'208";a="332321833"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 07:39:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
+   d="scan'208";a="714455498"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmsmga001.fm.intel.com with ESMTP; 18 May 2022 07:39:04 -0700
+From:   kan.liang@linux.intel.com
+To:     acme@kernel.org, mingo@redhat.com, irogers@google.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     peterz@infradead.org, zhengjun.xing@linux.intel.com,
+        adrian.hunter@intel.com, ak@linux.intel.com, eranian@google.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V3 0/4] Several perf metrics topdown related fixes
+Date:   Wed, 18 May 2022 07:38:56 -0700
+Message-Id: <20220518143900.1493980-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH V4] arm64: perf: Set PMCR.X of PMCR_EL0 during pmu reset
-Content-Language: en-US
-To:     Will Deacon <will@kernel.org>
-CC:     <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <catalin.marinas@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1652705738-1628-1-git-send-email-quic_c_spathi@quicinc.com>
- <20220517130822.GA3369@willie-the-truck>
-From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-In-Reply-To: <20220517130822.GA3369@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: Kan Liang <kan.liang@linux.intel.com>
 
-On 5/17/2022 6:38 PM, Will Deacon wrote:
-> On Mon, May 16, 2022 at 06:25:38PM +0530, Srinivasarao Pathipati wrote:
->> Enable exporting of events over PMU event export bus by setting
->> PMCR.X of PMCR_EL0 during pmu reset.
->>
->> As it impacts power consumption make it configurable at bootup
->> with kernel arguments and at runtime with sysctl.
->>
->> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
->> ---
->> Changes since V3:
->> 	- export bit is now configurable with sysctl
->> 	- enabling export bit on reset instead of retaining
->>
->> Changes since V2:
->> 	Done below changes as per Will's comments
->> 	- enabling pmcr_x now configurable with kernel parameters and
->> 	  by default it is disabled.
->> 	
->> Changes since V1:
->> 	- Preserving only PMCR_X bit as per Robin Murphy's comment.
->> ---
->>   Documentation/admin-guide/kernel-parameters.txt |  4 ++++
->>   Documentation/admin-guide/sysctl/kernel.rst     |  8 ++++++++
->>   arch/arm64/kernel/perf_event.c                  | 15 +++++++++++++++
->>   include/linux/perf_event.h                      |  1 +
->>   kernel/sysctl.c                                 | 12 ++++++++++++
->>   5 files changed, 40 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index de3da15..2139b81 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -5150,6 +5150,10 @@
->>   			Useful for devices that are detected asynchronously
->>   			(e.g. USB and MMC devices).
->>   
->> +	export_pmu_events
->> +			[KNL] Sets export bit of PMCR_EL0 to enable the exporting of
->> +			events over PMU event export bus.
-> Sorry, I should've been clearer ahbout this before: if you add a sysctl,
-> then you get the kernel cmdline option for free via something like
-> "sysctl.kernel.export_pmu_events=foo", so I think you can drop this and
-> the early_param().
+The Patch 1 is a follow-up patch for Ian's ("Fix topdown event weak
+grouping")[1].
 
-Thanks for your suggestion , I tried this method and observed that 
-pmu_reset is getting called even
+The patch 2 is to fix the perf metrics topdown events in a mixed group.
+It reuses the function introduced in [1].
+Patch 1 & 2 should be on top of [1].
 
-before kernel argument updated the sysctl variable.   So exporting is 
-not happening at early boot.
+The patch 3 & 4 are to fix other perf metrics topdown related issues.
+They can be merged separately.
 
->> +
->>   	retain_initrd	[RAM] Keep initrd memory after extraction
->>   
->>   	rfkill.default_state=
->> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
->> index ddccd10..8fbc3a0 100644
->> --- a/Documentation/admin-guide/sysctl/kernel.rst
->> +++ b/Documentation/admin-guide/sysctl/kernel.rst
->> @@ -892,6 +892,14 @@ The default value is 0 (access disabled).
->>   
->>   See Documentation/arm64/perf.rst for more information.
->>   
->> +export_pmu_events
->> +=================
-> You should add something like "(arm64 only)" to the title.
->
->> +Controls the export bit(4th bit) of PMCR_EL0 which enables the exporting of
-> Just say "Controls the PMU export bit (PMCR_EL0.X), which enables ...".
->
->> +events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
->> +
->> +0: disables exporting of events
->> +
->> +1: enables exporting of events
-> Please state that the default value is 0.
->
->>   pid_max
->>   =======
->> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
->> index cb69ff1..271a8c6 100644
->> --- a/arch/arm64/kernel/perf_event.c
->> +++ b/arch/arm64/kernel/perf_event.c
->> @@ -34,6 +34,7 @@
->>   #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_ACCESS		0xEC
->>   #define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_MISS		0xED
->>   
->> +int sysctl_export_pmu_events __read_mostly;
->>   /*
->>    * ARMv8 Architectural defined events, not all of these may
->>    * be supported on any given implementation. Unsupported events will
->> @@ -1025,6 +1026,17 @@ static int armv8pmu_filter_match(struct perf_event *event)
->>   	return evtype != ARMV8_PMUV3_PERFCTR_CHAIN;
->>   }
->>   
->> +static int __init export_pmu_events(char *str)
->> +{
->> +	/* Exporting of events can be enabled at runtime with sysctl or
->> +	 * statically at bootup with kernel parameters.
->> +	 */
->> +	sysctl_export_pmu_events = 1;
->> +	return 0;
->> +}
->> +
->> +early_param("export_pmu_events", export_pmu_events);
->> +
->>   static void armv8pmu_reset(void *info)
->>   {
->>   	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
->> @@ -1047,6 +1059,9 @@ static void armv8pmu_reset(void *info)
->>   	if (armv8pmu_has_long_event(cpu_pmu))
->>   		pmcr |= ARMV8_PMU_PMCR_LP;
->>   
->> +	if (sysctl_export_pmu_events)
->> +		pmcr |= ARMV8_PMU_PMCR_X;
->> +
->>   	armv8pmu_pmcr_write(pmcr);
->
-> Hmm, I think this reset path only runs when initialising/onlining a CPU,
-> so it's not a great user interface where the sysctl is concerned. It's
-> probably better to hook armv8pmu_start() for this.
->
->>   }
->>   
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index da75956..7790328 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -1311,6 +1311,7 @@ extern void put_callchain_entry(int rctx);
->>   
->>   extern int sysctl_perf_event_max_stack;
->>   extern int sysctl_perf_event_max_contexts_per_stack;
->> +extern int sysctl_export_pmu_events;
->>   
->>   static inline int perf_callchain_store_context(struct perf_callchain_entry_ctx *ctx, u64 ip)
->>   {
->> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
->> index e52b6e3..3b751a2e 100644
->> --- a/kernel/sysctl.c
->> +++ b/kernel/sysctl.c
->> @@ -2008,6 +2008,18 @@ static struct ctl_table kern_table[] = {
->>   		.extra2		= SYSCTL_ONE_THOUSAND,
->>   	},
->>   #endif
->> +#ifdef CONFIG_HW_PERF_EVENTS
->> +	{
->> +		.procname       = "export_pmu_events",
->> +		.data           = &sysctl_export_pmu_events,
->> +		.maxlen         = sizeof(int),
->> +		.mode           = 0644,
->> +		.proc_handler   = proc_dointvec_minmax,
->> +		.extra1         = SYSCTL_ZERO,
->> +		.extra2         = SYSCTL_ONE,
->> +
->> +	},
->> +#endif
-> Since this is arm64-specific, it should live in the arm64 code and not
-> here. See how we already register 'armv8_pmu_sysctl_table' for the ARMv8
-> PMU.
->
-> Will
+[1]: https://lore.kernel.org/all/20220517052724.283874-2-irogers@google.com/
+
+Changes since V2:
+- Add more comments for the evsel__sys_has_perf_metrics() and
+  topdown_sys_has_perf_metrics()
+- Remove the uncessary evsel->core.leader->nr_members = 0; in patch 2.
+  The value has been updated in the new evsel__remove_from_group().
+- Add Reviewed-by from Ian for patch 4
+
+Changes since V1:
+- Add comments for the evsel__sys_has_perf_metrics() and
+  topdown_sys_has_perf_metrics()
+- Factor out evsel__remove_from_group()
+- Add Reviewed-by from Ian for patch 3
+
+Kan Liang (4):
+  perf evsel: Fixes topdown events in a weak group for the hybrid
+    platform
+  perf stat: Always keep perf metrics topdown events in a group
+  perf parse-events: Support different format of the topdown event name
+  perf parse-events: Move slots event for the hybrid platform too
+
+ tools/perf/arch/x86/util/evlist.c  |  7 ++++---
+ tools/perf/arch/x86/util/evsel.c   | 23 +++++++++++++++++++++--
+ tools/perf/arch/x86/util/topdown.c | 25 +++++++++++++++++++++++++
+ tools/perf/arch/x86/util/topdown.h |  7 +++++++
+ tools/perf/builtin-stat.c          |  7 ++-----
+ tools/perf/util/evlist.c           |  6 +-----
+ tools/perf/util/evsel.c            | 13 +++++++++++--
+ tools/perf/util/evsel.h            |  2 +-
+ 8 files changed, 72 insertions(+), 18 deletions(-)
+ create mode 100644 tools/perf/arch/x86/util/topdown.h
+
+-- 
+2.35.1
+
