@@ -2,140 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0A2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 05:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D802C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 06:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230401AbiERF6v (ORCPT
+        id S230426AbiERGMc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 01:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34006 "EHLO
+        Wed, 18 May 2022 02:12:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230423AbiERF6t (ORCPT
+        with ESMTP id S230403AbiERGMb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 01:58:49 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C45C1EF3
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 22:58:47 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id nk9-20020a17090b194900b001df2fcdc165so4677199pjb.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 22:58:47 -0700 (PDT)
+        Wed, 18 May 2022 02:12:31 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC7B4D276
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 23:12:30 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id a11so1230291pff.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 23:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=o0tYGv5gKzzwAKbeBtiGIhGw8+poYiZW6V66JN4rF/Y=;
-        b=Jmj34sGWh4dN6sVL1KcsVd5Ko6DxtA2ljfd7CxuyhF0iUnOPhJmr2jY9Jr4u0QQ15+
-         tht1CE1RtsOzKeg6g9OeQd8lluEuraX0SPjxQ+Ql84rNDcEXBJGwTrH+Tpe3hNdyk6rB
-         jh26SGTW8V0fnzBmjXSvV/r/LkwqA6pU832kpVBTQgwDAubo+aUt0IOvC9ElMg/RABtF
-         4pcZb1ZLnvGX3/k8qVUnPT5Ougk+NC9SxeKU1o4Os/e+SAEWrqrbZtAn4auU5x4zt0mz
-         zDLFUf6abxMtF8s3JTr4GXFaVcpY308IwERcMvZNT31n9wEZYyjvnphXCIW1idmPzJf0
-         kwvA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Egc6ZBRUY3Z7canJd0liUWr1zN4YpwqPjX5M7wJmK6A=;
+        b=ZyceAB71StStDws0PCQWbFm05oQFzX/fmB8D4jIFiyZTkjcY7YAb4KwAptsQh5eUog
+         GEdf+efoFYDdNjPxnAyABJV9ERr+rmmLMkRN2QeddxZ7M3fCgJpCpts3ufWRe92HNS6B
+         1sH6y2UbOTyzLwEvJyEzGMmtGjgx8Q+hsiJlaoPU7dDMXxxhF7ZwQRiIS3RWGH2MM4+8
+         pP46COFUjCg7ezNqyyGeWUyAFXu/qUvXu0VuE2teZlTmI+druzbxUVI1HCAAdF7pbmDc
+         MmwTI4PuCWDYoRykrlSrE3GPu9hqFwtSBKwmcbbClXuRgA0TsNBdWnI0tdiuJrE8D8uJ
+         Weyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=o0tYGv5gKzzwAKbeBtiGIhGw8+poYiZW6V66JN4rF/Y=;
-        b=iGs6SUvs5xqA35dIKN0tMcXQTZsfWXGSST24b1UsdSwWlhXyGArUtBS1JUF0ozSbIh
-         p8N69TCcmkwJy+D0oV9jfysxaEP0ppLpAiUVQjvR5LiEP6fl8k5NGqP8bQHb61VtxMQd
-         Od1NGNUibO/ANJ4+1F78dSz3yoFxT7iWMeD+h2w9++uyt7gL9XbmOzlv5cGiZWYTZVUE
-         XPHqLlfCWxgN/LI3yEAVgCCeyxSm2LR2RJJt42aINPJTtvwvWqR9UNx+BQGE1m49yoJc
-         Aq1K6GaxYwWULQJZ3QNRvK3Y85JIV2sbYJIsYlMe6F24NDCajnPozSpffvmjyvtV2zTo
-         +qyw==
-X-Gm-Message-State: AOAM530buTKcwgnfipkOicnM1mUj2BSaq+yYEqmKYAQ/SccnQZE0ar9s
-        +6LikPuk+1qm4xTbAC9muY12eA==
-X-Google-Smtp-Source: ABdhPJwmo4MX8EtkpMW+wz6uUQ0J0zamBatqn6h0/7O/GiKhQ482py0wwHuBMX+OYGXPQpJEJSSkWQ==
-X-Received: by 2002:a17:903:41c1:b0:161:bec6:b308 with SMTP id u1-20020a17090341c100b00161bec6b308mr2581103ple.161.1652853526569;
-        Tue, 17 May 2022 22:58:46 -0700 (PDT)
-Received: from localhost.localdomain (n058152048195.netvigator.com. [58.152.48.195])
-        by smtp.gmail.com with ESMTPSA id cp16-20020a170902e79000b0015e8d4eb2c2sm627127plb.268.2022.05.17.22.58.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Egc6ZBRUY3Z7canJd0liUWr1zN4YpwqPjX5M7wJmK6A=;
+        b=WHS2Hd5umu9EXduxGcgTKacJbCT3vwZ30paZTGeFG/quHJvNRY0dHgQzIWSDZ0oDVl
+         tr5ME3xlk6SGGA3qG1iLPtxkt7uBI17ZMlFb/mrMSGEUJSmTaXQvrrTASXsF6+Hu6nJW
+         ix4MWvmrr4XDnaqAtHvqlIPGdloqsdMaCal4okPSAr3jugG34ktc6fqgei/98WVIvcnq
+         RG6Lqt9yYReAAEqg7h/xIpZkoZfgEa1k0z4YiM7zsVx9nEJ3w72PjMshImd59zCBePht
+         3Lo0CTdshan5YM7WvChANAJ0gWSlsg3k6VMq5ov7YLjYEsC/L3SBKpKljwQVzMreID+f
+         nTvg==
+X-Gm-Message-State: AOAM5310q3a+dF8cpZLJjZDkwnJd/x/UgLDsfcxOkXVe362Q0zvLdJz7
+        vrmQxoEytwpstuv694arwhol1g==
+X-Google-Smtp-Source: ABdhPJyKvttCrwlKvi6zipgCpCV0oQPQEBdkDd7IOo/kkUeLxXuGu/H6Qpe5WWHWjmeWOTHiM8ug2w==
+X-Received: by 2002:a05:6a02:206:b0:399:3c9:f465 with SMTP id bh6-20020a056a02020600b0039903c9f465mr23061776pgb.388.1652854350012;
+        Tue, 17 May 2022 23:12:30 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([137.184.121.66])
+        by smtp.gmail.com with ESMTPSA id 1-20020a620501000000b0050dc76281e1sm840168pff.187.2022.05.17.23.12.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 22:58:46 -0700 (PDT)
+        Tue, 17 May 2022 23:12:29 -0700 (PDT)
+Date:   Wed, 18 May 2022 14:12:21 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     Adam Li <adamli@amperemail.onmicrosoft.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Like Xu <likexu@tencent.com>, Alyssa Ross <hi@alyssa.is>,
-        Ian Rogers <irogers@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Adam Li <adamli@amperemail.onmicrosoft.com>,
+        Like Xu <likexu@tencent.com>, Ian Rogers <irogers@google.com>,
+        Alyssa Ross <hi@alyssa.is>, Kajol Jain <kjain@linux.ibm.com>,
         Li Huafei <lihuafei1@huawei.com>,
         German Gomez <german.gomez@arm.com>,
         James Clark <james.clark@arm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
+        Ali Saidi <alisaidi@amazon.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 11/11] perf c2c: Use 'peer' as default display for Arm64
-Date:   Wed, 18 May 2022 13:57:29 +0800
-Message-Id: <20220518055729.1869566-12-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220518055729.1869566-1-leo.yan@linaro.org>
-References: <20220518055729.1869566-1-leo.yan@linaro.org>
+Subject: Re: [PATCH v2 9/11] perf c2c: Sort on peer snooping for load
+ operations
+Message-ID: <20220518061221.GA430350@leoy-ThinkPad-X240s>
+References: <20220508092346.255826-1-leo.yan@linaro.org>
+ <20220508092346.255826-10-leo.yan@linaro.org>
+ <fefc1f23-ea1c-6339-77c4-b0974cbd6e93@amperemail.onmicrosoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fefc1f23-ea1c-6339-77c4-b0974cbd6e93@amperemail.onmicrosoft.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since Arm64 arch doesn't support HITMs flags, so use 'peer' as default
-if user doesn't specify display type; for other arches, it still uses
-'tot' as default display type if user doesn't specify it.
+Hi Adam,
 
-Suggested-by: Ali Saidi <alisaidi@amazon.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/builtin-c2c.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+On Fri, May 13, 2022 at 05:05:45PM +0800, Adam Li wrote:
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 3bd422c5e8ae..042431b7b6ba 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2785,7 +2785,7 @@ static int setup_callchain(struct evlist *evlist)
- 
- static int setup_display(const char *str)
- {
--	const char *display = str ?: "tot";
-+	const char *display = str;
- 
- 	if (!strcmp(display, "tot"))
- 		c2c.display = DISPLAY_TOT_HITM;
-@@ -2971,9 +2971,6 @@ static int perf_c2c__report(int argc, const char **argv)
- 	data.path  = input_name;
- 	data.force = symbol_conf.force;
- 
--	err = setup_display(display);
--	if (err)
--		goto out;
- 
- 	err = setup_coalesce(coalesce, no_source);
- 	if (err) {
-@@ -2994,6 +2991,22 @@ static int perf_c2c__report(int argc, const char **argv)
- 		goto out;
- 	}
- 
-+	/*
-+	 * Use the 'tot' as default display type if user doesn't specify it;
-+	 * since Arm64 platform doesn't support HITMs flag, use 'peer' as the
-+	 * default display type.
-+	 */
-+	if (!display) {
-+		if (!strcmp(perf_env__arch(&session->header.env), "arm64"))
-+			display = "peer";
-+		else
-+			display = "tot";
-+	}
-+
-+	err = setup_display(display);
-+	if (err)
-+		goto out_session;
-+
- 	session->itrace_synth_opts = &itrace_synth_opts;
- 
- 	err = setup_nodes(session);
--- 
-2.25.1
+[...]
 
+> > As result, we can get the 'peer' display as below:
+> > 
+> >   # perf c2c report -d peer --coalesce tid,pid,iaddr,dso -N --stdio
+> > 
+> 
+> Hi Leo,
+> 
+> I tested v2 patch on 2P Altra system.
+> In case the false-sharing data is mainly from remote node, 'Snoop Peers'
+> cannot indicate severity of false-sharing. As showed in bellow output,
+> there are only 10 'Load HIT Peer' records, while there are 2353
+> 'Load Remote DRAM' records.
+> 
+> And the name 'Load Remote DRAM' is kind of misleading, since we cannot tell
+> the data source is 'DRAM'.
+
+Appreicate for the testing, and your feedback is very helpful.
+
+After some discussion, in the patch set v9 "perf: arm-spe: Decode SPE
+source and use for perf c2c" (please ignore the typo "v8", actually
+it's patch set v9), Ali has updated the memory tag setting for the
+type ARM_SPE_NV_REMOTE.  I think the prominent change is we set
+PERF_MEM_SNOOPX_PEER flag for remote access.
+
+Please note, in the total statistics, all remote accesses will be
+accounted into metric "rmt_hit", so "rmt_hit" includes the access for
+remote DRAM or any upwards cache levels due we cannot distinguish
+them.
+
+From my experiment, with this updating the output result is promised
+for the peer accesses and it's easier for inspecting false sharing.
+
+As you might see I have prepared a git repo:
+https://git.linaro.org/people/leo.yan/linux-spe.git/ branch:
+perf_c2c_arm_spe_peer_v3, which contains the updated patches for both
+memory flag setting and perf c2c related patches.
+
+Could you confirm if the updated code works for you or not?
+
+Thanks,
+Leo
