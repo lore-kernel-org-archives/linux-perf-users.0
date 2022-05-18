@@ -2,135 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EB5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 09:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27A6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 09:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233800AbiERJHk (ORCPT
+        id S234177AbiERJ3l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 05:07:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56934 "EHLO
+        Wed, 18 May 2022 05:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233795AbiERJHi (ORCPT
+        with ESMTP id S234239AbiERJ3g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 05:07:38 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592B612FEC3
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 02:07:36 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id p4so1075896lfg.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 02:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wcrsvOrOm+mRa378F80R7USaGzcRNkSgm1WTWIJU7Qs=;
-        b=dOowfJdUkCgdm+X0sjpkSjkrWinBHywOfRCJNbbQg4ZKVRGegBTMgRLgdR+HsHFGKZ
-         r4xFbL1vipCRMWGmh9nB0S8FKnGjgZbtewcVMVPp2bWC2O5toghr+ux4gKsXPzoghRsL
-         WUOnQv3yOcw7YQOVrDk5ku5tDcNRyvk2u7JzYf93lhPHoYGlKPeYZMMpRm5144bV2zcT
-         WKvj/zSILDcgH344tlgTJ/s606MgwrrA+qjyxf8zFhmnLzroOMdt5L3scY4FFq/gcHxV
-         O3nplaMJWPnZBHVE3SMXQM6BNUvxKU0DNP0ZV6fdaX6iLjwlISaAEUpqQ6h78DIHQUHc
-         rK+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wcrsvOrOm+mRa378F80R7USaGzcRNkSgm1WTWIJU7Qs=;
-        b=2sh89elGiLMZW5zcjtPM1TmmgD7vpcIcLqh2vRGLVJYG9rvCt0ASUosgkT67oKGxL/
-         x1YEZ14IkSFMqvDOdM8qktxg//E1L/AtevfDk91xJhJoa9favgzIsgR3lASKguv/36o5
-         OGSaMR8vUu1Y4mjxEDBYBUZDxVjqY6Bo2MK9yywvndgupwrfWM/sGYyMpALKL3kxbzzj
-         IgnOXmvnwyQeBfxUr2uwtyOAePM7ShtI2JTSVAUYZWPJDWCkL7D4PaGsCvyT3LcSrBua
-         +604M6Kcn+/XjqnMZK5hxG8tjw92ZJ+qb1+gzaPapr5bZXodvCMUuv3lvjOJ6rnaj3+q
-         yq3Q==
-X-Gm-Message-State: AOAM532V1NLHIs1D7hYBcFcBtQcOjlw6YWxYi7yji3QvsdJpvDSqrI7T
-        YJ5f5CKM3+UgVP3jZQKUQ48zDS+tzG8hwZgzufPpmw==
-X-Google-Smtp-Source: ABdhPJzAelqtBPGCxXlfVN3acRhTDjVF3HlQ8kO0+AOIyERK7gjO1Z1UPKDGisPXmDCihnikdsCzfF2/c2VeEisQqRI=
-X-Received: by 2002:a05:6512:168d:b0:471:6cb9:c20f with SMTP id
- bu13-20020a056512168d00b004716cb9c20fmr19895367lfb.229.1652864854579; Wed, 18
- May 2022 02:07:34 -0700 (PDT)
+        Wed, 18 May 2022 05:29:36 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E8C99155E
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 02:29:25 -0700 (PDT)
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24I9Jgcr032514;
+        Wed, 18 May 2022 09:29:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=laJdj4sx12aZhshlPWONa65aRFSh9J7ElHIerkBUs44=;
+ b=Ce1HV8DFEhoWrrO1ApZAOKsh/A930gduH3PMOG+6dnVO4pVF6UtfZA2JGch1WKPTZfMW
+ HI6D1lUjPSRbKaq4jDbP3/j6hr+KlbrO2j+eUhn0P8IHmlPu6Poq4K7gxjfnxf/9oUxB
+ I3kSuZiKdcauuyoYqOdOQlG/G3F1Mtc2Nu5mHD0+jJzkPRAV2KmdOdLHPr2O6CeXSgjJ
+ YGKLC1frWQYAlmt8SBKY9ScSp04kNOyNHgEC7DCzmnirLUr1T9FOX5ml6KCtUr3Bx9Ul
+ EqbioMIFDTEWpgY3hGYkrNNkfK1bo7VtiENk6Si3MdgndWYnNkWPvIJ9t+Mh2zZE+cXt aw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4x2t85a8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 May 2022 09:29:18 +0000
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24I9PmIx004992;
+        Wed, 18 May 2022 09:29:17 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4x2t859s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 May 2022 09:29:17 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24I9SRKL013712;
+        Wed, 18 May 2022 09:29:15 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03fra.de.ibm.com with ESMTP id 3g2428vdet-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 May 2022 09:29:14 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24I9TCPl45941216
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 May 2022 09:29:12 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E538D52050;
+        Wed, 18 May 2022 09:29:11 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.163.14.86])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4881652051;
+        Wed, 18 May 2022 09:29:06 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, irogers@google.com
+Subject: [PATCH] tools/perf/test: Fix perf all PMU test to skip hv_24x7/hv_gpci tests on powerpc
+Date:   Wed, 18 May 2022 14:59:03 +0530
+Message-Id: <20220518092903.7065-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220308205000.27646-1-mike.leach@linaro.org> <20220308205000.27646-9-mike.leach@linaro.org>
- <71c11820-433d-755d-0eb4-797313d693f9@huawei.com>
-In-Reply-To: <71c11820-433d-755d-0eb4-797313d693f9@huawei.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 18 May 2022 10:07:23 +0100
-Message-ID: <CAJ9a7ViS-nxhmzRs6LwHSqPzHSo11inZ+066aKe116ESr6ufvw@mail.gmail.com>
-Subject: Re: [PATCH 08/10] coresight: Remove legacy Trace ID allocation mechanism
-To:     "liuqi (BA)" <liuqi115@huawei.com>
-Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: A8eDoEaPQr1_XPxcn22nsJdhEQHyUwxx
+X-Proofpoint-GUID: 0el3cysM-VBWMCDLuRj-dmw8hkTFV4IH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-18_03,2022-05-17_02,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ suspectscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 impostorscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205180048
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi
+"perf all PMU test" picks the input events from
+"perf list --raw-dump pmu" list and runs "perf stat -e"
+for each of the event in the list. In case of powerpc, the
+PowerVM environment supports events from hv_24x7 and hv_gpci
+PMU which is of example format like below:
+- hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
+- hv_gpci/event,partition_id=?/
 
-On Tue, 17 May 2022 at 04:56, liuqi (BA) <liuqi115@huawei.com> wrote:
->
-> Hi Mike,
->
-> On 2022/3/9 4:49, Mike Leach wrote:
-> > This static 'cpu * 2 + seed' was outdated and broken for systems with high
-> > core counts (>46).
-> >
-> > This has been replaced by a dynamic allocation system.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > ---
-> >   include/linux/coresight-pmu.h | 12 ------------
-> >   1 file changed, 12 deletions(-)
->
-> Seems coresight_get_trace_id() in tools/include/linux/coresight-pmu.h
-> need to be deleted too.
->
-> Thanks,
-> Qi
->
+The value for "?" needs to be filled in depending on
+system and respective event. CPM_ADJUNCT_INST needs have
+core value and domain value. hv_gpci event needs partition_id.
+Similarly, there are other events for hv_24x7 and hv_gpci
+having "?" in event format. Hence skip these events on powerpc
+platform since values like partition_id, domain is specific
+to system and event.
 
-Agreed - I'll sort it for the next release.
+Fixes: 3d5ac9effcc6 ("perf test: Workload test of all PMUs")
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/tests/shell/stat_all_pmu.sh | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Thanks
-
-Mike
-
-> >
-> > diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-> > index 4ac5c081af93..bb4eb4de3c77 100644
-> > --- a/include/linux/coresight-pmu.h
-> > +++ b/include/linux/coresight-pmu.h
-> > @@ -8,7 +8,6 @@
-> >   #define _LINUX_CORESIGHT_PMU_H
-> >
-> >   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
-> > -#define CORESIGHT_ETM_PMU_SEED  0x10
-> >
-> >   /*
-> >    * Below are the definition of bit offsets for perf option, and works as
-> > @@ -32,15 +31,4 @@
-> >   #define ETM4_CFG_BIT_RETSTK 12
-> >   #define ETM4_CFG_BIT_VMID_OPT       15
-> >
-> > -static inline int coresight_get_trace_id(int cpu)
-> > -{
-> > -     /*
-> > -      * A trace ID of value 0 is invalid, so let's start at some
-> > -      * random value that fits in 7 bits and go from there.  Since
-> > -      * the common convention is to have data trace IDs be I(N) + 1,
-> > -      * set instruction trace IDs as a function of the CPU number.
-> > -      */
-> > -     return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
-> > -}
-> > -
-> >   #endif
-> >
-> _______________________________________________
-> CoreSight mailing list -- coresight@lists.linaro.org
-> To unsubscribe send an email to coresight-leave@lists.linaro.org
-
-
-
+diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+index b30dba455f36..4a854b545bec 100755
+--- a/tools/perf/tests/shell/stat_all_pmu.sh
++++ b/tools/perf/tests/shell/stat_all_pmu.sh
+@@ -5,6 +5,16 @@
+ set -e
+ 
+ for p in $(perf list --raw-dump pmu); do
++  # In powerpc, skip the events for hv_24x7 and hv_gpci.
++  # These events needs input values to be filled in for
++  # core, chip, patition id based on system.
++  # Example: hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
++  # hv_gpci/event,partition_id=?/
++  # Hence skip these events for ppc.
++  if lscpu  |grep ppc && echo "$p" |grep -Eq 'hv_24x7|hv_gpci' ; then
++    echo "Skipping: Event '$p' in powerpc"
++    continue
++  fi
+   echo "Testing $p"
+   result=$(perf stat -e "$p" true 2>&1)
+   if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.35.1
+
