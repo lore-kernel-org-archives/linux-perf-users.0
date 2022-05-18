@@ -2,287 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A626C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 08:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EB5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 09:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233673AbiERIzz (ORCPT
+        id S233800AbiERJHk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 04:55:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
+        Wed, 18 May 2022 05:07:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233624AbiERIzj (ORCPT
+        with ESMTP id S233795AbiERJHi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 04:55:39 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 866AC13C09D;
-        Wed, 18 May 2022 01:55:34 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24I8p37L024079;
-        Wed, 18 May 2022 08:55:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=9SmW/g0JMl6tf7Lbt91x+7NrX+iL28d0ZGwjIlQptno=;
- b=npf5asaL9CAJzN9awK4aKG0PASwu4Gc+KjolO/MS3xgh/HptoEjivwPSd4w+bCwRYU2U
- 0iUkC6mLptUDL5c9cW52ge12p6OWAvxMjwoZxoMWKl1N2221wXFYp8hHydl+FAa4DJfg
- IkOhySjxFLU/91kg5pm/94THjEuDOL6BSz418is0VHieVgDKA+b87zqVoZee8rYaa8F4
- wJ4Qpn/lZpPk5JDTmBv55tHR70OaD/42qgXlgkZF5ZaFQedJu2EhOsO6zuogTvvEb1OH
- IodsLiGqEfXTxY4AYAiks6RYd78QffqkqZf+li8PMewQE2u7QIim5qfbokLquQyLYmLT hA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4wncg1nk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 08:55:18 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24I8pNNH024831;
-        Wed, 18 May 2022 08:55:18 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4wncg1n0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 08:55:17 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24I8qZKq004737;
-        Wed, 18 May 2022 08:55:15 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 3g2429dduf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 08:55:15 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24I8tCsW49938920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 May 2022 08:55:12 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E0B542042;
-        Wed, 18 May 2022 08:55:12 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0749F4203F;
-        Wed, 18 May 2022 08:55:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.163.14.86])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 18 May 2022 08:55:06 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, irogers@google.com
-Subject: [PATCH V2 1/2] powerpc/perf: Add support for caps under sysfs in powerpc
-Date:   Wed, 18 May 2022 14:25:01 +0530
-Message-Id: <20220518085502.6914-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+        Wed, 18 May 2022 05:07:38 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592B612FEC3
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 02:07:36 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id p4so1075896lfg.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 02:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wcrsvOrOm+mRa378F80R7USaGzcRNkSgm1WTWIJU7Qs=;
+        b=dOowfJdUkCgdm+X0sjpkSjkrWinBHywOfRCJNbbQg4ZKVRGegBTMgRLgdR+HsHFGKZ
+         r4xFbL1vipCRMWGmh9nB0S8FKnGjgZbtewcVMVPp2bWC2O5toghr+ux4gKsXPzoghRsL
+         WUOnQv3yOcw7YQOVrDk5ku5tDcNRyvk2u7JzYf93lhPHoYGlKPeYZMMpRm5144bV2zcT
+         WKvj/zSILDcgH344tlgTJ/s606MgwrrA+qjyxf8zFhmnLzroOMdt5L3scY4FFq/gcHxV
+         O3nplaMJWPnZBHVE3SMXQM6BNUvxKU0DNP0ZV6fdaX6iLjwlISaAEUpqQ6h78DIHQUHc
+         rK+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wcrsvOrOm+mRa378F80R7USaGzcRNkSgm1WTWIJU7Qs=;
+        b=2sh89elGiLMZW5zcjtPM1TmmgD7vpcIcLqh2vRGLVJYG9rvCt0ASUosgkT67oKGxL/
+         x1YEZ14IkSFMqvDOdM8qktxg//E1L/AtevfDk91xJhJoa9favgzIsgR3lASKguv/36o5
+         OGSaMR8vUu1Y4mjxEDBYBUZDxVjqY6Bo2MK9yywvndgupwrfWM/sGYyMpALKL3kxbzzj
+         IgnOXmvnwyQeBfxUr2uwtyOAePM7ShtI2JTSVAUYZWPJDWCkL7D4PaGsCvyT3LcSrBua
+         +604M6Kcn+/XjqnMZK5hxG8tjw92ZJ+qb1+gzaPapr5bZXodvCMUuv3lvjOJ6rnaj3+q
+         yq3Q==
+X-Gm-Message-State: AOAM532V1NLHIs1D7hYBcFcBtQcOjlw6YWxYi7yji3QvsdJpvDSqrI7T
+        YJ5f5CKM3+UgVP3jZQKUQ48zDS+tzG8hwZgzufPpmw==
+X-Google-Smtp-Source: ABdhPJzAelqtBPGCxXlfVN3acRhTDjVF3HlQ8kO0+AOIyERK7gjO1Z1UPKDGisPXmDCihnikdsCzfF2/c2VeEisQqRI=
+X-Received: by 2002:a05:6512:168d:b0:471:6cb9:c20f with SMTP id
+ bu13-20020a056512168d00b004716cb9c20fmr19895367lfb.229.1652864854579; Wed, 18
+ May 2022 02:07:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Wd0c7t2pPWVF4eJBY86IKBrnND8g9PRP
-X-Proofpoint-ORIG-GUID: t4eRH4j73RZKKFGcROaQBT-T1tJXnw1x
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-18_03,2022-05-17_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=999 priorityscore=1501 adultscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205180044
+References: <20220308205000.27646-1-mike.leach@linaro.org> <20220308205000.27646-9-mike.leach@linaro.org>
+ <71c11820-433d-755d-0eb4-797313d693f9@huawei.com>
+In-Reply-To: <71c11820-433d-755d-0eb4-797313d693f9@huawei.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Wed, 18 May 2022 10:07:23 +0100
+Message-ID: <CAJ9a7ViS-nxhmzRs6LwHSqPzHSo11inZ+066aKe116ESr6ufvw@mail.gmail.com>
+Subject: Re: [PATCH 08/10] coresight: Remove legacy Trace ID allocation mechanism
+To:     "liuqi (BA)" <liuqi115@huawei.com>
+Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add caps support under "/sys/bus/event_source/devices/<pmu>/"
-for powerpc. This directory can be used to expose some of the
-specific features that powerpc PMU supports to the user.
-Example: pmu_name. The name of PMU registered will depend on
-platform, say power9 or power10 or it could be Generic Compat
-PMU.
+Hi
 
-Currently the only way to know which is the registered
-PMU is from the dmesg logs. But clearing the dmesg will make it
-difficult to know exact PMU backend used. And even extracting
-from dmesg will be complicated, as we need  to parse the dmesg
-logs and add filters for pmu name. Whereas by exposing it via
-caps will make it easy as we just need to directly read it from
-the sysfs.
+On Tue, 17 May 2022 at 04:56, liuqi (BA) <liuqi115@huawei.com> wrote:
+>
+> Hi Mike,
+>
+> On 2022/3/9 4:49, Mike Leach wrote:
+> > This static 'cpu * 2 + seed' was outdated and broken for systems with high
+> > core counts (>46).
+> >
+> > This has been replaced by a dynamic allocation system.
+> >
+> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > ---
+> >   include/linux/coresight-pmu.h | 12 ------------
+> >   1 file changed, 12 deletions(-)
+>
+> Seems coresight_get_trace_id() in tools/include/linux/coresight-pmu.h
+> need to be deleted too.
+>
+> Thanks,
+> Qi
+>
 
-Add a caps directory to /sys/bus/event_source/devices/cpu/
-for power8, power9, power10 and generic compat PMU in respective
-PMU driver code. Update the pmu_name file under caps folder
-in core-book3s using "attr_update".
+Agreed - I'll sort it for the next release.
 
-The information exposed currently:
- - pmu_name : Underlying PMU name from the driver
+Thanks
 
-Example result with power9 pmu:
+Mike
 
- # ls /sys/bus/event_source/devices/cpu/caps
-pmu_name
+> >
+> > diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> > index 4ac5c081af93..bb4eb4de3c77 100644
+> > --- a/include/linux/coresight-pmu.h
+> > +++ b/include/linux/coresight-pmu.h
+> > @@ -8,7 +8,6 @@
+> >   #define _LINUX_CORESIGHT_PMU_H
+> >
+> >   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
+> > -#define CORESIGHT_ETM_PMU_SEED  0x10
+> >
+> >   /*
+> >    * Below are the definition of bit offsets for perf option, and works as
+> > @@ -32,15 +31,4 @@
+> >   #define ETM4_CFG_BIT_RETSTK 12
+> >   #define ETM4_CFG_BIT_VMID_OPT       15
+> >
+> > -static inline int coresight_get_trace_id(int cpu)
+> > -{
+> > -     /*
+> > -      * A trace ID of value 0 is invalid, so let's start at some
+> > -      * random value that fits in 7 bits and go from there.  Since
+> > -      * the common convention is to have data trace IDs be I(N) + 1,
+> > -      * set instruction trace IDs as a function of the CPU number.
+> > -      */
+> > -     return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
+> > -}
+> > -
+> >   #endif
+> >
+> _______________________________________________
+> CoreSight mailing list -- coresight@lists.linaro.org
+> To unsubscribe send an email to coresight-leave@lists.linaro.org
 
- # cat /sys/bus/event_source/devices/cpu/caps/pmu_name
-POWER9
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
-Changelog:
- v1 -> v2:
- Move the show function as generic in core-book3s
- and update show function using sysfs_emit and ppmu->name
- Added Documention for this ABI in patch 2.
- Notes: The caps directory is implemented in PMU for other
- architectures already. Reference commit for x86:
- commit b00233b53065 ("perf/x86: Export some PMU attributes in caps/ directory")
 
- arch/powerpc/perf/core-book3s.c        | 31 ++++++++++++++++++++++++++
- arch/powerpc/perf/generic-compat-pmu.c | 10 +++++++++
- arch/powerpc/perf/power10-pmu.c        | 10 +++++++++
- arch/powerpc/perf/power8-pmu.c         | 10 +++++++++
- arch/powerpc/perf/power9-pmu.c         | 10 +++++++++
- 5 files changed, 71 insertions(+)
-
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index b5b42cf0a703..a208f502a80b 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2488,6 +2488,33 @@ static int power_pmu_prepare_cpu(unsigned int cpu)
- 	return 0;
- }
- 
-+static ssize_t pmu_name_show(struct device *cdev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	if (ppmu)
-+		return sysfs_emit(buf, "%s\n", ppmu->name);
-+
-+	return 0;
-+}
-+
-+static DEVICE_ATTR_RO(pmu_name);
-+
-+static struct attribute *pmu_caps_attrs[] = {
-+	&dev_attr_pmu_name.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group pmu_caps_group = {
-+	.name  = "caps",
-+	.attrs = pmu_caps_attrs,
-+};
-+
-+static const struct attribute_group *pmu_caps_groups[] = {
-+	&pmu_caps_group,
-+	NULL,
-+};
-+
- int __init register_power_pmu(struct power_pmu *pmu)
- {
- 	if (ppmu)
-@@ -2498,6 +2525,10 @@ int __init register_power_pmu(struct power_pmu *pmu)
- 		pmu->name);
- 
- 	power_pmu.attr_groups = ppmu->attr_groups;
-+
-+	if (ppmu->flags & PPMU_ARCH_207S)
-+		power_pmu.attr_update = pmu_caps_groups;
-+
- 	power_pmu.capabilities |= (ppmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS);
- 
- #ifdef MSR_HV
-diff --git a/arch/powerpc/perf/generic-compat-pmu.c b/arch/powerpc/perf/generic-compat-pmu.c
-index f3db88aee4dd..817c69863038 100644
---- a/arch/powerpc/perf/generic-compat-pmu.c
-+++ b/arch/powerpc/perf/generic-compat-pmu.c
-@@ -151,9 +151,19 @@ static const struct attribute_group generic_compat_pmu_format_group = {
- 	.attrs = generic_compat_pmu_format_attr,
- };
- 
-+static struct attribute *generic_compat_pmu_caps_attrs[] = {
-+	NULL
-+};
-+
-+static struct attribute_group generic_compat_pmu_caps_group = {
-+	.name  = "caps",
-+	.attrs = generic_compat_pmu_caps_attrs,
-+};
-+
- static const struct attribute_group *generic_compat_pmu_attr_groups[] = {
- 	&generic_compat_pmu_format_group,
- 	&generic_compat_pmu_events_group,
-+	&generic_compat_pmu_caps_group,
- 	NULL,
- };
- 
-diff --git a/arch/powerpc/perf/power10-pmu.c b/arch/powerpc/perf/power10-pmu.c
-index c6d51e7093cf..d1adcd9f52e2 100644
---- a/arch/powerpc/perf/power10-pmu.c
-+++ b/arch/powerpc/perf/power10-pmu.c
-@@ -258,6 +258,15 @@ static const struct attribute_group power10_pmu_format_group = {
- 	.attrs = power10_pmu_format_attr,
- };
- 
-+static struct attribute *power10_pmu_caps_attrs[] = {
-+	NULL
-+};
-+
-+static struct attribute_group power10_pmu_caps_group = {
-+	.name  = "caps",
-+	.attrs = power10_pmu_caps_attrs,
-+};
-+
- static const struct attribute_group *power10_pmu_attr_groups_dd1[] = {
- 	&power10_pmu_format_group,
- 	&power10_pmu_events_group_dd1,
-@@ -267,6 +276,7 @@ static const struct attribute_group *power10_pmu_attr_groups_dd1[] = {
- static const struct attribute_group *power10_pmu_attr_groups[] = {
- 	&power10_pmu_format_group,
- 	&power10_pmu_events_group,
-+	&power10_pmu_caps_group,
- 	NULL,
- };
- 
-diff --git a/arch/powerpc/perf/power8-pmu.c b/arch/powerpc/perf/power8-pmu.c
-index e37b1e714d2b..2518f5375d4a 100644
---- a/arch/powerpc/perf/power8-pmu.c
-+++ b/arch/powerpc/perf/power8-pmu.c
-@@ -187,9 +187,19 @@ static const struct attribute_group power8_pmu_events_group = {
- 	.attrs = power8_events_attr,
- };
- 
-+static struct attribute *power8_pmu_caps_attrs[] = {
-+	NULL
-+};
-+
-+static struct attribute_group power8_pmu_caps_group = {
-+	.name  = "caps",
-+	.attrs = power8_pmu_caps_attrs,
-+};
-+
- static const struct attribute_group *power8_pmu_attr_groups[] = {
- 	&isa207_pmu_format_group,
- 	&power8_pmu_events_group,
-+	&power8_pmu_caps_group,
- 	NULL,
- };
- 
-diff --git a/arch/powerpc/perf/power9-pmu.c b/arch/powerpc/perf/power9-pmu.c
-index c393e837648e..5c654ce1a417 100644
---- a/arch/powerpc/perf/power9-pmu.c
-+++ b/arch/powerpc/perf/power9-pmu.c
-@@ -258,9 +258,19 @@ static const struct attribute_group power9_pmu_format_group = {
- 	.attrs = power9_pmu_format_attr,
- };
- 
-+static struct attribute *power9_pmu_caps_attrs[] = {
-+	NULL
-+};
-+
-+static struct attribute_group power9_pmu_caps_group = {
-+	.name  = "caps",
-+	.attrs = power9_pmu_caps_attrs,
-+};
-+
- static const struct attribute_group *power9_pmu_attr_groups[] = {
- 	&power9_pmu_format_group,
- 	&power9_pmu_events_group,
-+	&power9_pmu_caps_group,
- 	NULL,
- };
- 
 -- 
-2.31.1
-
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
