@@ -2,180 +2,166 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA4AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 09:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D0BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 09:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234204AbiERJaX (ORCPT
+        id S234585AbiERJq3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 05:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36686 "EHLO
+        Wed, 18 May 2022 05:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234274AbiERJaS (ORCPT
+        with ESMTP id S234729AbiERJqA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 05:30:18 -0400
-Received: from esa18.fujitsucc.c3s2.iphmx.com (esa18.fujitsucc.c3s2.iphmx.com [216.71.158.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52B11A3A9
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 02:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1652866210; x=1684402210;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=MOARR3nI+Pj58nuRJ1oXWz6o0YFddfpe0JHm+y0OZ44=;
-  b=RahSBSierTE2/ePHqX0IWKGZRgwfH31jlRvFJagrhb1z0VESKB4iWqIj
-   5wdhc2Y09H/LZ+5LcO5oftgrKbUiFS+jUmA1pz+aUscjNs8ZoKaFXs23R
-   +4pATao77pyHkUEAGc3VfiPmvSa5RmbykyavJ+noCDHQK1uvG96VyulB3
-   MiCX/eytnaD9pnPRgsPVVzyIDalMBr58Cu6DtheCsAwkXds78oAOS0q3y
-   tVGd8xz6gXGbbyv0reeGT4rOHHs8I9HEcTmgvRGdRUP5KTxW5fQEaU00e
-   vGRfAol574jWaoMO5zcxbHD+1ih+2cQSjzVmaEj4ySdgYJFrMiiCCUJkD
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="57392295"
-X-IronPort-AV: E=Sophos;i="5.91,234,1647270000"; 
-   d="scan'208";a="57392295"
-Received: from mail-tycjpn01lp2168.outbound.protection.outlook.com (HELO JPN01-TYC-obe.outbound.protection.outlook.com) ([104.47.23.168])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 18:28:49 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lOy+S1mxMykZUmkFHOzvrRSjCVIwtx3u0foe/nxM8BOnftm8i5KFDQnPnZQK54gtRndJqlJyNiPEtKj/bz/GfBrm3pWtes8Rn5CdrcS2mH9g1AmNYf58d22Fy4r51wMo10vXhzOdH1CX+JD7GkrbKkZr0bHst51IbcTRzg7wUYIWhQDSv9x4VXcSm4Eb/pf9CBfg+qvr4rumbcu3+a65JLmCKJ4ARsV8+RqZYpxzd4I9psUnevB5Su3t4j7Uyd8vVSxxuwfxogASNgATRCVPOZdrVjhntC4ExvhCVmWkBvlgviV6QlLKVOhqXaAAm22Y5ydiLtEFdurrICb2ZeeeuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MOARR3nI+Pj58nuRJ1oXWz6o0YFddfpe0JHm+y0OZ44=;
- b=h0ihy2ad0Q7KRP7MSqzPRTaywAL/3yq/+e7W3lXMqruOJaumL7R40mp1uZUXxjq/cNON6fiX+H1wyIWpLnvBmg9ihovvQ9Au+k9y9uAVv1lJRQDxWNdeH289jrrmLwZEyfULZekNWdY78hy2+I0XPFRMT8VuVexW7WNTDFAbmCBS/r4NesgmtM0pZM8zo5NPXDnYhbTPkRubIqXQn5j+ir8CqvlbslNLNJ3VmI51IYN0iT5LwBe5KPKOJSb3w9O90mYSMnFnMMs0BOBHAh90NB4VVnCrVouuhMEfZuveraNLuxUqqCWtKYRJ2WoZSRVOB27UEjtNaQ9BK9yA/aXJGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fujitsu.onmicrosoft.com; s=selector2-fujitsu-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MOARR3nI+Pj58nuRJ1oXWz6o0YFddfpe0JHm+y0OZ44=;
- b=pqqfaVnwv6NTW3q10nrtqvdJIJ6PCs4ma8aF0NcuXxJGXf5nucQgciYYP5/1BwteURN2+joWIElB/l4YPAeYXRbz1nK6AcaCVAdFo1neMEpBNQzdciQj1vqmGf0pZuosuFYe3Ng0IRMRw8aaasD5IlyGupmXrZfoqULu561ATnY=
-Received: from OSBPR01MB4600.jpnprd01.prod.outlook.com (2603:1096:604:7e::12)
- by TY2PR01MB5129.jpnprd01.prod.outlook.com (2603:1096:404:11a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.17; Wed, 18 May
- 2022 09:28:46 +0000
-Received: from OSBPR01MB4600.jpnprd01.prod.outlook.com
- ([fe80::f44e:cb18:cb18:e247]) by OSBPR01MB4600.jpnprd01.prod.outlook.com
- ([fe80::f44e:cb18:cb18:e247%4]) with mapi id 15.20.5273.014; Wed, 18 May 2022
- 09:28:45 +0000
-From:   "nakamura.shun@fujitsu.com" <nakamura.shun@fujitsu.com>
-To:     'Jiri Olsa' <olsajiri@gmail.com>
-CC:     "'peterz@infradead.org'" <peterz@infradead.org>,
-        "'mingo@redhat.com'" <mingo@redhat.com>,
-        "'acme@kernel.org'" <acme@kernel.org>,
-        "'mark.rutland@arm.com'" <mark.rutland@arm.com>,
-        "'alexander.shishkin@linux.intel.com'" 
-        <alexander.shishkin@linux.intel.com>,
-        "'jolsa@redhat.com'" <jolsa@redhat.com>,
-        "'namhyung@kernel.org'" <namhyung@kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'linux-perf-users@vger.kernel.org'" 
-        <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 0/7] libperf: Add interface for overflow check of sampling
- events
-Thread-Topic: Re: [PATCH 0/7] libperf: Add interface for overflow check of
- sampling events
-Thread-Index: Adhql+qIcS4TlJL7Rmm0mhE+FWh7sg==
-Date:   Wed, 18 May 2022 09:28:45 +0000
-Message-ID: <OSBPR01MB4600D5DA317696E3DAACC3CFF7D19@OSBPR01MB4600.jpnprd01.prod.outlook.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5879eb43-fe19-40ec-201f-08da38b0ce66
-x-ms-traffictypediagnostic: TY2PR01MB5129:EE_
-x-microsoft-antispam-prvs: <TY2PR01MB51298FC58E2B19EA3E5A15F9F7D19@TY2PR01MB5129.jpnprd01.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ENBLQVRMecqKOmySPkQygIaeNg6htJ9B43XXq8VoWP1231Tzf2P9rTzQU/fyx5Pul1q9+6ms0Ot8IL2pjMsGp6T4YziSobFUprpAKyVWgmtTSD42LznzK6oVU6l1916wtoYetIQ/lny0iyuRFimcD19DU6v5HmiEkVsZhlDmBrIA+h6gwv5hAhlMfUo3uuNJm1JTc6dxHJrqt/IL9yn73UCDzkGtLQxdKNgg7sKTxpWNeGM+4N/UALS4X/ywYKPYAAMsYDt10iXUWMg2Z/weWK/RdswKSnQgegd4NRFTFTgp5TyYXk0BGMmocbMAzI2QZOeVzkcNo5JtBCdIDhMPW+/3zG3LsL/lX0Vu/cL/qZ2yM/n2ryf5Jx+ee3MUFogvPPqY8L+miMfeTM5r21JvJPwbskxchOA0V2fwALDzFuYO/6Ob0IdVT/Ee8gHaXdJsv6Xqa1UEhVeaKg4Fn+Z4bjtpB9y9rZeAwTjLInozWok77Vlh0GB1QU0yqO0rCGUKGeybCjCrLvOUY8BDc7RrV3pKZAU7z6/bxpICF9KCVKNWJJZVrvBG7utF8flHD0bX/0iD0Mciak9ghUbQLO0Rnnp1rGFFmtJxqfnhDdc+5MWj4Ruw7TIQXHObL1lra7qLx4Lyrn6hloHKtIZSzBUMmrXWd89dFNrlLv8GlxFh0L6TEfhXK64DdU9BCDQGfvWwQSpgXo8ZMS9i3R916fxzRA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB4600.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(64756008)(38100700002)(38070700005)(66476007)(122000001)(4326008)(82960400001)(8676002)(86362001)(66946007)(5660300002)(66446008)(7416002)(76116006)(55016003)(6506007)(54906003)(8936002)(508600001)(85182001)(71200400001)(33656002)(83380400001)(186003)(316002)(66556008)(9686003)(26005)(7696005)(2906002)(52536014)(6916009)(4744005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?R1I2K2J1bzlnaldtMU56d1dZaENoVG9UKzNrbmxQdEMvclhwaVE0Rk9N?=
- =?iso-2022-jp?B?QlJ2UzlXYUg0WWF1RXFIQ21NUnhwRitEcUNIdUorVnBuWjhwd3dpNzF0?=
- =?iso-2022-jp?B?aHVRSWFXWDVMLzRxM0ZZUVpicDlVS0Mza0twRnV4RHI2eklRL2NPcVJv?=
- =?iso-2022-jp?B?c2greHIyZzhMaVkyL3B6V09EeGtJUzFDaFRHdzIxNktvK3k2T09obDRs?=
- =?iso-2022-jp?B?ZTV3OVlsUjZDQzZpSXBaUlZ5and6VjFUZ2xOOHV0Z09JY08ydmhjcWxG?=
- =?iso-2022-jp?B?eGVsd0ZnOWxyN2w1Y1BwMm9ldkl3T3ZycCthcXdFTlcxVlZGNHh5Q0hz?=
- =?iso-2022-jp?B?KzBNbFJPd3c3ZmxSYWRIOU1UVTZUbVlLYnRjRVNySDQ2anpKZkpjK3ll?=
- =?iso-2022-jp?B?U3pMWUxud0RnbS9kaUMvQjQ0TmhuWnRScTQ5dWIxZGwrZGsvRDNvcWpu?=
- =?iso-2022-jp?B?TnFRTTdqazl3am4vZ3p2aGZwRE1lckUzeUg0Y3V0OFZydDIwQ3RESzdy?=
- =?iso-2022-jp?B?dmVUU2VrTEtOQStsRi9zSEFiVXFsZzZCcFRzQTM2L2ZxSnNIbCtNRFNY?=
- =?iso-2022-jp?B?VFV0M2xhM0dPejdIakhVcTZVck9mVTcxMnZqR01WUXJGcTJCcnQrdlo1?=
- =?iso-2022-jp?B?WmtOYlV0eW5iZlY0dE94WnNmM1NGNHlVeWNYWURWNHhjQzdicExOSVBu?=
- =?iso-2022-jp?B?ZWV6eGlPWDhXSndIN1ZkZUZTNStUMThzNW0ySW9kVVJVSEJmanNJTzFu?=
- =?iso-2022-jp?B?aCtKVWFKOHV3NmZtTEZaZWYvTXVPc0hGdDZ0d29BcU4xbTMzcnkyNWpE?=
- =?iso-2022-jp?B?UURBWHhYMy9mOTJFSms5cnhQMGkxQXFlMyt3Z09tcWRRTWM5dTFhZ2RU?=
- =?iso-2022-jp?B?RFVtekJNMEFKWG1iU25WL3pkWmp0KzhIS1pyTHZEbFBJTzVicTM0TEE2?=
- =?iso-2022-jp?B?MElkNlVuS2JMN0lhMEdMZ0J1WWJkRitaQXo0YTYxdnBBWC96S0xsemhN?=
- =?iso-2022-jp?B?eWU1NUY2QndyTXIxdklYdzJhTjFrNEtBOXk3UCtNVGF2dHQwNG5QNkw1?=
- =?iso-2022-jp?B?bk1JV3VuZUZ3RTZKRTNPOW9VaGJMSXpFVmxUalR2b1FMVS8wSVFTZldO?=
- =?iso-2022-jp?B?bGJrU2RpSEFUanNkcjRSYWVOaEtISmZZS3Fzc1d5dUVBZ3h4S1BvTks2?=
- =?iso-2022-jp?B?YjUvQXJEeDR4UW5xRjhpMzNFK2I3MFdNNnNiVi9ld3FTUWRFVW9Gd0pK?=
- =?iso-2022-jp?B?RmVpOXgraGc0NDhTOStvcURFTDFKcCt0K2FXV3FDejdLUnRLZU9pR05q?=
- =?iso-2022-jp?B?N1BReHJIV1NMdXZXRGpOVG1nYU0zS25IRE56VHZXOEFjUldpZkZaeEJ2?=
- =?iso-2022-jp?B?eVVqMG1ZQktVN2duYWYrYW5CeUhPOFBiK1ZpTlBmZlAzZk9WTjVTZGxs?=
- =?iso-2022-jp?B?Vzkzb0JHQW5VUS8vcXAwdDJZTnUxSm82WnNaREE3bE1MQytPNXpOOXVh?=
- =?iso-2022-jp?B?S0pEWk56dzVLU1ZmNjFHZjlZK1FjNE0rektiZzlRa1dmTE5UUE1hQ0Fs?=
- =?iso-2022-jp?B?WnlNa3ZPQUttU2NJcndEcjdET0hMbTEwTC93V2E1cGxoUmJwdnh3cjNt?=
- =?iso-2022-jp?B?dEFPRW10TVNpQ1JYYjVyWWgyb1hVM0RvYXlSMzV3elZiMmVYVnBrOUto?=
- =?iso-2022-jp?B?V29qUFArYXV2bVpBM0gvNUtKNVF5THlBQk5iYW02TXZhUzh1TnRGZkEz?=
- =?iso-2022-jp?B?N0RoaU45NWFDdkhjamVPd1Yrb1VZWk53dWNLSURoM2FwNHp6dFc4Z1NO?=
- =?iso-2022-jp?B?U1FKUkp5Yi9wMm0vdXloMUdZcTBQV0Z6aHpXUkpvMENXaVFsRlFRK3Zy?=
- =?iso-2022-jp?B?bjhVZktzNWJ1dUhGYVJlaE4yRFZDYlcvVHlSdUZ3WDM2Wmd4WUZPaUdl?=
- =?iso-2022-jp?B?Qlc5SVFCVXNyR1A2cmd3RndrZ3NnekZzMVZtdmpHeDVoYWhqTjd3Z1ZY?=
- =?iso-2022-jp?B?aEkySTl1TldCNlJ0TUpNQUVmYjJZRXUrTzZKK3hhNWprOG5mNjhsWGRC?=
- =?iso-2022-jp?B?Q0NGNk5RZHFGdUsxNkJxZlhFN0psc3RzKzJUQVgrSjlxK0xFcGxNR0xi?=
- =?iso-2022-jp?B?TnZXakppM0pJdUZLN3NXdDBCeFZHdXlrYUlQWTlINldxVzdGNEl2ck91?=
- =?iso-2022-jp?B?SWxnNmplNjFtZ2J3b1pHbWVCWU12c3RxTHdvUWY0enNsVG5PaGpDSk0x?=
- =?iso-2022-jp?B?NGlFWUVKWGw4MFhmUjNHL05Ed0RDSEVYSVR4cTNTV1J4TlJ6K1B3QnI5?=
- =?iso-2022-jp?B?UjdZQ3JMMzYxaFRhVXhGcFFscGM4RUFzbitkYTYvbEYzd1YvNVFVb3lH?=
- =?iso-2022-jp?B?Y0QxNmw2S0ZoRkk5YmgwRmJid1VSa0xVZTIyOXZHNURQTVovdFJJUEx1?=
- =?iso-2022-jp?B?YTk2aEdlWnpkblo0dHE1KzRNRit0bjFjWjM0R0FyelArWVdBeEFiQTJR?=
- =?iso-2022-jp?B?ZUJkazltKzB4VUtIRXlYRURjdUtYSmZNYS8ranNmZ1Y3MVhQMThjS3VK?=
- =?iso-2022-jp?B?WkpYK0xjQT0=?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 May 2022 05:46:00 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2C7513CC8;
+        Wed, 18 May 2022 02:45:42 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33AD61FB;
+        Wed, 18 May 2022 02:45:01 -0700 (PDT)
+Received: from [10.57.4.200] (unknown [10.57.4.200])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 872E13F66F;
+        Wed, 18 May 2022 02:44:58 -0700 (PDT)
+Message-ID: <ca02e8f5-04bd-01ff-7b57-0fd08a1e2359@arm.com>
+Date:   Wed, 18 May 2022 10:44:57 +0100
 MIME-Version: 1.0
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSBPR01MB4600.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5879eb43-fe19-40ec-201f-08da38b0ce66
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2022 09:28:45.4389
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5+JBDwZirPxYHceJgedJB4lgINXpuiCY0Fh5kyh46/0C1iY9WrZ2tPky2KMOt5nYVaArn9OmDTH4OXRVmLd19/6htyAU1/zWoIf7ouKYFBg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB5129
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH v2 4/4] perf tools: arm64: Add support for VG register
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        broonie@kernel.org, acme@kernel.org, german.gomez@arm.com,
+        mathieu.poirier@linaro.org, john.garry@huawei.com,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220517102005.3022017-1-james.clark@arm.com>
+ <20220517102005.3022017-5-james.clark@arm.com>
+ <20220517131952.GE153558@leoy-ThinkPad-X240s>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220517131952.GE153558@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi, Jirka.
 
->This patch series adds interface for overflow check of sampling events
->to libperf.
->
->First patch move 'open_flags' from tools/perf to evsel::open_flags.
->
->Second patch introduce perf_{evsel, evlist}__open_opt() with extensible
->structure opts.
->
->Third patch add support for overflow handling of sampling events.
->
->Fourth patch adds a interface to check overflowed events.
->
->Fifth patch adds a interface to perform IOC_REFRESH and IOC_PERIOD.
->
->Sixth and seventh patch adds tests.
->
-Do you have any comments?
-If nothing else, I will rebase the patch to 5.18-rc7 and post the v2 patch.
 
-Best Regards
-Shunsuke
+On 17/05/2022 14:19, Leo Yan wrote:
+> On Tue, May 17, 2022 at 11:20:05AM +0100, James Clark wrote:
+>> Add the name of the VG register so it can be used in --user-regs
+>>
+>> The event will fail to open if the register is requested but not
+>> available so only add it to the mask if the kernel supports sve and also
+>> if it supports that specific register.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/arch/arm64/util/perf_regs.c | 34 ++++++++++++++++++++++++++
+>>  tools/perf/util/perf_regs.c            |  2 ++
+>>  2 files changed, 36 insertions(+)
+>>
+>> diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
+>> index 476b037eea1c..c0a921512a90 100644
+>> --- a/tools/perf/arch/arm64/util/perf_regs.c
+>> +++ b/tools/perf/arch/arm64/util/perf_regs.c
+>> @@ -2,9 +2,11 @@
+>>  #include <errno.h>
+>>  #include <regex.h>
+>>  #include <string.h>
+>> +#include <sys/auxv.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/zalloc.h>
+>>  
+>> +#include "../../../perf-sys.h"
+>>  #include "../../../util/debug.h"
+>>  #include "../../../util/event.h"
+>>  #include "../../../util/perf_regs.h"
+>> @@ -43,6 +45,7 @@ const struct sample_reg sample_reg_masks[] = {
+>>  	SMPL_REG(lr, PERF_REG_ARM64_LR),
+>>  	SMPL_REG(sp, PERF_REG_ARM64_SP),
+>>  	SMPL_REG(pc, PERF_REG_ARM64_PC),
+>> +	SMPL_REG(vg, PERF_REG_ARM64_VG),
+>>  	SMPL_REG_END
+>>  };
+>>  
+>> @@ -131,3 +134,34 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+>>  
+>>  	return SDT_ARG_VALID;
+>>  }
+>> +
+>> +uint64_t arch__user_reg_mask(void)
+>> +{
+>> +	struct perf_event_attr attr = {
+>> +		.type                   = PERF_TYPE_HARDWARE,
+>> +		.config                 = PERF_COUNT_HW_CPU_CYCLES,
+>> +		.sample_type            = PERF_SAMPLE_REGS_USER,
+>> +		.disabled               = 1,
+>> +		.exclude_kernel         = 1,
+>> +		.sample_period		= 1,
+>> +		.sample_regs_user	= PERF_REGS_MASK
+>> +	};
+>> +	int fd;
+>> +
+>> +	if (getauxval(AT_HWCAP) & HWCAP_SVE)
+>> +		attr.sample_regs_user |= SMPL_REG_MASK(PERF_REG_ARM64_VG);
+>> +
+>> +	/*
+>> +	 * Check if the pmu supports perf extended regs, before
+>> +	 * returning the register mask to sample.
+>> +	 */
+>> +	if (attr.sample_regs_user != PERF_REGS_MASK) {
+>> +		event_attr_init(&attr);
+>> +		fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+>> +		if (fd != -1) {
+>> +			close(fd);
+>> +			return attr.sample_regs_user;
+>> +		}
+>> +	}
+> 
+> Just curious, since we can know SVE is supported from reading
+> auxiliary value, can we directly return the register mask as below?
+> 
+>   PERF_REGS_MASK | SMPL_REG_MASK(PERF_REG_ARM64_VG);
 
+I was trying to cover the case where the system supports SVE, but
+the kernel doesn't have my changes to add the VG register yet.
+
+Technically I could just attempt to open the event without checking
+for SVE first and see if it works or not. But I preferred to be
+explicit so it's obvious why we're doing that.
+
+James
+
+> 
+> Except this question, this patch looks good to me.
+> 
+> Thanks,
+> Leo
+> 
+>> +	return PERF_REGS_MASK;
+>> +}
+>> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+>> index a982e40ee5a9..872dd3d38782 100644
+>> --- a/tools/perf/util/perf_regs.c
+>> +++ b/tools/perf/util/perf_regs.c
+>> @@ -103,6 +103,8 @@ static const char *__perf_reg_name_arm64(int id)
+>>  		return "lr";
+>>  	case PERF_REG_ARM64_PC:
+>>  		return "pc";
+>> +	case PERF_REG_ARM64_VG:
+>> +		return "vg";
+>>  	default:
+>>  		return NULL;
+>>  	}
+>> -- 
+>> 2.28.0
+>>
