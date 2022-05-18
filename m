@@ -2,129 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7ABC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 04:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8497EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 04:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbiEREQn (ORCPT
+        id S229638AbiEREUh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 00:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33740 "EHLO
+        Wed, 18 May 2022 00:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbiEREQl (ORCPT
+        with ESMTP id S229612AbiEREUf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 00:16:41 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FC518E22
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:16:39 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id p8so1000675pfh.8
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:16:39 -0700 (PDT)
+        Wed, 18 May 2022 00:20:35 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABF421251
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:34 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2fef1441caaso10456417b3.6
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a1/wuoT5db0kZRpIcSlyOn+OdTYXUqFFSk5R5NCmBHw=;
-        b=MyF+2wckfA0xYav8+EWfGdnkUM0DYtS4Y2y9V/ytqWLSrqhylsXZ2s8Mq/FwmlhHTq
-         lxy7FfrbV8Ab+3HwWgL2PI6Y6FSeSSbOvBijJNxilLM156T5cCkLfa2mR/pUiLxy48Xx
-         x8WGMoK7dbEGOcP9xeFijVk+gWVRAX8xXilDHmGp0kXMQPvqoI3nl3uya0+Vmck8dpFQ
-         9wDqW4/ODwpDMX2TfgDg94LOwZrur7HoIiSsRbBbTyr1DyAvksOdQu/GjL0B0k2a32VY
-         xfFSvTFSZGm5qBDg+NsrxsizvAE8eD7RzwAAMBBM3nF1lb4JZz62ffvjJ/QE8dMb6mBk
-         NYAQ==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ud9QzbIsCb5APT2y97Edpxaxa+OkwW1AX4JBgjdYyqw=;
+        b=ktS1a4chIOxiRYGlAbnl4hJ7+f4on9RqrrtLmCCSodmdkFq3XAFzIdr8PBWDBamj23
+         9xic/o495qLyAi8eHdAplNEadZu+jd1bUT9LeBUpHRJ6fX/akKIqZ7THje4ej7QSzJ8X
+         AhGQriUKKK7bAXF8F0WPMiDPSFcpRdAEvy/sicJgjiqgNtlVahdgz69IgSv5QNNXGygA
+         6sIIKjbfjqCniay96RgSZbx9KJNgV1Ggm43noXPrBzvp4z72wCTBj3EuYgRbsxCCJYUp
+         eT9MC312QwDc1m+tRZSjZIxBZn9aa1Isjom4TAutC5QedjbH1d57mnOJf7UnDB+J0HcQ
+         Xqhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a1/wuoT5db0kZRpIcSlyOn+OdTYXUqFFSk5R5NCmBHw=;
-        b=NRudpVRNhEjiRhl47+ksUqflhzA2IbOq5z7fTK3av3tYp7avZMAz4i+DPa+JDTj5Gs
-         qjxi/ypMlvSh6wYPKq0yOZ2mGi25HHBiunC117poWfGWEHz2LObxVJ6cJ+KnjrCQRghn
-         j22gC2y4nC7mdYBj0kpVcBWJZmoUvAQBrBWihk6tcV7kvKe/28GXKJWHZ96d+kqoYNEi
-         8BZlITTgklgdvUYkjaryKqx+6BDHuxwj4Nrg56RN4yxn6emCa1p66ni/0TxYvhAX861w
-         0d74xQYQigxoiu+5P2lWCWXP/lLFUOwjMS6QYmpn2pOFJDkhUVo78NufkIQJsiuzUvJe
-         MNpg==
-X-Gm-Message-State: AOAM532TDz2CyjQWYY5bvSu9jjWwQzW6+Fk3O1nWHD5lgB2OfbYE7bDm
-        md9EWsxZZXMwYN1VIr6PnfM1dw==
-X-Google-Smtp-Source: ABdhPJxIV/XkPSMp7Do5pkXR6Jtk0s9fhWG2Gr5Uks+e1PYfpOasm2UKlDlq1CpPFhRZ9d2o6C/HGQ==
-X-Received: by 2002:a05:6a00:170d:b0:512:ebab:3b25 with SMTP id h13-20020a056a00170d00b00512ebab3b25mr22777489pfc.32.1652847399126;
-        Tue, 17 May 2022 21:16:39 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([137.184.121.66])
-        by smtp.gmail.com with ESMTPSA id p123-20020a622981000000b0051811c2aa89sm568212pfp.196.2022.05.17.21.16.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 21:16:38 -0700 (PDT)
-Date:   Wed, 18 May 2022 12:16:30 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
-        benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com,
-        Jiri Olsa <jolsa@kernel.org>, kjain@linux.ibm.com,
-        lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v8 0/4] perf: arm-spe: Decode SPE source and use for perf
- c2c
-Message-ID: <20220518041630.GD402837@leoy-ThinkPad-X240s>
-References: <20220517020326.18580-1-alisaidi@amazon.com>
- <YoQRg1r7HuwiO3bZ@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YoQRg1r7HuwiO3bZ@kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ud9QzbIsCb5APT2y97Edpxaxa+OkwW1AX4JBgjdYyqw=;
+        b=Fx0HknfU+bLbS1kiW1Ii2cYn+J0h2EplVtbbWW0Qx6P0mFEpkCw1mIz8qQ9r9m9xzF
+         C/cE6w0lw31JrodxZg7vnXq0TmIQvpMA6aTzdZi7/EkxLuWRKFlU1KSKAmtRvCbyKfkG
+         eZfH5EaUoZBuyPvEvA71o9NtEmUyFYQqvixSf241dOtr162L7q0f3V0/ick4SvYLWDMM
+         pMKUKxFAHNlpZohWJS9I9AAU/IezujtPzPsJXuWSBb2MCNnwvMtS094axqpWx4czLMQK
+         SqxE49WlMJm5kSyNVTvTJYDzrjH5c27GylPaslKsdad/ojOTEVd5oBa+NHgUpBSzmBk9
+         VzyA==
+X-Gm-Message-State: AOAM530RTtaT6x+QkV19M6mQL3yXT1iMunwYrGN0JIzqyBJYYA8isiBT
+        7siyzvb3BmrCjrapt0cJ4fHKblvIrvs/
+X-Google-Smtp-Source: ABdhPJxbk/iG19iu/TMh87CdvQmpnxmoXa2dXZ21datK80WssvHarwN0ufAmeh0tBgq0XaQ3hcJfZh1zUJTY
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a5a1:af73:fe09:fd5])
+ (user=irogers job=sendgmr) by 2002:a5b:101:0:b0:64d:ae10:3d26 with SMTP id
+ 1-20020a5b0101000000b0064dae103d26mr13128289ybx.103.1652847633483; Tue, 17
+ May 2022 21:20:33 -0700 (PDT)
+Date:   Tue, 17 May 2022 21:20:19 -0700
+Message-Id: <20220518042027.836799-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
+Subject: [PATCH v2 0/8] Make more tests skip rather than fail
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
+        Marco Elver <elver@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Joe,
+A long standing niggle has been that tests that cannot pass are marked
+as failing rather than skip.  John Garry mentioned a similar concern
+in [1]. These changes fix this behavior so that as root, or not, at
+least the first 10 tests are passing or skipping.
 
-On Tue, May 17, 2022 at 06:20:03PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, May 17, 2022 at 02:03:21AM +0000, Ali Saidi escreveu:
-> > When synthesizing data from SPE, augment the type with source information
-> > for Arm Neoverse cores so we can detect situtions like cache line
-> > contention and transfers on Arm platforms. 
-> > 
-> > This changes enables future changes to c2c on a system with SPE where lines that
-> > are shared among multiple cores show up in perf c2c output. 
-> > 
-> > Changes is v9:
-> >  * Change reporting of remote socket data which should make Leo's upcomping
-> >    patch set for c2c make sense on multi-socket platforms  
-> 
-> Hey,
-> 
-> 	Joe Mario, who is one of 'perf c2c' authors asked me about some
-> git tree he could clone from for both building the kernel and
-> tools/perf/ so that he could do tests, can you please provide that?
+[1] https://lore.kernel.org/lkml/d32376b5-5538-ff00-6620-e74ad4b4abf2@huawei.com/
 
-I have uploaded the latest patches for enabling 'perf c2c' on Arm SPE
-on the repo:
+v2. Updates reviewed-by and acked-by. It addresses review comments
+    from Namhyung Kim <namhyung@kernel.org>. An extra fix is now
+    included for PERF_RECORD_* which can fail as a user because of
+    perf_event_paranoid.
 
-https://git.linaro.org/people/leo.yan/linux-spe.git branch: perf_c2c_arm_spe_peer_v3
+Ian Rogers (8):
+  perf test: Skip reason for suites with 1 test
+  perf test: Use skip in vmlinux kallsyms
+  perf test: Use skip in openat syscall
+  perf test: Basic mmap use skip
+  perf test: Parse events tidy terms_test
+  perf test: Parse events tidy evlist_test
+  perf test: Parse events break apart tests
+  perf test: Use skip in PERF_RECORD_*
 
-Below are the quick notes for build the kernel with enabling Arm SPE:
+ tools/perf/tests/builtin-test.c            |   6 +-
+ tools/perf/tests/mmap-basic.c              |  18 +-
+ tools/perf/tests/openat-syscall-all-cpus.c |  23 +-
+ tools/perf/tests/openat-syscall.c          |  20 +-
+ tools/perf/tests/parse-events.c            | 492 +++++++++++----------
+ tools/perf/tests/perf-record.c             |  18 +-
+ tools/perf/tests/vmlinux-kallsyms.c        |  12 +-
+ 7 files changed, 341 insertions(+), 248 deletions(-)
 
-  $ git clone -b perf_c2c_arm_spe_peer_v3 https://git.linaro.org/people/leo.yan/linux-spe.git
+-- 
+2.36.0.550.gb090851708-goog
 
-  Or
-
-  $ git clone -b perf_c2c_arm_spe_peer_v3 ssh://git@git.linaro.org/people/leo.yan/linux-spe.git
-
-  $ cd linux-spe
-
-  # Build kernel
-  $ make defconfig
-  $ ./scripts/config -e CONFIG_PID_IN_CONTEXTIDR
-  $ ./scripts/config -e CONFIG_ARM_SPE_PMU
-  $ make Image
-
-  # Build perf
-  $ cd tools/perf
-  $ make VF=1 DEBUG=1
-
-When boot the kernel, please add option "kpti=off" in kernel command
-line, you might need to update grub menu for this.
-
-Please feel free let us know if anything is not clear for you.
-
-Thank you,
-Leo
