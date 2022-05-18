@@ -2,218 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9726EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 May 2022 23:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A17C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 00:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231688AbiEQXPD (ORCPT
+        id S232308AbiERAJN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 19:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38902 "EHLO
+        Tue, 17 May 2022 20:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231678AbiEQXPC (ORCPT
+        with ESMTP id S232239AbiERAJL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 19:15:02 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72DC643EC9;
-        Tue, 17 May 2022 16:15:01 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id l16so696684oil.6;
-        Tue, 17 May 2022 16:15:01 -0700 (PDT)
+        Tue, 17 May 2022 20:09:11 -0400
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF8AC45799
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 17:09:10 -0700 (PDT)
+Received: by mail-vs1-xe34.google.com with SMTP id y74so390121vsy.7
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 17:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pqp1MkO8s5Q/fWvI1J1RmXv6S9bzNtcu8DiXX3zt1gw=;
+        b=A9lwE2CvTnmNhVd7OXASzUSBNwUY7FVWhMDUPV5Y094VfJtedUz1F37weVWeQ4a9hV
+         P3RdUprYgW3hKrYiUZCi+lNJr8ATqszNcCZ8MVv4t0v2RQ+eXShI2ntest3dJOJiwPaT
+         vutWW0S0A5jTkvd4GnLGev1vVYXkKrmJL8GpXSZYuNeXrSDWQAGsIGNiV3Gr481cDvaW
+         1EpMKVYblyh75+nim4Im9NBevYz97tZwA4UxOMDmPiH3eYrgPs1UhyN0u1VeJv7MdUxy
+         UujTUbEvIDLbY5GzvEIZv6gvJHPj6d44FDgjFxDiy+Gox2rFeE7oatb2h7uRwKrgXq0+
+         tPAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8hKdpqtuCqcq53/FL0d95GLSWtHDVcFVRWG97eELPOY=;
-        b=cz2zRU5iMCzUnIsk7n8zFUWXycTPrp8ZlvmqYb2IXAtWyv8AEbfVF7Ymnt8nt8sC28
-         AI/lEcp0isxBQO+It2zp8QtoROk5O+8maq8Qtv7ea3117Zq5qqv4bJp8NwjFp9COZQyO
-         DJATsdMrMi9oOlShmdoT1j1Mmz43jqdcBrT3rVME580tvRFVCbpbaiamK3qSkVGuYVhD
-         k2ly/RVmz5hQKuXWPvRmSmur84Osf/WJw6Yz/HiZcRya0thBG9hGUIapw3P/iOZbnDJI
-         6B8poiwn+SHCgFtRerJul7o1wSZ2LeSL3J6XUIWqT4hgqJmatRdDRBZm/8uqR+S5aksF
-         RHVg==
-X-Gm-Message-State: AOAM530RnI87Kd1wEItLmFxAkPiLecFK7H7EvIhc3KXTcH4nhIfWJthv
-        gMcGpEwTNQgycorsvJVRqUn6KszRI+21/RJb9Sg=
-X-Google-Smtp-Source: ABdhPJy7mTXjny0vLuS+De6ESOYh5G7Q+IrOqDl4n91k1yR2w0Srh5TIrGgP1dDVkRYa5iN0w2w/M8MmlJCcI4p6x6s=
-X-Received: by 2002:a05:6808:16ac:b0:2f9:52e5:da90 with SMTP id
- bb44-20020a05680816ac00b002f952e5da90mr17308310oib.5.1652829300570; Tue, 17
- May 2022 16:15:00 -0700 (PDT)
+        bh=pqp1MkO8s5Q/fWvI1J1RmXv6S9bzNtcu8DiXX3zt1gw=;
+        b=rsaM7qbZcC+vtPWwYoMDd8NNZHCp31i8RTYqFPbyMrUc9AOu98a4LSQdISYDCsWyj/
+         m2s8C/uj66RK+bAAG3HNGbExJwcWjElZe89wBCRObGaEe9lc+ne+A+nCfBOpmSiXfO25
+         7ECqQAIcOzV9rR8cg15pVqCKvlqnwfFTgpE+jbzLwMJrfNxNIELEx7NTJ+2y7G72CgZ2
+         4p4wxk2zJPSVIUHTUp5fJk/ZN5JL5vYSxSx1IEWfmKxYgp9+FNQdPp5tWb8F6cFA8K0o
+         WIbqoOaKwVwav56Qg/WW6RAvfbbEnV4Q4RKZSc/1Dc2YZ4nmzCODCMaPFGpqFJapC4Mk
+         byeQ==
+X-Gm-Message-State: AOAM532k83DUa0PTPX9laMUcLPpeEfteRCSFpiEDF810HbJqMYz29g//
+        xY8yXyBVHyQkgnegr3ZnjxOhklwAOw3veKufKf4yOQ==
+X-Google-Smtp-Source: ABdhPJwV4GUJWd82mo0ieKCaoxkqe7NgiyddUADRIYl7A+OVnrUKD2V/HxWM0z8nN+0mHD8DPqz4E0imXY+nmrQaVWk=
+X-Received: by 2002:a05:6102:2929:b0:32d:6662:72e2 with SMTP id
+ cz41-20020a056102292900b0032d666272e2mr10546186vsb.56.1652832549602; Tue, 17
+ May 2022 17:09:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <Ynka4u+jCvFefgwJ@krava> <20220517015726.96131-1-chengdongli@tencent.com>
-In-Reply-To: <20220517015726.96131-1-chengdongli@tencent.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 17 May 2022 16:14:49 -0700
-Message-ID: <CAM9d7chhpuKkUOet1YqvTsR4cc8WHrLTkofjA_meFY9-D_a7Mg@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] perf tools: fix callstack entries and nr print message
-To:     Chengdong Li <brytonlee01@gmail.com>
-Cc:     Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+References: <20220507053410.3798748-1-irogers@google.com> <20220507053410.3798748-2-irogers@google.com>
+ <YnkTIwiVBEGUJRKn@kernel.org> <b01a66c4-ec4d-ccb7-8ca7-130d93855177@linux.intel.com>
+ <708fab8f-b5c5-8f34-4322-3e337c56b869@linux.intel.com> <CAM9d7cgEc9o9y-fH==avzucigmMVw0AwooGw0eufb2+D568-_g@mail.gmail.com>
+In-Reply-To: <CAM9d7cgEc9o9y-fH==avzucigmMVw0AwooGw0eufb2+D568-_g@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 17 May 2022 17:08:56 -0700
+Message-ID: <CAP-5=fXM41WooXuzhToLQhfYN2OSmoLEHRZqP2v2yowQWbySig@mail.gmail.com>
+Subject: Re: [PATCH 1/5] Revert "perf stat: Support metrics with hybrid events"
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, likexu@tencent.com,
-        chengdongli@tencent.com
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Tue, May 17, 2022 at 3:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> On Tue, May 10, 2022 at 2:31 AM Xing Zhengjun
+> <zhengjun.xing@linux.intel.com> wrote:
+> >
+> >
+> >
+> > On 5/10/2022 5:55 AM, Liang, Kan wrote:
+> > >
+> > >
+> > > On 5/9/2022 9:12 AM, Arnaldo Carvalho de Melo wrote:
+> > >> Em Fri, May 06, 2022 at 10:34:06PM -0700, Ian Rogers escreveu:
+> > >>> This reverts commit 60344f1a9a597f2e0efcd57df5dad0b42da15e21.
+> > >>
+> > >> I picked this from the cover letter and added to this revert, to justify
+> > >> it:
+> > >>
+> > >> "Hybrid metrics place a PMU at the end of the parse string. This is
+> > >> also where tool events are placed. The behavior of the parse string
+> > >> isn't clear and so revert the change for now."
+> > >>
+> > >
+> > > I think the original patch used a "#" to indicate the PMU name, which
+> > > can be used to distinguish between the tool events and the PMU name.
+> > > To be honest, I'm not sure what's unclear here. Could you please clarify?
+> > >
+> > > With this revert, the issue mentioned in the original patch must be
+> > > broken on ADL. I don't see a replacement fix in this patch series.
+> > > Could you please propose a solution for the issue to replace the #PMU
+> > > name solution?
+> > >
+> > > Thanks,
+> > > Kan
+> >
+> > I am surprised the origin patch is reverted during discussion and though
+> > the discussion still has no conclusion.
+> > Let me introduce the purpose of the origin patch.
+> > For a hybrid system such as ADL, if both the metrics and the formula are
+> > different for the different PMUs, without this patch, the metric and
+> > event parser should work ok, nothing should be special for the hybrid.
+> > In fact, both "cpu_core" and "cpu_atom" may have the same metrics--the
+> > same metric name, even the same formula for the metrics. For example,
+> > both "cpu_core" and "cpu_atom" have metrics "IpBranch" and "IPC", For
+> > "IpBranch", both "cpu_core" and "cpu_atom" has the same metric name and
+> > their formula also is the same, the event name is the same though they
+> > belong to different PMUs. The old metric and event parser can not handle
+> > this kind of metric, that's why we need this patch.
+> >
+> >      "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+> >      "MetricName": "IpBranch",
+> >      "Unit": "cpu_core"
+> >
+> >      "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+> >      "MetricName": "IpBranch",
+> >      "Unit": "cpu_atom"
+> >
+> >
+> >     "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+> >     "MetricName": "IPC",
+> >     "Unit": "cpu_core"
+> >
+> >     "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.CORE",
+> >     "MetricName": "IPC",
+> >     "Unit": "cpu_atom"
+> >
+> > Except for the above two metrics, there are still a lot of similar
+> > metrics, "CPU_Utilization"...
+> >
+> > The original patch expanded the metric group string by adding
+> > "#PMU_name" to indicate the PMU name, which can be used to distinguish
+> > between the tool events and the PMU name, then the metric and event
+> > parser can parse the right PMU for the events.
+> >
+> > With the patch all the ADL metrics can pass, without the patch, a lot of
+> > metrics will fail. I don't think it's a good idea to revert it before
+> > the new solution is proposed.
+>
+> Just an idea.  Can we add a pmu prefix when it resolves the event
+> for a metric if it has the "Unit"?  It seems we can support something
+> like "cpu_core@INST_RETIRED.ANY@" already..
+>
+> Or could it be done when creating JSON files?
 
-On Mon, May 16, 2022 at 6:57 PM Chengdong Li <brytonlee01@gmail.com> wrote:
->
-> From: Chengdong Li <chengdongli@tencent.com>
->
-> when generating callstack information from branch_stack(Intel LBR),
-> the actual number of callstack entry should be bigger than the number
-> of branch_stack, for example:
->
->         branch_stack records:
->                 B() -> C()
->                 A() -> B()
->         converted callstack records should be:
->                 C()
->                 B()
->                 A()
-> though, the number of callstack equals
-> to the number of branch stack plus 1.
->
-> This patch fixes above issue in branch_stack__printf(). For example,
->
->         # echo 'scale=2000; 4*a(1)' > cmd
->         # perf record --call-graph lbr bc -l < cmd
->
-> Before applying this patch, `perf script -D` output:
->
->         1220022677386876 0x2a40 [0xd8]: PERF_RECORD_SAMPLE(IP, 0x4002): 17990/17990: 0x40a6d6 period: 894172 addr: 0
->         ... LBR call chain: nr:8
->         .....  0: fffffffffffffe00
->         .....  1: 000000000040a410
->         .....  2: 000000000040573c
->         .....  3: 0000000000408650
->         .....  4: 00000000004022f2
->         .....  5: 00000000004015f5
->         .....  6: 00007f5ed6dcb553
->         .....  7: 0000000000401698
->         ... FP chain: nr:2
->         .....  0: fffffffffffffe00
->         .....  1: 000000000040a6d8
->         ... branch callstack: nr:6    # which is not consistent with LBR records.
->         .....  0: 000000000040a410
->         .....  1: 0000000000408650    # ditto
->         .....  2: 00000000004022f2
->         .....  3: 00000000004015f5
->         .....  4: 00007f5ed6dcb553
->         .....  5: 0000000000401698
->          ... thread: bc:17990
->          ...... dso: /usr/bin/bc
->         bc 17990 1220022.677386:     894172 cycles:
->                           40a410 [unknown] (/usr/bin/bc)
->                           40573c [unknown] (/usr/bin/bc)
->                           408650 [unknown] (/usr/bin/bc)
->                           4022f2 [unknown] (/usr/bin/bc)
->                           4015f5 [unknown] (/usr/bin/bc)
->                     7f5ed6dcb553 __libc_start_main+0xf3 (/usr/lib64/libc-2.17.so)
->                           401698 [unknown] (/usr/bin/bc)
->
-> After applied:
->
->         1220022677386876 0x2a40 [0xd8]: PERF_RECORD_SAMPLE(IP, 0x4002): 17990/17990: 0x40a6d6 period: 894172 addr: 0
->         ... LBR call chain: nr:8
->         .....  0: fffffffffffffe00
->         .....  1: 000000000040a410
->         .....  2: 000000000040573c
->         .....  3: 0000000000408650
->         .....  4: 00000000004022f2
->         .....  5: 00000000004015f5
->         .....  6: 00007f5ed6dcb553
->         .....  7: 0000000000401698
->         ... FP chain: nr:2
->         .....  0: fffffffffffffe00
->         .....  1: 000000000040a6d8
->         ... branch callstack: nr:7
->         .....  0: 000000000040a410
->         .....  1: 000000000040573c
->         .....  2: 0000000000408650
->         .....  3: 00000000004022f2
->         .....  4: 00000000004015f5
->         .....  5: 00007f5ed6dcb553
->         .....  6: 0000000000401698
->          ... thread: bc:17990
->          ...... dso: /usr/bin/bc
->         bc 17990 1220022.677386:     894172 cycles:
->                           40a410 [unknown] (/usr/bin/bc)
->                           40573c [unknown] (/usr/bin/bc)
->                           408650 [unknown] (/usr/bin/bc)
->                           4022f2 [unknown] (/usr/bin/bc)
->                           4015f5 [unknown] (/usr/bin/bc)
->                     7f5ed6dcb553 __libc_start_main+0xf3 (/usr/lib64/libc-2.17.so)
->                           401698 [unknown] (/usr/bin/bc)
->
-> Change from v1:
->         - refined code style according to Jiri's review comments.
->
-> Signed-off-by: Chengdong Li <chengdongli@tencent.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Yep. The format for the events in the metric is the same as for
+parse-events, we copy+paste the strings from one to the other. The @
+in the json is used in place of slash (/) as slash is used in metrics
+for division.
 
 Thanks,
-Namhyung
+Ian
 
-
-> ---
->  tools/perf/util/session.c | 26 +++++++++++++++++++++-----
->  1 file changed, 21 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index f9a320694b85..a7f93f5a1ac8 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1151,9 +1151,20 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
->         struct branch_entry *entries = perf_sample__branch_entries(sample);
->         uint64_t i;
->
-> -       printf("%s: nr:%" PRIu64 "\n",
-> -               !callstack ? "... branch stack" : "... branch callstack",
-> -               sample->branch_stack->nr);
-> +       if (!callstack) {
-> +               printf("%s: nr:%" PRIu64 "\n", "... branch stack", sample->branch_stack->nr);
-> +       } else {
-> +               /* the reason of adding 1 to nr is because after expanding
-> +                * branch stack it generates nr + 1 callstack records. e.g.,
-> +                *         B()->C()
-> +                *         A()->B()
-> +                * the final callstack should be:
-> +                *         C()
-> +                *         B()
-> +                *         A()
-> +                */
-> +               printf("%s: nr:%" PRIu64 "\n", "... branch callstack", sample->branch_stack->nr+1);
-> +       }
->
->         for (i = 0; i < sample->branch_stack->nr; i++) {
->                 struct branch_entry *e = &entries[i];
-> @@ -1169,8 +1180,13 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
->                                 (unsigned)e->flags.reserved,
->                                 e->flags.type ? branch_type_name(e->flags.type) : "");
->                 } else {
-> -                       printf("..... %2"PRIu64": %016" PRIx64 "\n",
-> -                               i, i > 0 ? e->from : e->to);
-> +                       if (i == 0) {
-> +                               printf("..... %2"PRIu64": %016" PRIx64 "\n"
-> +                                      "..... %2"PRIu64": %016" PRIx64 "\n",
-> +                                               i, e->to, i+1, e->from);
-> +                       } else {
-> +                               printf("..... %2"PRIu64": %016" PRIx64 "\n", i+1, e->from);
-> +                       }
->                 }
->         }
->  }
-> --
-> 2.27.0
->
+> Thanks,
+> Namhyung
