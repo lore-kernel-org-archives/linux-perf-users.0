@@ -2,113 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CD7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 14:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CFEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 14:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbiEROBY (ORCPT
+        id S238541AbiEROOi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 10:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46844 "EHLO
+        Wed, 18 May 2022 10:14:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238458AbiEROBL (ORCPT
+        with ESMTP id S238524AbiEROOh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 10:01:11 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56844D8C
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 07:01:05 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id a19so2220273pgw.6
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 07:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ar6rolDwLMeiHKbJnDClgLyagtpYgq995PIhqINQJmI=;
-        b=OsMbFN6UrvDrNN0x3SKeFWq+SxjRL/JJpZp5yIY6ZSFLP/OrjvnIkq76NgNLjqw0H1
-         pVMF3pduSoX5BUlY/plgpl9vArHTEoNhG3AcgJsqmaE/Ef1/JRwUlIfxyeToS8EwgHNZ
-         jvA+PAEmfSQmXlUs6nqrKgO9iabtZofxGUd3sN7BqRr8cvkCAyPE1rWhLzEh2nUSjgi+
-         QCvShooGOHp5rSaAd4RKvDQhFQiP091GC1mPvwq8Z5jvXtmKj5L8CHqGpKkw5+IGuoug
-         Ur+KQec0ZrywjGfIpKPP/+6tCdc038aYFc4xi7TKo1kT/muZPLafdJFTZzoBahgOMPUY
-         SSNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ar6rolDwLMeiHKbJnDClgLyagtpYgq995PIhqINQJmI=;
-        b=OXHwORsnfQ6RQ8I/fHxGyr+1c1jt/9FZEbG7LVqXqVzRzsxGetSWlAAUgsee221SL9
-         zb725o7N5q6+HA1URTMSArPXJlTRKeZr9zgjRHR/EAuBFeeXsN8Fb18v+XyHH0IsHdf6
-         eUekQwhsJik9hOdeJwhmnsJ5T2+Pl/jd0dUbOxZxxxMdxJ1OyUiUYU6WWSaKr1gj5B4M
-         PUbmrNBbOr/dUSX+5oNGWpo00e884CDEHeGxot/mXAIjSdLSzSJuEdfibF8inZY2MwV0
-         CpuzJoX5uqcVIOSwUW9hbzMniq/sDTdWgrf2jRaI1d3GB1Y0PI5LkmJ6C+EX6vblcNFV
-         CtwA==
-X-Gm-Message-State: AOAM531cIdVc554Hr+myiL/MAj0NeM4taBWlNED4bN0R9ZRdYKZ4SbEZ
-        rdvsu2ZtDWRm2lAFCazeB0eKFw==
-X-Google-Smtp-Source: ABdhPJx3TNLz5f+9W529D5xXMinFWX+KMP0uI3fcwFLjPjaV6R9V5Bp4DSPFyvBx/r/K6tv6GzEI0g==
-X-Received: by 2002:a63:4e62:0:b0:398:cb40:19b0 with SMTP id o34-20020a634e62000000b00398cb4019b0mr24001969pgl.445.1652882464989;
-        Wed, 18 May 2022 07:01:04 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([137.184.121.66])
-        by smtp.gmail.com with ESMTPSA id s13-20020a17090302cd00b0015e8d4eb244sm1685310plk.142.2022.05.18.07.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 07:01:04 -0700 (PDT)
-Date:   Wed, 18 May 2022 22:00:56 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        broonie@kernel.org, acme@kernel.org, german.gomez@arm.com,
-        mathieu.poirier@linaro.org, john.garry@huawei.com,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
+        Wed, 18 May 2022 10:14:37 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D053C1C9AF6;
+        Wed, 18 May 2022 07:14:35 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BC5B23A;
+        Wed, 18 May 2022 07:14:35 -0700 (PDT)
+Received: from [10.57.82.55] (unknown [10.57.82.55])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC9843F73D;
+        Wed, 18 May 2022 07:14:32 -0700 (PDT)
+Message-ID: <7a17256d-cad0-bd94-02e7-f8adaa959654@arm.com>
+Date:   Wed, 18 May 2022 15:14:26 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 00/20] perf vendors events arm64: Multiple Arm CPUs
+Content-Language: en-GB
+To:     John Garry <john.garry@huawei.com>,
+        Nick Forrington <nick.forrington@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/4] perf tools: Use dynamic register set for Dwarf
- unwind
-Message-ID: <20220518140056.GC430350@leoy-ThinkPad-X240s>
-References: <20220517102005.3022017-1-james.clark@arm.com>
- <20220517102005.3022017-3-james.clark@arm.com>
- <20220517110322.GC153558@leoy-ThinkPad-X240s>
- <8f48b4d3-b463-a858-c0fc-0d503eee42dd@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f48b4d3-b463-a858-c0fc-0d503eee42dd@arm.com>
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>
+References: <20220510104758.64677-1-nick.forrington@arm.com>
+ <f523b0fe-1262-c1e5-c587-15842ccf0fcf@arm.com>
+ <28509191-3a45-de6d-f5bc-a8e7331c0a9e@huawei.com>
+ <5773b630-8159-1eba-481a-1bf3c406c055@arm.com>
+ <cf7d8003-9700-880f-0e46-ff40e6348bb1@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <cf7d8003-9700-880f-0e46-ff40e6348bb1@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 18, 2022 at 02:25:38PM +0100, James Clark wrote:
+On 2022-05-18 14:48, John Garry wrote:
+> On 18/05/2022 13:32, Robin Murphy wrote:
+>>> If we were to add to arm32/arm then the common event numbers and 
+>>> maybe other JSONs in future would need to be duplicated.
+>>>
+>>> Would there be any reason to add to arm32/arm apart to from being 
+>>> strictly proper? Maybe if lots of other 32b support for other vendors 
+>>> came along then it could make sense (to separate them out).
+>>
+>> That's the heart of the question, really. At best it seems 
+>> unnecessarily confusing as-is. 
 > 
+> I think it comes down to the first core supported was TX2 and the build 
+> system relies on the target arch to decide which arch from 
+> pmu-events/arch to compile.
 > 
-> On 17/05/2022 12:03, Leo Yan wrote:
-> > On Tue, May 17, 2022 at 11:20:03AM +0100, James Clark wrote:
-> >> Architectures can detect availability of extra registers at
-> >> runtime so use this more complete set for unwinding. This
-> >> will include the VG register on arm64 in a later commit.
-> >>
-> >> If the function isn't implemented then PERF_REGS_MASK is
-> >> returned and there is no change.
-> >>
-> >> Signed-off-by: James Clark <james.clark@arm.com>
-> > 
-> > This patch looks good to me:
-> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> > 
-> > Just curious, do you think should update the test (e.g.
-> > arch/arm64/tests/dwarf-unwind.c) to use arch__user_reg_mask()?
+>> AFAICS either the naming isn't functional, wherein it would 
+>> potentially make the most sense to rename the whole thing 
+>> "pmu-events/arch/arm" if it's merely for categorising Arm 
+>> architectures in general, or it is actually tied to the host triplet, 
+>> in which case the above patches are most likely useless.
 > 
-> I don't think so because the normal set of registers is manually
-> loaded in tools/perf/arch/arm64/tests/regs_load.S so it wouldn't
-> include this pseudo register. Also there is no SVE in the call
-> chain of the test so it would never have an effect.
+> Today ARCH=arm has no pmu-events support. I think that it should be easy 
+> to add plumbing for that. It becomes more tricky with supporting a 
+> single "arm" folder.
 > 
-> I could add a new test for SVE, but it depends on getting the
-> libunwind changes through first so will have to come later.
+> But then do people really care enough about pmu-events for these 32b 
+> cores? Until now, it seems not.
+> 
+>>
+>> I'd agree that there doesn't seem much point in trying to separate 
+>> things along relatively arbitrary lines if it *isn't* functionally 
+>> necessary - the PMUv2 common events look to be a straightforward 
+>> subset of the PMUv3 ones, but then there's Cortex-A32 anyway, plus 
+>> most of the already-supported CPUs could equally run an AArch32 perf 
+>> tool as well.
+> 
+> Sure, we should have these 32b cores supported for ARCH=arm if they are 
+> supported for ARCH=arm64. But then does it even make sense to have A7 
+> support in arch/arm64?
 
-It makes sense to add new SVE test later, thanks for clarification.
+That's what I'm getting at. If it is tied to the build target as you've 
+said above, then there is no point in an AArch64 perf tool including 
+data for CPUs on which that tool cannot possibly run; it's simply a 
+waste of space.
 
-So this patch series looks good for me.
+If there is interest in plumbing in support on AArch32 builds as well, 
+then I'd still be inclined to have a single arch/arm events directory, 
+and either do some build-time path munging or just symlink an arch/arm64 
+sibling back to it. Yes, technically there are AArch64-only CPUs whose 
+data would then be redundant when building for AArch32, but those are 
+such a minority that it seems like an entirely reasonable compromise.
 
-Leo
+Thanks,
+Robin.
