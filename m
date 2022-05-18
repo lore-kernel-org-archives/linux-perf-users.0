@@ -2,108 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D2FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 13:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30B5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 13:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238300AbiERNsa (ORCPT
+        id S238217AbiERN4u (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 09:48:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57400 "EHLO
+        Wed, 18 May 2022 09:56:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238289AbiERNsZ (ORCPT
+        with ESMTP id S238436AbiERNzk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 09:48:25 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8852B1C12DD;
-        Wed, 18 May 2022 06:48:22 -0700 (PDT)
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L3DkB0XFQz687Z6;
-        Wed, 18 May 2022 21:44:34 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 18 May 2022 15:48:20 +0200
-Received: from [10.47.24.102] (10.47.24.102) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
- 2022 14:48:18 +0100
-Message-ID: <cf7d8003-9700-880f-0e46-ff40e6348bb1@huawei.com>
-Date:   Wed, 18 May 2022 14:48:17 +0100
+        Wed, 18 May 2022 09:55:40 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE07119FF4C;
+        Wed, 18 May 2022 06:55:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=O9mZPAfhxk+vK1NmKVv9rMZucBWKRb6lp1Gqv3JYTMs=; b=k5zag6clGC7gAjXaCgqW79fCQm
+        /ahuxMDTaWfqlQrnt2u6+d9fNqVCuClolQff+831R3HtXerbbuOUK/Ssn5rmlLVBFnqnKsEJhAsR4
+        AuUXgr1p4/CCLLnGneGITW0wj4lSZIOS+iy7Dmq3NCKUZC9Mz8rYgVFNfawC67Bv9Xf15hPXpnSPD
+        CyxRvgejbT1vyk0ejwnVyS+dsv2rXMn2LsaOrn2EgbE4UfeqSmJWwCO7Y4lgRwQC7g0VzUAu+Qrbj
+        29taY2BZLdQaokwzFfEkgUG9lc7FzD6M+CYhJ1XVWBVrumujGt83uerUUZO9qfrUh4tv84Oqm40Rq
+        shVyTMQQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nrK8l-001YRv-67; Wed, 18 May 2022 13:55:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C5A583004B5;
+        Wed, 18 May 2022 15:55:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A76FF202391E4; Wed, 18 May 2022 15:55:00 +0200 (CEST)
+Date:   Wed, 18 May 2022 15:55:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Lin Yujun <linyujun809@huawei.com>, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johnny.chenyi@huawei.com, chenjiahao16@huawei.com,
+        chenlifu@huawei.com, lizhengyu3@huawei.com, liaochang1@huawei.com,
+        wangzhu9@huawei.com, xuyihang@huawei.com, chris.zjh@huawei.com,
+        zouyipeng@huawei.com
+Subject: Re: [PATCH -next] x86/events:Use struct_size() helper in kzalloc()
+Message-ID: <YoT6tHWbBOchi29i@hirez.programming.kicks-ass.net>
+References: <20220518131626.109123-1-linyujun809@huawei.com>
+ <20220518134920.GA8361@embeddedor>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH 00/20] perf vendors events arm64: Multiple Arm CPUs
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Nick Forrington <nick.forrington@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>
-CC:     Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>
-References: <20220510104758.64677-1-nick.forrington@arm.com>
- <f523b0fe-1262-c1e5-c587-15842ccf0fcf@arm.com>
- <28509191-3a45-de6d-f5bc-a8e7331c0a9e@huawei.com>
- <5773b630-8159-1eba-481a-1bf3c406c055@arm.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <5773b630-8159-1eba-481a-1bf3c406c055@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.24.102]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220518134920.GA8361@embeddedor>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/05/2022 13:32, Robin Murphy wrote:
->> If we were to add to arm32/arm then the common event numbers and maybe 
->> other JSONs in future would need to be duplicated.
->>
->> Would there be any reason to add to arm32/arm apart to from being 
->> strictly proper? Maybe if lots of other 32b support for other vendors 
->> came along then it could make sense (to separate them out).
+On Wed, May 18, 2022 at 08:49:20AM -0500, Gustavo A. R. Silva wrote:
+
+> > Signed-off-by: Lin Yujun <linyujun809@huawei.com>
+> > ---
+> >  arch/x86/events/rapl.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> > index 77e3a47af5ad..c7e79f0ac04f 100644
+> > --- a/arch/x86/events/rapl.c
+> > +++ b/arch/x86/events/rapl.c
+> > @@ -685,7 +685,7 @@ static int __init init_rapl_pmus(void)
+> >  	int maxdie = topology_max_packages() * topology_max_die_per_package();
+> >  	size_t size;
+> >  
+> > -	size = sizeof(*rapl_pmus) + maxdie * sizeof(struct rapl_pmu *);
+> > +	size = struct_size(rapl_pmus, pmus, maxdie);
+> >  	rapl_pmus = kzalloc(size, GFP_KERNEL);
 > 
-> That's the heart of the question, really. At best it seems unnecessarily 
-> confusing as-is. 
+> It seems that in this case, size could be entirely replaced by
+> struct_size().
 
-I think it comes down to the first core supported was TX2 and the build 
-system relies on the target arch to decide which arch from 
-pmu-events/arch to compile.
+Except every time I look at struct_size() I go: WTF does that do; while
+the code as-is is crystal clear, no de-obfucstaion required.
 
-> AFAICS either the naming isn't functional, wherein it 
-> would potentially make the most sense to rename the whole thing 
-> "pmu-events/arch/arm" if it's merely for categorising Arm architectures 
-> in general, or it is actually tied to the host triplet, in which case 
-> the above patches are most likely useless.
-
-Today ARCH=arm has no pmu-events support. I think that it should be easy 
-to add plumbing for that. It becomes more tricky with supporting a 
-single "arm" folder.
-
-But then do people really care enough about pmu-events for these 32b 
-cores? Until now, it seems not.
-
-> 
-> I'd agree that there doesn't seem much point in trying to separate 
-> things along relatively arbitrary lines if it *isn't* functionally 
-> necessary - the PMUv2 common events look to be a straightforward subset 
-> of the PMUv3 ones, but then there's Cortex-A32 anyway, plus most of the 
-> already-supported CPUs could equally run an AArch32 perf tool as well.
-
-Sure, we should have these 32b cores supported for ARCH=arm if they are 
-supported for ARCH=arm64. But then does it even make sense to have A7 
-support in arch/arm64?
-
-Thanks,
-John
