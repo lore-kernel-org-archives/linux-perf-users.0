@@ -2,199 +2,69 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D42C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 16:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B43C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 16:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235254AbiERQRn (ORCPT
+        id S240558AbiERQzG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 12:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38702 "EHLO
+        Wed, 18 May 2022 12:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234867AbiERQRm (ORCPT
+        with ESMTP id S240550AbiERQzG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 12:17:42 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E563D1E012E
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 09:17:40 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id u27so2578945wru.8
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 09:17:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=s7FakSBtFbTQXv6O1JmYb9LRvhJ2to9S1wtjJOuSc+4=;
-        b=YdGUUwvDnIvvcTgAsRwoO2Fy4rHjWv29+jdaKzoJXtDsn+KR+Ay36TfexUhI8rUutZ
-         LPr9fprcbxsKVWLjfqWog1vPXmESuuT+BqALNsTRpitKlSfog0fsxhapCr3dQNulQLke
-         kCJWCdnv/v62RlJsj7XobEPhZkJzHl2pJiMPAO1Ioqj7u+86hONW4aI3dlmvOP++rKNm
-         CBQB3rJQkL6kla46E6SeZcQx6Ir+w8LaJNVvvaiTJ64nRB0Cp5SgkNHMorWaSjH83Rmk
-         m5My2Wi3sUm+cEerC5MuetJHwkyXs0HLlAV7BK3l0wrH2C18u+8xClBCinLw6tnr56jE
-         NF3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=s7FakSBtFbTQXv6O1JmYb9LRvhJ2to9S1wtjJOuSc+4=;
-        b=0KqqfSxTaAz6gsou7A4YfUWCmYUk6AIDDYBtGslooPbvpZb/QLnD8LvnwoWAfBVdOf
-         Mh331f94wwbUxZ5bj27wiVL2O4sgTgw1pO3bYrLp+wJy1OrNUyH5b2R1q3OFPtU/4nWc
-         pW2a32nDDPLtvbfJNACXwAC83cBRP+h+RXtbOplDtzLk7g8aoVBgWDICk4Hxmaui505p
-         lI9raiOCJ7kEC0NZnNrye1xnVho2Gyr+rUEOfxLxU9v7Ih9mk1EALBnH1K9BH/VbDjbt
-         r3vrOlK2w/sJ5eszzfaBfOns3D13oSKcAB7mnS/ZF3jPMHBrCIDMbCm1f7YWt/eKILHh
-         o19g==
-X-Gm-Message-State: AOAM531grZK7hNwT/NnToVM3nfeuFAh/wrD58sXufi1RJdo9uKn6ye7u
-        LMESLepvmh1o6qfKPJiUKJe9cRbzmLKILes16AF4k1zOV6NDjfQH
-X-Google-Smtp-Source: ABdhPJzUBA/SCCTwf7eNe/a6UIKbxR3k7s5Oi4phgyqeGWQjf7PqPGJSgSZRLEvLCtWwhZs+9ygXMwILyVJgbNo41uA=
-X-Received: by 2002:a5d:674c:0:b0:20d:87e:8d6f with SMTP id
- l12-20020a5d674c000000b0020d087e8d6fmr417828wrw.40.1652890658391; Wed, 18 May
- 2022 09:17:38 -0700 (PDT)
+        Wed, 18 May 2022 12:55:06 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FC120139F;
+        Wed, 18 May 2022 09:55:03 -0700 (PDT)
+Received: from zn.tnic (p200300ea974657d0329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9746:57d0:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0D0B91EC0662;
+        Wed, 18 May 2022 18:54:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1652892898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=VRqk2XIoU7DZRwVUIljwCiK2hOhwF82JGe05ccrqLHs=;
+        b=VdStjWamEkAkYJl9mJxAmXz92e10LyHTx1AJvOom9HYGFhboLq6yvG9+uJUYYVvob0b2f1
+        A0XLo/FtsIGFpVvLfJ0M0wlhZ1Uo1n1TxIYtflwCeDvSR3kKKM6lQwgKFKqLiPZuCuUjXh
+        pGmFMe+pHPBi2c6jzQAW4WC0xP+HDn4=
+Date:   Wed, 18 May 2022 18:54:53 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Lin Yujun <linyujun809@huawei.com>, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johnny.chenyi@huawei.com, chenjiahao16@huawei.com,
+        chenlifu@huawei.com, lizhengyu3@huawei.com, liaochang1@huawei.com,
+        wangzhu9@huawei.com, xuyihang@huawei.com, chris.zjh@huawei.com,
+        zouyipeng@huawei.com
+Subject: Re: [PATCH -next] x86/events:Use struct_size() helper in kzalloc()
+Message-ID: <YoUk3RSi7aSCnDyW@zn.tnic>
+References: <20220518131626.109123-1-linyujun809@huawei.com>
+ <20220518134920.GA8361@embeddedor>
+ <YoT6tHWbBOchi29i@hirez.programming.kicks-ass.net>
+ <20220518160345.GA43938@embeddedor>
 MIME-Version: 1.0
-References: <CAP-5=fWkxtm5-Ebwkh4pzA83prvuAJ5yy6CKQYatdkKWu3Tgeg@mail.gmail.com>
- <CAPS78pqVdNLWD1bAm6ds7D==+sOaL4amLYZ4wiQgT79zC5xprg@mail.gmail.com>
- <CAP-5=fX5Kmdp1LYnaq9y-8ysk=Steo07b-gtiWx=mmTXDbSJnA@mail.gmail.com>
- <CAP-5=fVjd8oBW4pahww1sYxwWHd7XDgdN3u3WrHM3k9M58MdKA@mail.gmail.com> <CAP-5=fW=8hE+5NUAheaD+hnT7oeL+veXN6WpV-QxJ1+r7iS2bw@mail.gmail.com>
-In-Reply-To: <CAP-5=fW=8hE+5NUAheaD+hnT7oeL+veXN6WpV-QxJ1+r7iS2bw@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 18 May 2022 09:17:25 -0700
-Message-ID: <CAP-5=fVwTgh7xMTjnU7o9GiZcbhESKNwn3U=R=Ots_V9VwWb8Q@mail.gmail.com>
-Subject: Re: Linux Perf Tool Office Hours
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220518160345.GA43938@embeddedor>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A reminder that our first "office hours" are tomorrow at 2pm GMT,
-which I believe translates to these times around the world:
-China: 10pm
-India: 7:30pm
-Europe: 4pm
-UK: 3pm
-US east coast: 10am
-Brazil: 11am
-US west coast: 7am
-I expect there could be problems connecting and so I'll be logged into
-the IRC (#perf on irc.oftc.net).
+On Wed, May 18, 2022 at 11:03:45AM -0500, Gustavo A. R. Silva wrote:
+> Naming it flex_struct_size() would be more informative?
 
-My expectation is we'll speak in English but we should be mindful that
-this will be hard for people who don't get a lot of practice speaking
-English. Don't be afraid to raise a hand if you don't understand
-something. There may be someone else on the call who can help with a
-translation :-)
+Not use it at all if it makes the code less readable.
 
-It goes without saying but please be aware of the Linux contributor
-covenant code of conduct:
-https://www.kernel.org/doc/html/latest/process/code-of-conduct.html
-Arnaldo will be on the call and is the maintainer.
+-- 
+Regards/Gruss,
+    Boris.
 
-Agenda wise I think introductions would be nice and then we hope for
-the Google Summer-of-Code applicants to speak about their projects -
-what the project is, their plan and timeline. This will doubtless
-solicit feedback from people who've worked on Linux's perf tool for
-longer. People may have hot topics they'd like to bring up and if time
-allows we can discuss these. I'd also like to discuss (if we have
-time) the office hours itself, how can we make them useful, how
-frequently to have them, perhaps we can get invited speakers, etc.
-
-Thanks in advance and I'm looking forward to seeing everyone,
-Ian
-
-On Sun, May 15, 2022 at 4:37 PM Ian Rogers <irogers@google.com> wrote:
->
-> Hi,
->
-> Looking forward to seeing people at our first office hours this
-> Thursday. 1pm GMT (6am PDT) was too early and so I picked 2pm GMT. If
-> you'd like to be added to the Google calendar invite let me know,
-> otherwise the connection details are below:
->
-> Linux Perf Tool - Office Hours
-> Thursday, May 19 =C2=B7 7:00 =E2=80=93 8:00am
-> Google Meet joining info
-> Video call link: https://meet.google.com/goj-quks-ydn
-> Or dial: =E2=80=AA(US) +1 301-969-4101=E2=80=AC PIN: =E2=80=AA374 496 227=
-=E2=80=AC#
-> More phone numbers: https://tel.meet/goj-quks-ydn?pin=3D8067739163431
->
-> Thanks,
-> Ian
->
->
-> On Thu, May 12, 2022 at 9:34 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > I've closed the form. The results ordered from most to least popular
-> > are (ties are together):
-> >
-> > Preferred day of the week:
-> > Thursday
-> > Monday or Tuesday
-> > Friday
-> > Wednesday
-> >
-> > Preferred times:
-> > 1pm GMT
-> > 2pm GMT or 3pm GMT or 4pm GMT
-> > 5pm GMT
-> >
-> > Preferred meeting tool:
-> > Google meet
-> > Zoom
-> > Jtisi
-> >
-> > As per the GSoC timeline [1] we are requesting our student slots
-> > today. I'm hoping the office hours are going to be more broadly useful
-> > than just for GSoC students. 1pm GMT is 6am on the US west coast,
-> > which may mean we need to use a 2nd choice :-)
-> >
-> > Thanks,
-> > Ian
-> >
-> > [1] https://developers.google.com/open-source/gsoc/timeline
-> >
-> >
-> > On Thu, May 5, 2022 at 9:57 AM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > A reminder to help indicate a preference on office hour times and
-> > > video conference tool. So far the preferences are:
-> > >  - day of week: Thursday
-> > >  - time: 1pm GMT, 10am GMT-3, 3pm GMT+2, 6am GMT-7, 6:30pm GMT+5:30, =
-9pm GMT+8
-> > >  - video conference tool: Google meet
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > On Mon, May 2, 2022 at 9:35 AM Tanusree Debnath <tanu235m@gmail.com> =
-wrote:
-> > > >
-> > > > Hi,
-> > > > Thanks for the email. I have taken the survey and selected the time=
-s.
-> > > > Regards,
-> > > > Tanu
-> > > >
-> > > > On Sun, May 1, 2022 at 11:12 AM Ian Rogers <irogers@google.com> wro=
-te:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > We have multiple Google summer-of-code applicants this year, and =
-we'd
-> > > > > like to have a forum where they can discuss their proposal, work,
-> > > > > problems, etc. with the wider developer community. As such we're
-> > > > > proposing to set up biweekly office hours. It could be that these
-> > > > > office hours provide useful for other discussions too. To work ou=
-t the
-> > > > > best time and video conference tool for this I've created an anon=
-ymous
-> > > > > Google form:
-> > > > >
-> > > > > https://forms.gle/WCN19uMjp15bNRJV6
-> > > > >
-> > > > > Please help determine the best time and tool by entering what wor=
-ks
-> > > > > best for you.
-> > > > >
-> > > > > Thanks!
-> > > > > Ian
+https://people.kernel.org/tglx/notes-about-netiquette
