@@ -2,109 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E08C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 13:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6CAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 13:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237865AbiERNZz (ORCPT
+        id S238017AbiERNkA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 09:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48270 "EHLO
+        Wed, 18 May 2022 09:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237870AbiERNZq (ORCPT
+        with ESMTP id S238056AbiERNj7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 09:25:46 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 14D3D248F9;
-        Wed, 18 May 2022 06:25:43 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB38223A;
-        Wed, 18 May 2022 06:25:42 -0700 (PDT)
-Received: from [10.57.4.200] (unknown [10.57.4.200])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A3013F73D;
-        Wed, 18 May 2022 06:25:40 -0700 (PDT)
-Message-ID: <8f48b4d3-b463-a858-c0fc-0d503eee42dd@arm.com>
-Date:   Wed, 18 May 2022 14:25:38 +0100
+        Wed, 18 May 2022 09:39:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18171BE11D;
+        Wed, 18 May 2022 06:39:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5296DB820BF;
+        Wed, 18 May 2022 13:39:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E96C385A5;
+        Wed, 18 May 2022 13:39:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652881195;
+        bh=YAGu07lD7nk9Sec8Z4RqDJGNVMRvtX91QuhoK9EteBM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qBhRzGBkhJ/WS21W8UymKR/Yj7C9/5Idf0bT5jKtz2m/7qX77Ydy3/D/Gxt8mpFAy
+         m7Gn+S6iy7zsm/GjIuSiU5gYw/mQHit5V4radJO3h6m0NTmPcjR+sxljfoKN/zCRsn
+         gLo0ACR7qA1u9iAjrB+Yw5DroprSEp96IOtSkJPmxN5JTuO2iTv7ki6DofkfRFdJss
+         DwK2WK13qd4UTb65ZRR13MQedDzJIYWleNj5RI/J7Cn9rJdMMwFprNq6gWogWl2HmX
+         dDjSgKkTOwo+xaOfo9hILAgFvEW9QbTfTvUxOLuca4HAMquqajnPjg4tIBzoIgIFQj
+         mZRdk6/KEVTvw==
+Date:   Wed, 18 May 2022 08:49:20 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Lin Yujun <linyujun809@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, johnny.chenyi@huawei.com,
+        chenjiahao16@huawei.com, chenlifu@huawei.com,
+        lizhengyu3@huawei.com, liaochang1@huawei.com, wangzhu9@huawei.com,
+        xuyihang@huawei.com, chris.zjh@huawei.com, zouyipeng@huawei.com
+Subject: Re: [PATCH -next] x86/events:Use struct_size() helper in kzalloc()
+Message-ID: <20220518134920.GA8361@embeddedor>
+References: <20220518131626.109123-1-linyujun809@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v2 2/4] perf tools: Use dynamic register set for Dwarf
- unwind
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        broonie@kernel.org, acme@kernel.org, german.gomez@arm.com,
-        mathieu.poirier@linaro.org, john.garry@huawei.com,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220517102005.3022017-1-james.clark@arm.com>
- <20220517102005.3022017-3-james.clark@arm.com>
- <20220517110322.GC153558@leoy-ThinkPad-X240s>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220517110322.GC153558@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220518131626.109123-1-linyujun809@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, May 18, 2022 at 09:16:26PM +0800, Lin Yujun wrote:
+> Replace sizeof() with struct_size() to avoid potential integer
+> or heap overflow.
 
+This is not exactly what the patch does.
 
-On 17/05/2022 12:03, Leo Yan wrote:
-> On Tue, May 17, 2022 at 11:20:03AM +0100, James Clark wrote:
->> Architectures can detect availability of extra registers at
->> runtime so use this more complete set for unwinding. This
->> will include the VG register on arm64 in a later commit.
->>
->> If the function isn't implemented then PERF_REGS_MASK is
->> returned and there is no change.
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
-> 
-> This patch looks good to me:
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> 
-> Just curious, do you think should update the test (e.g.
-> arch/arm64/tests/dwarf-unwind.c) to use arch__user_reg_mask()?
-
-I don't think so because the normal set of registers is manually
-loaded in tools/perf/arch/arm64/tests/regs_load.S so it wouldn't
-include this pseudo register. Also there is no SVE in the call
-chain of the test so it would never have an effect.
-
-I could add a new test for SVE, but it depends on getting the
-libunwind changes through first so will have to come later.
-
-Thanks,
-James
+Your patch is replacing the open-coded calculation of the total amount
+of memory to be allocated for rapl_pmus with struct_size().
 
 > 
-> Thanks,
-> Leo
+> Also, address the following sparse warnings:
+> arch/x86/events/rapl.c:685:16: warning: using sizeof on a
+> flexible structure
+
+This does not address this warning because struct_size()
+still make use of sizeof on the struct-with-flex-array,
+internally.
+
+So, the mention to the sparse warning should be removed from
+this changelog text.
+
 > 
->> ---
->>  tools/perf/util/evsel.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->> index 5fd7924f8eb3..787bbcbcd2ae 100644
->> --- a/tools/perf/util/evsel.c
->> +++ b/tools/perf/util/evsel.c
->> @@ -896,7 +896,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
->>  					   "specifying a subset with --user-regs may render DWARF unwinding unreliable, "
->>  					   "so the minimal registers set (IP, SP) is explicitly forced.\n");
->>  			} else {
->> -				attr->sample_regs_user |= PERF_REGS_MASK;
->> +				attr->sample_regs_user |= arch__user_reg_mask();
->>  			}
->>  			attr->sample_stack_user = param->dump_size;
->>  			attr->exclude_callchain_user = 1;
->> -- 
->> 2.28.0
->>
+> Signed-off-by: Lin Yujun <linyujun809@huawei.com>
+> ---
+>  arch/x86/events/rapl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index 77e3a47af5ad..c7e79f0ac04f 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -685,7 +685,7 @@ static int __init init_rapl_pmus(void)
+>  	int maxdie = topology_max_packages() * topology_max_die_per_package();
+>  	size_t size;
+>  
+> -	size = sizeof(*rapl_pmus) + maxdie * sizeof(struct rapl_pmu *);
+> +	size = struct_size(rapl_pmus, pmus, maxdie);
+>  	rapl_pmus = kzalloc(size, GFP_KERNEL);
+
+It seems that in this case, size could be entirely replaced by
+struct_size().
+
+Thanks
+--
+Gustavo
