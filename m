@@ -2,102 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6CAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 13:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D2FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 13:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238017AbiERNkA (ORCPT
+        id S238300AbiERNsa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 09:40:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        Wed, 18 May 2022 09:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238056AbiERNj7 (ORCPT
+        with ESMTP id S238289AbiERNsZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 09:39:59 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18171BE11D;
-        Wed, 18 May 2022 06:39:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5296DB820BF;
-        Wed, 18 May 2022 13:39:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E96C385A5;
-        Wed, 18 May 2022 13:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652881195;
-        bh=YAGu07lD7nk9Sec8Z4RqDJGNVMRvtX91QuhoK9EteBM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qBhRzGBkhJ/WS21W8UymKR/Yj7C9/5Idf0bT5jKtz2m/7qX77Ydy3/D/Gxt8mpFAy
-         m7Gn+S6iy7zsm/GjIuSiU5gYw/mQHit5V4radJO3h6m0NTmPcjR+sxljfoKN/zCRsn
-         gLo0ACR7qA1u9iAjrB+Yw5DroprSEp96IOtSkJPmxN5JTuO2iTv7ki6DofkfRFdJss
-         DwK2WK13qd4UTb65ZRR13MQedDzJIYWleNj5RI/J7Cn9rJdMMwFprNq6gWogWl2HmX
-         dDjSgKkTOwo+xaOfo9hILAgFvEW9QbTfTvUxOLuca4HAMquqajnPjg4tIBzoIgIFQj
-         mZRdk6/KEVTvw==
-Date:   Wed, 18 May 2022 08:49:20 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Lin Yujun <linyujun809@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, johnny.chenyi@huawei.com,
-        chenjiahao16@huawei.com, chenlifu@huawei.com,
-        lizhengyu3@huawei.com, liaochang1@huawei.com, wangzhu9@huawei.com,
-        xuyihang@huawei.com, chris.zjh@huawei.com, zouyipeng@huawei.com
-Subject: Re: [PATCH -next] x86/events:Use struct_size() helper in kzalloc()
-Message-ID: <20220518134920.GA8361@embeddedor>
-References: <20220518131626.109123-1-linyujun809@huawei.com>
+        Wed, 18 May 2022 09:48:25 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8852B1C12DD;
+        Wed, 18 May 2022 06:48:22 -0700 (PDT)
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L3DkB0XFQz687Z6;
+        Wed, 18 May 2022 21:44:34 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 18 May 2022 15:48:20 +0200
+Received: from [10.47.24.102] (10.47.24.102) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
+ 2022 14:48:18 +0100
+Message-ID: <cf7d8003-9700-880f-0e46-ff40e6348bb1@huawei.com>
+Date:   Wed, 18 May 2022 14:48:17 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220518131626.109123-1-linyujun809@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH 00/20] perf vendors events arm64: Multiple Arm CPUs
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Nick Forrington <nick.forrington@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>
+CC:     Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>
+References: <20220510104758.64677-1-nick.forrington@arm.com>
+ <f523b0fe-1262-c1e5-c587-15842ccf0fcf@arm.com>
+ <28509191-3a45-de6d-f5bc-a8e7331c0a9e@huawei.com>
+ <5773b630-8159-1eba-481a-1bf3c406c055@arm.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <5773b630-8159-1eba-481a-1bf3c406c055@arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.24.102]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 18, 2022 at 09:16:26PM +0800, Lin Yujun wrote:
-> Replace sizeof() with struct_size() to avoid potential integer
-> or heap overflow.
+On 18/05/2022 13:32, Robin Murphy wrote:
+>> If we were to add to arm32/arm then the common event numbers and maybe 
+>> other JSONs in future would need to be duplicated.
+>>
+>> Would there be any reason to add to arm32/arm apart to from being 
+>> strictly proper? Maybe if lots of other 32b support for other vendors 
+>> came along then it could make sense (to separate them out).
+> 
+> That's the heart of the question, really. At best it seems unnecessarily 
+> confusing as-is. 
 
-This is not exactly what the patch does.
+I think it comes down to the first core supported was TX2 and the build 
+system relies on the target arch to decide which arch from 
+pmu-events/arch to compile.
 
-Your patch is replacing the open-coded calculation of the total amount
-of memory to be allocated for rapl_pmus with struct_size().
+> AFAICS either the naming isn't functional, wherein it 
+> would potentially make the most sense to rename the whole thing 
+> "pmu-events/arch/arm" if it's merely for categorising Arm architectures 
+> in general, or it is actually tied to the host triplet, in which case 
+> the above patches are most likely useless.
+
+Today ARCH=arm has no pmu-events support. I think that it should be easy 
+to add plumbing for that. It becomes more tricky with supporting a 
+single "arm" folder.
+
+But then do people really care enough about pmu-events for these 32b 
+cores? Until now, it seems not.
 
 > 
-> Also, address the following sparse warnings:
-> arch/x86/events/rapl.c:685:16: warning: using sizeof on a
-> flexible structure
+> I'd agree that there doesn't seem much point in trying to separate 
+> things along relatively arbitrary lines if it *isn't* functionally 
+> necessary - the PMUv2 common events look to be a straightforward subset 
+> of the PMUv3 ones, but then there's Cortex-A32 anyway, plus most of the 
+> already-supported CPUs could equally run an AArch32 perf tool as well.
 
-This does not address this warning because struct_size()
-still make use of sizeof on the struct-with-flex-array,
-internally.
+Sure, we should have these 32b cores supported for ARCH=arm if they are 
+supported for ARCH=arm64. But then does it even make sense to have A7 
+support in arch/arm64?
 
-So, the mention to the sparse warning should be removed from
-this changelog text.
-
-> 
-> Signed-off-by: Lin Yujun <linyujun809@huawei.com>
-> ---
->  arch/x86/events/rapl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-> index 77e3a47af5ad..c7e79f0ac04f 100644
-> --- a/arch/x86/events/rapl.c
-> +++ b/arch/x86/events/rapl.c
-> @@ -685,7 +685,7 @@ static int __init init_rapl_pmus(void)
->  	int maxdie = topology_max_packages() * topology_max_die_per_package();
->  	size_t size;
->  
-> -	size = sizeof(*rapl_pmus) + maxdie * sizeof(struct rapl_pmu *);
-> +	size = struct_size(rapl_pmus, pmus, maxdie);
->  	rapl_pmus = kzalloc(size, GFP_KERNEL);
-
-It seems that in this case, size could be entirely replaced by
-struct_size().
-
-Thanks
---
-Gustavo
+Thanks,
+John
