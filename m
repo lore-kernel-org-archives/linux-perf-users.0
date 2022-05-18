@@ -2,169 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9CAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 09:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B1DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 09:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233790AbiERJsk (ORCPT
+        id S234908AbiERJ5y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 05:48:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
+        Wed, 18 May 2022 05:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232778AbiERJsj (ORCPT
+        with ESMTP id S234895AbiERJ5o (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 05:48:39 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A583460A8F;
-        Wed, 18 May 2022 02:48:37 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id t6so1904050wra.4;
-        Wed, 18 May 2022 02:48:37 -0700 (PDT)
+        Wed, 18 May 2022 05:57:44 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 431853150E
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 02:57:44 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id a11so1688971pff.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 02:57:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=rRc4ITj1pwxMufibbMzExSF35u5hK1P/FT4xYai9KVw=;
-        b=jdcRG6I+t08rf21/JkRYHs1GdFqebk10xac5P/wNfZ2YAa0nwcLJpR0pkzA/mjTuYJ
-         vSURqjSWnX0ewro8vEAhOlLKEM8WoIpG+LuwG9DKc56uzUvhZj950ZiKIhgOh+61D+ft
-         hFcjxJ89RVD/iP7WyBeH67P5NqxefmdJ9c7a85JelchvHs8muJnF6HuitiR6wlL4mRgV
-         8108f7jYpqE4MjuuGO+X6ld6GRphyY+XG/8quBDmnnA8R77lLzYpmkZGV3XXsyCBkhAM
-         HVAHnySFC+JeXzE9j4KPB7sw5HuvfNspJ54GIwBpWhBS4ysl5gNwFt92rHvjtgodnzsc
-         nkzg==
+        bh=tc9+bvqYCqMUSJXb0nfQvcyKgjqV7Ocz6lWJsoBLOyQ=;
+        b=am+ErBo1ZB0G/hYVBrcfY1g1WCS12VRPKU0MqxO1eFPOZMnO1PfcYkLY3tknTliDWw
+         wBxg3LqZeg3ef3iGmyHkqn5SkRzAY1N5efuwoM7Ks+s38oDEoUJ05k6XRmLMQkuXE23j
+         Ts51nH6G6UDl9pi4Jy0PmG8h/z4mbK/jT4Qi/3K+KzA3bYHCZ9R60zq74x+5dZidSzJ/
+         eWrgC3XfDdl4Mzm+4qDElEQJiU4NCV3owan7qspY8A0AndODbOwqRy2U50Dzxc/nU3as
+         5QpBsthosbzuJM2zWM2vnv8Db49i3VEpNpZVfEub7knFMi3uWBTIiRIJdYAeOvh0dkuN
+         GJzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=rRc4ITj1pwxMufibbMzExSF35u5hK1P/FT4xYai9KVw=;
-        b=19BvV/8Z0z3vh8nyijcnZbxGNtj7JMnJ67iEq3+4ntDJ7jzhIWzoIbYk0LInG/J8Da
-         ub6T4KqR4PqJ390XaeVMG/qGd+Ryh4yR4UitL+bwmaThGD0wlUuPOGfG0uz7BBsn78KP
-         uFMJfp7HCk++/AgBW3+Xtd/RwnXF3G2wTzq6BzV8aU9nOoh2nCO+2VVTnkCMCU7mymDw
-         1mFNbiRlFu/NQweo7MqGC4B0rbBhVuAcbrPHMHvMRNyLEvuuHuXkXd9JXEBeyJLkmNqy
-         AfWnDSKrQsGJs4YMM4ljB23M47+97Q+ffZuE0lLR6mDDPs2augBIAtmSqaC+SOCEkBQA
-         wf5Q==
-X-Gm-Message-State: AOAM530PDvRGv45kHO/4iGSQnZ3JobN6nqxgIjkSC7NEoCLnYZw+cp59
-        gjMJ+GjUvbIkE0BWCzWDR44=
-X-Google-Smtp-Source: ABdhPJzvB2pvBpVXEzikrd+4CPwTc3drF/WEwKtb1xgMXHvqCABAuE4dnsmXiKnAiQOjyt8iyBBK5A==
-X-Received: by 2002:a5d:584b:0:b0:20c:6317:1f77 with SMTP id i11-20020a5d584b000000b0020c63171f77mr22541774wrf.355.1652867316100;
-        Wed, 18 May 2022 02:48:36 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id j10-20020adfa78a000000b0020c5253d8fcsm1785705wrc.72.2022.05.18.02.48.34
+        bh=tc9+bvqYCqMUSJXb0nfQvcyKgjqV7Ocz6lWJsoBLOyQ=;
+        b=aNs6KNFDAdUwjiceqSBQ+2PSRMA02mzUlbDA7TOZ40YwTSKjgaZDTfwLgKWLw0wblY
+         enr24Cgrgc1a6zrjpgoviNn0iwdkAkgCjQs/uo2ow/Y2Pg073gUyk6RDkdSryEceN6k/
+         xF95FNvfwr1ptDRj/vYwkruz5ftekqMkchemFqQKZoVtaNNVPMBkM4Zw3oNFvd/Cg+hK
+         zhEDVZRMI28RRxcF1EjlMjVqbTNyvJOdADUger5uVtrOY7AKPiYN+hVzdmOVqDsqvcNd
+         q8i+D5IbNiar6TeFLz7QyjNxznnfq2bcz2MT2563dhCgULG8A0ttMRPF2OaA7z548F7a
+         WOvQ==
+X-Gm-Message-State: AOAM532ycz8+3A42vA3WG8CfJSf9LmDv6IsOODhwVmqrA7HNLihETQ5Y
+        PzFxExBVom2659KU/STGxoGKxA==
+X-Google-Smtp-Source: ABdhPJwxN17DvvwgA27WGHd/CQU6EzFpAzCAl1BFGWWAOX6ggp1eIFb0ryL4HktPXI/Dtai14vWbIA==
+X-Received: by 2002:a63:5a01:0:b0:3d8:22cb:9224 with SMTP id o1-20020a635a01000000b003d822cb9224mr22960915pgb.548.1652867863321;
+        Wed, 18 May 2022 02:57:43 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([137.184.121.66])
+        by smtp.gmail.com with ESMTPSA id s26-20020a056a001c5a00b005180ea859d7sm1419223pfw.123.2022.05.18.02.57.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 02:48:35 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 18 May 2022 11:48:33 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Wed, 18 May 2022 02:57:42 -0700 (PDT)
+Date:   Wed, 18 May 2022 17:57:35 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        broonie@kernel.org, acme@kernel.org, german.gomez@arm.com,
+        mathieu.poirier@linaro.org, john.garry@huawei.com,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Subject: Re: [PATCHv2 0/3] perf tools: Fix prologue generation
-Message-ID: <YoTA8Q1Ij/eD8BI4@krava>
-References: <20220510074659.2557731-1-jolsa@kernel.org>
- <CAEf4BzbK9zgetgE1yKkCANTZqizUrXgamJa2X0f0XmzQUdFrCQ@mail.gmail.com>
- <YntnRixbfQ1HCm9T@krava>
- <Ynv+7iaaAbyM38B6@kernel.org>
- <CAEf4BzaQsF31f3WuU32wDCzo6bw7eY8E9zF6Lo218jfw-VQmcA@mail.gmail.com>
- <CAP-5=fX6Z549my7VR0GYNW11vvXJc_4dmg8KOvaFAusjKJV=JA@mail.gmail.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 4/4] perf tools: arm64: Add support for VG register
+Message-ID: <20220518095735.GB430350@leoy-ThinkPad-X240s>
+References: <20220517102005.3022017-1-james.clark@arm.com>
+ <20220517102005.3022017-5-james.clark@arm.com>
+ <20220517131952.GE153558@leoy-ThinkPad-X240s>
+ <ca02e8f5-04bd-01ff-7b57-0fd08a1e2359@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fX6Z549my7VR0GYNW11vvXJc_4dmg8KOvaFAusjKJV=JA@mail.gmail.com>
+In-Reply-To: <ca02e8f5-04bd-01ff-7b57-0fd08a1e2359@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 17, 2022 at 09:45:56PM -0700, Ian Rogers wrote:
-> On Tue, May 17, 2022 at 3:03 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Wed, May 11, 2022 at 11:22 AM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > Em Wed, May 11, 2022 at 09:35:34AM +0200, Jiri Olsa escreveu:
-> > > > On Tue, May 10, 2022 at 04:48:55PM -0700, Andrii Nakryiko wrote:
-> > > > > On Tue, May 10, 2022 at 12:47 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > > >
-> > > > > > hi,
-> > > > > > sending change we discussed some time ago [1] to get rid of
-> > > > > > some deprecated functions we use in perf prologue code.
-> > > > > >
-> > > > > > Despite the gloomy discussion I think the final code does
-> > > > > > not look that bad ;-)
-> > > > > >
-> > > > > > This patchset removes following libbpf functions from perf:
-> > > > > >   bpf_program__set_prep
-> > > > > >   bpf_program__nth_fd
-> > > > > >   struct bpf_prog_prep_result
-> > > > > >
-> > > > > > v2 changes:
-> > > > > >   - use fallback section prog handler, so we don't need to
-> > > > > >     use section prefix [Andrii]
-> > > > > >   - realloc prog->insns array in bpf_program__set_insns [Andrii]
-> > > > > >   - squash patch 1 from previous version with
-> > > > > >     bpf_program__set_insns change [Daniel]
-> > > > > >   - patch 3 already merged [Arnaldo]
-> > > > > >   - added more comments
-> > > > > >
-> > > > > >   meanwhile.. perf/core and bpf-next diverged, so:
-> > > > > >     - libbpf bpf_program__set_insns change is based on bpf-next/master
-> > > > > >     - perf changes do not apply on bpf-next/master so they are based on
-> > > > > >       perf/core ... however they can be merged only after we release
-> > > > > >       libbpf 0.8.0 with bpf_program__set_insns change, so we don't break
-> > > > > >       the dynamic linking
-> > > > > >       I'm sending perf changes now just for review, I'll resend them
-> > > > > >       once libbpf 0.8.0 is released
-> > > > > >
-> > > > > > thanks,
-> > > > > > jirka
-> > > > > >
-> > > > > >
-> > > > > > [1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
-> > > > > > ---
-> > > > > > Jiri Olsa (1):
-> > > > > >       libbpf: Add bpf_program__set_insns function
-> > > > > >
-> > > > >
-> > > > > The first patch looks good to me. The rest I can't really review and
-> > > > > test properly, so I'll leave it up to Arnaldo.
-> > > > >
-> > > > > Arnaldo, how do we coordinate these patches? Should they go through
-> > > > > bpf-next (after you Ack them) or you want them in your tree?
-> > > > >
-> > > > > I'd like to get the bpf_program__set_insns() patch into bpf-next so
-> > > > > that I can do libbpf v0.8 release, having it in a separate tree is
-> > > > > extremely inconvenient. Please let me know how you think we should
-> > > > > proceed?
-> > > >
-> > > > we need to wait with perf changes after the libbpf is merged and
-> > > > libbpf 0.8.0 is released.. so we don't break dynamic linking for
-> > > > perf
-> > > >
-> > > > at the moment please just take libbpf change and I'll resend the
-> > > > perf change later if needed
-> > >
-> > > Ok.
-> > >
-> >
-> > Jiri, libbpf v0.8 is out, can you please re-send your perf patches?
+On Wed, May 18, 2022 at 10:44:57AM +0100, James Clark wrote:
+
+[...]
+
+> >> +	if (getauxval(AT_HWCAP) & HWCAP_SVE)
+> >> +		attr.sample_regs_user |= SMPL_REG_MASK(PERF_REG_ARM64_VG);
+> >> +
+> >> +	/*
+> >> +	 * Check if the pmu supports perf extended regs, before
+> >> +	 * returning the register mask to sample.
+> >> +	 */
+> >> +	if (attr.sample_regs_user != PERF_REGS_MASK) {
+> >> +		event_attr_init(&attr);
+> >> +		fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+> >> +		if (fd != -1) {
+> >> +			close(fd);
+> >> +			return attr.sample_regs_user;
+> >> +		}
+> >> +	}
+> > 
+> > Just curious, since we can know SVE is supported from reading
+> > auxiliary value, can we directly return the register mask as below?
+> > 
+> >   PERF_REGS_MASK | SMPL_REG_MASK(PERF_REG_ARM64_VG);
 > 
-> We still haven't done as Andrii suggested in:
-> https://lore.kernel.org/lkml/CAEf4BzbbOHQZUAe6iWaehKCPQAf3VC=hq657buqe2_yRKxaK-A@mail.gmail.com/
-> so for LIBBPF_DYNAMIC I believe we're compiling against the header
-> files in tools/lib rather than the installed libbpf's header files.
-> This may have some unexpected consequences.
+> I was trying to cover the case where the system supports SVE, but
+> the kernel doesn't have my changes to add the VG register yet.
+> 
+> Technically I could just attempt to open the event without checking
+> for SVE first and see if it works or not. But I preferred to be
+> explicit so it's obvious why we're doing that.
 
-like your program is not doing what you expected.. been there ;-)
-sounds good, will check
+Understand; LGTM.
 
-jirka
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
