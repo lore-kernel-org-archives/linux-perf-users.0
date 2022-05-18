@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFF5C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 22:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB0DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 22:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbiERWrn (ORCPT
+        id S230334AbiERWrt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 18:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36434 "EHLO
+        Wed, 18 May 2022 18:47:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230238AbiERWrg (ORCPT
+        with ESMTP id S230225AbiERWrk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 18:47:36 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E4C179C3D;
-        Wed, 18 May 2022 15:47:31 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id pq9-20020a17090b3d8900b001df622bf81dso3472728pjb.3;
-        Wed, 18 May 2022 15:47:31 -0700 (PDT)
+        Wed, 18 May 2022 18:47:40 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12DB14FC8F;
+        Wed, 18 May 2022 15:47:34 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id bh5so3142102plb.6;
+        Wed, 18 May 2022 15:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IVBOxfzQt/PIEE4vMniJHKiPU+TnxC7q6f218dueTkE=;
-        b=mKE7ggYCATdvEklKmOjZLDBN0EX+PFd8N7wqo6DZsP8ydfBOZvPmc8zgNYh9la9sgL
-         9YZRLS2+WXU2AgEgtwQMEdLbzFI/QPtudyj36EEq1UlnnM5wDNJSpItCHgqWcjGaB1lT
-         tBkHREXIMdHNaUQkjRisIxdT4KU4ryH0TWKdC7ox99+xNStG0wKSakFBv98FpeQWy6Zz
-         c+ADvv+K7tcO2/saNgaDBTPaqYAkV1YdQ8n8eKzWKkEOzxsNg/591stA2Jtzvx2VD3AT
-         fJE7vfCqwdyhl/HPN4587uZOzwqao7sf4iqqj9Tu1DtDYSSuBYP9xVNOTeUFuzqbyC9Z
-         EEbw==
+        bh=GNIxSJPL7uksAJMx/pU2JN81C2HBSsM0y7AnkRhp5zw=;
+        b=IFb54PswqhNMOfbXf8vQPkueUIJZnvCMw2Ngi/rD581GYDmAzgUEDLtSx0792bhzbx
+         e+pve0X9t8Eek8JFR1A598HKALYuWNDgFlHPiYhL8VYrYLzqNaL8JrlfwnhNjtIFk1Np
+         4X3I1+bo3U9TH6Gdndr8E1Bl/cDAwXWPeIiRn8xqzNlQ2Fc+1OLQ2YIKOVkgiHG14WQo
+         2VHnABsB/XKkTRwW8BfI/Ow46I+iU/V8trr80amOEyBmoCpCFkkQkxy0ndEouoYKh33L
+         1teumz6CmlwuMR7x4/hIA2urAZrG+USvO2ZVPNlEvZ2NjgqBMmGWiKwyTnB7386n1AXd
+         lcxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=IVBOxfzQt/PIEE4vMniJHKiPU+TnxC7q6f218dueTkE=;
-        b=765eXD9UDyVsTlv2x4l48rcNGbRrBLAdmGC5yIUIsJ8LlXKC5LSt1kRRdufKMeMq9q
-         mml0R6hR8e23oZ1Axw4OIfbVsnBQY9MytfByWOaMgoML48RAZ27qsvHGrnRSq+U98ZZI
-         MkWp4zFNEaOOJGxzgwMpmQIe7SY5q3AA83NDzsR7hs2Q9Df/ZuZdY954a5uqAtMYDKDL
-         md/1I+kXT9EsGXPz+i7fV2i+nkrnBr3EcZP4B7pBylI6ASN9ESuY3J7eVj+sUFDZWk20
-         Cs1Z+clllETpiBFvTGXgqiaYWOnMQSJ+s7zPBotOW5U23jx/me61ktLCesmB/Vealqg/
-         lAFA==
-X-Gm-Message-State: AOAM532kLW3iyTlYbhEljPBZZdKpi929k8v/CveLY3GddqUYa1HNAzUU
-        f+EqJDpHY8/5YdBwve5cGKk=
-X-Google-Smtp-Source: ABdhPJyXlvYhSRlr9OBApZK2Y5Gjs9mDJ83qz7VD1h/6RYMvsvcG8z76Kgk/OfjTxGGJF10qix5Lyw==
-X-Received: by 2002:a17:902:d512:b0:15e:93de:762a with SMTP id b18-20020a170902d51200b0015e93de762amr1641329plg.132.1652914050193;
-        Wed, 18 May 2022 15:47:30 -0700 (PDT)
+        bh=GNIxSJPL7uksAJMx/pU2JN81C2HBSsM0y7AnkRhp5zw=;
+        b=kV7ESi1jDKriDTNbKWAfYWNRcsB+4gf6ZIkebzPEXP1BLVKM2ezxxk27zwmcTsL0pT
+         swnVxWCPJnfcLhKfkWfc+lVHNBCt02LowLazlz620rgScUx+XIzTHp1t5VMMtZrCJVO9
+         eya7OyOlNAQbOqeUU0U4COOV58tZ2hnuB1xDWMgylquAq2rjse41mQmNILyXEDYE89ng
+         U5ifoJBGByTmsS9p5jZXF7P93AAj/tur/P+P6GT14rSqGGjX9l0Q9l1IPyYM9tpTJNZL
+         ZZzKZNxIvzIwHbdJTDqLritfscQVT3zC0OvxqKWoOuGnaGFhHVGNKqWMlneoK4JJaO5J
+         qQTQ==
+X-Gm-Message-State: AOAM530uiWPLJXoxxJEHityZWOKj0aRJlVAtxG3nu3H578KGgHhXawZh
+        coQirM+TnZaL74Ui/zRK/q4=
+X-Google-Smtp-Source: ABdhPJyBJDY0NlTKLSW6molk6ZiYvE+eLuBn/Y5rQKWZn4OcGjEsDEca0xpRqvsmPCfXHXoeqb3Ssg==
+X-Received: by 2002:a17:902:e74d:b0:15e:94f7:611e with SMTP id p13-20020a170902e74d00b0015e94f7611emr1641543plf.37.1652914054133;
+        Wed, 18 May 2022 15:47:34 -0700 (PDT)
 Received: from balhae.corp.google.com ([2620:15c:2c1:200:a718:cbfe:31cb:3a04])
-        by smtp.gmail.com with ESMTPSA id d23-20020a170902aa9700b0015e8d4eb2besm2214100plr.264.2022.05.18.15.47.29
+        by smtp.gmail.com with ESMTPSA id d23-20020a170902aa9700b0015e8d4eb2besm2214100plr.264.2022.05.18.15.47.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 15:47:29 -0700 (PDT)
+        Wed, 18 May 2022 15:47:33 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -62,9 +62,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Milian Wolff <milian.wolff@kdab.com>, bpf@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Blake Jones <blakejones@google.com>
-Subject: [PATCH 2/6] perf record: Enable off-cpu analysis with BPF
-Date:   Wed, 18 May 2022 15:47:21 -0700
-Message-Id: <20220518224725.742882-3-namhyung@kernel.org>
+Subject: [PATCH 5/6] perf record: Add cgroup support for off-cpu profiling
+Date:   Wed, 18 May 2022 15:47:24 -0700
+Message-Id: <20220518224725.742882-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
 In-Reply-To: <20220518224725.742882-1-namhyung@kernel.org>
 References: <20220518224725.742882-1-namhyung@kernel.org>
@@ -74,580 +74,262 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add --off-cpu option to enable the off-cpu profiling with BPF.  It'd
-use a bpf_output event and rename it to "offcpu-time".  Samples will
-be synthesized at the end of the record session using data from a BPF
-map which contains the aggregated off-cpu time at context switches.
-So it needs root privilege to get the off-cpu profiling.
+This covers two different use cases.  The first one is cgroup
+filtering given by -G/--cgroup option which controls the off-cpu
+profiling for tasks in the given cgroups only.
 
-Each sample will have a separate user stacktrace so it will skip
-kernel threads.  The sample ip will be set from the stacktrace and
-other sample data will be updated accordingly.  Currently it only
-handles some basic sample types.
+The other use case is cgroup sampling which is enabled by
+--all-cgroups option and it adds PERF_SAMPLE_CGROUP to the sample_type
+to set the cgroup id of the task in the sample data.
 
-The sample timestamp is set to a dummy value just not to bother with
-other events during the sorting.  So it has a very big initial value
-and increase it on processing each samples.
+Example output.
 
-Good thing is that it can be used together with regular profiling like
-cpu cycles.  If you don't want to that, you can use a dummy event to
-enable off-cpu profiling only.
+  $ sudo perf record -a --off-cpu --all-cgroups sleep 1
 
-Example output:
-  $ sudo perf record --off-cpu perf bench sched messaging -l 1000
-
-  $ sudo perf report --stdio --call-graph=no
-  # Total Lost Samples: 0
-  #
-  # Samples: 41K of event 'cycles'
-  # Event count (approx.): 42137343851
+  $ sudo perf report --stdio -s comm,cgroup --call-graph=no
   ...
-
-  # Samples: 1K of event 'offcpu-time'
-  # Event count (approx.): 587990831640
+  # Samples: 144  of event 'offcpu-time'
+  # Event count (approx.): 48452045427
   #
-  # Children      Self  Command          Shared Object       Symbol
-  # ........  ........  ...............  ..................  .........................
+  # Children      Self  Command          Cgroup
+  # ........  ........  ...............  ..........................................
   #
-      81.66%     0.00%  sched-messaging  libc-2.33.so        [.] __libc_start_main
-      81.66%     0.00%  sched-messaging  perf                [.] cmd_bench
-      81.66%     0.00%  sched-messaging  perf                [.] main
-      81.66%     0.00%  sched-messaging  perf                [.] run_builtin
-      81.43%     0.00%  sched-messaging  perf                [.] bench_sched_messaging
-      40.86%    40.86%  sched-messaging  libpthread-2.33.so  [.] __read
-      37.66%    37.66%  sched-messaging  libpthread-2.33.so  [.] __write
-       2.91%     2.91%  sched-messaging  libc-2.33.so        [.] __poll
+      61.57%     5.60%  Chrome_ChildIOT  /user.slice/user-657345.slice/user@657345.service/app.slice/...
+      29.51%     7.38%  Web Content      /user.slice/user-657345.slice/user@657345.service/app.slice/...
+      17.48%     1.59%  Chrome_IOThread  /user.slice/user-657345.slice/user@657345.service/app.slice/...
+      16.48%     4.12%  pipewire-pulse   /user.slice/user-657345.slice/user@657345.service/session.slice/...
+      14.48%     2.07%  perf             /user.slice/user-657345.slice/user@657345.service/app.slice/...
+      14.30%     7.15%  CompositorTileW  /user.slice/user-657345.slice/user@657345.service/app.slice/...
+      13.33%     6.67%  Timer            /user.slice/user-657345.slice/user@657345.service/app.slice/...
   ...
-
-As you can see it spent most of off-cpu time in read and write in
-bench_sched_messaging().  The --call-graph=no was added just to make
-the output concise here.
-
-It uses perf hooks facility to control BPF program during the record
-session rather than adding new BPF/off-cpu specific calls.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Documentation/perf-record.txt |  10 ++
- tools/perf/Makefile.perf                 |   1 +
- tools/perf/builtin-record.c              |  25 +++
- tools/perf/util/Build                    |   1 +
- tools/perf/util/bpf_off_cpu.c            | 204 +++++++++++++++++++++++
- tools/perf/util/bpf_skel/off_cpu.bpf.c   | 139 +++++++++++++++
- tools/perf/util/off_cpu.h                |  24 +++
- 7 files changed, 404 insertions(+)
- create mode 100644 tools/perf/util/bpf_off_cpu.c
- create mode 100644 tools/perf/util/bpf_skel/off_cpu.bpf.c
- create mode 100644 tools/perf/util/off_cpu.h
+ tools/perf/builtin-record.c            |  2 +-
+ tools/perf/util/bpf_off_cpu.c          | 48 ++++++++++++++++++++++++--
+ tools/perf/util/bpf_skel/off_cpu.bpf.c | 33 ++++++++++++++++++
+ tools/perf/util/off_cpu.h              |  7 ++--
+ 4 files changed, 85 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 465be4e62a17..b4e9ef7edfef 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -758,6 +758,16 @@ include::intel-hybrid.txt[]
- 	If the URLs is not specified, the value of DEBUGINFOD_URLS
- 	system environment variable is used.
- 
-+--off-cpu::
-+	Enable off-cpu profiling with BPF.  The BPF program will collect
-+	task scheduling information with (user) stacktrace and save them
-+	as sample data of a software event named "offcpu-time".  The
-+	sample period will have the time the task slept in nanoseconds.
-+
-+	Note that BPF can collect stack traces using frame pointer ("fp")
-+	only, as of now.  So the applications built without the frame
-+	pointer might see bogus addresses.
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 6e5aded855cc..8f738e11356d 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1038,6 +1038,7 @@ SKEL_TMP_OUT := $(abspath $(SKEL_OUT)/.tmp)
- SKELETONS := $(SKEL_OUT)/bpf_prog_profiler.skel.h
- SKELETONS += $(SKEL_OUT)/bperf_leader.skel.h $(SKEL_OUT)/bperf_follower.skel.h
- SKELETONS += $(SKEL_OUT)/bperf_cgroup.skel.h $(SKEL_OUT)/func_latency.skel.h
-+SKELETONS += $(SKEL_OUT)/off_cpu.skel.h
- 
- $(SKEL_TMP_OUT) $(LIBBPF_OUTPUT):
- 	$(Q)$(MKDIR) -p $@
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index a5cf6a99d67f..91f88501412e 100644
+index 7f60d2eac0b4..77fa21c2c69f 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -49,6 +49,7 @@
- #include "util/clockid.h"
- #include "util/pmu-hybrid.h"
- #include "util/evlist-hybrid.h"
-+#include "util/off_cpu.h"
- #include "asm/bug.h"
- #include "perf.h"
- #include "cputopo.h"
-@@ -162,6 +163,7 @@ struct record {
- 	bool			buildid_mmap;
- 	bool			timestamp_filename;
- 	bool			timestamp_boundary;
-+	bool			off_cpu;
- 	struct switch_output	switch_output;
- 	unsigned long long	samples;
- 	unsigned long		output_max_size;	/* = 0: unlimited */
-@@ -903,6 +905,11 @@ static int record__config_text_poke(struct evlist *evlist)
- 	return 0;
+@@ -907,7 +907,7 @@ static int record__config_text_poke(struct evlist *evlist)
+ 
+ static int record__config_off_cpu(struct record *rec)
+ {
+-	return off_cpu_prepare(rec->evlist, &rec->opts.target);
++	return off_cpu_prepare(rec->evlist, &rec->opts.target, &rec->opts);
  }
  
-+static int record__config_off_cpu(struct record *rec)
-+{
-+	return off_cpu_prepare(rec->evlist);
-+}
-+
  static bool record__kcore_readable(struct machine *machine)
- {
- 	char kcore[PATH_MAX];
-@@ -2600,6 +2607,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	} else
- 		status = err;
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index 874856c55101..b73e84a02264 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -5,10 +5,12 @@
+ #include "util/evlist.h"
+ #include "util/off_cpu.h"
+ #include "util/perf-hooks.h"
++#include "util/record.h"
+ #include "util/session.h"
+ #include "util/target.h"
+ #include "util/cpumap.h"
+ #include "util/thread_map.h"
++#include "util/cgroup.h"
+ #include <bpf/bpf.h>
  
-+	if (rec->off_cpu)
-+		rec->bytes_written += off_cpu_write(rec->session);
-+
- 	record__synthesize(rec, true);
- 	/* this will be recalculated during process_buildids() */
- 	rec->samples = 0;
-@@ -3324,6 +3334,7 @@ static struct option __record_options[] = {
- 	OPT_CALLBACK_OPTARG(0, "threads", &record.opts, NULL, "spec",
- 			    "write collected trace data into several data files using parallel threads",
- 			    record__parse_threads),
-+	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
- 	OPT_END()
+ #include "bpf_skel/off_cpu.skel.h"
+@@ -24,6 +26,7 @@ struct off_cpu_key {
+ 	u32 tgid;
+ 	u32 stack_id;
+ 	u32 state;
++	u64 cgroup_id;
  };
  
-@@ -3743,6 +3754,12 @@ int cmd_record(int argc, const char **argv)
- 	set_nobuild('\0', "vmlinux", true);
- # undef set_nobuild
- # undef REASON
-+#endif
-+
-+#ifndef HAVE_BPF_SKEL
-+# define set_nobuild(s, l, m, c) set_option_nobuild(record_options, s, l, m, c)
-+	set_nobuild('\0', "off-cpu", "no BUILD_BPF_SKEL=1", true);
-+# undef set_nobuild
- #endif
+ union off_cpu_data {
+@@ -116,10 +119,11 @@ static void check_sched_switch_args(void)
+ 	}
+ }
  
- 	rec->opts.affinity = PERF_AFFINITY_SYS;
-@@ -3981,6 +3998,14 @@ int cmd_record(int argc, const char **argv)
+-int off_cpu_prepare(struct evlist *evlist, struct target *target)
++int off_cpu_prepare(struct evlist *evlist, struct target *target,
++		    struct record_opts *opts)
+ {
+ 	int err, fd, i;
+-	int ncpus = 1, ntasks = 1;
++	int ncpus = 1, ntasks = 1, ncgrps = 1;
+ 
+ 	if (off_cpu_config(evlist) < 0) {
+ 		pr_err("Failed to config off-cpu BPF event\n");
+@@ -143,6 +147,21 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target)
+ 		bpf_map__set_max_entries(skel->maps.task_filter, ntasks);
+ 	}
+ 
++	if (evlist__first(evlist)->cgrp) {
++		ncgrps = evlist->core.nr_entries - 1; /* excluding a dummy */
++		bpf_map__set_max_entries(skel->maps.cgroup_filter, ncgrps);
++
++		if (!cgroup_is_v2("perf_event"))
++			skel->rodata->uses_cgroup_v1 = true;
++	}
++
++	if (opts->record_cgroup) {
++		skel->rodata->needs_cgroup = true;
++
++		if (!cgroup_is_v2("perf_event"))
++			skel->rodata->uses_cgroup_v1 = true;
++	}
++
+ 	set_max_rlimit();
+ 	check_sched_switch_args();
+ 
+@@ -178,6 +197,29 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target)
  		}
  	}
  
-+	if (rec->off_cpu) {
-+		err = record__config_off_cpu(rec);
-+		if (err) {
-+			pr_err("record__config_off_cpu failed, error %d\n", err);
-+			goto out;
++	if (evlist__first(evlist)->cgrp) {
++		struct evsel *evsel;
++		u8 val = 1;
++
++		skel->bss->has_cgroup = 1;
++		fd = bpf_map__fd(skel->maps.cgroup_filter);
++
++		evlist__for_each_entry(evlist, evsel) {
++			struct cgroup *cgrp = evsel->cgrp;
++
++			if (cgrp == NULL)
++				continue;
++
++			if (!cgrp->id && read_cgroup_id(cgrp) < 0) {
++				pr_err("Failed to read cgroup id of %s\n",
++				       cgrp->name);
++				goto out;
++			}
++
++			bpf_map_update_elem(fd, &cgrp->id, &val, BPF_ANY);
 +		}
 +	}
 +
- 	if (record_opts__config(&rec->opts)) {
- 		err = -EINVAL;
- 		goto out;
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 9a7209a99e16..a51267d88ca9 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -147,6 +147,7 @@ perf-$(CONFIG_LIBBPF) += bpf_map.o
- perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
- perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter_cgroup.o
- perf-$(CONFIG_PERF_BPF_SKEL) += bpf_ftrace.o
-+perf-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
- perf-$(CONFIG_BPF_PROLOGUE) += bpf-prologue.o
- perf-$(CONFIG_LIBELF) += symbol-elf.o
- perf-$(CONFIG_LIBELF) += probe-file.o
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-new file mode 100644
-index 000000000000..9ed7aca3f4ac
---- /dev/null
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -0,0 +1,204 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "util/bpf_counter.h"
-+#include "util/debug.h"
-+#include "util/evsel.h"
-+#include "util/evlist.h"
-+#include "util/off_cpu.h"
-+#include "util/perf-hooks.h"
-+#include "util/session.h"
-+#include <bpf/bpf.h>
-+
-+#include "bpf_skel/off_cpu.skel.h"
-+
-+#define MAX_STACKS  32
-+/* we don't need actual timestamp, just want to put the samples at last */
-+#define OFF_CPU_TIMESTAMP  (~0ull << 32)
-+
-+static struct off_cpu_bpf *skel;
-+
-+struct off_cpu_key {
-+	u32 pid;
-+	u32 tgid;
-+	u32 stack_id;
-+	u32 state;
-+};
-+
-+union off_cpu_data {
-+	struct perf_event_header hdr;
-+	u64 array[1024 / sizeof(u64)];
-+};
-+
-+static int off_cpu_config(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+	struct perf_event_attr attr = {
-+		.type	= PERF_TYPE_SOFTWARE,
-+		.config = PERF_COUNT_SW_BPF_OUTPUT,
-+		.size	= sizeof(attr), /* to capture ABI version */
-+	};
-+	char *evname = strdup(OFFCPU_EVENT);
-+
-+	if (evname == NULL)
-+		return -ENOMEM;
-+
-+	evsel = evsel__new(&attr);
-+	if (!evsel) {
-+		free(evname);
-+		return -ENOMEM;
-+	}
-+
-+	evsel->core.attr.freq = 1;
-+	evsel->core.attr.sample_period = 1;
-+	/* off-cpu analysis depends on stack trace */
-+	evsel->core.attr.sample_type = PERF_SAMPLE_CALLCHAIN;
-+
-+	evlist__add(evlist, evsel);
-+
-+	free(evsel->name);
-+	evsel->name = evname;
-+
-+	return 0;
-+}
-+
-+static void off_cpu_start(void *arg __maybe_unused)
-+{
-+	skel->bss->enabled = 1;
-+}
-+
-+static void off_cpu_finish(void *arg __maybe_unused)
-+{
-+	skel->bss->enabled = 0;
-+	off_cpu_bpf__destroy(skel);
-+}
-+
-+int off_cpu_prepare(struct evlist *evlist)
-+{
-+	int err;
-+
-+	if (off_cpu_config(evlist) < 0) {
-+		pr_err("Failed to config off-cpu BPF event\n");
-+		return -1;
-+	}
-+
-+	set_max_rlimit();
-+
-+	skel = off_cpu_bpf__open_and_load();
-+	if (!skel) {
-+		pr_err("Failed to open off-cpu BPF skeleton\n");
-+		return -1;
-+	}
-+
-+	err = off_cpu_bpf__attach(skel);
-+	if (err) {
-+		pr_err("Failed to attach off-cpu BPF skeleton\n");
-+		goto out;
-+	}
-+
-+	if (perf_hooks__set_hook("record_start", off_cpu_start, NULL) ||
-+	    perf_hooks__set_hook("record_end", off_cpu_finish, NULL)) {
-+		pr_err("Failed to attach off-cpu skeleton\n");
-+		goto out;
-+	}
-+
-+	return 0;
-+
-+out:
-+	off_cpu_bpf__destroy(skel);
-+	return -1;
-+}
-+
-+int off_cpu_write(struct perf_session *session)
-+{
-+	int bytes = 0, size;
-+	int fd, stack;
-+	u64 sample_type, val, sid = 0;
-+	struct evsel *evsel;
-+	struct perf_data_file *file = &session->data->file;
-+	struct off_cpu_key prev, key;
-+	union off_cpu_data data = {
-+		.hdr = {
-+			.type = PERF_RECORD_SAMPLE,
-+			.misc = PERF_RECORD_MISC_USER,
-+		},
-+	};
-+	u64 tstamp = OFF_CPU_TIMESTAMP;
-+
-+	skel->bss->enabled = 0;
-+
-+	evsel = evlist__find_evsel_by_str(session->evlist, OFFCPU_EVENT);
-+	if (evsel == NULL) {
-+		pr_err("%s evsel not found\n", OFFCPU_EVENT);
-+		return 0;
-+	}
-+
-+	sample_type = evsel->core.attr.sample_type;
-+
-+	if (sample_type & (PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER)) {
-+		if (evsel->core.id)
-+			sid = evsel->core.id[0];
-+	}
-+
-+	fd = bpf_map__fd(skel->maps.off_cpu);
-+	stack = bpf_map__fd(skel->maps.stacks);
-+	memset(&prev, 0, sizeof(prev));
-+
-+	while (!bpf_map_get_next_key(fd, &prev, &key)) {
-+		int n = 1;  /* start from perf_event_header */
-+		int ip_pos = -1;
-+
-+		bpf_map_lookup_elem(fd, &key, &val);
-+
-+		if (sample_type & PERF_SAMPLE_IDENTIFIER)
-+			data.array[n++] = sid;
-+		if (sample_type & PERF_SAMPLE_IP) {
-+			ip_pos = n;
-+			data.array[n++] = 0;  /* will be updated */
-+		}
-+		if (sample_type & PERF_SAMPLE_TID)
-+			data.array[n++] = (u64)key.pid << 32 | key.tgid;
-+		if (sample_type & PERF_SAMPLE_TIME)
-+			data.array[n++] = tstamp;
-+		if (sample_type & PERF_SAMPLE_ID)
-+			data.array[n++] = sid;
-+		if (sample_type & PERF_SAMPLE_CPU)
-+			data.array[n++] = 0;
-+		if (sample_type & PERF_SAMPLE_PERIOD)
-+			data.array[n++] = val;
-+		if (sample_type & PERF_SAMPLE_CALLCHAIN) {
-+			int len = 0;
-+
-+			/* data.array[n] is callchain->nr (updated later) */
-+			data.array[n + 1] = PERF_CONTEXT_USER;
-+			data.array[n + 2] = 0;
-+
-+			bpf_map_lookup_elem(stack, &key.stack_id, &data.array[n + 2]);
-+			while (data.array[n + 2 + len])
-+				len++;
-+
-+			/* update length of callchain */
-+			data.array[n] = len + 1;
-+
-+			/* update sample ip with the first callchain entry */
-+			if (ip_pos >= 0)
-+				data.array[ip_pos] = data.array[n + 2];
-+
-+			/* calculate sample callchain data array length */
-+			n += len + 2;
-+		}
-+		/* TODO: handle more sample types */
-+
-+		size = n * sizeof(u64);
-+		data.hdr.size = size;
-+		bytes += size;
-+
-+		if (perf_data_file__write(file, &data, size) < 0) {
-+			pr_err("failed to write perf data, error: %m\n");
-+			return bytes;
-+		}
-+
-+		prev = key;
-+		/* increase dummy timestamp to sort later samples */
-+		tstamp++;
-+	}
-+	return bytes;
-+}
+ 	err = off_cpu_bpf__attach(skel);
+ 	if (err) {
+ 		pr_err("Failed to attach off-cpu BPF skeleton\n");
+@@ -275,6 +317,8 @@ int off_cpu_write(struct perf_session *session)
+ 			/* calculate sample callchain data array length */
+ 			n += len + 2;
+ 		}
++		if (sample_type & PERF_SAMPLE_CGROUP)
++			data.array[n++] = key.cgroup_id;
+ 		/* TODO: handle more sample types */
+ 
+ 		size = n * sizeof(u64);
 diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-new file mode 100644
-index 000000000000..5173ed882fdf
---- /dev/null
+index 986d7db6e75d..792ae2847080 100644
+--- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
 +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -0,0 +1,139 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+// Copyright (c) 2022 Google
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+#include <bpf/bpf_core_read.h>
-+
-+/* task->flags for off-cpu analysis */
-+#define PF_KTHREAD   0x00200000  /* I am a kernel thread */
-+
-+/* task->state for off-cpu analysis */
-+#define TASK_INTERRUPTIBLE	0x0001
-+#define TASK_UNINTERRUPTIBLE	0x0002
-+
-+#define MAX_STACKS   32
-+#define MAX_ENTRIES  102400
-+
-+struct tstamp_data {
-+	__u32 stack_id;
-+	__u32 state;
-+	__u64 timestamp;
-+};
-+
-+struct offcpu_key {
-+	__u32 pid;
-+	__u32 tgid;
-+	__u32 stack_id;
-+	__u32 state;
-+};
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
-+	__uint(key_size, sizeof(__u32));
-+	__uint(value_size, MAX_STACKS * sizeof(__u64));
-+	__uint(max_entries, MAX_ENTRIES);
-+} stacks SEC(".maps");
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
-+	__uint(map_flags, BPF_F_NO_PREALLOC);
-+	__type(key, int);
-+	__type(value, struct tstamp_data);
-+} tstamp SEC(".maps");
-+
+@@ -26,6 +26,7 @@ struct offcpu_key {
+ 	__u32 tgid;
+ 	__u32 stack_id;
+ 	__u32 state;
++	__u64 cgroup_id;
+ };
+ 
+ struct {
+@@ -63,6 +64,13 @@ struct {
+ 	__uint(max_entries, 1);
+ } task_filter SEC(".maps");
+ 
 +struct {
 +	__uint(type, BPF_MAP_TYPE_HASH);
-+	__uint(key_size, sizeof(struct offcpu_key));
-+	__uint(value_size, sizeof(__u64));
-+	__uint(max_entries, MAX_ENTRIES);
-+} off_cpu SEC(".maps");
++	__uint(key_size, sizeof(__u64));
++	__uint(value_size, sizeof(__u8));
++	__uint(max_entries, 1);
++} cgroup_filter SEC(".maps");
 +
-+/* old kernel task_struct definition */
-+struct task_struct___old {
-+	long state;
-+} __attribute__((preserve_access_index));
-+
-+int enabled = 0;
-+
-+/*
-+ * Old kernel used to call it task_struct->state and now it's '__state'.
-+ * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-+ *
-+ * https://nakryiko.com/posts/bpf-core-reference-guide/#handling-incompatible-field-and-type-changes
-+ */
-+static inline int get_task_state(struct task_struct *t)
+ /* old kernel task_struct definition */
+ struct task_struct___old {
+ 	long state;
+@@ -71,8 +79,11 @@ struct task_struct___old {
+ int enabled = 0;
+ int has_cpu = 0;
+ int has_task = 0;
++int has_cgroup = 0;
+ 
+ const volatile bool has_prev_state = false;
++const volatile bool needs_cgroup = false;
++const volatile bool uses_cgroup_v1 = false;
+ 
+ /*
+  * Old kernel used to call it task_struct->state and now it's '__state'.
+@@ -92,6 +103,18 @@ static inline int get_task_state(struct task_struct *t)
+ 	return BPF_CORE_READ(t_old, state);
+ }
+ 
++static inline __u64 get_cgroup_id(struct task_struct *t)
 +{
-+	if (bpf_core_field_exists(t->__state))
-+		return BPF_CORE_READ(t, __state);
++	struct cgroup *cgrp;
 +
-+	/* recast pointer to capture task_struct___old type for compiler */
-+	struct task_struct___old *t_old = (void *)t;
++	if (uses_cgroup_v1)
++		cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
++	else
++		cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
 +
-+	/* now use old "state" name of the field */
-+	return BPF_CORE_READ(t_old, state);
++	return BPF_CORE_READ(cgrp, kn, id);
 +}
 +
-+SEC("tp_btf/sched_switch")
-+int on_switch(u64 *ctx)
-+{
-+	__u64 ts;
-+	int state;
-+	__u32 stack_id;
-+	struct task_struct *prev, *next;
-+	struct tstamp_data *pelem;
+ static inline int can_record(struct task_struct *t, int state)
+ {
+ 	/* kernel threads don't have user stack */
+@@ -120,6 +143,15 @@ static inline int can_record(struct task_struct *t, int state)
+ 			return 0;
+ 	}
+ 
++	if (has_cgroup) {
++		__u8 *ok;
++		__u64 cgrp_id = get_cgroup_id(t);
 +
-+	if (!enabled)
-+		return 0;
-+
-+	prev = (struct task_struct *)ctx[1];
-+	next = (struct task_struct *)ctx[2];
-+	state = get_task_state(prev);
-+
-+	ts = bpf_ktime_get_ns();
-+
-+	if (prev->flags & PF_KTHREAD)
-+		goto next;
-+	if (state != TASK_INTERRUPTIBLE &&
-+	    state != TASK_UNINTERRUPTIBLE)
-+		goto next;
-+
-+	stack_id = bpf_get_stackid(ctx, &stacks,
-+				   BPF_F_FAST_STACK_CMP | BPF_F_USER_STACK);
-+
-+	pelem = bpf_task_storage_get(&tstamp, prev, NULL,
-+				     BPF_LOCAL_STORAGE_GET_F_CREATE);
-+	if (!pelem)
-+		goto next;
-+
-+	pelem->timestamp = ts;
-+	pelem->state = state;
-+	pelem->stack_id = stack_id;
-+
-+next:
-+	pelem = bpf_task_storage_get(&tstamp, next, NULL, 0);
-+
-+	if (pelem && pelem->timestamp) {
-+		struct offcpu_key key = {
-+			.pid = next->pid,
-+			.tgid = next->tgid,
-+			.stack_id = pelem->stack_id,
-+			.state = pelem->state,
-+		};
-+		__u64 delta = ts - pelem->timestamp;
-+		__u64 *total;
-+
-+		total = bpf_map_lookup_elem(&off_cpu, &key);
-+		if (total)
-+			*total += delta;
-+		else
-+			bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
-+
-+		/* prevent to reuse the timestamp later */
-+		pelem->timestamp = 0;
++		ok = bpf_map_lookup_elem(&cgroup_filter, &cgrp_id);
++		if (!ok)
++			return 0;
 +	}
 +
-+	return 0;
-+}
-+
-+char LICENSE[] SEC("license") = "Dual BSD/GPL";
+ 	return 1;
+ }
+ 
+@@ -156,6 +188,7 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+ 			.tgid = next->tgid,
+ 			.stack_id = pelem->stack_id,
+ 			.state = pelem->state,
++			.cgroup_id = needs_cgroup ? get_cgroup_id(next) : 0,
+ 		};
+ 		__u64 delta = ts - pelem->timestamp;
+ 		__u64 *total;
 diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
-new file mode 100644
-index 000000000000..375d03c424ea
---- /dev/null
+index f47af0232e55..548008f74d42 100644
+--- a/tools/perf/util/off_cpu.h
 +++ b/tools/perf/util/off_cpu.h
-@@ -0,0 +1,24 @@
-+#ifndef PERF_UTIL_OFF_CPU_H
-+#define PERF_UTIL_OFF_CPU_H
-+
-+struct evlist;
-+struct perf_session;
-+
-+#define OFFCPU_EVENT  "offcpu-time"
-+
-+#ifdef HAVE_BPF_SKEL
-+int off_cpu_prepare(struct evlist *evlist);
-+int off_cpu_write(struct perf_session *session);
-+#else
-+static inline int off_cpu_prepare(struct evlist *evlist __maybe_unused)
-+{
-+	return -1;
-+}
-+
-+static inline int off_cpu_write(struct perf_session *session __maybe_unused)
-+{
-+	return -1;
-+}
-+#endif
-+
-+#endif  /* PERF_UTIL_OFF_CPU_H */
+@@ -4,15 +4,18 @@
+ struct evlist;
+ struct target;
+ struct perf_session;
++struct record_opts;
+ 
+ #define OFFCPU_EVENT  "offcpu-time"
+ 
+ #ifdef HAVE_BPF_SKEL
+-int off_cpu_prepare(struct evlist *evlist, struct target *target);
++int off_cpu_prepare(struct evlist *evlist, struct target *target,
++		    struct record_opts *opts);
+ int off_cpu_write(struct perf_session *session);
+ #else
+ static inline int off_cpu_prepare(struct evlist *evlist __maybe_unused,
+-				  struct target *target __maybe_unused)
++				  struct target *target __maybe_unused,
++				  struct record_opts *opts __maybe_unused)
+ {
+ 	return -1;
+ }
 -- 
 2.36.1.124.g0e6072fb45-goog
 
