@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57199C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD303C433EF
 	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 04:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbiEREUy (ORCPT
+        id S229714AbiEREU4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 00:20:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45990 "EHLO
+        Wed, 18 May 2022 00:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbiEREUv (ORCPT
+        with ESMTP id S229800AbiEREUw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 00:20:51 -0400
+        Wed, 18 May 2022 00:20:52 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647E931347
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:47 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2ff17535eabso10080567b3.20
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039D12127A
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:52 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2fee45054e4so10669677b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=TnD0korMG/FM5gYCmH1Njrgw72EedmnJt8tATKJ2XT4=;
-        b=khfembNG8zneSKuQEEHGn0lq/InWcEWDv4RIyS1CnNSqUtEwWEPOezARmLO3MiEC/0
-         ZfLiShPvRXMV4E+qOTsmH4sF4PLl3TaP9sLnJJC1wV6dchTnqi+Z8lDkwy9yB1wwzjgc
-         q6VEOg0PuIaGdcE/JzO59TisF7kOMmB4lHaxvY/M+O2PA75KfU+dY8ZbZ0ISnuEQ52N8
-         47gPcRg2SrNEflwnK4Mb1+RI+KqykYO+VHSDZmKOLpXyY/Jh+wm44PlTju2MtzbTRLd1
-         IxePjeUr8bHPwh04yvR9g4GdKeT3p/LkbVE7apsPCKOGlX3WBHxChnl33E1fS0IcBRcx
-         yjyA==
+        bh=ulc7jVR4esIc7uAea3k2kp75KCKMXlF4y2JGNUw/UGw=;
+        b=bxid9/puL5bhxOXx2DTa8x8S1jgQCq5ay8qtP8LgiP6EyAB9Jn/k76q9uY+42eXvyT
+         7ZP0zMdq/j1OnIk//ijsmuz6SH1sN4KDPXScFDLgtlLjwqHonUI8XOUEn1HfFSbhdfJr
+         BjWr6JBk+5YusFdxIF/xgJuhHNA8LdL+WFERkJbck2kMhpFWX3H93AAVl1RDqGxoEpIO
+         cxU53lF8O8g4Rl+CbZ1W9tMvTGBkhD426abmXzh7kl24a+/5D1A2EYPmhd0wvIrSAgyL
+         MITt5pQLPyDvsOgutXaR4QDTMIpr8URZnJ1svgVo/dYHBbohIpIzEv6wr8cZiRWiZy73
+         2fcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=TnD0korMG/FM5gYCmH1Njrgw72EedmnJt8tATKJ2XT4=;
-        b=5VSCW7Y3fl58WmfVXrjCgfZg8mhlMS+6MyW5wXsmq6BxE1vMY4OPGLC1v0Q6v6ztrw
-         Zjj7IsqcduFPfhCtZabtSUSUOO4PGxhaxbZnBtFebeHWFs9pFLbsm8lHp7KFe6BT1FKZ
-         LFLm0Pt4wZIva16OWBNZriHpt3vNl42h+12Bi6BfpmNWtqnSaY5l44FiUFjmW/Qe0B0q
-         kD2nseMyPQrVypRbtzfHPsoHHNX9wkyEKVqYH+pvh8VOPiH+axUMteU2VmLMvFEYMI6d
-         yV50bsRIe5AdJyGPN7NyHjXmAe+EJccnv+OEmSvLEr5IFWG6qXOHDDYHAz/V2d6VazbC
-         nRJA==
-X-Gm-Message-State: AOAM531V3tu+X1qEQwwuiuFCGEVRQoFcgVOVOaY1QoSiz25FW+JS4o97
-        xdrA8j4z18b4vuJelwAxBnvdGYS1195J
-X-Google-Smtp-Source: ABdhPJz22hKpEg61DXNKla1u8OL158NTgqC854yWWibewPZZGMH6VhUPRxorNGHZahavCxgarFXR3UEjpm8W
+        bh=ulc7jVR4esIc7uAea3k2kp75KCKMXlF4y2JGNUw/UGw=;
+        b=5PHYboij0IqBPpOzT/RA88d4WhpXD4CVnXQLvzTXqBhAf8q7o6KqO9YIYssS5gpwTX
+         Qib6WavQqw1CLRPuqvE5wdjDJZbfSTOLwM+LDIFuQXob40preroqwgw/xhRrZIqqU5bI
+         iR00XK5j1XvxT23POzdNpB5OYypnRXsrIgdOccmYqyN2jLxqBk5scKBJtHZnUPIsqqZ9
+         jJ066RtY3gKE5QsyOhna/epxgQMotMj6o57eP4Ddps0KcmsRWEE/JYGokk3Z4E89WPQc
+         IVAvJJQQL010dWJjerYjNAPr5So0uHkcfpx9eE1vmBM6DajHah8MWyHVSSJuU/Wry1Wb
+         m9Qw==
+X-Gm-Message-State: AOAM531HO2HHRVHlOR8XWd/s6oZHVV0LEXCbOxFYgbVi5zOdwdN/xDDP
+        Ie0yAeS8dpDl0LUSO8NEup2CsW0H46RG
+X-Google-Smtp-Source: ABdhPJyi/kenzf5f6IvXdgmpjEuRxks7EA7p2I2jEiPI1ZIU8yY0XO2JOXI4l5qnLfdLCvciyP4mtpcve1ex
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a5a1:af73:fe09:fd5])
- (user=irogers job=sendgmr) by 2002:a81:1a4f:0:b0:2f8:9a6:62d6 with SMTP id
- a76-20020a811a4f000000b002f809a662d6mr29831710ywa.74.1652847646532; Tue, 17
- May 2022 21:20:46 -0700 (PDT)
-Date:   Tue, 17 May 2022 21:20:25 -0700
+ (user=irogers job=sendgmr) by 2002:a25:230f:0:b0:64d:76e2:6aa5 with SMTP id
+ j15-20020a25230f000000b0064d76e26aa5mr16689099ybj.116.1652847651210; Tue, 17
+ May 2022 21:20:51 -0700 (PDT)
+Date:   Tue, 17 May 2022 21:20:27 -0700
 In-Reply-To: <20220518042027.836799-1-irogers@google.com>
-Message-Id: <20220518042027.836799-7-irogers@google.com>
+Message-Id: <20220518042027.836799-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20220518042027.836799-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [PATCH v2 6/8] perf test: Parse events tidy evlist_test
+Subject: [PATCH v2 8/8] perf test: Use skip in PERF_RECORD_*
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,535 +76,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove two unused variables. Make structs const. Also fix the array
-index (aka id) for the event software/r0x1a/.
+Check if the error code is EACCES and make the test a skip with
+a "permissions" skip reason if so.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/parse-events.c | 171 ++++++++++++++++----------------
- 1 file changed, 84 insertions(+), 87 deletions(-)
+ tools/perf/tests/perf-record.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 7e802666d2d5..0d65770bd686 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1637,344 +1637,342 @@ static int test__hybrid_cache_event(struct evlist *evlist)
- 
- struct evlist_test {
- 	const char *name;
--	__u32 type;
--	const int id;
- 	bool (*valid)(void);
- 	int (*check)(struct evlist *evlist);
- };
- 
--static struct evlist_test test__events[] = {
-+static const struct evlist_test test__events[] = {
- 	{
- 		.name  = "syscalls:sys_enter_openat",
- 		.check = test__checkevent_tracepoint,
--		.id    = 0,
-+		/* 0 */
- 	},
- 	{
- 		.name  = "syscalls:*",
- 		.check = test__checkevent_tracepoint_multi,
--		.id    = 1,
-+		/* 1 */
- 	},
- 	{
- 		.name  = "r1a",
- 		.check = test__checkevent_raw,
--		.id    = 2,
-+		/* 2 */
- 	},
- 	{
- 		.name  = "1:1",
- 		.check = test__checkevent_numeric,
--		.id    = 3,
-+		/* 3 */
- 	},
- 	{
- 		.name  = "instructions",
- 		.check = test__checkevent_symbolic_name,
--		.id    = 4,
-+		/* 4 */
- 	},
- 	{
- 		.name  = "cycles/period=100000,config2/",
- 		.check = test__checkevent_symbolic_name_config,
--		.id    = 5,
-+		/* 5 */
- 	},
- 	{
- 		.name  = "faults",
- 		.check = test__checkevent_symbolic_alias,
--		.id    = 6,
-+		/* 6 */
- 	},
- 	{
- 		.name  = "L1-dcache-load-miss",
- 		.check = test__checkevent_genhw,
--		.id    = 7,
-+		/* 7 */
- 	},
- 	{
- 		.name  = "mem:0",
- 		.check = test__checkevent_breakpoint,
--		.id    = 8,
-+		/* 8 */
- 	},
- 	{
- 		.name  = "mem:0:x",
- 		.check = test__checkevent_breakpoint_x,
--		.id    = 9,
-+		/* 9 */
- 	},
- 	{
- 		.name  = "mem:0:r",
- 		.check = test__checkevent_breakpoint_r,
--		.id    = 10,
-+		/* 0 */
- 	},
- 	{
- 		.name  = "mem:0:w",
- 		.check = test__checkevent_breakpoint_w,
--		.id    = 11,
-+		/* 1 */
- 	},
- 	{
- 		.name  = "syscalls:sys_enter_openat:k",
- 		.check = test__checkevent_tracepoint_modifier,
--		.id    = 12,
-+		/* 2 */
- 	},
- 	{
- 		.name  = "syscalls:*:u",
- 		.check = test__checkevent_tracepoint_multi_modifier,
--		.id    = 13,
-+		/* 3 */
- 	},
- 	{
- 		.name  = "r1a:kp",
- 		.check = test__checkevent_raw_modifier,
--		.id    = 14,
-+		/* 4 */
- 	},
- 	{
- 		.name  = "1:1:hp",
- 		.check = test__checkevent_numeric_modifier,
--		.id    = 15,
-+		/* 5 */
- 	},
- 	{
- 		.name  = "instructions:h",
- 		.check = test__checkevent_symbolic_name_modifier,
--		.id    = 16,
-+		/* 6 */
- 	},
- 	{
- 		.name  = "faults:u",
- 		.check = test__checkevent_symbolic_alias_modifier,
--		.id    = 17,
-+		/* 7 */
- 	},
- 	{
- 		.name  = "L1-dcache-load-miss:kp",
- 		.check = test__checkevent_genhw_modifier,
--		.id    = 18,
-+		/* 8 */
- 	},
- 	{
- 		.name  = "mem:0:u",
- 		.check = test__checkevent_breakpoint_modifier,
--		.id    = 19,
-+		/* 9 */
- 	},
- 	{
- 		.name  = "mem:0:x:k",
- 		.check = test__checkevent_breakpoint_x_modifier,
--		.id    = 20,
-+		/* 0 */
- 	},
- 	{
- 		.name  = "mem:0:r:hp",
- 		.check = test__checkevent_breakpoint_r_modifier,
--		.id    = 21,
-+		/* 1 */
- 	},
- 	{
- 		.name  = "mem:0:w:up",
- 		.check = test__checkevent_breakpoint_w_modifier,
--		.id    = 22,
-+		/* 2 */
- 	},
- 	{
- 		.name  = "r1,syscalls:sys_enter_openat:k,1:1:hp",
- 		.check = test__checkevent_list,
--		.id    = 23,
-+		/* 3 */
- 	},
- 	{
- 		.name  = "instructions:G",
- 		.check = test__checkevent_exclude_host_modifier,
--		.id    = 24,
-+		/* 4 */
- 	},
- 	{
- 		.name  = "instructions:H",
- 		.check = test__checkevent_exclude_guest_modifier,
--		.id    = 25,
-+		/* 5 */
- 	},
- 	{
- 		.name  = "mem:0:rw",
- 		.check = test__checkevent_breakpoint_rw,
--		.id    = 26,
-+		/* 6 */
- 	},
- 	{
- 		.name  = "mem:0:rw:kp",
- 		.check = test__checkevent_breakpoint_rw_modifier,
--		.id    = 27,
-+		/* 7 */
- 	},
- 	{
- 		.name  = "{instructions:k,cycles:upp}",
- 		.check = test__group1,
--		.id    = 28,
-+		/* 8 */
- 	},
- 	{
- 		.name  = "{faults:k,cache-references}:u,cycles:k",
- 		.check = test__group2,
--		.id    = 29,
-+		/* 9 */
- 	},
- 	{
- 		.name  = "group1{syscalls:sys_enter_openat:H,cycles:kppp},group2{cycles,1:3}:G,instructions:u",
- 		.check = test__group3,
--		.id    = 30,
-+		/* 0 */
- 	},
- 	{
- 		.name  = "{cycles:u,instructions:kp}:p",
- 		.check = test__group4,
--		.id    = 31,
-+		/* 1 */
- 	},
- 	{
- 		.name  = "{cycles,instructions}:G,{cycles:G,instructions:G},cycles",
- 		.check = test__group5,
--		.id    = 32,
-+		/* 2 */
- 	},
- 	{
- 		.name  = "*:*",
- 		.check = test__all_tracepoints,
--		.id    = 33,
-+		/* 3 */
- 	},
- 	{
- 		.name  = "{cycles,cache-misses:G}:H",
- 		.check = test__group_gh1,
--		.id    = 34,
-+		/* 4 */
- 	},
- 	{
- 		.name  = "{cycles,cache-misses:H}:G",
- 		.check = test__group_gh2,
--		.id    = 35,
-+		/* 5 */
- 	},
- 	{
- 		.name  = "{cycles:G,cache-misses:H}:u",
- 		.check = test__group_gh3,
--		.id    = 36,
-+		/* 6 */
- 	},
- 	{
- 		.name  = "{cycles:G,cache-misses:H}:uG",
- 		.check = test__group_gh4,
--		.id    = 37,
-+		/* 7 */
- 	},
- 	{
- 		.name  = "{cycles,cache-misses,branch-misses}:S",
- 		.check = test__leader_sample1,
--		.id    = 38,
-+		/* 8 */
- 	},
- 	{
- 		.name  = "{instructions,branch-misses}:Su",
- 		.check = test__leader_sample2,
--		.id    = 39,
-+		/* 9 */
- 	},
- 	{
- 		.name  = "instructions:uDp",
- 		.check = test__checkevent_pinned_modifier,
--		.id    = 40,
-+		/* 0 */
- 	},
- 	{
- 		.name  = "{cycles,cache-misses,branch-misses}:D",
- 		.check = test__pinned_group,
--		.id    = 41,
-+		/* 1 */
- 	},
- 	{
- 		.name  = "mem:0/1",
- 		.check = test__checkevent_breakpoint_len,
--		.id    = 42,
-+		/* 2 */
- 	},
- 	{
- 		.name  = "mem:0/2:w",
- 		.check = test__checkevent_breakpoint_len_w,
--		.id    = 43,
-+		/* 3 */
- 	},
- 	{
- 		.name  = "mem:0/4:rw:u",
- 		.check = test__checkevent_breakpoint_len_rw_modifier,
--		.id    = 44
-+		/* 4 */
- 	},
- #if defined(__s390x__)
- 	{
- 		.name  = "kvm-s390:kvm_s390_create_vm",
- 		.check = test__checkevent_tracepoint,
- 		.valid = kvm_s390_create_vm_valid,
--		.id    = 100,
-+		/* 0 */
- 	},
- #endif
- 	{
- 		.name  = "instructions:I",
- 		.check = test__checkevent_exclude_idle_modifier,
--		.id    = 45,
-+		/* 5 */
- 	},
- 	{
- 		.name  = "instructions:kIG",
- 		.check = test__checkevent_exclude_idle_modifier_1,
--		.id    = 46,
-+		/* 6 */
- 	},
- 	{
- 		.name  = "task-clock:P,cycles",
- 		.check = test__checkevent_precise_max_modifier,
--		.id    = 47,
-+		/* 7 */
- 	},
- 	{
- 		.name  = "instructions/name=insn/",
- 		.check = test__checkevent_config_symbol,
--		.id    = 48,
-+		/* 8 */
- 	},
- 	{
- 		.name  = "r1234/name=rawpmu/",
- 		.check = test__checkevent_config_raw,
--		.id    = 49,
-+		/* 9 */
- 	},
- 	{
- 		.name  = "4:0x6530160/name=numpmu/",
- 		.check = test__checkevent_config_num,
--		.id    = 50,
-+		/* 0 */
- 	},
- 	{
- 		.name  = "L1-dcache-misses/name=cachepmu/",
- 		.check = test__checkevent_config_cache,
--		.id    = 51,
-+		/* 1 */
- 	},
- 	{
- 		.name  = "intel_pt//u",
- 		.valid = test__intel_pt_valid,
- 		.check = test__intel_pt,
--		.id    = 52,
-+		/* 2 */
- 	},
- 	{
- 		.name  = "cycles/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks'/Duk",
- 		.check = test__checkevent_complex_name,
--		.id    = 53
-+		/* 3 */
- 	},
- 	{
- 		.name  = "cycles//u",
- 		.check = test__sym_event_slash,
--		.id    = 54,
-+		/* 4 */
- 	},
- 	{
- 		.name  = "cycles:k",
- 		.check = test__sym_event_dc,
--		.id    = 55,
-+		/* 5 */
- 	},
- 	{
- 		.name  = "instructions:uep",
- 		.check = test__checkevent_exclusive_modifier,
--		.id    = 56,
-+		/* 6 */
- 	},
- 	{
- 		.name  = "{cycles,cache-misses,branch-misses}:e",
- 		.check = test__exclusive_group,
--		.id    = 57,
-+		/* 7 */
- 	},
- };
- 
--static struct evlist_test test__events_pmu[] = {
-+static const struct evlist_test test__events_pmu[] = {
- 	{
- 		.name  = "cpu/config=10,config1,config2=3,period=1000/u",
- 		.check = test__checkevent_pmu,
--		.id    = 0,
-+		/* 0 */
- 	},
- 	{
- 		.name  = "cpu/config=1,name=krava/u,cpu/config=2/u",
- 		.check = test__checkevent_pmu_name,
--		.id    = 1,
-+		/* 1 */
- 	},
- 	{
- 		.name  = "cpu/config=1,call-graph=fp,time,period=100000/,cpu/config=2,call-graph=no,time=0,period=2000/",
- 		.check = test__checkevent_pmu_partial_time_callgraph,
--		.id    = 2,
-+		/* 2 */
- 	},
- 	{
- 		.name  = "cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp",
- 		.check = test__checkevent_complex_name,
--		.id    = 3,
-+		/* 3 */
- 	},
- 	{
- 		.name  = "software/r1a/",
- 		.check = test__checkevent_raw_pmu,
--		.id    = 4,
-+		/* 4 */
- 	},
- 	{
- 		.name  = "software/r0x1a/",
- 		.check = test__checkevent_raw_pmu,
--		.id    = 4,
-+		/* 5 */
- 	},
- };
- 
-@@ -1990,55 +1988,55 @@ static const struct terms_test test__terms[] = {
- 	},
- };
- 
--static struct evlist_test test__hybrid_events[] = {
-+static const struct evlist_test test__hybrid_events[] = {
- 	{
- 		.name  = "cpu_core/cpu-cycles/",
- 		.check = test__hybrid_hw_event_with_pmu,
--		.id    = 0,
-+		/* 0 */
- 	},
- 	{
- 		.name  = "{cpu_core/cpu-cycles/,cpu_core/instructions/}",
- 		.check = test__hybrid_hw_group_event,
--		.id    = 1,
-+		/* 1 */
- 	},
- 	{
- 		.name  = "{cpu-clock,cpu_core/cpu-cycles/}",
- 		.check = test__hybrid_sw_hw_group_event,
--		.id    = 2,
-+		/* 2 */
- 	},
- 	{
- 		.name  = "{cpu_core/cpu-cycles/,cpu-clock}",
- 		.check = test__hybrid_hw_sw_group_event,
--		.id    = 3,
-+		/* 3 */
- 	},
- 	{
- 		.name  = "{cpu_core/cpu-cycles/k,cpu_core/instructions/u}",
- 		.check = test__hybrid_group_modifier1,
--		.id    = 4,
-+		/* 4 */
- 	},
- 	{
- 		.name  = "r1a",
- 		.check = test__hybrid_raw1,
--		.id    = 5,
-+		/* 5 */
- 	},
- 	{
- 		.name  = "cpu_core/r1a/",
- 		.check = test__hybrid_raw2,
--		.id    = 6,
-+		/* 6 */
- 	},
- 	{
- 		.name  = "cpu_core/config=10,config1,config2=3,period=1000/u",
- 		.check = test__checkevent_pmu,
--		.id    = 7,
-+		/* 7 */
- 	},
- 	{
- 		.name  = "cpu_core/LLC-loads/",
- 		.check = test__hybrid_cache_event,
--		.id    = 8,
-+		/* 8 */
- 	},
- };
- 
--static int test_event(struct evlist_test *e)
-+static int test_event(const struct evlist_test *e)
- {
- 	struct parse_events_error err;
- 	struct evlist *evlist;
-@@ -2093,15 +2091,14 @@ static int test_event_fake_pmu(const char *str)
- 	return ret;
+diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+index 6354465067b8..6a001fcfed68 100644
+--- a/tools/perf/tests/perf-record.c
++++ b/tools/perf/tests/perf-record.c
+@@ -330,7 +330,21 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+ out_delete_evlist:
+ 	evlist__delete(evlist);
+ out:
+-	return (err < 0 || errs > 0) ? -1 : 0;
++	if (err == -EACCES)
++		return TEST_SKIP;
++	if (err < 0)
++		return TEST_FAIL;
++	return TEST_OK;
  }
  
--static int test_events(struct evlist_test *events, unsigned cnt)
-+static int test_events(const struct evlist_test *events, int cnt)
- {
- 	int ret1, ret2 = 0;
--	unsigned i;
- 
--	for (i = 0; i < cnt; i++) {
--		struct evlist_test *e = &events[i];
-+	for (int i = 0; i < cnt; i++) {
-+		const struct evlist_test *e = &events[i];
- 
--		pr_debug("running test %d '%s'", e->id, e->name);
-+		pr_debug("running test %d '%s'", i, e->name);
- 		ret1 = test_event(e);
- 		if (ret1)
- 			ret2 = ret1;
-@@ -2193,7 +2190,7 @@ static int test_pmu_events(void)
- 	}
- 
- 	while (!ret && (ent = readdir(dir))) {
--		struct evlist_test e = { .id = 0, };
-+		struct evlist_test e = { .name = NULL, };
- 		char name[2 * NAME_MAX + 1 + 12 + 3];
- 
- 		/* Names containing . are special and cannot be used directly */
-@@ -2288,7 +2285,7 @@ static int test__checkevent_pmu_events_alias(struct evlist *evlist)
- 
- static int test_pmu_events_alias(char *event, char *alias)
- {
--	struct evlist_test e = { .id = 0, };
-+	struct evlist_test e = { .name = NULL, };
- 	char name[2 * NAME_MAX + 20];
- 
- 	snprintf(name, sizeof(name), "%s/event=1/,%s/event=1/",
+-DEFINE_SUITE("PERF_RECORD_* events & perf_sample fields", PERF_RECORD);
++static struct test_case tests__PERF_RECORD[] = {
++	TEST_CASE_REASON("PERF_RECORD_* events & perf_sample fields",
++			 PERF_RECORD,
++			 "permissions"),
++	{	.name = NULL, }
++};
++
++struct test_suite suite__PERF_RECORD = {
++	.desc = "PERF_RECORD_* events & perf_sample fields",
++	.test_cases = tests__PERF_RECORD,
++};
 -- 
 2.36.0.550.gb090851708-goog
 
