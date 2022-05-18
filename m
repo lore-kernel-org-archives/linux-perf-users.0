@@ -2,897 +2,203 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB4EC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 04:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E716C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 04:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbiEREU4 (ORCPT
+        id S229892AbiEREiF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 00:20:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45996 "EHLO
+        Wed, 18 May 2022 00:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbiEREUv (ORCPT
+        with ESMTP id S229878AbiEREiE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 00:20:51 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB95731359
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:49 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f8398e99dcso10477667b3.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:20:49 -0700 (PDT)
+        Wed, 18 May 2022 00:38:04 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0A49BF43
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:38:02 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id e28so328832wra.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=F54usjAFz5vOzrdA7Nd+K5d7QeUNwuqGITpxppLDKa4=;
-        b=odPp4kgnmwQQ4SnUxewUSNzh7Dh53hxIxND74XLjXNwxaMW6gbbyVeSe1iEVcTfhw/
-         gdRROBnW9p+t26XhT22/g841ITPy+0BPI8sfjEFukBAfzKrmBzm4PHFUgwyye5rtoMx4
-         IMnx9Is8HLb/QtX/TINqByoHEXUgM6cpj9NLOsrcq1pTPp65uEMRxRe5q35gP+7TyvAk
-         x7L2R46t79gUKSANkJqswtei1kJot9yOb7JEt9fCF7Cb9bsOOkwFjUldR/z/m45c5mBV
-         oz7uXJ3bhzc8lj1UxNuDsgAbuWVFSHirHYQYH03VLyrO/rXxRfUxvr/eUuFk//hqdktF
-         OSIw==
+        bh=YRzf4o3j3p6GE9ok9UjKci6UUosoBdJH+R8gXtS/sMo=;
+        b=IQNCaBIJdHcM5HtQWBdGF+DwM1G99rX1X3ZdEbUEWuQyKNeaoFxWs5No54ZhbeOwFG
+         5xZzvWkr+3zHTcS8WqJ5uLJKKO0XoXwQz1YIZzK3yhlUTuLJXbe71Je21E/JbEIGjqCW
+         bLgaRVlAlxF7lgY5aj50Ai60FwCorxoLeRToLq25n9WljTUUcpeQVn5MbhIRNhL97njH
+         UJgd9P24WjSWBkw1li4P9j8qAEWAfsWtOjpkqEm1zXKbDfm3d7sSzRz2e/VFEdzswDL+
+         5kQ6qwkDOGu4UE2i50mROS0rteKR14i57v4deZoP7d9n10bJsXZNHcgf7SFn0rDDUoUy
+         Y+ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=F54usjAFz5vOzrdA7Nd+K5d7QeUNwuqGITpxppLDKa4=;
-        b=lsSt7868TmUQfrlLqX58o2eijRnpBNPBtIKubOdrP9Y+2I+5GC/E5pmInpFmsNaJM1
-         4sUtdBYiqvcWIpa6rEsCyl4MQObvorle3LEmuA63jOZNe7TIZ3opiljCkU4LkIud/J0L
-         AgqZ1UYo7pf5SqAO+yDR+bfNI20aP7FTzemvwjV5Oq7RVN6+Ivx6ZFpzGswNWGwIQcZN
-         j2CniQmK1O5iG9pYKktZ6/M5Y4S6qyjEuQKeYOqZKy0WJopDwsdUM2JeMwzDlhaLHysn
-         M7eOFhvPynHxu9P9niK4s1FekGLpnbBRW7ZnMT/2heoLfWjEoQmuhIN9xSiW2fHweK4D
-         wqTw==
-X-Gm-Message-State: AOAM5323AKsnHguKYnxXR/ITyZMyhcl7eS5uuPCoCNbyxI8VApIcRgJB
-        oygyei1grr/Cz2nqrQEGOBdm0ot912pf
-X-Google-Smtp-Source: ABdhPJwQ53tXTg5XaTmNssXKWoqOg3S4q5z8eU/sC74qfnuNnYk4Faqsne7ja1QXmppCXBuoWCipFyFCZKZ2
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a5a1:af73:fe09:fd5])
- (user=irogers job=sendgmr) by 2002:a25:9081:0:b0:64d:d424:a811 with SMTP id
- t1-20020a259081000000b0064dd424a811mr9891525ybl.298.1652847648872; Tue, 17
- May 2022 21:20:48 -0700 (PDT)
-Date:   Tue, 17 May 2022 21:20:26 -0700
-In-Reply-To: <20220518042027.836799-1-irogers@google.com>
-Message-Id: <20220518042027.836799-8-irogers@google.com>
-Mime-Version: 1.0
-References: <20220518042027.836799-1-irogers@google.com>
-X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [PATCH v2 7/8] perf test: Parse events break apart tests
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YRzf4o3j3p6GE9ok9UjKci6UUosoBdJH+R8gXtS/sMo=;
+        b=N9NsLzMArZd4AOVT6Ps2gA7ftrYoBtj8grRab2bLAj01/V4oF+FexDKUt6k5/yn58X
+         UIkgpso7Df3DG7xSqdzWtFVAzU0CVZCo8tyUaCYS+1JsDFR1JGKLX731DtRzpgP0HFRh
+         Fh6kB03GEr3ZbDWpkeAkPHcu8kZIbvLdcoH/u81S1m4DlsZwpQnW8w3R3oWHNrT2AnXr
+         aWxli6AUhUOgHdbYLPcru52TZ8ZXMW8YViqs7pLIOIe+EV+ynb4Y1ZU9cLsIlkWlu4n7
+         76Z8gL/2xVaxwDL84z1pXFzJARG/u1S/E2A+5ohQ/pIwidXa2SQSG+HZ/5njWsPUNiEQ
+         6jFA==
+X-Gm-Message-State: AOAM533yOxz9VFFw31ueSAe11fedwHcRdMvOhEyEAZ081X3Kj/DuaJJl
+        NL0aGc8WJRw9Vvrp+JbiD4DDc9Sryv2reTSckoiB8A==
+X-Google-Smtp-Source: ABdhPJzzcqS4cPpVWW6ZhR/6pBwyMnzJwVjDnGXrffEUg06+M+mRl47JQWgHrMhFruh9XtzE5+gPMadhHLDOcELTDXo=
+X-Received: by 2002:a5d:448d:0:b0:20d:744:7663 with SMTP id
+ j13-20020a5d448d000000b0020d07447663mr12363014wrq.654.1652848681060; Tue, 17
+ May 2022 21:38:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220511211526.1021908-1-irogers@google.com> <20220511211526.1021908-7-irogers@google.com>
+ <d08b3d43-b02a-5aeb-e05e-f2f91d6a8f7a@huawei.com> <CAP-5=fUAXLL0CXrfrzYV2TT_31kouvJV-FWrZsipR27tT3i+uQ@mail.gmail.com>
+ <1e9d2bce-b967-dccb-e6af-241830e5b38e@huawei.com>
+In-Reply-To: <1e9d2bce-b967-dccb-e6af-241830e5b38e@huawei.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Tue, 17 May 2022 21:37:49 -0700
+Message-ID: <CAP-5=fVfS-7WsyAjPZ96AZrX1Y68Q9BESx9Rw2QoQWjs+_J=_w@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] perf jevents: Switch build to use jevents.py
+To:     John Garry <john.garry@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
-        Carsten Haitzler <carsten.haitzler@arm.com>,
-        Marco Elver <elver@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, sandipan.das@amd.com,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Break multiple tests in the main test into individual test cases. Make
-better use of skip and add reasons. Skip also for parse event permission
-issues (detected by searching the error string). Rather than break out
-of tests on the first failure, keep going and logging to pr_debug.
+On Tue, May 17, 2022 at 3:32 AM John Garry <john.garry@huawei.com> wrote:
+>
+> On 13/05/2022 16:58, Ian Rogers wrote:
+> > On Fri, May 13, 2022 at 8:38 AM John Garry <john.garry@huawei.com> wrote:
+> >>
+> >> On 11/05/2022 22:15, Ian Rogers wrote:
+> >>>     # jevents.py uses os.scandir and type hints present in Python 3.5 released in Sept. 2015.
+> >>> +    JEVENTS_PYTHON_GOOD := $(shell $(PYTHON) -c 'import sys;print("1" if(sys.version_info.major >= 3 and sys.version_info.minor >= 5) else "0")')
+> >>
+> >> I think that many - like me - will have python 2.7, so now will find no
+> >> pmu-events generated any longer after missing this message in the build :(
+> >>
+> >> Maybe many will have python >= 3.5 - but I don't know...
+> >
+> > So Python 2 has been end-of-life for over 2 years now:
+> > https://www.python.org/doc/sunset-python-2/
+> > There have been a number of LKML patches upgrading python to version 3.
+> >
+> > Python 3.5 has some very nice features of os.scandir and type hints,
+> > so if I set the bar lower than this it hurts the code quality. It is
+> > also at least 6 years old at this point, and so hopefully not
+> > unreasonable for a distribution to have picked it up :-) Looking at
+> > the change to C11 thread:
+> > https://lore.kernel.org/lkml/20220228103142.3301082-1-arnd@kernel.org/
+> > It seems the motivation for picking a language version is the features
+> > it provides and compatibility. If we choose pre-Python 3.5 we get more
+> > compatibility but we lose language features.
+> >
+> > My feeling is that we shouldn't need to support things that are no
+> > longer maintained (like Python 2) but I'm less clear if Python 3.5 is
+> > sufficiently compatible for everyone's needs. I kind of hope so, hence
+> > making the patches this way.
+>
+> Fine, I just think that you need to make this transition as seamless as
+> possible, otherwise it can be judged as a regression.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/parse-events.c | 311 ++++++++++++++++++--------------
- 1 file changed, 177 insertions(+), 134 deletions(-)
+Agreed.
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 0d65770bd686..459afdb256a1 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -56,7 +56,7 @@ static int test__checkevent_tracepoint(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong sample_type",
- 		PERF_TP_SAMPLE_TYPE == evsel->core.attr.sample_type);
- 	TEST_ASSERT_VAL("wrong sample_period", 1 == evsel->core.attr.sample_period);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_tracepoint_multi(struct evlist *evlist)
-@@ -74,7 +74,7 @@ static int test__checkevent_tracepoint_multi(struct evlist *evlist)
- 		TEST_ASSERT_VAL("wrong sample_period",
- 			1 == evsel->core.attr.sample_period);
- 	}
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_raw(struct evlist *evlist)
-@@ -84,7 +84,7 @@ static int test__checkevent_raw(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0x1a == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_numeric(struct evlist *evlist)
-@@ -94,7 +94,7 @@ static int test__checkevent_numeric(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", 1 == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", 1 == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_symbolic_name(struct evlist *evlist)
-@@ -105,7 +105,7 @@ static int test__checkevent_symbolic_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config",
- 			PERF_COUNT_HW_INSTRUCTIONS == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_symbolic_name_config(struct evlist *evlist)
-@@ -126,7 +126,7 @@ static int test__checkevent_symbolic_name_config(struct evlist *evlist)
- 			0 == evsel->core.attr.config1);
- 	TEST_ASSERT_VAL("wrong config2",
- 			1 == evsel->core.attr.config2);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_symbolic_alias(struct evlist *evlist)
-@@ -137,7 +137,7 @@ static int test__checkevent_symbolic_alias(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config",
- 			PERF_COUNT_SW_PAGE_FAULTS == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_genhw(struct evlist *evlist)
-@@ -147,7 +147,7 @@ static int test__checkevent_genhw(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HW_CACHE == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", (1 << 16) == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_breakpoint(struct evlist *evlist)
-@@ -161,7 +161,7 @@ static int test__checkevent_breakpoint(struct evlist *evlist)
- 					 evsel->core.attr.bp_type);
- 	TEST_ASSERT_VAL("wrong bp_len", HW_BREAKPOINT_LEN_4 ==
- 					evsel->core.attr.bp_len);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_breakpoint_x(struct evlist *evlist)
-@@ -174,7 +174,7 @@ static int test__checkevent_breakpoint_x(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong bp_type",
- 			HW_BREAKPOINT_X == evsel->core.attr.bp_type);
- 	TEST_ASSERT_VAL("wrong bp_len", sizeof(long) == evsel->core.attr.bp_len);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_breakpoint_r(struct evlist *evlist)
-@@ -189,7 +189,7 @@ static int test__checkevent_breakpoint_r(struct evlist *evlist)
- 			HW_BREAKPOINT_R == evsel->core.attr.bp_type);
- 	TEST_ASSERT_VAL("wrong bp_len",
- 			HW_BREAKPOINT_LEN_4 == evsel->core.attr.bp_len);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_breakpoint_w(struct evlist *evlist)
-@@ -204,7 +204,7 @@ static int test__checkevent_breakpoint_w(struct evlist *evlist)
- 			HW_BREAKPOINT_W == evsel->core.attr.bp_type);
- 	TEST_ASSERT_VAL("wrong bp_len",
- 			HW_BREAKPOINT_LEN_4 == evsel->core.attr.bp_len);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_breakpoint_rw(struct evlist *evlist)
-@@ -219,7 +219,7 @@ static int test__checkevent_breakpoint_rw(struct evlist *evlist)
- 		(HW_BREAKPOINT_R|HW_BREAKPOINT_W) == evsel->core.attr.bp_type);
- 	TEST_ASSERT_VAL("wrong bp_len",
- 			HW_BREAKPOINT_LEN_4 == evsel->core.attr.bp_len);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_tracepoint_modifier(struct evlist *evlist)
-@@ -450,7 +450,7 @@ static int test__checkevent_pmu(struct evlist *evlist)
- 	 */
- 	TEST_ASSERT_VAL("wrong period",     0 == evsel->core.attr.sample_period);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_list(struct evlist *evlist)
-@@ -489,7 +489,7 @@ static int test__checkevent_list(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_pmu_name(struct evlist *evlist)
-@@ -510,7 +510,7 @@ static int test__checkevent_pmu_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong name",
- 			!strcmp(evsel__name(evsel), "cpu/config=2/u"));
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_pmu_partial_time_callgraph(struct evlist *evlist)
-@@ -541,7 +541,7 @@ static int test__checkevent_pmu_partial_time_callgraph(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong callgraph",  !evsel__has_callchain(evsel));
- 	TEST_ASSERT_VAL("wrong time",  !(PERF_SAMPLE_TIME & evsel->core.attr.sample_type));
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_pmu_events(struct evlist *evlist)
-@@ -559,7 +559,7 @@ static int test__checkevent_pmu_events(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned);
- 	TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.exclusive);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- 
-@@ -591,7 +591,7 @@ static int test__checkevent_pmu_events_mix(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned);
- 	TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.pinned);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkterms_simple(struct list_head *terms)
-@@ -662,7 +662,7 @@ static int test__checkterms_simple(struct list_head *terms)
- 			term->type_val == PARSE_EVENTS__TERM_TYPE_NUM);
- 	TEST_ASSERT_VAL("wrong val", term->val.num == 0xead);
- 	TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config"));
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group1(struct evlist *evlist)
-@@ -704,7 +704,7 @@ static int test__group1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group2(struct evlist *evlist)
-@@ -759,7 +759,7 @@ static int test__group2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group3(struct evlist *evlist __maybe_unused)
-@@ -851,7 +851,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group4(struct evlist *evlist __maybe_unused)
-@@ -895,7 +895,7 @@ static int test__group4(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group5(struct evlist *evlist __maybe_unused)
-@@ -981,7 +981,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group_gh1(struct evlist *evlist)
-@@ -1021,7 +1021,7 @@ static int test__group_gh1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
- 	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group_gh2(struct evlist *evlist)
-@@ -1061,7 +1061,7 @@ static int test__group_gh2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
- 	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group_gh3(struct evlist *evlist)
-@@ -1101,7 +1101,7 @@ static int test__group_gh3(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
- 	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__group_gh4(struct evlist *evlist)
-@@ -1141,7 +1141,7 @@ static int test__group_gh4(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
- 	TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__leader_sample1(struct evlist *evlist)
-@@ -1194,7 +1194,7 @@ static int test__leader_sample1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
- 	TEST_ASSERT_VAL("wrong sample_read", evsel->sample_read);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__leader_sample2(struct evlist *evlist __maybe_unused)
-@@ -1233,7 +1233,7 @@ static int test__leader_sample2(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
- 	TEST_ASSERT_VAL("wrong sample_read", evsel->sample_read);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_pinned_modifier(struct evlist *evlist)
-@@ -1277,7 +1277,7 @@ static int test__pinned_group(struct evlist *evlist)
- 			PERF_COUNT_HW_BRANCH_MISSES == evsel->core.attr.config);
- 	TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_exclusive_modifier(struct evlist *evlist)
-@@ -1321,7 +1321,7 @@ static int test__exclusive_group(struct evlist *evlist)
- 			PERF_COUNT_HW_BRANCH_MISSES == evsel->core.attr.config);
- 	TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.exclusive);
- 
--	return 0;
-+	return TEST_OK;
- }
- static int test__checkevent_breakpoint_len(struct evlist *evlist)
- {
-@@ -1335,7 +1335,7 @@ static int test__checkevent_breakpoint_len(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong bp_len", HW_BREAKPOINT_LEN_1 ==
- 					evsel->core.attr.bp_len);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_breakpoint_len_w(struct evlist *evlist)
-@@ -1350,7 +1350,7 @@ static int test__checkevent_breakpoint_len_w(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong bp_len", HW_BREAKPOINT_LEN_2 ==
- 					evsel->core.attr.bp_len);
- 
--	return 0;
-+	return TEST_OK;
- }
- 
- static int
-@@ -1374,7 +1374,7 @@ static int test__checkevent_precise_max_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config",
- 			PERF_COUNT_SW_TASK_CLOCK == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_config_symbol(struct evlist *evlist)
-@@ -1382,7 +1382,7 @@ static int test__checkevent_config_symbol(struct evlist *evlist)
- 	struct evsel *evsel = evlist__first(evlist);
- 
- 	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "insn") == 0);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_config_raw(struct evlist *evlist)
-@@ -1390,7 +1390,7 @@ static int test__checkevent_config_raw(struct evlist *evlist)
- 	struct evsel *evsel = evlist__first(evlist);
- 
- 	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "rawpmu") == 0);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_config_num(struct evlist *evlist)
-@@ -1398,7 +1398,7 @@ static int test__checkevent_config_num(struct evlist *evlist)
- 	struct evsel *evsel = evlist__first(evlist);
- 
- 	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "numpmu") == 0);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_config_cache(struct evlist *evlist)
-@@ -1406,7 +1406,7 @@ static int test__checkevent_config_cache(struct evlist *evlist)
- 	struct evsel *evsel = evlist__first(evlist);
- 
- 	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "cachepmu") == 0);
--	return 0;
-+	return TEST_OK;
- }
- 
- static bool test__intel_pt_valid(void)
-@@ -1419,7 +1419,7 @@ static int test__intel_pt(struct evlist *evlist)
- 	struct evsel *evsel = evlist__first(evlist);
- 
- 	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "intel_pt//u") == 0);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_complex_name(struct evlist *evlist)
-@@ -1427,7 +1427,7 @@ static int test__checkevent_complex_name(struct evlist *evlist)
- 	struct evsel *evsel = evlist__first(evlist);
- 
- 	TEST_ASSERT_VAL("wrong complex name parsing", strcmp(evsel->name, "COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks") == 0);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__checkevent_raw_pmu(struct evlist *evlist)
-@@ -1437,7 +1437,7 @@ static int test__checkevent_raw_pmu(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0x1a == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__sym_event_slash(struct evlist *evlist)
-@@ -1447,7 +1447,7 @@ static int test__sym_event_slash(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
- 	TEST_ASSERT_VAL("wrong config", evsel->core.attr.config == PERF_COUNT_HW_CPU_CYCLES);
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__sym_event_dc(struct evlist *evlist)
-@@ -1457,7 +1457,7 @@ static int test__sym_event_dc(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
- 	TEST_ASSERT_VAL("wrong config", evsel->core.attr.config == PERF_COUNT_HW_CPU_CYCLES);
- 	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int count_tracepoints(void)
-@@ -1521,7 +1521,7 @@ static int test__hybrid_hw_event_with_pmu(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0x3c == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__hybrid_hw_group_event(struct evlist *evlist)
-@@ -1538,7 +1538,7 @@ static int test__hybrid_hw_group_event(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0xc0 == evsel->core.attr.config);
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__hybrid_sw_hw_group_event(struct evlist *evlist)
-@@ -1554,7 +1554,7 @@ static int test__hybrid_sw_hw_group_event(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0x3c == evsel->core.attr.config);
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__hybrid_hw_sw_group_event(struct evlist *evlist)
-@@ -1570,7 +1570,7 @@ static int test__hybrid_hw_sw_group_event(struct evlist *evlist)
- 	evsel = evsel__next(evsel);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__hybrid_group_modifier1(struct evlist *evlist)
-@@ -1591,7 +1591,7 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
- 	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__hybrid_raw1(struct evlist *evlist)
-@@ -1602,7 +1602,7 @@ static int test__hybrid_raw1(struct evlist *evlist)
- 		TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 		TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 		TEST_ASSERT_VAL("wrong config", 0x1a == evsel->core.attr.config);
--		return 0;
-+		return TEST_OK;
- 	}
- 
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
-@@ -1612,7 +1612,7 @@ static int test__hybrid_raw1(struct evlist *evlist)
- 	/* The type of second event is randome value */
- 	evsel = evsel__next(evsel);
- 	TEST_ASSERT_VAL("wrong config", 0x1a == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__hybrid_raw2(struct evlist *evlist)
-@@ -1622,7 +1622,7 @@ static int test__hybrid_raw2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0x1a == evsel->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
- static int test__hybrid_cache_event(struct evlist *evlist)
-@@ -1632,7 +1632,7 @@ static int test__hybrid_cache_event(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HW_CACHE == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", 0x2 == (evsel->core.attr.config & 0xffffffff));
--	return 0;
-+	return TEST_OK;
- }
- 
- struct evlist_test {
-@@ -2043,20 +2043,24 @@ static int test_event(const struct evlist_test *e)
- 	int ret;
- 
- 	if (e->valid && !e->valid()) {
--		pr_debug("... SKIP");
--		return 0;
-+		pr_debug("... SKIP\n");
-+		return TEST_OK;
- 	}
- 
- 	evlist = evlist__new();
--	if (evlist == NULL)
--		return -ENOMEM;
--
-+	if (evlist == NULL) {
-+		pr_err("Failed allocation");
-+		return TEST_FAIL;
-+	}
- 	parse_events_error__init(&err);
- 	ret = parse_events(evlist, e->name, &err);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
- 			 e->name, ret, err.str);
- 		parse_events_error__print(&err, e->name);
-+		ret = TEST_FAIL;
-+		if (strstr(err.str, "can't access trace events"))
-+			ret = TEST_SKIP;
- 	} else {
- 		ret = e->check(evlist);
- 	}
-@@ -2091,21 +2095,37 @@ static int test_event_fake_pmu(const char *str)
- 	return ret;
- }
- 
-+static int combine_test_results(int existing, int latest)
-+{
-+	if (existing == TEST_FAIL)
-+		return TEST_FAIL;
-+	if (existing == TEST_SKIP)
-+		return latest == TEST_OK ? TEST_SKIP : latest;
-+	return latest;
-+}
-+
- static int test_events(const struct evlist_test *events, int cnt)
- {
--	int ret1, ret2 = 0;
-+	int ret = TEST_OK;
- 
- 	for (int i = 0; i < cnt; i++) {
- 		const struct evlist_test *e = &events[i];
-+		int test_ret;
- 
--		pr_debug("running test %d '%s'", i, e->name);
--		ret1 = test_event(e);
--		if (ret1)
--			ret2 = ret1;
--		pr_debug("\n");
-+		pr_debug("running test %d '%s'\n", i, e->name);
-+		test_ret = test_event(e);
-+		if (test_ret != TEST_OK) {
-+			pr_debug("Event test failure: test %d '%s'", i, e->name);
-+			ret = combine_test_results(ret, test_ret);
-+		}
- 	}
- 
--	return ret2;
-+	return ret;
-+}
-+
-+static int test__events2(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	return test_events(test__events, ARRAY_SIZE(test__events));
- }
- 
- static int test_term(const struct terms_test *t)
-@@ -2151,6 +2171,11 @@ static int test_terms(const struct terms_test *terms, int cnt)
- 	return ret;
- }
- 
-+static int test__terms2(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	return test_terms(test__terms, ARRAY_SIZE(test__terms));
-+}
-+
- static int test_pmu(void)
- {
- 	struct stat st;
-@@ -2166,7 +2191,7 @@ static int test_pmu(void)
- 	return !ret;
- }
- 
--static int test_pmu_events(void)
-+static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	struct stat st;
- 	char path[PATH_MAX];
-@@ -2174,24 +2199,29 @@ static int test_pmu_events(void)
- 	DIR *dir;
- 	int ret;
- 
-+	if (!test_pmu())
-+		return TEST_SKIP;
-+
- 	snprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu/events/",
- 		 sysfs__mountpoint());
- 
- 	ret = stat(path, &st);
- 	if (ret) {
--		pr_debug("omitting PMU cpu events tests\n");
--		return 0;
-+		pr_debug("omitting PMU cpu events tests: %s\n", path);
-+		return TEST_OK;
- 	}
- 
- 	dir = opendir(path);
- 	if (!dir) {
--		pr_debug("can't open pmu event dir");
--		return -1;
-+		pr_debug("can't open pmu event dir: %s\n", path);
-+		return TEST_FAIL;
- 	}
- 
--	while (!ret && (ent = readdir(dir))) {
-+	ret = TEST_OK;
-+	while ((ent = readdir(dir))) {
- 		struct evlist_test e = { .name = NULL, };
- 		char name[2 * NAME_MAX + 1 + 12 + 3];
-+		int test_ret;
- 
- 		/* Names containing . are special and cannot be used directly */
- 		if (strchr(ent->d_name, '.'))
-@@ -2202,19 +2232,33 @@ static int test_pmu_events(void)
- 		e.name  = name;
- 		e.check = test__checkevent_pmu_events;
- 
--		ret = test_event(&e);
--		if (ret)
--			break;
-+		test_ret = test_event(&e);
-+		if (test_ret != TEST_OK) {
-+			pr_debug("Test PMU event failed for '%s'", name);
-+			ret = combine_test_results(ret, test_ret);
-+		}
- 		snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
- 		e.name  = name;
- 		e.check = test__checkevent_pmu_events_mix;
--		ret = test_event(&e);
-+		test_ret = test_event(&e);
-+		if (test_ret != TEST_OK) {
-+			pr_debug("Test PMU event failed for '%s'", name);
-+			ret = combine_test_results(ret, test_ret);
-+		}
- 	}
- 
- 	closedir(dir);
- 	return ret;
- }
- 
-+static int test__pmu_events2(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	if (!test_pmu())
-+		return TEST_SKIP;
-+
-+	return test_events(test__events_pmu, ARRAY_SIZE(test__events_pmu));
-+}
-+
- static bool test_alias(char **event, char **alias)
- {
- 	char path[PATH_MAX];
-@@ -2273,6 +2317,14 @@ static bool test_alias(char **event, char **alias)
- 	return false;
- }
- 
-+static int test__hybrid(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	if (!perf_pmu__has_hybrid())
-+		return TEST_SKIP;
-+
-+	return test_events(test__hybrid_events, ARRAY_SIZE(test__hybrid_events));
-+}
-+
- static int test__checkevent_pmu_events_alias(struct evlist *evlist)
- {
- 	struct evsel *evsel1 = evlist__first(evlist);
-@@ -2280,10 +2332,10 @@ static int test__checkevent_pmu_events_alias(struct evlist *evlist)
- 
- 	TEST_ASSERT_VAL("wrong type", evsel1->core.attr.type == evsel2->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", evsel1->core.attr.config == evsel2->core.attr.config);
--	return 0;
-+	return TEST_OK;
- }
- 
--static int test_pmu_events_alias(char *event, char *alias)
-+static int test__pmu_events_alias(char *event, char *alias)
- {
- 	struct evlist_test e = { .name = NULL, };
- 	char name[2 * NAME_MAX + 20];
-@@ -2296,72 +2348,63 @@ static int test_pmu_events_alias(char *event, char *alias)
- 	return test_event(&e);
- }
- 
--static int test_pmu_events_alias2(void)
-+static int test__alias(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
--	static const char events[][30] = {
--			"event-hyphen",
--			"event-two-hyph",
--	};
--	unsigned long i;
--	int ret = 0;
-+	char *event, *alias;
-+	int ret;
- 
--	for (i = 0; i < ARRAY_SIZE(events); i++) {
--		ret = test_event_fake_pmu(&events[i][0]);
--		if (ret) {
--			pr_err("check_parse_fake %s failed\n", &events[i][0]);
--			break;
--		}
--	}
-+	if (!test_alias(&event, &alias))
-+		return TEST_SKIP;
- 
-+	ret = test__pmu_events_alias(event, alias);
-+
-+	free(event);
-+	free(alias);
- 	return ret;
- }
- 
--static int test__parse_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+static int test__pmu_events_alias2(struct test_suite *test __maybe_unused,
-+				   int subtest __maybe_unused)
- {
--	int ret1, ret2 = 0;
--	char *event, *alias;
--
--#define TEST_EVENTS(tests)				\
--do {							\
--	ret1 = test_events(tests, ARRAY_SIZE(tests));	\
--	if (!ret2)					\
--		ret2 = ret1;				\
--} while (0)
--
--	if (perf_pmu__has_hybrid()) {
--		TEST_EVENTS(test__hybrid_events);
--		return ret2;
--	}
--
--	TEST_EVENTS(test__events);
--
--	if (test_pmu())
--		TEST_EVENTS(test__events_pmu);
--
--	if (test_pmu()) {
--		int ret = test_pmu_events();
--		if (ret)
--			return ret;
--	}
-+	static const char events[][30] = {
-+			"event-hyphen",
-+			"event-two-hyph",
-+	};
-+	int ret = TEST_OK;
- 
--	if (test_alias(&event, &alias)) {
--		int ret = test_pmu_events_alias(event, alias);
-+	for (unsigned int i = 0; i < ARRAY_SIZE(events); i++) {
-+		int test_ret = test_event_fake_pmu(&events[i][0]);
- 
--		free(event);
--		free(alias);
--		if (ret)
--			return ret;
-+		if (test_ret != TEST_OK) {
-+			pr_debug("check_parse_fake %s failed\n", &events[i][0]);
-+			ret = combine_test_results(ret, test_ret);
-+		}
- 	}
- 
--	ret1 = test_pmu_events_alias2();
--	if (!ret2)
--		ret2 = ret1;
--
--	ret1 = test_terms(test__terms, ARRAY_SIZE(test__terms));
--	if (!ret2)
--		ret2 = ret1;
--
--	return ret2;
-+	return ret;
- }
- 
--DEFINE_SUITE("Parse event definition strings", parse_events);
-+static struct test_case tests__parse_events[] = {
-+	TEST_CASE_REASON("Test event parsing",
-+			 events2,
-+			 "permissions"),
-+	TEST_CASE_REASON("Test parsing of \"hybrid\" CPU events",
-+			 hybrid,
-+			"not hybrid"),
-+	TEST_CASE_REASON("Parsing of all PMU events from sysfs",
-+			 pmu_events,
-+			 "permissions"),
-+	TEST_CASE_REASON("Parsing of given PMU events from sysfs",
-+			 pmu_events2,
-+			 "permissions"),
-+	TEST_CASE_REASON("Parsing of aliased events from sysfs", alias,
-+			 "no aliases in sysfs"),
-+	TEST_CASE("Parsing of aliased events", pmu_events_alias2),
-+	TEST_CASE("Parsing of terms (event modifiers)", terms2),
-+	{	.name = NULL, }
-+};
-+
-+struct test_suite suite__parse_events = {
-+	.desc = "Parse event definition strings",
-+	.test_cases = tests__parse_events,
-+};
--- 
-2.36.0.550.gb090851708-goog
+> For example, I have now python 3.6 (default) and 2.7 but it still
+> doesn't seem to work:
+>
+> john@localhost:~/acme/tools/perf> make
+>    BUILD:   Doing 'make -j4' parallel build
+> Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h'
+> differs from latest version at 'include/linux/coresight-pmu.h'
+> diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
+> Makefile.config:593: No sys/sdt.h found, no SDT events are defined,
+> please install systemtap-sdt-devel or systemtap-sdt-dev
+> Makefile.config:871: Python interpreter too old (older than 3.5)
+> disabling jevent generation
+> Makefile.config:904: Old version of libbfd/binutils things like PE
+> executable profiling will not be available
+> Makefile.config:1092: No openjdk development package found, please
+> install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+>
+> Auto-detecting system features:
+> ...                         dwarf: [ on  ]
+> ...            dwarf_getlocations: [ on  ]
+> ...                         glibc: [ on  ]
+> ...                        libbfd: [ OFF ]
+> ...                libbfd-buildid: [ OFF ]
+> ...                        libcap: [ on  ]
+> ...                        libelf: [ on  ]
+> ...                       libnuma: [ on  ]
+> ...        numa_num_possible_cpus: [ on  ]
+> ...                       libperl: [ on  ]
+> ...                     libpython: [ on  ]
+> ...                     libcrypto: [ on  ]
+> ...                     libunwind: [ on  ]
+> ...            libdw-dwarf-unwind: [ on  ]
+> ...                          zlib: [ on  ]
+> ...                          lzma: [ on  ]
+> ...                     get_cpuid: [ on  ]
+> ...                           bpf: [ on  ]
+> ...                        libaio: [ on  ]
+> ...                       libzstd: [ on  ]
+> ...        disassembler-four-args: [ on  ]
+>
+>
+> make[3]: Nothing to be done for 'install_headers'.
+> john@localhost:~/acme/tools/perf> python --version
+> Python 3.6.12
+> john@localhost:~/acme/tools/perf>
+>
+> which I need to figure out...
 
+Yep, I can't explain that :-) You could try something like adding a
+$(warning ... or similar to the build and running:
+python3 -c 'import sys; print(sys.version_info)'
+
+the jevents.py uses f-strings and so I'll need to bump the version
+from 3.5 to 3.6 in v2. Python 3.6 was released in December 2016.
+
+Thanks,
+Ian
+
+
+> >
+> >>   > + ifneq ($(JEVENTS_PYTHON_GOOD), 1)
+> >>   > + $(warning Python interpreter too old (older than 3.5) disabling
+> >> jevent generation)
+> >>   > + NO_JEVENTS := 1
+> >>
+> >> It is possible to flip NO_JEVENTS to be JEVENTS, i.e. no
+> >> double-negatives, like NO_JEVENTS := 0
+> >
+> > Agreed that double negatives are bad. The NO_... pattern is kind of
+> > throughout the make files and build files. I preferred the NO_... for
+> > consistency but if there's a consensus I'm happy to change.
+> >
+>
+> I have no strong preference. I just find that double negatives boggle
+> the mind.
+>
+> Thanks,
+> john
