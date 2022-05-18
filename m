@@ -2,104 +2,176 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B732C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 01:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12065C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 02:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232234AbiERBGs (ORCPT
+        id S234324AbiERCpV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 May 2022 21:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58110 "EHLO
+        Tue, 17 May 2022 22:45:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230105AbiERBGr (ORCPT
+        with ESMTP id S234315AbiERCpU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 May 2022 21:06:47 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699E036E19
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 18:06:46 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id h24so723006pgh.12
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 18:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GbQqiHon5mXOJtQ7qDFO/1YT/pDph51vsh9Oavp7fmY=;
-        b=inH5xjVG/jZfmds2/BFsMpqvlCQ8Sg2Wav2+94TRKdGaS4+3kKdtfIAB1q75ETZ/fJ
-         ATNzYfeV9BvxkfK0CVOMcA4QwLQn671w4YX8oy12oUJRtw2hhKXt73nBYPlAuWq+OBXr
-         DSTJaLBzVyiQZXJiLKDckGzb1EF8GM1e6FizTL+j71ddqjrGXCMuji4wriuKi3hKaBZB
-         IEZbfFq8q76Z4cwA6B4v3WkisogPY84j/ZTbHKwZ/xyfu3CUgHp1RB8WlsV+KOpiJfLz
-         DUJeLhTKdChApQqpbWmBwJnHLuLaqYFjHQqRn9xiA7ii6CvrzdVGskWF/L+bmEJD2e5Y
-         1Sng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GbQqiHon5mXOJtQ7qDFO/1YT/pDph51vsh9Oavp7fmY=;
-        b=QjelT1tMPqqRzz7KKAsFnhWO++uBc/s4uRmdp2Ea2RJ7Elr6hMsrwLPSxUofbSvPzZ
-         eS4O3DDRAxh1RkB2vmIIJWQ4rAx1bAg+sFJs0MmUXRActKd6FyldY3KICTErolj2wOcv
-         0mNmDBHRHjn2Xmcyylf9XD+l99lQYPh/p0Oke17129R+epyZD+Ic89RH0mdm3bfdvzzs
-         bKb8awoWrpzcg596p8RIFX1960PNGHJ8M7k+CQFcG3F0djPmvo+Ec/lCcO+TvH0oDSi0
-         JeKu5nW75D4dhnod6jM0sXFXPioqe8+HzOIFP1/rT437NoqoUO9lk5fLjr9Ksgzf5X89
-         TKtQ==
-X-Gm-Message-State: AOAM531P+LuP6jygyrpO5w8D79CRyIXKMMvuRcJBFUbUYavuLqXt7wzG
-        qkjWLWAgU2MlvjLiNhWVtxGOkA==
-X-Google-Smtp-Source: ABdhPJxHe6wTqA3Hd7+cLFPc0AM72PmGHVpv6W3BGxsjD2AA0peE3NA6rzS5zkdrIPuaWIMecvj0pg==
-X-Received: by 2002:a63:455f:0:b0:3c6:401c:c884 with SMTP id u31-20020a63455f000000b003c6401cc884mr21023993pgk.28.1652836005799;
-        Tue, 17 May 2022 18:06:45 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([137.184.121.66])
-        by smtp.gmail.com with ESMTPSA id 79-20020a630252000000b003c14af50605sm191559pgc.29.2022.05.17.18.06.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 18:06:45 -0700 (PDT)
-Date:   Wed, 18 May 2022 09:06:23 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
-        benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com,
-        Jiri Olsa <jolsa@kernel.org>, kjain@linux.ibm.com,
-        lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v8 0/4] perf: arm-spe: Decode SPE source and use for perf
- c2c
-Message-ID: <20220518010623.GA402837@leoy-ThinkPad-X240s>
-References: <20220517020326.18580-1-alisaidi@amazon.com>
- <YoQRg1r7HuwiO3bZ@kernel.org>
+        Tue, 17 May 2022 22:45:20 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA7254688;
+        Tue, 17 May 2022 19:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652841918; x=1684377918;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HkJveV1SObdCl0X5UzbD536bvT+Ssfn5TL+iMP961Dw=;
+  b=fUuqloN3j8tRp/6ynaOqdVJbKjB8u8cI/WNW4IOTmJMObp0lB+Rdsd30
+   A0WDNFhqAKniRfKrMczHTnYS8+O4o8kLtvm7KAfQIAJ+gZgwdLiel/5jm
+   ma9Qv2PM4YQNruQViLycqarRIOKGxYSGJYSkMpCwd3YOTR/J9EYExNgXo
+   FaKpyQzlpTkbN9fb4BM4Ef4vrFFpGDx8xXERMvBu3AKTdmMfn8dRWn1DE
+   vQdX/+w2J9c3EFDJJc3yLZRpZakRC2dJQTqKp1xLDTlw2rW+YwvFtjFgs
+   6vEDwQfVfqPCGH66U/l0P62/QV9R8OcCn2lbYKMThlaYLGLXtD6MzkN0N
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="296729043"
+X-IronPort-AV: E=Sophos;i="5.91,234,1647327600"; 
+   d="scan'208";a="296729043"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 19:45:18 -0700
+X-IronPort-AV: E=Sophos;i="5.91,234,1647327600"; 
+   d="scan'208";a="597479183"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.255.31.182]) ([10.255.31.182])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 19:45:13 -0700
+Message-ID: <8f846bfe-af5d-d895-0ee4-a5bbbae1fd06@linux.intel.com>
+Date:   Wed, 18 May 2022 10:45:11 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YoQRg1r7HuwiO3bZ@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 1/5] Revert "perf stat: Support metrics with hybrid
+ events"
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20220507053410.3798748-1-irogers@google.com>
+ <20220507053410.3798748-2-irogers@google.com> <YnkTIwiVBEGUJRKn@kernel.org>
+ <b01a66c4-ec4d-ccb7-8ca7-130d93855177@linux.intel.com>
+ <708fab8f-b5c5-8f34-4322-3e337c56b869@linux.intel.com>
+ <CAM9d7cgEc9o9y-fH==avzucigmMVw0AwooGw0eufb2+D568-_g@mail.gmail.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <CAM9d7cgEc9o9y-fH==avzucigmMVw0AwooGw0eufb2+D568-_g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
 
-On Tue, May 17, 2022 at 06:20:03PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, May 17, 2022 at 02:03:21AM +0000, Ali Saidi escreveu:
-> > When synthesizing data from SPE, augment the type with source information
-> > for Arm Neoverse cores so we can detect situtions like cache line
-> > contention and transfers on Arm platforms. 
-> > 
-> > This changes enables future changes to c2c on a system with SPE where lines that
-> > are shared among multiple cores show up in perf c2c output. 
-> > 
-> > Changes is v9:
-> >  * Change reporting of remote socket data which should make Leo's upcomping
-> >    patch set for c2c make sense on multi-socket platforms  
+
+On 5/18/2022 6:58 AM, Namhyung Kim wrote:
+> Hello,
 > 
-> Hey,
+> On Tue, May 10, 2022 at 2:31 AM Xing Zhengjun
+> <zhengjun.xing@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 5/10/2022 5:55 AM, Liang, Kan wrote:
+>>>
+>>>
+>>> On 5/9/2022 9:12 AM, Arnaldo Carvalho de Melo wrote:
+>>>> Em Fri, May 06, 2022 at 10:34:06PM -0700, Ian Rogers escreveu:
+>>>>> This reverts commit 60344f1a9a597f2e0efcd57df5dad0b42da15e21.
+>>>>
+>>>> I picked this from the cover letter and added to this revert, to justify
+>>>> it:
+>>>>
+>>>> "Hybrid metrics place a PMU at the end of the parse string. This is
+>>>> also where tool events are placed. The behavior of the parse string
+>>>> isn't clear and so revert the change for now."
+>>>>
+>>>
+>>> I think the original patch used a "#" to indicate the PMU name, which
+>>> can be used to distinguish between the tool events and the PMU name.
+>>> To be honest, I'm not sure what's unclear here. Could you please clarify?
+>>>
+>>> With this revert, the issue mentioned in the original patch must be
+>>> broken on ADL. I don't see a replacement fix in this patch series.
+>>> Could you please propose a solution for the issue to replace the #PMU
+>>> name solution?
+>>>
+>>> Thanks,
+>>> Kan
+>>
+>> I am surprised the origin patch is reverted during discussion and though
+>> the discussion still has no conclusion.
+>> Let me introduce the purpose of the origin patch.
+>> For a hybrid system such as ADL, if both the metrics and the formula are
+>> different for the different PMUs, without this patch, the metric and
+>> event parser should work ok, nothing should be special for the hybrid.
+>> In fact, both "cpu_core" and "cpu_atom" may have the same metrics--the
+>> same metric name, even the same formula for the metrics. For example,
+>> both "cpu_core" and "cpu_atom" have metrics "IpBranch" and "IPC", For
+>> "IpBranch", both "cpu_core" and "cpu_atom" has the same metric name and
+>> their formula also is the same, the event name is the same though they
+>> belong to different PMUs. The old metric and event parser can not handle
+>> this kind of metric, that's why we need this patch.
+>>
+>>       "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+>>       "MetricName": "IpBranch",
+>>       "Unit": "cpu_core"
+>>
+>>       "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+>>       "MetricName": "IpBranch",
+>>       "Unit": "cpu_atom"
+>>
+>>
+>>      "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+>>      "MetricName": "IPC",
+>>      "Unit": "cpu_core"
+>>
+>>      "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.CORE",
+>>      "MetricName": "IPC",
+>>      "Unit": "cpu_atom"
+>>
+>> Except for the above two metrics, there are still a lot of similar
+>> metrics, "CPU_Utilization"...
+>>
+>> The original patch expanded the metric group string by adding
+>> "#PMU_name" to indicate the PMU name, which can be used to distinguish
+>> between the tool events and the PMU name, then the metric and event
+>> parser can parse the right PMU for the events.
+>>
+>> With the patch all the ADL metrics can pass, without the patch, a lot of
+>> metrics will fail. I don't think it's a good idea to revert it before
+>> the new solution is proposed.
 > 
-> 	Joe Mario, who is one of 'perf c2c' authors asked me about some
-> git tree he could clone from for both building the kernel and
-> tools/perf/ so that he could do tests, can you please provide that?
+> Just an idea.  Can we add a pmu prefix when it resolves the event
+> for a metric if it has the "Unit"?  It seems we can support something
+> like "cpu_core@INST_RETIRED.ANY@" already..
+> 
+> Or could it be done when creating JSON files?
+> 
+> Thanks,
+> Namhyung
 
-Sure, I will prepare a git tree for testing and share with Joe.
+Yes, we have ever tested it, and it can work. we are changing the 
+converter tools to implement it, but it still has some issues that need 
+to fix.
 
-> thanks!
-
-Also thanks for your reminding.
-
-Leo
+-- 
+Zhengjun Xing
