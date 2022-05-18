@@ -2,159 +2,203 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DF7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 04:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE04C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 May 2022 05:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229972AbiEREqP (ORCPT
+        id S230330AbiERF5y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 00:46:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35110 "EHLO
+        Wed, 18 May 2022 01:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbiEREqN (ORCPT
+        with ESMTP id S230325AbiERF5x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 00:46:13 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D10F1260B
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:46:11 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id u3so944480wrg.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 21:46:10 -0700 (PDT)
+        Wed, 18 May 2022 01:57:53 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861F149C8F
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 22:57:52 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id c2so827640plh.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 May 2022 22:57:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JXaTY4KqUJaIozeXvx5Y70iZwlWNulDivMpkv1qtAes=;
-        b=QnEROjlY59cCqYTFLpPTAG4jrLQMfzYgl6J52oW/zwCd/SMTy5737J/4Fpw3elm3mb
-         oE3J9W2/OPHsUfzd9oWQe+Bmhd2WTDhGKmAPJYD09sutaUVlJEkBEnInk4LfZu/nVd5X
-         +08CJSUQEEet1nKoyMpzvfpCk7vFqOPX3z9fJh4fkIZYj/erZYDzavktqpMMk38CzMeE
-         D6v9ZIXZEodggD8aRytPIIpgCPFD3RtKpf8UDviw/hxSxQ+PXg+vAqrc97WJdiLwfbZ1
-         OTlNStPRgL1TAAZzIOyJpBsZ4ltQ3TYkqiQZDjbl4Wz5U9x1gjfxR8xAunZUoSeO+rMF
-         9YDw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YWzDBOyPe1f7P/agWm02zK5hEi+BwBKQclfQZQozu9A=;
+        b=wOGbuclrblLMe9jJsmqErIlwHXABeV9xsF0oBHhAxJ1wSkj7Kq3Awd1qdTkwaQFHwH
+         0z6ns/McGSCcsW3jADCrGv5cfCfzUFapLM61E2vn6gGoRWXaO3zNlGZcvFvmGRsF2dqs
+         KEwXmn57zDaTmYLF+mHAZMFWGTD1CPLWX20ki1xcbQJuzjewbMzJFdHOJfm+xsSlL/5r
+         V2nArGwbsDYN4pnf75xbuLo33WbTKLPq+92427jA2w+gtJptYlJt4e/QYNrza2fjTMt2
+         Bh4/Anv18cFF7tseERapek29lJGhffab1LH7D3jxcPchUj9rCb+rdX9+z6NgKiwB8+Rn
+         7mBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JXaTY4KqUJaIozeXvx5Y70iZwlWNulDivMpkv1qtAes=;
-        b=mpMLhgU6qjslEWhLUbBfL1gBHaNOj7ZoqZtOcox4f6RAkrdTZjpI31TAF3r3jpw3V/
-         6OYETKh9C9DN6tTe3P2BG67ObLVSYTf1KG5mo70ymq5s2awfN+OcGzWw3DaWSao0c5/n
-         qBUsw+cJH272m6+6gG9WmHLO4Rl1qPoOHxeI1nD10hdgp25WNSwxmb4/wgSJyDSuSiGS
-         a0CbWmOXQr0M7/vYsVSR4F4ywiUkY5tOH2JejTgQaVtT36ClsZSOQuUnYB5DU9/8fX0/
-         uPmu4nbe2hsAXxKG/a7Ea+OqGeuGygNYfKlwKzqX++4RmByUIa5pFR0Ed3UOl5cvwQso
-         OC7g==
-X-Gm-Message-State: AOAM5338ctyofMDtG+ZntdH9F3DeuDhN68TXLuxvli2VEoixN2Qd5tsn
-        E7ZiP/cl8WRt/ZZw9GSQD8qd4k0jpLVYBXGcNVt2Kg==
-X-Google-Smtp-Source: ABdhPJyLXUL07uz5XWVyoozPMmvElgMnGmtzGQ5cFnBzsSyjmjmpcwHIf6RheJdz/bdInVDDH4/wjQYueClopvcpwQk=
-X-Received: by 2002:a05:6000:78b:b0:20d:101b:2854 with SMTP id
- bu11-20020a056000078b00b0020d101b2854mr8366173wrb.300.1652849169359; Tue, 17
- May 2022 21:46:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220510074659.2557731-1-jolsa@kernel.org> <CAEf4BzbK9zgetgE1yKkCANTZqizUrXgamJa2X0f0XmzQUdFrCQ@mail.gmail.com>
- <YntnRixbfQ1HCm9T@krava> <Ynv+7iaaAbyM38B6@kernel.org> <CAEf4BzaQsF31f3WuU32wDCzo6bw7eY8E9zF6Lo218jfw-VQmcA@mail.gmail.com>
-In-Reply-To: <CAEf4BzaQsF31f3WuU32wDCzo6bw7eY8E9zF6Lo218jfw-VQmcA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 17 May 2022 21:45:56 -0700
-Message-ID: <CAP-5=fX6Z549my7VR0GYNW11vvXJc_4dmg8KOvaFAusjKJV=JA@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] perf tools: Fix prologue generation
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <olsajiri@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YWzDBOyPe1f7P/agWm02zK5hEi+BwBKQclfQZQozu9A=;
+        b=PfGoIbgTXmMcKHoPXaYPD59QBv39IgPQfDUMhH3hcTlJSO6cdcbv2tnW5AjnzQJkBt
+         gjD+DLZUWInDsJ/4mJy2yxdA6im6eDtPIyLWBglNNFx/DnO6vuUiwYaxYfLUnWtFyIY3
+         zRVPytTl2VnF+KZrAzzcXdt4NASDbhw0wirPJZCtVV7RGbWHGF8eNxz+j0xKhevnzzBC
+         c94Npanjhe+EsR9yUJyiBzNe74ooIth1nZixGycs2ztajsm5FKT5KIz4uymIjgC9hJ7n
+         W35ccUfIxw3UqYSh78J9qRD8JimP3AJLDhAqO8eG+nr/76Q37neYQjbclso35cmuZVYN
+         cuTA==
+X-Gm-Message-State: AOAM533z8N0Wv7Ksxd7AXIvoacOGJhoiiZtQpbglNJJPlpo1sa7HpW7q
+        USmOq4w5Jkped/6FmaRP8po69g==
+X-Google-Smtp-Source: ABdhPJw9i8r6bK3UVYWiV+Ya9658wmTF/lkS1oeJqSPzEgm3es26ND6NLx4naSDN1J08w6lL/THivQ==
+X-Received: by 2002:a17:902:cec8:b0:161:bbbf:c48e with SMTP id d8-20020a170902cec800b00161bbbfc48emr3243999plg.54.1652853471661;
+        Tue, 17 May 2022 22:57:51 -0700 (PDT)
+Received: from localhost.localdomain (n058152048195.netvigator.com. [58.152.48.195])
+        by smtp.gmail.com with ESMTPSA id cp16-20020a170902e79000b0015e8d4eb2c2sm627127plb.268.2022.05.17.22.57.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 May 2022 22:57:51 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Like Xu <likexu@tencent.com>, Alyssa Ross <hi@alyssa.is>,
+        Ian Rogers <irogers@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Adam Li <adamli@amperemail.onmicrosoft.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v3 00/11] perf c2c: Support display for Arm64
+Date:   Wed, 18 May 2022 13:57:18 +0800
+Message-Id: <20220518055729.1869566-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 17, 2022 at 3:03 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Wed, May 11, 2022 at 11:22 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Wed, May 11, 2022 at 09:35:34AM +0200, Jiri Olsa escreveu:
-> > > On Tue, May 10, 2022 at 04:48:55PM -0700, Andrii Nakryiko wrote:
-> > > > On Tue, May 10, 2022 at 12:47 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > >
-> > > > > hi,
-> > > > > sending change we discussed some time ago [1] to get rid of
-> > > > > some deprecated functions we use in perf prologue code.
-> > > > >
-> > > > > Despite the gloomy discussion I think the final code does
-> > > > > not look that bad ;-)
-> > > > >
-> > > > > This patchset removes following libbpf functions from perf:
-> > > > >   bpf_program__set_prep
-> > > > >   bpf_program__nth_fd
-> > > > >   struct bpf_prog_prep_result
-> > > > >
-> > > > > v2 changes:
-> > > > >   - use fallback section prog handler, so we don't need to
-> > > > >     use section prefix [Andrii]
-> > > > >   - realloc prog->insns array in bpf_program__set_insns [Andrii]
-> > > > >   - squash patch 1 from previous version with
-> > > > >     bpf_program__set_insns change [Daniel]
-> > > > >   - patch 3 already merged [Arnaldo]
-> > > > >   - added more comments
-> > > > >
-> > > > >   meanwhile.. perf/core and bpf-next diverged, so:
-> > > > >     - libbpf bpf_program__set_insns change is based on bpf-next/master
-> > > > >     - perf changes do not apply on bpf-next/master so they are based on
-> > > > >       perf/core ... however they can be merged only after we release
-> > > > >       libbpf 0.8.0 with bpf_program__set_insns change, so we don't break
-> > > > >       the dynamic linking
-> > > > >       I'm sending perf changes now just for review, I'll resend them
-> > > > >       once libbpf 0.8.0 is released
-> > > > >
-> > > > > thanks,
-> > > > > jirka
-> > > > >
-> > > > >
-> > > > > [1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
-> > > > > ---
-> > > > > Jiri Olsa (1):
-> > > > >       libbpf: Add bpf_program__set_insns function
-> > > > >
-> > > >
-> > > > The first patch looks good to me. The rest I can't really review and
-> > > > test properly, so I'll leave it up to Arnaldo.
-> > > >
-> > > > Arnaldo, how do we coordinate these patches? Should they go through
-> > > > bpf-next (after you Ack them) or you want them in your tree?
-> > > >
-> > > > I'd like to get the bpf_program__set_insns() patch into bpf-next so
-> > > > that I can do libbpf v0.8 release, having it in a separate tree is
-> > > > extremely inconvenient. Please let me know how you think we should
-> > > > proceed?
-> > >
-> > > we need to wait with perf changes after the libbpf is merged and
-> > > libbpf 0.8.0 is released.. so we don't break dynamic linking for
-> > > perf
-> > >
-> > > at the moment please just take libbpf change and I'll resend the
-> > > perf change later if needed
-> >
-> > Ok.
-> >
->
-> Jiri, libbpf v0.8 is out, can you please re-send your perf patches?
+Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
+us to detect cache line contention and transfers.
 
-We still haven't done as Andrii suggested in:
-https://lore.kernel.org/lkml/CAEf4BzbbOHQZUAe6iWaehKCPQAf3VC=hq657buqe2_yRKxaK-A@mail.gmail.com/
-so for LIBBPF_DYNAMIC I believe we're compiling against the header
-files in tools/lib rather than the installed libbpf's header files.
-This may have some unexpected consequences.
+Unlike x86 architecture, Arm SPE trace data cannot provide 'HITM'
+snooping flag, Ali Said has a patch set v9 "perf: arm-spe: Decode SPE
+source and use for perf c2c" [1] which introduces 'peer' flag and
+synthesizes memory samples with this flag.
 
-Thanks,
-Ian
+Based on patch set [1], this patch set is to finish the second half work
+to consume the 'peer' flag in perf c2c tool, it adds an extra display
+'peer' mode.
 
->
-> > - Arnaldo
+Patches 01, 02 and 03 are to support 'N/A' metrics for store operations.
+
+Patches 04 and 05 adds statistics and dimensions for memory samples with
+peer flag.
+
+Patches 06, 07, 08 are for refactoring, it refines the code with more
+general naming so this can allow us to easier to extend display modes
+but not strictly bound to HITM tags.
+
+Patches 09, 10 and 11 are to extend display 'peer' mode, it also updates
+the document and also changes to use 'peer' mode as default mode on
+Arm64 arches.
+
+This patch set has been verified for both x86 and Arm64 memory samples.
+
+The display result with x86 memory samples:
+
+  =================================================
+             Shared Data Cache Line Table          
+  =================================================
+  #
+  #        ----------- Cacheline ----------      Tot  ------- Load Hitm -------    Snoop    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
+  # Index             Address  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm     Peer  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
+  # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
+  #
+        0      0x55c8971f0080     0    1967   66.14%      252      252        0        0     6044     3550     2494     2024      470        0      528     2672       78        20      252         0        0         0         0
+        1      0x55c8971f00c0     0       1   33.86%      129      129        0        0      914      914        0        0        0        0      272      374       52        87      129         0        0         0         0
+
+  =================================================
+        Shared Cache Line Distribution Pareto      
+  =================================================
+  #
+  #        ----- HITM -----    Snoop  ------- Store Refs ------  --------- Data address ---------                      --------------- cycles ---------------    Total       cpu                                     Shared                               
+  #   Num  RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt hitm  lcl hitm      load      peer  records       cnt                  Symbol             Object              Source:Line  Node
+  # .....  .......  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  ........  .......  ........  ......................  .................  .......................  ....
+  #
+    -------------------------------------------------------------------------------
+        0        0      252        0     2024      470        0      0x55c8971f0080
+    -------------------------------------------------------------------------------
+             0.00%   12.30%    0.00%    0.00%    0.00%    0.00%                 0x0     0       1      0x55c8971ed3e9         0      1313       863         0     1222         3  [.] 0x00000000000013e9  false_sharing.exe  false_sharing.exe[13e9]   0
+             0.00%    0.79%    0.00%   90.51%    0.00%    0.00%                 0x0     0       1      0x55c8971ed3e2         0      1800       878         0     3029         3  [.] 0x00000000000013e2  false_sharing.exe  false_sharing.exe[13e2]   0
+             0.00%    0.00%    0.00%    9.49%  100.00%    0.00%                 0x0     0       1      0x55c8971ed3f4         0         0         0         0      662         3  [.] 0x00000000000013f4  false_sharing.exe  false_sharing.exe[13f4]   0
+             0.00%   86.90%    0.00%    0.00%    0.00%    0.00%                0x20     0       1      0x55c8971ed447         0       141       103         0     1131         2  [.] 0x0000000000001447  false_sharing.exe  false_sharing.exe[1447]   0
+
+    -------------------------------------------------------------------------------
+        1        0      129        0        0        0        0      0x55c8971f00c0
+    -------------------------------------------------------------------------------
+             0.00%  100.00%    0.00%    0.00%    0.00%    0.00%                0x20     0       1      0x55c8971ed455         0        88        94         0      914         2  [.] 0x0000000000001455  false_sharing.exe  false_sharing.exe[1455]   0
+
+
+The display result with Arm SPE memory samples:
+
+  =================================================
+             Shared Data Cache Line Table          
+  =================================================
+  #
+  #        ----------- Cacheline ----------    Snoop  ------- Load Hitm -------    Snoop    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
+  # Index             Address  Node  PA cnt     Peer    Total  LclHitm  RmtHitm     Peer  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
+  # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
+  #
+        0      0xaaaac17d6000   N/A       0  100.00%        0        0        0       99    18851    18851        0        0        0        0        0    18752        0        99        0         0        0         0         0
+
+  =================================================
+        Shared Cache Line Distribution Pareto      
+  =================================================
+  #
+  #        ----- HITM -----    Snoop  ------- Store Refs ------  --------- Data address ---------                      --------------- cycles ---------------    Total       cpu                                    Shared                       
+  #   Num  RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt hitm  lcl hitm      load      peer  records       cnt                  Symbol            Object      Source:Line  Node
+  # .....  .......  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  ........  .......  ........  ......................  ................  ...............  ....
+  #
+    -------------------------------------------------------------------------------
+        0        0        0       99        0        0        0      0xaaaac17d6000
+    -------------------------------------------------------------------------------
+             0.00%    0.00%    6.06%    0.00%    0.00%    0.00%                0x20   N/A       0      0xaaaac17c25ac         0         0        43       375    18469         2  [.] 0x00000000000025ac  memstress         memstress[25ac]   0
+             0.00%    0.00%   93.94%    0.00%    0.00%    0.00%                0x29   N/A       0      0xaaaac17c3e88         0         0       173       180      135         2  [.] 0x0000000000003e88  memstress         memstress[3e88]   0
+
+[1] https://lore.kernel.org/lkml/20220517020326.18580-1-alisaidi@amazon.com/
+
+Changes from v2:
+* Updated patch 04 to account metrics for both cache level and ld_peer
+  for PEER flag;
+* Updated document for metric 'rmt_hit' which is accounted for all
+  remote accesses (include remote DRAM and any upward caches).
+
+Changes from v1:
+* Updated patches 01, 02 and 03 to support 'N/A' metrics for store
+  operations, so can align with the patch set [1] for store samples.
+
+
+Leo Yan (11):
+  perf mem: Add stats for store operation with no available memory level
+  perf c2c: Add dimensions for 'N/A' metrics of store operation
+  perf c2c: Update documentation for store metric 'N/A'
+  perf mem: Add statistics for peer snooping
+  perf c2c: Add dimensions for peer load operations
+  perf c2c: Use explicit names for display macros
+  perf c2c: Rename dimension from 'percent_hitm' to
+    'percent_costly_snoop'
+  perf c2c: Refactor node header
+  perf c2c: Sort on peer snooping for load operations
+  perf c2c: Update documentation for new display option 'peer'
+  perf c2c: Use 'peer' as default display for Arm64
+
+ tools/perf/Documentation/perf-c2c.txt |  34 ++-
+ tools/perf/builtin-c2c.c              | 357 ++++++++++++++++++++------
+ tools/perf/util/mem-events.c          |  25 +-
+ tools/perf/util/mem-events.h          |   2 +
+ 4 files changed, 331 insertions(+), 87 deletions(-)
+
+-- 
+2.25.1
+
