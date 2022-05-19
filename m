@@ -2,28 +2,28 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D73C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 13:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF64C4167B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 13:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230193AbiESNnI (ORCPT
+        id S236677AbiESNws (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 May 2022 09:43:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        Thu, 19 May 2022 09:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230402AbiESNmf (ORCPT
+        with ESMTP id S239498AbiESNvQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 May 2022 09:42:35 -0400
+        Thu, 19 May 2022 09:51:16 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 01B913ED3D;
-        Thu, 19 May 2022 06:42:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 430CB1E3E2;
+        Thu, 19 May 2022 06:50:39 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FBBB15DB;
-        Thu, 19 May 2022 06:42:33 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AD931650;
+        Thu, 19 May 2022 06:50:07 -0700 (PDT)
 Received: from [10.57.3.56] (unknown [10.57.3.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04D473F66F;
-        Thu, 19 May 2022 06:42:30 -0700 (PDT)
-Message-ID: <4031d3a2-9f37-4399-f4b0-8a60d0d8193b@arm.com>
-Date:   Thu, 19 May 2022 14:42:28 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8E373F66F;
+        Thu, 19 May 2022 06:50:04 -0700 (PDT)
+Message-ID: <b4a16e3e-efbe-c06b-1bc3-c02e151a19a6@arm.com>
+Date:   Thu, 19 May 2022 14:50:03 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.9.0
@@ -48,50 +48,49 @@ Cc:     Will Deacon <will@kernel.org>,
 References: <20220510104758.64677-1-nick.forrington@arm.com>
  <f523b0fe-1262-c1e5-c587-15842ccf0fcf@arm.com>
  <28509191-3a45-de6d-f5bc-a8e7331c0a9e@huawei.com>
+ <5773b630-8159-1eba-481a-1bf3c406c055@arm.com>
+ <cf7d8003-9700-880f-0e46-ff40e6348bb1@huawei.com>
+ <7a17256d-cad0-bd94-02e7-f8adaa959654@arm.com>
+ <2d73146a-86fc-e0d1-11b9-432c7431d58a@huawei.com>
 From:   Nick Forrington <nick.forrington@arm.com>
-In-Reply-To: <28509191-3a45-de6d-f5bc-a8e7331c0a9e@huawei.com>
+In-Reply-To: <2d73146a-86fc-e0d1-11b9-432c7431d58a@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 18/05/2022 09:15, John Garry wrote:
-> On 17/05/2022 15:32, Robin Murphy wrote:
+On 19/05/2022 08:59, John Garry wrote:
+> On 18/05/2022 15:14, Robin Murphy wrote:
+>>> Sure, we should have these 32b cores supported for ARCH=arm if they 
+>>> are supported for ARCH=arm64. But then does it even make sense to 
+>>> have A7 support in arch/arm64?
 >>
->> On 2022-05-10 11:47, Nick Forrington wrote:
->>> Add Performance Monitoring Unit event data for the Arm CPUs listed
->>> below.
->>>
->>> Changesets are dependent due to incremental updates to the common 
->>> events
->>> file and mapfile.csv.
->>>
->>> Data is sourced from https://github.com/ARM-software/data
->>>
->>> Nick Forrington (20):
->>>    perf vendors events arm64: Arm Cortex-A5
->>>    perf vendors events arm64: Arm Cortex-A7
->>>    perf vendors events arm64: Arm Cortex-A8
->>>    perf vendors events arm64: Arm Cortex-A9
->>>    perf vendors events arm64: Arm Cortex-A15
->>>    perf vendors events arm64: Arm Cortex-A17
->>>    perf vendors events arm64: Arm Cortex-A32
+>> That's what I'm getting at. If it is tied to the build target as 
+>> you've said above, then there is no point in an AArch64 perf tool 
+>> including data for CPUs on which that tool cannot possibly run; it's 
+>> simply a waste of space.
 >>
->> Obligatory question over anything relating to the above CPUs being in 
->> an "arch/arm64" directory... ;)
+>> If there is interest in plumbing in support on AArch32 builds as 
+>> well, then I'd still be inclined to have a single arch/arm events 
+>> directory, and either do some build-time path munging or just symlink 
+>> an arch/arm64 sibling back to it. Yes, technically there are 
+>> AArch64-only CPUs whose data would then be redundant when building 
+>> for AArch32, 
 >
-> If we were to add to arm32/arm then the common event numbers and maybe 
-> other JSONs in future would need to be duplicated.
+> If size is an issue then we have ways to cut this down, like doing the 
+> arch standard events fixup dynamically when running perf tool, or even 
+> not describing those events in the JSONs and rely on reading the CPU 
+> PMU events folder to learn which of those events are supported.
 >
-> Would there be any reason to add to arm32/arm apart to from being 
-> strictly proper? Maybe if lots of other 32b support for other vendors 
-> came along then it could make sense (to separate them out).
+> > but those are
+> > such a minority that it seems like an entirely reasonable compromise.
+>
+> @Nick, Can you drop the 32b core support for arm64? Or, if you really 
+> want them, look into ARCH=arm pmu-events support?
 
-Not that I'm aware of, although I don't have these available to test.
-
-I'm happy to re-submit without these CPUs if it simplifies things.
+No problem - I'll resubmit without the 32b-only CPUs.
 
 Thanks,
 Nick
