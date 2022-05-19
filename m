@@ -2,118 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC832C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 15:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7920C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 15:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbiESPT2 (ORCPT
+        id S232947AbiESPpZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 May 2022 11:19:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56112 "EHLO
+        Thu, 19 May 2022 11:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240760AbiESPTU (ORCPT
+        with ESMTP id S232883AbiESPn5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 May 2022 11:19:20 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D030BC8BF7;
-        Thu, 19 May 2022 08:19:19 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id k16so5437673pff.5;
-        Thu, 19 May 2022 08:19:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZT0kkxr3l7Smdfz7QQHdxfYn2KhaYO5/l1cDmP3/Ufs=;
-        b=YtuRrPnUI7swcPgA3Zu2ElkHew2HgZl+zsd7IdLtJrBpUuVpRSF2VkFhc2iflGXR2e
-         nLoM+Kt7EQ2e8rJAJyYXV1HC3YRv6rRS11b9D3jb+bUURGBWiRBPvKHUW+d4In8HJQLt
-         5bSlzNt6FS0vprUh3t5O35ifXy6YSrDOkYKRPY/ahydyRJfOVT561Jq4K3GobNYtm4LN
-         o9ei7ED7kb99tdPTWKJ/BeW/7Tdip3b+uBOKcYiBTAFO6cRXxc8ZH00ip0vRr/gHnBdw
-         VU8AjyeChVuZxRO/QnQSMK0e+TVWDpoQ3pjobRxZ0/LV1HpNDxfaU+RJtAaH2AwKDHBN
-         6WTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZT0kkxr3l7Smdfz7QQHdxfYn2KhaYO5/l1cDmP3/Ufs=;
-        b=eKfvpCnfTsma/r2TySKtsBvvCUV9v5KmP3NaG5ebfOgOqu+e9VV5hqRJy9Z3W0pwAN
-         JAunmYIzAA1mOqGiD6u/wgzNQJ6PL6MLeBKQt9pH7EdGCin4+y1mzzQyJl6BGTxlhgWG
-         y+Wp881uCiFAAnWWCVT6Hb5MxHfQxDVVP17OMrx9rLLWvY0hr/xLZG5GmtB7fFozwjVZ
-         g7sqBCDOKV3hcHpPwjeqJ1ctjPEtKXs3t7OL/qxGiDtAcykcrOzX2xLzbmsy6Pn4kZsV
-         iljc5duQtx4i6zQNACTWPj/1Lb+N9EdbXA/RABqDwZDHcdzVD0EWLJbbdvCkSkzEru1f
-         ObuQ==
-X-Gm-Message-State: AOAM533n4oamrpxMR3KQf4LDfC4SOZsR7/2p63ziQLq91vsCf7TevAj6
-        P8goVcbbEb6hvUnrdeJjYYw=
-X-Google-Smtp-Source: ABdhPJzOrS+WKCfgn7ft56kSqt+DA5VzlJnQ4qMcPoRVulIbVbZTqqOqHiS3hZwi5a/A2e1N+6K/HA==
-X-Received: by 2002:a63:6b86:0:b0:3f6:6563:f222 with SMTP id g128-20020a636b86000000b003f66563f222mr487857pgc.3.1652973559348;
-        Thu, 19 May 2022 08:19:19 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.83])
-        by smtp.gmail.com with ESMTPSA id v8-20020a17090ac90800b001df54afccb3sm3676540pjt.6.2022.05.19.08.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 May 2022 08:19:18 -0700 (PDT)
-From:   Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] x86/events/intel/ds: Enable large PEBS for PERF_SAMPLE_WEIGHT_TYPE
-Date:   Thu, 19 May 2022 23:19:13 +0800
-Message-Id: <20220519151913.80545-1-likexu@tencent.com>
-X-Mailer: git-send-email 2.36.1
+        Thu, 19 May 2022 11:43:57 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97CC60075
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 08:43:56 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24JDZo2n011386;
+        Thu, 19 May 2022 15:43:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=adZC8wvyxdaVHqplMN4gKd7dtyqqxKTM0NA28ID9UC4=;
+ b=h6GV6057seEOCJXKzjL+l5A8MuvlwW2ara4oNEVgwXFc9M1UYMmKyiFkJuunv6xhcPHK
+ wyRIaeINWFq2m4NII8RY+QXklnsJywAxplWDlWPUSSGnSv2a2jStXF2aqWLSMpoXvwqB
+ 4McEr83RUfwffX71d77t6aa6lBD6wWiC0xCPZyEZpjgU+N1TIjqQm9vCOA4rRCIbXGIs
+ k4N4iFq6JXPhIhaHjbEJAnjQ6iS2psZ7Bpjg1Sq3g89GyBo45Y/Z8VYHQWNL8egdgQd5
+ 4c2wJy1VkA0fDosxLEeTAugRVlesLbs9q91vl5l5bA9mmHsz4nZKnKUosDZMr00pXiZP GA== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3g5pwvuh0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 May 2022 15:43:37 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24JFasHt019462;
+        Thu, 19 May 2022 15:43:36 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma02fra.de.ibm.com with ESMTP id 3g2428p7kf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 May 2022 15:43:36 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24JFTcmG27263462
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 May 2022 15:29:38 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7163A4054;
+        Thu, 19 May 2022 15:43:32 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3F339A405F;
+        Thu, 19 May 2022 15:43:28 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.211.122.132])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 19 May 2022 15:43:27 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, irogers@google.com
+Subject: [PATCH V2] tools/perf/test: Fix perf all PMU test to skip hv_24x7/hv_gpci tests on powerpc
+Date:   Thu, 19 May 2022 21:13:24 +0530
+Message-Id: <20220519154324.12531-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NApTNh27Bd31ZcyUAUzyPAOiMBj0W6U7
+X-Proofpoint-ORIG-GUID: NApTNh27Bd31ZcyUAUzyPAOiMBj0W6U7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-19_04,2022-05-19_03,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 adultscore=0
+ phishscore=0 clxscore=1015 suspectscore=0 mlxscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205190092
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Like Xu <likexu@tencent.com>
+"perf all PMU test" picks the input events from
+"perf list --raw-dump pmu" list and runs "perf stat -e"
+for each of the event in the list. In case of powerpc, the
+PowerVM environment supports events from hv_24x7 and hv_gpci
+PMU which is of example format like below:
+- hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
+- hv_gpci/event,partition_id=?/
 
-All the information required by the PERF_SAMPLE_WEIGHT is
-available in the pebs record. Thus large PEBS could be enabled
-for PERF_SAMPLE_WEIGHT sample type to save PMIs overhead until
-other non-compatible flags such as PERF_SAMPLE_DATA_PAGE_SIZE
-(due to lack of munmap tracking) stop it.
+The value for "?" needs to be filled in depending on
+system and respective event. CPM_ADJUNCT_INST needs have
+core value and domain value. hv_gpci event needs partition_id.
+Similarly, there are other events for hv_24x7 and hv_gpci
+having "?" in event format. Hence skip these events on powerpc
+platform since values like partition_id, domain is specific
+to system and event.
 
-To cover new weight extension, add PERF_SAMPLE_WEIGHT_TYPE
-to the guardian LARGE_PEBS_FLAGS.
-
-Tested it with:
-
-$ perf mem record -c 1000 workload
-Before: Captured and wrote 0.126 MB perf.data (958 samples) [958 PMIs]
-After: Captured and wrote 0.313 MB perf.data (4859 samples) [3 PMIs]
-
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Reported-by: Yongchao Duan <yongduan@tencent.com>
-Signed-off-by: Like Xu <likexu@tencent.com>
+Fixes: 3d5ac9effcc6 ("perf test: Workload test of all PMUs")
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
-v1: https://lore.kernel.org/lkml/20220519104509.51847-1-likexu@tencent.com/
-v1 -> v2 Changelog:
-- Use the PERF_SAMPLE_WEIGHT_TYPE instead (Kan);
+Changelog:
+ v1 -> v2:
+ Instead of checking for platform, used the pmu name
+ ie, hv_24x7 and hv_gpci to skip the test since this
+ pmu name is specific to powerpc as suggested by
+ Michael Ellerman.
 
- arch/x86/events/perf_event.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/stat_all_pmu.sh | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 21a5482bcf84..1ca6200ca135 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -136,7 +136,8 @@ struct amd_nb {
- 	PERF_SAMPLE_DATA_SRC | PERF_SAMPLE_IDENTIFIER | \
- 	PERF_SAMPLE_TRANSACTION | PERF_SAMPLE_PHYS_ADDR | \
- 	PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER | \
--	PERF_SAMPLE_PERIOD | PERF_SAMPLE_CODE_PAGE_SIZE)
-+	PERF_SAMPLE_PERIOD | PERF_SAMPLE_CODE_PAGE_SIZE | \
-+	PERF_SAMPLE_WEIGHT_TYPE)
+diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+index b30dba455f36..7d046bb8a7b9 100755
+--- a/tools/perf/tests/shell/stat_all_pmu.sh
++++ b/tools/perf/tests/shell/stat_all_pmu.sh
+@@ -5,6 +5,16 @@
+ set -e
  
- #define PEBS_GP_REGS			\
- 	((1ULL << PERF_REG_X86_AX)    | \
+ for p in $(perf list --raw-dump pmu); do
++  # In powerpc, skip the events for hv_24x7 and hv_gpci.
++  # These events needs input values to be filled in for
++  # core, chip, patition id based on system.
++  # Example: hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
++  # hv_gpci/event,partition_id=?/
++  # Hence skip these events for ppc.
++  if echo "$p" |grep -Eq 'hv_24x7|hv_gpci' ; then
++    echo "Skipping: Event '$p' in powerpc"
++    continue
++  fi
+   echo "Testing $p"
+   result=$(perf stat -e "$p" true 2>&1)
+   if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
 -- 
-2.36.1
+2.35.1
 
