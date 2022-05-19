@@ -2,98 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4774AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 07:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177DFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 08:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbiESH7y (ORCPT
+        id S232518AbiESI4A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 May 2022 03:59:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40450 "EHLO
+        Thu, 19 May 2022 04:56:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233479AbiESH7y (ORCPT
+        with ESMTP id S235651AbiESIzy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 May 2022 03:59:54 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F67C3983C;
-        Thu, 19 May 2022 00:59:52 -0700 (PDT)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L3j1l050rz6F9F7;
-        Thu, 19 May 2022 15:59:39 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 19 May 2022 09:59:50 +0200
-Received: from [10.47.92.25] (10.47.92.25) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 19 May
- 2022 08:59:49 +0100
-Message-ID: <2d73146a-86fc-e0d1-11b9-432c7431d58a@huawei.com>
-Date:   Thu, 19 May 2022 08:59:48 +0100
+        Thu, 19 May 2022 04:55:54 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D4BDF4B;
+        Thu, 19 May 2022 01:55:52 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24J8CS1t020312;
+        Thu, 19 May 2022 08:55:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=qPj3tCG2XC1z/JKo0fO7RystCI28s0gLivNl9vPh+U8=;
+ b=Q2t67BbeclxQ+XSy0VFeGGzJRgfFGBEiIMkcQbdiPfMm2yN5byKsUZjFMVuUM5RZPnUP
+ Ri8wXgwM6U/KIqZB0e1u07jMebUPCKMpQWcT6szMXfRL5DnOdKoOpyjEuStlNfKk7oJC
+ lcrlZW1NNOLmOCT0+If1iP3y//UkJ+oSMYdjQyLm/hh8odzrogxohOmJpY0IowXieHOl
+ UGS7drfzYwao4/jl5TIi1FXK1WqbUEPc+9Kl3d1JDA17kz4QoriXgZL3Eh7jZMmoPv0+
+ swbKkUNIaom6xg9T1FrnSPjjw3wjVFIboGQvJcUkxVdKCuxgfvIbLfrO863mW7CwDHqY 8w== 
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g5j67s0g7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 May 2022 08:55:45 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24J8niN6003443;
+        Thu, 19 May 2022 08:55:42 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 3g2428wn05-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 May 2022 08:55:42 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24J8td6n52298114
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 May 2022 08:55:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7B37742042;
+        Thu, 19 May 2022 08:55:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3AD184203F;
+        Thu, 19 May 2022 08:55:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 19 May 2022 08:55:39 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/s390: Compiler error on s390 for bench/numa.c
+Date:   Thu, 19 May 2022 10:55:30 +0200
+Message-Id: <20220519085530.999726-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 00/20] perf vendors events arm64: Multiple Arm CPUs
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Nick Forrington <nick.forrington@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>
-CC:     Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>
-References: <20220510104758.64677-1-nick.forrington@arm.com>
- <f523b0fe-1262-c1e5-c587-15842ccf0fcf@arm.com>
- <28509191-3a45-de6d-f5bc-a8e7331c0a9e@huawei.com>
- <5773b630-8159-1eba-481a-1bf3c406c055@arm.com>
- <cf7d8003-9700-880f-0e46-ff40e6348bb1@huawei.com>
- <7a17256d-cad0-bd94-02e7-f8adaa959654@arm.com>
-In-Reply-To: <7a17256d-cad0-bd94-02e7-f8adaa959654@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.92.25]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Wy7CXl0s37DVnK6BwpHpa8HCag4rUIU6
+X-Proofpoint-GUID: Wy7CXl0s37DVnK6BwpHpa8HCag4rUIU6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-19_01,2022-05-19_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 mlxlogscore=999 clxscore=1015
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205190049
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/05/2022 15:14, Robin Murphy wrote:
->> Sure, we should have these 32b cores supported for ARCH=arm if they 
->> are supported for ARCH=arm64. But then does it even make sense to have 
->> A7 support in arch/arm64?
-> 
-> That's what I'm getting at. If it is tied to the build target as you've 
-> said above, then there is no point in an AArch64 perf tool including 
-> data for CPUs on which that tool cannot possibly run; it's simply a 
-> waste of space.
-> 
-> If there is interest in plumbing in support on AArch32 builds as well, 
-> then I'd still be inclined to have a single arch/arm events directory, 
-> and either do some build-time path munging or just symlink an arch/arm64 
-> sibling back to it. Yes, technically there are AArch64-only CPUs whose 
-> data would then be redundant when building for AArch32, 
+The compilation on s390 results in this error:
 
-If size is an issue then we have ways to cut this down, like doing the 
-arch standard events fixup dynamically when running perf tool, or even 
-not describing those events in the JSONs and rely on reading the CPU PMU 
-events folder to learn which of those events are supported.
+ # make DEBUG=y bench/numa.o
+ ...
+ bench/numa.c: In function ‘__bench_numa’:
+ bench/numa.c:1749:81: error: ‘%d’ directive output may be truncated
+             writing between 1 and 11 bytes into a region of size between
+             10 and 20 [-Werror=format-truncation=]
+ 1749 |        snprintf(tname, sizeof(tname), "process%d:thread%d", p, t);
+                                                               ^~
+ ...
+ bench/numa.c:1749:64: note: directive argument in the range
+                [-2147483647, 2147483646]
+ ...
+ #
 
- > but those are
- > such a minority that it seems like an entirely reasonable compromise.
+The maximum length of the %d replacement is 11 characters because
+of the negative sign.  Therefore use %u as format conversion.
 
-@Nick, Can you drop the 32b core support for arm64? Or, if you really 
-want them, look into ARCH=arm pmu-events support?
+Output after:
+ # make  DEBUG=y bench/numa.o > /dev/null 2>&1; ll bench/numa.o
+ -rw-r--r-- 1 root root 418320 May 19 09:11 bench/numa.o
+ #
 
-thanks,
-John
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/bench/numa.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index d5289fa58a4f..ff0bfd87afbb 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -1746,7 +1746,7 @@ static int __bench_numa(const char *name)
+ 			for (t = 0; t < g->p.nr_threads; t++) {
+ 				memset(tname, 0, sizeof(tname));
+ 				td = g->threads + p*g->p.nr_threads + t;
+-				snprintf(tname, sizeof(tname), "process%d:thread%d", p, t);
++				snprintf(tname, sizeof(tname), "process%u:thread%u", p, t);
+ 				print_res(tname, td->speed_gbs,
+ 					"GB/sec",	"thread-speed", "GB/sec/thread speed");
+ 				print_res(tname, td->system_time_ns / NSEC_PER_SEC,
+-- 
+2.36.1
+
