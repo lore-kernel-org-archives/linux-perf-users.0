@@ -2,190 +2,310 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AB1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 21:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E045C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 21:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237854AbiESVCw (ORCPT
+        id S234787AbiESVhP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 May 2022 17:02:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50062 "EHLO
+        Thu, 19 May 2022 17:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245016AbiESVCt (ORCPT
+        with ESMTP id S232170AbiESVhN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 May 2022 17:02:49 -0400
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90002ED8C5;
-        Thu, 19 May 2022 14:02:40 -0700 (PDT)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-f1d5464c48so8232795fac.6;
-        Thu, 19 May 2022 14:02:40 -0700 (PDT)
+        Thu, 19 May 2022 17:37:13 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB529155D
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 14:37:10 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id j25so8917944wrc.9
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 14:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=igFDCAFACzy80cjdPLTvsGkRZ9A3jnJmOnHPpcNw6AQ=;
+        b=s1mlqyw+LClysKJmtZpaGc1qPFDsJS9FSwdJSWBvaHLArVo9NI6JlQOjP0YABrycaq
+         sg6/8kMOTDxzifc8mPFa1eu53EVYse2GJI5Fju6w2sUldItyEI4eH2VPGqgeM8KKqWRj
+         U3TeiOGqh4PjhUyq6bznY7GRkYgGx/kEOSP+k7lEHXUZl08zK3ubY3e1RA8jyX4mMNcX
+         c1kRuc5O8ZvKtyXkYu7V6TUIrLYkFBKEgx9Vc8hdsRBnv+GPUZgn1Dw1Am64c4v9w7mM
+         aDPlpioBwu0yrimN8byJsbWRvG4GppzJi3ozETdKpoGdEfpHuNpV9ucp9elJ59nsF04v
+         Qq4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QhNCb9LVQT2y+c1GcBgYSm7P/0wfKykJLM9u1VS0bGM=;
-        b=AtL0tqTdkxIYv1EXi6OJLEoSOW1eTvXK8EOjU/ci0sDSeVnv9vgUvjVua9D9TNpeWs
-         fZ3tNLFFvwnakOYR3F0iLK+cz6hGd/06RVdF81Sx8yzp4empSOHvx5iMwnOBK2AS0NAP
-         KT4KJ7+L/ihm6NUd4ZKbtqJf/oZHZcOum+YmPpKWkij/po1iUHQ22Gl2NPuIGM+OBEsd
-         b7wNQZAV5+umrOhepLAO6fPpBOjMSgvBJSEDdtwUXoeXeSwn4laSIshyygI2GHI5IjBi
-         yzJDxq4rzU/8CvViZKt/Uc+m/KHz2LlZ6O+RS1JsOsGJs9ib9ynLxSz2dKu6pha4V5dX
-         F5kw==
-X-Gm-Message-State: AOAM5314OwN956v5u4q0GF4yoQP0zam/T9+4DCjeeUZczDOn7u0VFAtf
-        AeCAnBuOKHl+dYfmtdqUBsVtrW+RycxUWfhuYGU=
-X-Google-Smtp-Source: ABdhPJzkcoNAu7ods84mp3iuQehJ35l8v00aBOjNA0clVdv9enPtYX3aWelBisSdli7eFvpT6Js1HT69rjRKtJJGMUo=
-X-Received: by 2002:a05:6871:215:b0:f1:8bf5:23ab with SMTP id
- t21-20020a056871021500b000f18bf523abmr3792505oad.92.1652994159791; Thu, 19
- May 2022 14:02:39 -0700 (PDT)
+        bh=igFDCAFACzy80cjdPLTvsGkRZ9A3jnJmOnHPpcNw6AQ=;
+        b=50T3TEKZdQmvpi+EwaaNjzJvk7t5HBMhH8u2xHj/i6Po1eHZ/yP2FjCmnAsTU/AXOK
+         pQZVwq+efmqWMN21Z7beJJqNkPlOEjgQQG0j0p993uukzvnPFz5iNqr+UWUUulqFFbvj
+         T3PTR/c1mh4hWG0VJrm2Ijm/+/iFOG0bkvBHPBNzNTaCvU++xXraPJn6cBG9dkEO9diu
+         iF6+aTIIjirAWnAdJT7UAry4wUNdWPIvoOgruSxFo4OqV3qsyZwNASWk4XofP8f7sX/5
+         tr1FIgwUeBmTTo8VuZKgoFQRfRryhi0DzkYy5Bk0ZvNaQ6+cGo0pWBmnxhIxRM4l3qEJ
+         F3FA==
+X-Gm-Message-State: AOAM531bBrmf6QxZMu9dVrx1taO+8a8tRbJf3auZaPsqUxqyO8ljw2NJ
+        p5zmUldXZ2UAUECYmzxMN/s7AADHyY7hYNqDAlZkag==
+X-Google-Smtp-Source: ABdhPJzg+JjwRXfyzA46Pz2YDobsZJTfHllLLU8F9AooZiDCk/r7ROEPbKuFnlvQGUofweecZaN5Go+Adm83c8fzTHg=
+X-Received: by 2002:adf:e70e:0:b0:20e:7523:f01d with SMTP id
+ c14-20020adfe70e000000b0020e7523f01dmr1457509wrm.300.1652996228782; Thu, 19
+ May 2022 14:37:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220518224725.742882-1-namhyung@kernel.org> <20220518224725.742882-4-namhyung@kernel.org>
- <CAP-5=fWfZ_MqiAUx-tdO1C=Dyyzno6FbBp+KGAb_MweXs+N7Jw@mail.gmail.com>
-In-Reply-To: <CAP-5=fWfZ_MqiAUx-tdO1C=Dyyzno6FbBp+KGAb_MweXs+N7Jw@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 19 May 2022 14:02:28 -0700
-Message-ID: <CAM9d7cgxdFJJQOg6ivuy4+nh=WME2fgjvM-kSWLv9zd49yxR4A@mail.gmail.com>
-Subject: Re: [PATCH 3/6] perf record: Implement basic filtering for off-cpu
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
+References: <20220518085502.6914-1-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fWN3Sgyp_hTyYvDrLrnr-7dj6ozERn0tDm5MrU2SEJ2Fg@mail.gmail.com> <4D9BD7B3-1FA0-4EFE-A7D9-75BBB84ED308@linux.vnet.ibm.com>
+In-Reply-To: <4D9BD7B3-1FA0-4EFE-A7D9-75BBB84ED308@linux.vnet.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 19 May 2022 14:36:56 -0700
+Message-ID: <CAP-5=fURkncicNEs87=QisBJhPkujRUZ51Z1S4A63fz+SXV6rg@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] powerpc/perf: Add support for caps under sysfs in powerpc
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     maddy@linux.vnet.ibm.com,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 18, 2022 at 9:02 PM Ian Rogers <irogers@google.com> wrote:
+On Thu, May 19, 2022 at 4:29 AM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
 >
-> On Wed, May 18, 2022 at 3:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > On 19-May-2022, at 10:12 AM, Ian Rogers <irogers@google.com> wrote:
 > >
-> > It should honor cpu and task filtering with -a, -C or -p, -t options.
+> > On Wed, May 18, 2022 at 1:55 AM Athira Rajeev
+> > <atrajeev@linux.vnet.ibm.com> wrote:
+> >>
+> >> Add caps support under "/sys/bus/event_source/devices/<pmu>/"
+> >> for powerpc. This directory can be used to expose some of the
+> >> specific features that powerpc PMU supports to the user.
+> >> Example: pmu_name. The name of PMU registered will depend on
+> >> platform, say power9 or power10 or it could be Generic Compat
+> >> PMU.
+> >>
+> >> Currently the only way to know which is the registered
+> >> PMU is from the dmesg logs. But clearing the dmesg will make it
+> >> difficult to know exact PMU backend used. And even extracting
+> >> from dmesg will be complicated, as we need  to parse the dmesg
+> >> logs and add filters for pmu name. Whereas by exposing it via
+> >> caps will make it easy as we just need to directly read it from
+> >> the sysfs.
 > >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/builtin-record.c            |  2 +-
-> >  tools/perf/util/bpf_off_cpu.c          | 78 +++++++++++++++++++++++---
-> >  tools/perf/util/bpf_skel/off_cpu.bpf.c | 52 +++++++++++++++--
-> >  tools/perf/util/off_cpu.h              |  6 +-
-> >  4 files changed, 123 insertions(+), 15 deletions(-)
+> > For ARM and x86 in the perf tool this is normally done through a cpuid
+> > like function, is there a reason to differ on Power?
 > >
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 91f88501412e..7f60d2eac0b4 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -907,7 +907,7 @@ static int record__config_text_poke(struct evlist *evlist)
-> >
-> >  static int record__config_off_cpu(struct record *rec)
-> >  {
-> > -       return off_cpu_prepare(rec->evlist);
-> > +       return off_cpu_prepare(rec->evlist, &rec->opts.target);
-> >  }
-> >
-> >  static bool record__kcore_readable(struct machine *machine)
-> > diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-> > index 9ed7aca3f4ac..b5e2d038da50 100644
-> > --- a/tools/perf/util/bpf_off_cpu.c
-> > +++ b/tools/perf/util/bpf_off_cpu.c
-> > @@ -6,6 +6,9 @@
-> >  #include "util/off_cpu.h"
-> >  #include "util/perf-hooks.h"
-> >  #include "util/session.h"
-> > +#include "util/target.h"
-> > +#include "util/cpumap.h"
-> > +#include "util/thread_map.h"
-> >  #include <bpf/bpf.h>
-> >
-> >  #include "bpf_skel/off_cpu.skel.h"
-> > @@ -60,8 +63,23 @@ static int off_cpu_config(struct evlist *evlist)
-> >         return 0;
-> >  }
-> >
-> > -static void off_cpu_start(void *arg __maybe_unused)
-> > +static void off_cpu_start(void *arg)
-> >  {
-> > +       struct evlist *evlist = arg;
-> > +
-> > +       /* update task filter for the given workload */
-> > +       if (!skel->bss->has_cpu && !skel->bss->has_task &&
-> > +           perf_thread_map__pid(evlist->core.threads, 0) != -1) {
-> > +               int fd;
-> > +               u32 pid;
-> > +               u8 val = 1;
-> > +
-> > +               skel->bss->has_task = 1;
-> > +               fd = bpf_map__fd(skel->maps.task_filter);
-> > +               pid = perf_thread_map__pid(evlist->core.threads, 0);
-> > +               bpf_map_update_elem(fd, &pid, &val, BPF_ANY);
-> > +       }
-> > +
-> >         skel->bss->enabled = 1;
-> >  }
-> >
-> > @@ -71,31 +89,75 @@ static void off_cpu_finish(void *arg __maybe_unused)
-> >         off_cpu_bpf__destroy(skel);
-> >  }
-> >
-> > -int off_cpu_prepare(struct evlist *evlist)
-> > +int off_cpu_prepare(struct evlist *evlist, struct target *target)
-> >  {
-> > -       int err;
-> > +       int err, fd, i;
-> > +       int ncpus = 1, ntasks = 1;
-> >
-> >         if (off_cpu_config(evlist) < 0) {
-> >                 pr_err("Failed to config off-cpu BPF event\n");
-> >                 return -1;
-> >         }
-> >
-> > -       set_max_rlimit();
-> > -
-> > -       skel = off_cpu_bpf__open_and_load();
-> > +       skel = off_cpu_bpf__open();
-> >         if (!skel) {
-> >                 pr_err("Failed to open off-cpu BPF skeleton\n");
-> >                 return -1;
-> >         }
-> >
-> > +       /* don't need to set cpu filter for system-wide mode */
-> > +       if (target->cpu_list) {
-> > +               ncpus = perf_cpu_map__nr(evlist->core.user_requested_cpus);
-> > +               bpf_map__set_max_entries(skel->maps.cpu_filter, ncpus);
-> > +       }
-> > +
-> > +       if (target__has_task(target)) {
-> > +               ntasks = perf_thread_map__nr(evlist->core.threads);
-> > +               bpf_map__set_max_entries(skel->maps.task_filter, ntasks);
-> > +       }
-> > +
-> > +       set_max_rlimit();
-> > +
-> > +       err = off_cpu_bpf__load(skel);
-> > +       if (err) {
-> > +               pr_err("Failed to load off-cpu skeleton\n");
-> > +               goto out;
-> > +       }
-> > +
-> > +       if (target->cpu_list) {
-> > +               u32 cpu;
-> > +               u8 val = 1;
-> > +
-> > +               skel->bss->has_cpu = 1;
-> > +               fd = bpf_map__fd(skel->maps.cpu_filter);
-> > +
-> > +               for (i = 0; i < ncpus; i++) {
-> > +                       cpu = perf_cpu_map__cpu(evlist->core.user_requested_cpus, i).cpu;
-> > +                       bpf_map_update_elem(fd, &cpu, &val, BPF_ANY);
+> > Thanks,
+> > Ian
 >
-> Perhaps more concise with a for_each:
+> Hi Ian,
 >
-> perf_cpu_map__for_each_cpu(cpu, idx, evlist->core.user_requested_cpus)
->   bpf_map_update_elem(fd, &cpu.cpu, &val, BPF_ANY);
+> Thanks for review. The information from cpuid or cpuinfo will provide
+> us the information of the platform/model/machine etc. In case of powerpc,
+> we have one case where, though platform points to specific generation of the
+> processor, say power9 or power10, the registered PMU could point to
+> different one. To be specific, this is named as Generic Compat PMU which
+> is a fallback PMU. This gets registered when the distro doesn't have support
+> for platform specific PMU. In that case distro will have a Generic
+> Compat PMU registered which supports basic features for performance monitoring.
+> This information can't be fetched from the cpuid data since that will point
+> to current platform.
+>
+> So the pmu_name exposed via "caps" will be useful to detect the PMU
+> registered and also we target to use this information in some of our
+> selftests.
 
-Will change.
+Thanks, I've no problem with the change. Do we need to do a similar
+discovery in the perf tool on old kernels? Perhaps then this
+information could be exposed in the perf list command for self tests.
 
 Thanks,
-Namhyung
+Ian
+
+> Thanks
+> Athira
+> >
+> >> Add a caps directory to /sys/bus/event_source/devices/cpu/
+> >> for power8, power9, power10 and generic compat PMU in respective
+> >> PMU driver code. Update the pmu_name file under caps folder
+> >> in core-book3s using "attr_update".
+> >>
+> >> The information exposed currently:
+> >> - pmu_name : Underlying PMU name from the driver
+> >>
+> >> Example result with power9 pmu:
+> >>
+> >> # ls /sys/bus/event_source/devices/cpu/caps
+> >> pmu_name
+> >>
+> >> # cat /sys/bus/event_source/devices/cpu/caps/pmu_name
+> >> POWER9
+> >>
+> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> >> ---
+> >> Changelog:
+> >> v1 -> v2:
+> >> Move the show function as generic in core-book3s
+> >> and update show function using sysfs_emit and ppmu->name
+> >> Added Documention for this ABI in patch 2.
+> >> Notes: The caps directory is implemented in PMU for other
+> >> architectures already. Reference commit for x86:
+> >> commit b00233b53065 ("perf/x86: Export some PMU attributes in caps/ directory")
+> >>
+> >> arch/powerpc/perf/core-book3s.c        | 31 ++++++++++++++++++++++++++
+> >> arch/powerpc/perf/generic-compat-pmu.c | 10 +++++++++
+> >> arch/powerpc/perf/power10-pmu.c        | 10 +++++++++
+> >> arch/powerpc/perf/power8-pmu.c         | 10 +++++++++
+> >> arch/powerpc/perf/power9-pmu.c         | 10 +++++++++
+> >> 5 files changed, 71 insertions(+)
+> >>
+> >> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+> >> index b5b42cf0a703..a208f502a80b 100644
+> >> --- a/arch/powerpc/perf/core-book3s.c
+> >> +++ b/arch/powerpc/perf/core-book3s.c
+> >> @@ -2488,6 +2488,33 @@ static int power_pmu_prepare_cpu(unsigned int cpu)
+> >>       return 0;
+> >> }
+> >>
+> >> +static ssize_t pmu_name_show(struct device *cdev,
+> >> +               struct device_attribute *attr,
+> >> +               char *buf)
+> >> +{
+> >> +       if (ppmu)
+> >> +               return sysfs_emit(buf, "%s\n", ppmu->name);
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static DEVICE_ATTR_RO(pmu_name);
+> >> +
+> >> +static struct attribute *pmu_caps_attrs[] = {
+> >> +       &dev_attr_pmu_name.attr,
+> >> +       NULL
+> >> +};
+> >> +
+> >> +static const struct attribute_group pmu_caps_group = {
+> >> +       .name  = "caps",
+> >> +       .attrs = pmu_caps_attrs,
+> >> +};
+> >> +
+> >> +static const struct attribute_group *pmu_caps_groups[] = {
+> >> +       &pmu_caps_group,
+> >> +       NULL,
+> >> +};
+> >> +
+> >> int __init register_power_pmu(struct power_pmu *pmu)
+> >> {
+> >>       if (ppmu)
+> >> @@ -2498,6 +2525,10 @@ int __init register_power_pmu(struct power_pmu *pmu)
+> >>               pmu->name);
+> >>
+> >>       power_pmu.attr_groups = ppmu->attr_groups;
+> >> +
+> >> +       if (ppmu->flags & PPMU_ARCH_207S)
+> >> +               power_pmu.attr_update = pmu_caps_groups;
+> >> +
+> >>       power_pmu.capabilities |= (ppmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS);
+> >>
+> >> #ifdef MSR_HV
+> >> diff --git a/arch/powerpc/perf/generic-compat-pmu.c b/arch/powerpc/perf/generic-compat-pmu.c
+> >> index f3db88aee4dd..817c69863038 100644
+> >> --- a/arch/powerpc/perf/generic-compat-pmu.c
+> >> +++ b/arch/powerpc/perf/generic-compat-pmu.c
+> >> @@ -151,9 +151,19 @@ static const struct attribute_group generic_compat_pmu_format_group = {
+> >>       .attrs = generic_compat_pmu_format_attr,
+> >> };
+> >>
+> >> +static struct attribute *generic_compat_pmu_caps_attrs[] = {
+> >> +       NULL
+> >> +};
+> >> +
+> >> +static struct attribute_group generic_compat_pmu_caps_group = {
+> >> +       .name  = "caps",
+> >> +       .attrs = generic_compat_pmu_caps_attrs,
+> >> +};
+> >> +
+> >> static const struct attribute_group *generic_compat_pmu_attr_groups[] = {
+> >>       &generic_compat_pmu_format_group,
+> >>       &generic_compat_pmu_events_group,
+> >> +       &generic_compat_pmu_caps_group,
+> >>       NULL,
+> >> };
+> >>
+> >> diff --git a/arch/powerpc/perf/power10-pmu.c b/arch/powerpc/perf/power10-pmu.c
+> >> index c6d51e7093cf..d1adcd9f52e2 100644
+> >> --- a/arch/powerpc/perf/power10-pmu.c
+> >> +++ b/arch/powerpc/perf/power10-pmu.c
+> >> @@ -258,6 +258,15 @@ static const struct attribute_group power10_pmu_format_group = {
+> >>       .attrs = power10_pmu_format_attr,
+> >> };
+> >>
+> >> +static struct attribute *power10_pmu_caps_attrs[] = {
+> >> +       NULL
+> >> +};
+> >> +
+> >> +static struct attribute_group power10_pmu_caps_group = {
+> >> +       .name  = "caps",
+> >> +       .attrs = power10_pmu_caps_attrs,
+> >> +};
+> >> +
+> >> static const struct attribute_group *power10_pmu_attr_groups_dd1[] = {
+> >>       &power10_pmu_format_group,
+> >>       &power10_pmu_events_group_dd1,
+> >> @@ -267,6 +276,7 @@ static const struct attribute_group *power10_pmu_attr_groups_dd1[] = {
+> >> static const struct attribute_group *power10_pmu_attr_groups[] = {
+> >>       &power10_pmu_format_group,
+> >>       &power10_pmu_events_group,
+> >> +       &power10_pmu_caps_group,
+> >>       NULL,
+> >> };
+> >>
+> >> diff --git a/arch/powerpc/perf/power8-pmu.c b/arch/powerpc/perf/power8-pmu.c
+> >> index e37b1e714d2b..2518f5375d4a 100644
+> >> --- a/arch/powerpc/perf/power8-pmu.c
+> >> +++ b/arch/powerpc/perf/power8-pmu.c
+> >> @@ -187,9 +187,19 @@ static const struct attribute_group power8_pmu_events_group = {
+> >>       .attrs = power8_events_attr,
+> >> };
+> >>
+> >> +static struct attribute *power8_pmu_caps_attrs[] = {
+> >> +       NULL
+> >> +};
+> >> +
+> >> +static struct attribute_group power8_pmu_caps_group = {
+> >> +       .name  = "caps",
+> >> +       .attrs = power8_pmu_caps_attrs,
+> >> +};
+> >> +
+> >> static const struct attribute_group *power8_pmu_attr_groups[] = {
+> >>       &isa207_pmu_format_group,
+> >>       &power8_pmu_events_group,
+> >> +       &power8_pmu_caps_group,
+> >>       NULL,
+> >> };
+> >>
+> >> diff --git a/arch/powerpc/perf/power9-pmu.c b/arch/powerpc/perf/power9-pmu.c
+> >> index c393e837648e..5c654ce1a417 100644
+> >> --- a/arch/powerpc/perf/power9-pmu.c
+> >> +++ b/arch/powerpc/perf/power9-pmu.c
+> >> @@ -258,9 +258,19 @@ static const struct attribute_group power9_pmu_format_group = {
+> >>       .attrs = power9_pmu_format_attr,
+> >> };
+> >>
+> >> +static struct attribute *power9_pmu_caps_attrs[] = {
+> >> +       NULL
+> >> +};
+> >> +
+> >> +static struct attribute_group power9_pmu_caps_group = {
+> >> +       .name  = "caps",
+> >> +       .attrs = power9_pmu_caps_attrs,
+> >> +};
+> >> +
+> >> static const struct attribute_group *power9_pmu_attr_groups[] = {
+> >>       &power9_pmu_format_group,
+> >>       &power9_pmu_events_group,
+> >> +       &power9_pmu_caps_group,
+> >>       NULL,
+> >> };
+> >>
+> >> --
+> >> 2.31.1
+>
