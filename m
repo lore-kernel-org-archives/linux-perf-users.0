@@ -2,155 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DEFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 09:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E166C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 10:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233401AbiESJ6N (ORCPT
+        id S235431AbiESKD5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 May 2022 05:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43176 "EHLO
+        Thu, 19 May 2022 06:03:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236429AbiESJ6M (ORCPT
+        with ESMTP id S230465AbiESKD4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 May 2022 05:58:12 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2149BAD8
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 02:58:10 -0700 (PDT)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24J9hCU2012542;
-        Thu, 19 May 2022 09:58:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=wFxZx8W8bwWKQXM4PE9relH1M19uKEVIoOHvXjmxzbU=;
- b=O4mumotZ46+ydNvH1co10GHxp+tztAaQxup2Rl6WHOQHhqYixn26v7X4Gq2qKCCOCqSB
- aXIIer4nXatJ2TwGQI+AY82WQoVvEemIjywbxm3mK21tPXFJkXT0AQYli5b/2u8E1JlQ
- gF4v/dfwKjzw6Ia5hkPGRzklR5OE/zey/02R7IcRMs9QOqe6U4/3wTalqXQdBd9xfq/9
- unQfcO9CRi7DCZ0r2x7L9fB5xcE1xdq8yUwy0qDqWAEo41cu64XhOLQQ9I1wz3gziv4H
- DWntE41MnhRAWESlEwEpS6UirU4dt29kB/Lh8CYGZZNh1yItM8wUUyyceWFM1c0gaEGm GA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g5kgqgaba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 May 2022 09:58:00 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24J9i95D014484;
-        Thu, 19 May 2022 09:58:00 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g5kgqgaav-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 May 2022 09:58:00 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24J9qdnV004511;
-        Thu, 19 May 2022 09:57:58 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 3g23pjf2j5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 May 2022 09:57:58 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24J9vtPO43712794
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 May 2022 09:57:55 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 542995204F;
-        Thu, 19 May 2022 09:57:55 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.211.121.120])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 01FEE52050;
-        Thu, 19 May 2022 09:57:50 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: [PATCH] tools/perf/test: Fix perf all PMU test to skip
- hv_24x7/hv_gpci tests on powerpc
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <87czgbng7z.fsf@mpe.ellerman.id.au>
-Date:   Thu, 19 May 2022 15:27:46 +0530
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, disgoel@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A6483EC1-243E-425D-97CE-9DC886513793@linux.vnet.ibm.com>
-References: <20220518092903.7065-1-atrajeev@linux.vnet.ibm.com>
- <87czgbng7z.fsf@mpe.ellerman.id.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cFbCfnA_CCrgqkA48CV_07VbJ8jFvjja
-X-Proofpoint-ORIG-GUID: qFYHz4GcHc_XrI0Y1-P11WK2NosKW7S0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-19_02,2022-05-19_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- phishscore=0 clxscore=1011 suspectscore=0 bulkscore=0 mlxscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205190055
+        Thu, 19 May 2022 06:03:56 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2074.outbound.protection.outlook.com [40.107.223.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD147994F8;
+        Thu, 19 May 2022 03:03:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n93KgrbTeelFw0pawgDikSLhrzzQ0Tx+U2hMImO6s+6gy6ts9Xxx5uFBAsS2l+RGeFJtVaNz5a0nJK6z9Vc0Jz3rLbn+mxuXPnHKeZA8yJXhrWsg6Uy/khevuteKZZjCmqQr0qKBNkHqqj2u8SBE/np5OLaA6jIEYKQ8+OrDA71Lqy0Z7Zb/tpFjrymbbJj6rHHfOmF6d3cycQ4xwdxQy3IBbzwNcK490/juoBvoxPfGMRe2mfeXOIUTp6YA6vBw1bwmcsCY6PAIl7VjuSz3YS8jN4ne7JTD4otGHfptNPNXF8miEj2Yp+Rmj5LcziFmK0GlcHrbe3vawv6r1L7svw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lxf6nL5ciwjc0Yn0KRYpEXYuyMN6pPxZXhe6+CcqxA8=;
+ b=Y74hBxs6eMPSVN7eg76zAElH+6Gee2b0uFbGV+V8Ko7uOjDNsP3FmcHF3TuQ2mp2F3m/zSZkMqGe9x0AL98IJ0C2i2enwsDTr8rMGvcCkh//pxQlGYidGevWJ8Q9uQPbH7sp9vW5SsdxN4awNS1LeRn/GMZzuaENKnf6QPnbRzAOdhUa7DdIz3olZ1ozgols8l+cyiPQ69+RdjTYT0IYeoN+YB3hpQV4t8AvVBAzpAZeJ3iD76Oqstpxw6O8rr7CM/lWlFX3votJy8UTCmlNSG7QjtcQcMZhX2aqV/wVQAX5YtFQjm/R8CzSFhAaUAr0LrnOcthI9pEaBAHIieoY5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lxf6nL5ciwjc0Yn0KRYpEXYuyMN6pPxZXhe6+CcqxA8=;
+ b=r1QZCmxv+WZ+en3VfV0/j/U7942FmjShiDbOpa5PzVYwzIm1E4W2XcK+MVv+ImE0Ku8kVBXXiiZVykLsPY+FN4mhPrjEQfWS844PH8IThNIaEQWEgm0IuKCWmxMU7enSr+rNeCzHysW5TzcyjJYiLzmiko6AZpTPjpAw3a+EkXE=
+Received: from DM5PR18CA0072.namprd18.prod.outlook.com (2603:10b6:3:22::34) by
+ DS7PR12MB5790.namprd12.prod.outlook.com (2603:10b6:8:75::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5250.14; Thu, 19 May 2022 10:03:49 +0000
+Received: from DM6NAM11FT010.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:22:cafe::d3) by DM5PR18CA0072.outlook.office365.com
+ (2603:10b6:3:22::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.26 via Frontend
+ Transport; Thu, 19 May 2022 10:03:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT010.mail.protection.outlook.com (10.13.172.222) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5273.14 via Frontend Transport; Thu, 19 May 2022 10:03:49 +0000
+Received: from sindhu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 19 May
+ 2022 05:03:43 -0500
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <x86@kernel.org>
+CC:     <peterz@infradead.org>, <bp@alien8.de>, <acme@kernel.org>,
+        <namhyung@kernel.org>, <jolsa@kernel.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <pbonzini@redhat.com>, <jmattson@google.com>,
+        <like.xu.linux@gmail.com>, <eranian@google.com>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>
+Subject: [PATCH 0/5] perf/x86/amd: Add PerfMonV2 DF ehnancements
+Date:   Thu, 19 May 2022 15:33:29 +0530
+Message-ID: <cover.1652954372.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 50270943-96b5-486b-8cb5-08da397edebc
+X-MS-TrafficTypeDiagnostic: DS7PR12MB5790:EE_
+X-Microsoft-Antispam-PRVS: <DS7PR12MB57902FEA6A5276228AB573728BD09@DS7PR12MB5790.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xw12mWh6cO2oULS3ini7vG/6ugTydbcIkNK9/nusiXo/unmqEHIm4Th0dP+q7X1JkfalMInpBlqVx9nYpIaTKf4fLB0meI+5KL+rEAoOwFV/Z8uRuEodKQH/X4N1ZeXEe2lYm689DNKZZ17s8mTjvSXVmD1HCXm+la7CzF+BfOrK6iHYtn2CetImdu2EyEeVri0cBFfOHvW9YPu/EDtOLooFDBowC/kVv7jOzuswY9N89cEU1JiwKqzHy/eAF/D3XkSPPQE7JK8E59sMv40kUysaGst1so+yfev2OJNcTjqCFU0YYkAVQvb2XTHvSVMnmEN09+XvzVKSejggCKbyrAE+EpDnbdqs3s9TdWHxMn7NpKdlu30D+rojvUvHKA7deAYKa3uFN4B5ohb9KNE7P8Pft3lFZjhpl5ofrPWj1OBCzLrnJBhIGwYJ/YsHAtBiWI/Mps3bOgym9zeRQZpZxLMFkDHrKmN52CD4KW9PrVLJQftFWByMdRAms+jbmZWzegT5JleVu8CLScLWz3Ngt/7X0SxNMH5uMMdWGSCnT+WH++nRe74XJ9BLr4NtySsHL/D6js8bkha3Orm1cULOuDVkzraoHVuHzE0GmOPeVlMWSCU0xogcf80jBTrWdK+bvUKTzHiayrtnUdmqniBrxLYLf+oIzrMgd2uTMbP8Ard9cDlg5YYJgXwVPyl7z8sa9i+p6b9mPcMjwmcSiiJXyA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(6666004)(70586007)(86362001)(7696005)(81166007)(26005)(36860700001)(54906003)(110136005)(316002)(426003)(336012)(40460700003)(47076005)(44832011)(356005)(2616005)(508600001)(7416002)(5660300002)(4326008)(82310400005)(36756003)(2906002)(83380400001)(8676002)(16526019)(8936002)(70206006)(186003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2022 10:03:49.0970
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50270943-96b5-486b-8cb5-08da397edebc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT010.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5790
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Add support for using AMD Performance Monitoring Version 2
+(PerfMonV2) features for Data Fabric (DF) events on Zen 4
+processors. Utilize new CPUID leaf to detect PerfMonV2 and
+determine the number of available PMCs. Also introduce the
+new event encoding format and RDPMC mappings for accessing
+additional DF counters.
 
+E.g. larger metric groups which require more than 4 counters
+could not be counted even on a Zen 4 platform that supports
+16 DF counters. Only partial counting is possible by using
+"--metric-no-group".
 
-> On 18-May-2022, at 6:35 PM, Michael Ellerman <mpe@ellerman.id.au> =
-wrote:
->=20
-> Athira Rajeev <atrajeev@linux.vnet.ibm.com> writes:
->> "perf all PMU test" picks the input events from
->> "perf list --raw-dump pmu" list and runs "perf stat -e"
->> for each of the event in the list. In case of powerpc, the
->> PowerVM environment supports events from hv_24x7 and hv_gpci
->> PMU which is of example format like below:
->> - hv_24x7/CPM_ADJUNCT_INST,domain=3D?,core=3D?/
->> - hv_gpci/event,partition_id=3D?/
->>=20
->> The value for "?" needs to be filled in depending on
->> system and respective event. CPM_ADJUNCT_INST needs have
->> core value and domain value. hv_gpci event needs partition_id.
->> Similarly, there are other events for hv_24x7 and hv_gpci
->> having "?" in event format. Hence skip these events on powerpc
->> platform since values like partition_id, domain is specific
->> to system and event.
->>=20
->> Fixes: 3d5ac9effcc6 ("perf test: Workload test of all PMUs")
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/tests/shell/stat_all_pmu.sh | 10 ++++++++++
->> 1 file changed, 10 insertions(+)
->>=20
->> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh =
-b/tools/perf/tests/shell/stat_all_pmu.sh
->> index b30dba455f36..4a854b545bec 100755
->> --- a/tools/perf/tests/shell/stat_all_pmu.sh
->> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
->> @@ -5,6 +5,16 @@
->> set -e
->>=20
->> for p in $(perf list --raw-dump pmu); do
->> +  # In powerpc, skip the events for hv_24x7 and hv_gpci.
->> +  # These events needs input values to be filled in for
->> +  # core, chip, patition id based on system.
->> +  # Example: hv_24x7/CPM_ADJUNCT_INST,domain=3D?,core=3D?/
->> +  # hv_gpci/event,partition_id=3D?/
->> +  # Hence skip these events for ppc.
->> +  if lscpu  |grep ppc && echo "$p" |grep -Eq 'hv_24x7|hv_gpci' ; =
-then
->=20
-> My system doesn't have lscpu installed, why not use `uname -m`.
->=20
-> But why check for ppc at all, the name of the pmu seems unique enough =
--
-> no one else is going to call their pmu something so odd :)
+  $ sudo perf stat -M nps1_die_to_dram true
 
-Thanks Michael for the review.
-Yes, I can directly use pmu name :)=20
+Before:
 
-Will address this change in V2
+   Performance counter stats for 'system wide':
 
-Thanks
-Athira
->=20
-> cheers
+       <not counted>      dram_channel_data_controller_4                                     (0.00%)
+       <not counted>      dram_channel_data_controller_1                                     (0.00%)
+       <not counted>      dram_channel_data_controller_6                                     (0.00%)
+       <not counted>      dram_channel_data_controller_3                                     (0.00%)
+       <not counted>      dram_channel_data_controller_0                                     (0.00%)
+       <not counted>      dram_channel_data_controller_5                                     (0.00%)
+       <not counted>      dram_channel_data_controller_2                                     (0.00%)
+       <not counted>      dram_channel_data_controller_7                                     (0.00%)
+             886817 ns    duration_time
+
+         0.000886817 seconds time elapsed
+
+After:
+
+   Performance counter stats for 'system wide':
+
+                   0      dram_channel_data_controller_4 #      0.2 MiB  nps1_die_to_dram
+                   0      dram_channel_data_controller_1
+                   0      dram_channel_data_controller_6
+                2838      dram_channel_data_controller_3
+                   0      dram_channel_data_controller_0
+                   0      dram_channel_data_controller_5
+                   0      dram_channel_data_controller_2
+                   0      dram_channel_data_controller_7
+              896438 ns   duration_time
+
+         0.000896438 seconds time elapsed
+
+Sandipan Das (5):
+  perf/x86/amd/uncore: Use dynamic events array
+  perf/x86/amd/uncore: Use attr_update for format attributes
+  perf/x86/amd/uncore: Detect available DF counters
+  perf/x86/amd/uncore: Add PerfMonV2 DF event format
+  perf/x86/amd/uncore: Add PerfMonV2 RDPMC assignments
+
+ arch/x86/events/amd/uncore.c      | 146 ++++++++++++++++++++++++------
+ arch/x86/include/asm/perf_event.h |  16 ++++
+ 2 files changed, 136 insertions(+), 26 deletions(-)
+
+-- 
+2.34.1
 
