@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AFFC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 23:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1766DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 23:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241836AbiESXtJ (ORCPT
+        id S233383AbiESXvT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 May 2022 19:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55070 "EHLO
+        Thu, 19 May 2022 19:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235659AbiESXtI (ORCPT
+        with ESMTP id S1343813AbiESXvP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 May 2022 19:49:08 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F59580CA
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 16:49:07 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id e28so8727468wra.10
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 16:49:07 -0700 (PDT)
+        Thu, 19 May 2022 19:51:15 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 551BF167D5
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 16:51:13 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id k30so9324712wrd.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 16:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=y0oCJ7eVklYU5ISMLpAljLf1EhsBiI+TUBhdkiRoUVg=;
-        b=pfat2u2dPri+xKpJXPyasmqlI45mteoXMh1L7cRS4WMoQHtyfaWPWOx3GyLwygL7nU
-         xTXCc6VSuasuntd0KQqRI4yOYRv/hznIslJUA+F3MOC5L7pE24s4tzdqJ0tm98KiOxwL
-         bNmBydfPqt5JxyU0F77kAxB8B2u+YsWhWia2YGFcQoYYnH8qqhYH8qmTvcQuXbXvztoi
-         qksNOFUSLdXGhJbss+KkPnHJbz+lKiPPLTG5faSGcPZtjRb9qMVLY+OiwssOhoqkfaB6
-         XHBuaK4zxI9Z9uf5c3HuIlJoVG4G4MvZ0b/X59FOZVGT60wQM8VKtBtIGHDN5NueQWHW
-         yd8w==
+        bh=VRcoMyrslj4bOAY/eW8WGx80U8klEQk6fgVVLvwb9XA=;
+        b=n6m8TTgv2IwWJDGLGmsOlLSpsjea2srSEInWca1mtXg54d6wSNG6FLta8vqeZoYVjF
+         /beNGSxaZHYhcTmypJY+FnwQ4Ms9qrZrHXlTUbWVEKR9fgIsqRFRWP6/l5vL8v79HD1G
+         KRKNRp/J1nf9EHyhGx8rbBJVfh96oLMG+C/AYHuP4nEF5f7Vo7+OE7as3GKJvfQpov1w
+         e3r4cvjKK4Sm78f1BK+mIaYW04KIlo3rVjejY4H8IZi/4xLvrMD1OxfIfuQG1ZnKHHxo
+         RZvp7baaCu4oemm+MfNvvApShPHL/WNiuWwrt6HoLHmncX4ZHXKynNZ83Zk336wVWM7i
+         tMFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y0oCJ7eVklYU5ISMLpAljLf1EhsBiI+TUBhdkiRoUVg=;
-        b=llTgxuzVyHhpj8o94lktBypPusj2lAnbt6ePp7oJDWSzNiAHt0EzBf+SquBOW15Al/
-         Wk6PZu2zJ+FNSdEdxAnzSjK4lQj39K2oshgx4otZW5ftANN4n73WY5La3V8XUWOUOVJY
-         jf/e/A2PZUehaVhcELbfZslYLYBDRa0K/V7psUmD2s0KczF2244XpsrfbKr9UqtURRou
-         TcRNGus8sTAoxk6SA2P64yC9rU6yS40E4Mw+ZQsuJoMBm+GPTJpFYlpuxhCZC2ZLNl9k
-         xq1dIBM/ERoROvWNWnJFNReVrfuS2x3MSwy/Bj1Sq4wXEJKZ7D816UNpx2+I4K1YA6bN
-         x7QA==
-X-Gm-Message-State: AOAM532kxCYF178qYCEQ0Vw8IkUElgmkr8qeFqPFSVvw5p7ft7pG6EMS
-        rKBoKGgI1/ErY+gLySND7DayX/UJVmSBWxwpmgmuYA==
-X-Google-Smtp-Source: ABdhPJzBNMNUR5pC8I5fNCJ4ZrGE+WO7njBavHiokXbKplP+1DGWwWbRRt2zXE1iRhdWZZt9A69h8Ne0WBttbXQpXHc=
-X-Received: by 2002:adf:e70e:0:b0:20e:7523:f01d with SMTP id
- c14-20020adfe70e000000b0020e7523f01dmr1757597wrm.300.1653004145679; Thu, 19
- May 2022 16:49:05 -0700 (PDT)
+        bh=VRcoMyrslj4bOAY/eW8WGx80U8klEQk6fgVVLvwb9XA=;
+        b=h/1C/UPakk7vmDQ+wlSVtS+a67pZAzcfVwjwA0+2j8BL8ialTLr9Cm4dQeUTRWhivI
+         TxqKVAz+0mTWZ3ewBBZFzfytq1hG+2tWJika2UrDwfFRa+23aVsvs7IXMPZ7ZIEX5RNN
+         36Gk/DNq+suAxO8eWlIc9TyJJ7f2fI7PPMzFu5157zfqyxmjE97qfPseu1BE4PMyMAWe
+         +mpVSzfKxT79w9i5/XRDETdEVAVcQTYswGLjuxSEyE5aJ26b38DZbx352rik9EL/VP8b
+         0vo8pTghaAF8pU8sn9Yxgh+VRUZlvtypqAIakKwMlbw484VVbKLT/qLISC8fT7+Edhb/
+         f1fQ==
+X-Gm-Message-State: AOAM532eCZFtdgbKP4tsx5rG8xlnmX86GzLR6JjshkLpjrgePjhp9xQ8
+        /O1577s4EEZDHy1HDoT9GC8fJSRVnZlb+e/B2/CkZw==
+X-Google-Smtp-Source: ABdhPJzKtQ78ONkLHremZq8wLSoKfoq8D2Wb2ImyXwDE8WvdDA10NMh3Ad8EfD1ZLcOsod7SFwd2cyqonewRi2vdJos=
+X-Received: by 2002:adf:d1e9:0:b0:20c:6c76:14d5 with SMTP id
+ g9-20020adfd1e9000000b0020c6c7614d5mr6036237wrd.375.1653004271689; Thu, 19
+ May 2022 16:51:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220519054355.477-1-ravi.bangoria@amd.com> <20220519054355.477-5-ravi.bangoria@amd.com>
-In-Reply-To: <20220519054355.477-5-ravi.bangoria@amd.com>
+References: <20220519054355.477-1-ravi.bangoria@amd.com> <20220519054355.477-6-ravi.bangoria@amd.com>
+In-Reply-To: <20220519054355.477-6-ravi.bangoria@amd.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 19 May 2022 16:48:51 -0700
-Message-ID: <CAP-5=fU5ArsMcTiYNgZ1U+i6mmtdc+OGx9_ny0x46+O7d4+dpQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] perf tool ibs: Sync amd ibs header file
+Date:   Thu, 19 May 2022 16:50:58 -0700
+Message-ID: <CAP-5=fWP42=AW9zr5ULM3_XL4pOhtTcLSr9kjvbRiH_EivO9JA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] perf script ibs: Support new IBS bits in raw trace dump
 To:     Ravi Bangoria <ravi.bangoria@amd.com>
 Cc:     acme@kernel.org, peterz@infradead.org, rrichter@amd.com,
         mingo@redhat.com, mark.rutland@arm.com, jolsa@kernel.org,
@@ -70,89 +70,177 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Wed, May 18, 2022 at 10:45 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
 >
-> IBS support has been enhanced with two new features in upcoming uarch:
-> 1. DataSrc extension and 2. L3 miss filtering. Additional set of bits
-> has been introduced in IBS registers to exploit these features.
-> New bits are already defining in arch/x86/ header. Sync it with tools
-> header file.
+> Interpret Additional set of IBS register bits while doing
+> perf report/script raw dump.
+>
+> IBS op pmu ex:
+>   $ sudo ./perf record -c 130 -a -e ibs_op/l3missonly=1/ --raw-samples
+>   $ sudo ./perf report -D
+>   ...
+>   ibs_op_ctl:     0000004500070008 MaxCnt       128 L3MissOnly 1 En 1
+>         Val 1 CntCtl 0=cycles CurCnt        69
+>   ibs_op_data:    0000000000710002 CompToRetCtr     2 TagToRetCtr   113
+>         BrnRet 0  RipInvalid 0 BrnFuse 0 Microcode 0
+>   ibs_op_data2:   0000000000000002 CacheHitSt 0=M-state RmtNode 0
+>         DataSrc 2=A peer cache in a near CCX
+>   ibs_op_data3:   000000681d1700a1 LdOp 1 StOp 0 DcL1TlbMiss 0
+>         DcL2TlbMiss 0 DcL1TlbHit2M 0 DcL1TlbHit1G 1 DcL2TlbHit2M 0
+>         DcMiss 1 DcMisAcc 0 DcWcMemAcc 0 DcUcMemAcc 0 DcLockedOp 0
+>         DcMissNoMabAlloc 1 DcLinAddrValid 1 DcPhyAddrValid 1
+>         DcL2TlbHit1G 0 L2Miss 1 SwPf 0 OpMemWidth  8 bytes
+>         OpDcMissOpenMemReqs  7 DcMissLat   104 TlbRefillLat     0
+>
+> IBS Fetch pmu ex:
+>   $ sudo ./perf record -c 130 -a -e ibs_fetch/l3missonly=1/ --raw-samples
+>   $ sudo ./perf report -D
+>   ...
+>   ibs_fetch_ctl:  3c1f00c700080008 MaxCnt     128 Cnt     128 Lat   199
+>         En 1 Val 1 Comp 1 IcMiss 1 PhyAddrValid        1 L1TlbPgSz 4KB
+>         L1TlbMiss 0 L2TlbMiss 0 RandEn 0 L2Miss 1 L3MissOnly 1
+>         FetchOcMiss 1 FetchL3Miss 1
+>
+> With the DataSrc extensions, the source of data can be decoded among:
+>  - Local L3 or other L1/L2 in CCX.
+>  - A peer cache in a near CCX.
+>  - Data returned from DRAM.
+>  - A peer cache in a far CCX.
+>  - DRAM address map with "long latency" bit set.
+>  - Data returned from MMIO/Config/PCI/APIC.
+>  - Extension Memory (S-Link, GenZ, etc - identified by the CS target
+>     and/or address map at DF's choice).
+>  - Peer Agent Memory.
 >
 > Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  tools/arch/x86/include/asm/amd-ibs.h | 16 ++++++++++------
->  tools/perf/util/amd-sample-raw.c     |  4 ++--
->  2 files changed, 12 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/arch/x86/include/asm/amd-ibs.h b/tools/arch/x86/include/asm/amd-ibs.h
-> index 765e9e752d03..9a3312e12e2e 100644
-> --- a/tools/arch/x86/include/asm/amd-ibs.h
-> +++ b/tools/arch/x86/include/asm/amd-ibs.h
-> @@ -29,7 +29,10 @@ union ibs_fetch_ctl {
->                         rand_en:1,      /* 57: random tagging enable */
->                         fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
->                                          *      (needs IbsFetchComp) */
-> -                       reserved:5;     /* 59-63: reserved */
-> +                       l3_miss_only:1, /* 59: Collect L3 miss samples only */
-> +                       fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
-> +                       fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
-> +                       reserved:2;     /* 62-63: reserved */
->         };
->  };
->
-> @@ -38,14 +41,14 @@ union ibs_op_ctl {
->         __u64 val;
->         struct {
->                 __u64   opmaxcnt:16,    /* 0-15: periodic op max. count */
-> -                       reserved0:1,    /* 16: reserved */
-> +                       l3_miss_only:1, /* 16: Collect L3 miss samples only */
->                         op_en:1,        /* 17: op sampling enable */
->                         op_val:1,       /* 18: op sample valid */
->                         cnt_ctl:1,      /* 19: periodic op counter control */
->                         opmaxcnt_ext:7, /* 20-26: upper 7 bits of periodic op maximum count */
-> -                       reserved1:5,    /* 27-31: reserved */
-> +                       reserved0:5,    /* 27-31: reserved */
->                         opcurcnt:27,    /* 32-58: periodic op counter current count */
-> -                       reserved2:5;    /* 59-63: reserved */
-> +                       reserved1:5;    /* 59-63: reserved */
->         };
->  };
->
-> @@ -71,11 +74,12 @@ union ibs_op_data {
->  union ibs_op_data2 {
->         __u64 val;
->         struct {
-> -               __u64   data_src:3,     /* 0-2: data source */
-> +               __u64   data_src_lo:3,  /* 0-2: data source low */
->                         reserved0:1,    /* 3: reserved */
->                         rmt_node:1,     /* 4: destination node */
->                         cache_hit_st:1, /* 5: cache hit state */
-> -                       reserved1:57;   /* 5-63: reserved */
-> +                       data_src_hi:2,  /* 6-7: data source high */
-> +                       reserved1:56;   /* 8-63: reserved */
->         };
->  };
->
-> diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
-> index d19d765195c5..3b623ea6ee7e 100644
-> --- a/tools/perf/util/amd-sample-raw.c
-> +++ b/tools/perf/util/amd-sample-raw.c
 
-nit: given the commit message this should probably be a separate patch.
+Looks good, but I think part of the previous patch should also be in this one.
 
 Thanks,
 Ian
-
-> @@ -98,9 +98,9 @@ static void pr_ibs_op_data2(union ibs_op_data2 reg)
->         };
+> ---
+>  tools/perf/util/amd-sample-raw.c | 64 +++++++++++++++++++++++++++++---
+>  1 file changed, 58 insertions(+), 6 deletions(-)
 >
->         printf("ibs_op_data2:\t%016llx %sRmtNode %d%s\n", reg.val,
-> -              reg.data_src == 2 ? (reg.cache_hit_st ? "CacheHitSt 1=O-State "
-> +              reg.data_src_lo == 2 ? (reg.cache_hit_st ? "CacheHitSt 1=O-State "
->                                                      : "CacheHitSt 0=M-state ") : "",
-> -              reg.rmt_node, data_src_str[reg.data_src]);
-> +              reg.rmt_node, data_src_str[reg.data_src_lo]);
+> diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
+> index 3b623ea6ee7e..63303f583bc0 100644
+> --- a/tools/perf/util/amd-sample-raw.c
+> +++ b/tools/perf/util/amd-sample-raw.c
+> @@ -18,6 +18,7 @@
+>  #include "pmu-events/pmu-events.h"
+>
+>  static u32 cpu_family, cpu_model, ibs_fetch_type, ibs_op_type;
+> +static bool zen4_ibs_extensions;
+>
+>  static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
+>  {
+> @@ -39,6 +40,7 @@ static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
+>         };
+>         const char *ic_miss_str = NULL;
+>         const char *l1tlb_pgsz_str = NULL;
+> +       char l3_miss_str[sizeof(" L3MissOnly _ FetchOcMiss _ FetchL3Miss _")] = "";
+>
+>         if (cpu_family == 0x19 && cpu_model < 0x10) {
+>                 /*
+> @@ -53,12 +55,19 @@ static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
+>                 ic_miss_str = ic_miss_strs[reg.ic_miss];
+>         }
+>
+> +       if (zen4_ibs_extensions) {
+> +               snprintf(l3_miss_str, sizeof(l3_miss_str),
+> +                        " L3MissOnly %d FetchOcMiss %d FetchL3Miss %d",
+> +                        reg.l3_miss_only, reg.fetch_oc_miss, reg.fetch_l3_miss);
+> +       }
+> +
+>         printf("ibs_fetch_ctl:\t%016llx MaxCnt %7d Cnt %7d Lat %5d En %d Val %d Comp %d%s "
+> -              "PhyAddrValid %d%s L1TlbMiss %d L2TlbMiss %d RandEn %d%s\n",
+> +               "PhyAddrValid %d%s L1TlbMiss %d L2TlbMiss %d RandEn %d%s%s\n",
+>                 reg.val, reg.fetch_maxcnt << 4, reg.fetch_cnt << 4, reg.fetch_lat,
+>                 reg.fetch_en, reg.fetch_val, reg.fetch_comp, ic_miss_str ? : "",
+>                 reg.phy_addr_valid, l1tlb_pgsz_str ? : "", reg.l1tlb_miss, reg.l2tlb_miss,
+> -               reg.rand_en, reg.fetch_comp ? (reg.fetch_l2_miss ? " L2Miss 1" : " L2Miss 0") : "");
+> +               reg.rand_en, reg.fetch_comp ? (reg.fetch_l2_miss ? " L2Miss 1" : " L2Miss 0") : "",
+> +               l3_miss_str);
 >  }
 >
+>  static void pr_ic_ibs_extd_ctl(union ic_ibs_extd_ctl reg)
+> @@ -68,9 +77,15 @@ static void pr_ic_ibs_extd_ctl(union ic_ibs_extd_ctl reg)
+>
+>  static void pr_ibs_op_ctl(union ibs_op_ctl reg)
+>  {
+> -       printf("ibs_op_ctl:\t%016llx MaxCnt %9d En %d Val %d CntCtl %d=%s CurCnt %9d\n",
+> -              reg.val, ((reg.opmaxcnt_ext << 16) | reg.opmaxcnt) << 4, reg.op_en, reg.op_val,
+> -              reg.cnt_ctl, reg.cnt_ctl ? "uOps" : "cycles", reg.opcurcnt);
+> +       char l3_miss_only[sizeof(" L3MissOnly _")] = "";
+> +
+> +       if (zen4_ibs_extensions)
+> +               snprintf(l3_miss_only, sizeof(l3_miss_only), " L3MissOnly %d", reg.l3_miss_only);
+> +
+> +       printf("ibs_op_ctl:\t%016llx MaxCnt %9d%s En %d Val %d CntCtl %d=%s CurCnt %9d\n",
+> +               reg.val, ((reg.opmaxcnt_ext << 16) | reg.opmaxcnt) << 4, l3_miss_only,
+> +               reg.op_en, reg.op_val, reg.cnt_ctl,
+> +               reg.cnt_ctl ? "uOps" : "cycles", reg.opcurcnt);
+>  }
+>
+>  static void pr_ibs_op_data(union ibs_op_data reg)
+> @@ -84,7 +99,34 @@ static void pr_ibs_op_data(union ibs_op_data reg)
+>                 reg.op_brn_ret, reg.op_rip_invalid, reg.op_brn_fuse, reg.op_microcode);
+>  }
+>
+> -static void pr_ibs_op_data2(union ibs_op_data2 reg)
+> +static void pr_ibs_op_data2_extended(union ibs_op_data2 reg)
+> +{
+> +       static const char * const data_src_str[] = {
+> +               "",
+> +               " DataSrc 1=Local L3 or other L1/L2 in CCX",
+> +               " DataSrc 2=A peer cache in a near CCX",
+> +               " DataSrc 3=Data returned from DRAM",
+> +               " DataSrc 4=(reserved)",
+> +               " DataSrc 5=A peer cache in a far CCX",
+> +               " DataSrc 6=DRAM address map with \"long latency\" bit set",
+> +               " DataSrc 7=Data returned from MMIO/Config/PCI/APIC",
+> +               " DataSrc 8=Extension Memory (S-Link, GenZ, etc)",
+> +               " DataSrc 9=(reserved)",
+> +               " DataSrc 10=(reserved)",
+> +               " DataSrc 11=(reserved)",
+> +               " DataSrc 12=Peer Agent Memory",
+> +               /* 13 to 31 are reserved. Avoid printing them. */
+> +       };
+> +       int data_src = (reg.data_src_hi << 3) | reg.data_src_lo;
+> +
+> +       printf("ibs_op_data2:\t%016llx %sRmtNode %d%s\n", reg.val,
+> +               (data_src == 1 || data_src == 2 || data_src == 5) ?
+> +                       (reg.cache_hit_st ? "CacheHitSt 1=O-State " : "CacheHitSt 0=M-state ") : "",
+> +               reg.rmt_node,
+> +               data_src < (int)ARRAY_SIZE(data_src_str) ? data_src_str[data_src] : "");
+> +}
+> +
+> +static void pr_ibs_op_data2_default(union ibs_op_data2 reg)
+>  {
+>         static const char * const data_src_str[] = {
+>                 "",
+> @@ -103,6 +145,13 @@ static void pr_ibs_op_data2(union ibs_op_data2 reg)
+>                reg.rmt_node, data_src_str[reg.data_src_lo]);
+>  }
+>
+> +static void pr_ibs_op_data2(union ibs_op_data2 reg)
+> +{
+> +       if (zen4_ibs_extensions)
+> +               return pr_ibs_op_data2_extended(reg);
+> +       pr_ibs_op_data2_default(reg);
+> +}
+> +
 >  static void pr_ibs_op_data3(union ibs_op_data3 reg)
+>  {
+>         char l2_miss_str[sizeof(" L2Miss _")] = "";
+> @@ -279,6 +328,9 @@ bool evlist__has_amd_ibs(struct evlist *evlist)
+>                 pmu_mapping += strlen(pmu_mapping) + 1 /* '\0' */;
+>         }
+>
+> +       if (perf_env__find_pmu_cap(env, 0, "ibs_op", "zen4_ibs_extensions"))
+> +               zen4_ibs_extensions = 1;
+> +
+>         if (ibs_fetch_type || ibs_op_type) {
+>                 if (!cpu_family)
+>                         parse_cpuid(env);
 > --
 > 2.27.0
 >
