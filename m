@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F39C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 03:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF36BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 03:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233156AbiESDUS (ORCPT
+        id S233218AbiESDUa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 May 2022 23:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45544 "EHLO
+        Wed, 18 May 2022 23:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233172AbiESDUQ (ORCPT
+        with ESMTP id S233158AbiESDUT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 May 2022 23:20:16 -0400
+        Wed, 18 May 2022 23:20:19 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915FA55353
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 20:20:14 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id v140-20020a252f92000000b0064d955c7b4eso3290184ybv.18
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 20:20:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2BF556403
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 20:20:16 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id d188-20020a25cdc5000000b00648429e5ab9so3311052ybf.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 May 2022 20:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Ufua0rfEsqMCPLeh09lss9xKZavLX++00V1DsERJjuU=;
-        b=C2Q3j4NOoL4Znn2cGiCWb4Z782Kd2RARJteKmjYTOGdWO6+Brzes/Fo4nRvRkBFGUB
-         J81EYI6UBSwSDerNAoiP30Qs30Ii38BnskBz3WuRNFTJfZ5DujjkKEXhM5bS3io5SU7j
-         LcQxaHJ+gy1ko9Zqrx1du2j26kXBIZS+6fUywTcYG0PL4WjiTEsXPXe7jY9TLdEdllpt
-         5CRxECRfwb/Zx+fAEWGZY/MhkC7ExuppQP2pXqWTe36nsC0hdiWuduiaPv+hfylYKL8X
-         8LHaBWv3xRmCkO0xvARKNFAWDYZb6sd6n3xIqRcRBdfbwxVk1cnz5pV9Ld9AUKsmCvFE
-         7gbQ==
+        bh=1limainpPz/ktpnhi2JQ14ZpISEsYFULN5eyOmNi+Sg=;
+        b=pwFiLjJF7F42X0N/SJOqIg+cAOdZbOcMsmo5i34y2KmksTi8MtPUEB0qc2c1HLmR45
+         cwJ+5gBpTjYMw6GcKjAMzXgbB1OabmEHtfbVS54w4nOVjbgkSeaHB3iHWUXZHP2ALe3x
+         VQEwVtR95jEfnd8/bokpy2LqYaPKYh9gBUuaxoXxMYCUTqaRobWi283YJ3TSSG41nrbt
+         qRNBzT0SblEn+0obrQlf3TQmAJZjTysd9Nd3biW0tKlOZmJLCSbwZWbWOTBh/e52vftR
+         eMjhM+TnOzRsRXC/6+QLoB7+4aMy32X6UJTMmOW4tvIOHKwWu8jbuidFy/Oo4R3UYu+U
+         bfFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Ufua0rfEsqMCPLeh09lss9xKZavLX++00V1DsERJjuU=;
-        b=Mi9MBka6xc2CbA1EWancAa8Kuk3SBCtv2EeQeCoaW1VxFstfmz8tXy8rWBwoF2Ea8p
-         9pNFA1ADVvVhihNGONn9A5UzH3ChjO4CW0y8lDGUSJVfAU6RX4MbQVi5mBw8R0jJyaQ4
-         Bfz7QCVgGRMobnVRz085Fez/+McV0CjOkl9keiCxLMuDFU5Bt450X9LgOv4EF+vD+79f
-         Z4DtNasPtNyOubN5ZXyTO5dcFmoOh99+6z6INCxIzlqtNBs6PtU5nVSI8DkpoDIzSmsb
-         DOQA3FQDOW522GHU/l8YzVcvowkHHUs60yHOUNU+gWV2EadilI/CRJBl3SW1qgZJeKjH
-         PVvQ==
-X-Gm-Message-State: AOAM532P4fVNv0jBrLEQwbLdQtjkAMk5apeFR3hl5lBIs6RMuWpfYTNr
-        u7p16wxsav8Byj8GaE3RwkLXF0QDfE2R
-X-Google-Smtp-Source: ABdhPJx3T641FWbwHWHy2wSXrWrEb93gC2BG4MiPOUUip0yv3E7lm0SEMw+8KmEckfWymjCEbsRsFDLqc+hA
+        bh=1limainpPz/ktpnhi2JQ14ZpISEsYFULN5eyOmNi+Sg=;
+        b=1yp2WVP6MXiFdrwHgbL2g0akilyuPtLQLbD7iKLMUjl2lpqNeu9OO0r3vFUsFJI6fR
+         uaLDVqMMckoEKWuzzhTkCSYN9aRQE7iQij0N/Cn/ZSQlNjda8jKx8rTDLvQsfzA6kl9k
+         pD4QA2DqFMQWTyl9PX8mE7qSsDBUozH2RHiUJF55nPNhQu/Ff5UJXWwEd3uAsUPs8TLA
+         o2G5RyrkoxUz9kvrezBze+1SdV1w9M/ijejElTgVbg3tlkeGZJWfotPHA9RJCxOcB5h3
+         Z91ST0sJ+nSeobQnR7TxK5zEsbzgshobmxWJIiTq0QPbicgg04Hqi67dKiC+xEOH8ffR
+         9Sig==
+X-Gm-Message-State: AOAM533+60DrbLmSXhUpxqWzvtMA71HuDqtYx9DGRrlFT8hrDKIqajfJ
+        C5F1wlnHIMHEuVxhBf3l3EM295vVVHSx
+X-Google-Smtp-Source: ABdhPJy8cyFjJSoZ/WeYBph7EUcVHsLsZB60kq0ih2WbPF8sSVl+a37Ci3uckkELeD+m4XbHoiUKuH2yLtsG
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:a233:bf3c:6ac:2a98])
- (user=irogers job=sendgmr) by 2002:a25:dc02:0:b0:64d:b6a3:e0bf with SMTP id
- y2-20020a25dc02000000b0064db6a3e0bfmr2460794ybe.41.1652930413690; Wed, 18 May
- 2022 20:20:13 -0700 (PDT)
-Date:   Wed, 18 May 2022 20:20:01 -0700
+ (user=irogers job=sendgmr) by 2002:a81:4104:0:b0:2f1:b59f:22a2 with SMTP id
+ o4-20020a814104000000b002f1b59f22a2mr2662292ywa.328.1652930416067; Wed, 18
+ May 2022 20:20:16 -0700 (PDT)
+Date:   Wed, 18 May 2022 20:20:02 -0700
 In-Reply-To: <20220519032005.1273691-1-irogers@google.com>
-Message-Id: <20220519032005.1273691-2-irogers@google.com>
+Message-Id: <20220519032005.1273691-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20220519032005.1273691-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
-Subject: [PATCH 1/5] perf stat: Fix and validate inputs in stat events
+Subject: [PATCH 2/5] perf stat: Add stat record+report test
 From:   Ian Rogers <irogers@google.com>
 To:     Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -85,57 +85,45 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Stat events can come from disk and so need a degree of validation. They
-contain a CPU which needs looking up via CPU map to access a counter.
-Add the CPU to index translation, alongside validity checking.
-
-Discussion thread:
+This would have caught:
 https://lore.kernel.org/linux-perf-users/CAP-5=fWQR=sCuiSMktvUtcbOLidEpUJLCybVF6=BRvORcDOq+g@mail.gmail.com/
 
-Fixes: 7ac0089d138f ("perf evsel: Pass cpu not cpu map index to synthesize")
-Suggested-by: Michael Petlan <mpetlan@redhat.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/stat.sh | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 4a5f3b8ff820..a77c28232298 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -474,9 +474,10 @@ int perf_stat_process_counter(struct perf_stat_config *config,
- int perf_event__process_stat_event(struct perf_session *session,
- 				   union perf_event *event)
- {
--	struct perf_counts_values count;
-+	struct perf_counts_values count, *ptr;
- 	struct perf_record_stat *st = &event->stat;
- 	struct evsel *counter;
-+	int cpu_map_idx;
- 
- 	count.val = st->val;
- 	count.ena = st->ena;
-@@ -487,8 +488,18 @@ int perf_event__process_stat_event(struct perf_session *session,
- 		pr_err("Failed to resolve counter for stat event.\n");
- 		return -EINVAL;
- 	}
--
--	*perf_counts(counter->counts, st->cpu, st->thread) = count;
-+	cpu_map_idx = perf_cpu_map__idx(evsel__cpus(counter), (struct perf_cpu){.cpu = st->cpu});
-+	if (cpu_map_idx == -1) {
-+		pr_err("Invalid CPU %d for event %s.\n", st->cpu, evsel__name(counter));
-+		return -EINVAL;
-+	}
-+	ptr = perf_counts(counter->counts, cpu_map_idx, st->thread);
-+	if (ptr == NULL) {
-+		pr_err("Failed to find perf count for CPU %d thread %d on event %s.\n",
-+			st->cpu, st->thread, evsel__name(counter));
-+		return -EINVAL;
-+	}
-+	*ptr = count;
- 	counter->supported = true;
- 	return 0;
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index c7894764d4a6..9313ef2739e0 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -16,6 +16,18 @@ test_default_stat() {
+   echo "Basic stat command test [Success]"
  }
+ 
++test_stat_record_report() {
++  echo "stat record and report test"
++  if ! perf stat record -o - true | perf stat report -i - 2>&1 | \
++    egrep -q "Performance counter stats for 'pipe':"
++  then
++    echo "stat record and report test [Failed]"
++    err=1
++    return
++  fi
++  echo "stat record and report test [Success]"
++}
++
+ test_topdown_groups() {
+   # Topdown events must be grouped with the slots event first. Test that
+   # parse-events reorders this.
+@@ -62,6 +74,7 @@ test_topdown_weak_groups() {
+ }
+ 
+ test_default_stat
++test_stat_record_report
+ test_topdown_groups
+ test_topdown_weak_groups
+ exit $err
 -- 
 2.36.1.124.g0e6072fb45-goog
 
