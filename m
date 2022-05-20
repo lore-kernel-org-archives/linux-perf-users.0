@@ -2,142 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98D3C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 10:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6873BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 11:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239415AbiETKND (ORCPT
+        id S1348645AbiETLqg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 May 2022 06:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57016 "EHLO
+        Fri, 20 May 2022 07:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236205AbiETKNC (ORCPT
+        with ESMTP id S1347951AbiETLqf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 May 2022 06:13:02 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F037F67D12;
-        Fri, 20 May 2022 03:13:01 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24K9t1f5015088;
-        Fri, 20 May 2022 10:12:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=03W+KVCf05ryBpIQznhubjGjNBUYpOjO41ZnD0L+yZY=;
- b=khAPDsHcfXx79sQeQGGf7zJirqbTPDlZM9P91zN9C81f5yokRd7+zqTQ6sooGALl7EF+
- ttCRLzUidUzYPckYx56Mwwb/ES+P99/tzw5WDkFVvfYmEdapuiK+ov5gx9WvppRDpa9g
- v9z0eV9Bk/l+QZnOQPUROnMqIZLKHU88mOFDgaDUls2mDOzib8YLXLzZCqXs+xl4Okyg
- c442eTLoeUX/ReoxVQivB04p2YXzICFZ3Op0IgIU/qPXp37dQa7p+zDzULKgkSjUfasZ
- XTzoaUA8kaL9en7NBWBgjtk8wblfMNP1eB8UijleJEnWuINopeQ0geqnXGFI/mXB43sT AA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g65m5m1x4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 May 2022 10:12:49 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24K9e0pQ029598;
-        Fri, 20 May 2022 10:12:49 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g65m5m1wm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 May 2022 10:12:49 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24KA7FcG022448;
-        Fri, 20 May 2022 10:12:47 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 3g4j3gk86v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 May 2022 10:12:47 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24K9wlGd40042866
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 May 2022 09:58:47 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40D6A4C046;
-        Fri, 20 May 2022 10:12:44 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB10F4C040;
-        Fri, 20 May 2022 10:12:37 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.163.31.125])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 May 2022 10:12:37 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, irogers@google.com
-Subject: [PATCH V3] tools/perf/test: Fix perf all PMU test to skip hv_24x7/hv_gpci tests on powerpc
-Date:   Fri, 20 May 2022 15:42:36 +0530
-Message-Id: <20220520101236.17249-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+        Fri, 20 May 2022 07:46:35 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB9FA57105;
+        Fri, 20 May 2022 04:46:34 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F63A1477;
+        Fri, 20 May 2022 04:46:34 -0700 (PDT)
+Received: from [192.168.0.5] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C68E3F718;
+        Fri, 20 May 2022 04:46:31 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] perf: arm64: Tools support for Dwarf unwinding
+ through SVE functions
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        James Clark <james.clark@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        broonie@kernel.org, leo.yan@linaro.org, mathieu.poirier@linaro.org,
+        john.garry@huawei.com, Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220517102005.3022017-1-james.clark@arm.com>
+ <YoO4Hiue7PmJ9KOS@kernel.org>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <995099d3-a170-69dc-d12e-c9b2e4753f35@arm.com>
+Date:   Fri, 20 May 2022 12:46:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
+In-Reply-To: <YoO4Hiue7PmJ9KOS@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: P3t1m_5cJo1TKPkjLQPk1RLXiH_V5YKx
-X-Proofpoint-ORIG-GUID: XZmE3eOwJARec2zzlTf2ubhndWCst_8O
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-20_03,2022-05-20_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0
- spamscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2205200073
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-"perf all PMU test" picks the input events from
-"perf list --raw-dump pmu" list and runs "perf stat -e"
-for each of the event in the list. In case of powerpc, the
-PowerVM environment supports events from hv_24x7 and hv_gpci
-PMU which is of example format like below:
-- hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
-- hv_gpci/event,partition_id=?/
 
-The value for "?" needs to be filled in depending on
-system and respective event. CPM_ADJUNCT_INST needs have
-core value and domain value. hv_gpci event needs partition_id.
-Similarly, there are other events for hv_24x7 and hv_gpci
-having "?" in event format. Hence skip these events on powerpc
-platform since values like partition_id, domain is specific
-to system and event.
+On 17/05/2022 15:58, Arnaldo Carvalho de Melo wrote:
+> Em Tue, May 17, 2022 at 11:20:01AM +0100, James Clark escreveu:
+>> Changes since v1:
+>>
+>>   * Split patchset into kernel side and Perf tool changes
+> Thanks, now I'll wait for the kernel side to be merged.
+>
+> - Arnaldo
+>  
 
-Fixes: 3d5ac9effcc6 ("perf test: Workload test of all PMUs")
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
-Changelog:
- v2 -> v3:
- Fixed patition/partition/ as pointed out by Ian Rogers.
+Hi,
 
- v1 -> v2:
- Instead of checking for platform, used the pmu name
- ie, hv_24x7 and hv_gpci to skip the test since this
- pmu name is specific to powerpc as suggested by
- Michael Ellerman.
+I think we also need to fix the below import (it's trying to import the
+perf_regs.h from the kernel, not the tools/ dir).
 
- tools/perf/tests/shell/stat_all_pmu.sh | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+diff --git a/tools/perf/util/libunwind/arm64.c b/tools/perf/util/libunwind/arm64.c
+index 15f60fd09424..014d82159656 100644
+--- a/tools/perf/util/libunwind/arm64.c
++++ b/tools/perf/util/libunwind/arm64.c
+@@ -24,7 +24,7 @@
+ #include "unwind.h"
+ #include "libunwind-aarch64.h"
+ #define perf_event_arm_regs perf_event_arm64_regs
+-#include <../../../../arch/arm64/include/uapi/asm/perf_regs.h>
++#include <../../../arch/arm64/include/uapi/asm/perf_regs.h>
+ #undef perf_event_arm_regs
+ #include "../../arch/arm64/util/unwind-libunwind.c"
 
-diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
-index b30dba455f36..7d046bb8a7b9 100755
---- a/tools/perf/tests/shell/stat_all_pmu.sh
-+++ b/tools/perf/tests/shell/stat_all_pmu.sh
-@@ -5,6 +5,16 @@
- set -e
- 
- for p in $(perf list --raw-dump pmu); do
-+  # In powerpc, skip the events for hv_24x7 and hv_gpci.
-+  # These events needs input values to be filled in for
-+  # core, chip, partition id based on system.
-+  # Example: hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
-+  # hv_gpci/event,partition_id=?/
-+  # Hence skip these events for ppc.
-+  if echo "$p" |grep -Eq 'hv_24x7|hv_gpci' ; then
-+    echo "Skipping: Event '$p' in powerpc"
-+    continue
-+  fi
-   echo "Testing $p"
-   result=$(perf stat -e "$p" true 2>&1)
-   if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
--- 
-2.35.1
 
