@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B886BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 18:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EC2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 19:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238391AbiETS7t (ORCPT
+        id S243976AbiETT2n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 May 2022 14:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48512 "EHLO
+        Fri, 20 May 2022 15:28:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237963AbiETS7s (ORCPT
+        with ESMTP id S233062AbiETT2n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 May 2022 14:59:48 -0400
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A0F195E92;
-        Fri, 20 May 2022 11:59:47 -0700 (PDT)
-Received: by mail-oi1-f175.google.com with SMTP id w130so11041009oig.0;
-        Fri, 20 May 2022 11:59:47 -0700 (PDT)
+        Fri, 20 May 2022 15:28:43 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C452418C052;
+        Fri, 20 May 2022 12:28:41 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-f1d5464c48so11392722fac.6;
+        Fri, 20 May 2022 12:28:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GFbPgQEtbW912BPIItjV08RciM4FEzthIck0qttGkpk=;
-        b=fDsPDHpCxd2z66DUW2lygsqMnwmm+Oemfn/HWNOJM5u3y+fwXKI7FC2OVjuDN/mdJL
-         WGOIwyGxQin0Fs/iuoAB6cpUM117DT2VXt7Lwq/q9SUyjZG24V07OKFP8VCywKCIhwiq
-         jHyUf1gOLSfJY5c5NRUV4ZL38Q21609njDFdgYm5TuKxLht69Hjp+KBQzZC49uwd3bmY
-         nqyXw5/CTlR6pSEElBHjxqghCNN7TTrqEXgrOjIEc9D+o0aitpB2MZyI1ln4Dq15gEDi
-         H+shatSm9R06b+e2fahalh/oVOIl1RUcORpFkdSLYhTOiTAojzg5Quryn7vNnKj+2wUR
-         UtGg==
-X-Gm-Message-State: AOAM531qC9rJ2vQT+Bq1CEm7yopMmzl2B2nyvDFYSOhlmoZtfNNpx0pw
-        a0oLDhgx84YcL4WlUueXchgjurDkJmYiB+PrGFY=
-X-Google-Smtp-Source: ABdhPJxqogoOMkG4+gq8mrfj4XEMfuHTadYZbi0FuE9/BP6hynPyQ+19JDm9/rtXUghz8nAXO8bAy051UWUXYYGCxss=
-X-Received: by 2002:a05:6808:2218:b0:326:bd8c:d044 with SMTP id
- bd24-20020a056808221800b00326bd8cd044mr6204978oib.92.1653073187030; Fri, 20
- May 2022 11:59:47 -0700 (PDT)
+        bh=3cDuz6fQsc5aaEblyOpia8pv18iquWLvYErtJW4LGps=;
+        b=i4IODgBPIiuF/mMNVw4CcSyjn7j3wU99E8TA5reSlMFNb5EjIE4v7XFjMtmPsH+d1q
+         i/C2aDEZUZ7GAzuhmL8lNW6IGzFlEVyayPluidP4WufvzxZ+mzo6lGGr4qQVi0/kQGPX
+         GRGhrgk1sU2HGZGHn6rBsbRW6bj+SlnDUw/mlVYh1y+a41OeUJJurJXtJmHu//u8YsL+
+         kLPdebfLGamlDs0utnx+qdtuLisVOhjOxjtvj+H+pWZ2IAiLIGAyQU6WH+Kx2zfk6AVD
+         EsKR9jI6eQREyKqdhyvRrQejU9vaYV3gp0rILmzYPfl6fMfTNCAEvRXiA+EEEDUZwrjx
+         vwjA==
+X-Gm-Message-State: AOAM533AzPhhEfEfffKS90gYyLUudpVlvgwKDzzGkzPeHEuR2NRGHghM
+        jYMzUHKeYoubqx0jCaYRXfBRgFGvhH0DFX7pWjZHObAe
+X-Google-Smtp-Source: ABdhPJx7BBa/4OP6RFw0ULAdpUukLO1CluVd2oxXHaf9x2VoeupAU3XTvXzii/RNn5g2ALAKRdrZtJxGnZnkjU6yINc=
+X-Received: by 2002:a05:6870:d1cd:b0:e1:e7ee:faa0 with SMTP id
+ b13-20020a056870d1cd00b000e1e7eefaa0mr6986769oac.5.1653074921048; Fri, 20 May
+ 2022 12:28:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220422093833.340873-1-nakamura.shun@fujitsu.com> <20220422093833.340873-3-nakamura.shun@fujitsu.com>
-In-Reply-To: <20220422093833.340873-3-nakamura.shun@fujitsu.com>
+References: <20220422093833.340873-1-nakamura.shun@fujitsu.com> <20220422093833.340873-4-nakamura.shun@fujitsu.com>
+In-Reply-To: <20220422093833.340873-4-nakamura.shun@fujitsu.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 20 May 2022 11:59:35 -0700
-Message-ID: <CAM9d7cjoDXmQ=6B3zMfq_+0QNyTc-r5nBCJoKJBx98JrJjv-YA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] libperf: Introduce perf_{evsel, evlist}__open_opt
- with extensible struct opts
+Date:   Fri, 20 May 2022 12:28:29 -0700
+Message-ID: <CAM9d7cjqP=M=V2neRC8WCQ-xAJKK0H21LK6vMo3MPed-QQ5WcA@mail.gmail.com>
+Subject: Re: [PATCH 3/7] libperf: Add support for overflow handling of
+ sampling events
 To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -57,133 +57,204 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
 On Fri, Apr 22, 2022 at 2:44 AM Shunsuke Nakamura
 <nakamura.shun@fujitsu.com> wrote:
 >
-> Introduce perf_{evsel, evlist}__open_opt with extensible structure opts.
-> The mechanism of the extensible structure opts imitates
-> tools/lib/bpf/libbpf.h. Currently, only open_flags is supported for the
-> opts structure.
+> Extend the fields of the opts structure to set up overflow handling
+> for sampling events. Also, add processing to set signal handlers in
+> perf_evsel__open_opts.
 >
 > Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 > ---
-[SNIP]
+>  tools/lib/perf/Documentation/libperf.txt |  6 +-
+>  tools/lib/perf/Makefile                  |  1 +
+>  tools/lib/perf/evsel.c                   | 79 ++++++++++++++++++++++++
+>  tools/lib/perf/include/perf/evsel.h      |  6 +-
+>  tools/lib/perf/tests/test-evlist.c       |  1 -
+>  5 files changed, 90 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+> index 6ca91ca94e01..ec93b1c75ebe 100644
+> --- a/tools/lib/perf/Documentation/libperf.txt
+> +++ b/tools/lib/perf/Documentation/libperf.txt
+> @@ -137,8 +137,12 @@ SYNOPSIS
+>            size_t sz;
+>
+>            unsigned long open_flags;       /* perf_event_open flags */
+> +          int flags;                      /* fcntl flags */
+
+What about just rename it to fcntl_flags ?
+
+> +          unsigned int signal;
+
+int ?
+
+> +          int owner_type;
+
+Please add a comment that it's for F_SETOWN_EX.
+
+> +          struct sigaction *sig;
+>    };
+> -  #define perf_evsel_open_opts__last_field open_flags
+> +  #define perf_evsel_open_opts__last_field sig
+>
+>    #define LIBPERF_OPTS(TYPE, NAME, ...)
+>
+> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+> index 21df023a2103..4c8fae193cf5 100644
+> --- a/tools/lib/perf/Makefile
+> +++ b/tools/lib/perf/Makefile
+> @@ -75,6 +75,7 @@ override CFLAGS += -Werror -Wall
+>  override CFLAGS += -fPIC
+>  override CFLAGS += $(INCLUDES)
+>  override CFLAGS += -fvisibility=hidden
+> +override CFLAGS += -D_GNU_SOURCE
+>
+>  all:
+>
 > diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> index 210ea7c06ce8..00c0cea43b52 100644
+> index 00c0cea43b52..a289f6c44d7c 100644
 > --- a/tools/lib/perf/evsel.c
 > +++ b/tools/lib/perf/evsel.c
-> @@ -16,8 +16,12 @@
->  #include <internal/lib.h>
->  #include <linux/string.h>
->  #include <sys/ioctl.h>
-> +#include <signal.h>
-> +#include <fcntl.h>
-> +#include <sys/types.h>
->  #include <sys/mman.h>
->  #include <asm/bug.h>
-> +#include "internal.h"
->
->  void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
->                       int idx)
-> @@ -26,6 +30,7 @@ void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
->         evsel->attr = *attr;
->         evsel->idx  = idx;
->         evsel->leader = evsel;
-> +       evsel->open_flags = 0;
-
-In general, you don't need to reset it to zero as it's allocated with
-zalloc().
-
+> @@ -460,6 +460,79 @@ void perf_counts_values__scale(struct perf_counts_values *count,
+>                 *pscaled = scaled;
 >  }
 >
-[SNIP]
-> diff --git a/tools/lib/perf/internal.h b/tools/lib/perf/internal.h
-> index 2c27e158de6b..4b91a087ed62 100644
-> --- a/tools/lib/perf/internal.h
-> +++ b/tools/lib/perf/internal.h
-> @@ -20,4 +20,48 @@ do {                            \
->  #define pr_debug2(fmt, ...)     __pr(LIBPERF_DEBUG2, fmt, ##__VA_ARGS__)
->  #define pr_debug3(fmt, ...)     __pr(LIBPERF_DEBUG3, fmt, ##__VA_ARGS__)
+> +static int perf_evsel__run_fcntl(struct perf_evsel *evsel,
+> +                                unsigned int cmd, unsigned long arg,
+> +                                int cpu_map_idx)
+
+I think it'd be better to have _cpu suffix in the function name
+as it handles on the specific cpu.
+
+> +{
+> +       int thread;
+> +
+> +       for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+> +               int err;
+> +               int *fd = FD(evsel, cpu_map_idx, thread);
+> +
+> +               if (!fd || *fd < 0)
+> +                       return -1;
+> +
+> +               err = fcntl(*fd, cmd, arg);
+> +               if (err)
+> +                       return err;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int perf_evsel__set_signal_handler(struct perf_evsel *evsel,
+> +                                         struct perf_evsel_open_opts *opts)
+> +{
+> +       unsigned int flags;
+> +       unsigned int signal;
+> +       struct f_owner_ex owner;
+> +       struct sigaction *sig;
+
+It can be confused with the signal number, how about sigact?
+
+
+> +       int cpu_map_idx;
+> +       int err = 0;
+> +
+> +       flags = OPTS_GET(opts, flags, (O_RDWR | O_NONBLOCK | O_ASYNC));
+> +       signal = OPTS_GET(opts, signal, SIGIO);
+> +       owner.type = OPTS_GET(opts, owner_type, F_OWNER_PID);
+> +       sig = OPTS_GET(opts, sig, NULL);
+> +
+> +       if (flags == 0 && signal == 0 && !owner.type == 0 && sig == 0)
+
+You man want to check owner.type without "!".
+
+> +               return err;
+> +
+> +       err = sigaction(signal, sig, NULL);
+> +       if (err)
+> +               return err;
+> +
+> +       switch (owner.type) {
+> +       case F_OWNER_PID:
+> +               owner.pid = getpid();
+> +               break;
+> +       case F_OWNER_TID:
+> +               owner.pid = syscall(SYS_gettid);
+> +               break;
+> +       case F_OWNER_PGRP:
+> +       default:
+> +               return -1;
+> +       }
+> +
+> +       for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->fd); cpu_map_idx++) {
+> +               err = perf_evsel__run_fcntl(evsel, F_SETFL, flags, cpu_map_idx);
+> +               if (err)
+> +                       return err;
+> +
+> +               err = perf_evsel__run_fcntl(evsel, F_SETSIG, signal, cpu_map_idx);
+> +               if (err)
+> +                       return err;
+> +
+> +               err = perf_evsel__run_fcntl(evsel, F_SETOWN_EX,
+> +                                           (unsigned long)&owner, cpu_map_idx);
+> +               if (err)
+> +                       return err;
+> +       }
+> +
+> +       return err;
+> +}
+> +
+>  int perf_evsel__open_opts(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+>                           struct perf_thread_map *threads,
+>                           struct perf_evsel_open_opts *opts)
+> @@ -474,6 +547,12 @@ int perf_evsel__open_opts(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+>         evsel->open_flags = OPTS_GET(opts, open_flags, 0);
 >
-> +static inline bool libperf_is_mem_zeroed(const char *p, ssize_t len)
-> +{
-> +       while (len > 0) {
-> +               if (*p)
-> +                       return false;
-> +               p++;
-> +               len--;
-> +       }
-> +       return true;
-> +}
+>         err = perf_evsel__open(evsel, cpus, threads);
+> +       if (err)
+> +               return err;
 > +
-> +static inline bool libperf_validate_opts(const char *opts,
-> +                                        size_t opts_sz, size_t user_sz,
-> +                                        const char *type_name)
-> +{
-> +       if (user_sz < sizeof(size_t)) {
-> +               pr_warning("%s size (%zu) is too small\n", type_name, user_sz);
-> +               return false;
-> +       }
-> +       if (!libperf_is_mem_zeroed(opts + opts_sz, (ssize_t)user_sz - opts_sz)) {
+> +       err = perf_evsel__set_signal_handler(evsel, opts);
+> +       if (err)
+> +               return err;
+>
+>         return err;
+>  }
+> diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
+> index 1140df4d2578..50662babfe97 100644
+> --- a/tools/lib/perf/include/perf/evsel.h
+> +++ b/tools/lib/perf/include/perf/evsel.h
+> @@ -29,8 +29,12 @@ struct perf_evsel_open_opts {
+>         size_t sz;
+>
+>         unsigned long open_flags;       /* perf_event_open flags */
+> +       int flags;                      /* fcntl flags */
+> +       unsigned int signal;
+> +       int owner_type;
+> +       struct sigaction *sig;
+>  };
+> -#define perf_evsel_open_opts__last_field open_flags
+> +#define perf_evsel_open_opts__last_field sig
+>
+>  #define LIBPERF_OPTS(TYPE, NAME, ...)                  \
+>         struct TYPE NAME = ({                           \
+> diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
+> index ed616fc19b4f..d8f9493cd4d1 100644
+> --- a/tools/lib/perf/tests/test-evlist.c
+> +++ b/tools/lib/perf/tests/test-evlist.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE // needed for sched.h to get sched_[gs]etaffinity and CPU_(ZERO,SET)
 
-I don't think the cast is necessary since it'll be promoted again
-to size_t due to opts_sz.  Instead, we can check if user_sz is
-greater than opts_sz explicitly and call the function.
-
-> +               pr_warning("%s has non-zero extra bytes\n", type_name);
-> +               return false;
-> +       }
-> +       return true;
-> +}
-> +
-> +#define offsetofend(TYPE, FIELD) \
-> +       (offsetof(TYPE, FIELD) + sizeof(((TYPE *)0)->FIELD))
-> +
-> +#define OPTS_VALID(opts, type)                                                 \
-> +       (!(opts) || libperf_validate_opts((const char *)opts,                   \
-> +                                         offsetofend(struct type,              \
-> +                                                     type##__last_field),      \
-> +                                               (opts)->sz, #type))
-> +#define OPTS_HAS(opts, field) \
-> +       ((opts) && opts->sz >= offsetofend(typeof(*(opts)), field))
-> +#define OPTS_GET(opts, field, fallback_value) \
-> +       (OPTS_HAS(opts, field) ? (opts)->field : fallback_value)
-
-It'd be nice if you add a blank line between the macros.
+Could be in a separate change.
 
 Thanks,
 Namhyung
 
 
-> +#define OPTS_SET(opts, field, value)           \
-> +       do {                                    \
-> +               if (OPTS_HAS(opts, field))      \
-> +                       (opts)->field = value;  \
-> +       } while (0)
-> +
->  #endif /* __LIBPERF_INTERNAL_H */
-> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-> index 190b56ae923a..eeeb3075e092 100644
-> --- a/tools/lib/perf/libperf.map
-> +++ b/tools/lib/perf/libperf.map
-> @@ -25,6 +25,7 @@ LIBPERF_0.0.1 {
->                 perf_evsel__enable;
->                 perf_evsel__disable;
->                 perf_evsel__open;
-> +               perf_evsel__open_opts;
->                 perf_evsel__close;
->                 perf_evsel__mmap;
->                 perf_evsel__munmap;
-> @@ -36,6 +37,7 @@ LIBPERF_0.0.1 {
->                 perf_evlist__new;
->                 perf_evlist__delete;
->                 perf_evlist__open;
-> +               perf_evlist__open_opts;
->                 perf_evlist__close;
->                 perf_evlist__enable;
->                 perf_evlist__disable;
+>  #include <inttypes.h>
+>  #include <sched.h>
+>  #include <stdio.h>
 > --
 > 2.25.1
 >
