@@ -2,212 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD83C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 19:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8F7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 21:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242469AbiETTjI (ORCPT
+        id S238713AbiETVSe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 May 2022 15:39:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49836 "EHLO
+        Fri, 20 May 2022 17:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230186AbiETTjI (ORCPT
+        with ESMTP id S238201AbiETVSd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 May 2022 15:39:08 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E71195BF7;
-        Fri, 20 May 2022 12:39:07 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id m6-20020a05683023a600b0060612720715so6149112ots.10;
-        Fri, 20 May 2022 12:39:07 -0700 (PDT)
+        Fri, 20 May 2022 17:18:33 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9998C19C753
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 May 2022 14:18:31 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2ff17535eabso81999307b3.20
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 May 2022 14:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=18bwlj3FX7yKV9w1kkR962CK79p7S27hQhP4LX/pIKQ=;
+        b=mGLUmGi7jHY+PecyF64Hh2M2xvayEJfgYAn0zfQ9IgXvts4wFfUo/cOK2a3daAlpgg
+         Z/x0HHvPMLlPCHc9MstENKUlKWNXgfRsbiUOAaaTTp4LGCLLob8PqJE00c56hO8yBeA5
+         UYaUuo/kE5Q5H3FnALF4QALDGnNih0qa6kUuob34d/lJi+Ur/6bZI614pp9by3LrWZvR
+         H1iqBas8ASIS/p9lPF1kbYol7QbDHQx11F8zRDfz8JOi/CTwHzmBV3jsYPFlrgD5u/QU
+         z+QN4QXG7G/hJ3pPyosd8UGGfLmcfl1mee3LPkMxTAK8Ly0VQ1hBj69p/QL19CckSzlb
+         paoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+KT5O2MPCFWhXmNzU927SlHQKaod6IokF9udHrhLrs=;
-        b=cvKqP+MavJaT5jBCClzEw7dLfT9RitYgiSSMqqzG6qXSeUOMV4MZl8dqh1MKdj0uTW
-         peOqi5UDIHPYZQKV4qD9mEzwDrhIRNJSbdTCTU49toNZjQpUAoWk8W4kK1YatiHDDX4F
-         kimkPVxwrqWZJhcKE+5PgnenVKHp9hEFVMTQEqpYfOFbuJbgNCidw0CTEHHOk+k17dP+
-         SIXJKrq3lrWr52fRn9DL0tkiVdzsPg7J5I7e6WIyR3/HAm3C7drUtCyiCgQAZB2qwmoD
-         DpAT/l6bMmwANUIE2Xuvm2p9cPrwdjloHtUfq8BZjqVyOtuXOfNYnftptKROCm/oaL4m
-         nGTw==
-X-Gm-Message-State: AOAM532I6E9k8YTQ26SCDbjQHbl/DfK72jBayFeP1HfTdzWErL4dYVDK
-        Gq0IDIMVUDw0flT+5fwnmaLOWpCjTd01U5be3eg=
-X-Google-Smtp-Source: ABdhPJyQLdoVf84znfujSIuBk52pu6KWT90xaxpsXjfjQslIGFtmEwo0/9x9C2XyXT8e685OYrZcDihzFTu9QMEPXEs=
-X-Received: by 2002:a05:6830:224d:b0:606:e0e4:347a with SMTP id
- t13-20020a056830224d00b00606e0e4347amr4565134otd.247.1653075546329; Fri, 20
- May 2022 12:39:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220422093833.340873-1-nakamura.shun@fujitsu.com> <20220422093833.340873-6-nakamura.shun@fujitsu.com>
-In-Reply-To: <20220422093833.340873-6-nakamura.shun@fujitsu.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 20 May 2022 12:38:55 -0700
-Message-ID: <CAM9d7cix9Oe3tjCV_w-ZRw6bTJpqe-g2n+ezn5mTvmPPri+Xdw@mail.gmail.com>
-Subject: Re: [PATCH 5/7] libperf: Add perf_evsel__{refresh, period}() functions
-To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=18bwlj3FX7yKV9w1kkR962CK79p7S27hQhP4LX/pIKQ=;
+        b=JdHwacR5pBBHooSNgLhWoKiv75J6mBVbrt50e/XF6igJHka6EPJWFhXNx3Abgx3KvQ
+         UfFcG4WCalhmVBdcMx2/uYHP0An3wKtkTpP7FbB3cQwzPpqRzFgDlFqKih6xNW9KuVn9
+         v6+Zyq496A0T/lwCCSFDTSxvDDve50ILIV++7Ljw0A/8mG5SUSjii4yDvPh7F2InImCF
+         z+1Urs7nrPuaDcvYrFjOxDmsYovsyI7qE4d5wyNbacNYj2JctMkhDZXCy40jDc7RLW+V
+         /8W3A9YLPa/tzv7ZK/WI4/Rf4uUQ6w+bw7dnBg7b5o7sMZ9bnZwvMTXxrHWAYtM7soUY
+         UZEQ==
+X-Gm-Message-State: AOAM531aKJtIA2G+4KInJW1hckbTmId63iZwVT3kFPiBehxs60AGEltQ
+        O1yxOMYUlencnvAQuExug33OqV5Mu8fw
+X-Google-Smtp-Source: ABdhPJyWt6SQJDsVNaO60kNg1MhSmmRPKx9jLE6nMqMy595GulDCVDpGbFVt14AFkHVJWwUIZVUuND4YgxJd
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:64b0:e751:72e8:e4a7])
+ (user=irogers job=sendgmr) by 2002:a25:496:0:b0:64f:59d4:dea2 with SMTP id
+ 144-20020a250496000000b0064f59d4dea2mr5340798ybe.493.1653081510737; Fri, 20
+ May 2022 14:18:30 -0700 (PDT)
+Date:   Fri, 20 May 2022 14:18:26 -0700
+Message-Id: <20220520211826.1828180-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
+Subject: [PATCH] perf build: Error for BPF skeletons without LIBBPF
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 2:45 AM Shunsuke Nakamura
-<nakamura.shun@fujitsu.com> wrote:
->
-> Add the following functions:
->
->   perf_evsel__refresh()
->   perf_evsel__period()
->
-> to set the over flow limit and period.
->
-> Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-> ---
->  tools/lib/perf/Documentation/libperf.txt |  2 ++
->  tools/lib/perf/evsel.c                   | 44 ++++++++++++++++++++----
->  tools/lib/perf/include/perf/evsel.h      |  2 ++
->  tools/lib/perf/libperf.map               |  2 ++
->  4 files changed, 44 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-> index bc7881348c76..773224a96bd3 100644
-> --- a/tools/lib/perf/Documentation/libperf.txt
-> +++ b/tools/lib/perf/Documentation/libperf.txt
-> @@ -162,6 +162,8 @@ SYNOPSIS
->    int perf_evsel__disable(struct perf_evsel *evsel);
->    int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
->    bool perf_evsel__has_fd(struct perf_evsel *evsel, int fd);
-> +  int perf_evsel__refresh(struct perf_evsel *evsel, int refresh);
-> +  int perf_evsel__period(struct perf_evsel *evsel, int period);
->    struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
->    struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
->    struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> index 446934c0e5e5..578ae0050036 100644
-> --- a/tools/lib/perf/evsel.c
-> +++ b/tools/lib/perf/evsel.c
-> @@ -334,7 +334,7 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
->  }
->
->  static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
-> -                                int ioc,  void *arg,
-> +                                int ioc, unsigned long arg,
->                                  int cpu_map_idx)
->  {
->         int thread;
-> @@ -357,7 +357,7 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
->
->  int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
->  {
-> -       return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, cpu_map_idx);
-> +       return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, cpu_map_idx);
->  }
->
->  int perf_evsel__enable(struct perf_evsel *evsel)
-> @@ -366,13 +366,13 @@ int perf_evsel__enable(struct perf_evsel *evsel)
->         int err = 0;
->
->         for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-> -               err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, i);
-> +               err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, i);
->         return err;
->  }
->
->  int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
->  {
-> -       return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, cpu_map_idx);
-> +       return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, cpu_map_idx);
->  }
->
->  int perf_evsel__disable(struct perf_evsel *evsel)
-> @@ -381,7 +381,39 @@ int perf_evsel__disable(struct perf_evsel *evsel)
->         int err = 0;
->
->         for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-> -               err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, i);
-> +               err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, i);
-> +       return err;
-> +}
-> +
-> +int perf_evsel__refresh(struct perf_evsel *evsel, int refresh)
-> +{
-> +       int i;
-> +       int err = 0;
-> +
-> +       for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-> +               err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_REFRESH, refresh, i);
-> +       return err;
-> +}
-> +
-> +int perf_evsel__period(struct perf_evsel *evsel, __u64 period)
-> +{
-> +       struct perf_event_attr *attr;
-> +       int i;
-> +       int err = 0;
-> +
-> +       attr = perf_evsel__attr(evsel);
-> +       if (!attr)
-> +               return -EINVAL;
+LIBBPF requires LIBELF so doing "make BUILD_BPF_SKEL=1 NO_LIBELF=1"
+fails with compiler errors about missing declarations. Similar could
+happen if libbpf feature detection fails. Prefer to error when
+BUILD_BPF_SKEL is enabled but LIBBPF isn't.
 
-I don't think it'd return NULL..
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.config | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index d9b699ad402c..bedb734bd6f2 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -664,6 +664,9 @@ ifdef BUILD_BPF_SKEL
+   ifeq ($(feature-clang-bpf-co-re), 0)
+     dummy := $(error Error: clang too old/not installed. Please install recent clang to build with BUILD_BPF_SKEL)
+   endif
++  ifeq ($(filter -DHAVE_LIBBPF_SUPPORT, $(CFLAGS)),)
++    dummy := $(error Error: BPF skeleton support requires libbpf)
++  endif
+   $(call detected,CONFIG_PERF_BPF_SKEL)
+   CFLAGS += -DHAVE_BPF_SKEL
+ endif
+-- 
+2.36.1.124.g0e6072fb45-goog
 
-
-> +
-> +       for (i = 0; i < xyarray__max_x(evsel->fd); i++) {
-> +               err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_PERIOD,
-> +                                           (unsigned long)&period, i);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       attr->sample_period = period;
-> +
->         return err;
->  }
->
-> @@ -392,7 +424,7 @@ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
->         for (i = 0; i < perf_cpu_map__nr(evsel->cpus) && !err; i++)
->                 err = perf_evsel__run_ioctl(evsel,
->                                      PERF_EVENT_IOC_SET_FILTER,
-> -                                    (void *)filter, i);
-> +                                    (unsigned long)filter, i);
->         return err;
->  }
->
-> diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-> index 19a7993d9021..2c5e52c17d28 100644
-> --- a/tools/lib/perf/include/perf/evsel.h
-> +++ b/tools/lib/perf/include/perf/evsel.h
-> @@ -60,6 +60,8 @@ LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
->  LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
->  LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
->  LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-> +LIBPERF_API int perf_evsel__refresh(struct perf_evsel *evsel, int refresh);
-> +LIBPERF_API int perf_evsel__period(struct perf_evsel *evsel, __u64 period);
->  LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
->  LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
->  LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-> diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-> index b2ace16bbc32..d97e208c5be8 100644
-> --- a/tools/lib/perf/libperf.map
-> +++ b/tools/lib/perf/libperf.map
-> @@ -31,6 +31,8 @@ LIBPERF_0.0.1 {
->                 perf_evsel__munmap;
->                 perf_evsel__mmap_base;
->                 perf_evsel__read;
-> +               perf_evsel__refresh;
-> +               perf_evsel__period;
->                 perf_evsel__cpus;
->                 perf_evsel__threads;
->                 perf_evsel__attr;
-> --
-> 2.25.1
->
