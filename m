@@ -2,128 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0BFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 08:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD6FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 09:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347303AbiETIq6 (ORCPT
+        id S243318AbiETJiu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 May 2022 04:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44510 "EHLO
+        Fri, 20 May 2022 05:38:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240372AbiETIq5 (ORCPT
+        with ESMTP id S235632AbiETJir (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 May 2022 04:46:57 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6859F5E154;
-        Fri, 20 May 2022 01:46:56 -0700 (PDT)
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24K5mhho030040;
-        Fri, 20 May 2022 08:46:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=y9mVKtccokxmVHzYzYmB7GoWZjwMwFt/swEe+h+kpg4=;
- b=rO8T+XZJycmA8pMLpJg8ylY8RZCYX1+RvRoRSeEGyWUzVCnyLS1XDm4jfsPJfuYsryPD
- OLPyT0YgplK9OYzfw1iAR7I3Q+SpRIntgaOAtiF/Fu7tae2bG92ah7rjFYvuVqyti3fP
- DO58BgMiK6sA8elZjXzZMqMxY/4cjMqWKExQZ0orOUyP+qGDMXlOdQLux+blWgu0uB3F
- DN6AA1ruE6BBpkFhfz5MMvwSWe/iuuQzFB5RVlFoNSQWVPdWIlGcgFPkwcYO+4lXVHEN
- jYZn7/xzKvN9YQkCOIDT2wDPBO1N2U4OCnw/v3lMKy6asnCqIik5wcoVI3XpFcTAraci nQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g655vu1jt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 May 2022 08:46:50 +0000
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24K8c6Rf031841;
-        Fri, 20 May 2022 08:46:50 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g655vu1jc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 May 2022 08:46:49 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24K8b1Jn001605;
-        Fri, 20 May 2022 08:46:47 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma02fra.de.ibm.com with ESMTP id 3g2428q9v8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 May 2022 08:46:47 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24K8k4E326673500
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 May 2022 08:46:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2641D42041;
-        Fri, 20 May 2022 08:46:44 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0EEAB4203F;
-        Fri, 20 May 2022 08:46:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.163.31.125])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 May 2022 08:46:38 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, irogers@google.com
-Subject: [PATCH V3 2/2] docs: ABI: sysfs-bus-event_source-devices: Document sysfs caps entry for PMU
-Date:   Fri, 20 May 2022 14:16:30 +0530
-Message-Id: <20220520084630.15181-2-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220520084630.15181-1-atrajeev@linux.vnet.ibm.com>
-References: <20220520084630.15181-1-atrajeev@linux.vnet.ibm.com>
+        Fri, 20 May 2022 05:38:47 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B1E5D1B7;
+        Fri, 20 May 2022 02:38:46 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id C26CB1F9EE;
+        Fri, 20 May 2022 09:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1653039524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vwa8jgE6ubsEKfUz+gYRve0wuQBCRznCtklt59zTV6Q=;
+        b=n4FUsnYY/xBnyS3SXETnotHd5Ec72kh2zh+Dai5f7buZTjDHEcxmvFl76tcNcSiGnbmu5U
+        COCabwTrl3uU15SJXqrrKAF+acixaXA+4I53JuXXoiexiw5MqutnBzZx+zmDOKwi0qKMRt
+        enjPGTMixqFSFTH0zMOo/VadTvKZals=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 27E2F2C142;
+        Fri, 20 May 2022 09:38:44 +0000 (UTC)
+Date:   Fri, 20 May 2022 11:38:43 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org, acme@kernel.org,
+        akpm@linux-foundation.org, alexander.shishkin@linux.intel.com,
+        catalin.marinas@arm.com, davem@davemloft.net, jolsa@redhat.com,
+        jthierry@redhat.com, keescook@chromium.org, kernelfans@gmail.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        masahiroy@kernel.org, matthias.bgg@gmail.com, maz@kernel.org,
+        mcgrof@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+        nixiaoming@huawei.com, peterz@infradead.org,
+        sparclinux@vger.kernel.org, sumit.garg@linaro.org,
+        wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
+Subject: Re: [PATCH v4 4/6] kernel/watchdog: Adapt the watchdog_hld interface
+ for async model
+Message-ID: <YodhoxG0xmfrNYoN@alley>
+References: <20220427161340.8518-1-lecopzer.chen@mediatek.com>
+ <20220427161340.8518-5-lecopzer.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Cib__CD5jPSDwEZXgRac3-p_LNprtz_1
-X-Proofpoint-GUID: Jl7j6Ne0drQ21XUYW4nEKhB6wmjGkWaQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-20_03,2022-05-19_03,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- bulkscore=0 priorityscore=1501 phishscore=0 spamscore=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 clxscore=1015 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205200061
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220427161340.8518-5-lecopzer.chen@mediatek.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Details is added about "caps" attribute group in the ABI documentation.
-This is used to expose some of the PMU attributes in "caps"
-directory under : /sys/bus/event_source/devices/<dev>/. The dev/caps
-will contain information about features that platform specific PMU
-supports.
+On Thu 2022-04-28 00:13:38, Lecopzer Chen wrote:
+> When lockup_detector_init()->watchdog_nmi_probe(), PMU may be not ready
+> yet. E.g. on arm64, PMU is not ready until
+> device_initcall(armv8_pmu_driver_init).  And it is deeply integrated
+> with the driver model and cpuhp. Hence it is hard to push this
+> initialization before smp_init().
+> 
+> But it is easy to take an opposite approach and try to initialize
+> the watchdog once again later.
+> The delayed probe is called using workqueues. It need to allocate
+> memory and must be proceed in a normal context.
+> The delayed probe is able to use if watchdog_nmi_probe() returns
+> non-zero which means the return code returned when PMU is not ready yet.
+> 
+> Provide an API - retry_lockup_detector_init() for anyone who needs
+> to delayed init lockup detector if they had ever failed at
+> lockup_detector_init().
+> 
+> The original assumption is: nobody should use delayed probe after
+> lockup_detector_check() which has __init attribute.
+> That is, anyone uses this API must call between lockup_detector_init()
+> and lockup_detector_check(), and the caller must have __init attribute
+> 
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> +/*
+> + * retry_lockup_detector_init - retry init lockup detector if possible.
+> + *
+> + * Retry hardlockup detector init. It is useful when it requires some
+> + * functionality that has to be initialized later on a particular
+> + * platform.
+> + */
+> +void __init retry_lockup_detector_init(void)
+> +{
+> +	/* Must be called before late init calls */
+> +	if (!allow_lockup_detector_init_retry)
+> +		return;
+> +
+> +	queue_work_on(__smp_processor_id(), system_wq, &detector_work);
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- .../sysfs-bus-event_source-devices-caps        | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-caps
+Just a small nit. This can be simplified by calling:
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-caps b/Documentation/ABI/testing/sysfs-bus-event_source-devices-caps
-new file mode 100644
-index 000000000000..8757dcf41c08
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-caps
-@@ -0,0 +1,18 @@
-+What:		/sys/bus/event_source/devices/<dev>/caps
-+Date:		May 2022
-+KernelVersion:	5.19
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+Description:
-+		Attribute group to describe the capabilities exposed
-+		for a particular pmu. Each attribute of this group can
-+		expose information specific to a PMU, say pmu_name, so that
-+		userspace can understand some of the feature which the
-+		platform specific PMU supports.
-+
-+		One of the example available capability in supported platform
-+		like Intel is pmu_name, which exposes underlying CPU name known
-+		to the PMU driver.
-+
-+		Example output in powerpc:
-+		grep . /sys/bus/event_source/devices/cpu/caps/*
-+		/sys/bus/event_source/devices/cpu/caps/pmu_name:POWER9
--- 
-2.35.1
+	schedule_work(&detector_work);
 
+It uses "system_wq" that uses CPU-bound workers. It prefers
+the current CPU. But the exact CPU is not important. Any CPU-bound
+worker is enough.
+
+> +}
+> +
+
+With the above change, feel free to use:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
+
+PS: I am sorry for the late review. I had busy weeks.
