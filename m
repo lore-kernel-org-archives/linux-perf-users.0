@@ -2,115 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99B5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 14:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F7BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 14:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349987AbiETOaL (ORCPT
+        id S1347477AbiETOwW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 May 2022 10:30:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40246 "EHLO
+        Fri, 20 May 2022 10:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229991AbiETOaL (ORCPT
+        with ESMTP id S244321AbiETOwV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 May 2022 10:30:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25A29D070;
-        Fri, 20 May 2022 07:30:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2D64061B07;
-        Fri, 20 May 2022 14:30:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63CB2C385A9;
-        Fri, 20 May 2022 14:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653057008;
-        bh=OeOgCk8EVTQhPkt9ndP9eIEJfKLKRtvt7Q6gkADqWOI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LOTQ2dYAAHFkY5UX99hXF9yCuk5nnvINOVXS+kUG1GYHrTBHyQEtrztOX+QMpaz2p
-         ac76gjoTXBlOrqpxS/Ldzjm4SSfQzvApTtRgppb52uE2SzuAg56YuC/rx2vCuowHQM
-         O9Jer8iks/2E1iSkxyuDUE7FnqUdjE3ETBB1xT7I7YMD7xOipuwgnjJOXlX0zOXI/q
-         xpZ2/Q5dtXJMuBUjZyUEE6j/Riio3aV8AoOfWW+3nBFCgpSO74gcxD0fxEjhoYoPXS
-         k8V0FQaqmo5giANlo8X1DeYI9v0uec4wAC8aWX1FtDgap4xixZq2KAwlK8MPDxO6op
-         ZyJzESl3jaB8Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E1C87400B1; Fri, 20 May 2022 11:30:04 -0300 (-03)
-Date:   Fri, 20 May 2022 11:30:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Namhyung Kim <namhyung@gmail.com>
-Subject: Re: [PATCH v2] perf/s390: Compiler error on s390 for bench/numa.c
-Message-ID: <Yoel7HCdQr+uSKNA@kernel.org>
-References: <20220520081158.2990006-1-tmricht@linux.ibm.com>
+        Fri, 20 May 2022 10:52:21 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5220116D48B;
+        Fri, 20 May 2022 07:52:20 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0ADE51477;
+        Fri, 20 May 2022 07:52:20 -0700 (PDT)
+Received: from [10.57.7.229] (unknown [10.57.7.229])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6431D3F73D;
+        Fri, 20 May 2022 07:52:16 -0700 (PDT)
+Message-ID: <f2b243a7-5736-1f84-c284-29219fac585d@arm.com>
+Date:   Fri, 20 May 2022 15:52:14 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH v2 0/2] perf: arm64: Tools support for Dwarf unwinding
+ through SVE functions
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        broonie@kernel.org, leo.yan@linaro.org, mathieu.poirier@linaro.org,
+        john.garry@huawei.com, Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220517102005.3022017-1-james.clark@arm.com>
+ <YoO4Hiue7PmJ9KOS@kernel.org> <995099d3-a170-69dc-d12e-c9b2e4753f35@arm.com>
+ <YoeKZFXO6zqFaqme@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <YoeKZFXO6zqFaqme@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220520081158.2990006-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, May 20, 2022 at 10:11:58AM +0200, Thomas Richter escreveu:
-> The compilation on s390 results in this error:
+
+
+On 20/05/2022 13:32, Arnaldo Carvalho de Melo wrote:
+> Em Fri, May 20, 2022 at 12:46:24PM +0100, German Gomez escreveu:
+>>
+>> On 17/05/2022 15:58, Arnaldo Carvalho de Melo wrote:
+>>> Em Tue, May 17, 2022 at 11:20:01AM +0100, James Clark escreveu:
+>>>> Changes since v1:
+>>>>
+>>>>   * Split patchset into kernel side and Perf tool changes
+>>> Thanks, now I'll wait for the kernel side to be merged.
+>>>
+>>> - Arnaldo
+>>>  
+>>
+>> Hi,
+>>
+>> I think we also need to fix the below import (it's trying to import the
+>> perf_regs.h from the kernel, not the tools/ dir).
 > 
->  # make DEBUG=y bench/numa.o
->  ...
->  bench/numa.c: In function ‘__bench_numa’:
->  bench/numa.c:1749:81: error: ‘%d’ directive output may be truncated
->              writing between 1 and 11 bytes into a region of size between
->              10 and 20 [-Werror=format-truncation=]
->  1749 |        snprintf(tname, sizeof(tname), "process%d:thread%d", p, t);
->                                                                ^~
->  ...
->  bench/numa.c:1749:64: note: directive argument in the range
->                 [-2147483647, 2147483646]
->  ...
->  #
+> Sure, that is why it is important to do a:
 > 
-> The maximum length of the %d replacement is 11 characters because
-> of the negative sign.  Therefore extend the array by two more
-> characters.
+> make -C tools/perf build-test
 > 
-> Output after:
->  # make  DEBUG=y bench/numa.o > /dev/null 2>&1; ll bench/numa.o
->  -rw-r--r-- 1 root root 418320 May 19 09:11 bench/numa.o
->  #
+
+Oops thanks, I will submit another version with a fix for this included.
+
+James
+
+> before posting patches, as it will do, among other tests, a detached tarball test using:
 > 
-> Fixes: 3aff8ba0a4c9c ("perf bench numa: Avoid possible truncation when using snprintf()")
-> Suggested-by: Namhyung Kim <namhyung@gmail.com>
-
-
-
-Thanks, applied.
-
-- Arnaldo
-
-
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/bench/numa.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> ⬢[acme@toolbox perf-urgent]$ make help | grep perf
+>   perf-tar-src-pkg    - Build perf-5.18.0-rc7.tar source tarball
+>   perf-targz-src-pkg  - Build perf-5.18.0-rc7.tar.gz source tarball
+>   perf-tarbz2-src-pkg - Build perf-5.18.0-rc7.tar.bz2 source tarball
+>   perf-tarxz-src-pkg  - Build perf-5.18.0-rc7.tar.xz source tarball
+>   perf-tarzst-src-pkg - Build perf-5.18.0-rc7.tar.zst source tarball
+> ⬢[acme@toolbox perf-urgent]$
 > 
-> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-> index d5289fa58a4f..20eed1e53f80 100644
-> --- a/tools/perf/bench/numa.c
-> +++ b/tools/perf/bench/numa.c
-> @@ -1740,7 +1740,7 @@ static int __bench_numa(const char *name)
->  		"GB/sec,", "total-speed",	"GB/sec total speed");
+> That will pick just what is in tools/perf/MANIFEST and that doesn´t
+> include the kernel headers, just what is in tools/ then building with
+> this patchkit would fail.
+> 
+> To recap:
+> 
+> ⬢[acme@toolbox perf-urgent]$ make perf-tarxz-src-pkg
+>   TAR
+>   PERF_VERSION = 5.18.rc7.gc645054ef517
+> ⬢[acme@toolbox perf-urgent]$ ls -la perf-5.18.0-rc7.tar.xz
+> -rw-r--r--. 1 acme acme 2364832 May 20 09:32 perf-5.18.0-rc7.tar.xz
+> ⬢[acme@toolbox perf-urgent]$ tar tvf perf-5.18.0-rc7.tar.xz | tail
+> -rw-rw-r-- root/root      7364 2022-05-20 09:32 perf-5.18.0-rc7/tools/perf/util/vdso.c
+> -rw-rw-r-- root/root       639 2022-05-20 09:32 perf-5.18.0-rc7/tools/perf/util/vdso.h
+> -rw-rw-r-- root/root      1793 2022-05-20 09:32 perf-5.18.0-rc7/tools/perf/util/zlib.c
+> -rw-rw-r-- root/root      2672 2022-05-20 09:32 perf-5.18.0-rc7/tools/perf/util/zstd.c
+> drwxrwxr-x root/root         0 2022-05-20 09:32 perf-5.18.0-rc7/tools/scripts/
+> -rw-rw-r-- root/root      1091 2022-05-20 09:32 perf-5.18.0-rc7/tools/scripts/Makefile.arch
+> -rw-rw-r-- root/root      5905 2022-05-20 09:32 perf-5.18.0-rc7/tools/scripts/Makefile.include
+> -rw-rw-r-- root/root      5288 2022-05-20 09:32 perf-5.18.0-rc7/tools/scripts/utilities.mak
+> -rw-r--r-- acme/acme        41 2022-05-20 09:32 perf-5.18.0-rc7/HEAD
+> -rw-r--r-- acme/acme        46 2022-05-20 09:32 perf-5.18.0-rc7/PERF-VERSION-FILE
+> ⬢[acme@toolbox perf-urgent]$
+> 
+> - Arnaldo
 >  
->  	if (g->p.show_details >= 2) {
-> -		char tname[14 + 2 * 10 + 1];
-> +		char tname[14 + 2 * 11 + 1];
->  		struct thread_data *td;
->  		for (p = 0; p < g->p.nr_proc; p++) {
->  			for (t = 0; t < g->p.nr_threads; t++) {
-> -- 
-> 2.36.1
-
--- 
-
-- Arnaldo
+>> diff --git a/tools/perf/util/libunwind/arm64.c b/tools/perf/util/libunwind/arm64.c
+>> index 15f60fd09424..014d82159656 100644
+>> --- a/tools/perf/util/libunwind/arm64.c
+>> +++ b/tools/perf/util/libunwind/arm64.c
+>> @@ -24,7 +24,7 @@
+>>  #include "unwind.h"
+>>  #include "libunwind-aarch64.h"
+>>  #define perf_event_arm_regs perf_event_arm64_regs
+>> -#include <../../../../arch/arm64/include/uapi/asm/perf_regs.h>
+>> +#include <../../../arch/arm64/include/uapi/asm/perf_regs.h>
+>>  #undef perf_event_arm_regs
+>>  #include "../../arch/arm64/util/unwind-libunwind.c"
+>>
+> 
