@@ -2,235 +2,213 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A11C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 00:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21599C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 03:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241689AbiETAkz (ORCPT
+        id S1345208AbiETDtx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 May 2022 20:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34074 "EHLO
+        Thu, 19 May 2022 23:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233982AbiETAkx (ORCPT
+        with ESMTP id S245387AbiETDtw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 May 2022 20:40:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A48015A30;
-        Thu, 19 May 2022 17:40:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EB82CB82956;
-        Fri, 20 May 2022 00:40:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40895C385B8;
-        Fri, 20 May 2022 00:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653007248;
-        bh=cxthwK70BLgcvJmYVgrDQMUShetThpHHGPNJUP+QVEI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HdsRrfd7DRhxeJPiEv1cZJ98kpB58kNrsh/vadXYkOALZUXRq3VndzPaDNF1zm3V8
-         CCG979mKXcAq+fFhwW6ijz0o5Ttz/vbG4rezkkXxf0PJDqCIkHul+yhusQrztOULp5
-         DDPe3F/U+SVNasjScSAA8cm84vrJeZABTg9GdZgTthRAaVzjuBH0yWM/8qL1iw6dei
-         SM1Go7Thb7am0Flubsiy8IFPbsLJ9sj0JAw6NvBbIoWNSdqOiSf4Ww13390BVzm1Ju
-         73JOxsedNhYAxXzmSARQXrhIGx5LUxfW4C8wcU6yexicNGtQk4DvRRn7BU1b6ICfZM
-         wBm54s+bed7fw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BF14E400B1; Thu, 19 May 2022 21:40:44 -0300 (-03)
-Date:   Thu, 19 May 2022 21:40:44 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Avi Kivity <avi@scylladb.com>
-Cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/1] perf build: Fix check for btf__load_from_kernel_by_id()
- in libbpf
-Message-ID: <YobjjFOblY4Xvwo7@kernel.org>
+        Thu, 19 May 2022 23:49:52 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2042.outbound.protection.outlook.com [40.107.220.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6435D146431;
+        Thu, 19 May 2022 20:49:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n4lJ1r425Pbf5/45fqCsXBDqOg1TDSSixq8hNkLDj+rG4sMP/k9u1QJhAdHHdS8sziD6bLbM29ciujgJowpbkHOSwOENOibPzdM0bu/WOU99hTexBavEOApQU+n/MzRih1tIgSIwPKIqueTk3cSmcjSIeUOejZgXrOxdfOm4SPXFpehZT/MeqZc28dF5HuUfYcg5venY1LMeX07A2d00tXz3b3FVpIVLp7hzc551eRbtqeEzyVyzBYPhb1ZWC0yJDCp/tGvSYCNI3xzuSme7CisCe4bPtLaMqqk3qkDj2gXbxumR7DuPGvNKl8REW2DskVUNKM5gfF6xqnmXXcUhJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FUQMGPSVw/iXGqXUxtKGmsCUvxZMkCvv8CW941olpw0=;
+ b=FkREtMQvyRHfhP8Y3DG4VS4RQDoWzevQGzelF6rtfKk7e972w/XIH+yXIFE57g9yfuUqN6CJs0e/MtM4Ljtoub3H+HgX5Im+FdFBXeEwlnFqY3UUd6pOL6A/SqoPAgCNQJBvvw/BvM7P7mNweHdrAi7RzC7dfTffAJkoBz060rn7fNUHJsbHsiUQqdJN6xA7Yr89VvOD0tyV7tqBG85C9cEZyg6BPVMwI3VsQO0+hak4+o2NEaDu6SFXLvgtj1zeqXK911OZqtIPXnLdgEmUBhO/GkNO8uZOLj8uv1n4fgttQJ0rpytCan5i2VR8Dcj4tqw6AXBztWDiaN1uhYGBCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FUQMGPSVw/iXGqXUxtKGmsCUvxZMkCvv8CW941olpw0=;
+ b=Lh2FGomlX32IuhR/DAnqerbx49EUHsGYvV6qzl8plKHLAYuVV/bmIddwhu4au1pXaiSlQOkVnadP7jkOg3gxS86Zj1lu32GbR+iwU/unY2YorTiGkeeLkscEo/jtIhZLFGY5LIZAyGfT3sMG5uUo1zJx9bQRB3HuEV9AeU0v02Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MN2PR12MB2989.namprd12.prod.outlook.com (2603:10b6:208:c4::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.16; Fri, 20 May
+ 2022 03:49:47 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::f1f6:dd2c:7e78:9770]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::f1f6:dd2c:7e78:9770%6]) with mapi id 15.20.5250.013; Fri, 20 May 2022
+ 03:49:47 +0000
+Message-ID: <e578d274-946f-2c73-026d-9b172ce32f19@amd.com>
+Date:   Fri, 20 May 2022 09:19:28 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [PATCH v3 2/5] perf header: Parse non-cpu pmu capabilities
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     acme@kernel.org, peterz@infradead.org, rrichter@amd.com,
+        mingo@redhat.com, mark.rutland@arm.com, jolsa@kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        james.clark@arm.com, leo.yan@linaro.org, kan.liang@linux.intel.com,
+        ak@linux.intel.com, eranian@google.com, like.xu.linux@gmail.com,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20220519054355.477-1-ravi.bangoria@amd.com>
+ <20220519054355.477-3-ravi.bangoria@amd.com>
+ <CAP-5=fXiZj+EBqmg89faK0pZD-Af3V1fHWMOkds1oKoaz+ucFA@mail.gmail.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <CAP-5=fXiZj+EBqmg89faK0pZD-Af3V1fHWMOkds1oKoaz+ucFA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR0101CA0040.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:1a::26) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-Url:  http://acmel.wordpress.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 98604357-1c6e-41a6-f6c5-08da3a13c853
+X-MS-TrafficTypeDiagnostic: MN2PR12MB2989:EE_
+X-Microsoft-Antispam-PRVS: <MN2PR12MB29890112237204E041C95AE0E0D39@MN2PR12MB2989.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IgniAox86SSrnqPSBWDZb18n5QKLqPQVBE2Mg4dPpof+5phhiPtQrD703FfcPUXM1Q3qHhz+q/vL2i28rb8tfuKnfwcLJRFwkLoqMuGV8ZmpT2dxQaJ3RUqYmDKzbJFxkiAqbSHxmDkZ7ePeTnrdXkyrJCC7KCmBhONgBKFBw1L2disKRpe3rr46YLknQI649aniMe3hYRjts1kZ6h4/kD9hSO0xQeanPlgTvyLly6ol5kDXz/6nGCdbBthRnCdjUwWdgsAZ5ZdyeR8G1zNcFLjuAO7I9ls8y20qGG82RjyJJZSBE955wtJv+IRcSAD9JqeO/a77cl7Nn7mXR2c1+FUqED+Yul26XEbfisK1CcEsBqsETbP3/3TxoQ6UebDUXZ1WeUUCxNfy1Mm1fni6dc89LYd19gIulw61i3dDCf2WMs4xEO9X2PjZNY9RwrpU7XQ265pgM3VBYYFK50FsFb0jX/T3XkcL/yUi03YOgSmpmwuxZiVvmgs7Y7mDUPIgi9dUl0vTy+bEVX6902IRcSe9DL1k0mN5JTnE6Jsy49hFKndu4U2KYYcRK/fa7hQEhdbME1XLbNekiic+a8TSjLfPY4oES4vjFpeWxasPATbVoAehJg8S+72sRcPCZEmftfCocayauJDbWEBRnIEkZVXHiWeArdUjmfUv5opcCHARDLNag377lwfBxcnhTGRthJYxowYwugPIQp/nCiy9PlIClBSey3WnynB7FWz9tqA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(26005)(31696002)(6512007)(38100700002)(6506007)(86362001)(53546011)(83380400001)(8676002)(4326008)(66476007)(66946007)(66556008)(186003)(36756003)(316002)(6916009)(508600001)(2616005)(2906002)(7416002)(8936002)(44832011)(31686004)(5660300002)(6486002)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RVpkVy8yU20vTWdXaE81b3VZWVpFd1UrTmM3SVJHdG51TFV3R0RUZGR0VVlR?=
+ =?utf-8?B?bWdtejNpNE9VZEs0a0VqME84akREcWJrdlVnWURVb0x5NFRYZEt1a05sTlpY?=
+ =?utf-8?B?UENZZEVnNGo4RitOOTYxTUdzNS9oNmJDQ0wzc3YxbEVoRTl0SGk3b29WZ1VP?=
+ =?utf-8?B?MVhLZnJ3VktJMmpVSUFKQnBpVHhSNDB5VjhnWTd5Ri9wUWxMNUpUYnduVDRK?=
+ =?utf-8?B?WjloaDhyQ1IrVmlSc3NEd0twckNYWGlKYVkvM0RjRlZ2dFBza2RqMW80Z09L?=
+ =?utf-8?B?dUxCQWUxRXRtdm9BN1lSM0RXMHZ4aXduZU9wd3B5d25SbFNGSmMzRHJFNkRO?=
+ =?utf-8?B?K1hUV2dsQ3EwSldia1IyYzR3MTVjNmppMUx6YmdYbVR3cU9oZTZES1QyM1JV?=
+ =?utf-8?B?WVBZVUJQbEdxaHpWaHF5WnhVS0tFTHBFeUdJVnJId2hRcUYxUlA5cDRkSWJo?=
+ =?utf-8?B?NHVGbXJVUVRFRzJwd3ZlQTV0VnhyQllXTzFzQWswWFAxalJjODRaOXBraE1n?=
+ =?utf-8?B?dFl5Z2lWUWdkOTJWQ0VvTEZJQWFhS2ovNWhmUS9rWklHKy9RQnM3bVcvZ2FD?=
+ =?utf-8?B?Wm1xeHlKbmZWY0loUkdIMCtqVFlTTmhCMnp4aWNkanZYRWlDWEYrUm1hTXVB?=
+ =?utf-8?B?a0dnUGdPT2tUZkVHSkkyRGs5Q2hLWEh6RzVCTkNzUCtjclhXVjI2TkVRcnNC?=
+ =?utf-8?B?QitLN3NsZTFKOFRocU04UHVqdTNoaGN3R1lIVEhrUnAwcUlhVTlqTGNKUVNL?=
+ =?utf-8?B?K3EyRkJPR1ViYVpDbUtKR0p3QW53SnZnWlFLTHBMTTY2Qk82SDRib1dVaUhC?=
+ =?utf-8?B?ZEFmUFhYL0Z6aGxRVE5LZk9nYlVLRDZBd2MxeGtzK3J1SEROTjNCM2FZeUht?=
+ =?utf-8?B?d2drWXViOWtCMThNRTM4S3VkUWxyOGtUZmozQldhQ3VVeU1nVmF4OGJjeUlL?=
+ =?utf-8?B?b2Y4MkNEQmhEcm05TStPTEd4K0RCYlRDeTMwQkxZeEdmZU9WOUpIaS9idUlV?=
+ =?utf-8?B?RkNvYkZsUEZIN3hNQW9jemtVWW93VGU4Mkp5OTMxdkJCZURkUlFWNzUwOGRZ?=
+ =?utf-8?B?SjNFVEg2Mm9OTUJkckQxaHZscm9WT3R6bEUrdVlYZUpjWTF4YlE0eGttZ0pu?=
+ =?utf-8?B?MklxalYyY3B4YnMxU05lWDVkd2JReTdLaUlMOW1jcG8rcndqSHVmZXpxUGNo?=
+ =?utf-8?B?Vkc4TCtLSGFldU9FRlRWd203REVPL25rWVhoekQ2U2s0RjQzbitxa2hpZld6?=
+ =?utf-8?B?UkFZZ2Y0Si9MZDlaODRJNlhHVzd0WUdUV1pvZFBicXJBdktXOHJXMnBEVHV3?=
+ =?utf-8?B?SWFZMndRRHZPYzVrT2ZTL2NUQVZhNTk5TFYvRTdLR29FWTFtTEVEeUZEWUFw?=
+ =?utf-8?B?THNRYnpvZ1pwR2tmSm9Sa29LQXgvTFZLdE5ETmJmRzVEQUZwaVNUaHFFL29T?=
+ =?utf-8?B?bUxOamFNMlQ1SnBIVEx0MWZucUxyNWkzY3NwSE0yS01pMGt0dWd0WmJ3ZzNV?=
+ =?utf-8?B?d0UrNTNpS2NvVjN1WkFOU2R2c01hZnptSnB2cWpKTkx3QkxVNDFVZGdoVUFQ?=
+ =?utf-8?B?cHFaeVN6dnE0WFpGcE1PUUU2L2pqRXFaVDVZNm10QXE1b3NlZ2xqaW5LWVBQ?=
+ =?utf-8?B?eGVIVExsZ0dlcUl6STZlaGhuTW9KZS9paHNrblZtRXIrMEZmUVN5UWVCZnpS?=
+ =?utf-8?B?Ty9EUUtTZGVGMHVqOEdlSnJXZVI3N1R6dVRMREhWRkVrdUZjL054Z3RGMHdp?=
+ =?utf-8?B?QXQzS01oMGkzbFVaWXdrMXdPeWxzQ3cxRkIzMGtRT00zbFkzRk4vZFJiaUpL?=
+ =?utf-8?B?aUQ5MUxxc3ZXd2NBQUpxaW5kRlc3VjhjbWd5SDVjNDJ5VEFWUWtVUDh1N1ZN?=
+ =?utf-8?B?OHJ3ZnRYelJVaWRQUkFVWDBrdzlxMGNIczRJUlYrMUZqczMxUzVnK3I1bC85?=
+ =?utf-8?B?NXk4eWRWWVdlajBvRm9TZDVNdlpsTDFZOEU1UnF4c2xxMElaVG9meE9HMGhN?=
+ =?utf-8?B?aUhXVHY0bkg0cE9GTjNSaksveWxZWGl0NEFiemp5S0JKbEZFb2NWNmVTd1Fq?=
+ =?utf-8?B?ZHNlWURRMmlFUzhXeFFZMnQ5dC9VQXBjVGx6TzljRUsrci91eDhxcVRabE96?=
+ =?utf-8?B?TG9sSUxDZTdJS0F3b1ZoVXp5cXpFcjFHcEtDUHVoVmtNQkxoKzlmbHFid2ZY?=
+ =?utf-8?B?MkNXOFI2R1dZV0thTWhjS0lqc0dBaC9lS3ExcHlaNGFWWENDRDNlTWpNaEE1?=
+ =?utf-8?B?Tmxmb2M1UHhOWWMrazlzaC8wLzFrS2RwVDFZNEx5K3JiUmRMcE5BM1VYaGNI?=
+ =?utf-8?B?Rk83OGZDMFRobzVoL1Z2SHRtelhpQVpFT09vQTRmYkx2ZmxCdkttQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98604357-1c6e-41a6-f6c5-08da3a13c853
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2022 03:49:47.0768
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QoEAS3Q5dYSC1o5eAmM/ciCeYMUVR3IzO4wXlM6zFljLVSlHEEXFadJm+dMdeAM7LYv7rQAJnkHuzyw9/DKMkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2989
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Avi, can you please try with this patch applied?
+Hi Ian,
 
-Thanks,
+On 20-May-22 3:57 AM, Ian Rogers wrote:
+> On Wed, May 18, 2022 at 10:45 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>>
+>> Pmus advertise their capabilities via sysfs attribute files but
+>> perf tool currently parses only core(cpu) pmu capabilities. Add
+>> support for parsing non-cpu pmu capabilities.
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>> ---
+>>  .../Documentation/perf.data-file-format.txt   |  18 ++
+>>  tools/perf/util/env.c                         |  48 +++++
+>>  tools/perf/util/env.h                         |  11 +
+>>  tools/perf/util/header.c                      | 198 ++++++++++++++++++
+>>  tools/perf/util/header.h                      |   1 +
+>>  tools/perf/util/pmu.c                         |  15 +-
+>>  tools/perf/util/pmu.h                         |   2 +
+>>  7 files changed, 289 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+>> index f56d0e0fbff6..7f8341db9134 100644
+>> --- a/tools/perf/Documentation/perf.data-file-format.txt
+>> +++ b/tools/perf/Documentation/perf.data-file-format.txt
+>> @@ -435,6 +435,24 @@ struct {
+>>         } [nr_pmu];
+>>  };
+>>
+>> +       HEADER_PMU_CAPS = 32,
+>> +
+>> +       List of pmu capabilities (except cpu pmu which is already
+>> +       covered by HEADER_CPU_PMU_CAPS)
+> 
+> Sorry for the ignorance, is this currently broken for hybrid then?
+> Will hybrid have a HEADER_CPU_PMU_CAPS? Presumably this varies between
+> ARM's big.little and Alderlake.
 
-- Arnaldo
+It's covered by HEADER_HYBRID_CPU_PMU_CAPS, but that too covers only
+cpu pmu. I think I should update the above comment to:
 
----
+	List of pmu capabilities (except cpu pmu which is already
+	covered by HEADER_CPU_PMU_CAPS / HEADER_HYBRID_CPU_PMU_CAPS)
 
-Avi Kivity reported a problem where the __weak
-btf__load_from_kernel_by_id() in tools/perf/util/bpf-event.c was being
-used and it called btf__get_from_id() in tools/lib/bpf/btf.c that in
-turn called back to btf__load_from_kernel_by_id(), resulting in an
-endless loop.
+>> +
+>> +struct {
+>> +       u32 nr_pmus;
+>> +       struct {
+>> +               u32 core_type;  /* For hybrid topology */
+> 
+> Could this be pmu_type as presumably we can have capabilities on any
+> kind of PMU?
 
-Fix this by adding a feature test to check if
-btf__load_from_kernel_by_id() is available when building perf with
-LIBBPF_DYNAMIC=1, and if not then provide the fallback to the old
-btf__get_from_id(), that doesn't call back to btf__load_from_kernel_by_id()
-since at that time it didn't exist at all.
+Not sure I follow that question but let me just put my thoughts here.
 
-Tested on Fedora 35 where we have libbpf-devel 0.4.0 with LIBBPF_DYNAMIC
-where we don't have btf__load_from_kernel_by_id() and thus its feature
-test fail, not defining HAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID:
+{core_type, pmu_name} is the unique key here. Considering a hypothetical
+scenario: A system has two types of cores P-core and E-core. Certain pmu
+inside P-core has some capabilities which are missing in the identical
+pmu belonging to E-core. The header will look something like:
 
-  $ cat /tmp/build/perf-urgent/feature/test-libbpf-btf__load_from_kernel_by_id.make.output
-  test-libbpf-btf__load_from_kernel_by_id.c: In function ‘main’:
-  test-libbpf-btf__load_from_kernel_by_id.c:6:16: error: implicit declaration of function ‘btf__load_from_kernel_by_id’ [-Werror=implicit-function-declaration]
-      6 |         return btf__load_from_kernel_by_id(20151128, NULL);
-        |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-  cc1: all warnings being treated as errors
-  $
+struct {
+	.nr_pmus = 2,
+	[0] = struct {
+		.core_type = 0, /* P-core */
+		.pmu_name = xyz_pmu,
+		.nr_caps = 2,
+		[0] = { .name = cap1, .value = value1 },
+		[1] = { .name = cap2, .value = value2 },
+	},
+	[1] = struct {
+		.core_type = 1; /* E-core */
+		.pmu_name = xyz_pmu;
+		.nr_caps = 1;
+		[0] = { .name = cap1, .value = value1 };
+	},
+};
 
-  $ nm /tmp/build/perf-urgent/perf | grep btf__load_from_kernel_by_id
-  00000000005ba180 T btf__load_from_kernel_by_id
-  $
+Does that answer your question?
 
-  $ objdump --disassemble=btf__load_from_kernel_by_id -S /tmp/build/perf-urgent/perf
-
-  /tmp/build/perf-urgent/perf:     file format elf64-x86-64
-  <SNIP>
-  00000000005ba180 <btf__load_from_kernel_by_id>:
-  #include "record.h"
-  #include "util/synthetic-events.h"
-
-  #ifndef HAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
-  struct btf *btf__load_from_kernel_by_id(__u32 id)
-  {
-    5ba180:	55                   	push   %rbp
-    5ba181:	48 89 e5             	mov    %rsp,%rbp
-    5ba184:	48 83 ec 10          	sub    $0x10,%rsp
-    5ba188:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
-    5ba18f:	00 00
-    5ba191:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
-    5ba195:	31 c0                	xor    %eax,%eax
-         struct btf *btf;
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-         int err = btf__get_from_id(id, &btf);
-    5ba197:	48 8d 75 f0          	lea    -0x10(%rbp),%rsi
-    5ba19b:	e8 a0 57 e5 ff       	call   40f940 <btf__get_from_id@plt>
-    5ba1a0:	89 c2                	mov    %eax,%edx
-  #pragma GCC diagnostic pop
-
-         return err ? ERR_PTR(err) : btf;
-    5ba1a2:	48 98                	cltq
-    5ba1a4:	85 d2                	test   %edx,%edx
-    5ba1a6:	48 0f 44 45 f0       	cmove  -0x10(%rbp),%rax
-  }
-  <SNIP>
-
-Fixes: 218e7b775d368f38 ("perf bpf: Provide a weak btf__load_from_kernel_by_id() for older libbpf versions")
-Link: https://lore.kernel.org/linux-perf-users/f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/build/Makefile.feature                               | 1 +
- tools/build/feature/Makefile                               | 4 ++++
- .../feature/test-libbpf-btf__load_from_kernel_by_id.c      | 7 +++++++
- tools/perf/Makefile.config                                 | 7 +++++++
- tools/perf/util/bpf-event.c                                | 4 +++-
- 5 files changed, 22 insertions(+), 1 deletion(-)
- create mode 100644 tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
-
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index ae61f464043a11fb..c6a48d0ef9ff0648 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -98,6 +98,7 @@ FEATURE_TESTS_EXTRA :=                  \
-          llvm-version                   \
-          clang                          \
-          libbpf                         \
-+         libbpf-btf__load_from_kernel_by_id \
-          libpfm4                        \
-          libdebuginfod			\
-          clang-bpf-co-re
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index de66e1cc073481c5..cb4a2a4fa2e48ebf 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -57,6 +57,7 @@ FILES=                                          \
-          test-lzma.bin                          \
-          test-bpf.bin                           \
-          test-libbpf.bin                        \
-+         test-libbpf-btf__load_from_kernel_by_id.bin	\
-          test-get_cpuid.bin                     \
-          test-sdt.bin                           \
-          test-cxx.bin                           \
-@@ -287,6 +288,9 @@ $(OUTPUT)test-bpf.bin:
- $(OUTPUT)test-libbpf.bin:
- 	$(BUILD) -lbpf
- 
-+$(OUTPUT)test-libbpf-btf__load_from_kernel_by_id.bin:
-+	$(BUILD) -lbpf
-+
- $(OUTPUT)test-sdt.bin:
- 	$(BUILD)
- 
-diff --git a/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c b/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
-new file mode 100644
-index 0000000000000000..f7c084428735a73d
---- /dev/null
-+++ b/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <bpf/libbpf.h>
-+
-+int main(void)
-+{
-+	return btf__load_from_kernel_by_id(20151128, NULL);
-+}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index f3bf9297bcc03c5e..1bd64e7404b9fbd4 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -553,9 +553,16 @@ ifndef NO_LIBELF
-         ifeq ($(feature-libbpf), 1)
-           EXTLIBS += -lbpf
-           $(call detected,CONFIG_LIBBPF_DYNAMIC)
-+
-+          $(call feature_check,libbpf-btf__load_from_kernel_by_id)
-+          ifeq ($(feature-libbpf-btf__load_from_kernel_by_id), 1)
-+            CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
-+          endif
-         else
-           dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
-         endif
-+      else
-+	CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
-       endif
-     endif
- 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index 94624733af7e225a..8271ab764eb56c7b 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -22,7 +22,8 @@
- #include "record.h"
- #include "util/synthetic-events.h"
- 
--struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
-+#ifndef HAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
-+struct btf *btf__load_from_kernel_by_id(__u32 id)
- {
-        struct btf *btf;
- #pragma GCC diagnostic push
-@@ -32,6 +33,7 @@ struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
- 
-        return err ? ERR_PTR(err) : btf;
- }
-+#endif
- 
- int __weak bpf_prog_load(enum bpf_prog_type prog_type,
- 			 const char *prog_name __maybe_unused,
--- 
-2.35.1
-
+Thanks for the review,
+Ravi
