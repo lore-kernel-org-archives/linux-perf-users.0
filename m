@@ -2,130 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DC0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 13:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33A1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 14:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347343AbiETNx4 (ORCPT
+        id S1345248AbiETOPM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 May 2022 09:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59434 "EHLO
+        Fri, 20 May 2022 10:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239709AbiETNxz (ORCPT
+        with ESMTP id S234377AbiETOPL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 May 2022 09:53:55 -0400
+        Fri, 20 May 2022 10:15:11 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14875E745
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 May 2022 06:53:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D391A1666B2;
+        Fri, 20 May 2022 07:15:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D84A61AC8
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 May 2022 13:53:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BBC3C385A9;
-        Fri, 20 May 2022 13:53:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7068661B1D;
+        Fri, 20 May 2022 14:15:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E63C385A9;
+        Fri, 20 May 2022 14:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653054833;
-        bh=wMKx/4Sb0rUuzgPrC9WPtYzb6f6cO4tK8XR1XVwLuy8=;
+        s=k20201202; t=1653056106;
+        bh=LexAD+My7zTkHhzGZZjrnNvnzF0U8YR8Me2dp0xadhk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qt5Kf/E+IATCxZO4v8G+TRz0zVF3wZ4xo0ta5g0cN/v6FW14PfDzK1U5O+OOPnhEy
-         HWghgeUk4Lyw89GHNMiZ53Cn18QW53lhSu3Jp5rj4FF8AyvkW9NIAqz7R2X4SFqxmv
-         FQbqqiNgIdQ+O7wPSr8WcW7cb+HO+Y66u65f4/RYhi6r/acG9eDz/i2Q4uaEMA55TA
-         lR+f3zQdRvxRh+B1UHq0IJevhKXR0ZRnISA/Sgx7qStJJqiX8wnTwAYYJ0ZXCIO+Md
-         R1PiMC71mjjxNk5bRVLqNa1wPRrFVysH5oovWvvkI+RLKpzC7UIT5WEGxOI4DjJrFy
-         dd09BEiWfYAYw==
+        b=kR78SDLgLc/MPLF4KmX2bXWOg0XpbZs1//f71+0Bx421j4MlvnuGU6bZOz6TT5lw9
+         n28vlljHDouO/cC1yjq3PnDm0mT1KrFSbYzPssfdj7J2B53Ff9NCtNC8XjnezBZqVe
+         ATuSTvkJsKxARQLFhShLnFhnSSUN8VTUUIQqszdeCS8V7pjBWdLUtcCu/uqfFrPYOB
+         JHr0p1Q0NKTicxopblor5K7ACAaBSoq4PJRl7zJ6UgjIwlhe76aprA/1Hbdi5SlRDF
+         TRo5WBjkUdiZqYh4Bomz4adi0rbsSgxxsxIRAjMC27AYpGgXFo7zEb77mADVFNQfiJ
+         cOivSVNy2nJ/g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0EF2A400B1; Fri, 20 May 2022 10:53:50 -0300 (-03)
-Date:   Fri, 20 May 2022 10:53:49 -0300
+        id B5428400B1; Fri, 20 May 2022 11:15:02 -0300 (-03)
+Date:   Fri, 20 May 2022 11:15:02 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH V2] tools/perf/test: Fix perf all PMU test to skip
- hv_24x7/hv_gpci tests on powerpc
-Message-ID: <YoedbRTgfdQs+7H0@kernel.org>
-References: <20220519154324.12531-1-atrajeev@linux.vnet.ibm.com>
- <CAP-5=fXrtTe=6-z8-OMzG60XZmA92nHEhc94+NyCJK-ZPDekPQ@mail.gmail.com>
+Cc:     kan.liang@linux.intel.com, mingo@redhat.com, namhyung@kernel.org,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        zhengjun.xing@linux.intel.com, Ammy Yi <ammy.yi@intel.com>
+Subject: Re: [PATCH] perf regs x86: Fix arch__intr_reg_mask() for the hybrid
+ platform
+Message-ID: <YoeiZh9SaRSvpB9r@kernel.org>
+References: <20220518145125.1494156-1-kan.liang@linux.intel.com>
+ <CAP-5=fWKmR-bDbiocSAd4qkrf7_ge+e1_gYLjQqRfGyc8FP4Sw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXrtTe=6-z8-OMzG60XZmA92nHEhc94+NyCJK-ZPDekPQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWKmR-bDbiocSAd4qkrf7_ge+e1_gYLjQqRfGyc8FP4Sw@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, May 19, 2022 at 11:45:07AM -0700, Ian Rogers escreveu:
-> On Thu, May 19, 2022 at 8:43 AM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
+Em Wed, May 18, 2022 at 09:38:20PM -0700, Ian Rogers escreveu:
+> On Wed, May 18, 2022 at 7:52 AM <kan.liang@linux.intel.com> wrote:
 > >
-> > "perf all PMU test" picks the input events from
-> > "perf list --raw-dump pmu" list and runs "perf stat -e"
-> > for each of the event in the list. In case of powerpc, the
-> > PowerVM environment supports events from hv_24x7 and hv_gpci
-> > PMU which is of example format like below:
-> > - hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
-> > - hv_gpci/event,partition_id=?/
+> > From: Kan Liang <kan.liang@linux.intel.com>
 > >
-> > The value for "?" needs to be filled in depending on
-> > system and respective event. CPM_ADJUNCT_INST needs have
-> > core value and domain value. hv_gpci event needs partition_id.
-> > Similarly, there are other events for hv_24x7 and hv_gpci
-> > having "?" in event format. Hence skip these events on powerpc
-> > platform since values like partition_id, domain is specific
-> > to system and event.
+> > The X86 specific arch__intr_reg_mask() is to check whether the kernel
+> > and hardware can collect XMM registers. But it doesn't work on some
+> > hybrid platform.
 > >
-> > Fixes: 3d5ac9effcc6 ("perf test: Workload test of all PMUs")
-> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> > ---
-> > Changelog:
-> >  v1 -> v2:
-> >  Instead of checking for platform, used the pmu name
-> >  ie, hv_24x7 and hv_gpci to skip the test since this
-> >  pmu name is specific to powerpc as suggested by
-> >  Michael Ellerman.
+> > Without the patch on ADL-N,
 > >
-> >  tools/perf/tests/shell/stat_all_pmu.sh | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
+> > $perf record -I?
+> > available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+> > R11 R12 R13 R14 R15
 > >
-> > diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
-> > index b30dba455f36..7d046bb8a7b9 100755
-> > --- a/tools/perf/tests/shell/stat_all_pmu.sh
-> > +++ b/tools/perf/tests/shell/stat_all_pmu.sh
-> > @@ -5,6 +5,16 @@
-> >  set -e
+> > The config of the test event doesn't contain the PMU information. The
+> > kernel may fail to initialize it on the correct hybrid PMU and return
+> > the wrong non-supported information.
 > >
-> >  for p in $(perf list --raw-dump pmu); do
-> > +  # In powerpc, skip the events for hv_24x7 and hv_gpci.
-> > +  # These events needs input values to be filled in for
-> > +  # core, chip, patition id based on system.
-> nit: s/patition/partition/
-> > +  # Example: hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
+> > Add the PMU information into the config for the hybrid platform. The
+> > same register set is supported among different hybrid PMUs. Checking
+> > the first available one is good enough.
+> >
+> > With the patch on ADL-N,
+> >
+> > $perf record -I?
+> > available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+> > R11 R12 R13 R14 R15 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 XMM9
+> > XMM10 XMM11 XMM12 XMM13 XMM14 XMM15
+> >
+> > Fixes: 6466ec14aaf4 ("perf regs x86: Add X86 specific arch__intr_reg_mask()")
+> > Reported-by: Ammy Yi <ammy.yi@intel.com>
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > 
-> I've no problem with this patch, we may need to do similar for other
+> Acked-by: Ian Rogers <irogers@google.com>
 
-Can I take this as an Acked-by?
+Thanks, applied.
 
 - Arnaldo
 
-> architectures. For this specific problem I wonder if rather than
-> skipping the event the event can be fixed with domain and core set to
-> 1 ? This would provide a little additional coverage.
+ 
+> > ---
+> >  tools/perf/arch/x86/util/perf_regs.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+> > index 207c56805c55..0ed177991ad0 100644
+> > --- a/tools/perf/arch/x86/util/perf_regs.c
+> > +++ b/tools/perf/arch/x86/util/perf_regs.c
+> > @@ -9,6 +9,8 @@
+> >  #include "../../../util/perf_regs.h"
+> >  #include "../../../util/debug.h"
+> >  #include "../../../util/event.h"
+> > +#include "../../../util/pmu.h"
+> > +#include "../../../util/pmu-hybrid.h"
+> >
+> >  const struct sample_reg sample_reg_masks[] = {
+> >         SMPL_REG(AX, PERF_REG_X86_AX),
+> > @@ -284,12 +286,22 @@ uint64_t arch__intr_reg_mask(void)
+> >                 .disabled               = 1,
+> >                 .exclude_kernel         = 1,
+> >         };
+> > +       struct perf_pmu *pmu;
+> 
+> nit: this could have smaller scope if just be declared in the if-block.
 > 
 > Thanks,
 > Ian
 > 
-> > +  # hv_gpci/event,partition_id=?/
-> > +  # Hence skip these events for ppc.
-> > +  if echo "$p" |grep -Eq 'hv_24x7|hv_gpci' ; then
-> > +    echo "Skipping: Event '$p' in powerpc"
-> > +    continue
-> > +  fi
-> >    echo "Testing $p"
-> >    result=$(perf stat -e "$p" true 2>&1)
-> >    if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
+> >         int fd;
+> >         /*
+> >          * In an unnamed union, init it here to build on older gcc versions
+> >          */
+> >         attr.sample_period = 1;
+> >
+> > +       if (perf_pmu__has_hybrid()) {
+> > +               /*
+> > +                * The same register set is supported among different hybrid PMUs.
+> > +                * Only check the first available one.
+> > +                */
+> > +               pmu = list_first_entry(&perf_pmu__hybrid_pmus, typeof(*pmu), hybrid_list);
+> > +               attr.config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+> > +       }
+> > +
+> >         event_attr_init(&attr);
+> >
+> >         fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
 > > --
 > > 2.35.1
 > >
