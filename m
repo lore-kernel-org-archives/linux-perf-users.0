@@ -2,245 +2,235 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1766DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 May 2022 23:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A11C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 May 2022 00:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233383AbiESXvT (ORCPT
+        id S241689AbiETAkz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 May 2022 19:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57712 "EHLO
+        Thu, 19 May 2022 20:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343813AbiESXvP (ORCPT
+        with ESMTP id S233982AbiETAkx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 May 2022 19:51:15 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 551BF167D5
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 16:51:13 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id k30so9324712wrd.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 May 2022 16:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VRcoMyrslj4bOAY/eW8WGx80U8klEQk6fgVVLvwb9XA=;
-        b=n6m8TTgv2IwWJDGLGmsOlLSpsjea2srSEInWca1mtXg54d6wSNG6FLta8vqeZoYVjF
-         /beNGSxaZHYhcTmypJY+FnwQ4Ms9qrZrHXlTUbWVEKR9fgIsqRFRWP6/l5vL8v79HD1G
-         KRKNRp/J1nf9EHyhGx8rbBJVfh96oLMG+C/AYHuP4nEF5f7Vo7+OE7as3GKJvfQpov1w
-         e3r4cvjKK4Sm78f1BK+mIaYW04KIlo3rVjejY4H8IZi/4xLvrMD1OxfIfuQG1ZnKHHxo
-         RZvp7baaCu4oemm+MfNvvApShPHL/WNiuWwrt6HoLHmncX4ZHXKynNZ83Zk336wVWM7i
-         tMFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VRcoMyrslj4bOAY/eW8WGx80U8klEQk6fgVVLvwb9XA=;
-        b=h/1C/UPakk7vmDQ+wlSVtS+a67pZAzcfVwjwA0+2j8BL8ialTLr9Cm4dQeUTRWhivI
-         TxqKVAz+0mTWZ3ewBBZFzfytq1hG+2tWJika2UrDwfFRa+23aVsvs7IXMPZ7ZIEX5RNN
-         36Gk/DNq+suAxO8eWlIc9TyJJ7f2fI7PPMzFu5157zfqyxmjE97qfPseu1BE4PMyMAWe
-         +mpVSzfKxT79w9i5/XRDETdEVAVcQTYswGLjuxSEyE5aJ26b38DZbx352rik9EL/VP8b
-         0vo8pTghaAF8pU8sn9Yxgh+VRUZlvtypqAIakKwMlbw484VVbKLT/qLISC8fT7+Edhb/
-         f1fQ==
-X-Gm-Message-State: AOAM532eCZFtdgbKP4tsx5rG8xlnmX86GzLR6JjshkLpjrgePjhp9xQ8
-        /O1577s4EEZDHy1HDoT9GC8fJSRVnZlb+e/B2/CkZw==
-X-Google-Smtp-Source: ABdhPJzKtQ78ONkLHremZq8wLSoKfoq8D2Wb2ImyXwDE8WvdDA10NMh3Ad8EfD1ZLcOsod7SFwd2cyqonewRi2vdJos=
-X-Received: by 2002:adf:d1e9:0:b0:20c:6c76:14d5 with SMTP id
- g9-20020adfd1e9000000b0020c6c7614d5mr6036237wrd.375.1653004271689; Thu, 19
- May 2022 16:51:11 -0700 (PDT)
+        Thu, 19 May 2022 20:40:53 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A48015A30;
+        Thu, 19 May 2022 17:40:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EB82CB82956;
+        Fri, 20 May 2022 00:40:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40895C385B8;
+        Fri, 20 May 2022 00:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653007248;
+        bh=cxthwK70BLgcvJmYVgrDQMUShetThpHHGPNJUP+QVEI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HdsRrfd7DRhxeJPiEv1cZJ98kpB58kNrsh/vadXYkOALZUXRq3VndzPaDNF1zm3V8
+         CCG979mKXcAq+fFhwW6ijz0o5Ttz/vbG4rezkkXxf0PJDqCIkHul+yhusQrztOULp5
+         DDPe3F/U+SVNasjScSAA8cm84vrJeZABTg9GdZgTthRAaVzjuBH0yWM/8qL1iw6dei
+         SM1Go7Thb7am0Flubsiy8IFPbsLJ9sj0JAw6NvBbIoWNSdqOiSf4Ww13390BVzm1Ju
+         73JOxsedNhYAxXzmSARQXrhIGx5LUxfW4C8wcU6yexicNGtQk4DvRRn7BU1b6ICfZM
+         wBm54s+bed7fw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BF14E400B1; Thu, 19 May 2022 21:40:44 -0300 (-03)
+Date:   Thu, 19 May 2022 21:40:44 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Avi Kivity <avi@scylladb.com>
+Cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/1] perf build: Fix check for btf__load_from_kernel_by_id()
+ in libbpf
+Message-ID: <YobjjFOblY4Xvwo7@kernel.org>
 MIME-Version: 1.0
-References: <20220519054355.477-1-ravi.bangoria@amd.com> <20220519054355.477-6-ravi.bangoria@amd.com>
-In-Reply-To: <20220519054355.477-6-ravi.bangoria@amd.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 19 May 2022 16:50:58 -0700
-Message-ID: <CAP-5=fWP42=AW9zr5ULM3_XL4pOhtTcLSr9kjvbRiH_EivO9JA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] perf script ibs: Support new IBS bits in raw trace dump
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, peterz@infradead.org, rrichter@amd.com,
-        mingo@redhat.com, mark.rutland@arm.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        james.clark@arm.com, leo.yan@linaro.org, kan.liang@linux.intel.com,
-        ak@linux.intel.com, eranian@google.com, like.xu.linux@gmail.com,
-        x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 18, 2022 at 10:45 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->
-> Interpret Additional set of IBS register bits while doing
-> perf report/script raw dump.
->
-> IBS op pmu ex:
->   $ sudo ./perf record -c 130 -a -e ibs_op/l3missonly=1/ --raw-samples
->   $ sudo ./perf report -D
->   ...
->   ibs_op_ctl:     0000004500070008 MaxCnt       128 L3MissOnly 1 En 1
->         Val 1 CntCtl 0=cycles CurCnt        69
->   ibs_op_data:    0000000000710002 CompToRetCtr     2 TagToRetCtr   113
->         BrnRet 0  RipInvalid 0 BrnFuse 0 Microcode 0
->   ibs_op_data2:   0000000000000002 CacheHitSt 0=M-state RmtNode 0
->         DataSrc 2=A peer cache in a near CCX
->   ibs_op_data3:   000000681d1700a1 LdOp 1 StOp 0 DcL1TlbMiss 0
->         DcL2TlbMiss 0 DcL1TlbHit2M 0 DcL1TlbHit1G 1 DcL2TlbHit2M 0
->         DcMiss 1 DcMisAcc 0 DcWcMemAcc 0 DcUcMemAcc 0 DcLockedOp 0
->         DcMissNoMabAlloc 1 DcLinAddrValid 1 DcPhyAddrValid 1
->         DcL2TlbHit1G 0 L2Miss 1 SwPf 0 OpMemWidth  8 bytes
->         OpDcMissOpenMemReqs  7 DcMissLat   104 TlbRefillLat     0
->
-> IBS Fetch pmu ex:
->   $ sudo ./perf record -c 130 -a -e ibs_fetch/l3missonly=1/ --raw-samples
->   $ sudo ./perf report -D
->   ...
->   ibs_fetch_ctl:  3c1f00c700080008 MaxCnt     128 Cnt     128 Lat   199
->         En 1 Val 1 Comp 1 IcMiss 1 PhyAddrValid        1 L1TlbPgSz 4KB
->         L1TlbMiss 0 L2TlbMiss 0 RandEn 0 L2Miss 1 L3MissOnly 1
->         FetchOcMiss 1 FetchL3Miss 1
->
-> With the DataSrc extensions, the source of data can be decoded among:
->  - Local L3 or other L1/L2 in CCX.
->  - A peer cache in a near CCX.
->  - Data returned from DRAM.
->  - A peer cache in a far CCX.
->  - DRAM address map with "long latency" bit set.
->  - Data returned from MMIO/Config/PCI/APIC.
->  - Extension Memory (S-Link, GenZ, etc - identified by the CS target
->     and/or address map at DF's choice).
->  - Peer Agent Memory.
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-
-Looks good, but I think part of the previous patch should also be in this one.
+Avi, can you please try with this patch applied?
 
 Thanks,
-Ian
-> ---
->  tools/perf/util/amd-sample-raw.c | 64 +++++++++++++++++++++++++++++---
->  1 file changed, 58 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
-> index 3b623ea6ee7e..63303f583bc0 100644
-> --- a/tools/perf/util/amd-sample-raw.c
-> +++ b/tools/perf/util/amd-sample-raw.c
-> @@ -18,6 +18,7 @@
->  #include "pmu-events/pmu-events.h"
->
->  static u32 cpu_family, cpu_model, ibs_fetch_type, ibs_op_type;
-> +static bool zen4_ibs_extensions;
->
->  static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
->  {
-> @@ -39,6 +40,7 @@ static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
->         };
->         const char *ic_miss_str = NULL;
->         const char *l1tlb_pgsz_str = NULL;
-> +       char l3_miss_str[sizeof(" L3MissOnly _ FetchOcMiss _ FetchL3Miss _")] = "";
->
->         if (cpu_family == 0x19 && cpu_model < 0x10) {
->                 /*
-> @@ -53,12 +55,19 @@ static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
->                 ic_miss_str = ic_miss_strs[reg.ic_miss];
->         }
->
-> +       if (zen4_ibs_extensions) {
-> +               snprintf(l3_miss_str, sizeof(l3_miss_str),
-> +                        " L3MissOnly %d FetchOcMiss %d FetchL3Miss %d",
-> +                        reg.l3_miss_only, reg.fetch_oc_miss, reg.fetch_l3_miss);
-> +       }
-> +
->         printf("ibs_fetch_ctl:\t%016llx MaxCnt %7d Cnt %7d Lat %5d En %d Val %d Comp %d%s "
-> -              "PhyAddrValid %d%s L1TlbMiss %d L2TlbMiss %d RandEn %d%s\n",
-> +               "PhyAddrValid %d%s L1TlbMiss %d L2TlbMiss %d RandEn %d%s%s\n",
->                 reg.val, reg.fetch_maxcnt << 4, reg.fetch_cnt << 4, reg.fetch_lat,
->                 reg.fetch_en, reg.fetch_val, reg.fetch_comp, ic_miss_str ? : "",
->                 reg.phy_addr_valid, l1tlb_pgsz_str ? : "", reg.l1tlb_miss, reg.l2tlb_miss,
-> -               reg.rand_en, reg.fetch_comp ? (reg.fetch_l2_miss ? " L2Miss 1" : " L2Miss 0") : "");
-> +               reg.rand_en, reg.fetch_comp ? (reg.fetch_l2_miss ? " L2Miss 1" : " L2Miss 0") : "",
-> +               l3_miss_str);
->  }
->
->  static void pr_ic_ibs_extd_ctl(union ic_ibs_extd_ctl reg)
-> @@ -68,9 +77,15 @@ static void pr_ic_ibs_extd_ctl(union ic_ibs_extd_ctl reg)
->
->  static void pr_ibs_op_ctl(union ibs_op_ctl reg)
->  {
-> -       printf("ibs_op_ctl:\t%016llx MaxCnt %9d En %d Val %d CntCtl %d=%s CurCnt %9d\n",
-> -              reg.val, ((reg.opmaxcnt_ext << 16) | reg.opmaxcnt) << 4, reg.op_en, reg.op_val,
-> -              reg.cnt_ctl, reg.cnt_ctl ? "uOps" : "cycles", reg.opcurcnt);
-> +       char l3_miss_only[sizeof(" L3MissOnly _")] = "";
-> +
-> +       if (zen4_ibs_extensions)
-> +               snprintf(l3_miss_only, sizeof(l3_miss_only), " L3MissOnly %d", reg.l3_miss_only);
-> +
-> +       printf("ibs_op_ctl:\t%016llx MaxCnt %9d%s En %d Val %d CntCtl %d=%s CurCnt %9d\n",
-> +               reg.val, ((reg.opmaxcnt_ext << 16) | reg.opmaxcnt) << 4, l3_miss_only,
-> +               reg.op_en, reg.op_val, reg.cnt_ctl,
-> +               reg.cnt_ctl ? "uOps" : "cycles", reg.opcurcnt);
->  }
->
->  static void pr_ibs_op_data(union ibs_op_data reg)
-> @@ -84,7 +99,34 @@ static void pr_ibs_op_data(union ibs_op_data reg)
->                 reg.op_brn_ret, reg.op_rip_invalid, reg.op_brn_fuse, reg.op_microcode);
->  }
->
-> -static void pr_ibs_op_data2(union ibs_op_data2 reg)
-> +static void pr_ibs_op_data2_extended(union ibs_op_data2 reg)
-> +{
-> +       static const char * const data_src_str[] = {
-> +               "",
-> +               " DataSrc 1=Local L3 or other L1/L2 in CCX",
-> +               " DataSrc 2=A peer cache in a near CCX",
-> +               " DataSrc 3=Data returned from DRAM",
-> +               " DataSrc 4=(reserved)",
-> +               " DataSrc 5=A peer cache in a far CCX",
-> +               " DataSrc 6=DRAM address map with \"long latency\" bit set",
-> +               " DataSrc 7=Data returned from MMIO/Config/PCI/APIC",
-> +               " DataSrc 8=Extension Memory (S-Link, GenZ, etc)",
-> +               " DataSrc 9=(reserved)",
-> +               " DataSrc 10=(reserved)",
-> +               " DataSrc 11=(reserved)",
-> +               " DataSrc 12=Peer Agent Memory",
-> +               /* 13 to 31 are reserved. Avoid printing them. */
-> +       };
-> +       int data_src = (reg.data_src_hi << 3) | reg.data_src_lo;
-> +
-> +       printf("ibs_op_data2:\t%016llx %sRmtNode %d%s\n", reg.val,
-> +               (data_src == 1 || data_src == 2 || data_src == 5) ?
-> +                       (reg.cache_hit_st ? "CacheHitSt 1=O-State " : "CacheHitSt 0=M-state ") : "",
-> +               reg.rmt_node,
-> +               data_src < (int)ARRAY_SIZE(data_src_str) ? data_src_str[data_src] : "");
-> +}
-> +
-> +static void pr_ibs_op_data2_default(union ibs_op_data2 reg)
->  {
->         static const char * const data_src_str[] = {
->                 "",
-> @@ -103,6 +145,13 @@ static void pr_ibs_op_data2(union ibs_op_data2 reg)
->                reg.rmt_node, data_src_str[reg.data_src_lo]);
->  }
->
-> +static void pr_ibs_op_data2(union ibs_op_data2 reg)
-> +{
-> +       if (zen4_ibs_extensions)
-> +               return pr_ibs_op_data2_extended(reg);
-> +       pr_ibs_op_data2_default(reg);
-> +}
-> +
->  static void pr_ibs_op_data3(union ibs_op_data3 reg)
->  {
->         char l2_miss_str[sizeof(" L2Miss _")] = "";
-> @@ -279,6 +328,9 @@ bool evlist__has_amd_ibs(struct evlist *evlist)
->                 pmu_mapping += strlen(pmu_mapping) + 1 /* '\0' */;
->         }
->
-> +       if (perf_env__find_pmu_cap(env, 0, "ibs_op", "zen4_ibs_extensions"))
-> +               zen4_ibs_extensions = 1;
-> +
->         if (ibs_fetch_type || ibs_op_type) {
->                 if (!cpu_family)
->                         parse_cpuid(env);
-> --
-> 2.27.0
->
+
+- Arnaldo
+
+---
+
+Avi Kivity reported a problem where the __weak
+btf__load_from_kernel_by_id() in tools/perf/util/bpf-event.c was being
+used and it called btf__get_from_id() in tools/lib/bpf/btf.c that in
+turn called back to btf__load_from_kernel_by_id(), resulting in an
+endless loop.
+
+Fix this by adding a feature test to check if
+btf__load_from_kernel_by_id() is available when building perf with
+LIBBPF_DYNAMIC=1, and if not then provide the fallback to the old
+btf__get_from_id(), that doesn't call back to btf__load_from_kernel_by_id()
+since at that time it didn't exist at all.
+
+Tested on Fedora 35 where we have libbpf-devel 0.4.0 with LIBBPF_DYNAMIC
+where we don't have btf__load_from_kernel_by_id() and thus its feature
+test fail, not defining HAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID:
+
+  $ cat /tmp/build/perf-urgent/feature/test-libbpf-btf__load_from_kernel_by_id.make.output
+  test-libbpf-btf__load_from_kernel_by_id.c: In function ‘main’:
+  test-libbpf-btf__load_from_kernel_by_id.c:6:16: error: implicit declaration of function ‘btf__load_from_kernel_by_id’ [-Werror=implicit-function-declaration]
+      6 |         return btf__load_from_kernel_by_id(20151128, NULL);
+        |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  cc1: all warnings being treated as errors
+  $
+
+  $ nm /tmp/build/perf-urgent/perf | grep btf__load_from_kernel_by_id
+  00000000005ba180 T btf__load_from_kernel_by_id
+  $
+
+  $ objdump --disassemble=btf__load_from_kernel_by_id -S /tmp/build/perf-urgent/perf
+
+  /tmp/build/perf-urgent/perf:     file format elf64-x86-64
+  <SNIP>
+  00000000005ba180 <btf__load_from_kernel_by_id>:
+  #include "record.h"
+  #include "util/synthetic-events.h"
+
+  #ifndef HAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
+  struct btf *btf__load_from_kernel_by_id(__u32 id)
+  {
+    5ba180:	55                   	push   %rbp
+    5ba181:	48 89 e5             	mov    %rsp,%rbp
+    5ba184:	48 83 ec 10          	sub    $0x10,%rsp
+    5ba188:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
+    5ba18f:	00 00
+    5ba191:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
+    5ba195:	31 c0                	xor    %eax,%eax
+         struct btf *btf;
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+         int err = btf__get_from_id(id, &btf);
+    5ba197:	48 8d 75 f0          	lea    -0x10(%rbp),%rsi
+    5ba19b:	e8 a0 57 e5 ff       	call   40f940 <btf__get_from_id@plt>
+    5ba1a0:	89 c2                	mov    %eax,%edx
+  #pragma GCC diagnostic pop
+
+         return err ? ERR_PTR(err) : btf;
+    5ba1a2:	48 98                	cltq
+    5ba1a4:	85 d2                	test   %edx,%edx
+    5ba1a6:	48 0f 44 45 f0       	cmove  -0x10(%rbp),%rax
+  }
+  <SNIP>
+
+Fixes: 218e7b775d368f38 ("perf bpf: Provide a weak btf__load_from_kernel_by_id() for older libbpf versions")
+Link: https://lore.kernel.org/linux-perf-users/f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/build/Makefile.feature                               | 1 +
+ tools/build/feature/Makefile                               | 4 ++++
+ .../feature/test-libbpf-btf__load_from_kernel_by_id.c      | 7 +++++++
+ tools/perf/Makefile.config                                 | 7 +++++++
+ tools/perf/util/bpf-event.c                                | 4 +++-
+ 5 files changed, 22 insertions(+), 1 deletion(-)
+ create mode 100644 tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index ae61f464043a11fb..c6a48d0ef9ff0648 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -98,6 +98,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          llvm-version                   \
+          clang                          \
+          libbpf                         \
++         libbpf-btf__load_from_kernel_by_id \
+          libpfm4                        \
+          libdebuginfod			\
+          clang-bpf-co-re
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index de66e1cc073481c5..cb4a2a4fa2e48ebf 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -57,6 +57,7 @@ FILES=                                          \
+          test-lzma.bin                          \
+          test-bpf.bin                           \
+          test-libbpf.bin                        \
++         test-libbpf-btf__load_from_kernel_by_id.bin	\
+          test-get_cpuid.bin                     \
+          test-sdt.bin                           \
+          test-cxx.bin                           \
+@@ -287,6 +288,9 @@ $(OUTPUT)test-bpf.bin:
+ $(OUTPUT)test-libbpf.bin:
+ 	$(BUILD) -lbpf
+ 
++$(OUTPUT)test-libbpf-btf__load_from_kernel_by_id.bin:
++	$(BUILD) -lbpf
++
+ $(OUTPUT)test-sdt.bin:
+ 	$(BUILD)
+ 
+diff --git a/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c b/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
+new file mode 100644
+index 0000000000000000..f7c084428735a73d
+--- /dev/null
++++ b/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <bpf/libbpf.h>
++
++int main(void)
++{
++	return btf__load_from_kernel_by_id(20151128, NULL);
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index f3bf9297bcc03c5e..1bd64e7404b9fbd4 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -553,9 +553,16 @@ ifndef NO_LIBELF
+         ifeq ($(feature-libbpf), 1)
+           EXTLIBS += -lbpf
+           $(call detected,CONFIG_LIBBPF_DYNAMIC)
++
++          $(call feature_check,libbpf-btf__load_from_kernel_by_id)
++          ifeq ($(feature-libbpf-btf__load_from_kernel_by_id), 1)
++            CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
++          endif
+         else
+           dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
+         endif
++      else
++	CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
+       endif
+     endif
+ 
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 94624733af7e225a..8271ab764eb56c7b 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -22,7 +22,8 @@
+ #include "record.h"
+ #include "util/synthetic-events.h"
+ 
+-struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
++#ifndef HAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
++struct btf *btf__load_from_kernel_by_id(__u32 id)
+ {
+        struct btf *btf;
+ #pragma GCC diagnostic push
+@@ -32,6 +33,7 @@ struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
+ 
+        return err ? ERR_PTR(err) : btf;
+ }
++#endif
+ 
+ int __weak bpf_prog_load(enum bpf_prog_type prog_type,
+ 			 const char *prog_name __maybe_unused,
+-- 
+2.35.1
+
