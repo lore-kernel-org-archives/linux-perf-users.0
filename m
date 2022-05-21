@@ -2,334 +2,181 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A0FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 May 2022 04:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A114AC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 21 May 2022 13:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236814AbiEUEsA (ORCPT
+        id S243499AbiEUNFA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 21 May 2022 00:48:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36144 "EHLO
+        Sat, 21 May 2022 09:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349247AbiEUEr7 (ORCPT
+        with ESMTP id S230162AbiEUNE7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 21 May 2022 00:47:59 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F331AE278
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 May 2022 21:47:58 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24L42x59025530;
-        Sat, 21 May 2022 04:47:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=lyocsUF+CR7ygjplRlFFbVrm/hMQJtZZcf62+8CnFtc=;
- b=qikZ0NXeKgakThhH5BQqUsNqpPpDGo856vrXBsN8GBZAA11oQXzfVjjXnoF2SiAzFhZE
- qtiYVarWtVvzeAF512NkbhJ9a15EKjsGYcwRj7dPOnSiiiH6UyK3hvIWEHODHzZIsyMZ
- wXrjTrrPOStO6+WVbubYRB758aBeApjYSfit8mOqFWx9RiygM8G7RXJ5tYEbbMoHjizc
- ID3crZ2Bl0NiJICasaRjHkd8UAoetAqOi5PHWG9ustcNTqbwNfHZQHl9HoSFUgp4rgYd
- n5lQanHO1/1oZmmP7aOzOztQLhP+ttPRrpKqlNaCZuLKUvEnOfQhYfbnL7FcXCGafEE4 pQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g6rqarey5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 21 May 2022 04:47:49 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24L4lm1N032739;
-        Sat, 21 May 2022 04:47:48 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g6rqarey0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 21 May 2022 04:47:48 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24L4878n004651;
-        Sat, 21 May 2022 04:47:46 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3g6qq982ke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 21 May 2022 04:47:46 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24L4lh4Q31457786
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 21 May 2022 04:47:43 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF66D4C04A;
-        Sat, 21 May 2022 04:47:42 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4236B4C040;
-        Sat, 21 May 2022 04:47:39 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.163.18.237])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat, 21 May 2022 04:47:38 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: [PATCH V2] tools/perf/tests: Skip perf BPF test if clang is not
- present
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAP-5=fX7XXHUzQvKQf-bmWxkJpMUTaRSca8oOo4w-3TgF_mHYQ@mail.gmail.com>
-Date:   Sat, 21 May 2022 10:17:38 +0530
-Cc:     Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        jolsa@kernel.org, kjain@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EE464D1F-C157-4313-A086-8A46B7A409DC@linux.vnet.ibm.com>
-References: <20220511115438.84032-1-atrajeev@linux.vnet.ibm.com>
- <be9726bc462d3b00243bd2161fb8e153b919db1e.camel@linux.vnet.ibm.com>
- <CAP-5=fX7XXHUzQvKQf-bmWxkJpMUTaRSca8oOo4w-3TgF_mHYQ@mail.gmail.com>
-To:     Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: casvgLV6OOllIGX9CEZ_U4ZpbtqUsRYs
-X-Proofpoint-ORIG-GUID: PRRRk0PqMgzwbHW2c0dBtjPW0AE4hngD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-20_08,2022-05-20_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 impostorscore=0 bulkscore=0 mlxscore=0 phishscore=0
- spamscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
- suspectscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2202240000 definitions=main-2205210023
+        Sat, 21 May 2022 09:04:59 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA559DFCA
+        for <linux-perf-users@vger.kernel.org>; Sat, 21 May 2022 06:04:58 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d22so9393328plr.9
+        for <linux-perf-users@vger.kernel.org>; Sat, 21 May 2022 06:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s2n5YNqGFylFAAt45N0qR9qOr0oyP2hkHtQVdhGhKKA=;
+        b=fwpjh7nVlyX8PDTyufrP1Utl9I+TbU8aqSma60xM47njNCNfifMS0+8zbIKUqSrCem
+         SyaXycwDwurccTF3FSXp2VKiHqcm6Cv7D8PLY91fhgJaNwUpWyHgZwzRjKBP/pk1oGgT
+         8DXyoZA1ukWgr97uWKkhFHy/FN8p8hiYmSu/YL9BxOkv/EKbI1tZV4aVOXZwv8dJhPcl
+         dX5n6GQvdOvM8TNIu5F//6jX98LueEabAoi3TAPFY8imYWv3tDEfVpuuqzP3A7WDrO3F
+         a1LXuhUS9hswpTbd0b5ZXpE33RsTgqFrfBptHTFG2kpOW0MTk3vwUo8Exvzc9zf8GlRF
+         3NTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s2n5YNqGFylFAAt45N0qR9qOr0oyP2hkHtQVdhGhKKA=;
+        b=yIIzuG7n0cNOyMlMXOG00T+JZAtam1cQ8quuWiuR+ktgPWulmZjO0XCEHFLnHQJmvP
+         Fb2CWiXvjnX+M7EeIsohXsHT5NuN5jhtM2EtCsX8WMSRXdeynnb294qQAy5g2dpGONQo
+         dxigTt+6rEKhPu/dcxHPriK4/T83OPMcpFTTT7xKpHL/APT7tRA85zgge2P+gNfeyueU
+         q1wUKdkjvjNQY9IfHE/ODJL6xSsCtEZHx0Wf9pPAdA6FYMlhaokf2ZNZTzrFcqE5plWz
+         mZwH+bVXjbaLmaSNTgqqiRuCISHZXp9cO37gaocf50h7SnHrlj6x6WXbYdJwAnd44501
+         DKYA==
+X-Gm-Message-State: AOAM532sQkibU49r7NdtYu9yHThrNRrguY7xbcOHwalVuuhsgUUjnGVI
+        63f+FqfH7H5cEIg+adECX4zzUQ==
+X-Google-Smtp-Source: ABdhPJweQgkTKhCYUsUhLdmEwD6BkQNij7Id6myVKcnLU7SMLmdQmwj4QtIsGnHXupjxwenCWzigXA==
+X-Received: by 2002:a17:903:40c4:b0:161:a2fa:adfb with SMTP id t4-20020a17090340c400b00161a2faadfbmr14417150pld.16.1653138298124;
+        Sat, 21 May 2022 06:04:58 -0700 (PDT)
+Received: from leo-build-box.lan (n058152048195.netvigator.com. [58.152.48.195])
+        by smtp.gmail.com with ESMTPSA id c2-20020a62f842000000b0050dc7628160sm3724874pfm.58.2022.05.21.06.04.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 May 2022 06:04:57 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Tanmay Jagdale <tanmay@marvell.com>,
+        "zengshun . wu" <zengshun.wu@outlook.com>,
+        Al Grant <al.grant@arm.com>, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v6 0/2] perf script python: Add script for CoreSight disassembly
+Date:   Sat, 21 May 2022 21:04:44 +0800
+Message-Id: <20220521130446.4163597-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This patch set is to add CoreSight disassembly script, the python script
+can dump assembly, source line and symbols for humans inspecting.
+
+The first patch changes python script engine to expose more information
+for DSO and maps, so it's helpful for disassembly with objdump program.
+
+The second patch is to introduce the python script for CoreSight trace
+data disassembly for branch samples.  It also can dump source line and
+symbol info for instruction samples.
+
+This patch set has been tested on Arm64 Juno board:
+
+  # perf script -s scripts/python/arm-cs-trace-disasm.py
+  ...
+  main  6728/6728  [0004]         0.000000000  main+0x40                               /root/coresight_test/main.c                15 	for (i = 0; i < 10000; i++) {
+  main  6728/6728  [0004]         0.000000000  main+0x20                               /root/coresight_test/main.c                16 		val = lib_loop_test(100);
+  main  6728/6728  [0004]         0.000000000  lib_loop_test@plt+0xc                   /root/coresight_test/main
+  main  6728/6728  [0004]         0.000000000  lib_loop_test+0xc                       /root/coresight_test/libcstest.c            8 	for (i = 0; i < 5; i++)
+  main  6728/6728  [0004]         0.000000000  lib_loop_test+0x30                      
+  main  6728/6728  [0004]         0.000000000  lib_loop_test+0x30                      
+  main  6728/6728  [0004]         0.000000000  lib_loop_test+0x30                      
+  main  6728/6728  [0004]         0.000000000  lib_loop_test+0x30                      
+  main  6728/6728  [0004]         0.000000000  lib_loop_test+0x30                      
+  main  6728/6728  [0004]         0.000000000  lib_loop_test+0x3c                      /root/coresight_test/libcstest.c           12 }
+  ...
+
+  # perf script -s scripts/python/arm-cs-trace-disasm.py -- -d llvm-objdump-11 -k ./vmlinux
+  ARM CoreSight Trace Data Assembler Dump
+        ffff800008eb3198 <etm4_enable_hw>:
+        ffff800008eb3310: c0 38 00 35   cbnz    w0, 0xffff800008eb3a28 <etm4_enable_hw+0x890>
+        ffff800008eb3314: 9f 3f 03 d5   dsb     sy
+        ffff800008eb3318: df 3f 03 d5   isb
+        ffff800008eb331c: f5 5b 42 a9   ldp     x21, x22, [sp, #32]
+        ffff800008eb3320: fb 73 45 a9   ldp     x27, x28, [sp, #80]
+        ffff800008eb3324: e0 82 40 39   ldrb    w0, [x23, #32]
+        ffff800008eb3328: 60 00 00 34   cbz     w0, 0xffff800008eb3334 <etm4_enable_hw+0x19c>
+        ffff800008eb332c: e0 03 19 aa   mov     x0, x25
+        ffff800008eb3330: 8c fe ff 97   bl      0xffff800008eb2d60 <etm4_cs_lock.isra.0.part.0>
+            main  6055/6055  [004]         0.000000000  etm4_enable_hw+0x198                     [kernel.kallsyms]
+        ffff800008eb2d60 <etm4_cs_lock.isra.0.part.0>:
+        ffff800008eb2d60: 1f 20 03 d5   nop
+        ffff800008eb2d64: 1f 20 03 d5   nop
+        ffff800008eb2d68: 3f 23 03 d5   hint    #25
+        ffff800008eb2d6c: 00 00 40 f9   ldr     x0, [x0]
+        ffff800008eb2d70: 9f 3f 03 d5   dsb     sy
+        ffff800008eb2d74: 00 c0 3e 91   add     x0, x0, #4016
+        ffff800008eb2d78: 1f 00 00 b9   str     wzr, [x0]
+        ffff800008eb2d7c: bf 23 03 d5   hint    #29
+        ffff800008eb2d80: c0 03 5f d6   ret
+            main  6055/6055  [004]         0.000000000  etm4_cs_lock.isra.0.part.0+0x20
+
+  # perf script -s scripts/python/arm-cs-trace-disasm.py -- -d objdump -k ./vmlinux
+  ARM CoreSight Trace Data Assembler Dump
+        ffff800008eb3310 <etm4_enable_hw+0x178>:
+        ffff800008eb3310:       350038c0        cbnz    w0, ffff800008eb3a28 <etm4_enable_hw+0x890>
+        ffff800008eb3314:       d5033f9f        dsb     sy
+        ffff800008eb3318:       d5033fdf        isb
+        ffff800008eb331c:       a9425bf5        ldp     x21, x22, [sp, #32]
+        ffff800008eb3320:       a94573fb        ldp     x27, x28, [sp, #80]
+        ffff800008eb3324:       394082e0        ldrb    w0, [x23, #32]
+        ffff800008eb3328:       34000060        cbz     w0, ffff800008eb3334 <etm4_enable_hw+0x19c>
+        ffff800008eb332c:       aa1903e0        mov     x0, x25
+        ffff800008eb3330:       97fffe8c        bl      ffff800008eb2d60 <etm4_cs_lock.isra.0.part.0>
+            main  6055/6055  [004]         0.000000000  etm4_enable_hw+0x198                     [kernel.kallsyms]
+        ffff800008eb2d60 <etm4_cs_lock.isra.0.part.0>:
+        ffff800008eb2d60:       d503201f        nop
+        ffff800008eb2d64:       d503201f        nop
+        ffff800008eb2d68:       d503233f        paciasp
+        ffff800008eb2d6c:       f9400000        ldr     x0, [x0]
+        ffff800008eb2d70:       d5033f9f        dsb     sy
+        ffff800008eb2d74:       913ec000        add     x0, x0, #0xfb0
+        ffff800008eb2d78:       b900001f        str     wzr, [x0]
+        ffff800008eb2d7c:       d50323bf        autiasp
+        ffff800008eb2d80:       d65f03c0        ret
+            main  6055/6055  [004]         0.000000000  etm4_cs_lock.isra.0.part.0+0x20
 
 
-> On 14-May-2022, at 12:02 AM, Ian Rogers <irogers@google.com> wrote:
->=20
-> On Thu, May 12, 2022 at 11:16 PM Disha Goel =
-<disgoel@linux.vnet.ibm.com> wrote:
->>=20
->>=20
->>=20
->> -----Original Message-----
->> From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> To: acme@kernel.org, jolsa@kernel.org
->> Cc: mpe@ellerman.id.au, linux-perf-users@vger.kernel.org, =
-linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com, =
-rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, =
-irogers@google.com
->> Subject: [PATCH V2] tools/perf/tests: Skip perf BPF test if clang is =
-not present
->> Date: Wed, 11 May 2022 17:24:38 +0530
->>=20
->> Perf BPF filter test fails in environment where "clang"
->>=20
->> is not installed.
->>=20
->>=20
->> Test failure logs:
->>=20
->>=20
->> <<>>
->>=20
->> 42: BPF filter                    :
->>=20
->> 42.1: Basic BPF filtering         : Skip
->>=20
->> 42.2: BPF pinning                 : FAILED!
->>=20
->> 42.3: BPF prologue generation     : FAILED!
->>=20
->> <<>>
->>=20
->>=20
->> Enabling verbose option provided debug logs which says
->>=20
->> clang/llvm needs to be installed. Snippet of verbose logs:
->>=20
->>=20
->> <<>>
->>=20
->> 42.2: BPF pinning                  :
->>=20
->> --- start ---
->>=20
->> test child forked, pid 61423
->>=20
->> ERROR: unable to find clang.
->>=20
->> Hint: Try to install latest clang/llvm to support BPF.
->>=20
->>        Check your $PATH
->>=20
->>=20
->> <<logs_here>>
->>=20
->>=20
->> Failed to compile test case: 'Basic BPF llvm compile'
->>=20
->> Unable to get BPF object, fix kbuild first
->>=20
->> test child finished with -1
->>=20
->> ---- end ----
->>=20
->> BPF filter subtest 2: FAILED!
->>=20
->> <<>>
->>=20
->>=20
->> Here subtests, "BPF pinning" and "BPF prologue generation"
->>=20
->> failed and logs shows clang/llvm is needed. After installing
->>=20
->> clang, testcase passes.
->>=20
->>=20
->> Reason on why subtest failure happens though logs has proper
->>=20
->> debug information:
->>=20
->> Main function __test__bpf calls test_llvm__fetch_bpf_obj by
->>=20
->> passing 4th argument as true ( 4th arguments maps to parameter
->>=20
->> "force" in test_llvm__fetch_bpf_obj ). But this will cause
->>=20
->> test_llvm__fetch_bpf_obj to skip the check for clang/llvm.
->>=20
->>=20
->> Snippet of code part which checks for clang based on
->>=20
->> parameter "force" in test_llvm__fetch_bpf_obj:
->>=20
->>=20
->> <<>>
->>=20
->> if (!force && (!llvm_param.user_set_param &&
->>=20
->> <<>>
->>=20
->>=20
->> Since force is set to "false", test won't get skipped and
->>=20
->> fails to compile test case. The BPF code compilation needs
->>=20
->> clang, So pass the fourth argument as "false" and also skip
->>=20
->> the test if reason for return is "TEST_SKIP"
->>=20
->>=20
->> After the patch:
->>=20
->>=20
->> <<>>
->>=20
->> 42: BPF filter                    :
->>=20
->> 42.1: Basic BPF filtering         : Skip
->>=20
->> 42.2: BPF pinning                 : Skip
->>=20
->> 42.3: BPF prologue generation     : Skip
->>=20
->> <<>>
->>=20
->>=20
->> Fixes: ba1fae431e74 ("perf test: Add 'perf test BPF'")
->>=20
->> Signed-off-by: Athira Rajeev <
->>=20
->> atrajeev@linux.vnet.ibm.com
->>=20
->>>=20
->>=20
->> ---
->>=20
->> Changelog:
->>=20
->> Addressed review comments from Arnaldo by adding
->>=20
->> reason for skipping of testcase.
->>=20
->>=20
->> tools/perf/tests/bpf.c | 10 ++++++----
->>=20
->> 1 file changed, 6 insertions(+), 4 deletions(-)
->>=20
->>=20
->> Tested the patch on powerpc and powernv, perf BPF test works fine =
-with the patch.
->>=20
->> Tested-by: Disha Goel <disgoel@linux.vnet.ibm.com>
->=20
-> Acked-by: Ian Rogers <irogers@google.com>
->=20
-> Thanks!
-> Ian
->=20
+Changes from v5:
+* Updated script for using f-string format (Ian);
+* Added Adrian's review tag for patch 01;
+* Fixed the issue for printing souce code line;
+* Fixed several issues for using python3 (dictionary index,
+  decode output for 'utf-8').
 
-Hi,
+Changes from v4:
+* Enhanced python script engine for DSO and map infos;
+* Rewrote the python script, added support for symbol and source line
+  dumping.
 
-Thanks all for the review.
 
-Athira
+Leo Yan (2):
+  perf scripting python: Expose dso and map information
+  perf scripts python: Support Arm CoreSight trace data disassembly
 
->> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
->>=20
->> index 57b9591f7cbb..17c023823713 100644
->>=20
->> --- a/tools/perf/tests/bpf.c
->>=20
->> +++ b/tools/perf/tests/bpf.c
->>=20
->> @@ -222,11 +222,11 @@ static int __test__bpf(int idx)
->>=20
->>=20
->>  ret =3D test_llvm__fetch_bpf_obj(&obj_buf, &obj_buf_sz,
->>=20
->>        bpf_testcase_table[idx].prog_id,
->>=20
->> -       true, NULL);
->>=20
->> +       false, NULL);
->>=20
->>  if (ret !=3D TEST_OK || !obj_buf || !obj_buf_sz) {
->>=20
->>  pr_debug("Unable to get BPF object, %s\n",
->>=20
->>  bpf_testcase_table[idx].msg_compile_fail);
->>=20
->> - if (idx =3D=3D 0)
->>=20
->> + if ((idx =3D=3D 0) || (ret =3D=3D TEST_SKIP))
->>=20
->>  return TEST_SKIP;
->>=20
->>  else
->>=20
->>  return TEST_FAIL;
->>=20
->> @@ -364,9 +364,11 @@ static int test__bpf_prologue_test(struct =
-test_suite *test __maybe_unused,
->>=20
->> static struct test_case bpf_tests[] =3D {
->>=20
->> #ifdef HAVE_LIBBPF_SUPPORT
->>=20
->>  TEST_CASE("Basic BPF filtering", basic_bpf_test),
->>=20
->> - TEST_CASE("BPF pinning", bpf_pinning),
->>=20
->> + TEST_CASE_REASON("BPF pinning", bpf_pinning,
->>=20
->> + "clang isn't installed or environment missing BPF support"),
->>=20
->> #ifdef HAVE_BPF_PROLOGUE
->>=20
->> - TEST_CASE("BPF prologue generation", bpf_prologue_test),
->>=20
->> + TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test,
->>=20
->> + "clang isn't installed or environment missing BPF support"),
->>=20
->> #else
->>=20
->>  TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not =
-compiled in"),
->>=20
->> #endif
+ .../scripts/python/arm-cs-trace-disasm.py     | 272 ++++++++++++++++++
+ .../scripting-engines/trace-event-python.c    |  21 +-
+ 2 files changed, 289 insertions(+), 4 deletions(-)
+ create mode 100755 tools/perf/scripts/python/arm-cs-trace-disasm.py
+
+-- 
+2.25.1
 
