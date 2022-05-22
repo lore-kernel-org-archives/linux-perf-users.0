@@ -2,189 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558EFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 22 May 2022 06:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95660C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 22 May 2022 06:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235509AbiEVGPq (ORCPT
+        id S233288AbiEVG2e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 22 May 2022 02:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50230 "EHLO
+        Sun, 22 May 2022 02:28:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbiEVGPo (ORCPT
+        with ESMTP id S232901AbiEVG2d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 22 May 2022 02:15:44 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EBA43C704
-        for <linux-perf-users@vger.kernel.org>; Sat, 21 May 2022 23:15:43 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id c14so11061877pfn.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 21 May 2022 23:15:43 -0700 (PDT)
+        Sun, 22 May 2022 02:28:33 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7447F3F8AC
+        for <linux-perf-users@vger.kernel.org>; Sat, 21 May 2022 23:28:32 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id l14so11348401pjk.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 21 May 2022 23:28:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jllyWuWeoq7lgbBX7gZVoDEy2R2rk3cOIHKyYS++UUY=;
-        b=sWeUD/D1clhUErYbKOXtKqynTBLrkJB1uVVgoQA4sEi3itZZbUsHO22ls87JrxSjNm
-         UeX464kzGuklpWcvHi5OyzkoEktjnBi79wR+4Tf3ERYxkA3NQ/LweHsV/OV0JX9QV+NG
-         kxHSOC8uV+YWZ70C4qImSedkQqesGhIphdX33G3DbcdoVvBeb3VcHwZAqluVvRxX19kf
-         zVSJMjirqSlFf3T75xoLrhs8wIMnbIyV2tiLdZ0659mTtGKICLopPrqoPHNKz4CkmJNW
-         2m7V+DtsvSY+eU0SiIHHI0HzuKUIaqdN+bxieEFaqSglLDcCA7G1zPngCL4NmVjFeSCA
-         IqsA==
+         :content-disposition:in-reply-to;
+        bh=eoHDbjWtl/zpr4ERvZZrGreb74/i9haCCnM5LzNUYAk=;
+        b=MnC6wR2iAAMH3qOKoH5nuxxT9XIbSH9f52IAn3EnuXnhlEByJniyImcQFzzGhuTxfd
+         UkP+qNe/O58QG40YREBS+AA+IfxVR/o+Ts5G/CBEGvNz9mO0/slb0aZfOnt7NEnFl3e4
+         +5NLq47E4XM678ZzL5L+M0mneX+u8chd4vz3l/dNYqyKoryKV6ARCTQhBg9QvyMWydne
+         mAgyHNSVOl+PM2t/61b5ft7Olh5QQGSwoBuAQnWedxPDVzyeGs9OMCkkbNWkASQNoIve
+         VaJIDU8WTa/CPBLm6vHVYRjaAcvUHbRBTsjywAThgQmAviT3TdEehDCitxSSSrIAfrLg
+         hJCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jllyWuWeoq7lgbBX7gZVoDEy2R2rk3cOIHKyYS++UUY=;
-        b=wwQdUcxmpHYfUUxTFctYtICj0RgACbcBweBBtvqhOU8h5mjs4OrRXYJmt0zLJ5oAEn
-         ee/fhHHJmtp3A6L6DNQZnDK7bUKjLIIYtkSnZWbTvqxyyobl5A9jOhzk1cdGozvnGV4f
-         Ln5YbYLbVD9rZ6j009g4m7SLNCQaJ9/2bX19EDshZaLPqZSAEUQlDW8pgo5rhCkP7rGk
-         o437RPzARuk0RuhlQ1eJiMbK0aGYyvnF07hcJxlkBD8qzwaOBdHsinymKVe/fgBtQzRV
-         DbLUzmAtJluAueRhRX/Yp53OO/uudHMSsYZfO827VzGdtSkLiHhZz/QTuB6iwlazTkzF
-         kL0w==
-X-Gm-Message-State: AOAM530p+Sj5HyKWseukOly5FY5YSXbgTaggbviYL5i1JD7tqKJfvjB+
-        pTFnokjnRE2s7C+t0kXkt+9Srw==
-X-Google-Smtp-Source: ABdhPJxAF+axv6wD4J6IBdMK5B2toBuQwMmUI2TzTVYd/f0rmMlL5qEwOSktLI58jMU6mHP+st8E+w==
-X-Received: by 2002:a63:181:0:b0:3f6:656a:e616 with SMTP id 123-20020a630181000000b003f6656ae616mr11321356pgb.448.1653200142709;
-        Sat, 21 May 2022 23:15:42 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=eoHDbjWtl/zpr4ERvZZrGreb74/i9haCCnM5LzNUYAk=;
+        b=fZpilQcLc0iVfUXiDXJ6ZaBhKfAArYf+puBO/HQXAjSGxF9vR/LejAH7xwdjpkzdpf
+         Got/7WxESzWhOOm/IV7OQkZwv1KZB5UlHsGYOV6xTfBwfbXkRwyvnf0Od4C6wi5HHP3w
+         cCzAqH866SP/5tZ8AWSN2HdjKdHkX29j9XG6BIZMVrm8FSzZK1KrXlbaQYZ4CqLuwex4
+         AxEpD42snNoopZYiiLlxReqbjzHA5rwjsiXjuEkIB3ZItlUaxMcbTKvTpcRMDK5o9nVY
+         YBbhLmXUtJXZDPMBYPBE+96SzS48R1laRovDbptid5CEWFuSFO9jYbrTvnPAkDZU9MiW
+         /vqA==
+X-Gm-Message-State: AOAM530IuARxIn43jXzASmG7ydVRUMuaGEqj7KMJ/TWhutwGmezKc8b8
+        h7BgQnohbKEtOrudw65jlFZH9Q==
+X-Google-Smtp-Source: ABdhPJw9xP241mvQ4Qzw8vGsGIoHqFrE7OAiqRV8u3LipqCdK0o00fgKCh6imlOTQvwTR8DXfyn1JQ==
+X-Received: by 2002:a17:90b:250c:b0:1df:453f:561a with SMTP id ns12-20020a17090b250c00b001df453f561amr19848304pjb.35.1653200911851;
+        Sat, 21 May 2022 23:28:31 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([137.184.121.66])
-        by smtp.gmail.com with ESMTPSA id l4-20020a17090a660400b001df666ebddesm4644331pjj.6.2022.05.21.23.15.36
+        by smtp.gmail.com with ESMTPSA id w12-20020a170902d70c00b001616e19537esm2524718ply.213.2022.05.21.23.28.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 May 2022 23:15:42 -0700 (PDT)
-Date:   Sun, 22 May 2022 14:15:33 +0800
+        Sat, 21 May 2022 23:28:31 -0700 (PDT)
+Date:   Sun, 22 May 2022 14:28:23 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Joe Mario <jmario@redhat.com>
+To:     James Clark <james.clark@arm.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, german.gomez@arm.com,
-        benh@kernel.crashing.org, Nick.Forrington@arm.com,
-        alexander.shishkin@linux.intel.com, andrew.kilroy@arm.com,
-        james.clark@arm.com, john.garry@huawei.com,
-        Jiri Olsa <jolsa@kernel.org>, kjain@linux.ibm.com,
-        lihuafei1@huawei.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, will@kernel.org
-Subject: Re: [PATCH v8 0/4] perf: arm-spe: Decode SPE source and use for perf
- c2c
-Message-ID: <20220522061533.GA715382@leoy-ThinkPad-X240s>
-References: <20220517020326.18580-1-alisaidi@amazon.com>
- <YoQRg1r7HuwiO3bZ@kernel.org>
- <20220518041630.GD402837@leoy-ThinkPad-X240s>
- <32e5a3b7-9294-bbd5-0ae4-b5c04eb4e0e6@redhat.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Like Xu <likexu@tencent.com>, Ian Rogers <irogers@google.com>,
+        Alyssa Ross <hi@alyssa.is>, Kajol Jain <kjain@linux.ibm.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        German Gomez <german.gomez@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] perf c2c: Support display for Arm64
+Message-ID: <20220522062823.GB715382@leoy-ThinkPad-X240s>
+References: <20220508092346.255826-1-leo.yan@linaro.org>
+ <d15bb8a2-2203-cabf-69de-627d0a45efdc@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <32e5a3b7-9294-bbd5-0ae4-b5c04eb4e0e6@redhat.com>
+In-Reply-To: <d15bb8a2-2203-cabf-69de-627d0a45efdc@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Joe,
+Hi James,
 
-On Thu, May 19, 2022 at 11:16:53AM -0400, Joe Mario wrote:
+On Thu, May 19, 2022 at 03:19:09PM +0100, James Clark wrote:
 
 [...]
 
-> Hi Leo:
-> Thanks for getting this working on ARM.  I do have a few comments.
+> Hi Leo,
 > 
-> I built and ran this on a ARM Neoverse-N1 system with 2 numa nodes.  
-> 
-> Comment 1:
-> When I run "perf c2c report", the "Node" field is marked "N/A".  It's supposed to show the numa node where the data address for the cacheline resides.  That's important both to see what node hot data resides on and if that data is getting lots of cross-numa accesses. 
+> I see that the HITM and Store Refs columns (even N/A) are all 0% on Arm.
+> Assuming it's a similar example to the x86 one above, does that mean that
+> these are always expected to be 0? If so, should they be removed to avoid
+> confusion, or is it just a case of the example not producing any non 0
+> data for these columns?
 
-Good catching.  Will fix it.
+On Arm SPE, we need to use 'N/A' for Store Refs, but we doesn't need
+HITM.
 
-> Comment 2:
-> I'm assuming you're identifying the contended cachelines using the "peer" load response, which indicates the load was resolved from a "peer" cpu's cacheline.  Please confirm.
+On x86, we should expect 'N/A' is useless and should be removed.
 
-Yeah, "peer" is ambiguous.  AFAIK, "peer" load can come from:
-- Local node which in peer CPU's cache (can be same cluster or peer cluster);
-- Remove ndoe which in CPU's cache line, or even from *remote DRAM*.
+I will update the view for this.
 
-> If that's true, is it possible to identify if that "peer" response was on the local or remote numa node?  
-
-Good point.  Yes, we can do this.  So far, the remote accesses are
-accounted in the metric "rmt_hit", it should be same with the
-remote peer load; but so far we have no a metric to account local
-peer loads, it would be not hard to add metric "lcl_peer".
-
-> I ask because being able to identify both local and remote HitM's on Intel X86_64 has been quite valuable.  That's because remote HitM's are costly and because it helps the viewer see if they need to optimize their cpu affinity or what node their hot data resides on.
-
-Thanks a lot for the info.  This means at least I should refine the shared
-cache line distribution pareto for remote peer access, will do some
-experiment for the enhancement.
-
-> Last Comment:
-> There's a row in the Pareto table that has incorrect column alignment.
-> Look at row 80 below in the truncated snipit of output.  It has an extra field inserted in it at the beginning.
-> I also show what the corrected output should look like.
-> 
-> Incorrect row 80:
->     71	=================================================
->     72	      Shared Cache Line Distribution Pareto      
->     73	=================================================
->     74	#
->     75	# ----- HITM -----    Snoop  ------- Store Refs ------  ------- CL --------                      
->     76	# RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss      N/A    Off  Node  PA cnt        Code address
->     77	# .......  .......  .......  .......  .......  .......  .....  ....  ......  ..................
->     78	#
->     79	  -------------------------------------------------------------------------------
->     80	      0        0        0     4648        0        0    11572            0x422140
->     81	  -------------------------------------------------------------------------------
->     82	    0.00%    0.00%    0.00%    0.00%    0.00%   44.47%    0x0   N/A       0            0x400ce8
->     83	    0.00%    0.00%   10.26%    0.00%    0.00%    0.00%    0x0   N/A       0            0x400e48
->     84	    0.00%    0.00%    0.00%    0.00%    0.00%   55.53%    0x0   N/A       0            0x400e54
->     85	    0.00%    0.00%   89.74%    0.00%    0.00%    0.00%    0x8   N/A       0            0x401038
-> 
-> 
-> Corrected row 80:
->     71	=================================================
->     72	      Shared Cache Line Distribution Pareto      
->     73	=================================================
->     74	#
->     75	# ----- HITM -----    Snoop  ------- Store Refs -----   ------- CL --------                       
->     76	# RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss     N/A     Off  Node  PA cnt        Code address
->     77	# .......  .......  .......  .......  .......  ......   .....  ....  ......  ..................
->     78	#
->     79	  -------------------------------------------------------------------------------
->     80	       0        0     4648        0        0    11572            0x422140
->     81	  -------------------------------------------------------------------------------
->     82	    0.00%    0.00%    0.00%    0.00%    0.00%   44.47%    0x0   N/A       0            0x400ce8
->     83	    0.00%    0.00%   10.26%    0.00%    0.00%    0.00%    0x0   N/A       0            0x400e48
->     84	    0.00%    0.00%    0.00%    0.00%    0.00%   55.53%    0x0   N/A       0            0x400e54
->     85	    0.00%    0.00%   89.74%    0.00%    0.00%    0.00%    0x8   N/A       0            0x401038
-
-Hmm‥.  At my side, I used below command to output pareto view, but I
-cannot see the conlumn "CL", the conlumn "CL" is only shown for TUI
-mode but not for the mode "--stdio".  Could you share the method for
-how to reproduce this issue?
-
-$ ./perf c2c report -i perf.data.v3 -N
-
-=================================================
-      Shared Cache Line Distribution Pareto      
-=================================================
-#
-#        ----- HITM -----    Snoop  ------- Store Refs ------  --------- Data address ---------                      --------------- cycles ---------------    Total       cpu                                     Shared                              
-#   Num  RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt hitm  lcl hitm      load      peer  records       cnt                  Symbol             Object             Source:Line  Node{cpus %peers %stores}
-# .....  .......  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  ........  .......  ........  ......................  .................  ......................  ....
-#
-  -------------------------------------------------------------------------------
-      0        0        0    56183        0        0    26534            0x420180
-  -------------------------------------------------------------------------------
-           0.00%    0.00%   99.85%    0.00%    0.00%    0.00%                 0x0   N/A       0            0x400bd0         0         0      1587      4034   188785         2  [.] 0x0000000000000bd0  false_sharing.exe  false_sharing.exe[bd0]   0{ 1  87.4%    n/a}  1{ 1  12.6%    n/a}
-           0.00%    0.00%    0.00%    0.00%    0.00%   54.56%                 0x0   N/A       0            0x400bd4         0         0         0         0    14476         2  [.] 0x0000000000000bd4  false_sharing.exe  false_sharing.exe[bd4]   0{ 1    n/a   0.2%}  1{ 1    n/a  99.8%}
-           0.00%    0.00%    0.00%    0.00%    0.00%   45.44%                 0x0   N/A       0            0x400bf8         0         0         0         0    12058         2  [.] 0x0000000000000bf8  false_sharing.exe  false_sharing.exe[bf8]   0{ 1    n/a  70.3%}  1{ 1    n/a  29.7%}
-           0.00%    0.00%    0.15%    0.00%    0.00%    0.00%                0x20   N/A       0            0x400c64         0         0      2462      2451     4835         2  [.] 0x0000000000000c64  false_sharing.exe  false_sharing.exe[c64]   0{ 1  11.9%    n/a}  1{ 1  88.1%    n/a}
-
-  -------------------------------------------------------------------------------
-      1        0        0     2571        0        0    69861            0x420100
-  -------------------------------------------------------------------------------
-           0.00%    0.00%    0.00%    0.00%    0.00%  100.00%                 0x8   N/A       0            0x400c08         0         0         0         0    69861         2  [.] 0x0000000000000c08  false_sharing.exe  false_sharing.exe[c08]   0{ 1    n/a  62.1%}  1{ 1    n/a  37.9%}
-           0.00%    0.00%  100.00%    0.00%    0.00%    0.00%                0x20   N/A       0            0x400c74         0         0       834       641     6576         2  [.] 0x0000000000000c74  false_sharing.exe  false_sharing.exe[c74]   0{ 1  93.2%    n/a}  1{ 1   6.8%    n/a}
-
-Very appreciate your testing and suggestions!
+Thanks for the testing!
 
 Leo
