@@ -2,109 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A447FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 12:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E1CC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 13:05:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235771AbiEWMzF (ORCPT
+        id S235862AbiEWNFo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 May 2022 08:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
+        Mon, 23 May 2022 09:05:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235777AbiEWMzE (ORCPT
+        with ESMTP id S235856AbiEWNFn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 May 2022 08:55:04 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E1B152E7E;
-        Mon, 23 May 2022 05:55:02 -0700 (PDT)
+        Mon, 23 May 2022 09:05:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135DF4992D;
+        Mon, 23 May 2022 06:05:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 109B2B810AC;
-        Mon, 23 May 2022 12:55:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912AFC385A9;
-        Mon, 23 May 2022 12:54:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A108361349;
+        Mon, 23 May 2022 13:05:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB6DC385A9;
+        Mon, 23 May 2022 13:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653310499;
-        bh=VL29GRANyhn2Yf22h7xWxr8NCXCPQBgciy3yLY8dyEc=;
+        s=k20201202; t=1653311141;
+        bh=bWrL+p+gwqZvG50H6tpkpi47lD1PdQOmcrKzmQSZeBU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gwou/P4SObZx4pE88EhIO5qDrF33vuU9h8oEaYoy1v1ypY3KKQsuPfCxmZR2LozP6
-         zp1T7rXjl8BVJX7MlMhJbd7P8MSN7O6QlIQs9Ph4fTWlkLApN/sARmBjqDc+JJbJLw
-         a6P3ZkGIbAX7S5JzX8N23PEaYoaphq0KS92U4EhyzwrdZhxFdDYdwYeZgjycMx5tKG
-         PjH9V+cpX93p6BhPwLLE0C+DP62k4+q6EToukbzs9KchPGqynaI9NmPjcdr/HftN5a
-         eQI/rqDnr2pltEfmjMt+gHtV7tNJJVaRlC72fYpA+4p2hrTcmuepey7JTx5da/Sg58
-         pGv7t5MWhFjog==
+        b=AWu9228BkTIzNTsWBSiHPPYtNXOhYhpo/D98nFYLThrLxBvWxCMfQwNpndNN3m7KR
+         HA+q61wF+dJrYwr3/9eyH1ooD6+HEgfi7dtjS7BJPzcS2pJeZs8FyYkEazWmYcPgKh
+         CCI00uz8N1c7dGCDuw9+vjkDByD1ybgzzhn89RgzZxksQzJ449Q2P95G8GK4vFGnmM
+         wAj4h0xF7iQ/LHHAy/dcm6aJQgzXGdYOW24hwBTARFUeiE6uBI+sHf+B3qH48c1yK3
+         WpzVvtTrnK9glwiFOHg1Tu8Pi/zLzsb9mWZAZAoEClOPENxV/6j4VKtjBx2VKSBY4H
+         Ae3USidvIzS6g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1250C400B1; Mon, 23 May 2022 09:54:57 -0300 (-03)
-Date:   Mon, 23 May 2022 09:54:57 -0300
+        id E4DCC400B1; Mon, 23 May 2022 10:05:37 -0300 (-03)
+Date:   Mon, 23 May 2022 10:05:37 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Lv Ruyi <lv.ruyi@zte.com.cn>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 0/5] perf_counts clean up and perf stat report bug fix
-Message-ID: <YouEIfLIaQjKK08q@kernel.org>
-References: <20220519032005.1273691-1-irogers@google.com>
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
+        Marco Elver <elver@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 0/8] Make more tests skip rather than fail
+Message-ID: <YouGoc9elnPwV5IM@kernel.org>
+References: <20220518042027.836799-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220519032005.1273691-1-irogers@google.com>
+In-Reply-To: <20220518042027.836799-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 18, 2022 at 08:20:00PM -0700, Ian Rogers escreveu:
-> perf_counts takes a CPU map index as an argument, however, there were
-> a few places where this hadn't been cleaned up and the index was
-> called cpu. In part this led to the bug discovered by Michael Petlan in:
-> https://lore.kernel.org/linux-perf-users/CAP-5=fWQR=sCuiSMktvUtcbOLidEpUJLCybVF6=BRvORcDOq+g@mail.gmail.com/
+Em Tue, May 17, 2022 at 09:20:19PM -0700, Ian Rogers escreveu:
+> A long standing niggle has been that tests that cannot pass are marked
+> as failing rather than skip.  John Garry mentioned a similar concern
+> in [1]. These changes fix this behavior so that as root, or not, at
+> least the first 10 tests are passing or skipping.
 > 
-> Fix the bug, tidy up more of the arguments passed to perf_counts, add
-> a test to ensure the bug isn't reintroduced and add a helper macro to
-> iterate over just CPU map indices.
+> [1] https://lore.kernel.org/lkml/d32376b5-5538-ff00-6620-e74ad4b4abf2@huawei.com/
+> 
+> v2. Updates reviewed-by and acked-by. It addresses review comments
+>     from Namhyung Kim <namhyung@kernel.org>. An extra fix is now
+>     included for PERF_RECORD_* which can fail as a user because of
+>     perf_event_paranoid.
 
-Applied 2-5 to perf/core. The first is already in 5.18
-
-
-Thanks,
+Thanks, applied.
 
 - Arnaldo
+
  
-> Ian Rogers (5):
->   perf stat: Fix and validate inputs in stat events
->   perf stat: Add stat record+report test
->   perf cpumap: Add perf_cpu_map__for_each_idx
->   perf bpf_counter: Tidy use of CPU map index
->   perf stat: Make use of index clearer with perf_counts
+> Ian Rogers (8):
+>   perf test: Skip reason for suites with 1 test
+>   perf test: Use skip in vmlinux kallsyms
+>   perf test: Use skip in openat syscall
+>   perf test: Basic mmap use skip
+>   perf test: Parse events tidy terms_test
+>   perf test: Parse events tidy evlist_test
+>   perf test: Parse events break apart tests
+>   perf test: Use skip in PERF_RECORD_*
 > 
->  tools/lib/perf/include/perf/cpumap.h |  3 ++
->  tools/perf/tests/shell/stat.sh       | 13 ++++++
->  tools/perf/util/bpf_counter.c        | 61 ++++++++++++++++------------
->  tools/perf/util/stat-display.c       | 22 +++++-----
->  tools/perf/util/stat.c               | 27 ++++++++----
->  5 files changed, 81 insertions(+), 45 deletions(-)
+>  tools/perf/tests/builtin-test.c            |   6 +-
+>  tools/perf/tests/mmap-basic.c              |  18 +-
+>  tools/perf/tests/openat-syscall-all-cpus.c |  23 +-
+>  tools/perf/tests/openat-syscall.c          |  20 +-
+>  tools/perf/tests/parse-events.c            | 492 +++++++++++----------
+>  tools/perf/tests/perf-record.c             |  18 +-
+>  tools/perf/tests/vmlinux-kallsyms.c        |  12 +-
+>  7 files changed, 341 insertions(+), 248 deletions(-)
 > 
 > -- 
-> 2.36.1.124.g0e6072fb45-goog
+> 2.36.0.550.gb090851708-goog
 
 -- 
 
