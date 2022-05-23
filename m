@@ -2,214 +2,378 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CECC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 08:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937E0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 09:04:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232068AbiEWIn5 (ORCPT
+        id S232484AbiEWJEn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 May 2022 04:43:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43842 "EHLO
+        Mon, 23 May 2022 05:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231876AbiEWInz (ORCPT
+        with ESMTP id S232475AbiEWJEm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 May 2022 04:43:55 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F2D3FD94;
-        Mon, 23 May 2022 01:43:53 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id k30so20244079wrd.5;
-        Mon, 23 May 2022 01:43:53 -0700 (PDT)
+        Mon, 23 May 2022 05:04:42 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FABA44760;
+        Mon, 23 May 2022 02:04:41 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id bg25so8295005wmb.4;
+        Mon, 23 May 2022 02:04:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=XZSTdMReuFxUglr0zW1U7pUwHaY1HEM4FPwN5xMO+SM=;
-        b=qTIBqn47z/Fb9xSVfVb33gHPU8ENmkdSAQGe2zeXBtk9/ccAtnXgbZYjwBCvSJl6UU
-         Mvm+iH/61paNzSICE60vYxJcZp9YkUh0lCwoFFUoRkhXsljLzdiPCL7Pn58gEulfFJSn
-         DIcPPdegVwCht55TAoLZ3QiShSMYg07AVowohLuqMRKk1+6ynBfj11Bf7nPbPssXSEb5
-         vKICo9NK6G9FhexQ3+wb5DK8l1ngn5tez2zG5qCLW+vr5rsS4F19XgkOWzYQcUlAcDoH
-         BsH4/bpHRNNlumclQ4csid6K9NDFkk6MfjDwx0CIJrfPdCdP2DrInyvY0KY1VfR0bAxM
-         GE3g==
+        bh=u8kDbKUhH6jkjODp8VrSUlBFIiA2YNyQkeo+Pu/y77o=;
+        b=CXkI6vAUWS5v83vb3vw6wXOAf4CGgs7tdL17DVtTDOyo9oQFKSmtsu1yKONKu0Vbo6
+         GhBbmywapERrDdMT+VV7cnvqqDLdTgbZXYx4QBM5ZPBWvDarJ2tDVleInIx4EoQ00TXp
+         X+aXwiPZpphGxXBf6aw6B0DbCc2hCIKgmP+R/HKSLR+Wh2rXdncr4q31bKpJHLM6TA75
+         m92tUuqzpT0wiVfDo1TRItxmLNYrjHp2YxlY6FWINlNM33ZjYm8b8P0Nr7fVtbGwSQBv
+         FUbFpe9LZDCe0kpbopEHik7v89X8zJ/o0HZ5AIAtJrzgVVLMHBp+1t18RiR+/sgbvbNp
+         jjHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XZSTdMReuFxUglr0zW1U7pUwHaY1HEM4FPwN5xMO+SM=;
-        b=6PeIaszUrpcuYGEQaBfUk4NbEIxmiQe3uW/FNOoLEnlsNzD0UGoD0kFQNqDziDndY/
-         WksDratGuScTRLB+Ou9T9l8U8byy6Rm+BaOIAZLQqGah9KiYuOhtCkp4J0+8bVsAsA5W
-         kXSDIsEtisfzhY6qkjCiJGK1fnpBLxM5SqejOD2ScgYckoykB/L03pF6fEVcw+AWTw1Y
-         FJaQMTwyhJW27tVaz0s8BQ8cwCsE+cBsx6XPsMjjlt0rKWRYV38eXdUSD7Of8Wam8tp/
-         g57772Gj15d8EgypWKBpbZI+pP6uLDib4QSrzVvupd4GFGLJp2pe6yRbkOjVXhFURRSJ
-         t0SA==
-X-Gm-Message-State: AOAM533tf84xqr1STBnfO78n787P8UjFk1YD3MWqWi8FucD47oxTnpXt
-        edp2WYaTKKIn5RB6KDvYftuErEb2fcnoU78P
-X-Google-Smtp-Source: ABdhPJw8Loff4lKBqUCywlJhjWTuhQom5m+9y93XSta5iwQyYShn7WaatdDduekh7G/s7jg1A9WHcw==
-X-Received: by 2002:a05:6000:178d:b0:20f:e84c:2f46 with SMTP id e13-20020a056000178d00b0020fe84c2f46mr1030243wrg.646.1653295432188;
-        Mon, 23 May 2022 01:43:52 -0700 (PDT)
+        bh=u8kDbKUhH6jkjODp8VrSUlBFIiA2YNyQkeo+Pu/y77o=;
+        b=M1CrVC7uyUn7+AaMBJK3DoIhyJCo0ZsO+S0GY9Af3CPk0BANfkFDkIWeMGx/Mykpsu
+         ul2cPWsd3hUBL5dhALbmyT1s3dqiCP6OFSf5yFLwGJz7hmdsSNKk3imsLnnJzop3LsV0
+         Z38MQzOW48873/dzj/e3ajoC/gRwYT/bMJ2YUdMR6rswlTAVUMfpGcfwWhtXF37A+3QX
+         n4ufrksECJZHmnsbawZYgbEAo7HWK2L0Xqt51p5lngXYTYmjQa4eWSZk26xTwC/bpx0o
+         ZSyEu4MRF3qVNprkNSmBcEoP5bnK2qPFkUD2alyzQEwGfzCkZNdmz2fs+r+CTyGFQQ5f
+         7/iQ==
+X-Gm-Message-State: AOAM531mVOtas7P1TW0qKyYo3epdV4Hckvaa7Jgs4FsxGTstSI0g2M18
+        BGYOfHjnU6UU8evb2Fr3GinZEcb72LzlYZH6
+X-Google-Smtp-Source: ABdhPJySZaOak7/vdmnO6wswyhWfRs8lR2bDG4mYImn97LZJ54mY2VjQBIbL9N0Wid8ekXaipEqZxA==
+X-Received: by 2002:a05:600c:4f03:b0:394:6499:21c7 with SMTP id l3-20020a05600c4f0300b00394649921c7mr18983081wmq.103.1653296679929;
+        Mon, 23 May 2022 02:04:39 -0700 (PDT)
 Received: from krava (net-93-65-240-241.cust.vodafonedsl.it. [93.65.240.241])
-        by smtp.gmail.com with ESMTPSA id u25-20020adfae59000000b0020d106c0386sm9535510wrd.89.2022.05.23.01.43.49
+        by smtp.gmail.com with ESMTPSA id b15-20020a7bc24f000000b0039736892653sm8928281wmj.27.2022.05.23.02.04.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 May 2022 01:43:51 -0700 (PDT)
+        Mon, 23 May 2022 02:04:39 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 23 May 2022 10:43:47 +0200
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Like Xu <likexu@tencent.com>, Alyssa Ross <hi@alyssa.is>,
-        Ian Rogers <irogers@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Adam Li <adamli@amperemail.onmicrosoft.com>,
-        Li Huafei <lihuafei1@huawei.com>,
-        German Gomez <german.gomez@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/11] perf c2c: Support display for Arm64
-Message-ID: <YotJQwZVfBtrEyuI@krava>
-References: <20220518055729.1869566-1-leo.yan@linaro.org>
+Date:   Mon, 23 May 2022 11:04:36 +0200
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     acme@kernel.org, irogers@google.com, peterz@infradead.org,
+        rrichter@amd.com, mingo@redhat.com, mark.rutland@arm.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        james.clark@arm.com, leo.yan@linaro.org, kan.liang@linux.intel.com,
+        ak@linux.intel.com, eranian@google.com, like.xu.linux@gmail.com,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v4 2/5] perf header: Parse non-cpu pmu capabilities
+Message-ID: <YotOJL0dJmKUQnlI@krava>
+References: <20220523033945.1612-1-ravi.bangoria@amd.com>
+ <20220523033945.1612-3-ravi.bangoria@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220518055729.1869566-1-leo.yan@linaro.org>
+In-Reply-To: <20220523033945.1612-3-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 18, 2022 at 01:57:18PM +0800, Leo Yan wrote:
-> Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
-> us to detect cache line contention and transfers.
-> 
-> Unlike x86 architecture, Arm SPE trace data cannot provide 'HITM'
-> snooping flag, Ali Said has a patch set v9 "perf: arm-spe: Decode SPE
-> source and use for perf c2c" [1] which introduces 'peer' flag and
-> synthesizes memory samples with this flag.
-> 
-> Based on patch set [1], this patch set is to finish the second half work
-> to consume the 'peer' flag in perf c2c tool, it adds an extra display
-> 'peer' mode.
-> 
-> Patches 01, 02 and 03 are to support 'N/A' metrics for store operations.
-> 
-> Patches 04 and 05 adds statistics and dimensions for memory samples with
-> peer flag.
-> 
-> Patches 06, 07, 08 are for refactoring, it refines the code with more
-> general naming so this can allow us to easier to extend display modes
-> but not strictly bound to HITM tags.
-> 
-> Patches 09, 10 and 11 are to extend display 'peer' mode, it also updates
-> the document and also changes to use 'peer' mode as default mode on
-> Arm64 arches.
-> 
-> This patch set has been verified for both x86 and Arm64 memory samples.
-> 
-> The display result with x86 memory samples:
-> 
->   =================================================
->              Shared Data Cache Line Table          
->   =================================================
->   #
->   #        ----------- Cacheline ----------      Tot  ------- Load Hitm -------    Snoop    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
->   # Index             Address  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm     Peer  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
->   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
->   #
->         0      0x55c8971f0080     0    1967   66.14%      252      252        0        0     6044     3550     2494     2024      470        0      528     2672       78        20      252         0        0         0         0
->         1      0x55c8971f00c0     0       1   33.86%      129      129        0        0      914      914        0        0        0        0      272      374       52        87      129         0        0         0         0
-> 
->   =================================================
->         Shared Cache Line Distribution Pareto      
->   =================================================
->   #
->   #        ----- HITM -----    Snoop  ------- Store Refs ------  --------- Data address ---------                      --------------- cycles ---------------    Total       cpu                                     Shared                               
->   #   Num  RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt hitm  lcl hitm      load      peer  records       cnt                  Symbol             Object              Source:Line  Node
->   # .....  .......  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  ........  .......  ........  ......................  .................  .......................  ....
->   #
->     -------------------------------------------------------------------------------
->         0        0      252        0     2024      470        0      0x55c8971f0080
->     -------------------------------------------------------------------------------
->              0.00%   12.30%    0.00%    0.00%    0.00%    0.00%                 0x0     0       1      0x55c8971ed3e9         0      1313       863         0     1222         3  [.] 0x00000000000013e9  false_sharing.exe  false_sharing.exe[13e9]   0
->              0.00%    0.79%    0.00%   90.51%    0.00%    0.00%                 0x0     0       1      0x55c8971ed3e2         0      1800       878         0     3029         3  [.] 0x00000000000013e2  false_sharing.exe  false_sharing.exe[13e2]   0
->              0.00%    0.00%    0.00%    9.49%  100.00%    0.00%                 0x0     0       1      0x55c8971ed3f4         0         0         0         0      662         3  [.] 0x00000000000013f4  false_sharing.exe  false_sharing.exe[13f4]   0
->              0.00%   86.90%    0.00%    0.00%    0.00%    0.00%                0x20     0       1      0x55c8971ed447         0       141       103         0     1131         2  [.] 0x0000000000001447  false_sharing.exe  false_sharing.exe[1447]   0
-> 
->     -------------------------------------------------------------------------------
->         1        0      129        0        0        0        0      0x55c8971f00c0
->     -------------------------------------------------------------------------------
->              0.00%  100.00%    0.00%    0.00%    0.00%    0.00%                0x20     0       1      0x55c8971ed455         0        88        94         0      914         2  [.] 0x0000000000001455  false_sharing.exe  false_sharing.exe[1455]   0
-> 
-> 
-> The display result with Arm SPE memory samples:
-> 
->   =================================================
->              Shared Data Cache Line Table          
->   =================================================
->   #
->   #        ----------- Cacheline ----------    Snoop  ------- Load Hitm -------    Snoop    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
->   # Index             Address  Node  PA cnt     Peer    Total  LclHitm  RmtHitm     Peer  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
->   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
->   #
->         0      0xaaaac17d6000   N/A       0  100.00%        0        0        0       99    18851    18851        0        0        0        0        0    18752        0        99        0         0        0         0         0
-> 
->   =================================================
->         Shared Cache Line Distribution Pareto      
->   =================================================
->   #
->   #        ----- HITM -----    Snoop  ------- Store Refs ------  --------- Data address ---------                      --------------- cycles ---------------    Total       cpu                                    Shared                       
->   #   Num  RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt hitm  lcl hitm      load      peer  records       cnt                  Symbol            Object      Source:Line  Node
->   # .....  .......  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  ........  .......  ........  ......................  ................  ...............  ....
->   #
->     -------------------------------------------------------------------------------
->         0        0        0       99        0        0        0      0xaaaac17d6000
->     -------------------------------------------------------------------------------
->              0.00%    0.00%    6.06%    0.00%    0.00%    0.00%                0x20   N/A       0      0xaaaac17c25ac         0         0        43       375    18469         2  [.] 0x00000000000025ac  memstress         memstress[25ac]   0
->              0.00%    0.00%   93.94%    0.00%    0.00%    0.00%                0x29   N/A       0      0xaaaac17c3e88         0         0       173       180      135         2  [.] 0x0000000000003e88  memstress         memstress[3e88]   0
-> 
-> [1] https://lore.kernel.org/lkml/20220517020326.18580-1-alisaidi@amazon.com/
-> 
-> Changes from v2:
-> * Updated patch 04 to account metrics for both cache level and ld_peer
->   for PEER flag;
-> * Updated document for metric 'rmt_hit' which is accounted for all
->   remote accesses (include remote DRAM and any upward caches).
+On Mon, May 23, 2022 at 09:09:42AM +0530, Ravi Bangoria wrote:
 
-LGTM
+SNIP
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index a27132e5a5ef..b4505dbb9f4a 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1580,6 +1580,67 @@ static int write_hybrid_cpu_pmu_caps(struct feat_fd *ff,
+>  	return 0;
+>  }
+>  
+> +/*
+> + * File format:
+> + *
+> + * struct {
+> + *	u32 nr_pmus;
+> + *	struct {
+> + *		char pmu_name[];
+> + *		u32 nr_caps;
+> + *		struct {
+> + *			char name[];
+> + *			char value[];
+> + *		} [nr_caps];
+> + *	} [nr_pmus];
+> + * };
+> + */
+> +static int write_pmu_caps(struct feat_fd *ff, struct evlist *evlist __maybe_unused)
+> +{
+> +	struct perf_pmu_caps *caps = NULL;
+> +	struct perf_pmu *pmu = NULL;
+> +	u32 nr_pmus = 0;
+> +	int ret;
+> +
+> +	while ((pmu = perf_pmu__scan(pmu))) {
+> +		if (!pmu->name || !strncmp(pmu->name, "cpu", 3) ||
 
-thanks,
+should we check for the hybrid names as well?
+there's a helper perf_pmu__is_hybrid,
+aybe you can use that
+
 jirka
 
-> 
-> Changes from v1:
-> * Updated patches 01, 02 and 03 to support 'N/A' metrics for store
->   operations, so can align with the patch set [1] for store samples.
-> 
-> 
-> Leo Yan (11):
->   perf mem: Add stats for store operation with no available memory level
->   perf c2c: Add dimensions for 'N/A' metrics of store operation
->   perf c2c: Update documentation for store metric 'N/A'
->   perf mem: Add statistics for peer snooping
->   perf c2c: Add dimensions for peer load operations
->   perf c2c: Use explicit names for display macros
->   perf c2c: Rename dimension from 'percent_hitm' to
->     'percent_costly_snoop'
->   perf c2c: Refactor node header
->   perf c2c: Sort on peer snooping for load operations
->   perf c2c: Update documentation for new display option 'peer'
->   perf c2c: Use 'peer' as default display for Arm64
-> 
->  tools/perf/Documentation/perf-c2c.txt |  34 ++-
->  tools/perf/builtin-c2c.c              | 357 ++++++++++++++++++++------
->  tools/perf/util/mem-events.c          |  25 +-
->  tools/perf/util/mem-events.h          |   2 +
->  4 files changed, 331 insertions(+), 87 deletions(-)
-> 
+
+> +		    perf_pmu__caps_parse(pmu) <= 0)
+> +			continue;
+> +		nr_pmus++;
+> +	}
+> +
+> +	ret = do_write(ff, &nr_pmus, sizeof(nr_pmus));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (!nr_pmus)
+> +		return 0;
+> +
+> +	while ((pmu = perf_pmu__scan(pmu))) {
+> +		if (!pmu->name || !strncmp(pmu->name, "cpu", 3) || !pmu->nr_caps)
+> +			continue;
+> +
+> +		ret = do_write_string(ff, pmu->name);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret = do_write(ff, &pmu->nr_caps, sizeof(pmu->nr_caps));
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		list_for_each_entry(caps, &pmu->caps, list) {
+> +			ret = do_write_string(ff, caps->name);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			ret = do_write_string(ff, caps->value);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+>  static void print_hostname(struct feat_fd *ff, FILE *fp)
+>  {
+>  	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
+> @@ -2209,6 +2270,32 @@ static void print_mem_topology(struct feat_fd *ff, FILE *fp)
+>  	}
+>  }
+>  
+> +static void print_pmu_caps(struct feat_fd *ff, FILE *fp)
+> +{
+> +	struct env_pmu_caps *env_pmu_caps = ff->ph->env.env_pmu_caps;
+> +	int nr_pmus_with_caps = ff->ph->env.nr_pmus_with_caps;
+> +	const char *delimiter = "";
+> +	char **ptr;
+> +	int i;
+> +	u32 j;
+> +
+> +	if (!nr_pmus_with_caps)
+> +		return;
+> +
+> +	for (i = 0; i < nr_pmus_with_caps; i++) {
+> +		fprintf(fp, "# %s pmu capabilities: ", env_pmu_caps[i].pmu_name);
+> +
+> +		ptr = env_pmu_caps[i].pmu_caps;
+> +
+> +		delimiter = "";
+> +		for (j = 0; j < env_pmu_caps[i].nr_caps; j++) {
+> +			fprintf(fp, "%s%s", delimiter, ptr[j]);
+> +			delimiter = ", ";
+> +		}
+> +		fprintf(fp, "\n");
+> +	}
+> +}
+> +
+>  static int __event_process_build_id(struct perf_record_header_build_id *bev,
+>  				    char *filename,
+>  				    struct perf_session *session)
+> @@ -3319,6 +3406,103 @@ static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
+>  	return ret;
+>  }
+>  
+> +static int __process_pmu_caps(struct feat_fd *ff, struct env_pmu_caps *env_pmu_caps)
+> +{
+> +	u32 nr_caps = env_pmu_caps->nr_caps;
+> +	int name_size, value_size;
+> +	char *name, *value, *ptr;
+> +	u32 i;
+> +
+> +	env_pmu_caps->pmu_caps = zalloc(sizeof(char *) * nr_caps);
+> +	if (!env_pmu_caps->pmu_caps)
+> +		return -1;
+> +
+> +	for (i = 0; i < nr_caps; i++) {
+> +		name = do_read_string(ff);
+> +		if (!name)
+> +			goto error;
+> +
+> +		value = do_read_string(ff);
+> +		if (!value)
+> +			goto free_name;
+> +
+> +		name_size = strlen(name);
+> +		value_size = strlen(value);
+> +		ptr = zalloc(sizeof(char) * (name_size + value_size + 2));
+> +		if (!ptr)
+> +			goto free_value;
+> +
+> +		memcpy(ptr, name, name_size);
+> +		ptr[name_size] = '=';
+> +		memcpy(ptr + name_size + 1, value, value_size);
+> +		env_pmu_caps->pmu_caps[i] = ptr;
+> +
+> +		free(value);
+> +		free(name);
+> +	}
+> +	return 0;
+> +
+> +free_value:
+> +	free(value);
+> +free_name:
+> +	free(name);
+> +error:
+> +	for (; i > 0; i--)
+> +		free(env_pmu_caps->pmu_caps[i - 1]);
+> +	free(env_pmu_caps->pmu_caps);
+> +	return -1;
+> +}
+> +
+> +static int process_pmu_caps(struct feat_fd *ff, void *data __maybe_unused)
+> +{
+> +	struct env_pmu_caps *env_pmu_caps;
+> +	u32 nr_pmus;
+> +	u32 i, j;
+> +
+> +	ff->ph->env.nr_pmus_with_caps = 0;
+> +	ff->ph->env.env_pmu_caps = NULL;
+> +
+> +	if (do_read_u32(ff, &nr_pmus))
+> +		return -1;
+> +
+> +	if (!nr_pmus)
+> +		return 0;
+> +
+> +	env_pmu_caps = zalloc(sizeof(struct env_pmu_caps) * nr_pmus);
+> +	if (!env_pmu_caps)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < nr_pmus; i++) {
+> +		env_pmu_caps[i].pmu_name = do_read_string(ff);
+> +		if (!env_pmu_caps[i].pmu_name)
+> +			goto error;
+> +
+> +		if (do_read_u32(ff, &env_pmu_caps[i].nr_caps))
+> +			goto free_pmu_name;
+> +
+> +		if (!__process_pmu_caps(ff, &env_pmu_caps[i]))
+> +			continue;
+> +
+> +free_pmu_name:
+> +		free(env_pmu_caps[i].pmu_name);
+> +		goto error;
+> +	}
+> +
+> +	ff->ph->env.nr_pmus_with_caps = nr_pmus;
+> +	ff->ph->env.env_pmu_caps = env_pmu_caps;
+> +	return 0;
+> +
+> +error:
+> +	for (; i > 0; i--) {
+> +		free(env_pmu_caps[i - 1].pmu_name);
+> +		for (j = 0; j < env_pmu_caps[i - 1].nr_caps; j++)
+> +			free(env_pmu_caps[i - 1].pmu_caps[j]);
+> +		free(env_pmu_caps[i - 1].pmu_caps);
+> +	}
+> +	free(env_pmu_caps);
+> +	return -1;
+> +}
+> +
+>  #define FEAT_OPR(n, func, __full_only) \
+>  	[HEADER_##n] = {					\
+>  		.name	    = __stringify(n),			\
+> @@ -3382,6 +3566,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+>  	FEAT_OPR(CLOCK_DATA,	clock_data,	false),
+>  	FEAT_OPN(HYBRID_TOPOLOGY,	hybrid_topology,	true),
+>  	FEAT_OPR(HYBRID_CPU_PMU_CAPS,	hybrid_cpu_pmu_caps,	false),
+> +	FEAT_OPR(PMU_CAPS,	pmu_caps,	false),
+>  };
+>  
+>  struct header_print_data {
+> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+> index 0eb4bc29a5a4..e9a067bb8b9e 100644
+> --- a/tools/perf/util/header.h
+> +++ b/tools/perf/util/header.h
+> @@ -47,6 +47,7 @@ enum {
+>  	HEADER_CLOCK_DATA,
+>  	HEADER_HYBRID_TOPOLOGY,
+>  	HEADER_HYBRID_CPU_PMU_CAPS,
+> +	HEADER_PMU_CAPS,
+>  	HEADER_LAST_FEATURE,
+>  	HEADER_FEAT_BITS	= 256,
+>  };
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 9a1c7e63e663..8d599acb7569 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1890,16 +1890,22 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+>  	const char *sysfs = sysfs__mountpoint();
+>  	DIR *caps_dir;
+>  	struct dirent *evt_ent;
+> -	int nr_caps = 0;
+> +
+> +	if (pmu->caps_initialized)
+> +		return pmu->nr_caps;
+>  
+>  	if (!sysfs)
+>  		return -1;
+>  
+> +	pmu->nr_caps = 0;
+> +
+>  	snprintf(caps_path, PATH_MAX,
+>  		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
+>  
+> -	if (stat(caps_path, &st) < 0)
+> +	if (stat(caps_path, &st) < 0) {
+> +		pmu->caps_initialized = true;
+>  		return 0;	/* no error if caps does not exist */
+> +	}
+>  
+>  	caps_dir = opendir(caps_path);
+>  	if (!caps_dir)
+> @@ -1926,13 +1932,14 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+>  			continue;
+>  		}
+>  
+> -		nr_caps++;
+> +		pmu->nr_caps++;
+>  		fclose(file);
+>  	}
+>  
+>  	closedir(caps_dir);
+>  
+> -	return nr_caps;
+> +	pmu->caps_initialized = true;
+> +	return pmu->nr_caps;
+>  }
+>  
+>  void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 541889fa9f9c..4b45fd8da5a3 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -46,6 +46,8 @@ struct perf_pmu {
+>  	struct perf_cpu_map *cpus;
+>  	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+>  	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
+> +	bool caps_initialized;
+> +	u32 nr_caps;
+>  	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+>  	struct list_head list;    /* ELEM */
+>  	struct list_head hybrid_list;
 > -- 
-> 2.25.1
+> 2.31.1
 > 
