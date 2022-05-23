@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCE1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 12:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455C0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 12:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235534AbiEWMir (ORCPT
+        id S235635AbiEWMnR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 May 2022 08:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53368 "EHLO
+        Mon, 23 May 2022 08:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235574AbiEWMii (ORCPT
+        with ESMTP id S235586AbiEWMnQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 May 2022 08:38:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C8D4EDCB;
-        Mon, 23 May 2022 05:38:37 -0700 (PDT)
+        Mon, 23 May 2022 08:43:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD2251591;
+        Mon, 23 May 2022 05:43:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2AB3AB80FF4;
-        Mon, 23 May 2022 12:38:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C168AC385A9;
-        Mon, 23 May 2022 12:38:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5BB0561328;
+        Mon, 23 May 2022 12:43:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E962C385AA;
+        Mon, 23 May 2022 12:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653309515;
-        bh=yMOdsP2eRBpCCjWHTfSlwMpc4RZQu7s9cFwc4nyTvX0=;
+        s=k20201202; t=1653309793;
+        bh=zW9uiCsuxykAehNhwe3g0mkRkT0Z9k/pe4p8dG5psYo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sAAYepGgJ0rBJGDc273Jnnel0vTNsEmiRfP1OCtHscMklUYZzcOFNSdFp4YOQtDwF
-         84KLODU1NVBIkQ5wODZSFMblP7gRyLMO/vw26L/Ml/jNC5IkB1xQAAnMpQbjrMfrvK
-         t21ibW03fc1PgJwW9pv5irFLau2oZoRWjYx+Q+/uCm+ymez40+J7SF2o7KA7HCiiY2
-         gNheM8n23+tN21gXGC0rv72UJ7gXK70ZN2S58a+q/yG/94AOHn1e7DLZ6JmVwwGh5S
-         LbDZccvs2T12HOfpkVcuJkxmLnaMIMsSy/HVbTGV/uinl4y+xmWVbbmgugXLwOnhxA
-         MUazpKAVefSwA==
+        b=QIYM0jtVJAt0si8PuKuXgneadJOxBonjx7l5HW6pWIm4QE3rApReQmwxmL0lyzfHH
+         nsH2GK/DvSttv7UI/GYjghA2k7hJjx7xJaSb8xBlDqFFEZdZ3Hv8ocf0HybQKhlqe9
+         Jgg/RoGgSpH2XnnjAlKPnMxADKB85UISuS/EdD7GkEJXD0H1lq7HCU3L2+eYnt9rUi
+         6E/l8Er7Y0HVauv+WQKbuF7wGm/rHXVQKx5DPnn6v7yJg7ZMbqD0j1mmB8sxQOJi8N
+         RmrbvQ+svVaw9Tqx5hivxmyQQMtcL8IqR2JZr2vSD6I5J12iwrHY2+6ct5kE1XLWgs
+         S4JsP9/7obieA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CC6D9400B1; Mon, 23 May 2022 09:38:31 -0300 (-03)
-Date:   Mon, 23 May 2022 09:38:31 -0300
+        id 83FCD400B1; Mon, 23 May 2022 09:43:10 -0300 (-03)
+Date:   Mon, 23 May 2022 09:43:10 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Like Xu <likexu@tencent.com>, Alyssa Ross <hi@alyssa.is>,
         Ian Rogers <irogers@google.com>,
@@ -54,159 +54,155 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/11] perf mem: Add statistics for peer snooping
-Message-ID: <YouAR+9Mi9AtX+g3@kernel.org>
+Subject: Re: [PATCH v3 00/11] perf c2c: Support display for Arm64
+Message-ID: <YouBXricVunh1NhJ@kernel.org>
 References: <20220518055729.1869566-1-leo.yan@linaro.org>
- <20220518055729.1869566-5-leo.yan@linaro.org>
+ <YotJQwZVfBtrEyuI@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220518055729.1869566-5-leo.yan@linaro.org>
+In-Reply-To: <YotJQwZVfBtrEyuI@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 18, 2022 at 01:57:22PM +0800, Leo Yan escreveu:
-> Since the flag PERF_MEM_SNOOPX_PEER is added to support cache snooping
-> from peer cache line, it can come from a peer core, a peer cluster, or
-> a remote NUMA node.
+Em Mon, May 23, 2022 at 10:43:47AM +0200, Jiri Olsa escreveu:
+> On Wed, May 18, 2022 at 01:57:18PM +0800, Leo Yan wrote:
+> > Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
+> > us to detect cache line contention and transfers.
+> > 
+> > Unlike x86 architecture, Arm SPE trace data cannot provide 'HITM'
+> > snooping flag, Ali Said has a patch set v9 "perf: arm-spe: Decode SPE
+> > source and use for perf c2c" [1] which introduces 'peer' flag and
+> > synthesizes memory samples with this flag.
+> > 
+> > Based on patch set [1], this patch set is to finish the second half work
+> > to consume the 'peer' flag in perf c2c tool, it adds an extra display
+> > 'peer' mode.
+
+Ok, I'll look at the base patch set...
+
+> > Patches 01, 02 and 03 are to support 'N/A' metrics for store operations.
+> > 
+> > Patches 04 and 05 adds statistics and dimensions for memory samples with
+> > peer flag.
+> > 
+> > Patches 06, 07, 08 are for refactoring, it refines the code with more
+> > general naming so this can allow us to easier to extend display modes
+> > but not strictly bound to HITM tags.
+> > 
+> > Patches 09, 10 and 11 are to extend display 'peer' mode, it also updates
+> > the document and also changes to use 'peer' mode as default mode on
+> > Arm64 arches.
+> > 
+> > This patch set has been verified for both x86 and Arm64 memory samples.
+> > 
+> > The display result with x86 memory samples:
+> > 
+> >   =================================================
+> >              Shared Data Cache Line Table          
+> >   =================================================
+> >   #
+> >   #        ----------- Cacheline ----------      Tot  ------- Load Hitm -------    Snoop    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
+> >   # Index             Address  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm     Peer  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
+> >   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
+> >   #
+> >         0      0x55c8971f0080     0    1967   66.14%      252      252        0        0     6044     3550     2494     2024      470        0      528     2672       78        20      252         0        0         0         0
+> >         1      0x55c8971f00c0     0       1   33.86%      129      129        0        0      914      914        0        0        0        0      272      374       52        87      129         0        0         0         0
+> > 
+> >   =================================================
+> >         Shared Cache Line Distribution Pareto      
+> >   =================================================
+> >   #
+> >   #        ----- HITM -----    Snoop  ------- Store Refs ------  --------- Data address ---------                      --------------- cycles ---------------    Total       cpu                                     Shared                               
+> >   #   Num  RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt hitm  lcl hitm      load      peer  records       cnt                  Symbol             Object              Source:Line  Node
+> >   # .....  .......  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  ........  .......  ........  ......................  .................  .......................  ....
+> >   #
+> >     -------------------------------------------------------------------------------
+> >         0        0      252        0     2024      470        0      0x55c8971f0080
+> >     -------------------------------------------------------------------------------
+> >              0.00%   12.30%    0.00%    0.00%    0.00%    0.00%                 0x0     0       1      0x55c8971ed3e9         0      1313       863         0     1222         3  [.] 0x00000000000013e9  false_sharing.exe  false_sharing.exe[13e9]   0
+> >              0.00%    0.79%    0.00%   90.51%    0.00%    0.00%                 0x0     0       1      0x55c8971ed3e2         0      1800       878         0     3029         3  [.] 0x00000000000013e2  false_sharing.exe  false_sharing.exe[13e2]   0
+> >              0.00%    0.00%    0.00%    9.49%  100.00%    0.00%                 0x0     0       1      0x55c8971ed3f4         0         0         0         0      662         3  [.] 0x00000000000013f4  false_sharing.exe  false_sharing.exe[13f4]   0
+> >              0.00%   86.90%    0.00%    0.00%    0.00%    0.00%                0x20     0       1      0x55c8971ed447         0       141       103         0     1131         2  [.] 0x0000000000001447  false_sharing.exe  false_sharing.exe[1447]   0
+> > 
+> >     -------------------------------------------------------------------------------
+> >         1        0      129        0        0        0        0      0x55c8971f00c0
+> >     -------------------------------------------------------------------------------
+> >              0.00%  100.00%    0.00%    0.00%    0.00%    0.00%                0x20     0       1      0x55c8971ed455         0        88        94         0      914         2  [.] 0x0000000000001455  false_sharing.exe  false_sharing.exe[1455]   0
+> > 
+> > 
+> > The display result with Arm SPE memory samples:
+> > 
+> >   =================================================
+> >              Shared Data Cache Line Table          
+> >   =================================================
+> >   #
+> >   #        ----------- Cacheline ----------    Snoop  ------- Load Hitm -------    Snoop    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
+> >   # Index             Address  Node  PA cnt     Peer    Total  LclHitm  RmtHitm     Peer  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
+> >   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
+> >   #
+> >         0      0xaaaac17d6000   N/A       0  100.00%        0        0        0       99    18851    18851        0        0        0        0        0    18752        0        99        0         0        0         0         0
+> > 
+> >   =================================================
+> >         Shared Cache Line Distribution Pareto      
+> >   =================================================
+> >   #
+> >   #        ----- HITM -----    Snoop  ------- Store Refs ------  --------- Data address ---------                      --------------- cycles ---------------    Total       cpu                                    Shared                       
+> >   #   Num  RmtHitm  LclHitm     Peer   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt hitm  lcl hitm      load      peer  records       cnt                  Symbol            Object      Source:Line  Node
+> >   # .....  .......  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  ........  .......  ........  ......................  ................  ...............  ....
+> >   #
+> >     -------------------------------------------------------------------------------
+> >         0        0        0       99        0        0        0      0xaaaac17d6000
+> >     -------------------------------------------------------------------------------
+> >              0.00%    0.00%    6.06%    0.00%    0.00%    0.00%                0x20   N/A       0      0xaaaac17c25ac         0         0        43       375    18469         2  [.] 0x00000000000025ac  memstress         memstress[25ac]   0
+> >              0.00%    0.00%   93.94%    0.00%    0.00%    0.00%                0x29   N/A       0      0xaaaac17c3e88         0         0       173       180      135         2  [.] 0x0000000000003e88  memstress         memstress[3e88]   0
+> > 
+> > [1] https://lore.kernel.org/lkml/20220517020326.18580-1-alisaidi@amazon.com/
+> > 
+> > Changes from v2:
+> > * Updated patch 04 to account metrics for both cache level and ld_peer
+> >   for PEER flag;
+> > * Updated document for metric 'rmt_hit' which is accounted for all
+> >   remote accesses (include remote DRAM and any upward caches).
 > 
-> This patch adds statistics for the flag PERF_MEM_SNOOPX_PEER.  Note, we
-> take PERF_MEM_SNOOPX_PEER as an affiliated info, it needs to cooperate
-> with cache level statistics.  Therefore, we account the load operations
-> for both the cache level's metrics (e.g. ld_l2hit, ld_llchit, etc.) and
-> the metric 'ld_peer' when flag PERF_MEM_SNOOPX_PEER is set.
+> LGTM
 > 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Tested-by: Ali Saidi <alisaidi@amazon.com>
-
-util/mem-events.c: In function ‘c2c_decode_stats’:
-util/mem-events.c:536:17: error: ‘PERF_MEM_SNOOPX_PEER’ undeclared (first use in this function); did you mean ‘PERF_MEM_SNOOPX_FWD’?
-
-
-Should I fix this as suggested by the compiler?
-
-  536 | #define P(a, b) PERF_MEM_##a##_##b
-      |                 ^~~~~~~~~
-util/mem-events.c:562:46: note: in expansion of macro ‘P’
-  562 |                                 if (snoopx & P(SNOOPX, PEER))
-      |                                              ^
-util/mem-events.c:536:17: note: each undeclared identifier is reported only once for each function it appears in
-  536 | #define P(a, b) PERF_MEM_##a##_##b
-      |                 ^~~~~~~~~
-util/mem-events.c:562:46: note: in expansion of macro ‘P’
-  562 |                                 if (snoopx & P(SNOOPX, PEER))
-      |                                              ^
-make[4]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/util/mem-events.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  LD      /tmp/build/perf/util/scripting-engines/perf-in.o
-make[3]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:139: util] Error 2
-make[2]: *** [Makefile.perf:664: /tmp/build/perf/perf-in.o] Error 2
-make[1]: *** [Makefile.perf:240: sub-make] Error 2
-make: *** [Makefile:113: install-bin] Error 2
-make: Leaving directory '/var/home/acme/git/perf/tools/perf'
-
- Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 PYTHON=python3 O=/tmp/build/perf -C tools/perf install-bin':
-
-    31,749,639,340      cycles:u
-    57,052,398,827      instructions:u            #    1.80  insn per cycle
-
-       2.123830023 seconds time elapsed
-
-       7.146520000 seconds user
-       1.707080000 seconds sys
-
-
-⬢[acme@toolbox perf]$
-
-> ---
->  tools/perf/util/mem-events.c | 22 +++++++++++++++++++---
->  tools/perf/util/mem-events.h |  1 +
->  2 files changed, 20 insertions(+), 3 deletions(-)
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 > 
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 5dca1882c284..9de0eb3a1200 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -525,6 +525,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
->  	u64 op     = data_src->mem_op;
->  	u64 lvl    = data_src->mem_lvl;
->  	u64 snoop  = data_src->mem_snoop;
-> +	u64 snoopx = data_src->mem_snoopx;
->  	u64 lock   = data_src->mem_lock;
->  	u64 blk    = data_src->mem_blk;
->  	/*
-> @@ -567,18 +568,28 @@ do {				\
->  			if (lvl & P(LVL, IO))  stats->ld_io++;
->  			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
->  			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
-> -			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-> +			if (lvl & P(LVL, L2)) {
-> +				stats->ld_l2hit++;
-> +
-> +				if (snoopx & P(SNOOPX, PEER))
-> +					stats->ld_peer++;
-> +			}
->  			if (lvl & P(LVL, L3 )) {
->  				if (snoop & P(SNOOP, HITM))
->  					HITM_INC(lcl_hitm);
->  				else
->  					stats->ld_llchit++;
-> +
-> +				if (snoopx & P(SNOOPX, PEER))
-> +					stats->ld_peer++;
->  			}
->  
->  			if (lvl & P(LVL, LOC_RAM)) {
->  				stats->lcl_dram++;
->  				if (snoop & P(SNOOP, HIT))
->  					stats->ld_shared++;
-> +				else if (snoopx & P(SNOOPX, PEER))
-> +					stats->ld_peer++;
->  				else
->  					stats->ld_excl++;
->  			}
-> @@ -597,10 +608,14 @@ do {				\
->  		if ((lvl & P(LVL, REM_CCE1)) ||
->  		    (lvl & P(LVL, REM_CCE2)) ||
->  		     mrem) {
-> -			if (snoop & P(SNOOP, HIT))
-> +			if (snoop & P(SNOOP, HIT)) {
->  				stats->rmt_hit++;
-> -			else if (snoop & P(SNOOP, HITM))
-> +			} else if (snoop & P(SNOOP, HITM)) {
->  				HITM_INC(rmt_hitm);
-> +			} else if (snoopx & P(SNOOPX, PEER)) {
-> +				stats->rmt_hit++;
-> +				stats->ld_peer++;
-> +			}
->  		}
->  
->  		if ((lvl & P(LVL, MISS)))
-> @@ -661,6 +676,7 @@ void c2c_add_stats(struct c2c_stats *stats, struct c2c_stats *add)
->  	stats->ld_l1hit		+= add->ld_l1hit;
->  	stats->ld_l2hit		+= add->ld_l2hit;
->  	stats->ld_llchit	+= add->ld_llchit;
-> +	stats->ld_peer		+= add->ld_peer;
->  	stats->lcl_hitm		+= add->lcl_hitm;
->  	stats->rmt_hitm		+= add->rmt_hitm;
->  	stats->tot_hitm		+= add->tot_hitm;
-> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-> index 8a8b568baeee..4879b841c841 100644
-> --- a/tools/perf/util/mem-events.h
-> +++ b/tools/perf/util/mem-events.h
-> @@ -75,6 +75,7 @@ struct c2c_stats {
->  	u32	ld_l1hit;            /* count of loads that hit L1D */
->  	u32	ld_l2hit;            /* count of loads that hit L2D */
->  	u32	ld_llchit;           /* count of loads that hit LLC */
-> +	u32	ld_peer;             /* count of loads that hit peer core or cluster cache */
->  	u32	lcl_hitm;            /* count of loads with local HITM  */
->  	u32	rmt_hitm;            /* count of loads with remote HITM */
->  	u32	tot_hitm;            /* count of loads with local and remote HITM */
-> -- 
-> 2.25.1
+> thanks,
+> jirka
+> 
+> > 
+> > Changes from v1:
+> > * Updated patches 01, 02 and 03 to support 'N/A' metrics for store
+> >   operations, so can align with the patch set [1] for store samples.
+> > 
+> > 
+> > Leo Yan (11):
+> >   perf mem: Add stats for store operation with no available memory level
+> >   perf c2c: Add dimensions for 'N/A' metrics of store operation
+> >   perf c2c: Update documentation for store metric 'N/A'
+> >   perf mem: Add statistics for peer snooping
+> >   perf c2c: Add dimensions for peer load operations
+> >   perf c2c: Use explicit names for display macros
+> >   perf c2c: Rename dimension from 'percent_hitm' to
+> >     'percent_costly_snoop'
+> >   perf c2c: Refactor node header
+> >   perf c2c: Sort on peer snooping for load operations
+> >   perf c2c: Update documentation for new display option 'peer'
+> >   perf c2c: Use 'peer' as default display for Arm64
+> > 
+> >  tools/perf/Documentation/perf-c2c.txt |  34 ++-
+> >  tools/perf/builtin-c2c.c              | 357 ++++++++++++++++++++------
+> >  tools/perf/util/mem-events.c          |  25 +-
+> >  tools/perf/util/mem-events.h          |   2 +
+> >  4 files changed, 331 insertions(+), 87 deletions(-)
+> > 
+> > -- 
+> > 2.25.1
+> > 
 
 -- 
 
