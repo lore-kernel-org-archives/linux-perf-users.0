@@ -2,126 +2,224 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C00C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 21:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8800CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 22:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbiEWV3p (ORCPT
+        id S229751AbiEWWnX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 May 2022 17:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54486 "EHLO
+        Mon, 23 May 2022 18:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbiEWV3o (ORCPT
+        with ESMTP id S229379AbiEWWnX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 May 2022 17:29:44 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D65A204C
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 May 2022 14:29:43 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id h205-20020a1c21d6000000b003972dda143eso318546wmh.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 May 2022 14:29:43 -0700 (PDT)
+        Mon, 23 May 2022 18:43:23 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164F9ABF48;
+        Mon, 23 May 2022 15:43:22 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id 3so10798244ily.2;
+        Mon, 23 May 2022 15:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=n5D4eoLrBsXPNV9vayceC9y7nrJtuDnRalRRWAgWsFk=;
-        b=Qj+VqH1Vcc263/TdOV3boTN4O0P66QIQ55KIMv9gdLgjmmnLVBQ2IwJqFEv0B8K3np
-         /rj2bddpL23lgef/3qXFFKsrc7msMUj6QtsxJvEA8e5U4JG/77eDoJuqmK9tYI4XBBS8
-         oKklxq86iL9YuMNA7JfFkq9SveRDVSn1PY/7ZsDERlGlm2zvw4ijT7FIypeX6TSoHpGp
-         hJkqeri5LpVJ7y0wfLpUQtd2lHKFPRDRwBk/tIQPc4bLQIkBcUjp96vyoKXaak0cPY/r
-         h9yRG6HPp1xWsQQVyQ4aDNNLdAlK+kt3zi5gDLFuJUOVd/14o70c1RZ396eXRd3wKogN
-         VG5A==
+         :cc;
+        bh=4z/iwgVrp0ukuHP0yEWJrSr5H7DsDenyaC4SaaPjbgw=;
+        b=PO8qB/TmPhfrifhrSpsXzaKD1Uncs+AiuBTMfZaMbASr/c0rQun3FOK97jQXz4cffX
+         z8vzjGtq+EmTfbIMzcSZKPhllCUQFK0zr35zQIB7tA4pahXRGN0EVZX7qEKnltG2zzPK
+         bjEWXmpiHdRyMwqmorBusWx5/MYbiV11tvShlfOp/ck+LP/LUju77awDz+m73Kg2hWrN
+         0rrOOyEduQYVQ70lJdPaoWo3JHTQVK47Hz9LtskheDxWfBMsysdrn1Gp7ktGo8aZowNr
+         ls+38XPbISiVXcd7JB6y7ZdnOOXYEiWAQZM0FHnnNiL+Jv9g2i0JbGtboAwNoXkPpSk9
+         vb/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=n5D4eoLrBsXPNV9vayceC9y7nrJtuDnRalRRWAgWsFk=;
-        b=EuZ7qnVQD0RdHL8NRDDc6HHuyXnQqGxfd9Y8l2r9/MuAdKDqlMCAUvxqlByaDgQyKt
-         cu2k1+UxhpEGojmQ5M6ff1Kl7rKFN5rJYWNeoTfMIMV8HWDi7gYLiXYv9fAfswZsApCw
-         FkCWV7RKrNc24+vKtWFH88FpZbt4L/DH8lIPs9aBWoLFcB7KhdN/pW3N/eYJFfSGVLXy
-         HmBCx+NpPPlCen2EQKekQ4nJL0H/wSgOSTU97hl3LJ6ToTH+TwpJq8ylKyHLB6LKvAAb
-         /D2kN6SgLXUH+cnlfCOIpIf7Te5vddCbrPBXxQT2KGYouUo6pGqfz8E2TGX//DrZ4sSd
-         k5qQ==
-X-Gm-Message-State: AOAM5334UOhko0CemjEj1YnAm/kZT5nfWUsEccxCisMBBaSrsFMwRJIH
-        rc9HgSoo3G0/MF5MPIPiaXgAsNBhHQTJNcO/PivtCQ==
-X-Google-Smtp-Source: ABdhPJy4Ye82XHhKGNUUjs10t7zCMA6rFt+ZY+zoUL0fc0QRnIyZZVtQFsa5RZb/9bdL26OX1wVyPCcC5faF0x3mcto=
-X-Received: by 2002:a1c:a301:0:b0:392:9bc5:203c with SMTP id
- m1-20020a1ca301000000b003929bc5203cmr834144wme.67.1653341381709; Mon, 23 May
- 2022 14:29:41 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=4z/iwgVrp0ukuHP0yEWJrSr5H7DsDenyaC4SaaPjbgw=;
+        b=TKOMTvk/EfrghW5sHnRP2uuZwNukXAbj98jeaIifTrOE2CrbE2SQMVNh7yUgHpihaN
+         oe+focAUl0mWsbzFmf/Rwz8mgrnR0wskTOeFMyiJLdmdRG41DYqH7KfSIYg9ZLmuU8a6
+         5bPWkrmrcvVdXFGTqrJme8u0ltl+SWJ6m/0FGDPN/Ri3k/CfvPuGWKlnUVICe6BjVXDU
+         Rco/FRB1j+dwgUTV9dt6xgkLbCHf9HmYsU/uQU7DrRIrI8kdzc2HToysRfsbvVUGtUIw
+         ZIf5+N50qT8OHiLpSLfrz+09wrlVR4K1b4uG9kNCAXBWxd0qyF5LlLBawCKPoBdZriPy
+         foXQ==
+X-Gm-Message-State: AOAM530CvYOMqAvyRFgsTGcbfHeLFWN9ilyihJPIx7ktw0KESTTn2ODR
+        H1Rg/hYn7MYsOyQJCse+VzMeqtPlncmAjNwxCbc=
+X-Google-Smtp-Source: ABdhPJzJJVJD/PLQLgGbm7LIqKqw3cIejTXmDdnef3swmIMtAay3abe77le37tDVs+dST38MrDX9hIWp0TThoVKIvdw=
+X-Received: by 2002:a05:6e02:1352:b0:2d1:6424:60b8 with SMTP id
+ k18-20020a056e02135200b002d1642460b8mr11798302ilr.305.1653345801408; Mon, 23
+ May 2022 15:43:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220523144952.364370-1-german.gomez@arm.com> <Yovo33Qh7eE7pTn1@kernel.org>
-In-Reply-To: <Yovo33Qh7eE7pTn1@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 23 May 2022 14:29:28 -0700
-Message-ID: <CAP-5=fVKcL5icCEaRRZT8Lh02=OsptJtaAk9JojwHNdyqcjvkw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/1] perf test cs-etm: Add end-to-end tests for
- CoreSight decoding
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, james.clark@arm.com,
-        leo.yan@linaro.org, Mark Rutland <mark.rutland@arm.com>,
+References: <20220510074659.2557731-1-jolsa@kernel.org> <CAEf4BzbK9zgetgE1yKkCANTZqizUrXgamJa2X0f0XmzQUdFrCQ@mail.gmail.com>
+ <YntnRixbfQ1HCm9T@krava> <Ynv+7iaaAbyM38B6@kernel.org> <CAEf4BzaQsF31f3WuU32wDCzo6bw7eY8E9zF6Lo218jfw-VQmcA@mail.gmail.com>
+ <YoTAhC+6j4JshqN8@krava> <YoYj6cb0aPNN/olH@krava> <CAEf4Bzaa60kZJbWT0xAqcDMyXBzbg98ShuizJAv7x+8_3X0ZBg@mail.gmail.com>
+ <Yokk5XRxBd72fqoW@kernel.org> <Yos8hq3NmBwemoJw@krava>
+In-Reply-To: <Yos8hq3NmBwemoJw@krava>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 23 May 2022 15:43:10 -0700
+Message-ID: <CAEf4BzYRJj8sXjYs2ioz6Qq7L2UshZDi4Kt0XLsLtwQSGCpAzg@mail.gmail.com>
+Subject: Re: [PATCHv2 0/3] perf tools: Fix prologue generation
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 23, 2022 at 1:05 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Mon, May 23, 2022 at 12:49 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 >
-> Em Mon, May 23, 2022 at 03:49:51PM +0100, German Gomez escreveu:
-> > Hi
+> On Sat, May 21, 2022 at 02:44:05PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, May 20, 2022 at 02:46:49PM -0700, Andrii Nakryiko escreveu:
+> > > On Thu, May 19, 2022 at 4:03 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > > On Wed, May 18, 2022 at 11:46:44AM +0200, Jiri Olsa wrote:
+> > > > > On Tue, May 17, 2022 at 03:02:53PM -0700, Andrii Nakryiko wrote:
+> > > > > > Jiri, libbpf v0.8 is out, can you please re-send your perf patches?
 > >
-> > While discussing running more tests for CoreSight, we thought it might
-> > be a good idea to upstream some EndToEnd tests for CoreSight decoding i=
-n
-> > order to lock down the behaviour. I am sending this as RFC to get some
-> > feedback from the community first.
+> > > > > yep, just made new fedora package.. will resend the perf changes soon
 > >
-> > The test relies on pre-geneated perf.data files that are downloaded
-> > during the test. I'm not sure it's a good idea to commit those files to
-> > the Linux repository, so they would have to live in an external source
-> > and be downloaded during the test.
+> > > > fedora package is on the way, but I'll need perf/core to merge
+> > > > the bpf_program__set_insns change.. Arnaldo, any idea when this
+> > > > could happen?
+> >
+> > > Can we land these patches through bpf-next to avoid such complicated
+> > > cross-tree dependencies? As I started removing libbpf APIs I also
+> > > noticed that perf is still using few other deprecated APIs:
+> > >   - bpf_map__next;
+> > >   - bpf_program__next;
+> > >   - bpf_load_program;
+> > >   - btf__get_from_id;
 >
-> That is ok, but please cache it locally, so that from the second 'perf
-> test' run onwards one doesn=C2=B4t have to incur in the download delay an=
-d
-> also be able to run the tests while not connected.
+> these were added just to bypass the time window when they were not
+> available in the package, so can be removed now (in the patch below)
+>
+> >
+> > > It's trivial to fix up, but doing it across few trees will delay
+> > > libbpf work as well.
+> >
+> > > So let's land this through bpf-next, if Arnaldo doesn't mind?
+> >
+> > Yeah, that should be ok, the only consideration is that I'm submitting
+> > this today to Linus:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/urgent&id=0ae065a5d265bc5ada13e350015458e0c5e5c351
+> >
+> > To address this:
+> >
+> > https://lore.kernel.org/linux-perf-users/f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com/
+>
+> ok, we can do that via bpf-next, but of course there's a problem ;-)
+>
+> perf/core already has dependency commit [1]
+>
+> so either we wait for perf/core and bpf-next/master to sync or:
+>
+>   - perf/core reverts [1] and
+>   - bpf-next/master takes [1] and the rest
+>
+> I have the changes ready if you guys are ok with that
 
-I have some continuous tests running that don't have internet access.
-Could we have an environment variable to give a path to an already
-downloaded version? I may be able to fake having a cached downloaded
-version. Where would such a download live?
+So, if I understand correctly, with merge window open bpf-next/master
+will get code from perf/core soon when we merge tip back in. So we can
+wait for that to happen and not revert anything.
 
-Thanks,
-Ian
+So please add the below patch to your series and resend once tip is
+merged into bpf-next? Thanks!
 
-> - Arnaldo
 >
-> > For this RFC, the files are stored in a Github repository [1]. As an
-> > idea, I think we could store them in a new repo in the ARM-software
-> > namespace. Any hosting suggestions are very welcome.
-> >
-> > Thanks,
-> > German
-> >
-> > [1] https://github.com/ARM-software/data/tree/984cde8fb0bb22591e284826a=
-80b338bb79c3655/perf/coresight
-> >
-> > German Gomez (1):
-> >   perf test cs-etm: Add end-to-end tests for CoreSight decoding
-> >
-> >  tools/perf/tests/shell/lib/arm_auxtrace.sh    | 21 +++++++
-> >  .../tests/shell/test_arm_coresight_decoder.sh | 57 +++++++++++++++++++
-> >  2 files changed, 78 insertions(+)
-> >  create mode 100644 tools/perf/tests/shell/lib/arm_auxtrace.sh
-> >  create mode 100755 tools/perf/tests/shell/test_arm_coresight_decoder.s=
-h
-> >
-> > --
-> > 2.25.1
+> thanks,
+> jirka
 >
+>
+> [1] https://lore.kernel.org/bpf/20220422100025.1469207-4-jolsa@kernel.org/
+>
+> ---
+> Subject: [PATCH bpf-next] perf tools: Remove the weak libbpf functions
+>
+> We added weak functions for some new libbpf functions because
+> they were not packaged at that time [1].
+>
+> These functions are now available in package, so we can remove
+> their weak perf variants.
+>
+> [1] https://lore.kernel.org/linux-perf-users/20211109140707.1689940-2-jolsa@kernel.org/
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/bpf-event.c | 51 -------------------------------------
+>  1 file changed, 51 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 94624733af7e..025f331b3867 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -22,57 +22,6 @@
+>  #include "record.h"
+>  #include "util/synthetic-events.h"
+>
+> -struct btf * __weak btf__load_from_kernel_by_id(__u32 id)
+> -{
+> -       struct btf *btf;
+> -#pragma GCC diagnostic push
+> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> -       int err = btf__get_from_id(id, &btf);
+> -#pragma GCC diagnostic pop
+> -
+> -       return err ? ERR_PTR(err) : btf;
+> -}
+> -
+> -int __weak bpf_prog_load(enum bpf_prog_type prog_type,
+> -                        const char *prog_name __maybe_unused,
+> -                        const char *license,
+> -                        const struct bpf_insn *insns, size_t insn_cnt,
+> -                        const struct bpf_prog_load_opts *opts)
+> -{
+> -#pragma GCC diagnostic push
+> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> -       return bpf_load_program(prog_type, insns, insn_cnt, license,
+> -                               opts->kern_version, opts->log_buf, opts->log_size);
+> -#pragma GCC diagnostic pop
+> -}
+> -
+> -struct bpf_program * __weak
+> -bpf_object__next_program(const struct bpf_object *obj, struct bpf_program *prev)
+> -{
+> -#pragma GCC diagnostic push
+> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> -       return bpf_program__next(prev, obj);
+> -#pragma GCC diagnostic pop
+> -}
+> -
+> -struct bpf_map * __weak
+> -bpf_object__next_map(const struct bpf_object *obj, const struct bpf_map *prev)
+> -{
+> -#pragma GCC diagnostic push
+> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> -       return bpf_map__next(prev, obj);
+> -#pragma GCC diagnostic pop
+> -}
+> -
+> -const void * __weak
+> -btf__raw_data(const struct btf *btf_ro, __u32 *size)
+> -{
+> -#pragma GCC diagnostic push
+> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> -       return btf__get_raw_data(btf_ro, size);
+> -#pragma GCC diagnostic pop
+> -}
+> -
+>  static int snprintf_hex(char *buf, size_t size, unsigned char *data, size_t len)
+>  {
+>         int ret = 0;
 > --
+> 2.35.3
 >
-> - Arnaldo
