@@ -2,108 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E1CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 13:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA1DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 13:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235862AbiEWNFo (ORCPT
+        id S235912AbiEWNJb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 May 2022 09:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48506 "EHLO
+        Mon, 23 May 2022 09:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235856AbiEWNFn (ORCPT
+        with ESMTP id S235887AbiEWNJ3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 May 2022 09:05:43 -0400
+        Mon, 23 May 2022 09:09:29 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135DF4992D;
-        Mon, 23 May 2022 06:05:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3DC54000;
+        Mon, 23 May 2022 06:09:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A108361349;
-        Mon, 23 May 2022 13:05:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB6DC385A9;
-        Mon, 23 May 2022 13:05:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5AF6B61344;
+        Mon, 23 May 2022 13:09:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB32C385A9;
+        Mon, 23 May 2022 13:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653311141;
-        bh=bWrL+p+gwqZvG50H6tpkpi47lD1PdQOmcrKzmQSZeBU=;
+        s=k20201202; t=1653311367;
+        bh=3FWqQ6lBRWaRCCFb2djCRRQ4eov10UfYPZz+vcD4rls=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AWu9228BkTIzNTsWBSiHPPYtNXOhYhpo/D98nFYLThrLxBvWxCMfQwNpndNN3m7KR
-         HA+q61wF+dJrYwr3/9eyH1ooD6+HEgfi7dtjS7BJPzcS2pJeZs8FyYkEazWmYcPgKh
-         CCI00uz8N1c7dGCDuw9+vjkDByD1ybgzzhn89RgzZxksQzJ449Q2P95G8GK4vFGnmM
-         wAj4h0xF7iQ/LHHAy/dcm6aJQgzXGdYOW24hwBTARFUeiE6uBI+sHf+B3qH48c1yK3
-         WpzVvtTrnK9glwiFOHg1Tu8Pi/zLzsb9mWZAZAoEClOPENxV/6j4VKtjBx2VKSBY4H
-         Ae3USidvIzS6g==
+        b=Sfjc23tz95+FUSHH8zPfCLpqGyoFaRPCfbuuAVakgWe+s3p+/yVaWqpy/mHbYy+F8
+         Tu2glSAybK4lv9UeXxP7LZzz9NhMKpldc9mr2ZJJE4zVuAOceUfsnYtkT02FCZ5sbm
+         eSL1/dYGXVMxd5BtuzMFgHNw/bRLTfCEbwferc2rQZJ9lKpT4hbYzQXgG4e6TFFtpy
+         x6PjMA+z2A4lFzePSCOegfdBtcYPYEArpJi0iSvA8JFyoabx3hcn3KSNZG+8HTGjo8
+         dncUSC6FiaSXMJzp3La3+1yFg/MiTV+pHNaquXcuoYwgVfIcVP9AEZMCr3JQHKUDZX
+         mLCLBJT8DGcAw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E4DCC400B1; Mon, 23 May 2022 10:05:37 -0300 (-03)
-Date:   Mon, 23 May 2022 10:05:37 -0300
+        id 7FC38400B1; Mon, 23 May 2022 10:09:25 -0300 (-03)
+Date:   Mon, 23 May 2022 10:09:25 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     John Garry <john.garry@huawei.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Sohaib Mohamed <sohaib.amhmd@gmail.com>,
-        Carsten Haitzler <carsten.haitzler@arm.com>,
-        Marco Elver <elver@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, sandipan.das@amd.com,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 0/8] Make more tests skip rather than fail
-Message-ID: <YouGoc9elnPwV5IM@kernel.org>
-References: <20220518042027.836799-1-irogers@google.com>
+Subject: Re: [PATCH v2 4/7] perf jevents: Modify match field
+Message-ID: <YouHhUl1snHY7Djz@kernel.org>
+References: <20220511211526.1021908-1-irogers@google.com>
+ <20220511211526.1021908-5-irogers@google.com>
+ <f7a4e895-82e4-b8d2-7c30-931f2a48a838@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220518042027.836799-1-irogers@google.com>
+In-Reply-To: <f7a4e895-82e4-b8d2-7c30-931f2a48a838@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 17, 2022 at 09:20:19PM -0700, Ian Rogers escreveu:
-> A long standing niggle has been that tests that cannot pass are marked
-> as failing rather than skip.  John Garry mentioned a similar concern
-> in [1]. These changes fix this behavior so that as root, or not, at
-> least the first 10 tests are passing or skipping.
+Em Tue, May 17, 2022 at 02:35:14PM +0100, John Garry escreveu:
+> On 11/05/2022 22:15, Ian Rogers wrote:
+> > The match_field function looks for json values to append to the event
+> > string. As the C code processes these in order the output order matches
+> > that in the json dictionary. Python json readers read the entire
+> > dictionary and lose the ordering. To make the python and C output
+> > comparable make the C code first read the extra fields then append them
+> > to the event in an order not determined by their order in the file.
+> > 
+> > Modify the pmu-events test so that test expectations match the new
+> > order.
+> > 
+> > Signed-off-by: Ian Rogers<irogers@google.com>
 > 
-> [1] https://lore.kernel.org/lkml/d32376b5-5538-ff00-6620-e74ad4b4abf2@huawei.com/
-> 
-> v2. Updates reviewed-by and acked-by. It addresses review comments
->     from Namhyung Kim <namhyung@kernel.org>. An extra fix is now
->     included for PERF_RECORD_* which can fail as a user because of
->     perf_event_paranoid.
+> Reviewed-by: John Garry <john.garry@huawei.com>
 
-Thanks, applied.
 
-- Arnaldo
-
- 
-> Ian Rogers (8):
->   perf test: Skip reason for suites with 1 test
->   perf test: Use skip in vmlinux kallsyms
->   perf test: Use skip in openat syscall
->   perf test: Basic mmap use skip
->   perf test: Parse events tidy terms_test
->   perf test: Parse events tidy evlist_test
->   perf test: Parse events break apart tests
->   perf test: Use skip in PERF_RECORD_*
-> 
->  tools/perf/tests/builtin-test.c            |   6 +-
->  tools/perf/tests/mmap-basic.c              |  18 +-
->  tools/perf/tests/openat-syscall-all-cpus.c |  23 +-
->  tools/perf/tests/openat-syscall.c          |  20 +-
->  tools/perf/tests/parse-events.c            | 492 +++++++++++----------
->  tools/perf/tests/perf-record.c             |  18 +-
->  tools/perf/tests/vmlinux-kallsyms.c        |  12 +-
->  7 files changed, 341 insertions(+), 248 deletions(-)
-> 
-> -- 
-> 2.36.0.550.gb090851708-goog
-
--- 
+Applied up to here, will take a closer look at 5-7
 
 - Arnaldo
