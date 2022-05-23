@@ -2,95 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2EDC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 18:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 189B6C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 May 2022 20:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231792AbiEWS2s (ORCPT
+        id S232078AbiEWUE7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 May 2022 14:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59024 "EHLO
+        Mon, 23 May 2022 16:04:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244199AbiEWS14 (ORCPT
+        with ESMTP id S232101AbiEWUE4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 May 2022 14:27:56 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB5413C355;
-        Mon, 23 May 2022 11:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653329014; x=1684865014;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=AAirzVQ1LHT4q1Vz0Dd+gXv6Ma1E8XYPflgQ8RPZTuY=;
-  b=CW29qTdcVhJv6pH6rb5oe8A9s9XiSi9CSVFCpWPumc85c9m729tMy+FM
-   O6N+WFSQ6PpNNwDfmoeu/YRK85oF993QyVEGwb+AIitsMx5hW1ghMqN8O
-   z2aW/OADrvGt3MXZ55n6N4wRni6o130Ijh6dUW97R1hJw+zfJM5b7MbBA
-   6icjHK1idVNv3HtS3ZyS7+kLM1p8GfjqJ7mV+eZxkzUw6nuzpslb/ZOmj
-   g47G1cZPFqm2RGpelJqqdOkfu3NPiBwIFPp6DfH40IU47tl+c3HHN687J
-   thSbqs0S3Tx+gXZCZqPLUejZJq8ekzH7sCctsZoBoFGGUmLXxBYTtksfE
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="253808334"
-X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
-   d="scan'208";a="253808334"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 10:56:33 -0700
-X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
-   d="scan'208";a="572224825"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.56.27])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 10:56:29 -0700
-Message-ID: <46470b7f-377b-5192-60c6-8dac2fdd196e@intel.com>
-Date:   Mon, 23 May 2022 20:56:23 +0300
+        Mon, 23 May 2022 16:04:56 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BD38CB04;
+        Mon, 23 May 2022 13:04:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CC1DAB8159E;
+        Mon, 23 May 2022 20:04:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3041BC385A9;
+        Mon, 23 May 2022 20:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653336290;
+        bh=VCr+7lkLQToR6Gio/RU+YAX+4G+XyxkoG7z0HQlZc1I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CC96xKYgJWBc5/HF5oqiLYTYAcPzTCjgXGDI9a8r7NvI1VNe4v4ahbpJa6UJ1YOM3
+         kGt/6i96ibrfvGR/EudBjy23Iaj9ZzJY2n5LJxr3/pEwd5QwxJfKfW2nxr1xo4z4ss
+         CecgeB++xdDOY/HR3hGQVszWbBfhDadg1xqHJ5PzlP0fu0nVX9FAdpZO1FriMuu9r0
+         WuiL+Mzy9MIXwr7sZ9/buOHD859EiHiu+FjHASbBfn2pOvrpD+CCYlz7n3thj66uUZ
+         W7wIMtDbn9OC128PdAYYZCr8ORbkVzwo+OgflXz5kOWVFE/QaSQp8KKNu470r+zh/7
+         J+YmxcAP7Z63g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8910240483; Mon, 23 May 2022 17:04:47 -0300 (-03)
+Date:   Mon, 23 May 2022 17:04:47 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     German Gomez <german.gomez@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        james.clark@arm.com, leo.yan@linaro.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [RFC PATCH 0/1] perf test cs-etm: Add end-to-end tests for
+ CoreSight decoding
+Message-ID: <Yovo33Qh7eE7pTn1@kernel.org>
+References: <20220523144952.364370-1-german.gomez@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.9.1
-Subject: Re: [PATCH V2 5/6] perf kvm report: Add guest_code support
-Content-Language: en-US
-To:     Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20220517131011.6117-1-adrian.hunter@intel.com>
- <20220517131011.6117-6-adrian.hunter@intel.com>
- <2ff19ce9-98e3-7867-9762-ffae049f1d9b@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <2ff19ce9-98e3-7867-9762-ffae049f1d9b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220523144952.364370-1-german.gomez@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 23/05/22 18:54, Andi Kleen wrote:
+Em Mon, May 23, 2022 at 03:49:51PM +0100, German Gomez escreveu:
+> Hi
 > 
-> On 5/17/2022 6:10 AM, Adrian Hunter wrote:
->> Add an option to indicate that guest code can be found in the hypervisor
->> process
+> While discussing running more tests for CoreSight, we thought it might
+> be a good idea to upstream some EndToEnd tests for CoreSight decoding in
+> order to lock down the behaviour. I am sending this as RFC to get some
+> feedback from the community first.
 > 
-> Sorry for harping on this, but is it correct that this assumes that the code is still at the original location at decode time?
+> The test relies on pre-geneated perf.data files that are downloaded
+> during the test. I'm not sure it's a good idea to commit those files to
+> the Linux repository, so they would have to live in an external source
+> and be downloaded during the test.
 
-No, at decode time, the code is found in the hypervisor dso.
+That is ok, but please cache it locally, so that from the second 'perf
+test' run onwards one doesn´t have to incur in the download delay and
+also be able to run the tests while not connected.
 
+- Arnaldo
+ 
+> For this RFC, the files are stored in a Github repository [1]. As an
+> idea, I think we could store them in a new repo in the ARM-software
+> namespace. Any hosting suggestions are very welcome.
 > 
-> If yes we need some warnings for this, something like:
+> Thanks,
+> German
 > 
-> This only works when the code is still available in the riginal memory location at decode time. This is typically the case for kernel code (unless modules are unloaded). 
-
-In this scenario, the VM does not have a kernel.
-
-Note, there is an existing method to trace a guest kernel as described here:
-
-	https://www.man7.org/linux/man-pages/man1/perf-intel-pt.1.html#TRACING_VIRTUAL_MACHINES
-
-For user programs it only works as long as there is no memory pressure which might cause the memory to be reused.
-
-In this scenario, there are also no user programs in the VM, only functions from the hypervisor.
-
-For dynamically generated (JITed) code it might be rather unreliable unless the hypervisor is SIGSTOPed during decoding.
+> [1] https://github.com/ARM-software/data/tree/984cde8fb0bb22591e284826a80b338bb79c3655/perf/coresight
 > 
+> German Gomez (1):
+>   perf test cs-etm: Add end-to-end tests for CoreSight decoding
+> 
+>  tools/perf/tests/shell/lib/arm_auxtrace.sh    | 21 +++++++
+>  .../tests/shell/test_arm_coresight_decoder.sh | 57 +++++++++++++++++++
+>  2 files changed, 78 insertions(+)
+>  create mode 100644 tools/perf/tests/shell/lib/arm_auxtrace.sh
+>  create mode 100755 tools/perf/tests/shell/test_arm_coresight_decoder.sh
+> 
+> -- 
+> 2.25.1
 
+-- 
 
-
+- Arnaldo
