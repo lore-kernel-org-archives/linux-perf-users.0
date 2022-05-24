@@ -2,97 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CDDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 May 2022 17:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BB2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 May 2022 18:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239899AbiEXRbf convert rfc822-to-8bit (ORCPT
+        id S240166AbiEXSIL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 May 2022 13:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44536 "EHLO
+        Tue, 24 May 2022 14:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234928AbiEXRbe (ORCPT
+        with ESMTP id S231981AbiEXSIK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 May 2022 13:31:34 -0400
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC85BE33;
-        Tue, 24 May 2022 10:31:33 -0700 (PDT)
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-f1d2ea701dso23094797fac.10;
-        Tue, 24 May 2022 10:31:33 -0700 (PDT)
+        Tue, 24 May 2022 14:08:10 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC856B02B;
+        Tue, 24 May 2022 11:08:09 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id p74so15507503iod.8;
+        Tue, 24 May 2022 11:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CCoZCqf5DZYvmFYZUo768NlduYJytxgbzyAhxTX5D1U=;
+        b=q2dwl0J2dE5Opv7iwInHFK6zBnH929Y3nD3A6TYfLHOnbC9AvRSf7PDJj7QYG6I75l
+         Oe82wo/Q91vqQ0OLGuTqXlgbuF8R4iCcGz6gIvUenR20l91PHKo7quUeDLTt1QoivWqm
+         ZSL5LUEQgRpqJBYCo3Iti7C/2Gb2deSsPqdedmJKeywIP4FOwZjMwXwV0++1jrLR7M64
+         hDblFWjeRmC9ycbkg0SFEgxiGjQxYY2+rK0KeqxUuq3CzHBLko+5krfiMUscD5WErVsG
+         TSGcWGfR9cO5n3x0u2Qdu9i/m9XY7j+cFqU4PbOT9ir+2GBaiX3lmyGPhtAR7N5Ge8Sw
+         lh6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=INBclGQUnAgmL/1YH+NfJhitfY2TwRtlpANpDvmKtu8=;
-        b=DAJ0s0TL/y1Y4A2/AaCkr4o0eL0SfCIIXSwrBICfL0N1WddU6VUaRpQ9ZzbPmENw9g
-         mWJZ9FQd+GDDbipRG9okcHZGWfhJNloCuFznVtBiRyYaB0Zzsa6VQPNPYJfFAqDq277r
-         BKql4sjjCUBteRBawWhk2R2M7x5E7CV4qkPX+bIyCVd8aDzceyG3MAAVmqkLWJTphpZY
-         V/Txa+tuJrm+64NpSCuLpZt1qtxhddVlAXJ2SJ7t00dCbK3IA3z6h8IFmFr0Zt328fhw
-         ntb7G3pBu2eo+cvjGC7wWCcZJXsmzi1oBFVuWvN3M3BJkdvWBLHs0Ku9FxD1Exsd1N15
-         Pi7w==
-X-Gm-Message-State: AOAM532fnhDqg2+owZBlsUvqQ9QMjv89d2yhvYZChEdl0eDYJXezYZRT
-        bGrpJNM4R+l63xLyxTaanD8A9Iahwf1ALAc7lh2fH9JS
-X-Google-Smtp-Source: ABdhPJy7tGg1nqbuZDJD22VAoGMen3mHOaLa+izprn8iO5pNVMR4PamIr8sDloYiBfh16hEDDPiyVc67lIC1yArhhnA=
-X-Received: by 2002:a05:6871:215:b0:f1:8bf5:23ab with SMTP id
- t21-20020a056871021500b000f18bf523abmr3101128oad.92.1653413492438; Tue, 24
- May 2022 10:31:32 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=CCoZCqf5DZYvmFYZUo768NlduYJytxgbzyAhxTX5D1U=;
+        b=h6NRsVSQ5KTU9NeJWo8qYXMV1+BnlP76hfGm42KhiNgL34QL9RhB9FGsN7uJsWWFWM
+         i1vSovRBShKRP7VW10nip+xK83wHFBskpc7hNEWV4bMI2s9tz6tVWYUbKEi83jGEOwsp
+         QzfKTuAnP/CCr1NfvoO1qi/qr5K78K2RoM+Wh69o01anzldI/Y3j5RmtZCy4iDkeTNIJ
+         d1Q+tp1hsJcEln7fa8g1QB3/eKWb0hsuQZ4UzkquebhOfADTPBZ2o+BU3onwT3Sy+GWq
+         RoWVHqGOrEhd0YwkdACEOkYMMAB6OS+G4g9VM0x+xWGhp4zpmkc7UiThGBQLomNOfTrT
+         vEUA==
+X-Gm-Message-State: AOAM5317hINu+kvCLsM8Wk2UZEUu+NJMqAmphk1e2ZO+rZdzgkbLGCPi
+        /VwWy14VjmjP/KW+QYcXXTYg0a9iISZAiACtEf17p8dN+eA=
+X-Google-Smtp-Source: ABdhPJwvMP45iKh6ctuzwjBEHsLMCZ2t2DJi6jHsM/Qh2syL2Byl+RUOpcjkYiO4u9890rA2qvaWtrRoh3wi4zvrHZk=
+X-Received: by 2002:a05:6638:22c3:b0:32e:ac50:aeb3 with SMTP id
+ j3-20020a05663822c300b0032eac50aeb3mr9147129jat.186.1653415688617; Tue, 24
+ May 2022 11:08:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220521010811.932703-1-namhyung@kernel.org> <20220521010811.932703-2-namhyung@kernel.org>
- <YouDHRXZYqZSEutp@kernel.org>
-In-Reply-To: <YouDHRXZYqZSEutp@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 24 May 2022 10:31:21 -0700
-Message-ID: <CAM9d7ciqYsj+eGp9VqT6qQjmnzUjjrvbH8g7TgNE02k_Fifr5w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf lock: Add -t/--thread option for report
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+References: <20220523020209.11810-1-ojeda@kernel.org> <20220523020209.11810-4-ojeda@kernel.org>
+ <YovvIQeN3lmOYzJO@kernel.org>
+In-Reply-To: <YovvIQeN3lmOYzJO@kernel.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 24 May 2022 20:07:57 +0200
+Message-ID: <CANiq72m6ttD9QpB3nW-5B+M1seknv0GZ4-DqtF85qTg6Lvxnhg@mail.gmail.com>
+Subject: Re: [PATCH v7 03/25] kallsyms: increase maximum kernel symbol length
+ to 512
+To:     Jarkko Sakkinen <jarkko@kernel.org>
+Cc:     Miguel Ojeda <ojeda@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rust-for-linux <rust-for-linux@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Gary Guo <gary@garyguo.net>, Boqun Feng <boqun.feng@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        live-patching@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
-
-On Mon, May 23, 2022 at 5:50 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
-> Applied both and added this:
+On Mon, May 23, 2022 at 10:33 PM Jarkko Sakkinen <jarkko@kernel.org> wrote:
 >
-> ⬢[acme@toolbox perf]$ git diff
-> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-> index b43222229807672c..656b537b2fba078f 100644
-> --- a/tools/perf/Documentation/perf-lock.txt
-> +++ b/tools/perf/Documentation/perf-lock.txt
-> @@ -64,6 +64,27 @@ REPORT OPTIONS
->  --combine-locks::
->         Merge lock instances in the same class (based on name).
->
-> +-t::
-> +--threads::
-> +    The -t option is to show per-thread lock stat like below:
-> +
-> +      $ perf lock report -t -F acquired,contended,avg_wait
-> +
-> +                    Name   acquired  contended   avg wait (ns)
-> +
-> +                    perf     240569          9            5784
-> +                 swapper     106610         19             543
-> +                  :15789      17370          2           14538
-> +            ContainerMgr       8981          6             874
-> +                   sleep       5275          1           11281
-> +         ContainerThread       4416          4             944
-> +         RootPressureThr       3215          5            1215
-> +             rcu_preempt       2954          0               0
-> +            ContainerMgr       2560          0               0
-> +                 unnamed       1873          0               0
-> +         EventManager_De       1845          1             636
-> +         futex-default-S       1609          0               0
-> +
->  INFO OPTIONS
->  ------------
+> There's no description what the patch does.
 
-Thanks a lot for doing this!
-Namhyung
+I am not sure what you mean. Both the subject and the last paragraph
+describe what the patch does, while the rest gives the rationale
+behind it.
+
+Cheers,
+Miguel
