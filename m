@@ -2,108 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46600C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 May 2022 14:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8262C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 May 2022 14:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232632AbiEXOdn (ORCPT
+        id S238507AbiEXO6S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 May 2022 10:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36612 "EHLO
+        Tue, 24 May 2022 10:58:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232272AbiEXOdm (ORCPT
+        with ESMTP id S238492AbiEXO6I (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 May 2022 10:33:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E0166F84
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 May 2022 07:33:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 24 May 2022 10:58:08 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1B987A1E;
+        Tue, 24 May 2022 07:58:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653404287; x=1684940287;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=JUpfAF9Am5zA2GbGQFfRJxRjAhrPXzVHQcmG8Ad5zuE=;
+  b=Llxzv/3vBA+rZEoRTBAH1ecHS3pSdrD/PNOC3RsBOEUHsyaIDCDwfjJx
+   88/n3u15kI45DllCp6lBzm+Q3eBmy+9nGkpdHBmeCe7uo1nxpyGjKnHP5
+   o23NaczivZ4JY4kcTbGGTFGZUa51jNqvPDWkcnx2sBywDVPc1nAfpgAyp
+   WewNaG33UtHn1ygNIfdtqMKm4Fx1MEbNYcQTSyLhX3XgKfKhiEjjFRgIS
+   FUjh7j0R/nr2lmC1VE006KRw1nbvrc2SX9cIIiiUQQSjANY/gFYZOJyL1
+   M25BzHeOWtkya4bLBp5SDj4uTp4094fz4amfhnSvFRpIlN9E8D9eHbwqs
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10357"; a="271127274"
+X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
+   d="scan'208";a="271127274"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2022 07:58:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
+   d="scan'208";a="577919340"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 24 May 2022 07:58:07 -0700
+Received: from [10.252.209.117] (kliang2-MOBL.ccr.corp.intel.com [10.252.209.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2EE3FB818F7
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 May 2022 14:33:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE08FC385AA;
-        Tue, 24 May 2022 14:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653402818;
-        bh=uJe7035b21o5k3OU08seVvA/khYOdy/5WhxDrU94Yhs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T1X7lEiZ+5+Ytk6TWSqOdCZIe+ByLgMFwwY05w1QUQm5oI3nPLvGRlEn4R9/N/Eex
-         ggJkKls25fswtNZAD+YCCKjpkRQT7R/YHlmhKUKr8EZwh1R9kS4/hbZNdRToygoRCO
-         WKGbpIucDSnjQBaJYyj4TZUZJ7tQGf6R2eJMz+c+6sp9Gq9v4yGieLHd3nyS2uVxtK
-         OUphRla9UWf1aBqxuTcbaf7AMFjA8ANYjeIzY896c9RGHHfLK9oxILZaQbjCa4KAtk
-         1YJDbL2wR1+j5mDNfkw9jjCWP7oTfuorRiRRX3I5fnqdNCGWdpImpb1j4jOQ+mhV/L
-         HqJH92iFhPg/w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6BA2C4007E; Tue, 24 May 2022 11:33:35 -0300 (-03)
-Date:   Tue, 24 May 2022 11:33:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        vasily Gorbik <gor@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: perf test case 40 LLVM search and compile runs endless (eBPF
- linkage issue)
-Message-ID: <Yozsvxx0JsTbVgW1@kernel.org>
-References: <bac4efca-c61e-5f62-daa1-f508b64d6a7f@linux.ibm.com>
- <YotrewGfs8c2sXfV@krava>
- <YozLKby7ITEtchC9@krava>
+        by linux.intel.com (Postfix) with ESMTPS id B6BCD580223;
+        Tue, 24 May 2022 07:58:06 -0700 (PDT)
+Message-ID: <fd28e6fb-cf4c-a065-6138-4c581e871341@linux.intel.com>
+Date:   Tue, 24 May 2022 10:58:05 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YozLKby7ITEtchC9@krava>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [BUG REPORT] perf tools: x86_64: weight column displays odd
+ memory latency data
+Content-Language: en-US
+To:     Tyson Thomas <tyson.thomas@sydney.edu.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+References: <SYBPR01MB6620E2316BDF9CE29178CB32DBD59@SYBPR01MB6620.ausprd01.prod.outlook.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <SYBPR01MB6620E2316BDF9CE29178CB32DBD59@SYBPR01MB6620.ausprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 24, 2022 at 02:10:17PM +0200, Jiri Olsa escreveu:
-> On Mon, May 23, 2022 at 01:09:51PM +0200, Jiri Olsa wrote:
-> > On Mon, May 23, 2022 at 12:52:06PM +0200, Thomas Richter wrote:
-> > > On s390 the test case 40 'LLVM search and compile' runs for ever:
-> > > 
-> > >   # date; timeout 30s perf test -F 40; date
-> > >   Mon May 23 12:35:48 PM CEST 2022
-> > >    40: LLVM search and compile   :
-> > >    40.1: Basic BPF llvm compile  :
-> > >   Mon May 23 12:36:18 PM CEST 2022
-> > >   #
-> > > 
-> > > Investigation by Ilya Leoshkevich revealed:
-> > > On s390 we hit an endless loop where bpf_object__next_program and bpf_program__next 
-> > > infinitely call each other. We tracked this down to ld.so preferring the perf's 
-> > > bpf_object__next_program weak copy over the libbpf's strong one.
-> > > 
-> > > This is introduced with commit 2a4898fc264a ("perf tools: Add more weak libbpf functions")
-> > > 
-> > > Also see discussion in 
-> > > https://lore.kernel.org/lkml/YY%2FAR2Dcaws0BAE9@kernel.org/
-> > > 
-> > > How can this be fixed asap? Thanks a lot.
-> > 
-> > I was just suggesting to remove that:
-> >   https://lore.kernel.org/bpf/Yos8hq3NmBwemoJw@krava/T/#mda8abccbf475b99d25abe5498a5df1af2da82ee8
-> > 
-> > it's no longer needed and can cause problem apparently
-> 
-> after discussing with Arnaldo we decided to go for another fix,
-> could you please try this branch:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   perf/weak
 
-I'm adding comments, testing and applying that series in my local tree,
-so far so good, will push to tmp.perf/core later.
 
-Please let us know if you guys looked at the patches in Jiri's perf/weak
-branch and if you are ok with it so that I can add
-Tested-by/acked-by/reviewed-by, which are always more than welcome.
+On 5/22/2022 6:14 PM, Tyson Thomas wrote:
+> Hi Kan, Linux-Perf Team
+> 
+> I have observed some odd behaviour within perf when using perf-mem. Specifically the reported latency under the weight column appears to be unreasonably high.
+> 
+> Here is a given sample from a recent test, I find that some of the  latencies are close to an unsigned short and I cannot seem to be understand why that would be outside of it being an issue with the perf events.
+> 
+> This can be replicated using a NAS benchmark, specifically cg.D.
+> 
+> I observe the following results in perf mem report (just getting the top 10 results)
+>
+
+
+Could you please show me the exact perf command used?
+
+With my perf mem report,
+The first column is the Overhead.
+The second column is the number of samples.
+The third column is the weight.
+The fourth is the Memory access.
+
+Seems like the weight is missed?
+
+Could you please check the perf report -D?
+It will dump the weight for each Sample.
+Does it look correct?
 
 Thanks,
+Kan
 
-- Arnaldo
+>   0.02% ,62515 ,L1 or L1 hit
+>   0.02% ,54048 ,L1 or L1 hit
+>   0.02% ,52206 ,L1 or L1 hit
+>   0.02% ,49831 ,L1 or L1 hit
+>   0.02% ,49056 ,Local RAM or RAM hit
+>   0.01% ,40666 ,LFB or LFB hit
+>   0.01% ,38080 ,L1 or L1 hit
+>   0.01% ,36772 ,L1 or L1 hit
+>   0.01% ,36729 ,LFB or LFB hit
+>   0.01% ,27101 ,LFB or LFB hit
+> 
+> Is it possible for someone to shed some light on this or am I misunderstanding how the weight column is used here?
+> This appears to have been an issue on 5.4, 5.10 and 5.15. I am looking into seeing if it is still present in 5.17 and 5.18.
+> 
+> I've also tried this on different Intel CPUs such as Intel Xeon 6230, i5-1135G7, Intel Xeon 6330
+> 
+> Any insight or help would be appreciated,
+> Tyson
