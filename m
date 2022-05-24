@@ -2,115 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8262C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 May 2022 14:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CDDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 May 2022 17:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238507AbiEXO6S (ORCPT
+        id S239899AbiEXRbf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 May 2022 10:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51782 "EHLO
+        Tue, 24 May 2022 13:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238492AbiEXO6I (ORCPT
+        with ESMTP id S234928AbiEXRbe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 May 2022 10:58:08 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1B987A1E;
-        Tue, 24 May 2022 07:58:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653404287; x=1684940287;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=JUpfAF9Am5zA2GbGQFfRJxRjAhrPXzVHQcmG8Ad5zuE=;
-  b=Llxzv/3vBA+rZEoRTBAH1ecHS3pSdrD/PNOC3RsBOEUHsyaIDCDwfjJx
-   88/n3u15kI45DllCp6lBzm+Q3eBmy+9nGkpdHBmeCe7uo1nxpyGjKnHP5
-   o23NaczivZ4JY4kcTbGGTFGZUa51jNqvPDWkcnx2sBywDVPc1nAfpgAyp
-   WewNaG33UtHn1ygNIfdtqMKm4Fx1MEbNYcQTSyLhX3XgKfKhiEjjFRgIS
-   FUjh7j0R/nr2lmC1VE006KRw1nbvrc2SX9cIIiiUQQSjANY/gFYZOJyL1
-   M25BzHeOWtkya4bLBp5SDj4uTp4094fz4amfhnSvFRpIlN9E8D9eHbwqs
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10357"; a="271127274"
-X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
-   d="scan'208";a="271127274"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2022 07:58:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
-   d="scan'208";a="577919340"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 24 May 2022 07:58:07 -0700
-Received: from [10.252.209.117] (kliang2-MOBL.ccr.corp.intel.com [10.252.209.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id B6BCD580223;
-        Tue, 24 May 2022 07:58:06 -0700 (PDT)
-Message-ID: <fd28e6fb-cf4c-a065-6138-4c581e871341@linux.intel.com>
-Date:   Tue, 24 May 2022 10:58:05 -0400
+        Tue, 24 May 2022 13:31:34 -0400
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC85BE33;
+        Tue, 24 May 2022 10:31:33 -0700 (PDT)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-f1d2ea701dso23094797fac.10;
+        Tue, 24 May 2022 10:31:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=INBclGQUnAgmL/1YH+NfJhitfY2TwRtlpANpDvmKtu8=;
+        b=DAJ0s0TL/y1Y4A2/AaCkr4o0eL0SfCIIXSwrBICfL0N1WddU6VUaRpQ9ZzbPmENw9g
+         mWJZ9FQd+GDDbipRG9okcHZGWfhJNloCuFznVtBiRyYaB0Zzsa6VQPNPYJfFAqDq277r
+         BKql4sjjCUBteRBawWhk2R2M7x5E7CV4qkPX+bIyCVd8aDzceyG3MAAVmqkLWJTphpZY
+         V/Txa+tuJrm+64NpSCuLpZt1qtxhddVlAXJ2SJ7t00dCbK3IA3z6h8IFmFr0Zt328fhw
+         ntb7G3pBu2eo+cvjGC7wWCcZJXsmzi1oBFVuWvN3M3BJkdvWBLHs0Ku9FxD1Exsd1N15
+         Pi7w==
+X-Gm-Message-State: AOAM532fnhDqg2+owZBlsUvqQ9QMjv89d2yhvYZChEdl0eDYJXezYZRT
+        bGrpJNM4R+l63xLyxTaanD8A9Iahwf1ALAc7lh2fH9JS
+X-Google-Smtp-Source: ABdhPJy7tGg1nqbuZDJD22VAoGMen3mHOaLa+izprn8iO5pNVMR4PamIr8sDloYiBfh16hEDDPiyVc67lIC1yArhhnA=
+X-Received: by 2002:a05:6871:215:b0:f1:8bf5:23ab with SMTP id
+ t21-20020a056871021500b000f18bf523abmr3101128oad.92.1653413492438; Tue, 24
+ May 2022 10:31:32 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [BUG REPORT] perf tools: x86_64: weight column displays odd
- memory latency data
-Content-Language: en-US
-To:     Tyson Thomas <tyson.thomas@sydney.edu.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-References: <SYBPR01MB6620E2316BDF9CE29178CB32DBD59@SYBPR01MB6620.ausprd01.prod.outlook.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <SYBPR01MB6620E2316BDF9CE29178CB32DBD59@SYBPR01MB6620.ausprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20220521010811.932703-1-namhyung@kernel.org> <20220521010811.932703-2-namhyung@kernel.org>
+ <YouDHRXZYqZSEutp@kernel.org>
+In-Reply-To: <YouDHRXZYqZSEutp@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 24 May 2022 10:31:21 -0700
+Message-ID: <CAM9d7ciqYsj+eGp9VqT6qQjmnzUjjrvbH8g7TgNE02k_Fifr5w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf lock: Add -t/--thread option for report
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Arnaldo,
 
-
-On 5/22/2022 6:14 PM, Tyson Thomas wrote:
-> Hi Kan, Linux-Perf Team
-> 
-> I have observed some odd behaviour within perf when using perf-mem. Specifically the reported latency under the weight column appears to be unreasonably high.
-> 
-> Here is a given sample from a recent test, I find that some of the  latencies are close to an unsigned short and I cannot seem to be understand why that would be outside of it being an issue with the perf events.
-> 
-> This can be replicated using a NAS benchmark, specifically cg.D.
-> 
-> I observe the following results in perf mem report (just getting the top 10 results)
+On Mon, May 23, 2022 at 5:50 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+> Applied both and added this:
 >
+> ⬢[acme@toolbox perf]$ git diff
+> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+> index b43222229807672c..656b537b2fba078f 100644
+> --- a/tools/perf/Documentation/perf-lock.txt
+> +++ b/tools/perf/Documentation/perf-lock.txt
+> @@ -64,6 +64,27 @@ REPORT OPTIONS
+>  --combine-locks::
+>         Merge lock instances in the same class (based on name).
+>
+> +-t::
+> +--threads::
+> +    The -t option is to show per-thread lock stat like below:
+> +
+> +      $ perf lock report -t -F acquired,contended,avg_wait
+> +
+> +                    Name   acquired  contended   avg wait (ns)
+> +
+> +                    perf     240569          9            5784
+> +                 swapper     106610         19             543
+> +                  :15789      17370          2           14538
+> +            ContainerMgr       8981          6             874
+> +                   sleep       5275          1           11281
+> +         ContainerThread       4416          4             944
+> +         RootPressureThr       3215          5            1215
+> +             rcu_preempt       2954          0               0
+> +            ContainerMgr       2560          0               0
+> +                 unnamed       1873          0               0
+> +         EventManager_De       1845          1             636
+> +         futex-default-S       1609          0               0
+> +
+>  INFO OPTIONS
+>  ------------
 
-
-Could you please show me the exact perf command used?
-
-With my perf mem report,
-The first column is the Overhead.
-The second column is the number of samples.
-The third column is the weight.
-The fourth is the Memory access.
-
-Seems like the weight is missed?
-
-Could you please check the perf report -D?
-It will dump the weight for each Sample.
-Does it look correct?
-
-Thanks,
-Kan
-
->   0.02% ,62515 ,L1 or L1 hit
->   0.02% ,54048 ,L1 or L1 hit
->   0.02% ,52206 ,L1 or L1 hit
->   0.02% ,49831 ,L1 or L1 hit
->   0.02% ,49056 ,Local RAM or RAM hit
->   0.01% ,40666 ,LFB or LFB hit
->   0.01% ,38080 ,L1 or L1 hit
->   0.01% ,36772 ,L1 or L1 hit
->   0.01% ,36729 ,LFB or LFB hit
->   0.01% ,27101 ,LFB or LFB hit
-> 
-> Is it possible for someone to shed some light on this or am I misunderstanding how the weight column is used here?
-> This appears to have been an issue on 5.4, 5.10 and 5.15. I am looking into seeing if it is still present in 5.17 and 5.18.
-> 
-> I've also tried this on different Intel CPUs such as Intel Xeon 6230, i5-1135G7, Intel Xeon 6330
-> 
-> Any insight or help would be appreciated,
-> Tyson
+Thanks a lot for doing this!
+Namhyung
