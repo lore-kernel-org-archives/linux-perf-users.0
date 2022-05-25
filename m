@@ -2,140 +2,314 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F20C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 09:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED9AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 11:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232600AbiEYJpU (ORCPT
+        id S234863AbiEYLH0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 May 2022 05:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58892 "EHLO
+        Wed, 25 May 2022 07:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241348AbiEYJor (ORCPT
+        with ESMTP id S236673AbiEYLHY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 May 2022 05:44:47 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08on2076.outbound.protection.outlook.com [40.107.101.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C62FD35;
-        Wed, 25 May 2022 02:44:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EGwXzEIuSZRIUiCTZmYjGwX1uEHUXtCXadEOO53MlM7LrwYBSEKi6h5OjBSBS95k+EHf3tbGzWn/Y68v+uoxwUKufgVY6QdYvLSLxKuem1LhvStfil+o7MkZmjwDkyGYzDWA8o/xtaOObA1EzRlnGJR5iEajxIBxMuihPNCtmJw9UcLtgNsCfnqLQDcNC7KXU5MOXVVzuPt7KCwyoMfzTJKlNM/j9+M60kRa/g2MRCBFHblU356KKw8+CFBlSXLN9CqwE4tdC2aUn+y4t0lMo8RkSDvwfLHk8E7aTGYEnNyj/6X6AAMuXP+zV23N8eFjpREUWa9wwUnNguEYRXk7Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cbvlHW0SmcPizpGbkDxSq1c/GhMxwfxf4uWB+qfxxaw=;
- b=MtngoxfQhUKrHGKFDnQlBsPu5QnKUhMULy3eTqqfv0Bx+gugnDxFx2SEX2oAQCqwnZiG0t4+QoaRWp3u/ObdYg8rea50cKqfT5SfRirI4LQy3s0UzRMz8aZxSOqvz+HXVJoK7gLT+Avypqlj7lBhDAMT/1MHgZnZDSVlaxsIQKG782n5AsNde7JO2lKpLaBSjKzy33GtbMcpD8ceX7W6yWFAxYQeRwETby84WONRdE9rAkdtLCqZcb6pG50CVIKWRhhcv8nvz/4hrWKwATNQYVe7tH1a4zvjZKdGqJ3H5J5Af7zbnHUaYVHIR6P/zlAOmde2qYTCO8QH57MbLblo4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cbvlHW0SmcPizpGbkDxSq1c/GhMxwfxf4uWB+qfxxaw=;
- b=H6/IXNrRWUxAk2z8rMywsa2oqwfxeuS+GZsWS8Q0q4Q0B8ywbLxlUIfbe9v4m/3y7ivUf1p9fY+PDne/M5iBYQ6IlxwfZeqD4nWyrJ/27e8e6MW5wYIjmvKFON1eAg4EXCsR05F4wNR9PCn6aFUdTO4zbAoV6gk8BdVgAq+tYec=
-Received: from MW4PR03CA0259.namprd03.prod.outlook.com (2603:10b6:303:b4::24)
- by BL3PR12MB6380.namprd12.prod.outlook.com (2603:10b6:208:3b3::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.23; Wed, 25 May
- 2022 09:44:39 +0000
-Received: from CO1NAM11FT019.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b4:cafe::ac) by MW4PR03CA0259.outlook.office365.com
- (2603:10b6:303:b4::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13 via Frontend
- Transport; Wed, 25 May 2022 09:44:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT019.mail.protection.outlook.com (10.13.175.57) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5293.13 via Frontend Transport; Wed, 25 May 2022 09:44:38 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 25 May
- 2022 04:44:24 -0500
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <peterz@infradead.org>, <acme@kernel.org>
-CC:     <ravi.bangoria@amd.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <eranian@google.com>, <irogers@google.com>, <jmario@redhat.com>,
-        <leo.yan@linaro.org>, <alisaidi@amazon.com>, <ak@linux.intel.com>,
-        <kan.liang@linux.intel.com>, <dave.hansen@linux.intel.com>,
-        <hpa@zytor.com>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <x86@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
-        <kim.phillips@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH 13/13] perf mem: Use more generic term for LFB
-Date:   Wed, 25 May 2022 15:09:38 +0530
-Message-ID: <20220525093938.4101-14-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220525093938.4101-1-ravi.bangoria@amd.com>
-References: <20220525093938.4101-1-ravi.bangoria@amd.com>
+        Wed, 25 May 2022 07:07:24 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA4E3B3F3;
+        Wed, 25 May 2022 04:07:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DD456B81D0A;
+        Wed, 25 May 2022 11:07:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B6CFC385B8;
+        Wed, 25 May 2022 11:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653476840;
+        bh=aZd2Jm71EyfyAuktpRZsuTKx7fZvMLY7U/iTDktxjm8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dNQmzY4yDU4TWBDuf0H4PVhugsbJf9FSEW08GDr1BHgd7U0MeLHNe6DDD5hHEkl3L
+         ws1X/+v9jZ1ZvtdhmJAsrY8Ok32DVo9cpvV92Bs/Qto0poylzY3AWxYbdxK4F/gtLo
+         GTnY5BDHz9W+AotQu2+b8FL/16T7YOyzhQm6K0W9d4Hz91bdag9MFxsZT0Apfwk91P
+         FbgGd2GtEeyS3V3z63Wm4WqjEW2zf4xE8SFajvJMPASCTb57Tt5IYhiWSKKT4oYsTd
+         a4EVphY9Gpmz567UlzYGmIT1gXVbtOLJlI3M+yTan+IAwmX1Vz5CphhwAo/qnx24ZA
+         Ar4PUdcsIBMqQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 164BB4007E; Wed, 25 May 2022 08:07:18 -0300 (-03)
+Date:   Wed, 25 May 2022 08:07:18 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
+        Like Xu <likexu@tencent.com>,
+        James Clark <james.clark@arm.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Claire Jensen <clairej735@gmail.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v4 1/3] perf test: Add checking for perf stat CSV output.
+Message-ID: <Yo4N5py+ggnREF7p@kernel.org>
+References: <20220525053814.3265216-1-irogers@google.com>
+ <20220525053814.3265216-2-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ea413e6f-4036-471a-b775-08da3e332fb4
-X-MS-TrafficTypeDiagnostic: BL3PR12MB6380:EE_
-X-Microsoft-Antispam-PRVS: <BL3PR12MB6380FA4C6A2947873613179AE0D69@BL3PR12MB6380.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Fv6C2JBh+VvVsQgUBh3zyuXZYdmh+uWjhKxL6BDYwpAp9wDkKJNCUKAj4OM/5FsqyCmK+SBhdldZJIhP5ZU3TV6OlQetQQBhFHLl0c0cfWHC5YHG04bZmbfOdeuDtrBvXbH15dtiysS9zUxECl6OPM8z5XyQ+OQdxtk+f1e1juyW6FRgNr5dXolLHHAEXRadk1ia2FiTRQom1OyhHC9bTfHoqAC0Xhq9e1gzAL9hIYjr6ACLfziKCNH0XBMjGlTywMke5MYQFLDOaoO3U+dKZJovDS5XAtnFDzYbJ97AeBJgQ2IL7UDZRWnrq5L5hHP3VgamoSC8fvGgMm8nX67iEwz6S2T2GEd+smIETF9iNCLN3SLCZCpH/PEguq0tLPZQi4vrkSGIw7h61KWYKYD7BVMtmtOjH7c8+vlkoVov1kj0LZE29DQSk/pkTxSV2VZS3CMgng3Ph6DQffW638tHH7oX8T8d0izEPzOIFboTyhqLS7bBZ1YIspyxWDArs1sNTVG60UNmfUqexbMsD4bHL/HPe9DrEi/HZiF4KX3zRLWnbSAbDm7Z31gnJXFXyd8igxT1wY097JYaV2eMbGoemPBvBOtgtFH6gTxjXQmJgEmknfQITPwt8RpJgrDnX3X8J4SIKFjwN2d+SzVzB1UUPaAXxAeuPY69Z0qvuu+cIsV4mcHC+/tC0PBOLLDzZIWSnWTByvpwnXMW+ytpuBHPR9vfFwtFs911UWQBE7mtWhY=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(186003)(82310400005)(5660300002)(8676002)(70586007)(40460700003)(83380400001)(86362001)(2616005)(16526019)(426003)(110136005)(47076005)(54906003)(8936002)(336012)(81166007)(7696005)(26005)(316002)(356005)(2906002)(44832011)(1076003)(70206006)(508600001)(36756003)(4326008)(36860700001)(7416002)(6666004)(41533002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2022 09:44:38.9098
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea413e6f-4036-471a-b775-08da3e332fb4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT019.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6380
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220525053814.3265216-2-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A hw component to track outstanding L1 Data Cache misses is called
-LFB (Line Fill Buffer) on Intel and Arm. However similar component
-exists on other arch with different names, for ex, it's called MAB
-(Miss Address Buffer) on AMD. Replace LFB with generic name "Cache
-Fill Buffer".
+Em Tue, May 24, 2022 at 10:38:12PM -0700, Ian Rogers escreveu:
+> From: Claire Jensen <cjense@google.com>
+> 
+> Counts expected fields for various commands. No testing added for
+> summary mode since it is broken.
+> 
+> An example of the summary output is:
+> 
+>          summary,263831,,instructions:u,1435072,100.0,0.46,insn per cycle
+> ,,,,,1.37,stalled cycles per insn
+> 
+> This should be:
+> 
+>          summary,263831,,instructions:u,1435072,100.0,0.46,insn per cycle
+>          summary,,,,,,1.37,stalled cycles per insn
+> 
+> The output has 7 fields when it should have 8. Additionally, the newline
+> spacing is wrong, so it was excluded from testing until a fix is made.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- tools/perf/util/mem-events.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+s/parnoia/paranoid/ on the [Skip] lines, or am I missing something? :-)
 
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 415d754fea8d..e3b8e174ceb4 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -282,7 +282,7 @@ static const char * const mem_lvl[] = {
- 	"HIT",
- 	"MISS",
- 	"L1",
--	"LFB",
-+	"Cache Fill Buffer",
- 	"L2",
- 	"L3",
- 	"Local RAM",
-@@ -298,7 +298,7 @@ static const char * const mem_lvlnum[] = {
- 	[PERF_MEM_LVLNUM_EXTN_MEM] = "Ext Mem",
- 	[PERF_MEM_LVLNUM_IO] = "I/O",
- 	[PERF_MEM_LVLNUM_ANY_CACHE] = "Any cache",
--	[PERF_MEM_LVLNUM_LFB] = "LFB",
-+	[PERF_MEM_LVLNUM_LFB] = "Cache Fill Buffer",
- 	[PERF_MEM_LVLNUM_RAM] = "RAM",
- 	[PERF_MEM_LVLNUM_PMEM] = "PMEM",
- 	[PERF_MEM_LVLNUM_NA] = "N/A",
+I'll fix this up here.
+
+- Arnaldo
+ 
+> Signed-off-by: Claire Jensen <cjense@google.com>
+> ---
+>  .../tests/shell/lib/perf_csv_output_lint.py   |  48 ++++++
+>  tools/perf/tests/shell/stat+csv_output.sh     | 147 ++++++++++++++++++
+>  2 files changed, 195 insertions(+)
+>  create mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
+>  create mode 100755 tools/perf/tests/shell/stat+csv_output.sh
+> 
+> diff --git a/tools/perf/tests/shell/lib/perf_csv_output_lint.py b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
+> new file mode 100644
+> index 000000000000..714f283cfb1b
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
+> @@ -0,0 +1,48 @@
+> +#!/usr/bin/python
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +import argparse
+> +import sys
+> +
+> +# Basic sanity check of perf CSV output as specified in the man page.
+> +# Currently just checks the number of fields per line in output.
+> +
+> +ap = argparse.ArgumentParser()
+> +ap.add_argument('--no-args', action='store_true')
+> +ap.add_argument('--interval', action='store_true')
+> +ap.add_argument('--system-wide-no-aggr', action='store_true')
+> +ap.add_argument('--system-wide', action='store_true')
+> +ap.add_argument('--event', action='store_true')
+> +ap.add_argument('--per-core', action='store_true')
+> +ap.add_argument('--per-thread', action='store_true')
+> +ap.add_argument('--per-die', action='store_true')
+> +ap.add_argument('--per-node', action='store_true')
+> +ap.add_argument('--per-socket', action='store_true')
+> +ap.add_argument('--separator', default=',', nargs='?')
+> +args = ap.parse_args()
+> +
+> +Lines = sys.stdin.readlines()
+> +
+> +def check_csv_output(exp):
+> +  for line in Lines:
+> +    if 'failed' not in line:
+> +      count = line.count(args.separator)
+> +      if count != exp:
+> +        sys.stdout.write(''.join(Lines))
+> +        raise RuntimeError(f'wrong number of fields. expected {exp} in {line}')
+> +
+> +try:
+> +  if args.no_args or args.system_wide or args.event:
+> +    expected_items = 6
+> +  elif args.interval or args.per_thread or args.system_wide_no_aggr:
+> +    expected_items = 7
+> +  elif args.per_core or args.per_socket or args.per_node or args.per_die:
+> +    expected_items = 8
+> +  else:
+> +    ap.print_help()
+> +    raise RuntimeError('No checking option specified')
+> +  check_csv_output(expected_items)
+> +
+> +except:
+> +  sys.stdout.write('Test failed for input: ' + ''.join(Lines))
+> +  raise
+> diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+> new file mode 100755
+> index 000000000000..82c25e9c7f21
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/stat+csv_output.sh
+> @@ -0,0 +1,147 @@
+> +#!/bin/bash
+> +# perf stat CSV output linter
+> +# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> +# Tests various perf stat CSV output commands for the
+> +# correct number of fields and the CSV separator set to ','.
+> +
+> +set -e
+> +
+> +pythonchecker=$(dirname $0)/lib/perf_csv_output_lint.py
+> +if [ "x$PYTHON" == "x" ]
+> +then
+> +	if which python3 > /dev/null
+> +	then
+> +		PYTHON=python3
+> +	elif which python > /dev/null
+> +	then
+> +		PYTHON=python
+> +	else
+> +		echo Skipping test, python not detected please set environment variable PYTHON.
+> +		exit 2
+> +	fi
+> +fi
+> +
+> +# Return true if perf_event_paranoid is > $1 and not running as root.
+> +function ParanoidAndNotRoot()
+> +{
+> +	 [ $(id -u) != 0 ] && [ $(cat /proc/sys/kernel/perf_event_paranoid) -gt $1 ]
+> +}
+> +
+> +check_no_args()
+> +{
+> +	echo -n "Checking CSV output: no args "
+> +	perf stat -x, true 2>&1 | $PYTHON $pythonchecker --no-args
+> +	echo "[Success]"
+> +}
+> +
+> +check_system_wide()
+> +{
+> +	echo -n "Checking CSV output: system wide "
+> +	if ParanoidAndNotRoot 0
+> +	then
+> +		echo "[Skip] parnoia and not root"
+> +		return
+> +	fi
+> +	perf stat -x, -a true 2>&1 | $PYTHON $pythonchecker --system-wide
+> +	echo "[Success]"
+> +}
+> +
+> +check_system_wide_no_aggr()
+> +{
+> +	echo -n "Checking CSV output: system wide "
+> +	if ParanoidAndNotRoot 0
+> +	then
+> +		echo "[Skip] parnoia and not root"
+> +		return
+> +	fi
+> +	echo -n "Checking CSV output: system wide no aggregation "
+> +	perf stat -x, -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
+> +	echo "[Success]"
+> +}
+> +
+> +check_interval()
+> +{
+> +	echo -n "Checking CSV output: interval "
+> +	perf stat -x, -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
+> +	echo "[Success]"
+> +}
+> +
+> +
+> +check_event()
+> +{
+> +	echo -n "Checking CSV output: event "
+> +	perf stat -x, -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
+> +	echo "[Success]"
+> +}
+> +
+> +check_per_core()
+> +{
+> +	echo -n "Checking CSV output: per core "
+> +	if ParanoidAndNotRoot 0
+> +	then
+> +		echo "[Skip] parnoia and not root"
+> +		return
+> +	fi
+> +	perf stat -x, --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
+> +	echo "[Success]"
+> +}
+> +
+> +check_per_thread()
+> +{
+> +	echo -n "Checking CSV output: per thread "
+> +	if ParanoidAndNotRoot 0
+> +	then
+> +		echo "[Skip] parnoia and not root"
+> +		return
+> +	fi
+> +	perf stat -x, --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
+> +	echo "[Success]"
+> +}
+> +
+> +check_per_die()
+> +{
+> +	echo -n "Checking CSV output: per die "
+> +	if ParanoidAndNotRoot 0
+> +	then
+> +		echo "[Skip] parnoia and not root"
+> +		return
+> +	fi
+> +	perf stat -x, --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
+> +	echo "[Success]"
+> +}
+> +
+> +check_per_node()
+> +{
+> +	echo -n "Checking CSV output: per node "
+> +	if ParanoidAndNotRoot 0
+> +	then
+> +		echo "[Skip] parnoia and not root"
+> +		return
+> +	fi
+> +	perf stat -x, --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
+> +	echo "[Success]"
+> +}
+> +
+> +check_per_socket()
+> +{
+> +	echo -n "Checking CSV output: per socket "
+> +	if ParanoidAndNotRoot 0
+> +	then
+> +		echo "[Skip] parnoia and not root"
+> +		return
+> +	fi
+> +	perf stat -x, --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
+> +	echo "[Success]"
+> +}
+> +
+> +check_no_args
+> +check_system_wide
+> +check_system_wide_no_aggr
+> +check_interval
+> +check_event
+> +check_per_core
+> +check_per_thread
+> +check_per_die
+> +check_per_node
+> +check_per_socket
+> +exit 0
+> -- 
+> 2.36.1.124.g0e6072fb45-goog
+
 -- 
-2.31.1
 
+- Arnaldo
