@@ -2,99 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A443BC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 14:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093A3C43217
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 14:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239529AbiEYOHC (ORCPT
+        id S243752AbiEYOHG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 May 2022 10:07:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
+        Wed, 25 May 2022 10:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245643AbiEYOFy (ORCPT
+        with ESMTP id S229674AbiEYOHE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 May 2022 10:05:54 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290D78D6BD;
-        Wed, 25 May 2022 07:03:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653487435; x=1685023435;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FdNkUTr3XASwSCxYa3ivhvPYt8r8WXycJZ613rnDCeE=;
-  b=K60NM2e227WWOO6sPbV2DViC1WmF2xeMeRGlN4g6SSkO4aSc31uTT2UJ
-   LROC/FmaLr1X0fmPByESBhqoemKfLICFdoGN1OxReaBTsrJegSh6orBmB
-   1jkgA7G9hwbQ3u749ybOlbkK1TeMDXIdH6u/+0/nC6PDjsJjCE07wpqo5
-   CYjdZ3NGzyobXDMKvXELmS/YCV1199mGh7SYmg92xG9+XYPn+34AKi1PN
-   uxrkBGGijP3/NyXV/a9KLqaN8RV5q9pnEa9mxQw7ve2hG7niuD36XD3FG
-   PxeEWMx7zFKJXpzA1RTCFY+o45bb/sdTL4E8n1hGw1IdnqfRpPJQr6onl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10358"; a="299154465"
-X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
-   d="scan'208";a="299154465"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2022 07:03:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
-   d="scan'208";a="717694868"
-Received: from zxingrtx.sh.intel.com ([10.239.159.110])
-  by fmsmga001.fm.intel.com with ESMTP; 25 May 2022 07:03:52 -0700
-From:   zhengjun.xing@linux.intel.com
-To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
-Subject: [PATCH] perf jevents: Fix event syntax error caused by ExtSel
-Date:   Wed, 25 May 2022 22:04:10 +0800
-Message-Id: <20220525140410.1706851-1-zhengjun.xing@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 25 May 2022 10:07:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE7C8D6BD;
+        Wed, 25 May 2022 07:07:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CAD326194D;
+        Wed, 25 May 2022 14:07:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E6DDC385B8;
+        Wed, 25 May 2022 14:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653487622;
+        bh=RgiR9Ce9ArVW3S3ZN6uRtn/r+jgQvDF3aziT/UtAWIY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u+CGMZEy7km5nHUeszhvjzBdwLcKs1gXYrev5uk9bWRbelFW2rjqQUYCyU4N523cM
+         pFvS2lUqFxKH2y7o1UT26f8ILVibpRSvAhrmNdt/uH0vAfk4AR8O7oTy1uqNDd1//y
+         TlmYyNLa8s40kewMqH8JP+rMcObq27ceUvnaIfIKMLcNUNpQB2y3f4a+F/3l58Z2+K
+         SijzzIN1u530ELvnyL3SDTIn59BtyzLtBGuXuJq0v1wTDlxLTyPTlL8+JeS0rmnWw7
+         pywPG9MZLIUnyBQhX34wxvUcoPe8J5G9ZoHYUGgqliD15H2lr2zcKy9SeQueH6sdXm
+         Es/Z7VZ6uLYIQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C7EEF4007E; Wed, 25 May 2022 11:06:58 -0300 (-03)
+Date:   Wed, 25 May 2022 11:06:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
+        Milian Wolff <milian.wolff@kdab.com>,
+        bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Blake Jones <blakejones@google.com>
+Subject: Re: [PATCH 3/6] perf record: Implement basic filtering for off-cpu
+Message-ID: <Yo44AppGsPKvf7Al@kernel.org>
+References: <20220518224725.742882-1-namhyung@kernel.org>
+ <20220518224725.742882-4-namhyung@kernel.org>
+ <CAP-5=fWfZ_MqiAUx-tdO1C=Dyyzno6FbBp+KGAb_MweXs+N7Jw@mail.gmail.com>
+ <CAM9d7cgxdFJJQOg6ivuy4+nh=WME2fgjvM-kSWLv9zd49yxR4A@mail.gmail.com>
+ <Yo4SqnEqzo2Rt+PF@kernel.org>
+ <Yo4Wpqzwp+XmfkMV@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yo4Wpqzwp+XmfkMV@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Em Wed, May 25, 2022 at 08:44:38AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, May 25, 2022 at 08:27:38AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Thu, May 19, 2022 at 02:02:28PM -0700, Namhyung Kim escreveu:
+> > > On Wed, May 18, 2022 at 9:02 PM Ian Rogers <irogers@google.com> wrote:
+> > > > Perhaps more concise with a for_each:
 
-In the origin code, when "ExtSel" is 1, the eventcode will change to
-"eventcode |= 1 << 21”. For event “UNC_Q_RxL_CREDITS_CONSUMED_VN0.DRS",
-its "ExtSel" is "1", its eventcode will change from 0x1E to 0x20001E,
-but in fact the eventcode should <=0x1FF, so this will cause the parse
-fail:
+> > > > perf_cpu_map__for_each_cpu(cpu, idx, evlist->core.user_requested_cpus)
+> > > >   bpf_map_update_elem(fd, &cpu.cpu, &val, BPF_ANY);
 
-  # perf stat -e "UNC_Q_RxL_CREDITS_CONSUMED_VN0.DRS" -a sleep 0.1
-event syntax error: '.._RxL_CREDITS_CONSUMED_VN0.DRS'
-                                  \___ value too big for format, maximum is 511
+> > So I'll wait for a new version of this patchset.
 
-On the perf kernel side, the kernel assumes the valid bits are continuous.
-It will adjust the 0x100 (bit 8 for perf tool) to bit 21 in HW.
+> I take that back, will apply and this can be a follow up patch, right?
 
-DEFINE_UNCORE_FORMAT_ATTR(event_ext, event, "config:0-7,21");
+I tested it and added some committer notes, everything is now at my
+tmp.perf/core branch and will transition to perf/core on its way to 5.19
+later today, after tests finish.
 
-So the perf tool follows the kernel side and just set bit8 other than bit21.
-
-Fixes: fedb2b518239 ("perf jevents: Add support for parsing uncore json files")
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/pmu-events/jevents.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index cee61c4ed59e..e597e4bac90f 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -605,7 +605,7 @@ static int json_events(const char *fn,
- 			} else if (json_streq(map, field, "ExtSel")) {
- 				char *code = NULL;
- 				addfield(map, &code, "", "", val);
--				eventcode |= strtoul(code, NULL, 0) << 21;
-+				eventcode |= strtoul(code, NULL, 0) << 8;
- 				free(code);
- 			} else if (json_streq(map, field, "EventName")) {
- 				addfield(map, &je.name, "", "", val);
--- 
-2.25.1
-
+- Arnaldo
