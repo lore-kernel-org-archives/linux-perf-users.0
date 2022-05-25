@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC78FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 09:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F788C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 09:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230379AbiEYJmb (ORCPT
+        id S239966AbiEYJmq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 May 2022 05:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52460 "EHLO
+        Wed, 25 May 2022 05:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239250AbiEYJma (ORCPT
+        with ESMTP id S240180AbiEYJmk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 May 2022 05:42:30 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2078.outbound.protection.outlook.com [40.107.92.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 050B963E4;
-        Wed, 25 May 2022 02:42:23 -0700 (PDT)
+        Wed, 25 May 2022 05:42:40 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2050.outbound.protection.outlook.com [40.107.96.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D9F8AE7B;
+        Wed, 25 May 2022 02:42:36 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FJG5DgfH0qHcvFhAYkRr77eaWGmHlPg9CIX5A7ixdks4+097GQo8YgEdMjk5mqFfoNqqZh2SpOhXDIlwBAllPdHNbLRxAiuplKQn3+kTUU2EE9sWGdFBmCMiFBqGvPhxJBS5/RB4KXKVnfxjF46njn/i785zm1Cx0Sh6R4b5Ig/iIfamvmobhH0qrGyiM40olb3HK5pSbaYUShGSF9+tMt3sOQO8VC8lccvpm3uR8lFNdHm4Goy0kax6p57DHTYCAz+Gag8BKEt/EWYvqeaOxmAadk1QL/ThStd9RP0BXM6tUDdQ9ECgOkAd5CegZflvueHOE59jw0IAOJDN+tXnxQ==
+ b=G8yt43fpI+vRQm71ps/8mH/T8bDBzOEkqKCEzBPTLw3H6hWOJvj7RLPaswtyOBC9cqr399coxgbTxbpmOhVCPqTQ4k8gQWYNCjhkqGArYfALmu1fgkJu+ccJr/ajoIigrwi0BHGBjtspy+yti5nXlmOu7DKlCe+MICYtHRlpXTxBs/VCOpbdoQKnumFx+oGAuowmnd1bDY/AsAlV2Sls6uhsftOvBSUo4aFN+14lyA3z3H/qYGM+NhAkcJjpXEQn2v4cF10M/ehiDaf5r5LVEw7V+2KU2uuTFg3HNiUOZPUS0ApsOmbMhSG2EU6Y7ipgWAYPDcFI9GEX4BtaoJ2smw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4aRJZifvG96NThxdAQFXCrkd1/IJ4Kr/DO3T+yZ0EcI=;
- b=RzOfDTHE+W0yUICJRDqetd8jslHxqlVgIB70SoDakA8l4KbuWX2O8p9n7ckAPUzgK4yAglxhLpRkVSHvN6rhTOChztDENmb78dSkN4gvIgo7oLQdvBEbaUzJSN+M2dKH0eAdnGLSzNiYdOZJwNq32GqhnHfTB67220ABNEQFg6onHiAdnAfvAy+sYhZWiU7jDL/RK8IKNh8YmqUsqWQF40aiGB327088e7/8tRTTqgOzWwY9AvzcRsU0WG/O1qP+CtAf4jckW7xPug9kOx5lsac/DmsCmCePEx9f8gEaSqALqH6zdlhvMXsn+G8DkkFbpZxTTj2nv5RcedMi1OxQ3A==
+ bh=8YJPnu+/ryBq9CO7JYZXgLCx6ovvlbA81wAP2C9M1O8=;
+ b=OFqARmtUD34bF9vHVzBeoEJJU8C00sWdWqHyRjaWEnfyzPKgUxR+nRMqpOkohf8LH0y/RLx+JQVZPBKqt7WT08rg8iHUf+zqhjCXAhcVqbx0ZMk53oNuhLpHHxvK9Oe5vWsLvIYTJ88rM2C3Odf8pq1PA012WT4AFA96gELPXc/PZ78wCdFyjswB2nUEraBl1+b8ALv7CfvrzoY6kDswppVms2q3jmEPf3tVDJ+Bspif8vuM+lT8vuCMy+RQdI/6eZt8KlwEONhWLmnYMdA4IBxF3JC0AjyYrwh56k5assBlOg5hUa0vb1F7MqBaIHeP5VrFhnFLqRpU8a6tBTX09Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4aRJZifvG96NThxdAQFXCrkd1/IJ4Kr/DO3T+yZ0EcI=;
- b=E3Di5ZxaN19Q8iF3K4vho+V41mM+MxSnH8p67n1tOuSE2HzlF+Jd4n7cQRpm5sveUE3nvXLzvL1buokLlU4Wvq2FsDdwOXmSjpCqs8OuPQ48tvE+pJbLytDlyeEYpGj6/dtQFVi9L26uSAWq5XVa6d9Jzm52oaV+G0j37Od09so=
-Received: from MW4P223CA0014.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::19)
- by BL1PR12MB5779.namprd12.prod.outlook.com (2603:10b6:208:392::9) with
+ bh=8YJPnu+/ryBq9CO7JYZXgLCx6ovvlbA81wAP2C9M1O8=;
+ b=D7MIcexEqNziNiaXbdRe7KwRVafuf2sWnhY7ZfzPrpEsdaUVqAk2v7Vuf1PKHgj5g4e3bebaw2UHdnYDFEcZShs6VcSTA7VEHiX4oyeuRyYx/GKUdUVAdrknWZQI5zJBLE/+nb8PZTlXav1zVENo9O3Nwz9LteoNHcyfi8BXv3U=
+Received: from MW3PR06CA0002.namprd06.prod.outlook.com (2603:10b6:303:2a::7)
+ by BN6PR12MB1812.namprd12.prod.outlook.com (2603:10b6:404:108::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.23; Wed, 25 May
- 2022 09:42:20 +0000
-Received: from CO1NAM11FT009.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:80:cafe::19) by MW4P223CA0014.outlook.office365.com
- (2603:10b6:303:80::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13; Wed, 25 May
+ 2022 09:42:33 +0000
+Received: from CO1NAM11FT064.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:2a:cafe::f) by MW3PR06CA0002.outlook.office365.com
+ (2603:10b6:303:2a::7) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13 via Frontend
- Transport; Wed, 25 May 2022 09:42:20 +0000
+ Transport; Wed, 25 May 2022 09:42:32 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT009.mail.protection.outlook.com (10.13.175.61) with Microsoft SMTP
+ CO1NAM11FT064.mail.protection.outlook.com (10.13.175.77) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5293.13 via Frontend Transport; Wed, 25 May 2022 09:42:20 +0000
+ 15.20.5293.13 via Frontend Transport; Wed, 25 May 2022 09:42:32 +0000
 Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 25 May
- 2022 04:42:05 -0500
+ 2022 04:42:18 -0500
 From:   Ravi Bangoria <ravi.bangoria@amd.com>
 To:     <peterz@infradead.org>, <acme@kernel.org>
 CC:     <ravi.bangoria@amd.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
@@ -67,9 +67,9 @@ CC:     <ravi.bangoria@amd.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
         <kim.phillips@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH 02/13] perf/x86/amd: Add IBS OP_DATA2/3 register bit definitions
-Date:   Wed, 25 May 2022 15:09:27 +0530
-Message-ID: <20220525093938.4101-3-ravi.bangoria@amd.com>
+Subject: [PATCH 03/13] perf/x86/amd: Support PERF_SAMPLE_DATA_SRC based on IBS_OP_DATA*
+Date:   Wed, 25 May 2022 15:09:28 +0530
+Message-ID: <20220525093938.4101-4-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220525093938.4101-1-ravi.bangoria@amd.com>
 References: <20220525093938.4101-1-ravi.bangoria@amd.com>
@@ -81,126 +81,361 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0ad10555-e877-4a5c-192f-08da3e32dd00
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5779:EE_
-X-Microsoft-Antispam-PRVS: <BL1PR12MB577993D4D30365BD2C4A9821E0D69@BL1PR12MB5779.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: d13e7d7a-0f1b-4ba6-1d6b-08da3e32e45b
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1812:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR12MB1812E061FECD53B1E387C1A2E0D69@BN6PR12MB1812.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yuYPDcackQmgw84AHXY0frVa6BNr5ZZc5nLSKZoWujad2XJN8E9iCapZKrAMAuk4Sje0rClDkO4ahVbE25th9J71IMk8HZGpgNUq9Swno5GUd/AT5nRQ0T+GvvMDH+QzU6VPKbY4rh2EVURnYxf9Y4DVacLml3BPckneIUXW67gf0TF8zVu/DVa31ys9hdIRpQiSfWBJs3Mg7qirqh86M20HOocm0yd5s9SNAeoDeSDhTnvnAq6CYROePaYEZEsIug+PrjG+CDZyJXNwRPZ+UbaRLV+b01ztVUTJlQIlgMylTc4A0K7oojkxGdpEGTrNJ4+9N1AuF+sgVMj6k2YY/1g7UgX6d4ylJJaogyttUh0N9eSKzOw/ofZM/hG2zadX5Q+AV5oGhFVCIlZ6qu2vs26QriiGgHelaAU3fTcoWWBc1gdl1XvfF293J9kStccr+Q6yyEs/S5VocbPRZR55sZTn51GKqeCYpNxZD63s1uXPpKU1IgZuDv8X+KzIl5JCJPDp1HVqfZIp6vw9JvuUQ26ke8HH//go2Etyx/7rg6FjcAJ7eZPfrpMuYrEqtv+B0tqWd2Ah62OYaS+kD2PlZYmKAUHw8716tPwMkQrBqgqzexzm+vIoOjRv3bzCuIH+MV1ZsGr7yU/tKHxVloPYjqtsUM4GSYKXp15xskgrORM54vnXncAkbqG1ZyQR6M1SRjx0CISwdA2cy+lP856zzA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(70586007)(316002)(40460700003)(2616005)(44832011)(7696005)(36756003)(426003)(70206006)(8936002)(356005)(8676002)(47076005)(26005)(336012)(82310400005)(83380400001)(5660300002)(7416002)(1076003)(186003)(6666004)(81166007)(86362001)(36860700001)(4326008)(508600001)(16526019)(54906003)(110136005)(2906002)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 2j6qB2YeGwMQi7d+lclvt2brIGDlvETrVyq0SUfUg7iO0J2oTFhxvDkrxQN5JRUpe8SsngOsPfaToLtzXEkFo9/Z4cgk8dOpth7XzMRdIMAXLdk4xPkkBVehjasuapKLi/d4W6ZEcuBCuKQU6F2KbxzyPldSossT7mbEhyaCvDPLLRTy/kqeQoHsjP72MS8IApop1he14B5WIlWvqsER98Z9SVJ/iLWUL5HYeZ8yluhftp+LvHrx0J59avlAQci7Ur+bJbKD7Z61ReqW0pMfqUgCac5QmUCw4CTaOrMqISgkHuF7e5YVeWa+XJ3pjwOGlUOIFWWwV0SS9qCN6Z+aF6DZ3ySOqdr8V+d20pEwwy0ik5f40g/Yk2c6rUvIDGvEb8SX7uPzL9R6Mf6utQxhDuF7zUan24NR+sxF8ajsvaSkWSRXxoa+qU834zPc9MgZd1W/dSE/oyeQrAXehb0kKwq5TvgDEwqIIWfLR+F0IifXv4a2k1Mx6pQTsME1vvLn/OfVu2W0Qdorxt9MWl/j/DibSzHV0Vv6bCy+algyZ/Q9ZSa/g/NZ90tOCet1FRNm9pzES0r3tZh+XL1DVyedg4xDCLHZPWdNSzJIlpdAylElBsL1dsaTEkW5vmxzgCw1J038FFW7eYJH50brRTIwIMVdo4aiTIptLkypOEg/z4Fhg8mUTccOLhz01+Iaftn2mksbzpvn97w8Mu9j/lvpgQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(2616005)(26005)(40460700003)(81166007)(1076003)(186003)(6666004)(36860700001)(7696005)(16526019)(36756003)(2906002)(82310400005)(8936002)(30864003)(44832011)(7416002)(508600001)(70206006)(70586007)(4326008)(8676002)(83380400001)(356005)(47076005)(426003)(86362001)(336012)(54906003)(110136005)(316002)(5660300002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2022 09:42:20.1529
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2022 09:42:32.4778
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ad10555-e877-4a5c-192f-08da3e32dd00
+X-MS-Exchange-CrossTenant-Network-Message-Id: d13e7d7a-0f1b-4ba6-1d6b-08da3e32e45b
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT009.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT064.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5779
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1812
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-AMD IBS OP_DATA2 and OP_DATA3 provides detail about tagged load/store
-ops. Add definitions for these registers into header file. In addition
-to those, IBS_OP_DATA2 DataSrc provides detail about location of the
-data being accessed from by load ops. Define macros for legacy and
-extended DataSrc values.
+struct perf_mem_data_src is used to pass arch specific memory access
+details into generic form. These details gets consumed by tools like
+perf mem and c2c. Each IBS tagged load/store sample provides most of
+the information needed for these tools. Add a logic to convert IBS
+specific raw data into perf_mem_data_src.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- arch/x86/include/asm/amd-ibs.h | 76 ++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ arch/x86/events/amd/ibs.c | 297 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 291 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/amd-ibs.h b/arch/x86/include/asm/amd-ibs.h
-index aabdbb5ab920..22184fe20cf0 100644
---- a/arch/x86/include/asm/amd-ibs.h
-+++ b/arch/x86/include/asm/amd-ibs.h
-@@ -6,6 +6,82 @@
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index c251bc44c088..6626caeed6a1 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -688,6 +688,289 @@ static struct perf_ibs perf_ibs_op = {
+ 	.get_count		= get_ibs_op_count,
+ };
  
- #include <asm/msr-index.h>
- 
-+/* IBS_OP_DATA2 Bits */
-+#define IBS_DATA_SRC_HI_SHIFT			6
-+#define IBS_DATA_SRC_HI_MASK			(0x3ULL << IBS_DATA_SRC_HI_SHIFT)
-+#define IBS_CACHE_HIT_ST_SHIFT			5
-+#define IBS_CACHE_HIT_ST_MASK			(0x1ULL << IBS_CACHE_HIT_ST_SHIFT)
-+#define IBS_RMT_NODE_SHIFT			4
-+#define IBS_RMT_NODE_MASK			(0x1ULL << IBS_RMT_NODE_SHIFT)
-+#define IBS_DATA_SRC_LO_SHIFT			0
-+#define IBS_DATA_SRC_LO_MASK			(0x7ULL << IBS_DATA_SRC_LO_SHIFT)
++static void perf_ibs_get_mem_op(u64 op_data3, struct perf_sample_data *data)
++{
++	union perf_mem_data_src *data_src = &data->data_src;
 +
-+/* IBS_OP_DATA2 DataSrc */
-+#define IBS_DATA_SRC_LOC_CACHE			 2
-+#define IBS_DATA_SRC_DRAM			 3
-+#define IBS_DATA_SRC_REM_CACHE			 4
-+#define IBS_DATA_SRC_IO				 7
++	data_src->mem_op = PERF_MEM_OP_NA;
 +
-+/* IBS_OP_DATA2 with DataSrc Extension */
-+#define IBS_DATA_SRC_EXT_LOC_CACHE		 1
-+#define IBS_DATA_SRC_EXT_NEAR_CCX_CACHE		 2
-+#define IBS_DATA_SRC_EXT_DRAM			 3
-+#define IBS_DATA_SRC_EXT_FAR_CCX_CACHE		 5
-+#define IBS_DATA_SRC_EXT_PMEM			 6
-+#define IBS_DATA_SRC_EXT_IO			 7
-+#define IBS_DATA_SRC_EXT_EXT_MEM		 8
-+#define IBS_DATA_SRC_EXT_PEER_AGENT_MEM		12
++	if (op_data3 & IBS_LD_OP_MASK)
++		data_src->mem_op = PERF_MEM_OP_LOAD;
++	else if (op_data3 & IBS_ST_OP_MASK)
++		data_src->mem_op = PERF_MEM_OP_STORE;
++}
 +
-+/* IBS_OP_DATA3 Bits */
-+#define IBS_TLB_REFILL_LAT_SHIFT		48
-+#define IBS_TLB_REFILL_LAT_MASK			(0xFFFFULL << IBS_TLB_REFILL_LAT_SHIFT)
-+#define IBS_DC_MISS_LAT_SHIFT			32
-+#define IBS_DC_MISS_LAT_MASK			(0xFFFFULL << IBS_DC_MISS_LAT_SHIFT)
-+#define IBS_OP_DC_MISS_OPEN_MEM_REQS_SHIFT	26
-+#define IBS_OP_DC_MISS_OPEN_MEM_REQS_MASK	(0x3FULL << IBS_OP_DC_MISS_OPEN_MEM_REQS_SHIFT)
-+#define IBS_OP_MEM_WIDTH_SHIFT			22
-+#define IBS_OP_MEM_WIDTH_MASK			(0xFULL << IBS_OP_MEM_WIDTH_SHIFT)
-+#define IBS_SW_PF_SHIFT				21
-+#define IBS_SW_PF_MASK				(0x1ULL << IBS_SW_PF_SHIFT)
-+#define IBS_L2_MISS_SHIFT			20
-+#define IBS_L2_MISS_MASK			(0x1ULL << IBS_L2_MISS_SHIFT)
-+#define IBS_DC_L2_TLB_HIT_1G_SHIFT		19
-+#define IBS_DC_L2_TLB_HIT_1G_MASK		(0x1ULL << IBS_DC_L2_TLB_HIT_1G_SHIFT)
-+#define IBS_DC_PHY_ADDR_VALID_SHIFT		18
-+#define IBS_DC_PHY_ADDR_VALID_MASK		(0x1ULL << IBS_DC_PHY_ADDR_VALID_SHIFT)
-+#define IBS_DC_LIN_ADDR_VALID_SHIFT		17
-+#define IBS_DC_LIN_ADDR_VALID_MASK		(0x1ULL << IBS_DC_LIN_ADDR_VALID_SHIFT)
-+#define IBS_DC_MISS_NO_MAB_ALLOC_SHIFT		16
-+#define IBS_DC_MISS_NO_MAB_ALLOC_MASK		(0x1ULL << IBS_DC_MISS_NO_MAB_ALLOC_SHIFT)
-+#define IBS_DC_LOCKED_OP_SHIFT			15
-+#define IBS_DC_LOCKED_OP_MASK			(0x1ULL << IBS_DC_LOCKED_OP_SHIFT)
-+#define IBS_DC_UC_MEM_ACC_SHIFT			14
-+#define IBS_DC_UC_MEM_ACC_MASK			(0x1ULL << IBS_DC_UC_MEM_ACC_SHIFT)
-+#define IBS_DC_WC_MEM_ACC_SHIFT			13
-+#define IBS_DC_WC_MEM_ACC_MASK			(0x1ULL << IBS_DC_WC_MEM_ACC_SHIFT)
-+#define IBS_DC_MIS_ACC_SHIFT			8
-+#define IBS_DC_MIS_ACC_MASK			(0x1ULL << IBS_DC_MIS_ACC_SHIFT)
-+#define IBS_DC_MISS_SHIFT			7
-+#define IBS_DC_MISS_MASK			(0x1ULL << IBS_DC_MISS_SHIFT)
-+#define IBS_DC_L2_TLB_HIT_2M_SHIFT		6
-+#define IBS_DC_L2_TLB_HIT_2M_MASK		(0x1ULL << IBS_DC_L2_TLB_HIT_2M_SHIFT)
 +/*
-+ * Definition of 5-4 bits is different between Zen3 and Zen4 (Zen2 definition
-+ * is same as Zen4) but the end result is same. So using Zen4 definition here.
++ * Processors having CPUID_Fn8000001B_EAX[11] aka IBS_CAPS_ZEN4 has
++ * more fine granular DataSrc encodings. Others have coarse.
 + */
-+#define IBS_DC_L1_TLB_HIT_1G_SHIFT		5
-+#define IBS_DC_L1_TLB_HIT_1G_MASK		(0x1ULL << IBS_DC_L1_TLB_HIT_1G_SHIFT)
-+#define IBS_DC_L1_TLB_HIT_2M_SHIFT		4
-+#define IBS_DC_L1_TLB_HIT_2M_MASK		(0x1ULL << IBS_DC_L1_TLB_HIT_2M_SHIFT)
-+#define IBS_DC_L2_TLB_MISS_SHIFT		3
-+#define IBS_DC_L2_TLB_MISS_MASK			(0x1ULL << IBS_DC_L2_TLB_MISS_SHIFT)
-+#define IBS_DC_L1_TLB_MISS_SHIFT		2
-+#define IBS_DC_L1_TLB_MISS_MASK			(0x1ULL << IBS_DC_L1_TLB_MISS_SHIFT)
-+#define IBS_ST_OP_SHIFT				1
-+#define IBS_ST_OP_MASK				(0x1ULL << IBS_ST_OP_SHIFT)
-+#define IBS_LD_OP_SHIFT				0
-+#define IBS_LD_OP_MASK				(0x1ULL << IBS_LD_OP_SHIFT)
++static u8 perf_ibs_data_src(u64 op_data2)
++{
++	if (ibs_caps & IBS_CAPS_ZEN4) {
++		return ((op_data2 & IBS_DATA_SRC_HI_MASK) >> (IBS_DATA_SRC_HI_SHIFT - 3)) |
++		       ((op_data2 & IBS_DATA_SRC_LO_MASK) >> IBS_DATA_SRC_LO_SHIFT);
++	}
 +
- /*
-  * IBS Hardware MSRs
-  */
++	return (op_data2 & IBS_DATA_SRC_LO_MASK) >> IBS_DATA_SRC_LO_SHIFT;
++}
++
++static void perf_ibs_get_mem_lvl(struct perf_event *event, u64 op_data2,
++				 u64 op_data3, struct perf_sample_data *data)
++{
++	union perf_mem_data_src *data_src = &data->data_src;
++	u8 ibs_data_src = perf_ibs_data_src(op_data2);
++
++	data_src->mem_lvl = 0;
++
++	/*
++	 * DcMiss, L2Miss, DataSrc, DcMissLat etc. are all invalid for Uncached
++	 * memory accesses. So, check DcUcMemAcc bit early.
++	 */
++	if (op_data3 & IBS_DC_UC_MEM_ACC_MASK &&
++	    ibs_data_src != IBS_DATA_SRC_EXT_IO) {
++		data_src->mem_lvl = PERF_MEM_LVL_UNC | PERF_MEM_LVL_HIT;
++		return;
++	}
++
++	/* L1 Hit */
++	if ((op_data3 & IBS_DC_MISS_MASK) == 0) {
++		data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_HIT;
++		return;
++	}
++
++	/* L2 Hit */
++	if ((op_data3 & IBS_L2_MISS_MASK) == 0) {
++		/* Erratum #1293 */
++		if (boot_cpu_data.x86 != 0x19 || boot_cpu_data.x86_model > 0xF ||
++		    !(op_data3 & IBS_SW_PF_MASK || op_data3 & IBS_DC_MISS_NO_MAB_ALLOC_MASK)) {
++			data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
++			return;
++		}
++	}
++
++	/* L3 Hit */
++	if (ibs_caps & IBS_CAPS_ZEN4) {
++		if (data_src->mem_op == PERF_MEM_OP_LOAD &&
++		    ibs_data_src == IBS_DATA_SRC_EXT_LOC_CACHE) {
++			data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
++			return;
++		}
++	} else {
++		if (data_src->mem_op == PERF_MEM_OP_LOAD &&
++		    ibs_data_src == IBS_DATA_SRC_LOC_CACHE) {
++			data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_REM_CCE1 |
++					    PERF_MEM_LVL_HIT;
++			return;
++		}
++	}
++
++	/* A peer cache in a near CCX. */
++	if (ibs_caps & IBS_CAPS_ZEN4 && data_src->mem_op == PERF_MEM_OP_LOAD &&
++	    ibs_data_src == IBS_DATA_SRC_EXT_NEAR_CCX_CACHE) {
++		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
++		return;
++	}
++
++	/* A peer cache in a far CCX. */
++	if (ibs_caps & IBS_CAPS_ZEN4) {
++		if (data_src->mem_op == PERF_MEM_OP_LOAD &&
++		    ibs_data_src == IBS_DATA_SRC_EXT_FAR_CCX_CACHE) {
++			data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2 | PERF_MEM_LVL_HIT;
++			return;
++		}
++	} else {
++		if (data_src->mem_op == PERF_MEM_OP_LOAD &&
++		    ibs_data_src == IBS_DATA_SRC_REM_CACHE) {
++			data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2 | PERF_MEM_LVL_HIT;
++			return;
++		}
++	}
++
++	/* DRAM */
++	if (data_src->mem_op == PERF_MEM_OP_LOAD &&
++	    ibs_data_src == IBS_DATA_SRC_EXT_DRAM) {
++		if ((op_data2 & IBS_RMT_NODE_MASK) == 0)
++			data_src->mem_lvl = PERF_MEM_LVL_LOC_RAM | PERF_MEM_LVL_HIT;
++		else
++			data_src->mem_lvl = PERF_MEM_LVL_REM_RAM1 | PERF_MEM_LVL_HIT;
++		return;
++	}
++
++	/* PMEM */
++	if (ibs_caps & IBS_CAPS_ZEN4 && data_src->mem_op == PERF_MEM_OP_LOAD &&
++	    ibs_data_src == IBS_DATA_SRC_EXT_PMEM) {
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_PMEM;
++		if (op_data2 & IBS_RMT_NODE_MASK) {
++			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
++			/* IBS doesn't provide Remote socket detail */
++			data_src->mem_hops = PERF_MEM_HOPS_1;
++		}
++		return;
++	}
++
++	/* Extension Memory */
++	if (ibs_caps & IBS_CAPS_ZEN4 && data_src->mem_op == PERF_MEM_OP_LOAD &&
++	    ibs_data_src == IBS_DATA_SRC_EXT_EXT_MEM) {
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_EXTN_MEM;
++		if (op_data2 & IBS_RMT_NODE_MASK) {
++			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
++			/* IBS doesn't provide Remote socket detail */
++			data_src->mem_hops = PERF_MEM_HOPS_1;
++		}
++		return;
++	}
++
++	/* IO */
++	if (data_src->mem_op == PERF_MEM_OP_LOAD &&
++	    ibs_data_src == IBS_DATA_SRC_EXT_IO) {
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_IO;
++		if (op_data2 & IBS_RMT_NODE_MASK) {
++			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
++			/* IBS doesn't provide Remote socket detail */
++			data_src->mem_hops = PERF_MEM_HOPS_1;
++		}
++		return;
++	}
++
++	/*
++	 * MAB (Miss Address Buffer) Hit. MAB keeps track of outstanding
++	 * DC misses. However such data may come from any level in mem
++	 * hierarchy. IBS provides detail about both MAB as well as actual
++	 * DataSrc simultaneously. Prioritize DataSrc over MAB, i.e. set
++	 * MAB only when IBS fails to provide DataSrc.
++	 */
++	if (op_data3 & IBS_DC_MISS_NO_MAB_ALLOC_MASK) {
++		data_src->mem_lvl = PERF_MEM_LVL_LFB | PERF_MEM_LVL_HIT;
++		return;
++	}
++
++	data_src->mem_lvl = PERF_MEM_LVL_NA;
++}
++
++static bool perf_ibs_cache_hit_st_valid(void)
++{
++	/* 0: Uninitialized, 1: Valid, -1: Invalid */
++	static int cache_hist_st_valid;
++
++	if (unlikely(!cache_hist_st_valid)) {
++		if (boot_cpu_data.x86 == 0x19 &&
++		    (boot_cpu_data.x86_model <= 0xF ||
++		    (boot_cpu_data.x86_model >= 0x20 &&
++		     boot_cpu_data.x86_model <= 0x5F))) {
++			cache_hist_st_valid = -1;
++		} else {
++			cache_hist_st_valid = 1;
++		}
++	}
++
++	return cache_hist_st_valid == 1;
++}
++
++static void perf_ibs_get_mem_snoop(u64 op_data2, struct perf_sample_data *data)
++{
++	union perf_mem_data_src *data_src = &data->data_src;
++	u8 ibs_data_src;
++
++	data_src->mem_snoop = PERF_MEM_SNOOP_NA;
++
++	if (!perf_ibs_cache_hit_st_valid() ||
++	    data_src->mem_op != PERF_MEM_OP_LOAD ||
++	    data_src->mem_lvl & PERF_MEM_LVL_L1 ||
++	    data_src->mem_lvl & PERF_MEM_LVL_L2 ||
++	    op_data2 & IBS_CACHE_HIT_ST_MASK)
++		return;
++
++	ibs_data_src = perf_ibs_data_src(op_data2);
++
++	if ((ibs_data_src == IBS_DATA_SRC_LOC_CACHE) ||
++	    (ibs_caps & IBS_CAPS_ZEN4 && (
++	     ibs_data_src == IBS_DATA_SRC_EXT_LOC_CACHE ||
++	     ibs_data_src == IBS_DATA_SRC_EXT_NEAR_CCX_CACHE ||
++	     ibs_data_src == IBS_DATA_SRC_EXT_FAR_CCX_CACHE))) {
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++	}
++}
++
++static void perf_ibs_get_tlb_lvl(u64 op_data3, struct perf_sample_data *data)
++{
++	union perf_mem_data_src *data_src = &data->data_src;
++	u64 l1_tlb_miss = op_data3 & IBS_DC_L1_TLB_MISS_MASK;
++	u64 lin_addr_valid = op_data3 & IBS_DC_LIN_ADDR_VALID_MASK;
++	u64 l2_tlb_miss = op_data3 & IBS_DC_L2_TLB_MISS_MASK;
++
++	data_src->mem_dtlb = PERF_MEM_TLB_NA;
++
++	if (!lin_addr_valid)
++		return;
++
++	if (!l1_tlb_miss) {
++		data_src->mem_dtlb = PERF_MEM_TLB_L1 | PERF_MEM_TLB_HIT;
++		return;
++	}
++
++	if (!l2_tlb_miss) {
++		data_src->mem_dtlb = PERF_MEM_TLB_L2 | PERF_MEM_TLB_HIT;
++		return;
++	}
++
++	data_src->mem_dtlb = PERF_MEM_TLB_L2 | PERF_MEM_TLB_MISS;
++}
++
++static void perf_ibs_get_mem_lock(u64 op_data3, struct perf_sample_data *data)
++{
++	union perf_mem_data_src *data_src = &data->data_src;
++
++	data_src->mem_lock = PERF_MEM_LOCK_NA;
++
++	if (op_data3 & IBS_DC_LOCKED_OP_MASK)
++		data_src->mem_lock = PERF_MEM_LOCK_LOCKED;
++}
++
++#define ibs_op_msr_idx(msr)	(msr - MSR_AMD64_IBSOPCTL)
++
++static void perf_ibs_get_data_src(struct perf_event *event,
++				  struct perf_ibs_data *ibs_data,
++				  struct perf_sample_data *data)
++{
++	union perf_mem_data_src *data_src = &data->data_src;
++	u64 op_data2 = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA2)];
++	u64 op_data3 = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)];
++
++	perf_ibs_get_mem_op(op_data3, data);
++	if (data_src->mem_op != PERF_MEM_OP_LOAD &&
++	    data_src->mem_op != PERF_MEM_OP_STORE)
++		return;
++
++	/* Erratum #1293 */
++	if (boot_cpu_data.x86 == 0x19 && boot_cpu_data.x86_model <= 0xF &&
++	    (op_data3 & IBS_SW_PF_MASK ||
++	     op_data3 & IBS_DC_MISS_NO_MAB_ALLOC_MASK)) {
++		/*
++		 * OP_DATA2 has only two fields on Zen3: DataSrc and RmtNode.
++		 * DataSrc=0 is No valid status and RmtNode is invalid when
++		 * DataSrc=0.
++		 */
++		op_data2 = 0;
++	}
++
++	perf_ibs_get_mem_lvl(event, op_data2, op_data3, data);
++	perf_ibs_get_mem_snoop(op_data2, data);
++	perf_ibs_get_tlb_lvl(op_data3, data);
++	perf_ibs_get_mem_lock(op_data3, data);
++}
++
++static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs, u64 sample_type,
++				   int check_rip)
++{
++	if (sample_type & PERF_SAMPLE_RAW ||
++	    (perf_ibs == &perf_ibs_op &&
++	     sample_type & PERF_SAMPLE_DATA_SRC))
++		return perf_ibs->offset_max;
++	else if (check_rip)
++		return 3;
++	return 1;
++}
++
+ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ {
+ 	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
+@@ -735,12 +1018,9 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 	size = 1;
+ 	offset = 1;
+ 	check_rip = (perf_ibs == &perf_ibs_op && (ibs_caps & IBS_CAPS_RIPINVALIDCHK));
+-	if (event->attr.sample_type & PERF_SAMPLE_RAW)
+-		offset_max = perf_ibs->offset_max;
+-	else if (check_rip)
+-		offset_max = 3;
+-	else
+-		offset_max = 1;
++
++	offset_max = perf_ibs_get_offset_max(perf_ibs, event->attr.sample_type, check_rip);
++
+ 	do {
+ 		rdmsrl(msr + offset, *buf++);
+ 		size++;
+@@ -793,6 +1073,11 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 		data.raw = &raw;
+ 	}
+ 
++	if (perf_ibs == &perf_ibs_op) {
++		if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC)
++			perf_ibs_get_data_src(event, &ibs_data, &data);
++	}
++
+ 	/*
+ 	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
+ 	 * recorded as part of interrupt regs. Thus we need to use rip from
 -- 
 2.31.1
 
