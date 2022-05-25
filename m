@@ -2,198 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82D7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 11:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79B2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 12:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243002AbiEYLor (ORCPT
+        id S235509AbiEYM63 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 May 2022 07:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
+        Wed, 25 May 2022 08:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242988AbiEYLor (ORCPT
+        with ESMTP id S233277AbiEYM62 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 May 2022 07:44:47 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E190A205F;
-        Wed, 25 May 2022 04:44:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 589DFB81D26;
-        Wed, 25 May 2022 11:44:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0320C385B8;
-        Wed, 25 May 2022 11:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653479083;
-        bh=GAfjtUV+VWXEWarM+pI0A5+TD8LhpNPOn8YUB/nmqb0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nMZI1c30fdkMelKJmBEEYsjENiErYsHgTNqHWeC3i0pzuYJeazxf2DgHGxw7UjjXv
-         x9d+T6WmiGwye83M7WHABUfNiIqCDr+2TlDVa0vj1dSX4xmC9Y4Ro78sFrwDT+Vtfw
-         qmAYracvjaFf3uMyCcGKNv7xTeGcWbuqVuJOICEsWyhhRGUauQM1caRVIQvhnZSIld
-         3F+AKdR98MQ87737+f70Sr+lh4UP/kBp7F7E47gKgtRA7akUs7JgWepg5oF7FvQeO2
-         Ej0pSsnXJRt7uyhnwy2BPY8BXDl9AJcRWGeqT0snkxrliS7V6oGQ/h12k6hpyDWNPB
-         9y3jXMHVCN/GA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F0BE34007E; Wed, 25 May 2022 08:44:38 -0300 (-03)
-Date:   Wed, 25 May 2022 08:44:38 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
-Subject: Re: [PATCH 3/6] perf record: Implement basic filtering for off-cpu
-Message-ID: <Yo4Wpqzwp+XmfkMV@kernel.org>
-References: <20220518224725.742882-1-namhyung@kernel.org>
- <20220518224725.742882-4-namhyung@kernel.org>
- <CAP-5=fWfZ_MqiAUx-tdO1C=Dyyzno6FbBp+KGAb_MweXs+N7Jw@mail.gmail.com>
- <CAM9d7cgxdFJJQOg6ivuy4+nh=WME2fgjvM-kSWLv9zd49yxR4A@mail.gmail.com>
- <Yo4SqnEqzo2Rt+PF@kernel.org>
+        Wed, 25 May 2022 08:58:28 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7828EA0051
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 May 2022 05:58:27 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id q1so7294506uao.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 May 2022 05:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MlfGy88ZCD4lOyKadsaMaTpiuM8NkVCXt/blXBLLSuM=;
+        b=WHFRS+3QBk6oxN3FURojB0WbB+U5Yk4Tva5DSe1TmlglfwC6xSB79PK/twKoeeqJ1Y
+         gQflcIaHygkWIFezpZLWDfiOFK22NGlWiFbkUz+Yj9mUz4IxO5AgavlQVUh0kzFDtPAK
+         a+B3yfQtzc9NgH4DISF44l9SiUYBu3GDdx9ixgMeH5sxMf8Yvs+zgemvkbfX2vO6ONo0
+         r+YOZWI+r7OSj8wrgAO+9rps8TxuTpl3N6RfXJGU/gnwbeyBYfnPaB5nXonXH+0eXJS9
+         D5Hdo1CY2iAnRhw5CeM976/rMLav8uhQr3sPxmOyPXwcb6ZJDQ9mbfgXWWb9SebA8+Lx
+         HtDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MlfGy88ZCD4lOyKadsaMaTpiuM8NkVCXt/blXBLLSuM=;
+        b=A8aAaYHN1rSZq3aKAuiKifjQOmncMfDCpqHnEfN+LA8gRAaRUHboJh9NaCCknj7vN5
+         CbyEj/X8JZrxlosAlTBn7HA3NiFG6DZ4XabRyifFVWAA+H8X+3hhB7E/n4tr6vU1kFci
+         GRS2Yl8LRvU9o5tRqdC7HqKzZ9prBdOwNgXdGFc9usePPGVlnb2A8QuQyQtMqNLuiUKB
+         H/Tm63K5qGFHN+WdPhmRUEUlpBq08hwXYJHU8fTtmr39nTSER30MJVwjvwWXHKodzk0E
+         CDiQO2FbuR021ztBPM68HKSPmxY0TaNG5Bx3RiqBsebVv0Hsfj3C0Xq94a/PGJZhUknx
+         ehiQ==
+X-Gm-Message-State: AOAM530aqj/NGcjuCFQSAfVJoFG6ZQ+UVxYdEZWFzYMnww7bGszWJxQ/
+        +DLH8NOhwPNIdM25YXFqSMFtaLw2FoCuIknSE13U5Q==
+X-Google-Smtp-Source: ABdhPJzfhaqn9oVCwhK40BxeJIQuF35mF5wePsIFZ0TXRA5Q0PqzCtwusZwnQpv5NWrM7h8rgrwcPPg78uDjv8XYTps=
+X-Received: by 2002:ab0:310b:0:b0:368:c7b0:5a6c with SMTP id
+ e11-20020ab0310b000000b00368c7b05a6cmr10054921ual.108.1653483506483; Wed, 25
+ May 2022 05:58:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yo4SqnEqzo2Rt+PF@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20220525093938.4101-1-ravi.bangoria@amd.com> <20220525093938.4101-5-ravi.bangoria@amd.com>
+In-Reply-To: <20220525093938.4101-5-ravi.bangoria@amd.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Wed, 25 May 2022 15:58:15 +0300
+Message-ID: <CABPqkBQ-4vpG_d-u-Q-pTQ_wDg_HhqNNC3dSLFE6MS5Bp3qTDw@mail.gmail.com>
+Subject: Re: [PATCH 04/13] perf/x86/amd: Support PERF_SAMPLE_WEIGHT using IBS OP_DATA3[IbsDcMissLat]
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     peterz@infradead.org, acme@kernel.org, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, jmario@redhat.com,
+        leo.yan@linaro.org, alisaidi@amazon.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, dave.hansen@linux.intel.com,
+        hpa@zytor.com, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 25, 2022 at 08:27:38AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, May 19, 2022 at 02:02:28PM -0700, Namhyung Kim escreveu:
-> > On Wed, May 18, 2022 at 9:02 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Wed, May 18, 2022 at 3:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > It should honor cpu and task filtering with -a, -C or -p, -t options.
-> > > >
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/builtin-record.c            |  2 +-
-> > > >  tools/perf/util/bpf_off_cpu.c          | 78 +++++++++++++++++++++++---
-> > > >  tools/perf/util/bpf_skel/off_cpu.bpf.c | 52 +++++++++++++++--
-> > > >  tools/perf/util/off_cpu.h              |  6 +-
-> > > >  4 files changed, 123 insertions(+), 15 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > > > index 91f88501412e..7f60d2eac0b4 100644
-> > > > --- a/tools/perf/builtin-record.c
-> > > > +++ b/tools/perf/builtin-record.c
-> > > > @@ -907,7 +907,7 @@ static int record__config_text_poke(struct evlist *evlist)
-> > > >
-> > > >  static int record__config_off_cpu(struct record *rec)
-> > > >  {
-> > > > -       return off_cpu_prepare(rec->evlist);
-> > > > +       return off_cpu_prepare(rec->evlist, &rec->opts.target);
-> > > >  }
-> > > >
-> > > >  static bool record__kcore_readable(struct machine *machine)
-> > > > diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-> > > > index 9ed7aca3f4ac..b5e2d038da50 100644
-> > > > --- a/tools/perf/util/bpf_off_cpu.c
-> > > > +++ b/tools/perf/util/bpf_off_cpu.c
-> > > > @@ -6,6 +6,9 @@
-> > > >  #include "util/off_cpu.h"
-> > > >  #include "util/perf-hooks.h"
-> > > >  #include "util/session.h"
-> > > > +#include "util/target.h"
-> > > > +#include "util/cpumap.h"
-> > > > +#include "util/thread_map.h"
-> > > >  #include <bpf/bpf.h>
-> > > >
-> > > >  #include "bpf_skel/off_cpu.skel.h"
-> > > > @@ -60,8 +63,23 @@ static int off_cpu_config(struct evlist *evlist)
-> > > >         return 0;
-> > > >  }
-> > > >
-> > > > -static void off_cpu_start(void *arg __maybe_unused)
-> > > > +static void off_cpu_start(void *arg)
-> > > >  {
-> > > > +       struct evlist *evlist = arg;
-> > > > +
-> > > > +       /* update task filter for the given workload */
-> > > > +       if (!skel->bss->has_cpu && !skel->bss->has_task &&
-> > > > +           perf_thread_map__pid(evlist->core.threads, 0) != -1) {
-> > > > +               int fd;
-> > > > +               u32 pid;
-> > > > +               u8 val = 1;
-> > > > +
-> > > > +               skel->bss->has_task = 1;
-> > > > +               fd = bpf_map__fd(skel->maps.task_filter);
-> > > > +               pid = perf_thread_map__pid(evlist->core.threads, 0);
-> > > > +               bpf_map_update_elem(fd, &pid, &val, BPF_ANY);
-> > > > +       }
-> > > > +
-> > > >         skel->bss->enabled = 1;
-> > > >  }
-> > > >
-> > > > @@ -71,31 +89,75 @@ static void off_cpu_finish(void *arg __maybe_unused)
-> > > >         off_cpu_bpf__destroy(skel);
-> > > >  }
-> > > >
-> > > > -int off_cpu_prepare(struct evlist *evlist)
-> > > > +int off_cpu_prepare(struct evlist *evlist, struct target *target)
-> > > >  {
-> > > > -       int err;
-> > > > +       int err, fd, i;
-> > > > +       int ncpus = 1, ntasks = 1;
-> > > >
-> > > >         if (off_cpu_config(evlist) < 0) {
-> > > >                 pr_err("Failed to config off-cpu BPF event\n");
-> > > >                 return -1;
-> > > >         }
-> > > >
-> > > > -       set_max_rlimit();
-> > > > -
-> > > > -       skel = off_cpu_bpf__open_and_load();
-> > > > +       skel = off_cpu_bpf__open();
-> > > >         if (!skel) {
-> > > >                 pr_err("Failed to open off-cpu BPF skeleton\n");
-> > > >                 return -1;
-> > > >         }
-> > > >
-> > > > +       /* don't need to set cpu filter for system-wide mode */
-> > > > +       if (target->cpu_list) {
-> > > > +               ncpus = perf_cpu_map__nr(evlist->core.user_requested_cpus);
-> > > > +               bpf_map__set_max_entries(skel->maps.cpu_filter, ncpus);
-> > > > +       }
-> > > > +
-> > > > +       if (target__has_task(target)) {
-> > > > +               ntasks = perf_thread_map__nr(evlist->core.threads);
-> > > > +               bpf_map__set_max_entries(skel->maps.task_filter, ntasks);
-> > > > +       }
-> > > > +
-> > > > +       set_max_rlimit();
-> > > > +
-> > > > +       err = off_cpu_bpf__load(skel);
-> > > > +       if (err) {
-> > > > +               pr_err("Failed to load off-cpu skeleton\n");
-> > > > +               goto out;
-> > > > +       }
-> > > > +
-> > > > +       if (target->cpu_list) {
-> > > > +               u32 cpu;
-> > > > +               u8 val = 1;
-> > > > +
-> > > > +               skel->bss->has_cpu = 1;
-> > > > +               fd = bpf_map__fd(skel->maps.cpu_filter);
-> > > > +
-> > > > +               for (i = 0; i < ncpus; i++) {
-> > > > +                       cpu = perf_cpu_map__cpu(evlist->core.user_requested_cpus, i).cpu;
-> > > > +                       bpf_map_update_elem(fd, &cpu, &val, BPF_ANY);
-> > >
-> > > Perhaps more concise with a for_each:
-> > >
-> > > perf_cpu_map__for_each_cpu(cpu, idx, evlist->core.user_requested_cpus)
-> > >   bpf_map_update_elem(fd, &cpu.cpu, &val, BPF_ANY);
-> 
-> So I'll wait for a new version of this patchset.
+On Wed, May 25, 2022 at 12:42 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>
+> IBS Op data3 provides data cache miss latency which can be passed as
+> sample->weight along with perf_mem_data_src. Note that sample->weight
+> will be populated only when PERF_SAMPLE_DATA_SRC is also set, although
+> both sample types are independent.
+>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  arch/x86/events/amd/ibs.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> index 6626caeed6a1..5a6e278713f4 100644
+> --- a/arch/x86/events/amd/ibs.c
+> +++ b/arch/x86/events/amd/ibs.c
+> @@ -738,6 +738,12 @@ static void perf_ibs_get_mem_lvl(struct perf_event *event, u64 op_data2,
+>                 return;
+>         }
+>
+> +       /* Load latency (Data cache miss latency) */
+> +       if (data_src->mem_op == PERF_MEM_OP_LOAD &&
+> +           event->attr.sample_type & PERF_SAMPLE_WEIGHT) {
+> +               data->weight.full = (op_data3 & IBS_DC_MISS_LAT_MASK) >> IBS_DC_MISS_LAT_SHIFT;
+> +       }
+> +
+I think here you also need to handle the WEIGHT_STRUCT case and put
+the cache miss latency in the right
+field. This IBS field covers the cache line movement and not the whole
+instruction latency which is the tag to ret field.
+In the case of WEIGHT_STRUCT you need to fill out the two fields.
 
-I take that back, will apply and this can be a follow up patch, right?
-
-- Arnaldo
+>         /* L2 Hit */
+>         if ((op_data3 & IBS_L2_MISS_MASK) == 0) {
+>                 /* Erratum #1293 */
+> --
+> 2.31.1
+>
