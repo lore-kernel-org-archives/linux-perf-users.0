@@ -2,356 +2,172 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4935CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 09:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA9BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 09:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240647AbiEYJNs (ORCPT
+        id S238961AbiEYJmA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 May 2022 05:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57878 "EHLO
+        Wed, 25 May 2022 05:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234463AbiEYJNS (ORCPT
+        with ESMTP id S234263AbiEYJl6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 May 2022 05:13:18 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315A47E1F6;
-        Wed, 25 May 2022 02:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653469806; x=1685005806;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JD8bFyaDHcYk/W64dsvRRE5s0H9OnHGSW5uKyjA1CCU=;
-  b=RRaiAJKfDf0CD7EeDbhye4i9Xdeb4eep/MBbT6mP1DiY7eq+JzLBRo6c
-   qUiy+K9jk1qY/b6dI+czMTpYaoujFBEohx11cv84c9tfeGcXWf41AtvZS
-   IeKMG7goFuniDb9xTHN7JIZfFFOOs+zFQSAE1CdOG+qFmIQQqK0y641X+
-   fIKFfdDeggNy+YDUmfLu04OkaBgSB1qyaxKfzQF/6P3XdAyK/CByQy+N/
-   WZZjOIKe8PUnPA4yXMU6+BO1hZTuXW1Qgd6uu+1UV6/9YhkYCbOtqxj9z
-   EpFCyeGYAn/BPh/P4G65inmSA99+sBGEo5AunmCFbo0WIUnobgAu2+YEj
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10357"; a="273873514"
-X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
-   d="scan'208";a="273873514"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2022 02:10:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
-   d="scan'208";a="717554983"
-Received: from zxingrtx.sh.intel.com ([10.239.159.110])
-  by fmsmga001.fm.intel.com with ESMTP; 25 May 2022 02:10:03 -0700
-From:   zhengjun.xing@linux.intel.com
-To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
-Subject: [PATCH 2/2] perf vendor events intel: Update metrics for Alderlake
-Date:   Wed, 25 May 2022 17:10:13 +0800
-Message-Id: <20220525091013.1704887-2-zhengjun.xing@linux.intel.com>
+        Wed, 25 May 2022 05:41:58 -0400
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08on2052.outbound.protection.outlook.com [40.107.101.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBFF51113;
+        Wed, 25 May 2022 02:41:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iKD1/qLu65GVqSeIVLu2qiQ757KBJKlDMOetKPW9xWs19GM+CoDpgRthwKdRztDSko1h8KUmRfIDaDMcJ+LjhjUOWe5Qjy6Bm7YVZKtN2YcDnIDI2yl0b0OueS7WxtSS0MDQMRp5uCqgYYd4ty6/rxIE7LedEoJzh6ZfFuM/rQqIVY05L2mFx70LF5wEKH55tJqQ1xOeaMrkte1ykPh+mt+xHVZ1jjZDopV8olxPKQlxf4sLcZbYke11xFKhOLYakBcInaE3RsI2rJsGEqYMUNFKMn/Jw5cf6m2288mKKkKg/P31DcY7Iu88KgNcCEFoRIkFRQQB85FwpU3JD75Xog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PSUb1lgpDMnF8+tOxkLd8LPFyBOWPHQAkW5o/I2e7Qk=;
+ b=DfTM5AaTI2vqJdDcCMZY0sYlgaKciRk9XKLnDvsZA2Q96Ggft8tZVpilJYvietFFxrwAntzSs4Q27J84hB6j266CYEuINfRGWje47PgZlPL03IMZL2ctMCUU8Fk7lIm9mD/F3jOdaHGy1SqWskC7oqUGUuzjPdFE99RiC0FneCZY8KyI6+y0CUm22FapbVTETtPa+jy4d0MClCUEYs+zsOuH+miBswkYM4b3k4RXRtM+4zgMZccuJw4v81mdf0UA266eVu49oAh9gb7uqY0tDhMLxsDUpfyE0mCWObj2wZCuwMJUjPPoL9uash7Z0atORxw7zDaxNF0YiLjpysZHjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PSUb1lgpDMnF8+tOxkLd8LPFyBOWPHQAkW5o/I2e7Qk=;
+ b=MV0NOeW8wfJE8fH0u+1zSpYH1KKAT3+SgFaXuWgJPaE9BNBX9Lh4y2UzZQk8BPZZ2FOR6rjAJUDREmTIpX7Jj24dGp/rVlQAWMOSN3yT8maO/tYIuuBt+nkbrWAc6sUQxTrWZFET8pyJGHi9c7zd7dLegSVLhjmY8CPk1VQSWd8=
+Received: from MW3PR05CA0018.namprd05.prod.outlook.com (2603:10b6:303:2b::23)
+ by MN2PR12MB3599.namprd12.prod.outlook.com (2603:10b6:208:d2::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.16; Wed, 25 May
+ 2022 09:41:53 +0000
+Received: from CO1NAM11FT003.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:2b:cafe::b1) by MW3PR05CA0018.outlook.office365.com
+ (2603:10b6:303:2b::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.5 via Frontend
+ Transport; Wed, 25 May 2022 09:41:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT003.mail.protection.outlook.com (10.13.175.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5293.13 via Frontend Transport; Wed, 25 May 2022 09:41:52 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 25 May
+ 2022 04:41:38 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <peterz@infradead.org>, <acme@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <eranian@google.com>, <irogers@google.com>, <jmario@redhat.com>,
+        <leo.yan@linaro.org>, <alisaidi@amazon.com>, <ak@linux.intel.com>,
+        <kan.liang@linux.intel.com>, <dave.hansen@linux.intel.com>,
+        <hpa@zytor.com>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <tglx@linutronix.de>,
+        <bp@alien8.de>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <kim.phillips@amd.com>, <santosh.shukla@amd.com>
+Subject: [PATCH 00/13] perf mem/c2c: Add support for AMD
+Date:   Wed, 25 May 2022 15:09:25 +0530
+Message-ID: <20220525093938.4101-1-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220525091013.1704887-1-zhengjun.xing@linux.intel.com>
-References: <20220525091013.1704887-1-zhengjun.xing@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5fae5b5f-f900-41d0-facb-08da3e32ccc7
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3599:EE_
+X-Microsoft-Antispam-PRVS: <MN2PR12MB35991AAC772922BD30FAADC8E0D69@MN2PR12MB3599.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nyQBz9E6UfJiFZ5U8AWTWFWNbYSnNIMQhYXtIYp78DUySCmQpj33ms3Sz3Y8zRWGxxVK/ztqwukXbNaOItlHeH9TTafVXXkPzGtMuMS4kxQAB1f+TcU52cIGzgRphRQDcN65lY6twdV2EhW1X39cgeRoZaK2GCAIayjCSSOeYz7NFMFlMZ5cQoEbZT2tH97sS9d5YjK97D19+2lR9GRAVQkpLysPpJEXHyBHKQ5nN5uSJ82qByIH7ZYXcSQtaRWLmScb0MVcgathyHM0nNSPgW+y/qOOJsH5DAV3g9noHLSJYBHSvpSascYTSFTv+07vBkZ87T27BWFd+TOz/F59kwqveG0Xwe5qE2nlXJTGErv65ZYWzltDJA2rJdA7dEVqfdEIeGe7oPqO+8OoBm352x84lftG4Dc0hHVJNQg/s7pjsDObI9+Lve2skB+g7TXMg3hswKUTtT/ivUH4dXbW3CZ+75W56t1TYr3uqmzbknddvFtpf3ZTIXKoJFU8JNsUGB7Jl5a/WR3pfMQWml1/IuIrJykXYoDlsoZ3zXif1AogkQe8YBOSgeeLwyrYx3UMlMsFT5x4MMCEpKmX8XcKigN0YV74sKMucqDpk5JLG/gqrJ/HrHg0SNVPgqxhFS+PNtfxxA+xxEIuYaWnF49bJlXdokwFjtUUBwhIKlncppTlQQj/j2A7KuP4bozvr9R7aEYkK3pkqjhQUjvyJBR0vXQf3SQUN8zq9TIFi9WKUtgSPt8mW0I8kv9ikGnuF+Dd+xkLKY9alQGWU+XNhf+fqE/LWybpObTKyYHDjfUz2MY=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(70586007)(82310400005)(316002)(2906002)(110136005)(508600001)(70206006)(966005)(44832011)(7416002)(5660300002)(86362001)(36756003)(8936002)(2616005)(8676002)(4326008)(26005)(426003)(336012)(54906003)(356005)(81166007)(47076005)(40460700003)(36860700001)(83380400001)(186003)(16526019)(6666004)(7696005)(1076003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2022 09:41:52.9260
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fae5b5f-f900-41d0-facb-08da3e32ccc7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT003.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3599
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Perf mem and c2c tools are wrappers around perf record with mem load/
+store events. IBS tagged load/store sample provides most of the
+information needed for these tools. Enable support for these tools on
+AMD Zen processors based on IBS Op pmu.
 
-Update JSON metrics for Alderlake to perf.
+There are some limitations though: Only load/store instructions provide
+mem/c2c information. However, IBS does not provide a way to choose a
+particular type of instruction to tag. This results in many non-LS
+instructions being tagged which appear as N/A. IBS, being an uncore pmu
+from kernel point of view[1], does not support per process monitoring.
+Thus, perf mem/c2c on AMD are currently supported in per-cpu mode only.
 
-It included both P-core and E-core metrics.
+Example:
+  $ sudo ./perf mem record -- -c 10000
+  ^C[ perf record: Woken up 227 times to write data ]
+  [ perf record: Captured and wrote 58.760 MB perf.data (836978 samples) ]
 
-P-core metrics based on TMA 4.4 (TMA_Metrics-full.csv)
-E-core metrics based on E-core TMA 2.0 (E-core_TMA_Metrics.csv)
+  $ sudo ./perf mem report -F mem,sample,snoop
+  Samples: 836K of event 'ibs_op//', Event count (approx.): 8418762
+  Memory access                  Samples  Snoop
+  N/A                             700620  N/A
+  L1 hit                          126675  N/A
+  L2 hit                             424  N/A
+  L3 hit                             664  HitM
+  L3 hit                              10  N/A
+  Local RAM hit                        2  N/A
+  Remote RAM (1 hop) hit            8558  N/A
+  Remote Cache (1 hop) hit             3  N/A
+  Remote Cache (1 hop) hit             2  HitM
+  Remote Cache (2 hops) hit            10  HitM
+  Remote Cache (2 hops) hit             6  N/A
+  Uncached hit                         4  N/A
 
-https://download.01.org/perfmon/
+[1]: https://lore.kernel.org/lkml/20220113134743.1292-1-ravi.bangoria@amd.com
 
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
----
- .../arch/x86/alderlake/adl-metrics.json       | 161 ++++++++++++------
- 1 file changed, 112 insertions(+), 49 deletions(-)
+Prepared on tip/perf/core (bae19fdd7e9e)
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-index 6b24958737b5..56f86b362c4b 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-@@ -37,7 +37,7 @@
-     {
-         "BriefDescription": "Fraction of Physical Core issue-slots utilized by this Logical Processor",
-         "MetricExpr": "TOPDOWN.SLOTS / ( TOPDOWN.SLOTS / 2 ) if #SMT_on else 1",
--        "MetricGroup": "SMT",
-+        "MetricGroup": "SMT;TmaL1",
-         "MetricName": "Slots_Utilization",
-         "Unit": "cpu_core"
-     },
-@@ -64,27 +64,20 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Actual per-core usage of the Floating Point execution units (regardless of the vector width)",
--        "MetricExpr": "( (FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE) + (FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE) ) / ( 2 * CPU_CLK_UNHALTED.DISTRIBUTED )",
-+        "BriefDescription": "Actual per-core usage of the Floating Point non-X87 execution units (regardless of precision or vector-width)",
-+        "MetricExpr": "( FP_ARITH_DISPATCHED.PORT_0 + FP_ARITH_DISPATCHED.PORT_1 + FP_ARITH_DISPATCHED.PORT_5 ) / ( 2 * CPU_CLK_UNHALTED.DISTRIBUTED )",
-         "MetricGroup": "Cor;Flops;HPC",
-         "MetricName": "FP_Arith_Utilization",
--        "PublicDescription": "Actual per-core usage of the Floating Point execution units (regardless of the vector width). Values > 1 are possible due to Fused-Multiply Add (FMA) counting.",
-+        "PublicDescription": "Actual per-core usage of the Floating Point non-X87 execution units (regardless of precision or vector-width). Values > 1 are possible due to ([BDW+] Fused-Multiply Add (FMA) counting - common; [ADL+] use all of ADD/MUL/FMA in Scalar or 128/256-bit vectors - less common).",
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
-+        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is execution) per-core",
-         "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
-         "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
-         "MetricName": "ILP",
-         "Unit": "cpu_core"
-     },
--    {
--        "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
--        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
--        "MetricGroup": "Bad;BadSpec;BrMispredicts",
--        "MetricName": "IpMispredict",
--        "Unit": "cpu_core"
--    },
-     {
-         "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
-         "MetricExpr": "CPU_CLK_UNHALTED.DISTRIBUTED",
-@@ -181,6 +174,13 @@
-         "PublicDescription": "Instructions per FP Arithmetic AVX* 256-bit instruction (lower number means higher occurrence rate). May undercount due to FMA double counting.",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Instructions per Software prefetch instruction (of any type: NTA/T0/T1/T2/Prefetch) (lower number means higher occurrence rate)",
-+        "MetricExpr": "INST_RETIRED.ANY / cpu_core@SW_PREFETCH_ACCESS.T0\\,umask\\=0xF@",
-+        "MetricGroup": "Prefetches",
-+        "MetricName": "IpSWPF",
-+        "Unit": "cpu_core"
-+    },
-     {
-         "BriefDescription": "Total number of retired Instructions, Sample with: INST_RETIRED.PREC_DIST",
-         "MetricExpr": "INST_RETIRED.ANY",
-@@ -188,6 +188,27 @@
-         "MetricName": "Instructions",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Estimated fraction of retirement-cycles dealing with repeat instructions",
-+        "MetricExpr": "INST_RETIRED.REP_ITERATION / cpu_core@UOPS_RETIRED.SLOTS\\,cmask\\=1@",
-+        "MetricGroup": "Pipeline;Ret",
-+        "MetricName": "Strings_Cycles",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Instructions per a microcode Assist invocation. See Assists tree node for details (lower number means higher occurrence rate)",
-+        "MetricExpr": "INST_RETIRED.ANY / cpu_core@ASSISTS.ANY\\,umask\\=0x1B@",
-+        "MetricGroup": "Pipeline;Ret;Retire",
-+        "MetricName": "IpAssist",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "",
-+        "MetricExpr": "UOPS_EXECUTED.THREAD / cpu_core@UOPS_EXECUTED.THREAD\\,cmask\\=1@",
-+        "MetricGroup": "Cor;Pipeline;PortsUtil;SMT",
-+        "MetricName": "Execute",
-+        "Unit": "cpu_core"
-+    },
-     {
-         "BriefDescription": "Average number of Uops issued by front-end when it issued something",
-         "MetricExpr": "UOPS_ISSUED.ANY / cpu_core@UOPS_ISSUED.ANY\\,cmask\\=1@",
-@@ -210,12 +231,26 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Number of Instructions per non-speculative DSB miss",
-+        "BriefDescription": "Average number of cycles of a switch from the DSB fetch-unit to MITE fetch unit - see DSB_Switches tree node for details.",
-+        "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / cpu_core@DSB2MITE_SWITCHES.PENALTY_CYCLES\\,cmask\\=1\\,edge\\=1@",
-+        "MetricGroup": "DSBmiss",
-+        "MetricName": "DSB_Switch_Cost",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Number of Instructions per non-speculative DSB miss (lower number means higher occurrence rate)",
-         "MetricExpr": "INST_RETIRED.ANY / FRONTEND_RETIRED.ANY_DSB_MISS",
-         "MetricGroup": "DSBmiss;Fed",
-         "MetricName": "IpDSB_Miss_Ret",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear) (lower number means higher occurrence rate)",
-+        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
-+        "MetricGroup": "Bad;BadSpec;BrMispredicts",
-+        "MetricName": "IpMispredict",
-+        "Unit": "cpu_core"
-+    },
-     {
-         "BriefDescription": "Fraction of branches that are non-taken conditionals",
-         "MetricExpr": "BR_INST_RETIRED.COND_NTAKEN / BR_INST_RETIRED.ALL_BRANCHES",
-@@ -252,11 +287,10 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Actual Average Latency for L1 data-cache miss demand load instructions (in core cycles)",
--        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
-+        "BriefDescription": "Actual Average Latency for L1 data-cache miss demand load operations (in core cycles)",
-+        "MetricExpr": "L1D_PEND_MISS.PENDING / MEM_LOAD_COMPLETED.L1_MISS_ANY",
-         "MetricGroup": "Mem;MemoryBound;MemoryLat",
-         "MetricName": "Load_Miss_Real_Latency",
--        "PublicDescription": "Actual Average Latency for L1 data-cache miss demand load instructions (in core cycles). Latency may be overestimated for multi-load instructions - e.g. repeat strings.",
-         "Unit": "cpu_core"
-     },
-     {
-@@ -266,34 +300,6 @@
-         "MetricName": "MLP",
-         "Unit": "cpu_core"
-     },
--    {
--        "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
--        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
--        "MetricGroup": "Mem;MemoryBW",
--        "MetricName": "L1D_Cache_Fill_BW",
--        "Unit": "cpu_core"
--    },
--    {
--        "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
--        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
--        "MetricGroup": "Mem;MemoryBW",
--        "MetricName": "L2_Cache_Fill_BW",
--        "Unit": "cpu_core"
--    },
--    {
--        "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
--        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
--        "MetricGroup": "Mem;MemoryBW",
--        "MetricName": "L3_Cache_Fill_BW",
--        "Unit": "cpu_core"
--    },
--    {
--        "BriefDescription": "Average per-core data access bandwidth to the L3 cache [GB / sec]",
--        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
--        "MetricGroup": "Mem;MemoryBW;Offcore",
--        "MetricName": "L3_Cache_Access_BW",
--        "Unit": "cpu_core"
--    },
-     {
-         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
-         "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
-@@ -316,14 +322,14 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
-+        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo instruction for all request types (including speculative)",
-         "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
-         "MetricGroup": "Mem;CacheMisses;Offcore",
-         "MetricName": "L2MPKI_All",
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "L2 cache misses per kilo instruction for all demand loads  (including speculative)",
-+        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo instruction for all demand loads  (including speculative)",
-         "MetricExpr": "1000 * L2_RQSTS.DEMAND_DATA_RD_MISS / INST_RETIRED.ANY",
-         "MetricGroup": "Mem;CacheMisses",
-         "MetricName": "L2MPKI_Load",
-@@ -351,7 +357,7 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Fill Buffer (FB) true hits per kilo instructions for retired demand loads",
-+        "BriefDescription": "Fill Buffer (FB) hits per kilo instructions for retired demand loads (L1D misses that merge into ongoing miss-handling entries)",
-         "MetricExpr": "1000 * MEM_LOAD_RETIRED.FB_HIT / INST_RETIRED.ANY",
-         "MetricGroup": "Mem;CacheMisses",
-         "MetricName": "FB_HPKI",
-@@ -365,6 +371,62 @@
-         "MetricName": "Page_Walks_Utilization",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Average per-core data fill bandwidth to the L1 data cache [GB / sec]",
-+        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L1D_Cache_Fill_BW",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-core data fill bandwidth to the L2 cache [GB / sec]",
-+        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L2_Cache_Fill_BW",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
-+        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L3_Cache_Fill_BW",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-core data access bandwidth to the L3 cache [GB / sec]",
-+        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
-+        "MetricGroup": "Mem;MemoryBW;Offcore",
-+        "MetricName": "L3_Cache_Access_BW",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-thread data fill bandwidth to the L1 data cache [GB / sec]",
-+        "MetricExpr": "(64 * L1D.REPLACEMENT / 1000000000 / duration_time)",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L1D_Cache_Fill_BW_1T",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-thread data fill bandwidth to the L2 cache [GB / sec]",
-+        "MetricExpr": "(64 * L2_LINES_IN.ALL / 1000000000 / duration_time)",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L2_Cache_Fill_BW_1T",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-thread data fill bandwidth to the L3 cache [GB / sec]",
-+        "MetricExpr": "(64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time)",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L3_Cache_Fill_BW_1T",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-thread data access bandwidth to the L3 cache [GB / sec]",
-+        "MetricExpr": "(64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time)",
-+        "MetricGroup": "Mem;MemoryBW;Offcore",
-+        "MetricName": "L3_Cache_Access_BW_1T",
-+        "Unit": "cpu_core"
-+    },
-     {
-         "BriefDescription": "Average CPU Utilization",
-         "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
-@@ -384,6 +446,7 @@
-         "MetricExpr": "( ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) / 1000000000 ) / duration_time",
-         "MetricGroup": "Cor;Flops;HPC",
-         "MetricName": "GFLOPs",
-+        "PublicDescription": "Giga Floating Point Operations Per Second. Aggregate across all supported options of: FP precisions, scalar and vector instructions, vector-width and AMX engine.",
-         "Unit": "cpu_core"
-     },
-     {
-@@ -461,7 +524,7 @@
-     },
-     {
-         "BriefDescription": "Counts the total number of issue slots  that were not consumed by the backend due to backend stalls",
--        "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)",
-+        "MetricExpr": "(TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE))",
-         "MetricGroup": "TopdownL1",
-         "MetricName": "Backend_Bound_Aux",
-         "PublicDescription": "Counts the total number of issue slots  that were not consumed by the backend due to backend stalls.  Note that UOPS must be available for consumption in order for this event to count.  If a uop is not available (IQ is empty), this event will not count.  All of these subevents count backend stalls, in slots, due to a resource limitation.   These are not cycle based events and therefore can not be precisely added or subtracted from the Backend_Bound subevents which are cycle based.  These subevents are supplementary to Backend_Bound and can be used to analyze results from a resource perspective at allocation.  ",
-@@ -620,7 +683,7 @@
-     },
-     {
-         "BriefDescription": "Estimated Pause cost. In percent",
--        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / ( 5 * CPU_CLK_UNHALTED.CORE )",
-+        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / (5 * CPU_CLK_UNHALTED.CORE)",
-         "MetricName": "Estimated_Pause_Cost",
-         "Unit": "cpu_atom"
-     },
+Ravi Bangoria (13):
+  perf/mem: Introduce PERF_MEM_LVLNUM_{EXTN_MEM|IO}
+  perf/x86/amd: Add IBS OP_DATA2/3 register bit definitions
+  perf/x86/amd: Support PERF_SAMPLE_DATA_SRC based on IBS_OP_DATA*
+  perf/x86/amd: Support PERF_SAMPLE_WEIGHT using IBS
+    OP_DATA3[IbsDcMissLat]
+  perf/x86/amd: Support PERF_SAMPLE_ADDR using IBS_DC_LINADDR
+  perf/x86/amd: Support PERF_SAMPLE_PHY_ADDR using IBS_DC_PHYSADDR
+  perf tool: Sync include/uapi/linux/perf_event.h header
+  perf tool: Sync arch/x86/include/asm/amd-ibs.h header
+  perf mem: Add support for printing PERF_MEM_LVLNUM_{EXTN_MEM|IO}
+  perf mem/c2c: Set PERF_SAMPLE_WEIGHT for LOAD_STORE events
+  perf mem/c2c: Add load store event mappings for AMD
+  perf mem/c2c: Avoid printing empty lines for unsupported events
+  perf mem: Use more generic term for LFB
+
+ arch/x86/events/amd/ibs.c                | 351 ++++++++++++++++++++++-
+ arch/x86/include/asm/amd-ibs.h           |  76 +++++
+ include/uapi/linux/perf_event.h          |   4 +-
+ tools/arch/x86/include/asm/amd-ibs.h     |  76 +++++
+ tools/include/uapi/linux/perf_event.h    |   4 +-
+ tools/perf/Documentation/perf-c2c.txt    |  14 +-
+ tools/perf/Documentation/perf-mem.txt    |   3 +-
+ tools/perf/Documentation/perf-record.txt |   1 +
+ tools/perf/arch/x86/util/mem-events.c    |  31 +-
+ tools/perf/builtin-c2c.c                 |   1 +
+ tools/perf/builtin-mem.c                 |   1 +
+ tools/perf/util/mem-events.c             |  17 +-
+ 12 files changed, 557 insertions(+), 22 deletions(-)
+
 -- 
-2.25.1
+2.31.1
 
