@@ -2,123 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B1FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 13:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A443BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 May 2022 14:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241158AbiEYNj4 (ORCPT
+        id S239529AbiEYOHC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 May 2022 09:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39014 "EHLO
+        Wed, 25 May 2022 10:07:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240087AbiEYNjz (ORCPT
+        with ESMTP id S245643AbiEYOFy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 May 2022 09:39:55 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68650DFC4
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 May 2022 06:39:54 -0700 (PDT)
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 079573F208
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 May 2022 13:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1653485993;
-        bh=YxMHNNo7yhfXfhg4oP8VVxFgO1u9JXBVrJrSswFRrJY=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=luXaulxSoQQR9C5zOY2xinXYME3xPQbSb79b8iDd9YyAbv/lWWdBFhjjihV9fbtxB
-         /APy3jVdR7WHfsIUiTMx6IOw4VtfIB2HnxgsIeVxULlg7u7k8W1jXnZI6yVcauQrO0
-         JyMRafwv4LUqhP+Y4ostEYRv/cAMJEYXEScFmT8q06q1WattDrdCT9ne3FIo3mFptD
-         BZsJ3hqmKtKbgR7GtkCWLkBx8aG4i5dLePkhYwSgveQJzQ1SsBXH5ukLEIkMc3P27p
-         tzjt6ePNZIXN7Gq6/T5xdwKGe5umerqI7qW40iJUJWpYGnWNZnrnP1ZSx3MPNUExg0
-         ZeKGlgWMMloVw==
-Received: by mail-ej1-f70.google.com with SMTP id gf24-20020a170906e21800b006fe8e7f8783so9137154ejb.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 May 2022 06:39:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YxMHNNo7yhfXfhg4oP8VVxFgO1u9JXBVrJrSswFRrJY=;
-        b=VNz5mIzuOgeBwMBmYZvbgY4DYrpGl8VNhQR39213cWWs7Om+XtqwiMZo/oNL02ucr2
-         OvKvy15gVTKpDuCoLO1LS6Z5Ceohes3JeN14P9eNRG5SxFt3/mNBJj1SeZWqCNKqy+NV
-         7faS8+/ViZ2qBEqZEh0BbAVIh9UEFD8HWqPW0xU0c73uYd8as/gdAsouGufZT+cFDYMU
-         AMZxMVxM5sLG2Z9P/ZTKpD8ZHLIs/tM2gpORjhWf+unqUuS2jNB3mlkBPZ9W9ibL4GUD
-         YkB4OLibWoTt14RO9k1dhIIdoPlTgBQHup7b6gFt0fPebeAoR8wJRX/qA4lr6sw8/eLQ
-         6Z5g==
-X-Gm-Message-State: AOAM533zNmf1iz5yM60ZhOGjw/R9LcDj4bLha8VwRAz3fB70QIJN7xCn
-        4X02Q/GeTEzbh8d2419QpUUqLVRa6AqnhuPeEkgkyYEQfVnzuDal22ERhNPsVBFKDK9JGy8CD8u
-        jPLrjbbbd76A8SFa/XDHV/LkRUem/aTt3am+buLxYJQsp80Y=
-X-Received: by 2002:a17:907:948a:b0:6ff:14dc:2fe7 with SMTP id dm10-20020a170907948a00b006ff14dc2fe7mr2353531ejc.299.1653485992586;
-        Wed, 25 May 2022 06:39:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy2axYjo493ViwTotKYqEg/RE3TxvUkH76euuzDljStK+89C0yRXXkrtYPcybPJyXiOnDYmGg==
-X-Received: by 2002:a17:907:948a:b0:6ff:14dc:2fe7 with SMTP id dm10-20020a170907948a00b006ff14dc2fe7mr2353512ejc.299.1653485992400;
-        Wed, 25 May 2022 06:39:52 -0700 (PDT)
-Received: from gollum.fritz.box ([194.191.244.86])
-        by smtp.gmail.com with ESMTPSA id b12-20020a170906150c00b006ff045d7c9bsm1689131ejd.173.2022.05.25.06.39.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 May 2022 06:39:51 -0700 (PDT)
-From:   Juerg Haefliger <juerg.haefliger@canonical.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-perf-users@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Juerg Haefliger <juerg.haefliger@canonical.com>
-Subject: [PATCH] x86/events: Kconfig: Fix indentation
-Date:   Wed, 25 May 2022 15:39:49 +0200
-Message-Id: <20220525133949.53730-1-juerg.haefliger@canonical.com>
-X-Mailer: git-send-email 2.32.0
+        Wed, 25 May 2022 10:05:54 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290D78D6BD;
+        Wed, 25 May 2022 07:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653487435; x=1685023435;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FdNkUTr3XASwSCxYa3ivhvPYt8r8WXycJZ613rnDCeE=;
+  b=K60NM2e227WWOO6sPbV2DViC1WmF2xeMeRGlN4g6SSkO4aSc31uTT2UJ
+   LROC/FmaLr1X0fmPByESBhqoemKfLICFdoGN1OxReaBTsrJegSh6orBmB
+   1jkgA7G9hwbQ3u749ybOlbkK1TeMDXIdH6u/+0/nC6PDjsJjCE07wpqo5
+   CYjdZ3NGzyobXDMKvXELmS/YCV1199mGh7SYmg92xG9+XYPn+34AKi1PN
+   uxrkBGGijP3/NyXV/a9KLqaN8RV5q9pnEa9mxQw7ve2hG7niuD36XD3FG
+   PxeEWMx7zFKJXpzA1RTCFY+o45bb/sdTL4E8n1hGw1IdnqfRpPJQr6onl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10358"; a="299154465"
+X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
+   d="scan'208";a="299154465"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2022 07:03:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,250,1647327600"; 
+   d="scan'208";a="717694868"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by fmsmga001.fm.intel.com with ESMTP; 25 May 2022 07:03:52 -0700
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
+Subject: [PATCH] perf jevents: Fix event syntax error caused by ExtSel
+Date:   Wed, 25 May 2022 22:04:10 +0800
+Message-Id: <20220525140410.1706851-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The convention for indentation seems to be a single tab. Help text is
-further indented by an additional two whitespaces. Fix the lines that
-violate these rules.
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
+In the origin code, when "ExtSel" is 1, the eventcode will change to
+"eventcode |= 1 << 21”. For event “UNC_Q_RxL_CREDITS_CONSUMED_VN0.DRS",
+its "ExtSel" is "1", its eventcode will change from 0x1E to 0x20001E,
+but in fact the eventcode should <=0x1FF, so this will cause the parse
+fail:
+
+  # perf stat -e "UNC_Q_RxL_CREDITS_CONSUMED_VN0.DRS" -a sleep 0.1
+event syntax error: '.._RxL_CREDITS_CONSUMED_VN0.DRS'
+                                  \___ value too big for format, maximum is 511
+
+On the perf kernel side, the kernel assumes the valid bits are continuous.
+It will adjust the 0x100 (bit 8 for perf tool) to bit 21 in HW.
+
+DEFINE_UNCORE_FORMAT_ATTR(event_ext, event, "config:0-7,21");
+
+So the perf tool follows the kernel side and just set bit8 other than bit21.
+
+Fixes: fedb2b518239 ("perf jevents: Add support for parsing uncore json files")
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/Kconfig | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/pmu-events/jevents.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
-index d6cdfe631674..6b5df277ed58 100644
---- a/arch/x86/events/Kconfig
-+++ b/arch/x86/events/Kconfig
-@@ -6,24 +6,24 @@ config PERF_EVENTS_INTEL_UNCORE
- 	depends on PERF_EVENTS && CPU_SUP_INTEL && PCI
- 	default y
- 	help
--	Include support for Intel uncore performance events. These are
--	available on NehalemEX and more modern processors.
-+	  Include support for Intel uncore performance events. These are
-+	  available on NehalemEX and more modern processors.
- 
- config PERF_EVENTS_INTEL_RAPL
- 	tristate "Intel/AMD rapl performance events"
- 	depends on PERF_EVENTS && (CPU_SUP_INTEL || CPU_SUP_AMD) && PCI
- 	default y
- 	help
--	Include support for Intel and AMD rapl performance events for power
--	monitoring on modern processors.
-+	  Include support for Intel and AMD rapl performance events for power
-+	  monitoring on modern processors.
- 
- config PERF_EVENTS_INTEL_CSTATE
- 	tristate "Intel cstate performance events"
- 	depends on PERF_EVENTS && CPU_SUP_INTEL && PCI
- 	default y
- 	help
--	Include support for Intel cstate performance events for power
--	monitoring on modern processors.
-+	  Include support for Intel cstate performance events for power
-+	  monitoring on modern processors.
- 
- config PERF_EVENTS_AMD_POWER
- 	depends on PERF_EVENTS && CPU_SUP_AMD
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index cee61c4ed59e..e597e4bac90f 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -605,7 +605,7 @@ static int json_events(const char *fn,
+ 			} else if (json_streq(map, field, "ExtSel")) {
+ 				char *code = NULL;
+ 				addfield(map, &code, "", "", val);
+-				eventcode |= strtoul(code, NULL, 0) << 21;
++				eventcode |= strtoul(code, NULL, 0) << 8;
+ 				free(code);
+ 			} else if (json_streq(map, field, "EventName")) {
+ 				addfield(map, &je.name, "", "", val);
 -- 
-2.32.0
+2.25.1
 
