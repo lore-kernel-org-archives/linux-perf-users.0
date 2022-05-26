@@ -2,548 +2,248 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAC8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 08:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5478EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 08:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231653AbiEZIUu (ORCPT
+        id S230215AbiEZIqy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 04:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56392 "EHLO
+        Thu, 26 May 2022 04:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239491AbiEZIUt (ORCPT
+        with ESMTP id S1346750AbiEZIqx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 04:20:49 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF33C1EEE
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 01:20:47 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id q18so849762pln.12
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 01:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MvJO3k+UibG4fP94EyHESsT2ANTiPAPA4JupAnGcQ6I=;
-        b=DO7DVzdiNfddcfcIkjCkYCWct76AHYUfA/ZfgHMfu+o7rN0DgiwpV637NxgU6WdlAU
-         ynqQGO88AloE25b62410LDcdSNi07pG40RlhfMpMiq2nulLuOiADY5Y+wu/pU6nqZl5C
-         SOSrI8ppCJySm7fEvaxrCy1J9hIuPA+jgFA79eglkIarIgwkL2X+wLIK02+cItOfQlTJ
-         PwsngeBveYl+lqtzY0aRlLYpG/cZ3elQowWPwrV0FCXPWauMgpbznrC+BkRRL3Ej0uhX
-         VUShzWy9wSc6DLsJ5Zgcu8jugS6csCum6pyhhFFiVxN8SAFfrRMLTxzCYyOnhSdxZJww
-         wKGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MvJO3k+UibG4fP94EyHESsT2ANTiPAPA4JupAnGcQ6I=;
-        b=7Q/YifdTGVK1JHjJs19FP7uTAOwxoWIPF0MU7PofQW4FybhzmNvbz7yqiAHg5EyqxZ
-         MMTB6Z++h+Z4FxAIyYuR2Gz0teD85rc+3Ypr1RY3363l+7OyWCtsbBBnDqtmiffy9wiU
-         +ghM4BbpvzTuYMPyDLpMUEOZJvwKYzO117yGF+fbk6+b9RFKW2Pzyp8hm0wDJBy97/NK
-         VBnYB+bNRp86E23vQZgCLfZy0blj6ozO6pNisJcoluvmoPCBiYiy01qfuqwQKr5/Z50v
-         0F+CqPpWk5tZ0eC+0YEZ1R66pDLqD1cT7iwR4kNonfpnbnVK9ua3TswN08fJFGKTcAyh
-         lYhw==
-X-Gm-Message-State: AOAM532cfcxmUKf6R0uDAQzUMgKt9pqYM6lEXRwig3WBBJmzhw1R1sKO
-        nIwFoMVpHV0RC33BYMbXetHs6A==
-X-Google-Smtp-Source: ABdhPJxMPrqHzB56rlhyP2cab+bsYj23/FFdQBr/DTqEBAYxscOWrBdUAIvejewmQxXmhHY4lHcn/g==
-X-Received: by 2002:a17:90a:8807:b0:1df:78c7:c215 with SMTP id s7-20020a17090a880700b001df78c7c215mr1378835pjn.234.1653553246417;
-        Thu, 26 May 2022 01:20:46 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (n058152048195.netvigator.com. [58.152.48.195])
-        by smtp.gmail.com with ESMTPSA id m17-20020a170902c45100b0015e8d4eb29bsm790605plm.229.2022.05.26.01.20.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 May 2022 01:20:45 -0700 (PDT)
-Date:   Thu, 26 May 2022 16:20:39 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: Re: [PATCH 3/3] perf test: Add coresight tests to guage quality of
- data generated
-Message-ID: <20220526082039.GA795802@leoy-ThinkPad-X240s>
-References: <20220309122859.31487-1-carsten.haitzler@foss.arm.com>
- <20220309122859.31487-3-carsten.haitzler@foss.arm.com>
- <20220410083041.GA184647@leoy-ThinkPad-X240s>
- <050209c2-c784-e255-4e75-5c8674c5cfe0@foss.arm.com>
+        Thu, 26 May 2022 04:46:53 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2044.outbound.protection.outlook.com [40.107.94.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA045EBE7;
+        Thu, 26 May 2022 01:46:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IPog+osdcpqoxgjxu1h0CluW7syzBEAO4jNpOfprJtPN35+E6hisiJZRZvMjFmwEdJ1HCtWeW8roNLiJshGRZ9sOTe3hZuO04mZ/aV5dj6OXhRayEeri4sIgpZXuBrHtYYCg50IzSLC9rRWtxe7jto4u5r3q+j5HHdbn0/A7ESW4dXNGufBPkWnsgqmkqZgl4nS0kcpUohuS/44ojkzPe3kG+KfAvlHoOMmMIOzByfWw6rG9SZcPuJBkip6IkIZGFhHAms1Lw7a7tlPBLnJPlwkidedrZwvQ7/xas+74Kzvix1ueCGF1c8BfHA2tFX//m2leC1onCQKURbjTM3F0EA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iQ1wHgYEXJsAoOG75Ib1m5P0n6NL5zZ/aco2/Ju3cys=;
+ b=Ls06oL2WBagwFZy9kIJDT49ISJN4GDXnIfKC6cYI0VgWiiSxSNifJ5FhKvPfkWrxsKb9Wb51DHfyt1D2JqnzXv4pMLVZPnJtGxjnKMSYDK259Ns5LWLmTLL0SswyYl2WgK9bLUfUNCywFISM3v7sxgkBp7woEdXClaplCJ0dVqIclxmL/BBplyTqcz5XTCYFgqubBy4jm99QeZC/dIebIn1vH5Z7CB9RD1EhpK+AaY7u1/tlkb7uyeS1tCNtrZqAGqfc9cNsqbrSRvj7Dp7BupS8oluiR7u5IH1ovoQ3mkMrvf2F4ZS9DYWb9+qBfpJfAfWPSxsjhvDv0gQb2LMnLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iQ1wHgYEXJsAoOG75Ib1m5P0n6NL5zZ/aco2/Ju3cys=;
+ b=qIP89NKUhO99DXGKpUqR4zzBFFWU7THSMOQh+TICABAYdmRw1L2J4dU3+fciAXmL6kOa+wZUWhWxIKMBz95c5+8n8QQmIYRZGVQ4jp7ifwZ41HbQih5y2FEIHzIVamLgAfkUQFCGgGICOPKiGrYL5gjWFRF2YdwJ2BqYQ+IDx90=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MWHPR12MB1455.namprd12.prod.outlook.com (2603:10b6:301:10::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.17; Thu, 26 May
+ 2022 08:46:50 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5044:b3eb:8442:fe92]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5044:b3eb:8442:fe92%7]) with mapi id 15.20.5273.023; Thu, 26 May 2022
+ 08:46:49 +0000
+Message-ID: <e10c3d1b-90a9-2f14-987b-9c0d2471ee53@amd.com>
+Date:   Thu, 26 May 2022 14:16:28 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [PATCH 06/13] perf/x86/amd: Support PERF_SAMPLE_PHY_ADDR using
+ IBS_DC_PHYSADDR
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
+        eranian@google.com, irogers@google.com, jmario@redhat.com,
+        leo.yan@linaro.org, alisaidi@amazon.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, dave.hansen@linux.intel.com,
+        hpa@zytor.com, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20220525093938.4101-1-ravi.bangoria@amd.com>
+ <20220525093938.4101-7-ravi.bangoria@amd.com>
+ <Yo4RSY2L80N5muJ9@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <Yo4RSY2L80N5muJ9@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0072.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ad::19) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <050209c2-c784-e255-4e75-5c8674c5cfe0@foss.arm.com>
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 606b6280-c4d7-4366-8759-08da3ef445f9
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1455:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR12MB14553CE08025E37E3A0131EAE0D99@MWHPR12MB1455.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jtYsHr/GvUdWCkz1UAmA4omklP2VA7GnPcJJ6lZnJpwzbKsIY9d17K+Fx5Lfq7ucX/yzJ9LBahKP5JD/yq6YY+vx4wFsaURM+zl8U6o3hCne40qt8jEwKITw8RD2uEzQEEi3ll1i7Cm25t5VPinOP1ph9OOUZpiVADP2vzthiayLRqa9YgylsTZrFOQxaEwcHvDswcKA160LvU/0g9qSY9MzMPcutr3DLojMNbqGliZObbVuafdTFHZG2gKqnQRo+pyvbPkVozrUg8oiH+eFqnZzoWNSOztkQI2aSXhB50YwBLjLdb+NTMNI8BqQhZhYqX0URhaZiMTJT4i62UgsF4h5gPdjPTG7Sv4UNUZ5MG7Zxb82NqC3CczuTVtY6Ti3KF8oSNMx/jCT56hkYbHWpYosKiiICIvg8IAMOYWr2JxMrycOGIOd1mYrXlYnuS65Gc0YAy+gn6HwN+xPBLDh4TvPysW9K+kOaqtd1o/k6pIcpseESHhh0luHdePKLqToZDxaPtBf8gYXXcPWIj9WdszSB20GLuj3VXCxDWsefbp2MV+HpHNlQvM8uAcq37iSkyH2FlJwkn579+AqS7STMYr1bUgxkXO0uotjR6GqhYItbM0jK5NFVTqGt5jxinIlKIwC5Kynh7Peln4fr+1UJOZhnJ6VPpnTiKS+r/TW94MA6+gJ+h3GqVa5VKc7iYgOj8x7AJNW49Op+MCAsTYXKAFbyANEGBZ5UgTuyqVra+Y=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8936002)(66476007)(66946007)(31686004)(66556008)(2906002)(316002)(6916009)(44832011)(6486002)(7416002)(4326008)(5660300002)(508600001)(8676002)(6506007)(6666004)(83380400001)(26005)(86362001)(6512007)(31696002)(186003)(38100700002)(2616005)(53546011)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Nmt6MDQ4T2JGMHpEZ29hc1Z2VkEwNThzYjJZU1E5eUVZOTlFeGdyeXUrcEVQ?=
+ =?utf-8?B?cGNpRzFwNlQ2UTNRZGEyZURudHlSRi90R2lMdFd0Ri94UjNoYmNhYTBld1Bs?=
+ =?utf-8?B?VFJYVUZkTHYzakg5OERzTHkzOHRCQWhxRWVXTUtlZm9FZ3FxeXNsTWpQdnlQ?=
+ =?utf-8?B?QzFYcUdjalZPVWdPeG1wRC9tazdSMVBwdHhqWVZyMDVIbjJndWFrNzFzaERD?=
+ =?utf-8?B?TDk4TStXY2lpVktuSzF3SHpCeXptRG9QbzVpRDM1WXBqZUNyMFA1NEdWWDZi?=
+ =?utf-8?B?L1RHZTFSZDJJeTJEcWUxdzlHdlljVGNOelJhMWxZdTJzd0JNWTVSZVJNaFB1?=
+ =?utf-8?B?aDFRcThWMVUzZ2Rxbk0yc3IwNTYxMjAzR2l2OXZldTJFbEJOMHZtcVFJejZw?=
+ =?utf-8?B?WFVqSHpSVUFBNnBuVjIyQlZwM052YkZheDRMTUs3SG12eU03dVkzK2FOa040?=
+ =?utf-8?B?a1FnY21IQmVzSGt1K2ExKzJPQzlKck9rcWJ1dFZlT0lZczdUbmNRWkxnZG9U?=
+ =?utf-8?B?Z3JQb3g0dXdldy9DREdWa2xKcW1qN3BZMGtUbC9LM3BtZTg4UFpBS3VjUmQz?=
+ =?utf-8?B?U2g3eSswK2N4NkMvV1BjWVBVK2RCS3RoVW5scVY4WGZUUFpXODFZbUVENDc3?=
+ =?utf-8?B?M21OcXhGQzhscFU0cGJmRXczejJxL2F6aDJPKzA5WTRtNUt0SkRyWlFHd0Y2?=
+ =?utf-8?B?QVNZOHl3Q2xNRlYrc2JQaFZjSzlIcFg0USt0UTJEM2FadStaNEtxYnQ0SXdI?=
+ =?utf-8?B?QUZaK2JnOUI1OFdYaGJLUnFEdStxYmRDWTdMZVVwMDd0MGRLV0wrcjIrcTlW?=
+ =?utf-8?B?YUF2RjJaZmVjLzQwQmkxWU9ZZHp3L0JCTWlEQlhuY01iLy9DWFdWTkk0N2hx?=
+ =?utf-8?B?WGhrSnUwb045WTVnSGVFemJTQ2xveCtzRjBob0pPemhyZmRtNzNtS216RUF5?=
+ =?utf-8?B?MTlYNXAxSU52ZkhtS3FjU3V5TXFld014K0s2WGxkNnNpTkNjZVV4ZjhGeGNO?=
+ =?utf-8?B?OGoxMG5jWFJFRVFkQnArMjNYeklPb0p4bXFyRXdOSjlvV3pVeHdhUko3RkJQ?=
+ =?utf-8?B?VU9GUjVjRzhwaWxRdUtKcUVrV0lUQzJJdG14SzVNdG53cWpzbGxyMk1sWmFx?=
+ =?utf-8?B?NG5RNjV6T2tnNDZkU3dBOHVrSldhUEhiTmFacFRtTlZKZmI2Kzdmc0F4Q3Jo?=
+ =?utf-8?B?Kzh1MWJmQ3NDVzlUVG8rYk03cVdNOS9UYXk5dnRYTEhYc2FWTUVZTnBzUHl6?=
+ =?utf-8?B?K21RWGNLaSt5K2ZUc2R2b1lrTVo3SDVoaVRUT1AxUUVyVmhWVTRobGJmNUl6?=
+ =?utf-8?B?Qy9SMnVSZFQxbHltVkRvaGx3eFYzRVpnL0JodUM4OW1mMVFiVGo5c0svZ01G?=
+ =?utf-8?B?cURlb0VFN3k3QXBSN0JNUm9xU1Z0Y2dnUXh0NElTaWtvTlJ0bmZBNDM3OU1x?=
+ =?utf-8?B?NGFXWlRNVzNXa010dFMrVlBFYXcwb1JHdmJvZ2VmYVlDL2dGcW9MWk4zMXdt?=
+ =?utf-8?B?M0Z3ZkFJMmhIcVhIS0xKLzRybHJ6c2cwdlBwajIza1k4S0o1ZEdNeWlpR1Fi?=
+ =?utf-8?B?dnhjcGlCWnlnNDdRRUU2YWpTdDZYSzdHZDRGMW1TbWRseWZzeExSQzlET2s0?=
+ =?utf-8?B?SHVIWVdXVXI4dDgvZnYvZ1l5aCtydEo0aXRNK1BnVnltdk1hVTlBUVBvejJm?=
+ =?utf-8?B?cDgxSUpPSTdLQUhvMHJTcEJNdnRUT1J3U0NOQ2lNeXFDbXUvWnUxa3lZSjY5?=
+ =?utf-8?B?ZldhanlWczFkRjBXYTREQXJlWFR0Z0c2bWN1ZE42ajlNSXAvU3VvekVNamJz?=
+ =?utf-8?B?VGNZd0NsNDFPQ3hJdFZ0ZlJJZVlFZUNsdVEya2wrRG5wRlJmYWJ2SXNRVkhn?=
+ =?utf-8?B?Z1dpY3cyYVFIaFBMeDNEYVNmYUE1SitKVlRuQ3dmRHVZS2dvbTU2RkFXQWNI?=
+ =?utf-8?B?dDRWMFB6c05hNkhxRmIydnFmWlBaRzRFNWRUM0NlYUpEMnZPeUI2Y0FPOCt0?=
+ =?utf-8?B?UGFkMVpQTHgvOG9DOUlNWlhYMzZnTzBvMURsNHVvMmJEMzRWWXhIWlpkNWV2?=
+ =?utf-8?B?N3RFdmc1UTlXL0hVbllnTnRzMG5oQm9SY3BRTWV1cVpvd0I4NkpiaXZEUmpm?=
+ =?utf-8?B?S3FDZnNQdUxFR1pQakMvakdoemlMUlh3TVN0WjN1S29ZdVlzZ0FIemNUWkxB?=
+ =?utf-8?B?VTVrRjg2eVB0WTZEQlFyd3V2VDM3OG9LQ3JvMDBOZ3NJM3BtMmpUVEJCbVB3?=
+ =?utf-8?B?UFBJT2dmRG5YVEVKM3g4RnVZbXZ4RUUwc3p5WU15cXljM1pReVpPbTllNGVC?=
+ =?utf-8?B?SnFnai9tcWl6eGl2K0JMekwyVk5neHpSamczcGI0MGk3QnpURjFXZz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 606b6280-c4d7-4366-8759-08da3ef445f9
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2022 08:46:49.7644
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WGJlY1cIEhbLJRFQIYtYDxhbloNSQFreFMVhE9tkdCLwqSf74ekPVJs+WqsOG0buG8q+bgRsWiRcR3d7GfQWsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1455
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Carsten,
-
-Sorry for late response.
-
-On Thu, Apr 21, 2022 at 06:38:33PM +0100, Carsten Haitzler wrote:
-
-[...]
-
-> > Very big change...  Why squash all patches form previous verion to this
-> > single one big patch?  Usually the format with small patches is much
-> > better for reviewing.
+On 25-May-22 4:51 PM, Peter Zijlstra wrote:
+> On Wed, May 25, 2022 at 03:09:31PM +0530, Ravi Bangoria wrote:
+>> IBS_DC_PHYSADDR provides the physical data address for the tagged load/
+>> store operation. Populate perf sample physical address using it.
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>> ---
+>>  arch/x86/events/amd/ibs.c | 26 +++++++++++++++++++++++++-
+>>  1 file changed, 25 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+>> index b57736357e25..c719020c0e83 100644
+>> --- a/arch/x86/events/amd/ibs.c
+>> +++ b/arch/x86/events/amd/ibs.c
+>> @@ -986,13 +986,35 @@ static void perf_ibs_get_data_addr(struct perf_event *event,
+>>  	data->addr = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCLINAD)];
+>>  }
+>>  
+>> +static void perf_ibs_get_phy_addr(struct perf_event *event,
+>> +				  struct perf_ibs_data *ibs_data,
+>> +				  struct perf_sample_data *data)
+>> +{
+>> +	union perf_mem_data_src *data_src = &data->data_src;
+>> +	u64 op_data3 = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)];
+>> +	u64 phy_addr_valid = op_data3 & IBS_DC_PHY_ADDR_VALID_MASK;
+>> +
+>> +	if (!(event->attr.sample_type & PERF_SAMPLE_DATA_SRC))
+>> +		perf_ibs_get_mem_op(op_data3, data);
+>> +
+>> +	if ((data_src->mem_op != PERF_MEM_OP_LOAD &&
+>> +	    data_src->mem_op != PERF_MEM_OP_STORE) ||
+>> +	    !phy_addr_valid) {
+>> +		data->phys_addr = 0x0;
+>> +		return;
+>> +	}
+>> +
+>> +	data->phys_addr = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCPHYSAD)];
+>> +}
 > 
-> I was asked to re-jig the tree and in doing so I also ended up cutting down
-> the size a lot so this just makes more sense together as a "here are the
-> tests" as adding infra without any tests makes no sense and the tests
-> themelves are self-contained in their own directories and source files and
-> "drivign scripts" thus it's essentially patch 1 appended to patch 2 to patch
-> 3 etc. and still broken up in the patch file by file.
+> perf_prepare_sample() will unconditionally overwrite data->phys_addr.
+> There is currently no facility to let the driver set this field.
 
-I am not sure if I understand the meaning, seems to me you could
-organize the patch series like:
+Thanks for pointing it Peter. Would you mind if I add:
 
-- Patch for common files (e.g. script lib/coresight.sh or some
-  Makefile changes);
-- Patches for enabling test cases, E.g.:
-  patch for asm_pure_loop;
-  patch for thread loop (include unroll loop);
-  patch for memcpy;
-- Patch for documentation.
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index c719020c0e83..fbd1f4e94d47 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -986,6 +986,19 @@ static void perf_ibs_get_data_addr(struct perf_event *event,
+        data->addr = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCLINAD)];
+ }
 
-If this is not comfortable for you, at least we can use three patches:
++/* data_src->mem_op should have been set by perf_ibs_get_phy_addr() */
++bool perf_arch_phys_addr_set(struct perf_event *event,
++                            struct perf_sample_data *data)
++{
++       union perf_mem_data_src *data_src = &data->data_src;
++
++       if (event->pmu != &perf_ibs_op.pmu)
++               return false;
++
++       return (data_src->mem_op == PERF_MEM_OP_LOAD ||
++               data_src->mem_op == PERF_MEM_OP_STORE);
++}
++
+ static void perf_ibs_get_phy_addr(struct perf_event *event,
+                                  struct perf_ibs_data *ibs_data,
+                                  struct perf_sample_data *data)
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index da759560eec5..67402af3b70f 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1477,6 +1477,8 @@ extern void perf_event_task_tick(void);
+ extern int perf_event_account_interrupt(struct perf_event *event);
+ extern int perf_event_period(struct perf_event *event, u64 value);
+ extern u64 perf_event_pause(struct perf_event *event, bool reset);
++bool perf_arch_phys_addr_set(struct perf_event *event,
++                            struct perf_sample_data *data);
+ #else /* !CONFIG_PERF_EVENTS: */
+ static inline void *
+ perf_aux_output_begin(struct perf_output_handle *handle,
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7699be46f3a1..9baeb2d21bc0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7283,6 +7283,12 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+        return callchain ?: &__empty_callchain;
+ }
 
-- Patch for common file (e.g. script lib/coresight.sh);
-- Patch for test cases;
-- Patch for documentation.
++bool __weak perf_arch_phys_addr_set(struct perf_event *event,
++                                   struct perf_sample_data *data)
++{
++       return false;
++}
++
+ void perf_prepare_sample(struct perf_event_header *header,
+                         struct perf_sample_data *data,
+                         struct perf_event *event,
+@@ -7404,8 +7410,10 @@ void perf_prepare_sample(struct perf_event_header *header,
+                header->size += size;
+        }
 
-[...]
+-       if (sample_type & PERF_SAMPLE_PHYS_ADDR)
++       if (sample_type & PERF_SAMPLE_PHYS_ADDR &&
++           !perf_arch_phys_addr_set(event, data)) {
+                data->phys_addr = perf_virt_to_phys(data->addr);
++       }
 
-> > > +If you see these above, then your system is tracing coresight data
-> > > +correctly.
-> > > +
-> > > +To compile perf with coresight support in the perf directory do
-> > > +
-> > > +    make CORESIGHT=1
-> > 
-> > It is inaccurate that if we don't mention openCSD lib.
-> 
-> Do you mean I need to mention that you need the opencsd library installed
-> too?
+ #ifdef CONFIG_CGROUP_PERF
+        if (sample_type & PERF_SAMPLE_CGROUP) {
 
-Yes, otherwise, users might directly build perf without opencsd lib,
-then finally they cannot use perf with Arm CoreSight.
-
-> > > +This will compile the perf tool with coresight support as well as
-> > > +build some small test binaries for perf test. This requires you also
-> > > +be compiling for 64bit Arm (ARM64/aarch64). The tools run as part of
-> > > +perf coresight tracing are in tests/shell/tools/coresight.
-> > 
-> > For build perf tool, I think above paragraphs are duplicate with the
-> > document Documentation/trace/coresight/coresight.rst.  Can we simply
-> > say:
-> > 
-> > "The details for building perf tool with support Arm Coresight can be
-> > found in the "HOWTO.md" file of the openCSD gitHub repository:
-> > https://github.com/Linaro/opencsd.
-> 
-> I can. I put this here as I didn't go clone OpencCSD first but used my
-> distro OpenCSD packages and thus of course didn't have the documentation in
-> front of me. I spent some time wondering why it wasn't building with
-> coresight support even though it detected OpenCSD when I compiled... I
-> didn't expect to have to go to some separate project git repository and read
-> docs there on how to build the perf tool here in the kernel. I wrote this
-> because it was an actual problem I hit and it's a lot less frustrating to
-> "end users" to give them the information they need in the relevant place
-> they need it instead of sending them around to other project trees. Building
-> perf with coresight support is handled by the perf tree int he kernel, not
-> OpenCSD, thus IMHO that is where the documentation belongs - alongside the
-> thing that determines how to build something.
-
-Understand.
-
-> > And "HOWTO.md" file gives the information and examples for how to use
-> > perf tool to record and report Coresight trace data.  It's the
-> > prerequisite for this perf Coresight test."
-> > 
-> > > +You will also want coresight support enabled in your kernel config.
-> > > +Ensure it is enabled with:
-> > > +
-> > > +    CONFIG_CORESIGHT=y
-> > > +
-> > > +There are various other coresight options you probably also want
-> > > +enabled like:
-> > > +
-> > > +    CONFIG_CORESIGHT_LINKS_AND_SINKS=y
-> > > +    CONFIG_CORESIGHT_LINK_AND_SINK_TMC=y
-> > > +    CONFIG_CORESIGHT_CATU=y
-> > > +    CONFIG_CORESIGHT_SINK_TPIU=y
-> > > +    CONFIG_CORESIGHT_SINK_ETBV10=y
-> > > +    CONFIG_CORESIGHT_SOURCE_ETM4X=y
-> > > +    CONFIG_CORESIGHT_STM=y
-> > > +    CONFIG_CORESIGHT_CPU_DEBUG=y
-> > > +    CONFIG_CORESIGHT_CTI=y
-> > > +    CONFIG_CORESIGHT_CTI_INTEGRATION_REGS=y
-> > > +
-> > > +Please refer to the kernel configuration help for more information.
-> > 
-> > I prefer to remove these kernel configuration since they are not
-> > inconsistent on different platforms (e.g. ETBV10, ETM4X, etc), and
-> > some configurations might not necessary (e.g. CPU_DEBUG).
-> 
-> Certainly there should be some documentation on which kernel configs you
-> might want to turn on then? Imagine someone new comes along and doesn't have
-> any idea what to possible enable at all and manages to build perf with
-> coresight support (as above) then finds it doesn't work because they didn't
-> enable enough config in the kernel? Sure - could probably trim these down a
-> bit but the point here is to alert the user to there being a range of
-> coresight config options that you need to turn on that you likely will find
-> are not turned on. They certainly are not turned on on distro kernels and a
-> lot of the time when you have a platform that already boots/works you start
-> with your distro kernel config file because you want everything enabled so
-> it actually boots. I've learned the hard way to do this as you manage to
-> forget to turn on some MMC driver or some other feature and your boot hangs
-> or doesn't find rootfs etc.
-
-So far, we will have two documents in Linux kernel:
-
-- Documentation/trace/coresight/coresight.rst;
-- tools/perf/Documentation/arm-coresight.txt.
-
-We need to avoid overlap between these two files.  I think we could use
-the file Documentation/trace/coresight/coresight.rst to focus on
-CoreSight driver module relates stuffs and
-tools/perf/Documentation/arm-coresight.txt is more about the perf
-usages.
-
-But, the file Documentation/trace/coresight/coresight.rst doesn't give
-any info for kernel configs, I think which would be a better place to
-give information for building kernel modules.
-
-> What would you recommend then as a "turn these on and coresight will almost
-> certainly work for you on your given hardware " then?
-
-This would be fine.  Alternatively, we could add a section in the file
-Documentation/trace/coresight/coresight.rst to describe how to build
-CoreSight modules.
-
-How you think for this?   I also would like to get suggestions from
-CoreSight maintainers Suzuki/Mathieu/Mike.
-
-[...]
-
-> > Please update based on the latest test case names, at my side, I can
-> > see the testing case like:
-> > 
-> >         Coresight / ASM Pure Loop
-> >         Coresight / Memcpy 16k 10 Threads
-> >         Coresight / Thread Loop 10 Threads - Check TID
-> >         Coresight / Thread Loop 2 Threads - Check TID
-> >         Coresight / Unroll Loop Thread 10
-> 
-> Oh sorry - yeah. I wrote the docs based on the earlier tests. Will fix.
-
-Thanks.
-
-> > > +
-> > > +These perf record tests will not run if the tool binaries do not exist
-> > > +in tests/shell/tools/coresight/*/ and will be skipped. If you do not
-> > > +have coresight support in hardware then either do not build perf with
-> > > +coresight support or remove these binaries in order to not have these
-> > > +tests fail and have them skip instead.
-> > > +
-> > > +These tests will log historical results in the current working
-> > > +directory (e.g. tools/perf) and will be named stats-*.csv like:
-> > > +
-> > > +    stats-asm_pure_loop-out.csv
-> > > +    stats-bubble_sort-random.csv
-> > > +    ...
-> > > +
-> > > +These statistic files log some aspects of the AUX data sections in
-> > > +the perf data output counting some numbers of certain encodings (a
-> > > +good way to know that it's working in a very simple way). One problem
-> > > +with coresight is that given a large enough amount of data needing to
-> > > +be logged, some of it can be lost due to the processor not waking up
-> > > +in time to read out all the data from buffers etc.. You will notice
-> > > +that the amount of data collected can vary a lot per run of perf test.
-> > > +If you wish to see how this changes over time, simply run perf test
-> > > +multiple times and all these csv files will have more and more data
-> > > +appended to it that you can later examine, graph and otherwise use to
-> > > +figure out if things have become worse or better.
-> > 
-> > I am confused by this narrative.  Does it try to remind that the final
-> > testing result (pass or fail) is not stable?  Or should we run for
-> > multiple times so have more chance to capture issues?
-> 
-> That is correct. I thought I was clear that it's lossy. That is actually the
-> case. I have tests here that actually fail because there is no data
-> collected from some threads at all (missing CID blocks for some of the
-> threads that run in the test). The point is to have tests that may be
-> failing now but in future will improve. I lowered the minimum bar to pass
-> for most tests to have "at least just a little data" but most tests show
-> highly variable amount of captured data. the csv files are there to
-> over-time give you a good idea of the stability of the captured data.
-
-Okay, this would be fine for me.  Though I am a bit worry that later if
-users report a failure, then how we can tell them this is a bug or it's
-just tracing quality issue?
-
-[...]
-
-> > > diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore b/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
-> > > new file mode 100644
-> > > index 000000000000..468673ac32e8
-> > > --- /dev/null
-> > > +++ b/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
-> > > @@ -0,0 +1 @@
-> > > +asm_pure_loop
-> > 
-> > Do we really need there '.gitignore' files under the folder
-> > 'tools/perf/tests/shell/coresight/'.
-> 
-> Where would you rather have them to ignore the generated binary tools?
-
-It's interesting that I wanted to find a case to object you, so I tried
-to check the folder linux/samples/bpf, but it does use .gitignore file
-to ignore built binaries :)
-
-Adding .gitignore is in practice and this would be fine for me.
-
-> > > diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile b/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
-> > > new file mode 100644
-> > > index 000000000000..10c5a60cb71c
-> > > --- /dev/null
-> > > +++ b/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
-> > > @@ -0,0 +1,30 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > > +
-> > > +include ../Makefile.miniconfig
-> > > +
-> > > +BIN=asm_pure_loop
-> > > +LIB=
-> > 
-> > Remove the unused variable 'LIB='.
-> 
-> I have this because I wanted to have a simple template to be able to re-use
-> for more tests over time. It's so much easier to maintain and extend if
-> every makefile and tool follow a similar pattern and you can almost copy &
-> paste between them as they don't have "exceptions". You really want me to
-> remove this?
-
-It's fine to keep it.  Could you add a comment for this?
-
-To be honest, I am not experienced for bash shell script, so I have no
-idea why write like this way.  If you think this is very common usage
-in shell, then you could keep it and don't need to add comment.
-
-[...]
-
-
-> > There have four sub folders under tools/perf/tests/shell/coresight:
-> > 
-> >    asm_pure_loop
-> >    memcpy_thread
-> >    thread_loop
-> >    unroll_loop_thread
-> > 
-> > And every folder has its own Makefile and every Makefile is quite
-> > close to each other.  I am just wandering if it's possible to
-> > remove the 4 Makefiles in these four sub folders, and simply use
-> > tools/perf/tests/shell/coresight/Makefile as the central place to
-> > build these assistant programs.
-> 
-> I did this so it's easier to etxent over time. having a single parent
-> makefile that over time accumulates little ugly "if's" and exceptions makes
-> longer-term maintenance and extending harder. I did it this way to make this
-> easy - make a copy of a dir - add that dir to a parent makefile then modify
-> the makefile as needed (but only as needed).
-
-Okay, let's keep the saperate makefiles.
-
-> > > diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> > > new file mode 100644
-> > > index 000000000000..75cf084a927d
-> > > --- /dev/null
-> > > +++ b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> > > @@ -0,0 +1,28 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +/* Tamas Zsoldos <tamas.zsoldos@arm.com>, 2021 */
-> > > +
-> > > +.globl _start
-> > > +_start:
-> > > +	mov	x0, 0x0000ffff
-> > > +	mov	x1, xzr
-> > > +loop:
-> > > +	nop
-> > > +	nop
-> > > +	cbnz	x1, noskip
-> > > +	nop
-> > > +	nop
-> > > +	adrp	x2, skip
-> > > +	add 	x2, x2, :lo12:skip
-> > > +	br	x2
-> > > +	nop
-> > > +	nop
-> > > +noskip:
-> > > +	nop
-> > > +	nop
-> > > +skip:
-> > > +	sub	x0, x0, 1
-> > > +	cbnz	x0, loop
-> > > +
-> > > +	mov	x0, #0
-> > > +	mov	x8, #93 // __NR_exit syscall
-> > > +	svc	#0
-> > 
-> > I tested the case "ASM Pure Loop" on my Juno board, and it complaints:
-> > 
-> > root@debian:/mnt/export/arm-linux-kernel/tools/perf# ./perf test -v 76
-> >   76: Coresight / ASM Pure Loop                                       :
-> > --- start ---
-> > test child forked, pid 9063
-> > failed to mmap with 12 (Cannot allocate memory)
-> > test child finished with -1
-> > ---- end ----
-> > Coresight / ASM Pure Loop: FAILED!
-> > 
-> > Since I only setup the 1GB memory for the Linux kernel, it fails to
-> > allocate AUX ring buffer with the size 256MB.  So I manully change
-> > the buffer size to 8MB in tools/perf/tests/shell/lib/coresight.sh:
-> > 
-> >    PERFRECMEM="-m ,8M"
-> > 
-> > So finally I can see the test case is passed:
-> 
-> This is artificial isn't it? limiting to 1GB. You certainly have far more
-> memory than that available. My testse were on a system with 4GB and I had no
-> issues.
-
-Please see below comment.
-
-> > root@debian:/mnt/export/arm-linux-kernel/tools/perf# ./perf test -v 76
-> >   76: Coresight / ASM Pure Loop                                       :
-> > --- start ---
-> > test child forked, pid 9481
-> > -m ,8M -e cs_etm//u
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.681 MB ./perf-asm_pure_loop-out.data ]
-> > test child finished with 0
-> > ---- end ----
-> > Coresight / ASM Pure Loop: Ok
-> > 
-> > Do you think we really need to use 256MiB as the AUX buffer size?
-> > IIRC, it means we allocate 256MiB per CPU for this case, on the other
-> > hand, you could see the final perf data file size is small (0.681
-> > MiB).
-> > 
-> > Seems to me, it's not necessary to allocate so big buffer for
-> > the test, and I tried to run below 4 cases with 8MiB, all of them can
-> > pass the testing :)
-> 
-> I didn't think anyone with a system with coresight support that would be
-> running perf record locally would only have 1GB of ram... I knew junos had
-> 8GB and my dragonboard has 4GB ... so I know I was on the smaller side. I
-> thought a larger buffer == safer results (less chance of needing to write
-> out the buffer during capture). Admittdly I used 256Mb when my tests ran for
-> much longer and collected more data. I can try drop to 8 or 16gb and see.
-
-Yes, my Juno board has 8GB but I also have DB410c with 1GB with quad
-coes [1].  I am still concern for 256MB buffer size, it's not friendly for
-embedded system, and even not good for server.  For example, if we run
-this testing on Arm server with 96 cores (like Hisilicon D06 board),
-then we need the buffer size is:
-
-  256MiB * 96 = 16GiB
-
-I agree usually 16GiB is not a problem for server, but seems to me
-it doesn't make much sense to consume huge memory resource for the
-testing.
-
-In other words, if set 8MiB (or 16MiB, 32MiB) buffer size and doesn't
-see testing result regression, I think this would be good to decrease
-the buffer size.
-
-[1] https://www.96boards.org/product/dragonboard410c/
-
-[...]
-
-> > > diff --git a/tools/perf/tests/shell/coresight_asm_pure_loop.sh b/tools/perf/tests/shell/coresight_asm_pure_loop.sh
-> > > new file mode 100755
-> > > index 000000000000..3f0dbefcad50
-> > > --- /dev/null
-> > > +++ b/tools/perf/tests/shell/coresight_asm_pure_loop.sh
-> > > @@ -0,0 +1,18 @@
-> > > +#!/bin/sh -e
-> > > +# Coresight / ASM Pure Loop
-> > > +
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > > +
-> > > +TEST="asm_pure_loop"
-> > > +. $(dirname $0)/lib/coresight.sh
-> > > +ARGS=""
-> > > +DATV="out"
-> > > +DATA="$DATD/perf-$TEST-$DATV.data"
-> > > +
-> > > +perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
-> > > +
-> > > +perf_dump_aux_verify "$DATA" 10 10 10
-> > > +
-> > > +err=$?
-> > > +exit $err
-> > 
-> > Can we organize the shell scripts by moving them into the folder
-> > tools/perf/tests/shell/coresight?
-> 
-> We can - but it comes with a fair few more changes.
-> 
-> >    coresight_asm_pure_loop.sh
-> >    coresight_memcpy_thread_16k_10.sh
-> >    coresight_thread_loop_check_tid_10.sh
-> >    coresight_thread_loop_check_tid_2.sh
-> >    coresight_unroll_loop_thread_10.sh
-> > 
-> > And we even can consider to move script test_arm_coresight.sh into
-> > the folder tools/perf/tests/shell/coresight and change its
-> > name as 'coresight_smoke_test.sh'.
-> 
-> Indeed these other tests I left alone for now and had not thought about how
-> to marry these together yet - leaving this for another day and another patch
-> set rather than this patch set itself. That was my thoguht. I was trying to
-> make an "Easier to extend by just dropping a test into a dir" setup here to
-> make maintenance and expansion easier over time (and thus encourage testing
-> by having a simple repeatable test infra to duplicate). I ended up with a
-> dir per test tool you need to build and a driver script in the tests/shell
-> dir. I think this is certainly worth considering but perhaps as a separate
-> set of work to marry these?
-
-Okay, it would be fine to use separate set for moving the script
-test_arm_coresight.sh, which is a simple case.
-
-> I piggybacked on the existing shell test infra but added a fair few more
-> scripts. To do what you suggest I'd need to modify the core shell test code
-> to walk subdirs recursively then looking for child scripts. The problem is
-> how does perf test's shell handling know about the coresight subdir vs the
-> lib subdir?
-
-Yeah, now I understand your point.  How about file layout like below?
-
-  tools/perf/tests/shell/coresight_test_hub.sh
-  tools/perf/tests/shell/coresight/coresight_asm_pure_loop.sh
-  tools/perf/tests/shell/coresight/coresight_memcpy_thread_16k_10.sh
-  tools/perf/tests/shell/coresight/coresight_thread_loop_check_tid_10.sh
-  tools/perf/tests/shell/coresight/coresight_thread_loop_check_tid_2.sh
-  tools/perf/tests/shell/coresight/coresight_unroll_loop_thread_10.sh
-
-So we use tools/perf/tests/shell/coresight_test_hub.sh as an interface
-to hook with Perf test infrastructure, and then hub.sh file calls
-testing scripts under the sub folder.  Seems to me, this is also
-friendly for later's extension.
-
-> Both contain *.sh shell scripts - the difference is the ones in
-> lib are not executable. Is this sufficiently different? I could also open
-> them to check the have #!/bin/... as the first line. Hardcoding just a
-> single coresight subdir just feels wrong and hacky to me, thus the generic
-> recursion solution I suggest here.
-
-Agreed.  I also don't prefer this way.
-
-> I can definitely see how extending to subdirs would make supporting testing
-> cleaner and divide things into their own domains (dirs).
-
-Thanks a lot for the work!  The test cases are good for me (but I would
-say Mike is the best person for reviewing testing trace data quaility),
-I just want to make sure it's not hard for later maintenance.
-
-Leo
+Thanks,
+Ravi
