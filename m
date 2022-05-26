@@ -2,351 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FFAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 22:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E27C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 23:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349313AbiEZWp2 (ORCPT
+        id S1343558AbiEZXFY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 18:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55430 "EHLO
+        Thu, 26 May 2022 19:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349305AbiEZWp0 (ORCPT
+        with ESMTP id S232827AbiEZXFX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 18:45:26 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672BAC6E5A
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 15:45:24 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id b11-20020a5b008b000000b00624ea481d55so2705398ybp.19
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 15:45:24 -0700 (PDT)
+        Thu, 26 May 2022 19:05:23 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C4E3B03D
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 16:05:22 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id z17so1749884wmf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 16:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=W0sWuy6oTQPVjB3fsY9LwhFU+wj+C4Fi95g+ekuZQ7c=;
-        b=C7RV9ok6dY1AYybfe9s5PMS/59NC1X3IjevQKCRiN+NQlRjB4Tm06DoTkjbT2a3OeZ
-         FXxnQ19pSb/ZVNLRV+APwvbQET8wxnxtiOyJ/wnWNSiO3HF3gRhquAF3UglD63dLOS8S
-         Z9IzRHBl7LcAseQzano1oINnxxIjL5YZBS3HcHo35n6R32+I/TsSUjQpgmRMjmwmNenk
-         aQyrU2r77wrgkNlQnYl9VuUD2FMscqa3kGCwX2t9lND/8/3Ffmp/5JFx3v+uWJa6gomV
-         17kNTv/Rt04dYmZsNXvrqpLv0M5xGbr37tHHvc/kLcoRSSd8rZxjYA6Uk4x1/1OTSTm+
-         P3Gg==
+        bh=+I9hUAJO0j4a5c/GJGmruQaMqz4ZWAD5gZXhmzliwZk=;
+        b=J8QrwSxUZ0Y7ODCts54yutQBOc73SmK5IYpXH3ICitGPXNDjHRlGpHmDf8l3SuhXKz
+         SN7RxuVMpmhvcJsEqXfH3Uv0hdEaAi3AU8Nd+ilR8AGPFH2zRUnDJgFqNb/jYdNacU8q
+         GpjrJ3nJL6NN2XdQHIljDtvJ62Shi4brLJOGCA5dk39AcJRYM1YINhrM7BxjOxpbyZfr
+         LzXVH4kEq7JsaEqgR19tVJvGUnCYDIkHgX5no7h4kWGG14DxfW3Ust4DXew3aNK3zqgd
+         u8U1ZS6Qs7azv+Qv3ErS74Bj4F7Yd26BKzsh+rtaCWpzgH5LbKD4LzcDw5Q8CFCno5gm
+         DcKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=W0sWuy6oTQPVjB3fsY9LwhFU+wj+C4Fi95g+ekuZQ7c=;
-        b=XnXB4cuDkKtJs6Fs1ne88v1CiECGz2gQoI3dowyDn2v4KWRUgyIq1WiLuN/lUyygBL
-         byeD8nFTDFOl+qYb3NMjiXMShlpFqBkBJrGDsv5Jz8ZbPyXGgUtQYAa+wvoUY5EyHhAQ
-         QvvkrYgKNqPoiFeaEWRqqPLDUqhHUr5kkjXqMT2uIgh2iS3A5tso2b0LNSfEtoCviLcS
-         y3La1fUhxRQcc65susZuDOVywGv8JFB+4wZINiowxXCskLf/W3lNe2WApM5bPCtzunZQ
-         /8rEYUAkwQyuyQtNWaKY4mc5IMWoaehNtNcYx5Js9PYgxOXTz867VK7kvfBA+4xYivHU
-         aklA==
-X-Gm-Message-State: AOAM532SrlFcMS6dJYOQLF4hdUke1fvtq6FvZ0jniSrwHPFJVGPnaSFH
-        1w4UQaKvkQs32qBVAux370ZJoIteXsuI
-X-Google-Smtp-Source: ABdhPJzJVxppI89ysg2ullf/UAcAYv3UIE1+AUTlJtIr5xVgb4JgOk9mU7egYfFt2Ycmwl91DPDomKqOnwDo
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4b39:e167:e698:7d4])
- (user=irogers job=sendgmr) by 2002:a5b:642:0:b0:64f:f322:8827 with SMTP id
- o2-20020a5b0642000000b0064ff3228827mr20474054ybq.536.1653605123527; Thu, 26
- May 2022 15:45:23 -0700 (PDT)
-Date:   Thu, 26 May 2022 15:45:15 -0700
-In-Reply-To: <20220526224515.4088240-1-irogers@google.com>
-Message-Id: <20220526224515.4088240-3-irogers@google.com>
-Mime-Version: 1.0
-References: <20220526224515.4088240-1-irogers@google.com>
-X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
-Subject: [PATCH v5 2/2] perf test: Json format checking
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+I9hUAJO0j4a5c/GJGmruQaMqz4ZWAD5gZXhmzliwZk=;
+        b=0As772ekOcq5+oqZLqcIwo+72EUjb6Krc9BiISXaSGG2Ra+olngf30r5PsqRDLaJLa
+         EnrvgPTvQvgAzX8jt4WKmWENcaSY0TMExDm4hk/bacSeEov/z7txntF7M42PAqa8A3hN
+         i1B64mqjU9ERXacSzvrCjN4Ys/4Phri0kSaNkcCL4FTgaMqlNFBevaPShIvS7m+PNKd2
+         E96vx19KhuO1Uq2LF6bRXE/YAMl1siUcVdHVx7OAj4vo6d1DakdntecbUkNgQxi0zeN6
+         x/GrU9Yze/+xsPML1dxsvbnZJbcRZZH5U9nrKhsHiJ8ntwlmByahrSJySFDiD9uoa+7/
+         xHDA==
+X-Gm-Message-State: AOAM532WIqAHehRnySeXOH8rQldr0a0ET4xhtS8R5Z1xN650oFJL6BYj
+        P6BxGynL9CxETDgroUGZwxEVmpRhH6w0YEeL71pQrQRmZbQ=
+X-Google-Smtp-Source: ABdhPJwO46jPvSXUkurSbGSLyLEeo/2C/lV3l3eEc34OFVXrkgIBRP8Z90Nn6u2PSBqrAbkfg9eKLzMeBT4jF7iuRws=
+X-Received: by 2002:a7b:c015:0:b0:397:3685:5148 with SMTP id
+ c21-20020a7bc015000000b0039736855148mr4290330wmb.174.1653606320753; Thu, 26
+ May 2022 16:05:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220526213136.193404-1-namhyung@kernel.org>
+In-Reply-To: <20220526213136.193404-1-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
-        Like Xu <likexu@tencent.com>,
-        James Clark <james.clark@arm.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Claire Jensen <clairej735@gmail.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+Date:   Thu, 26 May 2022 16:05:07 -0700
+Message-ID: <CAP-5=fXk35KSaNOSsymx=2=Yw5CG7=Rr3X0aRCFaTggfhts7dA@mail.gmail.com>
+Subject: Re: [PATCH] perf lock: Change to synthesize task events
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Claire Jensen <cjense@google.com>
+On Thu, May 26, 2022 at 2:31 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> With -t/--threads option, it needs to display task names so synthesize
+> task related events at the beginning.
+>
+> Fixes: 7c3bcbdf449f ("perf lock: Add -t/--thread option for report")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Add field checking tests for perf stat JSON output.
-Sanity checks the expected number of fields are present, that the
-expected keys are present and they have the correct values.
+Acked-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Claire Jensen <cjense@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../tests/shell/lib/perf_json_output_lint.py  |  95 +++++++++++
- tools/perf/tests/shell/stat+json_output.sh    | 147 ++++++++++++++++++
- 2 files changed, 242 insertions(+)
- create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
- create mode 100755 tools/perf/tests/shell/stat+json_output.sh
+Thanks,
+Ian
 
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-new file mode 100644
-index 000000000000..aaa4a8677b6c
---- /dev/null
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -0,0 +1,95 @@
-+#!/usr/bin/python
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+# Basic sanity check of perf JSON output as specified in the man page.
-+
-+import argparse
-+import sys
-+import json
-+
-+ap = argparse.ArgumentParser()
-+ap.add_argument('--no-args', action='store_true')
-+ap.add_argument('--interval', action='store_true')
-+ap.add_argument('--system-wide-no-aggr', action='store_true')
-+ap.add_argument('--system-wide', action='store_true')
-+ap.add_argument('--event', action='store_true')
-+ap.add_argument('--per-core', action='store_true')
-+ap.add_argument('--per-thread', action='store_true')
-+ap.add_argument('--per-die', action='store_true')
-+ap.add_argument('--per-node', action='store_true')
-+ap.add_argument('--per-socket', action='store_true')
-+args = ap.parse_args()
-+
-+Lines = sys.stdin.readlines()
-+
-+def isfloat(num):
-+  try:
-+    float(num)
-+    return True
-+  except ValueError:
-+    return False
-+
-+
-+def isint(num):
-+  try:
-+    int(num)
-+    return True
-+  except ValueError:
-+    return False
-+
-+def is_counter_value(num):
-+  return isfloat(num) or num == '<not counted>' or num == '<not supported>'
-+
-+def check_json_output(expected_items):
-+  if expected_items != -1:
-+    for line in Lines:
-+      if 'failed' not in line:
-+        count = 0
-+        count = line.count(',')
-+        if count != expected_items and (count == 1 or count == 2) and 'metric-value' in line:
-+          # Events that generate >1 metric may have isolated metric
-+          # values and possibly have an interval prefix.
-+          continue
-+        if count != expected_items:
-+          raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
-+                             f' in \'{line}\'')
-+  checks = {
-+      'aggregate-number': lambda x: isfloat(x),
-+      'core': lambda x: True,
-+      'counter-value': lambda x: is_counter_value(x),
-+      'cgroup': lambda x: True,
-+      'cpu': lambda x: isint(x),
-+      'die': lambda x: True,
-+      'event': lambda x: True,
-+      'event-runtime': lambda x: isfloat(x),
-+      'interval': lambda x: isfloat(x),
-+      'metric-unit': lambda x: True,
-+      'metric-value': lambda x: isfloat(x),
-+      'node': lambda x: True,
-+      'pcnt-running': lambda x: isfloat(x),
-+      'socket': lambda x: True,
-+      'thread': lambda x: True,
-+      'unit': lambda x: True,
-+  }
-+  input = '[\n' + ','.join(Lines) + '\n]'
-+  for item in json.loads(input):
-+    for key, value in item.items():
-+      if key not in checks:
-+        raise RuntimeError(f'Unexpected key: key={key} value={value}')
-+      if not checks[key](value):
-+        raise RuntimeError(f'Check failed for: key={key} value={value}')
-+
-+
-+try:
-+  if args.no_args or args.system_wide or args.event:
-+    expected_items = 6
-+  elif args.interval or args.per_thread or args.system_wide_no_aggr:
-+    expected_items = 7
-+  elif args.per_core or args.per_socket or args.per_node or args.per_die:
-+    expected_items = 8
-+  else:
-+    # If no option is specified, don't check the number of items.
-+    expected_items = -1
-+  check_json_output(expected_items)
-+except:
-+  print('Test failed for input:\n' + '\n'.join(Lines))
-+  raise
-diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
-new file mode 100755
-index 000000000000..ea8714a36051
---- /dev/null
-+++ b/tools/perf/tests/shell/stat+json_output.sh
-@@ -0,0 +1,147 @@
-+#!/bin/bash
-+# perf stat JSON output linter
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+# Checks various perf stat JSON output commands for the
-+# correct number of fields.
-+
-+set -e
-+
-+pythonchecker=$(dirname $0)/lib/perf_json_output_lint.py
-+if [ "x$PYTHON" == "x" ]
-+then
-+	if which python3 > /dev/null
-+	then
-+		PYTHON=python3
-+	elif which python > /dev/null
-+	then
-+		PYTHON=python
-+	else
-+		echo Skipping test, python not detected please set environment variable PYTHON.
-+		exit 2
-+	fi
-+fi
-+
-+# Return true if perf_event_paranoid is > $1 and not running as root.
-+function ParanoidAndNotRoot()
-+{
-+	 [ $(id -u) != 0 ] && [ $(cat /proc/sys/kernel/perf_event_paranoid) -gt $1 ]
-+}
-+
-+check_no_args()
-+{
-+	echo -n "Checking json output: no args "
-+	perf stat -j true 2>&1 | $PYTHON $pythonchecker --no-args
-+	echo "[Success]"
-+}
-+
-+check_system_wide()
-+{
-+	echo -n "Checking json output: system wide "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	perf stat -j -a true 2>&1 | $PYTHON $pythonchecker --system-wide
-+	echo "[Success]"
-+}
-+
-+check_system_wide_no_aggr()
-+{
-+	echo -n "Checking json output: system wide "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	echo -n "Checking json output: system wide no aggregation "
-+	perf stat -j -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
-+	echo "[Success]"
-+}
-+
-+check_interval()
-+{
-+	echo -n "Checking json output: interval "
-+	perf stat -j -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
-+	echo "[Success]"
-+}
-+
-+
-+check_event()
-+{
-+	echo -n "Checking json output: event "
-+	perf stat -j -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
-+	echo "[Success]"
-+}
-+
-+check_per_core()
-+{
-+	echo -n "Checking json output: per core "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	perf stat -j --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
-+	echo "[Success]"
-+}
-+
-+check_per_thread()
-+{
-+	echo -n "Checking json output: per thread "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	perf stat -j --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
-+	echo "[Success]"
-+}
-+
-+check_per_die()
-+{
-+	echo -n "Checking json output: per die "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	perf stat -j --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
-+	echo "[Success]"
-+}
-+
-+check_per_node()
-+{
-+	echo -n "Checking json output: per node "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	perf stat -j --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
-+	echo "[Success]"
-+}
-+
-+check_per_socket()
-+{
-+	echo -n "Checking json output: per socket "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	perf stat -j --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
-+	echo "[Success]"
-+}
-+
-+check_no_args
-+check_system_wide
-+check_system_wide_no_aggr
-+check_interval
-+check_event
-+check_per_core
-+check_per_thread
-+check_per_die
-+check_per_node
-+check_per_socket
-+exit 0
--- 
-2.36.1.124.g0e6072fb45-goog
-
+> ---
+>  tools/perf/builtin-lock.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index b1200b7340a6..23a33ac15e68 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -1083,7 +1083,7 @@ static int __cmd_report(bool display_info)
+>  static int __cmd_record(int argc, const char **argv)
+>  {
+>         const char *record_args[] = {
+> -               "record", "-R", "-m", "1024", "-c", "1", "--synth", "no",
+> +               "record", "-R", "-m", "1024", "-c", "1", "--synth", "task",
+>         };
+>         unsigned int rec_argc, i, j, ret;
+>         const char **rec_argv;
+> --
+> 2.36.1.124.g0e6072fb45-goog
+>
