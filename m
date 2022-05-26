@@ -2,86 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350ACC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 16:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F80FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 18:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238465AbiEZQI1 (ORCPT
+        id S1349250AbiEZSUT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 12:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
+        Thu, 26 May 2022 14:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244751AbiEZQIZ (ORCPT
+        with ESMTP id S1349222AbiEZSUB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 12:08:25 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D1C18B0A
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 09:08:23 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id c65so1484796pfb.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 09:08:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=c1Bktjyy5yJ48/4ouEx7iyf57Oc/MXH/iXvxQddSwqY=;
-        b=TG4xn66tfld7JgXJ99NFHNTFBy/Fa/PgxOABrwHjyvrHSkzB6WYiB2LwKkSu8YSgs3
-         DzNa+O5Yn5Gq42nfsi1YffVHYgdR/+S8s4R7jSB07TNYoCNwy5H2WinMRkOI8mylW8kk
-         QT8+hQuDfgdJywPgsRGmtYzZ5kArx76tGcQUiMIHpQx85rGCW1SqqX56K1h1+CZ43ob5
-         4Wd/6ZYwt9FYdhx+O0wyo0SVMg9Nq2auNMb8WH0yChC1jwKNUvkQQYBkUw/p58ty6Tfv
-         LW42xXWDPlW6rbkkqPC4l9q7CKBMX9aXCr7X8Psi1JoCZq29tec2Dj4hcZgrXn7KSSs/
-         WgkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c1Bktjyy5yJ48/4ouEx7iyf57Oc/MXH/iXvxQddSwqY=;
-        b=Gs7OgJAvMfaY/e9h8KZ7yKntmLFaERvKNVgujI/9KwZ4EAk4mqFhzJqBlpL25y9Hel
-         aQkdbYwTcB078HW7gyBlGSi6Cvz2SATDFiSzaFMJTN3DapntkiQYWrf7Zrg3yV5EeN/V
-         F63nukG6jbqllL58aEOH5DntTEz9Pt30+Ru/SNZ9K4SkvS65il3KDeoKfTOL96jjCkEa
-         nNBNzAfvBmsz5Zc+dGX3Or7mSLf/btDWI4fou/pxXTSWT2+RTonUmqdHpclGnPzQRhLJ
-         +Jsyr4Cosq20pOJKaQI9ctdgeHHDEyQzgSp6KyDtN+EMoq0KtGtQ/hPParRkKNFs3Jzy
-         ZAlA==
-X-Gm-Message-State: AOAM530QDlfIHEDHzAnj3Xzwh1bkxsVgyEZnE70nLh7cepzrFqXbutON
-        WB96z1O6q/KQQezDlkIiUCM1LA==
-X-Google-Smtp-Source: ABdhPJzhCgX4b/z0L+UTtDS+3Sl4/75IHeHEbzY0Xzo3Wl9favASavx82GN1vnqWmi6FTV58ROfr1g==
-X-Received: by 2002:a63:f705:0:b0:3fa:9d26:f4ef with SMTP id x5-20020a63f705000000b003fa9d26f4efmr13344938pgh.613.1653581302725;
-        Thu, 26 May 2022 09:08:22 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (n058152048195.netvigator.com. [58.152.48.195])
-        by smtp.gmail.com with ESMTPSA id k12-20020a170902d58c00b0016366fbc155sm1695092plh.255.2022.05.26.09.08.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 May 2022 09:08:22 -0700 (PDT)
-Date:   Fri, 27 May 2022 00:08:17 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: Re: [PATCH 3/3] perf test: Add coresight tests to guage quality of
- data generated
-Message-ID: <20220526160817.GE795802@leoy-ThinkPad-X240s>
-References: <20220309122859.31487-1-carsten.haitzler@foss.arm.com>
- <20220309122859.31487-3-carsten.haitzler@foss.arm.com>
- <20220410083041.GA184647@leoy-ThinkPad-X240s>
- <050209c2-c784-e255-4e75-5c8674c5cfe0@foss.arm.com>
- <20220526082039.GA795802@leoy-ThinkPad-X240s>
+        Thu, 26 May 2022 14:20:01 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651E8C03BA;
+        Thu, 26 May 2022 11:20:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C5D87B821AA;
+        Thu, 26 May 2022 18:19:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B857C34114;
+        Thu, 26 May 2022 18:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653589198;
+        bh=AV4sY7+ADpxJuDw9fhgadxalbn8NdBDUPKkU22h8dpc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iBVjaBWPP4FxfPd7GkRuTMDBV97IYTJ5n80HP2s5dFhMIGt6JTf6Pu7cn0BvAokB+
+         9Qg0Gj+LURkGJRn+bxSRWRd5SqMx0Y2EzihGgs2VGxnFNS8DGfKbctxsU0XgAGmKEO
+         U47chmUOStAD7VJfP50KagsW24iOYLfghC4sLI0Izh0Bj/2LMjdMbe0DQhzo3ZorDg
+         +rMGscAxcLeDnHp434izJcP2EefRi7gIHYSHEsa8Fcis1E+HjrQ/15otCnmmwUv3x0
+         bkAZu/JioqqAHRPCPt6Ddw392y176gYkiBLybLEBxdiba8VTkjXqsGW3cjPEfUX49v
+         14LjZJkmwiOeg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BED1F4036D; Thu, 26 May 2022 15:19:54 -0300 (-03)
+Date:   Thu, 26 May 2022 15:19:54 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, broonie@kernel.org,
+        german.gomez@arm.com, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 4/6] perf tools: Use dynamic register set for Dwarf
+ unwind
+Message-ID: <Yo/EytFDKnOEiWCa@kernel.org>
+References: <20220509144257.1623063-1-james.clark@arm.com>
+ <20220509144257.1623063-5-james.clark@arm.com>
+ <Yo+gYbLNnYGOPzGs@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220526082039.GA795802@leoy-ThinkPad-X240s>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Yo+gYbLNnYGOPzGs@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 26, 2022 at 04:20:39PM +0800, Leo Yan wrote:
-
-[...]
-
-> Yes, my Juno board has 8GB but I also have DB410c with 1GB with quad
-> coes [1].  I am still concern for 256MB buffer size, it's not friendly for
-> embedded system, and even not good for server.  For example, if we run
-> this testing on Arm server with 96 cores (like Hisilicon D06 board),
-> then we need the buffer size is:
+Em Thu, May 26, 2022 at 12:44:33PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, May 09, 2022 at 03:42:52PM +0100, James Clark escreveu:
+> > Architectures can detect availability of extra registers at
+> > runtime so use this more complete set for unwinding. This
+> > will include the VG register on arm64 in a later commit.
+> > 
+> > If the function isn't implemented then PERF_REGS_MASK is
+> > returned and there is no change.
 > 
->   256MiB * 96 = 16GiB
+> Committer notes:
+> 
+> Added util/perf_regs.c to tools/perf/util/python-ext-sources so that
+> 'perf test python' passes, i.e. the perf python binding has all the
+> symbols it needs, addressing:
+> 
+>   $ perf test -v python
+>    19: 'import perf' in python                                         :
+>   --- start ---
+>   test child forked, pid 2037817
+>   python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf/python'); import perf" | '/usr/bin/python3' "
+>   Traceback (most recent call last):
+>     File "<stdin>", line 1, in <module>
+>   ImportError: /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so: undefined symbol: arch__user_reg_mask
+>   test child finished with -1
+>   ---- end ----
+>   'import perf' in python: FAILED!
+>   $
 
-Correct for my bad math... here should be 256MiB * 96 = 24GiB.
+Too old to support?
+
+  69     7.19 ubuntu:16.04-x-arm64          : FAIL gcc version 5.4.0 20160609 (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9)
+    arch/arm64/util/perf_regs.c: In function 'arch__user_reg_mask':
+    arch/arm64/util/perf_regs.c:151:28: error: 'HWCAP_SVE' undeclared (first use in this function)
+      if (getauxval(AT_HWCAP) & HWCAP_SVE)
+                                ^
+    arch/arm64/util/perf_regs.c:151:28: note: each undeclared identifier is reported only once for each function it appears in
+    /git/perf-5.18.0/tools/build/Makefile.build:139: recipe for target 'util' failed
+    make[5]: *** [util] Error 2
+    /git/perf-5.18.0/tools/build/Makefile.build:139: recipe for target 'arm64' failed
+    make[4]: *** [arm64] Error 2
+    /git/perf-5.18.0/tools/build/Makefile.build:139: recipe for target 'arch' failed
+    make[3]: *** [arch] Error 2
+
+
+⬢[acme@toolbox perf]$ find . -name "*.h" | xargs grep -w HWCAP_SVE
+./arch/arm64/include/uapi/asm/hwcap.h:#define HWCAP_SVE		(1 << 22)
+⬢[acme@toolbox perf]$ 
+
+  
+> > Signed-off-by: James Clark <james.clark@arm.com>
+> > ---
+> >  tools/perf/util/evsel.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index d38722560e80..a881784da966 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -875,7 +875,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+> >  					   "specifying a subset with --user-regs may render DWARF unwinding unreliable, "
+> >  					   "so the minimal registers set (IP, SP) is explicitly forced.\n");
+> >  			} else {
+> > -				attr->sample_regs_user |= PERF_REGS_MASK;
+> > +				attr->sample_regs_user |= arch__user_reg_mask();
+> >  			}
+> >  			attr->sample_stack_user = param->dump_size;
+> >  			attr->exclude_callchain_user = 1;
+> > -- 
+> > 2.28.0
+> 
+> -- 
+> 
+> - Arnaldo
+
+-- 
+
+- Arnaldo
