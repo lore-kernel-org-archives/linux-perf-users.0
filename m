@@ -2,134 +2,195 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA23C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 15:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC3AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 15:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237618AbiEZPtK (ORCPT
+        id S1347962AbiEZPzQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 11:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51412 "EHLO
+        Thu, 26 May 2022 11:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232235AbiEZPtJ (ORCPT
+        with ESMTP id S233743AbiEZPzQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 11:49:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85810DE310;
-        Thu, 26 May 2022 08:49:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 26 May 2022 11:55:16 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2896CDE31F;
+        Thu, 26 May 2022 08:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653580515; x=1685116515;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rMKrDH08TcfNZuRlHBlLnu7ad/og3z1jJvc7CIZ0+4I=;
+  b=Jgp24VJWIV/8+RD+vx4IAITyQNMsKXzxlOeit447pabH2sqXvJrmMiOS
+   nlnUuU4hN8Y3bmFXcgrcAJqunySyuSm/O7+p/tKVaKzC0qMlDGShcvv3s
+   MKERBRhKLXTfLhgGRvrphjMP7f2so1qXVTDKNVs2O+G1Uj+0jKSy5u93Y
+   zX9R3etS+HBA/v2XHL7SyuecPArW2fSdyctb1h3DcmqCVfbx1JKw0Stea
+   5cHav9+Z5kXa5qTxs1gpd0Ildbej4JtKUD2p0igVwCTG/zrZ8y6m4Q8Zi
+   O3A+i5rJGdK9lyK5h7//bNRoBGe2Us4/w8F/HJ0AJzBW/9Q3K2xVkUdBE
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10359"; a="274201477"
+X-IronPort-AV: E=Sophos;i="5.91,252,1647327600"; 
+   d="scan'208";a="274201477"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 08:55:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,252,1647327600"; 
+   d="scan'208";a="578920010"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 26 May 2022 08:55:13 -0700
+Received: from [10.252.210.18] (kliang2-MOBL.ccr.corp.intel.com [10.252.210.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 18588B82109;
-        Thu, 26 May 2022 15:49:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8041EC385A9;
-        Thu, 26 May 2022 15:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653580145;
-        bh=c5IkqlHU0NdBzlSqhZtOY3kiyXBH/LiueJx5QwzX2zI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Igx8A/GRfxCbczJ7vUfDIg8X9fmUGbKz3MUEm84Z3qDjc7wqtZvwcA/1s7TJYyvml
-         vjlBOvM3EZ89RjAqQ8EBMOSC3wBKeIDG1Wo9r+PteIUYZSb1/ZTnt/VSbwIEAk4Sjd
-         9wZ17NwJvnVShT9NWD0scosvvxkt7twjJKYE1eozaR6RA5Eo1iTN8IOjuRfXVpoEE0
-         UeCwqJUvPkBZfWaZpQnoQog8ApNSxkncVYK24zc5E4RoinXHtVEi20ididQCi83Bxs
-         xCNU4xFDtvCQk2/7ZX/VrgBPN3wpFYLB9Qis9ogxwdXS91HPj5SnLss2KGRRx6Q6cf
-         RDyxHHClp+6sA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 639814036D; Thu, 26 May 2022 12:49:03 -0300 (-03)
-Date:   Thu, 26 May 2022 12:49:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+        by linux.intel.com (Postfix) with ESMTPS id B42D3580808;
+        Thu, 26 May 2022 08:55:10 -0700 (PDT)
+Message-ID: <adf43431-f828-75b2-359e-652c5fc96dc7@linux.intel.com>
+Date:   Thu, 26 May 2022 11:55:09 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v4 2/5] perf header: Parse non-cpu pmu capabilities
+Content-Language: en-US
 To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     irogers@google.com, peterz@infradead.org, rrichter@amd.com,
-        mingo@redhat.com, mark.rutland@arm.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        james.clark@arm.com, leo.yan@linaro.org, kan.liang@linux.intel.com,
+Cc:     acme@kernel.org, irogers@google.com, peterz@infradead.org,
+        rrichter@amd.com, mingo@redhat.com, mark.rutland@arm.com,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, james.clark@arm.com, leo.yan@linaro.org,
         ak@linux.intel.com, eranian@google.com, like.xu.linux@gmail.com,
         x86@kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, sandipan.das@amd.com,
         ananth.narayan@amd.com, kim.phillips@amd.com,
         santosh.shukla@amd.com
-Subject: Re: [PATCH v4 3/5] perf/x86/ibs: Add new IBS register bits into
- header
-Message-ID: <Yo+hbx9c/9FoaiJN@kernel.org>
 References: <20220523033945.1612-1-ravi.bangoria@amd.com>
- <20220523033945.1612-4-ravi.bangoria@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220523033945.1612-4-ravi.bangoria@amd.com>
-X-Url:  http://acmel.wordpress.com
+ <20220523033945.1612-3-ravi.bangoria@amd.com>
+ <7c072dd2-de6f-e083-a400-17467d6fe6e8@linux.intel.com>
+ <4f7239e2-c065-0800-f679-d4ed797fdecd@amd.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <4f7239e2-c065-0800-f679-d4ed797fdecd@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, May 23, 2022 at 09:09:43AM +0530, Ravi Bangoria escreveu:
-> IBS support has been enhanced with two new features in upcoming uarch:
-> 1. DataSrc extension and 2. L3 miss filtering. Additional set of bits
-> has been introduced in IBS registers to exploit these features. Define
-> these new bits into arch/x86/ header.
 
-You mentioned the kernel bits were already applied and this was a tools
-only series, this one slipped into :-)
 
-- Arnaldo
- 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> Acked-by: Ian Rogers <irogers@google.com>
-> ---
->  arch/x86/include/asm/amd-ibs.h | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
+On 5/26/2022 11:08 AM, Ravi Bangoria wrote:
+> Hi Kan,
 > 
-> diff --git a/arch/x86/include/asm/amd-ibs.h b/arch/x86/include/asm/amd-ibs.h
-> index aabdbb5ab920..f3eb098d63d4 100644
-> --- a/arch/x86/include/asm/amd-ibs.h
-> +++ b/arch/x86/include/asm/amd-ibs.h
-> @@ -29,7 +29,10 @@ union ibs_fetch_ctl {
->  			rand_en:1,	/* 57: random tagging enable */
->  			fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
->  					 *      (needs IbsFetchComp) */
-> -			reserved:5;	/* 59-63: reserved */
-> +			l3_miss_only:1,	/* 59: Collect L3 miss samples only */
-> +			fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
-> +			fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
-> +			reserved:2;	/* 62-63: reserved */
->  	};
->  };
->  
-> @@ -38,14 +41,14 @@ union ibs_op_ctl {
->  	__u64 val;
->  	struct {
->  		__u64	opmaxcnt:16,	/* 0-15: periodic op max. count */
-> -			reserved0:1,	/* 16: reserved */
-> +			l3_miss_only:1,	/* 16: Collect L3 miss samples only */
->  			op_en:1,	/* 17: op sampling enable */
->  			op_val:1,	/* 18: op sample valid */
->  			cnt_ctl:1,	/* 19: periodic op counter control */
->  			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
-> -			reserved1:5,	/* 27-31: reserved */
-> +			reserved0:5,	/* 27-31: reserved */
->  			opcurcnt:27,	/* 32-58: periodic op counter current count */
-> -			reserved2:5;	/* 59-63: reserved */
-> +			reserved1:5;	/* 59-63: reserved */
->  	};
->  };
->  
-> @@ -71,11 +74,12 @@ union ibs_op_data {
->  union ibs_op_data2 {
->  	__u64 val;
->  	struct {
-> -		__u64	data_src:3,	/* 0-2: data source */
-> +		__u64	data_src_lo:3,	/* 0-2: data source low */
->  			reserved0:1,	/* 3: reserved */
->  			rmt_node:1,	/* 4: destination node */
->  			cache_hit_st:1,	/* 5: cache hit state */
-> -			reserved1:57;	/* 5-63: reserved */
-> +			data_src_hi:2,	/* 6-7: data source high */
-> +			reserved1:56;	/* 8-63: reserved */
->  	};
->  };
->  
-> -- 
-> 2.31.1
+> [...]
+> 
+>>> +static int write_pmu_caps(struct feat_fd *ff, struct evlist *evlist __maybe_unused)
+>>> +{
+>>> +    struct perf_pmu_caps *caps = NULL;
+>>> +    struct perf_pmu *pmu = NULL;
+>>> +    u32 nr_pmus = 0;
+>>> +    int ret;
+>>> +
+>>> +    while ((pmu = perf_pmu__scan(pmu))) {
+>>> +        if (!pmu->name || !strncmp(pmu->name, "cpu", 3) ||
+>>> +            perf_pmu__caps_parse(pmu) <= 0)
+>>> +            continue;
+>>> +        nr_pmus++;
+>>> +    }
+>>> +
+>>> +    ret = do_write(ff, &nr_pmus, sizeof(nr_pmus));
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    if (!nr_pmus)
+>>> +        return 0;
+>>> +
+>>> +    while ((pmu = perf_pmu__scan(pmu))) {
+>>> +        if (!pmu->name || !strncmp(pmu->name, "cpu", 3) || !pmu->nr_caps)
+>>> +            continue;
+>>> +
+>>> +        ret = do_write_string(ff, pmu->name);
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +
+>>> +        ret = do_write(ff, &pmu->nr_caps, sizeof(pmu->nr_caps));
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +
+>>> +        list_for_each_entry(caps, &pmu->caps, list) {
+>>> +            ret = do_write_string(ff, caps->name);
+>>> +            if (ret < 0)
+>>> +                return ret;
+>>> +
+>>> +            ret = do_write_string(ff, caps->value);
+>>> +            if (ret < 0)
+>>> +                return ret;
+>>> +        }
+>>> +    }
+>>
+>> The write_per_cpu_pmu_caps() also does a similar thing. Can we factor out a generic write_pmu_caps() which works for both cpu and non-cpu pmu capabilities?
+> 
+> I might be able to do this but..
+> 
+>> It seems the print_pmu_caps()/process_pmu_caps() can also does similar factor out.
+> 
+> not this, see below..
+> 
+>> Actually, more aggressively, why not use the HEADER_PMU_CAPS to replace the HEADER_HYBRID_CPU_PMU_CAPS? The HEADER_HYBRID_CPU_PMU_CAPS is the last header feature. It seems doable. We can always write/print the "cpu_" kind of PMU first to be compatible with the old tools.
+> 
+> There are some differences in how capabilities are stored in perf.data header
+> as well as perf_env. In case of HEADER_CPU_PMU_CAPS or
+> HEADER_HYBRID_CPU_PMU_CAPS, all capabilities are stored in a single string
+> separated by NULL character. 
 
--- 
+I think this is the format for the internal string, not the format of 
+the perf.data header.
 
-- Arnaldo
+For the perf.data, here is the existing format for the 
+HEADER_HYBRID_CPU_PMU_CAPS.
+
+struct {
+	u32 nr_pmu;
+	struct {
+		u32 nr_cpu_pmu_caps;
+		{
+			char	name[];
+			char	value[];
+		} [nr_cpu_pmu_caps];
+		char pmu_name[];
+	} [nr_pmu];
+};
+
+Here is your proposal.
+
++struct {
++	u32 nr_pmus;
++	struct {
++		char pmu_name[];
++		u32 nr_caps;
++		struct {
++			char name[];
++			char value[];
++		} [nr_caps];
++	} [nr_pmus];
++};
+
+ From my understanding, they are the same. (It doesn't matter where we 
+put the char pmu_name[];)
+
+That's also why I think we should merge the HEADER_HYBRID_CPU_PMU_CAPS 
+and HEADER_PMU_CAPS. I don't think it make senses to basically handle 
+the same thing with different codes.
+
+
+> Whereas, in case of HEADER_PMU_CAPS, they are
+> stored as an array of strings. The reason for this difference is, searching
+> in an array is far easier compared to searching in a NULL separated string.
+
+I think the hybrid_cpc_node can be replaced by the env_pmu_caps.
+Then you don't need to modify the perf_env__find_pmu_cap().
+
+Thanks,
+Kan
+
+> So, I don't think I can extend HEADER_HYBRID_CPU_PMU_CAPS as HEADER_PMU_CAPS
+> without adding complexity in perf_env__find_pmu_cap().
+> 
+> Thanks for the review,
+> Ravi
