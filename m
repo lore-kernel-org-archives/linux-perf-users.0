@@ -2,144 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C316BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 15:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66078C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 15:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236307AbiEZPnf (ORCPT
+        id S235278AbiEZPoi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 11:43:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47974 "EHLO
+        Thu, 26 May 2022 11:44:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241189AbiEZPne (ORCPT
+        with ESMTP id S232621AbiEZPoi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 11:43:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28B48CFE14;
-        Thu, 26 May 2022 08:43:34 -0700 (PDT)
+        Thu, 26 May 2022 11:44:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0B9D9EB9;
+        Thu, 26 May 2022 08:44:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8AB5761C5D;
-        Thu, 26 May 2022 15:43:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF43C385A9;
-        Thu, 26 May 2022 15:43:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 62E6961C83;
+        Thu, 26 May 2022 15:44:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED3EC385A9;
+        Thu, 26 May 2022 15:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653579812;
-        bh=pFghZH5p3iCT67+6+qFAycKoXgf4wVflFH4Pzv1Zafg=;
+        s=k20201202; t=1653579875;
+        bh=pBD/3X+frAfug8ysE+SH0WD80ktftL6zAncoJ45+7zg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XS2jyPL+qEzQ2AGzNMdt+HVvmW9X4FKi09Q4984DWRc/B8tYjMNSoDaImK243LIVI
-         sCGUIz1NmcO5WOigq3gHyZ28djV7pWYR6RSMf3Qfng2t8BZyvGKoDOIh0/KFY3QiDV
-         GtabaZtQ1yx4v8LBvW6TBsYHxSlhvVzFKJJtUrJAcBvmaAkRhsFz8jdqxYh7KFzQYD
-         d8CityTroJ8r8lfPjjMZXYX0BOtxtNayOoFWVsnhHQVzGc5i2u6CjNg15a6fLsIhup
-         WymQx36hDU0eSWOFb2/u14sreiLKBY8FN2PoRjnMokW6bUUxzkTwrqR8LgvHLx0San
-         93+IHvfahNeOQ==
+        b=DFea7dCJN4pQtp7UGXvd/zQrwc/PbLdMUJmSsuIPj2Tk1txvHc+tC5l4r/uum80MK
+         PJYQv5N5Vy+PAgCYP/sOo9Q7RNS125Iv3Bf/J/T+5Em659Wa4zjhIHPTYR3A2V66Bq
+         ASDLqRzmsKWlAzszK53Ld9/rr6d5Oc4tESsCK0liB9HjHFVrnEWm1P3coh6V8Wsa0z
+         dHMIBAnfM3B1BvYNYcF2wW0VzmVCOER3QGXYnFxsZ7Omg8ecS5GdYMAnErMeHP91AM
+         Pl09tY7juClJji+lw5nP6cgOHaJryHow4NTyEH9w2qcIhr10dASr2LDRgmvesYfBxb
+         wvSKwSwRKInMQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A289D4036D; Thu, 26 May 2022 12:43:29 -0300 (-03)
-Date:   Thu, 26 May 2022 12:43:29 -0300
+        id AADFE4036D; Thu, 26 May 2022 12:44:33 -0300 (-03)
+Date:   Thu, 26 May 2022 12:44:33 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, broonie@kernel.org,
+        german.gomez@arm.com, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Tanmay Jagdale <tanmay@marvell.com>,
-        "zengshun . wu" <zengshun.wu@outlook.com>,
-        Al Grant <al.grant@arm.com>, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] perf scripting python: Expose dso and map
- information
-Message-ID: <Yo+gIQgElkOg/3EN@kernel.org>
-References: <20220521130446.4163597-1-leo.yan@linaro.org>
- <20220521130446.4163597-2-leo.yan@linaro.org>
+        Namhyung Kim <namhyung@kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 4/6] perf tools: Use dynamic register set for Dwarf
+ unwind
+Message-ID: <Yo+gYbLNnYGOPzGs@kernel.org>
+References: <20220509144257.1623063-1-james.clark@arm.com>
+ <20220509144257.1623063-5-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220521130446.4163597-2-leo.yan@linaro.org>
+In-Reply-To: <20220509144257.1623063-5-james.clark@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, May 21, 2022 at 09:04:45PM +0800, Leo Yan escreveu:
-> This change adds dso build_id and corresponding map's start and end
-> address.  The info of dso build_id can be used to find dso file path,
-> and we can validate if a branch address falls into the range of map's
-> start and end addresses.
+Em Mon, May 09, 2022 at 03:42:52PM +0100, James Clark escreveu:
+> Architectures can detect availability of extra registers at
+> runtime so use this more complete set for unwinding. This
+> will include the VG register on arm64 in a later commit.
 > 
-> In addition, the map's start address can be used as an offset for
-> disassembly.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> If the function isn't implemented then PERF_REGS_MASK is
+> returned and there is no change.
 
-Thanks, applied both patches.
+Committer notes:
 
-- Arnaldo
+Added util/perf_regs.c to tools/perf/util/python-ext-sources so that
+'perf test python' passes, i.e. the perf python binding has all the
+symbols it needs, addressing:
 
+  $ perf test -v python
+   19: 'import perf' in python                                         :
+  --- start ---
+  test child forked, pid 2037817
+  python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf/python'); import perf" | '/usr/bin/python3' "
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  ImportError: /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so: undefined symbol: arch__user_reg_mask
+  test child finished with -1
+  ---- end ----
+  'import perf' in python: FAILED!
+  $
+ 
+> Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  .../scripting-engines/trace-event-python.c    | 21 +++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
+>  tools/perf/util/evsel.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 659eb4e4b34b..adba01b7d9dd 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -755,12 +755,22 @@ static void set_regs_in_dict(PyObject *dict,
->  }
->  
->  static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
-> -			    const char *dso_field, const char *sym_field,
-> -			    const char *symoff_field)
-> +			    const char *dso_field, const char *dso_bid_field,
-> +			    const char *dso_map_start, const char *dso_map_end,
-> +			    const char *sym_field, const char *symoff_field)
->  {
-> +	char sbuild_id[SBUILD_ID_SIZE];
-> +
->  	if (al->map) {
->  		pydict_set_item_string_decref(dict, dso_field,
->  			_PyUnicode_FromString(al->map->dso->name));
-> +		build_id__sprintf(&al->map->dso->bid, sbuild_id);
-> +		pydict_set_item_string_decref(dict, dso_bid_field,
-> +			_PyUnicode_FromString(sbuild_id));
-> +		pydict_set_item_string_decref(dict, dso_map_start,
-> +			PyLong_FromUnsignedLong(al->map->start));
-> +		pydict_set_item_string_decref(dict, dso_map_end,
-> +			PyLong_FromUnsignedLong(al->map->end));
->  	}
->  	if (al->sym) {
->  		pydict_set_item_string_decref(dict, sym_field,
-> @@ -840,7 +850,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
->  			(const char *)sample->raw_data, sample->raw_size));
->  	pydict_set_item_string_decref(dict, "comm",
->  			_PyUnicode_FromString(thread__comm_str(al->thread)));
-> -	set_sym_in_dict(dict, al, "dso", "symbol", "symoff");
-> +	set_sym_in_dict(dict, al, "dso", "dso_bid", "dso_map_start", "dso_map_end",
-> +			"symbol", "symoff");
->  
->  	pydict_set_item_string_decref(dict, "callchain", callchain);
->  
-> @@ -856,7 +867,9 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
->  	if (addr_al) {
->  		pydict_set_item_string_decref(dict_sample, "addr_correlates_sym",
->  			PyBool_FromLong(1));
-> -		set_sym_in_dict(dict_sample, addr_al, "addr_dso", "addr_symbol", "addr_symoff");
-> +		set_sym_in_dict(dict_sample, addr_al, "addr_dso", "addr_dso_bid",
-> +				"addr_dso_map_start", "addr_dso_map_end",
-> +				"addr_symbol", "addr_symoff");
->  	}
->  
->  	if (sample->flags)
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index d38722560e80..a881784da966 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -875,7 +875,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+>  					   "specifying a subset with --user-regs may render DWARF unwinding unreliable, "
+>  					   "so the minimal registers set (IP, SP) is explicitly forced.\n");
+>  			} else {
+> -				attr->sample_regs_user |= PERF_REGS_MASK;
+> +				attr->sample_regs_user |= arch__user_reg_mask();
+>  			}
+>  			attr->sample_stack_user = param->dump_size;
+>  			attr->exclude_callchain_user = 1;
 > -- 
-> 2.25.1
+> 2.28.0
 
 -- 
 
