@@ -2,166 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA38C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 15:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474F1C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 15:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347849AbiEZPJC (ORCPT
+        id S240615AbiEZPRr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 11:09:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45464 "EHLO
+        Thu, 26 May 2022 11:17:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232481AbiEZPJB (ORCPT
+        with ESMTP id S1347900AbiEZPRp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 11:09:01 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2057.outbound.protection.outlook.com [40.107.220.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458771DA66;
-        Thu, 26 May 2022 08:09:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oOoaoCMc49Wlw+EpHZfk0/hcrx8rNcYovIM7OW7pmhEK6E1GM5khBYVr7KJ9lxU8FJ6ZkoRNfekHZpxDuINzfVApA9zRgPKSB/MffgN9yRj1bYvJiIHdjXZ3C86ioKfTump8WwVBvmq96FlSV0YmWawc8WSWJZ7S9TjvBFGzbJaaojFZ4+Rtv7F9Fdn9J0kJP+4EFgQDX/eGhGWg8oLvSjc/jIgR1jZ4TT3pNwzbjoqw1pI6usBgvCSGIe3kH/WLNMrkeBOQ+P5BX2+W+JUmAwuNWvbr3NHDTMZVF7KqF3B56QEXp2IgE2zSW+Ss16xnJoq3CpxxZse95jQQWMhSbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yAv7r5HrNCPMiIOB0KUQ+3UU6QDBNkTQvvtIA1gFOuY=;
- b=mZC7zL2l+BSUujqcNaxhxxPW9aWhD59olQJSnMH4RNzSWb8C4kiB1zel621Oj+ZlbzHVRb7I9P82GHC6M8HNsNYv/3b8jbgHfGF+sGv6hhMsr77zReobrZ+wd22sEKF+28QMpefyVkQTuREgHrVC5gAnV76s3Y1FVSc9oWLaXiEOL4o0cMIUwgTeNe1DV8SV9b54qlcbyn/NRJ7qD+qIY6pHOTHxEygpxOSbmyY42GyfPCBDVpbMIVYyJH49l+k8VFYFr67ce7yYu/ZuLA+63wOAQznlXOucbCRBjHE1XZ2i1eJTgk9D5krqntRiqhbP0dWgvgBWThu9At9HNFQFeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yAv7r5HrNCPMiIOB0KUQ+3UU6QDBNkTQvvtIA1gFOuY=;
- b=fGTSP6HwUETzjfQgbpfXKtRSSl0DBObfzUNZ31H7E9g4YEKeE8au2h6DB3SQ5PCoIsYBBMDQHrZuGimi+HLQTwsmYs2Gzit3/cCl97hyCtXyu7LeEHYqJkSt6ioroUBWd9MA9gFy6uxLFzoPg6/FlxfnsHNuzVw+1UyNQSOp7AI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6263.namprd12.prod.outlook.com (2603:10b6:8:95::17) by
- SA0PR12MB4463.namprd12.prod.outlook.com (2603:10b6:806:92::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5293.13; Thu, 26 May 2022 15:08:58 +0000
-Received: from DS7PR12MB6263.namprd12.prod.outlook.com
- ([fe80::1127:b300:ae99:655d]) by DS7PR12MB6263.namprd12.prod.outlook.com
- ([fe80::1127:b300:ae99:655d%5]) with mapi id 15.20.5293.013; Thu, 26 May 2022
- 15:08:58 +0000
-Message-ID: <365af18b-552e-bdcc-20ee-c6ce6e172500@amd.com>
-Date:   Thu, 26 May 2022 10:08:54 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH 02/13] perf/x86/amd: Add IBS OP_DATA2/3 register bit
- definitions
-Content-Language: en-US
-To:     Ravi Bangoria <ravi.bangoria@amd.com>, peterz@infradead.org,
-        acme@kernel.org
-Cc:     jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
-        irogers@google.com, jmario@redhat.com, leo.yan@linaro.org,
-        alisaidi@amazon.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        Thu, 26 May 2022 11:17:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BC451E40;
+        Thu, 26 May 2022 08:17:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9548A61C39;
+        Thu, 26 May 2022 15:17:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69C3C385A9;
+        Thu, 26 May 2022 15:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653578261;
+        bh=NBf+pAq2v5/7g2321kGFNz//hLtJL3AHQxwCRfNxGQE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mvpl6nH9ATWNnLSOb8duPOItXoH8WfMcvvDbmoA6anRZzVItyVQrJt/1F7ZVEc5xv
+         xotAO+pP/aaXlgY3VNQ3BZXWeGguFwMefngw8gsCxRppJA9EwMcTQtA879OVtqW36y
+         gP4TO5B7GtVZAkGFj+LiajGhuIORNG97Sj571nNxq9ZPIOzf5fB5Z3/DQkUnTL9H3j
+         S5HK3HMRZsPCZGhUqK0hfuohJGZqQ73a21lQ5aFy9P8jye66axeDNKMua6bNQa0dNi
+         TFei1TdSgwZvtQteRGKlbnuuFGC/pY0BKVpa8AiP4cCff8dB7Ae7Qqhz3tCxs+wuRT
+         hU87qrfLKPTig==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 23F024036D; Thu, 26 May 2022 12:17:39 -0300 (-03)
+Date:   Thu, 26 May 2022 12:17:39 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
-References: <20220525093938.4101-1-ravi.bangoria@amd.com>
- <20220525093938.4101-3-ravi.bangoria@amd.com>
-From:   Kim Phillips <kim.phillips@amd.com>
-In-Reply-To: <20220525093938.4101-3-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR05CA0028.namprd05.prod.outlook.com
- (2603:10b6:208:c0::41) To DS7PR12MB6263.namprd12.prod.outlook.com
- (2603:10b6:8:95::17)
+        Joe Mario <jmario@redhat.com>
+Subject: Re: [PATCH v2] perf c2c: Use stdio interface if slang is not
+ supported
+Message-ID: <Yo+aE7dEoKaECHEu@kernel.org>
+References: <20220526145400.611249-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 684f3f33-04e0-4f9c-be96-08da3f29a8a2
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4463:EE_
-X-Microsoft-Antispam-PRVS: <SA0PR12MB44638AFDEB23EEDDF149722787D99@SA0PR12MB4463.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wx74luhwxm3TMW3R3m4gKhusjToIP3IeVXju2iBFoxgDlgKZK4TVuyhdarg3/w9QH1E0YKf/gwkdpsTFGLbpu5NIUB8Af29TfM9qHR+0U2wm2MTsO2ZTgjIzA3StYOr3LLSy39UfR7hnJAkCXUgIkadjAeS7rWOvFbudtAug9AxOeKOM5vfU6eheoLpNku7YwQdSMt/YzpespeIFcvEl+VKU6HmZ9mPI1q1TyriB0h0mvsQ5kIWMDJHfZEusIbwLdyUW7Ero6IsgXfNPKqeXSKcQAOnPO4wdtOud13fbF3USZixpuxVGRCUH8Wzqu5Pzy2utLwR1v+C6HcjpBQRzNWJK+cd/Y4ZnDegaYHJapny4pmArd7GmxQhK068rL35tF8UTjCqZyz+moNLIaTkinto1k4GFutm238+Y4tcwVjEQ0Ig/nb19dclUoy2aSy2PQsBIp0QmqUDTwv8JLcwPvAVADhmvRZwE6pVW4w1MBX3zUP8rQr1iettLfTMUsghJc81aeARUARYbWxKG1Uc42GfaeLdFBL/RQUEGxhbfEPgPRqQ3xrMsFgkKA30g3N8+MJtpSO4YZA3eoiC6GlcsBSg58FZlpQT9M4jzp9scOWAH43s17shz+mTl7jKiiiM08oSIvCChpt0ZwT1eVvnI5g634xLwuk9ZrNNZ5eUMa96wSU3D8r4AzUGw1CZ6UiVcgJziklk37C8BqgDpbU1oaGtmPpmMJil+lb0bpKij5yA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6263.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(31686004)(5660300002)(2616005)(86362001)(26005)(6512007)(83380400001)(6666004)(186003)(36756003)(2906002)(316002)(4326008)(66946007)(44832011)(66556008)(66476007)(8676002)(31696002)(6506007)(7416002)(6486002)(53546011)(8936002)(508600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d2ZKOUk1T1ZnQ256Q3JTN2VsWkpaeFpWWGF1Rk1RTkZkNkFaUS95Q3VxaUVI?=
- =?utf-8?B?SVFkL2pDRENZaVAvTTIxQkg2Mk1BR21ZZjdwbDlXOTZ4TUlOOEJLN3MzQnBG?=
- =?utf-8?B?ajUwOXZnTGFhNHJ5OEVkVHRHMDRYTjNUWHZXYnhGaVdUTDNwaTA2SVlFNGRB?=
- =?utf-8?B?S2lCMmVvMUdMQ2JvS2dVVCswdzdZd05zZDlKVzY1WE9jeW1OSExXSS9Td2Vs?=
- =?utf-8?B?RStsQ2s3QlpDZXUrK0ZkNGpMem44VzVlZXZDdy9kRE15a3I5R2xVUmxmYVhG?=
- =?utf-8?B?M0xCRGNYVUxKbmJ6a0lTdjdGVTNubk1XVVJDQ0NZU1JBTmZCSzVZVm9pL2FQ?=
- =?utf-8?B?TW9vSWJFaWFQUXA0S1Q2UWZQN2cxdWNiYXVyc3Rrc3BWelVCaHR2SFBXc0dO?=
- =?utf-8?B?UWZmbXdlU3Y2VEg5M29tdXZaR2NGbVUxZVluUTJBcGhHMzZFOU56NHQ3Q3JM?=
- =?utf-8?B?eG00MnRVZWdITXhwTU5XUG8xQW9GNElBOUZiOHF2aFBMWlNYSEN3LzhOSkVw?=
- =?utf-8?B?WkRCRGJyYnl4a3BCblNFeWFxNllpdEFTTktKd2N1R3VrRTY2ZW5QWVN2REtQ?=
- =?utf-8?B?b09qdytEWGg5Wkk0bE8xaGZDZko0TGhEU1JpdjQyTVNtaGwwVzBkZkxKd0Vp?=
- =?utf-8?B?Vi9TMUVWUWZXaDZoRm1CQW0zcHJ4MllMOGovOUZNV1V6WVRxdGRlVldEMGFX?=
- =?utf-8?B?ajVGS1Flam5RSTJab3h4eW1TZHBsc0s5aUhSK1hiU3JlbVBpdWlvMExFN3pF?=
- =?utf-8?B?WTlkUUtWRW1kVVdoVUs1OVlKSzl3d1VOSFlIMk1IRWZwWmp6ZXBvRGw4K2cv?=
- =?utf-8?B?Z3NQZC8yYXp4ampicWJLMU8xT1Fzd1dqQ1VqTGtNaWp1TUpOTnBTYTA1MTMz?=
- =?utf-8?B?eWxPYXNET2JXbXNuYmwrN0h6T2tiSHhOT1hFYWFFSWJCcmQ4SnovMENya3VV?=
- =?utf-8?B?MS83bW1uRFI4cU5ZbjRUc0tXVWt1QlFCK2tYb0UzNFUrbVhwVWoyZ1hncnpL?=
- =?utf-8?B?YzVHeFRocWVhdGVZeDl6RGt0TTdHV3QxT08yZmFTWlp0aWw4V0tCVEp3MVFl?=
- =?utf-8?B?ckJyeTM5T0xQaUwwQ254aktaOC9qdVp5Vkd1ZmxrNStoZTFqZDFLa2wrZWh5?=
- =?utf-8?B?WFNEeHI0QzNKakhSR2F1SGh6S2sveHVYR04xM0VKSUl4YjZXOVhJZCtJMStk?=
- =?utf-8?B?Mk5jeS9Kd1lYOVdHZ2t3NHIvZ0l5Z29rYlJwd1lrZUlOaEpPOU5uRjIxeGFG?=
- =?utf-8?B?OTBMZ3NqbXZxOUswdS9kbXpCLzBLVmZmV0dDZjNIZE9yWTArVk05OWNTcWRu?=
- =?utf-8?B?RWN0QTUvcTZLK3BPL09KTWxQWUZyUnZTSnhxR3l1bTRLRjJtRnpKdXJhRzJ2?=
- =?utf-8?B?VXp2QmtCanpjbjZRc1ZwUEFFNG12ZTFicSs3b2VhOWVTcDU4TGQrbnBxcExP?=
- =?utf-8?B?eUtlK3V5OWZBc2tNcXVnSmlLWGtBVXd5aEJwcjZ6MFJsNDNqZFpJcFp5U0sw?=
- =?utf-8?B?NlJOSndsMmlzK2NsemxPRGhWbUtqaWc2RHNIQytITmx4LzJtRVFBbnBmVlhF?=
- =?utf-8?B?bnU5RklEaEJaWHVwRENPYkJPNTBUTHg3eE5ZY1VINWdoQnpWNG5DVTFHQmow?=
- =?utf-8?B?RzBEV0oxbE1BazFqeXlTd2N4KzF2ajU4aTM5eVJVZHUrUmZzRkxVcEx0V0kv?=
- =?utf-8?B?TTkwcGxLck42aVordnZVeVlSNEpmbTBtcmFCYkhwMFFjNEsreWlaVEhhT3dt?=
- =?utf-8?B?REJkOXdZMVlLL3FlTk1sL2M3cXZKVVZ6bXRSL0w1OWszRTFna1ltL0Z1QUpq?=
- =?utf-8?B?QnFRTkFTQW04dnFDNm42d0RyakxZMmNVVEJQT09KVzNRby8yKzd1R3hYUXQw?=
- =?utf-8?B?dmkrdGJtSkdkQlhacWZHc0JnMmRTUU5kVWxiS3JpUmtaaU9XUmlqcXVtVWRG?=
- =?utf-8?B?Rnl6NzBmbW9xUWxHM3g4bjRkbnY4MzYxVmFmRCtRV2hYQXphWlZpNWMxV1BV?=
- =?utf-8?B?WHl0L0RNTE03aEhuZEtOWEJMTWg0bkpPM1dLRkRsSGtxZXB2S0xOSUZlQkcv?=
- =?utf-8?B?c3lGcTF5azZhblJWVDNabHFUaWNwdnY4RHFrK09FQ0piaUkzWkVNQTNENkNm?=
- =?utf-8?B?b2VGanlMMXNOUUlRSmtJZjF1WS9pZFF4eS9rVXFvTUNQd2k4UjdFTSt2NlZn?=
- =?utf-8?B?azU3Yzd6S2xnYldxai9UTjRQcVNwOWtqWnBrUlcwUFdPS01LSXZOcmpBTm5z?=
- =?utf-8?B?SWtjL1hlQU5JY00vOWVBRjVxTzk0YmpjS0xyTkVuOTdZSFZ2aHdvdXk4dDhu?=
- =?utf-8?B?OXFBb0p0ZGMvYUY3RHd0c0M5UXFwekYraXl1SnE3Uk54L2FYeGxKUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 684f3f33-04e0-4f9c-be96-08da3f29a8a2
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6263.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2022 15:08:58.3199
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q9NSTliPb8smGPOE+AUO6YUWtIv6zwLCB1x/FlG4O78vjmbCU+BwqBY5hniIKiIkkhQHzy/ogX3mCpSIn398jg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4463
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220526145400.611249-1-leo.yan@linaro.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 5/25/22 4:39 AM, Ravi Bangoria wrote:
-
-Hi Ravi,
-
-> AMD IBS OP_DATA2 and OP_DATA3 provides detail about tagged load/store
-> ops. Add definitions for these registers into header file. In addition
-> to those, IBS_OP_DATA2 DataSrc provides detail about location of the
-> data being accessed from by load ops. Define macros for legacy and
-> extended DataSrc values.
+Em Thu, May 26, 2022 at 10:54:00PM +0800, Leo Yan escreveu:
+> If slang lib is not installed on the system, perf c2c tool disables
+> TUI mode and roll back to use stdio mode;  but the flag 'c2c.use_stdio'
+> is missed to set true and thus it wrongly applies UI quirks in the
+> function ui_quirks().
 > 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> This commit forces to use stdio interface if slang is not supported,
+> and it can avoid to apply the UI quirks and show the correct metric
+> header.
+> 
+> Before:
+> 
+> =================================================
+>       Shared Cache Line Distribution Pareto
+> =================================================
+>   -------------------------------------------------------------------------------
+>       0        0        0       99        0        0        0      0xaaaac17d6000
+>   -------------------------------------------------------------------------------
+>     0.00%    0.00%    6.06%    0.00%    0.00%    0.00%   0x20   N/A       0      0xaaaac17c25ac         0         0        43       375    18469         2  [.] 0x00000000000025ac  memstress         memstress[25ac]   0
+>     0.00%    0.00%   93.94%    0.00%    0.00%    0.00%   0x29   N/A       0      0xaaaac17c3e88         0         0       173       180      135         2  [.] 0x0000000000003e88  memstress         memstress[3e88]   0
+> 
+> After:
+> 
+> =================================================
+>       Shared Cache Line Distribution Pareto
+> =================================================
+>   -------------------------------------------------------------------------------
+>       0        0        0       99        0        0        0      0xaaaac17d6000
+>   -------------------------------------------------------------------------------
+>            0.00%    0.00%    6.06%    0.00%    0.00%    0.00%                0x20   N/A       0      0xaaaac17c25ac         0         0        43       375    18469         2  [.] 0x00000000000025ac  memstress         memstress[25ac]   0
+>            0.00%    0.00%   93.94%    0.00%    0.00%    0.00%                0x29   N/A       0      0xaaaac17c3e88         0         0       173       180      135         2  [.] 0x0000000000003e88  memstress         memstress[3e88]   0
+> 
+> Fixes: 5a1a99cd2e4e ("perf c2c report: Add main TUI browser")
+> Reported-by: Joe Mario <jmario@redhat.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+
+Thanks, applied.
+
+- Arnaldo
+
 > ---
->   arch/x86/include/asm/amd-ibs.h | 76 ++++++++++++++++++++++++++++++++++
->   1 file changed, 76 insertions(+)
 > 
-> diff --git a/arch/x86/include/asm/amd-ibs.h b/arch/x86/include/asm/amd-ibs.h
-> index aabdbb5ab920..22184fe20cf0 100644
-> --- a/arch/x86/include/asm/amd-ibs.h
-> +++ b/arch/x86/include/asm/amd-ibs.h
-> @@ -6,6 +6,82 @@
->   
->   #include <asm/msr-index.h>
->   
-> +/* IBS_OP_DATA2 Bits */
-> +#define IBS_DATA_SRC_HI_SHIFT			6
-> +#define IBS_DATA_SRC_HI_MASK			(0x3ULL << IBS_DATA_SRC_HI_SHIFT)
+> Changes from v1:
+> * Added fixes tag;
+> * Added reported tag from Joe.
+> 
+>  tools/perf/builtin-c2c.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index c8230c48125f..80b525c065ed 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -2801,9 +2801,7 @@ static int perf_c2c__report(int argc, const char **argv)
+>  		   "the input file to process"),
+>  	OPT_INCR('N', "node-info", &c2c.node_info,
+>  		 "show extra node info in report (repeat for more info)"),
+> -#ifdef HAVE_SLANG_SUPPORT
+>  	OPT_BOOLEAN(0, "stdio", &c2c.use_stdio, "Use the stdio interface"),
+> -#endif
+>  	OPT_BOOLEAN(0, "stats", &c2c.stats_only,
+>  		    "Display only statistic tables (implies --stdio)"),
+>  	OPT_BOOLEAN(0, "full-symbols", &c2c.symbol_full,
+> @@ -2833,6 +2831,10 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	if (argc)
+>  		usage_with_options(report_c2c_usage, options);
+>  
+> +#ifndef HAVE_SLANG_SUPPORT
+> +	c2c.use_stdio = true;
+> +#endif
+> +
+>  	if (c2c.stats_only)
+>  		c2c.use_stdio = true;
+>  
+> -- 
+> 2.25.1
 
-Is there a reason we're not using the existing bitfield
-definitions?  E.g., data_src_hi for the case above.
+-- 
 
-Thanks,
-
-Kim
+- Arnaldo
