@@ -2,139 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474F1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 15:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95512C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 15:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240615AbiEZPRr (ORCPT
+        id S1347908AbiEZPXs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 11:17:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44100 "EHLO
+        Thu, 26 May 2022 11:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347900AbiEZPRp (ORCPT
+        with ESMTP id S1347951AbiEZPXp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 11:17:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BC451E40;
-        Thu, 26 May 2022 08:17:43 -0700 (PDT)
+        Thu, 26 May 2022 11:23:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF48DE300;
+        Thu, 26 May 2022 08:23:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9548A61C39;
-        Thu, 26 May 2022 15:17:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69C3C385A9;
-        Thu, 26 May 2022 15:17:41 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 615C9B82109;
+        Thu, 26 May 2022 15:23:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5B4CC385A9;
+        Thu, 26 May 2022 15:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653578261;
-        bh=NBf+pAq2v5/7g2321kGFNz//hLtJL3AHQxwCRfNxGQE=;
+        s=k20201202; t=1653578617;
+        bh=6IZVvCtc7AKK6GVlmV/StJi7IokuGgZrQ4pffitComI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mvpl6nH9ATWNnLSOb8duPOItXoH8WfMcvvDbmoA6anRZzVItyVQrJt/1F7ZVEc5xv
-         xotAO+pP/aaXlgY3VNQ3BZXWeGguFwMefngw8gsCxRppJA9EwMcTQtA879OVtqW36y
-         gP4TO5B7GtVZAkGFj+LiajGhuIORNG97Sj571nNxq9ZPIOzf5fB5Z3/DQkUnTL9H3j
-         S5HK3HMRZsPCZGhUqK0hfuohJGZqQ73a21lQ5aFy9P8jye66axeDNKMua6bNQa0dNi
-         TFei1TdSgwZvtQteRGKlbnuuFGC/pY0BKVpa8AiP4cCff8dB7Ae7Qqhz3tCxs+wuRT
-         hU87qrfLKPTig==
+        b=gWLh3x8hTHfc3XVWzw0drhsYAdxY7X78BlpxOCN5/C3Gex4UdWsK3fx/RlQ26bLEY
+         oNNlA+PfF9nwIs9qpw/co8Y60+N+nrZCjg+rBegpXKwkY5OlCkariD5DmOwArOsAZN
+         4+zeCESL3GKwxXAYyKCQsNRWakMIPb8mlptX6lN7SbQi0AxByIzbY0nk992z+RyDm6
+         8TRCak9QOoRnBxwvhJ7yZMNShV3QfQmpPsk2Ni74fLbbj4aAVjnJOVNLRfj52IeEGv
+         4PsyfMBpIieNKAg9R45lTvluE+XHguYsXoVZnskrfGuHuPc57XiQVb7F4KC+gOZfoB
+         LW5tglrTkpngg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 23F024036D; Thu, 26 May 2022 12:17:39 -0300 (-03)
-Date:   Thu, 26 May 2022 12:17:39 -0300
+        id 055ED4036D; Thu, 26 May 2022 12:23:33 -0300 (-03)
+Date:   Thu, 26 May 2022 12:23:33 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        broonie@kernel.org, german.gomez@arm.com, leo.yan@linaro.org,
+        mathieu.poirier@linaro.org, john.garry@huawei.com,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joe Mario <jmario@redhat.com>
-Subject: Re: [PATCH v2] perf c2c: Use stdio interface if slang is not
- supported
-Message-ID: <Yo+aE7dEoKaECHEu@kernel.org>
-References: <20220526145400.611249-1-leo.yan@linaro.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 0/5] perf: arm64: Tools support for Dwarf unwinding
+ through SVE functions
+Message-ID: <Yo+bdSMUOkd1N4HE@kernel.org>
+References: <20220525154114.718321-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220526145400.611249-1-leo.yan@linaro.org>
+In-Reply-To: <20220525154114.718321-1-james.clark@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, May 26, 2022 at 10:54:00PM +0800, Leo Yan escreveu:
-> If slang lib is not installed on the system, perf c2c tool disables
-> TUI mode and roll back to use stdio mode;  but the flag 'c2c.use_stdio'
-> is missed to set true and thus it wrongly applies UI quirks in the
-> function ui_quirks().
+Em Wed, May 25, 2022 at 04:41:09PM +0100, James Clark escreveu:
+> Changes since v2:
+>   * Add commit to fix header include path to use Perf's copy
+>   * Apply Leo's review tags
 > 
-> This commit forces to use stdio interface if slang is not supported,
-> and it can avoid to apply the UI quirks and show the correct metric
-> header.
+> When SVE registers are pushed onto the stack the VG register is required to
+> unwind because the stack offsets would vary by the SVE register width at the
+> time when the sample was taken.
 > 
-> Before:
+> The patches ("[PATCH v2 0/2] perf: arm64: Kernel support for Dwarf unwinding
+> through SVE functions") add support for sampling the VG register to the kernel
+> and the docs. This is the patchset to add support to userspace perf.
 > 
-> =================================================
->       Shared Cache Line Distribution Pareto
-> =================================================
->   -------------------------------------------------------------------------------
->       0        0        0       99        0        0        0      0xaaaac17d6000
->   -------------------------------------------------------------------------------
->     0.00%    0.00%    6.06%    0.00%    0.00%    0.00%   0x20   N/A       0      0xaaaac17c25ac         0         0        43       375    18469         2  [.] 0x00000000000025ac  memstress         memstress[25ac]   0
->     0.00%    0.00%   93.94%    0.00%    0.00%    0.00%   0x29   N/A       0      0xaaaac17c3e88         0         0       173       180      135         2  [.] 0x0000000000003e88  memstress         memstress[3e88]   0
-> 
-> After:
-> 
-> =================================================
->       Shared Cache Line Distribution Pareto
-> =================================================
->   -------------------------------------------------------------------------------
->       0        0        0       99        0        0        0      0xaaaac17d6000
->   -------------------------------------------------------------------------------
->            0.00%    0.00%    6.06%    0.00%    0.00%    0.00%                0x20   N/A       0      0xaaaac17c25ac         0         0        43       375    18469         2  [.] 0x00000000000025ac  memstress         memstress[25ac]   0
->            0.00%    0.00%   93.94%    0.00%    0.00%    0.00%                0x29   N/A       0      0xaaaac17c3e88         0         0       173       180      135         2  [.] 0x0000000000003e88  memstress         memstress[3e88]   0
-> 
-> Fixes: 5a1a99cd2e4e ("perf c2c report: Add main TUI browser")
-> Reported-by: Joe Mario <jmario@redhat.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> A small change is also required to libunwind or libdw depending on which
+> unwinder is used, and these will be published later. Without these changes Perf
+> continues to work with both libraries, although the VG register is still not
+> used for unwinding. 
 
 Thanks, applied.
 
 - Arnaldo
 
-> ---
+ 
+> Thanks
+> James
 > 
-> Changes from v1:
-> * Added fixes tag;
-> * Added reported tag from Joe.
+> James Clark (5):
+>   perf tools: arm64: Use perf's copy of kernel headers
+>   perf tools: arm64: Copy perf_regs.h from the kernel
+>   perf tools: Use dynamic register set for Dwarf unwind
+>   perf tools: arm64: Decouple Libunwind register names from Perf
+>   perf tools: arm64: Add support for VG register
 > 
->  tools/perf/builtin-c2c.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  tools/arch/arm64/include/uapi/asm/perf_regs.h |  7 +-
+>  tools/perf/arch/arm64/util/perf_regs.c        | 34 +++++++++
+>  tools/perf/arch/arm64/util/unwind-libunwind.c | 73 +------------------
+>  tools/perf/util/evsel.c                       |  2 +-
+>  tools/perf/util/libunwind/arm64.c             |  2 +-
+>  tools/perf/util/perf_regs.c                   |  2 +
+>  6 files changed, 46 insertions(+), 74 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index c8230c48125f..80b525c065ed 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -2801,9 +2801,7 @@ static int perf_c2c__report(int argc, const char **argv)
->  		   "the input file to process"),
->  	OPT_INCR('N', "node-info", &c2c.node_info,
->  		 "show extra node info in report (repeat for more info)"),
-> -#ifdef HAVE_SLANG_SUPPORT
->  	OPT_BOOLEAN(0, "stdio", &c2c.use_stdio, "Use the stdio interface"),
-> -#endif
->  	OPT_BOOLEAN(0, "stats", &c2c.stats_only,
->  		    "Display only statistic tables (implies --stdio)"),
->  	OPT_BOOLEAN(0, "full-symbols", &c2c.symbol_full,
-> @@ -2833,6 +2831,10 @@ static int perf_c2c__report(int argc, const char **argv)
->  	if (argc)
->  		usage_with_options(report_c2c_usage, options);
->  
-> +#ifndef HAVE_SLANG_SUPPORT
-> +	c2c.use_stdio = true;
-> +#endif
-> +
->  	if (c2c.stats_only)
->  		c2c.use_stdio = true;
->  
 > -- 
-> 2.25.1
+> 2.28.0
 
 -- 
 
