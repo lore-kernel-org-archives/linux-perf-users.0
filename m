@@ -2,109 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5D6C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 09:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 May 2022 10:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231384AbiEZJ7S (ORCPT
+        id S1347027AbiEZKOo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 05:59:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33804 "EHLO
+        Thu, 26 May 2022 06:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbiEZJ7R (ORCPT
+        with ESMTP id S1347024AbiEZKOd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 05:59:17 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF55EC9ED3;
-        Thu, 26 May 2022 02:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WGOB9EyQRUr24YCN5rB/LhSsI3XPu4uR9O5zWC75Ejw=; b=akkmAKWfJArmhsc20vQ7CaYxqX
-        RrUe0QW6Mnle97C+rOFusEhaTPAmYLvUW6RzeM01pxP1ORJ0CUOfWwA0LiOi7FOrXicjx0khLDeVZ
-        qWtdsHyBlL8KEacR6Kq5R8xdyl0BoD2fN5g32xeUILFoHEq5Oif0QJTRsnyPySjH9Qbsc5xugrhgr
-        hXXu+jBrSuVzuCzAG8s7TK755Epkpo303LrMnRMvDsZo09BjJWCsIcRX4tc8w0+otIfLNRcygFLyE
-        9CtUqTdyqLrGQKZlu1DPgxXuzS6hi1hOBt7usGsqOXLCqlGyFLixUYkTxWrSZG37tuwH/sXeF/wYn
-        xn/D3npA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nuAEM-001rsn-6k; Thu, 26 May 2022 09:58:35 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BB3F6981124; Thu, 26 May 2022 11:56:33 +0200 (CEST)
-Date:   Thu, 26 May 2022 11:56:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
-        eranian@google.com, irogers@google.com, jmario@redhat.com,
-        leo.yan@linaro.org, alisaidi@amazon.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, dave.hansen@linux.intel.com,
-        hpa@zytor.com, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH 06/13] perf/x86/amd: Support PERF_SAMPLE_PHY_ADDR using
- IBS_DC_PHYSADDR
-Message-ID: <20220526095633.GO2578@worktop.programming.kicks-ass.net>
-References: <20220525093938.4101-1-ravi.bangoria@amd.com>
- <20220525093938.4101-7-ravi.bangoria@amd.com>
- <Yo4RSY2L80N5muJ9@hirez.programming.kicks-ass.net>
- <e10c3d1b-90a9-2f14-987b-9c0d2471ee53@amd.com>
+        Thu, 26 May 2022 06:14:33 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D42C9ECA
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 03:14:29 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id i18so1320037pfk.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 03:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RSEr13eh+b6fOF4AIQVIdh/mTfAE/d0o6HTViH73RH4=;
+        b=AhqRwWOd7vPwSK0WdCEI/mtADZ0WYUYDxoOYNpK0cJ+qeb3asr/jmkQ++hwgkcwnSB
+         38ucsbXU16c8+Zeyd2igfIIyCbZDxG4HcUppsnLaCljtbC5jdgWNLIm8ZBU8JzzKjUTk
+         nrwMZT9NmI/8rLEdsV185mOXplXQsj/n1SZAVdcQyBGF1x6NKuuSy+8dlA8w9D0PmHID
+         vXMWF6dbyuwM3OZzyQVMVA8SETBoHv5LTNsG40AgiE8PwLSkrZd5HxRQuD2kFs2GeC30
+         njIzMQG87fwF0lv1MvSPpllVsUvI27iogOqkkuwWd4CfElnWn3nvMdVHhSQXTo7Tf9XU
+         AlUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RSEr13eh+b6fOF4AIQVIdh/mTfAE/d0o6HTViH73RH4=;
+        b=y3GSJOMquhyIugYUrtcjaOo9RYoCEpaFmTkObMIggwCIbsfdMa0Ir6XyUBwj5XYjiE
+         D1HgLqOuauSYTzFuocUfRQJBQ4CZuMbXRBvELUuqbWlEOHNYvFtZfGasMmI9ZuKJxUYH
+         +bJT3/vXdgmh98PpxNOqsBDgnTzOX1rYRd9lfLzumKdQmh9z+FSBOCn+E+ua+Xrrq32V
+         WPKsDoU4C8h6n+C5SpTULXiiWuJ6yut0Gu7iztIxbPPqQBBOZ/8Gi0B1Tnez1imZfPMn
+         ZSyZuQFyua485+mMCzIJQ0ZUDA76bRgrbHPzShfrNTrtVcx8cM5Z0hyrZUyuzWhDhuaH
+         silQ==
+X-Gm-Message-State: AOAM532HxbyBDa5kgBYC4h9qgsZaX3Ub0H12/6wFzJZ/LWdh98I9zc/7
+        rpyxpI5F4M9SJRXWrC/9Mfj8OQ==
+X-Google-Smtp-Source: ABdhPJz3Z9xMwYQfC2QoP5WeL+fHK/zSti7f5Ovbj4z8bi0pBo7Myi8IR9qR2GZovHZ+KIH5C+l+5Q==
+X-Received: by 2002:a63:69c2:0:b0:3fa:78b5:d991 with SMTP id e185-20020a6369c2000000b003fa78b5d991mr14981430pgc.40.1653560069174;
+        Thu, 26 May 2022 03:14:29 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (n058152048195.netvigator.com. [58.152.48.195])
+        by smtp.gmail.com with ESMTPSA id b14-20020a62a10e000000b00512ee2f22acsm1109545pff.97.2022.05.26.03.14.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 May 2022 03:14:28 -0700 (PDT)
+Date:   Thu, 26 May 2022 18:14:23 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Subject: Re: [PATCH 2/3] perf test: Shell - only run .sh shell files to skip
+ other files
+Message-ID: <20220526101423.GB795802@leoy-ThinkPad-X240s>
+References: <20220309122859.31487-1-carsten.haitzler@foss.arm.com>
+ <20220309122859.31487-2-carsten.haitzler@foss.arm.com>
+ <20220410022846.GB14326@leoy-ThinkPad-X240s>
+ <9ab780aa-7e78-b0f9-21ed-cf30f41f8fab@foss.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e10c3d1b-90a9-2f14-987b-9c0d2471ee53@amd.com>
+In-Reply-To: <9ab780aa-7e78-b0f9-21ed-cf30f41f8fab@foss.arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 26, 2022 at 02:16:28PM +0530, Ravi Bangoria wrote:
-> On 25-May-22 4:51 PM, Peter Zijlstra wrote:
-> > On Wed, May 25, 2022 at 03:09:31PM +0530, Ravi Bangoria wrote:
-> >> IBS_DC_PHYSADDR provides the physical data address for the tagged load/
-> >> store operation. Populate perf sample physical address using it.
-> >>
-> >> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> >> ---
-> >>  arch/x86/events/amd/ibs.c | 26 +++++++++++++++++++++++++-
-> >>  1 file changed, 25 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> >> index b57736357e25..c719020c0e83 100644
-> >> --- a/arch/x86/events/amd/ibs.c
-> >> +++ b/arch/x86/events/amd/ibs.c
-> >> @@ -986,13 +986,35 @@ static void perf_ibs_get_data_addr(struct perf_event *event,
-> >>  	data->addr = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCLINAD)];
-> >>  }
-> >>  
-> >> +static void perf_ibs_get_phy_addr(struct perf_event *event,
-> >> +				  struct perf_ibs_data *ibs_data,
-> >> +				  struct perf_sample_data *data)
-> >> +{
-> >> +	union perf_mem_data_src *data_src = &data->data_src;
-> >> +	u64 op_data3 = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)];
-> >> +	u64 phy_addr_valid = op_data3 & IBS_DC_PHY_ADDR_VALID_MASK;
-> >> +
-> >> +	if (!(event->attr.sample_type & PERF_SAMPLE_DATA_SRC))
-> >> +		perf_ibs_get_mem_op(op_data3, data);
-> >> +
-> >> +	if ((data_src->mem_op != PERF_MEM_OP_LOAD &&
-> >> +	    data_src->mem_op != PERF_MEM_OP_STORE) ||
-> >> +	    !phy_addr_valid) {
-> >> +		data->phys_addr = 0x0;
-> >> +		return;
-> >> +	}
-> >> +
-> >> +	data->phys_addr = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCPHYSAD)];
-> >> +}
+On Thu, Apr 21, 2022 at 05:21:27PM +0100, Carsten Haitzler wrote:
+> On 4/10/22 03:28, Leo Yan wrote:
+> > On Wed, Mar 09, 2022 at 12:28:58PM +0000, carsten.haitzler@foss.arm.com wrote:
+> > > From: Carsten Haitzler <carsten.haitzler@arm.com>
+> > > 
+> > > You edit your scripts in the tests and end up with your usual shell
+> > > backup files with ~ or .bak or something else at the end, but then your
+> > > next perf test run wants to run the backups too. You might also have perf
+> > > .data files in the directory or something else undesireable as well. You end
+> > > up chasing which test is the one you edited and the backup and have to keep
+> > > removing all the backup files, so automatically skip any files that are
+> > > not plain *.sh scripts to limit the time wasted in chasing ghosts.
+> > > 
+> > > Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+> > > 
+> > > ---
+> > >   tools/perf/tests/builtin-test.c | 17 +++++++++++++++--
+> > >   1 file changed, 15 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > > index 3c34cb766724..3a02ba7a7a89 100644
+> > > --- a/tools/perf/tests/builtin-test.c
+> > > +++ b/tools/perf/tests/builtin-test.c
+> > > @@ -296,9 +296,22 @@ static const char *shell_test__description(char *description, size_t size,
+> > >   #define for_each_shell_test(entlist, nr, base, ent)	                \
+> > >   	for (int __i = 0; __i < nr && (ent = entlist[__i]); __i++)	\
+> > > -		if (!is_directory(base, ent) && \
+> > > +		if (ent->d_name[0] != '.' && \
+> > > +			!is_directory(base, ent) && \
+> > >   			is_executable_file(base, ent) && \
+> > > -			ent->d_name[0] != '.')
+> > > +			is_shell_script(ent->d_name))
 > > 
-> > perf_prepare_sample() will unconditionally overwrite data->phys_addr.
-> > There is currently no facility to let the driver set this field.
+> > Just nitpick: since multiple conditions are added, seems to me it's good
+> > to use a single function is_executable_shell_script() to make decision
+> > if a file is an executable shell script.
 > 
-> Thanks for pointing it Peter. Would you mind if I add:
+> I'd certainly make a function if this was being re-used, but as the "coding
+> pattern" was to do all the tests already inside the if() in only one place,
+> I kept with the style there and didn't change the code that didn't need
+> changing. I can rewrite this code and basically make a function that is just
+> an if ...:
+> 
+> bool is_exe_shell_script(const char *base, struct dirent *ent) {
+>    return ent->d_name[0] != '.'         && !is_directory(base, ent) &&
+>           is_executable_file(base, ent) && is_shell_script(ent->d_name);
+> }
+> 
+> And macro becomes:
+> 
+> #define for_each_shell_test(entlist, nr, base, ent) \
+>   for (int __i = 0; __i < nr && (ent = entlist[__i]); __i++) \
+>     if (is_shell(base, ent))
 
-I think it's best if you extend/mimic the __PERF_SAMPLE_CALLCHAIN_EARLY
-hack. It's more or less the same problem and then at least the solution
-is consistent.
+Sorry for long latency.
 
+If the condition checking gets complex, seems to me it is reasonable to
+use a static function (or a macro?) to encapsulate the logics.
+
+> But one catch... it really should be is_non_hidden_exe_shell_script() as
+> it's checking that it's not a hidden file AND is a shell script. Or do I
+> keep the hidden file test outside of the function in the if? If we're nit
+> picking then I need to know exactly what you want here as your suggested
+> name is actually incorrect.
+
+I personally prefer to use the condition:
+
+  if (is_exe_shell_script() && ent->d_name[0] != '.')
+      do_something...
+
+The reason is the function is_exe_shell_script() is more common and we
+use it easily in wider scope.
+
+> > And the condition checking 'ent->d_name[0] != '.'' would be redundant
+> > after we have checked the file suffix '.sh'.
+> 
+> This isn't actually redundant. You can have .something.sh :) If the idea is
+> we skip anything with a . at the start first always... then the if (to me)
+> is obvious.
+
+Yeah, I agree the checking the start char '.' is the right thing
+to do.
+
+Thanks,
+Leo
