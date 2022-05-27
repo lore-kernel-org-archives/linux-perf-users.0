@@ -2,160 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FB2C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 01:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CEAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 02:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230196AbiE0BQR (ORCPT
+        id S233898AbiE0CHA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 21:16:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56982 "EHLO
+        Thu, 26 May 2022 22:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231819AbiE0BQQ (ORCPT
+        with ESMTP id S233495AbiE0CG7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 21:16:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9696F271;
-        Thu, 26 May 2022 18:16:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2020761CB5;
-        Fri, 27 May 2022 01:16:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CDA9C34116;
-        Fri, 27 May 2022 01:16:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653614174;
-        bh=3OBYAY/ttRUgYAlC1eiThaGMaCz44RoEL561Vc+b8wM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WWLaLjekoR9RLT01/AGKfzkLzbX0ZqQnEgHD7m9xpIKFnE8QW1c/m2eJuLfs6m5qr
-         b/+AWQFoz82mq4om+LUaPNpMWgWJUBdwHpxciwJaefeKaFXRkfO/dF6A5YpvS42wU/
-         K3ZwnWjdTtjRHou0Ijo9WQwaHZqQUVzQOAYg9TbNQmswucS/p5kJr/6CbFcj/MRmk3
-         9+qq/PEzpecNvNPDjqfHyP2ZengmijD6HBePI9OG4ulEm+xajDDjPViEJXyNbj29X3
-         LQZ2D8XlZx3xACwR0VQlye7m9g1xdWD4+dooD44dbDHAy8dpyP+4VeudkhhnTlQ1cT
-         +AaYdckUbFcMg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0FD7E4036D; Thu, 26 May 2022 22:16:11 -0300 (-03)
-Date:   Thu, 26 May 2022 22:16:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Thu, 26 May 2022 22:06:59 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 738AC5FC3
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 19:06:58 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-306f3830324so550267b3.13
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 19:06:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=t432bOj9HNNyvwVqFkTcjkKR+K0Bmhu30IV4FVjsgoY=;
+        b=b3JXmJSg81a9cCK4Qjk0xcyCb+s5bCsYHXtaTB/4K+Hl98m0MtxyYoobjDFBTB7CFB
+         HK26ktpzNug4q4LPiNU/r4aRz3Cd1IFlwQ1riNeU7GWInC/YcT0FrdS4RclYpbP797Hg
+         Oa49gKiCb5LTpVK+EC5OdYiEFzh4nzZwdR3sI7Gf7Kw5upguEhIkLAkMTEabl5sM4X8H
+         buwqsT9qzsltd5mDKZaIByOHs59VhFUg2m0EG9xZK60XvvM8+Ti1SK1454iDDcUTk0XT
+         ZvoKuDWvEzZRG/ZfJs0qkFmkmu1lG/7ILKFrlD7hqqPcJdE7ohUgAUl+67rxn9cTw+Qh
+         4FqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=t432bOj9HNNyvwVqFkTcjkKR+K0Bmhu30IV4FVjsgoY=;
+        b=aOQJXR2MZUBRwYv04j6OxSsHdsQdrQ8bP/xLdEHAxU/VD0mJnU1nD4LGCJ3wQN7kyq
+         h/K16LPvY/li1L6zu0CD8iVPJVfrLtDoPRPrEccXo1AVWNEgYPmmhcySfDg56VC7ATYs
+         +CJXCSOqxAF9d/iae9DhREu5IB3EjeGNpOdcoYry5GXq4KIlnp9ZFIQ2ayUVyFVTfxo+
+         aO0NKkp1apEx3G/CbeXw31PxVAn6oTC1weAusKWeKO1i/EStf2WTKjQkL6uJml8BXObc
+         k6NjVK71pIvlEkCOuClml00TKTmvPG6y1+Ymy3qdufNCQWkNAk8iz9n9MwCZq42k9rpz
+         YmgA==
+X-Gm-Message-State: AOAM533qHgxqA2/+mu9zWnSfJzcSsz8kKV/5EL7Wu6PMXjnks19qAcQl
+        Fi7V1EFEJwryv13hs60s/SPqkLuCjcZg
+X-Google-Smtp-Source: ABdhPJzEVEPw+BMNvtb1jZpBoUKmkT3ERjQ/T4WthU6YPLykYRzhQAmiFOkVgzeG1dhQrUwWnlZiClN6c/y4
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4b39:e167:e698:7d4])
+ (user=irogers job=sendgmr) by 2002:a25:e788:0:b0:64d:87c1:8fa with SMTP id
+ e130-20020a25e788000000b0064d87c108famr38666633ybh.302.1653617217585; Thu, 26
+ May 2022 19:06:57 -0700 (PDT)
+Date:   Thu, 26 May 2022 19:06:53 -0700
+Message-Id: <20220527020653.4160884-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
+Subject: [PATCH] perf expr: Allow exponents on floating point values
+From:   Ian Rogers <irogers@google.com>
+To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv2 0/3] perf tools: Fix prologue generation
-Message-ID: <YpAmW/BDq4346OaI@kernel.org>
-References: <20220510074659.2557731-1-jolsa@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220510074659.2557731-1-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 10, 2022 at 09:46:56AM +0200, Jiri Olsa escreveu:
-> hi,
-> sending change we discussed some time ago [1] to get rid of
-> some deprecated functions we use in perf prologue code.
-> 
-> Despite the gloomy discussion I think the final code does
-> not look that bad ;-)
-> 
-> This patchset removes following libbpf functions from perf:
->   bpf_program__set_prep
->   bpf_program__nth_fd
->   struct bpf_prog_prep_result
+Pass the optional exponent component through to strtod that already
+supports it. We already have exponents in ScaleUnit and so this adds
+uniformity.
 
-So, the first patch is already in torvalds/master, I tried applying the
-other two patches to my local perf/core, that already is merged with
-torvalds/master and:
+Reported-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/expr.c | 2 ++
+ tools/perf/util/expr.l  | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-[root@quaco ~]# perf test 42
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           : FAILED!
- 42.2: BPF pinning                                                   : FAILED!
- 42.3: BPF prologue generation                                       : FAILED!
-[root@quaco ~]#
-
-I'll push my local perf/core to tmp.perf/core and continue tomorrow.
-
-Its failing around here:
-
-Open Debuginfo file: /root/.cache/debuginfod_client/e1c3de4b4c5db158f2098e80f2bf9140e8cfbdb6/debuginfo
-Try to find probe point from debuginfo.
-Matched function: do_epoll_wait [3806bb5]
-Probe point found: do_epoll_wait+0
-Found 1 probe_trace_events.
-Looking at the vmlinux_path (8 entries long)
-symsrc__init: build id mismatch for vmlinux.
-symsrc__init: cannot get elf header.
-Using /proc/kcore for kernel data
-Using /proc/kallsyms for symbols
-do_epoll_wait is out of .text, skip it.
-Post processing failed or all events are skipped. (1)
-Probe point 'do_epoll_wait' not found.
-bpf_probe: failed to convert perf probe events
-Failed to add events selected by BPF
-test child finished with -1
----- end ----
-BPF filter subtest 1: FAILED
-
-But:
-
-[root@quaco ~]# grep do_epoll_wait /proc/kallsyms
-ffffffff973c2a30 t do_epoll_wait
-[root@quaco ~]#
-
-- Arnaldo
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index d54c5371c6a6..5c0032fe93ae 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -97,6 +97,8 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 	ret |= test(ctx, "2.2 > 2.2", 0);
+ 	ret |= test(ctx, "2.2 < 1.1", 0);
+ 	ret |= test(ctx, "1.1 > 2.2", 0);
++	ret |= test(ctx, "1.1e10 < 1.1e100", 1);
++	ret |= test(ctx, "1.1e2 > 1.1e-2", 1);
  
-> v2 changes:
->   - use fallback section prog handler, so we don't need to
->     use section prefix [Andrii]
->   - realloc prog->insns array in bpf_program__set_insns [Andrii]
->   - squash patch 1 from previous version with
->     bpf_program__set_insns change [Daniel]
->   - patch 3 already merged [Arnaldo]
->   - added more comments
-> 
->   meanwhile.. perf/core and bpf-next diverged, so:
->     - libbpf bpf_program__set_insns change is based on bpf-next/master
->     - perf changes do not apply on bpf-next/master so they are based on
->       perf/core ... however they can be merged only after we release
->       libbpf 0.8.0 with bpf_program__set_insns change, so we don't break
->       the dynamic linking
->       I'm sending perf changes now just for review, I'll resend them
->       once libbpf 0.8.0 is released
-> 
-> thanks,
-> jirka
-> 
-> 
-> [1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
-> ---
-> Jiri Olsa (1):
->       libbpf: Add bpf_program__set_insns function
-> 
->  tools/lib/bpf/libbpf.c   | 22 ++++++++++++++++++++++
->  tools/lib/bpf/libbpf.h   | 18 ++++++++++++++++++
->  tools/lib/bpf/libbpf.map |  1 +
->  3 files changed, 41 insertions(+)
-> 
-> Jiri Olsa (2):
->       perf tools: Register fallback libbpf section handler
->       perf tools: Rework prologue generation code
-> 
->  tools/perf/util/bpf-loader.c | 175 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------
->  1 file changed, 157 insertions(+), 18 deletions(-)
-
+ 	if (ret) {
+ 		expr__ctx_free(ctx);
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index 0a13eb20c814..4dc8edbfd9ce 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -91,7 +91,7 @@ static int literal(yyscan_t scanner)
+ }
+ %}
+ 
+-number		([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)
++number		([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)(e-?[0-9]+)?
+ 
+ sch		[-,=]
+ spec		\\{sch}
 -- 
+2.36.1.124.g0e6072fb45-goog
 
-- Arnaldo
