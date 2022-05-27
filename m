@@ -2,132 +2,304 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7404C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 15:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5D0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 16:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354223AbiE0P7M (ORCPT
+        id S1352162AbiE0QEF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 May 2022 11:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
+        Fri, 27 May 2022 12:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353936AbiE0P6A (ORCPT
+        with ESMTP id S236442AbiE0QEE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 May 2022 11:58:00 -0400
+        Fri, 27 May 2022 12:04:04 -0400
 Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7DE36E26
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 May 2022 08:57:58 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 67-20020a1c1946000000b00397382b44f4so2974711wmz.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 May 2022 08:57:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3EE926F8
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 May 2022 09:04:02 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id n124-20020a1c2782000000b003972dfca96cso2969613wmn.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 May 2022 09:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+nhRSW0HB0IrL3AsaUbgyELmuQlg7AADB3tpFmkYZW4=;
-        b=ODsEChw49WJ2jXA7phOq9UZH0sa+uGOmARNU0dKT8ELNxeavTeP0ERYA525+wh7RW7
-         9p0HVYaFdK9NPOtwfoYX/3YxuBlVrTS/PvOIFREHdr6i3F0FZXNsx0jO1emEFXlOq8jk
-         UzaGW0oM2FSWqXu3ovPYxFW396ckgz81nYoroROMlRcdxD5HFF4bvmOf1FwwjwwS9E5M
-         9OWKi+EmtrlVAGJDI4ujDWdfiaOGYNygBvMJh+7eICZSsg2874r1YcHaLvmgsnell5CV
-         XhDsg+s/QhI5QzdQAgcnyrDgPgAhweQ+452ZY+E8TlGN2qWg3aPW1kMEF3SuGryy6ig8
-         Mrkw==
+        bh=cBiP6vW4sF/6LQTBgA+dMGRC5zva8gp7vJCCVGRKZkY=;
+        b=PIYjMgdNxRIA2Tuw3Y4gmhqlMeQ0ch8rdEcM/OJfoIEI6Kw/AVbIskGP0tANoqCdOb
+         de3epEKpSYBsAIIbdPdmrL9eP4L5UhC0jFgG/FLz+GLQ0g6a3WT1b1ckisa5dL5Xnpog
+         wFu+YgH2KYGliMVtuBT/2eePV7siWGrfLkDEv7KwOIkMZJ+7wURHITCUCXKfJgHSPJcF
+         1aCWXfxlNmG7DVmUMOQjpEa/uMXK31f52Is0Nmgs3z+5p0Er8Q5dnhSJi7xiKjg4hStY
+         CKSbi1TPZxE5c6F57pQXE1LfsGOF7Yw4QyBSEjnBOq3NqppchUnAux++XQIaW8fMKVBN
+         kJfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+nhRSW0HB0IrL3AsaUbgyELmuQlg7AADB3tpFmkYZW4=;
-        b=lq2ovAOwHk4PQwLvC+pCUjMY2avsnjKJfgLmK5kK41/5eS6jnX0CyYehvJe9UknHxI
-         gWRKGMNKfO/rQ0URM36pHftI0W2jTKm3FqOGETngRSWi3rn2SXq1u7OnPG6IUqdBx+ew
-         yEPwikzhRQsk150540Lo6tHwgWaQI4xKLVI5hbHDLmyV395Hjw3s5iIfA/f3i0Cze/mi
-         UreN8O7TzhgxoOSshZryyhumkoioasvH+OAvqkAQ+5DUnkstCr7vZQZHU1vlOdfPWfFN
-         0tx0zEdOUW8X8NVaB8VDH1865bCX55C4v60iueWnkhSFQ5C2ZR9BaCTQwdXBWlZHvxM9
-         YcjQ==
-X-Gm-Message-State: AOAM5306PbBxyLiO4j6nrZ5j84ulqe/s15FeTXrAk4Ec7GRSE+c0r7dj
-        P6aOolXakMdMx1SZdI1gAO9IJpLCSnenrA8s6Bn2Tg==
-X-Google-Smtp-Source: ABdhPJxCxbqWMUiPiaxpL5cuYifbkFM3KgEr5xj/06bdSvjWoV1r4auP+JYDEsowOpR+ZxfLquMI36O6bB/NtFlBkII=
-X-Received: by 2002:a05:600c:2305:b0:397:44a4:d3cb with SMTP id
- 5-20020a05600c230500b0039744a4d3cbmr7538356wmo.115.1653667077089; Fri, 27 May
- 2022 08:57:57 -0700 (PDT)
+        bh=cBiP6vW4sF/6LQTBgA+dMGRC5zva8gp7vJCCVGRKZkY=;
+        b=dWswiZ+n6cTeSnKjoyvnxuXWTmmDZ0NpqqpdWylA3PBFWkOhLkI0QOUlYuTl2u2JBF
+         Fs5cLD3F6r4LnUiQjl68rcwBxnOr0Guk8RbNVwtIP0gnLgDB2MqqrS1Pinlco+pxjG9W
+         cMFtrjJkNOcQ+PzTTNAl/QVxW2zno3kvy3w2xJoEOCF1KyazhtdiVFebfOUBvZD2j3ng
+         4ahphin+su6E6kq5hVQgR5r9+EJRiLDK40/T5Am8ytDt95uduD0K4udYuxr4R0nbEWrc
+         K08mnVG1zUo8KjUT7FiFtvIzWPTskJp5LF3STkaCFXgBOCvg6L9CfpVL2iHy1Exy971j
+         3e3A==
+X-Gm-Message-State: AOAM532OHI4DoeHlEfSuGONOWMKcWqL4dBecvP82VNP3/3NrlYbI5+3Y
+        cgAZHIyQ8zMgAwhgizHwidRc3eg05bgX49XqTgPkLQ==
+X-Google-Smtp-Source: ABdhPJwEum2+MBzphrcqGv6VA7uucC1mioqzsX+CjRL4+M/OSmP3Dd1iYs0J2lhNtitCSrdygtODmIXNlazfymK1H08=
+X-Received: by 2002:a1c:a301:0:b0:392:9bc5:203c with SMTP id
+ m1-20020a1ca301000000b003929bc5203cmr7618104wme.67.1653667440924; Fri, 27 May
+ 2022 09:04:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220527040407.4193232-1-irogers@google.com> <YpCeo6APNtXvrTPJ@hirez.programming.kicks-ass.net>
- <76dce5d3-6c69-e403-c4d9-f882967a4467@linux.intel.com>
-In-Reply-To: <76dce5d3-6c69-e403-c4d9-f882967a4467@linux.intel.com>
+References: <20220527055217.452307-1-maskray@google.com> <CAP-5=fVk9BmzcinBnjjFKBbNA+ojOo+qjS2m2ZAs7t9c2EkLxw@mail.gmail.com>
+In-Reply-To: <CAP-5=fVk9BmzcinBnjjFKBbNA+ojOo+qjS2m2ZAs7t9c2EkLxw@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 27 May 2022 08:57:43 -0700
-Message-ID: <CAP-5=fU4Anbx2R=L7VD3Pa_5e5nvkgSW2FNJg5+c5MJfcHcQgw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf metrics: Add literal for system TSC frequency
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, perry.taylor@intel.com,
-        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+Date:   Fri, 27 May 2022 09:03:46 -0700
+Message-ID: <CAP-5=fU8Pzzz+5W7Vy13tKv0=j8LYNc=+cv12LFvkGoAofJNqA@mail.gmail.com>
+Subject: Re: [PATCH] perf: Fix segbase for ld.lld linked objects
+To:     Fangrui Song <maskray@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, Sebastian Ullrich <sebasti@nullri.ch>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 27, 2022 at 7:54 AM Andi Kleen <ak@linux.intel.com> wrote:
+On Thu, May 26, 2022 at 11:49 PM Ian Rogers <irogers@google.com> wrote:
 >
->
-> On 5/27/2022 2:49 AM, Peter Zijlstra wrote:
-> > On Thu, May 26, 2022 at 09:04:07PM -0700, Ian Rogers wrote:
-> >> Such a literal is useful to calculate things like the average frequency
-> >> [1]. The TSC frequency isn't exposed by sysfs although some experimental
-> >> drivers look to add it [2]. This change computes the value using the
-> >> frequency in /proc/cpuinfo which is accurate at least on Intel
-> >> processors.
->
-> It would be better to use CPUID if available which is far more accurate.
-> Also I believe newer Intel CPUs drop the frequency in the brand string.
-
-But on v1 you also said it was broken for certain architectures. The
-point of the tests and warnings is to identify this case.
-
-> BTW it also has the problem that if perf script is run on some other
-> system to compute metrics it won't work.
-
-Yep. We don't yet support recording then reporting metrics on a
-different system. There would be a bunch to do to support this.
-
+> On Thu, May 26, 2022 at 10:52 PM Fangrui Song <maskray@google.com> wrote:
 > >
-> > This all seems bonghits inspired... and perf actually does expose the
-> > tsc frequency. What do you think is in perf_event_mmap_page::time_* ?
+> > segbase is the address of .eh_frame_hdr and table_data is segbase plus
+> > the header size. find_proc_info computes segbase as `map->start +
+> > segbase - map->pgoff` which is wrong when
+> >
+> > * .eh_frame_hdr and .text are in different PT_LOAD program headers
+> > * and their p_vaddr difference does not equal their p_offset difference
+> >
+> > Since 10.0, ld.lld's default --rosegment -z noseparate-code layout has
+> > such R and RX PT_LOAD program headers.
+> >
+> >     ld.lld => fail
+> >     ld.lld --no-rosegment => ok
+> >     ld.lld -z separate-code => ok
+> >
+> >     ld.bfd -z separate-code (default for Linux/x86) => ok
+> >     ld.bfd -z noseparate-code => ok
+> >
+> > To fix the issue, compute segbase as dso's base address plus
+> > PT_GNU_EH_FRAME's p_vaddr.
+> >
+> > Reported-by: Sebastian Ullrich <sebasti@nullri.ch>
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1646
+> > Signed-off-by: Fangrui Song <maskray@google.com>
+> > Cc: Ian Rogers <irogers@google.com>
 >
+> Thanks Fangrui! I tested static vs not, bfd and lld, perf test and
+> some hand tests. I couldn't see anything out of order. The code looks
+> good although there could be some ambiguity over the variables ending
+> _addr as these are the ELF given addresses rather than the thread's
+> virtual memory addresses. I'm also trying to get more comments
+> especially on major data structures like dso, but that can be fixed as
+> a follow-on.
 >
-> That's not really available to perf stat, which is the primary metrics user.
+> Tested-by: Ian Rogers <irogers@google.com>
+>
+> > ---
+> >  tools/perf/util/dso.h                    |  2 +
+> >  tools/perf/util/unwind-libunwind-local.c | 96 ++++++++++++++++--------
+> >  2 files changed, 67 insertions(+), 31 deletions(-)
+> >
+> > diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> > index 3a9fd4d389b5..ec4fc1a9454b 100644
+> > --- a/tools/perf/util/dso.h
+> > +++ b/tools/perf/util/dso.h
+> > @@ -179,6 +179,7 @@ struct dso {
+> >         bool             loaded;
+> >         u8               rel;
+> >         struct build_id  bid;
+> > +       u64              base_addr;
 
-So we have 3 approaches:
+This is an address in a thread, as one dso can be shared by multiple
+threads/processes it seems unsafe to hold it as the dso may be loaded
+at a different address in a different thread. For now we can just
+recompute the value rather than store it in the dso.
 
-1) read /proc/cpuinfo: pros: easy in comparison to other approaches.
-cons: will break in the future, will need a cross system strategy
-2) use cpuid: pros: can be made to work across systems cons: not
-available for all Intel architectures
-3) mmap: pros: more stable API than cpuinfo vendor string. cons: could
-end up with new events purely to gather a TSC frequency and associated
-complexity around permissions, etc.
+> >         u64              text_offset;
+> >         const char       *short_name;
+> >         const char       *long_name;
+> > @@ -197,6 +198,7 @@ struct dso {
+> >                 u64              file_size;
+> >                 struct list_head open_entry;
+> >                 u64              debug_frame_offset;
+> > +               u64              eh_frame_hdr_addr;
 
-I feel we can bike shed and go between the 3 approaches almost
-endlessly. I'd rather get something in and iterate. How the approach
-breaks can motivate the next steps and the tests added here will
-capture when it does break, not just when a metric is first used. I
-mentioned this on V1 and requested feedback, this is just implementing
-what I said I'd do to V1.
+This is the elf section address and safe to hold here.
 
 Thanks,
 Ian
 
-> -Andi
->
->
->
+> >                 u64              eh_frame_hdr_offset;
+> >         } data;
+> >         /* bpf prog information */
+> > diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> > index 41e29fc7648a..7a0053954e49 100644
+> > --- a/tools/perf/util/unwind-libunwind-local.c
+> > +++ b/tools/perf/util/unwind-libunwind-local.c
+> > @@ -169,30 +169,55 @@ static int __dw_read_encoded_value(u8 **p, u8 *end, u64 *val,
+> >         __v;                                                    \
+> >         })
+> >
+> > -static u64 elf_section_offset(int fd, const char *name)
+> > +static int elf_section_address_and_offset(int fd, const char *name, u64 *address, u64 *offset)
+> >  {
+> >         Elf *elf;
+> >         GElf_Ehdr ehdr;
+> >         GElf_Shdr shdr;
+> > -       u64 offset = 0;
+> > +       int ret;
+> >
+> >         elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
+> >         if (elf == NULL)
+> > -               return 0;
+> > +               return -1;
+> >
+> > -       do {
+> > -               if (gelf_getehdr(elf, &ehdr) == NULL)
+> > -                       break;
+> > +       if (gelf_getehdr(elf, &ehdr) == NULL)
+> > +               goto out_err;
+> >
+> > -               if (!elf_section_by_name(elf, &ehdr, &shdr, name, NULL))
+> > -                       break;
+> > -
+> > -               offset = shdr.sh_offset;
+> > -       } while (0);
+> > +       if (!elf_section_by_name(elf, &ehdr, &shdr, name, NULL))
+> > +               goto out_err;
+> >
+> > +       *address = shdr.sh_addr;
+> > +       *offset = shdr.sh_offset;
+> > +       ret = 0;
+> > +out_err:
+> >         elf_end(elf);
+> > +       return ret;
+> > +}
+> > +
+> > +#ifndef NO_LIBUNWIND_DEBUG_FRAME
+> > +static u64 elf_section_offset(int fd, const char *name)
+> > +{
+> > +       u64 address, offset;
+> > +
+> > +       if (elf_section_address_and_offset(fd, name, &address, &offset))
+> > +               return 0;
+> > +
+> >         return offset;
+> >  }
+> > +#endif
+> > +
+> > +static int elf_base_address(int fd)
+> > +{
+> > +       Elf *elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
+> > +       GElf_Phdr phdr;
+> > +       int retval = 0;
+> > +
+> > +       if (gelf_getphdr(elf, 0, &phdr) != NULL)
+> > +               retval = phdr.p_vaddr & -getpagesize();
+> > +
+> > +       elf_end(elf);
+> > +       return retval;
+> > +}
+> >
+> >  #ifndef NO_LIBUNWIND_DEBUG_FRAME
+> >  static int elf_is_exec(int fd, const char *name)
+> > @@ -248,8 +273,7 @@ struct eh_frame_hdr {
+> >  } __packed;
+> >
+> >  static int unwind_spec_ehframe(struct dso *dso, struct machine *machine,
+> > -                              u64 offset, u64 *table_data, u64 *segbase,
+> > -                              u64 *fde_count)
+> > +                              u64 offset, u64 *table_data_offset, u64 *fde_count)
+> >  {
+> >         struct eh_frame_hdr hdr;
+> >         u8 *enc = (u8 *) &hdr.enc;
+> > @@ -265,35 +289,45 @@ static int unwind_spec_ehframe(struct dso *dso, struct machine *machine,
+> >         dw_read_encoded_value(enc, end, hdr.eh_frame_ptr_enc);
+> >
+> >         *fde_count  = dw_read_encoded_value(enc, end, hdr.fde_count_enc);
+> > -       *segbase    = offset;
+> > -       *table_data = (enc - (u8 *) &hdr) + offset;
+> > +       *table_data_offset = enc - (u8 *) &hdr;
+> >         return 0;
+> >  }
+> >
+> > -static int read_unwind_spec_eh_frame(struct dso *dso, struct machine *machine,
+> > +static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
+> >                                      u64 *table_data, u64 *segbase,
+> >                                      u64 *fde_count)
+> >  {
+> > -       int ret = -EINVAL, fd;
+> > -       u64 offset = dso->data.eh_frame_hdr_offset;
+> > +       struct map *map;
+> > +       int ret, fd;
+> >
+> > -       if (offset == 0) {
+> > -               fd = dso__data_get_fd(dso, machine);
+> > +       if (dso->data.eh_frame_hdr_offset == 0) {
+> > +               u64 addr_min = UINT64_MAX;
+> > +
+> > +               fd = dso__data_get_fd(dso, ui->machine);
+> >                 if (fd < 0)
+> >                         return -EINVAL;
+> >
+> >                 /* Check the .eh_frame section for unwinding info */
+> > -               offset = elf_section_offset(fd, ".eh_frame_hdr");
+> > -               dso->data.eh_frame_hdr_offset = offset;
+> > +               ret = elf_section_address_and_offset(fd, ".eh_frame_hdr",
+> > +                                                    &dso->data.eh_frame_hdr_addr,
+> > +                                                    &dso->data.eh_frame_hdr_offset);
+> > +               maps__for_each_entry(ui->thread->maps, map) {
+> > +                       if (map->dso == dso && map->start < addr_min)
+> > +                               addr_min = map->start;
+> > +               }
+> > +               dso->base_addr = addr_min - elf_base_address(fd);
+> >                 dso__data_put_fd(dso);
+> > +               if (ret || dso->data.eh_frame_hdr_offset == 0)
+> > +                   return -EINVAL;
+> >         }
+> >
+> > -       if (offset)
+> > -               ret = unwind_spec_ehframe(dso, machine, offset,
+> > -                                         table_data, segbase,
+> > -                                         fde_count);
+> > -
+> > -       return ret;
+> > +       *segbase = dso->base_addr + dso->data.eh_frame_hdr_addr;
+> > +       ret = unwind_spec_ehframe(dso, ui->machine, dso->data.eh_frame_hdr_offset,
+> > +                                  table_data, fde_count);
+> > +       if (ret)
+> > +           return ret;
+> > +       *table_data += *segbase;
+> > +       return 0;
+> >  }
+> >
+> >  #ifndef NO_LIBUNWIND_DEBUG_FRAME
+> > @@ -388,14 +422,14 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
+> >         pr_debug("unwind: find_proc_info dso %s\n", map->dso->name);
+> >
+> >         /* Check the .eh_frame section for unwinding info */
+> > -       if (!read_unwind_spec_eh_frame(map->dso, ui->machine,
+> > +       if (!read_unwind_spec_eh_frame(map->dso, ui,
+> >                                        &table_data, &segbase, &fde_count)) {
+> >                 memset(&di, 0, sizeof(di));
+> >                 di.format   = UNW_INFO_FORMAT_REMOTE_TABLE;
+> >                 di.start_ip = map->start;
+> >                 di.end_ip   = map->end;
+> > -               di.u.rti.segbase    = map->start + segbase - map->pgoff;
+> > -               di.u.rti.table_data = map->start + table_data - map->pgoff;
+> > +               di.u.rti.segbase    = segbase;
+> > +               di.u.rti.table_data = table_data;
+> >                 di.u.rti.table_len  = fde_count * sizeof(struct table_entry)
+> >                                       / sizeof(unw_word_t);
+> >                 ret = dwarf_search_unwind_table(as, ip, &di, pi,
+> > --
+> > 2.36.1.124.g0e6072fb45-goog
+> >
