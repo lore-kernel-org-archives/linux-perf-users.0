@@ -2,139 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414C5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 06:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBC8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 06:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239042AbiE0GF0 (ORCPT
+        id S244878AbiE0GTE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 May 2022 02:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47024 "EHLO
+        Fri, 27 May 2022 02:19:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236997AbiE0GFZ (ORCPT
+        with ESMTP id S244833AbiE0GTD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 May 2022 02:05:25 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85117EBEB3
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 23:05:24 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-2ef5380669cso36948457b3.9
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 23:05:24 -0700 (PDT)
+        Fri, 27 May 2022 02:19:03 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9975A674C2
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 23:19:01 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id q4so3304823plr.11
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 23:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7VHvjIfJq9D6lO+TpoQm0tnmjw/+FCIiWflb4wfyiis=;
-        b=EVbTirZ2vrqAYHDnzMm5B3W6FGQZB1r/4vu2KijGst4r3mubDFHwxWtM6tTw7axbKa
-         pCC6F47ItDOVU+AV2wu+0Xh0MFWukiuBHOWIruQlWYrLgzOM6jlwjeZEahtHvqroDOBE
-         iC3LBxdlfM3Z6hJlIYTk2w5Yew2OVmF04h7Bv8fTr14bMln3jTd6S+l8vKUFp3U9IQ+s
-         p8wbaSPJh0yxnSl60+RK/7J5MAr5xBxAWR2DhxO9X7PTN6KZHrdc1bnvJtuv84Ykb6ZX
-         LNw/HUH0BJkZcIslZobcOkt3zEXU7np+FsjWIXfhyMEoB+zJDYGaKtNfcRduJMQpKBbP
-         f3iA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=YmwNb7GmrMj+Aj35yVXxyxMSFu/WwxZF0+SnvsJ3ZBc=;
+        b=FzUlge1dsiQ6u9tgG56Pfq2xP/PEWoglv6yK0nFxU8GkPm7H/d8o3U5dM9cYHb4B67
+         +dfLCEGA2ux9VbPFR4jvktJK7Xk8temg1Ueb2KBaK0/HqHpIFgiMJJfWvoPmoLs3DCJ+
+         AXp6969Vphe4sM0QHM4A21a8UUt+O4XcgwkjxGgyDZpSV5cCUHAS7M8599NmAEaVOpjK
+         SB/l5mCHtxYBppDKeTjEh6JahyN7NnT3AbE1i+8pY6ZMR5XcjGtGU/XGdJW2+Qe1cYnn
+         ReN+KxESb/+a0AuE2xXATd4lYeGRk+HcY9yqpgQefmLAvGQPZpyTtizW9oFy7WQiOsoO
+         a0WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7VHvjIfJq9D6lO+TpoQm0tnmjw/+FCIiWflb4wfyiis=;
-        b=sU2CQEKltpdbEZQNmu1m21WJOkpeolTKE6Ayj16BLIu4EKiDT3d+w82j3Q3vdR/H6o
-         iLxgtHtt3REFW7m6aflAdeXZ6ejwgap7A1j+S/NO05pEG6olh0nkjTXPD8S5WlCLxhlr
-         omrlEt/07ioLfMs7JF0zYLSw+TVX2C+sTOp3lcNaNYC1oNXlr7zFZLJAhAmEczf5vF3y
-         Uv+SEyiG15wCg3Vyqguf/+7Q65YEyJdbRZGds52APN03VsPT0kbb5B3zaacAiYO/AGeT
-         xw9DNRpyk+UrdIETdy0INQFbVFA4fq41/d3ZCXHkV/434S4aW1FrXJdhLRtqcSpPg7U0
-         7ibA==
-X-Gm-Message-State: AOAM530F2Zn8/WcbdAjuYFKrdcCwGZxYEasZEgqHc88AE7cwhkPuQ9wc
-        5z33pjge3x07hEh0WaZZkqpx0c1L0Rud4Lx5Lr3gzg==
-X-Google-Smtp-Source: ABdhPJzmqggwtA1y7Yx/fkUPb0VYhyt53XkbFW/YOv8U7jTTlx8hbfIWMLZOyIomdvlvIKNRQAdurZiLN3oGIAvuprM=
-X-Received: by 2002:a81:7c45:0:b0:300:2f8c:7cf2 with SMTP id
- x66-20020a817c45000000b003002f8c7cf2mr15465005ywc.255.1653631523553; Thu, 26
- May 2022 23:05:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAOBGo4zjkcX=ZQm1uYRDe9EjYqsTCyZY-Gf1C4XqMNYGFCcF+Q@mail.gmail.com>
- <CAP-5=fUobnt9anqeTaUt_EJVuMOpsxGR-Sa_e7qX=ZxqPDr+sA@mail.gmail.com>
- <20220526041650.esbcujaihdv5jqxm@google.com> <CAP-5=fVbCNg=wGbN3dK1yP_cu_eL3h-sPDZ1hC2BgVM8nmHZ_w@mail.gmail.com>
- <Yo+RDn9om2Eiwjym@kernel.org>
-In-Reply-To: <Yo+RDn9om2Eiwjym@kernel.org>
-From:   =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
-Date:   Thu, 26 May 2022 23:05:12 -0700
-Message-ID: <CAFP8O3JreR7XD-OygwP6+wwrJoxEfAnZm9+U8Ti68fmAHKaKvg@mail.gmail.com>
-Subject: Re: Call graph dwarf unwinding fails with lld
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YmwNb7GmrMj+Aj35yVXxyxMSFu/WwxZF0+SnvsJ3ZBc=;
+        b=rnFmPyeob4jgkXGmhkypgfIu4b5DAEiUI1VOb6cl9wH2QE7szfstD1taAgppaH0bmI
+         tfPrbGpLpVHuWDq8d1kjin9QQ9c2cCvKSyCKOv+PG5FnaIgY5leFcr1hO52Q3nDPF9x/
+         4Swd6dAz6M9SFMHtwZFqXltzsZxcvUzYEGLBZkrGUpewSuS1NVJt9QpOiMTB1iLbzjod
+         o4ECueqL2vx0L047tcEEvEwzQ6llNoN7kmsivroBQuUTxxSA3tSw9pPkkBvO3ITqEox3
+         OhEahVGw37QO1XodHzldz3Y42pRU/F/YbeqeSiuUGLhyCLNSCN8Ou/iDgJ09VlivflCm
+         sxNQ==
+X-Gm-Message-State: AOAM533gIAseXoM1OpsoQMzp25LdBrnqlS9TCMgZSESUlz37abHQm5ND
+        im/z07illJ5UQFmCxxEelOz7gg==
+X-Google-Smtp-Source: ABdhPJwqhqEGd9W8CmvrTs80ShemtIPeUuS1DxDxJentbUWgEs/zUXhACYfIaks1ckbEKdUM/Z1qTA==
+X-Received: by 2002:a17:902:7004:b0:161:f216:4f3f with SMTP id y4-20020a170902700400b00161f2164f3fmr34842103plk.98.1653632341007;
+        Thu, 26 May 2022 23:19:01 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (n058152048195.netvigator.com. [58.152.48.195])
+        by smtp.gmail.com with ESMTPSA id p6-20020a62ab06000000b0051843980605sm2550902pff.181.2022.05.26.23.18.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 May 2022 23:19:00 -0700 (PDT)
+Date:   Fri, 27 May 2022 14:18:54 +0800
+From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Travis Downs <travis.downs@gmail.com>,
-        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Cc:     James Clark <james.clark@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, broonie@kernel.org,
+        german.gomez@arm.com, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 4/6] perf tools: Use dynamic register set for Dwarf
+ unwind
+Message-ID: <20220527061854.GA829807@leoy-ThinkPad-X240s>
+References: <20220509144257.1623063-1-james.clark@arm.com>
+ <20220509144257.1623063-5-james.clark@arm.com>
+ <Yo+gYbLNnYGOPzGs@kernel.org>
+ <Yo/EytFDKnOEiWCa@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Yo/EytFDKnOEiWCa@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 26, 2022 at 7:39 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, May 25, 2022 at 09:25:39PM -0700, Ian Rogers escreveu:
-> > On Wed, May 25, 2022 at 9:16 PM Fangrui Song <maskray@google.com> wrote:
-> > >
-> > > On 2022-05-25, Ian Rogers wrote:
-> > > >On Tue, May 24, 2022 at 1:50 PM Travis Downs <travis.downs@gmail.com> wrote:
-> > > >>
-> > > >> I have been tracking down an issue locally where `perf record
-> > > >> --call-graph=dwarf` stopped working in the sense that unwinding always
-> > > >> failed.
-> > > >>
-> > > >> Turns out it was related to `lld` - binaries linked with `lld` don't
-> > > >> seem to unwind correctly with `--call-graph=dwarf`. I've confirmed
-> > > >> that the `.eh_frame` sections are there, but I guess they are
-> > > >> different after using this linker.
-> > > >>
-> > > >> Has anyone run into this?
-> > > >
-> > > >I was unaware but thanks for filing the bug!
-> > > >
-> > > >> There's an open LLVM issue at https://github.com/llvm/llvm-project/issues/53156
-> > > >>
-> > > >> ... but no activity since it was filed, though it is not clear if the
-> > > >> problem is really with lld or the unwinders.
-> > > >>
-> > > >> In a related question: perf supports more than one DWARF unwinding
-> > > >> implementation, depending on what libraries are available at build
-> > > >> time, right? Is there a way to select which unwinder is used at
-> > > >> runtime?
-> > > >
-> > > >I don't think so. There are two build options NO_LIBUNWIND=1 and
-> > > >NO_LIBDW_DWARF_UNWIND=1. I played around with the example from the
-> > > >bug, confirmed no difference with the eh_frames and hand verified
-> > > >them, I also added -fno-omit-frame-pointer -O0 and -static. I've not
-> > > >got a good handle on the issue but my suspicion is that the
-> > > >eh_frame_hdr is broken - it is at least something that lld generates.
-> > > >If I change the eh_frame_hdr finding to some findable but unexpected
-> > > >offset like eh_frame here:
-> > > >https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/unwind-libunwind-local.c?h=perf/core#n286
-> > > >and then test with a working linker the unwinding is broken similarly
-> > > >to with lld. I was looking for a useful tool (objdump, llvm-objdump,
-> > > >readelf, dwarfdump) to look at the eh_frame_hdr but I didn't see one.
-> > > >Perhaps someone has a suggestion or maybe pahole can do it. Hopefully
-> > > >this gives a lead for you to dig into for the bug.
-> > > >
-> > > >Thanks,
-> > > >Ian
-> > >
-> > > I am very familiar with lld and have read some nongnu libunwind code, so I guess I
-> > > may be an appropriate one debugging the issue, but I am puzzled about how to build tools/perf:
-> > >
-> > > /tmp/out/custom1 has needed llvm-project tools, built from origin/main
-> > > ninja -C /tmp/out/custom1 clang lld llvm-{nm,size,strings,objcopy,objdump,readelf,ar,strip}
-> > >
-> > > ```
-> > > % git checkout master  # torvalds/linux
-> > > % PATH=/tmp/out/custom1/bin:$PATH make O=/tmp/linux/x86_64 ARCH=x86_64 -j60 defconfig all
-> > > % PATH=/tmp/out/custom1/bin:$PATH make O=/tmp/linux/x86_64 ARCH=x86_64 -j60 -C tools/perf
->
-> I never tried build both Linux and perf on the same O= directory, can
-> you please building perf on a separate directory to see if this changes
-> anything?
->
-> Also you don't need to build Linux proper to test these problems, right?
->
-> - Arnaldo
+On Thu, May 26, 2022 at 03:19:54PM -0300, Arnaldo Carvalho de Melo wrote:
 
-Thank you! Using an O= without the kernel build fixes my build problem...
-Then I managed to craft a patch:)
-https://lore.kernel.org/linux-perf-users/20220527055217.452307-1-maskray@google.com/
-("perf: Fix segbase for ld.lld linked objects")
+[...]
+
+> Too old to support?
+> 
+>   69     7.19 ubuntu:16.04-x-arm64          : FAIL gcc version 5.4.0 20160609 (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9)
+>     arch/arm64/util/perf_regs.c: In function 'arch__user_reg_mask':
+>     arch/arm64/util/perf_regs.c:151:28: error: 'HWCAP_SVE' undeclared (first use in this function)
+>       if (getauxval(AT_HWCAP) & HWCAP_SVE)
+>                                 ^
+>     arch/arm64/util/perf_regs.c:151:28: note: each undeclared identifier is reported only once for each function it appears in
+>     /git/perf-5.18.0/tools/build/Makefile.build:139: recipe for target 'util' failed
+>     make[5]: *** [util] Error 2
+>     /git/perf-5.18.0/tools/build/Makefile.build:139: recipe for target 'arm64' failed
+>     make[4]: *** [arm64] Error 2
+>     /git/perf-5.18.0/tools/build/Makefile.build:139: recipe for target 'arch' failed
+>     make[3]: *** [arch] Error 2
+> 
+> 
+> ⬢[acme@toolbox perf]$ find . -name "*.h" | xargs grep -w HWCAP_SVE
+> ./arch/arm64/include/uapi/asm/hwcap.h:#define HWCAP_SVE		(1 << 22)
+> ⬢[acme@toolbox perf]$ 
+
+I tested aarch64 GCC-7.4.1 which doesn't support HWCAP_SVE, but
+aarch64 GCC-8.3.0 and GCC-9.4.0 support it.
+
+Either we can add below code:
+
+  #ifndef HWCAP_SVE
+  #define HWCAP_SVE		(1 << 22)
+  #endif
+
+Or directly include header file <.../asm/hwcap.h>.
+
+Not sure which method is preferred.  Maybe the first approach can be
+de-couple with Linux kernel code?
+
+Thanks,
+Leo
