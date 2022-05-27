@@ -2,303 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CC8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 18:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96979C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 18:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240468AbiE0SwN (ORCPT
+        id S1344367AbiE0Sye (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 May 2022 14:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
+        Fri, 27 May 2022 14:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237245AbiE0SwM (ORCPT
+        with ESMTP id S242219AbiE0Syd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 May 2022 14:52:12 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E797186FC
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 May 2022 11:52:08 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id j25so6941687wrb.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 May 2022 11:52:08 -0700 (PDT)
+        Fri, 27 May 2022 14:54:33 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A9C94C796
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 May 2022 11:54:31 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2f4e17a5809so46208907b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 May 2022 11:54:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6mnq6s94t7HVDlK1KKnF1BOHF1n74alGQX0XJ6Y9vKE=;
-        b=BR3zd/vBbmw1kqJ+9veXoJPVyr84j7xUtlwS+kx2VF6cEeRX56XW2ceoNXenDm9cZF
-         2+DmTQCWed/9NzrE3uAczYkvyLQ484ZJfmb7Jq99BEeHPk/dCA4R4tNBMp9ptoB6DLjR
-         4RhF4sPLrM7ojQITMHh/++RTnYQ8wqRDWhyUZd7j/V1axvFB0KABe07CqLntG8G6unap
-         CYUOysMLIuOsOf6dO2599uUE2wbyLoj3UshMAZ8oF5nwCkY/iRREw0X4yFGJ8RrKHyKn
-         2dQIMVyCFq4qPRqviXpWzvrQNbjJW7qZRPywaMLukSHwzb8qtFq4jTRAN7VD2NsD1x1R
-         5qVQ==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=3jMHuEWZEVTgcKAyUiSFGjXQFMoZWUz11fN75aDaI5g=;
+        b=PxCLRYqhvE0DZtFglnz62+sCDB4Vt4NUyo32ldkQ9A4c30DDh9X7Ky2Cn0gZ2jZGlf
+         LPFxoj5yNFHsk751cMTkU4oy95xOVOiLwNni8YZ6lz0yrQa/SXfA/KuKju2FyAS94Cxg
+         PT7m+vJf5JuN/a0EKoiHrzd+ZaeXLz32zehfaIMKbJPRjzX68tSjGvKOldAAMSsZF4fR
+         qHAnd/x4pbCMWZknMQtHKOSe1XssAzQPhiulOg+eexRjpCLUdofNviv3onjrF/GlgNIe
+         rVn6rhf7MlGoGN3vgaMKz9hMR8Fir1Hyr458x2gBlM7WThVueUuugonnuOkYjX/wicQa
+         IYDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6mnq6s94t7HVDlK1KKnF1BOHF1n74alGQX0XJ6Y9vKE=;
-        b=mRCFUsLw+7ba2Yo+ToOgCktyiuJTANU1X3aI66JcpIbtds9IKiknXw2KlcTc4CBPgM
-         Iz7RO9ABkUm7bjk8sD/cYIr+4LCrhcll1Yf3V56vY2l70xG/XMsL1jEcG3cLc9KqSRzI
-         5BAb13kT5/qQuW4lyJDHcv6LSLaH3PxcKxX9Hp/rFyvB8sNfe8zO7QV5XLlPD8KQ3gTn
-         a9ig/AcWt+WgIRoVyVuBIOCy7EQRTvvvYD5v8bahO6QsaJgozGatuZOOt/rXkZdHogId
-         m1BqM6w8gCAO6se+zBCpwSk+7S/K0qffaHdBFu7USS8o/7inidWUn0/v7aRX/CAFPQsF
-         kuWA==
-X-Gm-Message-State: AOAM531me3M3euxvIvFgNLDTNwbSib/DHmnTdAbr1dE7FxuNXWta4GmR
-        yTi6pf9HGxT5LlXMQkUHV0ojRprVhYlhXrREe3ImHfUGJZud1Q==
-X-Google-Smtp-Source: ABdhPJzInRoKCYogfXHEE4xel1G0d7QXLMHln0xOKGtmqeWL3sU5RFq0Efp5yPiLAgMVa1MHVNXDl5F+Bm5iOr/g/9o=
-X-Received: by 2002:a5d:598f:0:b0:20c:83c9:b05b with SMTP id
- n15-20020a5d598f000000b0020c83c9b05bmr36529153wri.343.1653677526611; Fri, 27
- May 2022 11:52:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220527182039.673248-1-maskray@google.com>
-In-Reply-To: <20220527182039.673248-1-maskray@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=3jMHuEWZEVTgcKAyUiSFGjXQFMoZWUz11fN75aDaI5g=;
+        b=dv1jy40HMOnM1WcYt548MsQuoz3DE9mJOjx4LE9fLkVP530RyTzUSeDmJ/4/fCj7eN
+         QVnB/scAJqBxxRigf6Ko1K7ut8AxInCza+6fr0ueaGO8ihE6cBiICALyPrVO2VwBHqxl
+         2b8I/KFSV2Nl1hDZRh6GWQoJxV/TOfBsdPKEbsYHZkn0LFnfZGuWhFfnGZQCmoNuERhh
+         a88H+0f9g+2c3+g3hCiiRtzOayuQcvOotsr+QOr6nmtoJZ41tE7U1tdM6zhwpJp0iypZ
+         R8HPs9enExvNxsm8/FHSJv5u4HgRGm7v+fHjgoEtJPVr8JPHfSHeSftW35eI+FwEsza2
+         QaeQ==
+X-Gm-Message-State: AOAM531Fap3dG6iI3vHa5ZhlaKwF85oHSi33oFGdBS6gjASAMszQULPx
+        vk+x4GYto9dvjvfYqfJFW1hwg3ijMNG5
+X-Google-Smtp-Source: ABdhPJwLz/Cb2OhjVqfIOoEZruXZ0cC/Mj+ooHvw7vgvt567POuXK0Jif1n9ajCXug3PnxYnDLlRmLSh7gG7
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:ed8f:39b4:b259:40ef])
+ (user=irogers job=sendgmr) by 2002:a25:d89:0:b0:65c:6714:71c1 with SMTP id
+ 131-20020a250d89000000b0065c671471c1mr11197ybn.226.1653677670143; Fri, 27 May
+ 2022 11:54:30 -0700 (PDT)
+Date:   Fri, 27 May 2022 11:54:23 -0700
+Message-Id: <20220527185426.240235-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
+Subject: [PATCH v3 0/3] Rewrite jevents program in python
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 27 May 2022 11:51:54 -0700
-Message-ID: <CAP-5=fWXm-G8M_MTBjj2h_JkHgj6WU27GDqJ0hcRthtYG-m4AQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf: Fix segbase for ld.lld linked objects
-To:     Fangrui Song <maskray@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Sebastian Ullrich <sebasti@nullri.ch>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, sandipan.das@amd.com,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 27, 2022 at 11:20 AM Fangrui Song <maskray@google.com> wrote:
->
-> segbase is the address of .eh_frame_hdr and table_data is segbase plus
-> the header size. find_proc_info computes segbase as `map->start +
-> segbase - map->pgoff` which is wrong when
->
-> * .eh_frame_hdr and .text are in different PT_LOAD program headers
-> * and their p_vaddr difference does not equal their p_offset difference
->
-> Since 10.0, ld.lld's default --rosegment -z noseparate-code layout has
-> such R and RX PT_LOAD program headers.
->
->     ld.lld (default) => perf report fails to unwind `perf record
->     --call-graph dwarf` recorded data
->     ld.lld --no-rosegment => ok (trivial, no R PT_LOAD)
->     ld.lld -z separate-code => ok but by luck: there are two PT_LOAD but
->     their p_vaddr difference equals p_offset difference
->
->     ld.bfd -z noseparate-code => ok (trivial, no R PT_LOAD)
->     ld.bfd -z separate-code (default for Linux/x86) => ok but by luck:
->     there are two PT_LOAD but their p_vaddr difference equals p_offset
->     difference
->
-> To fix the issue, compute segbase as dso's base address plus
-> PT_GNU_EH_FRAME's p_vaddr. The base address is computed by iterating
-> over all dso-associated maps and then subtract the first PT_LOAD p_vaddr
-> (the minimum guaranteed by generic ABI) from the minimum address.
->
-> In libunwind, find_proc_info transitively called by unw_step is cached,
-> so the iteration overhead is acceptable.
->
-> Reported-by: Sebastian Ullrich <sebasti@nullri.ch>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1646
-> Signed-off-by: Fangrui Song <maskray@google.com>
-> Cc: Ian Rogers <irogers@google.com>
+New architectures bring new complexity, such as Intel's hybrid
+models. jevents provides an alternative to specifying events in the
+kernel and exposing them through sysfs, however, it is difficult to
+work with. For example, an error in the json input would yield an
+error message but no json file or location. It is also a challenge to
+update jsmn.c given its forked nature.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+The changes here switch from jevents.c to a rewrite in python called
+jevents.py. This means there is a build time dependency on python, but
+such a dependency already exists for asciidoc (used to generate perf's
+man pages). If the build detects that python isn't present or is older
+than version 3.6 (released Dec. 2016) then an empty file is
+substituted for the generated one.
 
-Thanks!
-Ian
+A challenge with this code is in avoiding regressions. For this reason
+the jevents.py produces identical output to jevents.c, validated with a
+test script and build target.
 
-> --
-> Changes from v1:
-> * Fix elf_base_address to use the first PT_LOAD
-> * Use dso::elf_base_addr which is a constant even if the dso is loaded into multiple processes
-> ---
->  tools/perf/util/dso.h                    |   2 +
->  tools/perf/util/unwind-libunwind-local.c | 107 ++++++++++++++++-------
->  2 files changed, 78 insertions(+), 31 deletions(-)
->
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index 3a9fd4d389b5..97047a11282b 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -196,7 +196,9 @@ struct dso {
->                 u32              status_seen;
->                 u64              file_size;
->                 struct list_head open_entry;
-> +               u64              elf_base_addr;
->                 u64              debug_frame_offset;
-> +               u64              eh_frame_hdr_addr;
->                 u64              eh_frame_hdr_offset;
->         } data;
->         /* bpf prog information */
-> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-> index 41e29fc7648a..37622699c91a 100644
-> --- a/tools/perf/util/unwind-libunwind-local.c
-> +++ b/tools/perf/util/unwind-libunwind-local.c
-> @@ -169,30 +169,64 @@ static int __dw_read_encoded_value(u8 **p, u8 *end, u64 *val,
->         __v;                                                    \
->         })
->
-> -static u64 elf_section_offset(int fd, const char *name)
-> +static int elf_section_address_and_offset(int fd, const char *name, u64 *address, u64 *offset)
->  {
->         Elf *elf;
->         GElf_Ehdr ehdr;
->         GElf_Shdr shdr;
-> -       u64 offset = 0;
-> +       int ret;
->
->         elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
->         if (elf == NULL)
-> -               return 0;
-> +               return -1;
->
-> -       do {
-> -               if (gelf_getehdr(elf, &ehdr) == NULL)
-> -                       break;
-> +       if (gelf_getehdr(elf, &ehdr) == NULL)
-> +               goto out_err;
->
-> -               if (!elf_section_by_name(elf, &ehdr, &shdr, name, NULL))
-> -                       break;
-> -
-> -               offset = shdr.sh_offset;
-> -       } while (0);
-> +       if (!elf_section_by_name(elf, &ehdr, &shdr, name, NULL))
-> +               goto out_err;
->
-> +       *address = shdr.sh_addr;
-> +       *offset = shdr.sh_offset;
-> +       ret = 0;
-> +out_err:
->         elf_end(elf);
-> +       return ret;
-> +}
-> +
-> +#ifndef NO_LIBUNWIND_DEBUG_FRAME
-> +static u64 elf_section_offset(int fd, const char *name)
-> +{
-> +       u64 address, offset;
-> +
-> +       if (elf_section_address_and_offset(fd, name, &address, &offset))
-> +               return 0;
-> +
->         return offset;
->  }
-> +#endif
-> +
-> +static u64 elf_base_address(int fd)
-> +{
-> +       Elf *elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
-> +       GElf_Phdr phdr;
-> +       u64 retval = 0;
-> +       size_t i, phdrnum = 0;
-> +
-> +       if (elf == NULL)
-> +               return 0;
-> +       (void)elf_getphdrnum(elf, &phdrnum);
-> +       /* PT_LOAD segments are sorted by p_vaddr, so the first has the minimum p_vaddr. */
-> +       for (i = 0; i < phdrnum; i++) {
-> +               if (gelf_getphdr(elf, i, &phdr) && phdr.p_type == PT_LOAD) {
-> +                       retval = phdr.p_vaddr & -getpagesize();
-> +                       break;
-> +               }
-> +       }
-> +
-> +       elf_end(elf);
-> +       return retval;
-> +}
->
->  #ifndef NO_LIBUNWIND_DEBUG_FRAME
->  static int elf_is_exec(int fd, const char *name)
-> @@ -248,8 +282,7 @@ struct eh_frame_hdr {
->  } __packed;
->
->  static int unwind_spec_ehframe(struct dso *dso, struct machine *machine,
-> -                              u64 offset, u64 *table_data, u64 *segbase,
-> -                              u64 *fde_count)
-> +                              u64 offset, u64 *table_data_offset, u64 *fde_count)
->  {
->         struct eh_frame_hdr hdr;
->         u8 *enc = (u8 *) &hdr.enc;
-> @@ -265,35 +298,47 @@ static int unwind_spec_ehframe(struct dso *dso, struct machine *machine,
->         dw_read_encoded_value(enc, end, hdr.eh_frame_ptr_enc);
->
->         *fde_count  = dw_read_encoded_value(enc, end, hdr.fde_count_enc);
-> -       *segbase    = offset;
-> -       *table_data = (enc - (u8 *) &hdr) + offset;
-> +       *table_data_offset = enc - (u8 *) &hdr;
->         return 0;
->  }
->
-> -static int read_unwind_spec_eh_frame(struct dso *dso, struct machine *machine,
-> +static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
->                                      u64 *table_data, u64 *segbase,
->                                      u64 *fde_count)
->  {
-> -       int ret = -EINVAL, fd;
-> -       u64 offset = dso->data.eh_frame_hdr_offset;
-> +       struct map *map;
-> +       u64 base_addr = UINT64_MAX;
-> +       int ret, fd;
->
-> -       if (offset == 0) {
-> -               fd = dso__data_get_fd(dso, machine);
-> +       if (dso->data.eh_frame_hdr_offset == 0) {
-> +               fd = dso__data_get_fd(dso, ui->machine);
->                 if (fd < 0)
->                         return -EINVAL;
->
->                 /* Check the .eh_frame section for unwinding info */
-> -               offset = elf_section_offset(fd, ".eh_frame_hdr");
-> -               dso->data.eh_frame_hdr_offset = offset;
-> +               ret = elf_section_address_and_offset(fd, ".eh_frame_hdr",
-> +                                                    &dso->data.eh_frame_hdr_addr,
-> +                                                    &dso->data.eh_frame_hdr_offset);
-> +               dso->data.elf_base_addr = elf_base_address(fd);
->                 dso__data_put_fd(dso);
-> +               if (ret || dso->data.eh_frame_hdr_offset == 0)
-> +                       return -EINVAL;
->         }
->
-> -       if (offset)
-> -               ret = unwind_spec_ehframe(dso, machine, offset,
-> -                                         table_data, segbase,
-> -                                         fde_count);
-> -
-> -       return ret;
-> +       maps__for_each_entry(ui->thread->maps, map) {
-> +               if (map->dso == dso && map->start < base_addr)
-> +                       base_addr = map->start;
-> +       }
-> +       base_addr -= dso->data.elf_base_addr;
-> +       /* Address of .eh_frame_hdr */
-> +       *segbase = base_addr + dso->data.eh_frame_hdr_addr;
-> +       ret = unwind_spec_ehframe(dso, ui->machine, dso->data.eh_frame_hdr_offset,
-> +                                  table_data, fde_count);
-> +       if (ret)
-> +               return ret;
-> +       /* binary_search_table offset plus .eh_frame_hdr address */
-> +       *table_data += *segbase;
-> +       return 0;
->  }
->
->  #ifndef NO_LIBUNWIND_DEBUG_FRAME
-> @@ -388,14 +433,14 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
->         pr_debug("unwind: find_proc_info dso %s\n", map->dso->name);
->
->         /* Check the .eh_frame section for unwinding info */
-> -       if (!read_unwind_spec_eh_frame(map->dso, ui->machine,
-> +       if (!read_unwind_spec_eh_frame(map->dso, ui,
->                                        &table_data, &segbase, &fde_count)) {
->                 memset(&di, 0, sizeof(di));
->                 di.format   = UNW_INFO_FORMAT_REMOTE_TABLE;
->                 di.start_ip = map->start;
->                 di.end_ip   = map->end;
-> -               di.u.rti.segbase    = map->start + segbase - map->pgoff;
-> -               di.u.rti.table_data = map->start + table_data - map->pgoff;
-> +               di.u.rti.segbase    = segbase;
-> +               di.u.rti.table_data = table_data;
->                 di.u.rti.table_len  = fde_count * sizeof(struct table_entry)
->                                       / sizeof(unw_word_t);
->                 ret = dwarf_search_unwind_table(as, ip, &di, pi,
-> --
-> 2.36.1.124.g0e6072fb45-goog
->
+v3. Updates the patches for merged changes (on
+    acme/tmp.perf/core). Re-runs all comparisons to make sure the
+    generated pmu-events.c isn't altered at all by this change. Adds
+    the jevents.c ExtSel fix in:
+    https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
+    Bumps the python version from 3.5 to 3.6, as f-strings weren't
+    introduced until 3.6.
+
+v2. Fixes the build for architectures that don't have pmu-events json
+    (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
+    build for python not being present or too old (Suggested-by: Peter
+    Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
+
+Ian Rogers (3):
+  perf jevents: Add python converter script
+  perf jevents: Switch build to use jevents.py
+  perf jevents: Remove jevents.c
+
+ tools/perf/Makefile.config               |   19 +
+ tools/perf/Makefile.perf                 |   16 +-
+ tools/perf/pmu-events/Build              |   15 +-
+ tools/perf/pmu-events/empty-pmu-events.c |   21 +
+ tools/perf/pmu-events/jevents.c          | 1342 ----------------------
+ tools/perf/pmu-events/jevents.py         |  392 +++++++
+ tools/perf/pmu-events/jsmn.h             |   68 --
+ tools/perf/pmu-events/json.c             |  162 ---
+ tools/perf/pmu-events/json.h             |   39 -
+ 9 files changed, 444 insertions(+), 1630 deletions(-)
+ create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
+ delete mode 100644 tools/perf/pmu-events/jevents.c
+ create mode 100755 tools/perf/pmu-events/jevents.py
+ delete mode 100644 tools/perf/pmu-events/jsmn.h
+ delete mode 100644 tools/perf/pmu-events/json.c
+ delete mode 100644 tools/perf/pmu-events/json.h
+
+-- 
+2.36.1.255.ge46751e96f-goog
+
