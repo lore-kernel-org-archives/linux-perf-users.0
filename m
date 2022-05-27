@@ -2,149 +2,208 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D9DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 02:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6B3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 May 2022 04:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233969AbiE0C34 (ORCPT
+        id S239002AbiE0EEQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 May 2022 22:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53064 "EHLO
+        Fri, 27 May 2022 00:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230160AbiE0C3z (ORCPT
+        with ESMTP id S239923AbiE0EEP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 May 2022 22:29:55 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2042.outbound.protection.outlook.com [40.107.236.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EEDBE52BF;
-        Thu, 26 May 2022 19:29:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nd2We91IiAutqXa7W9m2kX4LjFiHuLrqD03WVN4m8ei+wrWHZMrbkgXGxqieDPrprCRif6NI+5xDS5TZSBpqt/zTzRGjSL4n6KfItRhumRG1IYi0SfAVxLltI3+iHmoFilQsDkAG92itIrBvbwBdjD1Gsx6EHOUdfXb3G68SdcYg25ZOoG6xHpZl0c0vo8ONBNoRt7fgXYM+9V9zZAs53ChbskOnpmbf19EcvX4MXn4TrxZaGoTLA5wOrHEuWX8fMn4XdEumS2Q69ofRQT50IVLA8k4y2AnsAgBEuOQeN62CYXIQSR+/Ze2smILHy3MWzrk39KYOBu0TqAA9V7w8rQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=taAb844CzXAnwMVxiU0CCJXxpTisqGHhA+O/iSabAZk=;
- b=X71MziBWqkZfV0uVlZqGoK3n4KoduAYKpD1KV5KgNXc8eFrBt6QwPmpWN1a/FJ2IL1o7WajzjF1Jski7GDQ4gOZQFYBZg8CWB7SiTUv6wGvLJ9encn1Qg3ej5xwAA08fT7KhL2Xw2WU8DJzQi4y2YRF+faMI+8dhggo6oPzO2VVihSgHVCW5vmtjZUEScfqLs9bzp9V3uzZndtVo2+LKHHbeF6xXhVQxe7b8c6+g+8m9wb8r305bXHmHVPMt+zFSRnrrXS+D3KavhX6Lv673sVCab0ald0+VLb8j6reDm9cMDTQUKHEDiqE2qgCRWJe0ebZ9Ig7w1flXqqVMuKS5Aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=taAb844CzXAnwMVxiU0CCJXxpTisqGHhA+O/iSabAZk=;
- b=y9bG4Q/toOUH0R5xzg09ecyFEzP0DYN0ou79/PDTogj4EbWs4r4GeIElWOE6knaUAxPRlMiA89YshYB3QbaDVUKI0Yp2Pc75U02Km8caoN6Q4XRTDikfgaDUBdmCZxX7tO4KkZaZI+xjUuPl1TiIFX02PUb5uWDq1LBz/8djTGY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by BN9PR12MB5082.namprd12.prod.outlook.com (2603:10b6:408:133::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13; Fri, 27 May
- 2022 02:29:51 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5044:b3eb:8442:fe92]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5044:b3eb:8442:fe92%7]) with mapi id 15.20.5273.023; Fri, 27 May 2022
- 02:29:51 +0000
-Message-ID: <de389d34-22c1-5c62-d6c2-bfb256924a97@amd.com>
-Date:   Fri, 27 May 2022 07:59:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: [PATCH v4 3/5] perf/x86/ibs: Add new IBS register bits into
- header
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>, peterz@infradead.org
-Cc:     irogers@google.com, rrichter@amd.com, mingo@redhat.com,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, james.clark@arm.com,
-        leo.yan@linaro.org, kan.liang@linux.intel.com, ak@linux.intel.com,
-        eranian@google.com, like.xu.linux@gmail.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20220523033945.1612-1-ravi.bangoria@amd.com>
- <20220523033945.1612-4-ravi.bangoria@amd.com> <Yo+hbx9c/9FoaiJN@kernel.org>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <Yo+hbx9c/9FoaiJN@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0164.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:de::6) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2be73a95-c592-400c-5974-08da3f88c6da
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5082:EE_
-X-Microsoft-Antispam-PRVS: <BN9PR12MB508267AD50762C9AACE7C89AE0D89@BN9PR12MB5082.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kd1+Pemut+Mg4scaYE4L7xrqhFNQluY1UfhoOTgkWFRpascwuMqSTLZxzH3dzujxjvCyIl2iqh8Fjav66FJ1WybUeLyP05m4RN9RKxV3H+nR4rwFiO+25jqGEDbQM6wyAD5HmD/Os144zf1jo+MrJ17mit4X2a2vHvr7YodKQSKDsqRLhdQ0a5e4QwYPFC5eLHe3834WEIhb31PfbgXCqH598QDaorCe8mmGc7YAmZaZSxJYZys3zvhl/6f0YcYH+QY+eeBSuKvypSjXKZnIZtVol09ojSXaKkFrgBJMpnacyNIShmeprfkwjF/iaNONH0Znf4aFsL0R63bsEdhPh9h5T7PS2KVi5EYm+E22EBYIh7GlrgRvdj0wiSDdbTNyOPONxXIlTgPQMwPLnHKVNGGNpHwf6XxcaC/fu3yw88+Se0xDa0K6HqQseN7wzrJPE6Jcz7xCk3giSZN0hQpQtObv3evQwdxqYKusOvbBl2Nb3wI7Dx3zqNEmSk4P0ZaScBGanzGmRtgJaz9g5waD6PEHPmQvY5WZX/dgECeZYkVVwUpcyc6ZaB5fwG8cN2buqNzauOPc3CLCrGvMvdkVSQ2A/HYqAQfso9b2RadNLcNNBFgIkgEX0lr7v5OLPpw04bMn+LiPpm8AFn9DH2Ym+5ls+FotbJzSFa9dFpmreMjk36rCdPOFeCTfJ3i4wVA7ILNsRreyi3ejKk2LqRoPqrCvwpuYFAfC1oaBSI87dLQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(5660300002)(66946007)(36756003)(6486002)(38100700002)(7416002)(2616005)(31686004)(316002)(186003)(6512007)(4744005)(86362001)(4326008)(66476007)(8676002)(44832011)(66556008)(508600001)(6666004)(53546011)(8936002)(26005)(6506007)(2906002)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Wkl1RjhlUmZrampEaUt6TksvNC9BbFhTVWo3MjM3dmg4RTJRQ0E5aFhCTTNO?=
- =?utf-8?B?U3FjZTMzUHpDbEFJWTEwWDlOYWtGVGxVbFZnbXlHeFhWcStXYmh3Tkl4a0l3?=
- =?utf-8?B?dmpKZjJDSExNeDBZUUxEejAydjlLZDVrSlU3b2FXcytJWThwQUhMT3RxbnBS?=
- =?utf-8?B?U3pkcTgxMFZDUHBDVHFzQlJOd0VVcnByTGN1TjF5ZXljcmpQR1BSRk9HZzU1?=
- =?utf-8?B?MlVIbW4wUG0yc2puMmhsS3VmRVMzN0s1Znk2MXlXcTdOYlhqU3JoaXEvbi84?=
- =?utf-8?B?L0pkUVY3OFRNWkJpQmlXM2xLSzhDc294SHlzc0NpNVd0R0hieGptSVI5bCtt?=
- =?utf-8?B?U2JpWjNObUtPZnNsR3oyUWdaUUd6TlF0TnUvR283dDg1Mk9QZTF4aG8vZm5s?=
- =?utf-8?B?dGNNY2VzYmFFaHFoQUlwVVJSVEMyOXJMa1hmNHJrVDBjMXh4U1laT3B5Z3BG?=
- =?utf-8?B?djArLzQxMU01KzFkUENqNWNTUk1sVG91UVJBa1FjY3BLQTRPOWtxdzdLN29H?=
- =?utf-8?B?d2NIcVk5b3JIcmxpMUpmTlpLUGo5WTZJMzJNbzVQWkJVd1BwUUZOTzA3N3g0?=
- =?utf-8?B?RDNBRUFJS3V1SEhzMUZJbmI2ckpxYVNFYlA2bExPajdqcVBEZGM3a2ZMeVd6?=
- =?utf-8?B?T1duRDYxWE15N1FUd3dTbG91MGVIdmg3NnNDTVJ0aEEySnFHbmNkQ2EyT2JE?=
- =?utf-8?B?c0RzRVdkTGZ0T05JeTlKeXpQTlROVzRRZGVXUXhJSCsyRVkzakdCeEphUCtF?=
- =?utf-8?B?NGZTcGJtZyt5TStSQ3ZMRVV6SDd1T3ozK0hNdlovK1BwRTZ4OHlUYzZHc0U4?=
- =?utf-8?B?WGdDQjlwWWR2QmlYK0c2REF5YnkyVG9ZR0ZCdFh0UWVRNVpqa3R6YjlySElP?=
- =?utf-8?B?NnBNRzZpeldEZDU5RytrUDJsZmEvSWY1L0J1WmxXdEtiQ1lieS9xUjBISkZh?=
- =?utf-8?B?RlVIQjJuUE4wcGpwMlVyaG9WSU0vaVFFZmdTL0lydU1yRkFXT2gxWXBCY2tY?=
- =?utf-8?B?Y0RmUHRXbS9ZOEZjbkh5djIrdXNwaVVNN2dLa1R4SllhdURKaytsK1NUTldT?=
- =?utf-8?B?M09OT0E2ejlLNytGM2RVN0lNdnYzaWRrMHgzSXcwQ2w1S09wNXduTUh1RCth?=
- =?utf-8?B?Tk1hQ0kzdGJsRC9ETlBzU0ZSUDJFVXNGQUZNVFVsbFlxN2MwS3Qvc3JrbXJl?=
- =?utf-8?B?K1RJQnd5dWN5NytmNXVQZzROa2o3UUttMkxzcTVKN0VJemptajhCTWtNeStQ?=
- =?utf-8?B?V0U2UUNaMklZanZIMEh3dzlybEgwMFYwK0pJUm1hVDdwM21OZ1JkbE4rQ0xH?=
- =?utf-8?B?bnRGVmFIMmx1bU1jS1pOTExnVkhYSmFad0xnUzJMb3ZUSGc5YWxwazdUTDlO?=
- =?utf-8?B?K1llWnFqaE1NT0s4T0NaYjhpcWVJclV1dHNGTGI3alhnWG0vYzIrRm44bnE5?=
- =?utf-8?B?Q2czNGJzTkd1dmhreUdGTWNYQ01xWDNpbENuVnVsK3BuRlAwcEJuUDh4ZHhP?=
- =?utf-8?B?THB6WGVNOURuV3Q2ellwbWg3NFBwd05iRWNQRGxrejF0MVVyY3ozK0tjN3Rt?=
- =?utf-8?B?TkdpWWNkaXVCdW5LUkdUOCtSMDE3aU9oQ2YzZmFRdlBMQTd1dWJBbUFmdmJu?=
- =?utf-8?B?RUlBdWhOcVJDZ3NhaEdIUHBTQUNjNVNiTVFqYzd0a3UwOXk0S3loUUxWUkpr?=
- =?utf-8?B?eDZRanVVay8xY1MzZHQ2ZERsOXYxbzBSUC9mTWRLSUp6alZxdnBWSFFQTFU5?=
- =?utf-8?B?aUFPOGNGbFJsRTdUQ0psa05hYk14b1FTVjBuMHFxc3QvY3pTWEptUTVaYUt2?=
- =?utf-8?B?djlvNlRLd2J2UnRJVGtOR1pOYXhhZkVpNHdvS0lkRVc3SUVXeTNBYXhGaElF?=
- =?utf-8?B?RWxHbkpFbGNVbGNzVU9vMVFiekdxc1ljVHdRbU5IMk9KRnNyZ0NMVXNuTHdO?=
- =?utf-8?B?dGY1MGp4VVpVT29HTUpDMzVMVFZZMmF1SlRySEs2TFp2MnZDV05OOTdqNllR?=
- =?utf-8?B?Z2ZlV050NDg5OEU4QmZ0TDZ6ejB0ZjhNSWxMU1Nyd2p6YmFwVzBKYzFINEU4?=
- =?utf-8?B?MWd3ZEhxcVhtYlZ0UkEwVnpRUEFQWllsM3JhT1Y1b1h0bUY0MU1mODJuODIz?=
- =?utf-8?B?WlFpNnRoS3BGVXB2T3gzblRBc0NKVnpPVlFyUHdMZm1IQzZJNXVDZTBCQnBL?=
- =?utf-8?B?Y3Q2K215OEtqQkZiWkN2Ylp3VVYvZDVKQmNtRXJkNzVvUzRJZVlPOTBYdmFF?=
- =?utf-8?B?cmFCRnJtbCtzbytLV3QvRWwxNmlzOFNzVmdpaUYzbm1RK0RNc1d3Y3RVNUxN?=
- =?utf-8?B?ODh6TW5pZVlpQ1BDZXVyRDNlbEsvUFBvSVYvN1VmWXk0UTcxRjVFdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2be73a95-c592-400c-5974-08da3f88c6da
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2022 02:29:51.4240
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c3Ql9zyRZzw1Nz9QuXGBIiL4sXONBT02RXnSkWpc4iti5KnARSt7BFzeJsE8rpr95w0J6uJfhiO/7cmYohm76A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5082
+        Fri, 27 May 2022 00:04:15 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73418EBEBF
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 21:04:12 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 4-20020a251004000000b0064df0151b18so3156401ybq.21
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 May 2022 21:04:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=j18U4kkoV3/OvD/NxmpbujJMFVrALYJLqrC/u8afB3Y=;
+        b=rYOMuXfxQ0JMU55WylL/alxBXhjaeUWA5X7tZBAwe9tOtz2AOZ8KCHRjhZ705+9yQ2
+         Y+P9oC528jBkB8vZ9rFzUMutNg8Bm1yGLd8zW0F28KxsbNb6ArmoFwQphF2i+SEMjpWB
+         lTbAlyf6Oysye0qwhGrWi0W0NJEaFIBU150aTjyubMivPjBYzefYIZ+92QPbBbUm01jD
+         w2sEMPIaiYQpejOqYrCQkH2cHeULS4Ieyp4gXI0NUjzwA0vBETe3VCPkQXIN0lpjrQWg
+         Fg3gm8newNcfcniJ76t4WcX1SuDEQF4HefnhqXmiDpQuuiDqF6tk+a6uVU7xUM4LR2W/
+         3OaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=j18U4kkoV3/OvD/NxmpbujJMFVrALYJLqrC/u8afB3Y=;
+        b=Dn0PXLXFmJp5qkBowS18D+S6Vc39nRZIgXxKetwiKNeZlpBnx5iJPK/3rywBXyGgbL
+         1lwIDV3XYg1Z6gTYvUcb2lZCNSSZYxEa77a6c/hDv1zUvxM0IFuotZ24EMLdtLJ1VyGU
+         L9cnXSwUt/iXwozT181tP5l5QC1LCrcgZ32ZLzgFE3+Py+7dpxMnIURHpaGPFSLeI+Jy
+         6xe0LGDUVQiWGRZGI4q6uEdb5/LvfGmku274YCjxZ5wTFEHxe9F37iPaBGB46jE//bQ4
+         FGt/iWXfJDrlwOjmQHjY9JxCYWCmnnJI+wY8NUANcrioBq+RoMeJo/VHSDFLasuNs8ee
+         3FpQ==
+X-Gm-Message-State: AOAM530G54vnNbrax1T3DMrtnakIoa2OBUgh6MHj11gFYreG9F5IQjUl
+        8KB2n3iWB2QbJ+4XOqroqEmr/n+Y6N9Y
+X-Google-Smtp-Source: ABdhPJxiKaIsaMY5drcO/BtwaU7AIZX/u+pgXW+4vC6FrTrFesrwAr2lSAr2/eRT+aIiaTg2K6xJv/M3KFEl
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:4b39:e167:e698:7d4])
+ (user=irogers job=sendgmr) by 2002:a0d:d003:0:b0:2eb:6441:d9a3 with SMTP id
+ s3-20020a0dd003000000b002eb6441d9a3mr41096784ywd.273.1653624251555; Thu, 26
+ May 2022 21:04:11 -0700 (PDT)
+Date:   Thu, 26 May 2022 21:04:07 -0700
+Message-Id: <20220527040407.4193232-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.124.g0e6072fb45-goog
+Subject: [PATCH v2] perf metrics: Add literal for system TSC frequency
+From:   Ian Rogers <irogers@google.com>
+To:     perry.taylor@intel.com, caleb.biggers@intel.com,
+        kshipra.bopardikar@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+Such a literal is useful to calculate things like the average frequency
+[1]. The TSC frequency isn't exposed by sysfs although some experimental
+drivers look to add it [2]. This change computes the value using the
+frequency in /proc/cpuinfo which is accurate at least on Intel
+processors.
 
-On 26-May-22 9:19 PM, Arnaldo Carvalho de Melo wrote:
-> Em Mon, May 23, 2022 at 09:09:43AM +0530, Ravi Bangoria escreveu:
->> IBS support has been enhanced with two new features in upcoming uarch:
->> 1. DataSrc extension and 2. L3 miss filtering. Additional set of bits
->> has been introduced in IBS registers to exploit these features. Define
->> these new bits into arch/x86/ header.
-> 
-> You mentioned the kernel bits were already applied and this was a tools
-> only series, this one slipped into :-)
+v2. Adds warnings to make clear if things have changed/broken on future
+    Intel platforms. It also adds caching and an Intel specific that a
+    value is computed.
 
-Right. V1 had a single patch containing both kernel and tools file changes
-and thus Peter might not have applied it. How should we pursues it?
+[1] https://github.com/intel/perfmon-metrics/blob/5ad9ef7056f31075e8178b9f1fb732af183b2c8d/SKX/metrics/perf/skx_metric_perf.json#L11
+[2] https://github.com/trailofbits/tsc_freq_khz
 
-Thanks,
-Ravi
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/expr.c | 15 +++++++++++++
+ tools/perf/util/expr.c  | 50 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 65 insertions(+)
+
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 5c0032fe93ae..45afe4f24859 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -1,8 +1,10 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "util/debug.h"
+ #include "util/expr.h"
++#include "util/header.h"
+ #include "util/smt.h"
+ #include "tests.h"
++#include <math.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <linux/zalloc.h>
+@@ -69,6 +71,11 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 	double val, num_cpus, num_cores, num_dies, num_packages;
+ 	int ret;
+ 	struct expr_parse_ctx *ctx;
++	bool is_intel = false;
++	char buf[128];
++
++	if (!get_cpuid(buf, sizeof(buf)))
++		is_intel = strstr(buf, "Intel") != NULL;
+ 
+ 	TEST_ASSERT_EQUAL("ids_union", test_ids_union(), 0);
+ 
+@@ -175,6 +182,14 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 	if (num_dies) // Some platforms do not have CPU die support, for example s390
+ 		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
+ 
++	if (is_intel) {
++		double system_tsc_freq;
++
++		TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&system_tsc_freq, ctx,
++								"#system_tsc_freq") == 0);
++		TEST_ASSERT_VAL("!isnan(#system_tsc_freq)", !isnan(system_tsc_freq));
++	}
++
+ 	/*
+ 	 * Source count returns the number of events aggregating in a leader
+ 	 * event including the leader. Check parsing yields an id.
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 675f318ce7c1..f33aeb1e6faa 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -402,6 +402,51 @@ double expr_id_data__source_count(const struct expr_id_data *data)
+ 	return data->val.source_count;
+ }
+ 
++/*
++ * Derive the TSC frequency in Hz from the /proc/cpuinfo, for example:
++ * ...
++ * model name      : Intel(R) Xeon(R) Gold 6154 CPU @ 3.00GHz
++ * ...
++ * will return 3000000000.
++ */
++static double system_tsc_freq(void)
++{
++	static double result;
++	static bool computed;
++	FILE *cpuinfo;
++	char *line = NULL;
++	size_t len = 0;
++
++	if (computed)
++		return result;
++
++	computed = true;
++	result = NAN;
++	cpuinfo = fopen("/proc/cpuinfo", "r");
++	if (!cpuinfo) {
++		pr_err("Failed to read /proc/cpuinfo for TSC frequency");
++		return NAN;
++	}
++	while (getline(&line, &len, cpuinfo) > 0) {
++		if (!strncmp(line, "model name", 10)) {
++			char *pos = strstr(line + 11, " @ ");
++
++			if (pos && sscanf(pos, " @ %lfGHz", &result) == 1) {
++				result *= 1000000000;
++				goto out;
++			}
++		}
++	}
++
++out:
++	if (isnan(result))
++		pr_err("Failed to find TSC frequency in /proc/cpuinfo");
++
++	free(line);
++	fclose(cpuinfo);
++	return result;
++}
++
+ double expr__get_literal(const char *literal)
+ {
+ 	static struct cpu_topology *topology;
+@@ -417,6 +462,11 @@ double expr__get_literal(const char *literal)
+ 		goto out;
+ 	}
+ 
++	if (!strcasecmp("#system_tsc_freq", literal)) {
++		result = system_tsc_freq();
++		goto out;
++	}
++
+ 	/*
+ 	 * Assume that topology strings are consistent, such as CPUs "0-1"
+ 	 * wouldn't be listed as "0,1", and so after deduplication the number of
+-- 
+2.36.1.124.g0e6072fb45-goog
+
