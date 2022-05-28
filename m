@@ -2,369 +2,313 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447A5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 28 May 2022 09:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0584C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 May 2022 12:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241279AbiE1J7Z (ORCPT
+        id S234929AbiE1MG4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 28 May 2022 05:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
+        Sat, 28 May 2022 08:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233893AbiE1J7R (ORCPT
+        with ESMTP id S229685AbiE1MG4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 28 May 2022 05:59:17 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844DA220E4;
-        Sat, 28 May 2022 02:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653731955; x=1685267955;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ermnPNthVQ4DmnHjZ/L3YrK+6AWC3KZdiEJYfJQpioo=;
-  b=mMVr3A9jXTjqzgNTKzXWmq/xZR8sCuM86mmoa0s3DVFLf8FP4Ud7OlHy
-   L552Pry1kKJskYITMmVQg/4SD+dk8FcC933N96+FeM3SvKpUo5Kxfdk9u
-   xfypwpknb+ME2VxAiAMiRqLEwrBXO3RJ3zNl6Nn7aJRGBwiCTGE2S7Okp
-   yWMSFgbgRVpNeCLb8yz5WGk5yucI6xXOk1hy0SNkZlJrOFQmINI/8EFdp
-   J9y18iE6qwFu7F3tEZpOvDM1URmi0iK++MSd0rpFovQ3snNCEUqWBk/3J
-   e4uXTBXXWlThjHXmM8EAYtuuBdAydEN/MkFvjMhWqg1YvgQK6RjzFrUEP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10360"; a="273470002"
-X-IronPort-AV: E=Sophos;i="5.91,258,1647327600"; 
-   d="scan'208";a="273470002"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2022 02:59:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,258,1647327600"; 
-   d="scan'208";a="610797004"
-Received: from zxingrtx.sh.intel.com ([10.239.159.110])
-  by orsmga001.jf.intel.com with ESMTP; 28 May 2022 02:59:12 -0700
-From:   zhengjun.xing@linux.intel.com
-To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
-Subject: [PATCH v2 2/2] perf vendor events intel: Update metrics for Alderlake
-Date:   Sat, 28 May 2022 17:59:33 +0800
-Message-Id: <20220528095933.1784141-2-zhengjun.xing@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220528095933.1784141-1-zhengjun.xing@linux.intel.com>
-References: <20220528095933.1784141-1-zhengjun.xing@linux.intel.com>
+        Sat, 28 May 2022 08:06:56 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CDC81A3AF;
+        Sat, 28 May 2022 05:06:54 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id h19so150340edj.0;
+        Sat, 28 May 2022 05:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=A6dRJGGRiiQ2vyYSYvYluDowmGKJP1jAiIvtAW6pwYg=;
+        b=RfwsT1HbPpE1LEGF/g+9Sev7/PRER0LBnXmRAECwuWIxgo6yB0WtXNeZP/V2z0HETE
+         AVyYrTlWDGI4wD3yUIr4civyqtnmnWQ3Q7RtLGw++e7NQI+Pl6HJZWGLx454ucY7M4kb
+         c1WfkBXjapmjFMuiu8Q++wWuwZFqqVtgS+u8VpSISRrLNTxQKvBQXjodT0dYMiqKip88
+         F/tiZsFn7Ko0HZRO6z2Qw/OFij+fyxOCTbItAGy1jFUdHTLhPUhcRiHiLY5IfQRl10j3
+         NMG5T3ztYozBI12QURkdQVl11wi/0UEUojrtsiwm5nfu9GuppOOAjOApX9i+2GwzmGwT
+         FlJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A6dRJGGRiiQ2vyYSYvYluDowmGKJP1jAiIvtAW6pwYg=;
+        b=KK3UCtJswEwCyzCNrJJzg8Ikfw9N8aVTES1kJGiGuMEKwoNYYykhV7xy8roWOnkQAn
+         7gt5ZhxBhSUPkXin905o9SuQ6nkufXFFGPGaAvd0Is89Dsg0WzbCJUw9gvCEE/f7gb5V
+         SUQabYpu8ARI467ibW5DFkeyKkOJpKSQqHpKzcQRHW1R+SY4huMTiwnzLBmlCtBhDtZb
+         Iqr5rKLpF9k6l1AOR/HPxahi2fYXw2Mc78w338HG9J6SN2ABHUE7nfZ6GeYeGs9Bdagt
+         gdq4pEiCxqcxozLT4j2Fbpv/IsBwn71vSvvluZaOXtq+iepIKGZaARD36E5IgEYmTUyV
+         xIKQ==
+X-Gm-Message-State: AOAM533c/Cfrknn0xI8gvOJbzfr3uL9PboXEBNCOd9cN8QgL4OEBve+f
+        SdIfj4vDs/ynXj7a1yBtmY4=
+X-Google-Smtp-Source: ABdhPJxm/ejUZGZm8z657xmbq/LMmnZ9dOBN9LTgy16KkSHJ800/cz2H/gcHdLY87u45w51JtZBjgQ==
+X-Received: by 2002:a05:6402:84c:b0:428:4cc4:8212 with SMTP id b12-20020a056402084c00b004284cc48212mr50183061edz.171.1653739612485;
+        Sat, 28 May 2022 05:06:52 -0700 (PDT)
+Received: from krava ([83.240.62.49])
+        by smtp.gmail.com with ESMTPSA id j25-20020a170906831900b006fefd1d5c2bsm2308204ejx.148.2022.05.28.05.06.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 May 2022 05:06:51 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Sat, 28 May 2022 14:06:49 +0200
+To:     Fangrui Song <maskray@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ian Rogers <irogers@google.com>, llvm@lists.linux.dev,
+        Sebastian Ullrich <sebasti@nullri.ch>
+Subject: Re: [PATCH v2] perf: Fix segbase for ld.lld linked objects
+Message-ID: <YpIQWdwtHqAdjLoC@krava>
+References: <20220527182039.673248-1-maskray@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220527182039.673248-1-maskray@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+On Fri, May 27, 2022 at 11:20:39AM -0700, Fangrui Song wrote:
+> segbase is the address of .eh_frame_hdr and table_data is segbase plus
+> the header size. find_proc_info computes segbase as `map->start +
+> segbase - map->pgoff` which is wrong when
+> 
+> * .eh_frame_hdr and .text are in different PT_LOAD program headers
+> * and their p_vaddr difference does not equal their p_offset difference
+> 
+> Since 10.0, ld.lld's default --rosegment -z noseparate-code layout has
+> such R and RX PT_LOAD program headers.
+> 
+>     ld.lld (default) => perf report fails to unwind `perf record
+>     --call-graph dwarf` recorded data
+>     ld.lld --no-rosegment => ok (trivial, no R PT_LOAD)
+>     ld.lld -z separate-code => ok but by luck: there are two PT_LOAD but
+>     their p_vaddr difference equals p_offset difference
+> 
+>     ld.bfd -z noseparate-code => ok (trivial, no R PT_LOAD)
+>     ld.bfd -z separate-code (default for Linux/x86) => ok but by luck:
+>     there are two PT_LOAD but their p_vaddr difference equals p_offset
+>     difference
+> 
+> To fix the issue, compute segbase as dso's base address plus
+> PT_GNU_EH_FRAME's p_vaddr. The base address is computed by iterating
+> over all dso-associated maps and then subtract the first PT_LOAD p_vaddr
+> (the minimum guaranteed by generic ABI) from the minimum address.
+> 
+> In libunwind, find_proc_info transitively called by unw_step is cached,
+> so the iteration overhead is acceptable.
+> 
+> Reported-by: Sebastian Ullrich <sebasti@nullri.ch>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1646
+> Signed-off-by: Fangrui Song <maskray@google.com>
+> Cc: Ian Rogers <irogers@google.com>
 
-Update JSON metrics for Alderlake to perf.
+nice, is this a problem for libdw dwarf unwind as well?
 
-It included both P-core and E-core metrics.
+you should be able to build it with:
 
-P-core metrics based on TMA 4.4 (TMA_Metrics-full.csv)
-E-core metrics based on E-core TMA 2.0 (E-core_TMA_Metrics.csv)
+  $ make NO_LIBUNWIND=1
 
-https://download.01.org/perfmon/
+thanks,
+jirka
 
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
----
-Change log:
-  v2:
-    * Regenerate it with the latest converter tool.
-
- .../arch/x86/alderlake/adl-metrics.json       | 163 ++++++++++++------
- 1 file changed, 113 insertions(+), 50 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-index 6b24958737b5..f8bdf7812b51 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
-@@ -37,7 +37,7 @@
-     {
-         "BriefDescription": "Fraction of Physical Core issue-slots utilized by this Logical Processor",
-         "MetricExpr": "TOPDOWN.SLOTS / ( TOPDOWN.SLOTS / 2 ) if #SMT_on else 1",
--        "MetricGroup": "SMT",
-+        "MetricGroup": "SMT;TmaL1",
-         "MetricName": "Slots_Utilization",
-         "Unit": "cpu_core"
-     },
-@@ -64,27 +64,20 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Actual per-core usage of the Floating Point execution units (regardless of the vector width)",
--        "MetricExpr": "( (FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE) + (FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE) ) / ( 2 * CPU_CLK_UNHALTED.DISTRIBUTED )",
-+        "BriefDescription": "Actual per-core usage of the Floating Point non-X87 execution units (regardless of precision or vector-width)",
-+        "MetricExpr": "( FP_ARITH_DISPATCHED.PORT_0 + FP_ARITH_DISPATCHED.PORT_1 + FP_ARITH_DISPATCHED.PORT_5 ) / ( 2 * CPU_CLK_UNHALTED.DISTRIBUTED )",
-         "MetricGroup": "Cor;Flops;HPC",
-         "MetricName": "FP_Arith_Utilization",
--        "PublicDescription": "Actual per-core usage of the Floating Point execution units (regardless of the vector width). Values > 1 are possible due to Fused-Multiply Add (FMA) counting.",
-+        "PublicDescription": "Actual per-core usage of the Floating Point non-X87 execution units (regardless of precision or vector-width). Values > 1 are possible due to ([BDW+] Fused-Multiply Add (FMA) counting - common; [ADL+] use all of ADD/MUL/FMA in Scalar or 128/256-bit vectors - less common).",
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
-+        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is execution) per-core",
-         "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
-         "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
-         "MetricName": "ILP",
-         "Unit": "cpu_core"
-     },
--    {
--        "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
--        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
--        "MetricGroup": "Bad;BadSpec;BrMispredicts",
--        "MetricName": "IpMispredict",
--        "Unit": "cpu_core"
--    },
-     {
-         "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
-         "MetricExpr": "CPU_CLK_UNHALTED.DISTRIBUTED",
-@@ -181,6 +174,13 @@
-         "PublicDescription": "Instructions per FP Arithmetic AVX* 256-bit instruction (lower number means higher occurrence rate). May undercount due to FMA double counting.",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Instructions per Software prefetch instruction (of any type: NTA/T0/T1/T2/Prefetch) (lower number means higher occurrence rate)",
-+        "MetricExpr": "INST_RETIRED.ANY / cpu_core@SW_PREFETCH_ACCESS.T0\\,umask\\=0xF@",
-+        "MetricGroup": "Prefetches",
-+        "MetricName": "IpSWPF",
-+        "Unit": "cpu_core"
-+    },
-     {
-         "BriefDescription": "Total number of retired Instructions, Sample with: INST_RETIRED.PREC_DIST",
-         "MetricExpr": "INST_RETIRED.ANY",
-@@ -188,6 +188,27 @@
-         "MetricName": "Instructions",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Estimated fraction of retirement-cycles dealing with repeat instructions",
-+        "MetricExpr": "INST_RETIRED.REP_ITERATION / cpu_core@UOPS_RETIRED.SLOTS\\,cmask\\=1@",
-+        "MetricGroup": "Pipeline;Ret",
-+        "MetricName": "Strings_Cycles",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Instructions per a microcode Assist invocation. See Assists tree node for details (lower number means higher occurrence rate)",
-+        "MetricExpr": "INST_RETIRED.ANY / cpu_core@ASSISTS.ANY\\,umask\\=0x1B@",
-+        "MetricGroup": "Pipeline;Ret;Retire",
-+        "MetricName": "IpAssist",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "",
-+        "MetricExpr": "UOPS_EXECUTED.THREAD / cpu_core@UOPS_EXECUTED.THREAD\\,cmask\\=1@",
-+        "MetricGroup": "Cor;Pipeline;PortsUtil;SMT",
-+        "MetricName": "Execute",
-+        "Unit": "cpu_core"
-+    },
-     {
-         "BriefDescription": "Average number of Uops issued by front-end when it issued something",
-         "MetricExpr": "UOPS_ISSUED.ANY / cpu_core@UOPS_ISSUED.ANY\\,cmask\\=1@",
-@@ -210,12 +231,26 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Number of Instructions per non-speculative DSB miss",
-+        "BriefDescription": "Average number of cycles of a switch from the DSB fetch-unit to MITE fetch unit - see DSB_Switches tree node for details.",
-+        "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / cpu_core@DSB2MITE_SWITCHES.PENALTY_CYCLES\\,cmask\\=1\\,edge@",
-+        "MetricGroup": "DSBmiss",
-+        "MetricName": "DSB_Switch_Cost",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Number of Instructions per non-speculative DSB miss (lower number means higher occurrence rate)",
-         "MetricExpr": "INST_RETIRED.ANY / FRONTEND_RETIRED.ANY_DSB_MISS",
-         "MetricGroup": "DSBmiss;Fed",
-         "MetricName": "IpDSB_Miss_Ret",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear) (lower number means higher occurrence rate)",
-+        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
-+        "MetricGroup": "Bad;BadSpec;BrMispredicts",
-+        "MetricName": "IpMispredict",
-+        "Unit": "cpu_core"
-+    },
-     {
-         "BriefDescription": "Fraction of branches that are non-taken conditionals",
-         "MetricExpr": "BR_INST_RETIRED.COND_NTAKEN / BR_INST_RETIRED.ALL_BRANCHES",
-@@ -252,11 +287,10 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Actual Average Latency for L1 data-cache miss demand load instructions (in core cycles)",
--        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
-+        "BriefDescription": "Actual Average Latency for L1 data-cache miss demand load operations (in core cycles)",
-+        "MetricExpr": "L1D_PEND_MISS.PENDING / MEM_LOAD_COMPLETED.L1_MISS_ANY",
-         "MetricGroup": "Mem;MemoryBound;MemoryLat",
-         "MetricName": "Load_Miss_Real_Latency",
--        "PublicDescription": "Actual Average Latency for L1 data-cache miss demand load instructions (in core cycles). Latency may be overestimated for multi-load instructions - e.g. repeat strings.",
-         "Unit": "cpu_core"
-     },
-     {
-@@ -266,34 +300,6 @@
-         "MetricName": "MLP",
-         "Unit": "cpu_core"
-     },
--    {
--        "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
--        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
--        "MetricGroup": "Mem;MemoryBW",
--        "MetricName": "L1D_Cache_Fill_BW",
--        "Unit": "cpu_core"
--    },
--    {
--        "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
--        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
--        "MetricGroup": "Mem;MemoryBW",
--        "MetricName": "L2_Cache_Fill_BW",
--        "Unit": "cpu_core"
--    },
--    {
--        "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
--        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
--        "MetricGroup": "Mem;MemoryBW",
--        "MetricName": "L3_Cache_Fill_BW",
--        "Unit": "cpu_core"
--    },
--    {
--        "BriefDescription": "Average per-core data access bandwidth to the L3 cache [GB / sec]",
--        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
--        "MetricGroup": "Mem;MemoryBW;Offcore",
--        "MetricName": "L3_Cache_Access_BW",
--        "Unit": "cpu_core"
--    },
-     {
-         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
-         "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
-@@ -316,14 +322,14 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
-+        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo instruction for all request types (including speculative)",
-         "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
-         "MetricGroup": "Mem;CacheMisses;Offcore",
-         "MetricName": "L2MPKI_All",
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "L2 cache misses per kilo instruction for all demand loads  (including speculative)",
-+        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo instruction for all demand loads  (including speculative)",
-         "MetricExpr": "1000 * L2_RQSTS.DEMAND_DATA_RD_MISS / INST_RETIRED.ANY",
-         "MetricGroup": "Mem;CacheMisses",
-         "MetricName": "L2MPKI_Load",
-@@ -351,7 +357,7 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Fill Buffer (FB) true hits per kilo instructions for retired demand loads",
-+        "BriefDescription": "Fill Buffer (FB) hits per kilo instructions for retired demand loads (L1D misses that merge into ongoing miss-handling entries)",
-         "MetricExpr": "1000 * MEM_LOAD_RETIRED.FB_HIT / INST_RETIRED.ANY",
-         "MetricGroup": "Mem;CacheMisses",
-         "MetricName": "FB_HPKI",
-@@ -365,6 +371,62 @@
-         "MetricName": "Page_Walks_Utilization",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Average per-core data fill bandwidth to the L1 data cache [GB / sec]",
-+        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L1D_Cache_Fill_BW",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-core data fill bandwidth to the L2 cache [GB / sec]",
-+        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L2_Cache_Fill_BW",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
-+        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L3_Cache_Fill_BW",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-core data access bandwidth to the L3 cache [GB / sec]",
-+        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
-+        "MetricGroup": "Mem;MemoryBW;Offcore",
-+        "MetricName": "L3_Cache_Access_BW",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-thread data fill bandwidth to the L1 data cache [GB / sec]",
-+        "MetricExpr": "(64 * L1D.REPLACEMENT / 1000000000 / duration_time)",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L1D_Cache_Fill_BW_1T",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-thread data fill bandwidth to the L2 cache [GB / sec]",
-+        "MetricExpr": "(64 * L2_LINES_IN.ALL / 1000000000 / duration_time)",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L2_Cache_Fill_BW_1T",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-thread data fill bandwidth to the L3 cache [GB / sec]",
-+        "MetricExpr": "(64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time)",
-+        "MetricGroup": "Mem;MemoryBW",
-+        "MetricName": "L3_Cache_Fill_BW_1T",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Average per-thread data access bandwidth to the L3 cache [GB / sec]",
-+        "MetricExpr": "(64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time)",
-+        "MetricGroup": "Mem;MemoryBW;Offcore",
-+        "MetricName": "L3_Cache_Access_BW_1T",
-+        "Unit": "cpu_core"
-+    },
-     {
-         "BriefDescription": "Average CPU Utilization",
-         "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
-@@ -384,6 +446,7 @@
-         "MetricExpr": "( ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) / 1000000000 ) / duration_time",
-         "MetricGroup": "Cor;Flops;HPC",
-         "MetricName": "GFLOPs",
-+        "PublicDescription": "Giga Floating Point Operations Per Second. Aggregate across all supported options of: FP precisions, scalar and vector instructions, vector-width and AMX engine.",
-         "Unit": "cpu_core"
-     },
-     {
-@@ -461,7 +524,7 @@
-     },
-     {
-         "BriefDescription": "Counts the total number of issue slots  that were not consumed by the backend due to backend stalls",
--        "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)",
-+        "MetricExpr": "(TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE))",
-         "MetricGroup": "TopdownL1",
-         "MetricName": "Backend_Bound_Aux",
-         "PublicDescription": "Counts the total number of issue slots  that were not consumed by the backend due to backend stalls.  Note that UOPS must be available for consumption in order for this event to count.  If a uop is not available (IQ is empty), this event will not count.  All of these subevents count backend stalls, in slots, due to a resource limitation.   These are not cycle based events and therefore can not be precisely added or subtracted from the Backend_Bound subevents which are cycle based.  These subevents are supplementary to Backend_Bound and can be used to analyze results from a resource perspective at allocation.  ",
-@@ -608,7 +671,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.CORE:k / CPU_CLK_UNHALTED.CORE",
-+        "MetricExpr": "cpu_atom@CPU_CLK_UNHALTED.CORE@k / CPU_CLK_UNHALTED.CORE",
-         "MetricName": "Kernel_Utilization",
-         "Unit": "cpu_atom"
-     },
-@@ -620,7 +683,7 @@
-     },
-     {
-         "BriefDescription": "Estimated Pause cost. In percent",
--        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / ( 5 * CPU_CLK_UNHALTED.CORE )",
-+        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / (5 * CPU_CLK_UNHALTED.CORE)",
-         "MetricName": "Estimated_Pause_Cost",
-         "Unit": "cpu_atom"
-     },
--- 
-2.25.1
-
+> 
+> --
+> Changes from v1:
+> * Fix elf_base_address to use the first PT_LOAD
+> * Use dso::elf_base_addr which is a constant even if the dso is loaded into multiple processes
+> ---
+>  tools/perf/util/dso.h                    |   2 +
+>  tools/perf/util/unwind-libunwind-local.c | 107 ++++++++++++++++-------
+>  2 files changed, 78 insertions(+), 31 deletions(-)
+> 
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index 3a9fd4d389b5..97047a11282b 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -196,7 +196,9 @@ struct dso {
+>  		u32		 status_seen;
+>  		u64		 file_size;
+>  		struct list_head open_entry;
+> +		u64		 elf_base_addr;
+>  		u64		 debug_frame_offset;
+> +		u64		 eh_frame_hdr_addr;
+>  		u64		 eh_frame_hdr_offset;
+>  	} data;
+>  	/* bpf prog information */
+> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> index 41e29fc7648a..37622699c91a 100644
+> --- a/tools/perf/util/unwind-libunwind-local.c
+> +++ b/tools/perf/util/unwind-libunwind-local.c
+> @@ -169,30 +169,64 @@ static int __dw_read_encoded_value(u8 **p, u8 *end, u64 *val,
+>  	__v;                                                    \
+>  	})
+>  
+> -static u64 elf_section_offset(int fd, const char *name)
+> +static int elf_section_address_and_offset(int fd, const char *name, u64 *address, u64 *offset)
+>  {
+>  	Elf *elf;
+>  	GElf_Ehdr ehdr;
+>  	GElf_Shdr shdr;
+> -	u64 offset = 0;
+> +	int ret;
+>  
+>  	elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
+>  	if (elf == NULL)
+> -		return 0;
+> +		return -1;
+>  
+> -	do {
+> -		if (gelf_getehdr(elf, &ehdr) == NULL)
+> -			break;
+> +	if (gelf_getehdr(elf, &ehdr) == NULL)
+> +		goto out_err;
+>  
+> -		if (!elf_section_by_name(elf, &ehdr, &shdr, name, NULL))
+> -			break;
+> -
+> -		offset = shdr.sh_offset;
+> -	} while (0);
+> +	if (!elf_section_by_name(elf, &ehdr, &shdr, name, NULL))
+> +		goto out_err;
+>  
+> +	*address = shdr.sh_addr;
+> +	*offset = shdr.sh_offset;
+> +	ret = 0;
+> +out_err:
+>  	elf_end(elf);
+> +	return ret;
+> +}
+> +
+> +#ifndef NO_LIBUNWIND_DEBUG_FRAME
+> +static u64 elf_section_offset(int fd, const char *name)
+> +{
+> +	u64 address, offset;
+> +
+> +	if (elf_section_address_and_offset(fd, name, &address, &offset))
+> +		return 0;
+> +
+>  	return offset;
+>  }
+> +#endif
+> +
+> +static u64 elf_base_address(int fd)
+> +{
+> +	Elf *elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
+> +	GElf_Phdr phdr;
+> +	u64 retval = 0;
+> +	size_t i, phdrnum = 0;
+> +
+> +	if (elf == NULL)
+> +		return 0;
+> +	(void)elf_getphdrnum(elf, &phdrnum);
+> +	/* PT_LOAD segments are sorted by p_vaddr, so the first has the minimum p_vaddr. */
+> +	for (i = 0; i < phdrnum; i++) {
+> +		if (gelf_getphdr(elf, i, &phdr) && phdr.p_type == PT_LOAD) {
+> +			retval = phdr.p_vaddr & -getpagesize();
+> +			break;
+> +		}
+> +	}
+> +
+> +	elf_end(elf);
+> +	return retval;
+> +}
+>  
+>  #ifndef NO_LIBUNWIND_DEBUG_FRAME
+>  static int elf_is_exec(int fd, const char *name)
+> @@ -248,8 +282,7 @@ struct eh_frame_hdr {
+>  } __packed;
+>  
+>  static int unwind_spec_ehframe(struct dso *dso, struct machine *machine,
+> -			       u64 offset, u64 *table_data, u64 *segbase,
+> -			       u64 *fde_count)
+> +			       u64 offset, u64 *table_data_offset, u64 *fde_count)
+>  {
+>  	struct eh_frame_hdr hdr;
+>  	u8 *enc = (u8 *) &hdr.enc;
+> @@ -265,35 +298,47 @@ static int unwind_spec_ehframe(struct dso *dso, struct machine *machine,
+>  	dw_read_encoded_value(enc, end, hdr.eh_frame_ptr_enc);
+>  
+>  	*fde_count  = dw_read_encoded_value(enc, end, hdr.fde_count_enc);
+> -	*segbase    = offset;
+> -	*table_data = (enc - (u8 *) &hdr) + offset;
+> +	*table_data_offset = enc - (u8 *) &hdr;
+>  	return 0;
+>  }
+>  
+> -static int read_unwind_spec_eh_frame(struct dso *dso, struct machine *machine,
+> +static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
+>  				     u64 *table_data, u64 *segbase,
+>  				     u64 *fde_count)
+>  {
+> -	int ret = -EINVAL, fd;
+> -	u64 offset = dso->data.eh_frame_hdr_offset;
+> +	struct map *map;
+> +	u64 base_addr = UINT64_MAX;
+> +	int ret, fd;
+>  
+> -	if (offset == 0) {
+> -		fd = dso__data_get_fd(dso, machine);
+> +	if (dso->data.eh_frame_hdr_offset == 0) {
+> +		fd = dso__data_get_fd(dso, ui->machine);
+>  		if (fd < 0)
+>  			return -EINVAL;
+>  
+>  		/* Check the .eh_frame section for unwinding info */
+> -		offset = elf_section_offset(fd, ".eh_frame_hdr");
+> -		dso->data.eh_frame_hdr_offset = offset;
+> +		ret = elf_section_address_and_offset(fd, ".eh_frame_hdr",
+> +						     &dso->data.eh_frame_hdr_addr,
+> +						     &dso->data.eh_frame_hdr_offset);
+> +		dso->data.elf_base_addr = elf_base_address(fd);
+>  		dso__data_put_fd(dso);
+> +		if (ret || dso->data.eh_frame_hdr_offset == 0)
+> +			return -EINVAL;
+>  	}
+>  
+> -	if (offset)
+> -		ret = unwind_spec_ehframe(dso, machine, offset,
+> -					  table_data, segbase,
+> -					  fde_count);
+> -
+> -	return ret;
+> +	maps__for_each_entry(ui->thread->maps, map) {
+> +		if (map->dso == dso && map->start < base_addr)
+> +			base_addr = map->start;
+> +	}
+> +	base_addr -= dso->data.elf_base_addr;
+> +	/* Address of .eh_frame_hdr */
+> +	*segbase = base_addr + dso->data.eh_frame_hdr_addr;
+> +	ret = unwind_spec_ehframe(dso, ui->machine, dso->data.eh_frame_hdr_offset,
+> +				   table_data, fde_count);
+> +	if (ret)
+> +		return ret;
+> +	/* binary_search_table offset plus .eh_frame_hdr address */
+> +	*table_data += *segbase;
+> +	return 0;
+>  }
+>  
+>  #ifndef NO_LIBUNWIND_DEBUG_FRAME
+> @@ -388,14 +433,14 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
+>  	pr_debug("unwind: find_proc_info dso %s\n", map->dso->name);
+>  
+>  	/* Check the .eh_frame section for unwinding info */
+> -	if (!read_unwind_spec_eh_frame(map->dso, ui->machine,
+> +	if (!read_unwind_spec_eh_frame(map->dso, ui,
+>  				       &table_data, &segbase, &fde_count)) {
+>  		memset(&di, 0, sizeof(di));
+>  		di.format   = UNW_INFO_FORMAT_REMOTE_TABLE;
+>  		di.start_ip = map->start;
+>  		di.end_ip   = map->end;
+> -		di.u.rti.segbase    = map->start + segbase - map->pgoff;
+> -		di.u.rti.table_data = map->start + table_data - map->pgoff;
+> +		di.u.rti.segbase    = segbase;
+> +		di.u.rti.table_data = table_data;
+>  		di.u.rti.table_len  = fde_count * sizeof(struct table_entry)
+>  				      / sizeof(unw_word_t);
+>  		ret = dwarf_search_unwind_table(as, ip, &di, pi,
+> -- 
+> 2.36.1.124.g0e6072fb45-goog
+> 
