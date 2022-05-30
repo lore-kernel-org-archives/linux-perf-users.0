@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F4DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 May 2022 11:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D52C43217
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 May 2022 11:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235899AbiE3LlO (ORCPT
+        id S235916AbiE3LlP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 May 2022 07:41:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41788 "EHLO
+        Mon, 30 May 2022 07:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235807AbiE3LlG (ORCPT
+        with ESMTP id S235883AbiE3LlO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 May 2022 07:41:06 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F18813C9
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 04:41:05 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id n13-20020a17090a394d00b001e30a60f82dso1875534pjf.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 04:41:05 -0700 (PDT)
+        Mon, 30 May 2022 07:41:14 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D8D813E4
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 04:41:10 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id x12so9915294pgj.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 04:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jjmrioi65tdvpnatZVOByjLto3yXdnCU74U03aRx/ek=;
-        b=dbovKyStqncZhviVmQ4s01Kz4FWR7dngHlpCcH+X9FLPjv/wnbG94Ns4SYZB8YCW1r
-         dU16yO4rVV/AAV/zVo9MtcFm/zmkItHUiqgbfAecAc6vLKDa7r+YXq0Fs+eF0P3QDvuB
-         lhjIdpJZK9zEL4cQCTrFRJ65n+NdLrx5xN0zFAzVZqZgU8ov04EZh0dYaKO6BJ3+X5hA
-         XUhKYk3QN/g7FKLze2o8VxViadQaYKmQyxbB0eulrQb8U3oBv2k9FrJWJ26JdOrJa0c3
-         lfkiZaJ8rcnhBcOMue1KIeNIAiWjCMTRSbaDQRknQrPWkYtE+l/KOuIfJeCjC9QdE21Q
-         9viQ==
+        bh=h8h+dOa5UXWEE0M1AXGeUja2PScbi3m/14Ye0UYGzpI=;
+        b=aOe0sxeZZ3mOj0Cr7eUZd6cMma69nGUO55Otyh2VVIlBOWRgpcdeLZEafs83PKh/VL
+         vtBOZ6xDlWoUF46lwZxNIPPnc+Ekd2iHetayug+sfRdpqIHIzBja5IVBCsPPw0bBNeqJ
+         yc9oh4u5n87wPvgsND0bnmTKbFy6ysJbylSQtmbvJS2jteohoTzKC4NMlZFMMZApv+rX
+         d7iMQTf+6STuriEOFXYUdT303pf6G8e2SZtDd3z1C+9f0cnkr3nRjP2TWtRABc6H8nRC
+         Oz3cv/7NYRKpgIPE8AuRF2gVB0t/+hksPqrotZo33wKMK4m+UKIAiyqmPQvil0eHS8aP
+         5ANA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jjmrioi65tdvpnatZVOByjLto3yXdnCU74U03aRx/ek=;
-        b=UFo9l0NT8rajD698eBUWwvdo7aAk46jr0N3KBpzr2jwvKpR0UQhe4esBRioKQaWXRO
-         wkuKs74qQFCjctOTj4tkxrrpDBJk8yA7i+T17/EBOOZxqQ0FdjM/GLG88ZOMyQ9f1ljc
-         NeoCEN1pkXYtTHgHkRNM2wXn187ZBd7DrkRWtDEIYyKRS1M9tLKuvCyu6ZdA6SJOkvy9
-         t9Iwm8ukA9xWKt/ZzqND2uJgHzrohtGelOeUXt4J18G/d+AIrUKeV4ADZW4XoxzSAzVe
-         tLnLoPwIXmaoORYTUWyvw5P4RfOr4Gu+V74wtm2dP6Scg01OBgpsTlUG1vk0zmi3Eqzo
-         mpvg==
-X-Gm-Message-State: AOAM530Uk8eHgwuDoxOb3bZdljmouPkFgWAf1vt/vzwTvDOf3RNsMbNe
-        5h2DxMUffOwb26J0bGUSohkrlA==
-X-Google-Smtp-Source: ABdhPJzcu2PXhaLkP/I7hnZpbOEuiIqD4SEi5tXzqvqWMLMUzV3tk7gJxBQRR3kWPrSNQJX+wi1oPQ==
-X-Received: by 2002:a17:902:ec85:b0:161:cff5:17c8 with SMTP id x5-20020a170902ec8500b00161cff517c8mr56097594plg.62.1653910864468;
-        Mon, 30 May 2022 04:41:04 -0700 (PDT)
+        bh=h8h+dOa5UXWEE0M1AXGeUja2PScbi3m/14Ye0UYGzpI=;
+        b=LmIN/XgfRfbbpdIYYru0JzDwcwAFN4zMFybavlcCGg8DElg1+3OXzMt+3wYfl/t+yJ
+         hxYB99OqlAm5DYo0L2slFIKTBn9XL6doXgPNdNVwrjQuLbLxYFO0I2uzJaIUUXVsYfwA
+         +hR1y+K3/Q+o74kOLWcgtH3dk6xNvKsJehgD3KTakLuNwnvNdQqsUFaoZa70FJ/0LZkZ
+         KvFhMvwIMOrP9m/LK+ZRHVQBxD0JMTsCMH7ckBOVXN28CLZWP25KlBrIb/+ejWJhXMqw
+         RGf0DmJMKnKuH+IzQOVwduLv4mdXEWElLWF4Bfe1FEiskFvqfS2BcBnZqFPGPB098HX7
+         Ah7A==
+X-Gm-Message-State: AOAM530pPrvOuWWT6lNNEXLKd0VyxvbE073s3fOK/RpEYUmp+rho1tgW
+        zsWDXQHUbizC7EOWXrbe+WTL+og7WHbt4x4fwsk=
+X-Google-Smtp-Source: ABdhPJyyY2z+LEUijMFV1bpmsqO0SFh/jX4VeU6hiEEwV+q9m0sYnCVjVpbejR2vwdIPBTX457L7wQ==
+X-Received: by 2002:a05:6a00:2402:b0:4e1:46ca:68bd with SMTP id z2-20020a056a00240200b004e146ca68bdmr56506321pfh.70.1653910869257;
+        Mon, 30 May 2022 04:41:09 -0700 (PDT)
 Received: from leo-build-box.lan (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id c7-20020a170902724700b00161a9df4de8sm8846194pll.145.2022.05.30.04.40.59
+        by smtp.gmail.com with ESMTPSA id c7-20020a170902724700b00161a9df4de8sm8846194pll.145.2022.05.30.04.41.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 May 2022 04:41:04 -0700 (PDT)
+        Mon, 30 May 2022 04:41:09 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -67,9 +67,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ali Saidi <alisaidi@amazon.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 01/12] perf mem: Add statistics for peer snooping
-Date:   Mon, 30 May 2022 19:40:25 +0800
-Message-Id: <20220530114036.3225544-2-leo.yan@linaro.org>
+Subject: [PATCH v4 02/12] perf c2c: Output statistics for peer snooping
+Date:   Mon, 30 May 2022 19:40:26 +0800
+Message-Id: <20220530114036.3225544-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220530114036.3225544-1-leo.yan@linaro.org>
 References: <20220530114036.3225544-1-leo.yan@linaro.org>
@@ -79,115 +79,35 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the flag PERF_MEM_SNOOPX_PEER is added to support cache snooping
-from peer cache line, it can come from a peer core, a peer cluster, or
-a remote NUMA node.
-
-This patch adds statistics for the flag PERF_MEM_SNOOPX_PEER.  Note, we
-take PERF_MEM_SNOOPX_PEER as an affiliated info, it needs to cooperate
-with cache level statistics.  Therefore, we account the load operations
-for both the cache level's metrics (e.g. ld_l2hit, ld_llchit, etc.) and
-peer related metrics when flag PERF_MEM_SNOOPX_PEER is set.
-
-So three new metrics are introduced: 'lcl_peer' is for local cache
-access, the metric 'rmt_peer' is for remote access (includes remote DRAM
-and any caches in remote node), and the metric 'tot_peer' is accounting
-the sum value of 'lcl_peer' and 'rmt_peer'.
+This patch outputs statistics for peer snooping for whole trace events
+and global shared cache line.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/mem-events.c | 28 +++++++++++++++++++++++++---
- tools/perf/util/mem-events.h |  3 +++
- 2 files changed, 28 insertions(+), 3 deletions(-)
+ tools/perf/builtin-c2c.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 5dca1882c284..764883183519 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -525,6 +525,7 @@ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
- 	u64 op     = data_src->mem_op;
- 	u64 lvl    = data_src->mem_lvl;
- 	u64 snoop  = data_src->mem_snoop;
-+	u64 snoopx = data_src->mem_snoopx;
- 	u64 lock   = data_src->mem_lock;
- 	u64 blk    = data_src->mem_blk;
- 	/*
-@@ -544,6 +545,12 @@ do {				\
- 	stats->tot_hitm++;	\
- } while (0)
- 
-+#define PEER_INC(__f)		\
-+do {				\
-+	stats->__f++;		\
-+	stats->tot_peer++;	\
-+} while (0)
-+
- #define P(a, b) PERF_MEM_##a##_##b
- 
- 	stats->nr_entries++;
-@@ -567,12 +574,20 @@ do {				\
- 			if (lvl & P(LVL, IO))  stats->ld_io++;
- 			if (lvl & P(LVL, LFB)) stats->ld_fbhit++;
- 			if (lvl & P(LVL, L1 )) stats->ld_l1hit++;
--			if (lvl & P(LVL, L2 )) stats->ld_l2hit++;
-+			if (lvl & P(LVL, L2)) {
-+				stats->ld_l2hit++;
-+
-+				if (snoopx & P(SNOOPX, PEER))
-+					PEER_INC(lcl_peer);
-+			}
- 			if (lvl & P(LVL, L3 )) {
- 				if (snoop & P(SNOOP, HITM))
- 					HITM_INC(lcl_hitm);
- 				else
- 					stats->ld_llchit++;
-+
-+				if (snoopx & P(SNOOPX, PEER))
-+					PEER_INC(lcl_peer);
- 			}
- 
- 			if (lvl & P(LVL, LOC_RAM)) {
-@@ -597,10 +612,14 @@ do {				\
- 		if ((lvl & P(LVL, REM_CCE1)) ||
- 		    (lvl & P(LVL, REM_CCE2)) ||
- 		     mrem) {
--			if (snoop & P(SNOOP, HIT))
-+			if (snoop & P(SNOOP, HIT)) {
- 				stats->rmt_hit++;
--			else if (snoop & P(SNOOP, HITM))
-+			} else if (snoop & P(SNOOP, HITM)) {
- 				HITM_INC(rmt_hitm);
-+			} else if (snoopx & P(SNOOPX, PEER)) {
-+				stats->rmt_hit++;
-+				PEER_INC(rmt_peer);
-+			}
- 		}
- 
- 		if ((lvl & P(LVL, MISS)))
-@@ -664,6 +683,9 @@ void c2c_add_stats(struct c2c_stats *stats, struct c2c_stats *add)
- 	stats->lcl_hitm		+= add->lcl_hitm;
- 	stats->rmt_hitm		+= add->rmt_hitm;
- 	stats->tot_hitm		+= add->tot_hitm;
-+	stats->lcl_peer		+= add->lcl_peer;
-+	stats->rmt_peer		+= add->rmt_peer;
-+	stats->tot_peer		+= add->tot_peer;
- 	stats->rmt_hit		+= add->rmt_hit;
- 	stats->lcl_dram		+= add->lcl_dram;
- 	stats->rmt_dram		+= add->rmt_dram;
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 8a8b568baeee..12372309d60e 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -78,6 +78,9 @@ struct c2c_stats {
- 	u32	lcl_hitm;            /* count of loads with local HITM  */
- 	u32	rmt_hitm;            /* count of loads with remote HITM */
- 	u32	tot_hitm;            /* count of loads with local and remote HITM */
-+	u32	lcl_peer;            /* count of loads with local peer cache */
-+	u32	rmt_peer;            /* count of loads with remote peer cache */
-+	u32	tot_peer;            /* count of loads with local and remote peer cache */
- 	u32	rmt_hit;             /* count of loads with remote hit clean; */
- 	u32	lcl_dram;            /* count of loads miss to local DRAM */
- 	u32	rmt_dram;            /* count of loads miss to remote DRAM */
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e8280973d7b8..ac389432c15f 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2202,6 +2202,8 @@ static void print_c2c__display_stats(FILE *out)
+ 	fprintf(out, "  Load LLC Misses                   : %10d\n", llc_misses);
+ 	fprintf(out, "  Load access blocked by data       : %10d\n", stats->blk_data);
+ 	fprintf(out, "  Load access blocked by address    : %10d\n", stats->blk_addr);
++	fprintf(out, "  Load HIT Local Peer               : %10d\n", stats->lcl_peer);
++	fprintf(out, "  Load HIT Remote Peer              : %10d\n", stats->rmt_peer);
+ 	fprintf(out, "  LLC Misses to Local DRAM          : %10.1f%%\n", ((double)stats->lcl_dram/(double)llc_misses) * 100.);
+ 	fprintf(out, "  LLC Misses to Remote DRAM         : %10.1f%%\n", ((double)stats->rmt_dram/(double)llc_misses) * 100.);
+ 	fprintf(out, "  LLC Misses to Remote cache (HIT)  : %10.1f%%\n", ((double)stats->rmt_hit /(double)llc_misses) * 100.);
+@@ -2230,6 +2232,7 @@ static void print_shared_cacheline_info(FILE *out)
+ 	fprintf(out, "  L1D hits on shared lines          : %10d\n", stats->ld_l1hit);
+ 	fprintf(out, "  L2D hits on shared lines          : %10d\n", stats->ld_l2hit);
+ 	fprintf(out, "  LLC hits on shared lines          : %10d\n", stats->ld_llchit + stats->lcl_hitm);
++	fprintf(out, "  Load hits on peer cache or nodes  : %10d\n", stats->lcl_peer + stats->rmt_peer);
+ 	fprintf(out, "  Locked Access on shared lines     : %10d\n", stats->locks);
+ 	fprintf(out, "  Blocked Access on shared lines    : %10d\n", stats->blk_data + stats->blk_addr);
+ 	fprintf(out, "  Store HITs on shared lines        : %10d\n", stats->store);
 -- 
 2.25.1
 
