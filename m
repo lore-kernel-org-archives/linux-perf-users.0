@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE30BC43219
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 May 2022 11:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB65C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 May 2022 11:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235921AbiE3LlR (ORCPT
+        id S234580AbiE3Lle (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 May 2022 07:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41956 "EHLO
+        Mon, 30 May 2022 07:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235925AbiE3LlQ (ORCPT
+        with ESMTP id S235861AbiE3LlY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 May 2022 07:41:16 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16B1813D5
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 04:41:14 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id cx11so2419576pjb.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 04:41:14 -0700 (PDT)
+        Mon, 30 May 2022 07:41:24 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236A881484
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 04:41:20 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id b5so10075710plx.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 04:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zq0qvzL6ixxtSc1desUKY/GqDh2eKKGtTiiw0hsNusc=;
-        b=VfNAdhbV0jFONXt1B7SQddxTBFQ+3fSxQK1MzL3gKczosuKMmaGnbuJ9a5XDy+zBYY
-         8dHnFNZh5ibfTj1W9lWoq6qntJ0g2/f8H+D1rTTpuYNBp38v9ZiuQsyDwOywdt9ADwzn
-         tVN6mPTKpgfTnRgRFc8L0B7DV0iUlhx2SJ5RB0oWYVEy8+dfZ0t/l4Mo5om+PVkszw4X
-         Lp1WAA4vqA170eTWV9Pza7ENN5IU+jfjjSkqKp1gu3E3NO2i4Z+YpiXcF5bRQikvYZ5o
-         LCAHpWny63Kws0mggGZH/mvNpNIeFNuW14ZyvlRrcpRDvTghkomUWXIKmfBt6l/8BtUY
-         6qaw==
+        bh=0JrXAt/7y4IjdEwppejNHx3DEKqS4BuTyzSkWmghpXw=;
+        b=lLt96XydFqnWfbHbv9KeyAjoe9Lh/rSzdLf8JaaQr385uQpufB8Aod0hEGHc+ylmqR
+         REvh0VU31b+jCWSg+gKpRH84CchGxPI09Z1Yh17O9Nsx5+JtVF/MEZdGEt7WABHPXrp9
+         QCI6HaioP31rvuR1cCrC055lrhbA7uqCPD3e2kOyXqwfN8wPadYvogOEGIpbhiTCLntA
+         4iA7v39VzZWptX7DPmdVqQ7787iEnIeGidXIFHBQ8XgGKlRjeMJlHpXD77eYcVkK3Toh
+         HYdu2PtJzmN9HbGsVCK7w/ovfQTSGqjhmbsKO9Gv7c8+3CF2d3exX73r8Baqxb/fskSW
+         beyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zq0qvzL6ixxtSc1desUKY/GqDh2eKKGtTiiw0hsNusc=;
-        b=jIdPMGFUHiNFXsXVuOXQbLnYGobKMF0LfedG3QdMTLwjDO9anJG7YDaQ7rk3Ia8IVI
-         S4S6zB5xDk/EoBhh+m/jKdp9Z1CSxkGWmxITVel63VNkpNINmMHDvcpUNzKBbVscFR5b
-         WX6TBvcNQwOvUfO5BIi+QbFhXYDF9O7pH+/OK9r8boB8uIElmsQ9u3Ph2BSUhx9bbLKd
-         AvUv4MaiNEPNf/ZND6P6pPix2eM4Jo6rIEs1AEUxpwPLB8Ch1ldP1T8atrNHFIPH/uYU
-         w19UWXArV9jM5+alKpaa+9tAW4vep9XnFOMp8JCraTO/aQ3soORN6wZX+eG2l3g8Bxbe
-         3Zog==
-X-Gm-Message-State: AOAM532NY51KudJUn8KtIveX9SA12yKt1nDnwfATtbVfnQrUICL/VETY
-        NXR9s8HgAktMrv6mlYrQV6SPNg==
-X-Google-Smtp-Source: ABdhPJx+K0aH11exUZTln+DH+rdVec4FwT6m0DdgBV/J+m62OQm/P2TGApRMgTML6BGJAd61DdYXDw==
-X-Received: by 2002:a17:903:2282:b0:163:c6c8:65c3 with SMTP id b2-20020a170903228200b00163c6c865c3mr7956024plh.120.1653910874106;
-        Mon, 30 May 2022 04:41:14 -0700 (PDT)
+        bh=0JrXAt/7y4IjdEwppejNHx3DEKqS4BuTyzSkWmghpXw=;
+        b=iDFCFc8Rf2yX+sIkbmTiW/1ymsmIodpTtcwvqX8xQbuFjyurgcmN8rZuzmV9C+bDib
+         /elNdOeOHhOY3Ph2EY3SQ9cxoLdc5VWw3J69yYidLMAhUkuWZuCRbkhSvq5rlaG4wfmZ
+         ZrP2fm8h0RW+zdo1yZVRB8kMVzgLZMB8xBeXfIddtVznA9hc5Mu2+ewl1u1/JscXQukx
+         KGGu3+aii3g/7WS+k8XkYG8GckPrjk/JK0hBX0OayPGU//rzQbUTUAymgRxAxU1C3+En
+         brGNpK7azDuQgxclzB8Kq3RxUCWlSrI+oumzP+txjgRnu2L74lsUCA7h/tVLVcFx6B8C
+         6EUQ==
+X-Gm-Message-State: AOAM5304MxVh0GaoEv3slKOXwfeZhMvqzLiAwPXu4UPWQLIqGNpLWLac
+        xV0Zy91qJ4zRpPJH1Sz2791KSQ==
+X-Google-Smtp-Source: ABdhPJxMTp9pZOnkFkLR8QB0BluHGLLkJcug50W9O2qSuPLwOqLq1e5dX7Ym1kbx/IIFOfqLz7vOjw==
+X-Received: by 2002:a17:902:e80a:b0:163:c2a4:4c9a with SMTP id u10-20020a170902e80a00b00163c2a44c9amr8825992plg.161.1653910879172;
+        Mon, 30 May 2022 04:41:19 -0700 (PDT)
 Received: from leo-build-box.lan (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id c7-20020a170902724700b00161a9df4de8sm8846194pll.145.2022.05.30.04.41.09
+        by smtp.gmail.com with ESMTPSA id c7-20020a170902724700b00161a9df4de8sm8846194pll.145.2022.05.30.04.41.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 May 2022 04:41:13 -0700 (PDT)
+        Mon, 30 May 2022 04:41:18 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -67,9 +67,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ali Saidi <alisaidi@amazon.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 03/12] perf c2c: Add dimensions for peer load operations
-Date:   Mon, 30 May 2022 19:40:27 +0800
-Message-Id: <20220530114036.3225544-4-leo.yan@linaro.org>
+Subject: [PATCH v4 04/12] perf c2c: Add dimensions of peer metrics for cache line view
+Date:   Mon, 30 May 2022 19:40:28 +0800
+Message-Id: <20220530114036.3225544-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220530114036.3225544-1-leo.yan@linaro.org>
 References: <20220530114036.3225544-1-leo.yan@linaro.org>
@@ -79,70 +79,166 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds three dimensions for peer load operations of 'lcl_peer',
-'rmt_peer' and 'tot_peer'.  These three dimensions will be used in the
-shared data cache line table.
+This patch adds dimensions of peer ops, which will be used for Shared
+cache line distribution pareto.
+
+It adds the percentage dimensions for local and remote peer operations,
+and the dimensions for accounting operation numbers which is used for
+stdio mode.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/builtin-c2c.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ tools/perf/builtin-c2c.c | 102 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
 diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index ac389432c15f..2d7991d372a6 100644
+index 2d7991d372a6..85768c526f9d 100644
 --- a/tools/perf/builtin-c2c.c
 +++ b/tools/perf/builtin-c2c.c
-@@ -650,6 +650,9 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __maybe_unused,			\
+@@ -902,6 +902,8 @@ static double percent_ ## __f(struct c2c_hist_entry *c2c_he)			\
  
- STAT_FN(rmt_hitm)
- STAT_FN(lcl_hitm)
-+STAT_FN(rmt_peer)
-+STAT_FN(lcl_peer)
-+STAT_FN(tot_peer)
- STAT_FN(store)
- STAT_FN(st_l1hit)
- STAT_FN(st_l1miss)
-@@ -1360,6 +1363,30 @@ static struct c2c_dimension dim_rmt_hitm = {
+ PERCENT_FN(rmt_hitm)
+ PERCENT_FN(lcl_hitm)
++PERCENT_FN(rmt_peer)
++PERCENT_FN(lcl_peer)
+ PERCENT_FN(st_l1hit)
+ PERCENT_FN(st_l1miss)
+ PERCENT_FN(st_na)
+@@ -968,6 +970,68 @@ percent_lcl_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 	return per_left - per_right;
+ }
+ 
++static int
++percent_lcl_peer_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++		       struct hist_entry *he)
++{
++	int width = c2c_width(fmt, hpp, he->hists);
++	double per = PERCENT(he, lcl_peer);
++	char buf[10];
++
++	return scnprintf(hpp->buf, hpp->size, "%*s", width, PERC_STR(buf, per));
++}
++
++static int
++percent_lcl_peer_color(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++		       struct hist_entry *he)
++{
++	return percent_color(fmt, hpp, he, percent_lcl_peer);
++}
++
++static int64_t
++percent_lcl_peer_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++		     struct hist_entry *left, struct hist_entry *right)
++{
++	double per_left;
++	double per_right;
++
++	per_left  = PERCENT(left, lcl_peer);
++	per_right = PERCENT(right, lcl_peer);
++
++	return per_left - per_right;
++}
++
++static int
++percent_rmt_peer_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++		       struct hist_entry *he)
++{
++	int width = c2c_width(fmt, hpp, he->hists);
++	double per = PERCENT(he, rmt_peer);
++	char buf[10];
++
++	return scnprintf(hpp->buf, hpp->size, "%*s", width, PERC_STR(buf, per));
++}
++
++static int
++percent_rmt_peer_color(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++		       struct hist_entry *he)
++{
++	return percent_color(fmt, hpp, he, percent_rmt_peer);
++}
++
++static int64_t
++percent_rmt_peer_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++		     struct hist_entry *left, struct hist_entry *right)
++{
++	double per_left;
++	double per_right;
++
++	per_left  = PERCENT(left, rmt_peer);
++	per_right = PERCENT(right, rmt_peer);
++
++	return per_left - per_right;
++}
++
+ static int
+ percent_stores_l1hit_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 			   struct hist_entry *he)
+@@ -1403,6 +1467,22 @@ static struct c2c_dimension dim_cl_lcl_hitm = {
  	.width		= 7,
  };
  
-+static struct c2c_dimension dim_tot_peer = {
-+	.header		= HEADER_SPAN("------- Load Peer -------", "Total", 2),
-+	.name		= "tot_peer",
-+	.cmp		= tot_peer_cmp,
-+	.entry		= tot_peer_entry,
-+	.width		= 7,
-+};
-+
-+static struct c2c_dimension dim_lcl_peer = {
-+	.header		= HEADER_SPAN_LOW("Local"),
-+	.name		= "lcl_peer",
-+	.cmp		= lcl_peer_cmp,
-+	.entry		= lcl_peer_entry,
-+	.width		= 7,
-+};
-+
-+static struct c2c_dimension dim_rmt_peer = {
-+	.header		= HEADER_SPAN_LOW("Remote"),
-+	.name		= "rmt_peer",
++static struct c2c_dimension dim_cl_rmt_peer = {
++	.header		= HEADER_SPAN("----- Peer -----", "Rmt", 1),
++	.name		= "cl_rmt_peer",
 +	.cmp		= rmt_peer_cmp,
 +	.entry		= rmt_peer_entry,
 +	.width		= 7,
 +};
 +
- static struct c2c_dimension dim_cl_rmt_hitm = {
- 	.header		= HEADER_SPAN("----- HITM -----", "Rmt", 1),
- 	.name		= "cl_rmt_hitm",
-@@ -1672,6 +1699,9 @@ static struct c2c_dimension *dimensions[] = {
- 	&dim_tot_hitm,
- 	&dim_lcl_hitm,
- 	&dim_rmt_hitm,
-+	&dim_tot_peer,
-+	&dim_lcl_peer,
-+	&dim_rmt_peer,
++static struct c2c_dimension dim_cl_lcl_peer = {
++	.header		= HEADER_SPAN_LOW("Lcl"),
++	.name		= "cl_lcl_peer",
++	.cmp		= lcl_peer_cmp,
++	.entry		= lcl_peer_entry,
++	.width		= 7,
++};
++
+ static struct c2c_dimension dim_tot_stores = {
+ 	.header		= HEADER_BOTH("Total", "Stores"),
+ 	.name		= "tot_stores",
+@@ -1547,6 +1627,24 @@ static struct c2c_dimension dim_percent_lcl_hitm = {
+ 	.width		= 7,
+ };
+ 
++static struct c2c_dimension dim_percent_rmt_peer = {
++	.header		= HEADER_SPAN("-- Peer Snoop --", "Rmt", 1),
++	.name		= "percent_rmt_peer",
++	.cmp		= percent_rmt_peer_cmp,
++	.entry		= percent_rmt_peer_entry,
++	.color		= percent_rmt_peer_color,
++	.width		= 7,
++};
++
++static struct c2c_dimension dim_percent_lcl_peer = {
++	.header		= HEADER_SPAN_LOW("Lcl"),
++	.name		= "percent_lcl_peer",
++	.cmp		= percent_lcl_peer_cmp,
++	.entry		= percent_lcl_peer_entry,
++	.color		= percent_lcl_peer_color,
++	.width		= 7,
++};
++
+ static struct c2c_dimension dim_percent_stores_l1hit = {
+ 	.header		= HEADER_SPAN("------- Store Refs ------", "L1 Hit", 2),
+ 	.name		= "percent_stores_l1hit",
+@@ -1704,6 +1802,8 @@ static struct c2c_dimension *dimensions[] = {
+ 	&dim_rmt_peer,
  	&dim_cl_lcl_hitm,
  	&dim_cl_rmt_hitm,
++	&dim_cl_lcl_peer,
++	&dim_cl_rmt_peer,
  	&dim_tot_stores,
+ 	&dim_stores_l1hit,
+ 	&dim_stores_l1miss,
+@@ -1721,6 +1821,8 @@ static struct c2c_dimension *dimensions[] = {
+ 	&dim_percent_hitm,
+ 	&dim_percent_rmt_hitm,
+ 	&dim_percent_lcl_hitm,
++	&dim_percent_rmt_peer,
++	&dim_percent_lcl_peer,
+ 	&dim_percent_stores_l1hit,
+ 	&dim_percent_stores_l1miss,
+ 	&dim_percent_stores_na,
 -- 
 2.25.1
 
