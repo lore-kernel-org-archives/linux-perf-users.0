@@ -2,1170 +2,844 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B630C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 May 2022 16:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB25AC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 09:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237120AbiE3Qrp (ORCPT
+        id S245179AbiEaJ1W (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 May 2022 12:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60908 "EHLO
+        Tue, 31 May 2022 05:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232500AbiE3Qro (ORCPT
+        with ESMTP id S241523AbiEaJ1W (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 May 2022 12:47:44 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ADD154BF8
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 09:47:41 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id z43so9789867ede.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 May 2022 09:47:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4YfYAAPtWnTOhUN9Lg4mGzi9j0rTUyTE06zuZjgBWpU=;
-        b=hdVFM/1s1gV9ntJIXakZj093hh9hlyOIEW6TBV9UKIV4QhuvC9yF2NYv1U+g8Sq56L
-         f6CF22DJf6EJZ8bronAoklMFA+fiRFmv3zSWcQkkNouBdr3CCJkuvxsT4larvjjE9WRg
-         FQYx/WoKme02Kt7tChojT9d6ky3n22Q9yTgn1mKt34vOlrbkHXttfpPQCIepUvwJfEXz
-         BQ9L20nM+4CHvBCohcHRGokhbs8vMYLHMEgJTIGIVfIWe8kEc7BFP9NE2pND0U5fQLtN
-         O3pZC4kZvpwpg+5XpT6CB2QOcM5F7EL7jEGEkZ/jHerID1WraIWy5SFzJNYZrMoMvN4Y
-         I5Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4YfYAAPtWnTOhUN9Lg4mGzi9j0rTUyTE06zuZjgBWpU=;
-        b=rGJ3VApSZLUHKkiM7RsAinJNsHiVyCrFmbv5j1c/0K29rPhxM2Cxx4Vk82rNZBPJ6J
-         cc6jOREk5qjJKlgCnIfobblOlK2GCGb5X0sZX6Z+2/G1p6T+Lroaxnd1SX9MIUKpHORh
-         Y0h/K5K1Avz8LSQRFNKp5vu3vw8hNB2CUsvqjE8OTX1lo7WQCq9Qy5CVdogf1yyr5XEh
-         Y3HZ6LRlry76w1zdiSGENDrtUBY1UNu7X8vmracyxPDo7g06E5M04kEQLhsc8/up6ylO
-         ysitNbzF6pCl3QxMBtdtixpfW3YpGTyyn4Yk7m3AWKJu2MBJ2TX0YFdXJw6invb5YMS+
-         koWA==
-X-Gm-Message-State: AOAM532enYiweuNMiKblPgI4YmQyRSgRrMtzJ0/mWILjSb1530HTWC/f
-        F31yabGwZoWhFdioOYkJ5iQUijGhxn0lFICLjK+1SkP/doo=
-X-Google-Smtp-Source: ABdhPJwgUfOdIlWXWODKcBJzYPK0efwEk9vcYfr3k96Qptu+NBL6wtkBhf80z9sgg3QMGMo9LR0kFrRVf5LLipaUSx8=
-X-Received: by 2002:a05:6402:e85:b0:41d:121b:f436 with SMTP id
- h5-20020a0564020e8500b0041d121bf436mr60230289eda.121.1653929259546; Mon, 30
- May 2022 09:47:39 -0700 (PDT)
+        Tue, 31 May 2022 05:27:22 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A1F25EB7;
+        Tue, 31 May 2022 02:27:19 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24V9Diwh020454;
+        Tue, 31 May 2022 09:27:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=9oWQu1XE6sQcMDnlyn74e52H/lDkK6trltFDMtRDOsI=;
+ b=KNDOPJDVXpsy3A9OGolBN3vc4F1eVJwv6PCZRFdmFacHIPz06C+jWe2FVGFBjcoOpD1h
+ 8RSYO+gskS4a13YBinEV3DkZp0teEB7iA3/1Kbee9myxQG+Em+V36IBPG5G3sUF5ZAoy
+ 06rmrj5fBwzBryI51wVYP7zzW7OObIL4U6bCJ4PhN1crrFtCTmh6KobnICXh444hbe1D
+ AOwJnvUJ2zQEj+LGJBIv7p+C02CW71eXnpe5xTcyRRxjhqeCvAw+/MksARRsvmvki1yi
+ fzgmI5yCJ6xt7wRXmKvcJOv687YjbYPELzOORlCB6RwU4/eXNev9R7qgmy/ZNLG0e7qH rQ== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gdg6y07xw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 May 2022 09:27:14 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24V9KQBw005270;
+        Tue, 31 May 2022 09:27:12 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma05fra.de.ibm.com with ESMTP id 3gbc97awrh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 May 2022 09:27:12 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24V9R9QD50856408
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 May 2022 09:27:09 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 233C7A405C;
+        Tue, 31 May 2022 09:27:09 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C46C6A405B;
+        Tue, 31 May 2022 09:27:08 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 31 May 2022 09:27:08 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 1/7] perf list: Add IBM z16 event description for s390
+Date:   Tue, 31 May 2022 11:27:00 +0200
+Message-Id: <20220531092706.1931503-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20220309122859.31487-1-carsten.haitzler@foss.arm.com>
- <20220309122859.31487-3-carsten.haitzler@foss.arm.com> <20220530162730.GA480245@p14s>
-In-Reply-To: <20220530162730.GA480245@p14s>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 30 May 2022 10:47:26 -0600
-Message-ID: <CANLsYkx=QfvkM4H2JAAKNuEAZfqv3248woJUdPuDu5Y-4_ojig@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf test: Add coresight tests to guage quality of
- data generated
-To:     carsten.haitzler@foss.arm.com
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mike.leach@linaro.org, leo.yan@linaro.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: t4aWcdlyzMj7CyA89OHerMGZJSEoI0ED
+X-Proofpoint-ORIG-GUID: t4aWcdlyzMj7CyA89OHerMGZJSEoI0ED
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-05-31_03,2022-05-30_03,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 bulkscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
+ adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2205310047
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 30 May 2022 at 10:27, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> On Wed, Mar 09, 2022 at 12:28:59PM +0000, carsten.haitzler@foss.arm.com wrote:
-> > From: Carsten Haitzler <carsten.haitzler@arm.com>
-> >
-> > This adds a test harness and tests to run perf record and examine the
-> > resuling output when coresight is enabled on arm64 and check the
-> > resulting quality of the output as part of perf test. These tests use
-> > various tools to produce output from perf record then measure some key
-> > specific aspects of that data to see if the data exists at all and
-> > contains key aspects such as measuring some data for every thread of
-> > a test or produces sufficient data for large exeuction runs of a large
-> > executable. etc.
-> >
-> > Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
-> > ---
-> >  MAINTAINERS                                   |   4 +
-> >  tools/perf/.gitignore                         |   6 +-
-> >  tools/perf/Documentation/arm-coresight.txt    | 140 ++++++++++++++++++
-> >  tools/perf/Makefile.perf                      |  14 +-
-> >  tools/perf/tests/shell/coresight/Makefile     |  30 ++++
-> >  .../tests/shell/coresight/Makefile.miniconfig |  23 +++
-> >  .../shell/coresight/asm_pure_loop/.gitignore  |   1 +
-> >  .../shell/coresight/asm_pure_loop/Makefile    |  30 ++++
-> >  .../coresight/asm_pure_loop/asm_pure_loop.S   |  28 ++++
-> >  .../shell/coresight/memcpy_thread/.gitignore  |   1 +
-> >  .../shell/coresight/memcpy_thread/Makefile    |  29 ++++
-> >  .../coresight/memcpy_thread/memcpy_thread.c   |  79 ++++++++++
-> >  .../shell/coresight/thread_loop/.gitignore    |   1 +
-> >  .../shell/coresight/thread_loop/Makefile      |  29 ++++
-> >  .../shell/coresight/thread_loop/thread_loop.c |  86 +++++++++++
-> >  .../coresight/unroll_loop_thread/.gitignore   |   1 +
-> >  .../coresight/unroll_loop_thread/Makefile     |  29 ++++
-> >  .../unroll_loop_thread/unroll_loop_thread.c   |  74 +++++++++
-> >  .../tests/shell/coresight_asm_pure_loop.sh    |  18 +++
-> >  .../shell/coresight_memcpy_thread_16k_10.sh   |  18 +++
-> >  .../coresight_thread_loop_check_tid_10.sh     |  19 +++
-> >  .../coresight_thread_loop_check_tid_2.sh      |  19 +++
-> >  .../shell/coresight_unroll_loop_thread_10.sh  |  18 +++
-> >  tools/perf/tests/shell/lib/coresight.sh       | 130 ++++++++++++++++
-> >  24 files changed, 823 insertions(+), 4 deletions(-)
->
-> As Leo pointed out this is a big patch and hard to digest intellectually.
->
-> >  create mode 100644 tools/perf/Documentation/arm-coresight.txt
-> >  create mode 100644 tools/perf/tests/shell/coresight/Makefile
-> >  create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
-> >  create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
-> >  create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
-> >  create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> >  create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
-> >  create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/Makefile
-> >  create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
-> >  create mode 100644 tools/perf/tests/shell/coresight/thread_loop/.gitignore
-> >  create mode 100644 tools/perf/tests/shell/coresight/thread_loop/Makefile
-> >  create mode 100644 tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
-> >  create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-> >  create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-> >  create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-> >  create mode 100755 tools/perf/tests/shell/coresight_asm_pure_loop.sh
-> >  create mode 100755 tools/perf/tests/shell/coresight_memcpy_thread_16k_10.sh
-> >  create mode 100755 tools/perf/tests/shell/coresight_thread_loop_check_tid_10.sh
-> >  create mode 100755 tools/perf/tests/shell/coresight_thread_loop_check_tid_2.sh
-> >  create mode 100755 tools/perf/tests/shell/coresight_unroll_loop_thread_10.sh
-> >  create mode 100644 tools/perf/tests/shell/lib/coresight.sh
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 673c7124ca82..18cc20609f2e 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1918,10 +1918,14 @@ F:    drivers/hwtracing/coresight/*
-> >  F:   include/dt-bindings/arm/coresight-cti-dt.h
-> >  F:   include/linux/coresight*
-> >  F:   samples/coresight/*
-> > +F:   tools/perf/Documentation/arm-coresight.txt
-> >  F:   tools/perf/arch/arm/util/auxtrace.c
-> >  F:   tools/perf/arch/arm/util/cs-etm.c
-> >  F:   tools/perf/arch/arm/util/cs-etm.h
-> >  F:   tools/perf/arch/arm/util/pmu.c
-> > +F:   tools/perf/tests/shell/coresight_*
-> > +F:   tools/perf/tests/shell/tools/Makefile
-> > +F:   tools/perf/tests/shell/tools/coresight/*
-> >  F:   tools/perf/util/cs-etm-decoder/*
-> >  F:   tools/perf/util/cs-etm.*
-> >
-> > diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-> > index 20b8ab984d5f..138c679ecacd 100644
-> > --- a/tools/perf/.gitignore
-> > +++ b/tools/perf/.gitignore
-> > @@ -15,8 +15,9 @@ perf*.1
-> >  perf*.xml
-> >  perf*.html
-> >  common-cmds.h
-> > -perf.data
-> > -perf.data.old
-> > +perf*.data
-> > +perf*.data.old
-> > +stats-*.csv
-> >  output.svg
-> >  perf-archive
-> >  perf-with-kcore
-> > @@ -30,6 +31,7 @@ config.mak.autogen
-> >  *-flex.*
-> >  *.pyc
-> >  *.pyo
-> > +*.stdout
-> >  .config-detected
-> >  util/intel-pt-decoder/inat-tables.c
-> >  arch/*/include/generated/
-> > diff --git a/tools/perf/Documentation/arm-coresight.txt b/tools/perf/Documentation/arm-coresight.txt
-> > new file mode 100644
-> > index 000000000000..3a9e6c573c58
-> > --- /dev/null
-> > +++ b/tools/perf/Documentation/arm-coresight.txt
->
-> I think it would be best to keep all the coresight documentation under the
-> current coresight documentation repository[1].  That way all the information on
-> coresight can be found in a central place.
->
-> Some part of what is added by this patch is redundant with what is currently
-> available in [1].  Other parts are tests specific and should be added under
-> something like "coresight-perf-test.rst".
->
-> Thanks,
-> Mathieu
->
-> [1]. Documentation/trace/coresight/
->
+Update IBM z16 counter description using document SA23-2260-07:
+"The Load-Program-Parameter and the CPU-Measurement Facilities"
+released in May, 2022, to include counter definitions for IBM z16
+counter sets:
+  * Basic counter set
+  * Problem/user counter set
+  * Crypto counter set
 
-I forgot... Please add a proper cover letter for this patchset.
+Use document SA23-2261-07:
+"The CPU-Measurement Facility Extended Counters Definition
+ for z10, z196/z114, zEC12/zBC12, z13/z13s, z14, z15 and z16"
+released on April 29, 2022 to include counter definitions for IBM z16
+  * Extended counter set
+  * MT-Diagnostic counter set
 
->
-> > @@ -0,0 +1,140 @@
-> > +Arm Coresight Support
-> > +=====================
-> > +
-> > +Coresight is a feature of some Arm based processors that allows for
-> > +debugging. One of the things it can do is trace every instruction
-> > +executed and remotely expose that information in a hardware compressed
-> > +stream. Perf is able to locally access that stream and store it to the
-> > +output perf data files. This stream can then be later decoded to give the
-> > +instructions that were traced for debugging or profiling purposes. You
-> > +can log such data with a perf record command like:
-> > +
-> > +    perf record -e cs_etm//u testbinary
-> > +
-> > +This would run some test binary (testbinary) until it exits and record
-> > +a perf.data trace file. That file would have AUX sections if coresight
-> > +is working correctly. You can dump the content of this file as
-> > +readable text with a command like:
-> > +
-> > +    perf report --stdio --dump -i perf.data
-> > +
-> > +You should find some sections of this file have AUX data blocks like:
-> > +
-> > +    0x1e78 [0x30]: PERF_RECORD_AUXTRACE size: 0x11dd0  offset: 0  ref: 0x1b614fc1061b0ad1  idx: 0  tid: 531230  cpu: -1
-> > +
-> > +    . ... CoreSight ETM Trace data: size 73168 bytes
-> > +            Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
-> > +              Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
-> > +              Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
-> > +              Idx:26; ID:10;  I_TRACE_ON : Trace On.
-> > +              Idx:27; ID:10;  I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000FFFFB6069140; Ctxt: AArch64,EL0, NS;
-> > +              Idx:38; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-> > +              Idx:39; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-> > +              Idx:40; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-> > +              Idx:41; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEN
-> > +              ...
-> > +
-> > +If you see these above, then your system is tracing coresight data
-> > +correctly.
-> > +
-> > +To compile perf with coresight support in the perf directory do
-> > +
-> > +    make CORESIGHT=1
-> > +
-> > +This will compile the perf tool with coresight support as well as
-> > +build some small test binaries for perf test. This requires you also
-> > +be compiling for 64bit Arm (ARM64/aarch64). The tools run as part of
-> > +perf coresight tracing are in tests/shell/tools/coresight.
-> > +
-> > +You will also want coresight support enabled in your kernel config.
-> > +Ensure it is enabled with:
-> > +
-> > +    CONFIG_CORESIGHT=y
-> > +
-> > +There are various other coresight options you probably also want
-> > +enabled like:
-> > +
-> > +    CONFIG_CORESIGHT_LINKS_AND_SINKS=y
-> > +    CONFIG_CORESIGHT_LINK_AND_SINK_TMC=y
-> > +    CONFIG_CORESIGHT_CATU=y
-> > +    CONFIG_CORESIGHT_SINK_TPIU=y
-> > +    CONFIG_CORESIGHT_SINK_ETBV10=y
-> > +    CONFIG_CORESIGHT_SOURCE_ETM4X=y
-> > +    CONFIG_CORESIGHT_STM=y
-> > +    CONFIG_CORESIGHT_CPU_DEBUG=y
-> > +    CONFIG_CORESIGHT_CTI=y
-> > +    CONFIG_CORESIGHT_CTI_INTEGRATION_REGS=y
-> > +
-> > +Please refer to the kernel configuration help for more information.
-> > +
-> > +Perf test - Verify kernel and userspace perf coresight work
-> > +===========================================================
-> > +
-> > +When you run perf test, it will do a lot of self tests. Some of those
-> > +tests will cover Coresight (only if enabled and on ARM64). You
-> > +generally would run perf test from the tools/perf directory in the
-> > +kernel tree. Some tests will check some internal perf support like:
-> > +
-> > +    Check Arm CoreSight trace data recording and synthesized samples
-> > +
-> > +Some others will actually use perf record and some test binaries that
-> > +are in tests/shell/tools/coresight and will collect traces to ensure a
-> > +minimum level of functionality is met. The scripts that launch these
-> > +tests are in tests/shell. These will all look like:
-> > +
-> > +    Coresight / Memcpy 1M 25 Threads
-> > +    Coresight / Unroll Loop Thread 2
-> > +    ...
-> > +
-> > +These perf record tests will not run if the tool binaries do not exist
-> > +in tests/shell/tools/coresight/*/ and will be skipped. If you do not
-> > +have coresight support in hardware then either do not build perf with
-> > +coresight support or remove these binaries in order to not have these
-> > +tests fail and have them skip instead.
-> > +
-> > +These tests will log historical results in the current working
-> > +directory (e.g. tools/perf) and will be named stats-*.csv like:
-> > +
-> > +    stats-asm_pure_loop-out.csv
-> > +    stats-bubble_sort-random.csv
-> > +    ...
-> > +
-> > +These statistic files log some aspects of the AUX data sections in
-> > +the perf data output counting some numbers of certain encodings (a
-> > +good way to know that it's working in a very simple way). One problem
-> > +with coresight is that given a large enough amount of data needing to
-> > +be logged, some of it can be lost due to the processor not waking up
-> > +in time to read out all the data from buffers etc.. You will notice
-> > +that the amount of data collected can vary a lot per run of perf test.
-> > +If you wish to see how this changes over time, simply run perf test
-> > +multiple times and all these csv files will have more and more data
-> > +appended to it that you can later examine, graph and otherwise use to
-> > +figure out if things have become worse or better.
-> > +
-> > +Be aware that amny of these tests take quite a while to run, specifically
-> > +in processing the perf data file and dumping contents to then examine what
-> > +is inside.
-> > +
-> > +You can change where these csv logs are stored by setting the
-> > +PERF_TEST_CORESIGHT_STATDIR environment variable before running perf
-> > +test like:
-> > +
-> > +    export PERF_TEST_CORESIGHT_STATDIR=/var/tmp
-> > +    perf test
-> > +
-> > +They will also store resulting perf output data in the current
-> > +directory for later inspection like:
-> > +
-> > +    perf-memcpy-1m.data
-> > +    perf-thread_loop-2th.data
-> > +    ...
-> > +
-> > +You can alter where the perf data files are stored by setting the
-> > +PERF_TEST_CORESIGHT_DATADIR environment variable such as:
-> > +
-> > +    PERF_TEST_CORESIGHT_DATADIR=/var/tmp
-> > +    perf test
-> > +
-> > +You may wish to set these above environment variables if you which to
-> > +keep the output of tests outside of the current working directory for
-> > +longer term storage and examination.
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index ac861e42c8f7..b97db83992e0 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -630,7 +630,15 @@ sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
-> >  $(sync_file_range_arrays): $(linux_uapi_dir)/fs.h $(sync_file_range_tbls)
-> >       $(Q)$(SHELL) '$(sync_file_range_tbls)' $(linux_uapi_dir) > $@
-> >
-> > -all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
-> > +TESTS_CORESIGHT_DIR := $(srctree)/tools/perf/tests/shell/coresight
-> > +
-> > +tests-coresight-targets: FORCE
-> > +     $(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR)
-> > +
-> > +tests-coresight-targets-clean:
-> > +     $(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) clean
-> > +
-> > +all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
-> >
-> >  # Create python binding output directory if not already present
-> >  _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
-> > @@ -1020,6 +1028,7 @@ install-tests: all install-gtk
-> >               $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
-> >               $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
-> >               $(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
-> > +     $(Q)$(MAKE) -C tests/shell/coresight install-tests
-> >
-> >  install-bin: install-tools install-tests install-traceevent-plugins
-> >
-> > @@ -1088,7 +1097,7 @@ endif # BUILD_BPF_SKEL
-> >  bpf-skel-clean:
-> >       $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
-> >
-> > -clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean
-> > +clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
-> >       $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-with-kcore $(OUTPUT)perf-iostat $(LANG_BINDINGS)
-> >       $(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
-> >       $(Q)$(RM) $(OUTPUT).config-detected
-> > @@ -1155,5 +1164,6 @@ FORCE:
-> >  .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
-> >  .PHONY: $(GIT-HEAD-PHONY) TAGS tags cscope FORCE prepare
-> >  .PHONY: libtraceevent_plugins archheaders
-> > +.PHONY: $(TESTS_CORESIGHT_TARGETS)
-> >
-> >  endif # force_fixdep
-> > diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-> > new file mode 100644
-> > index 000000000000..dda99aeac158
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/Makefile
-> > @@ -0,0 +1,30 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +include ../../../../../tools/scripts/Makefile.include
-> > +include ../../../../../tools/scripts/Makefile.arch
-> > +include ../../../../../tools/scripts/utilities.mak
-> > +
-> > +SUBDIRS = \
-> > +     asm_pure_loop \
-> > +     thread_loop \
-> > +     memcpy_thread \
-> > +     unroll_loop_thread
-> > +
-> > +all: $(SUBDIRS)
-> > +$(SUBDIRS):
-> > +     $(Q)$(MAKE) -C $@
-> > +
-> > +INSTALLDIRS = $(SUBDIRS:%=install-%)
-> > +
-> > +install-tests: $(INSTALLDIRS)
-> > +$(INSTALLDIRS):
-> > +     $(Q)$(MAKE) -C $(@:install-%=%) install-tests
-> > +
-> > +CLEANDIRS = $(SUBDIRS:%=clean-%)
-> > +
-> > +clean: $(CLEANDIRS)
-> > +$(CLEANDIRS):
-> > +     $(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
-> > +
-> > +.PHONY: all clean $(SUBDIRS) $(CLEANDIRS) $(INSTALLDIRS)
-> > +
-> > diff --git a/tools/perf/tests/shell/coresight/Makefile.miniconfig b/tools/perf/tests/shell/coresight/Makefile.miniconfig
-> > new file mode 100644
-> > index 000000000000..893c12685fed
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/Makefile.miniconfig
-> > @@ -0,0 +1,23 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +ifndef DESTDIR
-> > +prefix ?= $(HOME)
-> > +endif
-> > +
-> > +DESTDIR_SQ = $(subst ','\'',$(DESTDIR))
-> > +perfexecdir = libexec/perf-core
-> > +perfexec_instdir = $(perfexecdir)
-> > +
-> > +ifneq ($(filter /%,$(firstword $(perfexecdir))),)
-> > +perfexec_instdir = $(perfexecdir)
-> > +else
-> > +perfexec_instdir = $(prefix)/$(perfexecdir)
-> > +endif
-> > +
-> > +perfexec_instdir_SQ = $(subst ','\'',$(perfexec_instdir))
-> > +INSTALL = install
-> > +
-> > +include ../../../../../scripts/Makefile.include
-> > +include ../../../../../scripts/Makefile.arch
-> > +include ../../../../../scripts/utilities.mak
-> > diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore b/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
-> > new file mode 100644
-> > index 000000000000..468673ac32e8
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
-> > @@ -0,0 +1 @@
-> > +asm_pure_loop
-> > diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile b/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
-> > new file mode 100644
-> > index 000000000000..10c5a60cb71c
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
-> > @@ -0,0 +1,30 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +include ../Makefile.miniconfig
-> > +
-> > +BIN=asm_pure_loop
-> > +LIB=
-> > +
-> > +all: $(BIN)
-> > +
-> > +$(BIN): $(BIN).S
-> > +ifdef CORESIGHT
-> > +ifeq ($(ARCH),arm64)
-> > +     $(Q)$(CC) $(BIN).S -nostdlib -static -o $(BIN) $(LIB)
-> > +endif
-> > +endif
-> > +
-> > +install-tests: all
-> > +ifdef CORESIGHT
-> > +ifeq ($(ARCH),arm64)
-> > +     $(call QUIET_INSTALL, tests) \
-> > +             $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)'; \
-> > +             $(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)/$(BIN)'
-> > +endif
-> > +endif
-> > +
-> > +clean:
-> > +     $(Q)$(RM) -f $(BIN)
-> > +
-> > +.PHONY: all clean install-tests
-> > diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> > new file mode 100644
-> > index 000000000000..75cf084a927d
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> > @@ -0,0 +1,28 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/* Tamas Zsoldos <tamas.zsoldos@arm.com>, 2021 */
-> > +
-> > +.globl _start
-> > +_start:
-> > +     mov     x0, 0x0000ffff
-> > +     mov     x1, xzr
-> > +loop:
-> > +     nop
-> > +     nop
-> > +     cbnz    x1, noskip
-> > +     nop
-> > +     nop
-> > +     adrp    x2, skip
-> > +     add     x2, x2, :lo12:skip
-> > +     br      x2
-> > +     nop
-> > +     nop
-> > +noskip:
-> > +     nop
-> > +     nop
-> > +skip:
-> > +     sub     x0, x0, 1
-> > +     cbnz    x0, loop
-> > +
-> > +     mov     x0, #0
-> > +     mov     x8, #93 // __NR_exit syscall
-> > +     svc     #0
-> > diff --git a/tools/perf/tests/shell/coresight/memcpy_thread/.gitignore b/tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
-> > new file mode 100644
-> > index 000000000000..f8217e56091e
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
-> > @@ -0,0 +1 @@
-> > +memcpy_thread
-> > diff --git a/tools/perf/tests/shell/coresight/memcpy_thread/Makefile b/tools/perf/tests/shell/coresight/memcpy_thread/Makefile
-> > new file mode 100644
-> > index 000000000000..e2604cfae74b
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/memcpy_thread/Makefile
-> > @@ -0,0 +1,29 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +include ../Makefile.miniconfig
-> > +
-> > +BIN=memcpy_thread
-> > +LIB=-pthread
-> > +
-> > +all: $(BIN)
-> > +
-> > +$(BIN): $(BIN).c
-> > +ifdef CORESIGHT
-> > +ifeq ($(ARCH),arm64)
-> > +     $(Q)$(CC) $(BIN).c -o $(BIN) $(LIB)
-> > +endif
-> > +endif
-> > +
-> > +install-tests: all
-> > +ifdef CORESIGHT
-> > +ifeq ($(ARCH),arm64)
-> > +     $(call QUIET_INSTALL, tests) \
-> > +             $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)'; \
-> > +             $(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)/$(BIN)'
-> > +endif
-> > +endif
-> > +
-> > +clean:
-> > +     $(Q)$(RM) -f $(BIN)
-> > +
-> > +.PHONY: all clean install-tests
-> > diff --git a/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c b/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
-> > new file mode 100644
-> > index 000000000000..a7e169d1bf64
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
-> > @@ -0,0 +1,79 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +#include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <unistd.h>
-> > +#include <string.h>
-> > +#include <pthread.h>
-> > +
-> > +struct args {
-> > +     unsigned long loops;
-> > +     unsigned long size;
-> > +     pthread_t th;
-> > +     void *ret;
-> > +};
-> > +
-> > +static void *thrfn(void *arg)
-> > +{
-> > +     struct args *a = arg;
-> > +     unsigned long i, len = a->loops;
-> > +     unsigned char *src, *dst;
-> > +
-> > +     src = malloc(a->size * 1024);
-> > +     dst = malloc(a->size * 1024);
-> > +     if ((!src) || (!dst)) {
-> > +             printf("ERR: Can't allocate memory\n");
-> > +             exit(1);
-> > +     }
-> > +     for (i = 0; i < len; i++)
-> > +             memcpy(dst, src, a->size * 1024);
-> > +}
-> > +
-> > +static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
-> > +{
-> > +     pthread_t t;
-> > +     pthread_attr_t attr;
-> > +
-> > +     pthread_attr_init(&attr);
-> > +     pthread_create(&t, &attr, fn, arg);
-> > +     return t;
-> > +}
-> > +
-> > +int main(int argc, char **argv)
-> > +{
-> > +     unsigned long i, len, size, thr;
-> > +     pthread_t threads[256];
-> > +     struct args args[256];
-> > +     long long v;
-> > +
-> > +     if (argc < 4) {
-> > +             printf("ERR: %s [copysize Kb] [numthreads] [numloops (hundreds)]\n", argv[0]);
-> > +             exit(1);
-> > +     }
-> > +
-> > +     v = atoll(argv[1]);
-> > +     if ((v < 1) || (v > (1024 * 1024))) {
-> > +             printf("ERR: max memory 1GB (1048576 KB)\n");
-> > +             exit(1);
-> > +     }
-> > +     size = v;
-> > +     thr = atol(argv[2]);
-> > +     if ((thr < 1) || (thr > 256)) {
-> > +             printf("ERR: threads 1-256\n");
-> > +             exit(1);
-> > +     }
-> > +     v = atoll(argv[3]);
-> > +     if ((v < 1) || (v > 40000000000ll)) {
-> > +             printf("ERR: loops 1-40000000000 (hundreds)\n");
-> > +             exit(1);
-> > +     }
-> > +     len = v * 100;
-> > +     for (i = 0; i < thr; i++) {
-> > +             args[i].loops = len;
-> > +             args[i].size = size;
-> > +             args[i].th = new_thr(thrfn, &(args[i]));
-> > +     }
-> > +     for (i = 0; i < thr; i++)
-> > +             pthread_join(args[i].th, &(args[i].ret));
-> > +     return 0;
-> > +}
-> > diff --git a/tools/perf/tests/shell/coresight/thread_loop/.gitignore b/tools/perf/tests/shell/coresight/thread_loop/.gitignore
-> > new file mode 100644
-> > index 000000000000..6d4c33eaa9e8
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/thread_loop/.gitignore
-> > @@ -0,0 +1 @@
-> > +thread_loop
-> > diff --git a/tools/perf/tests/shell/coresight/thread_loop/Makefile b/tools/perf/tests/shell/coresight/thread_loop/Makefile
-> > new file mode 100644
-> > index 000000000000..424df4e8b0e6
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/thread_loop/Makefile
-> > @@ -0,0 +1,29 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +include ../Makefile.miniconfig
-> > +
-> > +BIN=thread_loop
-> > +LIB=-pthread
-> > +
-> > +all: $(BIN)
-> > +
-> > +$(BIN): $(BIN).c
-> > +ifdef CORESIGHT
-> > +ifeq ($(ARCH),arm64)
-> > +     $(Q)$(CC) $(BIN).c -o $(BIN) $(LIB)
-> > +endif
-> > +endif
-> > +
-> > +install-tests: all
-> > +ifdef CORESIGHT
-> > +ifeq ($(ARCH),arm64)
-> > +     $(call QUIET_INSTALL, tests) \
-> > +             $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)'; \
-> > +             $(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)/$(BIN)'
-> > +endif
-> > +endif
-> > +
-> > +clean:
-> > +     $(Q)$(RM) -f $(BIN)
-> > +
-> > +.PHONY: all clean install-tests
-> > diff --git a/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
-> > new file mode 100644
-> > index 000000000000..c0158fac7d0b
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
-> > @@ -0,0 +1,86 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +// define this for gettid()
-> > +#define _GNU_SOURCE
-> > +
-> > +#include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <unistd.h>
-> > +#include <string.h>
-> > +#include <pthread.h>
-> > +#include <sys/syscall.h>
-> > +#ifndef SYS_gettid
-> > +// gettid is 178 on arm64
-> > +# define SYS_gettid 178
-> > +#endif
-> > +#define gettid() syscall(SYS_gettid)
-> > +
-> > +struct args {
-> > +     unsigned int loops;
-> > +     pthread_t th;
-> > +     void *ret;
-> > +};
-> > +
-> > +static void *thrfn(void *arg)
-> > +{
-> > +     struct args *a = arg;
-> > +     int i = 0, len = a->loops;
-> > +
-> > +     if (getenv("SHOW_TID")) {
-> > +             unsigned long long tid = gettid();
-> > +
-> > +             printf("%llu\n", tid);
-> > +     }
-> > +     asm volatile(
-> > +             "loop:\n"
-> > +             "add %[i], %[i], #1\n"
-> > +             "cmp %[i], %[len]\n"
-> > +             "blt loop\n"
-> > +             : /* out */
-> > +             : /* in */ [i] "r" (i), [len] "r" (len)
-> > +             : /* clobber */
-> > +     );
-> > +     return (void *)(long)i;
-> > +}
-> > +
-> > +static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
-> > +{
-> > +     pthread_t t;
-> > +     pthread_attr_t attr;
-> > +
-> > +     pthread_attr_init(&attr);
-> > +     pthread_create(&t, &attr, fn, arg);
-> > +     return t;
-> > +}
-> > +
-> > +int main(int argc, char **argv)
-> > +{
-> > +     unsigned int i, len, thr;
-> > +     pthread_t threads[256];
-> > +     struct args args[256];
-> > +
-> > +     if (argc < 3) {
-> > +             printf("ERR: %s [numthreads] [numloops (millions)]\n", argv[0]);
-> > +             exit(1);
-> > +     }
-> > +
-> > +     thr = atoi(argv[1]);
-> > +     if ((thr < 1) || (thr > 256)) {
-> > +             printf("ERR: threads 1-256\n");
-> > +             exit(1);
-> > +     }
-> > +     len = atoi(argv[2]);
-> > +     if ((len < 1) || (len > 4000)) {
-> > +             printf("ERR: max loops 4000 (millions)\n");
-> > +             exit(1);
-> > +     }
-> > +     len *= 1000000;
-> > +     for (i = 0; i < thr; i++) {
-> > +             args[i].loops = len;
-> > +             args[i].th = new_thr(thrfn, &(args[i]));
-> > +     }
-> > +     for (i = 0; i < thr; i++)
-> > +             pthread_join(args[i].th, &(args[i].ret));
-> > +     return 0;
-> > +}
-> > diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-> > new file mode 100644
-> > index 000000000000..2cb4e996dbf3
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-> > @@ -0,0 +1 @@
-> > +unroll_loop_thread
-> > diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-> > new file mode 100644
-> > index 000000000000..45ab2be8be92
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-> > @@ -0,0 +1,29 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +include ../Makefile.miniconfig
-> > +
-> > +BIN=unroll_loop_thread
-> > +LIB=-pthread
-> > +
-> > +all: $(BIN)
-> > +
-> > +$(BIN): $(BIN).c
-> > +ifdef CORESIGHT
-> > +ifeq ($(ARCH),arm64)
-> > +     $(Q)$(CC) $(BIN).c -o $(BIN) $(LIB)
-> > +endif
-> > +endif
-> > +
-> > +install-tests: all
-> > +ifdef CORESIGHT
-> > +ifeq ($(ARCH),arm64)
-> > +     $(call QUIET_INSTALL, tests) \
-> > +             $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)'; \
-> > +             $(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/tools/$(BIN)/$(BIN)'
-> > +endif
-> > +endif
-> > +
-> > +clean:
-> > +     $(Q)$(RM) -f $(BIN)
-> > +
-> > +.PHONY: all clean install-tests
-> > diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-> > new file mode 100644
-> > index 000000000000..cb9d22c7dfb9
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-> > @@ -0,0 +1,74 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +#include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <unistd.h>
-> > +#include <string.h>
-> > +#include <pthread.h>
-> > +
-> > +struct args {
-> > +     pthread_t th;
-> > +     unsigned int in, out;
-> > +     void *ret;
-> > +};
-> > +
-> > +static void *thrfn(void *arg)
-> > +{
-> > +     struct args *a = arg;
-> > +     unsigned int i, in = a->in;
-> > +
-> > +     for (i = 0; i < 10000; i++) {
-> > +             asm volatile (
-> > +// force an unroll of thia add instruction so we can test long runs of code
-> > +#define SNIP1 "add %[in], %[in], #1\n"
-> > +// 10
-> > +#define SNIP2 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1
-> > +// 100
-> > +#define SNIP3 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2
-> > +// 1000
-> > +#define SNIP4 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3
-> > +// 10000
-> > +#define SNIP5 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4
-> > +// 100000
-> > +                     SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5
-> > +                     : /* out */
-> > +                     : /* in */ [in] "r" (in)
-> > +                     : /* clobber */
-> > +             );
-> > +     }
-> > +}
-> > +
-> > +static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
-> > +{
-> > +     pthread_t t;
-> > +     pthread_attr_t attr;
-> > +
-> > +     pthread_attr_init(&attr);
-> > +     pthread_create(&t, &attr, fn, arg);
-> > +     return t;
-> > +}
-> > +
-> > +int main(int argc, char **argv)
-> > +{
-> > +     unsigned int i, thr;
-> > +     pthread_t threads[256];
-> > +     struct args args[256];
-> > +
-> > +     if (argc < 2) {
-> > +             printf("ERR: %s [numthreads]\n", argv[0]);
-> > +             exit(1);
-> > +     }
-> > +
-> > +     thr = atoi(argv[1]);
-> > +     if ((thr > 256) || (thr < 1)) {
-> > +             printf("ERR: threads 1-256\n");
-> > +             exit(1);
-> > +     }
-> > +     for (i = 0; i < thr; i++) {
-> > +             args[i].in = rand();
-> > +             args[i].th = new_thr(thrfn, &(args[i]));
-> > +     }
-> > +     for (i = 0; i < thr; i++)
-> > +             pthread_join(args[i].th, &(args[i].ret));
-> > +     return 0;
-> > +}
-> > diff --git a/tools/perf/tests/shell/coresight_asm_pure_loop.sh b/tools/perf/tests/shell/coresight_asm_pure_loop.sh
-> > new file mode 100755
-> > index 000000000000..3f0dbefcad50
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight_asm_pure_loop.sh
-> > @@ -0,0 +1,18 @@
-> > +#!/bin/sh -e
-> > +# Coresight / ASM Pure Loop
-> > +
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +TEST="asm_pure_loop"
-> > +. $(dirname $0)/lib/coresight.sh
-> > +ARGS=""
-> > +DATV="out"
-> > +DATA="$DATD/perf-$TEST-$DATV.data"
-> > +
-> > +perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
-> > +
-> > +perf_dump_aux_verify "$DATA" 10 10 10
-> > +
-> > +err=$?
-> > +exit $err
-> > diff --git a/tools/perf/tests/shell/coresight_memcpy_thread_16k_10.sh b/tools/perf/tests/shell/coresight_memcpy_thread_16k_10.sh
-> > new file mode 100755
-> > index 000000000000..8972af835016
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight_memcpy_thread_16k_10.sh
-> > @@ -0,0 +1,18 @@
-> > +#!/bin/sh -e
-> > +# Coresight / Memcpy 16k 10 Threads
-> > +
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +TEST="memcpy_thread"
-> > +. $(dirname $0)/lib/coresight.sh
-> > +ARGS="16 10 1"
-> > +DATV="16k_10"
-> > +DATA="$DATD/perf-$TEST-$DATV.data"
-> > +
-> > +perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
-> > +
-> > +perf_dump_aux_verify "$DATA" 10 10 10
-> > +
-> > +err=$?
-> > +exit $err
-> > diff --git a/tools/perf/tests/shell/coresight_thread_loop_check_tid_10.sh b/tools/perf/tests/shell/coresight_thread_loop_check_tid_10.sh
-> > new file mode 100755
-> > index 000000000000..5b468901f89b
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight_thread_loop_check_tid_10.sh
-> > @@ -0,0 +1,19 @@
-> > +#!/bin/sh -e
-> > +# Coresight / Thread Loop 10 Threads - Check TID
-> > +
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +TEST="thread_loop"
-> > +. $(dirname $0)/lib/coresight.sh
-> > +ARGS="10 1"
-> > +DATV="check-tid-10th"
-> > +DATA="$DATD/perf-$TEST-$DATV.data"
-> > +STDO="$DATD/perf-$TEST-$DATV.stdout"
-> > +
-> > +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
-> > +
-> > +perf_dump_aux_tid_verify "$DATA" "$STDO"
-> > +
-> > +err=$?
-> > +exit $err
-> > diff --git a/tools/perf/tests/shell/coresight_thread_loop_check_tid_2.sh b/tools/perf/tests/shell/coresight_thread_loop_check_tid_2.sh
-> > new file mode 100755
-> > index 000000000000..f8b7abd3aa03
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight_thread_loop_check_tid_2.sh
-> > @@ -0,0 +1,19 @@
-> > +#!/bin/sh -e
-> > +# Coresight / Thread Loop 2 Threads - Check TID
-> > +
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +TEST="thread_loop"
-> > +. $(dirname $0)/lib/coresight.sh
-> > +ARGS="2 20"
-> > +DATV="check-tid-2th"
-> > +DATA="$DATD/perf-$TEST-$DATV.data"
-> > +STDO="$DATD/perf-$TEST-$DATV.stdout"
-> > +
-> > +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
-> > +
-> > +perf_dump_aux_tid_verify "$DATA" "$STDO"
-> > +
-> > +err=$?
-> > +exit $err
-> > diff --git a/tools/perf/tests/shell/coresight_unroll_loop_thread_10.sh b/tools/perf/tests/shell/coresight_unroll_loop_thread_10.sh
-> > new file mode 100755
-> > index 000000000000..c985dfb025c2
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/coresight_unroll_loop_thread_10.sh
-> > @@ -0,0 +1,18 @@
-> > +#!/bin/sh -e
-> > +# Coresight / Unroll Loop Thread 10
-> > +
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +TEST="unroll_loop_thread"
-> > +. $(dirname $0)/lib/coresight.sh
-> > +ARGS="10"
-> > +DATV="10"
-> > +DATA="$DATD/perf-$TEST-$DATV.data"
-> > +
-> > +perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
-> > +
-> > +perf_dump_aux_verify "$DATA" 10 10 10
-> > +
-> > +err=$?
-> > +exit $err
-> > diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
-> > new file mode 100644
-> > index 000000000000..6a611b073f02
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/lib/coresight.sh
-> > @@ -0,0 +1,130 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> > +
-> > +# This is sourced from a driver script so no need for #!/bin... etc. at the
-> > +# top - the assumption below is that it runs as part of sourcing after the
-> > +# test sets up some basic env vars to say what it is.
-> > +
-> > +# perf record options for the perf tests to use
-> > +PERFRECMEM="-m ,128M"
-> > +PERFRECOPT="$PERFRECMEM -e cs_etm//u"
-> > +
-> > +# These tests need to be run as root or coresight won't allow large buffers
-> > +# and will not collect proper data
-> > +UID=`id -u`
-> > +if test "$UID" -ne 0; then
-> > +     echo "Not running as root... skip"
-> > +     exit 2
-> > +fi
-> > +
-> > +TOOLS=$(dirname $0)
-> > +DIR="$TOOLS/coresight/$TEST"
-> > +BIN="$DIR/$TEST"
-> > +# If the test tool/binary does not exist and is executable then skip the test
-> > +if ! test -x "$BIN"; then exit 2; fi
-> > +DATD="."
-> > +# If the data dir env is set then make the data dir use that instead of ./
-> > +if test -n "$PERF_TEST_CORESIGHT_DATADIR"; then
-> > +     DATD="$PERF_TEST_CORESIGHT_DATADIR";
-> > +fi
-> > +# If the stat dir env is set then make the data dir use that instead of ./
-> > +STATD="."
-> > +if test -n "$PERF_TEST_CORESIGHT_STATDIR"; then
-> > +     STATD="$PERF_TEST_CORESIGHT_STATDIR";
-> > +fi
-> > +
-> > +# Called if the test fails - error code 2
-> > +err() {
-> > +     echo "$1"
-> > +     exit 1
-> > +}
-> > +
-> > +# Check that some statistics from our perf
-> > +check_val_min() {
-> > +     STATF="$4"
-> > +     if test "$2" -lt "$3"; then
-> > +             echo ", FAILED" >> "$STATF"
-> > +             err "Sanity check number of $1 is too low ($2 < $3)"
-> > +     fi
-> > +}
-> > +
-> > +perf_dump_aux_verify() {
-> > +     # Some basic checking that the AUX chunk contains some sensible data
-> > +     # to see that we are recording something and at least a minimum
-> > +     # amount of it. We should almost always see F3 atoms in just about
-> > +     # anything but certainly we will see some trace info and async atom
-> > +     # chunks.
-> > +     DUMP="$DATD/perf-tmp-aux-dump.txt"
-> > +     perf report --stdio --dump -i "$1" | \
-> > +             grep -o -e I_ATOM_F3 -e I_ASYNC -e I_TRACE_INFO > "$DUMP"
-> > +     # Simply count how many of these atoms we find to see that we are
-> > +     # producing a reasonable amount of data - exact checks are not sane
-> > +     # as this is a lossy  process where we may lose some blocks and the
-> > +     # compiler may produce different code depending on the compiler and
-> > +     # optimization options, so this is rough  just to see if we're
-> > +     # either missing almost all the data or all of it
-> > +     ATOM_F3_NUM=`grep I_ATOM_F3 "$DUMP" | wc -l`
-> > +     ATOM_ASYNC_NUM=`grep I_ASYNC "$DUMP" | wc -l`
-> > +     ATOM_TRACE_INFO_NUM=`grep I_TRACE_INFO "$DUMP" | wc -l`
-> > +     rm -f "$DUMP"
-> > +
-> > +     # Arguments provide minimums for a pass
-> > +     CHECK_F3_MIN="$2"
-> > +     CHECK_ASYNC_MIN="$3"
-> > +     CHECK_TRACE_INFO_MIN="$4"
-> > +
-> > +     # Write out statistics, so over time you can track results to see if
-> > +     # there is a pattern - for example we have less "noisy" results that
-> > +     # produce more consistent amounts of data each run, to see if over
-> > +     # time any techinques to  minimize data loss are having an effect or
-> > +     # not
-> > +     STATF="$STATD/stats-$TEST-$DATV.csv"
-> > +     if ! test -f "$STATF"; then
-> > +             echo "ATOM F3 Count, Minimum, ATOM ASYNC Count, Minimum, TRACE INFO Count, Minimum" > "$STATF"
-> > +     fi
-> > +     echo -n "$ATOM_F3_NUM, $CHECK_F3_MIN, $ATOM_ASYNC_NUM, $CHECK_ASYNC_MIN, $ATOM_TRACE_INFO_NUM, $CHECK_TRACE_INFO_MIN" >> "$STATF"
-> > +
-> > +     # Actually check to see if we passed or failed.
-> > +     check_val_min "ATOM_F3" "$ATOM_F3_NUM" "$CHECK_F3_MIN" "$STATF"
-> > +     check_val_min "ASYNC" "$ATOM_ASYNC_NUM" "$CHECK_ASYNC_MIN" "$STATF"
-> > +     check_val_min "TRACE_INFO" "$ATOM_TRACE_INFO_NUM" "$CHECK_TRACE_INFO_MIN" "$STATF"
-> > +     echo ", Ok" >> "$STATF"
-> > +}
-> > +
-> > +perf_dump_aux_tid_verify() {
-> > +     # Specifically crafted test will produce a list of Tread ID's to
-> > +     # stdout that need to be checked to  see that they have had trace
-> > +     # info collected in AUX blocks in the perf data. This will go
-> > +     # through all the TID's that are listed as CID=0xabcdef and see
-> > +     # that all the Thread IDs the test tool reports are  in the perf
-> > +     # data AUX chunks
-> > +
-> > +     # The TID test tools will print a TID per stdout line that are being
-> > +     # tested
-> > +     TIDS=`cat "$2"`
-> > +     # Scan the perf report to find the TIDs that are actually CID in hex
-> > +     # and build a list of the ones found
-> > +     FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
-> > +                     grep -o "CID=0x[0-9a-z]\+" | sed 's/CID=//g' | \
-> > +                     uniq | sort | uniq`
-> > +
-> > +     # Iterate over the list of TIDs that the test says it has and find
-> > +     # them in the TIDs found in the perf report
-> > +     MISSING=""
-> > +     for TID2 in $TIDS; do
-> > +             FOUND=""
-> > +             for TIDHEX in $FOUND_TIDS; do
-> > +                     TID=`printf "%i" $TIDHEX`
-> > +                     if test "$TID" -eq "$TID2"; then
-> > +                             FOUND="y"
-> > +                             break
-> > +                     fi
-> > +             done
-> > +             if test -z "$FOUND"; then
-> > +                     MISSING="$MISSING $TID"
-> > +             fi
-> > +     done
-> > +     if test -n "$MISSING"; then
-> > +             err "Thread IDs $MISSING not found in perf AUX data"
-> > +     fi
-> > +}
-> > --
-> > 2.32.0
-> >
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ .../pmu-events/arch/s390/cf_z16/basic.json    |  58 +++
+ .../pmu-events/arch/s390/cf_z16/crypto6.json  | 142 +++++
+ .../pmu-events/arch/s390/cf_z16/extended.json | 492 ++++++++++++++++++
+ .../arch/s390/cf_z16/transaction.json         |   7 +
+ tools/perf/pmu-events/arch/s390/mapfile.csv   |   1 +
+ 5 files changed, 700 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/basic.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/crypto6.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/extended.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/basic.json b/tools/perf/pmu-events/arch/s390/cf_z16/basic.json
+new file mode 100644
+index 000000000000..1023d47028ce
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/basic.json
+@@ -0,0 +1,58 @@
++[
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "0",
++		"EventName": "CPU_CYCLES",
++		"BriefDescription": "Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles, excluding the number of cycles while the CPU is in the wait state."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "1",
++		"EventName": "INSTRUCTIONS",
++		"BriefDescription": "Instruction Count",
++		"PublicDescription": "This counter counts the total number of instructions executed by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "2",
++		"EventName": "L1I_DIR_WRITES",
++		"BriefDescription": "Level-1 I-Cache Directory Write Count",
++		"PublicDescription": "This counter counts the total number of level-1 instruction-cache or unified-cache directory writes."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "3",
++		"EventName": "L1I_PENALTY_CYCLES",
++		"BriefDescription": "Level-1 I-Cache Penalty Cycle Count",
++		"PublicDescription": "This counter counts the total number of cache penalty cycles for level-1 instruction cache or unified cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "4",
++		"EventName": "L1D_DIR_WRITES",
++		"BriefDescription": "Level-1 D-Cache Directory Write Count",
++		"PublicDescription": "This counter counts the total number of level-1 data-cache directory writes."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "5",
++		"EventName": "L1D_PENALTY_CYCLES",
++		"BriefDescription": "Level-1 D-Cache Penalty Cycle Count",
++		"PublicDescription": "This counter counts the total number of cache penalty cycles for level-1 data cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "32",
++		"EventName": "PROBLEM_STATE_CPU_CYCLES",
++		"BriefDescription": "Problem-State Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles when the CPU is in the problem state, excluding the number of cycles while the CPU is in the wait state."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "33",
++		"EventName": "PROBLEM_STATE_INSTRUCTIONS",
++		"BriefDescription": "Problem-State Instruction Count",
++		"PublicDescription": "This counter counts the total number of instructions executed by the CPU while in the problem state."
++	}
++]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/crypto6.json b/tools/perf/pmu-events/arch/s390/cf_z16/crypto6.json
+new file mode 100644
+index 000000000000..8b4380b8e489
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/crypto6.json
+@@ -0,0 +1,142 @@
++[
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "64",
++		"EventName": "PRNG_FUNCTIONS",
++		"BriefDescription": "PRNG Function Count",
++		"PublicDescription": "This counter counts the total number of the pseudorandom-number-generation functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "65",
++		"EventName": "PRNG_CYCLES",
++		"BriefDescription": "PRNG Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles when the DEA/AES/SHA coprocessor is busy performing the pseudorandom- number-generation functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "66",
++		"EventName": "PRNG_BLOCKED_FUNCTIONS",
++		"BriefDescription": "PRNG Blocked Function Count",
++		"PublicDescription": "This counter counts the total number of the pseudorandom-number-generation functions that are issued by the CPU and are blocked because the DEA/AES/SHA coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "67",
++		"EventName": "PRNG_BLOCKED_CYCLES",
++		"BriefDescription": "PRNG Blocked Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the pseudorandom-number-generation functions issued by the CPU because the DEA/AES/SHA coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "68",
++		"EventName": "SHA_FUNCTIONS",
++		"BriefDescription": "SHA Function Count",
++		"PublicDescription": "This counter counts the total number of the SHA functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "69",
++		"EventName": "SHA_CYCLES",
++		"BriefDescription": "SHA Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles when the SHA coprocessor is busy performing the SHA functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "70",
++		"EventName": "SHA_BLOCKED_FUNCTIONS",
++		"BriefDescription": "SHA Blocked Function Count",
++		"PublicDescription": "This counter counts the total number of the SHA functions that are issued by the CPU and are blocked because the SHA coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "71",
++		"EventName": "SHA_BLOCKED_CYCLES",
++		"BriefDescription": "SHA Blocked Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the SHA functions issued by the CPU because the SHA coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "72",
++		"EventName": "DEA_FUNCTIONS",
++		"BriefDescription": "DEA Function Count",
++		"PublicDescription": "This counter counts the total number of the DEA functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "73",
++		"EventName": "DEA_CYCLES",
++		"BriefDescription": "DEA Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles when the DEA/AES coprocessor is busy performing the DEA functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "74",
++		"EventName": "DEA_BLOCKED_FUNCTIONS",
++		"BriefDescription": "DEA Blocked Function Count",
++		"PublicDescription": "This counter counts the total number of the DEA functions that are issued by the CPU and are blocked because the DEA/AES coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "75",
++		"EventName": "DEA_BLOCKED_CYCLES",
++		"BriefDescription": "DEA Blocked Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the DEA functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "76",
++		"EventName": "AES_FUNCTIONS",
++		"BriefDescription": "AES Function Count",
++		"PublicDescription": "This counter counts the total number of the AES functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "77",
++		"EventName": "AES_CYCLES",
++		"BriefDescription": "AES Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles when the DEA/AES coprocessor is busy performing the AES functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "78",
++		"EventName": "AES_BLOCKED_FUNCTIONS",
++		"BriefDescription": "AES Blocked Function Count",
++		"PublicDescription": "This counter counts the total number of the AES functions that are issued by the CPU and are blocked because the DEA/AES coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "79",
++		"EventName": "AES_BLOCKED_CYCLES",
++		"BriefDescription": "AES Blocked Cycle Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the AES functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "80",
++		"EventName": "ECC_FUNCTION_COUNT",
++		"BriefDescription": "ECC Function Count",
++		"PublicDescription": "This counter counts the total number of the elliptic-curve cryptography (ECC) functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "81",
++		"EventName": "ECC_CYCLES_COUNT",
++		"BriefDescription": "ECC Cycles Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles when the ECC coprocessor is busy performing the elliptic-curve cryptography (ECC) functions issued by the CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "82",
++		"EventName": "ECC_BLOCKED_FUNCTION_COUNT",
++		"BriefDescription": "Ecc Blocked Function Count",
++		"PublicDescription": "This counter counts the total number of the elliptic-curve cryptography (ECC) functions that are issued by the CPU and are blocked because the ECC coprocessor is busy performing a function issued by another CPU."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "83",
++		"EventName": "ECC_BLOCKED_CYCLES_COUNT",
++		"BriefDescription": "ECC Blocked Cycles Count",
++		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the elliptic-curve cryptography (ECC) functions issued by the CPU because the ECC coprocessor is busy performing a function issued by another CPU."
++	}
++]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/extended.json b/tools/perf/pmu-events/arch/s390/cf_z16/extended.json
+new file mode 100644
+index 000000000000..c306190fc06f
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/extended.json
+@@ -0,0 +1,492 @@
++[
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "128",
++		"EventName": "L1D_RO_EXCL_WRITES",
++		"BriefDescription": "L1D Read-only Exclusive Writes",
++		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "129",
++		"EventName": "DTLB2_WRITES",
++		"BriefDescription": "DTLB2 Writes",
++		"PublicDescription": "A translation has been written into The Translation Lookaside Buffer 2 (TLB2) and the request was made by the Level-1 Data cache. This is a replacement for what was provided for the DTLB on z13 and prior machines."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "130",
++		"EventName": "DTLB2_MISSES",
++		"BriefDescription": "DTLB2 Misses",
++		"PublicDescription": "A TLB2 miss is in progress for a request made by the Level-1 Data cache. Incremented by one for every TLB2 miss in progress for the Level-1 Data cache on this cycle. This is a replacement for what was provided for the DTLB on z13 and prior machines."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "131",
++		"EventName": "CRSTE_1MB_WRITES",
++		"BriefDescription": "One Megabyte CRSTE writes",
++		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "132",
++		"EventName": "DTLB2_GPAGE_WRITES",
++		"BriefDescription": "DTLB2 Two-Gigabyte Page Writes",
++		"PublicDescription": "A translation entry for a two-gigabyte page was written into the Level-2 TLB."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "134",
++		"EventName": "ITLB2_WRITES",
++		"BriefDescription": "ITLB2 Writes",
++		"PublicDescription": "A translation entry has been written into the Translation Lookaside Buffer 2 (TLB2) and the request was made by the instruction cache. This is a replacement for what was provided for the ITLB on z13 and prior machines."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "135",
++		"EventName": "ITLB2_MISSES",
++		"BriefDescription": "ITLB2 Misses",
++		"PublicDescription": "A TLB2 miss is in progress for a request made by the Level-1 Instruction cache. Incremented by one for every TLB2 miss in progress for the Level-1 Instruction cache in a cycle. This is a replacement for what was provided for the ITLB on z13 and prior machines."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "137",
++		"EventName": "TLB2_PTE_WRITES",
++		"BriefDescription": "TLB2 Page Table Entry Writes",
++		"PublicDescription": "A translation entry was written into the Page Table Entry array in the Level-2 TLB."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "138",
++		"EventName": "TLB2_CRSTE_WRITES",
++		"BriefDescription": "TLB2 Combined Region and Segment Entry Writes",
++		"PublicDescription": "Translation entries were written into the Combined Region and Segment Table Entry array and the Page Table Entry array in the Level-2 TLB."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "139",
++		"EventName": "TLB2_ENGINES_BUSY",
++		"BriefDescription": "TLB2 Engines Busy",
++		"PublicDescription": "The number of Level-2 TLB translation engines busy in a cycle."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "140",
++		"EventName": "TX_C_TEND",
++		"BriefDescription": "Completed TEND instructions in constrained TX mode",
++		"PublicDescription": "A TEND instruction has completed in a constrained transactional-execution mode."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "141",
++		"EventName": "TX_NC_TEND",
++		"BriefDescription": "Completed TEND instructions in non-constrained TX mode",
++		"PublicDescription": "A TEND instruction has completed in a non-constrained transactional-execution mode."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "143",
++		"EventName": "L1C_TLB2_MISSES",
++		"BriefDescription": "L1C TLB2 Misses",
++		"PublicDescription": "Increments by one for any cycle where a level-1 cache or level-2 TLB miss is in progress."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "145",
++		"EventName": "DCW_REQ",
++		"BriefDescription": "Directory Write Level 1 Data Cache from Cache",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "146",
++		"EventName": "DCW_REQ_IV",
++		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Intervention",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache with intervention."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "147",
++		"EventName": "DCW_REQ_CHIP_HIT",
++		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Chip HP Hit",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache after using chip level horizontal persistence, Chip-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "148",
++		"EventName": "DCW_REQ_DRAWER_HIT",
++		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Drawer HP Hit",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache after using drawer level horizontal persistence, Drawer-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "149",
++		"EventName": "DCW_ON_CHIP",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Chip Cache",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "150",
++		"EventName": "DCW_ON_CHIP_IV",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Chip Cache with Intervention",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-2 cache with intervention."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "151",
++		"EventName": "DCW_ON_CHIP_CHIP_HIT",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Chip Cache with Chip HP Hit",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-2 cache after using chip level horizontal persistence, Chip-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "152",
++		"EventName": "DCW_ON_CHIP_DRAWER_HIT",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Chip Cache with Drawer HP Hit",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "153",
++		"EventName": "DCW_ON_MODULE",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Module Cache",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Module Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "154",
++		"EventName": "DCW_ON_DRAWER",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Drawer Cache",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Drawer Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "155",
++		"EventName": "DCW_OFF_DRAWER",
++		"BriefDescription": "Directory Write Level 1 Data Cache from Off-Drawer Cache",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Drawer Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "156",
++		"EventName": "DCW_ON_CHIP_MEMORY",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Chip Memory",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Chip memory."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "157",
++		"EventName": "DCW_ON_MODULE_MEMORY",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Module Memory",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Module memory."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "158",
++		"EventName": "DCW_ON_DRAWER_MEMORY",
++		"BriefDescription": "Directory Write Level 1 Data Cache from On-Drawer Memory",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Drawer memory."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "159",
++		"EventName": "DCW_OFF_DRAWER_MEMORY",
++		"BriefDescription": "Directory Write Level 1 Data Cache from Off-Drawer Memory",
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Drawer memory."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "160",
++		"EventName": "IDCW_ON_MODULE_IV",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from On-Module Memory Cache with Intervention",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 Instruction cache directory where the returned cache line was sourced from an On-Module Level-2 cache with intervention."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "161",
++		"EventName": "IDCW_ON_MODULE_CHIP_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from On-Module Memory Cache with Chip Hit",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 Instruction cache directory where the returned cache line was sourced from an On-Module Level-2 cache using chip horizontal persistence, Chip-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "162",
++		"EventName": "IDCW_ON_MODULE_DRAWER_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from On-Module Memory Cache with Drawer Hit",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 Instruction cache directory where the returned cache line was sourced from an On-Module Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "163",
++		"EventName": "IDCW_ON_DRAWER_IV",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from On-Drawer Cache with Intervention",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 Instruction cache directory where the returned cache line was sourced from an On-Drawer Level-2 cache with intervention."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "164",
++		"EventName": "IDCW_ON_DRAWER_CHIP_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from On-Drawer Cache with Chip Hit",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 instruction cache directory where the returned cache line was sourced from an On-Drawer Level-2 cache using chip level horizontal persistence, Chip-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "165",
++		"EventName": "IDCW_ON_DRAWER_DRAWER_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from On-Drawer Cache with Drawer Hit",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 instruction cache directory where the returned cache line was sourced from an On-Drawer Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "166",
++		"EventName": "IDCW_OFF_DRAWER_IV",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from Off-Drawer Cache with Intervention",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-2 cache with intervention."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "167",
++		"EventName": "IDCW_OFF_DRAWER_CHIP_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from Off-Drawer Cache with Chip Hit",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-2 cache using chip level horizontal persistence, Chip-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "168",
++		"EventName": "IDCW_OFF_DRAWER_DRAWER_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction and Data Cache from Off-Drawer Cache with Drawer Hit",
++		"PublicDescription": "A directory write to the Level-1 Data or Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "169",
++		"EventName": "ICW_REQ",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from Cache",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced the requestors Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "170",
++		"EventName": "ICW_REQ_IV",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from Cache with Intervention",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the requestors Level-2 cache with intervention."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "171",
++		"EventName": "ICW_REQ_CHIP_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from Cache with Chip HP Hit",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the requestors Level-2 cache using chip level horizontal persistence, Chip-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "172",
++		"EventName": "ICW_REQ_DRAWER_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from Cache with Drawer HP Hit",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the requestor’s Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "173",
++		"EventName": "ICW_ON_CHIP",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Chip Cache",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Chip Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "174",
++		"EventName": "ICW_ON_CHIP_IV",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Chip Cache with Intervention",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced an On-Chip Level-2 cache with intervention."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "175",
++		"EventName": "ICW_ON_CHIP_CHIP_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Chip Cache with Chip HP Hit",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Chip Level-2 cache using chip level horizontal persistence, Chip-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "176",
++		"EventName": "ICW_ON_CHIP_DRAWER_HIT",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Chip Cache with Drawer HP Hit",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Chip level 2 cache using drawer level horizontal persistence, Drawer-HP hit."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "177",
++		"EventName": "ICW_ON_MODULE",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Module Cache",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Module Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "178",
++		"EventName": "ICW_ON_DRAWER",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Drawer Cache",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced an On-Drawer Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "179",
++		"EventName": "ICW_OFF_DRAWER",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from Off-Drawer Cache",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced an Off-Drawer Level-2 cache."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "180",
++		"EventName": "ICW_ON_CHIP_MEMORY",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Chip Memory",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Chip memory."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "181",
++		"EventName": "ICW_ON_MODULE_MEMORY",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Module Memory",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Module memory."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "182",
++		"EventName": "ICW_ON_DRAWER_MEMORY",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from On-Drawer Memory",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Drawer memory."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "183",
++		"EventName": "ICW_OFF_DRAWER_MEMORY",
++		"BriefDescription": "Directory Write Level 1 Instruction Cache from Off-Drawer Memory",
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Drawer memory."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "224",
++		"EventName": "BCD_DFP_EXECUTION_SLOTS",
++		"BriefDescription": "Binary Coded Decimal to Decimal Floating Point conversions",
++		"PublicDescription": "Count of floating point execution slots used for finished Binary Coded Decimal to Decimal Floating Point conversions. Instructions: CDZT, CXZT, CZDT, CZXT."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "225",
++		"EventName": "VX_BCD_EXECUTION_SLOTS",
++		"BriefDescription": "Count finished vector arithmetic Binary Coded Decimal instructions",
++		"PublicDescription": "Count of floating point execution slots used for finished vector arithmetic Binary Coded Decimal instructions. Instructions: VAP, VSP, VMP, VMSP, VDP, VSDP, VRP, VLIP, VSRP, VPSOP, VCP, VTP, VPKZ, VUPKZ, VCVB, VCVBG, VCVD, VCVDG."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "226",
++		"EventName": "DECIMAL_INSTRUCTIONS",
++		"BriefDescription": "Decimal instruction dispatched",
++		"PublicDescription": "Decimal instruction dispatched. Instructions: CVB, CVD, AP, CP, DP, ED, EDMK, MP, SRP, SP, ZAP."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "232",
++		"EventName": "LAST_HOST_TRANSLATIONS",
++		"BriefDescription": "Last host translation done",
++		"PublicDescription": "Last Host Translation done"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "244",
++		"EventName": "TX_NC_TABORT",
++		"BriefDescription": "Aborted transactions in unconstrained TX mode",
++		"PublicDescription": "A transaction abort has occurred in a non-constrained transactional-execution mode."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "245",
++		"EventName": "TX_C_TABORT_NO_SPECIAL",
++		"BriefDescription": "Aborted transactions in constrained TX mode",
++		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is not using any special logic to allow the transaction to complete."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "246",
++		"EventName": "TX_C_TABORT_SPECIAL",
++		"BriefDescription": "Aborted transactions in constrained TX mode using special completion logic",
++		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is using special logic to allow the transaction to complete."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "248",
++		"EventName": "DFLT_ACCESS",
++		"BriefDescription": "Cycles CPU spent obtaining access to Deflate unit",
++		"PublicDescription": "Cycles CPU spent obtaining access to Deflate unit"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "253",
++		"EventName": "DFLT_CYCLES",
++		"BriefDescription": "Cycles CPU is using Deflate unit",
++		"PublicDescription": "Cycles CPU is using Deflate unit"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "256",
++		"EventName": "SORTL",
++		"BriefDescription": "Count SORTL instructions",
++		"PublicDescription": "Increments by one for every SORT LISTS instruction executed."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "265",
++		"EventName": "DFLT_CC",
++		"BriefDescription": "Increments DEFLATE CONVERSION CALL",
++		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "266",
++		"EventName": "DFLT_CCFINISH",
++		"BriefDescription": "Increments completed DEFLATE CONVERSION CALL",
++		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "267",
++		"EventName": "NNPA_INVOCATIONS",
++		"BriefDescription": "NNPA Total invocations",
++		"PublicDescription": "Increments by one for every Neural Network Processing Assist instruction executed."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "268",
++		"EventName": "NNPA_COMPLETIONS",
++		"BriefDescription": "NNPA Total completions",
++		"PublicDescription": "Increments by one for every Neural Network Processing Assist instruction executed that ended in Condition Codes 0, 1 or 2."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "269",
++		"EventName": "NNPA_WAIT_LOCK",
++		"BriefDescription": "Cycles spent obtaining NNPA lock",
++		"PublicDescription": "Cycles CPU spent obtaining access to IBM Z Integrated Accelerator for AI."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "270",
++		"EventName": "NNPA_HOLD_LOCK",
++		"BriefDescription": "Cycles spent holding NNPA lock",
++		"PublicDescription": "Cycles CPU is using IBM Z Integrated Accelerator for AI."
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "448",
++		"EventName": "MT_DIAG_CYCLES_ONE_THR_ACTIVE",
++		"BriefDescription": "Cycle count with one thread active",
++		"PublicDescription": "Cycle count with one thread active"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "449",
++		"EventName": "MT_DIAG_CYCLES_TWO_THR_ACTIVE",
++		"BriefDescription": "Cycle count with two threads active",
++		"PublicDescription": "Cycle count with two threads active"
++	}
++]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+new file mode 100644
+index 000000000000..1a0034f79f73
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+@@ -0,0 +1,7 @@
++[
++  {
++    "BriefDescription": "Transaction count",
++    "MetricName": "transaction",
++    "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
++  }
++]
+diff --git a/tools/perf/pmu-events/arch/s390/mapfile.csv b/tools/perf/pmu-events/arch/s390/mapfile.csv
+index 61641a3480e0..a918e1af77a5 100644
+--- a/tools/perf/pmu-events/arch/s390/mapfile.csv
++++ b/tools/perf/pmu-events/arch/s390/mapfile.csv
+@@ -5,3 +5,4 @@ Family-model,Version,Filename,EventType
+ ^IBM.296[45].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z13,core
+ ^IBM.390[67].*[13]\.[1-5].[[:xdigit:]]+$,3,cf_z14,core
+ ^IBM.856[12].*3\.6.[[:xdigit:]]+$,3,cf_z15,core
++^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
+-- 
+2.36.1
+
