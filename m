@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271F7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 14:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EDFC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 15:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243924AbiEaO4Y (ORCPT
+        id S1345404AbiEaPAT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 May 2022 10:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40716 "EHLO
+        Tue, 31 May 2022 11:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235601AbiEaO4W (ORCPT
+        with ESMTP id S1345395AbiEaPAT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 May 2022 10:56:22 -0400
+        Tue, 31 May 2022 11:00:19 -0400
 Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C6E8FF95
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 07:56:19 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id e2so19088802wrc.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 07:56:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01DD4163D
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 08:00:15 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id k19so10892115wrd.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 08:00:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=EiY9jbx552SYqxq7+Nkmc6rdQnwk8nUu6TAPdiWZsCg=;
-        b=svO0XrahT5eE6Ut/ZpWtL1E3YDOk8bs3eexEZN/mkz8ZqCe4uK8hcPq4aPRnluE2vS
-         95/PrNb8CwrgTBmkTLc10m31VdF078r06nrAvueCv1NWtwoTWUugREWY2U95flX2B7Va
-         rLByMYDUTxlnzBkt1eOweuuVn8fGT3FXn+r1zmyW1TRlYcpC6r/wZTih7Y1c/KwzEqmz
-         TVLZP3gedkFXvcy5C+NiF0HDabtvGAktYMwtaeTXH/0xgK5w9qwb2JQop8rGf0Xy60+c
-         BSyqWAz5wjp/rdvV9rqh3T8FJMVQ+d5Bc+NiaVc628WF3pXmulXLuy9x2mRaoihZSJd9
-         GfwQ==
+        bh=6E5IiNRiMP4ClmqO+E3bUpQG4fenJZPkdyeUmxtCSyM=;
+        b=h6UWmpkpTKl5/shLEsnFDDgRczTCe6PBJqbV/TqM/cvHZ1CV6hPPCwReVE3Ty6W1PA
+         3oPup3XXSuGr8aG891k690LckV7GC2G+JcGEn2FCHRLwb9uzjHSk4vJIRhddEDddvI8w
+         QFukLBImVDXf8uVd5ZBID2+LRFt614DprCWlMoAu7XOGQLh0b8wkPa/0TjiqxQ10XMkK
+         m3gePEhTkwGWhZNvXhRoNcdpHKDetxhOyPD/gNBGSkZd6f9miUfdHwKGqGA0wlPNYb+5
+         ae/NBfcf8uSjapFGv8DVlWz8Pj7G2cEYcNJNuG/k0XkLSSwFc87Ady2BcMYr/wWy6IrZ
+         wxhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EiY9jbx552SYqxq7+Nkmc6rdQnwk8nUu6TAPdiWZsCg=;
-        b=R5y2mc5lpmwZw9T4oBqy7J/SwFDQgmRRC2nIXbHOV45DBBv8DF1wm/Lxjj5Okuk+O1
-         yAgHq1Uh9t0fOaDJ2lcAE+8J7bc+EjA36lvVUfTYfFK06Po13Yr+iu4OaM76csLr36W0
-         VHMfaSYLQ0AmoDueOrMerHhVC53t/VcJufPwEvTpYKRuFgb3h+yPLMRkG2PcV7Rq9EKS
-         XtFaAY+t8UTW6GlotroWlPNb/gUxoeiEXG3+KGTSLOasUHMxF6SYyBnTLuwm3gPPGNCq
-         S5xaPRAx8PO2GiYylD4BVcMvr7rM0qtdohYZoEg8EscNHT8OPt0lMSlrwANs5OK7/6pJ
-         ruHw==
-X-Gm-Message-State: AOAM532oihqFinIceW/YQr4r+q94qivpoMKXvG2TAVXNHEBHkPQgnvf7
-        T6Q1DDVoOWa8WD8zKYeeXjcndPeUH91puz9r/hwmYw==
-X-Google-Smtp-Source: ABdhPJx4LHThOj7mz2t6KPNp5il6yd3utnYh0C2lcewtt/8tFbjYTF+w+PrxZXc3pdJfh70SOUkvG5KLRhYfLBCtLZM=
-X-Received: by 2002:adf:f5c4:0:b0:210:2ac2:6aa0 with SMTP id
- k4-20020adff5c4000000b002102ac26aa0mr12839689wrp.300.1654008977239; Tue, 31
- May 2022 07:56:17 -0700 (PDT)
+        bh=6E5IiNRiMP4ClmqO+E3bUpQG4fenJZPkdyeUmxtCSyM=;
+        b=5DMZKerl3RdCn/0Zw5XhHqLAfRn9/5w41l992wYxnHA0il/EbT2De66xmPBPCt8M2z
+         WL/eWH1HsD9cV7GBAcqGLpL9oa7nrUSFsNZJS4NNyk9twQJvgUIYj31ASTZ/Z9lOTfn9
+         zdSJiLUMtPgGe4i5hhu8Ltb82K21xN2D2KM5nyIEcFUZmiBrk3fSinOBXORmxuBZYs+l
+         vQ3DmEGDwBUeCD5e59iOQfm5M6mDlsGGtPK4KRtdNloi/+R8nPBX+y+JcsXkVIorLEhX
+         aeKYjI7vJyHzu/cO5brjfvO9rbv6zNSRrP+52A+qID6wT+zeNc86PdRjKAqWaNXhsJm2
+         in1g==
+X-Gm-Message-State: AOAM533NG253fm6wQFA6BDylGT7aQ0emM70Yg3ZfdL2EmRx9hS9+xEcN
+        cnZ7+BKZSkxpe3BSskb8hJrtr11K8tFIbpWGCbZbcw==
+X-Google-Smtp-Source: ABdhPJw1+lIfxBKpL6wdOZy1t+W6ZJAZ08zhKfccAz0Y62Gqzox1eyYOdBs0YW5i80qEtlqV9Coc5w9wv4sXd4wJT9w=
+X-Received: by 2002:a5d:598f:0:b0:20c:83c9:b05b with SMTP id
+ n15-20020a5d598f000000b0020c83c9b05bmr51207037wri.343.1654009213660; Tue, 31
+ May 2022 08:00:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220530105657.2700635-1-tmricht@linux.ibm.com>
-In-Reply-To: <20220530105657.2700635-1-tmricht@linux.ibm.com>
+References: <20220531092706.1931503-1-tmricht@linux.ibm.com>
+In-Reply-To: <20220531092706.1931503-1-tmricht@linux.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 31 May 2022 07:56:04 -0700
-Message-ID: <CAP-5=fVhNkG=Sg1RyCc4Lmgitnxw0xQOBpfpaxVOim+RBs+KiA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf list: Add IBM z16 event description for s390
+Date:   Tue, 31 May 2022 08:00:00 -0700
+Message-ID: <CAP-5=fUdSNzq=NRH8mpCSouBVnajOakoJH+83YJCg7bkcaZO2A@mail.gmail.com>
+Subject: Re: [PATCH 1/7] perf list: Add IBM z16 event description for s390
 To:     Thomas Richter <tmricht@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
@@ -63,7 +63,7 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 30, 2022 at 3:57 AM Thomas Richter <tmricht@linux.ibm.com> wrot=
+On Tue, May 31, 2022 at 2:27 AM Thomas Richter <tmricht@linux.ibm.com> wrot=
 e:
 >
 > Update IBM z16 counter description using document SA23-2260-07:
