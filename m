@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA43C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 15:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79533C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 15:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345403AbiEaPAy (ORCPT
+        id S1345438AbiEaPBm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 May 2022 11:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49276 "EHLO
+        Tue, 31 May 2022 11:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345401AbiEaPAx (ORCPT
+        with ESMTP id S1345440AbiEaPBl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 May 2022 11:00:53 -0400
+        Tue, 31 May 2022 11:01:41 -0400
 Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F252427FE
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 08:00:51 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id e2so19104940wrc.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 08:00:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB025C67D
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 08:01:37 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id e2so19110797wrc.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 08:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=RUmAyq/lbNvciwfCraGSd4DO4fbRM9KkWd+gA0NCHkQ=;
-        b=PpTfYGnJ0hbu71Y7zXzLxBBze4Y7F6r/WvmdG1d9PV8PCJbWQJQABOqaxRuj3gcl76
-         8G+Fmi5RUv3Go5AVmQ+ZXEavBwWcBcBPlt1GeCtylrHVirkdBw1x3WEe4fH1dMEGBP71
-         E/wLbtIF05Pvk6ALJTidQ9M++nsHV3PpFdqzTQbxHNJ0CBr51jmKiVODA5qYeA+aC6x1
-         jTvuhh/oiBrma0CVbzZBpEheafWltRmukjVyY/1I2jI6LcuwjimVv8gjMcOK73i2b4je
-         0aYPOY80U6JwISFHDjXBxzgliaLTpzt7KT7JHx86Ue6F3ZWj7p1rCaB8gIZv2sdg4J4b
-         kw6g==
+        bh=6oF+ac2RUCAJQthxWVufUBZPDuIYEm4QP9/MDCMgGPQ=;
+        b=B6Y5nFSdshQNJWu3PP3s96IHwuz4K9nULFh7O+Q7KnzPRD47YMoCSBjaNvMCNb/jpz
+         e4Zme7RnOGuRkTOHJcj1XreJz/F1j3syZwnVTLl5Eof7A12RWLReHESfUKbRwjMHe/FQ
+         mUnjo/bH52/4YPd999lCzKxcddXb4meFjuRVooarZzLZrqN5zVN1dxiuQX8+v888dUmh
+         j6gJy+3/Ad130E1tFZO3yLeOoFhc/G9SVH810POFD8H1PBtgoqFp9Jiiub26mhBB5uWj
+         rRVeMScJY2OYxtDHw9H3jVD8/oRKOTUPr5/28anwaXQkzki2xg/wuYh+IDlCJS7JH9yZ
+         60Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RUmAyq/lbNvciwfCraGSd4DO4fbRM9KkWd+gA0NCHkQ=;
-        b=gLAVY9ynpcZbcwkar1pGxQcmvGCKXMl7eR+UTQ5i8LeW24joqYas/NJCHF1GyHp2Y7
-         2FyyIBuBMOw7tQzqhtxrtCAfV3TRDjLkiM5gRAyv1K3Y7WTJ+paSkpBALKUPY+9aQxXw
-         Y1RpdDNLvZGtgp0cH870egJQIcQhIddrRECuyJD3tGt/lM5q/0FJ4bnEPjyQNNuYI19l
-         0PVGPbHnyQqFPBm7eoxLu0ANn2T6hRtm0HSiWTgSPtngRbtXTxXPiV8VIueX9VlO7fop
-         epwK3LsmtqZmLpminM4G9cjVtRtxLVHe62Jk+eMABSSPFka4S2c9pEydP/Fr4XrEtmRk
-         Y8aw==
-X-Gm-Message-State: AOAM530pHodmAA0KxMWgwMYjQhB7FZS7Vb7Jus7OiWc2s2TGlJBxsZUB
-        SflrydxU2+v451Ftg8gcYwmmB7GxkE+8xbGmU7z6QA==
-X-Google-Smtp-Source: ABdhPJxqJnyL6s9LM1Tb/3Fdvqb3oena+HpCx5HwSWgLW7e7Mc+3ymsUUD8ZTTyBGhuheyjlAVwvld8xL3sA+tjW99A=
-X-Received: by 2002:adf:eb91:0:b0:20f:fcc2:475c with SMTP id
- t17-20020adfeb91000000b0020ffcc2475cmr27163709wrn.40.1654009250063; Tue, 31
- May 2022 08:00:50 -0700 (PDT)
+        bh=6oF+ac2RUCAJQthxWVufUBZPDuIYEm4QP9/MDCMgGPQ=;
+        b=fizKImFoNtjkrr61gPKI3lTB4lgD3M3koJ8gpQZ9AbCCHC1vOVEzBpAeJMDY0n8514
+         ayLRU2YmS4PJsEPq5MI1ph719DREtGb0EdipC3EjYkCmjFno7U4PIBtEZMJx4qfztLiG
+         Ma6d8H7irEu/UhHl9w3LzQ5MDicbCacERfaqLwW66CB+logbY1yDYO1MXQu68t8sXzMu
+         pqd+sKtZveCf+5UxhPhOKTmChAYnJIm9hDLmQy647dR50qQP3CY4xFJ5hJ0xZ5j5urDb
+         a+IKeeExsMFdfsQ3dYxhgznUDydW+mm2QyXhi8QoD81jeB8oXBsGaOpKpx1b6HbF7eCI
+         mFBw==
+X-Gm-Message-State: AOAM533GpdMuxOkCGm0+XapPmWdiDjHmmQARQH5vmgpenRBrOW14mXBC
+        9uTsrw5JP74O6b5PP4TJ9OahNRFg1Sz25dd5mNBVeQ==
+X-Google-Smtp-Source: ABdhPJyTKsCMdgkuWmBSCJvYu+0SB7g6GBnruruPQchmwOO6d7TA/5Cc6MrTmraWdjSt/NfRRVCcy94Qw2piB8svzNk=
+X-Received: by 2002:a05:6000:1acc:b0:20f:f12a:a535 with SMTP id
+ i12-20020a0560001acc00b0020ff12aa535mr30843895wry.375.1654009295067; Tue, 31
+ May 2022 08:01:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220531092706.1931503-1-tmricht@linux.ibm.com> <20220531092706.1931503-2-tmricht@linux.ibm.com>
-In-Reply-To: <20220531092706.1931503-2-tmricht@linux.ibm.com>
+References: <20220531092706.1931503-1-tmricht@linux.ibm.com> <20220531092706.1931503-3-tmricht@linux.ibm.com>
+In-Reply-To: <20220531092706.1931503-3-tmricht@linux.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 31 May 2022 08:00:37 -0700
-Message-ID: <CAP-5=fWBULDozZrDLtBAcE1tAD83S4XctDZoDEoAoj_p2aTTRQ@mail.gmail.com>
-Subject: Re: [PATCH 2/7] perf list: Update event description for IBM z10 to
+Date:   Tue, 31 May 2022 08:01:19 -0700
+Message-ID: <CAP-5=fV93hnqmuoGfpeD-rADt-wDc7aRwfGbLZD6zv-28wePFA@mail.gmail.com>
+Subject: Re: [PATCH 3/7] perf list: Update event description for IBM z13 to
  latest level
 To:     Thomas Richter <tmricht@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -67,7 +67,7 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Tue, May 31, 2022 at 2:27 AM Thomas Richter <tmricht@linux.ibm.com> wrot=
 e:
 >
-> Update IBM z10 event counter description to the latest level
+> Update IBM z13 event counter description to the latest level
 > as described in the documents
 > 1. SA23-2260-07:
 >    "The Load-Program-Parameter and the CPU-Measurement Facilities."
@@ -94,16 +94,16 @@ Thanks,
 Ian
 
 > ---
->  .../pmu-events/arch/s390/cf_z10/basic.json    | 48 +++++++-------
->  .../pmu-events/arch/s390/cf_z10/crypto.json   | 64 +++++++++----------
->  .../pmu-events/arch/s390/cf_z10/extended.json | 36 +++++------
->  3 files changed, 74 insertions(+), 74 deletions(-)
+>  .../pmu-events/arch/s390/cf_z13/basic.json    |  48 ++++-----
+>  .../pmu-events/arch/s390/cf_z13/crypto.json   |  64 +++++------
+>  .../pmu-events/arch/s390/cf_z13/extended.json | 100 +++++++++---------
+>  3 files changed, 106 insertions(+), 106 deletions(-)
 >
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_z10/basic.json b/tools/pe=
-rf/pmu-events/arch/s390/cf_z10/basic.json
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z13/basic.json b/tools/pe=
+rf/pmu-events/arch/s390/cf_z13/basic.json
 > index 783de7f1aeaa..9bd20a5f47af 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_z10/basic.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_z10/basic.json
+> --- a/tools/perf/pmu-events/arch/s390/cf_z13/basic.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z13/basic.json
 > @@ -3,84 +3,84 @@
 >                 "Unit": "CPU-M-CF",
 >                 "EventCode": "0",
@@ -247,11 +247,11 @@ r of penalty cycles for level-1 data cache while the CPU is in the problem =
 state."
 >         }
 >  ]
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_z10/crypto.json b/tools/p=
-erf/pmu-events/arch/s390/cf_z10/crypto.json
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z13/crypto.json b/tools/p=
+erf/pmu-events/arch/s390/cf_z13/crypto.json
 > index 3f28007d3892..a8d391ddeb8c 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_z10/crypto.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_z10/crypto.json
+> --- a/tools/perf/pmu-events/arch/s390/cf_z13/crypto.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z13/crypto.json
 > @@ -3,112 +3,112 @@
 >                 "Unit": "CPU-M-CF",
 >                 "EventCode": "64",
@@ -455,147 +455,13 @@ r of CPU cycles blocked for the AES functions issued by the CPU because the=
  DEA/AES coprocessor is busy performing a function issued by another CPU."
 >         }
 >  ]
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_z10/extended.json b/tools=
-/perf/pmu-events/arch/s390/cf_z10/extended.json
-> index 86bd8ba9391d..bf6a9811e014 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_z10/extended.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_z10/extended.json
-> @@ -4,125 +4,125 @@
->                 "EventCode": "128",
->                 "EventName": "L1I_L2_SOURCED_WRITES",
->                 "BriefDescription": "L1I L2 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 I-=
-Cache directory where the returned cache line was sourced from the Level-2 =
-(L1.5) cache"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction Cache directory where the returned cache line was sourced from th=
-e Level-2 (L1.5) cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z13/extended.json b/tools=
+/perf/pmu-events/arch/s390/cf_z13/extended.json
+> index 1a5e4f89c57e..99c1b93a7e36 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z13/extended.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z13/extended.json
+> @@ -11,7 +11,7 @@
 >                 "EventCode": "129",
->                 "EventName": "L1D_L2_SOURCED_WRITES",
->                 "BriefDescription": "L1D L2 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 D-=
-Cache directory where the installed cache line was sourced from the Level-2=
- (L1.5) cache"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta Cache directory where the installed cache line was sourced from the Leve=
-l-2 (L1.5) cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "130",
->                 "EventName": "L1I_L3_LOCAL_WRITES",
->                 "BriefDescription": "L1I L3 Local Writes",
-> -               "PublicDescription": "A directory write to the Level-1 I-=
-Cache directory where the installed cache line was sourced from the Level-3=
- cache that is on the same book as the Instruction cache (Local L2 cache)"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction Cache directory where the installed cache line was sourced from t=
-he Level-3 cache that is on the same book as the Instruction cache (Local L=
-2 cache)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "131",
->                 "EventName": "L1D_L3_LOCAL_WRITES",
->                 "BriefDescription": "L1D L3 Local Writes",
-> -               "PublicDescription": "A directory write to the Level-1 D-=
-Cache directory where the installtion cache line was source from the Level-=
-3 cache that is on the same book as the Data cache (Local L2 cache)"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta Cache directory where the installed cache line was source from the Level=
--3 cache that is on the same book as the Data cache (Local L2 cache)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "132",
->                 "EventName": "L1I_L3_REMOTE_WRITES",
->                 "BriefDescription": "L1I L3 Remote Writes",
-> -               "PublicDescription": "A directory write to the Level-1 I-=
-Cache directory where the installed cache line was sourced from a Level-3 c=
-ache that is not on the same book as the Instruction cache (Remote L2 cache=
-)"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction Cache directory where the installed cache line was sourced from a=
- Level-3 cache that is not on the same book as the Instruction cache (Remot=
-e L2 cache)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "133",
->                 "EventName": "L1D_L3_REMOTE_WRITES",
->                 "BriefDescription": "L1D L3 Remote Writes",
-> -               "PublicDescription": "A directory write to the Level-1 D-=
-Cache directory where the installed cache line was sourced from a Level-3 c=
-ache that is not on the same book as the Data cache (Remote L2 cache)"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta Cache directory where the installed cache line was sourced from a Level-=
-3 cache that is not on the same book as the Data cache (Remote L2 cache)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "134",
->                 "EventName": "L1D_LMEM_SOURCED_WRITES",
->                 "BriefDescription": "L1D Local Memory Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 D-=
-Cache directory where the installed cache line was sourced from memory that=
- is attached to the same book as the Data cache (Local Memory)"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta Cache directory where the installed cache line was sourced from memory t=
-hat is attached to the same book as the Data cache (Local Memory)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "135",
->                 "EventName": "L1I_LMEM_SOURCED_WRITES",
->                 "BriefDescription": "L1I Local Memory Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 I-=
-Cache where the installed cache line was sourced from memory that is attach=
-ed to the s ame book as the Instruction cache (Local Memory)"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction Cache where the installed cache line was sourced from memory that=
- is attached to the s ame book as the Instruction cache (Local Memory)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "136",
->                 "EventName": "L1D_RO_EXCL_WRITES",
->                 "BriefDescription": "L1D Read-only Exclusive Writes",
-> -               "PublicDescription": "A directory write to the Level-1 D-=
-Cache where the line was originally in a Read-Only state in the cache but h=
-as been updated to be in the Exclusive state that allows stores to the cach=
-e line"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta Cache where the line was originally in a Read-Only state in the cache bu=
-t has been updated to be in the Exclusive state that allows stores to the c=
-ache line."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "137",
->                 "EventName": "L1I_CACHELINE_INVALIDATES",
->                 "BriefDescription": "L1I Cacheline Invalidates",
-> -               "PublicDescription": "A cache line in the Level-1 I-Cache=
- has been invalidated by a store on the same CPU as the Level-1 I-Cache"
-> +               "PublicDescription": "A cache line in the Level-1 Instruc=
-tion Cache has been invalidated by a store on the same CPU as the Level-1 I=
-nstruction Cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "138",
->                 "EventName": "ITLB1_WRITES",
->                 "BriefDescription": "ITLB1 Writes",
-> -               "PublicDescription": "A translation entry has been writte=
-n into the Level-1 Instruction Translation Lookaside Buffer"
-> +               "PublicDescription": "A translation entry has been writte=
-n into the Level-1 Instruction Translation Lookaside Buffer (ITLB1)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "139",
 >                 "EventName": "DTLB1_WRITES",
 >                 "BriefDescription": "DTLB1 Writes",
 > -               "PublicDescription": "A translation entry has been writte=
@@ -605,40 +471,42 @@ n to the Level-1 Data Translation Lookaside Buffer (DTLB1)."
 >         },
 >         {
 >                 "Unit": "CPU-M-CF",
->                 "EventCode": "140",
->                 "EventName": "TLB2_PTE_WRITES",
->                 "BriefDescription": "TLB2 PTE Writes",
+> @@ -25,7 +25,7 @@
+>                 "EventCode": "131",
+>                 "EventName": "DTLB1_HPAGE_WRITES",
+>                 "BriefDescription": "DTLB1 One-Megabyte Page Writes",
 > -               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Page Table Entry arrays"
+n to the Level-1 Data Translation Lookaside Buffer for a one-megabyte page"
 > +               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Page Table Entry arrays."
+n to the Level-1 Data Translation Lookaside Buffer for a one-megabyte page.=
+"
 >         },
 >         {
 >                 "Unit": "CPU-M-CF",
->                 "EventCode": "141",
->                 "EventName": "TLB2_CRSTE_WRITES",
->                 "BriefDescription": "TLB2 CRSTE Writes",
-> -               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Common Region Segment Table Entry arrays"
-> +               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Common Region Segment Table Entry arrays."
+> @@ -39,63 +39,63 @@
+>                 "EventCode": "133",
+>                 "EventName": "L1D_L2D_SOURCED_WRITES",
+>                 "BriefDescription": "L1D L2D Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from the Level=
+-2 Data cache"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from the Level=
+-2 Data cache."
 >         },
 >         {
 >                 "Unit": "CPU-M-CF",
->                 "EventCode": "142",
->                 "EventName": "TLB2_CRSTE_HPAGE_WRITES",
->                 "BriefDescription": "TLB2 CRSTE One-Megabyte Page Writes"=
-,
+>                 "EventCode": "134",
+>                 "EventName": "ITLB1_WRITES",
+>                 "BriefDescription": "ITLB1 Writes",
 > -               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Common Region Segment Table Entry arrays for a one-meg=
-abyte large page translation"
+n to the Level-1 Instruction Translation Lookaside Buffer"
 > +               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Common Region Segment Table Entry arrays for a one-meg=
-abyte large page translation."
+n to the Level-1 Instruction Translation Lookaside Buffer (ITLB1)."
 >         },
 >         {
 >                 "Unit": "CPU-M-CF",
->                 "EventCode": "145",
+>                 "EventCode": "135",
 >                 "EventName": "ITLB1_MISSES",
 >                 "BriefDescription": "ITLB1 Misses",
 > -               "PublicDescription": "Level-1 Instruction TLB miss in pro=
@@ -648,25 +516,565 @@ gress. Incremented by one for every cycle an ITLB1 miss is in progress."
 >         },
 >         {
 >                 "Unit": "CPU-M-CF",
+>                 "EventCode": "136",
+>                 "EventName": "L1I_L2I_SOURCED_WRITES",
+>                 "BriefDescription": "L1I L2I Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from th=
+e Level-2 Instruction cache"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from th=
+e Level-2 Instruction cache."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "137",
+>                 "EventName": "TLB2_PTE_WRITES",
+>                 "BriefDescription": "TLB2 PTE Writes",
+> -               "PublicDescription": "A translation entry has been writte=
+n to the Level-2 TLB Page Table Entry arrays"
+> +               "PublicDescription": "A translation entry has been writte=
+n to the Level-2 TLB Page Table Entry arrays."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "138",
+>                 "EventName": "TLB2_CRSTE_HPAGE_WRITES",
+>                 "BriefDescription": "TLB2 CRSTE One-Megabyte Page Writes"=
+,
+> -               "PublicDescription": "A translation entry has been writte=
+n to the Level-2 TLB Combined Region Segment Table Entry arrays for a one-m=
+egabyte large page translation"
+> +               "PublicDescription": "A translation entry has been writte=
+n to the Level-2 TLB Combined Region Segment Table Entry arrays for a one-m=
+egabyte large page translation."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "139",
+>                 "EventName": "TLB2_CRSTE_WRITES",
+>                 "BriefDescription": "TLB2 CRSTE Writes",
+> -               "PublicDescription": "A translation entry has been writte=
+n to the Level-2 TLB Combined Region Segment Table Entry arrays"
+> +               "PublicDescription": "A translation entry has been writte=
+n to the Level-2 TLB Combined Region Segment Table Entry arrays."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "140",
+>                 "EventName": "TX_C_TEND",
+>                 "BriefDescription": "Completed TEND instructions in const=
+rained TX mode",
+> -               "PublicDescription": "A TEND instruction has completed in=
+ a constrained transactional-execution mode"
+> +               "PublicDescription": "A TEND instruction has completed in=
+ a constrained transactional-execution mode."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "141",
+>                 "EventName": "TX_NC_TEND",
+>                 "BriefDescription": "Completed TEND instructions in non-c=
+onstrained TX mode",
+> -               "PublicDescription": "A TEND instruction has completed in=
+ a non-constrained transactional-execution mode"
+> +               "PublicDescription": "A TEND instruction has completed in=
+ a non-constrained transactional-execution mode."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+> @@ -109,273 +109,273 @@
+>                 "EventCode": "144",
+>                 "EventName": "L1D_ONCHIP_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1D On-Chip L3 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Chi=
+p Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Chi=
+p Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "145",
+>                 "EventName": "L1D_ONCHIP_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1D On-Chip L3 Sourced Writes with I=
+ntervention",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Chi=
+p Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Chi=
+p Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
 >                 "EventCode": "146",
->                 "EventName": "DTLB1_MISSES",
->                 "BriefDescription": "DTLB1 Misses",
-> -               "PublicDescription": "Level-1 Data TLB miss in progress. =
-Incremented by one for every cycle an DTLB1 miss is in progress"
-> +               "PublicDescription": "Level-1 Data TLB miss in progress. =
-Incremented by one for every cycle an DTLB1 miss is in progress."
+>                 "EventName": "L1D_ONNODE_L4_SOURCED_WRITES",
+>                 "BriefDescription": "L1D On-Node L4 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Nod=
+e Level-4 cache"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Nod=
+e Level-4 cache."
 >         },
 >         {
 >                 "Unit": "CPU-M-CF",
 >                 "EventCode": "147",
->                 "EventName": "L2C_STORES_SENT",
->                 "BriefDescription": "L2C Stores Sent",
-> -               "PublicDescription": "Incremented by one for every store =
-sent to Level-2 (L1.5) cache"
-> +               "PublicDescription": "Incremented by one for every store =
-sent to Level-2 (L1.5) cache."
->         }
->  ]
+>                 "EventName": "L1D_ONNODE_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1D On-Node L3 Sourced Writes with I=
+ntervention",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Nod=
+e Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Nod=
+e Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "148",
+>                 "EventName": "L1D_ONNODE_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1D On-Node L3 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Nod=
+e Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Nod=
+e Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "149",
+>                 "EventName": "L1D_ONDRAWER_L4_SOURCED_WRITES",
+>                 "BriefDescription": "L1D On-Drawer L4 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Dra=
+wer Level-4 cache"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Dra=
+wer Level-4 cache."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "150",
+>                 "EventName": "L1D_ONDRAWER_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1D On-Drawer L3 Sourced Writes with=
+ Intervention",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Dra=
+wer Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Dra=
+wer Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "151",
+>                 "EventName": "L1D_ONDRAWER_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1D On-Drawer L3 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Dra=
+wer Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an On-Dra=
+wer Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "152",
+>                 "EventName": "L1D_OFFDRAWER_SCOL_L4_SOURCED_WRITES",
+>                 "BriefDescription": "L1D Off-Drawer Same-Column L4 Source=
+d Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Same-Column Level-4 cache"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Same-Column Level-4 cache."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "153",
+>                 "EventName": "L1D_OFFDRAWER_SCOL_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1D Off-Drawer Same-Column L3 Source=
+d Writes with Intervention",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Same-Column Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Same-Column Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "154",
+>                 "EventName": "L1D_OFFDRAWER_SCOL_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1D Off-Drawer Same-Column L3 Source=
+d Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Same-Column Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Same-Column Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "155",
+>                 "EventName": "L1D_OFFDRAWER_FCOL_L4_SOURCED_WRITES",
+>                 "BriefDescription": "L1D Off-Drawer Far-Column L3 Sourced=
+ Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Far-Column Level-4 cache"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Far-Column Level-4 cache."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "156",
+>                 "EventName": "L1D_OFFDRAWER_FCOL_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1D Off-Drawer Far-Column L3 Sourced=
+ Writes with Intervention",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Far-Column Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Far-Column Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "157",
+>                 "EventName": "L1D_OFFDRAWER_FCOL_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1D Off-Drawer Far-Column L3 Sourced=
+ Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Far-Column Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from an Off-Dr=
+awer Far-Column Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "158",
+>                 "EventName": "L1D_ONNODE_MEM_SOURCED_WRITES",
+>                 "BriefDescription": "L1D On-Node Memory Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from On-Node m=
+emory"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from On-Node m=
+emory."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "159",
+>                 "EventName": "L1D_ONDRAWER_MEM_SOURCED_WRITES",
+>                 "BriefDescription": "L1D On-Drawer Memory Sourced Writes"=
+,
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from On-Drawer=
+ memory"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from On-Drawer=
+ memory."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "160",
+>                 "EventName": "L1D_OFFDRAWER_MEM_SOURCED_WRITES",
+>                 "BriefDescription": "L1D Off-Drawer Memory Sourced Writes=
+",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from On-Drawer=
+ memory"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from Off-Drawe=
+r memory."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "161",
+>                 "EventName": "L1D_ONCHIP_MEM_SOURCED_WRITES",
+>                 "BriefDescription": "L1D On-Chip Memory Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from On-Chip m=
+emory"
+> +               "PublicDescription": "A directory write to the Level-1 Da=
+ta cache directory where the returned cache line was sourced from On-Chip m=
+emory."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "162",
+>                 "EventName": "L1I_ONCHIP_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1I On-Chip L3 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Chip Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Chip Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "163",
+>                 "EventName": "L1I_ONCHIP_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1I On-Chip L3 Sourced Writes with I=
+ntervention",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On Chip Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On Chip Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "164",
+>                 "EventName": "L1I_ONNODE_L4_SOURCED_WRITES",
+>                 "BriefDescription": "L1I On-Chip L4 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Node Level-4 cache"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Node Level-4 cache."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "165",
+>                 "EventName": "L1I_ONNODE_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1I On-Node L3 Sourced Writes with I=
+ntervention",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Node Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Node Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "166",
+>                 "EventName": "L1I_ONNODE_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1I On-Node L3 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Node Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Node Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "167",
+>                 "EventName": "L1I_ONDRAWER_L4_SOURCED_WRITES",
+>                 "BriefDescription": "L1I On-Drawer L4 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Drawer Level-4 cache"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Drawer Level-4 cache."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "168",
+>                 "EventName": "L1I_ONDRAWER_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1I On-Drawer L3 Sourced Writes with=
+ Intervention",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Drawer Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Drawer Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "169",
+>                 "EventName": "L1I_ONDRAWER_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1I On-Drawer L3 Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Drawer Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ On-Drawer Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "170",
+>                 "EventName": "L1I_OFFDRAWER_SCOL_L4_SOURCED_WRITES",
+>                 "BriefDescription": "L1I Off-Drawer Same-Column L4 Source=
+d Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Same-Column Level-4 cache"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Same-Column Level-4 cache."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "171",
+>                 "EventName": "L1I_OFFDRAWER_SCOL_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1I Off-Drawer Same-Column L3 Source=
+d Writes with Intervention",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Same-Column Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Same-Column Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "172",
+>                 "EventName": "L1I_OFFDRAWER_SCOL_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1I Off-Drawer Same-Column L3 Source=
+d Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Same-Column Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Same-Column Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "173",
+>                 "EventName": "L1I_OFFDRAWER_FCOL_L4_SOURCED_WRITES",
+>                 "BriefDescription": "L1I Off-Drawer Far-Column L4 Sourced=
+ Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Far-Column Level-4 cache"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Far-Column Level-4 cache."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "174",
+>                 "EventName": "L1I_OFFDRAWER_FCOL_L3_SOURCED_WRITES_IV",
+>                 "BriefDescription": "L1I Off-Drawer Far-Column L3 Sourced=
+ Writes with Intervention",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Far-Column Level-3 cache with intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Far-Column Level-3 cache with intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "175",
+>                 "EventName": "L1I_OFFDRAWER_FCOL_L3_SOURCED_WRITES",
+>                 "BriefDescription": "L1I Off-Drawer Far-Column L3 Sourced=
+ Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Far-Column Level-3 cache without intervention"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from an=
+ Off-Drawer Far-Column Level-3 cache without intervention."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "176",
+>                 "EventName": "L1I_ONNODE_MEM_SOURCED_WRITES",
+>                 "BriefDescription": "L1I On-Node Memory Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from On=
+-Node memory"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from On=
+-Node memory."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "177",
+>                 "EventName": "L1I_ONDRAWER_MEM_SOURCED_WRITES",
+>                 "BriefDescription": "L1I On-Drawer Memory Sourced Writes"=
+,
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from On=
+-Drawer memory"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from On=
+-Drawer memory."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "178",
+>                 "EventName": "L1I_OFFDRAWER_MEM_SOURCED_WRITES",
+>                 "BriefDescription": "L1I Off-Drawer Memory Sourced Writes=
+",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from On=
+-Drawer memory"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from On=
+-Drawer memory."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "179",
+>                 "EventName": "L1I_ONCHIP_MEM_SOURCED_WRITES",
+>                 "BriefDescription": "L1I On-Chip Memory Sourced Writes",
+> -               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from On=
+-Chip memory"
+> +               "PublicDescription": "A directory write to the Level-1 In=
+struction cache directory where the returned cache line was sourced from On=
+-Chip memory."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "218",
+>                 "EventName": "TX_NC_TABORT",
+>                 "BriefDescription": "Aborted transactions in non-constrai=
+ned TX mode",
+> -               "PublicDescription": "A transaction abort has occurred in=
+ a non-constrained transactional-execution mode"
+> +               "PublicDescription": "A transaction abort has occurred in=
+ a non-constrained transactional-execution mode."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "219",
+>                 "EventName": "TX_C_TABORT_NO_SPECIAL",
+>                 "BriefDescription": "Aborted transactions in constrained =
+TX mode not using special completion logic",
+> -               "PublicDescription": "A transaction abort has occurred in=
+ a constrained transactional-execution mode and the CPU is not using any sp=
+ecial logic to allow the transaction to complete"
+> +               "PublicDescription": "A transaction abort has occurred in=
+ a constrained transactional-execution mode and the CPU is not using any sp=
+ecial logic to allow the transaction to complete."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
+>                 "EventCode": "220",
+>                 "EventName": "TX_C_TABORT_SPECIAL",
+>                 "BriefDescription": "Aborted transactions in constrained =
+TX mode using special completion logic",
+> -               "PublicDescription": "A transaction abort has occurred in=
+ a constrained transactional-execution mode and the CPU is using special lo=
+gic to allow the transaction to complete"
+> +               "PublicDescription": "A transaction abort has occurred in=
+ a constrained transactional-execution mode and the CPU is using special lo=
+gic to allow the transaction to complete."
+>         },
+>         {
+>                 "Unit": "CPU-M-CF",
 > --
 > 2.36.1
 >
