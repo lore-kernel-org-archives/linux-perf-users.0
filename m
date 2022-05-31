@@ -2,85 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685F5C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 09:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891E2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 09:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245184AbiEaJ1Y (ORCPT
+        id S245203AbiEaJ1o (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 May 2022 05:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44022 "EHLO
+        Tue, 31 May 2022 05:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245178AbiEaJ1X (ORCPT
+        with ESMTP id S245190AbiEaJ10 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 May 2022 05:27:23 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D952AE25;
-        Tue, 31 May 2022 02:27:19 -0700 (PDT)
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24V7ciCE004345;
-        Tue, 31 May 2022 09:27:17 GMT
+        Tue, 31 May 2022 05:27:26 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA0A1A071;
+        Tue, 31 May 2022 02:27:23 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24V8hraX010094;
+        Tue, 31 May 2022 09:27:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=mUqfJfrXR64w2NcHZL1E6zZIeINYaxPlxCLuY/Zi/rA=;
- b=obol5BuUQ3n6jHay+s67d8ik1bYMkE5jB86/ARdQXyI7VgA1RyyyROpSVuM+zztdxcwb
- KTgxzqVLLHI0Aa+OfjL5juGWPpwxpBEZKLHvtSEiYcRgB9HCnZIDm3ap7KwZmq3j9JxV
- g/1Lxte/PTINkAz5AfgfCtENv4QN7v2892gAfudRJWjGFnkxLNWPtwih79TEhaGc+9Fy
- vzj5NolUFkDRzi919G7j8sandx4Nh1nZRcpOJGts1wF1mRtnNa7jD10YEhXeYUZV0XuX
- DHxA6JNgiYmQkRbBbsLHFQSI8O/6UISyV2FKXcbOWONB3024jzx3dbWes/Zhx3b+HWqF lA== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gdbsddayj-1
+ bh=HwnbxJQtjXvfzk6PP+Mzw83KRVC6kLRKJ2SV/eAhNV0=;
+ b=pL8r9pFPe+h3F56fAWF3vo70iPo+OCRsAd6F0P10o2JycbZrson/VuZn4qOFSBt8546s
+ 0sbQmxYnMAgqfvxHa2YrVTjHIijQLv5TpJWPp5S8uoNBT1BOYtNlTNGQv+KO8NDJozhf
+ fZJUPtxzDlKinQwhC5a84Rs8Kz8tDG3ZW6k8Tw4JG88P45fQH0/2ezS9bbG3HH9Dcz66
+ yKfZCWIfwYKWotfeLccXBpN8fiYaXGHpPkdRhVDskd1nAyryiPWq4qiwXZ5E4pMNpaB5
+ SSDRVn9Ofw+5QLvmQ/RK864EenEAGeYavpwwPYEvnviVkFdLqlBnR6FQQSQVxfhMVt8L 1A== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gd95kqk9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 May 2022 09:27:18 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24V9L624003377;
+        Tue, 31 May 2022 09:27:16 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma02fra.de.ibm.com with ESMTP id 3gbcc6awj6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Tue, 31 May 2022 09:27:16 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24V9KQBx005270;
-        Tue, 31 May 2022 09:27:14 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 3gbc97awrj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 May 2022 09:27:13 +0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24V9RANi19136898
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24V9RDBS41091394
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 May 2022 09:27:10 GMT
+        Tue, 31 May 2022 09:27:13 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3045A405B;
-        Tue, 31 May 2022 09:27:10 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DA278A405B;
+        Tue, 31 May 2022 09:27:12 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50DEEA4054;
-        Tue, 31 May 2022 09:27:10 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 88308A4054;
+        Tue, 31 May 2022 09:27:12 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 31 May 2022 09:27:10 +0000 (GMT)
+        Tue, 31 May 2022 09:27:12 +0000 (GMT)
 From:   Thomas Richter <tmricht@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
 Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
         hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 2/7] perf list: Update event description for IBM z10 to latest level
-Date:   Tue, 31 May 2022 11:27:01 +0200
-Message-Id: <20220531092706.1931503-2-tmricht@linux.ibm.com>
+Subject: [PATCH 4/7] perf list: Update event description for IBM z14 to latest level
+Date:   Tue, 31 May 2022 11:27:03 +0200
+Message-Id: <20220531092706.1931503-4-tmricht@linux.ibm.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220531092706.1931503-1-tmricht@linux.ibm.com>
 References: <20220531092706.1931503-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 64XrqEuG1z8TdOZ_ki74A993_ui56Le_
-X-Proofpoint-ORIG-GUID: 64XrqEuG1z8TdOZ_ki74A993_ui56Le_
+X-Proofpoint-GUID: VR7cz9EuaWIdvgnXQEXXicA3J7rISjMN
+X-Proofpoint-ORIG-GUID: VR7cz9EuaWIdvgnXQEXXicA3J7rISjMN
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
  definitions=2022-05-31_03,2022-05-30_03,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ spamscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ mlxlogscore=999 adultscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
  mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2204290000 definitions=main-2205310047
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update IBM z10 event counter description to the latest level
+Update IBM z14 event counter description to the latest level
 as described in the documents
 1. SA23-2260-07:
    "The Load-Program-Parameter and the CPU-Measurement Facilities."
@@ -101,16 +101,16 @@ for the following counter sets:
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
 ---
- .../pmu-events/arch/s390/cf_z10/basic.json    | 48 +++++++-------
- .../pmu-events/arch/s390/cf_z10/crypto.json   | 64 +++++++++----------
- .../pmu-events/arch/s390/cf_z10/extended.json | 36 +++++------
- 3 files changed, 74 insertions(+), 74 deletions(-)
+ .../pmu-events/arch/s390/cf_z14/basic.json    |  32 +++---
+ .../pmu-events/arch/s390/cf_z14/crypto.json   |  64 +++++------
+ .../pmu-events/arch/s390/cf_z14/extended.json | 102 +++++++++---------
+ 3 files changed, 99 insertions(+), 99 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z10/basic.json b/tools/perf/pmu-events/arch/s390/cf_z10/basic.json
-index 783de7f1aeaa..9bd20a5f47af 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z10/basic.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z10/basic.json
-@@ -3,84 +3,84 @@
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/basic.json b/tools/perf/pmu-events/arch/s390/cf_z14/basic.json
+index fc762e9f1d6e..1023d47028ce 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z14/basic.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z14/basic.json
+@@ -3,56 +3,56 @@
  		"Unit": "CPU-M-CF",
  		"EventCode": "0",
  		"EventName": "CPU_CYCLES",
@@ -181,48 +181,12 @@ index 783de7f1aeaa..9bd20a5f47af 100644
 -		"PublicDescription": "Problem-State Instruction Count"
 +		"BriefDescription": "Problem-State Instruction Count",
 +		"PublicDescription": "This counter counts the total number of instructions executed by the CPU while in the problem state."
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "34",
- 		"EventName": "PROBLEM_STATE_L1I_DIR_WRITES",
--		"BriefDescription": "Problem-State L1I Directory Writes",
--		"PublicDescription": "Problem-State Level-1 I-Cache Directory Write Count"
-+		"BriefDescription": "Problem-State Level-1 I-Cache Directory Write Count",
-+		"PublicDescription": "This counter counts the total number of level-1 instruction-cache or unified-cache directory writes while the CPU is in the problem state."
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "35",
- 		"EventName": "PROBLEM_STATE_L1I_PENALTY_CYCLES",
--		"BriefDescription": "Problem-State L1I Penalty Cycles",
--		"PublicDescription": "Problem-State Level-1 I-Cache Penalty Cycle Count"
-+		"BriefDescription": "Level-1 I-Cache Penalty Cycle Count",
-+		"PublicDescription": "This counter counts the total number of penalty cycles for level-1 instruction cache or unified cache while the CPU is in the problem state."
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "36",
- 		"EventName": "PROBLEM_STATE_L1D_DIR_WRITES",
--		"BriefDescription": "Problem-State L1D Directory Writes",
--		"PublicDescription": "Problem-State Level-1 D-Cache Directory Write Count"
-+		"BriefDescription": "Problem-State Level-1 D-Cache Directory Write Count",
-+		"PublicDescription": "This counter counts the total number of level-1 data-cache directory writes while the CPU is in the problem state."
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "37",
- 		"EventName": "PROBLEM_STATE_L1D_PENALTY_CYCLES",
--		"BriefDescription": "Problem-State L1D Penalty Cycles",
--		"PublicDescription": "Problem-State Level-1 D-Cache Penalty Cycle Count"
-+		"BriefDescription": "Problem-State Level-1 D-Cache Penalty Cycle Count",
-+		"PublicDescription": "This counter counts the total number of penalty cycles for level-1 data cache while the CPU is in the problem state."
  	}
  ]
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z10/crypto.json b/tools/perf/pmu-events/arch/s390/cf_z10/crypto.json
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/crypto.json b/tools/perf/pmu-events/arch/s390/cf_z14/crypto.json
 index 3f28007d3892..a8d391ddeb8c 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z10/crypto.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z10/crypto.json
+--- a/tools/perf/pmu-events/arch/s390/cf_z14/crypto.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z14/crypto.json
 @@ -3,112 +3,112 @@
  		"Unit": "CPU-M-CF",
  		"EventCode": "64",
@@ -368,154 +332,419 @@ index 3f28007d3892..a8d391ddeb8c 100644
 +		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the AES functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU."
  	}
  ]
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z10/extended.json b/tools/perf/pmu-events/arch/s390/cf_z10/extended.json
-index 86bd8ba9391d..bf6a9811e014 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z10/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z10/extended.json
-@@ -4,125 +4,125 @@
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+index 4942b20a1ea1..ad40cc4f9727 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+@@ -4,357 +4,357 @@
  		"EventCode": "128",
- 		"EventName": "L1I_L2_SOURCED_WRITES",
- 		"BriefDescription": "L1I L2 Sourced Writes",
--		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the returned cache line was sourced from the Level-2 (L1.5) cache"
-+		"PublicDescription": "A directory write to the Level-1 Instruction Cache directory where the returned cache line was sourced from the Level-2 (L1.5) cache."
+ 		"EventName": "L1D_RO_EXCL_WRITES",
+ 		"BriefDescription": "L1D Read-only Exclusive Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
++		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "129",
- 		"EventName": "L1D_L2_SOURCED_WRITES",
- 		"BriefDescription": "L1D L2 Sourced Writes",
--		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the installed cache line was sourced from the Level-2 (L1.5) cache"
-+		"PublicDescription": "A directory write to the Level-1 Data Cache directory where the installed cache line was sourced from the Level-2 (L1.5) cache."
+ 		"EventName": "DTLB2_WRITES",
+ 		"BriefDescription": "DTLB2 Writes",
+-		"PublicDescription": "A translation has been written into The Translation Lookaside Buffer 2 (TLB2) and the request was made by the data cache"
++		"PublicDescription": "A translation has been written into The Translation Lookaside Buffer 2 (TLB2) and the request was made by the data cache. This is a replacement for what was provided for the DTLB on prior machines."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "130",
- 		"EventName": "L1I_L3_LOCAL_WRITES",
- 		"BriefDescription": "L1I L3 Local Writes",
--		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the installed cache line was sourced from the Level-3 cache that is on the same book as the Instruction cache (Local L2 cache)"
-+		"PublicDescription": "A directory write to the Level-1 Instruction Cache directory where the installed cache line was sourced from the Level-3 cache that is on the same book as the Instruction cache (Local L2 cache)."
+ 		"EventName": "DTLB2_MISSES",
+ 		"BriefDescription": "DTLB2 Misses",
+-		"PublicDescription": "A TLB2 miss is in progress for a request made by the data cache. Incremented by one for every TLB2 miss in progress for the Level-1 Data cache on this cycle"
++		"PublicDescription": "A TLB2 miss is in progress for a request made by the data cache. Incremented by one for every TLB2 miss in progress for the Level-1 Data cache on this cycle. This is a replacement for what was provided for the DTLB on prior machines."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "131",
- 		"EventName": "L1D_L3_LOCAL_WRITES",
- 		"BriefDescription": "L1D L3 Local Writes",
--		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the installtion cache line was source from the Level-3 cache that is on the same book as the Data cache (Local L2 cache)"
-+		"PublicDescription": "A directory write to the Level-1 Data Cache directory where the installed cache line was source from the Level-3 cache that is on the same book as the Data cache (Local L2 cache)."
+ 		"EventName": "DTLB2_HPAGE_WRITES",
+ 		"BriefDescription": "DTLB2 One-Megabyte Page Writes",
+-		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page or a Last Host Translation was done"
++		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page or a Last Host Translation was done."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "132",
- 		"EventName": "L1I_L3_REMOTE_WRITES",
- 		"BriefDescription": "L1I L3 Remote Writes",
--		"PublicDescription": "A directory write to the Level-1 I-Cache directory where the installed cache line was sourced from a Level-3 cache that is not on the same book as the Instruction cache (Remote L2 cache)"
-+		"PublicDescription": "A directory write to the Level-1 Instruction Cache directory where the installed cache line was sourced from a Level-3 cache that is not on the same book as the Instruction cache (Remote L2 cache)."
+ 		"EventName": "DTLB2_GPAGE_WRITES",
+ 		"BriefDescription": "DTLB2 Two-Gigabyte Page Writes",
+-		"PublicDescription": "A translation entry for a two-gigabyte page was written into the Level-2 TLB"
++		"PublicDescription": "A translation entry for a two-gigabyte page was written into the Level-2 TLB."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "133",
- 		"EventName": "L1D_L3_REMOTE_WRITES",
- 		"BriefDescription": "L1D L3 Remote Writes",
--		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the installed cache line was sourced from a Level-3 cache that is not on the same book as the Data cache (Remote L2 cache)"
-+		"PublicDescription": "A directory write to the Level-1 Data Cache directory where the installed cache line was sourced from a Level-3 cache that is not on the same book as the Data cache (Remote L2 cache)."
+ 		"EventName": "L1D_L2D_SOURCED_WRITES",
+ 		"BriefDescription": "L1D L2D Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the Level-2 Data cache"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the Level-2 Data cache."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "134",
- 		"EventName": "L1D_LMEM_SOURCED_WRITES",
- 		"BriefDescription": "L1D Local Memory Sourced Writes",
--		"PublicDescription": "A directory write to the Level-1 D-Cache directory where the installed cache line was sourced from memory that is attached to the same book as the Data cache (Local Memory)"
-+		"PublicDescription": "A directory write to the Level-1 Data Cache directory where the installed cache line was sourced from memory that is attached to the same book as the Data cache (Local Memory)."
+ 		"EventName": "ITLB2_WRITES",
+ 		"BriefDescription": "ITLB2 Writes",
+-		"PublicDescription": "A translation entry has been written into the Translation Lookaside Buffer 2 (TLB2) and the request was made by the instruction cache"
++		"PublicDescription": "A translation entry has been written into the Translation Lookaside Buffer 2 (TLB2) and the request was made by the instruction cache. This is a replacement for what was provided for the ITLB on prior machines."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "135",
- 		"EventName": "L1I_LMEM_SOURCED_WRITES",
- 		"BriefDescription": "L1I Local Memory Sourced Writes",
--		"PublicDescription": "A directory write to the Level-1 I-Cache where the installed cache line was sourced from memory that is attached to the s ame book as the Instruction cache (Local Memory)"
-+		"PublicDescription": "A directory write to the Level-1 Instruction Cache where the installed cache line was sourced from memory that is attached to the s ame book as the Instruction cache (Local Memory)."
+ 		"EventName": "ITLB2_MISSES",
+ 		"BriefDescription": "ITLB2 Misses",
+-		"PublicDescription": "A TLB2 miss is in progress for a request made by the instruction cache. Incremented by one for every TLB2 miss in progress for the Level-1 Instruction cache in a cycle"
++		"PublicDescription": "A TLB2 miss is in progress for a request made by the instruction cache. Incremented by one for every TLB2 miss in progress for the Level-1 Instruction cache in a cycle. This is a replacement for what was provided for the ITLB on prior machines."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "136",
- 		"EventName": "L1D_RO_EXCL_WRITES",
- 		"BriefDescription": "L1D Read-only Exclusive Writes",
--		"PublicDescription": "A directory write to the Level-1 D-Cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
-+		"PublicDescription": "A directory write to the Level-1 Data Cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line."
+ 		"EventName": "L1I_L2I_SOURCED_WRITES",
+ 		"BriefDescription": "L1I L2I Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the Level-2 Instruction cache"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the Level-2 Instruction cache."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "137",
- 		"EventName": "L1I_CACHELINE_INVALIDATES",
- 		"BriefDescription": "L1I Cacheline Invalidates",
--		"PublicDescription": "A cache line in the Level-1 I-Cache has been invalidated by a store on the same CPU as the Level-1 I-Cache"
-+		"PublicDescription": "A cache line in the Level-1 Instruction Cache has been invalidated by a store on the same CPU as the Level-1 Instruction Cache."
+ 		"EventName": "TLB2_PTE_WRITES",
+ 		"BriefDescription": "TLB2 PTE Writes",
+-		"PublicDescription": "A translation entry was written into the Page Table Entry array in the Level-2 TLB"
++		"PublicDescription": "A translation entry was written into the Page Table Entry array in the Level-2 TLB."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "138",
- 		"EventName": "ITLB1_WRITES",
- 		"BriefDescription": "ITLB1 Writes",
--		"PublicDescription": "A translation entry has been written into the Level-1 Instruction Translation Lookaside Buffer"
-+		"PublicDescription": "A translation entry has been written into the Level-1 Instruction Translation Lookaside Buffer (ITLB1)."
+ 		"EventName": "TLB2_CRSTE_WRITES",
+ 		"BriefDescription": "TLB2 CRSTE Writes",
+-		"PublicDescription": "Translation entries were written into the Combined Region and Segment Table Entry array and the Page Table Entry array in the Level-2 TLB"
++		"PublicDescription": "Translation entries were written into the Combined Region and Segment Table Entry array and the Page Table Entry array in the Level-2 TLB."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "139",
- 		"EventName": "DTLB1_WRITES",
- 		"BriefDescription": "DTLB1 Writes",
--		"PublicDescription": "A translation entry has been written to the Level-1 Data Translation Lookaside Buffer"
-+		"PublicDescription": "A translation entry has been written to the Level-1 Data Translation Lookaside Buffer (DTLB1)."
+ 		"EventName": "TLB2_ENGINES_BUSY",
+ 		"BriefDescription": "TLB2 Engines Busy",
+-		"PublicDescription": "The number of Level-2 TLB translation engines busy in a cycle"
++		"PublicDescription": "The number of Level-2 TLB translation engines busy in a cycle."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "140",
- 		"EventName": "TLB2_PTE_WRITES",
- 		"BriefDescription": "TLB2 PTE Writes",
--		"PublicDescription": "A translation entry has been written to the Level-2 TLB Page Table Entry arrays"
-+		"PublicDescription": "A translation entry has been written to the Level-2 TLB Page Table Entry arrays."
+ 		"EventName": "TX_C_TEND",
+ 		"BriefDescription": "Completed TEND instructions in constrained TX mode",
+-		"PublicDescription": "A TEND instruction has completed in a constrained transactional-execution mode"
++		"PublicDescription": "A TEND instruction has completed in a constrained transactional-execution mode."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "141",
- 		"EventName": "TLB2_CRSTE_WRITES",
- 		"BriefDescription": "TLB2 CRSTE Writes",
--		"PublicDescription": "A translation entry has been written to the Level-2 TLB Common Region Segment Table Entry arrays"
-+		"PublicDescription": "A translation entry has been written to the Level-2 TLB Common Region Segment Table Entry arrays."
+ 		"EventName": "TX_NC_TEND",
+ 		"BriefDescription": "Completed TEND instructions in non-constrained TX mode",
+-		"PublicDescription": "A TEND instruction has completed in a non-constrained transactional-execution mode"
++		"PublicDescription": "A TEND instruction has completed in a non-constrained transactional-execution mode."
  	},
  	{
  		"Unit": "CPU-M-CF",
- 		"EventCode": "142",
- 		"EventName": "TLB2_CRSTE_HPAGE_WRITES",
- 		"BriefDescription": "TLB2 CRSTE One-Megabyte Page Writes",
--		"PublicDescription": "A translation entry has been written to the Level-2 TLB Common Region Segment Table Entry arrays for a one-megabyte large page translation"
-+		"PublicDescription": "A translation entry has been written to the Level-2 TLB Common Region Segment Table Entry arrays for a one-megabyte large page translation."
+ 		"EventCode": "143",
+ 		"EventName": "L1C_TLB2_MISSES",
+ 		"BriefDescription": "L1C TLB2 Misses",
+-		"PublicDescription": "Increments by one for any cycle where a level-1 cache or level-2 TLB miss is in progress"
++		"PublicDescription": "Increments by one for any cycle where a level-1 cache or level-2 TLB miss is in progress."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "144",
+ 		"EventName": "L1D_ONCHIP_L3_SOURCED_WRITES",
+ 		"BriefDescription": "L1D On-Chip L3 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-3 cache without intervention"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-3 cache without intervention."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "145",
- 		"EventName": "ITLB1_MISSES",
- 		"BriefDescription": "ITLB1 Misses",
--		"PublicDescription": "Level-1 Instruction TLB miss in progress. Incremented by one for every cycle an ITLB1 miss is in progress"
-+		"PublicDescription": "Level-1 Instruction TLB miss in progress. Incremented by one for every cycle an ITLB1 miss is in progress."
+ 		"EventName": "L1D_ONCHIP_MEMORY_SOURCED_WRITES",
+ 		"BriefDescription": "L1D On-Chip Memory Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Chip memory"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Chip memory."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "146",
- 		"EventName": "DTLB1_MISSES",
- 		"BriefDescription": "DTLB1 Misses",
--		"PublicDescription": "Level-1 Data TLB miss in progress. Incremented by one for every cycle an DTLB1 miss is in progress"
-+		"PublicDescription": "Level-1 Data TLB miss in progress. Incremented by one for every cycle an DTLB1 miss is in progress."
+ 		"EventName": "L1D_ONCHIP_L3_SOURCED_WRITES_IV",
+ 		"BriefDescription": "L1D On-Chip L3 Sourced Writes with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-3 cache with intervention"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-3 cache with intervention."
  	},
  	{
  		"Unit": "CPU-M-CF",
  		"EventCode": "147",
- 		"EventName": "L2C_STORES_SENT",
- 		"BriefDescription": "L2C Stores Sent",
--		"PublicDescription": "Incremented by one for every store sent to Level-2 (L1.5) cache"
-+		"PublicDescription": "Incremented by one for every store sent to Level-2 (L1.5) cache."
- 	}
- ]
+ 		"EventName": "L1D_ONCLUSTER_L3_SOURCED_WRITES",
+ 		"BriefDescription": "L1D On-Cluster L3 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Cluster Level-3 cache withountervention"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Cluster Level-3 cache without intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "148",
+ 		"EventName": "L1D_ONCLUSTER_MEMORY_SOURCED_WRITES",
+ 		"BriefDescription": "L1D On-Cluster Memory Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Cluster memory"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Cluster memory."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "149",
+ 		"EventName": "L1D_ONCLUSTER_L3_SOURCED_WRITES_IV",
+ 		"BriefDescription": "L1D On-Cluster L3 Sourced Writes with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Cluster Level-3 cache with intervention"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Cluster Level-3 cache with intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "150",
+ 		"EventName": "L1D_OFFCLUSTER_L3_SOURCED_WRITES",
+ 		"BriefDescription": "L1D Off-Cluster L3 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache without intervention"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache without intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "151",
+ 		"EventName": "L1D_OFFCLUSTER_MEMORY_SOURCED_WRITES",
+ 		"BriefDescription": "L1D Off-Cluster Memory Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Cluster memory"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Cluster memory."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "152",
+ 		"EventName": "L1D_OFFCLUSTER_L3_SOURCED_WRITES_IV",
+ 		"BriefDescription": "L1D Off-Cluster L3 Sourced Writes with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache with intervention"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache with intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "153",
+ 		"EventName": "L1D_OFFDRAWER_L3_SOURCED_WRITES",
+ 		"BriefDescription": "L1D Off-Drawer L3 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache without intervention"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache without intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "154",
+ 		"EventName": "L1D_OFFDRAWER_MEMORY_SOURCED_WRITES",
+ 		"BriefDescription": "L1D Off-Drawer Memory Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Drawer memory"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Drawer memory."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "155",
+ 		"EventName": "L1D_OFFDRAWER_L3_SOURCED_WRITES_IV",
+ 		"BriefDescription": "L1D Off-Drawer L3 Sourced Writes with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache with intervention"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache with intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "156",
+ 		"EventName": "L1D_ONDRAWER_L4_SOURCED_WRITES",
+ 		"BriefDescription": "L1D On-Drawer L4 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Drawer Level-4 cache"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Drawer Level-4 cache."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "157",
+ 		"EventName": "L1D_OFFDRAWER_L4_SOURCED_WRITES",
+ 		"BriefDescription": "L1D Off-Drawer L4 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Drawer Level-4 cache"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Drawer Level-4 cache."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "158",
+ 		"EventName": "L1D_ONCHIP_L3_SOURCED_WRITES_RO",
+ 		"BriefDescription": "L1D On-Chip L3 Sourced Writes read-only",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Chip L3 but a read-only invalidate was done to remove other copies of the cache line"
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Chip L3 but a read-only invalidate was done to remove other copies of the cache line."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "162",
+ 		"EventName": "L1I_ONCHIP_L3_SOURCED_WRITES",
+ 		"BriefDescription": "L1I On-Chip L3 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from an On-Chip Level-3 cache without intervention"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from an On-Chip Level-3 cache without intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "163",
+ 		"EventName": "L1I_ONCHIP_MEMORY_SOURCED_WRITES",
+ 		"BriefDescription": "L1I On-Chip Memory Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from On-Chip memory"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from On-Chip memory."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "164",
+ 		"EventName": "L1I_ONCHIP_L3_SOURCED_WRITES_IV",
+ 		"BriefDescription": "L1I On-Chip L3 Sourced Writes with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from an On-Chip Level-3 cache with intervention"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from an On-Chip Level-3 cache with intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "165",
+ 		"EventName": "L1I_ONCLUSTER_L3_SOURCED_WRITES",
+ 		"BriefDescription": "L1I On-Cluster L3 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Cluster Level-3 cache without intervention"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Cluster Level-3 cache without intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "166",
+ 		"EventName": "L1I_ONCLUSTER_MEMORY_SOURCED_WRITES",
+ 		"BriefDescription": "L1I On-Cluster Memory Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Cluster memory"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Cluster memory."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "167",
+ 		"EventName": "L1I_ONCLUSTER_L3_SOURCED_WRITES_IV",
+ 		"BriefDescription": "L1I On-Cluster L3 Sourced Writes with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Cluster Level-3 cache with intervention"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Cluster Level-3 cache with intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "168",
+ 		"EventName": "L1I_OFFCLUSTER_L3_SOURCED_WRITES",
+ 		"BriefDescription": "L1I Off-Cluster L3 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache without intervention"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache without intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "169",
+ 		"EventName": "L1I_OFFCLUSTER_MEMORY_SOURCED_WRITES",
+ 		"BriefDescription": "L1I Off-Cluster Memory Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Cluster memory"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Cluster memory."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "170",
+ 		"EventName": "L1I_OFFCLUSTER_L3_SOURCED_WRITES_IV",
+ 		"BriefDescription": "L1I Off-Cluster L3 Sourced Writes with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache with intervention"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache with intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "171",
+ 		"EventName": "L1I_OFFDRAWER_L3_SOURCED_WRITES",
+ 		"BriefDescription": "L1I Off-Drawer L3 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache without intervention"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache without intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "172",
+ 		"EventName": "L1I_OFFDRAWER_MEMORY_SOURCED_WRITES",
+ 		"BriefDescription": "L1I Off-Drawer Memory Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Drawer memory"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Drawer memory."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "173",
+ 		"EventName": "L1I_OFFDRAWER_L3_SOURCED_WRITES_IV",
+ 		"BriefDescription": "L1I Off-Drawer L3 Sourced Writes with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache with intervention"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache with intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "174",
+ 		"EventName": "L1I_ONDRAWER_L4_SOURCED_WRITES",
+ 		"BriefDescription": "L1I On-Drawer L4 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Drawer Level-4 cache"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Drawer Level-4 cache."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "175",
+ 		"EventName": "L1I_OFFDRAWER_L4_SOURCED_WRITES",
+ 		"BriefDescription": "L1I Off-Drawer L4 Sourced Writes",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Drawer Level-4 cache"
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Drawer Level-4 cache."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "224",
+ 		"EventName": "BCD_DFP_EXECUTION_SLOTS",
+ 		"BriefDescription": "BCD DFP Execution Slots",
+-		"PublicDescription": "Count of floating point execution slots used for finished Binary Coded Decimal to Decimal Floating Point conversions. Instructions: CDZT, CXZT, CZDT, CZXT"
++		"PublicDescription": "Count of floating point execution slots used for finished Binary Coded Decimal to Decimal Floating Point conversions. Instructions: CDZT, CXZT, CZDT, CZXT."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "225",
+ 		"EventName": "VX_BCD_EXECUTION_SLOTS",
+ 		"BriefDescription": "VX BCD Execution Slots",
+-		"PublicDescription": "Count of floating point execution slots used for finished vector arithmetic Binary Coded Decimal instructions. Instructions: VAP, VSP, VMPVMSP, VDP, VSDP, VRP, VLIP, VSRP, VPSOPVCP, VTP, VPKZ, VUPKZ, VCVB, VCVBG, VCVDVCVDG"
++		"PublicDescription": "Count of floating point execution slots used for finished vector arithmetic Binary Coded Decimal instructions. Instructions: VAP, VSP, VMPVMSP, VDP, VSDP, VRP, VLIP, VSRP, VPSOPVCP, VTP, VPKZ, VUPKZ, VCVB, VCVBG, VCVDVCVDG."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "226",
+ 		"EventName": "DECIMAL_INSTRUCTIONS",
+ 		"BriefDescription": "Decimal Instructions",
+-		"PublicDescription": "Decimal instructions dispatched. Instructions: CVB, CVD, AP, CP, DP, ED, EDMK, MP, SRP, SP, ZAP"
++		"PublicDescription": "Decimal instructions dispatched. Instructions: CVB, CVD, AP, CP, DP, ED, EDMK, MP, SRP, SP, ZAP."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "232",
+ 		"EventName": "LAST_HOST_TRANSLATIONS",
+ 		"BriefDescription": "Last host translation done",
+-		"PublicDescription": "Last Host Translation done"
++		"PublicDescription": "Last Host Translation done."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "243",
+ 		"EventName": "TX_NC_TABORT",
+ 		"BriefDescription": "Aborted transactions in non-constrained TX mode",
+-		"PublicDescription": "A transaction abort has occurred in a non-constrained transactional-execution mode"
++		"PublicDescription": "A transaction abort has occurred in a non-constrained transactional-execution mode."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "244",
+ 		"EventName": "TX_C_TABORT_NO_SPECIAL",
+ 		"BriefDescription": "Aborted transactions in constrained TX mode not using special completion logic",
+-		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is not using any special logic to allow the transaction to complete"
++		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is not using any special logic to allow the transaction to complete."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "245",
+ 		"EventName": "TX_C_TABORT_SPECIAL",
+ 		"BriefDescription": "Aborted transactions in constrained TX mode using special completion logic",
+-		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is using special logic to allow the transaction to complete"
++		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is using special logic to allow the transaction to complete."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
 -- 
 2.36.1
 
