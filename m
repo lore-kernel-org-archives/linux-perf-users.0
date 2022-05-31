@@ -2,859 +2,301 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F01C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 15:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E5EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 May 2022 18:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237776AbiEaPEp (ORCPT
+        id S244400AbiEaSoQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 May 2022 11:04:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56806 "EHLO
+        Tue, 31 May 2022 14:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345474AbiEaPEo (ORCPT
+        with ESMTP id S236340AbiEaSoO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 May 2022 11:04:44 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5D9986ED
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 08:04:40 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id t6so19110309wra.4
-        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 08:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m1abwaDk+9o88gS41bwHPfT6ZYBdJxdaG+uaRqiKU1A=;
-        b=s4/nWLP5ZmO1DWCrdK8aDKzXlJoxVqKfUTu/es8XsrtjRgUzHJOcESZMnswXdKZwQm
-         t4qucysgQNiNv2dmhGMjjWVEc4fzLr1HQcUd4FXgQNyZmQlDPJWDw4zI51dx4I/FE1SJ
-         JnDRuxzuefJDCCsV4GoRiocyzS5gO6+a0mLyfDAhClugIawBD/wDHtwVr2XicdQH5po3
-         fVAZzo0BQhs5Zr3XIiNjMmfV/YGbArCMYHebJhdSrcY8LOJr/uBaG7ok26+thI81RQT4
-         wC4/nzRoX+AlMIih5dTxfvCz0a9Yhsrsk/5SfXbETH4pywesESO9E9fQdtmLgq194oTj
-         r9XA==
+        Tue, 31 May 2022 14:44:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0ABD7B4E
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 11:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654022652;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ErJHM8tap1ZcL/SnaxNJvSXd4WthGzPsYfd+ht5Uyq4=;
+        b=Ha8WnZDg+HCvKGUEOaT8XNbxSt0r+w6dP4X/VivDW4HZA+NEfZAWs/4D5O7QXA4I8/BFVG
+        vb4AUT2HimbINk4f15oh66xv/uPBSX/Jtp0gkwpRjK/y0pSRrfPdmf09eQhLqm9ceVErEX
+        0szsklg6Q7EQkh9X5YHAAXOg8VDJLUg=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-22-tIBGyUXROVa2KptJbxP3qA-1; Tue, 31 May 2022 14:44:10 -0400
+X-MC-Unique: tIBGyUXROVa2KptJbxP3qA-1
+Received: by mail-qt1-f197.google.com with SMTP id v1-20020a05622a014100b002f93e6b1e8cso12914153qtw.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 31 May 2022 11:44:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m1abwaDk+9o88gS41bwHPfT6ZYBdJxdaG+uaRqiKU1A=;
-        b=fkFmEC/YoxWtsNGS8HfqwKk0AnOkZOLo/JmkOQu5jH7uAwCOKUmQq7l496J8n4qfNR
-         HLcOD/fY2p3s0zOJewLc2tfJMgDzZFDaEUZl5e7pOjFMUUa6Ni6FwzS+CRnZ/EFSeZ2w
-         N40iWXI1kvf/znf8/uQvSrBwOSTXYuQQbTq8MMaYgA/ZxUG38fT+3aX2rFwAdbeqhqnM
-         z/segSsjMqAd5h8E3BC0AfrGvYQ8Msvaqk6TqEd7TBrkUJpMJKiZIixG95J96BlWQSB6
-         6CyqWyWT8slgTvfNCpcaylH3CvgEs5hiwJiCoCahM0OfJM/ePkxiwAgjbOCEhqUOW18L
-         y9KA==
-X-Gm-Message-State: AOAM530GcOsRdvx2XgtkG2RW69+QrvVzJlfynvLJFkO4p0XsImRNjUWe
-        1sWnEd08yWjmVEHYYP6t60CEx1nxut2pMuBZPsFeYw==
-X-Google-Smtp-Source: ABdhPJwVeTxLE5fuqW2M6DGF472HHoJxVR2I+atPXE43AH2Al0ocOZ7Sv2r7mNyL2e6Oy4sgaNpzKcqkjLo875cwGHg=
-X-Received: by 2002:a5d:448d:0:b0:20d:744:7663 with SMTP id
- j13-20020a5d448d000000b0020d07447663mr51010240wrq.654.1654009477871; Tue, 31
- May 2022 08:04:37 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ErJHM8tap1ZcL/SnaxNJvSXd4WthGzPsYfd+ht5Uyq4=;
+        b=n6qMamfUSj+wuYpXRPtZjC9J9Yfkjn0DxU182PnB6uFRxbaoVr2dhYOKeYD7DsX3CH
+         PXlXRmMZFAFtXDz8FsIc5baMgLBZ82ovTosALq545paWYx8S3l+l98Lc59HzDSGQxXzB
+         P11KvYWaFRnUDWu2pOuzysaSZnk7GTxBPhcbAt6A+zu9aqz//yotXHxp0pJH5z/QV+wF
+         FOTi+oxLx3dHUwA8Tcrv8AwUlZVd2l3nvse+r78/BIHrhw4Qa5eGkD/JiJLq6PZ3JVN1
+         hHxi2F2r58wiZrM81LrBVcRqTtqiJNKf6qGvP1DjTlZDmNmqUFkWeWnWdJkDGbS94ZHM
+         IGPg==
+X-Gm-Message-State: AOAM533bEVKO5Ehzh68mtXZFtuBRX9ftR5EFZKAZ/BC6BNXGWHrcWlW9
+        rQmegf6tsKG9xyAuh6EZm3Ubve5LGYqriihcJqagAqaEEbaWY82EHevW+UTtJIW0Ao31luE4226
+        NrKKhdGyOPjOcXC6Z0rNr3texjq9VfQ==
+X-Received: by 2002:a05:6214:238d:b0:461:d89a:e1f3 with SMTP id fw13-20020a056214238d00b00461d89ae1f3mr51710938qvb.118.1654022649782;
+        Tue, 31 May 2022 11:44:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwpDfsnGzgsPeH60rbVEh5JBB+zSG0hZmXkCL57ItNlcHcZoKWqOdk0Fi0pScnxi0iep3yuwA==
+X-Received: by 2002:a05:6214:238d:b0:461:d89a:e1f3 with SMTP id fw13-20020a056214238d00b00461d89ae1f3mr51710898qvb.118.1654022649310;
+        Tue, 31 May 2022 11:44:09 -0700 (PDT)
+Received: from [192.168.1.86] (pool-173-48-131-43.bstnma.fios.verizon.net. [173.48.131.43])
+        by smtp.gmail.com with ESMTPSA id h4-20020ac85144000000b002ffad31c4easm6576935qtn.50.2022.05.31.11.44.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 May 2022 11:44:08 -0700 (PDT)
+Message-ID: <57a826ad-5ceb-ba1d-b80c-452f72720889@redhat.com>
+Date:   Tue, 31 May 2022 14:44:07 -0400
 MIME-Version: 1.0
-References: <20220531092706.1931503-1-tmricht@linux.ibm.com> <20220531092706.1931503-7-tmricht@linux.ibm.com>
-In-Reply-To: <20220531092706.1931503-7-tmricht@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 31 May 2022 08:04:24 -0700
-Message-ID: <CAP-5=fX-gGpVzcvAEgD3xgH4dYdpLbsBcs1R5KKUdjOSXSFvfA@mail.gmail.com>
-Subject: Re: [PATCH 7/7] perf list: Update event description for IBM
- zEC12/zBC12 to latest level
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH v4 00/12] perf c2c: Support display for Arm64
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Alyssa Ross <hi@alyssa.is>,
+        Ian Rogers <irogers@google.com>, Like Xu <likexu@tencent.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        Adam Li <adam.li@amperecomputing.com>,
+        German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220530114036.3225544-1-leo.yan@linaro.org>
+From:   Joe Mario <jmario@redhat.com>
+In-Reply-To: <20220530114036.3225544-1-leo.yan@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 31, 2022 at 2:28 AM Thomas Richter <tmricht@linux.ibm.com> wrot=
-e:
->
-> Update IBM zEC12/zBC12 event counter description to the latest level
-> as described in the documents
-> 1. SA23-2260-07:
->    "The Load-Program-Parameter and the CPU-Measurement Facilities."
->    released on May, 2022
-> for the following counter sets:
->    * Basic counter set
->    * Problem counter set
->    * Crypto counter set
->
-> 2. SA23-2261-07:
->    "The CPU-Measurement Facility Extended Counters Definition
->    for z10, z196/z114, zEC12/zBC12, z13/z13s, z14, z15 and z16"
->    released on April 29, 2022
-> for the following counter sets:
->    * Extended counter set
->    * MT-Diagnostic counter set
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+On 5/30/22 7:40 AM, Leo Yan wrote:
+> Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
+> us to detect cache line contention and transfers.
+> 
+> This patch set is based on Ali Said's patch set v9 "perf: arm-spe: Decode SPE
+> source and use for perf c2c" [1] and Ali's patch set doesn't need any
+> change in this new round.
+> 
+> To clearly show peer loads and express the local peer loads and remote
+> peer lodes, this patch introduces three new metrics 'lcl_peer',
+> 'rmt_peer' and 'tot_peer'.  The display 'peer' mode uses metric
+> 'tot_peer' for sorting cache lines.
+> 
+> Patches 01-05 adds statistics for memory samples, and add dimensions for
+> peer metrics.
+> 
+> Patches 06-09 are for refactoring, it refines the code with more general
+> naming so this can allow us to easier to extend display modes but not
+> strictly bound to HITM tags.
+> 
+> Patches 10-11 are to extend display 'peer' mode, and also changes to use
+> 'peer' mode as default mode for Arm64 arches.
+> 
+> Patch 12 updates document to describe the new dimensions for peer
+> metrics.
+> 
+> This patch set has been verified for both x86 and Arm64 memory samples.
+> 
+> Known issues:  Joe reminded there have an issue in patch set v3 that the
+> cache line metric shows 'N/A' for node, this is because Arm SPE trace
+> data doesn't contain physical address and leads to perf c2c tool fails
+> to find matched node range if physical address is zero.  This issue is
+> addressed in a separte patch [2].  Since I am still using the old
+> perf data file (I have no Neoverse platforms), the output result still
+> shows the Node field is 'N/A'.
+> 
 
-> ---
->  .../pmu-events/arch/s390/cf_zec12/basic.json  | 48 +++++++-------
->  .../pmu-events/arch/s390/cf_zec12/crypto.json | 64 +++++++++---------
->  .../arch/s390/cf_zec12/extended.json          | 66 +++++++++----------
->  3 files changed, 89 insertions(+), 89 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_zec12/basic.json b/tools/=
-perf/pmu-events/arch/s390/cf_zec12/basic.json
-> index 783de7f1aeaa..9bd20a5f47af 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_zec12/basic.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_zec12/basic.json
-> @@ -3,84 +3,84 @@
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "0",
->                 "EventName": "CPU_CYCLES",
-> -               "BriefDescription": "CPU Cycles",
-> -               "PublicDescription": "Cycle Count"
-> +               "BriefDescription": "Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles, excluding the number of cycles while the CPU is in the wai=
-t state."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "1",
->                 "EventName": "INSTRUCTIONS",
-> -               "BriefDescription": "Instructions",
-> -               "PublicDescription": "Instruction Count"
-> +               "BriefDescription": "Instruction Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of instructions executed by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "2",
->                 "EventName": "L1I_DIR_WRITES",
-> -               "BriefDescription": "L1I Directory Writes",
-> -               "PublicDescription": "Level-1 I-Cache Directory Write Cou=
-nt"
-> +               "BriefDescription": "Level-1 I-Cache Directory Write Coun=
-t",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of level-1 instruction-cache or unified-cache directory writes."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "3",
->                 "EventName": "L1I_PENALTY_CYCLES",
-> -               "BriefDescription": "L1I Penalty Cycles",
-> -               "PublicDescription": "Level-1 I-Cache Penalty Cycle Count=
-"
-> +               "BriefDescription": "Level-1 I-Cache Penalty Cycle Count"=
-,
-> +               "PublicDescription": "This counter counts the total numbe=
-r of cache penalty cycles for level-1 instruction cache or unified cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "4",
->                 "EventName": "L1D_DIR_WRITES",
-> -               "BriefDescription": "L1D Directory Writes",
-> -               "PublicDescription": "Level-1 D-Cache Directory Write Cou=
-nt"
-> +               "BriefDescription": "Level-1 D-Cache Directory Write Coun=
-t",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of level-1 data-cache directory writes."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "5",
->                 "EventName": "L1D_PENALTY_CYCLES",
-> -               "BriefDescription": "L1D Penalty Cycles",
-> -               "PublicDescription": "Level-1 D-Cache Penalty Cycle Count=
-"
-> +               "BriefDescription": "Level-1 D-Cache Penalty Cycle Count"=
-,
-> +               "PublicDescription": "This counter counts the total numbe=
-r of cache penalty cycles for level-1 data cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "32",
->                 "EventName": "PROBLEM_STATE_CPU_CYCLES",
-> -               "BriefDescription": "Problem-State CPU Cycles",
-> -               "PublicDescription": "Problem-State Cycle Count"
-> +               "BriefDescription": "Problem-State Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles when the CPU is in the problem state, excluding the number =
-of cycles while the CPU is in the wait state."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "33",
->                 "EventName": "PROBLEM_STATE_INSTRUCTIONS",
-> -               "BriefDescription": "Problem-State Instructions",
-> -               "PublicDescription": "Problem-State Instruction Count"
-> +               "BriefDescription": "Problem-State Instruction Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of instructions executed by the CPU while in the problem state."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "34",
->                 "EventName": "PROBLEM_STATE_L1I_DIR_WRITES",
-> -               "BriefDescription": "Problem-State L1I Directory Writes",
-> -               "PublicDescription": "Problem-State Level-1 I-Cache Direc=
-tory Write Count"
-> +               "BriefDescription": "Problem-State Level-1 I-Cache Direct=
-ory Write Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of level-1 instruction-cache or unified-cache directory writes while the =
-CPU is in the problem state."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "35",
->                 "EventName": "PROBLEM_STATE_L1I_PENALTY_CYCLES",
-> -               "BriefDescription": "Problem-State L1I Penalty Cycles",
-> -               "PublicDescription": "Problem-State Level-1 I-Cache Penal=
-ty Cycle Count"
-> +               "BriefDescription": "Level-1 I-Cache Penalty Cycle Count"=
-,
-> +               "PublicDescription": "This counter counts the total numbe=
-r of penalty cycles for level-1 instruction cache or unified cache while th=
-e CPU is in the problem state."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "36",
->                 "EventName": "PROBLEM_STATE_L1D_DIR_WRITES",
-> -               "BriefDescription": "Problem-State L1D Directory Writes",
-> -               "PublicDescription": "Problem-State Level-1 D-Cache Direc=
-tory Write Count"
-> +               "BriefDescription": "Problem-State Level-1 D-Cache Direct=
-ory Write Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of level-1 data-cache directory writes while the CPU is in the problem st=
-ate."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "37",
->                 "EventName": "PROBLEM_STATE_L1D_PENALTY_CYCLES",
-> -               "BriefDescription": "Problem-State L1D Penalty Cycles",
-> -               "PublicDescription": "Problem-State Level-1 D-Cache Penal=
-ty Cycle Count"
-> +               "BriefDescription": "Problem-State Level-1 D-Cache Penalt=
-y Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of penalty cycles for level-1 data cache while the CPU is in the problem =
-state."
->         }
->  ]
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_zec12/crypto.json b/tools=
-/perf/pmu-events/arch/s390/cf_zec12/crypto.json
-> index 3f28007d3892..a8d391ddeb8c 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_zec12/crypto.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_zec12/crypto.json
-> @@ -3,112 +3,112 @@
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "64",
->                 "EventName": "PRNG_FUNCTIONS",
-> -               "BriefDescription": "PRNG Functions",
-> -               "PublicDescription": "Total number of the PRNG functions =
-issued by the CPU"
-> +               "BriefDescription": "PRNG Function Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of the pseudorandom-number-generation functions issued by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "65",
->                 "EventName": "PRNG_CYCLES",
-> -               "BriefDescription": "PRNG Cycles",
-> -               "PublicDescription": "Total number of CPU cycles when the=
- DEA/AES coprocessor is busy performing PRNG functions issued by the CPU"
-> +               "BriefDescription": "PRNG Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles when the DEA/AES/SHA coprocessor is busy performing the pse=
-udorandom- number-generation functions issued by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "66",
->                 "EventName": "PRNG_BLOCKED_FUNCTIONS",
-> -               "BriefDescription": "PRNG Blocked Functions",
-> -               "PublicDescription": "Total number of the PRNG functions =
-that are issued by the CPU and are blocked because the DEA/AES coprocessor =
-is busy performing a function issued by another CPU"
-> +               "BriefDescription": "PRNG Blocked Function Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of the pseudorandom-number-generation functions that are issued by the CP=
-U and are blocked because the DEA/AES/SHA coprocessor is busy performing a =
-function issued by another CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "67",
->                 "EventName": "PRNG_BLOCKED_CYCLES",
-> -               "BriefDescription": "PRNG Blocked Cycles",
-> -               "PublicDescription": "Total number of CPU cycles blocked =
-for the PRNG functions issued by the CPU because the DEA/AES coprocessor is=
- busy performing a function issued by another CPU"
-> +               "BriefDescription": "PRNG Blocked Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles blocked for the pseudorandom-number-generation functions is=
-sued by the CPU because the DEA/AES/SHA coprocessor is busy performing a fu=
-nction issued by another CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "68",
->                 "EventName": "SHA_FUNCTIONS",
-> -               "BriefDescription": "SHA Functions",
-> -               "PublicDescription": "Total number of SHA functions issue=
-d by the CPU"
-> +               "BriefDescription": "SHA Function Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of the SHA functions issued by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "69",
->                 "EventName": "SHA_CYCLES",
-> -               "BriefDescription": "SHA Cycles",
-> -               "PublicDescription": "Total number of CPU cycles when the=
- SHA coprocessor is busy performing the SHA functions issued by the CPU"
-> +               "BriefDescription": "SHA Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles when the SHA coprocessor is busy performing the SHA functio=
-ns issued by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "70",
->                 "EventName": "SHA_BLOCKED_FUNCTIONS",
-> -               "BriefDescription": "SHA Blocked Functions",
-> -               "PublicDescription": "Total number of the SHA functions t=
-hat are issued by the CPU and are blocked because the SHA coprocessor is bu=
-sy performing a function issued by another CPU"
-> +               "BriefDescription": "SHA Blocked Function Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of the SHA functions that are issued by the CPU and are blocked because t=
-he SHA coprocessor is busy performing a function issued by another CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "71",
->                 "EventName": "SHA_BLOCKED_CYCLES",
-> -               "BriefDescription": "SHA Bloced Cycles",
-> -               "PublicDescription": "Total number of CPU cycles blocked =
-for the SHA functions issued by the CPU because the SHA coprocessor is busy=
- performing a function issued by another CPU"
-> +               "BriefDescription": "SHA Blocked Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles blocked for the SHA functions issued by the CPU because the=
- SHA coprocessor is busy performing a function issued by another CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "72",
->                 "EventName": "DEA_FUNCTIONS",
-> -               "BriefDescription": "DEA Functions",
-> -               "PublicDescription": "Total number of the DEA functions i=
-ssued by the CPU"
-> +               "BriefDescription": "DEA Function Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of the DEA functions issued by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "73",
->                 "EventName": "DEA_CYCLES",
-> -               "BriefDescription": "DEA Cycles",
-> -               "PublicDescription": "Total number of CPU cycles when the=
- DEA/AES coprocessor is busy performing the DEA functions issued by the CPU=
-"
-> +               "BriefDescription": "DEA Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles when the DEA/AES coprocessor is busy performing the DEA fun=
-ctions issued by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "74",
->                 "EventName": "DEA_BLOCKED_FUNCTIONS",
-> -               "BriefDescription": "DEA Blocked Functions",
-> -               "PublicDescription": "Total number of the DEA functions t=
-hat are issued by the CPU and are blocked because the DEA/AES coprocessor i=
-s busy performing a function issued by another CPU"
-> +               "BriefDescription": "DEA Blocked Function Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of the DEA functions that are issued by the CPU and are blocked because t=
-he DEA/AES coprocessor is busy performing a function issued by another CPU.=
-"
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "75",
->                 "EventName": "DEA_BLOCKED_CYCLES",
-> -               "BriefDescription": "DEA Blocked Cycles",
-> -               "PublicDescription": "Total number of CPU cycles blocked =
-for the DEA functions issued by the CPU because the DEA/AES coprocessor is =
-busy performing a function issued by another CPU"
-> +               "BriefDescription": "DEA Blocked Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles blocked for the DEA functions issued by the CPU because the=
- DEA/AES coprocessor is busy performing a function issued by another CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "76",
->                 "EventName": "AES_FUNCTIONS",
-> -               "BriefDescription": "AES Functions",
-> -               "PublicDescription": "Total number of AES functions issue=
-d by the CPU"
-> +               "BriefDescription": "AES Function Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of the AES functions issued by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "77",
->                 "EventName": "AES_CYCLES",
-> -               "BriefDescription": "AES Cycles",
-> -               "PublicDescription": "Total number of CPU cycles when the=
- DEA/AES coprocessor is busy performing the AES functions issued by the CPU=
-"
-> +               "BriefDescription": "AES Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles when the DEA/AES coprocessor is busy performing the AES fun=
-ctions issued by the CPU."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "78",
->                 "EventName": "AES_BLOCKED_FUNCTIONS",
-> -               "BriefDescription": "AES Blocked Functions",
-> -               "PublicDescription": "Total number of AES functions that =
-are issued by the CPU and are blocked because the DEA/AES coprocessor is bu=
-sy performing a function issued by another CPU"
-> +               "BriefDescription": "AES Blocked Function Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of the AES functions that are issued by the CPU and are blocked because t=
-he DEA/AES coprocessor is busy performing a function issued by another CPU.=
-"
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "79",
->                 "EventName": "AES_BLOCKED_CYCLES",
-> -               "BriefDescription": "AES Blocked Cycles",
-> -               "PublicDescription": "Total number of CPU cycles blocked =
-for the AES functions issued by the CPU because the DEA/AES coprocessor is =
-busy performing a function issued by another CPU"
-> +               "BriefDescription": "AES Blocked Cycle Count",
-> +               "PublicDescription": "This counter counts the total numbe=
-r of CPU cycles blocked for the AES functions issued by the CPU because the=
- DEA/AES coprocessor is busy performing a function issued by another CPU."
->         }
->  ]
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_zec12/extended.json b/too=
-ls/perf/pmu-events/arch/s390/cf_zec12/extended.json
-> index f40cbed89418..9e765581382b 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_zec12/extended.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_zec12/extended.json
-> @@ -18,230 +18,230 @@
->                 "EventCode": "130",
->                 "EventName": "L1D_L2I_SOURCED_WRITES",
->                 "BriefDescription": "L1D L2I Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from the Level=
--2 Instruction cache"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from the Level=
--2 Instruction cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "131",
->                 "EventName": "L1I_L2I_SOURCED_WRITES",
->                 "BriefDescription": "L1I L2I Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from th=
-e Level-2 Instruction cache"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from th=
-e Level-2 Instruction cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "132",
->                 "EventName": "L1D_L2D_SOURCED_WRITES",
->                 "BriefDescription": "L1D L2D Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from the Level=
--2 Data cache"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from the Level=
--2 Data cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "133",
->                 "EventName": "DTLB1_WRITES",
->                 "BriefDescription": "DTLB1 Writes",
-> -               "PublicDescription": "A translation entry has been writte=
-n to the Level-1 Data Translation Lookaside Buffer"
-> +               "PublicDescription": "A translation entry has been writte=
-n to the Level-1 Data Translation Lookaside Buffer (DTLB1)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "135",
->                 "EventName": "L1D_LMEM_SOURCED_WRITES",
->                 "BriefDescription": "L1D Local Memory Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache where the installed cache line was sourced from memory that is att=
-ached to the same book as the Data cache (Local Memory)"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache where the installed cache line was sourced from memory that is att=
-ached to the same book as the Data cache (Local Memory)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "137",
->                 "EventName": "L1I_LMEM_SOURCED_WRITES",
->                 "BriefDescription": "L1I Local Memory Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache where the installed cache line was sourced from memory that=
- is attached to the same book as the Instruction cache (Local Memory)"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache where the installed cache line was sourced from memory that=
- is attached to the same book as the Instruction cache (Local Memory)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "138",
->                 "EventName": "L1D_RO_EXCL_WRITES",
->                 "BriefDescription": "L1D Read-only Exclusive Writes",
-> -               "PublicDescription": "A directory write to the Level-1 D-=
-Cache where the line was originally in a Read-Only state in the cache but h=
-as been updated to be in the Exclusive state that allows stores to the cach=
-e line"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta Cache where the line was originally in a Read-Only state in the cache bu=
-t has been updated to be in the Exclusive state that allows stores to the c=
-ache line."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "139",
->                 "EventName": "DTLB1_HPAGE_WRITES",
->                 "BriefDescription": "DTLB1 One-Megabyte Page Writes",
-> -               "PublicDescription": "A translation entry has been writte=
-n to the Level-1 Data Translation Lookaside Buffer for a one-megabyte page"
-> +               "PublicDescription": "A translation entry has been writte=
-n to the Level-1 Data Translation Lookaside Buffer for a one-megabyte page.=
-"
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "140",
->                 "EventName": "ITLB1_WRITES",
->                 "BriefDescription": "ITLB1 Writes",
-> -               "PublicDescription": "A translation entry has been writte=
-n to the Level-1 Instruction Translation Lookaside Buffer"
-> +               "PublicDescription": "A translation entry has been writte=
-n to the Level-1 Instruction Translation Lookaside Buffer (ITLB1)."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "141",
->                 "EventName": "TLB2_PTE_WRITES",
->                 "BriefDescription": "TLB2 PTE Writes",
-> -               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Page Table Entry arrays"
-> +               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Page Table Entry arrays."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "142",
->                 "EventName": "TLB2_CRSTE_HPAGE_WRITES",
->                 "BriefDescription": "TLB2 CRSTE One-Megabyte Page Writes"=
-,
-> -               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Common Region Segment Table Entry arrays for a one-meg=
-abyte large page translation"
-> +               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Common Region Segment Table Entry arrays for a one-meg=
-abyte large page translation."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "143",
->                 "EventName": "TLB2_CRSTE_WRITES",
->                 "BriefDescription": "TLB2 CRSTE Writes",
-> -               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Common Region Segment Table Entry arrays"
-> +               "PublicDescription": "A translation entry has been writte=
-n to the Level-2 TLB Common Region Segment Table Entry arrays."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "144",
->                 "EventName": "L1D_ONCHIP_L3_SOURCED_WRITES",
->                 "BriefDescription": "L1D On-Chip L3 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an On Chi=
-p Level-3 cache without intervention"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an On Chi=
-p Level-3 cache without intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "145",
->                 "EventName": "L1D_OFFCHIP_L3_SOURCED_WRITES",
->                 "BriefDescription": "L1D Off-Chip L3 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Ch=
-ip/On Book Level-3 cache without intervention"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Ch=
-ip/On Book Level-3 cache without intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "146",
->                 "EventName": "L1D_OFFBOOK_L3_SOURCED_WRITES",
->                 "BriefDescription": "L1D Off-Book L3 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Bo=
-ok Level-3 cache without intervention"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Bo=
-ok Level-3 cache without intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "147",
->                 "EventName": "L1D_ONBOOK_L4_SOURCED_WRITES",
->                 "BriefDescription": "L1D On-Book L4 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an On Boo=
-k Level-4 cache"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an On Boo=
-k Level-4 cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "148",
->                 "EventName": "L1D_OFFBOOK_L4_SOURCED_WRITES",
->                 "BriefDescription": "L1D Off-Book L4 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Bo=
-ok Level-4 cache"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Bo=
-ok Level-4 cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "149",
->                 "EventName": "TX_NC_TEND",
->                 "BriefDescription": "Completed TEND instructions in non-c=
-onstrained TX mode",
-> -               "PublicDescription": "A TEND instruction has completed in=
- a nonconstrained transactional-execution mode"
-> +               "PublicDescription": "A TEND instruction has completed in=
- a nonconstrained transactional-execution mode."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "150",
->                 "EventName": "L1D_ONCHIP_L3_SOURCED_WRITES_IV",
->                 "BriefDescription": "L1D On-Chip L3 Sourced Writes with I=
-ntervention",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from a On Chip=
- Level-3 cache with intervention"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from a On Chip=
- Level-3 cache with intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "151",
->                 "EventName": "L1D_OFFCHIP_L3_SOURCED_WRITES_IV",
->                 "BriefDescription": "L1D Off-Chip L3 Sourced Writes with =
-Intervention",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Ch=
-ip/On Book Level-3 cache with intervention"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Ch=
-ip/On Book Level-3 cache with intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "152",
->                 "EventName": "L1D_OFFBOOK_L3_SOURCED_WRITES_IV",
->                 "BriefDescription": "L1D Off-Book L3 Sourced Writes with =
-Intervention",
-> -               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Bo=
-ok Level-3 cache with intervention"
-> +               "PublicDescription": "A directory write to the Level-1 Da=
-ta cache directory where the returned cache line was sourced from an Off Bo=
-ok Level-3 cache with intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "153",
->                 "EventName": "L1I_ONCHIP_L3_SOURCED_WRITES",
->                 "BriefDescription": "L1I On-Chip L3 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- On Chip Level-3 cache without intervention"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- On Chip Level-3 cache without intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "154",
->                 "EventName": "L1I_OFFCHIP_L3_SOURCED_WRITES",
->                 "BriefDescription": "L1I Off-Chip L3 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Chip/On Book Level-3 cache without intervention"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Chip/On Book Level-3 cache without intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "155",
->                 "EventName": "L1I_OFFBOOK_L3_SOURCED_WRITES",
->                 "BriefDescription": "L1I Off-Book L3 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Book Level-3 cache without intervention"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Book Level-3 cache without intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "156",
->                 "EventName": "L1I_ONBOOK_L4_SOURCED_WRITES",
->                 "BriefDescription": "L1I On-Book L4 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- On Book Level-4 cache"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- On Book Level-4 cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "157",
->                 "EventName": "L1I_OFFBOOK_L4_SOURCED_WRITES",
->                 "BriefDescription": "L1I Off-Book L4 Sourced Writes",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Book Level-4 cache"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Book Level-4 cache."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "158",
->                 "EventName": "TX_C_TEND",
->                 "BriefDescription": "Completed TEND instructions in const=
-rained TX mode",
-> -               "PublicDescription": "A TEND instruction has completed in=
- a constrained transactional-execution mode"
-> +               "PublicDescription": "A TEND instruction has completed in=
- a constrained transactional-execution mode."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "159",
->                 "EventName": "L1I_ONCHIP_L3_SOURCED_WRITES_IV",
->                 "BriefDescription": "L1I On-Chip L3 Sourced Writes with I=
-ntervention",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- On Chip Level-3 cache with intervention"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- On Chip Level-3 cache with intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "160",
->                 "EventName": "L1I_OFFCHIP_L3_SOURCED_WRITES_IV",
->                 "BriefDescription": "L1I Off-Chip L3 Sourced Writes with =
-Intervention",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Chip/On Book Level-3 cache with intervention"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Chip/On Book Level-3 cache with intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "161",
->                 "EventName": "L1I_OFFBOOK_L3_SOURCED_WRITES_IV",
->                 "BriefDescription": "L1I Off-Book L3 Sourced Writes with =
-Intervention",
-> -               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Book Level-3 cache with intervention"
-> +               "PublicDescription": "A directory write to the Level-1 In=
-struction cache directory where the returned cache line was sourced from an=
- Off Book Level-3 cache with intervention."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "177",
->                 "EventName": "TX_NC_TABORT",
->                 "BriefDescription": "Aborted transactions in non-constrai=
-ned TX mode",
-> -               "PublicDescription": "A transaction abort has occurred in=
- a nonconstrained transactional-execution mode"
-> +               "PublicDescription": "A transaction abort has occurred in=
- a nonconstrained transactional-execution mode."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "178",
->                 "EventName": "TX_C_TABORT_NO_SPECIAL",
->                 "BriefDescription": "Aborted transactions in constrained =
-TX mode not using special completion logic",
-> -               "PublicDescription": "A transaction abort has occurred in=
- a constrained transactional-execution mode and the CPU is not using any sp=
-ecial logic to allow the transaction to complete"
-> +               "PublicDescription": "A transaction abort has occurred in=
- a constrained transactional-execution mode and the CPU is not using any sp=
-ecial logic to allow the transaction to complete."
->         },
->         {
->                 "Unit": "CPU-M-CF",
->                 "EventCode": "179",
->                 "EventName": "TX_C_TABORT_SPECIAL",
->                 "BriefDescription": "Aborted transactions in constrained =
-TX mode using special completion logic",
-> -               "PublicDescription": "A transaction abort has occurred in=
- a constrained transactional-execution mode and the CPU is using special lo=
-gic to allow the transaction to complete"
-> +               "PublicDescription": "A transaction abort has occurred in=
- a constrained transactional-execution mode and the CPU is using special lo=
-gic to allow the transaction to complete."
->         }
->  ]
-> --
-> 2.36.1
->
+Hi Leo:
+I built a new perf with your patches and ran it on a 2-numa node Neoverse platform.
+I then ran my simple test that creates reader and writer threads to tug on the same cacheline.
+The c2c output is appended below.
+
+The output looks good, especially where you've broken out the (average) cycles for local and remote peer loads.  
+And I'm glad to see you fixed the "Node" column.  I use that a lot to help detect remote node accesses.  
+And the "PA cnt" field is working as well,  which is important to see if numa_balance is moving the data around.
+
+=================================================
+           Shared Data Cache Line Table
+=================================================
+#
+#        ----------- Cacheline ----------     Peer  ------- Load Peer -------    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
+# Index             Address  Node  PA cnt    Snoop    Total    Local   Remote  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
+# .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
+#
+      0            0x422140     0    6904   74.86%      137      131        6   148008   144970     3038        0        0     3038        0   144833      120        11        0         6        0         0         0
+      1  0xffffd976e63ae5c0     1       6    3.83%        7        7        0       15       15        0        0        0        0        0        8        4         3        0         0        0         0         0
+      2  0xffff07ffbf290980     0       5    2.19%        4        2        2       14       14        0        0        0        0        0       10        1         1        0         2        0         0         0
+      3  0xffffd976e57275c0     1       1    0.55%        1        1        0        1        1        0        0        0        0        0        0        1         0        0         0        0         0         0
+      4  0xffffd976e6071c00     1       3    0.55%        1        0        1        4        4        0        0        0        0        0        3        0         0        0         1        0         0         0
+     [snip]
+=================================================
+      Shared Cache Line Distribution Pareto
+=================================================
+#
+#        -- Peer Snoop --  ------- Store Refs ------  --------- Data address ---------                      ---------- cycles ----------    Total       cpu                               Shared
+#   Num      Rmt      Lcl   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt peer  lcl peer      load  records       cnt                      Symbol   Object                Source:Line  Node
+# .....  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  .......  ........  ..........................  .......  .........................  ....
+#
+  ----------------------------------------------------------------------
+      0        6      131        0        0     3038            0x422140
+  ----------------------------------------------------------------------
+           0.00%    0.00%    0.00%    0.00%   52.60%                 0x8     0       1            0x400e6c         0         0         0     1598         4  [.] writer                  tugtest  tugtest.c:152               0 1
+           0.00%    0.00%    0.00%    0.00%   47.40%                0x10     0       1            0x400e7c         0         0         0     1440         4  [.] writer                  tugtest  tugtest.c:153               0 1
+          33.33%   75.57%    0.00%    0.00%    0.00%                0x20     0       1            0x401018      4095      3803      3419      409         4  [.] reader                  tugtest  tugtest.c:187               0 1
+          66.67%   24.43%    0.00%    0.00%    0.00%                0x28     0       1            0x401034      4095      3470      3643      413         4  [.] reader                  tugtest  tugtest.c:187               0 1
+
+  ----------------------------------------------------------------------
+      1        0        7        0        0        0  0xffffd976e63ae5c0
+  ----------------------------------------------------------------------
+           0.00%   57.14%    0.00%    0.00%    0.00%                 0x0     1       1  0xffffd976e4815fbc         0      1333         0        4         2  [k] ktime_get                   [kernel.kallsyms]  seqlock.h:276          1                   
+           0.00%   14.29%    0.00%    0.00%    0.00%                 0x0     1       1  0xffffd976e4816d10         0       266       794        4         3  [k] ktime_get_update_offsets_n  [kernel.kallsyms]  seqlock.h:276        0 1
+           0.00%   28.57%    0.00%    0.00%    0.00%                0x30     1       1  0xffffd976e4816d20         0        87       150        4         3  [k] ktime_get_update_offsets_n  [kernel.kallsyms]  timekeeping.c:2298   0 1
+  
+  ----------------------------------------------------------------------     
+      2        2        2        0        0        0  0xffff07ffbf290980
+  ----------------------------------------------------------------------
+          50.00%  100.00%    0.00%    0.00%    0.00%                 0x4     0       1  0xffffd976e47d2bdc      1217      1600      1147        4         3  [k] queued_spin_lock_slowpath  [kernel.kallsyms]  qspinlock.c:511    0 1
+          50.00%    0.00%    0.00%    0.00%    0.00%                 0x4     0       1  0xffffd976e47d2a2c      4033         0         0        1         1  [k] queued_spin_lock_slowpath  [kernel.kallsyms]  qspinlock.c:382    0 1
+  
+  ----------------------------------------------------------------------     
+
+Thanks for doing this.  It looks good.
+I'll assume someone else is reviewing your code changes.
+
+Joe
+
+> Another thing is we need to enhance data source setting for old Arm
+> platforms.  As discussed, German would follow up this task later.
+> 
+> The latest patch set has been uploaded on the git server [3].
+> 
+> The display result with x86 memory samples:
+> 
+>   =================================================
+>              Shared Data Cache Line Table          
+>   =================================================
+>   #
+>   #        ----------- Cacheline ----------      Tot  ------- Load Hitm -------    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
+>   # Index             Address  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
+>   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
+>   #
+>         0      0x55c8971f0080     0    1967   66.14%      252      252        0     6044     3550     2494     2024      470        0      528     2672       78        20      252         0        0         0         0
+>         1      0x55c8971f00c0     0       1   33.86%      129      129        0      914      914        0        0        0        0      272      374       52        87      129         0        0         0         0
+> 
+>   =================================================
+>         Shared Cache Line Distribution Pareto      
+>   =================================================
+>   #
+>   #        ----- HITM -----  ------- Store Refs ------  --------- Data address ---------                      ---------- cycles ----------    Total       cpu                                     Shared                               
+>   #   Num  RmtHitm  LclHitm   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt hitm  lcl hitm      load  records       cnt                  Symbol             Object              Source:Line  Node
+>   # .....  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  .......  ........  ......................  .................  .......................  ....
+>   #
+>     ----------------------------------------------------------------------
+>         0        0      252     2024      470        0      0x55c8971f0080
+>     ----------------------------------------------------------------------
+>              0.00%   12.30%    0.00%    0.00%    0.00%                 0x0     0       1      0x55c8971ed3e9         0      1313       863     1222         3  [.] 0x00000000000013e9  false_sharing.exe  false_sharing.exe[13e9]   0
+>              0.00%    0.79%   90.51%    0.00%    0.00%                 0x0     0       1      0x55c8971ed3e2         0      1800       878     3029         3  [.] 0x00000000000013e2  false_sharing.exe  false_sharing.exe[13e2]   0
+>              0.00%    0.00%    9.49%  100.00%    0.00%                 0x0     0       1      0x55c8971ed3f4         0         0         0      662         3  [.] 0x00000000000013f4  false_sharing.exe  false_sharing.exe[13f4]   0
+>              0.00%   86.90%    0.00%    0.00%    0.00%                0x20     0       1      0x55c8971ed447         0       141       103     1131         2  [.] 0x0000000000001447  false_sharing.exe  false_sharing.exe[1447]   0
+> 
+>     ----------------------------------------------------------------------
+>         1        0      129        0        0        0      0x55c8971f00c0
+>     ----------------------------------------------------------------------
+>              0.00%  100.00%    0.00%    0.00%    0.00%                0x20     0       1      0x55c8971ed455         0        88        94      914         2  [.] 0x0000000000001455  false_sharing.exe  false_sharing.exe[1455]   0
+> 
+> 
+> The display result with Arm SPE:
+> 
+>   =================================================
+>              Shared Data Cache Line Table          
+>   =================================================
+>   #
+>   #        ----------- Cacheline ----------     Peer  ------- Load Peer -------    Total    Total    Total  --------- Stores --------  ----- Core Load Hit -----  - LLC Load Hit --  - RMT Load Hit --  --- Load Dram ----
+>   # Index             Address  Node  PA cnt    Snoop    Total    Local   Remote  records    Loads   Stores    L1Hit   L1Miss      N/A       FB       L1       L2    LclHit  LclHitm    RmtHit  RmtHitm       Lcl       Rmt
+>   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  .......  ........  .......  ........  .......  ........  ........
+>   #
+>         0      0xaaaac17d6000   N/A       0  100.00%       99       99        0    18851    18851        0        0        0        0        0    18752        0        99        0         0        0         0         0
+> 
+>   =================================================
+>         Shared Cache Line Distribution Pareto      
+>   =================================================
+>   #
+>   #        -- Peer Snoop --  ------- Store Refs ------  --------- Data address ---------                      ---------- cycles ----------    Total       cpu                                    Shared                       
+>   #   Num      Rmt      Lcl   L1 Hit  L1 Miss      N/A              Offset  Node  PA cnt        Code address  rmt peer  lcl peer      load  records       cnt                  Symbol            Object      Source:Line  Node{cpus %peers %stores}
+>   # .....  .......  .......  .......  .......  .......  ..................  ....  ......  ..................  ........  ........  ........  .......  ........  ......................  ................  ...............  ....
+>   #
+>     ----------------------------------------------------------------------
+>         0        0       99        0        0        0      0xaaaac17d6000
+>     ----------------------------------------------------------------------
+>              0.00%    6.06%    0.00%    0.00%    0.00%                0x20   N/A       0      0xaaaac17c25ac         0       375        43    18469         2  [.] 0x00000000000025ac  memstress         memstress[25ac]   0{ 2 100.0%    n/a}
+>              0.00%   93.94%    0.00%    0.00%    0.00%                0x29   N/A       0      0xaaaac17c3e88         0       180       173      135         2  [.] 0x0000000000003e88  memstress         memstress[3e88]   0{ 2 100.0%    n/a}
+> 
+> 
+> Changes from v3:
+> * Changed to display remote and local peer accesses (Joe);
+> * Fixed the usage info for display types (Joe);
+> * Do not display HITM dimensions when use 'peer' display, and HITM
+>   display doesn't show any 'peer' dimensions (James);
+> * Split to smaller patches for adding dimensions of peer operations;
+> * Updated documentation to reflect the latest GUI and stdio.
+> 
+> Changes from v2:
+> * Updated patch 04 to account metrics for both cache level and ld_peer
+>   for PEER flag;
+> * Updated document for metric 'rmt_hit' which is accounted for all
+>   remote accesses (include remote DRAM and any upward caches).
+> 
+> Changes from v1:
+> * Updated patches 01, 02 and 03 to support 'N/A' metrics for store
+>   operations, so can align with the patch set [1] for store samples.
+> 
+> 
+> [1] https://lore.kernel.org/lkml/20220517020326.18580-1-alisaidi@amazon.com/
+> [2] https://lore.kernel.org/lkml/20220530083645.253432-1-leo.yan@linaro.org/
+> [3] https://git.linaro.org/people/leo.yan/linux-spe.git/ branch: perf_c2c_arm_spe_peer_v4
+> 
+> 
+> Leo Yan (12):
+>   perf mem: Add statistics for peer snooping
+>   perf c2c: Output statistics for peer snooping
+>   perf c2c: Add dimensions for peer load operations
+>   perf c2c: Add dimensions of peer metrics for cache line view
+>   perf c2c: Add mean dimensions for peer operations
+>   perf c2c: Use explicit names for display macros
+>   perf c2c: Rename dimension from 'percent_hitm' to
+>     'percent_costly_snoop'
+>   perf c2c: Refactor node header
+>   perf c2c: Refactor display string
+>   perf c2c: Sort on peer snooping for load operations
+>   perf c2c: Use 'peer' as default display for Arm64
+>   perf c2c: Update documentation for new display option 'peer'
+> 
+>  tools/perf/Documentation/perf-c2c.txt |  30 +-
+>  tools/perf/builtin-c2c.c              | 454 ++++++++++++++++++++------
+>  tools/perf/util/mem-events.c          |  28 +-
+>  tools/perf/util/mem-events.h          |   3 +
+>  4 files changed, 403 insertions(+), 112 deletions(-)
+> 
+
