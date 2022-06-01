@@ -2,354 +2,193 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA55C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 06:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172BCC4321E
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 09:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350074AbiFAG66 (ORCPT
+        id S1351264AbiFAJf7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Jun 2022 02:58:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43166 "EHLO
+        Wed, 1 Jun 2022 05:35:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350068AbiFAG64 (ORCPT
+        with ESMTP id S1351218AbiFAJfX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Jun 2022 02:58:56 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E08F2BB1F;
-        Tue, 31 May 2022 23:58:55 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id nn3-20020a17090b38c300b001e0e091cf03so3212767pjb.1;
-        Tue, 31 May 2022 23:58:55 -0700 (PDT)
+        Wed, 1 Jun 2022 05:35:23 -0400
+Received: from mail-ej1-x64a.google.com (mail-ej1-x64a.google.com [IPv6:2a00:1450:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCA58FD5F
+        for <linux-perf-users@vger.kernel.org>; Wed,  1 Jun 2022 02:35:21 -0700 (PDT)
+Received: by mail-ej1-x64a.google.com with SMTP id ks1-20020a170906f84100b006fee53b22c2so655332ejb.10
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2022 02:35:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1KjHGRCb/gwEYrdUgbK9V5JpdX1zhq09kZ/uUwYFWDo=;
-        b=e4rZEv+qVKlgVHLRHoVI0W2nN2xwzY9sq++plrmNvKGX2bzSmIrY2RFs5hJmIyummw
-         xDb6XjGhYkphZdO7VfbR1hlfRVQgcjrUSLJbiRrmFgwv2JdVZFfGhkSAMMFVcl6K7NVy
-         UngelsP1WPInrx/Jt1iQo7oGupnWOawqo48UFw7A0wkHbQ+IqVP7Y3KPPw0bX/p1Fbu1
-         IJmXRuUWrukog8E6+EU5HnoNsUlRJELl7NPVqRQ9qGwegkWSB3Pk9Yk4HsmLNfTf0nXb
-         /11iTDoypwMGZOIGsOBI2x+hP1SF2817mZv8Sdf0f7o3nlbqwRw3j+LpdzPdHh+cjXzz
-         7ALg==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=nAAyFhVOk4u65vleHIjgu+W4rGODUec3akAhRLx+y9I=;
+        b=fU3U+u9oh7vSMuu1yxC4PQjdqQQGIEkx/Edfk44jtI77jbJEZCIafRg0+hLKVQpUMT
+         Do9h3dEQrWc5ATr9aTHFGhcIal3Bpgf6VpNT50CCu1RD528Q6adtg/uF37oWz3MegmOu
+         XTPosdYckbfm4DJw2w8V4DizDVrvl6maEh5x5jlGX/BrHRZk2ZAjKFXKa7GZHa4j7Prm
+         96KT6NeemVLFju6+dji+EdsONTxV1hz8mmrKTAYWflxknHWdpGTD8J++k93JXnhwy16E
+         Vxw5P/mre3HZaNzqxN+gwWpNpr03XGdPxAWCBH04IzAV+3zEF11E3vinUFoaos9dW7ir
+         PrqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=1KjHGRCb/gwEYrdUgbK9V5JpdX1zhq09kZ/uUwYFWDo=;
-        b=t+oTbu0KSGFDKIRHER6CdJ0Tt8z0F0BRR5MgApgNOHScNbiBCtMhwrHZ6T3w0YHR/x
-         rqNW+0aEzZUP59BIbeUZpZDE45UoFF+7i/wcnfPZYQX9/IEQ82kRPq+jtLrvOYCH4z+N
-         8zqwd4gbkAtApSx2NaDmOaj8u4colZ+6Oodw8HU7o8omhPrKaw5JtGBxpXwS5Iu/mYYH
-         wlXTIl0mL0Is0bYW5ujx/UVwtQoQfJLOwLOodJKpQ/lnBlDo9BYRaZmJ//SH53pDgx/o
-         zNh+f4PQCU03rdjW3nXue4LtQsvVqMo/geD2cV37bdWrv2vQVNrekRuI5nxaguJsqYY6
-         WE6g==
-X-Gm-Message-State: AOAM5307PM5Yt1Kdk8+PExqj8Bu2xelXLrhejQ2AXmK4/ST971U0hDxg
-        MLTc0NDhRX+ZeE9FLTenrEA=
-X-Google-Smtp-Source: ABdhPJwUHW0GMofOL8QRaZlHc/siRsCjjL62ZNz/Lq0p2eVYBEJUuoU9AFwGGDOWnIddMD55XMGSgQ==
-X-Received: by 2002:a17:902:7c0c:b0:161:ef0f:9da8 with SMTP id x12-20020a1709027c0c00b00161ef0f9da8mr28156048pll.147.1654066735036;
-        Tue, 31 May 2022 23:58:55 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:cb0:82d7:adf7:b62d:6020])
-        by smtp.gmail.com with ESMTPSA id b10-20020a17090a5a0a00b001cd4989febcsm3207271pjd.8.2022.05.31.23.58.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 May 2022 23:58:54 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH 5/5] perf lock: Look up callchain for the contended locks
-Date:   Tue, 31 May 2022 23:58:46 -0700
-Message-Id: <20220601065846.456965-6-namhyung@kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=nAAyFhVOk4u65vleHIjgu+W4rGODUec3akAhRLx+y9I=;
+        b=PedzRD7gwnF93u27A6JxWMupDS8bFRCP91hQDvOgCr0MvWv/ETf+PAeiRcD8lVupvG
+         SUYMWowUxKdFSV2/ZdPnOLSCde+ZXhLE0egbid/U2DXTpBt/TZyZKAzNc5knbPWl/N50
+         pONOkkH65/MPI1bjqUEVyGGMk/cZ7E2v/Z4lcHgKzzeTGMwY/O5F3J7N0G079ID4bUqR
+         JRAYlO9Wt/t14CJxMf5AhcL99lvlH2rVsMFXZzgxvu6sgPizBTSOQCToo6NX6JHevBnn
+         4jFC1LQYZb9MwTlEvS2PnZ1AtQgFmhzjzB42bIv0XpbzQw0ShT/Xr9ktUaax+P53Nkan
+         lmEA==
+X-Gm-Message-State: AOAM5322uMXvJl6NM7/1TPuMXbU4eF2ALNmtP/o8roqdAqHyn/0ZKm8c
+        G+5j0IZOKN3xEkmjrQJrHXG26HY+Yw==
+X-Google-Smtp-Source: ABdhPJxZHq5XOfwYwtj8MWKx1l8Au10pgCCI/gwzvd5AHmMBrBS2APi4kKt/nbWhVOc6JrCokO6VDIYrIg==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:ed43:9390:62cb:50ee])
+ (user=elver job=sendgmr) by 2002:a05:6402:2211:b0:42d:cb9e:cbf with SMTP id
+ cq17-20020a056402221100b0042dcb9e0cbfmr18833360edb.76.1654076120249; Wed, 01
+ Jun 2022 02:35:20 -0700 (PDT)
+Date:   Wed,  1 Jun 2022 11:35:02 +0200
+Message-Id: <20220601093502.364142-1-elver@google.com>
+Mime-Version: 1.0
 X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
-In-Reply-To: <20220601065846.456965-1-namhyung@kernel.org>
-References: <20220601065846.456965-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH RFC] perf: Allow restricted kernel breakpoints on user addresses
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The lock contention tracepoints don't provide lock names.  All we can
-do is to get stack traces and show the caller instead.  To minimize
-the overhead it's limited to up to 8 stack traces and display the
-first non-lock function symbol name as a caller.
+Allow the creation of restricted breakpoint perf events that also fire
+in the kernel (!exclude_kernel), if:
 
-  $ perf lock report -F acquired,contended,avg_wait
+  1. No sample information is requested; samples may contain IPs,
+     registers, or other information that may disclose kernel addresses.
 
-                  Name   acquired  contended   avg wait (ns)
+  2. The breakpoint (viz. data watchpoint) is on a user address.
 
-   update_blocked_a...         40         40            3611
-   kernfs_fop_open+...          5          5            3636
-    _nohz_idle_balance          3          3            2650
-   tick_do_update_j...          1          1            6041
-    ep_scan_ready_list          1          1            3930
-  ...
+The rules constrain the allowable perf events such that no sensitive
+kernel information can be disclosed.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Despite no explicit kernel information disclosure, the following
+questions may need answers:
+
+	1. Is obtaining information that the kernel accessed a
+	   particular user's known memory location revealing new
+	   information? Given the kernel's user space ABI, there should
+	   be no "surprise accesses" to user space memory in the first
+	   place.
+
+	2. Does causing breakpoints on user memory accesses by the
+	   kernel potentially impact timing in a sensitive way? Given
+	   that hardware breakpoints trigger regardless of the state of
+	   perf_event_attr::exclude_kernel, but are filtered in the perf
+	   subsystem, this possibility already exists independent of the
+	   proposed change.
+
+Signed-off-by: Marco Elver <elver@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
 ---
- tools/perf/builtin-lock.c | 165 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 161 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 82cbf0f2e4cd..46a5b3b50f0b 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -9,6 +9,7 @@
- #include "util/symbol.h"
- #include "util/thread.h"
- #include "util/header.h"
-+#include "util/callchain.h"
+RFC:
+
+We are looking to identify a set of constraints on perf events that
+would allow them to safely be created by unprivileged users when
+perf_event_paranoid > 1 && !perfmon_capable().
+
+Our current (and only) event type of interest is PERF_TYPE_BREAKPOINT.
+
+Any thoughts?
+
+---
+ include/linux/perf_event.h |  8 +-------
+ kernel/events/core.c       | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index af97dd427501..06c2ed46cbf9 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1348,13 +1348,7 @@ static inline int perf_is_paranoid(void)
+ 	return sysctl_perf_event_paranoid > -1;
+ }
  
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
-@@ -19,6 +20,7 @@
- #include "util/tool.h"
- #include "util/data.h"
- #include "util/string2.h"
-+#include "util/map.h"
+-static inline int perf_allow_kernel(struct perf_event_attr *attr)
+-{
+-	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+-		return -EACCES;
+-
+-	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+-}
++extern int perf_allow_kernel(struct perf_event_attr *attr);
  
- #include <sys/types.h>
- #include <sys/prctl.h>
-@@ -32,6 +34,7 @@
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
- #include <linux/err.h>
-+#include <linux/stringify.h>
+ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+ {
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 6eafb1b0ad4a..f37047cfcb2f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3266,6 +3266,12 @@ static int perf_event_modify_attr(struct perf_event *event,
+ 		return -EOPNOTSUPP;
+ 	}
  
- static struct perf_session *session;
++	if (!event->attr.exclude_kernel) {
++		err = perf_allow_kernel(attr);
++		if (err)
++			return err;
++	}
++
+ 	WARN_ON_ONCE(event->ctx->parent_ctx);
  
-@@ -120,6 +123,17 @@ static struct rb_root		thread_stats;
- static bool combine_locks;
- static bool show_thread_stats;
+ 	mutex_lock(&event->child_mutex);
+@@ -12104,6 +12110,38 @@ perf_check_permission(struct perf_event_attr *attr, struct task_struct *task)
+ 	return is_capable || ptrace_may_access(task, ptrace_mode);
+ }
  
 +/*
-+ * CONTENTION_STACK_DEPTH
-+ * Number of stack trace entries to find callers
++ * Check if unprivileged users are allowed to set up breakpoints on user
++ * addresses that also count when the kernel accesses them.
 + */
-+#define CONTENTION_STACK_DEPTH  8
-+
-+static u64 sched_text_start;
-+static u64 sched_text_end;
-+static u64 lock_text_start;
-+static u64 lock_text_end;
-+
- static struct thread_stat *thread_stat_find(u32 tid)
- {
- 	struct rb_node *node;
-@@ -451,6 +465,18 @@ static struct lock_stat *pop_from_result(void)
- 	return container_of(node, struct lock_stat, rb);
- }
- 
-+static struct lock_stat *lock_stat_find(u64 addr)
++static bool perf_allow_kernel_breakpoint(struct perf_event_attr *attr)
 +{
-+	struct hlist_head *entry = lockhashentry(addr);
-+	struct lock_stat *ret;
-+
-+	hlist_for_each_entry(ret, entry, hash_entry) {
-+		if (ret->addr == addr)
-+			return ret;
-+	}
-+	return NULL;
-+}
-+
- static struct lock_stat *lock_stat_findnew(u64 addr, const char *name)
- {
- 	struct hlist_head *entry = lockhashentry(addr);
-@@ -789,6 +815,116 @@ static int report_lock_release_event(struct evsel *evsel,
- 	return 0;
- }
- 
-+static bool is_lock_function(u64 addr)
-+{
-+	if (!sched_text_start) {
-+		struct machine *machine = &session->machines.host;
-+		struct map *kmap;
-+		struct symbol *sym;
-+
-+		sym = machine__find_kernel_symbol_by_name(machine,
-+							  "__sched_text_start",
-+							  &kmap);
-+		if (!sym) {
-+			/* to avoid retry */
-+			sched_text_start = 1;
-+			return false;
-+		}
-+
-+		sched_text_start = kmap->unmap_ip(kmap, sym->start);
-+
-+		/* should not fail from here */
-+		sym = machine__find_kernel_symbol_by_name(machine,
-+							  "__sched_text_end",
-+							  &kmap);
-+		sched_text_end = kmap->unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine,
-+							  "__lock_text_start",
-+							  &kmap);
-+		lock_text_start = kmap->unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine,
-+							  "__lock_text_end",
-+							  &kmap);
-+		lock_text_start = kmap->unmap_ip(kmap, sym->start);
-+	}
-+
-+	/* failed to get kernel symbols */
-+	if (sched_text_start == 1)
++	if (attr->type != PERF_TYPE_BREAKPOINT)
 +		return false;
 +
-+	/* mutex and rwsem functions are in sched text section */
-+	if (sched_text_start <= addr && addr < sched_text_end)
-+		return true;
++	/*
++	 * The sample may contain IPs, registers, or other information that may
++	 * disclose kernel addresses or timing information. Disallow any kind of
++	 * additional sample information.
++	 */
++	if (attr->sample_type)
++		return false;
 +
-+	/* spinlock functions are in lock text section */
-+	if (lock_text_start <= addr && addr < lock_text_end)
-+		return true;
-+
-+	return false;
++	/*
++	 * Only allow kernel breakpoints on user addresses.
++	 */
++	return access_ok((void __user *)(unsigned long)attr->bp_addr, attr->bp_len);
 +}
 +
-+static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sample,
-+				  char *buf, int size)
++int perf_allow_kernel(struct perf_event_attr *attr)
 +{
-+	struct thread *thread;
-+	struct callchain_cursor *cursor = &callchain_cursor;
-+	struct symbol *sym;
-+	int skip = 0;
-+	int ret;
++	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable() &&
++	    !perf_allow_kernel_breakpoint(attr))
++		return -EACCES;
 +
-+	/* lock names will be replaced to task name later */
-+	if (show_thread_stats)
-+		return -1;
-+
-+	thread = machine__findnew_thread(&session->machines.host,
-+					 -1, sample->pid);
-+	if (thread == NULL)
-+		return -1;
-+
-+	/* use caller function name from the callchain */
-+	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
-+					NULL, NULL, CONTENTION_STACK_DEPTH);
-+	if (ret != 0) {
-+		thread__put(thread);
-+		return -1;
-+	}
-+
-+	callchain_cursor_commit(cursor);
-+	thread__put(thread);
-+
-+	while (true) {
-+		struct callchain_cursor_node *node;
-+
-+		node = callchain_cursor_current(cursor);
-+		if (node == NULL)
-+			break;
-+
-+		/* skip first 3 entries - for lock functions */
-+		if (++skip <= 3)
-+			goto next;
-+
-+		sym = node->ms.sym;
-+		if (sym && !is_lock_function(node->ip)) {
-+			struct map *map = node->ms.map;
-+			u64 offset;
-+
-+			offset = map->map_ip(map, node->ip) - sym->start;
-+
-+			if (offset)
-+				scnprintf(buf, size, "%s+%#lx", sym->name, offset);
-+			else
-+				strlcpy(buf, sym->name, size);
-+			return 0;
-+		}
-+
-+next:
-+		callchain_cursor_advance(cursor);
-+	}
-+	return -1;
++	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
 +}
 +
- static int report_lock_contention_begin_event(struct evsel *evsel,
- 					      struct perf_sample *sample)
- {
-@@ -800,9 +936,18 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
- 	if (show_thread_stats)
- 		addr = sample->tid;
- 
--	ls = lock_stat_findnew(addr, "No name");
--	if (!ls)
--		return -ENOMEM;
-+	ls = lock_stat_find(addr);
-+	if (!ls) {
-+		char buf[128];
-+		const char *caller = buf;
-+
-+		if (lock_contention_caller(evsel, sample, buf, sizeof(buf)) < 0)
-+			caller = "Unknown";
-+
-+		ls = lock_stat_findnew(addr, caller);
-+		if (!ls)
-+			return -ENOMEM;
-+	}
- 
- 	ts = thread_stat_findnew(sample->tid);
- 	if (!ts)
-@@ -1176,6 +1321,7 @@ static int __cmd_report(bool display_info)
- 	struct perf_tool eops = {
- 		.sample		 = process_sample_event,
- 		.comm		 = perf_event__process_comm,
-+		.mmap		 = perf_event__process_mmap,
- 		.namespaces	 = perf_event__process_namespaces,
- 		.ordered_events	 = true,
- 	};
-@@ -1191,6 +1337,8 @@ static int __cmd_report(bool display_info)
- 		return PTR_ERR(session);
- 	}
- 
-+	/* for lock function check */
-+	symbol_conf.sort_by_name = true;
- 	symbol__init(&session->header.env);
- 
- 	if (!perf_session__has_traces(session, "lock record"))
-@@ -1235,8 +1383,12 @@ static int __cmd_record(int argc, const char **argv)
- 	const char *record_args[] = {
- 		"record", "-R", "-m", "1024", "-c", "1", "--synth", "task",
- 	};
-+	const char *callgraph_args[] = {
-+		"--call-graph", "fp," __stringify(CONTENTION_STACK_DEPTH),
-+	};
- 	unsigned int rec_argc, i, j, ret;
- 	unsigned int nr_tracepoints;
-+	unsigned int nr_callgraph_args = 0;
- 	const char **rec_argv;
- 	bool has_lock_stat = true;
- 
-@@ -1261,8 +1413,10 @@ static int __cmd_record(int argc, const char **argv)
- 		}
- 	}
- 
-+	nr_callgraph_args = ARRAY_SIZE(callgraph_args);
-+
- setup_args:
--	rec_argc = ARRAY_SIZE(record_args) + argc - 1;
-+	rec_argc = ARRAY_SIZE(record_args) + nr_callgraph_args + argc - 1;
- 
- 	if (has_lock_stat)
- 		nr_tracepoints = ARRAY_SIZE(lock_tracepoints);
-@@ -1294,6 +1448,9 @@ static int __cmd_record(int argc, const char **argv)
- 		rec_argv[i++] = ev_name;
- 	}
- 
-+	for (j = 0; j < nr_callgraph_args; j++, i++)
-+		rec_argv[i] = callgraph_args[j];
-+
- 	for (j = 1; j < (unsigned int)argc; j++, i++)
- 		rec_argv[i] = argv[j];
- 
+ /**
+  * sys_perf_event_open - open a performance event, associate it to a task/cpu
+  *
 -- 
 2.36.1.255.ge46751e96f-goog
 
