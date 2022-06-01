@@ -2,98 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1B5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 06:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9F4C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 06:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245323AbiFAGB2 (ORCPT
+        id S243006AbiFAG6u (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Jun 2022 02:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50206 "EHLO
+        Wed, 1 Jun 2022 02:58:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243355AbiFAGB1 (ORCPT
+        with ESMTP id S235092AbiFAG6u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Jun 2022 02:01:27 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3F32FFF1;
-        Tue, 31 May 2022 23:01:26 -0700 (PDT)
-Received: by mail-oi1-f177.google.com with SMTP id s188so1374649oie.4;
-        Tue, 31 May 2022 23:01:26 -0700 (PDT)
+        Wed, 1 Jun 2022 02:58:50 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F86428E3B;
+        Tue, 31 May 2022 23:58:49 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id n18so934123plg.5;
+        Tue, 31 May 2022 23:58:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kVs1vEJDTJ/i+IqBDUowDRvWGpTnBwZvyuJEkNB3FYc=;
+        b=iIQvYV9Y/2tVxTj7MpmzOPtWPi+bBoX5tq1M+rq5ylw1/rWq+KH7Yt5NwYrF7z9DwK
+         tsdap1vleIYYzjcM0BcOpGjkIWgHldrle5HD/nd8Z2dQW2jIJ3bIxPtDPEEz4mMrC0Xm
+         4I6en8eSgms2XPGRQAe6WWWUdCoqlrGg94mTA7Kh6RvkmWuZIsChb2w7kfd0Rd4DSW+Y
+         j3dRrm/ZXCqiY/W1ON7YmBOSiTvkeTHi1MfS9mPJmosX0vIjDmoNxG3m28WgyvnsYKX2
+         n9JcW3a40oF6WNFPlT6qkNBUTfAkyW8ApqMesRCya54+2Gu7I+R62vg0Uff+cKeECYXr
+         XU4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3gQ5prNQvxNU5BCy8dGPEskxDYGkNMOicAPNaI2Vitw=;
-        b=I4MMCzJdhF/gPZ5ZBd3iS7EDKHDy3QSSkFjFc/fgwtrdAlWJJRxUj4XVtMc+fBY9Kq
-         zWf3MUsbI5oIJtuEs0A1mJgGJxt8ke0dyl6Aa1I0RqK78S4BCgUdCsUB+zOjjrQ3MBKz
-         wqf3kxyR+7MwK/YPEYWSuT5ASemOwsVdEhVTZ++VO7AkL91eArerrK94fbLYlR1g6Kgk
-         PJqaLceS/PrN9tDHFxN5gbc3m+kOlx9VkNY4XufZt2tcWqWrMz5IC2FZEimL+2lOjiow
-         SvbUcbisQA1EUYZoZjl7o/zRsbLB2fIzKyFjNcry7fJwdjE+iYyR8GOKj110NxclwfDx
-         OkFg==
-X-Gm-Message-State: AOAM532vnY/wIkTJbG88MDypDrWXxz9MHFe5HiniFhSAAwAvxpy+a+oZ
-        CNS7qqtazsnstHIK752wckPQP/j8myD5mVVrF9s=
-X-Google-Smtp-Source: ABdhPJwYo/SJBcdj28bukzhXOluCYEl/I07PSoNeX5qSgooxA7bKozLBhQW8UO8GP/5L7Y2QfNd3LlCmIV/uJe0vDMY=
-X-Received: by 2002:a05:6808:16ac:b0:2f9:52e5:da90 with SMTP id
- bb44-20020a05680816ac00b002f952e5da90mr14509606oib.5.1654063285559; Tue, 31
- May 2022 23:01:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220518224725.742882-1-namhyung@kernel.org> <20220518224725.742882-3-namhyung@kernel.org>
- <CAP-5=fX=fiuZ31O2XTSsAwyGD=c5uf9P_BzX9L1QG-q8cUvQYQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fX=fiuZ31O2XTSsAwyGD=c5uf9P_BzX9L1QG-q8cUvQYQ@mail.gmail.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=kVs1vEJDTJ/i+IqBDUowDRvWGpTnBwZvyuJEkNB3FYc=;
+        b=M0r1Tj2W2mwaYNDJgCjrhPODReM1aTx0BkWh+hyZPQ/MLBTEr7iIdnk6X8zvxaPRHB
+         yYG3V/xJkaFwHBzezb7824/4vUriL3xB2duIGn03BbQmRfj8cOFsn0/O3PdoztVIvfft
+         E93Lsc1p3WvzR1KbAqQ6/X+jsZA///UdX47isAbf9aXcH+/y2f0IKwGOvOSolDmRkdNB
+         fZqxRZuGIi0zlYvHrhljdjK+ljLZCLZRTwxx1VLTgnKN4vEzWoa7GL5y0E8ts1KyfAdS
+         ShE5jTuXqR4w78pt2CIf0rxh2qp/VaYzWOWj7EkboFq0zncrvKZkQnHiah3KAbWhZP7o
+         43KQ==
+X-Gm-Message-State: AOAM5321XhJBDUbb6OlsSA9wqMCoN5IuhSO5orQV9a0UQBQHoKRyTihQ
+        r3UBW7WVFe7+4lmDbRcjAGMK99ghB5Y=
+X-Google-Smtp-Source: ABdhPJx8D9xZeRqTL7LAcpKAitPiC+cUILfYGY/uudbRjtBdhXETNfARkC/GjCsaOS7x66vGN1RtMw==
+X-Received: by 2002:a17:903:11d1:b0:151:9fb2:9858 with SMTP id q17-20020a17090311d100b001519fb29858mr63818869plh.136.1654066728755;
+        Tue, 31 May 2022 23:58:48 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:cb0:82d7:adf7:b62d:6020])
+        by smtp.gmail.com with ESMTPSA id b10-20020a17090a5a0a00b001cd4989febcsm3207271pjd.8.2022.05.31.23.58.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 May 2022 23:58:48 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 31 May 2022 23:01:14 -0700
-Message-ID: <CAM9d7cjT2o3xVUQf402shzirD4K2XoyomN+AL_R2WENKg6pwoQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] perf record: Enable off-cpu analysis with BPF
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Hao Luo <haoluo@google.com>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCHSET 0/5] perf lock: New lock contention tracepoints support (v1)
+Date:   Tue, 31 May 2022 23:58:41 -0700
+Message-Id: <20220601065846.456965-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 31, 2022 at 5:00 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Wed, May 18, 2022 at 3:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
-[SNIP]
-> > +
-> > +/*
-> > + * Old kernel used to call it task_struct->state and now it's '__state'.
-> > + * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-> > + *
-> > + * https://nakryiko.com/posts/bpf-core-reference-guide/#handling-incompatible-field-and-type-changes
-> > + */
-> > +static inline int get_task_state(struct task_struct *t)
-> > +{
-> > +       if (bpf_core_field_exists(t->__state))
-> > +               return BPF_CORE_READ(t, __state);
-> > +
->
-> When building against a pre-5.14 kernel I'm running into a build issue here:
->
-> tools/perf/util/bpf_skel/off_cpu.bpf.c:96:31: error: no member named '__
-> state' in 'struct task_struct'; did you mean 'state'?
->        if (bpf_core_field_exists(t->__state))
->                                     ^~~~~~~
->                                     state
->
-> This isn't covered by Andrii's BPF CO-RE reference guide. I have an
-> #iffy workaround below,but this will be brittle if the 5.14+ kernel
-> code is backported. Suggestions welcomed :-)
+Hello,
 
-Thanks for the fix.  I think we should not guess the field name
-in the current task struct and check both versions separately.
-I'm afraid the version check won't work with some backported
-kernels.  But do we care?
+Kernel v5.19 will have a new set of tracepoints to track lock
+contentions for various lock types.  Unlike tracepoints in LOCKDEP and
+LOCK_STAT, it's hit only for contended locks and lock names are not
+available.  So it needs to collect stack traces and display the caller
+function instead.
+
+This patchset merely adds support for the new tracepoints to the
+existing perf lock commands.  So there's no change to the user.  Later
+I'll add new a sub-command dedicated to the tracepoints to make use of
+the additional information.
+
+Example output:
+
+  $ sudo perf lock record -a sleep 3
+  
+  $ sudo perf lock report -F acquired,contended,avg_wait
+
+                  Name   acquired  contended   avg wait (ns)
+
+   update_blocked_a...         40         40            3611
+   kernfs_fop_open+...          5          5            3636
+    _nohz_idle_balance          3          3            2650
+   tick_do_update_j...          1          1            6041
+    ep_scan_ready_list          1          1            3930
+  ...
+
+You can find the code in the 'perf/lock-contention-v1' branch at
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
 Namhyung
+
+
+Namhyung Kim (5):
+  perf lock: Change to synthesize task events
+  perf lock: Add lock contention tracepoints record support
+  perf lock: Handle lock contention tracepoints
+  perf record: Allow to specify max stack depth of fp callchain
+  perf lock: Look up callchain for the contended locks
+
+ tools/perf/Documentation/perf-record.txt |   5 +
+ tools/perf/builtin-lock.c                | 356 ++++++++++++++++++++++-
+ tools/perf/util/callchain.c              |  18 +-
+ 3 files changed, 364 insertions(+), 15 deletions(-)
+
+
+base-commit: 9dde6cadb92b5670b23b97ec53091df0530ec38b
+-- 
+2.36.1.255.ge46751e96f-goog
+
