@@ -2,174 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EEBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 16:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1EEC43334
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 17:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351099AbiFAQRt (ORCPT
+        id S1355918AbiFARjX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Jun 2022 12:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38404 "EHLO
+        Wed, 1 Jun 2022 13:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240224AbiFAQRt (ORCPT
+        with ESMTP id S236698AbiFARjW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Jun 2022 12:17:49 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FE7357175;
-        Wed,  1 Jun 2022 09:17:47 -0700 (PDT)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LCvNZ3Xdqz67ZHP;
-        Thu,  2 Jun 2022 00:14:22 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 1 Jun 2022 18:17:44 +0200
-Received: from [10.47.88.115] (10.47.88.115) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 1 Jun
- 2022 17:17:42 +0100
-Message-ID: <d9056bc2-f640-f676-2599-c283479376a4@huawei.com>
-Date:   Wed, 1 Jun 2022 17:17:41 +0100
+        Wed, 1 Jun 2022 13:39:22 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF92F8A32F;
+        Wed,  1 Jun 2022 10:39:21 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id t25so3933463lfg.7;
+        Wed, 01 Jun 2022 10:39:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H6svHWI5VNrkMMb+5NDwNaMjRozk+3HNFT3dS0gG1KQ=;
+        b=CQN0YBYcDHUdErI/wo3pFwGt8L5+TCyc76m1vxbwAGgmLgGRj/iUn3Ku0s/rEDPnbm
+         325JjOsguX4XV7O4kZFRo2MgB9/9WTs6dpYwbp0+Jqx8L+iSMBpYHzCvuP9soYaiQ6UC
+         SaAsFtWBoeiWnZZ1t9V/jEDMNDPI/aP+LhETeiY9cJa4+PXP3+70gX0bmRFvUAqgWJC4
+         FbLIXQ+Q4WexKI9JnwPzer9UGPc3WaICu5wDDudtYMnpTWCnRTLw1+a2p2zxne2TaSZz
+         PTB3O/etJK8YhfRWtqX6YvE1aypJrUtEV4aooxlCpGLKkG/CQwNPJweJJTanmFu2ZjOp
+         4HwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H6svHWI5VNrkMMb+5NDwNaMjRozk+3HNFT3dS0gG1KQ=;
+        b=CbJD+9As3L7w2Lmfr4a14IytdinaxNxgCrd1pAw36A4kK9YRzXTc/u/vO9JlAXq8P4
+         gy0jl8mRcAH42o3F9qktb889imtmu0Tyq2tWHecjFFdmShJJvOPHTHcwB9wNNRUJ2ngN
+         qp92ol9i0PKiywYVNuJDVegkWrWUnmIFd0uq/DDhC9Tc1X3bxaGti63DrdYIjkgzKBKO
+         KkGObxGAGMOHAeqP4jmEOkKu1JJ9SQedHNOqLSQoitZINCfdHl/fGGjJDRK9LrdGEtu2
+         QnsGauqnaPlqHoi3DRCaFPl5trGyZpwbVRyge3gyhZBacyHtWbos5/kwa4flQ9GnLVjz
+         kMSQ==
+X-Gm-Message-State: AOAM5322MCMIPTRy9V4YfprXmVJccAZe7FpkcB8Ch3rf1MEaqcjCqpmi
+        Q6AfedGTW5AwJsGRSnMFBLpOsXLVvIh/j6UiVJg=
+X-Google-Smtp-Source: ABdhPJz4CTWuqBUCSMC9rIBvuCZvZxz1T+TCWnAQ8KQ8sV0N8dx6RKTji7EPbnZAq/QgQXjvkzLetXfhsDJCP/kN8Vg=
+X-Received: by 2002:a05:6512:68e:b0:477:cc29:f92 with SMTP id
+ t14-20020a056512068e00b00477cc290f92mr395399lfe.408.1654105159864; Wed, 01
+ Jun 2022 10:39:19 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v3 0/3] Rewrite jevents program in python
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+References: <CAEf4BzbK9zgetgE1yKkCANTZqizUrXgamJa2X0f0XmzQUdFrCQ@mail.gmail.com>
+ <YntnRixbfQ1HCm9T@krava> <Ynv+7iaaAbyM38B6@kernel.org> <CAEf4BzaQsF31f3WuU32wDCzo6bw7eY8E9zF6Lo218jfw-VQmcA@mail.gmail.com>
+ <YoTAhC+6j4JshqN8@krava> <YoYj6cb0aPNN/olH@krava> <CAEf4Bzaa60kZJbWT0xAqcDMyXBzbg98ShuizJAv7x+8_3X0ZBg@mail.gmail.com>
+ <Yokk5XRxBd72fqoW@kernel.org> <Yos8hq3NmBwemoJw@krava> <CAEf4BzYRJj8sXjYs2ioz6Qq7L2UshZDi4Kt0XLsLtwQSGCpAzg@mail.gmail.com>
+ <YoyXRij2LaxxTicC@krava>
+In-Reply-To: <YoyXRij2LaxxTicC@krava>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 1 Jun 2022 10:39:08 -0700
+Message-ID: <CAEf4Bzbxo7_dbBzjeBu8FeB6MFBpgqn1Cwq_om-mGuz-gJH6CA@mail.gmail.com>
+Subject: Re: [PATCHv2 0/3] perf tools: Fix prologue generation
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
-        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
-        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
-CC:     Stephane Eranian <eranian@google.com>
-References: <20220527185426.240235-1-irogers@google.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220527185426.240235-1-irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.88.115]
-X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 27/05/2022 19:54, Ian Rogers wrote:
-> New architectures bring new complexity, such as Intel's hybrid
-> models. jevents provides an alternative to specifying events in the
-> kernel and exposing them through sysfs, however, it is difficult to
-> work with. For example, an error in the json input would yield an
-> error message but no json file or location. It is also a challenge to
-> update jsmn.c given its forked nature.
-> 
-> The changes here switch from jevents.c to a rewrite in python called
-> jevents.py. This means there is a build time dependency on python, but
-> such a dependency already exists for asciidoc (used to generate perf's
-> man pages). If the build detects that python isn't present or is older
-> than version 3.6 (released Dec. 2016) then an empty file is
-> substituted for the generated one.
-> 
-> A challenge with this code is in avoiding regressions. For this reason
-> the jevents.py produces identical output to jevents.c, validated with a
-> test script and build target.
-> 
+On Tue, May 24, 2022 at 1:28 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> On Mon, May 23, 2022 at 03:43:10PM -0700, Andrii Nakryiko wrote:
+> > On Mon, May 23, 2022 at 12:49 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > On Sat, May 21, 2022 at 02:44:05PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > Em Fri, May 20, 2022 at 02:46:49PM -0700, Andrii Nakryiko escreveu:
+> > > > > On Thu, May 19, 2022 at 4:03 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > > > > On Wed, May 18, 2022 at 11:46:44AM +0200, Jiri Olsa wrote:
+> > > > > > > On Tue, May 17, 2022 at 03:02:53PM -0700, Andrii Nakryiko wrote:
+> > > > > > > > Jiri, libbpf v0.8 is out, can you please re-send your perf patches?
+> > > >
+> > > > > > > yep, just made new fedora package.. will resend the perf changes soon
+> > > >
+> > > > > > fedora package is on the way, but I'll need perf/core to merge
+> > > > > > the bpf_program__set_insns change.. Arnaldo, any idea when this
+> > > > > > could happen?
+> > > >
+> > > > > Can we land these patches through bpf-next to avoid such complicated
+> > > > > cross-tree dependencies? As I started removing libbpf APIs I also
+> > > > > noticed that perf is still using few other deprecated APIs:
+> > > > >   - bpf_map__next;
+> > > > >   - bpf_program__next;
+> > > > >   - bpf_load_program;
+> > > > >   - btf__get_from_id;
+> > >
+> > > these were added just to bypass the time window when they were not
+> > > available in the package, so can be removed now (in the patch below)
+> > >
+> > > >
+> > > > > It's trivial to fix up, but doing it across few trees will delay
+> > > > > libbpf work as well.
+> > > >
+> > > > > So let's land this through bpf-next, if Arnaldo doesn't mind?
+> > > >
+> > > > Yeah, that should be ok, the only consideration is that I'm submitting
+> > > > this today to Linus:
+> > > >
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/urgent&id=0ae065a5d265bc5ada13e350015458e0c5e5c351
+> > > >
+> > > > To address this:
+> > > >
+> > > > https://lore.kernel.org/linux-perf-users/f0add43b-3de5-20c5-22c4-70aff4af959f@scylladb.com/
+> > >
+> > > ok, we can do that via bpf-next, but of course there's a problem ;-)
+> > >
+> > > perf/core already has dependency commit [1]
+> > >
+> > > so either we wait for perf/core and bpf-next/master to sync or:
+> > >
+> > >   - perf/core reverts [1] and
+> > >   - bpf-next/master takes [1] and the rest
+> > >
+> > > I have the changes ready if you guys are ok with that
+> >
+> > So, if I understand correctly, with merge window open bpf-next/master
+> > will get code from perf/core soon when we merge tip back in. So we can
+> > wait for that to happen and not revert anything.
+> >
+> > So please add the below patch to your series and resend once tip is
+> > merged into bpf-next? Thanks!
+>
+> ok
 
-Hi Ian,
+Hm.. Ok, so I don't see your patches in tip yet. I see them in
+perf/core only. Which means things won't happen naturally soon. How
+should we proceed? I'm sitting on a pile of patches removing a lot of
+code from libbpf and I'd rather get it out soon, but I can't because
+of them breaking perf in bpf-next without Jiri's changes.
 
-I still see this:
+Arnaldo, what's your suggestion? Can we land remaining Jiri's patches
+into perf/core and then you can create a tag for us to merge into
+bpf-next, so that we avoid any conflicts later? Would that work? I
+think we did something like that with other trees (e.g., RCU), when we
+had dependencies like this before.
 
-...
-Makefile.config:906: Python interpreter too old (older than 3.6) 
-disabling jevent generation
-Makefile.config:939: Old version of libbfd/binutils things like PE 
-executable profiling will not be available
-Makefile.config:1127: No openjdk development package found, please 
-install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+Thoughts?
 
-Auto-detecting system features:
-...                         dwarf: [ on  ]
-...            dwarf_getlocations: [ on  ]
-...                         glibc: [ on  ]
-...                        libbfd: [ OFF ]
-...                libbfd-buildid: [ OFF ]
-...                        libcap: [ on  ]
-...                        libelf: [ on  ]
-...                       libnuma: [ on  ]
-...        numa_num_possible_cpus: [ on  ]
-...                       libperl: [ on  ]
-...                     libpython: [ on  ]
-...                     libcrypto: [ on  ]
-...                     libunwind: [ on  ]
-...            libdw-dwarf-unwind: [ on  ]
-...                          zlib: [ on  ]
-...                          lzma: [ on  ]
-...                     get_cpuid: [ on  ]
-...                           bpf: [ on  ]
-...                        libaio: [ on  ]
-...                       libzstd: [ on  ]
-...        disassembler-four-args: [ on  ]
-
-
-make[3]: Nothing to be done for 'install_headers'.
-john@localhost:~/acme/tools/perf> python --version
-Python 3.6.12
-
-I need to figure out what is going wrong...
-
-Thanks,
-John
-
-> v3. Updates the patches for merged changes (on
->      acme/tmp.perf/core). Re-runs all comparisons to make sure the
->      generated pmu-events.c isn't altered at all by this change. Adds
->      the jevents.c ExtSel fix in:
->      https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
->      Bumps the python version from 3.5 to 3.6, as f-strings weren't
->      introduced until 3.6.
-> 
-> v2. Fixes the build for architectures that don't have pmu-events json
->      (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
->      build for python not being present or too old (Suggested-by: Peter
->      Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
-> 
-> Ian Rogers (3):
->    perf jevents: Add python converter script
->    perf jevents: Switch build to use jevents.py
->    perf jevents: Remove jevents.c
-> 
->   tools/perf/Makefile.config               |   19 +
->   tools/perf/Makefile.perf                 |   16 +-
->   tools/perf/pmu-events/Build              |   15 +-
->   tools/perf/pmu-events/empty-pmu-events.c |   21 +
->   tools/perf/pmu-events/jevents.c          | 1342 ----------------------
->   tools/perf/pmu-events/jevents.py         |  392 +++++++
->   tools/perf/pmu-events/jsmn.h             |   68 --
->   tools/perf/pmu-events/json.c             |  162 ---
->   tools/perf/pmu-events/json.h             |   39 -
->   9 files changed, 444 insertions(+), 1630 deletions(-)
->   create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
->   delete mode 100644 tools/perf/pmu-events/jevents.c
->   create mode 100755 tools/perf/pmu-events/jevents.py
->   delete mode 100644 tools/perf/pmu-events/jsmn.h
->   delete mode 100644 tools/perf/pmu-events/json.c
->   delete mode 100644 tools/perf/pmu-events/json.h
-> 
-
+>
+> jirka
