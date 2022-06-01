@@ -2,110 +2,174 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883F5CCA473
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 16:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EEBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 16:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348272AbiFAQAc (ORCPT
+        id S1351099AbiFAQRt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Jun 2022 12:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
+        Wed, 1 Jun 2022 12:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355959AbiFAQAa (ORCPT
+        with ESMTP id S240224AbiFAQRt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Jun 2022 12:00:30 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84EC9A5035
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Jun 2022 09:00:25 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id n185so1229747wmn.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2022 09:00:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ilg3wcyDSklsbMz1TOa+dWOz/hKRqF3HJGEzPGq8bYo=;
-        b=HOiMEkgpdNnA+ZD3OrPYUyF8xH4aDp15CJPEqDtp+QJBleiSHldAWCZ1yslxpKWG3z
-         88CSduSitINIy/SYSYDuptvzaIO0R+DO8yflCUQIFJ2aV3hFP82hglfJJ0uGv/ath+gX
-         Gcj+4yGLmw4rJX9bsqx1RiGGc9XITbD64hw1JaRKnWDMyxBSNq2tRw1RIgIiuSeNdcnO
-         rbQ9y8V4pJQYkkCij4XJA+OY7Pu+WhpHATj4mhveiz1daZUvwHuqumns5q/8PdYw5JYc
-         Z+mvcdWXFRWnQ08VGqdNY8gFP0sUQpJ4TioLukq6jIu5e03eO0qc21xf4IU88bhB9jiz
-         00TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ilg3wcyDSklsbMz1TOa+dWOz/hKRqF3HJGEzPGq8bYo=;
-        b=s2XT7pXEFiFKJ9H4FulbT+5G3DEgmf8c37a/kMVvKboutp0FWf0Q4gJZyD3u2mRE/2
-         yWvujFz7qKI8oBFjKeIjbZ3NOm3bCgRpfEB1C7CXQFQ9JSqASu++eKRdNz7yFqoxW0pW
-         mhxrt2/QIcF7H4GV8ziOaTlVfJKmJQmSL5fS4vu/tEDZg/Ru7AZosqvboTGAW2LxuHje
-         aeDIW+rKBLMbcKfhWvvrX4gzFeqyZpCNcMLmjsZNMN0o6SggJFgGM86sIGNaxRR9AOZZ
-         q2KYcvhncu8UGSHkcr0ZM+LoTPVcvV5dvnXiFBK1qLXprh2XJn3CzouYqUyh4E82EiLT
-         4CPA==
-X-Gm-Message-State: AOAM533bViJrkVrzZAu+SRC4ANCsrVMtM8y3VqRsF09pvF5Mm2Wafm0S
-        ppW/h8xAQzTem8Ai/Nw8eNwjZ+crleUM8TNz2CNVIw==
-X-Google-Smtp-Source: ABdhPJwkqbqV0lH2o1ExtTdCA3sCWX+p1zKDtordwsnzyOYY3zAENjHRD7FY4ca6ZZrOHJYjnLZwxgjmf7cj18e5/T0=
-X-Received: by 2002:a05:600c:19cb:b0:397:51db:446f with SMTP id
- u11-20020a05600c19cb00b0039751db446fmr29353291wmq.182.1654099223774; Wed, 01
- Jun 2022 09:00:23 -0700 (PDT)
+        Wed, 1 Jun 2022 12:17:49 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FE7357175;
+        Wed,  1 Jun 2022 09:17:47 -0700 (PDT)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LCvNZ3Xdqz67ZHP;
+        Thu,  2 Jun 2022 00:14:22 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 1 Jun 2022 18:17:44 +0200
+Received: from [10.47.88.115] (10.47.88.115) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 1 Jun
+ 2022 17:17:42 +0100
+Message-ID: <d9056bc2-f640-f676-2599-c283479376a4@huawei.com>
+Date:   Wed, 1 Jun 2022 17:17:41 +0100
 MIME-Version: 1.0
-References: <20220601152544.1842447-1-zhengjun.xing@linux.intel.com>
-In-Reply-To: <20220601152544.1842447-1-zhengjun.xing@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 1 Jun 2022 09:00:10 -0700
-Message-ID: <CAP-5=fWTKLFuuDL6uCn1y3DrmDnq8zvReTpjZL+dW+eRQ8=MtQ@mail.gmail.com>
-Subject: Re: [PATCH] perf evlist: Extend arch_evsel__must_be_in_group to
- support hybrid systems
-To:     zhengjun.xing@linux.intel.com
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 0/3] Rewrite jevents program in python
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+CC:     Stephane Eranian <eranian@google.com>
+References: <20220527185426.240235-1-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220527185426.240235-1-irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.88.115]
+X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 1, 2022 at 8:25 AM <zhengjun.xing@linux.intel.com> wrote:
->
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->
-> For the hybrid system, the "slots" event changes to "cpu_core/slots/", need
-> extend API arch_evsel__must_be_in_group() to support hybrid systems.
->
-> In the origin code, for hybrid system event "cpu_core/slots/", the output
-> of the API arch_evsel__must_be_in_group() is "false" (in fact,it should be
-> "true"). Currently only one API evsel__remove_from_group() calls it. In
-> evsel__remove_from_group(), it adds the second condition to check, so the
-> output of evsel__remove_from_group() still is correct. That's the reason
-> why there isn't an instant error. I'd like to fix the issue found in API
-> arch_evsel__must_be_in_group() in case someone else using the function in
-> the other place.
->
-> Fixes: d98079c05b5a ("perf evlist: Keep topdown counters in weak group")
-> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+On 27/05/2022 19:54, Ian Rogers wrote:
+> New architectures bring new complexity, such as Intel's hybrid
+> models. jevents provides an alternative to specifying events in the
+> kernel and exposing them through sysfs, however, it is difficult to
+> work with. For example, an error in the json input would yield an
+> error message but no json file or location. It is also a challenge to
+> update jsmn.c given its forked nature.
+> 
+> The changes here switch from jevents.c to a rewrite in python called
+> jevents.py. This means there is a build time dependency on python, but
+> such a dependency already exists for asciidoc (used to generate perf's
+> man pages). If the build detects that python isn't present or is older
+> than version 3.6 (released Dec. 2016) then an empty file is
+> substituted for the generated one.
+> 
+> A challenge with this code is in avoiding regressions. For this reason
+> the jevents.py produces identical output to jevents.c, validated with a
+> test script and build target.
+> 
 
-Acked-by: Ian Rogers <irogers@google.com>
+Hi Ian,
+
+I still see this:
+
+...
+Makefile.config:906: Python interpreter too old (older than 3.6) 
+disabling jevent generation
+Makefile.config:939: Old version of libbfd/binutils things like PE 
+executable profiling will not be available
+Makefile.config:1127: No openjdk development package found, please 
+install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+
+Auto-detecting system features:
+...                         dwarf: [ on  ]
+...            dwarf_getlocations: [ on  ]
+...                         glibc: [ on  ]
+...                        libbfd: [ OFF ]
+...                libbfd-buildid: [ OFF ]
+...                        libcap: [ on  ]
+...                        libelf: [ on  ]
+...                       libnuma: [ on  ]
+...        numa_num_possible_cpus: [ on  ]
+...                       libperl: [ on  ]
+...                     libpython: [ on  ]
+...                     libcrypto: [ on  ]
+...                     libunwind: [ on  ]
+...            libdw-dwarf-unwind: [ on  ]
+...                          zlib: [ on  ]
+...                          lzma: [ on  ]
+...                     get_cpuid: [ on  ]
+...                           bpf: [ on  ]
+...                        libaio: [ on  ]
+...                       libzstd: [ on  ]
+...        disassembler-four-args: [ on  ]
+
+
+make[3]: Nothing to be done for 'install_headers'.
+john@localhost:~/acme/tools/perf> python --version
+Python 3.6.12
+
+I need to figure out what is going wrong...
 
 Thanks,
-Ian
+John
 
-> ---
->  tools/perf/arch/x86/util/evsel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-> index 88306183d629..ff4561b7b600 100644
-> --- a/tools/perf/arch/x86/util/evsel.c
-> +++ b/tools/perf/arch/x86/util/evsel.c
-> @@ -57,6 +57,6 @@ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
->                 return false;
->
->         return evsel->name &&
-> -               (!strcasecmp(evsel->name, "slots") ||
-> +               (strcasestr(evsel->name, "slots") ||
->                  strcasestr(evsel->name, "topdown"));
->  }
-> --
-> 2.25.1
->
+> v3. Updates the patches for merged changes (on
+>      acme/tmp.perf/core). Re-runs all comparisons to make sure the
+>      generated pmu-events.c isn't altered at all by this change. Adds
+>      the jevents.c ExtSel fix in:
+>      https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
+>      Bumps the python version from 3.5 to 3.6, as f-strings weren't
+>      introduced until 3.6.
+> 
+> v2. Fixes the build for architectures that don't have pmu-events json
+>      (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
+>      build for python not being present or too old (Suggested-by: Peter
+>      Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
+> 
+> Ian Rogers (3):
+>    perf jevents: Add python converter script
+>    perf jevents: Switch build to use jevents.py
+>    perf jevents: Remove jevents.c
+> 
+>   tools/perf/Makefile.config               |   19 +
+>   tools/perf/Makefile.perf                 |   16 +-
+>   tools/perf/pmu-events/Build              |   15 +-
+>   tools/perf/pmu-events/empty-pmu-events.c |   21 +
+>   tools/perf/pmu-events/jevents.c          | 1342 ----------------------
+>   tools/perf/pmu-events/jevents.py         |  392 +++++++
+>   tools/perf/pmu-events/jsmn.h             |   68 --
+>   tools/perf/pmu-events/json.c             |  162 ---
+>   tools/perf/pmu-events/json.h             |   39 -
+>   9 files changed, 444 insertions(+), 1630 deletions(-)
+>   create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
+>   delete mode 100644 tools/perf/pmu-events/jevents.c
+>   create mode 100755 tools/perf/pmu-events/jevents.py
+>   delete mode 100644 tools/perf/pmu-events/jsmn.h
+>   delete mode 100644 tools/perf/pmu-events/json.c
+>   delete mode 100644 tools/perf/pmu-events/json.h
+> 
+
