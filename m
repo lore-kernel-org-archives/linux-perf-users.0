@@ -2,595 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258A7C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 13:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65871C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 13:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353265AbiFANhr (ORCPT
+        id S1353375AbiFANwX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Jun 2022 09:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40212 "EHLO
+        Wed, 1 Jun 2022 09:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349217AbiFANhq (ORCPT
+        with ESMTP id S1344238AbiFANwW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Jun 2022 09:37:46 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F745DA76;
-        Wed,  1 Jun 2022 06:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654090664; x=1685626664;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gsRJp7GaX23R/lKpdCsb53wYqyYS7gYuILC3jDeQbbQ=;
-  b=jK/OL5O2mQkAzOkuoZr0s00Pcrh3vfNW+YYSI4Fqpr66crL+1YUvxJ5p
-   yE9o+RRthePx03oH3ADHHzk8j5pLO87SGn4kXzj4C1BEKaq64cbwWnqVg
-   dpCforjtI9R+EFqn/Be+0COSeio3NjINoJabq7QlX4QoyCoTLS/bSki8F
-   jcWAtpl8wDe5DmXNGITb/Oas5HMZOsjD/Ep0lEy2VOMih4iyvNl14zbgy
-   3+jdiT6v9WdmH2bkjzBkYJCnN3dDDSe8DkwFZakHngqM2PXpDmQmMEOX2
-   2McQOIv+GA4otGOJA3SqviES99uP7h63qp0aXYJf6hDiHjmyFlczIfABf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="274391553"
-X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
-   d="scan'208";a="274391553"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 06:37:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
-   d="scan'208";a="562800265"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 01 Jun 2022 06:37:32 -0700
-Received: from [10.252.214.178] (kliang2-MOBL.ccr.corp.intel.com [10.252.214.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 80FBE580931;
-        Wed,  1 Jun 2022 06:37:29 -0700 (PDT)
-Message-ID: <961e538e-9d1a-741c-56e9-bb546eab2aec@linux.intel.com>
-Date:   Wed, 1 Jun 2022 09:37:28 -0400
-MIME-Version: 1.0
+        Wed, 1 Jun 2022 09:52:22 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA232F3A9;
+        Wed,  1 Jun 2022 06:52:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RYUKZ0i/kAE4QEMT0A6qm8Y6FDJTssHzesz+/jQLbdPDs4Ut9f8xJxoJJRxQXwZLn4x4S+gG1mY3IpNJq8JjnQKCyGi7cj1N6Q676n2CJmtchlfOCxSm7wlX0yUk9H4D92y6dzXZ7FSzz+YF+5K0Om1/9ViJSZ6fH9qVkeMjR8J9SRjv3kx+65rg5ZV/TA0Sv/VSa/6XV21rBWH3AxtkOIaXkoai6Mvo+P3CzT6QzPYgFVUGvdo6O6KD1ZqeoVCLbYTBmMyEUAd8897GqFBRcBCZWwTkzdZ8EAv11DOH13tJ/4spAB2ZZs13wfjO4co4uO/xqaGGAOGk+PEgGczXIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fX2L5RWvIepWAAkaBLitv2XeMCpG+NFVl4GVIinzA14=;
+ b=hMMhiKfwQIWOuFCvdy/uMMX2cTYYIMTpC3tkEPeS0UnmwMZPJjm0M+fkuGwwt1ho1tMAmK0npQOO6IjmyDgx3Xfd436ClBnzbkmtYcqfJKNkgkXbnnmB+PNNxsa6umIhcSrbGYv/dUVw9Ymvz4X0cZUEjjfnTLREFdwlgX8oP36TuxhAaloxgYumjns7LFQZ1oSyfGuy+4vKWAMwH77wX7qZ+doBgOcqGpuygSuy/qINqPad5TD+ETOOb4xP6mjde+b7iU9rHcbHJ5GTkdeusxcmUpTvYu5Ra5XtIBLcOpLSvuam/OFcXZF9hnEk5SFizdqNcYqnm7sWeo0SRUIkfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fX2L5RWvIepWAAkaBLitv2XeMCpG+NFVl4GVIinzA14=;
+ b=LM0baPwWExJpjaf06aTpTv9TIaNwlQzx7eu57s2aAKan0Apo97g+evyiJCLYz3YY6r6Fd8G/9KJ2hVD0B+NkYJVxkmvk9+MdC6sp372AnOk0b0Neml8NXFsgiaCSA0fvDsriQ1sQbDKUyBeMgiKaaggtvJerJRJz3raLKNJuXdo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by DM4PR12MB5843.namprd12.prod.outlook.com (2603:10b6:8:66::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.13; Wed, 1 Jun
+ 2022 13:52:16 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5044:b3eb:8442:fe92]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5044:b3eb:8442:fe92%9]) with mapi id 15.20.5314.013; Wed, 1 Jun 2022
+ 13:52:16 +0000
+Message-ID: <0c795f97-c582-8059-fcf8-82b43239f0d1@amd.com>
+Date:   Wed, 1 Jun 2022 19:21:58 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v5 5/8] perf headers: Record non-cpu pmu capabilities
+ Thunderbird/91.4.1
+Subject: Re: [PATCH v5 2/8] perf tool: Parse pmu caps sysfs only once
 Content-Language: en-US
-To:     Ravi Bangoria <ravi.bangoria@amd.com>, acme@kernel.org
-Cc:     jolsa@kernel.org, irogers@google.com, peterz@infradead.org,
-        rrichter@amd.com, mingo@redhat.com, mark.rutland@arm.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        james.clark@arm.com, leo.yan@linaro.org, ak@linux.intel.com,
-        eranian@google.com, like.xu.linux@gmail.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        peterz@infradead.org, rrichter@amd.com, mingo@redhat.com,
+        mark.rutland@arm.com, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, james.clark@arm.com, leo.yan@linaro.org,
+        ak@linux.intel.com, eranian@google.com, like.xu.linux@gmail.com,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
 References: <20220601032608.1034-1-ravi.bangoria@amd.com>
- <20220601032608.1034-6-ravi.bangoria@amd.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20220601032608.1034-6-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <20220601032608.1034-3-ravi.bangoria@amd.com>
+ <47584a6b-20b9-9a3d-3125-d9fe848cea54@linux.intel.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <47584a6b-20b9-9a3d-3125-d9fe848cea54@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0082.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:9a::17) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5eb5a831-2c12-4493-c5f8-08da43d5f003
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5843:EE_
+X-Microsoft-Antispam-PRVS: <DM4PR12MB584382A813434629BC4547B7E0DF9@DM4PR12MB5843.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ODWmw2Y6fZDn/bY15HXxUUGpgCF2X6f+6No65gnjzpf61+6BoExIjAV2Hgz/1v3IqKh2QEOOhQQ8yj08Y/LPTJ3ohaiKNTe+qCFCB4XYFVEgavUMrhraD3olRN25gFXk9Ie91ykT0L2Bj0Yogr8gKSJPDjAyvnp6KbpsPAKrBAKAAKqtS27xyYHAV4E13lHiivyQ3SDC/Q95/FLAP29Ok8Qi3xVH2LwwpAVfii+7IcogE3lot2O2+V0es6n+kIvl5bve1Fds+aoHQumlh88/QEhCBtLs6m1P/oyK1UPJQ471pGi1UeTmvrFSa4CZMfTtGcfp//jJlQpk1SMJGOWmQHHuc+Z4tBDKxj0gmLk3PwBzv6g7LYCFg7rC1QBMnLDs1gzvRdPHkx1vMzVaci5flUabM6YyCZtjLMHIvZrttso6kwQok22rAsuz4qx+lm0wJgyvkAj2shSqdpEjiOoJ3pbke5vzQVWRtzds+7jLRvdibAur79VdMMvPQssYJ3q+X6+5/NmthxgCJtlSAdGHmVqjI1+p+Vguo9EJh4sLWZSACIzrsPH4s7RDo3/UW/mRjwYr3UHC/qGX6x0qaeKWe7F9uE33/BtuCRGZQKOl7BoDa/lnsE4oX872FSdN3QgiRFS55XeSV9gt2AQ2mb8ryVyUv2wJqyZMikSxSXbdnUi0xZjIjGJse2IIx+XH9yxSemBrvqFZAvX3aWTNCsRlBx6kElTd6/0WPyQw8EvmQ5Q=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(86362001)(6666004)(8936002)(186003)(31696002)(38100700002)(508600001)(5660300002)(44832011)(4744005)(7416002)(6486002)(2616005)(6506007)(6512007)(26005)(31686004)(66946007)(316002)(4326008)(8676002)(66556008)(66476007)(36756003)(6916009)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MzlUaUM2L0JJMjhybHVOV0ZudmpTVndVTWVxdXlUTmpYTUUrSkJRc0Q1YVFk?=
+ =?utf-8?B?a2VXYVRZL0J0c2FkRUVCSG9UbWNlQjVXbnE5RjN6RW11dlRNUyt1bG5LZkVB?=
+ =?utf-8?B?eWFlUEw3eUpldHp3TmZabGQvbERaWkpNK1RZKzd2Yjh0Sy9aSUdZZS9JTTY2?=
+ =?utf-8?B?OEN3K1BtMUtjZ2c0TWMvY1lNa0Z2ZzB4OW5KMFRSek1XOXJtZHowTFhRZGc1?=
+ =?utf-8?B?VTZncXkvZUJtcWtkNTZaM2ZiYTBQYnRoS3Y1QlQ2TG9FTFJhY1RSQWtRaGxz?=
+ =?utf-8?B?RDY2bmphc2k4Rjh0QlpWWi92bEJiWEtRK01kV0F3KythcTZYTUp5ZHRBOGhl?=
+ =?utf-8?B?Wk5oWitDd2Jlb3R3R1dnUzVNNlI4YkFFWUxOQ2R4Zi9JYkVQWk1LMEE0dWZt?=
+ =?utf-8?B?Ynp1cy9xejRBM3p5dkszSmM1cWxFUUlKWERmQ2RpQXVmTUVaV0RHOHRCeVNJ?=
+ =?utf-8?B?cXU2TkxUVVQ2NUNvTGVPSVNOb3FzQ1dxakVtc3ZXb0hadFJYcXQvTWRxZnRl?=
+ =?utf-8?B?MzgyeFpwWkpKV0xUMW5QOXRFZDk5c0ZYNnhQZVpHQzlteGV0eFpDaTAxeEZE?=
+ =?utf-8?B?cHJHRUtGOXRKeVQ5cnVRUFBOdkhWR3MwQzEvcDVaNkJlTEc0ei9xRFpTVko3?=
+ =?utf-8?B?OElOMzBzVG42Q3FkWHc3cGd6ZWc2UUxaOXFpUlc1ZEIyZnVBdCs5azUrN0pi?=
+ =?utf-8?B?QVJCVkQ1eVppUnBRb2RObXJnWGpkTXRnNW9LRHl5ZGlaY2J5azhsN0sxT2dt?=
+ =?utf-8?B?cWc0enhRNi9HSjRMaDQzdkpuYU9iWW1lMnV0ZFBCWitHZVQzVUdBdDQ5UjRa?=
+ =?utf-8?B?Z0FGVFFKTG05ZklaRDBkOWFrMThZampQNnFUS2NPYzV4c3hTNkRqZ3NDZ296?=
+ =?utf-8?B?N2wvS0VWNFI5OUl0UnNBU2VqWFZ4SXFZT011em1Sd2ZndHdDZ0VObnhCOUJi?=
+ =?utf-8?B?OHVKVHViMzA0NGU0NzV1Tkw4R2RMaStJRTNqVEFyOEdmeis5WmdObVFCNVBs?=
+ =?utf-8?B?VXZYUkVPWDQyMUsxdkh0Mi9wbGduNy9lZFR3U2MxaVhCUTg0VGE5cXBWUU1m?=
+ =?utf-8?B?dVFhTktxelB6Z2QrdWVCT1dIN0ltSGJndGpZcnJUc1ZLaWQ2TjZUc3FZVHRE?=
+ =?utf-8?B?dHNxWWZSU2EyZnlOaGt3Vlp4OHR6V1NnTCt1WmRaTmhxWUlQRm1SVmFFbXps?=
+ =?utf-8?B?cnBqbkI3Y3VqMjhuWk5CU0VDSHJJYStRUkF6bXVFbEM5dVptNm5PYmZRbU9H?=
+ =?utf-8?B?aUlQYUUxWDhmMkNObjJmUnZXTHZXUENmNitmNkE5VmR6aDg4T203Y2trT1VS?=
+ =?utf-8?B?L0xlbFRTS2lFSFRheUg2c3BsNmZES1lIYlF2MGE4dGk3RlpmRmlLeTJPeWlC?=
+ =?utf-8?B?Z0luMDNTWGtpTnBBbC9kZXorRW1ZNlBMZWdNRkgycU05UUlXeVRKMGYveVoz?=
+ =?utf-8?B?MUhseHJvUzlZN2kweHNDbUNiZU5xVWtUa0VxTDF3a2FaUEVHVVZQSklRUy9n?=
+ =?utf-8?B?Y2h1dUhhWHNuWXFCc1U2UWxETXN4WkNtT25MZDh6RG56OXYvSkpiQWJRY2pZ?=
+ =?utf-8?B?TlVWNXBVdzkzTVBNWmFnd2lWMktWK2d0V3J5d3RiZUFocWI3djVZMDlGeCtB?=
+ =?utf-8?B?L3pFTzNpV05WSkxEYmVIQmt3WkJLSjQzK1crT3pDNW1hQis0SmpuRU5XamNq?=
+ =?utf-8?B?M1Npb2o4Y0Zyb2huWU5wTDhTays4aFc5RUdQR2RsY1JGWjQ2NVJKK3BsTlZY?=
+ =?utf-8?B?cHZGSDZOU01QMXpJbEtXZGR4Wnl1ZW8ybnUyMkdoN1gxcUowY3E5Nm1kZXRE?=
+ =?utf-8?B?Y0lhVHVNajdmOGF5OGt5YUpoNkVwOWF6M29KamJEcFBxdE9hQlJKZU9nZ1dV?=
+ =?utf-8?B?WXYyMWRhZ2tCS1hsYThEYzhVbXJaTFNVa1hWalRKWFRVRWZzNXB2aGVldllt?=
+ =?utf-8?B?RGxXVUdPcG1TcHdaU2grVHZRb3E4M09vYVhKUTdZeFdvTGUvTXNRQTFGUlFr?=
+ =?utf-8?B?UG9yUnZVUnp0WW5KOTRoQkk5Z2h0VWFmcmtlTjBQeEhZV1NOQmp1M1o1T1Ri?=
+ =?utf-8?B?aGRkTVNCWnFwWklkVDlNM00wWHI3MEpzOXRnWEdzK0s2OFVGZ0REVnZDeHdt?=
+ =?utf-8?B?cVZaV09ZUXpFbFpML1RhcTdRSkhVK29oSGVtc3EyL1NaMG9uVUJmNUorSlA5?=
+ =?utf-8?B?aGlldGF0QWpWeWl5TGQ1ZlRta2hUTXpOMjVYTTFGVkszTE9RTmNFT0d5NFN2?=
+ =?utf-8?B?WFFIK3JsV2NDTEpid1FtREZnb1h6MDVOTEcxQm01Y1REK0hud1lldlJ6MW9u?=
+ =?utf-8?B?QVRBb3E4QlBacXJsM0l2R2Z5UDl4STJZbmRVZktGU2tBZTR4NkJDZz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5eb5a831-2c12-4493-c5f8-08da43d5f003
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2022 13:52:16.4453
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ydNxI9L29CFmx3xf5P6FXDOZKOA1MKansPDmcItRAbXjMQp+2EPu5PNnu0RExIINiSphycyIck6iRcA7fpI+/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5843
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Kan,
 
+[...]
 
-On 5/31/2022 11:26 PM, Ravi Bangoria wrote:
-> Pmus advertise their capabilities via sysfs attribute files but
-> perf tool currently parses only core(cpu) or hybrid core pmu
-> capabilities. Add support of recording non-core pmu capabilities
-> int perf.data header.
+>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>> index 541889fa9f9c..4b45fd8da5a3 100644
+>> --- a/tools/perf/util/pmu.h
+>> +++ b/tools/perf/util/pmu.h
+>> @@ -46,6 +46,8 @@ struct perf_pmu {
+>>       struct perf_cpu_map *cpus;
+>>       struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+>>       struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
+>> +    bool caps_initialized;
+>> +    u32 nr_caps;
 > 
-> Note that a newly proposed HEADER_PMU_CAPS is replacing existing
-> HEADER_HYBRID_CPU_PMU_CAPS. Special care is taken for hybrid core
-> pmus by writing their capabilities first in the perf.data header
-> to make sure new perf.data file being read by old perf tool does
-> not break.
+> If they are just used for the cache purpose, I don't think we need to add the variables in the struct perf_pmu.
 > 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->   .../Documentation/perf.data-file-format.txt   |  10 +-
->   tools/perf/builtin-inject.c                   |   2 +-
->   tools/perf/util/env.c                         |  60 ++++++-
->   tools/perf/util/env.h                         |  12 +-
->   tools/perf/util/header.c                      | 160 ++++++++++--------
->   tools/perf/util/header.h                      |   2 +-
->   6 files changed, 158 insertions(+), 88 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-> index f56d0e0fbff6..2233534e508a 100644
-> --- a/tools/perf/Documentation/perf.data-file-format.txt
-> +++ b/tools/perf/Documentation/perf.data-file-format.txt
-> @@ -419,18 +419,20 @@ Example:
->     cpu_core cpu list : 0-15
->     cpu_atom cpu list : 16-23
->   
-> -	HEADER_HYBRID_CPU_PMU_CAPS = 31,
-> +	HEADER_PMU_CAPS = 31,
->   
-> -	A list of hybrid CPU PMU capabilities.
-> +	List of pmu capabilities (except cpu pmu which is already
-> +	covered by HEADER_CPU_PMU_CAPS). Note that hybrid cpu pmu
-> +	capabilities are also stored here.
->   
->   struct {
->   	u32 nr_pmu;
->   	struct {
-> -		u32 nr_cpu_pmu_caps;
-> +		u32 nr_caps;
->   		{
->   			char	name[];
->   			char	value[];
-> -		} [nr_cpu_pmu_caps];
-> +		} [nr_caps];
->   		char pmu_name[];
->   	} [nr_pmu];
->   };
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index a75bf11585b5..05bc0cfccf83 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -809,7 +809,7 @@ static bool keep_feat(int feat)
->   	case HEADER_CPU_PMU_CAPS:
->   	case HEADER_CLOCK_DATA:
->   	case HEADER_HYBRID_TOPOLOGY:
-> -	case HEADER_HYBRID_CPU_PMU_CAPS:
-> +	case HEADER_PMU_CAPS:
->   		return true;
->   	/* Information that can be updated */
->   	case HEADER_BUILD_ID:
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 7d3aeb2e4622..5b8cf6a421a4 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -219,13 +219,13 @@ void perf_env__exit(struct perf_env *env)
->   	}
->   	zfree(&env->hybrid_nodes);
->   
-> -	for (i = 0; i < env->nr_hybrid_cpc_nodes; i++) {
-> -		for (j = 0; j < env->hybrid_cpc_nodes[i].nr_cpu_pmu_caps; j++)
-> -			zfree(&env->hybrid_cpc_nodes[i].cpu_pmu_caps[j]);
-> -		zfree(&env->hybrid_cpc_nodes[i].cpu_pmu_caps);
-> -		zfree(&env->hybrid_cpc_nodes[i].pmu_name);
-> +	for (i = 0; i < env->nr_pmus_with_caps; i++) {
-> +		for (j = 0; j < env->pmu_caps[i].nr_caps; j++)
-> +			zfree(&env->pmu_caps[i].caps[j]);
-> +		zfree(&env->pmu_caps[i].caps);
-> +		zfree(&env->pmu_caps[i].pmu_name);
->   	}
-> -	zfree(&env->hybrid_cpc_nodes);
-> +	zfree(&env->pmu_caps);
->   }
->   
->   void perf_env__init(struct perf_env *env)
-> @@ -531,3 +531,51 @@ int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu)
->   
->   	return cpu.cpu >= 0 && cpu.cpu < env->nr_numa_map ? env->numa_map[cpu.cpu] : -1;
->   }
-> +
-> +char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
-> +			     const char *cap)
-> +{
-> +	char *cap_eq;
-> +	int cap_size;
-> +	char **ptr;
-> +	int i, j;
-> +
-> +	if (!pmu_name || !cap)
-> +		return NULL;
-> +
-> +	cap_size = strlen(cap);
-> +	cap_eq = zalloc(cap_size + 2);
-> +	if (!cap_eq)
-> +		return NULL;
-> +
-> +	memcpy(cap_eq, cap, cap_size);
-> +	cap_eq[cap_size] = '=';
-> +
-> +	if (!strcmp(pmu_name, "cpu")) {
-> +		for (i = 0; i < env->nr_cpu_pmu_caps; i++) {
-> +			if (!strncmp(env->cpu_pmu_caps[i], cap_eq, cap_size + 1)) {
-> +				free(cap_eq);
-> +				return &env->cpu_pmu_caps[i][cap_size + 1];
-> +			}
-> +		}
-> +		goto out;
-> +	}
-> +
-> +	for (i = 0; i < env->nr_pmus_with_caps; i++) {
-> +		if (strcmp(env->pmu_caps[i].pmu_name, pmu_name))
-> +			continue;
-> +
-> +		ptr = env->pmu_caps[i].caps;
-> +
-> +		for (j = 0; j < env->pmu_caps[i].nr_caps; j++) {
-> +			if (!strncmp(ptr[j], cap_eq, cap_size + 1)) {
-> +				free(cap_eq);
-> +				return &ptr[j][cap_size + 1];
-> +			}
-> +		}
-> +	}
-> +
-> +out:
-> +	free(cap_eq);
-> +	return NULL;
-> +}
-> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> index 43aab59f7322..4566c51f2fd9 100644
-> --- a/tools/perf/util/env.h
-> +++ b/tools/perf/util/env.h
-> @@ -43,10 +43,10 @@ struct hybrid_node {
->   	char	*cpus;
->   };
->   
-> -struct hybrid_cpc_node {
-> -	int		nr_cpu_pmu_caps;
-> +struct pmu_caps {
-> +	int		nr_caps;
->   	unsigned int    max_branches;
-> -	char            **cpu_pmu_caps;
-> +	char            **caps;
->   	char            *pmu_name;
->   };
->   
-> @@ -74,7 +74,7 @@ struct perf_env {
->   	int			nr_groups;
->   	int			nr_cpu_pmu_caps;
->   	int			nr_hybrid_nodes;
-> -	int			nr_hybrid_cpc_nodes;
-> +	int			nr_pmus_with_caps;
->   	char			*cmdline;
->   	const char		**cmdline_argv;
->   	char			*sibling_cores;
-> @@ -94,7 +94,7 @@ struct perf_env {
->   	struct memory_node	*memory_nodes;
->   	unsigned long long	 memory_bsize;
->   	struct hybrid_node	*hybrid_nodes;
-> -	struct hybrid_cpc_node	*hybrid_cpc_nodes;
-> +	struct pmu_caps		*pmu_caps;
->   #ifdef HAVE_LIBBPF_SUPPORT
->   	/*
->   	 * bpf_info_lock protects bpf rbtrees. This is needed because the
-> @@ -172,4 +172,6 @@ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
->   struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
->   
->   int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
-> +char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
-> +			     const char *cap);
->   #endif /* __PERF_ENV_H */
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index a1e4ec53333d..67bf897e8f89 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -1512,18 +1512,13 @@ static int write_compressed(struct feat_fd *ff __maybe_unused,
->   	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
->   }
->   
-> -static int write_per_cpu_pmu_caps(struct feat_fd *ff, struct perf_pmu *pmu,
-> -				  bool write_pmu)
-> +static int __write_pmu_caps(struct feat_fd *ff, struct perf_pmu *pmu,
-> +			    bool write_pmu)
->   {
->   	struct perf_pmu_caps *caps = NULL;
-> -	int nr_caps;
->   	int ret;
->   
-> -	nr_caps = perf_pmu__caps_parse(pmu);
-> -	if (nr_caps < 0)
-> -		return nr_caps;
-> -
-> -	ret = do_write(ff, &nr_caps, sizeof(nr_caps));
-> +	ret = do_write(ff, &pmu->nr_caps, sizeof(pmu->nr_caps));
+> A static variable should be good enough. See sysctl__nmi_watchdog_enabled().
 
-The nr_caps can be retrieved from the cached perf_pmu__caps_parse().
-Seems we only need to pass the nr_caps as a parameter of the 
-__write_pmu_caps().
-
->   	if (ret < 0)
->   		return ret;
->   
-> @@ -1550,33 +1545,60 @@ static int write_cpu_pmu_caps(struct feat_fd *ff,
->   			      struct evlist *evlist __maybe_unused)
->   {
->   	struct perf_pmu *cpu_pmu = perf_pmu__find("cpu");
-> +	int ret;
->   
->   	if (!cpu_pmu)
->   		return -ENOENT;
->   
-> -	return write_per_cpu_pmu_caps(ff, cpu_pmu, false);
-> +	ret = perf_pmu__caps_parse(cpu_pmu);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return __write_pmu_caps(ff, cpu_pmu, false);
->   }
->   
-> -static int write_hybrid_cpu_pmu_caps(struct feat_fd *ff,
-> -				     struct evlist *evlist __maybe_unused)
-> +static int write_pmu_caps(struct feat_fd *ff,
-> +			  struct evlist *evlist __maybe_unused)
->   {
-> -	struct perf_pmu *pmu;
-> -	u32 nr_pmu = perf_pmu__hybrid_pmu_num();
-> +	struct perf_pmu *pmu = NULL;
-> +	int nr_pmu = 0;
->   	int ret;
->   
-> -	if (nr_pmu == 0)
-> -		return -ENOENT;
-> +	while ((pmu = perf_pmu__scan(pmu))) {
-> +		if (!pmu->name || !strcmp(pmu->name, "cpu") ||
-> +		    perf_pmu__caps_parse(pmu) <= 0)
-> +			continue;
-> +		nr_pmu++;
-> +	}
->   
->   	ret = do_write(ff, &nr_pmu, sizeof(nr_pmu));
->   	if (ret < 0)
->   		return ret;
->   
-> +	if (!nr_pmu)
-> +		return 0;
-> +
-> +	/*
-> +	 * Write hybrid pmu caps first to maintain compatibility with
-> +	 * older perf tool.
-> +	 */
-> +	pmu = NULL;
->   	perf_pmu__for_each_hybrid_pmu(pmu) {
-> -		ret = write_per_cpu_pmu_caps(ff, pmu, true);
-> +		ret = __write_pmu_caps(ff, pmu, true);
->   		if (ret < 0)
->   			return ret;
->   	}
->   
-> +	pmu = NULL;
-> +	while ((pmu = perf_pmu__scan(pmu))) {
-> +		if (!pmu->name || !strcmp(pmu->name, "cpu") ||
-> +		    !pmu->nr_caps || perf_pmu__is_hybrid(pmu->name))
-
-The perf_pmu__caps_parse() can used to replace the pmu->nr_caps.
-
-It seems we can factor out a macro to replace the repeat check 
-!pmu->name || !strcmp(pmu->name, "cpu") || perf_pmu__caps_parse(pmu) <= 0.
+These fields are per pmu. Static variable won't help :) And they are
+used in subsequent patches as well.
 
 Thanks,
-Kan
-
-> +			continue;
-> +
-> +		ret = __write_pmu_caps(ff, pmu, true);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
->   	return 0;
->   }
->   
-> @@ -2051,8 +2073,7 @@ static void print_compressed(struct feat_fd *ff, FILE *fp)
->   		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
->   }
->   
-> -static void print_per_cpu_pmu_caps(FILE *fp, int nr_caps, char **cpu_pmu_caps,
-> -				   char *pmu_name)
-> +static void __print_pmu_caps(FILE *fp, int nr_caps, char **caps, char *pmu_name)
->   {
->   	const char *delimiter = "";
->   	int i;
-> @@ -2064,7 +2085,7 @@ static void print_per_cpu_pmu_caps(FILE *fp, int nr_caps, char **cpu_pmu_caps,
->   
->   	fprintf(fp, "# %s pmu capabilities: ", pmu_name);
->   	for (i = 0; i < nr_caps; i++) {
-> -		fprintf(fp, "%s%s", delimiter, cpu_pmu_caps[i]);
-> +		fprintf(fp, "%s%s", delimiter, caps[i]);
->   		delimiter = ", ";
->   	}
->   
-> @@ -2073,19 +2094,18 @@ static void print_per_cpu_pmu_caps(FILE *fp, int nr_caps, char **cpu_pmu_caps,
->   
->   static void print_cpu_pmu_caps(struct feat_fd *ff, FILE *fp)
->   {
-> -	print_per_cpu_pmu_caps(fp, ff->ph->env.nr_cpu_pmu_caps,
-> -			       ff->ph->env.cpu_pmu_caps, (char *)"cpu");
-> +	__print_pmu_caps(fp, ff->ph->env.nr_cpu_pmu_caps,
-> +			 ff->ph->env.cpu_pmu_caps, (char *)"cpu");
->   }
->   
-> -static void print_hybrid_cpu_pmu_caps(struct feat_fd *ff, FILE *fp)
-> +static void print_pmu_caps(struct feat_fd *ff, FILE *fp)
->   {
-> -	struct hybrid_cpc_node *n;
-> +	struct pmu_caps *pmu_caps;
->   
-> -	for (int i = 0; i < ff->ph->env.nr_hybrid_cpc_nodes; i++) {
-> -		n = &ff->ph->env.hybrid_cpc_nodes[i];
-> -		print_per_cpu_pmu_caps(fp, n->nr_cpu_pmu_caps,
-> -				       n->cpu_pmu_caps,
-> -				       n->pmu_name);
-> +	for (int i = 0; i < ff->ph->env.nr_pmus_with_caps; i++) {
-> +		pmu_caps = &ff->ph->env.pmu_caps[i];
-> +		__print_pmu_caps(fp, pmu_caps->nr_caps, pmu_caps->caps,
-> +				 pmu_caps->pmu_name);
->   	}
->   }
->   
-> @@ -3196,28 +3216,27 @@ static int process_compressed(struct feat_fd *ff,
->   	return 0;
->   }
->   
-> -static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
-> -				    char ***cpu_pmu_caps,
-> -				    unsigned int *max_branches)
-> +static int __process_pmu_caps(struct feat_fd *ff, int *nr_caps,
-> +			      char ***caps, unsigned int *max_branches)
->   {
->   	int name_size, value_size;
->   	char *name, *value, *ptr;
-> -	u32 nr_caps, i;
-> +	u32 nr_pmu_caps, i;
->   
-> -	*nr_cpu_pmu_caps = 0;
-> -	*cpu_pmu_caps = NULL;
-> +	*nr_caps = 0;
-> +	*caps = NULL;
->   
-> -	if (do_read_u32(ff, &nr_caps))
-> +	if (do_read_u32(ff, &nr_pmu_caps))
->   		return -1;
->   
-> -	if (!nr_caps)
-> +	if (!nr_pmu_caps)
->   		return 0;
->   
-> -	*cpu_pmu_caps = zalloc(sizeof(char *) * nr_caps);
-> -	if (!*cpu_pmu_caps)
-> +	*caps = zalloc(sizeof(char *) * nr_pmu_caps);
-> +	if (!*caps)
->   		return -1;
->   
-> -	for (i = 0; i < nr_caps; i++) {
-> +	for (i = 0; i < nr_pmu_caps; i++) {
->   		name = do_read_string(ff);
->   		if (!name)
->   			goto error;
-> @@ -3235,7 +3254,7 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
->   		memcpy(ptr, name, name_size);
->   		ptr[name_size] = '=';
->   		memcpy(ptr + name_size + 1, value, value_size);
-> -		(*cpu_pmu_caps)[i] = ptr;
-> +		(*caps)[i] = ptr;
->   
->   		if (!strcmp(name, "branches"))
->   			*max_branches = atoi(value);
-> @@ -3243,7 +3262,7 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
->   		free(value);
->   		free(name);
->   	}
-> -	*nr_cpu_pmu_caps = nr_caps;
-> +	*nr_caps = nr_pmu_caps;
->   	return 0;
->   
->   free_value:
-> @@ -3252,29 +3271,28 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
->   	free(name);
->   error:
->   	for (; i > 0; i--)
-> -		free((*cpu_pmu_caps)[i - 1]);
-> -	free(*cpu_pmu_caps);
-> -	*cpu_pmu_caps = NULL;
-> -	*nr_cpu_pmu_caps = 0;
-> +		free((*caps)[i - 1]);
-> +	free(*caps);
-> +	*caps = NULL;
-> +	*nr_caps = 0;
->   	return -1;
->   }
->   
->   static int process_cpu_pmu_caps(struct feat_fd *ff,
->   				void *data __maybe_unused)
->   {
-> -	int ret = process_per_cpu_pmu_caps(ff, &ff->ph->env.nr_cpu_pmu_caps,
-> -					&ff->ph->env.cpu_pmu_caps,
-> -					&ff->ph->env.max_branches);
-> +	int ret = __process_pmu_caps(ff, &ff->ph->env.nr_cpu_pmu_caps,
-> +				     &ff->ph->env.cpu_pmu_caps,
-> +				     &ff->ph->env.max_branches);
->   
->   	if (!ret && !ff->ph->env.cpu_pmu_caps)
->   		pr_debug("cpu pmu capabilities not available\n");
->   	return ret;
->   }
->   
-> -static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
-> -				       void *data __maybe_unused)
-> +static int process_pmu_caps(struct feat_fd *ff, void *data __maybe_unused)
->   {
-> -	struct hybrid_cpc_node *nodes;
-> +	struct pmu_caps *pmu_caps;
->   	u32 nr_pmu, i;
->   	int ret;
->   	int j;
-> @@ -3283,45 +3301,45 @@ static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
->   		return -1;
->   
->   	if (!nr_pmu) {
-> -		pr_debug("hybrid cpu pmu capabilities not available\n");
-> +		pr_debug("pmu capabilities not available\n");
->   		return 0;
->   	}
->   
-> -	nodes = zalloc(sizeof(*nodes) * nr_pmu);
-> -	if (!nodes)
-> +	pmu_caps = zalloc(sizeof(*pmu_caps) * nr_pmu);
-> +	if (!pmu_caps)
->   		return -ENOMEM;
->   
->   	for (i = 0; i < nr_pmu; i++) {
-> -		struct hybrid_cpc_node *n = &nodes[i];
-> -
-> -		ret = process_per_cpu_pmu_caps(ff, &n->nr_cpu_pmu_caps,
-> -					       &n->cpu_pmu_caps,
-> -					       &n->max_branches);
-> +		ret = __process_pmu_caps(ff, &pmu_caps[i].nr_caps,
-> +					 &pmu_caps[i].caps,
-> +					 &pmu_caps[i].max_branches);
->   		if (ret)
->   			goto err;
->   
-> -		n->pmu_name = do_read_string(ff);
-> -		if (!n->pmu_name) {
-> +		pmu_caps[i].pmu_name = do_read_string(ff);
-> +		if (!pmu_caps[i].pmu_name) {
->   			ret = -1;
->   			goto err;
->   		}
-> -		if (!n->nr_cpu_pmu_caps)
-> -			pr_debug("%s pmu capabilities not available\n", n->pmu_name);
-> +		if (!pmu_caps[i].nr_caps) {
-> +			pr_debug("%s pmu capabilities not available\n",
-> +				 pmu_caps[i].pmu_name);
-> +		}
->   	}
->   
-> -	ff->ph->env.nr_hybrid_cpc_nodes = nr_pmu;
-> -	ff->ph->env.hybrid_cpc_nodes = nodes;
-> +	ff->ph->env.nr_pmus_with_caps = nr_pmu;
-> +	ff->ph->env.pmu_caps = pmu_caps;
->   	return 0;
->   
->   err:
->   	for (i = 0; i < nr_pmu; i++) {
-> -		for (j = 0; j < nodes[i].nr_cpu_pmu_caps; j++)
-> -			free(nodes[i].cpu_pmu_caps[j]);
-> -		free(nodes[i].cpu_pmu_caps);
-> -		free(nodes[i].pmu_name);
-> +		for (j = 0; j < pmu_caps[i].nr_caps; j++)
-> +			free(pmu_caps[i].caps[j]);
-> +		free(pmu_caps[i].caps);
-> +		free(pmu_caps[i].pmu_name);
->   	}
->   
-> -	free(nodes);
-> +	free(pmu_caps);
->   	return ret;
->   }
->   
-> @@ -3387,7 +3405,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
->   	FEAT_OPR(CPU_PMU_CAPS,	cpu_pmu_caps,	false),
->   	FEAT_OPR(CLOCK_DATA,	clock_data,	false),
->   	FEAT_OPN(HYBRID_TOPOLOGY,	hybrid_topology,	true),
-> -	FEAT_OPR(HYBRID_CPU_PMU_CAPS,	hybrid_cpu_pmu_caps,	false),
-> +	FEAT_OPR(PMU_CAPS,	pmu_caps,	false),
->   };
->   
->   struct header_print_data {
-> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-> index 08563c1f1bff..5790bf556b90 100644
-> --- a/tools/perf/util/header.h
-> +++ b/tools/perf/util/header.h
-> @@ -46,7 +46,7 @@ enum {
->   	HEADER_CPU_PMU_CAPS,
->   	HEADER_CLOCK_DATA,
->   	HEADER_HYBRID_TOPOLOGY,
-> -	HEADER_HYBRID_CPU_PMU_CAPS,
-> +	HEADER_PMU_CAPS,
->   	HEADER_LAST_FEATURE,
->   	HEADER_FEAT_BITS	= 256,
->   };
+Ravi
