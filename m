@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF3CCA47B
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 20:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052E1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 20:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbiFBUGu (ORCPT
+        id S237463AbiFBUJo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 16:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50234 "EHLO
+        Thu, 2 Jun 2022 16:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238383AbiFBUGt (ORCPT
+        with ESMTP id S237569AbiFBUJn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 16:06:49 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96BA236;
-        Thu,  2 Jun 2022 13:06:46 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id y144so2773781oia.7;
-        Thu, 02 Jun 2022 13:06:46 -0700 (PDT)
+        Thu, 2 Jun 2022 16:09:43 -0400
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8803021AC;
+        Thu,  2 Jun 2022 13:09:41 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-f3381207a5so8159527fac.4;
+        Thu, 02 Jun 2022 13:09:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AJx8EzZFfK8sPhpdoIX1JZPKfbXDh5xv5Av3MuXsAYI=;
-        b=glBURCeIaI9wyQ9Lt0jShRRY8CpxrvuG3aAtd4KiFZions1LD0zHzhC6SlWLVJU1O9
-         sSVknPkbp9D3genIFH8l8fg7w0srrIV+YOh03M3TiyijsSLA8lp5+L7l/LdFFvMJbxW4
-         lxeqwRhRuWVE1eZDEqfOqrUGu+ElaSDcV5vlBJVxg7Q5ue3rggMPiAdZKDZ9lJQwqznk
-         QsS3y7Y/JWl6GU7iHfmuckDIIMsjOdimKG7YYaAhgcTwiPayWpWYeptxWnaTMRDFu4T7
-         pMKd0D5EJLhY8RkjX4kiFQKybroH03Mxs9j19b9YEbsOUQbYH7J982bcUpdaxE75Fr9u
-         8ukA==
-X-Gm-Message-State: AOAM531nhdWnMvGotuUCa2cHzZBfQ7S38b6jSB/5sEKNnEULs5+NIlhC
-        16AwjTMFMkJCfuP8LMJGp2spNrzx+fRnRyq6Cyk=
-X-Google-Smtp-Source: ABdhPJxjPC7wm9cBiImBF5sK+Q/d4b72Jf+ZiDnArJjtCpDt5SG1lNVnykldTXmmR91r2AudAqs9F24/vVEdIfOoT34=
-X-Received: by 2002:a05:6808:1a01:b0:32b:1f24:9213 with SMTP id
- bk1-20020a0568081a0100b0032b1f249213mr3469092oib.92.1654200406066; Thu, 02
- Jun 2022 13:06:46 -0700 (PDT)
+        bh=AcNwfkxQR7d/YlmiTtCr3hnpdL0LWDXQZRLEfx+qgjo=;
+        b=6ZhAdWcQeqvervg5fAxzMOx7lYMKi1n2qvtNE7tm/S7IED5xW1lPaPWHj2kHjfTRDI
+         idYZOWgjj6hcDqI2HWo0sS+HO3sAau4zgV76mHUEl8F2EYqW0npgxDCsc8mMj5r2+sdj
+         I4TftKCi9+2hp3mHwofDDchUGOvEkMsw7qP8Y+WtDLFURjEcatUQY8fhjP/lIWiAnh6m
+         Ydkad2NK9ibzQGWrkngbB1rHyWAcAlUlZQRLv6TAIWCiUDX0CjU5wPWMkNq7q9fICa8A
+         +rbTlBuyEGWb1dKNxUqg6HqXQXTprEUaGmpqs2R4WJu0J00chSbfqgM3YQDAUJmWC5rT
+         Exxg==
+X-Gm-Message-State: AOAM530BDxnGGuISadcjDKaML2j6f2L+U9KanhUOS7B17gRzpZKwgeue
+        Y30aY3twF95O7yL8J3OVypbQMY/xEjnCaAdiy3E=
+X-Google-Smtp-Source: ABdhPJyAncQxPhnFubLXK+rW6BtKMShVaYITN8d1ys7TuwWhX7qbMSrSfeU2DU+OSoxYUdaUjFDjUWzWkD3jzZTysUw=
+X-Received: by 2002:a05:6870:d1cd:b0:e1:e7ee:faa0 with SMTP id
+ b13-20020a056870d1cd00b000e1e7eefaa0mr21146892oac.5.1654200580847; Thu, 02
+ Jun 2022 13:09:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220601065846.456965-1-namhyung@kernel.org> <20220601065846.456965-3-namhyung@kernel.org>
- <CAP-5=fWvS=1XrXnE_a+sif8ZKy2oc6pmo6RmZ6+fFrWoa1VM3A@mail.gmail.com>
-In-Reply-To: <CAP-5=fWvS=1XrXnE_a+sif8ZKy2oc6pmo6RmZ6+fFrWoa1VM3A@mail.gmail.com>
+References: <20220601065846.456965-1-namhyung@kernel.org> <20220601065846.456965-5-namhyung@kernel.org>
+ <CAP-5=fVniyi3dtvH=-0h9ugmkcanyMa7wdxwrPR4OkFdws=x_w@mail.gmail.com>
+In-Reply-To: <CAP-5=fVniyi3dtvH=-0h9ugmkcanyMa7wdxwrPR4OkFdws=x_w@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 2 Jun 2022 13:06:34 -0700
-Message-ID: <CAM9d7chthpaF9A_uZCm3uRzLe7Ho4-kuJ6J4D1evJPdMgSV9Ng@mail.gmail.com>
-Subject: Re: [PATCH 2/5] perf lock: Add lock contention tracepoints record support
+Date:   Thu, 2 Jun 2022 13:09:29 -0700
+Message-ID: <CAM9d7cgzkhCpLHGyFRi51G=qw1ijX28W2zu6G04dFGhP6n8TaA@mail.gmail.com>
+Subject: Re: [PATCH 4/5] perf record: Allow to specify max stack depth of fp callchain
 To:     Ian Rogers <irogers@google.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -58,40 +58,22 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Wed, Jun 1, 2022 at 11:21 PM Ian Rogers <irogers@google.com> wrote:
+On Wed, Jun 1, 2022 at 11:30 PM Ian Rogers <irogers@google.com> wrote:
 >
 > On Tue, May 31, 2022 at 11:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > When LOCKDEP and LOCK_STAT events are not available, it falls back to
-> > record the new lock contention tracepoints.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/builtin-lock.c | 70 +++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 63 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> > index 23a33ac15e68..3e3320b8cede 100644
-> > --- a/tools/perf/builtin-lock.c
-> > +++ b/tools/perf/builtin-lock.c
-> > @@ -495,6 +495,12 @@ struct trace_lock_handler {
-> >
-> >         int (*release_event)(struct evsel *evsel,
-> >                              struct perf_sample *sample);
-> > +
-> > +       int (*contention_begin_event)(struct evsel *evsel,
-> > +                                     struct perf_sample *sample);
-> > +
-> > +       int (*contention_end_event)(struct evsel *evsel,
-> > +                                   struct perf_sample *sample);
+> > Currently it has no interface to specify the max stack depth for perf
+> > record.  Extend the command line parameter to accept a number after
+> > 'fp' to specify the depth like '--call-graph fp,32'.
 >
-> Would it make sense to add a comment here about LOCKDEP and LOCK_STAT?
-> It could be confusing if the handler isn't called on different
-> kernels.
+> It is valid to have call-graph=fp as a modifier on an event. To
+> support a depth with that we couldn't use ',' as it is already the
+> separator between modifiers. For consistency maybe a different
+> separator should be used here?
 
-Sure, I'll add some comments here.
+But it's already there for dwarf stack dump size like
+'--call-graph dwarf,4096'.  Maybe we can add a new config term
+for the event parser.
 
 Thanks,
 Namhyung
