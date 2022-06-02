@@ -2,115 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABA4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 18:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF3CCA47B
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 20:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237842AbiFBSIY (ORCPT
+        id S229518AbiFBUGu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 14:08:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39394 "EHLO
+        Thu, 2 Jun 2022 16:06:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237836AbiFBSIX (ORCPT
+        with ESMTP id S238383AbiFBUGt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 14:08:23 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C9026ADD
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Jun 2022 11:08:22 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id t6so7452478wra.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jun 2022 11:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9HxLJgZtlHlK+K1gWFxW+a6tTn7Jn/932cs76W+wS5Q=;
-        b=gXafYBazVGRnUdC1FD29atbaAVADiZ30i2Q/SVfn9cd8GZ7W0bWCWgy9yYb4jP8Oyu
-         4hZmNacxn7qtAKDYOAQww+NmI4Hw7kk2P3klC22Jp8JrNyrVrHt6EtB7O+B0nWFZXw2t
-         5fIy3zrAmE30DcEWfjsDrytlixzdc+lEhAJnTO/Pgu6lScO38ihATUwxB5utWsKxmcX8
-         jkyCudn18LKGqzX9vJCyCtySxJo8QZeoebRRyDfu0FOin/VmtfLJWRjQtw4RUkHWf1rN
-         TYZtwE+lCZ7vqpVYB7IDg4TLGvhdp0SsFsbGAfyqqC5/sg0GZpc5WFCD1Nh5jaF+2eO4
-         QKUg==
+        Thu, 2 Jun 2022 16:06:49 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96BA236;
+        Thu,  2 Jun 2022 13:06:46 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id y144so2773781oia.7;
+        Thu, 02 Jun 2022 13:06:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9HxLJgZtlHlK+K1gWFxW+a6tTn7Jn/932cs76W+wS5Q=;
-        b=LNZjmGF4mYUSV+q1WlycCs5csnLg0dWRFBGQ6v9MRjkD7NzgB1sW+oRc9JLsMo0Coe
-         lWUIEgI+5/3fVsujESXQdYevSMfHcvExoKwywOwgDjaUQztmlzXG9tTkm82z7h3eFX+w
-         Bp7cuYDjnJkRECXoSsy8zfrXbUI6CaobvPaw0E247lr0IRIRJN3zysnK63bFUEUfjIov
-         ZPOC/NdNsfG/KaeqT1w6W5vs+w10L0DGNyVI0XCkPapq/rNbXfaVG2v+2WnHJvIafBzt
-         eplpzbS6TSdEGKuksPVSAstZl6rLEuMDW/evB9wj0wnYv2N7R6Ofvv++phDVdWlO+ZQJ
-         1P4w==
-X-Gm-Message-State: AOAM5332ynSvNHp3HUKk9HeXZfY0YHBIb3lEVOCnFphdpnYo3R0dXUxq
-        T2Y9U+UEeXz7cNfPV6LTxE6LOipY93frcnpsCSPhcg==
-X-Google-Smtp-Source: ABdhPJx5VCLYk+0/TVaEONygVnf++20yjQxm00tLoQZlGTbIZHx/1Gzbn0dkLv78dOY0suJYq+GgxsJlg8zECz0C21E=
-X-Received: by 2002:adf:f5c4:0:b0:210:2ac2:6aa0 with SMTP id
- k4-20020adff5c4000000b002102ac26aa0mr4671812wrp.300.1654193300494; Thu, 02
- Jun 2022 11:08:20 -0700 (PDT)
+        bh=AJx8EzZFfK8sPhpdoIX1JZPKfbXDh5xv5Av3MuXsAYI=;
+        b=glBURCeIaI9wyQ9Lt0jShRRY8CpxrvuG3aAtd4KiFZions1LD0zHzhC6SlWLVJU1O9
+         sSVknPkbp9D3genIFH8l8fg7w0srrIV+YOh03M3TiyijsSLA8lp5+L7l/LdFFvMJbxW4
+         lxeqwRhRuWVE1eZDEqfOqrUGu+ElaSDcV5vlBJVxg7Q5ue3rggMPiAdZKDZ9lJQwqznk
+         QsS3y7Y/JWl6GU7iHfmuckDIIMsjOdimKG7YYaAhgcTwiPayWpWYeptxWnaTMRDFu4T7
+         pMKd0D5EJLhY8RkjX4kiFQKybroH03Mxs9j19b9YEbsOUQbYH7J982bcUpdaxE75Fr9u
+         8ukA==
+X-Gm-Message-State: AOAM531nhdWnMvGotuUCa2cHzZBfQ7S38b6jSB/5sEKNnEULs5+NIlhC
+        16AwjTMFMkJCfuP8LMJGp2spNrzx+fRnRyq6Cyk=
+X-Google-Smtp-Source: ABdhPJxjPC7wm9cBiImBF5sK+Q/d4b72Jf+ZiDnArJjtCpDt5SG1lNVnykldTXmmR91r2AudAqs9F24/vVEdIfOoT34=
+X-Received: by 2002:a05:6808:1a01:b0:32b:1f24:9213 with SMTP id
+ bk1-20020a0568081a0100b0032b1f249213mr3469092oib.92.1654200406066; Thu, 02
+ Jun 2022 13:06:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220525154114.718321-1-james.clark@arm.com> <20220525154114.718321-2-james.clark@arm.com>
- <b6cf9d34-313e-6b7d-3781-a8a5af203cd6@arm.com>
-In-Reply-To: <b6cf9d34-313e-6b7d-3781-a8a5af203cd6@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 2 Jun 2022 11:08:07 -0700
-Message-ID: <CAP-5=fX6r31X7HeB-H4MjqwXMcdMSkzMzTk8Nr9F2=daQYhH3g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] perf tools: arm64: Use perf's copy of kernel headers
-To:     German Gomez <german.gomez@arm.com>
-Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org,
-        broonie@kernel.org, leo.yan@linaro.org, mathieu.poirier@linaro.org,
-        john.garry@huawei.com, Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
+References: <20220601065846.456965-1-namhyung@kernel.org> <20220601065846.456965-3-namhyung@kernel.org>
+ <CAP-5=fWvS=1XrXnE_a+sif8ZKy2oc6pmo6RmZ6+fFrWoa1VM3A@mail.gmail.com>
+In-Reply-To: <CAP-5=fWvS=1XrXnE_a+sif8ZKy2oc6pmo6RmZ6+fFrWoa1VM3A@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 2 Jun 2022 13:06:34 -0700
+Message-ID: <CAM9d7chthpaF9A_uZCm3uRzLe7Ho4-kuJ6J4D1evJPdMgSV9Ng@mail.gmail.com>
+Subject: Re: [PATCH 2/5] perf lock: Add lock contention tracepoints record support
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 25, 2022 at 8:59 AM German Gomez <german.gomez@arm.com> wrote:
->
->
-> On 25/05/2022 16:41, James Clark wrote:
-> > Fix this include path to use perf's copy of the kernel header
-> > rather than the one from the root of the repo.
-> >
-> > This fixes build errors when only applying the perf tools
-> > part of a patchset rather than both sides.
-> >
-> > Reported-by: German Gomez <german.gomez@arm.com>
-> > Signed-off-by: James Clark <james.clark@arm.com>
->
-> Without this change "make -C tools/perf" was failing if kernel-side changes weren't applied
->
-> Tested-by: German Gomez <german.gomez@arm.com>
->
-> Thanks,
-> German
+Hi Ian,
 
-Acked-by: Ian Rogers <irogers@google.com>
+On Wed, Jun 1, 2022 at 11:21 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Tue, May 31, 2022 at 11:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > When LOCKDEP and LOCK_STAT events are not available, it falls back to
+> > record the new lock contention tracepoints.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/builtin-lock.c | 70 +++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 63 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> > index 23a33ac15e68..3e3320b8cede 100644
+> > --- a/tools/perf/builtin-lock.c
+> > +++ b/tools/perf/builtin-lock.c
+> > @@ -495,6 +495,12 @@ struct trace_lock_handler {
+> >
+> >         int (*release_event)(struct evsel *evsel,
+> >                              struct perf_sample *sample);
+> > +
+> > +       int (*contention_begin_event)(struct evsel *evsel,
+> > +                                     struct perf_sample *sample);
+> > +
+> > +       int (*contention_end_event)(struct evsel *evsel,
+> > +                                   struct perf_sample *sample);
+>
+> Would it make sense to add a comment here about LOCKDEP and LOCK_STAT?
+> It could be confusing if the handler isn't called on different
+> kernels.
+
+Sure, I'll add some comments here.
 
 Thanks,
-Ian
-
-> > ---
-> >  tools/perf/util/libunwind/arm64.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/libunwind/arm64.c b/tools/perf/util/libunwind/arm64.c
-> > index 15f60fd09424..014d82159656 100644
-> > --- a/tools/perf/util/libunwind/arm64.c
-> > +++ b/tools/perf/util/libunwind/arm64.c
-> > @@ -24,7 +24,7 @@
-> >  #include "unwind.h"
-> >  #include "libunwind-aarch64.h"
-> >  #define perf_event_arm_regs perf_event_arm64_regs
-> > -#include <../../../../arch/arm64/include/uapi/asm/perf_regs.h>
-> > +#include <../../../arch/arm64/include/uapi/asm/perf_regs.h>
-> >  #undef perf_event_arm_regs
-> >  #include "../../arch/arm64/util/unwind-libunwind.c"
-> >
+Namhyung
