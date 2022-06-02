@@ -2,203 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30480C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 20:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ABAC43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 20:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239063AbiFBUaP (ORCPT
+        id S229913AbiFBUyq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 16:30:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48586 "EHLO
+        Thu, 2 Jun 2022 16:54:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238982AbiFBUaO (ORCPT
+        with ESMTP id S229520AbiFBUyp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 16:30:14 -0400
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DB624954;
-        Thu,  2 Jun 2022 13:30:12 -0700 (PDT)
-Received: by mail-ot1-f41.google.com with SMTP id 30-20020a9d0121000000b0060ae97b9967so4197389otu.7;
-        Thu, 02 Jun 2022 13:30:12 -0700 (PDT)
+        Thu, 2 Jun 2022 16:54:45 -0400
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5437133EB4
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Jun 2022 13:54:44 -0700 (PDT)
+Received: by mail-qk1-x72f.google.com with SMTP id x65so4593873qke.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jun 2022 13:54:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=6LjIkUGm3TVDX5vb/9qpUYyhJA5G8H8BVUBqEgDd3+0=;
+        b=K4BLbcoX/U1d5DJy0Fie0u2XxILrsmwY37n4f4m3obW8BgIV9K6IMQ336R1HqxtKYJ
+         099ADrHwc/doAy8ssKpWYGZT+pXduNfZgFSpRjQSxnSn6mWo2vqeTeh068WPsggWN546
+         ngdtgoGCRxxlMQu+pIgdP2X5g6mVTEzDF0288=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fhty1rGbx32mIVi7Ge6pky804Pd0/lzjVw+dFGZ23Uw=;
-        b=VjbX+vIY+QS/cwaP8NoqmQvEVSEw55/PgXUyNl8D3NoyqGa4kSvLpzgQjeNOgl9wtZ
-         J1viugDyf+LM0vMT4NY4fQP5Bt1qNaFfuCVafzicyhqPb+XKBvfQivSrQdTjdxM4mYQf
-         c4S8vmDWXp+rB4EOnqLNQyiKjokrB51gTQNtBwaCBkPeChYSYD2zIOMMtN4brdxe45+8
-         sRpDvJfPf8Rjui+61OTXN1e5KnPU+Q6ReBz1jyg9qQ3q1ykxBOefcE0nM5xp3joNQcgi
-         NKeBtBluDI+jTIGgX23dtwLCfMFoVHqRnJ/sWfef9lzP2FLgHW/ExYZjhC6vO2neWR/R
-         DXZw==
-X-Gm-Message-State: AOAM5309umW8SVMqqod0i4D+rG/3BBko0KyyekgrfS3N+ZhwzTTAyVsM
-        ADDrz+DzA6MTUeGjnD768YJhSAQJnVK6gJxd3II=
-X-Google-Smtp-Source: ABdhPJyxJQkCPOhgqo2PH9H9+RI4DQaU7powqdI2LYkTZho2nUbIBf3sXEM47EsiYXOYabUa0LUuoJdyWkc7ex2/sIg=
-X-Received: by 2002:a05:6830:2aa5:b0:60b:7cc:4ee0 with SMTP id
- s37-20020a0568302aa500b0060b07cc4ee0mr2737534otu.247.1654201812036; Thu, 02
- Jun 2022 13:30:12 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=6LjIkUGm3TVDX5vb/9qpUYyhJA5G8H8BVUBqEgDd3+0=;
+        b=7hPkTzTJvOsmhzT97Suf0TsZ58gZUT8QRZCCexI6DWMxBOXn3vLD2OSvvMYHPfJhFv
+         3i81CYuF71Z40vX67m7P+5YncUHUZVuoo0LYXVPBw6oeZru7ebDcx9U3yW/j3SJY1CgY
+         MouW30XDlutOVPSYanwVHOdTGdYFzcNs3IAnxXTZNo8o7rX86sPuBYzWeT1RQeHmJr1F
+         QQBWUpBqSDMRDbUqg3BMizRaMlJI6CUXIFySP0OTasXV6b4Q8Fx58gL8b/8/0lbOBhQm
+         oRMM5Z6+eRxeyjiB/2LrhcRwGM93tAltsRfvoB3MD133CVqlREhT5KIL+FKIgd0ExowR
+         uQqw==
+X-Gm-Message-State: AOAM533e40OGkVyksTfGVsnUF8KiQRo711ro3yxEtf1InM46BEy2j1eJ
+        VljNS1FUANIdJEdqwrPyjKrAtw==
+X-Google-Smtp-Source: ABdhPJySN8sV3owZc1gaDwMxXMUjTjGitab2FoDpySxmg+fsJ0CGADiXVU343143pwgQJQAaaz50wQ==
+X-Received: by 2002:a37:a285:0:b0:6a5:c3e4:59a1 with SMTP id l127-20020a37a285000000b006a5c3e459a1mr4679278qke.346.1654203283239;
+        Thu, 02 Jun 2022 13:54:43 -0700 (PDT)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id n12-20020a05622a11cc00b003022cdcd28bsm3782457qtk.2.2022.06.02.13.54.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jun 2022 13:54:42 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Thu, 2 Jun 2022 16:54:31 -0400 (EDT)
+To:     Ian Rogers <irogers@google.com>
+cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: a few libperf questions
+In-Reply-To: <CAP-5=fVeDJJ_HD=AeK0XSpsY52H58ZynRnnEpOB-z478=NxaiA@mail.gmail.com>
+Message-ID: <c41fb7e-41a4-65e0-342-9f8de9a4b31@maine.edu>
+References: <5842751-f5a2-4469-53f2-57ef1362568@maine.edu> <CAP-5=fVeDJJ_HD=AeK0XSpsY52H58ZynRnnEpOB-z478=NxaiA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220601032608.1034-1-ravi.bangoria@amd.com> <20220601032608.1034-2-ravi.bangoria@amd.com>
-In-Reply-To: <20220601032608.1034-2-ravi.bangoria@amd.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 2 Jun 2022 13:30:01 -0700
-Message-ID: <CAM9d7ch2dtTjhSt9i96yr4JLEWy7EgNArRvSURE4h5gLL6=7EQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/8] perf record ibs: Warn about sampling period skew
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>, rrichter@amd.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>, like.xu.linux@gmail.com,
-        x86@kernel.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>, ananth.narayan@amd.com,
-        Kim Phillips <kim.phillips@amd.com>, santosh.shukla@amd.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ravi,
+On Thu, 2 Jun 2022, Ian Rogers wrote:
 
-On Tue, May 31, 2022 at 8:27 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->
-> Samples without an L3 miss are discarded and counter is reset with
-> random value (between 1-15 for fetch pmu and 1-127 for op pmu) when
-> IBS L3 miss filtering is enabled. This causes a sampling period skew
-> but there is no way to reconstruct aggregated sampling period. So
-> print a warning at perf record if user sets l3missonly=1.
->
-> Ex:
->   # perf record -c 10000 -C 0 -e ibs_op/l3missonly=1/
->   WARNING: Hw internally resets sampling period when L3 Miss Filtering is enabled
->   and tagged operation does not cause L3 Miss. This causes sampling period skew.
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> Acked-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/x86/util/evsel.c | 49 ++++++++++++++++++++++++++++++++
->  tools/perf/util/evsel.c          |  7 +++++
->  tools/perf/util/evsel.h          |  1 +
->  3 files changed, 57 insertions(+)
->
-> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-> index 88306183d629..fceb904902ab 100644
-> --- a/tools/perf/arch/x86/util/evsel.c
-> +++ b/tools/perf/arch/x86/util/evsel.c
-> @@ -5,6 +5,7 @@
->  #include "util/env.h"
->  #include "util/pmu.h"
->  #include "linux/string.h"
-> +#include "util/debug.h"
->
->  void arch_evsel__set_sample_weight(struct evsel *evsel)
->  {
-> @@ -60,3 +61,51 @@ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
->                 (!strcasecmp(evsel->name, "slots") ||
->                  strcasestr(evsel->name, "topdown"));
->  }
-> +
-> +static void ibs_l3miss_warn(void)
-> +{
-> +       pr_warning(
-> +"WARNING: Hw internally resets sampling period when L3 Miss Filtering is enabled\n"
-> +"and tagged operation does not cause L3 Miss. This causes sampling period skew.\n");
-> +}
-> +
-> +void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr)
-> +{
-> +       struct perf_pmu *evsel_pmu, *ibs_fetch_pmu, *ibs_op_pmu;
-> +       static int warned_once;
-> +       /* 0: Uninitialized, 1: Yes, -1: No */
-> +       static int is_amd;
-> +
-> +       if (warned_once || is_amd == -1)
-> +               return;
-> +
-> +       if (!is_amd) {
-> +               struct perf_env *env = evsel__env(evsel);
-> +
-> +               if (!perf_env__cpuid(env) || !env->cpuid ||
-> +                   !strstarts(env->cpuid, "AuthenticAMD")) {
-> +                       is_amd = -1;
-> +                       return;
-> +               }
-> +               is_amd = 1;
-> +       }
-> +
-> +       evsel_pmu = evsel__find_pmu(evsel);
-> +       if (!evsel_pmu)
-> +               return;
-> +
-> +       ibs_fetch_pmu = perf_pmu__find("ibs_fetch");
-> +       ibs_op_pmu = perf_pmu__find("ibs_op");
-> +
-> +       if (ibs_fetch_pmu && ibs_fetch_pmu->type == evsel_pmu->type) {
-> +               if (attr->config & (1ULL << 59)) {
+> >         1. What's the licensing of libperf?  Is it GPLv2?
+> >
+> >                 PAPI is BSD licensed.
+> >                 This is something that actually pushes us to libperf
+> >                 because if I wanted to (for example) implement the new
+> >                 ARM rdpmc code I can't just copy it in to PAPI but
+> >                 would have to re-implement from scratch
+> 
+> I believe that as code in libperf was copied from perf it retains the
+> GPL-2.0-only license. Some new code is "LGPL-2.1 OR BSD-2-Clause",
+> which makes more sense and would align libperf with libbpf. We've
+> talked about rewriting this code in Rust, perhaps when that is done
+> the more permissive license could be used.
 
-It'd be nice if we used a macro or something instead of the
-magic number.
+I was looking into this more, the various files have different licenses
 
-> +                       ibs_l3miss_warn();
-> +                       warned_once = 1;
-> +               }
-> +       } else if (ibs_op_pmu && ibs_op_pmu->type == evsel_pmu->type) {
-> +               if (attr->config & (1ULL << 16)) {
+linux.git/tools/lib/perf$ cat *.c Makefile | grep SPDX | uniq
+// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-License-Identifier: GPL-2.0
+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
 
-Ditto.
+and this disagrees with what the documentation says:
 
-Thanks,
-Namhyung
+linux.git/tools/lib/perf/Documentation/libperf-counting.txt 
+
+LICENSE
+-------
+libperf is Free Software licensed under the GNU LGPL 2.1
 
 
-> +                       ibs_l3miss_warn();
-> +                       warned_once = 1;
-> +               }
-> +       }
-> +}
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ce499c5da8d7..8fea51a9cd90 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1091,6 +1091,11 @@ void __weak arch_evsel__fixup_new_cycles(struct perf_event_attr *attr __maybe_un
->  {
->  }
->
-> +void __weak arch__post_evsel_config(struct evsel *evsel __maybe_unused,
-> +                                   struct perf_event_attr *attr __maybe_unused)
-> +{
-> +}
-> +
->  static void evsel__set_default_freq_period(struct record_opts *opts,
->                                            struct perf_event_attr *attr)
->  {
-> @@ -1366,6 +1371,8 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->          */
->         if (evsel__is_dummy_event(evsel))
->                 evsel__reset_sample_bit(evsel, BRANCH_STACK);
-> +
-> +       arch__post_evsel_config(evsel, attr);
->  }
->
->  int evsel__set_filter(struct evsel *evsel, const char *filter)
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 73ea48e94079..92bed8e2f7d8 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -297,6 +297,7 @@ void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
->
->  void arch_evsel__set_sample_weight(struct evsel *evsel);
->  void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr);
-> +void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr);
->
->  int evsel__set_filter(struct evsel *evsel, const char *filter);
->  int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
-> --
-> 2.31.1
->
+I don't know which of these needs to be fixed to be more consistent.
+
+Vince Weaver
+vincent.weaver@maine.edu
+
+
