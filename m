@@ -2,846 +2,208 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0EEC43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 00:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79966C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 06:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232893AbiFBA4l (ORCPT
+        id S230400AbiFBGVy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Jun 2022 20:56:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41888 "EHLO
+        Thu, 2 Jun 2022 02:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232891AbiFBA4k (ORCPT
+        with ESMTP id S230334AbiFBGVv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Jun 2022 20:56:40 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56042A140F
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Jun 2022 17:56:37 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id r123-20020a1c2b81000000b0039c1439c33cso1956006wmr.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2022 17:56:37 -0700 (PDT)
+        Thu, 2 Jun 2022 02:21:51 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD66DEE5
+        for <linux-perf-users@vger.kernel.org>; Wed,  1 Jun 2022 23:21:49 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id o29-20020a05600c511d00b00397697f172dso3298562wms.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2022 23:21:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NmwbCdY3ZIdQZVvYTrvbJP8G/MiD6sEFBted3s0ak6g=;
-        b=h+NEPgh49Tk/92wk9LNSyXoC1voJ39BtCBA9bnu0s2fp5qtKlZsANTCqkWlJa59/ch
-         tWFCsVzz7HhDAgH694uft85TbFFNjaD13CLyvWFNq8QGirr5T0+S4Mukx/70LNSBxfty
-         1d7Sg5OLq+LpoCj4aXZDCLuux12CSNRO/JQACEEe9VRW8YB25lsdjPzEnYOG4v45A7c7
-         3y9AFSTwfqzhyF8evpzQtBqZrEQxmvpw7lbXbEGjZNwQ2TW/EZm3fnPFNIyuUlkcsLbE
-         W6f/qxkHU7gq5tVvQeV5tu1bcuW2a0AQ09wk10NA6VryA6zHvPL1Grpvo1AvWSO+X72X
-         rtzQ==
+         :cc;
+        bh=LOVgUxA1bDTDyTIwmAcMyzfNGeAcBs7vn2fkT3URToc=;
+        b=avOI5wm80HcfnD5JSHV7pK5BsH2+jVSuFyJ0O3c7HNgCLu8Iq6iYXahvWw0avss3eR
+         OnEGjxGmWICyBVIHkTj92usczbn9/N5FBHaBqO1wp3+Uqkmyul0llhXTdVW9kDmpUYAW
+         veDqiLVP0TXTyVsIk6kp2QSlg57vDs6nj4e/sDOVEFr7KjDkgdqkshtQvMa107DP6z0R
+         L71RMNTEyjhK78/fN80/mjnnY2cNuTZJ2jgjuHtqDhgksnFn/5HojsgBb6Syb6oZH1Ys
+         +b5+kf8wPP4yulJL4bcrJaiSJGja9DLWWySsMTnwb9zp1/JkzhO9uPs4dEkOCfi9NgoN
+         MFaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NmwbCdY3ZIdQZVvYTrvbJP8G/MiD6sEFBted3s0ak6g=;
-        b=rW6Lrnd6yA/BzL1uL45JP9vmQqYbJadwlwWpxJV9Y1J5MkR8krYXzcoIzB4ME3XNE3
-         6RYtbyHvAvsexYqZxVgZkce/xlrt+sGPNgEJJMHGFLZOAcpTwaW/wROucuSpIxj4H41C
-         Ezh4uBCcU7DRVDM+QNTuhA6WwIg79xarL33kOYMGIVa1wYKf+Y8eLxpToMVq35f/9A9x
-         q2+QEmA+LI4Q9byAQgDEXffPq1ddsr+VkfvGFhRaBLCEotGfA+/SD7TtdTORHCtCjusA
-         mBvzLvZq8noHWdbmZBtX1LemA1X+m4zrlPQ2HEk5C+08e6VL8KdB6EqZoHPu6pXr6jhW
-         Uj5w==
-X-Gm-Message-State: AOAM532eIJGqMPpMERezo9URTNIhx109JuSPGKb8xGUZtFxwFQj3CZSh
-        S1EWXuOKNJXGOqW1rRdfEY+C6v6AM6CBb7OBoVWqmQ==
-X-Google-Smtp-Source: ABdhPJyVsXjjwTd1cegN0oGpElZxfkf/WdasW+kq+ZKuCXghPz4y40jngRxpTy2eP4qkeE3EVgtGmTgpVTe3u00ucmQ=
-X-Received: by 2002:a05:600c:29d3:b0:397:4730:ee75 with SMTP id
- s19-20020a05600c29d300b003974730ee75mr1662859wmd.149.1654131396150; Wed, 01
- Jun 2022 17:56:36 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=LOVgUxA1bDTDyTIwmAcMyzfNGeAcBs7vn2fkT3URToc=;
+        b=MVRqwAg8NhdDxvaNJ3zlRDDSgWEccuPB5viCNUz7cZl3vL7YsnEZ2pjx4QUUwBDyD2
+         4cEkj+UfWxmROSfQDcbN5UI04q3gd+TQlMOCEFbyo2vPFLWdrS8FQILZd2I3Cc0K0pkU
+         19KuQkRIT/CB033ePxvECY0naZbt7FNjq9uNJbyrd/XFppU4yC3ug8S19HN8lfv3hP60
+         87yktCj3B6ZZqEI9AA10bQU+GE/cNQCr9Qn9QSkYBDJ8yZbsQ32tOnOg99D885B14nv3
+         YSIq6gi/XTMS9/BgS4AEyO7bsep0KH4odoE0KdhVCNiPLenYdCO6TA7gF2bvFRkcAGnj
+         U2YA==
+X-Gm-Message-State: AOAM532gdO7TqqD4IEGYaDEat7X1MavKBIxzILzoAyntw1R6gIvatVAv
+        Qil828IDva+hV2Q5ESGFM+eqn9cDrPD6GJTb1YUkyQ0ArkKQxDgo
+X-Google-Smtp-Source: ABdhPJx+Qg9/XPJgAjGUvPxditJJ54bsPjYt9M7fFcFlP4MsNMvGJmvit/KkVxeCCqj60h0rP7xlP0ScE+qOSxcDlPA=
+X-Received: by 2002:a1c:a301:0:b0:392:9bc5:203c with SMTP id
+ m1-20020a1ca301000000b003929bc5203cmr2446589wme.67.1654150908114; Wed, 01 Jun
+ 2022 23:21:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220528095933.1784141-1-zhengjun.xing@linux.intel.com>
-In-Reply-To: <20220528095933.1784141-1-zhengjun.xing@linux.intel.com>
+References: <20220601065846.456965-1-namhyung@kernel.org> <20220601065846.456965-3-namhyung@kernel.org>
+In-Reply-To: <20220601065846.456965-3-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 1 Jun 2022 17:56:24 -0700
-Message-ID: <CAP-5=fUpmtWRYcZQoV26q4ZCGVmORJpTe_Mz3Y=JmH3tXLvapw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf vendor events intel: Add metrics for Sapphirerapids
-To:     zhengjun.xing@linux.intel.com
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com
+Date:   Wed, 1 Jun 2022 23:21:34 -0700
+Message-ID: <CAP-5=fWvS=1XrXnE_a+sif8ZKy2oc6pmo6RmZ6+fFrWoa1VM3A@mail.gmail.com>
+Subject: Re: [PATCH 2/5] perf lock: Add lock contention tracepoints record support
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, May 28, 2022 at 2:59 AM <zhengjun.xing@linux.intel.com> wrote:
+On Tue, May 31, 2022 at 11:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> When LOCKDEP and LOCK_STAT events are not available, it falls back to
+> record the new lock contention tracepoints.
 >
-> Add JSON metrics for Sapphirerapids to perf.
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-lock.c | 70 +++++++++++++++++++++++++++++++++++----
+>  1 file changed, 63 insertions(+), 7 deletions(-)
 >
-> Based on TMA4.4 metrics.
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 23a33ac15e68..3e3320b8cede 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -495,6 +495,12 @@ struct trace_lock_handler {
 >
-> https://download.01.org/perfmon/TMA_Metrics-full.csv
->
-> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>         int (*release_event)(struct evsel *evsel,
+>                              struct perf_sample *sample);
+> +
+> +       int (*contention_begin_event)(struct evsel *evsel,
+> +                                     struct perf_sample *sample);
+> +
+> +       int (*contention_end_event)(struct evsel *evsel,
+> +                                   struct perf_sample *sample);
 
-I didn't find a sapphirerapids to test this on, but non-CPU specific
-event/metric tests passed.
-
-Tested-by: Ian Rogers <irogers@google.com>
+Would it make sense to add a comment here about LOCKDEP and LOCK_STAT?
+It could be confusing if the handler isn't called on different
+kernels.
 
 Thanks,
 Ian
 
-> ---
-> Change log:
->   v2:
->     * Regenerate it with the latest converter tool.
+>  };
 >
->  .../arch/x86/sapphirerapids/spr-metrics.json  | 530 ++++++++++++++++++
->  1 file changed, 530 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/spr-met=
-rics.json
+>  static struct lock_seq_stat *get_seq(struct thread_stat *ts, u64 addr)
+> @@ -822,6 +828,20 @@ static int evsel__process_lock_release(struct evsel *evsel, struct perf_sample *
+>         return 0;
+>  }
 >
-> diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.js=
-on b/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
-> new file mode 100644
-> index 000000000000..8f9497838bd4
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
-> @@ -0,0 +1,530 @@
-> +[
-> +    {
-> +        "BriefDescription": "Total pipeline cost of branch related instr=
-uctions (used for program control-flow including function calls)",
-> +        "MetricExpr": "100 * (( BR_INST_RETIRED.COND + 3 * BR_INST_RETIR=
-ED.NEAR_CALL + (BR_INST_RETIRED.NEAR_TAKEN - BR_INST_RETIRED.COND_TAKEN - 2=
- * BR_INST_RETIRED.NEAR_CALL) ) / TOPDOWN.SLOTS)",
-> +        "MetricGroup": "Ret",
-> +        "MetricName": "Branching_Overhead"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions Per Cycle (per Logical Process=
-or)",
-> +        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
-> +        "MetricGroup": "Ret;Summary",
-> +        "MetricName": "IPC"
-> +    },
-> +    {
-> +        "BriefDescription": "Cycles Per Instruction (per Logical Process=
-or)",
-> +        "MetricExpr": "1 / (INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD)"=
-,
-> +        "MetricGroup": "Pipeline;Mem",
-> +        "MetricName": "CPI"
-> +    },
-> +    {
-> +        "BriefDescription": "Per-Logical Processor actual clocks when th=
-e Logical Processor is active.",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
-> +        "MetricGroup": "Pipeline",
-> +        "MetricName": "CLKS"
-> +    },
-> +    {
-> +        "BriefDescription": "Total issue-pipeline slots (per-Physical Co=
-re till ICL; per-Logical Processor ICL onward)",
-> +        "MetricExpr": "TOPDOWN.SLOTS",
-> +        "MetricGroup": "TmaL1",
-> +        "MetricName": "SLOTS"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of Physical Core issue-slots utili=
-zed by this Logical Processor",
-> +        "MetricExpr": "TOPDOWN.SLOTS / ( TOPDOWN.SLOTS / 2 ) if #SMT_on =
-else 1",
-> +        "MetricGroup": "SMT;TmaL1",
-> +        "MetricName": "Slots_Utilization"
-> +    },
-> +    {
-> +        "BriefDescription": "The ratio of Executed- by Issued-Uops",
-> +        "MetricExpr": "UOPS_EXECUTED.THREAD / UOPS_ISSUED.ANY",
-> +        "MetricGroup": "Cor;Pipeline",
-> +        "MetricName": "Execute_per_Issue",
-> +        "PublicDescription": "The ratio of Executed- by Issued-Uops. Rat=
-io > 1 suggests high rate of uop micro-fusions. Ratio < 1 suggest high rate=
- of \"execute\" at rename stage."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions Per Cycle across hyper-threads=
- (per physical core)",
-> +        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.DISTRIBUTED",
-> +        "MetricGroup": "Ret;SMT;TmaL1",
-> +        "MetricName": "CoreIPC"
-> +    },
-> +    {
-> +        "BriefDescription": "Floating Point Operations Per Cycle",
-> +        "MetricExpr": "( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_=
-ARITH_INST_RETIRED.SCALAR_DOUBLE + FP_ARITH_INST_RETIRED2.SCALAR_HALF ) + 2=
- * ( FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED2.COMP=
-LEX_SCALAR_HALF ) + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARI=
-TH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED2.128B_PA=
-CKED_HALF + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRE=
-D.512B_PACKED_DOUBLE ) + 16 * ( FP_ARITH_INST_RETIRED2.256B_PACKED_HALF + F=
-P_ARITH_INST_RETIRED.512B_PACKED_SINGLE ) + 32 * FP_ARITH_INST_RETIRED2.512=
-B_PACKED_HALF + 4 * AMX_OPS_RETIRED.BF16 ) / CPU_CLK_UNHALTED.DISTRIBUTED",
-> +        "MetricGroup": "Ret;Flops",
-> +        "MetricName": "FLOPc"
-> +    },
-> +    {
-> +        "BriefDescription": "Actual per-core usage of the Floating Point=
- non-X87 execution units (regardless of precision or vector-width)",
-> +        "MetricExpr": "( FP_ARITH_DISPATCHED.PORT_0 + FP_ARITH_DISPATCHE=
-D.PORT_1 + FP_ARITH_DISPATCHED.PORT_5 ) / ( 2 * CPU_CLK_UNHALTED.DISTRIBUTE=
-D )",
-> +        "MetricGroup": "Cor;Flops;HPC",
-> +        "MetricName": "FP_Arith_Utilization",
-> +        "PublicDescription": "Actual per-core usage of the Floating Poin=
-t non-X87 execution units (regardless of precision or vector-width). Values=
- > 1 are possible due to ([BDW+] Fused-Multiply Add (FMA) counting - common=
-; [ADL+] use all of ADD/MUL/FMA in Scalar or 128/256-bit vectors - less com=
-mon)."
-> +    },
-> +    {
-> +        "BriefDescription": "Instruction-Level-Parallelism (average numb=
-er of uops executed when there is execution) per-core",
-> +        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCL=
-ES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
-> +        "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
-> +        "MetricName": "ILP"
-> +    },
-> +    {
-> +        "BriefDescription": "Core actual clocks when any Logical Process=
-or is active on the Physical Core",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.DISTRIBUTED",
-> +        "MetricGroup": "SMT",
-> +        "MetricName": "CORE_CLKS"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per Load (lower number means h=
-igher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_LOADS",
-> +        "MetricGroup": "InsType",
-> +        "MetricName": "IpLoad"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per Store (lower number means =
-higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_STORES",
-> +        "MetricGroup": "InsType",
-> +        "MetricName": "IpStore"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per Branch (lower number means=
- higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
-> +        "MetricGroup": "Branches;Fed;InsType",
-> +        "MetricName": "IpBranch"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per (near) call (lower number =
-means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
-> +        "MetricGroup": "Branches;Fed;PGO",
-> +        "MetricName": "IpCall"
-> +    },
-> +    {
-> +        "BriefDescription": "Instruction per taken branch",
-> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
-> +        "MetricGroup": "Branches;Fed;FetchBW;Frontend;PGO",
-> +        "MetricName": "IpTB"
-> +    },
-> +    {
-> +        "BriefDescription": "Branch instructions per taken branch. ",
-> +        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NE=
-AR_TAKEN",
-> +        "MetricGroup": "Branches;Fed;PGO",
-> +        "MetricName": "BpTkBranch"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per Floating Point (FP) Operat=
-ion (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / ( 1 * ( FP_ARITH_INST_RETIRED.=
-SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE + FP_ARITH_INST_RETIRED=
-2.SCALAR_HALF ) + 2 * ( FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH=
-_INST_RETIRED2.COMPLEX_SCALAR_HALF ) + 4 * ( FP_ARITH_INST_RETIRED.128B_PAC=
-KED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_IN=
-ST_RETIRED2.128B_PACKED_HALF + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + F=
-P_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * ( FP_ARITH_INST_RETIRED2.2=
-56B_PACKED_HALF + FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE ) + 32 * FP_ARIT=
-H_INST_RETIRED2.512B_PACKED_HALF + 4 * AMX_OPS_RETIRED.BF16 )",
-> +        "MetricGroup": "Flops;InsType",
-> +        "MetricName": "IpFLOP"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per FP Arithmetic instruction =
-(lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / ( (FP_ARITH_INST_RETIRED.SCALA=
-R_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE + FP_ARITH_INST_RETIRED2.SCA=
-LAR) + (FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.12=
-8B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE + FP_ARITH_INST=
-_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE + FP=
-_ARITH_INST_RETIRED.512B_PACKED_SINGLE + FP_ARITH_INST_RETIRED2.VECTOR) )",
-> +        "MetricGroup": "Flops;InsType",
-> +        "MetricName": "IpArith",
-> +        "PublicDescription": "Instructions per FP Arithmetic instruction=
- (lower number means higher occurrence rate). May undercount due to FMA dou=
-ble counting. Approximated prior to BDW."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per FP Arithmetic Scalar Singl=
-e-Precision instruction (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / FP_ARITH_INST_RETIRED.SCALAR_S=
-INGLE",
-> +        "MetricGroup": "Flops;FpScalar;InsType",
-> +        "MetricName": "IpArith_Scalar_SP",
-> +        "PublicDescription": "Instructions per FP Arithmetic Scalar Sing=
-le-Precision instruction (lower number means higher occurrence rate). May u=
-ndercount due to FMA double counting."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per FP Arithmetic Scalar Doubl=
-e-Precision instruction (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / FP_ARITH_INST_RETIRED.SCALAR_D=
-OUBLE",
-> +        "MetricGroup": "Flops;FpScalar;InsType",
-> +        "MetricName": "IpArith_Scalar_DP",
-> +        "PublicDescription": "Instructions per FP Arithmetic Scalar Doub=
-le-Precision instruction (lower number means higher occurrence rate). May u=
-ndercount due to FMA double counting."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per FP Arithmetic AVX/SSE 128-=
-bit instruction (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / ( FP_ARITH_INST_RETIRED.128B_P=
-ACKED_DOUBLE + FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RET=
-IRED2.128B_PACKED_HALF )",
-> +        "MetricGroup": "Flops;FpVector;InsType",
-> +        "MetricName": "IpArith_AVX128",
-> +        "PublicDescription": "Instructions per FP Arithmetic AVX/SSE 128=
--bit instruction (lower number means higher occurrence rate). May undercoun=
-t due to FMA double counting."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per FP Arithmetic AVX* 256-bit=
- instruction (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / ( FP_ARITH_INST_RETIRED.256B_P=
-ACKED_DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RET=
-IRED2.256B_PACKED_HALF )",
-> +        "MetricGroup": "Flops;FpVector;InsType",
-> +        "MetricName": "IpArith_AVX256",
-> +        "PublicDescription": "Instructions per FP Arithmetic AVX* 256-bi=
-t instruction (lower number means higher occurrence rate). May undercount d=
-ue to FMA double counting."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per FP Arithmetic AVX 512-bit =
-instruction (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / ( FP_ARITH_INST_RETIRED.512B_P=
-ACKED_DOUBLE + FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE + FP_ARITH_INST_RET=
-IRED2.512B_PACKED_HALF )",
-> +        "MetricGroup": "Flops;FpVector;InsType",
-> +        "MetricName": "IpArith_AVX512",
-> +        "PublicDescription": "Instructions per FP Arithmetic AVX 512-bit=
- instruction (lower number means higher occurrence rate). May undercount du=
-e to FMA double counting."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per FP Arithmetic AMX operatio=
-n (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / AMX_OPS_RETIRED.BF16",
-> +        "MetricGroup": "Flops;FpVector;InsType;Server",
-> +        "MetricName": "IpArith_AMX_F16",
-> +        "PublicDescription": "Instructions per FP Arithmetic AMX operati=
-on (lower number means higher occurrence rate). Operations factored per mat=
-rices' sizes of the AMX instructions."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per Integer Arithmetic AMX ope=
-ration (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / AMX_OPS_RETIRED.INT8",
-> +        "MetricGroup": "IntVector;InsType;Server",
-> +        "MetricName": "IpArith_AMX_Int8",
-> +        "PublicDescription": "Instructions per Integer Arithmetic AMX op=
-eration (lower number means higher occurrence rate). Operations factored pe=
-r matrices' sizes of the AMX instructions."
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per Software prefetch instruct=
-ion (of any type: NTA/T0/T1/T2/Prefetch) (lower number means higher occurre=
-nce rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / cpu@SW_PREFETCH_ACCESS.T0\\,um=
-ask\\=3D0xF@",
-> +        "MetricGroup": "Prefetches",
-> +        "MetricName": "IpSWPF"
-> +    },
-> +    {
-> +        "BriefDescription": "Total number of retired Instructions, Sampl=
-e with: INST_RETIRED.PREC_DIST",
-> +        "MetricExpr": "INST_RETIRED.ANY",
-> +        "MetricGroup": "Summary;TmaL1",
-> +        "MetricName": "Instructions"
-> +    },
-> +    {
-> +        "BriefDescription": "Estimated fraction of retirement-cycles dea=
-ling with repeat instructions",
-> +        "MetricExpr": "INST_RETIRED.REP_ITERATION / cpu@UOPS_RETIRED.SLO=
-TS\\,cmask\\=3D1@",
-> +        "MetricGroup": "Pipeline;Ret",
-> +        "MetricName": "Strings_Cycles"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per a microcode Assist invocat=
-ion. See Assists tree node for details (lower number means higher occurrenc=
-e rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / cpu@ASSISTS.ANY\\,umask\\=3D0x=
-1B@",
-> +        "MetricGroup": "Pipeline;Ret;Retire",
-> +        "MetricName": "IpAssist"
-> +    },
-> +    {
-> +        "BriefDescription": "",
-> +        "MetricExpr": "UOPS_EXECUTED.THREAD / cpu@UOPS_EXECUTED.THREAD\\=
-,cmask\\=3D1@",
-> +        "MetricGroup": "Cor;Pipeline;PortsUtil;SMT",
-> +        "MetricName": "Execute"
-> +    },
-> +    {
-> +        "BriefDescription": "Average number of Uops issued by front-end =
-when it issued something",
-> +        "MetricExpr": "UOPS_ISSUED.ANY / cpu@UOPS_ISSUED.ANY\\,cmask\\=
-=3D1@",
-> +        "MetricGroup": "Fed;FetchBW",
-> +        "MetricName": "Fetch_UpC"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of Uops delivered by the DSB (aka =
-Decoded ICache; or Uop Cache)",
-> +        "MetricExpr": "IDQ.DSB_UOPS / (IDQ.DSB_UOPS + IDQ.MITE_UOPS + ID=
-Q.MS_UOPS)",
-> +        "MetricGroup": "DSB;Fed;FetchBW",
-> +        "MetricName": "DSB_Coverage"
-> +    },
-> +    {
-> +        "BriefDescription": "Average number of cycles of a switch from t=
-he DSB fetch-unit to MITE fetch unit - see DSB_Switches tree node for detai=
-ls.",
-> +        "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / cpu@DSB2MITE_S=
-WITCHES.PENALTY_CYCLES\\,cmask\\=3D1\\,edge@",
-> +        "MetricGroup": "DSBmiss",
-> +        "MetricName": "DSB_Switch_Cost"
-> +    },
-> +    {
-> +        "BriefDescription": "Number of Instructions per non-speculative =
-DSB miss (lower number means higher occurrence rate)",
-> +        "MetricExpr": "INST_RETIRED.ANY / FRONTEND_RETIRED.ANY_DSB_MISS"=
-,
-> +        "MetricGroup": "DSBmiss;Fed",
-> +        "MetricName": "IpDSB_Miss_Ret"
-> +    },
-> +    {
-> +        "BriefDescription": "Number of Instructions per non-speculative =
-Branch Misprediction (JEClear) (lower number means higher occurrence rate)"=
-,
-> +        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
-> +        "MetricGroup": "Bad;BadSpec;BrMispredicts",
-> +        "MetricName": "IpMispredict"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of branches that are non-taken con=
-ditionals",
-> +        "MetricExpr": "BR_INST_RETIRED.COND_NTAKEN / BR_INST_RETIRED.ALL=
-_BRANCHES",
-> +        "MetricGroup": "Bad;Branches;CodeGen;PGO",
-> +        "MetricName": "Cond_NT"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of branches that are taken conditi=
-onals",
-> +        "MetricExpr": "BR_INST_RETIRED.COND_TAKEN / BR_INST_RETIRED.ALL_=
-BRANCHES",
-> +        "MetricGroup": "Bad;Branches;CodeGen;PGO",
-> +        "MetricName": "Cond_TK"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of branches that are CALL or RET",
-> +        "MetricExpr": "( BR_INST_RETIRED.NEAR_CALL + BR_INST_RETIRED.NEA=
-R_RETURN ) / BR_INST_RETIRED.ALL_BRANCHES",
-> +        "MetricGroup": "Bad;Branches",
-> +        "MetricName": "CallRet"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of branches that are unconditional=
- (direct or indirect) jumps",
-> +        "MetricExpr": "(BR_INST_RETIRED.NEAR_TAKEN - BR_INST_RETIRED.CON=
-D_TAKEN - 2 * BR_INST_RETIRED.NEAR_CALL) / BR_INST_RETIRED.ALL_BRANCHES",
-> +        "MetricGroup": "Bad;Branches",
-> +        "MetricName": "Jump"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of branches of other types (not in=
-dividually covered by other metrics in Info.Branches group)",
-> +        "MetricExpr": "1 - ( (BR_INST_RETIRED.COND_NTAKEN / BR_INST_RETI=
-RED.ALL_BRANCHES) + (BR_INST_RETIRED.COND_TAKEN / BR_INST_RETIRED.ALL_BRANC=
-HES) + (( BR_INST_RETIRED.NEAR_CALL + BR_INST_RETIRED.NEAR_RETURN ) / BR_IN=
-ST_RETIRED.ALL_BRANCHES) + ((BR_INST_RETIRED.NEAR_TAKEN - BR_INST_RETIRED.C=
-OND_TAKEN - 2 * BR_INST_RETIRED.NEAR_CALL) / BR_INST_RETIRED.ALL_BRANCHES) =
-)",
-> +        "MetricGroup": "Bad;Branches",
-> +        "MetricName": "Other_Branches"
-> +    },
-> +    {
-> +        "BriefDescription": "Actual Average Latency for L1 data-cache mi=
-ss demand load operations (in core cycles)",
-> +        "MetricExpr": "L1D_PEND_MISS.PENDING / MEM_LOAD_COMPLETED.L1_MIS=
-S_ANY",
-> +        "MetricGroup": "Mem;MemoryBound;MemoryLat",
-> +        "MetricName": "Load_Miss_Real_Latency"
-> +    },
-> +    {
-> +        "BriefDescription": "Memory-Level-Parallelism (average number of=
- L1 miss demand load when there is at least one such miss. Per-Logical Proc=
-essor)",
-> +        "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYC=
-LES",
-> +        "MetricGroup": "Mem;MemoryBound;MemoryBW",
-> +        "MetricName": "MLP"
-> +    },
-> +    {
-> +        "BriefDescription": "L1 cache true misses per kilo instruction f=
-or retired demand loads",
-> +        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.AN=
-Y",
-> +        "MetricGroup": "Mem;CacheMisses",
-> +        "MetricName": "L1MPKI"
-> +    },
-> +    {
-> +        "BriefDescription": "L1 cache true misses per kilo instruction f=
-or all demand loads (including speculative)",
-> +        "MetricExpr": "1000 * L2_RQSTS.ALL_DEMAND_DATA_RD / INST_RETIRED=
-.ANY",
-> +        "MetricGroup": "Mem;CacheMisses",
-> +        "MetricName": "L1MPKI_Load"
-> +    },
-> +    {
-> +        "BriefDescription": "L2 cache true misses per kilo instruction f=
-or retired demand loads",
-> +        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.AN=
-Y",
-> +        "MetricGroup": "Mem;Backend;CacheMisses",
-> +        "MetricName": "L2MPKI"
-> +    },
-> +    {
-> +        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo inst=
-ruction for all request types (including speculative)",
-> +        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
-> +        "MetricGroup": "Mem;CacheMisses;Offcore",
-> +        "MetricName": "L2MPKI_All"
-> +    },
-> +    {
-> +        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo inst=
-ruction for all demand loads  (including speculative)",
-> +        "MetricExpr": "1000 * L2_RQSTS.DEMAND_DATA_RD_MISS / INST_RETIRE=
-D.ANY",
-> +        "MetricGroup": "Mem;CacheMisses",
-> +        "MetricName": "L2MPKI_Load"
-> +    },
-> +    {
-> +        "BriefDescription": "L2 cache hits per kilo instruction for all =
-request types (including speculative)",
-> +        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / =
-INST_RETIRED.ANY",
-> +        "MetricGroup": "Mem;CacheMisses",
-> +        "MetricName": "L2HPKI_All"
-> +    },
-> +    {
-> +        "BriefDescription": "L2 cache hits per kilo instruction for all =
-demand loads  (including speculative)",
-> +        "MetricExpr": "1000 * L2_RQSTS.DEMAND_DATA_RD_HIT / INST_RETIRED=
-.ANY",
-> +        "MetricGroup": "Mem;CacheMisses",
-> +        "MetricName": "L2HPKI_Load"
-> +    },
-> +    {
-> +        "BriefDescription": "L3 cache true misses per kilo instruction f=
-or retired demand loads",
-> +        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.AN=
-Y",
-> +        "MetricGroup": "Mem;CacheMisses",
-> +        "MetricName": "L3MPKI"
-> +    },
-> +    {
-> +        "BriefDescription": "Fill Buffer (FB) hits per kilo instructions=
- for retired demand loads (L1D misses that merge into ongoing miss-handling=
- entries)",
-> +        "MetricExpr": "1000 * MEM_LOAD_RETIRED.FB_HIT / INST_RETIRED.ANY=
-",
-> +        "MetricGroup": "Mem;CacheMisses",
-> +        "MetricName": "FB_HPKI"
-> +    },
-> +    {
-> +        "BriefDescription": "Utilization of the core's Page Walker(s) se=
-rving STLB misses triggered by instruction/Load/Store accesses",
-> +        "MetricConstraint": "NO_NMI_WATCHDOG",
-> +        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WAL=
-K_PENDING + DTLB_STORE_MISSES.WALK_PENDING ) / ( 4 * CPU_CLK_UNHALTED.DISTR=
-IBUTED )",
-> +        "MetricGroup": "Mem;MemoryTLB",
-> +        "MetricName": "Page_Walks_Utilization"
-> +    },
-> +    {
-> +        "BriefDescription": "Average per-core data fill bandwidth to the=
- L1 data cache [GB / sec]",
-> +        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time=
-",
-> +        "MetricGroup": "Mem;MemoryBW",
-> +        "MetricName": "L1D_Cache_Fill_BW"
-> +    },
-> +    {
-> +        "BriefDescription": "Average per-core data fill bandwidth to the=
- L2 cache [GB / sec]",
-> +        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time=
-",
-> +        "MetricGroup": "Mem;MemoryBW",
-> +        "MetricName": "L2_Cache_Fill_BW"
-> +    },
-> +    {
-> +        "BriefDescription": "Average per-core data fill bandwidth to the=
- L3 cache [GB / sec]",
-> +        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / durati=
-on_time",
-> +        "MetricGroup": "Mem;MemoryBW",
-> +        "MetricName": "L3_Cache_Fill_BW"
-> +    },
-> +    {
-> +        "BriefDescription": "Average per-core data access bandwidth to t=
-he L3 cache [GB / sec]",
-> +        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 /=
- duration_time",
-> +        "MetricGroup": "Mem;MemoryBW;Offcore",
-> +        "MetricName": "L3_Cache_Access_BW"
-> +    },
-> +    {
-> +        "BriefDescription": "Rate of silent evictions from the L2 cache =
-per Kilo instruction where the evicted lines are dropped (no writeback to L=
-3 or memory)",
-> +        "MetricExpr": "1000 * L2_LINES_OUT.SILENT / INST_RETIRED.ANY",
-> +        "MetricGroup": "L2Evicts;Mem;Server",
-> +        "MetricName": "L2_Evictions_Silent_PKI"
-> +    },
-> +    {
-> +        "BriefDescription": "Rate of non silent evictions from the L2 ca=
-che per Kilo instruction",
-> +        "MetricExpr": "1000 * L2_LINES_OUT.NON_SILENT / INST_RETIRED.ANY=
-",
-> +        "MetricGroup": "L2Evicts;Mem;Server",
-> +        "MetricName": "L2_Evictions_NonSilent_PKI"
-> +    },
-> +    {
-> +        "BriefDescription": "Average per-thread data fill bandwidth to t=
-he L1 data cache [GB / sec]",
-> +        "MetricExpr": "(64 * L1D.REPLACEMENT / 1000000000 / duration_tim=
-e)",
-> +        "MetricGroup": "Mem;MemoryBW",
-> +        "MetricName": "L1D_Cache_Fill_BW_1T"
-> +    },
-> +    {
-> +        "BriefDescription": "Average per-thread data fill bandwidth to t=
-he L2 cache [GB / sec]",
-> +        "MetricExpr": "(64 * L2_LINES_IN.ALL / 1000000000 / duration_tim=
-e)",
-> +        "MetricGroup": "Mem;MemoryBW",
-> +        "MetricName": "L2_Cache_Fill_BW_1T"
-> +    },
-> +    {
-> +        "BriefDescription": "Average per-thread data fill bandwidth to t=
-he L3 cache [GB / sec]",
-> +        "MetricExpr": "(64 * LONGEST_LAT_CACHE.MISS / 1000000000 / durat=
-ion_time)",
-> +        "MetricGroup": "Mem;MemoryBW",
-> +        "MetricName": "L3_Cache_Fill_BW_1T"
-> +    },
-> +    {
-> +        "BriefDescription": "Average per-thread data access bandwidth to=
- the L3 cache [GB / sec]",
-> +        "MetricExpr": "(64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 =
-/ duration_time)",
-> +        "MetricGroup": "Mem;MemoryBW;Offcore",
-> +        "MetricName": "L3_Cache_Access_BW_1T"
-> +    },
-> +    {
-> +        "BriefDescription": "Average CPU Utilization",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
-> +        "MetricGroup": "HPC;Summary",
-> +        "MetricName": "CPU_Utilization"
-> +    },
-> +    {
-> +        "BriefDescription": "Measured Average Frequency for unhalted pro=
-cessors [GHz]",
-> +        "MetricExpr": "(CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_T=
-SC) * msr@tsc@ / 1000000000 / duration_time",
-> +        "MetricGroup": "Summary;Power",
-> +        "MetricName": "Average_Frequency"
-> +    },
-> +    {
-> +        "BriefDescription": "Giga Floating Point Operations Per Second",
-> +        "MetricExpr": "( ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + F=
-P_ARITH_INST_RETIRED.SCALAR_DOUBLE + FP_ARITH_INST_RETIRED2.SCALAR_HALF ) +=
- 2 * ( FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED2.CO=
-MPLEX_SCALAR_HALF ) + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_A=
-RITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED2.128B_=
-PACKED_HALF + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETI=
-RED.512B_PACKED_DOUBLE ) + 16 * ( FP_ARITH_INST_RETIRED2.256B_PACKED_HALF +=
- FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE ) + 32 * FP_ARITH_INST_RETIRED2.5=
-12B_PACKED_HALF + 4 * AMX_OPS_RETIRED.BF16 ) / 1000000000 ) / duration_time=
-",
-> +        "MetricGroup": "Cor;Flops;HPC",
-> +        "MetricName": "GFLOPs",
-> +        "PublicDescription": "Giga Floating Point Operations Per Second.=
- Aggregate across all supported options of: FP precisions, scalar and vecto=
-r instructions, vector-width and AMX engine."
-> +    },
-> +    {
-> +        "BriefDescription": "Tera Integer (matrix) Operations Per Second=
-",
-> +        "MetricExpr": "( 8 * AMX_OPS_RETIRED.INT8 /  1000000000000 ) / d=
-uration_time",
-> +        "MetricGroup": "Cor;HPC;IntVector;Server",
-> +        "MetricName": "TIOPS"
-> +    },
-> +    {
-> +        "BriefDescription": "Average Frequency Utilization relative nomi=
-nal frequency",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TS=
-C",
-> +        "MetricGroup": "Power",
-> +        "MetricName": "Turbo_Utilization"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of cycles where both hardware Logi=
-cal Processors were active",
-> +        "MetricExpr": "1 - CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_=
-UNHALTED.REF_DISTRIBUTED if #SMT_on else 0",
-> +        "MetricGroup": "SMT",
-> +        "MetricName": "SMT_2T_Utilization"
-> +    },
-> +    {
-> +        "BriefDescription": "Fraction of cycles spent in the Operating S=
-ystem (OS) Kernel mode",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD_P:k / CPU_CLK_UNHALTED.TH=
-READ",
-> +        "MetricGroup": "OS",
-> +        "MetricName": "Kernel_Utilization"
-> +    },
-> +    {
-> +        "BriefDescription": "Cycles Per Instruction for the Operating Sy=
-stem (OS) Kernel mode",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD_P:k / INST_RETIRED.ANY_P:=
-k",
-> +        "MetricGroup": "OS",
-> +        "MetricName": "Kernel_CPI"
-> +    },
-> +    {
-> +        "BriefDescription": "Average external Memory Bandwidth Use for r=
-eads and writes [GB / sec]",
-> +        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@=
-cas_count_write@ ) / 1000000000 ) / duration_time",
-> +        "MetricGroup": "HPC;Mem;MemoryBW;SoC",
-> +        "MetricName": "DRAM_BW_Use"
-> +    },
-> +    {
-> +        "BriefDescription": "Average latency of data read request to ext=
-ernal memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetch=
-es",
-> +        "MetricExpr": "1000000000 * ( UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD =
-/ UNC_CHA_TOR_INSERTS.IA_MISS_DRD ) / ( uncore_cha_0@event\\=3D0x1@ / durat=
-ion_time )",
-> +        "MetricGroup": "Mem;MemoryLat;SoC",
-> +        "MetricName": "MEM_Read_Latency"
-> +    },
-> +    {
-> +        "BriefDescription": "Average number of parallel data read reques=
-ts to external memory. Accounts for demand loads and L1/L2 prefetches",
-> +        "MetricExpr": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD / cha@UNC_CHA_T=
-OR_OCCUPANCY.IA_MISS_DRD\\,thresh\\=3D1@",
-> +        "MetricGroup": "Mem;MemoryBW;SoC",
-> +        "MetricName": "MEM_Parallel_Reads"
-> +    },
-> +    {
-> +        "BriefDescription": "Average latency of data read request to ext=
-ernal 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/=
-L2 data-read prefetches",
-> +        "MetricExpr": "( 1000000000 * ( UNC_CHA_TOR_OCCUPANCY.IA_MISS_DR=
-D_PMM / UNC_CHA_TOR_INSERTS.IA_MISS_DRD_PMM ) / uncore_cha_0@event\\=3D0x1@=
- )",
-> +        "MetricGroup": "Mem;MemoryLat;SoC;Server",
-> +        "MetricName": "MEM_PMM_Read_Latency"
-> +    },
-> +    {
-> +        "BriefDescription": "Average latency of data read request to ext=
-ernal DRAM memory [in nanoseconds]. Accounts for demand loads and L1/L2 dat=
-a-read prefetches",
-> +        "MetricExpr": " 1000000000 * ( UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD=
-_DDR / UNC_CHA_TOR_INSERTS.IA_MISS_DRD_DDR ) / uncore_cha_0@event\\=3D0x1@"=
-,
-> +        "MetricGroup": "Mem;MemoryLat;SoC;Server",
-> +        "MetricName": "MEM_DRAM_Read_Latency"
-> +    },
-> +    {
-> +        "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads=
- [GB / sec]",
-> +        "MetricExpr": "( ( 64 * UNC_M_PMM_RPQ_INSERTS / 1000000000 ) / d=
-uration_time )",
-> +        "MetricGroup": "Mem;MemoryBW;SoC;Server",
-> +        "MetricName": "PMM_Read_BW"
-> +    },
-> +    {
-> +        "BriefDescription": "Average 3DXP Memory Bandwidth Use for Write=
-s [GB / sec]",
-> +        "MetricExpr": "( ( 64 * UNC_M_PMM_WPQ_INSERTS / 1000000000 ) / d=
-uration_time )",
-> +        "MetricGroup": "Mem;MemoryBW;SoC;Server",
-> +        "MetricName": "PMM_Write_BW"
-> +    },
-> +    {
-> +        "BriefDescription": "Average IO (network or disk) Bandwidth Use =
-for Writes [GB / sec]",
-> +        "MetricExpr": "UNC_CHA_TOR_INSERTS.IO_PCIRDCUR * 64 / 1000000000=
- / duration_time",
-> +        "MetricGroup": "IoBW;Mem;SoC;Server",
-> +        "MetricName": "IO_Write_BW"
-> +    },
-> +    {
-> +        "BriefDescription": "Socket actual clocks when any core is activ=
-e on that socket",
-> +        "MetricExpr": "uncore_cha_0@event\\=3D0x1@",
-> +        "MetricGroup": "SoC",
-> +        "MetricName": "Socket_CLKS"
-> +    },
-> +    {
-> +        "BriefDescription": "Instructions per Far Branch ( Far Branches =
-apply upon transition from application to operating system, handling interr=
-upts, exceptions) [lower number means higher occurrence rate]",
-> +        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.FAR_BRANCH:u",
-> +        "MetricGroup": "Branches;OS",
-> +        "MetricName": "IpFarBranch"
-> +    },
-> +    {
-> +        "BriefDescription": "C1 residency percent per core",
-> +        "MetricExpr": "(cstate_core@c1\\-residency@ / msr@tsc@) * 100",
-> +        "MetricGroup": "Power",
-> +        "MetricName": "C1_Core_Residency"
-> +    },
-> +    {
-> +        "BriefDescription": "C6 residency percent per core",
-> +        "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
-> +        "MetricGroup": "Power",
-> +        "MetricName": "C6_Core_Residency"
-> +    },
-> +    {
-> +        "BriefDescription": "C2 residency percent per package",
-> +        "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
-> +        "MetricGroup": "Power",
-> +        "MetricName": "C2_Pkg_Residency"
-> +    },
-> +    {
-> +        "BriefDescription": "C6 residency percent per package",
-> +        "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
-> +        "MetricGroup": "Power",
-> +        "MetricName": "C6_Pkg_Residency"
-> +    }
-> +]
+> +static int evsel__process_contention_begin(struct evsel *evsel, struct perf_sample *sample)
+> +{
+> +       if (trace_handler->contention_begin_event)
+> +               return trace_handler->contention_begin_event(evsel, sample);
+> +       return 0;
+> +}
+> +
+> +static int evsel__process_contention_end(struct evsel *evsel, struct perf_sample *sample)
+> +{
+> +       if (trace_handler->contention_end_event)
+> +               return trace_handler->contention_end_event(evsel, sample);
+> +       return 0;
+> +}
+> +
+>  static void print_bad_events(int bad, int total)
+>  {
+>         /* Output for debug, this have to be removed */
+> @@ -1023,6 +1043,11 @@ static const struct evsel_str_handler lock_tracepoints[] = {
+>         { "lock:lock_release",   evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
+>  };
+>
+> +static const struct evsel_str_handler contention_tracepoints[] = {
+> +       { "lock:contention_begin", evsel__process_contention_begin, },
+> +       { "lock:contention_end",   evsel__process_contention_end,   },
+> +};
+> +
+>  static bool force;
+>
+>  static int __cmd_report(bool display_info)
+> @@ -1086,20 +1111,41 @@ static int __cmd_record(int argc, const char **argv)
+>                 "record", "-R", "-m", "1024", "-c", "1", "--synth", "task",
+>         };
+>         unsigned int rec_argc, i, j, ret;
+> +       unsigned int nr_tracepoints;
+>         const char **rec_argv;
+> +       bool has_lock_stat = true;
+>
+>         for (i = 0; i < ARRAY_SIZE(lock_tracepoints); i++) {
+>                 if (!is_valid_tracepoint(lock_tracepoints[i].name)) {
+> -                               pr_err("tracepoint %s is not enabled. "
+> -                                      "Are CONFIG_LOCKDEP and CONFIG_LOCK_STAT enabled?\n",
+> -                                      lock_tracepoints[i].name);
+> -                               return 1;
+> +                       pr_debug("tracepoint %s is not enabled. "
+> +                                "Are CONFIG_LOCKDEP and CONFIG_LOCK_STAT enabled?\n",
+> +                                lock_tracepoints[i].name);
+> +                       has_lock_stat = false;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       if (has_lock_stat)
+> +               goto setup_args;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(contention_tracepoints); i++) {
+> +               if (!is_valid_tracepoint(contention_tracepoints[i].name)) {
+> +                       pr_err("tracepoint %s is not enabled.\n",
+> +                              contention_tracepoints[i].name);
+> +                       return 1;
+>                 }
+>         }
+>
+> +setup_args:
+>         rec_argc = ARRAY_SIZE(record_args) + argc - 1;
+> +
+> +       if (has_lock_stat)
+> +               nr_tracepoints = ARRAY_SIZE(lock_tracepoints);
+> +       else
+> +               nr_tracepoints = ARRAY_SIZE(contention_tracepoints);
+> +
+>         /* factor of 2 is for -e in front of each tracepoint */
+> -       rec_argc += 2 * ARRAY_SIZE(lock_tracepoints);
+> +       rec_argc += 2 * nr_tracepoints;
+>
+>         rec_argv = calloc(rec_argc + 1, sizeof(char *));
+>         if (!rec_argv)
+> @@ -1108,9 +1154,19 @@ static int __cmd_record(int argc, const char **argv)
+>         for (i = 0; i < ARRAY_SIZE(record_args); i++)
+>                 rec_argv[i] = strdup(record_args[i]);
+>
+> -       for (j = 0; j < ARRAY_SIZE(lock_tracepoints); j++) {
+> +       for (j = 0; j < nr_tracepoints; j++) {
+> +               const char *ev_name;
+> +
+> +               if (has_lock_stat)
+> +                       ev_name = strdup(lock_tracepoints[j].name);
+> +               else
+> +                       ev_name = strdup(contention_tracepoints[j].name);
+> +
+> +               if (!ev_name)
+> +                       return -ENOMEM;
+> +
+>                 rec_argv[i++] = "-e";
+> -               rec_argv[i++] = strdup(lock_tracepoints[j].name);
+> +               rec_argv[i++] = ev_name;
+>         }
+>
+>         for (j = 1; j < (unsigned int)argc; j++, i++)
 > --
-> 2.25.1
+> 2.36.1.255.ge46751e96f-goog
 >
