@@ -2,46 +2,46 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BEDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 21:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84654C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 21:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235533AbiFBVhe (ORCPT
+        id S234954AbiFBVtK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 17:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52436 "EHLO
+        Thu, 2 Jun 2022 17:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbiFBVhe (ORCPT
+        with ESMTP id S239500AbiFBVtH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 17:37:34 -0400
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A2ED124;
-        Thu,  2 Jun 2022 14:37:32 -0700 (PDT)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-e656032735so8493868fac.0;
-        Thu, 02 Jun 2022 14:37:32 -0700 (PDT)
+        Thu, 2 Jun 2022 17:49:07 -0400
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E771DA73;
+        Thu,  2 Jun 2022 14:49:06 -0700 (PDT)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-f33f0f5b1dso8445488fac.8;
+        Thu, 02 Jun 2022 14:49:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IxuGkkHNWWeLUeTuvMQnzB7XapVuPrv4oDcnUHBUEBQ=;
-        b=W9btRF7Zn/JmoiwNTzfPNjbzz4sVHW3ei9u3D2aP22I4Oc3U6suXzm11OKWjRi2qd5
-         Mt9BBuZB/sQvI1UkI9L3mzi8eoYFl5f0d0G9ZH2bYFj+ij5+/YRXfHuZfR16mQGHoUEo
-         Ik/UCF0fgmCvIETxvIVwLO8sQ1x4nfBMuUzxLP3mkHBlV2JyVRth8c65W8TbVMxsG8+5
-         qvK9Q31pQk9oLn0qw7as274H3kD7d2JdAZs7qlKu2bZGnYovyRPegY1myUIuWaoXvIej
-         pLaryq/8IwhwjnBRVOq14guor8z8jfXypsvoxF/SVmY1GnWLvNCS6uiPYs9k2hjsVyPu
-         r/Gg==
-X-Gm-Message-State: AOAM530np9eQ54yPaNIy+cZ56A8tUgrrHLrm0EjgLhefMWx6PbmiMV/0
-        MHsgo28V7gdVoRs214ap2ozi6lts/nSyVFX+uQg=
-X-Google-Smtp-Source: ABdhPJxvgDk+bQS/verwzsiLD+3OEY1d3HlqZSfvZUr+Ie97LPC53JPeH8yLaAjg4aAc5mue2i4h4+fSUOq8RQd5Khk=
+        bh=sKkACeUL3LnAeVi71plphhcyfzIMOc+gua2iqwocQuA=;
+        b=O1DzTtfrK8Mk05CimMPCEVEO9G6WQDcJ6YC9hgeivVx3a0c8eX4Nkb9qSNHSssJIcE
+         OuPE+92gOJTiqRTlPqxoFdSjswJaW46gTPJwwKuMUdqR1MIGFQEXNM8TdEzwLp8ivXuu
+         op/Hea0F5vCzXWcDmOTiYFtAUi/11w7yz3IWzCZGgMYyc20amfTo7EwAZhqVT+2DP/RD
+         YCXi6wC9Yy05bPc/U4PuG0pymnaZeIZBqaVt+97JlsDUK2a20NvvIfKPTaqK9RmS26wZ
+         HuoIhaQHlyj35BNs0XblmtZRfE3ubAJulXHpfhwrBad4YWMNdQsaNF1AoQ34jW15YeyB
+         xeeg==
+X-Gm-Message-State: AOAM5304Hc9FweEspfN7D/iw5O3OdhEmnyyfL669lYaXFrZNZUOpSszN
+        oC+fzcLA2zyA3YfcX5TV6ZtBKWQEoR+OZU0ViCw=
+X-Google-Smtp-Source: ABdhPJzTNfwNLPb8t0j70UsQFfAD6cHsQLI7RL+cnbz+YeaJwJGN8IdT7M9aEL4pg2fsFIUwircwniQqkK3pSNX4NwI=
 X-Received: by 2002:a05:6871:215:b0:f1:8bf5:23ab with SMTP id
- t21-20020a056871021500b000f18bf523abmr3857072oad.92.1654205851711; Thu, 02
- Jun 2022 14:37:31 -0700 (PDT)
+ t21-20020a056871021500b000f18bf523abmr3875055oad.92.1654206545995; Thu, 02
+ Jun 2022 14:49:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220601032608.1034-1-ravi.bangoria@amd.com> <20220601032608.1034-5-ravi.bangoria@amd.com>
-In-Reply-To: <20220601032608.1034-5-ravi.bangoria@amd.com>
+References: <20220601032608.1034-1-ravi.bangoria@amd.com> <20220601032608.1034-7-ravi.bangoria@amd.com>
+In-Reply-To: <20220601032608.1034-7-ravi.bangoria@amd.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 2 Jun 2022 14:37:20 -0700
-Message-ID: <CAM9d7cgraWne_NRGFqscWbYSx5nue_A2fJCQ-OaQBTC3g0eijg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/8] perf headers: Store pmu caps in an array of strings
+Date:   Thu, 2 Jun 2022 14:48:55 -0700
+Message-ID: <CAM9d7ch3UOgT0mcF6Sxde5dHUOS9ux7DwG7sE8+s5Das54cHzw@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] perf/x86/ibs: Add new IBS register bits into header
 To:     Ravi Bangoria <ravi.bangoria@amd.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -64,105 +64,75 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 31, 2022 at 8:28 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+On Tue, May 31, 2022 at 8:30 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
 >
-> Currently all capabilities are stored in a single string separated
-> by NULL character. Instead, store them in an array which makes
-> searching of capability easier.
+> IBS support has been enhanced with two new features in upcoming uarch:
+> 1. DataSrc extension and 2. L3 miss filtering. Additional set of bits
+> has been introduced in IBS registers to exploit these features. Define
+> these new bits into arch/x86/ header.
 >
 > Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
-[SNIP]
-> @@ -3231,12 +3226,16 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
->                 if (!value)
->                         goto free_name;
->
-> -               if (strbuf_addf(&sb, "%s=%s", name, value) < 0)
-> +               name_size = strlen(name);
-> +               value_size = strlen(value);
-> +               ptr = zalloc(sizeof(char) * (name_size + value_size + 2));
-> +               if (!ptr)
->                         goto free_value;
->
-> -               /* include a NULL character at the end */
-> -               if (strbuf_add(&sb, "", 1) < 0)
-> -                       goto free_value;
-> +               memcpy(ptr, name, name_size);
-> +               ptr[name_size] = '=';
-> +               memcpy(ptr + name_size + 1, value, value_size);
+> Acked-by: Ian Rogers <irogers@google.com>
 
-What about using asprintf() instead?
+Isn't it a part of kernel changes?
 
 Thanks,
 Namhyung
 
 
-> +               (*cpu_pmu_caps)[i] = ptr;
+> ---
+>  arch/x86/include/asm/amd-ibs.h | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
 >
->                 if (!strcmp(name, "branches"))
->                         *max_branches = atoi(value);
-> @@ -3244,7 +3243,7 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
->                 free(value);
->                 free(name);
->         }
-> -       *cpu_pmu_caps = strbuf_detach(&sb, NULL);
-> +       *nr_cpu_pmu_caps = nr_caps;
->         return 0;
+> diff --git a/arch/x86/include/asm/amd-ibs.h b/arch/x86/include/asm/amd-ibs.h
+> index aabdbb5ab920..f3eb098d63d4 100644
+> --- a/arch/x86/include/asm/amd-ibs.h
+> +++ b/arch/x86/include/asm/amd-ibs.h
+> @@ -29,7 +29,10 @@ union ibs_fetch_ctl {
+>                         rand_en:1,      /* 57: random tagging enable */
+>                         fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
+>                                          *      (needs IbsFetchComp) */
+> -                       reserved:5;     /* 59-63: reserved */
+> +                       l3_miss_only:1, /* 59: Collect L3 miss samples only */
+> +                       fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
+> +                       fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
+> +                       reserved:2;     /* 62-63: reserved */
+>         };
+>  };
 >
->  free_value:
-> @@ -3252,16 +3251,24 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
->  free_name:
->         free(name);
->  error:
-> -       strbuf_release(&sb);
-> +       for (; i > 0; i--)
-> +               free((*cpu_pmu_caps)[i - 1]);
-> +       free(*cpu_pmu_caps);
-> +       *cpu_pmu_caps = NULL;
-> +       *nr_cpu_pmu_caps = 0;
->         return -1;
->  }
+> @@ -38,14 +41,14 @@ union ibs_op_ctl {
+>         __u64 val;
+>         struct {
+>                 __u64   opmaxcnt:16,    /* 0-15: periodic op max. count */
+> -                       reserved0:1,    /* 16: reserved */
+> +                       l3_miss_only:1, /* 16: Collect L3 miss samples only */
+>                         op_en:1,        /* 17: op sampling enable */
+>                         op_val:1,       /* 18: op sample valid */
+>                         cnt_ctl:1,      /* 19: periodic op counter control */
+>                         opmaxcnt_ext:7, /* 20-26: upper 7 bits of periodic op maximum count */
+> -                       reserved1:5,    /* 27-31: reserved */
+> +                       reserved0:5,    /* 27-31: reserved */
+>                         opcurcnt:27,    /* 32-58: periodic op counter current count */
+> -                       reserved2:5;    /* 59-63: reserved */
+> +                       reserved1:5;    /* 59-63: reserved */
+>         };
+>  };
 >
->  static int process_cpu_pmu_caps(struct feat_fd *ff,
->                                 void *data __maybe_unused)
->  {
-> -       return process_per_cpu_pmu_caps(ff, &ff->ph->env.nr_cpu_pmu_caps,
-> +       int ret = process_per_cpu_pmu_caps(ff, &ff->ph->env.nr_cpu_pmu_caps,
->                                         &ff->ph->env.cpu_pmu_caps,
->                                         &ff->ph->env.max_branches);
-> +
-> +       if (!ret && !ff->ph->env.cpu_pmu_caps)
-> +               pr_debug("cpu pmu capabilities not available\n");
-> +       return ret;
->  }
+> @@ -71,11 +74,12 @@ union ibs_op_data {
+>  union ibs_op_data2 {
+>         __u64 val;
+>         struct {
+> -               __u64   data_src:3,     /* 0-2: data source */
+> +               __u64   data_src_lo:3,  /* 0-2: data source low */
+>                         reserved0:1,    /* 3: reserved */
+>                         rmt_node:1,     /* 4: destination node */
+>                         cache_hit_st:1, /* 5: cache hit state */
+> -                       reserved1:57;   /* 5-63: reserved */
+> +                       data_src_hi:2,  /* 6-7: data source high */
+> +                       reserved1:56;   /* 8-63: reserved */
+>         };
+>  };
 >
->  static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
-> @@ -3270,6 +3277,7 @@ static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
->         struct hybrid_cpc_node *nodes;
->         u32 nr_pmu, i;
->         int ret;
-> +       int j;
->
->         if (do_read_u32(ff, &nr_pmu))
->                 return -1;
-> @@ -3297,6 +3305,8 @@ static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
->                         ret = -1;
->                         goto err;
->                 }
-> +               if (!n->nr_cpu_pmu_caps)
-> +                       pr_debug("%s pmu capabilities not available\n", n->pmu_name);
->         }
->
->         ff->ph->env.nr_hybrid_cpc_nodes = nr_pmu;
-> @@ -3305,6 +3315,8 @@ static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
->
->  err:
->         for (i = 0; i < nr_pmu; i++) {
-> +               for (j = 0; j < nodes[i].nr_cpu_pmu_caps; j++)
-> +                       free(nodes[i].cpu_pmu_caps[j]);
->                 free(nodes[i].cpu_pmu_caps);
->                 free(nodes[i].pmu_name);
->         }
 > --
 > 2.31.1
 >
