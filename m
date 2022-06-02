@@ -2,119 +2,497 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D06EC43334
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Jun 2022 23:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614AEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 00:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232601AbiFAXwl (ORCPT
+        id S232746AbiFBAyZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Jun 2022 19:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45972 "EHLO
+        Wed, 1 Jun 2022 20:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232591AbiFAXwj (ORCPT
+        with ESMTP id S232569AbiFBAyY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Jun 2022 19:52:39 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB7426A0BB
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Jun 2022 16:52:38 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id k36-20020a05600c1ca400b0039c2a3394caso214896wms.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2022 16:52:38 -0700 (PDT)
+        Wed, 1 Jun 2022 20:54:24 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570343BBC2
+        for <linux-perf-users@vger.kernel.org>; Wed,  1 Jun 2022 17:54:22 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id f23-20020a7bcc17000000b003972dda143eso3950833wmh.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jun 2022 17:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=X/VFqt1oB9dbnmFBmCgi4ywLQM2V0PTEoAnqKjWsR9Q=;
-        b=r6s+CYMdNFtIDz0qA6tpudH0yB2fKbwpR9tePS1sjhKI+Zsjt7TjXJ8wUgqGFuLu6C
-         woZdrT5s2G+LlLlqhSGyOokayEpBZ1c+LHHohD2IUdptB4x6iQw+h7f1ZAxLIHU1FITI
-         JfIsfMQKTy/AfJIFo4FJXEbtr1iTpVXxJDaoUiRgUiJecMQkbJap1qJ91yq0htSgBsIW
-         SZFpcV9R1zmtAu4hucIn7iCe25oOjoIpv0Szufg2wgkobbshSu6IvMkzkEXdtW3koSJG
-         QgAAs1tnoJzUZeNB1xofM2T7F+IzlBiv6QZv7jUXikFq47+DJaSC7WSXf6FzH2CnW0wB
-         lCrQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XfbFHuT8lffHOFsCPNZHJ2k/5QPMr7ZWhkyndAOr7zM=;
+        b=szScU1bIJ+MKTo+woVd7oKUbrDw4tSDt1IVJ2Jse+cVnXrlOmYOAbOGlzK9aE8aSy5
+         bw0DR0firoMibJV4oshLBH+VIrZhymCwrMr2I6Iyq/uhRSHvFkVg3cg7Dals6cIjygbJ
+         P44DmoqF6PFr5ZOsrZ6YiHW417Wv6fPPVud0FiejoHubRVsYEid3WPNknczQXbK+3NrE
+         cIUWyBqhRpFZ5gZEE/pQitQXJNhoTHQ17wMDbWZoBSQG5+GioG4n0gJayFWZh7FSBIWs
+         IsN3EcFhx9ZEex3iesYd7L48Ypj4Dm4Gc/wiwsoTh1huM8ed89Y1ncDymlSjXRhcSkDN
+         jcXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=X/VFqt1oB9dbnmFBmCgi4ywLQM2V0PTEoAnqKjWsR9Q=;
-        b=7xtI/97HvGObJ+WmHvRtBQntcefu5Jf48rpca1ywKeN/Iz5719F+4dGNHw9ArNGiq0
-         BvSatpS3ap/Wh8ZsiYYYqSP4tExXzYFnVU29KUS+AZWYKtYShYel5cJ5c4iWZVTLbkeJ
-         A+Up6a88TWlb/wYx8S32RN6n00QKNfAN36tL15T1o76jDgMNkJtHL5l0d+wG0Y6c/jvW
-         lP9mRlIyYkfd0mDTTTpDDDifDPvPs8oL/pnjFmwMR9K79wIlbZx4fblMyjo1YlS+iYGd
-         JWidhngC1auicoRXw9nJut/HRUe0Lvbv/b+0YZHOEAb9rh9CQU8RxSlpghL5mG2+Hr2W
-         bgXQ==
-X-Gm-Message-State: AOAM533Z5IlkLaHuYEzyOP4qGk45UCecZZV4nelzw+qSig3cl6NZFyUT
-        bAX8dAL41vTHm+qWlJfOZMnY9g9xNQ33o0jH8wGkzfWghoW2KQg4
-X-Google-Smtp-Source: ABdhPJzDiJFAtv9lJy70SmrCZBY8ttiSpupoxbXrkZKF99rOi9u8uCXdonoYDggQ/5G3eEK/o6JQie0lynGa8C26Pn4=
-X-Received: by 2002:a7b:c015:0:b0:397:3685:5148 with SMTP id
- c21-20020a7bc015000000b0039736855148mr1554794wmb.174.1654127556288; Wed, 01
- Jun 2022 16:52:36 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XfbFHuT8lffHOFsCPNZHJ2k/5QPMr7ZWhkyndAOr7zM=;
+        b=VA1sCkCa/dKj4TGMHCFhGnbIiqHIraSIgQQlS4yRmiEL0IZMIlupHd0CrLxw1cpmAB
+         p6EwfW21cNvodRQwtORMRlhurGmk1s261jdGxMskzAxYuWgwh6GRnecf1DVD73/3FAuI
+         JseOOIM6+4NT5MLr84P3xqEBA5R9t14Z2cvKcueeZmrm9XTDe0lVQd91zF3jyfPVDStx
+         LCAAQODJRot+b3/N9W4c6GmEUhg61GLebRTwOd1sZfNBUwtqe+Tz1319SD3rcOwuhSmT
+         d9ZNaAxbabb8BinsBOkc8AuT4DuxhOHi4oPCwni4PZI5QSe4UtinTpoXsoxxIznUAU4d
+         4Djg==
+X-Gm-Message-State: AOAM533+zlvGds5ewU5E5Xrdx4794effvfyNiGPa2JMnta0SgNZRUGJq
+        jlCjq3Xpx0435hJ0dXQzO0gDg1HDsHwusrY1tEHNQA==
+X-Google-Smtp-Source: ABdhPJyIl5btIlrJPVvwcs3X48zN7+SAlqqP9Caw/IyydFfH9Ww0ppLgSkBEavGsJCmFI4QLRPsDT/Ryd8xfFOxCc24=
+X-Received: by 2002:a05:600c:2305:b0:397:44a4:d3cb with SMTP id
+ 5-20020a05600c230500b0039744a4d3cbmr30266419wmo.115.1654131260582; Wed, 01
+ Jun 2022 17:54:20 -0700 (PDT)
 MIME-Version: 1.0
+References: <20220528095933.1784141-1-zhengjun.xing@linux.intel.com> <20220528095933.1784141-2-zhengjun.xing@linux.intel.com>
+In-Reply-To: <20220528095933.1784141-2-zhengjun.xing@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 1 Jun 2022 16:52:23 -0700
-Message-ID: <CAP-5=fUgbaRLkZFPO9fQBkhMM+VFi2r+qf6-zX1GE=SGqMwgAQ@mail.gmail.com>
-Subject: June 2nd - office hours
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@kernel.org>
+Date:   Wed, 1 Jun 2022 17:54:07 -0700
+Message-ID: <CAP-5=fW5+wo3C_48KGsjBaaR3+fcMhxoc_4KwdfnEgbuL7Swyw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf vendor events intel: Update metrics for Alderlake
+To:     zhengjun.xing@linux.intel.com
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On Sat, May 28, 2022 at 2:59 AM <zhengjun.xing@linux.intel.com> wrote:
+>
+> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>
+> Update JSON metrics for Alderlake to perf.
+>
+> It included both P-core and E-core metrics.
+>
+> P-core metrics based on TMA 4.4 (TMA_Metrics-full.csv)
+> E-core metrics based on E-core TMA 2.0 (E-core_TMA_Metrics.csv)
+>
+> https://download.01.org/perfmon/
+>
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-Sorry for the late notice, but those who have this on their calendar
-should already have seen it, I plan to hold another office hours at
-2pm GMT. The around the world times are I believe are the same as last
-time namely:
-China: 10pm
-India: 7:30pm
-Europe: 4pm
-UK: 3pm
-US east coast: 10am
-Brazil: 11am
-US west coast: 7am
+Tested-by: Ian Rogers <irogers@google.com>
 
-If you experience problems then my email can be used for Google
-hangout messages, I'll try to be on IRC (#perf on irc.oftc.net).
+PTAL at:
+https://lore.kernel.org/lkml/20220527020653.4160884-1-irogers@google.com/
+As the 1e12 fix will fail for say 1e13, whilst the patch above will
+work in all cases.
 
-A reminder that the code of conduct is here:
-https://www.kernel.org/doc/html/latest/process/code-of-conduct.html
-More details from two weeks ago are here:
-https://lore.kernel.org/linux-perf-users/CAP-5=3DfWkxtm5-Ebwkh4pzA83prvuAJ5=
-yy6CKQYatdkKWu3Tgeg@mail.gmail.com/
-
-The Google meet details are here:
-Linux Perf Tool - Office Hours
-Thursday, June 2 =C2=B7 7:00 =E2=80=93 8:00am PDT
-Google Meet joining info
-Video call link: https://meet.google.com/goj-quks-ydn
-Or dial: =E2=80=AA(US) +1 301-969-4101=E2=80=AC PIN: =E2=80=AA374 496 227=
-=E2=80=AC#
-More phone numbers: https://tel.meet/goj-quks-ydn?pin=3D8067739163431
-Notes (ask to be added to see):
-https://docs.google.com/document/d/1tQZvJ12czMedpmLLZWS0XILAte97zdR6H_tgC3I=
-vafs/edit?usp=3Dsharing&resourcekey=3D0-iV9_8Oc0cSOPl0-NvEYDAA
-
-The only agenda item I have is for Google Summer-of-Code review. We
-are in the community bonding period:
-https://developers.google.com/open-source/gsoc/timeline
-where:
-"GSoC contributors get to know mentors, read documentation, get up to
-speed to begin working on their projects"
-so I'm interested to know how we can help the GSoC contributors and
-what milestones they have achieved (downloading the code, building the
-code, making a modification, etc.).
-
-Some thoughts on other topics are:
- - please review my patch - patches that may have gone unattended on
-LKML and you'd like reviewed
- - testing - how to better structure tests, incorporate test suites
-like Michael Petlan's:
-https://github.com/rfmvh/perftool-testsuite
-https://lore.kernel.org/linux-perf-users/alpine.LRH.2.20.2205182311190.2973=
-5@Diego/
- - bring your own topic
-
-Thanks and I hope to see you tomorrow,
+Thanks,
 Ian
+
+> ---
+> Change log:
+>   v2:
+>     * Regenerate it with the latest converter tool.
+>
+>  .../arch/x86/alderlake/adl-metrics.json       | 163 ++++++++++++------
+>  1 file changed, 113 insertions(+), 50 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/=
+tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> index 6b24958737b5..f8bdf7812b51 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> @@ -37,7 +37,7 @@
+>      {
+>          "BriefDescription": "Fraction of Physical Core issue-slots utili=
+zed by this Logical Processor",
+>          "MetricExpr": "TOPDOWN.SLOTS / ( TOPDOWN.SLOTS / 2 ) if #SMT_on =
+else 1",
+> -        "MetricGroup": "SMT",
+> +        "MetricGroup": "SMT;TmaL1",
+>          "MetricName": "Slots_Utilization",
+>          "Unit": "cpu_core"
+>      },
+> @@ -64,27 +64,20 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Actual per-core usage of the Floating Point=
+ execution units (regardless of the vector width)",
+> -        "MetricExpr": "( (FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH=
+_INST_RETIRED.SCALAR_DOUBLE) + (FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + =
+FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKE=
+D_DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE) ) / ( 2 * CPU_CLK_UNHA=
+LTED.DISTRIBUTED )",
+> +        "BriefDescription": "Actual per-core usage of the Floating Point=
+ non-X87 execution units (regardless of precision or vector-width)",
+> +        "MetricExpr": "( FP_ARITH_DISPATCHED.PORT_0 + FP_ARITH_DISPATCHE=
+D.PORT_1 + FP_ARITH_DISPATCHED.PORT_5 ) / ( 2 * CPU_CLK_UNHALTED.DISTRIBUTE=
+D )",
+>          "MetricGroup": "Cor;Flops;HPC",
+>          "MetricName": "FP_Arith_Utilization",
+> -        "PublicDescription": "Actual per-core usage of the Floating Poin=
+t execution units (regardless of the vector width). Values > 1 are possible=
+ due to Fused-Multiply Add (FMA) counting.",
+> +        "PublicDescription": "Actual per-core usage of the Floating Poin=
+t non-X87 execution units (regardless of precision or vector-width). Values=
+ > 1 are possible due to ([BDW+] Fused-Multiply Add (FMA) counting - common=
+; [ADL+] use all of ADD/MUL/FMA in Scalar or 128/256-bit vectors - less com=
+mon).",
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Instruction-Level-Parallelism (average numb=
+er of uops executed when there is at least 1 uop executed)",
+> +        "BriefDescription": "Instruction-Level-Parallelism (average numb=
+er of uops executed when there is execution) per-core",
+>          "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCL=
+ES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
+>          "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
+>          "MetricName": "ILP",
+>          "Unit": "cpu_core"
+>      },
+> -    {
+> -        "BriefDescription": "Number of Instructions per non-speculative =
+Branch Misprediction (JEClear)",
+> -        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+> -        "MetricGroup": "Bad;BadSpec;BrMispredicts",
+> -        "MetricName": "IpMispredict",
+> -        "Unit": "cpu_core"
+> -    },
+>      {
+>          "BriefDescription": "Core actual clocks when any Logical Process=
+or is active on the Physical Core",
+>          "MetricExpr": "CPU_CLK_UNHALTED.DISTRIBUTED",
+> @@ -181,6 +174,13 @@
+>          "PublicDescription": "Instructions per FP Arithmetic AVX* 256-bi=
+t instruction (lower number means higher occurrence rate). May undercount d=
+ue to FMA double counting.",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "Instructions per Software prefetch instruct=
+ion (of any type: NTA/T0/T1/T2/Prefetch) (lower number means higher occurre=
+nce rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / cpu_core@SW_PREFETCH_ACCESS.T0=
+\\,umask\\=3D0xF@",
+> +        "MetricGroup": "Prefetches",
+> +        "MetricName": "IpSWPF",
+> +        "Unit": "cpu_core"
+> +    },
+>      {
+>          "BriefDescription": "Total number of retired Instructions, Sampl=
+e with: INST_RETIRED.PREC_DIST",
+>          "MetricExpr": "INST_RETIRED.ANY",
+> @@ -188,6 +188,27 @@
+>          "MetricName": "Instructions",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "Estimated fraction of retirement-cycles dea=
+ling with repeat instructions",
+> +        "MetricExpr": "INST_RETIRED.REP_ITERATION / cpu_core@UOPS_RETIRE=
+D.SLOTS\\,cmask\\=3D1@",
+> +        "MetricGroup": "Pipeline;Ret",
+> +        "MetricName": "Strings_Cycles",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions per a microcode Assist invocat=
+ion. See Assists tree node for details (lower number means higher occurrenc=
+e rate)",
+> +        "MetricExpr": "INST_RETIRED.ANY / cpu_core@ASSISTS.ANY\\,umask\\=
+=3D0x1B@",
+> +        "MetricGroup": "Pipeline;Ret;Retire",
+> +        "MetricName": "IpAssist",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "",
+> +        "MetricExpr": "UOPS_EXECUTED.THREAD / cpu_core@UOPS_EXECUTED.THR=
+EAD\\,cmask\\=3D1@",
+> +        "MetricGroup": "Cor;Pipeline;PortsUtil;SMT",
+> +        "MetricName": "Execute",
+> +        "Unit": "cpu_core"
+> +    },
+>      {
+>          "BriefDescription": "Average number of Uops issued by front-end =
+when it issued something",
+>          "MetricExpr": "UOPS_ISSUED.ANY / cpu_core@UOPS_ISSUED.ANY\\,cmas=
+k\\=3D1@",
+> @@ -210,12 +231,26 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Number of Instructions per non-speculative =
+DSB miss",
+> +        "BriefDescription": "Average number of cycles of a switch from t=
+he DSB fetch-unit to MITE fetch unit - see DSB_Switches tree node for detai=
+ls.",
+> +        "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / cpu_core@DSB2M=
+ITE_SWITCHES.PENALTY_CYCLES\\,cmask\\=3D1\\,edge@",
+> +        "MetricGroup": "DSBmiss",
+> +        "MetricName": "DSB_Switch_Cost",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Number of Instructions per non-speculative =
+DSB miss (lower number means higher occurrence rate)",
+>          "MetricExpr": "INST_RETIRED.ANY / FRONTEND_RETIRED.ANY_DSB_MISS"=
+,
+>          "MetricGroup": "DSBmiss;Fed",
+>          "MetricName": "IpDSB_Miss_Ret",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "Number of Instructions per non-speculative =
+Branch Misprediction (JEClear) (lower number means higher occurrence rate)"=
+,
+> +        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+> +        "MetricGroup": "Bad;BadSpec;BrMispredicts",
+> +        "MetricName": "IpMispredict",
+> +        "Unit": "cpu_core"
+> +    },
+>      {
+>          "BriefDescription": "Fraction of branches that are non-taken con=
+ditionals",
+>          "MetricExpr": "BR_INST_RETIRED.COND_NTAKEN / BR_INST_RETIRED.ALL=
+_BRANCHES",
+> @@ -252,11 +287,10 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Actual Average Latency for L1 data-cache mi=
+ss demand load instructions (in core cycles)",
+> -        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MIS=
+S + MEM_LOAD_RETIRED.FB_HIT )",
+> +        "BriefDescription": "Actual Average Latency for L1 data-cache mi=
+ss demand load operations (in core cycles)",
+> +        "MetricExpr": "L1D_PEND_MISS.PENDING / MEM_LOAD_COMPLETED.L1_MIS=
+S_ANY",
+>          "MetricGroup": "Mem;MemoryBound;MemoryLat",
+>          "MetricName": "Load_Miss_Real_Latency",
+> -        "PublicDescription": "Actual Average Latency for L1 data-cache m=
+iss demand load instructions (in core cycles). Latency may be overestimated=
+ for multi-load instructions - e.g. repeat strings.",
+>          "Unit": "cpu_core"
+>      },
+>      {
+> @@ -266,34 +300,6 @@
+>          "MetricName": "MLP",
+>          "Unit": "cpu_core"
+>      },
+> -    {
+> -        "BriefDescription": "Average data fill bandwidth to the L1 data =
+cache [GB / sec]",
+> -        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time=
+",
+> -        "MetricGroup": "Mem;MemoryBW",
+> -        "MetricName": "L1D_Cache_Fill_BW",
+> -        "Unit": "cpu_core"
+> -    },
+> -    {
+> -        "BriefDescription": "Average data fill bandwidth to the L2 cache=
+ [GB / sec]",
+> -        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time=
+",
+> -        "MetricGroup": "Mem;MemoryBW",
+> -        "MetricName": "L2_Cache_Fill_BW",
+> -        "Unit": "cpu_core"
+> -    },
+> -    {
+> -        "BriefDescription": "Average per-core data fill bandwidth to the=
+ L3 cache [GB / sec]",
+> -        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / durati=
+on_time",
+> -        "MetricGroup": "Mem;MemoryBW",
+> -        "MetricName": "L3_Cache_Fill_BW",
+> -        "Unit": "cpu_core"
+> -    },
+> -    {
+> -        "BriefDescription": "Average per-core data access bandwidth to t=
+he L3 cache [GB / sec]",
+> -        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 /=
+ duration_time",
+> -        "MetricGroup": "Mem;MemoryBW;Offcore",
+> -        "MetricName": "L3_Cache_Access_BW",
+> -        "Unit": "cpu_core"
+> -    },
+>      {
+>          "BriefDescription": "L1 cache true misses per kilo instruction f=
+or retired demand loads",
+>          "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.AN=
+Y",
+> @@ -316,14 +322,14 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "L2 cache misses per kilo instruction for al=
+l request types (including speculative)",
+> +        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo inst=
+ruction for all request types (including speculative)",
+>          "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
+>          "MetricGroup": "Mem;CacheMisses;Offcore",
+>          "MetricName": "L2MPKI_All",
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "L2 cache misses per kilo instruction for al=
+l demand loads  (including speculative)",
+> +        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo inst=
+ruction for all demand loads  (including speculative)",
+>          "MetricExpr": "1000 * L2_RQSTS.DEMAND_DATA_RD_MISS / INST_RETIRE=
+D.ANY",
+>          "MetricGroup": "Mem;CacheMisses",
+>          "MetricName": "L2MPKI_Load",
+> @@ -351,7 +357,7 @@
+>          "Unit": "cpu_core"
+>      },
+>      {
+> -        "BriefDescription": "Fill Buffer (FB) true hits per kilo instruc=
+tions for retired demand loads",
+> +        "BriefDescription": "Fill Buffer (FB) hits per kilo instructions=
+ for retired demand loads (L1D misses that merge into ongoing miss-handling=
+ entries)",
+>          "MetricExpr": "1000 * MEM_LOAD_RETIRED.FB_HIT / INST_RETIRED.ANY=
+",
+>          "MetricGroup": "Mem;CacheMisses",
+>          "MetricName": "FB_HPKI",
+> @@ -365,6 +371,62 @@
+>          "MetricName": "Page_Walks_Utilization",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "Average per-core data fill bandwidth to the=
+ L1 data cache [GB / sec]",
+> +        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time=
+",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L1D_Cache_Fill_BW",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-core data fill bandwidth to the=
+ L2 cache [GB / sec]",
+> +        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time=
+",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L2_Cache_Fill_BW",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-core data fill bandwidth to the=
+ L3 cache [GB / sec]",
+> +        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / durati=
+on_time",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L3_Cache_Fill_BW",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-core data access bandwidth to t=
+he L3 cache [GB / sec]",
+> +        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 /=
+ duration_time",
+> +        "MetricGroup": "Mem;MemoryBW;Offcore",
+> +        "MetricName": "L3_Cache_Access_BW",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-thread data fill bandwidth to t=
+he L1 data cache [GB / sec]",
+> +        "MetricExpr": "(64 * L1D.REPLACEMENT / 1000000000 / duration_tim=
+e)",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L1D_Cache_Fill_BW_1T",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-thread data fill bandwidth to t=
+he L2 cache [GB / sec]",
+> +        "MetricExpr": "(64 * L2_LINES_IN.ALL / 1000000000 / duration_tim=
+e)",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L2_Cache_Fill_BW_1T",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-thread data fill bandwidth to t=
+he L3 cache [GB / sec]",
+> +        "MetricExpr": "(64 * LONGEST_LAT_CACHE.MISS / 1000000000 / durat=
+ion_time)",
+> +        "MetricGroup": "Mem;MemoryBW",
+> +        "MetricName": "L3_Cache_Fill_BW_1T",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Average per-thread data access bandwidth to=
+ the L3 cache [GB / sec]",
+> +        "MetricExpr": "(64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 =
+/ duration_time)",
+> +        "MetricGroup": "Mem;MemoryBW;Offcore",
+> +        "MetricName": "L3_Cache_Access_BW_1T",
+> +        "Unit": "cpu_core"
+> +    },
+>      {
+>          "BriefDescription": "Average CPU Utilization",
+>          "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+> @@ -384,6 +446,7 @@
+>          "MetricExpr": "( ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + F=
+P_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKE=
+D_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_R=
+ETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE =
+) / 1000000000 ) / duration_time",
+>          "MetricGroup": "Cor;Flops;HPC",
+>          "MetricName": "GFLOPs",
+> +        "PublicDescription": "Giga Floating Point Operations Per Second.=
+ Aggregate across all supported options of: FP precisions, scalar and vecto=
+r instructions, vector-width and AMX engine.",
+>          "Unit": "cpu_core"
+>      },
+>      {
+> @@ -461,7 +524,7 @@
+>      },
+>      {
+>          "BriefDescription": "Counts the total number of issue slots  tha=
+t were not consumed by the backend due to backend stalls",
+> -        "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE=
+)",
+> +        "MetricExpr": "(TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.COR=
+E))",
+>          "MetricGroup": "TopdownL1",
+>          "MetricName": "Backend_Bound_Aux",
+>          "PublicDescription": "Counts the total number of issue slots  th=
+at were not consumed by the backend due to backend stalls.  Note that UOPS =
+must be available for consumption in order for this event to count.  If a u=
+op is not available (IQ is empty), this event will not count.  All of these=
+ subevents count backend stalls, in slots, due to a resource limitation.   =
+These are not cycle based events and therefore can not be precisely added o=
+r subtracted from the Backend_Bound subevents which are cycle based.  These=
+ subevents are supplementary to Backend_Bound and can be used to analyze re=
+sults from a resource perspective at allocation.  ",
+> @@ -608,7 +671,7 @@
+>      },
+>      {
+>          "BriefDescription": "Fraction of cycles spent in Kernel mode",
+> -        "MetricExpr": "CPU_CLK_UNHALTED.CORE:k / CPU_CLK_UNHALTED.CORE",
+> +        "MetricExpr": "cpu_atom@CPU_CLK_UNHALTED.CORE@k / CPU_CLK_UNHALT=
+ED.CORE",
+>          "MetricName": "Kernel_Utilization",
+>          "Unit": "cpu_atom"
+>      },
+> @@ -620,7 +683,7 @@
+>      },
+>      {
+>          "BriefDescription": "Estimated Pause cost. In percent",
+> -        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / ( 5 * CPU_CL=
+K_UNHALTED.CORE )",
+> +        "MetricExpr": "100 * SERIALIZATION.NON_C01_MS_SCB / (5 * CPU_CLK=
+_UNHALTED.CORE)",
+>          "MetricName": "Estimated_Pause_Cost",
+>          "Unit": "cpu_atom"
+>      },
+> --
+> 2.25.1
+>
