@@ -2,128 +2,182 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E56C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 13:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8443DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 15:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235120AbiFBNCL (ORCPT
+        id S234499AbiFBPfi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 09:02:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54078 "EHLO
+        Thu, 2 Jun 2022 11:35:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235127AbiFBNCJ (ORCPT
+        with ESMTP id S232397AbiFBPfh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 09:02:09 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96DC201BC
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Jun 2022 06:02:07 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id k19so6373249wrd.8
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jun 2022 06:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8BRxmVh83/7oOS9ziB753MF2kjJx4caRUXZ5QQ/JsSw=;
-        b=UHW3hKaPp4VcvGNiWM5hprGivixQ0QV/axF7K3VwJsm94DJKp8FL+o5CzFP0rKz5UW
-         rim+LlmX0EcT9ikPrbxPFc/mLP5YcFAbWxYC5SHVZJ6F4+V1MJJUbJ79x8nrGezHRIko
-         bN5V4VUlQdprSu6d4nD+iuCl132BtLcVZNlC5WLoik+n2bsqyo1pGvr8V3yu/ETJ1+x8
-         9Iekx6YQ4P1Kqoj4V9LnO338o1lswXKNXDpQCTwOKhFKACvARK5oV+sC09Tdt1qfnxIk
-         w4nqrJSZ4WZ4JHIaqrYyTSK6z/GTsIW06EeQ4wFqRUNpDcOu26dsGXrN8Km3NkftkXM6
-         hsRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8BRxmVh83/7oOS9ziB753MF2kjJx4caRUXZ5QQ/JsSw=;
-        b=y8wDSrChezFrVo6FAQqmX/Liv9Q7QZYQWfoe4U36eyvtjTSGHUCeHM4PR+P1KdmR7y
-         LFUBZGGxDVJWEs3qiVoGVrahaVJki3hbt6fyp9Z7TdPQkB5EVFgbBfv6BzxQhELsW/Lp
-         r6ub9fY3QLCCk3Q7py5K6mdbysDWG8YTinfnJx/zfLWlFRQy/pDQULcAFACrt5H7aOeD
-         AVQpC7/H7OqM3Mbm8lcARDrMpoqLmB1ohYvvdasE5lXJRCmVe7rS1ghO4S37dZBNkP/z
-         ZRXzx8UZw5ijcnbUzYY8Oxcxt3o5uvUm75uqXReBE+HzZA4XU00tTks8NlCUn6DNpXUR
-         O2og==
-X-Gm-Message-State: AOAM5330DkGkq4utC5PewUgyQJoemSaThDtJQ4TUphznVRm7AEu4TNnM
-        MLuH2fMbr7L/HyvPY1G5BRUaEVlhwAIzRvXB1hVO9IrqfOBq1Q==
-X-Google-Smtp-Source: ABdhPJzI3PENcq0FmIk5RJU1BCiCoYzznhE/yfdbp5w+G75/YhIZtUX7V8vTPhnCezygvlZYjAVrBfSUYWbooZiWQok=
-X-Received: by 2002:adf:f5c4:0:b0:210:2ac2:6aa0 with SMTP id
- k4-20020adff5c4000000b002102ac26aa0mr3589807wrp.300.1654174925154; Thu, 02
- Jun 2022 06:02:05 -0700 (PDT)
+        Thu, 2 Jun 2022 11:35:37 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 945FC38A1;
+        Thu,  2 Jun 2022 08:35:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654184135; x=1685720135;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=q72Kp6kH+XrCzkAj5EGf5w7xS0pzITO4JKHcGtdywh8=;
+  b=b+ZPLiNonSVqcKiWDHAKhcMYihEn2f3H3dQNfncbL3wg4TeyacQ63p4k
+   FuMZs8gO1N2jUCZ9QLRGULC8GQ81jHt/VqHwTtBgjHFJVJxsmkDD97ydQ
+   SgKjSNBynyo9yTV9RtmODuYwqw3Jxvyc31Wmm5AXGLRTXWoffIkcp1cLq
+   co215E5K86x/R1BrM8csTHln6hmUsZ31D57YJD8X9BDFdH5S9MdEHOOYr
+   HgoZSTkiqdkgRlp6Gq8NfpaVOfJxfeC7W6wJvYXY/TJ3BE9ZTfXAE+lsT
+   LIXcEE6KvCLzynr5i6GPrRwdGpUrs8beslG9dvIRE/+tsbs2dgTNOHtRO
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10366"; a="274788483"
+X-IronPort-AV: E=Sophos;i="5.91,271,1647327600"; 
+   d="scan'208";a="274788483"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2022 08:35:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,271,1647327600"; 
+   d="scan'208";a="563359712"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2022 08:35:31 -0700
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
+Subject: [PATCH] perf record: Support sample-read topdown metric group for hybrid platforms
+Date:   Thu,  2 Jun 2022 23:36:03 +0800
+Message-Id: <20220602153603.1884710-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CAP-5=fUgbaRLkZFPO9fQBkhMM+VFi2r+qf6-zX1GE=SGqMwgAQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fUgbaRLkZFPO9fQBkhMM+VFi2r+qf6-zX1GE=SGqMwgAQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 2 Jun 2022 06:01:51 -0700
-Message-ID: <CAP-5=fVWWG5e9jf91zgxXcJs8+D5DT=pCZg0UMfc2ph3imyJNg@mail.gmail.com>
-Subject: Re: June 2nd - office hours
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 1, 2022 at 4:52 PM Ian Rogers <irogers@google.com> wrote:
->
-> Hi,
->
-> Sorry for the late notice, but those who have this on their calendar
-> should already have seen it, I plan to hold another office hours at
-> 2pm GMT. The around the world times are I believe are the same as last
-> time namely:
-> China: 10pm
-> India: 7:30pm
-> Europe: 4pm
-> UK: 3pm
-> US east coast: 10am
-> Brazil: 11am
-> US west coast: 7am
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-A reminder that this is in 1 hour.
+With the hardware TopDown metrics feature, the sample-read feature should
+be supported for a TopDown group, e.g., sample a non-topdown event and read
+a Topdown metric group. But the current perf record code errors are out.
 
-Thanks,
-Ian
+For a TopDown metric group,the slots event must be the leader of the group,
+but the leader slots event doesn't support sampling. To support sample-read
+the TopDown metric group, uses the 2nd event of the group as the "leader"
+for the purposes of sampling.
 
-> If you experience problems then my email can be used for Google
-> hangout messages, I'll try to be on IRC (#perf on irc.oftc.net).
->
-> A reminder that the code of conduct is here:
-> https://www.kernel.org/doc/html/latest/process/code-of-conduct.html
-> More details from two weeks ago are here:
-> https://lore.kernel.org/linux-perf-users/CAP-5=3DfWkxtm5-Ebwkh4pzA83prvuA=
-J5yy6CKQYatdkKWu3Tgeg@mail.gmail.com/
->
-> The Google meet details are here:
-> Linux Perf Tool - Office Hours
-> Thursday, June 2 =C2=B7 7:00 =E2=80=93 8:00am PDT
-> Google Meet joining info
-> Video call link: https://meet.google.com/goj-quks-ydn
-> Or dial: =E2=80=AA(US) +1 301-969-4101=E2=80=AC PIN: =E2=80=AA374 496 227=
-=E2=80=AC#
-> More phone numbers: https://tel.meet/goj-quks-ydn?pin=3D8067739163431
-> Notes (ask to be added to see):
-> https://docs.google.com/document/d/1tQZvJ12czMedpmLLZWS0XILAte97zdR6H_tgC=
-3Ivafs/edit?usp=3Dsharing&resourcekey=3D0-iV9_8Oc0cSOPl0-NvEYDAA
->
-> The only agenda item I have is for Google Summer-of-Code review. We
-> are in the community bonding period:
-> https://developers.google.com/open-source/gsoc/timeline
-> where:
-> "GSoC contributors get to know mentors, read documentation, get up to
-> speed to begin working on their projects"
-> so I'm interested to know how we can help the GSoC contributors and
-> what milestones they have achieved (downloading the code, building the
-> code, making a modification, etc.).
->
-> Some thoughts on other topics are:
->  - please review my patch - patches that may have gone unattended on
-> LKML and you'd like reviewed
->  - testing - how to better structure tests, incorporate test suites
-> like Michael Petlan's:
-> https://github.com/rfmvh/perftool-testsuite
-> https://lore.kernel.org/linux-perf-users/alpine.LRH.2.20.2205182311190.29=
-735@Diego/
->  - bring your own topic
->
-> Thanks and I hope to see you tomorrow,
-> Ian
+Only the platform with the TopDown metric feature supports sample-read the
+topdown group. In commit acb65150a47c ("perf record: Support sample-read
+topdown metric group"), it adds arch_topdown_sample_read() to indicate
+whether the TopDown group supports sample-read, it should only work on the
+non-hybrid systems, this patch extends the support for hybrid platforms.
+
+Before:
+
+ # ./perf record -e "{cpu_core/slots/,cpu_core/cycles/,cpu_core/topdown-retiring/}:S" -a sleep 1
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cpu_core/topdown-retiring/).
+/bin/dmesg | grep -i perf may provide additional information.
+
+After:
+
+ # ./perf record -e "{cpu_core/slots/,cpu_core/cycles/,cpu_core/topdown-retiring/}:S" -a sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.238 MB perf.data (369 samples) ]
+
+Fixes: acb65150a47c ("perf record: Support sample-read topdown metric group")
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/arch/x86/util/evsel.c   |  3 ++-
+ tools/perf/arch/x86/util/evsel.h   |  7 +++++++
+ tools/perf/arch/x86/util/topdown.c | 21 ++++-----------------
+ 3 files changed, 13 insertions(+), 18 deletions(-)
+ create mode 100644 tools/perf/arch/x86/util/evsel.h
+
+diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+index ff4561b7b600..3501399cef35 100644
+--- a/tools/perf/arch/x86/util/evsel.c
++++ b/tools/perf/arch/x86/util/evsel.c
+@@ -5,6 +5,7 @@
+ #include "util/env.h"
+ #include "util/pmu.h"
+ #include "linux/string.h"
++#include "evsel.h"
+ 
+ void arch_evsel__set_sample_weight(struct evsel *evsel)
+ {
+@@ -32,7 +33,7 @@ void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr)
+ }
+ 
+ /* Check whether the evsel's PMU supports the perf metrics */
+-static bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
++bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
+ {
+ 	const char *pmu_name = evsel->pmu_name ? evsel->pmu_name : "cpu";
+ 
+diff --git a/tools/perf/arch/x86/util/evsel.h b/tools/perf/arch/x86/util/evsel.h
+new file mode 100644
+index 000000000000..19ad1691374d
+--- /dev/null
++++ b/tools/perf/arch/x86/util/evsel.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _EVSEL_H
++#define _EVSEL_H 1
++
++bool evsel__sys_has_perf_metrics(const struct evsel *evsel);
++
++#endif
+diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
+index f4d5422e9960..f81a7cfe4d63 100644
+--- a/tools/perf/arch/x86/util/topdown.c
++++ b/tools/perf/arch/x86/util/topdown.c
+@@ -4,6 +4,7 @@
+ #include "util/pmu.h"
+ #include "util/topdown.h"
+ #include "topdown.h"
++#include "evsel.h"
+ 
+ /* Check whether there is a PMU which supports the perf metrics. */
+ bool topdown_sys_has_perf_metrics(void)
+@@ -55,33 +56,19 @@ void arch_topdown_group_warn(void)
+ 
+ #define TOPDOWN_SLOTS		0x0400
+ 
+-static bool is_topdown_slots_event(struct evsel *counter)
+-{
+-	if (!counter->pmu_name)
+-		return false;
+-
+-	if (strcmp(counter->pmu_name, "cpu"))
+-		return false;
+-
+-	if (counter->core.attr.config == TOPDOWN_SLOTS)
+-		return true;
+-
+-	return false;
+-}
+-
+ /*
+  * Check whether a topdown group supports sample-read.
+  *
+- * Only Topdown metic supports sample-read. The slots
++ * Only Topdown metric supports sample-read. The slots
+  * event must be the leader of the topdown group.
+  */
+ 
+ bool arch_topdown_sample_read(struct evsel *leader)
+ {
+-	if (!pmu_have_event("cpu", "slots"))
++	if (!evsel__sys_has_perf_metrics(leader))
+ 		return false;
+ 
+-	if (is_topdown_slots_event(leader))
++	if (leader->core.attr.config == TOPDOWN_SLOTS)
+ 		return true;
+ 
+ 	return false;
+-- 
+2.25.1
+
