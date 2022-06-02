@@ -2,118 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD31C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 17:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABA4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 18:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236798AbiFBRLg (ORCPT
+        id S237842AbiFBSIY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 13:11:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39776 "EHLO
+        Thu, 2 Jun 2022 14:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234555AbiFBRLf (ORCPT
+        with ESMTP id S237836AbiFBSIX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 13:11:35 -0400
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649042A80F6;
-        Thu,  2 Jun 2022 10:11:34 -0700 (PDT)
+        Thu, 2 Jun 2022 14:08:23 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C9026ADD
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Jun 2022 11:08:22 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id t6so7452478wra.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jun 2022 11:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1654189895; x=1685725895;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lieI59ITfoRtC4B8Ptaya/6xFBTQt0IMD/X5QvUWlUA=;
-  b=ZF911keks4gBMybxAOM6MwHyDTU3vNKvEMnUlGy7vCU+Bk7te99n1MLK
-   LGrq9iPkAaBN+gM+zHPNAbvGSHDoXjlVgB6ur324YfHWg5J16C7ADd/Kb
-   lUMXy3ADXXLreyexi18tnHc6T4kTm7FbypdjP/6w1GY3LnJiHYAg3SwHr
-   w=;
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-1f9d5b26.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP; 02 Jun 2022 17:11:32 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-pdx-2b-1f9d5b26.us-west-2.amazon.com (Postfix) with ESMTPS id 13DE340BC6;
-        Thu,  2 Jun 2022 17:11:31 +0000 (UTC)
-Received: from EX13D02UWB001.ant.amazon.com (10.43.161.240) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.36; Thu, 2 Jun 2022 17:11:30 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D02UWB001.ant.amazon.com (10.43.161.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.36; Thu, 2 Jun 2022 17:11:30 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1497.36 via Frontend Transport; Thu, 2 Jun 2022 17:11:30 +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 507B5213F; Thu,  2 Jun 2022 17:11:29 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     <leo.yan@linaro.org>
-CC:     <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <hi@alyssa.is>,
-        <irogers@google.com>, <likexu@tencent.com>, <kjain@linux.ibm.com>,
-        <lihuafei1@huawei.com>, <adam.li@amperecomputing.com>,
-        <german.gomez@arm.com>, <james.clark@arm.com>,
-        <alisaidi@amazon.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 00/12] perf c2c: Support display for Arm64
-Date:   Thu, 2 Jun 2022 17:11:20 +0000
-Message-ID: <20220602171120.31166-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220601102505.GA408721@leoy-ThinkPad-X240s>
-References: <20220601102505.GA408721@leoy-ThinkPad-X240s>
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9HxLJgZtlHlK+K1gWFxW+a6tTn7Jn/932cs76W+wS5Q=;
+        b=gXafYBazVGRnUdC1FD29atbaAVADiZ30i2Q/SVfn9cd8GZ7W0bWCWgy9yYb4jP8Oyu
+         4hZmNacxn7qtAKDYOAQww+NmI4Hw7kk2P3klC22Jp8JrNyrVrHt6EtB7O+B0nWFZXw2t
+         5fIy3zrAmE30DcEWfjsDrytlixzdc+lEhAJnTO/Pgu6lScO38ihATUwxB5utWsKxmcX8
+         jkyCudn18LKGqzX9vJCyCtySxJo8QZeoebRRyDfu0FOin/VmtfLJWRjQtw4RUkHWf1rN
+         TYZtwE+lCZ7vqpVYB7IDg4TLGvhdp0SsFsbGAfyqqC5/sg0GZpc5WFCD1Nh5jaF+2eO4
+         QKUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9HxLJgZtlHlK+K1gWFxW+a6tTn7Jn/932cs76W+wS5Q=;
+        b=LNZjmGF4mYUSV+q1WlycCs5csnLg0dWRFBGQ6v9MRjkD7NzgB1sW+oRc9JLsMo0Coe
+         lWUIEgI+5/3fVsujESXQdYevSMfHcvExoKwywOwgDjaUQztmlzXG9tTkm82z7h3eFX+w
+         Bp7cuYDjnJkRECXoSsy8zfrXbUI6CaobvPaw0E247lr0IRIRJN3zysnK63bFUEUfjIov
+         ZPOC/NdNsfG/KaeqT1w6W5vs+w10L0DGNyVI0XCkPapq/rNbXfaVG2v+2WnHJvIafBzt
+         eplpzbS6TSdEGKuksPVSAstZl6rLEuMDW/evB9wj0wnYv2N7R6Ofvv++phDVdWlO+ZQJ
+         1P4w==
+X-Gm-Message-State: AOAM5332ynSvNHp3HUKk9HeXZfY0YHBIb3lEVOCnFphdpnYo3R0dXUxq
+        T2Y9U+UEeXz7cNfPV6LTxE6LOipY93frcnpsCSPhcg==
+X-Google-Smtp-Source: ABdhPJx5VCLYk+0/TVaEONygVnf++20yjQxm00tLoQZlGTbIZHx/1Gzbn0dkLv78dOY0suJYq+GgxsJlg8zECz0C21E=
+X-Received: by 2002:adf:f5c4:0:b0:210:2ac2:6aa0 with SMTP id
+ k4-20020adff5c4000000b002102ac26aa0mr4671812wrp.300.1654193300494; Thu, 02
+ Jun 2022 11:08:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20220525154114.718321-1-james.clark@arm.com> <20220525154114.718321-2-james.clark@arm.com>
+ <b6cf9d34-313e-6b7d-3781-a8a5af203cd6@arm.com>
+In-Reply-To: <b6cf9d34-313e-6b7d-3781-a8a5af203cd6@arm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 2 Jun 2022 11:08:07 -0700
+Message-ID: <CAP-5=fX6r31X7HeB-H4MjqwXMcdMSkzMzTk8Nr9F2=daQYhH3g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] perf tools: arm64: Use perf's copy of kernel headers
+To:     German Gomez <german.gomez@arm.com>
+Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
+        broonie@kernel.org, leo.yan@linaro.org, mathieu.poirier@linaro.org,
+        john.garry@huawei.com, Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
-
-On Wed, 1 Jun 2022 18:25:05 +0800 Leo Yan wrote:
-> Hi Joe,
-> 
-> On Tue, May 31, 2022 at 02:44:07PM -0400, Joe Mario wrote:
-> 
-> [...]
-> 
-> > Hi Leo:
-> > I built a new perf with your patches and ran it on a 2-numa node Neoverse platform.
-> > I then ran my simple test that creates reader and writer threads to tug on the same cacheline.
-> > The c2c output is appended below.
-> >
-> > The output looks good, especially where you've broken out the (average) cycles for local and remote peer loads.  
-> > And I'm glad to see you fixed the "Node" column.  I use that a lot to help detect remote node accesses.  
-> 
-> Thanks a lot for your testing and suggestions, which are really helpful!
-> 
-> > And the "PA cnt" field is working as well,  which is important to see if numa_balance is moving the data around.
-> 
-> Good to know this.  To be honest, before I didn't note for "PA cnt"
-> metric, I checked a bit for the code, this metrics is very useful to
-> understand how it's severe that a cache line is accessed from different
-> addresses, so we can get sense how a cache line is hammered.
-> 
-> [...]
+On Wed, May 25, 2022 at 8:59 AM German Gomez <german.gomez@arm.com> wrote:
 >
-> > Thanks for doing this.  It looks good.
-> 
-> You are welcome!  And very appreicate your helping to mature the code.
+>
+> On 25/05/2022 16:41, James Clark wrote:
+> > Fix this include path to use perf's copy of the kernel header
+> > rather than the one from the root of the repo.
+> >
+> > This fixes build errors when only applying the perf tools
+> > part of a patchset rather than both sides.
+> >
+> > Reported-by: German Gomez <german.gomez@arm.com>
+> > Signed-off-by: James Clark <james.clark@arm.com>
+>
+> Without this change "make -C tools/perf" was failing if kernel-side changes weren't applied
+>
+> Tested-by: German Gomez <german.gomez@arm.com>
+>
+> Thanks,
+> German
 
-Seconding that, thanks for progressing this so much Leo. 
-
-> 
-> > I'll assume someone else is reviewing your code changes.
-> 
-> Yeah, let's give a bit more time for reviewing.
-
-I've tested and given each patch a close look. I haven't found anything that
-looks to change other architectures and the output on my Graviton systems looks
-great. I pulled in your patch to add physical addresses to the spe records and
-as expected I saw the Node properly populated and PA cnt is no longer zero.  One
-nit is the documentation still says that "Total HITMs (tot) as default," while
-the code now defaults to "peer" on arm64.  Other than that:
-
-Tested-by: Ali Saidi <alisaidi@amazon.com>
-Reviewed-by: Ali Saidi <alisaidi@amazon.com>
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Ali
+Ian
 
+> > ---
+> >  tools/perf/util/libunwind/arm64.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/libunwind/arm64.c b/tools/perf/util/libunwind/arm64.c
+> > index 15f60fd09424..014d82159656 100644
+> > --- a/tools/perf/util/libunwind/arm64.c
+> > +++ b/tools/perf/util/libunwind/arm64.c
+> > @@ -24,7 +24,7 @@
+> >  #include "unwind.h"
+> >  #include "libunwind-aarch64.h"
+> >  #define perf_event_arm_regs perf_event_arm64_regs
+> > -#include <../../../../arch/arm64/include/uapi/asm/perf_regs.h>
+> > +#include <../../../arch/arm64/include/uapi/asm/perf_regs.h>
+> >  #undef perf_event_arm_regs
+> >  #include "../../arch/arm64/util/unwind-libunwind.c"
+> >
