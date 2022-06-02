@@ -2,102 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ABAC43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 20:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BEDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 21:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbiFBUyq (ORCPT
+        id S235533AbiFBVhe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 16:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
+        Thu, 2 Jun 2022 17:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbiFBUyp (ORCPT
+        with ESMTP id S229742AbiFBVhe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 16:54:45 -0400
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5437133EB4
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Jun 2022 13:54:44 -0700 (PDT)
-Received: by mail-qk1-x72f.google.com with SMTP id x65so4593873qke.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jun 2022 13:54:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=6LjIkUGm3TVDX5vb/9qpUYyhJA5G8H8BVUBqEgDd3+0=;
-        b=K4BLbcoX/U1d5DJy0Fie0u2XxILrsmwY37n4f4m3obW8BgIV9K6IMQ336R1HqxtKYJ
-         099ADrHwc/doAy8ssKpWYGZT+pXduNfZgFSpRjQSxnSn6mWo2vqeTeh068WPsggWN546
-         ngdtgoGCRxxlMQu+pIgdP2X5g6mVTEzDF0288=
+        Thu, 2 Jun 2022 17:37:34 -0400
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A2ED124;
+        Thu,  2 Jun 2022 14:37:32 -0700 (PDT)
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-e656032735so8493868fac.0;
+        Thu, 02 Jun 2022 14:37:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=6LjIkUGm3TVDX5vb/9qpUYyhJA5G8H8BVUBqEgDd3+0=;
-        b=7hPkTzTJvOsmhzT97Suf0TsZ58gZUT8QRZCCexI6DWMxBOXn3vLD2OSvvMYHPfJhFv
-         3i81CYuF71Z40vX67m7P+5YncUHUZVuoo0LYXVPBw6oeZru7ebDcx9U3yW/j3SJY1CgY
-         MouW30XDlutOVPSYanwVHOdTGdYFzcNs3IAnxXTZNo8o7rX86sPuBYzWeT1RQeHmJr1F
-         QQBWUpBqSDMRDbUqg3BMizRaMlJI6CUXIFySP0OTasXV6b4Q8Fx58gL8b/8/0lbOBhQm
-         oRMM5Z6+eRxeyjiB/2LrhcRwGM93tAltsRfvoB3MD133CVqlREhT5KIL+FKIgd0ExowR
-         uQqw==
-X-Gm-Message-State: AOAM533e40OGkVyksTfGVsnUF8KiQRo711ro3yxEtf1InM46BEy2j1eJ
-        VljNS1FUANIdJEdqwrPyjKrAtw==
-X-Google-Smtp-Source: ABdhPJySN8sV3owZc1gaDwMxXMUjTjGitab2FoDpySxmg+fsJ0CGADiXVU343143pwgQJQAaaz50wQ==
-X-Received: by 2002:a37:a285:0:b0:6a5:c3e4:59a1 with SMTP id l127-20020a37a285000000b006a5c3e459a1mr4679278qke.346.1654203283239;
-        Thu, 02 Jun 2022 13:54:43 -0700 (PDT)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id n12-20020a05622a11cc00b003022cdcd28bsm3782457qtk.2.2022.06.02.13.54.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jun 2022 13:54:42 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Thu, 2 Jun 2022 16:54:31 -0400 (EDT)
-To:     Ian Rogers <irogers@google.com>
-cc:     linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: a few libperf questions
-In-Reply-To: <CAP-5=fVeDJJ_HD=AeK0XSpsY52H58ZynRnnEpOB-z478=NxaiA@mail.gmail.com>
-Message-ID: <c41fb7e-41a4-65e0-342-9f8de9a4b31@maine.edu>
-References: <5842751-f5a2-4469-53f2-57ef1362568@maine.edu> <CAP-5=fVeDJJ_HD=AeK0XSpsY52H58ZynRnnEpOB-z478=NxaiA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IxuGkkHNWWeLUeTuvMQnzB7XapVuPrv4oDcnUHBUEBQ=;
+        b=W9btRF7Zn/JmoiwNTzfPNjbzz4sVHW3ei9u3D2aP22I4Oc3U6suXzm11OKWjRi2qd5
+         Mt9BBuZB/sQvI1UkI9L3mzi8eoYFl5f0d0G9ZH2bYFj+ij5+/YRXfHuZfR16mQGHoUEo
+         Ik/UCF0fgmCvIETxvIVwLO8sQ1x4nfBMuUzxLP3mkHBlV2JyVRth8c65W8TbVMxsG8+5
+         qvK9Q31pQk9oLn0qw7as274H3kD7d2JdAZs7qlKu2bZGnYovyRPegY1myUIuWaoXvIej
+         pLaryq/8IwhwjnBRVOq14guor8z8jfXypsvoxF/SVmY1GnWLvNCS6uiPYs9k2hjsVyPu
+         r/Gg==
+X-Gm-Message-State: AOAM530np9eQ54yPaNIy+cZ56A8tUgrrHLrm0EjgLhefMWx6PbmiMV/0
+        MHsgo28V7gdVoRs214ap2ozi6lts/nSyVFX+uQg=
+X-Google-Smtp-Source: ABdhPJxvgDk+bQS/verwzsiLD+3OEY1d3HlqZSfvZUr+Ie97LPC53JPeH8yLaAjg4aAc5mue2i4h4+fSUOq8RQd5Khk=
+X-Received: by 2002:a05:6871:215:b0:f1:8bf5:23ab with SMTP id
+ t21-20020a056871021500b000f18bf523abmr3857072oad.92.1654205851711; Thu, 02
+ Jun 2022 14:37:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20220601032608.1034-1-ravi.bangoria@amd.com> <20220601032608.1034-5-ravi.bangoria@amd.com>
+In-Reply-To: <20220601032608.1034-5-ravi.bangoria@amd.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 2 Jun 2022 14:37:20 -0700
+Message-ID: <CAM9d7cgraWne_NRGFqscWbYSx5nue_A2fJCQ-OaQBTC3g0eijg@mail.gmail.com>
+Subject: Re: [PATCH v5 4/8] perf headers: Store pmu caps in an array of strings
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>, rrichter@amd.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        James Clark <james.clark@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>, like.xu.linux@gmail.com,
+        x86@kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>, ananth.narayan@amd.com,
+        Kim Phillips <kim.phillips@amd.com>, santosh.shukla@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 2 Jun 2022, Ian Rogers wrote:
+On Tue, May 31, 2022 at 8:28 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>
+> Currently all capabilities are stored in a single string separated
+> by NULL character. Instead, store them in an array which makes
+> searching of capability easier.
+>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+[SNIP]
+> @@ -3231,12 +3226,16 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
+>                 if (!value)
+>                         goto free_name;
+>
+> -               if (strbuf_addf(&sb, "%s=%s", name, value) < 0)
+> +               name_size = strlen(name);
+> +               value_size = strlen(value);
+> +               ptr = zalloc(sizeof(char) * (name_size + value_size + 2));
+> +               if (!ptr)
+>                         goto free_value;
+>
+> -               /* include a NULL character at the end */
+> -               if (strbuf_add(&sb, "", 1) < 0)
+> -                       goto free_value;
+> +               memcpy(ptr, name, name_size);
+> +               ptr[name_size] = '=';
+> +               memcpy(ptr + name_size + 1, value, value_size);
 
-> >         1. What's the licensing of libperf?  Is it GPLv2?
-> >
-> >                 PAPI is BSD licensed.
-> >                 This is something that actually pushes us to libperf
-> >                 because if I wanted to (for example) implement the new
-> >                 ARM rdpmc code I can't just copy it in to PAPI but
-> >                 would have to re-implement from scratch
-> 
-> I believe that as code in libperf was copied from perf it retains the
-> GPL-2.0-only license. Some new code is "LGPL-2.1 OR BSD-2-Clause",
-> which makes more sense and would align libperf with libbpf. We've
-> talked about rewriting this code in Rust, perhaps when that is done
-> the more permissive license could be used.
+What about using asprintf() instead?
 
-I was looking into this more, the various files have different licenses
-
-linux.git/tools/lib/perf$ cat *.c Makefile | grep SPDX | uniq
-// SPDX-License-Identifier: GPL-2.0-only
-// SPDX-License-Identifier: GPL-2.0
-# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-
-and this disagrees with what the documentation says:
-
-linux.git/tools/lib/perf/Documentation/libperf-counting.txt 
-
-LICENSE
--------
-libperf is Free Software licensed under the GNU LGPL 2.1
-
-
-I don't know which of these needs to be fixed to be more consistent.
-
-Vince Weaver
-vincent.weaver@maine.edu
+Thanks,
+Namhyung
 
 
+> +               (*cpu_pmu_caps)[i] = ptr;
+>
+>                 if (!strcmp(name, "branches"))
+>                         *max_branches = atoi(value);
+> @@ -3244,7 +3243,7 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
+>                 free(value);
+>                 free(name);
+>         }
+> -       *cpu_pmu_caps = strbuf_detach(&sb, NULL);
+> +       *nr_cpu_pmu_caps = nr_caps;
+>         return 0;
+>
+>  free_value:
+> @@ -3252,16 +3251,24 @@ static int process_per_cpu_pmu_caps(struct feat_fd *ff, int *nr_cpu_pmu_caps,
+>  free_name:
+>         free(name);
+>  error:
+> -       strbuf_release(&sb);
+> +       for (; i > 0; i--)
+> +               free((*cpu_pmu_caps)[i - 1]);
+> +       free(*cpu_pmu_caps);
+> +       *cpu_pmu_caps = NULL;
+> +       *nr_cpu_pmu_caps = 0;
+>         return -1;
+>  }
+>
+>  static int process_cpu_pmu_caps(struct feat_fd *ff,
+>                                 void *data __maybe_unused)
+>  {
+> -       return process_per_cpu_pmu_caps(ff, &ff->ph->env.nr_cpu_pmu_caps,
+> +       int ret = process_per_cpu_pmu_caps(ff, &ff->ph->env.nr_cpu_pmu_caps,
+>                                         &ff->ph->env.cpu_pmu_caps,
+>                                         &ff->ph->env.max_branches);
+> +
+> +       if (!ret && !ff->ph->env.cpu_pmu_caps)
+> +               pr_debug("cpu pmu capabilities not available\n");
+> +       return ret;
+>  }
+>
+>  static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
+> @@ -3270,6 +3277,7 @@ static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
+>         struct hybrid_cpc_node *nodes;
+>         u32 nr_pmu, i;
+>         int ret;
+> +       int j;
+>
+>         if (do_read_u32(ff, &nr_pmu))
+>                 return -1;
+> @@ -3297,6 +3305,8 @@ static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
+>                         ret = -1;
+>                         goto err;
+>                 }
+> +               if (!n->nr_cpu_pmu_caps)
+> +                       pr_debug("%s pmu capabilities not available\n", n->pmu_name);
+>         }
+>
+>         ff->ph->env.nr_hybrid_cpc_nodes = nr_pmu;
+> @@ -3305,6 +3315,8 @@ static int process_hybrid_cpu_pmu_caps(struct feat_fd *ff,
+>
+>  err:
+>         for (i = 0; i < nr_pmu; i++) {
+> +               for (j = 0; j < nodes[i].nr_cpu_pmu_caps; j++)
+> +                       free(nodes[i].cpu_pmu_caps[j]);
+>                 free(nodes[i].cpu_pmu_caps);
+>                 free(nodes[i].pmu_name);
+>         }
+> --
+> 2.31.1
+>
