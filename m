@@ -2,179 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CB7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Jun 2022 22:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4F0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 03:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239789AbiFBWgK (ORCPT
+        id S230484AbiFCDhJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 18:36:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
+        Thu, 2 Jun 2022 23:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239701AbiFBWgI (ORCPT
+        with ESMTP id S229485AbiFCDhH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 18:36:08 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7A0037A28;
-        Thu,  2 Jun 2022 15:36:06 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id gc3-20020a17090b310300b001e33092c737so5939282pjb.3;
-        Thu, 02 Jun 2022 15:36:06 -0700 (PDT)
+        Thu, 2 Jun 2022 23:37:07 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE3760EF
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Jun 2022 20:37:06 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id u4so3323424pgk.11
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jun 2022 20:37:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jo2J8+ccPmmLsK98tmMIOCw7bUiOFRU2CRVDZrgo/XQ=;
-        b=VkJWUTc9vAoRc2WyGAFvtGoiHVtuQnDXWvQjuY0tcuzhnmmpzXh3PNonyGzw9P2ZtI
-         T9c06sZWImHSrV7P1FHwZ5VIkE1xSHrgXBE5EvzTHOMA61MWv6KDwM7GJfQgcPgSFkNi
-         xoLDjDkTRyR08vJtaNSjC4aYExux47Q5SvMeW0aV+3D5bAdBfQw2Fz0/aeb1QUdRqOTM
-         p0/D7x5wGQDa/z8LCWCOp4EH5jZUmu3WnMKXeIwEputPHc3P0A+mlHgbgaVY5lZ08bpA
-         19DXhn0Fs+A1QCkS+jWsl+rSCeZIcAwvz49XmSD3qHhg2FKme3Uc70io8Qw458u+tpJH
-         WrXA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=8NU2H/rGkzMEGnRhbeP8HcREPvdELz1mjoNpn1J8y28=;
+        b=G5hjpbI7XV6h8rDNmIjZ3hqDfqAkjgI23LJF2iF9Be0olDOfWL9wJpH7ZNZ2WsHoJk
+         +hSDFHSQ92r9u0M2Dch9H5yDGFXl1018AxFQlc7uf6ivvYzp73997ibMFQpQXdODhvDU
+         SmSbCmCc0HydGfuwe92D+n7Qix74SKPAtHSaWkJAuyGOBn7ah3+2Ad2iOzDy0gSxRmdS
+         UY3rGOn9FYQt/MrOLqTpckQDklqFMNXx1b6/0SblGFKTBBPR1roaGarjTmVOTMvdSD+1
+         N9ascL1nb9KOHUOtoJsWmApn3TRZYZqbgzm+1sekoP3HvbGS3ykPKPNDG6WruQ0+MV5v
+         zE7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=jo2J8+ccPmmLsK98tmMIOCw7bUiOFRU2CRVDZrgo/XQ=;
-        b=bzIeBe9rUOnvGhXgWuhuImob7u3CmprpHu10aPdbeFQWjAPFgHsGqwyKu2G9IYM7QN
-         GzjcvqyV0Q36RPie0xpnOCdjH/EewaOs3nmK2Sdhb9DujfBDd+k7DUlxHwPBDf5hAnaP
-         tdVkFCruqh9wnqNNoq78JMZUG61+awsatSSP7hmkHGQc14HO8YvzNHOE0Q4A4wlZ/Wk0
-         MGwF1DONx2Tw8OqpFz2X23raAnIOsGVJwVL0KNXxkYUfztGOnFmngwadUCe2vTAIeyY8
-         HryiM37plMukzK1N62QXzs8cHg3lfygGv7LbquEgjkCpV09JbkVKHtUyea+6O1ERgViv
-         9uKw==
-X-Gm-Message-State: AOAM5333tWmmrEd/fdyEaaeKbna7RZh/oLULeeniA1hPD6s3w4rm4MeN
-        WuyY0XdXOQm4zLp5XsdY7WU=
-X-Google-Smtp-Source: ABdhPJxe6WkXYFixrqeh0Jgn34I+s6pZkLGA6PhFTUXTTIrP2z1yYt4VKDNPFkieqKyjq/SIniZ7xA==
-X-Received: by 2002:a17:902:f64f:b0:156:f1cc:b284 with SMTP id m15-20020a170902f64f00b00156f1ccb284mr6847756plg.147.1654209366094;
-        Thu, 02 Jun 2022 15:36:06 -0700 (PDT)
-Received: from google.com ([2620:15c:2c1:200:84f2:5eb8:b22d:654d])
-        by smtp.gmail.com with ESMTPSA id j16-20020a17090a7e9000b001e32824c452sm6103895pjl.40.2022.06.02.15.36.04
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=8NU2H/rGkzMEGnRhbeP8HcREPvdELz1mjoNpn1J8y28=;
+        b=d6YJb28JmrDYRaCMSERQ34khVgrMWT8plZab+NWru3DxNVZ6xrAWa3vLXdrkomfhGc
+         wc/yRkhAwjI/RIKCCIAwCT+ie8lnvH4XpzrPmhOA2fhx24J5cqVAPjpk2LPK+EZQFKQL
+         LtAWkhzmltVNwj5hNS6OCmqdW/EMAyqsAtvWOiCMoaOt9IHarbOJLjQCsHGYp3pl/fNT
+         zg6WpcfEm1tw8V/iGF62QFPd+vy9NJQ01rzkNdTyF6yKlH6ShqEmu75FfcJfYB5+qSfu
+         eDPuedpruyt+nfnal2HQTWCKyQEurekU9dTOfVQA8SwymYS050Q/Ck2Os7owXIYUbbPi
+         /KCw==
+X-Gm-Message-State: AOAM531V1v1hPDuYMBVJ+kmVSvteBTd2qb+PzxHBIQbrhEmtrJ2IwE09
+        e9QJIQi5ZqpaH0VkgW1ajFo9RQ==
+X-Google-Smtp-Source: ABdhPJzMsOrexH9kVH+VLEwd+tYMcu34iM1PfCuW82bxkvjyz1uRPfZZ/PhcVkUAaPMsjb39aXLaHQ==
+X-Received: by 2002:a62:d045:0:b0:518:404d:9dc8 with SMTP id p66-20020a62d045000000b00518404d9dc8mr8346001pfg.60.1654227425535;
+        Thu, 02 Jun 2022 20:37:05 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
+        by smtp.gmail.com with ESMTPSA id u6-20020a170902714600b0015e8e7db067sm4271349plm.4.2022.06.02.20.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jun 2022 15:36:05 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-Date:   Thu, 2 Jun 2022 15:36:03 -0700
-From:   Namhyung Kim <namhyung@kernel.org>
+        Thu, 02 Jun 2022 20:37:05 -0700 (PDT)
+Date:   Fri, 3 Jun 2022 11:36:57 +0800
+From:   Leo Yan <leo.yan@linaro.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
+Cc:     Joe Mario <jmario@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Hao Luo <haoluo@google.com>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Blake Jones <blakejones@google.com>
-Subject: Re: [PATCH 2/6] perf record: Enable off-cpu analysis with BPF
-Message-ID: <Ypk7U1Ce4Muq3l5U@google.com>
-References: <20220518224725.742882-1-namhyung@kernel.org>
- <20220518224725.742882-3-namhyung@kernel.org>
- <CAP-5=fX=fiuZ31O2XTSsAwyGD=c5uf9P_BzX9L1QG-q8cUvQYQ@mail.gmail.com>
- <CAM9d7cjT2o3xVUQf402shzirD4K2XoyomN+AL_R2WENKg6pwoQ@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Alyssa Ross <hi@alyssa.is>,
+        Like Xu <likexu@tencent.com>, Kajol Jain <kjain@linux.ibm.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        Adam Li <adam.li@amperecomputing.com>,
+        German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] perf c2c: Support display for Arm64
+Message-ID: <20220603033657.GA41034@leoy-ThinkPad-X240s>
+References: <20220530114036.3225544-1-leo.yan@linaro.org>
+ <57a826ad-5ceb-ba1d-b80c-452f72720889@redhat.com>
+ <20220601102505.GA408721@leoy-ThinkPad-X240s>
+ <CAP-5=fVqjZOvncE3iTAF6Wfqrn3_UxGsrBJkiaT=qMs5xdq9LA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAM9d7cjT2o3xVUQf402shzirD4K2XoyomN+AL_R2WENKg6pwoQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVqjZOvncE3iTAF6Wfqrn3_UxGsrBJkiaT=qMs5xdq9LA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 31, 2022 at 11:01:14PM -0700, Namhyung Kim wrote:
-> On Tue, May 31, 2022 at 5:00 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Wed, May 18, 2022 at 3:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> [SNIP]
-> > > +
-> > > +/*
-> > > + * Old kernel used to call it task_struct->state and now it's '__state'.
-> > > + * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-> > > + *
-> > > + * https://nakryiko.com/posts/bpf-core-reference-guide/#handling-incompatible-field-and-type-changes
-> > > + */
-> > > +static inline int get_task_state(struct task_struct *t)
-> > > +{
-> > > +       if (bpf_core_field_exists(t->__state))
-> > > +               return BPF_CORE_READ(t, __state);
-> > > +
-> >
-> > When building against a pre-5.14 kernel I'm running into a build issue here:
-> >
-> > tools/perf/util/bpf_skel/off_cpu.bpf.c:96:31: error: no member named '__
-> > state' in 'struct task_struct'; did you mean 'state'?
-> >        if (bpf_core_field_exists(t->__state))
-> >                                     ^~~~~~~
-> >                                     state
-> >
-> > This isn't covered by Andrii's BPF CO-RE reference guide. I have an
-> > #iffy workaround below,but this will be brittle if the 5.14+ kernel
-> > code is backported. Suggestions welcomed :-)
-> 
-> Thanks for the fix.  I think we should not guess the field name
-> in the current task struct and check both versions separately.
-> I'm afraid the version check won't work with some backported
-> kernels.  But do we care?
+Hi Ian,
 
+On Thu, Jun 02, 2022 at 09:59:29AM -0700, Ian Rogers wrote:
 
-What about this instead?
+[...]
 
-----8<----
-From a621f836f00e11942e5d39a735ec8f7a21962d6a Mon Sep 17 00:00:00 2001
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 31 May 2022 14:25:05 -0700
-Subject: [PATCH] perf tools: Fix a build failure in off-cpu BPF program on old kernels
+> This is great Leo! I've not been able to test the changes but I didn't
+> have any coding comments (happy to give an Acked-by). Do you think we
+> can add a test for this? The test can skip when c2c isn't supported.
 
-Old kernels have task_struct which contains "state" field.  While the
-get_task_state() in the BPF code handles that, it assumed the kernel
-has the new definition and caused a build error on old kernels.
+It would be great if recieve your ACK tags :)
 
-We should not assume anything and access them carefully.
+Yeah, agree that it's good thing to add test for perf c2c.  Just note,
+after rough thinkіng, seems to me the right thing to do is to add a
+testing shell script in the folder tests/shell and use a tiny
+multi-threading program for accessing the share cache line from
+different nodes (or rollback to different CPUs).
 
-Reported-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_skel/off_cpu.bpf.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+I would like to use a separate patch for adding the test case, this
+would be easier for upstreaming current patch set.
 
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index 792ae2847080..cc6d7fd55118 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -71,6 +71,11 @@ struct {
- 	__uint(max_entries, 1);
- } cgroup_filter SEC(".maps");
- 
-+/* new kernel task_struct definition */
-+struct task_struct___new {
-+	long __state;
-+} __attribute__((preserve_access_index));
-+
- /* old kernel task_struct definition */
- struct task_struct___old {
- 	long state;
-@@ -93,14 +98,17 @@ const volatile bool uses_cgroup_v1 = false;
-  */
- static inline int get_task_state(struct task_struct *t)
- {
--	if (bpf_core_field_exists(t->__state))
--		return BPF_CORE_READ(t, __state);
-+	/* recast pointer to capture new type for compiler */
-+	struct task_struct___new *t_new = (void *)t;
- 
--	/* recast pointer to capture task_struct___old type for compiler */
--	struct task_struct___old *t_old = (void *)t;
-+	if (bpf_core_field_exists(t_new->__state)) {
-+		return BPF_CORE_READ(t_new, __state);
-+	} else {
-+		/* recast pointer to capture old type for compiler */
-+		struct task_struct___old *t_old = (void *)t;
- 
--	/* now use old "state" name of the field */
--	return BPF_CORE_READ(t_old, state);
-+		return BPF_CORE_READ(t_old, state);
-+	}
- }
- 
- static inline __u64 get_cgroup_id(struct task_struct *t)
--- 
-2.36.1.255.ge46751e96f-goog
+Please let me know if this is fine for you or not.  Thanks for reviewing
+and suggestions!
 
+Leo
