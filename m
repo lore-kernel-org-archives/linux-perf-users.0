@@ -2,325 +2,340 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CC6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 20:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04728C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 21:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347231AbiFCUpp (ORCPT
+        id S1348051AbiFCVAR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Jun 2022 16:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59240 "EHLO
+        Fri, 3 Jun 2022 17:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346929AbiFCUpp (ORCPT
+        with ESMTP id S1347807AbiFCVAP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Jun 2022 16:45:45 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DDF5B8A0;
-        Fri,  3 Jun 2022 13:45:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 77C6BB82480;
-        Fri,  3 Jun 2022 20:45:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1722C385A9;
-        Fri,  3 Jun 2022 20:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654289141;
-        bh=LLldoFXaGiOz4bO9jBQcNShDWrJjO5EVbO2QNsys1J8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmoTsQn8cpUP5hs7j4C5EvfFrbrAHEjo/k/SEOoZ9dZtadhBrG5cKKGjhXjZR4o3h
-         /w7iEJmlnIqux69kfozdcAtxKj6oNoB722ke9lKl7FXz5PSZogJEUAmy2SCPxk5Uf1
-         W6+hZFsHQRGIONYjXY6vXPopnX7b14SXx9TC6Gf8cNh29/GK6/Gj+mQTEUJHht1lfv
-         20VcLXPvW1FD+hCfHGonJW15lbooL05wzALA3gTrD3s3JSHN7C34EtrsrF/8nds1Ie
-         xQ/DmGAdVCQ04fs54qiR+Y0skJuQ87dPjIeGcgPk1FM1iLj7S3GtbPWqi6q3dduFRb
-         bdK6LfhnhHJgA==
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: [PATCHv4 bpf-next 2/2] perf tools: Rework prologue generation code
-Date:   Fri,  3 Jun 2022 22:45:09 +0200
-Message-Id: <20220603204509.15044-3-jolsa@kernel.org>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20220603204509.15044-1-jolsa@kernel.org>
-References: <20220603204509.15044-1-jolsa@kernel.org>
+        Fri, 3 Jun 2022 17:00:15 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5435676F
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 14:00:13 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id u3so11839626wrg.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 14:00:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Clz6tR5ivCzeh/CunE4A+ZyoKhX/KSXV/708BnmkcsE=;
+        b=baPq+F0++gKTHHfzwWVxbM4iW4rS1/D9/ppKSb1K8TVoHhPPytP89sO9e7VpBqt25V
+         Ii4cYd5DBNpw9OZG2TFrsfULIRXsjmL4Xx5URtcOi9gJsJFXI7UWs8Oqu9SbxOQDG7Bo
+         JJwn0pE4iXjRfNUPTu61Z/OlcQMBz9W3UdIxIxFV0lZhlsushuh6sGoPBRrMu6eXEfLR
+         c7KRW7XeUUTESYryd924xvcKW3SPD8rEmODKC3i14yVPno3DP4wxNzSDi+ODMOtMJT3m
+         cn17fufFBhd/EqYj7SmG62auD2eDjVWF3b35qc25+eh8OYqIQuxYxy7BNJ06aE9nEXVv
+         tkzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Clz6tR5ivCzeh/CunE4A+ZyoKhX/KSXV/708BnmkcsE=;
+        b=CISe89EHvWPQ6Pnm8G0qId5IZvoCJhktKhYtEOkrEe/AP3v1ugKDJLpqev982pvRLd
+         MAVKxd+CF46PmRJltAb2R/VF/Pgy/6pLYx/dONWLou6FhpXbaPb+SXCb4h2MivF2oj8B
+         Ii2CrEWVUfybHZsc0YwsMhFmtFVVZomzNy8NBeyJGjhhibTQcmgV8dFl+Z5jufb5laDV
+         9YErZw1pip5Q/+YG4Jm3f6aFSnYmWOuL7jVe29dNm+U4HVWTOOdkgi3cQZ21OseYMnPU
+         I6uawlOFyC+gIMu1ovgDnGcO1qlQkDn9tkBC1Z093v9RaktTtd3H8m8AB6084xkhIfJH
+         q/yQ==
+X-Gm-Message-State: AOAM530x9kG/2993Skrtb3wduH+yarGu6ffVhqMGka+BzzhQgjLGVKmE
+        RlovUAvORcAcGSbif1nhfW/3bWeeiLatRyX5zPk7LA==
+X-Google-Smtp-Source: ABdhPJz9HW0qw02xfUIixjpyD2f9xxNvG6rCCnn0CW1sPY+b5Ke1xFpn4ve1e86inTIdGfAxZteerZY5AAnCsUeM9+s=
+X-Received: by 2002:adf:f5c4:0:b0:210:2ac2:6aa0 with SMTP id
+ k4-20020adff5c4000000b002102ac26aa0mr9705156wrp.300.1654290011428; Fri, 03
+ Jun 2022 14:00:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220603113034.2009728-1-tmricht@linux.ibm.com>
+In-Reply-To: <20220603113034.2009728-1-tmricht@linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 3 Jun 2022 13:59:59 -0700
+Message-ID: <CAP-5=fXWngvcJ-M-OgZNuTCwXdvdYNmw-a0OcgQD7rFrc1eRFg@mail.gmail.com>
+Subject: Re: [PATCH] perf/test: perf test 83 fails on s390
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux390-list@tuxmaker.boeblingen.de.ibm.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, cjense@google.com, sumanthk@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some functions we use for bpf prologue generation are going to be
-deprecated. This change reworks current code not to use them.
+On Fri, Jun 3, 2022 at 4:33 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>
+> perf test -F 83 ("perf stat CSV output linter") fails on s390.
+> Reason is the wrong number of fields for certain CPU core/die/socket
+> related output.
+>
+> On x84_64 the output of command
+>  # ./perf stat -x, -A -a --no-merge true
+>  CPU0,1.50,msec,cpu-clock,1502781,100.00,1.052,CPUs utilized
+>  CPU1,1.48,msec,cpu-clock,1476113,100.00,1.034,CPUs utilized
+>  ...
+> results in 8 fields with 7 comma separators.
+>
+> On s390 the output of command
+>  #  ./perf stat -x, -A -a --no-merge -- true
+>  0.95,msec,cpu-clock,949800,100.00,1.060,CPUs utilized
+>  ...
+> results in 7 fields with 6 comma separators. Therefore this tests
+> fails on s390. Similar issues exist for per-die and per-socket output
+> which is not supported on s390.
+>
+> I have rewritten the python program to count commas in each output line
+> into a bash function to achieve the same result. I hope this makes
+> it a bit easier.
+>
+> Output before:
+>  # ./perf test -F 83
+>  83: perf stat CSV output linter  :
+>  Checking CSV output: no args [Success]
+>  Checking CSV output: system wide [Success]
+>  Checking CSV output: system wide Checking CSV output: \
+>          system wide no aggregation 6.92,msec,cpu-clock,\
+>          6918131,100.00,6.972,CPUs utilized
+>  ...
+>  RuntimeError: wrong number of fields. expected 7 in \
+>          6.92,msec,cpu-clock,6918131,100.00,6.972,CPUs utilized
+>
+>  FAILED!
+>  #
+>
+> Output after:
+>  # ./perf test -F 83
+>  83: perf stat CSV output linter             :
+>  Checking CSV output: no args [Success]
+>  Checking CSV output: system wide [Success]
+>  Checking CSV output: system wide Checking CSV output:\
+>          system wide no aggregation [Success]
+>  Checking CSV output: interval [Success]
+>  Checking CSV output: event [Success]
+>  Checking CSV output: per core [Success]
+>  Checking CSV output: per thread [Success]
+>  Checking CSV output: per die [Success]
+>  Checking CSV output: per node [Success]
+>  Checking CSV output: per socket [Success]
+>  Ok
+>  #
+>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 
-We need to replace following functions/struct:
-   bpf_program__set_prep
-   bpf_program__nth_fd
-   struct bpf_prog_prep_result
+Acked-by: Ian Rogers <irogers@google.com>
 
-Currently we use bpf_program__set_prep to hook perf callback before
-program is loaded and provide new instructions with the prologue.
+Thanks,
+Ian
 
-We replace this function/ality by taking instructions for specific
-program, attaching prologue to them and load such new ebpf programs
-with prologue using separate bpf_prog_load calls (outside libbpf
-load machinery).
-
-Before we can take and use program instructions, we need libbpf to
-actually load it. This way we get the final shape of its instructions
-with all relocations and verifier adjustments).
-
-There's one glitch though.. perf kprobe program already assumes
-generated prologue code with proper values in argument registers,
-so loading such program directly will fail in the verifier.
-
-That's where the fallback pre-load handler fits in and prepends
-the initialization code to the program. Once such program is loaded
-we take its instructions, cut off the initialization code and prepend
-the prologue.
-
-I know.. sorry ;-)
-
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/bpf-loader.c | 128 ++++++++++++++++++++++++++++++-----
- 1 file changed, 110 insertions(+), 18 deletions(-)
-
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index e7992a0eb477..30d0e688beec 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -9,6 +9,7 @@
- #include <linux/bpf.h>
- #include <bpf/libbpf.h>
- #include <bpf/bpf.h>
-+#include <linux/filter.h>
- #include <linux/err.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-@@ -49,6 +50,7 @@ struct bpf_prog_priv {
- 	struct bpf_insn *insns_buf;
- 	int nr_types;
- 	int *type_mapping;
-+	int *prologue_fds;
- };
- 
- struct bpf_perf_object {
-@@ -56,6 +58,11 @@ struct bpf_perf_object {
- 	struct bpf_object *obj;
- };
- 
-+struct bpf_preproc_result {
-+	struct bpf_insn *new_insn_ptr;
-+	int new_insn_cnt;
-+};
-+
- static LIST_HEAD(bpf_objects_list);
- static struct hashmap *bpf_program_hash;
- static struct hashmap *bpf_map_hash;
-@@ -233,14 +240,31 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
- 	return obj;
- }
- 
-+static void close_prologue_programs(struct bpf_prog_priv *priv)
-+{
-+	struct perf_probe_event *pev;
-+	int i, fd;
-+
-+	if (!priv->need_prologue)
-+		return;
-+	pev = &priv->pev;
-+	for (i = 0; i < pev->ntevs; i++) {
-+		fd = priv->prologue_fds[i];
-+		if (fd != -1)
-+			close(fd);
-+	}
-+}
-+
- static void
- clear_prog_priv(const struct bpf_program *prog __maybe_unused,
- 		void *_priv)
- {
- 	struct bpf_prog_priv *priv = _priv;
- 
-+	close_prologue_programs(priv);
- 	cleanup_perf_probe_events(&priv->pev, 1);
- 	zfree(&priv->insns_buf);
-+	zfree(&priv->prologue_fds);
- 	zfree(&priv->type_mapping);
- 	zfree(&priv->sys_name);
- 	zfree(&priv->evt_name);
-@@ -603,8 +627,8 @@ static int bpf__prepare_probe(void)
- 
- static int
- preproc_gen_prologue(struct bpf_program *prog, int n,
--		     struct bpf_insn *orig_insns, int orig_insns_cnt,
--		     struct bpf_prog_prep_result *res)
-+		     const struct bpf_insn *orig_insns, int orig_insns_cnt,
-+		     struct bpf_preproc_result *res)
- {
- 	struct bpf_prog_priv *priv = program_priv(prog);
- 	struct probe_trace_event *tev;
-@@ -652,7 +676,6 @@ preproc_gen_prologue(struct bpf_program *prog, int n,
- 
- 	res->new_insn_ptr = buf;
- 	res->new_insn_cnt = prologue_cnt + orig_insns_cnt;
--	res->pfd = NULL;
- 	return 0;
- 
- errout:
-@@ -760,7 +783,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 	struct bpf_prog_priv *priv = program_priv(prog);
- 	struct perf_probe_event *pev;
- 	bool need_prologue = false;
--	int err, i;
-+	int i;
- 
- 	if (IS_ERR_OR_NULL(priv)) {
- 		pr_debug("Internal error when hook preprocessor\n");
-@@ -798,6 +821,13 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 		return -ENOMEM;
- 	}
- 
-+	priv->prologue_fds = malloc(sizeof(int) * pev->ntevs);
-+	if (!priv->prologue_fds) {
-+		pr_debug("Not enough memory: alloc prologue fds failed\n");
-+		return -ENOMEM;
-+	}
-+	memset(priv->prologue_fds, -1, sizeof(int) * pev->ntevs);
-+
- 	priv->type_mapping = malloc(sizeof(int) * pev->ntevs);
- 	if (!priv->type_mapping) {
- 		pr_debug("Not enough memory: alloc type_mapping failed\n");
-@@ -806,13 +836,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 	memset(priv->type_mapping, -1,
- 	       sizeof(int) * pev->ntevs);
- 
--	err = map_prologue(pev, priv->type_mapping, &priv->nr_types);
--	if (err)
--		return err;
--
--	err = bpf_program__set_prep(prog, priv->nr_types,
--				    preproc_gen_prologue);
--	return err;
-+	return map_prologue(pev, priv->type_mapping, &priv->nr_types);
- }
- 
- int bpf__probe(struct bpf_object *obj)
-@@ -919,6 +943,77 @@ int bpf__unprobe(struct bpf_object *obj)
- 	return ret;
- }
- 
-+static int bpf_object__load_prologue(struct bpf_object *obj)
-+{
-+	int init_cnt = ARRAY_SIZE(prologue_init_insn);
-+	const struct bpf_insn *orig_insns;
-+	struct bpf_preproc_result res;
-+	struct perf_probe_event *pev;
-+	struct bpf_program *prog;
-+	int orig_insns_cnt;
-+
-+	bpf_object__for_each_program(prog, obj) {
-+		struct bpf_prog_priv *priv = program_priv(prog);
-+		int err, i, fd;
-+
-+		if (IS_ERR_OR_NULL(priv)) {
-+			pr_debug("bpf: failed to get private field\n");
-+			return -BPF_LOADER_ERRNO__INTERNAL;
-+		}
-+
-+		if (!priv->need_prologue)
-+			continue;
-+
-+		/*
-+		 * For each program that needs prologue we do following:
-+		 *
-+		 * - take its current instructions and use them
-+		 *   to generate the new code with prologue
-+		 * - load new instructions with bpf_prog_load
-+		 *   and keep the fd in prologue_fds
-+		 * - new fd will be used in bpf__foreach_event
-+		 *   to connect this program with perf evsel
-+		 */
-+		orig_insns = bpf_program__insns(prog);
-+		orig_insns_cnt = bpf_program__insn_cnt(prog);
-+
-+		pev = &priv->pev;
-+		for (i = 0; i < pev->ntevs; i++) {
-+			/*
-+			 * Skipping artificall prologue_init_insn instructions
-+			 * (init_cnt), so the prologue can be generated instead
-+			 * of them.
-+			 */
-+			err = preproc_gen_prologue(prog, i,
-+						   orig_insns + init_cnt,
-+						   orig_insns_cnt - init_cnt,
-+						   &res);
-+			if (err)
-+				return err;
-+
-+			fd = bpf_prog_load(bpf_program__get_type(prog),
-+					   bpf_program__name(prog), "GPL",
-+					   res.new_insn_ptr,
-+					   res.new_insn_cnt, NULL);
-+			if (fd < 0) {
-+				char bf[128];
-+
-+				libbpf_strerror(-errno, bf, sizeof(bf));
-+				pr_debug("bpf: load objects with prologue failed: err=%d: (%s)\n",
-+					 -errno, bf);
-+				return -errno;
-+			}
-+			priv->prologue_fds[i] = fd;
-+		}
-+		/*
-+		 * We no longer need the original program,
-+		 * we can unload it.
-+		 */
-+		bpf_program__unload(prog);
-+	}
-+	return 0;
-+}
-+
- int bpf__load(struct bpf_object *obj)
- {
- 	int err;
-@@ -930,7 +1025,7 @@ int bpf__load(struct bpf_object *obj)
- 		pr_debug("bpf: load objects failed: err=%d: (%s)\n", err, bf);
- 		return err;
- 	}
--	return 0;
-+	return bpf_object__load_prologue(obj);
- }
- 
- int bpf__foreach_event(struct bpf_object *obj,
-@@ -965,13 +1060,10 @@ int bpf__foreach_event(struct bpf_object *obj,
- 		for (i = 0; i < pev->ntevs; i++) {
- 			tev = &pev->tevs[i];
- 
--			if (priv->need_prologue) {
--				int type = priv->type_mapping[i];
--
--				fd = bpf_program__nth_fd(prog, type);
--			} else {
-+			if (priv->need_prologue)
-+				fd = priv->prologue_fds[i];
-+			else
- 				fd = bpf_program__fd(prog);
--			}
- 
- 			if (fd < 0) {
- 				pr_debug("bpf: failed to get file descriptor\n");
--- 
-2.35.3
-
+> ---
+>  .../tests/shell/lib/perf_csv_output_lint.py   | 48 -------------
+>  tools/perf/tests/shell/stat+csv_output.sh     | 69 ++++++++++++-------
+>  2 files changed, 45 insertions(+), 72 deletions(-)
+>  delete mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
+>
+> diff --git a/tools/perf/tests/shell/lib/perf_csv_output_lint.py b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
+> deleted file mode 100644
+> index 714f283cfb1b..000000000000
+> --- a/tools/perf/tests/shell/lib/perf_csv_output_lint.py
+> +++ /dev/null
+> @@ -1,48 +0,0 @@
+> -#!/usr/bin/python
+> -# SPDX-License-Identifier: GPL-2.0
+> -
+> -import argparse
+> -import sys
+> -
+> -# Basic sanity check of perf CSV output as specified in the man page.
+> -# Currently just checks the number of fields per line in output.
+> -
+> -ap = argparse.ArgumentParser()
+> -ap.add_argument('--no-args', action='store_true')
+> -ap.add_argument('--interval', action='store_true')
+> -ap.add_argument('--system-wide-no-aggr', action='store_true')
+> -ap.add_argument('--system-wide', action='store_true')
+> -ap.add_argument('--event', action='store_true')
+> -ap.add_argument('--per-core', action='store_true')
+> -ap.add_argument('--per-thread', action='store_true')
+> -ap.add_argument('--per-die', action='store_true')
+> -ap.add_argument('--per-node', action='store_true')
+> -ap.add_argument('--per-socket', action='store_true')
+> -ap.add_argument('--separator', default=',', nargs='?')
+> -args = ap.parse_args()
+> -
+> -Lines = sys.stdin.readlines()
+> -
+> -def check_csv_output(exp):
+> -  for line in Lines:
+> -    if 'failed' not in line:
+> -      count = line.count(args.separator)
+> -      if count != exp:
+> -        sys.stdout.write(''.join(Lines))
+> -        raise RuntimeError(f'wrong number of fields. expected {exp} in {line}')
+> -
+> -try:
+> -  if args.no_args or args.system_wide or args.event:
+> -    expected_items = 6
+> -  elif args.interval or args.per_thread or args.system_wide_no_aggr:
+> -    expected_items = 7
+> -  elif args.per_core or args.per_socket or args.per_node or args.per_die:
+> -    expected_items = 8
+> -  else:
+> -    ap.print_help()
+> -    raise RuntimeError('No checking option specified')
+> -  check_csv_output(expected_items)
+> -
+> -except:
+> -  sys.stdout.write('Test failed for input: ' + ''.join(Lines))
+> -  raise
+> diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+> index 983220ef3cb4..38c26f3ef4c1 100755
+> --- a/tools/perf/tests/shell/stat+csv_output.sh
+> +++ b/tools/perf/tests/shell/stat+csv_output.sh
+> @@ -6,20 +6,41 @@
+>
+>  set -e
+>
+> -pythonchecker=$(dirname $0)/lib/perf_csv_output_lint.py
+> -if [ "x$PYTHON" == "x" ]
+> -then
+> -       if which python3 > /dev/null
+> -       then
+> -               PYTHON=python3
+> -       elif which python > /dev/null
+> -       then
+> -               PYTHON=python
+> -       else
+> -               echo Skipping test, python not detected please set environment variable PYTHON.
+> -               exit 2
+> -       fi
+> -fi
+> +function commachecker()
+> +{
+> +       local -i cnt=0 exp=0
+> +
+> +       case "$1"
+> +       in "--no-args")         exp=6
+> +       ;; "--system-wide")     exp=6
+> +       ;; "--event")           exp=6
+> +       ;; "--interval")        exp=7
+> +       ;; "--per-thread")      exp=7
+> +       ;; "--system-wide-no-aggr")     exp=7
+> +                               [ $(uname -m) = "s390x" ] && exp=6
+> +       ;; "--per-core")        exp=8
+> +       ;; "--per-socket")      exp=8
+> +       ;; "--per-node")        exp=8
+> +       ;; "--per-die")         exp=8
+> +       esac
+> +
+> +       while read line
+> +       do
+> +               # Check for lines beginning with Failed
+> +               x=${line:0:6}
+> +               [ "$x" = "Failed" ] && continue
+> +
+> +               # Count the number of commas
+> +               x=$(echo $line | tr -d -c ',')
+> +               cnt="${#x}"
+> +               # echo $line $cnt
+> +               [ "$cnt" -ne "$exp" ] && {
+> +                       echo "wrong number of fields. expected $exp in $line" 1>&2
+> +                       exit 1;
+> +               }
+> +       done
+> +       return 0
+> +}
+>
+>  # Return true if perf_event_paranoid is > $1 and not running as root.
+>  function ParanoidAndNotRoot()
+> @@ -30,7 +51,7 @@ function ParanoidAndNotRoot()
+>  check_no_args()
+>  {
+>         echo -n "Checking CSV output: no args "
+> -       perf stat -x, true 2>&1 | $PYTHON $pythonchecker --no-args
+> +       perf stat -x, true 2>&1 | commachecker --no-args
+>         echo "[Success]"
+>  }
+>
+> @@ -42,7 +63,7 @@ check_system_wide()
+>                 echo "[Skip] paranoid and not root"
+>                 return
+>         fi
+> -       perf stat -x, -a true 2>&1 | $PYTHON $pythonchecker --system-wide
+> +       perf stat -x, -a true 2>&1 | commachecker --system-wide
+>         echo "[Success]"
+>  }
+>
+> @@ -55,14 +76,14 @@ check_system_wide_no_aggr()
+>                 return
+>         fi
+>         echo -n "Checking CSV output: system wide no aggregation "
+> -       perf stat -x, -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
+> +       perf stat -x, -A -a --no-merge true 2>&1 | commachecker --system-wide-no-aggr
+>         echo "[Success]"
+>  }
+>
+>  check_interval()
+>  {
+>         echo -n "Checking CSV output: interval "
+> -       perf stat -x, -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
+> +       perf stat -x, -I 1000 true 2>&1 | commachecker --interval
+>         echo "[Success]"
+>  }
+>
+> @@ -70,7 +91,7 @@ check_interval()
+>  check_event()
+>  {
+>         echo -n "Checking CSV output: event "
+> -       perf stat -x, -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
+> +       perf stat -x, -e cpu-clock true 2>&1 | commachecker --event
+>         echo "[Success]"
+>  }
+>
+> @@ -82,7 +103,7 @@ check_per_core()
+>                 echo "[Skip] paranoid and not root"
+>                 return
+>         fi
+> -       perf stat -x, --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
+> +       perf stat -x, --per-core -a true 2>&1 | commachecker --per-core
+>         echo "[Success]"
+>  }
+>
+> @@ -94,7 +115,7 @@ check_per_thread()
+>                 echo "[Skip] paranoid and not root"
+>                 return
+>         fi
+> -       perf stat -x, --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
+> +       perf stat -x, --per-thread -a true 2>&1 | commachecker --per-thread
+>         echo "[Success]"
+>  }
+>
+> @@ -106,7 +127,7 @@ check_per_die()
+>                 echo "[Skip] paranoid and not root"
+>                 return
+>         fi
+> -       perf stat -x, --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
+> +       perf stat -x, --per-die -a true 2>&1 | commachecker --per-die
+>         echo "[Success]"
+>  }
+>
+> @@ -118,7 +139,7 @@ check_per_node()
+>                 echo "[Skip] paranoid and not root"
+>                 return
+>         fi
+> -       perf stat -x, --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
+> +       perf stat -x, --per-node -a true 2>&1 | commachecker --per-node
+>         echo "[Success]"
+>  }
+>
+> @@ -130,7 +151,7 @@ check_per_socket()
+>                 echo "[Skip] paranoid and not root"
+>                 return
+>         fi
+> -       perf stat -x, --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
+> +       perf stat -x, --per-socket -a true 2>&1 | commachecker --per-socket
+>         echo "[Success]"
+>  }
+>
+> --
+> 2.36.1
+>
