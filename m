@@ -2,340 +2,434 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04728C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 21:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 839C4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 22:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348051AbiFCVAR (ORCPT
+        id S1346865AbiFCWby (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Jun 2022 17:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39256 "EHLO
+        Fri, 3 Jun 2022 18:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347807AbiFCVAP (ORCPT
+        with ESMTP id S231882AbiFCWbw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Jun 2022 17:00:15 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5435676F
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 14:00:13 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id u3so11839626wrg.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 14:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Clz6tR5ivCzeh/CunE4A+ZyoKhX/KSXV/708BnmkcsE=;
-        b=baPq+F0++gKTHHfzwWVxbM4iW4rS1/D9/ppKSb1K8TVoHhPPytP89sO9e7VpBqt25V
-         Ii4cYd5DBNpw9OZG2TFrsfULIRXsjmL4Xx5URtcOi9gJsJFXI7UWs8Oqu9SbxOQDG7Bo
-         JJwn0pE4iXjRfNUPTu61Z/OlcQMBz9W3UdIxIxFV0lZhlsushuh6sGoPBRrMu6eXEfLR
-         c7KRW7XeUUTESYryd924xvcKW3SPD8rEmODKC3i14yVPno3DP4wxNzSDi+ODMOtMJT3m
-         cn17fufFBhd/EqYj7SmG62auD2eDjVWF3b35qc25+eh8OYqIQuxYxy7BNJ06aE9nEXVv
-         tkzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Clz6tR5ivCzeh/CunE4A+ZyoKhX/KSXV/708BnmkcsE=;
-        b=CISe89EHvWPQ6Pnm8G0qId5IZvoCJhktKhYtEOkrEe/AP3v1ugKDJLpqev982pvRLd
-         MAVKxd+CF46PmRJltAb2R/VF/Pgy/6pLYx/dONWLou6FhpXbaPb+SXCb4h2MivF2oj8B
-         Ii2CrEWVUfybHZsc0YwsMhFmtFVVZomzNy8NBeyJGjhhibTQcmgV8dFl+Z5jufb5laDV
-         9YErZw1pip5Q/+YG4Jm3f6aFSnYmWOuL7jVe29dNm+U4HVWTOOdkgi3cQZ21OseYMnPU
-         I6uawlOFyC+gIMu1ovgDnGcO1qlQkDn9tkBC1Z093v9RaktTtd3H8m8AB6084xkhIfJH
-         q/yQ==
-X-Gm-Message-State: AOAM530x9kG/2993Skrtb3wduH+yarGu6ffVhqMGka+BzzhQgjLGVKmE
-        RlovUAvORcAcGSbif1nhfW/3bWeeiLatRyX5zPk7LA==
-X-Google-Smtp-Source: ABdhPJz9HW0qw02xfUIixjpyD2f9xxNvG6rCCnn0CW1sPY+b5Ke1xFpn4ve1e86inTIdGfAxZteerZY5AAnCsUeM9+s=
-X-Received: by 2002:adf:f5c4:0:b0:210:2ac2:6aa0 with SMTP id
- k4-20020adff5c4000000b002102ac26aa0mr9705156wrp.300.1654290011428; Fri, 03
- Jun 2022 14:00:11 -0700 (PDT)
+        Fri, 3 Jun 2022 18:31:52 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F164183;
+        Fri,  3 Jun 2022 15:31:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D0CE3B82482;
+        Fri,  3 Jun 2022 22:31:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AF7CC385B8;
+        Fri,  3 Jun 2022 22:31:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654295505;
+        bh=K/B+k2uCxWpGF96ctvGiGScF/lT1ApijbtpRSLNInFA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SJaOws2rsiXADDFjm5YyKx1gbQ/aLz6rEnI3vlKZrypVm6R2pu39dpevgNBlMJoaq
+         lHYUncVfpmNngvMp+lD6qubH9k9BYjNpIF3/BG55e+tIjtDrUruIMd/5GN/upcMhsm
+         BNAypPUxTTIq0EuPG/JDx0hmZ6s9JojkBOfdqoXpJZei/0w7qYaHz9XefJUF2Vn3j+
+         BOXspsPloAy35ijDzWPs/W8LEY6/a5a/5RSoIWXoiiRqkFV1RUDb5uy679dBrkmOqt
+         5vD5M/kQbyjewyqScT2SMoB+hHO6RdfeCNyj1nx1ZnrhWb5FjHkArHeFbqLO8TIpQZ
+         790rDvF8FYsKQ==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ian Rogers <irogers@google.com>,
+        Kevin Nomura <nomurak@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Sebastian Ullrich <sebasti@nullri.ch>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools changes for v5.19: 3rd batch
+Date:   Sat,  4 Jun 2022 00:31:36 +0200
+Message-Id: <20220603223136.554028-1-acme@kernel.org>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <20220603113034.2009728-1-tmricht@linux.ibm.com>
-In-Reply-To: <20220603113034.2009728-1-tmricht@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 3 Jun 2022 13:59:59 -0700
-Message-ID: <CAP-5=fXWngvcJ-M-OgZNuTCwXdvdYNmw-a0OcgQD7rFrc1eRFg@mail.gmail.com>
-Subject: Re: [PATCH] perf/test: perf test 83 fails on s390
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux390-list@tuxmaker.boeblingen.de.ibm.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, cjense@google.com, sumanthk@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 3, 2022 at 4:33 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->
-> perf test -F 83 ("perf stat CSV output linter") fails on s390.
-> Reason is the wrong number of fields for certain CPU core/die/socket
-> related output.
->
-> On x84_64 the output of command
->  # ./perf stat -x, -A -a --no-merge true
->  CPU0,1.50,msec,cpu-clock,1502781,100.00,1.052,CPUs utilized
->  CPU1,1.48,msec,cpu-clock,1476113,100.00,1.034,CPUs utilized
->  ...
-> results in 8 fields with 7 comma separators.
->
-> On s390 the output of command
->  #  ./perf stat -x, -A -a --no-merge -- true
->  0.95,msec,cpu-clock,949800,100.00,1.060,CPUs utilized
->  ...
-> results in 7 fields with 6 comma separators. Therefore this tests
-> fails on s390. Similar issues exist for per-die and per-socket output
-> which is not supported on s390.
->
-> I have rewritten the python program to count commas in each output line
-> into a bash function to achieve the same result. I hope this makes
-> it a bit easier.
->
-> Output before:
->  # ./perf test -F 83
->  83: perf stat CSV output linter  :
->  Checking CSV output: no args [Success]
->  Checking CSV output: system wide [Success]
->  Checking CSV output: system wide Checking CSV output: \
->          system wide no aggregation 6.92,msec,cpu-clock,\
->          6918131,100.00,6.972,CPUs utilized
->  ...
->  RuntimeError: wrong number of fields. expected 7 in \
->          6.92,msec,cpu-clock,6918131,100.00,6.972,CPUs utilized
->
->  FAILED!
->  #
->
-> Output after:
->  # ./perf test -F 83
->  83: perf stat CSV output linter             :
->  Checking CSV output: no args [Success]
->  Checking CSV output: system wide [Success]
->  Checking CSV output: system wide Checking CSV output:\
->          system wide no aggregation [Success]
->  Checking CSV output: interval [Success]
->  Checking CSV output: event [Success]
->  Checking CSV output: per core [Success]
->  Checking CSV output: per thread [Success]
->  Checking CSV output: per die [Success]
->  Checking CSV output: per node [Success]
->  Checking CSV output: per socket [Success]
->  Ok
->  #
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Hi Linus,
 
-Acked-by: Ian Rogers <irogers@google.com>
+	Please consider pulling,
 
-Thanks,
-Ian
+Best regards,
 
-> ---
->  .../tests/shell/lib/perf_csv_output_lint.py   | 48 -------------
->  tools/perf/tests/shell/stat+csv_output.sh     | 69 ++++++++++++-------
->  2 files changed, 45 insertions(+), 72 deletions(-)
->  delete mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
->
-> diff --git a/tools/perf/tests/shell/lib/perf_csv_output_lint.py b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
-> deleted file mode 100644
-> index 714f283cfb1b..000000000000
-> --- a/tools/perf/tests/shell/lib/perf_csv_output_lint.py
-> +++ /dev/null
-> @@ -1,48 +0,0 @@
-> -#!/usr/bin/python
-> -# SPDX-License-Identifier: GPL-2.0
-> -
-> -import argparse
-> -import sys
-> -
-> -# Basic sanity check of perf CSV output as specified in the man page.
-> -# Currently just checks the number of fields per line in output.
-> -
-> -ap = argparse.ArgumentParser()
-> -ap.add_argument('--no-args', action='store_true')
-> -ap.add_argument('--interval', action='store_true')
-> -ap.add_argument('--system-wide-no-aggr', action='store_true')
-> -ap.add_argument('--system-wide', action='store_true')
-> -ap.add_argument('--event', action='store_true')
-> -ap.add_argument('--per-core', action='store_true')
-> -ap.add_argument('--per-thread', action='store_true')
-> -ap.add_argument('--per-die', action='store_true')
-> -ap.add_argument('--per-node', action='store_true')
-> -ap.add_argument('--per-socket', action='store_true')
-> -ap.add_argument('--separator', default=',', nargs='?')
-> -args = ap.parse_args()
-> -
-> -Lines = sys.stdin.readlines()
-> -
-> -def check_csv_output(exp):
-> -  for line in Lines:
-> -    if 'failed' not in line:
-> -      count = line.count(args.separator)
-> -      if count != exp:
-> -        sys.stdout.write(''.join(Lines))
-> -        raise RuntimeError(f'wrong number of fields. expected {exp} in {line}')
-> -
-> -try:
-> -  if args.no_args or args.system_wide or args.event:
-> -    expected_items = 6
-> -  elif args.interval or args.per_thread or args.system_wide_no_aggr:
-> -    expected_items = 7
-> -  elif args.per_core or args.per_socket or args.per_node or args.per_die:
-> -    expected_items = 8
-> -  else:
-> -    ap.print_help()
-> -    raise RuntimeError('No checking option specified')
-> -  check_csv_output(expected_items)
-> -
-> -except:
-> -  sys.stdout.write('Test failed for input: ' + ''.join(Lines))
-> -  raise
-> diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-> index 983220ef3cb4..38c26f3ef4c1 100755
-> --- a/tools/perf/tests/shell/stat+csv_output.sh
-> +++ b/tools/perf/tests/shell/stat+csv_output.sh
-> @@ -6,20 +6,41 @@
->
->  set -e
->
-> -pythonchecker=$(dirname $0)/lib/perf_csv_output_lint.py
-> -if [ "x$PYTHON" == "x" ]
-> -then
-> -       if which python3 > /dev/null
-> -       then
-> -               PYTHON=python3
-> -       elif which python > /dev/null
-> -       then
-> -               PYTHON=python
-> -       else
-> -               echo Skipping test, python not detected please set environment variable PYTHON.
-> -               exit 2
-> -       fi
-> -fi
-> +function commachecker()
-> +{
-> +       local -i cnt=0 exp=0
-> +
-> +       case "$1"
-> +       in "--no-args")         exp=6
-> +       ;; "--system-wide")     exp=6
-> +       ;; "--event")           exp=6
-> +       ;; "--interval")        exp=7
-> +       ;; "--per-thread")      exp=7
-> +       ;; "--system-wide-no-aggr")     exp=7
-> +                               [ $(uname -m) = "s390x" ] && exp=6
-> +       ;; "--per-core")        exp=8
-> +       ;; "--per-socket")      exp=8
-> +       ;; "--per-node")        exp=8
-> +       ;; "--per-die")         exp=8
-> +       esac
-> +
-> +       while read line
-> +       do
-> +               # Check for lines beginning with Failed
-> +               x=${line:0:6}
-> +               [ "$x" = "Failed" ] && continue
-> +
-> +               # Count the number of commas
-> +               x=$(echo $line | tr -d -c ',')
-> +               cnt="${#x}"
-> +               # echo $line $cnt
-> +               [ "$cnt" -ne "$exp" ] && {
-> +                       echo "wrong number of fields. expected $exp in $line" 1>&2
-> +                       exit 1;
-> +               }
-> +       done
-> +       return 0
-> +}
->
->  # Return true if perf_event_paranoid is > $1 and not running as root.
->  function ParanoidAndNotRoot()
-> @@ -30,7 +51,7 @@ function ParanoidAndNotRoot()
->  check_no_args()
->  {
->         echo -n "Checking CSV output: no args "
-> -       perf stat -x, true 2>&1 | $PYTHON $pythonchecker --no-args
-> +       perf stat -x, true 2>&1 | commachecker --no-args
->         echo "[Success]"
->  }
->
-> @@ -42,7 +63,7 @@ check_system_wide()
->                 echo "[Skip] paranoid and not root"
->                 return
->         fi
-> -       perf stat -x, -a true 2>&1 | $PYTHON $pythonchecker --system-wide
-> +       perf stat -x, -a true 2>&1 | commachecker --system-wide
->         echo "[Success]"
->  }
->
-> @@ -55,14 +76,14 @@ check_system_wide_no_aggr()
->                 return
->         fi
->         echo -n "Checking CSV output: system wide no aggregation "
-> -       perf stat -x, -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
-> +       perf stat -x, -A -a --no-merge true 2>&1 | commachecker --system-wide-no-aggr
->         echo "[Success]"
->  }
->
->  check_interval()
->  {
->         echo -n "Checking CSV output: interval "
-> -       perf stat -x, -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
-> +       perf stat -x, -I 1000 true 2>&1 | commachecker --interval
->         echo "[Success]"
->  }
->
-> @@ -70,7 +91,7 @@ check_interval()
->  check_event()
->  {
->         echo -n "Checking CSV output: event "
-> -       perf stat -x, -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
-> +       perf stat -x, -e cpu-clock true 2>&1 | commachecker --event
->         echo "[Success]"
->  }
->
-> @@ -82,7 +103,7 @@ check_per_core()
->                 echo "[Skip] paranoid and not root"
->                 return
->         fi
-> -       perf stat -x, --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
-> +       perf stat -x, --per-core -a true 2>&1 | commachecker --per-core
->         echo "[Success]"
->  }
->
-> @@ -94,7 +115,7 @@ check_per_thread()
->                 echo "[Skip] paranoid and not root"
->                 return
->         fi
-> -       perf stat -x, --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
-> +       perf stat -x, --per-thread -a true 2>&1 | commachecker --per-thread
->         echo "[Success]"
->  }
->
-> @@ -106,7 +127,7 @@ check_per_die()
->                 echo "[Skip] paranoid and not root"
->                 return
->         fi
-> -       perf stat -x, --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
-> +       perf stat -x, --per-die -a true 2>&1 | commachecker --per-die
->         echo "[Success]"
->  }
->
-> @@ -118,7 +139,7 @@ check_per_node()
->                 echo "[Skip] paranoid and not root"
->                 return
->         fi
-> -       perf stat -x, --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
-> +       perf stat -x, --per-node -a true 2>&1 | commachecker --per-node
->         echo "[Success]"
->  }
->
-> @@ -130,7 +151,7 @@ check_per_socket()
->                 echo "[Skip] paranoid and not root"
->                 return
->         fi
-> -       perf stat -x, --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
-> +       perf stat -x, --per-socket -a true 2>&1 | commachecker --per-socket
->         echo "[Success]"
->  }
->
-> --
-> 2.36.1
->
+- Arnaldo
+
+Reduced set of tests at the end of this message.
+
+The following changes since commit 9be4cbd09da820a20d400670a45fc1571f6a13b8:
+
+  driver core: Set default deferred_probe_timeout back to 0. (2022-06-03 11:58:54 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.19-2022-06-04
+
+for you to fetch changes up to 1bcca2b1bd67f3c0e5c3a88ed16c6389f01a5b31:
+
+  perf vendor events intel: Update metrics for Alderlake (2022-06-03 21:45:32 +0200)
+
+----------------------------------------------------------------
+perf tools changes for v5.19: 3rd batch
+
+- Synthesize task events for pre-existing threads when using 'perf lock --threads',
+  as we need to show task names.
+
+- Fix unwinding with ld.lld (>= version 10.0) linked objects, where
+  .eh_frame_hdr and .text are in different PT_LOAD program headers, which makes
+  perf record --call-graph dwarf fail with such obkects.
+
+- Check if 'perf record' hangs in the ARM SPE (Statistical Profiling Extensions)
+  'perf test' entry when recording a workload with forks.
+
+- Trace physical address for Arm SPE events, needed for 'perf c2c' to locate
+  the memory node for samples.
+
+- Fix sorting in percent_rmt_hitm_cmp() in 'perf c2c'.
+
+- Further support for Intel hybrid systems in the evlist and 'perf record' code.
+
+- Update IBM s/390 vendor event JSON tables.
+
+- Add metrics (JSON) for Intel Sapphirerapids.
+
+- Update metrics for Intel Alderlake.
+
+- Correct typo of sysf 'event_source' directory in the documentation.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Fangrui Song (1):
+      perf unwind: Fix segbase for ld.lld linked objects
+
+German Gomez (1):
+      perf test arm-spe: Check if perf-record hangs when recording workload with forks
+
+Ian Rogers (1):
+      perf docs: Correct typo of event_sources
+
+Leo Yan (2):
+      perf mem: Trace physical address for Arm SPE events
+      perf c2c: Fix sorting in percent_rmt_hitm_cmp()
+
+Namhyung Kim (1):
+      perf lock: Change to synthesize task events
+
+Thomas Richter (7):
+      perf list: Add IBM z16 event description for s390
+      perf list: Update event description for IBM z10 to latest level
+      perf list: Update event description for IBM z13 to latest level
+      perf list: Update event description for IBM z14 to latest level
+      perf list: Update event description for IBM z15 to latest level
+      perf list: Update event description for IBM z196/z114 to latest level
+      perf list: Update event description for IBM zEC12/zBC12 to latest level
+
+Zhengjun Xing (4):
+      perf evlist: Extend arch_evsel__must_be_in_group to support hybrid systems
+      perf record: Support sample-read topdown metric group for hybrid platforms
+      perf vendor events intel: Add metrics for Sapphirerapids
+      perf vendor events intel: Update metrics for Alderlake
+
+ tools/perf/Documentation/perf-record.txt           |   2 +-
+ tools/perf/Documentation/perf-stat.txt             |   2 +-
+ tools/perf/Documentation/perf-top.txt              |   2 +-
+ tools/perf/arch/arm64/util/mem-events.c            |   6 +-
+ tools/perf/arch/x86/util/evsel.c                   |   5 +-
+ tools/perf/arch/x86/util/evsel.h                   |   7 +
+ tools/perf/arch/x86/util/topdown.c                 |  21 +-
+ tools/perf/builtin-c2c.c                           |   4 +-
+ tools/perf/builtin-lock.c                          |   2 +-
+ tools/perf/pmu-events/arch/s390/cf_z10/basic.json  |  48 +-
+ tools/perf/pmu-events/arch/s390/cf_z10/crypto.json |  64 +--
+ .../perf/pmu-events/arch/s390/cf_z10/extended.json |  36 +-
+ tools/perf/pmu-events/arch/s390/cf_z13/basic.json  |  48 +-
+ tools/perf/pmu-events/arch/s390/cf_z13/crypto.json |  64 +--
+ .../perf/pmu-events/arch/s390/cf_z13/extended.json | 100 ++--
+ tools/perf/pmu-events/arch/s390/cf_z14/basic.json  |  32 +-
+ tools/perf/pmu-events/arch/s390/cf_z14/crypto.json |  64 +--
+ .../perf/pmu-events/arch/s390/cf_z14/extended.json | 102 ++--
+ tools/perf/pmu-events/arch/s390/cf_z15/basic.json  |  32 +-
+ tools/perf/pmu-events/arch/s390/cf_z15/crypto.json | 114 -----
+ .../perf/pmu-events/arch/s390/cf_z15/crypto6.json  | 112 +++++
+ .../perf/pmu-events/arch/s390/cf_z15/extended.json | 108 ++---
+ tools/perf/pmu-events/arch/s390/cf_z16/basic.json  |  58 +++
+ .../perf/pmu-events/arch/s390/cf_z16/crypto6.json  | 142 ++++++
+ .../perf/pmu-events/arch/s390/cf_z16/extended.json | 492 +++++++++++++++++++
+ .../pmu-events/arch/s390/cf_z16/transaction.json   |   7 +
+ tools/perf/pmu-events/arch/s390/cf_z196/basic.json |  48 +-
+ .../perf/pmu-events/arch/s390/cf_z196/crypto.json  |  64 +--
+ .../pmu-events/arch/s390/cf_z196/extended.json     |  44 +-
+ .../perf/pmu-events/arch/s390/cf_zec12/basic.json  |  48 +-
+ .../perf/pmu-events/arch/s390/cf_zec12/crypto.json |  64 +--
+ .../pmu-events/arch/s390/cf_zec12/extended.json    |  66 +--
+ tools/perf/pmu-events/arch/s390/mapfile.csv        |   1 +
+ .../pmu-events/arch/x86/alderlake/adl-metrics.json | 163 +++++--
+ .../arch/x86/sapphirerapids/spr-metrics.json       | 530 +++++++++++++++++++++
+ tools/perf/tests/shell/test_arm_spe_fork.sh        |  92 ++++
+ tools/perf/util/dso.h                              |   2 +
+ tools/perf/util/unwind-libunwind-local.c           | 105 ++--
+ 38 files changed, 2163 insertions(+), 738 deletions(-)
+ create mode 100644 tools/perf/arch/x86/util/evsel.h
+ delete mode 100644 tools/perf/pmu-events/arch/s390/cf_z15/crypto.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/basic.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/crypto6.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/extended.json
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/spr-metrics.json
+ create mode 100755 tools/perf/tests/shell/test_arm_spe_fork.sh
+
+Test results:
+
+The container based builds will return when I get back home.
+
+The 'perf test' one will perform a variety of tests exercising
+tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
+with a variety of command line event specifications to then intercept the
+sys_perf_event syscall to check that the perf_event_attr fields are set up as
+expected, among a variety of other unit tests.
+
+Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
+with a variety of feature sets, exercising the build with an incomplete set of
+features as well as with a complete one.
+
+  $ uname -a
+  Linux quaco 5.17.11-300.fc36.x86_64 #1 SMP PREEMPT Wed May 25 15:04:05 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+  $ git log --oneline -1
+  1bcca2b1bd67f3c0 (HEAD -> perf/core) perf vendor events intel: Update metrics for Alderlake
+  $ perf -v
+  perf version 5.18.g1bcca2b1bd67
+  $ sudo su -
+  # perf -vv
+  perf version 5.18.g1bcca2b1bd67
+                   dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+      dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                   glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+           syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                  libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+              debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+                  libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+                 libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+  numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+                 libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+               libcrypto: [ OFF ]  # HAVE_LIBCRYPTO_SUPPORT
+               libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+      libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                    zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                    lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+               get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                     bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+                     aio: [ on  ]  # HAVE_AIO_SUPPORT
+                    zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+                 libpfm4: [ OFF ]  # HAVE_LIBPFM
+  # perf test
+    1: vmlinux symtab matches kallsyms                                 : Ok
+    2: Detect openat syscall event                                     : Ok
+    3: Detect openat syscall event on all cpus                         : Ok
+    4: Read samples using the mmap interface                           : Ok
+    5: Test data source output                                         : Ok
+    6: Parse event definition strings                                  :
+    6.1: Test event parsing                                            : Ok
+    6.2: Test parsing of "hybrid" CPU events                           : Skip (not hybrid)
+    6.3: Parsing of all PMU events from sysfs                          : Ok
+    6.4: Parsing of given PMU events from sysfs                        : Ok
+    6.5: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+    6.6: Parsing of aliased events                                     : Ok
+    6.7: Parsing of terms (event modifiers)                            : Ok
+    7: Simple expression parser                                        : Ok
+    8: PERF_RECORD_* events & perf_sample fields                       : Ok
+    9: Parse perf pmu format                                           : Ok
+   10: PMU events                                                      :
+   10.1: PMU event table sanity                                        : Ok
+   10.2: PMU event map aliases                                         : Ok
+   10.3: Parsing of PMU event table metrics                            : Ok
+   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+   11: DSO data read                                                   : Ok
+   12: DSO data cache                                                  : Ok
+   13: DSO data reopen                                                 : Ok
+   14: Roundtrip evsel->name                                           : Ok
+   15: Parse sched tracepoints fields                                  : Ok
+   16: syscalls:sys_enter_openat event fields                          : Ok
+   17: Setup struct perf_event_attr                                    : Ok
+   18: Match and link multiple hists                                   : Ok
+   19: 'import perf' in python                                         : Ok
+   20: Breakpoint overflow signal handler                              : Ok
+   21: Breakpoint overflow sampling                                    : Ok
+   22: Breakpoint accounting                                           : Ok
+   23: Watchpoint                                                      :
+   23.1: Read Only Watchpoint                                          : Skip (missing hardware support)
+   23.2: Write Only Watchpoint                                         : Ok
+   23.3: Read / Write Watchpoint                                       : Ok
+   23.4: Modify Watchpoint                                             : Ok
+   24: Number of exit events of a simple workload                      : Ok
+   25: Software clock events period values                             : Ok
+   26: Object code reading                                             : Ok
+   27: Sample parsing                                                  : Ok
+   28: Use a dummy software event to keep tracking                     : Ok
+   29: Parse with no sample_id_all bit set                             : Ok
+   30: Filter hist entries                                             : Ok
+   31: Lookup mmap thread                                              : Ok
+   32: Share thread maps                                               : Ok
+   33: Sort output of hist entries                                     : Ok
+   34: Cumulate child hist entries                                     : Ok
+   35: Track with sched_switch                                         : Ok
+   36: Filter fds with revents mask in a fdarray                       : Ok
+   37: Add fd to a fdarray, making it autogrow                         : Ok
+   38: kmod_path__parse                                                : Ok
+   39: Thread map                                                      : Ok
+   40: LLVM search and compile                                         :
+   40.1: Basic BPF llvm compile                                        : Ok
+   40.2: kbuild searching                                              : Ok
+   40.3: Compile source for BPF prologue generation                    : Ok
+   40.4: Compile source for BPF relocation                             : Ok
+   41: Session topology                                                : Ok
+   42: BPF filter                                                      :
+   42.1: Basic BPF filtering                                           : Ok
+   42.2: BPF pinning                                                   : Ok
+   42.3: BPF prologue generation                                       : Ok
+   43: Synthesize thread map                                           : Ok
+   44: Remove thread map                                               : Ok
+   45: Synthesize cpu map                                              : Ok
+   46: Synthesize stat config                                          : Ok
+   47: Synthesize stat                                                 : Ok
+   48: Synthesize stat round                                           : Ok
+   49: Synthesize attr update                                          : Ok
+   50: Event times                                                     : Ok
+   51: Read backward ring buffer                                       : Ok
+   52: Print cpu map                                                   : Ok
+   53: Merge cpu map                                                   : Ok
+   54: Probe SDT events                                                : Ok
+   55: is_printable_array                                              : Ok
+   56: Print bitmap                                                    : Ok
+   57: perf hooks                                                      : Ok
+   58: builtin clang support                                           :
+   58.1: builtin clang compile C source to IR                          : Skip (not compiled in)
+   58.2: builtin clang compile C source to ELF object                  : Skip (not compiled in)
+   59: unit_number__scnprintf                                          : Ok
+   60: mem2node                                                        : Ok
+   61: time utils                                                      : Ok
+   62: Test jit_write_elf                                              : Ok
+   63: Test libpfm4 support                                            :
+   63.1: test of individual --pfm-events                               : Skip (not compiled in)
+   63.2: test groups of --pfm-events                                   : Skip (not compiled in)
+   64: Test api io                                                     : Ok
+   65: maps__merge_in                                                  : Ok
+   66: Demangle Java                                                   : Ok
+   67: Demangle OCaml                                                  : Ok
+   68: Parse and process metrics                                       : Ok
+   69: PE file support                                                 : Ok
+   70: Event expansion for cgroups                                     : Ok
+   71: Convert perf time to TSC                                        :
+   71.1: TSC support                                                   : Ok
+   71.2: Perf time to TSC                                              : Ok
+   72: dlfilter C API                                                  : Ok
+   73: Sigtrap                                                         : Ok
+   74: x86 rdpmc                                                       : Ok
+   75: Test dwarf unwind                                               : Ok
+   76: x86 instruction decoder - new instructions                      : Ok
+   77: Intel PT packet decoder                                         : Ok
+   78: x86 bp modify                                                   : Ok
+   79: x86 Sample parsing                                              : Ok
+   80: build id cache operations                                       : Ok
+   81: daemon operations                                               : Ok
+   82: perf pipe recording and injection test                          : Ok
+   83: Add vfs_getname probe to get syscall args filenames             : Ok
+   84: probe libc's inet_pton & backtrace it with ping                 : Ok
+   85: Use vfs_getname probe to get syscall args filenames             : Ok
+   86: Zstd perf.data compression/decompression                        : Ok
+   87: perf record tests                                               : Ok
+   88: perf record offcpu profiling tests                              : Ok
+   89: perf stat CSV output linter                                     : Skip
+   90: perf stat csv summary test                                      : Ok
+   91: perf stat metrics (shadow stat) test                            : Ok
+   92: perf stat tests                                                 : Ok
+   93: perf all metricgroups test                                      : Ok
+   94: perf all metrics test                                           : FAILED!
+   95: perf all PMU test                                               : Ok
+   96: perf stat --bpf-counters test                                   : Ok
+   97: Check Arm64 callgraphs are complete in fp mode                  : Skip
+   98: Check Arm CoreSight trace data recording and synthesized samples: Skip
+   99: Check Arm SPE trace data recording and synthesized samples      : Skip
+  100: Check Arm SPE doesn't hang when there are forks                 : Skip
+  101: Miscellaneous Intel PT testing                                  : Ok
+  102: Check open filename arg using perf trace + vfs_getname          : Ok
+  #
+
+The CORESIGHT=1 build is failing, being investigated, couldn't reproduce it
+building it out of 'make -C tools/perf build-test', as below.
+
+Also LIBBPF_DYNAMIC=1 fails on fedora:36, as libbpf-devel is old, should work
+with 0.8.0, that is in fedora:rawhide and should be on 36 soon according to
+Jiri Olsa.
+
+  $ cat /proc/cpuinfo | grep "model name" -m1
+  model name	: Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz
+  $ git log --oneline -1 ; time make -C tools/perf/ build-test
+  1bcca2b1bd67f3c0 (HEAD -> perf/core, acme.korg/tmp.perf/core) perf vendor events intel: Update metrics for Alderlake
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+  - tarpkg: ./tests/perf-targz-src-pkg .
+                   make_static: make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 -j8  DESTDIR=/tmp/tmp.x5DTDzzkiO
+                make_with_gtk2: make GTK2=1 -j8  DESTDIR=/tmp/tmp.3FlErTijHh
+                make_minimal_O: make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1 NO_LIBCAP=1 NO_SYSCALL_TABLE=1
+                make_no_newt_O: make NO_NEWT=1
+                  make_no_ui_O: make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
+                  make_debug_O: make DEBUG=1
+            make_no_auxtrace_O: make NO_AUXTRACE=1
+   make_install_prefix_slash_O: make install prefix=/tmp/krava/
+       make_util_pmu_bison_o_O: make util/pmu-bison.o
+           make_no_backtrace_O: make NO_BACKTRACE=1
+             make_no_libperl_O: make NO_LIBPERL=1
+                   make_tags_O: make tags
+  make_no_libdw_dwarf_unwind_O: make NO_LIBDW_DWARF_UNWIND=1
+           make_no_libbionic_O: make NO_LIBBIONIC=1
+                 make_no_sdt_O: make NO_SDT=1
+            make_no_libaudit_O: make NO_LIBAUDIT=1
+                 make_perf_o_O: make perf.o
+                 make_cscope_O: make cscope
+                make_install_O: make install
+               make_no_slang_O: make NO_SLANG=1
+         make_no_syscall_tbl_O: make NO_SYSCALL_TABLE=1
+              make_no_libelf_O: make NO_LIBELF=1
+        make_no_libbpf_DEBUG_O: make NO_LIBBPF=1 DEBUG=1
+              make_no_libbpf_O: make NO_LIBBPF=1
+            make_no_demangle_O: make NO_DEMANGLE=1
+            make_install_bin_O: make install-bin
+         make_install_prefix_O: make install prefix=/tmp/krava
+              make_clean_all_O: make clean all
+                   make_pure_O: make
+             make_no_libnuma_O: make NO_LIBNUMA=1
+                    make_doc_O: make doc
+           make_no_libcrypto_O: make NO_LIBCRYPTO=1
+           make_no_libpython_O: make NO_LIBPYTHON=1
+                   make_help_O: make help
+                make_no_gtk2_O: make NO_GTK2=1
+         make_with_clangllvm_O: make LIBCLANGLLVM=1
+             make_no_scripts_O: make NO_LIBPYTHON=1 NO_LIBPERL=1
+             make_util_map_o_O: make util/map.o
+           make_with_libpfm4_O: make LIBPFM4=1
+        make_with_babeltrace_O: make LIBBABELTRACE=1
+           make_no_libunwind_O: make NO_LIBUNWIND=1
+  OK
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+  
+  real	18m58.348s
+  user	112m8.915s
+  sys	15m59.473s
+  $
