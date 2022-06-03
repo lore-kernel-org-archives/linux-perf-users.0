@@ -2,354 +2,234 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BD7C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 11:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA59DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 14:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243644AbiFCLa6 (ORCPT
+        id S244726AbiFCODj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Jun 2022 07:30:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51400 "EHLO
+        Fri, 3 Jun 2022 10:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238542AbiFCLa5 (ORCPT
+        with ESMTP id S235832AbiFCODh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Jun 2022 07:30:57 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA2C3C704;
-        Fri,  3 Jun 2022 04:30:56 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 253Aad6n001526;
-        Fri, 3 Jun 2022 11:30:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=TWuFSrfB9saZDu6O/TQlhO0/dPpvKZd/1iLk1zBqEnI=;
- b=YkqVrjgpYcBOKYccwR7OpZOS+4udRrF6E331cGnhTqnncfSvXr4w1y/BbTD27bLI7SJd
- xIFC3RRnKE+W873NC757lN3JmoKrpkvMh2zHGg5Cuj+8CG6qP4dP9tA1BJxNXg6bGG8u
- jfYG3C13pnwdVEwCLgwQcgXK6P5TiKdU0JbjArUn0ysWI5KxVzgbLwbzDAeOA+QuBbPR
- kePg14NBmqfDsqXGlB2Dx9Jo0c3jnWu0bxZHATz7CxnKbPriH9M5RCaFDKoDBdmnJtqm
- 8YI0YONhYCp6tz9wXT+48tFgSCeOLNS/bl/L62iftLhXYZvp/6ZCRpNcDLW6R1cwjBaE SA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gfeksaxr7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jun 2022 11:30:53 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 253BTiYw012992;
-        Fri, 3 Jun 2022 11:30:53 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gfeksaxnu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jun 2022 11:30:53 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 253BLvIm025527;
-        Fri, 3 Jun 2022 11:30:45 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma01fra.de.ibm.com with ESMTP id 3gbcakpbtv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jun 2022 11:30:45 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 253BUfGJ22151464
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jun 2022 11:30:41 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C479211C04A;
-        Fri,  3 Jun 2022 11:30:41 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 71E9D11C04C;
-        Fri,  3 Jun 2022 11:30:41 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Jun 2022 11:30:41 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux390-list@tuxmaker.boeblingen.de.ibm.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, cjense@google.com, sumanthk@linux.ibm.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/test: perf test 83 fails on s390
-Date:   Fri,  3 Jun 2022 13:30:34 +0200
-Message-Id: <20220603113034.2009728-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
+        Fri, 3 Jun 2022 10:03:37 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928EC2C671;
+        Fri,  3 Jun 2022 07:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654265014; x=1685801014;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=sjdGyUtJuDoTjTTLcueGlA/roqxqj9YbEIoz2xAYeLE=;
+  b=NAPFas0vu9BMZcfEwMjAlSQKE3xJbRstk+0l7VlbmB7h899i+pkU8+ix
+   WT37SpV6XVPrv22rs4W48J1HZF+5w0oX99Aoa0QNFQXQgFxdyFFhv4l7D
+   /gk77HhfQEBDQxDRyPwYJ45WR8LtV+d7biGCbtPNCmT8ROKVDYrt5EXNO
+   JAbeL2b80GzkC1rFHZYc2YGMXhpIQn5fwSxVqIWeigWcUEImfY0aVzlTC
+   dHSOmr9pkE88/Tj0AIQzm9MtndPJKizyurrShmUimGSS/AC/+BM1U1tNj
+   Se7UM5k5luQ/cz5wSTMpAnC51HSSHeUQVAuFDPQAyQu2Y/VCScXF3l8RK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10366"; a="336916961"
+X-IronPort-AV: E=Sophos;i="5.91,274,1647327600"; 
+   d="scan'208";a="336916961"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2022 07:03:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,274,1647327600"; 
+   d="scan'208";a="757486453"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2022 07:03:33 -0700
+Received: from [10.252.214.200] (kliang2-MOBL.ccr.corp.intel.com [10.252.214.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 787D75808E0;
+        Fri,  3 Jun 2022 07:03:32 -0700 (PDT)
+Message-ID: <02135ffb-c19c-6c8c-4900-a16a1c40a746@linux.intel.com>
+Date:   Fri, 3 Jun 2022 10:03:31 -0400
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [BUG REPORT] perf tools: x86_64: weight column displays odd
+ memory latency data
+Content-Language: en-US
+To:     Tyson Thomas <tyson.thomas@sydney.edu.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+References: <SYBPR01MB6620E2316BDF9CE29178CB32DBD59@SYBPR01MB6620.ausprd01.prod.outlook.com>
+ <fd28e6fb-cf4c-a065-6138-4c581e871341@linux.intel.com>
+ <MEYPR01MB66152548BEC4D0113BBBD7A5DBDF9@MEYPR01MB6615.ausprd01.prod.outlook.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <MEYPR01MB66152548BEC4D0113BBBD7A5DBDF9@MEYPR01MB6615.ausprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: h4XAIoEzw6rsLBvakpGQWNw7WLHcJxnS
-X-Proofpoint-ORIG-GUID: 3nmRY4fwGezJubKaypzCfGpX7ePAW4PX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-03_03,2022-06-03_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- clxscore=1015 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 impostorscore=0 bulkscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206030049
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf test -F 83 ("perf stat CSV output linter") fails on s390.
-Reason is the wrong number of fields for certain CPU core/die/socket
-related output.
 
-On x84_64 the output of command
- # ./perf stat -x, -A -a --no-merge true
- CPU0,1.50,msec,cpu-clock,1502781,100.00,1.052,CPUs utilized
- CPU1,1.48,msec,cpu-clock,1476113,100.00,1.034,CPUs utilized
- ...
-results in 8 fields with 7 comma separators.
 
-On s390 the output of command
- #  ./perf stat -x, -A -a --no-merge -- true
- 0.95,msec,cpu-clock,949800,100.00,1.060,CPUs utilized
- ...
-results in 7 fields with 6 comma separators. Therefore this tests
-fails on s390. Similar issues exist for per-die and per-socket output
-which is not supported on s390.
+On 6/1/2022 1:03 AM, Tyson Thomas wrote:
+> Hi Kan,
+> 
+> Thanks for the reply.
+> 
+> The exact command used was: perf mem report
+> 
+> The columns are in order: Overhead, Samples, Local Weight, Memory Access.
+> The results I sent before are: Overhead, Local Weight and Memory.
+> 
+> So, to update the table from before, each tuple has a sample of 1, so it is:
+> 
+>     0.02%,1 ,62515 ,L1 or L1 hit
+>     0.02%,1 ,54048 ,L1 or L1 hit
+>     0.02%,1 ,52206 ,L1 or L1 hit
+>     0.02%,1 ,49831 ,L1 or L1 hit
+>     0.02%,1 ,49056 ,Local RAM or RAM hit
+>     0.01%,1 ,40666 ,LFB or LFB hit
+>     0.01%,1 ,38080 ,L1 or L1 hit
+>     0.01%,1 ,36772 ,L1 or L1 hit
+> 
+> So, the weights are absurdly high here.
+> 
+> I'll give a reply on perf report -D shortly.
+> 
+> Regards,
+> Tyson
+> 
+> 
+> 
+> From: Liang, Kan <kan.liang@linux.intel.com>
+> Sent: Wednesday, 25 May 2022 12:58 AM
+> To: Tyson Thomas <tyson.thomas@sydney.edu.au>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; linux-perf-users@vger.kernel.org <linux-perf-users@vger.kernel.org>
+> Subject: Re: [BUG REPORT] perf tools: x86_64: weight column displays odd memory latency data
+>   
+> 
+> 
+> On 5/22/2022 6:14 PM, Tyson Thomas wrote:
+>> Hi Kan, Linux-Perf Team
+>>
+>> I have observed some odd behaviour within perf when using perf-mem. Specifically the reported latency under the weight column appears to be unreasonably high.
+>>
+>> Here is a given sample from a recent test, I find that some of the  latencies are close to an unsigned short and I cannot seem to be understand why that would be outside of it being an issue with the perf events.
+>>
+>> This can be replicated using a NAS benchmark, specifically cg.D.
 
-I have rewritten the python program to count commas in each output line
-into a bash function to achieve the same result. I hope this makes
-it a bit easier.
 
-Output before:
- # ./perf test -F 83
- 83: perf stat CSV output linter  :
- Checking CSV output: no args [Success]
- Checking CSV output: system wide [Success]
- Checking CSV output: system wide Checking CSV output: \
-	 system wide no aggregation 6.92,msec,cpu-clock,\
-	 6918131,100.00,6.972,CPUs utilized
- ...
- RuntimeError: wrong number of fields. expected 7 in \
-	 6.92,msec,cpu-clock,6918131,100.00,6.972,CPUs utilized
+I tried the cg.D benchmark on my machine, but I cannot reproduce the 
+issue. The weight looks reasonable.
 
- FAILED!
- #
+$ perf mem record ./bin/cg.D.x
 
-Output after:
- # ./perf test -F 83
- 83: perf stat CSV output linter             :
- Checking CSV output: no args [Success]
- Checking CSV output: system wide [Success]
- Checking CSV output: system wide Checking CSV output:\
-	 system wide no aggregation [Success]
- Checking CSV output: interval [Success]
- Checking CSV output: event [Success]
- Checking CSV output: per core [Success]
- Checking CSV output: per thread [Success]
- Checking CSV output: per die [Success]
- Checking CSV output: per node [Success]
- Checking CSV output: per socket [Success]
- Ok
- #
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- .../tests/shell/lib/perf_csv_output_lint.py   | 48 -------------
- tools/perf/tests/shell/stat+csv_output.sh     | 69 ++++++++++++-------
- 2 files changed, 45 insertions(+), 72 deletions(-)
- delete mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
+  NAS Parallel Benchmarks (NPB3.4-OMP) - CG Benchmark
 
-diff --git a/tools/perf/tests/shell/lib/perf_csv_output_lint.py b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
-deleted file mode 100644
-index 714f283cfb1b..000000000000
---- a/tools/perf/tests/shell/lib/perf_csv_output_lint.py
-+++ /dev/null
-@@ -1,48 +0,0 @@
--#!/usr/bin/python
--# SPDX-License-Identifier: GPL-2.0
--
--import argparse
--import sys
--
--# Basic sanity check of perf CSV output as specified in the man page.
--# Currently just checks the number of fields per line in output.
--
--ap = argparse.ArgumentParser()
--ap.add_argument('--no-args', action='store_true')
--ap.add_argument('--interval', action='store_true')
--ap.add_argument('--system-wide-no-aggr', action='store_true')
--ap.add_argument('--system-wide', action='store_true')
--ap.add_argument('--event', action='store_true')
--ap.add_argument('--per-core', action='store_true')
--ap.add_argument('--per-thread', action='store_true')
--ap.add_argument('--per-die', action='store_true')
--ap.add_argument('--per-node', action='store_true')
--ap.add_argument('--per-socket', action='store_true')
--ap.add_argument('--separator', default=',', nargs='?')
--args = ap.parse_args()
--
--Lines = sys.stdin.readlines()
--
--def check_csv_output(exp):
--  for line in Lines:
--    if 'failed' not in line:
--      count = line.count(args.separator)
--      if count != exp:
--        sys.stdout.write(''.join(Lines))
--        raise RuntimeError(f'wrong number of fields. expected {exp} in {line}')
--
--try:
--  if args.no_args or args.system_wide or args.event:
--    expected_items = 6
--  elif args.interval or args.per_thread or args.system_wide_no_aggr:
--    expected_items = 7
--  elif args.per_core or args.per_socket or args.per_node or args.per_die:
--    expected_items = 8
--  else:
--    ap.print_help()
--    raise RuntimeError('No checking option specified')
--  check_csv_output(expected_items)
--
--except:
--  sys.stdout.write('Test failed for input: ' + ''.join(Lines))
--  raise
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index 983220ef3cb4..38c26f3ef4c1 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -6,20 +6,41 @@
- 
- set -e
- 
--pythonchecker=$(dirname $0)/lib/perf_csv_output_lint.py
--if [ "x$PYTHON" == "x" ]
--then
--	if which python3 > /dev/null
--	then
--		PYTHON=python3
--	elif which python > /dev/null
--	then
--		PYTHON=python
--	else
--		echo Skipping test, python not detected please set environment variable PYTHON.
--		exit 2
--	fi
--fi
-+function commachecker()
-+{
-+	local -i cnt=0 exp=0
-+
-+	case "$1"
-+	in "--no-args")		exp=6
-+	;; "--system-wide")	exp=6
-+	;; "--event")		exp=6
-+	;; "--interval")	exp=7
-+	;; "--per-thread")	exp=7
-+	;; "--system-wide-no-aggr")	exp=7
-+				[ $(uname -m) = "s390x" ] && exp=6
-+	;; "--per-core")	exp=8
-+	;; "--per-socket")	exp=8
-+	;; "--per-node")	exp=8
-+	;; "--per-die")		exp=8
-+	esac
-+
-+	while read line
-+	do
-+		# Check for lines beginning with Failed
-+		x=${line:0:6}
-+		[ "$x" = "Failed" ] && continue
-+
-+		# Count the number of commas
-+		x=$(echo $line | tr -d -c ',')
-+		cnt="${#x}"
-+		# echo $line $cnt
-+		[ "$cnt" -ne "$exp" ] && {
-+			echo "wrong number of fields. expected $exp in $line" 1>&2
-+			exit 1;
-+		}
-+	done
-+	return 0
-+}
- 
- # Return true if perf_event_paranoid is > $1 and not running as root.
- function ParanoidAndNotRoot()
-@@ -30,7 +51,7 @@ function ParanoidAndNotRoot()
- check_no_args()
- {
- 	echo -n "Checking CSV output: no args "
--	perf stat -x, true 2>&1 | $PYTHON $pythonchecker --no-args
-+	perf stat -x, true 2>&1 | commachecker --no-args
- 	echo "[Success]"
- }
- 
-@@ -42,7 +63,7 @@ check_system_wide()
- 		echo "[Skip] paranoid and not root"
- 		return
- 	fi
--	perf stat -x, -a true 2>&1 | $PYTHON $pythonchecker --system-wide
-+	perf stat -x, -a true 2>&1 | commachecker --system-wide
- 	echo "[Success]"
- }
- 
-@@ -55,14 +76,14 @@ check_system_wide_no_aggr()
- 		return
- 	fi
- 	echo -n "Checking CSV output: system wide no aggregation "
--	perf stat -x, -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
-+	perf stat -x, -A -a --no-merge true 2>&1 | commachecker --system-wide-no-aggr
- 	echo "[Success]"
- }
- 
- check_interval()
- {
- 	echo -n "Checking CSV output: interval "
--	perf stat -x, -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
-+	perf stat -x, -I 1000 true 2>&1 | commachecker --interval
- 	echo "[Success]"
- }
- 
-@@ -70,7 +91,7 @@ check_interval()
- check_event()
- {
- 	echo -n "Checking CSV output: event "
--	perf stat -x, -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
-+	perf stat -x, -e cpu-clock true 2>&1 | commachecker --event
- 	echo "[Success]"
- }
- 
-@@ -82,7 +103,7 @@ check_per_core()
- 		echo "[Skip] paranoid and not root"
- 		return
- 	fi
--	perf stat -x, --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
-+	perf stat -x, --per-core -a true 2>&1 | commachecker --per-core
- 	echo "[Success]"
- }
- 
-@@ -94,7 +115,7 @@ check_per_thread()
- 		echo "[Skip] paranoid and not root"
- 		return
- 	fi
--	perf stat -x, --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
-+	perf stat -x, --per-thread -a true 2>&1 | commachecker --per-thread
- 	echo "[Success]"
- }
- 
-@@ -106,7 +127,7 @@ check_per_die()
- 		echo "[Skip] paranoid and not root"
- 		return
- 	fi
--	perf stat -x, --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
-+	perf stat -x, --per-die -a true 2>&1 | commachecker --per-die
- 	echo "[Success]"
- }
- 
-@@ -118,7 +139,7 @@ check_per_node()
- 		echo "[Skip] paranoid and not root"
- 		return
- 	fi
--	perf stat -x, --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
-+	perf stat -x, --per-node -a true 2>&1 | commachecker --per-node
- 	echo "[Success]"
- }
- 
-@@ -130,7 +151,7 @@ check_per_socket()
- 		echo "[Skip] paranoid and not root"
- 		return
- 	fi
--	perf stat -x, --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
-+	perf stat -x, --per-socket -a true 2>&1 | commachecker --per-socket
- 	echo "[Success]"
- }
- 
--- 
-2.36.1
+  Size:     1500000
+  Iterations:                    100
+  Number of available threads:     4
 
+^C[ perf record: Woken up 118 times to write data ]
+[ perf record: Captured and wrote 30.108 MB perf.data (438307 samples) ]
+
+$ perf mem report --stdio
+# To display the perf.data header info, please use 
+--header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 209K of event 'cpu/mem-loads,ldlat=30/Pu'
+# Total weight : 56835744
+# Sort order   : 
+local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,p_stage_cyc
+#
+# Overhead       Samples  Local Weight  Memory access             Symbol 
+                            Shared Object         Data Symbol >
+# ........  ............  ............  ........................ 
+................................  ....................  ............>
+#
+      0.01%            66  53            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.01%            53  58            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.01%            59  52            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.00%            53  53            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.00%            43  65            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.00%            50  55            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.00%            51  50            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.00%            46  55            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.00%            49  51            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2496          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%            48  52            L1 or L1 hit              [.] 
+randlc_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2441          Local RAM or RAM hit      [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2420          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2415          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2403          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2399          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2390          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2385          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2385          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2378          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+      0.00%             1  2358          LFB or LFB hit            [.] 
+sparse_                       cg.D.x                [.] 0x00007f>
+
+Thanks,
+Kan
+
+>>
+>> I observe the following results in perf mem report (just getting the top 10 results)
+>>
+> 
+> 
+> Could you please show me the exact perf command used?
+> 
+> With my perf mem report,
+> The first column is the Overhead.
+> The second column is the number of samples.
+> The third column is the weight.
+> The fourth is the Memory access.
+> 
+> Seems like the weight is missed?
+> 
+> Could you please check the perf report -D?
+> It will dump the weight for each Sample.
+> Does it look correct?
+> 
+> Thanks,
+> Kan
+> 
+>>     0.02% ,62515 ,L1 or L1 hit
+>>     0.02% ,54048 ,L1 or L1 hit
+>>     0.02% ,52206 ,L1 or L1 hit
+>>     0.02% ,49831 ,L1 or L1 hit
+>>     0.02% ,49056 ,Local RAM or RAM hit
+>>     0.01% ,40666 ,LFB or LFB hit
+>>     0.01% ,38080 ,L1 or L1 hit
+>>     0.01% ,36772 ,L1 or L1 hit
+>>     0.01% ,36729 ,LFB or LFB hit
+>>     0.01% ,27101 ,LFB or LFB hit
+>>
+>> Is it possible for someone to shed some light on this or am I misunderstanding how the weight column is used here?
+>> This appears to have been an issue on 5.4, 5.10 and 5.15. I am looking into seeing if it is still present in 5.17 and 5.18.
+>>
+>> I've also tried this on different Intel CPUs such as Intel Xeon 6230, i5-1135G7, Intel Xeon 6330
+>>
+>> Any insight or help would be appreciated,
+>> Tyson
