@@ -2,105 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454CDC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 03:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42B6C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 04:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233119AbiFCDqj (ORCPT
+        id S239236AbiFCE5x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Jun 2022 23:46:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53586 "EHLO
+        Fri, 3 Jun 2022 00:57:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231161AbiFCDqi (ORCPT
+        with ESMTP id S233340AbiFCE5w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Jun 2022 23:46:38 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A0A93701A
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Jun 2022 20:46:36 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id z17so6292046pff.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jun 2022 20:46:36 -0700 (PDT)
+        Fri, 3 Jun 2022 00:57:52 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABAA21832
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Jun 2022 21:57:50 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-30c2aa26ebfso59946337b3.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jun 2022 21:57:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XwoY0X65ErGegBJPGHjN6OI94flPB7b8Qeyfzlqg8dg=;
-        b=JyIrNSNEFRGPi8vjynDMfC852xoXp9o1wH0G6pelCnsc8huy5jz/wYGptktPjbc69u
-         3iOl8AiTRPOm8xSKk1HG7YAcToPily7UbJt+gSbz+MW1Q/qVRFD/KotFiKI8Wc+5Ausn
-         BqhNep0+rO1Bq/6IrmQgP2s0mwilYP0TZQOGgGGKcqiEPi6rj8YwNad8bf88NMYY+Hqb
-         zyxqmEHvJ6UgzeeZ1LlQJRpp+uBwGTEkmo3QkgfvqeVmQNszzQzIqxl4I2K47h1j+xUL
-         zLEzPqTktXxHjZDbOXtnBvWADXAkELtyFvO+52K9VL9ONo+FrTSuLWFLnsnCPWaEFoo4
-         coIA==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=MEQmxhdhzj6Wva0dy8UFtG14viIsjIrwd9QZHTnb4Sg=;
+        b=WhkX3pc6B1nQlpibT1FYCsRiyGAaNvybNGGpmlm4CoUsKd3Wlca7WK5LjY5Z/KOsDs
+         sdb/q6pSoMbrvKG6pr9gVgnRCEXycNiRCTZmrdiv1j+fIFZ3thVdebsjQ2mPTxKtTKZb
+         wD+n0UaX57U6Ht3D61rYEIUV9p0fionYn2lmaYEbbjmbAL1FNBQb36bbvk0x95WWjkrE
+         Cg1Ja4E0ue3ND3QaNDiRKi3O0frT587ZQ/LOdDa1bdLjoDRJQiISUvQjXPbKvHgJkZVD
+         yA36QkodwQEPa3xec6pEe21dQnQ6GK8NERN1N4TOdvGvGf/Ka8wYO4dWy3xieJQmF8wB
+         hAdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XwoY0X65ErGegBJPGHjN6OI94flPB7b8Qeyfzlqg8dg=;
-        b=OcvqrhtA8Q5x07I3WNiGs4Yq4dUKsykY3MWTY21SaMaJqb+ALXVKm5EoysWJtfzIvl
-         6PnGxPcHnEDp8IKIeV72g2Z8NGhwpz4VsvNoaCn0ejISx2NPdGxMEBGzO/rEw74vywga
-         GDEKJ41Bjn1a9NMmwWwF+RNWBAqiw6AZ1EDyVNPLJdc4J3VZ3GwCO41FvXqVGCWCPkXp
-         wxJOjj0gPW+VcOlrFidWBBBRxzOWp1ytzx0GK549BwDBL9zyC+Pxu9220ivwK3fwdEI2
-         +bzGx5Uv7EQXHRqK1VuGE8uWCNPOQwEj4ejOrPd4WhwAnIr1Gn7zRhkxNkiIqOjixfMX
-         ZnWg==
-X-Gm-Message-State: AOAM530NjUG+wG7eOI5tLN/pq0tIbxq+c1576HSymYZE9L5e1d7GHDsV
-        yXLkNScj3fib260R7RKXbKEIaQ==
-X-Google-Smtp-Source: ABdhPJxK8GGATroKcLec9/S2CEAkzNR0b5Lt2Lp//hkRe8j0T0uhFRdlDQH6KMqrenkO/go0Mo0SzQ==
-X-Received: by 2002:a63:d446:0:b0:3fc:1370:798a with SMTP id i6-20020a63d446000000b003fc1370798amr7285682pgj.190.1654227995356;
-        Thu, 02 Jun 2022 20:46:35 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
-        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm4231067pll.304.2022.06.02.20.46.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jun 2022 20:46:34 -0700 (PDT)
-Date:   Fri, 3 Jun 2022 11:46:27 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ali Saidi <alisaidi@amazon.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, hi@alyssa.is,
-        irogers@google.com, likexu@tencent.com, kjain@linux.ibm.com,
-        lihuafei1@huawei.com, adam.li@amperecomputing.com,
-        german.gomez@arm.com, james.clark@arm.com,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=MEQmxhdhzj6Wva0dy8UFtG14viIsjIrwd9QZHTnb4Sg=;
+        b=k2wognEi/L3pOqGT9ITMxkbp+Nu8AdSvzySr14Gwf/Fi5767B/UzwsfyWwL+3k+6n8
+         42t3pFjfqtSBFoB0j8s/quCQ9MnSlXjbhoViSDqLfRpnUUdNtFyZh3nRMBb/yt2wFqwg
+         NPKLvG2clfVfGskykfC33cvdzxmPKitJ0DJjSppTlL7HSGz2HEI47JYCA6HFw2ddfw2S
+         rpW5vVNL2aXoTu7B+7pPxgWq9pLV0nhFL63NinQUKRKkhO+JgOT0mD/c6WYDVXhcQrSN
+         uKfJwz8jWj6Lb/wStCgnJIgfPXxEEdF2lyCasTAOVnGWMUo8kQeiQu1WR87+IxJiEtmk
+         BhYw==
+X-Gm-Message-State: AOAM531zm+jSDA+8u+HDTuOZ4aPK8AusDzChdXPX+dNm3QybWrKx51rY
+        DemJCFvru7OwlKrG0HWq20+KccYcyITG
+X-Google-Smtp-Source: ABdhPJxC68EAiBGvASOaIPffKNdFKZ0ETYvIPGwdmpWXvlMj0PsDeresPRUqm2vz4oret+2Hq1YldMxgGydC
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:7125:61ca:dfbf:5f0b])
+ (user=irogers job=sendgmr) by 2002:a25:bd8b:0:b0:657:8392:55c3 with SMTP id
+ f11-20020a25bd8b000000b00657839255c3mr9130007ybh.452.1654232269215; Thu, 02
+ Jun 2022 21:57:49 -0700 (PDT)
+Date:   Thu,  2 Jun 2022 21:57:44 -0700
+Message-Id: <20220603045744.2815559-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
+Subject: [PATCH] perf docs: Correct typo of event_sources
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        German Gomez <german.gomez@arm.com>,
+        Alyssa Ross <hi@alyssa.is>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Like Xu <likexu@tencent.com>,
+        Joshua Martinez <joshuamart@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] perf c2c: Support display for Arm64
-Message-ID: <20220603034627.GB41034@leoy-ThinkPad-X240s>
-References: <20220601102505.GA408721@leoy-ThinkPad-X240s>
- <20220602171120.31166-1-alisaidi@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220602171120.31166-1-alisaidi@amazon.com>
+Cc:     Kevin Nomura <nomurak@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 02, 2022 at 05:11:20PM +0000, Ali Saidi wrote:
+The sysfs directory is called event_source.
 
-[...]
+Reported-by: Kevin Nomura <nomurak@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/perf-record.txt | 2 +-
+ tools/perf/Documentation/perf-stat.txt   | 2 +-
+ tools/perf/Documentation/perf-top.txt    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-> > You are welcome!  And very appreicate your helping to mature the code.
-> 
-> Seconding that, thanks for progressing this so much Leo. 
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index b4e9ef7edfef..cf8ad50f3de1 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -33,7 +33,7 @@ OPTIONS
+         - a raw PMU event in the form of rN where N is a hexadecimal value
+           that represents the raw register encoding with the layout of the
+           event control registers as described by entries in
+-          /sys/bus/event_sources/devices/cpu/format/*.
++          /sys/bus/event_source/devices/cpu/format/*.
+ 
+         - a symbolic or raw PMU event followed by an optional colon
+ 	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 8d1cde00b8d6..d8a33f4a47c5 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -39,7 +39,7 @@ report::
+ 	- a raw PMU event in the form of rN where N is a hexadecimal value
+ 	  that represents the raw register encoding with the layout of the
+ 	  event control registers as described by entries in
+-	  /sys/bus/event_sources/devices/cpu/format/*.
++	  /sys/bus/event_source/devices/cpu/format/*.
+ 
+         - a symbolic or raw PMU event followed by an optional colon
+ 	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index cac3dfbee7d8..c1fdba26bf53 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -41,7 +41,7 @@ Default is to monitor all CPUS.
+ 	(use 'perf list' to list all events) or a raw PMU event in the form
+ 	of rN where N is a hexadecimal value that represents the raw register
+ 	encoding with the layout of the event control registers as described
+-	by entries in /sys/bus/event_sources/devices/cpu/format/*.
++	by entries in /sys/bus/event_source/devices/cpu/format/*.
+ 
+ -E <entries>::
+ --entries=<entries>::
+-- 
+2.36.1.255.ge46751e96f-goog
 
-You are very welcome, Ali!
-
-> > > I'll assume someone else is reviewing your code changes.
-> > 
-> > Yeah, let's give a bit more time for reviewing.
-> 
-> I've tested and given each patch a close look. I haven't found anything that
-> looks to change other architectures and the output on my Graviton systems looks
-> great. I pulled in your patch to add physical addresses to the spe records and
-> as expected I saw the Node properly populated and PA cnt is no longer zero.  One
-> nit is the documentation still says that "Total HITMs (tot) as default," while
-> the code now defaults to "peer" on arm64.  Other than that:
-> 
-> Tested-by: Ali Saidi <alisaidi@amazon.com>
-> Reviewed-by: Ali Saidi <alisaidi@amazon.com>
-
-Thanks a lot for the testing.  Will respin a new patch set for
-correcting the documentation:
-
-  "Total HITMs (tot) as default, except Arm64 uses peer mode as default".
-
-And will add your test and review tags.
-
-Thanks,
-Leo
