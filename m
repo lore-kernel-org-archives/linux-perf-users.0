@@ -2,325 +2,185 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B55C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 09:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345D6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 09:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242998AbiFCJVr (ORCPT
+        id S243072AbiFCJcj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Jun 2022 05:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
+        Fri, 3 Jun 2022 05:32:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242995AbiFCJVq (ORCPT
+        with ESMTP id S229792AbiFCJci (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Jun 2022 05:21:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08CC3A184;
-        Fri,  3 Jun 2022 02:21:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 79FF7B82292;
-        Fri,  3 Jun 2022 09:21:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D7FC34114;
-        Fri,  3 Jun 2022 09:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654248102;
-        bh=oy7QZWldJsqzhyl2jzP9Z7SpnaeWaOENCH05DvtRWtg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nPgeGJ9z9Z5JDph8/tu6GKkoWFn6v6w+kOtQxdldklUK0D9/xYHvSdvC4SSqVdyHP
-         ItMoUBvNqZCMAD/iWtbr04fLG7XVCpNBTLSlK6HjT0mMYhX64o2JN0OZFwJh50QbGG
-         doB4z7wcgyd6Py7qGJCkFS0pqPsfaTakDsiaw1C1AlFed4Lp7twyBt9GrUfU5thET6
-         sRf/FiZrdD+9GYwtAyxyfgGwcb5wBD/FUwYV/TbFQ6Cy202DeiIX50w5nuLInDAYMG
-         7bOGQ9iT+BWa2BZ/7S/G6XhCsBiXv5QW9m6W3Ne80FpXiOtf1XT0m/j1S547hSGEF9
-         JcdoCm3BrJVAw==
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: [PATCHv3 bpf-next 2/2] perf tools: Rework prologue generation code
-Date:   Fri,  3 Jun 2022 11:21:10 +0200
-Message-Id: <20220603092110.1294855-3-jolsa@kernel.org>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20220603092110.1294855-1-jolsa@kernel.org>
-References: <20220603092110.1294855-1-jolsa@kernel.org>
+        Fri, 3 Jun 2022 05:32:38 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D3D2B24E
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 02:32:36 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id x17so9657774wrg.6
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 02:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oRAl4dbUfnsiRPLTOS5yGfa0W/muzE/YjY+y0YZxE+Q=;
+        b=VZZo5R+1WTZDQEVFN7gS7qZof7sbX7M9Cxkt0hZtijG2cdutDgEZRnOSOOLfRRAkrj
+         R/7m4qRMncLN+XC6xjnJnf4dXoGgX5I9Zv7H5PMKI8lPra/aYM15kOcanheJZSIX8I4G
+         wIFqaH3aDCcnUOLliaawDzz/PFIhFXo48uapmh9HDcQb/TnHpyPaNO0IO4xg97xt2hiK
+         pfHHPi6P8r6h/BtGwa8RbwITDxIsy8q9CnFbEF2q1DAUoQ8clpHkmaEdcp6WPWZ/Lp9c
+         fBgY5knVo0Y/d2ebLRvE32AlD2r751pwVA7FiGn2UqsTpF5ZfFePX+F/zIyoTI9TW/Hj
+         lHWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oRAl4dbUfnsiRPLTOS5yGfa0W/muzE/YjY+y0YZxE+Q=;
+        b=pmi1RwG5DyfGBMTdB+0os70W9jfIC6fHpdwN2qw30HkaK9/MqARD3Au5HrTni6S2Qb
+         9COq2z0712s1B/Luzp/aqLnbLn4Y/A9p6TnyxZWnURnPaNSEQoF57MFZ2ssSKx+oDm4y
+         G8JxkEOJBGqqlt6NgoVLnZCoYKAdpeJrUcptt9vPMv58q+y9kdE3uldCmu+f9vKURx4a
+         N9lUaXfC3UU0tue239du/h/c+E1afgpJBhWSACaAnHeWlom3DVQjvrpeiKIdUtV6gQYy
+         Z8L9EmA+UGr/K39Fd740Ikj/hJFQZKq+TxrQRTACXOBBpVstYA9GF6BFP1veeRX6MxWd
+         nP0A==
+X-Gm-Message-State: AOAM530we4od6Dgj0KpCJu9J/KZURy3v6vjQeFko9VYdfT1PHGfc4eCW
+        XIVBxz8K3iuvkdlPIQZ6QrI=
+X-Google-Smtp-Source: ABdhPJxeiSwV90HV9RfIoJT+xmaBq14fVOMnpxGKzgvrnz/ZLC4OtJe6kmPzNdEc9jDc2dPfg4GXMw==
+X-Received: by 2002:a05:6000:1887:b0:20f:e155:9db4 with SMTP id a7-20020a056000188700b0020fe1559db4mr7089389wri.243.1654248754702;
+        Fri, 03 Jun 2022 02:32:34 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id b18-20020adfde12000000b0020d0f111241sm6836596wrm.24.2022.06.03.02.32.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jun 2022 02:32:34 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Fri, 3 Jun 2022 11:32:31 +0200
+To:     Ian Rogers <irogers@google.com>
+Cc:     Vince Weaver <vincent.weaver@maine.edu>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: a few libperf questions
+Message-ID: <YpnVL3ClGTDMxk2K@krava>
+References: <5842751-f5a2-4469-53f2-57ef1362568@maine.edu>
+ <CAP-5=fVeDJJ_HD=AeK0XSpsY52H58ZynRnnEpOB-z478=NxaiA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVeDJJ_HD=AeK0XSpsY52H58ZynRnnEpOB-z478=NxaiA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some functions we use for bpf prologue generation are going to be
-deprecated. This change reworks current code not to use them.
+On Thu, Jun 02, 2022 at 09:25:46AM -0700, Ian Rogers wrote:
+> On Thu, Jun 2, 2022 at 8:38 AM Vince Weaver <vincent.weaver@maine.edu> wrote:
+> >
+> > Hello
+> >
+> > I work on various perf-related tools in the HPC community, most notably
+> > the PAPI performance library.
+> >
+> > Currently PAPI maintains its own independent code for working with
+> > perf_event_open(), but with the advent of libperf I was looking into maybe
+> > linking against libperf to avoid all the code/work duplication.  So I had
+> > a few questions.
+> >
+> >         1. What's the licensing of libperf?  Is it GPLv2?
+> >
+> >                 PAPI is BSD licensed.
+> >                 This is something that actually pushes us to libperf
+> >                 because if I wanted to (for example) implement the new
+> >                 ARM rdpmc code I can't just copy it in to PAPI but
+> >                 would have to re-implement from scratch
+> 
+> I believe that as code in libperf was copied from perf it retains the
+> GPL-2.0-only license. Some new code is "LGPL-2.1 OR BSD-2-Clause",
+> which makes more sense and would align libperf with libbpf. We've
+> talked about rewriting this code in Rust, perhaps when that is done
+> the more permissive license could be used.
 
-We need to replace following functions/struct:
-   bpf_program__set_prep
-   bpf_program__nth_fd
-   struct bpf_prog_prep_result
+yep, all the libperf code was copied from perf, so should have the
+same license
 
-Currently we use bpf_program__set_prep to hook perf callback before
-program is loaded and provide new instructions with the prologue.
+> 
+> >         2. Is it expected that distributions will start shipping
+> >                 libperf?  As part of perf or otherwise?
+> >
+> >                 Telling HPC users they need to dowload an entire
+> >                 kernel tree just to build libperf is seen as a huge
+> >                 obstacle for many, and just including a snapshot
+> >                 of the code into our code tree again starts having
+> >                 licensing issues.
+> 
+> There is a Makefile and an install step, however, I would say libperf
+> is *not* ready to be distributed. There was a lot of cleanup effort to
+> make libbpf 1.0 and similar should happen to libperf. I particularly
 
-We replace this function/ality by taking instructions for specific
-program, attaching prologue to them and load such new ebpf programs
-with prologue using separate bpf_prog_load calls (outside libbpf
-load machinery).
+it's currently packaged as sub package of kernel-tools in fedora:
 
-Before we can take and use program instructions, we need libbpf to
-actually load it. This way we get the final shape of its instructions
-with all relocations and verifier adjustments).
+	[jolsa@krava ~]$ rpm -qi libperf
+	Name        : libperf
+	Version     : 5.17.11
+	Release     : 200.fc35
+	Architecture: x86_64
+	Install Date: Mon 30 May 2022 09:30:12 AM CEST
+	Group       : Unspecified
+	Size        : 109230
+	License     : GPLv2
+	Signature   : RSA/SHA256, Wed 25 May 2022 10:46:33 PM CEST, Key ID db4639719867c58f
+	Source RPM  : kernel-tools-5.17.11-200.fc35.src.rpm
+	Build Date  : Wed 25 May 2022 10:15:25 PM CEST
+	Build Host  : bkernel01.iad2.fedoraproject.org
+	Packager    : Fedora Project
+	Vendor      : Fedora Project
+	URL         : http://www.kernel.org/
+	Bug URL     : https://bugz.fedoraproject.org/kernel-tools
+	Summary     : The perf library from kernel source
+	Description :
+	This package contains the kernel source perf library.
 
-There's one glitch though.. perf kprobe program already assumes
-generated prologue code with proper values in argument registers,
-so loading such program directly will fail in the verifier.
+not sure about other distros
 
-That's where the fallback pre-load handler fits in and prepends
-the initialization code to the program. Once such program is loaded
-we take its instructions, cut off the initialization code and prepend
-the prologue.
+> loathe perf_cpu_map__empty, which isn't doing what it says on the tin.
 
-I know.. sorry ;-)
+nice, that one should be easy to fix ;-)
 
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/bpf-loader.c | 128 ++++++++++++++++++++++++++++++-----
- 1 file changed, 110 insertions(+), 18 deletions(-)
+jirka
 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index e7992a0eb477..2ce5f9684863 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -9,6 +9,7 @@
- #include <linux/bpf.h>
- #include <bpf/libbpf.h>
- #include <bpf/bpf.h>
-+#include <linux/filter.h>
- #include <linux/err.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-@@ -49,6 +50,7 @@ struct bpf_prog_priv {
- 	struct bpf_insn *insns_buf;
- 	int nr_types;
- 	int *type_mapping;
-+	int *proglogue_fds;
- };
- 
- struct bpf_perf_object {
-@@ -56,6 +58,11 @@ struct bpf_perf_object {
- 	struct bpf_object *obj;
- };
- 
-+struct bpf_preproc_result {
-+	struct bpf_insn *new_insn_ptr;
-+	int new_insn_cnt;
-+};
-+
- static LIST_HEAD(bpf_objects_list);
- static struct hashmap *bpf_program_hash;
- static struct hashmap *bpf_map_hash;
-@@ -233,14 +240,31 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
- 	return obj;
- }
- 
-+static void close_prologue_programs(struct bpf_prog_priv *priv)
-+{
-+	struct perf_probe_event *pev;
-+	int i, fd;
-+
-+	if (!priv->need_prologue)
-+		return;
-+	pev = &priv->pev;
-+	for (i = 0; i < pev->ntevs; i++) {
-+		fd = priv->proglogue_fds[i];
-+		if (fd != -1)
-+			close(fd);
-+	}
-+}
-+
- static void
- clear_prog_priv(const struct bpf_program *prog __maybe_unused,
- 		void *_priv)
- {
- 	struct bpf_prog_priv *priv = _priv;
- 
-+	close_prologue_programs(priv);
- 	cleanup_perf_probe_events(&priv->pev, 1);
- 	zfree(&priv->insns_buf);
-+	zfree(&priv->proglogue_fds);
- 	zfree(&priv->type_mapping);
- 	zfree(&priv->sys_name);
- 	zfree(&priv->evt_name);
-@@ -603,8 +627,8 @@ static int bpf__prepare_probe(void)
- 
- static int
- preproc_gen_prologue(struct bpf_program *prog, int n,
--		     struct bpf_insn *orig_insns, int orig_insns_cnt,
--		     struct bpf_prog_prep_result *res)
-+		     const struct bpf_insn *orig_insns, int orig_insns_cnt,
-+		     struct bpf_preproc_result *res)
- {
- 	struct bpf_prog_priv *priv = program_priv(prog);
- 	struct probe_trace_event *tev;
-@@ -652,7 +676,6 @@ preproc_gen_prologue(struct bpf_program *prog, int n,
- 
- 	res->new_insn_ptr = buf;
- 	res->new_insn_cnt = prologue_cnt + orig_insns_cnt;
--	res->pfd = NULL;
- 	return 0;
- 
- errout:
-@@ -760,7 +783,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 	struct bpf_prog_priv *priv = program_priv(prog);
- 	struct perf_probe_event *pev;
- 	bool need_prologue = false;
--	int err, i;
-+	int i;
- 
- 	if (IS_ERR_OR_NULL(priv)) {
- 		pr_debug("Internal error when hook preprocessor\n");
-@@ -798,6 +821,13 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 		return -ENOMEM;
- 	}
- 
-+	priv->proglogue_fds = malloc(sizeof(int) * pev->ntevs);
-+	if (!priv->proglogue_fds) {
-+		pr_debug("Not enough memory: alloc prologue fds failed\n");
-+		return -ENOMEM;
-+	}
-+	memset(priv->proglogue_fds, -1, sizeof(int) * pev->ntevs);
-+
- 	priv->type_mapping = malloc(sizeof(int) * pev->ntevs);
- 	if (!priv->type_mapping) {
- 		pr_debug("Not enough memory: alloc type_mapping failed\n");
-@@ -806,13 +836,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
- 	memset(priv->type_mapping, -1,
- 	       sizeof(int) * pev->ntevs);
- 
--	err = map_prologue(pev, priv->type_mapping, &priv->nr_types);
--	if (err)
--		return err;
--
--	err = bpf_program__set_prep(prog, priv->nr_types,
--				    preproc_gen_prologue);
--	return err;
-+	return map_prologue(pev, priv->type_mapping, &priv->nr_types);
- }
- 
- int bpf__probe(struct bpf_object *obj)
-@@ -919,6 +943,77 @@ int bpf__unprobe(struct bpf_object *obj)
- 	return ret;
- }
- 
-+static int bpf_object__load_prologue(struct bpf_object *obj)
-+{
-+	int init_cnt = ARRAY_SIZE(prologue_init_insn);
-+	const struct bpf_insn *orig_insns;
-+	struct bpf_preproc_result res;
-+	struct perf_probe_event *pev;
-+	struct bpf_program *prog;
-+	int orig_insns_cnt;
-+
-+	bpf_object__for_each_program(prog, obj) {
-+		struct bpf_prog_priv *priv = program_priv(prog);
-+		int err, i, fd;
-+
-+		if (IS_ERR_OR_NULL(priv)) {
-+			pr_debug("bpf: failed to get private field\n");
-+			return -BPF_LOADER_ERRNO__INTERNAL;
-+		}
-+
-+		if (!priv->need_prologue)
-+			continue;
-+
-+		/*
-+		 * For each program that needs prologue we do following:
-+		 *
-+		 * - take its current instructions and use them
-+		 *   to generate the new code with prologue
-+		 * - load new instructions with bpf_prog_load
-+		 *   and keep the fd in proglogue_fds
-+		 * - new fd will be used in bpf__foreach_event
-+		 *   to connect this program with perf evsel
-+		 */
-+		orig_insns = bpf_program__insns(prog);
-+		orig_insns_cnt = bpf_program__insn_cnt(prog);
-+
-+		pev = &priv->pev;
-+		for (i = 0; i < pev->ntevs; i++) {
-+			/*
-+			 * Skipping artificall prologue_init_insn instructions
-+			 * (init_cnt), so the prologue can be generated instead
-+			 * of them.
-+			 */
-+			err = preproc_gen_prologue(prog, i,
-+						   orig_insns + init_cnt,
-+						   orig_insns_cnt - init_cnt,
-+						   &res);
-+			if (err)
-+				return err;
-+
-+			fd = bpf_prog_load(bpf_program__get_type(prog),
-+					   bpf_program__name(prog), "GPL",
-+					   res.new_insn_ptr,
-+					   res.new_insn_cnt, NULL);
-+			if (fd < 0) {
-+				char bf[128];
-+
-+				libbpf_strerror(-errno, bf, sizeof(bf));
-+				pr_debug("bpf: load objects with prologue failed: err=%d: (%s)\n",
-+					 -errno, bf);
-+				return -errno;
-+			}
-+			priv->proglogue_fds[i] = fd;
-+		}
-+		/*
-+		 * We no longer need the original program,
-+		 * we can unload it.
-+		 */
-+		bpf_program__unload(prog);
-+	}
-+	return 0;
-+}
-+
- int bpf__load(struct bpf_object *obj)
- {
- 	int err;
-@@ -930,7 +1025,7 @@ int bpf__load(struct bpf_object *obj)
- 		pr_debug("bpf: load objects failed: err=%d: (%s)\n", err, bf);
- 		return err;
- 	}
--	return 0;
-+	return bpf_object__load_prologue(obj);
- }
- 
- int bpf__foreach_event(struct bpf_object *obj,
-@@ -965,13 +1060,10 @@ int bpf__foreach_event(struct bpf_object *obj,
- 		for (i = 0; i < pev->ntevs; i++) {
- 			tev = &pev->tevs[i];
- 
--			if (priv->need_prologue) {
--				int type = priv->type_mapping[i];
--
--				fd = bpf_program__nth_fd(prog, type);
--			} else {
-+			if (priv->need_prologue)
-+				fd = priv->proglogue_fds[i];
-+			else
- 				fd = bpf_program__fd(prog);
--			}
- 
- 			if (fd < 0) {
- 				pr_debug("bpf: failed to get file descriptor\n");
--- 
-2.35.3
+> 
+> >         3. Is libperf planned to be backwards compatible with old kernels,
+> >                 or will it be tied to whatever kernel it is shipped with?
+> >                 Will it have ABI-stable releases?
+> >
+> >                 Sort of like with perf, I know only supporting the most
+> >                 recent kernel makes life easier for the kernel developers
+> >                 but it does make for a library versioning nightmare
+> >                 especially if trying to support people on older
+> >                 distro releases.
+> 
+> There is a myth that comes from Debian that perf only supports the
+> running kernel. This is wrong and means that bug fixes, improvements,
+> etc. are missed out on. This thread discusses it:
+> https://lore.kernel.org/linux-perf-users/CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com/
+> It would be hugely impactful if someone could fix this, as a lot of
+> other distributions follow Debian.
+> 
+> Given perf doesn't have this problem and it is using libperf, I don't
+> think libperf has the problem.
 
+yes, same rules as for perf.. it should be backward compatible
+
+jirka
+
+> 
+> > I'm going to try to see if I can get a libperf backend for PAPI going and
+> > maybe try to get some of the other HPC parties involved (they tend to not
+> > want to deal with kernel development directly for some reason) but I'm not
+> > sure if they're going to like how closely bound libperf is to
+> > the kernel tree.
+> 
+> Sounds good. The code is in the kernel tree but I'm not sure it is
+> "bound" to it.
+> 
+> Thanks,
+> Ian
+> 
+> > Vince Weaver
+> > vincent.weaver@maine.edu
