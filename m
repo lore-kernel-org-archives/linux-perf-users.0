@@ -2,234 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA59DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 14:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C50C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 18:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244726AbiFCODj (ORCPT
+        id S1347695AbiFCSrN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Jun 2022 10:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41158 "EHLO
+        Fri, 3 Jun 2022 14:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235832AbiFCODh (ORCPT
+        with ESMTP id S1347884AbiFCSrK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Jun 2022 10:03:37 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928EC2C671;
-        Fri,  3 Jun 2022 07:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654265014; x=1685801014;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=sjdGyUtJuDoTjTTLcueGlA/roqxqj9YbEIoz2xAYeLE=;
-  b=NAPFas0vu9BMZcfEwMjAlSQKE3xJbRstk+0l7VlbmB7h899i+pkU8+ix
-   WT37SpV6XVPrv22rs4W48J1HZF+5w0oX99Aoa0QNFQXQgFxdyFFhv4l7D
-   /gk77HhfQEBDQxDRyPwYJ45WR8LtV+d7biGCbtPNCmT8ROKVDYrt5EXNO
-   JAbeL2b80GzkC1rFHZYc2YGMXhpIQn5fwSxVqIWeigWcUEImfY0aVzlTC
-   dHSOmr9pkE88/Tj0AIQzm9MtndPJKizyurrShmUimGSS/AC/+BM1U1tNj
-   Se7UM5k5luQ/cz5wSTMpAnC51HSSHeUQVAuFDPQAyQu2Y/VCScXF3l8RK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10366"; a="336916961"
-X-IronPort-AV: E=Sophos;i="5.91,274,1647327600"; 
-   d="scan'208";a="336916961"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2022 07:03:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,274,1647327600"; 
-   d="scan'208";a="757486453"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2022 07:03:33 -0700
-Received: from [10.252.214.200] (kliang2-MOBL.ccr.corp.intel.com [10.252.214.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 787D75808E0;
-        Fri,  3 Jun 2022 07:03:32 -0700 (PDT)
-Message-ID: <02135ffb-c19c-6c8c-4900-a16a1c40a746@linux.intel.com>
-Date:   Fri, 3 Jun 2022 10:03:31 -0400
+        Fri, 3 Jun 2022 14:47:10 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25C0E11833;
+        Fri,  3 Jun 2022 11:47:06 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id a17so7009730lfs.11;
+        Fri, 03 Jun 2022 11:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+4u6kVDW4HmyPiFNJKwOa+wDt+d0qY4cVuOS5P9jlgU=;
+        b=G0GlbfMDSx4cJ+0z+gggAxeiX7yEYlhYeUDBz1c2wHPIgvmNu8sl6WbjsJUaTbLp6I
+         cIkWUwbt1eiLVfYPdMXkj7L57tdUWcmQMaZdlk3GXoArbIkRW6/0GMrmNpx+fvZA44PJ
+         prL2tTi6sEviLrAueBoUZu6+MUM5dmDxRP/LtXbYlgXeF6E/Jq39vGE4+oOyIsZCf/OF
+         HnNJHt2t+SK/T+vT3a36ih8qvFtNzxtbJYwCSg5THzMZbD9FKO/EkPUwCMsakVmwcc4X
+         3edUBUITB8i6ovdjzXpwu3jxrNPaMfw5xoG/+ibSvavS5yYcM/QiCZgXmoNQ7EvVZzMW
+         Ezdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+4u6kVDW4HmyPiFNJKwOa+wDt+d0qY4cVuOS5P9jlgU=;
+        b=P38nUyiUigoLEUNJEBcWu46zGLwvR/qkK0/uFlI2A1Eeq1G+SV9MUvoW5XbguGch2N
+         qWxYyw9lLcoD+fmo96LSvX37Hp503dJ+7pSpIGnkTn39/kT74tCHlfJe3Lu2aeqHqRVD
+         +ZvufDkQRGkGVbLds9/Z24+ts7o6o7aMNt0z238YDCu5BsfndiQ2q+EcgVhMWU2opKGv
+         3rG2jotKWa5a1F73w0LaYyJa2OouLgMEGgrBgphgn0L/SYPQ7YHVswVGsCgRE8g37rTr
+         VM2+gVsdr2+HUeWjnH5taZJ7LWrm9Jj1+qDVibSQVySCBftdi/77+5pqbocISOnocYxr
+         JVVg==
+X-Gm-Message-State: AOAM533YxotCbI1suMkwa4JMkKqPxqPQAHY/BMtwf2O8AMHY5/4UatSx
+        tOMPYeMs11sKBET+xcZxVvCACqVmSVemEYa23NY=
+X-Google-Smtp-Source: ABdhPJxV9xeU45IgiSilfvyQA0Z99BTs9yjgeqcQ/qEH2sbr7iJatXqLpPyE4oq/tWsVOvAVVYgJq15Fwt0Thif9JmA=
+X-Received: by 2002:a05:6512:1398:b0:448:bda0:99f2 with SMTP id
+ p24-20020a056512139800b00448bda099f2mr54449876lfa.681.1654282023944; Fri, 03
+ Jun 2022 11:47:03 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [BUG REPORT] perf tools: x86_64: weight column displays odd
- memory latency data
-Content-Language: en-US
-To:     Tyson Thomas <tyson.thomas@sydney.edu.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-References: <SYBPR01MB6620E2316BDF9CE29178CB32DBD59@SYBPR01MB6620.ausprd01.prod.outlook.com>
- <fd28e6fb-cf4c-a065-6138-4c581e871341@linux.intel.com>
- <MEYPR01MB66152548BEC4D0113BBBD7A5DBDF9@MEYPR01MB6615.ausprd01.prod.outlook.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <MEYPR01MB66152548BEC4D0113BBBD7A5DBDF9@MEYPR01MB6615.ausprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20220603092110.1294855-1-jolsa@kernel.org> <20220603092110.1294855-3-jolsa@kernel.org>
+In-Reply-To: <20220603092110.1294855-3-jolsa@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 3 Jun 2022 11:46:52 -0700
+Message-ID: <CAEf4BzYB44Ht20mF2RtYezaJU_TfN+j8nvZNbd82uvN=TmCXAA@mail.gmail.com>
+Subject: Re: [PATCHv3 bpf-next 2/2] perf tools: Rework prologue generation code
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Fri, Jun 3, 2022 at 2:21 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Some functions we use for bpf prologue generation are going to be
+> deprecated. This change reworks current code not to use them.
+>
+> We need to replace following functions/struct:
+>    bpf_program__set_prep
+>    bpf_program__nth_fd
+>    struct bpf_prog_prep_result
+>
+> Currently we use bpf_program__set_prep to hook perf callback before
+> program is loaded and provide new instructions with the prologue.
+>
+> We replace this function/ality by taking instructions for specific
+> program, attaching prologue to them and load such new ebpf programs
+> with prologue using separate bpf_prog_load calls (outside libbpf
+> load machinery).
+>
+> Before we can take and use program instructions, we need libbpf to
+> actually load it. This way we get the final shape of its instructions
+> with all relocations and verifier adjustments).
+>
+> There's one glitch though.. perf kprobe program already assumes
+> generated prologue code with proper values in argument registers,
+> so loading such program directly will fail in the verifier.
+>
+> That's where the fallback pre-load handler fits in and prepends
+> the initialization code to the program. Once such program is loaded
+> we take its instructions, cut off the initialization code and prepend
+> the prologue.
+>
+> I know.. sorry ;-)
+>
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/bpf-loader.c | 128 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 110 insertions(+), 18 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> index e7992a0eb477..2ce5f9684863 100644
+> --- a/tools/perf/util/bpf-loader.c
+> +++ b/tools/perf/util/bpf-loader.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/bpf.h>
+>  #include <bpf/libbpf.h>
+>  #include <bpf/bpf.h>
+> +#include <linux/filter.h>
+>  #include <linux/err.h>
+>  #include <linux/kernel.h>
+>  #include <linux/string.h>
+> @@ -49,6 +50,7 @@ struct bpf_prog_priv {
+>         struct bpf_insn *insns_buf;
+>         int nr_types;
+>         int *type_mapping;
+> +       int *proglogue_fds;
 
+massively copy/pasted typo? prologue_fds?
 
-On 6/1/2022 1:03 AM, Tyson Thomas wrote:
-> Hi Kan,
-> 
-> Thanks for the reply.
-> 
-> The exact command used was: perf mem report
-> 
-> The columns are in order: Overhead, Samples, Local Weight, Memory Access.
-> The results I sent before are: Overhead, Local Weight and Memory.
-> 
-> So, to update the table from before, each tuple has a sample of 1, so it is:
-> 
->     0.02%,1 ,62515 ,L1 or L1 hit
->     0.02%,1 ,54048 ,L1 or L1 hit
->     0.02%,1 ,52206 ,L1 or L1 hit
->     0.02%,1 ,49831 ,L1 or L1 hit
->     0.02%,1 ,49056 ,Local RAM or RAM hit
->     0.01%,1 ,40666 ,LFB or LFB hit
->     0.01%,1 ,38080 ,L1 or L1 hit
->     0.01%,1 ,36772 ,L1 or L1 hit
-> 
-> So, the weights are absurdly high here.
-> 
-> I'll give a reply on perf report -D shortly.
-> 
-> Regards,
-> Tyson
-> 
-> 
-> 
-> From: Liang, Kan <kan.liang@linux.intel.com>
-> Sent: Wednesday, 25 May 2022 12:58 AM
-> To: Tyson Thomas <tyson.thomas@sydney.edu.au>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; linux-perf-users@vger.kernel.org <linux-perf-users@vger.kernel.org>
-> Subject: Re: [BUG REPORT] perf tools: x86_64: weight column displays odd memory latency data
->   
-> 
-> 
-> On 5/22/2022 6:14 PM, Tyson Thomas wrote:
->> Hi Kan, Linux-Perf Team
->>
->> I have observed some odd behaviour within perf when using perf-mem. Specifically the reported latency under the weight column appears to be unreasonably high.
->>
->> Here is a given sample from a recent test, I find that some of the  latencies are close to an unsigned short and I cannot seem to be understand why that would be outside of it being an issue with the perf events.
->>
->> This can be replicated using a NAS benchmark, specifically cg.D.
+Other than that looks good to me, but we'll need Arnaldo's ack before
+merging into bpf-next.
 
+>  };
+>
+>  struct bpf_perf_object {
+> @@ -56,6 +58,11 @@ struct bpf_perf_object {
+>         struct bpf_object *obj;
+>  };
+>
 
-I tried the cg.D benchmark on my machine, but I cannot reproduce the 
-issue. The weight looks reasonable.
-
-$ perf mem record ./bin/cg.D.x
-
-
-  NAS Parallel Benchmarks (NPB3.4-OMP) - CG Benchmark
-
-  Size:     1500000
-  Iterations:                    100
-  Number of available threads:     4
-
-^C[ perf record: Woken up 118 times to write data ]
-[ perf record: Captured and wrote 30.108 MB perf.data (438307 samples) ]
-
-$ perf mem report --stdio
-# To display the perf.data header info, please use 
---header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 209K of event 'cpu/mem-loads,ldlat=30/Pu'
-# Total weight : 56835744
-# Sort order   : 
-local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,p_stage_cyc
-#
-# Overhead       Samples  Local Weight  Memory access             Symbol 
-                            Shared Object         Data Symbol >
-# ........  ............  ............  ........................ 
-................................  ....................  ............>
-#
-      0.01%            66  53            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.01%            53  58            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.01%            59  52            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.00%            53  53            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.00%            43  65            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.00%            50  55            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.00%            51  50            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.00%            46  55            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.00%            49  51            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2496          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%            48  52            L1 or L1 hit              [.] 
-randlc_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2441          Local RAM or RAM hit      [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2420          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2415          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2403          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2399          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2390          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2385          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2385          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2378          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-      0.00%             1  2358          LFB or LFB hit            [.] 
-sparse_                       cg.D.x                [.] 0x00007f>
-
-Thanks,
-Kan
-
->>
->> I observe the following results in perf mem report (just getting the top 10 results)
->>
-> 
-> 
-> Could you please show me the exact perf command used?
-> 
-> With my perf mem report,
-> The first column is the Overhead.
-> The second column is the number of samples.
-> The third column is the weight.
-> The fourth is the Memory access.
-> 
-> Seems like the weight is missed?
-> 
-> Could you please check the perf report -D?
-> It will dump the weight for each Sample.
-> Does it look correct?
-> 
-> Thanks,
-> Kan
-> 
->>     0.02% ,62515 ,L1 or L1 hit
->>     0.02% ,54048 ,L1 or L1 hit
->>     0.02% ,52206 ,L1 or L1 hit
->>     0.02% ,49831 ,L1 or L1 hit
->>     0.02% ,49056 ,Local RAM or RAM hit
->>     0.01% ,40666 ,LFB or LFB hit
->>     0.01% ,38080 ,L1 or L1 hit
->>     0.01% ,36772 ,L1 or L1 hit
->>     0.01% ,36729 ,LFB or LFB hit
->>     0.01% ,27101 ,LFB or LFB hit
->>
->> Is it possible for someone to shed some light on this or am I misunderstanding how the weight column is used here?
->> This appears to have been an issue on 5.4, 5.10 and 5.15. I am looking into seeing if it is still present in 5.17 and 5.18.
->>
->> I've also tried this on different Intel CPUs such as Intel Xeon 6230, i5-1135G7, Intel Xeon 6330
->>
->> Any insight or help would be appreciated,
->> Tyson
+[...]
