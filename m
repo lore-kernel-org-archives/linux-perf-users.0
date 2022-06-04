@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDE3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A198C43334
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbiFDE2q (ORCPT
+        id S1350441AbiFDE2w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Jun 2022 00:28:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56988 "EHLO
+        Sat, 4 Jun 2022 00:28:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbiFDE2o (ORCPT
+        with ESMTP id S1350435AbiFDE2t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Jun 2022 00:28:44 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94E3835DED
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:28:42 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id mh16-20020a17090b4ad000b001e8313301f1so2154922pjb.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:28:42 -0700 (PDT)
+        Sat, 4 Jun 2022 00:28:49 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE1C35DEB
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:28:48 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id h192so1888277pgc.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:28:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yn5/ZDP8Cojank8hFfjZKa0tb2ssK51DrACpaq53qsA=;
-        b=pmiYleJAyY4Pmhe9IA+istalMQQ2fNuvuI4ulBeYvwEcfBwtO0Z4SHYElxtwDwr87Z
-         wRAoWnYOjED4BtdGz0S1GRPVaXEW7wyY7nopMyi7LGY9TnS4u74WaSLnb1/ojgjxEk0k
-         Z4EVoBe4CpcsBs3P32Qc3sp/80vs9wbz3Pb4s+BK+w5jMb4OTWtrAXRfX9zMs1D5bJeL
-         G/9vj0yOXcEBtga+JtP/gnKCOFPO0iO2qNrFrioBD/IFJj5+lXnthTu+Iq4kJUQ2syge
-         yWiu1/0yswEhGPM/E8zyJk1ZbwVelL1FoWkBgJ6ddpfZ8AtfJRVtAvR2QSsnOKiwqY6N
-         4gIQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Wc1YiV9uyUA6hUWTfhvQxLsnBAF4WMjPE/wOPDue8vY=;
+        b=hlvAt+NKFQ93oLQE+Vc7CC1SciVNNaEIsz4OTmUYSw53+wN/88LcPvewlmeJcjqXYy
+         xGnEzwNO8wU1Snp1WP1B9f9NwHHICuzVLy/kMdZy+bHh8L05GvVO01KGtZUYt33hvH+o
+         GmMl0wyAXy5iFBMecOREOxexJjO7lDDILDeO7QsHanGXKIeCGZ0kEaftIpt8zpBcw8Ja
+         vU5ng6WEB2+UfN05oKcuQ+z7AAMC/U3C4hCbrMyVe83VuLrsQVjIB4se1DubesMRInFm
+         DIHSLpHgNLriaJfUci9gLg8jmUAQG+3T+8LohzfTvK0lJT6QAPO9iKsuQnN1p3rirA4+
+         g0sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yn5/ZDP8Cojank8hFfjZKa0tb2ssK51DrACpaq53qsA=;
-        b=wBmslEaYv2yr1TS7OxKT6JSlBMLbzT1en8LEAcCDBnbyH3srhUotu9CZJgfFY2W12n
-         6s8crmy3kozJy97gI2+AIvtQqAtMWtIgVCyxrZg8l/g9pHOJo5hKo8eqX5ghI1gB6u0s
-         rfz813VbjdIbdEqd+dASwWLAg1VhxtT135hsumyCgUmO1PjbqnMUzVXLbS4GYQYj2O8x
-         WG6KokGqsK7Lw6eJcAjKwfZ7mkSHjD7B/ZsnrpUabVHv+q7OfreCUfssOjwju5qDfbHY
-         WBsQ8QPevoNg1iCEyEKr0HtK24L7HSvY90yJCckvJ4cG1bYrm4v1GZVIIbx3ceBu5R2Z
-         Twog==
-X-Gm-Message-State: AOAM532ier7NsMpz8mzvUVq1+fSWvvKtGffGaz888NcXkkVZk+N4GN77
-        Ys51f1XjYR69DDKo5FAEpDVc1w==
-X-Google-Smtp-Source: ABdhPJwxyyu+5EskOg5GTwWkuWqJPxuVx7mgJG0Eh2CnxWlooMI7n0I1FYZXm4li0cV/Bxkkv2RUrA==
-X-Received: by 2002:a17:903:290:b0:15c:1c87:e66c with SMTP id j16-20020a170903029000b0015c1c87e66cmr13300666plr.61.1654316921960;
-        Fri, 03 Jun 2022 21:28:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Wc1YiV9uyUA6hUWTfhvQxLsnBAF4WMjPE/wOPDue8vY=;
+        b=ccOenSbUcW08QcwFH8plXQSswuT3jczBWkJaLbPSr96RbzE8dzZRbaCT7NzrLI5Tuk
+         4gS885IwVNgCdkNm5gkOH0e4l2P0TW2dPUugdi/y9/1+ahFMhxt7x2sfxKt2xFtXBvd8
+         a0B2002M4vqp8zrMu1Af7Y5Z4s4JwrPQwVK5Aws+ZqXwl2BE5d/JDpPMBNpMtzNxBaAu
+         kDMaE6QsrIkWPtkrPwfzBfzjI2GOEIjHa8kiAHlLwv+d4dRwaRTI6w+UwL/7rMnkANNr
+         j5m2O7bw1OKGrr3xTmlvcZU0gWCSiGSzUb/iKl63Gi2t/Ip8yZ/lrmvnLE+F1QlVVH1L
+         5uqw==
+X-Gm-Message-State: AOAM530+R6eHBI6zSnGCGPkkBQTJubKiLzhSWJJiXBnWKn3ddaqku3F4
+        7cZGGi9JOFRc6cZMRkm1wWIlvg==
+X-Google-Smtp-Source: ABdhPJyn3cqkMg0lACTzH2D0FR58K/46kMHeeMtnsgDgo1oVmKvzkM9jv8FNzFKJqNucvHfJJilpVQ==
+X-Received: by 2002:a05:6a00:21c8:b0:4c4:4bd:dc17 with SMTP id t8-20020a056a0021c800b004c404bddc17mr13233148pfj.57.1654316927721;
+        Fri, 03 Jun 2022 21:28:47 -0700 (PDT)
 Received: from leo-build-box.lan (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
-        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.28.36
+        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.28.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 21:28:41 -0700 (PDT)
+        Fri, 03 Jun 2022 21:28:47 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -65,94 +65,49 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adam Li <adam.li@amperecomputing.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 00/17] perf c2c: Support data source and display for Arm64
-Date:   Sat,  4 Jun 2022 12:28:03 +0800
-Message-Id: <20220604042820.2270916-1-leo.yan@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v5 01/17] perf: Add SNOOP_PEER flag to perf mem data struct
+Date:   Sat,  4 Jun 2022 12:28:04 +0800
+Message-Id: <20220604042820.2270916-2-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220604042820.2270916-1-leo.yan@linaro.org>
+References: <20220604042820.2270916-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
-us to detect cache line contention and transfers.
+From: Ali Saidi <alisaidi@amazon.com>
 
-This patch set includes Ali's patch set v9 "perf: arm-spe: Decode SPE
-source and use for perf c2c" [1] and rebased on the latest perf core
-banch with latest commit 1bcca2b1bd67 ("perf vendor events intel:
-Update metrics for Alderlake").
+Add a flag to the perf mem data struct to signal that a request caused a
+cache-to-cache transfer of a line from a peer of the requestor and
+wasn't sourced from a lower cache level.  The line being moved from one
+peer cache to another has latency and performance implications. On Arm64
+Neoverse systems the data source can indicate a cache-to-cache transfer
+but not if the line is dirty or clean, so instead of overloading HITM
+define a new flag that indicates this type of transfer.
 
-Patches 01-05 comes from Ali's patch set to support data source for Arm
-SPE for neoverse cores.
+Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+---
+ include/uapi/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patches 06-17 are patches from patch set v4 for support perf c2c peer
-display for Arm64 [2].
-
-This patch set has been verified for both x86 perf memory events and Arm
-SPE events.
-
-[1] https://lore.kernel.org/lkml/20220517020326.18580-1-alisaidi@amazon.com/
-[2] https://lore.kernel.org/lkml/20220530114036.3225544-1-leo.yan@linaro.org/
-
-Changes from v4:
-* Included Ali's patch set for adding data source in Arm SPE samples;
-* Added Ian's ACK and Ali's review and test tags;
-* Update document for the default peer dispaly for Arm64 (Ali).
-
-Changes from v3:
-* Changed to display remote and local peer accesses (Joe);
-* Fixed the usage info for display types (Joe);
-* Do not display HITM dimensions when use 'peer' display, and HITM
-  display doesn't show any 'peer' dimensions (James);
-* Split to smaller patches for adding dimensions of peer operations;
-* Updated documentation to reflect the latest GUI and stdio.
-
-Changes from v2:
-* Updated patch 04 to account metrics for both cache level and ld_peer
-  for PEER flag;
-* Updated document for metric 'rmt_hit' which is accounted for all
-  remote accesses (include remote DRAM and any upward caches).
-
-Changes from v1:
-* Updated patches 01, 02 and 03 to support 'N/A' metrics for store
-  operations, so can align with the patch set [1] for store samples.
-
-
-Ali Saidi (3):
-  perf: Add SNOOP_PEER flag to perf mem data struct
-  perf tools: sync addition of PERF_MEM_SNOOPX_PEER
-  perf arm-spe: Use SPE data source for neoverse cores
-
-Leo Yan (14):
-  perf mem: Print snoop peer flag
-  perf arm-spe: Don't set data source if it's not a memory operation
-  perf mem: Add statistics for peer snooping
-  perf c2c: Output statistics for peer snooping
-  perf c2c: Add dimensions for peer load operations
-  perf c2c: Add dimensions of peer metrics for cache line view
-  perf c2c: Add mean dimensions for peer operations
-  perf c2c: Use explicit names for display macros
-  perf c2c: Rename dimension from 'percent_hitm' to
-    'percent_costly_snoop'
-  perf c2c: Refactor node header
-  perf c2c: Refactor display string
-  perf c2c: Sort on peer snooping for load operations
-  perf c2c: Use 'peer' as default display for Arm64
-  perf c2c: Update documentation for new display option 'peer'
-
- include/uapi/linux/perf_event.h               |   2 +-
- tools/include/uapi/linux/perf_event.h         |   2 +-
- tools/perf/Documentation/perf-c2c.txt         |  31 +-
- tools/perf/builtin-c2c.c                      | 454 ++++++++++++++----
- .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 +
- tools/perf/util/arm-spe.c                     | 140 +++++-
- tools/perf/util/mem-events.c                  |  46 +-
- tools/perf/util/mem-events.h                  |   3 +
- 9 files changed, 550 insertions(+), 141 deletions(-)
-
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index d37629dbad72..7b88bfd097dc 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1310,7 +1310,7 @@ union perf_mem_data_src {
+ #define PERF_MEM_SNOOP_SHIFT	19
+ 
+ #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+-/* 1 free */
++#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
+ #define PERF_MEM_SNOOPX_SHIFT  38
+ 
+ /* locked instruction */
 -- 
 2.25.1
 
