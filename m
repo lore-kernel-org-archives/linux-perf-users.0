@@ -2,362 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDF3CCA480
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Jun 2022 23:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A29C43334
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 01:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349720AbiFCX5L (ORCPT
+        id S232106AbiFDBkV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Jun 2022 19:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49402 "EHLO
+        Fri, 3 Jun 2022 21:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348197AbiFCX5G (ORCPT
+        with ESMTP id S232081AbiFDBkU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Jun 2022 19:57:06 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAFAA3150E;
-        Fri,  3 Jun 2022 16:57:03 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id n13-20020a17090a394d00b001e30a60f82dso13219499pjf.5;
-        Fri, 03 Jun 2022 16:57:03 -0700 (PDT)
+        Fri, 3 Jun 2022 21:40:20 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FAB4205CF
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 18:40:16 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id d12-20020a17090abf8c00b001e2eb431ce4so8338874pjs.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 18:40:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3hkbhX/6MOkK3rip8U7mxVX59zVmn2+YKFP5KrECSL0=;
-        b=eM30wWR/RxbPLANC0lJTWX/saDl5LBZHE2RN7FZGbxg9AS5eWhVE7iI6qKTFXiv/7x
-         Yc8odZiMmb43ODXTaGnK+5vhIOUrzCZoCt/T0Qt14NxNyj3qZ3IF9QABdfgYG/gJdiz2
-         Ly1z4Ussid07mCnN9DslynXWPQbdKUuh/spaC2QCEDzfwliaN2H1AcleOq5VX8QC1cmL
-         l5nd01XzObXqkMhj0xtdjr6KTZyz8UV5vOgHq5Ba78+2zl1o3YwLLktHziyOKeyj1b2u
-         vkiAQJEJGCqyb7ixXvRM4ZNWYwtuhXboQ6KTL9MO2d8pSKWxopyTUvdV1/Img8BEBq4U
-         3aXQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AivyL9V8Uc1O7GX3xn/Ov3A+U/0bQ+9dt+dRzOycXs0=;
+        b=L7+Bs1SPe4yG6zfNwb1n+93MU6mDc5f33dScy1wKlOYkBfGrmGKnBWVMYJmoUqeAgR
+         BM2WNlFvDNQaMEkPdisL8/mnliuVV/aRYCwNIWgpMF0B3O4q+NH2i+zMbFhbqF/jm7YH
+         S7AgH0nplAHARjqaUOWlS8bqqa58L8NmiqzdgwgFaOtUSMwo6xwxMm4aNVKw4OMoCX2z
+         uZkWp/HlUwtmvbHRtlj0CTS5kkJCMyY2jwgZp61drNAt8HYWlCvIwj5Y2iyhki/+FwGw
+         7sYN/aNRUzKY8erhvTgECbENBNnj2Bv9qHgJgB4WyD8f50jOmRjBQ0Tro2cel29bQ5JR
+         f8bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=3hkbhX/6MOkK3rip8U7mxVX59zVmn2+YKFP5KrECSL0=;
-        b=HVDYQGREkfg8QtioIyPGNRUO0TsC0PNwj3chhaQgM/SOKsvtdsMcPn2Xdhz1ANUNBz
-         1MHgMMif4It0Eh3H7pkRCA67u5a21b+/nEfQChd95x+rauDwZBxaKfwibo+FfNe7/krK
-         3oH8yhdhxm+vV3/1bemQmZkoxCgchYSpasSqFEw+h4EqJXmBmkTsGPpbsC5Xs2Yt1u1t
-         rnOAs4wyf2QK8cIeX7w/nTvJ4QBXrkc5iZsWX0c2PtLdWjA+TTwdSCDPS+FlRhmFxAXv
-         180t065LwC6hqO7ltLuqSZCbJBPbR5SEavVJ59PdnVM0zodgAOhIeizUylkX2+Ncq1sQ
-         hv8A==
-X-Gm-Message-State: AOAM532NBdAFZjNUyG3+xomTbFjK9C8a9vpMhc72eFLPcO+LVOU3v9l0
-        aSJGMLhZaIzqKZ18i3V5/ds=
-X-Google-Smtp-Source: ABdhPJwsOXjLNHbOWCfDICFDMkojvGspfhK0w01uX5/0A3SlNJ9Kq3xHdj6X1MiGSH7YjpeOY7sdiw==
-X-Received: by 2002:a17:90a:5291:b0:1e0:cf4a:b6fa with SMTP id w17-20020a17090a529100b001e0cf4ab6famr13402024pjh.197.1654300623464;
-        Fri, 03 Jun 2022 16:57:03 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:cb0:e599:3567:7c60:5f5a])
-        by smtp.gmail.com with ESMTPSA id a37-20020a631a65000000b003c14af50626sm5868289pgm.62.2022.06.03.16.57.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AivyL9V8Uc1O7GX3xn/Ov3A+U/0bQ+9dt+dRzOycXs0=;
+        b=ckaCBWWIzL4c0uZ0kLzsY+F7PAS5yJ6vbsokWlf/rBQPrc6JbCD7QG/k+dPuyOo5dJ
+         eDkNgi7X/fPwywVYfQ8H2mwQO8G2MMGhU5haDF5rYWDv/Wa/28QfhGhqghbsT4bLK6tV
+         Bz/Nc4zBBaSGdyjV5Xbq0ScOk7PHElr582fxuokecupO391v3cYoqj+/IobamCtUjNuq
+         GdHTJAzBqWNI/qwOpRlYPM+zo6xKeqZMZJ/ABHBtFfQFsQv/QSSawD4A1M7NnyK0zC9p
+         +9ipyZeX1Kb9zWnJ735nn7crTtj48fRiXUOtYmO9oHXPETkHFX70vWq6JlQ+PXbFHjPl
+         fabQ==
+X-Gm-Message-State: AOAM533dRnXxrMy+ju5onw/zwA4dkfOipy70vkk/NbHznkqHFvMFzeZX
+        iTInm+/VtIBHoH54GKvuBz+rug==
+X-Google-Smtp-Source: ABdhPJwlvd7X8WnoraYcDZ3PZxnuu4vdj0qqJFZznpL4RKod2iBAB6fs58L3ry69UWUaOG/O0NMXbw==
+X-Received: by 2002:a17:902:cf06:b0:161:53b6:474d with SMTP id i6-20020a170902cf0600b0016153b6474dmr12729126plg.63.1654306814377;
+        Fri, 03 Jun 2022 18:40:14 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
+        by smtp.gmail.com with ESMTPSA id h4-20020a62b404000000b0050dc76281bcsm6048270pfn.150.2022.06.03.18.40.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 16:57:03 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH 5/5] perf lock: Look up callchain for the contended locks
-Date:   Fri,  3 Jun 2022 16:56:56 -0700
-Message-Id: <20220603235656.715800-6-namhyung@kernel.org>
-X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
-In-Reply-To: <20220603235656.715800-1-namhyung@kernel.org>
-References: <20220603235656.715800-1-namhyung@kernel.org>
+        Fri, 03 Jun 2022 18:40:13 -0700 (PDT)
+Date:   Sat, 4 Jun 2022 09:40:05 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Alyssa Ross <hi@alyssa.is>,
+        Ian Rogers <irogers@google.com>, Like Xu <likexu@tencent.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        Joe Mario <jmario@redhat.com>,
+        Adam Li <adam.li@amperecomputing.com>,
+        German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] perf c2c: Support display for Arm64
+Message-ID: <20220604014005.GA53464@leoy-ThinkPad-X240s>
+References: <20220530114036.3225544-1-leo.yan@linaro.org>
+ <Ypph9lA1qavXXZI5@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ypph9lA1qavXXZI5@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The lock contention tracepoints don't provide lock names.  All we can
-do is to get stack traces and show the caller instead.  To minimize
-the overhead it's limited to up to 8 stack traces and display the
-first non-lock function symbol name as a caller.
+Hi Arnaldo,
 
-  $ perf lock report -F acquired,contended,avg_wait,wait_total
+On Fri, Jun 03, 2022 at 09:33:10PM +0200, Arnaldo Carvalho de Melo wrote:
+> Em Mon, May 30, 2022 at 07:40:24PM +0800, Leo Yan escreveu:
+> > Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
+> > us to detect cache line contention and transfers.
+> > 
+> > This patch set is based on Ali Said's patch set v9 "perf: arm-spe: Decode SPE
+> > source and use for perf c2c" [1] and Ali's patch set doesn't need any
+> > change in this new round.
+> 
+> IIRC there is a kernel part there, please let me know when that part
+> gets merged so that I can process this 12 patches long set.
 
-                  Name   acquired  contended     avg wait    total wait
+This patch set is not dependent on any kernel patch, it bases on Ali's
+patch set "perf: arm-spe: Decode SPE source and use for perf c2c".
 
-   update_blocked_a...         40         40      3.61 us     144.45 us
-   kernfs_fop_open+...          5          5      3.64 us      18.18 us
-    _nohz_idle_balance          3          3      2.65 us       7.95 us
-   tick_do_update_j...          1          1      6.04 us       6.04 us
-    ep_scan_ready_list          1          1      3.93 us       3.93 us
-  ...
+Let me use a new patch set to include all relevant patches (include
+Ali's patches for setting data source and this patch set), will send
+out soon.  Hope this would be easier for picking up.
 
-Acked-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-lock.c | 172 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 168 insertions(+), 4 deletions(-)
+Thanks,
+Leo
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index d571d487fc6f..162655556037 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -9,6 +9,7 @@
- #include "util/symbol.h"
- #include "util/thread.h"
- #include "util/header.h"
-+#include "util/callchain.h"
- 
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
-@@ -19,6 +20,7 @@
- #include "util/tool.h"
- #include "util/data.h"
- #include "util/string2.h"
-+#include "util/map.h"
- 
- #include <sys/types.h>
- #include <sys/prctl.h>
-@@ -32,6 +34,7 @@
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
- #include <linux/err.h>
-+#include <linux/stringify.h>
- 
- static struct perf_session *session;
- 
-@@ -120,6 +123,24 @@ static struct rb_root		thread_stats;
- static bool combine_locks;
- static bool show_thread_stats;
- 
-+/*
-+ * CONTENTION_STACK_DEPTH
-+ * Number of stack trace entries to find callers
-+ */
-+#define CONTENTION_STACK_DEPTH  8
-+
-+/*
-+ * CONTENTION_STACK_SKIP
-+ * Number of stack trace entries to skip when finding callers.
-+ * The first few entries belong to the locking implementation itself.
-+ */
-+#define CONTENTION_STACK_DEPTH  3
-+
-+static u64 sched_text_start;
-+static u64 sched_text_end;
-+static u64 lock_text_start;
-+static u64 lock_text_end;
-+
- static struct thread_stat *thread_stat_find(u32 tid)
- {
- 	struct rb_node *node;
-@@ -483,6 +504,18 @@ static struct lock_stat *pop_from_result(void)
- 	return container_of(node, struct lock_stat, rb);
- }
- 
-+static struct lock_stat *lock_stat_find(u64 addr)
-+{
-+	struct hlist_head *entry = lockhashentry(addr);
-+	struct lock_stat *ret;
-+
-+	hlist_for_each_entry(ret, entry, hash_entry) {
-+		if (ret->addr == addr)
-+			return ret;
-+	}
-+	return NULL;
-+}
-+
- static struct lock_stat *lock_stat_findnew(u64 addr, const char *name)
- {
- 	struct hlist_head *entry = lockhashentry(addr);
-@@ -825,6 +858,116 @@ static int report_lock_release_event(struct evsel *evsel,
- 	return 0;
- }
- 
-+static bool is_lock_function(u64 addr)
-+{
-+	if (!sched_text_start) {
-+		struct machine *machine = &session->machines.host;
-+		struct map *kmap;
-+		struct symbol *sym;
-+
-+		sym = machine__find_kernel_symbol_by_name(machine,
-+							  "__sched_text_start",
-+							  &kmap);
-+		if (!sym) {
-+			/* to avoid retry */
-+			sched_text_start = 1;
-+			return false;
-+		}
-+
-+		sched_text_start = kmap->unmap_ip(kmap, sym->start);
-+
-+		/* should not fail from here */
-+		sym = machine__find_kernel_symbol_by_name(machine,
-+							  "__sched_text_end",
-+							  &kmap);
-+		sched_text_end = kmap->unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine,
-+							  "__lock_text_start",
-+							  &kmap);
-+		lock_text_start = kmap->unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine,
-+							  "__lock_text_end",
-+							  &kmap);
-+		lock_text_start = kmap->unmap_ip(kmap, sym->start);
-+	}
-+
-+	/* failed to get kernel symbols */
-+	if (sched_text_start == 1)
-+		return false;
-+
-+	/* mutex and rwsem functions are in sched text section */
-+	if (sched_text_start <= addr && addr < sched_text_end)
-+		return true;
-+
-+	/* spinlock functions are in lock text section */
-+	if (lock_text_start <= addr && addr < lock_text_end)
-+		return true;
-+
-+	return false;
-+}
-+
-+static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sample,
-+				  char *buf, int size)
-+{
-+	struct thread *thread;
-+	struct callchain_cursor *cursor = &callchain_cursor;
-+	struct symbol *sym;
-+	int skip = 0;
-+	int ret;
-+
-+	/* lock names will be replaced to task name later */
-+	if (show_thread_stats)
-+		return -1;
-+
-+	thread = machine__findnew_thread(&session->machines.host,
-+					 -1, sample->pid);
-+	if (thread == NULL)
-+		return -1;
-+
-+	/* use caller function name from the callchain */
-+	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
-+					NULL, NULL, CONTENTION_STACK_DEPTH);
-+	if (ret != 0) {
-+		thread__put(thread);
-+		return -1;
-+	}
-+
-+	callchain_cursor_commit(cursor);
-+	thread__put(thread);
-+
-+	while (true) {
-+		struct callchain_cursor_node *node;
-+
-+		node = callchain_cursor_current(cursor);
-+		if (node == NULL)
-+			break;
-+
-+		/* skip first few entries - for lock functions */
-+		if (++skip <= CONTENTION_STACK_SKIP)
-+			goto next;
-+
-+		sym = node->ms.sym;
-+		if (sym && !is_lock_function(node->ip)) {
-+			struct map *map = node->ms.map;
-+			u64 offset;
-+
-+			offset = map->map_ip(map, node->ip) - sym->start;
-+
-+			if (offset)
-+				scnprintf(buf, size, "%s+%#lx", sym->name, offset);
-+			else
-+				strlcpy(buf, sym->name, size);
-+			return 0;
-+		}
-+
-+next:
-+		callchain_cursor_advance(cursor);
-+	}
-+	return -1;
-+}
-+
- static int report_lock_contention_begin_event(struct evsel *evsel,
- 					      struct perf_sample *sample)
- {
-@@ -836,9 +979,18 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
- 	if (show_thread_stats)
- 		addr = sample->tid;
- 
--	ls = lock_stat_findnew(addr, "No name");
--	if (!ls)
--		return -ENOMEM;
-+	ls = lock_stat_find(addr);
-+	if (!ls) {
-+		char buf[128];
-+		const char *caller = buf;
-+
-+		if (lock_contention_caller(evsel, sample, buf, sizeof(buf)) < 0)
-+			caller = "Unknown";
-+
-+		ls = lock_stat_findnew(addr, caller);
-+		if (!ls)
-+			return -ENOMEM;
-+	}
- 
- 	ts = thread_stat_findnew(sample->tid);
- 	if (!ts)
-@@ -1212,6 +1364,7 @@ static int __cmd_report(bool display_info)
- 	struct perf_tool eops = {
- 		.sample		 = process_sample_event,
- 		.comm		 = perf_event__process_comm,
-+		.mmap		 = perf_event__process_mmap,
- 		.namespaces	 = perf_event__process_namespaces,
- 		.ordered_events	 = true,
- 	};
-@@ -1227,6 +1380,8 @@ static int __cmd_report(bool display_info)
- 		return PTR_ERR(session);
- 	}
- 
-+	/* for lock function check */
-+	symbol_conf.sort_by_name = true;
- 	symbol__init(&session->header.env);
- 
- 	if (!perf_session__has_traces(session, "lock record"))
-@@ -1271,8 +1426,12 @@ static int __cmd_record(int argc, const char **argv)
- 	const char *record_args[] = {
- 		"record", "-R", "-m", "1024", "-c", "1", "--synth", "task",
- 	};
-+	const char *callgraph_args[] = {
-+		"--call-graph", "fp," __stringify(CONTENTION_STACK_DEPTH),
-+	};
- 	unsigned int rec_argc, i, j, ret;
- 	unsigned int nr_tracepoints;
-+	unsigned int nr_callgraph_args = 0;
- 	const char **rec_argv;
- 	bool has_lock_stat = true;
- 
-@@ -1297,8 +1456,10 @@ static int __cmd_record(int argc, const char **argv)
- 		}
- 	}
- 
-+	nr_callgraph_args = ARRAY_SIZE(callgraph_args);
-+
- setup_args:
--	rec_argc = ARRAY_SIZE(record_args) + argc - 1;
-+	rec_argc = ARRAY_SIZE(record_args) + nr_callgraph_args + argc - 1;
- 
- 	if (has_lock_stat)
- 		nr_tracepoints = ARRAY_SIZE(lock_tracepoints);
-@@ -1330,6 +1491,9 @@ static int __cmd_record(int argc, const char **argv)
- 		rec_argv[i++] = ev_name;
- 	}
- 
-+	for (j = 0; j < nr_callgraph_args; j++, i++)
-+		rec_argv[i] = callgraph_args[j];
-+
- 	for (j = 1; j < (unsigned int)argc; j++, i++)
- 		rec_argv[i] = argv[j];
- 
--- 
-2.36.1.255.ge46751e96f-goog
-
+P.s. James' patch set for enabling SVE register is dependent on kernel
+changes, James is on vacation, I will monitor the latest status and
+update in the corresponding patch set thread.
