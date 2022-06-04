@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948A6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194E7CCA483
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350575AbiFDEaw (ORCPT
+        id S1350696AbiFDEax (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Jun 2022 00:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59536 "EHLO
+        Sat, 4 Jun 2022 00:30:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350632AbiFDEab (ORCPT
+        with ESMTP id S1350572AbiFDE3u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Jun 2022 00:30:31 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCEE837BF0
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:30:19 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id gc3-20020a17090b310300b001e33092c737so8494826pjb.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:30:19 -0700 (PDT)
+        Sat, 4 Jun 2022 00:29:50 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B99A3AA7C
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:29:40 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id q12-20020a17090a304c00b001e2d4fb0eb4so13524487pjl.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:29:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GU0Fx5MqBypkPPR5oPl8FBqUWIca4qCm6hD5a1k+pSo=;
-        b=P3hlmhZGSSe/tHysAx9pKosNOKX136mCts9rBAP73d+2oiAMeKZE9wH0jsJbQ//uaJ
-         KRmJWP+8mXEchku3A3OmLMc11cxoBVuV+Zxkm1+JAYZhUmLggl9ivXBgStthiaLV1CLL
-         n033U5o9vCrnszomBIFhKF9yS9c2m7Du041Y6vH3LMOn4ZJUtAY+G8oO/0Dm3ZJU0lha
-         DhZDSyh7kDb4HDTxOVNuBmxcebvlLZJN5m1k6FISRwegrjJa4zqjQfQGm9hjXOR3pj2M
-         mCc0rN5Oi6FfnhFlGCJq1GNc5HbmjB1q7e6z5zd8dmrXqtnQQOCXxARtaYQEmRDjYkES
-         8Bcg==
+        bh=3Qm66nfhudmwJA9iVinA9JP0NApAajjTf2BuY1M3OaI=;
+        b=kK5aeXkDtX7iX8griW86CyYEXdl/A0eEoOAH35kMiy8zC5YxZ13vkmUz41hNukiVED
+         mwOD/eHzHg/ydHq9EnMam14CC+qi74lZ5DT/BZLht4Ycg8oUmzkBZjyRvP10Zabr1bml
+         pM1ANKzvXgjiQFcGdB9yBK2kbxntk93fVC8L8EGzg5bWrtj+cW0HA62JIklUfPSZPpBY
+         JDX4X7ZtLv2ApTgr9o96CGNSHF9wrVPb++OYdBxWV9Af+auINOLjKL/8fwy9yJG6h9FN
+         qJlps4+jXViETOdDnbJUJNm1u+nf/wo2MAZWn914jK2uKqI6n0arJcJqgH+uKM8h8vhY
+         WiBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GU0Fx5MqBypkPPR5oPl8FBqUWIca4qCm6hD5a1k+pSo=;
-        b=GUMnxQiQT2Ei1Cooubafi2o8SByFtK9xlwS66Ui4ayJboHqTEQWm80izc1JV3yMPTo
-         /KYFWupx+wISU6pBhCIC0ypPExd3SoOUt+kNqyG2lwVQzFFMzA9gFEaUUoLrC9eRxBU3
-         P0lbMMEPuVrHDxNfEcQ8qPe5PjzECv9s7t/HGy57y0Nyo4QyJsjbzEKC02Vt3pNDgI6c
-         3+4qubYmDg1q32C2i1RDmgQ6tmqWpeunHMzdWl8Scs9kB4zFk/jo7+ByIOe9DNdcG/UW
-         jrww0HZh8+6jEXNxIKPH1OeFFAGhuRDs7nhS/wzmUa5Zu4ZhRUnzPN1njQntb3OQtpx3
-         xeGg==
-X-Gm-Message-State: AOAM533pkKWilAX9eEwiWiJAVmFJp1VzTeb1xC6TrwHHYFmc6va2eVH3
-        o7J0Opk/IqM1YhTAqYpAxKL6GA==
-X-Google-Smtp-Source: ABdhPJwPsv7B/cB0f9lf7gE7960SfuDJQhoEcKlSR/LEXNV7lFeDLyxi95gda2GN0VeIwR6MFMcD2w==
-X-Received: by 2002:a17:902:b703:b0:158:2667:7447 with SMTP id d3-20020a170902b70300b0015826677447mr12938801pls.92.1654317019242;
-        Fri, 03 Jun 2022 21:30:19 -0700 (PDT)
+        bh=3Qm66nfhudmwJA9iVinA9JP0NApAajjTf2BuY1M3OaI=;
+        b=2a+FCj6A1trzgAtlkWcGhlhPzNX7GvtLgf+XvmkgcP75F1HLHMLjUkHfxFuKbvsXGf
+         q0CHTRZp2LKs+zgSCWF91i2PrQseEBJl5JAECPET3GGzr1mIZ4EVz9ySwiPHUIHc7Voo
+         ptXw/Zmdt4+ASo0UzAkJloMQOKcj4LymAvCNdBmNL02ksj+t/KXkZ1myWi78xSZ0h6+7
+         3yrwtk9ikOkUx1LyCyu6xZ19V5ooQkEVpVknUMemUdJ+7yyugAs/lQ0rR5yP85mgOqI/
+         B+7kpRr6kFn8flD5sOX6/Vgp7WUU3cmEXoWuYd6esutbvFMhyFGw5DGcwieCTCMwOClJ
+         QzLQ==
+X-Gm-Message-State: AOAM5312LqapJvxh8SP7l+O7p5+rcGlHlNYijuuT9fMOTlhKA8gj+2Gc
+        M6vGRC4oeki8X3i3p1aJGlDSZA==
+X-Google-Smtp-Source: ABdhPJwhqQsWGwdhBIJ5vTo2aAtQciKAeP/FJizUt9b/VLhWNxzBpnmgnb4AcoR7NQR0tJzKw6Rx1A==
+X-Received: by 2002:a17:902:b694:b0:162:6ea:30 with SMTP id c20-20020a170902b69400b0016206ea0030mr13186546pls.95.1654316979740;
+        Fri, 03 Jun 2022 21:29:39 -0700 (PDT)
 Received: from leo-build-box.lan (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
-        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.30.13
+        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.29.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 21:30:18 -0700 (PDT)
+        Fri, 03 Jun 2022 21:29:39 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -66,9 +66,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 17/17] perf c2c: Update documentation for new display option 'peer'
-Date:   Sat,  4 Jun 2022 12:28:20 +0800
-Message-Id: <20220604042820.2270916-18-leo.yan@linaro.org>
+Subject: [PATCH v5 10/17] perf c2c: Add mean dimensions for peer operations
+Date:   Sat,  4 Jun 2022 12:28:13 +0800
+Message-Id: <20220604042820.2270916-11-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220604042820.2270916-1-leo.yan@linaro.org>
 References: <20220604042820.2270916-1-leo.yan@linaro.org>
@@ -78,100 +78,90 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the new display option 'peer' is introduced, this patch is to
-update the documentation to reflect it.
+This patch adds two dimensions for the mean value of peer operations.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Ian Rogers <irogers@google.com>
+Tested-by: Ali Saidi <alisaidi@amazon.com>
 Reviewed-by: Ali Saidi <alisaidi@amazon.com>
 ---
- tools/perf/Documentation/perf-c2c.txt | 31 +++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 7 deletions(-)
+ tools/perf/builtin-c2c.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index 6f69173731aa..f1f7ae6b08d1 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -109,7 +109,9 @@ REPORT OPTIONS
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index dd47f068b8da..8dd9218a052f 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -55,6 +55,8 @@ struct c2c_hists {
+ struct compute_stats {
+ 	struct stats		 lcl_hitm;
+ 	struct stats		 rmt_hitm;
++	struct stats		 lcl_peer;
++	struct stats		 rmt_peer;
+ 	struct stats		 load;
+ };
  
- -d::
- --display::
--	Switch to HITM type (rmt, lcl) to display and sort on. Total HITMs as default.
-+	Switch to HITM type (rmt, lcl) or peer snooping type (peer) to display
-+	and sort on. Total HITMs (tot) as default, except Arm64 uses peer mode
-+	as default.
+@@ -154,6 +156,8 @@ static void *c2c_he_zalloc(size_t size)
  
- --stitch-lbr::
- 	Show callgraph with stitched LBRs, which may have more complete
-@@ -174,12 +176,18 @@ For each cacheline in the 1) list we display following data:
-   Cacheline
-   - cacheline address (hex number)
+ 	init_stats(&c2c_he->cstats.lcl_hitm);
+ 	init_stats(&c2c_he->cstats.rmt_hitm);
++	init_stats(&c2c_he->cstats.lcl_peer);
++	init_stats(&c2c_he->cstats.rmt_peer);
+ 	init_stats(&c2c_he->cstats.load);
  
--  Rmt/Lcl Hitm
-+  Rmt/Lcl Hitm (Display with HITM types)
-   - cacheline percentage of all Remote/Local HITM accesses
+ 	return &c2c_he->he;
+@@ -253,6 +257,10 @@ static void compute_stats(struct c2c_hist_entry *c2c_he,
+ 		update_stats(&cstats->rmt_hitm, weight);
+ 	else if (stats->lcl_hitm)
+ 		update_stats(&cstats->lcl_hitm, weight);
++	else if (stats->rmt_peer)
++		update_stats(&cstats->rmt_peer, weight);
++	else if (stats->lcl_peer)
++		update_stats(&cstats->lcl_peer, weight);
+ 	else if (stats->load)
+ 		update_stats(&cstats->load, weight);
+ }
+@@ -1280,6 +1288,8 @@ __func(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp, struct hist_entry *he)	\
+ MEAN_ENTRY(mean_rmt_entry,  rmt_hitm);
+ MEAN_ENTRY(mean_lcl_entry,  lcl_hitm);
+ MEAN_ENTRY(mean_load_entry, load);
++MEAN_ENTRY(mean_rmt_peer_entry, rmt_peer);
++MEAN_ENTRY(mean_lcl_peer_entry, lcl_peer);
  
--  LLC Load Hitm - Total, LclHitm, RmtHitm
-+  Peer Snoop (Display with peer type)
-+  - cacheline percentage of all peer accesses
+ static int
+ cpucnt_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+@@ -1750,6 +1760,22 @@ static struct c2c_dimension dim_mean_load = {
+ 	.width		= 8,
+ };
+ 
++static struct c2c_dimension dim_mean_rmt_peer = {
++	.header		= HEADER_SPAN("---------- cycles ----------", "rmt peer", 2),
++	.name		= "mean_rmt_peer",
++	.cmp		= empty_cmp,
++	.entry		= mean_rmt_peer_entry,
++	.width		= 8,
++};
 +
-+  LLC Load Hitm - Total, LclHitm, RmtHitm (For display with HITM types)
-   - count of Total/Local/Remote load HITMs
- 
-+  Load Peer - Total, Local, Remote (For display with peer type)
-+  - count of Total/Local/Remote load from peer cache or DRAM
++static struct c2c_dimension dim_mean_lcl_peer = {
++	.header		= HEADER_SPAN_LOW("lcl peer"),
++	.name		= "mean_lcl_peer",
++	.cmp		= empty_cmp,
++	.entry		= mean_lcl_peer_entry,
++	.width		= 8,
++};
 +
-   Total records
-   - sum of all cachelines accesses
- 
-@@ -201,16 +209,21 @@ For each cacheline in the 1) list we display following data:
-   - count of LLC load accesses, includes LLC hits and LLC HITMs
- 
-   RMT Load Hit - RmtHit, RmtHitm
--  - count of remote load accesses, includes remote hits and remote HITMs
-+  - count of remote load accesses, includes remote hits and remote HITMs;
-+    on Arm neoverse cores, RmtHit is used to account remote accesses,
-+    includes remote DRAM or any upward cache level in remote node
- 
-   Load Dram - Lcl, Rmt
-   - count of local and remote DRAM accesses
- 
- For each offset in the 2) list we display following data:
- 
--  HITM - Rmt, Lcl
-+  HITM - Rmt, Lcl (Display with HITM types)
-   - % of Remote/Local HITM accesses for given offset within cacheline
- 
-+  Peer Snoop - Rmt, Lcl (Display with peer type)
-+  - % of Remote/Local peer accesses for given offset within cacheline
-+
-   Store Refs - L1 Hit, L1 Miss, N/A
-   - % of store accesses that hit L1, missed L1 and N/A (no available) memory
-     level for given offset within cacheline
-@@ -227,9 +240,12 @@ For each offset in the 2) list we display following data:
-   Code address
-   - code address responsible for the accesses
- 
--  cycles - rmt hitm, lcl hitm, load
-+  cycles - rmt hitm, lcl hitm, load (Display with HITM types)
-     - sum of cycles for given accesses - Remote/Local HITM and generic load
- 
-+  cycles - rmt peer, lcl peer, load (Display with peer type)
-+    - sum of cycles for given accesses - Remote/Local peer load and generic load
-+
-   cpu cnt
-     - number of cpus that participated on the access
- 
-@@ -251,7 +267,8 @@ The 'Node' field displays nodes that accesses given cacheline
- offset. Its output comes in 3 flavors:
-   - node IDs separated by ','
-   - node IDs with stats for each ID, in following format:
--      Node{cpus %hitms %stores}
-+      Node{cpus %hitms %stores} (Display with HITM types)
-+      Node{cpus %peers %stores} (Display with peer type)
-   - node IDs with list of affected CPUs in following format:
-       Node{cpu list}
- 
+ static struct c2c_dimension dim_cpucnt = {
+ 	.header		= HEADER_BOTH("cpu", "cnt"),
+ 	.name		= "cpucnt",
+@@ -1835,6 +1861,8 @@ static struct c2c_dimension *dimensions[] = {
+ 	&dim_node,
+ 	&dim_mean_rmt,
+ 	&dim_mean_lcl,
++	&dim_mean_rmt_peer,
++	&dim_mean_lcl_peer,
+ 	&dim_mean_load,
+ 	&dim_cpucnt,
+ 	&dim_srcline,
 -- 
 2.25.1
 
