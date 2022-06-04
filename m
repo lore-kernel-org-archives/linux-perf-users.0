@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF14C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D166DC43334
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350468AbiFDE3A (ORCPT
+        id S1350437AbiFDE3H (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Jun 2022 00:29:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57162 "EHLO
+        Sat, 4 Jun 2022 00:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350460AbiFDE26 (ORCPT
+        with ESMTP id S1348721AbiFDE3F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Jun 2022 00:28:58 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805EC37A0B
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:28:54 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id b5so8120802plx.10
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:28:54 -0700 (PDT)
+        Sat, 4 Jun 2022 00:29:05 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8E137014
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:29:01 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id p8so8556344pfh.8
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:29:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1GFA/G2sq7Z7tV5kUwDR4JNQSunfwujtW0Pzethicqk=;
-        b=dd5N4KgOOFen57SswJKMlpRQyZoOXZwv6XG6ilJNw4tVJiHvKVjis+OTi+zzt+nGwQ
-         kIByE3Gg9CVnPsWv1hLXqeQPZuryFe3qt9EHPKnlhynd7asQ64gBQl1upPd2aITKm/uy
-         VxGaUvrXSMrlwgz9bzYyTLjDkIBewZ/kYvJti5UVfHFet/C/gIk+ipcclx0vmHcKyUhw
-         52n3cOlRbwBqkcbYLGXDyQKXyZmstWrYuwxa9+1eqE9ea8yHRJ+K9GOIWj1a2Xrs+37z
-         lqdtJVAxGQWQyg//p6/dYRrrC7Wn2YtAtbotdUARaXJAxdqkI1qFLvT46dkDxDGEMXsW
-         bNWg==
+        bh=Jgh8b65aqfDEBjEikwGcRqaRvkh9OcNpE8mI3ojB+kM=;
+        b=eHTIYKX2niB3+hcP6wkl/Ab0BStnMoeg6znyPP0NaviP8TEk/n7XNEUbjNJHOoiV0n
+         gJSIq3ZOnqSw54Nzk3eGDl9fjqiBsVuv+4wTU2DlZd3BrMMHTqzzlPldz5VKkmgHb+qr
+         VEsXHpvbgSsRe+y+fQuiEPji+bh9d338QBs9CDUdFo7QI5wETtkfmjUUBV26AAceXmkt
+         uazuORxQrtqXGo7ynlBx/2OC7eJX0vcjrQ61Z34G1PdzSuqGjf6CLdl7y+HwGhF/LMMa
+         AQUrEADwLrrk3qDIBwGWyozxWRA8M+tCPmxMhOBea54xatxhUXFjlgSnlIPjQiCaQhn3
+         Rv9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1GFA/G2sq7Z7tV5kUwDR4JNQSunfwujtW0Pzethicqk=;
-        b=LyQ6doQQ4ydwVpAfX91R8440jXYLiMvvkzkY8RToPyfvKVUMRGERDjWIaZShiQbWEr
-         pl+hOS+Eb/5d/4NJxf3JB7vRNJ76nZ0VOtbE2+a9frPXw9AklAyvaLtm6He/IjwXk2+O
-         xxMup1xhsfpPLfXomGJjKY3om3ynFWC+vbvfMB1eqzxTauxZs8FxziXTed9zellD75aJ
-         IJVhX7Gws1Z4lldsiv4osjGIyjhQHNG+v5T/kgK3R2gZr7kpJqtWObe97j5MmkxVaX5x
-         9PYTvWZudavFXqIsvvfN4elgD2HKBcwt3/7RdEOcVpmC7SeS/i7+INLlO1u/G4ukrqZ5
-         WwVA==
-X-Gm-Message-State: AOAM530DKHUwi7tAa3Gm/p5RBwvFBmwwt2YCzVzk9DeiYGJNZctH/xFJ
-        YF1hYb/l/TTOyAOovaEv/GvuSg==
-X-Google-Smtp-Source: ABdhPJw+tOYyDFUf+277NXZH+SE7nfaTTpIOiGfuiMRFRQJf1KdhW3jfVV02quE2xe+Nks49lWYAAg==
-X-Received: by 2002:a17:90a:fd87:b0:1e2:cdfc:cbd3 with SMTP id cx7-20020a17090afd8700b001e2cdfccbd3mr35605758pjb.28.1654316933882;
-        Fri, 03 Jun 2022 21:28:53 -0700 (PDT)
+        bh=Jgh8b65aqfDEBjEikwGcRqaRvkh9OcNpE8mI3ojB+kM=;
+        b=og/rpKi7zkpPdXIWd42WUOn/x9+JJzqMDc4q08zxaCnuHwcOBi/BVu5EgdmexmKLza
+         jkXb8bzQfR0BzK12ah4NSkqDIw4KSeAC2R3JQSYIAYwUZ3spmZHTTfJW/ynAb6Gnn/ca
+         dOYAy+w6/hA1u656YOXAC8F2pOqGR/fx5tCe0hRI4mUtCfNfKaGvUEZcT6u7jn43pjpD
+         QHGFIz8Ys8khzvFB15knGzUWX2rAjEnZHu/OmJO584IiQq0tDV/KCr2xKj3A+yjnxgNI
+         ky4yu8D0mrEEKeV+sSScrFFFDwVhyWgIp6VMJEm8e/7G3EOVLBxnxld6jPcA1XZ4aWyI
+         7p3Q==
+X-Gm-Message-State: AOAM530O+HTSOHiHysgWulgXMF5n28zqSpLxzT9RZlJt5zSR0CjSt11q
+        2Rc3MiQ7ByFZquMlwixbdn33nQ==
+X-Google-Smtp-Source: ABdhPJzAquLSZIkdXHtL/r22pGnyGKY54qLAVIemNxP5n+EXK/Qmnar4Uj4qudeFDUO32PighxLreA==
+X-Received: by 2002:a05:6a00:15cd:b0:51b:c838:127c with SMTP id o13-20020a056a0015cd00b0051bc838127cmr11301457pfu.30.1654316940169;
+        Fri, 03 Jun 2022 21:29:00 -0700 (PDT)
 Received: from leo-build-box.lan (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
-        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.28.48
+        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.28.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 21:28:53 -0700 (PDT)
+        Fri, 03 Jun 2022 21:28:59 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -65,10 +65,10 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adam Li <adam.li@amperecomputing.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 02/17] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
-Date:   Sat,  4 Jun 2022 12:28:05 +0800
-Message-Id: <20220604042820.2270916-3-leo.yan@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v5 03/17] perf mem: Print snoop peer flag
+Date:   Sat,  4 Jun 2022 12:28:06 +0800
+Message-Id: <20220604042820.2270916-4-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220604042820.2270916-1-leo.yan@linaro.org>
 References: <20220604042820.2270916-1-leo.yan@linaro.org>
@@ -78,35 +78,74 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Ali Saidi <alisaidi@amazon.com>
+Since PERF_MEM_SNOOPX_PEER flag is a new snoop type, print this flag if
+it is set.
 
-Add a flag to the perf mem data struct to signal that a request caused a
-cache-to-cache transfer of a line from a peer of the requestor and
-wasn't sourced from a lower cache level.  The line being moved from one
-peer cache to another has latency and performance implications. On Arm64
-Neoverse systems the data source can indicate a cache-to-cache transfer
-but not if the line is dirty or clean, so instead of overloading HITM
-define a new flag that indicates this type of transfer.
+Before:
+       memstress  3603 [020]   122.463754:          1            l1d-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1          l1d-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1            llc-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1          llc-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1          tlb-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1              memory:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP N/A|TLB Walker hit|LCK No|BLK  N/A               aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
 
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+After:
+
+       memstress  3603 [020]   122.463754:          1            l1d-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1          l1d-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1            llc-miss:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1          llc-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1          tlb-access:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+       memstress  3603 [020]   122.463754:          1              memory:       8688000842 |OP LOAD|LVL L3 or L3 hit|SNP Peer|TLB Walker hit|LCK No|BLK  N/A              aaaac17c3e88 [unknown] (/home/ubuntu/memstress)
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Ali Saidi <alisaidi@amazon.com>
+Tested-by: Ali Saidi <alisaidi@amazon.com>
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
 ---
- tools/include/uapi/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/mem-events.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index d37629dbad72..7b88bfd097dc 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1310,7 +1310,7 @@ union perf_mem_data_src {
- #define PERF_MEM_SNOOP_SHIFT	19
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index c3c21a9c350b..5dca1882c284 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -410,6 +410,11 @@ static const char * const snoop_access[] = {
+ 	"HitM",
+ };
  
- #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
--/* 1 free */
-+#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
- #define PERF_MEM_SNOOPX_SHIFT  38
++static const char * const snoopx_access[] = {
++	"Fwd",
++	"Peer",
++};
++
+ int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
+ {
+ 	size_t i, l = 0;
+@@ -430,13 +435,20 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
+ 		}
+ 		l += scnprintf(out + l, sz - l, snoop_access[i]);
+ 	}
+-	if (mem_info &&
+-	     (mem_info->data_src.mem_snoopx & PERF_MEM_SNOOPX_FWD)) {
++
++	m = 0;
++	if (mem_info)
++		m = mem_info->data_src.mem_snoopx;
++
++	for (i = 0; m && i < ARRAY_SIZE(snoopx_access); i++, m >>= 1) {
++		if (!(m & 0x1))
++			continue;
++
+ 		if (l) {
+ 			strcat(out, " or ");
+ 			l += 4;
+ 		}
+-		l += scnprintf(out + l, sz - l, "Fwd");
++		l += scnprintf(out + l, sz - l, snoopx_access[i]);
+ 	}
  
- /* locked instruction */
+ 	if (*out == '\0')
 -- 
 2.25.1
 
