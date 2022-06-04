@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140C3C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C896CCA482
 	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232294AbiFDEaI (ORCPT
+        id S1350544AbiFDEaJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Jun 2022 00:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58618 "EHLO
+        Sat, 4 Jun 2022 00:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350581AbiFDE3y (ORCPT
+        with ESMTP id S1350550AbiFDEaA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Jun 2022 00:29:54 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E1DF35DFE
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:29:51 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id v11-20020a17090a4ecb00b001e2c5b837ccso13530732pjl.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:29:51 -0700 (PDT)
+        Sat, 4 Jun 2022 00:30:00 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5161537014
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:29:57 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id n10so8705865pjh.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:29:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=q6VEWmY6DuHMkOh6HqTlb6jLvc+Emj76rtex2ionhAY=;
-        b=f2KYLDGltwHeJcv7Zm+Il4ZHmv7MLryeW2B4gKu14lozsW5bteKRF+9Q/XgmN4T9Qf
-         SfvYUM9Ek4exDdBF6uRzm/ZCc9EgserRezFPKlys+JJ9QZHvCi7FshynIiR4aca/M2nt
-         9Qf5B98O8ywujjvoxxxoQwajjwLyJYuPHxuZNekJjj8cEcNfW4iJPT+K2vAuwJRi6rO9
-         M+qfAFOXruK+eHu3Q5LDVfKNRTsJGkGTTzhi3Tfy5ysp5FLS5y9qJ07DRqALhT6CC5Nu
-         g4ww5WsNRPG//rrvR6JwIveXrBYLT0RtrFO+EaTdi7KZC5cVW7RauHkEvHKGc697575T
-         RhQw==
+        bh=pV9mkt3ephXax7MfRdfbDUHOxPn/hdg1p0gu+rxdm78=;
+        b=mpC6M22S4cCbV9GmX77b2LQbSdCx/zcpKaW7wiDssAalFX9zJBZoA+9jNH2ItcXZLH
+         O8n7I/V4WCDdqeb+mitSx+tcrJJvvp+GDY/BKGJY6jNjw+He4dylN5bIkrGFivQ6AJBI
+         urJCfR7+Q4FQ70GKZzpYoCT/znCkOLo4eG0yEFuO+a4mkXf77uvHQv7OB0cCHnK1aIw0
+         IcXOTldIqROjpI85dYhELub59uC/H2HW2PifEmPpgAFHKSz1CLtS5oB/8vk7VEWhCz9+
+         Bws5Fh3vhujk21hUcsf4BPkGsa9tdjEBjk9yvjUB2Gh2dvcX5Q/OpA5JYEwjds8U8J6t
+         9ifQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=q6VEWmY6DuHMkOh6HqTlb6jLvc+Emj76rtex2ionhAY=;
-        b=RF2+bAQCjhVLXlLasMb5YvEAq6tlIe5LtSwne3pg2yn1tMnnbvefeQqsGCfjq/mmOd
-         2D6nHs7YrA+1EZsQJWioU+66gQvjE4oPF0OmM3d+VggLDXHbgsjzJZy7CXhz99bJN2vl
-         n27WxC/7jXCIu9gjeN4a9O7JohBjkopmGuba+yshyE/Pog+SMk6Idk1ekVrIW926/ANF
-         moYD3Rlehbo0K+Vo/e598IOid7FcGpDdmwpBRKYpXXbJ1UrytcHgLIsTX6oq/RP//Leg
-         nSAN7m+VVldkLVfCren8BqE9M9K1X/BCb50FZYcd0bQ9NG8disw9N5hwoPvb1gCs+nj+
-         7EUg==
-X-Gm-Message-State: AOAM530BxuvDIKDezamfZiWZImi9NulBhoS3D/JcxAvEPh7PN5cWfi2D
-        eVEgrgwQ/GB3BSbk1FhddD/jrg==
-X-Google-Smtp-Source: ABdhPJzyROiuTA/MxC5iDVkugqNxze3C4usCrRKy9Ot7D/f91eyyzkrPRNj14MuM6oxZn16V8gd3bA==
-X-Received: by 2002:a17:902:e5cc:b0:167:5526:ea68 with SMTP id u12-20020a170902e5cc00b001675526ea68mr3799065plf.133.1654316991098;
-        Fri, 03 Jun 2022 21:29:51 -0700 (PDT)
+        bh=pV9mkt3ephXax7MfRdfbDUHOxPn/hdg1p0gu+rxdm78=;
+        b=XOwJw5wrr4CBaqAAxnwHhWF92EsTZxOOA7BG3njTuJIhI3TB07LHRYQGlZdMwdgVkM
+         1wpO3tQEOzA/0PjcZbnZcK8TGeYQfce9yULLUeVDDA/Ebouarsta04xZl6Qr2hByAfg3
+         NgrrkSVowDphyIF8oHI0pMGe7tquf7nRP78HeV7Z705gcMUpYKbYI5APIPT5qPtR6/qU
+         7+Zj3015Cbj9oJWMIIum2iw0f+srUWeR2HjbslSWFPnNp+5tvU3+ra6td7QhHONKYD3I
+         tDBzwG5b2grj2TCR+2saqIxgNKbTqTfqyLqv8hK3kRJ0hp1MoiR6iGCIpJeOavs2FhZd
+         KUSQ==
+X-Gm-Message-State: AOAM532knEw4oe1tSYlsXnBiaSgQ5gwa4Ktr624YFP/v167wI9/LcvQL
+        LF+do4+dP4D5+8BIJ8pHfSbl6hKhxQLW3Ntq
+X-Google-Smtp-Source: ABdhPJz7MX++cHHfvMO8C7OgRtYjYk3Z7+QMbdY6e4mCdy91xbbx0ckbiponNUlRYL7n/3Rd/VZgEg==
+X-Received: by 2002:a17:902:e5c4:b0:166:44af:3c35 with SMTP id u4-20020a170902e5c400b0016644af3c35mr10493586plf.101.1654316996607;
+        Fri, 03 Jun 2022 21:29:56 -0700 (PDT)
 Received: from leo-build-box.lan (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
-        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.29.45
+        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.29.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 21:29:50 -0700 (PDT)
+        Fri, 03 Jun 2022 21:29:56 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -66,9 +66,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 12/17] perf c2c: Rename dimension from 'percent_hitm' to 'percent_costly_snoop'
-Date:   Sat,  4 Jun 2022 12:28:15 +0800
-Message-Id: <20220604042820.2270916-13-leo.yan@linaro.org>
+Subject: [PATCH v5 13/17] perf c2c: Refactor node header
+Date:   Sat,  4 Jun 2022 12:28:16 +0800
+Message-Id: <20220604042820.2270916-14-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220604042820.2270916-1-leo.yan@linaro.org>
 References: <20220604042820.2270916-1-leo.yan@linaro.org>
@@ -78,132 +78,70 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use more general naming for the main sort dimension, this can allow us
-not to sort only on HITM snoop type, so it can be extended to support
-other costly snooping operations.  So rename the dimension to the prefix
-'percent_costly_".
+The node header array contains 3 items, each item is used for one of
+the 3 flavors for node accessing info.  To extend sorting on other
+snooping type and not always stick to HITMs, the second header string
+"Node{cpus %hitms %stores}" should be adjusted (e.g. it's changed as
+"Node{cpus %peer %stores}").
+
+For this reason, this patch changes the node header array to three
+flat variables and uses switch-case in function setup_nodes_header(),
+thus it is easier for altering the header string.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Ian Rogers <irogers@google.com>
 Tested-by: Ali Saidi <alisaidi@amazon.com>
 Reviewed-by: Ali Saidi <alisaidi@amazon.com>
 ---
- tools/perf/builtin-c2c.c | 40 ++++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ tools/perf/builtin-c2c.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index cbeb1878a71c..66ff834516a2 100644
+index 66ff834516a2..49a9b8480b41 100644
 --- a/tools/perf/builtin-c2c.c
 +++ b/tools/perf/builtin-c2c.c
-@@ -798,7 +798,7 @@ percent_color(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	return hpp_color_scnprintf(hpp, "%*.2f%%", width - 1, per);
- }
- 
--static double percent_hitm(struct c2c_hist_entry *c2c_he)
-+static double percent_costly_snoop(struct c2c_hist_entry *c2c_he)
- {
- 	struct c2c_hists *hists;
- 	struct c2c_stats *stats;
-@@ -838,8 +838,8 @@ static double percent_hitm(struct c2c_hist_entry *c2c_he)
- })
- 
- static int
--percent_hitm_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
--		   struct hist_entry *he)
-+percent_costly_snoop_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+			   struct hist_entry *he)
- {
- 	struct c2c_hist_entry *c2c_he;
- 	int width = c2c_width(fmt, hpp, he->hists);
-@@ -847,20 +847,20 @@ percent_hitm_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	double per;
- 
- 	c2c_he = container_of(he, struct c2c_hist_entry, he);
--	per = percent_hitm(c2c_he);
-+	per = percent_costly_snoop(c2c_he);
- 	return scnprintf(hpp->buf, hpp->size, "%*s", width, PERC_STR(buf, per));
- }
- 
- static int
--percent_hitm_color(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
--		   struct hist_entry *he)
-+percent_costly_snoop_color(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+			   struct hist_entry *he)
- {
--	return percent_color(fmt, hpp, he, percent_hitm);
-+	return percent_color(fmt, hpp, he, percent_costly_snoop);
- }
- 
- static int64_t
--percent_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
--		 struct hist_entry *left, struct hist_entry *right)
-+percent_costly_snoop_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-+			 struct hist_entry *left, struct hist_entry *right)
- {
- 	struct c2c_hist_entry *c2c_left;
- 	struct c2c_hist_entry *c2c_right;
-@@ -870,8 +870,8 @@ percent_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
- 
--	per_left  = percent_hitm(c2c_left);
--	per_right = percent_hitm(c2c_right);
-+	per_left  = percent_costly_snoop(c2c_left);
-+	per_right = percent_costly_snoop(c2c_right);
- 
- 	return per_left - per_right;
- }
-@@ -1605,17 +1605,17 @@ static struct c2c_dimension dim_tot_loads = {
- 	.width		= 7,
+@@ -1723,12 +1723,6 @@ static struct c2c_dimension dim_dso = {
+ 	.se		= &sort_dso,
  };
  
--static struct c2c_header percent_hitm_header[] = {
-+static struct c2c_header percent_costly_snoop_header[] = {
- 	[DISPLAY_LCL_HITM] = HEADER_BOTH("Lcl", "Hitm"),
- 	[DISPLAY_RMT_HITM] = HEADER_BOTH("Rmt", "Hitm"),
- 	[DISPLAY_TOT_HITM] = HEADER_BOTH("Tot", "Hitm"),
- };
+-static struct c2c_header header_node[3] = {
+-	HEADER_LOW("Node"),
+-	HEADER_LOW("Node{cpus %hitms %stores}"),
+-	HEADER_LOW("Node{cpu list}"),
+-};
+-
+ static struct c2c_dimension dim_node = {
+ 	.name		= "node",
+ 	.cmp		= empty_cmp,
+@@ -2229,9 +2223,27 @@ static int resort_cl_cb(struct hist_entry *he, void *arg __maybe_unused)
+ 	return 0;
+ }
  
--static struct c2c_dimension dim_percent_hitm = {
--	.name		= "percent_hitm",
--	.cmp		= percent_hitm_cmp,
--	.entry		= percent_hitm_entry,
--	.color		= percent_hitm_color,
-+static struct c2c_dimension dim_percent_costly_snoop = {
-+	.name		= "percent_costly_snoop",
-+	.cmp		= percent_costly_snoop_cmp,
-+	.entry		= percent_costly_snoop_entry,
-+	.color		= percent_costly_snoop_color,
- 	.width		= 7,
- };
++static struct c2c_header header_node_0 = HEADER_LOW("Node");
++static struct c2c_header header_node_1 = HEADER_LOW("Node{cpus %hitms %stores}");
++static struct c2c_header header_node_2 = HEADER_LOW("Node{cpu list}");
++
+ static void setup_nodes_header(void)
+ {
+-	dim_node.header = header_node[c2c.node_info];
++	switch (c2c.node_info) {
++	case 0:
++		dim_node.header = header_node_0;
++		break;
++	case 1:
++		dim_node.header = header_node_1;
++		break;
++	case 2:
++		dim_node.header = header_node_2;
++		break;
++	default:
++		break;
++	}
++
++	return;
+ }
  
-@@ -1844,7 +1844,7 @@ static struct c2c_dimension *dimensions[] = {
- 	&dim_ld_rmthit,
- 	&dim_tot_recs,
- 	&dim_tot_loads,
--	&dim_percent_hitm,
-+	&dim_percent_costly_snoop,
- 	&dim_percent_rmt_hitm,
- 	&dim_percent_lcl_hitm,
- 	&dim_percent_rmt_peer,
-@@ -2748,7 +2748,7 @@ static int ui_quirks(void)
- 		nodestr = "CL";
- 	}
- 
--	dim_percent_hitm.header = percent_hitm_header[c2c.display];
-+	dim_percent_costly_snoop.header = percent_costly_snoop_header[c2c.display];
- 
- 	/* Fix the zero line for dcacheline column. */
- 	buf = fill_line("Cacheline", dim_dcacheline.width +
-@@ -3076,7 +3076,7 @@ static int perf_c2c__report(int argc, const char **argv)
- 		     "dcacheline,"
- 		     "dcacheline_node,"
- 		     "dcacheline_count,"
--		     "percent_hitm,"
-+		     "percent_costly_snoop,"
- 		     "tot_hitm,lcl_hitm,rmt_hitm,"
- 		     "tot_recs,"
- 		     "tot_loads,"
+ static int setup_nodes(struct perf_session *session)
 -- 
 2.25.1
 
