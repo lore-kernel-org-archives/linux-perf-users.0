@@ -2,107 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A29C43334
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 01:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40A7CCA473
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 02:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232106AbiFDBkV (ORCPT
+        id S1350034AbiFDCHc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Jun 2022 21:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
+        Fri, 3 Jun 2022 22:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232081AbiFDBkU (ORCPT
+        with ESMTP id S1350001AbiFDCHa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Jun 2022 21:40:20 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FAB4205CF
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 18:40:16 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id d12-20020a17090abf8c00b001e2eb431ce4so8338874pjs.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 18:40:16 -0700 (PDT)
+        Fri, 3 Jun 2022 22:07:30 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64AF313AF
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 19:07:29 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id a10so8572712pju.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 19:07:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=AivyL9V8Uc1O7GX3xn/Ov3A+U/0bQ+9dt+dRzOycXs0=;
-        b=L7+Bs1SPe4yG6zfNwb1n+93MU6mDc5f33dScy1wKlOYkBfGrmGKnBWVMYJmoUqeAgR
-         BM2WNlFvDNQaMEkPdisL8/mnliuVV/aRYCwNIWgpMF0B3O4q+NH2i+zMbFhbqF/jm7YH
-         S7AgH0nplAHARjqaUOWlS8bqqa58L8NmiqzdgwgFaOtUSMwo6xwxMm4aNVKw4OMoCX2z
-         uZkWp/HlUwtmvbHRtlj0CTS5kkJCMyY2jwgZp61drNAt8HYWlCvIwj5Y2iyhki/+FwGw
-         7sYN/aNRUzKY8erhvTgECbENBNnj2Bv9qHgJgB4WyD8f50jOmRjBQ0Tro2cel29bQ5JR
-         f8bA==
+        bh=ff/IhfCPH41H+OZSAXWB83B0oZdz+7dYMwu9KM64DQw=;
+        b=ceZCdMwmQ+8G45eBMa/Yfy/rn6hFeHi7miTK9GBzQM0Na2P3sRiZNS33cnb4VAtjzP
+         xIpg/TbOxpvQU/7irs6zU/aADpLUMdiGcQuFjUY0HLgYoj7I+paYvpkMvb7JSG3i2WpV
+         RB8AiOpYfqRJRSM4j0uvO4NbwE9/vuMq0OlCVqFoOQHHwqw4R9zb8HRu2UuGSjQZsrn5
+         0EEgLpQGwmi/WtYD9zaJaTOKpJs2zCUM8plapvqlq9jp9BW/VOdPPOytPkt47MuYdQMS
+         UFeOSwXlBTOJgPu/GNZtGFNvWsU8Iqyc0140qnFy6XAmSJh4ocbn1O4jSoIEvdIQ8n1u
+         5jig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=AivyL9V8Uc1O7GX3xn/Ov3A+U/0bQ+9dt+dRzOycXs0=;
-        b=ckaCBWWIzL4c0uZ0kLzsY+F7PAS5yJ6vbsokWlf/rBQPrc6JbCD7QG/k+dPuyOo5dJ
-         eDkNgi7X/fPwywVYfQ8H2mwQO8G2MMGhU5haDF5rYWDv/Wa/28QfhGhqghbsT4bLK6tV
-         Bz/Nc4zBBaSGdyjV5Xbq0ScOk7PHElr582fxuokecupO391v3cYoqj+/IobamCtUjNuq
-         GdHTJAzBqWNI/qwOpRlYPM+zo6xKeqZMZJ/ABHBtFfQFsQv/QSSawD4A1M7NnyK0zC9p
-         +9ipyZeX1Kb9zWnJ735nn7crTtj48fRiXUOtYmO9oHXPETkHFX70vWq6JlQ+PXbFHjPl
-         fabQ==
-X-Gm-Message-State: AOAM533dRnXxrMy+ju5onw/zwA4dkfOipy70vkk/NbHznkqHFvMFzeZX
-        iTInm+/VtIBHoH54GKvuBz+rug==
-X-Google-Smtp-Source: ABdhPJwlvd7X8WnoraYcDZ3PZxnuu4vdj0qqJFZznpL4RKod2iBAB6fs58L3ry69UWUaOG/O0NMXbw==
-X-Received: by 2002:a17:902:cf06:b0:161:53b6:474d with SMTP id i6-20020a170902cf0600b0016153b6474dmr12729126plg.63.1654306814377;
-        Fri, 03 Jun 2022 18:40:14 -0700 (PDT)
+        bh=ff/IhfCPH41H+OZSAXWB83B0oZdz+7dYMwu9KM64DQw=;
+        b=X3zF9zjCTozhPM0H4tZ++aDauDMM+/d2ReWcmcI++N6FgzMb7i1SlVYuCG6sAEZxY+
+         aha8xK3wbF/oSfmewf8HCkrUIbGVvoQMMGqi2Omy/wko4BOKiLZxWm+BCNZKyM+XD46U
+         AoQw1KbDuZzMLwk1e/pM/5bf1SsueD7vFBeFlYv9sEuMRkwb3IfEVsb70exh+wE32rPc
+         kLWxUrcQkOIWOBvdfxHdRbzyiG2xiI7JuENPetlWqgCTDeDukdut6u6vz8Q2OFv5z3kT
+         xyzFlOytKagfFeGfqwL4rbWP06e5F30kw5ARcxPxiw/m+aFBGZ5By4Ov3AjWrOwOU/E4
+         yCCg==
+X-Gm-Message-State: AOAM530Os63Y7FtvIibveEEj09opS+d8oO60zpYoAxYvo0V7BE8YPPNe
+        6o81gUrgrUbMLDLCtiTUQE7sKw==
+X-Google-Smtp-Source: ABdhPJyciJHiB4w7inpufhaHNS4EDndG3bC1pR3Eg/dKEgOX/M3M4LpojRWlNirzvjbZq8/I9eLCCA==
+X-Received: by 2002:a17:90b:4c8c:b0:1e8:5607:7ec0 with SMTP id my12-20020a17090b4c8c00b001e856077ec0mr523504pjb.36.1654308449330;
+        Fri, 03 Jun 2022 19:07:29 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
-        by smtp.gmail.com with ESMTPSA id h4-20020a62b404000000b0050dc76281bcsm6048270pfn.150.2022.06.03.18.40.07
+        by smtp.gmail.com with ESMTPSA id f17-20020a170902f39100b00163fd24ca8csm6079468ple.119.2022.06.03.19.07.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 18:40:13 -0700 (PDT)
-Date:   Sat, 4 Jun 2022 09:40:05 +0800
+        Fri, 03 Jun 2022 19:07:28 -0700 (PDT)
+Date:   Sat, 4 Jun 2022 10:07:21 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Alyssa Ross <hi@alyssa.is>,
-        Ian Rogers <irogers@google.com>, Like Xu <likexu@tencent.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Li Huafei <lihuafei1@huawei.com>,
-        Joe Mario <jmario@redhat.com>,
-        Adam Li <adam.li@amperecomputing.com>,
-        German Gomez <german.gomez@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] perf c2c: Support display for Arm64
-Message-ID: <20220604014005.GA53464@leoy-ThinkPad-X240s>
-References: <20220530114036.3225544-1-leo.yan@linaro.org>
- <Ypph9lA1qavXXZI5@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, broonie@kernel.org,
+        acme@kernel.org, german.gomez@arm.com, mathieu.poirier@linaro.org,
+        john.garry@huawei.com, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] perf: arm64: Kernel support for Dwarf unwinding
+ through SVE functions
+Message-ID: <20220604020721.GB53464@leoy-ThinkPad-X240s>
+References: <20220517100743.3020667-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Ypph9lA1qavXXZI5@kernel.org>
+In-Reply-To: <20220517100743.3020667-1-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
-
-On Fri, Jun 03, 2022 at 09:33:10PM +0200, Arnaldo Carvalho de Melo wrote:
-> Em Mon, May 30, 2022 at 07:40:24PM +0800, Leo Yan escreveu:
-> > Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
-> > us to detect cache line contention and transfers.
-> > 
-> > This patch set is based on Ali Said's patch set v9 "perf: arm-spe: Decode SPE
-> > source and use for perf c2c" [1] and Ali's patch set doesn't need any
-> > change in this new round.
+On Tue, May 17, 2022 at 11:07:41AM +0100, James Clark wrote:
+> Changes since v1:
 > 
-> IIRC there is a kernel part there, please let me know when that part
-> gets merged so that I can process this 12 patches long set.
+>   * Add Mark's review tag
+>   * Clarify in docs that it's the SVE register length
+>   * Split patchset into kernel side and Perf tool changes
+> 
+> When SVE registers are pushed onto the stack the VG register is required to
+> unwind because the stack offsets would vary by the SVE register width at the
+> time when the sample was taken.
+> 
+> These first two patches add support for sampling the VG register to the kernel
+> and the docs. There is another patchset to add support to userspace perf.
 
-This patch set is not dependent on any kernel patch, it bases on Ali's
-patch set "perf: arm-spe: Decode SPE source and use for perf c2c".
+Hi Catalin, Will,
 
-Let me use a new patch set to include all relevant patches (include
-Ali's patches for setting data source and this patch set), will send
-out soon.  Hope this would be easier for picking up.
+Since James is on vacation, just want to ping if you could pick up
+this two patches?  Mark.B has given review tags for this patch set.
+
+I did this is because there has another patch set in perf tool to
+enable SVE registsers [1], which is dependent on this patch set's
+merging.
 
 Thanks,
 Leo
 
-P.s. James' patch set for enabling SVE register is dependent on kernel
-changes, James is on vacation, I will monitor the latest status and
-update in the corresponding patch set thread.
+[1] https://lore.kernel.org/lkml/20220525154114.718321-1-james.clark@arm.com/
