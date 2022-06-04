@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A198C43334
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF14C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 04:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350441AbiFDE2w (ORCPT
+        id S1350468AbiFDE3A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Jun 2022 00:28:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57024 "EHLO
+        Sat, 4 Jun 2022 00:29:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350435AbiFDE2t (ORCPT
+        with ESMTP id S1350460AbiFDE26 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Jun 2022 00:28:49 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE1C35DEB
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:28:48 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id h192so1888277pgc.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:28:48 -0700 (PDT)
+        Sat, 4 Jun 2022 00:28:58 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805EC37A0B
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Jun 2022 21:28:54 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id b5so8120802plx.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jun 2022 21:28:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Wc1YiV9uyUA6hUWTfhvQxLsnBAF4WMjPE/wOPDue8vY=;
-        b=hlvAt+NKFQ93oLQE+Vc7CC1SciVNNaEIsz4OTmUYSw53+wN/88LcPvewlmeJcjqXYy
-         xGnEzwNO8wU1Snp1WP1B9f9NwHHICuzVLy/kMdZy+bHh8L05GvVO01KGtZUYt33hvH+o
-         GmMl0wyAXy5iFBMecOREOxexJjO7lDDILDeO7QsHanGXKIeCGZ0kEaftIpt8zpBcw8Ja
-         vU5ng6WEB2+UfN05oKcuQ+z7AAMC/U3C4hCbrMyVe83VuLrsQVjIB4se1DubesMRInFm
-         DIHSLpHgNLriaJfUci9gLg8jmUAQG+3T+8LohzfTvK0lJT6QAPO9iKsuQnN1p3rirA4+
-         g0sw==
+        bh=1GFA/G2sq7Z7tV5kUwDR4JNQSunfwujtW0Pzethicqk=;
+        b=dd5N4KgOOFen57SswJKMlpRQyZoOXZwv6XG6ilJNw4tVJiHvKVjis+OTi+zzt+nGwQ
+         kIByE3Gg9CVnPsWv1hLXqeQPZuryFe3qt9EHPKnlhynd7asQ64gBQl1upPd2aITKm/uy
+         VxGaUvrXSMrlwgz9bzYyTLjDkIBewZ/kYvJti5UVfHFet/C/gIk+ipcclx0vmHcKyUhw
+         52n3cOlRbwBqkcbYLGXDyQKXyZmstWrYuwxa9+1eqE9ea8yHRJ+K9GOIWj1a2Xrs+37z
+         lqdtJVAxGQWQyg//p6/dYRrrC7Wn2YtAtbotdUARaXJAxdqkI1qFLvT46dkDxDGEMXsW
+         bNWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Wc1YiV9uyUA6hUWTfhvQxLsnBAF4WMjPE/wOPDue8vY=;
-        b=ccOenSbUcW08QcwFH8plXQSswuT3jczBWkJaLbPSr96RbzE8dzZRbaCT7NzrLI5Tuk
-         4gS885IwVNgCdkNm5gkOH0e4l2P0TW2dPUugdi/y9/1+ahFMhxt7x2sfxKt2xFtXBvd8
-         a0B2002M4vqp8zrMu1Af7Y5Z4s4JwrPQwVK5Aws+ZqXwl2BE5d/JDpPMBNpMtzNxBaAu
-         kDMaE6QsrIkWPtkrPwfzBfzjI2GOEIjHa8kiAHlLwv+d4dRwaRTI6w+UwL/7rMnkANNr
-         j5m2O7bw1OKGrr3xTmlvcZU0gWCSiGSzUb/iKl63Gi2t/Ip8yZ/lrmvnLE+F1QlVVH1L
-         5uqw==
-X-Gm-Message-State: AOAM530+R6eHBI6zSnGCGPkkBQTJubKiLzhSWJJiXBnWKn3ddaqku3F4
-        7cZGGi9JOFRc6cZMRkm1wWIlvg==
-X-Google-Smtp-Source: ABdhPJyn3cqkMg0lACTzH2D0FR58K/46kMHeeMtnsgDgo1oVmKvzkM9jv8FNzFKJqNucvHfJJilpVQ==
-X-Received: by 2002:a05:6a00:21c8:b0:4c4:4bd:dc17 with SMTP id t8-20020a056a0021c800b004c404bddc17mr13233148pfj.57.1654316927721;
-        Fri, 03 Jun 2022 21:28:47 -0700 (PDT)
+        bh=1GFA/G2sq7Z7tV5kUwDR4JNQSunfwujtW0Pzethicqk=;
+        b=LyQ6doQQ4ydwVpAfX91R8440jXYLiMvvkzkY8RToPyfvKVUMRGERDjWIaZShiQbWEr
+         pl+hOS+Eb/5d/4NJxf3JB7vRNJ76nZ0VOtbE2+a9frPXw9AklAyvaLtm6He/IjwXk2+O
+         xxMup1xhsfpPLfXomGJjKY3om3ynFWC+vbvfMB1eqzxTauxZs8FxziXTed9zellD75aJ
+         IJVhX7Gws1Z4lldsiv4osjGIyjhQHNG+v5T/kgK3R2gZr7kpJqtWObe97j5MmkxVaX5x
+         9PYTvWZudavFXqIsvvfN4elgD2HKBcwt3/7RdEOcVpmC7SeS/i7+INLlO1u/G4ukrqZ5
+         WwVA==
+X-Gm-Message-State: AOAM530DKHUwi7tAa3Gm/p5RBwvFBmwwt2YCzVzk9DeiYGJNZctH/xFJ
+        YF1hYb/l/TTOyAOovaEv/GvuSg==
+X-Google-Smtp-Source: ABdhPJw+tOYyDFUf+277NXZH+SE7nfaTTpIOiGfuiMRFRQJf1KdhW3jfVV02quE2xe+Nks49lWYAAg==
+X-Received: by 2002:a17:90a:fd87:b0:1e2:cdfc:cbd3 with SMTP id cx7-20020a17090afd8700b001e2cdfccbd3mr35605758pjb.28.1654316933882;
+        Fri, 03 Jun 2022 21:28:53 -0700 (PDT)
 Received: from leo-build-box.lan (ec2-54-67-95-58.us-west-1.compute.amazonaws.com. [54.67.95.58])
-        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.28.42
+        by smtp.gmail.com with ESMTPSA id w24-20020a1709027b9800b00163d4c3ffabsm6152916pll.304.2022.06.03.21.28.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 21:28:47 -0700 (PDT)
+        Fri, 03 Jun 2022 21:28:53 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -65,10 +65,10 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adam Li <adam.li@amperecomputing.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v5 01/17] perf: Add SNOOP_PEER flag to perf mem data struct
-Date:   Sat,  4 Jun 2022 12:28:04 +0800
-Message-Id: <20220604042820.2270916-2-leo.yan@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v5 02/17] perf tools: sync addition of PERF_MEM_SNOOPX_PEER
+Date:   Sat,  4 Jun 2022 12:28:05 +0800
+Message-Id: <20220604042820.2270916-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220604042820.2270916-1-leo.yan@linaro.org>
 References: <20220604042820.2270916-1-leo.yan@linaro.org>
@@ -90,15 +90,14 @@ define a new flag that indicates this type of transfer.
 
 Signed-off-by: Ali Saidi <alisaidi@amazon.com>
 Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
 ---
- include/uapi/linux/perf_event.h | 2 +-
+ tools/include/uapi/linux/perf_event.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
 index d37629dbad72..7b88bfd097dc 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
 @@ -1310,7 +1310,7 @@ union perf_mem_data_src {
  #define PERF_MEM_SNOOP_SHIFT	19
  
