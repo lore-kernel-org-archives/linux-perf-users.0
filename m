@@ -2,152 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E16C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Jun 2022 11:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B2C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Jun 2022 23:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236010AbiFFL5g (ORCPT
+        id S235341AbiFFXrK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Jun 2022 07:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55550 "EHLO
+        Mon, 6 Jun 2022 19:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235952AbiFFL5V (ORCPT
+        with ESMTP id S235334AbiFFXrJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Jun 2022 07:57:21 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746E7DF;
-        Mon,  6 Jun 2022 04:57:09 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LGsPr4XfZzjXX8;
-        Mon,  6 Jun 2022 19:55:44 +0800 (CST)
-Received: from localhost.localdomain (10.67.164.66) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 6 Jun 2022 19:57:01 +0800
-From:   Yicong Yang <yangyicong@hisilicon.com>
-To:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
-        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <acme@kernel.org>,
-        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>
-CC:     <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mark.rutland@arm.com>, <joro@8bytes.org>,
-        <shameerali.kolothum.thodi@huawei.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH v9 4/8] perf tool: arm: Refactor event list iteration in auxtrace_record__init()
-Date:   Mon, 6 Jun 2022 19:55:51 +0800
-Message-ID: <20220606115555.41103-5-yangyicong@hisilicon.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20220606115555.41103-1-yangyicong@hisilicon.com>
-References: <20220606115555.41103-1-yangyicong@hisilicon.com>
+        Mon, 6 Jun 2022 19:47:09 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A031C03A9;
+        Mon,  6 Jun 2022 16:47:08 -0700 (PDT)
+Received: by mail-oi1-f179.google.com with SMTP id q184so4890647oia.1;
+        Mon, 06 Jun 2022 16:47:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=feTs37C7gOoBTTvu4J4a/W8wj3saqfjkYK0ShR5TDGk=;
+        b=Umu+7byJWB9JIeXcD5JzJ49rSzi+MWEqrwi+D6xkqrBuMQ/emB4cXMIHz7U7jYsx1I
+         hcHAHAEQSaHEsQzuAGTPemE3nvud0ZVWEX+vkSjCfqAVKqPpTbqbFW6RMakGOCEUy9zr
+         UhYGQjOe8d51JHP8QoQcn3RrZZGKOiqbOMeYXgNekr/aeJ1R3zRDufNEvXYfCFX2Kw9h
+         VcvM6Baclsf7f+8GaO9D8nT9r1/F1NrARE2ThrwG8WDBUIeP4/5EqdD8jWhoYHIgWEaT
+         R8oQEifNS6cSBxTFlLMJgn83vN+dliVAVDr7v4MqmHJ9Nwu45wvFQ4+kYfSI7Cka2OWD
+         nQPQ==
+X-Gm-Message-State: AOAM531so2QwLXtanKjwa6z9auKyW5JpWn6g8QNWE5CYo8ZsKJvVsPRW
+        euBjd+urgrQZydTjzj7JGsyBaD2xOcRQSIDBuTA=
+X-Google-Smtp-Source: ABdhPJyX087fQzsTb3cXqKlb3FHK2Usv3XxADxcZZ2DHMAR5vJqY0T/MEU7O04GUb3RZAcXb5O+l6CPjG3dEbhSI0RQ=
+X-Received: by 2002:a05:6808:1a01:b0:32b:1f24:9213 with SMTP id
+ bk1-20020a0568081a0100b0032b1f249213mr15031643oib.92.1654559227850; Mon, 06
+ Jun 2022 16:47:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.164.66]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+References: <20220604044519.594-1-ravi.bangoria@amd.com>
+In-Reply-To: <20220604044519.594-1-ravi.bangoria@amd.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 6 Jun 2022 16:46:57 -0700
+Message-ID: <CAM9d7ci9Th4Aye51G+X5F12BiDXTnffZdj-A+HGRfUX_nWuQdw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/8] perf/amd: Zen4 IBS extensions support (tool changes)
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>, rrichter@amd.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        James Clark <james.clark@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>, like.xu.linux@gmail.com,
+        x86@kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>, ananth.narayan@amd.com,
+        Kim Phillips <kim.phillips@amd.com>, santosh.shukla@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Qi Liu <liuqi115@huawei.com>
+Hi Ravi,
 
-Add find_pmu_for_event() and use to simplify logic in
-auxtrace_record_init(). find_pmu_for_event() will be
-reused in subsequent patches.
+On Fri, Jun 3, 2022 at 9:46 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>
+> Kernel side of changes have already been applied to linus/master
+> (except amd-ibs.h header). This series contains perf tool changes.
+>
+> v5: https://lore.kernel.org/lkml/20220601032608.1034-1-ravi.bangoria@amd.com
+> v5->v6:
+>  - Use macros instead of magic numbers for IBS l3missonly bits
+>  - Use asprintf() instead of allocating memory and copying data manually
+>  - Add Reviewed-by Kan Liang (patch 2-5).
+>
+> Patches prepared on acme/perf/core (9dde6cadb92b5)
+>
+> Original cover letter:
+>
+> IBS support has been enhanced with two new features in upcoming uarch:
+> 1. DataSrc extension and 2. L3 Miss Filtering capability. Both are
+> indicated by CPUID_Fn8000001B_EAX bit 11.
+>
+> DataSrc extension provides additional data source details for tagged
+> load/store operations. Add support for these new bits in perf report/
+> script raw-dump.
+>
+> IBS L3 miss filtering works by tagging an instruction on IBS counter
+> overflow and generating an NMI if the tagged instruction causes an L3
+> miss. Samples without an L3 miss are discarded and counter is reset
+> with random value (between 1-15 for fetch pmu and 1-127 for op pmu).
+> This helps in reducing sampling overhead when user is interested only
+> in such samples. One of the use case of such filtered samples is to
+> feed data to page-migration daemon in tiered memory systems.
+>
+> Add support for L3 miss filtering in IBS driver via new pmu attribute
+> "l3missonly". Example usage:
+>
+>   # perf record -a -e ibs_op/l3missonly=1/ --raw-samples sleep 5
+>   # perf report -D
+>
+> Some important points to keep in mind while using L3 miss filtering:
+> 1. Hw internally reset sampling period when tagged instruction does
+>    not cause L3 miss. But there is no way to reconstruct aggregated
+>    sampling period when this happens.
+> 2. L3 miss is not the actual event being counted. Rather, IBS will
+>    count fetch, cycles or uOps depending on the configuration. Thus
+>    sampling period have no direct connection to L3 misses.
+>
+> 1st causes sampling period skew. Thus, I've added warning message at
+> perf record:
+>
+>   # perf record -c 10000 -C 0 -e ibs_op/l3missonly=1/
+>   WARNING: Hw internally resets sampling period when L3 Miss Filtering is enabled
+>   and tagged operation does not cause L3 Miss. This causes sampling period skew.
+>
+> User can configure smaller sampling period to get more samples while
+> using l3missonly.
+>
+>
+> Ravi Bangoria (8):
+>   perf record ibs: Warn about sampling period skew
+>   perf tool: Parse pmu caps sysfs only once
+>   perf headers: Pass "cpu" pmu name while printing caps
+>   perf headers: Store pmu caps in an array of strings
+>   perf headers: Record non-cpu pmu capabilities
+>   perf/x86/ibs: Add new IBS register bits into header
+>   perf tool ibs: Sync amd ibs header file
+>   perf script ibs: Support new IBS bits in raw trace dump
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- tools/perf/arch/arm/util/auxtrace.c | 53 ++++++++++++++++++-----------
- 1 file changed, 34 insertions(+), 19 deletions(-)
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 5fc6a2a3dbc5..384c7cfda0fd 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -50,16 +50,32 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
- 	return arm_spe_pmus;
- }
- 
-+static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
-+					   int pmu_nr, struct evsel *evsel)
-+{
-+	int i;
-+
-+	if (!pmus)
-+		return NULL;
-+
-+	for (i = 0; i < pmu_nr; i++) {
-+		if (evsel->core.attr.type == pmus[i]->type)
-+			return pmus[i];
-+	}
-+
-+	return NULL;
-+}
-+
- struct auxtrace_record
- *auxtrace_record__init(struct evlist *evlist, int *err)
- {
--	struct perf_pmu	*cs_etm_pmu;
-+	struct perf_pmu	*cs_etm_pmu = NULL;
-+	struct perf_pmu **arm_spe_pmus = NULL;
- 	struct evsel *evsel;
--	bool found_etm = false;
-+	struct perf_pmu *found_etm = NULL;
- 	struct perf_pmu *found_spe = NULL;
--	struct perf_pmu **arm_spe_pmus = NULL;
-+	int auxtrace_event_cnt = 0;
- 	int nr_spes = 0;
--	int i = 0;
- 
- 	if (!evlist)
- 		return NULL;
-@@ -68,24 +84,23 @@ struct auxtrace_record
- 	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
- 
- 	evlist__for_each_entry(evlist, evsel) {
--		if (cs_etm_pmu &&
--		    evsel->core.attr.type == cs_etm_pmu->type)
--			found_etm = true;
--
--		if (!nr_spes || found_spe)
--			continue;
--
--		for (i = 0; i < nr_spes; i++) {
--			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
--				found_spe = arm_spe_pmus[i];
--				break;
--			}
--		}
-+		if (cs_etm_pmu && !found_etm)
-+			found_etm = find_pmu_for_event(&cs_etm_pmu, 1, evsel);
-+
-+		if (arm_spe_pmus && !found_spe)
-+			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
- 	}
-+
- 	free(arm_spe_pmus);
- 
--	if (found_etm && found_spe) {
--		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
-+	if (found_etm)
-+		auxtrace_event_cnt++;
-+
-+	if (found_spe)
-+		auxtrace_event_cnt++;
-+
-+	if (auxtrace_event_cnt > 1) {
-+		pr_err("Concurrent AUX trace operation not currently supported\n");
- 		*err = -EOPNOTSUPP;
- 		return NULL;
- 	}
--- 
-2.24.0
+Thanks,
+Namhyung
 
+
+>
+>  arch/x86/include/asm/amd-ibs.h                |  16 +-
+>  tools/arch/x86/include/asm/amd-ibs.h          |  16 +-
+>  .../Documentation/perf.data-file-format.txt   |  10 +-
+>  tools/perf/arch/x86/util/evsel.c              |  52 +++++
+>  tools/perf/builtin-inject.c                   |   2 +-
+>  tools/perf/util/amd-sample-raw.c              |  68 ++++++-
+>  tools/perf/util/env.c                         |  62 +++++-
+>  tools/perf/util/env.h                         |  14 +-
+>  tools/perf/util/evsel.c                       |   7 +
+>  tools/perf/util/evsel.h                       |   1 +
+>  tools/perf/util/header.c                      | 189 ++++++++++--------
+>  tools/perf/util/header.h                      |   2 +-
+>  tools/perf/util/pmu.c                         |  15 +-
+>  tools/perf/util/pmu.h                         |   2 +
+>  14 files changed, 329 insertions(+), 127 deletions(-)
+>
+> --
+> 2.31.1
+>
