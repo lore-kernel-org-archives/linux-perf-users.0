@@ -2,85 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C4EC43334
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Jun 2022 20:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60159C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Jun 2022 11:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241417AbiFDU4G (ORCPT
+        id S235914AbiFFL5Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Jun 2022 16:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42658 "EHLO
+        Mon, 6 Jun 2022 07:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241300AbiFDU4F (ORCPT
+        with ESMTP id S235953AbiFFL5V (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Jun 2022 16:56:05 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADF02CDD3;
-        Sat,  4 Jun 2022 13:56:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C42FAB803F6;
-        Sat,  4 Jun 2022 20:56:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 74FD0C385B8;
-        Sat,  4 Jun 2022 20:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654376162;
-        bh=fzxIdKNBxQYv1bsgYycgDgcXBAeAmjY5gDNOANoX1A4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=gT4jQr6qY4XFMQcCen+bkhyfqxIZADqw9xXServfU5ZLKHOxmaiGov4yw7x9RR2Yg
-         /btL+Z6YhM4X4Kxjdp1ZTKvEUOTlshXyyfGVSkj2usNF4eXZzX3bnRn7CXgzj0hGp4
-         9ud/ghE9mfJdTsMjBR3NWZ5jiuLI+oKvXXEadpr82hUVNeOfscoIdB0Uu7OLzOrqKq
-         UePYMEpOdtGXDEGlLa+nCTiuSQNh9Mdear4jdt6yGEfP7G51ddmFaXT/BLDear4Tsx
-         u19UPIZ3FUU6+mGwqpYNMxP5FUhZJP5l2KdaxpnxunwwPj1gYQ1nTya1XMP3zOwfDk
-         1DJQPlMALA+8w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 62E8FEAC081;
-        Sat,  4 Jun 2022 20:56:02 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools changes for v5.19: 3rd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220603223136.554028-1-acme@kernel.org>
-References: <20220603223136.554028-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220603223136.554028-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.19-2022-06-04
-X-PR-Tracked-Commit-Id: 1bcca2b1bd67f3c0e5c3a88ed16c6389f01a5b31
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 45b2e5ad6837dfe4de6b9028c575bd57c132774c
-Message-Id: <165437616240.25005.16223561163619319343.pr-tracker-bot@kernel.org>
-Date:   Sat, 04 Jun 2022 20:56:02 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        Kevin Nomura <nomurak@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Sebastian Ullrich <sebasti@nullri.ch>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Mon, 6 Jun 2022 07:57:21 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B6DC5;
+        Mon,  6 Jun 2022 04:57:08 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LGsMf4hRtzRhh3;
+        Mon,  6 Jun 2022 19:53:50 +0800 (CST)
+Received: from localhost.localdomain (10.67.164.66) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 6 Jun 2022 19:57:01 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
+        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <acme@kernel.org>,
+        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>
+CC:     <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mark.rutland@arm.com>, <joro@8bytes.org>,
+        <shameerali.kolothum.thodi@huawei.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
+Subject: [PATCH v9 1/8] iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to identity
+Date:   Mon, 6 Jun 2022 19:55:48 +0800
+Message-ID: <20220606115555.41103-2-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220606115555.41103-1-yangyicong@hisilicon.com>
+References: <20220606115555.41103-1-yangyicong@hisilicon.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sat,  4 Jun 2022 00:31:36 +0200:
+The DMA operations of HiSilicon PTT device can only work properly with
+identical mappings. So add a quirk for the device to force the domain
+as passthrough.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.19-2022-06-04
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
+---
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/45b2e5ad6837dfe4de6b9028c575bd57c132774c
-
-Thank you!
-
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+index 88817a3376ef..e119ff8396c9 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+@@ -2839,6 +2839,26 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
+ 	}
+ }
+ 
++/*
++ * HiSilicon PCIe tune and trace device can be used to trace TLP headers on the
++ * PCIe link and save the data to memory by DMA. The hardware is restricted to
++ * use identity mapping only.
++ */
++#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
++					 (pdev)->device == 0xa12e)
++
++static int arm_smmu_def_domain_type(struct device *dev)
++{
++	if (dev_is_pci(dev)) {
++		struct pci_dev *pdev = to_pci_dev(dev);
++
++		if (IS_HISI_PTT_DEVICE(pdev))
++			return IOMMU_DOMAIN_IDENTITY;
++	}
++
++	return 0;
++}
++
+ static struct iommu_ops arm_smmu_ops = {
+ 	.capable		= arm_smmu_capable,
+ 	.domain_alloc		= arm_smmu_domain_alloc,
+@@ -2856,6 +2876,7 @@ static struct iommu_ops arm_smmu_ops = {
+ 	.sva_unbind		= arm_smmu_sva_unbind,
+ 	.sva_get_pasid		= arm_smmu_sva_get_pasid,
+ 	.page_response		= arm_smmu_page_response,
++	.def_domain_type	= arm_smmu_def_domain_type,
+ 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+ 	.owner			= THIS_MODULE,
+ 	.default_domain_ops = &(const struct iommu_domain_ops) {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.24.0
+
