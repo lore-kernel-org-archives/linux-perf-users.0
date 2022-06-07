@@ -2,105 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7182DC43334
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Jun 2022 21:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C0FCCA47F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Jun 2022 21:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358775AbiFGVCe (ORCPT
+        id S1378358AbiFGVWv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Jun 2022 17:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
+        Tue, 7 Jun 2022 17:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377225AbiFGU7f (ORCPT
+        with ESMTP id S1378406AbiFGVWP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Jun 2022 16:59:35 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22A2187076;
-        Tue,  7 Jun 2022 11:44:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1F0D8B8239B;
-        Tue,  7 Jun 2022 18:44:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1A9C385A2;
-        Tue,  7 Jun 2022 18:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1654627485;
-        bh=kckRoG9lqxpsZdaB+tTCcD/6R4thHI69wGhEV+seiP4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FlY7upfuFQ+GXV3GPY0YRzrt+9/+dYv0m7Xs66+acGITK5aA06PwiVR9tfdOwGEfl
-         Qo3BFkR7oacz5+DdJINOTqJqVIwf4lEKdy4OU5/OcQWnbXlguWEXQx+F0n9Dbk4ZyT
-         WFM/Q5RVgNteYSHR87h/v2gHkI6DrR3ZTBV9p6WY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        peterz@infradead.org, adrian.hunter@intel.com,
-        alexander.shishkin@intel.com, acme@kernel.org, ak@linux.intel.com,
-        jolsa@redhat.com, mingo@redhat.com,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 5.17 757/772] perf evlist: Extend arch_evsel__must_be_in_group to support hybrid systems
-Date:   Tue,  7 Jun 2022 19:05:49 +0200
-Message-Id: <20220607165011.331502794@linuxfoundation.org>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220607164948.980838585@linuxfoundation.org>
-References: <20220607164948.980838585@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jun 2022 17:22:15 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340B51660AC;
+        Tue,  7 Jun 2022 12:00:08 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id f7so14933859ilr.5;
+        Tue, 07 Jun 2022 12:00:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=gmFsGC5asBOsMwTokySfFmYzyb+MMlB/ax36UF7roRM=;
+        b=KRprMFMJQ8BOYYCx4BfqQEDBD1M4TY98wxdYru5+suebV78nXfhlLKrGnc8GaVErSP
+         cjwIYbFU0/mGYM7apRJck5JB2BYQ6/ubIr49yDDlC2WBbGksnuJdw6dxc8K5QQ9NJ8FJ
+         LB0gqVLUHL332MSl+0Ggup1JJ9BBGATmQcUsE1L91zB727xv6cHXfEryOy1UPzae8mHq
+         lO2544zOWTuhEeJE6bv/A3JYhM2l6pHKhj9R1IZNatNsW08RpBcsS84yGLi5gskQ/zCT
+         ebhawZivg1kJjrGwcIhAnVqhXya9oaFlDhC/SBBNHi9cibNN7nYHnHlTLybvCHF4N4qe
+         1RVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=gmFsGC5asBOsMwTokySfFmYzyb+MMlB/ax36UF7roRM=;
+        b=vL3vWZSDMALOxknYlh+UZiiNtJUyylmi6iXVU/Yam53SqCcOoalR45jz10IH3E+nvW
+         Uo7+lke2+kxdZnG2UcxvT1Vrew57Gj1JhERmx1MvyA0SY9qF8NQv6bUPtK12ItMs0SBT
+         P4FpOMAVORH6w9zcE2xuE1mJ3PsIefoqg4F+8/CGhJvGi2WL4ooZwnkUX/dsLwHjQGQx
+         hlUwUD4o8tPry1DhvYJEt+BdV8iSXgeS2+V+pPOFWZRwSv66gZF77KoS3uYacfDLtGdn
+         BTDvppplE67W6C5ehkLRW3j99JLGAxKtOs6R5AaCkST3FGL72MHEB+pL5SgXgrwwit1W
+         bVvA==
+X-Gm-Message-State: AOAM532BFuXk334mmb7Zmq4qCh25wFCMh0EJK0Vwt52wD4cSTk9QB2eM
+        atDx9ZUP8pg9IHZ14omJ712lvq2oTZdkxTKpBZcHb4Rbdml4tQ==
+X-Google-Smtp-Source: ABdhPJxwLclFuAiiWhqiQoKXWYkJmP0Ngrn9iwSDQKmH+bDO8rFtb0bRQAPa6wYRnhdIUYRQyM1vNCrbUMeS0Q2A0LA=
+X-Received: by 2002:a92:cc8b:0:b0:2d6:5389:e7f4 with SMTP id
+ x11-20020a92cc8b000000b002d65389e7f4mr1465481ilo.245.1654628407330; Tue, 07
+ Jun 2022 12:00:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20220607000851.39798-1-irogers@google.com>
+In-Reply-To: <20220607000851.39798-1-irogers@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 7 Jun 2022 20:59:31 +0200
+Message-ID: <CA+icZUWpSF6ge76JVp1qBC5QhC1AwNacs5Di=e1QSbAD+SVKUA@mail.gmail.com>
+Subject: [Linux v5.19-rc1] tools/perf/a.out remains after make -C tools/perf clean
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Hi,
 
-commit e69a5c010246ca6a87c4e6f13d0a291954bdece8 upstream.
+I observed this some time ago - so this is not only Linux v5.19-rc1 related.
 
-For the hybrid system, the "slots" event changes to "cpu_core/slots/", need
-extend API arch_evsel__must_be_in_group() to support hybrid systems.
+$ LC_ALL=C make -C tools/perf clean 2>&1 | tee ../make-log_perf-clean.txt
+make: Entering directory '/home/dileks/src/linux-kernel/git/tools/perf'
+ CLEAN   x86
+ CLEAN   libtraceevent
+ CLEAN   libapi
+ CLEAN   libbpf
+ CLEAN   libsubcmd
+ CLEAN   libperf
+ CLEAN   fixdep
+ CLEAN   feature-detect
+ CLEAN   python
+ CLEAN   bpf-skel
+ CLEAN   core-objs
+ CLEAN   core-progs
+ CLEAN   core-gen
+ CLEAN   Documentation
+make: Leaving directory '/home/dileks/src/linux-kernel/git/tools/perf'
 
-In the origin code, for hybrid system event "cpu_core/slots/", the output
-of the API arch_evsel__must_be_in_group() is "false" (in fact,it should be
-"true"). Currently only one API evsel__remove_from_group() calls it. In
-evsel__remove_from_group(), it adds the second condition to check, so the
-output of evsel__remove_from_group() still is correct. That's the reason
-why there isn't an instant error. I'd like to fix the issue found in API
-arch_evsel__must_be_in_group() in case someone else using the function in
-the other place.
+$ git status -s
+M tools/perf/util/unwind-libunwind-local.c
+?? tools/perf/a.out
 
-Fixes: d98079c05b5a ("perf evlist: Keep topdown counters in weak group")
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lore.kernel.org/r/20220601152544.1842447-1-zhengjun.xing@linux.intel.com
-Cc: peterz@infradead.org
-Cc: adrian.hunter@intel.com
-Cc: alexander.shishkin@intel.com
-Cc: acme@kernel.org
-Cc: ak@linux.intel.com
-Cc: jolsa@redhat.com
-Cc: mingo@redhat.com
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/perf/arch/x86/util/evsel.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+$ rm -v tools/perf/a.out
+'tools/perf/a.out' deleted
 
---- a/tools/perf/arch/x86/util/evsel.c
-+++ b/tools/perf/arch/x86/util/evsel.c
-@@ -38,6 +38,6 @@ bool arch_evsel__must_be_in_group(const
- 		return false;
- 
- 	return evsel->name &&
--		(!strcasecmp(evsel->name, "slots") ||
-+		(strcasestr(evsel->name, "slots") ||
- 		 strcasestr(evsel->name, "topdown"));
- }
+$ git checkout -- tools/perf/util/unwind-libunwind-local.c
 
+$ git status -s
+[ empty ]
 
+Thanks.
+
+Regards,
+-Sedat-
