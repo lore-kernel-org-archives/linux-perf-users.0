@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1068EC43334
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Jun 2022 13:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CEBC43334
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Jun 2022 13:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244670AbiFGN0O (ORCPT
+        id S244672AbiFGN0e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Jun 2022 09:26:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47466 "EHLO
+        Tue, 7 Jun 2022 09:26:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244686AbiFGN0M (ORCPT
+        with ESMTP id S244703AbiFGN0b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Jun 2022 09:26:12 -0400
-X-Greylist: delayed 540 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Jun 2022 06:26:08 PDT
-Received: from forward500j.mail.yandex.net (forward500j.mail.yandex.net [5.45.198.250])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2912AC1EDC;
-        Tue,  7 Jun 2022 06:26:07 -0700 (PDT)
-Received: from myt5-f0e8352497c8.qloud-c.yandex.net (myt5-f0e8352497c8.qloud-c.yandex.net [IPv6:2a02:6b8:c12:3c22:0:640:f0e8:3524])
-        by forward500j.mail.yandex.net (Yandex) with ESMTP id D93886CB6DAE;
-        Tue,  7 Jun 2022 16:17:01 +0300 (MSK)
+        Tue, 7 Jun 2022 09:26:31 -0400
+X-Greylist: delayed 550 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Jun 2022 06:26:29 PDT
+Received: from forward500o.mail.yandex.net (forward500o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::610])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2B3C3D28;
+        Tue,  7 Jun 2022 06:26:29 -0700 (PDT)
+Received: from myt5-3819f28180eb.qloud-c.yandex.net (myt5-3819f28180eb.qloud-c.yandex.net [IPv6:2a02:6b8:c12:2815:0:640:3819:f281])
+        by forward500o.mail.yandex.net (Yandex) with ESMTP id C4A9E94258C;
+        Tue,  7 Jun 2022 16:17:15 +0300 (MSK)
 Received: from myt6-654ec0a0ab93.qloud-c.yandex.net (myt6-654ec0a0ab93.qloud-c.yandex.net [2a02:6b8:c12:1d80:0:640:654e:c0a0])
-        by myt5-f0e8352497c8.qloud-c.yandex.net (mxback/Yandex) with ESMTP id 3zNxHODKJI-H0fO9MpU;
-        Tue, 07 Jun 2022 16:17:01 +0300
+        by myt5-3819f28180eb.qloud-c.yandex.net (mxback/Yandex) with ESMTP id GRfsCTAl1R-HFgKe2sS;
+        Tue, 07 Jun 2022 16:17:15 +0300
 X-Yandex-Fwd: 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1654607821;
-        bh=hQhndwkj71U3FGMLsP/eq3Nugqa3M1fyrFTWT3q68hQ=;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1654607835;
+        bh=T/sjv6r+evzZz3D9hOnrBsFuwTi03hkMjzMpfeipj8g=;
         h=In-Reply-To:References:Date:Subject:Cc:To:From:Message-Id;
-        b=NJnzfUlSlee1UpmU5Dgch59/F8lXLuIVD8FhhXiFA9CJ1kWdMxKhcIdnWVy6AZTyV
-         3DqZZltYprFxT3qkivpyJ0ssDY7OpxzlKcpbiyThK37jmqOpTq4pnBxIpCpTTzdWHO
-         q+ZchxAeidjMHg1V/WiYd32NttwLoMnkuASiG1Ls=
-Authentication-Results: myt5-f0e8352497c8.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by myt6-654ec0a0ab93.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id sOXgg17Zrk-GxM4mQbH;
-        Tue, 07 Jun 2022 16:16:59 +0300
+        b=l5oGOhT7hZTF8satbdLVJ0oUXVdcdHju83EkF1ccx4nf2uh4NtHjtBlJ8FXfFwklS
+         2jXlFB5FC2zIaXKj4+YrRxIcpVZQmroRUDUdUpuhuWC3fnDJTKITWlQ9k/QUkw6CKk
+         Iqdsr29Somb6sF5nZVmwwj4juo6G22c9zqjhzagk=
+Authentication-Results: myt5-3819f28180eb.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by myt6-654ec0a0ab93.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id sOXgg17Zrk-HEM4WJNa;
+        Tue, 07 Jun 2022 16:17:14 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
 From:   Nikita Shubin <nikita.shubin@maquefel.me>
@@ -40,28 +40,23 @@ Cc:     Genevieve Chan <genevieve.chan@starfivetech.com>,
         =?UTF-8?q?Jo=C3=A3o=20M=C3=A1rio=20Domingos?= 
         <joao.mario@tecnico.ulisboa.pt>,
         Nikita Shubin <n.shubin@yadro.com>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
         linux-kernel@vger.kernel.org (open list),
-        linux-riscv@lists.infradead.org (open list:RISC-V PMU DRIVERS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PMU PROFILING
-        AND DEBUGGING),
         linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
-        SUBSYSTEM)
-Subject: [PATCH v3 2/4] RISC-V: Support CPUID for risc-v in perf
-Date:   Tue,  7 Jun 2022 16:16:45 +0300
-Message-Id: <20220607131648.29439-3-nikita.shubin@maquefel.me>
+        SUBSYSTEM),
+        linux-riscv@lists.infradead.org (open list:RISC-V ARCHITECTURE)
+Subject: [PATCH v3 4/4] RISC-V: Added HiFive Unmatched PMU events
+Date:   Tue,  7 Jun 2022 16:16:47 +0300
+Message-Id: <20220607131648.29439-5-nikita.shubin@maquefel.me>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220607131648.29439-1-nikita.shubin@maquefel.me>
 References: <20220607131648.29439-1-nikita.shubin@maquefel.me>
@@ -75,144 +70,233 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: João Mário Domingos <joao.mario@tecnico.ulisboa.pt>
 
-This patch creates the header.c file for the risc-v architecture and introduces support for
-PMU identification through sysfs.
-It is now possible to configure pmu-events in risc-v.
+This patch contains all the available events for the HiFive Unmatched performance monitoring unit.
 
-Depends on patch [1], that introduces the id sysfs file.
+Depends on patch [3], for the base mapfile.csv file.
 
 Signed-off-by: João Mário Domingos <joao.mario@tecnico.ulisboa.pt>
-[Nikita: replaced soc:pmu to riscv-pmu/id]
-Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
 Tested-by: Nikita Shubin <n.shubin@yadro.com>
 ---
-v2->v3:
-- Change 'soc/soc:pmu/id' to 'riscv-pmu/id'
----
- drivers/perf/riscv_pmu.c            | 18 ++++++++
- tools/perf/arch/riscv/util/Build    |  1 +
- tools/perf/arch/riscv/util/header.c | 66 +++++++++++++++++++++++++++++
- 3 files changed, 85 insertions(+)
- create mode 100644 tools/perf/arch/riscv/util/header.c
+ tools/perf/pmu-events/arch/riscv/mapfile.csv  |  1 +
+ .../arch/riscv/sifive/u74/instructions.json   | 92 +++++++++++++++++++
+ .../arch/riscv/sifive/u74/memory.json         | 32 +++++++
+ .../arch/riscv/sifive/u74/microarch.json      | 57 ++++++++++++
+ 4 files changed, 182 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
 
-diff --git a/drivers/perf/riscv_pmu.c b/drivers/perf/riscv_pmu.c
-index b2b8d2074ed0..d1aa4e0e527f 100644
---- a/drivers/perf/riscv_pmu.c
-+++ b/drivers/perf/riscv_pmu.c
-@@ -17,6 +17,23 @@
- 
- #include <asm/sbi.h>
- 
-+PMU_FORMAT_ATTR(event, "config:0-63");
-+
-+static struct attribute *riscv_arch_formats_attr[] = {
-+	&format_attr_event.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group riscv_pmu_format_group = {
-+	.name = "format",
-+	.attrs = riscv_arch_formats_attr,
-+};
-+
-+static const struct attribute_group *riscv_pmu_attr_groups[] = {
-+	&riscv_pmu_format_group,
-+	NULL,
-+};
-+
- static unsigned long csr_read_num(int csr_num)
- {
- #define switchcase_csr_read(__csr_num, __val)		{\
-@@ -307,6 +324,7 @@ struct riscv_pmu *riscv_pmu_alloc(void)
- 			cpuc->events[i] = NULL;
- 	}
- 	pmu->pmu = (struct pmu) {
-+		.attr_groups	= riscv_pmu_attr_groups,
- 		.event_init	= riscv_pmu_event_init,
- 		.add		= riscv_pmu_add,
- 		.del		= riscv_pmu_del,
-diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
-index 7d3050134ae0..603dbb5ae4dc 100644
---- a/tools/perf/arch/riscv/util/Build
-+++ b/tools/perf/arch/riscv/util/Build
-@@ -1,4 +1,5 @@
- perf-y += perf_regs.o
-+perf-y += header.o
- 
- perf-$(CONFIG_DWARF) += dwarf-regs.o
- perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
+diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+index 4f2aa199d9cb..bda3fb9382f1 100644
+--- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
++++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+@@ -12,3 +12,4 @@
+ #
+ #
+ #Family-model,Version,Filename,EventType
++0x48980072018,v1,sifive/u74,core
+diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
 new file mode 100644
-index 000000000000..98d40b87c9f3
+index 000000000000..5eab718c9256
 --- /dev/null
-+++ b/tools/perf/arch/riscv/util/header.c
-@@ -0,0 +1,66 @@
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <api/fs/fs.h>
-+#include <errno.h>
-+#include "../../util/debug.h"
-+#include "../../util/header.h"
-+
-+#define STR_LEN 1024
-+#define ID_SIZE 64
-+
-+static int _get_cpuid(char *buf, size_t sz)
-+{
-+	const char *sysfs = sysfs__mountpoint();
-+	u64 id = 0;
-+	char path[PATH_MAX];
-+	FILE *file;
-+
-+	if (!sysfs || sz < ID_SIZE)
-+		return -EINVAL;
-+
-+	scnprintf(path, PATH_MAX, "%s/devices/platform/riscv-pmu/id",
-+			sysfs);
-+
-+	file = fopen(path, "r");
-+	if (!file) {
-+		pr_debug("fopen failed for file %s\n", path);
-+		return -EINVAL;
-+	}
-+	if (!fgets(buf, ID_SIZE, file)) {
-+		fclose(file);
-+		return -EINVAL;
-+	}
-+
-+	fclose(file);
-+
-+	/*Check if value is numeric and remove special characters*/
-+	id = strtoul(buf, NULL, 16);
-+	if (!id)
-+		return -EINVAL;
-+	scnprintf(buf, ID_SIZE, "0x%lx", id);
-+
-+	return 0;
-+}
-+
-+char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
-+{
-+	char *buf = NULL;
-+	int res;
-+
-+	if (!pmu)
-+		return NULL;
-+
-+	buf = malloc(ID_SIZE);
-+	if (!buf)
-+		return NULL;
-+
-+	/* read id */
-+	res = _get_cpuid(buf, ID_SIZE);
-+	if (res) {
-+		pr_err("failed to get cpuid string for PMU %s\n", pmu->name);
-+		free(buf);
-+		buf = NULL;
-+	}
-+
-+	return buf;
-+}
++++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
+@@ -0,0 +1,92 @@
++[
++  {
++    "EventName": "EXCEPTION_TAKEN",
++    "EventCode": "0x0000100",
++    "BriefDescription": "Exception taken"
++  },
++  {
++    "EventName": "INTEGER_LOAD_RETIRED",
++    "EventCode": "0x0000200",
++    "BriefDescription": "Integer load instruction retired"
++  },
++  {
++    "EventName": "INTEGER_STORE_RETIRED",
++    "EventCode": "0x0000400",
++    "BriefDescription": "Integer store instruction retired"
++  },
++  {
++    "EventName": "ATOMIC_MEMORY_RETIRED",
++    "EventCode": "0x0000800",
++    "BriefDescription": "Atomic memory operation retired"
++  },
++  {
++    "EventName": "SYSTEM_INSTRUCTION_RETIRED",
++    "EventCode": "0x0001000",
++    "BriefDescription": "System instruction retired"
++  },
++  {
++    "EventName": "INTEGER_ARITHMETIC_RETIRED",
++    "EventCode": "0x0002000",
++    "BriefDescription": "Integer arithmetic instruction retired"
++  },
++  {
++    "EventName": "CONDITIONAL_BRANCH_RETIRED",
++    "EventCode": "0x0004000",
++    "BriefDescription": "Conditional branch retired"
++  },
++  {
++    "EventName": "JAL_INSTRUCTION_RETIRED",
++    "EventCode": "0x0008000",
++    "BriefDescription": "JAL instruction retired"
++  },
++  {
++    "EventName": "JALR_INSTRUCTION_RETIRED",
++    "EventCode": "0x0010000",
++    "BriefDescription": "JALR instruction retired"
++  },
++  {
++    "EventName": "INTEGER_MULTIPLICATION_RETIRED",
++    "EventCode": "0x0020000",
++    "BriefDescription": "Integer multiplication instruction retired"
++  },
++  {
++    "EventName": "INTEGER_DIVISION_RETIRED",
++    "EventCode": "0x0040000",
++    "BriefDescription": "Integer division instruction retired"
++  },
++  {
++    "EventName": "FP_LOAD_RETIRED",
++    "EventCode": "0x0080000",
++    "BriefDescription": "Floating-point load instruction retired"
++  },
++  {
++    "EventName": "FP_STORE_RETIRED",
++    "EventCode": "0x0100000",
++    "BriefDescription": "Floating-point store instruction retired"
++  },
++  {
++    "EventName": "FP_ADDITION_RETIRED",
++    "EventCode": "0x0200000",
++    "BriefDescription": "Floating-point addition retired"
++  },
++  {
++    "EventName": "FP_MULTIPLICATION_RETIRED",
++    "EventCode": "0x0400000",
++    "BriefDescription": "Floating-point multiplication retired"
++  },
++  {
++    "EventName": "FP_FUSEDMADD_RETIRED",
++    "EventCode": "0x0800000",
++    "BriefDescription": "Floating-point fused multiply-add retired"
++  },
++  {
++    "EventName": "FP_DIV_SQRT_RETIRED",
++    "EventCode": "0x1000000",
++    "BriefDescription": "Floating-point division or square-root retired"
++  },
++  {
++    "EventName": "OTHER_FP_RETIRED",
++    "EventCode": "0x2000000",
++    "BriefDescription": "Other floating-point instruction retired"
++  }
++]
+\ No newline at end of file
+diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
+new file mode 100644
+index 000000000000..be1a46312ac3
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
+@@ -0,0 +1,32 @@
++[
++  {
++    "EventName": "ICACHE_RETIRED",
++    "EventCode": "0x0000102",
++    "BriefDescription": "Instruction cache miss"
++  },
++  {
++    "EventName": "DCACHE_MISS_MMIO_ACCESSES",
++    "EventCode": "0x0000202",
++    "BriefDescription": "Data cache miss or memory-mapped I/O access"
++  },
++  {
++    "EventName": "DCACHE_WRITEBACK",
++    "EventCode": "0x0000402",
++    "BriefDescription": "Data cache write-back"
++  },
++  {
++    "EventName": "INST_TLB_MISS",
++    "EventCode": "0x0000802",
++    "BriefDescription": "Instruction TLB miss"
++  },
++  {
++    "EventName": "DATA_TLB_MISS",
++    "EventCode": "0x0001002",
++    "BriefDescription": "Data TLB miss"
++  },
++  {
++    "EventName": "UTLB_MISS",
++    "EventCode": "0x0002002",
++    "BriefDescription": "UTLB miss"
++  }
++]
+\ No newline at end of file
+diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
+new file mode 100644
+index 000000000000..50ffa55418cb
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
+@@ -0,0 +1,57 @@
++[
++  {
++    "EventName": "ADDRESSGEN_INTERLOCK",
++    "EventCode": "0x0000101",
++    "BriefDescription": "Address-generation interlock"
++  },
++  {
++    "EventName": "LONGLAT_INTERLOCK",
++    "EventCode": "0x0000201",
++    "BriefDescription": "Long-latency interlock"
++  },
++  {
++    "EventName": "CSR_READ_INTERLOCK",
++    "EventCode": "0x0000401",
++    "BriefDescription": "CSR read interlock"
++  },
++  {
++    "EventName": "ICACHE_ITIM_BUSY",
++    "EventCode": "0x0000801",
++    "BriefDescription": "Instruction cache/ITIM busy"
++  },
++  {
++    "EventName": "DCACHE_DTIM_BUSY",
++    "EventCode": "0x0001001",
++    "BriefDescription": "Data cache/DTIM busy"
++  },
++  {
++    "EventName": "BRANCH_DIRECTION_MISPREDICTION",
++    "EventCode": "0x0002001",
++    "BriefDescription": "Branch direction misprediction"
++  },
++  {
++    "EventName": "BRANCH_TARGET_MISPREDICTION",
++    "EventCode": "0x0004001",
++    "BriefDescription": "Branch/jump target misprediction"
++  },
++  {
++    "EventName": "PIPE_FLUSH_CSR_WRITE",
++    "EventCode": "0x0008001",
++    "BriefDescription": "Pipeline flush from CSR write"
++  },
++  {
++    "EventName": "PIPE_FLUSH_OTHER_EVENT",
++    "EventCode": "0x0010001",
++    "BriefDescription": "Pipeline flush from other event"
++  },
++  {
++    "EventName": "INTEGER_MULTIPLICATION_INTERLOCK",
++    "EventCode": "0x0020001",
++    "BriefDescription": "Integer multiplication interlock"
++  },
++  {
++    "EventName": "FP_INTERLOCK",
++    "EventCode": "0x0040001",
++    "BriefDescription": "Floating-point interlock"
++  }
++]
+\ No newline at end of file
 -- 
 2.35.1
 
