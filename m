@@ -2,159 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B2C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Jun 2022 23:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FE4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Jun 2022 00:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235341AbiFFXrK (ORCPT
+        id S232633AbiFGAJK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Jun 2022 19:47:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
+        Mon, 6 Jun 2022 20:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235334AbiFFXrJ (ORCPT
+        with ESMTP id S232617AbiFGAJJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Jun 2022 19:47:09 -0400
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A031C03A9;
-        Mon,  6 Jun 2022 16:47:08 -0700 (PDT)
-Received: by mail-oi1-f179.google.com with SMTP id q184so4890647oia.1;
-        Mon, 06 Jun 2022 16:47:08 -0700 (PDT)
+        Mon, 6 Jun 2022 20:09:09 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA53C8CB04
+        for <linux-perf-users@vger.kernel.org>; Mon,  6 Jun 2022 17:09:07 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id a127-20020a621a85000000b0051bc393dcb4so7113735pfa.6
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Jun 2022 17:09:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5njyuqsJfb5ANEto3T4lhSV8l6ei77v301vQGlsYZZs=;
+        b=Xarlvgo+aGPSnUVW4AOncnP8EbZ3BDRcAMJ/n5Vh/I2VAK/jbjiHP70PuNcB5+ROEq
+         L5E1vlBRIZKAd/n389NC8wA25BLPCjYTKd8SQ9AmXkzshhNsaYdYIQeb2YoVwbviJijj
+         DHtroToE9o7QMHbETr6NQ/PqJBn/pA3glQhTKRmS5cHTWQ/epMRkS42JuM/iOd0kEu5E
+         nVfq/0CEs+H9LqMuL9j203jGJlksrY6JXLcL1dkDXkI9Jg9GUQFJGLwTh491SGdDr0mA
+         7aLezO8L8vN2MTOXmmYx9ATd3CwK1Nwct7CwcLAaMmxPQ/uSHhVRj7SEm01O3BRzbbSe
+         fEuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=feTs37C7gOoBTTvu4J4a/W8wj3saqfjkYK0ShR5TDGk=;
-        b=Umu+7byJWB9JIeXcD5JzJ49rSzi+MWEqrwi+D6xkqrBuMQ/emB4cXMIHz7U7jYsx1I
-         hcHAHAEQSaHEsQzuAGTPemE3nvud0ZVWEX+vkSjCfqAVKqPpTbqbFW6RMakGOCEUy9zr
-         UhYGQjOe8d51JHP8QoQcn3RrZZGKOiqbOMeYXgNekr/aeJ1R3zRDufNEvXYfCFX2Kw9h
-         VcvM6Baclsf7f+8GaO9D8nT9r1/F1NrARE2ThrwG8WDBUIeP4/5EqdD8jWhoYHIgWEaT
-         R8oQEifNS6cSBxTFlLMJgn83vN+dliVAVDr7v4MqmHJ9Nwu45wvFQ4+kYfSI7Cka2OWD
-         nQPQ==
-X-Gm-Message-State: AOAM531so2QwLXtanKjwa6z9auKyW5JpWn6g8QNWE5CYo8ZsKJvVsPRW
-        euBjd+urgrQZydTjzj7JGsyBaD2xOcRQSIDBuTA=
-X-Google-Smtp-Source: ABdhPJyX087fQzsTb3cXqKlb3FHK2Usv3XxADxcZZ2DHMAR5vJqY0T/MEU7O04GUb3RZAcXb5O+l6CPjG3dEbhSI0RQ=
-X-Received: by 2002:a05:6808:1a01:b0:32b:1f24:9213 with SMTP id
- bk1-20020a0568081a0100b0032b1f249213mr15031643oib.92.1654559227850; Mon, 06
- Jun 2022 16:47:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220604044519.594-1-ravi.bangoria@amd.com>
-In-Reply-To: <20220604044519.594-1-ravi.bangoria@amd.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 6 Jun 2022 16:46:57 -0700
-Message-ID: <CAM9d7ci9Th4Aye51G+X5F12BiDXTnffZdj-A+HGRfUX_nWuQdw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/8] perf/amd: Zen4 IBS extensions support (tool changes)
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>, rrichter@amd.com,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5njyuqsJfb5ANEto3T4lhSV8l6ei77v301vQGlsYZZs=;
+        b=PeBpt5zYn/fmSyolbOU1cx7mNLHVkYQnho4/NT3nFpsk+hN5aoqO8zPUniXOcFjOyz
+         V2KNbZF3H00EtR/M+p5pjgSmivrNLOi6dxAOFVOAcaHV/CaQiNU355ibWGyoNUWSTP03
+         +dEvDCMMam69OsHsnLqEMnIWpBtNx9LEXIDAZ/ILPKpIaNf4S5cTZ3DwWfD+KaUfBz0V
+         vOmkIWjUBsOg/wT40bQ3zE+1PPJgahJS7m1/DI15+QXQiQAfu3xWdh+Ej8stuB46/DXc
+         +17ikfpp/LXmv9E7roblP4pw6ur8NvTXQ11euT6cBoNu7gfKBSHSI8scm3v2VNT/dKJw
+         sWdg==
+X-Gm-Message-State: AOAM531V1UZLDmA83Q6vJQqdAsotzc/UOMFMc2MXHMP/p2cN+/ocReG2
+        0hAEhsFC/l5g9HRFVlrKR3tmwt+rttBL
+X-Google-Smtp-Source: ABdhPJysN3Jfvc2kr6L+a1zuctuQEbH8RmFdNFd8u4ZR9Tc4WGWrW/1ALQMRqSCJyjJYXehXqmpBCH6RijA0
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:e763:4219:a098:af4b])
+ (user=irogers job=sendgmr) by 2002:a05:6a00:cd2:b0:51c:28b5:1573 with SMTP id
+ b18-20020a056a000cd200b0051c28b51573mr5173255pfv.59.1654560547157; Mon, 06
+ Jun 2022 17:09:07 -0700 (PDT)
+Date:   Mon,  6 Jun 2022 17:08:51 -0700
+Message-Id: <20220607000851.39798-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
+Subject: [PATCH] perf unwind: Fix uninitialized variable
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>, like.xu.linux@gmail.com,
-        x86@kernel.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>, ananth.narayan@amd.com,
-        Kim Phillips <kim.phillips@amd.com>, santosh.shukla@amd.com
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>, llvm@lists.linux.dev,
+        Fangrui Song <maskray@google.com>,
+        Sebastian Ullrich <sebasti@nullri.ch>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ravi,
+ret may be uninitialized on error goto paths.
 
-On Fri, Jun 3, 2022 at 9:46 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->
-> Kernel side of changes have already been applied to linus/master
-> (except amd-ibs.h header). This series contains perf tool changes.
->
-> v5: https://lore.kernel.org/lkml/20220601032608.1034-1-ravi.bangoria@amd.com
-> v5->v6:
->  - Use macros instead of magic numbers for IBS l3missonly bits
->  - Use asprintf() instead of allocating memory and copying data manually
->  - Add Reviewed-by Kan Liang (patch 2-5).
->
-> Patches prepared on acme/perf/core (9dde6cadb92b5)
->
-> Original cover letter:
->
-> IBS support has been enhanced with two new features in upcoming uarch:
-> 1. DataSrc extension and 2. L3 Miss Filtering capability. Both are
-> indicated by CPUID_Fn8000001B_EAX bit 11.
->
-> DataSrc extension provides additional data source details for tagged
-> load/store operations. Add support for these new bits in perf report/
-> script raw-dump.
->
-> IBS L3 miss filtering works by tagging an instruction on IBS counter
-> overflow and generating an NMI if the tagged instruction causes an L3
-> miss. Samples without an L3 miss are discarded and counter is reset
-> with random value (between 1-15 for fetch pmu and 1-127 for op pmu).
-> This helps in reducing sampling overhead when user is interested only
-> in such samples. One of the use case of such filtered samples is to
-> feed data to page-migration daemon in tiered memory systems.
->
-> Add support for L3 miss filtering in IBS driver via new pmu attribute
-> "l3missonly". Example usage:
->
->   # perf record -a -e ibs_op/l3missonly=1/ --raw-samples sleep 5
->   # perf report -D
->
-> Some important points to keep in mind while using L3 miss filtering:
-> 1. Hw internally reset sampling period when tagged instruction does
->    not cause L3 miss. But there is no way to reconstruct aggregated
->    sampling period when this happens.
-> 2. L3 miss is not the actual event being counted. Rather, IBS will
->    count fetch, cycles or uOps depending on the configuration. Thus
->    sampling period have no direct connection to L3 misses.
->
-> 1st causes sampling period skew. Thus, I've added warning message at
-> perf record:
->
->   # perf record -c 10000 -C 0 -e ibs_op/l3missonly=1/
->   WARNING: Hw internally resets sampling period when L3 Miss Filtering is enabled
->   and tagged operation does not cause L3 Miss. This causes sampling period skew.
->
-> User can configure smaller sampling period to get more samples while
-> using l3missonly.
->
->
-> Ravi Bangoria (8):
->   perf record ibs: Warn about sampling period skew
->   perf tool: Parse pmu caps sysfs only once
->   perf headers: Pass "cpu" pmu name while printing caps
->   perf headers: Store pmu caps in an array of strings
->   perf headers: Record non-cpu pmu capabilities
->   perf/x86/ibs: Add new IBS register bits into header
->   perf tool ibs: Sync amd ibs header file
->   perf script ibs: Support new IBS bits in raw trace dump
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Fixes: dc2cf4ca866f ("perf unwind: Fix segbase for ld.lld linked objects")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/unwind-libunwind-local.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 37622699c91a..6e5b8cce47bf 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -174,7 +174,7 @@ static int elf_section_address_and_offset(int fd, const char *name, u64 *address
+ 	Elf *elf;
+ 	GElf_Ehdr ehdr;
+ 	GElf_Shdr shdr;
+-	int ret;
++	int ret = -1;
+ 
+ 	elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
+ 	if (elf == NULL)
+-- 
+2.36.1.255.ge46751e96f-goog
 
-Thanks,
-Namhyung
-
-
->
->  arch/x86/include/asm/amd-ibs.h                |  16 +-
->  tools/arch/x86/include/asm/amd-ibs.h          |  16 +-
->  .../Documentation/perf.data-file-format.txt   |  10 +-
->  tools/perf/arch/x86/util/evsel.c              |  52 +++++
->  tools/perf/builtin-inject.c                   |   2 +-
->  tools/perf/util/amd-sample-raw.c              |  68 ++++++-
->  tools/perf/util/env.c                         |  62 +++++-
->  tools/perf/util/env.h                         |  14 +-
->  tools/perf/util/evsel.c                       |   7 +
->  tools/perf/util/evsel.h                       |   1 +
->  tools/perf/util/header.c                      | 189 ++++++++++--------
->  tools/perf/util/header.h                      |   2 +-
->  tools/perf/util/pmu.c                         |  15 +-
->  tools/perf/util/pmu.h                         |   2 +
->  14 files changed, 329 insertions(+), 127 deletions(-)
->
-> --
-> 2.31.1
->
