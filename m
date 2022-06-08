@@ -2,203 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B2BCCA482
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 18:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4667C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 19:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234507AbiFHSWk (ORCPT
+        id S230231AbiFHTaX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Jun 2022 14:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42478 "EHLO
+        Wed, 8 Jun 2022 15:30:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234344AbiFHSWc (ORCPT
+        with ESMTP id S229830AbiFHTaW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Jun 2022 14:22:32 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 489F2527D6;
-        Wed,  8 Jun 2022 11:22:28 -0700 (PDT)
-Received: from mail-ot1-f45.google.com ([209.85.210.45]) by
- mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MBDWo-1nu1Aj0jpW-00Cl9L; Wed, 08 Jun 2022 20:22:27 +0200
-Received: by mail-ot1-f45.google.com with SMTP id h15-20020a9d600f000000b0060c02d737ecso5325214otj.1;
-        Wed, 08 Jun 2022 11:22:24 -0700 (PDT)
-X-Gm-Message-State: AOAM530s+8fiOlM+i9vE1dNfx4Y17sS04XwwMs2CnmG4HRYgD36isAZk
-        0D3RFZgRb20DbfrU9Et6+2gq3VSbgjIfVUWmwNc=
-X-Google-Smtp-Source: ABdhPJzNVjvOg+I4TKoqtI9Mj5r7eGnKl4yZEYVHLzTr22uimte8bgKc1nTgREfDsecVqzQDeuxH8v8jGezndj85u8s=
-X-Received: by 2002:a25:e64b:0:b0:663:ffad:eac5 with SMTP id
- d72-20020a25e64b000000b00663ffadeac5mr3789690ybh.550.1654705730388; Wed, 08
- Jun 2022 09:28:50 -0700 (PDT)
+        Wed, 8 Jun 2022 15:30:22 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8791E734A;
+        Wed,  8 Jun 2022 12:30:21 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id a15so17279567ilq.12;
+        Wed, 08 Jun 2022 12:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=AOjdpRzw4kjXPBWg+IgjE0lEriWtzNXqibpX4C2uBGc=;
+        b=jAHJfid2MSi3OT1OIrtN7Gv3Z7jqBsRN41Sb5eYx0Qjy5mikfQtYnmbGDS4uiVXgW7
+         zHNMxIlB11TP9sMUU5jW7e5OuPn1/lBV0Tm2C+amVjedIj1dvPGXRLHZ61sGNkqTiEVN
+         TiiQOwyIc8G0sRKr/Fik/5BCd0m/7McOMzOV7vilEJr85Dc2R4KJfQ00f+YN85b0flW7
+         MtX3WMntOfil+plLEXbCxOZnvKfrdAmnLZY250xVt971dFPC+GtCLuVg9TfjZGbJxnnz
+         aPjCRVpFAOpYWXuUQNXOknXyi+1/YPh4qnS/Lpwsv42WL7UrBNUL3L6UhzFmk+qPpmux
+         j5ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=AOjdpRzw4kjXPBWg+IgjE0lEriWtzNXqibpX4C2uBGc=;
+        b=2BAMnOUA4gFJgxoTfqITiKGoLzCrrV6c05WUO1aWfWnFm2HH3Cj6NprVOdFRMtGjAp
+         nXsAM2uOKn2Nz7uqmMD0NyHbj/SEP+CFdVxDL5M810QCBHJxzb38pP9+w8aw64iSIPzr
+         cKeqr8LningBh5nmbrq42Bzj9qUXaJ8P4BjFgxERmsq6TcYFv31z7A1IIOMkGvoD1w/V
+         6+PR4UoOg7aJiBh6iyZ+/nKOLL2A2Ol9wX1ifV+MbOMlr1o+N6zry0gaseR8jBC6P75z
+         aUO5ZZvb83cUYVW1GB+OHk5bt6ZIdHZi1lgpgkwE1R1slbZEL5e0XK94FaIj0MVoB4nu
+         4ZJA==
+X-Gm-Message-State: AOAM531w2yKr4Q1Mtl+NIm+mvlsh3J8bO2KIQUrwPSAt9LKKXXzWDkNh
+        vBmwzi25ciK+IWoUnBVdBjrBm3WVex8hGHmodUg=
+X-Google-Smtp-Source: ABdhPJzZNF45qIna6xgVavAW/mvucDEcDYNma7Scvm6od77BMHrymlGXZcfcVbmbJ3P8L2ngZSRCY9O8y2BRxRRcNTk=
+X-Received: by 2002:a05:6e02:16ce:b0:2d3:edec:17a5 with SMTP id
+ 14-20020a056e0216ce00b002d3edec17a5mr18678433ilx.4.1654716620920; Wed, 08 Jun
+ 2022 12:30:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220608142723.103523089@infradead.org> <20220608144518.010587032@infradead.org>
-In-Reply-To: <20220608144518.010587032@infradead.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 8 Jun 2022 18:28:33 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0g-fNu9=BUECSXcNeWT7XWHQMnSXZE-XYE+5eakHxKxA@mail.gmail.com>
-Message-ID: <CAK8P3a0g-fNu9=BUECSXcNeWT7XWHQMnSXZE-XYE+5eakHxKxA@mail.gmail.com>
-Subject: Re: [PATCH 33/36] cpuidle,omap3: Use WFI for omap3_pm_idle()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Vineet Gupta <vgupta@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        bcain@quicinc.com, Huacai Chen <chenhuacai@kernel.org>,
-        Xuerui Wang <kernel@xen0n.name>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sam Creasey <sammy@sammy.net>, Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        David Miller <davem@davemloft.net>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+References: <20220607000851.39798-1-irogers@google.com> <CA+icZUW-Zrri=ofkdVtNNYcBCQ-cNvLt7GHfcJw54bxzf_zjZA@mail.gmail.com>
+In-Reply-To: <CA+icZUW-Zrri=ofkdVtNNYcBCQ-cNvLt7GHfcJw54bxzf_zjZA@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 8 Jun 2022 21:29:44 +0200
+Message-ID: <CA+icZUUMY1pxzXm-Me92w18ochhAjJvrsFxbC=6dZZg7HZJsiw@mail.gmail.com>
+Subject: Re: [PATCH] perf unwind: Fix uninitialized variable
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Juergen Gross <jgross@suse.com>, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, Pv-drivers <pv-drivers@vmware.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Rafael Wysocki <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        lpieralisi@kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Anup Patel <anup@brainfault.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        quic_neeraju@quicinc.com, Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        vschneid@redhat.com, jpoimboe@kernel.org,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-csky@vger.kernel.org,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        "open list:IA64 (Itanium) PLATFORM" <linux-ia64@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Openrisc <openrisc@lists.librecores.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-perf-users@vger.kernel.org,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, rcu@vger.kernel.org
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, Fangrui Song <maskray@google.com>,
+        Sebastian Ullrich <sebasti@nullri.ch>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:i13j6eoMFgPYw3MZijIlP+qsFdvpj6/skYv1EqsVW2MmaUt+4Gs
- TKbWFeC1OzuDFS2sWqGbpOsgmluCHecsmMhvkDcgDwZS7kTjkmCj52WVEg2IIi3r6+pRG+z
- rzU45Su9pBqdNiYGOn02kRSdYKHiXsPEK9v/SLC483IzBlr4JkNRrD5CpMvQol8uZlyYl3Z
- OrAoelai5SvzI6Si/N0ig==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qIZsoC3MLcE=:Fi7WALlfM393s9u3Q7GGEB
- U6nTQb9ZAacqVnVQIr5fu17PUS75NyrNwLU5KpsjdOVVfBfc8uArE2cxpw6c12hFBhX3dhwkf
- KDI5vh18Ywps+uzJdfZKSopuaSVtmt2s2HQdvEeWBprr7+EduCNhV80K0DwtYoA49ORgWusIu
- ujW9tDYBNpG67UDpVkgfsc3ttzz5uc3Xy0sibuPOAykcL0B5AWSqXzIwKWSXIqirRpqArM7E7
- bETP35dIOFK763UjdjbSoFLhR5SrzIR4UeUXf187+Wme9F6W+Rws6rNL6LzGBawb+ySvCswKZ
- MxFrfJOrtU1Y5BUpQdQwOfjb/PHv7vpbVgz8Zs+GoV4WIFtnKElc+cEITWimsy5PM7hafJWRo
- ROjdn03L8PdlPiYR9lYz+00O41lyVziINRWp9+rSC+t4izpUJoNiNs0csm+SKXzPwneljD4LH
- uN2dnzR6p74/xizBeD1YT9+hM1UpmUSukws+7Hc45MYcWX96x+MXAVQK4wsQ8GmEpkQ08x70j
- iyJax4TAxM9P+mlFEmgRAjGLAWq444DkLCUNHxPk1wT02l4SRMMmmrrxGvs4qkmfIwcIDZQAp
- e6a0iHSNYKFinZ4hANQsKZuj2y9VHGeV5PmMb5EJByFVPq4TYP7YGcz8UWZWLc+iLwAnwSXbm
- cIFx/XBMVAvoiqowG3xdiyI2k8M8LX0MoMQEU3oc9WC1G+QLWHhb7arsG7/2d6TPKSWodGwqw
- yUuV/IiHJ5ckO0YgIEJv8/5UNepD5mZVAQB/gNkY4V3xVnKHQxig1e/FYsA9nPjODiwDrYbYU
- XnTtm1tjRQolVfjeUVdYRd2R1w/Sd0wxx8M1JP3fM/zYO5/ypsmHXlRItKsXyOD5klxJBLwRm
- prbqkXHR/m6SdehHj67w==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 8, 2022 at 4:27 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Jun 7, 2022 at 8:12 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
 >
-> arch_cpu_idle() is a very simple idle interface and exposes only a
-> single idle state and is expected to not require RCU and not do any
-> tracing/instrumentation.
+> On Tue, Jun 7, 2022 at 2:09 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > ret may be uninitialized on error goto paths.
+> >
+> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Fixes: dc2cf4ca866f ("perf unwind: Fix segbase for ld.lld linked objects")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 >
-> As such, omap_sram_idle() is not a valid implementation. Replace it
-> with the simple (shallow) omap3_do_wfi() call. Leaving the more
-> complicated idle states for the cpuidle driver.
+> Thanks for the patch.
 >
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Feel free to add my:
+>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+>
 
-I see similar code in omap2:
+If it is not too late, more exactly:
 
-omap2_pm_idle()
- -> omap2_enter_full_retention()
-     -> omap2_sram_suspend()
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # LLVM-14 (x86-64)
 
-Is that code path safe to use without RCU or does it need a similar change?
+-Sedat-
 
-        Arnd
+> $ LC_ALL=C ll ~/bin/perf
+> -rwxr-xr-x 2 dileks dileks 16M Jun  7 20:10 /home/dileks/bin/perf
+>
+> $ ~/bin/perf -vv
+> perf version 5.19.0-rc1
+>                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+>    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+>                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+>         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+>                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+>            debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
+>                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+>               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+> numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+>               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+>             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+>              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+>             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+>             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+>    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+>                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+>                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+>             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+>                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+>                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+>                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+>               libpfm4: [ OFF ]  # HAVE_LIBPFM
+>
+> -Sedat-
+>
+> > ---
+> >  tools/perf/util/unwind-libunwind-local.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> > index 37622699c91a..6e5b8cce47bf 100644
+> > --- a/tools/perf/util/unwind-libunwind-local.c
+> > +++ b/tools/perf/util/unwind-libunwind-local.c
+> > @@ -174,7 +174,7 @@ static int elf_section_address_and_offset(int fd, const char *name, u64 *address
+> >         Elf *elf;
+> >         GElf_Ehdr ehdr;
+> >         GElf_Shdr shdr;
+> > -       int ret;
+> > +       int ret = -1;
+> >
+> >         elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
+> >         if (elf == NULL)
+> > --
+> > 2.36.1.255.ge46751e96f-goog
+> >
