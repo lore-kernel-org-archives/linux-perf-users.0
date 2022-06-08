@@ -2,85 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4339AC43334
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 10:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403F3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 10:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235351AbiFHKDF (ORCPT
+        id S237233AbiFHKqE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Jun 2022 06:03:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42066 "EHLO
+        Wed, 8 Jun 2022 06:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235965AbiFHKCv (ORCPT
+        with ESMTP id S237155AbiFHKqC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Jun 2022 06:02:51 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7381451CF;
-        Wed,  8 Jun 2022 02:43:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=A+CyjXVi+KYsagLnxynLgPapKZafI2doGh1EpEXW+4I=; b=TpYct5GI0487LzQAlTdrSE007A
-        Sa5jAYgO/UNmcTh8AyD0Z86ax39efkq0QC0bGMOOwswFnooLZ9ePviOj1F1EXNpbbg/LevKDMxUMg
-        cJoctLg2AKYrmd1dkC9lo/rGo42fq++QVYxb+oT/Dg9eBzqKS5+PUcCk8dDSY+8zHL4nmNR7rhigb
-        fhwj/f7n3NDigPX/Spdm1kmlg52GG/Jnd8P2wkRl49Na/85fAMDtG17ZErtT/2Q5JuiPuXa4vsU6n
-        HrkTF53KHft8nDem3bVFnp9QjYRO5D9NZ3fVkxg4EuAN+W6sLAIAurJaa+oHdlDgG1itc5X7jHTCs
-        J/zq9nhw==;
-Received: from dhcp-077-249-017-003.chello.nl ([77.249.17.3] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nysDb-005zfL-LV; Wed, 08 Jun 2022 09:43:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6596C30017D;
-        Wed,  8 Jun 2022 11:43:13 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2A9E620250966; Wed,  8 Jun 2022 11:43:13 +0200 (CEST)
-Date:   Wed, 8 Jun 2022 11:43:13 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yanfei Xu <yanfei.xu@intel.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf/core: remove a meaningless pair of
- rcu_read_{,un}lock()
-Message-ID: <YqBvMWwc1T4ZdKCg@hirez.programming.kicks-ass.net>
-References: <20220608090938.2178624-1-yanfei.xu@intel.com>
+        Wed, 8 Jun 2022 06:46:02 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC61A10D5C3;
+        Wed,  8 Jun 2022 03:45:58 -0700 (PDT)
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJ3hH55gqz67jfG;
+        Wed,  8 Jun 2022 18:42:23 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 8 Jun 2022 12:45:56 +0200
+Received: from [10.47.90.54] (10.47.90.54) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 8 Jun
+ 2022 11:45:55 +0100
+Message-ID: <9e981523-6032-fd24-08f9-0ef771cd1c2e@huawei.com>
+Date:   Wed, 8 Jun 2022 11:45:53 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220608090938.2178624-1-yanfei.xu@intel.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 3/4] RISC-V: Added generic pmu-events mapfile
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+CC:     Genevieve Chan <genevieve.chan@starfivetech.com>,
+        =?UTF-8?B?Sm/Do28gTcOhcmlvIERvbWluZ29z?= 
+        <joao.mario@tecnico.ulisboa.pt>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>
+References: <20220607131648.29439-1-nikita.shubin@maquefel.me>
+ <20220607131648.29439-4-nikita.shubin@maquefel.me>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220607131648.29439-4-nikita.shubin@maquefel.me>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.90.54]
+X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 08, 2022 at 05:09:38PM +0800, Yanfei Xu wrote:
-> Per the codes, this pair of rcu_read_{,un}lock() protects nothing.
-> Let's remove it.
+On 07/06/2022 14:16, Nikita Shubin wrote:
+> From: João Mário Domingos <joao.mario@tecnico.ulisboa.pt>
 > 
-> Further, the variable "pmu" is safe as it is in the SRCU read-side
-> critical scope of "pmus_srcu" and perf_pmu_unregister() delete it
-> after calling synchronize_srcu.
+> The pmu-events now supports custom events for RISC-V, plus the cycle,
+> time and instret events were defined.
 > 
-> Signed-off-by: Yanfei Xu <yanfei.xu@intel.com>
+> Signed-off-by: João Mário Domingos <joao.mario@tecnico.ulisboa.pt>
+> Tested-by: Nikita Shubin <n.shubin@yadro.com>
 > ---
->  kernel/events/core.c | 2 --
->  1 file changed, 2 deletions(-)
+>   tools/perf/pmu-events/arch/riscv/mapfile.csv  | 14 +++++++++++++
+>   .../pmu-events/arch/riscv/riscv-generic.json  | 20 +++++++++++++++++++
+>   2 files changed, 34 insertions(+)
+>   create mode 100644 tools/perf/pmu-events/arch/riscv/mapfile.csv
+>   create mode 100644 tools/perf/pmu-events/arch/riscv/riscv-generic.json
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 950b25c3f210..36b0df6feab4 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11296,9 +11296,7 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  	}
->  
->  again:
-> -	rcu_read_lock();
->  	pmu = idr_find(&pmu_idr, type);
-> -	rcu_read_unlock();
+> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> new file mode 100644
+> index 000000000000..4f2aa199d9cb
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> @@ -0,0 +1,14 @@
+> +# Format:
+> +#	MIDR,Version,JSON/file/pathname,Type
+> +#
+> +# where
+> +#	MIDR	Processor version
 
-You're mistaken, this is required for the radix tree internal nodes.
-Without it we can't safely traverse the radix tree without full
-serialization against the modifiers.
+ARM, no?
+
+> +#		Variant[23:20] and Revision [3:0] should be zero.
+> +#	Version could be used to track version of JSON file
+> +#		but currently unused.
+> +#	JSON/file/pathname is the path to JSON file, relative
+> +#		to tools/perf/pmu-events/arch/riscv/.
+> +#	Type is core, uncore etc
+> +#
+> +#
+> +#Family-model,Version,Filename,EventType
+> diff --git a/tools/perf/pmu-events/arch/riscv/riscv-generic.json b/tools/perf/pmu-events/arch/riscv/riscv-generic.json
+> new file mode 100644
+> index 000000000000..013e50efad99
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/riscv-generic.json
+
+where or how are these referenced?
+
+> @@ -0,0 +1,20 @@
+> +[
+> +  {
+> +    "PublicDescription": "CPU Cycles",
+> +    "EventCode": "0x00",
+> +    "EventName": "riscv_cycles",
+> +    "BriefDescription": "CPU cycles RISC-V generic counter"
+> +  },
+> +  {
+> +    "PublicDescription": "CPU Time",
+> +      "EventCode": "0x01",
+> +      "EventName": "riscv_time",
+> +      "BriefDescription": "CPU time RISC-V generic counter"
+> +  },
+> +  {
+> +    "PublicDescription": "CPU Instructions",
+> +      "EventCode": "0x02",
+> +      "EventName": "riscv_instret",
+> +      "BriefDescription": "CPU retired instructions RISC-V generic counter"
+> +  }
+> +]
+> \ No newline at end of file
+
