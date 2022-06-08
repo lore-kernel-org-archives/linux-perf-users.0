@@ -2,138 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE50C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 07:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28E8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 07:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234204AbiFHHbQ (ORCPT
+        id S229632AbiFHHbe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Jun 2022 03:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
+        Wed, 8 Jun 2022 03:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352606AbiFHGQL (ORCPT
+        with ESMTP id S236221AbiFHGem (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Jun 2022 02:16:11 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C02E102765;
-        Tue,  7 Jun 2022 22:51:57 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id v25so25623300eda.6;
-        Tue, 07 Jun 2022 22:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mio4H98TBZiyhR3Y6s7gDVrKgKOCAgzU0ua21Oyqqc8=;
-        b=M68WzYv+xAKyLyHNR9dcFOgSiIWourr8cL3AVYp/zEFFXLjWXGyil1FFnRBBuUBa63
-         1uPSrVAuSOeSfYGf2OYadBhuWnyD4zKD1ie3BT4NEvgE7EXrgP240inOIqH21Wk0o8lE
-         3yUtXcX6i+muMb08Jys5r2o4TrZkgKTg55Ym+lbuHVEloVXpc9vXyfdnqW+NRbA5bYCo
-         hNGaxJodNIMf3pn88VOL2YX4iM/YVGAvjSUsnPRhbCMDPqDiMfy8G/jytAV9KmGbFaox
-         RC6ox1Yr1BIC3F0JiXKy94/SfHjolqMQntqeSIpjO7O5uYMJyfs/ztL4lGfiyUB7wq0n
-         lq/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mio4H98TBZiyhR3Y6s7gDVrKgKOCAgzU0ua21Oyqqc8=;
-        b=g4k+NkLxe1EuH3Cw+d3ie8Vm1S+QAX1moRqtipBiKo6eFxN1IFQl0aD+00682rqtm2
-         2mZ/6WyzJnFClT1opLvpUilm79HVXFmW2hBrk3v9sPRTlOxPKsPlBkgA8anLG3xNkgmG
-         9TLqmy3WTYc0Ff5lmcHqQA9QndrNzxYwDrMF0S5AXcN2MHo23Pu23/BVMZUVc2phjdHf
-         s8/dN4m0ULxa7cVzit2bRfGc3C8/wWMia6d1FjvGh7U05gCrCPw4XrB/7ShP71Y3b6Tq
-         7XjMpd1vguXSccHV2X3v255RxdzoH0eblYP3qTMH6EB238MSmeLiRTCwOb6jmH1v2oSM
-         mRKQ==
-X-Gm-Message-State: AOAM530EX2VlY5abgpagWLy5tfKW81OyalGpaBjKIk64cprpFd5ajsDa
-        fjJODKcyI1hR1prDJow/rvt34/5hnCw=
-X-Google-Smtp-Source: ABdhPJy2Q6HOGlFK6VIg9yY00JMqgPHzxVKMj6gHKAoEbNANGUN5xiTOQhmoBgdyI2zZfgS1lYNt+Q==
-X-Received: by 2002:a05:6402:14c1:b0:42d:d6f1:ac3d with SMTP id f1-20020a05640214c100b0042dd6f1ac3dmr36724907edx.223.1654667516241;
-        Tue, 07 Jun 2022 22:51:56 -0700 (PDT)
-Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id m11-20020a056402050b00b0042dd7e13391sm11576518edv.45.2022.06.07.22.51.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 22:51:55 -0700 (PDT)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH] perf report: Skip symbols for idle symbols
-Date:   Wed,  8 Jun 2022 07:51:46 +0200
-Message-Id: <20220608055146.1446-1-zajec5@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 8 Jun 2022 02:34:42 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C4B192A9;
+        Tue,  7 Jun 2022 23:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654670077; x=1686206077;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vPz47IFaZCFVCEfg9YG+pCrbk0tPKwdZhmLWb5+acdE=;
+  b=jFaOVy2/x0q9MQ4D9fkr03+lJgCs5P04kWZzoNFR5dPAJGov57tv/L5E
+   5gryL3p5aEvOMjo08Rv4kMEAei4rm1AELoB5bYENUl8QS+fuB1CtdSyQQ
+   9vPlEHQ/vPDi7DdvuFC5B7d4zDl1OfbiFwYC6CZif1teCgy75XuxuLXWs
+   wqWHWqZlDQrEtw39xnN45LypdOuNqBgjkmeQXX0CJbsM2R4WEjL+5a0ki
+   0aAad8nq02H2bzvBturXLaQqeBinzjbEBt+mbwbCIlNuYfHelYw10Pkp4
+   qVtQHOTPnEut0KBELla8dCCrMW6O4qqSv+QoZ9UhX/N/9gz25UQaq0ePg
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10371"; a="302158675"
+X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
+   d="scan'208";a="302158675"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 23:34:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
+   d="scan'208";a="579923896"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by orsmga007.jf.intel.com with ESMTP; 07 Jun 2022 23:34:30 -0700
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
+Subject: [PATCH 1/2] perf vendor events intel: Rename tremontx to snowridgex
+Date:   Wed,  8 Jun 2022 14:34:38 +0800
+Message-Id: <20220608063439.1997394-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-Displaying idle symbols is rather useless and makes reviewing "real"
-symbols harder. perf top already skips them so perf report should
-probably do the same.
+Tremontx was an old name for Snowridgex, so rename Tremontx to Snowridgex.
 
-BEFORE
-
-# Overhead  Command          Shared Object          Symbol                             
-# ........  ...............  .....................  ...................................
-#
-    75.04%  swapper          [kernel.kallsyms]      [k] arch_cpu_idle
-     1.05%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___inval_dcache_area
-     0.78%  ksoftirqd/0      [kernel.kallsyms]      [k] __netif_receive_skb_core
-     0.75%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_table_lookup
-     0.58%  ksoftirqd/0      [kernel.kallsyms]      [k] __dev_queue_xmit
-     0.56%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_start_xmit
-     0.55%  ksoftirqd/0      [kernel.kallsyms]      [k] __skb_flow_dissect
-     0.53%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___clean_dcache_area_poc
-
-AFTER
-
-# Overhead  Command          Shared Object          Symbol                             
-# ........  ...............  .....................  ...................................
-#
-     4.21%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___inval_dcache_area
-     3.13%  ksoftirqd/0      [kernel.kallsyms]      [k] __netif_receive_skb_core
-     3.01%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_table_lookup
-     2.32%  ksoftirqd/0      [kernel.kallsyms]      [k] __dev_queue_xmit
-     2.23%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_start_xmit
-     2.21%  ksoftirqd/0      [kernel.kallsyms]      [k] __skb_flow_dissect
-     2.13%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___clean_dcache_area_poc
-     2.00%  ksoftirqd/0      [kernel.kallsyms]      [k] eth_type_trans
-     1.86%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_poll_rx
-     1.73%  ksoftirqd/0      [kernel.kallsyms]      [k] __local_bh_enable_ip
-     1.63%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_rules_lookup
-     1.61%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_poll_tx
-     (...)
-
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 ---
- tools/perf/builtin-report.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/arch/x86/mapfile.csv                      | 2 +-
+ .../pmu-events/arch/x86/{tremontx => snowridgex}/cache.json     | 0
+ .../arch/x86/{tremontx => snowridgex}/floating-point.json       | 0
+ .../pmu-events/arch/x86/{tremontx => snowridgex}/frontend.json  | 0
+ .../pmu-events/arch/x86/{tremontx => snowridgex}/memory.json    | 0
+ .../pmu-events/arch/x86/{tremontx => snowridgex}/other.json     | 0
+ .../pmu-events/arch/x86/{tremontx => snowridgex}/pipeline.json  | 0
+ .../arch/x86/{tremontx => snowridgex}/uncore-memory.json        | 0
+ .../arch/x86/{tremontx => snowridgex}/uncore-other.json         | 0
+ .../arch/x86/{tremontx => snowridgex}/uncore-power.json         | 0
+ .../arch/x86/{tremontx => snowridgex}/virtual-memory.json       | 0
+ 11 files changed, 1 insertion(+), 1 deletion(-)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/cache.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/floating-point.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/frontend.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/memory.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/other.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/pipeline.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/uncore-memory.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/uncore-other.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/uncore-power.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/virtual-memory.json (100%)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index afe4a5539ecc..7e31af009d44 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -316,9 +316,12 @@ static int process_sample_event(struct perf_tool *tool,
- 				     &rep->total_cycles);
- 	}
- 
--	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
--	if (ret < 0)
--		pr_debug("problem adding hist entry, skipping event\n");
-+	if (al.sym == NULL || !al.sym->idle) {
-+		ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
-+		if (ret < 0)
-+			pr_debug("problem adding hist entry, skipping event\n");
-+	}
-+
- out_put:
- 	addr_location__put(&al);
- 	return ret;
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index f5a382421a60..9852bca98d59 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -40,7 +40,7 @@ GenuineIntel-6-8[CD],v1,tigerlake,core
+ GenuineIntel-6-A7,v1,icelake,core
+ GenuineIntel-6-6A,v1,icelakex,core
+ GenuineIntel-6-6C,v1,icelakex,core
+-GenuineIntel-6-86,v1,tremontx,core
++GenuineIntel-6-86,v1,snowridgex,core
+ GenuineIntel-6-96,v1,elkhartlake,core
+ GenuineIntel-6-97,v1,alderlake,core
+ GenuineIntel-6-9A,v1,alderlake,core
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/cache.json b/tools/perf/pmu-events/arch/x86/snowridgex/cache.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/cache.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/cache.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/floating-point.json b/tools/perf/pmu-events/arch/x86/snowridgex/floating-point.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/floating-point.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/floating-point.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/frontend.json b/tools/perf/pmu-events/arch/x86/snowridgex/frontend.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/frontend.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/frontend.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/memory.json b/tools/perf/pmu-events/arch/x86/snowridgex/memory.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/memory.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/memory.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/other.json b/tools/perf/pmu-events/arch/x86/snowridgex/other.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/other.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/other.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/pipeline.json b/tools/perf/pmu-events/arch/x86/snowridgex/pipeline.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/pipeline.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-memory.json b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-memory.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/uncore-memory.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/uncore-memory.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-other.json b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-other.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/uncore-other.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/uncore-other.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-power.json b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/uncore-power.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
+diff --git a/tools/perf/pmu-events/arch/x86/tremontx/virtual-memory.json b/tools/perf/pmu-events/arch/x86/snowridgex/virtual-memory.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/tremontx/virtual-memory.json
+rename to tools/perf/pmu-events/arch/x86/snowridgex/virtual-memory.json
 -- 
-2.34.1
+2.25.1
 
