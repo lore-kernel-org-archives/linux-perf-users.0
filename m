@@ -2,60 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D340C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 22:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B694C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 23:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236839AbiFHWoZ (ORCPT
+        id S231845AbiFHXZH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Jun 2022 18:44:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55838 "EHLO
+        Wed, 8 Jun 2022 19:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236808AbiFHWoX (ORCPT
+        with ESMTP id S229481AbiFHXZG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Jun 2022 18:44:23 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5842F2504E7
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Jun 2022 15:44:18 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id z67-20020a254c46000000b0065cd3d2e67eso18774540yba.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jun 2022 15:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=2geO0ahuljEn77v5yZYAdJcWJ8DuHGsKu15Ptk4z1CU=;
-        b=l5jFMVhRHYNtdJfhQvNcXTPSLsGUyeeftIx9EEF8LyZJstnVOe7pTpdR1efUT7nFfp
-         +uyIF/k/VlGO6TwK70EhNvnpf8zaLXfQr/hFECUmySP7NxbCaJRR9//siudLs5EmGRiV
-         rTt6LaU0zf0wXSptc/7pM5GVsGZlcpQWfE5tzAjOjJZT+MEsuTuu9n4FxN3grDxNY0BT
-         8LVxfdG0bQR3i86PbSCegT767zZoqGNc5O0mZuziWI4yXpaf8qBBuc1q35Maf0Yk/zbe
-         J/DYLDq2rLzVQGI5Xj9zICvBSgwoMvRexJLYsllbt4Tpus29PqT7ZR5yomFgxamm6g/u
-         n4vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=2geO0ahuljEn77v5yZYAdJcWJ8DuHGsKu15Ptk4z1CU=;
-        b=k5CHJ91nfyBRIOlN7xumLhBXKKuGMATl7Yoed14mZFNG0evE5oq5J19pAVmTjEunGG
-         b4QYdlXo8NJg6NmWB6UHFDkNX3H8LyvPRytwFuPEeN4OLs24qIupPXIJzquy9NIJDOXe
-         Ag5VYNk0wvzo20I7XQt2zzMupgEf27Ft0GtSAW/KVx9U+TNcGdltO6lwnI9rDLlWINi0
-         ktQu8cxuuYwlurb51GJXxePexYmB8EmUd2H1YZEzGq17pYtOxzG/l2VA4JoGoIA8Wya5
-         564lgG1qvHePtg5+Q8UCd/2AVlIm9SIaXO/z8dR2PnHXDqcFF5rvi+ERQrdiv0oxs8Fs
-         WFIw==
-X-Gm-Message-State: AOAM530QK9HnqY8er9AI4eYmMnloNeNupzy3yDcbUa4F0+cKL9zsQ/z8
-        /EzIEiB/rg6d9tQYJ/hM0wtzwJsxcjfR
-X-Google-Smtp-Source: ABdhPJwOyTVT6fRTm9r0F+MK1W7bVH/+DpvqtizK5yosDhrXnnn8esrtNJzT6b/akFohsrP2YKqRQOW6xncH
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:de48:5efa:e4a1:2219])
- (user=irogers job=sendgmr) by 2002:a05:6902:102e:b0:65d:2286:a3b5 with SMTP
- id x14-20020a056902102e00b0065d2286a3b5mr37765177ybt.515.1654728257392; Wed,
- 08 Jun 2022 15:44:17 -0700 (PDT)
-Date:   Wed,  8 Jun 2022 15:43:53 -0700
-In-Reply-To: <20220608224353.1176079-1-irogers@google.com>
-Message-Id: <20220608224353.1176079-5-irogers@google.com>
-Mime-Version: 1.0
-References: <20220608224353.1176079-1-irogers@google.com>
-X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
-Subject: [PATCH 4/4] perf test: Add user space counter reading tests
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 8 Jun 2022 19:25:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B0C1C592E;
+        Wed,  8 Jun 2022 16:25:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3789461972;
+        Wed,  8 Jun 2022 23:25:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A66EC3411F;
+        Wed,  8 Jun 2022 23:25:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654730700;
+        bh=/54/gVROgLr5qQY4rtAyH8h2zB+YMwZbBjyQWM6yJhk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EdXRWBo3vDGGkyj7q0RpwIrHZdCCcBcdsfOMi9y4ZhSdjtrbG89YAxJf3d+RpUjBI
+         8UNED3ptlpX5TlC06t0hGeHH6HaCbHXYwcF9cD3o5xZyUDYUCUwQSqm3Y3Pygb+6l/
+         8ipD71kISWSYGO9DVz7FY+e32W0bBdUnE1FLd/GTVgp68qzLQLb+SDyTcW4sBoeR9H
+         TNYwcVWeNGLj1C6BK4fGv+ETDGZu51gom2nqlXCRNZZ4ne5Ifsf1iOf9vRVqbFV6JL
+         dqh9S6VETsKGAmMad6yOHkRhyifTXSPF8kBpXosG95n4UH/8J4bJimZc9evra/3wlK
+         ek5re1NXcwDeg==
+Received: by mail-vs1-f44.google.com with SMTP id g6so2824803vsb.2;
+        Wed, 08 Jun 2022 16:25:00 -0700 (PDT)
+X-Gm-Message-State: AOAM531zEa3zhZJL1XzFjoRdU3FRoiQ9V+xQ4UgT8lt8Dg7LSc2VTgiT
+        Vrxmqe8Qyzt2DJh0DPl+gI2bC02P2PYQl7y8pg==
+X-Google-Smtp-Source: ABdhPJzWxQGJAMhtx0Dvcq9Zk0kOqrOKJJk3dNMlgHPH0V9YOCpLsXowpyLL92Uc9tkUpq8g15bZX3gmqCPo1juG31o=
+X-Received: by 2002:a67:d38c:0:b0:349:d028:c8ea with SMTP id
+ b12-20020a67d38c000000b00349d028c8eamr16309163vsj.6.1654730699492; Wed, 08
+ Jun 2022 16:24:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220608224353.1176079-1-irogers@google.com> <20220608224353.1176079-3-irogers@google.com>
+In-Reply-To: <20220608224353.1176079-3-irogers@google.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 8 Jun 2022 17:24:48 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+rWB7AYr4THs2Dg98ss8cuL38QVuvTbQNwar2ePqwuww@mail.gmail.com>
+Message-ID: <CAL_Jsq+rWB7AYr4THs2Dg98ss8cuL38QVuvTbQNwar2ePqwuww@mail.gmail.com>
+Subject: Re: [PATCH 2/4] perf: Align user space counter reading with code
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -66,170 +61,105 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Andi Kleen <ak@linux.intel.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-These tests are based on test_stat_user_read in
-tools/lib/perf/tests/test-evsel.c. The tests are modified to skip if
-perf_event_open fails or rdpmc isn't supported.
+On Wed, Jun 8, 2022 at 4:44 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Align the user space counter reading documentation with the code in
+> perf_mmap__read_self. Previously the documentation was based on the perf
+> rdpmc test, but now general purpose code is provided by libperf.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/mmap-basic.c | 128 +++++++++++++++++++++++++++++++++-
- 1 file changed, 127 insertions(+), 1 deletion(-)
+IMO, this copy of not quite right code should just be removed perhaps
+with a pointer to perf_mmap__read_self(). It will just get out of date
+again. For example, the read loop might get rewritten with restartable
+sequences.
 
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index 30bbe144648a..791eebcc5883 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -170,14 +170,140 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
- 	return err;
- }
- 
-+static int test_stat_user_read(int event)
-+{
-+	struct perf_counts_values counts = { .val = 0 };
-+	struct perf_thread_map *threads;
-+	struct perf_evsel *evsel;
-+	struct perf_event_mmap_page *pc;
-+	struct perf_event_attr attr = {
-+		.type	= PERF_TYPE_HARDWARE,
-+		.config	= event,
-+#ifdef __aarch64__
-+		.config1 = 0x2,		/* Request user access */
-+#endif
-+	};
-+	int err, i, ret = TEST_FAIL;
-+	bool opened = false, mapped = false;
-+
-+	threads = perf_thread_map__new_dummy();
-+	TEST_ASSERT_VAL("failed to create threads", threads);
-+
-+	perf_thread_map__set_pid(threads, 0, 0);
-+
-+	evsel = perf_evsel__new(&attr);
-+	TEST_ASSERT_VAL("failed to create evsel", evsel);
-+
-+	err = perf_evsel__open(evsel, NULL, threads);
-+	if (err) {
-+		pr_err("failed to open evsel: %s\n", strerror(-err));
-+		if (err == -EACCES)
-+			ret = TEST_SKIP;
-+		goto out;
-+	}
-+	opened = true;
-+
-+	err = perf_evsel__mmap(evsel, 0);
-+	if (err) {
-+		pr_err("failed to mmap evsel: %s\n", strerror(-err));
-+		goto out;
-+	}
-+	mapped = true;
-+
-+	pc = perf_evsel__mmap_base(evsel, 0, 0);
-+	if (!pc) {
-+		pr_err("failed to get mmapped address\n");
-+		goto out;
-+	}
-+
-+	if (!pc->cap_user_rdpmc || !pc->index) {
-+		pr_err("userspace counter access not %s\n",
-+			!pc->cap_user_rdpmc ? "supported" : "enabled");
-+		ret = TEST_SKIP;
-+		goto out;
-+	}
-+	if (pc->pmc_width < 32) {
-+		pr_err("userspace counter width not set (%d)\n", pc->pmc_width);
-+		goto out;
-+	}
-+
-+	perf_evsel__read(evsel, 0, 0, &counts);
-+	if (counts.val == 0) {
-+		pr_err("failed to read value for evsel\n");
-+		goto out;
-+	}
-+
-+	for (i = 0; i < 5; i++) {
-+		volatile int count = 0x10000 << i;
-+		__u64 start, end, last = 0;
-+
-+		pr_debug("\tloop = %u, ", count);
-+
-+		perf_evsel__read(evsel, 0, 0, &counts);
-+		start = counts.val;
-+
-+		while (count--) ;
-+
-+		perf_evsel__read(evsel, 0, 0, &counts);
-+		end = counts.val;
-+
-+		if ((end - start) < last) {
-+			pr_err("invalid counter data: end=%llu start=%llu last= %llu\n",
-+				end, start, last);
-+			goto out;
-+		}
-+		last = end - start;
-+		pr_debug("count = %llu\n", end - start);
-+	}
-+	ret = TEST_OK;
-+
-+out:
-+	if (mapped)
-+		perf_evsel__munmap(evsel);
-+	if (opened)
-+		perf_evsel__close(evsel);
-+	perf_evsel__delete(evsel);
-+
-+	perf_thread_map__put(threads);
-+	return ret;
-+}
-+
-+static int test__mmap_user_read_instr(struct test_suite *test __maybe_unused,
-+				      int subtest __maybe_unused)
-+{
-+	return test_stat_user_read(PERF_COUNT_HW_INSTRUCTIONS);
-+}
-+
-+static int test__mmap_user_read_cycles(struct test_suite *test __maybe_unused,
-+				       int subtest __maybe_unused)
-+{
-+	return test_stat_user_read(PERF_COUNT_HW_CPU_CYCLES);
-+}
-+
- static struct test_case tests__basic_mmap[] = {
- 	TEST_CASE_REASON("Read samples using the mmap interface",
- 			 basic_mmap,
- 			 "permissions"),
-+	TEST_CASE_REASON("User space counter reading of instructions",
-+			 mmap_user_read_instr,
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+			 "permissions"
-+#else
-+			 "unsupported"
-+#endif
-+		),
-+	TEST_CASE_REASON("User space counter reading of cycles",
-+			 mmap_user_read_cycles,
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+			 "permissions"
-+#else
-+			 "unsupported"
-+#endif
-+		),
- 	{	.name = NULL, }
- };
- 
- struct test_suite suite__basic_mmap = {
--	.desc = "Read samples using the mmap interface",
-+	.desc = "mmap interface tests",
- 	.test_cases = tests__basic_mmap,
- };
--- 
-2.36.1.255.ge46751e96f-goog
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  include/uapi/linux/perf_event.h       | 32 ++++++++++++++++-----------
+>  tools/include/uapi/linux/perf_event.h | 32 ++++++++++++++++-----------
+>  2 files changed, 38 insertions(+), 26 deletions(-)
+>
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index d37629dbad72..3b84e0ad0723 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -538,9 +538,13 @@ struct perf_event_mmap_page {
+>          *
+>          *     if (pc->cap_usr_time && enabled != running) {
+>          *       cyc = rdtsc();
 
+Kind of x86 specific.
+
+> -        *       time_offset = pc->time_offset;
+>          *       time_mult   = pc->time_mult;
+>          *       time_shift  = pc->time_shift;
+> +        *       time_offset = pc->time_offset;
+> +        *       if (pc->cap_user_time_short) {
+> +        *         time_cycles = pc->time_cycles;
+> +        *         time_mask = pc->time_mask;
+> +        *       }
+
+This still misses the need for READ_ONCE().
+
+>          *     }
+>          *
+>          *     index = pc->index;
+> @@ -548,6 +552,9 @@ struct perf_event_mmap_page {
+>          *     if (pc->cap_user_rdpmc && index) {
+>          *       width = pc->pmc_width;
+>          *       pmc = rdpmc(index - 1);
+> +        *       pmc <<= 64 - width;
+> +        *       pmc >>= 64 - width;
+> +        *       count += pmc;
+>          *     }
+>          *
+>          *     barrier();
+> @@ -590,25 +597,24 @@ struct perf_event_mmap_page {
+>          * If cap_usr_time the below fields can be used to compute the time
+>          * delta since time_enabled (in ns) using rdtsc or similar.
+>          *
+> -        *   u64 quot, rem;
+> -        *   u64 delta;
+> -        *
+> -        *   quot = (cyc >> time_shift);
+> -        *   rem = cyc & (((u64)1 << time_shift) - 1);
+> -        *   delta = time_offset + quot * time_mult +
+> -        *              ((rem * time_mult) >> time_shift);
+> +        *   cyc = time_cycles + ((cyc - time_cycles) & time_mask);
+> +        *   delta = time_offset + mul_u64_u32_shr(cyc, time_mult, time_shift);
+
+For documentation purposes, the original code was easier to read and
+this is just an optimization. What does mul_u64_u32_shr() do exactly?
+It's not documented.
+
+>          *
+>          * Where time_offset,time_mult,time_shift and cyc are read in the
+>          * seqcount loop described above. This delta can then be added to
+> -        * enabled and possible running (if index), improving the scaling:
+> +        * enabled and possible running (if index) to improve the scaling. Due
+> +        * to event multiplexing, running maybe zero and so care is needed to
+> +        * avoid division by zero.
+>          *
+>          *   enabled += delta;
+> -        *   if (index)
+> +        *   if (idx)
+>          *     running += delta;
+>          *
+> -        *   quot = count / running;
+> -        *   rem  = count % running;
+> -        *   count = quot * enabled + (rem * enabled) / running;
+> +        *   if (running != 0) {
+> +        *     quot = count / running;
+> +        *     rem  = count % running;
+> +        *     count = quot * enabled + (rem * enabled) / running;
+> +        *   }
+>          */
+>         __u16   time_shift;
+>         __u32   time_mult;
