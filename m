@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B56C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 14:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E76FC43334
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Jun 2022 14:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242119AbiFHOwJ (ORCPT
+        id S242356AbiFHOwL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Jun 2022 10:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
+        Wed, 8 Jun 2022 10:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242353AbiFHOrI (ORCPT
+        with ESMTP id S242096AbiFHOqz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Jun 2022 10:47:08 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFFC49F00;
-        Wed,  8 Jun 2022 07:46:57 -0700 (PDT)
+        Wed, 8 Jun 2022 10:46:55 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B162318FA70;
+        Wed,  8 Jun 2022 07:46:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=Gj+eSw46X5SDCGNw8cDv0ubviLBcGEVy5VW0lj+ATKg=; b=N77RkI+QTaxDMs240pQaEKT6dP
-        4VgjixhsERFCAhqks8uUKYnPmgaasveu2D0er8qSsZ8usH68kBhYOFIT2yrd9wsE9EnUYwKD6vJFn
-        YrCqldOcFxaXkSm4md4Vmu8hIzcIEOupQGBDlSNznBz2Y5P+odjiBnErl61uy2dx6q+UOqet17BYz
-        YRYnLabyMm8DrqBCCxXS/evp2i38LSWPNGIlCoCVIiahKLBEt4buZJSAugJ95CGT+rwrcjJrgfDvy
-        7iWP6pqixLlyQSDUsBLus3ti7xSHLVPaECcwxD3le6NZmXfGe4TsQ4UGNm/smN8NdfrNJt3gzGoLJ
-        2l4659PA==;
+        bh=+nBTmu8be4dn87X4h4i4v5hXqWi/FDQJ2e0V2G49JnI=; b=c0sBpB4EJtpUlMJmM1BtzQg1jI
+        4PcdDgJzYOowDoMnmKAFYhNbpvRYzsV7kRFyLJf62+ZuPqPEFAxeBvm38jC9EIzinrmdPRpzRnIth
+        ZjcGrFN3FC2OLDiPw1MQ9GiO/ueu64sxGeUIVMfNNGZ1I6IAzUSGlYS50yZYH/qpVkumUW9sz9ylw
+        NiQ4O2XB8H8Hk/RXSmU/7i/042dpY1RsaqJxDbzJ3hgd+h+vW2daHvNujHxeLDb2O3c/EAvt6fmpH
+        /CT3Hd5fJEQuF8uryywQG23Lx98/8viggcr1njgwvu2L7IHYIVv/w/rdZa7aTRE+XIf9ro7DYS6a3
+        okJs1Mxg==;
 Received: from dhcp-077-249-017-003.chello.nl ([77.249.17.3] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nywx6-0066Dl-Fu; Wed, 08 Jun 2022 14:46:33 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nywx2-00ChXN-TW; Wed, 08 Jun 2022 14:46:29 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E20D8302F49;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A4C2B302F11;
         Wed,  8 Jun 2022 16:46:23 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id BC41C20C119B1; Wed,  8 Jun 2022 16:46:18 +0200 (CEST)
-Message-ID: <20220608144517.948600553@infradead.org>
+        id 9DB8020C10EDE; Wed,  8 Jun 2022 16:46:18 +0200 (CEST)
+Message-ID: <20220608144517.507286638@infradead.org>
 User-Agent: quilt/0.66
-Date:   Wed, 08 Jun 2022 16:27:55 +0200
+Date:   Wed, 08 Jun 2022 16:27:48 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org
 Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
@@ -100,7 +100,7 @@ Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
         linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
         rcu@vger.kernel.org
-Subject: [PATCH 32/36] ftrace: WARN on rcuidle
+Subject: [PATCH 25/36] time/tick-broadcast: Remove RCU_NONIDLE usage
 References: <20220608142723.103523089@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -108,59 +108,52 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-CONFIG_GENERIC_ENTRY disallows any and all tracing when RCU isn't
-enabled.
-
-XXX if s390 (the only other GENERIC_ENTRY user as of this writing)
-isn't comfortable with this, we could switch to
-HAVE_NOINSTR_VALIDATION which is x86_64 only atm.
+No callers left that have already disabled RCU.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/tracepoint.h |   13 ++++++++++++-
- kernel/trace/trace.c       |    3 +++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ kernel/time/tick-broadcast-hrtimer.c |   29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -178,6 +178,16 @@ static inline struct tracepoint *tracepo
- #endif /* CONFIG_HAVE_STATIC_CALL */
- 
- /*
-+ * CONFIG_GENERIC_ENTRY archs are expected to have sanitized entry and idle
-+ * code that disallow any/all tracing/instrumentation when RCU isn't watching.
-+ */
-+#ifdef CONFIG_GENERIC_ENTRY
-+#define RCUIDLE_COND(rcuidle)	(rcuidle)
-+#else
-+#define RCUIDLE_COND(rcuidle)	(rcuidle && in_nmi())
-+#endif
+--- a/kernel/time/tick-broadcast-hrtimer.c
++++ b/kernel/time/tick-broadcast-hrtimer.c
+@@ -56,25 +56,20 @@ static int bc_set_next(ktime_t expires,
+ 	 * hrtimer callback function is currently running, then
+ 	 * hrtimer_start() cannot move it and the timer stays on the CPU on
+ 	 * which it is assigned at the moment.
++	 */
++	hrtimer_start(&bctimer, expires, HRTIMER_MODE_ABS_PINNED_HARD);
++	/*
++	 * The core tick broadcast mode expects bc->bound_on to be set
++	 * correctly to prevent a CPU which has the broadcast hrtimer
++	 * armed from going deep idle.
+ 	 *
+-	 * As this can be called from idle code, the hrtimer_start()
+-	 * invocation has to be wrapped with RCU_NONIDLE() as
+-	 * hrtimer_start() can call into tracing.
++	 * As tick_broadcast_lock is held, nothing can change the cpu
++	 * base which was just established in hrtimer_start() above. So
++	 * the below access is safe even without holding the hrtimer
++	 * base lock.
+ 	 */
+-	RCU_NONIDLE( {
+-		hrtimer_start(&bctimer, expires, HRTIMER_MODE_ABS_PINNED_HARD);
+-		/*
+-		 * The core tick broadcast mode expects bc->bound_on to be set
+-		 * correctly to prevent a CPU which has the broadcast hrtimer
+-		 * armed from going deep idle.
+-		 *
+-		 * As tick_broadcast_lock is held, nothing can change the cpu
+-		 * base which was just established in hrtimer_start() above. So
+-		 * the below access is safe even without holding the hrtimer
+-		 * base lock.
+-		 */
+-		bc->bound_on = bctimer.base->cpu_base->cpu;
+-	} );
++	bc->bound_on = bctimer.base->cpu_base->cpu;
 +
-+/*
-  * it_func[0] is never NULL because there is at least one element in the array
-  * when the array itself is non NULL.
-  */
-@@ -189,7 +199,8 @@ static inline struct tracepoint *tracepo
- 			return;						\
- 									\
- 		/* srcu can't be used from NMI */			\
--		WARN_ON_ONCE(rcuidle && in_nmi());			\
-+		if (WARN_ON_ONCE(RCUIDLE_COND(rcuidle)))		\
-+			return;						\
- 									\
- 		/* keep srcu and sched-rcu usage consistent */		\
- 		preempt_disable_notrace();				\
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3104,6 +3104,9 @@ void __trace_stack(struct trace_array *t
- 		return;
- 	}
+ 	return 0;
+ }
  
-+	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_GENERIC_ENTRY)))
-+		return;
-+
- 	/*
- 	 * When an NMI triggers, RCU is enabled via rcu_nmi_enter(),
- 	 * but if the above rcu_is_watching() failed, then the NMI
 
 
