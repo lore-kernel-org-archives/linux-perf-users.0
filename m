@@ -2,189 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A35C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 05:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5155C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 05:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237858AbiFIFCv (ORCPT
+        id S238235AbiFIFYG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 01:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
+        Thu, 9 Jun 2022 01:24:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230510AbiFIFCu (ORCPT
+        with ESMTP id S238253AbiFIFYF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 01:02:50 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAF6B219128;
-        Wed,  8 Jun 2022 22:02:48 -0700 (PDT)
+        Thu, 9 Jun 2022 01:24:05 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C9B5FDA
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Jun 2022 22:24:02 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-30c9a01d1c5so193008057b3.11
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jun 2022 22:24:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1654750968; x=1686286968;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=zXw+Mis03bohBkfK+hDhw/wFr5Kd1lzp07uRvIK3edI=;
-  b=OV3VHIG5K49NaV0qNx7NjDZr6HKMHAdn5j+6f5+C70S75fPuVBllSk+z
-   ulXWcbNLlRXD29eqsO703NqAslJFLdKKsoqDEJA4hHoygepfequB29tUG
-   ZtAbRvlUqJ43cWEV8iGcDEprYzA8UyO9OA6o/R1zzDfVhICvGuGi1tCPT
-   U=;
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Jun 2022 22:02:48 -0700
-X-QCInternal: smtphost
-Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
-  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2022 22:02:47 -0700
-Received: from [10.242.59.11] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 8 Jun 2022
- 22:02:44 -0700
-Message-ID: <6820a04b-16d2-3310-6491-835d8727edec@quicinc.com>
-Date:   Thu, 9 Jun 2022 10:32:40 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH V5] arm64: perf: Make exporting of pmu events configurable
-Content-Language: en-US
-To:     <will@kernel.org>, <mark.rutland@arm.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <catalin.marinas@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1653306574-20946-1-git-send-email-quic_c_spathi@quicinc.com>
-From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-In-Reply-To: <1653306574-20946-1-git-send-email-quic_c_spathi@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=7XF9Ovw3kggDsMB//JiO35wPNulyyyK2DnQRx8sKbCw=;
+        b=Qxt+qHfYhDcOmc8hJ0bwanQhLdkNTTw/fTHYnVI3n9lc9yKskzsAgPUblvzaiKqzki
+         f4R+lZJq29nNw2NS9A2gMI8kKaT12s3IhM+pX4QiU0AQrQ0qe/G4kYYOKL4Oz+KPv82X
+         7lDgoVC5Fl/2mmrBnJzIwfT/hm0Hp/dNnPONk4i7CseHykg9pWWgTQuRqjzOnWZLYoe9
+         kPG0qrkCgz/oKwWwvd0zLDJGFiYnrGgZTbqMxeE3QmbZPzlNqwlr2qca2eSgyrf2s/ej
+         5BDSK7xwy0GfLGHT32urHkpiQqk95ILmj57wVUSRiEvC+FoQ38ZkFZH9Rl0lU3I99xqa
+         pH/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=7XF9Ovw3kggDsMB//JiO35wPNulyyyK2DnQRx8sKbCw=;
+        b=dD8Zu/4GfgrB40wVG2Yjw+mg6ZcBV4gQxcKS9pIXBKvU7bdK2eOitvaviamXCyco8n
+         Yk8TWjfEshOcM0X5Kc/6Un3dmcbVjY1D85w6K2Oh9YDt76AI81WOx9t0KQecLpR7l4+z
+         fgnFB/22ISUuUUiTHLloCPiBCZ/MJQ4EM3uVkLHM6NCacWRT1T35znG8lDaiEEBtuxQU
+         y5YGrMWbJCmyANl1DfzWnhDwCt9UAPWl14roHHe87WICqKHfhiIRAiTDsxSzUO8QydOx
+         UqZCzmAye6fMJYkeCXSaxaVWDofUzG0oT4lGtSlKuDScWuTGJHxf5ND5D3Xa1sKvNDct
+         IFMA==
+X-Gm-Message-State: AOAM533O1GhLsK5AcVsQAE3axUSFfRtJ/k9AM25KfbM60rkJ8+bhM6lZ
+        3y5ctjqCQOl0Vh6tzadnZJBduLaR0dzn
+X-Google-Smtp-Source: ABdhPJwf1EjrawTD8TkuztwNA6YeKtP7aL1hFxOD/Pfd+D7027QpFXS+X5Jr8E+OajcbsOHLBLEehH23wdcM
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:ae20:7578:fb21:976b])
+ (user=irogers job=sendgmr) by 2002:a25:2385:0:b0:664:381c:7c98 with SMTP id
+ j127-20020a252385000000b00664381c7c98mr1028385ybj.7.1654752241781; Wed, 08
+ Jun 2022 22:24:01 -0700 (PDT)
+Date:   Wed,  8 Jun 2022 22:23:51 -0700
+Message-Id: <20220609052355.1300162-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
+Subject: [PATCH v2 0/4] Tidy user rdpmc documentation and testing
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+libperf's perf_mmap__read_self and the addition of arm64 support mean
+that the perf_event.h and the rdpmc perf test have become
+stale. Refresh the documentation in perf_event.h, remove the x86 rdpmc
+test and port the libperf test as a non-architecture specific test.
 
-Hi Will / Robin ,
+Address sanitizer testing showed libperf leaking fds when the
+perf_event_open failed, add error paths to handle this.
 
-Could you please review this change.
+A comment is added to perf_event.h to avoid a divide by zero when
+scaling counts if the running time is 0. This was previously discussed
+in this thread:
+https://lore.kernel.org/lkml/CAP-5=fVRdqvswtyQMg5cB+ntTGda+SAYskjTQednEH-AeZo13g@mail.gmail.com/
 
-On 5/23/2022 5:19 PM, Srinivasarao Pathipati wrote:
-> The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
-> Make is configurable using sysctls to enable/disable at runtime.
-> It can also be enabled at early bootup with kernel arguments.
->
-> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-> ---
-> Changes since V4:
-> 	- Registering sysctls dynamically for only arm64 as suggested by Will
-> 	- Not removed the code to configure with kernel parameters
-> 	  as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
-> 	  is not working at early bootup. pmu_reset() getting called before
-> 	  sysctl's kernel parameter is set.
-> Changes since V3:
-> 	- export bit is now configurable with sysctl
-> 	- enabling export bit on reset instead of retaining
->
-> Changes since V2:
-> 	Done below changes as per Will's comments
-> 	- enabling pmcr_x now configurable with kernel parameters and
-> 	  by default it is disabled.
-> 	
-> Changes since V1:
-> 	- Preserving only PMCR_X bit as per Robin Murphy's comment.
->
-> ---
->   Documentation/admin-guide/kernel-parameters.txt |  5 +++++
->   Documentation/admin-guide/sysctl/kernel.rst     |  9 +++++++++
->   arch/arm64/kernel/perf_event.c                  | 24 ++++++++++++++++++++++++
->   3 files changed, 38 insertions(+)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index de3da15..2bf1187 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5150,6 +5150,11 @@
->   			Useful for devices that are detected asynchronously
->   			(e.g. USB and MMC devices).
->   
-> +	export_pmu_events
-> +			[KNL,ARM64] Sets the PMU export bit (PMCR_EL0.X), which enables
-> +			the exporting of events over an IMPLEMENTATION DEFINED PMU event
-> +			export bus to another device.
-> +
->   	retain_initrd	[RAM] Keep initrd memory after extraction
->   
->   	rfkill.default_state=
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index ddccd10..db42d4c 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -892,6 +892,15 @@ The default value is 0 (access disabled).
->   
->   See Documentation/arm64/perf.rst for more information.
->   
-> +export_pmu_events (arm64 only)
-> +==============================
-> +Controls the PMU export bit (PMCR_EL0.X), which enables the exporting of
-> +events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
-> +
-> +0: disables exporting of events (default).
-> +
-> +1: enables exporting of events.
-> +
->   
->   pid_max
->   =======
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index cb69ff1..d93e7c4 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -298,6 +298,7 @@ PMU_FORMAT_ATTR(long, "config1:0");
->   PMU_FORMAT_ATTR(rdpmc, "config1:1");
->   
->   static int sysctl_perf_user_access __read_mostly;
-> +static int sysctl_export_pmu_events __read_mostly;
->   
->   static inline bool armv8pmu_event_is_64bit(struct perf_event *event)
->   {
-> @@ -1025,6 +1026,17 @@ static int armv8pmu_filter_match(struct perf_event *event)
->   	return evtype != ARMV8_PMUV3_PERFCTR_CHAIN;
->   }
->   
-> +static int __init export_pmu_events(char *str)
-> +{
-> +	/* Enable exporting of pmu events at early bootup with kernel
-> +	 * arguments.
-> +	 */
-> +	sysctl_export_pmu_events = 1;
-> +	return 0;
-> +}
-> +
-> +early_param("export_pmu_events", export_pmu_events);
-> +
->   static void armv8pmu_reset(void *info)
->   {
->   	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
-> @@ -1047,6 +1059,9 @@ static void armv8pmu_reset(void *info)
->   	if (armv8pmu_has_long_event(cpu_pmu))
->   		pmcr |= ARMV8_PMU_PMCR_LP;
->   
-> +	if (sysctl_export_pmu_events)
-> +		pmcr |= ARMV8_PMU_PMCR_X;
-> +
->   	armv8pmu_pmcr_write(pmcr);
->   }
->   
-> @@ -1221,6 +1236,15 @@ static struct ctl_table armv8_pmu_sysctl_table[] = {
->   		.extra1		= SYSCTL_ZERO,
->   		.extra2		= SYSCTL_ONE,
->   	},
-> +	{
-> +		.procname       = "export_pmu_events",
-> +		.data           = &sysctl_export_pmu_events,
-> +		.maxlen         = sizeof(unsigned int),
-> +		.mode           = 0644,
-> +		.proc_handler   = proc_dointvec_minmax,
-> +		.extra1         = SYSCTL_ZERO,
-> +		.extra2         = SYSCTL_ONE,
-> +	},
->   	{ }
->   };
->   
+v2. Alters the skip in test_stat_user_read for open to always be a
+    skip as perf_event_open may fail with EACCES (permissions), ENOSYS
+    (not supported) and ENOENT (hypervisor). Adds Rob Herring's
+    acked-by on patch 3.
+
+Ian Rogers (4):
+  libperf evsel: Open shouldn't leak fd on failure
+  perf: Align user space counter reading with code
+  perf test: Remove x86 rdpmc test
+  perf test: Add user space counter reading tests
+
+ include/uapi/linux/perf_event.h        |  32 +++--
+ tools/include/uapi/linux/perf_event.h  |  32 +++--
+ tools/lib/perf/evsel.c                 |  17 ++-
+ tools/perf/arch/x86/tests/Build        |   1 -
+ tools/perf/arch/x86/tests/arch-tests.c |   2 -
+ tools/perf/arch/x86/tests/rdpmc.c      | 182 -------------------------
+ tools/perf/tests/mmap-basic.c          | 127 ++++++++++++++++-
+ 7 files changed, 176 insertions(+), 217 deletions(-)
+ delete mode 100644 tools/perf/arch/x86/tests/rdpmc.c
+
+-- 
+2.36.1.255.ge46751e96f-goog
+
