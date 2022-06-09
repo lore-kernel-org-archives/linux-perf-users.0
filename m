@@ -2,125 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E8ACCA473
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 11:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAB5CCA481
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 11:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243932AbiFILbp (ORCPT
+        id S243889AbiFILbq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 07:31:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54466 "EHLO
+        Thu, 9 Jun 2022 07:31:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243889AbiFILbV (ORCPT
+        with ESMTP id S243734AbiFILbV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Thu, 9 Jun 2022 07:31:21 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F643A4826
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 04:31:11 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id y19so46858079ejq.6
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 04:31:11 -0700 (PDT)
+Received: from mail-ej1-x64a.google.com (mail-ej1-x64a.google.com [IPv6:2a00:1450:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664503A5BDB
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 04:31:13 -0700 (PDT)
+Received: by mail-ej1-x64a.google.com with SMTP id bk16-20020a170906b0d000b006fe34a2e598so10815879ejb.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 04:31:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=google.com; s=20210112;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=+XewJc/p+7yp1re11t6BfmEtfp27WPbXPnywgusXXTc=;
-        b=dD0Bz9eW32MHk+TeRLS+QqFpXQSyJG1PFuM0sFc2oIQiPmRbBKI4wiAjUnrY0TOPB3
-         vmLpoVIxPESYT9ISrrirk39KtLhSpCgEKtG3yrDCpv/Gh6ZWSamp4kS8RJg23gIGNIEa
-         lDd2yagv7BcuRvFzrWxMhthjwknH7br96szys=
+        bh=vEnwLHfz8bnnz/z0hnI1W7+EOk8HMNN4MOfns1570U0=;
+        b=FJgcqRt48J5Dot/Fz9Uvm/E4iUfO5qVqzissd4gJ7h4TVLWQ6eMYxF/+mDWmUYehwt
+         kaZAdhcbjK6DjQoIPEj2ovbsH7tZR4sidZog2AVEC5Pcbv0/Fd8zdz/xgkaMk7566qWW
+         CtXnzZyoZZQCmfhPo2iHeESBHyL1ng2CcLJaeRINF4vimizadO6EST9hw6xvtREsPhiZ
+         Au5ALp1erVQNvVDl2CLPDLUo19W9/msQUdrJR4bOwmgKmz89mxUyWVlCwhjQLU5BI3zY
+         jeyj/ipnnM6TeFDdk1z2+RfKLNYkSEmH9XO71edFxAxxLc8Q/xUYJwLA992cBFhp+dn3
+         3OPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+XewJc/p+7yp1re11t6BfmEtfp27WPbXPnywgusXXTc=;
-        b=JaBwtZU2mfNznsBExqIUCun943aCozC5PiZGkOK9/eabIfIXn595AZv+q+n4lUxuAD
-         IC6UsBkbUzdnAVErR92z9m5Q2x/SdRRTY2oFLRZjgDwN5rYwYRjDfrIba8zSq/W6cf59
-         6LS8vI+mn5qiwZUx9neUSRecN9i8QPpKeSq4vxUkna4djsQ5ef5nfQLQWhUhmAiGHrZF
-         Q+rxB0bLD0zPI6VT6ZSEQXSyY9V1XoZO4TEkikGEYHmOGnB4juqt0vRlmmjOOXnl1ZgO
-         fNeixcPsYRoIpSL4CLSoKaNio15adajS7VrFc22A9SU4vktLMDDd3EmonB8P2vpDd8zk
-         CnPw==
-X-Gm-Message-State: AOAM5301JLjZnjawwHkL5gqOZg74tYt4xjrne24CGcAOgIUZ6YGEVdLX
-        e1A4TZhycQcDS+gVdUokweZ8sDloPjzgnAN3XEr0DA==
-X-Google-Smtp-Source: ABdhPJx9nV7wAxP/lyAtNedlGfDPIROj9YXpatcH7EqCac1uVlfTSKszMzYbWUxkatf8WgjTCZNOZTjPAlJBoltWDx4=
-X-Received: by 2002:a17:907:c22:b0:711:dc95:3996 with SMTP id
- ga34-20020a1709070c2200b00711dc953996mr13928684ejc.62.1654774269713; Thu, 09
- Jun 2022 04:31:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220608142723.103523089@infradead.org> <20220608144517.444659212@infradead.org>
- <YqG6URbihTNCk9YR@alley> <YqHFHB6qqv5wiR8t@worktop.programming.kicks-ass.net>
-In-Reply-To: <YqHFHB6qqv5wiR8t@worktop.programming.kicks-ass.net>
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-Date:   Thu, 9 Jun 2022 20:30:58 +0900
-Message-ID: <CA+_sPaoJGrXhNPCs2dKf2J7u07y1xYrRFZBUtkKwzK9GqcHSuQ@mail.gmail.com>
-Subject: Re: [PATCH 24/36] printk: Remove trace_.*_rcuidle() usage
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Petr Mladek <pmladek@suse.com>, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
-        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
-        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
-        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
-        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        James.Bottomley@hansenpartnership.com, deller@gmx.de,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
-        davem@davemloft.net, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        sudeep.holla@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, anup@brainfault.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
-        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, rostedt@goodmis.org,
-        john.ogness@linutronix.de, paulmck@kernel.org, frederic@kernel.org,
-        quic_neeraju@quicinc.com, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
-        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
-        rcu@vger.kernel.org
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=vEnwLHfz8bnnz/z0hnI1W7+EOk8HMNN4MOfns1570U0=;
+        b=DMRbdliOQeQW19ywKIbdQ2rnl462LO40qJPkUEyJLlraxYdCxykQ5xe4MldPMS6L6L
+         ayIhn3UUy42ts3VAgXIyxhHAv40+yJN3MEKAaB8cVq/IIhcJV3uAFAi1wfzoUDQFo/jQ
+         kwOoLyabmqLMZEagv/t9XE2d/eQQvQrIBS0FtjvrCIClOUFg/6TQF5kKKnJ/NsgNAj0e
+         pGE62SKkSDso8yXtpvXCPjMMxMjqDtb8G8TtdEx8GIVieSctPnjRfuJU2VzI9Ff5NwzA
+         rFlWDkgDTj4p/UGBW/rB/bWbRX6lGuwarbuqEEq44WR0gz4zyPp+WBbhEbya8rVpX01P
+         d3WQ==
+X-Gm-Message-State: AOAM533M+8Iy63GbP3/RuXRJbEpmpjiuGecV2Eq/P+rvpzmjJ7dyiNbN
+        4tN7tvVUx+Uzoh7PuQ/Ty9vn+LGPcA==
+X-Google-Smtp-Source: ABdhPJy6fxgLEEWOBBqF03SqL1tlVIBlJ9qpMkrzeULfbi/9xejgkRe26FJME5xe2MXNniUvCKkw5WpXAA==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:dcf:e5ba:10a5:1ea5])
+ (user=elver job=sendgmr) by 2002:a17:906:8513:b0:711:c67f:62b6 with SMTP id
+ i19-20020a170906851300b00711c67f62b6mr21303657ejx.657.1654774271337; Thu, 09
+ Jun 2022 04:31:11 -0700 (PDT)
+Date:   Thu,  9 Jun 2022 13:30:43 +0200
+In-Reply-To: <20220609113046.780504-1-elver@google.com>
+Message-Id: <20220609113046.780504-6-elver@google.com>
+Mime-Version: 1.0
+References: <20220609113046.780504-1-elver@google.com>
+X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
+Subject: [PATCH 5/8] perf/hw_breakpoint: Remove useless code related to
+ flexible breakpoints
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-My emails are getting rejected... Let me try web-interface
+Flexible breakpoints have never been implemented, with
+bp_cpuinfo::flexible always being 0. Unfortunately, they still occupy 4
+bytes in each bp_cpuinfo and bp_busy_slots, as well as computing the max
+flexible count in fetch_bp_busy_slots().
 
-Kudos to Petr for the questions and thanks to PeterZ for the answers.
+This again causes suboptimal code generation, when we always know that
+`!!slots.flexible` will be 0.
 
-On Thu, Jun 9, 2022 at 7:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> This is the tracepoint used to spool all of printk into ftrace, I
-> suspect there's users, but I haven't used it myself.
+Just get rid of the flexible "placeholder" and remove all real code
+related to it. Make a note in the comment related to the constraints
+algorithm but don't remove them from the algorithm, so that if in future
+flexible breakpoints need supporting, it should be trivial to revive
+them (along with reverting this change).
 
-I'm somewhat curious whether we can actually remove that trace event.
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ kernel/events/hw_breakpoint.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index 5f40c8dfa042..afe0a6007e96 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -46,8 +46,6 @@ struct bp_cpuinfo {
+ #else
+ 	unsigned int	*tsk_pinned;
+ #endif
+-	/* Number of non-pinned cpu/task breakpoints in a cpu */
+-	unsigned int	flexible; /* XXX: placeholder, see fetch_this_slot() */
+ };
+ 
+ static DEFINE_PER_CPU(struct bp_cpuinfo, bp_cpuinfo[TYPE_MAX]);
+@@ -71,7 +69,6 @@ static bool constraints_initialized __ro_after_init;
+ /* Gather the number of total pinned and un-pinned bp in a cpuset */
+ struct bp_busy_slots {
+ 	unsigned int pinned;
+-	unsigned int flexible;
+ };
+ 
+ /* Serialize accesses to the above constraints */
+@@ -213,10 +210,6 @@ fetch_bp_busy_slots(struct bp_busy_slots *slots, struct perf_event *bp,
+ 
+ 		if (nr > slots->pinned)
+ 			slots->pinned = nr;
+-
+-		nr = info->flexible;
+-		if (nr > slots->flexible)
+-			slots->flexible = nr;
+ 	}
+ }
+ 
+@@ -299,7 +292,8 @@ __weak void arch_unregister_hw_breakpoint(struct perf_event *bp)
+ }
+ 
+ /*
+- * Constraints to check before allowing this new breakpoint counter:
++ * Constraints to check before allowing this new breakpoint counter. Note that
++ * flexible breakpoints are currently unsupported -- see fetch_this_slot().
+  *
+  *  == Non-pinned counter == (Considered as pinned for now)
+  *
+@@ -366,7 +360,7 @@ static int __reserve_bp_slot(struct perf_event *bp, u64 bp_type)
+ 	fetch_this_slot(&slots, weight);
+ 
+ 	/* Flexible counters need to keep at least one slot */
+-	if (slots.pinned + (!!slots.flexible) > hw_breakpoint_slots_cached(type))
++	if (slots.pinned > hw_breakpoint_slots_cached(type))
+ 		return -ENOSPC;
+ 
+ 	ret = arch_reserve_bp_slot(bp);
+-- 
+2.36.1.255.ge46751e96f-goog
+
