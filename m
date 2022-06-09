@@ -2,98 +2,76 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2748C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 13:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246AEC43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 13:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234225AbiFINHv (ORCPT
+        id S238677AbiFINZa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 09:07:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59576 "EHLO
+        Thu, 9 Jun 2022 09:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237515AbiFINHp (ORCPT
+        with ESMTP id S236244AbiFINZa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 09:07:45 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC07A85EE4;
-        Thu,  9 Jun 2022 06:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1654780062; x=1686316062;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PTrfA4+QXjPYtg7WES29RLAhtkp56K5doQjbZoUFJhE=;
-  b=jNsOoN3zr0VsoaCsDIUIirWSxEpEmyil8DZK4060SeD1KHnHYlZQgRkW
-   01GRR4LJq9QBdRHDxtSzfT4AxAs3CuLKQRuJyYbpH6Lg2qzT0tMxMCGa0
-   HQJzKPLN6mTymJSM95TQqGXW7jW0Vn/mERVG5cSYm04oJ7xKaHL1UTTiF
-   M=;
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Jun 2022 06:07:41 -0700
-X-QCInternal: smtphost
-Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
-  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 06:07:41 -0700
-Received: from [10.242.59.11] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Thu, 9 Jun 2022
- 06:07:37 -0700
-Message-ID: <58c87a74-52e3-1133-f5cc-56c098f0273e@quicinc.com>
-Date:   Thu, 9 Jun 2022 18:37:34 +0530
+        Thu, 9 Jun 2022 09:25:30 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CBF4F9F2;
+        Thu,  9 Jun 2022 06:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RDnJZHWmp+ysb0h5kWT0rkgoVabhczhnKUMjH+r+EEo=; b=ZTuTdisB3u3GkBMB77eCqdbWc9
+        jJwUF3E2AQOHtgrIGRBaWTeBCUxmIl+lpTEnfIJT0qWeI+nHi82g2bLqQg3/i1ScT9/dGn68T6+Gk
+        4ATEfi1FcP5b1jSoPwi2aTPnD4MjbxOfvNFqWajswCCdaDsF/KMBMH/Q1gcXXT5R7zd1a5dVxK1/S
+        81AMFfHWq68ZGRrYsEZkmFsL8HreTNO88cox0geSEr2XtHRkxQLBDlru+VbstBq10bGeHdVbstIxI
+        ns+uXQwcqnlSYsaXEB5HUc0oRHcjd67oTmT4AWTk4Tb3N7qaizDsHMAIYOUc1e4Ltl3awT2358oiF
+        XjOPqY2Q==;
+Received: from dhcp-077-249-017-003.chello.nl ([77.249.17.3] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nzI9u-00DZzb-Gd; Thu, 09 Jun 2022 13:25:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3096930017D;
+        Thu,  9 Jun 2022 15:25:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 16C59200ECBB2; Thu,  9 Jun 2022 15:25:08 +0200 (CEST)
+Date:   Thu, 9 Jun 2022 15:25:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Marco Elver <elver@google.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] perf/hw_breakpoint: Make hw_breakpoint_weight()
+ inlinable
+Message-ID: <YqH0tAT2kboGG8FZ@hirez.programming.kicks-ass.net>
+References: <20220609113046.780504-1-elver@google.com>
+ <20220609113046.780504-5-elver@google.com>
+ <CACT4Y+YHp1mxxGNuGke42qcph0ibZb+6Ri_7fNJ+jg11NL-z8g@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH V5] arm64: perf: Make exporting of pmu events configurable
-Content-Language: en-US
-To:     Will Deacon <will@kernel.org>
-CC:     <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <catalin.marinas@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1653306574-20946-1-git-send-email-quic_c_spathi@quicinc.com>
- <20220609100247.GA2187@willie-the-truck>
- <4f5dbc00-e25b-f6ff-8585-31fc50f48a21@quicinc.com>
- <20220609113225.GA2326@willie-the-truck>
-From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-In-Reply-To: <20220609113225.GA2326@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+YHp1mxxGNuGke42qcph0ibZb+6Ri_7fNJ+jg11NL-z8g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Jun 09, 2022 at 02:03:12PM +0200, Dmitry Vyukov wrote:
 
-On 6/9/2022 5:02 PM, Will Deacon wrote:
-> [Please don't top-post]
->
-> On Thu, Jun 09, 2022 at 04:05:20PM +0530, Srinivasarao Pathipati wrote:
->> On 6/9/2022 3:32 PM, Will Deacon wrote:
->>> On Mon, May 23, 2022 at 05:19:34PM +0530, Srinivasarao Pathipati wrote:
->>>> The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
->>>> Make is configurable using sysctls to enable/disable at runtime.
->>>> It can also be enabled at early bootup with kernel arguments.
->>>>
->>>> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
->>>> ---
->>>> Changes since V4:
->>>> 	- Registering sysctls dynamically for only arm64 as suggested by Will
->>>> 	- Not removed the code to configure with kernel parameters
->>>> 	  as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
->>>> 	  is not working at early bootup. pmu_reset() getting called before
->>>> 	  sysctl's kernel parameter is set.
->>> Why do you need this during early bootup? Perf won't program any events
->>> until much later and if somebody else is configuring the PMU before
->>> entering Linux then they can also set that X bit in the PMCR.
->> On our Qualcomm platforms, The X bit is getting set by firmware at early
->> bootup for Qualcomm use cases
->> and non-secure world is resetting it, that causing issue.
-> What "Qualcomm use cases" and why should we care about them upstream?
+> > -__weak int hw_breakpoint_weight(struct perf_event *bp)
+> 
+> Humm... this was added in 2010 and never actually used to return
+> anything other than 1 since then (?). Looks like over-design. Maybe we
+> drop "#ifndef" and add a comment instead?
 
-Thanks Will & Robin for your inputs .
-
-Understood your point ,  pushed next version [V6] after removing kernel 
-parameters code.
-
->
-> Will
+Frederic, you have any recollection what this was supposed to go do?
