@@ -2,339 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA438CCA473
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 14:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40239CCA473
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 14:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244386AbiFIOxe (ORCPT
+        id S1344044AbiFIO40 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 10:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
+        Thu, 9 Jun 2022 10:56:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343738AbiFIOx1 (ORCPT
+        with ESMTP id S1344043AbiFIO4Z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 10:53:27 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DCCE22DF83;
-        Thu,  9 Jun 2022 07:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654786406; x=1686322406;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=F2DxW5Cms7WCyvZIJpBVQQWbERgXjoVTAO7vM9pr0u4=;
-  b=G1m+aeIfKOJzx9NlbG/SnCRGdt52KwYuqVGl1qHGYPxAHau4FB7y7B1Z
-   llBMPiamyyifNPSSX5Dwtuf2iAxJZAu7A7ZMYF+8WPhgS4LDV4xi5hZsO
-   QMKFLErv1k4EpNq8i3srxaiKvqQF/3pWj6on/sKtFQ5ZnAbg1x1/hZBlc
-   lqlREY9F7EUSMSweCGfnjTSsNY4b03oIu/+LkPl6Y79v0d9gTVUvRGv+V
-   9rHD6ClKmj6lOcirQpWcOdxCa43VEtNl77ic4I2uTttTCQWAYcbODKjWG
-   qE6OA19KDt3w5qQhGslH8o/W2Q0LGhSBMv4sv1Agy8TvpJ6pci+7In5EE
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10373"; a="302675613"
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="302675613"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 07:53:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="827633735"
-Received: from zxingrtx.sh.intel.com ([10.239.159.110])
-  by fmsmga006.fm.intel.com with ESMTP; 09 Jun 2022 07:53:21 -0700
-From:   zhengjun.xing@linux.intel.com
-To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
-Subject: [PATCH v2 5/5] perf stat: Add topdown metrics in the default perf stat on the hybrid machine
-Date:   Thu,  9 Jun 2022 22:53:14 +0800
-Message-Id: <20220609145314.2064632-6-zhengjun.xing@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220609145314.2064632-1-zhengjun.xing@linux.intel.com>
-References: <20220609145314.2064632-1-zhengjun.xing@linux.intel.com>
+        Thu, 9 Jun 2022 10:56:25 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270F339182A
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 07:56:24 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-3137c877092so43737557b3.13
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 07:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0+SkCjGgZBFq5wRCXTYfFTyaGhOAcbR2Sdoh6LQhmUA=;
+        b=deUfDUG4RR9z3kerucIqTXhqCeGsbHnfHtdvw5TsJVYFknetJ/w80Mv9kBz5l4wex9
+         TssewgR73O/IyB/u1mxjbxvVfqyOyYF82MCbjOeauw6zFo7MJimse2lx811joMZtXTdC
+         uT5XfiXo74nBdAcht78tvAUnApid/SMJhbV+Nr+EedCSPzCr3MTOd8EP9AmTLlsnhGck
+         znW1PntgjNv4SDv5OQvubmFMVhj/M7k5WoovioAqVoC/pkPL9GeBmYIXDknX5bKByQzG
+         isj398VB6w8UihJLCkMJNEXGeGaR/Pfe/bXeUjDzdAAissGD1HmQ0PWrAQE6T2NwCeIX
+         Z0+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0+SkCjGgZBFq5wRCXTYfFTyaGhOAcbR2Sdoh6LQhmUA=;
+        b=IScpGoPGTE8Y/rrvTutpFcsO4v6etYuqNV9FtJOdrgzNNUyhyCNXM7EkRhELW8VpBC
+         kLP/r7XVOnCeieReL1+mgfbgyPIsLHBwDC9bRrKNq/20dpZ+UjgD0O9BPq04eBzLvGgz
+         NZhC2SSf4HJjRVTHq8RFFHVbU0qlXzXMvOs132/tsALWLhzvwVYwFwswXHu2mJIeXs1l
+         VgJVkRhJooD3cSY0OjQwg7qcs/OpW37TjN7qUBoJJzNftwfxNHhV8to0qWpdieLbV9Ss
+         4VEIcUmwon8gnU5gNG69S2Pl4H1KW99hzbEcZW+6+IxL3NlOqRuXYsxdKY70ulYTCXh0
+         ZtmA==
+X-Gm-Message-State: AOAM532BYvhOdaoasvPhDD4M/FfJcwQCeT/Hnyd+s7F5GHwtrUk7BU8e
+        yTysJj1lGSSq6HgVvEd0WD8Dh9eqBjVvdGXqDenMgQ==
+X-Google-Smtp-Source: ABdhPJz3Thrnbg4dSqU+BoOQp4IJma6lc3JBLsyl9Q3m01mIrlVWxB4SwxkTgcDQXsBg4R1HBpAR8UmcfdarMxR1wx8=
+X-Received: by 2002:a0d:c0c6:0:b0:2ff:bb2:1065 with SMTP id
+ b189-20020a0dc0c6000000b002ff0bb21065mr44984991ywd.512.1654786583034; Thu, 09
+ Jun 2022 07:56:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-2-elver@google.com>
+ <CACT4Y+bOFmCyqfSgWS0b5xuwnPqP4V9v2ooJRmFCn0YAtOPmhQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+bOFmCyqfSgWS0b5xuwnPqP4V9v2ooJRmFCn0YAtOPmhQ@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 9 Jun 2022 16:55:46 +0200
+Message-ID: <CANpmjNNtV_6kgoLv=VX3z_oM6ZEvWJNAOj9z4ADcymqmhc+crw@mail.gmail.com>
+Subject: Re: [PATCH 1/8] perf/hw_breakpoint: Optimize list of per-task breakpoints
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+On Thu, 9 Jun 2022 at 16:29, Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Thu, 9 Jun 2022 at 13:31, Marco Elver <elver@google.com> wrote:
+> >
+> > On a machine with 256 CPUs, running the recently added perf breakpoint
+> > benchmark results in:
+> >
+> >  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
+> >  | # Running 'breakpoint/thread' benchmark:
+> >  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
+> >  |      Total time: 236.418 [sec]
+> >  |
+> >  |   123134.794271 usecs/op
+> >  |  7880626.833333 usecs/op/cpu
+> >
+> > The benchmark tests inherited breakpoint perf events across many
+> > threads.
+> >
+> > Looking at a perf profile, we can see that the majority of the time is
+> > spent in various hw_breakpoint.c functions, which execute within the
+> > 'nr_bp_mutex' critical sections which then results in contention on that
+> > mutex as well:
+> >
+> >     37.27%  [kernel]       [k] osq_lock
+> >     34.92%  [kernel]       [k] mutex_spin_on_owner
+> >     12.15%  [kernel]       [k] toggle_bp_slot
+> >     11.90%  [kernel]       [k] __reserve_bp_slot
+> >
+> > The culprit here is task_bp_pinned(), which has a runtime complexity of
+> > O(#tasks) due to storing all task breakpoints in the same list and
+> > iterating through that list looking for a matching task. Clearly, this
+> > does not scale to thousands of tasks.
+> >
+> > While one option would be to make task_struct a breakpoint list node,
+> > this would only further bloat task_struct for infrequently used data.
+>
+> task_struct already has:
+>
+> #ifdef CONFIG_PERF_EVENTS
+>   struct perf_event_context *perf_event_ctxp[perf_nr_task_contexts];
+>   struct mutex perf_event_mutex;
+>   struct list_head perf_event_list;
+> #endif
+>
+> Wonder if it's possible to use perf_event_mutex instead of the task_sharded_mtx?
+> And possibly perf_event_list instead of task_bps_ht? It will contain
+> other perf_event types, so we will need to test type as well, but on
+> the positive side, we don't need any management of the separate
+> container.
 
-Topdown metrics are missed in the default perf stat on the hybrid machine,
-add Topdown metrics in default perf stat for hybrid systems.
+Hmm, yes, I looked at that but then decided against messing the
+perf/core internals. The main issue I have with using perf_event_mutex
+is that we might interfere with perf/core's locking rules as well as
+interfere with other concurrent perf event additions. Using
+perf_event_list is very likely a no-go because it requires reworking
+perf/core as well.
 
-Currently, we support the perf metrics Topdown for the p-core PMU in the
-perf stat default, the perf metrics Topdown support for e-core PMU will be
-implemented later separately. Refactor the code adds two x86 specific
-functions. Widen the size of the event name column by 7 chars, so that all
-metrics after the "#" become aligned again.
-
-The perf metrics topdown feature is supported on the cpu_core of ADL. The
-dedicated perf metrics counter and the fixed counter 3 are used for the
-topdown events. Adding the topdown metrics doesn't trigger multiplexing.
-
-Before:
-
- # ./perf  stat  -a true
-
- Performance counter stats for 'system wide':
-
-             53.70 msec cpu-clock                 #   25.736 CPUs utilized
-                80      context-switches          #    1.490 K/sec
-                24      cpu-migrations            #  446.951 /sec
-                52      page-faults               #  968.394 /sec
-         2,788,555      cpu_core/cycles/          #   51.931 M/sec
-           851,129      cpu_atom/cycles/          #   15.851 M/sec
-         2,974,030      cpu_core/instructions/    #   55.385 M/sec
-           416,919      cpu_atom/instructions/    #    7.764 M/sec
-           586,136      cpu_core/branches/        #   10.916 M/sec
-            79,872      cpu_atom/branches/        #    1.487 M/sec
-            14,220      cpu_core/branch-misses/   #  264.819 K/sec
-             7,691      cpu_atom/branch-misses/   #  143.229 K/sec
-
-       0.002086438 seconds time elapsed
-
-After:
-
- # ./perf stat  -a true
-
- Performance counter stats for 'system wide':
-
-             61.39 msec cpu-clock                        #   24.874 CPUs utilized
-                76      context-switches                 #    1.238 K/sec
-                24      cpu-migrations                   #  390.968 /sec
-                52      page-faults                      #  847.097 /sec
-         2,753,695      cpu_core/cycles/                 #   44.859 M/sec
-           903,899      cpu_atom/cycles/                 #   14.725 M/sec
-         2,927,529      cpu_core/instructions/           #   47.690 M/sec
-           428,498      cpu_atom/instructions/           #    6.980 M/sec
-           581,299      cpu_core/branches/               #    9.470 M/sec
-            83,409      cpu_atom/branches/               #    1.359 M/sec
-            13,641      cpu_core/branch-misses/          #  222.216 K/sec
-             8,008      cpu_atom/branch-misses/          #  130.453 K/sec
-        14,761,308      cpu_core/slots/                  #  240.466 M/sec
-         3,288,625      cpu_core/topdown-retiring/       #     22.3% retiring
-         1,323,323      cpu_core/topdown-bad-spec/       #      9.0% bad speculation
-         5,477,470      cpu_core/topdown-fe-bound/       #     37.1% frontend bound
-         4,679,199      cpu_core/topdown-be-bound/       #     31.7% backend bound
-           646,194      cpu_core/topdown-heavy-ops/      #      4.4% heavy operations       #     17.9% light operations
-         1,244,999      cpu_core/topdown-br-mispredict/  #      8.4% branch mispredict      #      0.5% machine clears
-         3,891,800      cpu_core/topdown-fetch-lat/      #     26.4% fetch latency          #     10.7% fetch bandwidth
-         1,879,034      cpu_core/topdown-mem-bound/      #     12.7% memory bound           #     19.0% Core bound
-
-       0.002467839 seconds time elapsed
-
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
-Change log:
-  v2:
-    * Refactor arch_get_topdown_pmu_name() as Namhyung's suggestion.
-
- tools/perf/arch/x86/util/evlist.c  | 13 ++------
- tools/perf/arch/x86/util/topdown.c | 52 ++++++++++++++++++++++++++++++
- tools/perf/arch/x86/util/topdown.h |  1 +
- tools/perf/builtin-stat.c          | 14 ++------
- tools/perf/util/stat-display.c     |  2 +-
- tools/perf/util/topdown.c          |  7 ++++
- tools/perf/util/topdown.h          |  3 +-
- 7 files changed, 67 insertions(+), 25 deletions(-)
-
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index fd3500fd4b69..03c955480d34 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -3,12 +3,9 @@
- #include "util/pmu.h"
- #include "util/evlist.h"
- #include "util/parse-events.h"
--#include "topdown.h"
- #include "util/event.h"
- #include "util/pmu-hybrid.h"
--
--#define TOPDOWN_L1_EVENTS	"{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
--#define TOPDOWN_L2_EVENTS	"{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,topdown-fetch-lat,topdown-mem-bound}"
-+#include "topdown.h"
- 
- static int ___evlist__add_default_attrs(struct evlist *evlist,
- 					struct perf_event_attr *attrs,
-@@ -65,13 +62,7 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
- 	if (nr_attrs)
- 		return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
- 
--	if (!pmu_have_event("cpu", "slots"))
--		return 0;
--
--	if (pmu_have_event("cpu", "topdown-heavy-ops"))
--		return parse_events(evlist, TOPDOWN_L2_EVENTS, NULL);
--	else
--		return parse_events(evlist, TOPDOWN_L1_EVENTS, NULL);
-+	return topdown_parse_events(evlist);
- }
- 
- struct evsel *arch_evlist__leader(struct list_head *list)
-diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-index f81a7cfe4d63..35add91f2cd2 100644
---- a/tools/perf/arch/x86/util/topdown.c
-+++ b/tools/perf/arch/x86/util/topdown.c
-@@ -3,9 +3,17 @@
- #include "api/fs/fs.h"
- #include "util/pmu.h"
- #include "util/topdown.h"
-+#include "util/evlist.h"
-+#include "util/debug.h"
-+#include "util/pmu-hybrid.h"
- #include "topdown.h"
- #include "evsel.h"
- 
-+#define TOPDOWN_L1_EVENTS       "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
-+#define TOPDOWN_L1_EVENTS_CORE  "{slots,cpu_core/topdown-retiring/,cpu_core/topdown-bad-spec/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/}"
-+#define TOPDOWN_L2_EVENTS       "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,topdown-fetch-lat,topdown-mem-bound}"
-+#define TOPDOWN_L2_EVENTS_CORE  "{slots,cpu_core/topdown-retiring/,cpu_core/topdown-bad-spec/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/,cpu_core/topdown-heavy-ops/,cpu_core/topdown-br-mispredict/,cpu_core/topdown-fetch-lat/,cpu_core/topdown-mem-bound/}"
-+
- /* Check whether there is a PMU which supports the perf metrics. */
- bool topdown_sys_has_perf_metrics(void)
- {
-@@ -73,3 +81,47 @@ bool arch_topdown_sample_read(struct evsel *leader)
- 
- 	return false;
- }
-+
-+const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn)
-+{
-+	const char *pmu_name;
-+
-+	if (!perf_pmu__has_hybrid())
-+		return "cpu";
-+
-+	if (!evlist->hybrid_pmu_name) {
-+		if (warn)
-+			pr_warning
-+			    ("WARNING: default to use cpu_core topdown events\n");
-+		evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu("core");
-+	}
-+
-+	pmu_name = evlist->hybrid_pmu_name;
-+
-+	return pmu_name;
-+}
-+
-+int topdown_parse_events(struct evlist *evlist)
-+{
-+	const char *topdown_events;
-+	const char *pmu_name;
-+
-+	if (!topdown_sys_has_perf_metrics())
-+		return 0;
-+
-+	pmu_name = arch_get_topdown_pmu_name(evlist, false);
-+
-+	if (pmu_have_event(pmu_name, "topdown-heavy-ops")) {
-+		if (!strcmp(pmu_name, "cpu_core"))
-+			topdown_events = TOPDOWN_L2_EVENTS_CORE;
-+		else
-+			topdown_events = TOPDOWN_L2_EVENTS;
-+	} else {
-+		if (!strcmp(pmu_name, "cpu_core"))
-+			topdown_events = TOPDOWN_L1_EVENTS_CORE;
-+		else
-+			topdown_events = TOPDOWN_L1_EVENTS;
-+	}
-+
-+	return parse_events(evlist, topdown_events, NULL);
-+}
-diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
-index 46bf9273e572..7eb81f042838 100644
---- a/tools/perf/arch/x86/util/topdown.h
-+++ b/tools/perf/arch/x86/util/topdown.h
-@@ -3,5 +3,6 @@
- #define _TOPDOWN_H 1
- 
- bool topdown_sys_has_perf_metrics(void);
-+int topdown_parse_events(struct evlist *evlist);
- 
- #endif
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 837c3ca91af1..c6b68be78f8c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -71,6 +71,7 @@
- #include "util/bpf_counter.h"
- #include "util/iostat.h"
- #include "util/pmu-hybrid.h"
-+ #include "util/topdown.h"
- #include "asm/bug.h"
- 
- #include <linux/time64.h>
-@@ -1858,22 +1859,11 @@ static int add_default_attributes(void)
- 		unsigned int max_level = 1;
- 		char *str = NULL;
- 		bool warn = false;
--		const char *pmu_name = "cpu";
-+		const char *pmu_name = arch_get_topdown_pmu_name(evsel_list, true);
- 
- 		if (!force_metric_only)
- 			stat_config.metric_only = true;
- 
--		if (perf_pmu__has_hybrid()) {
--			if (!evsel_list->hybrid_pmu_name) {
--				pr_warning("WARNING: default to use cpu_core topdown events\n");
--				evsel_list->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu("core");
--			}
--
--			pmu_name = evsel_list->hybrid_pmu_name;
--			if (!pmu_name)
--				return -1;
--		}
--
- 		if (pmu_have_event(pmu_name, topdown_metric_L2_attrs[5])) {
- 			metric_attrs = topdown_metric_L2_attrs;
- 			max_level = 2;
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 606f09b09226..44045565c8f8 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -374,7 +374,7 @@ static void abs_printout(struct perf_stat_config *config,
- 			config->csv_output ? 0 : config->unit_width,
- 			evsel->unit, config->csv_sep);
- 
--	fprintf(output, "%-*s", config->csv_output ? 0 : 25, evsel__name(evsel));
-+	fprintf(output, "%-*s", config->csv_output ? 0 : 32, evsel__name(evsel));
- 
- 	print_cgroup(config, evsel);
- }
-diff --git a/tools/perf/util/topdown.c b/tools/perf/util/topdown.c
-index a369f84ceb6a..1090841550f7 100644
---- a/tools/perf/util/topdown.c
-+++ b/tools/perf/util/topdown.c
-@@ -65,3 +65,10 @@ __weak bool arch_topdown_sample_read(struct evsel *leader __maybe_unused)
- {
- 	return false;
- }
-+
-+__weak const char *arch_get_topdown_pmu_name(struct evlist *evlist
-+					     __maybe_unused,
-+					     bool warn __maybe_unused)
-+{
-+	return "cpu";
-+}
-diff --git a/tools/perf/util/topdown.h b/tools/perf/util/topdown.h
-index 118e75281f93..f9531528c559 100644
---- a/tools/perf/util/topdown.h
-+++ b/tools/perf/util/topdown.h
-@@ -2,11 +2,12 @@
- #ifndef TOPDOWN_H
- #define TOPDOWN_H 1
- #include "evsel.h"
-+#include "evlist.h"
- 
- bool arch_topdown_check_group(bool *warn);
- void arch_topdown_group_warn(void);
- bool arch_topdown_sample_read(struct evsel *leader);
--
-+const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn);
- int topdown_filter_events(const char **attr, char **str, bool use_group,
- 			  const char *pmu_name);
- 
--- 
-2.25.1
-
+I can already hear Peter shouting, but maybe I'm wrong. :-)
