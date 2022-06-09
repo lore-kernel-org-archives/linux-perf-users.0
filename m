@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B52C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 12:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E15DC43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 12:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244926AbiFIMFN (ORCPT
+        id S245094AbiFIMIm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 08:05:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43590 "EHLO
+        Thu, 9 Jun 2022 08:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237116AbiFIMFL (ORCPT
+        with ESMTP id S243194AbiFIMIk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 08:05:11 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB901C7EF5
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 05:05:09 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id w20so15988605lfa.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 05:05:09 -0700 (PDT)
+        Thu, 9 Jun 2022 08:08:40 -0400
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB248264472
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 05:08:38 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-30c143c41e5so238700387b3.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 05:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FkqNvRH4Nue6fdbta9cxcgqLM1LMKqMxVWrvF9XcLFQ=;
-        b=NmOW1JYwMEntHiUINUVDl0Dqc0b5Ifv91b3afpcgMUTllO2Vk8wjRaXnhHQrO4EL13
-         y+pSjZl7jRbxnLmO6w9lMAYroYpyWgz3WgnriI2AVqtf6IULDSf44PHZRCoIG0E8PAwJ
-         FlaPmoei9Z5Z1mCFfX5QSmcaGtRKNS+xe2dylcc06VmomyauMq5lwi+lSaO6ENDm0cNR
-         g8ouhtIEAPKUJbb/lc/1zzl9yqWr4ZwKa3GcLOQle86pbv770EDJ87pB0XcVITQ5s4+0
-         AaTI4fENDPfhg5on26HEqv82GuZtGu815FH1flK0dSVpT6ukVM1/bZofmX1MT3pD/hU7
-         N1mQ==
+        bh=/fgAdX8O4qm/LW6iACkSWWobNgY9ruhG5Pvbw2aAB7Y=;
+        b=dvX8wSw1YqLr7JxbM16NEQx7FymXa3gbT5EcIMum6jFbUzCSHcypiRmPZr0zHdwexR
+         feTWYjxBem01MXvewte4MWZ5GQyjqDuKiI/DfFcbeHBT9uxlz05lR5Eqz5bXQaAqr9ps
+         ijd4j4xDHm1WQFKFej8l2ONL6Xd+Pu+UodhIY43rTEq0+n4Nj3stvYhd4LWWmmo0vwHj
+         OGDw46J6GAtmOxzcnZ0xUf0iHcf5Fpk0b+A4Xw4ElJyHgRoNhRJauhbkYFnkzaaneGR/
+         Kh7uNEWyC/RSiX+Gv+UijRhPtrO/1MHU9XsiL3YG1sSR+jz3gj6LCpSENYb1sC2gKbxL
+         2RtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FkqNvRH4Nue6fdbta9cxcgqLM1LMKqMxVWrvF9XcLFQ=;
-        b=FoC4f41Zq8bDumu+1nJeVxSGMl4tpH0gUc3TqBAEv8DdvTc9TcjAAgUBoHf6n2Evmz
-         f9JqetXJegayuqpI35eIBOGuPEnpxp0ipY+RJ8poBQ86MwD4FL0av07z3jbWu/tdU4yj
-         +PHOgKey2Bnf4tLtRy+HFlgj8VM5mJJz05yvdEiCk30ocRzthOmduVY+EHnlUfg2I8Gg
-         hqLLb3MOSIcYUeR1fFWyiB9KT9VgIq3SzCAP/pI48uIrc17looaDYZ+DRwLCFVpAexou
-         zze2qoyLSwXPXLKcz5Vkus1j6AGHw8ZYi3febkYrOsEFU9idxZr5fqym88G+W6emzZ6u
-         1C8w==
-X-Gm-Message-State: AOAM533quNZrLZ6VvNmlFLAjI9mYElMir4HQ2GgqgdLZYGkT7QcPyD95
-        j/WZzB08X0b55T+6/7gkyGOy90SVrwPVr4PmHtZYHg==
-X-Google-Smtp-Source: ABdhPJzMhrxkLlnUXaKPQpDgRlkqURbWXFX5fn51UX8fc4BcPN/rnIY8a4TDILlakPMcFi5PiU8wbHGT0P/XduV0Syk=
-X-Received: by 2002:a05:6512:1588:b0:477:a556:4ab2 with SMTP id
- bp8-20020a056512158800b00477a5564ab2mr24570497lfb.376.1654776307498; Thu, 09
- Jun 2022 05:05:07 -0700 (PDT)
+        bh=/fgAdX8O4qm/LW6iACkSWWobNgY9ruhG5Pvbw2aAB7Y=;
+        b=6QrqMMh8onb8WlF5Mci2a5jmSQcQ0ColG3sPzBh6s/UZ9mwVhd0tR3E4EQUUHV4NGv
+         Qk/KwwD9lWeAlH7U+CqEi80HTMaea+BKlAi7UmviAkXSFy047pnvx/lsOoCtR6xjYBtP
+         MBHubV2alNyxzUylOi/Jfc6n8EDUXvBFozKeBvuq5FbRdpYQNJ0ZYEDS1bCezN59GxCh
+         8MAB6W3iF88k+OyzaZ8h/39lLu7xMhH0+2VqbKtZxvW8PdQ6aEGUGikLteTOT/d8ICVA
+         w16gBV7lSfPB+h9qYIqTzlnFC8AmdyYMCvvyh3eOlF/ok8YDnabSaLKq4mUZK8Mpsttt
+         a6oA==
+X-Gm-Message-State: AOAM533fCoEhcXjkadUrh+2X4vgwWvF1wUDdz0GbD3YoVNWNmXbgHaIU
+        Bacx+8p0SVw1fIqackKKykL1vTE0mHlw4gDhVU5gaA==
+X-Google-Smtp-Source: ABdhPJzZPS7J7sv47uy951EM3hqz0kXL15GrZMXB34rTuUWfP9U8r11uog9KS6g2i/mBGZE9wGd+ZmLkh6JpF4his44=
+X-Received: by 2002:a0d:c0c6:0:b0:2ff:bb2:1065 with SMTP id
+ b189-20020a0dc0c6000000b002ff0bb21065mr44133509ywd.512.1654776517756; Thu, 09
+ Jun 2022 05:08:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-6-elver@google.com>
-In-Reply-To: <20220609113046.780504-6-elver@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Jun 2022 14:04:55 +0200
-Message-ID: <CACT4Y+Zd0Zd_66DZ-f2HG4tR6ZdraFe9b4iEBJmG9p72+7RMWQ@mail.gmail.com>
-Subject: Re: [PATCH 5/8] perf/hw_breakpoint: Remove useless code related to
- flexible breakpoints
-To:     Marco Elver <elver@google.com>
+References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-5-elver@google.com>
+ <CACT4Y+YHp1mxxGNuGke42qcph0ibZb+6Ri_7fNJ+jg11NL-z8g@mail.gmail.com>
+In-Reply-To: <CACT4Y+YHp1mxxGNuGke42qcph0ibZb+6Ri_7fNJ+jg11NL-z8g@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 9 Jun 2022 14:08:01 +0200
+Message-ID: <CANpmjNMA=UKzpURckHh_Ss14oRoTQ7nZ4yqcb=nV1kBtEcEkdw@mail.gmail.com>
+Subject: Re: [PATCH 4/8] perf/hw_breakpoint: Make hw_breakpoint_weight() inlinable
+To:     Dmitry Vyukov <dvyukov@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Frederic Weisbecker <frederic@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
@@ -72,83 +72,65 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 9 Jun 2022 at 13:31, Marco Elver <elver@google.com> wrote:
+On Thu, 9 Jun 2022 at 14:03, Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> Flexible breakpoints have never been implemented, with
-> bp_cpuinfo::flexible always being 0. Unfortunately, they still occupy 4
-> bytes in each bp_cpuinfo and bp_busy_slots, as well as computing the max
-> flexible count in fetch_bp_busy_slots().
+> On Thu, 9 Jun 2022 at 13:31, Marco Elver <elver@google.com> wrote:
+> >
+> > Due to being a __weak function, hw_breakpoint_weight() will cause the
+> > compiler to always emit a call to it. This generates unnecessarily bad
+> > code (register spills etc.) for no good reason; in fact it appears in
+> > profiles of `perf bench -r 100 breakpoint thread -b 4 -p 128 -t 512`:
+> >
+> >     ...
+> >     0.70%  [kernel]       [k] hw_breakpoint_weight
+> >     ...
+> >
+> > While a small percentage, no architecture defines its own
+> > hw_breakpoint_weight() nor are there users outside hw_breakpoint.c,
+> > which makes the fact it is currently __weak a poor choice.
+> >
+> > Change hw_breakpoint_weight()'s definition to follow a similar protocol
+> > to hw_breakpoint_slots(), such that if <asm/hw_breakpoint.h> defines
+> > hw_breakpoint_weight(), we'll use it instead.
+> >
+> > The result is that it is inlined and no longer shows up in profiles.
+> >
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > ---
+> >  include/linux/hw_breakpoint.h | 1 -
+> >  kernel/events/hw_breakpoint.c | 4 +++-
+> >  2 files changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
+> > index 78dd7035d1e5..9fa3547acd87 100644
+> > --- a/include/linux/hw_breakpoint.h
+> > +++ b/include/linux/hw_breakpoint.h
+> > @@ -79,7 +79,6 @@ extern int dbg_reserve_bp_slot(struct perf_event *bp);
+> >  extern int dbg_release_bp_slot(struct perf_event *bp);
+> >  extern int reserve_bp_slot(struct perf_event *bp);
+> >  extern void release_bp_slot(struct perf_event *bp);
+> > -int hw_breakpoint_weight(struct perf_event *bp);
+> >  int arch_reserve_bp_slot(struct perf_event *bp);
+> >  void arch_release_bp_slot(struct perf_event *bp);
+> >  void arch_unregister_hw_breakpoint(struct perf_event *bp);
+> > diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+> > index 8e939723f27d..5f40c8dfa042 100644
+> > --- a/kernel/events/hw_breakpoint.c
+> > +++ b/kernel/events/hw_breakpoint.c
+> > @@ -125,10 +125,12 @@ static __init int init_breakpoint_slots(void)
+> >  }
+> >  #endif
+> >
+> > -__weak int hw_breakpoint_weight(struct perf_event *bp)
 >
-> This again causes suboptimal code generation, when we always know that
-> `!!slots.flexible` will be 0.
->
-> Just get rid of the flexible "placeholder" and remove all real code
-> related to it. Make a note in the comment related to the constraints
-> algorithm but don't remove them from the algorithm, so that if in future
-> flexible breakpoints need supporting, it should be trivial to revive
-> them (along with reverting this change).
->
-> Signed-off-by: Marco Elver <elver@google.com>
+> Humm... this was added in 2010 and never actually used to return
+> anything other than 1 since then (?). Looks like over-design. Maybe we
+> drop "#ifndef" and add a comment instead?
 
-Was added in 2009.
+Then there's little reason for the function either and we can just
+directly increment/decrement 1 everywhere. If we drop the ability for
+an arch to override, I feel that'd be cleaner.
 
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
+Either way, codegen won't change though.
 
-> ---
->  kernel/events/hw_breakpoint.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
->
-> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-> index 5f40c8dfa042..afe0a6007e96 100644
-> --- a/kernel/events/hw_breakpoint.c
-> +++ b/kernel/events/hw_breakpoint.c
-> @@ -46,8 +46,6 @@ struct bp_cpuinfo {
->  #else
->         unsigned int    *tsk_pinned;
->  #endif
-> -       /* Number of non-pinned cpu/task breakpoints in a cpu */
-> -       unsigned int    flexible; /* XXX: placeholder, see fetch_this_slot() */
->  };
->
->  static DEFINE_PER_CPU(struct bp_cpuinfo, bp_cpuinfo[TYPE_MAX]);
-> @@ -71,7 +69,6 @@ static bool constraints_initialized __ro_after_init;
->  /* Gather the number of total pinned and un-pinned bp in a cpuset */
->  struct bp_busy_slots {
->         unsigned int pinned;
-> -       unsigned int flexible;
->  };
->
->  /* Serialize accesses to the above constraints */
-> @@ -213,10 +210,6 @@ fetch_bp_busy_slots(struct bp_busy_slots *slots, struct perf_event *bp,
->
->                 if (nr > slots->pinned)
->                         slots->pinned = nr;
-> -
-> -               nr = info->flexible;
-> -               if (nr > slots->flexible)
-> -                       slots->flexible = nr;
->         }
->  }
->
-> @@ -299,7 +292,8 @@ __weak void arch_unregister_hw_breakpoint(struct perf_event *bp)
->  }
->
->  /*
-> - * Constraints to check before allowing this new breakpoint counter:
-> + * Constraints to check before allowing this new breakpoint counter. Note that
-> + * flexible breakpoints are currently unsupported -- see fetch_this_slot().
->   *
->   *  == Non-pinned counter == (Considered as pinned for now)
->   *
-> @@ -366,7 +360,7 @@ static int __reserve_bp_slot(struct perf_event *bp, u64 bp_type)
->         fetch_this_slot(&slots, weight);
->
->         /* Flexible counters need to keep at least one slot */
-> -       if (slots.pinned + (!!slots.flexible) > hw_breakpoint_slots_cached(type))
-> +       if (slots.pinned > hw_breakpoint_slots_cached(type))
->                 return -ENOSPC;
->
->         ret = arch_reserve_bp_slot(bp);
-> --
-> 2.36.1.255.ge46751e96f-goog
->
+Preferences?
