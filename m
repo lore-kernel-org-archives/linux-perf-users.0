@@ -2,127 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DA2C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 16:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B032C43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 16:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244036AbiFIQrT (ORCPT
+        id S1344847AbiFIQxh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 12:47:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33030 "EHLO
+        Thu, 9 Jun 2022 12:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232459AbiFIQrT (ORCPT
+        with ESMTP id S1344863AbiFIQxe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 12:47:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815DF49CB3;
-        Thu,  9 Jun 2022 09:47:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1925B61435;
-        Thu,  9 Jun 2022 16:47:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52379C34114;
-        Thu,  9 Jun 2022 16:47:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654793237;
-        bh=s4GLJNpauazSdGeRzSiiqXD67ISwLtFoXrDb8QBEiMY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tqoABzLdEYKkh97/nR9klaMMn+3WiQdRQB5QNMuK18IPM46UPINIzZtLWZutVe1AV
-         QJe7MODAATf9BtaOWX2DqDvM68+VAAmmhYxrps0db5OGS6SJCfjuLLSyHEFL4syc2C
-         QxhkNDjWzn1GKG5nRWEwfqUpz84CroFfO4oznG0JTSN6zGFrzu/YaWt7dkMh4YP+zu
-         AQr98HnxyZjkAU1B0UF4wiV3y8e5Itk3e4ma0PoftGvoOKI7w5DE+hNpyTYIyOPT7f
-         meeVp3UGqoSDl6E2A+g0zxKPqRcZdvqqKe4t7R8kQtfN3C7NWLcvdvE/fQuNRpWk37
-         4yh6BY5aixxOQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 14ED94096F; Thu,  9 Jun 2022 13:47:15 -0300 (-03)
-Date:   Thu, 9 Jun 2022 13:47:15 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
+        Thu, 9 Jun 2022 12:53:34 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 777136147
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 09:53:26 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id j20so3213552ljg.8
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 09:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RnnI75MEx4lNy+rx7v/bh01lvj2FiAMBVy1u9JepGfo=;
+        b=rMqG2WJPOlD4LQ8ZwCDsf+vQZC1NKtoCU+xmI1t5RCDuq2ySS5PmrgARG1EiNn2RX+
+         Eb7iTRgP8sGNIcNEEbi/NqOM+lt0qQYV3x20KYp6V3al+e/KQpw781+9fEqSMJLW8QQL
+         20IkhuMCuZJYN9Mkw+boqnomMUpkNCuxDQJRX4oHUyoHLAu9PhTI7GnGIVNI83TXU+2V
+         s2RSR2OCyAZYiNcCreJt9MQV8dckZhtArxQ5dwqQ8HrdYsQLCNqSkoHlGsdfmBv8KFon
+         edHyjyy7pby2JLfCK4aGFphbGZtKtnNEcQy2CvuqiDcVI9dQCu5kQ0FzK2THigolw0or
+         gtcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RnnI75MEx4lNy+rx7v/bh01lvj2FiAMBVy1u9JepGfo=;
+        b=y4DDRa2b3gc9BICMI6SQXoPHF5jn+6JaaQgaoLxu5cK+6Vd1YiwvST2ZnQzHhtQVu9
+         WIgPGsNy8GCAVHcc9IRzhcNfrSzU0Q5zSz7+PqOxJMMZDisjUXaZMliLAqHjE/xgsh+G
+         fjXjT9ljZb+vAPUNA69iDJVJvTwePhGryVsA9UDZdIzEZoRKIyRHbbgYo9E8h53meQBo
+         zTutEQCxxG8xVzJJbh7oknF+QEKdkPxwnNSW/vnwRfsmMKehIulCaeBGRbDR2ZM0C21u
+         DWdYkt3G9Xrqsg60fRCqY6VrGHERoXXy7UXlxKbXO2hyqmxgrAxW9u3QEb3v+krgYeTV
+         URGg==
+X-Gm-Message-State: AOAM531yug1jEHkhQW/ceE+sAAJ74TmIw8iGvXdIKveoW9W9jrhuSWss
+        wqRNWj+B56JfhHh7ZNmzDMA1AQrZEyb84ZOl6nEjTQ==
+X-Google-Smtp-Source: ABdhPJyi2BGKP0TSiPLfQzJczezSNvtxChlMABNaZCpY+QmT5gtvD0zJ+kJ1pH2lKvTQ2wpVF3jpFgpjN+ph+PALAb8=
+X-Received: by 2002:a2e:b0fc:0:b0:255:6f92:f9d4 with SMTP id
+ h28-20020a2eb0fc000000b002556f92f9d4mr22608060ljl.92.1654793604135; Thu, 09
+ Jun 2022 09:53:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-2-elver@google.com>
+ <CACT4Y+bOFmCyqfSgWS0b5xuwnPqP4V9v2ooJRmFCn0YAtOPmhQ@mail.gmail.com> <CANpmjNNtV_6kgoLv=VX3z_oM6ZEvWJNAOj9z4ADcymqmhc+crw@mail.gmail.com>
+In-Reply-To: <CANpmjNNtV_6kgoLv=VX3z_oM6ZEvWJNAOj9z4ADcymqmhc+crw@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 9 Jun 2022 18:53:12 +0200
+Message-ID: <CACT4Y+Zq-1nczM2JH7Sr4mZo84gsCRd83RAwwnHwmap-wCOLTQ@mail.gmail.com>
+Subject: Re: [PATCH 1/8] perf/hw_breakpoint: Optimize list of per-task breakpoints
+To:     Marco Elver <elver@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/4] libperf evsel: Open shouldn't leak fd on failure
-Message-ID: <YqIkEzCqgygb6F3f@kernel.org>
-References: <20220608224353.1176079-1-irogers@google.com>
- <20220608224353.1176079-2-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220608224353.1176079-2-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jun 08, 2022 at 03:43:50PM -0700, Ian Rogers escreveu:
-> If the perf_event_open fails the fd is opened but the fd is only freed
-> by closing (not by delete). Typically when an open fails you don't call
-> close and so this results in a memory leak. To avoid this, add a close
-> when open fails.
+.
+/On Thu, 9 Jun 2022 at 16:56, Marco Elver <elver@google.com> wrote:
+> > > On a machine with 256 CPUs, running the recently added perf breakpoint
+> > > benchmark results in:
+> > >
+> > >  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
+> > >  | # Running 'breakpoint/thread' benchmark:
+> > >  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
+> > >  |      Total time: 236.418 [sec]
+> > >  |
+> > >  |   123134.794271 usecs/op
+> > >  |  7880626.833333 usecs/op/cpu
+> > >
+> > > The benchmark tests inherited breakpoint perf events across many
+> > > threads.
+> > >
+> > > Looking at a perf profile, we can see that the majority of the time is
+> > > spent in various hw_breakpoint.c functions, which execute within the
+> > > 'nr_bp_mutex' critical sections which then results in contention on that
+> > > mutex as well:
+> > >
+> > >     37.27%  [kernel]       [k] osq_lock
+> > >     34.92%  [kernel]       [k] mutex_spin_on_owner
+> > >     12.15%  [kernel]       [k] toggle_bp_slot
+> > >     11.90%  [kernel]       [k] __reserve_bp_slot
+> > >
+> > > The culprit here is task_bp_pinned(), which has a runtime complexity of
+> > > O(#tasks) due to storing all task breakpoints in the same list and
+> > > iterating through that list looking for a matching task. Clearly, this
+> > > does not scale to thousands of tasks.
+> > >
+> > > While one option would be to make task_struct a breakpoint list node,
+> > > this would only further bloat task_struct for infrequently used data.
+> >
+> > task_struct already has:
+> >
+> > #ifdef CONFIG_PERF_EVENTS
+> >   struct perf_event_context *perf_event_ctxp[perf_nr_task_contexts];
+> >   struct mutex perf_event_mutex;
+> >   struct list_head perf_event_list;
+> > #endif
+> >
+> > Wonder if it's possible to use perf_event_mutex instead of the task_sharded_mtx?
+> > And possibly perf_event_list instead of task_bps_ht? It will contain
+> > other perf_event types, so we will need to test type as well, but on
+> > the positive side, we don't need any management of the separate
+> > container.
+>
+> Hmm, yes, I looked at that but then decided against messing the
+> perf/core internals. The main issue I have with using perf_event_mutex
+> is that we might interfere with perf/core's locking rules as well as
+> interfere with other concurrent perf event additions. Using
+> perf_event_list is very likely a no-go because it requires reworking
+> perf/core as well.
+>
+> I can already hear Peter shouting, but maybe I'm wrong. :-)
 
-Thanks, applied.
+Let's wait for Peter to shout then :)
+A significant part of this change is having per-task data w/o having
+per-task data.
 
-- Arnaldo
+The current perf-related data in task_struct is already multiple words
+and it's also not used in lots of production cases.
+Maybe we could have something like:
 
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/perf/evsel.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> index c1d58673f6ef..952f3520d5c2 100644
-> --- a/tools/lib/perf/evsel.c
-> +++ b/tools/lib/perf/evsel.c
-> @@ -149,23 +149,30 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
->  			int fd, group_fd, *evsel_fd;
->  
->  			evsel_fd = FD(evsel, idx, thread);
-> -			if (evsel_fd == NULL)
-> -				return -EINVAL;
-> +			if (evsel_fd == NULL) {
-> +				err = -EINVAL;
-> +				goto out;
-> +			}
->  
->  			err = get_group_fd(evsel, idx, thread, &group_fd);
->  			if (err < 0)
-> -				return err;
-> +				goto out;
->  
->  			fd = sys_perf_event_open(&evsel->attr,
->  						 threads->map[thread].pid,
->  						 cpu, group_fd, 0);
->  
-> -			if (fd < 0)
-> -				return -errno;
-> +			if (fd < 0) {
-> +				err = -errno;
-> +				goto out;
-> +			}
->  
->  			*evsel_fd = fd;
->  		}
->  	}
-> +out:
-> +	if (err)
-> +		perf_evsel__close(evsel);
->  
->  	return err;
->  }
-> -- 
-> 2.36.1.255.ge46751e96f-goog
+  struct perf_task_data* lazily_allocated_perf_data;
 
--- 
-
-- Arnaldo
+that's lazily allocated on first use instead of the current
+perf_event_ctxp/perf_event_mutex/perf_event_list.
+This way we could both reduce task_size when perf is not used and have
+more perf-related data (incl breakpoints) when it's used.
