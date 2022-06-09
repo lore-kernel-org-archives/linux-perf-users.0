@@ -2,174 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0EBC43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 00:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623F7C43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 03:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbiFIAKE (ORCPT
+        id S237441AbiFID2x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Jun 2022 20:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42388 "EHLO
+        Wed, 8 Jun 2022 23:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231699AbiFIAKD (ORCPT
+        with ESMTP id S232346AbiFID2x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Jun 2022 20:10:03 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9D013CDA;
-        Wed,  8 Jun 2022 17:10:00 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id c24-20020a9d4818000000b0060c2372addeso399402otf.11;
-        Wed, 08 Jun 2022 17:10:00 -0700 (PDT)
+        Wed, 8 Jun 2022 23:28:53 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1DF140F9
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Jun 2022 20:28:49 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-30c87716af6so191150887b3.22
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jun 2022 20:28:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i3YzjZWYXJycs6wrkROezA8KHgvVM2duWk8XTiinVlQ=;
-        b=HIWfbyi4oC2RfmzEJ8j2HCGR/9aB4AYyMA6qjSOSyCvQN2x13lUqJpkq7Alo9UF2jr
-         sI/h08TBJ8WrftH+l1AILLtkuZw2fQBYc5TpxQtdc0jFpGCDIwLrYQKXLoreAGUQQFJq
-         NoZZCoGIcJSmmbLiGltAvIyjapG/U4kwDmlJjEO8bx0V3UZZ3TDqnrN40wv+SYhHCck8
-         MniMkEiHJCxnVSd+5saJLQJstXJIZ8x/6diSxaIMXthn5yaVoAnrr1L9JedonlzOVPLz
-         ddyMG+cQ+CVPMfKPZo1hpn0sF5GQ2jnK2uffekfH6pnYPauRvz0v3IRPGMg/6ErLLFGO
-         6P7A==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9pnnBT0UYhrlxY+16+u8NQGh3M3CK1PWCQ4+N0B3YuE=;
+        b=Mr3ujL43dXU2Fxl87koL94ItiqlZH9yfDIzoaF14NVltaDPAyOSyRVWvzXvUXNAr8D
+         +MfMtaE87Jvu52b0B90VG9Xur5fIAosJ8MhM3R/z0pb5Sa0fMOmTFRK/n0CmuqjfUSrz
+         XijYoCdtDKmkgFlHEqmRM118YHsfSMHdyWkGwJK4TYfRIeqfKSI6At2xj9XsiVMbdjvE
+         b1KzgzWYjgHt4NI+98P8uYr7Aw3dQOwJpFPQiwRFMQ1s5+8jdOhkzcN9vyfBprKCn7xH
+         btCBhK99kLKsS21hPFLve11i+/jguNLOytlzIp/wIu80uXOpIuZqbcmJVjRc6HLQ3G6/
+         BOBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i3YzjZWYXJycs6wrkROezA8KHgvVM2duWk8XTiinVlQ=;
-        b=YNCh8mC+zzvEy8lGLfaNgupo7QuUqGKCPWE67aIkX042JMvshau/7gDZvzlBY9LOTb
-         K0L1i5qPbR4KR7VPQbuOoZkWXPmsVUigGQ4EsgeiYHIiU/w+Asqr9t81pVdl7GAv0W6o
-         ILU23/0nhiYBB7dgmOfMPuLir4IQQwQHXGMiDJZhip0bEituCaWiynAF7MbEh3yT1hLj
-         it9WIeX28sSBadz7vm0QcvQbiD6hMM2T/FOzbUgTysZUguFY/sdLG9OtHArGAzphNeVh
-         3w51F/Dok3mS9j9qBrfyVYz9yxfAW17K2yBz92NA7FsP8WvqVO4aCMtW8ADWdnwiHh7t
-         P6tA==
-X-Gm-Message-State: AOAM532Iq/YpAV0HomXe5X8YlB1AWxMRPmsXmSmHbxwweFZ4u4NJ3fY5
-        613sTt3eprd/W2poDExyCZIbh90PrkxqLpOFwCg=
-X-Google-Smtp-Source: ABdhPJy/ZYSU7LLbrX5YXP//2zn4Q/EkT23+nyGSDv1Qbl4HLopabHpRCrGgdtOfl6K9BG7K4BksdbpKDlzk6aG1x+8=
-X-Received: by 2002:a9d:7596:0:b0:60c:723:9e93 with SMTP id
- s22-20020a9d7596000000b0060c07239e93mr4810809otk.124.1654733400283; Wed, 08
- Jun 2022 17:10:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220607013315.1956301-1-zhengjun.xing@linux.intel.com> <20220607013315.1956301-6-zhengjun.xing@linux.intel.com>
-In-Reply-To: <20220607013315.1956301-6-zhengjun.xing@linux.intel.com>
-From:   Namhyung Kim <namhyung@gmail.com>
-Date:   Wed, 8 Jun 2022 17:09:49 -0700
-Message-ID: <CAM9d7ciZAZzsA=cDojZp8H5tTd-F7NC=OnTMRg3S3cdjCW0+eA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] perf stat: Add topdown metrics in the default perf
- stat on the hybrid machine
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, alexander.shishkin@intel.com,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9pnnBT0UYhrlxY+16+u8NQGh3M3CK1PWCQ4+N0B3YuE=;
+        b=fsLn/7SDJBktCs9dfRtyn5+oPSenMD4ghRaUWN8LY0Pwh8cBzGLy+lXybjMD1zANun
+         iv/HNO8qgK6qMPC6AjQB5IVeM9xfC3u73Aq729aaqw84Kcux7bQzRFQ6/mcC/aIbJPZr
+         RmUAtrQvYERkTWAZhAaCUAnE6wkuWLcbPX7wM8FtVZbtxj9pRNnc+wZigSsbKf4AkW0T
+         Lvwt2BNoDifyWhekAVkT3//AhH6pCXu9AEhoOWMcF2/gYX9u8Uv+n4f9YmnbxWg8NvUR
+         Rl5TVghswH2uUjy33zIpRig8tE3GSOWAfnqBlEaw4OgomgzjH9LQnCJoNryxbch558A0
+         uqPg==
+X-Gm-Message-State: AOAM533UrNVlN4hSfa/FY0eX6+kFIgA7ybBAH7qD1LEg7QCO2Kkf1klg
+        IAV2ToZYpmvNjS2lg0yhxp/c1AFFghHn
+X-Google-Smtp-Source: ABdhPJys41xg53VvG1GIvRlRyxEYnJpong5Qk7TfMCvQsgh2dbiJOv0+by/SC7e9Dssa0SuFHmAfFjjNw7M6
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:de48:5efa:e4a1:2219])
+ (user=irogers job=sendgmr) by 2002:a25:8909:0:b0:656:ae08:d91a with SMTP id
+ e9-20020a258909000000b00656ae08d91amr37913706ybl.414.1654745328994; Wed, 08
+ Jun 2022 20:28:48 -0700 (PDT)
+Date:   Wed,  8 Jun 2022 20:28:42 -0700
+Message-Id: <20220609032842.1257761-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
+Subject: [PATCH] perf test: Add flake tolerance to record test
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 7, 2022 at 1:08 AM <zhengjun.xing@linux.intel.com> wrote:
->
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->
-> Topdown metrics are missed in the default perf stat on the hybrid machine,
-> add Topdown metrics in default perf stat for hybrid systems.
->
-> Currently, we support the perf metrics Topdown for the p-core PMU in the
-> perf stat default, the perf metrics Topdown support for e-core PMU will be
-> implemented later separately. Refactor the code adds two x86 specific
-> functions. Widen the size of the event name column by 7 chars, so that all
-> metrics after the "#" become aligned again.
->
-> The perf metrics topdown feature is supported on the cpu_core of ADL. The
-> dedicated perf metrics counter and the fixed counter 3 are used for the
-> topdown events. Adding the topdown metrics doesn't trigger multiplexing.
->
-> Before:
->
->  # ./perf  stat  -a true
->
->  Performance counter stats for 'system wide':
->
->              53.70 msec cpu-clock                 #   25.736 CPUs utilized
->                 80      context-switches          #    1.490 K/sec
->                 24      cpu-migrations            #  446.951 /sec
->                 52      page-faults               #  968.394 /sec
->          2,788,555      cpu_core/cycles/          #   51.931 M/sec
->            851,129      cpu_atom/cycles/          #   15.851 M/sec
->          2,974,030      cpu_core/instructions/    #   55.385 M/sec
->            416,919      cpu_atom/instructions/    #    7.764 M/sec
->            586,136      cpu_core/branches/        #   10.916 M/sec
->             79,872      cpu_atom/branches/        #    1.487 M/sec
->             14,220      cpu_core/branch-misses/   #  264.819 K/sec
->              7,691      cpu_atom/branch-misses/   #  143.229 K/sec
->
->        0.002086438 seconds time elapsed
->
-> After:
->
->  # ./perf stat  -a true
->
->  Performance counter stats for 'system wide':
->
->              61.39 msec cpu-clock                        #   24.874 CPUs utilized
->                 76      context-switches                 #    1.238 K/sec
->                 24      cpu-migrations                   #  390.968 /sec
->                 52      page-faults                      #  847.097 /sec
->          2,753,695      cpu_core/cycles/                 #   44.859 M/sec
->            903,899      cpu_atom/cycles/                 #   14.725 M/sec
->          2,927,529      cpu_core/instructions/           #   47.690 M/sec
->            428,498      cpu_atom/instructions/           #    6.980 M/sec
->            581,299      cpu_core/branches/               #    9.470 M/sec
->             83,409      cpu_atom/branches/               #    1.359 M/sec
->             13,641      cpu_core/branch-misses/          #  222.216 K/sec
->              8,008      cpu_atom/branch-misses/          #  130.453 K/sec
->         14,761,308      cpu_core/slots/                  #  240.466 M/sec
->          3,288,625      cpu_core/topdown-retiring/       #     22.3% retiring
->          1,323,323      cpu_core/topdown-bad-spec/       #      9.0% bad speculation
->          5,477,470      cpu_core/topdown-fe-bound/       #     37.1% frontend bound
->          4,679,199      cpu_core/topdown-be-bound/       #     31.7% backend bound
->            646,194      cpu_core/topdown-heavy-ops/      #      4.4% heavy operations       #     17.9% light operations
->          1,244,999      cpu_core/topdown-br-mispredict/  #      8.4% branch mispredict      #      0.5% machine clears
->          3,891,800      cpu_core/topdown-fetch-lat/      #     26.4% fetch latency          #     10.7% fetch bandwidth
->          1,879,034      cpu_core/topdown-mem-bound/      #     12.7% memory bound           #     19.0% Core bound
->
->        0.002467839 seconds time elapsed
->
-> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
-[SNIP]
-> +const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn)
-> +{
-> +       const char *pmu_name = "cpu";
-> +
-> +       if (perf_pmu__has_hybrid()) {
-> +               if (!evlist->hybrid_pmu_name) {
-> +                       if (warn)
-> +                               pr_warning
-> +                                   ("WARNING: default to use cpu_core topdown events\n");
-> +                       evlist->hybrid_pmu_name =
-> +                           perf_pmu__hybrid_type_to_pmu("core");
+Testing at scale exposes record tests failing with no samples. Retry the
+test a bounded number of times to eliminate this.
 
-This doesn't look good.  Please consider reducing the
-indent level like returning early as
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/record.sh | 70 +++++++++++++++++++++-----------
+ 1 file changed, 47 insertions(+), 23 deletions(-)
 
-    if (!perf_pmu__has_hybrid())
-        return "cpu";
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 00c7285ce1ac..aeed364e834a 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -30,19 +30,29 @@ test_per_thread() {
+     fi
+     return
+   fi
+-  if ! perf record -e instructions:u --per-thread -o ${perfdata} true 2> /dev/null
+-  then
+-    echo "Per-thread record of instructions:u [Failed]"
+-    err=1
+-    return
+-  fi
+-  if ! perf report -i ${perfdata} -q | egrep -q true
+-  then
+-    echo "Per-thread record [Failed missing output]"
+-    err=1
+-    return
+-  fi
+-  echo "Basic --per-thread mode test [Success]"
++  flake_count=0
++  while true
++  do
++    if ! perf record -e instructions:u --per-thread -o ${perfdata} true 2> /dev/null
++    then
++      echo "Per-thread record of instructions:u [Failed]"
++      err=1
++      return
++    fi
++    if perf report -i ${perfdata} -q | egrep -q true
++    then
++      echo "Basic --per-thread mode test [Success]"
++      return
++    else
++      flake_count=$(($flake_count + 1))
++      if [ $flake_count -ge 30 ]
++      then
++        echo "Per-thread record attempted 30 times [Failed missing output]"
++        err=1
++        return
++      fi
++    fi
++  done
+ }
+ 
+ test_register_capture() {
+@@ -61,16 +71,30 @@ test_register_capture() {
+     echo "Register capture test [Skipped missing registers]"
+     return
+   fi
+-  if ! perf record -o - --intr-regs=di,r8,dx,cx -e cpu/br_inst_retired.near_call/p \
+-    -c 1000 --per-thread true 2> /dev/null \
+-    | perf script -F ip,sym,iregs -i - 2> /dev/null \
+-    | egrep -q "DI:"
+-  then
+-    echo "Register capture test [Failed missing output]"
+-    err=1
+-    return
+-  fi
+-  echo "Register capture test [Success]"
++  flake_count=0
++  while true
++  do
++    if ! perf record -o ${perfdata} --intr-regs=di,r8,dx,cx -e cpu/br_inst_retired.near_call/p \
++      -c 1000 --per-thread true 2> /dev/null
++    then
++      echo "Register capture test of cpu/br_inst_retired.near_call/p with --intr-regs [Failed]"
++      err=1
++      return
++    fi
++    if perf script -F ip,sym,iregs -i ${perfdata} 2> /dev/null | egrep -q "DI:"
++    then
++      echo "Register capture test [Success]"
++      return
++    else
++      flake_count=$(($flake_count + 1))
++      if [ $flake_count -ge 30 ]
++      then
++        echo "Register capture test attempted 30 times [Failed missing output]"
++        err=1
++        return
++      fi
++    fi
++  done
+ }
+ 
+ test_per_thread
+-- 
+2.36.1.255.ge46751e96f-goog
 
-    if (!evlist->hybrid_pmu_name) {
-        ...
-
-Thanks,
-Namhyung
-
-
-> +               }
-> +
-> +               pmu_name = evlist->hybrid_pmu_name;
-> +       }
-> +       return pmu_name;
-> +}
