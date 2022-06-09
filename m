@@ -2,314 +2,231 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F02BCCA47B
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 12:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C694EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 12:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243690AbiFIMad (ORCPT
+        id S232315AbiFIMrb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 08:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39184 "EHLO
+        Thu, 9 Jun 2022 08:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242836AbiFIMaa (ORCPT
+        with ESMTP id S230490AbiFIMra (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 08:30:30 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B08C1DA46
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 05:30:28 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id h23so37746465lfe.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 05:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SqP5eMJEaejE2EE5ptLXYYiISpaJ8khY1mUkqMBz8rQ=;
-        b=B6BHal5yV8fSdM9iSjA9WLco6js8fW+XR/frQ7/8ID/rUgbrY4ECSU2UFAUru3LRUT
-         VNIE5mGQcn9esZejsTwHx9lw0FOFkubu8HRv71KblgCHVNSmhq7vI9tjMOdtEWTrF6v6
-         H1IsU+b6PHiNFcw29yEC1nVMLZ/AyiJO2MIxwrMuz0GtdQ/Pfg/mBr5zT7fpsWUoGOOh
-         v0MjTZTSQe+huyYhrGEXgOBfcr6rVUhqqVJlB6Nr1vB16D8LZU+NSzImkXOGFc+SzuxV
-         1uDY2UlU2N1qx2FiM7LVD5+DexwCobIRTdQnYEl5xp8CS5s9IDgLAgCNkSErAikt6Xec
-         3Miw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SqP5eMJEaejE2EE5ptLXYYiISpaJ8khY1mUkqMBz8rQ=;
-        b=gQalajJjpejTGZGpfBKmaPgJhm8GC57ic4bpBFt8EgH6AKOXcs+ptaDxE9p8AzUQfX
-         Lb+l668JE2oMs2XKNBIqdTBlSf3Kc7aWXUzGwaGI/1BPKVOLb7PNtg/eqaKLbdRXPe8e
-         nk+QnYOQmuFFI4EgoJW5bQkrmC9Ej9EVP+KeQWR+wq0/Qs9f4W2uFuE4lKaPZqr5WDXi
-         2KpOt0B6WRemHhj4zrc1hjh2nkyiYF7mqfetyVF20H0FDBIl+GRhF681c5ffuQdsgPMD
-         5fOJFYmpFu3onjBoO4uDbUinCWsjbDPACJmgttSeDxHWdPKFbPdKahjadeg1ph4A8+B/
-         lVIg==
-X-Gm-Message-State: AOAM530Wx+jmuO2bTlOC59Cv341ZsS2Sddm0Beu0vKgC652CJ1uLGD9r
-        xTIRXuGGC6hFjm5japZxCG5uJ81HjoGPmeYFM3JU1Q==
-X-Google-Smtp-Source: ABdhPJxRaHeKPL3Sa/Of+nKOcscU8hJff6vmc+SN4k/sYQVtaBvmokG0D1zUhQ6uhlFusOWmnoOkSf5SlT5Hd6czrWw=
-X-Received: by 2002:a05:6512:3f13:b0:464:f55f:7806 with SMTP id
- y19-20020a0565123f1300b00464f55f7806mr25273629lfa.598.1654777826331; Thu, 09
- Jun 2022 05:30:26 -0700 (PDT)
+        Thu, 9 Jun 2022 08:47:30 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613C02E4C80;
+        Thu,  9 Jun 2022 05:47:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654778849; x=1686314849;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UGnNiLF3y4lS3+1gFKfQOUrGaju9xL60XoOfxI27cb4=;
+  b=XqLiX3uVK1VORKFz2mgjmHj7ciVFwVaBtZg8QEFQEUHh0R8mZYldba3E
+   UQpoAHr9071fxjn65RzPfXx8TwcKpu7+3dciU+oR71P6mmjK6Q149tthT
+   Kj95qqbWO3YZZ0N5nAaBQkACLmRivCeC6DYoPk0JxV9EM75G4DkoRZQzG
+   Do5q9rg2Ijs1alqrCuC5R1cySIqJwFrkpz+QIvgZrltbks9rNQ3UwP4ZC
+   Y7heLziNi1AcNXoQ2/4wx4UZ4U1tL6T9niqXMayzaa93KCruyRzLJ2Srb
+   jRTJ1nDQDKtBNvYNx+k7PYOX4GeANy0LHuQkPeSUfS04VmAA6u6065P7j
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10372"; a="274790464"
+X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
+   d="scan'208";a="274790464"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 05:47:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
+   d="scan'208";a="908296017"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Jun 2022 05:47:18 -0700
+Received: from [10.252.211.126] (kliang2-MOBL.ccr.corp.intel.com [10.252.211.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 8E9B45808F0;
+        Thu,  9 Jun 2022 05:47:16 -0700 (PDT)
+Message-ID: <3d687182-f189-870b-f0b4-dc80e48845af@linux.intel.com>
+Date:   Thu, 9 Jun 2022 08:47:14 -0400
 MIME-Version: 1.0
-References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-2-elver@google.com>
-In-Reply-To: <20220609113046.780504-2-elver@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Jun 2022 14:30:14 +0200
-Message-ID: <CACT4Y+ZfjLCj=wvPFhyUQLwxmcOXuK9G_a53SB=-niySExQdew@mail.gmail.com>
-Subject: Re: [PATCH 1/8] perf/hw_breakpoint: Optimize list of per-task breakpoints
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 4/5] perf x86 evlist: Add default hybrid events for perf
+ stat
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@gmail.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, alexander.shishkin@intel.com,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org,
-        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+References: <20220607013315.1956301-1-zhengjun.xing@linux.intel.com>
+ <20220607013315.1956301-5-zhengjun.xing@linux.intel.com>
+ <CAM9d7ci5_276eEDAaRis1CfHe6hyc5bK3RtirsAw5AGdR_KCTw@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAM9d7ci5_276eEDAaRis1CfHe6hyc5bK3RtirsAw5AGdR_KCTw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 9 Jun 2022 at 13:31, Marco Elver <elver@google.com> wrote:
->
-> On a machine with 256 CPUs, running the recently added perf breakpoint
-> benchmark results in:
->
->  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
->  | # Running 'breakpoint/thread' benchmark:
->  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
->  |      Total time: 236.418 [sec]
->  |
->  |   123134.794271 usecs/op
->  |  7880626.833333 usecs/op/cpu
->
-> The benchmark tests inherited breakpoint perf events across many
-> threads.
->
-> Looking at a perf profile, we can see that the majority of the time is
-> spent in various hw_breakpoint.c functions, which execute within the
-> 'nr_bp_mutex' critical sections which then results in contention on that
-> mutex as well:
->
->     37.27%  [kernel]       [k] osq_lock
->     34.92%  [kernel]       [k] mutex_spin_on_owner
->     12.15%  [kernel]       [k] toggle_bp_slot
->     11.90%  [kernel]       [k] __reserve_bp_slot
->
-> The culprit here is task_bp_pinned(), which has a runtime complexity of
-> O(#tasks) due to storing all task breakpoints in the same list and
-> iterating through that list looking for a matching task. Clearly, this
-> does not scale to thousands of tasks.
->
-> While one option would be to make task_struct a breakpoint list node,
-> this would only further bloat task_struct for infrequently used data.
->
-> Instead, make use of the "rhashtable" variant "rhltable" which stores
-> multiple items with the same key in a list. This results in average
-> runtime complexity of O(1) for task_bp_pinned().
->
-> With the optimization, the benchmark shows:
->
->  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
->  | # Running 'breakpoint/thread' benchmark:
->  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
->  |      Total time: 0.208 [sec]
->  |
->  |      108.422396 usecs/op
->  |     6939.033333 usecs/op/cpu
->
-> On this particular setup that's a speedup of ~1135x.
->
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
->  include/linux/perf_event.h    |  3 +-
->  kernel/events/hw_breakpoint.c | 56 ++++++++++++++++++++++-------------
->  2 files changed, 37 insertions(+), 22 deletions(-)
->
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 01231f1d976c..e27360436dc6 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -36,6 +36,7 @@ struct perf_guest_info_callbacks {
->  };
->
->  #ifdef CONFIG_HAVE_HW_BREAKPOINT
-> +#include <linux/rhashtable-types.h>
->  #include <asm/hw_breakpoint.h>
->  #endif
->
-> @@ -178,7 +179,7 @@ struct hw_perf_event {
->                          * creation and event initalization.
->                          */
->                         struct arch_hw_breakpoint       info;
-> -                       struct list_head                bp_list;
-> +                       struct rhlist_head              bp_list;
->                 };
->  #endif
->                 struct { /* amd_iommu */
-> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-> index f32320ac02fd..25c94c6e918d 100644
-> --- a/kernel/events/hw_breakpoint.c
-> +++ b/kernel/events/hw_breakpoint.c
-> @@ -28,7 +28,7 @@
->  #include <linux/sched.h>
->  #include <linux/init.h>
->  #include <linux/slab.h>
-> -#include <linux/list.h>
-> +#include <linux/rhashtable.h>
->  #include <linux/cpu.h>
->  #include <linux/smp.h>
->  #include <linux/bug.h>
-> @@ -55,7 +55,13 @@ static struct bp_cpuinfo *get_bp_info(int cpu, enum bp_type_idx type)
->  }
->
->  /* Keep track of the breakpoints attached to tasks */
-> -static LIST_HEAD(bp_task_head);
-> +static struct rhltable task_bps_ht;
-> +static const struct rhashtable_params task_bps_ht_params = {
-> +       .head_offset = offsetof(struct hw_perf_event, bp_list),
-> +       .key_offset = offsetof(struct hw_perf_event, target),
-> +       .key_len = sizeof_field(struct hw_perf_event, target),
-> +       .automatic_shrinking = true,
-> +};
->
->  static int constraints_initialized;
->
-> @@ -104,17 +110,23 @@ static unsigned int max_task_bp_pinned(int cpu, enum bp_type_idx type)
->   */
->  static int task_bp_pinned(int cpu, struct perf_event *bp, enum bp_type_idx type)
->  {
-> -       struct task_struct *tsk = bp->hw.target;
-> +       struct rhlist_head *head, *pos;
->         struct perf_event *iter;
->         int count = 0;
->
-> -       list_for_each_entry(iter, &bp_task_head, hw.bp_list) {
-> -               if (iter->hw.target == tsk &&
-> -                   find_slot_idx(iter->attr.bp_type) == type &&
-> +       rcu_read_lock();
-
-Why do we need rcu_read_lock() here?
-The patch does not change anything with respect to locking, so all
-accesses to the container should still be protected by nr_bp_mutex.
-Similarly for the rcu variant of for_each below.
-
-Otherwise the change looks good to me.
 
 
+On 6/8/2022 8:04 PM, Namhyung Kim wrote:
+> Hello,
+> 
+> On Tue, Jun 7, 2022 at 12:31 AM <zhengjun.xing@linux.intel.com> wrote:
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Provide a new solution to replace the reverted commit ac2dc29edd21
+>> ("perf stat: Add default hybrid events").
+>>
+>> For the default software attrs, nothing is changed.
+>> For the default hardware attrs, create a new evsel for each hybrid pmu.
+>>
+>> With the new solution, adding a new default attr will not require the
+>> special support for the hybrid platform anymore.
+>>
+>> Also, the "--detailed" is supported on the hybrid platform
+>>
+>> With the patch,
+>>
+>> ./perf stat -a -ddd sleep 1
+>>
+>>   Performance counter stats for 'system wide':
+>>
+>>         32,231.06 msec cpu-clock                 #   32.056 CPUs utilized
+>>               529      context-switches          #   16.413 /sec
+>>                32      cpu-migrations            #    0.993 /sec
+>>                69      page-faults               #    2.141 /sec
+>>       176,754,151      cpu_core/cycles/          #    5.484 M/sec          (41.65%)
+>>       161,695,280      cpu_atom/cycles/          #    5.017 M/sec          (49.92%)
+>>        48,595,992      cpu_core/instructions/    #    1.508 M/sec          (49.98%)
+>>        32,363,337      cpu_atom/instructions/    #    1.004 M/sec          (58.26%)
+>>        10,088,639      cpu_core/branches/        #  313.010 K/sec          (58.31%)
+>>         6,390,582      cpu_atom/branches/        #  198.274 K/sec          (58.26%)
+>>           846,201      cpu_core/branch-misses/   #   26.254 K/sec          (66.65%)
+>>           676,477      cpu_atom/branch-misses/   #   20.988 K/sec          (58.27%)
+>>        14,290,070      cpu_core/L1-dcache-loads/ #  443.363 K/sec          (66.66%)
+>>         9,983,532      cpu_atom/L1-dcache-loads/ #  309.749 K/sec          (58.27%)
+>>           740,725      cpu_core/L1-dcache-load-misses/ #   22.982 K/sec    (66.66%)
+>>   <not supported>      cpu_atom/L1-dcache-load-misses/
+>>           480,441      cpu_core/LLC-loads/       #   14.906 K/sec          (66.67%)
+>>           326,570      cpu_atom/LLC-loads/       #   10.132 K/sec          (58.27%)
+>>               329      cpu_core/LLC-load-misses/ #   10.208 /sec           (66.68%)
+>>                 0      cpu_atom/LLC-load-misses/ #    0.000 /sec           (58.32%)
+>>   <not supported>      cpu_core/L1-icache-loads/
+>>        21,982,491      cpu_atom/L1-icache-loads/ #  682.028 K/sec          (58.43%)
+>>         4,493,189      cpu_core/L1-icache-load-misses/ #  139.406 K/sec    (33.34%)
+>>         4,711,404      cpu_atom/L1-icache-load-misses/ #  146.176 K/sec    (50.08%)
+>>        13,713,090      cpu_core/dTLB-loads/      #  425.462 K/sec          (33.34%)
+>>         9,384,727      cpu_atom/dTLB-loads/      #  291.170 K/sec          (50.08%)
+>>           157,387      cpu_core/dTLB-load-misses/ #    4.883 K/sec         (33.33%)
+>>           108,328      cpu_atom/dTLB-load-misses/ #    3.361 K/sec         (50.08%)
+>>   <not supported>      cpu_core/iTLB-loads/
+>>   <not supported>      cpu_atom/iTLB-loads/
+>>            37,655      cpu_core/iTLB-load-misses/ #    1.168 K/sec         (33.32%)
+>>            61,661      cpu_atom/iTLB-load-misses/ #    1.913 K/sec         (50.03%)
+>>   <not supported>      cpu_core/L1-dcache-prefetches/
+>>   <not supported>      cpu_atom/L1-dcache-prefetches/
+>>   <not supported>      cpu_core/L1-dcache-prefetch-misses/
+>>   <not supported>      cpu_atom/L1-dcache-prefetch-misses/
+>>
+>>         1.005466919 seconds time elapsed
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>> ---
+>>   tools/perf/arch/x86/util/evlist.c | 52 ++++++++++++++++++++++++++++++-
+>>   tools/perf/util/evlist.c          |  2 +-
+>>   tools/perf/util/evlist.h          |  2 ++
+>>   3 files changed, 54 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+>> index 777bdf182a58..1b3f9e1a2287 100644
+>> --- a/tools/perf/arch/x86/util/evlist.c
+>> +++ b/tools/perf/arch/x86/util/evlist.c
+>> @@ -4,16 +4,66 @@
+>>   #include "util/evlist.h"
+>>   #include "util/parse-events.h"
+>>   #include "topdown.h"
+>> +#include "util/event.h"
+>> +#include "util/pmu-hybrid.h"
+>>
+>>   #define TOPDOWN_L1_EVENTS      "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
+>>   #define TOPDOWN_L2_EVENTS      "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,topdown-fetch-lat,topdown-mem-bound}"
+>>
+>> +static int ___evlist__add_default_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs)
+>> +{
+>> +       struct perf_cpu_map *cpus;
+>> +       struct evsel *evsel, *n;
+>> +       struct perf_pmu *pmu;
+>> +       LIST_HEAD(head);
+>> +       size_t i, j = 0;
+>> +
+>> +       for (i = 0; i < nr_attrs; i++)
+>> +               event_attr_init(attrs + i);
+>> +
+>> +       if (!perf_pmu__has_hybrid())
+>> +               return evlist__add_attrs(evlist, attrs, nr_attrs);
+>> +
+>> +       for (i = 0; i < nr_attrs; i++) {
+>> +               if (attrs[i].type == PERF_TYPE_SOFTWARE) {
+>> +                       evsel = evsel__new_idx(attrs + i, evlist->core.nr_entries + j);
+> 
+> Probably no need to calculate index (j) as it's updated
+> later when it goes to the evlist...
+> 
+> 
+>> +                       if (evsel == NULL)
+>> +                               goto out_delete_partial_list;
+>> +                       j++;
+>> +                       list_add_tail(&evsel->core.node, &head);
+>> +                       continue;
+>> +               }
+>> +
+>> +               perf_pmu__for_each_hybrid_pmu(pmu) {
+>> +                       evsel = evsel__new_idx(attrs + i, evlist->core.nr_entries + j);
+>> +                       if (evsel == NULL)
+>> +                               goto out_delete_partial_list;
+>> +                       j++;
+>> +                       evsel->core.attr.config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+>> +                       cpus = perf_cpu_map__get(pmu->cpus);
+>> +                       evsel->core.cpus = cpus;
+>> +                       evsel->core.own_cpus = perf_cpu_map__get(cpus);
+>> +                       evsel->pmu_name = strdup(pmu->name);
+>> +                       list_add_tail(&evsel->core.node, &head);
+>> +               }
+>> +       }
+>> +
+>> +       evlist__splice_list_tail(evlist, &head);
+> 
+> ... like here.
 
-> +       head = rhltable_lookup(&task_bps_ht, &bp->hw.target, task_bps_ht_params);
-> +       if (!head)
-> +               goto out;
-> +
-> +       rhl_for_each_entry_rcu(iter, pos, head, hw.bp_list) {
-> +               if (find_slot_idx(iter->attr.bp_type) == type &&
->                     (iter->cpu < 0 || cpu == iter->cpu))
->                         count += hw_breakpoint_weight(iter);
->         }
->
-> +out:
-> +       rcu_read_unlock();
->         return count;
->  }
->
-> @@ -187,7 +199,7 @@ static void toggle_bp_task_slot(struct perf_event *bp, int cpu,
->  /*
->   * Add/remove the given breakpoint in our constraint table
->   */
-> -static void
-> +static int
->  toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
->                int weight)
->  {
-> @@ -200,7 +212,7 @@ toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
->         /* Pinned counter cpu profiling */
->         if (!bp->hw.target) {
->                 get_bp_info(bp->cpu, type)->cpu_pinned += weight;
-> -               return;
-> +               return 0;
->         }
->
->         /* Pinned counter task profiling */
-> @@ -208,9 +220,9 @@ toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
->                 toggle_bp_task_slot(bp, cpu, type, weight);
->
->         if (enable)
-> -               list_add_tail(&bp->hw.bp_list, &bp_task_head);
-> +               return rhltable_insert(&task_bps_ht, &bp->hw.bp_list, task_bps_ht_params);
->         else
-> -               list_del(&bp->hw.bp_list);
-> +               return rhltable_remove(&task_bps_ht, &bp->hw.bp_list, task_bps_ht_params);
->  }
->
->  __weak int arch_reserve_bp_slot(struct perf_event *bp)
-> @@ -308,9 +320,7 @@ static int __reserve_bp_slot(struct perf_event *bp, u64 bp_type)
->         if (ret)
->                 return ret;
->
-> -       toggle_bp_slot(bp, true, type, weight);
-> -
-> -       return 0;
-> +       return toggle_bp_slot(bp, true, type, weight);
->  }
->
->  int reserve_bp_slot(struct perf_event *bp)
-> @@ -335,7 +345,7 @@ static void __release_bp_slot(struct perf_event *bp, u64 bp_type)
->
->         type = find_slot_idx(bp_type);
->         weight = hw_breakpoint_weight(bp);
-> -       toggle_bp_slot(bp, false, type, weight);
-> +       WARN_ON(toggle_bp_slot(bp, false, type, weight));
->  }
->
->  void release_bp_slot(struct perf_event *bp)
-> @@ -679,7 +689,7 @@ static struct pmu perf_breakpoint = {
->  int __init init_hw_breakpoint(void)
->  {
->         int cpu, err_cpu;
-> -       int i;
-> +       int i, ret;
->
->         for (i = 0; i < TYPE_MAX; i++)
->                 nr_slots[i] = hw_breakpoint_slots(i);
-> @@ -690,18 +700,24 @@ int __init init_hw_breakpoint(void)
->
->                         info->tsk_pinned = kcalloc(nr_slots[i], sizeof(int),
->                                                         GFP_KERNEL);
-> -                       if (!info->tsk_pinned)
-> -                               goto err_alloc;
-> +                       if (!info->tsk_pinned) {
-> +                               ret = -ENOMEM;
-> +                               goto err;
-> +                       }
->                 }
->         }
->
-> +       ret = rhltable_init(&task_bps_ht, &task_bps_ht_params);
-> +       if (ret)
-> +               goto err;
-> +
->         constraints_initialized = 1;
->
->         perf_pmu_register(&perf_breakpoint, "breakpoint", PERF_TYPE_BREAKPOINT);
->
->         return register_die_notifier(&hw_breakpoint_exceptions_nb);
->
-> - err_alloc:
-> +err:
->         for_each_possible_cpu(err_cpu) {
->                 for (i = 0; i < TYPE_MAX; i++)
->                         kfree(get_bp_info(err_cpu, i)->tsk_pinned);
-> @@ -709,7 +725,5 @@ int __init init_hw_breakpoint(void)
->                         break;
->         }
->
-> -       return -ENOMEM;
-> +       return ret;
->  }
-> -
-> -
-> --
-> 2.36.1.255.ge46751e96f-goog
->
+Yes, the index of all new evsel will be updated when adding to the evlist.
+
+Zhengjun, could you please handle the patch? Just set 0 idx for the new 
+evsel should be good enough.
+
+
+Thanks,
+Kan
+
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>> +
+>> +       return 0;
+>> +
+>> +out_delete_partial_list:
+>> +       __evlist__for_each_entry_safe(&head, n, evsel)
+>> +               evsel__delete(evsel);
+>> +       return -1;
+>> +}
