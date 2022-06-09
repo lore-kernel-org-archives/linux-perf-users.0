@@ -2,95 +2,189 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194DBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 04:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A35C43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 05:02:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237430AbiFIEJj (ORCPT
+        id S237858AbiFIFCv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 00:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33358 "EHLO
+        Thu, 9 Jun 2022 01:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237375AbiFIEJi (ORCPT
+        with ESMTP id S230510AbiFIFCu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 00:09:38 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0AC624BCA
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Jun 2022 21:09:36 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id y187so20758247pgd.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jun 2022 21:09:36 -0700 (PDT)
+        Thu, 9 Jun 2022 01:02:50 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAF6B219128;
+        Wed,  8 Jun 2022 22:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ouk7+Ke+HW093nWEFwQ5D14yOFTrhJHXFT/fgT162bQ=;
-        b=EUct5RkmkaOLADrUzrUz5MXFt81MEoAJJPQJNDRYKMCCRgMZ+kpm7cCxAhIKTHtBIy
-         6Ck22WNMJHvCfqO1etE0f3llvL4v4UBLX0+xI8w0HSPYbCQcndGrC1usEzdb3gec1gDs
-         r9LmND37fJbm//K7ZnhlrftOLznexRtzA4jYLPCUoSCxcaIf368C0a7TXbTzz/yjqjIF
-         6HbsJ40OBeJiq2fUgVMTzVkuwMGQvFeE6Fe+9nl+54rE57gO/x3OB04MJj1SFrXgfoGL
-         PrIJ06T8iIGeeI5L449Pk48yWbe7VsQBAfmkgLKjIvD3gFbxC0PQGqjE0hMxkncI/i4x
-         My1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ouk7+Ke+HW093nWEFwQ5D14yOFTrhJHXFT/fgT162bQ=;
-        b=sUjHYbtI2t7a1rL/gbDr0lYLBFOEnqcvYuoqc1xLXz2Z4I+hXOUb24jebi0qe29869
-         YKXEY7VOHupaYL+AooNzNx2deD8LFW7bcW0UGGT5qYwKH6MiQVJei7s7xAw9i69BtWlM
-         eQmDiZSv6Xp7AvhtVhWKpqwxI694RbbebjYaotCUHrPc2EIt2cJzfhzKCh0B7hGHn1z/
-         zC5xdYXUpcsamSkITjUz1cSfwDI+faE7UENBTXrsk2kWmE1Trd82Szw+V5wvw0tcLY60
-         gVs1GxHT2dFcnOIhpakixXZKfKDk4EJFeEwDwdl+uvxxDCrhFxPeEXqn9bje5qPomHqm
-         M5qw==
-X-Gm-Message-State: AOAM530IHtniv28XNv+7dPZPJl2VgWxG1P1xQkM8Py8zz6YtDJkclUtR
-        LrPTa3bJKIEuBJQDfnkJAjSxZyeVAagzOvQ+4qs=
-X-Google-Smtp-Source: ABdhPJyRq3/5D98T+QkcS5O1SPAlo57Uw3qIqKhI1hJS+mY3bjIHB2P9+hfcTjWWZR59I3qe2NQuBA==
-X-Received: by 2002:a63:5:0:b0:3fe:2558:677 with SMTP id 5-20020a630005000000b003fe25580677mr7137001pga.113.1654747776233;
-        Wed, 08 Jun 2022 21:09:36 -0700 (PDT)
-Received: from C02FT5A6MD6R.bytedance.net ([2404:9dc0:cd01::1c])
-        by smtp.gmail.com with ESMTPSA id j18-20020a170902759200b001624965d83bsm15592967pll.228.2022.06.08.21.09.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jun 2022 21:09:35 -0700 (PDT)
-From:   Gang Li <ligang.bdlg@bytedance.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Gang Li <ligang.bdlg@bytedance.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] perf trace: Enable ignore_missing_thread for stat
-Date:   Thu,  9 Jun 2022 12:09:24 +0800
-Message-Id: <20220609040924.12885-1-ligang.bdlg@bytedance.com>
-X-Mailer: git-send-email 2.32.0
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1654750968; x=1686286968;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=zXw+Mis03bohBkfK+hDhw/wFr5Kd1lzp07uRvIK3edI=;
+  b=OV3VHIG5K49NaV0qNx7NjDZr6HKMHAdn5j+6f5+C70S75fPuVBllSk+z
+   ulXWcbNLlRXD29eqsO703NqAslJFLdKKsoqDEJA4hHoygepfequB29tUG
+   ZtAbRvlUqJ43cWEV8iGcDEprYzA8UyO9OA6o/R1zzDfVhICvGuGi1tCPT
+   U=;
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Jun 2022 22:02:48 -0700
+X-QCInternal: smtphost
+Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
+  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2022 22:02:47 -0700
+Received: from [10.242.59.11] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 8 Jun 2022
+ 22:02:44 -0700
+Message-ID: <6820a04b-16d2-3310-6491-835d8727edec@quicinc.com>
+Date:   Thu, 9 Jun 2022 10:32:40 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH V5] arm64: perf: Make exporting of pmu events configurable
+Content-Language: en-US
+To:     <will@kernel.org>, <mark.rutland@arm.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <catalin.marinas@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1653306574-20946-1-git-send-email-quic_c_spathi@quicinc.com>
+From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+In-Reply-To: <1653306574-20946-1-git-send-email-quic_c_spathi@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf already support ignore_missing_thread for -p, but not yet
-applied to `perf stat -p <pid>`. This patch enables ignore_missing_thread
-for `perf stat -p <pid>`.
 
-Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
----
- tools/perf/builtin-stat.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi Will / Robin ,
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 4ce87a8eb7d7..d2ecd4d29624 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2586,6 +2586,8 @@ int cmd_stat(int argc, const char **argv)
- 	if (evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack))
- 		goto out;
- 
-+	/* Enable ignoring missing threads when -p option is defined. */
-+	evlist__first(evsel_list)->ignore_missing_thread = target.pid;
- 	status = 0;
- 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
- 		if (stat_config.run_count != 1 && verbose > 0)
--- 
-2.20.1
+Could you please review this change.
 
+On 5/23/2022 5:19 PM, Srinivasarao Pathipati wrote:
+> The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
+> Make is configurable using sysctls to enable/disable at runtime.
+> It can also be enabled at early bootup with kernel arguments.
+>
+> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+> ---
+> Changes since V4:
+> 	- Registering sysctls dynamically for only arm64 as suggested by Will
+> 	- Not removed the code to configure with kernel parameters
+> 	  as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
+> 	  is not working at early bootup. pmu_reset() getting called before
+> 	  sysctl's kernel parameter is set.
+> Changes since V3:
+> 	- export bit is now configurable with sysctl
+> 	- enabling export bit on reset instead of retaining
+>
+> Changes since V2:
+> 	Done below changes as per Will's comments
+> 	- enabling pmcr_x now configurable with kernel parameters and
+> 	  by default it is disabled.
+> 	
+> Changes since V1:
+> 	- Preserving only PMCR_X bit as per Robin Murphy's comment.
+>
+> ---
+>   Documentation/admin-guide/kernel-parameters.txt |  5 +++++
+>   Documentation/admin-guide/sysctl/kernel.rst     |  9 +++++++++
+>   arch/arm64/kernel/perf_event.c                  | 24 ++++++++++++++++++++++++
+>   3 files changed, 38 insertions(+)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index de3da15..2bf1187 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5150,6 +5150,11 @@
+>   			Useful for devices that are detected asynchronously
+>   			(e.g. USB and MMC devices).
+>   
+> +	export_pmu_events
+> +			[KNL,ARM64] Sets the PMU export bit (PMCR_EL0.X), which enables
+> +			the exporting of events over an IMPLEMENTATION DEFINED PMU event
+> +			export bus to another device.
+> +
+>   	retain_initrd	[RAM] Keep initrd memory after extraction
+>   
+>   	rfkill.default_state=
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index ddccd10..db42d4c 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -892,6 +892,15 @@ The default value is 0 (access disabled).
+>   
+>   See Documentation/arm64/perf.rst for more information.
+>   
+> +export_pmu_events (arm64 only)
+> +==============================
+> +Controls the PMU export bit (PMCR_EL0.X), which enables the exporting of
+> +events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
+> +
+> +0: disables exporting of events (default).
+> +
+> +1: enables exporting of events.
+> +
+>   
+>   pid_max
+>   =======
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index cb69ff1..d93e7c4 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -298,6 +298,7 @@ PMU_FORMAT_ATTR(long, "config1:0");
+>   PMU_FORMAT_ATTR(rdpmc, "config1:1");
+>   
+>   static int sysctl_perf_user_access __read_mostly;
+> +static int sysctl_export_pmu_events __read_mostly;
+>   
+>   static inline bool armv8pmu_event_is_64bit(struct perf_event *event)
+>   {
+> @@ -1025,6 +1026,17 @@ static int armv8pmu_filter_match(struct perf_event *event)
+>   	return evtype != ARMV8_PMUV3_PERFCTR_CHAIN;
+>   }
+>   
+> +static int __init export_pmu_events(char *str)
+> +{
+> +	/* Enable exporting of pmu events at early bootup with kernel
+> +	 * arguments.
+> +	 */
+> +	sysctl_export_pmu_events = 1;
+> +	return 0;
+> +}
+> +
+> +early_param("export_pmu_events", export_pmu_events);
+> +
+>   static void armv8pmu_reset(void *info)
+>   {
+>   	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
+> @@ -1047,6 +1059,9 @@ static void armv8pmu_reset(void *info)
+>   	if (armv8pmu_has_long_event(cpu_pmu))
+>   		pmcr |= ARMV8_PMU_PMCR_LP;
+>   
+> +	if (sysctl_export_pmu_events)
+> +		pmcr |= ARMV8_PMU_PMCR_X;
+> +
+>   	armv8pmu_pmcr_write(pmcr);
+>   }
+>   
+> @@ -1221,6 +1236,15 @@ static struct ctl_table armv8_pmu_sysctl_table[] = {
+>   		.extra1		= SYSCTL_ZERO,
+>   		.extra2		= SYSCTL_ONE,
+>   	},
+> +	{
+> +		.procname       = "export_pmu_events",
+> +		.data           = &sysctl_export_pmu_events,
+> +		.maxlen         = sizeof(unsigned int),
+> +		.mode           = 0644,
+> +		.proc_handler   = proc_dointvec_minmax,
+> +		.extra1         = SYSCTL_ZERO,
+> +		.extra2         = SYSCTL_ONE,
+> +	},
+>   	{ }
+>   };
+>   
