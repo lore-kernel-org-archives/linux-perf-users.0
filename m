@@ -2,231 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C694EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 12:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCCCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 12:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232315AbiFIMrb (ORCPT
+        id S232860AbiFIMxP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 08:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
+        Thu, 9 Jun 2022 08:53:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230490AbiFIMra (ORCPT
+        with ESMTP id S235521AbiFIMxO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 08:47:30 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613C02E4C80;
-        Thu,  9 Jun 2022 05:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654778849; x=1686314849;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UGnNiLF3y4lS3+1gFKfQOUrGaju9xL60XoOfxI27cb4=;
-  b=XqLiX3uVK1VORKFz2mgjmHj7ciVFwVaBtZg8QEFQEUHh0R8mZYldba3E
-   UQpoAHr9071fxjn65RzPfXx8TwcKpu7+3dciU+oR71P6mmjK6Q149tthT
-   Kj95qqbWO3YZZ0N5nAaBQkACLmRivCeC6DYoPk0JxV9EM75G4DkoRZQzG
-   Do5q9rg2Ijs1alqrCuC5R1cySIqJwFrkpz+QIvgZrltbks9rNQ3UwP4ZC
-   Y7heLziNi1AcNXoQ2/4wx4UZ4U1tL6T9niqXMayzaa93KCruyRzLJ2Srb
-   jRTJ1nDQDKtBNvYNx+k7PYOX4GeANy0LHuQkPeSUfS04VmAA6u6065P7j
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10372"; a="274790464"
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="274790464"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 05:47:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="908296017"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Jun 2022 05:47:18 -0700
-Received: from [10.252.211.126] (kliang2-MOBL.ccr.corp.intel.com [10.252.211.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 8E9B45808F0;
-        Thu,  9 Jun 2022 05:47:16 -0700 (PDT)
-Message-ID: <3d687182-f189-870b-f0b4-dc80e48845af@linux.intel.com>
-Date:   Thu, 9 Jun 2022 08:47:14 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 4/5] perf x86 evlist: Add default hybrid events for perf
- stat
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@gmail.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, alexander.shishkin@intel.com,
+        Thu, 9 Jun 2022 08:53:14 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 541CA12E32B
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 05:53:11 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id u8so27956213wrm.13
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 05:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xsbD60qIHanlKuWKt+8TLbFkRT3oM/UNVHEodPGa7yk=;
+        b=ogxQx9/A77IYQ/hkeDboJ31yIL2cjqX5j2tbjDpVF4T49J/STcN+TRwFrbHQjaoMLW
+         ltWumxcgf2zS7G8Iw/ewsvUxc82h2ycTigV0zuzXwhTU2elDIsRMAkDYai2dVUqTJUfc
+         V1l9p6AukaGvIR5nKfcLtG14Z2ISv9bBnT1QGsjiRphpW/rB5Dbc4XiC83J+5uvQ0D60
+         RmKk/IUExDhpBPums6vI4w70UYQV+ou+WFx8y5AKBEPLkAOR/Y+pxn+FKKmg43coSSP0
+         G9KpfHlnEJXtzStO/xypwKyMezq47b0UB6XNhOwP6YtMg59SqonDYWpPvpaI2WNG2HUq
+         kqgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xsbD60qIHanlKuWKt+8TLbFkRT3oM/UNVHEodPGa7yk=;
+        b=xohra1gHs54oewdE8RaGF8ImArWce4sMqE48PZMj9gRxlJbJcH0INRTHKvcHSKs936
+         QNg8Z65RQ4iTOk79gqiFc30pS/fyTInYDsCCD+aE8WUy8muOIPJq0cIjo03p+pHxJ1rs
+         pt3BIqX1JZywB2h8b++3V8+myOqecw/g1WlZ4QCrTFBR2SY5iXoUBk8hPkb1HrYRzrcV
+         kiu7LPkVhxKaEmaNwcNs1c2e0wJ9l2NLX+AX0to83+a9nDB0yTb+Ny4zJmvaUoYXw5jJ
+         l1t/S/wjvcn1mRK4V7Pjktp4ARIUaqDZu5nXkGbT9oHlQRZp0/7OULfieYl/89vJ980r
+         T0Iw==
+X-Gm-Message-State: AOAM531aIyLv3WYJ1Os5MWPESr4QKW0oiQvsSdiOqOhHvinAThMlxRUB
+        QVisVu3Ah80cFRxkhj8irwB2N2095xwDZQ==
+X-Google-Smtp-Source: ABdhPJyJUVWiu56wlkL1GRUdrN5r0Z2qCI6oeCaAM64dh4ZzAFCXGHnDJ6WcKQ7t2Jmgwe09MkROHA==
+X-Received: by 2002:a5d:6c62:0:b0:218:3e13:4b17 with SMTP id r2-20020a5d6c62000000b002183e134b17mr20790347wrz.673.1654779189454;
+        Thu, 09 Jun 2022 05:53:09 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:9c:201:dcf:e5ba:10a5:1ea5])
+        by smtp.gmail.com with ESMTPSA id v190-20020a1cacc7000000b003975c7058bfsm27801688wme.12.2022.06.09.05.53.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jun 2022 05:53:08 -0700 (PDT)
+Date:   Thu, 9 Jun 2022 14:53:02 +0200
+From:   Marco Elver <elver@google.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-References: <20220607013315.1956301-1-zhengjun.xing@linux.intel.com>
- <20220607013315.1956301-5-zhengjun.xing@linux.intel.com>
- <CAM9d7ci5_276eEDAaRis1CfHe6hyc5bK3RtirsAw5AGdR_KCTw@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAM9d7ci5_276eEDAaRis1CfHe6hyc5bK3RtirsAw5AGdR_KCTw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/8] perf/hw_breakpoint: Optimize list of per-task
+ breakpoints
+Message-ID: <YqHtLvdLvdM5Lmdh@elver.google.com>
+References: <20220609113046.780504-1-elver@google.com>
+ <20220609113046.780504-2-elver@google.com>
+ <CACT4Y+ZfjLCj=wvPFhyUQLwxmcOXuK9G_a53SB=-niySExQdew@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZfjLCj=wvPFhyUQLwxmcOXuK9G_a53SB=-niySExQdew@mail.gmail.com>
+User-Agent: Mutt/2.1.4 (2021-12-11)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Jun 09, 2022 at 02:30PM +0200, Dmitry Vyukov wrote:
+[...]
+> > +       rcu_read_lock();
+> 
+> Why do we need rcu_read_lock() here?
+> The patch does not change anything with respect to locking, so all
+> accesses to the container should still be protected by nr_bp_mutex.
+> Similarly for the rcu variant of for_each below.
+[...]
+> > +       head = rhltable_lookup(&task_bps_ht, &bp->hw.target, task_bps_ht_params);
+> > +       if (!head)
+> > +               goto out;
+> > +
+> > +       rhl_for_each_entry_rcu(iter, pos, head, hw.bp_list) {
 
+It's part of rhashtable's interface requirements:
 
-On 6/8/2022 8:04 PM, Namhyung Kim wrote:
-> Hello,
-> 
-> On Tue, Jun 7, 2022 at 12:31 AM <zhengjun.xing@linux.intel.com> wrote:
->>
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> Provide a new solution to replace the reverted commit ac2dc29edd21
->> ("perf stat: Add default hybrid events").
->>
->> For the default software attrs, nothing is changed.
->> For the default hardware attrs, create a new evsel for each hybrid pmu.
->>
->> With the new solution, adding a new default attr will not require the
->> special support for the hybrid platform anymore.
->>
->> Also, the "--detailed" is supported on the hybrid platform
->>
->> With the patch,
->>
->> ./perf stat -a -ddd sleep 1
->>
->>   Performance counter stats for 'system wide':
->>
->>         32,231.06 msec cpu-clock                 #   32.056 CPUs utilized
->>               529      context-switches          #   16.413 /sec
->>                32      cpu-migrations            #    0.993 /sec
->>                69      page-faults               #    2.141 /sec
->>       176,754,151      cpu_core/cycles/          #    5.484 M/sec          (41.65%)
->>       161,695,280      cpu_atom/cycles/          #    5.017 M/sec          (49.92%)
->>        48,595,992      cpu_core/instructions/    #    1.508 M/sec          (49.98%)
->>        32,363,337      cpu_atom/instructions/    #    1.004 M/sec          (58.26%)
->>        10,088,639      cpu_core/branches/        #  313.010 K/sec          (58.31%)
->>         6,390,582      cpu_atom/branches/        #  198.274 K/sec          (58.26%)
->>           846,201      cpu_core/branch-misses/   #   26.254 K/sec          (66.65%)
->>           676,477      cpu_atom/branch-misses/   #   20.988 K/sec          (58.27%)
->>        14,290,070      cpu_core/L1-dcache-loads/ #  443.363 K/sec          (66.66%)
->>         9,983,532      cpu_atom/L1-dcache-loads/ #  309.749 K/sec          (58.27%)
->>           740,725      cpu_core/L1-dcache-load-misses/ #   22.982 K/sec    (66.66%)
->>   <not supported>      cpu_atom/L1-dcache-load-misses/
->>           480,441      cpu_core/LLC-loads/       #   14.906 K/sec          (66.67%)
->>           326,570      cpu_atom/LLC-loads/       #   10.132 K/sec          (58.27%)
->>               329      cpu_core/LLC-load-misses/ #   10.208 /sec           (66.68%)
->>                 0      cpu_atom/LLC-load-misses/ #    0.000 /sec           (58.32%)
->>   <not supported>      cpu_core/L1-icache-loads/
->>        21,982,491      cpu_atom/L1-icache-loads/ #  682.028 K/sec          (58.43%)
->>         4,493,189      cpu_core/L1-icache-load-misses/ #  139.406 K/sec    (33.34%)
->>         4,711,404      cpu_atom/L1-icache-load-misses/ #  146.176 K/sec    (50.08%)
->>        13,713,090      cpu_core/dTLB-loads/      #  425.462 K/sec          (33.34%)
->>         9,384,727      cpu_atom/dTLB-loads/      #  291.170 K/sec          (50.08%)
->>           157,387      cpu_core/dTLB-load-misses/ #    4.883 K/sec         (33.33%)
->>           108,328      cpu_atom/dTLB-load-misses/ #    3.361 K/sec         (50.08%)
->>   <not supported>      cpu_core/iTLB-loads/
->>   <not supported>      cpu_atom/iTLB-loads/
->>            37,655      cpu_core/iTLB-load-misses/ #    1.168 K/sec         (33.32%)
->>            61,661      cpu_atom/iTLB-load-misses/ #    1.913 K/sec         (50.03%)
->>   <not supported>      cpu_core/L1-dcache-prefetches/
->>   <not supported>      cpu_atom/L1-dcache-prefetches/
->>   <not supported>      cpu_core/L1-dcache-prefetch-misses/
->>   <not supported>      cpu_atom/L1-dcache-prefetch-misses/
->>
->>         1.005466919 seconds time elapsed
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->> ---
->>   tools/perf/arch/x86/util/evlist.c | 52 ++++++++++++++++++++++++++++++-
->>   tools/perf/util/evlist.c          |  2 +-
->>   tools/perf/util/evlist.h          |  2 ++
->>   3 files changed, 54 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
->> index 777bdf182a58..1b3f9e1a2287 100644
->> --- a/tools/perf/arch/x86/util/evlist.c
->> +++ b/tools/perf/arch/x86/util/evlist.c
->> @@ -4,16 +4,66 @@
->>   #include "util/evlist.h"
->>   #include "util/parse-events.h"
->>   #include "topdown.h"
->> +#include "util/event.h"
->> +#include "util/pmu-hybrid.h"
->>
->>   #define TOPDOWN_L1_EVENTS      "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
->>   #define TOPDOWN_L2_EVENTS      "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,topdown-fetch-lat,topdown-mem-bound}"
->>
->> +static int ___evlist__add_default_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs)
->> +{
->> +       struct perf_cpu_map *cpus;
->> +       struct evsel *evsel, *n;
->> +       struct perf_pmu *pmu;
->> +       LIST_HEAD(head);
->> +       size_t i, j = 0;
->> +
->> +       for (i = 0; i < nr_attrs; i++)
->> +               event_attr_init(attrs + i);
->> +
->> +       if (!perf_pmu__has_hybrid())
->> +               return evlist__add_attrs(evlist, attrs, nr_attrs);
->> +
->> +       for (i = 0; i < nr_attrs; i++) {
->> +               if (attrs[i].type == PERF_TYPE_SOFTWARE) {
->> +                       evsel = evsel__new_idx(attrs + i, evlist->core.nr_entries + j);
-> 
-> Probably no need to calculate index (j) as it's updated
-> later when it goes to the evlist...
-> 
-> 
->> +                       if (evsel == NULL)
->> +                               goto out_delete_partial_list;
->> +                       j++;
->> +                       list_add_tail(&evsel->core.node, &head);
->> +                       continue;
->> +               }
->> +
->> +               perf_pmu__for_each_hybrid_pmu(pmu) {
->> +                       evsel = evsel__new_idx(attrs + i, evlist->core.nr_entries + j);
->> +                       if (evsel == NULL)
->> +                               goto out_delete_partial_list;
->> +                       j++;
->> +                       evsel->core.attr.config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
->> +                       cpus = perf_cpu_map__get(pmu->cpus);
->> +                       evsel->core.cpus = cpus;
->> +                       evsel->core.own_cpus = perf_cpu_map__get(cpus);
->> +                       evsel->pmu_name = strdup(pmu->name);
->> +                       list_add_tail(&evsel->core.node, &head);
->> +               }
->> +       }
->> +
->> +       evlist__splice_list_tail(evlist, &head);
-> 
-> ... like here.
+	/**
+	 * rhltable_lookup - search hash list table
+	 * @hlt:	hash table
+	 * @key:	the pointer to the key
+	 * @params:	hash table parameters
+	 *
+	 * Computes the hash value for the key and traverses the bucket chain looking
+	 * for a entry with an identical key.  All matching entries are returned
+	 * in a list.
+	 *
+	 * This must only be called under the RCU read lock.
+	 *
+	 * Returns the list of entries that match the given key.
+	 */
 
-Yes, the index of all new evsel will be updated when adding to the evlist.
-
-Zhengjun, could you please handle the patch? Just set 0 idx for the new 
-evsel should be good enough.
-
-
-Thanks,
-Kan
-
-> 
-> Thanks,
-> Namhyung
-> 
-> 
->> +
->> +       return 0;
->> +
->> +out_delete_partial_list:
->> +       __evlist__for_each_entry_safe(&head, n, evsel)
->> +               evsel__delete(evsel);
->> +       return -1;
->> +}
+Beyond that, even though there might not appear to be any concurrent
+rhashtable modifications, it'll be allowed in patch 6/8. Furthermore,
+rhashtable actually does concurrent background compactions since I
+selected 'automatic_shrinking = true' (so we don't leak tons of memory
+after starting and killing those 1000s of tasks) -- there's this
+call_rcu() in lib/rhashtable.c that looks like that's when it's used.
+This work is done in a deferred work by rht_deferred_worker().
