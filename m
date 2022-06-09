@@ -2,145 +2,192 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA750C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 09:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B832CCA47D
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 09:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234663AbiFIJmG (ORCPT
+        id S239354AbiFIJsd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 05:42:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50442 "EHLO
+        Thu, 9 Jun 2022 05:48:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240663AbiFIJmE (ORCPT
+        with ESMTP id S242882AbiFIJsU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 05:42:04 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71104488B0;
-        Thu,  9 Jun 2022 02:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654767721; x=1686303721;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=82EaOJdb4q3VlkGA9TJt8tLAW1WlT5f3xEFTSTdiiFc=;
-  b=LhRJAX/I8a8Wb2MGlQtmUzhWOfJwVZmw1Lm5cYY7e7alFLcD0eLKNwXW
-   X9xcSlLevY5CaNVE+OzT6Ao/J4ljM+0piWqtwjRsdbmHlkjHvAsFkuvqW
-   oEl5CMEamfVDAnsK4dVVZaGD/6+ns90lAIwCmoTgvbjub/WjauPXNDDnP
-   LzR9moZA1LvYCSTa7q6ovEigEEx7ai0vwgJ0ctimYygWw9ZY/0Lywklnh
-   ij+6VH5Jkg2nsbiDQyxqe4TxlpF4qtioyOuKQUv+acUcB50QC3JAmBHuU
-   vexU9R314mCABazEcXoxFZ9KvzqECtOCKKkKcglC9lXOzzXLNFi1mQaWy
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10372"; a="338986211"
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="338986211"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 02:42:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="683875465"
-Received: from zxingrtx.sh.intel.com ([10.239.159.110])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Jun 2022 02:41:57 -0700
-From:   zhengjun.xing@linux.intel.com
-To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com
-Subject: [PATCH v2 1/2] perf vendor events intel: Rename tremontx to snowridgex
-Date:   Thu,  9 Jun 2022 17:42:21 +0800
-Message-Id: <20220609094222.2030167-1-zhengjun.xing@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 9 Jun 2022 05:48:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F3E23A3D8;
+        Thu,  9 Jun 2022 02:48:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=9jA4mchnYQoJ5XaXo73/qgoc6iaW5C3P1k7XaYKsS1U=; b=cB9XFjQVxWqfDyzeN0qaxTZuLD
+        YLcvVXkDGRGNOtMLtEgH+zL1QwGa+jRQrKiDu6o+KwcqUIios781clMIKdQSQtEcXojjpXyjmvj46
+        euyjd4m+n/z+pXAWpiww5AHKVJISuO8dbwfn2kdK+vnbm4iQMh9u58KvobfYp6DKnGfTofnM78Yt0
+        Jz76LJDB6p5dvl91aPCez/Dj+sFAkswEne+HjI0PWGc0G7Uh6QasF9s0y9AlvQ8RjyVaUQ4ilXQ62
+        Z4qivKfe5pGVxrpCjV/g6X6ndctS6ICj5/6oYIabFd8D02kUsNuFDdK3DNDO+pifvTslSQOhwvIep
+        NfI5oq7A==;
+Received: from dhcp-077-249-017-003.chello.nl ([77.249.17.3] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nzEli-00DR5Q-VZ; Thu, 09 Jun 2022 09:47:59 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 100CA981287; Thu,  9 Jun 2022 11:47:58 +0200 (CEST)
+Date:   Thu, 9 Jun 2022 11:47:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        bcain@quicinc.com, Huacai Chen <chenhuacai@kernel.org>,
+        Xuerui Wang <kernel@xen0n.name>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sam Creasey <sammy@sammy.net>, Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        David Miller <davem@davemloft.net>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Juergen Gross <jgross@suse.com>, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, Pv-drivers <pv-drivers@vmware.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Rafael Wysocki <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        lpieralisi@kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Anup Patel <anup@brainfault.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        jacob.jun.pan@linux.intel.com, Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        quic_neeraju@quicinc.com, Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        vschneid@redhat.com, jpoimboe@kernel.org,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-csky@vger.kernel.org,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        "open list:IA64 (Itanium) PLATFORM" <linux-ia64@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
+        <virtualization@lists.linux-foundation.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 33/36] cpuidle,omap3: Use WFI for omap3_pm_idle()
+Message-ID: <YqHBzbAiqaZeoipw@worktop.programming.kicks-ass.net>
+References: <20220608142723.103523089@infradead.org>
+ <20220608144518.010587032@infradead.org>
+ <CAK8P3a0g-fNu9=BUECSXcNeWT7XWHQMnSXZE-XYE+5eakHxKxA@mail.gmail.com>
+ <YqGjqgSrTRseJW6M@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YqGjqgSrTRseJW6M@atomide.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+On Thu, Jun 09, 2022 at 10:39:22AM +0300, Tony Lindgren wrote:
+> * Arnd Bergmann <arnd@arndb.de> [220608 18:18]:
+> > On Wed, Jun 8, 2022 at 4:27 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > arch_cpu_idle() is a very simple idle interface and exposes only a
+> > > single idle state and is expected to not require RCU and not do any
+> > > tracing/instrumentation.
+> > >
+> > > As such, omap_sram_idle() is not a valid implementation. Replace it
+> > > with the simple (shallow) omap3_do_wfi() call. Leaving the more
+> > > complicated idle states for the cpuidle driver.
+> 
+> Agreed it makes sense to limit deeper idle states to cpuidle. Hopefully
+> there is some informative splat for attempting to use arch_cpu_ide()
+> for deeper idle states :)
 
-Tremontx was an old name for Snowridgex, so rename Tremontx to Snowridgex.
+The arch_cpu_idle() interface doesn't allow one to express a desire for
+deeper states. I'm not sure how anyone could even attempt this.
 
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
----
-Change log:
-  v2:
-    * no change since v1.
-
- tools/perf/pmu-events/arch/x86/mapfile.csv                      | 2 +-
- .../pmu-events/arch/x86/{tremontx => snowridgex}/cache.json     | 0
- .../arch/x86/{tremontx => snowridgex}/floating-point.json       | 0
- .../pmu-events/arch/x86/{tremontx => snowridgex}/frontend.json  | 0
- .../pmu-events/arch/x86/{tremontx => snowridgex}/memory.json    | 0
- .../pmu-events/arch/x86/{tremontx => snowridgex}/other.json     | 0
- .../pmu-events/arch/x86/{tremontx => snowridgex}/pipeline.json  | 0
- .../arch/x86/{tremontx => snowridgex}/uncore-memory.json        | 0
- .../arch/x86/{tremontx => snowridgex}/uncore-other.json         | 0
- .../arch/x86/{tremontx => snowridgex}/uncore-power.json         | 0
- .../arch/x86/{tremontx => snowridgex}/virtual-memory.json       | 0
- 11 files changed, 1 insertion(+), 1 deletion(-)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/cache.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/floating-point.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/frontend.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/memory.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/other.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/pipeline.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/uncore-memory.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/uncore-other.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/uncore-power.json (100%)
- rename tools/perf/pmu-events/arch/x86/{tremontx => snowridgex}/virtual-memory.json (100%)
-
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index f5a382421a60..9852bca98d59 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -40,7 +40,7 @@ GenuineIntel-6-8[CD],v1,tigerlake,core
- GenuineIntel-6-A7,v1,icelake,core
- GenuineIntel-6-6A,v1,icelakex,core
- GenuineIntel-6-6C,v1,icelakex,core
--GenuineIntel-6-86,v1,tremontx,core
-+GenuineIntel-6-86,v1,snowridgex,core
- GenuineIntel-6-96,v1,elkhartlake,core
- GenuineIntel-6-97,v1,alderlake,core
- GenuineIntel-6-9A,v1,alderlake,core
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/cache.json b/tools/perf/pmu-events/arch/x86/snowridgex/cache.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/cache.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/cache.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/floating-point.json b/tools/perf/pmu-events/arch/x86/snowridgex/floating-point.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/floating-point.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/floating-point.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/frontend.json b/tools/perf/pmu-events/arch/x86/snowridgex/frontend.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/frontend.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/frontend.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/memory.json b/tools/perf/pmu-events/arch/x86/snowridgex/memory.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/memory.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/memory.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/other.json b/tools/perf/pmu-events/arch/x86/snowridgex/other.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/other.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/other.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/pipeline.json b/tools/perf/pmu-events/arch/x86/snowridgex/pipeline.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/pipeline.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/pipeline.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-memory.json b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-memory.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/uncore-memory.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/uncore-memory.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-other.json b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-other.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/uncore-other.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/uncore-other.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/uncore-power.json b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/uncore-power.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
-diff --git a/tools/perf/pmu-events/arch/x86/tremontx/virtual-memory.json b/tools/perf/pmu-events/arch/x86/snowridgex/virtual-memory.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/x86/tremontx/virtual-memory.json
-rename to tools/perf/pmu-events/arch/x86/snowridgex/virtual-memory.json
--- 
-2.25.1
-
+But given what OMAP needs to go deeper, this would involve things that
+require RCU, combine that with the follow up patches that rip out all
+the trace_.*_rcuidle() hackery from the power and clock domain code,
+PROVE_RCU should scream if anybody were to attempt it.
