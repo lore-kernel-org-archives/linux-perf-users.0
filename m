@@ -2,85 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07087C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 10:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BC1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 10:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234091AbiFIKfb (ORCPT
+        id S243149AbiFIKmH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 06:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55724 "EHLO
+        Thu, 9 Jun 2022 06:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233351AbiFIKfa (ORCPT
+        with ESMTP id S243427AbiFIKlq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 06:35:30 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D7928720;
-        Thu,  9 Jun 2022 03:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1654770928; x=1686306928;
+        Thu, 9 Jun 2022 06:41:46 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6202C265208;
+        Thu,  9 Jun 2022 03:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654771285; x=1686307285;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=3Znz8DrGVKl+VSTFbHf1qfRtqF/T0VJbeFWJBv2ixsA=;
-  b=SEESCanWC8D/wOmrMnEZPcVmWTd7FaGMAcLKp/PpHq3h1X+EK8Kyzp3d
-   otHTq4/anKQ6P8dBsCru5vbSCYbKsC5xYb8ejOH7kdPW/ccmzfOzDanox
-   DiwtXcRCAXR2max+Za5GMfO25QRPJ3O2Zua+q+LDFDHinDABAujmzovr8
-   M=;
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Jun 2022 03:35:28 -0700
-X-QCInternal: smtphost
-Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
-  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 03:35:27 -0700
-Received: from [10.242.59.11] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Thu, 9 Jun 2022
- 03:35:23 -0700
-Message-ID: <4f5dbc00-e25b-f6ff-8585-31fc50f48a21@quicinc.com>
-Date:   Thu, 9 Jun 2022 16:05:20 +0530
+  bh=/rZ/cmVg1xRRULer/B8wH9YfqMjm5s1dbHpQmBQNiu0=;
+  b=J2/fM1TJ//Zrh5vK5JO9lvzKXuzurYs6AlDWv7c9luKXwp3y4oS6ByQ0
+   NadDn1p8hg6JLwn5zCZpjOGGJoUhXZhVrG2sZ34TW874hJt67kkd0vT7+
+   Ck2tpy/RpIXtZLmHSnhwDaPxggSdkvxdHP3jvbT9DN2xCvWi2i/RfwtJc
+   Yr3bMQryrZmkkXeVnQdIhTFAMwLID2R33VyE/cmKvDk/yqEdrFMryxFn2
+   NjW0f/qumENv1D28vl+ogM+B3wMl4JreBOnqO/ZFOLXHh237vmaFXSWaX
+   wHlkI0FwxXQ7wyJ31avgr4l7FsBVWSipoURYzfvoL1rGWSvVgkZuxkh9U
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10372"; a="302602657"
+X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
+   d="scan'208";a="302602657"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 03:41:24 -0700
+X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
+   d="scan'208";a="637407833"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.255.28.81]) ([10.255.28.81])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 03:41:22 -0700
+Message-ID: <b6a49ed6-612f-5f53-a08c-c35bae52cfe3@linux.intel.com>
+Date:   Thu, 9 Jun 2022 18:41:19 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH V5] arm64: perf: Make exporting of pmu events configurable
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 5/5] perf stat: Add topdown metrics in the default perf
+ stat on the hybrid machine
 Content-Language: en-US
-To:     Will Deacon <will@kernel.org>
-CC:     <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <catalin.marinas@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1653306574-20946-1-git-send-email-quic_c_spathi@quicinc.com>
- <20220609100247.GA2187@willie-the-truck>
-From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-In-Reply-To: <20220609100247.GA2187@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To:     Namhyung Kim <namhyung@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, alexander.shishkin@intel.com,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>
+References: <20220607013315.1956301-1-zhengjun.xing@linux.intel.com>
+ <20220607013315.1956301-6-zhengjun.xing@linux.intel.com>
+ <CAM9d7ciZAZzsA=cDojZp8H5tTd-F7NC=OnTMRg3S3cdjCW0+eA@mail.gmail.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <CAM9d7ciZAZzsA=cDojZp8H5tTd-F7NC=OnTMRg3S3cdjCW0+eA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On our Qualcomm platforms, The X bit is getting set by firmware at early 
-bootup for Qualcomm use cases
-and non-secure world is resetting it, that causing issue.
 
-On 6/9/2022 3:32 PM, Will Deacon wrote:
-> On Mon, May 23, 2022 at 05:19:34PM +0530, Srinivasarao Pathipati wrote:
->> The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
->> Make is configurable using sysctls to enable/disable at runtime.
->> It can also be enabled at early bootup with kernel arguments.
+
+On 6/9/2022 8:09 AM, Namhyung Kim wrote:
+> On Tue, Jun 7, 2022 at 1:08 AM <zhengjun.xing@linux.intel.com> wrote:
 >>
->> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+>> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>>
+>> Topdown metrics are missed in the default perf stat on the hybrid machine,
+>> add Topdown metrics in default perf stat for hybrid systems.
+>>
+>> Currently, we support the perf metrics Topdown for the p-core PMU in the
+>> perf stat default, the perf metrics Topdown support for e-core PMU will be
+>> implemented later separately. Refactor the code adds two x86 specific
+>> functions. Widen the size of the event name column by 7 chars, so that all
+>> metrics after the "#" become aligned again.
+>>
+>> The perf metrics topdown feature is supported on the cpu_core of ADL. The
+>> dedicated perf metrics counter and the fixed counter 3 are used for the
+>> topdown events. Adding the topdown metrics doesn't trigger multiplexing.
+>>
+>> Before:
+>>
+>>   # ./perf  stat  -a true
+>>
+>>   Performance counter stats for 'system wide':
+>>
+>>               53.70 msec cpu-clock                 #   25.736 CPUs utilized
+>>                  80      context-switches          #    1.490 K/sec
+>>                  24      cpu-migrations            #  446.951 /sec
+>>                  52      page-faults               #  968.394 /sec
+>>           2,788,555      cpu_core/cycles/          #   51.931 M/sec
+>>             851,129      cpu_atom/cycles/          #   15.851 M/sec
+>>           2,974,030      cpu_core/instructions/    #   55.385 M/sec
+>>             416,919      cpu_atom/instructions/    #    7.764 M/sec
+>>             586,136      cpu_core/branches/        #   10.916 M/sec
+>>              79,872      cpu_atom/branches/        #    1.487 M/sec
+>>              14,220      cpu_core/branch-misses/   #  264.819 K/sec
+>>               7,691      cpu_atom/branch-misses/   #  143.229 K/sec
+>>
+>>         0.002086438 seconds time elapsed
+>>
+>> After:
+>>
+>>   # ./perf stat  -a true
+>>
+>>   Performance counter stats for 'system wide':
+>>
+>>               61.39 msec cpu-clock                        #   24.874 CPUs utilized
+>>                  76      context-switches                 #    1.238 K/sec
+>>                  24      cpu-migrations                   #  390.968 /sec
+>>                  52      page-faults                      #  847.097 /sec
+>>           2,753,695      cpu_core/cycles/                 #   44.859 M/sec
+>>             903,899      cpu_atom/cycles/                 #   14.725 M/sec
+>>           2,927,529      cpu_core/instructions/           #   47.690 M/sec
+>>             428,498      cpu_atom/instructions/           #    6.980 M/sec
+>>             581,299      cpu_core/branches/               #    9.470 M/sec
+>>              83,409      cpu_atom/branches/               #    1.359 M/sec
+>>              13,641      cpu_core/branch-misses/          #  222.216 K/sec
+>>               8,008      cpu_atom/branch-misses/          #  130.453 K/sec
+>>          14,761,308      cpu_core/slots/                  #  240.466 M/sec
+>>           3,288,625      cpu_core/topdown-retiring/       #     22.3% retiring
+>>           1,323,323      cpu_core/topdown-bad-spec/       #      9.0% bad speculation
+>>           5,477,470      cpu_core/topdown-fe-bound/       #     37.1% frontend bound
+>>           4,679,199      cpu_core/topdown-be-bound/       #     31.7% backend bound
+>>             646,194      cpu_core/topdown-heavy-ops/      #      4.4% heavy operations       #     17.9% light operations
+>>           1,244,999      cpu_core/topdown-br-mispredict/  #      8.4% branch mispredict      #      0.5% machine clears
+>>           3,891,800      cpu_core/topdown-fetch-lat/      #     26.4% fetch latency          #     10.7% fetch bandwidth
+>>           1,879,034      cpu_core/topdown-mem-bound/      #     12.7% memory bound           #     19.0% Core bound
+>>
+>>         0.002467839 seconds time elapsed
+>>
+>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 >> ---
->> Changes since V4:
->> 	- Registering sysctls dynamically for only arm64 as suggested by Will
->> 	- Not removed the code to configure with kernel parameters
->> 	  as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
->> 	  is not working at early bootup. pmu_reset() getting called before
->> 	  sysctl's kernel parameter is set.
-> Why do you need this during early bootup? Perf won't program any events
-> until much later and if somebody else is configuring the PMU before
-> entering Linux then they can also set that X bit in the PMCR.
->
-> Will
+> [SNIP]
+>> +const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn)
+>> +{
+>> +       const char *pmu_name = "cpu";
+>> +
+>> +       if (perf_pmu__has_hybrid()) {
+>> +               if (!evlist->hybrid_pmu_name) {
+>> +                       if (warn)
+>> +                               pr_warning
+>> +                                   ("WARNING: default to use cpu_core topdown events\n");
+>> +                       evlist->hybrid_pmu_name =
+>> +                           perf_pmu__hybrid_type_to_pmu("core");
+> 
+> This doesn't look good.  Please consider reducing the
+> indent level like returning early as
+> 
+>      if (!perf_pmu__has_hybrid())
+>          return "cpu";
+> 
+>      if (!evlist->hybrid_pmu_name) {
+>          ...
+> 
+Thanks for the comments, I will update it in the next version.
+> Thanks,
+> Namhyung
+> 
+> 
+>> +               }
+>> +
+>> +               pmu_name = evlist->hybrid_pmu_name;
+>> +       }
+>> +       return pmu_name;
+>> +}
+
+-- 
+Zhengjun Xing
