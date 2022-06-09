@@ -2,92 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D9BC43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 11:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00965C43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 11:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234091AbiFILhD (ORCPT
+        id S244683AbiFILrY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 07:37:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55796 "EHLO
+        Thu, 9 Jun 2022 07:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235928AbiFILhC (ORCPT
+        with ESMTP id S244613AbiFILrK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 07:37:02 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B67C26394;
-        Thu,  9 Jun 2022 04:36:59 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7534712FC;
-        Thu,  9 Jun 2022 04:36:59 -0700 (PDT)
-Received: from [10.57.82.209] (unknown [10.57.82.209])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF1433F73B;
-        Thu,  9 Jun 2022 04:36:55 -0700 (PDT)
-Message-ID: <a0b03913-6412-0e2a-d9c5-431c52ff624f@arm.com>
-Date:   Thu, 9 Jun 2022 12:36:50 +0100
+        Thu, 9 Jun 2022 07:47:10 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B398E4424
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 04:45:39 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id l18so18514869lje.13
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 04:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SgEKCxAtx5GHqR+44FfrWhhi7CpRDkMPbE0Ct/xZup4=;
+        b=Wn59IozK5z/jpjt8Q+UhuuKvGQXTYML6Wz855bP4DgDOntSmeYZtPzJNKtrlHwfvHf
+         ApbXtCwKfeZ9hkhsu/hkSYT0kDL5vYvror1qbKdxxG0eCculn2KC1zsnYdh5Z3OJJXaJ
+         5NaEzVt8ZA9DzqbThmfpCgKCv6J/qg9D1M7wTBZXgSSz2qD3+FK0XuiNELILE5TU27LI
+         YLCa4egi9+BCmGd8KGu3bd37kTQfiL8IbIqhCIAXJpOwFaoJ9PTvisfnBF+H1VDtVFno
+         R6GtChMm1zuBAx0vTWGYEU/bAmM0fIwyOLHfidKpaC8t20PfA6rVFqFtlM7yyE0bCNxG
+         aWfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SgEKCxAtx5GHqR+44FfrWhhi7CpRDkMPbE0Ct/xZup4=;
+        b=lc9AWkN6Mxxu1Wf6RSPss0O0kc+894dXqeiXMPFaidRBUtOxkyuNEe62QGhUbKPPsR
+         rcuwYwEQR7P/wZfD89DzfmaKleMQaBzdqBboleuN8N7FixbltKFifeHHB5rW9GH9TiKz
+         TLAhnJg0RW0hupAd7Y82U5ykiaOtGz5sEd9Tj3TF5fXEir1Zf0/R62qeT55eZ9WqSfGb
+         kvZcIu3Em0FbXeSHwXYzTSsEMsSk9P7Vi9vuszfiXzyykZfVzZY58xsk65rjRQhw5mTK
+         26eq7yiKuwydzsqLViT0B/B4tP4HjPfu8gSY52lJGgmaiPg08f0NcMx3mzEBt7/YIArJ
+         eEAw==
+X-Gm-Message-State: AOAM531P9le6y9qZ4gA2uu/GMZv3Y4kVyrrJ9zM72+sQFHWu9MbIlL7N
+        67eBnx7kHKi9u/9ZfVuaI2MuYemXWt60WmQFR+IjPg==
+X-Google-Smtp-Source: ABdhPJzc//2SRPZwIQ355J74Z4MT+McfEWqwj7F8FfClJc+91CoVx7/ooPiEOeCc/G2KtXyyeT2PvA9UqQV4rHuXqnA=
+X-Received: by 2002:a2e:b0fc:0:b0:255:6f92:f9d4 with SMTP id
+ h28-20020a2eb0fc000000b002556f92f9d4mr21861715ljl.92.1654775137344; Thu, 09
+ Jun 2022 04:45:37 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH V5] arm64: perf: Make exporting of pmu events configurable
-Content-Language: en-GB
-To:     Srinivasarao Pathipati <quic_c_spathi@quicinc.com>,
-        Will Deacon <will@kernel.org>
-Cc:     mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1653306574-20946-1-git-send-email-quic_c_spathi@quicinc.com>
- <20220609100247.GA2187@willie-the-truck>
- <4f5dbc00-e25b-f6ff-8585-31fc50f48a21@quicinc.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <4f5dbc00-e25b-f6ff-8585-31fc50f48a21@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-3-elver@google.com>
+In-Reply-To: <20220609113046.780504-3-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 9 Jun 2022 13:45:25 +0200
+Message-ID: <CACT4Y+ZM3yYYeOGBNEA8+FzjjfMcR-TiENjmCB8Dq-KSPvOWyg@mail.gmail.com>
+Subject: Re: [PATCH 2/8] perf/hw_breakpoint: Mark data __ro_after_init
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022-06-09 11:35, Srinivasarao Pathipati wrote:
-> On our Qualcomm platforms, The X bit is getting set by firmware at early 
-> bootup for Qualcomm use cases
-> and non-secure world is resetting it, that causing issue.
+On Thu, 9 Jun 2022 at 13:31, Marco Elver <elver@google.com> wrote:
+>
+> Mark read-only data after initialization as __ro_after_init.
+>
+> While we are here, turn 'constraints_initialized' into a bool.
+>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-I think you're going to have to clarify what exactly this "issue" is if 
-we're ever going to make sense of it...
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-I can't imagine that export from a disabled PMU would matter much, so my 
-best guess is that EL2 firmware has reserved some counters via 
-MDCR_EL2.HPMN which it's using to monitor the Non-Secure boot; if that 
-also depends on PMCR.X remaining set, then as far as I can see it's 
-really the firmware's own stupid fault for not using MDCR_EL2.TPMCR to 
-prevent Linux from messing with its configuration. Or maybe something in 
-the Secure world is trying to use the PMU independently and it's an EL3 
-bug where PMCR_EL0 isn't being context-switched properly?
-
-Robin.
-
-> On 6/9/2022 3:32 PM, Will Deacon wrote:
->> On Mon, May 23, 2022 at 05:19:34PM +0530, Srinivasarao Pathipati wrote:
->>> The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
->>> Make is configurable using sysctls to enable/disable at runtime.
->>> It can also be enabled at early bootup with kernel arguments.
->>>
->>> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
->>> ---
->>> Changes since V4:
->>>     - Registering sysctls dynamically for only arm64 as suggested by 
->>> Will
->>>     - Not removed the code to configure with kernel parameters
->>>       as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
->>>       is not working at early bootup. pmu_reset() getting called before
->>>       sysctl's kernel parameter is set.
->> Why do you need this during early bootup? Perf won't program any events
->> until much later and if somebody else is configuring the PMU before
->> entering Linux then they can also set that X bit in the PMCR.
->>
->> Will
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> ---
+>  kernel/events/hw_breakpoint.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+> index 25c94c6e918d..1f718745d569 100644
+> --- a/kernel/events/hw_breakpoint.c
+> +++ b/kernel/events/hw_breakpoint.c
+> @@ -47,7 +47,7 @@ struct bp_cpuinfo {
+>  };
+>
+>  static DEFINE_PER_CPU(struct bp_cpuinfo, bp_cpuinfo[TYPE_MAX]);
+> -static int nr_slots[TYPE_MAX];
+> +static int nr_slots[TYPE_MAX] __ro_after_init;
+>
+>  static struct bp_cpuinfo *get_bp_info(int cpu, enum bp_type_idx type)
+>  {
+> @@ -63,7 +63,7 @@ static const struct rhashtable_params task_bps_ht_params = {
+>         .automatic_shrinking = true,
+>  };
+>
+> -static int constraints_initialized;
+> +static bool constraints_initialized __ro_after_init;
+>
+>  /* Gather the number of total pinned and un-pinned bp in a cpuset */
+>  struct bp_busy_slots {
+> @@ -711,7 +711,7 @@ int __init init_hw_breakpoint(void)
+>         if (ret)
+>                 goto err;
+>
+> -       constraints_initialized = 1;
+> +       constraints_initialized = true;
+>
+>         perf_pmu_register(&perf_breakpoint, "breakpoint", PERF_TYPE_BREAKPOINT);
+>
+> --
+> 2.36.1.255.ge46751e96f-goog
+>
