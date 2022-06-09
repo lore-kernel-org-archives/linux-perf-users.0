@@ -2,233 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABA1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 05:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDDCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 05:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238412AbiFIFY3 (ORCPT
+        id S238175AbiFIFac (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 01:24:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48110 "EHLO
+        Thu, 9 Jun 2022 01:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238321AbiFIFYN (ORCPT
+        with ESMTP id S232974AbiFIFac (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 01:24:13 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C905FDA
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Jun 2022 22:24:11 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 10-20020a250d0a000000b0065ca0e7be90so19362378ybn.17
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jun 2022 22:24:11 -0700 (PDT)
+        Thu, 9 Jun 2022 01:30:32 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A9822849E
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Jun 2022 22:30:31 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id z9so5099916wmf.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jun 2022 22:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lb9q5Yv/NRSmWQ/bYz01a/1C1DKx+kQvVtIfEuSv0m8=;
-        b=qaF4ArVQ5Ijgk1R5sedAyMQtN/PHxBZPjddPKT5shPniD6r9GsaYHQBs41nCGkkNuL
-         SHeGn0BJokgDCtz1HiabL50GLDN9M66oSLJ0Cptw0pKhtcRozR9pcq5NlwCaipB6PQI1
-         BN3aPtREHhon32R+AKAjbVOY6MyuHU2QlgePTzJa43GC3ZOxSSF5w7soyhEImLmWxlKz
-         4vgCgVz7oVxq9kWTqcZKuaiSB9E22ifRjJjq/ES84kRBpS47/mCKRN1f+F8kKz+ef/r2
-         H5/m76I5fY5vbtPh82w0aCnWJ2wfsWWIoSzIa+do4QPri0HuWJK4ky021voryleXLPTP
-         xEFQ==
+        bh=GqVxPTyMN5LSk5+AeVkxx+W87CD161pDvzbwjFm6+gQ=;
+        b=ppfX5cL9GJVYrxGHnfjXRVJ07D6rTaIh988wnDEoyi6c5Ox34r0eWU/UBDtEIU0ZuZ
+         p/ODifY6UvgRrGPpvrnG4hT+W9mQHF7OEapC4RQqObUxbNYz4JRXui6JQ0KTenlgJpgt
+         GNTW9/8r5K0Qsh35abiBd4trapkZK81bnXoH/PlI6AcGDCOxB2jENnq48GI4pcTTzsz0
+         K51lyN5dhq0Rv6ZjPqS6XhUtN5tKBzqftrATAVfH+5o735FpkWM87uwSh3tZ38OxPjWb
+         T5SgRHO6SwQJWZ+Y2moVO/o0HG7r1yen+bxSMZgoGg2XwZ7QgQoxHP5UDHcOsxol/ljt
+         bDVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=lb9q5Yv/NRSmWQ/bYz01a/1C1DKx+kQvVtIfEuSv0m8=;
-        b=yhy9EGvP/1X8yeIyQHAPHg7+xpyYNn9XQIa+Da4/HaZofi6iBWUEgtzq/6nrJljAZX
-         I8oNOw9sj5GUgJd23AZIiU0tqX/LTbpCztZNc5XPEhFOUf6ZmmHxM5Ri7WDnB0Utna/b
-         8A55ln3gPcWDV4Z9NEAzYJpkNzEe1cmMlpk3x2EZMMS3kpBR//VZW6amxCYEGw1WRFZ9
-         qjBfMkLg/LuLkVFrhlHvwkjYRexVr9J2YPLhXdS4E8MJZ0+zs4VeLbtDcezo3yAZn+ri
-         7MXRCBsp2deiEAryPuB4m9oM2Pb6YUkghsVXKrnrbHOdtdpXfXDdqslILjQY3s+C7Y7C
-         /YEw==
-X-Gm-Message-State: AOAM533PVE1Lioa6xwB6MH8STKJ5l6BIsrpbqKJEgcuJwjml0jI9lDY3
-        uxP6XW3ZXA8d/ijgnHzhEFbcV9POpaiO
-X-Google-Smtp-Source: ABdhPJyAqMlhCuxzMnoqvzbXCEIxUYUC+UEZoPwaqzgyUw3HKZqt3ckccIlBiudFoF39cskbid5mabc+fva+
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:ae20:7578:fb21:976b])
- (user=irogers job=sendgmr) by 2002:a0d:f443:0:b0:300:4795:fc0f with SMTP id
- d64-20020a0df443000000b003004795fc0fmr40154662ywf.354.1654752251112; Wed, 08
- Jun 2022 22:24:11 -0700 (PDT)
-Date:   Wed,  8 Jun 2022 22:23:55 -0700
-In-Reply-To: <20220609052355.1300162-1-irogers@google.com>
-Message-Id: <20220609052355.1300162-5-irogers@google.com>
-Mime-Version: 1.0
-References: <20220609052355.1300162-1-irogers@google.com>
-X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
-Subject: [PATCH v2 4/4] perf test: Add user space counter reading tests
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GqVxPTyMN5LSk5+AeVkxx+W87CD161pDvzbwjFm6+gQ=;
+        b=n0rXb7GfF5Srgxkhg1/eqTNLt7azonPEmdlt/gVTJT2IA9W+99Rl9RkyQBKvyE6Tlm
+         etSH/yEMqx0QZItVcF2zeywojQ9is+fpFQOjNOYa3326EQtxkv2/sU5vl/OSX785P95W
+         aDmmmbz9lR77VD5QseQtSQJzjPdNBi5NkFdcryxTmHfV/mYTqmuBOpKiaJaEa8nSlGxS
+         RJpR3ynEhhIEsbk05cpBTnADta2szIimo/ejiUtyDaUqTOU2QG2jlqOiYzXlvc9nUsQW
+         AEBpok7OiGI4bLMNfz0viv50/38grdkzlDOnmOpFy2Tal3f1BH4PUYVaEr/x/CkjRsam
+         FIXA==
+X-Gm-Message-State: AOAM5318jB9qYujfLm4/yztpz9+WY2TBcruQxMHDQm+HqdDIj/EPRGGF
+        4b2NTExURxCeYzzHJkG0gjcMrIOUT09YbGbZlwnJ6Q==
+X-Google-Smtp-Source: ABdhPJy+P7056WQ8engnYC1mHTb9UsiXlHIixlBMPvMOgpTq+KmQ2uox3NULMOxAH6LXfVKDgLQEOlLlMRqr4ZBxD4k=
+X-Received: by 2002:a05:600c:19cb:b0:397:51db:446f with SMTP id
+ u11-20020a05600c19cb00b0039751db446fmr1434807wmq.182.1654752629440; Wed, 08
+ Jun 2022 22:30:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220527020653.4160884-1-irogers@google.com>
+In-Reply-To: <20220527020653.4160884-1-irogers@google.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Wed, 8 Jun 2022 22:30:17 -0700
+Message-ID: <CAP-5=fUqBaoDwJB4-rizoP6tYnZAw6YW+wROVYqiNzj7iG+G-Q@mail.gmail.com>
+Subject: Re: [PATCH] perf expr: Allow exponents on floating point values
+To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-These tests are based on test_stat_user_read in
-tools/lib/perf/tests/test-evsel.c. The tests are modified to skip if
-perf_event_open fails or rdpmc isn't supported.
+On Thu, May 26, 2022 at 7:06 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Pass the optional exponent component through to strtod that already
+> supports it. We already have exponents in ScaleUnit and so this adds
+> uniformity.
+>
+> Reported-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/mmap-basic.c | 127 +++++++++++++++++++++++++++++++++-
- 1 file changed, 126 insertions(+), 1 deletion(-)
+Ping. Simple fix with tests, PTAL. Thanks,
+Ian
 
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index 30bbe144648a..dfb6173b2a82 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -170,14 +170,139 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
- 	return err;
- }
- 
-+static int test_stat_user_read(int event)
-+{
-+	struct perf_counts_values counts = { .val = 0 };
-+	struct perf_thread_map *threads;
-+	struct perf_evsel *evsel;
-+	struct perf_event_mmap_page *pc;
-+	struct perf_event_attr attr = {
-+		.type	= PERF_TYPE_HARDWARE,
-+		.config	= event,
-+#ifdef __aarch64__
-+		.config1 = 0x2,		/* Request user access */
-+#endif
-+	};
-+	int err, i, ret = TEST_FAIL;
-+	bool opened = false, mapped = false;
-+
-+	threads = perf_thread_map__new_dummy();
-+	TEST_ASSERT_VAL("failed to create threads", threads);
-+
-+	perf_thread_map__set_pid(threads, 0, 0);
-+
-+	evsel = perf_evsel__new(&attr);
-+	TEST_ASSERT_VAL("failed to create evsel", evsel);
-+
-+	err = perf_evsel__open(evsel, NULL, threads);
-+	if (err) {
-+		pr_err("failed to open evsel: %s\n", strerror(-err));
-+		ret = TEST_SKIP;
-+		goto out;
-+	}
-+	opened = true;
-+
-+	err = perf_evsel__mmap(evsel, 0);
-+	if (err) {
-+		pr_err("failed to mmap evsel: %s\n", strerror(-err));
-+		goto out;
-+	}
-+	mapped = true;
-+
-+	pc = perf_evsel__mmap_base(evsel, 0, 0);
-+	if (!pc) {
-+		pr_err("failed to get mmapped address\n");
-+		goto out;
-+	}
-+
-+	if (!pc->cap_user_rdpmc || !pc->index) {
-+		pr_err("userspace counter access not %s\n",
-+			!pc->cap_user_rdpmc ? "supported" : "enabled");
-+		ret = TEST_SKIP;
-+		goto out;
-+	}
-+	if (pc->pmc_width < 32) {
-+		pr_err("userspace counter width not set (%d)\n", pc->pmc_width);
-+		goto out;
-+	}
-+
-+	perf_evsel__read(evsel, 0, 0, &counts);
-+	if (counts.val == 0) {
-+		pr_err("failed to read value for evsel\n");
-+		goto out;
-+	}
-+
-+	for (i = 0; i < 5; i++) {
-+		volatile int count = 0x10000 << i;
-+		__u64 start, end, last = 0;
-+
-+		pr_debug("\tloop = %u, ", count);
-+
-+		perf_evsel__read(evsel, 0, 0, &counts);
-+		start = counts.val;
-+
-+		while (count--) ;
-+
-+		perf_evsel__read(evsel, 0, 0, &counts);
-+		end = counts.val;
-+
-+		if ((end - start) < last) {
-+			pr_err("invalid counter data: end=%llu start=%llu last= %llu\n",
-+				end, start, last);
-+			goto out;
-+		}
-+		last = end - start;
-+		pr_debug("count = %llu\n", end - start);
-+	}
-+	ret = TEST_OK;
-+
-+out:
-+	if (mapped)
-+		perf_evsel__munmap(evsel);
-+	if (opened)
-+		perf_evsel__close(evsel);
-+	perf_evsel__delete(evsel);
-+
-+	perf_thread_map__put(threads);
-+	return ret;
-+}
-+
-+static int test__mmap_user_read_instr(struct test_suite *test __maybe_unused,
-+				      int subtest __maybe_unused)
-+{
-+	return test_stat_user_read(PERF_COUNT_HW_INSTRUCTIONS);
-+}
-+
-+static int test__mmap_user_read_cycles(struct test_suite *test __maybe_unused,
-+				       int subtest __maybe_unused)
-+{
-+	return test_stat_user_read(PERF_COUNT_HW_CPU_CYCLES);
-+}
-+
- static struct test_case tests__basic_mmap[] = {
- 	TEST_CASE_REASON("Read samples using the mmap interface",
- 			 basic_mmap,
- 			 "permissions"),
-+	TEST_CASE_REASON("User space counter reading of instructions",
-+			 mmap_user_read_instr,
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+			 "permissions"
-+#else
-+			 "unsupported"
-+#endif
-+		),
-+	TEST_CASE_REASON("User space counter reading of cycles",
-+			 mmap_user_read_cycles,
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+			 "permissions"
-+#else
-+			 "unsupported"
-+#endif
-+		),
- 	{	.name = NULL, }
- };
- 
- struct test_suite suite__basic_mmap = {
--	.desc = "Read samples using the mmap interface",
-+	.desc = "mmap interface tests",
- 	.test_cases = tests__basic_mmap,
- };
--- 
-2.36.1.255.ge46751e96f-goog
-
+> ---
+>  tools/perf/tests/expr.c | 2 ++
+>  tools/perf/util/expr.l  | 2 +-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> index d54c5371c6a6..5c0032fe93ae 100644
+> --- a/tools/perf/tests/expr.c
+> +++ b/tools/perf/tests/expr.c
+> @@ -97,6 +97,8 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+>         ret |= test(ctx, "2.2 > 2.2", 0);
+>         ret |= test(ctx, "2.2 < 1.1", 0);
+>         ret |= test(ctx, "1.1 > 2.2", 0);
+> +       ret |= test(ctx, "1.1e10 < 1.1e100", 1);
+> +       ret |= test(ctx, "1.1e2 > 1.1e-2", 1);
+>
+>         if (ret) {
+>                 expr__ctx_free(ctx);
+> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+> index 0a13eb20c814..4dc8edbfd9ce 100644
+> --- a/tools/perf/util/expr.l
+> +++ b/tools/perf/util/expr.l
+> @@ -91,7 +91,7 @@ static int literal(yyscan_t scanner)
+>  }
+>  %}
+>
+> -number         ([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)
+> +number         ([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)(e-?[0-9]+)?
+>
+>  sch            [-,=]
+>  spec           \\{sch}
+> --
+> 2.36.1.124.g0e6072fb45-goog
+>
