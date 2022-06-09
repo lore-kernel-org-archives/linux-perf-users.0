@@ -2,119 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCCCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 12:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF71C43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 13:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232860AbiFIMxP (ORCPT
+        id S244167AbiFINA1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 08:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
+        Thu, 9 Jun 2022 09:00:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235521AbiFIMxO (ORCPT
+        with ESMTP id S1343630AbiFINAX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 08:53:14 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 541CA12E32B
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 05:53:11 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id u8so27956213wrm.13
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 05:53:11 -0700 (PDT)
+        Thu, 9 Jun 2022 09:00:23 -0400
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414914A3F0;
+        Thu,  9 Jun 2022 06:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xsbD60qIHanlKuWKt+8TLbFkRT3oM/UNVHEodPGa7yk=;
-        b=ogxQx9/A77IYQ/hkeDboJ31yIL2cjqX5j2tbjDpVF4T49J/STcN+TRwFrbHQjaoMLW
-         ltWumxcgf2zS7G8Iw/ewsvUxc82h2ycTigV0zuzXwhTU2elDIsRMAkDYai2dVUqTJUfc
-         V1l9p6AukaGvIR5nKfcLtG14Z2ISv9bBnT1QGsjiRphpW/rB5Dbc4XiC83J+5uvQ0D60
-         RmKk/IUExDhpBPums6vI4w70UYQV+ou+WFx8y5AKBEPLkAOR/Y+pxn+FKKmg43coSSP0
-         G9KpfHlnEJXtzStO/xypwKyMezq47b0UB6XNhOwP6YtMg59SqonDYWpPvpaI2WNG2HUq
-         kqgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xsbD60qIHanlKuWKt+8TLbFkRT3oM/UNVHEodPGa7yk=;
-        b=xohra1gHs54oewdE8RaGF8ImArWce4sMqE48PZMj9gRxlJbJcH0INRTHKvcHSKs936
-         QNg8Z65RQ4iTOk79gqiFc30pS/fyTInYDsCCD+aE8WUy8muOIPJq0cIjo03p+pHxJ1rs
-         pt3BIqX1JZywB2h8b++3V8+myOqecw/g1WlZ4QCrTFBR2SY5iXoUBk8hPkb1HrYRzrcV
-         kiu7LPkVhxKaEmaNwcNs1c2e0wJ9l2NLX+AX0to83+a9nDB0yTb+Ny4zJmvaUoYXw5jJ
-         l1t/S/wjvcn1mRK4V7Pjktp4ARIUaqDZu5nXkGbT9oHlQRZp0/7OULfieYl/89vJ980r
-         T0Iw==
-X-Gm-Message-State: AOAM531aIyLv3WYJ1Os5MWPESr4QKW0oiQvsSdiOqOhHvinAThMlxRUB
-        QVisVu3Ah80cFRxkhj8irwB2N2095xwDZQ==
-X-Google-Smtp-Source: ABdhPJyJUVWiu56wlkL1GRUdrN5r0Z2qCI6oeCaAM64dh4ZzAFCXGHnDJ6WcKQ7t2Jmgwe09MkROHA==
-X-Received: by 2002:a5d:6c62:0:b0:218:3e13:4b17 with SMTP id r2-20020a5d6c62000000b002183e134b17mr20790347wrz.673.1654779189454;
-        Thu, 09 Jun 2022 05:53:09 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:9c:201:dcf:e5ba:10a5:1ea5])
-        by smtp.gmail.com with ESMTPSA id v190-20020a1cacc7000000b003975c7058bfsm27801688wme.12.2022.06.09.05.53.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jun 2022 05:53:08 -0700 (PDT)
-Date:   Thu, 9 Jun 2022 14:53:02 +0200
-From:   Marco Elver <elver@google.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org,
-        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/8] perf/hw_breakpoint: Optimize list of per-task
- breakpoints
-Message-ID: <YqHtLvdLvdM5Lmdh@elver.google.com>
-References: <20220609113046.780504-1-elver@google.com>
- <20220609113046.780504-2-elver@google.com>
- <CACT4Y+ZfjLCj=wvPFhyUQLwxmcOXuK9G_a53SB=-niySExQdew@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZfjLCj=wvPFhyUQLwxmcOXuK9G_a53SB=-niySExQdew@mail.gmail.com>
-User-Agent: Mutt/2.1.4 (2021-12-11)
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1654779614; x=1686315614;
+  h=from:to:cc:subject:date:message-id;
+  bh=MbluhEaJzamnhyK/2T+/wKWSz4GPM1oLHU1upxZh1bA=;
+  b=WPLD68DbZDWaxxpOhDc+kSPDlxypjyKTacj4jkv9MeWUN9QDo1KpyxVm
+   MorHx6Cv/xfktb9sTBIrSy8DkD+m8lGuA6bcKNl7xDkSdzc8EudG1Qa9U
+   4IPGGIkzGURDcywc/Za4ziw+Nl/E64gMBQZRI8ZyaUmjmt3j5Ns9Vz75K
+   o=;
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
+  by alexa-out.qualcomm.com with ESMTP; 09 Jun 2022 06:00:10 -0700
+X-QCInternal: smtphost
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Jun 2022 06:00:09 -0700
+X-QCInternal: smtphost
+Received: from hu-c-spathi-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.108.59])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jun 2022 18:29:53 +0530
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 212714)
+        id C53E83E5A; Thu,  9 Jun 2022 18:29:51 +0530 (+0530)
+From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+To:     will@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+Subject: [PATCH V6] arm64: perf: Make exporting of pmu events configurable
+Date:   Thu,  9 Jun 2022 18:29:49 +0530
+Message-Id: <1654779589-19937-1-git-send-email-quic_c_spathi@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 09, 2022 at 02:30PM +0200, Dmitry Vyukov wrote:
-[...]
-> > +       rcu_read_lock();
-> 
-> Why do we need rcu_read_lock() here?
-> The patch does not change anything with respect to locking, so all
-> accesses to the container should still be protected by nr_bp_mutex.
-> Similarly for the rcu variant of for_each below.
-[...]
-> > +       head = rhltable_lookup(&task_bps_ht, &bp->hw.target, task_bps_ht_params);
-> > +       if (!head)
-> > +               goto out;
-> > +
-> > +       rhl_for_each_entry_rcu(iter, pos, head, hw.bp_list) {
+The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
+Make it configurable using sysctls to enable/disable at runtime.
 
-It's part of rhashtable's interface requirements:
+Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+---
+Changes since V5:
+	- removed configuring with kernel parameters.
+Changes since V4:
+	- Registering sysctls dynamically for only arm64 as suggested by Will
+	- Not removed the code to configure with kernel parameters 
+	  as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
+	  is not working at early bootup. pmu_reset() getting called before 
+	  sysctl's kernel parameter is set.
+Changes since V3:
+	- export bit is now configurable with sysctl
+	- enabling export bit on reset instead of retaining
 
-	/**
-	 * rhltable_lookup - search hash list table
-	 * @hlt:	hash table
-	 * @key:	the pointer to the key
-	 * @params:	hash table parameters
-	 *
-	 * Computes the hash value for the key and traverses the bucket chain looking
-	 * for a entry with an identical key.  All matching entries are returned
-	 * in a list.
-	 *
-	 * This must only be called under the RCU read lock.
-	 *
-	 * Returns the list of entries that match the given key.
-	 */
+Changes since V2:
+	Done below changes as per Will's comments
+	- enabling pmcr_x now configurable with kernel parameters and
+	  by default it is disabled.
+	
+Changes since V1:
+	- Preserving only PMCR_X bit as per Robin Murphy's comment.
 
-Beyond that, even though there might not appear to be any concurrent
-rhashtable modifications, it'll be allowed in patch 6/8. Furthermore,
-rhashtable actually does concurrent background compactions since I
-selected 'automatic_shrinking = true' (so we don't leak tons of memory
-after starting and killing those 1000s of tasks) -- there's this
-call_rcu() in lib/rhashtable.c that looks like that's when it's used.
-This work is done in a deferred work by rht_deferred_worker().
+---
+ Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++++
+ arch/arm64/kernel/perf_event.c              | 13 +++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index ddccd10..c2ecd84 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -267,6 +267,17 @@ domain names are in general different. For a detailed discussion
+ see the ``hostname(1)`` man page.
+ 
+ 
++export_pmu_events (arm64 only)
++==============================
++
++Controls the PMU export bit (PMCR_EL0.X), which enables the exporting of
++events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
++
++0: disables exporting of events (default).
++
++1: enables exporting of events.
++
++
+ firmware_config
+ ===============
+ 
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index cb69ff1..a8c32a0 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -298,6 +298,7 @@ PMU_FORMAT_ATTR(long, "config1:0");
+ PMU_FORMAT_ATTR(rdpmc, "config1:1");
+ 
+ static int sysctl_perf_user_access __read_mostly;
++static int sysctl_export_pmu_events __read_mostly;
+ 
+ static inline bool armv8pmu_event_is_64bit(struct perf_event *event)
+ {
+@@ -1047,6 +1048,9 @@ static void armv8pmu_reset(void *info)
+ 	if (armv8pmu_has_long_event(cpu_pmu))
+ 		pmcr |= ARMV8_PMU_PMCR_LP;
+ 
++	if (sysctl_export_pmu_events)
++		pmcr |= ARMV8_PMU_PMCR_X;
++
+ 	armv8pmu_pmcr_write(pmcr);
+ }
+ 
+@@ -1221,6 +1225,15 @@ static struct ctl_table armv8_pmu_sysctl_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
+ 	},
++	{
++		.procname       = "export_pmu_events",
++		.data           = &sysctl_export_pmu_events,
++		.maxlen         = sizeof(unsigned int),
++		.mode           = 0644,
++		.proc_handler   = proc_dointvec_minmax,
++		.extra1         = SYSCTL_ZERO,
++		.extra2         = SYSCTL_ONE,
++	},
+ 	{ }
+ };
+ 
+-- 
+2.7.4
+
