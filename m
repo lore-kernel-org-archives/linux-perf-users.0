@@ -2,56 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D0EC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 13:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC77C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 13:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239478AbiFIN3l (ORCPT
+        id S1343660AbiFINlq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 09:29:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42170 "EHLO
+        Thu, 9 Jun 2022 09:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234782AbiFIN3k (ORCPT
+        with ESMTP id S1343898AbiFINln (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 09:29:40 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE92FC80B
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 06:29:38 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id m32-20020a05600c3b2000b0039756bb41f2so12597656wms.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 06:29:38 -0700 (PDT)
+        Thu, 9 Jun 2022 09:41:43 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 161812250A
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 06:41:40 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id b7so13672844ljr.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 06:41:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rjMuIRUcb0cPQvXILDOIo+coVEcP/6ZTYygCO+zLwZI=;
-        b=llsDjVZg+rOdu3CGzqkX32eaAVwdPsiU1VS8nnyvNRDE8sSblRFHTicWYkcfv1MHXu
-         MdioVqNNs5cZ6VFBcG/BTh+RYCpb4wW/GsS0eXUaIy0clqjbpJSnR1ulbw/7zoIenBq5
-         GrUbInpSMPpuI1FYSkYzT523tdWtskkHSqijsxWHddPhy9Ua2EDYEGOq/3ZraWyloBKi
-         IYBEdx9YQRGK140dTUf06Mckk0WfQToxgONPNEvHd6As8zdXa28IdWZ5JxDGVqVLQktY
-         jr1QPxVBWK0Kbx7LIDEtxfJ3aXBUuioiTK9kFPOUNXroue4i/t/PAPRtgUMUE5v9JXNw
-         txhg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PF28ZnQLVsGI2i7ul/dfgqup/8C1a0mc9TiBXmcosYU=;
+        b=OAxGTJUe+XEVGmasomKjfTPF19BOrYj/fEHmMcR16tXmje2L2+5aMxRpp7TxlZz6+J
+         yvlRV1lYkm0XlpTf4tltOaog/KE+I4t+0hk2WrYk3ACPv+Y7oF+vJN9L5yagoTRSCrS/
+         rworsIcSpHAopjkAjIDAp6gLDlsgNfeV+NvL3Db5jTsQRr/8ODDXA4w0x3waW2l6VyvY
+         QuVdTcP44qHWxvGI92Tw8KlDERHWKynUAg3xzD4PoY+1SZM+nkIHAMReHJqIYi8fyhAZ
+         GYTE2tO9RGEqmtMrpDG8JYNiKjyopdZujiWnnYuw9ckMZ1u0SBLz5YG8HyowXxR6qw40
+         Er/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rjMuIRUcb0cPQvXILDOIo+coVEcP/6ZTYygCO+zLwZI=;
-        b=NZWzBSeBVmVc6bm6DDwNzYsFb83MQK8fjVz6z7zLhel3EJ6TyNX/x2kMWCU83Cfkxl
-         0RKH2Zy3scfWji61l3ioHQnX11lCXYXtNYSwR9oN7XXOI2r98GKjoS4d+fX/662OJorB
-         kdE0Ubis9V7mGNCBW54BP6mB8eZrB9nqzgiR/wRJBkVh7fDCmaiziHYb8JGymBvqdX/b
-         wETfZHBuLZu/eWq2w4c2ALpLvPuFKu9LIoBtxm37gU1v6V7APgzkxifxPRTsca1IDXSX
-         Hp6DnGel43hl3J2VNl1aOVtyzV0RMkuhuJkRftz6L+ag5qVXHv2Jft+lNWt9SYH04gqI
-         jgwA==
-X-Gm-Message-State: AOAM532kBqpz4SU8Pf4mavaNODVsge6o9gMdFhO7ayidN2G9aNuCMKTA
-        RjasPedZCDdQr65edK3IC48fDQ==
-X-Google-Smtp-Source: ABdhPJyZ8W/NkcPXAC3pwT4egxuS2urSSW5AltvpWbSolwLujgLmjNCc1uFC8yzG/FYW9KPUrP/oOA==
-X-Received: by 2002:a7b:c057:0:b0:39c:4579:42e1 with SMTP id u23-20020a7bc057000000b0039c457942e1mr3381516wmc.102.1654781377037;
-        Thu, 09 Jun 2022 06:29:37 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:9c:201:dcf:e5ba:10a5:1ea5])
-        by smtp.gmail.com with ESMTPSA id bg20-20020a05600c3c9400b0039c15861001sm26391486wmb.21.2022.06.09.06.29.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jun 2022 06:29:36 -0700 (PDT)
-Date:   Thu, 9 Jun 2022 15:29:29 +0200
-From:   Marco Elver <elver@google.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PF28ZnQLVsGI2i7ul/dfgqup/8C1a0mc9TiBXmcosYU=;
+        b=bRD9faZi0rpzbu/i15ElTdCQqx4WtI+mxZPTaXPIlF2nB5p6L/nnJFItkWi+YDwHCH
+         CEZTinKi01zuoAWa23If/rE+S2+JgWNmA/YH4w8slfzFhzrGQVDKy8trF1G+mOFhbK5U
+         UauaKoqehPGv51WXHBo5l4Cs456LKuskTxmTXhf7fir7DWsJ+M/9p+RlHRy5TMvHBdct
+         +vLrXDSicT6MTOwT9UGvBJTbFecc5KKhaxdMfGxuEowBc3qfvph/hrdACCI25CDQp1lT
+         4znDDfG3Qc6DAiEtaUdbpyy5OxfPkVqy2z+Vc98d/OauMsTz9xeW4LbPWfLtOHwHCJfm
+         196Q==
+X-Gm-Message-State: AOAM533qLdIolBV0ejquvhzcoO2GaDXntj8FolFO4JeJqLgi4vzr2nzn
+        4ttPHPlV00gvPeo+18ZN7jIA5CSIXr/6hDmkoz5EPA==
+X-Google-Smtp-Source: ABdhPJxKwbLXuKSnIJ3Phiqmieh/Wr9lduzAjt/Ld23SCuasFCRov3KdDNmTk8meN2KOewMYkB2L7tKO5zGU0Tha5P4=
+X-Received: by 2002:a2e:b0fc:0:b0:255:6f92:f9d4 with SMTP id
+ h28-20020a2eb0fc000000b002556f92f9d4mr22136645ljl.92.1654782098160; Thu, 09
+ Jun 2022 06:41:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-6-elver@google.com>
+ <CACT4Y+Zd0Zd_66DZ-f2HG4tR6ZdraFe9b4iEBJmG9p72+7RMWQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+Zd0Zd_66DZ-f2HG4tR6ZdraFe9b4iEBJmG9p72+7RMWQ@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 9 Jun 2022 15:41:26 +0200
+Message-ID: <CACT4Y+appPi5YAdKFB-2caO6xkg89FmV1_4532u7Jx_5CAX9xw@mail.gmail.com>
+Subject: Re: [PATCH 5/8] perf/hw_breakpoint: Remove useless code related to
+ flexible breakpoints
+To:     Marco Elver <elver@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Frederic Weisbecker <frederic@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
@@ -64,136 +68,94 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         linux-perf-users@vger.kernel.org, x86@kernel.org,
         linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/8] perf/hw_breakpoint: Reduce contention with large
- number of tasks
-Message-ID: <YqH1uUtWHkFr/jDY@elver.google.com>
-References: <20220609113046.780504-1-elver@google.com>
- <20220609113046.780504-7-elver@google.com>
- <CACT4Y+aHZ4RTsz_SY=U5NKRWR1M4f0cy1WdepJyBGkbYy7_=TA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+aHZ4RTsz_SY=U5NKRWR1M4f0cy1WdepJyBGkbYy7_=TA@mail.gmail.com>
-User-Agent: Mutt/2.1.4 (2021-12-11)
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 09, 2022 at 03:03PM +0200, Dmitry Vyukov wrote:
-[...]
-> > -/* Serialize accesses to the above constraints */
-> > -static DEFINE_MUTEX(nr_bp_mutex);
-> > +/*
-> > + * Synchronizes accesses to the per-CPU constraints; users of data in bp_cpuinfo
-> > + * must acquire bp_cpuinfo_lock as writer to get a stable snapshot of all CPUs'
-> > + * constraints. Modifications without use may only acquire bp_cpuinfo_lock as a
-> > + * reader, but must otherwise ensure modifications are never lost.
-> > + */
-> 
-> I can't understand this comment.
-> Modifications need to acquire in read mode, while only users must
-> acquire in write mode. Shouldn't it be the other way around? What is
-> "Modifications without use"?
-
-Right, maybe this comment needs tweaking.
-
-The main rules are -- the obvious ones:
-
-	 - plain reads are ok with just a read-lock (target is task,
-	   reading 'cpu_pinned');
-
-	 - plain writes need a write-lock (target is CPU, writing
-	   'cpu_pinned');
-
-the not so obvious one:
-
-	- "modification without use" are the increment/decrement of
-	  tsk_pinned done if the target is a task; in this case, we can
-	  happily allow concurrent _atomic_ increments/decrements from
-	  different tasks as long as there is no "use" i.e. read the
-	  value and check it to make a decision if there is space or not
-	  (this is only done by CPU targets).
-
-So the main idea is that the rwlock when held as a reader permits these
-"modifications without use" concurrently by task targets, but will block
-a CPU target wishing to get a stable snapshot until that acquires the
-rwlock as a writer.
-
-The modifications done by task targets are done on atomic variables, so
-we never loose any increments/decrements, but while these modifications
-are going on, the global view of tsk_pinned may be inconsistent.
-However, we know that once a CPU target acquires the rwlock as a writer,
-there will be no more "readers" -- or rather any task targets that can
-update tsk_pinned concurrently -- and therefore tsk_pinned must be
-stable once we acquire the rwlock as a writer.
-
-I'll have to think some more how to best update the comment...
-
-> > +static DEFINE_RWLOCK(bp_cpuinfo_lock);
-> > +
-> > +/*
-> > + * Synchronizes accesses to the per-task breakpoint list in task_bps_ht. Since
-> > + * rhltable synchronizes concurrent insertions/deletions, independent tasks may
-> > + * insert/delete concurrently; therefore, a mutex per task would be sufficient.
-> > + *
-> > + * To avoid bloating task_struct with infrequently used data, use a sharded
-> > + * mutex that scales with number of CPUs.
-> > + */
-> > +static DEFINE_PER_CPU(struct mutex, task_sharded_mtx);
-> > +
-> > +static struct mutex *get_task_sharded_mtx(struct perf_event *bp)
-> > +{
-> > +       int shard;
-> > +
-> > +       if (!bp->hw.target)
-> > +               return NULL;
-> > +
-> > +       /*
-> > +        * Compute a valid shard index into per-CPU data.
-> > +        */
-> > +       shard = task_pid_nr(bp->hw.target) % nr_cpu_ids;
-> > +       shard = cpumask_next(shard - 1, cpu_possible_mask);
-> > +       if (shard >= nr_cpu_ids)
-> > +               shard = cpumask_first(cpu_possible_mask);
-> > +
-> > +       return per_cpu_ptr(&task_sharded_mtx, shard);
-> > +}
-> > +
-> > +static struct mutex *bp_constraints_lock(struct perf_event *bp)
-> > +{
-> > +       struct mutex *mtx = get_task_sharded_mtx(bp);
-> > +
-> > +       if (mtx) {
-> > +               mutex_lock(mtx);
-> > +               read_lock(&bp_cpuinfo_lock);
-> 
-> Is NR_CPUS == 1 case still important to optimize? I guess with small
-> VMs it may be important again.
-> If so, we could just write-lock bp_cpuinfo_lock always if NR_CPUS == 1.
-
-Not sure, I guess it's easy to add the check for NR_CPUS==1.
-
-[...]
-> > @@ -397,12 +497,11 @@ static void __release_bp_slot(struct perf_event *bp, u64 bp_type)
+On Thu, 9 Jun 2022 at 14:04, Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Thu, 9 Jun 2022 at 13:31, Marco Elver <elver@google.com> wrote:
 > >
-> >  void release_bp_slot(struct perf_event *bp)
-> >  {
-> > -       mutex_lock(&nr_bp_mutex);
-> > +       struct mutex *mtx = bp_constraints_lock(bp);
+> > Flexible breakpoints have never been implemented, with
+> > bp_cpuinfo::flexible always being 0. Unfortunately, they still occupy 4
+> > bytes in each bp_cpuinfo and bp_busy_slots, as well as computing the max
+> > flexible count in fetch_bp_busy_slots().
 > >
-> >         arch_unregister_hw_breakpoint(bp);
-> 
-> If I understand this correctly, this can weaken protection for
-> arch_unregister_hw_breakpoint() and __modify_bp_slot(). Previously
-> they were globally serialized, but now several calls can run in
-> parallel. Is it OK?
+> > This again causes suboptimal code generation, when we always know that
+> > `!!slots.flexible` will be 0.
+> >
+> > Just get rid of the flexible "placeholder" and remove all real code
+> > related to it. Make a note in the comment related to the constraints
+> > algorithm but don't remove them from the algorithm, so that if in future
+> > flexible breakpoints need supporting, it should be trivial to revive
+> > them (along with reverting this change).
+> >
+> > Signed-off-by: Marco Elver <elver@google.com>
+>
+> Was added in 2009.
+>
+> Acked-by: Dmitry Vyukov <dvyukov@google.com>
+>
+> > ---
+> >  kernel/events/hw_breakpoint.c | 12 +++---------
+> >  1 file changed, 3 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+> > index 5f40c8dfa042..afe0a6007e96 100644
+> > --- a/kernel/events/hw_breakpoint.c
+> > +++ b/kernel/events/hw_breakpoint.c
+> > @@ -46,8 +46,6 @@ struct bp_cpuinfo {
+> >  #else
+> >         unsigned int    *tsk_pinned;
+> >  #endif
+> > -       /* Number of non-pinned cpu/task breakpoints in a cpu */
+> > -       unsigned int    flexible; /* XXX: placeholder, see fetch_this_slot() */
+> >  };
+> >
+> >  static DEFINE_PER_CPU(struct bp_cpuinfo, bp_cpuinfo[TYPE_MAX]);
+> > @@ -71,7 +69,6 @@ static bool constraints_initialized __ro_after_init;
+> >  /* Gather the number of total pinned and un-pinned bp in a cpuset */
+> >  struct bp_busy_slots {
 
-__modify_bp_slot() just calls __release_bp_slot() and
-__reserve_bp_slot() which is related to constraints accounting, and is
-all internal to hw_breakpoint.
+Do we also want to remove this struct altogether? Now it becomes just
+an int counter.
 
-Only ppc overrides some of the sea arch_ functions. In arch/powerpc:
-arch_unregister_hw_breakpoint() looks like it only accesses
-bp->ctx->task, so that looks ok; however, looks like
-arch_release_bp_slot() might want its own lock because it mutates a
-list, but that lock wants to be in powerpc code.
+> >         unsigned int pinned;
+> > -       unsigned int flexible;
+> >  };
+> >
+> >  /* Serialize accesses to the above constraints */
+> > @@ -213,10 +210,6 @@ fetch_bp_busy_slots(struct bp_busy_slots *slots, struct perf_event *bp,
+> >
+> >                 if (nr > slots->pinned)
+> >                         slots->pinned = nr;
+> > -
+> > -               nr = info->flexible;
+> > -               if (nr > slots->flexible)
+> > -                       slots->flexible = nr;
+> >         }
+> >  }
+> >
+> > @@ -299,7 +292,8 @@ __weak void arch_unregister_hw_breakpoint(struct perf_event *bp)
+> >  }
+> >
+> >  /*
+> > - * Constraints to check before allowing this new breakpoint counter:
+> > + * Constraints to check before allowing this new breakpoint counter. Note that
+> > + * flexible breakpoints are currently unsupported -- see fetch_this_slot().
+> >   *
+> >   *  == Non-pinned counter == (Considered as pinned for now)
+> >   *
+> > @@ -366,7 +360,7 @@ static int __reserve_bp_slot(struct perf_event *bp, u64 bp_type)
+> >         fetch_this_slot(&slots, weight);
+> >
+> >         /* Flexible counters need to keep at least one slot */
+> > -       if (slots.pinned + (!!slots.flexible) > hw_breakpoint_slots_cached(type))
+> > +       if (slots.pinned > hw_breakpoint_slots_cached(type))
+> >                 return -ENOSPC;
+> >
+> >         ret = arch_reserve_bp_slot(bp);
+> > --
+> > 2.36.1.255.ge46751e96f-goog
+> >
