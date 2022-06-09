@@ -2,119 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5E2C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 13:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44682C43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 13:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242294AbiFINF4 (ORCPT
+        id S1343669AbiFINGi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 09:05:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51894 "EHLO
+        Thu, 9 Jun 2022 09:06:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238960AbiFINFz (ORCPT
+        with ESMTP id S236268AbiFINGc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 09:05:55 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 241C72A274
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 06:05:54 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id c2so18466275lfk.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 06:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xOQI9nYJjsWx7RUNIP4XR5dRmZHTAqrUHXmWvjF6nBY=;
-        b=X7FFvILgfoQbhrO16Zdxh9SVLvxEy8XxHsClf1zUJteoAVjCcWwi/RF6y3u4H8+0Za
-         DHpnXD3XLZWCkSwQbpXBQuWjcZs+yIeVMe/o8FcP4I4JeO5gvOU627r0k+g9afDZ6ix/
-         1OxHn/GxfQ5hBL1SVgRI/msxQdAL2zBCOWjMRgPzbk2JC+M8drt0uevaSbVbi8y1jM2g
-         DLcEKYb2VV4E95XAjOqt8+Sed/XY6Ou2af/ft2KCmmolakWr/jMd0CE4Z/9vm4z2B59u
-         FW7KmqiYXblPyAIdl+FYoOBANpgcqMqQw7CzXhxATrZLUL0VrGGWg8vcNA+fFnoLlJ9M
-         H42w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xOQI9nYJjsWx7RUNIP4XR5dRmZHTAqrUHXmWvjF6nBY=;
-        b=rc2WiqtGy0JWhegLiV1fyZjPAMWChXatBCUopdA5vxI8nYFSRrG8EN2XVJAG98+/Fr
-         oarmiig5/rlBAkZ+9DvHXFl43+6jFq3H/PM93orF/GdcBLe40tFTrKgYpirhxQ6+yYdS
-         Dgv5itqgWNx8LydLUP6bUdJ9EQlN903gogxYIPKRReneRkFgjQwgc/Xp9CIy+nF50klE
-         t/Cjv/GDQVY7FRqAPN4aShYDmCLgQmxuDxbS7tlj/weEOr2Kd1aKoWzV9DGzim0cMgbL
-         FFxJwhzmNwG9LkSRmeacX7nyVGUi5kSIoCOHW2WbZNkc8RgIbxWX+rhj2Udv02ShKcBP
-         u7gg==
-X-Gm-Message-State: AOAM532d30R5YosPZ/JBA4SOfXHb0zXO6AG+ehVLHIcolagorsZya0IG
-        Rt6W60CGiImeOHNpsdxHULVWK28bFx3IPlLrF/XnXIlD5ZFR4A==
-X-Google-Smtp-Source: ABdhPJxkLn5hvttF5zsF9zgm1UVZ5x24Zl1UOxfqmTsWE0EAiXcf3Tk1+ZeyugTCS9QDYWM3Dh9NWewl2HiF59iUyg8=
-X-Received: by 2002:ac2:4f11:0:b0:479:3554:79d with SMTP id
- k17-20020ac24f11000000b004793554079dmr15389711lfr.417.1654779952199; Thu, 09
- Jun 2022 06:05:52 -0700 (PDT)
+        Thu, 9 Jun 2022 09:06:32 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724408215A;
+        Thu,  9 Jun 2022 06:06:30 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id EE7B921F31;
+        Thu,  9 Jun 2022 13:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1654779989; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fQ7/fX+AXX7RSe4KqEkRum0uc4vC19BTUP6nq2wTOec=;
+        b=o28ZaXYpRsbDNeH7DdY3dJH3Fnc3dlxZT8L+x/2aFmo5tE4BAEDzQGW4+i3DDhNGrDHekt
+        G23+f/oOyTepRO03yIh1gixSASehX2C07pg1fm0i3R3KDgn22PhYw8V9jvCq8nE2YIN+/O
+        p3FQSqV1HR0kVCZZzDry3RvUltYRjYI=
+Received: from suse.cz (unknown [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id CEE382C141;
+        Thu,  9 Jun 2022 13:06:27 +0000 (UTC)
+Date:   Thu, 9 Jun 2022 15:06:00 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     ink@jurassic.park.msu.ru, mattst88@gmail.com, vgupta@kernel.org,
+        linux@armlinux.org.uk, ulli.kroll@googlemail.com,
+        linus.walleij@linaro.org, shawnguo@kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
+        khilman@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
+        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, James.Bottomley@hansenpartnership.com,
+        deller@gmx.de, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 24/36] printk: Remove trace_.*_rcuidle() usage
+Message-ID: <YqHwOFg/WlMqe8/Z@alley>
+References: <20220608142723.103523089@infradead.org>
+ <20220608144517.444659212@infradead.org>
+ <YqG6URbihTNCk9YR@alley>
+ <YqHFHB6qqv5wiR8t@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-2-elver@google.com>
- <CACT4Y+ZfjLCj=wvPFhyUQLwxmcOXuK9G_a53SB=-niySExQdew@mail.gmail.com> <YqHtLvdLvdM5Lmdh@elver.google.com>
-In-Reply-To: <YqHtLvdLvdM5Lmdh@elver.google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Jun 2022 15:05:40 +0200
-Message-ID: <CACT4Y+YWrzpdTnbcvhBb3GfZ-0GmCZuvErFZbh5abNHAV+7WZQ@mail.gmail.com>
-Subject: Re: [PATCH 1/8] perf/hw_breakpoint: Optimize list of per-task breakpoints
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org,
-        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YqHFHB6qqv5wiR8t@worktop.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 9 Jun 2022 at 14:53, Marco Elver <elver@google.com> wrote:
->
-> On Thu, Jun 09, 2022 at 02:30PM +0200, Dmitry Vyukov wrote:
-> [...]
-> > > +       rcu_read_lock();
-> >
-> > Why do we need rcu_read_lock() here?
-> > The patch does not change anything with respect to locking, so all
-> > accesses to the container should still be protected by nr_bp_mutex.
-> > Similarly for the rcu variant of for_each below.
-> [...]
-> > > +       head = rhltable_lookup(&task_bps_ht, &bp->hw.target, task_bps_ht_params);
-> > > +       if (!head)
-> > > +               goto out;
-> > > +
-> > > +       rhl_for_each_entry_rcu(iter, pos, head, hw.bp_list) {
->
-> It's part of rhashtable's interface requirements:
->
->         /**
->          * rhltable_lookup - search hash list table
->          * @hlt:        hash table
->          * @key:        the pointer to the key
->          * @params:     hash table parameters
->          *
->          * Computes the hash value for the key and traverses the bucket chain looking
->          * for a entry with an identical key.  All matching entries are returned
->          * in a list.
->          *
->          * This must only be called under the RCU read lock.
->          *
->          * Returns the list of entries that match the given key.
->          */
->
-> Beyond that, even though there might not appear to be any concurrent
-> rhashtable modifications, it'll be allowed in patch 6/8. Furthermore,
-> rhashtable actually does concurrent background compactions since I
-> selected 'automatic_shrinking = true' (so we don't leak tons of memory
-> after starting and killing those 1000s of tasks) -- there's this
-> call_rcu() in lib/rhashtable.c that looks like that's when it's used.
-> This work is done in a deferred work by rht_deferred_worker().
+On Thu 2022-06-09 12:02:04, Peter Zijlstra wrote:
+> On Thu, Jun 09, 2022 at 11:16:46AM +0200, Petr Mladek wrote:
+> > On Wed 2022-06-08 16:27:47, Peter Zijlstra wrote:
+> > > The problem, per commit fc98c3c8c9dc ("printk: use rcuidle console
+> > > tracepoint"), was printk usage from the cpuidle path where RCU was
+> > > already disabled.
+> > > 
+> > Does this "prevent" calling printk() a safe way in code with
+> > RCU disabled?
+> 
+> On x86_64, yes. Other architectures, less so.
+> 
+> Specifically, the objtool noinstr validation pass will warn at build
+> time (DEBUG_ENTRY=y) if any noinstr/cpuidle code does a call to
+> non-vetted code like printk().
+> 
+> At the same time; there's a few hacks that allow WARN to work, but
+> mostly if you hit WARN in entry/noinstr you get to keep the pieces in
+> any case.
+> 
+> On other architecture we'll need to rely on runtime coverage with
+> PROVE_RCU. That is, if a splat like in the above mentioned commit
+> happens again, we'll need to fix it by adjusting the callchain, not by
+> mucking about with RCU state.
 
+Makes sense. Feel free to use for this patch:
 
-I see. Thanks.
+Acked-by: Petr Mladek <pmladek@suse.com>
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> > Therefore if this patch allows to remove some tricky tracing
+> > code then it might be worth it. But if trace_console_rcuidle()
+> > variant is still going to be available then I would keep using it.
+> 
+> My ultimate goal is to delete trace_.*_rcuidle() and RCU_NONIDLE()
+> entirely. We're close, but not quite there yet.
+
+I keep my fingers crossed.
+
+Best Regards,
+Petr
