@@ -2,179 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BC1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 10:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 887EAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 11:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243149AbiFIKmH (ORCPT
+        id S237047AbiFILbB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 06:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
+        Thu, 9 Jun 2022 07:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243427AbiFIKlq (ORCPT
+        with ESMTP id S235304AbiFILa7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 06:41:46 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6202C265208;
-        Thu,  9 Jun 2022 03:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654771285; x=1686307285;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/rZ/cmVg1xRRULer/B8wH9YfqMjm5s1dbHpQmBQNiu0=;
-  b=J2/fM1TJ//Zrh5vK5JO9lvzKXuzurYs6AlDWv7c9luKXwp3y4oS6ByQ0
-   NadDn1p8hg6JLwn5zCZpjOGGJoUhXZhVrG2sZ34TW874hJt67kkd0vT7+
-   Ck2tpy/RpIXtZLmHSnhwDaPxggSdkvxdHP3jvbT9DN2xCvWi2i/RfwtJc
-   Yr3bMQryrZmkkXeVnQdIhTFAMwLID2R33VyE/cmKvDk/yqEdrFMryxFn2
-   NjW0f/qumENv1D28vl+ogM+B3wMl4JreBOnqO/ZFOLXHh237vmaFXSWaX
-   wHlkI0FwxXQ7wyJ31avgr4l7FsBVWSipoURYzfvoL1rGWSvVgkZuxkh9U
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10372"; a="302602657"
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="302602657"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 03:41:24 -0700
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="637407833"
-Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.255.28.81]) ([10.255.28.81])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 03:41:22 -0700
-Message-ID: <b6a49ed6-612f-5f53-a08c-c35bae52cfe3@linux.intel.com>
-Date:   Thu, 9 Jun 2022 18:41:19 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 5/5] perf stat: Add topdown metrics in the default perf
- stat on the hybrid machine
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, alexander.shishkin@intel.com,
+        Thu, 9 Jun 2022 07:30:59 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6508939A648
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 04:30:58 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-31382419c22so27105827b3.18
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 04:30:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=jgek/xbFyP6k/AwYv1XTJdXWbQnAo26L2HOt5DoBXsU=;
+        b=Fy1H55PfDYCeMv8rBas4mMZS/7wfUvzeY4alUyUvMTdSV3m3MAHIgl2lhFhM4iqz3P
+         YnaeOG+42f2NjxIhArYfXRZSxZonJWpaECkFLRCvTg1F76NCfywWgev/wqpvNYq4Hhwo
+         AdtkN0B+vIuRGRU/wnQialrAQTiWXlVD/60uOsII0WFLwboa5gkk6vMW4GvQjOMP5i7E
+         gA63ioD8KVexeU0PApbtl5WMaQ4uoZ82otDrNIf4MSwUeY1q0JhvWuBFiDOYPjMHZlSQ
+         rKxrnJrlJigxt/xzjjLJLCi+IOankjnEysaeMJ17SLfYsH3lqjGVKvcnmM7DtTaIhjo7
+         46AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=jgek/xbFyP6k/AwYv1XTJdXWbQnAo26L2HOt5DoBXsU=;
+        b=jI2lcHprJ1tqXOiu1UTHtknCxdgTzzdwdA8xa5ZpzuAJxoUT0nEAwYf97/8nZHIj1V
+         ZKFA9PlgXFkFZtSEC7IphrU/pzl6Qv9KBzwFRFqgWgREXLQrzkzxi39XGfID8JTZwM9h
+         NaDGH4m2l4OPNcYaRJGLuLz2VfuMckgG+uLZXTAS9nJvwWZsAQ8f7LUpS3xW6zRbR/P6
+         NSNWdHLqenvyUbHX585uX+jvgg18tP5kic9OGkm3tXqRsQ21TIPhVhna00L/SlfFGMUU
+         Z/Yi5wYscX6BLq38jVEGcfySXtcp5xiDWZCL58CF1kuZ81Z/+pO83LBprI1MUV1sWMlU
+         g+Og==
+X-Gm-Message-State: AOAM531go08ULHICHe46C92oOPGfO7/WM0+fBZC8+XtR0Qu1ij42gUP8
+        jvplnIZZzKowkCfblRwqIxFeBVeS8w==
+X-Google-Smtp-Source: ABdhPJwXl9EhYDUHMoRUsonHSMafUY49HAbhznQ0um7Z0gJyfC6OvtmdmrnCE0gDShvyyDzCT8kDCUNF2w==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:dcf:e5ba:10a5:1ea5])
+ (user=elver job=sendgmr) by 2002:a05:6902:102c:b0:663:32b8:4b24 with SMTP id
+ x12-20020a056902102c00b0066332b84b24mr30477830ybt.1.1654774257606; Thu, 09
+ Jun 2022 04:30:57 -0700 (PDT)
+Date:   Thu,  9 Jun 2022 13:30:38 +0200
+Message-Id: <20220609113046.780504-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
+Subject: [PATCH 0/8] perf/hw_breakpoint: Optimize for thousands of tasks
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>
-References: <20220607013315.1956301-1-zhengjun.xing@linux.intel.com>
- <20220607013315.1956301-6-zhengjun.xing@linux.intel.com>
- <CAM9d7ciZAZzsA=cDojZp8H5tTd-F7NC=OnTMRg3S3cdjCW0+eA@mail.gmail.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <CAM9d7ciZAZzsA=cDojZp8H5tTd-F7NC=OnTMRg3S3cdjCW0+eA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Namhyung Kim <namhyung@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The hw_breakpoint subsystem's code has seen little change in over 10
+years. In that time, systems with >100s of CPUs have become common,
+along with improvements to the perf subsystem: using breakpoints on
+thousands of concurrent tasks should be a supported usecase.
 
+The breakpoint constraints accounting algorithm is the major bottleneck
+in doing so:
 
-On 6/9/2022 8:09 AM, Namhyung Kim wrote:
-> On Tue, Jun 7, 2022 at 1:08 AM <zhengjun.xing@linux.intel.com> wrote:
->>
->> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->>
->> Topdown metrics are missed in the default perf stat on the hybrid machine,
->> add Topdown metrics in default perf stat for hybrid systems.
->>
->> Currently, we support the perf metrics Topdown for the p-core PMU in the
->> perf stat default, the perf metrics Topdown support for e-core PMU will be
->> implemented later separately. Refactor the code adds two x86 specific
->> functions. Widen the size of the event name column by 7 chars, so that all
->> metrics after the "#" become aligned again.
->>
->> The perf metrics topdown feature is supported on the cpu_core of ADL. The
->> dedicated perf metrics counter and the fixed counter 3 are used for the
->> topdown events. Adding the topdown metrics doesn't trigger multiplexing.
->>
->> Before:
->>
->>   # ./perf  stat  -a true
->>
->>   Performance counter stats for 'system wide':
->>
->>               53.70 msec cpu-clock                 #   25.736 CPUs utilized
->>                  80      context-switches          #    1.490 K/sec
->>                  24      cpu-migrations            #  446.951 /sec
->>                  52      page-faults               #  968.394 /sec
->>           2,788,555      cpu_core/cycles/          #   51.931 M/sec
->>             851,129      cpu_atom/cycles/          #   15.851 M/sec
->>           2,974,030      cpu_core/instructions/    #   55.385 M/sec
->>             416,919      cpu_atom/instructions/    #    7.764 M/sec
->>             586,136      cpu_core/branches/        #   10.916 M/sec
->>              79,872      cpu_atom/branches/        #    1.487 M/sec
->>              14,220      cpu_core/branch-misses/   #  264.819 K/sec
->>               7,691      cpu_atom/branch-misses/   #  143.229 K/sec
->>
->>         0.002086438 seconds time elapsed
->>
->> After:
->>
->>   # ./perf stat  -a true
->>
->>   Performance counter stats for 'system wide':
->>
->>               61.39 msec cpu-clock                        #   24.874 CPUs utilized
->>                  76      context-switches                 #    1.238 K/sec
->>                  24      cpu-migrations                   #  390.968 /sec
->>                  52      page-faults                      #  847.097 /sec
->>           2,753,695      cpu_core/cycles/                 #   44.859 M/sec
->>             903,899      cpu_atom/cycles/                 #   14.725 M/sec
->>           2,927,529      cpu_core/instructions/           #   47.690 M/sec
->>             428,498      cpu_atom/instructions/           #    6.980 M/sec
->>             581,299      cpu_core/branches/               #    9.470 M/sec
->>              83,409      cpu_atom/branches/               #    1.359 M/sec
->>              13,641      cpu_core/branch-misses/          #  222.216 K/sec
->>               8,008      cpu_atom/branch-misses/          #  130.453 K/sec
->>          14,761,308      cpu_core/slots/                  #  240.466 M/sec
->>           3,288,625      cpu_core/topdown-retiring/       #     22.3% retiring
->>           1,323,323      cpu_core/topdown-bad-spec/       #      9.0% bad speculation
->>           5,477,470      cpu_core/topdown-fe-bound/       #     37.1% frontend bound
->>           4,679,199      cpu_core/topdown-be-bound/       #     31.7% backend bound
->>             646,194      cpu_core/topdown-heavy-ops/      #      4.4% heavy operations       #     17.9% light operations
->>           1,244,999      cpu_core/topdown-br-mispredict/  #      8.4% branch mispredict      #      0.5% machine clears
->>           3,891,800      cpu_core/topdown-fetch-lat/      #     26.4% fetch latency          #     10.7% fetch bandwidth
->>           1,879,034      cpu_core/topdown-mem-bound/      #     12.7% memory bound           #     19.0% Core bound
->>
->>         0.002467839 seconds time elapsed
->>
->> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
-> [SNIP]
->> +const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn)
->> +{
->> +       const char *pmu_name = "cpu";
->> +
->> +       if (perf_pmu__has_hybrid()) {
->> +               if (!evlist->hybrid_pmu_name) {
->> +                       if (warn)
->> +                               pr_warning
->> +                                   ("WARNING: default to use cpu_core topdown events\n");
->> +                       evlist->hybrid_pmu_name =
->> +                           perf_pmu__hybrid_type_to_pmu("core");
-> 
-> This doesn't look good.  Please consider reducing the
-> indent level like returning early as
-> 
->      if (!perf_pmu__has_hybrid())
->          return "cpu";
-> 
->      if (!evlist->hybrid_pmu_name) {
->          ...
-> 
-Thanks for the comments, I will update it in the next version.
-> Thanks,
-> Namhyung
-> 
-> 
->> +               }
->> +
->> +               pmu_name = evlist->hybrid_pmu_name;
->> +       }
->> +       return pmu_name;
->> +}
+  1. task_bp_pinned() has been O(#tasks), and called twice for each CPU.
+
+  2. Everything is serialized on a global mutex, 'nr_bp_mutex'.
+
+This series first optimizes task_bp_pinned() to only take O(1) on
+average, and then reworks synchronization to allow concurrency when
+checking and updating breakpoint constraints for tasks. Along the way,
+smaller micro-optimizations and cleanups are done as they seemed obvious
+when staring at the code (but likely insignificant).
+
+The result is (on a system with 256 CPUs) that we go from:
+
+ | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
+	 	[ ^ more aggressive benchmark parameters took too long ]
+ | # Running 'breakpoint/thread' benchmark:
+ | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
+ |      Total time: 236.418 [sec]
+ |
+ |   123134.794271 usecs/op
+ |  7880626.833333 usecs/op/cpu
+
+... to -- with all optimizations:
+
+ | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
+ | # Running 'breakpoint/thread' benchmark:
+ | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
+ |      Total time: 0.071 [sec]
+ |
+ |       37.134896 usecs/op
+ |     2376.633333 usecs/op/cpu
+
+On the used test system, that's an effective speedup of ~3315x per op.
+
+Which is close to the theoretical ideal performance through
+optimizations in hw_breakpoint.c -- for reference, constraints
+accounting disabled:
+
+ | perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
+ | # Running 'breakpoint/thread' benchmark:
+ | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
+ |      Total time: 0.067 [sec]
+ |
+ |       35.286458 usecs/op
+ |     2258.333333 usecs/op/cpu
+
+At this point, the current implementation is only ~5% slower than the
+theoretical ideal. However, given constraints accounting cannot
+realistically be disabled, this is likely as far as we can push it.
+
+Marco Elver (8):
+  perf/hw_breakpoint: Optimize list of per-task breakpoints
+  perf/hw_breakpoint: Mark data __ro_after_init
+  perf/hw_breakpoint: Optimize constant number of breakpoint slots
+  perf/hw_breakpoint: Make hw_breakpoint_weight() inlinable
+  perf/hw_breakpoint: Remove useless code related to flexible
+    breakpoints
+  perf/hw_breakpoint: Reduce contention with large number of tasks
+  perf/hw_breakpoint: Optimize task_bp_pinned() if CPU-independent
+  perf/hw_breakpoint: Clean up headers
+
+ arch/sh/include/asm/hw_breakpoint.h  |   5 +-
+ arch/x86/include/asm/hw_breakpoint.h |   5 +-
+ include/linux/hw_breakpoint.h        |   1 -
+ include/linux/perf_event.h           |   3 +-
+ kernel/events/hw_breakpoint.c        | 374 +++++++++++++++++++--------
+ 5 files changed, 276 insertions(+), 112 deletions(-)
 
 -- 
-Zhengjun Xing
+2.36.1.255.ge46751e96f-goog
