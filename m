@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A31C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 11:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DFDCCA473
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 11:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235304AbiFILbD (ORCPT
+        id S243687AbiFILbH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 07:31:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53580 "EHLO
+        Thu, 9 Jun 2022 07:31:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237108AbiFILbC (ORCPT
+        with ESMTP id S243710AbiFILbF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 07:31:02 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A4339C118
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 04:31:01 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id l3-20020a257003000000b00663dca68ed8so6752031ybc.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 04:31:01 -0700 (PDT)
+        Thu, 9 Jun 2022 07:31:05 -0400
+Received: from mail-ej1-x64a.google.com (mail-ej1-x64a.google.com [IPv6:2a00:1450:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9784839E4AA
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 04:31:04 -0700 (PDT)
+Received: by mail-ej1-x64a.google.com with SMTP id kf3-20020a17090776c300b0070d149300e9so8414971ejc.15
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 04:31:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=vZHbZ1oi5OSjCMeU4/rneix3L5XarWjinLy785pgor0=;
-        b=rJ6pp5xowS86Nd+/gorliRhFqUB5J+6mavLLuFiIdbWcQEhh6CT0t2PyhmpZ7XlHuV
-         fJEKAnXZefd7pn33hZxyEaRytMDaJ8OfYiSvmXWHsOaxoj8OsWOqbyD3u8Hqg4tEuyux
-         zsPtCAqnIgLyFyTYD2Fcn6nm+BwXQfHXoAuBsmLe34GoBAI4YIIqe45Sqp8NV28d0S+D
-         bltiNySjqDhkJoauzSpEgnSsKrVSYQZ0l486YY3xoXoI+wtdC1H3VBf2GCJqNQZFzdYt
-         v1IYGNzqEUhFbjtOBXkScAJ9ok5FhxPFKqh0SSpwI1MU6XFAngUa/85tiBwSpXZ6u1UF
-         7JFg==
+        bh=wnAKNm59aHUnnDDyhy7DQsgawVHUm92RhZIM8y499GE=;
+        b=WkMVlpXnnh1ry0CE/UDyLuTslVl/KojJzPPXdlolY5n5SJY+KHvM0s4QPsDw/ImjRh
+         H7xWhFfwc7tkUsc7mIagXa6nY0nBENo5RRHA3oEV6WH+2w2X3aHNZ85++S+erMQfqPkx
+         vd4C/Xgk6CSQCYAYghdKE47r5IhfLhU8b566MOuhEDdT63B/h20KCT5kzXAs8AkFhe54
+         tBIQJD1p2jmbzcuTVidce8EB/oRJaEyTbhMHSxR4ShMTEDvDheLB49ozQ9DEvxGI/ipf
+         EYERxwz18K4afh4hwu2YtxEc0JbjpJC0jcF2XZbqOM1AiaYhRREJCDp2LBgG31/PJS3n
+         AuLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=vZHbZ1oi5OSjCMeU4/rneix3L5XarWjinLy785pgor0=;
-        b=xEQvPYXfhWrZwz/QKv6OXWD9MvUq4KFD5hxaPUevzcAy9g9+lS1DpzU6wafsxjNhAJ
-         VIbICuFuvWAw0iX2gWrszlUh3AvgTo2rP3X6aZ7UpgCcnyRCt+wU22aR+pfehA8htu4y
-         IB3IRfl39CoIObxYOekUPqcBybqKf61S7yMq9t7ZR4FZO8V9OfAc4tGpTveNFwEabeLK
-         lnDQwueLu0VQ5sMhOY2NYRo/O7q0YwdT+UwBgpwk54fj5Z4OlMXxZo9PhKdKMISEWR+y
-         ZPM4PAXjSx/ch5wxPOKijf2RW1LcI86JciKdZwOxYkW81sSyxKbxEboFC5CO8wBx1a0I
-         t/Fw==
-X-Gm-Message-State: AOAM532L+mZvS/CbrAx6x2OS9G3z7kZdNwggvEdd8QVolmlMIK2WIKqb
-        DCmvJmwiKllp5Q752iOzRwsKjV9INA==
-X-Google-Smtp-Source: ABdhPJxnsh9anBT52y2AD1F6IjCtDlLW/bu8fyR/DC08IH7PUuKLO9593httKBZZ5/ksOups8ZfqirI4yw==
+        bh=wnAKNm59aHUnnDDyhy7DQsgawVHUm92RhZIM8y499GE=;
+        b=yIzEmadem9HGwiFkUz4c96Maekk/8pr7mW8zfDZ5vhaDZnSq14NgUl2CkeRhLJOk4v
+         DeBcc+KIW0XmY/x6xHDekuSZJle7cxOmk3wIVcD5DfiMEH0VXcF6AOgA+JY8wMSpfsxY
+         cLKUgwWE5n+oE/by41GxTskdziaf/30gG8DMGgEz7WSMUDJl0e40dapR5wHQCxnHvMTm
+         naSZ412QsfRvLLWvhn/oOB2cgOrrHiNfVbivMYEaMavv5I2ymmt55/Ln/4Pw83tF7xM7
+         b2tYMvqm9hlqinYWerVvCNehOdzdfM6cMfhDXlktQK9LCAWLLRv8zcQPSXL/pE49/C/v
+         yKyg==
+X-Gm-Message-State: AOAM532ZgDqEBkCgn/AuG6eYLE8t80g5ivC7+TJGNlZylFQszwjTiRLt
+        EpzwBnhJ1brFsq96lwpRzrZ76Wh52Q==
+X-Google-Smtp-Source: ABdhPJx73qjTeXCe10FaRzf/2yFdYj63Q0oseWtLrCparCyLdJilS10nXnGYV7x816rUyXswmnTt6sQNBQ==
 X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:dcf:e5ba:10a5:1ea5])
- (user=elver job=sendgmr) by 2002:a25:dccd:0:b0:65c:bc72:75bf with SMTP id
- y196-20020a25dccd000000b0065cbc7275bfmr37441073ybe.315.1654774260428; Thu, 09
- Jun 2022 04:31:00 -0700 (PDT)
-Date:   Thu,  9 Jun 2022 13:30:39 +0200
+ (user=elver job=sendgmr) by 2002:a05:6402:500b:b0:431:78d0:bf9d with SMTP id
+ p11-20020a056402500b00b0043178d0bf9dmr17528643eda.184.1654774262890; Thu, 09
+ Jun 2022 04:31:02 -0700 (PDT)
+Date:   Thu,  9 Jun 2022 13:30:40 +0200
 In-Reply-To: <20220609113046.780504-1-elver@google.com>
-Message-Id: <20220609113046.780504-2-elver@google.com>
+Message-Id: <20220609113046.780504-3-elver@google.com>
 Mime-Version: 1.0
 References: <20220609113046.780504-1-elver@google.com>
 X-Mailer: git-send-email 2.36.1.255.ge46751e96f-goog
-Subject: [PATCH 1/8] perf/hw_breakpoint: Optimize list of per-task breakpoints
+Subject: [PATCH 2/8] perf/hw_breakpoint: Mark data __ro_after_init
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>,
         Frederic Weisbecker <frederic@kernel.org>,
@@ -73,233 +73,46 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On a machine with 256 CPUs, running the recently added perf breakpoint
-benchmark results in:
+Mark read-only data after initialization as __ro_after_init.
 
- | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
- | # Running 'breakpoint/thread' benchmark:
- | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
- |      Total time: 236.418 [sec]
- |
- |   123134.794271 usecs/op
- |  7880626.833333 usecs/op/cpu
-
-The benchmark tests inherited breakpoint perf events across many
-threads.
-
-Looking at a perf profile, we can see that the majority of the time is
-spent in various hw_breakpoint.c functions, which execute within the
-'nr_bp_mutex' critical sections which then results in contention on that
-mutex as well:
-
-    37.27%  [kernel]       [k] osq_lock
-    34.92%  [kernel]       [k] mutex_spin_on_owner
-    12.15%  [kernel]       [k] toggle_bp_slot
-    11.90%  [kernel]       [k] __reserve_bp_slot
-
-The culprit here is task_bp_pinned(), which has a runtime complexity of
-O(#tasks) due to storing all task breakpoints in the same list and
-iterating through that list looking for a matching task. Clearly, this
-does not scale to thousands of tasks.
-
-While one option would be to make task_struct a breakpoint list node,
-this would only further bloat task_struct for infrequently used data.
-
-Instead, make use of the "rhashtable" variant "rhltable" which stores
-multiple items with the same key in a list. This results in average
-runtime complexity of O(1) for task_bp_pinned().
-
-With the optimization, the benchmark shows:
-
- | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
- | # Running 'breakpoint/thread' benchmark:
- | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
- |      Total time: 0.208 [sec]
- |
- |      108.422396 usecs/op
- |     6939.033333 usecs/op/cpu
-
-On this particular setup that's a speedup of ~1135x.
+While we are here, turn 'constraints_initialized' into a bool.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- include/linux/perf_event.h    |  3 +-
- kernel/events/hw_breakpoint.c | 56 ++++++++++++++++++++++-------------
- 2 files changed, 37 insertions(+), 22 deletions(-)
+ kernel/events/hw_breakpoint.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 01231f1d976c..e27360436dc6 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -36,6 +36,7 @@ struct perf_guest_info_callbacks {
- };
- 
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#include <linux/rhashtable-types.h>
- #include <asm/hw_breakpoint.h>
- #endif
- 
-@@ -178,7 +179,7 @@ struct hw_perf_event {
- 			 * creation and event initalization.
- 			 */
- 			struct arch_hw_breakpoint	info;
--			struct list_head		bp_list;
-+			struct rhlist_head		bp_list;
- 		};
- #endif
- 		struct { /* amd_iommu */
 diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index f32320ac02fd..25c94c6e918d 100644
+index 25c94c6e918d..1f718745d569 100644
 --- a/kernel/events/hw_breakpoint.c
 +++ b/kernel/events/hw_breakpoint.c
-@@ -28,7 +28,7 @@
- #include <linux/sched.h>
- #include <linux/init.h>
- #include <linux/slab.h>
--#include <linux/list.h>
-+#include <linux/rhashtable.h>
- #include <linux/cpu.h>
- #include <linux/smp.h>
- #include <linux/bug.h>
-@@ -55,7 +55,13 @@ static struct bp_cpuinfo *get_bp_info(int cpu, enum bp_type_idx type)
- }
+@@ -47,7 +47,7 @@ struct bp_cpuinfo {
+ };
  
- /* Keep track of the breakpoints attached to tasks */
--static LIST_HEAD(bp_task_head);
-+static struct rhltable task_bps_ht;
-+static const struct rhashtable_params task_bps_ht_params = {
-+	.head_offset = offsetof(struct hw_perf_event, bp_list),
-+	.key_offset = offsetof(struct hw_perf_event, target),
-+	.key_len = sizeof_field(struct hw_perf_event, target),
-+	.automatic_shrinking = true,
-+};
+ static DEFINE_PER_CPU(struct bp_cpuinfo, bp_cpuinfo[TYPE_MAX]);
+-static int nr_slots[TYPE_MAX];
++static int nr_slots[TYPE_MAX] __ro_after_init;
  
- static int constraints_initialized;
- 
-@@ -104,17 +110,23 @@ static unsigned int max_task_bp_pinned(int cpu, enum bp_type_idx type)
-  */
- static int task_bp_pinned(int cpu, struct perf_event *bp, enum bp_type_idx type)
+ static struct bp_cpuinfo *get_bp_info(int cpu, enum bp_type_idx type)
  {
--	struct task_struct *tsk = bp->hw.target;
-+	struct rhlist_head *head, *pos;
- 	struct perf_event *iter;
- 	int count = 0;
+@@ -63,7 +63,7 @@ static const struct rhashtable_params task_bps_ht_params = {
+ 	.automatic_shrinking = true,
+ };
  
--	list_for_each_entry(iter, &bp_task_head, hw.bp_list) {
--		if (iter->hw.target == tsk &&
--		    find_slot_idx(iter->attr.bp_type) == type &&
-+	rcu_read_lock();
-+	head = rhltable_lookup(&task_bps_ht, &bp->hw.target, task_bps_ht_params);
-+	if (!head)
-+		goto out;
-+
-+	rhl_for_each_entry_rcu(iter, pos, head, hw.bp_list) {
-+		if (find_slot_idx(iter->attr.bp_type) == type &&
- 		    (iter->cpu < 0 || cpu == iter->cpu))
- 			count += hw_breakpoint_weight(iter);
- 	}
+-static int constraints_initialized;
++static bool constraints_initialized __ro_after_init;
  
-+out:
-+	rcu_read_unlock();
- 	return count;
- }
- 
-@@ -187,7 +199,7 @@ static void toggle_bp_task_slot(struct perf_event *bp, int cpu,
- /*
-  * Add/remove the given breakpoint in our constraint table
-  */
--static void
-+static int
- toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
- 	       int weight)
- {
-@@ -200,7 +212,7 @@ toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
- 	/* Pinned counter cpu profiling */
- 	if (!bp->hw.target) {
- 		get_bp_info(bp->cpu, type)->cpu_pinned += weight;
--		return;
-+		return 0;
- 	}
- 
- 	/* Pinned counter task profiling */
-@@ -208,9 +220,9 @@ toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
- 		toggle_bp_task_slot(bp, cpu, type, weight);
- 
- 	if (enable)
--		list_add_tail(&bp->hw.bp_list, &bp_task_head);
-+		return rhltable_insert(&task_bps_ht, &bp->hw.bp_list, task_bps_ht_params);
- 	else
--		list_del(&bp->hw.bp_list);
-+		return rhltable_remove(&task_bps_ht, &bp->hw.bp_list, task_bps_ht_params);
- }
- 
- __weak int arch_reserve_bp_slot(struct perf_event *bp)
-@@ -308,9 +320,7 @@ static int __reserve_bp_slot(struct perf_event *bp, u64 bp_type)
+ /* Gather the number of total pinned and un-pinned bp in a cpuset */
+ struct bp_busy_slots {
+@@ -711,7 +711,7 @@ int __init init_hw_breakpoint(void)
  	if (ret)
- 		return ret;
+ 		goto err;
  
--	toggle_bp_slot(bp, true, type, weight);
--
--	return 0;
-+	return toggle_bp_slot(bp, true, type, weight);
- }
- 
- int reserve_bp_slot(struct perf_event *bp)
-@@ -335,7 +345,7 @@ static void __release_bp_slot(struct perf_event *bp, u64 bp_type)
- 
- 	type = find_slot_idx(bp_type);
- 	weight = hw_breakpoint_weight(bp);
--	toggle_bp_slot(bp, false, type, weight);
-+	WARN_ON(toggle_bp_slot(bp, false, type, weight));
- }
- 
- void release_bp_slot(struct perf_event *bp)
-@@ -679,7 +689,7 @@ static struct pmu perf_breakpoint = {
- int __init init_hw_breakpoint(void)
- {
- 	int cpu, err_cpu;
--	int i;
-+	int i, ret;
- 
- 	for (i = 0; i < TYPE_MAX; i++)
- 		nr_slots[i] = hw_breakpoint_slots(i);
-@@ -690,18 +700,24 @@ int __init init_hw_breakpoint(void)
- 
- 			info->tsk_pinned = kcalloc(nr_slots[i], sizeof(int),
- 							GFP_KERNEL);
--			if (!info->tsk_pinned)
--				goto err_alloc;
-+			if (!info->tsk_pinned) {
-+				ret = -ENOMEM;
-+				goto err;
-+			}
- 		}
- 	}
- 
-+	ret = rhltable_init(&task_bps_ht, &task_bps_ht_params);
-+	if (ret)
-+		goto err;
-+
- 	constraints_initialized = 1;
+-	constraints_initialized = 1;
++	constraints_initialized = true;
  
  	perf_pmu_register(&perf_breakpoint, "breakpoint", PERF_TYPE_BREAKPOINT);
  
- 	return register_die_notifier(&hw_breakpoint_exceptions_nb);
- 
-- err_alloc:
-+err:
- 	for_each_possible_cpu(err_cpu) {
- 		for (i = 0; i < TYPE_MAX; i++)
- 			kfree(get_bp_info(err_cpu, i)->tsk_pinned);
-@@ -709,7 +725,5 @@ int __init init_hw_breakpoint(void)
- 			break;
- 	}
- 
--	return -ENOMEM;
-+	return ret;
- }
--
--
 -- 
 2.36.1.255.ge46751e96f-goog
 
