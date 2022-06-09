@@ -2,179 +2,248 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98248C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 15:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B904CC43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 15:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236701AbiFIPAj (ORCPT
+        id S242772AbiFIPkk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 11:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56552 "EHLO
+        Thu, 9 Jun 2022 11:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236850AbiFIPAi (ORCPT
+        with ESMTP id S1344577AbiFIPkj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 11:00:38 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DF73A8FA6
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Jun 2022 08:00:36 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id h23so38420497lfe.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jun 2022 08:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NsfmNOfUlC+V3z4AhfvGEnurL/kWR5dN7NT7SPzXTek=;
-        b=kICnwHg+tz0bV++tkQVcLGjsGWQePp6LuSl2JUV4C9/W95LIKwfa7N3u9q2g2fl23W
-         vHbKn2zHQfkDmXqsPE9qAzcelTKIzlluT+9gFneFOewqU/bOHdbN9+805Q2+6ZIrl6PI
-         9maDGv7jeD+IslHkyjBNiJ9Va2xTyb58RSYv0R0TLgvUI6FExJsynWzDjLY32ChbG+XV
-         X6w6jpfDF32hlHkzmTcv6rIMRDoqzXo58qI/oN5Q7y5D58RMbeQN8xkeJV/L6g2zo22q
-         8uvG8OFYQbHpIMmFCCkOr7NPz6rlEKx+1SZwpiPy+qlJ14jWLbd5Lf6thEcU10OoSwT9
-         9ITA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NsfmNOfUlC+V3z4AhfvGEnurL/kWR5dN7NT7SPzXTek=;
-        b=wlGQ/LNGOaUJ2u4vsTxTlR/f7+DvwOdSamV4QVtHdfyhD+RS5jSYihNph1Nl2LeXG0
-         T8PZSgmakxmGFw/VN2/WIqImG5xg26e5K2KnSIKfin4MPKXl76PGK3uWFBZr/GEsyXTO
-         TWi5ttGSCml14MCe3QKIJ0i7ApTespd83jGo8z222mi8UMQpdOTZ0BxutuenvHWKVucE
-         RYzpmRj+kid8ZTaCXXq5npyS2We+ZDeCnU9hxxrhaFAshfNXl1xk5XJGVYfhsbO+bWwg
-         7w6I+/7QywFrw3aA2Tosizn0n2ZzvpT8ZElgnrleJUTFWP3eSLn96usHTVDCsxtMcuMl
-         /f1g==
-X-Gm-Message-State: AOAM533UdmNeHosS3Fn404s6M80m+wI/IdGRat4F90Pq1InnKsP9vDOU
-        U21Oroe2FlgsIoGeEd6AFVLlN2lLLCzXVWvHt9go2Q==
-X-Google-Smtp-Source: ABdhPJzCyhTAPCSGKsOEYllZmziNv8gM2S20pugkFptHOcy8BZaQJMKZRhF14tbm0E7D62SPU0gO0ononF6at0D43lE=
-X-Received: by 2002:a05:6512:3f13:b0:464:f55f:7806 with SMTP id
- y19-20020a0565123f1300b00464f55f7806mr25654590lfa.598.1654786834533; Thu, 09
- Jun 2022 08:00:34 -0700 (PDT)
+        Thu, 9 Jun 2022 11:40:39 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9259F1F58A8;
+        Thu,  9 Jun 2022 08:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654789237; x=1686325237;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WwfXvFmcGyVeb1ltcUjcvgZBiMYvu1xqMqLBsmyHi3A=;
+  b=Bzy3W9q1RR4MHa0c0f9Ihhp1gWFrm5n8NjYv1XXzM0D+qFkJiruuTxCu
+   TvX3HelioRX+1ie/XveNSioIKMKAGE8MJnGw3spd8iw7RCy+t/pPJz5sQ
+   2m5Bq6j+ysp0gtET4OxDpxODV6QsBAL9rFwyJBOqC6tyDAurz5Ej2sTku
+   J9Ua1ilBY39YORTx2yX+lmoN/WTpztOPYbb5qR/8GE5N5LfTQmkFfz2ds
+   bnor1xVtwpCUNLRsZZOUJrHodEMN68wB39+00u3BgrOctLjJee9jZKCTS
+   Yj6KfT0TM1O1yWmWUwH7PidOZB9ttpC3FNe5v76XoYrEpvi3MC57axyyQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10373"; a="276088014"
+X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
+   d="scan'208";a="276088014"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 08:40:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
+   d="scan'208";a="566442514"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 09 Jun 2022 08:40:36 -0700
+Received: from [10.252.211.126] (kliang2-MOBL.ccr.corp.intel.com [10.252.211.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 7C44B580B9E;
+        Thu,  9 Jun 2022 08:40:34 -0700 (PDT)
+Message-ID: <8358dc65-88d8-1550-96bd-9e66477c4bd5@linux.intel.com>
+Date:   Thu, 9 Jun 2022 11:40:33 -0400
 MIME-Version: 1.0
-References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-8-elver@google.com>
-In-Reply-To: <20220609113046.780504-8-elver@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Jun 2022 17:00:22 +0200
-Message-ID: <CACT4Y+bGPLampPm7JHJeXeK_CwQ2_=3mRktPCh7T9r3y8r02hw@mail.gmail.com>
-Subject: Re: [PATCH 7/8] perf/hw_breakpoint: Optimize task_bp_pinned() if CPU-independent
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org,
-        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v2 4/5] perf x86 evlist: Add default hybrid events for
+ perf stat
+Content-Language: en-US
+To:     zhengjun.xing@linux.intel.com, acme@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com
+References: <20220609145314.2064632-1-zhengjun.xing@linux.intel.com>
+ <20220609145314.2064632-5-zhengjun.xing@linux.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220609145314.2064632-5-zhengjun.xing@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 9 Jun 2022 at 13:31, Marco Elver <elver@google.com> wrote:
->
-> Running the perf benchmark with (note: more aggressive parameters vs.
-> preceding changes, but same host with 256 CPUs):
->
->  | $> perf bench -r 100 breakpoint thread -b 4 -p 128 -t 512
->  | # Running 'breakpoint/thread' benchmark:
->  | # Created/joined 100 threads with 4 breakpoints and 128 parallelism
->  |      Total time: 1.953 [sec]
->  |
->  |       38.146289 usecs/op
->  |     4882.725000 usecs/op/cpu
->
->     16.29%  [kernel]       [k] rhashtable_jhash2
->     16.19%  [kernel]       [k] osq_lock
->     14.22%  [kernel]       [k] queued_spin_lock_slowpath
->      8.58%  [kernel]       [k] task_bp_pinned
->      8.30%  [kernel]       [k] mutex_spin_on_owner
->      4.03%  [kernel]       [k] smp_cfm_core_cond
->      2.97%  [kernel]       [k] toggle_bp_slot
->      2.94%  [kernel]       [k] bcmp
->
-> We can see that a majority of the time is now spent hashing task
-> pointers to index into task_bps_ht in task_bp_pinned().
->
-> However, if task_bp_pinned()'s computation is independent of any CPU,
-> i.e. always `iter->cpu < 0`, the result for each invocation will be
-> identical. With increasing CPU-count, this problem worsens.
->
-> Instead, identify if every call to task_bp_pinned() is CPU-independent,
-> and cache the result. Use the cached result instead of a call to
-> task_bp_pinned(), now __task_bp_pinned(), with task_bp_pinned() deciding
-> if the cached result can be used.
->
-> After this optimization:
->
->     21.96%  [kernel]       [k] queued_spin_lock_slowpath
->     16.39%  [kernel]       [k] osq_lock
->      9.82%  [kernel]       [k] toggle_bp_slot
->      9.81%  [kernel]       [k] find_next_bit
->      4.93%  [kernel]       [k] mutex_spin_on_owner
->      4.71%  [kernel]       [k] smp_cfm_core_cond
->      4.30%  [kernel]       [k] __reserve_bp_slot
->      2.65%  [kernel]       [k] cpumask_next
->
-> Showing that the time spent hashing keys has become insignificant.
->
-> With the given benchmark parameters, however, we see no statistically
-> significant improvement in performance on the test system with 256 CPUs.
-> This is very likely due to the benchmark parameters being too aggressive
-> and contention elsewhere becoming dominant.
->
-> Indeed, when using the less aggressive parameters from the preceding
-> changes, we now observe:
->
->  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
->  | # Running 'breakpoint/thread' benchmark:
->  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
->  |      Total time: 0.071 [sec]
->  |
->  |       37.134896 usecs/op
->  |     2376.633333 usecs/op/cpu
->
-> Which is an improvement of 12% compared to without this optimization
-> (baseline is 42 usecs/op). This is now only 5% slower than the
-> theoretical ideal (constraints disabled), and 18% slower than no
-> breakpoints at all.
->
-> [ While we're here, swap task_bp_pinned()'s bp and cpu arguments to be
->   more consistent with other functions (which have bp first, before the
->   cpu argument). ]
 
-There are 3 main cases:
-1. Per-cpu bp.
-2. Per-task and per-cpu bp.
-3. Per-task bp (on all cpus)
-right?
 
-For case 1 we still seem to do lots of unnecessary work in
-fetch_bp_busy_slots() by iterating over all CPUs. We are going to bump
-only the CPU's cpu_pinned, so that's the only CPU we need to
-fetch/check.
+On 6/9/2022 10:53 AM, zhengjun.xing@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Provide a new solution to replace the reverted commit ac2dc29edd21
+> ("perf stat: Add default hybrid events").
+> 
+> For the default software attrs, nothing is changed.
+> For the default hardware attrs, create a new evsel for each hybrid pmu.
+> 
+> With the new solution, adding a new default attr will not require the
+> special support for the hybrid platform anymore.
+> 
+> Also, the "--detailed" is supported on the hybrid platform
+> 
+> With the patch,
+> 
+> ./perf stat -a -ddd sleep 1
+> 
+>   Performance counter stats for 'system wide':
+> 
+>         32,231.06 msec cpu-clock                 #   32.056 CPUs utilized
+>               529      context-switches          #   16.413 /sec
+>                32      cpu-migrations            #    0.993 /sec
+>                69      page-faults               #    2.141 /sec
+>       176,754,151      cpu_core/cycles/          #    5.484 M/sec          (41.65%)
+>       161,695,280      cpu_atom/cycles/          #    5.017 M/sec          (49.92%)
+>        48,595,992      cpu_core/instructions/    #    1.508 M/sec          (49.98%)
+>        32,363,337      cpu_atom/instructions/    #    1.004 M/sec          (58.26%)
+>        10,088,639      cpu_core/branches/        #  313.010 K/sec          (58.31%)
+>         6,390,582      cpu_atom/branches/        #  198.274 K/sec          (58.26%)
+>           846,201      cpu_core/branch-misses/   #   26.254 K/sec          (66.65%)
+>           676,477      cpu_atom/branch-misses/   #   20.988 K/sec          (58.27%)
+>        14,290,070      cpu_core/L1-dcache-loads/ #  443.363 K/sec          (66.66%)
+>         9,983,532      cpu_atom/L1-dcache-loads/ #  309.749 K/sec          (58.27%)
+>           740,725      cpu_core/L1-dcache-load-misses/ #   22.982 K/sec    (66.66%)
+>   <not supported>      cpu_atom/L1-dcache-load-misses/
+>           480,441      cpu_core/LLC-loads/       #   14.906 K/sec          (66.67%)
+>           326,570      cpu_atom/LLC-loads/       #   10.132 K/sec          (58.27%)
+>               329      cpu_core/LLC-load-misses/ #   10.208 /sec           (66.68%)
+>                 0      cpu_atom/LLC-load-misses/ #    0.000 /sec           (58.32%)
+>   <not supported>      cpu_core/L1-icache-loads/
+>        21,982,491      cpu_atom/L1-icache-loads/ #  682.028 K/sec          (58.43%)
+>         4,493,189      cpu_core/L1-icache-load-misses/ #  139.406 K/sec    (33.34%)
+>         4,711,404      cpu_atom/L1-icache-load-misses/ #  146.176 K/sec    (50.08%)
+>        13,713,090      cpu_core/dTLB-loads/      #  425.462 K/sec          (33.34%)
+>         9,384,727      cpu_atom/dTLB-loads/      #  291.170 K/sec          (50.08%)
+>           157,387      cpu_core/dTLB-load-misses/ #    4.883 K/sec         (33.33%)
+>           108,328      cpu_atom/dTLB-load-misses/ #    3.361 K/sec         (50.08%)
+>   <not supported>      cpu_core/iTLB-loads/
+>   <not supported>      cpu_atom/iTLB-loads/
+>            37,655      cpu_core/iTLB-load-misses/ #    1.168 K/sec         (33.32%)
+>            61,661      cpu_atom/iTLB-load-misses/ #    1.913 K/sec         (50.03%)
+>   <not supported>      cpu_core/L1-dcache-prefetches/
+>   <not supported>      cpu_atom/L1-dcache-prefetches/
+>   <not supported>      cpu_core/L1-dcache-prefetch-misses/
+>   <not supported>      cpu_atom/L1-dcache-prefetch-misses/
+> 
+>         1.005466919 seconds time elapsed
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> ---
+> Change log:
+>    v2:
+>      * The index of all new evsel will be updated when adding to the evlist,
+>        just set 0 idx for the new evsel.
+> 
+>   tools/perf/arch/x86/util/evlist.c | 52 ++++++++++++++++++++++++++++++-
+>   tools/perf/util/evlist.c          |  2 +-
+>   tools/perf/util/evlist.h          |  2 ++
+>   3 files changed, 54 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+> index 777bdf182a58..fd3500fd4b69 100644
+> --- a/tools/perf/arch/x86/util/evlist.c
+> +++ b/tools/perf/arch/x86/util/evlist.c
+> @@ -4,16 +4,66 @@
+>   #include "util/evlist.h"
+>   #include "util/parse-events.h"
+>   #include "topdown.h"
+> +#include "util/event.h"
+> +#include "util/pmu-hybrid.h"
+>   
+>   #define TOPDOWN_L1_EVENTS	"{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
+>   #define TOPDOWN_L2_EVENTS	"{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,topdown-fetch-lat,topdown-mem-bound}"
+>   
+> +static int ___evlist__add_default_attrs(struct evlist *evlist,
+> +					struct perf_event_attr *attrs,
+> +					size_t nr_attrs)
+> +{
+> +	struct perf_cpu_map *cpus;
+> +	struct evsel *evsel, *n;
+> +	struct perf_pmu *pmu;
+> +	LIST_HEAD(head);
+> +	size_t i = 0;
+> +
+> +	for (i = 0; i < nr_attrs; i++)
+> +		event_attr_init(attrs + i);
+> +
+> +	if (!perf_pmu__has_hybrid())
+> +		return evlist__add_attrs(evlist, attrs, nr_attrs);
+> +
+> +	for (i = 0; i < nr_attrs; i++) {
+> +		if (attrs[i].type == PERF_TYPE_SOFTWARE) {
+> +			evsel = evsel__new_idx(attrs + i, evlist->core.nr_entries);
 
-For case 2 we also do lots of unnecessary work, again we also need to
-check only 1 CPU (don't need cached_tbp_pinned). Also don't need to do
-atomic_dec/inc on all other CPUs (they dec/inc the same variable).
+Although the idx will be updated later, the value doesn't matter.
+I think it should be better to use 0, rather than 
+evlist->core.nr_entries. Because it's a new evsel and hasn't been added 
+into the evlist yet.
 
-Case 3 is the only one when we need to check all CPUs and
-cached_tbp_pinned may be useful.
-But I wonder if we could instead add a per-task
-has_per_cpu_breakpoints flag. Then if the flag is set, we check all
-CPUs as we do now (don't need cached_tbp_pinned). And if it's not set,
-then we could optimize the code even more by making it O(1) instead of
-O(N). Namely, we add global tsk_pinned for tasks that don't have
-per-cpu breakpoints, and we update only that tsk_pinned instead of
-iterating over all CPUs.
-I think this will require adding cpu_pinned as well (similar to
-tsk_pinned but aggregated over all CPUs).
-Then the fast path capacity check can become just:
-
-if (bp->hw.target && !bp->hw.target->has_per_cpu_breakpoints && bp->cpu < 0) {
-  if (max_cpu_bp_pinned(type) + task_bp_pinned(-1 /*cpu*/, bp, type) +
-hw_breakpoint_weight(bp) > nr_slots[type])
-    return -ENOSPC;
-}
-
-Does it make any sense?
+Thanks,
+Kan
+> +			if (evsel == NULL)
+> +				goto out_delete_partial_list;
+> +			list_add_tail(&evsel->core.node, &head);
+> +			continue;
+> +		}
+> +
+> +		perf_pmu__for_each_hybrid_pmu(pmu) {
+> +			evsel = evsel__new_idx(attrs + i, evlist->core.nr_entries);
+> +			if (evsel == NULL)
+> +				goto out_delete_partial_list;
+> +			evsel->core.attr.config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
+> +			cpus = perf_cpu_map__get(pmu->cpus);
+> +			evsel->core.cpus = cpus;
+> +			evsel->core.own_cpus = perf_cpu_map__get(cpus);
+> +			evsel->pmu_name = strdup(pmu->name);
+> +			list_add_tail(&evsel->core.node, &head);
+> +		}
+> +	}
+> +
+> +	evlist__splice_list_tail(evlist, &head);
+> +
+> +	return 0;
+> +
+> +out_delete_partial_list:
+> +	__evlist__for_each_entry_safe(&head, n, evsel)
+> +		evsel__delete(evsel);
+> +	return -1;
+> +}
+> +
+>   int arch_evlist__add_default_attrs(struct evlist *evlist,
+>   				   struct perf_event_attr *attrs,
+>   				   size_t nr_attrs)
+>   {
+>   	if (nr_attrs)
+> -		return __evlist__add_default_attrs(evlist, attrs, nr_attrs);
+> +		return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
+>   
+>   	if (!pmu_have_event("cpu", "slots"))
+>   		return 0;
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index efa5f006b5c6..5ff4b9504828 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -309,7 +309,7 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
+>   	return evsel;
+>   }
+>   
+> -static int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs)
+> +int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs)
+>   {
+>   	struct evsel *evsel, *n;
+>   	LIST_HEAD(head);
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index 129095c0fe6d..351ba2887a79 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -104,6 +104,8 @@ static inline int evlist__add_default(struct evlist *evlist)
+>   	return __evlist__add_default(evlist, true);
+>   }
+>   
+> +int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs);
+> +
+>   int __evlist__add_default_attrs(struct evlist *evlist,
+>   				     struct perf_event_attr *attrs, size_t nr_attrs);
+>   
