@@ -2,81 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEE0C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 19:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BFAC43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Jun 2022 20:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235193AbiFITbe (ORCPT
+        id S244589AbiFIUcI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 15:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59902 "EHLO
+        Thu, 9 Jun 2022 16:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233371AbiFITbd (ORCPT
+        with ESMTP id S235367AbiFIUcH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 15:31:33 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9043B3F3;
-        Thu,  9 Jun 2022 12:31:32 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id x6-20020a1c7c06000000b003972dfca96cso52303wmc.4;
-        Thu, 09 Jun 2022 12:31:32 -0700 (PDT)
+        Thu, 9 Jun 2022 16:32:07 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F402D2315E;
+        Thu,  9 Jun 2022 13:32:05 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id l18so20128745lje.13;
+        Thu, 09 Jun 2022 13:32:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vbKPtmJbRhRn3EAA719J/gFo3OO4cSK0EnKPpp4liAs=;
-        b=WIbAp+3ymFvw77b4DaPv3jWw3ackXtvgSzXBpsMS3ssupnYPrL5afw4TkMludBbKtM
-         gFtXUBUM06D6Y5Oj1AfWeIBhYFYpKWHzeYb6SFqP8kZeRH6iuOoURdaO7Gzk/Sczw5PN
-         HMZgx4rClHAXMvgdNnzQRGx2scn/ftxzdS9htvRDUDuUkSauCLGghZ/Cb8vbOPCWwJJ5
-         8rmtXlXOp5SrCvytDim7avMYs3qJRftLdSyGDkJg/fR3mz49pBcoXjFLXsmjjqHSlK6d
-         jagJQyRwaIbHFxNFblrl4SfWSO4AR0923NIozCCy0xEFMrQCQHMNFqBhglIsnZgBr7aQ
-         FYAA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cBK6/mXz5yDC7klt1oq1cf3xvjwR6jBvhdS+cTpC2Kc=;
+        b=CiGCRkuu73W3M46UnvqsubR3XsaquRcx+ygNWQGVmPGSXGMJnWH9oai48a4suWLLU5
+         Pq36AelyxvjQHlrb455eOX5/tFaxlZrat58v1EGJgbBwcymaJBnGIP3tNIyIiOiOvvsQ
+         GNfgA25u2NkDcsoc2ecPhN8Wtz6w6kI/qFqqd9DHXkXqSX/a9P8Wh5hjdrsT1/eaXmHr
+         xS0q+LuGnBy+SYmuJKmcQUeduUUajQdpjb75xjQ0K+LJq1ppIpsYdQZF/OcijyghJevM
+         XDViHckOlQqAIx2Y+MORfOu2USE5Y3+SZ8wUby3hjoXalZ0ToTeMsliD/xURqBr+smu+
+         oSBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vbKPtmJbRhRn3EAA719J/gFo3OO4cSK0EnKPpp4liAs=;
-        b=HqKUk9tglRDlVBbFUZW+jnNqAhEZhCJ2qHsXP0aw6hgxnnG0T66T6lBfx2NbceUabE
-         EVwF0xOURIneyWG9zURy+bdjHyG8dGQi8YsqFuygobTwuu+5RvdwwP7AC/VSS9JkY74/
-         U2TfDvrzt0jY3ihLUpIfvVUUKuaAnc7TAZWPDfX6OBsSU9QKM06b4Tr4Wjl/Q4IchnCB
-         pcT0d3aAIvXtj4RytltjdXUVyxbp9/bnSSlEmOvPdCW5yApNbY8Y6htF7+a6uwUhOiPB
-         0a0UFxOKFGUKDzka2movUF2XJGooO5BJK7wF/as+fGHSMGEonPeXZllsEeorhXhecIyD
-         0q6g==
-X-Gm-Message-State: AOAM533Xmpua6iKWASEYHe5IUV2Yr/6o7LFNQfRjir5kaR+D2qJp+lq1
-        9EAQLa5k3qtE3jnFUqS89oKeHhmeWaM=
-X-Google-Smtp-Source: ABdhPJxWpPo6pQKy5JK50NIyX7ZPj4oY4NZz1YawG9saLqtl9bw4p+y+B2Een+dw1DJnNw56ulbuNw==
-X-Received: by 2002:a1c:7317:0:b0:399:e654:3c92 with SMTP id d23-20020a1c7317000000b00399e6543c92mr4943140wmb.49.1654803091233;
-        Thu, 09 Jun 2022 12:31:31 -0700 (PDT)
-Received: from erthalion.local (dslb-094-222-028-039.094.222.pools.vodafone-ip.de. [94.222.28.39])
-        by smtp.gmail.com with ESMTPSA id o6-20020a05600c510600b0039748be12dbsm118136wms.47.2022.06.09.12.31.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jun 2022 12:31:30 -0700 (PDT)
-Date:   Thu, 9 Jun 2022 21:30:28 +0200
-From:   Dmitry Dolgov <9erthalion6@gmail.com>
-To:     linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        songliubraving@fb.com, rostedt@goodmis.org, peterz@infradead.org,
-        mingo@redhat.com
-Subject: Re: [PATCH] perf/kprobe: maxactive for fd-based kprobe
-Message-ID: <20220609193028.zhxpxscawnd3sep6@erthalion.local>
-References: <20220609192936.23985-1-9erthalion6@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cBK6/mXz5yDC7klt1oq1cf3xvjwR6jBvhdS+cTpC2Kc=;
+        b=1Y2qSxGEJfvkPLAZfbA5FXSJL42FqVYuPc5svJuKmi8ZuqGKm7h/PEpWHgq+xpXYX4
+         tMoYuKuAE3Eb+G0+zdd7JTnkM9hV+4qsqGqru8wpEertxYT/6CjaBFZgnycrFpAbhgwZ
+         zNfKpIsbau29dQx8zg8rrW3EbGpQ3QuE9WlSsgKQCO7C+psNVNYSRPY2QuYFGimFUbvN
+         jc1mp91YhZi8h1keYMBfU2E6SMPdxOjVhcV37KEhfINE4nc02ySlwGxLCQ3OgwYT3et1
+         yfk7DVZ2E+7Z7WHdcEr7c8AIr6u3hecD/jYQLe5NDvzip2iJ/jiE9aMBCWDAeBMyVGFp
+         3jpA==
+X-Gm-Message-State: AOAM533CqPdeUxpniyr1d3XujfOt7Szrh+Kszx+WbTk9DaMr2ICy73Fl
+        iBEADqNF8hk+NKX0JsW2NDb+ezHKsy0NBPDIumc=
+X-Google-Smtp-Source: ABdhPJxou4cMHEUqYdwxbHH6tZ0jconZwUVRjvAMuutMRmYAI1AQ2jy33QjIuBiX17OJCemD6QJo1dLyoLOgEoTD+Qo=
+X-Received: by 2002:a2e:3a16:0:b0:255:7811:2827 with SMTP id
+ h22-20020a2e3a16000000b0025578112827mr20036524lja.130.1654806724358; Thu, 09
+ Jun 2022 13:32:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220609192936.23985-1-9erthalion6@gmail.com>
+References: <20220603204509.15044-1-jolsa@kernel.org>
+In-Reply-To: <20220603204509.15044-1-jolsa@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 9 Jun 2022 13:31:52 -0700
+Message-ID: <CAEf4BzbT4Z=B2hZxTQf1MrCp6TGiMgP+_t7p8G5A+RdVyNP+8w@mail.gmail.com>
+Subject: Re: [PATCHv4 bpf-next 0/2] perf tools: Fix prologue generation
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> On Thu, Jun 09, 2022 at 09:29:36PM +0200, Dmitrii Dolgov wrote:
+On Fri, Jun 3, 2022 at 1:45 PM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> Enable specifying maxactive for fd based kretprobe. This will be useful
-> for tracing tools like bcc and bpftrace (see for example discussion [1]).
-> Use highest 12 bit (bit 52-63) to allow maximal maxactive of 4095.
+> hi,
+> sending change we discussed some time ago [1] to get rid of
+> some deprecated functions we use in perf prologue code.
 >
-> The original patch [2] seems to be fallen through the cracks and wasn't
-> applied. I've merely rebased the work done by Song Liu and verififed it
-> still works.
+> Despite the gloomy discussion I think the final code does
+> not look that bad ;-)
 >
-> [1]: https://github.com/iovisor/bpftrace/issues/835
-> [2]: https://lore.kernel.org/all/20191007223111.1142454-1-songliubraving@fb.com/
+> This patchset removes following libbpf functions from perf:
+>   bpf_program__set_prep
+>   bpf_program__nth_fd
+>   struct bpf_prog_prep_result
+>
+> v4 changes:
+>   - fix typo [Andrii]
+>
+> v3 changes:
+>   - removed R0/R1 zero init in libbpf_prog_prepare_load_fn,
+>     because it's not needed [Andrii]
+>   - rebased/post on top of bpf-next/master which now has
+>     all the needed perf/core changes
+>
+> v2 changes:
+>   - use fallback section prog handler, so we don't need to
+>     use section prefix [Andrii]
+>   - realloc prog->insns array in bpf_program__set_insns [Andrii]
+>   - squash patch 1 from previous version with
+>     bpf_program__set_insns change [Daniel]
+>   - patch 3 already merged [Arnaldo]
+>   - added more comments
+>
+> thanks,
+> jirka
+>
 
-I've recently stumbled upon this seemingly lost topic, and wanted to raise it
-again. Please let me know if there is a more appropriate way to do so.
+Arnaldo, can I get an ack from you for this patch set? Thank you!
+
+>
+> [1] https://lore.kernel.org/bpf/CAEf4BzaiBO3_617kkXZdYJ8hS8YF--ZLgapNbgeeEJ-pY0H88g@mail.gmail.com/
+> ---
+> Jiri Olsa (2):
+>       perf tools: Register fallback libbpf section handler
+>       perf tools: Rework prologue generation code
+>
+>  tools/perf/util/bpf-loader.c | 173 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------
+>  1 file changed, 155 insertions(+), 18 deletions(-)
