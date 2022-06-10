@@ -2,198 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7062AC43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Jun 2022 09:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0B4C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Jun 2022 14:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346185AbiFJJiB (ORCPT
+        id S1349301AbiFJOAY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Jun 2022 05:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
+        Fri, 10 Jun 2022 10:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349283AbiFJJhg (ORCPT
+        with ESMTP id S1349139AbiFJOAW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Jun 2022 05:37:36 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 143762EA3F
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jun 2022 02:37:34 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id p13so46078641ybm.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jun 2022 02:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R0yCkjQP9dSep6/xo5aErRNWl4SfOJuW2ssFAWrT83k=;
-        b=nO+Vc9QpBfc97wxN0P0lNFwcZL8aq9S/jnpkw/FMf/H5jOMnqHxk7Pxqa0OPOB+YxX
-         orKbp+piyGbRJ9DzvoPkcrnLe3FJ5pMN4A54d6NJNkq4SsjcuIMkfcMEkTLShmgaKO09
-         C1VOHm5FnGZTrIk5CTI7Qxk9WhseeoEabnDuHyTjjtBRHuX8SmAMl8GdggcIrbNJhErH
-         7iU0sgiVHKY6oXJ0rJzG8cWqSwU077q8b6kjGGGOLbdR7clgpI55hA2gHNF1lgvOldJk
-         sv22J1ecsaJTSlbE/mO6SI8N1nRFAjMZcbt/uKEhJ9LPvsNsyhfUHn7yeUFANZYuskbS
-         OaiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R0yCkjQP9dSep6/xo5aErRNWl4SfOJuW2ssFAWrT83k=;
-        b=4VmfA6GaznINpJSEdrv9n7j1fuzFNCouCNAEZtFJ7u6nrMXZ/veCAlHNwVLYEHhqPl
-         zuc8qibtum50Em6liR++hXObEtW8qyzNw7FJ5rGt1/3IDuPUc91exkpCVQkKjl4A4tG5
-         jBzC1mzWwkPaWWj9XU2myO8vC0CmZCViuH6XV0L9Tecl8fpZDBGZg9mlMyrvLABZApot
-         pTbioDX8kjyuJvzq97M3NGO+VhWDKtQgF0JTJvnb5Z8+le7v5vB6Rdom7I188dGVVPhc
-         lPugRkZ6o5ZNsgC9PtL9qxj5IIR+ErxdOn8Lk+zeZUSglLhk4UvQSQk3YyAH+bSmBvkj
-         cayA==
-X-Gm-Message-State: AOAM5318IZhjRVdRwgw92/ZXDuL1/v8q68B8wIdTZOwAh/Chb1DCWtSC
-        NXMxky2kBd9OxHy8MvsPHcBT6IH6UkZgtoVAMae+dILxnVU=
-X-Google-Smtp-Source: ABdhPJxXiFwQaTBLPTkph/AjipRc+juKKt3pA4IouwLvjmm28vvVXPhLBSYwPN05TUhyiz+qjJjeNxYxfrBawaR5ZjA=
-X-Received: by 2002:a5b:49:0:b0:656:151d:a1e3 with SMTP id e9-20020a5b0049000000b00656151da1e3mr12972356ybp.425.1654853853082;
- Fri, 10 Jun 2022 02:37:33 -0700 (PDT)
+        Fri, 10 Jun 2022 10:00:22 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7015B273937
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jun 2022 07:00:00 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25ADIiNb023542;
+        Fri, 10 Jun 2022 13:59:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=f4aq0u3gKzc7phMU3PgLH4gEl81nO1j9Vq1ikMfl1qU=;
+ b=BWTCjmjCR/A3NJxxKqkGyU2w90TQni48BHKCiujxYEdE/vg8imgNpml5pyKKkkrMbkO9
+ k5PB/YkLjgN+KxW4+tCU2B84ChgXJrAmP15Bcmf+Yl7kUeMwn0lCLg4U5KOdizlThLbi
+ +yBhmwDMvaitIA3Chfq48FkO0/2vmsbWFB/BLJdbQU6Ytkk2zBL6awCGfgDi40uoKMi8
+ zMPg570hX2RZA6GxihTvq5R1Q68a8Jz3Mz1tmMKgaCvOtkwESVzpXjh4ltumNRU9u93/
+ phOSEFDZ+4gFlmszYBtJkYc8kcn13T//KE6E9HE+eRIWfO+K+x5Bx7pEe0V1s3C/0njq Tg== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gm6qurujs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jun 2022 13:59:53 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25ADa8bc007047;
+        Fri, 10 Jun 2022 13:59:51 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 3gfy196hmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jun 2022 13:59:50 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25ADxlBG19530122
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jun 2022 13:59:47 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B09752050;
+        Fri, 10 Jun 2022 13:59:47 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.163.7.130])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B205852052;
+        Fri, 10 Jun 2022 13:59:41 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com
+Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com, tmricht@linux.ibm.com
+Subject: [PATCH] tools/perf/tests: Fix session topology test comparison check
+Date:   Fri, 10 Jun 2022 19:29:39 +0530
+Message-Id: <20220610135939.63361-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-2-elver@google.com>
- <CACT4Y+bOFmCyqfSgWS0b5xuwnPqP4V9v2ooJRmFCn0YAtOPmhQ@mail.gmail.com>
- <CANpmjNNtV_6kgoLv=VX3z_oM6ZEvWJNAOj9z4ADcymqmhc+crw@mail.gmail.com>
- <CACT4Y+Zq-1nczM2JH7Sr4mZo84gsCRd83RAwwnHwmap-wCOLTQ@mail.gmail.com>
- <CANpmjNNC7ry59OXsJrPMf56Xi63chexaDfnP4t8_4MG7S5ZgCg@mail.gmail.com> <CACT4Y+ZyrWuZxqpO_fKBjdXbTY-GJu6M7GARVk7YQnyv790mFw@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZyrWuZxqpO_fKBjdXbTY-GJu6M7GARVk7YQnyv790mFw@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 10 Jun 2022 11:36:56 +0200
-Message-ID: <CANpmjNNyyFuozLmqyuQ3u1LLjc4-1STq5EyV9=WHhyc2Z9OUEQ@mail.gmail.com>
-Subject: Re: [PATCH 1/8] perf/hw_breakpoint: Optimize list of per-task breakpoints
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, x86@kernel.org,
-        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Tswhf1-I05yyeEShKuVhJnXsWYvfubQg
+X-Proofpoint-ORIG-GUID: Tswhf1-I05yyeEShKuVhJnXsWYvfubQg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-10_06,2022-06-09_02,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ mlxlogscore=999 priorityscore=1501 phishscore=0 lowpriorityscore=0
+ clxscore=1015 impostorscore=0 suspectscore=0 malwarescore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2206100056
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 10 Jun 2022 at 11:04, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Thu, 9 Jun 2022 at 20:37, Marco Elver <elver@google.com> wrote:
-> > > /On Thu, 9 Jun 2022 at 16:56, Marco Elver <elver@google.com> wrote:
-> > > > > > On a machine with 256 CPUs, running the recently added perf breakpoint
-> > > > > > benchmark results in:
-> > > > > >
-> > > > > >  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
-> > > > > >  | # Running 'breakpoint/thread' benchmark:
-> > > > > >  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
-> > > > > >  |      Total time: 236.418 [sec]
-> > > > > >  |
-> > > > > >  |   123134.794271 usecs/op
-> > > > > >  |  7880626.833333 usecs/op/cpu
-> > > > > >
-> > > > > > The benchmark tests inherited breakpoint perf events across many
-> > > > > > threads.
-> > > > > >
-> > > > > > Looking at a perf profile, we can see that the majority of the time is
-> > > > > > spent in various hw_breakpoint.c functions, which execute within the
-> > > > > > 'nr_bp_mutex' critical sections which then results in contention on that
-> > > > > > mutex as well:
-> > > > > >
-> > > > > >     37.27%  [kernel]       [k] osq_lock
-> > > > > >     34.92%  [kernel]       [k] mutex_spin_on_owner
-> > > > > >     12.15%  [kernel]       [k] toggle_bp_slot
-> > > > > >     11.90%  [kernel]       [k] __reserve_bp_slot
-> > > > > >
-> > > > > > The culprit here is task_bp_pinned(), which has a runtime complexity of
-> > > > > > O(#tasks) due to storing all task breakpoints in the same list and
-> > > > > > iterating through that list looking for a matching task. Clearly, this
-> > > > > > does not scale to thousands of tasks.
-> > > > > >
-> > > > > > While one option would be to make task_struct a breakpoint list node,
-> > > > > > this would only further bloat task_struct for infrequently used data.
-> > > > >
-> > > > > task_struct already has:
-> > > > >
-> > > > > #ifdef CONFIG_PERF_EVENTS
-> > > > >   struct perf_event_context *perf_event_ctxp[perf_nr_task_contexts];
-> > > > >   struct mutex perf_event_mutex;
-> > > > >   struct list_head perf_event_list;
-> > > > > #endif
-> > > > >
-> > > > > Wonder if it's possible to use perf_event_mutex instead of the task_sharded_mtx?
-> > > > > And possibly perf_event_list instead of task_bps_ht? It will contain
-> > > > > other perf_event types, so we will need to test type as well, but on
-> > > > > the positive side, we don't need any management of the separate
-> > > > > container.
-> > > >
-> > > > Hmm, yes, I looked at that but then decided against messing the
-> > > > perf/core internals. The main issue I have with using perf_event_mutex
-> > > > is that we might interfere with perf/core's locking rules as well as
-> > > > interfere with other concurrent perf event additions. Using
-> > > > perf_event_list is very likely a no-go because it requires reworking
-> > > > perf/core as well.
-> > > >
-> > > > I can already hear Peter shouting, but maybe I'm wrong. :-)
-> > >
-> > > Let's wait for Peter to shout then :)
-> > > A significant part of this change is having per-task data w/o having
-> > > per-task data.
-> > >
-> > > The current perf-related data in task_struct is already multiple words
-> > > and it's also not used in lots of production cases.
-> > > Maybe we could have something like:
-> > >
-> > >   struct perf_task_data* lazily_allocated_perf_data;
-> > >
-> > > that's lazily allocated on first use instead of the current
-> > > perf_event_ctxp/perf_event_mutex/perf_event_list.
-> > > This way we could both reduce task_size when perf is not used and have
-> > > more perf-related data (incl breakpoints) when it's used.
-> >
-> > I don't mind either option, so keeping task_struct bloat in mind, we have:
-> >
-> >   1. rhashtable option, no changes to task_struct.
-> >
-> >   2. add the breakpoint mutex + list to task_struct.
-> >
-> >   3. add something like hw_breakpoint_task_data* and allocate lazily.
-> >
-> >   4. (your proposal) move all of perf data into a new struct (+add
-> > hw_breakpoint things in there) that is lazily allocated.
-> >
-> > I don't think perf is that infrequently used, and I can't estimate
-> > performance impact, so I don't like #4 too much personally. My
-> > preferred compromise would be #3, but at the same time I'd rather not
-> > bloat task_struct even with 8 extra infrequently used bytes. Am I too
-> > paranoid?
-> >
-> > Preferences?
->
->
-> There is also this "could eventually get its own" comment:
->
-> static struct pmu perf_breakpoint = {
->   .task_ctx_nr = perf_sw_context, /* could eventually get its own */
-> https://elixir.bootlin.com/linux/v5.19-rc1/source/kernel/events/hw_breakpoint.c#L669
->
-> If it gets its own, then it also gets a perf_event_context pointer in
-> task_struct:
-> https://elixir.bootlin.com/linux/v5.19-rc1/source/include/linux/sched.h#L1229
-> And perf_event_context has its own mutex and lots of other stuff.
-> But I don't know what other implications it has.
+commit cfd7092c31ae ("perf test session topology: Fix test to
+skip the test in guest environment") added check to skip the
+testcase if the socket_id can't be fetched from topology info.
+But the condition check uses strncmp which should be changed to
+!strncmp and to correctly match platform. Patch fixes this
+condition check.
 
-Relying on perf events to be the only way that instantiates
-breakpoints does not work, because hw_breakpoint is also used by
-ptrace independently.
+Fixes: cfd7092c31ae ("perf test session topology: Fix test to skip the test in guest environment")
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/tests/topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On a whole, adding lazily allocated data to task_struct is not as
-simple as the rhashtable option (need to take care of  fork and exit
-and make sure the lazily allocated data lives long enough etc.). I
-question the added complexity vs. the benefit, when using the
-rhashtable avoids all that. If I get rid of the O(#cpu) loops it also
-doesn't show up in profiles anymore and any efforts to optimize here
-are not buying us much in terms of performance.
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index d23a9e322ff5..0b4f61b6cc6b 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -115,7 +115,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	 * physical_package_id will be set to -1. Hence skip this
+ 	 * test if physical_package_id returns -1 for cpu from perf_cpu_map.
+ 	 */
+-	if (strncmp(session->header.env.arch, "powerpc", 7)) {
++	if (!strncmp(session->header.env.arch, "ppc64le", 7)) {
+ 		if (cpu__get_socket_id(perf_cpu_map__cpu(map, 0)) == -1)
+ 			return TEST_SKIP;
+ 	}
+-- 
+2.35.1
 
-If the main issue is the mutex, I suppose we can find a hole in
-task_struct and stick it there (there's a massive 32-byte hole above
-task_struct::stats).
-
-Was the mutex the only benefit?
