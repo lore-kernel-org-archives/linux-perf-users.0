@@ -2,119 +2,208 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012BBCCA47B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Jun 2022 03:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E58C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Jun 2022 08:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346304AbiFJDwC (ORCPT
+        id S1347752AbiFJI1w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 23:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45424 "EHLO
+        Fri, 10 Jun 2022 04:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346310AbiFJDwA (ORCPT
+        with ESMTP id S1347669AbiFJI1R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 23:52:00 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9EDFF38C084;
-        Thu,  9 Jun 2022 20:51:59 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85D841692;
-        Thu,  9 Jun 2022 20:51:59 -0700 (PDT)
-Received: from a077893.blr.arm.com (unknown [10.162.42.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8DD283F766;
-        Thu,  9 Jun 2022 20:51:54 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, acme@kernel.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH V6 8/8] perf/tools: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
-Date:   Fri, 10 Jun 2022 09:21:01 +0530
-Message-Id: <20220610035101.424112-9-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220610035101.424112-1-anshuman.khandual@arm.com>
-References: <20220610035101.424112-1-anshuman.khandual@arm.com>
+        Fri, 10 Jun 2022 04:27:17 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87B513F11
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jun 2022 01:25:37 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id w2so45803435ybi.7
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jun 2022 01:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eLcNDbfanR+9OC/qj3TxYDSuqrtVsDPMKOVV+JQ2Ebk=;
+        b=qYH3eZm3seThktIWCEgiuC5CXyWK/GsQmp6anI5aIb6WSFfjgrvJs4p7L3uEYPjzlO
+         GkpRJ66GZKUGuLP+eVCYPdnQQ3mGQairHQPI2PQc1CH1h2wbBhNSPsStZaGA2/6tX3at
+         D8KJUf05Z3XZyoX+vQ5pLBt3uaq7/Fy6rgwWGrqhUMyVOLJ7MN+2NVzUknbR9jsV4dbS
+         Ex2rFoIyPAm1bbbPBZE2IOshCFVPOUCDXQn1JL5cFS6RedIbifXHNKbm8mXOOqP/BgB7
+         Cn0NJz199Cds1Hu0PjRzH+OzsRVEpaKpNjt6r1pElqk4N6HD/j6TXSi1LE4VE8FLXAQ5
+         MWlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eLcNDbfanR+9OC/qj3TxYDSuqrtVsDPMKOVV+JQ2Ebk=;
+        b=8Lc9ZWiWLYSrMZfPRXE6cnbuS9Kmele/sryz+gyliwB4Euwc1xzdkbpoREoql9CfnA
+         H6Ble3YLoVcV1J7JONpCyem2+yPY97DIU2khK15z0aVVqh2D0ep6AGtbwEBbscgxXc7C
+         xs11cVFuZyTMRwph/bfAIC0XzFcug781TtdSG3XgAmSNcAKN0eAADnFsPMtH48Pl2Xn+
+         jbulIPI9VnpqrqKZLYxxvp74+tM0Oa43xerGCTxuyNC8RmmzhcoMfT2l31O1rvdnz7A4
+         ChVNZaVDdg9lReXRLTSGUVc7HLTXzq/GBWokT4o+0/zKYdudCJz9/lbfzbT23e3sqAOc
+         JRXQ==
+X-Gm-Message-State: AOAM532C9INYNJOIBGSubu4AZDnkph4Rms01IZBEU7yqW9Y2bVrRqvJS
+        wfquP6UWd+DVJ7n2ZzKzqZvTlrcfC+e4vxLui/0yUg==
+X-Google-Smtp-Source: ABdhPJydoxyoTdgF9ni8cdiFnXZkxJlGkObaA7hNXhDjoVc4B0iiziqKPPa6r/6uLoLWbaxJTW/jn03h0o1hIC06IXs=
+X-Received: by 2002:a25:d054:0:b0:664:49cb:410 with SMTP id
+ h81-20020a25d054000000b0066449cb0410mr4709163ybg.609.1654849536816; Fri, 10
+ Jun 2022 01:25:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220609113046.780504-1-elver@google.com> <20220609113046.780504-8-elver@google.com>
+ <CACT4Y+bGPLampPm7JHJeXeK_CwQ2_=3mRktPCh7T9r3y8r02hw@mail.gmail.com>
+In-Reply-To: <CACT4Y+bGPLampPm7JHJeXeK_CwQ2_=3mRktPCh7T9r3y8r02hw@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 10 Jun 2022 10:25:00 +0200
+Message-ID: <CANpmjNNwOOYxOXLixrUD25YoszYcy7SRwXMMfrj5zZvrETkp0g@mail.gmail.com>
+Subject: Re: [PATCH 7/8] perf/hw_breakpoint: Optimize task_bp_pinned() if CPU-independent
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This updates the perf tool with arch specific branch type classification
-used for BRBE on arm64 platform as added in the kernel earlier.
+On Thu, 9 Jun 2022 at 17:00, 'Dmitry Vyukov' via kasan-dev
+<kasan-dev@googlegroups.com> wrote:
+>
+> On Thu, 9 Jun 2022 at 13:31, Marco Elver <elver@google.com> wrote:
+> >
+> > Running the perf benchmark with (note: more aggressive parameters vs.
+> > preceding changes, but same host with 256 CPUs):
+> >
+> >  | $> perf bench -r 100 breakpoint thread -b 4 -p 128 -t 512
+> >  | # Running 'breakpoint/thread' benchmark:
+> >  | # Created/joined 100 threads with 4 breakpoints and 128 parallelism
+> >  |      Total time: 1.953 [sec]
+> >  |
+> >  |       38.146289 usecs/op
+> >  |     4882.725000 usecs/op/cpu
+> >
+> >     16.29%  [kernel]       [k] rhashtable_jhash2
+> >     16.19%  [kernel]       [k] osq_lock
+> >     14.22%  [kernel]       [k] queued_spin_lock_slowpath
+> >      8.58%  [kernel]       [k] task_bp_pinned
+> >      8.30%  [kernel]       [k] mutex_spin_on_owner
+> >      4.03%  [kernel]       [k] smp_cfm_core_cond
+> >      2.97%  [kernel]       [k] toggle_bp_slot
+> >      2.94%  [kernel]       [k] bcmp
+> >
+> > We can see that a majority of the time is now spent hashing task
+> > pointers to index into task_bps_ht in task_bp_pinned().
+> >
+> > However, if task_bp_pinned()'s computation is independent of any CPU,
+> > i.e. always `iter->cpu < 0`, the result for each invocation will be
+> > identical. With increasing CPU-count, this problem worsens.
+> >
+> > Instead, identify if every call to task_bp_pinned() is CPU-independent,
+> > and cache the result. Use the cached result instead of a call to
+> > task_bp_pinned(), now __task_bp_pinned(), with task_bp_pinned() deciding
+> > if the cached result can be used.
+> >
+> > After this optimization:
+> >
+> >     21.96%  [kernel]       [k] queued_spin_lock_slowpath
+> >     16.39%  [kernel]       [k] osq_lock
+> >      9.82%  [kernel]       [k] toggle_bp_slot
+> >      9.81%  [kernel]       [k] find_next_bit
+> >      4.93%  [kernel]       [k] mutex_spin_on_owner
+> >      4.71%  [kernel]       [k] smp_cfm_core_cond
+> >      4.30%  [kernel]       [k] __reserve_bp_slot
+> >      2.65%  [kernel]       [k] cpumask_next
+> >
+> > Showing that the time spent hashing keys has become insignificant.
+> >
+> > With the given benchmark parameters, however, we see no statistically
+> > significant improvement in performance on the test system with 256 CPUs.
+> > This is very likely due to the benchmark parameters being too aggressive
+> > and contention elsewhere becoming dominant.
+> >
+> > Indeed, when using the less aggressive parameters from the preceding
+> > changes, we now observe:
+> >
+> >  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
+> >  | # Running 'breakpoint/thread' benchmark:
+> >  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
+> >  |      Total time: 0.071 [sec]
+> >  |
+> >  |       37.134896 usecs/op
+> >  |     2376.633333 usecs/op/cpu
+> >
+> > Which is an improvement of 12% compared to without this optimization
+> > (baseline is 42 usecs/op). This is now only 5% slower than the
+> > theoretical ideal (constraints disabled), and 18% slower than no
+> > breakpoints at all.
+> >
+> > [ While we're here, swap task_bp_pinned()'s bp and cpu arguments to be
+> >   more consistent with other functions (which have bp first, before the
+> >   cpu argument). ]
+>
+> There are 3 main cases:
+> 1. Per-cpu bp.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- tools/include/uapi/linux/perf_event.h |  6 ++++++
- tools/perf/util/branch.c              | 13 +++++++++++++
- 2 files changed, 19 insertions(+)
+Yes, CPU-target breakpoint on just 1 CPU.
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 193dba2ecdc1..4cf1c8e22cab 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -282,6 +282,12 @@ enum {
- 	PERF_BR_PRIV_HV		= 3,
- };
- 
-+#define PERF_BR_ARM64_FIQ		PERF_BR_NEW_ARCH_1
-+#define PERF_BR_ARM64_DEBUG_HALT	PERF_BR_NEW_ARCH_2
-+#define PERF_BR_ARM64_DEBUG_EXIT	PERF_BR_NEW_ARCH_3
-+#define PERF_BR_ARM64_DEBUG_INST	PERF_BR_NEW_ARCH_4
-+#define PERF_BR_ARM64_DEBUG_DATA	PERF_BR_NEW_ARCH_5
-+
- #define PERF_SAMPLE_BRANCH_PLM_ALL \
- 	(PERF_SAMPLE_BRANCH_USER|\
- 	 PERF_SAMPLE_BRANCH_KERNEL|\
-diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-index 6d962b0a4532..d40776c44b06 100644
---- a/tools/perf/util/branch.c
-+++ b/tools/perf/util/branch.c
-@@ -45,11 +45,24 @@ const char *branch_new_type_name(int new_type)
- 		"FAULT_ALGN",
- 		"FAULT_DATA",
- 		"FAULT_INST",
-+/*
-+ * TODO: This switch should happen on 'session->header.env.arch'
-+ * instead, because an arm64 platform perf recording could be
-+ * opened for analysis on other platforms as well.
-+ */
-+#ifdef __aarch64__
-+		"ARM64_FIQ",
-+		"ARM64_DEBUG_HALT",
-+		"ARM64_DEBUG_EXIT",
-+		"ARM64_DEBUG_INST",
-+		"ARM64_DEBUG_DATA"
-+#else
- 		"ARCH_1",
- 		"ARCH_2",
- 		"ARCH_3",
- 		"ARCH_4",
- 		"ARCH_5"
-+#endif
- 	};
- 
- 	if (new_type >= 0 && new_type < PERF_BR_NEW_MAX)
--- 
-2.25.1
+> 2. Per-task and per-cpu bp.
 
+Task-target breakpoint but pinned to 1 CPU.
+
+> 3. Per-task bp (on all cpus)
+
+Task-target breakpoint that can run on all CPUs.
+
+> right?
+>
+> For case 1 we still seem to do lots of unnecessary work in
+> fetch_bp_busy_slots() by iterating over all CPUs. We are going to bump
+> only the CPU's cpu_pinned, so that's the only CPU we need to
+> fetch/check.
+
+It'll just do 1 iteration, because cpumask_of_bp() will return a mask
+with just the event's target CPU in it.
+
+> For case 2 we also do lots of unnecessary work, again we also need to
+> check only 1 CPU (don't need cached_tbp_pinned). Also don't need to do
+> atomic_dec/inc on all other CPUs (they dec/inc the same variable).
+
+Same as above, just 1 iteration because cpumask_of_bp() does the right
+thing. cached_tbp_pinned may still be used if all existing task
+breakpoints are CPU-independent (i.e. cpu==-1; granted, doing
+task_bp_pinned() once or twice probably is irrelevant in this case).
+
+> Case 3 is the only one when we need to check all CPUs and
+> cached_tbp_pinned may be useful.
+> But I wonder if we could instead add a per-task
+> has_per_cpu_breakpoints flag. Then if the flag is set, we check all
+> CPUs as we do now (don't need cached_tbp_pinned). And if it's not set,
+> then we could optimize the code even more by making it O(1) instead of
+> O(N).
+
+> Namely, we add global tsk_pinned for tasks that don't have
+> per-cpu breakpoints, and we update only that tsk_pinned instead of
+> iterating over all CPUs.
+
+That seems reasonable.
+
+> I think this will require adding cpu_pinned as well (similar to
+> tsk_pinned but aggregated over all CPUs).
+
+> Then the fast path capacity check can become just:
+>
+> if (bp->hw.target && !bp->hw.target->has_per_cpu_breakpoints && bp->cpu < 0) {
+>   if (max_cpu_bp_pinned(type) + task_bp_pinned(-1 /*cpu*/, bp, type) +
+> hw_breakpoint_weight(bp) > nr_slots[type])
+>     return -ENOSPC;
+> }
+>
+> Does it make any sense?
+
+Yes, I think this might work. I'll see if I can make it work.
