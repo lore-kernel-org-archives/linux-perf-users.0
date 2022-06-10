@@ -2,340 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C72C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Jun 2022 02:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61993C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Jun 2022 03:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345903AbiFJCzw (ORCPT
+        id S234773AbiFJDvT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Jun 2022 22:55:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52594 "EHLO
+        Thu, 9 Jun 2022 23:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346098AbiFJCzp (ORCPT
+        with ESMTP id S234635AbiFJDvS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Jun 2022 22:55:45 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F0B4B841;
-        Thu,  9 Jun 2022 19:55:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654829735; x=1686365735;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HorYf3nLNCdX8tcdJkTuAPZiWk/LbkgyLHvDeaCbH3g=;
-  b=gGTz/4LUhf67g3SLM3tnUZwPrG4t6Ibr3L8fo1sUTc71ThG/LH39GonQ
-   3ZRC2M1Z1DkrlSbBypVYHcc/fp8yoQBmzSJwATcFIHB7kPdHp96QhsAoE
-   lhyAHKGeYW5Xf0X3qtpNZQbdUq8xrqEv9Z2WgKMTph4QTZ4DlqbCpphCo
-   nt4ckdN/Hv/s2Um9duYeKxBx7Rx9dVay1YHO3cdgXJ/UaonnwrnpfyA3+
-   SAejCkmMvacfcB5VjitFd3cpoKlzO+i16ZpXb0x6EJsDzgW2hzp32OEec
-   ST6HVF9sNEQ45McqxxGZxT7/+SiHHxxo0LlUl9BwWoGAlUTrggGr3N69I
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10373"; a="266261223"
-X-IronPort-AV: E=Sophos;i="5.91,288,1647327600"; 
-   d="scan'208";a="266261223"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 19:55:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,288,1647327600"; 
-   d="scan'208";a="566670441"
-Received: from zxingrtx.sh.intel.com ([10.239.159.110])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jun 2022 19:55:31 -0700
-From:   zhengjun.xing@linux.intel.com
-To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org, namhyung@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        zhengjun.xing@linux.intel.com
-Subject: [PATCH v3 5/5] perf stat: Add topdown metrics in the default perf stat on the hybrid machine
-Date:   Fri, 10 Jun 2022 10:54:49 +0800
-Message-Id: <20220610025449.2089232-6-zhengjun.xing@linux.intel.com>
+        Thu, 9 Jun 2022 23:51:18 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F20AE38A280;
+        Thu,  9 Jun 2022 20:51:15 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B48B1063;
+        Thu,  9 Jun 2022 20:51:15 -0700 (PDT)
+Received: from a077893.blr.arm.com (unknown [10.162.42.8])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E0CF93F766;
+        Thu,  9 Jun 2022 20:51:09 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, acme@kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH V6 0/8] perf: Expand perf_branch_entry
+Date:   Fri, 10 Jun 2022 09:20:53 +0530
+Message-Id: <20220610035101.424112-1-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220610025449.2089232-1-zhengjun.xing@linux.intel.com>
-References: <20220610025449.2089232-1-zhengjun.xing@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Branch Record Buffer Extension (BRBE) implementation on arm64 captures more
+branch type classification which cannot be accommodated in the current perf
+branch record format via perf_branch_entry.type element (4 bit field). Also
+it captures privilege information which does not have a corresponding slot
+in perf_branch_entry. This series expands struct perf_branch_entry, to meet
+both these requirements without breaking the existing user space ABI for
+perf tools.
 
-Topdown metrics are missed in the default perf stat on the hybrid machine,
-add Topdown metrics in default perf stat for hybrid systems.
+All architecture specific branch types added via perf_branch_entry.new_type
+field in [PATCH 3/4] will be used in BRBE implementation on arm64 platform
+later on with the following map.
 
-Currently, we support the perf metrics Topdown for the p-core PMU in the
-perf stat default, the perf metrics Topdown support for e-core PMU will be
-implemented later separately. Refactor the code adds two x86 specific
-functions. Widen the size of the event name column by 7 chars, so that all
-metrics after the "#" become aligned again.
+#ifdef CONFIG_ARM64
+#define PERF_BR_FIQ		PERF_BR_NEW_ARCH_1
+#define PERF_BR_DEBUG_HALT	PERF_BR_NEW_ARCH_2
+#define PERF_BR_DEBUG_EXIT	PERF_BR_NEW_ARCH_3
+#define PERF_BR_DEBUG_INST	PERF_BR_NEW_ARCH_4
+#define PERF_BR_DEBUG_DATA	PERF_BR_NEW_ARCH_5
+#endif
 
-The perf metrics topdown feature is supported on the cpu_core of ADL. The
-dedicated perf metrics counter and the fixed counter 3 are used for the
-topdown events. Adding the topdown metrics doesn't trigger multiplexing.
+This series applies on v5.19-rc1
 
-Before:
+perf API
 
- # ./perf  stat  -a true
+The series being applied
 
- Performance counter stats for 'system wide':
+- Clean : tools/perf/check-headers.sh
+- Clean : diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
 
-             53.70 msec cpu-clock                 #   25.736 CPUs utilized
-                80      context-switches          #    1.490 K/sec
-                24      cpu-migrations            #  446.951 /sec
-                52      page-faults               #  968.394 /sec
-         2,788,555      cpu_core/cycles/          #   51.931 M/sec
-           851,129      cpu_atom/cycles/          #   15.851 M/sec
-         2,974,030      cpu_core/instructions/    #   55.385 M/sec
-           416,919      cpu_atom/instructions/    #    7.764 M/sec
-           586,136      cpu_core/branches/        #   10.916 M/sec
-            79,872      cpu_atom/branches/        #    1.487 M/sec
-            14,220      cpu_core/branch-misses/   #  264.819 K/sec
-             7,691      cpu_atom/branch-misses/   #  143.229 K/sec
+References
 
-       0.002086438 seconds time elapsed
+- BRBE captured branch record information
 
-After:
+https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers/BRBINF-n--EL1--Branch-Record-Buffer-Information-Register--n-?lang=en
 
- # ./perf stat  -a true
+- BRBE based perf branch stack implementation on arm64 platform
 
- Performance counter stats for 'system wide':
+https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
 
-             61.39 msec cpu-clock                        #   24.874 CPUs utilized
-                76      context-switches                 #    1.238 K/sec
-                24      cpu-migrations                   #  390.968 /sec
-                52      page-faults                      #  847.097 /sec
-         2,753,695      cpu_core/cycles/                 #   44.859 M/sec
-           903,899      cpu_atom/cycles/                 #   14.725 M/sec
-         2,927,529      cpu_core/instructions/           #   47.690 M/sec
-           428,498      cpu_atom/instructions/           #    6.980 M/sec
-           581,299      cpu_core/branches/               #    9.470 M/sec
-            83,409      cpu_atom/branches/               #    1.359 M/sec
-            13,641      cpu_core/branch-misses/          #  222.216 K/sec
-             8,008      cpu_atom/branch-misses/          #  130.453 K/sec
-        14,761,308      cpu_core/slots/                  #  240.466 M/sec
-         3,288,625      cpu_core/topdown-retiring/       #     22.3% retiring
-         1,323,323      cpu_core/topdown-bad-spec/       #      9.0% bad speculation
-         5,477,470      cpu_core/topdown-fe-bound/       #     37.1% frontend bound
-         4,679,199      cpu_core/topdown-be-bound/       #     31.7% backend bound
-           646,194      cpu_core/topdown-heavy-ops/      #      4.4% heavy operations       #     17.9% light operations
-         1,244,999      cpu_core/topdown-br-mispredict/  #      8.4% branch mispredict      #      0.5% machine clears
-         3,891,800      cpu_core/topdown-fetch-lat/      #     26.4% fetch latency          #     10.7% fetch bandwidth
-         1,879,034      cpu_core/topdown-mem-bound/      #     12.7% memory bound           #     19.0% Core bound
+Changes in V6:
 
-       0.002467839 seconds time elapsed
+- Process PERF_BR_EXTEND_ABI in perf tools and fetch from perf_branch_entry.new_type
+- Modified the commit message for [PATCH 1/8]
 
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
-Change log:
-  v3:
-    * Make the pr_warning in one line.
-  v2:
-    * Refactor arch_get_topdown_pmu_name() as Namhyung's suggestion.
+Changes in V5:
 
- tools/perf/arch/x86/util/evlist.c  | 13 ++------
- tools/perf/arch/x86/util/topdown.c | 51 ++++++++++++++++++++++++++++++
- tools/perf/arch/x86/util/topdown.h |  1 +
- tools/perf/builtin-stat.c          | 14 ++------
- tools/perf/util/stat-display.c     |  2 +-
- tools/perf/util/topdown.c          |  7 ++++
- tools/perf/util/topdown.h          |  3 +-
- 7 files changed, 66 insertions(+), 25 deletions(-)
+https://lore.kernel.org/linux-arm-kernel/20220404045046.634522-1-anshuman.khandual@arm.com/
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index c83f8c11735f..cb59ce9b9638 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -3,12 +3,9 @@
- #include "util/pmu.h"
- #include "util/evlist.h"
- #include "util/parse-events.h"
--#include "topdown.h"
- #include "util/event.h"
- #include "util/pmu-hybrid.h"
--
--#define TOPDOWN_L1_EVENTS	"{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
--#define TOPDOWN_L2_EVENTS	"{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,topdown-fetch-lat,topdown-mem-bound}"
-+#include "topdown.h"
- 
- static int ___evlist__add_default_attrs(struct evlist *evlist,
- 					struct perf_event_attr *attrs,
-@@ -65,13 +62,7 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
- 	if (nr_attrs)
- 		return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
- 
--	if (!pmu_have_event("cpu", "slots"))
--		return 0;
--
--	if (pmu_have_event("cpu", "topdown-heavy-ops"))
--		return parse_events(evlist, TOPDOWN_L2_EVENTS, NULL);
--	else
--		return parse_events(evlist, TOPDOWN_L1_EVENTS, NULL);
-+	return topdown_parse_events(evlist);
- }
- 
- struct evsel *arch_evlist__leader(struct list_head *list)
-diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-index f81a7cfe4d63..67c524324125 100644
---- a/tools/perf/arch/x86/util/topdown.c
-+++ b/tools/perf/arch/x86/util/topdown.c
-@@ -3,9 +3,17 @@
- #include "api/fs/fs.h"
- #include "util/pmu.h"
- #include "util/topdown.h"
-+#include "util/evlist.h"
-+#include "util/debug.h"
-+#include "util/pmu-hybrid.h"
- #include "topdown.h"
- #include "evsel.h"
- 
-+#define TOPDOWN_L1_EVENTS       "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
-+#define TOPDOWN_L1_EVENTS_CORE  "{slots,cpu_core/topdown-retiring/,cpu_core/topdown-bad-spec/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/}"
-+#define TOPDOWN_L2_EVENTS       "{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,topdown-fetch-lat,topdown-mem-bound}"
-+#define TOPDOWN_L2_EVENTS_CORE  "{slots,cpu_core/topdown-retiring/,cpu_core/topdown-bad-spec/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/,cpu_core/topdown-heavy-ops/,cpu_core/topdown-br-mispredict/,cpu_core/topdown-fetch-lat/,cpu_core/topdown-mem-bound/}"
-+
- /* Check whether there is a PMU which supports the perf metrics. */
- bool topdown_sys_has_perf_metrics(void)
- {
-@@ -73,3 +81,46 @@ bool arch_topdown_sample_read(struct evsel *leader)
- 
- 	return false;
- }
-+
-+const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn)
-+{
-+	const char *pmu_name;
-+
-+	if (!perf_pmu__has_hybrid())
-+		return "cpu";
-+
-+	if (!evlist->hybrid_pmu_name) {
-+		if (warn)
-+			pr_warning("WARNING: default to use cpu_core topdown events\n");
-+		evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu("core");
-+	}
-+
-+	pmu_name = evlist->hybrid_pmu_name;
-+
-+	return pmu_name;
-+}
-+
-+int topdown_parse_events(struct evlist *evlist)
-+{
-+	const char *topdown_events;
-+	const char *pmu_name;
-+
-+	if (!topdown_sys_has_perf_metrics())
-+		return 0;
-+
-+	pmu_name = arch_get_topdown_pmu_name(evlist, false);
-+
-+	if (pmu_have_event(pmu_name, "topdown-heavy-ops")) {
-+		if (!strcmp(pmu_name, "cpu_core"))
-+			topdown_events = TOPDOWN_L2_EVENTS_CORE;
-+		else
-+			topdown_events = TOPDOWN_L2_EVENTS;
-+	} else {
-+		if (!strcmp(pmu_name, "cpu_core"))
-+			topdown_events = TOPDOWN_L1_EVENTS_CORE;
-+		else
-+			topdown_events = TOPDOWN_L1_EVENTS;
-+	}
-+
-+	return parse_events(evlist, topdown_events, NULL);
-+}
-diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
-index 46bf9273e572..7eb81f042838 100644
---- a/tools/perf/arch/x86/util/topdown.h
-+++ b/tools/perf/arch/x86/util/topdown.h
-@@ -3,5 +3,6 @@
- #define _TOPDOWN_H 1
- 
- bool topdown_sys_has_perf_metrics(void);
-+int topdown_parse_events(struct evlist *evlist);
- 
- #endif
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 837c3ca91af1..c6b68be78f8c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -71,6 +71,7 @@
- #include "util/bpf_counter.h"
- #include "util/iostat.h"
- #include "util/pmu-hybrid.h"
-+ #include "util/topdown.h"
- #include "asm/bug.h"
- 
- #include <linux/time64.h>
-@@ -1858,22 +1859,11 @@ static int add_default_attributes(void)
- 		unsigned int max_level = 1;
- 		char *str = NULL;
- 		bool warn = false;
--		const char *pmu_name = "cpu";
-+		const char *pmu_name = arch_get_topdown_pmu_name(evsel_list, true);
- 
- 		if (!force_metric_only)
- 			stat_config.metric_only = true;
- 
--		if (perf_pmu__has_hybrid()) {
--			if (!evsel_list->hybrid_pmu_name) {
--				pr_warning("WARNING: default to use cpu_core topdown events\n");
--				evsel_list->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu("core");
--			}
--
--			pmu_name = evsel_list->hybrid_pmu_name;
--			if (!pmu_name)
--				return -1;
--		}
--
- 		if (pmu_have_event(pmu_name, topdown_metric_L2_attrs[5])) {
- 			metric_attrs = topdown_metric_L2_attrs;
- 			max_level = 2;
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 606f09b09226..44045565c8f8 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -374,7 +374,7 @@ static void abs_printout(struct perf_stat_config *config,
- 			config->csv_output ? 0 : config->unit_width,
- 			evsel->unit, config->csv_sep);
- 
--	fprintf(output, "%-*s", config->csv_output ? 0 : 25, evsel__name(evsel));
-+	fprintf(output, "%-*s", config->csv_output ? 0 : 32, evsel__name(evsel));
- 
- 	print_cgroup(config, evsel);
- }
-diff --git a/tools/perf/util/topdown.c b/tools/perf/util/topdown.c
-index a369f84ceb6a..1090841550f7 100644
---- a/tools/perf/util/topdown.c
-+++ b/tools/perf/util/topdown.c
-@@ -65,3 +65,10 @@ __weak bool arch_topdown_sample_read(struct evsel *leader __maybe_unused)
- {
- 	return false;
- }
-+
-+__weak const char *arch_get_topdown_pmu_name(struct evlist *evlist
-+					     __maybe_unused,
-+					     bool warn __maybe_unused)
-+{
-+	return "cpu";
-+}
-diff --git a/tools/perf/util/topdown.h b/tools/perf/util/topdown.h
-index 118e75281f93..f9531528c559 100644
---- a/tools/perf/util/topdown.h
-+++ b/tools/perf/util/topdown.h
-@@ -2,11 +2,12 @@
- #ifndef TOPDOWN_H
- #define TOPDOWN_H 1
- #include "evsel.h"
-+#include "evlist.h"
- 
- bool arch_topdown_check_group(bool *warn);
- void arch_topdown_group_warn(void);
- bool arch_topdown_sample_read(struct evsel *leader);
--
-+const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn);
- int topdown_filter_events(const char **attr, char **str, bool use_group,
- 			  const char *pmu_name);
- 
+- Dropped patches [PATCH 1/10] and [PATCH 6/10] related to PERF_BR_[RET|IRQ] - merged
+  via the commit cedd3614e5d9c809 ("perf: Add irq and exception return branch types")
+
+- Rebased series on v5.18-rc1
+
+Changes in V4:
+
+https://lore.kernel.org/all/20220315053516.431515-1-anshuman.khandual@arm.com/
+
+- Modified the struct branch_flags as required
+- Dropped CONFIG_ARM64 from perf header file to avoid build problem
+- Renamed PERF_BR_NEW_<BRANCH_TYPE> as PERF_BR_ARM64_<BRANCH_TYPE>
+
+Changes in V3:
+
+https://lore.kernel.org/all/20220314055857.125421-1-anshuman.khandual@arm.com/
+
+- Fixed small typo s/privillege/privilege in include/uapi/linux/perf_event.h
+- Added PRIV_SHIFT in __p_branch_sample_type()
+- Added arm64 platform override of the new arch specific branch types
+- Renamed s/PERF_BR_XXX/PERF_BR_PRIV_XXX/ for privilege level branch types
+- Added PERF_BR_PRIV_UNKNOWN as the starting value
+- Expanded perf_branch_entry.priv into a 3 bits field 
+
+Changes in V2:
+
+https://lore.kernel.org/all/20220309033642.144769-1-anshuman.khandual@arm.com/
+
+Cc: Robin Murphy <robin.murphy@arm.com> 
+Cc: Suzuki Poulose <suzuki.poulose@arm.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (8):
+  perf: Add system error and not in transaction branch types
+  perf: Extend branch type classification
+  perf: Capture branch privilege information
+  perf: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
+  perf/tools: Add system error and not in transaction branch types
+  perf/tools: Extend branch type classification
+  perf/tools: Add branch privilege information request flag
+  perf/tools: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
+
+ arch/x86/events/intel/lbr.c               |  2 +-
+ include/uapi/linux/perf_event.h           | 36 +++++++++++-
+ tools/include/uapi/linux/perf_event.h     | 36 +++++++++++-
+ tools/perf/Documentation/perf-record.txt  |  1 +
+ tools/perf/builtin-script.c               |  2 +-
+ tools/perf/util/branch.c                  | 69 ++++++++++++++++++++++-
+ tools/perf/util/branch.h                  |  7 ++-
+ tools/perf/util/parse-branch-options.c    |  1 +
+ tools/perf/util/perf_event_attr_fprintf.c |  2 +-
+ tools/perf/util/session.c                 |  2 +-
+ 10 files changed, 149 insertions(+), 9 deletions(-)
+
 -- 
 2.25.1
 
