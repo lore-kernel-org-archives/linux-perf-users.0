@@ -2,108 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F0FC43334
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Jun 2022 04:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAB8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Jun 2022 18:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238625AbiFKEIb (ORCPT
+        id S230060AbiFKS2x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Jun 2022 00:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37066 "EHLO
+        Sat, 11 Jun 2022 14:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237285AbiFKEI3 (ORCPT
+        with ESMTP id S229753AbiFKS2w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Jun 2022 00:08:29 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99050F1A;
-        Fri, 10 Jun 2022 21:08:26 -0700 (PDT)
-Received: from canpemm500007.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LKkmg5yWVzjXDP;
-        Sat, 11 Jun 2022 12:06:59 +0800 (CST)
-Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
- (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Sat, 11 Jun
- 2022 12:08:24 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <ast@kernel.org>,
-        <daniel@iogearbox.net>, <andrii@kernel.org>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@kernel.org>, <christylee@fb.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] perf: Fix pass 0 to PTR_ERR
-Date:   Sat, 11 Jun 2022 12:07:19 +0800
-Message-ID: <20220611040719.8160-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 11 Jun 2022 14:28:52 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D786021E11;
+        Sat, 11 Jun 2022 11:28:49 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id m20so3740337ejj.10;
+        Sat, 11 Jun 2022 11:28:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O8vjC1NOqcfKHs6cCVju07ovb9Bmfhfc9kJzZpuTlAs=;
+        b=kndKVMrTTrr+Og3lph4E8s24LCWngPqyvj2HfhGX/JglD2YaVdAsKbCnoF/KZh5O4M
+         MSvcD+PBv+hnBUANwCwlJ+zCITn7W8DuN7zWV25kgE1rdJSCrMhBK/idJZIjH+A5pXQu
+         GXOxRm6LrLSlIvIh9QgwRf/aE1lM+ql/5H5ltRDt7oK7TCK/fRqp7LT0PXyp0gvQbaam
+         uT83nLpv0wZfsNBzoS9tY+MPb6y4O+qYGiJHbRwGfNAwZjRhmr8/7Ozy0L8KmwPNXldS
+         cn6M3H1UQlSxLoXe9QzE7HUHu5fdKNogUEonij1ok5UI7KOzxrD/WdrAFfLrChLY7xq1
+         NlRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O8vjC1NOqcfKHs6cCVju07ovb9Bmfhfc9kJzZpuTlAs=;
+        b=ucTPu0Irf+TZa4vtCHuYgi1QGDT4NH9p8fdTAsti5F9m380izHpKy/Yd9psqsCe6aK
+         5Y82dYvwt4j60WwDYtICFoDZ+vuOo3yfC6N0JwiNRgLtijGLZOcrEy0q73Rc26IRNT2c
+         R6wNVbP5bJ3bnPvxOdGExP28+lltq+JlYQJXpy6SJcoBqJHDJkYm8Y6CWtHO5rCENvUG
+         lz1L3/9zGXOE9KIS7oQgP0QpSgnua+Wz/41yeQyvoftpPzFT/Xsck/+UQwCGVGHYPvoI
+         Rigle8xeajNMZWZ/4KBJFrkqRF5wEUZwGrJSFgvMa9mVv56AOo7lnqZwZQw56Pn1fX3z
+         tFSg==
+X-Gm-Message-State: AOAM533EqmTf3vc533VdM40RVMP5XtLqM1YQURNRkjIlfTmMn3eXZSWf
+        HF0ECZK+3SCMh8qhIrn0ASA/H6tsinujETbZ9Po=
+X-Google-Smtp-Source: ABdhPJyXzlDhAZ+FKjclWprkT+e8NVYLHB0jOQPZ+A2Pu0ikmI7H37YxLZ2dsZIAXCCLQCoF7Z1ZWtshACaNpDjHEB0=
+X-Received: by 2002:a17:906:14d5:b0:711:c55a:998 with SMTP id
+ y21-20020a17090614d500b00711c55a0998mr31961646ejc.708.1654972128256; Sat, 11
+ Jun 2022 11:28:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.215]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500007.china.huawei.com (7.192.104.62)
-X-CFilter-Loop: Reflected
+References: <20220609192936.23985-1-9erthalion6@gmail.com> <20220609193028.zhxpxscawnd3sep6@erthalion.local>
+In-Reply-To: <20220609193028.zhxpxscawnd3sep6@erthalion.local>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Sat, 11 Jun 2022 11:28:36 -0700
+Message-ID: <CAADnVQLLq+=gc1r+5pxrf3=VL29yZG=_9z6Th-rzcpC+xxsoyA@mail.gmail.com>
+Subject: Re: [PATCH] perf/kprobe: maxactive for fd-based kprobe
+To:     Dmitry Dolgov <9erthalion6@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Passing NULL to PTR_ERR will result in 0 (success), also move
-evlist__find_evsel_by_str() behind for for minor optimization.
+On Thu, Jun 9, 2022 at 1:14 PM Dmitry Dolgov <9erthalion6@gmail.com> wrote:
+>
+> > On Thu, Jun 09, 2022 at 09:29:36PM +0200, Dmitrii Dolgov wrote:
+> >
+> > Enable specifying maxactive for fd based kretprobe. This will be useful
+> > for tracing tools like bcc and bpftrace (see for example discussion [1]).
+> > Use highest 12 bit (bit 52-63) to allow maximal maxactive of 4095.
+> >
+> > The original patch [2] seems to be fallen through the cracks and wasn't
+> > applied. I've merely rebased the work done by Song Liu and verififed it
+> > still works.
+> >
+> > [1]: https://github.com/iovisor/bpftrace/issues/835
+> > [2]: https://lore.kernel.org/all/20191007223111.1142454-1-songliubraving@fb.com/
+>
+> I've recently stumbled upon this seemingly lost topic, and wanted to raise it
+> again. Please let me know if there is a more appropriate way to do so.
 
-Fixes: 924b1cd61148 ("perf: Stop using bpf_map__def() API")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- tools/perf/util/bpf-loader.c | 15 ++++++++-------
- tools/perf/util/bpf_map.c    |  2 +-
- 2 files changed, 9 insertions(+), 8 deletions(-)
+With kretprobe using rethook the maxactive limit is no longer used.
+So we probably don't need this patch.
 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index f8ad581ea247..b301ffc8c6e7 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -1253,21 +1253,22 @@ __bpf_map__config_event(struct bpf_map *map,
- 			struct parse_events_term *term,
- 			struct evlist *evlist)
- {
--	struct bpf_map_op *op;
- 	const char *map_name = bpf_map__name(map);
--	struct evsel *evsel = evlist__find_evsel_by_str(evlist, term->val.str);
-+	struct bpf_map_op *op;
-+	struct evsel *evsel;
- 
-+	if (!map) {
-+		pr_debug("Map '%s' is invalid\n", map_name);
-+		return -BPF_LOADER_ERRNO__INTERNAL;
-+	}
-+
-+	evsel = evlist__find_evsel_by_str(evlist, term->val.str);
- 	if (!evsel) {
- 		pr_debug("Event (for '%s') '%s' doesn't exist\n",
- 			 map_name, term->val.str);
- 		return -BPF_LOADER_ERRNO__OBJCONF_MAP_NOEVT;
- 	}
- 
--	if (!map) {
--		pr_debug("Map '%s' is invalid\n", map_name);
--		return PTR_ERR(map);
--	}
--
- 	/*
- 	 * No need to check key_size and value_size:
- 	 * kernel has already checked them.
-diff --git a/tools/perf/util/bpf_map.c b/tools/perf/util/bpf_map.c
-index c863ae0c5cb5..c72aee6a91ee 100644
---- a/tools/perf/util/bpf_map.c
-+++ b/tools/perf/util/bpf_map.c
-@@ -36,7 +36,7 @@ int bpf_map__fprintf(struct bpf_map *map, FILE *fp)
- 		return fd;
- 
- 	if (!map)
--		return PTR_ERR(map);
-+		return -EINVAL;
- 
- 	err = -ENOMEM;
- 	key = malloc(bpf_map__key_size(map));
--- 
-2.17.1
-
+Masami, wdyt?
