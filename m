@@ -2,309 +2,170 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16567C43334
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Jun 2022 16:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F441C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Jun 2022 22:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbiFLQZQ (ORCPT
+        id S236939AbiFLWS4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Jun 2022 12:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
+        Sun, 12 Jun 2022 18:18:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbiFLQZP (ORCPT
+        with ESMTP id S238342AbiFLWSz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Jun 2022 12:25:15 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 060AC5E156;
-        Sun, 12 Jun 2022 09:25:14 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id s1so4407048wra.9;
-        Sun, 12 Jun 2022 09:25:13 -0700 (PDT)
+        Sun, 12 Jun 2022 18:18:55 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F4C522DE;
+        Sun, 12 Jun 2022 15:18:54 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id m16-20020a7bca50000000b0039c8a224c95so1250867wml.2;
+        Sun, 12 Jun 2022 15:18:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=5flk/qL29qSBs94WkHtYEwD+wqRTcbtd2jwDx4HEmtw=;
-        b=kCZC/ubVDGgfgJOVNWXI+3kJ02DI3Gcre3OAO5T1JVJ2mwAXcSAawvwpWwyLVABuc5
-         NH2/mT8v9/3bXBTqbmcCtmhlh6dPIaGuOxAEYaL6Hkxe5YTx+duCyOyGZlo1IECtuy53
-         7FRR5yfqFsZB+fpymAiGle7AZygTeFIuAxut5r4AsYPnXif51MfXXwOl4m30l1RInQM1
-         mS1zvywicUEs44S/k3NvXw8TkTxy/giidylVZ7J0WBvboOvJ+8gcq08/OlUQqviyguub
-         dEaYDj86E17t4szLBjvnKN4iP25sF9tSY60/z3qQxyEC36Vpg2L4h1HVsm7W/tcvnyex
-         KXlQ==
+        bh=0thwiCYGeXFypOTTdMenKsaCFbmk82Gcr6TnyVmb8yA=;
+        b=pZWYIp2o5jCFoBnPd0Oq1Gia588evVxHniD8D40IWBC8rjn6+MwbMY2vvWTZkQ8ELf
+         ayB4JSMONkqNN7VeGju1hmlZRR0m2sSKiMaP+XmwJqFXqciSx4m+GaNm/jWmC7oGqO/r
+         mu4b9rEhjQ0syyFvpa7Nw6/4DP5P+Rp0sVZ831vnW3g6muxyXU3zoXPQ4SEiFX3P8Y6Q
+         1CzWe3z8uCDZVZUSivsoUYe9SzauxPeKc7ZPVywanIKFsLAMVTRaECmAB+9whak1VM7i
+         VmvScyZBYcWosp6d6+48KAcMdYRl4Hhv0s9XmheyVdG+dsLOIr/RcHJ5du0F7FiM2WSK
+         w3rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=5flk/qL29qSBs94WkHtYEwD+wqRTcbtd2jwDx4HEmtw=;
-        b=4383g0FTSX0ZGT0rFp4Jadyn7fB0bPhKIcmuY6oMRbR+1uks7uYjPNF6WJ0BR4kMgi
-         /mZSi0cFaoeU8V+meABtq3Ij/FlxB6OklhMTJynrO3NkyY5Qb3I2IyYI0rikwmG6ZzM/
-         cvpmFsKsfraXIreCIt+thQqXcLU1da2rlslkAyfY7uMwD4kEMkDz6idRMrr/ZuOmdoFS
-         abP+tPi66zfj+2r45lKDowPnzP+Y1oE2j509aYoMEq11BuP9FDN1K3ETijiSwJ2E0EKD
-         ufmuYxWXSj4gvOSFCOFVUFpPomSADj3LO86heTZljK2abdKQ3p2ktlYDCter6EGRzRBT
-         fMmA==
-X-Gm-Message-State: AOAM531rjm+oY2v2wr4aSzmigdrHUDxz8ovNq+q3Ts/W7yCjKInaFlBZ
-        c+wg3hyyyQS9X3peDsrylM4=
-X-Google-Smtp-Source: ABdhPJzQR8sIKhKkmeF3b5mQJO9Q/sBMcf3hU2YFJhcGfnIIEvoVi8aCQdWdCSB7rstN0yVsI4LuPw==
-X-Received: by 2002:adf:e991:0:b0:210:3222:cd1e with SMTP id h17-20020adfe991000000b002103222cd1emr55285164wrm.49.1655051112386;
-        Sun, 12 Jun 2022 09:25:12 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id r15-20020a05600c35cf00b0039c54f34948sm11277924wmq.5.2022.06.12.09.25.11
+        bh=0thwiCYGeXFypOTTdMenKsaCFbmk82Gcr6TnyVmb8yA=;
+        b=e5ejjc1PzaXpNpzHSWK7oswIEhdeu44Azz2mMGGqCJpJVGesnFzLjRoDIV2h5HzT+d
+         hP65uNDASKVprO5X6oEyaguHfj/faMDX+YrsbCvPpeSjzcqgkZdZK54tCdoTZILZrDX4
+         KcrwbZ2KuelWsbqCEahTvgvuiBjI6De5tMH731l1EqQRJUtOzmHmDKle3pAHtb/x8H6F
+         VNyv+fAzZs7NsC1mu3O1Q/Ay9mEQXgsuP1bQ1AFNQ/ucrSgLIB22JBW4dlXoUVf38fSu
+         mG56KvVV+DSpwlA1/LKZBgY+L5ZLWAmZqAzvWDmtBZMMUaN/leJO+s+ZfHO30oyeBWeC
+         UVig==
+X-Gm-Message-State: AOAM530TFLWHsRpJQA0keotAnwNphsyuK/8mh+HpTTnbRBxEj7b+qUpF
+        j98st6LC74FJU+sgZW1eF00=
+X-Google-Smtp-Source: ABdhPJy4r9gHhbJ80DPs5mRwEFIbQTdpXEVCPUijeTzMFrvkeKvn2p7VagcUJMQLXv58cR/kG7l4KA==
+X-Received: by 2002:a7b:cc0d:0:b0:381:220e:a3a0 with SMTP id f13-20020a7bcc0d000000b00381220ea3a0mr11181132wmh.59.1655072332987;
+        Sun, 12 Jun 2022 15:18:52 -0700 (PDT)
+Received: from krava ([83.240.60.46])
+        by smtp.gmail.com with ESMTPSA id s7-20020a5d4247000000b0021018642ff8sm6602167wrr.76.2022.06.12.15.18.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jun 2022 09:25:11 -0700 (PDT)
+        Sun, 12 Jun 2022 15:18:52 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Sun, 12 Jun 2022 18:25:09 +0200
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Date:   Mon, 13 Jun 2022 00:18:49 +0200
+To:     Blake Jones <blakejones@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv4 bpf-next 0/2] perf tools: Fix prologue generation
-Message-ID: <YqYTZVa44Y6RQ11W@krava>
-References: <20220603204509.15044-1-jolsa@kernel.org>
- <CAEf4BzbT4Z=B2hZxTQf1MrCp6TGiMgP+_t7p8G5A+RdVyNP+8w@mail.gmail.com>
- <YqOOsL8EbbO3lhmC@kernel.org>
- <CAEf4BzaKP8MHtGZDVSpwbCxNUD4zY9wkjEa4HKR0LWxYKW5cGQ@mail.gmail.com>
- <YqOvYo1tp32gKviM@krava>
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] Add a "-m" option to "perf buildid-list".
+Message-ID: <YqZmSRS8UPQJzWFE@krava>
+References: <20220607191550.4141024-1-blakejones@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YqOvYo1tp32gKviM@krava>
+In-Reply-To: <20220607191550.4141024-1-blakejones@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 10:53:57PM +0200, Jiri Olsa wrote:
-> On Fri, Jun 10, 2022 at 11:45:48AM -0700, Andrii Nakryiko wrote:
-> > On Fri, Jun 10, 2022 at 11:34 AM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > Em Thu, Jun 09, 2022 at 01:31:52PM -0700, Andrii Nakryiko escreveu:
-> > > > On Fri, Jun 3, 2022 at 1:45 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > >
-> > > > > hi,
-> > > > > sending change we discussed some time ago [1] to get rid of
-> > > > > some deprecated functions we use in perf prologue code.
-> > > > >
-> > > > > Despite the gloomy discussion I think the final code does
-> > > > > not look that bad ;-)
-> > > > >
-> > > > > This patchset removes following libbpf functions from perf:
-> > > > >   bpf_program__set_prep
-> > > > >   bpf_program__nth_fd
-> > > > >   struct bpf_prog_prep_result
-> > > > >
-> > > > > v4 changes:
-> > > > >   - fix typo [Andrii]
-> > > > >
-> > > > > v3 changes:
-> > > > >   - removed R0/R1 zero init in libbpf_prog_prepare_load_fn,
-> > > > >     because it's not needed [Andrii]
-> > > > >   - rebased/post on top of bpf-next/master which now has
-> > > > >     all the needed perf/core changes
-> > > > >
-> > > > > v2 changes:
-> > > > >   - use fallback section prog handler, so we don't need to
-> > > > >     use section prefix [Andrii]
-> > > > >   - realloc prog->insns array in bpf_program__set_insns [Andrii]
-> > > > >   - squash patch 1 from previous version with
-> > > > >     bpf_program__set_insns change [Daniel]
-> > > > >   - patch 3 already merged [Arnaldo]
-> > > > >   - added more comments
-> > > > >
-> > > > > thanks,
-> > > > > jirka
-> > > > >
-> > > >
-> > > > Arnaldo, can I get an ack from you for this patch set? Thank you!
-> > >
-> > > So, before these patches:
-> > >
-> > > [acme@quaco perf-urgent]$ git log --oneline -5
-> > > 22905f78d181f446 (HEAD) libperf evsel: Open shouldn't leak fd on failure
-> > > a3c6da3dbd4bdf9c perf test: Fix "perf stat CSV output linter" test on s390
-> > > 785cb9e85e8ba66f perf unwind: Fix uninitialized variable
-> > > 874c8ca1e60b2c56 netfs: Fix gcc-12 warning by embedding vfs inode in netfs_i_context
-> > > 3d9f55c57bc3659f Merge tag 'fs_for_v5.19-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs
-> > > [acme@quaco perf-urgent]$ sudo su -
-> > > [root@quaco ~]# perf -v
-> > > perf version 5.19.rc1.g22905f78d181
-> > > [root@quaco ~]# perf test 42
-> > >  42: BPF filter                                                      :
-> > >  42.1: Basic BPF filtering                                           : Ok
-> > >  42.2: BPF pinning                                                   : Ok
-> > >  42.3: BPF prologue generation                                       : Ok
-> > > [root@quaco ~]#
-> > >
-> > > And after:
-> > >
-> > > [acme@quaco perf-urgent]$ git log --oneline -5
-> > > f8ec656242acf2de (HEAD -> perf/urgent) perf tools: Rework prologue generation code
-> > > a750a8dd7e5d2d4b perf tools: Register fallback libbpf section handler
-> > > d28f2a8ad42af160 libperf evsel: Open shouldn't leak fd on failure
-> > > a3c6da3dbd4bdf9c perf test: Fix "perf stat CSV output linter" test on s390
-> > > 785cb9e85e8ba66f perf unwind: Fix uninitialized variable
-> > > [acme@quaco perf-urgent]$ sudo su -
-> > > [root@quaco ~]# perf -v
-> > > perf version 5.19.rc1.gf8ec656242ac
-> > > [root@quaco ~]# perf test 42
-> > >  42: BPF filter                                                      :
-> > >  42.1: Basic BPF filtering                                           : FAILED!
-> > >  42.2: BPF pinning                                                   : FAILED!
-> > >  42.3: BPF prologue generation                                       : Ok
-> > > [root@quaco ~]#
-> > >
-> > > Jiri, can you try reproducing these? Do this require some other work
-> > > that is in bpf-next/master? Lemme try...
-> > >
-> > > Further details:
-> > >
-> > > [acme@quaco perf-urgent]$ clang -v
-> > > clang version 13.0.0 (five:git/llvm-project d667b96c98438edcc00ec85a3b151ac2dae862f3)
-> > > Target: x86_64-unknown-linux-gnu
-> > > Thread model: posix
-> > > InstalledDir: /usr/local/bin
-> > > Found candidate GCC installation: /usr/lib/gcc/x86_64-redhat-linux/12
-> > > Selected GCC installation: /usr/lib/gcc/x86_64-redhat-linux/12
-> > > Candidate multilib: .;@m64
-> > > Candidate multilib: 32;@m32
-> > > Selected multilib: .;@m64
-> > > [acme@quaco perf-urgent]$ cat /etc/fedora-release
-> > > Fedora release 36 (Thirty Six)
-> > > [acme@quaco perf-urgent]$ gcc -v
-> > > Using built-in specs.
-> > > COLLECT_GCC=/usr/bin/gcc
-> > > COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/12/lto-wrapper
-> > > OFFLOAD_TARGET_NAMES=nvptx-none
-> > > OFFLOAD_TARGET_DEFAULT=1
-> > > Target: x86_64-redhat-linux
-> > > Configured with: ../configure --enable-bootstrap --enable-languages=c,c++,fortran,objc,obj-c++,ada,go,d,lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=http://bugzilla.redhat.com/bugzilla --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-12.1.1-20220507/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none --without-cuda-driver --enable-offload-defaulted --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1
-> > > Thread model: posix
-> > > Supported LTO compression algorithms: zlib zstd
-> > > gcc version 12.1.1 20220507 (Red Hat 12.1.1-1) (GCC)
-> > > [acme@quaco perf-urgent]$
-> > >
-> > > [root@quaco ~]# perf test -v 42
-> > >  42: BPF filter                                                      :
-> > >  42.1: Basic BPF filtering                                           :
-> > > --- start ---
-> > > test child forked, pid 638881
-> > > Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
-> > > set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-> > > unset env: KBUILD_OPTS
-> > > include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h
-> > > set env: NR_CPUS=8
-> > > set env: LINUX_VERSION_CODE=0x5110b
-> > > set env: CLANG_EXEC=/usr/lib64/ccache/clang
-> > > set env: CLANG_OPTIONS=-xc -g
+On Tue, Jun 07, 2022 at 12:15:50PM -0700, Blake Jones wrote:
+> This new option displays all of the information needed to do external
+> BuildID-based symbolization of kernel stack traces, such as those collected
+> by bpf_get_stackid(). For each kernel module plus the main kernel, it
+> displays the BuildID, the start and end virtual addresses of that module's
+> text range (rounded out to page boundaries), and the pathname of the
+> module.
 > 
-> ok, it's the BTF debug info as Andrii mentioned below,
-> I assume you have 'clang-opt=-g' in .perfconfig, right?
+> When run as a non-privileged user, the actual addresses of the modules'
+> text ranges are not available, so the tools displays "0, <text length>" for
+> kernel modules and "0, ffffffffffffffff" for the kernel itself.
 > 
-> when I add it to mine I can reproduce, perfect
+> This patch has been rebased as of this afternoon, but is otherwise
+> identical to the version I sent out last month.
 > 
-> SNIP
+> Sample output:
 > 
-> > > bpf: config 'func=do_epoll_wait' is ok
-> > > Looking at the vmlinux_path (8 entries long)
-> > > symsrc__init: build id mismatch for vmlinux.
-> > > Using /usr/lib/debug/lib/modules/5.17.11-300.fc36.x86_64/vmlinux for symbols
-> > > Open Debuginfo file: /usr/lib/debug/.build-id/f2/26f5d75e6842add57095a0615a1e5c16783dd7.debug
-> > > Try to find probe point from debuginfo.
-> > > Matched function: do_epoll_wait [38063fb]
-> > > Probe point found: do_epoll_wait+0
-> > > Found 1 probe_trace_events.
-> > > Opening /sys/kernel/tracing//kprobe_events write=1
-> > > Opening /sys/kernel/tracing//README write=0
-> > > Writing event: p:perf_bpf_probe/func _text+3943040
-> > > libbpf: map 'flip_table': created successfully, fd=4
-> > > libbpf: prog 'bpf_func__SyS_epoll_pwait': BPF program load failed: Invalid argument
-> > > libbpf: prog 'bpf_func__SyS_epoll_pwait': -- BEGIN PROG LOAD LOG --
-> > > Invalid insn code at line_info[11].insn_off
-> > 
-> > Mismatched line_info.
-> > 
-> > Jiri, I think we need to clear func_info and line_info in
-> > bpf_program__set_insns() because at that point func/line info can be
-> > mismatched and won't correspond to the actual set of instructions.
+> root# perf buildid-list -m
+> cf6df852fd4da122d616153353cc8f560fd12fe0 ffffffffa5400000 ffffffffa6001e27 [kernel.kallsyms]
+> 1aa7209aa2acb067d66ed6cf7676d65066384d61 ffffffffc0087000 ffffffffc008b000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/sha512_generic.ko
+> 3857815b5bf0183697b68f8fe0ea06121644041e ffffffffc008c000 ffffffffc0098000 /lib/modules/5.15.15-1rodete2-amd64/kernel/arch/x86/crypto/sha512-ssse3.ko
+> 4081fde0bca2bc097cb3e9d1efcb836047d485f1 ffffffffc0099000 ffffffffc009f000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/acpi/button.ko
+> 1ef81ba4890552ea6b0314f9635fc43fc8cef568 ffffffffc00a4000 ffffffffc00aa000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/cryptd.ko
+> cc5c985506cb240d7d082b55ed260cbb851f983e ffffffffc00af000 ffffffffc00b6000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/i2c/busses/i2c-piix4.ko
+> [...]
+> 
+> Signed-off-by: Blake Jones <blakejones@google.com>
+> ---
+>  .../perf/Documentation/perf-buildid-list.txt  |  3 ++
+>  tools/perf/builtin-buildid-list.c             | 33 ++++++++++++++++++-
+>  tools/perf/util/dso.c                         | 23 +++++++++++++
+>  tools/perf/util/dso.h                         |  2 ++
+>  tools/perf/util/machine.c                     | 13 ++++++++
+>  tools/perf/util/machine.h                     |  5 +++
+>  6 files changed, 78 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-buildid-list.txt b/tools/perf/Documentation/perf-buildid-list.txt
+> index 25c52efcc7f0..a82e92c2667d 100644
+> --- a/tools/perf/Documentation/perf-buildid-list.txt
+> +++ b/tools/perf/Documentation/perf-buildid-list.txt
+> @@ -33,6 +33,9 @@ OPTIONS
+>  -k::
+>  --kernel::
+>  	Show running kernel build id.
+> +-m::
+> +--modules::
+> +	Show buildid, start/end text address, and path of kernel and modules.
 
-so the problem is that we prepend init proglogue instructions
-for each program not just for the one that needs it, so it will
-mismatch later on.. the fix below makes it work for me
+why 'modules' ? it shows all maps (including kernel)
+so perhaps -m/--maps would be better?
 
-Arnaldo,
-I squashed and pushed the change below changes to my bpf/depre
-branch, could you please retest?
+also please state that it's from running kernel
+
+SNIP
+
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 5ac13958d1bd..7c490b5ce449 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -1227,6 +1227,19 @@ void dso__set_long_name(struct dso *dso, const char *name, bool name_allocated)
+>  	dso__set_long_name_id(dso, name, NULL, name_allocated);
+>  }
+>  
+> +void dso__get_long_name(const struct dso *dso, char *name, size_t len)
+> +{
+> +	if (len == 0)
+> +		return;
+> +	if (dso->long_name == NULL) {
+> +		name[0] = '\0';
+> +		return;
+> +	}
+> +
+> +	strncpy(name, dso->long_name, len);
+> +	name[len - 1] = '\0';
+> +}
+> +
+>  void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated)
+>  {
+>  	if (name == NULL)
+> @@ -1359,6 +1372,16 @@ void dso__set_build_id(struct dso *dso, struct build_id *bid)
+>  	dso->has_build_id = 1;
+>  }
+>  
+> +void dso__get_build_id(struct dso *dso, struct build_id *bid)
+> +{
+> +	if (dso->has_build_id) {
+> +		*bid = dso->bid;
+> +	} else {
+> +		bid->size = 0;
+> +		memset(bid->data, 0, sizeof(*bid->data));
+> +	}
+> +}
+
+any reason why not use the dso fields directly?
 
 thanks,
 jirka
-
-
----
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 30d0e688beec..6bd7c288e820 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -107,6 +107,17 @@ static int bpf_perf_object__add(struct bpf_object *obj)
- 	return perf_obj ? 0 : -ENOMEM;
- }
- 
-+static void *program_priv(const struct bpf_program *prog)
-+{
-+	void *priv;
-+
-+	if (IS_ERR_OR_NULL(bpf_program_hash))
-+		return NULL;
-+	if (!hashmap__find(bpf_program_hash, prog, &priv))
-+		return NULL;
-+	return priv;
-+}
-+
- static struct bpf_insn prologue_init_insn[] = {
- 	BPF_MOV64_IMM(BPF_REG_2, 0),
- 	BPF_MOV64_IMM(BPF_REG_3, 0),
-@@ -120,9 +131,18 @@ static int libbpf_prog_prepare_load_fn(struct bpf_program *prog,
- {
- 	size_t init_size_cnt = ARRAY_SIZE(prologue_init_insn);
- 	size_t orig_insn_cnt, insn_cnt, init_size, orig_size;
-+	struct bpf_prog_priv *priv = program_priv(prog);
- 	const struct bpf_insn *orig_insn;
- 	struct bpf_insn *insn;
- 
-+	if (IS_ERR_OR_NULL(priv)) {
-+		pr_debug("bpf: failed to get private field\n");
-+		return -BPF_LOADER_ERRNO__INTERNAL;
-+	}
-+
-+	if (!priv->need_prologue)
-+		return 0;
-+
- 	/* prepend initialization code to program instructions */
- 	orig_insn = bpf_program__insns(prog);
- 	orig_insn_cnt = bpf_program__insn_cnt(prog);
-@@ -312,17 +332,6 @@ static bool ptr_equal(const void *key1, const void *key2,
- 	return key1 == key2;
- }
- 
--static void *program_priv(const struct bpf_program *prog)
--{
--	void *priv;
--
--	if (IS_ERR_OR_NULL(bpf_program_hash))
--		return NULL;
--	if (!hashmap__find(bpf_program_hash, prog, &priv))
--		return NULL;
--	return priv;
--}
--
- static int program_set_priv(struct bpf_program *prog, void *priv)
- {
- 	void *old_priv;
