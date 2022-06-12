@@ -2,88 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAB8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Jun 2022 18:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A514C43334
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Jun 2022 06:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230060AbiFKS2x (ORCPT
+        id S234511AbiFLGVV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Jun 2022 14:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
+        Sun, 12 Jun 2022 02:21:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbiFKS2w (ORCPT
+        with ESMTP id S229664AbiFLGVU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Jun 2022 14:28:52 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D786021E11;
-        Sat, 11 Jun 2022 11:28:49 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id m20so3740337ejj.10;
-        Sat, 11 Jun 2022 11:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O8vjC1NOqcfKHs6cCVju07ovb9Bmfhfc9kJzZpuTlAs=;
-        b=kndKVMrTTrr+Og3lph4E8s24LCWngPqyvj2HfhGX/JglD2YaVdAsKbCnoF/KZh5O4M
-         MSvcD+PBv+hnBUANwCwlJ+zCITn7W8DuN7zWV25kgE1rdJSCrMhBK/idJZIjH+A5pXQu
-         GXOxRm6LrLSlIvIh9QgwRf/aE1lM+ql/5H5ltRDt7oK7TCK/fRqp7LT0PXyp0gvQbaam
-         uT83nLpv0wZfsNBzoS9tY+MPb6y4O+qYGiJHbRwGfNAwZjRhmr8/7Ozy0L8KmwPNXldS
-         cn6M3H1UQlSxLoXe9QzE7HUHu5fdKNogUEonij1ok5UI7KOzxrD/WdrAFfLrChLY7xq1
-         NlRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O8vjC1NOqcfKHs6cCVju07ovb9Bmfhfc9kJzZpuTlAs=;
-        b=ucTPu0Irf+TZa4vtCHuYgi1QGDT4NH9p8fdTAsti5F9m380izHpKy/Yd9psqsCe6aK
-         5Y82dYvwt4j60WwDYtICFoDZ+vuOo3yfC6N0JwiNRgLtijGLZOcrEy0q73Rc26IRNT2c
-         R6wNVbP5bJ3bnPvxOdGExP28+lltq+JlYQJXpy6SJcoBqJHDJkYm8Y6CWtHO5rCENvUG
-         lz1L3/9zGXOE9KIS7oQgP0QpSgnua+Wz/41yeQyvoftpPzFT/Xsck/+UQwCGVGHYPvoI
-         Rigle8xeajNMZWZ/4KBJFrkqRF5wEUZwGrJSFgvMa9mVv56AOo7lnqZwZQw56Pn1fX3z
-         tFSg==
-X-Gm-Message-State: AOAM533EqmTf3vc533VdM40RVMP5XtLqM1YQURNRkjIlfTmMn3eXZSWf
-        HF0ECZK+3SCMh8qhIrn0ASA/H6tsinujETbZ9Po=
-X-Google-Smtp-Source: ABdhPJyXzlDhAZ+FKjclWprkT+e8NVYLHB0jOQPZ+A2Pu0ikmI7H37YxLZ2dsZIAXCCLQCoF7Z1ZWtshACaNpDjHEB0=
-X-Received: by 2002:a17:906:14d5:b0:711:c55a:998 with SMTP id
- y21-20020a17090614d500b00711c55a0998mr31961646ejc.708.1654972128256; Sat, 11
- Jun 2022 11:28:48 -0700 (PDT)
+        Sun, 12 Jun 2022 02:21:20 -0400
+X-Greylist: delayed 312 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 11 Jun 2022 23:21:19 PDT
+Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD3D739BAD
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Jun 2022 23:21:19 -0700 (PDT)
+Received: by nautica.notk.org (Postfix, from userid 108)
+        id E465DC01B; Sun, 12 Jun 2022 08:16:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+        t=1655014562; bh=nJDO7/qBIBucVpix5fyRM3Rkiiq7vw3tMCV118r+sj4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ibS4L0UCjxNSfiKLJvGRcjtTuXWAZ8IoSuX7hxFJnKoww4a4fLtSCYZUvWU19DF7K
+         QM5IiwpB+CA/OSiqklIYgDvjMzS8se2hu8F/cP1dx0SIhnmynJw0qRxVdQgG2wNwKI
+         rmDMSM7yzRjAF2dmKA1sGMsL4MOpkmVOHQvsSq6h6040E2r+dfRpVQD11gn0rmXPUM
+         rFOTM7VLMw/3n2HCS0GXEGjI3RQ0aXKq7XOrtyTEaPKhvmfzoKsvRW5ZlxyIjJzLqm
+         /KIf30X7o2MzLG1NP/eSLVMckgmRlzbcjgajYqbDpguYj/vV3LO1q1VilvwVjX7aNq
+         aG5aAaWz11EjQ==
+Received: from odin.codewreck.org (localhost [127.0.0.1])
+        by nautica.notk.org (Postfix) with ESMTPS id EC1C1C009;
+        Sun, 12 Jun 2022 08:15:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+        t=1655014552; bh=nJDO7/qBIBucVpix5fyRM3Rkiiq7vw3tMCV118r+sj4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=X+28B/h9frr/iIwfyqbvVHz1QbaByJJkfl4R/GL/wcIgt7ckMZS/CFhz7YH4vq7Ss
+         PsnGZi0JRVrsFJWWaK29bzbMODfEn6X84u29d//YYsURAbuqJlZUqD+UOeUtxhHbf8
+         oPjjlr62vnxAHHZpO5K0nYEao2ielnw9fQW1r7reRAOmr7lx3GmniWvMsA4YcMuLgv
+         JGChOQBJpesVbnDmv8Hk2GLpkH8uoG76W6mDjD2FyNds+u1J4VP6tikcIx0bLPuTsT
+         Q0NbGWSoBLbXqBIahpQijUAR3Im/fXUiK5niuM6xwygYbTM9dtkwRF4WhqOSRhn+gf
+         10we1yzNOll1Q==
+Received: from localhost (odin.codewreck.org [local])
+        by odin.codewreck.org (OpenSMTPD) with ESMTPA id be16708e;
+        Sun, 12 Jun 2022 06:15:45 +0000 (UTC)
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Dominique Martinet <asmadeus@codewreck.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf parse: Allow names to start with digits
+Date:   Sun, 12 Jun 2022 15:15:08 +0900
+Message-Id: <20220612061508.1449636-1-asmadeus@codewreck.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220609192936.23985-1-9erthalion6@gmail.com> <20220609193028.zhxpxscawnd3sep6@erthalion.local>
-In-Reply-To: <20220609193028.zhxpxscawnd3sep6@erthalion.local>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Sat, 11 Jun 2022 11:28:36 -0700
-Message-ID: <CAADnVQLLq+=gc1r+5pxrf3=VL29yZG=_9z6Th-rzcpC+xxsoyA@mail.gmail.com>
-Subject: Re: [PATCH] perf/kprobe: maxactive for fd-based kprobe
-To:     Dmitry Dolgov <9erthalion6@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 9, 2022 at 1:14 PM Dmitry Dolgov <9erthalion6@gmail.com> wrote:
->
-> > On Thu, Jun 09, 2022 at 09:29:36PM +0200, Dmitrii Dolgov wrote:
-> >
-> > Enable specifying maxactive for fd based kretprobe. This will be useful
-> > for tracing tools like bcc and bpftrace (see for example discussion [1]).
-> > Use highest 12 bit (bit 52-63) to allow maximal maxactive of 4095.
-> >
-> > The original patch [2] seems to be fallen through the cracks and wasn't
-> > applied. I've merely rebased the work done by Song Liu and verififed it
-> > still works.
-> >
-> > [1]: https://github.com/iovisor/bpftrace/issues/835
-> > [2]: https://lore.kernel.org/all/20191007223111.1142454-1-songliubraving@fb.com/
->
-> I've recently stumbled upon this seemingly lost topic, and wanted to raise it
-> again. Please let me know if there is a more appropriate way to do so.
+Tracepoints can start with digits, although we don't have many of these:
 
-With kretprobe using rethook the maxactive limit is no longer used.
-So we probably don't need this patch.
+$ rg -g '*.h' '\bTRACE_EVENT\([0-9]'
+net/mac802154/trace.h
+53:TRACE_EVENT(802154_drv_return_int,
+...
 
-Masami, wdyt?
+net/ieee802154/trace.h
+66:TRACE_EVENT(802154_rdev_add_virtual_intf,
+...
+
+include/trace/events/9p.h
+124:TRACE_EVENT(9p_client_req,
+...
+
+Just allow names to start with digits too so e.g. perf probe -e '9p:*'
+works
+
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+---
+ tools/perf/util/parse-events.l | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 5b6e4b5249cf..4133d6950d29 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -211,7 +211,7 @@ bpf_source	[^,{}]+\.c[a-zA-Z0-9._]*
+ num_dec		[0-9]+
+ num_hex		0x[a-fA-F0-9]+
+ num_raw_hex	[a-fA-F0-9]+
+-name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
++name		[a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
+ name_tag	[\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
+ name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
+ drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
+-- 
+2.36.1
+
