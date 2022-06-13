@@ -2,370 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE0FCCA47D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 09:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D6BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 10:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241328AbiFMJuO (ORCPT
+        id S231440AbiFMKBq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 05:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47974 "EHLO
+        Mon, 13 Jun 2022 06:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241331AbiFMJty (ORCPT
+        with ESMTP id S235736AbiFMKBn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 05:49:54 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E311ADAA;
-        Mon, 13 Jun 2022 02:49:22 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LM6F46fh4zjXfm;
-        Mon, 13 Jun 2022 17:47:52 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 13 Jun 2022 17:48:08 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.61) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 13 Jun 2022 17:48:07 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [RFC 10/13] perf kwork: Implement perf kwork latency
-Date:   Mon, 13 Jun 2022 17:46:02 +0800
-Message-ID: <20220613094605.208401-11-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20220613094605.208401-1-yangjihong1@huawei.com>
-References: <20220613094605.208401-1-yangjihong1@huawei.com>
+        Mon, 13 Jun 2022 06:01:43 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 88ABD1D0F4;
+        Mon, 13 Jun 2022 03:01:35 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08C11D6E;
+        Mon, 13 Jun 2022 03:01:35 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.38.134])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C11BB3F66F;
+        Mon, 13 Jun 2022 03:01:28 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        will@kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/8] arm64/perf: Enable branch stack sampling
+Date:   Mon, 13 Jun 2022 15:31:11 +0530
+Message-Id: <20220613100119.684673-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.61]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Implements framework of perf kwork latency, which is used to report time
-properties such as delay time and frequency.
+This series enables perf branch stack sampling support on arm64 platform
+via a new arch feature called Branch Record Buffer Extension (BRBE). All
+relevant register definitions could be accessed here.
 
-test case:
+https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 
-  Kwork Name                | Cpu  | Avg delay     | Frequency | Max delay     | Max delay start     | Max delay end       |
- ---------------------------------------------------------------------------------------------------------------------------
- ---------------------------------------------------------------------------------------------------------------------------
-  INFO: 37.324% skipped events (33174 including 0 raise, 33174 entry, 0 exit)
+This series applies on v5.19-rc2 after the BRBE related perf ABI changes series
+(V6) that was posted earlier.
 
-Since there are no latency-enabled events, the output is empty.
+https://lore.kernel.org/linux-arm-kernel/20220610035101.424112-1-anshuman.khandual@arm.com/
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/builtin-kwork.c | 153 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
+Following issues remain inconclusive
 
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index f27ffad223a3..84e318eea832 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -32,6 +32,7 @@ enum kwork_class_type {
- };
- 
- enum kwork_trace_type {
-+	KWORK_TRACE_RAISE,
- 	KWORK_TRACE_ENTRY,
- 	KWORK_TRACE_EXIT,
- 	KWORK_TRACE_MAX,
-@@ -39,6 +40,7 @@ enum kwork_trace_type {
- 
- enum kwork_report_type {
- 	KWORK_REPORT_RUNTIME,
-+	KWORK_REPORT_LATENCY,
- };
- 
- /*
-@@ -104,6 +106,14 @@ struct kwork_cluster {
- 	u64 max_runtime_start;
- 	u64 max_runtime_end;
- 	u64 total_runtime;
-+
-+	/*
-+	 * latency report
-+	 */
-+	u64 max_latency;
-+	u64 max_latency_start;
-+	u64 max_latency_end;
-+	u64 total_latency;
- };
- 
- struct kwork_class {
-@@ -128,6 +138,10 @@ struct kwork_class {
- 
- struct perf_kwork;
- struct trace_kwork_handler {
-+	int (*raise_event)(struct perf_kwork *kwork,
-+			   struct kwork_class *class, struct evsel *evsel,
-+			   struct perf_sample *sample, struct machine *machine);
-+
- 	int (*entry_event)(struct perf_kwork *kwork,
- 			   struct kwork_class *class, struct evsel *evsel,
- 			   struct perf_sample *sample, struct machine *machine);
-@@ -195,12 +209,14 @@ struct perf_kwork {
- #define PRINT_CPU_WIDTH 4
- #define PRINT_FREQ_WIDTH 9
- #define PRINT_RUNTIME_WIDTH 10
-+#define PRINT_LATENCY_WIDTH 10
- #define PRINT_TIMESTAMP_WIDTH 17
- #define PRINT_KWORK_NAME_WIDTH 25
- #define RPINT_DECIMAL_WIDTH 3
- #define PRINT_TIME_UNIT_SEC_WIDTH 2
- #define PRINT_TIME_UNIT_MESC_WIDTH 3
- #define PRINT_RUNTIME_HEADER_WIDTH (PRINT_RUNTIME_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
-+#define PRINT_LATENCY_HEADER_WIDTH (PRINT_LATENCY_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
- #define PRINT_TIMESTAMP_HEADER_WIDTH (PRINT_TIMESTAMP_WIDTH + PRINT_TIME_UNIT_SEC_WIDTH)
- 
- struct sort_dimension {
-@@ -254,6 +270,36 @@ static int max_runtime_cmp(struct kwork_cluster *l, struct kwork_cluster *r)
- 	return 0;
- }
- 
-+static int avg_latency_cmp(struct kwork_cluster *l, struct kwork_cluster *r)
-+{
-+	u64 avgl, avgr;
-+
-+	if (!r->nr_atoms)
-+		return 1;
-+	if (!l->nr_atoms)
-+		return -1;
-+
-+	avgl = l->total_latency / l->nr_atoms;
-+	avgr = r->total_latency / r->nr_atoms;
-+
-+	if (avgl > avgr)
-+		return 1;
-+	if (avgl < avgr)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static int max_latency_cmp(struct kwork_cluster *l, struct kwork_cluster *r)
-+{
-+	if (l->max_latency > r->max_latency)
-+		return 1;
-+	if (l->max_latency < r->max_latency)
-+		return -1;
-+
-+	return 0;
-+}
-+
- static int sort_dimension__add(struct perf_kwork *kwork __maybe_unused,
- 			       const char *tok, struct list_head *list)
- {
-@@ -274,13 +320,21 @@ static int sort_dimension__add(struct perf_kwork *kwork __maybe_unused,
- 		.name = "freq",
- 		.cmp  = freq_cmp,
- 	};
-+	static struct sort_dimension avg_sort_dimension = {
-+		.name = "avg",
-+		.cmp  = avg_latency_cmp,
-+	};
- 	struct sort_dimension *available_sorts[] = {
- 		&id_sort_dimension,
- 		&max_sort_dimension,
- 		&freq_sort_dimension,
- 		&runtime_sort_dimension,
-+		&avg_sort_dimension,
- 	};
- 
-+	if (kwork->report == KWORK_REPORT_LATENCY)
-+		max_sort_dimension.cmp = max_latency_cmp;
-+
- 	for (i = 0; i < ARRAY_SIZE(available_sorts); i++) {
- 		if (!strcmp(available_sorts[i]->name, tok)) {
- 			list_add_tail(&available_sorts[i]->list, list);
-@@ -639,6 +693,59 @@ static int report_exit_event(struct perf_kwork *kwork,
- 	return 0;
- }
- 
-+static void latency_update_entry_event(struct kwork_cluster *cluster,
-+				       struct kwork_atom *atom,
-+				       struct perf_sample *sample)
-+{
-+	u64 delta;
-+	u64 entry_time = sample->time;
-+	u64 raise_time = atom->time;
-+
-+	if ((raise_time != 0) && (entry_time >= raise_time)) {
-+		delta = entry_time - raise_time;
-+		if ((delta > cluster->max_latency) ||
-+		    (cluster->max_latency == 0)) {
-+			cluster->max_latency = delta;
-+			cluster->max_latency_start = raise_time;
-+			cluster->max_latency_end = entry_time;
-+		}
-+		cluster->total_latency += delta;
-+		cluster->nr_atoms++;
-+	}
-+}
-+
-+static int latency_raise_event(struct perf_kwork *kwork,
-+			       struct kwork_class *class,
-+			       struct evsel *evsel,
-+			       struct perf_sample *sample,
-+			       struct machine *machine __maybe_unused)
-+{
-+	return cluster_push_atom(kwork, class, KWORK_TRACE_RAISE,
-+				 KWORK_TRACE_MAX, evsel, sample, NULL);
-+}
-+
-+static int latency_entry_event(struct perf_kwork *kwork,
-+			       struct kwork_class *class,
-+			       struct evsel *evsel,
-+			       struct perf_sample *sample,
-+			       struct machine *machine __maybe_unused)
-+{
-+	struct kwork_atom *atom = NULL;
-+	struct kwork_cluster *cluster = NULL;
-+
-+	atom = cluster_pop_atom(kwork, class, KWORK_TRACE_ENTRY,
-+				KWORK_TRACE_RAISE, evsel, sample, &cluster);
-+	if (cluster == NULL)
-+		return -1;
-+
-+	if (atom != NULL) {
-+		latency_update_entry_event(cluster, atom, sample);
-+		atom_del(atom);
-+	}
-+
-+	return 0;
-+}
-+
- static struct kwork_class kwork_irq;
- static int process_irq_handler_entry_event(struct perf_tool *tool,
- 					   struct evsel *evsel,
-@@ -903,6 +1010,7 @@ static void report_print_cluster(struct perf_kwork *kwork,
- 	int ret = 0;
- 	char kwork_name[PRINT_KWORK_NAME_WIDTH];
- 	char max_runtime_start[32], max_runtime_end[32];
-+	char max_latency_start[32], max_latency_end[32];
- 
- 	printf(" ");
- 
-@@ -928,6 +1036,14 @@ static void report_print_cluster(struct perf_kwork *kwork,
- 		ret += printf(" %*.*f ms |",
- 			      PRINT_RUNTIME_WIDTH, RPINT_DECIMAL_WIDTH,
- 			      (double)cluster->total_runtime / NSEC_PER_MSEC);
-+	/*
-+	 * avg delay
-+	 */
-+	else if (kwork->report == KWORK_REPORT_LATENCY)
-+		ret += printf(" %*.*f ms |",
-+			      PRINT_LATENCY_WIDTH, RPINT_DECIMAL_WIDTH,
-+			      (double)cluster->total_latency /
-+			      cluster->nr_atoms / NSEC_PER_MSEC);
- 
- 	/*
- 	 * frequency
-@@ -951,6 +1067,22 @@ static void report_print_cluster(struct perf_kwork *kwork,
- 			      PRINT_TIMESTAMP_WIDTH, max_runtime_start,
- 			      PRINT_TIMESTAMP_WIDTH, max_runtime_end);
- 	}
-+	/*
-+	 * max delay, max delay start, max delay end
-+	 */
-+	else if (kwork->report == KWORK_REPORT_LATENCY) {
-+		timestamp__scnprintf_usec(cluster->max_latency_start,
-+					  max_latency_start,
-+					  sizeof(max_latency_start));
-+		timestamp__scnprintf_usec(cluster->max_latency_end,
-+					  max_latency_end,
-+					  sizeof(max_latency_end));
-+		ret += printf(" %*.*f ms | %*s s | %*s s |",
-+			      PRINT_LATENCY_WIDTH, RPINT_DECIMAL_WIDTH,
-+			      (double)cluster->max_latency / NSEC_PER_MSEC,
-+			      PRINT_TIMESTAMP_WIDTH, max_latency_start,
-+			      PRINT_TIMESTAMP_WIDTH, max_latency_end);
-+	}
- 
- 	printf("\n");
- }
-@@ -967,6 +1099,9 @@ static int report_print_header(struct perf_kwork *kwork)
- 	if (kwork->report == KWORK_REPORT_RUNTIME)
- 		ret += printf(" %-*s |",
- 			      PRINT_RUNTIME_HEADER_WIDTH, "Total Runtime");
-+	else if (kwork->report == KWORK_REPORT_LATENCY)
-+		ret += printf(" %-*s |",
-+			      PRINT_LATENCY_HEADER_WIDTH, "Avg delay");
- 
- 	ret += printf(" %-*s |", PRINT_FREQ_WIDTH, "Frequency");
- 
-@@ -975,6 +1110,11 @@ static int report_print_header(struct perf_kwork *kwork)
- 			      PRINT_RUNTIME_HEADER_WIDTH, "Max runtime",
- 			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max runtime start",
- 			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max runtime end");
-+	else if (kwork->report == KWORK_REPORT_LATENCY)
-+		ret += printf(" %-*s | %-*s | %-*s |",
-+			      PRINT_LATENCY_HEADER_WIDTH, "Max delay",
-+			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max delay start",
-+			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max delay end");
- 
- 	printf("\n");
- 	print_separator(ret);
-@@ -1008,6 +1148,7 @@ static void print_skipped_events(struct perf_kwork *kwork)
- {
- 	int i;
- 	const char *const kwork_event_str[] = {
-+		[KWORK_TRACE_RAISE] = "raise",
- 		[KWORK_TRACE_ENTRY] = "entry",
- 		[KWORK_TRACE_EXIT]  = "exit",
- 	};
-@@ -1121,11 +1262,18 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
- 		.entry_event = report_entry_event,
- 		.exit_event  = report_exit_event,
- 	};
-+	static struct trace_kwork_handler latency_ops = {
-+		.raise_event = latency_raise_event,
-+		.entry_event = latency_entry_event,
-+	};
- 
- 	switch (kwork->report) {
- 	case KWORK_REPORT_RUNTIME:
- 		kwork->tp_handler = &report_ops;
- 		break;
-+	case KWORK_REPORT_LATENCY:
-+		kwork->tp_handler = &latency_ops;
-+		break;
- 	default:
- 		pr_debug("Invalid report type %d\n", kwork->report);
- 		break;
-@@ -1330,6 +1478,7 @@ static int perf_kwork__record(struct perf_kwork *kwork,
- int cmd_kwork(int argc, const char **argv)
- {
- 	static const char default_report_sort_order[] = "runtime, max, freq";
-+	static const char default_latency_sort_order[] = "avg, max, freq";
- 	static struct perf_kwork kwork = {
- 		.tool = {
- 			.sample = perf_kwork__process_tracepoint_sample,
-@@ -1463,11 +1612,15 @@ int cmd_kwork(int argc, const char **argv)
- 		setup_sorting(&kwork, report_options, report_usage);
- 		return perf_kwork__report(&kwork);
- 	} else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) {
-+		kwork.sort_order = default_latency_sort_order;
- 		if (argc > 1) {
- 			argc = parse_options(argc, argv, latency_options, latency_usage, 0);
- 			if (argc)
- 				usage_with_options(latency_usage, latency_options);
- 		}
-+		kwork.report = KWORK_REPORT_LATENCY;
-+		setup_sorting(&kwork, latency_options, latency_usage);
-+		return perf_kwork__report(&kwork);
- 	} else if (strlen(argv[0]) > 2 && strstarts("timehist", argv[0])) {
- 		if (argc > 1) {
- 			argc = parse_options(argc, argv, timehist_options, timehist_usage, 0);
+- Jame's concerns regarding permission inadequacy related to perfmon_capable()
+- Jame's concerns regarding using perf_event_paranoid along with perfmon_capable()
+- Rob's concerns regarding the series structure, arm_pmu callbacks based framework
+
+Changes in V1:
+
+- Added CONFIG_PERF_EVENTS wrapper for all branch sample filter helpers
+- Process new perf branch types via PERF_BR_EXTEND_ABI
+
+Changes in RFC V2:
+
+https://lore.kernel.org/linux-arm-kernel/20220412115455.293119-1-anshuman.khandual@arm.com/
+
+- Added branch_sample_priv() while consolidating other branch sample filter helpers
+- Changed all SYS_BRBXXXN_EL1 register definition encodings per Marc
+- Changed the BRBE driver as per proposed BRBE related perf ABI changes (V5)
+- Added documentation for struct arm_pmu changes, updated commit message
+- Updated commit message for BRBE detection infrastructure patch
+- PERF_SAMPLE_BRANCH_KERNEL gets checked during arm event init (outside the driver)
+- Branch privilege state capture mechanism has now moved inside the driver
+
+Changes in RFC V1:
+
+https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (8):
+  perf: Consolidate branch sample filter helpers
+  arm64/perf: Add register definitions for BRBE
+  arm64/perf: Update struct arm_pmu for BRBE
+  arm64/perf: Update struct pmu_hw_events for BRBE
+  driver/perf/arm_pmu_platform: Add support for BRBE attributes detection
+  arm64/perf: Drive BRBE from perf event states
+  arm64/perf: Add BRBE driver
+  arm64/perf: Enable branch stack sampling
+
+ arch/arm64/include/asm/sysreg.h | 222 ++++++++++++++++
+ arch/arm64/kernel/perf_event.c  |  48 ++++
+ drivers/perf/Kconfig            |  11 +
+ drivers/perf/Makefile           |   1 +
+ drivers/perf/arm_pmu.c          |  72 +++++-
+ drivers/perf/arm_pmu_brbe.c     | 442 ++++++++++++++++++++++++++++++++
+ drivers/perf/arm_pmu_brbe.h     | 259 +++++++++++++++++++
+ drivers/perf/arm_pmu_platform.c |  34 +++
+ include/linux/perf/arm_pmu.h    |  63 +++++
+ include/linux/perf_event.h      |  26 ++
+ kernel/events/core.c            |   9 +-
+ 11 files changed, 1177 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/perf/arm_pmu_brbe.c
+ create mode 100644 drivers/perf/arm_pmu_brbe.h
+
 -- 
-2.30.GIT
+2.25.1
 
