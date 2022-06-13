@@ -2,144 +2,823 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC04CCA47D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 20:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8656C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 21:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351438AbiFMU7w (ORCPT
+        id S1348692AbiFMVjb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 16:59:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
+        Mon, 13 Jun 2022 17:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351504AbiFMU5p (ORCPT
+        with ESMTP id S244651AbiFMVjU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 16:57:45 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3A8BCB9;
-        Mon, 13 Jun 2022 13:33:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655152384; x=1686688384;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=V8qgBoWN/fG+xJHX0cluoEtpiNIPFeWPspFIuQ5rZO0=;
-  b=QPZq7L5/0ekDKRX7DohsY0SRSrtkdsOtRgxVOrkZxvyjIv3zthgA4ioW
-   HJebky0MEudVtYCRAgteWMpm558rV75+fwQZFFJR3vR5Br1yxwwMlyf/A
-   n2Fpnd1Cxsp6Br1PDg45nTgKLshK16RhybJxlA+O4hGeMU6GlQA7G3szk
-   ZAa1xQlgg+JEZp7U+VFtOqAg6tjI0A4OLbR2Chku1jDAK7AjXEN3N5L/c
-   QzloV6oIl8WAZeQDMbh4GJrbic+1ERCAveuWX29w0/IEgz21F6B5Nj37D
-   OmUoOiBYV9rVvNBa5XY0DPoPN1pBkdfz+aQNlekuIIjV97CoNVPpmPw+I
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="364734057"
-X-IronPort-AV: E=Sophos;i="5.91,298,1647327600"; 
-   d="scan'208";a="364734057"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 13:33:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,298,1647327600"; 
-   d="scan'208";a="569223227"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 13 Jun 2022 13:33:00 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o0qk7-000L7P-EQ;
-        Mon, 13 Jun 2022 20:32:59 +0000
-Date:   Tue, 14 Jun 2022 04:32:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        will@kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/8] perf: Consolidate branch sample filter helpers
-Message-ID: <202206140422.ttLxMHtq-lkp@intel.com>
-References: <20220613100119.684673-2-anshuman.khandual@arm.com>
+        Mon, 13 Jun 2022 17:39:20 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5134321AD
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 14:39:17 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id u8so8655207wrm.13
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 14:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i+QjqldokXgQT8Xk7E8EKWG/SghQVrCZnNVhqvlo9TM=;
+        b=b4btrcEiqIIEEbYNH4cfHh2MG0wVdlhdPNIWL4itm+3NOfF8QVY5J0SlKPHsHZOFEN
+         UZ0QThdGoNP284if60xEeCjX6/PDQEcRW2s4JpB+KJkFcSzDuduKnW8LRTW/hbib9T3F
+         hP4olhzcHkL8Q48267mo1+jyNTlLsX8r9wJ51mT4rM0FyE7yOVYD8vltpiNO0o2BNszZ
+         xoDdHHl7x+kLpSXalqCLvY15kKbpyF5rkFTExfqQfNsfjFo9n37DMdbvaSRnAYgd4/gx
+         01vg1KgCdBXUnovuQ7dhDEQKM+KABT6BbykNncE32wjkIdO0I0aEgu42IIMMIcIVItFM
+         FrHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i+QjqldokXgQT8Xk7E8EKWG/SghQVrCZnNVhqvlo9TM=;
+        b=3x4jlPxgl4glszAd2tFttCXwl9Ho3NgqQGz9SYN8YFSQkF5Z8CDnrPsNUGWq3skeOs
+         V9FqrnYBWa42sxezCYECSVmB/cQgp4yiUiUZBTI6StRePMmv3XBEkLYZ4xFW1bO5IW0L
+         1pAnX9Oj00/6unlDbs/rWBYmN35gSzqla7XyMjfICP27hkVPHjLWPno42pOaZ+pfLBv8
+         hWMtLFyYWhSWa57kp+s3idOW7hlEf9EG/kXYRICOucoax5nloOTjHPPqedn2o9G3PoM2
+         HD1aE4Ijsw6Y9FQR7OyuQWpzlfbRcGCiRYnQM2326wD7NXJyZVHG8F3J2CE4r4lwbdqJ
+         DZjA==
+X-Gm-Message-State: AJIora9WsqdlsapNNUydedLfxrMTPtxhFwcqLm4NYI9v+tIl5RCRxTFw
+        kg8TAc25h6bZKBZcoq1JgtkwHWpqHi79OiqPkklQuw==
+X-Google-Smtp-Source: AGRyM1vkt/9Rye2WlO+X9jpXdlqp1gHkBN5ccrzAJSxnrSvTCqvlIBZ4zvahHy2ey6Mr5aGcJ0erXxqYqZHPZfeMPXQ=
+X-Received: by 2002:adf:f5c4:0:b0:210:2ac2:6aa0 with SMTP id
+ k4-20020adff5c4000000b002102ac26aa0mr1611265wrp.300.1655156355262; Mon, 13
+ Jun 2022 14:39:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220613100119.684673-2-anshuman.khandual@arm.com>
+References: <20220526224515.4088240-1-irogers@google.com> <20220526224515.4088240-2-irogers@google.com>
+In-Reply-To: <20220526224515.4088240-2-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 13 Jun 2022 14:39:02 -0700
+Message-ID: <CAP-5=fXRM3UtRYwH7-7ZqiL-LU62mxW0BzvuuLqMt1A1o18OWQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] perf stat: Add JSON output option
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
+        Like Xu <likexu@tencent.com>,
+        James Clark <james.clark@arm.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Claire Jensen <clairej735@gmail.com>
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Anshuman,
+On Thu, May 26, 2022 at 3:45 PM Ian Rogers <irogers@google.com> wrote:
+>
+> From: Claire Jensen <cjense@google.com>
+>
+> CSV output is tricky to format and column layout changes are susceptible
+> to breaking parsers. New JSON-formatted output has variable names to
+> identify fields that are consistent and informative, making
+> the output parseable.
+>
+> CSV output example:
+>
+> 1.20,msec,task-clock:u,1204272,100.00,0.697,CPUs utilized
+> 0,,context-switches:u,1204272,100.00,0.000,/sec
+> 0,,cpu-migrations:u,1204272,100.00,0.000,/sec
+> 70,,page-faults:u,1204272,100.00,58.126,K/sec
+>
+> JSON output example:
+>
+> {"counter-value" : "3805.723968", "unit" : "msec", "event" :
+> "cpu-clock", "event-runtime" : 3805731510100.00, "pcnt-running"
+> : 100.00, "metric-value" : 4.007571, "metric-unit" : "CPUs utilized"}
+> {"counter-value" : "6166.000000", "unit" : "", "event" :
+> "context-switches", "event-runtime" : 3805723045100.00, "pcnt-running"
+> : 100.00, "metric-value" : 1.620191, "metric-unit" : "K/sec"}
+> {"counter-value" : "466.000000", "unit" : "", "event" :
+> "cpu-migrations", "event-runtime" : 3805727613100.00, "pcnt-running"
+> : 100.00, "metric-value" : 122.447136, "metric-unit" : "/sec"}
+> {"counter-value" : "208.000000", "unit" : "", "event" :
+> "page-faults", "event-runtime" : 3805726799100.00, "pcnt-running"
+> : 100.00, "metric-value" : 54.654516, "metric-unit" : "/sec"}
+>
+> Also added documentation for JSON option.
+> There is some tidy up of CSV code including a potential memory over run
+> in the os.nfields set up. To facilitate this an AGGR_MAX value is added.
+>
+> Signed-off-by: Claire Jensen <cjense@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Documentation/perf-stat.txt |  21 ++
+>  tools/perf/builtin-stat.c              |   6 +
+>  tools/perf/util/stat-display.c         | 384 ++++++++++++++++++-------
+>  tools/perf/util/stat.c                 |   1 +
+>  tools/perf/util/stat.h                 |   2 +
+>  5 files changed, 308 insertions(+), 106 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index 8d1cde00b8d6..f9cdfd912b05 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -570,6 +570,27 @@ Additional metrics may be printed with all earlier fields being empty.
+>
+>  include::intel-hybrid.txt[]
+>
+> +JSON FORMAT
+> +-----------
+> +
+> +With -j, perf stat is able to print out a JSON format output
+> +that can be used for parsing.
+> +
+> +- timestamp : optional usec time stamp in fractions of second (with -I)
+> +- optional aggregate options:
+> +               - core : core identifier (with --per-core)
+> +               - die : die identifier (with --per-die)
+> +               - socket : socket identifier (with --per-socket)
+> +               - node : node identifier (with --per-node)
+> +               - thread : thread identifier (with --per-thread)
+> +- counter-value : counter value
+> +- unit : unit of the counter value or empty
+> +- event : event name
+> +- variance : optional variance if multiple values are collected (with -r)
+> +- runtime : run time of counter
+> +- metric-value : optional metric value
+> +- metric-unit : optional unit of metric
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-top[1], linkperf:perf-list[1]
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 4ce87a8eb7d7..6c7e59440e3a 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1256,6 +1256,8 @@ static struct option stat_options[] = {
+>                     "Merge identical named hybrid events"),
+>         OPT_STRING('x', "field-separator", &stat_config.csv_sep, "separator",
+>                    "print counts with custom separator"),
+> +       OPT_BOOLEAN('j', "json-output", &stat_config.json_output,
+> +                  "print counts in JSON format"),
+>         OPT_CALLBACK('G', "cgroup", &evsel_list, "name",
+>                      "monitor event in cgroup name only", parse_stat_cgroups),
+>         OPT_STRING(0, "for-each-cgroup", &stat_config.cgroup_list, "name",
+> @@ -1442,6 +1444,7 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr(enum aggr_mode aggr_mode)
+>         case AGGR_GLOBAL:
+>         case AGGR_THREAD:
+>         case AGGR_UNSET:
+> +       case AGGR_MAX:
+>         default:
+>                 return NULL;
+>         }
+> @@ -1466,6 +1469,7 @@ static aggr_get_id_t aggr_mode__get_id(enum aggr_mode aggr_mode)
+>         case AGGR_GLOBAL:
+>         case AGGR_THREAD:
+>         case AGGR_UNSET:
+> +       case AGGR_MAX:
+>         default:
+>                 return NULL;
+>         }
+> @@ -1616,6 +1620,7 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr_file(enum aggr_mode aggr_mode)
+>         case AGGR_GLOBAL:
+>         case AGGR_THREAD:
+>         case AGGR_UNSET:
+> +       case AGGR_MAX:
+>         default:
+>                 return NULL;
+>         }
+> @@ -1636,6 +1641,7 @@ static aggr_get_id_t aggr_mode__get_id_file(enum aggr_mode aggr_mode)
+>         case AGGR_GLOBAL:
+>         case AGGR_THREAD:
+>         case AGGR_UNSET:
+> +       case AGGR_MAX:
+>         default:
+>                 return NULL;
+>         }
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 606f09b09226..2bbd11446fa9 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -28,15 +28,21 @@
+>  static void print_running(struct perf_stat_config *config,
+>                           u64 run, u64 ena)
+>  {
+> -       if (config->csv_output) {
+> -               fprintf(config->output, "%s%" PRIu64 "%s%.2f",
+> -                                       config->csv_sep,
+> -                                       run,
+> -                                       config->csv_sep,
+> -                                       ena ? 100.0 * run / ena : 100.0);
+> -       } else if (run != ena) {
+> +
+> +       double enabled_percent = 100;
+> +
+> +       if (run != ena)
+> +               enabled_percent = 100 * run / ena;
+> +       if (config->json_output)
+> +               fprintf(config->output,
+> +                       "\"event-runtime\" : %lu, \"pcnt-running\" : %.2f, ",
+> +                       run, enabled_percent);
+> +       else if (config->csv_output)
+> +               fprintf(config->output,
+> +                       "%s%" PRIu64 "%s%.2f", config->csv_sep,
+> +                       run, config->csv_sep, enabled_percent);
+> +       else if (run != ena)
+>                 fprintf(config->output, "  (%.2f%%)", 100.0 * run / ena);
+> -       }
+>  }
+>
+>  static void print_noise_pct(struct perf_stat_config *config,
+> @@ -44,7 +50,9 @@ static void print_noise_pct(struct perf_stat_config *config,
+>  {
+>         double pct = rel_stddev_stats(total, avg);
+>
+> -       if (config->csv_output)
+> +       if (config->json_output)
+> +               fprintf(config->output, "\"variance\" : %.2f, ", pct);
+> +       else if (config->csv_output)
+>                 fprintf(config->output, "%s%.2f%%", config->csv_sep, pct);
+>         else if (pct)
+>                 fprintf(config->output, "  ( +-%6.2f%% )", pct);
+> @@ -66,7 +74,11 @@ static void print_cgroup(struct perf_stat_config *config, struct evsel *evsel)
+>  {
+>         if (nr_cgroups) {
+>                 const char *cgrp_name = evsel->cgrp ? evsel->cgrp->name  : "";
+> -               fprintf(config->output, "%s%s", config->csv_sep, cgrp_name);
+> +
+> +               if (config->json_output)
+> +                       fprintf(config->output, "\"cgroup\" : \"%s\", ", cgrp_name);
+> +               else
+> +                       fprintf(config->output, "%s%s", config->csv_sep, cgrp_name);
+>         }
+>  }
+>
+> @@ -74,69 +86,123 @@ static void print_cgroup(struct perf_stat_config *config, struct evsel *evsel)
+>  static void aggr_printout(struct perf_stat_config *config,
+>                           struct evsel *evsel, struct aggr_cpu_id id, int nr)
+>  {
+> +
+> +
+> +       if (config->json_output && !config->interval)
+> +               fprintf(config->output, "{");
+> +
+>         switch (config->aggr_mode) {
+>         case AGGR_CORE:
+> -               fprintf(config->output, "S%d-D%d-C%*d%s%*d%s",
+> -                       id.socket,
+> -                       id.die,
+> -                       config->csv_output ? 0 : -8,
+> -                       id.core,
+> -                       config->csv_sep,
+> -                       config->csv_output ? 0 : 4,
+> -                       nr,
+> -                       config->csv_sep);
+> +               if (config->json_output) {
+> +                       fprintf(config->output,
+> +                               "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d, ",
+> +                               id.socket,
+> +                               id.die,
+> +                               id.core,
+> +                               nr);
+> +               } else {
+> +                       fprintf(config->output, "S%d-D%d-C%*d%s%*d%s",
+> +                               id.socket,
+> +                               id.die,
+> +                               config->csv_output ? 0 : -8,
+> +                               id.core,
+> +                               config->csv_sep,
+> +                               config->csv_output ? 0 : 4,
+> +                               nr,
+> +                               config->csv_sep);
+> +               }
+>                 break;
+>         case AGGR_DIE:
+> -               fprintf(config->output, "S%d-D%*d%s%*d%s",
+> -                       id.socket,
+> -                       config->csv_output ? 0 : -8,
+> -                       id.die,
+> -                       config->csv_sep,
+> -                       config->csv_output ? 0 : 4,
+> -                       nr,
+> -                       config->csv_sep);
+> +               if (config->json_output) {
+> +                       fprintf(config->output,
+> +                               "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d, ",
+> +                               id.socket,
+> +                               id.die,
+> +                               nr);
+> +               } else {
+> +                       fprintf(config->output, "S%d-D%*d%s%*d%s",
+> +                               id.socket,
+> +                               config->csv_output ? 0 : -8,
+> +                               id.die,
+> +                               config->csv_sep,
+> +                               config->csv_output ? 0 : 4,
+> +                               nr,
+> +                               config->csv_sep);
+> +               }
+>                 break;
+>         case AGGR_SOCKET:
+> -               fprintf(config->output, "S%*d%s%*d%s",
+> -                       config->csv_output ? 0 : -5,
+> -                       id.socket,
+> -                       config->csv_sep,
+> -                       config->csv_output ? 0 : 4,
+> -                       nr,
+> -                       config->csv_sep);
+> -                       break;
+> +               if (config->json_output) {
+> +                       fprintf(config->output,
+> +                               "\"socket\" : \"S%d\", \"aggregate-number\" : %d, ",
+> +                               id.socket,
+> +                               nr);
+> +               } else {
+> +                       fprintf(config->output, "S%*d%s%*d%s",
+> +                               config->csv_output ? 0 : -5,
+> +                               id.socket,
+> +                               config->csv_sep,
+> +                               config->csv_output ? 0 : 4,
+> +                               nr,
+> +                               config->csv_sep);
+> +               }
+> +               break;
+>         case AGGR_NODE:
+> -               fprintf(config->output, "N%*d%s%*d%s",
+> -                       config->csv_output ? 0 : -5,
+> -                       id.node,
+> -                       config->csv_sep,
+> -                       config->csv_output ? 0 : 4,
+> -                       nr,
+> -                       config->csv_sep);
+> -                       break;
+> +               if (config->json_output) {
+> +                       fprintf(config->output, "\"node\" : \"N%d\", \"aggregate-number\" : %d, ",
+> +                               id.node,
+> +                               nr);
+> +               } else {
+> +                       fprintf(config->output, "N%*d%s%*d%s",
+> +                               config->csv_output ? 0 : -5,
+> +                               id.node,
+> +                               config->csv_sep,
+> +                               config->csv_output ? 0 : 4,
+> +                               nr,
+> +                               config->csv_sep);
+> +               }
+> +               break;
+>         case AGGR_NONE:
+> -               if (evsel->percore && !config->percore_show_thread) {
+> -                       fprintf(config->output, "S%d-D%d-C%*d%s",
+> -                               id.socket,
+> -                               id.die,
+> -                               config->csv_output ? 0 : -3,
+> -                               id.core, config->csv_sep);
+> -               } else if (id.cpu.cpu > -1) {
+> -                       fprintf(config->output, "CPU%*d%s",
+> -                               config->csv_output ? 0 : -7,
+> -                               id.cpu.cpu, config->csv_sep);
+> +               if (config->json_output) {
+> +                       if (evsel->percore && !config->percore_show_thread) {
+> +                               fprintf(config->output, "\"core\" : \"S%d-D%d-C%d\"",
+> +                                       id.socket,
+> +                                       id.die,
+> +                                       id.core);
+> +                       } else if (id.core > -1) {
+> +                               fprintf(config->output, "\"cpu\" : \"%d\", ",
+> +                                       id.cpu.cpu);
+> +                       }
+> +               } else {
+> +                       if (evsel->percore && !config->percore_show_thread) {
+> +                               fprintf(config->output, "S%d-D%d-C%*d%s",
+> +                                       id.socket,
+> +                                       id.die,
+> +                                       config->csv_output ? 0 : -3,
+> +                                       id.core, config->csv_sep);
+> +                       } else if (id.core > -1) {
+> +                               fprintf(config->output, "CPU%*d%s",
+> +                                       config->csv_output ? 0 : -7,
+> +                                       id.cpu.cpu, config->csv_sep);
+> +                       }
+>                 }
+>                 break;
+>         case AGGR_THREAD:
+> -               fprintf(config->output, "%*s-%*d%s",
+> -                       config->csv_output ? 0 : 16,
+> -                       perf_thread_map__comm(evsel->core.threads, id.thread),
+> -                       config->csv_output ? 0 : -8,
+> -                       perf_thread_map__pid(evsel->core.threads, id.thread),
+> -                       config->csv_sep);
+> +               if (config->json_output) {
+> +                       fprintf(config->output, "\"thread\" : \"%s-%d\", ",
+> +                               perf_thread_map__comm(evsel->core.threads, id.thread),
+> +                               perf_thread_map__pid(evsel->core.threads, id.thread));
+> +               } else {
+> +                       fprintf(config->output, "%*s-%*d%s",
+> +                               config->csv_output ? 0 : 16,
+> +                               perf_thread_map__comm(evsel->core.threads, id.thread),
+> +                               config->csv_output ? 0 : -8,
+> +                               perf_thread_map__pid(evsel->core.threads, id.thread),
+> +                               config->csv_sep);
+> +               }
+>                 break;
+>         case AGGR_GLOBAL:
+>         case AGGR_UNSET:
+> +       case AGGR_MAX:
+>         default:
+>                 break;
+>         }
+> @@ -234,6 +300,31 @@ static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
+>         fprintf(out, "%s%s%s%s", config->csv_sep, vals, config->csv_sep, skip_spaces(unit));
+>  }
+>
+> +static void print_metric_json(struct perf_stat_config *config __maybe_unused,
+> +                            void *ctx,
+> +                            const char *color __maybe_unused,
+> +                            const char *fmt __maybe_unused,
+> +                            const char *unit, double val)
+> +{
+> +       struct outstate *os = ctx;
+> +       FILE *out = os->fh;
+> +
+> +       fprintf(out, "\"metric-value\" : %f, ", val);
+> +       fprintf(out, "\"metric-unit\" : \"%s\"", unit);
+> +       if (!config->metric_only)
+> +               fprintf(out, "}");
+> +}
+> +
+> +static void new_line_json(struct perf_stat_config *config, void *ctx)
+> +{
+> +       struct outstate *os = ctx;
+> +
+> +       fputc('\n', os->fh);
+> +       if (os->prefix)
+> +               fprintf(os->fh, "%s", os->prefix);
+> +       aggr_printout(config, os->evsel, os->id, os->nr);
+> +}
+> +
+>  /* Filter out some columns that don't work well in metrics only mode */
+>
+>  static bool valid_only_metric(const char *unit)
+> @@ -300,6 +391,27 @@ static void print_metric_only_csv(struct perf_stat_config *config __maybe_unused
+>         fprintf(out, "%s%s", vals, config->csv_sep);
+>  }
+>
+> +static void print_metric_only_json(struct perf_stat_config *config __maybe_unused,
+> +                                 void *ctx, const char *color __maybe_unused,
+> +                                 const char *fmt,
+> +                                 const char *unit, double val)
+> +{
+> +       struct outstate *os = ctx;
+> +       FILE *out = os->fh;
+> +       char buf[64], *vals, *ends;
+> +       char tbuf[1024];
+> +
+> +       if (!valid_only_metric(unit))
+> +               return;
+> +       unit = fixunit(tbuf, os->evsel, unit);
+> +       snprintf(buf, sizeof(buf), fmt, val);
+> +       ends = vals = skip_spaces(buf);
+> +       while (isdigit(*ends) || *ends == '.')
+> +               ends++;
+> +       *ends = 0;
+> +       fprintf(out, "{\"metric-value\" : \"%s\"}", vals);
+> +}
+> +
+>  static void new_line_metric(struct perf_stat_config *config __maybe_unused,
+>                             void *ctx __maybe_unused)
+>  {
+> @@ -318,10 +430,13 @@ static void print_metric_header(struct perf_stat_config *config,
+>             os->evsel->priv != os->evsel->evlist->selected->priv)
+>                 return;
+>
+> -       if (!valid_only_metric(unit))
+> +       if (!valid_only_metric(unit) && !config->json_output)
+>                 return;
+>         unit = fixunit(tbuf, os->evsel, unit);
+> -       if (config->csv_output)
+> +
+> +       if (config->json_output)
+> +               fprintf(os->fh, "\"unit\" : \"%s\"", unit);
+> +       else if (config->csv_output)
+>                 fprintf(os->fh, "%s%s", unit, config->csv_sep);
+>         else
+>                 fprintf(os->fh, "%*s ", config->metric_only_len, unit);
+> @@ -367,14 +482,28 @@ static void abs_printout(struct perf_stat_config *config,
+>
+>         aggr_printout(config, evsel, id, nr);
+>
+> -       fprintf(output, fmt, avg, config->csv_sep);
+> +       if (config->json_output)
+> +               fprintf(output, "\"counter-value\" : \"%f\", ", avg);
+> +       else
+> +               fprintf(output, fmt, avg, config->csv_sep);
+> +
+> +       if (config->json_output) {
+> +               if (evsel->unit) {
+> +                       fprintf(output, "\"unit\" : \"%s\", ",
+> +                               evsel->unit);
+> +               }
+> +       } else {
+> +               if (evsel->unit)
+> +                       fprintf(output, "%-*s%s",
+> +                               config->csv_output ? 0 : config->unit_width,
+> +                               evsel->unit, config->csv_sep);
+> +       }
+>
+> -       if (evsel->unit)
+> -               fprintf(output, "%-*s%s",
+> -                       config->csv_output ? 0 : config->unit_width,
+> -                       evsel->unit, config->csv_sep);
+>
+> -       fprintf(output, "%-*s", config->csv_output ? 0 : 25, evsel__name(evsel));
+> +       if (config->json_output)
+> +               fprintf(output, "\"event\" : \"%s\", ", evsel__name(evsel));
+> +       else
+> +               fprintf(output, "%-*s", config->csv_output ? 0 : 25, evsel__name(evsel));
+>
+>         print_cgroup(config, evsel);
+>  }
+> @@ -416,34 +545,30 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>                 .nr = nr,
+>                 .evsel = counter,
+>         };
+> -       print_metric_t pm = print_metric_std;
+> +       print_metric_t pm;
+>         new_line_t nl;
+>
+> -       if (config->metric_only) {
+> -               nl = new_line_metric;
+> -               if (config->csv_output)
+> -                       pm = print_metric_only_csv;
+> -               else
+> -                       pm = print_metric_only;
+> -       } else
+> -               nl = new_line_std;
+> -
+> -       if (config->csv_output && !config->metric_only) {
+> -               static int aggr_fields[] = {
+> -                       [AGGR_GLOBAL] = 0,
+> -                       [AGGR_THREAD] = 1,
+> +       if (config->csv_output) {
+> +               static const int aggr_fields[AGGR_MAX] = {
 
-Thank you for the patch! Yet something to improve:
+Note, this change fixes an undefined/address sanitizer issue:
+Test failed for input: util/stat-display.c:444:28: runtime error:
+index 7 out of bounds for type 'int [6]'
+util/stat-display.c:444:28: runtime error: load of address
+0x55af9ac39c2c with insufficient space for an object of type 'int'
+0x55af9ac39c2c: note: pointer points here
+ 00 00 06 00 27 5f 42 6f  6f 6c 27 00 ff ff 00 00  27 73 74 72 75 63
+74 20  70 65 72 66 5f 65 76 6c
 
-[auto build test ERROR on tip/perf/core]
-[also build test ERROR on acme/perf/core]
-[cannot apply to arm64/for-next/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220613-180501
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git f0fe9f3c7abcc946a676dfb295478c50312523c2
-config: x86_64-randconfig-a002-20220613 (https://download.01.org/0day-ci/archive/20220614/202206140422.ttLxMHtq-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project d378268ead93c85803c270277f0243737b536ae7)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/1bd23b8ca1fc92f2f5b28a94ebd95432febfe96c
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220613-180501
-        git checkout 1bd23b8ca1fc92f2f5b28a94ebd95432febfe96c
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/acpi/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/acpi/acpi_pad.c:20:
->> include/linux/perf_event.h:1708:42: error: use of undeclared identifier 'PERF_SAMPLE_BRANCH_PRIV_SAVE'; did you mean 'PERF_SAMPLE_BRANCH_TYPE_SAVE'?
-           return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
-                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                   PERF_SAMPLE_BRANCH_TYPE_SAVE
-   include/uapi/linux/perf_event.h:231:2: note: 'PERF_SAMPLE_BRANCH_TYPE_SAVE' declared here
-           PERF_SAMPLE_BRANCH_TYPE_SAVE    =
-           ^
-   1 error generated.
---
-   In file included from drivers/acpi/processor_idle.c:24:
->> include/linux/perf_event.h:1708:42: error: use of undeclared identifier 'PERF_SAMPLE_BRANCH_PRIV_SAVE'; did you mean 'PERF_SAMPLE_BRANCH_TYPE_SAVE'?
-           return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
-                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                   PERF_SAMPLE_BRANCH_TYPE_SAVE
-   include/uapi/linux/perf_event.h:231:2: note: 'PERF_SAMPLE_BRANCH_TYPE_SAVE' declared here
-           PERF_SAMPLE_BRANCH_TYPE_SAVE    =
-           ^
-   drivers/acpi/processor_idle.c:1083:12: warning: no previous prototype for function 'acpi_processor_ffh_lpi_probe' [-Wmissing-prototypes]
-   int __weak acpi_processor_ffh_lpi_probe(unsigned int cpu)
-              ^
-   drivers/acpi/processor_idle.c:1083:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   int __weak acpi_processor_ffh_lpi_probe(unsigned int cpu)
-   ^
-   static 
-   drivers/acpi/processor_idle.c:1152:12: warning: no previous prototype for function 'acpi_processor_ffh_lpi_enter' [-Wmissing-prototypes]
-   int __weak acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
-              ^
-   drivers/acpi/processor_idle.c:1152:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   int __weak acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
-   ^
-   static 
-   2 warnings and 1 error generated.
-
-
-vim +1708 include/linux/perf_event.h
-
-  1705	
-  1706	static inline bool branch_sample_priv(const struct perf_event *event)
-  1707	{
-> 1708		return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+>                         [AGGR_NONE] = 1,
+> +                       [AGGR_GLOBAL] = 0,
+>                         [AGGR_SOCKET] = 2,
+>                         [AGGR_DIE] = 2,
+>                         [AGGR_CORE] = 2,
+> +                       [AGGR_THREAD] = 1,
+> +                       [AGGR_UNSET] = 0,
+> +                       [AGGR_NODE] = 0,
+>                 };
+>
+> -               pm = print_metric_csv;
+> -               nl = new_line_csv;
+> -               os.nfields = 3;
+> -               os.nfields += aggr_fields[config->aggr_mode];
+> -               if (counter->cgrp)
+> -                       os.nfields++;
+> +               pm = config->metric_only ? print_metric_only_csv : print_metric_csv;
+> +               nl = config->metric_only ? new_line_metric : new_line_csv;
+> +               os.nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
+> +       } else if (config->json_output) {
+> +               pm = config->metric_only ? print_metric_only_json : print_metric_json;
+> +               nl = config->metric_only ? new_line_metric : new_line_json;
+> +       } else {
+> +               pm = config->metric_only ? print_metric_only : print_metric_std;
+> +               nl = config->metric_only ? new_line_metric : new_line_std;
+>         }
+>
+>         if (!config->no_csv_summary && config->csv_output &&
+> @@ -458,10 +583,15 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>                 }
+>                 aggr_printout(config, counter, id, nr);
+>
+> -               fprintf(config->output, "%*s%s",
+> -                       config->csv_output ? 0 : 18,
+> -                       counter->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED,
+> -                       config->csv_sep);
+> +               if (config->json_output) {
+> +                       fprintf(config->output, "\"counter-value\" : \"%s\", ",
+> +                                       counter->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED);
+> +               } else {
+> +                       fprintf(config->output, "%*s%s",
+> +                               config->csv_output ? 0 : 18,
+> +                               counter->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED,
+> +                               config->csv_sep);
+> +               }
+>
+>                 if (counter->supported) {
+>                         if (!evlist__has_hybrid(counter->evlist)) {
+> @@ -471,21 +601,32 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>                         }
+>                 }
+>
+> -               fprintf(config->output, "%-*s%s",
+> -                       config->csv_output ? 0 : config->unit_width,
+> -                       counter->unit, config->csv_sep);
+> +               if (config->json_output) {
+> +                       fprintf(config->output, "\"unit\" : \"%s\", ", counter->unit);
+> +               } else {
+> +                       fprintf(config->output, "%-*s%s",
+> +                               config->csv_output ? 0 : config->unit_width,
+> +                               counter->unit, config->csv_sep);
+> +               }
+>
+> -               fprintf(config->output, "%*s",
+> -                       config->csv_output ? 0 : -25, evsel__name(counter));
+> +               if (config->json_output) {
+> +                       fprintf(config->output, "\"event\" : \"%s\", ",
+> +                               evsel__name(counter));
+> +               } else {
+> +                       fprintf(config->output, "%*s",
+> +                                config->csv_output ? 0 : -25, evsel__name(counter));
+> +               }
+>
+>                 print_cgroup(config, counter);
+>
+> -               if (!config->csv_output)
+> +               if (!config->csv_output && !config->json_output)
+>                         pm(config, &os, NULL, NULL, "", 0);
+>                 print_noise(config, counter, noise);
+>                 print_running(config, run, ena);
+>                 if (config->csv_output)
+>                         pm(config, &os, NULL, NULL, "", 0);
+> +               else if (config->json_output)
+> +                       pm(config, &os, NULL, NULL, "", 0);
+>                 return;
+>         }
+>
+> @@ -500,12 +641,15 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>         if (config->csv_output && !config->metric_only) {
+>                 print_noise(config, counter, noise);
+>                 print_running(config, run, ena);
+> +       } else if (config->json_output && !config->metric_only) {
+> +               print_noise(config, counter, noise);
+> +               print_running(config, run, ena);
+>         }
+>
+>         perf_stat__print_shadow_stats(config, counter, uval,
+>                                 first_shadow_cpu_map_idx(config, counter, &id),
+>                                 &out, &config->metric_events, st);
+> -       if (!config->csv_output && !config->metric_only) {
+> +       if (!config->csv_output && !config->metric_only && !config->json_output) {
+>                 print_noise(config, counter, noise);
+>                 print_running(config, run, ena);
+>         }
+> @@ -1004,8 +1148,12 @@ static void print_metric_headers(struct perf_stat_config *config,
+>         struct outstate os = {
+>                 .fh = config->output
+>         };
+> +       bool first = true;
+> +
+> +               if (config->json_output && !config->interval)
+> +                       fprintf(config->output, "{");
+>
+> -       if (prefix)
+> +       if (prefix && !config->json_output)
+>                 fprintf(config->output, "%s", prefix);
+>
+>         if (!config->csv_output && !no_indent)
+> @@ -1025,6 +1173,9 @@ static void print_metric_headers(struct perf_stat_config *config,
+>                 os.evsel = counter;
+>                 out.ctx = &os;
+>                 out.print_metric = print_metric_header;
+> +               if (!first && config->json_output)
+> +                       fprintf(config->output, ", ");
+> +               first = false;
+>                 out.new_line = new_line_metric;
+>                 out.force_header = true;
+>                 perf_stat__print_shadow_stats(config, counter, 0,
+> @@ -1033,6 +1184,8 @@ static void print_metric_headers(struct perf_stat_config *config,
+>                                               &config->metric_events,
+>                                               &rt_stat);
+>         }
+> +       if (config->json_output)
+> +               fprintf(config->output, "}");
+>         fputc('\n', config->output);
+>  }
+>
+> @@ -1048,10 +1201,18 @@ static void print_interval(struct perf_stat_config *config,
+>         if (config->interval_clear)
+>                 puts(CONSOLE_CLEAR);
+>
+> -       if (!config->iostat_run)
+> -               sprintf(prefix, "%6lu.%09lu%s", (unsigned long) ts->tv_sec, ts->tv_nsec, config->csv_sep);
+> -
+> -       if ((num_print_interval == 0 && !config->csv_output) || config->interval_clear) {
+> +       if (!config->iostat_run && !config->json_output)
+> +               sprintf(prefix, "%6lu.%09lu%s", (unsigned long) ts->tv_sec,
+> +                                ts->tv_nsec, config->csv_sep);
+> +       if (!config->iostat_run && config->json_output && !config->metric_only)
+> +               sprintf(prefix, "{\"interval\" : %lu.%09lu, ", (unsigned long)
+> +                                ts->tv_sec, ts->tv_nsec);
+> +       if (!config->iostat_run && config->json_output && config->metric_only)
+> +               sprintf(prefix, "{\"interval\" : %lu.%09lu}", (unsigned long)
+> +                                ts->tv_sec, ts->tv_nsec);
+> +
+> +       if ((num_print_interval == 0 && !config->csv_output && !config->json_output)
+> +                        || config->interval_clear) {
+>                 switch (config->aggr_mode) {
+>                 case AGGR_NODE:
+>                         fprintf(output, "#           time node   cpus");
+> @@ -1091,12 +1252,19 @@ static void print_interval(struct perf_stat_config *config,
+>                                         fprintf(output, "             counts %*s events\n", unit_width, "unit");
+>                         }
+>                 case AGGR_UNSET:
+> +               case AGGR_MAX:
+>                         break;
+>                 }
+>         }
+>
+> -       if ((num_print_interval == 0 || config->interval_clear) && metric_only)
+> +       if ((num_print_interval == 0 || config->interval_clear)
+> +                        && metric_only && !config->json_output)
+>                 print_metric_headers(config, evlist, " ", true);
+> +       if ((num_print_interval == 0 || config->interval_clear)
+> +                        && metric_only && config->json_output) {
+> +               fprintf(output, "{");
+> +               print_metric_headers(config, evlist, " ", true);
+> +       }
+>         if (++num_print_interval == 25)
+>                 num_print_interval = 0;
+>  }
+> @@ -1110,7 +1278,7 @@ static void print_header(struct perf_stat_config *config,
+>
+>         fflush(stdout);
+>
+> -       if (!config->csv_output) {
+> +       if (!config->csv_output && !config->json_output) {
+>                 fprintf(output, "\n");
+>                 fprintf(output, " Performance counter stats for ");
+>                 if (_target->bpf_str)
+> @@ -1303,6 +1471,9 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+>                         num_print_iv = 0;
+>                 if (config->aggr_mode == AGGR_GLOBAL && prefix && !config->iostat_run)
+>                         fprintf(config->output, "%s", prefix);
+> +
+> +               if (config->json_output && !config->metric_only)
+> +                       fprintf(config->output, "}");
+>         }
+>
+>         switch (config->aggr_mode) {
+> @@ -1341,12 +1512,13 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+>                         }
+>                 }
+>                 break;
+> +       case AGGR_MAX:
+>         case AGGR_UNSET:
+>         default:
+>                 break;
+>         }
+>
+> -       if (!interval && !config->csv_output)
+> +       if (!interval && !config->csv_output && !config->json_output)
+>                 print_footer(config);
+>
+>         fflush(config->output);
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 37ea2d044708..0882b4754fcf 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -401,6 +401,7 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+>                 aggr->ena += count->ena;
+>                 aggr->run += count->run;
+>         case AGGR_UNSET:
+> +       case AGGR_MAX:
+>         default:
+>                 break;
+>         }
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index b5aeb8e6d34b..668250022f8c 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -57,6 +57,7 @@ enum aggr_mode {
+>         AGGR_THREAD,
+>         AGGR_UNSET,
+>         AGGR_NODE,
+> +       AGGR_MAX
+>  };
+>
+>  enum {
+> @@ -121,6 +122,7 @@ struct perf_stat_config {
+>         bool                     no_inherit;
+>         bool                     identifier;
+>         bool                     csv_output;
+> +       bool                     json_output;
+>         bool                     interval_clear;
+>         bool                     metric_only;
+>         bool                     null_run;
+> --
+> 2.36.1.124.g0e6072fb45-goog
+>
