@@ -2,160 +2,221 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55CBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 09:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B72C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 09:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239565AbiFMJHG (ORCPT
+        id S240158AbiFMJso (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 05:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36532 "EHLO
+        Mon, 13 Jun 2022 05:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239350AbiFMJHF (ORCPT
+        with ESMTP id S240506AbiFMJsM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 05:07:05 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 18052E0C1;
-        Mon, 13 Jun 2022 02:07:04 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5368D6E;
-        Mon, 13 Jun 2022 02:07:03 -0700 (PDT)
-Received: from [10.163.38.134] (unknown [10.163.38.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FEFE3F66F;
-        Mon, 13 Jun 2022 02:06:56 -0700 (PDT)
-Message-ID: <d74a6068-1193-0d1e-7e7b-28a0be761b9e@arm.com>
-Date:   Mon, 13 Jun 2022 14:36:55 +0530
+        Mon, 13 Jun 2022 05:48:12 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BDB113F05;
+        Mon, 13 Jun 2022 02:48:10 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LM6C90FjHzgYrW;
+        Mon, 13 Jun 2022 17:46:13 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 13 Jun 2022 17:48:08 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 13 Jun 2022 17:48:07 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [RFC 11/13] perf kwork: Add softirq latency support
+Date:   Mon, 13 Jun 2022 17:46:03 +0800
+Message-ID: <20220613094605.208401-12-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20220613094605.208401-1-yangjihong1@huawei.com>
+References: <20220613094605.208401-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH V6 0/8] perf: Expand perf_branch_entry
-Content-Language: en-US
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, acme@kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220610035101.424112-1-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20220610035101.424112-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Implements softirq latency function.
 
+test case:
 
-On 6/10/22 09:20, Anshuman Khandual wrote:
-> Branch Record Buffer Extension (BRBE) implementation on arm64 captures more
-> branch type classification which cannot be accommodated in the current perf
-> branch record format via perf_branch_entry.type element (4 bit field). Also
-> it captures privilege information which does not have a corresponding slot
-> in perf_branch_entry. This series expands struct perf_branch_entry, to meet
-> both these requirements without breaking the existing user space ABI for
-> perf tools.
-> 
-> All architecture specific branch types added via perf_branch_entry.new_type
-> field in [PATCH 3/4] will be used in BRBE implementation on arm64 platform
-> later on with the following map.
-> 
-> #ifdef CONFIG_ARM64
-> #define PERF_BR_FIQ		PERF_BR_NEW_ARCH_1
-> #define PERF_BR_DEBUG_HALT	PERF_BR_NEW_ARCH_2
-> #define PERF_BR_DEBUG_EXIT	PERF_BR_NEW_ARCH_3
-> #define PERF_BR_DEBUG_INST	PERF_BR_NEW_ARCH_4
-> #define PERF_BR_DEBUG_DATA	PERF_BR_NEW_ARCH_5
-> #endif
-> 
-> This series applies on v5.19-rc1
-> 
-> perf API
-> 
-> The series being applied
-> 
-> - Clean : tools/perf/check-headers.sh
-> - Clean : diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
-> 
-> References
-> 
-> - BRBE captured branch record information
-> 
-> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers/BRBINF-n--EL1--Branch-Record-Buffer-Information-Register--n-?lang=en
-> 
-> - BRBE based perf branch stack implementation on arm64 platform
-> 
-> https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
-> 
-> Changes in V6:
-> 
-> - Process PERF_BR_EXTEND_ABI in perf tools and fetch from perf_branch_entry.new_type
-> - Modified the commit message for [PATCH 1/8]
-> 
-> Changes in V5:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20220404045046.634522-1-anshuman.khandual@arm.com/
-> 
-> - Dropped patches [PATCH 1/10] and [PATCH 6/10] related to PERF_BR_[RET|IRQ] - merged
->   via the commit cedd3614e5d9c809 ("perf: Add irq and exception return branch types")
-> 
-> - Rebased series on v5.18-rc1
-> 
-> Changes in V4:
-> 
-> https://lore.kernel.org/all/20220315053516.431515-1-anshuman.khandual@arm.com/
-> 
-> - Modified the struct branch_flags as required
-> - Dropped CONFIG_ARM64 from perf header file to avoid build problem
-> - Renamed PERF_BR_NEW_<BRANCH_TYPE> as PERF_BR_ARM64_<BRANCH_TYPE>
-> 
-> Changes in V3:
-> 
-> https://lore.kernel.org/all/20220314055857.125421-1-anshuman.khandual@arm.com/
-> 
-> - Fixed small typo s/privillege/privilege in include/uapi/linux/perf_event.h
-> - Added PRIV_SHIFT in __p_branch_sample_type()
-> - Added arm64 platform override of the new arch specific branch types
-> - Renamed s/PERF_BR_XXX/PERF_BR_PRIV_XXX/ for privilege level branch types
-> - Added PERF_BR_PRIV_UNKNOWN as the starting value
-> - Expanded perf_branch_entry.priv into a 3 bits field 
-> 
-> Changes in V2:
-> 
-> https://lore.kernel.org/all/20220309033642.144769-1-anshuman.khandual@arm.com/
-> 
-> Cc: Robin Murphy <robin.murphy@arm.com> 
-> Cc: Suzuki Poulose <suzuki.poulose@arm.com>
-> Cc: James Clark <james.clark@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Anshuman Khandual (8):
->   perf: Add system error and not in transaction branch types
->   perf: Extend branch type classification
->   perf: Capture branch privilege information
->   perf: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
->   perf/tools: Add system error and not in transaction branch types
->   perf/tools: Extend branch type classification
->   perf/tools: Add branch privilege information request flag
->   perf/tools: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
+  # perf kwork lat
 
-I forgot to collect all the "Reviewed-by" tags from James Clark on some
-patches (1, 2, 4, 5). Will add them next time around.
+    Kwork Name                | Cpu  | Avg delay     | Frequency | Max delay     | Max delay start     | Max delay end       |
+   ---------------------------------------------------------------------------------------------------------------------------
+    (s)RCU:9                  | 0006 |      1.338 ms |         1 |      1.338 ms |    2072616.369122 s |    2072616.370461 s |
+    (s)RCU:9                  | 0005 |      0.945 ms |         2 |      1.757 ms |    2072616.368262 s |    2072616.370020 s |
+    (s)RCU:9                  | 0002 |      0.575 ms |        73 |      1.884 ms |    2072616.423139 s |    2072616.425023 s |
+    (s)RCU:9                  | 0000 |      0.327 ms |       105 |      1.365 ms |    2072620.344392 s |    2072620.345757 s |
+    (s)RCU:9                  | 0001 |      0.233 ms |       711 |      2.862 ms |    2072620.639022 s |    2072620.641885 s |
+    (s)NET_RX:3               | 0002 |      0.219 ms |         5 |      0.762 ms |    2072624.174209 s |    2072624.174971 s |
+    (s)RCU:9                  | 0004 |      0.176 ms |         4 |      0.265 ms |    2072620.333206 s |    2072620.333472 s |
+    (s)RCU:9                  | 0007 |      0.172 ms |      3165 |      2.890 ms |    2072616.385706 s |    2072616.388595 s |
+    (s)TIMER:1                | 0000 |      0.168 ms |        11 |      0.307 ms |    2072620.638399 s |    2072620.638706 s |
+    (s)RCU:9                  | 0003 |      0.149 ms |       194 |      1.127 ms |    2072620.617286 s |    2072620.618413 s |
+    (s)SCHED:7                | 0002 |      0.136 ms |        12 |      0.384 ms |    2072617.261300 s |    2072617.261684 s |
+    (s)BLOCK:4                | 0001 |      0.131 ms |        79 |      2.734 ms |    2072620.639022 s |    2072620.641756 s |
+    (s)SCHED:7                | 0000 |      0.127 ms |       360 |      0.989 ms |    2072616.386068 s |    2072616.387057 s |
+    (s)BLOCK:4                | 0000 |      0.125 ms |        13 |      0.209 ms |    2072620.354356 s |    2072620.354564 s |
+    (s)SCHED:7                | 0004 |      0.121 ms |         3 |      0.172 ms |    2072620.333236 s |    2072620.333408 s |
+    (s)SCHED:7                | 0003 |      0.113 ms |        82 |      0.226 ms |    2072618.917223 s |    2072618.917449 s |
+    (s)SCHED:7                | 0001 |      0.098 ms |       209 |      0.986 ms |    2072620.392020 s |    2072620.393007 s |
+    (s)TIMER:1                | 0007 |      0.095 ms |      1550 |      1.274 ms |    2072625.965379 s |    2072625.966653 s |
+    (s)TIMER:1                | 0004 |      0.081 ms |         2 |      0.082 ms |    2072620.333187 s |    2072620.333269 s |
+    (s)TIMER:1                | 0002 |      0.076 ms |        10 |      0.104 ms |    2072617.261239 s |    2072617.261344 s |
+    (s)TIMER:1                | 0003 |      0.065 ms |       245 |      1.023 ms |    2072620.617286 s |    2072620.618309 s |
+    (s)SCHED:7                | 0006 |      0.064 ms |         2 |      0.081 ms |    2072616.370310 s |    2072616.370391 s |
+    (s)SCHED:7                | 0007 |      0.062 ms |      2753 |      0.473 ms |    2072621.357987 s |    2072621.358460 s |
+    (s)TIMER:1                | 0001 |      0.055 ms |       774 |      0.396 ms |    2072617.523145 s |    2072617.523540 s |
+    (s)SCHED:7                | 0005 |      0.040 ms |         2 |      0.042 ms |    2072616.369895 s |    2072616.369937 s |
+   ---------------------------------------------------------------------------------------------------------------------------
+    INFO: 28.605% skipped events (25424 including 2617 raise, 22807 entry, 0 exit)
 
-- Anshuman
+  # perf kwork lat -C 0,1
+
+    Kwork Name                | Cpu  | Avg delay     | Frequency | Max delay     | Max delay start     | Max delay end       |
+   ---------------------------------------------------------------------------------------------------------------------------
+    (s)RCU:9                  | 0000 |      0.327 ms |       105 |      1.365 ms |    2072620.344392 s |    2072620.345757 s |
+    (s)RCU:9                  | 0001 |      0.233 ms |       711 |      2.862 ms |    2072620.639022 s |    2072620.641885 s |
+    (s)TIMER:1                | 0000 |      0.168 ms |        11 |      0.307 ms |    2072620.638399 s |    2072620.638706 s |
+    (s)BLOCK:4                | 0001 |      0.131 ms |        79 |      2.734 ms |    2072620.639022 s |    2072620.641756 s |
+    (s)SCHED:7                | 0000 |      0.127 ms |       360 |      0.989 ms |    2072616.386068 s |    2072616.387057 s |
+    (s)BLOCK:4                | 0000 |      0.125 ms |        13 |      0.209 ms |    2072620.354356 s |    2072620.354564 s |
+    (s)SCHED:7                | 0001 |      0.098 ms |       209 |      0.986 ms |    2072620.392020 s |    2072620.393007 s |
+    (s)TIMER:1                | 0001 |      0.055 ms |       774 |      0.396 ms |    2072617.523145 s |    2072617.523540 s |
+   ---------------------------------------------------------------------------------------------------------------------------
+    INFO: 26.410% skipped events (23473 including 795 raise, 22678 entry, 0 exit)
+
+  # perf kwork lat -n SCHED
+
+    Kwork Name                | Cpu  | Avg delay     | Frequency | Max delay     | Max delay start     | Max delay end       |
+   ---------------------------------------------------------------------------------------------------------------------------
+    (s)SCHED:7                | 0002 |      0.136 ms |        12 |      0.384 ms |    2072617.261300 s |    2072617.261684 s |
+    (s)SCHED:7                | 0000 |      0.127 ms |       360 |      0.989 ms |    2072616.386068 s |    2072616.387057 s |
+    (s)SCHED:7                | 0004 |      0.121 ms |         3 |      0.172 ms |    2072620.333236 s |    2072620.333408 s |
+    (s)SCHED:7                | 0003 |      0.113 ms |        82 |      0.226 ms |    2072618.917223 s |    2072618.917449 s |
+    (s)SCHED:7                | 0001 |      0.098 ms |       209 |      0.986 ms |    2072620.392020 s |    2072620.393007 s |
+    (s)SCHED:7                | 0006 |      0.064 ms |         2 |      0.081 ms |    2072616.370310 s |    2072616.370391 s |
+    (s)SCHED:7                | 0007 |      0.062 ms |      2753 |      0.473 ms |    2072621.357987 s |    2072621.358460 s |
+    (s)SCHED:7                | 0005 |      0.040 ms |         2 |      0.042 ms |    2072616.369895 s |    2072616.369937 s |
+   ---------------------------------------------------------------------------------------------------------------------------
+    INFO: 0.006% skipped events (5 including 5 raise, 0 entry, 0 exit)
+
+  # perf kwork lat -s freq,max
+
+    Kwork Name                | Cpu  | Avg delay     | Frequency | Max delay     | Max delay start     | Max delay end       |
+   ---------------------------------------------------------------------------------------------------------------------------
+    (s)RCU:9                  | 0007 |      0.172 ms |      3165 |      2.890 ms |    2072616.385706 s |    2072616.388595 s |
+    (s)SCHED:7                | 0007 |      0.062 ms |      2753 |      0.473 ms |    2072621.357987 s |    2072621.358460 s |
+    (s)TIMER:1                | 0007 |      0.095 ms |      1550 |      1.274 ms |    2072625.965379 s |    2072625.966653 s |
+    (s)TIMER:1                | 0001 |      0.055 ms |       774 |      0.396 ms |    2072617.523145 s |    2072617.523540 s |
+    (s)RCU:9                  | 0001 |      0.233 ms |       711 |      2.862 ms |    2072620.639022 s |    2072620.641885 s |
+    (s)SCHED:7                | 0000 |      0.127 ms |       360 |      0.989 ms |    2072616.386068 s |    2072616.387057 s |
+    (s)TIMER:1                | 0003 |      0.065 ms |       245 |      1.023 ms |    2072620.617286 s |    2072620.618309 s |
+    (s)SCHED:7                | 0001 |      0.098 ms |       209 |      0.986 ms |    2072620.392020 s |    2072620.393007 s |
+    (s)RCU:9                  | 0003 |      0.149 ms |       194 |      1.127 ms |    2072620.617286 s |    2072620.618413 s |
+    (s)RCU:9                  | 0000 |      0.327 ms |       105 |      1.365 ms |    2072620.344392 s |    2072620.345757 s |
+    (s)SCHED:7                | 0003 |      0.113 ms |        82 |      0.226 ms |    2072618.917223 s |    2072618.917449 s |
+    (s)BLOCK:4                | 0001 |      0.131 ms |        79 |      2.734 ms |    2072620.639022 s |    2072620.641756 s |
+    (s)RCU:9                  | 0002 |      0.575 ms |        73 |      1.884 ms |    2072616.423139 s |    2072616.425023 s |
+    (s)BLOCK:4                | 0000 |      0.125 ms |        13 |      0.209 ms |    2072620.354356 s |    2072620.354564 s |
+    (s)SCHED:7                | 0002 |      0.136 ms |        12 |      0.384 ms |    2072617.261300 s |    2072617.261684 s |
+    (s)TIMER:1                | 0000 |      0.168 ms |        11 |      0.307 ms |    2072620.638399 s |    2072620.638706 s |
+    (s)TIMER:1                | 0002 |      0.076 ms |        10 |      0.104 ms |    2072617.261239 s |    2072617.261344 s |
+    (s)NET_RX:3               | 0002 |      0.219 ms |         5 |      0.762 ms |    2072624.174209 s |    2072624.174971 s |
+    (s)RCU:9                  | 0004 |      0.176 ms |         4 |      0.265 ms |    2072620.333206 s |    2072620.333472 s |
+    (s)SCHED:7                | 0004 |      0.121 ms |         3 |      0.172 ms |    2072620.333236 s |    2072620.333408 s |
+    (s)RCU:9                  | 0005 |      0.945 ms |         2 |      1.757 ms |    2072616.368262 s |    2072616.370020 s |
+    (s)TIMER:1                | 0004 |      0.081 ms |         2 |      0.082 ms |    2072620.333187 s |    2072620.333269 s |
+    (s)SCHED:7                | 0006 |      0.064 ms |         2 |      0.081 ms |    2072616.370310 s |    2072616.370391 s |
+    (s)SCHED:7                | 0005 |      0.040 ms |         2 |      0.042 ms |    2072616.369895 s |    2072616.369937 s |
+    (s)RCU:9                  | 0006 |      1.338 ms |         1 |      1.338 ms |    2072616.369122 s |    2072616.370461 s |
+   ---------------------------------------------------------------------------------------------------------------------------
+    INFO: 28.605% skipped events (25424 including 2617 raise, 22807 entry, 0 exit)
+
+  # perf kwork lat --time 2072620.333236,
+
+    Kwork Name                | Cpu  | Avg delay     | Frequency | Max delay     | Max delay start     | Max delay end       |
+   ---------------------------------------------------------------------------------------------------------------------------
+    (s)RCU:9                  | 0001 |      0.699 ms |       130 |      2.862 ms |    2072620.639022 s |    2072620.641885 s |
+    (s)RCU:9                  | 0000 |      0.320 ms |        70 |      1.365 ms |    2072620.344392 s |    2072620.345757 s |
+    (s)NET_RX:3               | 0002 |      0.298 ms |         3 |      0.762 ms |    2072624.174209 s |    2072624.174971 s |
+    (s)RCU:9                  | 0002 |      0.297 ms |        13 |      0.687 ms |    2072622.126201 s |    2072622.126888 s |
+    (s)RCU:9                  | 0003 |      0.271 ms |        17 |      1.127 ms |    2072620.617286 s |    2072620.618413 s |
+    (s)TIMER:1                | 0000 |      0.166 ms |         8 |      0.307 ms |    2072620.638399 s |    2072620.638706 s |
+    (s)RCU:9                  | 0004 |      0.146 ms |         3 |      0.253 ms |    2072621.357331 s |    2072621.357584 s |
+    (s)SCHED:7                | 0003 |      0.143 ms |        15 |      0.197 ms |    2072625.973321 s |    2072625.973519 s |
+    (s)TIMER:1                | 0003 |      0.137 ms |        16 |      1.023 ms |    2072620.617286 s |    2072620.618309 s |
+    (s)RCU:9                  | 0005 |      0.133 ms |         1 |      0.133 ms |    2072626.530482 s |    2072626.530615 s |
+    (s)BLOCK:4                | 0001 |      0.131 ms |        79 |      2.734 ms |    2072620.639022 s |    2072620.641756 s |
+    (s)BLOCK:4                | 0000 |      0.125 ms |        13 |      0.209 ms |    2072620.354356 s |    2072620.354564 s |
+    (s)SCHED:7                | 0001 |      0.121 ms |        15 |      0.986 ms |    2072620.392020 s |    2072620.393007 s |
+    (s)SCHED:7                | 0004 |      0.121 ms |         3 |      0.172 ms |    2072620.333236 s |    2072620.333408 s |
+    (s)SCHED:7                | 0000 |      0.115 ms |       269 |      0.987 ms |    2072624.176905 s |    2072624.177892 s |
+    (s)SCHED:7                | 0002 |      0.109 ms |         7 |      0.140 ms |    2072625.966227 s |    2072625.966368 s |
+    (s)RCU:9                  | 0007 |      0.095 ms |      1526 |      1.333 ms |    2072620.616224 s |    2072620.617557 s |
+    (s)TIMER:1                | 0007 |      0.094 ms |      1546 |      1.274 ms |    2072625.965379 s |    2072625.966653 s |
+    (s)TIMER:1                | 0004 |      0.079 ms |         1 |      0.079 ms |    2072621.357313 s |    2072621.357393 s |
+    (s)TIMER:1                | 0002 |      0.072 ms |         7 |      0.082 ms |    2072620.845190 s |    2072620.845272 s |
+    (s)TIMER:1                | 0001 |      0.070 ms |         9 |      0.149 ms |    2072620.360584 s |    2072620.360734 s |
+    (s)SCHED:7                | 0007 |      0.068 ms |      1959 |      0.473 ms |    2072621.357987 s |    2072621.358460 s |
+    (s)SCHED:7                | 0005 |      0.038 ms |         1 |      0.038 ms |    2072626.530536 s |    2072626.530573 s |
+   ---------------------------------------------------------------------------------------------------------------------------
+    INFO: 17.800% skipped events (15821 including 1602 raise, 14219 entry, 0 exit)
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-kwork.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 84e318eea832..e0ffd3291b3a 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -816,6 +816,20 @@ static struct kwork_class kwork_irq = {
+ };
+ 
+ static struct kwork_class kwork_softirq;
++static int process_softirq_raise_event(struct perf_tool *tool,
++				       struct evsel *evsel,
++				       struct perf_sample *sample,
++				       struct machine *machine)
++{
++	struct perf_kwork *kwork = container_of(tool, struct perf_kwork, tool);
++
++	if (kwork->tp_handler->raise_event)
++		return kwork->tp_handler->raise_event(kwork, &kwork_softirq,
++						      evsel, sample, machine);
++
++	return 0;
++}
++
+ static int process_softirq_entry_event(struct perf_tool *tool,
+ 				       struct evsel *evsel,
+ 				       struct perf_sample *sample,
+@@ -845,7 +859,7 @@ static int process_softirq_exit_event(struct perf_tool *tool,
+ }
+ 
+ const struct evsel_str_handler softirq_tp_handlers[] = {
+-	{ "irq:softirq_raise", NULL, },
++	{ "irq:softirq_raise", process_softirq_raise_event, },
+ 	{ "irq:softirq_entry", process_softirq_entry_event, },
+ 	{ "irq:softirq_exit",  process_softirq_exit_event, },
+ };
+-- 
+2.30.GIT
+
