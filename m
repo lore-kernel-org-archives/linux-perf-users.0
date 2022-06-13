@@ -2,150 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FA8C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 17:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC4DC43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 18:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239218AbiFMRlQ (ORCPT
+        id S242331AbiFMSHt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 13:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49626 "EHLO
+        Mon, 13 Jun 2022 14:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244262AbiFMRjW (ORCPT
+        with ESMTP id S240258AbiFMSHS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 13:39:22 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 09C5437BC7;
-        Mon, 13 Jun 2022 06:08:47 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB44DD6E;
-        Mon, 13 Jun 2022 06:08:46 -0700 (PDT)
-Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C294E3F792;
-        Mon, 13 Jun 2022 06:08:45 -0700 (PDT)
-Message-ID: <ae8bdc2c-a444-74c1-70d5-c97d27b22ec5@foss.arm.com>
-Date:   Mon, 13 Jun 2022 14:08:30 +0100
+        Mon, 13 Jun 2022 14:07:18 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 487628B08C;
+        Mon, 13 Jun 2022 07:00:11 -0700 (PDT)
+X-UUID: 5b903e51ecdd41c5afd89475ff3bdc7f-20220613
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.6,REQID:b1b21acc-6e52-4b19-9107-0c200a3bcd83,OB:30,L
+        OB:20,IP:0,URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:100,FILE:0,RULE:Release_Ham
+        ,ACTION:release,TS:95
+X-CID-INFO: VERSION:1.1.6,REQID:b1b21acc-6e52-4b19-9107-0c200a3bcd83,OB:30,LOB
+        :20,IP:0,URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:100,FILE:0,RULE:Spam_GS981B3D
+        ,ACTION:quarantine,TS:95
+X-CID-META: VersionHash:b14ad71,CLOUDID:e1048f37-84c0-4f9a-9fbd-acd4a0e9ad0f,C
+        OID:c390d734f6ed,Recheck:0,SF:28|17|19|48,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:0,File:nil,QS:nil,BEC:nil,COL:0
+X-UUID: 5b903e51ecdd41c5afd89475ff3bdc7f-20220613
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+        (envelope-from <lecopzer.chen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 727380737; Mon, 13 Jun 2022 22:00:01 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
+ Mon, 13 Jun 2022 22:00:00 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.792.3 via Frontend Transport; Mon, 13 Jun 2022 22:00:00 +0800
+From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <pmladek@suse.com>, <acme@kernel.org>, <akpm@linux-foundation.org>,
+        <alexander.shishkin@linux.intel.com>, <catalin.marinas@arm.com>,
+        <davem@davemloft.net>, <jolsa@redhat.com>, <jthierry@redhat.com>,
+        <keescook@chromium.org>, <kernelfans@gmail.com>,
+        <lecopzer.chen@mediatek.com>, <linux-mediatek@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <mark.rutland@arm.com>,
+        <masahiroy@kernel.org>, <matthias.bgg@gmail.com>, <maz@kernel.org>,
+        <mcgrof@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <nixiaoming@huawei.com>, <peterz@infradead.org>,
+        <sparclinux@vger.kernel.org>, <sumit.garg@linaro.org>,
+        <wangqing@vivo.com>, <will@kernel.org>, <yj.chiang@mediatek.com>
+Subject: [PATCH v5 3/6] kernel/watchdog_hld: Ensure CPU-bound context when creating hardlockup detector event
+Date:   Mon, 13 Jun 2022 21:59:53 +0800
+Message-ID: <20220613135956.15711-4-lecopzer.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20220613135956.15711-1-lecopzer.chen@mediatek.com>
+References: <20220613135956.15711-1-lecopzer.chen@mediatek.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 2/3] perf test: Shell - only run .sh shell files to skip
- other files
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-References: <20220309122859.31487-1-carsten.haitzler@foss.arm.com>
- <20220309122859.31487-2-carsten.haitzler@foss.arm.com>
- <20220410022846.GB14326@leoy-ThinkPad-X240s>
- <9ab780aa-7e78-b0f9-21ed-cf30f41f8fab@foss.arm.com>
- <20220526101423.GB795802@leoy-ThinkPad-X240s>
-From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Organization: Arm Ltd.
-In-Reply-To: <20220526101423.GB795802@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: Pingfan Liu <kernelfans@gmail.com>
 
+hardlockup_detector_event_create() should create perf_event on the
+current CPU. Preemption could not get disabled because
+perf_event_create_kernel_counter() allocates memory. Instead,
+the CPU locality is achieved by processing the code in a per-CPU
+bound kthread.
 
-On 5/26/22 11:14, Leo Yan wrote:
-> On Thu, Apr 21, 2022 at 05:21:27PM +0100, Carsten Haitzler wrote:
->> On 4/10/22 03:28, Leo Yan wrote:
->>> On Wed, Mar 09, 2022 at 12:28:58PM +0000, carsten.haitzler@foss.arm.com wrote:
->>>> From: Carsten Haitzler <carsten.haitzler@arm.com>
->>>>
->>>> You edit your scripts in the tests and end up with your usual shell
->>>> backup files with ~ or .bak or something else at the end, but then your
->>>> next perf test run wants to run the backups too. You might also have perf
->>>> .data files in the directory or something else undesireable as well. You end
->>>> up chasing which test is the one you edited and the backup and have to keep
->>>> removing all the backup files, so automatically skip any files that are
->>>> not plain *.sh scripts to limit the time wasted in chasing ghosts.
->>>>
->>>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
->>>>
->>>> ---
->>>>    tools/perf/tests/builtin-test.c | 17 +++++++++++++++--
->>>>    1 file changed, 15 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
->>>> index 3c34cb766724..3a02ba7a7a89 100644
->>>> --- a/tools/perf/tests/builtin-test.c
->>>> +++ b/tools/perf/tests/builtin-test.c
->>>> @@ -296,9 +296,22 @@ static const char *shell_test__description(char *description, size_t size,
->>>>    #define for_each_shell_test(entlist, nr, base, ent)	                \
->>>>    	for (int __i = 0; __i < nr && (ent = entlist[__i]); __i++)	\
->>>> -		if (!is_directory(base, ent) && \
->>>> +		if (ent->d_name[0] != '.' && \
->>>> +			!is_directory(base, ent) && \
->>>>    			is_executable_file(base, ent) && \
->>>> -			ent->d_name[0] != '.')
->>>> +			is_shell_script(ent->d_name))
->>>
->>> Just nitpick: since multiple conditions are added, seems to me it's good
->>> to use a single function is_executable_shell_script() to make decision
->>> if a file is an executable shell script.
->>
->> I'd certainly make a function if this was being re-used, but as the "coding
->> pattern" was to do all the tests already inside the if() in only one place,
->> I kept with the style there and didn't change the code that didn't need
->> changing. I can rewrite this code and basically make a function that is just
->> an if ...:
->>
->> bool is_exe_shell_script(const char *base, struct dirent *ent) {
->>     return ent->d_name[0] != '.'         && !is_directory(base, ent) &&
->>            is_executable_file(base, ent) && is_shell_script(ent->d_name);
->> }
->>
->> And macro becomes:
->>
->> #define for_each_shell_test(entlist, nr, base, ent) \
->>    for (int __i = 0; __i < nr && (ent = entlist[__i]); __i++) \
->>      if (is_shell(base, ent))
-> 
-> Sorry for long latency.
+Add a check to prevent mistakes when calling the code in another
+code path.
 
-No problem.
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Co-developed-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+---
+ kernel/watchdog_hld.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> If the condition checking gets complex, seems to me it is reasonable to
-> use a static function (or a macro?) to encapsulate the logics.
+diff --git a/kernel/watchdog_hld.c b/kernel/watchdog_hld.c
+index 701f35f0e2d4..0573cef0b9dc 100644
+--- a/kernel/watchdog_hld.c
++++ b/kernel/watchdog_hld.c
+@@ -169,10 +169,16 @@ static void watchdog_overflow_callback(struct perf_event *event,
+ 
+ static int hardlockup_detector_event_create(void)
+ {
+-	unsigned int cpu = smp_processor_id();
++	unsigned int cpu;
+ 	struct perf_event_attr *wd_attr;
+ 	struct perf_event *evt;
+ 
++	/*
++	 * Preemption is not disabled because memory will be allocated.
++	 * Ensure CPU-locality by calling this in per-CPU kthread.
++	 */
++	WARN_ON(!is_percpu_thread());
++	cpu = raw_smp_processor_id();
+ 	wd_attr = &wd_hw_attr;
+ 	wd_attr->sample_period = hw_nmi_get_sample_period(watchdog_thresh);
+ 
+-- 
+2.25.1
 
-Well normally my rule i s - if it gets re-used then do it, otherwise it 
-just involves more indirection to follow. :) But regardless of that, 
-given some other things you ask for that kind of makes this discussion 
-moot as it requires much bigger wholesale changes to the test infra 
-which will make these patches a lot more work. I'll get to that later in 
-mails.
-
->> But one catch... it really should be is_non_hidden_exe_shell_script() as
->> it's checking that it's not a hidden file AND is a shell script. Or do I
->> keep the hidden file test outside of the function in the if? If we're nit
->> picking then I need to know exactly what you want here as your suggested
->> name is actually incorrect.
-> 
-> I personally prefer to use the condition:
-> 
->    if (is_exe_shell_script() && ent->d_name[0] != '.')
->        do_something...
-> 
-> The reason is the function is_exe_shell_script() is more common and we
-> use it easily in wider scope.
-
-As above - will probably have to redo a lot of the test infra involving 
-the shell tests to handle some of your other requests, but if we don't 
-go that way, I have got where you want to go and I can do this.
-
->>> And the condition checking 'ent->d_name[0] != '.'' would be redundant
->>> after we have checked the file suffix '.sh'.
->>
->> This isn't actually redundant. You can have .something.sh :) If the idea is
->> we skip anything with a . at the start first always... then the if (to me)
->> is obvious.
-> 
-> Yeah, I agree the checking the start char '.' is the right thing
-> to do.
-
-:)
