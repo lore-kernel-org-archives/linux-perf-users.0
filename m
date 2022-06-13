@@ -2,105 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A4ECCA47C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 10:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBD1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 10:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232008AbiFMKDE (ORCPT
+        id S233833AbiFMKF5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 06:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
+        Mon, 13 Jun 2022 06:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241453AbiFMKCc (ORCPT
+        with ESMTP id S229808AbiFMKF4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 06:02:32 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6628226CF;
-        Mon, 13 Jun 2022 03:02:29 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE1C91042;
-        Mon, 13 Jun 2022 03:02:29 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.38.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 421013F66F;
-        Mon, 13 Jun 2022 03:02:22 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        will@kernel.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 8/8] arm64/perf: Enable branch stack sampling
-Date:   Mon, 13 Jun 2022 15:31:19 +0530
-Message-Id: <20220613100119.684673-9-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220613100119.684673-1-anshuman.khandual@arm.com>
-References: <20220613100119.684673-1-anshuman.khandual@arm.com>
+        Mon, 13 Jun 2022 06:05:56 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AEEDBD;
+        Mon, 13 Jun 2022 03:05:56 -0700 (PDT)
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LM6c82yFFz68B2P;
+        Mon, 13 Jun 2022 18:04:24 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 13 Jun 2022 12:05:54 +0200
+Received: from [10.195.33.253] (10.195.33.253) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 13 Jun 2022 11:05:53 +0100
+Message-ID: <2955958b-4982-42bc-7c68-82cd23462b35@huawei.com>
+Date:   Mon, 13 Jun 2022 11:09:01 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] perf vendor events arm64: Arm Cortex-A78C and X1C
+To:     Nick Forrington <nick.forrington@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>
+CC:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        "Mike Leach" <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20220610174459.615995-1-nick.forrington@arm.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220610174459.615995-1-nick.forrington@arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.195.33.253]
+X-ClientProxiedBy: lhreml746-chm.china.huawei.com (10.201.108.196) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that all the required pieces are already in place, just enable the perf
-branch stack sampling support on arm64 platform, by removing the gate which
-blocks it in armpmu_event_init().
+On 10/06/2022 18:44, Nick Forrington wrote:
+> Add PMU events for the Arm Cortex-A78C and Arm Cortex-X1C CPUs.
+> 
+> Events for Arm Cortex-A78C match those for Arm Cortex-A78.
+> Events for Arm Cortex-X1C match those for Arm Cortex- X1.
+> 
+> As such, this is just a mapfile change.
+> 
+> Main ID Register (MIDR) and event data is sourced from the corresponding
+> Arm Technical Reference Manuals:
+> 
+> Arm Cortex-A78C
+> https://developer.arm.com/documentation/102226/
+> 
+> Arm Cortex-X1C
+> https://developer.arm.com/documentation/101968/
+> 
+> Signed-off-by: Nick Forrington<nick.forrington@arm.com>
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/perf/arm_pmu.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 52a903d26702..efbc6db42b35 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -537,9 +537,35 @@ static int armpmu_event_init(struct perf_event *event)
- 		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
- 		return -ENOENT;
- 
--	/* does not support taken branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
-+	if (has_branch_stack(event)) {
-+		/*
-+		 * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
-+		 * in the config, before branch stack sampling events
-+		 * can be requested.
-+		 */
-+		if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
-+			pr_warn_once("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
-+			return -EOPNOTSUPP;
-+		}
-+
-+		if (event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_KERNEL) {
-+			if (!perfmon_capable()) {
-+				pr_warn_once("does not have permission for kernel branch filter\n");
-+				return -EPERM;
-+			}
-+		}
-+
-+		/*
-+		 * Branch stack sampling event can not be supported in
-+		 * case either the required driver itself is absent or
-+		 * BRBE buffer, is not supported. Besides checking for
-+		 * the callback prevents a crash in case it's absent.
-+		 */
-+		if (!armpmu->brbe_supported || !armpmu->brbe_supported(event)) {
-+			pr_warn_once("BRBE is not supported\n");
-+			return -EOPNOTSUPP;
-+		}
-+	}
- 
- 	if (armpmu->map_event(event) == -ENOENT)
- 		return -ENOENT;
--- 
-2.25.1
-
+Reviewed-by: John Garry <john.garry@huawei.com>
