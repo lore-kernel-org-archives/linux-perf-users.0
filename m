@@ -2,147 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DB7CCA483
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 08:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF351C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 08:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240193AbiFMIpZ (ORCPT
+        id S229721AbiFMIrs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 04:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60786 "EHLO
+        Mon, 13 Jun 2022 04:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240320AbiFMIpG (ORCPT
+        with ESMTP id S239329AbiFMIrq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 04:45:06 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB7CB20192;
-        Mon, 13 Jun 2022 01:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pN3d4KEFcv2ptnSv0mvCj6MvUML0g63O/kngZ8T7P5U=; b=jHY41velXm5OfTDUZVWOgGoGBS
-        3XcfJnIs2Kw4MnQzhXHXXp0NuTvYgWNNcy9H8ZMc64VSaMQLttlBqVnSkycnBSdvSyy0Jak2Oc/oh
-        vvGayo0C9yY99bqhrLdUZmtWJXcMrqnljzCxzdeOwv7I5/kT19cRmZ3SrWtebHTgXMFdZAZxKh/LD
-        FLvZqYIpmAvjq1lnM+gSi7696QvqdD2nf0hqYc6h4USx92PA9LVEoUSL3WQM5ig7zhrj1+/gECYeb
-        R1xWNHwwSLm1F21Q9Cu7wJn7J1PofxmN5bqxHgiOokEGCrOE72TMA7ta7eHf7Pxf1c+Q+Jc6wUzzF
-        Why4PJmw==;
-Received: from dhcp-077-249-017-003.chello.nl ([77.249.17.3] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o0fgQ-007VfF-TN; Mon, 13 Jun 2022 08:44:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D9091302DA8;
-        Mon, 13 Jun 2022 10:44:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BB85B200C72F2; Mon, 13 Jun 2022 10:44:22 +0200 (CEST)
-Date:   Mon, 13 Jun 2022 10:44:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        vgupta@kernel.org, linux@armlinux.org.uk,
-        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
-        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
-        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
-        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        James.Bottomley@hansenpartnership.com, deller@gmx.de,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
-        davem@davemloft.net, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        sudeep.holla@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, anup@brainfault.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-        rostedt@goodmis.org, pmladek@suse.com, senozhatsky@chromium.org,
-        john.ogness@linutronix.de, paulmck@kernel.org, frederic@kernel.org,
-        quic_neeraju@quicinc.com, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
-        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH 04/36] cpuidle,intel_idle: Fix CPUIDLE_FLAG_IRQ_ENABLE
-Message-ID: <Yqb45vclY2KVL0wZ@hirez.programming.kicks-ass.net>
-References: <20220608142723.103523089@infradead.org>
- <20220608144516.172460444@infradead.org>
- <20220609164921.5e61711d@jacob-builder>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220609164921.5e61711d@jacob-builder>
+        Mon, 13 Jun 2022 04:47:46 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9487BBF44
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 01:47:44 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id s22-20020a252d56000000b0065d1ef35f9dso4522742ybe.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 01:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=tX56IynK4g6cEhjx/px0z/IXENX17azezRVhy0kMlX8=;
+        b=JsGvTqvb5lf5Hai0NPWB2/LefnN0tiOusT9QdOYy2H586IRul4QwbB//rEo0fLhAET
+         kBQuGRy9iqTE1dekJFtVtKogtQAVX1FhXNu6WHDb9fVMGAsONPXLpcLkhcAzsxC3q7g7
+         huvou6PuJAVM7jYG/uNQozO5VB7My5Wpd03QYyAf5ZQrSnIE/SCP1h4/kLVT6Tjqcjmm
+         +9g1ZG+Fh1JQjp3Jwo3evVt4P3RqWxQIzhManAcOdTd3kybodORKyl6RD3LVcLTtKpUQ
+         cpJCqjz22l2ECiRVCixQjLWVvNvhQyh2ksRnQgZ1Ne2mulWLgcRCkR5WlltO3bVJap5Z
+         x7Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=tX56IynK4g6cEhjx/px0z/IXENX17azezRVhy0kMlX8=;
+        b=ZZMnJecN4xKgn6P4YQ4qHbfMR2WpbFOySthTVGYudn8lfcp+W102AwHN3D+zKICqTZ
+         BgoufNdLrxHo3OphWPjtXgvkES33hCfMb872enlG9Bt+8tf9NIO/T8wrAmZvJt8oWI3k
+         CYye85zW4LGHCV5s2McjKW1JOiwSl/bJBXzothQngGaVmsR6YDYrq/5KkFdivNDx501F
+         D2wv7Znf3t4bqgubUkqDpXM5UP3sPDy9TsJdbrYjyiz4BSwVcDyuk9x9kjI5ktwzsQG9
+         sAWOEWw1fIV3/Iie6qQos569VDefK8Q4g3Tds0e7tNgTb6Qoxlkm5+P3HNnc7z3Rwm5K
+         uGmw==
+X-Gm-Message-State: AOAM531mWImsRT+WJgKZ3bnyiQp8kALj33Wj8wFpraisLM7tPefiBlRL
+        eSUHx/0bKqnt7a7ekuv2dtEb6QY81u8d
+X-Google-Smtp-Source: ABdhPJxPj43DFMO/GRe77cIEw3Nkmq4yWBlr8ADVGE2jEF1zGv/zKXDaB3UAmL9GK1oDUZV3H2jHG60HJ2XN
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:1256:a8b4:594a:9164])
+ (user=irogers job=sendgmr) by 2002:a5b:dcf:0:b0:64a:6923:bbba with SMTP id
+ t15-20020a5b0dcf000000b0064a6923bbbamr60889716ybr.398.1655110063699; Mon, 13
+ Jun 2022 01:47:43 -0700 (PDT)
+Date:   Mon, 13 Jun 2022 01:47:33 -0700
+Message-Id: <20220613084739.1159111-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
+Subject: [PATCH 0/6] Corrections to cpu map event encoding
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 09, 2022 at 04:49:21PM -0700, Jacob Pan wrote:
-> Hi Peter,
-> 
-> On Wed, 08 Jun 2022 16:27:27 +0200, Peter Zijlstra <peterz@infradead.org>
-> wrote:
-> 
-> > Commit c227233ad64c ("intel_idle: enable interrupts before C1 on
-> > Xeons") wrecked intel_idle in two ways:
-> > 
-> >  - must not have tracing in idle functions
-> >  - must return with IRQs disabled
-> > 
-> > Additionally, it added a branch for no good reason.
-> > 
-> > Fixes: c227233ad64c ("intel_idle: enable interrupts before C1 on Xeons")
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  drivers/idle/intel_idle.c |   48
-> > +++++++++++++++++++++++++++++++++++----------- 1 file changed, 37
-> > insertions(+), 11 deletions(-)
-> > 
-> > --- a/drivers/idle/intel_idle.c
-> > +++ b/drivers/idle/intel_idle.c
-> > @@ -129,21 +137,37 @@ static unsigned int mwait_substates __in
-> >   *
-> >   * Must be called under local_irq_disable().
-> >   */
-> nit: this comment is no long true, right?
+A mask encoding of a cpu map is laid out as:
+  u16 nr
+  u16 long_size
+  unsigned long mask[];
+However, the mask may be 8-byte aligned meaning there is a 4-byte pad
+after long_size. This means 32-bit and 64-bit builds see the mask as
+being at different offsets. On top of this the structure is in the byte
+data[] encoded as:
+  u16 type
+  char data[]
+This means the mask's struct isn't the required 4 or 8 byte aligned, but
+is offset by 2. Consequently the long reads and writes are causing
+undefined behavior as the alignment is broken.
 
-It still is, all the idle routines are called with interrupts disabled,
-but must also exit with interrupts disabled.
+These changes do minor clean up with const, visibility of functions
+and using the constant time max function. It then adds 32 and 64-bit
+mask encoding variants, packed to match current alignment. Taking the
+address of a packed struct leads to unaligned data, so function
+arguments are altered to be passed the packed struct. To compact the
+mask encoding further and drop the padding, the 4-byte variant is
+preferred. Finally a new range encoding is added, that reduces the
+size of the common case of a range of CPUs to a single u64.
 
-If the idle method requires interrupts to be enabled, it must be sure to
-disable them again before returning. Given all the RCU/tracing concerns
-it must use raw_local_irq_*() for this though.
+On a 72 CPU (hyperthread) machine the original encoding of all CPUs is:
+0x9a98 [0x28]: event: 74
+.
+. ... raw event: size 40 bytes
+.  0000:  4a 00 00 00 00 00 28 00 01 00 02 00 08 00 00 00  J.....(.........
+.  0010:  00 00 ff ff ff ff ff ff ff ff ff 00 00 00 00 00  ................
+.  0020:  00 00 00 00 00 00 00 00                          ........        
+
+0 0 0x9a98 [0x28]: PERF_RECORD_CPU_MAP
+
+Using the 4-byte encoding it is:
+0x9a98@pipe [0x20]: event: 74
+.
+. ... raw event: size 32 bytes
+.  0000:  4a 00 00 00 00 00 20 00 01 00 03 00 04 00 ff ff  J..... .........
+.  0010:  ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00  ................
+
+0 0 0x9a98 [0x20]: PERF_RECORD_CPU_MAP
+
+Finally, with the range encoding it is:
+0x9ab8@pipe [0x10]: event: 74
+.
+. ... raw event: size 16 bytes
+.  0000:  4a 00 00 00 00 00 10 00 02 00 00 00 00 00 47 00  J.............G.
+
+0 0 0x9ab8 [0x10]: PERF_RECORD_CPU_MAP
+
+
+Ian Rogers (6):
+  perf cpumap: Const map for max
+  perf cpumap: Synthetic events and const/static
+  perf cpumap: Compute mask size in constant time
+  perf cpumap: Fix alignment for masks in event encoding
+  perf events: Prefer union over variable length array
+  perf cpumap: Add range data encoding
+
+ tools/lib/perf/cpumap.c              |   2 +-
+ tools/lib/perf/include/perf/cpumap.h |   2 +-
+ tools/lib/perf/include/perf/event.h  |  61 ++++++++-
+ tools/perf/tests/cpumap.c            |  71 ++++++++---
+ tools/perf/tests/event_update.c      |  14 +--
+ tools/perf/util/cpumap.c             | 111 +++++++++++++---
+ tools/perf/util/cpumap.h             |   4 +-
+ tools/perf/util/event.h              |   4 -
+ tools/perf/util/header.c             |  24 ++--
+ tools/perf/util/session.c            |  35 +++---
+ tools/perf/util/synthetic-events.c   | 182 +++++++++++++--------------
+ tools/perf/util/synthetic-events.h   |   2 +-
+ 12 files changed, 327 insertions(+), 185 deletions(-)
+
+-- 
+2.36.1.476.g0c4daa206d-goog
+
