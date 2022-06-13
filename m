@@ -2,54 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF351C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 08:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7B2C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 08:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbiFMIrs (ORCPT
+        id S239307AbiFMIrv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 04:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35946 "EHLO
+        Mon, 13 Jun 2022 04:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239329AbiFMIrq (ORCPT
+        with ESMTP id S239964AbiFMIrt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 04:47:46 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9487BBF44
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 01:47:44 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id s22-20020a252d56000000b0065d1ef35f9dso4522742ybe.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 01:47:44 -0700 (PDT)
+        Mon, 13 Jun 2022 04:47:49 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE3EDF6D
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 01:47:47 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-30c14765d55so47795607b3.13
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 01:47:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=tX56IynK4g6cEhjx/px0z/IXENX17azezRVhy0kMlX8=;
-        b=JsGvTqvb5lf5Hai0NPWB2/LefnN0tiOusT9QdOYy2H586IRul4QwbB//rEo0fLhAET
-         kBQuGRy9iqTE1dekJFtVtKogtQAVX1FhXNu6WHDb9fVMGAsONPXLpcLkhcAzsxC3q7g7
-         huvou6PuJAVM7jYG/uNQozO5VB7My5Wpd03QYyAf5ZQrSnIE/SCP1h4/kLVT6Tjqcjmm
-         +9g1ZG+Fh1JQjp3Jwo3evVt4P3RqWxQIzhManAcOdTd3kybodORKyl6RD3LVcLTtKpUQ
-         cpJCqjz22l2ECiRVCixQjLWVvNvhQyh2ksRnQgZ1Ne2mulWLgcRCkR5WlltO3bVJap5Z
-         x7Qw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=+TZFSQCPo2Ju+GzmGovbnxDwp60NNa1c3IUVi64MUwE=;
+        b=m2G85oiUaIgx7yZjFlW1pWdakJHDEGzddu/k0tEqME2rscMJFMI+H8NuW+pc2shBsH
+         BdMeTQCNahkzQAHbQu0AvzTcS9EMNjYttG0/RVkKMRqW55ssuntWP4JwNXrDGgiV1cvF
+         bxzbInrxhDHCdhv2miJwkekNpQh5of+v9yCy1kfT1sunfMTjEKrb2yOL6/ow+9gQvq9D
+         nZSfWiYAeeL1l2iwCzw1nEulcFpTO3k/ilDtBfmo3Zrv/0Qa+u7iLcZExFfJ+P3Ib73g
+         sDf0qnD83q+5lYDQ/WdIVjOX/ZDkElteX7LHSuahBInWSLVLPT2kfBzM438uOK5s5bNO
+         fGng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=tX56IynK4g6cEhjx/px0z/IXENX17azezRVhy0kMlX8=;
-        b=ZZMnJecN4xKgn6P4YQ4qHbfMR2WpbFOySthTVGYudn8lfcp+W102AwHN3D+zKICqTZ
-         BgoufNdLrxHo3OphWPjtXgvkES33hCfMb872enlG9Bt+8tf9NIO/T8wrAmZvJt8oWI3k
-         CYye85zW4LGHCV5s2McjKW1JOiwSl/bJBXzothQngGaVmsR6YDYrq/5KkFdivNDx501F
-         D2wv7Znf3t4bqgubUkqDpXM5UP3sPDy9TsJdbrYjyiz4BSwVcDyuk9x9kjI5ktwzsQG9
-         sAWOEWw1fIV3/Iie6qQos569VDefK8Q4g3Tds0e7tNgTb6Qoxlkm5+P3HNnc7z3Rwm5K
-         uGmw==
-X-Gm-Message-State: AOAM531mWImsRT+WJgKZ3bnyiQp8kALj33Wj8wFpraisLM7tPefiBlRL
-        eSUHx/0bKqnt7a7ekuv2dtEb6QY81u8d
-X-Google-Smtp-Source: ABdhPJxPj43DFMO/GRe77cIEw3Nkmq4yWBlr8ADVGE2jEF1zGv/zKXDaB3UAmL9GK1oDUZV3H2jHG60HJ2XN
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=+TZFSQCPo2Ju+GzmGovbnxDwp60NNa1c3IUVi64MUwE=;
+        b=ZYKSQPa74VF2I2o7jFFNkiHDNPPjSQVtWBgBr6TaPZTYaiAPI38C0XJdzDyOnre2n7
+         35Whx4qXxYGbp1qEJjCPFlkaqnmLY1MxwDFFo3N8qaS6000oQ8Ap1s+tkPmAvNHuZlL7
+         QOrNvgA6juiCmZAG6sWzH3AvjqOaSjTCl7bjlspd/uPrCusb8PBDdxZNiMfXQczQ8Im6
+         oaR9mADc/hWJRoPnNW8h4v6CgJxGS+uB1CctgNRQX+xqnUAo1BWN6YAqcmlh9ZVvR3CH
+         re8GeH7uqTCRywkcsXnvDeg9WEQ3+sZYwLafQb9e2Fu/gAo4HSHBs8BqT1Jxmh7HQZLQ
+         Ze9w==
+X-Gm-Message-State: AOAM533dJ1Ok6MsbdPWBUHfh+lRc9J2h1Fb+RVwVG+LXH5ezmzsm2oxi
+        8kIwXUIz9hKuqyKN22dJRjFjMaT1MNrN
+X-Google-Smtp-Source: ABdhPJwSSqRhSBjwM5FE3KlSNKSPK1Bh8G9cCaBSGRqGDpSFwbXBYZ+bGM5GWkMHxTj+CRVGZ7NhoZp56Ncl
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:1256:a8b4:594a:9164])
- (user=irogers job=sendgmr) by 2002:a5b:dcf:0:b0:64a:6923:bbba with SMTP id
- t15-20020a5b0dcf000000b0064a6923bbbamr60889716ybr.398.1655110063699; Mon, 13
- Jun 2022 01:47:43 -0700 (PDT)
-Date:   Mon, 13 Jun 2022 01:47:33 -0700
-Message-Id: <20220613084739.1159111-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:e68b:0:b0:65c:7aa5:f901 with SMTP id
+ d133-20020a25e68b000000b0065c7aa5f901mr57398720ybh.147.1655110066202; Mon, 13
+ Jun 2022 01:47:46 -0700 (PDT)
+Date:   Mon, 13 Jun 2022 01:47:34 -0700
+In-Reply-To: <20220613084739.1159111-1-irogers@google.com>
+Message-Id: <20220613084739.1159111-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220613084739.1159111-1-irogers@google.com>
 X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
-Subject: [PATCH 0/6] Corrections to cpu map event encoding
+Subject: [PATCH 1/6] perf cpumap: Const map for max
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -78,79 +82,40 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A mask encoding of a cpu map is laid out as:
-  u16 nr
-  u16 long_size
-  unsigned long mask[];
-However, the mask may be 8-byte aligned meaning there is a 4-byte pad
-after long_size. This means 32-bit and 64-bit builds see the mask as
-being at different offsets. On top of this the structure is in the byte
-data[] encoded as:
-  u16 type
-  char data[]
-This means the mask's struct isn't the required 4 or 8 byte aligned, but
-is offset by 2. Consequently the long reads and writes are causing
-undefined behavior as the alignment is broken.
+Allows max to be used with const perf_cpu_maps.
 
-These changes do minor clean up with const, visibility of functions
-and using the constant time max function. It then adds 32 and 64-bit
-mask encoding variants, packed to match current alignment. Taking the
-address of a packed struct leads to unaligned data, so function
-arguments are altered to be passed the packed struct. To compact the
-mask encoding further and drop the padding, the 4-byte variant is
-preferred. Finally a new range encoding is added, that reduces the
-size of the common case of a range of CPUs to a single u64.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/perf/cpumap.c              | 2 +-
+ tools/lib/perf/include/perf/cpumap.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-On a 72 CPU (hyperthread) machine the original encoding of all CPUs is:
-0x9a98 [0x28]: event: 74
-.
-. ... raw event: size 40 bytes
-.  0000:  4a 00 00 00 00 00 28 00 01 00 02 00 08 00 00 00  J.....(.........
-.  0010:  00 00 ff ff ff ff ff ff ff ff ff 00 00 00 00 00  ................
-.  0020:  00 00 00 00 00 00 00 00                          ........        
-
-0 0 0x9a98 [0x28]: PERF_RECORD_CPU_MAP
-
-Using the 4-byte encoding it is:
-0x9a98@pipe [0x20]: event: 74
-.
-. ... raw event: size 32 bytes
-.  0000:  4a 00 00 00 00 00 20 00 01 00 03 00 04 00 ff ff  J..... .........
-.  0010:  ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00  ................
-
-0 0 0x9a98 [0x20]: PERF_RECORD_CPU_MAP
-
-Finally, with the range encoding it is:
-0x9ab8@pipe [0x10]: event: 74
-.
-. ... raw event: size 16 bytes
-.  0000:  4a 00 00 00 00 00 10 00 02 00 00 00 00 00 47 00  J.............G.
-
-0 0 0x9ab8 [0x10]: PERF_RECORD_CPU_MAP
-
-
-Ian Rogers (6):
-  perf cpumap: Const map for max
-  perf cpumap: Synthetic events and const/static
-  perf cpumap: Compute mask size in constant time
-  perf cpumap: Fix alignment for masks in event encoding
-  perf events: Prefer union over variable length array
-  perf cpumap: Add range data encoding
-
- tools/lib/perf/cpumap.c              |   2 +-
- tools/lib/perf/include/perf/cpumap.h |   2 +-
- tools/lib/perf/include/perf/event.h  |  61 ++++++++-
- tools/perf/tests/cpumap.c            |  71 ++++++++---
- tools/perf/tests/event_update.c      |  14 +--
- tools/perf/util/cpumap.c             | 111 +++++++++++++---
- tools/perf/util/cpumap.h             |   4 +-
- tools/perf/util/event.h              |   4 -
- tools/perf/util/header.c             |  24 ++--
- tools/perf/util/session.c            |  35 +++---
- tools/perf/util/synthetic-events.c   | 182 +++++++++++++--------------
- tools/perf/util/synthetic-events.h   |   2 +-
- 12 files changed, 327 insertions(+), 185 deletions(-)
-
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index 384d5e076ee4..6cd0be7c1bb4 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -309,7 +309,7 @@ bool perf_cpu_map__has(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
+ 	return perf_cpu_map__idx(cpus, cpu) != -1;
+ }
+ 
+-struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map)
++struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
+ {
+ 	struct perf_cpu result = {
+ 		.cpu = -1
+diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+index 24de795b09bb..03aceb72a783 100644
+--- a/tools/lib/perf/include/perf/cpumap.h
++++ b/tools/lib/perf/include/perf/cpumap.h
+@@ -23,7 +23,7 @@ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
+ LIBPERF_API struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
+ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
+ LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
+-LIBPERF_API struct perf_cpu perf_cpu_map__max(struct perf_cpu_map *map);
++LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
+ LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
+ 
+ #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
 -- 
 2.36.1.476.g0c4daa206d-goog
 
