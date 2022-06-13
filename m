@@ -2,96 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21431CCA47B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 20:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC04CCA47D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 20:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350776AbiFMUyf (ORCPT
+        id S1351438AbiFMU7w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 16:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
+        Mon, 13 Jun 2022 16:59:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350928AbiFMUxU (ORCPT
+        with ESMTP id S1351504AbiFMU5p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 16:53:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CC06270;
-        Mon, 13 Jun 2022 13:15:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 03931B815A5;
-        Mon, 13 Jun 2022 20:15:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91801C341C6;
-        Mon, 13 Jun 2022 20:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655151334;
-        bh=b/8VMS48rFYiEviowVXeqT6J9SY5rNVLT0UgxTwZTUw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j1AAlI7QMYzRjcQuw42ItWMpK2AttkPHZp8P1GQUuTvJXflLhvE4pUT6tGStt02iN
-         YjCHVIJir3qRC1IwRKDDebXM7DWBqejfFJoi/NgaWA4KFae6rwbVDdUq1C2YfvU3j4
-         2NesundUnuMkMp90Bmy0m+/HvvU2jdmLkCV8SEoYBGvQvCR/kMl8qPMvM7Dmi1Vzm/
-         GsSCm3re8ZHeyapw0hPLcZq2XpCDWKQihLk0o+iZ6OiJDSP3lpx63fT8dbv3M7g3I5
-         Y0+6wpOFJfWxBmyHRZhhse8Llaj7jNTvo6JP0s3a4hKjQs/0LDrRkbpcuQKILnmUuZ
-         n1i9zGu6JdNEQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B8F434096F; Mon, 13 Jun 2022 17:15:30 -0300 (-03)
-Date:   Mon, 13 Jun 2022 17:15:30 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv4 bpf-next 0/2] perf tools: Fix prologue generation
-Message-ID: <Yqea4oMxjcnKbPdx@kernel.org>
-References: <20220603204509.15044-1-jolsa@kernel.org>
- <CAEf4BzbT4Z=B2hZxTQf1MrCp6TGiMgP+_t7p8G5A+RdVyNP+8w@mail.gmail.com>
- <YqOOsL8EbbO3lhmC@kernel.org>
- <CAEf4BzaKP8MHtGZDVSpwbCxNUD4zY9wkjEa4HKR0LWxYKW5cGQ@mail.gmail.com>
- <YqOvYo1tp32gKviM@krava>
- <YqYTZVa44Y6RQ11W@krava>
+        Mon, 13 Jun 2022 16:57:45 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3A8BCB9;
+        Mon, 13 Jun 2022 13:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655152384; x=1686688384;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V8qgBoWN/fG+xJHX0cluoEtpiNIPFeWPspFIuQ5rZO0=;
+  b=QPZq7L5/0ekDKRX7DohsY0SRSrtkdsOtRgxVOrkZxvyjIv3zthgA4ioW
+   HJebky0MEudVtYCRAgteWMpm558rV75+fwQZFFJR3vR5Br1yxwwMlyf/A
+   n2Fpnd1Cxsp6Br1PDg45nTgKLshK16RhybJxlA+O4hGeMU6GlQA7G3szk
+   ZAa1xQlgg+JEZp7U+VFtOqAg6tjI0A4OLbR2Chku1jDAK7AjXEN3N5L/c
+   QzloV6oIl8WAZeQDMbh4GJrbic+1ERCAveuWX29w0/IEgz21F6B5Nj37D
+   OmUoOiBYV9rVvNBa5XY0DPoPN1pBkdfz+aQNlekuIIjV97CoNVPpmPw+I
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="364734057"
+X-IronPort-AV: E=Sophos;i="5.91,298,1647327600"; 
+   d="scan'208";a="364734057"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 13:33:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,298,1647327600"; 
+   d="scan'208";a="569223227"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 13 Jun 2022 13:33:00 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o0qk7-000L7P-EQ;
+        Mon, 13 Jun 2022 20:32:59 +0000
+Date:   Tue, 14 Jun 2022 04:32:32 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        will@kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/8] perf: Consolidate branch sample filter helpers
+Message-ID: <202206140422.ttLxMHtq-lkp@intel.com>
+References: <20220613100119.684673-2-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YqYTZVa44Y6RQ11W@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20220613100119.684673-2-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Jun 12, 2022 at 06:25:09PM +0200, Jiri Olsa escreveu:
-> On Fri, Jun 10, 2022 at 10:53:57PM +0200, Jiri Olsa wrote:
-> > On Fri, Jun 10, 2022 at 11:45:48AM -0700, Andrii Nakryiko wrote:
-> > > On Fri, Jun 10, 2022 at 11:34 AM Arnaldo Carvalho de Melo
-> > > > libbpf: map 'flip_table': created successfully, fd=4
-> > > > libbpf: prog 'bpf_func__SyS_epoll_pwait': BPF program load failed: Invalid argument
-> > > > libbpf: prog 'bpf_func__SyS_epoll_pwait': -- BEGIN PROG LOAD LOG --
-> > > > Invalid insn code at line_info[11].insn_off
+Hi Anshuman,
 
-> > > Mismatched line_info.
+Thank you for the patch! Yet something to improve:
 
-> > > Jiri, I think we need to clear func_info and line_info in
-> > > bpf_program__set_insns() because at that point func/line info can be
-> > > mismatched and won't correspond to the actual set of instructions.
+[auto build test ERROR on tip/perf/core]
+[also build test ERROR on acme/perf/core]
+[cannot apply to arm64/for-next/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-> so the problem is that we prepend init proglogue instructions
-> for each program not just for the one that needs it, so it will
-> mismatch later on.. the fix below makes it work for me
+url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220613-180501
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git f0fe9f3c7abcc946a676dfb295478c50312523c2
+config: x86_64-randconfig-a002-20220613 (https://download.01.org/0day-ci/archive/20220614/202206140422.ttLxMHtq-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project d378268ead93c85803c270277f0243737b536ae7)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/1bd23b8ca1fc92f2f5b28a94ebd95432febfe96c
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220613-180501
+        git checkout 1bd23b8ca1fc92f2f5b28a94ebd95432febfe96c
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/acpi/
 
-> Arnaldo,
-> I squashed and pushed the change below changes to my bpf/depre
-> branch, could you please retest?
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-I'll check.
+All errors (new ones prefixed by >>):
 
-- Arnaldo
+   In file included from drivers/acpi/acpi_pad.c:20:
+>> include/linux/perf_event.h:1708:42: error: use of undeclared identifier 'PERF_SAMPLE_BRANCH_PRIV_SAVE'; did you mean 'PERF_SAMPLE_BRANCH_TYPE_SAVE'?
+           return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
+                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                                   PERF_SAMPLE_BRANCH_TYPE_SAVE
+   include/uapi/linux/perf_event.h:231:2: note: 'PERF_SAMPLE_BRANCH_TYPE_SAVE' declared here
+           PERF_SAMPLE_BRANCH_TYPE_SAVE    =
+           ^
+   1 error generated.
+--
+   In file included from drivers/acpi/processor_idle.c:24:
+>> include/linux/perf_event.h:1708:42: error: use of undeclared identifier 'PERF_SAMPLE_BRANCH_PRIV_SAVE'; did you mean 'PERF_SAMPLE_BRANCH_TYPE_SAVE'?
+           return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
+                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                                   PERF_SAMPLE_BRANCH_TYPE_SAVE
+   include/uapi/linux/perf_event.h:231:2: note: 'PERF_SAMPLE_BRANCH_TYPE_SAVE' declared here
+           PERF_SAMPLE_BRANCH_TYPE_SAVE    =
+           ^
+   drivers/acpi/processor_idle.c:1083:12: warning: no previous prototype for function 'acpi_processor_ffh_lpi_probe' [-Wmissing-prototypes]
+   int __weak acpi_processor_ffh_lpi_probe(unsigned int cpu)
+              ^
+   drivers/acpi/processor_idle.c:1083:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int __weak acpi_processor_ffh_lpi_probe(unsigned int cpu)
+   ^
+   static 
+   drivers/acpi/processor_idle.c:1152:12: warning: no previous prototype for function 'acpi_processor_ffh_lpi_enter' [-Wmissing-prototypes]
+   int __weak acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
+              ^
+   drivers/acpi/processor_idle.c:1152:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int __weak acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
+   ^
+   static 
+   2 warnings and 1 error generated.
+
+
+vim +1708 include/linux/perf_event.h
+
+  1705	
+  1706	static inline bool branch_sample_priv(const struct perf_event *event)
+  1707	{
+> 1708		return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
