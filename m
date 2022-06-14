@@ -2,93 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A02C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Jun 2022 22:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C84EC43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 01:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229783AbiFMWCy (ORCPT
+        id S236615AbiFNBgq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 18:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
+        Mon, 13 Jun 2022 21:36:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiFMWCy (ORCPT
+        with ESMTP id S241502AbiFNBgq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 18:02:54 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DD3A275DB
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 15:02:53 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id w20so10964756lfa.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 15:02:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NSZAOUc7jDHG2RZNVp8mc5S+xeoioWqOft0dihIfjPA=;
-        b=A+epGxaCSLgfadqz8qkKfJUDb2SI2zjLi4019IM7FloS0RQWHRPZNxzbLQMJlYHhJA
-         LkBd/b2ghI9kdqlzIPw/rCmur9tWA7y/YMZlScR/0Nlp9pqmRRkZZatNtaN10p8rHlbF
-         0IZ/D0VHG06/9BtY2soYa+1hqcqKEkSUCfKfbGiVJNlnuZmqnVBTkd/+BHmLx+izwhwg
-         ni9fQ6NTHAbZdVEDqVdkkMUQCma7SIQRuvCN1c+Dud2I2Q47kTqmofIP2l1kaGPdzcUq
-         ACIR8xR+sp1rf9g5ljwGD+TgYad1/a8trC4+yzcQnQunq+u/Kuqi7NYGg2OaceiEz2pD
-         +aFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NSZAOUc7jDHG2RZNVp8mc5S+xeoioWqOft0dihIfjPA=;
-        b=hXvvIDHzXp9b1FeIytW18e93SFYJBVBF0s5dEz/KUZ1FGZAngUYDkxK6yZg1rzgdLx
-         +yPmx0+WpVZLXVFn3nlbXJnC9Xy8sk7FbYk3+YHrpSy/Xd4CSI8xHfrzXfRNP2JQNzNF
-         g1GWvU/Mfd8bSk7Mr310rXg5zsh7aLbyF9M6IR3fic2jzHzpC0pDR+VJ0qF+PzYcPOzK
-         1g/MwRSAi1c0zXppa8f6vUNmUAPbke5bsV4llD1CTOWsaeqDbBIPCll8mzQgC6Dpbxup
-         YXv8aaWASI7qul7PyVOhRYM6Ph6bNkxI3XRq7BRdjyQ6u1bnvLNQQb5pcB3wBctDODWT
-         g4Tw==
-X-Gm-Message-State: AJIora9GpQUzq+9pDb5sCgC4hIf3Cg3VQrGQJ1acpQ45HpTljWngo0IE
-        Tr2NCPIhwd1Y/hYjgwLLaYwdexbr13TZSpGUY9AYEg==
-X-Google-Smtp-Source: AGRyM1tGbOk/N5Z0kR13FxIphP5KV5gSzMr3/W2uaDx+YVqR8fYtvcJm57MYyAfnMFouPXDniHgmcveY+sMcdwMrOko=
-X-Received: by 2002:ac2:4a69:0:b0:479:7c24:c3e2 with SMTP id
- q9-20020ac24a69000000b004797c24c3e2mr1129822lfp.487.1655157771232; Mon, 13
- Jun 2022 15:02:51 -0700 (PDT)
+        Mon, 13 Jun 2022 21:36:46 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4682D33A25;
+        Mon, 13 Jun 2022 18:36:44 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7AD323A;
+        Mon, 13 Jun 2022 18:36:43 -0700 (PDT)
+Received: from [10.162.40.17] (unknown [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFDAD3F792;
+        Mon, 13 Jun 2022 18:36:38 -0700 (PDT)
+Message-ID: <7df0ca46-1ece-2f51-a7a7-a0129724e6bc@arm.com>
+Date:   Tue, 14 Jun 2022 07:06:35 +0530
 MIME-Version: 1.0
-References: <20220607191550.4141024-1-blakejones@google.com> <YqZmSRS8UPQJzWFE@krava>
-In-Reply-To: <YqZmSRS8UPQJzWFE@krava>
-From:   Blake Jones <blakejones@google.com>
-Date:   Mon, 13 Jun 2022 15:02:39 -0700
-Message-ID: <CAP_z_CgkJ8RgWevJnDiq-+JjB=ni0OzJ3npwW+S9RZ66i0Y3Kg@mail.gmail.com>
-Subject: Re: [PATCH RESEND] Add a "-m" option to "perf buildid-list".
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 1/8] perf: Consolidate branch sample filter helpers
+Content-Language: en-US
+To:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org
+References: <20220613100119.684673-2-anshuman.khandual@arm.com>
+ <202206140422.ttLxMHtq-lkp@intel.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <202206140422.ttLxMHtq-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thanks for taking a look at this!
 
-On Sun, Jun 12, 2022 at 3:18 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> why 'modules' ? it shows all maps (including kernel)
-> so perhaps -m/--maps would be better?
+On 6/14/22 02:02, kernel test robot wrote:
+> Hi Anshuman,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on tip/perf/core]
+> [also build test ERROR on acme/perf/core]
+> [cannot apply to arm64/for-next/core]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220613-180501
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git f0fe9f3c7abcc946a676dfb295478c50312523c2
+> config: x86_64-randconfig-a002-20220613 (https://download.01.org/0day-ci/archive/20220614/202206140422.ttLxMHtq-lkp@intel.com/config)
+> compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project d378268ead93c85803c270277f0243737b536ae7)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # https://github.com/intel-lab-lkp/linux/commit/1bd23b8ca1fc92f2f5b28a94ebd95432febfe96c
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220613-180501
+>         git checkout 1bd23b8ca1fc92f2f5b28a94ebd95432febfe96c
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/acpi/
+> 
+> If you fix the issue, kindly add following tag where applicable
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from drivers/acpi/acpi_pad.c:20:
+>>> include/linux/perf_event.h:1708:42: error: use of undeclared identifier 'PERF_SAMPLE_BRANCH_PRIV_SAVE'; did you mean 'PERF_SAMPLE_BRANCH_TYPE_SAVE'?
+>            return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
+>                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>                                                    PERF_SAMPLE_BRANCH_TYPE_SAVE
+>    include/uapi/linux/perf_event.h:231:2: note: 'PERF_SAMPLE_BRANCH_TYPE_SAVE' declared here
+>            PERF_SAMPLE_BRANCH_TYPE_SAVE    =
+>            ^
+>    1 error generated.
 
- I called it "modules" because it only operates on the kernel. Calling it
-"maps" would suggest to me that it might also be able to show
-information about the maps in perf.data files, which it can't (just as the
-"-k" option only operates on the kernel). Given that, does it still seem
-like "maps" would be more appropriate?
-
-> also please state that it's from running kernel
-
-Happy to make this change.
-
-> any reason why not use the dso fields directly?
-
-I was just following my general software engineering instincts to
-encapsulate implementation details, so that e.g. the caller doesn't need to
-know about details such as the "has_build_id" boolean. I haven't made
-changes to perf before, so if that's not the preferred style, I can do it
-a different way.
-
-Blake
+This series is dependent on another one which adds symbol PERF_SAMPLE_BRANCH_TYPE_SAVE
+as mentioned in the cover letter. I understand the '--base' argument for git format-patch
+output, but how to mention another prerequisite series before this can be built tested ?
