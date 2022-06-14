@@ -2,46 +2,46 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C84EC43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 01:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D590C43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 01:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236615AbiFNBgq (ORCPT
+        id S229633AbiFNBoX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 21:36:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45964 "EHLO
+        Mon, 13 Jun 2022 21:44:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241502AbiFNBgq (ORCPT
+        with ESMTP id S229556AbiFNBoW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 21:36:46 -0400
+        Mon, 13 Jun 2022 21:44:22 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4682D33A25;
-        Mon, 13 Jun 2022 18:36:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 472552872A;
+        Mon, 13 Jun 2022 18:44:21 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7AD323A;
-        Mon, 13 Jun 2022 18:36:43 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A93623A;
+        Mon, 13 Jun 2022 18:44:21 -0700 (PDT)
 Received: from [10.162.40.17] (unknown [10.162.40.17])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFDAD3F792;
-        Mon, 13 Jun 2022 18:36:38 -0700 (PDT)
-Message-ID: <7df0ca46-1ece-2f51-a7a7-a0129724e6bc@arm.com>
-Date:   Tue, 14 Jun 2022 07:06:35 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8D463F792;
+        Mon, 13 Jun 2022 18:44:16 -0700 (PDT)
+Message-ID: <0bc0f99d-41ad-3ce3-deeb-c4c713100e74@arm.com>
+Date:   Tue, 14 Jun 2022 07:14:14 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-Subject: Re: [PATCH 1/8] perf: Consolidate branch sample filter helpers
+Subject: Re: [PATCH 7/8] arm64/perf: Add BRBE driver
 Content-Language: en-US
-To:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+To:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
         acme@kernel.org, mark.rutland@arm.com, will@kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         James Clark <james.clark@arm.com>,
         Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         linux-perf-users@vger.kernel.org
-References: <20220613100119.684673-2-anshuman.khandual@arm.com>
- <202206140422.ttLxMHtq-lkp@intel.com>
+References: <20220613100119.684673-1-anshuman.khandual@arm.com>
+ <20220613100119.684673-8-anshuman.khandual@arm.com>
+ <f84187d1-b7eb-e25e-090a-d09532f15594@arm.com>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <202206140422.ttLxMHtq-lkp@intel.com>
+In-Reply-To: <f84187d1-b7eb-e25e-090a-d09532f15594@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -49,48 +49,44 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 6/14/22 02:02, kernel test robot wrote:
-> Hi Anshuman,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on tip/perf/core]
-> [also build test ERROR on acme/perf/core]
-> [cannot apply to arm64/for-next/core]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220613-180501
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git f0fe9f3c7abcc946a676dfb295478c50312523c2
-> config: x86_64-randconfig-a002-20220613 (https://download.01.org/0day-ci/archive/20220614/202206140422.ttLxMHtq-lkp@intel.com/config)
-> compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project d378268ead93c85803c270277f0243737b536ae7)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/intel-lab-lkp/linux/commit/1bd23b8ca1fc92f2f5b28a94ebd95432febfe96c
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220613-180501
->         git checkout 1bd23b8ca1fc92f2f5b28a94ebd95432febfe96c
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/acpi/
-> 
-> If you fix the issue, kindly add following tag where applicable
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from drivers/acpi/acpi_pad.c:20:
->>> include/linux/perf_event.h:1708:42: error: use of undeclared identifier 'PERF_SAMPLE_BRANCH_PRIV_SAVE'; did you mean 'PERF_SAMPLE_BRANCH_TYPE_SAVE'?
->            return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
->                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->                                                    PERF_SAMPLE_BRANCH_TYPE_SAVE
->    include/uapi/linux/perf_event.h:231:2: note: 'PERF_SAMPLE_BRANCH_TYPE_SAVE' declared here
->            PERF_SAMPLE_BRANCH_TYPE_SAVE    =
->            ^
->    1 error generated.
 
-This series is dependent on another one which adds symbol PERF_SAMPLE_BRANCH_TYPE_SAVE
-as mentioned in the cover letter. I understand the '--base' argument for git format-patch
-output, but how to mention another prerequisite series before this can be built tested ?
+On 6/13/22 17:46, German Gomez wrote:
+> Hi Anshuman, thanks for the update,
+> 
+> As I mentioned offline, I have a perf test that I've been using for the
+> branch records and filters. I'll let you know the result using this set.
+
+Sure, thanks !
+
+> 
+> On 13/06/2022 11:01, Anshuman Khandual wrote:
+>> [...]
+>>
+>> +
+>> +static int brbe_fetch_perf_priv(u64 brbinf)
+>> +{
+>> +       int brbe_el = brbe_fetch_el(brbinf);
+>> +
+>> +       switch (brbe_el) {
+>> +       case BRBINF_EL_EL0:
+>> +               return PERF_BR_PRIV_USER;
+>> +       case BRBINF_EL_EL1:
+>> +               return PERF_BR_PRIV_KERNEL;
+>> +       case BRBINF_EL_EL2:
+>> +               if (is_kernel_in_hyp_mode())
+>> +                       return PERF_BR_PRIV_KERNEL;
+>> +               return PERF_BR_PRIV_HV;
+>> +       default:
+>> +               pr_warn("unknown branch privilege captured\n");
+>> +               return -1;
+> 
+> This looks like it should return PERF_BR_PRIV_UNKNOWN.
+
+Right, return from this function gets into perf branch record's priv
+element and '-1' is not something that can be parsed correctly in the
+user space tools as the corresponding enum itself starts with 0 i.e
+PERF_BR_PRIV_UNKNOWN.
+
+cpuc->brbe_entries[idx].priv = brbe_fetch_perf_priv(brbinf)
+
+Will change the return as PERF_BR_PRIV_UNKNOWN instead.
