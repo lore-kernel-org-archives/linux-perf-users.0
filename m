@@ -2,188 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1B8C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 21:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FA6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 22:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358451AbiFNVzD (ORCPT
+        id S229880AbiFNWIi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 17:55:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49330 "EHLO
+        Tue, 14 Jun 2022 18:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358400AbiFNVzB (ORCPT
+        with ESMTP id S1358464AbiFNWI1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 17:55:01 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D9B51321;
-        Tue, 14 Jun 2022 14:54:53 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id 111-20020a9d0378000000b0060c2db66d44so7535665otv.6;
-        Tue, 14 Jun 2022 14:54:53 -0700 (PDT)
+        Tue, 14 Jun 2022 18:08:27 -0400
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3294EDEC;
+        Tue, 14 Jun 2022 15:08:26 -0700 (PDT)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-fe4ac3b87fso14319370fac.3;
+        Tue, 14 Jun 2022 15:08:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aPkt6OutKwD8jCYv2fsTMQtVwLarWjjJ5QWfFp7LHmA=;
-        b=B6jxOURtCRPtUoHFXYB5QxIgQyFOFLplqOrxY/W7T/2wzRPNQH2IfWgIWnvNC8SVcX
-         8fTghBGm+YWjpM7iODsaR+A0ECZZrCpFdxq8KAbfCzq5hNd+c4caEauK6oFGfaJIir+g
-         Vu2j59XJXnYPpjEPM8WoiXTyCssOfl5cX/Y1fzjZEyqUEmEqpI0JwXQa7BvnH86vBel7
-         LyjENLFuBe15q7L2W89WW0bH47mWYNMuToVzdCmrHVxyssZC/KaOm2Zm3KagENvhbzrB
-         RWQxm8mo5IAqJm4kOmwwx4LRgCTkq+F/N/dKUDdFnenNQ8iQk+Sl84kt8MPKSHSFWNpe
-         5w4g==
-X-Gm-Message-State: AOAM531+HlRiMVR65cAtZDw5f+z75EjXv8DTb6APGuIhwl1ZvGyT2F6S
-        Q9xoLLHa+66Mgfr3u5kQtCULWpGbaPbl9tmWoGM=
-X-Google-Smtp-Source: ABdhPJx2x7GBI/4hsnXMT5Lj2uVuoEzpYooApUaaOJsZJiRbsmSXCHqSnKZ/XPjKpKm/Kx9qLrSaPdyhGjFmxwcBTLo=
-X-Received: by 2002:a9d:22aa:0:b0:60c:3ab6:5ba with SMTP id
- y39-20020a9d22aa000000b0060c3ab605bamr2841192ota.247.1655243692582; Tue, 14
- Jun 2022 14:54:52 -0700 (PDT)
+        bh=uL+pfJik+rRQSzc9i4k7KVHHfK2XbB8mJChZyZzr7dg=;
+        b=HYQeEdIOv0BAeqhZeFoYdjszgmt2IE42IC/1gm1qQoCEY/px33MW0QAb/KU5JGAhjt
+         x7rUiUZTJjI+Y/X70uS+Neu/VZyBI7y6DrASxieeGquMu/W7vqWBcR57ANEO4Xlczl2o
+         bYSsA4WNWuQFy6AltI/pVzkjofi4GihqzZbyqPdiQCQxdkHPKBOrgYl+Qj5rcqR467PW
+         2XZOPcvOQlUjxZDwvSOem6vIvldJOTKsr9A+Ox59QWS/0WoefZfOHGFHQMLKGw+3PURo
+         MJCkXLbduPWIzBOFhv5SzyDoQJSRLWNkLN7bmsOJ4y0zRnqYXZvWCcLypcRa2WYsF1JS
+         u1Fw==
+X-Gm-Message-State: AJIora9ssO30nTs3rcOHDXIDVR8/YTWwB5deiw1K8FShkLcZTsavfyax
+        JVaVUx1i287DBuFf+VXiM3tvVo6wlxXv5IlG7f0=
+X-Google-Smtp-Source: AGRyM1uTl5swnr44HgvS3WnCGGSBkcYZyGp2KxlIhOgybf9f+SSY/eyv4iYT3URmqg8eMxOPoSae0XBP+EYvB9ug+Qo=
+X-Received: by 2002:a05:6870:4585:b0:fb:5105:76b8 with SMTP id
+ y5-20020a056870458500b000fb510576b8mr3555860oao.92.1655244506189; Tue, 14 Jun
+ 2022 15:08:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220613094605.208401-1-yangjihong1@huawei.com> <20220613094605.208401-10-yangjihong1@huawei.com>
-In-Reply-To: <20220613094605.208401-10-yangjihong1@huawei.com>
+References: <20220614103751.1395645-1-yajun.deng@linux.dev>
+In-Reply-To: <20220614103751.1395645-1-yajun.deng@linux.dev>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 14 Jun 2022 14:54:41 -0700
-Message-ID: <CAM9d7cijyKgCt7su96yM9OWgHP5Hh1UMQh+iBskO+m+rb_y5ww@mail.gmail.com>
-Subject: Re: [RFC 09/13] perf kwork: Add workqueue report support
-To:     Yang Jihong <yangjihong1@huawei.com>
+Date:   Tue, 14 Jun 2022 15:08:15 -0700
+Message-ID: <CAM9d7cj4=3DNz=kKhVbx0uKYwbbaQF6ZdjkezKPdT67j8rcEMg@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: fix perf_event_mux_interval_ms when set zero
+To:     Yajun Deng <yajun.deng@linux.dev>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 2:48 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->
-> Implements workqueue report function.
->
-> test case:
->
->   # perf kwork -k workqueue rep
->
->     Kwork Name                | Cpu  | Total Runtime | Frequency | Max runtime   | Max runtime start   | Max runtime end     |
->    ---------------------------------------------------------------------------------------------------------------------------
->     (w)0xffffffff83e09fa0     | 0001 |   2152.678 ms |       194 |     12.376 ms |    2059361.546621 s |    2059361.558997 s |
->     (w)0xffff888332fea180     | 0000 |     17.125 ms |       301 |      1.018 ms |    2059358.441070 s |    2059358.442089 s |
->     (w)0xffff8881035a83d8     | 0007 |      7.556 ms |         3 |      3.212 ms |    2059362.614643 s |    2059362.617855 s |
->     (w)0xffff888102fc14a0     | 0002 |      7.080 ms |         5 |      1.962 ms |    2059365.421753 s |    2059365.423714 s |
->     (w)0xffffffff82f7da00     | 0000 |      4.277 ms |         7 |      3.778 ms |    2059360.851063 s |    2059360.854841 s |
->     (w)0xffffffff8305d680     | 0006 |      1.796 ms |         1 |      1.796 ms |    2059360.046818 s |    2059360.048613 s |
->     (w)0xffff8883339e9040     | 0005 |      1.659 ms |         2 |      1.619 ms |    2059361.266051 s |    2059361.267670 s |
->     (w)0xffff888333de9040     | 0007 |      1.121 ms |         5 |      0.783 ms |    2059368.238059 s |    2059368.238842 s |
->     (w)0xffff888332fe9040     | 0000 |      0.990 ms |         4 |      0.911 ms |    2059359.604075 s |    2059359.604986 s |
->     (w)0xffff8883331e9040     | 0001 |      0.244 ms |         6 |      0.046 ms |    2059362.689277 s |    2059362.689323 s |
->     (w)0xffff888102e44400     | 0007 |      0.239 ms |         2 |      0.137 ms |    2059363.117537 s |    2059363.117674 s |
->     (w)0xffff8883333ea180     | 0002 |      0.141 ms |         5 |      0.049 ms |    2059365.423784 s |    2059365.423833 s |
->     (w)0xffffffff83062f28     | 0006 |      0.084 ms |         2 |      0.047 ms |    2059358.208033 s |    2059358.208080 s |
->     (w)0xffffffff8305ca48     | 0003 |      0.078 ms |         2 |      0.041 ms |    2059361.071371 s |    2059361.071412 s |
->     (w)0xffff8883337e9040     | 0004 |      0.062 ms |         1 |      0.062 ms |    2059362.605723 s |    2059362.605785 s |
->     (w)0xffff8881035a81e8     | 0001 |      0.056 ms |         1 |      0.056 ms |    2059363.118231 s |    2059363.118287 s |
->     (w)0xffff8883335e9040     | 0003 |      0.026 ms |         1 |      0.026 ms |    2059358.573397 s |    2059358.573423 s |
->     (w)0xffffffff83062e70     | 0006 |      0.023 ms |         1 |      0.023 ms |    2059368.398864 s |    2059368.398888 s |
->     (w)0xffffffff83e06480     | 0002 |      0.000 ms |         1 |      0.000 ms |    2059359.986792 s |    2059359.986792 s |
+Hello,
 
-Using "function" in the tracepoint and symbolizing it would be
-far more intuitive.
+On Tue, Jun 14, 2022 at 3:38 AM Yajun Deng <yajun.deng@linux.dev> wrote:
+>
+> The perf_event_mux_interval_ms is set to zero or one by default.
+
+I see that __perf_mux_hrtimer_init() sets it to PERF_CPU_HRTIMER
+if it's less than 1.
 
 Thanks,
 Namhyung
 
 
->    ---------------------------------------------------------------------------------------------------------------------------
+> It can't change back when someone changes it from zero to another
+> value.
 >
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> Make perf_event_mux_interval_ms to PERF_CPU_HRTIMER when set zero.
+>
+> Fixes: 62b856397927 ("perf: Add sysfs entry to adjust multiplexing interval per PMU")
+> Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
 > ---
->  tools/perf/builtin-kwork.c | 65 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 63 insertions(+), 2 deletions(-)
+>  kernel/events/core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-> index 1eb416faf8ef..f27ffad223a3 100644
-> --- a/tools/perf/builtin-kwork.c
-> +++ b/tools/perf/builtin-kwork.c
-> @@ -813,16 +813,77 @@ static struct kwork_class kwork_softirq = {
->         .cluster_name   = softirq_cluster_name,
->  };
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 61ad10862c21..73c8c7462bbf 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10954,9 +10954,12 @@ perf_event_mux_interval_ms_store(struct device *dev,
+>         if (ret)
+>                 return ret;
 >
-> +static struct kwork_class kwork_workqueue;
-> +static int process_workqueue_execute_start_event(struct perf_tool *tool,
-> +                                                struct evsel *evsel,
-> +                                                struct perf_sample *sample,
-> +                                                struct machine *machine)
-> +{
-> +       struct perf_kwork *kwork = container_of(tool, struct perf_kwork, tool);
-> +
-> +       if (kwork->tp_handler->entry_event)
-> +               return kwork->tp_handler->entry_event(kwork, &kwork_workqueue,
-> +                                                   evsel, sample, machine);
-> +
-> +       return 0;
-> +}
-> +
-> +static int process_workqueue_execute_end_event(struct perf_tool *tool,
-> +                                              struct evsel *evsel,
-> +                                              struct perf_sample *sample,
-> +                                              struct machine *machine)
-> +{
-> +       struct perf_kwork *kwork = container_of(tool, struct perf_kwork, tool);
-> +
-> +       if (kwork->tp_handler->exit_event)
-> +               return kwork->tp_handler->exit_event(kwork, &kwork_workqueue,
-> +                                                  evsel, sample, machine);
-> +
-> +       return 0;
-> +}
-> +
->  const struct evsel_str_handler workqueue_tp_handlers[] = {
->         { "workqueue:workqueue_activate_work", NULL, },
-> -       { "workqueue:workqueue_execute_start", NULL, },
-> -       { "workqueue:workqueue_execute_end",   NULL, },
-> +       { "workqueue:workqueue_execute_start", process_workqueue_execute_start_event, },
-> +       { "workqueue:workqueue_execute_end",   process_workqueue_execute_end_event, },
->  };
+> -       if (timer < 1)
+> +       if (timer < 0)
+>                 return -EINVAL;
 >
-> +static int workqueue_class_init(struct kwork_class *class,
-> +                               struct perf_session *session)
-> +{
-> +       if (perf_session__set_tracepoints_handlers(session,
-> +                                                  workqueue_tp_handlers)) {
-> +               pr_debug("Failed to set workqueue tracepoints handlers\n");
-> +               return -1;
-> +       }
+> +       if (timer < 1)
+> +               timer = PERF_CPU_HRTIMER;
 > +
-> +       class->cluster_root = RB_ROOT_CACHED;
-> +       return 0;
-> +}
-> +
-> +static void workqueue_cluster_init(struct kwork_class *class,
-> +                                  struct kwork_cluster *cluster,
-> +                                  struct evsel *evsel,
-> +                                  struct perf_sample *sample)
-> +{
-> +       cluster->name = NULL;
-> +       cluster->class = class;
-> +       cluster->cpu = sample->cpu;
-> +       cluster->id = evsel__intval(evsel, sample, "work");
-> +}
-> +
-> +static void workqueue_cluster_name(struct kwork_cluster *cluster, char *buf, int len)
-> +{
-> +       snprintf(buf, len, "(w)0x%" PRIx64, cluster->id);
-> +}
-> +
->  static struct kwork_class kwork_workqueue = {
->         .name           = "workqueue",
->         .nr_tracepoints = 3,
->         .tp_handlers    = workqueue_tp_handlers,
-> +       .class_init     = workqueue_class_init,
-> +       .cluster_init   = workqueue_cluster_init,
-> +       .cluster_name   = workqueue_cluster_name,
->  };
->
->  static struct kwork_class *kwork_class_supported_list[KWORK_CLASS_MAX] = {
+>         /* same value, noting to do */
+>         if (timer == pmu->hrtimer_interval_ms)
+>                 return count;
 > --
-> 2.30.GIT
+> 2.25.1
 >
