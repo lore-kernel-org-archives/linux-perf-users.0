@@ -2,98 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01951C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 19:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542EEC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 21:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231262AbiFNTYy (ORCPT
+        id S232915AbiFNVoI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 15:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
+        Tue, 14 Jun 2022 17:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229988AbiFNTYx (ORCPT
+        with ESMTP id S231695AbiFNVoI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 15:24:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E9419022;
-        Tue, 14 Jun 2022 12:24:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0530F60C6A;
-        Tue, 14 Jun 2022 19:24:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 398C2C3411B;
-        Tue, 14 Jun 2022 19:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655234692;
-        bh=xJD7b4c406YOoDqHxaDs+stVjMjykI9ulQJDvKWMsg8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tRyeik4sjF52fNvPA5D5HHRlCVKK43zcbvEk/2B1HLylcxKCJtieNcESKMZv2QcCh
-         2iuN3uGF+BxH/DOaaVhCbwYVWrHdLur2ZejlGWV+JZUa4VmTAa05FBEPJm23Gi004d
-         U6OddF8uc6zWoFsyK0a0fl1Qi7u7K0vv8xxZnhi6JYJCRGSR0YPqrlsEY0BqpPckrI
-         V4EWGcG/j1FkUXotrtY4IL/Cq8G7tGR09vWkftn52Ep4TW7CoaTyrWWeK/EvCEgJmY
-         Zn8k6NtykxXPC36lTB5XFuOUtCoZ4w2QElfC8BLnEb4YAaLBz+Ie3qVOZbQ4QN2MUA
-         kQZP5RMM2bu/Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DE9E54096F; Tue, 14 Jun 2022 16:24:49 -0300 (-03)
-Date:   Tue, 14 Jun 2022 16:24:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
+        Tue, 14 Jun 2022 17:44:08 -0400
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DCBD275C7;
+        Tue, 14 Jun 2022 14:44:07 -0700 (PDT)
+Received: by mail-oi1-f178.google.com with SMTP id bf7so12050989oib.11;
+        Tue, 14 Jun 2022 14:44:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8QMsUtIyEnI6GxBkF9iHYVsdk25z9ZpByq01YYX9ysg=;
+        b=U+9FTiDgexv7UAmKgVfX/D1ndon1vQ/6UaK4lhGUbH5N+80R5YVsLk6qVNe/YD5ci5
+         hU4o9FU2+bfhKIv3GUGmAhSOQsag25FCGlaLz18Og3d4PMMB0Osx74pXwgm7NBUujcYl
+         wvPYFX0qsSzNfkp/FX/BOhPGVhIkmuHMNVi+I1zsmhkUqdzzFYN7Jm1zFn/uW9qa7rhs
+         vMZO81RyxpaWVv4d7UKkQN9hTblpk2tXaTvAyO4uCkWKzgCA2yhf4kFTEbQqX5z6nQtP
+         7Kd5+PC5QqYVpFdsL0lAtPtU8ZfS3zD9FIsrWgKMxNrxWanVoD1r8256iQVf43NUuGsj
+         A4XQ==
+X-Gm-Message-State: AOAM533V8tcvC77iNlxmAoE/lSnS7zsWz9FyUYzr59FpdUWL3u/kPP78
+        6TF47u/+tz3m8F/V8Q2v3yjL7clBvD/mrnQLG5o=
+X-Google-Smtp-Source: ABdhPJx0GRPfywd6bkowa8JZnSN+9Oe1XgrNO3hMIS2tkcqC7REp+48SEf0mFA5J4AyJ3FXtED8jcNZ+hzsANBKnvzw=
+X-Received: by 2002:aca:bb56:0:b0:32f:2160:bfd8 with SMTP id
+ l83-20020acabb56000000b0032f2160bfd8mr3158871oif.92.1655243046655; Tue, 14
+ Jun 2022 14:44:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220613094605.208401-1-yangjihong1@huawei.com> <20220613094605.208401-2-yangjihong1@huawei.com>
+In-Reply-To: <20220613094605.208401-2-yangjihong1@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 14 Jun 2022 14:43:55 -0700
+Message-ID: <CAM9d7ch-VL6siA7g79pN1OSgus4X2C0D2tptAt5u04KUqxOUTg@mail.gmail.com>
+Subject: Re: [RFC 01/13] perf kwork: New tool
+To:     Yang Jihong <yangjihong1@huawei.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux v5.19-rc1] tools/perf/a.out remains after make -C
- tools/perf clean
-Message-ID: <YqjggY64PKfog0YW@kernel.org>
-References: <20220607000851.39798-1-irogers@google.com>
- <CA+icZUWpSF6ge76JVp1qBC5QhC1AwNacs5Di=e1QSbAD+SVKUA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+icZUWpSF6ge76JVp1qBC5QhC1AwNacs5Di=e1QSbAD+SVKUA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jun 07, 2022 at 08:59:31PM +0200, Sedat Dilek escreveu:
-> Hi,
-> 
-> I observed this some time ago - so this is not only Linux v5.19-rc1 related.
-> 
-> $ LC_ALL=C make -C tools/perf clean 2>&1 | tee ../make-log_perf-clean.txt
-> make: Entering directory '/home/dileks/src/linux-kernel/git/tools/perf'
->  CLEAN   x86
->  CLEAN   libtraceevent
->  CLEAN   libapi
->  CLEAN   libbpf
->  CLEAN   libsubcmd
->  CLEAN   libperf
->  CLEAN   fixdep
->  CLEAN   feature-detect
->  CLEAN   python
->  CLEAN   bpf-skel
->  CLEAN   core-objs
->  CLEAN   core-progs
->  CLEAN   core-gen
->  CLEAN   Documentation
-> make: Leaving directory '/home/dileks/src/linux-kernel/git/tools/perf'
-> 
-> $ git status -s
-> M tools/perf/util/unwind-libunwind-local.c
-> ?? tools/perf/a.out
-> 
-> $ rm -v tools/perf/a.out
-> 'tools/perf/a.out' deleted
-> 
-> $ git checkout -- tools/perf/util/unwind-libunwind-local.c
-> 
-> $ git status -s
-> [ empty ]
+Hello,
 
-Interesting, since Linus complained at some point that after building
-perf some new temp file was left there I added 'git status' to my
-scripts to always get this flagged.
+On Mon, Jun 13, 2022 at 2:48 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>
+> The perf-kwork tool is used to trace time properties of kernel work
+> (such as irq, softirq, and workqueue), including runtime, latency,
+> and timehist, using the infrastructure in the perf tools to allow
+> tracing extra targets:
+>
+>   # perf kwork -h
+>
+>    Usage: perf kwork [<options>] {record|report|latency|timehist}
+>
+>       -D, --dump-raw-trace  dump raw trace in ASCII
+>       -f, --force           don't complain, do it
+>       -k, --kwork <kwork>   list of kwork to profile (irq, softirq, workqueue etc)
+>       -v, --verbose         be more verbose (show symbol address, etc)
+>
+>   # perf kwork record -- sleep 1
+>   [ perf record: Woken up 0 times to write data ]
+>   [ perf record: Captured and wrote 1.696 MB perf.data ]
+>
+>   # perf kwork report -h
+>
+>    Usage: perf kwork report [<options>]
+>
+>       -C, --cpu <cpu>       list of cpus to profile
+>       -i, --input <file>    input file name
+>       -n, --name <name>     event name to profile
+>       -s, --sort <key[,key2...]>
+>                             sort by key(s): runtime, max, freq
+>       -S, --with-summary    Show summary with statistics
+>           --time <str>      Time span for analysis (start,stop)
+>
+>   # perf kwork latency -h
+>
+>    Usage: perf kwork latency [<options>]
+>
+>       -C, --cpu <cpu>       list of cpus to profile
+>       -i, --input <file>    input file name
+>       -n, --name <name>     event name to profile
+>       -s, --sort <key[,key2...]>
+>                             sort by key(s): avg, max, freq
+>           --time <str>      Time span for analysis (start,stop)
+>
+>   # perf kwork timehist -h
+>
+>    Usage: perf kwork timehist [<options>]
+>
+>       -C, --cpu <cpu>       list of cpus to profile
+>       -g, --call-graph      Display call chains if present
+>       -i, --input <file>    input file name
+>       -k, --vmlinux <file>  vmlinux pathname
+>       -n, --name <name>     event name to profile
+>           --kallsyms <file>
+>                             kallsyms pathname
+>           --max-stack <n>   Maximum number of functions to display backtrace.
+>           --symfs <directory>
+>                             Look for files with symbols relative to this directory
+>           --time <str>      Time span for analysis (start,stop)
 
-I'm not seeing this here.
+I think you can add this and the documentation when you
+actually add the functionality later.
 
-- Arnaldo
+Thanks,
+Namhyung
