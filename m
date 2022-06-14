@@ -2,121 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553B5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 16:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B2BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 16:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351393AbiFNQKc (ORCPT
+        id S243807AbiFNQPh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 12:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51872 "EHLO
+        Tue, 14 Jun 2022 12:15:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240735AbiFNQKa (ORCPT
+        with ESMTP id S1351492AbiFNQPV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 12:10:30 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB5C2B1B8;
-        Tue, 14 Jun 2022 09:10:29 -0700 (PDT)
-Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LMtfD5PNxz688jJ;
-        Wed, 15 Jun 2022 00:08:52 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Tue, 14 Jun 2022 18:10:26 +0200
-Received: from [10.195.33.253] (10.195.33.253) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 14 Jun 2022 17:10:24 +0100
-Message-ID: <350b905c-1ac1-3577-6b56-c13f2aeab712@huawei.com>
-Date:   Tue, 14 Jun 2022 17:13:32 +0100
+        Tue, 14 Jun 2022 12:15:21 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E53C737BDF;
+        Tue, 14 Jun 2022 09:15:19 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A006C169C;
+        Tue, 14 Jun 2022 09:15:19 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.41.154])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D37FC3F66F;
+        Tue, 14 Jun 2022 09:15:01 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 17:14:57 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        vgupta@kernel.org, linux@armlinux.org.uk,
+        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
+        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
+        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        dinguyen@kernel.org, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, jgross@suse.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
+        chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org,
+        lenb@kernel.org, pavel@ucw.cz, gregkh@linuxfoundation.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 16/36] rcu: Fix rcu_idle_exit()
+Message-ID: <Yqi0AVZmI5GyVpNa@FVFF77S0Q05N>
+References: <20220608142723.103523089@infradead.org>
+ <20220608144516.935970247@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v3 0/3] Rewrite jevents program in python
-To:     Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
-        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
-        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20220527185426.240235-1-irogers@google.com>
- <d9056bc2-f640-f676-2599-c283479376a4@huawei.com>
- <CAP-5=fU8Wn8wV0whYOraU+5tGf+kKUk73gSwOg+LHp19vzua3A@mail.gmail.com>
- <f94710b3-4ca8-47c5-939c-1ad01d712d5f@huawei.com>
- <CAP-5=fWO8wd2xqi2acJ0FGyLgE3dQDw2m9=AUCC_veseyuybJw@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <CAP-5=fWO8wd2xqi2acJ0FGyLgE3dQDw2m9=AUCC_veseyuybJw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.195.33.253]
-X-ClientProxiedBy: lhreml746-chm.china.huawei.com (10.201.108.196) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220608144516.935970247@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 14/06/2022 17:03, Ian Rogers wrote:
->> diff -u tools/perf/trace/beauty/include/linux/socket.h
->> include/linux/socket.h
->> Makefile.config:259: *** which python-config not found. Stop.
->> Makefile.perf:239: recipe for target 'sub-make' failed
->> make[1]: *** [sub-make] Error 2
->> Makefile:69: recipe for target 'all' failed
->> make: *** [all] Error 2
->> john@debian:~/linux/tools/perf$
->>
->> JFYI, this is my alternatives:
->>
->> sudo update-alternatives --config python
->> There are 3 choices for the alternative python (providing
->> /usr/bin/python).
->>
->>     Selection    Path                     Priority  Status
->> ------------------------------------------------------------
->>     0            /usr/local/bin/python3.6   50        auto mode
->>     1            /usr/bin/python2.7         1         manual mode
->>     2            /usr/bin/python3.5         2         manual mode
->> * 3            /usr/local/bin/python3.6   50        manual mode
->>
->> Press <enter> to keep the current choice[*], or type selection number:
-> Thanks Gary,
+On Wed, Jun 08, 2022 at 04:27:39PM +0200, Peter Zijlstra wrote:
+> Current rcu_idle_exit() is terminally broken because it uses
+> local_irq_{save,restore}(), which are traced which uses RCU.
 > 
-> Perhaps it relates to dev packages. Perhaps, apt-get install
-> python-dev-is-python3 which should resolve the symlinks. I wonder that
-> you have python dev for python2 but python3 installed without the dev.
-> We should be able to make a Makefile test for this.
+> However, now that all the callers are sure to have IRQs disabled, we
+> can remove these calls.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-So I was trying another system here as a sanity test (as my main dev box 
-is not working either). And this other system is debian and only 
-supports python up to 3.5, so that is why I have 
-/usr/local/bin/python3.6 as an alt, i.e. I downloaded and built myself.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Anyway, I do have python3-dev:
+Mark.
 
-john@debian:~/linux/tools/perf$ sudo apt-get install python3-dev
-Reading package lists... Done
-Building dependency tree
-Reading state information... Done
-python3-dev is already the newest version (3.5.3-1).
-
+> ---
+>  kernel/rcu/tree.c |    9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -659,7 +659,7 @@ static noinstr void rcu_eqs_enter(bool u
+>   * If you add or remove a call to rcu_idle_enter(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_idle_enter(void)
+> +void noinstr rcu_idle_enter(void)
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  	rcu_eqs_enter(false);
+> @@ -896,13 +896,10 @@ static void noinstr rcu_eqs_exit(bool us
+>   * If you add or remove a call to rcu_idle_exit(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_idle_exit(void)
+> +void noinstr rcu_idle_exit(void)
+>  {
+> -	unsigned long flags;
+> -
+> -	local_irq_save(flags);
+> +	lockdep_assert_irqs_disabled();
+>  	rcu_eqs_exit(false);
+> -	local_irq_restore(flags);
+>  }
+>  EXPORT_SYMBOL_GPL(rcu_idle_exit);
+>  
+> 
+> 
