@@ -2,120 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879BBCCA483
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 12:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493E1C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 13:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356848AbiFNMm6 (ORCPT
+        id S244166AbiFNNRK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 08:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51850 "EHLO
+        Tue, 14 Jun 2022 09:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243456AbiFNMmq (ORCPT
+        with ESMTP id S237111AbiFNNRJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 08:42:46 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF0572B243;
-        Tue, 14 Jun 2022 05:41:35 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CCFF1655;
-        Tue, 14 Jun 2022 05:41:35 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.41.154])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CDCF3F73B;
-        Tue, 14 Jun 2022 05:41:17 -0700 (PDT)
-Date:   Tue, 14 Jun 2022 13:41:13 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        vgupta@kernel.org, linux@armlinux.org.uk,
-        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
-        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
-        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
-        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
-        davem@davemloft.net, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, jgross@suse.com,
-        srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
-        chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org,
-        lenb@kernel.org, pavel@ucw.cz, gregkh@linuxfoundation.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        sudeep.holla@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, anup@brainfault.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
-        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
-        senozhatsky@chromium.org, john.ogness@linutronix.de,
-        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, joel@joelfernandes.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
-        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH 14/36] cpuidle: Fix rcu_idle_*() usage
-Message-ID: <YqiB6YpVqq4wuDtO@FVFF77S0Q05N>
-References: <20220608142723.103523089@infradead.org>
- <20220608144516.808451191@infradead.org>
+        Tue, 14 Jun 2022 09:17:09 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 375E3369FA
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 06:17:09 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id 3-20020a17090a174300b001e426a02ac5so11755319pjm.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 06:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MMo5ycw9fsXGBtd6u4S+9VnthcYrmxBhfzklb6NM/k4=;
+        b=Du9R7H8xGzbITqGJTl+aBcrqT6mzGQJAvIVPDEh2EYjJgHNQBMYW7DUbWXJaRNLlDP
+         K0ueW6CO6u65oXc0Ba1stiI6o7SrHhX2yERVWUXCMd3i6/N+NDffQuv28zEL3es9h+aF
+         HF4B6lTUhXt4I4aA86ZDwd5fKE9KLOlEICbclOiweY3QI40s3Jtu3XocChbUJvxPSbZi
+         UtLCezLwOWtbz9rTHK+N98W00/HGjfCMbMkeN17sPGWWxLcJpth8Iae1tQ1Mx+FZjHVE
+         9uOJf89U80ryMDq3WjbPU3mLhSKnVsxifwrE0yy9H6y8K4BPaGITSIU+ylfRiKFGa7ZW
+         heYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MMo5ycw9fsXGBtd6u4S+9VnthcYrmxBhfzklb6NM/k4=;
+        b=bGOzzlx2G/XexdtoGQ7ApUkloxxYcBA+8Y+l+QoZ2/R86JurnPhWjJvvutFxDHC9na
+         MzioBePakhC622EQ++qCg3w19yWpip+KA8K5zCGP/AuVxE9mBvc1BcbV+UajoAeJxI4W
+         E28NV9kmeMBMSGky9s8BIXJI3WBJmDm5ldzbfcIKr0CV4TYUT+X3TNoxF39dAipFOub7
+         v9VMaZYCs5iPU/OuRkvihrucF9pC5bA/rW/+x+gYPIyTlpxkcAr9aBaZbah0OrGdi1EW
+         8jw8SKLVIR/IFb3QwD9akp/cyH5jlO2Ey841tRdNI0cwU6fpuI02xaAGYAez9rxzfscy
+         rJzg==
+X-Gm-Message-State: AJIora8CjKycdXNGx8gQ6C+m0hikxfqBUSTGx7delu+m2We3qoz29yFv
+        Fs/K1wz+/Kdu52dg9dW7WxQZyw==
+X-Google-Smtp-Source: AGRyM1t1mOOIzLWMWUljDNJNTCBWrTSZsjvdQJ7sE1b2JDr2SDhIvv5RgELudLWBUtAK4sMee9o+ag==
+X-Received: by 2002:a17:90a:408f:b0:1d1:d1ba:2abb with SMTP id l15-20020a17090a408f00b001d1d1ba2abbmr4552403pjg.152.1655212628560;
+        Tue, 14 Jun 2022 06:17:08 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (n058152077182.netvigator.com. [58.152.77.182])
+        by smtp.gmail.com with ESMTPSA id h65-20020a62de44000000b0050dc762813csm7603863pfg.22.2022.06.14.06.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jun 2022 06:17:08 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 21:17:04 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Michael Petlan <mpetlan@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
+        jolsa@kernel.org, german.gomez@arm.com
+Subject: Re: [PATCH] perf test: Record only user callchains
+Message-ID: <20220614131704.GA237086@leoy-ThinkPad-X240s>
+References: <20220614105207.26223-1-mpetlan@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220608144516.808451191@infradead.org>
+In-Reply-To: <20220614105207.26223-1-mpetlan@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 08, 2022 at 04:27:37PM +0200, Peter Zijlstra wrote:
-> --- a/kernel/time/tick-broadcast.c
-> +++ b/kernel/time/tick-broadcast.c
-> @@ -622,9 +622,13 @@ struct cpumask *tick_get_broadcast_onesh
->   * to avoid a deep idle transition as we are about to get the
->   * broadcast IPI right away.
->   */
-> -int tick_check_broadcast_expired(void)
-> +noinstr int tick_check_broadcast_expired(void)
->  {
-> +#ifdef _ASM_GENERIC_BITOPS_INSTRUMENTED_NON_ATOMIC_H
-> +	return arch_test_bit(smp_processor_id(), cpumask_bits(tick_broadcast_force_mask));
-> +#else
->  	return cpumask_test_cpu(smp_processor_id(), tick_broadcast_force_mask);
-> +#endif
->  }
+On Tue, Jun 14, 2022 at 12:52:07PM +0200, Michael Petlan wrote:
+> The testcase 'Check Arm64 callgraphs are complete in fp mode' wants to
+> see the following output:
+> 
+>     610 leaf
+>     62f parent
+>     648 main
+> 
+> However, without excluding user callchains, the output might look like:
+> 	ffffc2ff40ef1b5c arch_local_irq_enable
+> 	ffffc2ff419d032c __schedule
+> 	ffffc2ff419d06c0 schedule
+> 	ffffc2ff40e4da30 do_notify_resume
+> 	ffffc2ff40e421b0 work_pending
+> 	             610 leaf
+> 	             62f parent
+> 	             648 main
+> 
+> Adding '--user-callchains' leaves only the wanted symbols in the chain.
+> 
+> Suggested-by: German Gomez <german.gomez@arm.com>
+> Tested-by: Michael Petlan <mpetlan@redhat.com>
 
-This is somewhat not-ideal. :/
+Since you are the patch's author, it's not necessary to add your
+tested tag.
 
-Could we unconditionally do the arch_test_bit() variant, with a comment, or
-does that not exist in some cases?
+> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 
-Thanks,
-Mark.
+With addressing German's comment for "excluding kernel callchains":
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+
+> ---
+>  tools/perf/tests/shell/test_arm_callgraph_fp.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
+> index 6ffbb27afaba..ec108d45d3c6 100755
+> --- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
+> +++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
+> @@ -43,7 +43,7 @@ CFLAGS="-g -O0 -fno-inline -fno-omit-frame-pointer"
+>  cc $CFLAGS $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
+>  
+>  # Add a 1 second delay to skip samples that are not in the leaf() function
+> -perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 -- $TEST_PROGRAM 2> /dev/null &
+> +perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 --user-callchains -- $TEST_PROGRAM 2> /dev/null &
+>  PID=$!
+>  
+>  echo " + Recording (PID=$PID)..."
+> -- 
+> 2.18.4
+> 
