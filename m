@@ -2,80 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F134C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 14:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A393CCA47C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 15:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234749AbiFNOjL (ORCPT
+        id S243244AbiFNPlA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 10:39:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
+        Tue, 14 Jun 2022 11:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347945AbiFNOjK (ORCPT
+        with ESMTP id S1344569AbiFNPk7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 10:39:10 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1DB3CFCE
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 07:39:09 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id h5so11639472wrb.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 07:39:09 -0700 (PDT)
+        Tue, 14 Jun 2022 11:40:59 -0400
+Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C6D36316
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 08:40:57 -0700 (PDT)
+Received: by mail-vk1-xa29.google.com with SMTP id n203so4205263vke.7
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 08:40:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=P5SSmOpxaieAxhBhqLWRq50g/jaHGZ+k1H6+ZODiYts=;
-        b=LhfEscu4SL/74tSj97prUIfgT825d4K7enMooSY9LuVRkpG/9fKkilfDhaXyGaRK+X
-         6WjpPY20DgafAmrFzGmZnHZzPgqJr20pxhwzByrKfmX9Y8RJs+nxCVpFIapqDO7m771z
-         Rsa3ALsO9dINWlsHpfnd9yuqMLd1ZebR6EnOkn7g4CN5Set3VhlUJsGajH2xi8RG0ypt
-         XlDWGze1rayefwh/p4q1wsorWjrIm1AhI+aQ/WCmP+mnv3W3cGC9SrjCDVG6m+5ySmVm
-         ISYCLkP1w4Nza0VGGbpFYZOsxZBEDg7Rq0SfWMT86p8sNPg6b0hYdAlfOWmsPQOe5jGN
-         RsgQ==
+        bh=piScKtqRvHw1IYDuJFxYjo3aE7lfG3qLoSCxhUyNnz4=;
+        b=I7KHFvWekg+pv1Vmu0HOSzOdUCDbYdwC4arUqp2Y2ybU/3AX1+NwBg0WX50ij6t5py
+         75y79402bGQz8jPQcSMPvrxWMv1FF9cUBQLeLo1NuvZ0N/ISaFBB0DoO3pPSG4MzTReQ
+         EvRncO+KeUXmnmfBWjKfDzhV4pqs1e1w0aS7Urgz5dcRHUfi09+5afXy/nNpOeHzLij6
+         9BG2yFbTr7NYSbCgMLTcmsrPzc5GQw0mIZ6RPBx9VdHd3efx/oWABeQKu3EchBAXuxeg
+         Ah5Kzt0NVjSPGrRxA8c6z7CX7T98/fA9ulrSVhtU61+cALukPONyjeS5d+1+22LuZmFl
+         RBmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=P5SSmOpxaieAxhBhqLWRq50g/jaHGZ+k1H6+ZODiYts=;
-        b=pslA1exdLra3hrv5mny49fHh7WRHFGmf73clCJxafTTmFWBt6SsjQpVcx81fYrN1Pd
-         wrQ7DSt61clZ3JEADsceHjuUvh2o/ophmyN52rfXDadZMJQOiXGq2sFD0uZLNBiCmU3m
-         tzwXOfZSQw+YhqXJpP92ASqeGTCZIBqlVsrcOsb7xkgsrWjPnw/5aJn1fgjz8B2kYWlq
-         +p02zaSuWh8OIANO24+CnxdiqkPKA1tcZ72Z3mzglhRamRNxv60Mp0JTaV6gfYNP9D7Z
-         nxBjCw9cbrj/Pnumr/XCD9gCaIYJCZ0raqp1+mxDFrQOquruRyfQPmEwAufctOrf2lNU
-         V1gw==
-X-Gm-Message-State: AJIora/qr5zUsiXLLeOamScnknTiEyM8nOouhV4ZSlRJqgsIE6duteXP
-        L1bAe6LOm8frJTOWYtfs/e0tt8CJolRvPljEYNy3XFZAj34=
-X-Google-Smtp-Source: AGRyM1s7gwiJFhXq3CTNcQ+tU3H7yju67V8T7j+VRz7Qx3Yg4u1r1anNz4VqC0dMSQxjIrAWVcrJ0JBnWeZG2x80nHU=
-X-Received: by 2002:a05:6000:1a8d:b0:219:e3f2:c092 with SMTP id
- f13-20020a0560001a8d00b00219e3f2c092mr5456547wry.375.1655217547516; Tue, 14
- Jun 2022 07:39:07 -0700 (PDT)
+        bh=piScKtqRvHw1IYDuJFxYjo3aE7lfG3qLoSCxhUyNnz4=;
+        b=2zg3o+TIg64/15IiiJ6rr8W5ki9YsB7R3iuA5wLduijNnsn4xzNO/605RjWCH3Lp6C
+         363QlB+GSlgCvII8HXZpTX7y/1TbCA1QgDFxOobWlUhx/DdrYgOYVMwFJNhDkqTMWp7w
+         zlH3m4ifwzLjbYZzrsBX28a9zBnFC15VZvahTwlkbVxjKsVFmQi+BQ288J23Ji79MSx6
+         Y52/7abtcTLYmMWPS2ViEfDuqMIHcWLVjkd/RsqxU8E3DcEa5hhfH5EpH5iVUc/UITzU
+         D+g7n7I7zFNFA1hmj8701eNSCFWNRtaVs7A0cIGCBmi6SwUuy5WoyWUIA30VRJZ2IYV5
+         W6XA==
+X-Gm-Message-State: AJIora8YhmIBzVvNRnHqFX8EOLrIIs5cQNg0NRCqfoeDhVx/FSThoC7h
+        7zKkXrGS9/B0p+iCATNOTyFDvMNk00hc6Cj0FLDnEA==
+X-Google-Smtp-Source: AGRyM1ti2FhMHTOV9Gs8KPszNf4LcQ6P4eH9GowBi/dqxiPwslOMqkHiQ6WvbnpMw20B6iJy+kM2DB7lIL3kvGH927I=
+X-Received: by 2002:a05:6122:200f:b0:368:990b:3ffc with SMTP id
+ l15-20020a056122200f00b00368990b3ffcmr2591048vkd.2.1655221256650; Tue, 14 Jun
+ 2022 08:40:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220610135939.63361-1-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20220610135939.63361-1-atrajeev@linux.vnet.ibm.com>
+References: <20220603235656.715800-1-namhyung@kernel.org> <20220603235656.715800-2-namhyung@kernel.org>
+In-Reply-To: <20220603235656.715800-2-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Jun 2022 07:38:55 -0700
-Message-ID: <CAP-5=fV6sPUtSqPBmJ0dmeUK+wuuXgyq-GQRV_g_B5uC4y5oGA@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf/tests: Fix session topology test comparison check
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, disgoel@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com, tmricht@linux.ibm.com
+Date:   Tue, 14 Jun 2022 08:40:44 -0700
+Message-ID: <CAP-5=fWFamGi4ZXHz6+4gWmaaK-zo_p=EEF=uju0Pm0fcTAe1w@mail.gmail.com>
+Subject: Re: [PATCH 1/5] perf lock: Print wait times with unit
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 7:00 AM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
+On Fri, Jun 3, 2022 at 4:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> commit cfd7092c31ae ("perf test session topology: Fix test to
-> skip the test in guest environment") added check to skip the
-> testcase if the socket_id can't be fetched from topology info.
-> But the condition check uses strncmp which should be changed to
-> !strncmp and to correctly match platform. Patch fixes this
-> condition check.
+> Currently it only prints the time in nsec but it's a bit hard to read
+> and takes longer in the screen.  We can change it to use different
+> units and keep the number small to save the space.
 >
-> Fixes: cfd7092c31ae ("perf test session topology: Fix test to skip the test in guest environment")
-> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Before:
+>   $ perf lock report
+>
+>                 Name   acquired  contended   avg wait (ns) total wait (ns)   max wait (ns)   min wait (ns)
+>
+>         jiffies_lock        433         32            2778           88908           13570             692
+>    &lruvec->lru_lock        747          5           11254           56272           18317            1412
+>       slock-AF_INET6          7          1           23543           23543           23543           23543
+>     &newf->file_lock        706         15            1025           15388            2279             618
+>       slock-AF_INET6          8          1           10379           10379           10379           10379
+>          &rq->__lock       2143          5            2037           10185            3462             939
+>
+> After:
+>                 Name   acquired  contended     avg wait   total wait     max wait     min wait
+>
+>         jiffies_lock        433         32      2.78 us     88.91 us     13.57 us       692 ns
+>    &lruvec->lru_lock        747          5     11.25 us     56.27 us     18.32 us      1.41 us
+>       slock-AF_INET6          7          1     23.54 us     23.54 us     23.54 us     23.54 us
+>     &newf->file_lock        706         15      1.02 us     15.39 us      2.28 us       618 ns
+>       slock-AF_INET6          8          1     10.38 us     10.38 us     10.38 us     10.38 us
+>          &rq->__lock       2143          5      2.04 us     10.19 us      3.46 us       939 ns
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Acked-by: Ian Rogers <irogers@google.com>
 
@@ -83,22 +103,91 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/tests/topology.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/builtin-lock.c | 48 ++++++++++++++++++++++++++++++++-------
+>  1 file changed, 40 insertions(+), 8 deletions(-)
 >
-> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-> index d23a9e322ff5..0b4f61b6cc6b 100644
-> --- a/tools/perf/tests/topology.c
-> +++ b/tools/perf/tests/topology.c
-> @@ -115,7 +115,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->          * physical_package_id will be set to -1. Hence skip this
->          * test if physical_package_id returns -1 for cpu from perf_cpu_map.
->          */
-> -       if (strncmp(session->header.env.arch, "powerpc", 7)) {
-> +       if (!strncmp(session->header.env.arch, "ppc64le", 7)) {
->                 if (cpu__get_socket_id(perf_cpu_map__cpu(map, 0)) == -1)
->                         return TEST_SKIP;
->         }
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 23a33ac15e68..57e396323d05 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -251,6 +251,31 @@ struct lock_key {
+>         struct list_head        list;
+>  };
+>
+> +static void lock_stat_key_print_time(unsigned long long nsec, int len)
+> +{
+> +       static const struct {
+> +               float base;
+> +               const char *unit;
+> +       } table[] = {
+> +               { 1e9 * 3600, "h " },
+> +               { 1e9 * 60, "m " },
+> +               { 1e9, "s " },
+> +               { 1e6, "ms" },
+> +               { 1e3, "us" },
+> +               { 0, NULL },
+> +       };
+> +
+> +       for (int i = 0; table[i].unit; i++) {
+> +               if (nsec < table[i].base)
+> +                       continue;
+> +
+> +               pr_info("%*.2f %s", len - 3, nsec / table[i].base, table[i].unit);
+> +               return;
+> +       }
+> +
+> +       pr_info("%*llu %s", len - 3, nsec, "ns");
+> +}
+> +
+>  #define PRINT_KEY(member)                                              \
+>  static void lock_stat_key_print_ ## member(struct lock_key *key,       \
+>                                            struct lock_stat *ls)        \
+> @@ -258,11 +283,18 @@ static void lock_stat_key_print_ ## member(struct lock_key *key,  \
+>         pr_info("%*llu", key->len, (unsigned long long)ls->member);     \
+>  }
+>
+> +#define PRINT_TIME(member)                                             \
+> +static void lock_stat_key_print_ ## member(struct lock_key *key,       \
+> +                                          struct lock_stat *ls)        \
+> +{                                                                      \
+> +       lock_stat_key_print_time((unsigned long long)ls->member, key->len);     \
+> +}
+> +
+>  PRINT_KEY(nr_acquired)
+>  PRINT_KEY(nr_contended)
+> -PRINT_KEY(avg_wait_time)
+> -PRINT_KEY(wait_time_total)
+> -PRINT_KEY(wait_time_max)
+> +PRINT_TIME(avg_wait_time)
+> +PRINT_TIME(wait_time_total)
+> +PRINT_TIME(wait_time_max)
+>
+>  static void lock_stat_key_print_wait_time_min(struct lock_key *key,
+>                                               struct lock_stat *ls)
+> @@ -272,7 +304,7 @@ static void lock_stat_key_print_wait_time_min(struct lock_key *key,
+>         if (wait_time == ULLONG_MAX)
+>                 wait_time = 0;
+>
+> -       pr_info("%*"PRIu64, key->len, wait_time);
+> +       lock_stat_key_print_time(wait_time, key->len);
+>  }
+>
+>
+> @@ -291,10 +323,10 @@ static const char         *output_fields;
+>  struct lock_key keys[] = {
+>         DEF_KEY_LOCK(acquired, "acquired", nr_acquired, 10),
+>         DEF_KEY_LOCK(contended, "contended", nr_contended, 10),
+> -       DEF_KEY_LOCK(avg_wait, "avg wait (ns)", avg_wait_time, 15),
+> -       DEF_KEY_LOCK(wait_total, "total wait (ns)", wait_time_total, 15),
+> -       DEF_KEY_LOCK(wait_max, "max wait (ns)", wait_time_max, 15),
+> -       DEF_KEY_LOCK(wait_min, "min wait (ns)", wait_time_min, 15),
+> +       DEF_KEY_LOCK(avg_wait, "avg wait", avg_wait_time, 12),
+> +       DEF_KEY_LOCK(wait_total, "total wait", wait_time_total, 12),
+> +       DEF_KEY_LOCK(wait_max, "max wait", wait_time_max, 12),
+> +       DEF_KEY_LOCK(wait_min, "min wait", wait_time_min, 12),
+>
+>         /* extra comparisons much complicated should be here */
+>         { }
 > --
-> 2.35.1
+> 2.36.1.255.ge46751e96f-goog
 >
