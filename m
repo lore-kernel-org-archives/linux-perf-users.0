@@ -2,110 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476C9CCA486
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 12:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879BBCCA483
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 12:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243929AbiFNMbU (ORCPT
+        id S1356848AbiFNMm6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 08:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59434 "EHLO
+        Tue, 14 Jun 2022 08:42:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356594AbiFNM3N (ORCPT
+        with ESMTP id S243456AbiFNMmq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 08:29:13 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B0A23BDD;
-        Tue, 14 Jun 2022 05:29:10 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id o7so16871760eja.1;
-        Tue, 14 Jun 2022 05:29:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=axAoTgW4f9hEkpnjg5fk+kCuJUrcn/1GVTmzDalaTpE=;
-        b=TC2i7XA7+9Xlrhf2dw40ePmPdZiuddA5zyiu0EL3XudVgt7iMQ76XXD090WPUwKYo2
-         9Nynx4bkyvSKns2UbUrHBv83yWFIT6kEG5MsIa4E+VrqDkFyl5hIZ+VgoIkETMBGe3fr
-         Nh1NH3Auzr8xBCYZo8Ms7ZoV8Q78axRaf6/zQRn4WQVypJ7x/KG/7+pZwuCdi6jGx9TH
-         Y4Dc1xYnzdLx73qEjyzX6MwktZGp7uUy97J0M1P6csFAsVkuAhfl1qnKnwkIndBmmS8x
-         TartraPrDPxftKMy0WCDH9SAqEvIRe2ZOktv9Pm/S5wMGjcTjug8uEzcNjdsjXJuegXw
-         SkCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=axAoTgW4f9hEkpnjg5fk+kCuJUrcn/1GVTmzDalaTpE=;
-        b=2LxkQ/Me/QE6d449KCic8JPHrfv3nkBzZwXYNsymSmQF+tCEYFMLrdW7LoN9nHpA9p
-         T1JwurqX1TKiXs4vqB1p26xLemyOF0HFMMs6cEXBwt5Wq2rwbDx/QM32u4y0XDKzeRAM
-         UJo6h03Zs0slHbMtiYmCClQVdRAYPvhL9BZAy/iX2fv/jPaLRDyFwHplcVVOaN3jIHW8
-         LZ6NAFUPkBe3k9R6TZyH8m4j/Hw5q++NPyw3bD3/d/wFoiZkVs3lA515jEqvyQsWW3bs
-         80OgjKqUxcDgB9Cxv0r/XOllTHVpwZzyS1IlS6tGH2Bx61uBS59gKDE6OkPKL3lo3qnJ
-         lR/Q==
-X-Gm-Message-State: AOAM530bWCJvGoJc57dK70tSFCHJXb4M79ZB3JWA/gMyBq/OXeyLOVAX
-        AMY0PIJfdf9M61OKlVKK318=
-X-Google-Smtp-Source: ABdhPJyywCmnpHZqwVSmt50ed8p/dYmi/CUTgqEnog5vo72tdHnTWhxx4t9rRMHalfnoYRdREvIu2Q==
-X-Received: by 2002:a17:906:51c6:b0:712:2a1a:afc8 with SMTP id v6-20020a17090651c600b007122a1aafc8mr4298295ejk.649.1655209749213;
-        Tue, 14 Jun 2022 05:29:09 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id i9-20020a05640242c900b0042dce73168csm7170844edc.13.2022.06.14.05.29.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jun 2022 05:29:08 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Tue, 14 Jun 2022 14:29:06 +0200
-To:     Blake Jones <blakejones@google.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] Add a "-m" option to "perf buildid-list".
-Message-ID: <Yqh/EkVy99Bej46S@krava>
-References: <20220607191550.4141024-1-blakejones@google.com>
- <YqZmSRS8UPQJzWFE@krava>
- <CAP_z_CgkJ8RgWevJnDiq-+JjB=ni0OzJ3npwW+S9RZ66i0Y3Kg@mail.gmail.com>
+        Tue, 14 Jun 2022 08:42:46 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF0572B243;
+        Tue, 14 Jun 2022 05:41:35 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CCFF1655;
+        Tue, 14 Jun 2022 05:41:35 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.41.154])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CDCF3F73B;
+        Tue, 14 Jun 2022 05:41:17 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 13:41:13 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        vgupta@kernel.org, linux@armlinux.org.uk,
+        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
+        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
+        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        dinguyen@kernel.org, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, jgross@suse.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
+        chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org,
+        lenb@kernel.org, pavel@ucw.cz, gregkh@linuxfoundation.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 14/36] cpuidle: Fix rcu_idle_*() usage
+Message-ID: <YqiB6YpVqq4wuDtO@FVFF77S0Q05N>
+References: <20220608142723.103523089@infradead.org>
+ <20220608144516.808451191@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP_z_CgkJ8RgWevJnDiq-+JjB=ni0OzJ3npwW+S9RZ66i0Y3Kg@mail.gmail.com>
+In-Reply-To: <20220608144516.808451191@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 03:02:39PM -0700, Blake Jones wrote:
-> Thanks for taking a look at this!
-> 
-> On Sun, Jun 12, 2022 at 3:18 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > why 'modules' ? it shows all maps (including kernel)
-> > so perhaps -m/--maps would be better?
-> 
->  I called it "modules" because it only operates on the kernel. Calling it
-> "maps" would suggest to me that it might also be able to show
-> information about the maps in perf.data files, which it can't (just as the
-> "-k" option only operates on the kernel). Given that, does it still seem
-> like "maps" would be more appropriate?
+On Wed, Jun 08, 2022 at 04:27:37PM +0200, Peter Zijlstra wrote:
+> --- a/kernel/time/tick-broadcast.c
+> +++ b/kernel/time/tick-broadcast.c
+> @@ -622,9 +622,13 @@ struct cpumask *tick_get_broadcast_onesh
+>   * to avoid a deep idle transition as we are about to get the
+>   * broadcast IPI right away.
+>   */
+> -int tick_check_broadcast_expired(void)
+> +noinstr int tick_check_broadcast_expired(void)
+>  {
+> +#ifdef _ASM_GENERIC_BITOPS_INSTRUMENTED_NON_ATOMIC_H
+> +	return arch_test_bit(smp_processor_id(), cpumask_bits(tick_broadcast_force_mask));
+> +#else
+>  	return cpumask_test_cpu(smp_processor_id(), tick_broadcast_force_mask);
+> +#endif
+>  }
 
-still there's kernel map included, so it's strange to me call it modules
+This is somewhat not-ideal. :/
 
-  --m/--kernel-maps ?
+Could we unconditionally do the arch_test_bit() variant, with a comment, or
+does that not exist in some cases?
 
-> 
-> > also please state that it's from running kernel
-> 
-> Happy to make this change.
-> 
-> > any reason why not use the dso fields directly?
-> 
-> I was just following my general software engineering instincts to
-> encapsulate implementation details, so that e.g. the caller doesn't need to
-> know about details such as the "has_build_id" boolean. I haven't made
-> changes to perf before, so if that's not the preferred style, I can do it
-> a different way.
-
-we have some helpers for dso fields, but AFAICS long_name and has_build_id
-are used directly all over the place
-
-jirka
+Thanks,
+Mark.
