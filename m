@@ -2,91 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D590C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 01:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFA4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 01:47:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbiFNBoX (ORCPT
+        id S244416AbiFNBri (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 21:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        Mon, 13 Jun 2022 21:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiFNBoW (ORCPT
+        with ESMTP id S242078AbiFNBre (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 21:44:22 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 472552872A;
-        Mon, 13 Jun 2022 18:44:21 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A93623A;
-        Mon, 13 Jun 2022 18:44:21 -0700 (PDT)
-Received: from [10.162.40.17] (unknown [10.162.40.17])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8D463F792;
-        Mon, 13 Jun 2022 18:44:16 -0700 (PDT)
-Message-ID: <0bc0f99d-41ad-3ce3-deeb-c4c713100e74@arm.com>
-Date:   Tue, 14 Jun 2022 07:14:14 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 7/8] arm64/perf: Add BRBE driver
-Content-Language: en-US
-To:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Mon, 13 Jun 2022 21:47:34 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 428512180
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 18:47:28 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2d11b6259adso13111587b3.19
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 18:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=l4PjIvONm1IQKFepEMuDqPyve0EvuaStAKHleWOI5U4=;
+        b=keMrD0lK99MmEmZqNHED9SqQIvx29ap+MgANfW658dwlfZvJrsoNWlI9FXDBxqa+za
+         VARGdXXoJmn5KryQWZj+8ScXKK6VXqNwAmxBq3WrvJtTYqyF49pPQeabsvoQ33dd7Zm9
+         GUdC5cio7eBOfzPKl6VgquXY1jLeMHFBa0mblXnksXxjh9ZBheHBbS2YBLkmyB2cnv0z
+         RODtwrbl065MJcM4aR2i0vB2oIgwB4RMKqps974SsAItXpR+hUM9whwp/5wZxzkdRDOz
+         ZEJKu26kcTh5Mj7t2oGlCPJPuLSeewLtsuZoU0kfm6Fy8cQ92KsRwUtE31ZwuEw4o661
+         pfTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=l4PjIvONm1IQKFepEMuDqPyve0EvuaStAKHleWOI5U4=;
+        b=gVGCb8aknR3KNYL8X+KqTrvUMGHXqmisHtmsJhMsW8w/+GOJk8uEWQnCeADBTBL0sb
+         uSLZLcjvETU4VA0V8xTZ54qkrIUPS0J7lNwXfuXZGi3tSWN8dEAhOueQzFVIoWZfT8WX
+         hI4aiYtU7K/bW0a+JmBrDu6Cpuc9qSVVJigx4G+hB2B3z+c5YRsxGEDlcHNCqMb8bRkT
+         LMddnL2hbw6cJB8Z0cMDoiLN/9w7jRduR1lxH3h0E5wc5nlV1qmaMkyDww0rxLB8Ath7
+         KnP0W1FQYZtPzxLe+afwsr1irqz7cbyymnOn1g6jQ5st3tNMBN5b8Iwcibn6JSRojJ4c
+         URTQ==
+X-Gm-Message-State: AJIora+QqwiMnBGwGndkrtGYHN+uUH7u9/aXu9bDsrJOzz+qmU4P3Lu0
+        vNIwKQW58GH7tKFq7bR6lCqdYJrOOlg0
+X-Google-Smtp-Source: AGRyM1subzJdwRtf+vAOstyD6tqNevSviIR17aL9d/daU5mnA6A1DY7dA9Gj0iqv9t7BAYwDQeVntF57tsLy
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:e4b4:1d0c:1c56:a7ed])
+ (user=irogers job=sendgmr) by 2002:a25:3c45:0:b0:664:cf75:c2d6 with SMTP id
+ j66-20020a253c45000000b00664cf75c2d6mr2520288yba.446.1655171248020; Mon, 13
+ Jun 2022 18:47:28 -0700 (PDT)
+Date:   Mon, 13 Jun 2022 18:47:14 -0700
+Message-Id: <20220614014714.1407239-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
+Subject: [PATCH] perf bpf: 8 byte align bpil data
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org
-References: <20220613100119.684673-1-anshuman.khandual@arm.com>
- <20220613100119.684673-8-anshuman.khandual@arm.com>
- <f84187d1-b7eb-e25e-090a-d09532f15594@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <f84187d1-b7eb-e25e-090a-d09532f15594@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+bpil data is accessed assuming 64-bit alignment resulting in undefined
+behavior as the data is just byte aligned. With an -fsanitize=undefined
+build the following errors are observed:
 
+$ sudo perf record -a sleep 1
+util/bpf-event.c:310:22: runtime error: load of misaligned address 0x55f61084520f for type '__u64', which requires 8 byte alignment
+0x55f61084520f: note: pointer points here
+ a8 fe ff ff 3c  51 d3 c0 ff ff ff ff 04  84 d3 c0 ff ff ff ff d8  aa d3 c0 ff ff ff ff a4  c0 d3 c0
+             ^
+util/bpf-event.c:311:20: runtime error: load of misaligned address 0x55f61084522f for type '__u32', which requires 4 byte alignment
+0x55f61084522f: note: pointer points here
+ ff ff ff ff c7  17 00 00 f1 02 00 00 1f  04 00 00 58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00
+             ^
+util/bpf-event.c:198:33: runtime error: member access within misaligned address 0x55f61084523f for type 'const struct bpf_func_info', which requires 4 byte alignment
+0x55f61084523f: note: pointer points here
+ 58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00 3b 00 00 00 ab  02 00 00 44 00 00 00 14  03 00 00
 
-On 6/13/22 17:46, German Gomez wrote:
-> Hi Anshuman, thanks for the update,
-> 
-> As I mentioned offline, I have a perf test that I've been using for the
-> branch records and filters. I'll let you know the result using this set.
+Correct this by rouding up the data sizes and aligning the pointers.
 
-Sure, thanks !
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf-utils.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> 
-> On 13/06/2022 11:01, Anshuman Khandual wrote:
->> [...]
->>
->> +
->> +static int brbe_fetch_perf_priv(u64 brbinf)
->> +{
->> +       int brbe_el = brbe_fetch_el(brbinf);
->> +
->> +       switch (brbe_el) {
->> +       case BRBINF_EL_EL0:
->> +               return PERF_BR_PRIV_USER;
->> +       case BRBINF_EL_EL1:
->> +               return PERF_BR_PRIV_KERNEL;
->> +       case BRBINF_EL_EL2:
->> +               if (is_kernel_in_hyp_mode())
->> +                       return PERF_BR_PRIV_KERNEL;
->> +               return PERF_BR_PRIV_HV;
->> +       default:
->> +               pr_warn("unknown branch privilege captured\n");
->> +               return -1;
-> 
-> This looks like it should return PERF_BR_PRIV_UNKNOWN.
+diff --git a/tools/perf/util/bpf-utils.c b/tools/perf/util/bpf-utils.c
+index e271e05e51bc..80b1d2b3729b 100644
+--- a/tools/perf/util/bpf-utils.c
++++ b/tools/perf/util/bpf-utils.c
+@@ -149,11 +149,10 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+ 		count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
+ 		size  = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
+ 
+-		data_len += count * size;
++		data_len += roundup(count * size, sizeof(__u64));
+ 	}
+ 
+ 	/* step 3: allocate continuous memory */
+-	data_len = roundup(data_len, sizeof(__u64));
+ 	info_linear = malloc(sizeof(struct perf_bpil) + data_len);
+ 	if (!info_linear)
+ 		return ERR_PTR(-ENOMEM);
+@@ -180,7 +179,7 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+ 		bpf_prog_info_set_offset_u64(&info_linear->info,
+ 					     desc->array_offset,
+ 					     ptr_to_u64(ptr));
+-		ptr += count * size;
++		ptr += roundup(count * size, sizeof(__u64));
+ 	}
+ 
+ 	/* step 5: call syscall again to get required arrays */
+-- 
+2.36.1.476.g0c4daa206d-goog
 
-Right, return from this function gets into perf branch record's priv
-element and '-1' is not something that can be parsed correctly in the
-user space tools as the corresponding enum itself starts with 0 i.e
-PERF_BR_PRIV_UNKNOWN.
-
-cpuc->brbe_entries[idx].priv = brbe_fetch_perf_priv(brbinf)
-
-Will change the return as PERF_BR_PRIV_UNKNOWN instead.
