@@ -2,130 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFA4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 01:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CFFC43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 05:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244416AbiFNBri (ORCPT
+        id S233653AbiFNF6n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Jun 2022 21:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54978 "EHLO
+        Tue, 14 Jun 2022 01:58:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242078AbiFNBre (ORCPT
+        with ESMTP id S238715AbiFNF6X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Jun 2022 21:47:34 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 428512180
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 18:47:28 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2d11b6259adso13111587b3.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Jun 2022 18:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=l4PjIvONm1IQKFepEMuDqPyve0EvuaStAKHleWOI5U4=;
-        b=keMrD0lK99MmEmZqNHED9SqQIvx29ap+MgANfW658dwlfZvJrsoNWlI9FXDBxqa+za
-         VARGdXXoJmn5KryQWZj+8ScXKK6VXqNwAmxBq3WrvJtTYqyF49pPQeabsvoQ33dd7Zm9
-         GUdC5cio7eBOfzPKl6VgquXY1jLeMHFBa0mblXnksXxjh9ZBheHBbS2YBLkmyB2cnv0z
-         RODtwrbl065MJcM4aR2i0vB2oIgwB4RMKqps974SsAItXpR+hUM9whwp/5wZxzkdRDOz
-         ZEJKu26kcTh5Mj7t2oGlCPJPuLSeewLtsuZoU0kfm6Fy8cQ92KsRwUtE31ZwuEw4o661
-         pfTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=l4PjIvONm1IQKFepEMuDqPyve0EvuaStAKHleWOI5U4=;
-        b=gVGCb8aknR3KNYL8X+KqTrvUMGHXqmisHtmsJhMsW8w/+GOJk8uEWQnCeADBTBL0sb
-         uSLZLcjvETU4VA0V8xTZ54qkrIUPS0J7lNwXfuXZGi3tSWN8dEAhOueQzFVIoWZfT8WX
-         hI4aiYtU7K/bW0a+JmBrDu6Cpuc9qSVVJigx4G+hB2B3z+c5YRsxGEDlcHNCqMb8bRkT
-         LMddnL2hbw6cJB8Z0cMDoiLN/9w7jRduR1lxH3h0E5wc5nlV1qmaMkyDww0rxLB8Ath7
-         KnP0W1FQYZtPzxLe+afwsr1irqz7cbyymnOn1g6jQ5st3tNMBN5b8Iwcibn6JSRojJ4c
-         URTQ==
-X-Gm-Message-State: AJIora+QqwiMnBGwGndkrtGYHN+uUH7u9/aXu9bDsrJOzz+qmU4P3Lu0
-        vNIwKQW58GH7tKFq7bR6lCqdYJrOOlg0
-X-Google-Smtp-Source: AGRyM1subzJdwRtf+vAOstyD6tqNevSviIR17aL9d/daU5mnA6A1DY7dA9Gj0iqv9t7BAYwDQeVntF57tsLy
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:e4b4:1d0c:1c56:a7ed])
- (user=irogers job=sendgmr) by 2002:a25:3c45:0:b0:664:cf75:c2d6 with SMTP id
- j66-20020a253c45000000b00664cf75c2d6mr2520288yba.446.1655171248020; Mon, 13
- Jun 2022 18:47:28 -0700 (PDT)
-Date:   Mon, 13 Jun 2022 18:47:14 -0700
-Message-Id: <20220614014714.1407239-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
-Subject: [PATCH] perf bpf: 8 byte align bpil data
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 Jun 2022 01:58:23 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA17131220;
+        Mon, 13 Jun 2022 22:58:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655186302; x=1686722302;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ywmOAFbDeYJlfmJGeX0tKQffJo9BReoENhKIXWT7mPc=;
+  b=LFp7uQMxwyipr/j5X73dOetV95zY5CkJlbpVhsByl46PVh6l5/sQyTU0
+   ALSB4D3qmqe1UDENn7STscG2rXKpOOFOkE6l0e+lJB7WbubkAFI3JrUpr
+   e0sIKyN8XVyQxCzjsNrAR5j9a7N0kh+DiU8s4V/pFub4lVJu0ZjSfUEYo
+   ofIOHhf+WV8CVxaLy6joHaAr+hlSxLCrGmWXV1jEauQq/dy0W9u5DcKzG
+   0ovMbQoRNDNDRSbQwDUci5+Y59x61ajS67H4a6Xyf31+Uq5wOgm/6DcQq
+   jJWVYM72YYt9wzwXXC/aZntSZpFvBf4hCOLTyqiNMyRIzX64HXYjssZ1L
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="258347353"
+X-IronPort-AV: E=Sophos;i="5.91,299,1647327600"; 
+   d="scan'208";a="258347353"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 22:58:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,299,1647327600"; 
+   d="scan'208";a="830209036"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2022 22:58:16 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o0zZ9-000LXv-Jb;
+        Tue, 14 Jun 2022 05:58:15 +0000
+Date:   Tue, 14 Jun 2022 13:57:53 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, pmladek@suse.com, acme@kernel.org,
+        akpm@linux-foundation.org, alexander.shishkin@linux.intel.com,
+        catalin.marinas@arm.com, davem@davemloft.net, jolsa@redhat.com,
+        jthierry@redhat.com, keescook@chromium.org, kernelfans@gmail.com,
+        lecopzer.chen@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        masahiroy@kernel.org, matthias.bgg@gmail.com, maz@kernel.org,
+        mcgrof@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+        nixiaoming@huawei.com, peterz@infradead.org,
+        sparclinux@vger.kernel.org, sumit.garg@linaro.org,
+        wangqing@vivo.com, will@kernel.org, yj.chiang@mediatek.com
+Subject: Re: [PATCH v5 4/6] kernel/watchdog: Adapt the watchdog_hld interface
+ for async model
+Message-ID: <202206141348.e7aqnN0q-lkp@intel.com>
+References: <20220613135956.15711-5-lecopzer.chen@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220613135956.15711-5-lecopzer.chen@mediatek.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-bpil data is accessed assuming 64-bit alignment resulting in undefined
-behavior as the data is just byte aligned. With an -fsanitize=undefined
-build the following errors are observed:
+Hi Lecopzer,
 
-$ sudo perf record -a sleep 1
-util/bpf-event.c:310:22: runtime error: load of misaligned address 0x55f61084520f for type '__u64', which requires 8 byte alignment
-0x55f61084520f: note: pointer points here
- a8 fe ff ff 3c  51 d3 c0 ff ff ff ff 04  84 d3 c0 ff ff ff ff d8  aa d3 c0 ff ff ff ff a4  c0 d3 c0
-             ^
-util/bpf-event.c:311:20: runtime error: load of misaligned address 0x55f61084522f for type '__u32', which requires 4 byte alignment
-0x55f61084522f: note: pointer points here
- ff ff ff ff c7  17 00 00 f1 02 00 00 1f  04 00 00 58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00
-             ^
-util/bpf-event.c:198:33: runtime error: member access within misaligned address 0x55f61084523f for type 'const struct bpf_func_info', which requires 4 byte alignment
-0x55f61084523f: note: pointer points here
- 58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00 3b 00 00 00 ab  02 00 00 44 00 00 00 14  03 00 00
+Thank you for the patch! Yet something to improve:
 
-Correct this by rouding up the data sizes and aligning the pointers.
+[auto build test ERROR on arm64/for-next/core]
+[also build test ERROR on arm/for-next kvmarm/next soc/for-next linus/master v5.19-rc2 next-20220610]
+[cannot apply to xilinx-xlnx/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/bpf-utils.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Lecopzer-Chen/Support-hld-delayed-init-based-on-Pseudo-NMI-for/20220614-021318
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+config: sparc64-randconfig-r026-20220613 (https://download.01.org/0day-ci/archive/20220614/202206141348.e7aqnN0q-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/7df94eb967160312b005f9d8a29b558beec2d5a7
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Lecopzer-Chen/Support-hld-delayed-init-based-on-Pseudo-NMI-for/20220614-021318
+        git checkout 7df94eb967160312b005f9d8a29b558beec2d5a7
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=sparc64 SHELL=/bin/bash
 
-diff --git a/tools/perf/util/bpf-utils.c b/tools/perf/util/bpf-utils.c
-index e271e05e51bc..80b1d2b3729b 100644
---- a/tools/perf/util/bpf-utils.c
-+++ b/tools/perf/util/bpf-utils.c
-@@ -149,11 +149,10 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
- 		count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
- 		size  = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
- 
--		data_len += count * size;
-+		data_len += roundup(count * size, sizeof(__u64));
- 	}
- 
- 	/* step 3: allocate continuous memory */
--	data_len = roundup(data_len, sizeof(__u64));
- 	info_linear = malloc(sizeof(struct perf_bpil) + data_len);
- 	if (!info_linear)
- 		return ERR_PTR(-ENOMEM);
-@@ -180,7 +179,7 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
- 		bpf_prog_info_set_offset_u64(&info_linear->info,
- 					     desc->array_offset,
- 					     ptr_to_u64(ptr));
--		ptr += count * size;
-+		ptr += roundup(count * size, sizeof(__u64));
- 	}
- 
- 	/* step 5: call syscall again to get required arrays */
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   kernel/watchdog.c: In function 'lockup_detector_init':
+>> kernel/watchdog.c:915:17: error: 'allow_lockup_detector_init_retry' undeclared (first use in this function); did you mean 'retry_lockup_detector_init'?
+     915 |                 allow_lockup_detector_init_retry = true;
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                 retry_lockup_detector_init
+   kernel/watchdog.c:915:17: note: each undeclared identifier is reported only once for each function it appears in
+
+
+vim +915 kernel/watchdog.c
+
+   903	
+   904	void __init lockup_detector_init(void)
+   905	{
+   906		if (tick_nohz_full_enabled())
+   907			pr_info("Disabling watchdog on nohz_full cores by default\n");
+   908	
+   909		cpumask_copy(&watchdog_cpumask,
+   910			     housekeeping_cpumask(HK_TYPE_TIMER));
+   911	
+   912		if (!watchdog_nmi_probe())
+   913			nmi_watchdog_available = true;
+   914		else
+ > 915			allow_lockup_detector_init_retry = true;
+
 -- 
-2.36.1.476.g0c4daa206d-goog
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
