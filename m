@@ -2,116 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7999BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 12:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476C9CCA486
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 12:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237111AbiFNMTt (ORCPT
+        id S243929AbiFNMbU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 08:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50782 "EHLO
+        Tue, 14 Jun 2022 08:31:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230164AbiFNMTr (ORCPT
+        with ESMTP id S1356594AbiFNM3N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 08:19:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6603742A22
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 05:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655209185;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tWBc/vI1Z1D0EjroDYG8+oWkAC8zWRb9nfpYXzA3cC0=;
-        b=TVjHiYYp35NWkVF3UTnOgRsthgWUxXqdnT2za1iic9jy1+pCTmhk11jwaOpayceDc3OZk2
-        w27mn6HFbJdr0kcRdKhy3SLrznh44ylbcGHTcX9PDz6ma8a0eo/8FdJBA1gJoNMswVRB12
-        ioXf6HP4IdS0kZ3dBuh0f/Sry4Tqd1o=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-62-8Ts-B-UnOY6q51BZ8OUivg-1; Tue, 14 Jun 2022 08:19:40 -0400
-X-MC-Unique: 8Ts-B-UnOY6q51BZ8OUivg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1C425101A54E;
-        Tue, 14 Jun 2022 12:19:40 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B63F9D7F;
-        Tue, 14 Jun 2022 12:19:37 +0000 (UTC)
-Date:   Tue, 14 Jun 2022 14:19:34 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     German Gomez <german.gomez@arm.com>
-cc:     linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
-        jolsa@kernel.org, James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH] perf test: Record only user callchains
-In-Reply-To: <7460bdf5-7c11-bfa7-9105-5b6b453aa925@arm.com>
-Message-ID: <alpine.LRH.2.20.2206141419010.3839@Diego>
-References: <20220614105207.26223-1-mpetlan@redhat.com> <7460bdf5-7c11-bfa7-9105-5b6b453aa925@arm.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Tue, 14 Jun 2022 08:29:13 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B0A23BDD;
+        Tue, 14 Jun 2022 05:29:10 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id o7so16871760eja.1;
+        Tue, 14 Jun 2022 05:29:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=axAoTgW4f9hEkpnjg5fk+kCuJUrcn/1GVTmzDalaTpE=;
+        b=TC2i7XA7+9Xlrhf2dw40ePmPdZiuddA5zyiu0EL3XudVgt7iMQ76XXD090WPUwKYo2
+         9Nynx4bkyvSKns2UbUrHBv83yWFIT6kEG5MsIa4E+VrqDkFyl5hIZ+VgoIkETMBGe3fr
+         Nh1NH3Auzr8xBCYZo8Ms7ZoV8Q78axRaf6/zQRn4WQVypJ7x/KG/7+pZwuCdi6jGx9TH
+         Y4Dc1xYnzdLx73qEjyzX6MwktZGp7uUy97J0M1P6csFAsVkuAhfl1qnKnwkIndBmmS8x
+         TartraPrDPxftKMy0WCDH9SAqEvIRe2ZOktv9Pm/S5wMGjcTjug8uEzcNjdsjXJuegXw
+         SkCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=axAoTgW4f9hEkpnjg5fk+kCuJUrcn/1GVTmzDalaTpE=;
+        b=2LxkQ/Me/QE6d449KCic8JPHrfv3nkBzZwXYNsymSmQF+tCEYFMLrdW7LoN9nHpA9p
+         T1JwurqX1TKiXs4vqB1p26xLemyOF0HFMMs6cEXBwt5Wq2rwbDx/QM32u4y0XDKzeRAM
+         UJo6h03Zs0slHbMtiYmCClQVdRAYPvhL9BZAy/iX2fv/jPaLRDyFwHplcVVOaN3jIHW8
+         LZ6NAFUPkBe3k9R6TZyH8m4j/Hw5q++NPyw3bD3/d/wFoiZkVs3lA515jEqvyQsWW3bs
+         80OgjKqUxcDgB9Cxv0r/XOllTHVpwZzyS1IlS6tGH2Bx61uBS59gKDE6OkPKL3lo3qnJ
+         lR/Q==
+X-Gm-Message-State: AOAM530bWCJvGoJc57dK70tSFCHJXb4M79ZB3JWA/gMyBq/OXeyLOVAX
+        AMY0PIJfdf9M61OKlVKK318=
+X-Google-Smtp-Source: ABdhPJyywCmnpHZqwVSmt50ed8p/dYmi/CUTgqEnog5vo72tdHnTWhxx4t9rRMHalfnoYRdREvIu2Q==
+X-Received: by 2002:a17:906:51c6:b0:712:2a1a:afc8 with SMTP id v6-20020a17090651c600b007122a1aafc8mr4298295ejk.649.1655209749213;
+        Tue, 14 Jun 2022 05:29:09 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id i9-20020a05640242c900b0042dce73168csm7170844edc.13.2022.06.14.05.29.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jun 2022 05:29:08 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 14 Jun 2022 14:29:06 +0200
+To:     Blake Jones <blakejones@google.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] Add a "-m" option to "perf buildid-list".
+Message-ID: <Yqh/EkVy99Bej46S@krava>
+References: <20220607191550.4141024-1-blakejones@google.com>
+ <YqZmSRS8UPQJzWFE@krava>
+ <CAP_z_CgkJ8RgWevJnDiq-+JjB=ni0OzJ3npwW+S9RZ66i0Y3Kg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP_z_CgkJ8RgWevJnDiq-+JjB=ni0OzJ3npwW+S9RZ66i0Y3Kg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 14 Jun 2022, German Gomez wrote:
-> Hi Michael, thanks for the fix
+On Mon, Jun 13, 2022 at 03:02:39PM -0700, Blake Jones wrote:
+> Thanks for taking a look at this!
 > 
-> On 14/06/2022 11:52, Michael Petlan wrote:
-> > The testcase 'Check Arm64 callgraphs are complete in fp mode' wants to
-> > see the following output:
-> >
-> >     610 leaf
-> >     62f parent
-> >     648 main
-> >
-> > However, without excluding user callchains, the output might look like:
+> On Sun, Jun 12, 2022 at 3:18 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > why 'modules' ? it shows all maps (including kernel)
+> > so perhaps -m/--maps would be better?
 > 
-> I think you meant "kernel callchains"
+>  I called it "modules" because it only operates on the kernel. Calling it
+> "maps" would suggest to me that it might also be able to show
+> information about the maps in perf.data files, which it can't (just as the
+> "-k" option only operates on the kernel). Given that, does it still seem
+> like "maps" would be more appropriate?
 
-Oh... of course I did. Thanks.
+still there's kernel map included, so it's strange to me call it modules
+
+  --m/--kernel-maps ?
 
 > 
-> > 	ffffc2ff40ef1b5c arch_local_irq_enable
-> > 	ffffc2ff419d032c __schedule
-> > 	ffffc2ff419d06c0 schedule
-> > 	ffffc2ff40e4da30 do_notify_resume
-> > 	ffffc2ff40e421b0 work_pending
-> > 	             610 leaf
-> > 	             62f parent
-> > 	             648 main
-> >
-> > Adding '--user-callchains' leaves only the wanted symbols in the chain.
-> >
-> > Suggested-by: German Gomez <german.gomez@arm.com>
-> > Tested-by: Michael Petlan <mpetlan@redhat.com>
-> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> > also please state that it's from running kernel
 > 
-> Fixes: cd6382d82752 ("perf test arm64: Test unwinding using fame-pointer (fp) mode")
-> Reviewed-by: German Gomez <german.gomez@arm.com>
+> Happy to make this change.
 > 
-> German
+> > any reason why not use the dso fields directly?
 > 
-> > ---
-> >  tools/perf/tests/shell/test_arm_callgraph_fp.sh | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> > index 6ffbb27afaba..ec108d45d3c6 100755
-> > --- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> > +++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> > @@ -43,7 +43,7 @@ CFLAGS="-g -O0 -fno-inline -fno-omit-frame-pointer"
-> >  cc $CFLAGS $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
-> >  
-> >  # Add a 1 second delay to skip samples that are not in the leaf() function
-> > -perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 -- $TEST_PROGRAM 2> /dev/null &
-> > +perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 --user-callchains -- $TEST_PROGRAM 2> /dev/null &
-> >  PID=$!
-> >  
-> >  echo " + Recording (PID=$PID)..."
-> 
-> 
+> I was just following my general software engineering instincts to
+> encapsulate implementation details, so that e.g. the caller doesn't need to
+> know about details such as the "has_build_id" boolean. I haven't made
+> changes to perf before, so if that's not the preferred style, I can do it
+> a different way.
 
+we have some helpers for dso fields, but AFAICS long_name and has_build_id
+are used directly all over the place
+
+jirka
