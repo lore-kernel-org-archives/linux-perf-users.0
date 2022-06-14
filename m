@@ -2,118 +2,519 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493E1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 13:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59D7C43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 14:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244166AbiFNNRK (ORCPT
+        id S235697AbiFNOeR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 09:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
+        Tue, 14 Jun 2022 10:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237111AbiFNNRJ (ORCPT
+        with ESMTP id S1355831AbiFNOeQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 09:17:09 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 375E3369FA
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 06:17:09 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 3-20020a17090a174300b001e426a02ac5so11755319pjm.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 06:17:09 -0700 (PDT)
+        Tue, 14 Jun 2022 10:34:16 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E52369E1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 07:34:14 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id t1-20020a62ea01000000b0051be221a3ebso3929294pfh.17
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 07:34:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MMo5ycw9fsXGBtd6u4S+9VnthcYrmxBhfzklb6NM/k4=;
-        b=Du9R7H8xGzbITqGJTl+aBcrqT6mzGQJAvIVPDEh2EYjJgHNQBMYW7DUbWXJaRNLlDP
-         K0ueW6CO6u65oXc0Ba1stiI6o7SrHhX2yERVWUXCMd3i6/N+NDffQuv28zEL3es9h+aF
-         HF4B6lTUhXt4I4aA86ZDwd5fKE9KLOlEICbclOiweY3QI40s3Jtu3XocChbUJvxPSbZi
-         UtLCezLwOWtbz9rTHK+N98W00/HGjfCMbMkeN17sPGWWxLcJpth8Iae1tQ1Mx+FZjHVE
-         9uOJf89U80ryMDq3WjbPU3mLhSKnVsxifwrE0yy9H6y8K4BPaGITSIU+ylfRiKFGa7ZW
-         heYg==
+        d=google.com; s=20210112;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=UewJqU8rUQMKPeVGAP0/Y/t8r5J/Omui5wNwxJu+AJ0=;
+        b=MHBjuQC8yYtGQgPYRH4HfWCGi7dvDrRXxmA8jRHk0s4tq354dmzBvJELeMaYKEkd0B
+         gnJ6j6yCk4T1aLE+hl1U0NT9g3IKeFeDYgU8GF1IFwPFmJKaVejgTGynlmUc0iwvReN5
+         knmNW2rh0sgIq4c+/aGjxNEbz0mKA196dp3jPrz3lPT06Wt+DszYLVtxNnReCQFknys7
+         44zmaDqJX9NNwXk4ofLh5HS45sYm2EzktB985D9O5f9Flz6EO8i0C9mahvWY8GMbofpL
+         V32zP4P4icyjMmNSPHBFxR4McF+uf6jC9KFLVjK5ahKMPNDFI6a3/bzBKJl1Xo49JAdU
+         B7kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MMo5ycw9fsXGBtd6u4S+9VnthcYrmxBhfzklb6NM/k4=;
-        b=bGOzzlx2G/XexdtoGQ7ApUkloxxYcBA+8Y+l+QoZ2/R86JurnPhWjJvvutFxDHC9na
-         MzioBePakhC622EQ++qCg3w19yWpip+KA8K5zCGP/AuVxE9mBvc1BcbV+UajoAeJxI4W
-         E28NV9kmeMBMSGky9s8BIXJI3WBJmDm5ldzbfcIKr0CV4TYUT+X3TNoxF39dAipFOub7
-         v9VMaZYCs5iPU/OuRkvihrucF9pC5bA/rW/+x+gYPIyTlpxkcAr9aBaZbah0OrGdi1EW
-         8jw8SKLVIR/IFb3QwD9akp/cyH5jlO2Ey841tRdNI0cwU6fpuI02xaAGYAez9rxzfscy
-         rJzg==
-X-Gm-Message-State: AJIora8CjKycdXNGx8gQ6C+m0hikxfqBUSTGx7delu+m2We3qoz29yFv
-        Fs/K1wz+/Kdu52dg9dW7WxQZyw==
-X-Google-Smtp-Source: AGRyM1t1mOOIzLWMWUljDNJNTCBWrTSZsjvdQJ7sE1b2JDr2SDhIvv5RgELudLWBUtAK4sMee9o+ag==
-X-Received: by 2002:a17:90a:408f:b0:1d1:d1ba:2abb with SMTP id l15-20020a17090a408f00b001d1d1ba2abbmr4552403pjg.152.1655212628560;
-        Tue, 14 Jun 2022 06:17:08 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id h65-20020a62de44000000b0050dc762813csm7603863pfg.22.2022.06.14.06.17.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jun 2022 06:17:08 -0700 (PDT)
-Date:   Tue, 14 Jun 2022 21:17:04 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Michael Petlan <mpetlan@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
-        jolsa@kernel.org, german.gomez@arm.com
-Subject: Re: [PATCH] perf test: Record only user callchains
-Message-ID: <20220614131704.GA237086@leoy-ThinkPad-X240s>
-References: <20220614105207.26223-1-mpetlan@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220614105207.26223-1-mpetlan@redhat.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=UewJqU8rUQMKPeVGAP0/Y/t8r5J/Omui5wNwxJu+AJ0=;
+        b=K75MhF7tuowhQtkRknqDEDGCd/9n9TOqXV0nHZyGELv2BPfsVv3Owr99wVP80V9kc3
+         6hoql4pJFJy0v1RWAnQwY5/QgZ8IX47h7gLrC2RPtie3SDVr4kmtBeWLVZZqTAESmgCs
+         Eg9hzLd165hT4DNAHJqyfFiSFy4FYzr37Y1r4MMUKPoD+5A64uvOaaJX3mqWro+67wUS
+         r80bcN5UfRphI7qoT9qaOui0MkDlDGkNd37u0QynN4Y6bqQSje+HN9NezzhiaWgjkKq4
+         HOBOcbSfX20yo0lDZFhYwRGSW/NvdeltnS0nFlrz8VCns675H3pC3dcSfufdJDotjd/k
+         Zi7A==
+X-Gm-Message-State: AJIora8+ef0HLKWw3xZxgfbdA6g3rohS1qmj914C0L5tGhEIk8coOGPd
+        hfkaJtKNMlFcqJIcpRS0h/E131pd3FYK
+X-Google-Smtp-Source: AGRyM1t1btBv8VGktDGMGfE+C/8S7YLYrzj4B9G7ynAKfNrVdsjHz4AXbO/xZ9XYWTj52/mE/S8IJS4wUEgT
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:b55a:aaa7:a:1b17])
+ (user=irogers job=sendgmr) by 2002:a17:902:ea08:b0:163:ec68:ae08 with SMTP id
+ s8-20020a170902ea0800b00163ec68ae08mr4588980plg.52.1655217254238; Tue, 14 Jun
+ 2022 07:34:14 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 07:33:53 -0700
+In-Reply-To: <20220614143353.1559597-1-irogers@google.com>
+Message-Id: <20220614143353.1559597-7-irogers@google.com>
+Mime-Version: 1.0
+References: <20220614143353.1559597-1-irogers@google.com>
+X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
+Subject: [PATCH v2 6/6] perf cpumap: Add range data encoding
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 12:52:07PM +0200, Michael Petlan wrote:
-> The testcase 'Check Arm64 callgraphs are complete in fp mode' wants to
-> see the following output:
-> 
->     610 leaf
->     62f parent
->     648 main
-> 
-> However, without excluding user callchains, the output might look like:
-> 	ffffc2ff40ef1b5c arch_local_irq_enable
-> 	ffffc2ff419d032c __schedule
-> 	ffffc2ff419d06c0 schedule
-> 	ffffc2ff40e4da30 do_notify_resume
-> 	ffffc2ff40e421b0 work_pending
-> 	             610 leaf
-> 	             62f parent
-> 	             648 main
-> 
-> Adding '--user-callchains' leaves only the wanted symbols in the chain.
-> 
-> Suggested-by: German Gomez <german.gomez@arm.com>
-> Tested-by: Michael Petlan <mpetlan@redhat.com>
+Often cpumaps encode a range of all CPUs, add a compact encoding that
+doesn't require a bit mask or list of all CPUs.
 
-Since you are the patch's author, it's not necessary to add your
-tested tag.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/perf/include/perf/event.h |  14 +++
+ tools/perf/tests/cpumap.c           |  52 ++++++++--
+ tools/perf/util/cpumap.c            |  31 +++++-
+ tools/perf/util/session.c           |   5 +
+ tools/perf/util/synthetic-events.c  | 151 ++++++++++++++--------------
+ 5 files changed, 166 insertions(+), 87 deletions(-)
 
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index 21170f5afb61..43f990b8c58b 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -152,6 +152,7 @@ struct perf_record_header_attr {
+ enum {
+ 	PERF_CPU_MAP__CPUS = 0,
+ 	PERF_CPU_MAP__MASK = 1,
++	PERF_CPU_MAP__RANGE_CPUS = 2,
+ };
+ 
+ /*
+@@ -185,6 +186,17 @@ struct perf_record_mask_cpu_map64 {
+ 	__u64			 mask[];
+ };
+ 
++/*
++ * An encoding of a CPU map for a range starting at start_cpu through to
++ * end_cpu. If any_cpu is 1, an any CPU (-1) value (aka dummy value) is present.
++ */
++struct perf_record_range_cpu_map {
++	__u8 any_cpu;
++	__u8 __pad;
++	__u16 start_cpu;
++	__u16 end_cpu;
++};
++
+ struct __packed perf_record_cpu_map_data {
+ 	__u16			 type;
+ 	union {
+@@ -194,6 +206,8 @@ struct __packed perf_record_cpu_map_data {
+ 		struct perf_record_mask_cpu_map32 mask32_data;
+ 		/* Used when type == PERF_CPU_MAP__MASK and long_size == 8. */
+ 		struct perf_record_mask_cpu_map64 mask64_data;
++		/* Used when type == PERF_CPU_MAP__RANGE_CPUS. */
++		struct perf_record_range_cpu_map range_cpu_data;
+ 	};
+ };
+ 
+diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+index 7ea150cdc137..7c873c6ae3eb 100644
+--- a/tools/perf/tests/cpumap.c
++++ b/tools/perf/tests/cpumap.c
+@@ -19,7 +19,6 @@ static int process_event_mask(struct perf_tool *tool __maybe_unused,
+ 	struct perf_record_cpu_map *map_event = &event->cpu_map;
+ 	struct perf_record_cpu_map_data *data;
+ 	struct perf_cpu_map *map;
+-	int i;
+ 	unsigned int long_size;
+ 
+ 	data = &map_event->data;
+@@ -32,16 +31,17 @@ static int process_event_mask(struct perf_tool *tool __maybe_unused,
+ 
+ 	TEST_ASSERT_VAL("wrong nr",   data->mask32_data.nr == 1);
+ 
+-	for (i = 0; i < 20; i++) {
++	TEST_ASSERT_VAL("wrong cpu", perf_record_cpu_map_data__test_bit(0, data));
++	TEST_ASSERT_VAL("wrong cpu", !perf_record_cpu_map_data__test_bit(1, data));
++	for (int i = 2; i <= 20; i++)
+ 		TEST_ASSERT_VAL("wrong cpu", perf_record_cpu_map_data__test_bit(i, data));
+-	}
+ 
+ 	map = cpu_map__new_data(data);
+ 	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 20);
+ 
+-	for (i = 0; i < 20; i++) {
+-		TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, i).cpu == i);
+-	}
++	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 0).cpu == 0);
++	for (int i = 2; i <= 20; i++)
++		TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, i - 1).cpu == i);
+ 
+ 	perf_cpu_map__put(map);
+ 	return 0;
+@@ -73,25 +73,59 @@ static int process_event_cpus(struct perf_tool *tool __maybe_unused,
+ 	return 0;
+ }
+ 
++static int process_event_range_cpus(struct perf_tool *tool __maybe_unused,
++				union perf_event *event,
++				struct perf_sample *sample __maybe_unused,
++				struct machine *machine __maybe_unused)
++{
++	struct perf_record_cpu_map *map_event = &event->cpu_map;
++	struct perf_record_cpu_map_data *data;
++	struct perf_cpu_map *map;
++
++	data = &map_event->data;
++
++	TEST_ASSERT_VAL("wrong type", data->type == PERF_CPU_MAP__RANGE_CPUS);
++
++	TEST_ASSERT_VAL("wrong any_cpu",   data->range_cpu_data.any_cpu == 0);
++	TEST_ASSERT_VAL("wrong start_cpu", data->range_cpu_data.start_cpu == 1);
++	TEST_ASSERT_VAL("wrong end_cpu",   data->range_cpu_data.end_cpu == 256);
++
++	map = cpu_map__new_data(data);
++	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 256);
++	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 0).cpu == 1);
++	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__max(map).cpu == 256);
++	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&map->refcnt) == 1);
++	perf_cpu_map__put(map);
++	return 0;
++}
++
+ 
+ static int test__cpu_map_synthesize(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+ {
+ 	struct perf_cpu_map *cpus;
+ 
+-	/* This one is better stores in mask. */
+-	cpus = perf_cpu_map__new("0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19");
++	/* This one is better stored in a mask. */
++	cpus = perf_cpu_map__new("0,2-20");
+ 
+ 	TEST_ASSERT_VAL("failed to synthesize map",
+ 		!perf_event__synthesize_cpu_map(NULL, cpus, process_event_mask, NULL));
+ 
+ 	perf_cpu_map__put(cpus);
+ 
+-	/* This one is better stores in cpu values. */
++	/* This one is better stored in cpu values. */
+ 	cpus = perf_cpu_map__new("1,256");
+ 
+ 	TEST_ASSERT_VAL("failed to synthesize map",
+ 		!perf_event__synthesize_cpu_map(NULL, cpus, process_event_cpus, NULL));
+ 
++	perf_cpu_map__put(cpus);
++
++	/* This one is better stored as a range. */
++	cpus = perf_cpu_map__new("1-256");
++
++	TEST_ASSERT_VAL("failed to synthesize map",
++		!perf_event__synthesize_cpu_map(NULL, cpus, process_event_range_cpus, NULL));
++
+ 	perf_cpu_map__put(cpus);
+ 	return 0;
+ }
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index ae43fb88f444..2389bd3e19b8 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -112,12 +112,39 @@ static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_cpu_map_
+ 
+ }
+ 
++static struct perf_cpu_map *cpu_map__from_range(const struct perf_record_cpu_map_data *data)
++{
++	struct perf_cpu_map *map;
++	unsigned int i = 0;
++
++	map = perf_cpu_map__empty_new(data->range_cpu_data.end_cpu -
++				data->range_cpu_data.start_cpu + 1 + data->range_cpu_data.any_cpu);
++	if (!map)
++		return NULL;
++
++	if (data->range_cpu_data.any_cpu)
++		map->map[i++].cpu = -1;
++
++	for (int cpu = data->range_cpu_data.start_cpu; cpu <= data->range_cpu_data.end_cpu;
++	     i++, cpu++)
++		map->map[i].cpu = cpu;
++
++	return map;
++}
++
+ struct perf_cpu_map *cpu_map__new_data(const struct perf_record_cpu_map_data *data)
+ {
+-	if (data->type == PERF_CPU_MAP__CPUS)
++	switch (data->type) {
++	case PERF_CPU_MAP__CPUS:
+ 		return cpu_map__from_entries(data);
+-	else
++	case PERF_CPU_MAP__MASK:
+ 		return cpu_map__from_mask(data);
++	case PERF_CPU_MAP__RANGE_CPUS:
++		return cpu_map__from_range(data);
++	default:
++		pr_err("cpu_map__new_data unknown type %d\n", data->type);
++		return NULL;
++	}
+ }
+ 
+ size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index d52a39ba48e3..0acb9de54b06 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -941,6 +941,11 @@ static void perf_event__cpu_map_swap(union perf_event *event,
+ 		default:
+ 			pr_err("cpu_map swap: unsupported long size\n");
+ 		}
++		break;
++	case PERF_CPU_MAP__RANGE_CPUS:
++		data->range_cpu_data.start_cpu = bswap_16(data->range_cpu_data.start_cpu);
++		data->range_cpu_data.end_cpu = bswap_16(data->range_cpu_data.end_cpu);
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index ec54ac1ed96f..76beda3e1a10 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -1183,93 +1183,97 @@ int perf_event__synthesize_thread_map2(struct perf_tool *tool,
+ 	return err;
+ }
+ 
+-static void synthesize_cpus(struct perf_record_cpu_map_data *data,
+-			    const struct perf_cpu_map *map)
+-{
+-	int i, map_nr = perf_cpu_map__nr(map);
+-
+-	data->cpus_data.nr = map_nr;
++struct synthesize_cpu_map_data {
++	const struct perf_cpu_map *map;
++	int nr;
++	int min_cpu;
++	int max_cpu;
++	int has_any_cpu;
++	int type;
++	size_t size;
++	struct perf_record_cpu_map_data *data;
++};
+ 
+-	for (i = 0; i < map_nr; i++)
+-		data->cpus_data.cpu[i] = perf_cpu_map__cpu(map, i).cpu;
++static void synthesize_cpus(struct synthesize_cpu_map_data *data)
++{
++	data->data->type = PERF_CPU_MAP__CPUS;
++	data->data->cpus_data.nr = data->nr;
++	for (int i = 0; i < data->nr; i++)
++		data->data->cpus_data.cpu[i] = perf_cpu_map__cpu(data->map, i).cpu;
+ }
+ 
+-static void synthesize_mask(struct perf_record_cpu_map_data *data,
+-			    const struct perf_cpu_map *map, int max)
++static void synthesize_mask(struct synthesize_cpu_map_data *data)
+ {
+ 	int idx;
+ 	struct perf_cpu cpu;
+ 
+ 	/* Due to padding, the 4bytes per entry mask variant is always smaller. */
+-	data->mask32_data.nr = BITS_TO_U32(max);
+-	data->mask32_data.long_size = 4;
++	data->data->type = PERF_CPU_MAP__MASK;
++	data->data->mask32_data.nr = BITS_TO_U32(data->max_cpu);
++	data->data->mask32_data.long_size = 4;
+ 
+-	perf_cpu_map__for_each_cpu(cpu, idx, map) {
++	perf_cpu_map__for_each_cpu(cpu, idx, data->map) {
+ 		int bit_word = cpu.cpu / 32;
+-		__u32 bit_mask = 1U << (cpu.cpu & 31);
++		u32 bit_mask = 1U << (cpu.cpu & 31);
+ 
+-		data->mask32_data.mask[bit_word] |= bit_mask;
++		data->data->mask32_data.mask[bit_word] |= bit_mask;
+ 	}
+ }
+ 
+-static size_t cpus_size(const struct perf_cpu_map *map)
++static void synthesize_range_cpus(struct synthesize_cpu_map_data *data)
+ {
+-	return sizeof(struct cpu_map_entries) + perf_cpu_map__nr(map) * sizeof(u16);
++	data->data->type = PERF_CPU_MAP__RANGE_CPUS;
++	data->data->range_cpu_data.any_cpu = data->has_any_cpu;
++	data->data->range_cpu_data.start_cpu = data->min_cpu;
++	data->data->range_cpu_data.end_cpu = data->max_cpu;
+ }
+ 
+-static size_t mask_size(const struct perf_cpu_map *map, int *max)
+-{
+-	*max = perf_cpu_map__max(map).cpu;
+-	return sizeof(struct perf_record_mask_cpu_map32) + BITS_TO_U32(*max) * sizeof(__u32);
+-}
+-
+-static void *cpu_map_data__alloc(const struct perf_cpu_map *map, size_t *size,
+-				 u16 *type, int *max)
++static void *cpu_map_data__alloc(struct synthesize_cpu_map_data *syn_data,
++				 size_t header_size)
+ {
+ 	size_t size_cpus, size_mask;
+-	bool is_dummy = perf_cpu_map__empty(map);
+ 
+-	/*
+-	 * Both array and mask data have variable size based
+-	 * on the number of cpus and their actual values.
+-	 * The size of the 'struct perf_record_cpu_map_data' is:
+-	 *
+-	 *   array = size of 'struct cpu_map_entries' +
+-	 *           number of cpus * sizeof(u64)
+-	 *
+-	 *   mask  = size of 'struct perf_record_record_cpu_map' +
+-	 *           maximum cpu bit converted to size of longs
+-	 *
+-	 * and finally + the size of 'struct perf_record_cpu_map_data'.
+-	 */
+-	size_cpus = cpus_size(map);
+-	size_mask = mask_size(map, max);
++	syn_data->nr = perf_cpu_map__nr(syn_data->map);
++	syn_data->has_any_cpu = (perf_cpu_map__cpu(syn_data->map, 0).cpu == -1) ? 1 : 0;
+ 
+-	if (is_dummy || (size_cpus < size_mask)) {
+-		*size += size_cpus;
+-		*type  = PERF_CPU_MAP__CPUS;
+-	} else {
+-		*size += size_mask;
+-		*type  = PERF_CPU_MAP__MASK;
++	syn_data->min_cpu = perf_cpu_map__cpu(syn_data->map, syn_data->has_any_cpu).cpu;
++	syn_data->max_cpu = perf_cpu_map__max(syn_data->map).cpu;
++	if (syn_data->max_cpu - syn_data->min_cpu + 1 == syn_data->nr - syn_data->has_any_cpu) {
++		/* A consecutive range of CPUs can be encoded using a range. */
++		assert(sizeof(u16) + sizeof(struct perf_record_range_cpu_map) == sizeof(u64));
++		syn_data->type = PERF_CPU_MAP__RANGE_CPUS;
++		syn_data->size = header_size + sizeof(u64);
++		return zalloc(syn_data->size);
+ 	}
+ 
+-	*size += sizeof(__u16); /* For perf_record_cpu_map_data.type. */
+-	*size = PERF_ALIGN(*size, sizeof(u64));
+-	return zalloc(*size);
++	size_cpus = sizeof(u16) + sizeof(struct cpu_map_entries) + syn_data->nr * sizeof(u16);
++	/* Due to padding, the 4bytes per entry mask variant is always smaller. */
++	size_mask = sizeof(u16) + sizeof(struct perf_record_mask_cpu_map32) +
++		BITS_TO_U32(syn_data->max_cpu) * sizeof(__u32);
++	if (syn_data->has_any_cpu || size_cpus < size_mask) {
++		/* Follow the CPU map encoding. */
++		syn_data->type = PERF_CPU_MAP__CPUS;
++		syn_data->size = header_size + PERF_ALIGN(size_cpus, sizeof(u64));
++		return zalloc(syn_data->size);
++	}
++	/* Encode using a bitmask. */
++	syn_data->type = PERF_CPU_MAP__MASK;
++	syn_data->size = header_size + PERF_ALIGN(size_mask, sizeof(u64));
++	return zalloc(syn_data->size);
+ }
+ 
+-static void cpu_map_data__synthesize(struct perf_record_cpu_map_data *data,
+-				     const struct perf_cpu_map *map,
+-				     u16 type, int max)
++static void cpu_map_data__synthesize(struct synthesize_cpu_map_data *data)
+ {
+-	data->type = type;
+-
+-	switch (type) {
++	switch (data->type) {
+ 	case PERF_CPU_MAP__CPUS:
+-		synthesize_cpus(data, map);
++		synthesize_cpus(data);
+ 		break;
+ 	case PERF_CPU_MAP__MASK:
+-		synthesize_mask(data, map, max);
++		synthesize_mask(data);
++		break;
++	case PERF_CPU_MAP__RANGE_CPUS:
++		synthesize_range_cpus(data);
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -1277,23 +1281,22 @@ static void cpu_map_data__synthesize(struct perf_record_cpu_map_data *data,
+ 
+ static struct perf_record_cpu_map *cpu_map_event__new(const struct perf_cpu_map *map)
+ {
+-	size_t size = sizeof(struct perf_event_header);
++	struct synthesize_cpu_map_data syn_data = { .map = map };
+ 	struct perf_record_cpu_map *event;
+-	int max;
+-	u16 type;
+ 
+-	event = cpu_map_data__alloc(map, &size, &type, &max);
++
++	event = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header));
+ 	if (!event)
+ 		return NULL;
+ 
++	syn_data.data = &event->data;
+ 	event->header.type = PERF_RECORD_CPU_MAP;
+-	event->header.size = size;
+-	event->data.type   = type;
+-
+-	cpu_map_data__synthesize(&event->data, map, type, max);
++	event->header.size = syn_data.size;
++	cpu_map_data__synthesize(&syn_data);
+ 	return event;
+ }
+ 
++
+ int perf_event__synthesize_cpu_map(struct perf_tool *tool,
+ 				   const struct perf_cpu_map *map,
+ 				   perf_event__handler_t process,
+@@ -1891,24 +1894,20 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
+ int perf_event__synthesize_event_update_cpus(struct perf_tool *tool, struct evsel *evsel,
+ 					     perf_event__handler_t process)
+ {
+-	size_t size = sizeof(struct perf_event_header) + sizeof(u64) + sizeof(u64);
++	struct synthesize_cpu_map_data syn_data = { .map = evsel->core.own_cpus };
+ 	struct perf_record_event_update *ev;
+-	int max, err;
+-	u16 type;
+-
+-	if (!evsel->core.own_cpus)
+-		return 0;
++	int err;
+ 
+-	ev = cpu_map_data__alloc(evsel->core.own_cpus, &size, &type, &max);
++	ev = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header) + 2 * sizeof(u64));
+ 	if (!ev)
+ 		return -ENOMEM;
+ 
++	syn_data.data = &ev->cpus.cpus;
+ 	ev->header.type = PERF_RECORD_EVENT_UPDATE;
+-	ev->header.size = (u16)size;
++	ev->header.size = (u16)syn_data.size;
+ 	ev->type	= PERF_EVENT_UPDATE__CPUS;
+ 	ev->id		= evsel->core.id[0];
+-
+-	cpu_map_data__synthesize(&ev->cpus.cpus, evsel->core.own_cpus, type, max);
++	cpu_map_data__synthesize(&syn_data);
+ 
+ 	err = process(tool, (union perf_event *)ev, NULL, NULL);
+ 	free(ev);
+-- 
+2.36.1.476.g0c4daa206d-goog
 
-With addressing German's comment for "excluding kernel callchains":
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
-> ---
->  tools/perf/tests/shell/test_arm_callgraph_fp.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> index 6ffbb27afaba..ec108d45d3c6 100755
-> --- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> +++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-> @@ -43,7 +43,7 @@ CFLAGS="-g -O0 -fno-inline -fno-omit-frame-pointer"
->  cc $CFLAGS $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
->  
->  # Add a 1 second delay to skip samples that are not in the leaf() function
-> -perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 -- $TEST_PROGRAM 2> /dev/null &
-> +perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 --user-callchains -- $TEST_PROGRAM 2> /dev/null &
->  PID=$!
->  
->  echo " + Recording (PID=$PID)..."
-> -- 
-> 2.18.4
-> 
