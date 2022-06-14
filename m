@@ -2,192 +2,210 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A393CCA47C
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 15:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EF7CCA47C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Jun 2022 15:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243244AbiFNPlA (ORCPT
+        id S1344058AbiFNPt6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 11:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
+        Tue, 14 Jun 2022 11:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344569AbiFNPk7 (ORCPT
+        with ESMTP id S1344068AbiFNPt5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 11:40:59 -0400
-Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C6D36316
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 08:40:57 -0700 (PDT)
-Received: by mail-vk1-xa29.google.com with SMTP id n203so4205263vke.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 08:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=piScKtqRvHw1IYDuJFxYjo3aE7lfG3qLoSCxhUyNnz4=;
-        b=I7KHFvWekg+pv1Vmu0HOSzOdUCDbYdwC4arUqp2Y2ybU/3AX1+NwBg0WX50ij6t5py
-         75y79402bGQz8jPQcSMPvrxWMv1FF9cUBQLeLo1NuvZ0N/ISaFBB0DoO3pPSG4MzTReQ
-         EvRncO+KeUXmnmfBWjKfDzhV4pqs1e1w0aS7Urgz5dcRHUfi09+5afXy/nNpOeHzLij6
-         9BG2yFbTr7NYSbCgMLTcmsrPzc5GQw0mIZ6RPBx9VdHd3efx/oWABeQKu3EchBAXuxeg
-         Ah5Kzt0NVjSPGrRxA8c6z7CX7T98/fA9ulrSVhtU61+cALukPONyjeS5d+1+22LuZmFl
-         RBmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=piScKtqRvHw1IYDuJFxYjo3aE7lfG3qLoSCxhUyNnz4=;
-        b=2zg3o+TIg64/15IiiJ6rr8W5ki9YsB7R3iuA5wLduijNnsn4xzNO/605RjWCH3Lp6C
-         363QlB+GSlgCvII8HXZpTX7y/1TbCA1QgDFxOobWlUhx/DdrYgOYVMwFJNhDkqTMWp7w
-         zlH3m4ifwzLjbYZzrsBX28a9zBnFC15VZvahTwlkbVxjKsVFmQi+BQ288J23Ji79MSx6
-         Y52/7abtcTLYmMWPS2ViEfDuqMIHcWLVjkd/RsqxU8E3DcEa5hhfH5EpH5iVUc/UITzU
-         D+g7n7I7zFNFA1hmj8701eNSCFWNRtaVs7A0cIGCBmi6SwUuy5WoyWUIA30VRJZ2IYV5
-         W6XA==
-X-Gm-Message-State: AJIora8YhmIBzVvNRnHqFX8EOLrIIs5cQNg0NRCqfoeDhVx/FSThoC7h
-        7zKkXrGS9/B0p+iCATNOTyFDvMNk00hc6Cj0FLDnEA==
-X-Google-Smtp-Source: AGRyM1ti2FhMHTOV9Gs8KPszNf4LcQ6P4eH9GowBi/dqxiPwslOMqkHiQ6WvbnpMw20B6iJy+kM2DB7lIL3kvGH927I=
-X-Received: by 2002:a05:6122:200f:b0:368:990b:3ffc with SMTP id
- l15-20020a056122200f00b00368990b3ffcmr2591048vkd.2.1655221256650; Tue, 14 Jun
- 2022 08:40:56 -0700 (PDT)
+        Tue, 14 Jun 2022 11:49:57 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC86369C3;
+        Tue, 14 Jun 2022 08:49:55 -0700 (PDT)
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LMtDF2Cvtz68Bfb;
+        Tue, 14 Jun 2022 23:49:49 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 14 Jun 2022 17:49:52 +0200
+Received: from [10.195.33.253] (10.195.33.253) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 14 Jun 2022 16:49:51 +0100
+Message-ID: <f94710b3-4ca8-47c5-939c-1ad01d712d5f@huawei.com>
+Date:   Tue, 14 Jun 2022 16:52:58 +0100
 MIME-Version: 1.0
-References: <20220603235656.715800-1-namhyung@kernel.org> <20220603235656.715800-2-namhyung@kernel.org>
-In-Reply-To: <20220603235656.715800-2-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Jun 2022 08:40:44 -0700
-Message-ID: <CAP-5=fWFamGi4ZXHz6+4gWmaaK-zo_p=EEF=uju0Pm0fcTAe1w@mail.gmail.com>
-Subject: Re: [PATCH 1/5] perf lock: Print wait times with unit
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 0/3] Rewrite jevents program in python
+To:     Ian Rogers <irogers@google.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20220527185426.240235-1-irogers@google.com>
+ <d9056bc2-f640-f676-2599-c283479376a4@huawei.com>
+ <CAP-5=fU8Wn8wV0whYOraU+5tGf+kKUk73gSwOg+LHp19vzua3A@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <CAP-5=fU8Wn8wV0whYOraU+5tGf+kKUk73gSwOg+LHp19vzua3A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.195.33.253]
+X-ClientProxiedBy: lhreml746-chm.china.huawei.com (10.201.108.196) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 3, 2022 at 4:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Currently it only prints the time in nsec but it's a bit hard to read
-> and takes longer in the screen.  We can change it to use different
-> units and keep the number small to save the space.
->
-> Before:
->   $ perf lock report
->
->                 Name   acquired  contended   avg wait (ns) total wait (ns)   max wait (ns)   min wait (ns)
->
->         jiffies_lock        433         32            2778           88908           13570             692
->    &lruvec->lru_lock        747          5           11254           56272           18317            1412
->       slock-AF_INET6          7          1           23543           23543           23543           23543
->     &newf->file_lock        706         15            1025           15388            2279             618
->       slock-AF_INET6          8          1           10379           10379           10379           10379
->          &rq->__lock       2143          5            2037           10185            3462             939
->
-> After:
->                 Name   acquired  contended     avg wait   total wait     max wait     min wait
->
->         jiffies_lock        433         32      2.78 us     88.91 us     13.57 us       692 ns
->    &lruvec->lru_lock        747          5     11.25 us     56.27 us     18.32 us      1.41 us
->       slock-AF_INET6          7          1     23.54 us     23.54 us     23.54 us     23.54 us
->     &newf->file_lock        706         15      1.02 us     15.39 us      2.28 us       618 ns
->       slock-AF_INET6          8          1     10.38 us     10.38 us     10.38 us     10.38 us
->          &rq->__lock       2143          5      2.04 us     10.19 us      3.46 us       939 ns
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On 01/06/2022 23:43, Ian Rogers wrote:
+> On Wed, Jun 1, 2022 at 9:17 AM John Garry<john.garry@huawei.com>  wrote:
+>> On 27/05/2022 19:54, Ian Rogers wrote:
+>>> New architectures bring new complexity, such as Intel's hybrid
+>>> models. jevents provides an alternative to specifying events in the
+>>> kernel and exposing them through sysfs, however, it is difficult to
+>>> work with. For example, an error in the json input would yield an
+>>> error message but no json file or location. It is also a challenge to
+>>> update jsmn.c given its forked nature.
+>>>
+>>> The changes here switch from jevents.c to a rewrite in python called
+>>> jevents.py. This means there is a build time dependency on python, but
+>>> such a dependency already exists for asciidoc (used to generate perf's
+>>> man pages). If the build detects that python isn't present or is older
+>>> than version 3.6 (released Dec. 2016) then an empty file is
+>>> substituted for the generated one.
+>>>
+>>> A challenge with this code is in avoiding regressions. For this reason
+>>> the jevents.py produces identical output to jevents.c, validated with a
+>>> test script and build target.
+>>>
+>> Hi Ian,
+>>
+>> I still see this:
+>>
+>> ...
+>> Makefile.config:906: Python interpreter too old (older than 3.6)
+>> disabling jevent generation
+>> Makefile.config:939: Old version of libbfd/binutils things like PE
+>> executable profiling will not be available
+>> Makefile.config:1127: No openjdk development package found, please
+>> install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+>>
+>> Auto-detecting system features:
+>> ...                         dwarf: [ on  ]
+>> ...            dwarf_getlocations: [ on  ]
+>> ...                         glibc: [ on  ]
+>> ...                        libbfd: [ OFF ]
+>> ...                libbfd-buildid: [ OFF ]
+>> ...                        libcap: [ on  ]
+>> ...                        libelf: [ on  ]
+>> ...                       libnuma: [ on  ]
+>> ...        numa_num_possible_cpus: [ on  ]
+>> ...                       libperl: [ on  ]
+>> ...                     libpython: [ on  ]
+>> ...                     libcrypto: [ on  ]
+>> ...                     libunwind: [ on  ]
+>> ...            libdw-dwarf-unwind: [ on  ]
+>> ...                          zlib: [ on  ]
+>> ...                          lzma: [ on  ]
+>> ...                     get_cpuid: [ on  ]
+>> ...                           bpf: [ on  ]
+>> ...                        libaio: [ on  ]
+>> ...                       libzstd: [ on  ]
+>> ...        disassembler-four-args: [ on  ]
+>>
+>>
+>> make[3]: Nothing to be done for 'install_headers'.
+>> john@localhost:~/acme/tools/perf> python --version
+>> Python 3.6.12
+>>
+>> I need to figure out what is going wrong...
+> Thanks for testing John! Could you try adding something like this:
+> ```
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 9538d737d655..c23f39e21a70 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -901,6 +901,8 @@ ifneq ($(NO_JEVENTS),1)
+>      NO_JEVENTS := 1
+>    else
+>      # jevents.py uses f-strings present in Python 3.6 released in Dec. 2016.
+> +    PYTHON_VERSION=$(shell $(PYTHON) -c 'import sys;print(sys.version_info)')
+> +    $(error $(PYTHON_VERSION))
+>      JEVENTS_PYTHON_GOOD := $(shell $(PYTHON) -c 'import sys;print("1"
+> if(sys.version_info.major >=
+> 3 and sys.version_info.minor >= 6) else "0")')
+>      ifneq ($(JEVENTS_PYTHON_GOOD), 1)
+>        $(warning Python interpreter too old (older than 3.6) disabling
+> jevent generation)
+> ```
 
-Acked-by: Ian Rogers <irogers@google.com>
+That gives:
 
-Thanks,
-Ian
+Makefile.config:459: No libdw DWARF unwind found, Please install 
+elfutils-devel/libdw-dev >= 0.158 and/or set LIBDW_DIR
+Makefile.config:464: No libdw.h found or old libdw.h found or elfutils 
+is older than 0.138, disables dwarf support. Please install new 
+elfutils-devel/libdw-dev
+Makefile.config:617: DWARF support is off, BPF prologue is disabled
+Makefile.config:667: No debug_frame support found in libunwind-aarch64
+Makefile.config:738: No debug_frame support found in libunwind
+Makefile.config:906: *** sys.version_info(major=2, minor=7, micro=13, 
+releaselevel='final', serial=0).Stop.
+Makefile.perf:239: recipe for target 'sub-make' failed
+make[1]: *** [sub-make] Error 2
+Makefile:69: recipe for target 'all' failed
+make: *** [all] Error 2
+john@debian:~/linux/tools/perf$ python --version
+Python 3.6.9
+john@debian:~/linux/tools/perf$
 
-> ---
->  tools/perf/builtin-lock.c | 48 ++++++++++++++++++++++++++++++++-------
->  1 file changed, 40 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 23a33ac15e68..57e396323d05 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -251,6 +251,31 @@ struct lock_key {
->         struct list_head        list;
->  };
->
-> +static void lock_stat_key_print_time(unsigned long long nsec, int len)
-> +{
-> +       static const struct {
-> +               float base;
-> +               const char *unit;
-> +       } table[] = {
-> +               { 1e9 * 3600, "h " },
-> +               { 1e9 * 60, "m " },
-> +               { 1e9, "s " },
-> +               { 1e6, "ms" },
-> +               { 1e3, "us" },
-> +               { 0, NULL },
-> +       };
-> +
-> +       for (int i = 0; table[i].unit; i++) {
-> +               if (nsec < table[i].base)
-> +                       continue;
-> +
-> +               pr_info("%*.2f %s", len - 3, nsec / table[i].base, table[i].unit);
-> +               return;
-> +       }
-> +
-> +       pr_info("%*llu %s", len - 3, nsec, "ns");
-> +}
-> +
->  #define PRINT_KEY(member)                                              \
->  static void lock_stat_key_print_ ## member(struct lock_key *key,       \
->                                            struct lock_stat *ls)        \
-> @@ -258,11 +283,18 @@ static void lock_stat_key_print_ ## member(struct lock_key *key,  \
->         pr_info("%*llu", key->len, (unsigned long long)ls->member);     \
->  }
->
-> +#define PRINT_TIME(member)                                             \
-> +static void lock_stat_key_print_ ## member(struct lock_key *key,       \
-> +                                          struct lock_stat *ls)        \
-> +{                                                                      \
-> +       lock_stat_key_print_time((unsigned long long)ls->member, key->len);     \
-> +}
-> +
->  PRINT_KEY(nr_acquired)
->  PRINT_KEY(nr_contended)
-> -PRINT_KEY(avg_wait_time)
-> -PRINT_KEY(wait_time_total)
-> -PRINT_KEY(wait_time_max)
-> +PRINT_TIME(avg_wait_time)
-> +PRINT_TIME(wait_time_total)
-> +PRINT_TIME(wait_time_max)
->
->  static void lock_stat_key_print_wait_time_min(struct lock_key *key,
->                                               struct lock_stat *ls)
-> @@ -272,7 +304,7 @@ static void lock_stat_key_print_wait_time_min(struct lock_key *key,
->         if (wait_time == ULLONG_MAX)
->                 wait_time = 0;
->
-> -       pr_info("%*"PRIu64, key->len, wait_time);
-> +       lock_stat_key_print_time(wait_time, key->len);
->  }
->
->
-> @@ -291,10 +323,10 @@ static const char         *output_fields;
->  struct lock_key keys[] = {
->         DEF_KEY_LOCK(acquired, "acquired", nr_acquired, 10),
->         DEF_KEY_LOCK(contended, "contended", nr_contended, 10),
-> -       DEF_KEY_LOCK(avg_wait, "avg wait (ns)", avg_wait_time, 15),
-> -       DEF_KEY_LOCK(wait_total, "total wait (ns)", wait_time_total, 15),
-> -       DEF_KEY_LOCK(wait_max, "max wait (ns)", wait_time_max, 15),
-> -       DEF_KEY_LOCK(wait_min, "min wait (ns)", wait_time_min, 15),
-> +       DEF_KEY_LOCK(avg_wait, "avg wait", avg_wait_time, 12),
-> +       DEF_KEY_LOCK(wait_total, "total wait", wait_time_total, 12),
-> +       DEF_KEY_LOCK(wait_max, "max wait", wait_time_max, 12),
-> +       DEF_KEY_LOCK(wait_min, "min wait", wait_time_min, 12),
->
->         /* extra comparisons much complicated should be here */
->         { }
-> --
-> 2.36.1.255.ge46751e96f-goog
->
+> You can also specify which python you want on the make command line,
+> for example adding PYTHON=`which python` at the end of your make
+> command.
+
+diff -u tools/perf/trace/beauty/include/linux/socket.h 
+include/linux/socket.h
+Makefile.config:259: *** which python-config not found. Stop.
+Makefile.perf:239: recipe for target 'sub-make' failed
+make[1]: *** [sub-make] Error 2
+Makefile:69: recipe for target 'all' failed
+make: *** [all] Error 2
+john@debian:~/linux/tools/perf$
+
+JFYI, this is my alternatives:
+
+sudo update-alternatives --config python
+There are 3 choices for the alternative python (providing 
+/usr/bin/python).
+
+   Selection    Path			 Priority  Status
+------------------------------------------------------------
+   0            /usr/local/bin/python3.6   50        auto mode
+   1            /usr/bin/python2.7         1         manual mode
+   2            /usr/bin/python3.5         2         manual mode
+* 3            /usr/local/bin/python3.6   50        manual mode
+
+Press <enter> to keep the current choice[*], or type selection number: 
+
+
+
+Can someone else try this? Arnaldo?
+
+Sorry for being useless with this....
