@@ -2,83 +2,241 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2019C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 13:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56698C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 15:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236389AbiFONjQ (ORCPT
+        id S241510AbiFOPHu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 09:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47616 "EHLO
+        Wed, 15 Jun 2022 11:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354092AbiFONjP (ORCPT
+        with ESMTP id S238011AbiFOPHt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 09:39:15 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2E6633374;
-        Wed, 15 Jun 2022 06:39:14 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4DC7153B;
-        Wed, 15 Jun 2022 06:39:14 -0700 (PDT)
-Received: from [10.57.84.186] (unknown [10.57.84.186])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75B2E3F7F5;
-        Wed, 15 Jun 2022 06:39:11 -0700 (PDT)
-Subject: Re: [PATCH V6 6/8] perf/tools: Extend branch type classification
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, acme@kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220610035101.424112-1-anshuman.khandual@arm.com>
- <20220610035101.424112-7-anshuman.khandual@arm.com>
- <e0f29bc9-eae4-e433-2d4e-4dd53e31967d@arm.com>
- <8bfce917-84a6-23a2-d926-a1efa901f4f1@arm.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <60d21662-aa8f-b50a-b0a3-462f1b3dec43@arm.com>
-Date:   Wed, 15 Jun 2022 14:39:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Wed, 15 Jun 2022 11:07:49 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586D0BE28;
+        Wed, 15 Jun 2022 08:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655305668; x=1686841668;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CXQFgUFtaJrmqb7dbdE8TtUh3d8InjWxzbzSrWOzXFg=;
+  b=jicdFCU1THDmB2kmETTcLs6Xtsn3HA3EMDkqeCW4WMID3Kx7HwX/ThSc
+   oeYC7Z7lxKtMTqUWWD3fPjp959ugaIVAaoSqsuL5Wtv4XIOjgt7Foqvuh
+   AJterXlvPQabgTapmF0qe/S0V5aCZnuS55ufzlzZLh998Q3d3+reZQxep
+   3NRmBaDOAQ8723XjW8n3wDGOcOkCvSmKLzIQpiJYHt5nuqTO4dWElg20f
+   wgbULT4cuDNF4Xy1NiQRjpHbN83DC9SuxmM2jx2ATj1TUPOnPZvQJCsCs
+   sY/GBiVLWCT2+M6h6PniVqWroP7r1uezOtWmdtYUNwfZTNEpWPs9sD7Qq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10378"; a="279039943"
+X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
+   d="scan'208";a="279039943"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 08:07:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
+   d="scan'208";a="583248668"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by orsmga007.jf.intel.com with ESMTP; 15 Jun 2022 08:07:44 -0700
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@kernel.org, namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        zhengjun.xing@linux.intel.com
+Subject: [PATCH] perf record: Support "--cputype" option for hybrid events
+Date:   Wed, 15 Jun 2022 23:08:23 +0800
+Message-Id: <20220615150823.2230349-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <8bfce917-84a6-23a2-d926-a1efa901f4f1@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-On 15/06/2022 04:21, Anshuman Khandual wrote:
-> [...]
->  
-> +const char *get_branch_type(struct branch_entry *e)
-> +{
-> +	if (e->flags.type == PERF_BR_UNKNOWN)
-> +		return "";
->> There is a small change of behavior in "perf script --field brstack".
->> Unknown branches were printed as "-" before but now it's an empty
->> string.
-> get_branch_type() replaces print output in two different functions.
-> branch_stack__printf() used to print a space " " for PERF_BR_UNKNOWN,
-> and print_bstack_flags() used to print a "-" for PERF_BR_UNKNOWN.
-> When they are factorized via get_branch_type(), one of those print
-> formats need to be choosen.
+perf stat already has the "--cputype" option to enable events only on the
+specified PMU for the hybrid platform, this commit extends the "--cputype"
+support to perf record.
 
-Thanks for clarifying, Anshuman. I only bring it up in case somebody is
-parsing this line for their use case. While running on x86 I came across
-some UNKNOWN branches during my runs.
+Without "--cputype", it reports events for both cpu_core and cpu_atom.
 
-I have updated and sent a generic branch stack sampling perf test that
-supports both ("-" and empty string) just in case. Hope it's useful.
+ # ./perf record  -e cycles -a sleep 1 | ./perf report
 
-https://lore.kernel.org/all/20220615130901.1151397-1-german.gomez@arm.com/
+ # To display the perf.data header info, please use --header/--header-only options.
+ #
+ [ perf record: Woken up 1 times to write data ]
+ [ perf record: Captured and wrote 0.000 MB (null) ]
+ #
+ # Total Lost Samples: 0
+ #
+ # Samples: 335  of event 'cpu_core/cycles/'
+ # Event count (approx.): 35855267
+ #
+ # Overhead  Command          Shared Object      Symbol
+ # ........  ...............  .................  .........................................
+ #
+     10.31%  swapper          [kernel.kallsyms]  [k] poll_idle
+      9.42%  swapper          [kernel.kallsyms]  [k] menu_select
+      ...    ...               ...               ... ...
 
-Thanks,
-German
+ # Samples: 61  of event 'cpu_atom/cycles/'
+ # Event count (approx.): 16453825
+ #
+ # Overhead  Command        Shared Object      Symbol
+ # ........  .............  .................  ......................................
+ #
+     26.36%  snapd          [unknown]          [.] 0x0000563cc6d03841
+      7.43%  migration/13   [kernel.kallsyms]  [k] update_sd_lb_stats.constprop.0
+      ...    ...            ...                ... ...
+
+With "--cputype", it reports events only for the specified PMU.
+
+ # ./perf record --cputype core  -e cycles -a sleep 1 | ./perf report
+
+ # To display the perf.data header info, please use --header/--header-only options.
+ #
+ [ perf record: Woken up 1 times to write data ]
+ [ perf record: Captured and wrote 0.000 MB (null) ]
+ #
+ # Total Lost Samples: 0
+ #
+ # Samples: 221  of event 'cpu_core/cycles/'
+ # Event count (approx.): 27121818
+ #
+ # Overhead  Command          Shared Object      Symbol
+ # ........  ...............  .................  .........................................
+ #
+     11.24%  swapper          [kernel.kallsyms]  [k] e1000_irq_enable
+      7.77%  swapper          [kernel.kallsyms]  [k] mwait_idle_with_hints.constprop.0
+      ...    ...              ...                ... ...
+
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/Documentation/perf-record.txt |  4 ++++
+ tools/perf/builtin-record.c              |  3 +++
+ tools/perf/builtin-stat.c                | 20 --------------------
+ tools/perf/util/pmu-hybrid.c             | 19 +++++++++++++++++++
+ tools/perf/util/pmu-hybrid.h             |  2 ++
+ 5 files changed, 28 insertions(+), 20 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index cf8ad50f3de1..ba8d680da1ac 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -402,6 +402,10 @@ Enable weightened sampling. An additional weight is recorded per sample and can
+ displayed with the weight and local_weight sort keys.  This currently works for TSX
+ abort events and some memory events in precise mode on modern Intel CPUs.
+ 
++--cputype::
++Only enable events on applying cpu with this type for hybrid platform(e.g. core or atom).
++For non-hybrid events, it should be no effect.
++
+ --namespaces::
+ Record events of type PERF_RECORD_NAMESPACES.  This enables 'cgroup_id' sort key.
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 9a71f0330137..e1edd4e98358 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3183,6 +3183,9 @@ static struct option __record_options[] = {
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		    "be more verbose (show counter open errors, etc)"),
+ 	OPT_BOOLEAN('q', "quiet", &quiet, "don't print any message"),
++	OPT_CALLBACK(0, "cputype", &record.evlist, "hybrid cpu type",
++		     "Only enable events on applying cpu with this type for hybrid platform (e.g. core or atom)",
++		     parse_hybrid_type),
+ 	OPT_BOOLEAN('s', "stat", &record.opts.inherit_stat,
+ 		    "per thread counts"),
+ 	OPT_BOOLEAN('d', "data", &record.opts.sample_address, "Record the sample addresses"),
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 4ce87a8eb7d7..0d95b29273f4 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1184,26 +1184,6 @@ static int parse_stat_cgroups(const struct option *opt,
+ 	return parse_cgroups(opt, str, unset);
+ }
+ 
+-static int parse_hybrid_type(const struct option *opt,
+-			     const char *str,
+-			     int unset __maybe_unused)
+-{
+-	struct evlist *evlist = *(struct evlist **)opt->value;
+-
+-	if (!list_empty(&evlist->core.entries)) {
+-		fprintf(stderr, "Must define cputype before events/metrics\n");
+-		return -1;
+-	}
+-
+-	evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu(str);
+-	if (!evlist->hybrid_pmu_name) {
+-		fprintf(stderr, "--cputype %s is not supported!\n", str);
+-		return -1;
+-	}
+-
+-	return 0;
+-}
+-
+ static struct option stat_options[] = {
+ 	OPT_BOOLEAN('T', "transaction", &transaction_run,
+ 		    "hardware transaction statistics"),
+diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
+index f51ccaac60ee..5c490b5201b7 100644
+--- a/tools/perf/util/pmu-hybrid.c
++++ b/tools/perf/util/pmu-hybrid.c
+@@ -13,6 +13,7 @@
+ #include <stdarg.h>
+ #include <locale.h>
+ #include <api/fs/fs.h>
++#include "util/evlist.h"
+ #include "fncache.h"
+ #include "pmu-hybrid.h"
+ 
+@@ -87,3 +88,21 @@ char *perf_pmu__hybrid_type_to_pmu(const char *type)
+ 	free(pmu_name);
+ 	return NULL;
+ }
++
++int parse_hybrid_type(const struct option *opt, const char *str, int unset __maybe_unused)
++{
++	struct evlist *evlist = *(struct evlist **)opt->value;
++
++	if (!list_empty(&evlist->core.entries)) {
++		fprintf(stderr, "Must define cputype before events/metrics\n");
++		return -1;
++	}
++
++	evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu(str);
++	if (!evlist->hybrid_pmu_name) {
++		fprintf(stderr, "--cputype %s is not supported!\n", str);
++		return -1;
++	}
++
++	return 0;
++}
+diff --git a/tools/perf/util/pmu-hybrid.h b/tools/perf/util/pmu-hybrid.h
+index 2b186c26a43e..26101f134a3a 100644
+--- a/tools/perf/util/pmu-hybrid.h
++++ b/tools/perf/util/pmu-hybrid.h
+@@ -5,6 +5,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/compiler.h>
+ #include <linux/list.h>
++#include <subcmd/parse-options.h>
+ #include <stdbool.h>
+ #include "pmu.h"
+ 
+@@ -18,6 +19,7 @@ bool perf_pmu__hybrid_mounted(const char *name);
+ struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name);
+ bool perf_pmu__is_hybrid(const char *name);
+ char *perf_pmu__hybrid_type_to_pmu(const char *type);
++int parse_hybrid_type(const struct option *opt, const char *str, int unset __maybe_unused);
+ 
+ static inline int perf_pmu__hybrid_pmu_num(void)
+ {
+-- 
+2.25.1
+
