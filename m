@@ -2,97 +2,229 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB13CCA47A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 00:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A19C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 00:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbiFOAK1 (ORCPT
+        id S229908AbiFOAN5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 20:10:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55662 "EHLO
+        Tue, 14 Jun 2022 20:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235780AbiFOAKZ (ORCPT
+        with ESMTP id S238166AbiFOANr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 20:10:25 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFE132CDD5
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 17:10:22 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id y29so11471225ljd.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 17:10:22 -0700 (PDT)
+        Tue, 14 Jun 2022 20:13:47 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0231581C
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 17:13:46 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id q2-20020a170902dac200b00168b3978426so5615005plx.17
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 17:13:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ZT+Efo6l+fWT1GirYyYwbz0NJsp81iiUhfjEirzp/k=;
-        b=LJsnOP4CoKnvqaCcnqWlC4bwcEXcXTiyFVB96RpleJz6aoN2TOWXDruPGAL1t4uyav
-         fRwNhAGBhBCG9FfgAJ3paUHXoFOmWAnAYo1suprtZZ5mS25tQZhwbQv5FyI4sSd70YS5
-         4iXFdClQRAb4nXx27awSKYV5VKjXYyh/yvDxkXzfADWYsMrv9kWXj6lqX392Jp0L5Q+M
-         RDCj8GS+HyFvJrKemFToSdK9WwmAtasMd38Kf+NkdI70HOZ8A3ykXi6gR0SaKrJY9Ils
-         E0AXh2805qHeURJmVGo7/Yvc/7e+kFMmIUCTpAoz7cqgZ/Ep3kXXQ2MoSBlIpIlTi9El
-         knfg==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=VWOVk1jH/Ru1/0ssqOaKB13FZQZaZbbtFy4vR2AihMw=;
+        b=LwBF5P4EWnhcmnqlfh220XsbVgQ40ho2vvijCuCVrq7gnnj/aW2PKau3PQwpWSTc0R
+         WAwdHro0SkOGtQpjU1wPz1GxXhMYmKtFpiqUB7TJN31758mqmwuvV25zZ2OGDTxElC7z
+         SOzGTN4LzCMcDgrtlaDrIdHq+8m9uphIJkux74OXeKbrpIKcqMo7EBHTFytmnRo3qAO9
+         Sk4/b/sVysWZ8drQ1TJuzshwmozZC3qo8d6xRuvTa++Z+Xab7SnHQvlsqZ186Jv0yY6+
+         QL3X3/3BTfZ2EFeXU0VNCOOtzRWxTe2LzcB34sG8cWjbhf7BI0bKuYoalC7ZhHFEob/v
+         0EWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ZT+Efo6l+fWT1GirYyYwbz0NJsp81iiUhfjEirzp/k=;
-        b=w7NEQsHQFGy0QoZowj0vSssxa/BnI6drUKz6DJewGGpLE7kL4A5xUEL3Ya9LDka4mr
-         dRCpiYjsO6KCj5za3+1ZtyFIDxsSjZS+MZjEO5h/suzWtd+Nb09xprI2IOSL1nbz2XmV
-         7Z2ANS5ku0Q6+nMv4aLbGuwNgHavPAnSReqGkilrcHGC8r81W+wT110AmR3FsqT3AF+n
-         e4eM9Ar6SwtSx/8Alo30lVyoAJsTCZEybl83fQQbm2eL7mMvshUhWVstTuPaFiblTccL
-         6Wm9ONjJaQrI0WecVlwwBgFrG4spXGYMoGQgAnleBWWqKxQ5RMp8M6FhyigyxAYkh9X8
-         8TPw==
-X-Gm-Message-State: AJIora8EYQ8G87tzrUimOz2o/4xbvTV52/ND9DoSGsrRYsN+fqHwxg0I
-        bTO8F3XiSfUa4kH4maj5xRcrSIsOBKW5cdKHIyl5Fg==
-X-Google-Smtp-Source: AGRyM1tc8Y8MD8cs3DZZWCSYKv3VbS7+QZXAjenyYqIarR/gDOwbvsPN4LNGaN/+GpwS+/adL0KUFlgsnQ6JCoCkOaE=
-X-Received: by 2002:a05:651c:44f:b0:255:889c:d100 with SMTP id
- g15-20020a05651c044f00b00255889cd100mr3827072ljg.352.1655251820395; Tue, 14
- Jun 2022 17:10:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220607191550.4141024-1-blakejones@google.com>
- <YqZmSRS8UPQJzWFE@krava> <CAP_z_CgkJ8RgWevJnDiq-+JjB=ni0OzJ3npwW+S9RZ66i0Y3Kg@mail.gmail.com>
- <Yqh/EkVy99Bej46S@krava>
-In-Reply-To: <Yqh/EkVy99Bej46S@krava>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=VWOVk1jH/Ru1/0ssqOaKB13FZQZaZbbtFy4vR2AihMw=;
+        b=K/xSARdhW6hSjVuGSaCLnLalpGpvIqBkNh2j8wE8X1cvObtvvp3Pq7KNT7kM1RWYSC
+         xwOcaUXbONeStiAk23e/YPwAbVtDRoBaN2VAp6ya8G6hurx5wtMJguml90I6p/X3A1BT
+         kvQgyOFbfjT1s5ZE7od6HhQWtcCS4k56HF4+2KeDrAy5Np/60GtDYAG3BaSHFG34R0m2
+         LRP1KHJiarAU/2YL3yNcWRAEhaNEMfB242Ta0qAlsulKhCERlH3xsCqIT6XwbRg/OtGU
+         5wOYeZX7+0IehkG40TkNk5GtqW/T6W8oJjijBMvY7o/zrM+gyy5iAbIFxwFbzp1obSCB
+         3vlQ==
+X-Gm-Message-State: AJIora/2HFhUQH8MJ7nAdQJrNfYu6xgtULknUvjsHVe/6bNofG65g8Vh
+        Xm57tCXCoO2aemC7SzincRgLmMwizYEQdJDv
+X-Google-Smtp-Source: AGRyM1vGymm0xuf01VUXyVzBQro51MWVc/Eq45Kv64E7feWc10x4bxuGwSrgK5CdFJ0tBgDQz6uefp9zOxQKWKz7
+X-Received: from blakejones.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:411c])
+ (user=blakejones job=sendgmr) by 2002:a17:90a:fb90:b0:1e3:809:9296 with SMTP
+ id cp16-20020a17090afb9000b001e308099296mr7056679pjb.26.1655252025667; Tue,
+ 14 Jun 2022 17:13:45 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 17:13:34 -0700
+Message-Id: <20220615001334.611882-1-blakejones@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
+Subject: [PATCH v2] Add a "-m" option to "perf buildid-list".
 From:   Blake Jones <blakejones@google.com>
-Date:   Tue, 14 Jun 2022 17:10:09 -0700
-Message-ID: <CAP_z_Ci+Zm5v33hc-WaaLKj9ruJtBY-FMVhrcR7ZX1uJdquLvA@mail.gmail.com>
-Subject: Re: [PATCH RESEND] Add a "-m" option to "perf buildid-list".
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Blake Jones <blakejones@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 5:29 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> still there's kernel map included, so it's strange to me call it modules
->
->   --m/--kernel-maps ?
+This new option displays all of the information needed to do external
+BuildID-based symbolization of kernel stack traces, such as those collected
+by bpf_get_stackid(). For each kernel module plus the main kernel, it
+displays the BuildID, the start and end virtual addresses of that module's
+text range (rounded out to page boundaries), and the pathname of the
+module.
 
-Sure, I'll go with that.
+When run as a non-privileged user, the actual addresses of the modules'
+text ranges are not available, so the tools displays "0, <text length>" for
+kernel modules and "0, 0xffffffffffffffff" for the kernel itself.
 
-> > > also please state that it's from running kernel
-> >
-> > Happy to make this change.
-> >
-> > > any reason why not use the dso fields directly?
-> >
-> > I was just following my general software engineering instincts to
-> > encapsulate implementation details, so that e.g. the caller doesn't need to
-> > know about details such as the "has_build_id" boolean. I haven't made
-> > changes to perf before, so if that's not the preferred style, I can do it
-> > a different way.
->
-> we have some helpers for dso fields, but AFAICS long_name and has_build_id
-> are used directly all over the place
+Sample output:
 
-Okay, I've switched the code over to use those fields directly.
+root# perf buildid-list -m
+cf6df852fd4da122d616153353cc8f560fd12fe0 ffffffffa5400000 ffffffffa6001e27 [kernel.kallsyms]
+1aa7209aa2acb067d66ed6cf7676d65066384d61 ffffffffc0087000 ffffffffc008b000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/sha512_generic.ko
+3857815b5bf0183697b68f8fe0ea06121644041e ffffffffc008c000 ffffffffc0098000 /lib/modules/5.15.15-1rodete2-amd64/kernel/arch/x86/crypto/sha512-ssse3.ko
+4081fde0bca2bc097cb3e9d1efcb836047d485f1 ffffffffc0099000 ffffffffc009f000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/acpi/button.ko
+1ef81ba4890552ea6b0314f9635fc43fc8cef568 ffffffffc00a4000 ffffffffc00aa000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/cryptd.ko
+cc5c985506cb240d7d082b55ed260cbb851f983e ffffffffc00af000 ffffffffc00b6000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/i2c/busses/i2c-piix4.ko
+[...]
 
-New patch coming shortly.
+Signed-off-by: Blake Jones <blakejones@google.com>
+---
+ .../perf/Documentation/perf-buildid-list.txt  |  4 +++
+ tools/perf/builtin-buildid-list.c             | 35 ++++++++++++++++++-
+ tools/perf/util/machine.c                     | 13 +++++++
+ tools/perf/util/machine.h                     |  5 +++
+ 4 files changed, 56 insertions(+), 1 deletion(-)
 
-Blake
+diff --git a/tools/perf/Documentation/perf-buildid-list.txt b/tools/perf/Documentation/perf-buildid-list.txt
+index 25c52efcc7f0..e1e8fdbe06b9 100644
+--- a/tools/perf/Documentation/perf-buildid-list.txt
++++ b/tools/perf/Documentation/perf-buildid-list.txt
+@@ -33,6 +33,10 @@ OPTIONS
+ -k::
+ --kernel::
+ 	Show running kernel build id.
++-m::
++--kernel-maps::
++	Show buildid, start/end text address, and path of running kernel and
++	its modules.
+ -v::
+ --verbose::
+ 	Be more verbose.
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index cebadd632234..e73520190974 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -12,6 +12,7 @@
+ #include "util/build-id.h"
+ #include "util/debug.h"
+ #include "util/dso.h"
++#include "util/map.h"
+ #include <subcmd/pager.h>
+ #include <subcmd/parse-options.h>
+ #include "util/session.h"
+@@ -20,6 +21,31 @@
+ #include <errno.h>
+ #include <linux/err.h>
+ 
++static int buildid__map_cb(struct map *map, void *arg __maybe_unused)
++{
++	const struct dso *dso = map->dso;
++	char bid_buf[SBUILD_ID_SIZE];
++
++	memset(bid_buf, 0, sizeof(bid_buf));
++	if (dso->has_build_id)
++		build_id__sprintf(&dso->bid, bid_buf);
++	printf("%s %16lx %16lx", bid_buf, map->start, map->end);
++	if (dso->long_name != NULL)
++		printf(" %s", dso->long_name);
++	printf("\n");
++
++	return 0;
++}
++
++static void buildid__show_kernel_maps(void)
++{
++	struct machine *machine;
++
++	machine = machine__new_host();
++	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
++	machine__delete(machine);
++}
++
+ static int sysfs__fprintf_build_id(FILE *fp)
+ {
+ 	char sbuild_id[SBUILD_ID_SIZE];
+@@ -99,6 +125,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
+ int cmd_buildid_list(int argc, const char **argv)
+ {
+ 	bool show_kernel = false;
++	bool show_kernel_maps = false;
+ 	bool with_hits = false;
+ 	bool force = false;
+ 	const struct option options[] = {
+@@ -106,6 +133,8 @@ int cmd_buildid_list(int argc, const char **argv)
+ 	OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
+ 	OPT_BOOLEAN('k', "kernel", &show_kernel, "Show current kernel build id"),
++	OPT_BOOLEAN('m', "kernel-maps", &show_kernel_maps,
++	    "Show build id of current kernel + modules"),
+ 	OPT_INCR('v', "verbose", &verbose, "be more verbose"),
+ 	OPT_END()
+ 	};
+@@ -117,8 +146,12 @@ int cmd_buildid_list(int argc, const char **argv)
+ 	argc = parse_options(argc, argv, options, buildid_list_usage, 0);
+ 	setup_pager();
+ 
+-	if (show_kernel)
++	if (show_kernel) {
+ 		return !(sysfs__fprintf_build_id(stdout) > 0);
++	} else if (show_kernel_maps) {
++		buildid__show_kernel_maps();
++		return 0;
++	}
+ 
+ 	return perf_session__list_build_ids(force, with_hits);
+ }
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 009061852808..28fff9a02ab0 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -3327,3 +3327,16 @@ int machine__for_each_dso(struct machine *machine, machine__dso_t fn, void *priv
+ 	}
+ 	return err;
+ }
++
++int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, void *priv)
++{
++	struct maps *maps = machine__kernel_maps(machine);
++	struct map *map;
++	int err = 0;
++
++	for (map = maps__first(maps); map != NULL; map = map__next(map)) {
++		if (fn(map, priv))
++			err = -1;
++	}
++	return err;
++}
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 5d7daf7cb7bc..e1476343cbb2 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -262,6 +262,11 @@ typedef int (*machine__dso_t)(struct dso *dso, struct machine *machine, void *pr
+ 
+ int machine__for_each_dso(struct machine *machine, machine__dso_t fn,
+ 			  void *priv);
++
++typedef int (*machine__map_t)(struct map *map, void *priv);
++int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn,
++				 void *priv);
++
+ int machine__for_each_thread(struct machine *machine,
+ 			     int (*fn)(struct thread *thread, void *p),
+ 			     void *priv);
+
+base-commit: 1bcca2b1bd67f3c0e5c3a88ed16c6389f01a5b31
+-- 
+2.36.1.476.g0c4daa206d-goog
+
