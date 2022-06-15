@@ -2,1096 +2,1213 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD78FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 06:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16191C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 07:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234799AbiFOGvG (ORCPT
+        id S243575AbiFOHVH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 02:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
+        Wed, 15 Jun 2022 03:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234071AbiFOGvF (ORCPT
+        with ESMTP id S235803AbiFOHVG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 02:51:05 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A135344A15;
-        Tue, 14 Jun 2022 23:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655275862; x=1686811862;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Kql89oEzPOhbcVc0Z3BIbsdYNPTvzel+dHrKHtLkc0s=;
-  b=D97vI94lxY1xZgyh7cYSenbg9Mc8FO1dKKi7N5bB07EjF3vFwPEVwwih
-   4Q56XHXklsywKAxWvBXBC98NEfN7hueHNbPhQeJJ4XhOwfq5e400mgK4C
-   NRWVGf/Io3NPvNpPWvzVONB/mdSOY3hithk0uo4TnsmTMZJkMhaWq6bTT
-   Kju8ji1E0hOKVSNhxa+dRqPxh3RMcwhp3J0xa1DVogfQq9n/DtBPECmLk
-   79JO/ogZhouM+c9jFobzcM7gNvA2jlTlx7J2ocuSlVDfrpHhVdtNwH3d4
-   TNxQqytQAaxGcRrxUWwTIZWwm7MznQbEiGrlbppV/gooUOcaCvpWkILxR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10378"; a="365207679"
-X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
-   d="scan'208";a="365207679"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 23:51:02 -0700
-X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
-   d="scan'208";a="640826447"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.80])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 23:50:54 -0700
-Message-ID: <482ed1f6-af6f-b5cd-393f-77d91f24af9d@intel.com>
-Date:   Wed, 15 Jun 2022 09:50:49 +0300
+        Wed, 15 Jun 2022 03:21:06 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938F543AC3;
+        Wed, 15 Jun 2022 00:21:02 -0700 (PDT)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25F6rFNp005431;
+        Wed, 15 Jun 2022 07:20:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=loztZ/g3OyyCQWLE4tdUB8PdGklazx9FQN8w5eASFNA=;
+ b=Lkojo4Ahlfn/s6YBeLmmsY+byaEojvMJoQa2OS/pf/uuNdyNdB9KopNmyUCPVcnTKlb9
+ 8Pm/XsuFY/7ApKiuc/Uqbb9e3UDRxWtzpm4W5qfawDbrS/f8c9g/slDtSh+tv91T9SOy
+ JCDmW+1i85H91ig2YzFRHziU3VameYl05n9IUU0PVOQBxbpbh7631m11xqdYBOyLMro9
+ ksXVynHclKYHFrUjA5EQXsMXSgfr9SYyidgvNH8rHxmJIWBlsw53QcRYUEYA3huFIiL4
+ 9CrkyRMFPL1AlPcmTGxv0GQnLB6j4sfgV7dJUtI9twePmKVzrhYcR/u1s6QW44wycW9Z NQ== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gq72jd21d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jun 2022 07:20:57 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25F7KPpm031289;
+        Wed, 15 Jun 2022 07:20:55 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 3gmjajde3s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jun 2022 07:20:55 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25F7KqMl21823990
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jun 2022 07:20:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F00F352059;
+        Wed, 15 Jun 2022 07:20:51 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9D3405204F;
+        Wed, 15 Jun 2022 07:20:51 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf list: Add PMU pai_crypto event description for IBM z16
+Date:   Wed, 15 Jun 2022 09:20:43 +0200
+Message-Id: <20220615072043.2978743-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.9.1
-Subject: Re: [PATCH] perf io: Make open and read calls more robust
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Song Liu <songliubraving@fb.com>, Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        German Gomez <german.gomez@arm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Denis Nikitin <denik@chromium.org>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Fangrui Song <maskray@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220615060354.1763693-1-irogers@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220615060354.1763693-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: kQgJYSzjD0TkA4BlKJBxHCBCY1cCPvGT
+X-Proofpoint-GUID: kQgJYSzjD0TkA4BlKJBxHCBCY1cCPvGT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-15_03,2022-06-13_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2206150024
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15/06/22 09:03, Ian Rogers wrote:
-> Wrap open and read calls with TEMP_FAILURE_RETRY in case a signal
-> causes the syscall to need to restart.
+Add the event description for the IBM z16 pai_crypto PMU released with
+commit 1bf54f32f525 ("s390/pai: Add support for cryptography counters")
 
-Please expand on why you want this change.  Can you give an example
-of where it makes a difference?
+The document SA22-7832-13 "z/Architecture Principles of Operation",
+published May, 2022, contains the description of the
+Processor Activity Instrumentation Facility and the cryptography
+counter set., See Pages 5-110 to 5-113.
 
-It looks pretty ugly so maybe making replacement functions or macros
-is better e.g.
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ .../perf/pmu-events/arch/s390/cf_z16/pai.json | 1101 +++++++++++++++++
+ tools/perf/pmu-events/jevents.c               |    1 +
+ 2 files changed, 1102 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/pai.json
 
-#define open_retry(a, ...)                                 \
-    ({ long int __result;                                  \
-       do __result = (long int) open((a), ##__VA_ARGS__);  \
-       while (__result == -1L && errno == EINTR);          \
-       __result; })
-
-
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/api/io.h                       |  3 ++-
->  tools/lib/symbol/kallsyms.c              |  4 ++-
->  tools/perf/builtin-daemon.c              | 19 +++++++-------
->  tools/perf/builtin-ftrace.c              | 18 ++++++-------
->  tools/perf/builtin-inject.c              |  2 +-
->  tools/perf/builtin-kvm.c                 |  2 +-
->  tools/perf/builtin-record.c              |  6 ++---
->  tools/perf/builtin-sched.c               |  2 +-
->  tools/perf/builtin-script.c              |  2 +-
->  tools/perf/util/copyfile.c               |  2 +-
->  tools/perf/util/data.c                   | 11 ++++----
->  tools/perf/util/dso.c                    |  6 ++---
->  tools/perf/util/evlist.c                 |  6 ++---
->  tools/perf/util/lzma.c                   |  4 +--
->  tools/perf/util/namespaces.c             |  5 ++--
->  tools/perf/util/parse-events.c           |  6 ++---
->  tools/perf/util/pmu.c                    | 12 ++++-----
->  tools/perf/util/probe-event.c            |  4 +--
->  tools/perf/util/probe-file.c             | 10 ++++----
->  tools/perf/util/session.c                |  2 +-
->  tools/perf/util/symbol-elf.c             | 32 ++++++++++++------------
->  tools/perf/util/symbol-minimal.c         |  6 ++---
->  tools/perf/util/symbol.c                 |  4 +--
->  tools/perf/util/synthetic-events.c       |  7 +++---
->  tools/perf/util/trace-event-info.c       |  6 ++---
->  tools/perf/util/trace-event-read.c       |  5 ++--
->  tools/perf/util/unwind-libunwind-local.c |  4 +--
->  tools/perf/util/zlib.c                   |  5 ++--
->  28 files changed, 102 insertions(+), 93 deletions(-)
-> 
-> diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-> index 777c20f6b604..b292bbd39fb0 100644
-> --- a/tools/lib/api/io.h
-> +++ b/tools/lib/api/io.h
-> @@ -7,6 +7,7 @@
->  #ifndef __API_IO__
->  #define __API_IO__
->  
-> +#include <errno.h>
->  #include <stdlib.h>
->  #include <unistd.h>
->  
-> @@ -45,7 +46,7 @@ static inline int io__get_char(struct io *io)
->  		return -1;
->  
->  	if (ptr == io->end) {
-> -		ssize_t n = read(io->fd, io->buf, io->buf_len);
-> +		ssize_t n = TEMP_FAILURE_RETRY(read(io->fd, io->buf, io->buf_len));
->  
->  		if (n <= 0) {
->  			io->eof = true;
-> diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-> index e335ac2b9e19..5436c038c379 100644
-> --- a/tools/lib/symbol/kallsyms.c
-> +++ b/tools/lib/symbol/kallsyms.c
-> @@ -3,7 +3,9 @@
->  #include "api/io.h"
->  #include <stdio.h>
->  #include <sys/stat.h>
-> +#include <errno.h>
->  #include <fcntl.h>
-> +#include <unistd.h>
->  
->  u8 kallsyms2elf_type(char type)
->  {
-> @@ -36,7 +38,7 @@ int kallsyms__parse(const char *filename, void *arg,
->  	char bf[BUFSIZ];
->  	int err;
->  
-> -	io.fd = open(filename, O_RDONLY, 0);
-> +	io.fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY, 0));
->  
->  	if (io.fd < 0)
->  		return -1;
-> diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-> index 6cb3f6cc36d0..d4e1a5636056 100644
-> --- a/tools/perf/builtin-daemon.c
-> +++ b/tools/perf/builtin-daemon.c
-> @@ -351,7 +351,7 @@ static int daemon_session__run(struct daemon_session *session,
->  		return -1;
->  	}
->  
-> -	fd = open("/dev/null", O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open("/dev/null", O_RDONLY));
->  	if (fd < 0) {
->  		perror("failed: open /dev/null");
->  		return -1;
-> @@ -360,7 +360,7 @@ static int daemon_session__run(struct daemon_session *session,
->  	dup2(fd, 0);
->  	close(fd);
->  
-> -	fd = open(SESSION_OUTPUT, O_RDWR|O_CREAT|O_TRUNC, 0644);
-> +	fd = TEMP_FAILURE_RETRY(open(SESSION_OUTPUT, O_RDWR|O_CREAT|O_TRUNC, 0644));
->  	if (fd < 0) {
->  		perror("failed: open session output");
->  		return -1;
-> @@ -405,7 +405,8 @@ static pid_t handle_signalfd(struct daemon *daemon)
->  	 * coalesced in kernel and we can receive only single signal even
->  	 * if multiple SIGCHLD were generated.
->  	 */
-> -	err = read(daemon->signal_fd, &si, sizeof(struct signalfd_siginfo));
-> +	err = TEMP_FAILURE_RETRY(read(daemon->signal_fd, &si,
-> +				      sizeof(struct signalfd_siginfo)));
->  	if (err != sizeof(struct signalfd_siginfo)) {
->  		pr_err("failed to read signal fd\n");
->  		return -1;
-> @@ -522,7 +523,7 @@ static int daemon_session__control(struct daemon_session *session,
->  	scnprintf(control_path, sizeof(control_path), "%s/%s",
->  		  session->base, SESSION_CONTROL);
->  
-> -	control = open(control_path, O_WRONLY|O_NONBLOCK);
-> +	control = TEMP_FAILURE_RETRY(open(control_path, O_WRONLY|O_NONBLOCK));
->  	if (!control)
->  		return -1;
->  
-> @@ -531,7 +532,7 @@ static int daemon_session__control(struct daemon_session *session,
->  		scnprintf(ack_path, sizeof(ack_path), "%s/%s",
->  			  session->base, SESSION_ACK);
->  
-> -		ack = open(ack_path, O_RDONLY, O_NONBLOCK);
-> +		ack = TEMP_FAILURE_RETRY(open(ack_path, O_RDONLY, O_NONBLOCK));
->  		if (!ack) {
->  			close(control);
->  			return -1;
-> @@ -564,7 +565,7 @@ static int daemon_session__control(struct daemon_session *session,
->  		goto out;
->  	}
->  
-> -	err = read(ack, buf, sizeof(buf));
-> +	err = TEMP_FAILURE_RETRY(read(ack, buf, sizeof(buf)));
->  	if (err > 0)
->  		ret = strcmp(buf, "ack\n");
->  	else
-> @@ -1078,7 +1079,7 @@ static int handle_config_changes(struct daemon *daemon, int conf_fd,
->  	ssize_t len;
->  
->  	while (!(*config_changed)) {
-> -		len = read(conf_fd, buf, sizeof(buf));
-> +		len = TEMP_FAILURE_RETRY(read(conf_fd, buf, sizeof(buf)));
->  		if (len == -1) {
->  			if (errno != EAGAIN) {
->  				perror("failed: read");
-> @@ -1147,7 +1148,7 @@ static int check_lock(struct daemon *daemon)
->  
->  	scnprintf(path, sizeof(path), "%s/lock", daemon->base);
->  
-> -	fd = open(path, O_RDWR|O_CREAT|O_CLOEXEC, 0640);
-> +	fd = TEMP_FAILURE_RETRY(open(path, O_RDWR|O_CREAT|O_CLOEXEC, 0640));
->  	if (fd < 0)
->  		return -1;
->  
-> @@ -1201,7 +1202,7 @@ static int go_background(struct daemon *daemon)
->  		return -1;
->  	}
->  
-> -	fd = open("output", O_RDWR|O_CREAT|O_TRUNC, 0644);
-> +	fd = TEMP_FAILURE_RETRY(open("output", O_RDWR|O_CREAT|O_TRUNC, 0644));
->  	if (fd < 0) {
->  		perror("failed: open");
->  		return -1;
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 7de07bb16d23..7553e20f38b2 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -79,7 +79,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
->  	else
->  		flags |= O_TRUNC;
->  
-> -	fd = open(file, flags);
-> +	fd = TEMP_FAILURE_RETRY(open(file, flags));
->  	if (fd < 0) {
->  		pr_debug("cannot open tracing file: %s: %s\n",
->  			 name, str_error_r(errno, errbuf, sizeof(errbuf)));
-> @@ -132,7 +132,7 @@ static int read_tracing_file_to_stdout(const char *name)
->  		return -1;
->  	}
->  
-> -	fd = open(file, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(file, O_RDONLY));
->  	if (fd < 0) {
->  		pr_debug("cannot open tracing file: %s: %s\n",
->  			 name, str_error_r(errno, buf, sizeof(buf)));
-> @@ -141,7 +141,7 @@ static int read_tracing_file_to_stdout(const char *name)
->  
->  	/* read contents to stdout */
->  	while (true) {
-> -		int n = read(fd, buf, sizeof(buf));
-> +		int n = TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf)));
->  		if (n == 0)
->  			break;
->  		else if (n < 0)
-> @@ -608,7 +608,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  		goto out_reset;
->  	}
->  
-> -	trace_fd = open(trace_file, O_RDONLY);
-> +	trace_fd = TEMP_FAILURE_RETRY(open(trace_file, O_RDONLY));
->  
->  	put_tracing_file(trace_file);
->  
-> @@ -645,7 +645,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  			break;
->  
->  		if (pollfd.revents & POLLIN) {
-> -			int n = read(trace_fd, buf, sizeof(buf));
-> +			int n = TEMP_FAILURE_RETRY(read(trace_fd, buf, sizeof(buf)));
->  			if (n < 0)
->  				break;
->  			if (fwrite(buf, n, 1, stdout) != 1)
-> @@ -665,7 +665,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  
->  	/* read remaining buffer contents */
->  	while (true) {
-> -		int n = read(trace_fd, buf, sizeof(buf));
-> +		int n = TEMP_FAILURE_RETRY(read(trace_fd, buf, sizeof(buf)));
->  		if (n <= 0)
->  			break;
->  		if (fwrite(buf, n, 1, stdout) != 1)
-> @@ -826,7 +826,7 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
->  		return -1;
->  	}
->  
-> -	fd = open(trace_file, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(trace_file, O_RDONLY));
->  	if (fd < 0)
->  		pr_err("failed to open trace_pipe\n");
->  
-> @@ -913,7 +913,7 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
->  			break;
->  
->  		if (pollfd.revents & POLLIN) {
-> -			int n = read(trace_fd, buf, sizeof(buf) - 1);
-> +			int n = TEMP_FAILURE_RETRY(read(trace_fd, buf, sizeof(buf) - 1));
->  			if (n < 0)
->  				break;
->  
-> @@ -931,7 +931,7 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
->  
->  	/* read remaining buffer contents */
->  	while (!ftrace->target.use_bpf) {
-> -		int n = read(trace_fd, buf, sizeof(buf) - 1);
-> +		int n = TEMP_FAILURE_RETRY(read(trace_fd, buf, sizeof(buf) - 1));
->  		if (n <= 0)
->  			break;
->  		make_histogram(buckets, buf, n, line, ftrace->use_nsec);
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index a75bf11585b5..960b4a50583e 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -155,7 +155,7 @@ static int copy_bytes(struct perf_inject *inject, int fd, off_t size)
->  	int ret;
->  
->  	while (size > 0) {
-> -		ssz = read(fd, buf, min(size, (off_t)sizeof(buf)));
-> +		ssz = TEMP_FAILURE_RETRY(read(fd, buf, min(size, (off_t)sizeof(buf))));
->  		if (ssz < 0)
->  			return -errno;
->  		ret = output_bytes(inject, buf, ssz);
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 3696ae97f149..4dd8292d1941 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -880,7 +880,7 @@ static int perf_kvm__handle_timerfd(struct perf_kvm_stat *kvm)
->  	uint64_t c;
->  	int rc;
->  
-> -	rc = read(kvm->timerfd, &c, sizeof(uint64_t));
-> +	rc = TEMP_FAILURE_RETRY(read(kvm->timerfd, &c, sizeof(uint64_t)));
->  	if (rc < 0) {
->  		if (errno == EAGAIN)
->  			return 0;
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 9a71f0330137..361610bc96b6 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -902,7 +902,7 @@ static bool record__kcore_readable(struct machine *machine)
->  
->  	scnprintf(kcore, sizeof(kcore), "%s/proc/kcore", machine->root_dir);
->  
-> -	fd = open(kcore, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(kcore, O_RDONLY));
->  	if (fd < 0)
->  		return false;
->  
-> @@ -2049,7 +2049,7 @@ static int record__terminate_thread(struct record_thread *thread_data)
->  
->  	close(thread_data->pipes.msg[1]);
->  	thread_data->pipes.msg[1] = -1;
-> -	err = read(thread_data->pipes.ack[0], &ack, sizeof(ack));
-> +	err = TEMP_FAILURE_RETRY(read(thread_data->pipes.ack[0], &ack, sizeof(ack)));
->  	if (err > 0)
->  		pr_debug2("threads[%d]: sent %s\n", tid, thread_msg_tags[ack]);
->  	else
-> @@ -2097,7 +2097,7 @@ static int record__start_threads(struct record *rec)
->  			goto out_err;
->  		}
->  
-> -		err = read(thread_data[t].pipes.ack[0], &msg, sizeof(msg));
-> +		err = TEMP_FAILURE_RETRY(read(thread_data[t].pipes.ack[0], &msg, sizeof(msg)));
->  		if (err > 0)
->  			pr_debug2("threads[%d]: sent %s\n", rec->thread_data[t].tid,
->  				  thread_msg_tags[msg]);
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 646bd938927a..149787268d02 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -604,7 +604,7 @@ static u64 get_cpu_usage_nsec_self(int fd)
->  	u64 runtime;
->  	int ret;
->  
-> -	ret = read(fd, &runtime, sizeof(runtime));
-> +	ret = TEMP_FAILURE_RETRY(read(fd, &runtime, sizeof(runtime)));
->  	BUG_ON(ret != sizeof(runtime));
->  
->  	return runtime;
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index c689054002cc..844f5350bfdf 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -4207,7 +4207,7 @@ int cmd_script(int argc, const char **argv)
->  			goto out_delete;
->  		}
->  
-> -		input = open(data.path, O_RDONLY);	/* input_name */
-> +		input = TEMP_FAILURE_RETRY(open(data.path, O_RDONLY));	/* input_name */
->  		if (input < 0) {
->  			err = -errno;
->  			perror("failed to open file");
-> diff --git a/tools/perf/util/copyfile.c b/tools/perf/util/copyfile.c
-> index 47e03de7c235..c7bff4943936 100644
-> --- a/tools/perf/util/copyfile.c
-> +++ b/tools/perf/util/copyfile.c
-> @@ -112,7 +112,7 @@ static int copyfile_mode_ns(const char *from, const char *to, mode_t mode,
->  		goto out_close_to;
->  
->  	nsinfo__mountns_enter(nsi, &nsc);
-> -	fromfd = open(from, O_RDONLY);
-> +	fromfd = TEMP_FAILURE_RETRY(open(from, O_RDONLY));
->  	nsinfo__mountns_exit(&nsc);
->  	if (fromfd < 0)
->  		goto out_close_to;
-> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-> index caabeac24c69..a9066a3d914f 100644
-> --- a/tools/perf/util/data.c
-> +++ b/tools/perf/util/data.c
-> @@ -53,7 +53,8 @@ int perf_data__create_dir(struct perf_data *data, int nr)
->  			goto out_err;
->  		}
->  
-> -		ret = open(file->path, O_RDWR|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
-> +		ret = TEMP_FAILURE_RETRY(open(file->path, O_RDWR|O_CREAT|O_TRUNC,
-> +					      S_IRUSR|S_IWUSR));
->  		if (ret < 0) {
->  			ret = -errno;
->  			goto out_err;
-> @@ -123,7 +124,7 @@ int perf_data__open_dir(struct perf_data *data)
->  		if (!file->path)
->  			goto out_err;
->  
-> -		ret = open(file->path, O_RDONLY);
-> +		ret = TEMP_FAILURE_RETRY(open(file->path, O_RDONLY));
->  		if (ret < 0)
->  			goto out_err;
->  
-> @@ -248,7 +249,7 @@ static int open_file_read(struct perf_data *data)
->  	int fd;
->  	char sbuf[STRERR_BUFSIZE];
->  
-> -	fd = open(data->file.path, flags);
-> +	fd = TEMP_FAILURE_RETRY(open(data->file.path, flags));
->  	if (fd < 0) {
->  		int err = errno;
->  
-> @@ -288,8 +289,8 @@ static int open_file_write(struct perf_data *data)
->  	int fd;
->  	char sbuf[STRERR_BUFSIZE];
->  
-> -	fd = open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
-> -		  S_IRUSR|S_IWUSR);
-> +	fd = TEMP_FAILURE_RETRY(open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
-> +				     S_IRUSR|S_IWUSR));
->  
->  	if (fd < 0)
->  		pr_err("failed to open %s : %s\n", data->file.path,
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 5ac13958d1bd..40befa2429f9 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -300,7 +300,7 @@ int filename__decompress(const char *name, char *pathname,
->  	 * descriptor to the uncompressed file.
->  	 */
->  	if (!compressions[comp].is_compressed(name))
-> -		return open(name, O_RDONLY);
-> +		return TEMP_FAILURE_RETRY(open(name, O_RDONLY));
->  
->  	fd = mkstemp(tmpbuf);
->  	if (fd < 0) {
-> @@ -476,7 +476,7 @@ static int do_open(char *name)
->  	char sbuf[STRERR_BUFSIZE];
->  
->  	do {
-> -		fd = open(name, O_RDONLY|O_CLOEXEC);
-> +		fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY|O_CLOEXEC));
->  		if (fd >= 0)
->  			return fd;
->  
-> @@ -898,7 +898,7 @@ static ssize_t file_read(struct dso *dso, struct machine *machine,
->  		goto out;
->  	}
->  
-> -	ret = pread(dso->data.fd, data, DSO__DATA_CACHE_SIZE, offset);
-> +	ret = TEMP_FAILURE_RETRY(pread(dso->data.fd, data, DSO__DATA_CACHE_SIZE, offset));
->  out:
->  	pthread_mutex_unlock(&dso__data_open_lock);
->  	return ret;
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 48af7d379d82..ba0dcdf91120 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -1440,7 +1440,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
->  		/*
->  		 * Wait until the parent tells us to go.
->  		 */
-> -		ret = read(go_pipe[0], &bf, 1);
-> +		ret = TEMP_FAILURE_RETRY(read(go_pipe[0], &bf, 1));
->  		/*
->  		 * The parent will ask for the execvp() to be performed by
->  		 * writing exactly one byte, in workload.cork_fd, usually via
-> @@ -1837,7 +1837,7 @@ static int evlist__parse_control_fifo(const char *str, int *ctl_fd, int *ctl_fd_
->  	 * O_RDWR avoids POLLHUPs which is necessary to allow the other
->  	 * end of a FIFO to be repeatedly opened and closed.
->  	 */
-> -	fd = open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC);
-> +	fd = TEMP_FAILURE_RETRY(open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC));
->  	if (fd < 0) {
->  		pr_err("Failed to open '%s'\n", s);
->  		ret = -errno;
-> @@ -1848,7 +1848,7 @@ static int evlist__parse_control_fifo(const char *str, int *ctl_fd, int *ctl_fd_
->  
->  	if (p && *++p) {
->  		/* O_RDWR | O_NONBLOCK means the other end need not be open */
-> -		fd = open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC);
-> +		fd = TEMP_FAILURE_RETRY(open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC));
->  		if (fd < 0) {
->  			pr_err("Failed to open '%s'\n", p);
->  			ret = -errno;
-> diff --git a/tools/perf/util/lzma.c b/tools/perf/util/lzma.c
-> index 51424cdc3b68..93e0a6a53e28 100644
-> --- a/tools/perf/util/lzma.c
-> +++ b/tools/perf/util/lzma.c
-> @@ -109,7 +109,7 @@ int lzma_decompress_to_file(const char *input, int output_fd)
->  
->  bool lzma_is_compressed(const char *input)
->  {
-> -	int fd = open(input, O_RDONLY);
-> +	int fd = TEMP_FAILURE_RETRY(open(input, O_RDONLY));
->  	const uint8_t magic[6] = { 0xFD, '7', 'z', 'X', 'Z', 0x00 };
->  	char buf[6] = { 0 };
->  	ssize_t rc;
-> @@ -117,7 +117,7 @@ bool lzma_is_compressed(const char *input)
->  	if (fd < 0)
->  		return -1;
->  
-> -	rc = read(fd, buf, sizeof(buf));
-> +	rc = TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf)));
->  	close(fd);
->  	return rc == sizeof(buf) ?
->  	       memcmp(buf, magic, sizeof(buf)) == 0 : false;
-> diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-> index dd536220cdb9..89edfba6af06 100644
-> --- a/tools/perf/util/namespaces.c
-> +++ b/tools/perf/util/namespaces.c
-> @@ -9,6 +9,7 @@
->  #include "get_current_dir_name.h"
->  #include <sys/types.h>
->  #include <sys/stat.h>
-> +#include <errno.h>
->  #include <fcntl.h>
->  #include <limits.h>
->  #include <sched.h>
-> @@ -266,11 +267,11 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
->  	if (!oldcwd)
->  		return;
->  
-> -	oldns = open(curpath, O_RDONLY);
-> +	oldns = TEMP_FAILURE_RETRY(open(curpath, O_RDONLY));
->  	if (oldns < 0)
->  		goto errout;
->  
-> -	newns = open(nsi->mntns_path, O_RDONLY);
-> +	newns = TEMP_FAILURE_RETRY(open(nsi->mntns_path, O_RDONLY));
->  	if (newns < 0)
->  		goto errout;
->  
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 7ed235740431..75f8f2e44195 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -189,7 +189,7 @@ static int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
->  	int fd;
->  
->  	snprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path, evt_dir->d_name);
-> -	fd = open(evt_path, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(evt_path, O_RDONLY));
->  	if (fd < 0)
->  		return -EINVAL;
->  	close(fd);
-> @@ -233,10 +233,10 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
->  
->  			scnprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path,
->  				  evt_dirent->d_name);
-> -			fd = open(evt_path, O_RDONLY);
-> +			fd = TEMP_FAILURE_RETRY(open(evt_path, O_RDONLY));
->  			if (fd < 0)
->  				continue;
-> -			if (read(fd, id_buf, sizeof(id_buf)) < 0) {
-> +			if (TEMP_FAILURE_RETRY(read(fd, id_buf, sizeof(id_buf))) < 0) {
->  				close(fd);
->  				continue;
->  			}
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 9a1c7e63e663..59252cfc2b5b 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -154,14 +154,14 @@ static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, char *dir, char *
->  
->  	scnprintf(path, PATH_MAX, "%s/%s.scale", dir, name);
->  
-> -	fd = open(path, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY));
->  	if (fd == -1)
->  		return -1;
->  
->  	if (fstat(fd, &st) < 0)
->  		goto error;
->  
-> -	sret = read(fd, scale, sizeof(scale)-1);
-> +	sret = TEMP_FAILURE_RETRY(read(fd, scale, sizeof(scale)-1));
->  	if (sret < 0)
->  		goto error;
->  
-> @@ -184,11 +184,11 @@ static int perf_pmu__parse_unit(struct perf_pmu_alias *alias, char *dir, char *n
->  
->  	scnprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
->  
-> -	fd = open(path, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY));
->  	if (fd == -1)
->  		return -1;
->  
-> -	sret = read(fd, alias->unit, UNIT_MAX_LEN);
-> +	sret = TEMP_FAILURE_RETRY(read(fd, alias->unit, UNIT_MAX_LEN));
->  	if (sret < 0)
->  		goto error;
->  
-> @@ -214,7 +214,7 @@ perf_pmu__parse_per_pkg(struct perf_pmu_alias *alias, char *dir, char *name)
->  
->  	scnprintf(path, PATH_MAX, "%s/%s.per-pkg", dir, name);
->  
-> -	fd = open(path, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY));
->  	if (fd == -1)
->  		return -1;
->  
-> @@ -232,7 +232,7 @@ static int perf_pmu__parse_snapshot(struct perf_pmu_alias *alias,
->  
->  	scnprintf(path, PATH_MAX, "%s/%s.snapshot", dir, name);
->  
-> -	fd = open(path, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY));
->  	if (fd == -1)
->  		return -1;
->  
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 062b5cbe67af..7838889f55df 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -276,7 +276,7 @@ static char *find_module_name(const char *module)
->  	char *mod_name = NULL;
->  	int name_offset;
->  
-> -	fd = open(module, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(module, O_RDONLY));
->  	if (fd < 0)
->  		return NULL;
->  
-> @@ -598,7 +598,7 @@ static int get_text_start_address(const char *exec, u64 *address,
->  	struct nscookie nsc;
->  
->  	nsinfo__mountns_enter(nsi, &nsc);
-> -	fd = open(exec, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(exec, O_RDONLY));
->  	nsinfo__mountns_exit(&nsc);
->  	if (fd < 0)
->  		return -errno;
-> diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-> index 3d50de3217d5..b788932656e8 100644
-> --- a/tools/perf/util/probe-file.c
-> +++ b/tools/perf/util/probe-file.c
-> @@ -115,9 +115,9 @@ int open_trace_file(const char *trace_file, bool readwrite)
->  	if (ret >= 0) {
->  		pr_debug("Opening %s write=%d\n", buf, readwrite);
->  		if (readwrite && !probe_event_dry_run)
-> -			ret = open(buf, O_RDWR | O_APPEND, 0);
-> +			ret = TEMP_FAILURE_RETRY(open(buf, O_RDWR | O_APPEND, 0));
->  		else
-> -			ret = open(buf, O_RDONLY, 0);
-> +			ret = TEMP_FAILURE_RETRY(open(buf, O_RDONLY, 0));
->  
->  		if (ret < 0)
->  			ret = -errno;
-> @@ -180,7 +180,7 @@ struct strlist *probe_file__get_rawlist(int fd)
->  	if (sl == NULL)
->  		return NULL;
->  
-> -	fddup = dup(fd);
-> +	fddup = TEMP_FAILURE_RETRY(dup(fd));
->  	if (fddup < 0)
->  		goto out_free_sl;
->  
-> @@ -498,7 +498,7 @@ static int probe_cache__open(struct probe_cache *pcache, const char *target,
->  	}
->  
->  	snprintf(cpath, PATH_MAX, "%s/probes", dir_name);
-> -	fd = open(cpath, O_CREAT | O_RDWR, 0644);
-> +	fd = TEMP_FAILURE_RETRY(open(cpath, O_CREAT | O_RDWR, 0644));
->  	if (fd < 0)
->  		pr_debug("Failed to open cache(%d): %s\n", fd, cpath);
->  	free(dir_name);
-> @@ -514,7 +514,7 @@ static int probe_cache__load(struct probe_cache *pcache)
->  	int ret = 0, fddup;
->  	FILE *fp;
->  
-> -	fddup = dup(pcache->fd);
-> +	fddup = TEMP_FAILURE_RETRY(dup(pcache->fd));
->  	if (fddup < 0)
->  		return -errno;
->  	fp = fdopen(fddup, "r");
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 0acb9de54b06..b2fc389cc530 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -384,7 +384,7 @@ static int skipn(int fd, off_t n)
->  	ssize_t ret;
->  
->  	while (n > 0) {
-> -		ret = read(fd, buf, min(n, (off_t)sizeof(buf)));
-> +		ret = TEMP_FAILURE_RETRY(read(fd, buf, min(n, (off_t)sizeof(buf))));
->  		if (ret <= 0)
->  			return ret;
->  		n -= ret;
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index ecd377938eea..02556070a2ce 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -577,7 +577,7 @@ static int read_build_id(const char *filename, struct build_id *bid)
->  	if (size < BUILD_ID_SIZE)
->  		goto out;
->  
-> -	fd = open(filename, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
->  	if (fd < 0)
->  		goto out;
->  
-> @@ -638,7 +638,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
->  	size_t size = sizeof(bid->data);
->  	int fd, err = -1;
->  
-> -	fd = open(filename, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
->  	if (fd < 0)
->  		goto out;
->  
-> @@ -647,24 +647,24 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
->  		GElf_Nhdr nhdr;
->  		size_t namesz, descsz;
->  
-> -		if (read(fd, &nhdr, sizeof(nhdr)) != sizeof(nhdr))
-> +		if (TEMP_FAILURE_RETRY(read(fd, &nhdr, sizeof(nhdr))) != sizeof(nhdr))
->  			break;
->  
->  		namesz = NOTE_ALIGN(nhdr.n_namesz);
->  		descsz = NOTE_ALIGN(nhdr.n_descsz);
->  		if (nhdr.n_type == NT_GNU_BUILD_ID &&
->  		    nhdr.n_namesz == sizeof("GNU")) {
-> -			if (read(fd, bf, namesz) != (ssize_t)namesz)
-> +			if (TEMP_FAILURE_RETRY(read(fd, bf, namesz)) != (ssize_t)namesz)
->  				break;
->  			if (memcmp(bf, "GNU", sizeof("GNU")) == 0) {
->  				size_t sz = min(descsz, size);
-> -				if (read(fd, bid->data, sz) == (ssize_t)sz) {
-> +				if (TEMP_FAILURE_RETRY(read(fd, bid->data, sz)) == (ssize_t)sz) {
->  					memset(bid->data + sz, 0, size - sz);
->  					bid->size = sz;
->  					err = 0;
->  					break;
->  				}
-> -			} else if (read(fd, bf, descsz) != (ssize_t)descsz)
-> +			} else if (TEMP_FAILURE_RETRY(read(fd, bf, descsz)) != (ssize_t)descsz)
->  				break;
->  		} else {
->  			int n = namesz + descsz;
-> @@ -674,7 +674,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
->  				pr_debug("%s: truncating reading of build id in sysfs file %s: n_namesz=%u, n_descsz=%u.\n",
->  					 __func__, filename, nhdr.n_namesz, nhdr.n_descsz);
->  			}
-> -			if (read(fd, bf, n) != n)
-> +			if (TEMP_FAILURE_RETRY(read(fd, bf, n)) != n)
->  				break;
->  		}
->  	}
-> @@ -732,7 +732,7 @@ int filename__read_debuglink(const char *filename, char *debuglink,
->  	Elf_Scn *sec;
->  	Elf_Kind ek;
->  
-> -	fd = open(filename, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
->  	if (fd < 0)
->  		goto out;
->  
-> @@ -844,7 +844,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
->  
->  		type = dso->symtab_type;
->  	} else {
-> -		fd = open(name, O_RDONLY);
-> +		fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY));
->  		if (fd < 0) {
->  			dso->load_errno = errno;
->  			return -1;
-> @@ -1454,7 +1454,7 @@ static int copy_bytes(int from, off_t from_offs, int to, off_t to_offs, u64 len)
->  		if (len < n)
->  			n = len;
->  		/* Use read because mmap won't work on proc files */
-> -		r = read(from, buf, n);
-> +		r = TEMP_FAILURE_RETRY(read(from, buf, n));
->  		if (r < 0)
->  			goto out;
->  		if (!r)
-> @@ -1485,7 +1485,7 @@ static int kcore__open(struct kcore *kcore, const char *filename)
->  {
->  	GElf_Ehdr *ehdr;
->  
-> -	kcore->fd = open(filename, O_RDONLY);
-> +	kcore->fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
->  	if (kcore->fd == -1)
->  		return -1;
->  
-> @@ -1518,7 +1518,7 @@ static int kcore__init(struct kcore *kcore, char *filename, int elfclass,
->  	if (temp)
->  		kcore->fd = mkstemp(filename);
->  	else
-> -		kcore->fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400);
-> +		kcore->fd = TEMP_FAILURE_RETRY(open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400));
->  	if (kcore->fd == -1)
->  		return -1;
->  
-> @@ -1966,7 +1966,7 @@ static int kcore_copy__compare_fds(int from, int to)
->  
->  	while (1) {
->  		/* Use read because mmap won't work on proc files */
-> -		ret = read(from, buf_from, page_size);
-> +		ret = TEMP_FAILURE_RETRY(read(from, buf_from, page_size));
->  		if (ret < 0)
->  			goto out;
->  
-> @@ -1994,11 +1994,11 @@ static int kcore_copy__compare_files(const char *from_filename,
->  {
->  	int from, to, err = -1;
->  
-> -	from = open(from_filename, O_RDONLY);
-> +	from = TEMP_FAILURE_RETRY(open(from_filename, O_RDONLY));
->  	if (from < 0)
->  		return -1;
->  
-> -	to = open(to_filename, O_RDONLY);
-> +	to = TEMP_FAILURE_RETRY(open(to_filename, O_RDONLY));
->  	if (to < 0)
->  		goto out_close_from;
->  
-> @@ -2419,7 +2419,7 @@ int get_sdt_note_list(struct list_head *head, const char *target)
->  	Elf *elf;
->  	int fd, ret;
->  
-> -	fd = open(target, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(target, O_RDONLY));
->  	if (fd < 0)
->  		return -EBADF;
->  
-> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-> index f9eb0bee7f15..7e25d476b1b2 100644
-> --- a/tools/perf/util/symbol-minimal.c
-> +++ b/tools/perf/util/symbol-minimal.c
-> @@ -230,7 +230,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
->  	size_t buf_size;
->  	void *buf;
->  
-> -	fd = open(filename, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
->  	if (fd < 0)
->  		return -1;
->  
-> @@ -242,7 +242,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
->  	if (buf == NULL)
->  		goto out;
->  
-> -	if (read(fd, buf, buf_size) != (ssize_t) buf_size)
-> +	if (TEMP_FAILURE_RETRY(read(fd, buf, buf_size)) != (ssize_t) buf_size)
->  		goto out_free;
->  
->  	ret = read_build_id(buf, buf_size, bid, false);
-> @@ -256,7 +256,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
->  int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
->  	         enum dso_binary_type type)
->  {
-> -	int fd = open(name, O_RDONLY);
-> +	int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY));
->  	if (fd < 0)
->  		goto out_errno;
->  
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index f72baf636724..5212667ea67d 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1335,7 +1335,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->  	md.dso = dso;
->  	INIT_LIST_HEAD(&md.maps);
->  
-> -	fd = open(kcore_filename, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(kcore_filename, O_RDONLY));
->  	if (fd < 0) {
->  		pr_debug("Failed to open %s. Note /proc/kcore requires CAP_SYS_RAWIO capability to access.\n",
->  			 kcore_filename);
-> @@ -2156,7 +2156,7 @@ static int find_matching_kcore(struct map *map, char *dir, size_t dir_sz)
->   */
->  static bool filename__readable(const char *file)
->  {
-> -	int fd = open(file, O_RDONLY);
-> +	int fd = TEMP_FAILURE_RETRY(open(file, O_RDONLY));
->  	if (fd < 0)
->  		return false;
->  	close(fd);
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> index 76beda3e1a10..9dcc268bd69c 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -40,6 +40,7 @@
->  #include <api/io.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
-> +#include <errno.h>
->  #include <fcntl.h>
->  #include <unistd.h>
->  
-> @@ -86,13 +87,13 @@ static int perf_event__get_comm_ids(pid_t pid, pid_t tid, char *comm, size_t len
->  	else
->  		snprintf(bf, sizeof(bf), "/proc/%d/status", tid);
->  
-> -	fd = open(bf, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(bf, O_RDONLY));
->  	if (fd < 0) {
->  		pr_debug("couldn't open %s\n", bf);
->  		return -1;
->  	}
->  
-> -	n = read(fd, bf, sizeof(bf) - 1);
-> +	n = TEMP_FAILURE_RETRY(read(fd, bf, sizeof(bf) - 1));
->  	close(fd);
->  	if (n <= 0) {
->  		pr_warning("Couldn't get COMM, tigd and ppid for pid %d\n",
-> @@ -410,7 +411,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
->  	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
->  		machine->root_dir, pid, pid);
->  
-> -	io.fd = open(bf, O_RDONLY, 0);
-> +	io.fd = TEMP_FAILURE_RETRY(open(bf, O_RDONLY, 0));
->  	if (io.fd < 0) {
->  		/*
->  		 * We raced with a task exiting - just return:
-> diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-> index a65f65d0857e..c917a4217c6f 100644
-> --- a/tools/perf/util/trace-event-info.c
-> +++ b/tools/perf/util/trace-event-info.c
-> @@ -48,7 +48,7 @@ static int record_file(const char *file, ssize_t hdr_sz)
->  	int r, fd;
->  	int err = -EIO;
->  
-> -	fd = open(file, O_RDONLY);
-> +	fd = TEMP_FAILURE_RETRY(open(file, O_RDONLY));
->  	if (fd < 0) {
->  		pr_debug("Can't read '%s'", file);
->  		return -errno;
-> @@ -61,7 +61,7 @@ static int record_file(const char *file, ssize_t hdr_sz)
->  	}
->  
->  	do {
-> -		r = read(fd, buf, BUFSIZ);
-> +		r = TEMP_FAILURE_RETRY(read(fd, buf, BUFSIZ));
->  		if (r > 0) {
->  			size += r;
->  			if (write(output_fd, buf, r) != r)
-> @@ -519,7 +519,7 @@ struct tracing_data *tracing_data_get(struct list_head *pattrs,
->  			return NULL;
->  		}
->  
-> -		temp_fd = open(tdata->temp_file, O_RDWR);
-> +		temp_fd = TEMP_FAILURE_RETRY(open(tdata->temp_file, O_RDWR));
->  		if (temp_fd < 0) {
->  			pr_debug("Can't read '%s'", tdata->temp_file);
->  			free(tdata);
-> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
-> index 8a01af783310..7086770ec225 100644
-> --- a/tools/perf/util/trace-event-read.c
-> +++ b/tools/perf/util/trace-event-read.c
-> @@ -11,6 +11,7 @@
->  #include <sys/stat.h>
->  #include <sys/wait.h>
->  #include <sys/mman.h>
-> +#include <errno.h>
->  #include <fcntl.h>
->  #include <unistd.h>
->  #include <errno.h>
-> @@ -28,7 +29,7 @@ static int __do_read(int fd, void *buf, int size)
->  	int rsize = size;
->  
->  	while (size) {
-> -		int ret = read(fd, buf, size);
-> +		int ret = TEMP_FAILURE_RETRY(read(fd, buf, size));
->  
->  		if (ret <= 0)
->  			return -1;
-> @@ -105,7 +106,7 @@ static char *read_string(void)
->  	char c;
->  
->  	for (;;) {
-> -		r = read(input_fd, &c, 1);
-> +		r = TEMP_FAILURE_RETRY(read(input_fd, &c, 1));
->  		if (r < 0) {
->  			pr_debug("reading input file");
->  			goto out;
-> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-> index 37622699c91a..2ece387a73c6 100644
-> --- a/tools/perf/util/unwind-libunwind-local.c
-> +++ b/tools/perf/util/unwind-libunwind-local.c
-> @@ -362,7 +362,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
->  		}
->  
->  		if (ofs <= 0) {
-> -			fd = open(dso->symsrc_filename, O_RDONLY);
-> +			fd = TEMP_FAILURE_RETRY(open(dso->symsrc_filename, O_RDONLY));
->  			if (fd >= 0) {
->  				ofs = elf_section_offset(fd, ".debug_frame");
->  				close(fd);
-> @@ -377,7 +377,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
->  				dso, DSO_BINARY_TYPE__DEBUGLINK,
->  				machine->root_dir, debuglink, PATH_MAX);
->  			if (!ret) {
-> -				fd = open(debuglink, O_RDONLY);
-> +				fd = TEMP_FAILURE_RETRY(open(debuglink, O_RDONLY));
->  				if (fd >= 0) {
->  					ofs = elf_section_offset(fd,
->  							".debug_frame");
-> diff --git a/tools/perf/util/zlib.c b/tools/perf/util/zlib.c
-> index 78d2297c1b67..f4563ea094c8 100644
-> --- a/tools/perf/util/zlib.c
-> +++ b/tools/perf/util/zlib.c
-> @@ -1,4 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#include <errno.h>
->  #include <fcntl.h>
->  #include <stdio.h>
->  #include <string.h>
-> @@ -82,7 +83,7 @@ int gzip_decompress_to_file(const char *input, int output_fd)
->  
->  bool gzip_is_compressed(const char *input)
->  {
-> -	int fd = open(input, O_RDONLY);
-> +	int fd = TEMP_FAILURE_RETRY(open(input, O_RDONLY));
->  	const uint8_t magic[2] = { 0x1f, 0x8b };
->  	char buf[2] = { 0 };
->  	ssize_t rc;
-> @@ -90,7 +91,7 @@ bool gzip_is_compressed(const char *input)
->  	if (fd < 0)
->  		return -1;
->  
-> -	rc = read(fd, buf, sizeof(buf));
-> +	rc = TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf)));
->  	close(fd);
->  	return rc == sizeof(buf) ?
->  	       memcmp(buf, magic, sizeof(buf)) == 0 : false;
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai.json b/tools/perf/pmu-events/arch/s390/cf_z16/pai.json
+new file mode 100644
+index 000000000000..cf8563d059b9
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai.json
+@@ -0,0 +1,1101 @@
++[
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4096",
++		"EventName": "CRYPTO_ALL",
++		"BriefDescription": "CRYPTO ALL",
++		"PublicDescription": "Sums of all non zero cryptography counters"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4097",
++		"EventName": "KM_DEA",
++		"BriefDescription": "KM DEA",
++		"PublicDescription": "KM-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4098",
++		"EventName": "KM_TDEA_128",
++		"BriefDescription": "KM TDEA 128",
++		"PublicDescription": "KM-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4099",
++		"EventName": "KM_TDEA_192",
++		"BriefDescription": "KM TDEA 192",
++		"PublicDescription": "KM-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4100",
++		"EventName": "KM_ENCRYPTED_DEA",
++		"BriefDescription": "KM ENCRYPTED DEA",
++		"PublicDescription": "KM-Encrypted-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4101",
++		"EventName": "KM_ENCRYPTED_TDEA_128",
++		"BriefDescription": "KM ENCRYPTED TDEA 128",
++		"PublicDescription": "KM-Encrypted-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4102",
++		"EventName": "KM_ENCRYPTED_TDEA_192",
++		"BriefDescription": "KM ENCRYPTED TDEA 192",
++		"PublicDescription": "KM-Encrypted-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4103",
++		"EventName": "KM_AES_128",
++		"BriefDescription": "KM AES 128",
++		"PublicDescription": "KM-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4104",
++		"EventName": "KM_AES_192",
++		"BriefDescription": "KM AES 192",
++		"PublicDescription": "KM-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4105",
++		"EventName": "KM_AES_256",
++		"BriefDescription": "KM AES 256",
++		"PublicDescription": "KM-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4106",
++		"EventName": "KM_ENCRYPTED_AES_128",
++		"BriefDescription": "KM ENCRYPTED AES 128",
++		"PublicDescription": "KM-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4107",
++		"EventName": "KM_ENCRYPTED_AES_192",
++		"BriefDescription": "KM ENCRYPTED AES 192",
++		"PublicDescription": "KM-Encrypted-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4108",
++		"EventName": "KM_ENCRYPTED_AES_256",
++		"BriefDescription": "KM ENCRYPTED AES 256",
++		"PublicDescription": "KM-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4109",
++		"EventName": "KM_XTS_AES_128",
++		"BriefDescription": "KM XTS AES 128",
++		"PublicDescription": "KM-XTS-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4110",
++		"EventName": "KM_XTS_AES_256",
++		"BriefDescription": "KM XTS AES 256",
++		"PublicDescription": "KM-XTS-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4111",
++		"EventName": "KM_XTS_ENCRYPTED_AES_128",
++		"BriefDescription": "KM XTS ENCRYPTED AES 128",
++		"PublicDescription": "KM-XTS-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4112",
++		"EventName": "KM_XTS_ENCRYPTED_AES_256",
++		"BriefDescription": "KM XTS ENCRYPTED AES 256",
++		"PublicDescription": "KM-XTS-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4113",
++		"EventName": "KMC_DEA",
++		"BriefDescription": "KMC DEA",
++		"PublicDescription": "KMC-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4114",
++		"EventName": "KMC_TDEA_128",
++		"BriefDescription": "KMC TDEA 128",
++		"PublicDescription": "KMC-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4115",
++		"EventName": "KMC_TDEA_192",
++		"BriefDescription": "KMC TDEA 192",
++		"PublicDescription": "KMC-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4116",
++		"EventName": "KMC_ENCRYPTED_DEA",
++		"BriefDescription": "KMC ENCRYPTED DEA",
++		"PublicDescription": "KMC-Encrypted-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4117",
++		"EventName": "KMC_ENCRYPTED_TDEA_128",
++		"BriefDescription": "KMC ENCRYPTED TDEA 128",
++		"PublicDescription": "KMC-Encrypted-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4118",
++		"EventName": "KMC_ENCRYPTED_TDEA_192",
++		"BriefDescription": "KMC ENCRYPTED TDEA 192",
++		"PublicDescription": "KMC-Encrypted-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4119",
++		"EventName": "KMC_AES_128",
++		"BriefDescription": "KMC AES 128",
++		"PublicDescription": "KMC-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4120",
++		"EventName": "KMC_AES_192",
++		"BriefDescription": "KMC AES 192",
++		"PublicDescription": "KMC-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4121",
++		"EventName": "KMC_AES_256",
++		"BriefDescription": "KMC AES 256",
++		"PublicDescription": "KMC-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4122",
++		"EventName": "KMC_ENCRYPTED_AES_128",
++		"BriefDescription": "KMC ENCRYPTED AES 128",
++		"PublicDescription": "KMC-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4123",
++		"EventName": "KMC_ENCRYPTED_AES_192",
++		"BriefDescription": "KMC ENCRYPTED AES 192",
++		"PublicDescription": "KMC-Encrypted-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4124",
++		"EventName": "KMC_ENCRYPTED_AES_256",
++		"BriefDescription": "KMC ENCRYPTED AES 256",
++		"PublicDescription": "KMC-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4125",
++		"EventName": "KMC_PRNG",
++		"BriefDescription": "KMC PRNG",
++		"PublicDescription": "KMC-PRNG function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4126",
++		"EventName": "KMA_GCM_AES_128",
++		"BriefDescription": "KMA GCM AES 128",
++		"PublicDescription": "KMA-GCM-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4127",
++		"EventName": "KMA_GCM_AES_192",
++		"BriefDescription": "KMA GCM AES 192",
++		"PublicDescription": "KMA-GCM-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4128",
++		"EventName": "KMA_GCM_AES_256",
++		"BriefDescription": "KMA GCM AES 256",
++		"PublicDescription": "KMA-GCM-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4129",
++		"EventName": "KMA_GCM_ENCRYPTED_AES_128",
++		"BriefDescription": "KMA GCM ENCRYPTED AES 128",
++		"PublicDescription": "KMA-GCM-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4130",
++		"EventName": "KMA_GCM_ENCRYPTED_AES_192",
++		"BriefDescription": "KMA GCM ENCRYPTED AES 192",
++		"PublicDescription": "KMA-GCM-Encrypted-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4131",
++		"EventName": "KMA_GCM_ENCRYPTED_AES_256",
++		"BriefDescription": "KMA GCM ENCRYPTED AES 256",
++		"PublicDescription": "KMA-GCM-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4132",
++		"EventName": "KMF_DEA",
++		"BriefDescription": "KMF DEA",
++		"PublicDescription": "KMF-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4133",
++		"EventName": "KMF_TDEA_128",
++		"BriefDescription": "KMF TDEA 128",
++		"PublicDescription": "KMF-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4134",
++		"EventName": "KMF_TDEA_192",
++		"BriefDescription": "KMF TDEA 192",
++		"PublicDescription": "KMF-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4135",
++		"EventName": "KMF_ENCRYPTED_DEA",
++		"BriefDescription": "KMF ENCRYPTED DEA",
++		"PublicDescription": "KMF-Encrypted-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4136",
++		"EventName": "KMF_ENCRYPTED_TDEA_128",
++		"BriefDescription": "KMF ENCRYPTED TDEA 128",
++		"PublicDescription": "KMF-Encrypted-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4137",
++		"EventName": "KMF_ENCRYPTED_TDEA_192",
++		"BriefDescription": "KMF ENCRYPTED TDEA 192",
++		"PublicDescription": "KMF-Encrypted-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4138",
++		"EventName": "KMF_AES_128",
++		"BriefDescription": "KMF AES 128",
++		"PublicDescription": "KMF-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4139",
++		"EventName": "KMF_AES_192",
++		"BriefDescription": "KMF AES 192",
++		"PublicDescription": "KMF-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4140",
++		"EventName": "KMF_AES_256",
++		"BriefDescription": "KMF AES 256",
++		"PublicDescription": "KMF-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4141",
++		"EventName": "KMF_ENCRYPTED_AES_128",
++		"BriefDescription": "KMF ENCRYPTED AES 128",
++		"PublicDescription": "KMF-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4142",
++		"EventName": "KMF_ENCRYPTED_AES_192",
++		"BriefDescription": "KMF ENCRYPTED AES 192",
++		"PublicDescription": "KMF-Encrypted-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4143",
++		"EventName": "KMF_ENCRYPTED_AES_256",
++		"BriefDescription": "KMF ENCRYPTED AES 256",
++		"PublicDescription": "KMF-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4144",
++		"EventName": "KMCTR_DEA",
++		"BriefDescription": "KMCTR DEA",
++		"PublicDescription": "KMCTR-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4145",
++		"EventName": "KMCTR_TDEA_128",
++		"BriefDescription": "KMCTR TDEA 128",
++		"PublicDescription": "KMCTR-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4146",
++		"EventName": "KMCTR_TDEA_192",
++		"BriefDescription": "KMCTR TDEA 192",
++		"PublicDescription": "KMCTR-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4147",
++		"EventName": "KMCTR_ENCRYPTED_DEA",
++		"BriefDescription": "KMCTR ENCRYPTED DEA",
++		"PublicDescription": "KMCTR-Encrypted-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4148",
++		"EventName": "KMCTR_ENCRYPTED_TDEA_128",
++		"BriefDescription": "KMCTR ENCRYPTED TDEA 128",
++		"PublicDescription": "KMCTR-Encrypted-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4149",
++		"EventName": "KMCTR_ENCRYPTED_TDEA_192",
++		"BriefDescription": "KMCTR ENCRYPTED TDEA 192",
++		"PublicDescription": "KMCTR-Encrypted-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4150",
++		"EventName": "KMCTR_AES_128",
++		"BriefDescription": "KMCTR AES 128",
++		"PublicDescription": "KMCTR-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4151",
++		"EventName": "KMCTR_AES_192",
++		"BriefDescription": "KMCTR AES 192",
++		"PublicDescription": "KMCTR-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4152",
++		"EventName": "KMCTR_AES_256",
++		"BriefDescription": "KMCTR AES 256",
++		"PublicDescription": "KMCTR-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4153",
++		"EventName": "KMCTR_ENCRYPTED_AES_128",
++		"BriefDescription": "KMCTR ENCRYPTED AES 128",
++		"PublicDescription": "KMCTR-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4154",
++		"EventName": "KMCTR_ENCRYPTED_AES_192",
++		"BriefDescription": "KMCTR ENCRYPTED AES 192",
++		"PublicDescription": "KMCTR-Encrypted-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4155",
++		"EventName": "KMCTR_ENCRYPTED_AES_256",
++		"BriefDescription": "KMCTR ENCRYPTED AES 256",
++		"PublicDescription": "KMCTR-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4156",
++		"EventName": "KMO_DEA",
++		"BriefDescription": "KMO DEA",
++		"PublicDescription": "KMO-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4157",
++		"EventName": "KMO_TDEA_128",
++		"BriefDescription": "KMO TDEA 128",
++		"PublicDescription": "KMO-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4158",
++		"EventName": "KMO_TDEA_192",
++		"BriefDescription": "KMO TDEA 192",
++		"PublicDescription": "KMO-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4159",
++		"EventName": "KMO_ENCRYPTED_DEA",
++		"BriefDescription": "KMO ENCRYPTED DEA",
++		"PublicDescription": "KMO-Encrypted-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4160",
++		"EventName": "KMO_ENCRYPTED_TDEA_128",
++		"BriefDescription": "KMO ENCRYPTED TDEA 128",
++		"PublicDescription": "KMO-Encrypted-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4161",
++		"EventName": "KMO_ENCRYPTED_TDEA_192",
++		"BriefDescription": "KMO ENCRYPTED TDEA 192",
++		"PublicDescription": "KMO-Encrypted-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4162",
++		"EventName": "KMO_AES_128",
++		"BriefDescription": "KMO AES 128",
++		"PublicDescription": "KMO-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4163",
++		"EventName": "KMO_AES_192",
++		"BriefDescription": "KMO AES 192",
++		"PublicDescription": "KMO-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4164",
++		"EventName": "KMO_AES_256",
++		"BriefDescription": "KMO AES 256",
++		"PublicDescription": "KMO-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4165",
++		"EventName": "KMO_ENCRYPTED_AES_128",
++		"BriefDescription": "KMO ENCRYPTED AES 128",
++		"PublicDescription": "KMO-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4166",
++		"EventName": "KMO_ENCRYPTED_AES_192",
++		"BriefDescription": "KMO ENCRYPTED AES 192",
++		"PublicDescription": "KMO-Encrypted-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4167",
++		"EventName": "KMO_ENCRYPTED_AES_256",
++		"BriefDescription": "KMO ENCRYPTED AES 256",
++		"PublicDescription": "KMO-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4168",
++		"EventName": "KIMD_SHA_1",
++		"BriefDescription": "KIMD SHA 1",
++		"PublicDescription": "KIMD-SHA-1 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4169",
++		"EventName": "KIMD_SHA_256",
++		"BriefDescription": "KIMD SHA 256",
++		"PublicDescription": "KIMD-SHA-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4170",
++		"EventName": "KIMD_SHA_512",
++		"BriefDescription": "KIMD SHA 512",
++		"PublicDescription": "KIMD-SHA-512 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4171",
++		"EventName": "KIMD_SHA3_224",
++		"BriefDescription": "KIMD SHA3 224",
++		"PublicDescription": "KIMD-SHA3-224 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4172",
++		"EventName": "KIMD_SHA3_256",
++		"BriefDescription": "KIMD SHA3 256",
++		"PublicDescription": "KIMD-SHA3-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4173",
++		"EventName": "KIMD_SHA3_384",
++		"BriefDescription": "KIMD SHA3 384",
++		"PublicDescription": "KIMD-SHA3-384 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4174",
++		"EventName": "KIMD_SHA3_512",
++		"BriefDescription": "KIMD SHA3 512",
++		"PublicDescription": "KIMD-SHA3-512 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4175",
++		"EventName": "KIMD_SHAKE_128",
++		"BriefDescription": "KIMD SHAKE 128",
++		"PublicDescription": "KIMD-SHAKE-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4176",
++		"EventName": "KIMD_SHAKE_256",
++		"BriefDescription": "KIMD SHAKE 256",
++		"PublicDescription": "KIMD-SHAKE-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4177",
++		"EventName": "KIMD_GHASH",
++		"BriefDescription": "KIMD GHASH",
++		"PublicDescription": "KIMD-GHASH function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4178",
++		"EventName": "KLMD_SHA_1",
++		"BriefDescription": "KLMD SHA 1",
++		"PublicDescription": "KLMD-SHA-1 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4179",
++		"EventName": "KLMD_SHA_256",
++		"BriefDescription": "KLMD SHA 256",
++		"PublicDescription": "KLMD-SHA-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4180",
++		"EventName": "KLMD_SHA_512",
++		"BriefDescription": "KLMD SHA 512",
++		"PublicDescription": "KLMD-SHA-512 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4181",
++		"EventName": "KLMD_SHA3_224",
++		"BriefDescription": "KLMD SHA3 224",
++		"PublicDescription": "KLMD-SHA3-224 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4182",
++		"EventName": "KLMD_SHA3_256",
++		"BriefDescription": "KLMD SHA3 256",
++		"PublicDescription": "KLMD-SHA3-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4183",
++		"EventName": "KLMD_SHA3_384",
++		"BriefDescription": "KLMD SHA3 384",
++		"PublicDescription": "KLMD-SHA3-384 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4184",
++		"EventName": "KLMD_SHA3_512",
++		"BriefDescription": "KLMD SHA3 512",
++		"PublicDescription": "KLMD-SHA3-512 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4185",
++		"EventName": "KLMD_SHAKE_128",
++		"BriefDescription": "KLMD SHAKE 128",
++		"PublicDescription": "KLMD-SHAKE-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4186",
++		"EventName": "KLMD_SHAKE_256",
++		"BriefDescription": "KLMD SHAKE 256",
++		"PublicDescription": "KLMD-SHAKE-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4187",
++		"EventName": "KMAC_DEA",
++		"BriefDescription": "KMAC DEA",
++		"PublicDescription": "KMAC-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4188",
++		"EventName": "KMAC_TDEA_128",
++		"BriefDescription": "KMAC TDEA 128",
++		"PublicDescription": "KMAC-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4189",
++		"EventName": "KMAC_TDEA_192",
++		"BriefDescription": "KMAC TDEA 192",
++		"PublicDescription": "KMAC-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4190",
++		"EventName": "KMAC_ENCRYPTED_DEA",
++		"BriefDescription": "KMAC ENCRYPTED DEA",
++		"PublicDescription": "KMAC-Encrypted-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4191",
++		"EventName": "KMAC_ENCRYPTED_TDEA_128",
++		"BriefDescription": "KMAC ENCRYPTED TDEA 128",
++		"PublicDescription": "KMAC-Encrypted-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4192",
++		"EventName": "KMAC_ENCRYPTED_TDEA_192",
++		"BriefDescription": "KMAC ENCRYPTED TDEA 192",
++		"PublicDescription": "KMAC-Encrypted-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4193",
++		"EventName": "KMAC_AES_128",
++		"BriefDescription": "KMAC AES 128",
++		"PublicDescription": "KMAC-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4194",
++		"EventName": "KMAC_AES_192",
++		"BriefDescription": "KMAC AES 192",
++		"PublicDescription": "KMAC-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4195",
++		"EventName": "KMAC_AES_256",
++		"BriefDescription": "KMAC AES 256",
++		"PublicDescription": "KMAC-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4196",
++		"EventName": "KMAC_ENCRYPTED_AES_128",
++		"BriefDescription": "KMAC ENCRYPTED AES 128",
++		"PublicDescription": "KMAC-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4197",
++		"EventName": "KMAC_ENCRYPTED_AES_192",
++		"BriefDescription": "KMAC ENCRYPTED AES 192",
++		"PublicDescription": "KMAC-Encrypted-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4198",
++		"EventName": "KMAC_ENCRYPTED_AES_256",
++		"BriefDescription": "KMAC ENCRYPTED AES 256",
++		"PublicDescription": "KMAC-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4199",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_DEA",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING DEA",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4200",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_TDEA_128",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING TDEA 128",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-TDEA-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4201",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_TDEA_192",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING TDEA 192",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-TDEA-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4202",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_DEA",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING ENCRYPTED DEA",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-Encrypted-DEA function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4203",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_TDEA_128",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING ENCRYPTED TDEA 128",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-Encrypted-TDEA- 128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4204",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_TDEA_192",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING ENCRYPTED TDEA 192",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-Encrypted-TDEA- 192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4205",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_AES_128",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING AES 128",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4206",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_AES_192",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING AES 192",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-AES-192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4207",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_AES_256",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING AES 256",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4208",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_AES_128",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING ENCRYPTED AES 128",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-Encrypted-AES- 128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4209",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_AES_192",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING ENCRYPTED AES 192",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-Encrypted-AES- 192 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4210",
++		"EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_AES_256A",
++		"BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING ENCRYPTED AES 256A",
++		"PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-Encrypted-AES- 256A function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4211",
++		"EventName": "PCC_COMPUTE_XTS_PARAMETER_USING_AES_128",
++		"BriefDescription": "PCC COMPUTE XTS PARAMETER USING AES 128",
++		"PublicDescription": "PCC-Compute-XTS-Parameter-Using-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4212",
++		"EventName": "PCC_COMPUTE_XTS_PARAMETER_USING_AES_256",
++		"BriefDescription": "PCC COMPUTE XTS PARAMETER USING AES 256",
++		"PublicDescription": "PCC-Compute-XTS-Parameter-Using-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4213",
++		"EventName": "PCC_COMPUTE_XTS_PARAMETER_USING_ENCRYPTED_AES_128",
++		"BriefDescription": "PCC COMPUTE XTS PARAMETER USING ENCRYPTED AES 128",
++		"PublicDescription": "PCC-Compute-XTS-Parameter-Using-Encrypted-AES-128 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4214",
++		"EventName": "PCC_COMPUTE_XTS_PARAMETER_USING_ENCRYPTED_AES_256",
++		"BriefDescription": "PCC COMPUTE XTS PARAMETER USING ENCRYPTED AES 256",
++		"PublicDescription": "PCC-Compute-XTS-Parameter-Using-Encrypted-AES-256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4215",
++		"EventName": "PCC_SCALAR_MULTIPLY_P256",
++		"BriefDescription": "PCC SCALAR MULTIPLY P256",
++		"PublicDescription": "PCC-Scalar-Multiply-P256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4216",
++		"EventName": "PCC_SCALAR_MULTIPLY_P384",
++		"BriefDescription": "PCC SCALAR MULTIPLY P384",
++		"PublicDescription": "PCC-Scalar-Multiply-P384 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4217",
++		"EventName": "PCC_SCALAR_MULTIPLY_P521",
++		"BriefDescription": "PCC SCALAR MULTIPLY P521",
++		"PublicDescription": "PCC-Scalar-Multiply-P521 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4218",
++		"EventName": "PCC_SCALAR_MULTIPLY_ED25519",
++		"BriefDescription": "PCC SCALAR MULTIPLY ED25519",
++		"PublicDescription": "PCC-Scalar-Multiply-Ed25519 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4219",
++		"EventName": "PCC_SCALAR_MULTIPLY_ED448",
++		"BriefDescription": "PCC SCALAR MULTIPLY ED448",
++		"PublicDescription": "PCC-Scalar-Multiply-Ed448 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4220",
++		"EventName": "PCC_SCALAR_MULTIPLY_X25519",
++		"BriefDescription": "PCC SCALAR MULTIPLY X25519",
++		"PublicDescription": "PCC-Scalar-Multiply-X25519 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4221",
++		"EventName": "PCC_SCALAR_MULTIPLY_X448",
++		"BriefDescription": "PCC SCALAR MULTIPLY X448",
++		"PublicDescription": "PCC-Scalar-Multiply-X448 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4222",
++		"EventName": "PRNO_SHA_512_DRNG",
++		"BriefDescription": "PRNO SHA 512 DRNG",
++		"PublicDescription": "PRNO-SHA-512-DRNG function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4223",
++		"EventName": "PRNO_TRNG_QUERY_RAW_TO_CONDITIONED_RATIO",
++		"BriefDescription": "PRNO TRNG QUERY RAW TO CONDITIONED RATIO",
++		"PublicDescription": "PRNO-TRNG-Query-Raw-to-Conditioned-Ratio function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4224",
++		"EventName": "PRNO_TRNG",
++		"BriefDescription": "PRNO TRNG",
++		"PublicDescription": "PRNO-TRNG function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4225",
++		"EventName": "KDSA_ECDSA_VERIFY_P256",
++		"BriefDescription": "KDSA ECDSA VERIFY P256",
++		"PublicDescription": "KDSA-ECDSA-Verify-P256 function ending with CC=0 or CC=2"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4226",
++		"EventName": "KDSA_ECDSA_VERIFY_P384",
++		"BriefDescription": "KDSA ECDSA VERIFY P384",
++		"PublicDescription": "KDSA-ECDSA-Verify-P384 function ending with CC=0 or CC=2"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4227",
++		"EventName": "KDSA_ECDSA_VERIFY_P521",
++		"BriefDescription": "KDSA ECDSA VERIFY P521",
++		"PublicDescription": "KDSA-ECDSA-Verify-P521 function ending with CC=0 or CC=2"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4228",
++		"EventName": "KDSA_ECDSA_SIGN_P256",
++		"BriefDescription": "KDSA ECDSA SIGN P256",
++		"PublicDescription": "KDSA-ECDSA-Sign-P256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4229",
++		"EventName": "KDSA_ECDSA_SIGN_P384",
++		"BriefDescription": "KDSA ECDSA SIGN P384",
++		"PublicDescription": "KDSA-ECDSA-Sign-P384 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4230",
++		"EventName": "KDSA_ECDSA_SIGN_P521",
++		"BriefDescription": "KDSA ECDSA SIGN P521",
++		"PublicDescription": "KDSA-ECDSA-Sign-P521 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4231",
++		"EventName": "KDSA_ENCRYPTED_ECDSA_SIGN_P256",
++		"BriefDescription": "KDSA ENCRYPTED ECDSA SIGN P256",
++		"PublicDescription": "KDSA-Encrypted-ECDSA-Sign-P256 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4232",
++		"EventName": "KDSA_ENCRYPTED_ECDSA_SIGN_P384",
++		"BriefDescription": "KDSA ENCRYPTED ECDSA SIGN P384",
++		"PublicDescription": "KDSA-Encrypted-ECDSA-Sign-P384 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4233",
++		"EventName": "KDSA_ENCRYPTED_ECDSA_SIGN_P521",
++		"BriefDescription": "KDSA ENCRYPTED ECDSA SIGN P521",
++		"PublicDescription": "KDSA-Encrypted-ECDSA-Sign-P521 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4234",
++		"EventName": "KDSA_EDDSA_VERIFY_ED25519",
++		"BriefDescription": "KDSA EDDSA VERIFY ED25519",
++		"PublicDescription": "KDSA-EdDSA-Verify-Ed25519 function ending with CC=0 or CC=2"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4235",
++		"EventName": "KDSA_EDDSA_VERIFY_ED448",
++		"BriefDescription": "KDSA EDDSA VERIFY ED448",
++		"PublicDescription": "KDSA-EdDSA-Verify-Ed448 function ending with CC=0 or CC=2"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4236",
++		"EventName": "KDSA_EDDSA_SIGN_ED25519",
++		"BriefDescription": "KDSA EDDSA SIGN ED25519",
++		"PublicDescription": "KDSA-EdDSA-Sign-Ed25519 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4237",
++		"EventName": "KDSA_EDDSA_SIGN_ED448",
++		"BriefDescription": "KDSA EDDSA SIGN ED448",
++		"PublicDescription": "KDSA-EdDSA-Sign-Ed448 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4238",
++		"EventName": "KDSA_ENCRYPTED_EDDSA_SIGN_ED25519",
++		"BriefDescription": "KDSA ENCRYPTED EDDSA SIGN ED25519",
++		"PublicDescription": "KDSA-Encrypted-EdDSA-Sign-Ed25519 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4239",
++		"EventName": "KDSA_ENCRYPTED_EDDSA_SIGN_ED448",
++		"BriefDescription": "KDSA ENCRYPTED EDDSA SIGN ED448",
++		"PublicDescription": "KDSA-Encrypted-EdDSA-Sign-Ed448 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4240",
++		"EventName": "PCKMO_ENCRYPT_DEA_KEY",
++		"BriefDescription": "PCKMO ENCRYPT DEA KEY",
++		"PublicDescription": "PCKMO-Encrypt-DEA-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4241",
++		"EventName": "PCKMO_ENCRYPT_TDEA_128_KEY",
++		"BriefDescription": "PCKMO ENCRYPT TDEA 128 KEY",
++		"PublicDescription": "PCKMO-Encrypt-TDEA-128-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4242",
++		"EventName": "PCKMO_ENCRYPT_TDEA_192_KEY",
++		"BriefDescription": "PCKMO ENCRYPT TDEA 192 KEY",
++		"PublicDescription": "PCKMO-Encrypt-TDEA-192-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4243",
++		"EventName": "PCKMO_ENCRYPT_AES_128_KEY",
++		"BriefDescription": "PCKMO ENCRYPT AES 128 KEY",
++		"PublicDescription": "PCKMO-Encrypt-AES-128-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4244",
++		"EventName": "PCKMO_ENCRYPT_AES_192_KEY",
++		"BriefDescription": "PCKMO ENCRYPT AES 192 KEY",
++		"PublicDescription": "PCKMO-Encrypt-AES-192-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4245",
++		"EventName": "PCKMO_ENCRYPT_AES_256_KEY",
++		"BriefDescription": "PCKMO ENCRYPT AES 256 KEY",
++		"PublicDescription": "PCKMO-Encrypt-AES-256-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4246",
++		"EventName": "PCKMO_ENCRYPT_ECC_P256_KEY",
++		"BriefDescription": "PCKMO ENCRYPT ECC P256 KEY",
++		"PublicDescription": "PCKMO-Encrypt-ECC-P256-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4247",
++		"EventName": "PCKMO_ENCRYPT_ECC_P384_KEY",
++		"BriefDescription": "PCKMO ENCRYPT ECC P384 KEY",
++		"PublicDescription": "PCKMO-Encrypt-ECC-P384-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4248",
++		"EventName": "PCKMO_ENCRYPT_ECC_P521_KEY",
++		"BriefDescription": "PCKMO ENCRYPT ECC P521 KEY",
++		"PublicDescription": "PCKMO-Encrypt-ECC-P521-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4249",
++		"EventName": "PCKMO_ENCRYPT_ECC_ED25519_KEY",
++		"BriefDescription": "PCKMO ENCRYPT ECC ED25519 KEY",
++		"PublicDescription": "PCKMO-Encrypt-ECC-Ed25519-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4250",
++		"EventName": "PCKMO_ENCRYPT_ECC_ED448_KEY",
++		"BriefDescription": "PCKMO ENCRYPT ECC ED448 KEY",
++		"PublicDescription": "PCKMO-Encrypt-ECC-Ed448-key function"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4251",
++		"EventName": "IBM_RESERVED_155",
++		"BriefDescription": "IBM RESERVED_155",
++		"PublicDescription": "Reserved for IBM use"
++	},
++	{
++		"Unit": "PAI-CRYPTO",
++		"EventCode": "4252",
++		"EventName": "IBM_RESERVED_156",
++		"BriefDescription": "IBM RESERVED_156",
++		"PublicDescription": "Reserved for IBM use"
++	}
++]
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index e597e4bac90f..12e31773ab1f 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -246,6 +246,7 @@ static struct map {
+ 	{ "iMPH-U", "uncore_arb" },
+ 	{ "CPU-M-CF", "cpum_cf" },
+ 	{ "CPU-M-SF", "cpum_sf" },
++	{ "PAI-CRYPTO", "pai_crypto" },
+ 	{ "UPI LL", "uncore_upi" },
+ 	{ "hisi_sicl,cpa", "hisi_sicl,cpa"},
+ 	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
+-- 
+2.36.1
 
