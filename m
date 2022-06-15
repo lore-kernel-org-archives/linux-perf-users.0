@@ -2,83 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA258C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 20:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BA7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 21:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345384AbiFOU2J (ORCPT
+        id S1349070AbiFOVKd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 16:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51802 "EHLO
+        Wed, 15 Jun 2022 17:10:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345229AbiFOU17 (ORCPT
+        with ESMTP id S244672AbiFOVKc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 16:27:59 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAD926578
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 13:27:56 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 31so10741529pgv.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 13:27:56 -0700 (PDT)
+        Wed, 15 Jun 2022 17:10:32 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC01754005;
+        Wed, 15 Jun 2022 14:10:31 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id kq6so25613811ejb.11;
+        Wed, 15 Jun 2022 14:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=waymo.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=syWGUG0lWZLunZQgJIKp2Yfbg6tQIO0GmJWVkrre5tk=;
-        b=YM1aeCtU/0Gy/4Oa0BY64Hi4+Zc8br7R8VmlbwExVP+APx/ouCwCt573rB+KGMC2pt
-         Rct1ST/Qlm/Xg5Mo53pIquiOfVO0XBtXklTai8igqVmfsGhfL7RxoR1KcV1KjpkGC9mj
-         3f0Gm9Cc5oE/U5RWEVoVSZ7WXUkjeWUv6GId51hZnc00aBjPBrkIiKo0HW6ptEmXVj56
-         +9akhYP8RlkLpuEhyhc2RaJQlJNm/76qPopKdOildVzLkzWH5KYsfki2yDZEf6hrhiLX
-         CN/NJBLl/IC2qfZslNN+kkxf4ooAxWswEKTaLUXx5Oelruw4tWMgnLqJ5tsCrnjp/zsx
-         xt8g==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+e5WSuTokr9JPK19yT3iV5VjDMxp0CsMqUd82dkDfNw=;
+        b=E7fl3/tfPrJIHXOdi2ZLg0bezkWJaCCVssMcntFzW/rG8qML0Lg9+RaHh/fS9w71G+
+         hx6lM2B7obpx8AnKtQHbJGeFl2nhzgF63kN9dnhO/N1WB5B6PyiV64N2IOUPyHXF/Pav
+         fuQaYfTeesgH1MMdHRdpvvf3JzYLKQoxf7PzincM96t5gIA81WMe3vyLsYagwjC+7+LZ
+         uHKv6zvPg2ctlnWnBzD+20nv0gXMV647gBgoKkqCJvJMMxrrhKJsUcjWBYzCO3OuKzZe
+         KxVyYZ0i57LGZGmEGeYzXmB/pawwrdtjmak5KO0cZd7qxxGMbhcSZACiPFV17M0vy0G4
+         fjRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=syWGUG0lWZLunZQgJIKp2Yfbg6tQIO0GmJWVkrre5tk=;
-        b=jiEEUCah90AA5cuO6chpfVIaGY7JJdZstIUUdU6fmlGVEQ3nbnPY6JZ6NAQlGJqpUW
-         vMmEqDlPn/eoijAEB1i8VTnWFmY1vPkYDwIeHBcAvbE9f1W5sEtRI3m4gyAtnBmeSoP1
-         3QzkZ79vt1wW+iAFm09xG3LY9dNiuXQYSr/nOLhAqbhqnN+9m+oFlutkZ5PLHllyyj1U
-         JXAq9BDe21iQfgrYi2kINxerzX1jpJbJdn59QPVxHQlwifFuKYSoY7lIi/AaytZ2zfM8
-         +EqLj5E9w9U5yH1TuMrLiNMaCsReQpFkS3ZofqtaM3TeC7db7PfSBgUJXQUwKUk4AnmK
-         4XiA==
-X-Gm-Message-State: AJIora+Fnqd2dKduLUI6yXn7mzFh5TsiO4OT9h2r+gD9bCuN2hjIZMJK
-        FLUxQq1rBS5o/vOJhWuD1VG7k/yyduZnaylRn/OkdCEqv/pZAQ==
-X-Google-Smtp-Source: AGRyM1tI8hcFrfX/NWFGt1k6IgCVrDVk5QJMIQkhlIigPmvmEcE+YF/E2t8iMPe7ca6B3ot9VoBPpC3nKTccAkZpfRo=
-X-Received: by 2002:a65:48c6:0:b0:405:176f:695c with SMTP id
- o6-20020a6548c6000000b00405176f695cmr1322748pgs.295.1655324875563; Wed, 15
- Jun 2022 13:27:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+e5WSuTokr9JPK19yT3iV5VjDMxp0CsMqUd82dkDfNw=;
+        b=DbDYzch5EhjXVYZsLiH+IxMAxpNUbkhJ9nao1Srk2p/qhhqyUEr2FsJkvN/rz+jNN4
+         9aQhio54zGhIloLWK3LBi1ANk0/4E0of9FNCyYJ2IwpAx0IaGzeMf6A6d/kI1x71NUIQ
+         w89XFKqdkGY+yZGVf1t86s5jzzdZsMffWjGr0Ulxe/vp8JGlP3yHswSk87efFLassi8m
+         jap3lvDIvWn7CSbTmhOmGKHofmCbv6J5J8nEcSpzFFkDnaOholx57ftTnLxJWQFCKu+x
+         3IhzGBgwuXWV5JoPXq0nqxjc5k84yGzOPSPQzGoAuiEzhg5zHp+bCGrJTKMPIpsYXqPN
+         CbBg==
+X-Gm-Message-State: AJIora+A882bDpBTk64zrFL88crPiE4EtMVH5QIbJQO1JAuh3Z6JEpck
+        vEdPhvRcq/cFwbiaj10vLJc=
+X-Google-Smtp-Source: AGRyM1u2aR6m0+zusfzkc1IccfcreBIzvcK7QxJ4O76ZRZ1UqhFZa/ZvZ0x6LAv/HuZhPMsRoDvsvw==
+X-Received: by 2002:a17:907:97c4:b0:711:ea9a:103b with SMTP id js4-20020a17090797c400b00711ea9a103bmr1657077ejc.155.1655327430278;
+        Wed, 15 Jun 2022 14:10:30 -0700 (PDT)
+Received: from erthalion.local (dslb-094-222-028-039.094.222.pools.vodafone-ip.de. [94.222.28.39])
+        by smtp.gmail.com with ESMTPSA id ch25-20020a0564021bd900b0042dd4ccccf5sm171123edb.82.2022.06.15.14.10.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 14:10:29 -0700 (PDT)
+Date:   Wed, 15 Jun 2022 23:09:28 +0200
+From:   Dmitry Dolgov <9erthalion6@gmail.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "alexei.starovoitov@gmail.com" <alexei.starovoitov@gmail.com>
+Subject: Re: [PATCH v2 1/1] perf/kprobe: maxactive for fd-based kprobe
+Message-ID: <20220615210928.6asl44eqiznvnyef@erthalion.local>
+References: <20220615195501.15597-1-songliubraving@fb.com>
+ <D96E92E8-46A2-440C-AF8B-71BADA60C5D9@fb.com>
 MIME-Version: 1.0
-Reply-To: rsilvera@waymo.com
-From:   Raul Silvera <rsilvera@waymo.com>
-Date:   Wed, 15 Jun 2022 13:27:29 -0700
-Message-ID: <CA+PGoB9bmsMreQD1r=bkibALaQN8O-+X7PZ+ZC_LjQX6f=wsYw@mail.gmail.com>
-Subject: perf inject >= v5.13 corrupting files collected with perf record <= v5.12
-To:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D96E92E8-46A2-440C-AF8B-71BADA60C5D9@fb.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Running perf inject >= v5.13 on a perf.data generated by perf record <= v5.12
-results in a corrupted file. I think this is related to commit
-71d7924b3e8ac, which added a member to struct perf_event_attr.
+> On Wed, Jun 15, 2022 at 08:27:41PM +0000, Song Liu wrote:
+>
+> > On Jun 15, 2022, at 12:55 PM, Song Liu <9erthalion6@gmail.com> wrote:
+>
+> This is not the right way to change author of a commit, as it still keeps
+> your email. You need
+>
+> git commit --amend --author="Song Liu <songliubraving@fb.com>"
 
-Is this combination supported? I wrote a small patch that I believe
-fixes this, and would be happy to mail it if this combination is
-expected to work.
-
-Repro steps (from tools/perf directory):
-git checkout tags/v5.12 -b v5.12-branch
-make perf
-./perf record -o /tmp/perf.data.v5.12 ls /tmp >/dev/null
-git checkout tags/v5.13 -b v5.13-branch
-make perf
-./perf inject -i /tmp/perf.data.v5.12 -o /tmp/perf.data.v5.13
-./perf script -i /tmp/perf.data.v5.12           # Succeeds
-./perf script -i /tmp/perf.data.v5.13           # Fails
-
-./perf script -i /tmp/perf.data.v5.13 produces:
-0x3f0 [0]: failed to process type: 768 [Invalid argument]
-
-Thanks
-
-Raul E. Silvera
-waymo.com
+Thanks, I was thinking the --from key would be enough. Let me get a
+second try.
