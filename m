@@ -2,132 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C31AC43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 01:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E49C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 01:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241827AbiFOBjD (ORCPT
+        id S231237AbiFOBmM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 21:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38534 "EHLO
+        Tue, 14 Jun 2022 21:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240009AbiFOBjB (ORCPT
+        with ESMTP id S232340AbiFOBmM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 21:39:01 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148C02FFDE;
-        Tue, 14 Jun 2022 18:38:54 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LN7D60ZGXzRjXd;
-        Wed, 15 Jun 2022 09:35:34 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 15 Jun 2022 09:38:51 +0800
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 15 Jun 2022 09:38:50 +0800
-Subject: Re: [RFC 01/13] perf kwork: New tool
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 14 Jun 2022 21:42:12 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F12D35254;
+        Tue, 14 Jun 2022 18:42:11 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id z14so5176601pjb.4;
+        Tue, 14 Jun 2022 18:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RM1736vw8chYXeHFe7e3lr1ecchAK8y6/yn77lePcYw=;
+        b=IplICM+yMdz3vaL2+ZOfVGVFKpzZPXkiLvQQN/RDK76D9dB4cX0+w1LuFydCzZaNpB
+         8qJggGssUWzpFkZd2OAfPZM6mXLRrWHWg+usVGRxIrquARShLmARBDWi02OcwhPKF7xS
+         ZDd3fHNZF3+x8iFMsW8zwsZl5ewjojido/3CCUBbK3BprxhCmeSa24kQpZ4G+860DKIg
+         b1pUl9gHW5X8fc8erljXUY/kpFbA+exj5TUX0l/0kQ0IgOBDt8yzEyLAHTGf5M7GZpNh
+         r1JcxQGynXxv890Ymyn2pDBLffJYeOHzJo1B5hkifvOlUo6Sw947ityPAUDrs39HoWfv
+         O1NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RM1736vw8chYXeHFe7e3lr1ecchAK8y6/yn77lePcYw=;
+        b=JKHoI3tmnWn/zROr/Ge7rZOmCpgj7EgpXnda5lj+V0KzaiJGC8hpMd1haTjumfNeNz
+         8I1EJ2lYnjHTjWQ+vGcvWkGgB/zjwstc+tRnuF0A5+lkFceFdnRIefteiLnXS+4/dvY2
+         NYtYZMfBcFDIhTCu1haonTd2g9OfJVe/LzbpsOHjEZ8/dK5gGwQdoJrZT08Fy/TQaU6w
+         WtrxILSsffNG4nyHM28S82OAtw82uJTOaLNvEXYdgEhtlwNVOnldhdy1saf8WpdGBzk7
+         rg96RyYTkm/iZUk0ZM4+SlPHqgvTujJRxv8ZpsexJjlR1ND5mrip6PZ91V3W/Uo615TP
+         gIWQ==
+X-Gm-Message-State: AOAM530BCWG8uTZKlEtSPjGF1M7e/RqOZOuhPgu/B5l33tzNB3z5ryEq
+        HysYfpmcamFZfvrALwzSvCQ=
+X-Google-Smtp-Source: AGRyM1uw/e5D6lAGbQnzjILGRoXMj8zFwKOjpbwkUjT3HY9Vb7x22Q09KQ8J8yXhrsJsakuYM1/yFQ==
+X-Received: by 2002:a17:902:aa4b:b0:164:11ad:af0f with SMTP id c11-20020a170902aa4b00b0016411adaf0fmr7271481plr.54.1655257330847;
+        Tue, 14 Jun 2022 18:42:10 -0700 (PDT)
+Received: from rpi400.lan (c-73-70-190-118.hsd1.ca.comcast.net. [73.70.190.118])
+        by smtp.gmail.com with ESMTPSA id 199-20020a6300d0000000b003f24d67d226sm8468197pga.92.2022.06.14.18.42.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jun 2022 18:42:09 -0700 (PDT)
+From:   Ian Rogers <rogers.email@gmail.com>
+X-Google-Original-From: Ian Rogers <irogers@google.com>
+Received: by rpi400.lan (Postfix, from userid 1001)
+        id 447CC2FC2BA; Tue, 14 Jun 2022 18:42:08 -0700 (PDT)
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-References: <20220613094605.208401-1-yangjihong1@huawei.com>
- <20220613094605.208401-2-yangjihong1@huawei.com>
- <CAM9d7ch-VL6siA7g79pN1OSgus4X2C0D2tptAt5u04KUqxOUTg@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <f7ce4fd3-9631-015a-8b1f-81f704e82719@huawei.com>
-Date:   Wed, 15 Jun 2022 09:38:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
+Subject: [PATCH] perf python: Avoid deprecation warning on distutils
+Date:   Tue, 14 Jun 2022 18:42:06 -0700
+Message-Id: <20220615014206.26651-1-irogers@google.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7ch-VL6siA7g79pN1OSgus4X2C0D2tptAt5u04KUqxOUTg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello, Namhyung
+Fix the following DeprecationWarning:
 
-On 2022/6/15 5:43, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Jun 13, 2022 at 2:48 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> The perf-kwork tool is used to trace time properties of kernel work
->> (such as irq, softirq, and workqueue), including runtime, latency,
->> and timehist, using the infrastructure in the perf tools to allow
->> tracing extra targets:
->>
->>    # perf kwork -h
->>
->>     Usage: perf kwork [<options>] {record|report|latency|timehist}
->>
->>        -D, --dump-raw-trace  dump raw trace in ASCII
->>        -f, --force           don't complain, do it
->>        -k, --kwork <kwork>   list of kwork to profile (irq, softirq, workqueue etc)
->>        -v, --verbose         be more verbose (show symbol address, etc)
->>
->>    # perf kwork record -- sleep 1
->>    [ perf record: Woken up 0 times to write data ]
->>    [ perf record: Captured and wrote 1.696 MB perf.data ]
->>
->>    # perf kwork report -h
->>
->>     Usage: perf kwork report [<options>]
->>
->>        -C, --cpu <cpu>       list of cpus to profile
->>        -i, --input <file>    input file name
->>        -n, --name <name>     event name to profile
->>        -s, --sort <key[,key2...]>
->>                              sort by key(s): runtime, max, freq
->>        -S, --with-summary    Show summary with statistics
->>            --time <str>      Time span for analysis (start,stop)
->>
->>    # perf kwork latency -h
->>
->>     Usage: perf kwork latency [<options>]
->>
->>        -C, --cpu <cpu>       list of cpus to profile
->>        -i, --input <file>    input file name
->>        -n, --name <name>     event name to profile
->>        -s, --sort <key[,key2...]>
->>                              sort by key(s): avg, max, freq
->>            --time <str>      Time span for analysis (start,stop)
->>
->>    # perf kwork timehist -h
->>
->>     Usage: perf kwork timehist [<options>]
->>
->>        -C, --cpu <cpu>       list of cpus to profile
->>        -g, --call-graph      Display call chains if present
->>        -i, --input <file>    input file name
->>        -k, --vmlinux <file>  vmlinux pathname
->>        -n, --name <name>     event name to profile
->>            --kallsyms <file>
->>                              kallsyms pathname
->>            --max-stack <n>   Maximum number of functions to display backtrace.
->>            --symfs <directory>
->>                              Look for files with symbols relative to this directory
->>            --time <str>      Time span for analysis (start,stop)
-> 
-> I think you can add this and the documentation when you
-> actually add the functionality later.
-> 
-OK, I'll fix in next version.
+tools/perf/util/setup.py:31: DeprecationWarning: The distutils
+package is deprecated and slated for removal in Python 3.12. Use
+setuptools or check PEP 632 for potential alternatives
 
+Note: the setuptools module may need installing, for example:
+sudo apt install python-setuptools
 
-Thanks，
-Jihong
-.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/setup.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index c255a2c90cd6..5a3c74bce836 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -11,7 +11,7 @@ def clang_has_option(option):
+     return [o for o in cc_output if ((b"unknown argument" in o) or (b"is not supported" in o))] == [ ]
+ 
+ if cc_is_clang:
+-    from distutils.sysconfig import get_config_vars
++    from sysconfig import get_config_vars
+     vars = get_config_vars()
+     for var in ('CFLAGS', 'OPT'):
+         vars[var] = sub("-specs=[^ ]+", "", vars[var])
+@@ -28,10 +28,10 @@ if cc_is_clang:
+         if not clang_has_option("-ffat-lto-objects"):
+             vars[var] = sub("-ffat-lto-objects", "", vars[var])
+ 
+-from distutils.core import setup, Extension
++from setuptools import setup, Extension
+ 
+-from distutils.command.build_ext   import build_ext   as _build_ext
+-from distutils.command.install_lib import install_lib as _install_lib
++from setuptools.command.build_ext   import build_ext   as _build_ext
++from setuptools.command.install_lib import install_lib as _install_lib
+ 
+ class build_ext(_build_ext):
+     def finalize_options(self):
+-- 
+2.34.1
+
