@@ -2,95 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A02FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 18:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AA6C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 19:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349421AbiFOStV (ORCPT
+        id S231317AbiFOTHo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 14:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56972 "EHLO
+        Wed, 15 Jun 2022 15:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358156AbiFOStT (ORCPT
+        with ESMTP id S229737AbiFOTHn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 14:49:19 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805834B1E6;
-        Wed, 15 Jun 2022 11:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655318953; x=1686854953;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wn5NiHZZ5IcNI7uGKQLVRm318DxREBFo5acevQoydbM=;
-  b=ixNy89eZGoR5fjmsx1BbP5GPtIyDN/+pCZmdgplP15p8bfDqYQ4mX7DM
-   WoFEUKypxvpFW4+WDnRep4+TTUihPpiIyml7w5mKjtyqHwx42XpnLf5OI
-   PU/DWKoBmddjo992XMYPR/Zq/bhmujUC9zSAzGCfDZB19zxReI1TqrFQk
-   Byn4VozmaaNtC0BPWU2dq69NfMgAWgaIIkP8CkQVKOlDY+9EjHL64fMhf
-   KeB7uwOUnP2KUOqd91fN80IgWzuyTUjoEwvv8NSg5+FdmL3Iw8LQCfqZC
-   MSQEdhtaCtz9QX48ho977Ymht9owQqj0tzvtbJP18MRLh1cLKH95u7nik
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="365424895"
-X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
-   d="scan'208";a="365424895"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 11:33:12 -0700
-X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
-   d="scan'208";a="612868968"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.209.51.207]) ([10.209.51.207])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 11:33:10 -0700
-Message-ID: <11db049c-c288-71c2-de37-545fd695d486@linux.intel.com>
-Date:   Wed, 15 Jun 2022 11:33:05 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] perf io: Make open and read calls more robust
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
+        Wed, 15 Jun 2022 15:07:43 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152281182C;
+        Wed, 15 Jun 2022 12:07:38 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id u37so3852803pfg.3;
+        Wed, 15 Jun 2022 12:07:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h6tRYruc0V5Cohol4GRMnPOLxDy9KK9MqLJG9857f+o=;
+        b=EPwo47etFGbDXxA3C9s2Y+FhZ26CDF9BORo6UO78Vm4ynG8SlnH/5XpEzK6GbSae1l
+         SYbEHy0yB88gYEjQeQ0PaMFwD9LKWdA7JSnOObAsYETM8zhN9U1b09oSGaDvLpUClxA3
+         AB6h4h/2E4q4oy768g++O01h38N0ZyORAzn4Xzl2hI2Z3E3UNtfLH7EZl9aMk3jgMtrA
+         XWhDxktpiel5DbFeFbB9N/w1IYjyrbxtXQ9lsWzL+yXaLrFw6JxjGblik7a1x+mCSVT7
+         BKUuJJccb5Zzwwa6AxgvOlI4f7iK6IOpkc8QSkRcs4FTMKAJFxJOPKe0Typfy/0LqDLw
+         QyPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=h6tRYruc0V5Cohol4GRMnPOLxDy9KK9MqLJG9857f+o=;
+        b=hWmUQFZ4bvNGxrPDeQurYFHe7lYPUgifhEbOpZKLcGj4751ENwUfLdblQrKFYnZ/Gs
+         g4bGB2fr5ukG6wL5dnaBYDEX62PmvS9wRvQQ5fJ6ZkJytA+ZMO8KuRhN3uEnpPTUKEZ+
+         1F/NopM0u6Ju4lloN+6N8zMLRxe5UkP9ypSYjH0cade/EkU70bK0v89L4Cgfl+vAnFzs
+         yGW1LarnAqZEO5FL4mjzAnz3imA9CCQlngGCJy4w4sa+eWawDpBVQYscbhgNM9KnqNo1
+         IXd+xBEnMUwkYDVXwCLq38jUMbCG35lHC9F5fO3UKIc5cKzcNgePYFW+9o596bL8dLMW
+         OHxw==
+X-Gm-Message-State: AJIora+iQ7i40l+YJV/FPXUzvB7YDUGYeFWoRyTWlVx3ssSP2P7AVlWd
+        plbJbQEq+w13agMiWX/L3QzHIqYHrHae+A==
+X-Google-Smtp-Source: AGRyM1uTzQ/tshi0AoPH7dTPOaOqHkG3atVLlhU6YIvrW9qHYMjyzIussN/gXjS3WJbrjOcZUJTCdA==
+X-Received: by 2002:a63:1220:0:b0:408:a4cd:8aae with SMTP id h32-20020a631220000000b00408a4cd8aaemr1039007pgl.377.1655320057519;
+        Wed, 15 Jun 2022 12:07:37 -0700 (PDT)
+Received: from balhae.corp.google.com ([2620:15c:2c1:200:6b99:92ca:1efa:c0fb])
+        by smtp.gmail.com with ESMTPSA id t21-20020a17090aae1500b001e2ebcce5d5sm2175795pjq.37.2022.06.15.12.07.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 12:07:37 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Song Liu <songliubraving@fb.com>, Leo Yan <leo.yan@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org,
         John Garry <john.garry@huawei.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        German Gomez <german.gomez@arm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Denis Nikitin <denik@chromium.org>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Fangrui Song <maskray@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220615060354.1763693-1-irogers@google.com>
-From:   Andi Kleen <ak@linux.intel.com>
-In-Reply-To: <20220615060354.1763693-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mike Leach <mike.leach@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] perf test: Add ARM SPE system wide test
+Date:   Wed, 15 Jun 2022 12:07:35 -0700
+Message-Id: <20220615190735.1298213-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+In the past it had a problem not setting the pid/tid on the sample
+correctly when system-wide mode is used.  Although it's fixed now it'd
+be nice if we have a test case for it.
 
-On 6/14/2022 11:03 PM, Ian Rogers wrote:
-> Wrap open and read calls with TEMP_FAILURE_RETRY in case a signal
-> causes the syscall to need to restart.
+Cc: German Gomez <german.gomez@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/shell/test_arm_spe.sh | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-
-Why not just use SA_RESTART on the signals?
-
-
--Andi
+diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
+index e59044edc406..b9c588ae393b 100755
+--- a/tools/perf/tests/shell/test_arm_spe.sh
++++ b/tools/perf/tests/shell/test_arm_spe.sh
+@@ -23,6 +23,7 @@ glb_err=0
+ cleanup_files()
+ {
+ 	rm -f ${perfdata}
++	rm -f ${perfdata}.old
+ 	exit $glb_err
+ }
+ 
+@@ -85,5 +86,19 @@ arm_spe_snapshot_test() {
+ 	arm_spe_report "SPE snapshot testing" $err
+ }
+ 
++arm_spe_system_wide_test() {
++	echo "Recording trace with system-wide mode $perfdata"
++	perf record -o ${perfdata} -e arm_spe// -a \
++		-- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
++
++	perf_script_samples dd &&
++	perf_report_samples dd
++
++	err=$?
++	arm_spe_report "SPE system-wide testing" $err
++}
++
+ arm_spe_snapshot_test
++arm_spe_system_wide_test
++
+ exit $glb_err
+-- 
+2.36.1.476.g0c4daa206d-goog
 
