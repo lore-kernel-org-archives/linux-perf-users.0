@@ -2,973 +2,1131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A747C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 15:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578C3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 15:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbiFOP3e (ORCPT
+        id S1349657AbiFOPe4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 11:29:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49400 "EHLO
+        Wed, 15 Jun 2022 11:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352214AbiFOP11 (ORCPT
+        with ESMTP id S1349528AbiFOPez (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 11:27:27 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A9645050;
-        Wed, 15 Jun 2022 08:27:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CF295B81F0B;
-        Wed, 15 Jun 2022 15:27:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE57C34115;
-        Wed, 15 Jun 2022 15:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655306826;
-        bh=vsuOzE9zk8EUMxazzYnwc+GCoKeW+gBkvqC9es8C/aM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MvXVDEf/AbsyElj0UQXB4KTNElJQNwOeP+TPb+VMKibWwIKO+P6IxrIuCxQhyTeb0
-         eQeBp/Qaf7dPjIbwYWeX+cQVxBDfRV5V7/wb/APU3SOsFEzB++v38LcrQpPM7MExyt
-         sFKZ3NJ72ZlME3uxIVh0E6oJQDclXs6C3lTf+Sw24AAi9Id931Yt3ySpS5xIbfBKZS
-         m0h/PDE9K24vaFnLFDNzio7+q/s9SR53ABd5MrogmFdfa2c/5kOEMwQaLlKKBRcF7Y
-         nWqdg60NdPzRU+2rN+ADAUhtUw8zgTr5FxegXcmB5MPqHRgDenArUmOD+0NgYW7eks
-         q3B0KIrvc2fUA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3A28D4096F; Wed, 15 Jun 2022 12:27:03 -0300 (-03)
-Date:   Wed, 15 Jun 2022 12:27:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv4 bpf-next 0/2] perf tools: Fix prologue generation
-Message-ID: <Yqn6R2BA12U6Ftzt@kernel.org>
-References: <20220603204509.15044-1-jolsa@kernel.org>
- <CAEf4BzbT4Z=B2hZxTQf1MrCp6TGiMgP+_t7p8G5A+RdVyNP+8w@mail.gmail.com>
- <YqOOsL8EbbO3lhmC@kernel.org>
- <CAEf4BzaKP8MHtGZDVSpwbCxNUD4zY9wkjEa4HKR0LWxYKW5cGQ@mail.gmail.com>
- <YqOvYo1tp32gKviM@krava>
- <YqYTZVa44Y6RQ11W@krava>
+        Wed, 15 Jun 2022 11:34:55 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0405824BCA
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 08:34:53 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id h5so15952416wrb.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 08:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WzSpCkVH7AzuRGjb5EFzZoP7/cZ5hbcdd8afVI0voK0=;
+        b=kiqCLeFfrHAv+Phqt2F0YYdKBfC+iwUAfQuX8NSqPtlEA0A7U6pTcqKCHCriQ8xJEK
+         30PhYCaEa7j+00nuTgXI67t81KUo6N6aT6la6ydogTGFQgheiWzgR8dYLB9L8+d0WhJq
+         8QWXu0OKF3+/5B21ycpk1FkYS6THjEQQROJ+TwbkTPoyRhoXBoc+7joaNPU1mcxr5bf2
+         Xyh3UtDAb8Y/F2U9nt+YDxHftzEnJ9K+iFewlqDhFTLivvDAQ37jd8fQWmZjYiTzZDBf
+         jYF+LTyO+ToJSTMtHX1TtsQl4rvoZGaM7WeC8sh35Vd/OOqqtQfrpm6DlycL6BNvIuVP
+         5eoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WzSpCkVH7AzuRGjb5EFzZoP7/cZ5hbcdd8afVI0voK0=;
+        b=uWFvSX4HobwqKygUJ6AL2HheSFA+EhrRWvfl+Lz1uXxgC+rqRtTBgaZiFiSPo4wq9S
+         SIYuBRTTu6vjGKE9acBqFaaLNdps3JNErokVATeWzfTygKKESr05mDm3L/mZkN/kLkaJ
+         8XhCXmCZ/g0egsriKcGjCIKeaTNw3/zJL4UMKLtX/TvzfwpFv+UOUw1E+2URGbwWU1N2
+         Uj9ifvh1Ehr01fDGlumf3aw/GHtGVqBYwt1niTUAXPn4nx/RJPo4cF3M87R6WqdxO74z
+         Q8aJY5lxrLHmrRWiUzJ1FUB7HNX0BSVCitOBPnOLY9F0vkK4Tos38oM5xalN6Sd1MI77
+         geBA==
+X-Gm-Message-State: AJIora/TrUGOh+pQqpu89pU8UOP/N12SvoH32bRQ6i2rX5ef77uKZWSN
+        370qEmJTQSbQGLeyE7xYwNQu1Ya5ULRk9FGq4EjdqA==
+X-Google-Smtp-Source: AGRyM1tZQFI8fG4XyLT4B0A7crRtpNvyg1fQvi8CL5XB6kxQDmN1C7iFU4zaNgsJbUb+1S2n2rPeFEagYBFmfwvPqNA=
+X-Received: by 2002:a5d:598e:0:b0:219:ea16:5a2a with SMTP id
+ n14-20020a5d598e000000b00219ea165a2amr352027wri.343.1655307290612; Wed, 15
+ Jun 2022 08:34:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YqYTZVa44Y6RQ11W@krava>
-X-Url:  http://acmel.wordpress.com
+References: <20220615060354.1763693-1-irogers@google.com> <482ed1f6-af6f-b5cd-393f-77d91f24af9d@intel.com>
+In-Reply-To: <482ed1f6-af6f-b5cd-393f-77d91f24af9d@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 15 Jun 2022 08:34:37 -0700
+Message-ID: <CAP-5=fWp7NifZm4B_xgnPURxsFbdUPnsyfgLaNQeOBSs+v99YQ@mail.gmail.com>
+Subject: Re: [PATCH] perf io: Make open and read calls more robust
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Song Liu <songliubraving@fb.com>, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        German Gomez <german.gomez@arm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Denis Nikitin <denik@chromium.org>,
+        Lexi Shao <shaolexi@huawei.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Jun 12, 2022 at 06:25:09PM +0200, Jiri Olsa escreveu:
-> so the problem is that we prepend init proglogue instructions
-> for each program not just for the one that needs it, so it will
-> mismatch later on.. the fix below makes it work for me
+On Tue, Jun 14, 2022 at 11:51 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 15/06/22 09:03, Ian Rogers wrote:
+> > Wrap open and read calls with TEMP_FAILURE_RETRY in case a signal
+> > causes the syscall to need to restart.
+>
+> Please expand on why you want this change.  Can you give an example
+> of where it makes a difference?
 
-> Arnaldo,
-> I squashed and pushed the change below changes to my bpf/depre
-> branch, could you please retest?
+As we can get signals pretty much anywhere in the code many syscalls
+are robust to this:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/builtin-record.c?h=perf/core#n311
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/builtin-record.c?h=perf/core#n372
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/builtin-record.c?h=perf/core#n1585
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/builtin-record.c?h=perf/core#n2502
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/builtin-top.c?h=perf/core#n707
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/copyfile.c?h=perf/core#n59
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evlist.c?h=perf/core#n1966
 
-Before:
+But as this change shows there are a large number that are not. They
+will get EINTR and turn it into a failure which really isn't one.
+Making an example of this is near impossible as you need to arrange
+the signal delivery very carefully. I am however motivated to do this
+as we're seeing missing events when running perf in fleetwide
+profiling and I wish to discount EINTR as a cause.
 
-[acme@quaco perf-urgent]$ git log --oneline -5
-e2cf9d315f90670f (HEAD -> perf/urgent, five/perf/urgent) perf test topology: Use !strncmp(right platform) to fix guest PPC comparision check
-42e4fb08ff987b50 perf test: Record only user callchains on the "Check Arm64 callgraphs are complete in fp mode" test
-819d5c3cf75d0f95 perf beauty: Update copy of linux/socket.h with the kernel sources
-ebdc02b3ece8238b perf test: Fix variable length array undefined behavior in bp_account
-8ff58c35adb7f118 libperf evsel: Open shouldn't leak fd on failure
-[acme@quaco perf-urgent]$ sudo su -
-[root@quaco ~]# perf -v
-perf version 5.19.rc2.ge2cf9d315f90
-[root@quaco ~]# perf test bpf
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        : Ok
- 40.3: Compile source for BPF prologue generation                    : Ok
- 40.4: Compile source for BPF relocation                             : Ok
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           : Ok
- 42.2: BPF pinning                                                   : Ok
- 42.3: BPF prologue generation                                       : Ok
- 63: Test libpfm4 support                                            :
- 96: perf stat --bpf-counters test                                   : Ok
-[root@quaco ~]#
+> It looks pretty ugly so maybe making replacement functions or macros
+> is better e.g.
+>
+> #define open_retry(a, ...)                                 \
+>     ({ long int __result;                                  \
+>        do __result = (long int) open((a), ##__VA_ARGS__);  \
+>        while (__result == -1L && errno == EINTR);          \
+>        __result; })
 
-After your first patch:
+As open is a user land thing there is no Linux precedent to follow
+here. TEMP_FAILURE_RETRY is the general norm, and I'd like to see it
+used when a raw system call is made. ie, if you want open_retry:
 
-[acme@quaco perf-urgent]$ git log --oneline -5 jolsa/bpf/depre
-9317b879db422632 (jolsa/bpf/depre) perf tools: Rework prologue generation code
-4d40831f29f2c9ad perf tools: Register fallback libbpf section handler
-f913ad6559e337b4 libbpf: Fix is_pow_of_2
-f175ece2e3436748 selftests/bpf: Fix tc_redirect_dtime
-7b711e721234f475 bpf, test_run: Remove unnecessary prog type checks
-[acme@quaco perf-urgent]$ git cherry-pick 4d40831f29f2c9ad
-[perf/urgent ab39fb6880b57507] perf tools: Register fallback libbpf section handler
- Author: Jiri Olsa <jolsa@kernel.org>
- Date: Thu Apr 21 15:22:25 2022 +0200
- 1 file changed, 65 insertions(+), 11 deletions(-)
-[acme@quaco perf-urgent]$
-[acme@quaco perf-urgent]$ alias m='rm -rf ~/libexec/perf-core/ ; perf stat -e cycles:u,instructions:u make -k BUILD_BPF_SKEL=1 PYTHON=python3 O=/tmp/build/perf-urgent -C tools/perf install-bin && perf test python'
-[acme@quaco perf-urgent]$ rm -rf /tmp/build/perf-urgent ; mkdir -p /tmp/build/perf-urgent ; m
-<SNIP>
- 19: 'import perf' in python                                         : Ok
-[acme@quaco perf-urgent]$
-[acme@quaco perf-urgent]$ sudo su -
-[sudo] password for acme:
-[root@quaco ~]# perf test bpf
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        : Ok
- 40.3: Compile source for BPF prologue generation                    : Ok
- 40.4: Compile source for BPF relocation                             : Ok
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           : Ok
- 42.2: BPF pinning                                                   : Ok
- 42.3: BPF prologue generation                                       : FAILED!
- 63: Test libpfm4 support                                            :
- 96: perf stat --bpf-counters test                                   : Ok
-[root@quaco ~]#
+#define open_retry(a, ...) TEMP_FAILURE_RETRY(open((a), ##__VA_ARGS__))
 
-perf test -v bpf later, lets see if landing the second patch fixes
-things and this bisection problem is justified:
+I don't think we need to be in the game of reinventing
+TEMP_FAILURE_RETRY. I think we can follow on from this change with
+changes not to use raw open and read calls, instead preferring some of
+our existing EINTR robust reads like readn, etc. Doing that is beyond
+the scope of what this change is trying to do.
 
-[acme@quaco perf-urgent]$ git log --oneline -5 jolsa/bpf/depre
-9317b879db422632 (jolsa/bpf/depre) perf tools: Rework prologue generation code
-4d40831f29f2c9ad perf tools: Register fallback libbpf section handler
-f913ad6559e337b4 libbpf: Fix is_pow_of_2
-f175ece2e3436748 selftests/bpf: Fix tc_redirect_dtime
-7b711e721234f475 bpf, test_run: Remove unnecessary prog type checks
-[acme@quaco perf-urgent]$ git remote update jolsa
-Fetching jolsa
-[acme@quaco perf-urgent]$ git cherry-pick 9317b879db422632
-[perf/urgent 9a36c7c94e1f596d] perf tools: Rework prologue generation code
- Author: Jiri Olsa <jolsa@kernel.org>
- Date: Mon May 9 22:46:20 2022 +0200
- 1 file changed, 110 insertions(+), 18 deletions(-)
-[acme@quaco perf-urgent]$
-[acme@quaco perf-urgent]$ rm -rf /tmp/build/perf-urgent ; mkdir -p /tmp/build/perf-urgent ; m
-<SNIP>
- 19: 'import perf' in python                                         : Ok
-[acme@quaco perf-urgent]$ sudo su -
-[root@quaco ~]# perf test bpf
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        : Ok
- 40.3: Compile source for BPF prologue generation                    : Ok
- 40.4: Compile source for BPF relocation                             : Ok
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           : Ok
- 42.2: BPF pinning                                                   : Ok
- 42.3: BPF prologue generation                                       : Ok
- 63: Test libpfm4 support                                            :
- 96: perf stat --bpf-counters test                                   : Ok
-[root@quaco ~]#
+Thanks,
+Ian
 
-So it works in the end, can it be made to work after the first step? I
-didn't check that.
-
--v without the last patch:
-
-[acme@quaco perf-urgent]$ git reset --hard HEAD~
-HEAD is now at ab39fb6880b57507 perf tools: Register fallback libbpf section handler
-[acme@quaco perf-urgent]$ rm -rf /tmp/build/perf-urgent ; mkdir -p /tmp/build/perf-urgent ; m
-<SNIP>
- 19: 'import perf' in python                                         : Ok
-[acme@quaco perf-urgent]$ sudo su -
-[root@quaco ~]# perf test -v bpf
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        :
---- start ---
-test child forked, pid 731590
-Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
-set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-unset env: KBUILD_OPTS
-include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: NR_CPUS=8
-set env: LINUX_VERSION_CODE=0x5110b
-set env: CLANG_EXEC=/usr/lib64/ccache/clang
-set env: CLANG_OPTIONS=-xc -g
-set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
-set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-set env: CLANG_SOURCE=-
-llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-example.c
- * Test basic LLVM building
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
-#endif
-#define BPF_ANY 0
-#define BPF_MAP_TYPE_ARRAY 2
-#define BPF_FUNC_map_lookup_elem 1
-#define BPF_FUNC_map_update_elem 2
-
-static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	(void *) BPF_FUNC_map_lookup_elem;
-static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	(void *) BPF_FUNC_map_update_elem;
-
-struct bpf_map_def {
-	unsigned int type;
-	unsigned int key_size;
-	unsigned int value_size;
-	unsigned int max_entries;
-};
-
-#define SEC(NAME) __attribute__((section(NAME), used))
-struct bpf_map_def SEC("maps") flip_table = {
-	.type = BPF_MAP_TYPE_ARRAY,
-	.key_size = sizeof(int),
-	.value_size = sizeof(int),
-	.max_entries = 1,
-};
-
-SEC("func=do_epoll_wait")
-int bpf_func__SyS_epoll_pwait(void *ctx)
-{
-	int ind =0;
-	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
-	int new_flag;
-	if (!flag)
-		return 0;
-	/* flip flag and store back */
-	new_flag = !*flag;
-	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
-	return new_flag;
-}
-char _license[] SEC("license") = "GPL";
-int _version SEC("version") = LINUX_VERSION_CODE;
-' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
-llvm compiling command : echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-example.c
- * Test basic LLVM building
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt=-DLINUX_VERSION_CODE=0x40200 into llvm section of ~/.perfconfig'
-#endif
-#define BPF_ANY 0
-#define BPF_MAP_TYPE_ARRAY 2
-#define BPF_FUNC_map_lookup_elem 1
-#define BPF_FUNC_map_update_elem 2
-
-static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	(void *) BPF_FUNC_map_lookup_elem;
-static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	(void *) BPF_FUNC_map_update_elem;
-
-struct bpf_map_def {
-	unsigned int type;
-	unsigned int key_size;
-	unsigned int value_size;
-	unsigned int max_entries;
-};
-
-#define SEC(NAME) __attribute__((section(NAME), used))
-struct bpf_map_def SEC(maps) flip_table = {
-	.type = BPF_MAP_TYPE_ARRAY,
-	.key_size = sizeof(int),
-	.value_size = sizeof(int),
-	.max_entries = 1,
-};
-
-SEC(func=do_epoll_wait)
-int bpf_func__SyS_epoll_pwait(void *ctx)
-{
-	int ind =0;
-	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
-	int new_flag;
-	if (!flag)
-		return 0;
-	/* flip flag and store back */
-	new_flag = !*flag;
-	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
-	return new_flag;
-}
-char _license[] SEC(license) = GPL;
-int _version SEC(version) = LINUX_VERSION_CODE;
-' | /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x5110b -xc -g -I/home/acme/lib/perf/include/bpf -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.17.11-300.fc36.x86_64/build -c - -target bpf  -O2 -o - 
-libbpf: map 'flip_table' (legacy): legacy map definitions are deprecated, use BTF-defined maps instead
-libbpf: Use of BPF_ANNOTATE_KV_PAIR is deprecated, use BTF-defined maps in .maps section instead
-test child finished with 0
----- end ----
-LLVM search and compile subtest 1: Ok
- 40.3: Compile source for BPF prologue generation                    :
---- start ---
-test child forked, pid 731783
-Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
-set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-unset env: KBUILD_OPTS
-include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: NR_CPUS=8
-set env: LINUX_VERSION_CODE=0x5110b
-set env: CLANG_EXEC=/usr/lib64/ccache/clang
-set env: CLANG_OPTIONS=-xc -g
-set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
-set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-set env: CLANG_SOURCE=-
-llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-test-prologue.c
- * Test BPF prologue
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
-#endif
-#define SEC(NAME) __attribute__((section(NAME), used))
-
-#include <uapi/linux/fs.h>
-
-/*
- * If CONFIG_PROFILE_ALL_BRANCHES is selected,
- * 'if' is redefined after include kernel header.
- * Recover 'if' for BPF object code.
- */
-#ifdef if
-# undef if
-#endif
-
-#define FMODE_READ		0x1
-#define FMODE_WRITE		0x2
-
-static void (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
-	(void *) 6;
-
-SEC("func=null_lseek file->f_mode offset orig")
-int bpf_func__null_lseek(void *ctx, int err, unsigned long _f_mode,
-			 unsigned long offset, unsigned long orig)
-{
-	fmode_t f_mode = (fmode_t)_f_mode;
-
-	if (err)
-		return 0;
-	if (f_mode & FMODE_WRITE)
-		return 0;
-	if (offset & 1)
-		return 0;
-	if (orig == SEEK_CUR)
-		return 0;
-	return 1;
-}
-
-char _license[] SEC("license") = "GPL";
-int _version SEC("version") = LINUX_VERSION_CODE;
-' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
-llvm compiling command : 
-test child finished with 0
----- end ----
-LLVM search and compile subtest 3: Ok
- 40.4: Compile source for BPF relocation                             :
---- start ---
-test child forked, pid 731976
-Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
-set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-unset env: KBUILD_OPTS
-include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: NR_CPUS=8
-set env: LINUX_VERSION_CODE=0x5110b
-set env: CLANG_EXEC=/usr/lib64/ccache/clang
-set env: CLANG_OPTIONS=-xc -g
-set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
-set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-set env: CLANG_SOURCE=-
-llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-test-relocation.c
- * Test BPF loader checking relocation
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
-#endif
-#define BPF_ANY 0
-#define BPF_MAP_TYPE_ARRAY 2
-#define BPF_FUNC_map_lookup_elem 1
-#define BPF_FUNC_map_update_elem 2
-
-static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	(void *) BPF_FUNC_map_lookup_elem;
-static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	(void *) BPF_FUNC_map_update_elem;
-
-struct bpf_map_def {
-	unsigned int type;
-	unsigned int key_size;
-	unsigned int value_size;
-	unsigned int max_entries;
-};
-
-#define SEC(NAME) __attribute__((section(NAME), used))
-struct bpf_map_def SEC("maps") my_table = {
-	.type = BPF_MAP_TYPE_ARRAY,
-	.key_size = sizeof(int),
-	.value_size = sizeof(int),
-	.max_entries = 1,
-};
-
-int this_is_a_global_val;
-
-SEC("func=sys_write")
-int bpf_func__sys_write(void *ctx)
-{
-	int key = 0;
-	int value = 0;
-
-	/*
-	 * Incorrect relocation. Should not allow this program be
-	 * loaded into kernel.
-	 */
-	bpf_map_update_elem(&this_is_a_global_val, &key, &value, 0);
-	return 0;
-}
-char _license[] SEC("license") = "GPL";
-int _version SEC("version") = LINUX_VERSION_CODE;
-' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
-llvm compiling command : echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-test-relocation.c
- * Test BPF loader checking relocation
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt=-DLINUX_VERSION_CODE=0x40200 into llvm section of ~/.perfconfig'
-#endif
-#define BPF_ANY 0
-#define BPF_MAP_TYPE_ARRAY 2
-#define BPF_FUNC_map_lookup_elem 1
-#define BPF_FUNC_map_update_elem 2
-
-static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	(void *) BPF_FUNC_map_lookup_elem;
-static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	(void *) BPF_FUNC_map_update_elem;
-
-struct bpf_map_def {
-	unsigned int type;
-	unsigned int key_size;
-	unsigned int value_size;
-	unsigned int max_entries;
-};
-
-#define SEC(NAME) __attribute__((section(NAME), used))
-struct bpf_map_def SEC(maps) my_table = {
-	.type = BPF_MAP_TYPE_ARRAY,
-	.key_size = sizeof(int),
-	.value_size = sizeof(int),
-	.max_entries = 1,
-};
-
-int this_is_a_global_val;
-
-SEC(func=sys_write)
-int bpf_func__sys_write(void *ctx)
-{
-	int key = 0;
-	int value = 0;
-
-	/*
-	 * Incorrect relocation. Should not allow this program be
-	 * loaded into kernel.
-	 */
-	bpf_map_update_elem(&this_is_a_global_val, &key, &value, 0);
-	return 0;
-}
-char _license[] SEC(license) = GPL;
-int _version SEC(version) = LINUX_VERSION_CODE;
-' | /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x5110b -xc -g -I/home/acme/lib/perf/include/bpf -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.17.11-300.fc36.x86_64/build -c - -target bpf  -O2 -o - 
-test child finished with 0
----- end ----
-LLVM search and compile subtest 4: Ok
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           :
---- start ---
-test child forked, pid 732169
-Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
-set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-unset env: KBUILD_OPTS
-include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: NR_CPUS=8
-set env: LINUX_VERSION_CODE=0x5110b
-set env: CLANG_EXEC=/usr/lib64/ccache/clang
-set env: CLANG_OPTIONS=-xc -g
-set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
-set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-set env: CLANG_SOURCE=-
-llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-example.c
- * Test basic LLVM building
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
-#endif
-#define BPF_ANY 0
-#define BPF_MAP_TYPE_ARRAY 2
-#define BPF_FUNC_map_lookup_elem 1
-#define BPF_FUNC_map_update_elem 2
-
-static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	(void *) BPF_FUNC_map_lookup_elem;
-static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	(void *) BPF_FUNC_map_update_elem;
-
-struct bpf_map_def {
-	unsigned int type;
-	unsigned int key_size;
-	unsigned int value_size;
-	unsigned int max_entries;
-};
-
-#define SEC(NAME) __attribute__((section(NAME), used))
-struct bpf_map_def SEC("maps") flip_table = {
-	.type = BPF_MAP_TYPE_ARRAY,
-	.key_size = sizeof(int),
-	.value_size = sizeof(int),
-	.max_entries = 1,
-};
-
-SEC("func=do_epoll_wait")
-int bpf_func__SyS_epoll_pwait(void *ctx)
-{
-	int ind =0;
-	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
-	int new_flag;
-	if (!flag)
-		return 0;
-	/* flip flag and store back */
-	new_flag = !*flag;
-	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
-	return new_flag;
-}
-char _license[] SEC("license") = "GPL";
-int _version SEC("version") = LINUX_VERSION_CODE;
-' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
-llvm compiling command : echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-example.c
- * Test basic LLVM building
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt=-DLINUX_VERSION_CODE=0x40200 into llvm section of ~/.perfconfig'
-#endif
-#define BPF_ANY 0
-#define BPF_MAP_TYPE_ARRAY 2
-#define BPF_FUNC_map_lookup_elem 1
-#define BPF_FUNC_map_update_elem 2
-
-static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	(void *) BPF_FUNC_map_lookup_elem;
-static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	(void *) BPF_FUNC_map_update_elem;
-
-struct bpf_map_def {
-	unsigned int type;
-	unsigned int key_size;
-	unsigned int value_size;
-	unsigned int max_entries;
-};
-
-#define SEC(NAME) __attribute__((section(NAME), used))
-struct bpf_map_def SEC(maps) flip_table = {
-	.type = BPF_MAP_TYPE_ARRAY,
-	.key_size = sizeof(int),
-	.value_size = sizeof(int),
-	.max_entries = 1,
-};
-
-SEC(func=do_epoll_wait)
-int bpf_func__SyS_epoll_pwait(void *ctx)
-{
-	int ind =0;
-	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
-	int new_flag;
-	if (!flag)
-		return 0;
-	/* flip flag and store back */
-	new_flag = !*flag;
-	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
-	return new_flag;
-}
-char _license[] SEC(license) = GPL;
-int _version SEC(version) = LINUX_VERSION_CODE;
-' | /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x5110b -xc -g -I/home/acme/lib/perf/include/bpf -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.17.11-300.fc36.x86_64/build -c - -target bpf  -O2 -o - 
-libbpf: loading object '[basic_bpf_test]' from buffer
-libbpf: elf: section(3) func=do_epoll_wait, size 192, link 0, flags 6, type=1
-libbpf: sec 'func=do_epoll_wait': found program 'bpf_func__SyS_epoll_pwait' at insn offset 0 (0 bytes), code size 24 insns (192 bytes)
-libbpf: elf: section(4) .relfunc=do_epoll_wait, size 32, link 22, flags 0, type=9
-libbpf: elf: section(5) maps, size 16, link 0, flags 3, type=1
-libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
-libbpf: license of [basic_bpf_test] is GPL
-libbpf: elf: section(7) version, size 4, link 0, flags 3, type=1
-libbpf: kernel version of [basic_bpf_test] is 5110b
-libbpf: elf: section(13) .BTF, size 576, link 0, flags 0, type=1
-libbpf: elf: section(15) .BTF.ext, size 256, link 0, flags 0, type=1
-libbpf: elf: section(22) .symtab, size 336, link 1, flags 0, type=2
-libbpf: looking for externs among 14 symbols...
-libbpf: collected 0 externs total
-libbpf: elf: found 1 legacy map definitions (16 bytes) in [basic_bpf_test]
-libbpf: map 'flip_table' (legacy): legacy map definitions are deprecated, use BTF-defined maps instead
-libbpf: map 'flip_table' (legacy): at sec_idx 5, offset 0.
-libbpf: map 11 is "flip_table"
-libbpf: Use of BPF_ANNOTATE_KV_PAIR is deprecated, use BTF-defined maps in .maps section instead
-libbpf: map:flip_table container_name:____btf_map_flip_table cannot be found in BTF. Missing BPF_ANNOTATE_KV_PAIR?
-libbpf: sec '.relfunc=do_epoll_wait': collecting relocation for section(3) 'func=do_epoll_wait'
-libbpf: sec '.relfunc=do_epoll_wait': relo #0: insn #4 against 'flip_table'
-libbpf: prog 'bpf_func__SyS_epoll_pwait': found map 0 (flip_table, sec 5, off 0) for insn #4
-libbpf: sec '.relfunc=do_epoll_wait': relo #1: insn #17 against 'flip_table'
-libbpf: prog 'bpf_func__SyS_epoll_pwait': found map 0 (flip_table, sec 5, off 0) for insn #17
-bpf: config program 'func=do_epoll_wait'
-symbol:do_epoll_wait file:(null) line:0 offset:0 return:0 lazy:(null)
-bpf: config 'func=do_epoll_wait' is ok
-Looking at the vmlinux_path (8 entries long)
-symsrc__init: build id mismatch for vmlinux.
-Using /usr/lib/debug/lib/modules/5.17.11-300.fc36.x86_64/vmlinux for symbols
-Open Debuginfo file: /usr/lib/debug/.build-id/f2/26f5d75e6842add57095a0615a1e5c16783dd7.debug
-Try to find probe point from debuginfo.
-Matched function: do_epoll_wait [38063fb]
-Probe point found: do_epoll_wait+0
-
-Found 1 probe_trace_events.
-Opening /sys/kernel/tracing//kprobe_events write=1
-Opening /sys/kernel/tracing//README write=0
-Writing event: p:perf_bpf_probe/func _text+3943040
-libbpf: map 'flip_table': created successfully, fd=4
-add bpf event perf_bpf_probe:func and attach bpf program 5
-adding perf_bpf_probe:func
-adding perf_bpf_probe:func to 0x3017000
-Using CPUID GenuineIntel-6-8E-A
-mmap size 1052672B
-Opening /sys/kernel/tracing//kprobe_events write=1
-Opening /sys/kernel/tracing//uprobe_events write=1
-Parsing probe_events: p:perf_bpf_probe/func _text+3943040
-Group:perf_bpf_probe Event:func probe:p
-Writing event: -:perf_bpf_probe/func
-test child finished with 0
----- end ----
-BPF filter subtest 1: Ok
- 42.2: BPF pinning                                                   :
---- start ---
-test child forked, pid 732362
-Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
-set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-unset env: KBUILD_OPTS
-include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: NR_CPUS=8
-set env: LINUX_VERSION_CODE=0x5110b
-set env: CLANG_EXEC=/usr/lib64/ccache/clang
-set env: CLANG_OPTIONS=-xc -g
-set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
-set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-set env: CLANG_SOURCE=-
-llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-example.c
- * Test basic LLVM building
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
-#endif
-#define BPF_ANY 0
-#define BPF_MAP_TYPE_ARRAY 2
-#define BPF_FUNC_map_lookup_elem 1
-#define BPF_FUNC_map_update_elem 2
-
-static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	(void *) BPF_FUNC_map_lookup_elem;
-static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	(void *) BPF_FUNC_map_update_elem;
-
-struct bpf_map_def {
-	unsigned int type;
-	unsigned int key_size;
-	unsigned int value_size;
-	unsigned int max_entries;
-};
-
-#define SEC(NAME) __attribute__((section(NAME), used))
-struct bpf_map_def SEC("maps") flip_table = {
-	.type = BPF_MAP_TYPE_ARRAY,
-	.key_size = sizeof(int),
-	.value_size = sizeof(int),
-	.max_entries = 1,
-};
-
-SEC("func=do_epoll_wait")
-int bpf_func__SyS_epoll_pwait(void *ctx)
-{
-	int ind =0;
-	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
-	int new_flag;
-	if (!flag)
-		return 0;
-	/* flip flag and store back */
-	new_flag = !*flag;
-	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
-	return new_flag;
-}
-char _license[] SEC("license") = "GPL";
-int _version SEC("version") = LINUX_VERSION_CODE;
-' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
-llvm compiling command : echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-example.c
- * Test basic LLVM building
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt=-DLINUX_VERSION_CODE=0x40200 into llvm section of ~/.perfconfig'
-#endif
-#define BPF_ANY 0
-#define BPF_MAP_TYPE_ARRAY 2
-#define BPF_FUNC_map_lookup_elem 1
-#define BPF_FUNC_map_update_elem 2
-
-static void *(*bpf_map_lookup_elem)(void *map, void *key) =
-	(void *) BPF_FUNC_map_lookup_elem;
-static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
-	(void *) BPF_FUNC_map_update_elem;
-
-struct bpf_map_def {
-	unsigned int type;
-	unsigned int key_size;
-	unsigned int value_size;
-	unsigned int max_entries;
-};
-
-#define SEC(NAME) __attribute__((section(NAME), used))
-struct bpf_map_def SEC(maps) flip_table = {
-	.type = BPF_MAP_TYPE_ARRAY,
-	.key_size = sizeof(int),
-	.value_size = sizeof(int),
-	.max_entries = 1,
-};
-
-SEC(func=do_epoll_wait)
-int bpf_func__SyS_epoll_pwait(void *ctx)
-{
-	int ind =0;
-	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
-	int new_flag;
-	if (!flag)
-		return 0;
-	/* flip flag and store back */
-	new_flag = !*flag;
-	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
-	return new_flag;
-}
-char _license[] SEC(license) = GPL;
-int _version SEC(version) = LINUX_VERSION_CODE;
-' | /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x5110b -xc -g -I/home/acme/lib/perf/include/bpf -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.17.11-300.fc36.x86_64/build -c - -target bpf  -O2 -o - 
-libbpf: loading object '[bpf_pinning]' from buffer
-libbpf: elf: section(3) func=do_epoll_wait, size 192, link 0, flags 6, type=1
-libbpf: sec 'func=do_epoll_wait': found program 'bpf_func__SyS_epoll_pwait' at insn offset 0 (0 bytes), code size 24 insns (192 bytes)
-libbpf: elf: section(4) .relfunc=do_epoll_wait, size 32, link 22, flags 0, type=9
-libbpf: elf: section(5) maps, size 16, link 0, flags 3, type=1
-libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
-libbpf: license of [bpf_pinning] is GPL
-libbpf: elf: section(7) version, size 4, link 0, flags 3, type=1
-libbpf: kernel version of [bpf_pinning] is 5110b
-libbpf: elf: section(13) .BTF, size 576, link 0, flags 0, type=1
-libbpf: elf: section(15) .BTF.ext, size 256, link 0, flags 0, type=1
-libbpf: elf: section(22) .symtab, size 336, link 1, flags 0, type=2
-libbpf: looking for externs among 14 symbols...
-libbpf: collected 0 externs total
-libbpf: elf: found 1 legacy map definitions (16 bytes) in [bpf_pinning]
-libbpf: map 'flip_table' (legacy): legacy map definitions are deprecated, use BTF-defined maps instead
-libbpf: map 'flip_table' (legacy): at sec_idx 5, offset 0.
-libbpf: map 11 is "flip_table"
-libbpf: Use of BPF_ANNOTATE_KV_PAIR is deprecated, use BTF-defined maps in .maps section instead
-libbpf: map:flip_table container_name:____btf_map_flip_table cannot be found in BTF. Missing BPF_ANNOTATE_KV_PAIR?
-libbpf: sec '.relfunc=do_epoll_wait': collecting relocation for section(3) 'func=do_epoll_wait'
-libbpf: sec '.relfunc=do_epoll_wait': relo #0: insn #4 against 'flip_table'
-libbpf: prog 'bpf_func__SyS_epoll_pwait': found map 0 (flip_table, sec 5, off 0) for insn #4
-libbpf: sec '.relfunc=do_epoll_wait': relo #1: insn #17 against 'flip_table'
-libbpf: prog 'bpf_func__SyS_epoll_pwait': found map 0 (flip_table, sec 5, off 0) for insn #17
-bpf: config program 'func=do_epoll_wait'
-symbol:do_epoll_wait file:(null) line:0 offset:0 return:0 lazy:(null)
-bpf: config 'func=do_epoll_wait' is ok
-Looking at the vmlinux_path (8 entries long)
-symsrc__init: build id mismatch for vmlinux.
-Using /usr/lib/debug/lib/modules/5.17.11-300.fc36.x86_64/vmlinux for symbols
-Open Debuginfo file: /usr/lib/debug/.build-id/f2/26f5d75e6842add57095a0615a1e5c16783dd7.debug
-Try to find probe point from debuginfo.
-Matched function: do_epoll_wait [38063fb]
-Probe point found: do_epoll_wait+0
-Found 1 probe_trace_events.
-Opening /sys/kernel/tracing//kprobe_events write=1
-Opening /sys/kernel/tracing//README write=0
-Writing event: p:perf_bpf_probe/func _text+3943040
-libbpf: map 'flip_table': created successfully, fd=4
-add bpf event perf_bpf_probe:func and attach bpf program 5
-adding perf_bpf_probe:func
-adding perf_bpf_probe:func to 0x3017000
-Using CPUID GenuineIntel-6-8E-A
-mmap size 1052672B
-libbpf: pinned map '/sys/fs/bpf/perf_test/flip_table'
-libbpf: pinned program '/sys/fs/bpf/perf_test/func=do_epoll_wait'
-Opening /sys/kernel/tracing//kprobe_events write=1
-Opening /sys/kernel/tracing//uprobe_events write=1
-Parsing probe_events: p:perf_bpf_probe/func _text+3943040
-Group:perf_bpf_probe Event:func probe:p
-Writing event: -:perf_bpf_probe/func
-test child finished with 0
----- end ----
-BPF filter subtest 2: Ok
- 42.3: BPF prologue generation                                       :
---- start ---
-test child forked, pid 732556
-Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
-set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-unset env: KBUILD_OPTS
-include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: NR_CPUS=8
-set env: LINUX_VERSION_CODE=0x5110b
-set env: CLANG_EXEC=/usr/lib64/ccache/clang
-set env: CLANG_OPTIONS=-xc -g
-set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
-set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
-set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
-set env: CLANG_SOURCE=-
-llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
-/*
- * bpf-script-test-prologue.c
- * Test BPF prologue
- */
-#ifndef LINUX_VERSION_CODE
-# error Need LINUX_VERSION_CODE
-# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
-#endif
-#define SEC(NAME) __attribute__((section(NAME), used))
-
-#include <uapi/linux/fs.h>
-
-/*
- * If CONFIG_PROFILE_ALL_BRANCHES is selected,
- * 'if' is redefined after include kernel header.
- * Recover 'if' for BPF object code.
- */
-#ifdef if
-# undef if
-#endif
-
-#define FMODE_READ		0x1
-#define FMODE_WRITE		0x2
-
-static void (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
-	(void *) 6;
-
-SEC("func=null_lseek file->f_mode offset orig")
-int bpf_func__null_lseek(void *ctx, int err, unsigned long _f_mode,
-			 unsigned long offset, unsigned long orig)
-{
-	fmode_t f_mode = (fmode_t)_f_mode;
-
-	if (err)
-		return 0;
-	if (f_mode & FMODE_WRITE)
-		return 0;
-	if (offset & 1)
-		return 0;
-	if (orig == SEEK_CUR)
-		return 0;
-	return 1;
-}
-
-char _license[] SEC("license") = "GPL";
-int _version SEC("version") = LINUX_VERSION_CODE;
-' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
-llvm compiling command : 
-libbpf: loading object '[bpf_prologue_test]' from buffer
-libbpf: elf: section(3) func=null_lseek file->f_mode offset orig, size 112, link 0, flags 6, type=1
-libbpf: sec 'func=null_lseek file->f_mode offset orig': found program 'bpf_func__null_lseek' at insn offset 0 (0 bytes), code size 14 insns (112 bytes)
-libbpf: elf: section(4) license, size 4, link 0, flags 3, type=1
-libbpf: license of [bpf_prologue_test] is GPL
-libbpf: elf: section(5) version, size 4, link 0, flags 3, type=1
-libbpf: kernel version of [bpf_prologue_test] is 5110b
-libbpf: elf: section(11) .BTF, size 489, link 0, flags 0, type=1
-libbpf: elf: section(13) .BTF.ext, size 144, link 0, flags 0, type=1
-libbpf: elf: section(20) .symtab, size 312, link 1, flags 0, type=2
-libbpf: looking for externs among 13 symbols...
-libbpf: collected 0 externs total
-bpf: config program 'func=null_lseek file->f_mode offset orig'
-symbol:null_lseek file:(null) line:0 offset:0 return:0 lazy:(null)
-parsing arg: file->f_mode into file, f_mode(1)
-parsing arg: offset into offset
-parsing arg: orig into orig
-bpf: config 'func=null_lseek file->f_mode offset orig' is ok
-Looking at the vmlinux_path (8 entries long)
-symsrc__init: build id mismatch for vmlinux.
-Using /usr/lib/debug/lib/modules/5.17.11-300.fc36.x86_64/vmlinux for symbols
-Open Debuginfo file: /usr/lib/debug/.build-id/f2/26f5d75e6842add57095a0615a1e5c16783dd7.debug
-Try to find probe point from debuginfo.
-Opening /sys/kernel/tracing//README write=0
-Matched function: null_lseek [73f7810]
-Probe point found: null_lseek+0
-Searching 'file' variable in context.
-Converting variable file into trace event.
-converting f_mode in file
-f_mode type is unsigned int.
-Searching 'offset' variable in context.
-Converting variable offset into trace event.
-offset type is long long int.
-Searching 'orig' variable in context.
-Converting variable orig into trace event.
-orig type is int.
-Found 1 probe_trace_events.
-Opening /sys/kernel/tracing//kprobe_events write=1
-Writing event: p:perf_bpf_probe/func _text+8502800 f_mode=+68(%di):x32 offset=%si:s64 orig=%dx:s32
-In map_prologue, ntevs=1
-mapping[0]=0
-prologue: pass validation
-prologue: slow path
-prologue: fetch arg 0, base reg is %di
-prologue: arg 0: offset 68
-prologue: fetch arg 1, base reg is %si
-prologue: fetch arg 2, base reg is %dx
-prologue: load arg 0, insn_sz is BPF_W
-prologue: load arg 1, insn_sz is BPF_DW
-prologue: load arg 2, insn_sz is BPF_DW
-add bpf event perf_bpf_probe:func and attach bpf program 4
-adding perf_bpf_probe:func
-adding perf_bpf_probe:func to 0x3739570
-Using CPUID GenuineIntel-6-8E-A
-mmap size 1052672B
-BPF filter result incorrect, expected 28, got 222 samples
-Opening /sys/kernel/tracing//kprobe_events write=1
-Opening /sys/kernel/tracing//uprobe_events write=1
-Parsing probe_events: p:perf_bpf_probe/func _text+8502800 f_mode=+68(%di):x32 offset=%si:s64 orig=%dx:s32
-Group:perf_bpf_probe Event:func probe:p
-Writing event: -:perf_bpf_probe/func
-test child finished with -1
----- end ----
-BPF filter subtest 3: FAILED!
- 63: Test libpfm4 support                                            :
- 96: perf stat --bpf-counters test                                   :
---- start ---
-test child forked, pid 732749
-test child finished with 0
----- end ----
-perf stat --bpf-counters test: Ok
-[root@quaco ~]# 
-[root@quaco ~]# 
-[root@quaco ~]# 
-
-
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/api/io.h                       |  3 ++-
+> >  tools/lib/symbol/kallsyms.c              |  4 ++-
+> >  tools/perf/builtin-daemon.c              | 19 +++++++-------
+> >  tools/perf/builtin-ftrace.c              | 18 ++++++-------
+> >  tools/perf/builtin-inject.c              |  2 +-
+> >  tools/perf/builtin-kvm.c                 |  2 +-
+> >  tools/perf/builtin-record.c              |  6 ++---
+> >  tools/perf/builtin-sched.c               |  2 +-
+> >  tools/perf/builtin-script.c              |  2 +-
+> >  tools/perf/util/copyfile.c               |  2 +-
+> >  tools/perf/util/data.c                   | 11 ++++----
+> >  tools/perf/util/dso.c                    |  6 ++---
+> >  tools/perf/util/evlist.c                 |  6 ++---
+> >  tools/perf/util/lzma.c                   |  4 +--
+> >  tools/perf/util/namespaces.c             |  5 ++--
+> >  tools/perf/util/parse-events.c           |  6 ++---
+> >  tools/perf/util/pmu.c                    | 12 ++++-----
+> >  tools/perf/util/probe-event.c            |  4 +--
+> >  tools/perf/util/probe-file.c             | 10 ++++----
+> >  tools/perf/util/session.c                |  2 +-
+> >  tools/perf/util/symbol-elf.c             | 32 ++++++++++++------------
+> >  tools/perf/util/symbol-minimal.c         |  6 ++---
+> >  tools/perf/util/symbol.c                 |  4 +--
+> >  tools/perf/util/synthetic-events.c       |  7 +++---
+> >  tools/perf/util/trace-event-info.c       |  6 ++---
+> >  tools/perf/util/trace-event-read.c       |  5 ++--
+> >  tools/perf/util/unwind-libunwind-local.c |  4 +--
+> >  tools/perf/util/zlib.c                   |  5 ++--
+> >  28 files changed, 102 insertions(+), 93 deletions(-)
+> >
+> > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+> > index 777c20f6b604..b292bbd39fb0 100644
+> > --- a/tools/lib/api/io.h
+> > +++ b/tools/lib/api/io.h
+> > @@ -7,6 +7,7 @@
+> >  #ifndef __API_IO__
+> >  #define __API_IO__
+> >
+> > +#include <errno.h>
+> >  #include <stdlib.h>
+> >  #include <unistd.h>
+> >
+> > @@ -45,7 +46,7 @@ static inline int io__get_char(struct io *io)
+> >               return -1;
+> >
+> >       if (ptr == io->end) {
+> > -             ssize_t n = read(io->fd, io->buf, io->buf_len);
+> > +             ssize_t n = TEMP_FAILURE_RETRY(read(io->fd, io->buf, io->buf_len));
+> >
+> >               if (n <= 0) {
+> >                       io->eof = true;
+> > diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
+> > index e335ac2b9e19..5436c038c379 100644
+> > --- a/tools/lib/symbol/kallsyms.c
+> > +++ b/tools/lib/symbol/kallsyms.c
+> > @@ -3,7 +3,9 @@
+> >  #include "api/io.h"
+> >  #include <stdio.h>
+> >  #include <sys/stat.h>
+> > +#include <errno.h>
+> >  #include <fcntl.h>
+> > +#include <unistd.h>
+> >
+> >  u8 kallsyms2elf_type(char type)
+> >  {
+> > @@ -36,7 +38,7 @@ int kallsyms__parse(const char *filename, void *arg,
+> >       char bf[BUFSIZ];
+> >       int err;
+> >
+> > -     io.fd = open(filename, O_RDONLY, 0);
+> > +     io.fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY, 0));
+> >
+> >       if (io.fd < 0)
+> >               return -1;
+> > diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+> > index 6cb3f6cc36d0..d4e1a5636056 100644
+> > --- a/tools/perf/builtin-daemon.c
+> > +++ b/tools/perf/builtin-daemon.c
+> > @@ -351,7 +351,7 @@ static int daemon_session__run(struct daemon_session *session,
+> >               return -1;
+> >       }
+> >
+> > -     fd = open("/dev/null", O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open("/dev/null", O_RDONLY));
+> >       if (fd < 0) {
+> >               perror("failed: open /dev/null");
+> >               return -1;
+> > @@ -360,7 +360,7 @@ static int daemon_session__run(struct daemon_session *session,
+> >       dup2(fd, 0);
+> >       close(fd);
+> >
+> > -     fd = open(SESSION_OUTPUT, O_RDWR|O_CREAT|O_TRUNC, 0644);
+> > +     fd = TEMP_FAILURE_RETRY(open(SESSION_OUTPUT, O_RDWR|O_CREAT|O_TRUNC, 0644));
+> >       if (fd < 0) {
+> >               perror("failed: open session output");
+> >               return -1;
+> > @@ -405,7 +405,8 @@ static pid_t handle_signalfd(struct daemon *daemon)
+> >        * coalesced in kernel and we can receive only single signal even
+> >        * if multiple SIGCHLD were generated.
+> >        */
+> > -     err = read(daemon->signal_fd, &si, sizeof(struct signalfd_siginfo));
+> > +     err = TEMP_FAILURE_RETRY(read(daemon->signal_fd, &si,
+> > +                                   sizeof(struct signalfd_siginfo)));
+> >       if (err != sizeof(struct signalfd_siginfo)) {
+> >               pr_err("failed to read signal fd\n");
+> >               return -1;
+> > @@ -522,7 +523,7 @@ static int daemon_session__control(struct daemon_session *session,
+> >       scnprintf(control_path, sizeof(control_path), "%s/%s",
+> >                 session->base, SESSION_CONTROL);
+> >
+> > -     control = open(control_path, O_WRONLY|O_NONBLOCK);
+> > +     control = TEMP_FAILURE_RETRY(open(control_path, O_WRONLY|O_NONBLOCK));
+> >       if (!control)
+> >               return -1;
+> >
+> > @@ -531,7 +532,7 @@ static int daemon_session__control(struct daemon_session *session,
+> >               scnprintf(ack_path, sizeof(ack_path), "%s/%s",
+> >                         session->base, SESSION_ACK);
+> >
+> > -             ack = open(ack_path, O_RDONLY, O_NONBLOCK);
+> > +             ack = TEMP_FAILURE_RETRY(open(ack_path, O_RDONLY, O_NONBLOCK));
+> >               if (!ack) {
+> >                       close(control);
+> >                       return -1;
+> > @@ -564,7 +565,7 @@ static int daemon_session__control(struct daemon_session *session,
+> >               goto out;
+> >       }
+> >
+> > -     err = read(ack, buf, sizeof(buf));
+> > +     err = TEMP_FAILURE_RETRY(read(ack, buf, sizeof(buf)));
+> >       if (err > 0)
+> >               ret = strcmp(buf, "ack\n");
+> >       else
+> > @@ -1078,7 +1079,7 @@ static int handle_config_changes(struct daemon *daemon, int conf_fd,
+> >       ssize_t len;
+> >
+> >       while (!(*config_changed)) {
+> > -             len = read(conf_fd, buf, sizeof(buf));
+> > +             len = TEMP_FAILURE_RETRY(read(conf_fd, buf, sizeof(buf)));
+> >               if (len == -1) {
+> >                       if (errno != EAGAIN) {
+> >                               perror("failed: read");
+> > @@ -1147,7 +1148,7 @@ static int check_lock(struct daemon *daemon)
+> >
+> >       scnprintf(path, sizeof(path), "%s/lock", daemon->base);
+> >
+> > -     fd = open(path, O_RDWR|O_CREAT|O_CLOEXEC, 0640);
+> > +     fd = TEMP_FAILURE_RETRY(open(path, O_RDWR|O_CREAT|O_CLOEXEC, 0640));
+> >       if (fd < 0)
+> >               return -1;
+> >
+> > @@ -1201,7 +1202,7 @@ static int go_background(struct daemon *daemon)
+> >               return -1;
+> >       }
+> >
+> > -     fd = open("output", O_RDWR|O_CREAT|O_TRUNC, 0644);
+> > +     fd = TEMP_FAILURE_RETRY(open("output", O_RDWR|O_CREAT|O_TRUNC, 0644));
+> >       if (fd < 0) {
+> >               perror("failed: open");
+> >               return -1;
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index 7de07bb16d23..7553e20f38b2 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -79,7 +79,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
+> >       else
+> >               flags |= O_TRUNC;
+> >
+> > -     fd = open(file, flags);
+> > +     fd = TEMP_FAILURE_RETRY(open(file, flags));
+> >       if (fd < 0) {
+> >               pr_debug("cannot open tracing file: %s: %s\n",
+> >                        name, str_error_r(errno, errbuf, sizeof(errbuf)));
+> > @@ -132,7 +132,7 @@ static int read_tracing_file_to_stdout(const char *name)
+> >               return -1;
+> >       }
+> >
+> > -     fd = open(file, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(file, O_RDONLY));
+> >       if (fd < 0) {
+> >               pr_debug("cannot open tracing file: %s: %s\n",
+> >                        name, str_error_r(errno, buf, sizeof(buf)));
+> > @@ -141,7 +141,7 @@ static int read_tracing_file_to_stdout(const char *name)
+> >
+> >       /* read contents to stdout */
+> >       while (true) {
+> > -             int n = read(fd, buf, sizeof(buf));
+> > +             int n = TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf)));
+> >               if (n == 0)
+> >                       break;
+> >               else if (n < 0)
+> > @@ -608,7 +608,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+> >               goto out_reset;
+> >       }
+> >
+> > -     trace_fd = open(trace_file, O_RDONLY);
+> > +     trace_fd = TEMP_FAILURE_RETRY(open(trace_file, O_RDONLY));
+> >
+> >       put_tracing_file(trace_file);
+> >
+> > @@ -645,7 +645,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+> >                       break;
+> >
+> >               if (pollfd.revents & POLLIN) {
+> > -                     int n = read(trace_fd, buf, sizeof(buf));
+> > +                     int n = TEMP_FAILURE_RETRY(read(trace_fd, buf, sizeof(buf)));
+> >                       if (n < 0)
+> >                               break;
+> >                       if (fwrite(buf, n, 1, stdout) != 1)
+> > @@ -665,7 +665,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+> >
+> >       /* read remaining buffer contents */
+> >       while (true) {
+> > -             int n = read(trace_fd, buf, sizeof(buf));
+> > +             int n = TEMP_FAILURE_RETRY(read(trace_fd, buf, sizeof(buf)));
+> >               if (n <= 0)
+> >                       break;
+> >               if (fwrite(buf, n, 1, stdout) != 1)
+> > @@ -826,7 +826,7 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
+> >               return -1;
+> >       }
+> >
+> > -     fd = open(trace_file, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(trace_file, O_RDONLY));
+> >       if (fd < 0)
+> >               pr_err("failed to open trace_pipe\n");
+> >
+> > @@ -913,7 +913,7 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
+> >                       break;
+> >
+> >               if (pollfd.revents & POLLIN) {
+> > -                     int n = read(trace_fd, buf, sizeof(buf) - 1);
+> > +                     int n = TEMP_FAILURE_RETRY(read(trace_fd, buf, sizeof(buf) - 1));
+> >                       if (n < 0)
+> >                               break;
+> >
+> > @@ -931,7 +931,7 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
+> >
+> >       /* read remaining buffer contents */
+> >       while (!ftrace->target.use_bpf) {
+> > -             int n = read(trace_fd, buf, sizeof(buf) - 1);
+> > +             int n = TEMP_FAILURE_RETRY(read(trace_fd, buf, sizeof(buf) - 1));
+> >               if (n <= 0)
+> >                       break;
+> >               make_histogram(buckets, buf, n, line, ftrace->use_nsec);
+> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> > index a75bf11585b5..960b4a50583e 100644
+> > --- a/tools/perf/builtin-inject.c
+> > +++ b/tools/perf/builtin-inject.c
+> > @@ -155,7 +155,7 @@ static int copy_bytes(struct perf_inject *inject, int fd, off_t size)
+> >       int ret;
+> >
+> >       while (size > 0) {
+> > -             ssz = read(fd, buf, min(size, (off_t)sizeof(buf)));
+> > +             ssz = TEMP_FAILURE_RETRY(read(fd, buf, min(size, (off_t)sizeof(buf))));
+> >               if (ssz < 0)
+> >                       return -errno;
+> >               ret = output_bytes(inject, buf, ssz);
+> > diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> > index 3696ae97f149..4dd8292d1941 100644
+> > --- a/tools/perf/builtin-kvm.c
+> > +++ b/tools/perf/builtin-kvm.c
+> > @@ -880,7 +880,7 @@ static int perf_kvm__handle_timerfd(struct perf_kvm_stat *kvm)
+> >       uint64_t c;
+> >       int rc;
+> >
+> > -     rc = read(kvm->timerfd, &c, sizeof(uint64_t));
+> > +     rc = TEMP_FAILURE_RETRY(read(kvm->timerfd, &c, sizeof(uint64_t)));
+> >       if (rc < 0) {
+> >               if (errno == EAGAIN)
+> >                       return 0;
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index 9a71f0330137..361610bc96b6 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -902,7 +902,7 @@ static bool record__kcore_readable(struct machine *machine)
+> >
+> >       scnprintf(kcore, sizeof(kcore), "%s/proc/kcore", machine->root_dir);
+> >
+> > -     fd = open(kcore, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(kcore, O_RDONLY));
+> >       if (fd < 0)
+> >               return false;
+> >
+> > @@ -2049,7 +2049,7 @@ static int record__terminate_thread(struct record_thread *thread_data)
+> >
+> >       close(thread_data->pipes.msg[1]);
+> >       thread_data->pipes.msg[1] = -1;
+> > -     err = read(thread_data->pipes.ack[0], &ack, sizeof(ack));
+> > +     err = TEMP_FAILURE_RETRY(read(thread_data->pipes.ack[0], &ack, sizeof(ack)));
+> >       if (err > 0)
+> >               pr_debug2("threads[%d]: sent %s\n", tid, thread_msg_tags[ack]);
+> >       else
+> > @@ -2097,7 +2097,7 @@ static int record__start_threads(struct record *rec)
+> >                       goto out_err;
+> >               }
+> >
+> > -             err = read(thread_data[t].pipes.ack[0], &msg, sizeof(msg));
+> > +             err = TEMP_FAILURE_RETRY(read(thread_data[t].pipes.ack[0], &msg, sizeof(msg)));
+> >               if (err > 0)
+> >                       pr_debug2("threads[%d]: sent %s\n", rec->thread_data[t].tid,
+> >                                 thread_msg_tags[msg]);
+> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> > index 646bd938927a..149787268d02 100644
+> > --- a/tools/perf/builtin-sched.c
+> > +++ b/tools/perf/builtin-sched.c
+> > @@ -604,7 +604,7 @@ static u64 get_cpu_usage_nsec_self(int fd)
+> >       u64 runtime;
+> >       int ret;
+> >
+> > -     ret = read(fd, &runtime, sizeof(runtime));
+> > +     ret = TEMP_FAILURE_RETRY(read(fd, &runtime, sizeof(runtime)));
+> >       BUG_ON(ret != sizeof(runtime));
+> >
+> >       return runtime;
+> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > index c689054002cc..844f5350bfdf 100644
+> > --- a/tools/perf/builtin-script.c
+> > +++ b/tools/perf/builtin-script.c
+> > @@ -4207,7 +4207,7 @@ int cmd_script(int argc, const char **argv)
+> >                       goto out_delete;
+> >               }
+> >
+> > -             input = open(data.path, O_RDONLY);      /* input_name */
+> > +             input = TEMP_FAILURE_RETRY(open(data.path, O_RDONLY));  /* input_name */
+> >               if (input < 0) {
+> >                       err = -errno;
+> >                       perror("failed to open file");
+> > diff --git a/tools/perf/util/copyfile.c b/tools/perf/util/copyfile.c
+> > index 47e03de7c235..c7bff4943936 100644
+> > --- a/tools/perf/util/copyfile.c
+> > +++ b/tools/perf/util/copyfile.c
+> > @@ -112,7 +112,7 @@ static int copyfile_mode_ns(const char *from, const char *to, mode_t mode,
+> >               goto out_close_to;
+> >
+> >       nsinfo__mountns_enter(nsi, &nsc);
+> > -     fromfd = open(from, O_RDONLY);
+> > +     fromfd = TEMP_FAILURE_RETRY(open(from, O_RDONLY));
+> >       nsinfo__mountns_exit(&nsc);
+> >       if (fromfd < 0)
+> >               goto out_close_to;
+> > diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> > index caabeac24c69..a9066a3d914f 100644
+> > --- a/tools/perf/util/data.c
+> > +++ b/tools/perf/util/data.c
+> > @@ -53,7 +53,8 @@ int perf_data__create_dir(struct perf_data *data, int nr)
+> >                       goto out_err;
+> >               }
+> >
+> > -             ret = open(file->path, O_RDWR|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
+> > +             ret = TEMP_FAILURE_RETRY(open(file->path, O_RDWR|O_CREAT|O_TRUNC,
+> > +                                           S_IRUSR|S_IWUSR));
+> >               if (ret < 0) {
+> >                       ret = -errno;
+> >                       goto out_err;
+> > @@ -123,7 +124,7 @@ int perf_data__open_dir(struct perf_data *data)
+> >               if (!file->path)
+> >                       goto out_err;
+> >
+> > -             ret = open(file->path, O_RDONLY);
+> > +             ret = TEMP_FAILURE_RETRY(open(file->path, O_RDONLY));
+> >               if (ret < 0)
+> >                       goto out_err;
+> >
+> > @@ -248,7 +249,7 @@ static int open_file_read(struct perf_data *data)
+> >       int fd;
+> >       char sbuf[STRERR_BUFSIZE];
+> >
+> > -     fd = open(data->file.path, flags);
+> > +     fd = TEMP_FAILURE_RETRY(open(data->file.path, flags));
+> >       if (fd < 0) {
+> >               int err = errno;
+> >
+> > @@ -288,8 +289,8 @@ static int open_file_write(struct perf_data *data)
+> >       int fd;
+> >       char sbuf[STRERR_BUFSIZE];
+> >
+> > -     fd = open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
+> > -               S_IRUSR|S_IWUSR);
+> > +     fd = TEMP_FAILURE_RETRY(open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
+> > +                                  S_IRUSR|S_IWUSR));
+> >
+> >       if (fd < 0)
+> >               pr_err("failed to open %s : %s\n", data->file.path,
+> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> > index 5ac13958d1bd..40befa2429f9 100644
+> > --- a/tools/perf/util/dso.c
+> > +++ b/tools/perf/util/dso.c
+> > @@ -300,7 +300,7 @@ int filename__decompress(const char *name, char *pathname,
+> >        * descriptor to the uncompressed file.
+> >        */
+> >       if (!compressions[comp].is_compressed(name))
+> > -             return open(name, O_RDONLY);
+> > +             return TEMP_FAILURE_RETRY(open(name, O_RDONLY));
+> >
+> >       fd = mkstemp(tmpbuf);
+> >       if (fd < 0) {
+> > @@ -476,7 +476,7 @@ static int do_open(char *name)
+> >       char sbuf[STRERR_BUFSIZE];
+> >
+> >       do {
+> > -             fd = open(name, O_RDONLY|O_CLOEXEC);
+> > +             fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY|O_CLOEXEC));
+> >               if (fd >= 0)
+> >                       return fd;
+> >
+> > @@ -898,7 +898,7 @@ static ssize_t file_read(struct dso *dso, struct machine *machine,
+> >               goto out;
+> >       }
+> >
+> > -     ret = pread(dso->data.fd, data, DSO__DATA_CACHE_SIZE, offset);
+> > +     ret = TEMP_FAILURE_RETRY(pread(dso->data.fd, data, DSO__DATA_CACHE_SIZE, offset));
+> >  out:
+> >       pthread_mutex_unlock(&dso__data_open_lock);
+> >       return ret;
+> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > index 48af7d379d82..ba0dcdf91120 100644
+> > --- a/tools/perf/util/evlist.c
+> > +++ b/tools/perf/util/evlist.c
+> > @@ -1440,7 +1440,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+> >               /*
+> >                * Wait until the parent tells us to go.
+> >                */
+> > -             ret = read(go_pipe[0], &bf, 1);
+> > +             ret = TEMP_FAILURE_RETRY(read(go_pipe[0], &bf, 1));
+> >               /*
+> >                * The parent will ask for the execvp() to be performed by
+> >                * writing exactly one byte, in workload.cork_fd, usually via
+> > @@ -1837,7 +1837,7 @@ static int evlist__parse_control_fifo(const char *str, int *ctl_fd, int *ctl_fd_
+> >        * O_RDWR avoids POLLHUPs which is necessary to allow the other
+> >        * end of a FIFO to be repeatedly opened and closed.
+> >        */
+> > -     fd = open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC);
+> > +     fd = TEMP_FAILURE_RETRY(open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC));
+> >       if (fd < 0) {
+> >               pr_err("Failed to open '%s'\n", s);
+> >               ret = -errno;
+> > @@ -1848,7 +1848,7 @@ static int evlist__parse_control_fifo(const char *str, int *ctl_fd, int *ctl_fd_
+> >
+> >       if (p && *++p) {
+> >               /* O_RDWR | O_NONBLOCK means the other end need not be open */
+> > -             fd = open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC);
+> > +             fd = TEMP_FAILURE_RETRY(open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC));
+> >               if (fd < 0) {
+> >                       pr_err("Failed to open '%s'\n", p);
+> >                       ret = -errno;
+> > diff --git a/tools/perf/util/lzma.c b/tools/perf/util/lzma.c
+> > index 51424cdc3b68..93e0a6a53e28 100644
+> > --- a/tools/perf/util/lzma.c
+> > +++ b/tools/perf/util/lzma.c
+> > @@ -109,7 +109,7 @@ int lzma_decompress_to_file(const char *input, int output_fd)
+> >
+> >  bool lzma_is_compressed(const char *input)
+> >  {
+> > -     int fd = open(input, O_RDONLY);
+> > +     int fd = TEMP_FAILURE_RETRY(open(input, O_RDONLY));
+> >       const uint8_t magic[6] = { 0xFD, '7', 'z', 'X', 'Z', 0x00 };
+> >       char buf[6] = { 0 };
+> >       ssize_t rc;
+> > @@ -117,7 +117,7 @@ bool lzma_is_compressed(const char *input)
+> >       if (fd < 0)
+> >               return -1;
+> >
+> > -     rc = read(fd, buf, sizeof(buf));
+> > +     rc = TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf)));
+> >       close(fd);
+> >       return rc == sizeof(buf) ?
+> >              memcmp(buf, magic, sizeof(buf)) == 0 : false;
+> > diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
+> > index dd536220cdb9..89edfba6af06 100644
+> > --- a/tools/perf/util/namespaces.c
+> > +++ b/tools/perf/util/namespaces.c
+> > @@ -9,6 +9,7 @@
+> >  #include "get_current_dir_name.h"
+> >  #include <sys/types.h>
+> >  #include <sys/stat.h>
+> > +#include <errno.h>
+> >  #include <fcntl.h>
+> >  #include <limits.h>
+> >  #include <sched.h>
+> > @@ -266,11 +267,11 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+> >       if (!oldcwd)
+> >               return;
+> >
+> > -     oldns = open(curpath, O_RDONLY);
+> > +     oldns = TEMP_FAILURE_RETRY(open(curpath, O_RDONLY));
+> >       if (oldns < 0)
+> >               goto errout;
+> >
+> > -     newns = open(nsi->mntns_path, O_RDONLY);
+> > +     newns = TEMP_FAILURE_RETRY(open(nsi->mntns_path, O_RDONLY));
+> >       if (newns < 0)
+> >               goto errout;
+> >
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > index 7ed235740431..75f8f2e44195 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -189,7 +189,7 @@ static int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
+> >       int fd;
+> >
+> >       snprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path, evt_dir->d_name);
+> > -     fd = open(evt_path, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(evt_path, O_RDONLY));
+> >       if (fd < 0)
+> >               return -EINVAL;
+> >       close(fd);
+> > @@ -233,10 +233,10 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
+> >
+> >                       scnprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path,
+> >                                 evt_dirent->d_name);
+> > -                     fd = open(evt_path, O_RDONLY);
+> > +                     fd = TEMP_FAILURE_RETRY(open(evt_path, O_RDONLY));
+> >                       if (fd < 0)
+> >                               continue;
+> > -                     if (read(fd, id_buf, sizeof(id_buf)) < 0) {
+> > +                     if (TEMP_FAILURE_RETRY(read(fd, id_buf, sizeof(id_buf))) < 0) {
+> >                               close(fd);
+> >                               continue;
+> >                       }
+> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > index 9a1c7e63e663..59252cfc2b5b 100644
+> > --- a/tools/perf/util/pmu.c
+> > +++ b/tools/perf/util/pmu.c
+> > @@ -154,14 +154,14 @@ static int perf_pmu__parse_scale(struct perf_pmu_alias *alias, char *dir, char *
+> >
+> >       scnprintf(path, PATH_MAX, "%s/%s.scale", dir, name);
+> >
+> > -     fd = open(path, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY));
+> >       if (fd == -1)
+> >               return -1;
+> >
+> >       if (fstat(fd, &st) < 0)
+> >               goto error;
+> >
+> > -     sret = read(fd, scale, sizeof(scale)-1);
+> > +     sret = TEMP_FAILURE_RETRY(read(fd, scale, sizeof(scale)-1));
+> >       if (sret < 0)
+> >               goto error;
+> >
+> > @@ -184,11 +184,11 @@ static int perf_pmu__parse_unit(struct perf_pmu_alias *alias, char *dir, char *n
+> >
+> >       scnprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
+> >
+> > -     fd = open(path, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY));
+> >       if (fd == -1)
+> >               return -1;
+> >
+> > -     sret = read(fd, alias->unit, UNIT_MAX_LEN);
+> > +     sret = TEMP_FAILURE_RETRY(read(fd, alias->unit, UNIT_MAX_LEN));
+> >       if (sret < 0)
+> >               goto error;
+> >
+> > @@ -214,7 +214,7 @@ perf_pmu__parse_per_pkg(struct perf_pmu_alias *alias, char *dir, char *name)
+> >
+> >       scnprintf(path, PATH_MAX, "%s/%s.per-pkg", dir, name);
+> >
+> > -     fd = open(path, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY));
+> >       if (fd == -1)
+> >               return -1;
+> >
+> > @@ -232,7 +232,7 @@ static int perf_pmu__parse_snapshot(struct perf_pmu_alias *alias,
+> >
+> >       scnprintf(path, PATH_MAX, "%s/%s.snapshot", dir, name);
+> >
+> > -     fd = open(path, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY));
+> >       if (fd == -1)
+> >               return -1;
+> >
+> > diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> > index 062b5cbe67af..7838889f55df 100644
+> > --- a/tools/perf/util/probe-event.c
+> > +++ b/tools/perf/util/probe-event.c
+> > @@ -276,7 +276,7 @@ static char *find_module_name(const char *module)
+> >       char *mod_name = NULL;
+> >       int name_offset;
+> >
+> > -     fd = open(module, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(module, O_RDONLY));
+> >       if (fd < 0)
+> >               return NULL;
+> >
+> > @@ -598,7 +598,7 @@ static int get_text_start_address(const char *exec, u64 *address,
+> >       struct nscookie nsc;
+> >
+> >       nsinfo__mountns_enter(nsi, &nsc);
+> > -     fd = open(exec, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(exec, O_RDONLY));
+> >       nsinfo__mountns_exit(&nsc);
+> >       if (fd < 0)
+> >               return -errno;
+> > diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+> > index 3d50de3217d5..b788932656e8 100644
+> > --- a/tools/perf/util/probe-file.c
+> > +++ b/tools/perf/util/probe-file.c
+> > @@ -115,9 +115,9 @@ int open_trace_file(const char *trace_file, bool readwrite)
+> >       if (ret >= 0) {
+> >               pr_debug("Opening %s write=%d\n", buf, readwrite);
+> >               if (readwrite && !probe_event_dry_run)
+> > -                     ret = open(buf, O_RDWR | O_APPEND, 0);
+> > +                     ret = TEMP_FAILURE_RETRY(open(buf, O_RDWR | O_APPEND, 0));
+> >               else
+> > -                     ret = open(buf, O_RDONLY, 0);
+> > +                     ret = TEMP_FAILURE_RETRY(open(buf, O_RDONLY, 0));
+> >
+> >               if (ret < 0)
+> >                       ret = -errno;
+> > @@ -180,7 +180,7 @@ struct strlist *probe_file__get_rawlist(int fd)
+> >       if (sl == NULL)
+> >               return NULL;
+> >
+> > -     fddup = dup(fd);
+> > +     fddup = TEMP_FAILURE_RETRY(dup(fd));
+> >       if (fddup < 0)
+> >               goto out_free_sl;
+> >
+> > @@ -498,7 +498,7 @@ static int probe_cache__open(struct probe_cache *pcache, const char *target,
+> >       }
+> >
+> >       snprintf(cpath, PATH_MAX, "%s/probes", dir_name);
+> > -     fd = open(cpath, O_CREAT | O_RDWR, 0644);
+> > +     fd = TEMP_FAILURE_RETRY(open(cpath, O_CREAT | O_RDWR, 0644));
+> >       if (fd < 0)
+> >               pr_debug("Failed to open cache(%d): %s\n", fd, cpath);
+> >       free(dir_name);
+> > @@ -514,7 +514,7 @@ static int probe_cache__load(struct probe_cache *pcache)
+> >       int ret = 0, fddup;
+> >       FILE *fp;
+> >
+> > -     fddup = dup(pcache->fd);
+> > +     fddup = TEMP_FAILURE_RETRY(dup(pcache->fd));
+> >       if (fddup < 0)
+> >               return -errno;
+> >       fp = fdopen(fddup, "r");
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index 0acb9de54b06..b2fc389cc530 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -384,7 +384,7 @@ static int skipn(int fd, off_t n)
+> >       ssize_t ret;
+> >
+> >       while (n > 0) {
+> > -             ret = read(fd, buf, min(n, (off_t)sizeof(buf)));
+> > +             ret = TEMP_FAILURE_RETRY(read(fd, buf, min(n, (off_t)sizeof(buf))));
+> >               if (ret <= 0)
+> >                       return ret;
+> >               n -= ret;
+> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> > index ecd377938eea..02556070a2ce 100644
+> > --- a/tools/perf/util/symbol-elf.c
+> > +++ b/tools/perf/util/symbol-elf.c
+> > @@ -577,7 +577,7 @@ static int read_build_id(const char *filename, struct build_id *bid)
+> >       if (size < BUILD_ID_SIZE)
+> >               goto out;
+> >
+> > -     fd = open(filename, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
+> >       if (fd < 0)
+> >               goto out;
+> >
+> > @@ -638,7 +638,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
+> >       size_t size = sizeof(bid->data);
+> >       int fd, err = -1;
+> >
+> > -     fd = open(filename, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
+> >       if (fd < 0)
+> >               goto out;
+> >
+> > @@ -647,24 +647,24 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
+> >               GElf_Nhdr nhdr;
+> >               size_t namesz, descsz;
+> >
+> > -             if (read(fd, &nhdr, sizeof(nhdr)) != sizeof(nhdr))
+> > +             if (TEMP_FAILURE_RETRY(read(fd, &nhdr, sizeof(nhdr))) != sizeof(nhdr))
+> >                       break;
+> >
+> >               namesz = NOTE_ALIGN(nhdr.n_namesz);
+> >               descsz = NOTE_ALIGN(nhdr.n_descsz);
+> >               if (nhdr.n_type == NT_GNU_BUILD_ID &&
+> >                   nhdr.n_namesz == sizeof("GNU")) {
+> > -                     if (read(fd, bf, namesz) != (ssize_t)namesz)
+> > +                     if (TEMP_FAILURE_RETRY(read(fd, bf, namesz)) != (ssize_t)namesz)
+> >                               break;
+> >                       if (memcmp(bf, "GNU", sizeof("GNU")) == 0) {
+> >                               size_t sz = min(descsz, size);
+> > -                             if (read(fd, bid->data, sz) == (ssize_t)sz) {
+> > +                             if (TEMP_FAILURE_RETRY(read(fd, bid->data, sz)) == (ssize_t)sz) {
+> >                                       memset(bid->data + sz, 0, size - sz);
+> >                                       bid->size = sz;
+> >                                       err = 0;
+> >                                       break;
+> >                               }
+> > -                     } else if (read(fd, bf, descsz) != (ssize_t)descsz)
+> > +                     } else if (TEMP_FAILURE_RETRY(read(fd, bf, descsz)) != (ssize_t)descsz)
+> >                               break;
+> >               } else {
+> >                       int n = namesz + descsz;
+> > @@ -674,7 +674,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
+> >                               pr_debug("%s: truncating reading of build id in sysfs file %s: n_namesz=%u, n_descsz=%u.\n",
+> >                                        __func__, filename, nhdr.n_namesz, nhdr.n_descsz);
+> >                       }
+> > -                     if (read(fd, bf, n) != n)
+> > +                     if (TEMP_FAILURE_RETRY(read(fd, bf, n)) != n)
+> >                               break;
+> >               }
+> >       }
+> > @@ -732,7 +732,7 @@ int filename__read_debuglink(const char *filename, char *debuglink,
+> >       Elf_Scn *sec;
+> >       Elf_Kind ek;
+> >
+> > -     fd = open(filename, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
+> >       if (fd < 0)
+> >               goto out;
+> >
+> > @@ -844,7 +844,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
+> >
+> >               type = dso->symtab_type;
+> >       } else {
+> > -             fd = open(name, O_RDONLY);
+> > +             fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY));
+> >               if (fd < 0) {
+> >                       dso->load_errno = errno;
+> >                       return -1;
+> > @@ -1454,7 +1454,7 @@ static int copy_bytes(int from, off_t from_offs, int to, off_t to_offs, u64 len)
+> >               if (len < n)
+> >                       n = len;
+> >               /* Use read because mmap won't work on proc files */
+> > -             r = read(from, buf, n);
+> > +             r = TEMP_FAILURE_RETRY(read(from, buf, n));
+> >               if (r < 0)
+> >                       goto out;
+> >               if (!r)
+> > @@ -1485,7 +1485,7 @@ static int kcore__open(struct kcore *kcore, const char *filename)
+> >  {
+> >       GElf_Ehdr *ehdr;
+> >
+> > -     kcore->fd = open(filename, O_RDONLY);
+> > +     kcore->fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
+> >       if (kcore->fd == -1)
+> >               return -1;
+> >
+> > @@ -1518,7 +1518,7 @@ static int kcore__init(struct kcore *kcore, char *filename, int elfclass,
+> >       if (temp)
+> >               kcore->fd = mkstemp(filename);
+> >       else
+> > -             kcore->fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400);
+> > +             kcore->fd = TEMP_FAILURE_RETRY(open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400));
+> >       if (kcore->fd == -1)
+> >               return -1;
+> >
+> > @@ -1966,7 +1966,7 @@ static int kcore_copy__compare_fds(int from, int to)
+> >
+> >       while (1) {
+> >               /* Use read because mmap won't work on proc files */
+> > -             ret = read(from, buf_from, page_size);
+> > +             ret = TEMP_FAILURE_RETRY(read(from, buf_from, page_size));
+> >               if (ret < 0)
+> >                       goto out;
+> >
+> > @@ -1994,11 +1994,11 @@ static int kcore_copy__compare_files(const char *from_filename,
+> >  {
+> >       int from, to, err = -1;
+> >
+> > -     from = open(from_filename, O_RDONLY);
+> > +     from = TEMP_FAILURE_RETRY(open(from_filename, O_RDONLY));
+> >       if (from < 0)
+> >               return -1;
+> >
+> > -     to = open(to_filename, O_RDONLY);
+> > +     to = TEMP_FAILURE_RETRY(open(to_filename, O_RDONLY));
+> >       if (to < 0)
+> >               goto out_close_from;
+> >
+> > @@ -2419,7 +2419,7 @@ int get_sdt_note_list(struct list_head *head, const char *target)
+> >       Elf *elf;
+> >       int fd, ret;
+> >
+> > -     fd = open(target, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(target, O_RDONLY));
+> >       if (fd < 0)
+> >               return -EBADF;
+> >
+> > diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+> > index f9eb0bee7f15..7e25d476b1b2 100644
+> > --- a/tools/perf/util/symbol-minimal.c
+> > +++ b/tools/perf/util/symbol-minimal.c
+> > @@ -230,7 +230,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
+> >       size_t buf_size;
+> >       void *buf;
+> >
+> > -     fd = open(filename, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(filename, O_RDONLY));
+> >       if (fd < 0)
+> >               return -1;
+> >
+> > @@ -242,7 +242,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
+> >       if (buf == NULL)
+> >               goto out;
+> >
+> > -     if (read(fd, buf, buf_size) != (ssize_t) buf_size)
+> > +     if (TEMP_FAILURE_RETRY(read(fd, buf, buf_size)) != (ssize_t) buf_size)
+> >               goto out_free;
+> >
+> >       ret = read_build_id(buf, buf_size, bid, false);
+> > @@ -256,7 +256,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
+> >  int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
+> >                enum dso_binary_type type)
+> >  {
+> > -     int fd = open(name, O_RDONLY);
+> > +     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY));
+> >       if (fd < 0)
+> >               goto out_errno;
+> >
+> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > index f72baf636724..5212667ea67d 100644
+> > --- a/tools/perf/util/symbol.c
+> > +++ b/tools/perf/util/symbol.c
+> > @@ -1335,7 +1335,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+> >       md.dso = dso;
+> >       INIT_LIST_HEAD(&md.maps);
+> >
+> > -     fd = open(kcore_filename, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(kcore_filename, O_RDONLY));
+> >       if (fd < 0) {
+> >               pr_debug("Failed to open %s. Note /proc/kcore requires CAP_SYS_RAWIO capability to access.\n",
+> >                        kcore_filename);
+> > @@ -2156,7 +2156,7 @@ static int find_matching_kcore(struct map *map, char *dir, size_t dir_sz)
+> >   */
+> >  static bool filename__readable(const char *file)
+> >  {
+> > -     int fd = open(file, O_RDONLY);
+> > +     int fd = TEMP_FAILURE_RETRY(open(file, O_RDONLY));
+> >       if (fd < 0)
+> >               return false;
+> >       close(fd);
+> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> > index 76beda3e1a10..9dcc268bd69c 100644
+> > --- a/tools/perf/util/synthetic-events.c
+> > +++ b/tools/perf/util/synthetic-events.c
+> > @@ -40,6 +40,7 @@
+> >  #include <api/io.h>
+> >  #include <sys/types.h>
+> >  #include <sys/stat.h>
+> > +#include <errno.h>
+> >  #include <fcntl.h>
+> >  #include <unistd.h>
+> >
+> > @@ -86,13 +87,13 @@ static int perf_event__get_comm_ids(pid_t pid, pid_t tid, char *comm, size_t len
+> >       else
+> >               snprintf(bf, sizeof(bf), "/proc/%d/status", tid);
+> >
+> > -     fd = open(bf, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(bf, O_RDONLY));
+> >       if (fd < 0) {
+> >               pr_debug("couldn't open %s\n", bf);
+> >               return -1;
+> >       }
+> >
+> > -     n = read(fd, bf, sizeof(bf) - 1);
+> > +     n = TEMP_FAILURE_RETRY(read(fd, bf, sizeof(bf) - 1));
+> >       close(fd);
+> >       if (n <= 0) {
+> >               pr_warning("Couldn't get COMM, tigd and ppid for pid %d\n",
+> > @@ -410,7 +411,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+> >       snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
+> >               machine->root_dir, pid, pid);
+> >
+> > -     io.fd = open(bf, O_RDONLY, 0);
+> > +     io.fd = TEMP_FAILURE_RETRY(open(bf, O_RDONLY, 0));
+> >       if (io.fd < 0) {
+> >               /*
+> >                * We raced with a task exiting - just return:
+> > diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
+> > index a65f65d0857e..c917a4217c6f 100644
+> > --- a/tools/perf/util/trace-event-info.c
+> > +++ b/tools/perf/util/trace-event-info.c
+> > @@ -48,7 +48,7 @@ static int record_file(const char *file, ssize_t hdr_sz)
+> >       int r, fd;
+> >       int err = -EIO;
+> >
+> > -     fd = open(file, O_RDONLY);
+> > +     fd = TEMP_FAILURE_RETRY(open(file, O_RDONLY));
+> >       if (fd < 0) {
+> >               pr_debug("Can't read '%s'", file);
+> >               return -errno;
+> > @@ -61,7 +61,7 @@ static int record_file(const char *file, ssize_t hdr_sz)
+> >       }
+> >
+> >       do {
+> > -             r = read(fd, buf, BUFSIZ);
+> > +             r = TEMP_FAILURE_RETRY(read(fd, buf, BUFSIZ));
+> >               if (r > 0) {
+> >                       size += r;
+> >                       if (write(output_fd, buf, r) != r)
+> > @@ -519,7 +519,7 @@ struct tracing_data *tracing_data_get(struct list_head *pattrs,
+> >                       return NULL;
+> >               }
+> >
+> > -             temp_fd = open(tdata->temp_file, O_RDWR);
+> > +             temp_fd = TEMP_FAILURE_RETRY(open(tdata->temp_file, O_RDWR));
+> >               if (temp_fd < 0) {
+> >                       pr_debug("Can't read '%s'", tdata->temp_file);
+> >                       free(tdata);
+> > diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+> > index 8a01af783310..7086770ec225 100644
+> > --- a/tools/perf/util/trace-event-read.c
+> > +++ b/tools/perf/util/trace-event-read.c
+> > @@ -11,6 +11,7 @@
+> >  #include <sys/stat.h>
+> >  #include <sys/wait.h>
+> >  #include <sys/mman.h>
+> > +#include <errno.h>
+> >  #include <fcntl.h>
+> >  #include <unistd.h>
+> >  #include <errno.h>
+> > @@ -28,7 +29,7 @@ static int __do_read(int fd, void *buf, int size)
+> >       int rsize = size;
+> >
+> >       while (size) {
+> > -             int ret = read(fd, buf, size);
+> > +             int ret = TEMP_FAILURE_RETRY(read(fd, buf, size));
+> >
+> >               if (ret <= 0)
+> >                       return -1;
+> > @@ -105,7 +106,7 @@ static char *read_string(void)
+> >       char c;
+> >
+> >       for (;;) {
+> > -             r = read(input_fd, &c, 1);
+> > +             r = TEMP_FAILURE_RETRY(read(input_fd, &c, 1));
+> >               if (r < 0) {
+> >                       pr_debug("reading input file");
+> >                       goto out;
+> > diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> > index 37622699c91a..2ece387a73c6 100644
+> > --- a/tools/perf/util/unwind-libunwind-local.c
+> > +++ b/tools/perf/util/unwind-libunwind-local.c
+> > @@ -362,7 +362,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+> >               }
+> >
+> >               if (ofs <= 0) {
+> > -                     fd = open(dso->symsrc_filename, O_RDONLY);
+> > +                     fd = TEMP_FAILURE_RETRY(open(dso->symsrc_filename, O_RDONLY));
+> >                       if (fd >= 0) {
+> >                               ofs = elf_section_offset(fd, ".debug_frame");
+> >                               close(fd);
+> > @@ -377,7 +377,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+> >                               dso, DSO_BINARY_TYPE__DEBUGLINK,
+> >                               machine->root_dir, debuglink, PATH_MAX);
+> >                       if (!ret) {
+> > -                             fd = open(debuglink, O_RDONLY);
+> > +                             fd = TEMP_FAILURE_RETRY(open(debuglink, O_RDONLY));
+> >                               if (fd >= 0) {
+> >                                       ofs = elf_section_offset(fd,
+> >                                                       ".debug_frame");
+> > diff --git a/tools/perf/util/zlib.c b/tools/perf/util/zlib.c
+> > index 78d2297c1b67..f4563ea094c8 100644
+> > --- a/tools/perf/util/zlib.c
+> > +++ b/tools/perf/util/zlib.c
+> > @@ -1,4 +1,5 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> > +#include <errno.h>
+> >  #include <fcntl.h>
+> >  #include <stdio.h>
+> >  #include <string.h>
+> > @@ -82,7 +83,7 @@ int gzip_decompress_to_file(const char *input, int output_fd)
+> >
+> >  bool gzip_is_compressed(const char *input)
+> >  {
+> > -     int fd = open(input, O_RDONLY);
+> > +     int fd = TEMP_FAILURE_RETRY(open(input, O_RDONLY));
+> >       const uint8_t magic[2] = { 0x1f, 0x8b };
+> >       char buf[2] = { 0 };
+> >       ssize_t rc;
+> > @@ -90,7 +91,7 @@ bool gzip_is_compressed(const char *input)
+> >       if (fd < 0)
+> >               return -1;
+> >
+> > -     rc = read(fd, buf, sizeof(buf));
+> > +     rc = TEMP_FAILURE_RETRY(read(fd, buf, sizeof(buf)));
+> >       close(fd);
+> >       return rc == sizeof(buf) ?
+> >              memcmp(buf, magic, sizeof(buf)) == 0 : false;
+>
