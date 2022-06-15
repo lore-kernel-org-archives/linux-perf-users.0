@@ -2,263 +2,973 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF40C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 15:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A747C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 15:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347422AbiFOPRN (ORCPT
+        id S231737AbiFOP3e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 11:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39762 "EHLO
+        Wed, 15 Jun 2022 11:29:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347151AbiFOPRM (ORCPT
+        with ESMTP id S1352214AbiFOP11 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 11:17:12 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBA63CFCD
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 08:17:09 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id q15so15791290wrc.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 08:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vvxf8KlSr0ZVRSgLE+viuGfqiYUL867BC1Qcel1jf2Q=;
-        b=GEMTMBYeJoJqX8s26fdaEEzaxqmr0OjcZ/ETLkbHSqp12148poShzWT+nvXFcGBtun
-         yRnS0XoQL1xVkD2YXR+5YZd6wo8Fwx4sItIrJApJ3+mcTv1lSCCf5vcDmHrLvbWFIKvb
-         hhQTq/JDNyosK6xQqBnJUXfJH8DOsMHseZWRiYkl1qtUk6KSo29qrN5YI2SNusR2C4KD
-         dmes5PkjPD5gg2UJY9kzX3BIUGUk0qIM7L1nEWiXF9vyVN2YgUqLQ9ILoM2aMbUI1hir
-         IrkcVgyg4WEf0zbXLeiHz+y7K6NZn8dMp4p5UMoikyPJtUKiYCAq6DUJKpeJvUPki7W3
-         zYrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vvxf8KlSr0ZVRSgLE+viuGfqiYUL867BC1Qcel1jf2Q=;
-        b=P0MRp50OwJ1eWHrn2cg92byl7A6Zljxxmw/AI74UxK6uzbPDeuT52KWFiWiUYskRio
-         jSDGf9qMnfJ45h1QpDd1K/ApOc9oUl33KfchMtaAF99CI9jPec6BuMJQ3g1/ZINWH1Mi
-         jcXe4gfkCbV3PiRXjLcmbQglvjvYbnj/DJOn1ows/DSPhzZaAW0odjxqk9FjjsLU/CnK
-         oLOzJGMMW78wd45Adk1rXbrop8ovK3Gw5G6c6vOhPX0boBWdM99YoCgoG5wQFSZ7giSv
-         bSZ/Q7v9FBY8p4jyGYw4JwnkZ5iSZEgdOIcEvV7cpDjACcvJgHGsR0eWqqBYaGoDXKGo
-         BItg==
-X-Gm-Message-State: AJIora+MnFGQGaiNvrlLmpWAAWZf1/mDaL0Zi2jA50y9J7T6obmaeTa7
-        wjB3iaRzIC6HT5o0vCC/T5XAh70idjVmYv/Wv16CTA==
-X-Google-Smtp-Source: AGRyM1uV0/TnCCC9vUDVQzVqxqGoC9H1FzouHTEPOyFtLfkjXcB+OqFE+WURMKtbiig/6NgrlT6mS3TfTPw+yvjaoa8=
-X-Received: by 2002:a05:6000:1a8d:b0:219:e3f2:c092 with SMTP id
- f13-20020a0560001a8d00b00219e3f2c092mr288061wry.375.1655306227590; Wed, 15
- Jun 2022 08:17:07 -0700 (PDT)
+        Wed, 15 Jun 2022 11:27:27 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A9645050;
+        Wed, 15 Jun 2022 08:27:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CF295B81F0B;
+        Wed, 15 Jun 2022 15:27:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE57C34115;
+        Wed, 15 Jun 2022 15:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655306826;
+        bh=vsuOzE9zk8EUMxazzYnwc+GCoKeW+gBkvqC9es8C/aM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MvXVDEf/AbsyElj0UQXB4KTNElJQNwOeP+TPb+VMKibWwIKO+P6IxrIuCxQhyTeb0
+         eQeBp/Qaf7dPjIbwYWeX+cQVxBDfRV5V7/wb/APU3SOsFEzB++v38LcrQpPM7MExyt
+         sFKZ3NJ72ZlME3uxIVh0E6oJQDclXs6C3lTf+Sw24AAi9Id931Yt3ySpS5xIbfBKZS
+         m0h/PDE9K24vaFnLFDNzio7+q/s9SR53ABd5MrogmFdfa2c/5kOEMwQaLlKKBRcF7Y
+         nWqdg60NdPzRU+2rN+ADAUhtUw8zgTr5FxegXcmB5MPqHRgDenArUmOD+0NgYW7eks
+         q3B0KIrvc2fUA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3A28D4096F; Wed, 15 Jun 2022 12:27:03 -0300 (-03)
+Date:   Wed, 15 Jun 2022 12:27:03 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCHv4 bpf-next 0/2] perf tools: Fix prologue generation
+Message-ID: <Yqn6R2BA12U6Ftzt@kernel.org>
+References: <20220603204509.15044-1-jolsa@kernel.org>
+ <CAEf4BzbT4Z=B2hZxTQf1MrCp6TGiMgP+_t7p8G5A+RdVyNP+8w@mail.gmail.com>
+ <YqOOsL8EbbO3lhmC@kernel.org>
+ <CAEf4BzaKP8MHtGZDVSpwbCxNUD4zY9wkjEa4HKR0LWxYKW5cGQ@mail.gmail.com>
+ <YqOvYo1tp32gKviM@krava>
+ <YqYTZVa44Y6RQ11W@krava>
 MIME-Version: 1.0
-References: <20220615150823.2230349-1-zhengjun.xing@linux.intel.com>
-In-Reply-To: <20220615150823.2230349-1-zhengjun.xing@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 15 Jun 2022 08:16:54 -0700
-Message-ID: <CAP-5=fVnD=jiSav=UAV9E_mc8XtcHad107ww8JSeiJ2y4ucxDw@mail.gmail.com>
-Subject: Re: [PATCH] perf record: Support "--cputype" option for hybrid events
-To:     zhengjun.xing@linux.intel.com
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YqYTZVa44Y6RQ11W@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 15, 2022 at 8:07 AM <zhengjun.xing@linux.intel.com> wrote:
->
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->
-> perf stat already has the "--cputype" option to enable events only on the
-> specified PMU for the hybrid platform, this commit extends the "--cputype"
-> support to perf record.
->
-> Without "--cputype", it reports events for both cpu_core and cpu_atom.
->
->  # ./perf record  -e cycles -a sleep 1 | ./perf report
->
->  # To display the perf.data header info, please use --header/--header-only options.
->  #
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.000 MB (null) ]
->  #
->  # Total Lost Samples: 0
->  #
->  # Samples: 335  of event 'cpu_core/cycles/'
->  # Event count (approx.): 35855267
->  #
->  # Overhead  Command          Shared Object      Symbol
->  # ........  ...............  .................  .........................................
->  #
->      10.31%  swapper          [kernel.kallsyms]  [k] poll_idle
->       9.42%  swapper          [kernel.kallsyms]  [k] menu_select
->       ...    ...               ...               ... ...
->
->  # Samples: 61  of event 'cpu_atom/cycles/'
->  # Event count (approx.): 16453825
->  #
->  # Overhead  Command        Shared Object      Symbol
->  # ........  .............  .................  ......................................
->  #
->      26.36%  snapd          [unknown]          [.] 0x0000563cc6d03841
->       7.43%  migration/13   [kernel.kallsyms]  [k] update_sd_lb_stats.constprop.0
->       ...    ...            ...                ... ...
->
-> With "--cputype", it reports events only for the specified PMU.
->
->  # ./perf record --cputype core  -e cycles -a sleep 1 | ./perf report
->
->  # To display the perf.data header info, please use --header/--header-only options.
->  #
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.000 MB (null) ]
->  #
->  # Total Lost Samples: 0
->  #
->  # Samples: 221  of event 'cpu_core/cycles/'
->  # Event count (approx.): 27121818
->  #
->  # Overhead  Command          Shared Object      Symbol
->  # ........  ...............  .................  .........................................
->  #
->      11.24%  swapper          [kernel.kallsyms]  [k] e1000_irq_enable
->       7.77%  swapper          [kernel.kallsyms]  [k] mwait_idle_with_hints.constprop.0
->       ...    ...              ...                ... ...
+Em Sun, Jun 12, 2022 at 06:25:09PM +0200, Jiri Olsa escreveu:
+> so the problem is that we prepend init proglogue instructions
+> for each program not just for the one that needs it, so it will
+> mismatch later on.. the fix below makes it work for me
 
-This is already possible by having the PMU name as part of the event,
-cpu_atom/cycles/ or cpu_core/cycles/. I don't know why we're adding
-"hybrid" all over the code base, I wish it would stop. You are asking
-for an option here for an implied PMU for events that don't specify a
-PMU. The option should be called --pmutype and consider all PMUs. We
-should remove the "hybrid" PMU list and make all of the "hybrid" code
-generic.
+> Arnaldo,
+> I squashed and pushed the change below changes to my bpf/depre
+> branch, could you please retest?
 
-Thanks,
-Ian
+Before:
 
-> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/Documentation/perf-record.txt |  4 ++++
->  tools/perf/builtin-record.c              |  3 +++
->  tools/perf/builtin-stat.c                | 20 --------------------
->  tools/perf/util/pmu-hybrid.c             | 19 +++++++++++++++++++
->  tools/perf/util/pmu-hybrid.h             |  2 ++
->  5 files changed, 28 insertions(+), 20 deletions(-)
->
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index cf8ad50f3de1..ba8d680da1ac 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -402,6 +402,10 @@ Enable weightened sampling. An additional weight is recorded per sample and can
->  displayed with the weight and local_weight sort keys.  This currently works for TSX
->  abort events and some memory events in precise mode on modern Intel CPUs.
->
-> +--cputype::
-> +Only enable events on applying cpu with this type for hybrid platform(e.g. core or atom).
-> +For non-hybrid events, it should be no effect.
-> +
->  --namespaces::
->  Record events of type PERF_RECORD_NAMESPACES.  This enables 'cgroup_id' sort key.
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 9a71f0330137..e1edd4e98358 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -3183,6 +3183,9 @@ static struct option __record_options[] = {
->         OPT_INCR('v', "verbose", &verbose,
->                     "be more verbose (show counter open errors, etc)"),
->         OPT_BOOLEAN('q', "quiet", &quiet, "don't print any message"),
-> +       OPT_CALLBACK(0, "cputype", &record.evlist, "hybrid cpu type",
-> +                    "Only enable events on applying cpu with this type for hybrid platform (e.g. core or atom)",
-> +                    parse_hybrid_type),
->         OPT_BOOLEAN('s', "stat", &record.opts.inherit_stat,
->                     "per thread counts"),
->         OPT_BOOLEAN('d', "data", &record.opts.sample_address, "Record the sample addresses"),
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 4ce87a8eb7d7..0d95b29273f4 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1184,26 +1184,6 @@ static int parse_stat_cgroups(const struct option *opt,
->         return parse_cgroups(opt, str, unset);
->  }
->
-> -static int parse_hybrid_type(const struct option *opt,
-> -                            const char *str,
-> -                            int unset __maybe_unused)
-> -{
-> -       struct evlist *evlist = *(struct evlist **)opt->value;
-> -
-> -       if (!list_empty(&evlist->core.entries)) {
-> -               fprintf(stderr, "Must define cputype before events/metrics\n");
-> -               return -1;
-> -       }
-> -
-> -       evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu(str);
-> -       if (!evlist->hybrid_pmu_name) {
-> -               fprintf(stderr, "--cputype %s is not supported!\n", str);
-> -               return -1;
-> -       }
-> -
-> -       return 0;
-> -}
-> -
->  static struct option stat_options[] = {
->         OPT_BOOLEAN('T', "transaction", &transaction_run,
->                     "hardware transaction statistics"),
-> diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
-> index f51ccaac60ee..5c490b5201b7 100644
-> --- a/tools/perf/util/pmu-hybrid.c
-> +++ b/tools/perf/util/pmu-hybrid.c
-> @@ -13,6 +13,7 @@
->  #include <stdarg.h>
->  #include <locale.h>
->  #include <api/fs/fs.h>
-> +#include "util/evlist.h"
->  #include "fncache.h"
->  #include "pmu-hybrid.h"
->
-> @@ -87,3 +88,21 @@ char *perf_pmu__hybrid_type_to_pmu(const char *type)
->         free(pmu_name);
->         return NULL;
->  }
-> +
-> +int parse_hybrid_type(const struct option *opt, const char *str, int unset __maybe_unused)
-> +{
-> +       struct evlist *evlist = *(struct evlist **)opt->value;
-> +
-> +       if (!list_empty(&evlist->core.entries)) {
-> +               fprintf(stderr, "Must define cputype before events/metrics\n");
-> +               return -1;
-> +       }
-> +
-> +       evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu(str);
-> +       if (!evlist->hybrid_pmu_name) {
-> +               fprintf(stderr, "--cputype %s is not supported!\n", str);
-> +               return -1;
-> +       }
-> +
-> +       return 0;
-> +}
-> diff --git a/tools/perf/util/pmu-hybrid.h b/tools/perf/util/pmu-hybrid.h
-> index 2b186c26a43e..26101f134a3a 100644
-> --- a/tools/perf/util/pmu-hybrid.h
-> +++ b/tools/perf/util/pmu-hybrid.h
-> @@ -5,6 +5,7 @@
->  #include <linux/perf_event.h>
->  #include <linux/compiler.h>
->  #include <linux/list.h>
-> +#include <subcmd/parse-options.h>
->  #include <stdbool.h>
->  #include "pmu.h"
->
-> @@ -18,6 +19,7 @@ bool perf_pmu__hybrid_mounted(const char *name);
->  struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name);
->  bool perf_pmu__is_hybrid(const char *name);
->  char *perf_pmu__hybrid_type_to_pmu(const char *type);
-> +int parse_hybrid_type(const struct option *opt, const char *str, int unset __maybe_unused);
->
->  static inline int perf_pmu__hybrid_pmu_num(void)
->  {
-> --
-> 2.25.1
->
+[acme@quaco perf-urgent]$ git log --oneline -5
+e2cf9d315f90670f (HEAD -> perf/urgent, five/perf/urgent) perf test topology: Use !strncmp(right platform) to fix guest PPC comparision check
+42e4fb08ff987b50 perf test: Record only user callchains on the "Check Arm64 callgraphs are complete in fp mode" test
+819d5c3cf75d0f95 perf beauty: Update copy of linux/socket.h with the kernel sources
+ebdc02b3ece8238b perf test: Fix variable length array undefined behavior in bp_account
+8ff58c35adb7f118 libperf evsel: Open shouldn't leak fd on failure
+[acme@quaco perf-urgent]$ sudo su -
+[root@quaco ~]# perf -v
+perf version 5.19.rc2.ge2cf9d315f90
+[root@quaco ~]# perf test bpf
+ 40: LLVM search and compile                                         :
+ 40.1: Basic BPF llvm compile                                        : Ok
+ 40.3: Compile source for BPF prologue generation                    : Ok
+ 40.4: Compile source for BPF relocation                             : Ok
+ 42: BPF filter                                                      :
+ 42.1: Basic BPF filtering                                           : Ok
+ 42.2: BPF pinning                                                   : Ok
+ 42.3: BPF prologue generation                                       : Ok
+ 63: Test libpfm4 support                                            :
+ 96: perf stat --bpf-counters test                                   : Ok
+[root@quaco ~]#
+
+After your first patch:
+
+[acme@quaco perf-urgent]$ git log --oneline -5 jolsa/bpf/depre
+9317b879db422632 (jolsa/bpf/depre) perf tools: Rework prologue generation code
+4d40831f29f2c9ad perf tools: Register fallback libbpf section handler
+f913ad6559e337b4 libbpf: Fix is_pow_of_2
+f175ece2e3436748 selftests/bpf: Fix tc_redirect_dtime
+7b711e721234f475 bpf, test_run: Remove unnecessary prog type checks
+[acme@quaco perf-urgent]$ git cherry-pick 4d40831f29f2c9ad
+[perf/urgent ab39fb6880b57507] perf tools: Register fallback libbpf section handler
+ Author: Jiri Olsa <jolsa@kernel.org>
+ Date: Thu Apr 21 15:22:25 2022 +0200
+ 1 file changed, 65 insertions(+), 11 deletions(-)
+[acme@quaco perf-urgent]$
+[acme@quaco perf-urgent]$ alias m='rm -rf ~/libexec/perf-core/ ; perf stat -e cycles:u,instructions:u make -k BUILD_BPF_SKEL=1 PYTHON=python3 O=/tmp/build/perf-urgent -C tools/perf install-bin && perf test python'
+[acme@quaco perf-urgent]$ rm -rf /tmp/build/perf-urgent ; mkdir -p /tmp/build/perf-urgent ; m
+<SNIP>
+ 19: 'import perf' in python                                         : Ok
+[acme@quaco perf-urgent]$
+[acme@quaco perf-urgent]$ sudo su -
+[sudo] password for acme:
+[root@quaco ~]# perf test bpf
+ 40: LLVM search and compile                                         :
+ 40.1: Basic BPF llvm compile                                        : Ok
+ 40.3: Compile source for BPF prologue generation                    : Ok
+ 40.4: Compile source for BPF relocation                             : Ok
+ 42: BPF filter                                                      :
+ 42.1: Basic BPF filtering                                           : Ok
+ 42.2: BPF pinning                                                   : Ok
+ 42.3: BPF prologue generation                                       : FAILED!
+ 63: Test libpfm4 support                                            :
+ 96: perf stat --bpf-counters test                                   : Ok
+[root@quaco ~]#
+
+perf test -v bpf later, lets see if landing the second patch fixes
+things and this bisection problem is justified:
+
+[acme@quaco perf-urgent]$ git log --oneline -5 jolsa/bpf/depre
+9317b879db422632 (jolsa/bpf/depre) perf tools: Rework prologue generation code
+4d40831f29f2c9ad perf tools: Register fallback libbpf section handler
+f913ad6559e337b4 libbpf: Fix is_pow_of_2
+f175ece2e3436748 selftests/bpf: Fix tc_redirect_dtime
+7b711e721234f475 bpf, test_run: Remove unnecessary prog type checks
+[acme@quaco perf-urgent]$ git remote update jolsa
+Fetching jolsa
+[acme@quaco perf-urgent]$ git cherry-pick 9317b879db422632
+[perf/urgent 9a36c7c94e1f596d] perf tools: Rework prologue generation code
+ Author: Jiri Olsa <jolsa@kernel.org>
+ Date: Mon May 9 22:46:20 2022 +0200
+ 1 file changed, 110 insertions(+), 18 deletions(-)
+[acme@quaco perf-urgent]$
+[acme@quaco perf-urgent]$ rm -rf /tmp/build/perf-urgent ; mkdir -p /tmp/build/perf-urgent ; m
+<SNIP>
+ 19: 'import perf' in python                                         : Ok
+[acme@quaco perf-urgent]$ sudo su -
+[root@quaco ~]# perf test bpf
+ 40: LLVM search and compile                                         :
+ 40.1: Basic BPF llvm compile                                        : Ok
+ 40.3: Compile source for BPF prologue generation                    : Ok
+ 40.4: Compile source for BPF relocation                             : Ok
+ 42: BPF filter                                                      :
+ 42.1: Basic BPF filtering                                           : Ok
+ 42.2: BPF pinning                                                   : Ok
+ 42.3: BPF prologue generation                                       : Ok
+ 63: Test libpfm4 support                                            :
+ 96: perf stat --bpf-counters test                                   : Ok
+[root@quaco ~]#
+
+So it works in the end, can it be made to work after the first step? I
+didn't check that.
+
+-v without the last patch:
+
+[acme@quaco perf-urgent]$ git reset --hard HEAD~
+HEAD is now at ab39fb6880b57507 perf tools: Register fallback libbpf section handler
+[acme@quaco perf-urgent]$ rm -rf /tmp/build/perf-urgent ; mkdir -p /tmp/build/perf-urgent ; m
+<SNIP>
+ 19: 'import perf' in python                                         : Ok
+[acme@quaco perf-urgent]$ sudo su -
+[root@quaco ~]# perf test -v bpf
+ 40: LLVM search and compile                                         :
+ 40.1: Basic BPF llvm compile                                        :
+--- start ---
+test child forked, pid 731590
+Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
+set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+unset env: KBUILD_OPTS
+include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: NR_CPUS=8
+set env: LINUX_VERSION_CODE=0x5110b
+set env: CLANG_EXEC=/usr/lib64/ccache/clang
+set env: CLANG_OPTIONS=-xc -g
+set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
+set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+set env: CLANG_SOURCE=-
+llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-example.c
+ * Test basic LLVM building
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
+#endif
+#define BPF_ANY 0
+#define BPF_MAP_TYPE_ARRAY 2
+#define BPF_FUNC_map_lookup_elem 1
+#define BPF_FUNC_map_update_elem 2
+
+static void *(*bpf_map_lookup_elem)(void *map, void *key) =
+	(void *) BPF_FUNC_map_lookup_elem;
+static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
+	(void *) BPF_FUNC_map_update_elem;
+
+struct bpf_map_def {
+	unsigned int type;
+	unsigned int key_size;
+	unsigned int value_size;
+	unsigned int max_entries;
+};
+
+#define SEC(NAME) __attribute__((section(NAME), used))
+struct bpf_map_def SEC("maps") flip_table = {
+	.type = BPF_MAP_TYPE_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(int),
+	.max_entries = 1,
+};
+
+SEC("func=do_epoll_wait")
+int bpf_func__SyS_epoll_pwait(void *ctx)
+{
+	int ind =0;
+	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
+	int new_flag;
+	if (!flag)
+		return 0;
+	/* flip flag and store back */
+	new_flag = !*flag;
+	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
+	return new_flag;
+}
+char _license[] SEC("license") = "GPL";
+int _version SEC("version") = LINUX_VERSION_CODE;
+' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
+llvm compiling command : echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-example.c
+ * Test basic LLVM building
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt=-DLINUX_VERSION_CODE=0x40200 into llvm section of ~/.perfconfig'
+#endif
+#define BPF_ANY 0
+#define BPF_MAP_TYPE_ARRAY 2
+#define BPF_FUNC_map_lookup_elem 1
+#define BPF_FUNC_map_update_elem 2
+
+static void *(*bpf_map_lookup_elem)(void *map, void *key) =
+	(void *) BPF_FUNC_map_lookup_elem;
+static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
+	(void *) BPF_FUNC_map_update_elem;
+
+struct bpf_map_def {
+	unsigned int type;
+	unsigned int key_size;
+	unsigned int value_size;
+	unsigned int max_entries;
+};
+
+#define SEC(NAME) __attribute__((section(NAME), used))
+struct bpf_map_def SEC(maps) flip_table = {
+	.type = BPF_MAP_TYPE_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(int),
+	.max_entries = 1,
+};
+
+SEC(func=do_epoll_wait)
+int bpf_func__SyS_epoll_pwait(void *ctx)
+{
+	int ind =0;
+	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
+	int new_flag;
+	if (!flag)
+		return 0;
+	/* flip flag and store back */
+	new_flag = !*flag;
+	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
+	return new_flag;
+}
+char _license[] SEC(license) = GPL;
+int _version SEC(version) = LINUX_VERSION_CODE;
+' | /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x5110b -xc -g -I/home/acme/lib/perf/include/bpf -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.17.11-300.fc36.x86_64/build -c - -target bpf  -O2 -o - 
+libbpf: map 'flip_table' (legacy): legacy map definitions are deprecated, use BTF-defined maps instead
+libbpf: Use of BPF_ANNOTATE_KV_PAIR is deprecated, use BTF-defined maps in .maps section instead
+test child finished with 0
+---- end ----
+LLVM search and compile subtest 1: Ok
+ 40.3: Compile source for BPF prologue generation                    :
+--- start ---
+test child forked, pid 731783
+Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
+set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+unset env: KBUILD_OPTS
+include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: NR_CPUS=8
+set env: LINUX_VERSION_CODE=0x5110b
+set env: CLANG_EXEC=/usr/lib64/ccache/clang
+set env: CLANG_OPTIONS=-xc -g
+set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
+set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+set env: CLANG_SOURCE=-
+llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-test-prologue.c
+ * Test BPF prologue
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
+#endif
+#define SEC(NAME) __attribute__((section(NAME), used))
+
+#include <uapi/linux/fs.h>
+
+/*
+ * If CONFIG_PROFILE_ALL_BRANCHES is selected,
+ * 'if' is redefined after include kernel header.
+ * Recover 'if' for BPF object code.
+ */
+#ifdef if
+# undef if
+#endif
+
+#define FMODE_READ		0x1
+#define FMODE_WRITE		0x2
+
+static void (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
+	(void *) 6;
+
+SEC("func=null_lseek file->f_mode offset orig")
+int bpf_func__null_lseek(void *ctx, int err, unsigned long _f_mode,
+			 unsigned long offset, unsigned long orig)
+{
+	fmode_t f_mode = (fmode_t)_f_mode;
+
+	if (err)
+		return 0;
+	if (f_mode & FMODE_WRITE)
+		return 0;
+	if (offset & 1)
+		return 0;
+	if (orig == SEEK_CUR)
+		return 0;
+	return 1;
+}
+
+char _license[] SEC("license") = "GPL";
+int _version SEC("version") = LINUX_VERSION_CODE;
+' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
+llvm compiling command : 
+test child finished with 0
+---- end ----
+LLVM search and compile subtest 3: Ok
+ 40.4: Compile source for BPF relocation                             :
+--- start ---
+test child forked, pid 731976
+Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
+set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+unset env: KBUILD_OPTS
+include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: NR_CPUS=8
+set env: LINUX_VERSION_CODE=0x5110b
+set env: CLANG_EXEC=/usr/lib64/ccache/clang
+set env: CLANG_OPTIONS=-xc -g
+set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
+set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+set env: CLANG_SOURCE=-
+llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-test-relocation.c
+ * Test BPF loader checking relocation
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
+#endif
+#define BPF_ANY 0
+#define BPF_MAP_TYPE_ARRAY 2
+#define BPF_FUNC_map_lookup_elem 1
+#define BPF_FUNC_map_update_elem 2
+
+static void *(*bpf_map_lookup_elem)(void *map, void *key) =
+	(void *) BPF_FUNC_map_lookup_elem;
+static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
+	(void *) BPF_FUNC_map_update_elem;
+
+struct bpf_map_def {
+	unsigned int type;
+	unsigned int key_size;
+	unsigned int value_size;
+	unsigned int max_entries;
+};
+
+#define SEC(NAME) __attribute__((section(NAME), used))
+struct bpf_map_def SEC("maps") my_table = {
+	.type = BPF_MAP_TYPE_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(int),
+	.max_entries = 1,
+};
+
+int this_is_a_global_val;
+
+SEC("func=sys_write")
+int bpf_func__sys_write(void *ctx)
+{
+	int key = 0;
+	int value = 0;
+
+	/*
+	 * Incorrect relocation. Should not allow this program be
+	 * loaded into kernel.
+	 */
+	bpf_map_update_elem(&this_is_a_global_val, &key, &value, 0);
+	return 0;
+}
+char _license[] SEC("license") = "GPL";
+int _version SEC("version") = LINUX_VERSION_CODE;
+' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
+llvm compiling command : echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-test-relocation.c
+ * Test BPF loader checking relocation
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt=-DLINUX_VERSION_CODE=0x40200 into llvm section of ~/.perfconfig'
+#endif
+#define BPF_ANY 0
+#define BPF_MAP_TYPE_ARRAY 2
+#define BPF_FUNC_map_lookup_elem 1
+#define BPF_FUNC_map_update_elem 2
+
+static void *(*bpf_map_lookup_elem)(void *map, void *key) =
+	(void *) BPF_FUNC_map_lookup_elem;
+static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
+	(void *) BPF_FUNC_map_update_elem;
+
+struct bpf_map_def {
+	unsigned int type;
+	unsigned int key_size;
+	unsigned int value_size;
+	unsigned int max_entries;
+};
+
+#define SEC(NAME) __attribute__((section(NAME), used))
+struct bpf_map_def SEC(maps) my_table = {
+	.type = BPF_MAP_TYPE_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(int),
+	.max_entries = 1,
+};
+
+int this_is_a_global_val;
+
+SEC(func=sys_write)
+int bpf_func__sys_write(void *ctx)
+{
+	int key = 0;
+	int value = 0;
+
+	/*
+	 * Incorrect relocation. Should not allow this program be
+	 * loaded into kernel.
+	 */
+	bpf_map_update_elem(&this_is_a_global_val, &key, &value, 0);
+	return 0;
+}
+char _license[] SEC(license) = GPL;
+int _version SEC(version) = LINUX_VERSION_CODE;
+' | /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x5110b -xc -g -I/home/acme/lib/perf/include/bpf -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.17.11-300.fc36.x86_64/build -c - -target bpf  -O2 -o - 
+test child finished with 0
+---- end ----
+LLVM search and compile subtest 4: Ok
+ 42: BPF filter                                                      :
+ 42.1: Basic BPF filtering                                           :
+--- start ---
+test child forked, pid 732169
+Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
+set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+unset env: KBUILD_OPTS
+include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: NR_CPUS=8
+set env: LINUX_VERSION_CODE=0x5110b
+set env: CLANG_EXEC=/usr/lib64/ccache/clang
+set env: CLANG_OPTIONS=-xc -g
+set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
+set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+set env: CLANG_SOURCE=-
+llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-example.c
+ * Test basic LLVM building
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
+#endif
+#define BPF_ANY 0
+#define BPF_MAP_TYPE_ARRAY 2
+#define BPF_FUNC_map_lookup_elem 1
+#define BPF_FUNC_map_update_elem 2
+
+static void *(*bpf_map_lookup_elem)(void *map, void *key) =
+	(void *) BPF_FUNC_map_lookup_elem;
+static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
+	(void *) BPF_FUNC_map_update_elem;
+
+struct bpf_map_def {
+	unsigned int type;
+	unsigned int key_size;
+	unsigned int value_size;
+	unsigned int max_entries;
+};
+
+#define SEC(NAME) __attribute__((section(NAME), used))
+struct bpf_map_def SEC("maps") flip_table = {
+	.type = BPF_MAP_TYPE_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(int),
+	.max_entries = 1,
+};
+
+SEC("func=do_epoll_wait")
+int bpf_func__SyS_epoll_pwait(void *ctx)
+{
+	int ind =0;
+	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
+	int new_flag;
+	if (!flag)
+		return 0;
+	/* flip flag and store back */
+	new_flag = !*flag;
+	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
+	return new_flag;
+}
+char _license[] SEC("license") = "GPL";
+int _version SEC("version") = LINUX_VERSION_CODE;
+' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
+llvm compiling command : echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-example.c
+ * Test basic LLVM building
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt=-DLINUX_VERSION_CODE=0x40200 into llvm section of ~/.perfconfig'
+#endif
+#define BPF_ANY 0
+#define BPF_MAP_TYPE_ARRAY 2
+#define BPF_FUNC_map_lookup_elem 1
+#define BPF_FUNC_map_update_elem 2
+
+static void *(*bpf_map_lookup_elem)(void *map, void *key) =
+	(void *) BPF_FUNC_map_lookup_elem;
+static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
+	(void *) BPF_FUNC_map_update_elem;
+
+struct bpf_map_def {
+	unsigned int type;
+	unsigned int key_size;
+	unsigned int value_size;
+	unsigned int max_entries;
+};
+
+#define SEC(NAME) __attribute__((section(NAME), used))
+struct bpf_map_def SEC(maps) flip_table = {
+	.type = BPF_MAP_TYPE_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(int),
+	.max_entries = 1,
+};
+
+SEC(func=do_epoll_wait)
+int bpf_func__SyS_epoll_pwait(void *ctx)
+{
+	int ind =0;
+	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
+	int new_flag;
+	if (!flag)
+		return 0;
+	/* flip flag and store back */
+	new_flag = !*flag;
+	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
+	return new_flag;
+}
+char _license[] SEC(license) = GPL;
+int _version SEC(version) = LINUX_VERSION_CODE;
+' | /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x5110b -xc -g -I/home/acme/lib/perf/include/bpf -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.17.11-300.fc36.x86_64/build -c - -target bpf  -O2 -o - 
+libbpf: loading object '[basic_bpf_test]' from buffer
+libbpf: elf: section(3) func=do_epoll_wait, size 192, link 0, flags 6, type=1
+libbpf: sec 'func=do_epoll_wait': found program 'bpf_func__SyS_epoll_pwait' at insn offset 0 (0 bytes), code size 24 insns (192 bytes)
+libbpf: elf: section(4) .relfunc=do_epoll_wait, size 32, link 22, flags 0, type=9
+libbpf: elf: section(5) maps, size 16, link 0, flags 3, type=1
+libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
+libbpf: license of [basic_bpf_test] is GPL
+libbpf: elf: section(7) version, size 4, link 0, flags 3, type=1
+libbpf: kernel version of [basic_bpf_test] is 5110b
+libbpf: elf: section(13) .BTF, size 576, link 0, flags 0, type=1
+libbpf: elf: section(15) .BTF.ext, size 256, link 0, flags 0, type=1
+libbpf: elf: section(22) .symtab, size 336, link 1, flags 0, type=2
+libbpf: looking for externs among 14 symbols...
+libbpf: collected 0 externs total
+libbpf: elf: found 1 legacy map definitions (16 bytes) in [basic_bpf_test]
+libbpf: map 'flip_table' (legacy): legacy map definitions are deprecated, use BTF-defined maps instead
+libbpf: map 'flip_table' (legacy): at sec_idx 5, offset 0.
+libbpf: map 11 is "flip_table"
+libbpf: Use of BPF_ANNOTATE_KV_PAIR is deprecated, use BTF-defined maps in .maps section instead
+libbpf: map:flip_table container_name:____btf_map_flip_table cannot be found in BTF. Missing BPF_ANNOTATE_KV_PAIR?
+libbpf: sec '.relfunc=do_epoll_wait': collecting relocation for section(3) 'func=do_epoll_wait'
+libbpf: sec '.relfunc=do_epoll_wait': relo #0: insn #4 against 'flip_table'
+libbpf: prog 'bpf_func__SyS_epoll_pwait': found map 0 (flip_table, sec 5, off 0) for insn #4
+libbpf: sec '.relfunc=do_epoll_wait': relo #1: insn #17 against 'flip_table'
+libbpf: prog 'bpf_func__SyS_epoll_pwait': found map 0 (flip_table, sec 5, off 0) for insn #17
+bpf: config program 'func=do_epoll_wait'
+symbol:do_epoll_wait file:(null) line:0 offset:0 return:0 lazy:(null)
+bpf: config 'func=do_epoll_wait' is ok
+Looking at the vmlinux_path (8 entries long)
+symsrc__init: build id mismatch for vmlinux.
+Using /usr/lib/debug/lib/modules/5.17.11-300.fc36.x86_64/vmlinux for symbols
+Open Debuginfo file: /usr/lib/debug/.build-id/f2/26f5d75e6842add57095a0615a1e5c16783dd7.debug
+Try to find probe point from debuginfo.
+Matched function: do_epoll_wait [38063fb]
+Probe point found: do_epoll_wait+0
+
+Found 1 probe_trace_events.
+Opening /sys/kernel/tracing//kprobe_events write=1
+Opening /sys/kernel/tracing//README write=0
+Writing event: p:perf_bpf_probe/func _text+3943040
+libbpf: map 'flip_table': created successfully, fd=4
+add bpf event perf_bpf_probe:func and attach bpf program 5
+adding perf_bpf_probe:func
+adding perf_bpf_probe:func to 0x3017000
+Using CPUID GenuineIntel-6-8E-A
+mmap size 1052672B
+Opening /sys/kernel/tracing//kprobe_events write=1
+Opening /sys/kernel/tracing//uprobe_events write=1
+Parsing probe_events: p:perf_bpf_probe/func _text+3943040
+Group:perf_bpf_probe Event:func probe:p
+Writing event: -:perf_bpf_probe/func
+test child finished with 0
+---- end ----
+BPF filter subtest 1: Ok
+ 42.2: BPF pinning                                                   :
+--- start ---
+test child forked, pid 732362
+Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
+set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+unset env: KBUILD_OPTS
+include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: NR_CPUS=8
+set env: LINUX_VERSION_CODE=0x5110b
+set env: CLANG_EXEC=/usr/lib64/ccache/clang
+set env: CLANG_OPTIONS=-xc -g
+set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
+set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+set env: CLANG_SOURCE=-
+llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-example.c
+ * Test basic LLVM building
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
+#endif
+#define BPF_ANY 0
+#define BPF_MAP_TYPE_ARRAY 2
+#define BPF_FUNC_map_lookup_elem 1
+#define BPF_FUNC_map_update_elem 2
+
+static void *(*bpf_map_lookup_elem)(void *map, void *key) =
+	(void *) BPF_FUNC_map_lookup_elem;
+static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
+	(void *) BPF_FUNC_map_update_elem;
+
+struct bpf_map_def {
+	unsigned int type;
+	unsigned int key_size;
+	unsigned int value_size;
+	unsigned int max_entries;
+};
+
+#define SEC(NAME) __attribute__((section(NAME), used))
+struct bpf_map_def SEC("maps") flip_table = {
+	.type = BPF_MAP_TYPE_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(int),
+	.max_entries = 1,
+};
+
+SEC("func=do_epoll_wait")
+int bpf_func__SyS_epoll_pwait(void *ctx)
+{
+	int ind =0;
+	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
+	int new_flag;
+	if (!flag)
+		return 0;
+	/* flip flag and store back */
+	new_flag = !*flag;
+	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
+	return new_flag;
+}
+char _license[] SEC("license") = "GPL";
+int _version SEC("version") = LINUX_VERSION_CODE;
+' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
+llvm compiling command : echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-example.c
+ * Test basic LLVM building
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt=-DLINUX_VERSION_CODE=0x40200 into llvm section of ~/.perfconfig'
+#endif
+#define BPF_ANY 0
+#define BPF_MAP_TYPE_ARRAY 2
+#define BPF_FUNC_map_lookup_elem 1
+#define BPF_FUNC_map_update_elem 2
+
+static void *(*bpf_map_lookup_elem)(void *map, void *key) =
+	(void *) BPF_FUNC_map_lookup_elem;
+static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
+	(void *) BPF_FUNC_map_update_elem;
+
+struct bpf_map_def {
+	unsigned int type;
+	unsigned int key_size;
+	unsigned int value_size;
+	unsigned int max_entries;
+};
+
+#define SEC(NAME) __attribute__((section(NAME), used))
+struct bpf_map_def SEC(maps) flip_table = {
+	.type = BPF_MAP_TYPE_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(int),
+	.max_entries = 1,
+};
+
+SEC(func=do_epoll_wait)
+int bpf_func__SyS_epoll_pwait(void *ctx)
+{
+	int ind =0;
+	int *flag = bpf_map_lookup_elem(&flip_table, &ind);
+	int new_flag;
+	if (!flag)
+		return 0;
+	/* flip flag and store back */
+	new_flag = !*flag;
+	bpf_map_update_elem(&flip_table, &ind, &new_flag, BPF_ANY);
+	return new_flag;
+}
+char _license[] SEC(license) = GPL;
+int _version SEC(version) = LINUX_VERSION_CODE;
+' | /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CPUS__=8 -DLINUX_VERSION_CODE=0x5110b -xc -g -I/home/acme/lib/perf/include/bpf -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/5.17.11-300.fc36.x86_64/build -c - -target bpf  -O2 -o - 
+libbpf: loading object '[bpf_pinning]' from buffer
+libbpf: elf: section(3) func=do_epoll_wait, size 192, link 0, flags 6, type=1
+libbpf: sec 'func=do_epoll_wait': found program 'bpf_func__SyS_epoll_pwait' at insn offset 0 (0 bytes), code size 24 insns (192 bytes)
+libbpf: elf: section(4) .relfunc=do_epoll_wait, size 32, link 22, flags 0, type=9
+libbpf: elf: section(5) maps, size 16, link 0, flags 3, type=1
+libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
+libbpf: license of [bpf_pinning] is GPL
+libbpf: elf: section(7) version, size 4, link 0, flags 3, type=1
+libbpf: kernel version of [bpf_pinning] is 5110b
+libbpf: elf: section(13) .BTF, size 576, link 0, flags 0, type=1
+libbpf: elf: section(15) .BTF.ext, size 256, link 0, flags 0, type=1
+libbpf: elf: section(22) .symtab, size 336, link 1, flags 0, type=2
+libbpf: looking for externs among 14 symbols...
+libbpf: collected 0 externs total
+libbpf: elf: found 1 legacy map definitions (16 bytes) in [bpf_pinning]
+libbpf: map 'flip_table' (legacy): legacy map definitions are deprecated, use BTF-defined maps instead
+libbpf: map 'flip_table' (legacy): at sec_idx 5, offset 0.
+libbpf: map 11 is "flip_table"
+libbpf: Use of BPF_ANNOTATE_KV_PAIR is deprecated, use BTF-defined maps in .maps section instead
+libbpf: map:flip_table container_name:____btf_map_flip_table cannot be found in BTF. Missing BPF_ANNOTATE_KV_PAIR?
+libbpf: sec '.relfunc=do_epoll_wait': collecting relocation for section(3) 'func=do_epoll_wait'
+libbpf: sec '.relfunc=do_epoll_wait': relo #0: insn #4 against 'flip_table'
+libbpf: prog 'bpf_func__SyS_epoll_pwait': found map 0 (flip_table, sec 5, off 0) for insn #4
+libbpf: sec '.relfunc=do_epoll_wait': relo #1: insn #17 against 'flip_table'
+libbpf: prog 'bpf_func__SyS_epoll_pwait': found map 0 (flip_table, sec 5, off 0) for insn #17
+bpf: config program 'func=do_epoll_wait'
+symbol:do_epoll_wait file:(null) line:0 offset:0 return:0 lazy:(null)
+bpf: config 'func=do_epoll_wait' is ok
+Looking at the vmlinux_path (8 entries long)
+symsrc__init: build id mismatch for vmlinux.
+Using /usr/lib/debug/lib/modules/5.17.11-300.fc36.x86_64/vmlinux for symbols
+Open Debuginfo file: /usr/lib/debug/.build-id/f2/26f5d75e6842add57095a0615a1e5c16783dd7.debug
+Try to find probe point from debuginfo.
+Matched function: do_epoll_wait [38063fb]
+Probe point found: do_epoll_wait+0
+Found 1 probe_trace_events.
+Opening /sys/kernel/tracing//kprobe_events write=1
+Opening /sys/kernel/tracing//README write=0
+Writing event: p:perf_bpf_probe/func _text+3943040
+libbpf: map 'flip_table': created successfully, fd=4
+add bpf event perf_bpf_probe:func and attach bpf program 5
+adding perf_bpf_probe:func
+adding perf_bpf_probe:func to 0x3017000
+Using CPUID GenuineIntel-6-8E-A
+mmap size 1052672B
+libbpf: pinned map '/sys/fs/bpf/perf_test/flip_table'
+libbpf: pinned program '/sys/fs/bpf/perf_test/func=do_epoll_wait'
+Opening /sys/kernel/tracing//kprobe_events write=1
+Opening /sys/kernel/tracing//uprobe_events write=1
+Parsing probe_events: p:perf_bpf_probe/func _text+3943040
+Group:perf_bpf_probe Event:func probe:p
+Writing event: -:perf_bpf_probe/func
+test child finished with 0
+---- end ----
+BPF filter subtest 2: Ok
+ 42.3: BPF prologue generation                                       :
+--- start ---
+test child forked, pid 732556
+Kernel build dir is set to /lib/modules/5.17.11-300.fc36.x86_64/build
+set env: KBUILD_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+unset env: KBUILD_OPTS
+include option is set to -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: NR_CPUS=8
+set env: LINUX_VERSION_CODE=0x5110b
+set env: CLANG_EXEC=/usr/lib64/ccache/clang
+set env: CLANG_OPTIONS=-xc -g
+set env: KERNEL_INC_OPTIONS=-nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h 
+set env: PERF_BPF_INC_OPTIONS=-I/home/acme/lib/perf/include/bpf
+set env: WORKING_DIR=/lib/modules/5.17.11-300.fc36.x86_64/build
+set env: CLANG_SOURCE=-
+llvm compiling command template: echo '// SPDX-License-Identifier: GPL-2.0
+/*
+ * bpf-script-test-prologue.c
+ * Test BPF prologue
+ */
+#ifndef LINUX_VERSION_CODE
+# error Need LINUX_VERSION_CODE
+# error Example: for 4.2 kernel, put 'clang-opt="-DLINUX_VERSION_CODE=0x40200" into llvm section of ~/.perfconfig'
+#endif
+#define SEC(NAME) __attribute__((section(NAME), used))
+
+#include <uapi/linux/fs.h>
+
+/*
+ * If CONFIG_PROFILE_ALL_BRANCHES is selected,
+ * 'if' is redefined after include kernel header.
+ * Recover 'if' for BPF object code.
+ */
+#ifdef if
+# undef if
+#endif
+
+#define FMODE_READ		0x1
+#define FMODE_WRITE		0x2
+
+static void (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
+	(void *) 6;
+
+SEC("func=null_lseek file->f_mode offset orig")
+int bpf_func__null_lseek(void *ctx, int err, unsigned long _f_mode,
+			 unsigned long offset, unsigned long orig)
+{
+	fmode_t f_mode = (fmode_t)_f_mode;
+
+	if (err)
+		return 0;
+	if (f_mode & FMODE_WRITE)
+		return 0;
+	if (offset & 1)
+		return 0;
+	if (orig == SEEK_CUR)
+		return 0;
+	return 1;
+}
+
+char _license[] SEC("license") = "GPL";
+int _version SEC("version") = LINUX_VERSION_CODE;
+' | $CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS -DLINUX_VERSION_CODE=$LINUX_VERSION_CODE $CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS -Wno-unused-value -Wno-pointer-sign -working-directory $WORKING_DIR -c "$CLANG_SOURCE" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE
+llvm compiling command : 
+libbpf: loading object '[bpf_prologue_test]' from buffer
+libbpf: elf: section(3) func=null_lseek file->f_mode offset orig, size 112, link 0, flags 6, type=1
+libbpf: sec 'func=null_lseek file->f_mode offset orig': found program 'bpf_func__null_lseek' at insn offset 0 (0 bytes), code size 14 insns (112 bytes)
+libbpf: elf: section(4) license, size 4, link 0, flags 3, type=1
+libbpf: license of [bpf_prologue_test] is GPL
+libbpf: elf: section(5) version, size 4, link 0, flags 3, type=1
+libbpf: kernel version of [bpf_prologue_test] is 5110b
+libbpf: elf: section(11) .BTF, size 489, link 0, flags 0, type=1
+libbpf: elf: section(13) .BTF.ext, size 144, link 0, flags 0, type=1
+libbpf: elf: section(20) .symtab, size 312, link 1, flags 0, type=2
+libbpf: looking for externs among 13 symbols...
+libbpf: collected 0 externs total
+bpf: config program 'func=null_lseek file->f_mode offset orig'
+symbol:null_lseek file:(null) line:0 offset:0 return:0 lazy:(null)
+parsing arg: file->f_mode into file, f_mode(1)
+parsing arg: offset into offset
+parsing arg: orig into orig
+bpf: config 'func=null_lseek file->f_mode offset orig' is ok
+Looking at the vmlinux_path (8 entries long)
+symsrc__init: build id mismatch for vmlinux.
+Using /usr/lib/debug/lib/modules/5.17.11-300.fc36.x86_64/vmlinux for symbols
+Open Debuginfo file: /usr/lib/debug/.build-id/f2/26f5d75e6842add57095a0615a1e5c16783dd7.debug
+Try to find probe point from debuginfo.
+Opening /sys/kernel/tracing//README write=0
+Matched function: null_lseek [73f7810]
+Probe point found: null_lseek+0
+Searching 'file' variable in context.
+Converting variable file into trace event.
+converting f_mode in file
+f_mode type is unsigned int.
+Searching 'offset' variable in context.
+Converting variable offset into trace event.
+offset type is long long int.
+Searching 'orig' variable in context.
+Converting variable orig into trace event.
+orig type is int.
+Found 1 probe_trace_events.
+Opening /sys/kernel/tracing//kprobe_events write=1
+Writing event: p:perf_bpf_probe/func _text+8502800 f_mode=+68(%di):x32 offset=%si:s64 orig=%dx:s32
+In map_prologue, ntevs=1
+mapping[0]=0
+prologue: pass validation
+prologue: slow path
+prologue: fetch arg 0, base reg is %di
+prologue: arg 0: offset 68
+prologue: fetch arg 1, base reg is %si
+prologue: fetch arg 2, base reg is %dx
+prologue: load arg 0, insn_sz is BPF_W
+prologue: load arg 1, insn_sz is BPF_DW
+prologue: load arg 2, insn_sz is BPF_DW
+add bpf event perf_bpf_probe:func and attach bpf program 4
+adding perf_bpf_probe:func
+adding perf_bpf_probe:func to 0x3739570
+Using CPUID GenuineIntel-6-8E-A
+mmap size 1052672B
+BPF filter result incorrect, expected 28, got 222 samples
+Opening /sys/kernel/tracing//kprobe_events write=1
+Opening /sys/kernel/tracing//uprobe_events write=1
+Parsing probe_events: p:perf_bpf_probe/func _text+8502800 f_mode=+68(%di):x32 offset=%si:s64 orig=%dx:s32
+Group:perf_bpf_probe Event:func probe:p
+Writing event: -:perf_bpf_probe/func
+test child finished with -1
+---- end ----
+BPF filter subtest 3: FAILED!
+ 63: Test libpfm4 support                                            :
+ 96: perf stat --bpf-counters test                                   :
+--- start ---
+test child forked, pid 732749
+test child finished with 0
+---- end ----
+perf stat --bpf-counters test: Ok
+[root@quaco ~]# 
+[root@quaco ~]# 
+[root@quaco ~]# 
+
+
