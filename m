@@ -2,229 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A19C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 00:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFC7CCA483
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 00:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbiFOAN5 (ORCPT
+        id S238399AbiFOAoR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 20:13:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59306 "EHLO
+        Tue, 14 Jun 2022 20:44:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238166AbiFOANr (ORCPT
+        with ESMTP id S231504AbiFOAoO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 20:13:47 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0231581C
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 17:13:46 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id q2-20020a170902dac200b00168b3978426so5615005plx.17
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 17:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=VWOVk1jH/Ru1/0ssqOaKB13FZQZaZbbtFy4vR2AihMw=;
-        b=LwBF5P4EWnhcmnqlfh220XsbVgQ40ho2vvijCuCVrq7gnnj/aW2PKau3PQwpWSTc0R
-         WAwdHro0SkOGtQpjU1wPz1GxXhMYmKtFpiqUB7TJN31758mqmwuvV25zZ2OGDTxElC7z
-         SOzGTN4LzCMcDgrtlaDrIdHq+8m9uphIJkux74OXeKbrpIKcqMo7EBHTFytmnRo3qAO9
-         Sk4/b/sVysWZ8drQ1TJuzshwmozZC3qo8d6xRuvTa++Z+Xab7SnHQvlsqZ186Jv0yY6+
-         QL3X3/3BTfZ2EFeXU0VNCOOtzRWxTe2LzcB34sG8cWjbhf7BI0bKuYoalC7ZhHFEob/v
-         0EWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=VWOVk1jH/Ru1/0ssqOaKB13FZQZaZbbtFy4vR2AihMw=;
-        b=K/xSARdhW6hSjVuGSaCLnLalpGpvIqBkNh2j8wE8X1cvObtvvp3Pq7KNT7kM1RWYSC
-         xwOcaUXbONeStiAk23e/YPwAbVtDRoBaN2VAp6ya8G6hurx5wtMJguml90I6p/X3A1BT
-         kvQgyOFbfjT1s5ZE7od6HhQWtcCS4k56HF4+2KeDrAy5Np/60GtDYAG3BaSHFG34R0m2
-         LRP1KHJiarAU/2YL3yNcWRAEhaNEMfB242Ta0qAlsulKhCERlH3xsCqIT6XwbRg/OtGU
-         5wOYeZX7+0IehkG40TkNk5GtqW/T6W8oJjijBMvY7o/zrM+gyy5iAbIFxwFbzp1obSCB
-         3vlQ==
-X-Gm-Message-State: AJIora/2HFhUQH8MJ7nAdQJrNfYu6xgtULknUvjsHVe/6bNofG65g8Vh
-        Xm57tCXCoO2aemC7SzincRgLmMwizYEQdJDv
-X-Google-Smtp-Source: AGRyM1vGymm0xuf01VUXyVzBQro51MWVc/Eq45Kv64E7feWc10x4bxuGwSrgK5CdFJ0tBgDQz6uefp9zOxQKWKz7
-X-Received: from blakejones.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:411c])
- (user=blakejones job=sendgmr) by 2002:a17:90a:fb90:b0:1e3:809:9296 with SMTP
- id cp16-20020a17090afb9000b001e308099296mr7056679pjb.26.1655252025667; Tue,
- 14 Jun 2022 17:13:45 -0700 (PDT)
-Date:   Tue, 14 Jun 2022 17:13:34 -0700
-Message-Id: <20220615001334.611882-1-blakejones@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
-Subject: [PATCH v2] Add a "-m" option to "perf buildid-list".
-From:   Blake Jones <blakejones@google.com>
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 Jun 2022 20:44:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4434BBBE;
+        Tue, 14 Jun 2022 17:44:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4259A61949;
+        Wed, 15 Jun 2022 00:44:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95DFBC3411B;
+        Wed, 15 Jun 2022 00:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655253852;
+        bh=rcjBHcwDa3Vvz9ae34yYid9fcwgrK1WVNSLCfZ/KP5E=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=fdhcRapfOZeMu89rXN1F9+PFgQBw1jq2TFCvdWilZKBPl7d60xoaf+Z1BoVI71oyo
+         RqJwT7IyOmWKrdq1gGthk/wr5qRLVQoB8lFuH3bhpG8v28ehqFht7ixYYEHPsMm9AB
+         B8Nl92yiOr67Th9tcRyEPi0fRLrSpOhoRzoC/T6UuHa5X12CLk5h++1bfLpyoCHqB+
+         fvK77b4d+EdbOzzr1aIJ1u6gTHC44L8QS8SaSAp9SKbflwgVl3VgsZCvB9XatY8lhL
+         9YwdPZU6iL7l0pnNRdqWmeOhCsfxrQ+i6D2NKXEGZhl5QpSSUjx5BoIk0tcHaLBiwv
+         bedv5BuhTNO6Q==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id 327DD5C0BCC; Tue, 14 Jun 2022 17:44:12 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 17:44:12 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        vgupta@kernel.org, linux@armlinux.org.uk,
+        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
+        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
+        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        dinguyen@kernel.org, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 16/36] rcu: Fix rcu_idle_exit()
+Message-ID: <20220615004412.GA5766@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
+References: <20220608142723.103523089@infradead.org>
+ <20220608144516.935970247@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220608144516.935970247@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This new option displays all of the information needed to do external
-BuildID-based symbolization of kernel stack traces, such as those collected
-by bpf_get_stackid(). For each kernel module plus the main kernel, it
-displays the BuildID, the start and end virtual addresses of that module's
-text range (rounded out to page boundaries), and the pathname of the
-module.
+On Wed, Jun 08, 2022 at 04:27:39PM +0200, Peter Zijlstra wrote:
+> Current rcu_idle_exit() is terminally broken because it uses
+> local_irq_{save,restore}(), which are traced which uses RCU.
+> 
+> However, now that all the callers are sure to have IRQs disabled, we
+> can remove these calls.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-When run as a non-privileged user, the actual addresses of the modules'
-text ranges are not available, so the tools displays "0, <text length>" for
-kernel modules and "0, 0xffffffffffffffff" for the kernel itself.
+We have some fun conflicts between this series and Frederic's context-tracking
+series.  But it looks like these can be resolved by:
 
-Sample output:
+1.	A patch on top of Frederic's series that provides the old rcu_*()
+	names for the functions now prefixed with ct_*() such as
+	ct_idle_exit().
 
-root# perf buildid-list -m
-cf6df852fd4da122d616153353cc8f560fd12fe0 ffffffffa5400000 ffffffffa6001e27 [kernel.kallsyms]
-1aa7209aa2acb067d66ed6cf7676d65066384d61 ffffffffc0087000 ffffffffc008b000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/sha512_generic.ko
-3857815b5bf0183697b68f8fe0ea06121644041e ffffffffc008c000 ffffffffc0098000 /lib/modules/5.15.15-1rodete2-amd64/kernel/arch/x86/crypto/sha512-ssse3.ko
-4081fde0bca2bc097cb3e9d1efcb836047d485f1 ffffffffc0099000 ffffffffc009f000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/acpi/button.ko
-1ef81ba4890552ea6b0314f9635fc43fc8cef568 ffffffffc00a4000 ffffffffc00aa000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/cryptd.ko
-cc5c985506cb240d7d082b55ed260cbb851f983e ffffffffc00af000 ffffffffc00b6000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/i2c/busses/i2c-piix4.ko
-[...]
+2.	Another patch on top of Frederic's series that takes the
+	changes remaining from this patch, shown below.  Frederic's
+	series uses raw_local_irq_save() and raw_local_irq_restore(),
+	which can then be removed.
 
-Signed-off-by: Blake Jones <blakejones@google.com>
----
- .../perf/Documentation/perf-buildid-list.txt  |  4 +++
- tools/perf/builtin-buildid-list.c             | 35 ++++++++++++++++++-
- tools/perf/util/machine.c                     | 13 +++++++
- tools/perf/util/machine.h                     |  5 +++
- 4 files changed, 56 insertions(+), 1 deletion(-)
+Or is there a better way to do this?
 
-diff --git a/tools/perf/Documentation/perf-buildid-list.txt b/tools/perf/Documentation/perf-buildid-list.txt
-index 25c52efcc7f0..e1e8fdbe06b9 100644
---- a/tools/perf/Documentation/perf-buildid-list.txt
-+++ b/tools/perf/Documentation/perf-buildid-list.txt
-@@ -33,6 +33,10 @@ OPTIONS
- -k::
- --kernel::
- 	Show running kernel build id.
-+-m::
-+--kernel-maps::
-+	Show buildid, start/end text address, and path of running kernel and
-+	its modules.
- -v::
- --verbose::
- 	Be more verbose.
-diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-index cebadd632234..e73520190974 100644
---- a/tools/perf/builtin-buildid-list.c
-+++ b/tools/perf/builtin-buildid-list.c
-@@ -12,6 +12,7 @@
- #include "util/build-id.h"
- #include "util/debug.h"
- #include "util/dso.h"
-+#include "util/map.h"
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
- #include "util/session.h"
-@@ -20,6 +21,31 @@
- #include <errno.h>
- #include <linux/err.h>
- 
-+static int buildid__map_cb(struct map *map, void *arg __maybe_unused)
-+{
-+	const struct dso *dso = map->dso;
-+	char bid_buf[SBUILD_ID_SIZE];
-+
-+	memset(bid_buf, 0, sizeof(bid_buf));
-+	if (dso->has_build_id)
-+		build_id__sprintf(&dso->bid, bid_buf);
-+	printf("%s %16lx %16lx", bid_buf, map->start, map->end);
-+	if (dso->long_name != NULL)
-+		printf(" %s", dso->long_name);
-+	printf("\n");
-+
-+	return 0;
-+}
-+
-+static void buildid__show_kernel_maps(void)
-+{
-+	struct machine *machine;
-+
-+	machine = machine__new_host();
-+	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
-+	machine__delete(machine);
-+}
-+
- static int sysfs__fprintf_build_id(FILE *fp)
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit f64cee8c159e9863a74594efe3d33fb513a6a7b5
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Tue Jun 14 17:24:43 2022 -0700
+
+    context_tracking: Interrupts always disabled for ct_idle_exit()
+    
+    Now that the idle-loop cleanups have ensured that rcu_idle_exit() is
+    always invoked with interrupts disabled, remove the interrupt disabling
+    in favor of a debug check.
+    
+    Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+    Cc: Frederic Weisbecker <frederic@kernel.org>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+index 1da44803fd319..99310cf5b0254 100644
+--- a/kernel/context_tracking.c
++++ b/kernel/context_tracking.c
+@@ -332,11 +332,8 @@ EXPORT_SYMBOL_GPL(ct_idle_enter);
+  */
+ void noinstr ct_idle_exit(void)
  {
- 	char sbuild_id[SBUILD_ID_SIZE];
-@@ -99,6 +125,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
- int cmd_buildid_list(int argc, const char **argv)
- {
- 	bool show_kernel = false;
-+	bool show_kernel_maps = false;
- 	bool with_hits = false;
- 	bool force = false;
- 	const struct option options[] = {
-@@ -106,6 +133,8 @@ int cmd_buildid_list(int argc, const char **argv)
- 	OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
- 	OPT_BOOLEAN('k', "kernel", &show_kernel, "Show current kernel build id"),
-+	OPT_BOOLEAN('m', "kernel-maps", &show_kernel_maps,
-+	    "Show build id of current kernel + modules"),
- 	OPT_INCR('v', "verbose", &verbose, "be more verbose"),
- 	OPT_END()
- 	};
-@@ -117,8 +146,12 @@ int cmd_buildid_list(int argc, const char **argv)
- 	argc = parse_options(argc, argv, options, buildid_list_usage, 0);
- 	setup_pager();
- 
--	if (show_kernel)
-+	if (show_kernel) {
- 		return !(sysfs__fprintf_build_id(stdout) > 0);
-+	} else if (show_kernel_maps) {
-+		buildid__show_kernel_maps();
-+		return 0;
-+	}
- 
- 	return perf_session__list_build_ids(force, with_hits);
+-	unsigned long flags;
+-
+-	raw_local_irq_save(flags);
++	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !raw_irqs_disabled());
+ 	ct_kernel_enter(false, RCU_DYNTICKS_IDX - CONTEXT_IDLE);
+-	raw_local_irq_restore(flags);
  }
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 009061852808..28fff9a02ab0 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3327,3 +3327,16 @@ int machine__for_each_dso(struct machine *machine, machine__dso_t fn, void *priv
- 	}
- 	return err;
- }
-+
-+int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, void *priv)
-+{
-+	struct maps *maps = machine__kernel_maps(machine);
-+	struct map *map;
-+	int err = 0;
-+
-+	for (map = maps__first(maps); map != NULL; map = map__next(map)) {
-+		if (fn(map, priv))
-+			err = -1;
-+	}
-+	return err;
-+}
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 5d7daf7cb7bc..e1476343cbb2 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -262,6 +262,11 @@ typedef int (*machine__dso_t)(struct dso *dso, struct machine *machine, void *pr
+ EXPORT_SYMBOL_GPL(ct_idle_exit);
  
- int machine__for_each_dso(struct machine *machine, machine__dso_t fn,
- 			  void *priv);
-+
-+typedef int (*machine__map_t)(struct map *map, void *priv);
-+int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn,
-+				 void *priv);
-+
- int machine__for_each_thread(struct machine *machine,
- 			     int (*fn)(struct thread *thread, void *p),
- 			     void *priv);
-
-base-commit: 1bcca2b1bd67f3c0e5c3a88ed16c6389f01a5b31
--- 
-2.36.1.476.g0c4daa206d-goog
-
