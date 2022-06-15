@@ -2,105 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111A5C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 18:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A02FC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 18:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345493AbiFOSY7 (ORCPT
+        id S1349421AbiFOStV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 14:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
+        Wed, 15 Jun 2022 14:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241899AbiFOSY6 (ORCPT
+        with ESMTP id S1358156AbiFOStT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 14:24:58 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2874525588
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 11:24:57 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id q15so16441173wrc.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 11:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=dcAxWgbZuRHTp66ggWKgZRQnYEOnRN0xUdUzompkjlI=;
-        b=AAlNd6Lwcr4sbv/nSgSJS5gZgZrBovngMXOuvbDW0zpntn6a/XL7WMUmwe8rMzK3q6
-         6gtaP6LvEWknTyRNCguVVZRGxl/ayptS3v1Sa6YbjgBCi9ol/mFKVaB9grW3pdDqiBt+
-         eB9b0gK84ouMfD28zfMFPqod3FZF6MhZVfyVCsIYCdz8PXzcsGDAWzkkls6hHS6bZvd1
-         MOVYNbqENDjsvSOzqE171ictHpZvTrDrYStn5I55jl9n/XoHHc6jTHo/hIFSnEJE/7e6
-         TovJzNnywKoG4OL2QPQSAS38IeYYWw8Aymm8jfmCaghllXplNlE0FuB/KMwq+qPw5/Kn
-         bdJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=dcAxWgbZuRHTp66ggWKgZRQnYEOnRN0xUdUzompkjlI=;
-        b=EntbKkTTd719b9RpweLgCzfl5rp8p17vCGEkmgPI6sfk813ASJJQs8UXee888Sosqc
-         ZmZ/tmA9sfd8LEIF8Zz5AUJSOE+yL6brMNIpcAAog/WK0pZzw4pYpa0h1RY8gYudgw5g
-         4OwuyrybTZRI/WKvAaRQ8fWCx8qmfjz6LjKkbL00hFCTZgFf6OXEhJH6MpLXb7xMhqie
-         mbp53LYjD/ocHo+4JIv5z5O67L3e6GLh4wIPaacuIfg5To/zuMlW9HN6pzvtVl5ynVOe
-         Z5Nrq+mQVIUqeSrh1F90ZkLNqftyaQ7Xrd3DaRgtOg0z91vdN/BF7buhz3UOnG9rUeQU
-         aUgw==
-X-Gm-Message-State: AJIora+JsqZKyMFpwuRZ0TEmA4MCvPy61SeVbBpb92b4RnYrqdQt9H3k
-        jsD4BOscEfUQj+y3TpZaWFFcfU/hw0M7D5KiDqqTw+cpUcu5Aw/c0io=
-X-Google-Smtp-Source: AGRyM1uc3C11xrMSmEKL/cMINqibGVrFUNr3O/PY9RbSRqM4JK5iyabAQ9529q2C9akOMeAmdgJ+dK9xmZRWwqjgAuE=
-X-Received: by 2002:adf:e19e:0:b0:211:7169:dfa6 with SMTP id
- az30-20020adfe19e000000b002117169dfa6mr1072699wrb.654.1655317494855; Wed, 15
- Jun 2022 11:24:54 -0700 (PDT)
+        Wed, 15 Jun 2022 14:49:19 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805834B1E6;
+        Wed, 15 Jun 2022 11:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655318953; x=1686854953;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wn5NiHZZ5IcNI7uGKQLVRm318DxREBFo5acevQoydbM=;
+  b=ixNy89eZGoR5fjmsx1BbP5GPtIyDN/+pCZmdgplP15p8bfDqYQ4mX7DM
+   WoFEUKypxvpFW4+WDnRep4+TTUihPpiIyml7w5mKjtyqHwx42XpnLf5OI
+   PU/DWKoBmddjo992XMYPR/Zq/bhmujUC9zSAzGCfDZB19zxReI1TqrFQk
+   Byn4VozmaaNtC0BPWU2dq69NfMgAWgaIIkP8CkQVKOlDY+9EjHL64fMhf
+   KeB7uwOUnP2KUOqd91fN80IgWzuyTUjoEwvv8NSg5+FdmL3Iw8LQCfqZC
+   MSQEdhtaCtz9QX48ho977Ymht9owQqj0tzvtbJP18MRLh1cLKH95u7nik
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="365424895"
+X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
+   d="scan'208";a="365424895"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 11:33:12 -0700
+X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
+   d="scan'208";a="612868968"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.209.51.207]) ([10.209.51.207])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 11:33:10 -0700
+Message-ID: <11db049c-c288-71c2-de37-545fd695d486@linux.intel.com>
+Date:   Wed, 15 Jun 2022 11:33:05 -0700
 MIME-Version: 1.0
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 15 Jun 2022 11:24:42 -0700
-Message-ID: <CAP-5=fVdLBjQa4ptJGMfSSm69d=vezqLr=ZwoCk8J1R4OPVTgQ@mail.gmail.com>
-Subject: June 16th - office hours
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] perf io: Make open and read calls more robust
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Song Liu <songliubraving@fb.com>, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        German Gomez <german.gomez@arm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Denis Nikitin <denik@chromium.org>,
+        Lexi Shao <shaolexi@huawei.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220615060354.1763693-1-irogers@google.com>
+From:   Andi Kleen <ak@linux.intel.com>
+In-Reply-To: <20220615060354.1763693-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
 
-A reminder that there will be another office hours tomorrow at 2pm
-GMT. The around the world times I believe are:
-China: 10pm
-India: 7:30pm
-Europe: 4pm
-UK: 3pm
-US east coast: 10am
-Brazil: 11am
-US west coast: 7am
+On 6/14/2022 11:03 PM, Ian Rogers wrote:
+> Wrap open and read calls with TEMP_FAILURE_RETRY in case a signal
+> causes the syscall to need to restart.
 
-If you experience problems then my email can be used for Google
-hangout messages, I'll try to be on IRC (#perf on irc.oftc.net).
 
-A reminder that the code of conduct is here:
-https://www.kernel.org/doc/html/latest/process/code-of-conduct.html
-More details from the first office hours are here:
-https://lore.kernel.org/linux-perf-users/CAP-5=3DfWkxtm5-Ebwkh4pzA83prvuAJ5=
-yy6CKQYatdkKWu3Tgeg@mail.gmail.com/
+Why not just use SA_RESTART on the signals?
 
-The Google meet details are here:
-Linux Perf Tool - Office Hours
-Thursday, June 16 =C2=B7 7:00 =E2=80=93 8:00am
-Google Meet joining info
-Video call link: https://meet.google.com/goj-quks-ydn
-Or dial: =E2=80=AA(US) +1 301-969-4101=E2=80=AC PIN: =E2=80=AA374 496 227=
-=E2=80=AC#
-More phone numbers: https://tel.meet/goj-quks-ydn?pin=3D8067739163431
-Notes (ask to be added to see):
-https://docs.google.com/document/d/1tQZvJ12czMedpmLLZWS0XILAte97zdR6H_tgC3I=
-vafs/edit?usp=3Dsharing&resourcekey=3D0-iV9_8Oc0cSOPl0-NvEYDAA
 
-Agenda:
- - It is the first week of GSoC so we should do our first check in
-with the contributors.
+-Andi
 
-If other people have agenda items then please reply-all to this
-e-mail. I believe there is interest in discussing hybrid plans - I
-don't have hybrid plans but if others want to discuss this then please
-let me know.
-
-Thanks and I hope to see you tomorrow,
-Ian
