@@ -2,205 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDA5CCA47E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 13:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E4EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 13:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348663AbiFONJP (ORCPT
+        id S241056AbiFONVT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 09:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47106 "EHLO
+        Wed, 15 Jun 2022 09:21:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234938AbiFONJP (ORCPT
+        with ESMTP id S1349376AbiFONVR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 09:09:15 -0400
+        Wed, 15 Jun 2022 09:21:17 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F312122297;
-        Wed, 15 Jun 2022 06:09:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D966F3B02F
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 06:21:16 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA4071570;
-        Wed, 15 Jun 2022 06:09:13 -0700 (PDT)
-Received: from e127744.arm.com (unknown [10.57.84.186])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ABE563F66F;
-        Wed, 15 Jun 2022 06:09:11 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE883139F;
+        Wed, 15 Jun 2022 06:21:16 -0700 (PDT)
+Received: from [10.57.84.186] (unknown [10.57.84.186])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2EA1B3F66F;
+        Wed, 15 Jun 2022 06:21:15 -0700 (PDT)
+Subject: Re: [PATCH] perf test: Record only user callchains
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Michael Petlan <mpetlan@redhat.com>,
+        linux-perf-users@vger.kernel.org, acme@redhat.com,
+        jolsa@kernel.org, Leo Yan <leo.yan@linaro.org>
+References: <20220614105207.26223-1-mpetlan@redhat.com>
+ <20220614131704.GA237086@leoy-ThinkPad-X240s> <Yqjc/FSW2sJ6ZA5U@kernel.org>
+ <20220615081402.GA121588@leoy-ThinkPad-X240s>
 From:   German Gomez <german.gomez@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     German Gomez <german.gomez@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH] perf test: Add test for branch stack sampling
-Date:   Wed, 15 Jun 2022 14:09:01 +0100
-Message-Id: <20220615130901.1151397-2-german.gomez@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220615130901.1151397-1-german.gomez@arm.com>
-References: <20220615130901.1151397-1-german.gomez@arm.com>
+Message-ID: <3cee66ce-f4d6-fee6-6efe-84a3e3ef5bb1@arm.com>
+Date:   Wed, 15 Jun 2022 14:21:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220615081402.GA121588@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a self test for branch stack sampling, to check that we get the
-expected branch types, and filters behave as expected.
 
-Suggested-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: German Gomez <german.gomez@arm.com>
----
- tools/perf/tests/shell/lib/brstack/main.h | 16 +++++
- tools/perf/tests/shell/lib/brstack/test.c | 24 +++++++
- tools/perf/tests/shell/test_brstack.sh    | 86 +++++++++++++++++++++++
- 3 files changed, 126 insertions(+)
- create mode 100644 tools/perf/tests/shell/lib/brstack/main.h
- create mode 100644 tools/perf/tests/shell/lib/brstack/test.c
- create mode 100755 tools/perf/tests/shell/test_brstack.sh
+On 15/06/2022 09:14, Leo Yan wrote:
+> On Tue, Jun 14, 2022 at 04:09:48PM -0300, Arnaldo Carvalho de Melo wrote:
+>
+> [...]
+>
+>>> With addressing German's comment for "excluding kernel callchains":
+>> Addressed.
+>>  
+>>> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+>> Thanks, added.
+> Thanks a lot, Arnaldo!
 
-diff --git a/tools/perf/tests/shell/lib/brstack/main.h b/tools/perf/tests/shell/lib/brstack/main.h
-new file mode 100644
-index 000000000..94d2665ec
---- /dev/null
-+++ b/tools/perf/tests/shell/lib/brstack/main.h
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define BENCH_RUNS 99999
-+
-+void bench(void);
-+
-+int main(void)
-+{
-+	int cnt = 0;
-+
-+	while (1) {
-+		if ((cnt++) > BENCH_RUNS)
-+			break;
-+		bench();		/* call */
-+	}				/* branch (uncond) */
-+	return 0;
-+}
-diff --git a/tools/perf/tests/shell/lib/brstack/test.c b/tools/perf/tests/shell/lib/brstack/test.c
-new file mode 100644
-index 000000000..8a2308901
---- /dev/null
-+++ b/tools/perf/tests/shell/lib/brstack/test.c
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "main.h"
-+
-+int cnt;
-+
-+void bar(void)
-+{
-+}				/* return */
-+
-+void foo(void)
-+{
-+	bar();			/* call */
-+}				/* return */
-+
-+void bench(void)
-+{
-+	void (*foo_ind)(void) = foo;
-+
-+	if ((cnt++) % 3)	/* branch (cond) */
-+		foo();		/* call */
-+
-+	bar();			/* call */
-+	foo_ind();		/* call (ind) */
-+}
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-new file mode 100755
-index 000000000..2b1a1b20a
---- /dev/null
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -0,0 +1,86 @@
-+#!/bin/sh
-+# Check branch stack sampling
-+
-+# SPDX-License-Identifier: GPL-2.0
-+# German Gomez <german.gomez@arm.com>, 2022
-+
-+set -e
-+
-+# we need a C compiler to build the test programs
-+# so bail if none is found
-+if ! [ -x "$(command -v cc)" ]; then
-+	echo "failed: no compiler, install gcc"
-+	exit 2
-+fi
-+
-+# skip the test if the hardware doesn't support branch stack sampling
-+perf record -b -o- -- true > /dev/null || exit 2
-+
-+TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
-+
-+cleanup() {
-+	rm -rf $TMPDIR
-+}
-+
-+trap cleanup exit term int
-+
-+test_user_branches() {
-+	echo
-+	echo "Testing user branch stack sampling"
-+	echo
-+
-+	cc -fno-inline -g "$(dirname $0)/lib/brstack/test.c" -o $TMPDIR/a.out
-+
-+	perf record -o $TMPDIR/perf.data -q --branch-filter any,save_type,u -- $TMPDIR/a.out
-+	perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 > $TMPDIR/perf.script
-+
-+	# example of branch entries:
-+	# 	foo+0x14/bar+0x40/P/-/-/0/CALL
-+
-+	set -x
-+	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
-+	egrep -m1 "^foo\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
-+	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
-+	egrep -m1 "^bench\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
-+	egrep -m1 "^bar\+[^ ]*/foo\+[^ ]*/RET$"		$TMPDIR/perf.script
-+	egrep -m1 "^foo\+[^ ]*/bench\+[^ ]*/RET$"	$TMPDIR/perf.script
-+	egrep -m1 "^bench\+[^ ]*/bench\+[^ ]*/COND$"	$TMPDIR/perf.script
-+	egrep -m1 "^main\+[^ ]*/main\+[^ ]*/UNCOND$"	$TMPDIR/perf.script
-+	set +x
-+
-+	# some branch types are still not being tested:
-+	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
-+}
-+
-+test_filter() {
-+	local filter=$1
-+	local expect=$2
-+
-+	echo
-+	echo "Testing branch stack filtering permutation ($filter,$expect)"
-+	echo
-+
-+	cc -fno-inline -g "$(dirname $0)/lib/brstack/test.c" -o $TMPDIR/a.out
-+
-+	perf record -o $TMPDIR/perf.data -q --branch-filter $filter,save_type,u -- $TMPDIR/a.out
-+	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
-+
-+	# fail if we find any branch type that doesn't match any of the expected ones
-+	# also consider UNKNOWN branch types (-)
-+	if egrep -vm1 "^[^ ]*/($expect|-|( *))$" $TMPDIR/perf.script; then
-+		return 1
-+	fi
-+}
-+
-+test_user_branches
-+
-+# first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
-+# second argument are the expected branch types for the given filter
-+test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|FAULT_DATA|FAULT_INST"
-+test_filter "call"	"CALL|SYSCALL"
-+test_filter "cond"	"COND"
-+test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
-+
-+test_filter "call,cond"		"CALL|SYSCALL|COND"
-+test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|FAULT_DATA|FAULT_INST|SYSCALL|COND"
-+test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|FAULT_DATA|FAULT_INST|RET|COND_RET|SYSRET|ERET"
--- 
-2.25.1
-
++1, thank you for the edits and merging
