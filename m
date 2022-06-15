@@ -2,113 +2,208 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78008C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 03:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A718CCA483
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 05:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234696AbiFODWm (ORCPT
+        id S243160AbiFOFfp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 23:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39176 "EHLO
+        Wed, 15 Jun 2022 01:35:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231516AbiFODWl (ORCPT
+        with ESMTP id S239980AbiFOFfm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 23:22:41 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F0614035;
-        Tue, 14 Jun 2022 20:22:38 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LN9Yt2fw4zjY96;
-        Wed, 15 Jun 2022 11:21:06 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 15 Jun 2022 11:22:09 +0800
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 15 Jun 2022 11:22:08 +0800
-Subject: Re: [RFC 09/13] perf kwork: Add workqueue report support
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-References: <20220613094605.208401-1-yangjihong1@huawei.com>
- <20220613094605.208401-10-yangjihong1@huawei.com>
- <CAM9d7cijyKgCt7su96yM9OWgHP5Hh1UMQh+iBskO+m+rb_y5ww@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <81afcdb8-0bbf-a28b-d944-770ca3de0397@huawei.com>
-Date:   Wed, 15 Jun 2022 11:22:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Wed, 15 Jun 2022 01:35:42 -0400
+Received: from muru.com (muru.com [72.249.23.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 283F649FA0;
+        Tue, 14 Jun 2022 22:35:41 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6EE2B80AE;
+        Wed, 15 Jun 2022 05:30:54 +0000 (UTC)
+Date:   Wed, 15 Jun 2022 08:35:38 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        vgupta@kernel.org, linux@armlinux.org.uk,
+        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        khilman@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
+        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, James.Bottomley@hansenpartnership.com,
+        deller@gmx.de, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org, Peter Vasil <petervasil@gmail.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH 34.5/36] cpuidle,omap4: Push RCU-idle into
+ omap4_enter_lowpower()
+Message-ID: <YqlvqhdlFsNvUBeG@atomide.com>
+References: <20220608142723.103523089@infradead.org>
+ <20220608144518.073801916@infradead.org>
+ <Yqcv6crSNKuSWoTu@atomide.com>
+ <YqkHto+zgAPs4kQI@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7cijyKgCt7su96yM9OWgHP5Hh1UMQh+iBskO+m+rb_y5ww@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YqkHto+zgAPs4kQI@worktop.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi,
 
-On 2022/6/15 5:54, Namhyung Kim wrote:
-> On Mon, Jun 13, 2022 at 2:48 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> Implements workqueue report function.
->>
->> test case:
->>
->>    # perf kwork -k workqueue rep
->>
->>      Kwork Name                | Cpu  | Total Runtime | Frequency | Max runtime   | Max runtime start   | Max runtime end     |
->>     ---------------------------------------------------------------------------------------------------------------------------
->>      (w)0xffffffff83e09fa0     | 0001 |   2152.678 ms |       194 |     12.376 ms |    2059361.546621 s |    2059361.558997 s |
->>      (w)0xffff888332fea180     | 0000 |     17.125 ms |       301 |      1.018 ms |    2059358.441070 s |    2059358.442089 s |
->>      (w)0xffff8881035a83d8     | 0007 |      7.556 ms |         3 |      3.212 ms |    2059362.614643 s |    2059362.617855 s |
->>      (w)0xffff888102fc14a0     | 0002 |      7.080 ms |         5 |      1.962 ms |    2059365.421753 s |    2059365.423714 s |
->>      (w)0xffffffff82f7da00     | 0000 |      4.277 ms |         7 |      3.778 ms |    2059360.851063 s |    2059360.854841 s |
->>      (w)0xffffffff8305d680     | 0006 |      1.796 ms |         1 |      1.796 ms |    2059360.046818 s |    2059360.048613 s |
->>      (w)0xffff8883339e9040     | 0005 |      1.659 ms |         2 |      1.619 ms |    2059361.266051 s |    2059361.267670 s |
->>      (w)0xffff888333de9040     | 0007 |      1.121 ms |         5 |      0.783 ms |    2059368.238059 s |    2059368.238842 s |
->>      (w)0xffff888332fe9040     | 0000 |      0.990 ms |         4 |      0.911 ms |    2059359.604075 s |    2059359.604986 s |
->>      (w)0xffff8883331e9040     | 0001 |      0.244 ms |         6 |      0.046 ms |    2059362.689277 s |    2059362.689323 s |
->>      (w)0xffff888102e44400     | 0007 |      0.239 ms |         2 |      0.137 ms |    2059363.117537 s |    2059363.117674 s |
->>      (w)0xffff8883333ea180     | 0002 |      0.141 ms |         5 |      0.049 ms |    2059365.423784 s |    2059365.423833 s |
->>      (w)0xffffffff83062f28     | 0006 |      0.084 ms |         2 |      0.047 ms |    2059358.208033 s |    2059358.208080 s |
->>      (w)0xffffffff8305ca48     | 0003 |      0.078 ms |         2 |      0.041 ms |    2059361.071371 s |    2059361.071412 s |
->>      (w)0xffff8883337e9040     | 0004 |      0.062 ms |         1 |      0.062 ms |    2059362.605723 s |    2059362.605785 s |
->>      (w)0xffff8881035a81e8     | 0001 |      0.056 ms |         1 |      0.056 ms |    2059363.118231 s |    2059363.118287 s |
->>      (w)0xffff8883335e9040     | 0003 |      0.026 ms |         1 |      0.026 ms |    2059358.573397 s |    2059358.573423 s |
->>      (w)0xffffffff83062e70     | 0006 |      0.023 ms |         1 |      0.023 ms |    2059368.398864 s |    2059368.398888 s |
->>      (w)0xffffffff83e06480     | 0002 |      0.000 ms |         1 |      0.000 ms |    2059359.986792 s |    2059359.986792 s |
+Adding Aaro Koskinen and Peter Vasil for pm24xx for n800 and n810 related
+idle.
+
+* Peter Zijlstra <peterz@infradead.org> [220614 22:07]:
+> On Mon, Jun 13, 2022 at 03:39:05PM +0300, Tony Lindgren wrote:
+> > OMAP4 uses full SoC suspend modes as idle states, as such it needs the
+> > whole power-domain and clock-domain code from the idle path.
+> > 
+> > All that code is not suitable to run with RCU disabled, as such push
+> > RCU-idle deeper still.
+> > 
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> > 
+> > Peter here's one more for your series, looks like this is needed to avoid
+> > warnings similar to what you did for omap3.
 > 
-> Using "function" in the tracepoint and symbolizing it would be
-> far more intuitive.
+> Thanks Tony!
 > 
-OK，This is a simplified version that will be improved in the next 
-version, and I'd like to add the following features:
-1. Supports the kthread profile.
-2. Save runtime and latency in kernel using ebpf(similar to "perf 
-record: Implement off-cpu profiling with BPF") . This reduces the number 
-of interruptions caused by writing files to hard disks, which is closer 
-to the actual scenario.
+> I've had a brief look at omap2_pm_idle() and do I understand it right
+> that something like the below patch would reduce it to a simple 'WFI'?
+
+Yes that should do for omap2_do_wfi().
+
+> What do I do with the rest of that code, because I don't think this
+> thing has a cpuidle driver to take over, effectively turning it into
+> dead code.
+
+As we are establishing a policy where deeper idle states must be
+handled by cpuidle, and for most part that has been the case for at least
+10 years, I'd just drop the unused functions with an explanation in the
+patch why we're doing it. Or the functions could be tagged with
+__maybe_unused if folks prefer that.
+
+In the pm24xx case we are not really causing a regression for users as
+there are still pending patches to make n800 and n810 truly usable with
+the mainline kernel. At least the PMIC and LCD related patches need some
+work [0]. The deeper idle states can be added back later using cpuidle
+as needed so we have a clear path.
+
+Aaro & Peter V, do you have any better suggestions here as this will
+mostly affect you guys currently?
+
+Regards,
+
+Tony
+
+[0] https://lore.kernel.org/linux-omap/20211224214512.1583430-1-peter.vasil@gmail.com/
 
 
-This RFC is sent to discuss to see if this function is useful to the 
-community and can be accepted by the community. :)
-
-
-
-Thanks,
-Jihong
-
-.
+> --- a/arch/arm/mach-omap2/pm24xx.c
+> +++ b/arch/arm/mach-omap2/pm24xx.c
+> @@ -126,10 +126,20 @@ static int omap2_allow_mpu_retention(voi
+>  	return 1;
+>  }
+>  
+> -static void omap2_enter_mpu_retention(void)
+> +static void omap2_do_wfi(void)
+>  {
+>  	const int zero = 0;
+>  
+> +	/* WFI */
+> +	asm("mcr p15, 0, %0, c7, c0, 4" : : "r" (zero) : "memory", "cc");
+> +}
+> +
+> +#if 0
+> +/*
+> + * possible cpuidle implementation between WFI and full_retention above
+> + */
+> +static void omap2_enter_mpu_retention(void)
+> +{
+>  	/* The peripherals seem not to be able to wake up the MPU when
+>  	 * it is in retention mode. */
+>  	if (omap2_allow_mpu_retention()) {
+> @@ -146,8 +157,7 @@ static void omap2_enter_mpu_retention(vo
+>  		pwrdm_set_next_pwrst(mpu_pwrdm, PWRDM_POWER_ON);
+>  	}
+>  
+> -	/* WFI */
+> -	asm("mcr p15, 0, %0, c7, c0, 4" : : "r" (zero) : "memory", "cc");
+> +	omap2_do_wfi();
+>  
+>  	pwrdm_set_next_pwrst(mpu_pwrdm, PWRDM_POWER_ON);
+>  }
+> @@ -161,6 +171,7 @@ static int omap2_can_sleep(void)
+>  
+>  	return 1;
+>  }
+> +#endif
+>  
+>  static void omap2_pm_idle(void)
+>  {
+> @@ -169,6 +180,7 @@ static void omap2_pm_idle(void)
+>  	if (omap_irq_pending())
+>  		return;
+>  
+> +#if 0
+>  	error = cpu_cluster_pm_enter();
+>  	if (error || !omap2_can_sleep()) {
+>  		omap2_enter_mpu_retention();
+> @@ -179,6 +191,9 @@ static void omap2_pm_idle(void)
+>  
+>  out_cpu_cluster_pm:
+>  	cpu_cluster_pm_exit();
+> +#else
+> +	omap2_do_wfi();
+> +#endif
+>  }
+>  
+>  static void __init prcm_setup_regs(void)
