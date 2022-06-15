@@ -2,147 +2,197 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83C4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 03:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D4DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 03:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345988AbiFODNy (ORCPT
+        id S238646AbiFODV6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Jun 2022 23:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59730 "EHLO
+        Tue, 14 Jun 2022 23:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351605AbiFODNw (ORCPT
+        with ESMTP id S237302AbiFODV6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Jun 2022 23:13:52 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 963A04D6A0
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 20:13:50 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id n185so5594443wmn.4
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jun 2022 20:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yzv5eaByYVX50lBqPhTHyIiI1jj84Kw6BozZseArlPM=;
-        b=IIWBoco614YCy/2/A9fNn0flfIzyV0vqrFQEateuhiigUnx6irUW0zgzvfcILyEN01
-         TZABkUIKmyKLvnNn3RPwkpw4MEV2x81hVQ53g6qOwcVImPorfrQ29VVqbmRufGt4IPEy
-         qLFRdRB60fbIU61X6LJwgmS7pri7yQQBxhZ2bIftmEpKUgycG66mLyTcIDk94Jz33Vhv
-         R6dJSnm/bJsr5mBEe2/oNqYv2GhoaY4nOyfjEyyoLVPyKW0OXKr/lGsibl3XlCIdNSDu
-         bEAqQaRCW3mi2HTtnI1jl1tKV865cvoAk4BKFHbjOx3AU8pJ/sphrM3vqaGNRIFeK1Po
-         CJHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yzv5eaByYVX50lBqPhTHyIiI1jj84Kw6BozZseArlPM=;
-        b=aFpqhP4l84GjS6LY2Yh31F3dEgYN0kzPu2D87Fp9pRIipDAoP5Zq9y7C2zNkwx6m9C
-         iNGnBt7RUBYOkCgc2iPPaB1dTsmPtKjSh7DkRYdbrND724p//UzaqSSYoanxD5TNQmNf
-         VWrYtAsi/jHv5H5qjPvRuN6+OOYSfmu4Ziu/Ka+rnF1WBlTvIKu6UEKPYoOScq6d9Ngo
-         4+dnp/IqpCoqvqwgXuUz09oJUkLg5J6l8m7PSIUsdOTr8M6USr2tzEfc44jWdoUW+2IE
-         CNtcjl7g4jrCu/qjv+A2YNrytr+x2JKafmk+BASEMukHDDORQHe4Wipo0ZB1vTUgYhGt
-         v+xQ==
-X-Gm-Message-State: AOAM530Dudz8bU98fro13nu1rbafSQJnw5+FGv1Fe2FeYjrCoAishn8B
-        epzWmSB7CcMbd4qGTVRyP2bwL7wm0yLH/jF2afl/oA==
-X-Google-Smtp-Source: ABdhPJyc+ioiwIvkUk170KWMBDq2nVqmUPY6DdWy8K66yWGIowx8HzKwMmlFrJy62UL41mTc2zY97koi2C0sOYql2WQ=
-X-Received: by 2002:a05:600c:29d3:b0:397:4730:ee75 with SMTP id
- s19-20020a05600c29d300b003974730ee75mr7465039wmd.149.1655262828974; Tue, 14
- Jun 2022 20:13:48 -0700 (PDT)
+        Tue, 14 Jun 2022 23:21:58 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D05FC4F1E9;
+        Tue, 14 Jun 2022 20:21:56 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84187153B;
+        Tue, 14 Jun 2022 20:21:56 -0700 (PDT)
+Received: from [192.168.0.146] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F6083F66F;
+        Tue, 14 Jun 2022 20:21:50 -0700 (PDT)
+Message-ID: <8bfce917-84a6-23a2-d926-a1efa901f4f1@arm.com>
+Date:   Wed, 15 Jun 2022 08:51:40 +0530
 MIME-Version: 1.0
-References: <20220527185426.240235-1-irogers@google.com> <d9056bc2-f640-f676-2599-c283479376a4@huawei.com>
- <CAP-5=fU8Wn8wV0whYOraU+5tGf+kKUk73gSwOg+LHp19vzua3A@mail.gmail.com>
- <f94710b3-4ca8-47c5-939c-1ad01d712d5f@huawei.com> <CAP-5=fWO8wd2xqi2acJ0FGyLgE3dQDw2m9=AUCC_veseyuybJw@mail.gmail.com>
- <350b905c-1ac1-3577-6b56-c13f2aeab712@huawei.com>
-In-Reply-To: <350b905c-1ac1-3577-6b56-c13f2aeab712@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Jun 2022 20:13:36 -0700
-Message-ID: <CAP-5=fVHtt41ifoWxr7ifd6FSosfhaxRFEJ_ez4KHT3wUQd5Kw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Rewrite jevents program in python
-To:     John Garry <john.garry@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
-        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH V6 6/8] perf/tools: Extend branch type classification
+Content-Language: en-US
+To:     German Gomez <german.gomez@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        acme@kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com, sandipan.das@amd.com,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220610035101.424112-1-anshuman.khandual@arm.com>
+ <20220610035101.424112-7-anshuman.khandual@arm.com>
+ <e0f29bc9-eae4-e433-2d4e-4dd53e31967d@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <e0f29bc9-eae4-e433-2d4e-4dd53e31967d@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 9:10 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 14/06/2022 17:03, Ian Rogers wrote:
-> >> diff -u tools/perf/trace/beauty/include/linux/socket.h
-> >> include/linux/socket.h
-> >> Makefile.config:259: *** which python-config not found. Stop.
-> >> Makefile.perf:239: recipe for target 'sub-make' failed
-> >> make[1]: *** [sub-make] Error 2
-> >> Makefile:69: recipe for target 'all' failed
-> >> make: *** [all] Error 2
-> >> john@debian:~/linux/tools/perf$
-> >>
-> >> JFYI, this is my alternatives:
-> >>
-> >> sudo update-alternatives --config python
-> >> There are 3 choices for the alternative python (providing
-> >> /usr/bin/python).
-> >>
-> >>     Selection    Path                     Priority  Status
-> >> ------------------------------------------------------------
-> >>     0            /usr/local/bin/python3.6   50        auto mode
-> >>     1            /usr/bin/python2.7         1         manual mode
-> >>     2            /usr/bin/python3.5         2         manual mode
-> >> * 3            /usr/local/bin/python3.6   50        manual mode
-> >>
-> >> Press <enter> to keep the current choice[*], or type selection number:
-> > Thanks Gary,
-> >
-> > Perhaps it relates to dev packages. Perhaps, apt-get install
-> > python-dev-is-python3 which should resolve the symlinks. I wonder that
-> > you have python dev for python2 but python3 installed without the dev.
-> > We should be able to make a Makefile test for this.
->
-> So I was trying another system here as a sanity test (as my main dev box
-> is not working either). And this other system is debian and only
-> supports python up to 3.5, so that is why I have
-> /usr/local/bin/python3.6 as an alt, i.e. I downloaded and built myself.
->
-> Anyway, I do have python3-dev:
->
-> john@debian:~/linux/tools/perf$ sudo apt-get install python3-dev
-> Reading package lists... Done
-> Building dependency tree
-> Reading state information... Done
-> python3-dev is already the newest version (3.5.3-1).
->
 
-It turned out to be something simple. The build is set up to prefer
-python2 over python3, so if you have both you get python2. I've fixed
-this now in v4 (PTAL):
-https://lore.kernel.org/lkml/20220615030438.51477-1-irogers@google.com/
 
-I think we should remove python2 build support as it is confusing and
-python2 doesn't support setuptools meaning this patch fails:
-https://lore.kernel.org/lkml/20220615014206.26651-1-irogers@google.com/
-and without that patch python3 generates deprecated module warnings.
+On 6/14/22 22:23, German Gomez wrote:
+> Hi Anshuman,
+> 
+> On 10/06/2022 04:50, Anshuman Khandual wrote:
+>> This updates the perf tool with generic branch type classification with new
+>> ABI extender place holder i.e PERF_BR_EXTEND_ABI, the new 4 bit branch type
+>> field i.e perf_branch_entry.new_type, new generic page fault related branch
+>> types and some arch specific branch types as added earlier in the kernel.
+>>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Jiri Olsa <jolsa@redhat.com>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-perf-users@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  tools/include/uapi/linux/perf_event.h | 16 ++++++++-
+>>  tools/perf/builtin-script.c           |  2 +-
+>>  tools/perf/util/branch.c              | 52 ++++++++++++++++++++++++++-
+>>  tools/perf/util/branch.h              |  6 +++-
+>>  tools/perf/util/session.c             |  2 +-
+>>  5 files changed, 73 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+>> index 26d8f0b5ac0d..d29280adc3c4 100644
+>> --- a/tools/include/uapi/linux/perf_event.h
+>> +++ b/tools/include/uapi/linux/perf_event.h
+>> @@ -255,9 +255,22 @@ enum {
+>>  	PERF_BR_IRQ		= 12,	/* irq */
+>>  	PERF_BR_SERROR		= 13,	/* system error */
+>>  	PERF_BR_NO_TX		= 14,	/* not in transaction */
+>> +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
+>>  	PERF_BR_MAX,
+>>  };
+>>  
+>> +enum {
+>> +	PERF_BR_NEW_FAULT_ALGN		= 0,    /* Alignment fault */
+>> +	PERF_BR_NEW_FAULT_DATA		= 1,    /* Data fault */
+>> +	PERF_BR_NEW_FAULT_INST		= 2,    /* Inst fault */
+>> +	PERF_BR_NEW_ARCH_1		= 3,    /* Architecture specific */
+>> +	PERF_BR_NEW_ARCH_2		= 4,    /* Architecture specific */
+>> +	PERF_BR_NEW_ARCH_3		= 5,    /* Architecture specific */
+>> +	PERF_BR_NEW_ARCH_4		= 6,    /* Architecture specific */
+>> +	PERF_BR_NEW_ARCH_5		= 7,    /* Architecture specific */
+>> +	PERF_BR_NEW_MAX,
+>> +};
+>> +
+>>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
+>>  	(PERF_SAMPLE_BRANCH_USER|\
+>>  	 PERF_SAMPLE_BRANCH_KERNEL|\
+>> @@ -1372,7 +1385,8 @@ struct perf_branch_entry {
+>>  		abort:1,    /* transaction abort */
+>>  		cycles:16,  /* cycle count to last branch */
+>>  		type:4,     /* branch type */
+>> -		reserved:40;
+>> +		new_type:4, /* additional branch type */
+>> +		reserved:36;
+>>  };
+>>  
+>>  union perf_sample_weight {
+>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>> index c689054002cc..d4d581230f23 100644
+>> --- a/tools/perf/builtin-script.c
+>> +++ b/tools/perf/builtin-script.c
+>> @@ -866,7 +866,7 @@ static int print_bstack_flags(FILE *fp, struct branch_entry *br)
+>>  		       br->flags.in_tx ? 'X' : '-',
+>>  		       br->flags.abort ? 'A' : '-',
+>>  		       br->flags.cycles,
+>> -		       br->flags.type ? branch_type_name(br->flags.type) : "-");
+>> +		       get_branch_type(br));
+> (Small comment below regarding this line)
+> 
+>>  }
+>>  
+>>  static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+>> diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
+>> index abc673347bee..6d962b0a4532 100644
+>> --- a/tools/perf/util/branch.c
+>> +++ b/tools/perf/util/branch.c
+>> @@ -21,7 +21,10 @@ void branch_type_count(struct branch_type_stat *st, struct branch_flags *flags,
+>>  	if (flags->type == PERF_BR_UNKNOWN || from == 0)
+>>  		return;
+>>  
+>> -	st->counts[flags->type]++;
+>> +	if (flags->type == PERF_BR_EXTEND_ABI)
+>> +		st->new_counts[flags->new_type]++;
+>> +	else
+>> +		st->counts[flags->type]++;
+>>  
+>>  	if (flags->type == PERF_BR_COND) {
+>>  		if (to > from)
+>> @@ -36,6 +39,25 @@ void branch_type_count(struct branch_type_stat *st, struct branch_flags *flags,
+>>  		st->cross_4k++;
+>>  }
+>>  
+>> +const char *branch_new_type_name(int new_type)
+>> +{
+>> +	const char *branch_new_names[PERF_BR_NEW_MAX] = {
+>> +		"FAULT_ALGN",
+>> +		"FAULT_DATA",
+>> +		"FAULT_INST",
+>> +		"ARCH_1",
+>> +		"ARCH_2",
+>> +		"ARCH_3",
+>> +		"ARCH_4",
+>> +		"ARCH_5"
+>> +	};
+>> +
+>> +	if (new_type >= 0 && new_type < PERF_BR_NEW_MAX)
+>> +		return branch_new_names[new_type];
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>>  const char *branch_type_name(int type)
+>>  {
+>>  	const char *branch_names[PERF_BR_MAX] = {
+>> @@ -62,6 +84,17 @@ const char *branch_type_name(int type)
+>>  	return NULL;
+>>  }
+>>  
+>> +const char *get_branch_type(struct branch_entry *e)
+>> +{
+>> +	if (e->flags.type == PERF_BR_UNKNOWN)
+>> +		return "";
+> There is a small change of behavior in "perf script --field brstack".
+> Unknown branches were printed as "-" before but now it's an empty
+> string.
 
-Thanks,
-Ian
+get_branch_type() replaces print output in two different functions.
+branch_stack__printf() used to print a space " " for PERF_BR_UNKNOWN,
+and print_bstack_flags() used to print a "-" for PERF_BR_UNKNOWN.
+When they are factorized via get_branch_type(), one of those print
+formats need to be choosen.
