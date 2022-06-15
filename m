@@ -2,221 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBAACCA47B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 10:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF49C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 10:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242385AbiFOKPU (ORCPT
+        id S243604AbiFOKo5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 06:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
+        Wed, 15 Jun 2022 06:44:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346840AbiFOKNd (ORCPT
+        with ESMTP id S234129AbiFOKo4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 06:13:33 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B6382559A
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 03:13:31 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id y6so5366035pfr.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 03:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=u65QQc2UhosWLMahxlQMn59AukfWR4oEL4oKp6IP8R4=;
-        b=p6mwc20X/Q1hFeLzxCcgv78Ie6ePALgDnjKy0f6FJRwbFLlEtcyClUGIdIrRdeQuXG
-         S/APdh60P9Vj8ZWvK21slVtmWATXSGVi+5VECU1WfwLJvu2C/wmcawnZDXRiot0hlSHm
-         Rj7uCUvqbhfhVQA2GJoevnDtzp3l7dads+GM0V7twfGct+XRmzBvtEqdoi5foez5H8Tl
-         y+0lXd+AX5G7s1qiOthMz582qdHInuCvPvzrWtGgxndpyZsnunHSHy2OoTApYkKzSehV
-         bDdojCchjZBnfLQaL4EpQdwXR+4O+F/a96TGh2BXnAkuyMFutgthOpv/gugFEo+C2bE3
-         9Itg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=u65QQc2UhosWLMahxlQMn59AukfWR4oEL4oKp6IP8R4=;
-        b=0lEVl6Nc7aBdsSvtcJP2bkb0dMV8Bv1M3lImx2v40gZBglnHO6YpsMaUMSaGT6tTWy
-         Vntf1lTm7JZs6YSG8dj9XV8k6npI9hHgTa/ino2rw4Tx2yWXVX+CuO2tSK0Q4mVorzAk
-         cxtS4C/37YE7TXNQYuhTSNYxGCpI7VONjtD4v9tcylxCUw0EBomMkD+FeV0oz3gCNwSV
-         CuL+QQMOX6QZjIxOaJeoLOiDdc8JRlW+lWxQskPUGDoQIp84Px5QC4kewNgaYdHlkwl+
-         hLylAWFNdmwm64MUiidZz8tn9+hVF1gJUx191rGtaNJS7q44AR5WYUFgB/fVG+nOS2Sw
-         p9Dg==
-X-Gm-Message-State: AOAM5320oqAcFnuTx7am60DtSVkeaNkZahoEmFgetE7TKf/QJ9tb5t6w
-        4KAk+Q41dt+FR+QL9p5hEAjtSw==
-X-Google-Smtp-Source: ABdhPJyRk1EuvqaSy5Q9Ox2cFgvalWMPQnJzgUhcIvPfkO5QikvHoHYqXNW1DdxHoCrhz1YsvIMCUg==
-X-Received: by 2002:a63:81c3:0:b0:3fc:c510:1a3 with SMTP id t186-20020a6381c3000000b003fcc51001a3mr8220683pgd.581.1655288010235;
-        Wed, 15 Jun 2022 03:13:30 -0700 (PDT)
-Received: from [10.255.194.85] ([139.177.225.252])
-        by smtp.gmail.com with ESMTPSA id jd13-20020a170903260d00b0016184e7b013sm8885181plb.36.2022.06.15.03.13.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jun 2022 03:13:27 -0700 (PDT)
-Message-ID: <0e27425e-1fb6-bc7c-9845-71dc805897c3@bytedance.com>
-Date:   Wed, 15 Jun 2022 18:13:12 +0800
+        Wed, 15 Jun 2022 06:44:56 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED87750463
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 03:44:55 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-15-KgCYn3nfPo6x7IeS2ioUCw-1; Wed, 15 Jun 2022 11:44:52 +0100
+X-MC-Unique: KgCYn3nfPo6x7IeS2ioUCw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.36; Wed, 15 Jun 2022 11:44:50 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.036; Wed, 15 Jun 2022 11:44:50 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Ian Rogers' <rogers.email@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        "Kan Liang" <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Zhengjun Xing" <zhengjun.xing@linux.intel.com>,
+        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "Nick Forrington" <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "James Clark" <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "ananth.narayan@amd.com" <ananth.narayan@amd.com>,
+        "ravi.bangoria@amd.com" <ravi.bangoria@amd.com>,
+        "santosh.shukla@amd.com" <santosh.shukla@amd.com>,
+        "sandipan.das@amd.com" <sandipan.das@amd.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+CC:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Subject: RE: [PATCH v4 3/4] perf jevents: Switch build to use jevents.py
+Thread-Topic: [PATCH v4 3/4] perf jevents: Switch build to use jevents.py
+Thread-Index: AQHYgGTBf2pcanF4ukiDhmkMwHDNNq1QRgsQ
+Date:   Wed, 15 Jun 2022 10:44:50 +0000
+Message-ID: <9951ad2acd3d4454b39c4862da75d913@AcuMS.aculab.com>
+References: <20220615030438.51477-1-irogers@google.com>
+ <20220615030438.51477-4-irogers@google.com>
+In-Reply-To: <20220615030438.51477-4-irogers@google.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.10.0
-Subject: Re: Re: [PATCH 0/5 v1] mm, oom: Introduce per numa node oom for
- CONSTRAINT_MEMORY_POLICY
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     akpm@linux-foundation.org, songmuchun@bytedance.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        ebiederm@xmission.com, keescook@chromium.org,
-        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
-        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
-        apopple@nvidia.com, adobriyan@gmail.com,
-        stephen.s.brennan@oracle.com, ohoono.kwon@samsung.com,
-        haolee.swjtu@gmail.com, kaleshsingh@google.com,
-        zhengqi.arch@bytedance.com, peterx@redhat.com, shy828301@gmail.com,
-        surenb@google.com, ccross@google.com, vincent.whitchurch@axis.com,
-        tglx@linutronix.de, bigeasy@linutronix.de, fenghua.yu@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20220512044634.63586-1-ligang.bdlg@bytedance.com>
- <YoJ/ioXwGTdCywUE@dhcp22.suse.cz>
-From:   Gang Li <ligang.bdlg@bytedance.com>
-In-Reply-To: <YoJ/ioXwGTdCywUE@dhcp22.suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi, I've done some benchmarking in the last few days.
-
-On 2022/5/17 00:44, Michal Hocko wrote:
-> Sorry, I have only now found this email thread. The limitation of the
-> NUMA constrained oom is well known and long standing. Basically the
-> whole thing is a best effort as we are lacking per numa node memory
-> stats. I can see that you are trying to fill up that gap but this is
-> not really free. Have you measured the runtime overhead? Accounting is
-> done in a very performance sensitive paths and it would be rather
-> unfortunate to make everybody pay the overhead while binding to a
-> specific node or sets of nodes is not the most common usecase.
-
-## CPU consumption
-
-According to the result of Unixbench. There is less than one percent 
-performance loss in most cases.
-
-On 40c512g machine.
-
-40 parallel copies of tests:
-+----------+----------+-----+----------+---------+---------+---------+
-| numastat | FileCopy | ... |   Pipe   |  Fork   | syscall |  total  |
-+----------+----------+-----+----------+---------+---------+---------+
-| off      | 2920.24  | ... | 35926.58 | 6980.14 | 2617.18 | 8484.52 |
-| on       | 2919.15  | ... | 36066.07 | 6835.01 | 2724.82 | 8461.24 |
-| overhead | 0.04%    | ... | -0.39%   | 2.12%   | -3.95%  | 0.28%   |
-+----------+----------+-----+----------+---------+---------+---------+
-
-1 parallel copy of tests:
-+----------+----------+-----+---------+--------+---------+---------+
-| numastat | FileCopy | ... |  Pipe   |  Fork  | syscall |  total  |
-+----------+----------+-----+---------+--------+---------+---------+
-| off      | 1515.37  | ... | 1473.97 | 546.88 | 1152.37 | 1671.2  |
-| on       | 1508.09  | ... | 1473.75 | 532.61 | 1148.83 | 1662.72 |
-| overhead | 0.48%    | ... | 0.01%   | 2.68%  | 0.31%   | 0.51%   |
-+----------+----------+-----+---------+--------+---------+---------+
-
-## MEM consumption
-
-per task_struct:
-sizeof(int) * num_possible_nodes() + sizeof(int*)
-typically 4 * 2 + 8 bytes
-
-per mm_struct:
-sizeof(atomic_long_t) * num_possible_nodes() + sizeof(atomic_long_t*)
-typically 8 * 2 + 8 bytes
-
-zap_pte_range:
-sizeof(int) * num_possible_nodes() + sizeof(int*)
-typically 4 * 2 + 8 bytes
-
-> Also have you tried to have a look at cpusets? Those should be easier to
-> make a proper selection as it should be possible to iterate over tasks
-> belonging to a specific cpuset much more easier - essentialy something
-> similar to memcg oom killer. We do not do that right now and by a very
-> brief look at the CONSTRAINT_CPUSET it seems that this code is not
-> really doing much these days. Maybe that would be a more appropriate way
-> to deal with more precise node aware oom killing?
-
-Looks like both CONSTRAINT_MEMORY_POLICY and CONSTRAINT_CPUSET can
-be uesd to deal with node aware oom killing.
-
-I think we can calculate badness in this way:
-    If constraint=CONSTRAINT_MEMORY_POLICY, get badness by `nodemask`.
-    If constraint=CONSTRAINT_CPUSET, get badness by `mems_allowed`.
-
-example code:
-```
-long oom_badness(struct task_struct *p, struct oom_control *oc)
-	long points;
-
-	...
-
-	if (unlikely(oc->constraint == CONSTRAINT_MEMORY_POLICY)) {
-		for_each_node_mask(nid, oc->nodemask)
-			points += get_mm_counter(p->mm, -1, nid)
-	} else if (unlikely(oc->constraint == CONSTRAINT_CPUSET)) {
-		for_each_node_mask(nid, cpuset_current_mems_allowed)
-			points += get_mm_counter(p->mm, -1, nid)
-	} else {
-		points = get_mm_rss(p->mm);
-	}
-	points += get_mm_counter(p->mm, MM_SWAPENTS, NUMA_NO_NODE) \
-		+ mm_pgtables_bytes(p->mm) / PAGE_SIZE;
-
-	...
-
-}
-```
-
+From: Ian Rogers
+> Sent: 15 June 2022 04:05
 > 
-> [...]
->>   21 files changed, 317 insertions(+), 111 deletions(-)
+> Generate pmu-events.c using jevents.py rather than the binary built from
+> jevents.c. Add a new config variable NO_JEVENTS that is set when there
+> is no architecture json or an appropriate python interpreter isn't present.
+> When NO_JEVENTS is defined the file pmu-events/empty-pmu-events.c is copied
+> and used as the pmu-events.c file.
 > 
-> The code footprint is not free either. And more importantnly does this
-> even work much more reliably? I can see quite some NUMA_NO_NODE
-> accounting (e.g. copy_pte_range!).Is this somehow fixable?
+...
+> +    # jevents.py uses f-strings present in Python 3.6 released in Dec. 2016.
+> +    JEVENTS_PYTHON_GOOD := $(shell $(PYTHON) -c 'import sys;print("1" if(sys.version_info.major >= 3
+> and sys.version_info.minor >= 6) else "0")')
 
-> Also how do those numbers add up. Let's say you increase the counter as
-> NUMA_NO_NODE but later on during the clean up you decrease based on the
-> page node?
- > Last but not least I am really not following MM_NO_TYPE concept. I can
- > only see add_mm_counter users without any decrements. What is going on
- > there?
+You probably want a "2>/dev/null" in there.
 
-There are two usage scenarios of NUMA_NO_NODE in this patch.
+I also think I remember seeing a `which python` in one of these patches.
+'which' is a bourne shell script that is trying to emulate a csh builtin.
+It can't actually work, and ISTR one of the distros might be
+trying to remove it.
+In a traditional bourne shell you should use `type python`, the posix
+equivalent (which any shell written in the last 30 years out to get
+right) is `command -V python`.
+Both type and command have to be shell builtins.
+Although I suspect some shells get command -V wrong.
 
-1. placeholder when swap pages in and out of swapfile.
-```
-	// mem to swapfile
-	dec_mm_counter(vma->vm_mm, MM_ANONPAGES, page_to_nid(page));
-	inc_mm_counter(vma->vm_mm, MM_SWAPENTS, NUMA_NO_NODE);
+	David
 
-	// swapfile to mem
-	inc_mm_counter(vma->vm_mm, MM_ANONPAGES, page_to_nid(page));
-	dec_mm_counter(vma->vm_mm, MM_SWAPENTS, NUMA_NO_NODE);
-```
-
-In *_mm_counter(vma->vm_mm, MM_SWAPENTS, NUMA_NO_NODE),
-NUMA_NO_NODE is a placeholder. It means this page does not exist in any
-node anymore.
-
-2. placeholder in `add_mm_rss_vec` and `sync_mm_rss` for per process mm 
-counter synchronization with SPLIT_RSS_COUNTING enabled.
-
-
-MM_NO_TYPE is also a placeholder in `*_mm_counter`, `add_mm_rss_vec` and 
-`sync_mm_rss`.
-
-These placeholders are very strange. Maybe I should introduce a helper
-function for mm->rss_stat.numa_count counting instead of using
-placeholder.
-
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
