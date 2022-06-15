@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AD8C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 16:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF71CCA47F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 16:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242516AbiFOQce (ORCPT
+        id S1354229AbiFOQcg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 12:32:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35180 "EHLO
+        Wed, 15 Jun 2022 12:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345836AbiFOQca (ORCPT
+        with ESMTP id S1348146AbiFOQcb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 12:32:30 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1016041312;
-        Wed, 15 Jun 2022 09:32:26 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id z14so6953382pjb.4;
-        Wed, 15 Jun 2022 09:32:26 -0700 (PDT)
+        Wed, 15 Jun 2022 12:32:31 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC33C7B;
+        Wed, 15 Jun 2022 09:32:29 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id g10-20020a17090a708a00b001ea8aadd42bso2575434pjk.0;
+        Wed, 15 Jun 2022 09:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=To6GanTQ5VDmwkEDfHH2NW2hi0lID+6OMpi9DEy3e74=;
-        b=DDfgjPyMURfBUxUYPp/+3LhkxhS7i2Dk0U/oK9GPpGePs16u226NB+gY7wDXybBmvH
-         IihEuZeumLhhSWVqC8ETEwUp6JAH1bBoWrd1QifK4DdijIl2UXi+KbvABB4B5ByzoaX+
-         BKaHQEJ20jAjx16ugn+9ZHGZOP6oo1AIcCZKj7WKuHmn5DPjj2M1AQAU3F2BsbJ57YJ+
-         4tNbhubED4tPo5zbxC52E5+wA0J59hbb7XN24I/4EAIOs0qXBbOPaKN/sDWYgnxX2hv6
-         jcJJh6l3KxyesgiANyGgrbW5idouCfGbtLkc/nx+Um/4lBVC88scTQN8+892ap9oh88E
-         XKIg==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SEfnqww0vhMlkVHiAk0LS1yqqikkfJ8P8/TMa6OHIgk=;
+        b=pVULSWm1v8HJ3x39vt+zJEuX905ymHetz97g76i4hkrDv1/vjIrq3kpEifIvu5MxOr
+         2qDZr6bOfE8kZzcabDhPJY7awFZMPOyNh91Icp1nuWhmPc+JhL/8Kt38VpattRAFDeOZ
+         pki3VDAtDz7xopAMLTVSHOBm5LDoF02Rsvr2Q2L4zzwySfY9rA6iRlRkRNzLtk3f/U+6
+         3CD8YY17KL9JrG1Ph9j1oOb/1iIiknoU1kF7N/KJUhYlxhIL5GgqS+au2j3e/becV8XS
+         SPpeoF7IDJTxNjv7OAkyvDIEmP0vd27vGataP6J5xrYGlGb3yQ2BlTo3Ji90zPy3OPwJ
+         zfZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=To6GanTQ5VDmwkEDfHH2NW2hi0lID+6OMpi9DEy3e74=;
-        b=MfHrQUbG1wxiPew3SVrPZJOcrJUBZpIUUAY3qbgsev+TFyxCXYKAbrEWn6eI0gCYf2
-         8n12W4Tiv5oro9fXzqWyPTUsmIBfpf8HXAJ54KQSf1zLH0cJCpPfceK7EZ+IUeX2kfaA
-         jB9Wot4Kku3N1F7vL1pOFsx4lubbIhkJjPFQid3nOOwA/lB2qVZ1r0P8+KRgrvGzrwj2
-         I1CEZWF846hJgoO4RpPSHDSxMfP4SeGQOfPxTu5x2WisnXO55XXdv8R3anP1ierI6c0K
-         cT7Vn/s5OHlX3gAl7Ll4kDVA3R4eZSkSj4LxbI0rZedGj5Lf/cf/SR/iBv+IjoBSYSbQ
-         zfrQ==
-X-Gm-Message-State: AJIora+gt5YNwDQoRPxxs7waEf3u2cL6qpHs7kOZFVKPFRMdw7psb5Og
-        8Aeb3tRycAj0h6YiuaeTvl4=
-X-Google-Smtp-Source: AGRyM1vWmD6AXjiwt2vRM4rwafHcK3gqHCqcaDI392vDshYl2I5ADwds+Pr5RhsVmqjl54qTJv+zVA==
-X-Received: by 2002:a17:903:25d6:b0:168:a88f:44ea with SMTP id jc22-20020a17090325d600b00168a88f44eamr520994plb.28.1655310745481;
-        Wed, 15 Jun 2022 09:32:25 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=SEfnqww0vhMlkVHiAk0LS1yqqikkfJ8P8/TMa6OHIgk=;
+        b=k9DJVueNkKYV4000icyalB1Ob8WfuG3+Hny1SCurbVZWvzcojXMBQNpHkwD8h94hYa
+         57Yx71alRpx9n6CGTTsWRDzFKn5GmDTHpvxYwMN6fnihjRq7qUW9Cy5sNSlO73Kwb8Is
+         tCm6+6ySC8zmElwCy/cEUMAVLRaOOzUCXp+AdmslKUXelAkifLuPzZYNEVY5m2VWDe59
+         VXUrDcSkP06sln6LDF4Ch3Bf1C+Cbuj7jgVmuePQ6duMgJC1us4dluHulAW5ykK/2Qaj
+         CrOqxafH/5VU9yxRq3Vr37+jV5EZPnw/2GXn967WdkyMKCBjKxZysbirUU5Ys+90q2dB
+         hHSg==
+X-Gm-Message-State: AJIora+bth/NXcvzNaWrFILuZfSlKyizae57UFSw1fhsMKI4RnA+M11l
+        d9yBDeUhfMS2jUxmThVncBY=
+X-Google-Smtp-Source: AGRyM1vMDUaakpBkI+Ebb9s7inI0Xj0cvuVf8NoHbN/yu5jJHpwMj6mLO/Pb55P266slffVhpdLfUg==
+X-Received: by 2002:a17:90b:2241:b0:1e8:8ad8:5f22 with SMTP id hk1-20020a17090b224100b001e88ad85f22mr11104674pjb.73.1655310748910;
+        Wed, 15 Jun 2022 09:32:28 -0700 (PDT)
 Received: from balhae.corp.google.com ([2620:15c:2c1:200:6b99:92ca:1efa:c0fb])
-        by smtp.gmail.com with ESMTPSA id q23-20020a170902edd700b00168bffd39a1sm9583881plk.143.2022.06.15.09.32.23
+        by smtp.gmail.com with ESMTPSA id q23-20020a170902edd700b00168bffd39a1sm9583881plk.143.2022.06.15.09.32.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 09:32:24 -0700 (PDT)
+        Wed, 15 Jun 2022 09:32:28 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -61,85 +61,60 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Waiman Long <longman@redhat.com>,
         Boqun Feng <boqun.feng@gmail.com>,
         Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCHSET 0/7] perf lock: New lock contention tracepoints support (v4)
-Date:   Wed, 15 Jun 2022 09:32:15 -0700
-Message-Id: <20220615163222.1275500-1-namhyung@kernel.org>
+Subject: [PATCH 2/7] perf lock: Allow to use different kernel symbols
+Date:   Wed, 15 Jun 2022 09:32:17 -0700
+Message-Id: <20220615163222.1275500-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
+In-Reply-To: <20220615163222.1275500-1-namhyung@kernel.org>
+References: <20220615163222.1275500-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Add --vmlinux and --kallsyms options to support data file from
+different kernels.
 
-Kernel v5.19 will have a new set of tracepoints to track lock
-contentions for various lock types.  Unlike tracepoints in LOCKDEP and
-LOCK_STAT, it's hit only for contended locks and lock names are not
-available.  So it needs to collect stack traces and display the caller
-function instead.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-lock.txt | 7 +++++++
+ tools/perf/builtin-lock.c              | 4 ++++
+ 2 files changed, 11 insertions(+)
 
-Changes in v4)
- * add Acked-by from Ian
- * more comments on trace_lock_handler
- * don't create stats in the contention_end handler
+diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+index 656b537b2fba..4b8568f0c53b 100644
+--- a/tools/perf/Documentation/perf-lock.txt
++++ b/tools/perf/Documentation/perf-lock.txt
+@@ -46,6 +46,13 @@ COMMON OPTIONS
+ --force::
+ 	Don't complain, do it.
  
-Changes in v3)
- * fix build error
- * support data from different kernels/machines
- * skip bad stat unless there's actual bad ones
++--vmlinux=<file>::
++        vmlinux pathname
++
++--kallsyms=<file>::
++        kallsyms pathname
++
++
+ REPORT OPTIONS
+ --------------
  
-Changes in v2)
- * add Acked-by from Ian
- * print time with a unit for compact output
- * add some comments  (Ian)
- * remove already applied patch
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 57e396323d05..118a036a81fb 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1162,6 +1162,10 @@ int cmd_lock(int argc, const char **argv)
+ 	OPT_INCR('v', "verbose", &verbose, "be more verbose (show symbol address, etc)"),
+ 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace, "dump raw trace in ASCII"),
+ 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
++	OPT_STRING(0, "vmlinux", &symbol_conf.vmlinux_name,
++		   "file", "vmlinux pathname"),
++	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
++		   "file", "kallsyms pathname"),
+ 	OPT_END()
+ 	};
  
-This patchset merely adds support for the new tracepoints to the
-existing perf lock commands.  So there's no change to the user.  Later
-I'll add new a sub-command dedicated to the tracepoints to make use of
-the additional information.
-
-Example output:
-
-  $ sudo perf lock record -a sleep 3
-
-  $ perf lock report -F acquired,contended,avg_wait,wait_total
-
-                  Name   acquired  contended     avg wait    total wait
-
-   update_blocked_a...         40         40      3.61 us     144.45 us
-   kernfs_fop_open+...          5          5      3.64 us      18.18 us
-    _nohz_idle_balance          3          3      2.65 us       7.95 us
-   tick_do_update_j...          1          1      6.04 us       6.04 us
-    ep_scan_ready_list          1          1      3.93 us       3.93 us
-  ...
-
-You can find the code in the 'perf/lock-contention-v4' branch at
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (7):
-  perf lock: Print wait times with unit
-  perf lock: Allow to use different kernel symbols
-  perf lock: Skip print_bad_events() if nothing bad
-  perf lock: Add lock contention tracepoints record support
-  perf lock: Handle lock contention tracepoints
-  perf record: Allow to specify max stack depth of fp callchain
-  perf lock: Look up callchain for the contended locks
-
- tools/perf/Documentation/perf-lock.txt   |   7 +
- tools/perf/Documentation/perf-record.txt |   5 +
- tools/perf/builtin-lock.c                | 426 ++++++++++++++++++++++-
- tools/perf/util/callchain.c              |  18 +-
- 4 files changed, 434 insertions(+), 22 deletions(-)
-
-
-base-commit: 9886142c7a2226439c1e3f7d9b69f9c7094c3ef6
 -- 
 2.36.1.476.g0c4daa206d-goog
 
