@@ -2,118 +2,221 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C1AC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 09:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBAACCA47B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Jun 2022 10:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345384AbiFOJPJ (ORCPT
+        id S242385AbiFOKPU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Jun 2022 05:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54532 "EHLO
+        Wed, 15 Jun 2022 06:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347680AbiFOJOS (ORCPT
+        with ESMTP id S1346840AbiFOKNd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Jun 2022 05:14:18 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 632DB393D9
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 02:14:17 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id k7so535442plg.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 02:14:17 -0700 (PDT)
+        Wed, 15 Jun 2022 06:13:33 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B6382559A
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 03:13:31 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id y6so5366035pfr.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 03:13:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=U5W+u2socUdfvA7Xut56xq8m0f3VViU7LDQmKDKAFUw=;
-        b=AuhzgNxfF4Wt8XjnPKCHtvnPTDkBF9j9nHeM3JacQLlyl4UesOejhMt+G6sv5jOza1
-         Ip1smplzqEW9tti/ZgM8KZ7wQq6oJO5Wd3QSQ6S2+pDFFvqFx+AqWLdAOO63jkSE5gZI
-         EKRXzrTPC61QKv/gkS+anhA9Ev6a9cfxgUdwD43YtoqPukJuA5Hq4wIXfzGtFke1zo5L
-         ZqazuW56GgUg4Elsv7veM5cpyfsKta6gqLyTuhM1PtMC8XNaO+r1TANLyJ6xD90goJmy
-         h1EHqcBvkgkeekeF9sIMqYr9Go8bpOcLDgiiqq6on37PuuWeRUZiMlYnIRLyninwm8Or
-         ATtA==
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=u65QQc2UhosWLMahxlQMn59AukfWR4oEL4oKp6IP8R4=;
+        b=p6mwc20X/Q1hFeLzxCcgv78Ie6ePALgDnjKy0f6FJRwbFLlEtcyClUGIdIrRdeQuXG
+         S/APdh60P9Vj8ZWvK21slVtmWATXSGVi+5VECU1WfwLJvu2C/wmcawnZDXRiot0hlSHm
+         Rj7uCUvqbhfhVQA2GJoevnDtzp3l7dads+GM0V7twfGct+XRmzBvtEqdoi5foez5H8Tl
+         y+0lXd+AX5G7s1qiOthMz582qdHInuCvPvzrWtGgxndpyZsnunHSHy2OoTApYkKzSehV
+         bDdojCchjZBnfLQaL4EpQdwXR+4O+F/a96TGh2BXnAkuyMFutgthOpv/gugFEo+C2bE3
+         9Itg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U5W+u2socUdfvA7Xut56xq8m0f3VViU7LDQmKDKAFUw=;
-        b=s0eSOF2T3iX866Ce8dhbIxybbr/mpzCrBAvevNTXrrp227jX8ymqunzo+ynLGpl/eO
-         m6Ok58wKiXfRD7b+/YI8FnYOn7udfvpCSwxtLC3RGqzvd2HIBMJ+8zP7jaJh0F96Z7VJ
-         wMX302U665lmyyKqYtVbY1O6E9D0ZaGwIUlQ0YaaO/Hp9VX8jHA6pkOfmNPs/XTP8qNb
-         iDatqKhVCh9vvc0L2MJaWMwBxHWhW1gFUOzBG4FFjOhS7jLyPjltAHUZS2bDz7MWAX/F
-         tx+d5vg+8EWes4mpxrXd/pe5KdlBH0u1o1qvbnHuJMKoe1UzYpeLDDLHkLmJ+k6doP/e
-         u2xg==
-X-Gm-Message-State: AJIora/W3qEnNQ+oZLBEVg3IzU6TCM1bQqDlfss6jv0Pb64jU9wgxWLE
-        BPQ587pHZp835hRgsSMpjDd3Zw==
-X-Google-Smtp-Source: AGRyM1t/aeseBSMJUh1pB4pBXT7wadG652+Zr21QtvXUxfp40vVCbCLIM4o3ACzHMUvDYa13RC/Tgw==
-X-Received: by 2002:a17:902:6901:b0:168:9bb4:7adb with SMTP id j1-20020a170902690100b001689bb47adbmr8392907plk.147.1655284456709;
-        Wed, 15 Jun 2022 02:14:16 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id h11-20020a170902f2cb00b00163aba9a2a5sm8717942plc.106.2022.06.15.02.14.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 02:14:15 -0700 (PDT)
-Date:   Wed, 15 Jun 2022 17:14:06 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: Re: [PATCH 2/3] perf test: Shell - only run .sh shell files to skip
- other files
-Message-ID: <20220615091406.GB121786@leoy-ThinkPad-X240s>
-References: <20220309122859.31487-1-carsten.haitzler@foss.arm.com>
- <20220309122859.31487-2-carsten.haitzler@foss.arm.com>
- <20220410022846.GB14326@leoy-ThinkPad-X240s>
- <9ab780aa-7e78-b0f9-21ed-cf30f41f8fab@foss.arm.com>
- <20220526101423.GB795802@leoy-ThinkPad-X240s>
- <ae8bdc2c-a444-74c1-70d5-c97d27b22ec5@foss.arm.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=u65QQc2UhosWLMahxlQMn59AukfWR4oEL4oKp6IP8R4=;
+        b=0lEVl6Nc7aBdsSvtcJP2bkb0dMV8Bv1M3lImx2v40gZBglnHO6YpsMaUMSaGT6tTWy
+         Vntf1lTm7JZs6YSG8dj9XV8k6npI9hHgTa/ino2rw4Tx2yWXVX+CuO2tSK0Q4mVorzAk
+         cxtS4C/37YE7TXNQYuhTSNYxGCpI7VONjtD4v9tcylxCUw0EBomMkD+FeV0oz3gCNwSV
+         CuL+QQMOX6QZjIxOaJeoLOiDdc8JRlW+lWxQskPUGDoQIp84Px5QC4kewNgaYdHlkwl+
+         hLylAWFNdmwm64MUiidZz8tn9+hVF1gJUx191rGtaNJS7q44AR5WYUFgB/fVG+nOS2Sw
+         p9Dg==
+X-Gm-Message-State: AOAM5320oqAcFnuTx7am60DtSVkeaNkZahoEmFgetE7TKf/QJ9tb5t6w
+        4KAk+Q41dt+FR+QL9p5hEAjtSw==
+X-Google-Smtp-Source: ABdhPJyRk1EuvqaSy5Q9Ox2cFgvalWMPQnJzgUhcIvPfkO5QikvHoHYqXNW1DdxHoCrhz1YsvIMCUg==
+X-Received: by 2002:a63:81c3:0:b0:3fc:c510:1a3 with SMTP id t186-20020a6381c3000000b003fcc51001a3mr8220683pgd.581.1655288010235;
+        Wed, 15 Jun 2022 03:13:30 -0700 (PDT)
+Received: from [10.255.194.85] ([139.177.225.252])
+        by smtp.gmail.com with ESMTPSA id jd13-20020a170903260d00b0016184e7b013sm8885181plb.36.2022.06.15.03.13.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jun 2022 03:13:27 -0700 (PDT)
+Message-ID: <0e27425e-1fb6-bc7c-9845-71dc805897c3@bytedance.com>
+Date:   Wed, 15 Jun 2022 18:13:12 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae8bdc2c-a444-74c1-70d5-c97d27b22ec5@foss.arm.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.10.0
+Subject: Re: Re: [PATCH 0/5 v1] mm, oom: Introduce per numa node oom for
+ CONSTRAINT_MEMORY_POLICY
+Content-Language: en-US
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     akpm@linux-foundation.org, songmuchun@bytedance.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        ebiederm@xmission.com, keescook@chromium.org,
+        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
+        apopple@nvidia.com, adobriyan@gmail.com,
+        stephen.s.brennan@oracle.com, ohoono.kwon@samsung.com,
+        haolee.swjtu@gmail.com, kaleshsingh@google.com,
+        zhengqi.arch@bytedance.com, peterx@redhat.com, shy828301@gmail.com,
+        surenb@google.com, ccross@google.com, vincent.whitchurch@axis.com,
+        tglx@linutronix.de, bigeasy@linutronix.de, fenghua.yu@intel.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20220512044634.63586-1-ligang.bdlg@bytedance.com>
+ <YoJ/ioXwGTdCywUE@dhcp22.suse.cz>
+From:   Gang Li <ligang.bdlg@bytedance.com>
+In-Reply-To: <YoJ/ioXwGTdCywUE@dhcp22.suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 02:08:30PM +0100, Carsten Haitzler wrote:
+Hi, I've done some benchmarking in the last few days.
 
-[...]
+On 2022/5/17 00:44, Michal Hocko wrote:
+> Sorry, I have only now found this email thread. The limitation of the
+> NUMA constrained oom is well known and long standing. Basically the
+> whole thing is a best effort as we are lacking per numa node memory
+> stats. I can see that you are trying to fill up that gap but this is
+> not really free. Have you measured the runtime overhead? Accounting is
+> done in a very performance sensitive paths and it would be rather
+> unfortunate to make everybody pay the overhead while binding to a
+> specific node or sets of nodes is not the most common usecase.
 
-> > If the condition checking gets complex, seems to me it is reasonable to
-> > use a static function (or a macro?) to encapsulate the logics.
+## CPU consumption
+
+According to the result of Unixbench. There is less than one percent 
+performance loss in most cases.
+
+On 40c512g machine.
+
+40 parallel copies of tests:
++----------+----------+-----+----------+---------+---------+---------+
+| numastat | FileCopy | ... |   Pipe   |  Fork   | syscall |  total  |
++----------+----------+-----+----------+---------+---------+---------+
+| off      | 2920.24  | ... | 35926.58 | 6980.14 | 2617.18 | 8484.52 |
+| on       | 2919.15  | ... | 36066.07 | 6835.01 | 2724.82 | 8461.24 |
+| overhead | 0.04%    | ... | -0.39%   | 2.12%   | -3.95%  | 0.28%   |
++----------+----------+-----+----------+---------+---------+---------+
+
+1 parallel copy of tests:
++----------+----------+-----+---------+--------+---------+---------+
+| numastat | FileCopy | ... |  Pipe   |  Fork  | syscall |  total  |
++----------+----------+-----+---------+--------+---------+---------+
+| off      | 1515.37  | ... | 1473.97 | 546.88 | 1152.37 | 1671.2  |
+| on       | 1508.09  | ... | 1473.75 | 532.61 | 1148.83 | 1662.72 |
+| overhead | 0.48%    | ... | 0.01%   | 2.68%  | 0.31%   | 0.51%   |
++----------+----------+-----+---------+--------+---------+---------+
+
+## MEM consumption
+
+per task_struct:
+sizeof(int) * num_possible_nodes() + sizeof(int*)
+typically 4 * 2 + 8 bytes
+
+per mm_struct:
+sizeof(atomic_long_t) * num_possible_nodes() + sizeof(atomic_long_t*)
+typically 8 * 2 + 8 bytes
+
+zap_pte_range:
+sizeof(int) * num_possible_nodes() + sizeof(int*)
+typically 4 * 2 + 8 bytes
+
+> Also have you tried to have a look at cpusets? Those should be easier to
+> make a proper selection as it should be possible to iterate over tasks
+> belonging to a specific cpuset much more easier - essentialy something
+> similar to memcg oom killer. We do not do that right now and by a very
+> brief look at the CONSTRAINT_CPUSET it seems that this code is not
+> really doing much these days. Maybe that would be a more appropriate way
+> to deal with more precise node aware oom killing?
+
+Looks like both CONSTRAINT_MEMORY_POLICY and CONSTRAINT_CPUSET can
+be uesd to deal with node aware oom killing.
+
+I think we can calculate badness in this way:
+    If constraint=CONSTRAINT_MEMORY_POLICY, get badness by `nodemask`.
+    If constraint=CONSTRAINT_CPUSET, get badness by `mems_allowed`.
+
+example code:
+```
+long oom_badness(struct task_struct *p, struct oom_control *oc)
+	long points;
+
+	...
+
+	if (unlikely(oc->constraint == CONSTRAINT_MEMORY_POLICY)) {
+		for_each_node_mask(nid, oc->nodemask)
+			points += get_mm_counter(p->mm, -1, nid)
+	} else if (unlikely(oc->constraint == CONSTRAINT_CPUSET)) {
+		for_each_node_mask(nid, cpuset_current_mems_allowed)
+			points += get_mm_counter(p->mm, -1, nid)
+	} else {
+		points = get_mm_rss(p->mm);
+	}
+	points += get_mm_counter(p->mm, MM_SWAPENTS, NUMA_NO_NODE) \
+		+ mm_pgtables_bytes(p->mm) / PAGE_SIZE;
+
+	...
+
+}
+```
+
 > 
-> Well normally my rule i s - if it gets re-used then do it, otherwise it just
-> involves more indirection to follow. :) But regardless of that, given some
-> other things you ask for that kind of makes this discussion moot as it
-> requires much bigger wholesale changes to the test infra which will make
-> these patches a lot more work. I'll get to that later in mails.
-
-Your mentioned rule makes sense to me.
-
-> > > But one catch... it really should be is_non_hidden_exe_shell_script() as
-> > > it's checking that it's not a hidden file AND is a shell script. Or do I
-> > > keep the hidden file test outside of the function in the if? If we're nit
-> > > picking then I need to know exactly what you want here as your suggested
-> > > name is actually incorrect.
-> > 
-> > I personally prefer to use the condition:
-> > 
-> >    if (is_exe_shell_script() && ent->d_name[0] != '.')
-> >        do_something...
-> > 
-> > The reason is the function is_exe_shell_script() is more common and we
-> > use it easily in wider scope.
+> [...]
+>>   21 files changed, 317 insertions(+), 111 deletions(-)
 > 
-> As above - will probably have to redo a lot of the test infra involving the
-> shell tests to handle some of your other requests, but if we don't go that
-> way, I have got where you want to go and I can do this.
+> The code footprint is not free either. And more importantnly does this
+> even work much more reliably? I can see quite some NUMA_NO_NODE
+> accounting (e.g. copy_pte_range!).Is this somehow fixable?
 
-To be honest, I am not sure if this patch is related with refactoring
-test infrastructure or not.  You could reconsider when you spin for next
-patch set (as you said, might refactor test infra).
+> Also how do those numbers add up. Let's say you increase the counter as
+> NUMA_NO_NODE but later on during the clean up you decrease based on the
+> page node?
+ > Last but not least I am really not following MM_NO_TYPE concept. I can
+ > only see add_mm_counter users without any decrements. What is going on
+ > there?
 
-In case you still want to keep this patch as it is, it would be fine for
-me and you could add my reviewed tag:
+There are two usage scenarios of NUMA_NO_NODE in this patch.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+1. placeholder when swap pages in and out of swapfile.
+```
+	// mem to swapfile
+	dec_mm_counter(vma->vm_mm, MM_ANONPAGES, page_to_nid(page));
+	inc_mm_counter(vma->vm_mm, MM_SWAPENTS, NUMA_NO_NODE);
 
-Thanks,
-Leo
+	// swapfile to mem
+	inc_mm_counter(vma->vm_mm, MM_ANONPAGES, page_to_nid(page));
+	dec_mm_counter(vma->vm_mm, MM_SWAPENTS, NUMA_NO_NODE);
+```
+
+In *_mm_counter(vma->vm_mm, MM_SWAPENTS, NUMA_NO_NODE),
+NUMA_NO_NODE is a placeholder. It means this page does not exist in any
+node anymore.
+
+2. placeholder in `add_mm_rss_vec` and `sync_mm_rss` for per process mm 
+counter synchronization with SPLIT_RSS_COUNTING enabled.
+
+
+MM_NO_TYPE is also a placeholder in `*_mm_counter`, `add_mm_rss_vec` and 
+`sync_mm_rss`.
+
+These placeholders are very strange. Maybe I should introduce a helper
+function for mm->rss_stat.numa_count counting instead of using
+placeholder.
+
+
