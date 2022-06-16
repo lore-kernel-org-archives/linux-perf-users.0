@@ -2,162 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4E9CCA483
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Jun 2022 21:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FB6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Jun 2022 23:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379145AbiFPVW4 (ORCPT
+        id S1379146AbiFPXFv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Jun 2022 17:22:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
+        Thu, 16 Jun 2022 19:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378999AbiFPVWx (ORCPT
+        with ESMTP id S1379122AbiFPXFu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Jun 2022 17:22:53 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 783DC1EC6A;
-        Thu, 16 Jun 2022 14:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655414572; x=1686950572;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eIVB2Wcg0d4KNkOlM5BOJs0iOIDhUm5jxxQVobMAAIM=;
-  b=RP2YCFWJTKa74eNpADc52RfwyjDAvZ8LbqtQ+29QXXL8TwRbvjSWS7Ba
-   pq99M69aIQ9JNjTvJTyVDW//G+jY7TSkumi1VWip/2CpHCCXM6c6TDOdt
-   ovkJ3Yi3iryHnvVyD2y26qw2tMuSleKA/emETgYWmPoT1kmV2lQAziBjw
-   O3q86x2LyuYnnhk+Vs+DKTvFCxrgF97TC4OmRtb6/SSLEM/JP4XfqNzIy
-   uBWpPFsIMbGc2UKu+E2AO9bfY2POAwfylNkeUEpgS6fQsCe6X4buSH60h
-   /gpL6lhB831yaHj1bisym9RyaHXfKLRndrfm290x2hFX1FL/TzwTh4/0s
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="259207705"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="259207705"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 14:22:51 -0700
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="560027674"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.198.157])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 14:22:51 -0700
-Date:   Thu, 16 Jun 2022 14:26:56 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        vgupta@kernel.org, linux@armlinux.org.uk,
-        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
-        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
-        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
-        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        James.Bottomley@hansenpartnership.com, deller@gmx.de,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
-        davem@davemloft.net, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        sudeep.holla@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, anup@brainfault.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-        rostedt@goodmis.org, pmladek@suse.com, senozhatsky@chromium.org,
-        john.ogness@linutronix.de, paulmck@kernel.org, frederic@kernel.org,
-        quic_neeraju@quicinc.com, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
-        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
-        rcu@vger.kernel.org, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 04/36] cpuidle,intel_idle: Fix CPUIDLE_FLAG_IRQ_ENABLE
-Message-ID: <20220616142656.4b1acc4a@jacob-builder>
-In-Reply-To: <Yqb45vclY2KVL0wZ@hirez.programming.kicks-ass.net>
-References: <20220608142723.103523089@infradead.org>
-        <20220608144516.172460444@infradead.org>
-        <20220609164921.5e61711d@jacob-builder>
-        <Yqb45vclY2KVL0wZ@hirez.programming.kicks-ass.net>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 16 Jun 2022 19:05:50 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782305F248;
+        Thu, 16 Jun 2022 16:05:49 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id i15so2443473plr.1;
+        Thu, 16 Jun 2022 16:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mHgod+Kwm8xVpSdotXQQvx7e6tmha0GKj/Bf2zOifHk=;
+        b=OXWRYmk3bowxbdyaVslq9VNcPeawn20YbaR1OPvyh0O7ygcQjUnHi5Qg61SiPX0GiD
+         00kM6ArXf8CqTpduim9SzIvSIBZca8RVcSQ4m7rFl9SEJL+3DW3oChYVuto32I+tfuFM
+         rPBpeQAXOPKzRk2RVhHs4VW2Ku4w8yfbvtIXnmHG+fak80AA9glfnvAnNGMa7BpQ7H8D
+         vwJnjbH0/tm/LaRdEIG+EE+7vrGCHG68A4gIXlRaINU8FaXyB/pCvIO4i2qK3csYJm/W
+         rLeXyiQVUJFDUHGh0WXdbXFyOFooWXsM3Wl3U+26BsH3+UBYtGIhgEMNISZerXdasd80
+         NaCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=mHgod+Kwm8xVpSdotXQQvx7e6tmha0GKj/Bf2zOifHk=;
+        b=KlSbriLHBS0UY1b2A+vUlmXjiPPvEoUYsX0+hV8/w0y0I8estSsj38OgcF9M5LxMjb
+         mT+QXsIYX7lWEyT72nf6m/DquhJNe4l1caQ2SKrZeIG2AwqfcyA+bJxVF+aw0x3CyB7c
+         qmuqew33je78icN1T/TagtgS+XMwyxppcPA+f/M7D1fZl3SXFUEfbcGptP69ONPPfTaa
+         cuZpAARRL/dPPABMzCY22h3P//Y3hvCIJktS0AV/b48Rzk9h+OQBD52q0Yvn14HnjAFp
+         MUpPAyh90t1Y5szZPqH3Wy1OqiyscyyMCg8tHjG78XKubxQ5ElN7KBlW139bMRSBOvxX
+         oIsw==
+X-Gm-Message-State: AJIora+NBHE2ZXdouENWayCFgfUtwWiPinbeSKyiIwHZYbTaiX5Ce4/L
+        eQZ/tZoBj49VYBjyLsAo0TI=
+X-Google-Smtp-Source: AGRyM1uV6/odU4A50BOArugcTBNxGR1W4NDH3lx5sugfaP1Topmwxuko/J/qzy6expDqJmVv/wCQXw==
+X-Received: by 2002:a17:90b:1611:b0:1ec:6ce7:5e11 with SMTP id la17-20020a17090b161100b001ec6ce75e11mr2613639pjb.146.1655420748778;
+        Thu, 16 Jun 2022 16:05:48 -0700 (PDT)
+Received: from balhae.corp.google.com ([2620:15c:2c1:200:1253:816e:a3a1:fc8b])
+        by smtp.gmail.com with ESMTPSA id p48-20020a056a0026f000b0050dc7628184sm2321457pfw.94.2022.06.16.16.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jun 2022 16:05:48 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2] perf test: Add ARM SPE system wide test
+Date:   Thu, 16 Jun 2022 16:05:46 -0700
+Message-Id: <20220616230546.1390813-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Peter,
+In the past it had a problem not setting the pid/tid on the sample
+correctly when system-wide mode is used.  Although it's fixed now it'd
+be nice if we have a test case for it.
 
-On Mon, 13 Jun 2022 10:44:22 +0200, Peter Zijlstra <peterz@infradead.org>
-wrote:
+Cc: German Gomez <german.gomez@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+* skip if system-wide record was failed
 
-> On Thu, Jun 09, 2022 at 04:49:21PM -0700, Jacob Pan wrote:
-> > Hi Peter,
-> > 
-> > On Wed, 08 Jun 2022 16:27:27 +0200, Peter Zijlstra
-> > <peterz@infradead.org> wrote:
-> >   
-> > > Commit c227233ad64c ("intel_idle: enable interrupts before C1 on
-> > > Xeons") wrecked intel_idle in two ways:
-> > > 
-> > >  - must not have tracing in idle functions
-> > >  - must return with IRQs disabled
-> > > 
-> > > Additionally, it added a branch for no good reason.
-> > > 
-> > > Fixes: c227233ad64c ("intel_idle: enable interrupts before C1 on
-> > > Xeons") Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > >  drivers/idle/intel_idle.c |   48
-> > > +++++++++++++++++++++++++++++++++++----------- 1 file changed, 37
-> > > insertions(+), 11 deletions(-)
-> > > 
-> > > --- a/drivers/idle/intel_idle.c
-> > > +++ b/drivers/idle/intel_idle.c
-> > > @@ -129,21 +137,37 @@ static unsigned int mwait_substates __in
-> > >   *
-> > >   * Must be called under local_irq_disable().
-> > >   */  
-> > nit: this comment is no long true, right?  
-> 
-> It still is, all the idle routines are called with interrupts disabled,
-> but must also exit with interrupts disabled.
-> 
-> If the idle method requires interrupts to be enabled, it must be sure to
-> disable them again before returning. Given all the RCU/tracing concerns
-> it must use raw_local_irq_*() for this though.
-Makes sense, it is just little confusing when the immediate caller does
-raw_local_irq_enable() which does not cancel out local_irq_disable().
+ tools/perf/tests/shell/test_arm_spe.sh | 28 +++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-Thanks,
+diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
+index e59044edc406..962841a51f27 100755
+--- a/tools/perf/tests/shell/test_arm_spe.sh
++++ b/tools/perf/tests/shell/test_arm_spe.sh
+@@ -23,17 +23,20 @@ glb_err=0
+ cleanup_files()
+ {
+ 	rm -f ${perfdata}
++	rm -f ${perfdata}.old
+ 	exit $glb_err
+ }
+ 
+ trap cleanup_files exit term int
+ 
+ arm_spe_report() {
+-	if [ $2 != 0 ]; then
++	if [ $2 = 0 ]; then
++		echo "$1: PASS"
++	elif [ $2 = 2 ]; then
++		echo "$1: SKIPPED"
++	else
+ 		echo "$1: FAIL"
+ 		glb_err=$2
+-	else
+-		echo "$1: PASS"
+ 	fi
+ }
+ 
+@@ -85,5 +88,24 @@ arm_spe_snapshot_test() {
+ 	arm_spe_report "SPE snapshot testing" $err
+ }
+ 
++arm_spe_system_wide_test() {
++	echo "Recording trace with system-wide mode $perfdata"
++	perf record -o ${perfdata} -e arm_spe// -a \
++		-- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
++
++	if [ $? != 0 ]; then
++		arm_spe_report "SPE system-wide testing" 2
++		return
++	fi
++
++	perf_script_samples dd &&
++	perf_report_samples dd
++
++	err=$?
++	arm_spe_report "SPE system-wide testing" $err
++}
++
+ arm_spe_snapshot_test
++arm_spe_system_wide_test
++
+ exit $glb_err
+-- 
+2.36.1.476.g0c4daa206d-goog
 
-Jacob
