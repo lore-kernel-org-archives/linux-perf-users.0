@@ -2,147 +2,274 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AACCCA47C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Jun 2022 05:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C91C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Jun 2022 08:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358732AbiFPFho (ORCPT
+        id S230051AbiFPIbq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Jun 2022 01:37:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57480 "EHLO
+        Thu, 16 Jun 2022 04:31:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358710AbiFPFhn (ORCPT
+        with ESMTP id S1348251AbiFPIbp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Jun 2022 01:37:43 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 15 Jun 2022 22:37:37 PDT
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F17885713B
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jun 2022 22:37:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1655356942; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=CyY6ToycbNn+zWinEzZEs0D//LT/UQNM1yTp2rHMer0hwQN4tmWfTgqUFVSU4MPLcxr2BOKVwcGUZKUeSALbSOjoSWzAzd3CnTofuFRfuqvdLWTaVMyL3zypuzWUbe7/blkcbJXrre8wfvOkpkrpUel7mTxCsP6BbLy0KTbrbkM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1655356942; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=SPhGZ2firub1ZFNfQSqHRLLIpyGLrtsyXbIh15hT2/8=; 
-        b=Ih+sj9oFQWGcYzm8swXT2KgK6YU4FGTN3NJjLn4f+r25gKboLVXBlm1sjL8l4biL+uAJ73m5sa9UKmnJHWfaYS8vZNFfmaLi6RwwjOaiNlsvcVDiwBKZg/c3NzQ08ZVCUi/o6G9LjmHKYGLVh7X7yYUPWMRjRtOM+gOiO1U5Jt0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        spf=pass  smtp.mailfrom=business@elijahpepe.com;
-        dmarc=pass header.from=<business@elijahpepe.com>
-Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 165535694023895.0045501776118; Wed, 15 Jun 2022 22:22:20 -0700 (PDT)
-Date:   Wed, 15 Jun 2022 22:22:20 -0700
-From:   Elijah Conners <business@elijahpepe.com>
-To:     "acme" <acme@kernel.org>
-Cc:     "peterz" <peterz@infradead.org>, "mingo" <mingo@redhat.com>,
-        "linux-perf-users" <linux-perf-users@vger.kernel.org>,
-        "jolsa" <jolsa@kernel.org>, "markrutland" <mark.rutland@arm.com>,
-        "alexandershishkin" <alexander.shishkin@linux.intel.com>,
-        "namhyung" <namhyung@kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <1816af65fb3.cadada251255317.8101049033080913987@elijahpepe.com>
-In-Reply-To: 
-Subject: [PATCH] scripts: use is None instead of == None
+        Thu, 16 Jun 2022 04:31:45 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2771C5DA5F;
+        Thu, 16 Jun 2022 01:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655368304; x=1686904304;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=LLQKWpBbbH2gL+fmhc1WDqRYlnfOMa7XL0kc10V7SSQ=;
+  b=UBO56ep8LpHuDcJZLaMw4ubNY605XQIutJypwJis3s7QrHCmDVPjBycf
+   fnCwLaVyRmd2sMhtAEk3ilFLoi5ATBphVsTRXvjQbJAhA1pwwbx9mmvkG
+   XJenprUusTprm7PVzbBAxR/uFz4K/KLhlIz0XxvOJz5S5UImuubQPd2Yx
+   lVm5qT/9i8kJGXyFG9Zju2fHLIFnoq8W6cCkg+cZb/8DPOrJYR0xP2NhS
+   asILvQOQngT3tpYlkwuYTzYRomu6N5b9ULcfwhbQe6N5tukjnNOZ8t74Y
+   1VFNXFZomwfPGo8E3FHboyV/ua73LzC1wDZwir7wr/v2F64TBIqscFC7D
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="267887691"
+X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
+   d="scan'208";a="267887691"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 01:31:42 -0700
+X-IronPort-AV: E=Sophos;i="5.91,304,1647327600"; 
+   d="scan'208";a="641437890"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.238.6.2]) ([10.238.6.2])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 01:31:39 -0700
+Message-ID: <bc4d4c51-27ee-d8ef-a190-e5c7e587447b@linux.intel.com>
+Date:   Thu, 16 Jun 2022 16:31:37 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] perf record: Support "--cputype" option for hybrid events
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@linux.intel.com
+References: <20220615150823.2230349-1-zhengjun.xing@linux.intel.com>
+ <CAP-5=fVnD=jiSav=UAV9E_mc8XtcHad107ww8JSeiJ2y4ucxDw@mail.gmail.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <CAP-5=fVnD=jiSav=UAV9E_mc8XtcHad107ww8JSeiJ2y4ucxDw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In compaction-times.py, exported-sql-viewer.py, mem-phys-addr.py,
-net_dropmonitor.py, kunit.py, and tdc.py, the None object is checked
-against various variables using equality. This is 50% slower than using
-an identity operator, since using equality invokes the __eq__ method.
-Checking identity in this case is also much better form.
+Hi Ian,
 
-Signed-off-by: Elijah Conners <business@elijahpepe.com>
----
- tools/perf/scripts/python/compaction-times.py    | 2 +-
- tools/perf/scripts/python/exported-sql-viewer.py | 2 +-
- tools/perf/scripts/python/mem-phys-addr.py       | 2 +-
- tools/perf/scripts/python/net_dropmonitor.py     | 2 +-
- tools/testing/kunit/kunit.py                     | 2 +-
- tools/testing/selftests/tc-testing/tdc.py        | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+On 6/15/2022 11:16 PM, Ian Rogers wrote:
+> On Wed, Jun 15, 2022 at 8:07 AM <zhengjun.xing@linux.intel.com> wrote:
+>>
+>> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>>
+>> perf stat already has the "--cputype" option to enable events only on the
+>> specified PMU for the hybrid platform, this commit extends the "--cputype"
+>> support to perf record.
+>>
+>> Without "--cputype", it reports events for both cpu_core and cpu_atom.
+>>
+>>   # ./perf record  -e cycles -a sleep 1 | ./perf report
+>>
+>>   # To display the perf.data header info, please use --header/--header-only options.
+>>   #
+>>   [ perf record: Woken up 1 times to write data ]
+>>   [ perf record: Captured and wrote 0.000 MB (null) ]
+>>   #
+>>   # Total Lost Samples: 0
+>>   #
+>>   # Samples: 335  of event 'cpu_core/cycles/'
+>>   # Event count (approx.): 35855267
+>>   #
+>>   # Overhead  Command          Shared Object      Symbol
+>>   # ........  ...............  .................  .........................................
+>>   #
+>>       10.31%  swapper          [kernel.kallsyms]  [k] poll_idle
+>>        9.42%  swapper          [kernel.kallsyms]  [k] menu_select
+>>        ...    ...               ...               ... ...
+>>
+>>   # Samples: 61  of event 'cpu_atom/cycles/'
+>>   # Event count (approx.): 16453825
+>>   #
+>>   # Overhead  Command        Shared Object      Symbol
+>>   # ........  .............  .................  ......................................
+>>   #
+>>       26.36%  snapd          [unknown]          [.] 0x0000563cc6d03841
+>>        7.43%  migration/13   [kernel.kallsyms]  [k] update_sd_lb_stats.constprop.0
+>>        ...    ...            ...                ... ...
+>>
+>> With "--cputype", it reports events only for the specified PMU.
+>>
+>>   # ./perf record --cputype core  -e cycles -a sleep 1 | ./perf report
+>>
+>>   # To display the perf.data header info, please use --header/--header-only options.
+>>   #
+>>   [ perf record: Woken up 1 times to write data ]
+>>   [ perf record: Captured and wrote 0.000 MB (null) ]
+>>   #
+>>   # Total Lost Samples: 0
+>>   #
+>>   # Samples: 221  of event 'cpu_core/cycles/'
+>>   # Event count (approx.): 27121818
+>>   #
+>>   # Overhead  Command          Shared Object      Symbol
+>>   # ........  ...............  .................  .........................................
+>>   #
+>>       11.24%  swapper          [kernel.kallsyms]  [k] e1000_irq_enable
+>>        7.77%  swapper          [kernel.kallsyms]  [k] mwait_idle_with_hints.constprop.0
+>>        ...    ...              ...                ... ...
+> 
+> This is already possible by having the PMU name as part of the event,
+> cpu_atom/cycles/ or cpu_core/cycles/. I don't know why we're adding
+> "hybrid" all over the code base, I wish it would stop. You are asking
+> for an option here for an implied PMU for events that don't specify a
+> PMU. The option should be called --pmutype and consider all PMUs. We
+> should remove the "hybrid" PMU list and make all of the "hybrid" code
+> generic.
+> 
 
-diff --git a/tools/perf/scripts/python/compaction-times.py b/tools/perf/scripts/python/compaction-times.py
-index 2560a042dc6f..790cc58214a9 100644
---- a/tools/perf/scripts/python/compaction-times.py
-+++ b/tools/perf/scripts/python/compaction-times.py
-@@ -31,7 +31,7 @@ class comm_filter:
- 
-     def filter(self, pid, comm):
-         m = self.re.search(comm)
--        return m == None or m.group() == ""
-+        return m is None or m.group() == ""
- 
- class pid_filter:
-     def __init__(self, low, high):
-diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 13f2d8a81610..28b53739746f 100755
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -452,7 +452,7 @@ class FindBar():
-         index = self.textbox.currentIndex()
-         data = self.textbox.itemData(index)
-         # Store the pattern in the combo box to keep it with the text value
--        if data == None:
-+        if data is None:
-             self.textbox.setItemData(index, pattern)
-         else:
-             self.pattern.setChecked(data)
-diff --git a/tools/perf/scripts/python/mem-phys-addr.py b/tools/perf/scripts/python/mem-phys-addr.py
-index 1f332e72b9b0..5891a4df69aa 100644
---- a/tools/perf/scripts/python/mem-phys-addr.py
-+++ b/tools/perf/scripts/python/mem-phys-addr.py
-@@ -95,6 +95,6 @@ def process_event(param_dict):
-     phys_addr  = sample["phys_addr"]
- 
-     global event_name
--    if event_name == None:
-+    if event_name is None:
-         event_name = name
-     load_mem_type_cnt[find_memory_type(phys_addr)] += 1
-diff --git a/tools/perf/scripts/python/net_dropmonitor.py b/tools/perf/scripts/python/net_dropmonitor.py
-index 101059971738..cd9488f11e03 100755
---- a/tools/perf/scripts/python/net_dropmonitor.py
-+++ b/tools/perf/scripts/python/net_dropmonitor.py
-@@ -55,7 +55,7 @@ def print_drop_table():
-     print("%25s %25s %25s" % ("LOCATION", "OFFSET", "COUNT"))
-     for i in drop_log.keys():
-         (sym, off) = get_sym(i)
--        if sym == None:
-+        if sym is None:
-             sym = i
-         print("%25s %25s %25s" % (sym, off, drop_log[i]))
- 
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index 9274c6355809..6195e091d22d 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -496,7 +496,7 @@ def main(argv, linux=None):
-         if result.status != KunitStatus.SUCCESS:
-             sys.exit(1)
-     elif cli_args.subcommand == 'parse':
--        if cli_args.file == None:
-+        if cli_args.file is None:
-             sys.stdin.reconfigure(errors='backslashreplace')  # pytype: disable=attribute-error
-             kunit_output = sys.stdin
-         else:
-diff --git a/tools/testing/selftests/tc-testing/tdc.py b/tools/testing/selftests/tc-testing/tdc.py
-index ee22e3447ec7..f1840023283a 100755
---- a/tools/testing/selftests/tc-testing/tdc.py
-+++ b/tools/testing/selftests/tc-testing/tdc.py
-@@ -355,7 +355,7 @@ def test_runner(pm, args, filtered_tests):
-         print('give test rig 2 seconds to stabilize')
-     time.sleep(2)
-     for tidx in testlist:
--        if "flower" in tidx["category"] and args.device == None:
-+        if "flower" in tidx["category"] and args.device is None:
-             errmsg = "Tests using the DEV2 variable must define the name of a "
-             errmsg += "physical NIC with the -d option when running tdc.\n"
-             errmsg += "Test has been skipped."
---
-2.25.1
+I can change the option name from "cputype" to "pmutype". We have 
+planned to clean up the hybrid code, and try to reduce the code with "if 
+perf_pmu__has_hybrid()", this will be done step by step, from this 
+patch, we have begun to do some clean-up, move the hybrid API from the 
+common file to the hybrid-specific files. For the clean-up, Do you have 
+any ideas? Thanks.
+
+> Thanks,
+> Ian
+> 
+>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>   tools/perf/Documentation/perf-record.txt |  4 ++++
+>>   tools/perf/builtin-record.c              |  3 +++
+>>   tools/perf/builtin-stat.c                | 20 --------------------
+>>   tools/perf/util/pmu-hybrid.c             | 19 +++++++++++++++++++
+>>   tools/perf/util/pmu-hybrid.h             |  2 ++
+>>   5 files changed, 28 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+>> index cf8ad50f3de1..ba8d680da1ac 100644
+>> --- a/tools/perf/Documentation/perf-record.txt
+>> +++ b/tools/perf/Documentation/perf-record.txt
+>> @@ -402,6 +402,10 @@ Enable weightened sampling. An additional weight is recorded per sample and can
+>>   displayed with the weight and local_weight sort keys.  This currently works for TSX
+>>   abort events and some memory events in precise mode on modern Intel CPUs.
+>>
+>> +--cputype::
+>> +Only enable events on applying cpu with this type for hybrid platform(e.g. core or atom).
+>> +For non-hybrid events, it should be no effect.
+>> +
+>>   --namespaces::
+>>   Record events of type PERF_RECORD_NAMESPACES.  This enables 'cgroup_id' sort key.
+>>
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index 9a71f0330137..e1edd4e98358 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -3183,6 +3183,9 @@ static struct option __record_options[] = {
+>>          OPT_INCR('v', "verbose", &verbose,
+>>                      "be more verbose (show counter open errors, etc)"),
+>>          OPT_BOOLEAN('q', "quiet", &quiet, "don't print any message"),
+>> +       OPT_CALLBACK(0, "cputype", &record.evlist, "hybrid cpu type",
+>> +                    "Only enable events on applying cpu with this type for hybrid platform (e.g. core or atom)",
+>> +                    parse_hybrid_type),
+>>          OPT_BOOLEAN('s', "stat", &record.opts.inherit_stat,
+>>                      "per thread counts"),
+>>          OPT_BOOLEAN('d', "data", &record.opts.sample_address, "Record the sample addresses"),
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index 4ce87a8eb7d7..0d95b29273f4 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -1184,26 +1184,6 @@ static int parse_stat_cgroups(const struct option *opt,
+>>          return parse_cgroups(opt, str, unset);
+>>   }
+>>
+>> -static int parse_hybrid_type(const struct option *opt,
+>> -                            const char *str,
+>> -                            int unset __maybe_unused)
+>> -{
+>> -       struct evlist *evlist = *(struct evlist **)opt->value;
+>> -
+>> -       if (!list_empty(&evlist->core.entries)) {
+>> -               fprintf(stderr, "Must define cputype before events/metrics\n");
+>> -               return -1;
+>> -       }
+>> -
+>> -       evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu(str);
+>> -       if (!evlist->hybrid_pmu_name) {
+>> -               fprintf(stderr, "--cputype %s is not supported!\n", str);
+>> -               return -1;
+>> -       }
+>> -
+>> -       return 0;
+>> -}
+>> -
+>>   static struct option stat_options[] = {
+>>          OPT_BOOLEAN('T', "transaction", &transaction_run,
+>>                      "hardware transaction statistics"),
+>> diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
+>> index f51ccaac60ee..5c490b5201b7 100644
+>> --- a/tools/perf/util/pmu-hybrid.c
+>> +++ b/tools/perf/util/pmu-hybrid.c
+>> @@ -13,6 +13,7 @@
+>>   #include <stdarg.h>
+>>   #include <locale.h>
+>>   #include <api/fs/fs.h>
+>> +#include "util/evlist.h"
+>>   #include "fncache.h"
+>>   #include "pmu-hybrid.h"
+>>
+>> @@ -87,3 +88,21 @@ char *perf_pmu__hybrid_type_to_pmu(const char *type)
+>>          free(pmu_name);
+>>          return NULL;
+>>   }
+>> +
+>> +int parse_hybrid_type(const struct option *opt, const char *str, int unset __maybe_unused)
+>> +{
+>> +       struct evlist *evlist = *(struct evlist **)opt->value;
+>> +
+>> +       if (!list_empty(&evlist->core.entries)) {
+>> +               fprintf(stderr, "Must define cputype before events/metrics\n");
+>> +               return -1;
+>> +       }
+>> +
+>> +       evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu(str);
+>> +       if (!evlist->hybrid_pmu_name) {
+>> +               fprintf(stderr, "--cputype %s is not supported!\n", str);
+>> +               return -1;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> diff --git a/tools/perf/util/pmu-hybrid.h b/tools/perf/util/pmu-hybrid.h
+>> index 2b186c26a43e..26101f134a3a 100644
+>> --- a/tools/perf/util/pmu-hybrid.h
+>> +++ b/tools/perf/util/pmu-hybrid.h
+>> @@ -5,6 +5,7 @@
+>>   #include <linux/perf_event.h>
+>>   #include <linux/compiler.h>
+>>   #include <linux/list.h>
+>> +#include <subcmd/parse-options.h>
+>>   #include <stdbool.h>
+>>   #include "pmu.h"
+>>
+>> @@ -18,6 +19,7 @@ bool perf_pmu__hybrid_mounted(const char *name);
+>>   struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name);
+>>   bool perf_pmu__is_hybrid(const char *name);
+>>   char *perf_pmu__hybrid_type_to_pmu(const char *type);
+>> +int parse_hybrid_type(const struct option *opt, const char *str, int unset __maybe_unused);
+>>
+>>   static inline int perf_pmu__hybrid_pmu_num(void)
+>>   {
+>> --
+>> 2.25.1
+>>
+
+-- 
+Zhengjun Xing
