@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1093C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Jun 2022 07:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F42C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Jun 2022 07:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380589AbiFQHis (ORCPT
+        id S1380340AbiFQHpY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Jun 2022 03:38:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50638 "EHLO
+        Fri, 17 Jun 2022 03:45:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380451AbiFQHiq (ORCPT
+        with ESMTP id S1380237AbiFQHpY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Jun 2022 03:38:46 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F95E5000F
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 00:38:46 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id i15so3230765plr.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 00:38:46 -0700 (PDT)
+        Fri, 17 Jun 2022 03:45:24 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD60674F1
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 00:45:23 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id d129so3389503pgc.9
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 00:45:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0JRZE0Z29r4UlodpfRtV08NQRTnigdJxgN3DP8hXpHY=;
-        b=NEY2iKtHtUL4IQc6zDdgegvPzcuaw41bP35nUj4lBy/tvaeYi7elW4M+N690lLhGq2
-         0rJfaSTXaD/T7z4qm+9e6kKlfFQlLg9rDkuMl4K8VoAZI8D9f/xlUf78quh946+BOpsD
-         qWyWBO4LGd/dmaYObpXd2Yttb5VUc766BKpIpyhI25Lbwh5ZkazF29qI1oBEL6FHlSSB
-         ohtbxmFYvqtW0Gi3MsDd1MW2rF1sTusEgoaTQKuAxO93n8+q9S16xOvtdu199048/KUN
-         jzKT9FYQpIMikudcJA71wbR9YJceiV8xJP6AGrJiw2KJ2/uavXGJMAJ4YWWhOWraM8lm
-         ZDMg==
+        bh=UN5wKNbB+gVz0MX2GTcg6Rw1lsEc1tgfAUNNFpXQz3Y=;
+        b=Mswm1WvMrZVDLXyE4nWVJOH7IqmhFUOXGqh300G317e18kZuX1t4wJKQ2gBsonvfRB
+         YwdilqV6fdJSxYgeH95yKrzKmZ+p8GxvKPDteJH6dT01eS4vNcYW5SAvLZo7qyUzCRFQ
+         rZd2R40wgGsWGAcL5uCDewtjtGs5nwyODjBC138U6EF1DHtXb/Wq0m4XsdRV8LZ1QiP8
+         s8r3oXWvMtj2bQmNu8OmrvHIIf2XrLv8ImrkQTtPArxqHg+iRSoIFlQZFbP2CJKEovR3
+         cvzVH57cSbZinlmY8RX79059QZAiM7gflroH52frgUDpVctvoseuMzXnvuEEPNUY/5Ng
+         IPkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=0JRZE0Z29r4UlodpfRtV08NQRTnigdJxgN3DP8hXpHY=;
-        b=w1/iJARpWBJ6qhF8Kqdz281jfcr+fjTZPkOmhTmzgSK4jwEdp7MFdpUcOM7XFRmtOT
-         kph48dXLxRBNX1i7QEIScM0EzlC8g2YQgueXd9vOafQhT4+j7k4ko7HyYV8nAEG0RSjY
-         f/syPW+fPDzRNPo8Uu/s/zKZnTq68DceIIftPWJopPfm2lpf217eEuWHx8UC/cVmWiw5
-         6TETGjN5E40BIxJ+g3Wz64YQ98cjFp8V/dqb9JNRciyBUPKzAJNGoszoxYBQtGxTshyC
-         eTFGcCTheRj4bIpeIscemJDXNRey10TinENig6/oqK4UEFyBXNGo9sbInqbGp3yrkudZ
-         tHPQ==
-X-Gm-Message-State: AJIora+YJokDerjfoTkK+crBOGGWqN9t1Nq+PQ1Nw1LPYzktPQ5SLgcv
-        WVv+w1l+2wi4rS+v6Xtx8CU4kw==
-X-Google-Smtp-Source: AGRyM1tUyfYz20VN7BXvpIfxhhyVOdn7+NV09gMOWoEO8ZHM10dORUVqR3B883OKoeWHwEhkbW7ejw==
-X-Received: by 2002:a17:902:ba8d:b0:168:ff8f:c1f with SMTP id k13-20020a170902ba8d00b00168ff8f0c1fmr8039334pls.6.1655451525503;
-        Fri, 17 Jun 2022 00:38:45 -0700 (PDT)
+        bh=UN5wKNbB+gVz0MX2GTcg6Rw1lsEc1tgfAUNNFpXQz3Y=;
+        b=aW7R7sFbKsgTFiB3OEYFrxFzv03F9Jp9OJLNgmkWBvKyVsTTiyZJXED56uyi1ZtYi+
+         NYLI/D7gJO7zRO5PE6jMyfVNCGDGPV+vcMTHbpjeX6bHewiCNl8/WuN0EhWCghwTMQMi
+         gnF+akpuuEGjoCaiKI8KTs4wHRangD6Pz6qaDvEcBoRJqsP8PQus0jOXrnmD6GDIjTQs
+         7mgwcagg9yUM5zBYYXEFbj63gLBsuG+1UgDB8Ekmbm66Plw9QIj/xdh4PdBtOMVusJc1
+         ysv+ceRQqSVugaJYRzY90j9kNVP6hQ9M1mYr/QMbFAhHadqdozc14Ny1x9QdFn2B151x
+         aYug==
+X-Gm-Message-State: AJIora9hocMlZzEzwBL75c8y7VrLWuMjgcI3S1vsS1wlgeTIyus11N7A
+        hYxodmGTFnltfAT7c4c7Tehzrw==
+X-Google-Smtp-Source: AGRyM1s01D2BJk6yQTd7SaCXZiVMvkVhiFRGRZTdE1735521WxT0x7F3MhFT2n0cfBSNbLgJDSS4zQ==
+X-Received: by 2002:a05:6a00:218c:b0:51c:c64:3f6a with SMTP id h12-20020a056a00218c00b0051c0c643f6amr8524810pfi.50.1655451922717;
+        Fri, 17 Jun 2022 00:45:22 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s (n058152077154.netvigator.com. [58.152.77.154])
-        by smtp.gmail.com with ESMTPSA id w22-20020a1709026f1600b001676f87473fsm2827966plk.302.2022.06.17.00.38.42
+        by smtp.gmail.com with ESMTPSA id c5-20020a17090ab28500b001e88c4bb3dcsm4945443pjr.25.2022.06.17.00.45.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jun 2022 00:38:45 -0700 (PDT)
-Date:   Fri, 17 Jun 2022 15:38:40 +0800
+        Fri, 17 Jun 2022 00:45:22 -0700 (PDT)
+Date:   Fri, 17 Jun 2022 15:45:17 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -65,65 +65,52 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mike Leach <mike.leach@linaro.org>,
         German Gomez <german.gomez@arm.com>
 Subject: Re: [PATCH v2] perf test: Add ARM SPE system wide test
-Message-ID: <20220617073840.GA45710@leoy-ThinkPad-X240s>
+Message-ID: <20220617074517.GB45710@leoy-ThinkPad-X240s>
 References: <20220616230546.1390813-1-namhyung@kernel.org>
+ <20220617073840.GA45710@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220616230546.1390813-1-namhyung@kernel.org>
+In-Reply-To: <20220617073840.GA45710@leoy-ThinkPad-X240s>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Namhyung,
-
-On Thu, Jun 16, 2022 at 04:05:46PM -0700, Namhyung Kim wrote:
-
-[...]
-
-> +arm_spe_system_wide_test() {
-> +	echo "Recording trace with system-wide mode $perfdata"
-> +	perf record -o ${perfdata} -e arm_spe// -a \
-> +		-- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
-> +
-> +	if [ $? != 0 ]; then
-> +		arm_spe_report "SPE system-wide testing" 2
-> +		return
-> +	fi
-
-I am awared the root permission issue after I saw German's suggestion.
-
-If the snapshot test is passed, no matter the system wide test is passed
-or not, we will always return 0 for 'passed' result.  But we might miss
-to capture the system-wide testing failure.
-
-How about use 'dummy' event to verіfy the root permission?
-(actually I referred to intel-pt test):
-
-        perf record -o ${tmpfile} -B -N --no-bpf-event -e dummy:u -a true 2>&1 >/dev/null
-        if [ $? != 0 ]; then
-        	arm_spe_report "SPE system-wide testing" 2
-        	return
-        fi
-
-        perf record -o ${perfdata} -e arm_spe// -a \
-                  -- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
-
-Thanks,
-Leo
-
-> +	perf_script_samples dd &&
-> +	perf_report_samples dd
-> +
-> +	err=$?
-> +	arm_spe_report "SPE system-wide testing" $err
-> +}
-> +
->  arm_spe_snapshot_test
-> +arm_spe_system_wide_test
-> +
->  exit $glb_err
-> -- 
-> 2.36.1.476.g0c4daa206d-goog
+On Fri, Jun 17, 2022 at 03:38:40PM +0800, Leo Yan wrote:
+> Hi Namhyung,
 > 
+> On Thu, Jun 16, 2022 at 04:05:46PM -0700, Namhyung Kim wrote:
+> 
+> [...]
+> 
+> > +arm_spe_system_wide_test() {
+> > +	echo "Recording trace with system-wide mode $perfdata"
+> > +	perf record -o ${perfdata} -e arm_spe// -a \
+> > +		-- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
+> > +
+> > +	if [ $? != 0 ]; then
+> > +		arm_spe_report "SPE system-wide testing" 2
+> > +		return
+> > +	fi
+> 
+> I am awared the root permission issue after I saw German's suggestion.
+> 
+> If the snapshot test is passed, no matter the system wide test is passed
+> or not, we will always return 0 for 'passed' result.  But we might miss
+> to capture the system-wide testing failure.
+> 
+> How about use 'dummy' event to verіfy the root permission?
+> (actually I referred to intel-pt test):
+> 
+>         perf record -o ${tmpfile} -B -N --no-bpf-event -e dummy:u -a true 2>&1 >/dev/null
+
+Sorry for typo, s/tmpfile/perfdata/
+
+>         if [ $? != 0 ]; then
+>         	arm_spe_report "SPE system-wide testing" 2
+>         	return
+>         fi
+> 
+>         perf record -o ${perfdata} -e arm_spe// -a \
+>                   -- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
