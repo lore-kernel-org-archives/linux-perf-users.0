@@ -2,92 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE60C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Jun 2022 14:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Jun 2022 18:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382570AbiFQOjf (ORCPT
+        id S230325AbiFQSbp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Jun 2022 10:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43590 "EHLO
+        Fri, 17 Jun 2022 14:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233234AbiFQOjf (ORCPT
+        with ESMTP id S230011AbiFQSbm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Jun 2022 10:39:35 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D689239684;
-        Fri, 17 Jun 2022 07:39:33 -0700 (PDT)
-Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LPhTm4850z6H6mV;
-        Fri, 17 Jun 2022 22:37:48 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Fri, 17 Jun 2022 16:39:31 +0200
-Received: from [10.126.175.22] (10.126.175.22) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 17 Jun 2022 15:39:29 +0100
-Message-ID: <cb61ea57-ea48-ccd7-fa3f-6e46f196de1e@huawei.com>
-Date:   Fri, 17 Jun 2022 15:39:28 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v5 2/4] perf jevents: Add python converter script
-To:     Ian Rogers <irogers@google.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 17 Jun 2022 14:31:42 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECDAF33350;
+        Fri, 17 Jun 2022 11:31:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9B896B82A03;
+        Fri, 17 Jun 2022 18:31:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 098C7C3411B;
+        Fri, 17 Jun 2022 18:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655490698;
+        bh=2/knutDxckjBdkBXfrZLSAKW2wg72XY5+Fy5skCxEVI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MF5JdofyYxxqaZmk43bNRCfBOacUQ3k+eK3Ow+OY1V525OWbgv5koJy9Tr8ZNInpo
+         YDQCY7bkTboxclR2QJbf/OJ6uuD6Sag6yesPKdWq/z3uZ2c70pQ6DMv+8SyhG8nfH7
+         VXTW3VvVeW+1BQBsmizWooSX1iW0mO8+RkZ0vOdK2lveM/eRfDbBjla/Idx+I9nUYf
+         QhKavYZ6mNUX/L0Sh0/AY5pAhy5nMFQ7al+M4+jf8mhK8dxSAztFEd72ACq+OY6b+x
+         gMZ7fmJdVAtHskdpR3TpKuM87mBo8Fdgz7M8M8KEg2Wqr+RVHKH9WqgBC8+W5hMgrR
+         qOvj7+/fd+RDw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 678864096F; Fri, 17 Jun 2022 15:31:35 -0300 (-03)
+Date:   Fri, 17 Jun 2022 15:31:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     kajoljain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Felix Fietkau <nbd@nbd.name>,
-        Qi Liu <liuqi115@huawei.com>, Like Xu <likexu@tencent.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        "Nick Forrington" <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        "James Clark" <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
-        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-References: <20220616044806.47770-1-irogers@google.com>
- <20220616044806.47770-3-irogers@google.com>
- <7eb148e5-0763-1dbe-d1f5-80e5159be7c8@linux.intel.com>
- <CAP-5=fUy=_HFhhdghRJs-+G75ppsYCRg72SSnoeijvdqb8hyVQ@mail.gmail.com>
- <3108fd92-c05b-961f-2367-81925535bf4f@linux.intel.com>
- <CAP-5=fW10QAD1MZ_RhdCvOTwiWTcYoQps5hSGH4F2JsVYeAB5A@mail.gmail.com>
- <5e27d1e8-f329-7e11-2f5a-cc0d53ce1db3@linux.intel.com>
- <CAP-5=fUZbi2359+jgMx8MNjT0aEt1Ai0aBzA4kc+iKphpJWwCg@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <CAP-5=fUZbi2359+jgMx8MNjT0aEt1Ai0aBzA4kc+iKphpJWwCg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.175.22]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Subject: Re: [PATCH] perf expr: Allow exponents on floating point values
+Message-ID: <YqzIh1qx976G96NB@kernel.org>
+References: <20220527020653.4160884-1-irogers@google.com>
+ <a959de1b-c938-0e9f-73a4-89fbeb33cf97@linux.ibm.com>
+ <CAP-5=fVY-tdEzXi8fcPGQdQf+F93OTzA7z6UksQy=c6Vh7uPpA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVY-tdEzXi8fcPGQdQf+F93OTzA7z6UksQy=c6Vh7uPpA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 17/06/2022 14:33, Ian Rogers wrote:
->> ...                       libzstd: [ on  ]
->> ...        disassembler-four-args: [ on  ]
->> ...         python-dev-is-python3: [ off ]
->>
-> Agreed on cleaning up the python Makefile logic. I'd rather do it out
-> of these patches.
-IMHO I know it's painful to get right but we should have it shouted that 
-python is not properly configured and jevents won't get compiled 
-(properly) - the message "Python interpreter too old (older than 3.6) 
-disabling jevent generation" is too quiet.
+Em Wed, Jun 15, 2022 at 10:16:32PM -0700, Ian Rogers escreveu:
+> On Wed, Jun 8, 2022 at 10:47 PM kajoljain <kjain@linux.ibm.com> wrote:
+> 
+> > Patch looks fine to me
+> >
+> > Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
+> >
+> 
+> Thanks! Arnaldo, can this one go in?
 
-Thanks!
+Sure, applied.
+
+- Arnaldo
+ 
+> Ian
+> 
+> 
+> >
+> > On 5/27/22 07:36, Ian Rogers wrote:
+> > > Pass the optional exponent component through to strtod that already
+> > > supports it. We already have exponents in ScaleUnit and so this adds
+> > > uniformity.
+> > >
+> > > Reported-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/tests/expr.c | 2 ++
+> > >  tools/perf/util/expr.l  | 2 +-
+> > >  2 files changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> > > index d54c5371c6a6..5c0032fe93ae 100644
+> > > --- a/tools/perf/tests/expr.c
+> > > +++ b/tools/perf/tests/expr.c
+> > > @@ -97,6 +97,8 @@ static int test__expr(struct test_suite *t
+> > __maybe_unused, int subtest __maybe_u
+> > >       ret |= test(ctx, "2.2 > 2.2", 0);
+> > >       ret |= test(ctx, "2.2 < 1.1", 0);
+> > >       ret |= test(ctx, "1.1 > 2.2", 0);
+> > > +     ret |= test(ctx, "1.1e10 < 1.1e100", 1);
+> > > +     ret |= test(ctx, "1.1e2 > 1.1e-2", 1);
+> > >
+> > >       if (ret) {
+> > >               expr__ctx_free(ctx);
+> > > diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+> > > index 0a13eb20c814..4dc8edbfd9ce 100644
+> > > --- a/tools/perf/util/expr.l
+> > > +++ b/tools/perf/util/expr.l
+> > > @@ -91,7 +91,7 @@ static int literal(yyscan_t scanner)
+> > >  }
+> > >  %}
+> > >
+> > > -number               ([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)
+> > > +number               ([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)(e-?[0-9]+)?
+> > >
+> > >  sch          [-,=]
+> > >  spec         \\{sch}
+> >
+
+-- 
+
+- Arnaldo
