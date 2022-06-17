@@ -2,170 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7980BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Jun 2022 04:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BC7C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Jun 2022 20:11:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232772AbiFTEWK (ORCPT
+        id S1343598AbiFQULi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Jun 2022 00:22:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53258 "EHLO
+        Fri, 17 Jun 2022 16:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229833AbiFTEWJ (ORCPT
+        with ESMTP id S230184AbiFQULh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Jun 2022 00:22:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4C47665;
-        Sun, 19 Jun 2022 21:22:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 36DCC6100D;
-        Mon, 20 Jun 2022 04:22:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 620E7C3411B;
-        Mon, 20 Jun 2022 04:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655698927;
-        bh=43ZzRl4vSvG7C1xd9vN3G+UqhhkVeLob3m67YbtyVbQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ON4PNMCbAB1lci1WY9T+sB1LU0aMRZROFIhB10P0ykfanYPEaIEjZkMZjWVFkdyWF
-         DeqcglU1tuwdvHFFCAXgfeppWZDAuh4uiVACJBko8C8zeyxFQv4p7PcQqtQxB5A7/Y
-         79aAsRMjCq1Ji9YmJvvjMltudy+mOzu55aY6KJtB1ssiCMZU2en31VdLuFjHMxpVwr
-         o/N6Kxn4iHn0QCEyfb0kDVM+WksKrcNPwqRvSZmUti1lxpa0TNGfn8kZtRivex2myL
-         KCAlvZ1iPQgEKDZZ2P7N4XmQGT746GfaWi8Jh/iy9ElbWKBmmtmd+152kCSrfrJPYY
-         iH7MuqR+QzVxw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 318A34096F; Mon, 20 Jun 2022 01:22:04 -0300 (-03)
-Date:   Mon, 20 Jun 2022 01:22:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Fri, 17 Jun 2022 16:11:37 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B009120BD1
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 13:11:36 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id i17so1321333qvo.13
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 13:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:message-id:mime-version;
+        bh=c6HUnYkSdwKF6VwZqapAdI/2A9eVLq9BatAO2vrrJnw=;
+        b=IX2PByp4AaPYCaHsl6YaKxCQDBLcbzVfewb/i5gDZJp4jC5hZnUusDaeihpND2VR3b
+         2sZT0iz0pv92t3hD0zp1TvJBu9l8dLLbEi7+msWg7AfZOIXgxBr5+apxMEFg4MuWs2ty
+         lLkNS/F1s2iGiJZURZjQDd3QjCpnH5JBlqEoA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:date:to:cc:message-id:mime-version;
+        bh=c6HUnYkSdwKF6VwZqapAdI/2A9eVLq9BatAO2vrrJnw=;
+        b=D+BptFnEJoLUCx5y6vj6GK8fKL2pc7g1D3mp+sD9SNiPSY8lKP/uLhhzKKG2A7qjal
+         /XwPQnLKyo3RmJJZXwv4xx7bxNb1B2OhUzbyDWTb7LztYuLU0OzNJLM/UsCC0sXHIzJP
+         HadkNnT4iXXrVlvNQ0DSE+y6Ul5fFQkUrBVe7kMe8uX8pX3ew0kVvFuhCP73/MNDhjh9
+         rv5ksQCqUSFcmFi1EOY3VbkhIMekV/3xi4/bAlJdbEjKXraLS66JaIt69dA/zsVsfa2t
+         YBpJGlwjRiIlpthQcItESKc7cR+65ijlv17j14nkLkbWpB2lUXyxx367dc2XxHK579bq
+         XjbA==
+X-Gm-Message-State: AJIora/5Nw9HTixx5c7VYCeJJyx+ZY6DrSa/XIfytel0OxVCRDprpG6C
+        L5udS+NJLbXutmdswub86fDFx+NLDRWMhA==
+X-Google-Smtp-Source: AGRyM1uH6N33lIH+urBS+pxdMchukdpm2KfvwVdoRWcIoCCFoYOXcO7VRs/OEyCpGYrMfI3DsYiOlg==
+X-Received: by 2002:ac8:5e4f:0:b0:305:1e3d:b829 with SMTP id i15-20020ac85e4f000000b003051e3db829mr10040332qtx.471.1655496695881;
+        Fri, 17 Jun 2022 13:11:35 -0700 (PDT)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id y29-20020a37f61d000000b006a3325fd985sm5011152qkj.13.2022.06.17.13.11.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jun 2022 13:11:35 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Fri, 17 Jun 2022 16:11:34 -0400 (EDT)
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+cc:     Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Ali Saidi <alisaidi@amazon.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf tools fixes for v5.19: 1st batch
-Message-ID: <Yq/17Lv3SS9VAXst@kernel.org>
-References: <20220619193240.802856-1-acme@kernel.org>
+        Will Deacon <will@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>
+Message-ID: <db2031ec-cf4-4323-9d3-8262849add3d@maine.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220619193240.802856-1-acme@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sigh,
+Hello
 
-	Used the wrong pull request send shell script, "smi" instead of
-"sml" :-\ This must be affecting my brain more than just a headache,
-sorry, please consider this for rc4 then.
+Is the perf_mmap__read_self() interface as found in tools/lib/perf/mmap.c
+the "official" interface for accessing the perf mmap info from
+userspace?
 
-Thanks,
+Are the READ_ONCE() calls required?  If they are left out, will accessing 
+the mmap interface potentially fail?  Has this ever been seen in practice?
 
-- Arnaldo
+Part of why I am asking is both
+	tools/lib/perf/mmap.c
+and
+	tools/linux/compiler.h (which defines READ_ONCE)
+have SPDX headers indicating they are GPL-2.0 licensed, which means it 
+seems like it would not be possible to easily use the perf mmap interface 
+from BSD-licensed code.  Would it be possible to get those two files 
+re-licensed?
 
-Em Sun, Jun 19, 2022 at 04:32:40PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Hi Linus,
-> 
-> 	Please consider pulling, there are some more header sync
-> activity for next week, still recovering the french no-mask bonanza and
-> the brazilian omicron crash (maybe related?) (yeah, me+wife+kid
-> infected), sigh.
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> The following changes since commit 354c6e071be986a44b956f7b57f1884244431048:
-> 
->   Merge tag 'ext4_for_linus_stable' of git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4 (2022-06-18 21:51:12 -0500)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.19-2022-06-19
-> 
-> for you to fetch changes up to 140cd9ec8fdddc0e2d1684e6b69bcd05efbc9549:
-> 
->   tools headers UAPI: Sync linux/prctl.h with the kernel sources (2022-06-19 11:42:25 -0300)
-> 
-> ----------------------------------------------------------------
-> perf tool fixes for v5.19, 1st batch:
-> 
-> - Don't set data source if it's not a memory operation in ARM SPE (Statistical
->   Profiling Extensions).
-> 
-> - Fix handling of exponent floating point values in perf stat expressions.
-> 
-> - Don't leak fd on failure on libperf open.
-> 
-> - Fix 'perf test' CPU topology test for PPC guest systems.
-> 
-> - Fix undefined behaviour on breakpoint account 'perf test' entry.
-> 
-> - Record only user callchains on the "Check ARM64 callgraphs are complete in FP
->   mode" 'perf test' entry.
-> 
-> - Fix "perf stat CSV output linter" test on s390.
-> 
-> - Sync batch of kernel headers with tools/perf/.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (4):
->       perf beauty: Update copy of linux/socket.h with the kernel sources
->       tools headers UAPI: Sync x86's asm/kvm.h with the kernel sources
->       tools headers arm64: Sync arm64's cputype.h with the kernel sources
->       tools headers UAPI: Sync linux/prctl.h with the kernel sources
-> 
-> Athira Rajeev (1):
->       perf test topology: Use !strncmp(right platform) to fix guest PPC comparision check
-> 
-> Ian Rogers (5):
->       perf unwind: Fix uninitialized variable
->       libperf evsel: Open shouldn't leak fd on failure
->       perf test: Fix variable length array undefined behavior in bp_account
->       perf expr: Allow exponents on floating point values
->       perf metrics: Ensure at least 1 id per metric
-> 
-> Leo Yan (1):
->       perf arm-spe: Don't set data source if it's not a memory operation
-> 
-> Michael Petlan (1):
->       perf test: Record only user callchains on the "Check Arm64 callgraphs are complete in fp mode" test
-> 
-> Thomas Richter (1):
->       perf test: Fix "perf stat CSV output linter" test on s390
-> 
->  tools/arch/arm64/include/asm/cputype.h             | 12 +++-
->  tools/arch/x86/include/uapi/asm/kvm.h              | 11 ++--
->  tools/include/uapi/linux/prctl.h                   |  9 +++
->  tools/lib/perf/evsel.c                             | 17 ++++--
->  tools/perf/tests/bp_account.c                      | 16 ++++-
->  tools/perf/tests/expr.c                            |  2 +
->  tools/perf/tests/shell/lib/perf_csv_output_lint.py | 48 ---------------
->  tools/perf/tests/shell/stat+csv_output.sh          | 69 ++++++++++++++--------
->  tools/perf/tests/shell/test_arm_callgraph_fp.sh    |  2 +-
->  tools/perf/tests/topology.c                        |  2 +-
->  tools/perf/trace/beauty/include/linux/socket.h     |  7 ++-
->  tools/perf/util/arm-spe.c                          | 22 +++----
->  tools/perf/util/expr.l                             |  2 +-
->  tools/perf/util/metricgroup.c                      |  9 +++
->  tools/perf/util/unwind-libunwind-local.c           |  2 +-
->  15 files changed, 125 insertions(+), 105 deletions(-)
->  delete mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
+The (BSD-licensed) PAPI is currently using a mmap reading interface 
+based on early documentation for the feature, but it isn't 100% the same 
+as the version from libperf (and isn't using READ_ONCE).  Life would be 
+easier if we could use the perf version of the code because then we would 
+have one less variable to deal with when trying to track down issues.
 
--- 
+Vince Weaver
+vincent.weaver@maine.edu
 
-- Arnaldo
+
