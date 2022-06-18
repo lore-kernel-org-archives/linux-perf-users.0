@@ -2,176 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B1DC43334
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Jun 2022 02:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40A1C43334
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Jun 2022 13:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383900AbiFRClE (ORCPT
+        id S230393AbiFRNtN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Jun 2022 22:41:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49588 "EHLO
+        Sat, 18 Jun 2022 09:49:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231748AbiFRClC (ORCPT
+        with ESMTP id S234248AbiFRNtL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Jun 2022 22:41:02 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48747579AB;
-        Fri, 17 Jun 2022 19:41:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655520061; x=1687056061;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=69FVXhRcNi3XWbo8cR10pFMkzX2M6PFU7BLsMWAUkAA=;
-  b=D3DjQEKqmNHuIOQr64wpDZQZQsW0XtnZSk1nXX5/weV2AwyIw/bY1nf6
-   5XHDYN/E7CwBakZYpVnq/zDAIh74nEBWTsFu3xTwBhUmrgaq5MKyTB5nX
-   vou8C8qEQoTujJ73cwKfPcNUVYWsxeVVPdhlTtgiLDjBSQk8Zq10WXL3M
-   Skp8+LdSbEgirVOW/KigYKMsz3mswH9vSM3Na7P53it6IGhwEDxomre5k
-   iUNcy+UDJlfh6pFGnz1Frj/BFrzyZilhQPJp16ZPMWSkGELARRelZs0gO
-   R5rXMRSUn1PZbhYWyBS1R0/sBOnPUqCehFeI+OgKzw/Ot2VYyJE/HI5Ag
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="268338733"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="268338733"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 19:41:00 -0700
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="590351625"
-Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.249.173.113]) ([10.249.173.113])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 19:40:54 -0700
-Message-ID: <a1737a8c-4d8e-a868-35a3-224e12e8c42b@linux.intel.com>
-Date:   Sat, 18 Jun 2022 10:40:52 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v6 0/4] Rewrite jevents program in python
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sat, 18 Jun 2022 09:49:11 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3EDC51D0FF;
+        Sat, 18 Jun 2022 06:49:10 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 070C5113E;
+        Sat, 18 Jun 2022 06:49:10 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.35.139])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5DA93F792;
+        Sat, 18 Jun 2022 06:49:07 -0700 (PDT)
+Date:   Sat, 18 Jun 2022 14:49:03 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Vince Weaver <vincent.weaver@maine.edu>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Felix Fietkau <nbd@nbd.name>,
-        Qi Liu <liuqi115@huawei.com>, Like Xu <likexu@tencent.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com, sandipan.das@amd.com,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20220618000907.433350-1-irogers@google.com>
- <d3b39b1c-7d2e-0acd-fa92-8e05a3bad1fb@linux.intel.com>
- <CAP-5=fUVWsVz2WguxDgiAEqG=eVAmJ+qkKDndDcfancsd8V2+A@mail.gmail.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <CAP-5=fUVWsVz2WguxDgiAEqG=eVAmJ+qkKDndDcfancsd8V2+A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Will Deacon <will@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: READ_ONCE() usage in perf_mmap_read_self()
+Message-ID: <Yq3Xzz2XebvEJFcJ@FVFF77S0Q05N>
+References: <f26be5e-af31-a996-9c7-86d9d1ed4b2@maine.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f26be5e-af31-a996-9c7-86d9d1ed4b2@maine.edu>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+On Fri, Jun 17, 2022 at 04:13:22PM -0400, Vince Weaver wrote:
+> Hello
 
-On 6/18/2022 9:41 AM, Ian Rogers wrote:
-> On Fri, Jun 17, 2022 at 5:23 PM Xing Zhengjun
-> <zhengjun.xing@linux.intel.com> wrote:
->>
->> Hi Ian,
->>
->> On 6/18/2022 8:09 AM, Ian Rogers wrote:
->>> New architectures bring new complexity, such as Intel's hybrid
->>> models. jevents provides an alternative to specifying events in the
->>> kernel and exposing them through sysfs, however, it is difficult to
->>> work with. For example, an error in the json input would yield an
->>> error message but no json file or location. It is also a challenge to
->>> update jsmn.c given its forked nature.
->>>
->>> The changes here switch from jevents.c to a rewrite in python called
->>> jevents.py. This means there is a build time dependency on python, but
->>> such a dependency already exists for asciidoc (used to generate perf's
->>> man pages). If the build detects that python isn't present or is older
->>> than version 3.6 (released Dec. 2016) then an empty file is
->>> substituted for the generated one.
->>>
->>> A challenge with this code is in avoiding regressions. For this reason
->>> the jevents.py produces identical output to jevents.c, validated with a
->>> test script and build target.
->>>
->>> v6. Fixes an annotation and use of removesuffix that aren't present in
->>>       Python 3.6. Linter issues are also fixed.The code was tested on
->>>       Python 3.6 and 3.8 with docker.
->>
->> I just test it, now it can be built successfully with python 3.8.
-> 
-> Great! Tested-by/Reviewed-by/Acked-by always welcome :-)
+Hi Vince,
 
-I test python3.8 and python3.10, both can build successfully.
-I also check the "pmu-events.c" generated by both C and python code, 
-they are the same.
+> Is the perf_mmap__read_self() interface as found in tools/lib/perf/mmap.c
+> the "official" interface for accessing the perf mmap info from
+> userspace?
 
-Tested-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+The tools/lib/perf stuff is *a* library for accessing it, but no-one's mandated
+to use that, and in that sense it's not the "official" interface. The
+"official" interface is whatever's documented in the UAPI headers, e.g.
 
-> 
-> Ian
-> 
->>> v5. Adds a 2>/dev/null as suggested by David Laight
->>>       <David.Laight@aculab.com>.
->>> v4. Fixes the build for systems with python2 installed by adding a
->>>       patch that makes python3 the preferred python (Reported-by: John
->>>       Garry <john.garry@huawei.com>). It also fixes a bash-ism in the
->>>       jevents-test.sh and fixes the handling of an empty string for a
->>>       metric BriefDescription as one was added for sapphirerapids in the
->>>       metric Execute.
->>> v3. Updates the patches for merged changes (on
->>>       acme/tmp.perf/core). Re-runs all comparisons to make sure the
->>>       generated pmu-events.c isn't altered at all by this change. Adds
->>>       the jevents.c ExtSel fix in:
->>>       https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
->>>       Bumps the python version from 3.5 to 3.6, as f-strings weren't
->>>       introduced until 3.6.
->>>
->>> v2. Fixes the build for architectures that don't have pmu-events json
->>>       (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
->>>       build for python not being present or too old (Suggested-by: Peter
->>>       Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
->>>
->>> Ian Rogers (4):
->>>     perf python: Prefer python3
->>>     perf jevents: Add python converter script
->>>     perf jevents: Switch build to use jevents.py
->>>     perf jevents: Remove jevents.c
->>>
->>>    tools/perf/Makefile.config               |   27 +-
->>>    tools/perf/Makefile.perf                 |   16 +-
->>>    tools/perf/pmu-events/Build              |   15 +-
->>>    tools/perf/pmu-events/empty-pmu-events.c |   21 +
->>>    tools/perf/pmu-events/jevents.c          | 1342 ----------------------
->>>    tools/perf/pmu-events/jevents.py         |  409 +++++++
->>>    tools/perf/pmu-events/jsmn.h             |   68 --
->>>    tools/perf/pmu-events/json.c             |  162 ---
->>>    tools/perf/pmu-events/json.h             |   39 -
->>>    9 files changed, 465 insertions(+), 1634 deletions(-)
->>>    create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
->>>    delete mode 100644 tools/perf/pmu-events/jevents.c
->>>    create mode 100755 tools/perf/pmu-events/jevents.py
->>>    delete mode 100644 tools/perf/pmu-events/jsmn.h
->>>    delete mode 100644 tools/perf/pmu-events/json.c
->>>    delete mode 100644 tools/perf/pmu-events/json.h
->>>
->>
->> --
->> Zhengjun Xing
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/perf_event.h?h=v5.19-rc2#n517
 
--- 
-Zhengjun Xing
+... though I admit that's not as clear as it ideally would be, and we could
+improve that and/or add some other documentation that's earier to consume.
+
+> Are the READ_ONCE() calls required?  If they are left out, will accessing 
+> the mmap interface potentially fail?  Has this ever been seen in practice?
+
+There's a bunch of subtlety here. The gist is:
+ 
+1) Here we use READ_ONCE() to make the loads single-copy-atomic (i.e. not torn
+   into separate accesses). There are other ways that can be achieved without
+   using READ_ONCE().
+
+   In practice, compilers don't generally tear loads of less than the machine
+   word size when used in "simple" sequences, but they can often replay loads
+   assuming that the value hasn't changed. For the sequences here, I suspect
+   it's very unlikely the compiler would tear accesses or replay them.
+
+2) The reads of pc->lock need to be single-copy-atomic, or the loop may not
+   correctly protect reads within the sequence. In the absnece of that, the
+   result could be bogus (and as below, accesses to the counters could trigger
+   unexpected exceptions).
+
+3) Compiler barriers are necessary to ensure that loads within the loop are
+   protected by pc->lock and not pulled out of the loop or cached over multiple
+   iterations of the loop.
+
+4) Data loaded *and consumed* within the loop may need to be loaded with
+   single-copy-atomic accesses depending on how they are used. For example,
+   pc->index needs to be loaded in a single-copt-atomic way or an erroeous
+   counter index could be used, and the access to that counter might cause an
+   exception.
+
+   In contrast, dor data where we just perform some maths without side-effects,
+   that wouldn't be important.
+
+5) Data merely loaded within the loop doesn't strictly need to be loaded in a
+   single-copy-atomic way. If there's concurrent modification, pc->lock will
+   have changed, causing it to be diescarded, and if there's no concurrent
+   modification the tearing is benign.
+
+IIUC we marked everything with READ_ONCE() because that was simpler to reason
+about (and very unlikely to be detrimental) rather than it being strictly
+necessary.
+
+Does that make sense and does that answer your questions?
+
+> Part of why I am asking is both
+>  	tools/lib/perf/mmap.c
+> and
+>  	tools/linux/compiler.h (which defines READ_ONCE)
+> have SPDX headers indicating they are GPL-2.0 licensed, which means it 
+> seems like it would not be possible to easily use the perf mmap interface 
+> from BSD-licensed code.  Would it be possible to get those two files 
+> re-licensed?
+
+I suspect that's likely to be difficult since (IIUC) those are derived from
+other kernel code licensed as GPL-2.0, and we'd need to get all relevant
+contributors to agree to the relicensing.
+
+> The (BSD-licensed) PAPI is currently using a mmap reading interface 
+> based on early documentation for the feature, but it isn't 100% the same 
+> as the version from libperf (and isn't using READ_ONCE).  Life would be 
+> easier if we could use the perf version of the code because then we would 
+> have one less variable to deal with when trying to track down issues.
+
+Would clarifying the documentation be helpful here? We might be able to
+document this more clearly and precisely, then align the tools/lib/perf/ code
+with the documentation, even if we can't necessarily relicense that code as-is.
+
+Thanks,
+Mark.
