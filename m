@@ -2,58 +2,50 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5C5C43334
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Jun 2022 01:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B1DC43334
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Jun 2022 02:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237028AbiFRBmG (ORCPT
+        id S1383900AbiFRClE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Jun 2022 21:42:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39128 "EHLO
+        Fri, 17 Jun 2022 22:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234311AbiFRBmF (ORCPT
+        with ESMTP id S231748AbiFRClC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Jun 2022 21:42:05 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EF960D87
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 18:42:04 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id m125-20020a1ca383000000b0039c63fe5f64so3133440wme.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 18:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ImA2TsTKHG7+vdC/F5W3JR4P1g4uMzx7I/ft34Eowdw=;
-        b=seBZhPQDYCD66pKqf8TJgaCXBg+qa/mcq7pRIManL+VY0q/o8Mxp7h1OlpvqENcQuW
-         vQq4Azd4ZOXqml6SKFgsyAn+EvetF3YRRkwQjFMOybUFJvdctcWl2cSYLTUnxLqHCQlc
-         qGN6EsMmIkqQ3B7ujOe2rD/o8cPe1ypVvryJRvpejIkGqrU0lR4dtwUS0EwE86bGB9YG
-         76rrd+lQ0Z4NBO+K3v6biSTmZcldMjqhPIhCY9y1BrMYezpILwx9uMWdIXPqZ0wFyxVG
-         kNYNvEe2Rzpy3fwLb/RwU1jG1yAWkXcSlObhk3Zf2YCjjnK5MGxiBThf3LVIy9fqEumU
-         vfxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ImA2TsTKHG7+vdC/F5W3JR4P1g4uMzx7I/ft34Eowdw=;
-        b=pSVuXqCPsJzTjsxmRbL0Mb3Pdq2a8JweOJN52C0Q0rOh6pBscHizs/sIAaLat2uBG6
-         zVhnr0ihLxfVdxWS9RA1eTdqt2o2r7R71wqVLsFr3LmwYgGqXZW+F3NdmzOw8GEVfEmD
-         OV2SroQakpLA5N1HzYQGq+gu7Crt6UGmvuVfc4I8YUUrUHsZC/rxZmUHtrTCS0LOHe7+
-         YNy/Rb5KpmWszarhso02/Phm6AQIk1CzrhnYo8v6dxcpUvWBuM24q/KB+8IC5g7UXK/Y
-         AoqxFA70YO7NT60Dv5tcK1mzxanrLRvuKgN16o7iAxIvvq0N9G7wK4VSTCq97JsNSozq
-         Rq2A==
-X-Gm-Message-State: AJIora/eX6OS8ReL3irHOR6Vm55Hl4VgcUJD69sdXQuzRkY5mPArQx1u
-        MBmjTtU0yP/Jg0Znk4WKvdoNh9Bj1GWFZ05EPJ4VOw==
-X-Google-Smtp-Source: AGRyM1uJAVgMC+FdPKXuDnS8BkERCAtpEBQ/QwnGY07QPhz0sSjWHadTqyyK+cNCrTlIFQ7Cy65OUeE2LA3WOcgamu4=
-X-Received: by 2002:a7b:cb58:0:b0:39e:f121:f7d4 with SMTP id
- v24-20020a7bcb58000000b0039ef121f7d4mr3161742wmj.174.1655516522408; Fri, 17
- Jun 2022 18:42:02 -0700 (PDT)
+        Fri, 17 Jun 2022 22:41:02 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48747579AB;
+        Fri, 17 Jun 2022 19:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655520061; x=1687056061;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=69FVXhRcNi3XWbo8cR10pFMkzX2M6PFU7BLsMWAUkAA=;
+  b=D3DjQEKqmNHuIOQr64wpDZQZQsW0XtnZSk1nXX5/weV2AwyIw/bY1nf6
+   5XHDYN/E7CwBakZYpVnq/zDAIh74nEBWTsFu3xTwBhUmrgaq5MKyTB5nX
+   vou8C8qEQoTujJ73cwKfPcNUVYWsxeVVPdhlTtgiLDjBSQk8Zq10WXL3M
+   Skp8+LdSbEgirVOW/KigYKMsz3mswH9vSM3Na7P53it6IGhwEDxomre5k
+   iUNcy+UDJlfh6pFGnz1Frj/BFrzyZilhQPJp16ZPMWSkGELARRelZs0gO
+   R5rXMRSUn1PZbhYWyBS1R0/sBOnPUqCehFeI+OgKzw/Ot2VYyJE/HI5Ag
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="268338733"
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="268338733"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 19:41:00 -0700
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="590351625"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.249.173.113]) ([10.249.173.113])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 19:40:54 -0700
+Message-ID: <a1737a8c-4d8e-a868-35a3-224e12e8c42b@linux.intel.com>
+Date:   Sat, 18 Jun 2022 10:40:52 +0800
 MIME-Version: 1.0
-References: <20220618000907.433350-1-irogers@google.com> <d3b39b1c-7d2e-0acd-fa92-8e05a3bad1fb@linux.intel.com>
-In-Reply-To: <d3b39b1c-7d2e-0acd-fa92-8e05a3bad1fb@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 17 Jun 2022 18:41:50 -0700
-Message-ID: <CAP-5=fUVWsVz2WguxDgiAEqG=eVAmJ+qkKDndDcfancsd8V2+A@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
 Subject: Re: [PATCH v6 0/4] Rewrite jevents program in python
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -78,89 +70,108 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Perry Taylor <perry.taylor@intel.com>,
         Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
         Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20220618000907.433350-1-irogers@google.com>
+ <d3b39b1c-7d2e-0acd-fa92-8e05a3bad1fb@linux.intel.com>
+ <CAP-5=fUVWsVz2WguxDgiAEqG=eVAmJ+qkKDndDcfancsd8V2+A@mail.gmail.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <CAP-5=fUVWsVz2WguxDgiAEqG=eVAmJ+qkKDndDcfancsd8V2+A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 17, 2022 at 5:23 PM Xing Zhengjun
-<zhengjun.xing@linux.intel.com> wrote:
->
-> Hi Ian,
->
-> On 6/18/2022 8:09 AM, Ian Rogers wrote:
-> > New architectures bring new complexity, such as Intel's hybrid
-> > models. jevents provides an alternative to specifying events in the
-> > kernel and exposing them through sysfs, however, it is difficult to
-> > work with. For example, an error in the json input would yield an
-> > error message but no json file or location. It is also a challenge to
-> > update jsmn.c given its forked nature.
-> >
-> > The changes here switch from jevents.c to a rewrite in python called
-> > jevents.py. This means there is a build time dependency on python, but
-> > such a dependency already exists for asciidoc (used to generate perf's
-> > man pages). If the build detects that python isn't present or is older
-> > than version 3.6 (released Dec. 2016) then an empty file is
-> > substituted for the generated one.
-> >
-> > A challenge with this code is in avoiding regressions. For this reason
-> > the jevents.py produces identical output to jevents.c, validated with a
-> > test script and build target.
-> >
-> > v6. Fixes an annotation and use of removesuffix that aren't present in
-> >      Python 3.6. Linter issues are also fixed.The code was tested on
-> >      Python 3.6 and 3.8 with docker.
->
-> I just test it, now it can be built successfully with python 3.8.
+Hi Ian,
 
-Great! Tested-by/Reviewed-by/Acked-by always welcome :-)
+On 6/18/2022 9:41 AM, Ian Rogers wrote:
+> On Fri, Jun 17, 2022 at 5:23 PM Xing Zhengjun
+> <zhengjun.xing@linux.intel.com> wrote:
+>>
+>> Hi Ian,
+>>
+>> On 6/18/2022 8:09 AM, Ian Rogers wrote:
+>>> New architectures bring new complexity, such as Intel's hybrid
+>>> models. jevents provides an alternative to specifying events in the
+>>> kernel and exposing them through sysfs, however, it is difficult to
+>>> work with. For example, an error in the json input would yield an
+>>> error message but no json file or location. It is also a challenge to
+>>> update jsmn.c given its forked nature.
+>>>
+>>> The changes here switch from jevents.c to a rewrite in python called
+>>> jevents.py. This means there is a build time dependency on python, but
+>>> such a dependency already exists for asciidoc (used to generate perf's
+>>> man pages). If the build detects that python isn't present or is older
+>>> than version 3.6 (released Dec. 2016) then an empty file is
+>>> substituted for the generated one.
+>>>
+>>> A challenge with this code is in avoiding regressions. For this reason
+>>> the jevents.py produces identical output to jevents.c, validated with a
+>>> test script and build target.
+>>>
+>>> v6. Fixes an annotation and use of removesuffix that aren't present in
+>>>       Python 3.6. Linter issues are also fixed.The code was tested on
+>>>       Python 3.6 and 3.8 with docker.
+>>
+>> I just test it, now it can be built successfully with python 3.8.
+> 
+> Great! Tested-by/Reviewed-by/Acked-by always welcome :-)
 
-Ian
+I test python3.8 and python3.10, both can build successfully.
+I also check the "pmu-events.c" generated by both C and python code, 
+they are the same.
 
-> > v5. Adds a 2>/dev/null as suggested by David Laight
-> >      <David.Laight@aculab.com>.
-> > v4. Fixes the build for systems with python2 installed by adding a
-> >      patch that makes python3 the preferred python (Reported-by: John
-> >      Garry <john.garry@huawei.com>). It also fixes a bash-ism in the
-> >      jevents-test.sh and fixes the handling of an empty string for a
-> >      metric BriefDescription as one was added for sapphirerapids in the
-> >      metric Execute.
-> > v3. Updates the patches for merged changes (on
-> >      acme/tmp.perf/core). Re-runs all comparisons to make sure the
-> >      generated pmu-events.c isn't altered at all by this change. Adds
-> >      the jevents.c ExtSel fix in:
-> >      https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
-> >      Bumps the python version from 3.5 to 3.6, as f-strings weren't
-> >      introduced until 3.6.
-> >
-> > v2. Fixes the build for architectures that don't have pmu-events json
-> >      (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
-> >      build for python not being present or too old (Suggested-by: Peter
-> >      Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
-> >
-> > Ian Rogers (4):
-> >    perf python: Prefer python3
-> >    perf jevents: Add python converter script
-> >    perf jevents: Switch build to use jevents.py
-> >    perf jevents: Remove jevents.c
-> >
-> >   tools/perf/Makefile.config               |   27 +-
-> >   tools/perf/Makefile.perf                 |   16 +-
-> >   tools/perf/pmu-events/Build              |   15 +-
-> >   tools/perf/pmu-events/empty-pmu-events.c |   21 +
-> >   tools/perf/pmu-events/jevents.c          | 1342 ----------------------
-> >   tools/perf/pmu-events/jevents.py         |  409 +++++++
-> >   tools/perf/pmu-events/jsmn.h             |   68 --
-> >   tools/perf/pmu-events/json.c             |  162 ---
-> >   tools/perf/pmu-events/json.h             |   39 -
-> >   9 files changed, 465 insertions(+), 1634 deletions(-)
-> >   create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
-> >   delete mode 100644 tools/perf/pmu-events/jevents.c
-> >   create mode 100755 tools/perf/pmu-events/jevents.py
-> >   delete mode 100644 tools/perf/pmu-events/jsmn.h
-> >   delete mode 100644 tools/perf/pmu-events/json.c
-> >   delete mode 100644 tools/perf/pmu-events/json.h
-> >
->
-> --
-> Zhengjun Xing
+Tested-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+
+> 
+> Ian
+> 
+>>> v5. Adds a 2>/dev/null as suggested by David Laight
+>>>       <David.Laight@aculab.com>.
+>>> v4. Fixes the build for systems with python2 installed by adding a
+>>>       patch that makes python3 the preferred python (Reported-by: John
+>>>       Garry <john.garry@huawei.com>). It also fixes a bash-ism in the
+>>>       jevents-test.sh and fixes the handling of an empty string for a
+>>>       metric BriefDescription as one was added for sapphirerapids in the
+>>>       metric Execute.
+>>> v3. Updates the patches for merged changes (on
+>>>       acme/tmp.perf/core). Re-runs all comparisons to make sure the
+>>>       generated pmu-events.c isn't altered at all by this change. Adds
+>>>       the jevents.c ExtSel fix in:
+>>>       https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
+>>>       Bumps the python version from 3.5 to 3.6, as f-strings weren't
+>>>       introduced until 3.6.
+>>>
+>>> v2. Fixes the build for architectures that don't have pmu-events json
+>>>       (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
+>>>       build for python not being present or too old (Suggested-by: Peter
+>>>       Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
+>>>
+>>> Ian Rogers (4):
+>>>     perf python: Prefer python3
+>>>     perf jevents: Add python converter script
+>>>     perf jevents: Switch build to use jevents.py
+>>>     perf jevents: Remove jevents.c
+>>>
+>>>    tools/perf/Makefile.config               |   27 +-
+>>>    tools/perf/Makefile.perf                 |   16 +-
+>>>    tools/perf/pmu-events/Build              |   15 +-
+>>>    tools/perf/pmu-events/empty-pmu-events.c |   21 +
+>>>    tools/perf/pmu-events/jevents.c          | 1342 ----------------------
+>>>    tools/perf/pmu-events/jevents.py         |  409 +++++++
+>>>    tools/perf/pmu-events/jsmn.h             |   68 --
+>>>    tools/perf/pmu-events/json.c             |  162 ---
+>>>    tools/perf/pmu-events/json.h             |   39 -
+>>>    9 files changed, 465 insertions(+), 1634 deletions(-)
+>>>    create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
+>>>    delete mode 100644 tools/perf/pmu-events/jevents.c
+>>>    create mode 100755 tools/perf/pmu-events/jevents.py
+>>>    delete mode 100644 tools/perf/pmu-events/jsmn.h
+>>>    delete mode 100644 tools/perf/pmu-events/json.c
+>>>    delete mode 100644 tools/perf/pmu-events/json.h
+>>>
+>>
+>> --
+>> Zhengjun Xing
+
+-- 
+Zhengjun Xing
