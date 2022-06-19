@@ -2,113 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41457C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Jun 2022 14:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2DCC43334
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Jun 2022 19:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234692AbiFSOYt (ORCPT
+        id S229706AbiFSTcx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Jun 2022 10:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57740 "EHLO
+        Sun, 19 Jun 2022 15:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235038AbiFSOYs (ORCPT
+        with ESMTP id S229780AbiFSTcw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Jun 2022 10:24:48 -0400
+        Sun, 19 Jun 2022 15:32:52 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B78EADF0E;
-        Sun, 19 Jun 2022 07:24:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC8DCE9;
+        Sun, 19 Jun 2022 12:32:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 63EE6B80D2E;
-        Sun, 19 Jun 2022 14:24:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5FE8C34114;
-        Sun, 19 Jun 2022 14:24:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DC1DCB80DDB;
+        Sun, 19 Jun 2022 19:32:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 048CEC34114;
+        Sun, 19 Jun 2022 19:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655648684;
-        bh=lglb5lq3IdzlIW/sY6jHocKiCWTiCv4pt/JLOGVrB9Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VXkiY0i4IutbbBWhuCRfv4ytN6VFem4MHeNx9VCXwtexb+6Mo0DtrYi+5tLPh0PEV
-         /5zvlEam6LQ2bIVDa+TwaIWP0b7xuB6wdTNcNMxEgoNBRBdnnccOVUQp6ZsZR8VbUh
-         hs81ZhF2ZBSOTki1xW8f1QG+hx83BDNuqIyW6hrPxMGzOa9bQAm3N+JIAjhJjJVS6f
-         FpKlS6mO2J9iei087B+QUi2YaYB8JOm+48u85sXKTDJ8DkNF+KHlSolJnXgaYCCmYf
-         EwCxnUY/kyz4PhtcIeNLUJUzrFy1YxyHyp4m0lrnSJEWs2D7/dK6oMkqI6VsrFIXd7
-         oC+fM92dnWZpg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 590294096F; Sun, 19 Jun 2022 11:24:41 -0300 (-03)
-Date:   Sun, 19 Jun 2022 11:24:41 -0300
+        s=k20201202; t=1655667168;
+        bh=KzY1R7EXRN08xnUMYOeVuTknO1SngU7AjYDwY4X55n4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qOf/eb/bL+pWg+lLLA/B9fAdMEQS/nGdyHWsmPgprvA2Vt7q/KaJemuDD9F7WJfeB
+         DBAiGfCB5GKohy40Ag8/bL5O+XUid2w2vTMkY+Luc69x1VWXlGz4yh2nobU5l3SjoF
+         oxr5bDuwl4R+MckZzRo/Jwflj7T8eWJwmOPyp2GL7D1aJIdxdxvMGJpcpcbNvAYC/m
+         fUb60gsJ6acZpDOL28dFaFr5OCLF4GZGld5JdI2WI2ZrkCvW1/Qt6qqvU5GrE9m56O
+         lO/K/rxIBD6vpVqmCqY/508vpYcDxnrZb3uJEeaA4mxNF4D98ahrS9w08xrUPKkjwP
+         wZJK+LDdj2DRA==
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf metrics: Ensure at least 1 id per metric
-Message-ID: <Yq8xqdUnAv428foN@kernel.org>
-References: <20220618013957.999321-1-irogers@google.com>
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v5.19: 1st batch
+Date:   Sun, 19 Jun 2022 16:32:40 -0300
+Message-Id: <20220619193240.802856-1-acme@kernel.org>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220618013957.999321-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 17, 2022 at 06:39:57PM -0700, Ian Rogers escreveu:
-> We may have no events for a metric evaluated to a constant. In such a
-> case ensure a tool event is at least evaluated for metric parsing and
-> displaying.
+Hi Linus,
 
-Thanks, applied.
+	Please consider pulling, there are some more header sync
+activity for next week, still recovering the french no-mask bonanza and
+the brazilian omicron crash (maybe related?) (yeah, me+wife+kid
+infected), sigh.
 
-- Arnaldo
-
- 
-> Fixes: 8586d2744ff3 ("perf metrics: Don't add all tool events for sharing")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/metricgroup.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index ee8fcfa115e5..8f7baeabc5cf 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1372,6 +1372,7 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
->  
->  	*out_evlist = NULL;
->  	if (!metric_no_merge || hashmap__size(ids->ids) == 0) {
-> +		bool added_event = false;
->  		int i;
->  		/*
->  		 * We may fail to share events between metrics because a tool
-> @@ -1393,8 +1394,16 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
->  				if (!tmp)
->  					return -ENOMEM;
->  				ids__insert(ids->ids, tmp);
-> +				added_event = true;
->  			}
->  		}
-> +		if (!added_event && hashmap__size(ids->ids) == 0) {
-> +			char *tmp = strdup("duration_time");
-> +
-> +			if (!tmp)
-> +				return -ENOMEM;
-> +			ids__insert(ids->ids, tmp);
-> +		}
->  	}
->  	ret = metricgroup__build_event_string(&events, ids, modifier,
->  					      has_constraint);
-> -- 
-> 2.37.0.rc0.104.g0611611a94-goog
-
--- 
+Best regards,
 
 - Arnaldo
+
+The following changes since commit 354c6e071be986a44b956f7b57f1884244431048:
+
+  Merge tag 'ext4_for_linus_stable' of git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4 (2022-06-18 21:51:12 -0500)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.19-2022-06-19
+
+for you to fetch changes up to 140cd9ec8fdddc0e2d1684e6b69bcd05efbc9549:
+
+  tools headers UAPI: Sync linux/prctl.h with the kernel sources (2022-06-19 11:42:25 -0300)
+
+----------------------------------------------------------------
+perf tool fixes for v5.19, 1st batch:
+
+- Don't set data source if it's not a memory operation in ARM SPE (Statistical
+  Profiling Extensions).
+
+- Fix handling of exponent floating point values in perf stat expressions.
+
+- Don't leak fd on failure on libperf open.
+
+- Fix 'perf test' CPU topology test for PPC guest systems.
+
+- Fix undefined behaviour on breakpoint account 'perf test' entry.
+
+- Record only user callchains on the "Check ARM64 callgraphs are complete in FP
+  mode" 'perf test' entry.
+
+- Fix "perf stat CSV output linter" test on s390.
+
+- Sync batch of kernel headers with tools/perf/.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (4):
+      perf beauty: Update copy of linux/socket.h with the kernel sources
+      tools headers UAPI: Sync x86's asm/kvm.h with the kernel sources
+      tools headers arm64: Sync arm64's cputype.h with the kernel sources
+      tools headers UAPI: Sync linux/prctl.h with the kernel sources
+
+Athira Rajeev (1):
+      perf test topology: Use !strncmp(right platform) to fix guest PPC comparision check
+
+Ian Rogers (5):
+      perf unwind: Fix uninitialized variable
+      libperf evsel: Open shouldn't leak fd on failure
+      perf test: Fix variable length array undefined behavior in bp_account
+      perf expr: Allow exponents on floating point values
+      perf metrics: Ensure at least 1 id per metric
+
+Leo Yan (1):
+      perf arm-spe: Don't set data source if it's not a memory operation
+
+Michael Petlan (1):
+      perf test: Record only user callchains on the "Check Arm64 callgraphs are complete in fp mode" test
+
+Thomas Richter (1):
+      perf test: Fix "perf stat CSV output linter" test on s390
+
+ tools/arch/arm64/include/asm/cputype.h             | 12 +++-
+ tools/arch/x86/include/uapi/asm/kvm.h              | 11 ++--
+ tools/include/uapi/linux/prctl.h                   |  9 +++
+ tools/lib/perf/evsel.c                             | 17 ++++--
+ tools/perf/tests/bp_account.c                      | 16 ++++-
+ tools/perf/tests/expr.c                            |  2 +
+ tools/perf/tests/shell/lib/perf_csv_output_lint.py | 48 ---------------
+ tools/perf/tests/shell/stat+csv_output.sh          | 69 ++++++++++++++--------
+ tools/perf/tests/shell/test_arm_callgraph_fp.sh    |  2 +-
+ tools/perf/tests/topology.c                        |  2 +-
+ tools/perf/trace/beauty/include/linux/socket.h     |  7 ++-
+ tools/perf/util/arm-spe.c                          | 22 +++----
+ tools/perf/util/expr.l                             |  2 +-
+ tools/perf/util/metricgroup.c                      |  9 +++
+ tools/perf/util/unwind-libunwind-local.c           |  2 +-
+ 15 files changed, 125 insertions(+), 105 deletions(-)
+ delete mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
