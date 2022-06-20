@@ -2,91 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BC7C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Jun 2022 20:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AB1CCA479
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Jun 2022 12:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343598AbiFQULi (ORCPT
+        id S239184AbiFTMnq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Jun 2022 16:11:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46754 "EHLO
+        Mon, 20 Jun 2022 08:43:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230184AbiFQULh (ORCPT
+        with ESMTP id S233887AbiFTMn1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Jun 2022 16:11:37 -0400
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B009120BD1
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 13:11:36 -0700 (PDT)
-Received: by mail-qv1-xf32.google.com with SMTP id i17so1321333qvo.13
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Jun 2022 13:11:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:message-id:mime-version;
-        bh=c6HUnYkSdwKF6VwZqapAdI/2A9eVLq9BatAO2vrrJnw=;
-        b=IX2PByp4AaPYCaHsl6YaKxCQDBLcbzVfewb/i5gDZJp4jC5hZnUusDaeihpND2VR3b
-         2sZT0iz0pv92t3hD0zp1TvJBu9l8dLLbEi7+msWg7AfZOIXgxBr5+apxMEFg4MuWs2ty
-         lLkNS/F1s2iGiJZURZjQDd3QjCpnH5JBlqEoA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:message-id:mime-version;
-        bh=c6HUnYkSdwKF6VwZqapAdI/2A9eVLq9BatAO2vrrJnw=;
-        b=D+BptFnEJoLUCx5y6vj6GK8fKL2pc7g1D3mp+sD9SNiPSY8lKP/uLhhzKKG2A7qjal
-         /XwPQnLKyo3RmJJZXwv4xx7bxNb1B2OhUzbyDWTb7LztYuLU0OzNJLM/UsCC0sXHIzJP
-         HadkNnT4iXXrVlvNQ0DSE+y6Ul5fFQkUrBVe7kMe8uX8pX3ew0kVvFuhCP73/MNDhjh9
-         rv5ksQCqUSFcmFi1EOY3VbkhIMekV/3xi4/bAlJdbEjKXraLS66JaIt69dA/zsVsfa2t
-         YBpJGlwjRiIlpthQcItESKc7cR+65ijlv17j14nkLkbWpB2lUXyxx367dc2XxHK579bq
-         XjbA==
-X-Gm-Message-State: AJIora/5Nw9HTixx5c7VYCeJJyx+ZY6DrSa/XIfytel0OxVCRDprpG6C
-        L5udS+NJLbXutmdswub86fDFx+NLDRWMhA==
-X-Google-Smtp-Source: AGRyM1uH6N33lIH+urBS+pxdMchukdpm2KfvwVdoRWcIoCCFoYOXcO7VRs/OEyCpGYrMfI3DsYiOlg==
-X-Received: by 2002:ac8:5e4f:0:b0:305:1e3d:b829 with SMTP id i15-20020ac85e4f000000b003051e3db829mr10040332qtx.471.1655496695881;
-        Fri, 17 Jun 2022 13:11:35 -0700 (PDT)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id y29-20020a37f61d000000b006a3325fd985sm5011152qkj.13.2022.06.17.13.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jun 2022 13:11:35 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Fri, 17 Jun 2022 16:11:34 -0400 (EDT)
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-cc:     Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 20 Jun 2022 08:43:27 -0400
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C42445F9F;
+        Mon, 20 Jun 2022 05:43:25 -0700 (PDT)
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1o3GkV-0004H2-Co; Mon, 20 Jun 2022 14:43:23 +0200
+Received: from [2a02:168:f656:0:d16a:7287:ccf0:4fff] (helo=localhost.localdomain)
+        by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1o3GkU-000RhI-UM; Mon, 20 Jun 2022 14:43:22 +0200
+Subject: Re: [PATCHv5 bpf-next 1/1] perf tools: Rework prologue generation
+ code
+To:     Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>
-Message-ID: <db2031ec-cf4-4323-9d3-8262849add3d@maine.edu>
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Ian Rogers <irogers@google.com>
+References: <20220616202214.70359-1-jolsa@kernel.org>
+ <20220616202214.70359-2-jolsa@kernel.org>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <72122b4e-1056-7392-f9eb-6ea4c0a79529@iogearbox.net>
+Date:   Mon, 20 Jun 2022 14:43:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20220616202214.70359-2-jolsa@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.6/26578/Mon Jun 20 10:06:11 2022)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello
+On 6/16/22 10:22 PM, Jiri Olsa wrote:
+> Some functions we use for bpf prologue generation are going to be
+> deprecated. This change reworks current code not to use them.
+> 
+> We need to replace following functions/struct:
+>     bpf_program__set_prep
+>     bpf_program__nth_fd
+>     struct bpf_prog_prep_result
+> 
+> Currently we use bpf_program__set_prep to hook perf callback before
+> program is loaded and provide new instructions with the prologue.
+> 
+> We replace this function/ality by taking instructions for specific
+> program, attaching prologue to them and load such new ebpf programs
+> with prologue using separate bpf_prog_load calls (outside libbpf
+> load machinery).
+> 
+> Before we can take and use program instructions, we need libbpf to
+> actually load it. This way we get the final shape of its instructions
+> with all relocations and verifier adjustments).
+> 
+> There's one glitch though.. perf kprobe program already assumes
+> generated prologue code with proper values in argument registers,
+> so loading such program directly will fail in the verifier.
+> 
+> That's where the fallback pre-load handler fits in and prepends
+> the initialization code to the program. Once such program is loaded
+> we take its instructions, cut off the initialization code and prepend
+> the prologue.
+> 
+> I know.. sorry ;-)
+> 
+> To have access to the program when loading this patch adds support to
+> register 'fallback' section handler to take care of perf kprobe programs.
+> The fallback means that it handles any section definition besides the
+> ones that libbpf handles.
+> 
+> The handler serves two purposes:
+>    - allows perf programs to have special arguments in section name
+>    - allows perf to use pre-load callback where we can attach init
+>      code (zeroing all argument registers) to each perf program
+> 
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-Is the perf_mmap__read_self() interface as found in tools/lib/perf/mmap.c
-the "official" interface for accessing the perf mmap info from
-userspace?
+Hey Arnaldo, if you get a chance, please take a look.
 
-Are the READ_ONCE() calls required?  If they are left out, will accessing 
-the mmap interface potentially fail?  Has this ever been seen in practice?
-
-Part of why I am asking is both
-	tools/lib/perf/mmap.c
-and
-	tools/linux/compiler.h (which defines READ_ONCE)
-have SPDX headers indicating they are GPL-2.0 licensed, which means it 
-seems like it would not be possible to easily use the perf mmap interface 
-from BSD-licensed code.  Would it be possible to get those two files 
-re-licensed?
-
-The (BSD-licensed) PAPI is currently using a mmap reading interface 
-based on early documentation for the feature, but it isn't 100% the same 
-as the version from libperf (and isn't using READ_ONCE).  Life would be 
-easier if we could use the perf version of the code because then we would 
-have one less variable to deal with when trying to track down issues.
-
-Vince Weaver
-vincent.weaver@maine.edu
-
-
+Thanks a lot,
+Daniel
