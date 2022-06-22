@@ -2,95 +2,196 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885E0C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 03:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5EAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 07:12:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356032AbiFVDBF (ORCPT
+        id S1352307AbiFVHMo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Jun 2022 23:01:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34404 "EHLO
+        Wed, 22 Jun 2022 03:12:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356000AbiFVDBF (ORCPT
+        with ESMTP id S1352309AbiFVHMn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Jun 2022 23:01:05 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCAD38A0
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jun 2022 20:01:03 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id i15so14194437plr.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jun 2022 20:01:03 -0700 (PDT)
+        Wed, 22 Jun 2022 03:12:43 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D494636B7D;
+        Wed, 22 Jun 2022 00:12:41 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id h23so32158759ejj.12;
+        Wed, 22 Jun 2022 00:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ouk7+Ke+HW093nWEFwQ5D14yOFTrhJHXFT/fgT162bQ=;
-        b=jA3j6FyEGH1/5+bAOoD0Ib6WIKkZ8k/bg0Bzh4SHDOYIX6jgNPmYo0CZ/UQuaxDX82
-         QhRVKdI1oq0Y3/NM2baS1JMSBo6vgjYgZmMw3fEsdr5hOYZtkbpK31n0c37FcL5u3wR3
-         V9snxpgc69x/y6owSUvi0gCiZom2KJ6j0q+dt9BnBKNi9K+KV8hbTJJDKgBAc0cN8lrO
-         LjK1V9saaKmDQhIURvWjvQixzioaM9CTFXT2AC4FYniZrdfiirM8cg0U9nqSPlF7dz3q
-         feqbriu0sGFdTsoHBwfOJj5UvT0kfLCh0QteCTOsUqW03a+7gjSxoWOL4rZE3xfKOiuy
-         srlg==
+        d=gmail.com; s=20210112;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=T/oBWtZlAaa1zy8Ki8EAbozaehzugDrI6LzbJis+ljU=;
+        b=WbdTJTyLptfjK2P4wNF8nuDSCHfPSAn5xPfiwzVz+aYbK6GIkuhmaOR7k5ZUyMoROP
+         BXXjgFhAm/o5/4vi6Dv9MfXEWh1FWwzd3QIVPJAerDKwDPjMJizSBldCrMGGeE4wQ6Ux
+         mk8KKmilSFamEj4hjABc1CbAizZBdMvQCbgkkgveqPeqdLWsVt2pysWfMvQLKDQ4v1KU
+         I8AIiaFBDPNMh8QLvMLR2kNxvdfw0d+3ZBt2amAZYE+Jv0xPZ2LX5Oon9qSAry4rBRSt
+         dOwtH0W1XPWqBLnyKhS1u5jJGDfjJOrmOg2hLrDC9Fri/vy+yFzqI9tW8gyvj0+nQ4D1
+         dlVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ouk7+Ke+HW093nWEFwQ5D14yOFTrhJHXFT/fgT162bQ=;
-        b=pKRkKwJcB1ddEDuH/N3dtX1Hy8CSj2UgmAoDVjQ9ARHLpe+mLXyFGo+S9IdOkKIa6Q
-         ET7tmKvr4Rd7yZwYBFDByNrd5cTKx7g9u1bcQuvWGlMLPHaAYfBAyOPlxw575y2CLYLe
-         AyseCorKMQYHGNiZAXO8CK38hBQ5/MEQiVxWcvTFxNhBWdy1RC10gSNTrc2ZnZZBALnH
-         d4uX70VcttTkr8YZcH8TSRtQZkDY60bq/C8pPTKLdh29HJmwEGmm8Z4CWd4M8SQTO71C
-         M8PnhKOXzdAKZGSQEnSjrznC7Ac6ct0F39F7QCE4+9b48FM0sF5s7FqjAsa4PcHjOLB4
-         kONg==
-X-Gm-Message-State: AJIora90h1WefAkAaJu6e7QMGV2IPA+7IZAl5Lti1B1dRNhMv9YX0X9J
-        d6BUnEHXo2qpzfb6pduBCFfI4w==
-X-Google-Smtp-Source: AGRyM1sIw0vkJI0h3xc94T1nViSALDbu1qL270YXWZwxWkMDEIkDFHduJOG0UYjLJS+cTW+qxf2ywA==
-X-Received: by 2002:a17:90b:3d91:b0:1ec:d594:31f5 with SMTP id pq17-20020a17090b3d9100b001ecd59431f5mr1281779pjb.114.1655866863236;
-        Tue, 21 Jun 2022 20:01:03 -0700 (PDT)
-Received: from C02FT5A6MD6R.bytedance.net ([61.120.150.78])
-        by smtp.gmail.com with ESMTPSA id r13-20020a63b10d000000b003fe28130b12sm11769790pgf.62.2022.06.21.20.00.56
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T/oBWtZlAaa1zy8Ki8EAbozaehzugDrI6LzbJis+ljU=;
+        b=ud4FWUElviit7sxZ4WyiK/T7EpqphMrBc7sUHDi3mCQomLhWuJzmcpzoVMuZpUCXzZ
+         ZTZ+5YWpcDEKYsRj7iX9jXHaRjrM7zJVCeMMd6W7XxIqbpMPxuDVMN+4YxI+zSC9VO8V
+         7Y+xpz+h12nBULis+yd5ayblKcYJ4zInRcagExdbrzg+WqPoBAL6E+tQ8WBjPO/GxYnO
+         jjWw7bWQOrO/3ifqNbQjh4dLPsCcDxGUiP/zqD5dtj0GAh6sV1lISAFvS8vM8xgyn6zU
+         wYsdneslIWL89ONI+jsn7G++H1n/pYC/6hC7al8ixwFtvVdhkp4SOB5/zHsRmh9CSobw
+         ciKA==
+X-Gm-Message-State: AJIora/rHrlh8sw0b/eLbwFudwHmIU1UzGfDtli89IUV/EeALoLYYC2m
+        N8t46IaUnZxQdv3kfCWQ0/I=
+X-Google-Smtp-Source: AGRyM1sPFgb0jyBERMTQll2ATCZxaJopXzPAq3FNkBSe+pRdvC4nFWeW4CCS7sMYM5uPSbyGVeQDhQ==
+X-Received: by 2002:a17:906:180c:b0:6fe:9a3e:3d5b with SMTP id v12-20020a170906180c00b006fe9a3e3d5bmr1744547eje.202.1655881960197;
+        Wed, 22 Jun 2022 00:12:40 -0700 (PDT)
+Received: from krava ([83.240.60.54])
+        by smtp.gmail.com with ESMTPSA id g18-20020a17090604d200b006fec8e8eff6sm650532eja.176.2022.06.22.00.12.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jun 2022 20:01:01 -0700 (PDT)
-From:   Gang Li <ligang.bdlg@bytedance.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 22 Jun 2022 00:12:39 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Wed, 22 Jun 2022 09:12:36 +0200
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Gang Li <ligang.bdlg@bytedance.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v1] perf stat: Enable ignore_missing_thread for stat
-Date:   Wed, 22 Jun 2022 11:00:37 +0800
-Message-Id: <20220622030037.15005-1-ligang.bdlg@bytedance.com>
-X-Mailer: git-send-email 2.32.0
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, sandipan.das@amd.com,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v6 0/4] Rewrite jevents program in python
+Message-ID: <YrLA5NMBv1uIx7UD@krava>
+References: <20220618000907.433350-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220618000907.433350-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf already support ignore_missing_thread for -p, but not yet
-applied to `perf stat -p <pid>`. This patch enables ignore_missing_thread
-for `perf stat -p <pid>`.
+On Fri, Jun 17, 2022 at 05:09:03PM -0700, Ian Rogers wrote:
+> New architectures bring new complexity, such as Intel's hybrid
+> models. jevents provides an alternative to specifying events in the
+> kernel and exposing them through sysfs, however, it is difficult to
+> work with. For example, an error in the json input would yield an
+> error message but no json file or location. It is also a challenge to
+> update jsmn.c given its forked nature.
+> 
+> The changes here switch from jevents.c to a rewrite in python called
+> jevents.py. This means there is a build time dependency on python, but
+> such a dependency already exists for asciidoc (used to generate perf's
+> man pages). If the build detects that python isn't present or is older
+> than version 3.6 (released Dec. 2016) then an empty file is
+> substituted for the generated one.
+> 
+> A challenge with this code is in avoiding regressions. For this reason
+> the jevents.py produces identical output to jevents.c, validated with a
+> test script and build target.
+> 
+> v6. Fixes an annotation and use of removesuffix that aren't present in
+>     Python 3.6. Linter issues are also fixed.The code was tested on
+>     Python 3.6 and 3.8 with docker.
 
-Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
----
- tools/perf/builtin-stat.c | 2 ++
- 1 file changed, 2 insertions(+)
+hi,
+I'm getting test failures with this:
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 4ce87a8eb7d7..d2ecd4d29624 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2586,6 +2586,8 @@ int cmd_stat(int argc, const char **argv)
- 	if (evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack))
- 		goto out;
- 
-+	/* Enable ignoring missing threads when -p option is defined. */
-+	evlist__first(evsel_list)->ignore_missing_thread = target.pid;
- 	status = 0;
- 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
- 		if (stat_config.run_count != 1 && verbose > 0)
--- 
-2.20.1
+ 10: PMU events                                                      :
+ 10.1: PMU event table sanity                                        : FAILED!
+ 10.2: PMU event map aliases                                         : FAILED!
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
 
+I can see that pass without the patchset, verbose run shows:
+
+	[jolsa@krava perf]$ sudo ./perf test -vv 'PMU event map aliases'
+	 10: PMU events                                                      :
+	 10.2: PMU event map aliases                                         :
+	--- start ---
+	test child forked, pid 272763
+	Using CPUID GenuineIntel-6-8C-1
+	intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+	could not find test events map
+	testing core PMU cpu aliases: failed
+	test child finished with -1
+	---- end ----
+	PMU events subtest 2: FAILED!
+	[jolsa@krava perf]$ sudo ./perf test -vv 'PMU event table sanity'
+	 10: PMU events                                                      :
+	 10.1: PMU event table sanity                                        :
+	--- start ---
+	test child forked, pid 272771
+	could not find test events map
+	test child finished with -1
+	---- end ----
+	PMU events subtest 1: FAILED!
+
+jirka
+
+
+> v5. Adds a 2>/dev/null as suggested by David Laight
+>     <David.Laight@aculab.com>.
+> v4. Fixes the build for systems with python2 installed by adding a
+>     patch that makes python3 the preferred python (Reported-by: John
+>     Garry <john.garry@huawei.com>). It also fixes a bash-ism in the
+>     jevents-test.sh and fixes the handling of an empty string for a
+>     metric BriefDescription as one was added for sapphirerapids in the
+>     metric Execute.
+> v3. Updates the patches for merged changes (on
+>     acme/tmp.perf/core). Re-runs all comparisons to make sure the
+>     generated pmu-events.c isn't altered at all by this change. Adds
+>     the jevents.c ExtSel fix in:
+>     https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
+>     Bumps the python version from 3.5 to 3.6, as f-strings weren't
+>     introduced until 3.6.
+> 
+> v2. Fixes the build for architectures that don't have pmu-events json
+>     (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
+>     build for python not being present or too old (Suggested-by: Peter
+>     Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
+> 
+> Ian Rogers (4):
+>   perf python: Prefer python3
+>   perf jevents: Add python converter script
+>   perf jevents: Switch build to use jevents.py
+>   perf jevents: Remove jevents.c
+> 
+>  tools/perf/Makefile.config               |   27 +-
+>  tools/perf/Makefile.perf                 |   16 +-
+>  tools/perf/pmu-events/Build              |   15 +-
+>  tools/perf/pmu-events/empty-pmu-events.c |   21 +
+>  tools/perf/pmu-events/jevents.c          | 1342 ----------------------
+>  tools/perf/pmu-events/jevents.py         |  409 +++++++
+>  tools/perf/pmu-events/jsmn.h             |   68 --
+>  tools/perf/pmu-events/json.c             |  162 ---
+>  tools/perf/pmu-events/json.h             |   39 -
+>  9 files changed, 465 insertions(+), 1634 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
+>  delete mode 100644 tools/perf/pmu-events/jevents.c
+>  create mode 100755 tools/perf/pmu-events/jevents.py
+>  delete mode 100644 tools/perf/pmu-events/jsmn.h
+>  delete mode 100644 tools/perf/pmu-events/json.c
+>  delete mode 100644 tools/perf/pmu-events/json.h
+> 
+> -- 
+> 2.36.1.476.g0c4daa206d-goog
+> 
