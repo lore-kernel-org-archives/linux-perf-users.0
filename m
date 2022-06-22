@@ -2,158 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5968C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 07:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41372C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 08:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352787AbiFVHg5 (ORCPT
+        id S1354892AbiFVIjA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Jun 2022 03:36:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
+        Wed, 22 Jun 2022 04:39:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352299AbiFVHg4 (ORCPT
+        with ESMTP id S1355060AbiFVIiP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Jun 2022 03:36:56 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBB7937038;
-        Wed, 22 Jun 2022 00:36:54 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id v1so32254331ejg.13;
-        Wed, 22 Jun 2022 00:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Wi0CQ/UGQQa8acXiq8dwtuqTzl9sInEfXQBc7BMoppw=;
-        b=DqrcfCmBLC0Ke+WEOWgvjXumJE7blXqIJgqHBH7e5uC+iHuDPSQ8kp4nc9Zzs9Qfi5
-         ZHLdvM9PgZhyokyuvQk6EBFjQmHmGd98Bl6xErf0j+rND/uiYkFZydxiU0cZE/9HpGLp
-         nbajezoUf1Xsm1IE403wDXnok7ijrF8mbm+dhRrgs0/l616YocyoD4PdHkHSxRVigO4J
-         pbJQV1bYzrutFyMk63IvBaA0tynoD2ci/OQebj3MLS9nsQykGglRSWcK/STDxb8SX929
-         Q+/BUfS0cc/uoU1nPjZJEQyxStbdfpzzGrosDR00Qkn94giNUUq4ZK1oT9dDVE1PO3BI
-         12iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Wi0CQ/UGQQa8acXiq8dwtuqTzl9sInEfXQBc7BMoppw=;
-        b=oSTCUI8t0/pUJY1S3C6ncid/lm6JcFOK6bughEldpMDYi805rxPawQUop8FO6a/aCP
-         44pS4XpTC/HHv6Xpyq58FvNj2VLIKjpS80KENgUFmZVz1g1dqaCHhLZbcfIV7pZUTHai
-         pIPB10sCKfcdKM+u0PQpUiBWaFdeeWsw4nGQ+0qAH6rqjfXqgCiccjzsOZSLzS4QOLWd
-         GV67aOSIefu8B1HFb3CF+AywVN9oW1+SbE0OlMNJ01d1Gt20cHHz43BkCMBUYN5851+P
-         qE3MAY9yqUbx/uuDTsMAf7aWUuyp0PMuvtIgdIzdl3lD04EJhRR6HJHoAQEeawxhwws+
-         u8Dg==
-X-Gm-Message-State: AJIora/SYUIHB6tO4EPsuoFE2pJczmCJayTn9nj849rlH22UTRCGQybW
-        iLi+gB89Hgf1Y5gopCosQAM=
-X-Google-Smtp-Source: AGRyM1u2AcyiwmXFX1qnKFR0vamIGSdZGUt9vwlSs+rmTCuno7vG9j/9ZiKwM3GC/xJLbrxL2Fqing==
-X-Received: by 2002:a17:906:5187:b0:712:477:df9b with SMTP id y7-20020a170906518700b007120477df9bmr1847867ejk.424.1655883413335;
-        Wed, 22 Jun 2022 00:36:53 -0700 (PDT)
-Received: from krava ([83.240.60.54])
-        by smtp.gmail.com with ESMTPSA id qn25-20020a170907211900b00722e49c06e8sm2238289ejb.216.2022.06.22.00.36.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jun 2022 00:36:53 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 22 Jun 2022 09:36:50 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 22 Jun 2022 04:38:15 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0C038BD0;
+        Wed, 22 Jun 2022 01:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655887041; x=1687423041;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=X4zZjjAv44KljLRCOUf/T8tCTEA3aG+3U9GCPy0feiU=;
+  b=ZSxA0rjL78bf69/WAOpSxccKwAUVfJbqSV3MuFgQVuUdmTXYZ+BqLBiw
+   sd5+wFbhtk3g+zxQq7VjFZryD/khlYfqjeLWOY0TJ9Au5j8XAJPxmxPOz
+   L98zbetloTtiFuJywhlPvvzGdlWYQqg/6cKM8euwH8wDYsA23Ubd3OyuS
+   DImgxuzn4nRSmRDfbCxtcuSeqoC/iyGtrFoWIm8DflHBOLBCn0cglZGob
+   0+lIHnWwWf4LJAYQ1+i7IOh/A5zOlNFCBOffIrNAa0UtnGfE45/QmVGlp
+   eSjRpodd2xNXNxF+7oZMydfj2/6cRvk7qDpmxi0Mbg714xZWC3A9pH7Yr
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="279124538"
+X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
+   d="scan'208";a="279124538"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 01:37:06 -0700
+X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
+   d="scan'208";a="644077804"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.59.193])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 01:37:02 -0700
+Message-ID: <b7de807d-5ec3-3d8d-59ba-4058e1193a96@intel.com>
+Date:   Wed, 22 Jun 2022 11:36:58 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.9.1
+Subject: Re: [PATCH v2] perf: Adjust perf-inject output data offset for
+ backward compatibility
+Content-Language: en-US
+To:     Raul Silvera <rsilvera@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
-        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com, sandipan.das@amd.com,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v6 0/4] Rewrite jevents program in python
-Message-ID: <YrLGkqDMVidTtFMG@krava>
-References: <20220618000907.433350-1-irogers@google.com>
- <YrLA5NMBv1uIx7UD@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YrLA5NMBv1uIx7UD@krava>
+        Ian Rogers <irogers@google.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220621152725.2668041-1-rsilvera@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220621152725.2668041-1-rsilvera@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 22, 2022 at 09:12:40AM +0200, Jiri Olsa wrote:
-> On Fri, Jun 17, 2022 at 05:09:03PM -0700, Ian Rogers wrote:
-> > New architectures bring new complexity, such as Intel's hybrid
-> > models. jevents provides an alternative to specifying events in the
-> > kernel and exposing them through sysfs, however, it is difficult to
-> > work with. For example, an error in the json input would yield an
-> > error message but no json file or location. It is also a challenge to
-> > update jsmn.c given its forked nature.
-> > 
-> > The changes here switch from jevents.c to a rewrite in python called
-> > jevents.py. This means there is a build time dependency on python, but
-> > such a dependency already exists for asciidoc (used to generate perf's
-> > man pages). If the build detects that python isn't present or is older
-> > than version 3.6 (released Dec. 2016) then an empty file is
-> > substituted for the generated one.
-> > 
-> > A challenge with this code is in avoiding regressions. For this reason
-> > the jevents.py produces identical output to jevents.c, validated with a
-> > test script and build target.
-> > 
-> > v6. Fixes an annotation and use of removesuffix that aren't present in
-> >     Python 3.6. Linter issues are also fixed.The code was tested on
-> >     Python 3.6 and 3.8 with docker.
+On 21/06/22 18:27, Raul Silvera wrote:
+> When perf inject creates a new file, it reuses the data offset from the
+> input file. If there has been a change on the size of the header, as
+> happened in v5.12 -> v5.13, the new offsets will be wrong, resulting in
+> a corrupted output file.
 > 
-> hi,
-> I'm getting test failures with this:
+> This change adds the function perf_session__data_offset to compute the
+> data offset based on the current header size, and uses that instead of
+> the offset from the original input file.
 > 
->  10: PMU events                                                      :
->  10.1: PMU event table sanity                                        : FAILED!
->  10.2: PMU event map aliases                                         : FAILED!
->  10.3: Parsing of PMU event table metrics                            : Ok
->  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+> Signed-off-by: Raul Silvera <rsilvera@google.com>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+> Changes since v1:
+>  - Use the adjusted header->data_offset in do_write_header instead of
+>    recomputing it.
+> ---
+>  tools/perf/builtin-inject.c |  2 +-
+>  tools/perf/util/header.c    | 14 ++++++++++++++
+>  tools/perf/util/header.h    |  2 ++
+>  3 files changed, 17 insertions(+), 1 deletion(-)
 > 
-> I can see that pass without the patchset, verbose run shows:
-> 
-> 	[jolsa@krava perf]$ sudo ./perf test -vv 'PMU event map aliases'
-> 	 10: PMU events                                                      :
-> 	 10.2: PMU event map aliases                                         :
-> 	--- start ---
-> 	test child forked, pid 272763
-> 	Using CPUID GenuineIntel-6-8C-1
-> 	intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-> 	could not find test events map
-> 	testing core PMU cpu aliases: failed
-> 	test child finished with -1
-> 	---- end ----
-> 	PMU events subtest 2: FAILED!
-> 	[jolsa@krava perf]$ sudo ./perf test -vv 'PMU event table sanity'
-> 	 10: PMU events                                                      :
-> 	 10.1: PMU event table sanity                                        :
-> 	--- start ---
-> 	test child forked, pid 272771
-> 	could not find test events map
-> 	test child finished with -1
-> 	---- end ----
-> 	PMU events subtest 1: FAILED!
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index a75bf11585b5..1dfdcef36607 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -916,7 +916,7 @@ static int __cmd_inject(struct perf_inject *inject)
+>  		inject->tool.tracing_data = perf_event__repipe_tracing_data;
+>  	}
+>  
+> -	output_data_offset = session->header.data_offset;
+> +	output_data_offset = perf_session__data_offset(session->evlist);
+>  
+>  	if (inject->build_id_all) {
+>  		inject->tool.mmap	  = perf_event__repipe_buildid_mmap;
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 53332da100e8..6ad629db63b7 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -3686,6 +3686,20 @@ int perf_session__write_header(struct perf_session *session,
+>  	return perf_session__do_write_header(session, evlist, fd, at_exit, NULL);
+>  }
+>  
+> +size_t perf_session__data_offset(const struct evlist *evlist)
+> +{
+> +	struct evsel *evsel;
+> +	size_t data_offset;
+> +
+> +	data_offset = sizeof(struct perf_file_header);
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		data_offset += evsel->core.ids * sizeof(u64);
+> +	}
+> +	data_offset += evlist->core.nr_entries * sizeof(struct perf_file_attr);
+> +
+> +	return data_offset;
+> +}
+> +
+>  int perf_session__inject_header(struct perf_session *session,
+>  				struct evlist *evlist,
+>  				int fd,
+> diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+> index 08563c1f1bff..56916dabce7b 100644
+> --- a/tools/perf/util/header.h
+> +++ b/tools/perf/util/header.h
+> @@ -136,6 +136,8 @@ int perf_session__inject_header(struct perf_session *session,
+>  				int fd,
+>  				struct feat_copier *fc);
+>  
+> +size_t perf_session__data_offset(const struct evlist *evlist);
+> +
+>  void perf_header__set_feat(struct perf_header *header, int feat);
+>  void perf_header__clear_feat(struct perf_header *header, int feat);
+>  bool perf_header__has_feat(const struct perf_header *header, int feat);
 
-ah, ok I did not notice:
-
-Makefile.config:909: Python interpreter too old (older than 3.6) disabling jevent generation
-
-I installed python3-devel and it's ok
-
-should we make above tests SKIP in case there's empty pmu-events.c ?
-
-thanks,
-jirka
