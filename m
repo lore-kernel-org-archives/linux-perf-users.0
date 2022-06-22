@@ -2,113 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A281BC43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 15:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A93C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 15:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230123AbiFVPA5 (ORCPT
+        id S235394AbiFVPHy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Jun 2022 11:00:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60498 "EHLO
+        Wed, 22 Jun 2022 11:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347638AbiFVPAy (ORCPT
+        with ESMTP id S1343920AbiFVPHx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Jun 2022 11:00:54 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B387B3E0F7;
-        Wed, 22 Jun 2022 08:00:52 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25MEQdr5015397;
-        Wed, 22 Jun 2022 15:00:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=KA1JdRgtOjD40XyEB3YqySk4ezHovydA8xxcytIvEYQ=;
- b=NSBfEbpYDxi2EtzNLiGVV4uw1tjgyyVZdTF3fBoUUnpPsANoCAlYlzWhxtg5Oq+P4sTu
- 5m4PFGlO2NcWLddzGRSFyXitMpxqzZvNKN52q2zc0lm/jJ7/E151gitnra9uYlBlNnUQ
- fmJJ3y1HQJqtMnufByjLitBTsSjQ1Eg7aM0yngk2TnxOqtHpBKxM5s5555U5j65TPnJY
- 1O+GOj7sL7iVvrrW9itY1Qj5FWzEcYv28Cr776eCSkjsFf2LnsienjEtaIdhWVMRe+I9
- Ho6do+V7MIb2OjAj+THetnBcswJVH1ihve2C4/dumParYTlWwj1ccA9v9AXLjuoQroqg Bw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gv4uqh36s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jun 2022 15:00:32 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25MER0wW016225;
-        Wed, 22 Jun 2022 15:00:32 GMT
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gv4uqh35a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jun 2022 15:00:32 +0000
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25MEZV2m007182;
-        Wed, 22 Jun 2022 15:00:31 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 3gs6babcy5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jun 2022 15:00:30 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25MExFXV6489080
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jun 2022 14:59:15 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4E46AC05B;
-        Wed, 22 Jun 2022 14:59:15 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC5DDAC05F;
-        Wed, 22 Jun 2022 14:59:14 +0000 (GMT)
-Received: from li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com (unknown [9.160.24.26])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Wed, 22 Jun 2022 14:59:14 +0000 (GMT)
-Date:   Wed, 22 Jun 2022 09:59:13 -0500
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC 00/13] perf: Add perf kwork
-Message-ID: <YrMuQXIn9DdhZl2w@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
-References: <20220613094605.208401-1-yangjihong1@huawei.com>
+        Wed, 22 Jun 2022 11:07:53 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51EBA393F7;
+        Wed, 22 Jun 2022 08:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655910471; x=1687446471;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=spGuvBmrzu5CQX1DEn7d16VfVTAFMeRLkLyRMCTgqtI=;
+  b=mIv24N/h1ry+ejUcipwuX0mrP4sXGlRLO3JloZ0FeZy8zbgYRUP2skWY
+   mQmrLK4o7rzGfG11aLljLKsZtUrU9SPmDm0q3PX/X0yrZrFL0PfTgLsaf
+   So/i93RKq3+CdXobkcm1TBKJW/1sIw2AaxvsFBtNorXi5yGKM9ZJCteZZ
+   VTzAEnEkptI7LWlEK2n4RWgUYSKi24E5UO48SyLX/UMYvmm3SLQgahCpC
+   Pf+dJmirTGVaFgVRfNM85HU57vFa8f/WV6MxuD5KRoznh3EFSP+KvZDfJ
+   KcKU1+TfAz74BduG1FnFLGWqELn3Mze5OhcPoPAmyrMxiC5Nu712u57aC
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="366763810"
+X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
+   d="scan'208";a="366763810"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 08:07:50 -0700
+X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
+   d="scan'208";a="677596461"
+Received: from bshakya-mobl.amr.corp.intel.com (HELO [10.212.188.76]) ([10.212.188.76])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 08:07:49 -0700
+Message-ID: <677c46db-02ef-24b8-c25f-762b41fb8bdb@intel.com>
+Date:   Wed, 22 Jun 2022 08:07:31 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220613094605.208401-1-yangjihong1@huawei.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: AvCbPAo-d3UsCRqJ_ADSkvTZyHdcA9f6
-X-Proofpoint-GUID: aGQ6kEiRha3BkJ7E2zLkTpSiFgYZfmCj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-06-22_04,2022-06-22_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 clxscore=1011 mlxscore=0 impostorscore=0 malwarescore=0
- phishscore=0 suspectscore=0 adultscore=0 mlxlogscore=799
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2204290000 definitions=main-2206220074
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 2/4] x86/cpuid: refactor setup_clear_cpu_cap/clear_feature
+Content-Language: en-US
+To:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Kees Cook <keescook@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20220622144820.751402-1-mlevitsk@redhat.com>
+ <20220622144820.751402-3-mlevitsk@redhat.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20220622144820.751402-3-mlevitsk@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 05:45:52PM +0800, Yang Jihong wrote:
-> Sometimes, we need to analyze time properties of kernel work such as irq,
-> softirq, and workqueue, such as delay and running time of specific interrupts.
-> Currently, these events have kernel tracepoints, but perf tool does not
-> directly analyze the delay of these events
+On 6/22/22 07:48, Maxim Levitsky wrote:
+> Simplify the code a bit by always passing &boot_cpu_data
+> in case the setup_clear_cpu_cap was called.
 > 
-> The perf-kwork tool is used to trace time properties of kernel work
-> (such as irq, softirq, and workqueue), including runtime, latency,
-> and timehist, using the infrastructure in the perf tools to allow
-> tracing extra targets
-> 
-> test case:
-> 
->   # perf kwork report
-> 
->     Kwork Name                | Cpu  | Total Runtime | Frequency | Max runtime   | Max runtime start   | Max runtime end     |
->    ---------------------------------------------------------------------------------------------------------------------------
->     (s)RCU:9                  | 0007 |      3.488 ms |      1258 |      0.145 ms |    3398384.220013 s |    3398384.220157 s |
->     (s)NET_RX:3               | 0003 |      1.866 ms |       156 |      0.042 ms |    3398385.629764 s |    3398385.629806 s |
->     (s)TIMER:1                | 0000 |      1.799 ms |       117 |      0.055 ms |    3398385.568033 s |    3398385.568088 s |
->     (w)0xffff9c66e563ee98     | 0006 |      1.561 ms |         5 |      0.351 ms |    3398384.060021 s |    3398384.060371 s |
+> Also unify clear_cpu_cap and do_clear_cpu_cap.
 
-What units are used for "Frequency"? It would be helpful to include somewhere.
+Please always add a "()" suffix to functions.  "foo" is a variable, but
+"foo()" is a function.
 
-PC
+I also really like when a changelog has a clear problem statement.  I
+_think_ the problem here is something along the lines of the 'c'
+argument to clear_feature() having different behavior when it is NULL
+versus '&boot_cpu_data'.
+
+Basically, there's no reason to support clearing a bit in
+'&boot_cpu_data' without also setting that bit in 'cpu_caps_cleared'.
+>  {
+> -	do_clear_cpu_cap(NULL, feature);
+> +	clear_cpu_cap(&boot_cpu_data, feature);
+>  }
+
