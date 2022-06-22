@@ -2,88 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56137C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 08:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D757C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 14:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353034AbiFVIyj (ORCPT
+        id S1357444AbiFVOsw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Jun 2022 04:54:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51246 "EHLO
+        Wed, 22 Jun 2022 10:48:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355528AbiFVIy1 (ORCPT
+        with ESMTP id S1353714AbiFVOsu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Jun 2022 04:54:27 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 092A733E95;
-        Wed, 22 Jun 2022 01:54:25 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id n1so22139727wrg.12;
-        Wed, 22 Jun 2022 01:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XSnTuKyAEQznMOKio5DJTSS6Ar+VbuhbWZFcTUrdno0=;
-        b=kQxE01iQo67i7D7weXgdN2OAzpYTszypFwo7OSDINe53zPxhw5gNX6Xp/3pjD2z2U0
-         C8oDVtga14pstgNMbkx7DNsXGducbRp+rbgVQ769sFyWdtG6xVoolN9I87vqGo7s+2mA
-         JiBzJXsOA7uyMlLjsPSvqboiYP64j46eJAT4zu+uDNBzU6QU8+lUxelYBqyS8z4posWX
-         d4Gg+z3UGPwX2wNOc0j08EUKJkM4Z8a6pkUukPrjhlYmbhD+6PnSvqKI8dVt3rURuD1Z
-         diK6bm8GJ/Z7kbAQ27Y/qRH4LiaYoysaaU7SwxfAyFt0waCljoAsLkcoH1n+7ocDbvid
-         Mcaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XSnTuKyAEQznMOKio5DJTSS6Ar+VbuhbWZFcTUrdno0=;
-        b=KJucKNziQOLfKeqf/cmDxqJO8IIrVmj+oCgaOPYxE8P1q9i8Y6jQwhjf7QtHgXRaF+
-         T3dhlBuLj+5A9d9a+JIQsnmcBa2X1q5fQBod+GZkw6A+AF6ojya3zlRPYfSmNgHnJMgA
-         zYPdEr7OAsSsVXaznRv8RRKEA5LJ09nTHNck+U9Fy72M8TmgI8sFUfOdYiPQOovYx4K8
-         nT1AyoMYkKGd/+dbtuNyIwUDx2YA31LvseqELc3r8W21gKyYRg1+EZe8CiaNK16ye6tK
-         sYiUOO5oZyIPYogsCmyeIuYxiudTqf6eyCBaqOn9BuZSn9MnO6/WBpKnIB9AoFQRSbZ3
-         Pasw==
-X-Gm-Message-State: AJIora8HJcCAi6B6IANzHRHgfQsoTgazE1x+EKtTUzW+QINJDQ9DBqNj
-        IxTaxYZ/coR9CYD9Y5ZUolJL5QGuuW3iMw==
-X-Google-Smtp-Source: AGRyM1tn+kK6+v7DTfaND8NnETGmYc84yT2z8QjXz1XX6/5JmCJE8rhuxZm4l0FA9ZUu+13OebayfQ==
-X-Received: by 2002:adf:fdca:0:b0:21b:8e8e:686e with SMTP id i10-20020adffdca000000b0021b8e8e686emr2200982wrs.368.1655888063459;
-        Wed, 22 Jun 2022 01:54:23 -0700 (PDT)
-Received: from ddolgov.remote.csb (dslb-094-222-028-039.094.222.pools.vodafone-ip.de. [94.222.28.39])
-        by smtp.gmail.com with ESMTPSA id n3-20020a5d67c3000000b0021b8cd8a068sm9511209wrw.49.2022.06.22.01.54.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jun 2022 01:54:22 -0700 (PDT)
-Date:   Wed, 22 Jun 2022 10:54:21 +0200
-From:   Dmitry Dolgov <9erthalion6@gmail.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        songliubraving@fb.com, rostedt@goodmis.org, peterz@infradead.org,
-        mingo@redhat.com, alexei.starovoitov@gmail.com
-Subject: Re: [PATCH v3 1/1] perf/kprobe: maxactive for fd-based kprobe
-Message-ID: <20220622085421.k2kikjndluxfmf7q@ddolgov.remote.csb>
-References: <20220615211559.7856-1-9erthalion6@gmail.com>
- <20220619013137.6d10a232246be482a5c0db82@kernel.org>
+        Wed, 22 Jun 2022 10:48:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31E073CA66
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jun 2022 07:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655909329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BfzGA2BfgEmm4tcaB5rbMih4mJIyv5Ggi+5ejPnvGzs=;
+        b=dce/0J5FNyVc+yIPOMNPhr7hriBEP8Py+Z4ktIbsJLZV6oGXn1VsZEt2hNXqr2lbsP6UCg
+        3CVlfTMmn3nMAzLLlBHr+BFIVpK69l59dhrcvmlyGHkdXugGOTceXJHSpO+UGzcSIZ16Hl
+        eRXx2/5IlcnLO6abspZ1P96VU1026QU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-474-N2RvB7y5NLeqzs-ommWDCA-1; Wed, 22 Jun 2022 10:48:46 -0400
+X-MC-Unique: N2RvB7y5NLeqzs-ommWDCA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6AE6418A6534;
+        Wed, 22 Jun 2022 14:48:28 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.40.194.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1365A40E80E1;
+        Wed, 22 Jun 2022 14:48:21 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Kees Cook <keescook@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        Jane Malalane <jane.malalane@citrix.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-crypto@vger.kernel.org (open list:CRYPTO API),
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 0/4] x86: cpuid: improve support for broken CPUID configurations
+Date:   Wed, 22 Jun 2022 17:48:16 +0300
+Message-Id: <20220622144820.751402-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220619013137.6d10a232246be482a5c0db82@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> On Sun, Jun 19, 2022 at 01:31:37AM +0900, Masami Hiramatsu wrote:
-> On Wed, 15 Jun 2022 23:15:59 +0200
-> Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
->
-> > From: Song Liu <songliubraving@fb.com>
-> >
-> > Enable specifying maxactive for fd based kretprobe. This will be useful
-> > for tracing tools like bcc and bpftrace (see for example discussion [1]).
-> > Use highest 12 bit (bit 52-63) to allow maximal maxactive of 4095.
->
-> I'm not sure what environment you are considering to use this
-> feature, but is 4095 enough, and are you really need to specify
-> the maxactive by linear digit?
-> I mean you may need the logarithm of maxactive? In this case, you
-> only need 4 bits for 2 - 65546 (1 = 2^0 will be used for the default
-> value).
+This patch series aims to harden the cpuid code against the case when=0D
+the hypervisor exposes a broken CPUID configuration to the guest,=0D
+in the form of having a feature disabled but not features that depend on it=
+.=0D
+=0D
+This is the more generic way to fix kernel panic in aes-ni kernel driver,=0D
+which was triggered by CPUID configuration in which AVX is disabled but=0D
+not AVX2.=0D
+=0D
+https://lore.kernel.org/all/20211103145231.GA4485@gondor.apana.org.au/T/=0D
+=0D
+This was tested by booting a guest with AVX disabled and not AVX2,=0D
+and observing that both a warning is now printed in dmesg, and=0D
+that avx2 is gone from /proc/cpuinfo.=0D
+=0D
+Best regards,=0D
+	Maxim Levitsky=0D
+=0D
+Maxim Levitsky (4):=0D
+  perf/x86/intel/lbr: use setup_clear_cpu_cap instead of clear_cpu_cap=0D
+  x86/cpuid: refactor setup_clear_cpu_cap/clear_feature=0D
+  x86/cpuid: move filter_cpuid_features to cpuid-deps.c=0D
+  x86/cpuid: check for dependencies violations in CPUID and attempt to=0D
+    fix them=0D
+=0D
+ arch/x86/events/intel/lbr.c       |  2 +-=0D
+ arch/x86/include/asm/cpufeature.h |  1 +=0D
+ arch/x86/kernel/cpu/common.c      | 50 +-----------------=0D
+ arch/x86/kernel/cpu/cpuid-deps.c  | 84 +++++++++++++++++++++++++++----=0D
+ 4 files changed, 78 insertions(+), 59 deletions(-)=0D
+=0D
+-- =0D
+2.26.3=0D
+=0D
 
-From what I see it's capped by KRETPROBE_MAXACTIVE_MAX anyway, which
-value is 4096. Do I miss something, is it possible to use maxactive with
-larger values down the line?
