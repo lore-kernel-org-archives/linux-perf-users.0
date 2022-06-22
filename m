@@ -2,51 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68197C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 17:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F6ACCA479
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Jun 2022 18:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377332AbiFVRS7 (ORCPT
+        id S1359745AbiFVS5Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Jun 2022 13:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57524 "EHLO
+        Wed, 22 Jun 2022 14:57:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376717AbiFVRS6 (ORCPT
+        with ESMTP id S235707AbiFVS5V (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Jun 2022 13:18:58 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 257C52180C;
-        Wed, 22 Jun 2022 10:18:57 -0700 (PDT)
+        Wed, 22 Jun 2022 14:57:21 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6478167E9;
+        Wed, 22 Jun 2022 11:57:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655918337; x=1687454337;
+  t=1655924240; x=1687460240;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=CW1y5IDbjPjtCIKvflTqoe0LEPdTAbEMuAa5hhCumaw=;
-  b=WyYCVfw2z2IcQXpqC+LHSlNhgDD+xjyB+EhQKdZX5k6C3nOJrcf3W+ta
-   xXEZqh0xhuPeQf4EE6StUkqTdBA2cVASkw30lq8FXViI6cibGkYXzj0/C
-   S5BnIrOtxlvNEF473VgwnHzciV1YZz5NfgWlJ48ijgqHmLGmd5cYQ2kUC
-   q8k837YPA/Wec6Yv0pmM207TNryFfAvHHormR1byBVbN4hU8BgqsEFQjo
-   Jw+YFLQu9SbyHwssn9aAz49UJZvm47VpJkdp8Ub8nvy7enHLX8ukC6zJg
-   swwGZNYLbOEr3FR76/qvKecjkv5FnQ7a12cz578UjmLQCqrlsl+oyujq8
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="278029172"
+  bh=GfUjOXbnbljOCWDgJqhlMo6F4sjejR8sLGNLfJqUuMw=;
+  b=Ic4I7KQ7uCh/cnUu7dQJNLJ/M0CGmP0n5uIaQB3egn2FaxL44w23QTKs
+   ALpmjdKHrdevzFyzCnWqf8g7DjTYQ5E6s0POAFlkSVoqPU0vM3iSXfbGW
+   cBCbTS78mu13FEhIv+8xR57FD2OSob/Dqh1qNsOIZMSSJybtTeIt981nF
+   k00r1oVPqHsNE5N5p7Cz+DYVAdNYTGI7oYBT1er2jNodaVJz+lDDWxpDu
+   0lbhBTI5aNDKI80bADTcc8wgRK7TUna0rDA8PDB+0+krEdOwqzF/t1Ti/
+   PlAN98Av25tIMb++f63fK0pNJqzefBCufIzfTjua4kE/XpeMvet7E73m/
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="281245147"
 X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="278029172"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 10:18:57 -0700
+   d="scan'208";a="281245147"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 11:57:20 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="677654980"
-Received: from bshakya-mobl.amr.corp.intel.com (HELO [10.212.188.76]) ([10.212.188.76])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 10:18:55 -0700
-Message-ID: <485dd428-9aaa-9571-49a5-9d17c6e72e00@intel.com>
-Date:   Wed, 22 Jun 2022 10:18:36 -0700
+   d="scan'208";a="563141901"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 22 Jun 2022 11:57:20 -0700
+Received: from [10.252.208.245] (kliang2-MOBL.ccr.corp.intel.com [10.252.208.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id F2A35580970;
+        Wed, 22 Jun 2022 11:57:16 -0700 (PDT)
+Message-ID: <4a635493-4e06-af5a-d4d7-e9e669051b08@linux.intel.com>
+Date:   Wed, 22 Jun 2022 14:57:15 -0400
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 4/4] x86/cpuid: check for dependencies violations in CPUID
- and attempt to fix them
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 1/4] perf/x86/intel/lbr: use setup_clear_cpu_cap instead
+ of clear_cpu_cap
 Content-Language: en-US
-To:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-kernel@vger.kernel.org
 Cc:     "Chang S. Bae" <chang.seok.bae@intel.com>,
         Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
@@ -70,127 +78,60 @@ Cc:     "Chang S. Bae" <chang.seok.bae@intel.com>,
         "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
         Paolo Bonzini <pbonzini@redhat.com>
 References: <20220622144820.751402-1-mlevitsk@redhat.com>
- <20220622144820.751402-5-mlevitsk@redhat.com>
- <c271cbf5-dfb5-c3dd-002b-9a358c90e984@intel.com>
- <70deac4c885b2bf41daecaed054f80f867ed19de.camel@redhat.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <70deac4c885b2bf41daecaed054f80f867ed19de.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+ <20220622144820.751402-2-mlevitsk@redhat.com>
+ <84c84de9-f5f1-1f8c-fa7c-6a416ea3373e@intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <84c84de9-f5f1-1f8c-fa7c-6a416ea3373e@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 6/22/22 10:09, Maxim Levitsky wrote:
-> On Wed, 2022-06-22 at 08:32 -0700, Dave Hansen wrote:
->> On 6/22/22 07:48, Maxim Levitsky wrote:
->>> Due to configuration bugs, sometimes a CPU feature is disabled in CPUID,
->>> but not features that depend on it.
->>>
->>> While the above is not supported, the kernel should try to not crash,
->>> and clearing the dependent cpu caps is the best way to do it.
+
+
+On 6/22/2022 10:58 AM, Dave Hansen wrote:
+> On 6/22/22 07:48, Maxim Levitsky wrote:
+>> clear_cpu_cap(&boot_cpu_data) is very similar to setup_clear_cpu_cap
+>> except that the latter also sets a bit in 'cpu_caps_cleared' which
+>> later clears the same cap in secondary cpus, which is likely
+>> what is meant here.
 >>
->> That's a rather paltry changelog.
->>
->> If I remember correctly, there's a crystal clear problem:
->>
->> 	If a CPU enumerates support for AVX2 but AVX via CPUID, the
->> 	kernel crashes.
->>
->> There's also a follow-on problem.  The kernel has all the data it needs
->> to fix this, but just doesn't consult it:
->>
->> 	To make matters worse, the kernel _knows_ that this is an ill-
->> 	advised situation: The kernel prevents itself from clearing the
->> 	software representation of the AVX CPUID bit without also
->> 	clearing AVX2.
->>
->> 	But, the kernel only consults this knowledge when it is clearing
->> 	cpu_cap bits.  It does not consult this information when it is
->> 	populating those cpu_cap bits.
+>> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 > 
-> Yes, I agree. I'll update the changelog with something more in depth.
+> Seems like a:
 > 
+> Fixes: 47125db27e47 ("perf/x86/intel/lbr: Support Architectural LBR")
+> 
+> would be in order.
+> 
+> Kan, does this change look right to you?
+
+For the current implementation, the Arch LBR feature should be either 
+supported by all the CPUs or disabled on all the CPUs. It cannot be only 
+enabled for partial CPUs, even in a hybrid platform.
+So the current code only check the boot CPU via static_cpu_has().
+
+Ideally, Yes, I think it may be better to clear the bit for all CPUs, 
+which makes the capability consistent among CPUs.
+
+Thanks,
+Kan
+> 
+>>   arch/x86/events/intel/lbr.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->>> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
->>> index 4cc79971d2d847..c83a8f447d6aed 100644
->>> --- a/arch/x86/kernel/cpu/common.c
->>> +++ b/arch/x86/kernel/cpu/common.c
->>> @@ -1469,7 +1469,7 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
->>>  			this_cpu->c_early_init(c);
->>>  
->>>  		c->cpu_index = 0;
->>> -		filter_cpuid_features(c, false);
->>> +		filter_cpuid_features(c, true);
->>>  
->>>  		if (this_cpu->c_bsp_init)
->>>  			this_cpu->c_bsp_init(c);
->>> @@ -1757,7 +1757,7 @@ static void identify_cpu(struct cpuinfo_x86 *c)
->>>  	 */
->>>  
->>>  	/* Filter out anything that depends on CPUID levels we don't have */
->>> -	filter_cpuid_features(c, true);
->>> +	filter_cpuid_features(c, false);
->>>  
->>>  	/* If the model name is still unset, do table lookup. */
->>>  	if (!c->x86_model_id[0]) {
->>
->> While we're at it, could we please rid ourselves of this unreadable
->> mystery true/false gunk?
+>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>> index 13179f31fe10fa..b08715172309a7 100644
+>> --- a/arch/x86/events/intel/lbr.c
+>> +++ b/arch/x86/events/intel/lbr.c
+>> @@ -1860,7 +1860,7 @@ void __init intel_pmu_arch_lbr_init(void)
+>>   	return;
+>>   
+>>   clear_arch_lbr:
+>> -	clear_cpu_cap(&boot_cpu_data, X86_FEATURE_ARCH_LBR);
+>> +	setup_clear_cpu_cap(X86_FEATURE_ARCH_LBR);
+>>   }
+>>   
+>>   /**
 > 
-> It is present if I understand the code correctly to avoid printing a warning twice.
-> It used to be 'warn' parameter, and I changed it to 'early' parameter, 
-> inverting its boolean value, because I have seen that warning is not printed at all, 
-> and I assumed that it is because the first early call already clears the cpuid cap
-> and the second call doesn't get the warning.
-
-If the goal is truly to suppress the warning once per dependency, it
-would be trivial to do:
-
-	struct cpuid_dep {
-	        unsigned int    feature;
-        	unsigned int    depends;
-+		bool warned;
-	};
-
-Then:
-
-	...
-	clear_feature(c, d->feature);
-+	if (!d->warned)
-+		pr_warn(...);
-+	d->warned = 1;
-
-You could even have two bits if you feel that we need separate warnings
-for the hardware (true CPUID) and software (setup_clear_cpu_cap()) checks.
-
->>>  		pr_warn("CPU: CPU feature " X86_CAP_FMT " disabled, no CPUID level 0x%x\n",
->>>  			x86_cap_flag(df->feature), df->level);
->>>  	}
->>> +
->>> +	for (d = cpuid_deps; d->feature; d++) {
->>> +
->>> +		if (!test_feature(c, d->feature) || test_feature(c, d->depends))
->>> +			continue;
->>> +
->>> +		clear_feature(c, d->feature);
->>> +
->>> +		pr_warn("CPU: CPU feature " X86_CAP_FMT " disabled, because it depends on "
->>> +			X86_CAP_FMT " which is not supported in CPUID\n",
->>> +			x86_cap_flag(d->feature), x86_cap_flag(d->depends));
->>> +	}
->>>  }
->>
->> The do_clear_cpu_cap() does this with a loop, presumably because a later
->> (higher index in the array) feature in cpuid_deps[] could theoretically
->> clear an earlier (lower index) feature.
-> 
-> Sorry this is my silly mistake. I intended to call clear_cpu_cap here,
-> which will if needed disable all the depedencies, so a loop doesn't
-> seem to be needed here. 
-> 
-> It's not very efficient but this is only done once per vCPU so shouldn't matter.
-
-Right, and it only loops if it is actually clearing features, which is
-arguably the result of a broken CPU or hypervisor, which is rare too.
-It's not inefficient in any case that matters.
