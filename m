@@ -2,125 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CA1C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Jun 2022 14:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE043C43334
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Jun 2022 14:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229833AbiFWO0Q (ORCPT
+        id S231951AbiFWOqr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Jun 2022 10:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
+        Thu, 23 Jun 2022 10:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229768AbiFWO0P (ORCPT
+        with ESMTP id S230330AbiFWOqm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Jun 2022 10:26:15 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D916836B6C;
-        Thu, 23 Jun 2022 07:26:14 -0700 (PDT)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25NDFmHq006493;
-        Thu, 23 Jun 2022 14:25:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=UH/E2Dz3Di0zJG/5hMV/2VU5CDhkghCuUBcdP0NHpi8=;
- b=W2v52cUL38m7HOrqMIAW2zRSlRc1PxdEPhj356a6wQZWInebAd6W7Uxk3SX93YuP4QOo
- cwAEAruz7xqNDCONNX6CycD3Bv5Awf2pTJ+05POfSntsj/Au+hkeaIhO9wAUxdCWNkj+
- 5PHY3N5sroMH3GEF6oJHhivngVGj2+zcI2qIvBnSYaLKibRAOeFKmOJn1S367F6uNauG
- H7Y+r78WCtN2AvggxZuLQSneT4K84c2EteXznVSdVTlwj+mfTuzjAAuSSeQ6zmkkTAfL
- XTh1Ztn2FzmHVv6AabPTNtuueQHyE+oEMkBLNNVhl+XG2WW2Cd+aLzgMwxDvg9J3DqVf eQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gvrwfj4ah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jun 2022 14:25:46 +0000
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25NDuJJp028009;
-        Thu, 23 Jun 2022 14:25:46 GMT
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gvrwfj49f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jun 2022 14:25:45 +0000
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25NEKPvj029358;
-        Thu, 23 Jun 2022 14:25:44 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma01dal.us.ibm.com with ESMTP id 3guk92mvax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jun 2022 14:25:44 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25NEPh6Q32964966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jun 2022 14:25:43 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D9646E050;
-        Thu, 23 Jun 2022 14:25:43 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70ACB6E04E;
-        Thu, 23 Jun 2022 14:25:41 +0000 (GMT)
-Received: from li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com (unknown [9.160.24.26])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 23 Jun 2022 14:25:41 +0000 (GMT)
-Date:   Thu, 23 Jun 2022 09:25:39 -0500
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC 00/13] perf: Add perf kwork
-Message-ID: <YrR34345A4h/5RfU@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
-References: <20220613094605.208401-1-yangjihong1@huawei.com>
- <YrMuQXIn9DdhZl2w@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
- <3cccc03a-c2bc-91d9-60b9-daf180c6b108@huawei.com>
+        Thu, 23 Jun 2022 10:46:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701F44578F;
+        Thu, 23 Jun 2022 07:46:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D55A61E61;
+        Thu, 23 Jun 2022 14:46:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46E3CC3411B;
+        Thu, 23 Jun 2022 14:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655995600;
+        bh=gLtSEKNeH4ode8uSzhAq8jIlify+j9XHrfLNKbaIkxc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SX/K98zneuEP7DgTVrnJMtOMTg9KJyHkEhywfbwL/OOS1m0gg7wbFGDQhyYm8VS7C
+         4TFrcKLUQgc7xR/OBPZu0lJiZIKewhgDbatEv8djw9rwdHE9TCTFFbj1jiaQrhZN9i
+         HwUHBZVq9ruZgxDjN52TAov+ikryhfNktgYRsUb1DdG0m0+psdvj4f+NOzyUx8jpVv
+         Q7PDSs1y7T1MvfHFXhWDsunSsf687BwWswmuSPZ+Z0TKrQ6MCaKyyFgSjGcw/ejH9j
+         j/meT+JZJ1ecgo5tFgTWRUFYUe7D0v6GSwtkh8jx+27lciVFsB+7o2qp5IEuhks9lO
+         m9Rk9IXbZKcVw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DE1C84096F; Thu, 23 Jun 2022 11:46:36 -0300 (-03)
+Date:   Thu, 23 Jun 2022 11:46:36 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Raul Silvera <rsilvera@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf: Adjust perf-inject output data offset for
+ backward compatibility
+Message-ID: <YrR8zDls7y//T7zI@kernel.org>
+References: <20220621152725.2668041-1-rsilvera@google.com>
+ <b7de807d-5ec3-3d8d-59ba-4058e1193a96@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3cccc03a-c2bc-91d9-60b9-daf180c6b108@huawei.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yuzybOkGMxq9-YeFQYK1WhuDyDdLflyW
-X-Proofpoint-ORIG-GUID: 0BMRZkLs11qURKaveAhmnIukMD_x9TJ6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-06-23_06,2022-06-23_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- bulkscore=0 suspectscore=0 phishscore=0 adultscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 mlxlogscore=872
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206230055
+In-Reply-To: <b7de807d-5ec3-3d8d-59ba-4058e1193a96@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 09:02:45AM +0800, Yang Jihong wrote:
-> On 2022/6/22 22:59, Paul A. Clarke wrote:
-> > On Mon, Jun 13, 2022 at 05:45:52PM +0800, Yang Jihong wrote:
-> > > Sometimes, we need to analyze time properties of kernel work such as irq,
-> > > softirq, and workqueue, such as delay and running time of specific interrupts.
-> > > Currently, these events have kernel tracepoints, but perf tool does not
-> > > directly analyze the delay of these events
-> > > 
-> > > The perf-kwork tool is used to trace time properties of kernel work
-> > > (such as irq, softirq, and workqueue), including runtime, latency,
-> > > and timehist, using the infrastructure in the perf tools to allow
-> > > tracing extra targets
-> > > 
-> > > test case:
-> > > 
-> > >    # perf kwork report
-> > > 
-> > >      Kwork Name                | Cpu  | Total Runtime | Frequency | Max runtime   | Max runtime start   | Max runtime end     |
-> > >     ---------------------------------------------------------------------------------------------------------------------------
-> > >      (s)RCU:9                  | 0007 |      3.488 ms |      1258 |      0.145 ms |    3398384.220013 s |    3398384.220157 s |
-> > >      (s)NET_RX:3               | 0003 |      1.866 ms |       156 |      0.042 ms |    3398385.629764 s |    3398385.629806 s |
-> > >      (s)TIMER:1                | 0000 |      1.799 ms |       117 |      0.055 ms |    3398385.568033 s |    3398385.568088 s |
-> > >      (w)0xffff9c66e563ee98     | 0006 |      1.561 ms |         5 |      0.351 ms |    3398384.060021 s |    3398384.060371 s |
+Em Wed, Jun 22, 2022 at 11:36:58AM +0300, Adrian Hunter escreveu:
+> On 21/06/22 18:27, Raul Silvera wrote:
+> > When perf inject creates a new file, it reuses the data offset from the
+> > input file. If there has been a change on the size of the header, as
+> > happened in v5.12 -> v5.13, the new offsets will be wrong, resulting in
+> > a corrupted output file.
 > > 
-> > What units are used for "Frequency"? It would be helpful to include somewhere.
+> > This change adds the function perf_session__data_offset to compute the
+> > data offset based on the current header size, and uses that instead of
+> > the offset from the original input file.
+> > 
+> > Signed-off-by: Raul Silvera <rsilvera@google.com>
+> 
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> This refers to the number of event in the trace period.
+Thanks, applied.
 
-I see. I suggest changing the column heading to say that.
-"Count", "Number of Events", "Occurrences", something like that.
+- Arnaldo
 
-"Frequency" is a count-per-time-unit, like hertz, which doesn't
-match well here.
+ 
+> > ---
+> > Changes since v1:
+> >  - Use the adjusted header->data_offset in do_write_header instead of
+> >    recomputing it.
+> > ---
+> >  tools/perf/builtin-inject.c |  2 +-
+> >  tools/perf/util/header.c    | 14 ++++++++++++++
+> >  tools/perf/util/header.h    |  2 ++
+> >  3 files changed, 17 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> > index a75bf11585b5..1dfdcef36607 100644
+> > --- a/tools/perf/builtin-inject.c
+> > +++ b/tools/perf/builtin-inject.c
+> > @@ -916,7 +916,7 @@ static int __cmd_inject(struct perf_inject *inject)
+> >  		inject->tool.tracing_data = perf_event__repipe_tracing_data;
+> >  	}
+> >  
+> > -	output_data_offset = session->header.data_offset;
+> > +	output_data_offset = perf_session__data_offset(session->evlist);
+> >  
+> >  	if (inject->build_id_all) {
+> >  		inject->tool.mmap	  = perf_event__repipe_buildid_mmap;
+> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > index 53332da100e8..6ad629db63b7 100644
+> > --- a/tools/perf/util/header.c
+> > +++ b/tools/perf/util/header.c
+> > @@ -3686,6 +3686,20 @@ int perf_session__write_header(struct perf_session *session,
+> >  	return perf_session__do_write_header(session, evlist, fd, at_exit, NULL);
+> >  }
+> >  
+> > +size_t perf_session__data_offset(const struct evlist *evlist)
+> > +{
+> > +	struct evsel *evsel;
+> > +	size_t data_offset;
+> > +
+> > +	data_offset = sizeof(struct perf_file_header);
+> > +	evlist__for_each_entry(evlist, evsel) {
+> > +		data_offset += evsel->core.ids * sizeof(u64);
+> > +	}
+> > +	data_offset += evlist->core.nr_entries * sizeof(struct perf_file_attr);
+> > +
+> > +	return data_offset;
+> > +}
+> > +
+> >  int perf_session__inject_header(struct perf_session *session,
+> >  				struct evlist *evlist,
+> >  				int fd,
+> > diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+> > index 08563c1f1bff..56916dabce7b 100644
+> > --- a/tools/perf/util/header.h
+> > +++ b/tools/perf/util/header.h
+> > @@ -136,6 +136,8 @@ int perf_session__inject_header(struct perf_session *session,
+> >  				int fd,
+> >  				struct feat_copier *fc);
+> >  
+> > +size_t perf_session__data_offset(const struct evlist *evlist);
+> > +
+> >  void perf_header__set_feat(struct perf_header *header, int feat);
+> >  void perf_header__clear_feat(struct perf_header *header, int feat);
+> >  bool perf_header__has_feat(const struct perf_header *header, int feat);
 
-PC
+-- 
+
+- Arnaldo
