@@ -2,89 +2,231 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5BCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 16:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B6FC43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 16:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231459AbiFXQTo (ORCPT
+        id S229792AbiFXQcb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 12:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
+        Fri, 24 Jun 2022 12:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbiFXQTm (ORCPT
+        with ESMTP id S231394AbiFXQc1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Jun 2022 12:19:42 -0400
+        Fri, 24 Jun 2022 12:32:27 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44FD03C706;
-        Fri, 24 Jun 2022 09:19:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F7650E00;
+        Fri, 24 Jun 2022 09:32:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 04336B82A3A;
-        Fri, 24 Jun 2022 16:19:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85A52C34114;
-        Fri, 24 Jun 2022 16:19:37 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 709F4B82941;
+        Fri, 24 Jun 2022 16:32:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B68C34114;
+        Fri, 24 Jun 2022 16:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656087577;
-        bh=GnA2DvgsL+gQNtgqEkQiuBzC52en4llzdKBJm8+xA+8=;
+        s=k20201202; t=1656088344;
+        bh=yYCDrZO0o9uhyNyz750MA0oHLA7lMWV6M8OXBfI793Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HBSCYA++i4drdNWk7WOxnlwBOuQciWAF6BO0ytM/YimhZTMCdBUQ8Udwp6qWqtvt+
-         o930I08vAlMr4o0cDKOSGwuoH8FIxmOzf169ZgPZrcXYDWoxR3jzaVc1Lwh7k7dOqb
-         ynaIvE1+yAHkBfMes2OOCHCMi4CHaFrnRLjW3zO5darGHGnaVmkCXO33ckdTk45A9T
-         eG9wQTbqpuup6X3Tr+9AOGqSd3mSUxnysYoA7Q+HMF2VOeKEkOmnkl7g4x94AWAK0l
-         dYeWUgquSpHuQTatsOqAATVnxsI07oxZnoHLOpclybqTr6ivaBfivGDHUmgikqUSp4
-         KhRYgek4rb74g==
+        b=mG+KkjhRLrCqXzpQ1w1zNcJtX6wNjzH8HMPfvrqxfU3xCVoru7cdiJVTsoj2k5o7O
+         z0fH5v81gmqqgTlrpg6PeQnsky74KrcAYo3juKmgf7PjD7UKyjIXJf5HpsQooOdoaX
+         6HJ/LNdCDlNhxIXFpiBHBExmVl1N73Z+bxHsf+acjE6sYQo5/WPa/Rm3OWYeFkJvP2
+         DTgi/G+Yy8NW1LYBNXiwfCbTcV968thbnv/LsvD7EPoBvCYE9H6w9D5lgI9bRUcdLv
+         1FindllO1I0ZqTGesWwm0sd3SciDPsJ4y5qmaH6wwFPfgydfcKfShoF5VskWyof3VX
+         P9ydyJOe+IgZA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F24824096F; Fri, 24 Jun 2022 13:19:34 -0300 (-03)
-Date:   Fri, 24 Jun 2022 13:19:34 -0300
+        id F00184096F; Fri, 24 Jun 2022 13:32:20 -0300 (-03)
+Date:   Fri, 24 Jun 2022 13:32:20 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>, rrichter@amd.com,
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        =?iso-8859-1?Q?Jo=E3o_M=E1rio?= Domingos 
+        <joao.mario@tecnico.ulisboa.pt>, linux@yadro.com,
+        Nikita Shubin <n.shubin@yadro.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>, like.xu.linux@gmail.com,
-        x86@kernel.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>, ananth.narayan@amd.com,
-        Kim Phillips <kim.phillips@amd.com>, santosh.shukla@amd.com
-Subject: Re: [PATCH v6 0/8] perf/amd: Zen4 IBS extensions support (tool
- changes)
-Message-ID: <YrXkFii1Fme9e1AE@kernel.org>
-References: <20220604044519.594-1-ravi.bangoria@amd.com>
- <CAM9d7ci9Th4Aye51G+X5F12BiDXTnffZdj-A+HGRfUX_nWuQdw@mail.gmail.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 2/5] perf tools riscv: Add support for get_cpuid_str
+ function
+Message-ID: <YrXnFAaT/B1In/+t@kernel.org>
+References: <20220624160117.3206-1-nikita.shubin@maquefel.me>
+ <20220624160117.3206-3-nikita.shubin@maquefel.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7ci9Th4Aye51G+X5F12BiDXTnffZdj-A+HGRfUX_nWuQdw@mail.gmail.com>
+In-Reply-To: <20220624160117.3206-3-nikita.shubin@maquefel.me>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 06, 2022 at 04:46:57PM -0700, Namhyung Kim escreveu:
-> On Fri, Jun 3, 2022 at 9:46 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> > Ravi Bangoria (8):
-> >   perf record ibs: Warn about sampling period skew
-> >   perf tool: Parse pmu caps sysfs only once
-> >   perf headers: Pass "cpu" pmu name while printing caps
-> >   perf headers: Store pmu caps in an array of strings
-> >   perf headers: Record non-cpu pmu capabilities
-> >   perf/x86/ibs: Add new IBS register bits into header
-> >   perf tool ibs: Sync amd ibs header file
-> >   perf script ibs: Support new IBS bits in raw trace dump
- 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+Em Fri, Jun 24, 2022 at 07:00:52PM +0300, Nikita Shubin escreveu:
+> From: Nikita Shubin <n.shubin@yadro.com>
+> 
+> The get_cpuid_str function returns the string that
+> contains values of MVENDORID, MARCHID and MIMPID in
+> hex format separated by coma.
+> 
+> The values themselves are taken from first cpu entry
+> in "/proc/cpuid" that contains "mvendorid", "marchid"
+> and "mimpid".
+> 
+> Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
+> ---
+>  tools/perf/arch/riscv/util/Build    |   1 +
+>  tools/perf/arch/riscv/util/header.c | 109 ++++++++++++++++++++++++++++
+>  2 files changed, 110 insertions(+)
+>  create mode 100644 tools/perf/arch/riscv/util/header.c
+> 
+> diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
+> index 7d3050134ae0..603dbb5ae4dc 100644
+> --- a/tools/perf/arch/riscv/util/Build
+> +++ b/tools/perf/arch/riscv/util/Build
+> @@ -1,4 +1,5 @@
+>  perf-y += perf_regs.o
+> +perf-y += header.o
+>  
+>  perf-$(CONFIG_DWARF) += dwarf-regs.o
+>  perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
+> new file mode 100644
+> index 000000000000..53e8ddf7990b
+> --- /dev/null
+> +++ b/tools/perf/arch/riscv/util/header.c
+> @@ -0,0 +1,109 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Implementation of get_cpuid().
+> + *
+> + * Author: Nikita Shubin <n.shubin@yadro.com>
+> + */
+> +
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <api/fs/fs.h>
+> +#include <errno.h>
+> +#include "../../util/debug.h"
+> +#include "../../util/header.h"
+> +
+> +#define CPUINFO_MVEN	"mvendorid"
+> +#define CPUINFO_MARCH	"marchid"
+> +#define CPUINFO_MIMP	"mimpid"
+> +#define CPUINFO		"/proc/cpuinfo"
+> +
+> +static char *_get_field(const char *line)
+> +{
+> +	char *line2, *nl;
+> +
+> +	line2 = strrchr(line, ' ');
+> +	if (!line2)
+> +		return NULL;
+> +
+> +	line2++;
+> +	nl = strrchr(line, '\n');
+> +	if (!nl)
+> +		return NULL;
+> +
+> +	return strndup(line2, nl - line2);
+> +}
+> +
+> +static char *_get_cpuid(void)
+> +{
+> +	char *line = NULL;
+> +	char *mvendorid = NULL;
+> +	char *marchid = NULL;
+> +	char *mimpid = NULL;
+> +	char *cpuid = NULL;
+> +	int read;
+> +	unsigned long line_sz;
+> +	FILE *cpuinfo;
+> +
+> +	cpuinfo = fopen(CPUINFO, "r");
+> +	if (cpuinfo == NULL)
+> +		return cpuid;
+> +
+> +	while ((read = getline(&line, &line_sz, cpuinfo)) != -1) {
+> +		if (!strncmp(line, CPUINFO_MVEN, strlen(CPUINFO_MVEN))) {
+> +			mvendorid = _get_field(line);
+> +			if (!mvendorid)
+> +				goto free;
+> +		} else if (!strncmp(line, CPUINFO_MARCH, strlen(CPUINFO_MARCH))) {
+> +			marchid = _get_field(line);
+> +			if (!marchid)
+> +				goto free;
+> +		} else if (!strncmp(line, CPUINFO_MIMP, strlen(CPUINFO_MIMP))) {
+> +			mimpid = _get_field(line);
+> +			if (!mimpid)
+> +				goto free;
+> +
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (!mvendorid || !marchid || !mimpid) {
+> +		cpuid = NULL;
+> +		goto free;
+> +	}
+> +
+> +	if (asprintf(&cpuid, "%s-%s-%s", mvendorid, marchid, mimpid) < 0)
+> +		cpuid = NULL;
+> +
+> +free:
+> +	fclose(cpuinfo);
+> +
+> +	if (mvendorid)
+> +		free(mvendorid);
+> +
+> +	if (marchid)
+> +		free(marchid);
+> +
+> +	if (mimpid)
+> +		free(mimpid);
 
-Thanks, applied the series to perf/core, except for "[PATCH v6 6/8]
-perf/x86/ibs: Add new IBS register bits into header", that is outside
-tools/.
+just use:
+
+	
+	free(mvendorid);
+	free(marchid);
+	free(mimpid);
+
+fewer lines, free() accepts NULL.
+
+> +
+> +	return cpuid;
+> +}
+> +
+> +int get_cpuid(char *buffer, size_t sz)
+> +{
+> +	char *cpuid = _get_cpuid();
+> +
+> +	if (sz < strlen(cpuid)) {
+> +		free(cpuid);
+> +		return -EINVAL;
+> +	}
+> +
+> +	scnprintf(buffer, sz, "%s", cpuid);
+
+You're leaking cpuid here.
+
+> +	return 0;
+> +}
+> +
+> +char *
+> +get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+> +{
+> +	return _get_cpuid();
+> +}
+> -- 
+> 2.35.1
+
+-- 
 
 - Arnaldo
-
