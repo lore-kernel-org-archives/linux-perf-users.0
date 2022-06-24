@@ -2,105 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD091C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 06:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B02C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 12:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230418AbiFXGWi convert rfc822-to-8bit (ORCPT
+        id S229615AbiFXMSg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 02:22:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33828 "EHLO
+        Fri, 24 Jun 2022 08:18:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbiFXGWb (ORCPT
+        with ESMTP id S229522AbiFXMSe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Jun 2022 02:22:31 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC87429806;
-        Thu, 23 Jun 2022 23:22:28 -0700 (PDT)
-Received: by mail-oi1-f181.google.com with SMTP id y77so2445467oia.3;
-        Thu, 23 Jun 2022 23:22:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hSpectRvYq6DsCmRNXGz7AExKucd6LMcxFZxCsIXSBw=;
-        b=d3VRDdf0tz5mufyW21DCkPvAyotsis8BuFh/syhtN3EKJTb7Oh9TWs3SQRUZlpQvfO
-         orI0Fo2ZyLAzPhaXaVOa43/ICsAv+hT9WXs7e+4KudQzngOkJCwTA+ZqxvPVmT29Gb41
-         d+0mOrMZw3U5GHQouvWj4zgBF7ypdcvDJveWS+wd1rtZfu/zIcpoZH6NgDVOMmsBxWbK
-         aD0qUdXjmNbydSDoYJTdcRigkfdgQFUCz3/HSjnWo8VW6pBxts/x+wEKUgO3Iv0dlVog
-         kXh/ekJaEi+xX+rPLbHmSBBHxXbPDTctV4UYddLOiZF2BJId1lutG3pvsuD0gBhM0LHy
-         rotw==
-X-Gm-Message-State: AJIora8pzEtVJYmfk2uGRgeQaucmvZvEMXz7Oc6qNqO/YBcgxolAtJG5
-        gCOoUcFnByCtjKjxw2k7XdY/8GWbr/UrPsgcaM8=
-X-Google-Smtp-Source: AGRyM1vBjU1NdQV4VjER73vQV72loH9nfVspFCLK90tN88MNy+w/dR9vjVFfEsumZn0wTc0FdtNjCg8tCjm832zgjV4=
-X-Received: by 2002:a05:6808:1385:b0:32f:729e:4869 with SMTP id
- c5-20020a056808138500b0032f729e4869mr1030252oiw.5.1656051747907; Thu, 23 Jun
- 2022 23:22:27 -0700 (PDT)
+        Fri, 24 Jun 2022 08:18:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94E81168;
+        Fri, 24 Jun 2022 05:18:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5722461655;
+        Fri, 24 Jun 2022 12:18:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63E3EC34114;
+        Fri, 24 Jun 2022 12:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656073112;
+        bh=Vrl/35KfEA8EXbn5hdEP2XvtFH/JWegI4kprxqGCvz8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=st/AuHrEZ7YjHPn6RpxtJT00QhQHgZJ+TSKJnaNAs5PUD6P85zteMKnXkL/XYZ0aE
+         6dO2FhsmutMlCQZ7DTR4Pc5jDCW0Sz57NUR4Cs40idy550oMTVJolVulYAfwPEcFyw
+         a8xA+085x65qFaFO1EPKtSv0gdvH1enSUjJ0ZOgrWwXyITAugCEFN6SRWSMN5k08ix
+         P2y9iHInJp73O1dblnRM2Z5ALsUas5k9O0VJrqZLr8Dj4n6Nis+C+Ah8hOz/C24mqc
+         0m1G5d+8wn8ec0SUXrFz6BL3Cc4bLEI8je+6SvQCwfvlzYRefVnSmm5qCtFMNgzXld
+         YZSqZ00OTTkYg==
+Date:   Fri, 24 Jun 2022 13:18:26 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+Cc:     mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V6] arm64: perf: Make exporting of pmu events configurable
+Message-ID: <20220624121825.GB18561@willie-the-truck>
+References: <1654779589-19937-1-git-send-email-quic_c_spathi@quicinc.com>
 MIME-Version: 1.0
-References: <20220616230546.1390813-1-namhyung@kernel.org> <20220617073840.GA45710@leoy-ThinkPad-X240s>
- <20220617074517.GB45710@leoy-ThinkPad-X240s>
-In-Reply-To: <20220617074517.GB45710@leoy-ThinkPad-X240s>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 23 Jun 2022 23:22:16 -0700
-Message-ID: <CAM9d7ci8pLo=dKFgF8O8610eHTx532d+1TKTf18ibPMtdZp5Lg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test: Add ARM SPE system wide test
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        German Gomez <german.gomez@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1654779589-19937-1-git-send-email-quic_c_spathi@quicinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+On Thu, Jun 09, 2022 at 06:29:49PM +0530, Srinivasarao Pathipati wrote:
+> The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
+> Make it configurable using sysctls to enable/disable at runtime.
+> 
+> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
+> ---
+> Changes since V5:
+> 	- removed configuring with kernel parameters.
+> Changes since V4:
+> 	- Registering sysctls dynamically for only arm64 as suggested by Will
+> 	- Not removed the code to configure with kernel parameters 
+> 	  as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
+> 	  is not working at early bootup. pmu_reset() getting called before 
+> 	  sysctl's kernel parameter is set.
+> Changes since V3:
+> 	- export bit is now configurable with sysctl
+> 	- enabling export bit on reset instead of retaining
+> 
+> Changes since V2:
+> 	Done below changes as per Will's comments
+> 	- enabling pmcr_x now configurable with kernel parameters and
+> 	  by default it is disabled.
+> 	
+> Changes since V1:
+> 	- Preserving only PMCR_X bit as per Robin Murphy's comment.
+> 
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++++
+>  arch/arm64/kernel/perf_event.c              | 13 +++++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index ddccd10..c2ecd84 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -267,6 +267,17 @@ domain names are in general different. For a detailed discussion
+>  see the ``hostname(1)`` man page.
+>  
+>  
+> +export_pmu_events (arm64 only)
+> +==============================
+> +
+> +Controls the PMU export bit (PMCR_EL0.X), which enables the exporting of
+> +events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
+> +
+> +0: disables exporting of events (default).
+> +
+> +1: enables exporting of events.
+> +
+> +
+>  firmware_config
+>  ===============
+>  
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index cb69ff1..a8c32a0 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -298,6 +298,7 @@ PMU_FORMAT_ATTR(long, "config1:0");
+>  PMU_FORMAT_ATTR(rdpmc, "config1:1");
+>  
+>  static int sysctl_perf_user_access __read_mostly;
+> +static int sysctl_export_pmu_events __read_mostly;
+>  
+>  static inline bool armv8pmu_event_is_64bit(struct perf_event *event)
+>  {
+> @@ -1047,6 +1048,9 @@ static void armv8pmu_reset(void *info)
+>  	if (armv8pmu_has_long_event(cpu_pmu))
+>  		pmcr |= ARMV8_PMU_PMCR_LP;
+>  
+> +	if (sysctl_export_pmu_events)
+> +		pmcr |= ARMV8_PMU_PMCR_X;
 
-On Fri, Jun 17, 2022 at 12:45 AM Leo Yan <leo.yan@linaro.org> wrote:
->
-> On Fri, Jun 17, 2022 at 03:38:40PM +0800, Leo Yan wrote:
-> > Hi Namhyung,
-> >
-> > On Thu, Jun 16, 2022 at 04:05:46PM -0700, Namhyung Kim wrote:
-> >
-> > [...]
-> >
-> > > +arm_spe_system_wide_test() {
-> > > +   echo "Recording trace with system-wide mode $perfdata"
-> > > +   perf record -o ${perfdata} -e arm_spe// -a \
-> > > +           -- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
-> > > +
-> > > +   if [ $? != 0 ]; then
-> > > +           arm_spe_report "SPE system-wide testing" 2
-> > > +           return
-> > > +   fi
-> >
-> > I am awared the root permission issue after I saw German's suggestion.
-> >
-> > If the snapshot test is passed, no matter the system wide test is passed
-> > or not, we will always return 0 for 'passed' result.  But we might miss
-> > to capture the system-wide testing failure.
-> >
-> > How about use 'dummy' event to verіfy the root permission?
-> > (actually I referred to intel-pt test):
-> >
-> >         perf record -o ${perfdata} -B -N --no-bpf-event -e dummy:u -a true 2>&1 >/dev/null
-> >         if [ $? != 0 ]; then
-> >               arm_spe_report "SPE system-wide testing" 2
-> >               return
-> >         fi
-> >
-> >         perf record -o ${perfdata} -e arm_spe// -a \
-> >                   -- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
+I think we need to do this in armv8pmu_start() rather than armv8pmu_reset(),
+otherwise any changes to the sysctl at runtime won't take effect unless you
+do something like re-online the CPU.
 
-Ok, will add the change.
-
-Thanks,
-Namhyung
+Will
