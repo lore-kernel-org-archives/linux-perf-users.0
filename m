@@ -2,231 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B6FC43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 16:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A33C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 16:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229792AbiFXQcb (ORCPT
+        id S229761AbiFXQkR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 12:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59190 "EHLO
+        Fri, 24 Jun 2022 12:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231394AbiFXQc1 (ORCPT
+        with ESMTP id S229757AbiFXQkR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Jun 2022 12:32:27 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F7650E00;
-        Fri, 24 Jun 2022 09:32:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 709F4B82941;
-        Fri, 24 Jun 2022 16:32:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B68C34114;
-        Fri, 24 Jun 2022 16:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656088344;
-        bh=yYCDrZO0o9uhyNyz750MA0oHLA7lMWV6M8OXBfI793Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mG+KkjhRLrCqXzpQ1w1zNcJtX6wNjzH8HMPfvrqxfU3xCVoru7cdiJVTsoj2k5o7O
-         z0fH5v81gmqqgTlrpg6PeQnsky74KrcAYo3juKmgf7PjD7UKyjIXJf5HpsQooOdoaX
-         6HJ/LNdCDlNhxIXFpiBHBExmVl1N73Z+bxHsf+acjE6sYQo5/WPa/Rm3OWYeFkJvP2
-         DTgi/G+Yy8NW1LYBNXiwfCbTcV968thbnv/LsvD7EPoBvCYE9H6w9D5lgI9bRUcdLv
-         1FindllO1I0ZqTGesWwm0sd3SciDPsJ4y5qmaH6wwFPfgydfcKfShoF5VskWyof3VX
-         P9ydyJOe+IgZA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F00184096F; Fri, 24 Jun 2022 13:32:20 -0300 (-03)
-Date:   Fri, 24 Jun 2022 13:32:20 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        =?iso-8859-1?Q?Jo=E3o_M=E1rio?= Domingos 
-        <joao.mario@tecnico.ulisboa.pt>, linux@yadro.com,
-        Nikita Shubin <n.shubin@yadro.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 2/5] perf tools riscv: Add support for get_cpuid_str
- function
-Message-ID: <YrXnFAaT/B1In/+t@kernel.org>
-References: <20220624160117.3206-1-nikita.shubin@maquefel.me>
- <20220624160117.3206-3-nikita.shubin@maquefel.me>
+        Fri, 24 Jun 2022 12:40:17 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFCC420BF6;
+        Fri, 24 Jun 2022 09:40:16 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id p8so4237466oip.8;
+        Fri, 24 Jun 2022 09:40:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uJ6qtHcqOz6w1LeyYAylMDSTeSEr5a9i/a+y4bB03pY=;
+        b=y9CSZ4Mshp7oP5LTIawjFZoLvQO39FA/Con4siN4CR2Do4BnPDE3aTFSs0OUYdqePs
+         nqvJmBCW/nCYUywxBUQJRykF57BLd4hao9OKJfIJhzl4uba8XmhuYFGrE+/he1YOlTCn
+         sC2bkrACHCLO4qOVviDFv0PR5eF7s1JrJ0sIgn/KDorXjdMRT/JENw26AG2ZX4wdpxlL
+         OaLPEzHG25ZaMN7evtXVRp/UVmzrJ5QqqkXheVejexdP6R054swIHO2bSJZdE/lLIeor
+         e6GkAPkkxohkthzY8x3fL+b8ZndkVfYClflze91ZlBHhybGL/lY+8sMJQr5cD+syN72K
+         fCdg==
+X-Gm-Message-State: AJIora9vhc1jaVuI9GWKN5Sdsm72BiO3T76tmgHE9Q064jBVLWqNQuIU
+        +DKKEp+y2Naycf+Prubyf8egHVjlLpuKvK+T1b4=
+X-Google-Smtp-Source: AGRyM1v932IX/+v8BNb8d1qQRB7XL1BzzRvueyhyfQbrsI0opkZOQG+QgjlV7MxQW8BxMr5mMrMuYfbB7VI7eQyITCQ=
+X-Received: by 2002:a05:6808:1385:b0:32f:729e:4869 with SMTP id
+ c5-20020a056808138500b0032f729e4869mr2501390oiw.5.1656088816047; Fri, 24 Jun
+ 2022 09:40:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220624160117.3206-3-nikita.shubin@maquefel.me>
-X-Url:  http://acmel.wordpress.com
+References: <20220615163222.1275500-1-namhyung@kernel.org>
+In-Reply-To: <20220615163222.1275500-1-namhyung@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 24 Jun 2022 09:40:05 -0700
+Message-ID: <CAM9d7cjD=at=AtKmvMLogjN6mieWVR2kk-HigxO01cvPPRGFBg@mail.gmail.com>
+Subject: Re: [PATCHSET 0/7] perf lock: New lock contention tracepoints support (v4)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 24, 2022 at 07:00:52PM +0300, Nikita Shubin escreveu:
-> From: Nikita Shubin <n.shubin@yadro.com>
-> 
-> The get_cpuid_str function returns the string that
-> contains values of MVENDORID, MARCHID and MIMPID in
-> hex format separated by coma.
-> 
-> The values themselves are taken from first cpu entry
-> in "/proc/cpuid" that contains "mvendorid", "marchid"
-> and "mimpid".
-> 
-> Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
-> ---
->  tools/perf/arch/riscv/util/Build    |   1 +
->  tools/perf/arch/riscv/util/header.c | 109 ++++++++++++++++++++++++++++
->  2 files changed, 110 insertions(+)
->  create mode 100644 tools/perf/arch/riscv/util/header.c
-> 
-> diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
-> index 7d3050134ae0..603dbb5ae4dc 100644
-> --- a/tools/perf/arch/riscv/util/Build
-> +++ b/tools/perf/arch/riscv/util/Build
-> @@ -1,4 +1,5 @@
->  perf-y += perf_regs.o
-> +perf-y += header.o
->  
->  perf-$(CONFIG_DWARF) += dwarf-regs.o
->  perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-> diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
-> new file mode 100644
-> index 000000000000..53e8ddf7990b
-> --- /dev/null
-> +++ b/tools/perf/arch/riscv/util/header.c
-> @@ -0,0 +1,109 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Implementation of get_cpuid().
-> + *
-> + * Author: Nikita Shubin <n.shubin@yadro.com>
-> + */
-> +
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <api/fs/fs.h>
-> +#include <errno.h>
-> +#include "../../util/debug.h"
-> +#include "../../util/header.h"
-> +
-> +#define CPUINFO_MVEN	"mvendorid"
-> +#define CPUINFO_MARCH	"marchid"
-> +#define CPUINFO_MIMP	"mimpid"
-> +#define CPUINFO		"/proc/cpuinfo"
-> +
-> +static char *_get_field(const char *line)
-> +{
-> +	char *line2, *nl;
-> +
-> +	line2 = strrchr(line, ' ');
-> +	if (!line2)
-> +		return NULL;
-> +
-> +	line2++;
-> +	nl = strrchr(line, '\n');
-> +	if (!nl)
-> +		return NULL;
-> +
-> +	return strndup(line2, nl - line2);
-> +}
-> +
-> +static char *_get_cpuid(void)
-> +{
-> +	char *line = NULL;
-> +	char *mvendorid = NULL;
-> +	char *marchid = NULL;
-> +	char *mimpid = NULL;
-> +	char *cpuid = NULL;
-> +	int read;
-> +	unsigned long line_sz;
-> +	FILE *cpuinfo;
-> +
-> +	cpuinfo = fopen(CPUINFO, "r");
-> +	if (cpuinfo == NULL)
-> +		return cpuid;
-> +
-> +	while ((read = getline(&line, &line_sz, cpuinfo)) != -1) {
-> +		if (!strncmp(line, CPUINFO_MVEN, strlen(CPUINFO_MVEN))) {
-> +			mvendorid = _get_field(line);
-> +			if (!mvendorid)
-> +				goto free;
-> +		} else if (!strncmp(line, CPUINFO_MARCH, strlen(CPUINFO_MARCH))) {
-> +			marchid = _get_field(line);
-> +			if (!marchid)
-> +				goto free;
-> +		} else if (!strncmp(line, CPUINFO_MIMP, strlen(CPUINFO_MIMP))) {
-> +			mimpid = _get_field(line);
-> +			if (!mimpid)
-> +				goto free;
-> +
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!mvendorid || !marchid || !mimpid) {
-> +		cpuid = NULL;
-> +		goto free;
-> +	}
-> +
-> +	if (asprintf(&cpuid, "%s-%s-%s", mvendorid, marchid, mimpid) < 0)
-> +		cpuid = NULL;
-> +
-> +free:
-> +	fclose(cpuinfo);
-> +
-> +	if (mvendorid)
-> +		free(mvendorid);
-> +
-> +	if (marchid)
-> +		free(marchid);
-> +
-> +	if (mimpid)
-> +		free(mimpid);
+Ping!  Any comments?
 
-just use:
 
-	
-	free(mvendorid);
-	free(marchid);
-	free(mimpid);
-
-fewer lines, free() accepts NULL.
-
-> +
-> +	return cpuid;
-> +}
-> +
-> +int get_cpuid(char *buffer, size_t sz)
-> +{
-> +	char *cpuid = _get_cpuid();
-> +
-> +	if (sz < strlen(cpuid)) {
-> +		free(cpuid);
-> +		return -EINVAL;
-> +	}
-> +
-> +	scnprintf(buffer, sz, "%s", cpuid);
-
-You're leaking cpuid here.
-
-> +	return 0;
-> +}
-> +
-> +char *
-> +get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
-> +{
-> +	return _get_cpuid();
-> +}
-> -- 
-> 2.35.1
-
--- 
-
-- Arnaldo
+On Wed, Jun 15, 2022 at 9:32 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> Kernel v5.19 will have a new set of tracepoints to track lock
+> contentions for various lock types.  Unlike tracepoints in LOCKDEP and
+> LOCK_STAT, it's hit only for contended locks and lock names are not
+> available.  So it needs to collect stack traces and display the caller
+> function instead.
+>
+> Changes in v4)
+>  * add Acked-by from Ian
+>  * more comments on trace_lock_handler
+>  * don't create stats in the contention_end handler
+>
+> Changes in v3)
+>  * fix build error
+>  * support data from different kernels/machines
+>  * skip bad stat unless there's actual bad ones
+>
+> Changes in v2)
+>  * add Acked-by from Ian
+>  * print time with a unit for compact output
+>  * add some comments  (Ian)
+>  * remove already applied patch
+>
+> This patchset merely adds support for the new tracepoints to the
+> existing perf lock commands.  So there's no change to the user.  Later
+> I'll add new a sub-command dedicated to the tracepoints to make use of
+> the additional information.
+>
+> Example output:
+>
+>   $ sudo perf lock record -a sleep 3
+>
+>   $ perf lock report -F acquired,contended,avg_wait,wait_total
+>
+>                   Name   acquired  contended     avg wait    total wait
+>
+>    update_blocked_a...         40         40      3.61 us     144.45 us
+>    kernfs_fop_open+...          5          5      3.64 us      18.18 us
+>     _nohz_idle_balance          3          3      2.65 us       7.95 us
+>    tick_do_update_j...          1          1      6.04 us       6.04 us
+>     ep_scan_ready_list          1          1      3.93 us       3.93 us
+>   ...
+>
+> You can find the code in the 'perf/lock-contention-v4' branch at
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (7):
+>   perf lock: Print wait times with unit
+>   perf lock: Allow to use different kernel symbols
+>   perf lock: Skip print_bad_events() if nothing bad
+>   perf lock: Add lock contention tracepoints record support
+>   perf lock: Handle lock contention tracepoints
+>   perf record: Allow to specify max stack depth of fp callchain
+>   perf lock: Look up callchain for the contended locks
+>
+>  tools/perf/Documentation/perf-lock.txt   |   7 +
+>  tools/perf/Documentation/perf-record.txt |   5 +
+>  tools/perf/builtin-lock.c                | 426 ++++++++++++++++++++++-
+>  tools/perf/util/callchain.c              |  18 +-
+>  4 files changed, 434 insertions(+), 22 deletions(-)
+>
+>
+> base-commit: 9886142c7a2226439c1e3f7d9b69f9c7094c3ef6
+> --
+> 2.36.1.476.g0c4daa206d-goog
+>
