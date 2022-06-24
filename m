@@ -2,164 +2,210 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D806CCA481
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 14:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F58CCA473
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 16:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232225AbiFXOGo (ORCPT
+        id S229965AbiFXQBi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 10:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
+        Fri, 24 Jun 2022 12:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232358AbiFXOGZ (ORCPT
+        with ESMTP id S229962AbiFXQBh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Jun 2022 10:06:25 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA964EDD7;
-        Fri, 24 Jun 2022 07:06:08 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LTzRC1vSPzDsC8;
-        Fri, 24 Jun 2022 22:05:27 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 22:06:02 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.61) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 22:06:01 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <ast@kernel.org>,
-        <daniel@iogearbox.net>, <andrii@kernel.org>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@kernel.org>, <irogers@google.com>,
-        <davemarchevsky@fb.com>, <adrian.hunter@intel.com>,
-        <alexandre.truong@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [RFC v2 04/17] perf kwork: Add workqueue kwork record support
-Date:   Fri, 24 Jun 2022 22:03:36 +0800
-Message-ID: <20220624140349.16964-5-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20220624140349.16964-1-yangjihong1@huawei.com>
-References: <20220624140349.16964-1-yangjihong1@huawei.com>
+        Fri, 24 Jun 2022 12:01:37 -0400
+Received: from forward501j.mail.yandex.net (forward501j.mail.yandex.net [5.45.198.251])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201055251F;
+        Fri, 24 Jun 2022 09:01:34 -0700 (PDT)
+Received: from myt5-30ca2e5366d2.qloud-c.yandex.net (myt5-30ca2e5366d2.qloud-c.yandex.net [IPv6:2a02:6b8:c12:fa5:0:640:30ca:2e53])
+        by forward501j.mail.yandex.net (Yandex) with ESMTP id D6F5B6233EA;
+        Fri, 24 Jun 2022 19:01:32 +0300 (MSK)
+Received: from myt5-ca5ec8faf378.qloud-c.yandex.net (myt5-ca5ec8faf378.qloud-c.yandex.net [2a02:6b8:c12:2514:0:640:ca5e:c8fa])
+        by myt5-30ca2e5366d2.qloud-c.yandex.net (mxback/Yandex) with ESMTP id qioSD0rNVz-1Vf4Z6IB;
+        Fri, 24 Jun 2022 19:01:32 +0300
+X-Yandex-Fwd: 2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1656086492;
+        bh=PUG8BO7e1bq7Yd/4revT/SkW7cbQUppnFmBmmkR/A8I=;
+        h=In-Reply-To:References:Date:Subject:Cc:To:From:Message-Id;
+        b=sqeaDYikYQJ1uwwG/xnLpAdcfWEB/CbQU1IcQcqAfJ26vD1K27fdhBk9km5MVg8E+
+         pKkBGqgypni7d3+mfzQLKMHzL1PTEpee3qdgEiTdlatWOgtg1tFx4l5rXj37SqwyBG
+         qp8kW9M2MeQoZ8E9Vt0ae+2K68uiYXUX5nKdLtf0=
+Authentication-Results: myt5-30ca2e5366d2.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by myt5-ca5ec8faf378.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id iVUkuL8Azf-1UMKIGh9;
+        Fri, 24 Jun 2022 19:01:31 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>
+Cc:     =?UTF-8?q?Jo=C3=A3o=20M=C3=A1rio=20Domingos?= 
+        <joao.mario@tecnico.ulisboa.pt>, linux@yadro.com,
+        Nikita Shubin <n.shubin@yadro.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v4 2/5] perf tools riscv: Add support for get_cpuid_str function
+Date:   Fri, 24 Jun 2022 19:00:52 +0300
+Message-Id: <20220624160117.3206-3-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220624160117.3206-1-nikita.shubin@maquefel.me>
+References: <20220624160117.3206-1-nikita.shubin@maquefel.me>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.61]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Record workqueue events workqueue:workqueue_activate_work,
-workqueue:workqueue_execute_start & workqueue:workqueue_execute_end
+From: Nikita Shubin <n.shubin@yadro.com>
 
-Tese cases:
-Record all events:
+The get_cpuid_str function returns the string that
+contains values of MVENDORID, MARCHID and MIMPID in
+hex format separated by coma.
 
-  # perf kwork record -o perf_kwork.date -- sleep 1
-  [ perf record: Woken up 0 times to write data ]
-  [ perf record: Captured and wrote 0.857 MB perf_kwork.date ]
-  #
-  # perf evlist -i perf_kwork.date
-  irq:irq_handler_entry
-  irq:irq_handler_exit
-  irq:softirq_raise
-  irq:softirq_entry
-  irq:softirq_exit
-  workqueue:workqueue_activate_work
-  workqueue:workqueue_execute_start
-  workqueue:workqueue_execute_end
-  dummy:HG
-  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
+The values themselves are taken from first cpu entry
+in "/proc/cpuid" that contains "mvendorid", "marchid"
+and "mimpid".
 
-Record workqueue events:
-
-  # perf kwork -k workqueue record -o perf_kwork.date -- sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.081 MB perf_kwork.date ]
-  #
-  # perf evlist -i perf_kwork.date
-  workqueue:workqueue_activate_work
-  workqueue:workqueue_execute_start
-  workqueue:workqueue_execute_end
-  dummy:HG
-  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
-
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
 ---
- tools/perf/Documentation/perf-kwork.txt |  2 +-
- tools/perf/builtin-kwork.c              | 16 +++++++++++++++-
- tools/perf/util/kwork.h                 |  1 +
- 3 files changed, 17 insertions(+), 2 deletions(-)
+ tools/perf/arch/riscv/util/Build    |   1 +
+ tools/perf/arch/riscv/util/header.c | 109 ++++++++++++++++++++++++++++
+ 2 files changed, 110 insertions(+)
+ create mode 100644 tools/perf/arch/riscv/util/header.c
 
-diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
-index abfdeca2ad39..c5b52f61da99 100644
---- a/tools/perf/Documentation/perf-kwork.txt
-+++ b/tools/perf/Documentation/perf-kwork.txt
-@@ -32,7 +32,7 @@ OPTIONS
+diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
+index 7d3050134ae0..603dbb5ae4dc 100644
+--- a/tools/perf/arch/riscv/util/Build
++++ b/tools/perf/arch/riscv/util/Build
+@@ -1,4 +1,5 @@
+ perf-y += perf_regs.o
++perf-y += header.o
  
- -k::
- --kwork::
--	List of kwork to profile (irq, softirq, etc)
-+	List of kwork to profile (irq, softirq, workqueue, etc)
- 
- -v::
- --verbose::
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 2c492c8fd019..8086236b7513 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -50,9 +50,23 @@ static struct kwork_class kwork_softirq = {
- 	.tp_handlers    = softirq_tp_handlers,
- };
- 
-+const struct evsel_str_handler workqueue_tp_handlers[] = {
-+	{ "workqueue:workqueue_activate_work", NULL, },
-+	{ "workqueue:workqueue_execute_start", NULL, },
-+	{ "workqueue:workqueue_execute_end",   NULL, },
-+};
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
+new file mode 100644
+index 000000000000..53e8ddf7990b
+--- /dev/null
++++ b/tools/perf/arch/riscv/util/header.c
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Implementation of get_cpuid().
++ *
++ * Author: Nikita Shubin <n.shubin@yadro.com>
++ */
 +
-+static struct kwork_class kwork_workqueue = {
-+	.name           = "workqueue",
-+	.type           = KWORK_CLASS_WORKQUEUE,
-+	.nr_tracepoints = 3,
-+	.tp_handlers    = workqueue_tp_handlers,
-+};
++#include <stdio.h>
++#include <stdlib.h>
++#include <api/fs/fs.h>
++#include <errno.h>
++#include "../../util/debug.h"
++#include "../../util/header.h"
 +
- static struct kwork_class *kwork_class_supported_list[KWORK_CLASS_MAX] = {
- 	[KWORK_CLASS_IRQ]       = &kwork_irq,
- 	[KWORK_CLASS_SOFTIRQ]   = &kwork_softirq,
-+	[KWORK_CLASS_WORKQUEUE] = &kwork_workqueue,
- };
- 
- static void setup_event_list(struct perf_kwork *kwork,
-@@ -159,7 +173,7 @@ int cmd_kwork(int argc, const char **argv)
- 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
- 		    "dump raw trace in ASCII"),
- 	OPT_STRING('k', "kwork", &kwork.event_list_str, "kwork",
--		   "list of kwork to profile (irq, softirq, etc)"),
-+		   "list of kwork to profile (irq, softirq, workqueue, etc)"),
- 	OPT_BOOLEAN('f', "force", &kwork.force, "don't complain, do it"),
- 	OPT_END()
- 	};
-diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
-index 669a81626cb4..03203c4deb34 100644
---- a/tools/perf/util/kwork.h
-+++ b/tools/perf/util/kwork.h
-@@ -15,6 +15,7 @@
- enum kwork_class_type {
- 	KWORK_CLASS_IRQ,
- 	KWORK_CLASS_SOFTIRQ,
-+	KWORK_CLASS_WORKQUEUE,
- 	KWORK_CLASS_MAX,
- };
- 
++#define CPUINFO_MVEN	"mvendorid"
++#define CPUINFO_MARCH	"marchid"
++#define CPUINFO_MIMP	"mimpid"
++#define CPUINFO		"/proc/cpuinfo"
++
++static char *_get_field(const char *line)
++{
++	char *line2, *nl;
++
++	line2 = strrchr(line, ' ');
++	if (!line2)
++		return NULL;
++
++	line2++;
++	nl = strrchr(line, '\n');
++	if (!nl)
++		return NULL;
++
++	return strndup(line2, nl - line2);
++}
++
++static char *_get_cpuid(void)
++{
++	char *line = NULL;
++	char *mvendorid = NULL;
++	char *marchid = NULL;
++	char *mimpid = NULL;
++	char *cpuid = NULL;
++	int read;
++	unsigned long line_sz;
++	FILE *cpuinfo;
++
++	cpuinfo = fopen(CPUINFO, "r");
++	if (cpuinfo == NULL)
++		return cpuid;
++
++	while ((read = getline(&line, &line_sz, cpuinfo)) != -1) {
++		if (!strncmp(line, CPUINFO_MVEN, strlen(CPUINFO_MVEN))) {
++			mvendorid = _get_field(line);
++			if (!mvendorid)
++				goto free;
++		} else if (!strncmp(line, CPUINFO_MARCH, strlen(CPUINFO_MARCH))) {
++			marchid = _get_field(line);
++			if (!marchid)
++				goto free;
++		} else if (!strncmp(line, CPUINFO_MIMP, strlen(CPUINFO_MIMP))) {
++			mimpid = _get_field(line);
++			if (!mimpid)
++				goto free;
++
++			break;
++		}
++	}
++
++	if (!mvendorid || !marchid || !mimpid) {
++		cpuid = NULL;
++		goto free;
++	}
++
++	if (asprintf(&cpuid, "%s-%s-%s", mvendorid, marchid, mimpid) < 0)
++		cpuid = NULL;
++
++free:
++	fclose(cpuinfo);
++
++	if (mvendorid)
++		free(mvendorid);
++
++	if (marchid)
++		free(marchid);
++
++	if (mimpid)
++		free(mimpid);
++
++	return cpuid;
++}
++
++int get_cpuid(char *buffer, size_t sz)
++{
++	char *cpuid = _get_cpuid();
++
++	if (sz < strlen(cpuid)) {
++		free(cpuid);
++		return -EINVAL;
++	}
++
++	scnprintf(buffer, sz, "%s", cpuid);
++	return 0;
++}
++
++char *
++get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
++{
++	return _get_cpuid();
++}
 -- 
-2.30.GIT
+2.35.1
 
