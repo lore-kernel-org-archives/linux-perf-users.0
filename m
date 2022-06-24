@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB36CC43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 14:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ED8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 14:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232204AbiFXOGO (ORCPT
+        id S232322AbiFXOGS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 10:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59954 "EHLO
+        Fri, 24 Jun 2022 10:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232285AbiFXOGL (ORCPT
+        with ESMTP id S232206AbiFXOGL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 24 Jun 2022 10:06:11 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE764EDD2;
-        Fri, 24 Jun 2022 07:06:10 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LTzPV2k4fz1KC9y;
-        Fri, 24 Jun 2022 22:03:58 +0800 (CST)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18DE4EDDE;
+        Fri, 24 Jun 2022 07:06:08 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LTzQW3TdNzkWkC;
+        Fri, 24 Jun 2022 22:04:51 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
  dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 22:06:08 +0800
+ 15.1.2375.24; Fri, 24 Jun 2022 22:06:06 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.61) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 22:06:07 +0800
+ 15.1.2375.24; Fri, 24 Jun 2022 22:06:05 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -39,9 +39,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <linux-perf-users@vger.kernel.org>, <netdev@vger.kernel.org>,
         <bpf@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [RFC v2 12/17] perf kwork: Add workqueue latency support
-Date:   Fri, 24 Jun 2022 22:03:44 +0800
-Message-ID: <20220624140349.16964-13-yangjihong1@huawei.com>
+Subject: [RFC v2 09/17] perf kwork: Add workqueue report support
+Date:   Fri, 24 Jun 2022 22:03:41 +0800
+Message-ID: <20220624140349.16964-10-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20220624140349.16964-1-yangjihong1@huawei.com>
 References: <20220624140349.16964-1-yangjihong1@huawei.com>
@@ -56,71 +56,171 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Implements workqueue latency function.
+Implements workqueue report function.
 
 Test cases:
 
-  # perf kwork -k workqueue lat
+  # perf kwork -k workqueue rep
 
-    Kwork Name                     | Cpu  | Avg delay     | Count     | Max delay     | Max delay start     | Max delay end       |
+    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
    --------------------------------------------------------------------------------------------------------------------------------
-    (w)vmstat_update               | 0001 |      5.004 ms |         1 |      5.004 ms |      44001.745646 s |      44001.750650 s |
-    (w)vmstat_update               | 0006 |      1.773 ms |         1 |      1.773 ms |      44000.830840 s |      44000.832613 s |
-    (w)vmstat_shepherd             | 0000 |      0.992 ms |         8 |      2.474 ms |      44007.717845 s |      44007.720318 s |
-    (w)vmstat_update               | 0000 |      0.974 ms |         5 |      2.624 ms |      44004.785970 s |      44004.788594 s |
-    (w)e1000_watchdog              | 0002 |      0.687 ms |         5 |      2.632 ms |      44005.009334 s |      44005.011966 s |
-    (w)vmstat_update               | 0002 |      0.307 ms |         1 |      0.307 ms |      44004.817395 s |      44004.817702 s |
-    (w)vmstat_update               | 0004 |      0.296 ms |         1 |      0.296 ms |      43997.913677 s |      43997.913973 s |
-    (w)mix_interrupt_randomness    | 0000 |      0.283 ms |       285 |      3.724 ms |      44006.790889 s |      44006.794613 s |
-    (w)neigh_managed_work          | 0001 |      0.271 ms |         1 |      0.271 ms |      43997.665542 s |      43997.665813 s |
-    (w)vmstat_update               | 0005 |      0.261 ms |         1 |      0.261 ms |      44007.820542 s |      44007.820803 s |
-    (w)neigh_managed_work          | 0004 |      0.220 ms |         1 |      0.220 ms |      44002.953287 s |      44002.953507 s |
-    (w)neigh_periodic_work         | 0004 |      0.217 ms |         1 |      0.217 ms |      43999.929718 s |      43999.929935 s |
-    (w)mix_interrupt_randomness    | 0002 |      0.199 ms |         5 |      0.310 ms |      44005.012316 s |      44005.012625 s |
-    (w)vmstat_update               | 0003 |      0.199 ms |         4 |      0.307 ms |      44005.714391 s |      44005.714699 s |
-    (w)gc_worker                   | 0001 |      0.071 ms |       173 |      1.128 ms |      44002.062579 s |      44002.063707 s |
+    (w)gc_worker                   | 0001 |   1912.389 ms |       173 |     12.896 ms |      44002.050787 s |      44002.063683 s |
+    (w)mix_interrupt_randomness    | 0000 |     24.308 ms |       285 |      3.349 ms |      44004.784908 s |      44004.788257 s |
+    (w)e1000_watchdog              | 0002 |      5.332 ms |         5 |      2.059 ms |      44000.914366 s |      44000.916424 s |
+    (w)vmstat_update               | 0005 |      0.989 ms |         2 |      0.953 ms |      43997.986991 s |      43997.987944 s |
+    (w)vmstat_shepherd             | 0000 |      0.964 ms |         8 |      0.195 ms |      43997.986453 s |      43997.986648 s |
+    (w)vmstat_update               | 0003 |      0.306 ms |         6 |      0.077 ms |      44004.689543 s |      44004.689620 s |
+    (w)vmstat_update               | 0000 |      0.196 ms |         5 |      0.049 ms |      44005.713732 s |      44005.713781 s |
+    (w)vmstat_update               | 0001 |      0.162 ms |         2 |      0.130 ms |      44000.192034 s |      44000.192164 s |
+    (w)mix_interrupt_randomness    | 0002 |      0.114 ms |         5 |      0.037 ms |      44005.012625 s |      44005.012662 s |
+    (w)vmstat_update               | 0002 |      0.084 ms |         2 |      0.043 ms |      44004.817702 s |      44004.817745 s |
+    (w)vmstat_update               | 0006 |      0.067 ms |         2 |      0.041 ms |      43997.987214 s |      43997.987254 s |
+    (w)neigh_periodic_work         | 0004 |      0.039 ms |         1 |      0.039 ms |      43999.929935 s |      43999.929974 s |
+    (w)vmstat_update               | 0007 |      0.037 ms |         1 |      0.037 ms |      43997.988969 s |      43997.989006 s |
+    (w)neigh_managed_work          | 0001 |      0.036 ms |         1 |      0.036 ms |      43997.665813 s |      43997.665849 s |
+    (w)neigh_managed_work          | 0004 |      0.036 ms |         1 |      0.036 ms |      44002.953507 s |      44002.953543 s |
+    (w)vmstat_update               | 0004 |      0.027 ms |         1 |      0.027 ms |      43997.913973 s |      43997.914000 s |
    --------------------------------------------------------------------------------------------------------------------------------
-    INFO: 0.020% skipped events (17 including 10 raise, 7 entry, 0 exit)
+
+  # perf kwork -k workqueue rep -S
+
+    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+   --------------------------------------------------------------------------------------------------------------------------------
+    (w)gc_worker                   | 0001 |   1912.389 ms |       173 |     12.896 ms |      44002.050787 s |      44002.063683 s |
+    (w)mix_interrupt_randomness    | 0000 |     24.308 ms |       285 |      3.349 ms |      44004.784908 s |      44004.788257 s |
+    (w)e1000_watchdog              | 0002 |      5.332 ms |         5 |      2.059 ms |      44000.914366 s |      44000.916424 s |
+    (w)vmstat_update               | 0005 |      0.989 ms |         2 |      0.953 ms |      43997.986991 s |      43997.987944 s |
+    (w)vmstat_shepherd             | 0000 |      0.964 ms |         8 |      0.195 ms |      43997.986453 s |      43997.986648 s |
+    (w)vmstat_update               | 0003 |      0.306 ms |         6 |      0.077 ms |      44004.689543 s |      44004.689620 s |
+    (w)vmstat_update               | 0000 |      0.196 ms |         5 |      0.049 ms |      44005.713732 s |      44005.713781 s |
+    (w)vmstat_update               | 0001 |      0.162 ms |         2 |      0.130 ms |      44000.192034 s |      44000.192164 s |
+    (w)mix_interrupt_randomness    | 0002 |      0.114 ms |         5 |      0.037 ms |      44005.012625 s |      44005.012662 s |
+    (w)vmstat_update               | 0002 |      0.084 ms |         2 |      0.043 ms |      44004.817702 s |      44004.817745 s |
+    (w)vmstat_update               | 0006 |      0.067 ms |         2 |      0.041 ms |      43997.987214 s |      43997.987254 s |
+    (w)neigh_periodic_work         | 0004 |      0.039 ms |         1 |      0.039 ms |      43999.929935 s |      43999.929974 s |
+    (w)vmstat_update               | 0007 |      0.037 ms |         1 |      0.037 ms |      43997.988969 s |      43997.989006 s |
+    (w)neigh_managed_work          | 0001 |      0.036 ms |         1 |      0.036 ms |      43997.665813 s |      43997.665849 s |
+    (w)neigh_managed_work          | 0004 |      0.036 ms |         1 |      0.036 ms |      44002.953507 s |      44002.953543 s |
+    (w)vmstat_update               | 0004 |      0.027 ms |         1 |      0.027 ms |      43997.913973 s |      43997.914000 s |
+   --------------------------------------------------------------------------------------------------------------------------------
+    Total count            :       500
+    Total runtime   (msec) :  1945.085 (0.192% load average)
+    Total time span (msec) : 10155.026
+   --------------------------------------------------------------------------------------------------------------------------------
+
+  # perf kwork -k workqueue rep -n vmstat_update
+
+    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+   --------------------------------------------------------------------------------------------------------------------------------
+    (w)vmstat_update               | 0005 |      0.989 ms |         2 |      0.953 ms |      43997.986991 s |      43997.987944 s |
+    (w)vmstat_update               | 0003 |      0.306 ms |         6 |      0.077 ms |      44004.689543 s |      44004.689620 s |
+    (w)vmstat_update               | 0000 |      0.196 ms |         5 |      0.049 ms |      44005.713732 s |      44005.713781 s |
+    (w)vmstat_update               | 0001 |      0.162 ms |         2 |      0.130 ms |      44000.192034 s |      44000.192164 s |
+    (w)vmstat_update               | 0002 |      0.084 ms |         2 |      0.043 ms |      44004.817702 s |      44004.817745 s |
+    (w)vmstat_update               | 0006 |      0.067 ms |         2 |      0.041 ms |      43997.987214 s |      43997.987254 s |
+    (w)vmstat_update               | 0007 |      0.037 ms |         1 |      0.037 ms |      43997.988969 s |      43997.989006 s |
+    (w)vmstat_update               | 0004 |      0.027 ms |         1 |      0.027 ms |      43997.913973 s |      43997.914000 s |
+   --------------------------------------------------------------------------------------------------------------------------------
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/builtin-kwork.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ tools/perf/builtin-kwork.c | 74 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 72 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index fa09d4eea913..4902bc73aca1 100644
+index 8680fe3795d4..f7736b6f0815 100644
 --- a/tools/perf/builtin-kwork.c
 +++ b/tools/perf/builtin-kwork.c
-@@ -767,6 +767,20 @@ static struct kwork_class kwork_softirq = {
+@@ -657,17 +657,87 @@ static struct kwork_class kwork_softirq = {
+ 	.work_name      = softirq_work_name,
  };
  
- static struct kwork_class kwork_workqueue;
-+static int process_workqueue_activate_work_event(struct perf_tool *tool,
++static struct kwork_class kwork_workqueue;
++static int process_workqueue_execute_start_event(struct perf_tool *tool,
 +						 struct evsel *evsel,
 +						 struct perf_sample *sample,
 +						 struct machine *machine)
 +{
 +	struct perf_kwork *kwork = container_of(tool, struct perf_kwork, tool);
 +
-+	if (kwork->tp_handler->raise_event)
-+		return kwork->tp_handler->raise_event(kwork, &kwork_workqueue,
++	if (kwork->tp_handler->entry_event)
++		return kwork->tp_handler->entry_event(kwork, &kwork_workqueue,
 +						    evsel, sample, machine);
 +
 +	return 0;
 +}
 +
- static int process_workqueue_execute_start_event(struct perf_tool *tool,
- 						 struct evsel *evsel,
- 						 struct perf_sample *sample,
-@@ -796,7 +810,7 @@ static int process_workqueue_execute_end_event(struct perf_tool *tool,
- }
- 
++static int process_workqueue_execute_end_event(struct perf_tool *tool,
++					       struct evsel *evsel,
++					       struct perf_sample *sample,
++					       struct machine *machine)
++{
++	struct perf_kwork *kwork = container_of(tool, struct perf_kwork, tool);
++
++	if (kwork->tp_handler->exit_event)
++		return kwork->tp_handler->exit_event(kwork, &kwork_workqueue,
++						   evsel, sample, machine);
++
++	return 0;
++}
++
  const struct evsel_str_handler workqueue_tp_handlers[] = {
--	{ "workqueue:workqueue_activate_work", NULL, },
-+	{ "workqueue:workqueue_activate_work", process_workqueue_activate_work_event, },
- 	{ "workqueue:workqueue_execute_start", process_workqueue_execute_start_event, },
- 	{ "workqueue:workqueue_execute_end",   process_workqueue_execute_end_event,   },
+ 	{ "workqueue:workqueue_activate_work", NULL, },
+-	{ "workqueue:workqueue_execute_start", NULL, },
+-	{ "workqueue:workqueue_execute_end",   NULL, },
++	{ "workqueue:workqueue_execute_start", process_workqueue_execute_start_event, },
++	{ "workqueue:workqueue_execute_end",   process_workqueue_execute_end_event,   },
  };
+ 
++static int workqueue_class_init(struct kwork_class *class,
++				struct perf_session *session)
++{
++	if (perf_session__set_tracepoints_handlers(session,
++						   workqueue_tp_handlers)) {
++		pr_err("Failed to set workqueue tracepoints handlers\n");
++		return -1;
++	}
++
++	class->work_root = RB_ROOT_CACHED;
++	return 0;
++}
++
++static void workqueue_work_init(struct kwork_class *class,
++				struct kwork_work *work,
++				struct evsel *evsel,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	char *modp = NULL;
++	unsigned long long function_addr = evsel__intval(evsel,
++							 sample, "function");
++
++	work->class = class;
++	work->cpu = sample->cpu;
++	work->id = evsel__intval(evsel, sample, "work");
++	work->name = function_addr == 0 ? NULL :
++		machine__resolve_kernel_addr(machine, &function_addr, &modp);
++}
++
++static void workqueue_work_name(struct kwork_work *work, char *buf, int len)
++{
++	if (work->name != NULL)
++		snprintf(buf, len, "(w)%s", work->name);
++	else
++		snprintf(buf, len, "(w)0x%" PRIx64, work->id);
++}
++
+ static struct kwork_class kwork_workqueue = {
+ 	.name           = "workqueue",
+ 	.type           = KWORK_CLASS_WORKQUEUE,
+ 	.nr_tracepoints = 3,
+ 	.tp_handlers    = workqueue_tp_handlers,
++	.class_init     = workqueue_class_init,
++	.work_init      = workqueue_work_init,
++	.work_name      = workqueue_work_name,
+ };
+ 
+ static struct kwork_class *kwork_class_supported_list[KWORK_CLASS_MAX] = {
 -- 
 2.30.GIT
 
