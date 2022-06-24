@@ -2,123 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45ADBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 16:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5BCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 16:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231233AbiFXQI6 (ORCPT
+        id S231459AbiFXQTo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 12:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39094 "EHLO
+        Fri, 24 Jun 2022 12:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231296AbiFXQIy (ORCPT
+        with ESMTP id S229598AbiFXQTm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Jun 2022 12:08:54 -0400
-X-Greylist: delayed 440 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Jun 2022 09:08:52 PDT
-Received: from forward101p.mail.yandex.net (forward101p.mail.yandex.net [77.88.28.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68A8393EF
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Jun 2022 09:08:52 -0700 (PDT)
-Received: from myt5-36442628f0be.qloud-c.yandex.net (myt5-36442628f0be.qloud-c.yandex.net [IPv6:2a02:6b8:c12:1c0c:0:640:3644:2628])
-        by forward101p.mail.yandex.net (Yandex) with ESMTP id E74B059D0609;
-        Fri, 24 Jun 2022 19:01:24 +0300 (MSK)
-Received: from myt5-ca5ec8faf378.qloud-c.yandex.net (myt5-ca5ec8faf378.qloud-c.yandex.net [2a02:6b8:c12:2514:0:640:ca5e:c8fa])
-        by myt5-36442628f0be.qloud-c.yandex.net (mxback/Yandex) with ESMTP id 2Fyt6Hhqj2-1MfK7rLK;
-        Fri, 24 Jun 2022 19:01:24 +0300
-X-Yandex-Fwd: 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1656086484;
-        bh=V2FI//aX/fY8Jc2kwGxZThRsM9F7hvj3YMlPdBRYyS8=;
-        h=Date:Subject:Cc:To:From:Message-Id;
-        b=QwQN4xN62UdWVzVipm9XF6FMGLsXU4unzPCWkMLbgtbOO9GD0BgOvdKPvbUNueeSj
-         Nvmgzcoy4deQU9Q+eS+S/CVwkJlDWH6FBk8zFDH5la+3PJzBGm0gmYVAiK+GgWt5Nf
-         UIrvp3ChDrB9NGAnjkhEYA6NgZMPMcaqhZ6FYSq4=
-Authentication-Results: myt5-36442628f0be.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by myt5-ca5ec8faf378.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id iVUkuL8Azf-1LMKbASM;
-        Fri, 24 Jun 2022 19:01:21 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>
-Cc:     =?UTF-8?q?Jo=C3=A3o=20M=C3=A1rio=20Domingos?= 
-        <joao.mario@tecnico.ulisboa.pt>, linux@yadro.com,
-        Nikita Shubin <n.shubin@yadro.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Fri, 24 Jun 2022 12:19:42 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44FD03C706;
+        Fri, 24 Jun 2022 09:19:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 04336B82A3A;
+        Fri, 24 Jun 2022 16:19:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85A52C34114;
+        Fri, 24 Jun 2022 16:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656087577;
+        bh=GnA2DvgsL+gQNtgqEkQiuBzC52en4llzdKBJm8+xA+8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HBSCYA++i4drdNWk7WOxnlwBOuQciWAF6BO0ytM/YimhZTMCdBUQ8Udwp6qWqtvt+
+         o930I08vAlMr4o0cDKOSGwuoH8FIxmOzf169ZgPZrcXYDWoxR3jzaVc1Lwh7k7dOqb
+         ynaIvE1+yAHkBfMes2OOCHCMi4CHaFrnRLjW3zO5darGHGnaVmkCXO33ckdTk45A9T
+         eG9wQTbqpuup6X3Tr+9AOGqSd3mSUxnysYoA7Q+HMF2VOeKEkOmnkl7g4x94AWAK0l
+         dYeWUgquSpHuQTatsOqAATVnxsI07oxZnoHLOpclybqTr6ivaBfivGDHUmgikqUSp4
+         KhRYgek4rb74g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F24824096F; Fri, 24 Jun 2022 13:19:34 -0300 (-03)
+Date:   Fri, 24 Jun 2022 13:19:34 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>, rrichter@amd.com,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH v4 0/5] RISC-V: Create unique identification for SoC PMU
-Date:   Fri, 24 Jun 2022 19:00:50 +0300
-Message-Id: <20220624160117.3206-1-nikita.shubin@maquefel.me>
-X-Mailer: git-send-email 2.35.1
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        James Clark <james.clark@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>, like.xu.linux@gmail.com,
+        x86@kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>, ananth.narayan@amd.com,
+        Kim Phillips <kim.phillips@amd.com>, santosh.shukla@amd.com
+Subject: Re: [PATCH v6 0/8] perf/amd: Zen4 IBS extensions support (tool
+ changes)
+Message-ID: <YrXkFii1Fme9e1AE@kernel.org>
+References: <20220604044519.594-1-ravi.bangoria@amd.com>
+ <CAM9d7ci9Th4Aye51G+X5F12BiDXTnffZdj-A+HGRfUX_nWuQdw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7ci9Th4Aye51G+X5F12BiDXTnffZdj-A+HGRfUX_nWuQdw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Nikita Shubin <n.shubin@yadro.com>
+Em Mon, Jun 06, 2022 at 04:46:57PM -0700, Namhyung Kim escreveu:
+> On Fri, Jun 3, 2022 at 9:46 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+> > Ravi Bangoria (8):
+> >   perf record ibs: Warn about sampling period skew
+> >   perf tool: Parse pmu caps sysfs only once
+> >   perf headers: Pass "cpu" pmu name while printing caps
+> >   perf headers: Store pmu caps in an array of strings
+> >   perf headers: Record non-cpu pmu capabilities
+> >   perf/x86/ibs: Add new IBS register bits into header
+> >   perf tool ibs: Sync amd ibs header file
+> >   perf script ibs: Support new IBS bits in raw trace dump
+ 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-This series aims to provide matching vendor SoC with corresponded JSON bindings.
+Thanks, applied the series to perf/core, except for "[PATCH v6 6/8]
+perf/x86/ibs: Add new IBS register bits into header", that is outside
+tools/.
 
-The ID string is proposed to be in form of MVENDORID-MARCHID-MIMPID, for example 
-for Sifive Unmatched the corresponding string will be:
-
-0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-
-Where MIMPID can vary as all impl supported the same number of events, this might not 
-be true for all future SoC however.
-
-Also added 3 counters which are standart for all RISC-V implementations and SBI firmware 
-events prerry names, as any firmware that supports SBI PMU should also support firmare 
-events.
-
-Link: https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc
-Link: https://patchwork.kernel.org/project/linux-riscv/list/?series=648017
----
-v3->v4:
-- drop pmuid in riscv_pmu_sbi, we are using /proc/cpuinfo
-- rework util/header.c to use /proc/cpuinfo
-- add SBI firmware events
-- add firmware and std arch events to U74 pmu bindings
-- change U74 id string and description in mapfile.csv
----
-Nikita Shubin (5):
-  drivers/perf: riscv_pmu_sbi: perf format
-  perf tools riscv: Add support for get_cpuid_str function
-  perf arch events: riscv arch std event files
-  perf arch events: riscv sbi firmare std event files
-  perf vendor events riscv: add Sifive U74 JSON file
-
- drivers/perf/riscv_pmu_sbi.c                  |  20 +++
- tools/perf/arch/riscv/util/Build              |   1 +
- tools/perf/arch/riscv/util/header.c           | 109 ++++++++++++++
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |  17 +++
- .../pmu-events/arch/riscv/riscv-generic.json  |  20 +++
- .../arch/riscv/riscv-sbi-firmware.json        | 134 ++++++++++++++++++
- .../arch/riscv/sifive/u74/firmware.json       |  68 +++++++++
- .../arch/riscv/sifive/u74/generic.json        |  11 ++
- .../arch/riscv/sifive/u74/instructions.json   |  92 ++++++++++++
- .../arch/riscv/sifive/u74/memory.json         |  32 +++++
- .../arch/riscv/sifive/u74/microarch.json      |  57 ++++++++
- 11 files changed, 561 insertions(+)
- create mode 100644 tools/perf/arch/riscv/util/header.c
- create mode 100644 tools/perf/pmu-events/arch/riscv/mapfile.csv
- create mode 100644 tools/perf/pmu-events/arch/riscv/riscv-generic.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/generic.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
-
--- 
-2.35.1
+- Arnaldo
 
