@@ -2,567 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03F7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 18:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C460C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 19:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230431AbiFXS72 (ORCPT
+        id S229928AbiFXS77 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 14:59:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56216 "EHLO
+        Fri, 24 Jun 2022 14:59:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbiFXS71 (ORCPT
+        with ESMTP id S229586AbiFXS77 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Jun 2022 14:59:27 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148517C53B;
-        Fri, 24 Jun 2022 11:59:26 -0700 (PDT)
+        Fri, 24 Jun 2022 14:59:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FCA81A39;
+        Fri, 24 Jun 2022 11:59:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 95110B82B86;
-        Fri, 24 Jun 2022 18:59:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B90C34114;
-        Fri, 24 Jun 2022 18:59:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E5A136201E;
+        Fri, 24 Jun 2022 18:59:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2713CC34114;
+        Fri, 24 Jun 2022 18:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656097163;
-        bh=9lG/oNBpocVsZWbSlBaA7xBp6sq+q5dWcKQtjzSW/J4=;
+        s=k20201202; t=1656097197;
+        bh=Ehv96mzwD9x4fzKR144NLvZwEwTNqOQbQuPP+zLDXss=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CqP0l0s9B6WiDpvpg3x90jCaLt78gxi5nMbSk3AsCfMNkecdyrLgV1IpnPsWTMKfj
-         pXtpF02igze5un5WJW9lHkhXFldmldSzL1OBeKtEnfF6Nk9BTqFrjwv6NlUQw8C7GQ
-         i5hh/9g7aPPx7MftrCLY5/8YgHv54D36CtnFRJHJ86a3s2ev+8PTJ37HPKTXP7OGE9
-         bn/8cqktRSnHw9AM1hybkYzYXY4KYPQthRPXIhMl45X7Bpy95rnwNg115HBfHr69ug
-         xtsd7dnxgyeicg06E6mlAqcu5TOJrTSmeCaclEHY0ex/fkLlkrIanNOg3u71HPPF+2
-         vCUtN6FMj1Pqg==
+        b=LhWeh8VSMIM7b9Nr2r4zP1lY3fxqRzoG3MrWkf9NfT+Tn9Eg/nZNdyyr3FXcIfgs4
+         14gIp/awX+03Cu7Lf9nZHsdwMBRctWQwTrcsIAkWqlCWncJmhTjAe1ESxQUacx9vjf
+         YOK/SjfHjyq1eA6LW306pbyODGddKguZbPWjwxjr6c74oYkzm1zQbveuoEVnXTap1m
+         ALr+cnMnOEJtray/NbjIpjtGQNue3H07wLNPKOOg7p83Ae4m4GMC9w/v0KbStvtyRD
+         5pK/q65NsuyRRTRJeOWoCXj9vcgHkWpiTcoiC8BtfhTrSwudROioFXIVTw6AsA0iBW
+         pp2AEMs2X9wOQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1EA1B4096F; Fri, 24 Jun 2022 15:59:20 -0300 (-03)
-Date:   Fri, 24 Jun 2022 15:59:20 -0300
+        id 1092C4096F; Fri, 24 Jun 2022 15:59:55 -0300 (-03)
+Date:   Fri, 24 Jun 2022 15:59:55 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv5 bpf-next 1/1] perf tools: Rework prologue generation
- code
-Message-ID: <YrYJiELwAlufv3gA@kernel.org>
-References: <20220616202214.70359-1-jolsa@kernel.org>
- <20220616202214.70359-2-jolsa@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCHSET 0/7] perf lock: New lock contention tracepoints
+ support (v4)
+Message-ID: <YrYJq8UQ04FFN12/@kernel.org>
+References: <20220615163222.1275500-1-namhyung@kernel.org>
+ <CAM9d7cjD=at=AtKmvMLogjN6mieWVR2kk-HigxO01cvPPRGFBg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220616202214.70359-2-jolsa@kernel.org>
+In-Reply-To: <CAM9d7cjD=at=AtKmvMLogjN6mieWVR2kk-HigxO01cvPPRGFBg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jun 16, 2022 at 10:22:14PM +0200, Jiri Olsa escreveu:
-> Some functions we use for bpf prologue generation are going to be
-> deprecated. This change reworks current code not to use them.
-> 
-> We need to replace following functions/struct:
->    bpf_program__set_prep
->    bpf_program__nth_fd
->    struct bpf_prog_prep_result
+Em Fri, Jun 24, 2022 at 09:40:05AM -0700, Namhyung Kim escreveu:
+>> Ping!  Any comments?
 
-So this is a combination of those two patches, ok:
-
-Before:
-
-[root@quaco ~]# perf -v
-perf version 5.19.rc3.g3af6e6d06631
-[root@quaco ~]# perf test bpf
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        : Ok
- 40.3: Compile source for BPF prologue generation                    : Ok
- 40.4: Compile source for BPF relocation                             : Ok
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           : Ok
- 42.2: BPF pinning                                                   : Ok
- 42.3: BPF prologue generation                                       : Ok
- 63: Test libpfm4 support                                            :
- 96: perf stat --bpf-counters test                                   : Ok
-[root@quaco ~]#
-
-After:
-[acme@quaco perf-urgent]$ git log --oneline -5
-44d22a24d0d49588 (HEAD -> perf/urgent) perf tools: Rework prologue generation code
-3af6e6d0663196e7 (five/perf/urgent) perf stat: Enable ignore_missing_thread
-c3259c85b333af5e perf inject: Adjust output data offset for backward compatibility
-8e6445010f7bffbb perf trace beauty: Fix generation of errno id->str table on ALT Linux
-57a438eb2aef4f1f perf build-id: Fix caching files with a wrong build ID
-[acme@quaco perf-urgent]$ 
-[root@quaco ~]# perf -v
-perf version 5.19.rc3.g44d22a24d0d4
-[root@quaco ~]# perf test bpf
- 40: LLVM search and compile                                         :
- 40.1: Basic BPF llvm compile                                        : Ok
- 40.3: Compile source for BPF prologue generation                    : Ok
- 40.4: Compile source for BPF relocation                             : Ok
- 42: BPF filter                                                      :
- 42.1: Basic BPF filtering                                           : Ok
- 42.2: BPF pinning                                                   : Ok
- 42.3: BPF prologue generation                                       : Ok
- 63: Test libpfm4 support                                            :
- 96: perf stat --bpf-counters test                                   : Ok
-[root@quaco ~]#
-
-And 'perf test' with the augmented_raw_syscalls.c eBPF support also
-continues to work:
-
-[root@quaco ~]# perf trace -e /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c,open*,connect* --max-events 20
-     0.000 systemd-oomd/948 openat(dfd: CWD, filename: "/proc/meminfo", flags: RDONLY|CLOEXEC) = 12
-     0.151 abrt-dump-jour/1338 openat(dfd: CWD, filename: "/var/log/journal/d6a97235307247e09f13f326fb607e3c/system.journal", flags: RDONLY|CLOEXEC|NONBLOCK) = 31
-     0.096 abrt-dump-jour/1336 openat(dfd: CWD, filename: "/var/log/journal/d6a97235307247e09f13f326fb607e3c/system.journal", flags: RDONLY|CLOEXEC|NONBLOCK) = 31
-     0.092 abrt-dump-jour/1337 openat(dfd: CWD, filename: "/var/log/journal/d6a97235307247e09f13f326fb607e3c/system.journal", flags: RDONLY|CLOEXEC|NONBLOCK) = 31
-     9.024 isc-net-0000/1108 connect(fd: 512, uservaddr: { .family: INET6, port: 53, addr: 2406:8600:f03f:1f8::1003 }, addrlen: 28) = -1 ENETUNREACH (Network is unreachable)
-     9.728 isc-net-0000/1108 connect(fd: 513, uservaddr: { .family: INET6, port: 53, addr: 2406:2000:1d0::7961:686f:6f21 }, addrlen: 28) = -1 ENETUNREACH (Network is unreachable)
-     9.811 systemd-journa/712 openat(dfd: CWD, filename: "/proc/1107/comm", flags: RDONLY|CLOEXEC) ...
-    10.061 isc-net-0000/1108 connect(fd: 514, uservaddr: { .family: INET6, port: 53, addr: 2001:4998:1c0::7961:686f:6f21 }, addrlen: 28) = -1 ENETUNREACH (Network is unreachable)
-     9.811 systemd-journa/712  ... [continued]: openat())             = 66
-    10.401 systemd-journa/712 openat(dfd: CWD, filename: "/proc/1107/cmdline", flags: RDONLY|CLOEXEC|NOCTTY) = 66
-    10.438 isc-net-0000/1108 connect(fd: 513, uservaddr: { .family: INET6, port: 53, addr: 2001:4998:1b0::7961:686f:6f21 }, addrlen: 28) = -1 ENETUNREACH (Network is unreachable)
-    10.803 isc-net-0000/1108 connect(fd: 514, uservaddr: { .family: INET, port: 53, addr: 98.138.11.157 }, addrlen: 16) = 0
-    10.851 systemd-journa/712 openat(dfd: CWD, filename: "/proc/1107/status", flags: RDONLY|CLOEXEC|NOCTTY) = 66
-    11.165 systemd-journa/712 openat(dfd: CWD, filename: "/proc/1107/sessionid", flags: RDONLY|CLOEXEC) = 66
-    11.420 systemd-journa/712 openat(dfd: CWD, filename: "/proc/1107/loginuid", flags: RDONLY|CLOEXEC) = 66
-    11.631 systemd-journa/712 openat(dfd: CWD, filename: "/proc/1107/cgroup", flags: RDONLY|CLOEXEC) = 66
-    11.903 systemd-journa/712 openat(dfd: CWD, filename: "/run/systemd/units/log-extra-fields:named.service", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-    12.085 systemd-journa/712 openat(dfd: CWD, filename: "/run/log/journal/d6a97235307247e09f13f326fb607e3c/system.journal", flags: RDWR|CLOEXEC|NONBLOCK) = -1 ENOENT (No such file or directory)
-    12.849 systemd-journa/712 openat(dfd: CWD, filename: "/run/log/journal/d6a97235307247e09f13f326fb607e3c/system.journal", flags: RDWR|CLOEXEC|NONBLOCK) = -1 ENOENT (No such file or directory)
-    13.141 systemd-journa/712 openat(dfd: CWD, filename: "/run/log/journal/d6a97235307247e09f13f326fb607e3c/system.journal", flags: RDWR|CLOEXEC|NONBLOCK) = -1 ENOENT (No such file or directory)
-[root@quaco ~]#
-
-[root@quaco ~]# grep -A2 SEC /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c
-SEC("!raw_syscalls:unaugmented")
-int syscall_unaugmented(struct syscall_enter_args *args)
-{
---
- * These will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
- * augmented_args_tmp what was read by that raw_syscalls:sys_enter and go
- * on from there, reading the first syscall arg as a string, i.e. open's
---
-SEC("!syscalls:sys_enter_connect")
-int sys_enter_connect(struct syscall_enter_args *args)
-{
---
-SEC("!syscalls:sys_enter_sendto")
-int sys_enter_sendto(struct syscall_enter_args *args)
-{
---
-SEC("!syscalls:sys_enter_open")
-int sys_enter_open(struct syscall_enter_args *args)
-{
---
-SEC("!syscalls:sys_enter_openat")
-int sys_enter_openat(struct syscall_enter_args *args)
-{
---
-SEC("!syscalls:sys_enter_rename")
-int sys_enter_rename(struct syscall_enter_args *args)
-{
---
-SEC("!syscalls:sys_enter_renameat")
-int sys_enter_renameat(struct syscall_enter_args *args)
-{
---
-SEC("raw_syscalls:sys_enter")
-int sys_enter(struct syscall_enter_args *args)
-{
---
-SEC("raw_syscalls:sys_exit")
-int sys_exit(struct syscall_exit_args *args)
-{
-[root@quaco ~]#
-
-
-Thanks, you can have my:
-
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Stronger than an:
-
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+ 
+I'll take a look and test it soon.
 
 - Arnaldo
- 
-> Currently we use bpf_program__set_prep to hook perf callback before
-> program is loaded and provide new instructions with the prologue.
+
 > 
-> We replace this function/ality by taking instructions for specific
-> program, attaching prologue to them and load such new ebpf programs
-> with prologue using separate bpf_prog_load calls (outside libbpf
-> load machinery).
-> 
-> Before we can take and use program instructions, we need libbpf to
-> actually load it. This way we get the final shape of its instructions
-> with all relocations and verifier adjustments).
-> 
-> There's one glitch though.. perf kprobe program already assumes
-> generated prologue code with proper values in argument registers,
-> so loading such program directly will fail in the verifier.
-> 
-> That's where the fallback pre-load handler fits in and prepends
-> the initialization code to the program. Once such program is loaded
-> we take its instructions, cut off the initialization code and prepend
-> the prologue.
-> 
-> I know.. sorry ;-)
-> 
-> To have access to the program when loading this patch adds support to
-> register 'fallback' section handler to take care of perf kprobe programs.
-> The fallback means that it handles any section definition besides the
-> ones that libbpf handles.
-> 
-> The handler serves two purposes:
->   - allows perf programs to have special arguments in section name
->   - allows perf to use pre-load callback where we can attach init
->     code (zeroing all argument registers) to each perf program
-> 
-> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/bpf-loader.c | 204 ++++++++++++++++++++++++++++++-----
->  1 file changed, 175 insertions(+), 29 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> index f8ad581ea247..6bd7c288e820 100644
-> --- a/tools/perf/util/bpf-loader.c
-> +++ b/tools/perf/util/bpf-loader.c
-> @@ -9,6 +9,7 @@
->  #include <linux/bpf.h>
->  #include <bpf/libbpf.h>
->  #include <bpf/bpf.h>
-> +#include <linux/filter.h>
->  #include <linux/err.h>
->  #include <linux/kernel.h>
->  #include <linux/string.h>
-> @@ -49,6 +50,7 @@ struct bpf_prog_priv {
->  	struct bpf_insn *insns_buf;
->  	int nr_types;
->  	int *type_mapping;
-> +	int *prologue_fds;
->  };
->  
->  struct bpf_perf_object {
-> @@ -56,6 +58,11 @@ struct bpf_perf_object {
->  	struct bpf_object *obj;
->  };
->  
-> +struct bpf_preproc_result {
-> +	struct bpf_insn *new_insn_ptr;
-> +	int new_insn_cnt;
-> +};
-> +
->  static LIST_HEAD(bpf_objects_list);
->  static struct hashmap *bpf_program_hash;
->  static struct hashmap *bpf_map_hash;
-> @@ -86,6 +93,7 @@ bpf_perf_object__next(struct bpf_perf_object *prev)
->  	     (perf_obj) = (tmp), (tmp) = bpf_perf_object__next(tmp))
->  
->  static bool libbpf_initialized;
-> +static int libbpf_sec_handler;
->  
->  static int bpf_perf_object__add(struct bpf_object *obj)
->  {
-> @@ -99,12 +107,76 @@ static int bpf_perf_object__add(struct bpf_object *obj)
->  	return perf_obj ? 0 : -ENOMEM;
->  }
->  
-> +static void *program_priv(const struct bpf_program *prog)
-> +{
-> +	void *priv;
-> +
-> +	if (IS_ERR_OR_NULL(bpf_program_hash))
-> +		return NULL;
-> +	if (!hashmap__find(bpf_program_hash, prog, &priv))
-> +		return NULL;
-> +	return priv;
-> +}
-> +
-> +static struct bpf_insn prologue_init_insn[] = {
-> +	BPF_MOV64_IMM(BPF_REG_2, 0),
-> +	BPF_MOV64_IMM(BPF_REG_3, 0),
-> +	BPF_MOV64_IMM(BPF_REG_4, 0),
-> +	BPF_MOV64_IMM(BPF_REG_5, 0),
-> +};
-> +
-> +static int libbpf_prog_prepare_load_fn(struct bpf_program *prog,
-> +				       struct bpf_prog_load_opts *opts __maybe_unused,
-> +				       long cookie __maybe_unused)
-> +{
-> +	size_t init_size_cnt = ARRAY_SIZE(prologue_init_insn);
-> +	size_t orig_insn_cnt, insn_cnt, init_size, orig_size;
-> +	struct bpf_prog_priv *priv = program_priv(prog);
-> +	const struct bpf_insn *orig_insn;
-> +	struct bpf_insn *insn;
-> +
-> +	if (IS_ERR_OR_NULL(priv)) {
-> +		pr_debug("bpf: failed to get private field\n");
-> +		return -BPF_LOADER_ERRNO__INTERNAL;
-> +	}
-> +
-> +	if (!priv->need_prologue)
-> +		return 0;
-> +
-> +	/* prepend initialization code to program instructions */
-> +	orig_insn = bpf_program__insns(prog);
-> +	orig_insn_cnt = bpf_program__insn_cnt(prog);
-> +	init_size = init_size_cnt * sizeof(*insn);
-> +	orig_size = orig_insn_cnt * sizeof(*insn);
-> +
-> +	insn_cnt = orig_insn_cnt + init_size_cnt;
-> +	insn = malloc(insn_cnt * sizeof(*insn));
-> +	if (!insn)
-> +		return -ENOMEM;
-> +
-> +	memcpy(insn, prologue_init_insn, init_size);
-> +	memcpy((char *) insn + init_size, orig_insn, orig_size);
-> +	bpf_program__set_insns(prog, insn, insn_cnt);
-> +	return 0;
-> +}
-> +
->  static int libbpf_init(void)
->  {
-> +	LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
-> +		.prog_prepare_load_fn = libbpf_prog_prepare_load_fn,
-> +	);
-> +
->  	if (libbpf_initialized)
->  		return 0;
->  
->  	libbpf_set_print(libbpf_perf_print);
-> +	libbpf_sec_handler = libbpf_register_prog_handler(NULL, BPF_PROG_TYPE_KPROBE,
-> +							  0, &handler_opts);
-> +	if (libbpf_sec_handler < 0) {
-> +		pr_debug("bpf: failed to register libbpf section handler: %d\n",
-> +			 libbpf_sec_handler);
-> +		return -BPF_LOADER_ERRNO__INTERNAL;
-> +	}
->  	libbpf_initialized = true;
->  	return 0;
->  }
-> @@ -188,14 +260,31 @@ struct bpf_object *bpf__prepare_load(const char *filename, bool source)
->  	return obj;
->  }
->  
-> +static void close_prologue_programs(struct bpf_prog_priv *priv)
-> +{
-> +	struct perf_probe_event *pev;
-> +	int i, fd;
-> +
-> +	if (!priv->need_prologue)
-> +		return;
-> +	pev = &priv->pev;
-> +	for (i = 0; i < pev->ntevs; i++) {
-> +		fd = priv->prologue_fds[i];
-> +		if (fd != -1)
-> +			close(fd);
-> +	}
-> +}
-> +
->  static void
->  clear_prog_priv(const struct bpf_program *prog __maybe_unused,
->  		void *_priv)
->  {
->  	struct bpf_prog_priv *priv = _priv;
->  
-> +	close_prologue_programs(priv);
->  	cleanup_perf_probe_events(&priv->pev, 1);
->  	zfree(&priv->insns_buf);
-> +	zfree(&priv->prologue_fds);
->  	zfree(&priv->type_mapping);
->  	zfree(&priv->sys_name);
->  	zfree(&priv->evt_name);
-> @@ -243,17 +332,6 @@ static bool ptr_equal(const void *key1, const void *key2,
->  	return key1 == key2;
->  }
->  
-> -static void *program_priv(const struct bpf_program *prog)
-> -{
-> -	void *priv;
-> -
-> -	if (IS_ERR_OR_NULL(bpf_program_hash))
-> -		return NULL;
-> -	if (!hashmap__find(bpf_program_hash, prog, &priv))
-> -		return NULL;
-> -	return priv;
-> -}
-> -
->  static int program_set_priv(struct bpf_program *prog, void *priv)
->  {
->  	void *old_priv;
-> @@ -558,8 +636,8 @@ static int bpf__prepare_probe(void)
->  
->  static int
->  preproc_gen_prologue(struct bpf_program *prog, int n,
-> -		     struct bpf_insn *orig_insns, int orig_insns_cnt,
-> -		     struct bpf_prog_prep_result *res)
-> +		     const struct bpf_insn *orig_insns, int orig_insns_cnt,
-> +		     struct bpf_preproc_result *res)
->  {
->  	struct bpf_prog_priv *priv = program_priv(prog);
->  	struct probe_trace_event *tev;
-> @@ -607,7 +685,6 @@ preproc_gen_prologue(struct bpf_program *prog, int n,
->  
->  	res->new_insn_ptr = buf;
->  	res->new_insn_cnt = prologue_cnt + orig_insns_cnt;
-> -	res->pfd = NULL;
->  	return 0;
->  
->  errout:
-> @@ -715,7 +792,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
->  	struct bpf_prog_priv *priv = program_priv(prog);
->  	struct perf_probe_event *pev;
->  	bool need_prologue = false;
-> -	int err, i;
-> +	int i;
->  
->  	if (IS_ERR_OR_NULL(priv)) {
->  		pr_debug("Internal error when hook preprocessor\n");
-> @@ -753,6 +830,13 @@ static int hook_load_preprocessor(struct bpf_program *prog)
->  		return -ENOMEM;
->  	}
->  
-> +	priv->prologue_fds = malloc(sizeof(int) * pev->ntevs);
-> +	if (!priv->prologue_fds) {
-> +		pr_debug("Not enough memory: alloc prologue fds failed\n");
-> +		return -ENOMEM;
-> +	}
-> +	memset(priv->prologue_fds, -1, sizeof(int) * pev->ntevs);
-> +
->  	priv->type_mapping = malloc(sizeof(int) * pev->ntevs);
->  	if (!priv->type_mapping) {
->  		pr_debug("Not enough memory: alloc type_mapping failed\n");
-> @@ -761,13 +845,7 @@ static int hook_load_preprocessor(struct bpf_program *prog)
->  	memset(priv->type_mapping, -1,
->  	       sizeof(int) * pev->ntevs);
->  
-> -	err = map_prologue(pev, priv->type_mapping, &priv->nr_types);
-> -	if (err)
-> -		return err;
-> -
-> -	err = bpf_program__set_prep(prog, priv->nr_types,
-> -				    preproc_gen_prologue);
-> -	return err;
-> +	return map_prologue(pev, priv->type_mapping, &priv->nr_types);
->  }
->  
->  int bpf__probe(struct bpf_object *obj)
-> @@ -874,6 +952,77 @@ int bpf__unprobe(struct bpf_object *obj)
->  	return ret;
->  }
->  
-> +static int bpf_object__load_prologue(struct bpf_object *obj)
-> +{
-> +	int init_cnt = ARRAY_SIZE(prologue_init_insn);
-> +	const struct bpf_insn *orig_insns;
-> +	struct bpf_preproc_result res;
-> +	struct perf_probe_event *pev;
-> +	struct bpf_program *prog;
-> +	int orig_insns_cnt;
-> +
-> +	bpf_object__for_each_program(prog, obj) {
-> +		struct bpf_prog_priv *priv = program_priv(prog);
-> +		int err, i, fd;
-> +
-> +		if (IS_ERR_OR_NULL(priv)) {
-> +			pr_debug("bpf: failed to get private field\n");
-> +			return -BPF_LOADER_ERRNO__INTERNAL;
-> +		}
-> +
-> +		if (!priv->need_prologue)
-> +			continue;
-> +
-> +		/*
-> +		 * For each program that needs prologue we do following:
-> +		 *
-> +		 * - take its current instructions and use them
-> +		 *   to generate the new code with prologue
-> +		 * - load new instructions with bpf_prog_load
-> +		 *   and keep the fd in prologue_fds
-> +		 * - new fd will be used in bpf__foreach_event
-> +		 *   to connect this program with perf evsel
-> +		 */
-> +		orig_insns = bpf_program__insns(prog);
-> +		orig_insns_cnt = bpf_program__insn_cnt(prog);
-> +
-> +		pev = &priv->pev;
-> +		for (i = 0; i < pev->ntevs; i++) {
-> +			/*
-> +			 * Skipping artificall prologue_init_insn instructions
-> +			 * (init_cnt), so the prologue can be generated instead
-> +			 * of them.
-> +			 */
-> +			err = preproc_gen_prologue(prog, i,
-> +						   orig_insns + init_cnt,
-> +						   orig_insns_cnt - init_cnt,
-> +						   &res);
-> +			if (err)
-> +				return err;
-> +
-> +			fd = bpf_prog_load(bpf_program__get_type(prog),
-> +					   bpf_program__name(prog), "GPL",
-> +					   res.new_insn_ptr,
-> +					   res.new_insn_cnt, NULL);
-> +			if (fd < 0) {
-> +				char bf[128];
-> +
-> +				libbpf_strerror(-errno, bf, sizeof(bf));
-> +				pr_debug("bpf: load objects with prologue failed: err=%d: (%s)\n",
-> +					 -errno, bf);
-> +				return -errno;
-> +			}
-> +			priv->prologue_fds[i] = fd;
-> +		}
-> +		/*
-> +		 * We no longer need the original program,
-> +		 * we can unload it.
-> +		 */
-> +		bpf_program__unload(prog);
-> +	}
-> +	return 0;
-> +}
-> +
->  int bpf__load(struct bpf_object *obj)
->  {
->  	int err;
-> @@ -885,7 +1034,7 @@ int bpf__load(struct bpf_object *obj)
->  		pr_debug("bpf: load objects failed: err=%d: (%s)\n", err, bf);
->  		return err;
->  	}
-> -	return 0;
-> +	return bpf_object__load_prologue(obj);
->  }
->  
->  int bpf__foreach_event(struct bpf_object *obj,
-> @@ -920,13 +1069,10 @@ int bpf__foreach_event(struct bpf_object *obj,
->  		for (i = 0; i < pev->ntevs; i++) {
->  			tev = &pev->tevs[i];
->  
-> -			if (priv->need_prologue) {
-> -				int type = priv->type_mapping[i];
-> -
-> -				fd = bpf_program__nth_fd(prog, type);
-> -			} else {
-> +			if (priv->need_prologue)
-> +				fd = priv->prologue_fds[i];
-> +			else
->  				fd = bpf_program__fd(prog);
-> -			}
->  
->  			if (fd < 0) {
->  				pr_debug("bpf: failed to get file descriptor\n");
-> -- 
-> 2.35.3
+> On Wed, Jun 15, 2022 at 9:32 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > Kernel v5.19 will have a new set of tracepoints to track lock
+> > contentions for various lock types.  Unlike tracepoints in LOCKDEP and
+> > LOCK_STAT, it's hit only for contended locks and lock names are not
+> > available.  So it needs to collect stack traces and display the caller
+> > function instead.
+> >
+> > Changes in v4)
+> >  * add Acked-by from Ian
+> >  * more comments on trace_lock_handler
+> >  * don't create stats in the contention_end handler
+> >
+> > Changes in v3)
+> >  * fix build error
+> >  * support data from different kernels/machines
+> >  * skip bad stat unless there's actual bad ones
+> >
+> > Changes in v2)
+> >  * add Acked-by from Ian
+> >  * print time with a unit for compact output
+> >  * add some comments  (Ian)
+> >  * remove already applied patch
+> >
+> > This patchset merely adds support for the new tracepoints to the
+> > existing perf lock commands.  So there's no change to the user.  Later
+> > I'll add new a sub-command dedicated to the tracepoints to make use of
+> > the additional information.
+> >
+> > Example output:
+> >
+> >   $ sudo perf lock record -a sleep 3
+> >
+> >   $ perf lock report -F acquired,contended,avg_wait,wait_total
+> >
+> >                   Name   acquired  contended     avg wait    total wait
+> >
+> >    update_blocked_a...         40         40      3.61 us     144.45 us
+> >    kernfs_fop_open+...          5          5      3.64 us      18.18 us
+> >     _nohz_idle_balance          3          3      2.65 us       7.95 us
+> >    tick_do_update_j...          1          1      6.04 us       6.04 us
+> >     ep_scan_ready_list          1          1      3.93 us       3.93 us
+> >   ...
+> >
+> > You can find the code in the 'perf/lock-contention-v4' branch at
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> >
+> > Thanks,
+> > Namhyung
+> >
+> >
+> > Namhyung Kim (7):
+> >   perf lock: Print wait times with unit
+> >   perf lock: Allow to use different kernel symbols
+> >   perf lock: Skip print_bad_events() if nothing bad
+> >   perf lock: Add lock contention tracepoints record support
+> >   perf lock: Handle lock contention tracepoints
+> >   perf record: Allow to specify max stack depth of fp callchain
+> >   perf lock: Look up callchain for the contended locks
+> >
+> >  tools/perf/Documentation/perf-lock.txt   |   7 +
+> >  tools/perf/Documentation/perf-record.txt |   5 +
+> >  tools/perf/builtin-lock.c                | 426 ++++++++++++++++++++++-
+> >  tools/perf/util/callchain.c              |  18 +-
+> >  4 files changed, 434 insertions(+), 22 deletions(-)
+> >
+> >
+> > base-commit: 9886142c7a2226439c1e3f7d9b69f9c7094c3ef6
+> > --
+> > 2.36.1.476.g0c4daa206d-goog
+> >
 
 -- 
 
