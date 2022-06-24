@@ -2,97 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B43DC43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 01:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD091C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 06:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230405AbiFXB1B (ORCPT
+        id S230418AbiFXGWi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Jun 2022 21:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
+        Fri, 24 Jun 2022 02:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbiFXB1A (ORCPT
+        with ESMTP id S229734AbiFXGWb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Jun 2022 21:27:00 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8437A60C55;
-        Thu, 23 Jun 2022 18:26:59 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LTfZb4zCfzkWmn;
-        Fri, 24 Jun 2022 09:25:43 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 09:26:57 +0800
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 09:26:57 +0800
-Subject: Re: [RFC 00/13] perf: Add perf kwork
-To:     "Paul A. Clarke" <pc@us.ibm.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-References: <20220613094605.208401-1-yangjihong1@huawei.com>
- <YrMuQXIn9DdhZl2w@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
- <3cccc03a-c2bc-91d9-60b9-daf180c6b108@huawei.com>
- <YrR34345A4h/5RfU@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <8ee806af-7ced-6f8f-ef66-a75819f19375@huawei.com>
-Date:   Fri, 24 Jun 2022 09:26:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Fri, 24 Jun 2022 02:22:31 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC87429806;
+        Thu, 23 Jun 2022 23:22:28 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id y77so2445467oia.3;
+        Thu, 23 Jun 2022 23:22:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hSpectRvYq6DsCmRNXGz7AExKucd6LMcxFZxCsIXSBw=;
+        b=d3VRDdf0tz5mufyW21DCkPvAyotsis8BuFh/syhtN3EKJTb7Oh9TWs3SQRUZlpQvfO
+         orI0Fo2ZyLAzPhaXaVOa43/ICsAv+hT9WXs7e+4KudQzngOkJCwTA+ZqxvPVmT29Gb41
+         d+0mOrMZw3U5GHQouvWj4zgBF7ypdcvDJveWS+wd1rtZfu/zIcpoZH6NgDVOMmsBxWbK
+         aD0qUdXjmNbydSDoYJTdcRigkfdgQFUCz3/HSjnWo8VW6pBxts/x+wEKUgO3Iv0dlVog
+         kXh/ekJaEi+xX+rPLbHmSBBHxXbPDTctV4UYddLOiZF2BJId1lutG3pvsuD0gBhM0LHy
+         rotw==
+X-Gm-Message-State: AJIora8pzEtVJYmfk2uGRgeQaucmvZvEMXz7Oc6qNqO/YBcgxolAtJG5
+        gCOoUcFnByCtjKjxw2k7XdY/8GWbr/UrPsgcaM8=
+X-Google-Smtp-Source: AGRyM1vBjU1NdQV4VjER73vQV72loH9nfVspFCLK90tN88MNy+w/dR9vjVFfEsumZn0wTc0FdtNjCg8tCjm832zgjV4=
+X-Received: by 2002:a05:6808:1385:b0:32f:729e:4869 with SMTP id
+ c5-20020a056808138500b0032f729e4869mr1030252oiw.5.1656051747907; Thu, 23 Jun
+ 2022 23:22:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YrR34345A4h/5RfU@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+References: <20220616230546.1390813-1-namhyung@kernel.org> <20220617073840.GA45710@leoy-ThinkPad-X240s>
+ <20220617074517.GB45710@leoy-ThinkPad-X240s>
+In-Reply-To: <20220617074517.GB45710@leoy-ThinkPad-X240s>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 23 Jun 2022 23:22:16 -0700
+Message-ID: <CAM9d7ci8pLo=dKFgF8O8610eHTx532d+1TKTf18ibPMtdZp5Lg@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test: Add ARM SPE system wide test
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        German Gomez <german.gomez@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Leo,
 
-On 2022/6/23 22:25, Paul A. Clarke wrote:
-> On Thu, Jun 23, 2022 at 09:02:45AM +0800, Yang Jihong wrote:
->> On 2022/6/22 22:59, Paul A. Clarke wrote:
->>> On Mon, Jun 13, 2022 at 05:45:52PM +0800, Yang Jihong wrote:
->>>> Sometimes, we need to analyze time properties of kernel work such as irq,
->>>> softirq, and workqueue, such as delay and running time of specific interrupts.
->>>> Currently, these events have kernel tracepoints, but perf tool does not
->>>> directly analyze the delay of these events
->>>>
->>>> The perf-kwork tool is used to trace time properties of kernel work
->>>> (such as irq, softirq, and workqueue), including runtime, latency,
->>>> and timehist, using the infrastructure in the perf tools to allow
->>>> tracing extra targets
->>>>
->>>> test case:
->>>>
->>>>     # perf kwork report
->>>>
->>>>       Kwork Name                | Cpu  | Total Runtime | Frequency | Max runtime   | Max runtime start   | Max runtime end     |
->>>>      ---------------------------------------------------------------------------------------------------------------------------
->>>>       (s)RCU:9                  | 0007 |      3.488 ms |      1258 |      0.145 ms |    3398384.220013 s |    3398384.220157 s |
->>>>       (s)NET_RX:3               | 0003 |      1.866 ms |       156 |      0.042 ms |    3398385.629764 s |    3398385.629806 s |
->>>>       (s)TIMER:1                | 0000 |      1.799 ms |       117 |      0.055 ms |    3398385.568033 s |    3398385.568088 s |
->>>>       (w)0xffff9c66e563ee98     | 0006 |      1.561 ms |         5 |      0.351 ms |    3398384.060021 s |    3398384.060371 s |
->>>
->>> What units are used for "Frequency"? It would be helpful to include somewhere.
-> 
->> This refers to the number of event in the trace period.
-> 
-> I see. I suggest changing the column heading to say that.
-> "Count", "Number of Events", "Occurrences", something like that.
-> 
-> "Frequency" is a count-per-time-unit, like hertz, which doesn't
-> match well here.
+On Fri, Jun 17, 2022 at 12:45 AM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Fri, Jun 17, 2022 at 03:38:40PM +0800, Leo Yan wrote:
+> > Hi Namhyung,
+> >
+> > On Thu, Jun 16, 2022 at 04:05:46PM -0700, Namhyung Kim wrote:
+> >
+> > [...]
+> >
+> > > +arm_spe_system_wide_test() {
+> > > +   echo "Recording trace with system-wide mode $perfdata"
+> > > +   perf record -o ${perfdata} -e arm_spe// -a \
+> > > +           -- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
+> > > +
+> > > +   if [ $? != 0 ]; then
+> > > +           arm_spe_report "SPE system-wide testing" 2
+> > > +           return
+> > > +   fi
+> >
+> > I am awared the root permission issue after I saw German's suggestion.
+> >
+> > If the snapshot test is passed, no matter the system wide test is passed
+> > or not, we will always return 0 for 'passed' result.  But we might miss
+> > to capture the system-wide testing failure.
+> >
+> > How about use 'dummy' event to verіfy the root permission?
+> > (actually I referred to intel-pt test):
+> >
+> >         perf record -o ${perfdata} -B -N --no-bpf-event -e dummy:u -a true 2>&1 >/dev/null
+> >         if [ $? != 0 ]; then
+> >               arm_spe_report "SPE system-wide testing" 2
+> >               return
+> >         fi
+> >
+> >         perf record -o ${perfdata} -e arm_spe// -a \
+> >                   -- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
 
-OK, I'll fix in next version.
+Ok, will add the change.
 
 Thanks,
-Jihong
+Namhyung
