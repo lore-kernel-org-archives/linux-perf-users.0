@@ -2,84 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5D4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 01:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B43DC43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 01:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbiFXBPk (ORCPT
+        id S230405AbiFXB1B (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Jun 2022 21:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58784 "EHLO
+        Thu, 23 Jun 2022 21:27:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiFXBPk (ORCPT
+        with ESMTP id S229553AbiFXB1A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Jun 2022 21:15:40 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A79E5677C
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jun 2022 18:15:38 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id r1so737939plo.10
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jun 2022 18:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=waymo.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=butmaP3MZLJKp7KyOl4iN5q8QhrWp2OkI+B4YSz0aIQ=;
-        b=m2Uaa8d7gdEj5+DzOx974vCa3LSY3dJ9yNx1Obzfs1iOVmP1s6U0THaf8v+SRzOuyn
-         XXJnl2lAmtmx6dmc7963srnUWukt95Qe52IzOb6W9R/sdL1uMfbq+SHl7cFpVbNqj2V8
-         DkqYW6wHIgGTau/3R0NuBjA/znjoxP2VUNNvi4/jpp/8abWEzO//EEEyIe1mv8KfF/SY
-         NF6/TkbCg3mOZv5OVv8ReORx3I2TQazBp9eOwSCvfyq8qm2e6EOF6M5/vhP0UWNCkfF4
-         73AwK1NKxPZTZFDU4zJtQktI9NuimNPNKTYmRTgFdARvPQtRiOJrHIvjoyY7rIgDd8EO
-         lG8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=butmaP3MZLJKp7KyOl4iN5q8QhrWp2OkI+B4YSz0aIQ=;
-        b=oW2uUpTA3eWUIsNweKcIXA1lH1y5NQTc2Z0pcNjdSyAShJYCwLL9QTKNrIWSJ0Y+QM
-         bp/tBKfk53NqQ4AshNUOKoH9fssi9Znk1gq66UQM2lg8zRXGti4xS4o01DrzdejBEKNR
-         sXXfpayNmaVxXJo9654OStrnv11iK7A1qLlpOyBXL+tS65s2hXWU+ARF3tSPir20X1+Y
-         Y91dLkD2owUljwZ8x8c1W2ZMvb8WPd1Cj5r1jEcpAEuP8CKx/xwuZ5XXLlEuX4TCL4gL
-         uDqYuH/vagxyZDkmutL8oL6xCRDNw10j18QYUBOpGDTfiwZ7agrnM9ThcrAYKhgK7dYl
-         RqqA==
-X-Gm-Message-State: AJIora9w6TAZhvFH46rCKWAVzvwl+CzifJtfei+GMv9WFcUBTp23bQmo
-        ljZaFcuSIo/jniSHE1o6XDt9xxvdDKThcUFzBkeSdRfOmmw=
-X-Google-Smtp-Source: AGRyM1t8B/WKBQgAmv8QmOV80ePTUDc3AKHj02++Sv/LOPagGALc81Sg8ZFNMwLwqyGXSaGvrh8e6PP5SZyW0csMBNc=
-X-Received: by 2002:a17:902:7c10:b0:168:f08d:d0f with SMTP id
- x16-20020a1709027c1000b00168f08d0d0fmr42162945pll.31.1656033337135; Thu, 23
- Jun 2022 18:15:37 -0700 (PDT)
+        Thu, 23 Jun 2022 21:27:00 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8437A60C55;
+        Thu, 23 Jun 2022 18:26:59 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LTfZb4zCfzkWmn;
+        Fri, 24 Jun 2022 09:25:43 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 24 Jun 2022 09:26:57 +0800
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 24 Jun 2022 09:26:57 +0800
+Subject: Re: [RFC 00/13] perf: Add perf kwork
+To:     "Paul A. Clarke" <pc@us.ibm.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+References: <20220613094605.208401-1-yangjihong1@huawei.com>
+ <YrMuQXIn9DdhZl2w@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
+ <3cccc03a-c2bc-91d9-60b9-daf180c6b108@huawei.com>
+ <YrR34345A4h/5RfU@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <8ee806af-7ced-6f8f-ef66-a75819f19375@huawei.com>
+Date:   Fri, 24 Jun 2022 09:26:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Reply-To: rsilvera@waymo.com
-From:   Raul Silvera <rsilvera@waymo.com>
-Date:   Thu, 23 Jun 2022 18:15:11 -0700
-Message-ID: <CA+PGoB-WrXzZuCQONzyTuy69a3ND7_HmVh5FZH5T4Y9qbtBYBA@mail.gmail.com>
-Subject: Using perf-inject to inject a fixed set of build-ids
-To:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YrR34345A4h/5RfU@li-be644d4c-2c59-11b2-a85c-bc3dba3ed00b.ibm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello. I have a system A where I collect perf.data files without build
-ids, and want to analyze them on system B, running a different version
-of Linux.
+Hello,
 
-My analysis depends on build ids, so I want to use perf-inject -b on
-system B to extend the files collected on system A. Currently,
-perf-inject retrieves the build ids from system B and injects them on
-the perf.data file from A. Instead I would like to provide a hardcoded
-list of build ids to use, which I would manually collect from A.
+On 2022/6/23 22:25, Paul A. Clarke wrote:
+> On Thu, Jun 23, 2022 at 09:02:45AM +0800, Yang Jihong wrote:
+>> On 2022/6/22 22:59, Paul A. Clarke wrote:
+>>> On Mon, Jun 13, 2022 at 05:45:52PM +0800, Yang Jihong wrote:
+>>>> Sometimes, we need to analyze time properties of kernel work such as irq,
+>>>> softirq, and workqueue, such as delay and running time of specific interrupts.
+>>>> Currently, these events have kernel tracepoints, but perf tool does not
+>>>> directly analyze the delay of these events
+>>>>
+>>>> The perf-kwork tool is used to trace time properties of kernel work
+>>>> (such as irq, softirq, and workqueue), including runtime, latency,
+>>>> and timehist, using the infrastructure in the perf tools to allow
+>>>> tracing extra targets
+>>>>
+>>>> test case:
+>>>>
+>>>>     # perf kwork report
+>>>>
+>>>>       Kwork Name                | Cpu  | Total Runtime | Frequency | Max runtime   | Max runtime start   | Max runtime end     |
+>>>>      ---------------------------------------------------------------------------------------------------------------------------
+>>>>       (s)RCU:9                  | 0007 |      3.488 ms |      1258 |      0.145 ms |    3398384.220013 s |    3398384.220157 s |
+>>>>       (s)NET_RX:3               | 0003 |      1.866 ms |       156 |      0.042 ms |    3398385.629764 s |    3398385.629806 s |
+>>>>       (s)TIMER:1                | 0000 |      1.799 ms |       117 |      0.055 ms |    3398385.568033 s |    3398385.568088 s |
+>>>>       (w)0xffff9c66e563ee98     | 0006 |      1.561 ms |         5 |      0.351 ms |    3398384.060021 s |    3398384.060371 s |
+>>>
+>>> What units are used for "Frequency"? It would be helpful to include somewhere.
+> 
+>> This refers to the number of event in the trace period.
+> 
+> I see. I suggest changing the column heading to say that.
+> "Count", "Number of Events", "Occurrences", something like that.
+> 
+> "Frequency" is a count-per-time-unit, like hertz, which doesn't
+> match well here.
 
-My current thinking is to add an option, say '--known-build-ids'
-specifying the build ids as a list of (path, build-id) pairs, similar
-to the output of perf buildid-list. The parameter would be parsed
-using strlist__new, allowing the build ids to be loaded from a file by
-using the existing support for the "file://" prefix.
+OK, I'll fix in next version.
 
-Does this sound like a reasonable thing to do, or are there other
-mechanisms that would support my goal? If this sounds OK I can prepare
-a patch for it.
-
-Appreciate any feedback/suggestions.
-
-
-Raul E. Silvera
-Software Engineer
-waymo.com
+Thanks,
+Jihong
