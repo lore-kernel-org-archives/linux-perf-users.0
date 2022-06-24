@@ -2,72 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABC9C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 21:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D12C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 23:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231959AbiFXVig (ORCPT
+        id S231180AbiFXXNS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 17:38:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38392 "EHLO
+        Fri, 24 Jun 2022 19:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231965AbiFXVif (ORCPT
+        with ESMTP id S229441AbiFXXNR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Jun 2022 17:38:35 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940817C87F;
-        Fri, 24 Jun 2022 14:38:32 -0700 (PDT)
-Received: by mail-ot1-f42.google.com with SMTP id 73-20020a9d084f000000b00616b04c7656so1496449oty.3;
-        Fri, 24 Jun 2022 14:38:32 -0700 (PDT)
+        Fri, 24 Jun 2022 19:13:17 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 034A468012;
+        Fri, 24 Jun 2022 16:13:16 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id 68so3681189pgb.10;
+        Fri, 24 Jun 2022 16:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=97W1aGnfJTsRH0sQeB3uyZG1FdhNBzAYORArQFFa5J8=;
+        b=WaQTACkscwQ+r10TsXLL2IDdBXO78KeBOqyPH1sEf7nHOfk/88AkzO/GRuWjF8cOvl
+         pTH2J7EM5+tcc/pM49YYi12tc9NsS3F+QVdPYtsF05j+fs9mW3Lu9BU6KLS+Ln+snonm
+         CQocnuVS6GgqZeivqXaouar2yFPS3ljolbxXEBV7DM2rqYg7mjOKYaRvsjZmNLFdMZKj
+         15jGbtn9phJS2OEikiiRPvLTd0H6zJcgsu5armedsY8pQhB7kLBENwsmkblXjD5m1chL
+         4DGKiqSV4Q1owDTwxj33HiY9FWQ0c8bzgzOGJ2410tnkODzTtLhY1QKxAMqOIpU4nMNs
+         vEdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cYcXXZ+B2CoGXK414DiWpGrGWSwnr+1yUkDbpi5uzp0=;
-        b=pQB59/ezUxfFdnIG81MtrZP27f+7Zx8Rqa2VYZ4pO7CAHenMqh+RWx7qSQZIHaYaVM
-         DjZSXjl8kqh8yEOpY9/OhTzxmZr7bfk7l5KLVXGddYGGAS1k8ZVWSsMtSP2t0UX9jsx0
-         8Ce8XsSRthCgmnpjArWVDLzmZqUrbp99dauie3LsUXy8MBaIpsJgjHmOcmSVQAATJDNJ
-         tLo2NMd1B78GW+lqZF+rg1DMLiPLtEc7swx21Lmp+URPCS1WM12iZhWWwzUOiCEUenvD
-         yJrivt3vo+GNSQ/L6+sfbyC7q1QyXLXtDl+NhQqhfp8/q67aCbxB9MYr4+vlSOdZ7GEm
-         CByQ==
-X-Gm-Message-State: AJIora+xP0Iw++b2Fn51BSENn+91DiNBAVJ7o8Kx302tGvnn5DJ4ejrR
-        kfMj/9y5rrB3hlY6cUt08AU0017wogKwQe78yyZVi7yt9Lw=
-X-Google-Smtp-Source: AGRyM1snja+oK2x+mVIkaS3jdsjGyQUiYHxBVdHahnHLf1GDk9E9NQxw3HHkdKm91Ulk3sOxQN6gB1pv29kuV3CLqF0=
-X-Received: by 2002:a9d:620a:0:b0:616:afea:1d62 with SMTP id
- g10-20020a9d620a000000b00616afea1d62mr454373otj.124.1656106711634; Fri, 24
- Jun 2022 14:38:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220615163222.1275500-1-namhyung@kernel.org> <CAM9d7cjD=at=AtKmvMLogjN6mieWVR2kk-HigxO01cvPPRGFBg@mail.gmail.com>
- <YrYJq8UQ04FFN12/@kernel.org>
-In-Reply-To: <YrYJq8UQ04FFN12/@kernel.org>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=97W1aGnfJTsRH0sQeB3uyZG1FdhNBzAYORArQFFa5J8=;
+        b=FP/brQVtddT5shmYM78NAH4t7+KcxnIp1k7K6SqqGIsMJ/a1LKnHhzTMZS+B7/zH5T
+         2bNUmSI8Tfitg0Y5tIq3HUIf/DAo4VgRhOhv37UIePy2Yos3cEZ8rf2Dkx8GiOtNvgX7
+         R5uQVgt+SawQeWslCVrgWQoflETYFbjljEYlNo/sWcbrpKDs/9+GeI1lM5TAk3KqLUSN
+         4YLUgFx0Liey4/Fuxl1ZzpdmXwy07AKXRl9ywlZx2JDiNp5YPP+xpq1WkWPmbJoxpveg
+         Hts5zpU7YD5PklDtRant3cSdPBGCP3XRbuR0mvprIPtYhSau3vIykOv0dLn+FRUYnj2S
+         zSZQ==
+X-Gm-Message-State: AJIora+Rhq56Ckycv9bSxUZHTUce2m3YSOx9XGateW4tkR0e46E9nALo
+        ZMXNnysfQRXSisiO84zzcYQ=
+X-Google-Smtp-Source: AGRyM1tRHHjEWu+SxmsXdStgAmXUbMstdEJ81AIJqaNRIFgHwUDeylo9SumsU2ECSZWng7xqzcvskw==
+X-Received: by 2002:a05:6a00:d9b:b0:525:6b81:4f14 with SMTP id bf27-20020a056a000d9b00b005256b814f14mr1554852pfb.38.1656112395401;
+        Fri, 24 Jun 2022 16:13:15 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:480:eeb0:3156:8fd:28f6])
+        by smtp.gmail.com with ESMTPSA id z19-20020aa78893000000b0050dc76281e0sm2242439pfe.186.2022.06.24.16.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jun 2022 16:13:14 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 24 Jun 2022 14:38:20 -0700
-Message-ID: <CAM9d7cjSPB+YfUBKHC_b3ux8z5r0QOr_B=nbPX62vygOogiVYQ@mail.gmail.com>
-Subject: Re: [PATCHSET 0/7] perf lock: New lock contention tracepoints support (v4)
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Hao Luo <haoluo@google.com>,
+        Milian Wolff <milian.wolff@kdab.com>, bpf@vger.kernel.org,
+        Blake Jones <blakejones@google.com>
+Subject: [PATCHSET 0/6] perf tools: A couple of fixes for perf record --off-cpu (v1)
+Date:   Fri, 24 Jun 2022 16:13:07 -0700
+Message-Id: <20220624231313.367909-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+Hello,
 
-On Fri, Jun 24, 2022 at 11:59 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Jun 24, 2022 at 09:40:05AM -0700, Namhyung Kim escreveu:
-> >> Ping!  Any comments?
->
->
-> I'll take a look and test it soon.
+The first patch fixes a build error on old kernels which has
+task_struct->state field that is renamed to __state.  Actually I made
+a mistake when I wrote the code and assumed new kernel version.
 
-Thanks for doing that!
+The second patch is to prevent invalid sample synthesize by
+disallowing unsupported sample types.
+
+The rest of the series implements inheritance of offcpu events for the
+child processes.  Unlike perf events, BPF cannot know which task it
+should track except for ones set in a BPF map at the beginning.  Add
+another BPF program to the fork path and add the process id to the
+map if the parent is tracked.
+
+With this change, it can get the correct off-cpu events for child
+processes.  I've tested it with perf bench sched messaging which
+creates a lot of processes.
+
+  $ sudo perf record -e dummy --off-cpu -- perf bench sched messaging
+  # Running 'sched/messaging' benchmark:
+  # 20 sender and receiver processes per group
+  # 10 groups == 400 processes run
+
+       Total time: 0.196 [sec]
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.178 MB perf.data (851 samples) ]
+
+
+  $ sudo perf report --stat | grep -A1 offcpu
+  offcpu-time stats:
+            SAMPLE events:        851
+
+The benchmark passes messages by read/write and it creates off-cpu
+events.  With 400 processes, we can see more than 800 events.
+
+The child process tracking is also enabled when -p option is given.
+But -t option does NOT as it only cares about the specific threads.
+It may be different what perf_event does now, but I think it makes
+more sense.
+
+You can get it from 'perf/offcpu-child-v1' branch in my tree
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
 Namhyung
+
+
+Namhyung Kim (6):
+  perf offcpu: Fix a build failure on old kernels
+  perf offcpu: Accept allowed sample types only
+  perf offcpu: Check process id for the given workload
+  perf offcpu: Parse process id separately
+  perf offcpu: Track child processes
+  perf offcpu: Update offcpu test for child process
+
+ tools/perf/tests/shell/record_offcpu.sh | 57 ++++++++++++++++++++---
+ tools/perf/util/bpf_off_cpu.c           | 60 +++++++++++++++++++++++--
+ tools/perf/util/bpf_skel/off_cpu.bpf.c  | 58 +++++++++++++++++++++---
+ tools/perf/util/evsel.c                 |  9 ++++
+ tools/perf/util/off_cpu.h               |  9 ++++
+ 5 files changed, 176 insertions(+), 17 deletions(-)
+
+
+base-commit: 9886142c7a2226439c1e3f7d9b69f9c7094c3ef6
+-- 
+2.37.0.rc0.161.g10f37bed90-goog
+
