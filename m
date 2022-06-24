@@ -2,82 +2,72 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C45C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 20:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABC9C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Jun 2022 21:38:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231178AbiFXUkT (ORCPT
+        id S231959AbiFXVig (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Jun 2022 16:40:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
+        Fri, 24 Jun 2022 17:38:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiFXUkR (ORCPT
+        with ESMTP id S231965AbiFXVif (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Jun 2022 16:40:17 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D88506EB;
-        Fri, 24 Jun 2022 13:40:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5435FB82C11;
-        Fri, 24 Jun 2022 20:40:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 060D5C34114;
-        Fri, 24 Jun 2022 20:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656103213;
-        bh=9iPJDMdsLOTs+gVhh/J9sqCKNq4wk8utxW/b4IH50iQ=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=IG67JxY0FIPu2CHbfl7ych6gXyxZQ8hUZ62LvDqoeiIy0pbPStyPq02Zo0plk8hrm
-         5cFnsOmqnB53YtO8tZEkMviu+tT4bDkBbWL/FdYg5CmSBnOWchrJig4ZX/YHpvAzHv
-         Lhh33C7K9tzXYgSSXL3lKWFiMN0IyKr2vcsn/msLmiKIQp1hGxBuf1JjeXdOTqHN7w
-         CCbQ+c0QfS15w720ndL8YYV34V+B6sLGS4paM4pYLtIdQkBsunY36wHoojoXPJLw0q
-         89U02dDzQXCPl7XqvR7Xed9tyKN8+xh8yVnI5I24nL6KfWKxrvcF3l/i9OrQ/96idq
-         Z07M9bJntDhTw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E014CE737F0;
-        Fri, 24 Jun 2022 20:40:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 24 Jun 2022 17:38:35 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940817C87F;
+        Fri, 24 Jun 2022 14:38:32 -0700 (PDT)
+Received: by mail-ot1-f42.google.com with SMTP id 73-20020a9d084f000000b00616b04c7656so1496449oty.3;
+        Fri, 24 Jun 2022 14:38:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cYcXXZ+B2CoGXK414DiWpGrGWSwnr+1yUkDbpi5uzp0=;
+        b=pQB59/ezUxfFdnIG81MtrZP27f+7Zx8Rqa2VYZ4pO7CAHenMqh+RWx7qSQZIHaYaVM
+         DjZSXjl8kqh8yEOpY9/OhTzxmZr7bfk7l5KLVXGddYGGAS1k8ZVWSsMtSP2t0UX9jsx0
+         8Ce8XsSRthCgmnpjArWVDLzmZqUrbp99dauie3LsUXy8MBaIpsJgjHmOcmSVQAATJDNJ
+         tLo2NMd1B78GW+lqZF+rg1DMLiPLtEc7swx21Lmp+URPCS1WM12iZhWWwzUOiCEUenvD
+         yJrivt3vo+GNSQ/L6+sfbyC7q1QyXLXtDl+NhQqhfp8/q67aCbxB9MYr4+vlSOdZ7GEm
+         CByQ==
+X-Gm-Message-State: AJIora+xP0Iw++b2Fn51BSENn+91DiNBAVJ7o8Kx302tGvnn5DJ4ejrR
+        kfMj/9y5rrB3hlY6cUt08AU0017wogKwQe78yyZVi7yt9Lw=
+X-Google-Smtp-Source: AGRyM1snja+oK2x+mVIkaS3jdsjGyQUiYHxBVdHahnHLf1GDk9E9NQxw3HHkdKm91Ulk3sOxQN6gB1pv29kuV3CLqF0=
+X-Received: by 2002:a9d:620a:0:b0:616:afea:1d62 with SMTP id
+ g10-20020a9d620a000000b00616afea1d62mr454373otj.124.1656106711634; Fri, 24
+ Jun 2022 14:38:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv5 bpf-next 0/1] perf tools: Fix prologue generation
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <165610321291.32168.11018330141135892002.git-patchwork-notify@kernel.org>
-Date:   Fri, 24 Jun 2022 20:40:12 +0000
-References: <20220616202214.70359-1-jolsa@kernel.org>
-In-Reply-To: <20220616202214.70359-1-jolsa@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     acme@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, mingo@kernel.org,
-        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-        a.p.zijlstra@chello.nl, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, john.fastabend@gmail.com, irogers@google.com
+References: <20220615163222.1275500-1-namhyung@kernel.org> <CAM9d7cjD=at=AtKmvMLogjN6mieWVR2kk-HigxO01cvPPRGFBg@mail.gmail.com>
+ <YrYJq8UQ04FFN12/@kernel.org>
+In-Reply-To: <YrYJq8UQ04FFN12/@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 24 Jun 2022 14:38:20 -0700
+Message-ID: <CAM9d7cjSPB+YfUBKHC_b3ux8z5r0QOr_B=nbPX62vygOogiVYQ@mail.gmail.com>
+Subject: Re: [PATCHSET 0/7] perf lock: New lock contention tracepoints support (v4)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello:
+Hi Arnaldo,
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+On Fri, Jun 24, 2022 at 11:59 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, Jun 24, 2022 at 09:40:05AM -0700, Namhyung Kim escreveu:
+> >> Ping!  Any comments?
+>
+>
+> I'll take a look and test it soon.
 
-On Thu, 16 Jun 2022 22:22:13 +0200 you wrote:
-> hi,
-> sending change we discussed some time ago [1] to get rid of
-> some deprecated functions we use in perf prologue code.
-> 
-> Despite the gloomy discussion I think the final code does
-> not look that bad ;-)
-> 
-> [...]
-
-Here is the summary with links:
-  - [PATCHv5,bpf-next,1/1] perf tools: Rework prologue generation code
-    https://git.kernel.org/bpf/bpf-next/c/b168852eb8ef
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks for doing that!
+Namhyung
