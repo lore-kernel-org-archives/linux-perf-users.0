@@ -2,48 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BB6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat, 25 Jun 2022 05:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CA4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 25 Jun 2022 05:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbiFYF2Y (ORCPT
+        id S231672AbiFYFdG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 25 Jun 2022 01:28:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
+        Sat, 25 Jun 2022 01:33:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbiFYF2Y (ORCPT
+        with ESMTP id S230224AbiFYFdG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 25 Jun 2022 01:28:24 -0400
-Received: from forward500j.mail.yandex.net (forward500j.mail.yandex.net [5.45.198.250])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D4CB492;
-        Fri, 24 Jun 2022 22:28:20 -0700 (PDT)
+        Sat, 25 Jun 2022 01:33:06 -0400
+X-Greylist: delayed 48680 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Jun 2022 22:32:59 PDT
+Received: from forward500p.mail.yandex.net (forward500p.mail.yandex.net [77.88.28.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BE3B5FE0;
+        Fri, 24 Jun 2022 22:32:58 -0700 (PDT)
 Received: from sas1-0e0150e31af0.qloud-c.yandex.net (sas1-0e0150e31af0.qloud-c.yandex.net [IPv6:2a02:6b8:c14:392a:0:640:e01:50e3])
-        by forward500j.mail.yandex.net (Yandex) with ESMTP id 18D446CB7324;
-        Sat, 25 Jun 2022 08:28:18 +0300 (MSK)
-Received: from sas2-e7f6fb703652.qloud-c.yandex.net (sas2-e7f6fb703652.qloud-c.yandex.net [2a02:6b8:c14:4fa6:0:640:e7f6:fb70])
-        by sas1-0e0150e31af0.qloud-c.yandex.net (mxback/Yandex) with ESMTP id lMAl9z8mXq-SGfGlZik;
-        Sat, 25 Jun 2022 08:28:18 +0300
+        by forward500p.mail.yandex.net (Yandex) with ESMTP id 7AF10F05027;
+        Sat, 25 Jun 2022 08:32:56 +0300 (MSK)
+Received: from sas2-cc22fd2335f8.qloud-c.yandex.net (sas2-cc22fd2335f8.qloud-c.yandex.net [2a02:6b8:c08:6c82:0:640:cc22:fd23])
+        by sas1-0e0150e31af0.qloud-c.yandex.net (mxback/Yandex) with ESMTP id xFjlaQOfax-WufmqaGT;
+        Sat, 25 Jun 2022 08:32:56 +0300
 X-Yandex-Fwd: 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1656134898;
-        bh=olh/t8bBvdypCRtDpfeOgA30mVxtptEkmVnsLVjMzDc=;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1656135176;
+        bh=T7iFQChTVP8pQJbKquVBw3SXg4q3eSNB/OuZ7Wdi5nY=;
         h=In-Reply-To:Subject:Cc:To:From:References:Date:Message-ID;
-        b=Bp/ICzPWzLMY/gyXracYUUPZjyK9jzgM+dU+ClK8GBSj4ff43N/t2tDIg7Hvn7ow5
-         utFRQA1pzsRFajGPBt3QMKTxR1jNxhiv0UgbL1ARXc1yBFN17rSfRlGVvGgAUqJw1n
-         Q2rTefMzib1Tws59ZSND0T12UFKfojGaeTjOfMqs=
+        b=REi6Fi33vfxc6G8PQgKXwwVO4u9o8q/VvoTAvqLRbNsTxW9hdIp06YqD/hCHmNnSO
+         xW23Xm7/p0kMv4ZWgW5/tFLCLuJDC/aWx13KQOXFw8lIcbM8cATPtbMXbeuVQsq/jv
+         OFGm9C4oeoJ1feYjSmYn9YrtoWkSf4F/HqGZj6vI=
 Authentication-Results: sas1-0e0150e31af0.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by sas2-e7f6fb703652.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id G8teebH6cY-SEN46qGX;
-        Sat, 25 Jun 2022 08:28:15 +0300
+Received: by sas2-cc22fd2335f8.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id gseD0Q4hf9-WsNK6FZJ;
+        Sat, 25 Jun 2022 08:32:55 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
-Date:   Sat, 25 Jun 2022 08:28:13 +0300
+Date:   Sat, 25 Jun 2022 08:32:53 +0300
 From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Anup Patel <anup@brainfault.org>,
         =?UTF-8?B?Sm/Do28gTcOhcmlv?= Domingos 
-        <joao.mario@tecnico.ulisboa.pt>, linux@yadro.com,
+        <joao.mario@tecnico.ulisboa.pt>, linux <linux@yadro.com>,
         Nikita Shubin <n.shubin@yadro.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
@@ -51,71 +52,93 @@ Cc:     Atish Patra <atishp@atishpatra.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 2/5] perf tools riscv: Add support for get_cpuid_str
- function
-Message-ID: <20220625082813.3b70727c@redslave.neermore.group>
-In-Reply-To: <YrXnFAaT/B1In/+t@kernel.org>
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH v4 3/5] perf arch events: riscv arch std event files
+Message-ID: <20220625083253.61b3e0db@redslave.neermore.group>
+In-Reply-To: <CAOnJCU+B+dXXhqL6CYRG7Lhr_QWwyxrDZdGZG6HphnTEE9o5Mw@mail.gmail.com>
 References: <20220624160117.3206-1-nikita.shubin@maquefel.me>
-        <20220624160117.3206-3-nikita.shubin@maquefel.me>
-        <YrXnFAaT/B1In/+t@kernel.org>
+        <20220624160117.3206-4-nikita.shubin@maquefel.me>
+        <CAOnJCU+B+dXXhqL6CYRG7Lhr_QWwyxrDZdGZG6HphnTEE9o5Mw@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Arnaldo!
+Hello Atish!
 
-On Fri, 24 Jun 2022 13:32:20 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Fri, 24 Jun 2022 10:01:07 -0700
+Atish Patra <atishp@atishpatra.org> wrote:
 
-> > +	if (mimpid)
-> > +		free(mimpid);  
-> 
-> just use:
-> 
-> 	
-> 	free(mvendorid);
-> 	free(marchid);
-> 	free(mimpid);
-> 
-> fewer lines, free() accepts NULL.
-> 
-> > +
-> > +	return cpuid;
-> > +}
-> > +
-> > +int get_cpuid(char *buffer, size_t sz)
-> > +{
-> > +	char *cpuid = _get_cpuid();
-> > +
-> > +	if (sz < strlen(cpuid)) {
-> > +		free(cpuid);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	scnprintf(buffer, sz, "%s", cpuid);  
-> 
-> You're leaking cpuid here.
+> On Fri, Jun 24, 2022 at 9:01 AM Nikita Shubin
+> <nikita.shubin@maquefel.me> wrote:
+> >
+> > From: Nikita Shubin <n.shubin@yadro.com>
+> >
+> > cycles, time and instret counters are defined by RISC-V privileged
+> > spec and they should be available on any RISC-V implementation,
+> > epose them to arch std event files, so they can be reused by
+> > particular PMU bindings.
+> >
+> > Derived-from-code-by: Jo=C3=A3o M=C3=A1rio Domingos
+> > <joao.mario@tecnico.ulisboa.pt> Signed-off-by: Nikita Shubin
+> > <n.shubin@yadro.com> =20
+>=20
+> Why do we need this ? The PMU driver already parses the standard perf
+> events. So you can pass -e cycles -e instructions.
+>=20
+> Even though time is described as a counter and accessibility
+> controlled by mcounteren, you can not start/stop it (no bit in
+> mcountinhibit).
+> Thus, it can't be used from perf.
 
-Agree with both.
+My first thought was that we can use cycle, time, instret on any RISC-V
+platform even without any bindings, but as you pointed out it's
+indeed useless.
 
-Thank you for pointing it out.
+I'll drop this one.
 
-> 
-> > +	return 0;
-> > +}
-> > +
-> > +char *
-> > +get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
-> > +{
-> > +	return _get_cpuid();
-> > +}
-> > -- 
-> > 2.35.1  
-> 
+>=20
+> > ---
+> >  .../pmu-events/arch/riscv/riscv-generic.json  | 20
+> > +++++++++++++++++++ 1 file changed, 20 insertions(+)
+> >  create mode 100644
+> > tools/perf/pmu-events/arch/riscv/riscv-generic.json
+> >
+> > diff --git a/tools/perf/pmu-events/arch/riscv/riscv-generic.json
+> > b/tools/perf/pmu-events/arch/riscv/riscv-generic.json new file mode
+> > 100644 index 000000000000..a7ffbe87a0f7
+> > --- /dev/null
+> > +++ b/tools/perf/pmu-events/arch/riscv/riscv-generic.json
+> > @@ -0,0 +1,20 @@
+> > +[
+> > +  {
+> > +    "PublicDescription": "CPU Cycles",
+> > +    "EventCode": "0x00",
+> > +    "EventName": "riscv_cycles",
+> > +    "BriefDescription": "CPU cycles RISC-V generic counter"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "CPU Time",
+> > +    "EventCode": "0x01",
+> > +    "EventName": "riscv_time",
+> > +    "BriefDescription": "CPU time RISC-V generic counter"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "CPU Instructions",
+> > +    "EventCode": "0x02",
+> > +    "EventName": "riscv_instret",
+> > +    "BriefDescription": "CPU retired instructions RISC-V generic
+> > counter"
+> > +  }
+> > +]
+> > --
+> > 2.35.1
+> > =20
+>=20
+>=20
 
