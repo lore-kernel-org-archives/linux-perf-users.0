@@ -2,88 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15938C43334
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Jun 2022 19:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E4CC43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 01:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbiFZTPN (ORCPT
+        id S229910AbiF0BUE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 26 Jun 2022 15:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57556 "EHLO
+        Sun, 26 Jun 2022 21:20:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbiFZTPL (ORCPT
+        with ESMTP id S230205AbiF0BUD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 26 Jun 2022 15:15:11 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690C5B7C2;
-        Sun, 26 Jun 2022 12:15:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 21F22B80DF9;
-        Sun, 26 Jun 2022 19:15:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B7D6CC34114;
-        Sun, 26 Jun 2022 19:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656270907;
-        bh=43PGScvluWTooU/TYpWh1BYeq7eIjhr2zaDN3uAsJLk=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=JfFBWEs5MAebQDhALvHVnoNL2v8cC/gHfCZE9dxKh1Y6V3zDoIJjguekpvDE/kVJP
-         M0K3Ch93DRjbCAOEzKb0UPvV6zQ5z3nbt0SN+J+rF7sSz5FEXOBps9pH/4Gs84TY8i
-         FiGu/3m29U0JNsjSeMjXyAhQ4HEh/UntqGhkz+JxmBnYqoa9Kvi/kGabD6hqTaGiF3
-         ZtzNCmQcXCGoB6tgO4S22UxGbgIR14o3RZc1yWgqGAv700wNo6GMZtdsyRGeQKl4Kf
-         SYqOPNZ5mw5wBC557SRglRsypQaf1r7awJGPLYuue/dg+SPhPRQZEomo2RINvLUFYY
-         sZf5mYMuskcZA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9E002FD99FF;
-        Sun, 26 Jun 2022 19:15:07 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v5.19: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220626175707.1168954-1-acme@kernel.org>
-References: <20220626175707.1168954-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220626175707.1168954-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.19-2022-06-26
-X-PR-Tracked-Commit-Id: f8d866194082e703c86751cceb07f6243cde96d2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 893d1eaa56e8ed8ebf0726556454c9e53c0bf047
-Message-Id: <165627090761.30585.13601361175916372679.pr-tracker-bot@kernel.org>
-Date:   Sun, 26 Jun 2022 19:15:07 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Gang Li <ligang.bdlg@bytedance.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Raul Silvera <rsilvera@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Sun, 26 Jun 2022 21:20:03 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF062AE5
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 Jun 2022 18:20:01 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id g7so2737329pjj.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 Jun 2022 18:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JiM3N5evqJOowVHWeRy1BwX3FfyhynbxcUWkOm6L1ik=;
+        b=MsSky8rDDNs+PaeJiRVQB1ywR02u//iGONyyvf7FEtTfEv4lDjV4I0s9czbxLDUlC7
+         hsbylmLh4lkwFDR2wcTssR4JKfGmiC0X2jbsyTQqZ8piT/seBMuw9fJg5afyGhwP6hWJ
+         h4KVr+A/lgCTGixqzRRf/QAH3Ih2kD9CrSUYJyArsX3bkBBSeQWDmcUaIaTgp/poVGou
+         wCELTMGy/eNdRn8wkTfLBYMviw3HKzeBKLaP4DuXF7jOANwxuL7mwKoQdphN9VwfycyL
+         EYnKRM7gBzMgq54yzBZbT0+8WpoxkEAGhh9PIHUMCo7yarxf3rbI8yqoZGFOpq3EQwXU
+         GTEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JiM3N5evqJOowVHWeRy1BwX3FfyhynbxcUWkOm6L1ik=;
+        b=V1dmw3vHS3ERqDADaBbMkKBN/V9lpF+tn4J4n5Yf6QItdpckQGdFMcro1qbxKyKPMe
+         XXb3xmVm+T3VCHoIT+kSnPteWTJ+kYdqDs6PIZBVARZFJOlK9aB+7JXuXwS9jXzUV6DX
+         awfRiklxciI7GxdW5bz8hK45Y/RGAJwmw0+rEj+QNkWt7MJy2oZpt17ML/Rwafreg3dm
+         5zC6zBD1ys322EwIftEy9+1iUzN9BQdSQ+zOk4TanhB6sbNhyKByHYPLiz1pvw2HVZHr
+         0rWFaEx3uLK2nCfAZBkvsh0ik370Vco48WlbCapbPfR0OSKGJJ+T/uB1q6wDaGMUerqk
+         naAA==
+X-Gm-Message-State: AJIora+Yr+7wazJz5jgrTkPWkPP1KvjvStny+wupnv31V9MEFhUDWACB
+        Hx6FIBmDzSbsPJLOa0s9c5wxQA==
+X-Google-Smtp-Source: AGRyM1t2oztCFYrN6uMQKxDHkXdOqDSQ8UIJhLBDVPzheHA8LqCKnazYXDAdI5hfVtGXQ8ObBUyVpQ==
+X-Received: by 2002:a17:903:1cf:b0:16a:605a:d58a with SMTP id e15-20020a17090301cf00b0016a605ad58amr11786381plh.37.1656292800336;
+        Sun, 26 Jun 2022 18:20:00 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([103.135.249.206])
+        by smtp.gmail.com with ESMTPSA id n22-20020a17090a161600b001ecd48b80a2sm8064260pja.5.2022.06.26.18.19.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jun 2022 18:19:59 -0700 (PDT)
+Date:   Mon, 27 Jun 2022 09:19:52 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     gregkh@linuxfoundation.org, alexander.shishkin@linux.intel.com,
+        james.clark@arm.com, will@kernel.org, robin.murphy@arm.com,
+        acme@kernel.org, jonathan.cameron@huawei.com,
+        john.garry@huawei.com, helgaas@kernel.org,
+        lorenzo.pieralisi@arm.com, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, mark.rutland@arm.com, joro@8bytes.org,
+        shameerali.kolothum.thodi@huawei.com, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
+        prime.zeng@huawei.com, liuqi115@huawei.com,
+        zhangshaokun@hisilicon.com, linuxarm@huawei.com
+Subject: Re: [PATCH v9 4/8] perf tool: arm: Refactor event list iteration in
+ auxtrace_record__init()
+Message-ID: <20220627011952.GA143063@leoy-ThinkPad-X240s>
+References: <20220606115555.41103-1-yangyicong@hisilicon.com>
+ <20220606115555.41103-5-yangyicong@hisilicon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220606115555.41103-5-yangyicong@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sun, 26 Jun 2022 14:57:07 -0300:
+On Mon, Jun 06, 2022 at 07:55:51PM +0800, Yicong Yang wrote:
+> From: Qi Liu <liuqi115@huawei.com>
+> 
+> Add find_pmu_for_event() and use to simplify logic in
+> auxtrace_record_init(). find_pmu_for_event() will be
+> reused in subsequent patches.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.19-2022-06-26
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/893d1eaa56e8ed8ebf0726556454c9e53c0bf047
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> ---
+>  tools/perf/arch/arm/util/auxtrace.c | 53 ++++++++++++++++++-----------
+>  1 file changed, 34 insertions(+), 19 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> index 5fc6a2a3dbc5..384c7cfda0fd 100644
+> --- a/tools/perf/arch/arm/util/auxtrace.c
+> +++ b/tools/perf/arch/arm/util/auxtrace.c
+> @@ -50,16 +50,32 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
+>  	return arm_spe_pmus;
+>  }
+>  
+> +static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
+> +					   int pmu_nr, struct evsel *evsel)
+> +{
+> +	int i;
+> +
+> +	if (!pmus)
+> +		return NULL;
+> +
+> +	for (i = 0; i < pmu_nr; i++) {
+> +		if (evsel->core.attr.type == pmus[i]->type)
+> +			return pmus[i];
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  struct auxtrace_record
+>  *auxtrace_record__init(struct evlist *evlist, int *err)
+>  {
+> -	struct perf_pmu	*cs_etm_pmu;
+> +	struct perf_pmu	*cs_etm_pmu = NULL;
+> +	struct perf_pmu **arm_spe_pmus = NULL;
+>  	struct evsel *evsel;
+> -	bool found_etm = false;
+> +	struct perf_pmu *found_etm = NULL;
+>  	struct perf_pmu *found_spe = NULL;
+> -	struct perf_pmu **arm_spe_pmus = NULL;
+> +	int auxtrace_event_cnt = 0;
+>  	int nr_spes = 0;
+> -	int i = 0;
+>  
+>  	if (!evlist)
+>  		return NULL;
+> @@ -68,24 +84,23 @@ struct auxtrace_record
+>  	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+>  
+>  	evlist__for_each_entry(evlist, evsel) {
+> -		if (cs_etm_pmu &&
+> -		    evsel->core.attr.type == cs_etm_pmu->type)
+> -			found_etm = true;
+> -
+> -		if (!nr_spes || found_spe)
+> -			continue;
+> -
+> -		for (i = 0; i < nr_spes; i++) {
+> -			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+> -				found_spe = arm_spe_pmus[i];
+> -				break;
+> -			}
+> -		}
+> +		if (cs_etm_pmu && !found_etm)
+> +			found_etm = find_pmu_for_event(&cs_etm_pmu, 1, evsel);
+> +
+> +		if (arm_spe_pmus && !found_spe)
+> +			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
+>  	}
+> +
+>  	free(arm_spe_pmus);
+>  
+> -	if (found_etm && found_spe) {
+> -		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+> +	if (found_etm)
+> +		auxtrace_event_cnt++;
+> +
+> +	if (found_spe)
+> +		auxtrace_event_cnt++;
+> +
+> +	if (auxtrace_event_cnt > 1) {
+> +		pr_err("Concurrent AUX trace operation not currently supported\n");
+>  		*err = -EOPNOTSUPP;
+>  		return NULL;
+>  	}
+> -- 
+> 2.24.0
