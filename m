@@ -2,118 +2,79 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6526C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 08:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0742C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 11:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232564AbiF0ISm (ORCPT
+        id S234037AbiF0LBQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Jun 2022 04:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
+        Mon, 27 Jun 2022 07:01:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232452AbiF0ISl (ORCPT
+        with ESMTP id S233658AbiF0LBP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Jun 2022 04:18:41 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE065C76;
-        Mon, 27 Jun 2022 01:18:39 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LWgY31qVdzhYn4;
-        Mon, 27 Jun 2022 16:16:23 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 27 Jun 2022 16:18:36 +0800
-CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
-        <james.clark@arm.com>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <acme@kernel.org>, <jonathan.cameron@huawei.com>,
-        <john.garry@huawei.com>, <helgaas@kernel.org>,
-        <lorenzo.pieralisi@arm.com>, <mathieu.poirier@linaro.org>,
-        <suzuki.poulose@arm.com>, <mark.rutland@arm.com>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>
-Subject: Re: [PATCH v9 5/8] perf tool: Add support for HiSilicon PCIe Tune and
- Trace device driver
-To:     Leo Yan <leo.yan@linaro.org>,
-        Yicong Yang <yangyicong@hisilicon.com>
-References: <20220606115555.41103-1-yangyicong@hisilicon.com>
- <20220606115555.41103-6-yangyicong@hisilicon.com>
- <20220627020256.GB143063@leoy-ThinkPad-X240s>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <fb55fdab-3ad6-a21a-315a-9dc404b35f11@huawei.com>
-Date:   Mon, 27 Jun 2022 16:18:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Mon, 27 Jun 2022 07:01:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7860B6470;
+        Mon, 27 Jun 2022 04:01:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3302CB810A3;
+        Mon, 27 Jun 2022 11:01:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5391C3411D;
+        Mon, 27 Jun 2022 11:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656327672;
+        bh=dnVo2kKU4XfL2p5JbW7BGQOVgWSy6yL9g0TtFxZ2uJs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AOuDenptTw43xrEUM45YSwOY3l2Z1fhndBUy9ZoEFd/dGBAYgGa3Fwak2NmUv4VOG
+         lprN6GaJghhxI+q0fwCIO+Ih1+XH3IsopttRnP05SwWVIPQPqQFeqr/cjG7gvUs10d
+         198E9elLVuW2OCv24ftya9bTi4Ykchgv9MHsLUxWv9xp0fZ+2RvlFDje1iPuJFfFH0
+         bKt2L2EAyj5TCGjEegZWLxZEtr5/2NkqzBPL1TL0mosGkgNrrzj85owf5HKD3wS/QL
+         V91ir/tEEy3VVpUTyH2BItNhLruqJBbktbJByhsAv2laT40rCTxWoQCBwRWSZttkYu
+         wrj9OQ/pzYGZw==
+Date:   Mon, 27 Jun 2022 12:01:05 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/8] arm64/perf: Enable branch stack sampling
+Message-ID: <20220627110105.GF22095@willie-the-truck>
+References: <20220613100119.684673-1-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20220627020256.GB143063@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220613100119.684673-1-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/6/27 10:02, Leo Yan wrote:
-> On Mon, Jun 06, 2022 at 07:55:52PM +0800, Yicong Yang wrote:
->> From: Qi Liu <liuqi115@huawei.com>
->>
->> HiSilicon PCIe tune and trace device (PTT) could dynamically tune
->> the PCIe link's events, and trace the TLP headers).
->>
->> This patch add support for PTT device in perf tool, so users could
->> use 'perf record' to get TLP headers trace data.
->>
->> Signed-off-by: Qi Liu <liuqi115@huawei.com>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+On Mon, Jun 13, 2022 at 03:31:11PM +0530, Anshuman Khandual wrote:
+> This series enables perf branch stack sampling support on arm64 platform
+> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+> relevant register definitions could be accessed here.
 > 
-> Just one minor comment.
+> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 > 
-> [...]
+> This series applies on v5.19-rc2 after the BRBE related perf ABI changes series
+> (V6) that was posted earlier.
 > 
->> diff --git a/tools/perf/util/hisi-ptt.h b/tools/perf/util/hisi-ptt.h
->> new file mode 100644
->> index 000000000000..2db9b4056214
->> --- /dev/null
->> +++ b/tools/perf/util/hisi-ptt.h
->> @@ -0,0 +1,19 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * HiSilicon PCIe Trace and Tuning (PTT) support
->> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
->> + */
->> +
->> +#ifndef INCLUDE__PERF_HISI_PTT_H__
->> +#define INCLUDE__PERF_HISI_PTT_H__
->> +
->> +#define HISI_PTT_PMU_NAME		"hisi_ptt"
->> +#define HISI_PTT_AUXTRACE_PRIV_SIZE	sizeof(u64)
->> +
->> +struct auxtrace_record *hisi_ptt_recording_init(int *err,
->> +						struct perf_pmu *hisi_ptt_pmu);
->> +
->> +int hisi_ptt_process_auxtrace_info(union perf_event *event,
->> +				   struct perf_session *session);
+> https://lore.kernel.org/linux-arm-kernel/20220610035101.424112-1-anshuman.khandual@arm.com/
 > 
-> The function hisi_ptt_process_auxtrace_info() is introduced by next
-> patch for support PTT decoding, for good practice (e.g. keep
-> bisection), it's good to introduce function declaration and definition
-> in one patch.
+> Following issues remain inconclusive
 > 
+> - Jame's concerns regarding permission inadequacy related to perfmon_capable()
+> - Jame's concerns regarding using perf_event_paranoid along with perfmon_capable()
 
-Thanks for catching this. There's something wrong when doing the patch splitting.
-Will fix this!
+afaict, the capability stuff remains unresolved with the SPE driver, so I'd
+really like to see it fixed there first before we add more broken drivers.
 
-> With this fixing, this patch looks good to me:
-> 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> 
+https://lore.kernel.org/r/20220118100702.GB16547@willie-the-truck
 
-Thanks.
+Will
