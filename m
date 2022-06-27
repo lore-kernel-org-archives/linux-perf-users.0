@@ -2,92 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D429C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 14:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D20C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 16:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236472AbiF0OCO (ORCPT
+        id S239245AbiF0Qbb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Jun 2022 10:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38622 "EHLO
+        Mon, 27 Jun 2022 12:31:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236355AbiF0OCO (ORCPT
+        with ESMTP id S239239AbiF0Qba (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Jun 2022 10:02:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DBE10578;
-        Mon, 27 Jun 2022 07:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BpEvF0BzklG8G9XjSPP96oVb/MAS3WNPpABfNhe5u5s=; b=ZV1HzTDRRvvaBT0EJFa4US4l4F
-        GHea9PgpyHfJqxTevWsYuYnrsgtVy9qh9+rPGLXlDi5Dei3SciLj7YfCl/o2/O0HsBqJyMkC8xkpl
-        Xh88cl/xkod+OM8+U/Is97UoRJr0ObUiAcWofUjeB19Rlil3RdV67Z1VcUj+rBVZERJSYgoYMr/J5
-        C2eaahpLR+mgEQZZ+g3OvEQsT6JBsMs7TxjWMNjL3aklnutRHkh5j/FOUPM6Az+bLYno2OoY+j769
-        mHTtQqN4tzH8GcVbCiF20H4rKSiqdZGeH04LYb9DpDLA3iVBjz098WeniRwPEEBbD7+dR9dHW5XzL
-        l8+9JBmg==;
-Received: from dhcp-077-249-017-003.chello.nl ([77.249.17.3] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o5pJ1-00BPhR-AX; Mon, 27 Jun 2022 14:01:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DC4D230040C;
-        Mon, 27 Jun 2022 16:01:31 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BE20C29BEB0F7; Mon, 27 Jun 2022 16:01:31 +0200 (CEST)
-Date:   Mon, 27 Jun 2022 16:01:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yicong Yang <yangyicong@huawei.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, yangyicong@hisilicon.com,
-        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
-        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        jonathan.cameron@huawei.com, robin.murphy@arm.com,
-        leo.yan@linaro.org, mark.rutland@arm.com, will@kernel.org,
-        joro@8bytes.org, shameerali.kolothum.thodi@huawei.com,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        john.garry@huawei.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        iommu@lists.linux-foundation.org, prime.zeng@huawei.com,
-        liuqi115@huawei.com, james.clark@arm.com,
-        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
-        alexander.shishkin@linux.intel.com, acme@kernel.org
-Subject: Re: [PATCH v9 0/8] Add support for HiSilicon PCIe Tune and Trace
- device
-Message-ID: <Yrm4O+AFbgnoBVba@hirez.programming.kicks-ass.net>
-References: <20220606115555.41103-1-yangyicong@hisilicon.com>
- <af6723f1-c0c5-8af5-857c-af9280e705af@huawei.com>
- <Yrms2cI05O2yZRKU@kroah.com>
- <e737393a-56dd-7d24-33d3-e935b14ba758@huawei.com>
+        Mon, 27 Jun 2022 12:31:30 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C437EB7C2
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 09:31:29 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id n1so13814075wrg.12
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 09:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=HNkxfGs48VSxHAOqXGkJUfu04O7swZ6fTeoWEAvO5OA=;
+        b=JxILDstZMdk9Wup1kgij/cyPb408PmxxA5LgQWcgiPdlRRIOB+YN4TKx735As0O2kU
+         RWOucHzqW4EZqsX3Qc9Jv799JtdMoSt8TrkCsnsKr2LZ3iKifiIVnxUsvI5+uA4Cbz7k
+         ykzgRcFdfviDDgE5VsLFt9gCyMNAitmefRqf/pbjt6D7wbDFRrwRpFLftlJ/kNcsab84
+         NTCY7ELhGB3OmIGw0MFQHWqkcRSWiu4PWpuQ31TuDLsVXVPx2zqfeEbU4Z/hx/m3gQHn
+         R4ZK2VXbZLlFyf2LGiPH2Z8JRkBxrUvbANzOItXHakGokLYIjTafhyFt2f/e9RWGXlh2
+         r48w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=HNkxfGs48VSxHAOqXGkJUfu04O7swZ6fTeoWEAvO5OA=;
+        b=Bl1zGhhlcbw7HzkVG51ilwpcXJ9xGRD1OG+smhUthvihaXxtqvG7LMI9MA2u1Fn3lu
+         oK7akHkihjgj0sykx2iKEvmT/3NB7u+yQsOInlHd2qsrOQXfiPp3p+iy2eCnJAaU//om
+         7Efwanne41+vD7JjQDJ8PAs14ie2rrjF2bgou/rYGhL/hPXXYzXlJhLvufujUc6RNDhQ
+         JJ/m+Qu5T7UzH4r68nPNOvG8Nxlo5v5DLsQVUf1xVyPwLRUhcJV5Cq28FnynMtS5H5M7
+         ivOdNGL8kFL13cwQ5VZCeSMNUpEv3bwD/xKlIKlbkUSjnWEqhn6EjhiY0Y4oNsqmqJ6u
+         6wvA==
+X-Gm-Message-State: AJIora+SZRV61nxS4B6nIe2d7C8HYE/R81x4vcXsRTjCmIA4LUN8d0Lj
+        eSP+fa1fnDM4ryrSvf4rzMUA8gRdAPpXfikdszKhgsNz/6i42w==
+X-Google-Smtp-Source: AGRyM1vZLeX8DOJUVBkOawsyL/LVSq07z3KNnVgtcidRX9ilK784cJUBC9GeDCsNhTctvdCTd0tia+Bg7nUCpFdDagY=
+X-Received: by 2002:a5d:544c:0:b0:21b:a288:f98c with SMTP id
+ w12-20020a5d544c000000b0021ba288f98cmr12901121wrv.300.1656347487372; Mon, 27
+ Jun 2022 09:31:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e737393a-56dd-7d24-33d3-e935b14ba758@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 27 Jun 2022 09:31:15 -0700
+Message-ID: <CAP-5=fUpDdYOcRBBy21cDi=eTov++cKY_E-rnP9++wvopJbijw@mail.gmail.com>
+Subject: June 30th - office hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 09:25:42PM +0800, Yicong Yang wrote:
-> On 2022/6/27 21:12, Greg KH wrote:
-> > On Mon, Jun 27, 2022 at 07:18:12PM +0800, Yicong Yang wrote:
-> >> Hi Greg,
-> >>
-> >> Since the kernel side of this device has been reviewed for 8 versions with
-> >> all comments addressed and no more comment since v9 posted in 5.19-rc1,
-> >> is it ok to merge it first (for Patch 1-3 and 7-8)?
-> > 
-> > I am not the maintainer of this subsystem, so I do not understand why
-> > you are asking me :(
-> > 
-> 
-> I checked the log of drivers/hwtracing and seems patches of coresight/intel_th/stm
-> applied by different maintainers and I see you applied some patches of intel_th/stm.
-> Should any of these three maintainers or you can help applied this?
+Hi,
 
-I was hoping Mark would have a look, since he knows this ARM stuff
-better than me. But ISTR he's somewhat busy atm too. But an ACK from the
-CoreSight people would also be appreciated.
+An earlier than of late reminder that there will be another office
+hours on June 30th at 2pm GMT*. We should do our usual GSoC
+contributor check-ins, please feel free to suggest additional agenda
+items!
 
-And Arnaldo usually doesn't pick up the userspace perf bits until the
-kernel side is sorted.
+If you experience problems then my email can be used for Google
+hangout messages, I'll try to be on IRC (#perf on irc.oftc.net).
+
+A reminder that the code of conduct is below**:
+https://www.kernel.org/doc/html/latest/process/code-of-conduct.html
+
+The Google meet details are here:
+Linux Perf Tool - Office Hours
+Thursday, June 30 =C2=B7 7:00 =E2=80=93 8:00am (PDT)
+Google Meet joining info
+Video call link: https://meet.google.com/goj-quks-ydn
+Or dial: =E2=80=AA(US) +1 301-969-4101=E2=80=AC PIN: =E2=80=AA374 496 227=
+=E2=80=AC#
+More phone numbers: https://tel.meet/goj-quks-ydn?pin=3D8067739163431
+Notes (ask to be added to see):
+https://docs.google.com/document/d/1tQZvJ12czMedpmLLZWS0XILAte97zdR6H_tgC3I=
+vafs/edit?usp=3Dsharing&resourcekey=3D0-iV9_8Oc0cSOPl0-NvEYDAA
+
+Thanks,
+Ian
+
+*The around the world times I believe are:
+China: 10pm
+India: 7:30pm
+Europe: 4pm
+UK: 3pm
+US east coast: 10am
+Brazil: 11am
+US west coast: 7am
+
+**More details from the first office hours are here:
+https://lore.kernel.org/linux-perf-users/CAP-5=3DfWkxtm5-Ebwkh4pzA83prvuAJ5=
+yy6CKQYatdkKWu3Tgeg@mail.gmail.com/
