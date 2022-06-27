@@ -2,141 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1A6CCA47E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 19:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09A0C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 20:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241024AbiF0TyJ (ORCPT
+        id S232068AbiF0U43 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Jun 2022 15:54:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36066 "EHLO
+        Mon, 27 Jun 2022 16:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241252AbiF0Txt (ORCPT
+        with ESMTP id S229583AbiF0U42 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Jun 2022 15:53:49 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 841F51ADB4
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 12:53:47 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id 9so10052421pgd.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 12:53:47 -0700 (PDT)
+        Mon, 27 Jun 2022 16:56:28 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9132ACD;
+        Mon, 27 Jun 2022 13:56:27 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id o9so14764561edt.12;
+        Mon, 27 Jun 2022 13:56:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=k/l4LcE4w+6LYrCo6/Ek+44r04gbnpHm9yyPA0qKR6A=;
-        b=ryYp2naL1201DMNfPmSbpexCs+zqiLsBQDBXHc9esFHxBJ8Ep2LLrsgHtxJtosu2+J
-         1iBYfvQQXv6NYwKQ2qXQCc4mHXYQGPYeeUC3hu2OgPUPjZXH+3Hi6Zqo5SyTeGerBVQA
-         p1Bh5daOuP6Q9UMRPxlj6vxZpUjBpxOPEYhjttl3pP6gtksJnO1wA5G3ERXmm3iOhFrs
-         MlyYmEaZt8I/cdZ0xlE1RQA9V/oE3k4e+iV7r8nrUlXmSvlRImOQktUmXD254MFh7ceV
-         2zbWTxt+/QD0MTYLBrv8xqePAliI2A59OkEqXOPrksIatTeOcW53aiRz+65e7KopsoX+
-         3osw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zZYxoCPScWXjQwHFlcANYHGk3bPGNCdA16fhomtXzig=;
+        b=faGaQLRpG+IQROqdEzZ4ky3l7Le5IQ+LCAxS/3EHNHKYbddYRQ9XgwIwUqXyWa3R2K
+         Zl6dEtw1+qLg8qaj14p++CQBTiPXbQFX8kzaUqFaWxmT1ak2rJ6i7xftxkpORqvkP/+x
+         ccjiGREgPQf8W3l5Lr0OAHGgduHe27M1Vci6ciP58d3lb1CFdaoMSD1pD87RAVakxh5E
+         5pWp45VYYC5N/3vNHhlilp8dSWi9HiWRKq29g9MTVNzr9JtRzgOIPYN/FMZvwFl8L+wM
+         zgGMimUBRZDUUEM7JpeMhGXki8/I86b8N/SZHlA0nJASY6kbTRkBMTtF/cLDwyQbiJux
+         z+Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=k/l4LcE4w+6LYrCo6/Ek+44r04gbnpHm9yyPA0qKR6A=;
-        b=NWh8hkrWSz+3EuyUK5uTAehoXFl1ukLDtJ8lSSzCLGFOHhnX5uCuZlin4Bo4QMIPdg
-         3ZwXCgYbjxW1uVuFfrQ7Lj4e85l6PIFfEzwYsR6s33dUByGb6K6t3zGRP3J5vkq3WfIr
-         Yg8Vcnltmp1pdx3P6qabyNdvxNk5GmpuDCTq4ZAb63F4JFeRd+2zOATDMPSyO/DEXb3O
-         6AvOIyNHoHO4gEeOlsepnjmPGGaMNrKPzRqUrWLi0ND7aifPI3LXNM6MY9x+cMvK1aqW
-         dsvBkgOab6047OWSRSS4wvWhSQmCzI3QAOh9KeSUnVvMpnh/wplM56FMtINluMzbgHq4
-         p+Ig==
-X-Gm-Message-State: AJIora9suFujHW6IkOsHgVzALiaYzNBOMi2KWAyvjHAep+MXr8iitWB4
-        YRBMdnaCZp4waAcgpLXX3yELHg==
-X-Google-Smtp-Source: AGRyM1ssDeW6Ux1oaY9ixgaaapzXMFszbxcRVeOWaHAYiiaVMZ4HUYtPzqxXzR6I8+fqeJNf8u9hpg==
-X-Received: by 2002:a63:7a5d:0:b0:40c:fcbe:4799 with SMTP id j29-20020a637a5d000000b0040cfcbe4799mr14428539pgn.297.1656359626928;
-        Mon, 27 Jun 2022 12:53:46 -0700 (PDT)
-Received: from hermes.local (204-195-112-199.wavecable.com. [204.195.112.199])
-        by smtp.gmail.com with ESMTPSA id c16-20020a056a00009000b0051c1b445094sm7821510pfj.7.2022.06.27.12.53.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 12:53:46 -0700 (PDT)
-Date:   Mon, 27 Jun 2022 12:53:43 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, dm-devel@redhat.com,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, io-uring@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        kasan-dev@googlegroups.com, linux-mmc@vger.kernel.org,
-        nvdimm@lists.linux.dev, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, linux-perf-users@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        v9fs-developer@lists.sourceforge.net, linux-rdma@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] treewide: uapi: Replace zero-length arrays with
- flexible-array members
-Message-ID: <20220627125343.44e24c41@hermes.local>
-In-Reply-To: <20220627180432.GA136081@embeddedor>
-References: <20220627180432.GA136081@embeddedor>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zZYxoCPScWXjQwHFlcANYHGk3bPGNCdA16fhomtXzig=;
+        b=ku/CSB3eyq2p0/9Z6lOn1A74G4iKYIr5fMr7cYTgK/x371HmP4ZsjnTBU6uKmAm2Ee
+         jII5sd5+qw8h+uppYkGoD0VE3iZXR1e7uXEVY5KThdnEHY8qLL+HyOGM2JNrG38puA2e
+         jIlbmeR7Gp1ZRYqQ44dRAQx7+Pi1smk16lgCfUBG144NZoMGAgSYkDWCucIfwqTwGYQe
+         aKeuNmQO/Fhee0hQc3K8c5xr5PaBbbIrC7DOOJRV5fyfKqBY1dan936MmL6rqvTbck8L
+         rqL6f9/Hx7155K+5RoeFVuI+O+tser0u8hj7vIl8VqJinhhXDeIUM013P0KgN3TuGu2T
+         xlfg==
+X-Gm-Message-State: AJIora80sbXaUQ96xkuEfKgH/Bn6RMJKNHXr3yGwbUrTeY0rQp12/G0L
+        DcjtP6kISBE+1/rkqp06y05e3VQtUcF1VJ4z1eg=
+X-Google-Smtp-Source: AGRyM1vSFR/5VfuUx99F/9e3fpf5w79op2GZg/nz3Tn8dAZhwJQByxpaIv+hq3rUNAk1YwfppxULTZUS/fan6EOKfTk=
+X-Received: by 2002:a05:6402:3514:b0:435:f24a:fbad with SMTP id
+ b20-20020a056402351400b00435f24afbadmr18301496edd.311.1656363385709; Mon, 27
+ Jun 2022 13:56:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20220614014714.1407239-1-irogers@google.com>
+In-Reply-To: <20220614014714.1407239-1-irogers@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 27 Jun 2022 13:56:13 -0700
+Message-ID: <CAEf4BzYXQULPgC_qP-O9F6yo9ohKfDRWChDAOsqYX8bWYuv5ng@mail.gmail.com>
+Subject: Re: [PATCH] perf bpf: 8 byte align bpil data
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 27 Jun 2022 20:04:32 +0200
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+On Mon, Jun 13, 2022 at 6:47 PM Ian Rogers <irogers@google.com> wrote:
+>
+> bpil data is accessed assuming 64-bit alignment resulting in undefined
+> behavior as the data is just byte aligned. With an -fsanitize=undefined
+> build the following errors are observed:
+>
+> $ sudo perf record -a sleep 1
+> util/bpf-event.c:310:22: runtime error: load of misaligned address 0x55f61084520f for type '__u64', which requires 8 byte alignment
+> 0x55f61084520f: note: pointer points here
+>  a8 fe ff ff 3c  51 d3 c0 ff ff ff ff 04  84 d3 c0 ff ff ff ff d8  aa d3 c0 ff ff ff ff a4  c0 d3 c0
+>              ^
+> util/bpf-event.c:311:20: runtime error: load of misaligned address 0x55f61084522f for type '__u32', which requires 4 byte alignment
+> 0x55f61084522f: note: pointer points here
+>  ff ff ff ff c7  17 00 00 f1 02 00 00 1f  04 00 00 58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00
+>              ^
+> util/bpf-event.c:198:33: runtime error: member access within misaligned address 0x55f61084523f for type 'const struct bpf_func_info', which requires 4 byte alignment
+> 0x55f61084523f: note: pointer points here
+>  58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00 3b 00 00 00 ab  02 00 00 44 00 00 00 14  03 00 00
+>
+> Correct this by rouding up the data sizes and aligning the pointers.
 
-> There is a regular need in the kernel to provide a way to declare
-> having a dynamically sized set of trailing elements in a structure.
-> Kernel code should always use =E2=80=9Cflexible array members=E2=80=9D[1]=
- for these
-> cases. The older style of one-element or zero-length arrays should
-> no longer be used[2].
->=20
-> This code was transformed with the help of Coccinelle:
-> (linux-5.19-rc2$ spatch --jobs $(getconf _NPROCESSORS_ONLN) --sp-file scr=
-ipt.cocci --include-headers --dir . > output.patch)
->=20
-> @@
-> identifier S, member, array;
-> type T1, T2;
-> @@
->=20
-> struct S {
->   ...
->   T1 member;
->   T2 array[
-> - 0
->   ];
-> };
->=20
-> -fstrict-flex-arrays=3D3 is coming and we need to land these changes
-> to prevent issues like these in the short future:
->=20
-> ../fs/minix/dir.c:337:3: warning: 'strcpy' will always overflow; destinat=
-ion buffer has size 0,
-> but the source string has length 2 (including NUL byte) [-Wfortify-source]
-> 		strcpy(de3->name, ".");
-> 		^
->=20
-> Since these are all [0] to [] changes, the risk to UAPI is nearly zero. If
-> this breaks anything, we can use a union with a new member name.
->=20
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-le=
-ngth-and-one-element-arrays
->=20
-> Link: https://github.com/KSPP/linux/issues/78
-> Build-tested-by: https://lore.kernel.org/lkml/62b675ec.wKX6AOZ6cbE71vtF%2=
-5lkp@intel.com/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+typo: rounding
 
-Thanks this fixes warning with gcc-12 in iproute2.
-In function =E2=80=98xfrm_algo_parse=E2=80=99,
-    inlined from =E2=80=98xfrm_state_modify.constprop=E2=80=99 at xfrm_stat=
-e.c:573:5:
-xfrm_state.c:162:32: warning: writing 1 byte into a region of size 0 [-Wstr=
-ingop-overflow=3D]
-  162 |                         buf[j] =3D val;
-      |                         ~~~~~~~^~~~~
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+
+Makes sense.
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+
+>  tools/perf/util/bpf-utils.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf-utils.c b/tools/perf/util/bpf-utils.c
+> index e271e05e51bc..80b1d2b3729b 100644
+> --- a/tools/perf/util/bpf-utils.c
+> +++ b/tools/perf/util/bpf-utils.c
+> @@ -149,11 +149,10 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+>                 count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
+>                 size  = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
+>
+> -               data_len += count * size;
+> +               data_len += roundup(count * size, sizeof(__u64));
+>         }
+>
+>         /* step 3: allocate continuous memory */
+> -       data_len = roundup(data_len, sizeof(__u64));
+>         info_linear = malloc(sizeof(struct perf_bpil) + data_len);
+>         if (!info_linear)
+>                 return ERR_PTR(-ENOMEM);
+> @@ -180,7 +179,7 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+>                 bpf_prog_info_set_offset_u64(&info_linear->info,
+>                                              desc->array_offset,
+>                                              ptr_to_u64(ptr));
+> -               ptr += count * size;
+> +               ptr += roundup(count * size, sizeof(__u64));
+>         }
+>
+>         /* step 5: call syscall again to get required arrays */
+> --
+> 2.36.1.476.g0c4daa206d-goog
+>
