@@ -2,160 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9506BC43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 06:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6526C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 08:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232011AbiF0GVF (ORCPT
+        id S232564AbiF0ISm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Jun 2022 02:21:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54698 "EHLO
+        Mon, 27 Jun 2022 04:18:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231776AbiF0GVF (ORCPT
+        with ESMTP id S232452AbiF0ISl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Jun 2022 02:21:05 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651AF2BCC;
-        Sun, 26 Jun 2022 23:21:04 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id s17so8548757iob.7;
-        Sun, 26 Jun 2022 23:21:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=+Ua18/p8hkHhPEFibJ7/14yqoaJ6Vlr8Bwa0LwoGmco=;
-        b=AgGZJExEG28jIEYgz0q7+FWzHtSIrG685VZQRA0qSFwJOzD0b5+SfHxij9xZXoPYQ0
-         EYrr3Sr2h72eK2PK9o4Ri0E3T4mds7HlVYApbtVhMj5WChyv2JQrkgQiF9fzVcrzRttf
-         WuD26hfwQXAaqToChLfQsqycbE4QKTkaosnOC6h6pLk2ozxzyZyy+NHvwmh+5YcE6aDn
-         f4UkIeg88PxhuGOoeF69lPb5WSK/0GkzAgkN/HUxxGDMX6TFzUf6QocWwlXATWxvMcvs
-         LjLt1gR1lEXzgbBrz5fJcbMxKkhad+VTKPG7z+DFqtjgpavSVZ46mblqfNIw5wOvGS99
-         6kxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=+Ua18/p8hkHhPEFibJ7/14yqoaJ6Vlr8Bwa0LwoGmco=;
-        b=PJXgEfKx/B1sZhOtcHr75H6zy9sS6OJC6ko2xhqRJWSt5VG7W4JfQ+NA8f0YIUjZ57
-         carhtb85yaWFp0r1WtebjDm2QbkhQf4Ri6Pb+YT+SDIqiSq2KdroOp9Yz48t43qDpHF7
-         5lz6C1Ch7Hw3JglfV5ychLhSFEchxaaZwaf6AfLDBtxDa55CgB7JSFoliOKN/Ci/zQRU
-         JPUBPe6OR6VcmxPpJ8/TXqN/Tolntynwj9k7OLemVLTDf4jZTEL62mpLAfyyFory4m+D
-         OqhsRT+HylnUQ29DVmTO0vE0u7ywhfNGmDUtG/nr9o5eHru/x5vhSR+GZb1I2VqdZbcr
-         0uLw==
-X-Gm-Message-State: AJIora9HUeQHpUAY4Gx23qyi8vDbEuqdlvRusXUiEU6Zo9t1K++cBuCp
-        E36erKG/Cz+KUHaatay0TIZo19IW307vZWakzGY=
-X-Google-Smtp-Source: AGRyM1spyVdearMCY8BhTc2GpLt3ndrewBGOYQFb3iYqgwxAOES/t4SaLMpcB+yWfLPLRcNF6K4toXeKvJBs+ISL25A=
-X-Received: by 2002:a05:6638:1415:b0:331:d318:83ab with SMTP id
- k21-20020a056638141500b00331d31883abmr7162512jad.126.1656310863812; Sun, 26
- Jun 2022 23:21:03 -0700 (PDT)
+        Mon, 27 Jun 2022 04:18:41 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE065C76;
+        Mon, 27 Jun 2022 01:18:39 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LWgY31qVdzhYn4;
+        Mon, 27 Jun 2022 16:16:23 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 27 Jun 2022 16:18:36 +0800
+CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
+        <james.clark@arm.com>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <acme@kernel.org>, <jonathan.cameron@huawei.com>,
+        <john.garry@huawei.com>, <helgaas@kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <mathieu.poirier@linaro.org>,
+        <suzuki.poulose@arm.com>, <mark.rutland@arm.com>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>
+Subject: Re: [PATCH v9 5/8] perf tool: Add support for HiSilicon PCIe Tune and
+ Trace device driver
+To:     Leo Yan <leo.yan@linaro.org>,
+        Yicong Yang <yangyicong@hisilicon.com>
+References: <20220606115555.41103-1-yangyicong@hisilicon.com>
+ <20220606115555.41103-6-yangyicong@hisilicon.com>
+ <20220627020256.GB143063@leoy-ThinkPad-X240s>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <fb55fdab-3ad6-a21a-315a-9dc404b35f11@huawei.com>
+Date:   Mon, 27 Jun 2022 16:18:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-References: <20220607000851.39798-1-irogers@google.com> <CA+icZUWpSF6ge76JVp1qBC5QhC1AwNacs5Di=e1QSbAD+SVKUA@mail.gmail.com>
- <YqjggY64PKfog0YW@kernel.org> <CA+icZUUx_Re+w9S7eHXma9aC=8T8ypp8=+tkJy7zJMrUocMSKQ@mail.gmail.com>
- <Yrh7uSL0AybSqd0V@kernel.org>
-In-Reply-To: <Yrh7uSL0AybSqd0V@kernel.org>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 27 Jun 2022 08:20:27 +0200
-Message-ID: <CA+icZUXt8rBadACnXPUdeQbR_nJbqYG+pGPF=767jHV+B2uYsA@mail.gmail.com>
-Subject: Re: [Linux v5.19-rc1] tools/perf/a.out remains after make -C
- tools/perf clean
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20220627020256.GB143063@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jun 26, 2022 at 5:31 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Wed, Jun 15, 2022 at 12:11:48AM +0200, Sedat Dilek escreveu:
-> > On Tue, Jun 14, 2022 at 9:24 PM Arnaldo Carvalho de Melo
-> > <arnaldo.melo@gmail.com> wrote:
-> > >
-> > > Em Tue, Jun 07, 2022 at 08:59:31PM +0200, Sedat Dilek escreveu:
-> > > > Hi,
-> > > >
-> > > > I observed this some time ago - so this is not only Linux v5.19-rc1 related.
-> > > >
-> > > > $ LC_ALL=C make -C tools/perf clean 2>&1 | tee ../make-log_perf-clean.txt
-> > > > make: Entering directory '/home/dileks/src/linux-kernel/git/tools/perf'
-> > > >  CLEAN   x86
-> > > >  CLEAN   libtraceevent
-> > > >  CLEAN   libapi
-> > > >  CLEAN   libbpf
-> > > >  CLEAN   libsubcmd
-> > > >  CLEAN   libperf
-> > > >  CLEAN   fixdep
-> > > >  CLEAN   feature-detect
-> > > >  CLEAN   python
-> > > >  CLEAN   bpf-skel
-> > > >  CLEAN   core-objs
-> > > >  CLEAN   core-progs
-> > > >  CLEAN   core-gen
-> > > >  CLEAN   Documentation
-> > > > make: Leaving directory '/home/dileks/src/linux-kernel/git/tools/perf'
-> > > >
-> > > > $ git status -s
-> > > > M tools/perf/util/unwind-libunwind-local.c
-> > > > ?? tools/perf/a.out
-> > > >
-> > > > $ rm -v tools/perf/a.out
-> > > > 'tools/perf/a.out' deleted
-> > > >
-> > > > $ git checkout -- tools/perf/util/unwind-libunwind-local.c
-> > > >
-> > > > $ git status -s
-> > > > [ empty ]
-> > >
-> > > Interesting, since Linus complained at some point that after building
-> > > perf some new temp file was left there I added 'git status' to my
-> > > scripts to always get this flagged.
-> > >
-> > > I'm not seeing this here.
-> > >
-> >
-> > Just re-checked with Linux v5.19-rc2 and attaching tools/perf/a.out +
-> > tools/perf/Makefile.config.
-> >
-> > Check perf binary:
-> >
-> > $ ~/bin/perf -vv
-> > perf version 5.19.0-rc2
-> >                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-> >    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-> >                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-> >         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-> >                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-> >            debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
-> >                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-> >               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> >               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-> >             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-> >              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-> >             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-> >             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-> >    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-> >                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-> >                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-> >             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-> >                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> >                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-> >                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-> >               libpfm4: [ OFF ]  # HAVE_LIBPFM
-> >
-> > Tried `make distclean`.
-> > Tried `make tools/ clean` but tools/tracing/rtla produces errors (rm clean).
-> > Still exists: tools/perf/a.out.
->
-> I started seeing this here, will investigate and re-read your reports,
-> thanks for sending them!
->
+On 2022/6/27 10:02, Leo Yan wrote:
+> On Mon, Jun 06, 2022 at 07:55:52PM +0800, Yicong Yang wrote:
+>> From: Qi Liu <liuqi115@huawei.com>
+>>
+>> HiSilicon PCIe tune and trace device (PTT) could dynamically tune
+>> the PCIe link's events, and trace the TLP headers).
+>>
+>> This patch add support for PTT device in perf tool, so users could
+>> use 'perf record' to get TLP headers trace data.
+>>
+>> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> Just one minor comment.
+> 
+> [...]
+> 
+>> diff --git a/tools/perf/util/hisi-ptt.h b/tools/perf/util/hisi-ptt.h
+>> new file mode 100644
+>> index 000000000000..2db9b4056214
+>> --- /dev/null
+>> +++ b/tools/perf/util/hisi-ptt.h
+>> @@ -0,0 +1,19 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * HiSilicon PCIe Trace and Tuning (PTT) support
+>> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+>> + */
+>> +
+>> +#ifndef INCLUDE__PERF_HISI_PTT_H__
+>> +#define INCLUDE__PERF_HISI_PTT_H__
+>> +
+>> +#define HISI_PTT_PMU_NAME		"hisi_ptt"
+>> +#define HISI_PTT_AUXTRACE_PRIV_SIZE	sizeof(u64)
+>> +
+>> +struct auxtrace_record *hisi_ptt_recording_init(int *err,
+>> +						struct perf_pmu *hisi_ptt_pmu);
+>> +
+>> +int hisi_ptt_process_auxtrace_info(union perf_event *event,
+>> +				   struct perf_session *session);
+> 
+> The function hisi_ptt_process_auxtrace_info() is introduced by next
+> patch for support PTT decoding, for good practice (e.g. keep
+> bisection), it's good to introduce function declaration and definition
+> in one patch.
+> 
 
-Thanks for the feedback.
+Thanks for catching this. There's something wrong when doing the patch splitting.
+Will fix this!
 
-If you need further information or have something for testing, please
-let me know.
+> With this fixing, this patch looks good to me:
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> 
 
--sed@-
+Thanks.
