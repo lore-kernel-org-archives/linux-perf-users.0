@@ -2,225 +2,229 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6FECCA47B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 22:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7869CC43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 22:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242652AbiF0Wb7 (ORCPT
+        id S240939AbiF0Wlj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Jun 2022 18:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37574 "EHLO
+        Mon, 27 Jun 2022 18:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242644AbiF0Wby (ORCPT
+        with ESMTP id S236583AbiF0Wl3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Jun 2022 18:31:54 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B592B1FCCA;
-        Mon, 27 Jun 2022 15:31:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656369110; x=1687905110;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=cFfs79so5bDyszYGeV34Sx13DSMu8p5hKhG+YTrPg6I=;
-  b=DbS6Fgbxmvyv+I85OGq4Ii9xtDeApCr6hH2Jc+ivTd8eRRaCyUqNTFTp
-   vSqvPxM7gUvWSmkLjPpzuFCwhNrNRZkU17E/qmLm9VG46T5r5z4hcuSMR
-   88QgdHJWOsBJ1AxjPunwZgo0UR1BeIWksgICRd98chF6W0tnLts+beWra
-   YQCe2HAtg9hW6Ocn65oxLhnVPfMCxQ3VnUonU4AOrkQMr+F7jDR9Ac3zO
-   I/zwRj8IxYTlNtUJzWFH8Go/M4CQc4rwxbY5c8uyfoMtjEfdsij9PLUAj
-   RYv/Hk9tSZSwdm5x+8wGQm3+02NJs+7uZrljA6QRXKuNMaDISOHrg5qUg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="307054827"
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="307054827"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 15:31:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
-   d="scan'208";a="594502569"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Jun 2022 15:31:49 -0700
-Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 27 Jun 2022 15:31:48 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Mon, 27 Jun 2022 15:31:48 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Mon, 27 Jun 2022 15:31:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bgbRU5ZSJ+1Njs1Ls5+mrC2TiMXDi6j+q1nXEW35T0vgGO9W6aK0KqFw8sLIpVNW5OEYewvET37n7OLnzZJzrdoAPvuBbKl2gKhhbMESYILsmLYunOjlbKIBJepwvrBGTXlteBN4XqKcJA3F5ktTDOcARc7D/BEWm1ouxrRANeHu7u58sV/HAAoNgfi/egYKuQLeez6w+8vyf6/t3bVzALpXu4HHE9Zu0zqEJk2ju0blX3YtecrfUxzHj/CVnr40PS3z1w1ZMy8GJZzHL7fpiQznoZJDug/Y+NOh43a03VPTMQQvWz4AoCcRi+x91siT0uSwWDqDOh7397up6lUgLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fk+tjoSHkPKT19HAXvoo/zCR1SLEsyiUuNU6CruvzGM=;
- b=QI0iafA/bjqr3Gx/f278cS7Oe2x/WkoQMqIGtb6F5Dxfd8KGUdN0WY+LZsBdW5DuG/IkEiGDaJLunvc+wYSbILqxZb12Aer3pTYr7w8s46PErQpET6TL3qYW29h2Ov9/EnK7F8GH22u1w5GbZgtfq5oQQYIpUatlbQe4GzlKUmVSPR6hRnIesSOW9Vyo4AYmxRthVk7LvEDo8N/e0qC5Yke05/8T1b32FiLPtXodGmdngB9bhvjeeKmMTiW3Gs6/1vEACeKhtxeUnT3KCN0/cetAqByvXQUerrK00rSjds9UgCkj018UeCPxBTH+mSq7QbJmqLlZKctqU5S1D0VuOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by MN2PR11MB3615.namprd11.prod.outlook.com
- (2603:10b6:208:ec::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.16; Mon, 27 Jun
- 2022 22:31:46 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::f50c:6e72:c8aa:8dbf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::f50c:6e72:c8aa:8dbf%7]) with mapi id 15.20.5373.018; Mon, 27 Jun 2022
- 22:31:46 +0000
-Date:   Mon, 27 Jun 2022 15:31:42 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <x86@kernel.org>, <dm-devel@redhat.com>,
-        <linux-m68k@lists.linux-m68k.org>, <linux-mips@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
-        <linux-can@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux1394-devel@lists.sourceforge.net>,
-        <io-uring@vger.kernel.org>, <lvs-devel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <kasan-dev@googlegroups.com>,
-        <linux-mmc@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <linux-sctp@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-scsi@vger.kernel.org>, <target-devel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <v9fs-developer@lists.sourceforge.net>,
-        <linux-rdma@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH][next] treewide: uapi: Replace zero-length arrays with
- flexible-array members
-Message-ID: <62ba2fced98ed_103a0e29448@dwillia2-xfh.notmuch>
-References: <20220627180432.GA136081@embeddedor>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220627180432.GA136081@embeddedor>
-X-ClientProxiedBy: MW4PR03CA0348.namprd03.prod.outlook.com
- (2603:10b6:303:dc::23) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 09857533-95a6-4ce5-821a-08da588cd147
-X-MS-TrafficTypeDiagnostic: MN2PR11MB3615:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: I8QxY2dRCssS1nOBaKo6XXukRWcQnmTJH2CTvS1oBWI5m88TdZyePC8+8Y0lOy5CTi+gHMca0W8aiZ/N99wYfzWDT4IwVc4nlPrt+m+R4p2eDFjRwAp5zJ0VpYLntAd+8A00LZQoJik2rjbu5yVMxLfzdAE/sViq6QR/ukrAYU6UH00hT/qjTfq5KJ6RNmBJjkE9wR8YlchdCVQfclNLDMwBRKAceVhlApanN3Kun5MvZcVR3nAEDzee42+78vAUhiTD75bcuXHURf9mM6NWettdBNB+fgoFRuSIfNbpFulswaXgt+/W3zFI5GI6s+IO6P7PaIkaHL5ETfxVXF7R5o8CyVUDydZpe+Wo6FiGJLus4dot7TeZ2i7BumDmuP2aPbFZpX0GbQZu4hursUXqRwE2dMGw5Mf+B4E0s5mE8SNKEUgUaTQbQGCJ+39EGCF8oMg/hVKoYY9RhxhEhjLKAozVDeQ4YIGG0uJOByhFexDi/CUzss4zWm3FPSVVNx4WelTO8Eiasy/iNjTp8PznOSLGYIo42iw/Hjo++nvz4kH45aIuzAYBtK24nNuwNzMbw4sZoThoJKGKwgdXb5MUKX0VZNuO4cSKb3qG94N5aRCJ56Wdc/+RlFCaggvApnHVcVb8WZ2tBa7ELxVh5io/heAz/fk/UX+HQSPPeKz2L/y2wd5VLtSoLAK+t2RnWXIknFIHsQEtJpjJCc3Z5XS3bsdpx9Mhe7/ar6cHw6C6qj10wOiolEM6AzvfHFUUlo6+4Fm/bKWXrtwiCf23irh7lEh8H2PSKKbYuEuqvEmBbfU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(376002)(396003)(346002)(39860400002)(366004)(6666004)(7416002)(6506007)(41300700001)(38100700002)(8936002)(83380400001)(66946007)(66476007)(7406005)(66556008)(82960400001)(9686003)(26005)(6512007)(5660300002)(6486002)(110136005)(478600001)(8676002)(966005)(2906002)(316002)(4326008)(186003)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TG81TEp2bjd5Ui8vcXRBOE1oT2o4aFh0aE1Ma1hEaHNzOWFKMEpVOEdjc0I3?=
- =?utf-8?B?SWNnYkVSZ2gxcDgwU2twTjF4ZW5PbFcwZHpEZlc3WnBtOXhsVUNMcVhTb2hw?=
- =?utf-8?B?Z1UvTFZkSXdjc3lZU1JpbGhXSDExS2RTcUhFanJHbitxYk5nSzB2TitnUTB1?=
- =?utf-8?B?d3Npa2lreGhFanpCS2Z6WGhuaWtsYldmWXB4eVAyaE9lSG5JNHV0SG9FTG40?=
- =?utf-8?B?elVLZEpIUWZ0K0ZFamlxcHU1Qmw3T1J1VU9CK29Ib0VzanNEK0xad2VyeFM5?=
- =?utf-8?B?c1dUZzh5RE9UR0Y3Wk1mOHpMdS9FUjRTU0VKT0ErU0tGd1pvdng5Wk92WmVP?=
- =?utf-8?B?aGhLVHE5QitoeUVFSmRYd3I1UEJVckw5SXNobnQ3VkNFYzFGM0VWMjR6NHZE?=
- =?utf-8?B?MW5hbUVZR3Q1TGRXQnRIbEYyU3BuRHRzbjFoN25iQ3ZsRkRwTUNiZWpLRGwy?=
- =?utf-8?B?dUlDcnNJZlRWNjZqYzNJY1RPQnhEWTJMN056dkJtK3FMS3NNL1paZ1dtQXQ2?=
- =?utf-8?B?c2toU3JpelZQMm1yVkNiTnZReUROU2thMlN0K3ptc3lqSFpGQTc5dFZ5ZkZH?=
- =?utf-8?B?M1dRNjhzT1NSOHFBRm9lV01xSExNeWJmM0d3L3hoVXNZSVc0N0dTZ1RKSnBZ?=
- =?utf-8?B?T3l5WDhrTlVZTWNYZHI3U2V3TFFTc1hKUGxZTXFNVm1Ga2hFYTNnZmZCcWZV?=
- =?utf-8?B?d29rZjJmN2NUbGh0Y29KR2hBUkdIRHpJc2FCRHkzZjZiMkJMRExhRGtPOWZK?=
- =?utf-8?B?N3VjaFU3aEpNZHFnUC9qY0RJZGwwcUgzT2crTlVnWHI3NEdGanZPVTlna1NY?=
- =?utf-8?B?ZWdsU200UjJWTVBSWW1ENTRUWTFVMmFSbDliV0FTVlJQRCs3UFI2L0JRK2pH?=
- =?utf-8?B?Z1NWQjZGdFh2aGg0ay9FV1paWmtram9tK1M4ZzgwN3h5TThkNis1bHVXTDVP?=
- =?utf-8?B?czlJK1NnR0tNcDQvOXJrdnN6YnEyRHkyNzdiMzA5SWhGV0J0a1h2Q2poc2F3?=
- =?utf-8?B?Ri9DYkJjVm9nQWVjME1ndnFtT3Q3RjFyVEVDM0U1VFd0elBCRnlXUHJWR3Zx?=
- =?utf-8?B?S3kzV3dOM0NqSjRnOUVWdGhTN0hnbTRBOUpnT3cwc3hhTkZEMzBNbkpzbEtJ?=
- =?utf-8?B?Vm5lVE0wbUN4UEdlTHBVWG9QdzRobWdCWStjb2QvcGlPd1JhUnY1UUtHcUUx?=
- =?utf-8?B?blp4NGRWbE5SYTRrRjN1Uy80ZWJoZXBvdnRDWFpMNTZBU2NCci9McTlMelJC?=
- =?utf-8?B?VTlHaGR3cGF5UlEzR3BrSVdRalM3TnJtMXhaQnBnSXNISE9aL1lHS29qQ3RV?=
- =?utf-8?B?dFd6TytkMkVUNmNMa0Z5eHBOSGJ2UXVoZFR1dHdXemhDK29MWXBBQkowaUta?=
- =?utf-8?B?NGVZZnZmOVBaK000TUQzWXk0eG1SazBONFVrYjBuVWcrdmJtK0lQSU80RGpD?=
- =?utf-8?B?YlIwdFZvcTZIMmdyK3diQ25wRWgvV1kzZkZ4U2VyYS84eDBhZHlCYkVPbngx?=
- =?utf-8?B?VUt1WHc0NjNqR0dWM0dEbnZ4cXVscHVlOEF2V2w5Vkw0UnVrNzVjL0h0a1oz?=
- =?utf-8?B?TFlFWWhIWEI3eXFVczlqa2Juc3JZVUZ0ZUtIbHhXWGV6bkloMmw4TXVXK2hm?=
- =?utf-8?B?UDBYQjI4TVB4QlVlcDRQclZ3OFBoeDVPTTNGQnVIZ2VmZE9zcXA0M3M0cHVv?=
- =?utf-8?B?dHRETGgzWFRSQTd1ZHVkRnJiOER6WWFMb2RJbWF1T2RzYXQ1YVd4Zmh3RkFZ?=
- =?utf-8?B?M0NTTVlTdEZmT1FDUm1KRzMwZFh1SWJGMlF2SXpJUmFCTmpEN21jWU90TTNO?=
- =?utf-8?B?OEVTa29FempFTmpYeFdFMTkxa2hrL3hSWUtrUldHZUhxVTRIZVQ4WlhwUUtn?=
- =?utf-8?B?YS92UWZzL21Fc09vRE81TXZaUngzTm93L2tqOENTdHUybUtLYzlPSFozR0NG?=
- =?utf-8?B?VkJZeTlQMHQ2MnVqUEJneFVaNDFEQ3VCdXIvb0dhYnVNcmx4Z2I3dWR2ZWFr?=
- =?utf-8?B?U3FFVHNwb3VmbWxUMUY4TFFCTURWcE1hQmxVUlZzNkJaT241OEJ3Zk5vS2tw?=
- =?utf-8?B?ZlZEU1FmY3BiaG9iUDZIS0lPK1FVTnZOSVU4L2h5bE1qaXZ3ZWYrdXBtMFVw?=
- =?utf-8?B?N2RnT3VrY0Rkc1VYM3BIamw2bDJ1TnRabHlKcXdORXhocDlnWWhBdlBuc0FJ?=
- =?utf-8?B?VFE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09857533-95a6-4ce5-821a-08da588cd147
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2022 22:31:45.8792
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tff1Ajm5j5IjP8nC+pmHruh1VBM1HYz+iFkTnXnCZrfcWvUa1L/3YXcaJpJFmczORKhoOnLDiSvurI/2Snl4amoFHffRXHppNmqfZrAlNU4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3615
-X-OriginatorOrg: intel.com
+        Mon, 27 Jun 2022 18:41:29 -0400
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D5A1BE80
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 15:41:28 -0700 (PDT)
+Received: by mail-pj1-x1049.google.com with SMTP id z13-20020a17090ab10d00b001ec86329c08so3599665pjq.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 15:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=VWOVk1jH/Ru1/0ssqOaKB13FZQZaZbbtFy4vR2AihMw=;
+        b=U3e8/1GURdwGIAAFUU81M/SVz+LRao4LLZWWl/OrbybdCl903JTylbP3MRKJDFx3gq
+         JacHf+Tx3TJZ7D6oO5amJKBPhH2YNumbOb6/VhcXS2Sq9o62eMUMx//fhqiJrbQeJR/n
+         sDqqMuk2IDEnlXTQbSS+KMpTi0dEp0JadMxZBltoN+CA+N5pqoapt28fdm3V6Bkl4GLQ
+         tuoQB5syrnkVOGsFv4cgtDStG/ljMKhCUYtEBKuGLOPpbVNASgyFph368F7/ohHWVWF5
+         xt6dvam+kTPw+38L7rWCLzNa7SDf3pToo2cku7NDNUkBk8pL2Z6ne8MsgA7Amc/k6rZl
+         57eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=VWOVk1jH/Ru1/0ssqOaKB13FZQZaZbbtFy4vR2AihMw=;
+        b=JLq2Bh1GN37nsuwI5D3pFc3oGlZtWBVew2kY4i1wXdzTzls1qtVmLk6NSxXMJPCb+u
+         +byD8BQ4vUBTWjjc3XUnDVr4OFoe1oG1N3MKlb2t0m6Pjhx10LhXfvxV5J5CCfzhykEy
+         bQneo73EkI2kFY29DiWQHqVDoi01f3oP+tNUrYN49wXaOhs58BtEVAqQzUEbC07B9+3k
+         FQINIRcIDJvxVxIJ16JE7aAlQ1d97xaXqRDZfiJGWLeZz9Ro6uFsBAXtZ5XnnH8WZRaz
+         9+ZTLqcCBwiA3TxrHIUSopmPQzH7C3i33JwgXnLsePOxK/ng7+Lh06CWNyOtQ4lhd8q1
+         9ulg==
+X-Gm-Message-State: AJIora8hBdDjip6Ks/XUccwN0aydDJTqn3X1nQ0AWmr8pfWOMv2/l0kC
+        84SNYjV6078KSogRwR6gR1+2ihbke9TgT/yG
+X-Google-Smtp-Source: AGRyM1sOaDV3HTAdMOsEX1ae55WDsgGcPzNaJOi4lGRO74gADlY3yZSMYEvrQbf96KGJQ6hMm5tflxZfCphzwGD1
+X-Received: from blakejones.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:411c])
+ (user=blakejones job=sendgmr) by 2002:a17:903:2448:b0:16a:37de:89b3 with SMTP
+ id l8-20020a170903244800b0016a37de89b3mr446772pls.68.1656369688408; Mon, 27
+ Jun 2022 15:41:28 -0700 (PDT)
+Date:   Mon, 27 Jun 2022 15:41:16 -0700
+Message-Id: <20220627224116.3015376-1-blakejones@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+Subject: [PATCH v2 RESEND] Add a "-m" option to "perf buildid-list".
+From:   Blake Jones <blakejones@google.com>
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Blake Jones <blakejones@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Gustavo A. R. Silva wrote:
-> There is a regular need in the kernel to provide a way to declare
-> having a dynamically sized set of trailing elements in a structure.
-> Kernel code should always use “flexible array members”[1] for these
-> cases. The older style of one-element or zero-length arrays should
-> no longer be used[2].
-> 
-> This code was transformed with the help of Coccinelle:
-> (linux-5.19-rc2$ spatch --jobs $(getconf _NPROCESSORS_ONLN) --sp-file script.cocci --include-headers --dir . > output.patch)
-> 
-> @@
-> identifier S, member, array;
-> type T1, T2;
-> @@
-> 
-> struct S {
->   ...
->   T1 member;
->   T2 array[
-> - 0
->   ];
-> };
-> 
-> -fstrict-flex-arrays=3 is coming and we need to land these changes
-> to prevent issues like these in the short future:
-> 
-> ../fs/minix/dir.c:337:3: warning: 'strcpy' will always overflow; destination buffer has size 0,
-> but the source string has length 2 (including NUL byte) [-Wfortify-source]
-> 		strcpy(de3->name, ".");
-> 		^
-> 
-> Since these are all [0] to [] changes, the risk to UAPI is nearly zero. If
-> this breaks anything, we can use a union with a new member name.
-> 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Link: https://github.com/KSPP/linux/issues/78
-> Build-tested-by: https://lore.kernel.org/lkml/62b675ec.wKX6AOZ6cbE71vtF%25lkp@intel.com/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Hi all!
-> 
-> JFYI: I'm adding this to my -next tree. :)
-> 
-[..]
->  include/uapi/linux/ndctl.h                    | 10 +--
+This new option displays all of the information needed to do external
+BuildID-based symbolization of kernel stack traces, such as those collected
+by bpf_get_stackid(). For each kernel module plus the main kernel, it
+displays the BuildID, the start and end virtual addresses of that module's
+text range (rounded out to page boundaries), and the pathname of the
+module.
 
-For ndctl.h
+When run as a non-privileged user, the actual addresses of the modules'
+text ranges are not available, so the tools displays "0, <text length>" for
+kernel modules and "0, 0xffffffffffffffff" for the kernel itself.
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+Sample output:
+
+root# perf buildid-list -m
+cf6df852fd4da122d616153353cc8f560fd12fe0 ffffffffa5400000 ffffffffa6001e27 [kernel.kallsyms]
+1aa7209aa2acb067d66ed6cf7676d65066384d61 ffffffffc0087000 ffffffffc008b000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/sha512_generic.ko
+3857815b5bf0183697b68f8fe0ea06121644041e ffffffffc008c000 ffffffffc0098000 /lib/modules/5.15.15-1rodete2-amd64/kernel/arch/x86/crypto/sha512-ssse3.ko
+4081fde0bca2bc097cb3e9d1efcb836047d485f1 ffffffffc0099000 ffffffffc009f000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/acpi/button.ko
+1ef81ba4890552ea6b0314f9635fc43fc8cef568 ffffffffc00a4000 ffffffffc00aa000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/cryptd.ko
+cc5c985506cb240d7d082b55ed260cbb851f983e ffffffffc00af000 ffffffffc00b6000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/i2c/busses/i2c-piix4.ko
+[...]
+
+Signed-off-by: Blake Jones <blakejones@google.com>
+---
+ .../perf/Documentation/perf-buildid-list.txt  |  4 +++
+ tools/perf/builtin-buildid-list.c             | 35 ++++++++++++++++++-
+ tools/perf/util/machine.c                     | 13 +++++++
+ tools/perf/util/machine.h                     |  5 +++
+ 4 files changed, 56 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/Documentation/perf-buildid-list.txt b/tools/perf/Documentation/perf-buildid-list.txt
+index 25c52efcc7f0..e1e8fdbe06b9 100644
+--- a/tools/perf/Documentation/perf-buildid-list.txt
++++ b/tools/perf/Documentation/perf-buildid-list.txt
+@@ -33,6 +33,10 @@ OPTIONS
+ -k::
+ --kernel::
+ 	Show running kernel build id.
++-m::
++--kernel-maps::
++	Show buildid, start/end text address, and path of running kernel and
++	its modules.
+ -v::
+ --verbose::
+ 	Be more verbose.
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index cebadd632234..e73520190974 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -12,6 +12,7 @@
+ #include "util/build-id.h"
+ #include "util/debug.h"
+ #include "util/dso.h"
++#include "util/map.h"
+ #include <subcmd/pager.h>
+ #include <subcmd/parse-options.h>
+ #include "util/session.h"
+@@ -20,6 +21,31 @@
+ #include <errno.h>
+ #include <linux/err.h>
+ 
++static int buildid__map_cb(struct map *map, void *arg __maybe_unused)
++{
++	const struct dso *dso = map->dso;
++	char bid_buf[SBUILD_ID_SIZE];
++
++	memset(bid_buf, 0, sizeof(bid_buf));
++	if (dso->has_build_id)
++		build_id__sprintf(&dso->bid, bid_buf);
++	printf("%s %16lx %16lx", bid_buf, map->start, map->end);
++	if (dso->long_name != NULL)
++		printf(" %s", dso->long_name);
++	printf("\n");
++
++	return 0;
++}
++
++static void buildid__show_kernel_maps(void)
++{
++	struct machine *machine;
++
++	machine = machine__new_host();
++	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
++	machine__delete(machine);
++}
++
+ static int sysfs__fprintf_build_id(FILE *fp)
+ {
+ 	char sbuild_id[SBUILD_ID_SIZE];
+@@ -99,6 +125,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
+ int cmd_buildid_list(int argc, const char **argv)
+ {
+ 	bool show_kernel = false;
++	bool show_kernel_maps = false;
+ 	bool with_hits = false;
+ 	bool force = false;
+ 	const struct option options[] = {
+@@ -106,6 +133,8 @@ int cmd_buildid_list(int argc, const char **argv)
+ 	OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
+ 	OPT_BOOLEAN('k', "kernel", &show_kernel, "Show current kernel build id"),
++	OPT_BOOLEAN('m', "kernel-maps", &show_kernel_maps,
++	    "Show build id of current kernel + modules"),
+ 	OPT_INCR('v', "verbose", &verbose, "be more verbose"),
+ 	OPT_END()
+ 	};
+@@ -117,8 +146,12 @@ int cmd_buildid_list(int argc, const char **argv)
+ 	argc = parse_options(argc, argv, options, buildid_list_usage, 0);
+ 	setup_pager();
+ 
+-	if (show_kernel)
++	if (show_kernel) {
+ 		return !(sysfs__fprintf_build_id(stdout) > 0);
++	} else if (show_kernel_maps) {
++		buildid__show_kernel_maps();
++		return 0;
++	}
+ 
+ 	return perf_session__list_build_ids(force, with_hits);
+ }
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 009061852808..28fff9a02ab0 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -3327,3 +3327,16 @@ int machine__for_each_dso(struct machine *machine, machine__dso_t fn, void *priv
+ 	}
+ 	return err;
+ }
++
++int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, void *priv)
++{
++	struct maps *maps = machine__kernel_maps(machine);
++	struct map *map;
++	int err = 0;
++
++	for (map = maps__first(maps); map != NULL; map = map__next(map)) {
++		if (fn(map, priv))
++			err = -1;
++	}
++	return err;
++}
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 5d7daf7cb7bc..e1476343cbb2 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -262,6 +262,11 @@ typedef int (*machine__dso_t)(struct dso *dso, struct machine *machine, void *pr
+ 
+ int machine__for_each_dso(struct machine *machine, machine__dso_t fn,
+ 			  void *priv);
++
++typedef int (*machine__map_t)(struct map *map, void *priv);
++int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn,
++				 void *priv);
++
+ int machine__for_each_thread(struct machine *machine,
+ 			     int (*fn)(struct thread *thread, void *p),
+ 			     void *priv);
+
+base-commit: 1bcca2b1bd67f3c0e5c3a88ed16c6389f01a5b31
+-- 
+2.36.1.476.g0c4daa206d-goog
+
