@@ -2,110 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D488C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 16:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEC9CCA473
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 17:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239384AbiF0Quh (ORCPT
+        id S239929AbiF0RSL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Jun 2022 12:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46542 "EHLO
+        Mon, 27 Jun 2022 13:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234113AbiF0Qug (ORCPT
+        with ESMTP id S239542AbiF0RSJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Jun 2022 12:50:36 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6214F5B6;
-        Mon, 27 Jun 2022 09:50:33 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id n185so5790060wmn.4;
-        Mon, 27 Jun 2022 09:50:33 -0700 (PDT)
+        Mon, 27 Jun 2022 13:18:09 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61FCC134
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 10:18:07 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id n1so13989328wrg.12
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 10:18:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A7Hsl2uga4BWww01zjD1ZVcBEkd3C0wHhuB0PJts4bs=;
-        b=IbCtxMYCu6wVWLe8i1R3rYHrDbf1VZ9aB73YiFVzrgh+s25sFQRZbULnvc4iTvSSC4
-         Sq1dTWSoqrCgY+o8GvImKin6irgPGSDDWAPoOTkTWTmpMuLfSy3OASFh+HS/eYnpwuSA
-         CxCeefhSLV2K/4xhP43xmM44EvHOErrXr7J0Dl6OyjTffoAFJXRCDPhp/Vytc9+WvoGf
-         8v9PQv1jpLEI2UAp7B1wUhrdZHUyzILov+/wmFfCiFPaXDu+IfFYIGJWkBhKdHr+Q/Ib
-         EpR6mQt/GPspuVinXL/EgyUBg5AHnj7Rznmp238rKUy+8ULHX6fyUpoekCuuER9KTYng
-         3F0Q==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rx9f3FFpQHBCbk0ON6Xh6VW45WNeEZB24W/hAUNIOhc=;
+        b=G+D6o8B0JVucQW6+PhCQ5L2XRwfWedIWe5iLwmsIKnP8l2kIPE3ln4/ME0/NvRV+UI
+         IRq3HZNljewherNlCxkZNHbPRyhOKbLAJsPLf/122Lc0zDeUZ3DSYptMKEcEzzE5M49v
+         K7z5/G6X58efTmpm/XecTLJdA7JzogWXZL37jfBfaiP12a4vZimKbpMNVbZqbhlrQndn
+         amVSil4XRxHxN3Czg+9XDVPJzWWjWA1lGbD0M6Gf9a4KCdlQI4edBbYRGLimeSp7uaaN
+         pvrRhrhKcOF/RRlK5ucxsSdCE8jF8RFh7BplqDvHDLsP9MUYF1Emg8N/f0LtedmrcKxn
+         UcoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A7Hsl2uga4BWww01zjD1ZVcBEkd3C0wHhuB0PJts4bs=;
-        b=Cvq0Mlmm7tb45oWdHkte8R5gu641huJLnJ2l7/eKJLadGjtsCYvMURsZ9/c4/r/fba
-         5Th6N5u1/PSTsuRuR0VCfziRbHP3g5Bxp3hih9t02oYGc5oOFZV/F3nCxV5Bphb8Y9EE
-         IuAv6frpavso8ZGlaWr9XUZYTdc1WZXUmmGrsnK8OyqusbAFCG6YvIP17/VBOfFVZ4hP
-         2hWto660sWRQTp/DxdAXMuhlwcne9kCXVB6r00yCUiE4p5uOUIF/XDoUGfUQlJwxZMbK
-         x7HXloFfcjDW1tBJnDKfPrhpFhMOpDfN/m8HC55Sup8evxFuU/PHwPHfjLn28UyjZQf+
-         QPxw==
-X-Gm-Message-State: AJIora9XxZO5ACV6SQkcyUjk9t9amLqFky3sTwSg98VUWERch0hnl/5S
-        R2sRrXRZL5IcodmD7p0QgDY=
-X-Google-Smtp-Source: AGRyM1sHOzOAcWp6o5ZNecGHwGQkgkiAE8rSfAgKatCNrhLyyd7RLh99kLZ0pXmAnhtxZ/nnEj+XFg==
-X-Received: by 2002:a1c:4d10:0:b0:3a0:4697:4f5c with SMTP id o16-20020a1c4d10000000b003a046974f5cmr11202064wmh.22.1656348632327;
-        Mon, 27 Jun 2022 09:50:32 -0700 (PDT)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id g12-20020a7bc4cc000000b003a03185231bsm13542332wmk.31.2022.06.27.09.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 09:50:31 -0700 (PDT)
-From:   Colin Ian King <colin.i.king@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rx9f3FFpQHBCbk0ON6Xh6VW45WNeEZB24W/hAUNIOhc=;
+        b=K0R47SvYICfF8clr4Vg6pARh8d/4EKFsPhqRt3Bu8AhoIVq+SyQWSZk7V7awASav7Y
+         Pvu+RsW9S9fZCsJpg9mjchOvXCdNPny1x/U6QbSJEG9R6zTN/M8lcHrZ17O/S/pONTDq
+         x3+HmRq1OI8v+s2xFtY5PRspkG25xwD3075TWixMG/ZpuafsT0I9kBIrSnkp5AVRerFu
+         NNMV83y9uA5mdFpFo+pMdefjXMfm5Xnb4W3E31IdoHuK8OJ3FfCzqTV4jW4B3wMkSApR
+         rF9aq2UopuZJnkzYVsDtXXhY0oO0lZQEhuswIi5EMLMmS2V54L9kZplYQ3jKKziD33Dc
+         0KZQ==
+X-Gm-Message-State: AJIora+PPy9tiOE3ckQoDTqNhbS7SNM2Z/KAJOLekUt4tl8odHU/hS5H
+        uYlSk0tjBRRY7BTrZEz55Gcjswvl+FmqkYykP819uQ==
+X-Google-Smtp-Source: AGRyM1vXlEJ2cJEQvlLdrnPihXwK9o/E1cIAWChD1xuv8agkjMs9iJuTfwntYyHAZfhGP9MzEdXOJwWhE277bB/fsJI=
+X-Received: by 2002:a5d:6b91:0:b0:21b:bc0b:7282 with SMTP id
+ n17-20020a5d6b91000000b0021bbc0b7282mr13477019wrx.375.1656350285740; Mon, 27
+ Jun 2022 10:18:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220614014714.1407239-1-irogers@google.com>
+In-Reply-To: <20220614014714.1407239-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 27 Jun 2022 10:17:51 -0700
+Message-ID: <CAP-5=fVg9ZVOONuiJZopC7RyuEXvP8t79EFjQF0GCcV=atGbCg@mail.gmail.com>
+Subject: Re: [PATCH] perf bpf: 8 byte align bpil data
+To:     Dave Marchevsky <davemarchevsky@fb.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86/rapl: use NULL for a null pointer rather than zero
-Date:   Mon, 27 Jun 2022 17:50:30 +0100
-Message-Id: <20220627165030.146986-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.35.3
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There are pointers being initialized with a zero, use NULL instead.
+On Mon, Jun 13, 2022 at 6:47 PM Ian Rogers <irogers@google.com> wrote:
+>
+> bpil data is accessed assuming 64-bit alignment resulting in undefined
+> behavior as the data is just byte aligned. With an -fsanitize=undefined
+> build the following errors are observed:
+>
+> $ sudo perf record -a sleep 1
+> util/bpf-event.c:310:22: runtime error: load of misaligned address 0x55f61084520f for type '__u64', which requires 8 byte alignment
+> 0x55f61084520f: note: pointer points here
+>  a8 fe ff ff 3c  51 d3 c0 ff ff ff ff 04  84 d3 c0 ff ff ff ff d8  aa d3 c0 ff ff ff ff a4  c0 d3 c0
+>              ^
+> util/bpf-event.c:311:20: runtime error: load of misaligned address 0x55f61084522f for type '__u32', which requires 4 byte alignment
+> 0x55f61084522f: note: pointer points here
+>  ff ff ff ff c7  17 00 00 f1 02 00 00 1f  04 00 00 58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00
+>              ^
+> util/bpf-event.c:198:33: runtime error: member access within misaligned address 0x55f61084523f for type 'const struct bpf_func_info', which requires 4 byte alignment
+> 0x55f61084523f: note: pointer points here
+>  58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00 3b 00 00 00 ab  02 00 00 44 00 00 00 14  03 00 00
+>
+> Correct this by rouding up the data sizes and aligning the pointers.
 
-Cleans up sparse warnings:
-arch/x86/events/rapl.c:540:59: warning: Using plain integer as NULL pointer
-arch/x86/events/rapl.c:542:59: warning: Using plain integer as NULL pointer
-arch/x86/events/rapl.c:543:59: warning: Using plain integer as NULL pointer
-arch/x86/events/rapl.c:544:59: warning: Using plain integer as NULL pointer
+Happy Monday, polite ping!
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- arch/x86/events/rapl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks,
+Ian
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 77e3a47af5ad..7d70690fded5 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -537,11 +537,11 @@ static struct perf_msr intel_rapl_spr_msrs[] = {
-  * - want to use same event codes across both architectures
-  */
- static struct perf_msr amd_rapl_msrs[] = {
--	[PERF_RAPL_PP0]  = { 0, &rapl_events_cores_group, 0, false, 0 },
-+	[PERF_RAPL_PP0]  = { 0, &rapl_events_cores_group, NULL, false, 0 },
- 	[PERF_RAPL_PKG]  = { MSR_AMD_PKG_ENERGY_STATUS,  &rapl_events_pkg_group,   test_msr, false, RAPL_MSR_MASK },
--	[PERF_RAPL_RAM]  = { 0, &rapl_events_ram_group,   0, false, 0 },
--	[PERF_RAPL_PP1]  = { 0, &rapl_events_gpu_group,   0, false, 0 },
--	[PERF_RAPL_PSYS] = { 0, &rapl_events_psys_group,  0, false, 0 },
-+	[PERF_RAPL_RAM]  = { 0, &rapl_events_ram_group,   NULL, false, 0 },
-+	[PERF_RAPL_PP1]  = { 0, &rapl_events_gpu_group,   NULL, false, 0 },
-+	[PERF_RAPL_PSYS] = { 0, &rapl_events_psys_group,  NULL, false, 0 },
- };
- 
- static int rapl_cpu_offline(unsigned int cpu)
--- 
-2.35.3
-
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/bpf-utils.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf-utils.c b/tools/perf/util/bpf-utils.c
+> index e271e05e51bc..80b1d2b3729b 100644
+> --- a/tools/perf/util/bpf-utils.c
+> +++ b/tools/perf/util/bpf-utils.c
+> @@ -149,11 +149,10 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+>                 count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
+>                 size  = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
+>
+> -               data_len += count * size;
+> +               data_len += roundup(count * size, sizeof(__u64));
+>         }
+>
+>         /* step 3: allocate continuous memory */
+> -       data_len = roundup(data_len, sizeof(__u64));
+>         info_linear = malloc(sizeof(struct perf_bpil) + data_len);
+>         if (!info_linear)
+>                 return ERR_PTR(-ENOMEM);
+> @@ -180,7 +179,7 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+>                 bpf_prog_info_set_offset_u64(&info_linear->info,
+>                                              desc->array_offset,
+>                                              ptr_to_u64(ptr));
+> -               ptr += count * size;
+> +               ptr += roundup(count * size, sizeof(__u64));
+>         }
+>
+>         /* step 5: call syscall again to get required arrays */
+> --
+> 2.36.1.476.g0c4daa206d-goog
+>
