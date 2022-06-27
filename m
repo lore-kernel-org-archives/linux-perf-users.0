@@ -2,138 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEC9CCA473
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 17:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE36C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 17:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239929AbiF0RSL (ORCPT
+        id S239196AbiF0R1t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Jun 2022 13:18:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37832 "EHLO
+        Mon, 27 Jun 2022 13:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239542AbiF0RSJ (ORCPT
+        with ESMTP id S239656AbiF0R1r (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Jun 2022 13:18:09 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61FCC134
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 10:18:07 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id n1so13989328wrg.12
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 10:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rx9f3FFpQHBCbk0ON6Xh6VW45WNeEZB24W/hAUNIOhc=;
-        b=G+D6o8B0JVucQW6+PhCQ5L2XRwfWedIWe5iLwmsIKnP8l2kIPE3ln4/ME0/NvRV+UI
-         IRq3HZNljewherNlCxkZNHbPRyhOKbLAJsPLf/122Lc0zDeUZ3DSYptMKEcEzzE5M49v
-         K7z5/G6X58efTmpm/XecTLJdA7JzogWXZL37jfBfaiP12a4vZimKbpMNVbZqbhlrQndn
-         amVSil4XRxHxN3Czg+9XDVPJzWWjWA1lGbD0M6Gf9a4KCdlQI4edBbYRGLimeSp7uaaN
-         pvrRhrhKcOF/RRlK5ucxsSdCE8jF8RFh7BplqDvHDLsP9MUYF1Emg8N/f0LtedmrcKxn
-         UcoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rx9f3FFpQHBCbk0ON6Xh6VW45WNeEZB24W/hAUNIOhc=;
-        b=K0R47SvYICfF8clr4Vg6pARh8d/4EKFsPhqRt3Bu8AhoIVq+SyQWSZk7V7awASav7Y
-         Pvu+RsW9S9fZCsJpg9mjchOvXCdNPny1x/U6QbSJEG9R6zTN/M8lcHrZ17O/S/pONTDq
-         x3+HmRq1OI8v+s2xFtY5PRspkG25xwD3075TWixMG/ZpuafsT0I9kBIrSnkp5AVRerFu
-         NNMV83y9uA5mdFpFo+pMdefjXMfm5Xnb4W3E31IdoHuK8OJ3FfCzqTV4jW4B3wMkSApR
-         rF9aq2UopuZJnkzYVsDtXXhY0oO0lZQEhuswIi5EMLMmS2V54L9kZplYQ3jKKziD33Dc
-         0KZQ==
-X-Gm-Message-State: AJIora+PPy9tiOE3ckQoDTqNhbS7SNM2Z/KAJOLekUt4tl8odHU/hS5H
-        uYlSk0tjBRRY7BTrZEz55Gcjswvl+FmqkYykP819uQ==
-X-Google-Smtp-Source: AGRyM1vXlEJ2cJEQvlLdrnPihXwK9o/E1cIAWChD1xuv8agkjMs9iJuTfwntYyHAZfhGP9MzEdXOJwWhE277bB/fsJI=
-X-Received: by 2002:a5d:6b91:0:b0:21b:bc0b:7282 with SMTP id
- n17-20020a5d6b91000000b0021bbc0b7282mr13477019wrx.375.1656350285740; Mon, 27
- Jun 2022 10:18:05 -0700 (PDT)
+        Mon, 27 Jun 2022 13:27:47 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B088612AC6;
+        Mon, 27 Jun 2022 10:27:43 -0700 (PDT)
+Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LWvhY0l3hz6H8RF;
+        Tue, 28 Jun 2022 01:23:41 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Mon, 27 Jun 2022 19:27:40 +0200
+Received: from [10.126.172.251] (10.126.172.251) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2375.24; Mon, 27 Jun 2022 18:27:39 +0100
+Message-ID: <6f9649d7-8129-57cf-8ab5-03abacd9cb6e@huawei.com>
+Date:   Mon, 27 Jun 2022 18:27:39 +0100
 MIME-Version: 1.0
-References: <20220614014714.1407239-1-irogers@google.com>
-In-Reply-To: <20220614014714.1407239-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 27 Jun 2022 10:17:51 -0700
-Message-ID: <CAP-5=fVg9ZVOONuiJZopC7RyuEXvP8t79EFjQF0GCcV=atGbCg@mail.gmail.com>
-Subject: Re: [PATCH] perf bpf: 8 byte align bpil data
-To:     Dave Marchevsky <davemarchevsky@fb.com>
-Cc:     Stephane Eranian <eranian@google.com>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v6 0/4] Rewrite jevents program in python
+To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+CC:     Stephane Eranian <eranian@google.com>
+References: <20220627025744.106527-1-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220627025744.106527-1-irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.172.251]
+X-ClientProxiedBy: lhreml708-chm.china.huawei.com (10.201.108.57) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 6:47 PM Ian Rogers <irogers@google.com> wrote:
->
-> bpil data is accessed assuming 64-bit alignment resulting in undefined
-> behavior as the data is just byte aligned. With an -fsanitize=undefined
-> build the following errors are observed:
->
-> $ sudo perf record -a sleep 1
-> util/bpf-event.c:310:22: runtime error: load of misaligned address 0x55f61084520f for type '__u64', which requires 8 byte alignment
-> 0x55f61084520f: note: pointer points here
->  a8 fe ff ff 3c  51 d3 c0 ff ff ff ff 04  84 d3 c0 ff ff ff ff d8  aa d3 c0 ff ff ff ff a4  c0 d3 c0
->              ^
-> util/bpf-event.c:311:20: runtime error: load of misaligned address 0x55f61084522f for type '__u32', which requires 4 byte alignment
-> 0x55f61084522f: note: pointer points here
->  ff ff ff ff c7  17 00 00 f1 02 00 00 1f  04 00 00 58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00
->              ^
-> util/bpf-event.c:198:33: runtime error: member access within misaligned address 0x55f61084523f for type 'const struct bpf_func_info', which requires 4 byte alignment
-> 0x55f61084523f: note: pointer points here
->  58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00 3b 00 00 00 ab  02 00 00 44 00 00 00 14  03 00 00
->
-> Correct this by rouding up the data sizes and aligning the pointers.
+On 27/06/2022 03:57, Ian Rogers wrote:
+> A challenge with this code is in avoiding regressions. For this reason
+> the jevents.py produces identical output to jevents.c, validated with a
+> test script and build target.
+> 
+> v6. Adds Tested-by from Zhengjun Xing<zhengjun.xing@linux.intel.com>
+>      and Thomas Richter<tmricht@linux.ibm.com>. Fixes issues spotted
+>      by Jiri Olsa<jolsa@kernel.org>, jsmn.c wasn't deleted and the
+>      empty pmu-events.c didn't pass the pmu-events test. It also adds a
+>      missing mkdir which is necessary before creating pmu-events.c and
+>      tweaks the quiet display code in the empty case to display a gen.
+> v5. Adds a 2>/dev/null as suggested by David Laight
 
-Happy Monday, polite ping!
+
+Hmmm... shouldn't this be v7? Anyway what I got with message-id 
+20220627025744.106527-1-irogers@google.com now seems to build and the 
+output looks ok.
 
 Thanks,
-Ian
-
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/bpf-utils.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/bpf-utils.c b/tools/perf/util/bpf-utils.c
-> index e271e05e51bc..80b1d2b3729b 100644
-> --- a/tools/perf/util/bpf-utils.c
-> +++ b/tools/perf/util/bpf-utils.c
-> @@ -149,11 +149,10 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
->                 count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
->                 size  = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
->
-> -               data_len += count * size;
-> +               data_len += roundup(count * size, sizeof(__u64));
->         }
->
->         /* step 3: allocate continuous memory */
-> -       data_len = roundup(data_len, sizeof(__u64));
->         info_linear = malloc(sizeof(struct perf_bpil) + data_len);
->         if (!info_linear)
->                 return ERR_PTR(-ENOMEM);
-> @@ -180,7 +179,7 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
->                 bpf_prog_info_set_offset_u64(&info_linear->info,
->                                              desc->array_offset,
->                                              ptr_to_u64(ptr));
-> -               ptr += count * size;
-> +               ptr += roundup(count * size, sizeof(__u64));
->         }
->
->         /* step 5: call syscall again to get required arrays */
-> --
-> 2.36.1.476.g0c4daa206d-goog
->
+John
