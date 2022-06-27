@@ -2,240 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7ABC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 02:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53261C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 02:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230361AbiF0Chj (ORCPT
+        id S232363AbiF0C5z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 26 Jun 2022 22:37:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53478 "EHLO
+        Sun, 26 Jun 2022 22:57:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229623AbiF0Chj (ORCPT
+        with ESMTP id S232382AbiF0C5y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 26 Jun 2022 22:37:39 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAA42DC3;
-        Sun, 26 Jun 2022 19:37:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B010CB80EA2;
-        Mon, 27 Jun 2022 02:37:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3878C34114;
-        Mon, 27 Jun 2022 02:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656297455;
-        bh=D+G2DLW2HL7zT3/2hMTlWfwrTSd2wXHmM83LipydSGw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jhRe5IhXXEzJh7BBoumsbdxjgf53LQ9tyitw0BZcuVd1JXSTXuT22UV7pb+TDOzGT
-         veKmbMJSg6HOuWIdBULQuZvU6xSEIvc26UxgzOEcQRh9vU6HfBZ60Mnir+RVUwkfSN
-         fL6wc+iXJi3SDg/cRwqAbpK4/PqS/xFgkSk8vKiDP6QCoSqrtTECJB5F7O6GCsIr+n
-         4kRtramxwFU3AvVNqUWfZSJQwh2NhEeffnBLYfhR5iDH19Cygp8rsS1hV+hjMOtwrX
-         d4BiF/sVZwd5jTh9RFcpFybn75pGlkUS0OPc1IRqNfn53W936/DxrUgYfBfBVqnU2E
-         iytG6F6jOuPjw==
-Date:   Mon, 27 Jun 2022 11:37:31 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        songliubraving@fb.com, rostedt@goodmis.org, peterz@infradead.org,
-        mingo@redhat.com, alexei.starovoitov@gmail.com
-Subject: Re: [PATCH v4 1/1] perf/kprobe: maxactive for fd-based kprobe
-Message-Id: <20220627113731.00fa70887d19a163884243fa@kernel.org>
-In-Reply-To: <20220625152429.27539-1-9erthalion6@gmail.com>
-References: <20220625152429.27539-1-9erthalion6@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 26 Jun 2022 22:57:54 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69FAB38B7
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 Jun 2022 19:57:53 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2dc7bdd666fso67680517b3.7
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 Jun 2022 19:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=a2fOd84tKma8EBOoYLl1yXcF/bVpn+tXFfh8wONSJHw=;
+        b=ld2t9CLo7nP+OT5H09VRlzkjhJzVA/xlWaaKHg5RZ3dWu31QWLXofNhGoSm3pl/aNs
+         kTQYjc+efB3HD0NhScP7BDurQ+CBnrzDdVC1GiErxiMXbacl1x+bQeBGYfxGNaAu6apP
+         oY06Z0bj04lSRXQoq2MiJQXbMWYNTcG+E05x7qGCHiXic4RW983rBeOO1d3nVfCATkyE
+         RAS+MgMjm63UEswkEEreSlH41Kw3aTu2VCsC36zZBB1cJSf0Uk1C1SLaLvrnyc3XxvSt
+         xe5pgbPZLnRfkOQgJKwgV9kk32SpkNS8H6xbGVizl/TcqVgigKr4K8CFHi2Jtkit7nGM
+         VPiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=a2fOd84tKma8EBOoYLl1yXcF/bVpn+tXFfh8wONSJHw=;
+        b=ggn9BTBxVAun9lkBiQ+Mx9wHGca9zVfh1wlGT3vWS12Pk8oM6dysH3Y8AdOe2+lzYk
+         VdqVXBHkFGX9CqQx5bG1VdkeMGpegSBxBSDQXqe3sB4F2MEnyxmnNS3ZisKj8D9VOxH1
+         5kv9n/PaCHmfRh6nmj6zzLsTaJ2jpM4lgeltJOlv9uFPlC6VimmNgien/6syfcpEkjvW
+         cP1QK1ZITLhTiG/jPckrFQ+zSSRydKSv3eq18dnqxzeeGz5IBEwd40EfLK8hLs32dMcR
+         murAK0VzFqH3bX+zBTnbbtHN81cADpgCwepRZQvGVBNky6jBUJR7xCQqm0wvKP0A7X0h
+         UerQ==
+X-Gm-Message-State: AJIora8cnqIdYYv6vsWSwqiHvxDAbZFAhaGkCQca/8YNb51oP8vNJNAj
+        JM4VV31FFtqLH258fnhkgH4iwBSbuUiG
+X-Google-Smtp-Source: AGRyM1sOfbkoS05RkdeEbrjjtiZ+bs28kS1Kb1As8SCl552Ng8sc/DP26748w4s3JvZD2H1AlSUv1oQzdZ0L
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:646b:8b65:8f13:1c18])
+ (user=irogers job=sendgmr) by 2002:a25:1944:0:b0:66c:7ba4:7481 with SMTP id
+ 65-20020a251944000000b0066c7ba47481mr11127858ybz.640.1656298672703; Sun, 26
+ Jun 2022 19:57:52 -0700 (PDT)
+Date:   Sun, 26 Jun 2022 19:57:40 -0700
+Message-Id: <20220627025744.106527-1-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+Subject: [PATCH v6 0/4] Rewrite jevents program in python
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, sandipan.das@amd.com,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, 25 Jun 2022 17:24:29 +0200
-Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
+New architectures bring new complexity, such as Intel's hybrid
+models. jevents provides an alternative to specifying events in the
+kernel and exposing them through sysfs, however, it is difficult to
+work with. For example, an error in the json input would yield an
+error message but no json file or location. It is also a challenge to
+update jsmn.c given its forked nature.
 
-> From: Song Liu <songliubraving@fb.com>
-> 
-> Enable specifying maxactive for fd based kretprobe. This will be useful
-> for tracing tools like bcc and bpftrace (see for example discussion [1]).
-> Use highest 4 bit (bit 59-63) to allow specifying maxactive by log2.
-> 
-> The original patch [2] seems to be fallen through the cracks and wasn't
-> applied. I've merely rebased the work done by Song Liu, verififed it
-> still works, and modified to allow specifying maxactive by log2 per
-> suggestion from the discussion thread.
-> 
-> Note that changes in rethook implementation may render maxactive
-> obsolete.
-> 
-> [1]: https://github.com/iovisor/bpftrace/issues/835
-> [2]: https://lore.kernel.org/all/20191007223111.1142454-1-songliubraving@fb.com/
-> 
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+The changes here switch from jevents.c to a rewrite in python called
+jevents.py. This means there is a build time dependency on python, but
+such a dependency already exists for asciidoc (used to generate perf's
+man pages). If the build detects that python isn't present or is older
+than version 3.6 (released Dec. 2016) then an empty file is
+substituted for the generated one.
 
-This looks good to me.
+A challenge with this code is in avoiding regressions. For this reason
+the jevents.py produces identical output to jevents.c, validated with a
+test script and build target.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+v6. Adds Tested-by from Zhengjun Xing <zhengjun.xing@linux.intel.com>
+    and Thomas Richter <tmricht@linux.ibm.com>. Fixes issues spotted
+    by Jiri Olsa <jolsa@kernel.org>, jsmn.c wasn't deleted and the
+    empty pmu-events.c didn't pass the pmu-events test. It also adds a
+    missing mkdir which is necessary before creating pmu-events.c and
+    tweaks the quiet display code in the empty case to display a gen.
+v5. Adds a 2>/dev/null as suggested by David Laight
+    <David.Laight@aculab.com>.
+v4. Fixes the build for systems with python2 installed by adding a
+    patch that makes python3 the preferred python (Reported-by: John
+    Garry <john.garry@huawei.com>). It also fixes a bash-ism in the
+    jevents-test.sh and fixes the handling of an empty string for a
+    metric BriefDescription as one was added for sapphirerapids in the
+    metric Execute.
+v3. Updates the patches for merged changes (on
+    acme/tmp.perf/core). Re-runs all comparisons to make sure the
+    generated pmu-events.c isn't altered at all by this change. Adds
+    the jevents.c ExtSel fix in:
+    https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
+    Bumps the python version from 3.5 to 3.6, as f-strings weren't
+    introduced until 3.6.
 
+v2. Fixes the build for architectures that don't have pmu-events json
+    (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
+    build for python not being present or too old (Suggested-by: Peter
+    Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
 
-Thank you!
+Ian Rogers (4):
+  perf python: Prefer python3
+  perf jevents: Add python converter script
+  perf jevents: Switch build to use jevents.py
+  perf jevents: Remove jevents.c
 
-> ---
-> Previous discussion: https://lore.kernel.org/bpf/20220615211559.7856-1-9erthalion6@gmail.com/
-> 
-> Changes in v4:
->     - Allow specifying maxactive by log2
-> 
-> Changes in v3:
->     - Set correct author
-> 
-> Changes in v2:
->     - Fix comment about number bits for the offset
-> 
->  include/linux/trace_events.h    |  3 ++-
->  kernel/events/core.c            | 20 ++++++++++++++++----
->  kernel/trace/trace_event_perf.c |  5 +++--
->  kernel/trace/trace_kprobe.c     |  4 ++--
->  kernel/trace/trace_probe.h      |  2 +-
->  5 files changed, 24 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index e6e95a9f07a5..7ca453a73252 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -850,7 +850,8 @@ extern void perf_trace_destroy(struct perf_event *event);
->  extern int  perf_trace_add(struct perf_event *event, int flags);
->  extern void perf_trace_del(struct perf_event *event, int flags);
->  #ifdef CONFIG_KPROBE_EVENTS
-> -extern int  perf_kprobe_init(struct perf_event *event, bool is_retprobe);
-> +extern int  perf_kprobe_init(struct perf_event *event, bool is_retprobe,
-> +			     int max_active);
->  extern void perf_kprobe_destroy(struct perf_event *event);
->  extern int bpf_get_kprobe_info(const struct perf_event *event,
->  			       u32 *fd_type, const char **symbol,
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 23bb19716ad3..184325ff2656 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9809,24 +9809,34 @@ static struct pmu perf_tracepoint = {
->   * PERF_PROBE_CONFIG_IS_RETPROBE if set, create kretprobe/uretprobe
->   *                               if not set, create kprobe/uprobe
->   *
-> - * The following values specify a reference counter (or semaphore in the
-> - * terminology of tools like dtrace, systemtap, etc.) Userspace Statically
-> - * Defined Tracepoints (USDT). Currently, we use 40 bit for the offset.
-> + * PERF_UPROBE_REF_CTR_OFFSET_* specify a reference counter (or semaphore
-> + * in the terminology of tools like dtrace, systemtap, etc.) Userspace
-> + * Statically Defined Tracepoints (USDT). Currently, we use 32 bit for the
-> + * offset.
->   *
->   * PERF_UPROBE_REF_CTR_OFFSET_BITS	# of bits in config as th offset
->   * PERF_UPROBE_REF_CTR_OFFSET_SHIFT	# of bits to shift left
-> + *
-> + * PERF_KPROBE_MAX_ACTIVE_* defines log2 of max_active for kretprobe.
-> + * KRETPROBE_MAXACTIVE_MAX is 4096. We allow 4095 here to save a bit.
->   */
->  enum perf_probe_config {
->  	PERF_PROBE_CONFIG_IS_RETPROBE = 1U << 0,  /* [k,u]retprobe */
->  	PERF_UPROBE_REF_CTR_OFFSET_BITS = 32,
->  	PERF_UPROBE_REF_CTR_OFFSET_SHIFT = 64 - PERF_UPROBE_REF_CTR_OFFSET_BITS,
-> +	PERF_KPROBE_MAX_ACTIVE_BITS = 4,
-> +	PERF_KPROBE_MAX_ACTIVE_SHIFT = 64 - PERF_KPROBE_MAX_ACTIVE_BITS,
->  };
->  
->  PMU_FORMAT_ATTR(retprobe, "config:0");
->  #endif
->  
->  #ifdef CONFIG_KPROBE_EVENTS
-> +/* max_active is specified by log2, to allow larger values if needed */
-> +PMU_FORMAT_ATTR(max_active_log2, "config:59-63");
-> +
->  static struct attribute *kprobe_attrs[] = {
-> +	&format_attr_max_active_log2.attr,
->  	&format_attr_retprobe.attr,
->  	NULL,
->  };
-> @@ -9857,6 +9867,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
->  {
->  	int err;
->  	bool is_retprobe;
-> +	int max_active_log2;
->  
->  	if (event->attr.type != perf_kprobe.type)
->  		return -ENOENT;
-> @@ -9871,7 +9882,8 @@ static int perf_kprobe_event_init(struct perf_event *event)
->  		return -EOPNOTSUPP;
->  
->  	is_retprobe = event->attr.config & PERF_PROBE_CONFIG_IS_RETPROBE;
-> -	err = perf_kprobe_init(event, is_retprobe);
-> +	max_active_log2 = event->attr.config >> PERF_KPROBE_MAX_ACTIVE_SHIFT;
-> +	err = perf_kprobe_init(event, is_retprobe, 1U << max_active_log2);
->  	if (err)
->  		return err;
->  
-> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-> index a114549720d6..129000327809 100644
-> --- a/kernel/trace/trace_event_perf.c
-> +++ b/kernel/trace/trace_event_perf.c
-> @@ -245,7 +245,8 @@ void perf_trace_destroy(struct perf_event *p_event)
->  }
->  
->  #ifdef CONFIG_KPROBE_EVENTS
-> -int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
-> +int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe,
-> +					 int max_active)
->  {
->  	int ret;
->  	char *func = NULL;
-> @@ -271,7 +272,7 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
->  
->  	tp_event = create_local_trace_kprobe(
->  		func, (void *)(unsigned long)(p_event->attr.kprobe_addr),
-> -		p_event->attr.probe_offset, is_retprobe);
-> +		p_event->attr.probe_offset, is_retprobe, max_active);
->  	if (IS_ERR(tp_event)) {
->  		ret = PTR_ERR(tp_event);
->  		goto out;
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 47cebef78532..3ad30cfce9c3 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1784,7 +1784,7 @@ static int unregister_kprobe_event(struct trace_kprobe *tk)
->  /* create a trace_kprobe, but don't add it to global lists */
->  struct trace_event_call *
->  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
-> -			  bool is_return)
-> +			  bool is_return, int max_active)
->  {
->  	enum probe_print_type ptype;
->  	struct trace_kprobe *tk;
-> @@ -1799,7 +1799,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
->  	event = func ? func : "DUMMY_EVENT";
->  
->  	tk = alloc_trace_kprobe(KPROBE_EVENT_SYSTEM, event, (void *)addr, func,
-> -				offs, 0 /* maxactive */, 0 /* nargs */,
-> +				offs, max_active, 0 /* nargs */,
->  				is_return);
->  
->  	if (IS_ERR(tk)) {
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 92cc149af0fd..26fe21980793 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -376,7 +376,7 @@ extern int traceprobe_set_print_fmt(struct trace_probe *tp, enum probe_print_typ
->  #ifdef CONFIG_PERF_EVENTS
->  extern struct trace_event_call *
->  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
-> -			  bool is_return);
-> +			  bool is_return, int max_active);
->  extern void destroy_local_trace_kprobe(struct trace_event_call *event_call);
->  
->  extern struct trace_event_call *
-> -- 
-> 2.32.0
-> 
-
+ tools/perf/Makefile.config               |   27 +-
+ tools/perf/Makefile.perf                 |   16 +-
+ tools/perf/pmu-events/Build              |   17 +-
+ tools/perf/pmu-events/empty-pmu-events.c |  158 +++
+ tools/perf/pmu-events/jevents.c          | 1342 ----------------------
+ tools/perf/pmu-events/jevents.py         |  409 +++++++
+ tools/perf/pmu-events/jsmn.c             |  352 ------
+ tools/perf/pmu-events/jsmn.h             |   68 --
+ tools/perf/pmu-events/json.c             |  162 ---
+ tools/perf/pmu-events/json.h             |   39 -
+ 10 files changed, 604 insertions(+), 1986 deletions(-)
+ create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
+ delete mode 100644 tools/perf/pmu-events/jevents.c
+ create mode 100755 tools/perf/pmu-events/jevents.py
+ delete mode 100644 tools/perf/pmu-events/jsmn.c
+ delete mode 100644 tools/perf/pmu-events/jsmn.h
+ delete mode 100644 tools/perf/pmu-events/json.c
+ delete mode 100644 tools/perf/pmu-events/json.h
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.37.0.rc0.161.g10f37bed90-goog
+
