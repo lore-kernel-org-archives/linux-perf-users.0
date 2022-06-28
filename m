@@ -2,81 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 14:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276F3C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 14:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346689AbiF1OjW (ORCPT
+        id S1346535AbiF1Okj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Jun 2022 10:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
+        Tue, 28 Jun 2022 10:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346535AbiF1OjV (ORCPT
+        with ESMTP id S235217AbiF1Oki (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Jun 2022 10:39:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245E42A249;
-        Tue, 28 Jun 2022 07:39:21 -0700 (PDT)
+        Tue, 28 Jun 2022 10:40:38 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D452A268;
+        Tue, 28 Jun 2022 07:40:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B372161B10;
-        Tue, 28 Jun 2022 14:39:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E474BC3411D;
-        Tue, 28 Jun 2022 14:39:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 344A2B81A9D;
+        Tue, 28 Jun 2022 14:40:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4515C3411D;
+        Tue, 28 Jun 2022 14:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656427160;
-        bh=iXjQOMUw2pEqEisHPWIOBTot93+QZsYt/nHRRPucOyc=;
+        s=k20201202; t=1656427235;
+        bh=SPjXuF7ug4/m0B1q/9Wi9NwaJ+Z+lH+ARwTZHw5gHqA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LqR9CN0wDjLJFmWy9tW2JNnugtju01skjVmIwyQGlS5tghYgB2YEq4/jUGrLRfGT3
-         X9BHevJs3fCge08w6NZKeppOw+9z51olocTjzUylhUoMuUjoONGWH1B1zIv6nECXaZ
-         V6mALMeromolaLDKWIpQyYIqr4t120G2e7uibto8Dz8RlAXXtdc2+YNNKEbDmUYnRo
-         aliyLR4CE1KvCCv916ievOlW2XY5G+VY0U09vTItsQI/XUdhnLRaIvaK648LtRee3m
-         UCPoM7dMfsLjLGBlbZtgzdnDQ0jtFNrp2sdvZPdfT/SfnRwSahuRVM3F3bVi6TJeXg
-         63yRl8mMg8C7g==
+        b=cHYUeL/5wForfMIxqXQ8LwzpYmy6yom92ZLlP8BjmA+R3eVGsNcqZDjHkFEUjKGMh
+         TCE2j1+1DW4thBIHoiU6WOyRXFP0/ClW+2Q15hxIMbsOQA2zW62rp8ytdKQtDb1HCl
+         C4t2MUhXnyBW+rp4ckFOjne2UZHTsvHN9ruYi4fijBxfiw0Q970+uo0CgwUfoCEzXx
+         ++hTh0dQJrcFvS5OclZW5SoypVcEBdlrF0licrd/gSMIcLPhdSZlvF8cOhS++sVOI/
+         NqfOSPn51q6WXQATW/7MlMAMoRQID3OlSBVhdqNTPzyIBLtsmnuiHo8pUl0Rg7aTcS
+         R0vyd11BH4E7Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6C2E04096F; Tue, 28 Jun 2022 11:39:16 -0300 (-03)
-Date:   Tue, 28 Jun 2022 11:39:16 -0300
+        id 4E8AB4096F; Tue, 28 Jun 2022 11:40:32 -0300 (-03)
+Date:   Tue, 28 Jun 2022 11:40:32 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux v5.19-rc1] tools/perf/a.out remains after make -C
- tools/perf clean
-Message-ID: <YrsSlH8OCR0JSlxA@kernel.org>
-References: <20220607000851.39798-1-irogers@google.com>
- <CA+icZUWpSF6ge76JVp1qBC5QhC1AwNacs5Di=e1QSbAD+SVKUA@mail.gmail.com>
- <YqjggY64PKfog0YW@kernel.org>
- <CA+icZUUx_Re+w9S7eHXma9aC=8T8ypp8=+tkJy7zJMrUocMSKQ@mail.gmail.com>
- <Yrh7uSL0AybSqd0V@kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Hao Luo <haoluo@google.com>,
+        Milian Wolff <milian.wolff@kdab.com>, bpf@vger.kernel.org,
+        Blake Jones <blakejones@google.com>
+Subject: Re: [PATCHSET 0/6] perf tools: A couple of fixes for perf record
+ --off-cpu (v1)
+Message-ID: <YrsS4HxNBUk5wtcU@kernel.org>
+References: <20220624231313.367909-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yrh7uSL0AybSqd0V@kernel.org>
+In-Reply-To: <20220624231313.367909-1-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Jun 26, 2022 at 12:31:05PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Jun 15, 2022 at 12:11:48AM +0200, Sedat Dilek escreveu:
-> >                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> >                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-> >                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-> >               libpfm4: [ OFF ]  # HAVE_LIBPFM
-> > 
-> > Tried `make distclean`.
-> > Tried `make tools/ clean` but tools/tracing/rtla produces errors (rm clean).
-> > Still exists: tools/perf/a.out.
+Em Fri, Jun 24, 2022 at 04:13:07PM -0700, Namhyung Kim escreveu:
+> Hello,
 > 
-> I started seeing this here, will investigate and re-read your reports,
-> thanks for sending them!
+> The first patch fixes a build error on old kernels which has
+> task_struct->state field that is renamed to __state.  Actually I made
+> a mistake when I wrote the code and assumed new kernel version.
+> 
+> The second patch is to prevent invalid sample synthesize by
+> disallowing unsupported sample types.
 
-This is only happening when I use CC=clang, here I have clang 13, just
-making a note, seems related to a feature check,
-tools/build/feature/test-hello.c.
+So I'll pick the first two for perf/urgent and then when that is merged
+into perf/core pick the rest, ok?
+
+- Arnaldo
+ 
+> The rest of the series implements inheritance of offcpu events for the
+> child processes.  Unlike perf events, BPF cannot know which task it
+> should track except for ones set in a BPF map at the beginning.  Add
+> another BPF program to the fork path and add the process id to the
+> map if the parent is tracked.
+> 
+> With this change, it can get the correct off-cpu events for child
+> processes.  I've tested it with perf bench sched messaging which
+> creates a lot of processes.
+> 
+>   $ sudo perf record -e dummy --off-cpu -- perf bench sched messaging
+>   # Running 'sched/messaging' benchmark:
+>   # 20 sender and receiver processes per group
+>   # 10 groups == 400 processes run
+> 
+>        Total time: 0.196 [sec]
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.178 MB perf.data (851 samples) ]
+> 
+> 
+>   $ sudo perf report --stat | grep -A1 offcpu
+>   offcpu-time stats:
+>             SAMPLE events:        851
+> 
+> The benchmark passes messages by read/write and it creates off-cpu
+> events.  With 400 processes, we can see more than 800 events.
+> 
+> The child process tracking is also enabled when -p option is given.
+> But -t option does NOT as it only cares about the specific threads.
+> It may be different what perf_event does now, but I think it makes
+> more sense.
+> 
+> You can get it from 'perf/offcpu-child-v1' branch in my tree
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> Namhyung Kim (6):
+>   perf offcpu: Fix a build failure on old kernels
+>   perf offcpu: Accept allowed sample types only
+>   perf offcpu: Check process id for the given workload
+>   perf offcpu: Parse process id separately
+>   perf offcpu: Track child processes
+>   perf offcpu: Update offcpu test for child process
+> 
+>  tools/perf/tests/shell/record_offcpu.sh | 57 ++++++++++++++++++++---
+>  tools/perf/util/bpf_off_cpu.c           | 60 +++++++++++++++++++++++--
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c  | 58 +++++++++++++++++++++---
+>  tools/perf/util/evsel.c                 |  9 ++++
+>  tools/perf/util/off_cpu.h               |  9 ++++
+>  5 files changed, 176 insertions(+), 17 deletions(-)
+> 
+> 
+> base-commit: 9886142c7a2226439c1e3f7d9b69f9c7094c3ef6
+> -- 
+> 2.37.0.rc0.161.g10f37bed90-goog
+
+-- 
 
 - Arnaldo
