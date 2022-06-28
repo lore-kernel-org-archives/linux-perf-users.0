@@ -2,391 +2,464 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC13CCA488
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 11:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C07AC43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 12:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344416AbiF1Lrv (ORCPT
+        id S236759AbiF1Mxi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Jun 2022 07:47:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38174 "EHLO
+        Tue, 28 Jun 2022 08:53:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345362AbiF1Lr0 (ORCPT
+        with ESMTP id S232648AbiF1Mxh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Jun 2022 07:47:26 -0400
-Received: from forward500o.mail.yandex.net (forward500o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::610])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30443ED;
-        Tue, 28 Jun 2022 04:47:19 -0700 (PDT)
-Received: from vla1-692e383ae130.qloud-c.yandex.net (vla1-692e383ae130.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:4e82:0:640:692e:383a])
-        by forward500o.mail.yandex.net (Yandex) with ESMTP id 65F969453CC;
-        Tue, 28 Jun 2022 14:47:17 +0300 (MSK)
-Received: from vla3-178a3f795968.qloud-c.yandex.net (vla3-178a3f795968.qloud-c.yandex.net [2a02:6b8:c15:2584:0:640:178a:3f79])
-        by vla1-692e383ae130.qloud-c.yandex.net (mxback/Yandex) with ESMTP id sX49to1cqG-lGfmad0s;
-        Tue, 28 Jun 2022 14:47:17 +0300
-X-Yandex-Fwd: 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1656416837;
-        bh=uIgGq9RtOjEwIIQo2y+1+SfTXsxbp5dNH3HQ1GEm9wg=;
-        h=In-Reply-To:References:Date:Subject:Cc:To:From:Message-Id;
-        b=UgNTKE00P/t/XYMtHiKeQQkoMVELts0WK9Fmzp3eGNIV4e1VCtuBUB0iIZuY9uxOs
-         srrbr94pdW+NPFdx7p/JQM2lu31vm4NmuY+ZOQwGwwvaewfgHonGo6O/vWNCIBEj/R
-         zT+G3FPcon9s/7bc0DODLKzvAfTXBeSYJbvfg2eE=
-Authentication-Results: vla1-692e383ae130.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by vla3-178a3f795968.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id s5dKAuvn1y-lEMCupLQ;
-        Tue, 28 Jun 2022 14:47:15 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     linux@yadro.com, Genevieve Chan <genevieve.chan@starfivetech.com>,
-        =?UTF-8?q?Jo=C3=A3o=20M=C3=A1rio=20Domingos?= 
-        <joao.mario@tecnico.ulisboa.pt>,
-        Nikita Shubin <n.shubin@yadro.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 28 Jun 2022 08:53:37 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20EA2E9D6
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 05:53:35 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id f39so22142339lfv.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 05:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ME9ogYLhPCZuFXLa1q13oIt/WDr6DICnKX+45BprLvQ=;
+        b=O/eDFTpZBGvsxiXhm+rdXmX9EjlpV6zoT4RSdiYdgX4BlPP3BJYz1o3Kd7V3x2E9PS
+         Ra/Z0HB82bpCEAMAmLMxi3tMC/F5nXeSpcQe4CeRTiuf2zQXeGpjmjQa0RQB8NH7W8q+
+         eo5Xo9NN/TYsgx2IJ7+f/Yf1AMjQl6TltVnIKeSd0iWs50w9CTactRY6QDEZPS8hLxco
+         rljnl8g+UkEBNOLI6KV5/xhgnPJZJKl2nE4hDC+/BxjhRC6edHmDYy0IJtJ2zN8VLCaw
+         AxW9kxxB/xqdKMtw0UCjU8F2B3NysGTTT4fxCGJFf/T1kfJICkQwMi4Y/fEH4GYM+8/W
+         JVEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ME9ogYLhPCZuFXLa1q13oIt/WDr6DICnKX+45BprLvQ=;
+        b=J9HLCSFjpu+V1kUEMDr2uV/jSnENiwqo1ybWdQOxp8MIFAecSxTuCNETv1Z0h12gYz
+         gaDP3mM6Q9tZkLi/gul4ycHxpKXhnA9coFOcCJFUJLTCZZaAaOgegDQ4Fg2vipmYt/NJ
+         cM9FXbKG0b6BB1+8Yi/TXdorN1UCIVPD1Lz/5ZzQWlMCsNjXCIQE6go4K3AqNZgKidtH
+         191baj9CNFXhLTGX8TbFsP6ZEglEyRAaFdMaZLJBGrfWw9mNM+ggROUYQlJ1LTbJaqW7
+         KJBWE2ftlRrRNL2iCWqVZ+rD2d3Q2TQxYJa7aUgZI4LzahoDF+O9OJ4JWs52BpaOj3az
+         s5PA==
+X-Gm-Message-State: AJIora99Tr9+DN/QvtfWYNbRXd7PAiQhVi1QO0qRxP2g5EkOc++OAUxE
+        vh3JUSRgLSjOBgCsc0iH/jon+Gpx5aYcHFCLqFSo8Q==
+X-Google-Smtp-Source: AGRyM1v27CNMnBcn0g2o7zhsJ/MyLQPHQ0FaLWdS99mATqRq3+ORykWe5FcxukL1nQBDPZ/4iExKqLFKk0x5Tp5UDZw=
+X-Received: by 2002:a05:6512:10c3:b0:47f:a97e:35c with SMTP id
+ k3-20020a05651210c300b0047fa97e035cmr11411428lfg.417.1656420813860; Tue, 28
+ Jun 2022 05:53:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220628095833.2579903-1-elver@google.com> <20220628095833.2579903-2-elver@google.com>
+In-Reply-To: <20220628095833.2579903-2-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 28 Jun 2022 14:53:22 +0200
+Message-ID: <CACT4Y+brMfpe1_T5eaki8YLRVeCsFqJ6WbUCAe2+ALNTT=By0w@mail.gmail.com>
+Subject: Re: [PATCH v2 01/13] perf/hw_breakpoint: Add KUnit test for
+ constraints accounting
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v5 4/4] perf vendor events riscv: add Sifive U74 JSON file
-Date:   Tue, 28 Jun 2022 14:45:58 +0300
-Message-Id: <20220628114625.166665-5-nikita.shubin@maquefel.me>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220628114625.166665-1-nikita.shubin@maquefel.me>
-References: <20220628114625.166665-1-nikita.shubin@maquefel.me>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, linux-sh@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Nikita Shubin <n.shubin@yadro.com>
+ On Tue, 28 Jun 2022 at 11:59, Marco Elver <elver@google.com> wrote:
+>
+> Add KUnit test for hw_breakpoint constraints accounting, with various
+> interesting mixes of breakpoint targets (some care was taken to catch
+> interesting corner cases via bug-injection).
+>
+> The test cannot be built as a module because it requires access to
+> hw_breakpoint_slots(), which is not inlinable or exported on all
+> architectures.
+>
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+> v2:
+> * New patch.
+> ---
+>  kernel/events/Makefile             |   1 +
+>  kernel/events/hw_breakpoint_test.c | 321 +++++++++++++++++++++++++++++
+>  lib/Kconfig.debug                  |  10 +
+>  3 files changed, 332 insertions(+)
+>  create mode 100644 kernel/events/hw_breakpoint_test.c
+>
+> diff --git a/kernel/events/Makefile b/kernel/events/Makefile
+> index 8591c180b52b..91a62f566743 100644
+> --- a/kernel/events/Makefile
+> +++ b/kernel/events/Makefile
+> @@ -2,4 +2,5 @@
+>  obj-y := core.o ring_buffer.o callchain.o
+>
+>  obj-$(CONFIG_HAVE_HW_BREAKPOINT) += hw_breakpoint.o
+> +obj-$(CONFIG_HW_BREAKPOINT_KUNIT_TEST) += hw_breakpoint_test.o
+>  obj-$(CONFIG_UPROBES) += uprobes.o
+> diff --git a/kernel/events/hw_breakpoint_test.c b/kernel/events/hw_breakpoint_test.c
+> new file mode 100644
+> index 000000000000..747a0249a606
+> --- /dev/null
+> +++ b/kernel/events/hw_breakpoint_test.c
+> @@ -0,0 +1,321 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * KUnit test for hw_breakpoint constraints accounting logic.
+> + *
+> + * Copyright (C) 2022, Google LLC.
+> + */
+> +
+> +#include <kunit/test.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/hw_breakpoint.h>
+> +#include <linux/kthread.h>
+> +#include <linux/perf_event.h>
+> +#include <asm/hw_breakpoint.h>
+> +
+> +#define TEST_REQUIRES_BP_SLOTS(test, slots)                                            \
+> +       do {                                                                            \
+> +               if ((slots) > get_test_bp_slots()) {                                    \
+> +                       kunit_skip((test), "Requires breakpoint slots: %d > %d", slots, \
+> +                                  get_test_bp_slots());                                \
+> +               }                                                                       \
+> +       } while (0)
+> +
+> +#define TEST_EXPECT_NOSPC(expr) KUNIT_EXPECT_EQ(test, -ENOSPC, PTR_ERR(expr))
+> +
+> +#define MAX_TEST_BREAKPOINTS 512
+> +
+> +static char break_vars[MAX_TEST_BREAKPOINTS];
+> +static struct perf_event *test_bps[MAX_TEST_BREAKPOINTS];
+> +static struct task_struct *__other_task;
+> +
+> +static struct perf_event *register_test_bp(int cpu, struct task_struct *tsk, int idx)
+> +{
+> +       struct perf_event_attr attr = {};
+> +
+> +       if (WARN_ON(idx < 0 || idx >= MAX_TEST_BREAKPOINTS))
+> +               return NULL;
+> +
+> +       hw_breakpoint_init(&attr);
+> +       attr.bp_addr = (unsigned long)&break_vars[idx];
+> +       attr.bp_len = HW_BREAKPOINT_LEN_1;
+> +       attr.bp_type = HW_BREAKPOINT_RW;
+> +       return perf_event_create_kernel_counter(&attr, cpu, tsk, NULL, NULL);
+> +}
+> +
+> +static void unregister_test_bp(struct perf_event **bp)
+> +{
+> +       if (WARN_ON(IS_ERR(*bp)))
+> +               return;
+> +       if (WARN_ON(!*bp))
+> +               return;
+> +       unregister_hw_breakpoint(*bp);
+> +       *bp = NULL;
+> +}
+> +
+> +static int get_test_bp_slots(void)
+> +{
+> +       static int slots;
 
-This patch add the Sifive U74 JSON file.
+Why is this function needed? Is hw_breakpoint_slots() very slow?
 
-Derived-from-code-by: João Mário Domingos <joao.mario@tecnico.ulisboa.pt>
-Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
-Link: https://sifive.cdn.prismic.io/sifive/ad5577a0-9a00-45c9-a5d0-424a3d586060_u74_core_complex_manual_21G3.pdf
----
-v4->v5:
-- dropped cycle, time, instret ArchStdEvent bindings
----
- tools/perf/pmu-events/arch/riscv/mapfile.csv  | 17 ++++
- .../arch/riscv/sifive/u74/firmware.json       | 68 ++++++++++++++
- .../arch/riscv/sifive/u74/instructions.json   | 92 +++++++++++++++++++
- .../arch/riscv/sifive/u74/memory.json         | 32 +++++++
- .../arch/riscv/sifive/u74/microarch.json      | 57 ++++++++++++
- 5 files changed, 266 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/riscv/mapfile.csv
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
+> +
+> +       if (!slots)
+> +               slots = hw_breakpoint_slots(TYPE_DATA);
+> +
+> +       return slots;
+> +}
+> +
+> +static void fill_one_bp_slot(struct kunit *test, int *id, int cpu, struct task_struct *tsk)
+> +{
+> +       struct perf_event *bp = register_test_bp(cpu, tsk, *id);
+> +
+> +       KUNIT_ASSERT_NOT_NULL(test, bp);
+> +       KUNIT_ASSERT_FALSE(test, IS_ERR(bp));
+> +       KUNIT_ASSERT_NULL(test, test_bps[*id]);
+> +       test_bps[(*id)++] = bp;
+> +}
+> +
+> +/*
+> + * Fills up the given @cpu/@tsk with breakpoints, only leaving @skip slots free.
+> + *
+> + * Returns true if this can be called again, continuing at @id.
+> + */
+> +static bool fill_bp_slots(struct kunit *test, int *id, int cpu, struct task_struct *tsk, int skip)
+> +{
+> +       for (int i = 0; i < get_test_bp_slots() - skip; ++i)
+> +               fill_one_bp_slot(test, id, cpu, tsk);
+> +
+> +       return *id + get_test_bp_slots() <= MAX_TEST_BREAKPOINTS;
+> +}
+> +
+> +static int dummy_kthread(void *arg)
+> +{
+> +       return 0;
+> +}
+> +
+> +static struct task_struct *get_other_task(struct kunit *test)
+> +{
+> +       struct task_struct *tsk;
+> +
+> +       if (__other_task)
+> +               return __other_task;
+> +
+> +       tsk = kthread_create(dummy_kthread, NULL, "hw_breakpoint_dummy_task");
+> +       KUNIT_ASSERT_FALSE(test, IS_ERR(tsk));
+> +       __other_task = tsk;
+> +       return __other_task;
+> +}
+> +
+> +static int get_other_cpu(void)
+> +{
+> +       int cpu;
+> +
+> +       for_each_online_cpu(cpu) {
+> +               if (cpu != raw_smp_processor_id())
 
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-new file mode 100644
-index 000000000000..c61b3d6ef616
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -0,0 +1,17 @@
-+# Format:
-+#	MVENDORID-MARCHID-MIMPID,Version,JSON/file/pathname,Type
-+#
-+# where
-+#	MVENDORID	JEDEC code of the core provider
-+#	MARCHID		base microarchitecture of the hart
-+#	MIMPID		unique encoding of the version
-+#			of the processor implementation
-+#	Version could be used to track version of JSON file
-+#		but currently unused.
-+#	JSON/file/pathname is the path to JSON file, relative
-+#		to tools/perf/pmu-events/arch/riscv/.
-+#	Type is core, uncore etc
-+#
-+#
-+#MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
-+0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
-new file mode 100644
-index 000000000000..9b4a032186a7
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
-@@ -0,0 +1,68 @@
-+[
-+  {
-+    "ArchStdEvent": "FW_MISALIGNED_LOAD"
-+  },
-+  {
-+    "ArchStdEvent": "FW_MISALIGNED_STORE"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ACCESS_LOAD"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ACCESS_STORE"
-+  },
-+  {
-+    "ArchStdEvent": "FW_ILLEGAL_INSN"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SET_TIMER"
-+  },
-+  {
-+    "ArchStdEvent": "FW_IPI_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_IPI_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_FENCE_I_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
-+  },
-+  {
-+    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
-new file mode 100644
-index 000000000000..5eab718c9256
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
-@@ -0,0 +1,92 @@
-+[
-+  {
-+    "EventName": "EXCEPTION_TAKEN",
-+    "EventCode": "0x0000100",
-+    "BriefDescription": "Exception taken"
-+  },
-+  {
-+    "EventName": "INTEGER_LOAD_RETIRED",
-+    "EventCode": "0x0000200",
-+    "BriefDescription": "Integer load instruction retired"
-+  },
-+  {
-+    "EventName": "INTEGER_STORE_RETIRED",
-+    "EventCode": "0x0000400",
-+    "BriefDescription": "Integer store instruction retired"
-+  },
-+  {
-+    "EventName": "ATOMIC_MEMORY_RETIRED",
-+    "EventCode": "0x0000800",
-+    "BriefDescription": "Atomic memory operation retired"
-+  },
-+  {
-+    "EventName": "SYSTEM_INSTRUCTION_RETIRED",
-+    "EventCode": "0x0001000",
-+    "BriefDescription": "System instruction retired"
-+  },
-+  {
-+    "EventName": "INTEGER_ARITHMETIC_RETIRED",
-+    "EventCode": "0x0002000",
-+    "BriefDescription": "Integer arithmetic instruction retired"
-+  },
-+  {
-+    "EventName": "CONDITIONAL_BRANCH_RETIRED",
-+    "EventCode": "0x0004000",
-+    "BriefDescription": "Conditional branch retired"
-+  },
-+  {
-+    "EventName": "JAL_INSTRUCTION_RETIRED",
-+    "EventCode": "0x0008000",
-+    "BriefDescription": "JAL instruction retired"
-+  },
-+  {
-+    "EventName": "JALR_INSTRUCTION_RETIRED",
-+    "EventCode": "0x0010000",
-+    "BriefDescription": "JALR instruction retired"
-+  },
-+  {
-+    "EventName": "INTEGER_MULTIPLICATION_RETIRED",
-+    "EventCode": "0x0020000",
-+    "BriefDescription": "Integer multiplication instruction retired"
-+  },
-+  {
-+    "EventName": "INTEGER_DIVISION_RETIRED",
-+    "EventCode": "0x0040000",
-+    "BriefDescription": "Integer division instruction retired"
-+  },
-+  {
-+    "EventName": "FP_LOAD_RETIRED",
-+    "EventCode": "0x0080000",
-+    "BriefDescription": "Floating-point load instruction retired"
-+  },
-+  {
-+    "EventName": "FP_STORE_RETIRED",
-+    "EventCode": "0x0100000",
-+    "BriefDescription": "Floating-point store instruction retired"
-+  },
-+  {
-+    "EventName": "FP_ADDITION_RETIRED",
-+    "EventCode": "0x0200000",
-+    "BriefDescription": "Floating-point addition retired"
-+  },
-+  {
-+    "EventName": "FP_MULTIPLICATION_RETIRED",
-+    "EventCode": "0x0400000",
-+    "BriefDescription": "Floating-point multiplication retired"
-+  },
-+  {
-+    "EventName": "FP_FUSEDMADD_RETIRED",
-+    "EventCode": "0x0800000",
-+    "BriefDescription": "Floating-point fused multiply-add retired"
-+  },
-+  {
-+    "EventName": "FP_DIV_SQRT_RETIRED",
-+    "EventCode": "0x1000000",
-+    "BriefDescription": "Floating-point division or square-root retired"
-+  },
-+  {
-+    "EventName": "OTHER_FP_RETIRED",
-+    "EventCode": "0x2000000",
-+    "BriefDescription": "Other floating-point instruction retired"
-+  }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
-new file mode 100644
-index 000000000000..be1a46312ac3
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
-@@ -0,0 +1,32 @@
-+[
-+  {
-+    "EventName": "ICACHE_RETIRED",
-+    "EventCode": "0x0000102",
-+    "BriefDescription": "Instruction cache miss"
-+  },
-+  {
-+    "EventName": "DCACHE_MISS_MMIO_ACCESSES",
-+    "EventCode": "0x0000202",
-+    "BriefDescription": "Data cache miss or memory-mapped I/O access"
-+  },
-+  {
-+    "EventName": "DCACHE_WRITEBACK",
-+    "EventCode": "0x0000402",
-+    "BriefDescription": "Data cache write-back"
-+  },
-+  {
-+    "EventName": "INST_TLB_MISS",
-+    "EventCode": "0x0000802",
-+    "BriefDescription": "Instruction TLB miss"
-+  },
-+  {
-+    "EventName": "DATA_TLB_MISS",
-+    "EventCode": "0x0001002",
-+    "BriefDescription": "Data TLB miss"
-+  },
-+  {
-+    "EventName": "UTLB_MISS",
-+    "EventCode": "0x0002002",
-+    "BriefDescription": "UTLB miss"
-+  }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
-new file mode 100644
-index 000000000000..50ffa55418cb
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
-@@ -0,0 +1,57 @@
-+[
-+  {
-+    "EventName": "ADDRESSGEN_INTERLOCK",
-+    "EventCode": "0x0000101",
-+    "BriefDescription": "Address-generation interlock"
-+  },
-+  {
-+    "EventName": "LONGLAT_INTERLOCK",
-+    "EventCode": "0x0000201",
-+    "BriefDescription": "Long-latency interlock"
-+  },
-+  {
-+    "EventName": "CSR_READ_INTERLOCK",
-+    "EventCode": "0x0000401",
-+    "BriefDescription": "CSR read interlock"
-+  },
-+  {
-+    "EventName": "ICACHE_ITIM_BUSY",
-+    "EventCode": "0x0000801",
-+    "BriefDescription": "Instruction cache/ITIM busy"
-+  },
-+  {
-+    "EventName": "DCACHE_DTIM_BUSY",
-+    "EventCode": "0x0001001",
-+    "BriefDescription": "Data cache/DTIM busy"
-+  },
-+  {
-+    "EventName": "BRANCH_DIRECTION_MISPREDICTION",
-+    "EventCode": "0x0002001",
-+    "BriefDescription": "Branch direction misprediction"
-+  },
-+  {
-+    "EventName": "BRANCH_TARGET_MISPREDICTION",
-+    "EventCode": "0x0004001",
-+    "BriefDescription": "Branch/jump target misprediction"
-+  },
-+  {
-+    "EventName": "PIPE_FLUSH_CSR_WRITE",
-+    "EventCode": "0x0008001",
-+    "BriefDescription": "Pipeline flush from CSR write"
-+  },
-+  {
-+    "EventName": "PIPE_FLUSH_OTHER_EVENT",
-+    "EventCode": "0x0010001",
-+    "BriefDescription": "Pipeline flush from other event"
-+  },
-+  {
-+    "EventName": "INTEGER_MULTIPLICATION_INTERLOCK",
-+    "EventCode": "0x0020001",
-+    "BriefDescription": "Integer multiplication interlock"
-+  },
-+  {
-+    "EventName": "FP_INTERLOCK",
-+    "EventCode": "0x0040001",
-+    "BriefDescription": "Floating-point interlock"
-+  }
-+]
-\ No newline at end of file
--- 
-2.30.2
+Are we guaranteed to not be rescheduled in the middle of a test?
+If not, can't get_other_cpu() return the same CPU that was returned by
+raw_smp_processor_id() earlier in the test?
 
+> +                       break;
+> +       }
+> +
+> +       return cpu;
+> +}
+> +
+> +/* ===== Test cases ===== */
+> +
+> +static void test_one_cpu(struct kunit *test)
+> +{
+> +       int idx = 0;
+> +
+> +       fill_bp_slots(test, &idx, raw_smp_processor_id(), NULL, 0);
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +}
+> +
+> +static void test_many_cpus(struct kunit *test)
+> +{
+> +       int idx = 0;
+> +       int cpu;
+> +
+> +       /* Test that CPUs are independent. */
+> +       for_each_online_cpu(cpu) {
+> +               bool do_continue = fill_bp_slots(test, &idx, cpu, NULL, 0);
+> +
+> +               TEST_EXPECT_NOSPC(register_test_bp(cpu, NULL, idx));
+> +               if (!do_continue)
+> +                       break;
+> +       }
+> +}
+> +
+> +static void test_one_task_on_all_cpus(struct kunit *test)
+> +{
+> +       int idx = 0;
+> +
+> +       fill_bp_slots(test, &idx, -1, current, 0);
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +       /* Remove one and adding back CPU-target should work. */
+> +       unregister_test_bp(&test_bps[0]);
+> +       fill_one_bp_slot(test, &idx, raw_smp_processor_id(), NULL);
+> +}
+> +
+> +static void test_two_tasks_on_all_cpus(struct kunit *test)
+> +{
+> +       int idx = 0;
+> +
+> +       /* Test that tasks are independent. */
+> +       fill_bp_slots(test, &idx, -1, current, 0);
+> +       fill_bp_slots(test, &idx, -1, get_other_task(test), 0);
+> +
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), get_other_task(test), idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +       /* Remove one from first task and adding back CPU-target should not work. */
+> +       unregister_test_bp(&test_bps[0]);
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +}
+> +
+> +static void test_one_task_on_one_cpu(struct kunit *test)
+> +{
+> +       int idx = 0;
+> +
+> +       fill_bp_slots(test, &idx, raw_smp_processor_id(), current, 0);
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +       /*
+> +        * Remove one and adding back CPU-target should work; this case is
+> +        * special vs. above because the task's constraints are CPU-dependent.
+> +        */
+> +       unregister_test_bp(&test_bps[0]);
+> +       fill_one_bp_slot(test, &idx, raw_smp_processor_id(), NULL);
+> +}
+> +
+> +static void test_one_task_mixed(struct kunit *test)
+> +{
+> +       int idx = 0;
+> +
+> +       TEST_REQUIRES_BP_SLOTS(test, 3);
+> +
+> +       fill_one_bp_slot(test, &idx, raw_smp_processor_id(), current);
+> +       fill_bp_slots(test, &idx, -1, current, 1);
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +
+> +       /* Transition from CPU-dependent pinned count to CPU-independent. */
+> +       unregister_test_bp(&test_bps[0]);
+> +       unregister_test_bp(&test_bps[1]);
+> +       fill_one_bp_slot(test, &idx, raw_smp_processor_id(), NULL);
+> +       fill_one_bp_slot(test, &idx, raw_smp_processor_id(), NULL);
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +}
+> +
+> +static void test_two_tasks_on_one_cpu(struct kunit *test)
+> +{
+> +       int idx = 0;
+> +
+> +       fill_bp_slots(test, &idx, raw_smp_processor_id(), current, 0);
+> +       fill_bp_slots(test, &idx, raw_smp_processor_id(), get_other_task(test), 0);
+> +
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), get_other_task(test), idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +       /* Can still create breakpoints on some other CPU. */
+> +       fill_bp_slots(test, &idx, get_other_cpu(), NULL, 0);
+> +}
+> +
+> +static void test_two_tasks_on_one_all_cpus(struct kunit *test)
+> +{
+> +       int idx = 0;
+> +
+> +       fill_bp_slots(test, &idx, raw_smp_processor_id(), current, 0);
+> +       fill_bp_slots(test, &idx, -1, get_other_task(test), 0);
+> +
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), get_other_task(test), idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +       /* Cannot create breakpoints on some other CPU either. */
+> +       TEST_EXPECT_NOSPC(register_test_bp(get_other_cpu(), NULL, idx));
+> +}
+> +
+> +static void test_task_on_all_and_one_cpu(struct kunit *test)
+> +{
+> +       int tsk_on_cpu_idx, cpu_idx;
+> +       int idx = 0;
+> +
+> +       TEST_REQUIRES_BP_SLOTS(test, 3);
+> +
+> +       fill_bp_slots(test, &idx, -1, current, 2);
+> +       /* Transitioning from only all CPU breakpoints to mixed. */
+> +       tsk_on_cpu_idx = idx;
+> +       fill_one_bp_slot(test, &idx, raw_smp_processor_id(), current);
+> +       fill_one_bp_slot(test, &idx, -1, current);
+> +
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +
+> +       /* We should still be able to use up another CPU's slots. */
+> +       cpu_idx = idx;
+> +       fill_one_bp_slot(test, &idx, get_other_cpu(), NULL);
+> +       TEST_EXPECT_NOSPC(register_test_bp(get_other_cpu(), NULL, idx));
+> +
+> +       /* Transitioning back to task target on all CPUs. */
+> +       unregister_test_bp(&test_bps[tsk_on_cpu_idx]);
+> +       /* Still have a CPU target breakpoint in get_other_cpu(). */
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       /* Remove it and try again. */
+> +       unregister_test_bp(&test_bps[cpu_idx]);
+> +       fill_one_bp_slot(test, &idx, -1, current);
+> +
+> +       TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), current, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(raw_smp_processor_id(), NULL, idx));
+> +       TEST_EXPECT_NOSPC(register_test_bp(get_other_cpu(), NULL, idx));
+> +}
+> +
+> +static struct kunit_case hw_breakpoint_test_cases[] = {
+> +       KUNIT_CASE(test_one_cpu),
+> +       KUNIT_CASE(test_many_cpus),
+> +       KUNIT_CASE(test_one_task_on_all_cpus),
+> +       KUNIT_CASE(test_two_tasks_on_all_cpus),
+> +       KUNIT_CASE(test_one_task_on_one_cpu),
+> +       KUNIT_CASE(test_one_task_mixed),
+> +       KUNIT_CASE(test_two_tasks_on_one_cpu),
+> +       KUNIT_CASE(test_two_tasks_on_one_all_cpus),
+> +       KUNIT_CASE(test_task_on_all_and_one_cpu),
+> +       {},
+> +};
+> +
+> +static int test_init(struct kunit *test)
+> +{
+> +       /* Most test cases want 2 distinct CPUs. */
+> +       return num_online_cpus() < 2 ? -EINVAL : 0;
+> +}
+> +
+> +static void test_exit(struct kunit *test)
+> +{
+> +       for (int i = 0; i < MAX_TEST_BREAKPOINTS; ++i) {
+> +               if (test_bps[i])
+> +                       unregister_test_bp(&test_bps[i]);
+> +       }
+> +
+> +       if (__other_task) {
+> +               kthread_stop(__other_task);
+> +               __other_task = NULL;
+> +       }
+> +}
+> +
+> +static struct kunit_suite hw_breakpoint_test_suite = {
+> +       .name = "hw_breakpoint",
+> +       .test_cases = hw_breakpoint_test_cases,
+> +       .init = test_init,
+> +       .exit = test_exit,
+> +};
+> +
+> +kunit_test_suites(&hw_breakpoint_test_suite);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Marco Elver <elver@google.com>");
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 2e24db4bff19..4c87a6edf046 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2513,6 +2513,16 @@ config STACKINIT_KUNIT_TEST
+>           CONFIG_GCC_PLUGIN_STRUCTLEAK, CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF,
+>           or CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.
+>
+> +config HW_BREAKPOINT_KUNIT_TEST
+> +       bool "Test hw_breakpoint constraints accounting" if !KUNIT_ALL_TESTS
+> +       depends on HAVE_HW_BREAKPOINT
+> +       depends on KUNIT=y
+> +       default KUNIT_ALL_TESTS
+> +       help
+> +         Tests for hw_breakpoint constraints accounting.
+> +
+> +         If unsure, say N.
+> +
+>  config TEST_UDELAY
+>         tristate "udelay test driver"
+>         help
+> --
+> 2.37.0.rc0.161.g10f37bed90-goog
+>
