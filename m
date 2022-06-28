@@ -2,45 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA27C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 15:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D69CCA47E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 15:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347595AbiF1PLw (ORCPT
+        id S1348182AbiF1PPs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Jun 2022 11:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44538 "EHLO
+        Tue, 28 Jun 2022 11:15:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346886AbiF1PLw (ORCPT
+        with ESMTP id S1348159AbiF1PP2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Jun 2022 11:11:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5188E2AC6D;
-        Tue, 28 Jun 2022 08:11:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E125760EAE;
-        Tue, 28 Jun 2022 15:11:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED921C3411D;
-        Tue, 28 Jun 2022 15:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656429110;
-        bh=6CRrz5GE3sbPpBNvpOE8bS4r8rF34+JaaCSHcXzLz7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FgGFKKvuIrmCI31odpnLzLZxivYQQycW+SNotiBpZhqhEy592cZmU5RPF8+Cu3/Vg
-         qADsWEpad00yrFTBKMUKFU6MfFf7XZErZkBgHBKYlEccfAam9HgzjizQiiO20aTu0Z
-         rBy3Wvfv/rz3gkJpniPu55HK43Qraxym3Jo2lOr7I5BrCPlPRR1816zUAB6mVbmKKb
-         vjs7FTztRASVm+SJi7LYR0P6EeRHt/5ENUVgrU8NN8xIt+w08l4H2JLnkgum9fUQ4I
-         Q2j3vkWTOQCoUZmZEf4bV4sUD1oENLFAypIfj51+DyRqden0TlkTNJYQlDuptQgWb4
-         +XGbWFt3Rtr0Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 675E24096F; Tue, 28 Jun 2022 12:11:47 -0300 (-03)
-Date:   Tue, 28 Jun 2022 12:11:47 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 28 Jun 2022 11:15:28 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A44332057
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 08:15:19 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id r20so18207386wra.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 08:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8kVNWHrBL0GiaNqy7pXs9TTaPLwVW5aeut18uIqtgkc=;
+        b=Lur6rtWdWtsnC+SAMWRIoyGTCnfrArnoVRT/JoKQA1MBFjN7wKpLHEMLSnukDEMMHU
+         Ay8mffu3ExD+WOLzoMZ+p+JZ0ihbmQHBW6GWjmYKXBoeoe0FBG0XJ7G9Gj7v5Haq+GO3
+         Q4N96g0vvP7TUEYJcVhsixklEsMkotlZak7Lw+VD8LfCJ+ePdug2NU13uZZa4uLEPlGY
+         R1LHApvvD7Xx1zetSoSWWfwOIYLhCIdnAERf7Bj6mgMQXZar+tZqeEOkuMD/O/XWIa7q
+         K+OFjxGLNiNhPL9R9aMgdJuBzRu/VIrMkviyPILGE1JV+wYAVrZ32Z/g1Y0yuXXmJN41
+         0Myw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8kVNWHrBL0GiaNqy7pXs9TTaPLwVW5aeut18uIqtgkc=;
+        b=jX3kVkXfOw63NKLqAqc0yEcyfRLcW2GBDWUE9wI/WP0vhYUwaV2dRfe43DxrSzKLqt
+         IIBb6byXm1GCvPBaOlmqwMGU6YEf1/oHFLwNXmUlR5sc+1iY5hEwsVR7RJevvIk35yhs
+         0QVQMl6INlHXpbeA2J7adQKr+6UJl4P6jrOK0u0m2DhmR7M/SwstkHHvFlFMMyoAQX+y
+         w5RtINlutT3DpnGoFmkU/fg7M47SnXGJXXMToaaJva+lBH9up+uxMgiqd/6pgdhi5w/v
+         TYhzZm2jVNQLwIOrfl3vPwAuSS7hrVap+8PWTLk24lYwMAbmWCwPndo6DWCyOzlVpsFy
+         wVsg==
+X-Gm-Message-State: AJIora8dfqlaR9MeUYn5RfFQDqXYKNfR9FP5SR+vKLrgItpe25ChKGIA
+        YONCJCFqCMWViUgu7Zf/g6Xzy/xfegvMGn5Xp+xafw==
+X-Google-Smtp-Source: AGRyM1vzfRMZwSSEMuW4Vd1zY8jVZxxwz2LtHYL1OrjbU/xaztX9Iy32yiJySZYdl72ksriuNPl+C/SvWFQ9AuqsVYs=
+X-Received: by 2002:a5d:544c:0:b0:21b:a288:f98c with SMTP id
+ w12-20020a5d544c000000b0021ba288f98cmr17779907wrv.300.1656429317400; Tue, 28
+ Jun 2022 08:15:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220614014714.1407239-1-irogers@google.com> <Yrq5Bun3Nmb1vrW3@krava>
+In-Reply-To: <Yrq5Bun3Nmb1vrW3@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 28 Jun 2022 08:15:04 -0700
+Message-ID: <CAP-5=fXNJjRxGCE=mH22bLg1mNXMRgL_px4=-=8Zq-DLUXbxTg@mail.gmail.com>
+Subject: Re: [PATCH] perf bpf: 8 byte align bpil data
+To:     olsajiri@gmail.com
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -56,26 +72,25 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf bpf: 8 byte align bpil data
-Message-ID: <YrsaM7q1KDKwfeLp@kernel.org>
-References: <20220614014714.1407239-1-irogers@google.com>
- <Yrq4fFtgcpwa2JUu@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yrq4fFtgcpwa2JUu@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jun 28, 2022 at 10:14:52AM +0200, Jiri Olsa escreveu:
+On Tue, Jun 28, 2022 at 1:41 AM <olsajiri@gmail.com> wrote:
+>
 > On Mon, Jun 13, 2022 at 06:47:14PM -0700, Ian Rogers wrote:
 > > bpil data is accessed assuming 64-bit alignment resulting in undefined
 > > behavior as the data is just byte aligned. With an -fsanitize=undefined
 > > build the following errors are observed:
-> > 
+>
+> I need to add -w to get the clean build with that, do you see that as well?
+>
+>   $ make EXTRA_CFLAGS='-fsanitize=undefined -w'
+
+I don't recall needing this, but I was stacking fixes which may explain it.
+
+> >
 > > $ sudo perf record -a sleep 1
 > > util/bpf-event.c:310:22: runtime error: load of misaligned address 0x55f61084520f for type '__u64', which requires 8 byte alignment
 > > 0x55f61084520f: note: pointer points here
@@ -88,107 +103,49 @@ Em Tue, Jun 28, 2022 at 10:14:52AM +0200, Jiri Olsa escreveu:
 > > util/bpf-event.c:198:33: runtime error: member access within misaligned address 0x55f61084523f for type 'const struct bpf_func_info', which requires 4 byte alignment
 > > 0x55f61084523f: note: pointer points here
 > >  58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00 3b 00 00 00 ab  02 00 00 44 00 00 00 14  03 00 00
-> > 
-> > Correct this by rouding up the data sizes and aligning the pointers.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/bpf-utils.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/bpf-utils.c b/tools/perf/util/bpf-utils.c
-> > index e271e05e51bc..80b1d2b3729b 100644
-> > --- a/tools/perf/util/bpf-utils.c
-> > +++ b/tools/perf/util/bpf-utils.c
-> > @@ -149,11 +149,10 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
-> >  		count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
-> >  		size  = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
-> >  
-> > -		data_len += count * size;
-> > +		data_len += roundup(count * size, sizeof(__u64));
-> >  	}
-> >  
-> >  	/* step 3: allocate continuous memory */
-> > -	data_len = roundup(data_len, sizeof(__u64));
-> >  	info_linear = malloc(sizeof(struct perf_bpil) + data_len);
-> >  	if (!info_linear)
-> >  		return ERR_PTR(-ENOMEM);
-> > @@ -180,7 +179,7 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
-> >  		bpf_prog_info_set_offset_u64(&info_linear->info,
-> >  					     desc->array_offset,
-> >  					     ptr_to_u64(ptr));
-> > -		ptr += count * size;
-> > +		ptr += roundup(count * size, sizeof(__u64));
-> 
-> this one depends on info_linear->data being alligned(8), right?
-> 
-> should we make sure it's allways the case like in the patch
-> below, or it's superfluous?
-> 
+>
+>
+> and I'm also getting another error in:
+>
+> [root@krava perf]# ./perf record -a sleep 1
+> util/synthetic-events.c:1202:11: runtime error: member access within misaligned address 0x00000286f7ea for type 'struct perf_record_record_cpu_map', which requires 8 byte alignment
+> 0x00000286f7ea: note: pointer points here
+>  20 00  01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00
+>               ^
+> util/synthetic-events.c:1203:18: runtime error: member access within misaligned address 0x00000286f7ea for type 'struct perf_record_record_cpu_map', which requires 8 byte alignment
+> 0x00000286f7ea: note: pointer points here
+>  20 00  01 00 01 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00
+>               ^
+> util/synthetic-events.c:1206:46: runtime error: member access within misaligned address 0x00000286f7ea for type 'struct perf_record_record_cpu_map', which requires 8 byte alignment
+> 0x00000286f7ea: note: pointer points here
+>  20 00  01 00 01 00 08 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00
+>               ^
+> /home/jolsa/kernel/linux-perf/tools/include/asm-generic/bitops/atomic.h:10:29: runtime error: load of misaligned address 0x00000286f7f2 for type 'long unsigned int', which requires 8 byte alignment
+> 0x00000286f7f2: note: pointer points here
+>  00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  51 00 00 00 00 00
+>               ^
+>
+> are you going to address this one as well?
+>
+>
+> the reason for this one is that 'data' in struct perf_record_cpu_map_data
+> is not alligned(8), so that's why I raised the question in my other reply ;-)
+>
+> I wonder we should mark all tools/lib/perf/include/perf/event.h types
+> as packed to prevent any compiler padding
+
+I already sent out a fix and some improvements related to this:
+https://lore.kernel.org/lkml/20220614143353.1559597-1-irogers@google.com/
+Could you take a look?
+
+I'm not sure about aligned and packed. I tried to minimize it in the
+change above. The issue is that taking the address of a variable in a
+packed struct results in an unaligned pointer. To address this in the
+fix above I changed the functions to pass pointers to the whole
+struct.
+
+Thanks,
+Ian
+
 > thanks,
 > jirka
-> 
-> 
-> ---
-> diff --git a/tools/perf/util/bpf-utils.h b/tools/perf/util/bpf-utils.h
-> index 86a5055cdfad..1aba76c44116 100644
-> --- a/tools/perf/util/bpf-utils.h
-> +++ b/tools/perf/util/bpf-utils.h
-> @@ -60,7 +60,7 @@ struct perf_bpil {
->  	/* which arrays are included in data */
->  	__u64			arrays;
->  	struct bpf_prog_info	info;
-> -	__u8			data[];
-> +	__u8			data[] __attribute__((aligned(8)));
->  };
->  
->  struct perf_bpil *
-
-⬢[acme@toolbox perf-urgent]$ pahole -C perf_bpil ~/bin/perf
-struct perf_bpil {
-	__u32                      info_len;             /*     0     4 */
-	__u32                      data_len;             /*     4     4 */
-	__u64                      arrays;               /*     8     8 */
-	struct bpf_prog_info       info __attribute__((__aligned__(8))); /*    16   224 */
-
-	/* XXX last struct has 4 bytes of padding */
-
-	/* --- cacheline 3 boundary (192 bytes) was 48 bytes ago --- */
-	__u8                       data[];               /*   240     0 */
-
-	/* size: 240, cachelines: 4, members: 5 */
-	/* paddings: 1, sum paddings: 4 */
-	/* forced alignments: 1 */
-	/* last cacheline: 48 bytes */
-} __attribute__((__aligned__(8)));
-⬢[acme@toolbox perf-urgent]$
-
-
-Humm, lotsa explicit alignments already?
-
-Looking at the sources:
-
-struct perf_bpil {
-        /* size of struct bpf_prog_info, when the tool is compiled */
-        __u32                   info_len;
-        /* total bytes allocated for data, round up to 8 bytes */
-        __u32                   data_len;
-        /* which arrays are included in data */
-        __u64                   arrays;
-        struct bpf_prog_info    info;
-        __u8                    data[];
-};
-
-Interesting, where is pahole finding those aligned attributes? Ok
-'struct bpf_prog_info' in tools/include/uapi/linux/bpf.h has aligned(8)
-for the whole struct, so perf_bpil's info gets that.
-
-sp that data right after 'info' is 8 byte alignedas
-sizeof(bpf_prog_info) is a multiple of 8 bytes.
-
-So I think I can apply the patch as-is and leave making sure data is
-8-byte aligned for later.
-
-Doing that now.
-
-- Arnaldo
