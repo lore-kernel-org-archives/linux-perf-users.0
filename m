@@ -2,315 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5145CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 15:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80A8C43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 15:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346890AbiF1P15 (ORCPT
+        id S1347796AbiF1Pfa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Jun 2022 11:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
+        Tue, 28 Jun 2022 11:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346550AbiF1P1z (ORCPT
+        with ESMTP id S1347854AbiF1Pf3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Jun 2022 11:27:55 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098A72E6A3
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 08:27:51 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id x3so22969873lfd.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 08:27:50 -0700 (PDT)
+        Tue, 28 Jun 2022 11:35:29 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F04833E89;
+        Tue, 28 Jun 2022 08:35:28 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id mf9so26692549ejb.0;
+        Tue, 28 Jun 2022 08:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JcrXyHrbwCCKxz8IEipVzSt2camDv5QxjxkeQewO/T0=;
-        b=OwQ4ahQWbrsPbES0ZStgp4gfOkrVfPAcdoH5+qPB9pW79khO5R7mCpTc3wOXx+zzsX
-         0zcdK55j/MaLvUaYAgls1Q3b+VYvR34VfQktWHj6RA84M7kWBdR0TAMldDPnZ9ItE4Xz
-         YBUvPTRXYN4eO8GLWrf28lsaLT1tqrWT5e/XZg4T5GolUMherk27yEnBWxoorGAuXvGu
-         pSWNPHlVS9f2YEE3m7F+Zu1g3XjKvHdyYLYk033NvwX0Slt3xjdVn+hxrBJicYwHfRBR
-         iNaQAD6Cda/3fzyfZal8fs5HglZRCCHhZ2lsbjw0a56fBAUHaxRdjBYDoywsdYSxCIJX
-         AcCA==
+        d=gmail.com; s=20210112;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DL43punzQ+qzj6hSdoTRg0mAdzG3rAXkxtHbjtjcKDk=;
+        b=J/pl124QRt2Wk2blBedwyS9d7/NqidqGNjmcJKmMTwWV1k2PN4bCCL1XaJI2c4NegV
+         Tv7PPzrhPRaTW/hgrurPvvbIIjcf2579WfQqhCfIu8GwswFzunf+HuxpWGSQFGwOFG/P
+         yKppR+dssvXShdpG2cskbpM2bfmSZNYTFgfDukzoWZasp0UcuvUGbKo0qZJjfEn3t1H8
+         cdMKbenRdJgMdGiaOHLS7i/Ic/HqygfFKoJYVNQsZCruUioBSMdg5q0UE714pBAWOkNk
+         XY3ulXdyYYl4yKo9JPcylZrcfs5CCZ9h/yqD/4NYcjrjJAmcyO77F2grc2SyfMXit+qx
+         BUbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JcrXyHrbwCCKxz8IEipVzSt2camDv5QxjxkeQewO/T0=;
-        b=cWrrKCnGigNniOMUrkAcJ8X/fAn2WL5oeeB11HAvoa/0GfktI/kqBSq0lH5Vh4s+nf
-         dr9oGR5rho9zXwwzxTocuf9esfhX+NEEqYwOuY+h4ysy0AdUlsBp+xw1LY9Eas6sJHIT
-         y+mhMyjXoK3yoGsYWzRdtVXNCgyypq51LzdJsMkFvV+z3MjEpJhxG6wVD4jb6+khVZO4
-         4j6XTgcKY1WzJCYM0lIBWbGZzWogJ2CpGUsaj9jZkzB1olcZFOwG4HxKFLnnTuXwwgtU
-         vp8aCmEdt3yzYr41mLgaBYU0t7gYcDlhqkGwobnfzfW16iaatcbRjMiYqQUQEa+Hruyr
-         5mNw==
-X-Gm-Message-State: AJIora8+4EeOQjNYZssE1mVK226QenIrWBsOwmOsAt11FlqBvDoKQTYv
-        1/XqmVtb3N6l/8hGskppxgDCVMXorieYNt2vTP/7DQ==
-X-Google-Smtp-Source: AGRyM1s+cQkS5m43fYkZyD/0llt7eZYGp+yHbsTW1rNivIM7Wj819yMVtuHuRVRa1u+aUwcoEhamNdNjw/giES0oDvA=
-X-Received: by 2002:a05:6512:2520:b0:47f:8512:19c1 with SMTP id
- be32-20020a056512252000b0047f851219c1mr12110789lfb.540.1656430068858; Tue, 28
- Jun 2022 08:27:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220628095833.2579903-1-elver@google.com> <20220628095833.2579903-4-elver@google.com>
- <CACT4Y+bh06ZF5s4Mfq+CJ8RJ+Fm41NeXt=C8Kkx11t9hgABpYQ@mail.gmail.com> <CANpmjNOT=npm9Bu9QGNO=SgCJVB2fr8ojO4-u-Ffgw4gmRuSfw@mail.gmail.com>
-In-Reply-To: <CANpmjNOT=npm9Bu9QGNO=SgCJVB2fr8ojO4-u-Ffgw4gmRuSfw@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 28 Jun 2022 17:27:37 +0200
-Message-ID: <CACT4Y+YQibtAk0y=SVTSp27Ythjk4c1jCV2_BNAL5Uiw-fMo_w@mail.gmail.com>
-Subject: Re: [PATCH v2 03/13] perf/hw_breakpoint: Optimize list of per-task breakpoints
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DL43punzQ+qzj6hSdoTRg0mAdzG3rAXkxtHbjtjcKDk=;
+        b=pzT17uwl6Fba0V2ZPkqe4zMZFBuLECzCZbShEO2QFYosiO68qy3aDx+96iwhHlEIb7
+         GAsmJNR3UEfV6vlJ687RXGQkh6dYBgEugJfjt3keLmjrKl7qvsP8hjc52k8Bdfsb7m+Q
+         YO+m8t5tmvdTlujwPmbRsG8+200ijNBcFhosH69IveNG0ZGcnFn8yrorzlUrSXqbzeuj
+         fmkfBLty3agHu3jsYT9mpJPJcwuuqGZDvbkmmFbbtShBqUFTFFmLCchDNMO9rd28qzlL
+         AeaDiA9isidd11CojjJwrC/P1l0yX+52R8yqgeiVnOVog4lL9mLKEUJ1w4+B7AqClAcd
+         xYgw==
+X-Gm-Message-State: AJIora8h23NQt640u/jGZqDTlpmH485ZsQXaH4lhIinwcBxb2qul6jKz
+        xwFiXHW2op1kY2e5KXo0ILk=
+X-Google-Smtp-Source: AGRyM1uPRSomYbKmcMmXmhjerNWDelmBl5PQl5c4/qUVsG9o1Ty4qLP7QnFBMkjQwr2Ou31X8L2+FQ==
+X-Received: by 2002:a17:906:4794:b0:722:f10e:6240 with SMTP id cw20-20020a170906479400b00722f10e6240mr19530893ejc.704.1656430526484;
+        Tue, 28 Jun 2022 08:35:26 -0700 (PDT)
+Received: from krava (net-109-116-206-47.cust.vodafonedsl.it. [109.116.206.47])
+        by smtp.gmail.com with ESMTPSA id by27-20020a0564021b1b00b004356112a8a2sm9698253edb.15.2022.06.28.08.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jun 2022 08:35:25 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 28 Jun 2022 17:35:21 +0200
+To:     Ian Rogers <irogers@google.com>
+Cc:     olsajiri@gmail.com, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, linux-sh@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf bpf: 8 byte align bpil data
+Message-ID: <YrsfueiaxKmpf0Ng@krava>
+References: <20220614014714.1407239-1-irogers@google.com>
+ <Yrq5Bun3Nmb1vrW3@krava>
+ <CAP-5=fXNJjRxGCE=mH22bLg1mNXMRgL_px4=-=8Zq-DLUXbxTg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXNJjRxGCE=mH22bLg1mNXMRgL_px4=-=8Zq-DLUXbxTg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 28 Jun 2022 at 16:54, Marco Elver <elver@google.com> wrote:
-> > > On a machine with 256 CPUs, running the recently added perf breakpoint
-> > > benchmark results in:
-> > >
-> > >  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
-> > >  | # Running 'breakpoint/thread' benchmark:
-> > >  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
-> > >  |      Total time: 236.418 [sec]
-> > >  |
-> > >  |   123134.794271 usecs/op
-> > >  |  7880626.833333 usecs/op/cpu
-> > >
-> > > The benchmark tests inherited breakpoint perf events across many
-> > > threads.
-> > >
-> > > Looking at a perf profile, we can see that the majority of the time is
-> > > spent in various hw_breakpoint.c functions, which execute within the
-> > > 'nr_bp_mutex' critical sections which then results in contention on that
-> > > mutex as well:
-> > >
-> > >     37.27%  [kernel]       [k] osq_lock
-> > >     34.92%  [kernel]       [k] mutex_spin_on_owner
-> > >     12.15%  [kernel]       [k] toggle_bp_slot
-> > >     11.90%  [kernel]       [k] __reserve_bp_slot
-> > >
-> > > The culprit here is task_bp_pinned(), which has a runtime complexity of
-> > > O(#tasks) due to storing all task breakpoints in the same list and
-> > > iterating through that list looking for a matching task. Clearly, this
-> > > does not scale to thousands of tasks.
-> > >
-> > > Instead, make use of the "rhashtable" variant "rhltable" which stores
-> > > multiple items with the same key in a list. This results in average
-> > > runtime complexity of O(1) for task_bp_pinned().
-> > >
-> > > With the optimization, the benchmark shows:
-> > >
-> > >  | $> perf bench -r 30 breakpoint thread -b 4 -p 64 -t 64
-> > >  | # Running 'breakpoint/thread' benchmark:
-> > >  | # Created/joined 30 threads with 4 breakpoints and 64 parallelism
-> > >  |      Total time: 0.208 [sec]
-> > >  |
-> > >  |      108.422396 usecs/op
-> > >  |     6939.033333 usecs/op/cpu
-> > >
-> > > On this particular setup that's a speedup of ~1135x.
-> > >
-> > > While one option would be to make task_struct a breakpoint list node,
-> > > this would only further bloat task_struct for infrequently used data.
-> > > Furthermore, after all optimizations in this series, there's no evidence
-> > > it would result in better performance: later optimizations make the time
-> > > spent looking up entries in the hash table negligible (we'll reach the
-> > > theoretical ideal performance i.e. no constraints).
-> > >
-> > > Signed-off-by: Marco Elver <elver@google.com>
-> > > ---
-> > > v2:
-> > > * Commit message tweaks.
-> > > ---
-> > >  include/linux/perf_event.h    |  3 +-
-> > >  kernel/events/hw_breakpoint.c | 56 ++++++++++++++++++++++-------------
-> > >  2 files changed, 37 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > > index 01231f1d976c..e27360436dc6 100644
-> > > --- a/include/linux/perf_event.h
-> > > +++ b/include/linux/perf_event.h
-> > > @@ -36,6 +36,7 @@ struct perf_guest_info_callbacks {
-> > >  };
-> > >
-> > >  #ifdef CONFIG_HAVE_HW_BREAKPOINT
-> > > +#include <linux/rhashtable-types.h>
-> > >  #include <asm/hw_breakpoint.h>
-> > >  #endif
-> > >
-> > > @@ -178,7 +179,7 @@ struct hw_perf_event {
-> > >                          * creation and event initalization.
-> > >                          */
-> > >                         struct arch_hw_breakpoint       info;
-> > > -                       struct list_head                bp_list;
-> > > +                       struct rhlist_head              bp_list;
-> > >                 };
-> > >  #endif
-> > >                 struct { /* amd_iommu */
-> > > diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-> > > index 1b013968b395..add1b9c59631 100644
-> > > --- a/kernel/events/hw_breakpoint.c
-> > > +++ b/kernel/events/hw_breakpoint.c
-> > > @@ -26,10 +26,10 @@
-> > >  #include <linux/irqflags.h>
-> > >  #include <linux/kdebug.h>
-> > >  #include <linux/kernel.h>
-> > > -#include <linux/list.h>
-> > >  #include <linux/mutex.h>
-> > >  #include <linux/notifier.h>
-> > >  #include <linux/percpu.h>
-> > > +#include <linux/rhashtable.h>
-> > >  #include <linux/sched.h>
-> > >  #include <linux/slab.h>
-> > >
-> > > @@ -54,7 +54,13 @@ static struct bp_cpuinfo *get_bp_info(int cpu, enum bp_type_idx type)
-> > >  }
-> > >
-> > >  /* Keep track of the breakpoints attached to tasks */
-> > > -static LIST_HEAD(bp_task_head);
-> > > +static struct rhltable task_bps_ht;
-> > > +static const struct rhashtable_params task_bps_ht_params = {
-> > > +       .head_offset = offsetof(struct hw_perf_event, bp_list),
-> > > +       .key_offset = offsetof(struct hw_perf_event, target),
-> > > +       .key_len = sizeof_field(struct hw_perf_event, target),
-> > > +       .automatic_shrinking = true,
-> > > +};
-> > >
-> > >  static int constraints_initialized;
-> > >
-> > > @@ -103,17 +109,23 @@ static unsigned int max_task_bp_pinned(int cpu, enum bp_type_idx type)
-> > >   */
-> > >  static int task_bp_pinned(int cpu, struct perf_event *bp, enum bp_type_idx type)
-> > >  {
-> > > -       struct task_struct *tsk = bp->hw.target;
-> > > +       struct rhlist_head *head, *pos;
-> > >         struct perf_event *iter;
-> > >         int count = 0;
-> > >
-> > > -       list_for_each_entry(iter, &bp_task_head, hw.bp_list) {
-> > > -               if (iter->hw.target == tsk &&
-> > > -                   find_slot_idx(iter->attr.bp_type) == type &&
-> > > +       rcu_read_lock();
-> > > +       head = rhltable_lookup(&task_bps_ht, &bp->hw.target, task_bps_ht_params);
-> > > +       if (!head)
-> > > +               goto out;
-> > > +
-> > > +       rhl_for_each_entry_rcu(iter, pos, head, hw.bp_list) {
-> > > +               if (find_slot_idx(iter->attr.bp_type) == type &&
-> > >                     (iter->cpu < 0 || cpu == iter->cpu))
-> > >                         count += hw_breakpoint_weight(iter);
-> > >         }
-> > >
-> > > +out:
-> > > +       rcu_read_unlock();
-> > >         return count;
-> > >  }
-> > >
-> > > @@ -186,7 +198,7 @@ static void toggle_bp_task_slot(struct perf_event *bp, int cpu,
-> > >  /*
-> > >   * Add/remove the given breakpoint in our constraint table
-> > >   */
-> > > -static void
-> > > +static int
-> > >  toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
-> > >                int weight)
-> > >  {
-> > > @@ -199,7 +211,7 @@ toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
-> > >         /* Pinned counter cpu profiling */
-> > >         if (!bp->hw.target) {
-> > >                 get_bp_info(bp->cpu, type)->cpu_pinned += weight;
-> > > -               return;
-> > > +               return 0;
-> > >         }
-> > >
-> > >         /* Pinned counter task profiling */
-> > > @@ -207,9 +219,9 @@ toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
-> > >                 toggle_bp_task_slot(bp, cpu, type, weight);
-> > >
-> > >         if (enable)
-> > > -               list_add_tail(&bp->hw.bp_list, &bp_task_head);
-> > > +               return rhltable_insert(&task_bps_ht, &bp->hw.bp_list, task_bps_ht_params);
-> > >         else
-> > > -               list_del(&bp->hw.bp_list);
-> > > +               return rhltable_remove(&task_bps_ht, &bp->hw.bp_list, task_bps_ht_params);
-> > >  }
-> > >
-> > >  __weak int arch_reserve_bp_slot(struct perf_event *bp)
-> > > @@ -307,9 +319,7 @@ static int __reserve_bp_slot(struct perf_event *bp, u64 bp_type)
-> > >         if (ret)
-> > >                 return ret;
-> > >
-> > > -       toggle_bp_slot(bp, true, type, weight);
-> > > -
-> > > -       return 0;
-> > > +       return toggle_bp_slot(bp, true, type, weight);
-> > >  }
-> > >
-> > >  int reserve_bp_slot(struct perf_event *bp)
-> > > @@ -334,7 +344,7 @@ static void __release_bp_slot(struct perf_event *bp, u64 bp_type)
-> > >
-> > >         type = find_slot_idx(bp_type);
-> > >         weight = hw_breakpoint_weight(bp);
-> > > -       toggle_bp_slot(bp, false, type, weight);
-> > > +       WARN_ON(toggle_bp_slot(bp, false, type, weight));
-> > >  }
-> > >
-> > >  void release_bp_slot(struct perf_event *bp)
-> > > @@ -678,7 +688,7 @@ static struct pmu perf_breakpoint = {
-> > >  int __init init_hw_breakpoint(void)
-> > >  {
-> > >         int cpu, err_cpu;
-> > > -       int i;
-> > > +       int i, ret;
-> > >
-> > >         for (i = 0; i < TYPE_MAX; i++)
-> > >                 nr_slots[i] = hw_breakpoint_slots(i);
-> > > @@ -689,18 +699,24 @@ int __init init_hw_breakpoint(void)
-> > >
-> > >                         info->tsk_pinned = kcalloc(nr_slots[i], sizeof(int),
-> > >                                                         GFP_KERNEL);
-> > > -                       if (!info->tsk_pinned)
-> > > -                               goto err_alloc;
-> > > +                       if (!info->tsk_pinned) {
-> > > +                               ret = -ENOMEM;
-> > > +                               goto err;
-> > > +                       }
-> > >                 }
-> > >         }
-> > >
-> > > +       ret = rhltable_init(&task_bps_ht, &task_bps_ht_params);
-> > > +       if (ret)
-> > > +               goto err;
-> > > +
-> > >         constraints_initialized = 1;
-> > >
-> > >         perf_pmu_register(&perf_breakpoint, "breakpoint", PERF_TYPE_BREAKPOINT);
-> > >
-> > >         return register_die_notifier(&hw_breakpoint_exceptions_nb);
+On Tue, Jun 28, 2022 at 08:15:04AM -0700, Ian Rogers wrote:
+> On Tue, Jun 28, 2022 at 1:41 AM <olsajiri@gmail.com> wrote:
 > >
-> > It seems there is a latent bug here:
-> > if register_die_notifier() fails we also need to execute the err: label code.
->
-> I think we should ignore it, because it's just a notifier when the
-> kernel dies. I'd rather have working breakpoints (which we have if we
-> made it to this point) when the kernel is live, and sacrifice some bad
-> behaviour when the kernel dies.
-
-I don't have a strong opinion either way. If ignoring such functions
-is acceptable practice, it sounds fine.
-
-> > Otherwise the patch looks good.
+> > On Mon, Jun 13, 2022 at 06:47:14PM -0700, Ian Rogers wrote:
+> > > bpil data is accessed assuming 64-bit alignment resulting in undefined
+> > > behavior as the data is just byte aligned. With an -fsanitize=undefined
+> > > build the following errors are observed:
 > >
-> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
->
-> Thanks,
-> -- Marco
+> > I need to add -w to get the clean build with that, do you see that as well?
+> >
+> >   $ make EXTRA_CFLAGS='-fsanitize=undefined -w'
+> 
+> I don't recall needing this, but I was stacking fixes which may explain it.
+> 
+> > >
+> > > $ sudo perf record -a sleep 1
+> > > util/bpf-event.c:310:22: runtime error: load of misaligned address 0x55f61084520f for type '__u64', which requires 8 byte alignment
+> > > 0x55f61084520f: note: pointer points here
+> > >  a8 fe ff ff 3c  51 d3 c0 ff ff ff ff 04  84 d3 c0 ff ff ff ff d8  aa d3 c0 ff ff ff ff a4  c0 d3 c0
+> > >              ^
+> > > util/bpf-event.c:311:20: runtime error: load of misaligned address 0x55f61084522f for type '__u32', which requires 4 byte alignment
+> > > 0x55f61084522f: note: pointer points here
+> > >  ff ff ff ff c7  17 00 00 f1 02 00 00 1f  04 00 00 58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00
+> > >              ^
+> > > util/bpf-event.c:198:33: runtime error: member access within misaligned address 0x55f61084523f for type 'const struct bpf_func_info', which requires 4 byte alignment
+> > > 0x55f61084523f: note: pointer points here
+> > >  58 04 00 00 00  00 00 00 0f 00 00 00 63  02 00 00 3b 00 00 00 ab  02 00 00 44 00 00 00 14  03 00 00
+> >
+> >
+> > and I'm also getting another error in:
+> >
+> > [root@krava perf]# ./perf record -a sleep 1
+> > util/synthetic-events.c:1202:11: runtime error: member access within misaligned address 0x00000286f7ea for type 'struct perf_record_record_cpu_map', which requires 8 byte alignment
+> > 0x00000286f7ea: note: pointer points here
+> >  20 00  01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00
+> >               ^
+> > util/synthetic-events.c:1203:18: runtime error: member access within misaligned address 0x00000286f7ea for type 'struct perf_record_record_cpu_map', which requires 8 byte alignment
+> > 0x00000286f7ea: note: pointer points here
+> >  20 00  01 00 01 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00
+> >               ^
+> > util/synthetic-events.c:1206:46: runtime error: member access within misaligned address 0x00000286f7ea for type 'struct perf_record_record_cpu_map', which requires 8 byte alignment
+> > 0x00000286f7ea: note: pointer points here
+> >  20 00  01 00 01 00 08 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00
+> >               ^
+> > /home/jolsa/kernel/linux-perf/tools/include/asm-generic/bitops/atomic.h:10:29: runtime error: load of misaligned address 0x00000286f7f2 for type 'long unsigned int', which requires 8 byte alignment
+> > 0x00000286f7f2: note: pointer points here
+> >  00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  51 00 00 00 00 00
+> >               ^
+> >
+> > are you going to address this one as well?
+> >
+> >
+> > the reason for this one is that 'data' in struct perf_record_cpu_map_data
+> > is not alligned(8), so that's why I raised the question in my other reply ;-)
+> >
+> > I wonder we should mark all tools/lib/perf/include/perf/event.h types
+> > as packed to prevent any compiler padding
+> 
+> I already sent out a fix and some improvements related to this:
+> https://lore.kernel.org/lkml/20220614143353.1559597-1-irogers@google.com/
+> Could you take a look?
+
+ok, I overlooked that one
+
+> 
+> I'm not sure about aligned and packed. I tried to minimize it in the
+> change above. The issue is that taking the address of a variable in a
+> packed struct results in an unaligned pointer. To address this in the
+> fix above I changed the functions to pass pointers to the whole
+> struct.
+
+ok, will check,
+
+thanks,
+jirka
