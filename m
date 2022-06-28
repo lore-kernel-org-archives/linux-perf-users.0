@@ -2,174 +2,267 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82093CCA479
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 14:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61119CCA479
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 14:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346976AbiF1OrC (ORCPT
+        id S1347415AbiF1Oxj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Jun 2022 10:47:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55036 "EHLO
+        Tue, 28 Jun 2022 10:53:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347163AbiF1Oq6 (ORCPT
+        with ESMTP id S1347443AbiF1Oxe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Jun 2022 10:46:58 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 263022ED55;
-        Tue, 28 Jun 2022 07:46:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C65CCB81EA2;
-        Tue, 28 Jun 2022 14:46:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDB3C3411D;
-        Tue, 28 Jun 2022 14:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656427614;
-        bh=TvTe4Qb0dtjUwWQirqmAkZHbbIfz5YO7qMPwTZqUeSs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UV3InFSBhPO4SzgB4K8MD6zPRFYHx6vL0yiV+Gn9hOrBuceOdCSe/cnz+i+Ny9AGR
-         nfjXbcyjtfnv82PQxBCQrDJHCZxssfsfaN/ftuk9r4c08Lc5SnAuj7dEcTQ7VRDODW
-         H7ayiKcgmY0vVKKWYOdzBUtD/zrAUoBAAe94pO/i3SHtWyzlBxcIKteS0Q165lvtLt
-         h44/1QwNxd7k0pF7vhJHYPCP3tiyyDmVKNQT+f1AmrmKVNe8TqjpK1PI0DHe/3uWD6
-         LnAufJus7qjt9dAD3X7ESidKcleMREsPG5xxJmrZxYOaZ+lp5mItAA8RH9WhKi5UyR
-         PYZVRLwTxWGqw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 166494096F; Tue, 28 Jun 2022 11:46:52 -0300 (-03)
-Date:   Tue, 28 Jun 2022 11:46:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Hao Luo <haoluo@google.com>,
-        Milian Wolff <milian.wolff@kdab.com>, bpf@vger.kernel.org,
-        Blake Jones <blakejones@google.com>
-Subject: Re: [PATCH 2/6] perf offcpu: Accept allowed sample types only
-Message-ID: <YrsUXCRBNSV4ILoK@kernel.org>
-References: <20220624231313.367909-1-namhyung@kernel.org>
- <20220624231313.367909-3-namhyung@kernel.org>
+        Tue, 28 Jun 2022 10:53:34 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE710DED
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 07:53:07 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id z21so22700335lfb.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 07:53:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YTlupDxR0VuIlLuxHDuN5QQVbAsill4fsciLPt4itQQ=;
+        b=CK+v3yJgQ6tqQ6GDj03fYUW2dSNd/lPiUr2/BoPpFuw76C7+8vo6ZiXT7YBCj+y0BX
+         I8rPJGnGimDE+jY5GN+SXOoMAXMozLWKwSAHu2kVTE/9KyQ2S0/2Y9u2ZI5GNCLZqf63
+         ROjWdqrK+0mlaO/QmzEZWTqhfv03RSKOp6ZWWBugRAMKFpvDRfz3wbDAF3Jlt4VLNQiK
+         qyX+0r5YBMz3rdZeuU7U1AZHOdH6V1elOMC1LsqXZnGW4Li7eeVVqQHZ85SQnwuQgsJR
+         5FNm51BQjf+ru4edKuxfPbmSFpAK9ULRaCqsALBctVOe2vPi8iFXwhQLGbofAg3npGeN
+         kGRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YTlupDxR0VuIlLuxHDuN5QQVbAsill4fsciLPt4itQQ=;
+        b=hhioRwNu3V0yG+9/WOvPPRmx/SeCyowQoSJXONevWWt27Lg11KvpTDQNFZmNJ6+19I
+         cOAOLs3Hd50yyyE1kWG1ScIoEVc296Hc4u+hgv6COURFLZfJOgLYQnkNVodJCNGh2MFL
+         jiJPo3YHfWnMdsc94Fv8LjkPEGz9OujWAv9uxvYYHy4qfU4An7eYiC+PrNRQf01Yuo/V
+         imiJ6gyllH+CvH9CPTb/eG0/jsDKGLHJkQcipFrBHTyOy3dZjejkaYPNMl4BSH8sji74
+         13O8KV+qHeAK3ArNZ/iIXFPOA/g18wdg8BBEeHsT67/7mUDT8dJqpf6NaDsviuqlLCig
+         11dg==
+X-Gm-Message-State: AJIora+uuXCJuMG8fZxcuODGFPjo2ISD9Y4V3DReaap+BouCXnzk79+d
+        n8m2QYY5vWLG0KvPlrbDnhej39IFK7LqeIiW2aRpGQ==
+X-Google-Smtp-Source: AGRyM1vkpEV6l5ncNBuwoJTHSw7hdq0PUPHxE7ZvWBHFWAQusvLqPE8bfvDu0rO5nfpTbV2ylARwqgHtko8nyWD1E0w=
+X-Received: by 2002:a05:6512:39ce:b0:481:31e4:1e06 with SMTP id
+ k14-20020a05651239ce00b0048131e41e06mr2071928lfu.376.1656427985930; Tue, 28
+ Jun 2022 07:53:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220624231313.367909-3-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20220628095833.2579903-1-elver@google.com> <20220628095833.2579903-12-elver@google.com>
+In-Reply-To: <20220628095833.2579903-12-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 28 Jun 2022 16:52:54 +0200
+Message-ID: <CACT4Y+Y+NRKVbL3E8ctrgWh0H4hyHLoZryXN8V-qyB0bCfA1Xw@mail.gmail.com>
+Subject: Re: [PATCH v2 11/13] perf/hw_breakpoint: Introduce bp_slots_histogram
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, linux-sh@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 24, 2022 at 04:13:09PM -0700, Namhyung Kim escreveu:
-> As offcpu-time event is synthesized at the end, it could not get the
-> all the sample info.  Define OFFCPU_SAMPLE_TYPES for allowed ones and
-> mask out others in evsel__config() to prevent parse errors.
-> 
-> Because perf sample parsing assumes a specific ordering with the
-> sample types, setting unsupported one would make it fail to read
-> data like perf record -d/--data.
+On Tue, 28 Jun 2022 at 11:59, Marco Elver <elver@google.com> wrote:
+>
+> Factor out the existing `atomic_t count[N]` into its own struct called
+> 'bp_slots_histogram', to generalize and make its intent clearer in
+> preparation of reusing elsewhere. The basic idea of bucketing "total
+> uses of N slots" resembles a histogram, so calling it such seems most
+> intuitive.
+>
+> No functional change.
+>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-> Fixes: edc41a1099c2 ("perf record: Enable off-cpu analysis with BPF")
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-Thanks, applied.
-
-- Arnaldo
-
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/bpf_off_cpu.c | 7 ++++++-
->  tools/perf/util/evsel.c       | 9 +++++++++
->  tools/perf/util/off_cpu.h     | 9 +++++++++
->  3 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-> index b73e84a02264..f289b7713598 100644
-> --- a/tools/perf/util/bpf_off_cpu.c
-> +++ b/tools/perf/util/bpf_off_cpu.c
-> @@ -265,6 +265,12 @@ int off_cpu_write(struct perf_session *session)
->  
->  	sample_type = evsel->core.attr.sample_type;
->  
-> +	if (sample_type & ~OFFCPU_SAMPLE_TYPES) {
-> +		pr_err("not supported sample type: %llx\n",
-> +		       (unsigned long long)sample_type);
-> +		return -1;
-> +	}
+> v2:
+> * New patch.
+> ---
+>  kernel/events/hw_breakpoint.c | 94 +++++++++++++++++++++++------------
+>  1 file changed, 62 insertions(+), 32 deletions(-)
+>
+> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+> index 128ba3429223..18886f115abc 100644
+> --- a/kernel/events/hw_breakpoint.c
+> +++ b/kernel/events/hw_breakpoint.c
+> @@ -36,19 +36,27 @@
+>  #include <linux/slab.h>
+>
+>  /*
+> - * Constraints data
+> + * Datastructure to track the total uses of N slots across tasks or CPUs;
+> + * bp_slots_histogram::count[N] is the number of assigned N+1 breakpoint slots.
+>   */
+> -struct bp_cpuinfo {
+> -       /* Number of pinned cpu breakpoints in a cpu */
+> -       unsigned int    cpu_pinned;
+> -       /* tsk_pinned[n] is the number of tasks having n+1 breakpoints */
+> +struct bp_slots_histogram {
+>  #ifdef hw_breakpoint_slots
+> -       atomic_t        tsk_pinned[hw_breakpoint_slots(0)];
+> +       atomic_t count[hw_breakpoint_slots(0)];
+>  #else
+> -       atomic_t        *tsk_pinned;
+> +       atomic_t *count;
+>  #endif
+>  };
+>
+> +/*
+> + * Per-CPU constraints data.
+> + */
+> +struct bp_cpuinfo {
+> +       /* Number of pinned CPU breakpoints in a CPU. */
+> +       unsigned int                    cpu_pinned;
+> +       /* Histogram of pinned task breakpoints in a CPU. */
+> +       struct bp_slots_histogram       tsk_pinned;
+> +};
 > +
->  	if (sample_type & (PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER)) {
->  		if (evsel->core.id)
->  			sid = evsel->core.id[0];
-> @@ -319,7 +325,6 @@ int off_cpu_write(struct perf_session *session)
->  		}
->  		if (sample_type & PERF_SAMPLE_CGROUP)
->  			data.array[n++] = key.cgroup_id;
-> -		/* TODO: handle more sample types */
->  
->  		size = n * sizeof(u64);
->  		data.hdr.size = size;
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ce499c5da8d7..094b0a9c0bc0 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -48,6 +48,7 @@
->  #include "util.h"
->  #include "hashmap.h"
->  #include "pmu-hybrid.h"
-> +#include "off_cpu.h"
->  #include "../perf-sys.h"
->  #include "util/parse-branch-options.h"
->  #include <internal/xyarray.h>
-> @@ -1102,6 +1103,11 @@ static void evsel__set_default_freq_period(struct record_opts *opts,
->  	}
+>  static DEFINE_PER_CPU(struct bp_cpuinfo, bp_cpuinfo[TYPE_MAX]);
+>
+>  static struct bp_cpuinfo *get_bp_info(int cpu, enum bp_type_idx type)
+> @@ -159,6 +167,18 @@ static inline int hw_breakpoint_slots_cached(int type)
+>         return __nr_bp_slots[type];
 >  }
->  
-> +static bool evsel__is_offcpu_event(struct evsel *evsel)
+>
+> +static __init bool
+> +bp_slots_histogram_alloc(struct bp_slots_histogram *hist, enum bp_type_idx type)
 > +{
-> +	return evsel__is_bpf_output(evsel) && !strcmp(evsel->name, OFFCPU_EVENT);
+> +       hist->count = kcalloc(hw_breakpoint_slots_cached(type), sizeof(*hist->count), GFP_KERNEL);
+> +       return hist->count;
 > +}
 > +
->  /*
->   * The enable_on_exec/disabled value strategy:
->   *
-> @@ -1366,6 +1372,9 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->  	 */
->  	if (evsel__is_dummy_event(evsel))
->  		evsel__reset_sample_bit(evsel, BRANCH_STACK);
+> +static __init void bp_slots_histogram_free(struct bp_slots_histogram *hist)
+> +{
+> +       kfree(hist->count);
+> +}
 > +
-> +	if (evsel__is_offcpu_event(evsel))
-> +		evsel->core.attr.sample_type &= OFFCPU_SAMPLE_TYPES;
+>  static __init int init_breakpoint_slots(void)
+>  {
+>         int i, cpu, err_cpu;
+> @@ -170,8 +190,7 @@ static __init int init_breakpoint_slots(void)
+>                 for (i = 0; i < TYPE_MAX; i++) {
+>                         struct bp_cpuinfo *info = get_bp_info(cpu, i);
+>
+> -                       info->tsk_pinned = kcalloc(__nr_bp_slots[i], sizeof(atomic_t), GFP_KERNEL);
+> -                       if (!info->tsk_pinned)
+> +                       if (!bp_slots_histogram_alloc(&info->tsk_pinned, i))
+>                                 goto err;
+>                 }
+>         }
+> @@ -180,7 +199,7 @@ static __init int init_breakpoint_slots(void)
+>  err:
+>         for_each_possible_cpu(err_cpu) {
+>                 for (i = 0; i < TYPE_MAX; i++)
+> -                       kfree(get_bp_info(err_cpu, i)->tsk_pinned);
+> +                       bp_slots_histogram_free(&get_bp_info(err_cpu, i)->tsk_pinned);
+>                 if (err_cpu == cpu)
+>                         break;
+>         }
+> @@ -189,6 +208,34 @@ static __init int init_breakpoint_slots(void)
 >  }
->  
->  int evsel__set_filter(struct evsel *evsel, const char *filter)
-> diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
-> index 548008f74d42..2dd67c60f211 100644
-> --- a/tools/perf/util/off_cpu.h
-> +++ b/tools/perf/util/off_cpu.h
-> @@ -1,6 +1,8 @@
->  #ifndef PERF_UTIL_OFF_CPU_H
->  #define PERF_UTIL_OFF_CPU_H
->  
-> +#include <linux/perf_event.h>
+>  #endif
+>
+> +static inline void
+> +bp_slots_histogram_add(struct bp_slots_histogram *hist, int old, int val)
+> +{
+> +       const int old_idx = old - 1;
+> +       const int new_idx = old_idx + val;
 > +
->  struct evlist;
->  struct target;
->  struct perf_session;
-> @@ -8,6 +10,13 @@ struct record_opts;
->  
->  #define OFFCPU_EVENT  "offcpu-time"
->  
-> +#define OFFCPU_SAMPLE_TYPES  (PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_IP | \
-> +			      PERF_SAMPLE_TID | PERF_SAMPLE_TIME | \
-> +			      PERF_SAMPLE_ID | PERF_SAMPLE_CPU | \
-> +			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN | \
-> +			      PERF_SAMPLE_CGROUP)
+> +       if (old_idx >= 0)
+> +               atomic_dec(&hist->count[old_idx]);
+> +       if (new_idx >= 0)
+> +               atomic_inc(&hist->count[new_idx]);
+> +}
 > +
+> +static int
+> +bp_slots_histogram_max(struct bp_slots_histogram *hist, enum bp_type_idx type)
+> +{
+> +       for (int i = hw_breakpoint_slots_cached(type) - 1; i >= 0; i--) {
+> +               const int count = atomic_read(&hist->count[i]);
 > +
->  #ifdef HAVE_BPF_SKEL
->  int off_cpu_prepare(struct evlist *evlist, struct target *target,
->  		    struct record_opts *opts);
-> -- 
+> +               /* Catch unexpected writers; we want a stable snapshot. */
+> +               ASSERT_EXCLUSIVE_WRITER(hist->count[i]);
+> +               if (count > 0)
+> +                       return i + 1;
+> +               WARN(count < 0, "inconsistent breakpoint slots histogram");
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  #ifndef hw_breakpoint_weight
+>  static inline int hw_breakpoint_weight(struct perf_event *bp)
+>  {
+> @@ -205,13 +252,11 @@ static inline enum bp_type_idx find_slot_idx(u64 bp_type)
+>  }
+>
+>  /*
+> - * Report the maximum number of pinned breakpoints a task
+> - * have in this cpu
+> + * Return the maximum number of pinned breakpoints a task has in this CPU.
+>   */
+>  static unsigned int max_task_bp_pinned(int cpu, enum bp_type_idx type)
+>  {
+> -       atomic_t *tsk_pinned = get_bp_info(cpu, type)->tsk_pinned;
+> -       int i;
+> +       struct bp_slots_histogram *tsk_pinned = &get_bp_info(cpu, type)->tsk_pinned;
+>
+>         /*
+>          * At this point we want to have acquired the bp_cpuinfo_sem as a
+> @@ -219,14 +264,7 @@ static unsigned int max_task_bp_pinned(int cpu, enum bp_type_idx type)
+>          * toggle_bp_task_slot() to tsk_pinned, and we get a stable snapshot.
+>          */
+>         lockdep_assert_held_write(&bp_cpuinfo_sem);
+> -
+> -       for (i = hw_breakpoint_slots_cached(type) - 1; i >= 0; i--) {
+> -               ASSERT_EXCLUSIVE_WRITER(tsk_pinned[i]); /* Catch unexpected writers. */
+> -               if (atomic_read(&tsk_pinned[i]) > 0)
+> -                       return i + 1;
+> -       }
+> -
+> -       return 0;
+> +       return bp_slots_histogram_max(tsk_pinned, type);
+>  }
+>
+>  /*
+> @@ -300,8 +338,7 @@ max_bp_pinned_slots(struct perf_event *bp, enum bp_type_idx type)
+>  static void toggle_bp_task_slot(struct perf_event *bp, int cpu,
+>                                 enum bp_type_idx type, int weight)
+>  {
+> -       atomic_t *tsk_pinned = get_bp_info(cpu, type)->tsk_pinned;
+> -       int old_idx, new_idx;
+> +       struct bp_slots_histogram *tsk_pinned = &get_bp_info(cpu, type)->tsk_pinned;
+>
+>         /*
+>          * If bp->hw.target, tsk_pinned is only modified, but not used
+> @@ -311,14 +348,7 @@ static void toggle_bp_task_slot(struct perf_event *bp, int cpu,
+>          * bp_cpuinfo_sem as a writer to stabilize tsk_pinned's value.
+>          */
+>         lockdep_assert_held_read(&bp_cpuinfo_sem);
+> -
+> -       old_idx = task_bp_pinned(cpu, bp, type) - 1;
+> -       new_idx = old_idx + weight;
+> -
+> -       if (old_idx >= 0)
+> -               atomic_dec(&tsk_pinned[old_idx]);
+> -       if (new_idx >= 0)
+> -               atomic_inc(&tsk_pinned[new_idx]);
+> +       bp_slots_histogram_add(tsk_pinned, task_bp_pinned(cpu, bp, type), weight);
+>  }
+>
+>  /*
+> --
 > 2.37.0.rc0.161.g10f37bed90-goog
-
--- 
-
-- Arnaldo
+>
