@@ -2,229 +2,168 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7869CC43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Jun 2022 22:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D269CCCA48A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 00:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240939AbiF0Wlj (ORCPT
+        id S240542AbiF1AlB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Jun 2022 18:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53696 "EHLO
+        Mon, 27 Jun 2022 20:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236583AbiF0Wl3 (ORCPT
+        with ESMTP id S241694AbiF1Ak6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Jun 2022 18:41:29 -0400
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D5A1BE80
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 15:41:28 -0700 (PDT)
-Received: by mail-pj1-x1049.google.com with SMTP id z13-20020a17090ab10d00b001ec86329c08so3599665pjq.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 15:41:28 -0700 (PDT)
+        Mon, 27 Jun 2022 20:40:58 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5A8DF90
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 17:40:56 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id v6so8609684qkh.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jun 2022 17:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=VWOVk1jH/Ru1/0ssqOaKB13FZQZaZbbtFy4vR2AihMw=;
-        b=U3e8/1GURdwGIAAFUU81M/SVz+LRao4LLZWWl/OrbybdCl903JTylbP3MRKJDFx3gq
-         JacHf+Tx3TJZ7D6oO5amJKBPhH2YNumbOb6/VhcXS2Sq9o62eMUMx//fhqiJrbQeJR/n
-         sDqqMuk2IDEnlXTQbSS+KMpTi0dEp0JadMxZBltoN+CA+N5pqoapt28fdm3V6Bkl4GLQ
-         tuoQB5syrnkVOGsFv4cgtDStG/ljMKhCUYtEBKuGLOPpbVNASgyFph368F7/ohHWVWF5
-         xt6dvam+kTPw+38L7rWCLzNa7SDf3pToo2cku7NDNUkBk8pL2Z6ne8MsgA7Amc/k6rZl
-         57eQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=nrCjPCGAs4MTUiLBt7Ijf/MJPuIyH6lM8yqPhdyhJD8=;
+        b=QGfGz2XeyaJLxS6IycR7jteyzbs2f9vu4fQQcftWhoNW5sUtbyuMKwRS5XXshn3Hg2
+         yZubOZXW72TGsXoMKBc9lhqncUYMSH0Z6bymz383cNPRRHeF7rKM5RXMNm4Eaw5tsGTg
+         BQX0bHWNlf6m2F5J4oWG32dxQT2CTBmnGX6tl+1lipYgts8fc/1uUmHwN5t3zZzoA6Qn
+         DTeDwoNVOxWo0hy32OR9hFE/UO0/97qh5eo+5ewqu/iIRVMFQ1AIctopaFBuZOm9BPLs
+         HAx/pGMXLvvVO6Cb9sesF2T5smUMb44u7gsx78px69APS8fFzY4PmSgo/WM3D328ZbRr
+         X/FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=VWOVk1jH/Ru1/0ssqOaKB13FZQZaZbbtFy4vR2AihMw=;
-        b=JLq2Bh1GN37nsuwI5D3pFc3oGlZtWBVew2kY4i1wXdzTzls1qtVmLk6NSxXMJPCb+u
-         +byD8BQ4vUBTWjjc3XUnDVr4OFoe1oG1N3MKlb2t0m6Pjhx10LhXfvxV5J5CCfzhykEy
-         bQneo73EkI2kFY29DiWQHqVDoi01f3oP+tNUrYN49wXaOhs58BtEVAqQzUEbC07B9+3k
-         FQINIRcIDJvxVxIJ16JE7aAlQ1d97xaXqRDZfiJGWLeZz9Ro6uFsBAXtZ5XnnH8WZRaz
-         9+ZTLqcCBwiA3TxrHIUSopmPQzH7C3i33JwgXnLsePOxK/ng7+Lh06CWNyOtQ4lhd8q1
-         9ulg==
-X-Gm-Message-State: AJIora8hBdDjip6Ks/XUccwN0aydDJTqn3X1nQ0AWmr8pfWOMv2/l0kC
-        84SNYjV6078KSogRwR6gR1+2ihbke9TgT/yG
-X-Google-Smtp-Source: AGRyM1sOaDV3HTAdMOsEX1ae55WDsgGcPzNaJOi4lGRO74gADlY3yZSMYEvrQbf96KGJQ6hMm5tflxZfCphzwGD1
-X-Received: from blakejones.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:411c])
- (user=blakejones job=sendgmr) by 2002:a17:903:2448:b0:16a:37de:89b3 with SMTP
- id l8-20020a170903244800b0016a37de89b3mr446772pls.68.1656369688408; Mon, 27
- Jun 2022 15:41:28 -0700 (PDT)
-Date:   Mon, 27 Jun 2022 15:41:16 -0700
-Message-Id: <20220627224116.3015376-1-blakejones@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-Subject: [PATCH v2 RESEND] Add a "-m" option to "perf buildid-list".
-From:   Blake Jones <blakejones@google.com>
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=nrCjPCGAs4MTUiLBt7Ijf/MJPuIyH6lM8yqPhdyhJD8=;
+        b=5QO9XRsqQNn95/gjBAValjAuDk5DwfMUcHE4Pkm5KbPXgEg6+vANulvY+GnDSrRzGH
+         xUAROsUOT1KrsuHxCtRCVGtg6xboiaAaDHwzvL3br1+LHqgfCgmI6MY/e86RPsyjZMXr
+         v2CUsLG7swZ+o1ONaaRZWSwOeGTZ2SXVtElx0F/3v2sviF9dP0hJpJbp0TAW7lCTQydN
+         Ue6aElR4BuLZWsR/XjJIJ40DOIyZ3MXSYOAAHJW4orTtA381BcsjSyu4KGFDh9stQIqO
+         oL0e8CcwgpTPf9LTtPrICkRXD5/MeecWp4cOC47AslnPim0R1E0Vt2joRVJReWsXoAw1
+         qcJQ==
+X-Gm-Message-State: AJIora+6Z7mxcneVvPCRJ851PXrdBqXXhnYz4AL4en5sJEnX4wvwmvmq
+        XnRC+fl7ZljW4om1WMvNz+lCzg==
+X-Google-Smtp-Source: AGRyM1vTCFcIzhygOqc0dfz0XQz9dolsiNFu6n34Zw7Kl9e9LRh00tD6U1uaxZUOgaZBY5Ks0qTgkA==
+X-Received: by 2002:a05:620a:1450:b0:6af:1999:5f4c with SMTP id i16-20020a05620a145000b006af19995f4cmr7538467qkl.301.1656376854703;
+        Mon, 27 Jun 2022 17:40:54 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id x11-20020a05620a448b00b006a768c699adsm10335849qkp.125.2022.06.27.17.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jun 2022 17:40:53 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1o5zHg-002iu4-9Z; Mon, 27 Jun 2022 21:40:52 -0300
+Date:   Mon, 27 Jun 2022 21:40:52 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org, dm-devel@redhat.com,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, io-uring@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        kasan-dev@googlegroups.com, linux-mmc@vger.kernel.org,
+        nvdimm@lists.linux.dev, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-perf-users@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        v9fs-developer@lists.sourceforge.net, linux-rdma@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] treewide: uapi: Replace zero-length arrays with
+ flexible-array members
+Message-ID: <20220628004052.GM23621@ziepe.ca>
+References: <20220627180432.GA136081@embeddedor>
+ <6bc1e94c-ce1d-a074-7d0c-8dbe6ce22637@iogearbox.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6bc1e94c-ce1d-a074-7d0c-8dbe6ce22637@iogearbox.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This new option displays all of the information needed to do external
-BuildID-based symbolization of kernel stack traces, such as those collected
-by bpf_get_stackid(). For each kernel module plus the main kernel, it
-displays the BuildID, the start and end virtual addresses of that module's
-text range (rounded out to page boundaries), and the pathname of the
-module.
+On Mon, Jun 27, 2022 at 08:27:37PM +0200, Daniel Borkmann wrote:
+> On 6/27/22 8:04 PM, Gustavo A. R. Silva wrote:
+> > There is a regular need in the kernel to provide a way to declare
+> > having a dynamically sized set of trailing elements in a structure.
+> > Kernel code should always use “flexible array members”[1] for these
+> > cases. The older style of one-element or zero-length arrays should
+> > no longer be used[2].
+> > 
+> > This code was transformed with the help of Coccinelle:
+> > (linux-5.19-rc2$ spatch --jobs $(getconf _NPROCESSORS_ONLN) --sp-file script.cocci --include-headers --dir . > output.patch)
+> > 
+> > @@
+> > identifier S, member, array;
+> > type T1, T2;
+> > @@
+> > 
+> > struct S {
+> >    ...
+> >    T1 member;
+> >    T2 array[
+> > - 0
+> >    ];
+> > };
+> > 
+> > -fstrict-flex-arrays=3 is coming and we need to land these changes
+> > to prevent issues like these in the short future:
+> > 
+> > ../fs/minix/dir.c:337:3: warning: 'strcpy' will always overflow; destination buffer has size 0,
+> > but the source string has length 2 (including NUL byte) [-Wfortify-source]
+> > 		strcpy(de3->name, ".");
+> > 		^
+> > 
+> > Since these are all [0] to [] changes, the risk to UAPI is nearly zero. If
+> > this breaks anything, we can use a union with a new member name.
+> > 
+> > [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> > [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+> > 
+> > Link: https://github.com/KSPP/linux/issues/78
+> > Build-tested-by: https://lore.kernel.org/lkml/62b675ec.wKX6AOZ6cbE71vtF%25lkp@intel.com/
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> > Hi all!
+> > 
+> > JFYI: I'm adding this to my -next tree. :)
+> 
+> Fyi, this breaks BPF CI:
+> 
+> https://github.com/kernel-patches/bpf/runs/7078719372?check_suite_focus=true
+> 
+>   [...]
+>   progs/map_ptr_kern.c:314:26: error: field 'trie_key' with variable sized type 'struct bpf_lpm_trie_key' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+>           struct bpf_lpm_trie_key trie_key;
+>                                   ^
 
-When run as a non-privileged user, the actual addresses of the modules'
-text ranges are not available, so the tools displays "0, <text length>" for
-kernel modules and "0, 0xffffffffffffffff" for the kernel itself.
+This will break the rdma-core userspace as well, with a similar
+error:
 
-Sample output:
+/usr/bin/clang-13 -DVERBS_DEBUG -Dibverbs_EXPORTS -Iinclude -I/usr/include/libnl3 -I/usr/include/drm -g -O2 -fdebug-prefix-map=/__w/1/s=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -Wmissing-prototypes -Wmissing-declarations -Wwrite-strings -Wformat=2 -Wcast-function-type -Wformat-nonliteral -Wdate-time -Wnested-externs -Wshadow -Wstrict-prototypes -Wold-style-definition -Werror -Wredundant-decls -g -fPIC   -std=gnu11 -MD -MT libibverbs/CMakeFiles/ibverbs.dir/cmd_flow.c.o -MF libibverbs/CMakeFiles/ibverbs.dir/cmd_flow.c.o.d -o libibverbs/CMakeFiles/ibverbs.dir/cmd_flow.c.o   -c ../libibverbs/cmd_flow.c
+In file included from ../libibverbs/cmd_flow.c:33:
+In file included from include/infiniband/cmd_write.h:36:
+In file included from include/infiniband/cmd_ioctl.h:41:
+In file included from include/infiniband/verbs.h:48:
+In file included from include/infiniband/verbs_api.h:66:
+In file included from include/infiniband/ib_user_ioctl_verbs.h:38:
+include/rdma/ib_user_verbs.h:436:34: error: field 'base' with variable sized type 'struct ib_uverbs_create_cq_resp' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+        struct ib_uverbs_create_cq_resp base;
+                                        ^
+include/rdma/ib_user_verbs.h:644:34: error: field 'base' with variable sized type 'struct ib_uverbs_create_qp_resp' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+        struct ib_uverbs_create_qp_resp base;
 
-root# perf buildid-list -m
-cf6df852fd4da122d616153353cc8f560fd12fe0 ffffffffa5400000 ffffffffa6001e27 [kernel.kallsyms]
-1aa7209aa2acb067d66ed6cf7676d65066384d61 ffffffffc0087000 ffffffffc008b000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/sha512_generic.ko
-3857815b5bf0183697b68f8fe0ea06121644041e ffffffffc008c000 ffffffffc0098000 /lib/modules/5.15.15-1rodete2-amd64/kernel/arch/x86/crypto/sha512-ssse3.ko
-4081fde0bca2bc097cb3e9d1efcb836047d485f1 ffffffffc0099000 ffffffffc009f000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/acpi/button.ko
-1ef81ba4890552ea6b0314f9635fc43fc8cef568 ffffffffc00a4000 ffffffffc00aa000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/cryptd.ko
-cc5c985506cb240d7d082b55ed260cbb851f983e ffffffffc00af000 ffffffffc00b6000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/i2c/busses/i2c-piix4.ko
-[...]
+Which is why I gave up trying to change these..
 
-Signed-off-by: Blake Jones <blakejones@google.com>
----
- .../perf/Documentation/perf-buildid-list.txt  |  4 +++
- tools/perf/builtin-buildid-list.c             | 35 ++++++++++++++++++-
- tools/perf/util/machine.c                     | 13 +++++++
- tools/perf/util/machine.h                     |  5 +++
- 4 files changed, 56 insertions(+), 1 deletion(-)
+Though maybe we could just switch off -Wgnu-variable-sized-type-not-at-end  during configuration ?
 
-diff --git a/tools/perf/Documentation/perf-buildid-list.txt b/tools/perf/Documentation/perf-buildid-list.txt
-index 25c52efcc7f0..e1e8fdbe06b9 100644
---- a/tools/perf/Documentation/perf-buildid-list.txt
-+++ b/tools/perf/Documentation/perf-buildid-list.txt
-@@ -33,6 +33,10 @@ OPTIONS
- -k::
- --kernel::
- 	Show running kernel build id.
-+-m::
-+--kernel-maps::
-+	Show buildid, start/end text address, and path of running kernel and
-+	its modules.
- -v::
- --verbose::
- 	Be more verbose.
-diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-index cebadd632234..e73520190974 100644
---- a/tools/perf/builtin-buildid-list.c
-+++ b/tools/perf/builtin-buildid-list.c
-@@ -12,6 +12,7 @@
- #include "util/build-id.h"
- #include "util/debug.h"
- #include "util/dso.h"
-+#include "util/map.h"
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
- #include "util/session.h"
-@@ -20,6 +21,31 @@
- #include <errno.h>
- #include <linux/err.h>
- 
-+static int buildid__map_cb(struct map *map, void *arg __maybe_unused)
-+{
-+	const struct dso *dso = map->dso;
-+	char bid_buf[SBUILD_ID_SIZE];
-+
-+	memset(bid_buf, 0, sizeof(bid_buf));
-+	if (dso->has_build_id)
-+		build_id__sprintf(&dso->bid, bid_buf);
-+	printf("%s %16lx %16lx", bid_buf, map->start, map->end);
-+	if (dso->long_name != NULL)
-+		printf(" %s", dso->long_name);
-+	printf("\n");
-+
-+	return 0;
-+}
-+
-+static void buildid__show_kernel_maps(void)
-+{
-+	struct machine *machine;
-+
-+	machine = machine__new_host();
-+	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
-+	machine__delete(machine);
-+}
-+
- static int sysfs__fprintf_build_id(FILE *fp)
- {
- 	char sbuild_id[SBUILD_ID_SIZE];
-@@ -99,6 +125,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
- int cmd_buildid_list(int argc, const char **argv)
- {
- 	bool show_kernel = false;
-+	bool show_kernel_maps = false;
- 	bool with_hits = false;
- 	bool force = false;
- 	const struct option options[] = {
-@@ -106,6 +133,8 @@ int cmd_buildid_list(int argc, const char **argv)
- 	OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
- 	OPT_BOOLEAN('k', "kernel", &show_kernel, "Show current kernel build id"),
-+	OPT_BOOLEAN('m', "kernel-maps", &show_kernel_maps,
-+	    "Show build id of current kernel + modules"),
- 	OPT_INCR('v', "verbose", &verbose, "be more verbose"),
- 	OPT_END()
- 	};
-@@ -117,8 +146,12 @@ int cmd_buildid_list(int argc, const char **argv)
- 	argc = parse_options(argc, argv, options, buildid_list_usage, 0);
- 	setup_pager();
- 
--	if (show_kernel)
-+	if (show_kernel) {
- 		return !(sysfs__fprintf_build_id(stdout) > 0);
-+	} else if (show_kernel_maps) {
-+		buildid__show_kernel_maps();
-+		return 0;
-+	}
- 
- 	return perf_session__list_build_ids(force, with_hits);
- }
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 009061852808..28fff9a02ab0 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3327,3 +3327,16 @@ int machine__for_each_dso(struct machine *machine, machine__dso_t fn, void *priv
- 	}
- 	return err;
- }
-+
-+int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, void *priv)
-+{
-+	struct maps *maps = machine__kernel_maps(machine);
-+	struct map *map;
-+	int err = 0;
-+
-+	for (map = maps__first(maps); map != NULL; map = map__next(map)) {
-+		if (fn(map, priv))
-+			err = -1;
-+	}
-+	return err;
-+}
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 5d7daf7cb7bc..e1476343cbb2 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -262,6 +262,11 @@ typedef int (*machine__dso_t)(struct dso *dso, struct machine *machine, void *pr
- 
- int machine__for_each_dso(struct machine *machine, machine__dso_t fn,
- 			  void *priv);
-+
-+typedef int (*machine__map_t)(struct map *map, void *priv);
-+int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn,
-+				 void *priv);
-+
- int machine__for_each_thread(struct machine *machine,
- 			     int (*fn)(struct thread *thread, void *p),
- 			     void *priv);
-
-base-commit: 1bcca2b1bd67f3c0e5c3a88ed16c6389f01a5b31
--- 
-2.36.1.476.g0c4daa206d-goog
-
+Jason
