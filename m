@@ -2,39 +2,36 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90BECCA486
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 11:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF87C43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 11:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344386AbiF1Lru (ORCPT
+        id S1344364AbiF1Lrt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Jun 2022 07:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38094 "EHLO
+        Tue, 28 Jun 2022 07:47:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345340AbiF1LrX (ORCPT
+        with ESMTP id S1345355AbiF1LrZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Jun 2022 07:47:23 -0400
-Received: from forward105p.mail.yandex.net (forward105p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:108])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2755931347;
-        Tue, 28 Jun 2022 04:46:36 -0700 (PDT)
-Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
-        by forward105p.mail.yandex.net (Yandex) with ESMTP id 10FC62FD96EB;
-        Tue, 28 Jun 2022 14:46:35 +0300 (MSK)
-Received: from vla1-af84b0e8a1e8.qloud-c.yandex.net (vla1-af84b0e8a1e8.qloud-c.yandex.net [IPv6:2a02:6b8:c0d:991:0:640:af84:b0e8])
-        by forward100q.mail.yandex.net (Yandex) with ESMTP id 0B7C56F40B16;
-        Tue, 28 Jun 2022 14:46:35 +0300 (MSK)
+        Tue, 28 Jun 2022 07:47:25 -0400
+Received: from forward501j.mail.yandex.net (forward501j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF3403207F;
+        Tue, 28 Jun 2022 04:46:58 -0700 (PDT)
+Received: from vla5-169af227e802.qloud-c.yandex.net (vla5-169af227e802.qloud-c.yandex.net [IPv6:2a02:6b8:c18:3523:0:640:169a:f227])
+        by forward501j.mail.yandex.net (Yandex) with ESMTP id 60737624139;
+        Tue, 28 Jun 2022 14:46:57 +0300 (MSK)
 Received: from vla3-178a3f795968.qloud-c.yandex.net (vla3-178a3f795968.qloud-c.yandex.net [2a02:6b8:c15:2584:0:640:178a:3f79])
-        by vla1-af84b0e8a1e8.qloud-c.yandex.net (mxback/Yandex) with ESMTP id TR9ypVqcip-kXfqs477;
-        Tue, 28 Jun 2022 14:46:35 +0300
+        by vla5-169af227e802.qloud-c.yandex.net (mxback/Yandex) with ESMTP id RtX9GFYHRZ-kumWQbta;
+        Tue, 28 Jun 2022 14:46:57 +0300
 X-Yandex-Fwd: 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1656416795;
-        bh=KmAhe3GOyQCf3f/h40/f2dj9cqeEBZpz3rTHjKTlv1g=;
-        h=Date:Subject:Cc:To:From:Message-Id;
-        b=ie+vRnDuLEVcB3Leq2RJql7tFz8orUklnEO1RQQVkpZgB1NvgMxDqT8OOjwuzlJ7V
-         vEHfzMwgts0oBX26/NmR5WkPi90VbAXLOE3cDq3XRr2mVO3nAAXYSF04cCYtkcRkRM
-         Qio3zqOQ9qOYPvsfCeuVykXpMqwb+x87Rc5jY+CU=
-Authentication-Results: vla1-af84b0e8a1e8.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by vla3-178a3f795968.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id s5dKAuvn1y-kVMCLslW;
-        Tue, 28 Jun 2022 14:46:32 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1656416817;
+        bh=EDkgTYXqCHYjbvERnqJf2pJgEiUWEp1aF8bjZ/VqbsU=;
+        h=In-Reply-To:References:Date:Subject:Cc:To:From:Message-Id;
+        b=INebxkcjGQQpnsfSoAtCkFIBdbIiqVzL0BcPkF1qFQdB6i5OevjTmdM24rEd0c5Sj
+         UldiHM4iBqBrXXW8x3yq2rdN3D8uceAJm6baqO2CpcmUoE6hwJDBNcykvXqJxVG2wV
+         IlS0YwdAwAZzk6+Wv05haZdu/c/415jVbvGpxHsQ=
+Authentication-Results: vla5-169af227e802.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by vla3-178a3f795968.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id s5dKAuvn1y-ksMC9AYW;
+        Tue, 28 Jun 2022 14:46:56 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
 From:   Nikita Shubin <nikita.shubin@maquefel.me>
@@ -42,18 +39,25 @@ Cc:     linux@yadro.com, Genevieve Chan <genevieve.chan@starfivetech.com>,
         =?UTF-8?q?Jo=C3=A3o=20M=C3=A1rio=20Domingos?= 
         <joao.mario@tecnico.ulisboa.pt>,
         Nikita Shubin <n.shubin@yadro.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Anup Patel <anup@brainfault.org>, Jiri Olsa <jolsa@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v5 0/4] RISC-V: Create unique identification for SoC PMU
-Date:   Tue, 28 Jun 2022 14:45:54 +0300
-Message-Id: <20220628114625.166665-1-nikita.shubin@maquefel.me>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v5] perf arch events: riscv sbi firmware std event files
+Date:   Tue, 28 Jun 2022 14:45:57 +0300
+Message-Id: <20220628114625.166665-4-nikita.shubin@maquefel.me>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220628114625.166665-1-nikita.shubin@maquefel.me>
+References: <20220628114625.166665-1-nikita.shubin@maquefel.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
@@ -62,97 +66,162 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Nikita Shubin <n.shubin@yadro.com>
 
-From: Nikita Shubin <n.shubin@yadro.com>
+Firmware events are defined by "RISC-V Supervisor Binary Interface
+Specification", which means they should be always available as long as
+firmware supports >= 0.3.0 SBI.
 
-This series aims to provide matching vendor SoC with corresponded JSON bindings.
+Expose them to arch std events, so they can be reused by particular
+PMU bindings.
 
-The ID string is proposed to be in form of MVENDORID-MARCHID-MIMPID, for example 
-for Sifive Unmatched the corresponding string will be:
-
-0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-
-Where MIMPID can vary as all impl supported the same number of events, this might not 
-be true for all future SoC however.
-
-Also added SBI firmware events pretty names, as any firmware that supports SBI PMU 
-should also support firmare events [1].
-
-Series depends on patch by Anup Patel, exposing mvendor, marchid and mimpid 
-to "/proc/cpuinfo" [2].
-
-[1] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc
-[2] https://lkml.org/lkml/2022/6/20/498
-
-Link to previous version:
-https://patchwork.kernel.org/project/linux-riscv/list/?series=653649
-
-See original cover letter by João Mário Domingos:
-https://patchwork.kernel.org/project/linux-riscv/cover/20211116154812.17008-1-joao.mario@tecnico.ulisboa.pt/
-
-Tested with the following OpenSBI device tree bindings:
-
-```
-pmu {
-	compatible = "riscv,pmu";
-	riscv,event-to-mhpmcounters =
-		<0x03 0x06 0x18
-		0x10001 0x10002 0x18
-		0x10009 0x10009 0x18
-		0x10011 0x10011 0x18
-		0x10019 0x10019 0x18
-		0x10021 0x10021 0x18>;
-	riscv,event-to-mhpmevent =
-		<0x03 0x00000000 0x1801
-		0x04 0x00000000 0x0302
-		0x05 0x00000000 0x4000
-		0x06 0x00000000 0x6001
-		0x10001 0x00000000 0x0202
-		0x10002 0x00000000 0x0402
-		0x10009 0x00000000 0x0102
-		0x10011 0x00000000 0x2002
-		0x10019 0x00000000 0x1002
-		0x10021 0x00000000 0x0802>;
-	riscv,raw-event-to-mhpmcounters =
-		<0x00000000 0x03ffff00 0x0 0x0 0x18
-		0x00000000 0x0007ff01 0x0 0x1 0x18
-		0x00000000 0x00003f02 0x0 0x2 0x18>;
-};
-```
+Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
 ---
 v4->v5:
-Atish Patra:
-	- dropped cycle, time instret std arch events
-	- format config is now 48-bit wide
-Arnaldo Carvalho de Melo:
-	- fixed cpuid leakage
-	- no "if" before free
-Will Deacon:
-	- simply use "config:63"
+- changed EventCode to ConfigCode, as 63 bit exceeds event code format
 ---
-Nikita Shubin (4):
-  drivers/perf: riscv_pmu_sbi: perf format
-  perf tools riscv: Add support for get_cpuid_str function
-  perf arch events: riscv sbi firmware std event files
-  perf vendor events riscv: add Sifive U74 JSON file
-
- drivers/perf/riscv_pmu_sbi.c                  |  20 +++
- tools/perf/arch/riscv/util/Build              |   1 +
- tools/perf/arch/riscv/util/header.c           | 106 ++++++++++++++
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |  17 +++
  .../arch/riscv/riscv-sbi-firmware.json        | 134 ++++++++++++++++++
- .../arch/riscv/sifive/u74/firmware.json       |  68 +++++++++
- .../arch/riscv/sifive/u74/instructions.json   |  92 ++++++++++++
- .../arch/riscv/sifive/u74/memory.json         |  32 +++++
- .../arch/riscv/sifive/u74/microarch.json      |  57 ++++++++
- 9 files changed, 527 insertions(+)
- create mode 100644 tools/perf/arch/riscv/util/header.c
- create mode 100644 tools/perf/pmu-events/arch/riscv/mapfile.csv
+ 1 file changed, 134 insertions(+)
  create mode 100644 tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
 
+diff --git a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+new file mode 100644
+index 000000000000..b9d305f1ada8
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+@@ -0,0 +1,134 @@
++[
++  {
++    "PublicDescription": "Misaligned load trap",
++    "ConfigCode": "0x8000000000000000",
++    "EventName": "FW_MISALIGNED_LOAD",
++    "BriefDescription": "Misaligned load trap event"
++  },
++  {
++    "PublicDescription": "Misaligned store trap",
++    "ConfigCode": "0x8000000000000001",
++    "EventName": "FW_MISALIGNED_STORE",
++    "BriefDescription": "Misaligned store trap event"
++  },
++  {
++    "PublicDescription": "Load access trap",
++    "ConfigCode": "0x8000000000000002",
++    "EventName": "FW_ACCESS_LOAD",
++    "BriefDescription": "Load access trap event"
++  },
++  {
++    "PublicDescription": "Store access trap",
++    "ConfigCode": "0x8000000000000003",
++    "EventName": "FW_ACCESS_STORE",
++    "BriefDescription": "Store access trap event"
++  },
++  {
++    "PublicDescription": "Illegal instruction trap",
++    "ConfigCode": "0x8000000000000004",
++    "EventName": "FW_ILLEGAL_INSN",
++    "BriefDescription": "Illegal instruction trap event"
++  },
++  {
++    "PublicDescription": "Set timer event",
++    "ConfigCode": "0x8000000000000005",
++    "EventName": "FW_SET_TIMER",
++    "BriefDescription": "Set timer event"
++  },
++  {
++    "PublicDescription": "Sent IPI to other HART event",
++    "ConfigCode": "0x8000000000000006",
++    "EventName": "FW_IPI_SENT",
++    "BriefDescription": "Sent IPI to other HART event"
++  },
++  {
++    "PublicDescription": "Received IPI from other HART event",
++    "ConfigCode": "0x8000000000000007",
++    "EventName": "FW_IPI_RECEIVED",
++    "BriefDescription": "Received IPI from other HART event"
++  },
++  {
++    "PublicDescription": "Sent FENCE.I request to other HART event",
++    "ConfigCode": "0x8000000000000008",
++    "EventName": "FW_FENCE_I_SENT",
++    "BriefDescription": "Sent FENCE.I request to other HART event"
++  },
++  {
++    "PublicDescription": "Received FENCE.I request from other HART event",
++    "ConfigCode": "0x8000000000000009",
++    "EventName": "FW_FENCE_I_RECEIVED",
++    "BriefDescription": "Received FENCE.I request from other HART event"
++  },
++  {
++    "PublicDescription": "Sent SFENCE.VMA request to other HART event",
++    "ConfigCode": "0x80000000000000a",
++    "EventName": "FW_SFENCE_VMA_SENT",
++    "BriefDescription": "Sent SFENCE.VMA request to other HART event"
++  },
++  {
++    "PublicDescription": "Received SFENCE.VMA request from other HART event",
++    "ConfigCode": "0x800000000000000b",
++    "EventName": "FW_SFENCE_VMA_RECEIVED",
++    "BriefDescription": "Received SFENCE.VMA request from other HART event"
++  },
++  {
++    "PublicDescription": "Sent SFENCE.VMA with ASID request to other HART event",
++    "ConfigCode": "0x800000000000000c",
++    "EventName": "FW_SFENCE_VMA_RECEIVED",
++    "BriefDescription": "Sent SFENCE.VMA with ASID request to other HART event"
++  },
++  {
++    "PublicDescription": "Received SFENCE.VMA with ASID request from other HART event",
++    "ConfigCode": "0x800000000000000d",
++    "EventName": "FW_SFENCE_VMA_ASID_RECEIVED",
++    "BriefDescription": "Received SFENCE.VMA with ASID request from other HART event"
++  },
++  {
++    "PublicDescription": "Sent HFENCE.GVMA request to other HART event",
++    "ConfigCode": "0x800000000000000e",
++    "EventName": "FW_HFENCE_GVMA_SENT",
++    "BriefDescription": "Sent HFENCE.GVMA request to other HART event"
++  },
++  {
++    "PublicDescription": "Received HFENCE.GVMA request from other HART event",
++    "ConfigCode": "0x800000000000000f",
++    "EventName": "FW_HFENCE_GVMA_RECEIVED",
++    "BriefDescription": "Received HFENCE.GVMA request from other HART event"
++  },
++  {
++    "PublicDescription": "Sent HFENCE.GVMA with VMID request to other HART event",
++    "ConfigCode": "0x8000000000000010",
++    "EventName": "FW_HFENCE_GVMA_VMID_SENT",
++    "BriefDescription": "Sent HFENCE.GVMA with VMID request to other HART event"
++  },
++  {
++    "PublicDescription": "Received HFENCE.GVMA with VMID request from other HART event",
++    "ConfigCode": "0x8000000000000011",
++    "EventName": "FW_HFENCE_GVMA_VMID_RECEIVED",
++    "BriefDescription": "Received HFENCE.GVMA with VMID request from other HART event"
++  },
++  {
++    "PublicDescription": "Sent HFENCE.VVMA request to other HART event",
++    "ConfigCode": "0x8000000000000012",
++    "EventName": "FW_HFENCE_VVMA_SENT",
++    "BriefDescription": "Sent HFENCE.VVMA request to other HART event"
++  },
++  {
++    "PublicDescription": "Received HFENCE.VVMA request from other HART event",
++    "ConfigCode": "0x8000000000000013",
++    "EventName": "FW_HFENCE_VVMA_RECEIVED",
++    "BriefDescription": "Received HFENCE.VVMA request from other HART event"
++  },
++  {
++    "PublicDescription": "Sent HFENCE.VVMA with ASID request to other HART event",
++    "ConfigCode": "0x8000000000000014",
++    "EventName": "FW_HFENCE_VVMA_ASID_SENT",
++    "BriefDescription": "Sent HFENCE.VVMA with ASID request to other HART event"
++  },
++  {
++    "PublicDescription": "Received HFENCE.VVMA with ASID request from other HART event",
++    "ConfigCode": "0x8000000000000015",
++    "EventName": "FW_HFENCE_VVMA_ASID_RECEIVED",
++    "BriefDescription": "Received HFENCE.VVMA with ASID request from other HART event"
++  }
++]
 -- 
 2.30.2
 
