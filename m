@@ -2,84 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D134FC43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 14:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 14:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346519AbiF1OSh (ORCPT
+        id S1346689AbiF1OjW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Jun 2022 10:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58350 "EHLO
+        Tue, 28 Jun 2022 10:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346441AbiF1OSc (ORCPT
+        with ESMTP id S1346535AbiF1OjV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Jun 2022 10:18:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81CCDEA;
-        Tue, 28 Jun 2022 07:18:30 -0700 (PDT)
+        Tue, 28 Jun 2022 10:39:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245E42A249;
+        Tue, 28 Jun 2022 07:39:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5AFB9B81E0B;
-        Tue, 28 Jun 2022 14:18:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B5F2C341C6;
-        Tue, 28 Jun 2022 14:18:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B372161B10;
+        Tue, 28 Jun 2022 14:39:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E474BC3411D;
+        Tue, 28 Jun 2022 14:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656425908;
-        bh=gNqsfpabtVurh3KrN/HDHkVIuq5HYEGkFj0dq9pxBp0=;
+        s=k20201202; t=1656427160;
+        bh=iXjQOMUw2pEqEisHPWIOBTot93+QZsYt/nHRRPucOyc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LKmDxdeiZbNhcfCtRCGKrWsyjlCMGrWNe6JPI6+0Ud4+CdurjXwUmrO+N85g9uStN
-         ZMyX+h6jcWDShk2bKHv4I1CwjG76KgIokSJRaPNHE+tAExMRqCJhyYb+qk23PpSnt8
-         UZagMIRlLLl0N2746CMcacDFBvR451lE95WpeBq0GW4QDuaouxlRRNIVOVHDclrQ6f
-         3R9oBNaPqtGDm4Fzozu0TEhclsuvbNSWpoAarBMEoFPJEcd4AO2pVjb65zJgdF1PVp
-         ef3Ggil+1czhmYD/i4aHezmCjBjk3ri61YXhTXJoT9Ami17Y24U2vq1uockAAm5n3K
-         LL1PsE5NQ0Syg==
-Date:   Tue, 28 Jun 2022 16:18:23 +0200
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, dm-devel@redhat.com,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, io-uring@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        kasan-dev@googlegroups.com, linux-mmc@vger.kernel.org,
-        nvdimm@lists.linux.dev, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, linux-perf-users@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        v9fs-developer@lists.sourceforge.net, linux-rdma@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] treewide: uapi: Replace zero-length arrays with
- flexible-array members
-Message-ID: <20220628141823.GB25163@embeddedor>
-References: <20220627180432.GA136081@embeddedor>
- <20220627125343.44e24c41@hermes.local>
+        b=LqR9CN0wDjLJFmWy9tW2JNnugtju01skjVmIwyQGlS5tghYgB2YEq4/jUGrLRfGT3
+         X9BHevJs3fCge08w6NZKeppOw+9z51olocTjzUylhUoMuUjoONGWH1B1zIv6nECXaZ
+         V6mALMeromolaLDKWIpQyYIqr4t120G2e7uibto8Dz8RlAXXtdc2+YNNKEbDmUYnRo
+         aliyLR4CE1KvCCv916ievOlW2XY5G+VY0U09vTItsQI/XUdhnLRaIvaK648LtRee3m
+         UCPoM7dMfsLjLGBlbZtgzdnDQ0jtFNrp2sdvZPdfT/SfnRwSahuRVM3F3bVi6TJeXg
+         63yRl8mMg8C7g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6C2E04096F; Tue, 28 Jun 2022 11:39:16 -0300 (-03)
+Date:   Tue, 28 Jun 2022 11:39:16 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Linux v5.19-rc1] tools/perf/a.out remains after make -C
+ tools/perf clean
+Message-ID: <YrsSlH8OCR0JSlxA@kernel.org>
+References: <20220607000851.39798-1-irogers@google.com>
+ <CA+icZUWpSF6ge76JVp1qBC5QhC1AwNacs5Di=e1QSbAD+SVKUA@mail.gmail.com>
+ <YqjggY64PKfog0YW@kernel.org>
+ <CA+icZUUx_Re+w9S7eHXma9aC=8T8ypp8=+tkJy7zJMrUocMSKQ@mail.gmail.com>
+ <Yrh7uSL0AybSqd0V@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220627125343.44e24c41@hermes.local>
+In-Reply-To: <Yrh7uSL0AybSqd0V@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 12:53:43PM -0700, Stephen Hemminger wrote:
-> Thanks this fixes warning with gcc-12 in iproute2.
-> In function ‘xfrm_algo_parse’,
->     inlined from ‘xfrm_state_modify.constprop’ at xfrm_state.c:573:5:
-> xfrm_state.c:162:32: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
->   162 |                         buf[j] = val;
->       |                         ~~~~~~~^~~~~
+Em Sun, Jun 26, 2022 at 12:31:05PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Jun 15, 2022 at 12:11:48AM +0200, Sedat Dilek escreveu:
+> >                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+> >                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+> >                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+> >               libpfm4: [ OFF ]  # HAVE_LIBPFM
+> > 
+> > Tried `make distclean`.
+> > Tried `make tools/ clean` but tools/tracing/rtla produces errors (rm clean).
+> > Still exists: tools/perf/a.out.
+> 
+> I started seeing this here, will investigate and re-read your reports,
+> thanks for sending them!
 
-Great! This gives me hope. :)
+This is only happening when I use CC=clang, here I have clang 13, just
+making a note, seems related to a feature check,
+tools/build/feature/test-hello.c.
 
-Thanks
---
-Gustavo
+- Arnaldo
