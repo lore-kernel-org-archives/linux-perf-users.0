@@ -2,79 +2,171 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC26C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 16:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E68C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Jun 2022 17:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232927AbiF1QzN (ORCPT
+        id S232554AbiF1RzC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Jun 2022 12:55:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
+        Tue, 28 Jun 2022 13:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234149AbiF1Qyf (ORCPT
+        with ESMTP id S232089AbiF1RzB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Jun 2022 12:54:35 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F2262B268;
-        Tue, 28 Jun 2022 09:52:40 -0700 (PDT)
-Received: by mail-oi1-f181.google.com with SMTP id q11so17938546oih.10;
-        Tue, 28 Jun 2022 09:52:40 -0700 (PDT)
+        Tue, 28 Jun 2022 13:55:01 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3896DF8
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 10:54:59 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id m14so11757465plg.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Jun 2022 10:54:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ifakbg1KSXljeCc2KlqlOz+XfzIBohlTVCEx+b5hm2Y=;
+        b=Lpc3rw2lUDFTgNuiFkNi7vJ3FOoQQ8sPNV+A/xT7kPgFFi5TelrrdXlIUbrL4j9GT+
+         3+ei8DuymmFwmq4TMtVSFXVwj/BEoFuIu2AqPN9i6R5zOS+ndUs4OIvpg1Fj2tZP3rAs
+         mZTqNdFC15vlNUFmjWu7inrraPu1BA3Mkzqts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E648dBFHTDJv9vUh9mhheRk7gXIcU15BjfaY5SWNU/4=;
-        b=gSOVjOcaZjALmK5EbfhepRESzg4GXINUrjHEeizQpL7tEMR01Fpqo/0q9LiBDhPxjX
-         7FoTvZhsbl8QY9p66GREDRk1O92ugUyTjYH+QjUSX3EpIIG9322ru9vWy8ZgkCw0vfAE
-         Cy2gLMtYI3WUUBD64a6VsoRSPjMke93xJt0GqfZQjAG+ZYK8eAilDLZHaB9pmrMRNuU0
-         Kp0zRpUJxraFtu0xJMnHHGD3q4ZFLWTGV0ENtljaPzrZAJRvmWZ5nZiOiyDvHxabd4kX
-         Whsi7Z1bUSvinvIhyTN4mQ0Qhbd9bgMvL5Em4piMmIsX6BsqCQ5Qp8tkMtqQ32frgKtG
-         /XBQ==
-X-Gm-Message-State: AJIora9iM6tLltSP80PZLveZ4OwdsovipQY1RTXzxjnmmdOkw4grTvZD
-        AUcfnCodqQKbbuVF40rhZ1eW6HWtVDMad2ZLq7M=
-X-Google-Smtp-Source: AGRyM1sbCijzlGmpKPdegGoOMfsLP5Ed4vha/ePGdTsixV1iBn+35ReKPUl0TQoX1sPRdZ7ta5gDOyitlr+H1Ui4kzg=
-X-Received: by 2002:aca:bb56:0:b0:32f:2160:bfd8 with SMTP id
- l83-20020acabb56000000b0032f2160bfd8mr402430oif.92.1656435159732; Tue, 28 Jun
- 2022 09:52:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ifakbg1KSXljeCc2KlqlOz+XfzIBohlTVCEx+b5hm2Y=;
+        b=axki9YsXv8JbFF+MhV9DMxgo0u4xKPsVGF0ulU71Js530Rm820fOldUZMI7xsJdt8J
+         bu0gD7k0cvke+1U69PPBjm0GLmNmJ0vC9hH0F/4aoyixTr7/C8gLk9cr6vIXzK0cr24j
+         6WEw8mNyiVY2fm3y7bgSCStjdEcRmgAizt2Z/k+crsM8EHST76R1PSV1kwmMC3/BoaJx
+         y7s1gpEiuv9hYnO3QVYux+rZ5GAKFUTlz08nE//ow9yqIDqfjndM0GZNR7bpDtT9wNE0
+         hbO4g2aRiVEZov0SacY0sh6nxE3+CVDO35I58eZfEDbzxn+B6MQ1btthpBPjPlMj8zf0
+         56wQ==
+X-Gm-Message-State: AJIora+deC2d4i9U0G8rLf0oi85iMZRDtXgSHYiDZln5D+KzZ+sVsAPs
+        gFoZHCZmzOfU2FoNccNQdCl3lA==
+X-Google-Smtp-Source: AGRyM1vNNODoy68cNcew+BOwykVJS5AyiEbndqdKVVh3DpwTH+wUBJ1HcGxnO6zSsyx2Hva19xbd8w==
+X-Received: by 2002:a17:90b:3b52:b0:1ec:db2a:b946 with SMTP id ot18-20020a17090b3b5200b001ecdb2ab946mr838564pjb.229.1656438899502;
+        Tue, 28 Jun 2022 10:54:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f15-20020a170902ff0f00b0016a84d232a6sm5432810plj.46.2022.06.28.10.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jun 2022 10:54:59 -0700 (PDT)
+Date:   Tue, 28 Jun 2022 10:54:58 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org, dm-devel@redhat.com,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, io-uring@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        kasan-dev@googlegroups.com, linux-mmc@vger.kernel.org,
+        nvdimm@lists.linux.dev, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-perf-users@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        v9fs-developer@lists.sourceforge.net, linux-rdma@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] treewide: uapi: Replace zero-length arrays with
+ flexible-array members
+Message-ID: <202206281009.4332AA33@keescook>
+References: <20220627180432.GA136081@embeddedor>
+ <6bc1e94c-ce1d-a074-7d0c-8dbe6ce22637@iogearbox.net>
+ <20220628004052.GM23621@ziepe.ca>
 MIME-Version: 1.0
-References: <20220624231313.367909-1-namhyung@kernel.org> <20220624231313.367909-2-namhyung@kernel.org>
- <YrsT3iw+FEXb6kxF@kernel.org>
-In-Reply-To: <YrsT3iw+FEXb6kxF@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 28 Jun 2022 09:52:28 -0700
-Message-ID: <CAM9d7ciPK4Z05LYNNukAsTdEMEce4hOWRa83THbENDuWjXcyEQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] perf offcpu: Fix a build failure on old kernels
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        bpf <bpf@vger.kernel.org>, Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220628004052.GM23621@ziepe.ca>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 7:44 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Jun 24, 2022 at 04:13:08PM -0700, Namhyung Kim escreveu:
-> > Old kernels have task_struct which contains "state" field and newer
-> > kernels have "__state".  While the get_task_state() in the BPF code
-> > handles that in some way, it assumed the current kernel has the new
-> > definition and it caused a build error on old kernels.
-> >
-> > We should not assume anything and access them carefully.  Do not use
-> > the task struct directly and access them using new and old definitions
-> > in a row.
->
-> I added a:
->
-> Fixes: edc41a1099c2d08c ("perf record: Enable off-cpu analysis with BPF")
->
-> Ok?
+On Mon, Jun 27, 2022 at 09:40:52PM -0300, Jason Gunthorpe wrote:
+> On Mon, Jun 27, 2022 at 08:27:37PM +0200, Daniel Borkmann wrote:
+> > [...]
+> > Fyi, this breaks BPF CI:
+> > 
+> > https://github.com/kernel-patches/bpf/runs/7078719372?check_suite_focus=true
+> > 
+> >   [...]
+> >   progs/map_ptr_kern.c:314:26: error: field 'trie_key' with variable sized type 'struct bpf_lpm_trie_key' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+> >           struct bpf_lpm_trie_key trie_key;
+> >                                   ^
 
-Sure, thanks for doing this!
-Namhyung
+The issue here seems to be a collision between "unknown array size"
+and known sizes:
+
+struct bpf_lpm_trie_key {
+        __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
+        __u8    data[0];        /* Arbitrary size */
+};
+
+struct lpm_key {
+	struct bpf_lpm_trie_key trie_key;
+	__u32 data;
+};
+
+This is treating trie_key as a header, which it's not: it's a complete
+structure. :)
+
+Perhaps:
+
+struct lpm_key {
+        __u32 prefixlen;
+        __u32 data;
+};
+
+I don't see anything else trying to include bpf_lpm_trie_key.
+
+> 
+> This will break the rdma-core userspace as well, with a similar
+> error:
+> 
+> /usr/bin/clang-13 -DVERBS_DEBUG -Dibverbs_EXPORTS -Iinclude -I/usr/include/libnl3 -I/usr/include/drm -g -O2 -fdebug-prefix-map=/__w/1/s=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -Wmissing-prototypes -Wmissing-declarations -Wwrite-strings -Wformat=2 -Wcast-function-type -Wformat-nonliteral -Wdate-time -Wnested-externs -Wshadow -Wstrict-prototypes -Wold-style-definition -Werror -Wredundant-decls -g -fPIC   -std=gnu11 -MD -MT libibverbs/CMakeFiles/ibverbs.dir/cmd_flow.c.o -MF libibverbs/CMakeFiles/ibverbs.dir/cmd_flow.c.o.d -o libibverbs/CMakeFiles/ibverbs.dir/cmd_flow.c.o   -c ../libibverbs/cmd_flow.c
+> In file included from ../libibverbs/cmd_flow.c:33:
+> In file included from include/infiniband/cmd_write.h:36:
+> In file included from include/infiniband/cmd_ioctl.h:41:
+> In file included from include/infiniband/verbs.h:48:
+> In file included from include/infiniband/verbs_api.h:66:
+> In file included from include/infiniband/ib_user_ioctl_verbs.h:38:
+> include/rdma/ib_user_verbs.h:436:34: error: field 'base' with variable sized type 'struct ib_uverbs_create_cq_resp' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+>         struct ib_uverbs_create_cq_resp base;
+>                                         ^
+> include/rdma/ib_user_verbs.h:644:34: error: field 'base' with variable sized type 'struct ib_uverbs_create_qp_resp' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+>         struct ib_uverbs_create_qp_resp base;
+
+This looks very similar, a struct of unknown size is being treated as a
+header struct:
+
+struct ib_uverbs_create_cq_resp {
+        __u32 cq_handle;
+        __u32 cqe;
+        __aligned_u64 driver_data[0];
+};
+
+struct ib_uverbs_ex_create_cq_resp {
+        struct ib_uverbs_create_cq_resp base;
+        __u32 comp_mask;
+        __u32 response_length;
+};
+
+And it only gets used here:
+
+                DECLARE_UVERBS_WRITE(IB_USER_VERBS_CMD_CREATE_CQ,
+                                     ib_uverbs_create_cq,
+                                     UAPI_DEF_WRITE_UDATA_IO(
+                                             struct ib_uverbs_create_cq,
+                                             struct ib_uverbs_create_cq_resp),
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                     UAPI_DEF_METHOD_NEEDS_FN(create_cq)),
+
+which must also be assuming it's a header. So probably better to just
+drop the driver_data field? I don't see anything using it (that I can
+find) besides as a sanity-check that the field exists and is at the end
+of the struct.
+
+-- 
+Kees Cook
