@@ -2,54 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8CAC43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 18:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290E0C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 18:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230271AbiF2SZd (ORCPT
+        id S229799AbiF2SZm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Jun 2022 14:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
+        Wed, 29 Jun 2022 14:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbiF2SZc (ORCPT
+        with ESMTP id S230139AbiF2SZm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Jun 2022 14:25:32 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEED25EBD
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 11:25:31 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id n84-20020a25da57000000b0066d2ae53d18so4992182ybf.15
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 11:25:31 -0700 (PDT)
+        Wed, 29 Jun 2022 14:25:42 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E2802A73F
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 11:25:41 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-3178996424dso136558427b3.21
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 11:25:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=1f0Ur6hbGyTYzxP4DvfGWl44AJTfod6EaR5IYzCVFo4=;
-        b=tOoS6bbd/0Ckdjf3fUN9LHcpnfnrZf1cuEgEb8U6NMdaeoo3m6AcP5/ZsqFJk0mWPd
-         gkn/0GGkbrvYcnYCGIauJfpVdxs3BT8FuMDBoSh86dg/XV3fFjIpuHg/hNo1ZPHEgVSN
-         Jzxog92KnO6NOwEtKY7WN5rDk6VTXDkyETvGNnxjl8fEIQQVGuHqTvI5tb7KXr6Y/mt8
-         SELiyHcw3PSGPfCZnNFvrw4cdBRy10f3oqGdfiRjw2niWUbtMfh3dBgaxrnVlkoHLzWC
-         ej1pbtNrXWjf7njSHMa0PcZqTDAzk6GTuhobAQfy+g/f8oj0UiAuZl5G7o/I4z+gw60f
-         OxFg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=61y9ZbhNM9aUa2DE015x/wXVvTB/o4yjLiEf1BV500Q=;
+        b=baBCA/KhIRIKWbiWArtjOZMGeBZ9usu3nyVsCsSEi2tBwChryTPc6wxkxEBbf7sFdA
+         tLTycH/nJxV3GMcVs/3gbn8tXTxSjk+UysCDnEBMCoqjWv9zdj9A/ZHB4IlvQsk1hp93
+         ZJaQvDLRU1hClGiTWCZ+JZCt3USJLdkVLI/UgkJDTdePct5USqWQUASkCjZKFIygeNwR
+         z2T+MnN9QSCbbNk+spFX3YrxZrdy+X6nBjtf/iyLIMuj4FG1NTQVWORNKtduaKmzwoD7
+         Vy+atG6nUAeQ4pw+rX1VJ2nvDX2tBEjv3nQSKedp0TV5blNZ/b57zLpXZfEEdGRmQ2Bs
+         UK9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=1f0Ur6hbGyTYzxP4DvfGWl44AJTfod6EaR5IYzCVFo4=;
-        b=5HoHKrhjdauZspI6bRdG4Kb00LbUl96bbl/zUrXh8Iz9RwT3sPiLpfLvkm0QCsughV
-         Ud1spgUc9b68LqVHKnXMkDlNgBrSQhoRETmT+7i2uXMgFw/ZbDkHMWxOh5jw9iI765JS
-         HVCS8GQ7Z17mNE/aUoziq3+kszUpE7J0wnigSmGk/O+WkUKJ0cvwTVR030u4cuxLitz/
-         a32a4WcrnBRL0UkFpZFX0PrUAAKEApurTBd8aCbms7huRzUZdMn5Hei4LeWFi+75mx39
-         hdnERd8OLwuoDGPT/Q1DfJzJ0bgAdNleDelVGuE0ZzglpV5797dumLR54AiUVbk+gfIc
-         g3AQ==
-X-Gm-Message-State: AJIora+VIKqVb1jv64KSrg60ShhkCSwEjmCSF3fyepLlxkbp8PfSOL1x
-        vSQeqwf81SFK7n8w05vkcVzR7TcMNGyE
-X-Google-Smtp-Source: AGRyM1tE0QYu5xftU0kl9VWEzzxD6BkZj/8WgT0dTjS8P4XcNOoJyoarGWwbUmLqEjKpKr6Bms2W2lQ8nsFp
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=61y9ZbhNM9aUa2DE015x/wXVvTB/o4yjLiEf1BV500Q=;
+        b=iycBS2eGCXDfmQFasJAnBfVGofUb/OYzwehVPmUECaB6lrERYEQco8rrzSUwdE04dj
+         35sv01iH4v6u/hCOpQIZ60HyDg01oVkTmX0Q/ZirEUywitI6ZDvoYtIHSnhh+vzyvUmX
+         vWoxo98PVuhbyqBNA6goOzFLb7R1zEyEkvf2X5/ak82wTpUN/9ZUp5IAzo5/OyB/KmM1
+         vGye4pCK1kbgga4s8QJRBz/VndQ0fHU/hITZcmO0AajUMYnvVToRyIN2z4EotAhtp+jm
+         LCGRAPRIdDM3oZGobSRgrsBw2savUAmX/0X4GdZ0/RnAcnqgmLYSaKAVnFfjlM+Dc5yu
+         KW9w==
+X-Gm-Message-State: AJIora+sqqUlHCDqa50x0z5K8+GSfdi2DxBRCGZ6fP2hcZUF/nTPB3jS
+        jveiGUZOCD+QEv/27CsqibuZKzfWoLE+
+X-Google-Smtp-Source: AGRyM1sMndKMm44rfmDv3hwTaujKL2Kn2c493wD28xDQB+xXXXO4cmtQBUgqGchDWkmDzV9wBzZsuryjd6pr
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f5a1:84fb:df7d:bd89])
- (user=irogers job=sendgmr) by 2002:a25:5c5:0:b0:66c:b809:ddde with SMTP id
- 188-20020a2505c5000000b0066cb809dddemr4885032ybf.67.1656527130312; Wed, 29
- Jun 2022 11:25:30 -0700 (PDT)
-Date:   Wed, 29 Jun 2022 11:25:01 -0700
-Message-Id: <20220629182505.406269-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:50c7:0:b0:66c:95d2:c7e5 with SMTP id
+ e190-20020a2550c7000000b0066c95d2c7e5mr4976142ybb.156.1656527140474; Wed, 29
+ Jun 2022 11:25:40 -0700 (PDT)
+Date:   Wed, 29 Jun 2022 11:25:02 -0700
+In-Reply-To: <20220629182505.406269-1-irogers@google.com>
+Message-Id: <20220629182505.406269-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220629182505.406269-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-Subject: [PATCH v7 0/4] Rewrite jevents program in python
+Subject: [PATCH v7 1/4] perf python: Prefer python3
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -77,82 +81,57 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Perry Taylor <perry.taylor@intel.com>,
         Kshipra Bopardikar <kshipra.bopardikar@intel.com>
 Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Ian Rogers <rogers.email@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-New architectures bring new complexity, such as Intel's hybrid
-models. jevents provides an alternative to specifying events in the
-kernel and exposing them through sysfs, however, it is difficult to
-work with. For example, an error in the json input would yield an
-error message but no json file or location. It is also a challenge to
-update jsmn.c given its forked nature.
+From: Ian Rogers <rogers.email@gmail.com>
 
-The changes here switch from jevents.c to a rewrite in python called
-jevents.py. This means there is a build time dependency on python, but
-such a dependency already exists for asciidoc (used to generate perf's
-man pages). If the build detects that python isn't present or is older
-than version 3.6 (released Dec. 2016) then an empty file is
-substituted for the generated one.
+The PYTHON_AUTO code orders the preference for the PYTHON command to
+be python3, python and then python2. python3 makes a more logical
+preference as python2 is no longer supported:
+https://www.python.org/doc/sunset-python-2/
 
-A challenge with this code is in avoiding regressions. For this reason
-the jevents.py produces identical output to jevents.c, validated with a
-test script and build target.
+Reorder the priority of the PYTHON command to be python2, python and
+then python3.
 
-v7. Adds Tested-by from John Garry <john.garry@huawei.com>.
-v6. Adds Tested-by from Zhengjun Xing <zhengjun.xing@linux.intel.com>
-    and Thomas Richter <tmricht@linux.ibm.com>. Fixes issues spotted
-    by Jiri Olsa <jolsa@kernel.org>, jsmn.c wasn't deleted and the
-    empty pmu-events.c didn't pass the pmu-events test. It also adds a
-    missing mkdir which is necessary before creating pmu-events.c and
-    tweaks the quiet display code in the empty case to display a gen.
-v5. Adds a 2>/dev/null as suggested by David Laight
-    <David.Laight@aculab.com>.
-v4. Fixes the build for systems with python2 installed by adding a
-    patch that makes python3 the preferred python (Reported-by: John
-    Garry <john.garry@huawei.com>). It also fixes a bash-ism in the
-    jevents-test.sh and fixes the handling of an empty string for a
-    metric BriefDescription as one was added for sapphirerapids in the
-    metric Execute.
-v3. Updates the patches for merged changes (on
-    acme/tmp.perf/core). Re-runs all comparisons to make sure the
-    generated pmu-events.c isn't altered at all by this change. Adds
-    the jevents.c ExtSel fix in:
-    https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
-    Bumps the python version from 3.5 to 3.6, as f-strings weren't
-    introduced until 3.6.
-v2. Fixes the build for architectures that don't have pmu-events json
-    (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
-    build for python not being present or too old (Suggested-by: Peter
-    Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
+Reported-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: John Garry <john.garry@huawei.com>
+---
+ tools/perf/Makefile.config | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Ian Rogers (4):
-  perf python: Prefer python3
-  perf jevents: Add python converter script
-  perf jevents: Switch build to use jevents.py
-  perf jevents: Remove jevents.c
-
- tools/perf/Makefile.config               |   27 +-
- tools/perf/Makefile.perf                 |   16 +-
- tools/perf/pmu-events/Build              |   17 +-
- tools/perf/pmu-events/empty-pmu-events.c |  158 +++
- tools/perf/pmu-events/jevents.c          | 1342 ----------------------
- tools/perf/pmu-events/jevents.py         |  409 +++++++
- tools/perf/pmu-events/jsmn.c             |  352 ------
- tools/perf/pmu-events/jsmn.h             |   68 --
- tools/perf/pmu-events/json.c             |  162 ---
- tools/perf/pmu-events/json.h             |   39 -
- 10 files changed, 604 insertions(+), 1986 deletions(-)
- create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
- delete mode 100644 tools/perf/pmu-events/jevents.c
- create mode 100755 tools/perf/pmu-events/jevents.py
- delete mode 100644 tools/perf/pmu-events/jsmn.c
- delete mode 100644 tools/perf/pmu-events/jsmn.h
- delete mode 100644 tools/perf/pmu-events/json.c
- delete mode 100644 tools/perf/pmu-events/json.h
-
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 73e0762092fe..16c1a87444b8 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -241,15 +241,15 @@ endif
+ # Try different combinations to accommodate systems that only have
+ # python[2][3]-config in weird combinations in the following order of
+ # priority from lowest to highest:
+-#   * python3-config
+-#   * python-config
+ #   * python2-config as per pep-0394.
++#   * python-config
++#   * python3-config
+ #   * $(PYTHON)-config (If PYTHON is user supplied but PYTHON_CONFIG isn't)
+ #
+ PYTHON_AUTO := python-config
+-PYTHON_AUTO := $(if $(call get-executable,python3-config),python3-config,$(PYTHON_AUTO))
+-PYTHON_AUTO := $(if $(call get-executable,python-config),python-config,$(PYTHON_AUTO))
+ PYTHON_AUTO := $(if $(call get-executable,python2-config),python2-config,$(PYTHON_AUTO))
++PYTHON_AUTO := $(if $(call get-executable,python-config),python-config,$(PYTHON_AUTO))
++PYTHON_AUTO := $(if $(call get-executable,python3-config),python3-config,$(PYTHON_AUTO))
+ 
+ # If PYTHON is defined but PYTHON_CONFIG isn't, then take $(PYTHON)-config as if it was the user
+ # supplied value for PYTHON_CONFIG. Because it's "user supplied", error out if it doesn't exist.
 -- 
 2.37.0.rc0.161.g10f37bed90-goog
 
