@@ -2,193 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF70C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0B6C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 16:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230457AbiF2QT5 (ORCPT
+        id S230011AbiF2Qne (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Jun 2022 12:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
+        Wed, 29 Jun 2022 12:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbiF2QT5 (ORCPT
+        with ESMTP id S229955AbiF2Qnd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Jun 2022 12:19:57 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FADC338B9
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 09:19:55 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id r20so23261247wra.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 09:19:55 -0700 (PDT)
+        Wed, 29 Jun 2022 12:43:33 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7FA422B07
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 09:43:31 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id f190so9429808wma.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 09:43:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FLkSPLqdWchiZ/oz5Bm6mdpCQSd7koMGos2YDTUdRdc=;
-        b=pSR0kohjl1FpuuyJEjOCrCbFAf3ojag1+QUrSubdb5P7wmrWHATHA/3Ty6XQEmoTMD
-         fiO37Na0ZzEFywr3cjXQk7QkjEjJwuihnwIGqGWPgfgh7kbpteT9g2/VIjIZ+NLTK92V
-         YdaRt+ArsTeZYwyZNrUus21QGBF0uWqB2MExPhIb9P1VHKij3CRUVIpSGV3STpQYgdlq
-         U1Ru94iunQEsPHIPKwnaAauFcVkwUPUQqfm1LpSbqKJ9RMPcQdLngEWz+9qQ4ld1zJ8k
-         7im8s7A8cLH2kIhhdgVbLJLF1WjAK/5BG2VJtD9Gy0jPApjZfCKbzNvzkzhPgYBL5M12
-         FUkg==
+        bh=uyNdAiqX42nvqZ9JWQ/ZZaNT635XeywxS5XfMuA1CNA=;
+        b=opEEI8h3+r0PCqDkmte4H0kX0dHSW0KHKiFIN9QkbQDYyw9MZk+K4YkwZZpBiNBh5o
+         PHZ00wpnpy09QVuA596YHI1IXuFiGKStIGwr355sBtLqirvwyu+X+pzoba8Hvl4CeSRA
+         951rV2x5tz49mFgmEZagaOIQnxeC4i8gdj/ncHjPxVj5ni2WdWP19l3dcdTgAVeh9NPn
+         KWshRxNd3Tv9VpnUv4FcBVmyHC4rXb/yTMURlMZNdKCCiE7mkMm1GktD2EkgvU4BLw7M
+         M1SCUkOyRIzFw7gmJnN5el0E6eFz9I1sVr3cLEt/TDOEOnh6RFLIhD9R3JEx/fNOqD++
+         0Dvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FLkSPLqdWchiZ/oz5Bm6mdpCQSd7koMGos2YDTUdRdc=;
-        b=1YORTzEs5RYhJotkzhFipTYXiqaLQVqLyqY/OHib9X8bbohnhUqk5sDfFC0Wy/JQlW
-         OOXKNWISSXlK5uhkC7kb6Uz5o5TrHRri+UttXG1rWenTrRABF1DDii2GhGG/MIGIbxjA
-         ZpAiCrEiCM5ZgCMqLSOWZS4FIgBW2VN5wIRtjtuN00BV5qciSyR2Zs1nV6+sR+rJNyht
-         iBZYUggT4REsNFeIAbk8qM5ZLUGVbq1lMoP1Q3zrm+2I3liuLsLxRJPh+OI7N2CoQQLm
-         OfV62FiJX1rZdc0WDMLJRs1hao3FF1IhEHmcpfExI0IZvg8QSRrzr+o/K3eXWIRI9Pn4
-         fhhA==
-X-Gm-Message-State: AJIora+awzAjoxM+uY+2+wPWoNzvzgW6EYzBA0CSlWgPr06WNHrBEAXj
-        4dXJXveGPsyoGiyeHryCQWcFN3n8KGW4QIo1JE2Cvg==
-X-Google-Smtp-Source: AGRyM1uee+LoBIZBf8a8NWZEvKBYMp+aDFM7tYysu5M431x388f6Rtjs1Wica8IAH2O3Ft1YDwnG5uoIS2e72wfVrvE=
-X-Received: by 2002:a5d:5a1a:0:b0:21b:883a:28a1 with SMTP id
- bq26-20020a5d5a1a000000b0021b883a28a1mr3940129wrb.40.1656519593880; Wed, 29
- Jun 2022 09:19:53 -0700 (PDT)
+        bh=uyNdAiqX42nvqZ9JWQ/ZZaNT635XeywxS5XfMuA1CNA=;
+        b=qL/MrakhWgB7WrpfaKNIr7gkEi+8TwwtGZx/Tns4ZFoHajisz7HLV6ww4Kxv04u09v
+         pFMEBhfsuM2K6tJlWK6cRX/hurU0SE3MFZWFL7xlYU4xMInA0sO5YNEbKY92bokNknzE
+         t2b9AZa+71B9bPdJvqkzNiU2Ot7lkQtwctNBAdu/Rng8F/TFmwDBph+n2DJWKbuB67z4
+         oF2Frz6Q6XNMDDyMpoygMYshsK/CbD7vSKlbRnA49TPBzUAh68WpHsbY0IVyOhOD//hl
+         AENyJCDkksT/HZkNP8MprBcyNOMC3EK4JGaeNjnICh4J+LdWtUgZHo2LtfpeRaZ9hrUJ
+         3cFw==
+X-Gm-Message-State: AJIora9G65PKM2y/db/T6klOxpKeL67V8E4Ip2rPIIKyCcBIaQ7WmM2f
+        Q0cFvF54J383x/9LcLpomYbjPDH/Fy3bP1xGe5ZTCw==
+X-Google-Smtp-Source: AGRyM1tzVMu+TvVRluK/L7Osh8Zh1JGst4FUzpq7H+X2NAYP7sSYq8BO0Hw75njUXs/skzfjKMMdQXFX07FY1+vv1dA=
+X-Received: by 2002:a05:600c:4e4c:b0:3a0:53a2:48b5 with SMTP id
+ e12-20020a05600c4e4c00b003a053a248b5mr4628041wmq.174.1656521010316; Wed, 29
+ Jun 2022 09:43:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220614143353.1559597-1-irogers@google.com> <20220614143353.1559597-7-irogers@google.com>
- <Yrwb28xHsPCZzSw7@krava>
-In-Reply-To: <Yrwb28xHsPCZzSw7@krava>
+References: <20220629112717.125927-1-jolsa@kernel.org>
+In-Reply-To: <20220629112717.125927-1-jolsa@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 29 Jun 2022 09:19:40 -0700
-Message-ID: <CAP-5=fVfNxtX+QJqB532=LckGDQRbqV5i21iWSxucg0MS0Bejw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] perf cpumap: Add range data encoding
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+Date:   Wed, 29 Jun 2022 09:43:17 -0700
+Message-ID: <CAP-5=fWm5uZYrxakCZuJtWgVFChNje2SpPgDXD+Xs=XnmB2dzA@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Convert legacy map definition to BTF-defined
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        Colin Ian King <colin.king@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andrii@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 29, 2022 at 2:31 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, Jun 29, 2022 at 4:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> On Tue, Jun 14, 2022 at 07:33:53AM -0700, Ian Rogers wrote:
+> The libbpf is switching off support for legacy map definitions [1],
+> which will break the perf llvm tests.
 >
-> SNIP
+> Moving the base source map definition to BTF-defined, so we need
+> to use -g compile option for to add debug/BTF info.
 >
-> > -static size_t cpus_size(const struct perf_cpu_map *map)
-> > +static void synthesize_range_cpus(struct synthesize_cpu_map_data *data)
-> >  {
-> > -     return sizeof(struct cpu_map_entries) + perf_cpu_map__nr(map) * sizeof(u16);
-> > +     data->data->type = PERF_CPU_MAP__RANGE_CPUS;
-> > +     data->data->range_cpu_data.any_cpu = data->has_any_cpu;
-> > +     data->data->range_cpu_data.start_cpu = data->min_cpu;
-> > +     data->data->range_cpu_data.end_cpu = data->max_cpu;
-> >  }
-> >
-> > -static size_t mask_size(const struct perf_cpu_map *map, int *max)
-> > -{
-> > -     *max = perf_cpu_map__max(map).cpu;
-> > -     return sizeof(struct perf_record_mask_cpu_map32) + BITS_TO_U32(*max) * sizeof(__u32);
-> > -}
-> > -
-> > -static void *cpu_map_data__alloc(const struct perf_cpu_map *map, size_t *size,
-> > -                              u16 *type, int *max)
-> > +static void *cpu_map_data__alloc(struct synthesize_cpu_map_data *syn_data,
-> > +                              size_t header_size)
-> >  {
-> >       size_t size_cpus, size_mask;
-> > -     bool is_dummy = perf_cpu_map__empty(map);
-> >
-> > -     /*
-> > -      * Both array and mask data have variable size based
-> > -      * on the number of cpus and their actual values.
-> > -      * The size of the 'struct perf_record_cpu_map_data' is:
-> > -      *
-> > -      *   array = size of 'struct cpu_map_entries' +
-> > -      *           number of cpus * sizeof(u64)
-> > -      *
-> > -      *   mask  = size of 'struct perf_record_record_cpu_map' +
-> > -      *           maximum cpu bit converted to size of longs
-> > -      *
-> > -      * and finally + the size of 'struct perf_record_cpu_map_data'.
-> > -      */
-> > -     size_cpus = cpus_size(map);
-> > -     size_mask = mask_size(map, max);
-> > +     syn_data->nr = perf_cpu_map__nr(syn_data->map);
-> > +     syn_data->has_any_cpu = (perf_cpu_map__cpu(syn_data->map, 0).cpu == -1) ? 1 : 0;
+> [1] https://lore.kernel.org/bpf/20220627211527.2245459-1-andrii@kernel.org/
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/tests/bpf-script-example.c | 15 +++++++++------
+>  tools/perf/util/llvm-utils.c          |  2 +-
+>  2 files changed, 10 insertions(+), 7 deletions(-)
 >
-> I'm bit lost in the logic in here.. should it be '.cpu != -1' ?
-> has_any_cpu is named as bool but used as index below ;-)
+> diff --git a/tools/perf/tests/bpf-script-example.c b/tools/perf/tests/bpf-script-example.c
+> index ab4b98b3165d..065a4ac5d8e5 100644
+> --- a/tools/perf/tests/bpf-script-example.c
+> +++ b/tools/perf/tests/bpf-script-example.c
+> @@ -24,13 +24,16 @@ struct bpf_map_def {
+>         unsigned int max_entries;
+>  };
 >
-> could you please keep/update the comment above and explain
-> the conditions when each cpu_map type is taken
+> +#define __uint(name, val) int (*name)[val]
+> +#define __type(name, val) typeof(val) *name
 
-So this relates to the CPU map "empty" problem that I've been moaning
-about for a time with Adrian, Arnaldo, etc. The CPU map can contain -1
-for the "any CPU" case in perf_event_open, it can also contain CPU
-values after this as the result of a merge. Having only -1 in the CPU
-map is referred to as a dummy (presumably because the dummy event uses
-it), what does it mean if you have the -1 and CPU values? Things get
-really messy when you look at what the definition of empty is. Here
-I've used the term from perf_event_open that -1 means this can be on
-any CPU. As the CPU map data is sorted we can take advantage that the
-"any CPU" value always comes first. If we have it we set the bit here.
-We also use the bit below so that we ignore the first array element if
-it has -1 in it. As the -1 adjusts the CPU map size, there are some
-other adjustments as well. Hopefully this makes things clearer and I
-want to rewrite parts of the CPU map API to make them clearer too -
-empty should mean == NULL or nr == 0, dummy is more confusing to me
-than "any CPU", etc.
+This is probably worth a comment, reading it hurts :-) I expect that
+libbpf provides a definition that the rest of the world uses.
+
+Fwiw, the pre bpf counters BPF in perf needs a good overhaul. Arnaldo
+mentioned switching perf trace's BPF to use BPF skeletons in another
+post. The tests we have on event filters are flaky. One fewer bpf.h in
+the world seems like a service to humanity (I'm looking at you
+tools/perf/include/bpf/bpf.h).
 
 Thanks,
 Ian
 
-> thanks,
-> jirka
+> +
+>  #define SEC(NAME) __attribute__((section(NAME), used))
+> -struct bpf_map_def SEC("maps") flip_table = {
+> -       .type = BPF_MAP_TYPE_ARRAY,
+> -       .key_size = sizeof(int),
+> -       .value_size = sizeof(int),
+> -       .max_entries = 1,
+> -};
+> +struct {
+> +       __uint(type, BPF_MAP_TYPE_ARRAY);
+> +       __uint(max_entries, 1);
+> +       __type(key, int);
+> +       __type(value, int);
+> +} flip_table SEC(".maps");
 >
-> >
-> > -     if (is_dummy || (size_cpus < size_mask)) {
-> > -             *size += size_cpus;
-> > -             *type  = PERF_CPU_MAP__CPUS;
-> > -     } else {
-> > -             *size += size_mask;
-> > -             *type  = PERF_CPU_MAP__MASK;
-> > +     syn_data->min_cpu = perf_cpu_map__cpu(syn_data->map, syn_data->has_any_cpu).cpu;
-> > +     syn_data->max_cpu = perf_cpu_map__max(syn_data->map).cpu;
-> > +     if (syn_data->max_cpu - syn_data->min_cpu + 1 == syn_data->nr - syn_data->has_any_cpu) {
-> > +             /* A consecutive range of CPUs can be encoded using a range. */
-> > +             assert(sizeof(u16) + sizeof(struct perf_record_range_cpu_map) == sizeof(u64));
-> > +             syn_data->type = PERF_CPU_MAP__RANGE_CPUS;
-> > +             syn_data->size = header_size + sizeof(u64);
-> > +             return zalloc(syn_data->size);
-> >       }
-> >
-> > -     *size += sizeof(__u16); /* For perf_record_cpu_map_data.type. */
-> > -     *size = PERF_ALIGN(*size, sizeof(u64));
-> > -     return zalloc(*size);
-> > +     size_cpus = sizeof(u16) + sizeof(struct cpu_map_entries) + syn_data->nr * sizeof(u16);
-> > +     /* Due to padding, the 4bytes per entry mask variant is always smaller. */
-> > +     size_mask = sizeof(u16) + sizeof(struct perf_record_mask_cpu_map32) +
-> > +             BITS_TO_U32(syn_data->max_cpu) * sizeof(__u32);
-> > +     if (syn_data->has_any_cpu || size_cpus < size_mask) {
-> > +             /* Follow the CPU map encoding. */
-> > +             syn_data->type = PERF_CPU_MAP__CPUS;
-> > +             syn_data->size = header_size + PERF_ALIGN(size_cpus, sizeof(u64));
-> > +             return zalloc(syn_data->size);
-> > +     }
-> > +     /* Encode using a bitmask. */
-> > +     syn_data->type = PERF_CPU_MAP__MASK;
-> > +     syn_data->size = header_size + PERF_ALIGN(size_mask, sizeof(u64));
-> > +     return zalloc(syn_data->size);
+>  SEC("func=do_epoll_wait")
+>  int bpf_func__SyS_epoll_pwait(void *ctx)
+> diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+> index 96c8ef60f4f8..2dc797007419 100644
+> --- a/tools/perf/util/llvm-utils.c
+> +++ b/tools/perf/util/llvm-utils.c
+> @@ -25,7 +25,7 @@
+>                 "$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
+>                 "-Wno-unused-value -Wno-pointer-sign "          \
+>                 "-working-directory $WORKING_DIR "              \
+> -               "-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
+> +               "-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -g -O2 -o - $LLVM_OPTIONS_PIPE"
 >
-> SNIP
+>  struct llvm_param llvm_param = {
+>         .clang_path = "clang",
+> --
+> 2.35.3
+>
