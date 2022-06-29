@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EA7C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 09:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FFBC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 09:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232646AbiF2JSe (ORCPT
+        id S232781AbiF2JbN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Jun 2022 05:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
+        Wed, 29 Jun 2022 05:31:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232198AbiF2JS3 (ORCPT
+        with ESMTP id S232812AbiF2JbM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Jun 2022 05:18:29 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74AFA35DD7;
-        Wed, 29 Jun 2022 02:18:27 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id ay16so31290322ejb.6;
-        Wed, 29 Jun 2022 02:18:27 -0700 (PDT)
+        Wed, 29 Jun 2022 05:31:12 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38E339825;
+        Wed, 29 Jun 2022 02:31:11 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id sb34so31270870ejc.11;
+        Wed, 29 Jun 2022 02:31:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=YQ2liDNfsWzTdaQwT5Zj1QzIYCnNrLNtOJI6KLhDBKA=;
-        b=cS85G4x8XensQbCOxFzETVRXSRBSv/AvQ5qcRtF5jMSMI2VGYXD1IoGZwNJ2UJBTcO
-         vQUyqGT8oowDPQTzVzQITSBRRbpr4Q9s8EU6g2qfbKRH37fsrpGqOZNDAqbFCu3Pfepk
-         OobT+L6TDen01+gEvfnDI55gbyDEQNXkDFNg8SsEFKFm0rEfOca96PY1yKgegmpOV1GK
-         gq27/70qdzvYe0GCuoS9zHAtsG634anILAGUp2NG5t28iyle4M0eFECAIwoPPlwBw2sG
-         RuK/WbDLcDfiCavrbeiMesR5KBNnJYVHQ38qnGbBK+cYutsVMKTVTNMmx2Ud8pocgWC8
-         aOYA==
+        bh=1MQtKyGpLfxVaTXrtUo/eYc0t4KdNpNUjTXmOdTkSlg=;
+        b=q8HNG5xT4k5tqN0KcQ7F/ovA4ug+wyQHASp0zFULB9rYp681wgfyMdhDhTi4Lef2LR
+         IU51FH6k9uPtpIpD/rfRA6deez95BBiSD42tjIjDBrDCrtzsT5jVne9tga8K3pJmm/fK
+         KwTGF8C5KGokhCHmQChBWj0aIomx9BmUxJAGB0gEmtQAIEnHN0UXKpgMn98PhAWxRIfi
+         5JgOOpCm0wlg9xFMRzVTJ08zfkPXpirJktFvRCrsM0hLJmlpCMfY/4WnPZeHBx1rTem0
+         V4WoySDmh27Qb9x0UpLwi0HNP53DhB31pZZo+vR0TmyEhNpfKCsIvsSWT+PeiOGGMbi8
+         A1Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YQ2liDNfsWzTdaQwT5Zj1QzIYCnNrLNtOJI6KLhDBKA=;
-        b=XVdXyyvE73w760XHD74BJn3CzABXeCaLtIZgllczL6GQRLpixkBZRAggC9X7k076HN
-         USfD2r/v9EpA7+2Ey+EZrvLHE/FCBSLRkJ1BFjOpAyZuKkeViWvm2UbcJ5Dv0GtRwbQI
-         ShVpnIG0CwtthfG1PPxKbkHsFq8oL9rEO9I8ORi5vzTkUBz6ZevpWPjsf0Lm08v6cjcg
-         ka8nq9qDjCMHlVcSkXfJibJZ7mEJ4OhSnNpVz1z/TlUHweGTE8TmP55V/MoC6nv8ArPy
-         PEsau8tIZa1vhroKHoX9VrNLz7y4RwMDWgbcEK6ELAjuMIKaqETFLvhmzTFzP92VZbNO
-         w7TA==
-X-Gm-Message-State: AJIora/dhNEQKyU6mw68T/nREvfgFVSB3f8cRVocEAGDEbT71dt8uY8U
-        cORIRV90mEJ2+DydY7+6rZQ=
-X-Google-Smtp-Source: AGRyM1uW6oaPhhOkEurR07OoPrbe8D54kuROy2UN9EmmwiM3oCqkvsBvgpYMJxhDGd03cppewiKyOw==
-X-Received: by 2002:a17:907:6d13:b0:726:44bd:436d with SMTP id sa19-20020a1709076d1300b0072644bd436dmr2305589ejc.167.1656494305569;
-        Wed, 29 Jun 2022 02:18:25 -0700 (PDT)
+        bh=1MQtKyGpLfxVaTXrtUo/eYc0t4KdNpNUjTXmOdTkSlg=;
+        b=5TVq+vq0D8KdiLuyNLMFJqIFa6BPEVaNJVqoz4IC9ZSfNLXgJKzpzEtbdid8HV1Jb3
+         w3jsx2eASjCkrlG2Czy1VghC3Oxqql1mvY6fhMtU0mnz2LCtvTvZoHZrePNPyKCd24ny
+         Mzidpb7a8+Pdvik3J3hvZnc7LzQCZWdAa/h5rb5FguVtTQ57GfewQGjZSlChMHyFM2Ap
+         D+1EZkqbHns/vPbaZZnee3TSxrkAh4d05J8yDTaAVfbxTKIRU8N3OYJztvAJWJdhTHaC
+         SVNthCP6KKNz9spqppc6jMG8lBdjiA7MhwZmGuXSmJ+xxyDlcIZHjdt/i3l8wfvFBWbt
+         2DQQ==
+X-Gm-Message-State: AJIora+R1ylGo13mEgIf0vtzo3u5tbbnmfVw4TbcR84M8KMGwSBO1xjD
+        HHejV/GSugQdhh19UPvqkr4=
+X-Google-Smtp-Source: AGRyM1uSHVD3OrNA4yy2l4BhcVNH+1bC36C6joYvzWd41Pmu+x3ByjAsa0AVI7z0Pg6WTVr+PUa4ww==
+X-Received: by 2002:a17:907:7248:b0:726:30fc:e7fc with SMTP id ds8-20020a170907724800b0072630fce7fcmr2424523ejc.274.1656495070357;
+        Wed, 29 Jun 2022 02:31:10 -0700 (PDT)
 Received: from krava (net-109-116-206-47.cust.vodafonedsl.it. [109.116.206.47])
-        by smtp.gmail.com with ESMTPSA id v5-20020a170906338500b006fed85c1a8fsm7519916eja.202.2022.06.29.02.18.23
+        by smtp.gmail.com with ESMTPSA id a12-20020a170906670c00b006fe8c831632sm7437057ejp.73.2022.06.29.02.31.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 02:18:25 -0700 (PDT)
+        Wed, 29 Jun 2022 02:31:09 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 29 Jun 2022 11:18:21 +0200
+Date:   Wed, 29 Jun 2022 11:31:07 +0200
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -72,373 +72,106 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 4/6] perf cpumap: Fix alignment for masks in event
- encoding
-Message-ID: <YrwY3SP+jsTwrRBw@krava>
+Subject: Re: [PATCH v2 6/6] perf cpumap: Add range data encoding
+Message-ID: <Yrwb28xHsPCZzSw7@krava>
 References: <20220614143353.1559597-1-irogers@google.com>
- <20220614143353.1559597-5-irogers@google.com>
+ <20220614143353.1559597-7-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220614143353.1559597-5-irogers@google.com>
+In-Reply-To: <20220614143353.1559597-7-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 07:33:51AM -0700, Ian Rogers wrote:
-> A mask encoding of a cpu map is laid out as:
->   u16 nr
->   u16 long_size
->   unsigned long mask[];
-> However, the mask may be 8-byte aligned meaning there is a 4-byte pad
-> after long_size. This means 32-bit and 64-bit builds see the mask as
-> being at different offsets. On top of this the structure is in the byte
-> data[] encoded as:
->   u16 type
->   char data[]
-> This means the mask's struct isn't the required 4 or 8 byte aligned, but
-> is offset by 2. Consequently the long reads and writes are causing
-> undefined behavior as the alignment is broken.
-> 
-> Fix the mask struct by creating explicit 32 and 64-bit variants, use a
-> union to avoid data[] and casts; the struct must be packed so the
-> layout matches the existing perf.data layout. Taking an address of a
-> member of a packed struct breaks alignment so pass the packed
-> perf_record_cpu_map_data to functions, so they can access variables with
-> the right alignment.
-> 
-> As the 64-bit version has 4 bytes of padding, optimizing writing to only
-> write the 32-bit version.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Tue, Jun 14, 2022 at 07:33:53AM -0700, Ian Rogers wrote:
 
 SNIP
 
->  struct perf_record_cpu_map {
-> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> index f94929ebb54b..7ea150cdc137 100644
-> --- a/tools/perf/tests/cpumap.c
-> +++ b/tools/perf/tests/cpumap.c
-> @@ -17,21 +17,23 @@ static int process_event_mask(struct perf_tool *tool __maybe_unused,
->  			 struct machine *machine __maybe_unused)
+> -static size_t cpus_size(const struct perf_cpu_map *map)
+> +static void synthesize_range_cpus(struct synthesize_cpu_map_data *data)
 >  {
->  	struct perf_record_cpu_map *map_event = &event->cpu_map;
-> -	struct perf_record_record_cpu_map *mask;
->  	struct perf_record_cpu_map_data *data;
->  	struct perf_cpu_map *map;
->  	int i;
-> +	unsigned int long_size;
->  
->  	data = &map_event->data;
->  
->  	TEST_ASSERT_VAL("wrong type", data->type == PERF_CPU_MAP__MASK);
->  
-> -	mask = (struct perf_record_record_cpu_map *)data->data;
-> +	long_size = data->mask32_data.long_size;
->  
-> -	TEST_ASSERT_VAL("wrong nr",   mask->nr == 1);
-> +	TEST_ASSERT_VAL("wrong long_size", long_size == 4 || long_size == 8);
-
-should we check here just for long_size == 4 ?
-
-SNIP
-
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 12b2243222b0..ae43fb88f444 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -22,54 +22,102 @@ static int max_node_num;
->   */
->  static int *cpunode_map;
->  
-> -static struct perf_cpu_map *cpu_map__from_entries(struct cpu_map_entries *cpus)
-> +bool perf_record_cpu_map_data__test_bit(int i,
-> +					const struct perf_record_cpu_map_data *data)
-> +{
-> +	int bit_word32 = i / 32;
-> +	__u32 bit_mask32 = 1U << (i & 31);
-> +	int bit_word64 = i / 64;
-> +	__u64 bit_mask64 = ((__u64)1) << (i & 63);
-> +
-> +	return (data->mask32_data.long_size == 4)
-> +		? (bit_word32 < data->mask32_data.nr) &&
-> +		(data->mask32_data.mask[bit_word32] & bit_mask32) != 0
-> +		: (bit_word64 < data->mask64_data.nr) &&
-> +		(data->mask64_data.mask[bit_word64] & bit_mask64) != 0;
-> +}
-> +
-> +/* Read ith mask value from data into the given 64-bit sized bitmap */
-> +static void perf_record_cpu_map_data__read_one_mask(const struct perf_record_cpu_map_data *data,
-> +						    int i, unsigned long *bitmap)
-> +{
-> +#if __SIZEOF_LONG__ == 8
-> +	if (data->mask32_data.long_size == 4)
-> +		bitmap[0] = data->mask32_data.mask[i];
-> +	else
-> +		bitmap[0] = data->mask64_data.mask[i];
-> +#else
-> +	if (data->mask32_data.long_size == 4) {
-> +		bitmap[0] = data->mask32_data.mask[i];
-> +		bitmap[1] = 0;
-> +	} else {
-> +#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-> +		bitmap[0] = (unsigned long)(data->mask64_data.mask[i] >> 32);
-> +		bitmap[1] = (unsigned long)data->mask64_data.mask[i];
-> +#else
-> +		bitmap[0] = (unsigned long)data->mask64_data.mask[i];
-> +		bitmap[1] = (unsigned long)(data->mask64_data.mask[i] >> 32);
-> +#endif
-
-should this be taken care of earlier by perf_event__cpu_map_swap ?
-
-
-> +	}
-> +#endif
-> +}
-> +static struct perf_cpu_map *cpu_map__from_entries(const struct perf_record_cpu_map_data *data)
->  {
->  	struct perf_cpu_map *map;
->  
-> -	map = perf_cpu_map__empty_new(cpus->nr);
-> +	map = perf_cpu_map__empty_new(data->cpus_data.nr);
->  	if (map) {
->  		unsigned i;
->  
-> -		for (i = 0; i < cpus->nr; i++) {
-> +		for (i = 0; i < data->cpus_data.nr; i++) {
->  			/*
->  			 * Special treatment for -1, which is not real cpu number,
->  			 * and we need to use (int) -1 to initialize map[i],
->  			 * otherwise it would become 65535.
->  			 */
-> -			if (cpus->cpu[i] == (u16) -1)
-> +			if (data->cpus_data.cpu[i] == (u16) -1)
->  				map->map[i].cpu = -1;
->  			else
-> -				map->map[i].cpu = (int) cpus->cpu[i];
-> +				map->map[i].cpu = (int) data->cpus_data.cpu[i];
->  		}
->  	}
->  
->  	return map;
+> -	return sizeof(struct cpu_map_entries) + perf_cpu_map__nr(map) * sizeof(u16);
+> +	data->data->type = PERF_CPU_MAP__RANGE_CPUS;
+> +	data->data->range_cpu_data.any_cpu = data->has_any_cpu;
+> +	data->data->range_cpu_data.start_cpu = data->min_cpu;
+> +	data->data->range_cpu_data.end_cpu = data->max_cpu;
 >  }
 >  
-> -static struct perf_cpu_map *cpu_map__from_mask(struct perf_record_record_cpu_map *mask)
-> +static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_cpu_map_data *data)
->  {
-> +	DECLARE_BITMAP(local_copy, 64);
-> +	int weight = 0, mask_nr = data->mask32_data.nr;
->  	struct perf_cpu_map *map;
-> -	int nr, nbits = mask->nr * mask->long_size * BITS_PER_BYTE;
->  
-> -	nr = bitmap_weight(mask->mask, nbits);
-> +	for (int i = 0; i < mask_nr; i++) {
-> +		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
-> +		weight += bitmap_weight(local_copy, 64);
-> +	}
-> +
-> +	map = perf_cpu_map__empty_new(weight);
-> +	if (!map)
-> +		return NULL;
->  
-> -	map = perf_cpu_map__empty_new(nr);
-> -	if (map) {
-> -		int cpu, i = 0;
-> +	for (int i = 0, j = 0; i < mask_nr; i++) {
-> +		int cpus_per_i = (i * data->mask32_data.long_size  * BITS_PER_BYTE);
-> +		int cpu;
->  
-> -		for_each_set_bit(cpu, mask->mask, nbits)
-> -			map->map[i++].cpu = cpu;
-> +		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
-> +		for_each_set_bit(cpu, local_copy, 64)
-> +			map->map[j++].cpu = cpu + cpus_per_i;
->  	}
->  	return map;
->  
->  }
->  
-> -struct perf_cpu_map *cpu_map__new_data(struct perf_record_cpu_map_data *data)
-> +struct perf_cpu_map *cpu_map__new_data(const struct perf_record_cpu_map_data *data)
->  {
->  	if (data->type == PERF_CPU_MAP__CPUS)
-> -		return cpu_map__from_entries((struct cpu_map_entries *)data->data);
-> +		return cpu_map__from_entries(data);
->  	else
-> -		return cpu_map__from_mask((struct perf_record_record_cpu_map *)data->data);
-> +		return cpu_map__from_mask(data);
->  }
->  
->  size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp)
-> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-> index 703ae6d3386e..fa8a5acdcae1 100644
-> --- a/tools/perf/util/cpumap.h
-> +++ b/tools/perf/util/cpumap.h
-> @@ -37,9 +37,11 @@ struct cpu_aggr_map {
->  
->  struct perf_record_cpu_map_data;
->  
-> +bool perf_record_cpu_map_data__test_bit(int i, const struct perf_record_cpu_map_data *data);
-> +
->  struct perf_cpu_map *perf_cpu_map__empty_new(int nr);
->  
-> -struct perf_cpu_map *cpu_map__new_data(struct perf_record_cpu_map_data *data);
-> +struct perf_cpu_map *cpu_map__new_data(const struct perf_record_cpu_map_data *data);
->  size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size);
->  size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size);
->  size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp);
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 0aa818977d2b..d52a39ba48e3 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -914,30 +914,30 @@ static void perf_event__cpu_map_swap(union perf_event *event,
->  				     bool sample_id_all __maybe_unused)
->  {
->  	struct perf_record_cpu_map_data *data = &event->cpu_map.data;
-> -	struct cpu_map_entries *cpus;
-> -	struct perf_record_record_cpu_map *mask;
-> -	unsigned i;
->  
->  	data->type = bswap_16(data->type);
->  
->  	switch (data->type) {
->  	case PERF_CPU_MAP__CPUS:
-> -		cpus = (struct cpu_map_entries *)data->data;
+> -static size_t mask_size(const struct perf_cpu_map *map, int *max)
+> -{
+> -	*max = perf_cpu_map__max(map).cpu;
+> -	return sizeof(struct perf_record_mask_cpu_map32) + BITS_TO_U32(*max) * sizeof(__u32);
+> -}
 > -
-> -		cpus->nr = bswap_16(cpus->nr);
-> +		data->cpus_data.nr = bswap_16(data->cpus_data.nr);
->  
-> -		for (i = 0; i < cpus->nr; i++)
-> -			cpus->cpu[i] = bswap_16(cpus->cpu[i]);
-> +		for (unsigned i = 0; i < data->cpus_data.nr; i++)
-> +			data->cpus_data.cpu[i] = bswap_16(data->cpus_data.cpu[i]);
->  		break;
->  	case PERF_CPU_MAP__MASK:
-> -		mask = (struct perf_record_record_cpu_map *)data->data;
-> -
-> -		mask->nr = bswap_16(mask->nr);
-> -		mask->long_size = bswap_16(mask->long_size);
-> +		data->mask32_data.long_size = bswap_16(data->mask32_data.long_size);
->  
-> -		switch (mask->long_size) {
-> -		case 4: mem_bswap_32(&mask->mask, mask->nr); break;
-> -		case 8: mem_bswap_64(&mask->mask, mask->nr); break;
-> +		switch (data->mask32_data.long_size) {
-> +		case 4:
-> +			data->mask32_data.nr = bswap_16(data->mask32_data.nr);
-> +			for (unsigned i = 0; i < data->mask32_data.nr; i++)
-> +				data->mask32_data.mask[i] = bswap_32(data->mask32_data.mask[i]);
-> +			break;
-
-why not use the mem_bswap_* functions?
-
-looks like we never swap it completely, because we passed
-mask->nr where should be the size
-
-> +		case 8:
-> +			data->mask64_data.nr = bswap_16(data->mask64_data.nr);
-> +			for (unsigned i = 0; i < data->mask64_data.nr; i++)
-> +				data->mask64_data.mask[i] = bswap_64(data->mask64_data.mask[i]);
-> +			break;
->  		default:
->  			pr_err("cpu_map swap: unsupported long size\n");
->  		}
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> index 0d87df20ec44..4fa7d0d7dbcf 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -1183,27 +1183,33 @@ int perf_event__synthesize_thread_map2(struct perf_tool *tool,
->  	return err;
->  }
->  
-> -static void synthesize_cpus(struct cpu_map_entries *cpus,
-> +static void synthesize_cpus(struct perf_record_cpu_map_data *data,
->  			    const struct perf_cpu_map *map)
+> -static void *cpu_map_data__alloc(const struct perf_cpu_map *map, size_t *size,
+> -				 u16 *type, int *max)
+> +static void *cpu_map_data__alloc(struct synthesize_cpu_map_data *syn_data,
+> +				 size_t header_size)
 >  {
->  	int i, map_nr = perf_cpu_map__nr(map);
+>  	size_t size_cpus, size_mask;
+> -	bool is_dummy = perf_cpu_map__empty(map);
 >  
-> -	cpus->nr = map_nr;
-> +	data->cpus_data.nr = map_nr;
->  
->  	for (i = 0; i < map_nr; i++)
-> -		cpus->cpu[i] = perf_cpu_map__cpu(map, i).cpu;
-> +		data->cpus_data.cpu[i] = perf_cpu_map__cpu(map, i).cpu;
->  }
->  
-> -static void synthesize_mask(struct perf_record_record_cpu_map *mask,
-> +static void synthesize_mask(struct perf_record_cpu_map_data *data,
->  			    const struct perf_cpu_map *map, int max)
->  {
-> -	int i;
-> +	int idx;
-> +	struct perf_cpu cpu;
-> +
-> +	/* Due to padding, the 4bytes per entry mask variant is always smaller. */
-> +	data->mask32_data.nr = BITS_TO_U32(max);
-> +	data->mask32_data.long_size = 4;
+> -	/*
+> -	 * Both array and mask data have variable size based
+> -	 * on the number of cpus and their actual values.
+> -	 * The size of the 'struct perf_record_cpu_map_data' is:
+> -	 *
+> -	 *   array = size of 'struct cpu_map_entries' +
+> -	 *           number of cpus * sizeof(u64)
+> -	 *
+> -	 *   mask  = size of 'struct perf_record_record_cpu_map' +
+> -	 *           maximum cpu bit converted to size of longs
+> -	 *
+> -	 * and finally + the size of 'struct perf_record_cpu_map_data'.
+> -	 */
+> -	size_cpus = cpus_size(map);
+> -	size_mask = mask_size(map, max);
+> +	syn_data->nr = perf_cpu_map__nr(syn_data->map);
+> +	syn_data->has_any_cpu = (perf_cpu_map__cpu(syn_data->map, 0).cpu == -1) ? 1 : 0;
 
-ok, so we go always with 32 bit version
+I'm bit lost in the logic in here.. should it be '.cpu != -1' ?
+has_any_cpu is named as bool but used as index below ;-)
 
->  
-> -	mask->nr = BITS_TO_LONGS(max);
-> -	mask->long_size = sizeof(long);
-> +	perf_cpu_map__for_each_cpu(cpu, idx, map) {
-> +		int bit_word = cpu.cpu / 32;
-> +		__u32 bit_mask = 1U << (cpu.cpu & 31);
+could you please keep/update the comment above and explain
+the conditions when each cpu_map type is taken
 
-set_bit uses (nr % 32), but I guess it does not matter
-
-
+thanks,
 jirka
 
 >  
-> -	for (i = 0; i < perf_cpu_map__nr(map); i++)
-> -		set_bit(perf_cpu_map__cpu(map, i).cpu, mask->mask);
-> +		data->mask32_data.mask[bit_word] |= bit_mask;
+> -	if (is_dummy || (size_cpus < size_mask)) {
+> -		*size += size_cpus;
+> -		*type  = PERF_CPU_MAP__CPUS;
+> -	} else {
+> -		*size += size_mask;
+> -		*type  = PERF_CPU_MAP__MASK;
+> +	syn_data->min_cpu = perf_cpu_map__cpu(syn_data->map, syn_data->has_any_cpu).cpu;
+> +	syn_data->max_cpu = perf_cpu_map__max(syn_data->map).cpu;
+> +	if (syn_data->max_cpu - syn_data->min_cpu + 1 == syn_data->nr - syn_data->has_any_cpu) {
+> +		/* A consecutive range of CPUs can be encoded using a range. */
+> +		assert(sizeof(u16) + sizeof(struct perf_record_range_cpu_map) == sizeof(u64));
+> +		syn_data->type = PERF_CPU_MAP__RANGE_CPUS;
+> +		syn_data->size = header_size + sizeof(u64);
+> +		return zalloc(syn_data->size);
+>  	}
+>  
+> -	*size += sizeof(__u16); /* For perf_record_cpu_map_data.type. */
+> -	*size = PERF_ALIGN(*size, sizeof(u64));
+> -	return zalloc(*size);
+> +	size_cpus = sizeof(u16) + sizeof(struct cpu_map_entries) + syn_data->nr * sizeof(u16);
+> +	/* Due to padding, the 4bytes per entry mask variant is always smaller. */
+> +	size_mask = sizeof(u16) + sizeof(struct perf_record_mask_cpu_map32) +
+> +		BITS_TO_U32(syn_data->max_cpu) * sizeof(__u32);
+> +	if (syn_data->has_any_cpu || size_cpus < size_mask) {
+> +		/* Follow the CPU map encoding. */
+> +		syn_data->type = PERF_CPU_MAP__CPUS;
+> +		syn_data->size = header_size + PERF_ALIGN(size_cpus, sizeof(u64));
+> +		return zalloc(syn_data->size);
 > +	}
->  }
->  
->  static size_t cpus_size(const struct perf_cpu_map *map)
-> @@ -1214,7 +1220,7 @@ static size_t cpus_size(const struct perf_cpu_map *map)
->  static size_t mask_size(const struct perf_cpu_map *map, int *max)
->  {
->  	*max = perf_cpu_map__max(map).cpu;
-> -	return sizeof(struct perf_record_record_cpu_map) + BITS_TO_LONGS(*max) * sizeof(long);
-> +	return sizeof(struct perf_record_mask_cpu_map32) + BITS_TO_U32(*max) * sizeof(__u32);
->  }
->  
->  static void *cpu_map_data__alloc(const struct perf_cpu_map *map, size_t *size,
-> @@ -1247,7 +1253,7 @@ static void *cpu_map_data__alloc(const struct perf_cpu_map *map, size_t *size,
->  		*type  = PERF_CPU_MAP__MASK;
->  	}
->  
-> -	*size += sizeof(struct perf_record_cpu_map_data);
-> +	*size += sizeof(__u16); /* For perf_record_cpu_map_data.type. */
->  	*size = PERF_ALIGN(*size, sizeof(u64));
->  	return zalloc(*size);
->  }
-> @@ -1260,10 +1266,10 @@ static void cpu_map_data__synthesize(struct perf_record_cpu_map_data *data,
->  
->  	switch (type) {
->  	case PERF_CPU_MAP__CPUS:
-> -		synthesize_cpus((struct cpu_map_entries *) data->data, map);
-> +		synthesize_cpus(data, map);
->  		break;
->  	case PERF_CPU_MAP__MASK:
-> -		synthesize_mask((struct perf_record_record_cpu_map *)data->data, map, max);
-> +		synthesize_mask(data, map, max);
->  	default:
->  		break;
->  	}
-> @@ -1271,7 +1277,7 @@ static void cpu_map_data__synthesize(struct perf_record_cpu_map_data *data,
->  
->  static struct perf_record_cpu_map *cpu_map_event__new(const struct perf_cpu_map *map)
->  {
-> -	size_t size = sizeof(struct perf_record_cpu_map);
-> +	size_t size = sizeof(struct perf_event_header);
->  	struct perf_record_cpu_map *event;
->  	int max;
->  	u16 type;
-> -- 
-> 2.36.1.476.g0c4daa206d-goog
-> 
+> +	/* Encode using a bitmask. */
+> +	syn_data->type = PERF_CPU_MAP__MASK;
+> +	syn_data->size = header_size + PERF_ALIGN(size_mask, sizeof(u64));
+> +	return zalloc(syn_data->size);
+
+SNIP
