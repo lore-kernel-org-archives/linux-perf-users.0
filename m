@@ -2,112 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7ECC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 16:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EB1CCA47C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 16:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230140AbiF2QoF (ORCPT
+        id S231477AbiF2QtJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Jun 2022 12:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
+        Wed, 29 Jun 2022 12:49:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiF2QoD (ORCPT
+        with ESMTP id S231995AbiF2Qs4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Jun 2022 12:44:03 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC9B2DD48
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 09:44:01 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id v126so11673024pgv.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 09:44:01 -0700 (PDT)
+        Wed, 29 Jun 2022 12:48:56 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E38F3F8A6
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 09:47:35 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id v193-20020a1cacca000000b003a051f41541so3572280wme.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 09:47:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H6SDMsRMBFpIBVc64uIxAbw8HhGrz6w0VpurvPOqgsM=;
-        b=E37c3grA1rBzm//lFsHFq0a6MEvdOJph9uYs3FQO1S8A6X3GdkgNphhA/C6P2kfvHI
-         Z9lg3Mz12GVOO2ZhjOOKzktWjASYcaNGpIqcqxP190j8kEnP4ALnkN4Pr4WvOiO5a2qz
-         +fPd3kGXalda8Z0nnf7k1O/MWlnMqVX3Vi379rTIfoUXcJq0QwGwES99n41Ui8zMsPeO
-         I7qpItVN6Z8/GhxF5R/7Nka26QL1rRbcIvXROtDXJyqfS5Zw6ZRt0EXbmLr9V0dYI++w
-         By5gG0xbyAEEhB1NwmMbVUPTjqUnazp5q43Fx4MkLYKlFj+P7IeotiTuwMt/bsLVuNL6
-         Li+A==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hS0iWXw2vBwf07hRw+AJMaKL/+/P5ivyQ+NC1agijLM=;
+        b=UTPJK6vrgyh5TnMtMa1HKMxiXFPTLDxlke2Q8G4jm+4uxsef+BI0ytD9mAf/f4uMB7
+         U6AIMURbzNn50OYHjNi140ZxAmSV/rBOeMBF4Y5UJAZOpqSaCycRF38vD6YWz5XGLBws
+         8tHtGQ47NDwpdfrKSTnIs5ZhRiirWZefqcMDPsTIydbTSGbycFInJiquD+w1C0yfVmPU
+         n49TZOSp3dpA2rEgnWS6o9zshGGFVbKaDe/IiqiDyPymvgOmTgvIjboUCPfLsDUKID1f
+         MVp1O8U/IzvP3+CZuvALPnmix8A1ogKBq3P157+OnajtfQHr0sUfJSXdZF+Fo4X+ZuY7
+         fcfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H6SDMsRMBFpIBVc64uIxAbw8HhGrz6w0VpurvPOqgsM=;
-        b=ng3lCI2dMKB6r5oUkQQw+47XViiXAxHvum2eJXY2M681UNFOd/q40UNeBIAAnU6PcK
-         3dJo5iacczJWnVrvDBV+kyk0FCWgia58T47V4N8uqhN3snZZZs+A4iyKGiQyWOoDEZUz
-         cOtyvyNu0uG+DRAxRdFTIViG0oDJ6pk3k/t7w2MPbQEXtFOIO0L9TDhdu8wLYgqyNLG0
-         gPg737FXJyFUj8NtIAJ0P6tl5QX3r0m1P7odZLMwEk+pB3ZLtCi6dPMagrQ149NEJHWE
-         ySy3V9GDGnIVt4ORDq0LZ5ZV2ptSKvRIR3lyMvIJ0fP3+NZL2nMpW2xXLCfe5m/vB1jC
-         VQ6Q==
-X-Gm-Message-State: AJIora9Q+M9qwvBjLh09DjX8PlFnfyPpwMngQC6JD3Ii5ObHUbr3k6Tt
-        dipy16oYZgvHERPC2pWTUzxIaQ==
-X-Google-Smtp-Source: AGRyM1v+C9A3jaRc2Q1KV6w1TvaLeuYysn0eCdaDGnMabgdtlVm1AV+vGXDLImhGSxwXKw+9L5UhTA==
-X-Received: by 2002:a63:fa56:0:b0:3fc:d3d2:ceac with SMTP id g22-20020a63fa56000000b003fcd3d2ceacmr3778194pgk.99.1656521041434;
-        Wed, 29 Jun 2022 09:44:01 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id cu7-20020a056a00448700b00525373aac7csm11665197pfb.26.2022.06.29.09.43.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 09:44:00 -0700 (PDT)
-Date:   Wed, 29 Jun 2022 10:43:57 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Yicong Yang <yangyicong@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>, yangyicong@hisilicon.com,
-        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
-        suzuki.poulose@arm.com, jonathan.cameron@huawei.com,
-        robin.murphy@arm.com, leo.yan@linaro.org, mark.rutland@arm.com,
-        will@kernel.org, joro@8bytes.org,
-        shameerali.kolothum.thodi@huawei.com, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, john.garry@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
-        prime.zeng@huawei.com, liuqi115@huawei.com, james.clark@arm.com,
-        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
-        alexander.shishkin@linux.intel.com, acme@kernel.org
-Subject: Re: [PATCH v9 0/8] Add support for HiSilicon PCIe Tune and Trace
- device
-Message-ID: <20220629164357.GA2018382@p14s>
-References: <20220606115555.41103-1-yangyicong@hisilicon.com>
- <af6723f1-c0c5-8af5-857c-af9280e705af@huawei.com>
- <Yrms2cI05O2yZRKU@kroah.com>
- <e737393a-56dd-7d24-33d3-e935b14ba758@huawei.com>
- <Yrm4O+AFbgnoBVba@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hS0iWXw2vBwf07hRw+AJMaKL/+/P5ivyQ+NC1agijLM=;
+        b=k9nGSK8sXpvEDC/7Wjf0V11gR3ZeEyf3oKJPW0tALh1DcNIeKZmDCDDSscUdgb8Me2
+         6SLB5X94QRaqATIPzvvF7wkj9YpHta5Pu6rEXnEKW1dgWxGRXmLoqeFHpp75FiC/Rgtm
+         OX9Oy03y//vIsecXFsVyIbsIAZJrYuBqAGu7x/DbpGQBk5ROHvIs8i15U7/2O1BIK0Wi
+         bFJD+PTXvK/8dy4nJguidluzuntVrFBdEHnH0vL8PLmUDNAB+kerEAUo6g54af1FqXil
+         DF67AbJvfHBQkctUIHh/jIjos0eNlAPwHxxF4dHEaYYjWr/s2O8MenKvDIVwsksqoZHE
+         YeTA==
+X-Gm-Message-State: AJIora/GOjh/nuH8KPrUC1AqKPskeIB0tEigO9R/LuaQcbeVorvFuhlB
+        M0ffWhSchqD+5nlNygpxCGJspxULu6clgvltfjLE8w==
+X-Google-Smtp-Source: AGRyM1uxkhcSA3OsIObuOFN5p+XSrzXK099UTPZg+lPZ9LA/gThbRH5Xl6cD4CYYXDihOH3PPu8P55Igo59ImMRq3jc=
+X-Received: by 2002:a7b:c10c:0:b0:3a0:439d:6d66 with SMTP id
+ w12-20020a7bc10c000000b003a0439d6d66mr4835817wmi.149.1656521253873; Wed, 29
+ Jun 2022 09:47:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yrm4O+AFbgnoBVba@hirez.programming.kicks-ass.net>
+References: <20220627025744.106527-1-irogers@google.com> <6f9649d7-8129-57cf-8ab5-03abacd9cb6e@huawei.com>
+In-Reply-To: <6f9649d7-8129-57cf-8ab5-03abacd9cb6e@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 29 Jun 2022 09:47:21 -0700
+Message-ID: <CAP-5=fVxc7H75mb=j23gTD-eMYD3vru5U9QFGQDmODb57aykPA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Rewrite jevents program in python
+To:     John Garry <john.garry@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Felix Fietkau <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
+        Like Xu <likexu@tencent.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Nick Forrington <nick.forrington@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com, sandipan.das@amd.com,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 04:01:31PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 27, 2022 at 09:25:42PM +0800, Yicong Yang wrote:
-> > On 2022/6/27 21:12, Greg KH wrote:
-> > > On Mon, Jun 27, 2022 at 07:18:12PM +0800, Yicong Yang wrote:
-> > >> Hi Greg,
-> > >>
-> > >> Since the kernel side of this device has been reviewed for 8 versions with
-> > >> all comments addressed and no more comment since v9 posted in 5.19-rc1,
-> > >> is it ok to merge it first (for Patch 1-3 and 7-8)?
-> > > 
-> > > I am not the maintainer of this subsystem, so I do not understand why
-> > > you are asking me :(
-> > > 
-> > 
-> > I checked the log of drivers/hwtracing and seems patches of coresight/intel_th/stm
-> > applied by different maintainers and I see you applied some patches of intel_th/stm.
-> > Should any of these three maintainers or you can help applied this?
-> 
-> I was hoping Mark would have a look, since he knows this ARM stuff
-> better than me. But ISTR he's somewhat busy atm too. But an ACK from the
-> CoreSight people would also be appreciated.
+On Mon, Jun 27, 2022 at 10:27 AM John Garry <john.garry@huawei.com> wrote:
 >
+> On 27/06/2022 03:57, Ian Rogers wrote:
+> > A challenge with this code is in avoiding regressions. For this reason
+> > the jevents.py produces identical output to jevents.c, validated with a
+> > test script and build target.
+> >
+> > v6. Adds Tested-by from Zhengjun Xing<zhengjun.xing@linux.intel.com>
+> >      and Thomas Richter<tmricht@linux.ibm.com>. Fixes issues spotted
+> >      by Jiri Olsa<jolsa@kernel.org>, jsmn.c wasn't deleted and the
+> >      empty pmu-events.c didn't pass the pmu-events test. It also adds a
+> >      missing mkdir which is necessary before creating pmu-events.c and
+> >      tweaks the quiet display code in the empty case to display a gen.
+> > v5. Adds a 2>/dev/null as suggested by David Laight
+>
+>
+> Hmmm... shouldn't this be v7? Anyway what I got with message-id
+> 20220627025744.106527-1-irogers@google.com now seems to build and the
+> output looks ok.
+>
+> Thanks,
+> John
 
-I'll spend some time on it next week.
+Thanks John, I think I've confused myself by working on greater than 1
+machine wrt version numbers. I can re-send as v7, would it be okay to
+put on a Tested-by: John Garry <john.garry@huawei.com> ?
 
-Thanks,
-Mathieu
-
-> And Arnaldo usually doesn't pick up the userspace perf bits until the
-> kernel side is sorted.
+Ian
