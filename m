@@ -2,66 +2,63 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2359C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 18:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8CAC43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 18:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbiF2SLr (ORCPT
+        id S230271AbiF2SZd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Jun 2022 14:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54560 "EHLO
+        Wed, 29 Jun 2022 14:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbiF2SLq (ORCPT
+        with ESMTP id S229513AbiF2SZc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Jun 2022 14:11:46 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B611811A28
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 11:11:45 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id b26so11282769wrc.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 11:11:45 -0700 (PDT)
+        Wed, 29 Jun 2022 14:25:32 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEED25EBD
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 11:25:31 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id n84-20020a25da57000000b0066d2ae53d18so4992182ybf.15
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 11:25:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lKWWlQLOEb5CNhiWUSoPZ3c2KB23CiF89xYNjZt498Y=;
-        b=hEzhln9y815dHz1vopcSdH6UgxjBQ26JMPrFOd0r0Zu7E85XmpX1Fgaq9jLqTdvA2A
-         ugy4WoiHPI4PV1sZUEOJdIEE/5egU2gw0CQ9o5RICcrt/Qnb0UGZsKA+XkRV+kMguTLP
-         XBEHP3+DdBmGEkZgDdNq+ap/hV7AQN6yT85mfawcMdKC3fupwE4J8wrg+V9qpPmcTgCD
-         /TPvzIT2ORoWtHUpGKXY4RYVFCLM3ObAm1nIIUMbRC7HICkIffkc/sB0Potd2qiCEPcd
-         x5Agw+5CcwkMv49GJwcU7KzsCbTEo/r7kiFakoN7nfHQvW+XZo3NDEHtFvSx/aL4zkwZ
-         Wz9g==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=1f0Ur6hbGyTYzxP4DvfGWl44AJTfod6EaR5IYzCVFo4=;
+        b=tOoS6bbd/0Ckdjf3fUN9LHcpnfnrZf1cuEgEb8U6NMdaeoo3m6AcP5/ZsqFJk0mWPd
+         gkn/0GGkbrvYcnYCGIauJfpVdxs3BT8FuMDBoSh86dg/XV3fFjIpuHg/hNo1ZPHEgVSN
+         Jzxog92KnO6NOwEtKY7WN5rDk6VTXDkyETvGNnxjl8fEIQQVGuHqTvI5tb7KXr6Y/mt8
+         SELiyHcw3PSGPfCZnNFvrw4cdBRy10f3oqGdfiRjw2niWUbtMfh3dBgaxrnVlkoHLzWC
+         ej1pbtNrXWjf7njSHMa0PcZqTDAzk6GTuhobAQfy+g/f8oj0UiAuZl5G7o/I4z+gw60f
+         OxFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lKWWlQLOEb5CNhiWUSoPZ3c2KB23CiF89xYNjZt498Y=;
-        b=RDln6jMu7Dy6PTMeBpX/XiCbviE7ajSIZWzueKPJg969ah+Xb4kxTrllD6pfFH9MHF
-         av1mmgngY5HOMZmMxzVmOSVc+odj0sUiLFP7oSyofPtD4I55oJaf/cUbsT1w76iNRXoB
-         XObI911G4tUyzDBH1JgzDRA5lEP8vt7UIrw9Jt+zIFHf+35Uqn2Ug0c9tvaCIVoefz6k
-         KTsc7ir9HYfgYQWKQQ/yCBA30UYoAnVw9yUgEtBTZDSApSBRt6DNNGDsMSZLIujVVGdh
-         md9eAhKKtsdg3HsyZFKRkCV+AlfAkr7UvK55PU/LzeDEV8dSHu+aJL8DpjIA43m888HK
-         qQYg==
-X-Gm-Message-State: AJIora/JlauYcoFKU4uLPn/iupZNDQbjZV2lht+d+jteOmvVLhLUIJyZ
-        VImcsSxwLiuwsQ1KAkeodudtaPtsUx9FcG7l134qNA==
-X-Google-Smtp-Source: AGRyM1vH0mBEB9/AnxmPjR6pGfw0AEo6P2RAWOMhI9osqKlFGZXF67K7ExbW3VDb03ij4M6fTLPKIm/I3lVrqC03Jg4=
-X-Received: by 2002:a5d:5983:0:b0:21b:b7cb:f84e with SMTP id
- n3-20020a5d5983000000b0021bb7cbf84emr4599496wri.654.1656526304117; Wed, 29
- Jun 2022 11:11:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220627025744.106527-1-irogers@google.com> <20220627025744.106527-3-irogers@google.com>
- <26fb5fec-500d-61c2-f009-556c5f7e86e6@huawei.com>
-In-Reply-To: <26fb5fec-500d-61c2-f009-556c5f7e86e6@huawei.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=1f0Ur6hbGyTYzxP4DvfGWl44AJTfod6EaR5IYzCVFo4=;
+        b=5HoHKrhjdauZspI6bRdG4Kb00LbUl96bbl/zUrXh8Iz9RwT3sPiLpfLvkm0QCsughV
+         Ud1spgUc9b68LqVHKnXMkDlNgBrSQhoRETmT+7i2uXMgFw/ZbDkHMWxOh5jw9iI765JS
+         HVCS8GQ7Z17mNE/aUoziq3+kszUpE7J0wnigSmGk/O+WkUKJ0cvwTVR030u4cuxLitz/
+         a32a4WcrnBRL0UkFpZFX0PrUAAKEApurTBd8aCbms7huRzUZdMn5Hei4LeWFi+75mx39
+         hdnERd8OLwuoDGPT/Q1DfJzJ0bgAdNleDelVGuE0ZzglpV5797dumLR54AiUVbk+gfIc
+         g3AQ==
+X-Gm-Message-State: AJIora+VIKqVb1jv64KSrg60ShhkCSwEjmCSF3fyepLlxkbp8PfSOL1x
+        vSQeqwf81SFK7n8w05vkcVzR7TcMNGyE
+X-Google-Smtp-Source: AGRyM1tE0QYu5xftU0kl9VWEzzxD6BkZj/8WgT0dTjS8P4XcNOoJyoarGWwbUmLqEjKpKr6Bms2W2lQ8nsFp
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f5a1:84fb:df7d:bd89])
+ (user=irogers job=sendgmr) by 2002:a25:5c5:0:b0:66c:b809:ddde with SMTP id
+ 188-20020a2505c5000000b0066cb809dddemr4885032ybf.67.1656527130312; Wed, 29
+ Jun 2022 11:25:30 -0700 (PDT)
+Date:   Wed, 29 Jun 2022 11:25:01 -0700
+Message-Id: <20220629182505.406269-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+Subject: [PATCH v7 0/4] Rewrite jevents program in python
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 29 Jun 2022 11:11:31 -0700
-Message-ID: <CAP-5=fXRnPoFZgaTSW5jyh5pcnUyHsMUZHzm9_RsDZpjaK=eyA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/4] perf jevents: Add python converter script
-To:     John Garry <john.garry@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
@@ -78,57 +75,84 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         santosh.shukla@amd.com, sandipan.das@amd.com,
         Caleb Biggers <caleb.biggers@intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <rogers.email@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
+        Kshipra Bopardikar <kshipra.bopardikar@intel.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 29, 2022 at 9:56 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 27/06/2022 03:57, Ian Rogers wrote:
-> > +
-> > +    def unit_to_pmu(unit: str) -> str:
-> > +      """Convert a JSON Unit to Linux PMU name."""
-> > +      if not unit:
-> > +        return None
-> > +      # Comment brought over from jevents.c:
-> > +      # it's not realistic to keep adding these, we need something more scalable ...
->
-> Since we're converting to python it might be a good idea to consider
-> this - ever have an ideas on something better?
+New architectures bring new complexity, such as Intel's hybrid
+models. jevents provides an alternative to specifying events in the
+kernel and exposing them through sysfs, however, it is difficult to
+work with. For example, an error in the json input would yield an
+error message but no json file or location. It is also a challenge to
+update jsmn.c given its forked nature.
 
-I think it is something ripe for cleanup, no particular thoughts on
-this case. I'd like to make it so that jevents/pmu-events is aligned
-with sysfs, which this relates to.
+The changes here switch from jevents.c to a rewrite in python called
+jevents.py. This means there is a build time dependency on python, but
+such a dependency already exists for asciidoc (used to generate perf's
+man pages). If the build detects that python isn't present or is older
+than version 3.6 (released Dec. 2016) then an empty file is
+substituted for the generated one.
 
-Thanks,
-Ian
+A challenge with this code is in avoiding regressions. For this reason
+the jevents.py produces identical output to jevents.c, validated with a
+test script and build target.
 
-> Thanks,
-> John
->
-> > +      table = {
-> > +          'CBO': 'uncore_cbox',
-> > +          'QPI LL': 'uncore_qpi',
-> > +          'SBO': 'uncore_sbox',
-> > +          'iMPH-U': 'uncore_arb',
-> > +          'CPU-M-CF': 'cpum_cf',
-> > +          'CPU-M-SF': 'cpum_sf',
-> > +          'UPI LL': 'uncore_upi',
-> > +          'hisi_sicl,cpa': 'hisi_sicl,cpa',
-> > +          'hisi_sccl,ddrc': 'hisi_sccl,ddrc',
-> > +          'hisi_sccl,hha': 'hisi_sccl,hha',
-> > +          'hisi_sccl,l3c': 'hisi_sccl,l3c',
-> > +          'imx8_ddr': 'imx8_ddr',
-> > +          'L3PMC': 'amd_l3',
-> > +          'DFPMC': 'amd_df',
-> > +          'cpu_core': 'cpu_core',
-> > +          'cpu_atom': 'cpu_atom',
-> > +      }
-> > +      return table[unit] if unit in table else f'uncore_{unit.lower()}'
-> > +
->
+v7. Adds Tested-by from John Garry <john.garry@huawei.com>.
+v6. Adds Tested-by from Zhengjun Xing <zhengjun.xing@linux.intel.com>
+    and Thomas Richter <tmricht@linux.ibm.com>. Fixes issues spotted
+    by Jiri Olsa <jolsa@kernel.org>, jsmn.c wasn't deleted and the
+    empty pmu-events.c didn't pass the pmu-events test. It also adds a
+    missing mkdir which is necessary before creating pmu-events.c and
+    tweaks the quiet display code in the empty case to display a gen.
+v5. Adds a 2>/dev/null as suggested by David Laight
+    <David.Laight@aculab.com>.
+v4. Fixes the build for systems with python2 installed by adding a
+    patch that makes python3 the preferred python (Reported-by: John
+    Garry <john.garry@huawei.com>). It also fixes a bash-ism in the
+    jevents-test.sh and fixes the handling of an empty string for a
+    metric BriefDescription as one was added for sapphirerapids in the
+    metric Execute.
+v3. Updates the patches for merged changes (on
+    acme/tmp.perf/core). Re-runs all comparisons to make sure the
+    generated pmu-events.c isn't altered at all by this change. Adds
+    the jevents.c ExtSel fix in:
+    https://lore.kernel.org/lkml/20220525140410.1706851-1-zhengjun.xing@linux.intel.com/
+    Bumps the python version from 3.5 to 3.6, as f-strings weren't
+    introduced until 3.6.
+v2. Fixes the build for architectures that don't have pmu-events json
+    (Suggested-by: John Garry <john.garry@huawei.com>) and fixes the
+    build for python not being present or too old (Suggested-by: Peter
+    Zijlstra <peterz@infradead.org>/John Garry <john.garry@huawei.com>).
+
+Ian Rogers (4):
+  perf python: Prefer python3
+  perf jevents: Add python converter script
+  perf jevents: Switch build to use jevents.py
+  perf jevents: Remove jevents.c
+
+ tools/perf/Makefile.config               |   27 +-
+ tools/perf/Makefile.perf                 |   16 +-
+ tools/perf/pmu-events/Build              |   17 +-
+ tools/perf/pmu-events/empty-pmu-events.c |  158 +++
+ tools/perf/pmu-events/jevents.c          | 1342 ----------------------
+ tools/perf/pmu-events/jevents.py         |  409 +++++++
+ tools/perf/pmu-events/jsmn.c             |  352 ------
+ tools/perf/pmu-events/jsmn.h             |   68 --
+ tools/perf/pmu-events/json.c             |  162 ---
+ tools/perf/pmu-events/json.h             |   39 -
+ 10 files changed, 604 insertions(+), 1986 deletions(-)
+ create mode 100644 tools/perf/pmu-events/empty-pmu-events.c
+ delete mode 100644 tools/perf/pmu-events/jevents.c
+ create mode 100755 tools/perf/pmu-events/jevents.py
+ delete mode 100644 tools/perf/pmu-events/jsmn.c
+ delete mode 100644 tools/perf/pmu-events/jsmn.h
+ delete mode 100644 tools/perf/pmu-events/json.c
+ delete mode 100644 tools/perf/pmu-events/json.h
+
+-- 
+2.37.0.rc0.161.g10f37bed90-goog
+
