@@ -2,176 +2,246 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FFBC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 09:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33603C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Jun 2022 09:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232781AbiF2JbN (ORCPT
+        id S229575AbiF2Jim (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Jun 2022 05:31:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44170 "EHLO
+        Wed, 29 Jun 2022 05:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232812AbiF2JbM (ORCPT
+        with ESMTP id S232499AbiF2Jil (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Jun 2022 05:31:12 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38E339825;
-        Wed, 29 Jun 2022 02:31:11 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id sb34so31270870ejc.11;
-        Wed, 29 Jun 2022 02:31:11 -0700 (PDT)
+        Wed, 29 Jun 2022 05:38:41 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDD1344F7;
+        Wed, 29 Jun 2022 02:38:39 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id d2so19649490ejy.1;
+        Wed, 29 Jun 2022 02:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=1MQtKyGpLfxVaTXrtUo/eYc0t4KdNpNUjTXmOdTkSlg=;
-        b=q8HNG5xT4k5tqN0KcQ7F/ovA4ug+wyQHASp0zFULB9rYp681wgfyMdhDhTi4Lef2LR
-         IU51FH6k9uPtpIpD/rfRA6deez95BBiSD42tjIjDBrDCrtzsT5jVne9tga8K3pJmm/fK
-         KwTGF8C5KGokhCHmQChBWj0aIomx9BmUxJAGB0gEmtQAIEnHN0UXKpgMn98PhAWxRIfi
-         5JgOOpCm0wlg9xFMRzVTJ08zfkPXpirJktFvRCrsM0hLJmlpCMfY/4WnPZeHBx1rTem0
-         V4WoySDmh27Qb9x0UpLwi0HNP53DhB31pZZo+vR0TmyEhNpfKCsIvsSWT+PeiOGGMbi8
-         A1Vw==
+        bh=k6oe5HEpSP/3PpEQG2PUO3klQcAhWUWpeHfTAN39oX0=;
+        b=W4e7yR9ZG0trJJugdEemzCpLENreaJ1h95PAmwWFdXQHHGFE7e6BEeSmGWVvgNqH4Q
+         9bShryjOI/WYLLQ+bRLj7jggPuoSy9yTmFaRl85Vhd7ZJ0fPlVRzgK3gCQn/pcMyFAxQ
+         CiEIJxDHD3mihnof5epKKxCZrtMohEOaM363LgKgS39J867RbjrC8cEICdRBX3sTe57H
+         OY9PjusZs8QDiOV0POIpulIaH2PvUYITjTmqYpSuUANuma5i8SJR7zob48r3VCL/2jRN
+         89m/ZAon4H4w/UEGpGT/f2u996G5UQd0fOPlNnNLbLOteKQSutlU5dMkEhWh1Io1bO5P
+         cYOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1MQtKyGpLfxVaTXrtUo/eYc0t4KdNpNUjTXmOdTkSlg=;
-        b=5TVq+vq0D8KdiLuyNLMFJqIFa6BPEVaNJVqoz4IC9ZSfNLXgJKzpzEtbdid8HV1Jb3
-         w3jsx2eASjCkrlG2Czy1VghC3Oxqql1mvY6fhMtU0mnz2LCtvTvZoHZrePNPyKCd24ny
-         Mzidpb7a8+Pdvik3J3hvZnc7LzQCZWdAa/h5rb5FguVtTQ57GfewQGjZSlChMHyFM2Ap
-         D+1EZkqbHns/vPbaZZnee3TSxrkAh4d05J8yDTaAVfbxTKIRU8N3OYJztvAJWJdhTHaC
-         SVNthCP6KKNz9spqppc6jMG8lBdjiA7MhwZmGuXSmJ+xxyDlcIZHjdt/i3l8wfvFBWbt
-         2DQQ==
-X-Gm-Message-State: AJIora+R1ylGo13mEgIf0vtzo3u5tbbnmfVw4TbcR84M8KMGwSBO1xjD
-        HHejV/GSugQdhh19UPvqkr4=
-X-Google-Smtp-Source: AGRyM1uSHVD3OrNA4yy2l4BhcVNH+1bC36C6joYvzWd41Pmu+x3ByjAsa0AVI7z0Pg6WTVr+PUa4ww==
-X-Received: by 2002:a17:907:7248:b0:726:30fc:e7fc with SMTP id ds8-20020a170907724800b0072630fce7fcmr2424523ejc.274.1656495070357;
-        Wed, 29 Jun 2022 02:31:10 -0700 (PDT)
+        bh=k6oe5HEpSP/3PpEQG2PUO3klQcAhWUWpeHfTAN39oX0=;
+        b=Q46DZoeEBn5dnMTzGh65JdHtb1j2zuP6fxs7ZcL8uM9JkDdyMpewRp8BpG08X1Nidp
+         ulFFUgg8q2Hfiy3DNbOna1C0T6WmLjA66NBNW2SELDmX9Nf/zwx08CDhRFFy5FA6NEpN
+         4IAgZa//thGPeDoThs74eUphxV6zTajBdaswtWovGAtTmFquL0nENGs9+bmdZ91v1Xav
+         UfdffgtMMDsj9uRKv/38KL6BF7B0xCEXT4pGRB/KvpJ7ePxNu0Pff3RUwdXiZSGxTdRN
+         aeIjuVRCIKUw7NgI1FOSSEl0kUwCIovTyBag+CMuXTIDOJXs8pH4ulkJLOXu7o0eULD4
+         lODw==
+X-Gm-Message-State: AJIora/+W08QhBDT9tyOFw8TbtlRB/sgA0TVNwGwPkEQ1+NO9ji7VZP+
+        qOXik4fbsVvktyOM8gmED7Y=
+X-Google-Smtp-Source: AGRyM1vBCl+JXbc4hO4FdLPbxshOfGmCJHN00UL2M4bqUQOXHUUBC+OtlfpzcwXLDb/iC2E0kQZpqw==
+X-Received: by 2002:a17:907:6d99:b0:726:3668:4f2a with SMTP id sb25-20020a1709076d9900b0072636684f2amr2312436ejc.627.1656495518506;
+        Wed, 29 Jun 2022 02:38:38 -0700 (PDT)
 Received: from krava (net-109-116-206-47.cust.vodafonedsl.it. [109.116.206.47])
-        by smtp.gmail.com with ESMTPSA id a12-20020a170906670c00b006fe8c831632sm7437057ejp.73.2022.06.29.02.31.08
+        by smtp.gmail.com with ESMTPSA id fd5-20020a056402388500b00436f3107bdasm10095675edb.38.2022.06.29.02.38.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 02:31:09 -0700 (PDT)
+        Wed, 29 Jun 2022 02:38:37 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 29 Jun 2022 11:31:07 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+Date:   Wed, 29 Jun 2022 11:38:35 +0200
+To:     Blake Jones <blakejones@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        Colin Ian King <colin.king@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 6/6] perf cpumap: Add range data encoding
-Message-ID: <Yrwb28xHsPCZzSw7@krava>
-References: <20220614143353.1559597-1-irogers@google.com>
- <20220614143353.1559597-7-irogers@google.com>
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 RESEND] Add a "-m" option to "perf buildid-list".
+Message-ID: <Yrwdm4eW+lFtByiZ@krava>
+References: <20220627224116.3015376-1-blakejones@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220614143353.1559597-7-irogers@google.com>
+In-Reply-To: <20220627224116.3015376-1-blakejones@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 07:33:53AM -0700, Ian Rogers wrote:
+On Mon, Jun 27, 2022 at 03:41:16PM -0700, Blake Jones wrote:
+> This new option displays all of the information needed to do external
+> BuildID-based symbolization of kernel stack traces, such as those collected
+> by bpf_get_stackid(). For each kernel module plus the main kernel, it
+> displays the BuildID, the start and end virtual addresses of that module's
+> text range (rounded out to page boundaries), and the pathname of the
+> module.
+> 
+> When run as a non-privileged user, the actual addresses of the modules'
+> text ranges are not available, so the tools displays "0, <text length>" for
+> kernel modules and "0, 0xffffffffffffffff" for the kernel itself.
+> 
+> Sample output:
+> 
+> root# perf buildid-list -m
+> cf6df852fd4da122d616153353cc8f560fd12fe0 ffffffffa5400000 ffffffffa6001e27 [kernel.kallsyms]
+> 1aa7209aa2acb067d66ed6cf7676d65066384d61 ffffffffc0087000 ffffffffc008b000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/sha512_generic.ko
+> 3857815b5bf0183697b68f8fe0ea06121644041e ffffffffc008c000 ffffffffc0098000 /lib/modules/5.15.15-1rodete2-amd64/kernel/arch/x86/crypto/sha512-ssse3.ko
+> 4081fde0bca2bc097cb3e9d1efcb836047d485f1 ffffffffc0099000 ffffffffc009f000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/acpi/button.ko
+> 1ef81ba4890552ea6b0314f9635fc43fc8cef568 ffffffffc00a4000 ffffffffc00aa000 /lib/modules/5.15.15-1rodete2-amd64/kernel/crypto/cryptd.ko
+> cc5c985506cb240d7d082b55ed260cbb851f983e ffffffffc00af000 ffffffffc00b6000 /lib/modules/5.15.15-1rodete2-amd64/kernel/drivers/i2c/busses/i2c-piix4.ko
+> [...]
+> 
+> Signed-off-by: Blake Jones <blakejones@google.com>
+> ---
+>  .../perf/Documentation/perf-buildid-list.txt  |  4 +++
+>  tools/perf/builtin-buildid-list.c             | 35 ++++++++++++++++++-
+>  tools/perf/util/machine.c                     | 13 +++++++
+>  tools/perf/util/machine.h                     |  5 +++
+>  4 files changed, 56 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-buildid-list.txt b/tools/perf/Documentation/perf-buildid-list.txt
+> index 25c52efcc7f0..e1e8fdbe06b9 100644
+> --- a/tools/perf/Documentation/perf-buildid-list.txt
+> +++ b/tools/perf/Documentation/perf-buildid-list.txt
+> @@ -33,6 +33,10 @@ OPTIONS
+>  -k::
+>  --kernel::
+>  	Show running kernel build id.
+> +-m::
+> +--kernel-maps::
+> +	Show buildid, start/end text address, and path of running kernel and
+> +	its modules.
+>  -v::
+>  --verbose::
+>  	Be more verbose.
+> diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+> index cebadd632234..e73520190974 100644
+> --- a/tools/perf/builtin-buildid-list.c
+> +++ b/tools/perf/builtin-buildid-list.c
+> @@ -12,6 +12,7 @@
+>  #include "util/build-id.h"
+>  #include "util/debug.h"
+>  #include "util/dso.h"
+> +#include "util/map.h"
+>  #include <subcmd/pager.h>
+>  #include <subcmd/parse-options.h>
+>  #include "util/session.h"
+> @@ -20,6 +21,31 @@
+>  #include <errno.h>
+>  #include <linux/err.h>
+>  
+> +static int buildid__map_cb(struct map *map, void *arg __maybe_unused)
+> +{
+> +	const struct dso *dso = map->dso;
+> +	char bid_buf[SBUILD_ID_SIZE];
+> +
+> +	memset(bid_buf, 0, sizeof(bid_buf));
+> +	if (dso->has_build_id)
+> +		build_id__sprintf(&dso->bid, bid_buf);
+> +	printf("%s %16lx %16lx", bid_buf, map->start, map->end);
+> +	if (dso->long_name != NULL)
+> +		printf(" %s", dso->long_name);
 
-SNIP
+nit, should we display short_name in case long_name is missing?
 
-> -static size_t cpus_size(const struct perf_cpu_map *map)
-> +static void synthesize_range_cpus(struct synthesize_cpu_map_data *data)
+> +	printf("\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void buildid__show_kernel_maps(void)
+> +{
+> +	struct machine *machine;
+> +
+> +	machine = machine__new_host();
+> +	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
+> +	machine__delete(machine);
+> +}
+> +
+>  static int sysfs__fprintf_build_id(FILE *fp)
 >  {
-> -	return sizeof(struct cpu_map_entries) + perf_cpu_map__nr(map) * sizeof(u16);
-> +	data->data->type = PERF_CPU_MAP__RANGE_CPUS;
-> +	data->data->range_cpu_data.any_cpu = data->has_any_cpu;
-> +	data->data->range_cpu_data.start_cpu = data->min_cpu;
-> +	data->data->range_cpu_data.end_cpu = data->max_cpu;
+>  	char sbuild_id[SBUILD_ID_SIZE];
+> @@ -99,6 +125,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
+>  int cmd_buildid_list(int argc, const char **argv)
+>  {
+>  	bool show_kernel = false;
+> +	bool show_kernel_maps = false;
+>  	bool with_hits = false;
+>  	bool force = false;
+>  	const struct option options[] = {
+> @@ -106,6 +133,8 @@ int cmd_buildid_list(int argc, const char **argv)
+>  	OPT_STRING('i', "input", &input_name, "file", "input file name"),
+>  	OPT_BOOLEAN('f', "force", &force, "don't complain, do it"),
+>  	OPT_BOOLEAN('k', "kernel", &show_kernel, "Show current kernel build id"),
+> +	OPT_BOOLEAN('m', "kernel-maps", &show_kernel_maps,
+> +	    "Show build id of current kernel + modules"),
+>  	OPT_INCR('v', "verbose", &verbose, "be more verbose"),
+>  	OPT_END()
+>  	};
+> @@ -117,8 +146,12 @@ int cmd_buildid_list(int argc, const char **argv)
+>  	argc = parse_options(argc, argv, options, buildid_list_usage, 0);
+>  	setup_pager();
+>  
+> -	if (show_kernel)
+> +	if (show_kernel) {
+>  		return !(sysfs__fprintf_build_id(stdout) > 0);
+> +	} else if (show_kernel_maps) {
+> +		buildid__show_kernel_maps();
+> +		return 0;
+> +	}
+>  
+>  	return perf_session__list_build_ids(force, with_hits);
 >  }
->  
-> -static size_t mask_size(const struct perf_cpu_map *map, int *max)
-> -{
-> -	*max = perf_cpu_map__max(map).cpu;
-> -	return sizeof(struct perf_record_mask_cpu_map32) + BITS_TO_U32(*max) * sizeof(__u32);
-> -}
-> -
-> -static void *cpu_map_data__alloc(const struct perf_cpu_map *map, size_t *size,
-> -				 u16 *type, int *max)
-> +static void *cpu_map_data__alloc(struct synthesize_cpu_map_data *syn_data,
-> +				 size_t header_size)
->  {
->  	size_t size_cpus, size_mask;
-> -	bool is_dummy = perf_cpu_map__empty(map);
->  
-> -	/*
-> -	 * Both array and mask data have variable size based
-> -	 * on the number of cpus and their actual values.
-> -	 * The size of the 'struct perf_record_cpu_map_data' is:
-> -	 *
-> -	 *   array = size of 'struct cpu_map_entries' +
-> -	 *           number of cpus * sizeof(u64)
-> -	 *
-> -	 *   mask  = size of 'struct perf_record_record_cpu_map' +
-> -	 *           maximum cpu bit converted to size of longs
-> -	 *
-> -	 * and finally + the size of 'struct perf_record_cpu_map_data'.
-> -	 */
-> -	size_cpus = cpus_size(map);
-> -	size_mask = mask_size(map, max);
-> +	syn_data->nr = perf_cpu_map__nr(syn_data->map);
-> +	syn_data->has_any_cpu = (perf_cpu_map__cpu(syn_data->map, 0).cpu == -1) ? 1 : 0;
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 009061852808..28fff9a02ab0 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -3327,3 +3327,16 @@ int machine__for_each_dso(struct machine *machine, machine__dso_t fn, void *priv
+>  	}
+>  	return err;
+>  }
+> +
+> +int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, void *priv)
+> +{
+> +	struct maps *maps = machine__kernel_maps(machine);
+> +	struct map *map;
+> +	int err = 0;
+> +
+> +	for (map = maps__first(maps); map != NULL; map = map__next(map)) {
+> +		if (fn(map, priv))
+> +			err = -1;
 
-I'm bit lost in the logic in here.. should it be '.cpu != -1' ?
-has_any_cpu is named as bool but used as index below ;-)
-
-could you please keep/update the comment above and explain
-the conditions when each cpu_map type is taken
+I think we should rather break in here and return user's error
+other than that, the patch looks good to me
 
 thanks,
 jirka
 
->  
-> -	if (is_dummy || (size_cpus < size_mask)) {
-> -		*size += size_cpus;
-> -		*type  = PERF_CPU_MAP__CPUS;
-> -	} else {
-> -		*size += size_mask;
-> -		*type  = PERF_CPU_MAP__MASK;
-> +	syn_data->min_cpu = perf_cpu_map__cpu(syn_data->map, syn_data->has_any_cpu).cpu;
-> +	syn_data->max_cpu = perf_cpu_map__max(syn_data->map).cpu;
-> +	if (syn_data->max_cpu - syn_data->min_cpu + 1 == syn_data->nr - syn_data->has_any_cpu) {
-> +		/* A consecutive range of CPUs can be encoded using a range. */
-> +		assert(sizeof(u16) + sizeof(struct perf_record_range_cpu_map) == sizeof(u64));
-> +		syn_data->type = PERF_CPU_MAP__RANGE_CPUS;
-> +		syn_data->size = header_size + sizeof(u64);
-> +		return zalloc(syn_data->size);
->  	}
->  
-> -	*size += sizeof(__u16); /* For perf_record_cpu_map_data.type. */
-> -	*size = PERF_ALIGN(*size, sizeof(u64));
-> -	return zalloc(*size);
-> +	size_cpus = sizeof(u16) + sizeof(struct cpu_map_entries) + syn_data->nr * sizeof(u16);
-> +	/* Due to padding, the 4bytes per entry mask variant is always smaller. */
-> +	size_mask = sizeof(u16) + sizeof(struct perf_record_mask_cpu_map32) +
-> +		BITS_TO_U32(syn_data->max_cpu) * sizeof(__u32);
-> +	if (syn_data->has_any_cpu || size_cpus < size_mask) {
-> +		/* Follow the CPU map encoding. */
-> +		syn_data->type = PERF_CPU_MAP__CPUS;
-> +		syn_data->size = header_size + PERF_ALIGN(size_cpus, sizeof(u64));
-> +		return zalloc(syn_data->size);
 > +	}
-> +	/* Encode using a bitmask. */
-> +	syn_data->type = PERF_CPU_MAP__MASK;
-> +	syn_data->size = header_size + PERF_ALIGN(size_mask, sizeof(u64));
-> +	return zalloc(syn_data->size);
-
-SNIP
+> +	return err;
+> +}
+> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+> index 5d7daf7cb7bc..e1476343cbb2 100644
+> --- a/tools/perf/util/machine.h
+> +++ b/tools/perf/util/machine.h
+> @@ -262,6 +262,11 @@ typedef int (*machine__dso_t)(struct dso *dso, struct machine *machine, void *pr
+>  
+>  int machine__for_each_dso(struct machine *machine, machine__dso_t fn,
+>  			  void *priv);
+> +
+> +typedef int (*machine__map_t)(struct map *map, void *priv);
+> +int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn,
+> +				 void *priv);
+> +
+>  int machine__for_each_thread(struct machine *machine,
+>  			     int (*fn)(struct thread *thread, void *p),
+>  			     void *priv);
+> 
+> base-commit: 1bcca2b1bd67f3c0e5c3a88ed16c6389f01a5b31
+> -- 
+> 2.36.1.476.g0c4daa206d-goog
+> 
