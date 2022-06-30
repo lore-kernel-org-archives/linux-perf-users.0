@@ -2,210 +2,65 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2226C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Jun 2022 00:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FC0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Jun 2022 01:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231268AbiF3ASm (ORCPT
+        id S229687AbiF3Btn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Jun 2022 20:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46642 "EHLO
+        Wed, 29 Jun 2022 21:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229797AbiF3ASm (ORCPT
+        with ESMTP id S229479AbiF3Btm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Jun 2022 20:18:42 -0400
-Received: from mail-io1-xd4a.google.com (mail-io1-xd4a.google.com [IPv6:2607:f8b0:4864:20::d4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E5881EEEE
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 17:18:41 -0700 (PDT)
-Received: by mail-io1-xd4a.google.com with SMTP id u25-20020a6b4919000000b006729aaa1b68so9504802iob.21
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jun 2022 17:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=SDDWjQKRaEGkTJ3I32oXUEVaP3itRNsscC5r/hKsp4o=;
-        b=kC+o6UunKcWa3JkImof0IuxjAt0JubhMzUHBxFu72NIFTrsuiWR8qiuPWPtXz8LpUH
-         KyG/M3ohVzxfofN5eycFVNuy3of1Hex0WFzvGWfgBH7XrVEhSfUWK9O36KrS9bArfIqt
-         wifblZuakeSQZhns5bW84J2WrKXT4DfXfX2+X8T3j7UlUssG3YShhx11si4Avr+XTfps
-         ZDi8eWTrfyugN7s96TZFeihmwOym9s0HecXYekiOuXExdhVbTQY2BPkmELp3eXD8W09/
-         Z6HnUjAntyZD2PAIukptDQTTh3l8UQ7NIgDXAwB2nKpYcbU0dH19z+PKnNwhM06YDdfk
-         DngA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=SDDWjQKRaEGkTJ3I32oXUEVaP3itRNsscC5r/hKsp4o=;
-        b=W6V65KN8JvG7sNWA8Qlq+8MiQ/3QkbZbHLI8QP7zlHtp0RFA/LJT9g5mn+hp5p4NJA
-         DRuWFfM6/fBLSaQQrGDwu8tvwnV6tIInZ9dJACFer/oa7tl/ZrBeKgsXM6i7oH4l2hX+
-         sbsPOzz/OlWJAcphKK/P3Ymj/ZyjoErPZGodvOGSqx5NZ7BwjfiWR+DuKTWxUlh8OJLf
-         +jxtieEN9NF/jNnZxA0CAK5makVwVECWZL1IX6A9GveDTJd+/s9IX2QBgRUBAthioaL2
-         y5wSf6s6CHuhIyRhUI/xn5Gy+aUp7pgUrNSbgPpcHqUrFVO/riLL5EMrtfLlo4Dd9Jn2
-         FJgg==
-X-Gm-Message-State: AJIora9W/EZUsdN5vqciatzw5YNNoGuNLBKufrCUDuiwvD0Dfq236TwK
-        xgDCbu2lGWA6G5WCl064y0stqkNZC5/m6A==
-X-Google-Smtp-Source: AGRyM1u2VOaMT7wpjVwAzV+WuTwvxd+1kRwUZNFZr/YOCZVkewlcYwZK1N98RZe/v+BuxXzQOIGzLegnXpVsbg==
-X-Received: from riochico.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:b3e])
- (user=rsilvera job=sendgmr) by 2002:a02:ad04:0:b0:339:e044:64fa with SMTP id
- s4-20020a02ad04000000b00339e04464famr3583148jan.233.1656548320477; Wed, 29
- Jun 2022 17:18:40 -0700 (PDT)
-Date:   Thu, 30 Jun 2022 00:18:25 +0000
-Message-Id: <20220630001825.3905089-1-rsilvera@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-Subject: [PATCH] perf inject: Add a command line option to specify build ids.
-From:   Raul Silvera <rsilvera@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
+        Wed, 29 Jun 2022 21:49:42 -0400
+Received: from mail.nfschina.com (unknown [IPv6:2400:dd01:100f:2:72e2:84ff:fe10:5f45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3294A3A19D;
+        Wed, 29 Jun 2022 18:49:41 -0700 (PDT)
+Received: from localhost (unknown [127.0.0.1])
+        by mail.nfschina.com (Postfix) with ESMTP id 4B1E61E80D21;
+        Thu, 30 Jun 2022 09:48:22 +0800 (CST)
+X-Virus-Scanned: amavisd-new at test.com
+Received: from mail.nfschina.com ([127.0.0.1])
+        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IfKIvFrCnZDe; Thu, 30 Jun 2022 09:48:19 +0800 (CST)
+Received: from localhost.localdomain (unknown [219.141.250.2])
+        (Authenticated sender: kunyu@nfschina.com)
+        by mail.nfschina.com (Postfix) with ESMTPA id 888011E80D11;
+        Thu, 30 Jun 2022 09:48:19 +0800 (CST)
+From:   Li kunyu <kunyu@nfschina.com>
+To:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org
 Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Raul Silvera <rsilvera@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Li kunyu <kunyu@nfschina.com>
+Subject: [PATCH] kernel: Delete a semicolon
+Date:   Thu, 30 Jun 2022 09:49:22 +0800
+Message-Id: <20220630014922.6047-1-kunyu@nfschina.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit adds the option --known-build-ids to perf inject.
-It allows the user to explicitly specify the build id for a given
-path, instead of retrieving it from the current system. This is
-useful in cases where a perf.data file is processed on a different
-system from where it was collected, or if some of the binaries are
-no longer available.
+Extra semicolons could be deleted.
 
-The build ids and paths are specified in pairs in the command line.
-Using the file:// specifier, build ids can be loaded from a file
-directly generated by perf buildid-list. This is convenient to copy
-build ids from one perf.data file to another.
-
-** Example: In this example we use perf record to create two
-perf.data files, one with build ids and another without, and use
-perf buildid-list and perf inject to copy the build ids from the
-first file to the second.
-
-$ perf record ls /tmp                  # Create perf.data file
-$ perf record --no-buildid ls /tmp -o perf.data.no-buildid
-$ perf buildid-list > /tmp/build-ids.txt
-$ perf inject -b --known-build-ids='file:///tmp/build-ids.txt' \
-$  -i perf.data.no-buildid -o perf.data.buildid
-
-Signed-off-by: Raul Silvera <rsilvera@google.com>
+Signed-off-by: Li kunyu <kunyu@nfschina.com>
 ---
- tools/perf/builtin-inject.c | 57 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index a75bf11585b5..667b942f870e 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -21,6 +21,7 @@
- #include "util/data.h"
- #include "util/auxtrace.h"
- #include "util/jit.h"
-+#include "util/string2.h"
- #include "util/symbol.h"
- #include "util/synthetic-events.h"
- #include "util/thread.h"
-@@ -35,6 +36,7 @@
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 80782cddb1da..55bd25a48af1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4454,7 +4454,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
  
- #include <linux/list.h>
- #include <linux/string.h>
-+#include <ctype.h>
- #include <errno.h>
- #include <signal.h>
+ 	*value = local64_read(&event->count);
+ 	if (enabled || running) {
+-		u64 __enabled, __running, __now;;
++		u64 __enabled, __running, __now;
  
-@@ -59,6 +61,8 @@ struct perf_inject {
- 	struct itrace_synth_opts itrace_synth_opts;
- 	char			event_copy[PERF_SAMPLE_MAX_SIZE];
- 	struct perf_file_section secs[HEADER_FEAT_BITS];
-+	const char		*known_build_ids_source;
-+	struct strlist		*known_build_ids;
- };
- 
- struct event_entry {
-@@ -570,9 +574,43 @@ static int dso__read_build_id(struct dso *dso)
- 	return dso->has_build_id ? 0 : -1;
- }
- 
-+static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
-+					       struct dso *dso)
-+{
-+	struct str_node *pos;
-+	int bid_len;
-+
-+	strlist__for_each_entry(pos, inject->known_build_ids) {
-+		const char *space;
-+
-+		pos->s = skip_spaces(pos->s);
-+		space = strstr(pos->s, " ");
-+		if (space == NULL ||
-+		    !strcmp(dso->long_name, skip_spaces(space)))
-+			continue;
-+		bid_len = space - pos->s;
-+		if (bid_len == 0 || bid_len / 2 > BUILD_ID_SIZE)
-+			return false;
-+		for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
-+			if (!isxdigit(pos->s[2 * ix]) ||
-+			    !isxdigit(pos->s[2 * ix + 1]))
-+				return false;
-+
-+			dso->bid.data[ix] = (hex(pos->s[2 * ix]) << 4 |
-+					     hex(pos->s[2 * ix + 1]));
-+		}
-+		dso->bid.size = bid_len / 2;
-+		dso->has_build_id = 1;
-+		return true;
-+	}
-+	return false;
-+}
-+
- static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
- 				struct machine *machine, u8 cpumode, u32 flags)
- {
-+	struct perf_inject *inject = container_of(tool, struct perf_inject,
-+						  tool);
- 	int err;
- 
- 	if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
-@@ -580,6 +618,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
- 	if (is_no_dso_memory(dso->long_name))
- 		return 0;
- 
-+	if (inject->known_build_ids != NULL &&
-+	    perf_inject__lookup_known_build_id(inject, dso))
-+		return 1;
-+
- 	if (dso__read_build_id(dso) < 0) {
- 		pr_debug("no build_id found for %s\n", dso->long_name);
- 		return -1;
-@@ -1082,6 +1124,9 @@ int cmd_inject(int argc, const char **argv)
- 			    "Inject build-ids into the output stream"),
- 		OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
- 			    "Inject build-ids of all DSOs into the output stream"),
-+		OPT_STRING(0, "known-build-ids", &inject.known_build_ids_source,
-+			   "buildid path [buildid path...]",
-+			   "build-ids to use for specific files"),
- 		OPT_STRING('i', "input", &inject.input_name, "file",
- 			   "input file name"),
- 		OPT_STRING('o', "output", &inject.output.path, "file",
-@@ -1215,6 +1260,18 @@ int cmd_inject(int argc, const char **argv)
- 		 */
- 		inject.tool.ordered_events = true;
- 		inject.tool.ordering_requires_timestamps = true;
-+		if (inject.known_build_ids_source != NULL) {
-+			struct strlist *known_build_ids;
-+
-+			known_build_ids = strlist__new(
-+			    inject.known_build_ids_source, NULL);
-+
-+			if (known_build_ids == NULL) {
-+				pr_err("Couldn't parse known build ids.\n");
-+				goto out_delete;
-+			}
-+			inject.known_build_ids = known_build_ids;
-+		}
- 	}
- 
- 	if (inject.sched_stat) {
+ 		calc_timer_values(event, &__now, &__enabled, &__running);
+ 		if (enabled)
 -- 
-2.37.0.rc0.161.g10f37bed90-goog
+2.18.2
 
