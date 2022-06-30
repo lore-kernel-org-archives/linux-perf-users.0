@@ -2,91 +2,63 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8370C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Jun 2022 08:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567B4C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Jun 2022 09:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233569AbiF3Igl (ORCPT
+        id S233072AbiF3JME (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Jun 2022 04:36:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39294 "EHLO
+        Thu, 30 Jun 2022 05:12:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbiF3Igk (ORCPT
+        with ESMTP id S232392AbiF3JMD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Jun 2022 04:36:40 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E24B122BFB;
-        Thu, 30 Jun 2022 01:36:37 -0700 (PDT)
-Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LYWr23tz3z682wj;
-        Thu, 30 Jun 2022 16:35:46 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 30 Jun 2022 10:36:34 +0200
-Received: from [10.126.174.156] (10.126.174.156) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 30 Jun 2022 09:36:32 +0100
-Message-ID: <f5c6f963-6bfd-1954-be15-10dcf1238e50@huawei.com>
-Date:   Thu, 30 Jun 2022 09:36:34 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v6 2/4] perf jevents: Add python converter script
+        Thu, 30 Jun 2022 05:12:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF2219290;
+        Thu, 30 Jun 2022 02:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fKhp50+9SIhJMYax6I+Xr+ALEZw4CNs891R7EBo08tc=; b=fvoqC2XxraUH4aFRYOsIg+7wBt
+        tYrWYqJ8BIUpxouvnTFY22ZcSBNYguGyY6pJ8RKdvnzbJwug+MmqiGP4A2Ke9Vph/PC6/7+/QnytJ
+        CQaaXHlVNe6PL+RfjSwzSaRagi5zMX0Zg41450e7Z+ZhGIYxsfx75JsD7HLpaMjhbhPLy+dI476er
+        CK589w5tPp7RXXlEUFSBYDUMqM5rxcS9ZWcqFM4bcD+hEW3loyKvjaonJL96xOP6S0fM0vsqqmAht
+        KIYATbS3Ecz77RG8fECsYyorNTwfqR+L2xcUJ8duwc8UpXAT45jIKuW4EWB4VOUHW3pN66/kyjtnh
+        7HqZoKyw==;
+Received: from dhcp-077-249-017-003.chello.nl ([77.249.17.3] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o6qDA-00DyDV-F4; Thu, 30 Jun 2022 09:11:44 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8C53298000E; Thu, 30 Jun 2022 11:11:42 +0200 (CEST)
+Date:   Thu, 30 Jun 2022 11:11:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        "Felix Fietkau" <nbd@nbd.name>, Qi Liu <liuqi115@huawei.com>,
-        Like Xu <likexu@tencent.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        Nick Forrington <nick.forrington@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        "Paul A . Clarke" <pc@us.ibm.com>, Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
-        <santosh.shukla@amd.com>, <sandipan.das@amd.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Kshipra Bopardikar <kshipra.bopardikar@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <rogers.email@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-References: <20220627025744.106527-1-irogers@google.com>
- <20220627025744.106527-3-irogers@google.com>
- <26fb5fec-500d-61c2-f009-556c5f7e86e6@huawei.com>
- <CAP-5=fXRnPoFZgaTSW5jyh5pcnUyHsMUZHzm9_RsDZpjaK=eyA@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <CAP-5=fXRnPoFZgaTSW5jyh5pcnUyHsMUZHzm9_RsDZpjaK=eyA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.174.156]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Claire Jensen <cjense@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf test: Skip for paranoid 3
+Message-ID: <Yr1ozmP2E8Fer11e@worktop.programming.kicks-ass.net>
+References: <20220629034007.332804-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220629034007.332804-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29/06/2022 19:11, Ian Rogers wrote:
->>> +      # it's not realistic to keep adding these, we need something more scalable ...
->> Since we're converting to python it might be a good idea to consider
->> this - ever have an ideas on something better?
-> I think it is something ripe for cleanup, no particular thoughts on
-> this case. I'd like to make it so that jevents/pmu-events is aligned
-> with sysfs, which this relates to.
+On Tue, Jun 28, 2022 at 08:40:07PM -0700, Ian Rogers wrote:
+> Add skip tests for paranoid level being 3.
+> Rather than skipping lines starting "Failed", skip lines containing
+> "failed" - making the behavior consistent with the previous python
+> version.
 
-Right, I know that you sent a big mail on that and I never really 
-checked it in detail - sorry. Let me look again.
-
-thanks,
-John
+paranoid 3 is an out of tree patch.
