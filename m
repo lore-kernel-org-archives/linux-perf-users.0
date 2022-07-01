@@ -2,116 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B52C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Jul 2022 18:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A14C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Jul 2022 20:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231293AbiGASVb (ORCPT
+        id S232335AbiGAUzF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Jul 2022 14:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48898 "EHLO
+        Fri, 1 Jul 2022 16:55:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230436AbiGASVa (ORCPT
+        with ESMTP id S232300AbiGAUzD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Jul 2022 14:21:30 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15731A3AC
-        for <linux-perf-users@vger.kernel.org>; Fri,  1 Jul 2022 11:21:28 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id k14so3095914plh.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Jul 2022 11:21:28 -0700 (PDT)
+        Fri, 1 Jul 2022 16:55:03 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DF468A11;
+        Fri,  1 Jul 2022 13:55:01 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id x138so3506812pfc.3;
+        Fri, 01 Jul 2022 13:55:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zWAndBPU/YBRNnP7iW5mGKvMtcz8VndtaaAnNCQfy9k=;
-        b=ZW27MIhtPvBFpjZeiPNkxlAe7Kq6vAdIV6fc5YmBqLRNcJDb9ov6iJ7VpIB26ZnpDN
-         FWIVfAOukpxsETvidZcCXoddzqRDHwpIlQcCcxYOzjDaBG0LbEnsWgn1be3Gv0kv4j7r
-         Dz/HJzOfExPOediDoAKC1FPl/8UUd8zeEHYZY=
+        bh=r0tzuXJ4fkDFDXNosYJbNw2/XivHjlXN2Le9Og9w1Vg=;
+        b=M9tf3Y44xGmhLMIrSU+f0NqKp5sL7jXJmEeHbOhB1LEuWawhJtXhuaHPPGApTsV27w
+         HAKoLm/eVLKpVWmL2uNg/YyxRDzSM8WYJKOjXu6YxbsrhJSIxc1xdBXbj5iB1vZ5dEdf
+         GQreTg74l2K+2Y0zpn0WyaFb2rVG67qf/+mS4qRNzW6yV/cdXfqHGWByEBJPabL6fYFj
+         Rb18dyWRfvbmAPAHppoTo4BgGWQJJapDZeNl3tOTrDjZL3lPaOY2Iq9MiwoEIx4BAgk7
+         A0P9W+SAsfX9Td80dvmKDpZr+K+pfTROdDikA6vzOdV/kAra3uTkPXyKwWkVaqd3+s4p
+         +Hog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zWAndBPU/YBRNnP7iW5mGKvMtcz8VndtaaAnNCQfy9k=;
-        b=VLAMbSrDgu/Gdozq+s3gEH6xOqU8nhzfR8qBV3la0++H3MVgi1YszD98YvnFzVo7fr
-         LCIJEJcawmrJO3r/v8IyA9uYqFKa0Tia1rKM6drRzB1V7FG18mjiVgfT99kZtPAA9CQ+
-         lKE8nA519z9Xd7dClpmrzmSoSfebIz3fqky6DuonZG6b3Jg9xJrxJwITTGQE/KCL9ss+
-         Rg39kisAB/oAeS4UarOB2Ca+F2jdz0hCeBAtJTv0gRRofjDQI+1vLK+HI5SPbyzGriuE
-         FVmor5RuG/1vn1bYQF1l2NKcjtV4fTq/rOPcx5vvgf1+ryL+HL3Ao8wID3kOzESYnpVO
-         s75w==
-X-Gm-Message-State: AJIora+2edNauwMt18VNPJfcuRjJotkowrYGQSlXnJUIkcGqTXLHmAoY
-        UFomNy9q66DrmBFdYXqSD15axhwm/RpT9WQv
-X-Google-Smtp-Source: AGRyM1tKXEyY57JI4ZOQHqx08RV9uduSeVWzNHQJ4yQI/LrFKPD3zxLoXur7ZuHp1jIiKS85YkDnWg==
-X-Received: by 2002:a17:90b:4a4e:b0:1ec:beae:6f33 with SMTP id lb14-20020a17090b4a4e00b001ecbeae6f33mr19621048pjb.185.1656699688298;
-        Fri, 01 Jul 2022 11:21:28 -0700 (PDT)
-Received: from localhost ([2601:644:200:2b2:96e:bcc8:8ad7:1761])
-        by smtp.gmail.com with ESMTPSA id gz4-20020a17090b0ec400b001ec4f258028sm6865954pjb.55.2022.07.01.11.21.27
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=r0tzuXJ4fkDFDXNosYJbNw2/XivHjlXN2Le9Og9w1Vg=;
+        b=FAp7n8kE68SbuSV9Jw18JPWdO63apVptMGXg4zjmtrqQbGsbVp9PXE+6KK/fG4C1WN
+         GWfex4kS217dvf3EdHmcYORNdD5FLEeU+1UpipxQPybfeGqYaN3cBvzVWnCB0pBmXOjN
+         69DyxfBVgayf/uxQJoCeOeN0ML4jZDBvVfwQ8Ub0wSjqsnBkG8PVEmyA0+ZxGVRZD6Ij
+         SNOgAWroYUULYsbmw6aR71JUKwbyH1eUzrUYEwb2Sz5w2pB1fRxiHLdnE3AKVV92DQmz
+         ar4XBqvikT9qTajhV01z8OGDXKNeGfWNTrxefD7ehiv4nHDpJK9+bmTFEGZKCvpSq67D
+         e5og==
+X-Gm-Message-State: AJIora9FcDv0GwFWyd4C9/owi2yja6gbkkp52MNpko4u7EsJ1RU62hhg
+        uxz3AFseJuB7n6ywC7+7w+o=
+X-Google-Smtp-Source: AGRyM1tKTPk/lGBk4MHeQR0UtAfurvaaef/ixvVvIr01raf/MRwgsXWvhPJgm4YRjOUhS9ZtUJq15w==
+X-Received: by 2002:a63:90c1:0:b0:40d:3be3:5609 with SMTP id a184-20020a6390c1000000b0040d3be35609mr13565938pge.421.1656708900689;
+        Fri, 01 Jul 2022 13:55:00 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:480:d774:23c8:6d02:a99d])
+        by smtp.gmail.com with ESMTPSA id c16-20020a170902b69000b001678dcb4c5asm16057176pls.100.2022.07.01.13.54.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 11:21:27 -0700 (PDT)
-From:   Ivan Babrou <ivan@cloudflare.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
-        Ivan Babrou <ivan@cloudflare.com>,
+        Fri, 01 Jul 2022 13:54:59 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Fangrui Song <maskray@google.com>
-Subject: [PATCH] perf unwind: fix unitialized offset on aarch64
-Date:   Fri,  1 Jul 2022 11:20:46 -0700
-Message-Id: <20220701182046.12589-1-ivan@cloudflare.com>
-X-Mailer: git-send-email 2.36.1
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/2] perf tools: Don't sort the task scan result from /proc
+Date:   Fri,  1 Jul 2022 13:54:57 -0700
+Message-Id: <20220701205458.985106-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Commit dc2cf4ca866f uncovered the following issue on aarch64:
+It should not sort the result as procfs already returns a proper
+ordering of tasks.  Actually sorting the order caused problems that it
+doesn't guararantee to process the main thread first.
 
-    util/unwind-libunwind-local.c: In function 'find_proc_info':
-    util/unwind-libunwind-local.c:386:28: error: 'offset' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-    386 |                         if (ofs > 0) {
-        |                            ^
-    util/unwind-libunwind-local.c:199:22: note: 'offset' was declared here
-    199 |         u64 address, offset;
-        |                      ^~~~~~
-    util/unwind-libunwind-local.c:371:20: error: 'offset' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-    371 |                 if (ofs <= 0) {
-        |                    ^
-    util/unwind-libunwind-local.c:199:22: note: 'offset' was declared here
-    199 |         u64 address, offset;
-        |                      ^~~~~~
-    util/unwind-libunwind-local.c:363:20: error: 'offset' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-    363 |                 if (ofs <= 0) {
-        |                    ^
-    util/unwind-libunwind-local.c:199:22: note: 'offset' was declared here
-    199 |         u64 address, offset;
-        |                      ^~~~~~
-    In file included from util/libunwind/arm64.c:37:
-
-Signed-off-by: Ivan Babrou <ivan@cloudflare.com>
-Fixes: dc2cf4ca866f
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/unwind-libunwind-local.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/synthetic-events.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 37622699c91a..eaa8fa4b34f3 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -197,7 +197,7 @@ static int elf_section_address_and_offset(int fd, const char *name, u64 *address
- #ifndef NO_LIBUNWIND_DEBUG_FRAME
- static u64 elf_section_offset(int fd, const char *name)
- {
--	u64 address, offset;
-+	u64 address, offset = 0;
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 27acdc5e5723..a068f42833c3 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -754,7 +754,7 @@ static int __event__synthesize_thread(union perf_event *comm_event,
+ 	snprintf(filename, sizeof(filename), "%s/proc/%d/task",
+ 		 machine->root_dir, pid);
  
- 	if (elf_section_address_and_offset(fd, name, &address, &offset))
+-	n = scandir(filename, &dirent, filter_task, alphasort);
++	n = scandir(filename, &dirent, filter_task, NULL);
+ 	if (n < 0)
+ 		return n;
+ 
+@@ -987,7 +987,7 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
  		return 0;
+ 
+ 	snprintf(proc_path, sizeof(proc_path), "%s/proc", machine->root_dir);
+-	n = scandir(proc_path, &dirent, filter_task, alphasort);
++	n = scandir(proc_path, &dirent, filter_task, NULL);
+ 	if (n < 0)
+ 		return err;
+ 
 -- 
-2.36.1
+2.37.0.rc0.161.g10f37bed90-goog
 
