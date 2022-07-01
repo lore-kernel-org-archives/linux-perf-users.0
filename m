@@ -2,106 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFFAC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Jul 2022 23:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12775C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Jul 2022 23:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232016AbiGAXGj (ORCPT
+        id S231896AbiGAXJg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Jul 2022 19:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
+        Fri, 1 Jul 2022 19:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230308AbiGAXGi (ORCPT
+        with ESMTP id S230211AbiGAXJf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Jul 2022 19:06:38 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C01166D56B
-        for <linux-perf-users@vger.kernel.org>; Fri,  1 Jul 2022 16:06:37 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id r20so5167935wra.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Jul 2022 16:06:37 -0700 (PDT)
+        Fri, 1 Jul 2022 19:09:35 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C843071BF1;
+        Fri,  1 Jul 2022 16:09:34 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id l2so3994717pjf.1;
+        Fri, 01 Jul 2022 16:09:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1B1PddGTFrs/U46LbISSKfXwRw3hwTHsrh1nOCkyZGM=;
-        b=MwtHdmBTB8lfuO9wkWlKJj+Br1ms52PTcDsN5cQeoaOAaeGV/UAB0QIPKCip8L4RZ3
-         8PjN+g1lN9q2ztsjpR02DmhQrMqjZHFKGMA/5pzC4AQmBr/bhXt5eXvKOKx2jjZrF1bx
-         G9CrxAbgZ/cYYKbj09GnMy3FW/YCOVcomc9tev0xOnaM7mUcQ9pnhb+0LrI59v1UmIMp
-         bie8l/RVReNL7eNCq98z5OlBA15gHQSrF6BuSGBzy8BmUnDirhFokX4LaaFNbD94NStm
-         M6999INanbFvt1UuzaJMfZqiCh/wHiUEnyF0d73SvwvL13jwVQBJ42lINdUoUZWZwDV1
-         l3Ng==
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6IRIEmaeAGecPLER6MT79dRjRZdauydgJASqqrU4/Kg=;
+        b=SdbwE9SB09/WGXPxj0WG5eSh+z5Y9MRmCDAT55nPg50HMKd2kqr5U77bO3B+FQPjDT
+         0y2fPFQz950SK8ds5T7IJKuBeaFXDSx3NecPebmNi1f6c5Txg39/RvUlI1yFaijgy3Cy
+         HITwlFjfux+07H1F/EahDqMXKTMECveugjAh56h+Gu4L4gFxA7baaVgMn936WRv3+v2i
+         e3aTV7QHMoeMfASi2RGDdqZKfbbK5y3nu+5cz7KTbq73hut60piK8LltrrLxVVVgrgYN
+         ZNOG7DFGzVSPCwc4AJ6WSm9nJMxC1d+fT4VUtle0YG22jyDG2oHbef4VbqfZLViZIARF
+         0wuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1B1PddGTFrs/U46LbISSKfXwRw3hwTHsrh1nOCkyZGM=;
-        b=PiWTpNfjzlN690RLiA28bH3IR02qCXx0WPlwLmnmmXmo17qGvbdn+8TRJJZdpX58QX
-         l3suhKjgiqSbmA60Nc3ZMx/neS9KxHGCrOks2T7dF1rxIgMIku+8/Xbd0z2owHcIfRSm
-         srQOeuzPmx4WqHHauAQC7e9lHMdo1gKWtdk6Hlo9IGKik8n4g7/QBWYYrTkOXYPmJerv
-         WUNR6PoOaPNV8O0+/RnDkNsfiKVHEMKGE1himMvqDGzi9QrGacuqQycx8983njaPAbWz
-         VZkYeiCeY7bh7tjgmvnN1fPENVfCoILiRSmAdpD4oPzVvlKjbQzssD3ImaRwjwuGRuVr
-         MY1g==
-X-Gm-Message-State: AJIora+e5EoZhNY7ifJVb1sqJ4hAU5GWGRQAv1RusI84SMg+tXUi1fgO
-        JUjDZf1qPwcwMCjxOx7ZIfoTq8DKx/bOhXPi9NWCAQ==
-X-Google-Smtp-Source: AGRyM1tWpZix666JECrwCJowa6y3s9TWdxowxhr3qwkxiglqa7ZfYZIXog7jepaIxJ46KpT5De9W/q/nnphGp8jK8DA=
-X-Received: by 2002:a5d:5983:0:b0:21b:b7cb:f84e with SMTP id
- n3-20020a5d5983000000b0021bb7cbf84emr16345581wri.654.1656716796220; Fri, 01
- Jul 2022 16:06:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220701205458.985106-1-namhyung@kernel.org> <20220701205458.985106-2-namhyung@kernel.org>
-In-Reply-To: <20220701205458.985106-2-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 1 Jul 2022 16:06:24 -0700
-Message-ID: <CAP-5=fVwkXcKopw--chdtjsX1D0MnXOXYjqgi-xx0_Zxk6bC=A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf tools: Ignore dead threads during event synthesis
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=6IRIEmaeAGecPLER6MT79dRjRZdauydgJASqqrU4/Kg=;
+        b=ljliAGrAdmbHtqDe8abQsorlnNTNnBraBA+Ftaf6iv3WF8UHe0+S6ZPqXJeA96lOzp
+         PSKz/gZs60ffyoSqHIKvYB3cj6IPWkhXoTMVvRO84xfCjbF3D6RNseMfszjj44+0O4LJ
+         m6a/GFoUddn++OrRlQqxa8vCDRVn2zak5esinaG7tQKNfxrNVm0kyJjXvWrtpsSVjN9y
+         hUnUCvWrPsRJzOpbopyGJCJlWflOZiDLt2mO3U7rRcchKuNC9SUj1AE9qK8Mu3eChmI7
+         +bRy7KVthzooXpxwhAwUUR2fRzs+5ynWm7NGfc2USFYKY1421VoBK1VFd1gaTBOsMUTK
+         k7Sw==
+X-Gm-Message-State: AJIora9Kfh8ERGe9tr3uhxjbh70nMildHZhJUgcrTUAGZrXiDPEFixBH
+        woETdcPBOMPrhimTb0Z8oTU3CeyFrAE=
+X-Google-Smtp-Source: AGRyM1vA/AjwaFm81NLiY27aIloLyadvzu2yIpcAegr60+50oyy5p7qGjtvZXKOeLyozLXgud1CatQ==
+X-Received: by 2002:a17:902:f68f:b0:16a:7a95:4689 with SMTP id l15-20020a170902f68f00b0016a7a954689mr22440565plg.112.1656716974276;
+        Fri, 01 Jul 2022 16:09:34 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:480:3b24:1e12:a30a:e9e9])
+        by smtp.gmail.com with ESMTPSA id c3-20020a624e03000000b005183cf12184sm6256981pfb.133.2022.07.01.16.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Jul 2022 16:09:33 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v3] perf test: Add ARM SPE system wide test
+Date:   Fri,  1 Jul 2022 16:09:32 -0700
+Message-Id: <20220701230932.1000495-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 1:55 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> When it synthesize various task events, it scans the list of task
-> first and then accesses later.  There's a window threads can die
-> between the two and proc entries may not be available.
->
-> Instead of bailing out, we can ignore that thread and move on.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+In the past it had a problem not setting the pid/tid on the sample
+correctly when system-wide mode is used.  Although it's fixed now it'd
+be nice if we have a test case for it.
 
-Acked-by: Ian Rogers <irogers@google.com>
+Cc: German Gomez <german.gomez@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+* skip if system-wide record was failed
+* use dummy event for testing
 
-Thanks,
-Ian
+ tools/perf/tests/shell/test_arm_spe.sh | 30 +++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
 
-> ---
->  tools/perf/util/synthetic-events.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> index a068f42833c3..84d17bd4efae 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -767,11 +767,12 @@ static int __event__synthesize_thread(union perf_event *comm_event,
->                 if (*end)
->                         continue;
->
-> -               rc = -1;
-> +               /* some threads may exit just after scan, ignore it */
->                 if (perf_event__prepare_comm(comm_event, pid, _pid, machine,
->                                              &tgid, &ppid, &kernel_thread) != 0)
-> -                       break;
-> +                       continue;
->
-> +               rc = -1;
->                 if (perf_event__synthesize_fork(tool, fork_event, _pid, tgid,
->                                                 ppid, process, machine) < 0)
->                         break;
-> --
-> 2.37.0.rc0.161.g10f37bed90-goog
->
+diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
+index e59044edc406..0d47479adba8 100755
+--- a/tools/perf/tests/shell/test_arm_spe.sh
++++ b/tools/perf/tests/shell/test_arm_spe.sh
+@@ -23,17 +23,20 @@ glb_err=0
+ cleanup_files()
+ {
+ 	rm -f ${perfdata}
++	rm -f ${perfdata}.old
+ 	exit $glb_err
+ }
+ 
+ trap cleanup_files exit term int
+ 
+ arm_spe_report() {
+-	if [ $2 != 0 ]; then
++	if [ $2 = 0 ]; then
++		echo "$1: PASS"
++	elif [ $2 = 2 ]; then
++		echo "$1: SKIPPED"
++	else
+ 		echo "$1: FAIL"
+ 		glb_err=$2
+-	else
+-		echo "$1: PASS"
+ 	fi
+ }
+ 
+@@ -85,5 +88,26 @@ arm_spe_snapshot_test() {
+ 	arm_spe_report "SPE snapshot testing" $err
+ }
+ 
++arm_spe_system_wide_test() {
++	echo "Recording trace with system-wide mode $perfdata"
++
++	perf record -o - -e dummy -a -B true > /dev/null 2>&1
++	if [ $? != 0 ]; then
++		arm_spe_report "SPE system-wide testing" 2
++		return
++	fi
++
++	perf record -o ${perfdata} -e arm_spe// -a --no-bpf-event \
++		-- dd if=/dev/zero of=/dev/null count=100000 > /dev/null 2>&1
++
++	perf_script_samples dd &&
++	perf_report_samples dd
++
++	err=$?
++	arm_spe_report "SPE system-wide testing" $err
++}
++
+ arm_spe_snapshot_test
++arm_spe_system_wide_test
++
+ exit $glb_err
+-- 
+2.37.0.rc0.161.g10f37bed90-goog
+
