@@ -2,104 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E97C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Jul 2022 20:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF7EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  1 Jul 2022 23:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232278AbiGAUzG (ORCPT
+        id S231254AbiGAXGV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Jul 2022 16:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
+        Fri, 1 Jul 2022 19:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232064AbiGAUzD (ORCPT
+        with ESMTP id S229994AbiGAXGU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Jul 2022 16:55:03 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C155068A26;
-        Fri,  1 Jul 2022 13:55:02 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id s27so3411322pga.13;
-        Fri, 01 Jul 2022 13:55:02 -0700 (PDT)
+        Fri, 1 Jul 2022 19:06:20 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814936EEB1
+        for <linux-perf-users@vger.kernel.org>; Fri,  1 Jul 2022 16:06:19 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id o16-20020a05600c379000b003a02eaea815so4620665wmr.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 Jul 2022 16:06:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uQ6KsO2zFBmcfmgLJrQL61MdtKOyPUgT/0irzsdCMHU=;
-        b=TVfZtmud/h5X321ny0Mc7f5dsivitUSp0rMZEnD2UuzzDznneUjwY2YxNiWjaRyhPh
-         CtOXxJRHZdnjafJHbG9bbocXSi736L4ageMgyp9PTAgetvXnUyJUCvYcG0ipcDv79Z8O
-         0syRmqxHPmghkGyVHBNTM+qkcl5rDEiBYZk8HWkg6wkxE6BnVnJY149/K8QyUtlqyTJf
-         y8jl1psX95tR60TmMz5cJSmTMqFJwsT+qTAxe1zwIAf55cHzV/9Qe5oapWeci7qXF0Nt
-         UoGu7AWbavo5JNtRTltA8wCz2d0nYcwZ80kbjmZQhJ7ne8Gf681UNKr+hnZcO3zsULgz
-         jx1g==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n7xp4nnQTL9CDa5RM9fRJT3jD+dPM5rIbsC2OObud0M=;
+        b=LblUYuIy5SXHWSx5d4ANlDn7+H26GGlOrNWd1X0wQLsV+nBm26Fm3YCX7N+9EIQ44J
+         AiC2WSMAe0Xs6L9RJuoPj4h3zObFsiGadgy/a/d1V6mX3FfBbi5EXE1Y7ZY1hrVpJE76
+         8AIQ7nwP7EYx4PrdvWqTKFREo6VPPG8PCbuyrL0IwafyjXPfif7fGg7rmkt3iPIHzc7L
+         ZI3DQFuc8xdNvzAjE/H2bW41SmNh1GFpAxw7/KULFIfVRn82gmidRAj6Ieva9zKNjyZx
+         f3jl0gpe9v2PwYcDkdSL9BJX/SVKAMTFcvjjZ2ZqJsWqT03zn6vQsAWLXaeRi6PWanHH
+         YCRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=uQ6KsO2zFBmcfmgLJrQL61MdtKOyPUgT/0irzsdCMHU=;
-        b=OafJ78ckZOHccguyJ9kB2RPaKtQyEtcJbrmlGoEIflclwJ5uzCGtbbqWIKzKo+rG2B
-         1cVWJd+5Et3O9S/SBl7NevRBgD+jqEMXyqVq/Y2oMC5DIwwPB3lyx8U0oetbzqswPbuW
-         DtW/dJNAAdhDhAYM1TQy6/VaNClKju+gndS3jdv7BWZ9sB5bc6Kv9gTvcy5c5hL0eyU5
-         LRmHmdr3wXTZEZrfG9RJmRucT26x5MpwFCBhL3tsNqVsqoURg3G+9rOTt+6fq27pKWco
-         kfzm5PoNU+Vei7ufOvyubrbvwV0Fs5wePlZzPuHJkKU437nSBvfCbTn/mPsqRYuBAS4t
-         L9bg==
-X-Gm-Message-State: AJIora9xkjffDn5uA9w+N11kUq91qheUNd3BIV3kexGAvPgVHuqtzOgg
-        MJxf3KHSq/fqZkjJJtB0LBA=
-X-Google-Smtp-Source: AGRyM1v4qTPXxg09V3OPjyQyTmcdBdj+IKuWT95mNa+vh4IIJr7Uc5rQLlq6Mm2BrOHZgsZep70zrA==
-X-Received: by 2002:a63:2254:0:b0:40d:d291:7710 with SMTP id t20-20020a632254000000b0040dd2917710mr13678752pgm.269.1656708901768;
-        Fri, 01 Jul 2022 13:55:01 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:480:d774:23c8:6d02:a99d])
-        by smtp.gmail.com with ESMTPSA id c16-20020a170902b69000b001678dcb4c5asm16057176pls.100.2022.07.01.13.55.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 13:55:01 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n7xp4nnQTL9CDa5RM9fRJT3jD+dPM5rIbsC2OObud0M=;
+        b=0fdiFFvmVyXfjNodhKu1DCAMHweJpImVYK5g0mI7KP3+fataDZgYoG6COKjxZ3iB7j
+         iHe3VyGC1y0unUY0B+77NGm8n4c7ms0cgXF7LxKhl5PBkqNO0BwNqTb61r/yooMohY7c
+         gClyfU+XFBt3xTX3qdg+Zilk9Ql93GzyIzx2dPC8cdNm1g6vEnO8qd34ZcCd0hXHhn8e
+         qtKy27RZcp0bg9+sklgvzw8sZWCW9dn6CpEpIjBDjMIbLjOa3VmCxCiN0ME7uyijaE+J
+         oWuf8DTWFZOf1x/9+itUEes8Udx6u2H++uqYgX3QtuMNtSLEnsjqrUkOqwT5j+tAodCA
+         1Lig==
+X-Gm-Message-State: AJIora89mJKWq9o/7wRVTa46Bg4DQB5gMVQ+iKbKpKwEX7epqP3vrjrA
+        YIZab74DBPG5ciDafHF+jmZ6Z8hFYvFrqxNjCVUsWAJqIEA=
+X-Google-Smtp-Source: AGRyM1v4TG9T22ukbtdPxW1GOczpQEwVEWtguEGORPaZuQzTrHnF+xTTs3JjDEuz4C20xf6u4bp+0AjHNi+ZzN6vvWA=
+X-Received: by 2002:a05:600c:4e4c:b0:3a0:53a2:48b5 with SMTP id
+ e12-20020a05600c4e4c00b003a053a248b5mr18301843wmq.174.1656716777822; Fri, 01
+ Jul 2022 16:06:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220701205458.985106-1-namhyung@kernel.org>
+In-Reply-To: <20220701205458.985106-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 1 Jul 2022 16:06:05 -0700
+Message-ID: <CAP-5=fVbp4QT2J4Ek9e+1XL1HEMrUrYgNXptcWqyCHZxWbVAGA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf tools: Don't sort the task scan result from /proc
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] perf tools: Ignore dead threads during event synthesis
-Date:   Fri,  1 Jul 2022 13:54:58 -0700
-Message-Id: <20220701205458.985106-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-In-Reply-To: <20220701205458.985106-1-namhyung@kernel.org>
-References: <20220701205458.985106-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When it synthesize various task events, it scans the list of task
-first and then accesses later.  There's a window threads can die
-between the two and proc entries may not be available.
+On Fri, Jul 1, 2022 at 1:55 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> It should not sort the result as procfs already returns a proper
+> ordering of tasks.  Actually sorting the order caused problems that it
+> doesn't guararantee to process the main thread first.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Instead of bailing out, we can ignore that thread and move on.
+Acked-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/synthetic-events.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index a068f42833c3..84d17bd4efae 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -767,11 +767,12 @@ static int __event__synthesize_thread(union perf_event *comm_event,
- 		if (*end)
- 			continue;
- 
--		rc = -1;
-+		/* some threads may exit just after scan, ignore it */
- 		if (perf_event__prepare_comm(comm_event, pid, _pid, machine,
- 					     &tgid, &ppid, &kernel_thread) != 0)
--			break;
-+			continue;
- 
-+		rc = -1;
- 		if (perf_event__synthesize_fork(tool, fork_event, _pid, tgid,
- 						ppid, process, machine) < 0)
- 			break;
--- 
-2.37.0.rc0.161.g10f37bed90-goog
-
+> ---
+>  tools/perf/util/synthetic-events.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 27acdc5e5723..a068f42833c3 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -754,7 +754,7 @@ static int __event__synthesize_thread(union perf_event *comm_event,
+>         snprintf(filename, sizeof(filename), "%s/proc/%d/task",
+>                  machine->root_dir, pid);
+>
+> -       n = scandir(filename, &dirent, filter_task, alphasort);
+> +       n = scandir(filename, &dirent, filter_task, NULL);
+>         if (n < 0)
+>                 return n;
+>
+> @@ -987,7 +987,7 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
+>                 return 0;
+>
+>         snprintf(proc_path, sizeof(proc_path), "%s/proc", machine->root_dir);
+> -       n = scandir(proc_path, &dirent, filter_task, alphasort);
+> +       n = scandir(proc_path, &dirent, filter_task, NULL);
+>         if (n < 0)
+>                 return err;
+>
+> --
+> 2.37.0.rc0.161.g10f37bed90-goog
+>
