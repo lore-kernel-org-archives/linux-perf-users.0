@@ -2,529 +2,250 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2088AC43334
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Jul 2022 03:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172DDC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Jul 2022 09:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230406AbiGBDCL (ORCPT
+        id S231882AbiGBJfh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 1 Jul 2022 23:02:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39998 "EHLO
+        Sat, 2 Jul 2022 05:35:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbiGBDCJ (ORCPT
+        with ESMTP id S229446AbiGBJfg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 1 Jul 2022 23:02:09 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED21937036;
-        Fri,  1 Jul 2022 20:02:07 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id r66so4046860pgr.2;
-        Fri, 01 Jul 2022 20:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GvgrvexFFdYmKYfW01B8Hx0R3rbDwFFQNYi/YvJTByA=;
-        b=F5GxiVKUhBmWQZNQG3H0PiwGxo6kr/h7aqBmEm9IN7//A72Lq2fkr6D+PBVPCP5M22
-         VMcfCAYaQiAf+QWfNv0YgInBOQsZ/YCTpIifO1fgcEMr1QcAQZUEFelTamfAgtVCDJNS
-         PU6Zx8CYzbxBZefcZBwbRCGHkmAiovLtn4d2orZZYFS70vbv0c9EriJiLhUbcJMNLnAX
-         IiJBeT9VkdlFP4E9XAtNwoQaSIpq2Shs8CLacb7okA6f2+85oc6b2p/uMPG4c1XXCM2b
-         VfoKYQ8WgCwh6V1IhJnQ7I0ngRC2+HEzYBTFDK3jf8hbV86F2jlN3onJq6Ndup0PTR8k
-         mcRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GvgrvexFFdYmKYfW01B8Hx0R3rbDwFFQNYi/YvJTByA=;
-        b=wdUgWE6tqnecBTshbA/1dSgyDbnrpvNoaumnWk6RelKt3wycMDOSBgQHRT3V8AfuAS
-         E89RJDkBY3w0RkwSQE2zAwArAC58WTyhSpYYP1kwvKLjseXk16nVleT9Ak8ZOg7Zu5yW
-         0+aNgiacA3dqSGBn93vyiRP2lslWEBCO869zrN6I4QJawx0ILE599MvDNk9NoG0o1LRh
-         KHdDVkaUIzCTp0OglZIDvytiCdHGhJQOu7QkSg3r06O8ucBL38AvpR4ysNbAmc0WtI4Y
-         z67WfrVOKzFwicee8exRlX7MFD9u1S0S1/vWDfxTye+b9ElO8mfrJwYIO9FqowC+Nk0b
-         JO2A==
-X-Gm-Message-State: AJIora9iDb++RCvrPe7mqNryXtWjPDVo5HPDe+Tddtr5mdsD0YSMzQ8M
-        yp0hdVZWzQgIOFOAxTXMiTM=
-X-Google-Smtp-Source: AGRyM1tXTh3yDvTBFdCpy3SORBH6vNzDL9yR9YTRReqYKxOSVsqGSvmt/Hd5fy4806p6gsp77w4shw==
-X-Received: by 2002:a63:7519:0:b0:40d:677:b89b with SMTP id q25-20020a637519000000b0040d0677b89bmr14829482pgc.49.1656730927150;
-        Fri, 01 Jul 2022 20:02:07 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-17.three.co.id. [180.214.232.17])
-        by smtp.gmail.com with ESMTPSA id s9-20020a62e709000000b00527ab697c6asm10569974pfh.18.2022.07.01.20.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 20:02:06 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id B37E41037E5; Sat,  2 Jul 2022 10:02:01 +0700 (WIB)
-Date:   Sat, 2 Jul 2022 10:02:01 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     "carsten.haitzler@foss.arm.com" <carsten.haitzler@foss.arm.com>
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, leo.yan@linaro.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 14/14] perf test: Add relevant documentation about
- CoreSight testing
-Message-ID: <Yr+1KZfciYQWdDgK@debian.me>
-References: <20220701120804.3226396-1-carsten.haitzler@foss.arm.com>
- <20220701120804.3226396-15-carsten.haitzler@foss.arm.com>
+        Sat, 2 Jul 2022 05:35:36 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE52015A02;
+        Sat,  2 Jul 2022 02:35:34 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LZmzz4QKFzTgFN;
+        Sat,  2 Jul 2022 17:31:59 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 2 Jul 2022 17:35:32 +0800
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 2 Jul 2022 17:35:31 +0800
+Subject: Re: [RFC v2 00/17] perf: Add perf kwork
+To:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <andrii@kernel.org>, <john.fastabend@gmail.com>,
+        <kpsingh@kernel.org>, <irogers@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+References: <20220624140349.16964-1-yangjihong1@huawei.com>
+CC:     <adrian.hunter@intel.com>, <alexandre.truong@arm.com>,
+        <davemarchevsky@fb.com>, <yhs@fb.com>, <songliubraving@fb.com>,
+        <kafai@fb.com>, <peterz@infradead.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <659dbfab-63df-e881-09d4-3fe96352cbd9@huawei.com>
+Date:   Sat, 2 Jul 2022 17:35:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220701120804.3226396-15-carsten.haitzler@foss.arm.com>
+In-Reply-To: <20220624140349.16964-1-yangjihong1@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 01, 2022 at 01:08:03PM +0100, carsten.haitzler@foss.arm.com wrote:
-> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
+Hello,
+
+On 2022/6/24 22:03, Yang Jihong wrote:
+> Sometimes, we need to analyze time properties of kernel work such as irq,
+> softirq, and workqueue, including delay and running time of specific interrupts.
+> Currently, these events have kernel tracepoints, but perf tool does not
+> directly analyze the delay of these events
 > 
-
-Hi Carsten,
-
-This doc patch can be improved, see below.
-
-> This adds/improves documentation helping people get started with
-> CoreSight and perf as well as describing the testing and how it works.
+> The perf-kwork tool is used to trace time properties of kernel work
+> (such as irq, softirq, and workqueue), including runtime, latency,
+> and timehist, using the infrastructure in the perf tools to allow
+> tracing extra targets
 > 
-
-Use imperative mood instead of descriptive one for patch description.
-
-> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
-> ---
->  .../trace/coresight/coresight-perf.rst        | 160 ++++++++++++++++++
->  tools/perf/Documentation/arm-coresight.txt    |   5 +
->  2 files changed, 165 insertions(+)
->  create mode 100644 Documentation/trace/coresight/coresight-perf.rst
->  create mode 100644 tools/perf/Documentation/arm-coresight.txt
+> We also use bpf trace to collect and filter data in kernel to solve
+> problem of large perf data volume and extra file system interruptions.
 > 
-> diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
-> new file mode 100644
-> index 000000000000..de25082447dd
-> --- /dev/null
-> +++ b/Documentation/trace/coresight/coresight-perf.rst
-> @@ -0,0 +1,160 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +================
-> +CoreSight - Perf
-> +================
-> +
-> +    :Author:   Carsten Haitzler <carsten.haitzler@arm.com>
-> +    :Date:     June 29th, 2022
-> +
-> +Perf is able to locally access CoreSight trace data and store it to the
-> +output perf data files. This data can then be later decoded to give the
-> +instructions that were traced for debugging or profiling purposes. You
-> +can log such data with a perf record command like:
-> +
-> +    perf record -e cs_etm//u testbinary
-> +
+> Example usage:
+> 
+> 1. Kwork record:
+> 
+>    # perf kwork record -- sleep 10
+>    [ perf record: Woken up 0 times to write data ]
+>    [ perf record: Captured and wrote 6.825 MB perf.data ]
+> 
+> 2. Kwork report:
+> 
+>    # perf kwork report -S
+> 
+>      Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+>     --------------------------------------------------------------------------------------------------------------------------------
+>      virtio0-requests:25            | 0000 |   1347.861 ms |     25049 |      1.417 ms |     121235.524083 s |     121235.525499 s |
+>      (s)TIMER:1                     | 0005 |    151.033 ms |      2545 |      0.153 ms |     121237.454591 s |     121237.454744 s |
+>      (s)RCU:9                       | 0005 |    117.254 ms |      2754 |      0.223 ms |     121239.461024 s |     121239.461246 s |
+>      (s)SCHED:7                     | 0005 |     58.714 ms |      1773 |      0.075 ms |     121237.702345 s |     121237.702419 s |
+>      (s)RCU:9                       | 0007 |     43.359 ms |       945 |      0.861 ms |     121237.702984 s |     121237.703845 s |
+>      (s)SCHED:7                     | 0000 |     33.389 ms |       549 |      4.121 ms |     121235.521379 s |     121235.525499 s |
+>      (s)RCU:9                       | 0002 |     21.419 ms |       484 |      0.281 ms |     121244.629001 s |     121244.629282 s |
+>      (w)mix_interrupt_randomness    | 0000 |     21.047 ms |       391 |      1.016 ms |     121237.934008 s |     121237.935024 s |
+>      (s)SCHED:7                     | 0007 |     19.903 ms |       570 |      0.065 ms |     121235.523360 s |     121235.523426 s |
+>      (s)RCU:9                       | 0000 |     19.017 ms |       472 |      0.507 ms |     121244.634002 s |     121244.634510 s |
+>      ... <SNIP> ...
+>      (s)SCHED:7                     | 0003 |      0.049 ms |         1 |      0.049 ms |     121240.018631 s |     121240.018680 s |
+>      (w)vmstat_update               | 0003 |      0.046 ms |         1 |      0.046 ms |     121240.916200 s |     121240.916246 s |
+>      (s)RCU:9                       | 0004 |      0.045 ms |         2 |      0.024 ms |     121235.522876 s |     121235.522900 s |
+>      (w)neigh_managed_work          | 0001 |      0.044 ms |         1 |      0.044 ms |     121235.513929 s |     121235.513973 s |
+>      (w)vmstat_update               | 0006 |      0.031 ms |         1 |      0.031 ms |     121245.673914 s |     121245.673945 s |
+>      (w)vmstat_update               | 0004 |      0.028 ms |         1 |      0.028 ms |     121235.522743 s |     121235.522770 s |
+>      (w)wb_update_bandwidth_workfn  | 0000 |      0.024 ms |         1 |      0.024 ms |     121244.842660 s |     121244.842683 s |
+>     --------------------------------------------------------------------------------------------------------------------------------
+>      Total count            :     36071
+>      Total runtime   (msec) :  1887.188 (0.185% load average)
+>      Total time span (msec) : 10185.012
+>     --------------------------------------------------------------------------------------------------------------------------------
+> 
+> 3. Kwork latency:
+> 
+>    # perf kwork latency
+> 
+>      Kwork Name                     | Cpu  | Avg delay     | Count     | Max delay     | Max delay start     | Max delay end       |
+>     --------------------------------------------------------------------------------------------------------------------------------
+>      (s)TIMER:1                     | 0004 |      3.903 ms |         1 |      3.903 ms |     121235.517068 s |     121235.520971 s |
+>      (s)RCU:9                       | 0004 |      3.252 ms |         2 |      5.809 ms |     121235.517068 s |     121235.522876 s |
+>      (s)RCU:9                       | 0001 |      3.238 ms |         2 |      5.832 ms |     121235.514494 s |     121235.520326 s |
+>      (w)vmstat_update               | 0004 |      1.738 ms |         1 |      1.738 ms |     121235.521005 s |     121235.522743 s |
+>      (s)SCHED:7                     | 0004 |      0.978 ms |         2 |      1.899 ms |     121235.520940 s |     121235.522840 s |
+>      (w)wb_update_bandwidth_workfn  | 0000 |      0.834 ms |         1 |      0.834 ms |     121244.841826 s |     121244.842660 s |
+>      (s)RCU:9                       | 0003 |      0.479 ms |         3 |      0.752 ms |     121240.027521 s |     121240.028273 s |
+>      (s)TIMER:1                     | 0001 |      0.465 ms |         1 |      0.465 ms |     121235.513107 s |     121235.513572 s |
+>      (w)vmstat_update               | 0000 |      0.391 ms |         5 |      1.275 ms |     121236.814938 s |     121236.816213 s |
+>      (w)mix_interrupt_randomness    | 0002 |      0.317 ms |         5 |      0.874 ms |     121244.628034 s |     121244.628908 s |
+>      (w)neigh_managed_work          | 0001 |      0.315 ms |         1 |      0.315 ms |     121235.513614 s |     121235.513929 s |
+>      ... <SNIP> ...
+>      (s)TIMER:1                     | 0005 |      0.061 ms |      2545 |      0.506 ms |     121237.136113 s |     121237.136619 s |
+>      (s)SCHED:7                     | 0001 |      0.052 ms |        21 |      0.437 ms |     121237.711014 s |     121237.711451 s |
+>      (s)SCHED:7                     | 0002 |      0.045 ms |       309 |      0.145 ms |     121237.137184 s |     121237.137329 s |
+>      (s)SCHED:7                     | 0003 |      0.045 ms |         1 |      0.045 ms |     121240.018586 s |     121240.018631 s |
+>      (s)SCHED:7                     | 0007 |      0.044 ms |       570 |      0.173 ms |     121238.161161 s |     121238.161334 s |
+>      (s)BLOCK:4                     | 0003 |      0.030 ms |         4 |      0.056 ms |     121240.028255 s |     121240.028311 s |
+>     --------------------------------------------------------------------------------------------------------------------------------
+>      INFO: 28.761% skipped events (27674 including 2607 raise, 25067 entry, 0 exit)
+>   
+> 4. Kwork timehist:
+>   
+>    # perf kwork timehist
+>     Runtime start      Runtime end        Cpu     Kwork name                      Runtime     Delaytime
+>                                                   (TYPE)NAME:NUM                  (msec)      (msec)
+>     -----------------  -----------------  ------  ------------------------------  ----------  ----------
+>         121235.513572      121235.513674  [0001]  (s)TIMER:1                           0.102       0.465
+>         121235.513688      121235.513738  [0001]  (s)SCHED:7                           0.050       0.172
+>         121235.513750      121235.513777  [0001]  (s)RCU:9                             0.027       0.643
+>         121235.513929      121235.513973  [0001]  (w)neigh_managed_work                0.044       0.315
+>         121235.520326      121235.520386  [0001]  (s)RCU:9                             0.060       5.832
+>         121235.520672      121235.520716  [0002]  (s)SCHED:7                           0.044       0.048
+>         121235.520729      121235.520753  [0002]  (s)RCU:9                             0.024       5.651
+>         121235.521213      121235.521249  [0005]  (s)TIMER:1                           0.036       0.064
+>         121235.520166      121235.521379  [0000]  (s)SCHED:7                           1.213       0.056
+>      ... <SNIP> ...
+>         121235.533256      121235.533296  [0000]  virtio0-requests:25                  0.040
+>         121235.533322      121235.533359  [0000]  (s)SCHED:7                           0.037       0.095
+>         121235.533018      121235.533452  [0006]  (s)RCU:9                             0.434       0.348
+>         121235.534653      121235.534698  [0000]  virtio0-requests:25                  0.046
+>         121235.535657      121235.535702  [0000]  virtio0-requests:25                  0.044
+>         121235.535857      121235.535916  [0005]  (s)TIMER:1                           0.059       0.055
+>         121235.535927      121235.535947  [0005]  (s)RCU:9                             0.020       0.113
+>         121235.536178      121235.536196  [0006]  (s)RCU:9                             0.018       0.410
+>         121235.537406      121235.537445  [0006]  (s)SCHED:7                           0.039       0.049
+>         121235.537457      121235.537481  [0006]  (s)RCU:9                             0.024       0.334
+>         121235.538199      121235.538254  [0007]  (s)RCU:9                             0.055       0.066
+> 
+> 5. Kwork report use bpf:
+> 
+>    # perf kwork report -b
+>    Starting trace, Hit <Ctrl+C> to stop and report
+>    ^C
+>      Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+>     --------------------------------------------------------------------------------------------------------------------------------
+>      (w)flush_to_ldisc              | 0000 |      2.279 ms |         2 |      2.219 ms |     121293.080933 s |     121293.083152 s |
+>      (s)SCHED:7                     | 0001 |      2.141 ms |         2 |      2.100 ms |     121293.082064 s |     121293.084164 s |
+>      (s)RCU:9                       | 0003 |      2.137 ms |         3 |      2.046 ms |     121293.081348 s |     121293.083394 s |
+>      (s)TIMER:1                     | 0007 |      1.882 ms |        12 |      0.249 ms |     121295.632211 s |     121295.632460 s |
+>      (w)e1000_watchdog              | 0002 |      1.136 ms |         3 |      0.428 ms |     121294.496559 s |     121294.496987 s |
+>      (s)SCHED:7                     | 0007 |      0.995 ms |        12 |      0.139 ms |     121295.632483 s |     121295.632621 s |
+>      (s)NET_RX:3                    | 0002 |      0.727 ms |         5 |      0.391 ms |     121299.044624 s |     121299.045016 s |
+>      (s)TIMER:1                     | 0002 |      0.696 ms |         5 |      0.164 ms |     121294.496172 s |     121294.496337 s |
+>      (s)SCHED:7                     | 0002 |      0.427 ms |         6 |      0.077 ms |     121295.840321 s |     121295.840398 s |
+>      (s)SCHED:7                     | 0000 |      0.366 ms |         3 |      0.156 ms |     121296.545389 s |     121296.545545 s |
+>      eth0:10                        | 0002 |      0.353 ms |         5 |      0.122 ms |     121293.084796 s |     121293.084919 s |
+>      (w)flush_to_ldisc              | 0000 |      0.298 ms |         1 |      0.298 ms |     121299.046236 s |     121299.046534 s |
+>      (w)mix_interrupt_randomness    | 0002 |      0.215 ms |         4 |      0.077 ms |     121293.086747 s |     121293.086823 s |
+>      (s)RCU:9                       | 0002 |      0.128 ms |         3 |      0.060 ms |     121293.087348 s |     121293.087409 s |
+>      (w)vmstat_shepherd             | 0000 |      0.098 ms |         1 |      0.098 ms |     121293.083901 s |     121293.083999 s |
+>      (s)TIMER:1                     | 0001 |      0.089 ms |         1 |      0.089 ms |     121293.085709 s |     121293.085798 s |
+>      (w)vmstat_update               | 0003 |      0.071 ms |         1 |      0.071 ms |     121293.085227 s |     121293.085298 s |
+>      (w)wq_barrier_func             | 0000 |      0.064 ms |         1 |      0.064 ms |     121293.083688 s |     121293.083752 s |
+>      (w)vmstat_update               | 0000 |      0.041 ms |         1 |      0.041 ms |     121293.083829 s |     121293.083869 s |
+>      (s)RCU:9                       | 0001 |      0.038 ms |         1 |      0.038 ms |     121293.085818 s |     121293.085856 s |
+>      (s)RCU:9                       | 0007 |      0.035 ms |         1 |      0.035 ms |     121293.112322 s |     121293.112357 s |
+>     --------------------------------------------------------------------------------------------------------------------------------
+> 
+> 6. Kwork latency use bpf:
+> 
+>    # perf kwork latency -b
+>    Starting trace, Hit <Ctrl+C> to stop and report
+>    ^C
+>      Kwork Name                     | Cpu  | Avg delay     | Count     | Max delay     | Max delay start     | Max delay end       |
+>     --------------------------------------------------------------------------------------------------------------------------------
+>      (w)vmstat_shepherd             | 0000 |      2.044 ms |         2 |      2.764 ms |     121314.942758 s |     121314.945522 s |
+>      (w)flush_to_ldisc              | 0000 |      1.008 ms |         1 |      1.008 ms |     121317.335508 s |     121317.336516 s |
+>      (w)vmstat_update               | 0002 |      0.879 ms |         1 |      0.879 ms |     121317.024405 s |     121317.025284 s |
+>      (w)mix_interrupt_randomness    | 0002 |      0.328 ms |         5 |      0.383 ms |     121308.832944 s |     121308.833327 s |
+>      (w)e1000_watchdog              | 0002 |      0.304 ms |         5 |      0.368 ms |     121317.024305 s |     121317.024673 s |
+>      (s)RCU:9                       | 0001 |      0.172 ms |        41 |      0.728 ms |     121308.308187 s |     121308.308915 s |
+>      (s)TIMER:1                     | 0000 |      0.149 ms |         3 |      0.195 ms |     121317.334255 s |     121317.334449 s |
+>      (s)NET_RX:3                    | 0001 |      0.143 ms |        40 |      1.213 ms |     121315.030992 s |     121315.032205 s |
+>      (s)RCU:9                       | 0002 |      0.139 ms |        27 |      0.187 ms |     121315.077388 s |     121315.077576 s |
+>      (s)NET_RX:3                    | 0002 |      0.130 ms |         7 |      0.283 ms |     121308.832917 s |     121308.833201 s |
+>      (s)SCHED:7                     | 0007 |      0.123 ms |        34 |      0.191 ms |     121308.736240 s |     121308.736431 s |
+>      (s)TIMER:1                     | 0007 |      0.116 ms |        18 |      0.145 ms |     121308.736168 s |     121308.736313 s |
+>      (s)RCU:9                       | 0007 |      0.111 ms |        68 |      0.318 ms |     121308.736194 s |     121308.736512 s |
+>      (s)SCHED:7                     | 0002 |      0.110 ms |        22 |      0.292 ms |     121308.832197 s |     121308.832489 s |
+>      (s)TIMER:1                     | 0001 |      0.107 ms |         1 |      0.107 ms |     121314.948230 s |     121314.948337 s |
+>      (w)neigh_managed_work          | 0001 |      0.103 ms |         1 |      0.103 ms |     121314.948381 s |     121314.948484 s |
+>      (s)RCU:9                       | 0000 |      0.099 ms |        49 |      0.289 ms |     121308.520167 s |     121308.520456 s |
+>      (s)NET_RX:3                    | 0007 |      0.096 ms |        40 |      1.227 ms |     121315.022994 s |     121315.024220 s |
+>      (s)RCU:9                       | 0003 |      0.093 ms |        37 |      0.261 ms |     121314.950651 s |     121314.950913 s |
+>      (w)flush_to_ldisc              | 0000 |      0.090 ms |         1 |      0.090 ms |     121317.336737 s |     121317.336827 s |
+>      (s)TIMER:1                     | 0002 |      0.078 ms |        36 |      0.115 ms |     121310.880172 s |     121310.880288 s |
+>      (s)SCHED:7                     | 0001 |      0.071 ms |        27 |      0.180 ms |     121314.953571 s |     121314.953751 s |
+>      (s)SCHED:7                     | 0000 |      0.066 ms |        28 |      0.344 ms |     121317.334345 s |     121317.334689 s |
+>      (s)SCHED:7                     | 0003 |      0.063 ms |        14 |      0.119 ms |     121314.978808 s |     121314.978927 s |
+>     --------------------------------------------------------------------------------------------------------------------------------
+> 
+> 7. Kwork report with filter:
+> 
+>    # perf kwork report -b -n RCU
+>    Starting trace, Hit <Ctrl+C> to stop and report
+>    ^C
+>      Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+>     --------------------------------------------------------------------------------------------------------------------------------
+>      (s)RCU:9                       | 0006 |      2.266 ms |         3 |      2.158 ms |     121335.008290 s |     121335.010449 s |
+>      (s)RCU:9                       | 0002 |      0.158 ms |         3 |      0.063 ms |     121335.011914 s |     121335.011977 s |
+>      (s)RCU:9                       | 0007 |      0.082 ms |         1 |      0.082 ms |     121335.448378 s |     121335.448460 s |
+>      (s)RCU:9                       | 0000 |      0.058 ms |         1 |      0.058 ms |     121335.011350 s |     121335.011408 s |
+>     --------------------------------------------------------------------------------------------------------------------------------
+>
 
-Use literal code block.
+PING
 
-> +This would run some test binary (testbinary) until it exits and record
-> +a perf.data trace file. That file would have AUX sections if CoreSight
-> +is working correctly. You can dump the content of this file as
-> +readable text with a command like:
-> +
-> +    perf report --stdio --dump -i perf.data
-> +
+Looking forward to the community's review
 
-Same as above.
-
-> +You should find some sections of this file have AUX data blocks like:
-> +
-> +    0x1e78 [0x30]: PERF_RECORD_AUXTRACE size: 0x11dd0  offset: 0  ref: 0x1b614fc1061b0ad1  idx: 0  tid: 531230  cpu: -1
-> +
-> +    . ... CoreSight ETM Trace data: size 73168 bytes
-> +            Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
-> +              Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
-> +              Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
-> +              Idx:26; ID:10;  I_TRACE_ON : Trace On.
-> +              Idx:27; ID:10;  I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000FFFFB6069140; Ctxt: AArch64,EL0, NS;
-> +              Idx:38; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-> +              Idx:39; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-> +              Idx:40; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-> +              Idx:41; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEN
-> +              ...
-> +
-
-Here too.
-
-> +If you see these above, then your system is tracing CoreSight data
-> +correctly.
-> +
-> +To compile perf with CoreSight support in the tools/perf directory do
-> +
-> +    make CORESIGHT=1
-> +
-
-Here too again.
-
-> +This requires OpenCSD to build. You may install distribution packages
-> +for the support such as libopencsd and libopencsd-dev or download it
-> +and build yourself. Upstream OpenCSD is located at:
-> +
-> +  https://github.com/Linaro/OpenCSD
-> +
-> +For complete information on building perf with CoreSight support and
-> +more extensive usage look at:
-> +
-> +  https://github.com/Linaro/OpenCSD/blob/master/HOWTO.md
-> +
-> +
-> +Kernel CoreSight Support
-> +------------------------
-> +
-> +You will also want CoreSight support enabled in your kernel config.
-> +Ensure it is enabled with:
-> +
-> +    CONFIG_CORESIGHT=y
-> +
-> +There are various other CoreSight options you probably also want
-> +enabled like:
-> +
-> +    CONFIG_CORESIGHT_LINKS_AND_SINKS=y
-> +    CONFIG_CORESIGHT_LINK_AND_SINK_TMC=y
-> +    CONFIG_CORESIGHT_CATU=y
-> +    CONFIG_CORESIGHT_SINK_TPIU=y
-> +    CONFIG_CORESIGHT_SINK_ETBV10=y
-> +    CONFIG_CORESIGHT_SOURCE_ETM4X=y
-> +    CONFIG_CORESIGHT_STM=y
-> +    CONFIG_CORESIGHT_CPU_DEBUG=y
-> +    CONFIG_CORESIGHT_CTI=y
-> +    CONFIG_CORESIGHT_CTI_INTEGRATION_REGS=y
-> +
-
-Same as above again.
-
-> +Please refer to the kernel configuration help for more information.
-> +
-> +Perf test - Verify kernel and userspace perf CoreSight work
-> +-----------------------------------------------------------
-> +
-> +When you run perf test, it will do a lot of self tests. Some of those
-> +tests will cover CoreSight (only if enabled and on ARM64). You
-> +generally would run perf test from the tools/perf directory in the
-> +kernel tree. Some tests will check some internal perf support like:
-> +
-> +    Check Arm CoreSight trace data recording and synthesized samples
-> +    Check Arm SPE trace data recording and synthesized samples
-> +
-
-Use bullet lists.
-
-> +Some others will actually use perf record and some test binaries that
-> +are in tests/shell/coresight and will collect traces to ensure a
-> +minimum level of functionality is met. The scripts that launch these
-> +tests are in the same directory. These will all look like:
-> +
-> +    CoreSight / ASM Pure Loop
-> +    CoreSight / Memcpy 16k 10 Threads
-> +    CoreSight / Thread Loop 10 Threads - Check TID
-> +    ...
-> +
-
-Same as above.
-
-> +These perf record tests will not run if the tool binaries do not exist
-> +in tests/shell/coresight/*/ and will be skipped. If you do not have
-> +CoreSight support in hardware then either do not build perf with
-> +CoreSight support or remove these binaries in order to not have these
-> +tests fail and have them skip instead.
-> +
-> +These tests will log historical results in the current working
-> +directory (e.g. tools/perf) and will be named stats-*.csv like:
-> +
-> +    stats-asm_pure_loop-out.csv
-> +    stats-memcpy_thread-16k_10.csv
-> +    ...
-> +
-
-These above causes htmldocs warning (unescaped wildcard), so I have to apply
-the fixup:
-
----- >8 ----
-
-diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
-index de25082447dd50..a25fcda5c37c55 100644
---- a/Documentation/trace/coresight/coresight-perf.rst
-+++ b/Documentation/trace/coresight/coresight-perf.rst
-@@ -102,13 +102,13 @@ tests are in the same directory. These will all look like:
-     ...
- 
- These perf record tests will not run if the tool binaries do not exist
--in tests/shell/coresight/*/ and will be skipped. If you do not have
-+in tests/shell/coresight/\*/ and will be skipped. If you do not have
- CoreSight support in hardware then either do not build perf with
- CoreSight support or remove these binaries in order to not have these
- tests fail and have them skip instead.
- 
- These tests will log historical results in the current working
--directory (e.g. tools/perf) and will be named stats-*.csv like:
-+directory (e.g. tools/perf) and will be named stats-\*.csv like:
- 
-     stats-asm_pure_loop-out.csv
-     stats-memcpy_thread-16k_10.csv
-
----- >8 ----
-
-Also, the output list above could be inside code block (since these
-are output).
-
-> +These statistic files log some aspects of the AUX data sections in
-> +the perf data output counting some numbers of certain encodings (a
-> +good way to know that it's working in a very simple way). One problem
-> +with CoreSight is that given a large enough amount of data needing to
-> +be logged, some of it can be lost due to the processor not waking up
-> +in time to read out all the data from buffers etc.. You will notice
-> +that the amount of data collected can vary a lot per run of perf test.
-> +If you wish to see how this changes over time, simply run perf test
-> +multiple times and all these csv files will have more and more data
-> +appended to it that you can later examine, graph and otherwise use to
-> +figure out if things have become worse or better.
-> +
-> +This means sometimes these tests fail as they don't capture all the
-> +data needed. This is about tracking quality and amount of data
-> +produced over time and to see when changes to the Linux kernel improve
-> +quality of traces.
-> +
-> +Be aware that some of these tests take quite a while to run, specifically
-> +in processing the perf data file and dumping contents to then examine what
-> +is inside.
-> +
-> +You can change where these csv logs are stored by setting the
-> +PERF_TEST_CORESIGHT_STATDIR environment variable before running perf
-> +test like:
-> +
-> +    export PERF_TEST_CORESIGHT_STATDIR=/var/tmp
-> +    perf test
-> +
-> +They will also store resulting perf output data in the current
-> +directory for later inspection like:
-> +
-> +    perf-asm_pure_loop-out.data
-> +    perf-memcpy_thread-16k_10.data
-> +    ...
-> +
-> +You can alter where the perf data files are stored by setting the
-> +PERF_TEST_CORESIGHT_DATADIR environment variable such as:
-> +
-> +    PERF_TEST_CORESIGHT_DATADIR=/var/tmp
-> +    perf test
-> +
-
-Use code block.
-
-> +You may wish to set these above environment variables if you whish to
-> +keep the output of tests outside of the current working directory for
-> +longer term storage and examination.
-> diff --git a/tools/perf/Documentation/arm-coresight.txt b/tools/perf/Documentation/arm-coresight.txt
-> new file mode 100644
-> index 000000000000..f94743a4d161
-> --- /dev/null
-> +++ b/tools/perf/Documentation/arm-coresight.txt
-> @@ -0,0 +1,5 @@
-> +Arm CoreSight Support
-> +=====================
-> +
-> +Please see docuentation in the central CoreSight location in the
-> +kernel tree under Documentation/trace/coresight
-
-s/ducuentation/documentation/
-
-So here's the improv:
-
----- >8 ----
-
-diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
-index a25fcda5c37c55..0dd4689a699ecd 100644
---- a/Documentation/trace/coresight/coresight-perf.rst
-+++ b/Documentation/trace/coresight/coresight-perf.rst
-@@ -10,37 +10,37 @@ CoreSight - Perf
- Perf is able to locally access CoreSight trace data and store it to the
- output perf data files. This data can then be later decoded to give the
- instructions that were traced for debugging or profiling purposes. You
--can log such data with a perf record command like:
-+can log such data with a perf record command like::
- 
--    perf record -e cs_etm//u testbinary
-+   perf record -e cs_etm//u testbinary
- 
- This would run some test binary (testbinary) until it exits and record
- a perf.data trace file. That file would have AUX sections if CoreSight
- is working correctly. You can dump the content of this file as
--readable text with a command like:
-+readable text with a command like::
- 
--    perf report --stdio --dump -i perf.data
-+   perf report --stdio --dump -i perf.data
- 
--You should find some sections of this file have AUX data blocks like:
-+You should find some sections of this file have AUX data blocks like::
- 
--    0x1e78 [0x30]: PERF_RECORD_AUXTRACE size: 0x11dd0  offset: 0  ref: 0x1b614fc1061b0ad1  idx: 0  tid: 531230  cpu: -1
-+   0x1e78 [0x30]: PERF_RECORD_AUXTRACE size: 0x11dd0  offset: 0  ref: 0x1b614fc1061b0ad1  idx: 0  tid: 531230  cpu: -1
- 
--    . ... CoreSight ETM Trace data: size 73168 bytes
--            Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
--              Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
--              Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
--              Idx:26; ID:10;  I_TRACE_ON : Trace On.
--              Idx:27; ID:10;  I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000FFFFB6069140; Ctxt: AArch64,EL0, NS;
--              Idx:38; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
--              Idx:39; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
--              Idx:40; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
--              Idx:41; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEN
--              ...
-+   . ... CoreSight ETM Trace data: size 73168 bytes
-+           Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
-+             Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
-+             Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
-+             Idx:26; ID:10;  I_TRACE_ON : Trace On.
-+             Idx:27; ID:10;  I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000FFFFB6069140; Ctxt: AArch64,EL0, NS;
-+             Idx:38; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+             Idx:39; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+             Idx:40; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+             Idx:41; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEN
-+             ...
- 
- If you see these above, then your system is tracing CoreSight data
- correctly.
- 
--To compile perf with CoreSight support in the tools/perf directory do
-+To compile perf with CoreSight support in the tools/perf directory do::
- 
-     make CORESIGHT=1
- 
-@@ -60,23 +60,23 @@ Kernel CoreSight Support
- ------------------------
- 
- You will also want CoreSight support enabled in your kernel config.
--Ensure it is enabled with:
-+Ensure it is enabled with::
- 
--    CONFIG_CORESIGHT=y
-+   CONFIG_CORESIGHT=y
- 
- There are various other CoreSight options you probably also want
--enabled like:
-+enabled like::
- 
--    CONFIG_CORESIGHT_LINKS_AND_SINKS=y
--    CONFIG_CORESIGHT_LINK_AND_SINK_TMC=y
--    CONFIG_CORESIGHT_CATU=y
--    CONFIG_CORESIGHT_SINK_TPIU=y
--    CONFIG_CORESIGHT_SINK_ETBV10=y
--    CONFIG_CORESIGHT_SOURCE_ETM4X=y
--    CONFIG_CORESIGHT_STM=y
--    CONFIG_CORESIGHT_CPU_DEBUG=y
--    CONFIG_CORESIGHT_CTI=y
--    CONFIG_CORESIGHT_CTI_INTEGRATION_REGS=y
-+   CONFIG_CORESIGHT_LINKS_AND_SINKS=y
-+   CONFIG_CORESIGHT_LINK_AND_SINK_TMC=y
-+   CONFIG_CORESIGHT_CATU=y
-+   CONFIG_CORESIGHT_SINK_TPIU=y
-+   CONFIG_CORESIGHT_SINK_ETBV10=y
-+   CONFIG_CORESIGHT_SOURCE_ETM4X=y
-+   CONFIG_CORESIGHT_STM=y
-+   CONFIG_CORESIGHT_CPU_DEBUG=y
-+   CONFIG_CORESIGHT_CTI=y
-+   CONFIG_CORESIGHT_CTI_INTEGRATION_REGS=y
- 
- Please refer to the kernel configuration help for more information.
- 
-@@ -88,18 +88,18 @@ tests will cover CoreSight (only if enabled and on ARM64). You
- generally would run perf test from the tools/perf directory in the
- kernel tree. Some tests will check some internal perf support like:
- 
--    Check Arm CoreSight trace data recording and synthesized samples
--    Check Arm SPE trace data recording and synthesized samples
-+* Check Arm CoreSight trace data recording and synthesized samples
-+* Check Arm SPE trace data recording and synthesized samples
- 
- Some others will actually use perf record and some test binaries that
- are in tests/shell/coresight and will collect traces to ensure a
- minimum level of functionality is met. The scripts that launch these
- tests are in the same directory. These will all look like:
- 
--    CoreSight / ASM Pure Loop
--    CoreSight / Memcpy 16k 10 Threads
--    CoreSight / Thread Loop 10 Threads - Check TID
--    ...
-+* CoreSight / ASM Pure Loop
-+* CoreSight / Memcpy 16k 10 Threads
-+* CoreSight / Thread Loop 10 Threads - Check TID
-+* etc.
- 
- These perf record tests will not run if the tool binaries do not exist
- in tests/shell/coresight/\*/ and will be skipped. If you do not have
-@@ -108,11 +108,11 @@ CoreSight support or remove these binaries in order to not have these
- tests fail and have them skip instead.
- 
- These tests will log historical results in the current working
--directory (e.g. tools/perf) and will be named stats-\*.csv like:
-+directory (e.g. tools/perf) and will be named stats-\*.csv like::
- 
--    stats-asm_pure_loop-out.csv
--    stats-memcpy_thread-16k_10.csv
--    ...
-+   stats-asm_pure_loop-out.csv
-+   stats-memcpy_thread-16k_10.csv
-+   ...
- 
- These statistic files log some aspects of the AUX data sections in
- the perf data output counting some numbers of certain encodings (a
-@@ -137,23 +137,23 @@ is inside.
- 
- You can change where these csv logs are stored by setting the
- PERF_TEST_CORESIGHT_STATDIR environment variable before running perf
--test like:
-+test like::
- 
--    export PERF_TEST_CORESIGHT_STATDIR=/var/tmp
--    perf test
-+   export PERF_TEST_CORESIGHT_STATDIR=/var/tmp
-+   perf test
- 
- They will also store resulting perf output data in the current
--directory for later inspection like:
-+directory for later inspection like::
- 
--    perf-asm_pure_loop-out.data
--    perf-memcpy_thread-16k_10.data
--    ...
-+   perf-asm_pure_loop-out.data
-+   perf-memcpy_thread-16k_10.data
-+   ...
- 
- You can alter where the perf data files are stored by setting the
--PERF_TEST_CORESIGHT_DATADIR environment variable such as:
-+PERF_TEST_CORESIGHT_DATADIR environment variable such as::
- 
--    PERF_TEST_CORESIGHT_DATADIR=/var/tmp
--    perf test
-+   PERF_TEST_CORESIGHT_DATADIR=/var/tmp
-+   perf test
- 
- You may wish to set these above environment variables if you whish to
- keep the output of tests outside of the current working directory for
-diff --git a/tools/perf/Documentation/arm-coresight.txt b/tools/perf/Documentation/arm-coresight.txt
-index f94743a4d161f2..c117fc50a2a956 100644
---- a/tools/perf/Documentation/arm-coresight.txt
-+++ b/tools/perf/Documentation/arm-coresight.txt
-@@ -1,5 +1,5 @@
- Arm CoreSight Support
- =====================
- 
--Please see docuentation in the central CoreSight location in the
--kernel tree under Documentation/trace/coresight
-+For full documentation, see Documentation/trace/coresight/coresight-perf.rst
-+in the kernel tree.
-
----- >8 ----
-
-Note: since this is documentation patch, don't forget to Cc linux-doc list.
-I add it for you.
-
-Thanks.
-
--- 
-An old man doll... just what I always wanted! - Clara
+Best Regards,
+Yang
