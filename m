@@ -2,111 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C691C433EF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Jul 2022 09:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616BFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Jul 2022 12:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbiGBJt5 (ORCPT
+        id S232177AbiGBMSo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 2 Jul 2022 05:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54632 "EHLO
+        Sat, 2 Jul 2022 08:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiGBJt5 (ORCPT
+        with ESMTP id S229644AbiGBMSn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 2 Jul 2022 05:49:57 -0400
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 460CF13CD1;
-        Sat,  2 Jul 2022 02:49:55 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id B0CE7C01F; Sat,  2 Jul 2022 11:49:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1656755393; bh=kWnM5HmL8ZFxmHvTL3mAW3KL5okW54pgpZzMeub04BA=;
+        Sat, 2 Jul 2022 08:18:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3B79FC6;
+        Sat,  2 Jul 2022 05:18:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B09A60B70;
+        Sat,  2 Jul 2022 12:18:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A95C34114;
+        Sat,  2 Jul 2022 12:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656764321;
+        bh=vHkVr3Xnp9/13ksrVIueC09gqM5BYMAMpr8ToNmwTKc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K5PVBEieNp9VipJHL//Pd2ri4iffFUOyGAFlu/85gzuYeX/TZ2eyfWxjEcAxxbMk7
-         iOeH5ij3NjubZSuHjyEUfMl9tUDFomKzARqomzh4gjq9ZwTQa7kxbuhMkb9QhOkbgg
-         EpHv6+ZcTzF0qBBg44C6CG/dR/niGBTuMzKFPtP0moKjMp0A3GFj3TCS1MNomRDtkI
-         cNF6A23XLFLFtVcNcQXt3ReJyQbzAz5oqGDevBHXrH3b7dZqEaIbuE4AObp5IBn0YX
-         gEMO7db99yj87MC6qmf6eTOpRH1IA4k9z2KatjNSt75E7zAQD2+ELNwcFcprLKIHs8
-         Cte4UEIHv+2xg==
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id 69C2AC009;
-        Sat,  2 Jul 2022 11:49:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1656755393; bh=kWnM5HmL8ZFxmHvTL3mAW3KL5okW54pgpZzMeub04BA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K5PVBEieNp9VipJHL//Pd2ri4iffFUOyGAFlu/85gzuYeX/TZ2eyfWxjEcAxxbMk7
-         iOeH5ij3NjubZSuHjyEUfMl9tUDFomKzARqomzh4gjq9ZwTQa7kxbuhMkb9QhOkbgg
-         EpHv6+ZcTzF0qBBg44C6CG/dR/niGBTuMzKFPtP0moKjMp0A3GFj3TCS1MNomRDtkI
-         cNF6A23XLFLFtVcNcQXt3ReJyQbzAz5oqGDevBHXrH3b7dZqEaIbuE4AObp5IBn0YX
-         gEMO7db99yj87MC6qmf6eTOpRH1IA4k9z2KatjNSt75E7zAQD2+ELNwcFcprLKIHs8
-         Cte4UEIHv+2xg==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 14cf811d;
-        Sat, 2 Jul 2022 09:49:46 +0000 (UTC)
-Date:   Sat, 2 Jul 2022 18:49:31 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        b=on/8bBA/BwTaAjAspsO8q7/J5LprnogcGVcpACo1kv0Y7UZFHD01cJjbpv1YBmiTF
+         u9xiqp5H2TBcRGH8PTdo2QFZ7iO9ENotnp5Dfmj2WARNJF12XrhOllhNcKlXZxFtRf
+         CjA3oTBkfhwXlvJmpyBRdQ+Sb+ksA5mS5Zi+YbpaFWcAcaCjdVgWwUE2WFNtaZDf7p
+         LXkn4WF+HTFItJXJzqQrOPrFtQr4V9fCtWRyb6KsClGaTbMhbkuVbQk6sJzWnIj6Rz
+         UxNGrWDzJxY6QUyXdlOdfO+fpq4elof7l7574PjhmqUgbMHcGa0p++iEwX09h6EErG
+         kykWANvV7KE6g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7B3564096F; Sat,  2 Jul 2022 09:18:38 -0300 (-03)
+Date:   Sat, 2 Jul 2022 09:18:38 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ivan Babrou <ivan@cloudflare.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@cloudflare.com, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf parse: Allow names to start with digits
-Message-ID: <YsAUqwzeO8U6cIJA@codewreck.org>
-References: <20220612061508.1449636-1-asmadeus@codewreck.org>
+        Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Ian Rogers <irogers@google.com>,
+        Fangrui Song <maskray@google.com>
+Subject: Re: [PATCH] perf unwind: fix unitialized offset on aarch64
+Message-ID: <YsA3nmwXyLfN4OQA@kernel.org>
+References: <20220701182046.12589-1-ivan@cloudflare.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220612061508.1449636-1-asmadeus@codewreck.org>
+In-Reply-To: <20220701182046.12589-1-ivan@cloudflare.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Em Fri, Jul 01, 2022 at 11:20:46AM -0700, Ivan Babrou escreveu:
+> Commit dc2cf4ca866f uncovered the following issue on aarch64:
+> 
+>     util/unwind-libunwind-local.c: In function 'find_proc_info':
+>     util/unwind-libunwind-local.c:386:28: error: 'offset' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>     386 |                         if (ofs > 0) {
+>         |                            ^
+>     util/unwind-libunwind-local.c:199:22: note: 'offset' was declared here
+>     199 |         u64 address, offset;
+>         |                      ^~~~~~
+>     util/unwind-libunwind-local.c:371:20: error: 'offset' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>     371 |                 if (ofs <= 0) {
+>         |                    ^
+>     util/unwind-libunwind-local.c:199:22: note: 'offset' was declared here
+>     199 |         u64 address, offset;
+>         |                      ^~~~~~
+>     util/unwind-libunwind-local.c:363:20: error: 'offset' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>     363 |                 if (ofs <= 0) {
+>         |                    ^
+>     util/unwind-libunwind-local.c:199:22: note: 'offset' was declared here
+>     199 |         u64 address, offset;
+>         |                      ^~~~~~
+>     In file included from util/libunwind/arm64.c:37:
 
-just making sure my mail didn't get lost -- would anyone have time to
-look at this?
+Thanks, applied.
 
-I don't mind if it's slow or another solution is taken, I'd just like to
-be able to use 9p probes with perf eventually :)
+- Arnaldo
 
-Thanks!
-
-Dominique Martinet wrote on Sun, Jun 12, 2022 at 03:15:08PM +0900:
-> Tracepoints can start with digits, although we don't have many of these:
-> 
-> $ rg -g '*.h' '\bTRACE_EVENT\([0-9]'
-> net/mac802154/trace.h
-> 53:TRACE_EVENT(802154_drv_return_int,
-> ...
-> 
-> net/ieee802154/trace.h
-> 66:TRACE_EVENT(802154_rdev_add_virtual_intf,
-> ...
-> 
-> include/trace/events/9p.h
-> 124:TRACE_EVENT(9p_client_req,
-> ...
-> 
-> Just allow names to start with digits too so e.g. perf probe -e '9p:*'
-> works
-> 
-> Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+ 
+> Signed-off-by: Ivan Babrou <ivan@cloudflare.com>
+> Fixes: dc2cf4ca866f
 > ---
->  tools/perf/util/parse-events.l | 2 +-
+>  tools/perf/util/unwind-libunwind-local.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-> index 5b6e4b5249cf..4133d6950d29 100644
-> --- a/tools/perf/util/parse-events.l
-> +++ b/tools/perf/util/parse-events.l
-> @@ -211,7 +211,7 @@ bpf_source	[^,{}]+\.c[a-zA-Z0-9._]*
->  num_dec		[0-9]+
->  num_hex		0x[a-fA-F0-9]+
->  num_raw_hex	[a-fA-F0-9]+
-> -name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
-> +name		[a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
->  name_tag	[\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
->  name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
->  drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
+> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+> index 37622699c91a..eaa8fa4b34f3 100644
+> --- a/tools/perf/util/unwind-libunwind-local.c
+> +++ b/tools/perf/util/unwind-libunwind-local.c
+> @@ -197,7 +197,7 @@ static int elf_section_address_and_offset(int fd, const char *name, u64 *address
+>  #ifndef NO_LIBUNWIND_DEBUG_FRAME
+>  static u64 elf_section_offset(int fd, const char *name)
+>  {
+> -	u64 address, offset;
+> +	u64 address, offset = 0;
+>  
+>  	if (elf_section_address_and_offset(fd, name, &address, &offset))
+>  		return 0;
+> -- 
+> 2.36.1
+
+-- 
+
+- Arnaldo
