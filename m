@@ -2,62 +2,69 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0CFC433EF
-	for <linux-perf-users@archiver.kernel.org>; Sun,  3 Jul 2022 20:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281CDC43334
+	for <linux-perf-users@archiver.kernel.org>; Sun,  3 Jul 2022 21:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbiGCUlB (ORCPT
+        id S230037AbiGCVbH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 3 Jul 2022 16:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46460 "EHLO
+        Sun, 3 Jul 2022 17:31:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiGCUlA (ORCPT
+        with ESMTP id S229519AbiGCVbG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 3 Jul 2022 16:41:00 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB04E1150;
-        Sun,  3 Jul 2022 13:40:59 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id w2-20020a056830110200b00616ce0dfcb2so6288666otq.1;
-        Sun, 03 Jul 2022 13:40:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=vnMdHc9n06lEe86ZhIvCrTAOI1nFEwHvlgHZoZb6Zps=;
-        b=Ncc5RY5GP0lkZ0q1Y3VIgAtdXoJlZhL4VHOYXZyDVZ2zyaP+eE25F5es7umKsKIejv
-         pXW91Ig3PVyncOJmJinu/qdhpQORPTDaeTWGAIKdb4sySk8Q/fhk04WxUawtwZy9xxyG
-         Me1A01MndoUPwaU/UowzCmtFTGvHrjluk/540Fa27rM1UIDeHY24fzY5LiHSli19hziy
-         FYmAakP2uHo9A7FHaMgIPFu8u5KCfNgsgnEWN76banJiuPQqQyXeRnS9PgqW/CQCWoh6
-         qNv9yWIefMMdF3jVNNj/cSPNZpLWc9cl7nUCdmMG2KaCxxp0g4VuNb3thCEZwUpkmYkP
-         PPqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=vnMdHc9n06lEe86ZhIvCrTAOI1nFEwHvlgHZoZb6Zps=;
-        b=RlD/w6zz/5RIuAslNhFk7Ywy9ZHvJSINi5XvXVocsSovYk9slVYDQC18myQMdF6OQ6
-         dW3uEyZEcEFM6KwUfhp3JTuNYAsJCRNVWWTDlNiBQR54EQkdX1nufCEtKSRWawZ3Jidq
-         EXZhO+5C3BhlLOAjYASBzoErDkRVL9kGDVk+Zg8UGFggXregCXqFhVUJGmM9tv3IJdS2
-         amYvNGcFRKtkmU1/owzm3FrMHDJzzHOdkmeGhdK1KGK3iFZEZiZFgPeTCXxVMxl0koEq
-         1DrOsesABYkgJnpeHYgB7YoRlR5MmF4EuCl0rvyM2kBTFiKn034PYgqtkB7k2XXL6Ren
-         fCVA==
-X-Gm-Message-State: AJIora859gZXLGfIFZxnMVzROvWGQnnKHZ1O2FIuVRmLlI1MdOFdCzO3
-        zuWWT67R/yl5XkwPLhFqf+IjV81c9m83ZpTT/MA=
-X-Google-Smtp-Source: AGRyM1tqkbygJQELSpRQP1ufSQnbtjBaq8MVtGHbXMb4k8VpBRsRBP2Pl0YfxErKO81+fYNnqUY7OO7P4Ekzhq4sKqw=
-X-Received: by 2002:a05:6830:1d5b:b0:616:de98:2556 with SMTP id
- p27-20020a0568301d5b00b00616de982556mr11847704oth.367.1656880859242; Sun, 03
- Jul 2022 13:40:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <CA+icZUVVXq0Mh8=QuopF0tMZyZ0Tn8AiKEZoA3jfP47Q8B=x2A@mail.gmail.com>
- <CA+icZUW3VrDC8J4MnNb1H3nGYQggBwY4zOoaJkzSsNj7xKDvyQ@mail.gmail.com>
- <CA+icZUVcCMCGEaxytyJd_-Ur-Ey_gWyXx=tApo-SVUqbX_bhUA@mail.gmail.com>
- <CA+icZUVpr8ZeOKCj4zMMqbFT013KJz2T1csvXg+VSkdvJH1Ubw@mail.gmail.com> <20220703165115.gox3hlwwdcnorcul@awork3.anarazel.de>
-In-Reply-To: <20220703165115.gox3hlwwdcnorcul@awork3.anarazel.de>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sun, 3 Jul 2022 22:40:22 +0200
-Message-ID: <CA+icZUXCqzZgdSNyPwM+nmdTdPoZrQm2M=2DgOy7j_YHXQ1T6w@mail.gmail.com>
-Subject: Re: [perf-tools] Build-error in tools/perf/util/annotate.c with LLVM-14
-To:     Andres Freund <andres@anarazel.de>
+        Sun, 3 Jul 2022 17:31:06 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3A65FC2;
+        Sun,  3 Jul 2022 14:31:05 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id DB7595C0061;
+        Sun,  3 Jul 2022 17:31:04 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sun, 03 Jul 2022 17:31:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1656883864; x=1656970264; bh=P+eL1Ug90j
+        cAif2rkt5zV/SsOFRZ2blzqg+nKXzhH5A=; b=peTEV+nkvEcmt6UExg13DKCuh2
+        YjduUwNbgmKsZwNWe7ho5HaWSwbCiuj+OZ4PZm+T1nJQQ+qeuKwoargnIsSa001G
+        SuCRg8Bw9hLA2I2fRbR7TMrlTsAJpp2E1sles6w+UrQ/y1bhLHdb9CjrqPU1/pUk
+        U6+Oy1T/wiiE6n8bFVDYm3ahoMr4Kz1ngUKzmfU/GuRyl9hr6iEYSOkB7fomARXC
+        9BEHuvVeUU1BEF3Pwa7VfxO5QFvZdFx6MLUDXDEwmWntA+2fEs0Gbyj/bj8HMn7g
+        GVudNvS5eS85tLVXeN7KAf5AHH4j43RV61oRUY5i6t2v6rHOfGpu5N1f4w8g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; t=1656883864; x=1656970264; bh=P+eL1Ug90jcAif2rkt5zV/SsOFRZ
+        2blzqg+nKXzhH5A=; b=cx2m+KpccWVMp3NQZAfrCj1nmSBTQSyb2YK9FeLo+82M
+        4/2BXTA05SG9XTe4oG/1OzmSbQsfbjnCqQXyY7wYQ1y6eu1d8UmOBTJ4SxYTukhg
+        XR14nTA0b/TjLqXQmiU/+d5gX2CQ7Y4x8vTmqA/6nQRimwlt2BcbEwrDaqBW+G9i
+        mmp7pUtkdpfjReZjhY8nZ046rSujKNfofg8HTE5gt8CyDgs4Ae7D+09BSRARnvXe
+        XznW1UEM6HkhwMHgi0Vf5ssXcbpJsuBvD9D5iAAPmlQwQBKwS/n53Mwy63O+mL6E
+        OlKHMt5KXh03ykFIXPmK+aKbfX9pUodsoOb1KLhLJQ==
+X-ME-Sender: <xms:mArCYoR71A8UMLf3CaJde7BBjyQLADjE2FZpuw_X-D4SurJPOsUAGQ>
+    <xme:mArCYlxLF0KQ6sC3kadYY4ZNJr2dNFBqOxkIsDbTP_glNLlrGZnmTQAG-WiyUaDeU
+    KNhZINgCirjb6icBw>
+X-ME-Received: <xmr:mArCYl0W0EmGlAjl6_-5D4U7jYAHNPvZPJSVGC__AExd26Ah2zVDqRvgZ-lRAx6XcAzT1OHQbsCEtmFN0aQhQ21-9P7P2VQcifoiLuc_t32e64FvlHZ_QWM_dhGI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudehjedgudeihecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgu
+    rhgvshcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucggtf
+    frrghtthgvrhhnpedvffefvefhteevffegieetfefhtddvffejvefhueetgeeludehteev
+    udeitedtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpegrnhgurhgvshesrghnrghrrgiivghlrdguvg
+X-ME-Proxy: <xmx:mArCYsB_UOrtWhfLyQbEuR9lSYQTU557-7eMImdiZVlEoTf1gKfCug>
+    <xmx:mArCYhipUJg40X0JKrYU1X19MGmmdId8tRjVgS8y-3EPN8CV4SSAEg>
+    <xmx:mArCYoorSoU5Z8X5hARugFyvjckkrFUezWhJckmMDXjfnuzLQAcaRQ>
+    <xmx:mArCYmaxE32E5Xiu8urj7Rq_S_URgaYynHO0WcWnqvOC_3yD9iASIw>
+Feedback-ID: id4a34324:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 3 Jul 2022 17:31:04 -0400 (EDT)
+Date:   Sun, 3 Jul 2022 14:31:03 -0700
+From:   Andres Freund <andres@anarazel.de>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -67,115 +74,46 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Quentin Monnet <quentin@isovalent.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [perf-tools] Build-error in tools/perf/util/annotate.c with
+ LLVM-14
+Message-ID: <20220703213103.n3oxmdnlyjsdrty4@awork3.anarazel.de>
+References: <CA+icZUVVXq0Mh8=QuopF0tMZyZ0Tn8AiKEZoA3jfP47Q8B=x2A@mail.gmail.com>
+ <CA+icZUW3VrDC8J4MnNb1H3nGYQggBwY4zOoaJkzSsNj7xKDvyQ@mail.gmail.com>
+ <CA+icZUVcCMCGEaxytyJd_-Ur-Ey_gWyXx=tApo-SVUqbX_bhUA@mail.gmail.com>
+ <CA+icZUVpr8ZeOKCj4zMMqbFT013KJz2T1csvXg+VSkdvJH1Ubw@mail.gmail.com>
+ <20220703165115.gox3hlwwdcnorcul@awork3.anarazel.de>
+ <CA+icZUXCqzZgdSNyPwM+nmdTdPoZrQm2M=2DgOy7j_YHXQ1T6w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+icZUXCqzZgdSNyPwM+nmdTdPoZrQm2M=2DgOy7j_YHXQ1T6w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jul 3, 2022 at 6:51 PM Andres Freund <andres@anarazel.de> wrote:
->
-> Hi,
->
-> On 2022-07-03 13:54:41 +0200, Sedat Dilek wrote:
-> > Andres, you have some test-cases how you verified the built perf is OK?
->
-> I ran an intentionally expensive workload, monitored it with bpftrace, then
-> took a perf profile. Then annotated the bpf "function" and verified it looked
-> the same before / after, using a perf built in a container (and thus
-> compiling).
->
->
-> Similar with bpftool, I dumped a jited program with a bpftool built with /
-> without the patches (inside the container using nsenter for the version
-> without the patches, so I could build it, using nsenter -t $pid -m -p) and
-> compared both the json and non-json output before / after.
->
-> V=4; nsenter -t 847325 -m -p /usr/src/linux/tools/bpf/bpftool/bpftool -j -d prog dump jited id 22 > /tmp/22.jit.json.$V; nsenter -t 847325 -m -p /usr/src/linux/tools/bpf/bpftool/bpftool -d prog dump jited id 22 > /tmp/22.jit.txt.$V
->
-> and then diffed the results.
->
->
-> bpf_jit_disasm was harder, because bpf_jit_enable = 2 is broken currently. So
-> I gathered output in a VM from an older kernel, and used bpf_jit_disasm -f ...
-> before / after the patches.
->
+Hi,
 
-My test-case was to build a Linux v5.19-rc4 plus custom patches
-including your v1 patchset.
+On 2022-07-03 22:40:22 +0200, Sedat Dilek wrote:
+> My test-case was to build a Linux v5.19-rc4 plus custom patches
+> including your v1 patchset.
 
-Using my selfmade perf:
+> make-line:
+> 
+> /home/dileks/bin/perf stat make V=1 -j4 LLVM=1 LLVM_IAS=1
+> PAHOLE=/opt/pahole/bin/pahole LOCALVERSION=-1-amd64-clang
+> 14-lto KBUILD_BUILD_HOST=iniza KBUILD_BUILD_USER=sedat.dilek@gmail.com
+> KBUILD_BUILD_TIMESTAMP=2022-07-03 bindeb-pkg
+> KDEB_PKGVERSION=5.19.0~rc4-1~bookworm+dileks1
+> [...]
+> Hmmm, it took a bit longer as usual.
 
-$ ~/bin/perf -vv
-perf version 5.19.0-rc4
-                dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-   dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-        syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-               libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-           debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
-               libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-              libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-              libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-            libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-             libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-            libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-            libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-   libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                 zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                 lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-            get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                  bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                  aio: [ on  ]  # HAVE_AIO_SUPPORT
-                 zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-              libpfm4: [ OFF ]  # HAVE_LIBPFM
+I don't think the patches would affect the performance of this workload - I
+don't know the kernel build process well, but I don't see why anything in it
+would trigger bpf programs to be disassembled? I guess the additional three
+feature tests can take a tiny bit of time, but...
 
-make-line:
+Sent out a new version, did add you as a CC.
 
-/home/dileks/bin/perf stat make V=1 -j4 LLVM=1 LLVM_IAS=1
-PAHOLE=/opt/pahole/bin/pahole LOCALVERSION=-1-amd64-clang
-14-lto KBUILD_BUILD_HOST=iniza KBUILD_BUILD_USER=sedat.dilek@gmail.com
-KBUILD_BUILD_TIMESTAMP=2022-07-03 bindeb-pkg
-KDEB_PKGVERSION=5.19.0~rc4-1~bookworm+dileks1
+Greetings,
 
-Performance counter stats for 'make V=1 -j4 LLVM=1 LLVM_IAS=1
-PAHOLE=/opt/pahole/bin/pahole LOCALVERSION=-1-amd64-clang14-lto
-KBUILD_BUILD_HOST=iniza KBUILD_BUILD_USER=sedat.dilek@gmail.com
-KBUILD_BUILD_TIMESTAMP=2022-07-03 bindeb-pkg
-KDEB_PKGVERSION=5.19.0~rc4-1~bookworm+dileks1':
-
-      49180053.86 msec task-clock                #    3.371 CPUs
-utilized
-         11647016      context-switches          #  236.824 /sec
-           341509      cpu-migrations            #    6.944 /sec
-        341092829      page-faults               #    6.936 K/sec
-   86858202428205      cycles                    #    1.766 GHz
-   63272333662538      stalled-cycles-frontend   #   72.85% frontend
-cycles idle
-   45610931269521      stalled-cycles-backend    #   52.51% backend
-cycles idle
-   58841762567958      instructions              #    0.68  insn per
-cycle
-                                                 #    1.08  stalled
-cycles per insn
-   10469937534492      branches                  #  212.890 M/sec
-     558492683589      branch-misses             #    5.33% of all
-branches
-
-  14587.639724247 seconds time elapsed
-
-  45568.184531000 seconds user
-   3656.227306000 seconds sys
-
-Hmmm, it took a bit longer as usual.
-
-But hey:
-
-$ cat /proc/version
-Linux version 5.19.0-rc4-1-amd64-clang14-lto
-(sedat.dilek@gmail.com@iniza) (dileks clang version 14.0.5
-(https://github.com/llvm/llvm-project.git
-c12386ae247c0d46e1d513942e322e3a0510b126), LLD 14.0.5)
-#1~bookworm+dileks1 SMP PREEMPT_DYNAMIC 2022-07-03
-
--Sedat-
+Andres Freund
