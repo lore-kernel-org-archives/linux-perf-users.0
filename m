@@ -2,110 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11773C43334
-	for <linux-perf-users@archiver.kernel.org>; Sat,  2 Jul 2022 23:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDE8C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun,  3 Jul 2022 09:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbiGBXvl (ORCPT
+        id S230156AbiGCJd0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 2 Jul 2022 19:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47014 "EHLO
+        Sun, 3 Jul 2022 05:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiGBXvl (ORCPT
+        with ESMTP id S230356AbiGCJdZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 2 Jul 2022 19:51:41 -0400
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8E87B4AB;
-        Sat,  2 Jul 2022 16:51:39 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id 70936C01F; Sun,  3 Jul 2022 01:51:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1656805898; bh=Zm5xiOI3tzjPZ5dH6z84+OwIZ0P84+PXbsyPyxuxS2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FJWDzq2+FWAHHGPBavPpzlQQoKg8jGGiAPOHS/YDqaDMSGb90ZB3E7r9/sWkAAGV5
-         ME8fn4DQJyKzE3Aso4JK/sqXKvKuZ8XeYMzeYwW/TggciXR6aa5o1jSXmPogcCoJXU
-         d6mT7lE8uYbblb3s/pIsnIZ+BXqCTKQ8gmiEnHZbGbphikhagl5YQo1HTfKBubHCKF
-         LsqZ5k0A592iv8RRBV1wXzX6XbYgd3S9FzARjm3su3kY7euq04fiYLiMVmYSIB0WEv
-         MB3LTSOQoUehRxfZIoLXgZbaj92YW44GMqMP9gTRaDjMU5Y7ELvXK/vzRaMSx6555X
-         m33uaY7Vppq+g==
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id BE809C009;
-        Sun,  3 Jul 2022 01:51:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1656805897; bh=Zm5xiOI3tzjPZ5dH6z84+OwIZ0P84+PXbsyPyxuxS2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OM1PqoewUlNlwRC2XmRHT8lRxzkovhVmiMEZSmsa20jap5ziWLN8StHfoJnIIuBnj
-         AENcu1vSRkxoyTKUHbveKhDqqeDvO1H4vfmTX0DSugL2Lk3gBc3moRkiLrmnZDSIc6
-         spLUJuVIIqYIJpw1SZGodxOm5ZxS94fTGQezuR4CUr/tIBlMXFmDhyHHqJinT3djMX
-         5KNGx5p8o0/YNo1sprdyqttUOV4PTwHZ/m2jTAe2DtLswwzSj2CXP4XRohOPHLokwd
-         5ggqwqntabIxuxthKL0TMsVRHNX8e0MuLqop4+UYky31R8fp5w1Xm0dZzwPTNg4o1S
-         5maJ/DlRk6QAA==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 9729a9d2;
-        Sat, 2 Jul 2022 23:51:30 +0000 (UTC)
-Date:   Sun, 3 Jul 2022 08:51:14 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf parse: Allow names to start with digits
-Message-ID: <YsDZ8mTnCQzpejOM@codewreck.org>
-References: <20220612061508.1449636-1-asmadeus@codewreck.org>
- <YsAUqwzeO8U6cIJA@codewreck.org>
- <YsA4+A7TSjzUKDWK@kernel.org>
- <YsBosxs9TVB0aLrf@krava>
+        Sun, 3 Jul 2022 05:33:25 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698123892;
+        Sun,  3 Jul 2022 02:33:24 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id ay16so11673446ejb.6;
+        Sun, 03 Jul 2022 02:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qN6TJiBzUxNdaAU6Co/vYWar8RPEaCWtbXsoQnQcIco=;
+        b=nip9Z/1qj7dJOHdJz9EqBkdU3JcEmxG0opD7kOyK8tFP0ol1GM7c+2zL4h9UI0V8eJ
+         zFDQ61hqfotB3j/A6fgewg9zKxP1E1I0hSo7Wa+xCniB0/5Vl5uoH0F7qaAqWETGtbH3
+         XkRtOVFgTXy3DWE/z1YjpY+YW/p2m5Ld69eqOacqoRoIRABiWnJ0C8REdnqXEL6SkjbN
+         UVLCunLQwYvNhFU3YRuu0mmi+S3pV4pjTQXMWTpvuUQJEN+7l6FLpTJgn6kHJlrnFoSK
+         XN8TDffnDvHQVRrFWakQmRpHFFkt7ruZU04CwF1eqzbIUFZFO/AkV8DBvXA/2duhW+73
+         v0EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qN6TJiBzUxNdaAU6Co/vYWar8RPEaCWtbXsoQnQcIco=;
+        b=FPPkaBKgl8OAvzLf6Cj6uPjqKbzcwPaCjuoUp0Fcgx/eJhMBgrP3Iy2PsSi/W7HC3q
+         F/OElADstZcIkh6Q5AZDmJJzkcx+r0vrSZc7K0bEYAGFuf+5rOpr91ZQaOBqklS0e0Vg
+         yifvg4EXIY5329HIHe19LbaF6Dqs26edrqGqH8QEonGz8NwdOYad1L5lNDNWQig0xemx
+         7qVaSR8lTGgxreDN8GFp9TL1OlH7r7Nob/DuX1a+9X+GJgimgurnP/dorYDhuI7sSWc0
+         odWC583zureybZp6Qiikfi1UnQm1C4lOAUOgv8ZNBJvosex3TJj88abVdac9q2Y8X7Df
+         XfFA==
+X-Gm-Message-State: AJIora9GdRy7xlFiipXWDKYKCRuyBAFH7q37kAOOcmsAgdoxCQe7uM+I
+        84TDk7dQhogPOPcaScnYK+I=
+X-Google-Smtp-Source: AGRyM1uI75SkT5SuiOCumbsbjx+WyzWwxISdA50+mdBdzoDW8h0TmV2Bb/Cqo2rTUFrHKI8vykEeEQ==
+X-Received: by 2002:a17:906:8a53:b0:72a:8a2d:db61 with SMTP id gx19-20020a1709068a5300b0072a8a2ddb61mr12488186ejc.674.1656840802907;
+        Sun, 03 Jul 2022 02:33:22 -0700 (PDT)
+Received: from erthalion.local (dslb-094-222-028-039.094.222.pools.vodafone-ip.de. [94.222.28.39])
+        by smtp.gmail.com with ESMTPSA id f15-20020a170906084f00b00718d18a1860sm12819498ejd.61.2022.07.03.02.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Jul 2022 02:33:22 -0700 (PDT)
+Date:   Sun, 3 Jul 2022 11:32:16 +0200
+From:   Dmitry Dolgov <9erthalion6@gmail.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        songliubraving@fb.com, rostedt@goodmis.org, peterz@infradead.org,
+        mingo@redhat.com, alexei.starovoitov@gmail.com
+Subject: Re: [PATCH v4 1/1] perf/kprobe: maxactive for fd-based kprobe
+Message-ID: <20220703093216.5qpxfvza5dhuknru@erthalion.local>
+References: <20220625152429.27539-1-9erthalion6@gmail.com>
+ <20220627113731.00fa70887d19a163884243fa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YsBosxs9TVB0aLrf@krava>
+In-Reply-To: <20220627113731.00fa70887d19a163884243fa@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Jiri Olsa wrote on Sat, Jul 02, 2022 at 05:48:03PM +0200:
-> > > > -name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
-> > > > +name		[a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
-> 
-> I thought it'd clash with events like cpu/event=3/,
-> but lexer check numbers first, so we're fine there
-> 
-> it smells like it could break some events, but I couldn't
-> find any case of that
-> 
-> could you please at least add tests to tests/parse-events.c
-> for such case?
+> On Mon, Jun 27, 2022 at 11:37:31AM +0900, Masami Hiramatsu wrote:
+> On Sat, 25 Jun 2022 17:24:29 +0200
+> Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
+>
+> > From: Song Liu <songliubraving@fb.com>
+> >
+> > Enable specifying maxactive for fd based kretprobe. This will be useful
+> > for tracing tools like bcc and bpftrace (see for example discussion [1]).
+> > Use highest 4 bit (bit 59-63) to allow specifying maxactive by log2.
+> >
+> > The original patch [2] seems to be fallen through the cracks and wasn't
+> > applied. I've merely rebased the work done by Song Liu, verififed it
+> > still works, and modified to allow specifying maxactive by log2 per
+> > suggestion from the discussion thread.
+> >
+> > Note that changes in rethook implementation may render maxactive
+> > obsolete.
+> >
+> > [1]: https://github.com/iovisor/bpftrace/issues/835
+> > [2]: https://lore.kernel.org/all/20191007223111.1142454-1-songliubraving@fb.com/
+> >
+> > Signed-off-by: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+>
+> This looks good to me.
+>
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-hmm, I'd love to but on my system I have no events that start with a
-number unless I manually modprobe 9pnet (or 802154 stuff), so tests
-would start failing for most people and I don't think we want that...
-
-I have confirmed the following 'perf test "event parsing"' works iff
-patch is applied and 9pnet loaded:
----- 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 459afdb256a1..3d069fe9eb79 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1941,6 +1941,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__exclusive_group,
- 		/* 7 */
- 	},
-+	{
-+		.name  = "9p:9p_client_req",
-+		.check = test__checkevent_tracepoint,
-+		/* 8 */
-+	},
- };
- 
- static const struct evlist_test test__events_pmu[] = {
-----
-
-not sure if there'd be any other way of testing, there's nothing else in
-'perf list' that starts with a number.
---
-Dominique
+Thanks. Is there anything else I can help with to get this change
+committed?
