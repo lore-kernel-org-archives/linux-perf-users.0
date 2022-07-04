@@ -2,198 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4FCC43334
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Jul 2022 12:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610B8CCA482
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Jul 2022 13:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232438AbiGDMCc (ORCPT
+        id S232791AbiGDNWz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Jul 2022 08:02:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
+        Mon, 4 Jul 2022 09:22:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233792AbiGDMC3 (ORCPT
+        with ESMTP id S233868AbiGDNWl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Jul 2022 08:02:29 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344551182D;
-        Mon,  4 Jul 2022 05:02:28 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Lc4Cm06sXzYd0r;
-        Mon,  4 Jul 2022 20:01:40 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 4 Jul 2022 20:02:26 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.61) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 4 Jul 2022 20:02:25 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v2] perf/core: Fix data race between perf_event_set_output and perf_mmap_close
-Date:   Mon, 4 Jul 2022 20:00:06 +0800
-Message-ID: <20220704120006.98141-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
+        Mon, 4 Jul 2022 09:22:41 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CAB8F38;
+        Mon,  4 Jul 2022 06:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656940932; x=1688476932;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7X6+4WgQpVWZhi7AvLXyGHGEV5/74ETt1pwl0e7qxc0=;
+  b=YLev8Epj0tP1oTI++MstrC/2aCGw2a3XXDcLrAfRXnIi7i8uzPyamTDN
+   wr73ebfbxd6ymUWDqyUXxt92qy8o4cOtVdCWHBylKk/zZvgYXQOpOy4Io
+   bo2cS4/uH0zReoLqIpr5FfecbqLWBeHWE82J7WPI5zraIgBJd0LkxVQsM
+   8g5idhF2B1J2NGbzqJuhn9AVeZBbPRPP6T3GgAKs9KAsuN72PXAtBXAUZ
+   752d9grqM4FKL4tVoBkipbaJsePJEK77n1x4fiyLGhv/ttEtZedQ/tnYz
+   mvA4Zd2RozTq7QXcJHUMMgthtNBkEXkC2+SbS2g+e9HKPK1M8GPZ+eSLC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10397"; a="280682586"
+X-IronPort-AV: E=Sophos;i="5.92,243,1650956400"; 
+   d="scan'208";a="280682586"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2022 06:22:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,243,1650956400"; 
+   d="scan'208";a="919360662"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 04 Jul 2022 06:22:10 -0700
+Received: from [10.252.212.27] (kliang2-MOBL.ccr.corp.intel.com [10.252.212.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 1DDB3580AF2;
+        Mon,  4 Jul 2022 06:22:08 -0700 (PDT)
+Message-ID: <9fde1c3a-3fdb-b2b7-7448-8de608853bd2@linux.intel.com>
+Date:   Mon, 4 Jul 2022 09:22:06 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.61]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 1/2] perf record: Fix "--per-thread" option for hybrid
+ machines
+Content-Language: en-US
+To:     zhengjun.xing@linux.intel.com, acme@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@kernel.org, namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, ak@linux.intel.com,
+        Adrian Hunter <adrian.hunter@intel.com>
+References: <20220702023536.2661899-1-zhengjun.xing@linux.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220702023536.2661899-1-zhengjun.xing@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Data race exists between perf_event_set_output and perf_mmap_close.
-The scenario is as follows:
 
-                  CPU1                                                       CPU2
-                                                                    perf_mmap_close(event2)
-                                                                      if (atomic_dec_and_test(&event2->rb->mmap_count)  // mmap_count 1 -> 0
-                                                                        detach_rest = true;
-ioctl(event1, PERF_EVENT_IOC_SET_OUTPUT, event2)
-  perf_event_set_output(event1, event2)
-                                                                      if (!detach_rest)
-                                                                        goto out_put;
-                                                                      list_for_each_entry_rcu(event, &event2->rb->event_list, rb_entry)
-                                                                        ring_buffer_attach(event, NULL)
-                                                                      // because event1 has not been added to event2->rb->event_list,
-                                                                      // event1->rb is not set to NULL in these loops
 
-    ring_buffer_attach(event1, event2->rb)
-      list_add_rcu(&event1->rb_entry, &event2->rb->event_list)
+On 7/1/2022 10:35 PM, zhengjun.xing@linux.intel.com wrote:
+> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> 
+> Commit b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems to
+> collect metadata records") adds a dummy event on hybrid systems to fix the
+> symbol "unknown" issue when the workload is created in a P-core but runs
+> on an E-core. When "--per-thread" is enabled, the nr_cpus is reduced to 1,
+>   adding a dummy event is useless for this issue, and it will also cause
 
-The above data race causes a problem, that is, event1->rb is not NULL, but event1->rb->mmap_count is 0.
-If the perf_mmap interface is invoked for the fd of event1, the kernel keeps in the perf_mmap infinite loop:
+A dummy event is required since a mmap event may be loaded at runtime on 
+any CPU. Thanks Adrian to point it out.
 
-again:
-        mutex_lock(&event->mmap_mutex);
-        if (event->rb) {
-<SNIP>
-                if (!atomic_inc_not_zero(&event->rb->mmap_count)) {
-                        /*
-                         * Raced against perf_mmap_close() through
-                         * perf_event_set_output(). Try again, hope for better
-                         * luck.
-                         */
-                        mutex_unlock(&event->mmap_mutex);
-                        goto again;
-                }
-<SNIP>
+Thanks,
+Kan
 
-This problem has occurred on the Syzkaller, causing the softlockup. The call stack is as follows:
-[ 3666.984385][    C2] watchdog: BUG: soft lockup - CPU#2 stuck for 23s! [syz-executor.2:32404]
-[ 3666.986137][    C2] Modules linked in:
-[ 3666.989581][    C2] CPU: 2 PID: 32404 Comm: syz-executor.2 Not tainted 5.10.0+ #4
-[ 3666.990697][    C2] Hardware name: linux,dummy-virt (DT)
-[ 3666.992270][    C2] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO BTYPE=--)
-[ 3666.993787][    C2] pc : __kasan_check_write+0x0/0x40
-[ 3666.994841][    C2] lr : perf_mmap+0x3c8/0xf80
-[ 3666.995661][    C2] sp : ffff00001011f8f0
-[ 3666.996598][    C2] x29: ffff00001011f8f0 x28: ffff0000cf644868
-[ 3666.998488][    C2] x27: ffff000012cad2c0 x26: 0000000000000000
-[ 3666.999888][    C2] x25: 0000000000000001 x24: ffff000012cad298
-[ 3667.003511][    C2] x23: 0000000000000000 x22: ffff000012cad000
-[ 3667.005504][    C2] x21: ffff0000cf644818 x20: ffff0000cf6d2400
-[ 3667.006891][    C2] x19: ffff0000cf6d24c0 x18: 0000000000000000
-[ 3667.008295][    C2] x17: 0000000000000000 x16: 0000000000000000
-[ 3667.009528][    C2] x15: 0000000000000000 x14: 0000000000000000
-[ 3667.010658][    C2] x13: 0000000000000000 x12: ffff800002023f17
-[ 3667.012169][    C2] x11: 1fffe00002023f16 x10: ffff800002023f16
-[ 3667.013780][    C2] x9 : dfffa00000000000 x8 : ffff00001011f8b7
-[ 3667.015265][    C2] x7 : 0000000000000001 x6 : ffff800002023f16
-[ 3667.016683][    C2] x5 : ffff0000c0f36400 x4 : 0000000000000000
-[ 3667.018078][    C2] x3 : ffffa00010000000 x2 : ffffa000119a0000
-[ 3667.019343][    C2] x1 : 0000000000000004 x0 : ffff0000cf6d24c0
-[ 3667.021276][    C2] Call trace:
-[ 3667.022598][    C2]  __kasan_check_write+0x0/0x40
-[ 3667.023666][    C2]  __mmap_region+0x7a4/0xc90
-[ 3667.024679][    C2]  __do_mmap_mm+0x600/0xa20
-[ 3667.025700][    C2]  do_mmap+0x114/0x384
-[ 3667.026583][    C2]  vm_mmap_pgoff+0x138/0x230
-[ 3667.027532][    C2]  ksys_mmap_pgoff+0x1d8/0x570
-[ 3667.028537][    C2]  __arm64_sys_mmap+0xa4/0xd0
-[ 3667.029597][    C2]  el0_svc_common.constprop.0+0xf4/0x414
-[ 3667.030682][    C2]  do_el0_svc+0x50/0x11c
-[ 3667.031545][    C2]  el0_svc+0x20/0x30
-[ 3667.032368][    C2]  el0_sync_handler+0xe4/0x1e0
-[ 3667.033305][    C2]  el0_sync+0x148/0x180
-
-perf_mmap_close and ring_buffer_attach involve complicated lock recursion.
-The solution is to modify ring_buffer_attach function, that is,
-after new event is added to rb->event_list, check whether rb->mmap_count is 0,
-if the value is 0, another core performs perf_mmap_close operation
-on ring buffer during this period. In this case, we set event->rb to NULL.
-
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
-
-Changes since v1:
- - Modify commit message description.
-
- kernel/events/core.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 80782cddb1da..c67c070f7b39 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5900,6 +5900,7 @@ static void ring_buffer_attach(struct perf_event *event,
- 			       struct perf_buffer *rb)
- {
- 	struct perf_buffer *old_rb = NULL;
-+	struct perf_buffer *new_rb = rb;
- 	unsigned long flags;
- 
- 	WARN_ON_ONCE(event->parent);
-@@ -5928,6 +5929,20 @@ static void ring_buffer_attach(struct perf_event *event,
- 
- 		spin_lock_irqsave(&rb->event_lock, flags);
- 		list_add_rcu(&event->rb_entry, &rb->event_list);
-+
-+		/*
-+		 * When perf_mmap_close traverses rb->event_list during
-+		 * detach all other events, new event may not be added to
-+		 * rb->event_list, let's check again, if rb->mmap_count is 0,
-+		 * it indicates that perf_mmap_close is executed.
-+		 * Manually delete event from rb->event_list and
-+		 * set event->rb to null.
-+		 */
-+		if (!atomic_read(&rb->mmap_count)) {
-+			list_del_rcu(&event->rb_entry);
-+			new_rb = NULL;
-+		}
-+
- 		spin_unlock_irqrestore(&rb->event_lock, flags);
- 	}
- 
-@@ -5944,7 +5959,7 @@ static void ring_buffer_attach(struct perf_event *event,
- 	if (has_aux(event))
- 		perf_event_stop(event, 0);
- 
--	rcu_assign_pointer(event->rb, rb);
-+	rcu_assign_pointer(event->rb, new_rb);
- 
- 	if (old_rb) {
- 		ring_buffer_put(old_rb);
-@@ -11883,6 +11898,13 @@ perf_event_set_output(struct perf_event *event, struct perf_event *output_event)
- 			goto unlock;
- 	}
- 
-+	/*
-+	 * If rb->mmap_count is 0, perf_mmap_close is being executed,
-+	 * the ring buffer is about to be unmapped and cannot be attached.
-+	 */
-+	if (rb && !atomic_read(&rb->mmap_count))
-+		goto unlock;
-+
- 	ring_buffer_attach(event, rb);
- 
- 	ret = 0;
--- 
-2.30.GIT
-
+> "failed to mmap with 22 (Invalid argument)". This patch stops adding dummy
+> events when the option "--per-thread" is enabled, then the option can work
+> on hybrid machines.
+> 
+> Before:
+> 
+>   # ./perf record -e cycles:u --per-thread  sleep 1
+>   failed to mmap with 22 (Invalid argument)
+> 
+> After:
+> 
+>   # ./perf record -e cycles:u --per-thread  sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.002 MB perf.data (6 samples) ]
+> 
+> Fixes: b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems to collect metadata records")
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>   tools/perf/builtin-record.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index e1edd4e98358..44ea2dd424fe 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1223,7 +1223,7 @@ static int record__open(struct record *rec)
+>   	 * of waiting or event synthesis.
+>   	 */
+>   	if (opts->initial_delay || target__has_cpu(&opts->target) ||
+> -	    perf_pmu__has_hybrid()) {
+> +	    (perf_pmu__has_hybrid() && !opts->target.per_thread)) {
+>   		pos = evlist__get_tracking_event(evlist);
+>   		if (!evsel__is_dummy_event(pos)) {
+>   			/* Set up dummy event. */
