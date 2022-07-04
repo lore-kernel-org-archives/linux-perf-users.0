@@ -2,136 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D05CCCA479
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Jul 2022 15:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27137C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Jul 2022 21:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233980AbiGDP1a (ORCPT
+        id S230311AbiGDVjU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Jul 2022 11:27:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48434 "EHLO
+        Mon, 4 Jul 2022 17:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233922AbiGDP13 (ORCPT
+        with ESMTP id S229554AbiGDVjT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Jul 2022 11:27:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 472D8CE11;
-        Mon,  4 Jul 2022 08:27:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D82D861741;
-        Mon,  4 Jul 2022 15:27:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C379C3411E;
-        Mon,  4 Jul 2022 15:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656948448;
-        bh=SBO5j9zc5dNFisK0fKtoA0eUNhaH5nh3Zn77jItG49Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NQMF2072MscULiCWo5iV63hGtGOkyb4t8gZQvDTYG+o+lfO56hYzTRenPV78+4oWJ
-         Lq3mOSbBjYRDyfF5kiY0yxBB2Y43Z7ETPYyNukMOQBCE/boF5XfeakVW5/nBoGfLjJ
-         O98QjcTYI+B3d7C5oTvH+aqUutOy8jK8F3l09rVofdK5Iq4m8s64tFmxpP7fMOuSZV
-         LmG67TQVweH00i3gkcPev/EohCZRZdZCCzuheXhS2+D4H+lki6ydeuQj3/Yjd9evGW
-         E4EDEcaqLNRK6KBdEbDKA+O8K4g9uwsi+cZO6MpME/0wcSVIsnmr5ae8sp45vPvhH5
-         TQ2mANCfKTyFQ==
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCHv2] perf tools: Convert legacy map definition to BTF-defined
-Date:   Mon,  4 Jul 2022 17:27:21 +0200
-Message-Id: <20220704152721.352046-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.35.3
+        Mon, 4 Jul 2022 17:39:19 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A626587
+        for <linux-perf-users@vger.kernel.org>; Mon,  4 Jul 2022 14:39:17 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id m184so6039539wme.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Jul 2022 14:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=85xt8gfUylWcpZOgKCioxv2QzHKT4Z0Id5Y79nmNe0g=;
+        b=DZvPEU0niRPSUg1uzGPh9s1PVrURtPh3cmG2Acv6IPUz019D1bbLrcQoOFs8/lQlyV
+         5z8bFMsb7Z5botGnD+CF+p/j07Y/wL4p9BDp8cPijf4Vj6F1HF+FoXOYFeasKG6rhypA
+         m/VQRymrff10HgSmuC6keRDMqkff7H0Ng5KQD7842RfSU0G3SECxj5JluIDUrbvoKzSk
+         59GkHMcCoQGzUo4qZVqCOQi9t4WddmAY/on7/fWq5lDxNFiEjGdwkoC8ZXPFJy0rq9d7
+         WTeQK6eqpJuHmmr8vvwYiKcMyy1+pfkZ3YYYJkxl/YdUYmb8Uo2/VxBSLEBxxCBtUZ/a
+         E9Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=85xt8gfUylWcpZOgKCioxv2QzHKT4Z0Id5Y79nmNe0g=;
+        b=jGF3mgJMb22L7CzA5FK9XMuH8v/4iRSlfX16aFVphKDgdYgA+itRMf1ZuEwRBaENHR
+         KHjb1Idsz/Rbm1xIQQdnpbXj892evmQFjZVK1Fywq67JwVTxsHA1IiJJnVR0NHzs2NFF
+         +VsCdkHMuEREUvtZSz+l6wht7cP4SlDMmcl2CwHrYRqftvFLYxe7SHrrb2BAyf/xNKcE
+         9JDDca5iE+9tbBm0zvLvn/z9Nfz8ephr08FAwRaZ8jJCxRWI/KZ9/BKmgq61RkY8cEwi
+         QB40J5tbFskVxRs4A3P5VKqEJdbPIJ9kv/Ypm878IvYac9q4Ubhywp3EZLZTgWQbY768
+         HI/g==
+X-Gm-Message-State: AJIora/EXRqOsI+LJ4aGfwvjYzickgHQjYXIY/53XJF91kO5791/s3o5
+        ddxrO/ZCDnLcc10yZMf2hRN2UGzItrmS9TnnM2OY0w==
+X-Google-Smtp-Source: AGRyM1tgbpIUtnl6G41e9mMCxrIpjAX5Mn906pDW+/tjH/RghZlCNr9dPs9zTQlMxKYT7qaUntqPtN/W6f5EkG1sqw8=
+X-Received: by 2002:a7b:ce86:0:b0:3a0:48a1:d0c6 with SMTP id
+ q6-20020a7bce86000000b003a048a1d0c6mr33506068wmj.67.1656970756031; Mon, 04
+ Jul 2022 14:39:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220612061508.1449636-1-asmadeus@codewreck.org>
+In-Reply-To: <20220612061508.1449636-1-asmadeus@codewreck.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 4 Jul 2022 14:39:05 -0700
+Message-ID: <CAP-5=fXgNTW1eXRZhz-s_AfP+v1Oyx1zdksm-Q0B4YVPAgjKxw@mail.gmail.com>
+Subject: Re: [PATCH] perf parse: Allow names to start with digits
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The libbpf is switching off support for legacy map definitions [1],
-which will break the perf llvm tests.
+On Sat, Jun 11, 2022 at 11:16 PM Dominique Martinet
+<asmadeus@codewreck.org> wrote:
+>
+> Tracepoints can start with digits, although we don't have many of these:
+>
+> $ rg -g '*.h' '\bTRACE_EVENT\([0-9]'
+> net/mac802154/trace.h
+> 53:TRACE_EVENT(802154_drv_return_int,
+> ...
+>
+> net/ieee802154/trace.h
+> 66:TRACE_EVENT(802154_rdev_add_virtual_intf,
+> ...
+>
+> include/trace/events/9p.h
+> 124:TRACE_EVENT(9p_client_req,
+> ...
+>
+> Just allow names to start with digits too so e.g. perf probe -e '9p:*'
+> works
+>
+> Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+> ---
+>  tools/perf/util/parse-events.l | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+> index 5b6e4b5249cf..4133d6950d29 100644
+> --- a/tools/perf/util/parse-events.l
+> +++ b/tools/perf/util/parse-events.l
+> @@ -211,7 +211,7 @@ bpf_source  [^,{}]+\.c[a-zA-Z0-9._]*
+>  num_dec                [0-9]+
+>  num_hex                0x[a-fA-F0-9]+
+>  num_raw_hex    [a-fA-F0-9]+
+> -name           [a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
+> +name           [a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
 
-Moving the base source map definition to BTF-defined, so we need
-to use -g compile option for to add debug/BTF info.
+Perhaps this would be cleaner as:
+name           [a-zA-Z0-9_*?\[\]!]+
+except that would allow a name to start with an exclamation. Would
+that be an issue?
 
-[1] https://lore.kernel.org/bpf/20220627211527.2245459-1-andrii@kernel.org/
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/tests/bpf-script-example.c | 35 ++++++++++++++++++---------
- tools/perf/util/llvm-utils.c          |  2 +-
- 2 files changed, 24 insertions(+), 13 deletions(-)
+Thanks,
+Ian
 
-v2 changes:
-  - added comments to macros [Ian]
-  - removed struct bpf_map_def, it's no longer needed
-
-diff --git a/tools/perf/tests/bpf-script-example.c b/tools/perf/tests/bpf-script-example.c
-index ab4b98b3165d..7981c69ed1b4 100644
---- a/tools/perf/tests/bpf-script-example.c
-+++ b/tools/perf/tests/bpf-script-example.c
-@@ -17,20 +17,31 @@ static void *(*bpf_map_lookup_elem)(void *map, void *key) =
- static void *(*bpf_map_update_elem)(void *map, void *key, void *value, int flags) =
- 	(void *) BPF_FUNC_map_update_elem;
- 
--struct bpf_map_def {
--	unsigned int type;
--	unsigned int key_size;
--	unsigned int value_size;
--	unsigned int max_entries;
--};
-+/*
-+ * Following macros are taken from tools/lib/bpf/bpf_helpers.h,
-+ * and are used to create BTF defined maps. It is easier to take
-+ * 2 simple macros, than being able to include above header in
-+ * runtime.
-+ *
-+ * __uint - defines integer attribute of BTF map definition,
-+ * Such attributes are represented using a pointer to an array,
-+ * in which dimensionality of array encodes specified integer
-+ * value.
-+ *
-+ * __type - defines pointer variable with typeof(val) type for
-+ * attributes like key or value, which will be defined by the
-+ * size of the type.
-+ */
-+#define __uint(name, val) int (*name)[val]
-+#define __type(name, val) typeof(val) *name
- 
- #define SEC(NAME) __attribute__((section(NAME), used))
--struct bpf_map_def SEC("maps") flip_table = {
--	.type = BPF_MAP_TYPE_ARRAY,
--	.key_size = sizeof(int),
--	.value_size = sizeof(int),
--	.max_entries = 1,
--};
-+struct {
-+	__uint(type, BPF_MAP_TYPE_ARRAY);
-+	__uint(max_entries, 1);
-+	__type(key, int);
-+	__type(value, int);
-+} flip_table SEC(".maps");
- 
- SEC("func=do_epoll_wait")
- int bpf_func__SyS_epoll_pwait(void *ctx)
-diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-index 96c8ef60f4f8..2dc797007419 100644
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -25,7 +25,7 @@
- 		"$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
- 		"-Wno-unused-value -Wno-pointer-sign "		\
- 		"-working-directory $WORKING_DIR "		\
--		"-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
-+		"-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -g -O2 -o - $LLVM_OPTIONS_PIPE"
- 
- struct llvm_param llvm_param = {
- 	.clang_path = "clang",
--- 
-2.35.3
-
+>  name_tag       [\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
+>  name_minus     [a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
+>  drv_cfg_term   [a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
+> --
+> 2.36.1
+>
