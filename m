@@ -2,120 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610B8CCA482
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Jul 2022 13:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C27C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Jul 2022 14:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232791AbiGDNWz (ORCPT
+        id S234824AbiGDOyj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Jul 2022 09:22:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59816 "EHLO
+        Mon, 4 Jul 2022 10:54:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233868AbiGDNWl (ORCPT
+        with ESMTP id S234782AbiGDOyj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Jul 2022 09:22:41 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CAB8F38;
-        Mon,  4 Jul 2022 06:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656940932; x=1688476932;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7X6+4WgQpVWZhi7AvLXyGHGEV5/74ETt1pwl0e7qxc0=;
-  b=YLev8Epj0tP1oTI++MstrC/2aCGw2a3XXDcLrAfRXnIi7i8uzPyamTDN
-   wr73ebfbxd6ymUWDqyUXxt92qy8o4cOtVdCWHBylKk/zZvgYXQOpOy4Io
-   bo2cS4/uH0zReoLqIpr5FfecbqLWBeHWE82J7WPI5zraIgBJd0LkxVQsM
-   8g5idhF2B1J2NGbzqJuhn9AVeZBbPRPP6T3GgAKs9KAsuN72PXAtBXAUZ
-   752d9grqM4FKL4tVoBkipbaJsePJEK77n1x4fiyLGhv/ttEtZedQ/tnYz
-   mvA4Zd2RozTq7QXcJHUMMgthtNBkEXkC2+SbS2g+e9HKPK1M8GPZ+eSLC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10397"; a="280682586"
-X-IronPort-AV: E=Sophos;i="5.92,243,1650956400"; 
-   d="scan'208";a="280682586"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2022 06:22:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,243,1650956400"; 
-   d="scan'208";a="919360662"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Jul 2022 06:22:10 -0700
-Received: from [10.252.212.27] (kliang2-MOBL.ccr.corp.intel.com [10.252.212.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 1DDB3580AF2;
-        Mon,  4 Jul 2022 06:22:08 -0700 (PDT)
-Message-ID: <9fde1c3a-3fdb-b2b7-7448-8de608853bd2@linux.intel.com>
-Date:   Mon, 4 Jul 2022 09:22:06 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 1/2] perf record: Fix "--per-thread" option for hybrid
- machines
-Content-Language: en-US
-To:     zhengjun.xing@linux.intel.com, acme@kernel.org,
-        peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org, namhyung@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, ak@linux.intel.com,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <20220702023536.2661899-1-zhengjun.xing@linux.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20220702023536.2661899-1-zhengjun.xing@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mon, 4 Jul 2022 10:54:39 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 32E0D316;
+        Mon,  4 Jul 2022 07:54:38 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2633123A;
+        Mon,  4 Jul 2022 07:54:38 -0700 (PDT)
+Received: from e124483.cambridge.arm.com (e124483.cambridge.arm.com [10.1.29.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E3A633F792;
+        Mon,  4 Jul 2022 07:54:33 -0700 (PDT)
+From:   Andrew Kilroy <andrew.kilroy@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Tom Rix <trix@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Subject: [PATCH 0/8] Perf stack unwinding with pointer authentication
+Date:   Mon,  4 Jul 2022 15:53:24 +0100
+Message-Id: <20220704145333.22557-1-andrew.kilroy@arm.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This patch series addresses issues that perf has when attempting to show
+userspace stacks in the presence of pointer authentication on arm64.
+
+Depending on whether libunwind or libdw is used, perf incorrectly
+displays the userspace stack in 'perf report --stdio'.  With libunwind,
+only the leaf function is shown.
+
+            |
+            ---0x200000004005bf
+               0x200000004005bf
+               my_leaf_function
+
+With libdw, only the leaf function is shown even though there are
+callers in the application.
+
+            |
+            ---my_leaf_function
 
 
-On 7/1/2022 10:35 PM, zhengjun.xing@linux.intel.com wrote:
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> 
-> Commit b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems to
-> collect metadata records") adds a dummy event on hybrid systems to fix the
-> symbol "unknown" issue when the workload is created in a P-core but runs
-> on an E-core. When "--per-thread" is enabled, the nr_cpus is reduced to 1,
->   adding a dummy event is useless for this issue, and it will also cause
+The reason perf cannot show the stack upon a perf report --stdio is
+because the unwinders are given instruction pointers which contain a
+pointer authentication code (PAC).  For the libraries to correctly
+unwind, they need to know which bits of the instruction pointer to turn
+off.
 
-A dummy event is required since a mmap event may be loaded at runtime on 
-any CPU. Thanks Adrian to point it out.
+The kernel exposes the set of PAC bits via the NT_ARM_PAC_MASK regset.
+It is expected that this may vary per-task in future. The kernel also
+exposes which pointer authentication keys are enabled via the
+NT_ARM_PAC_ENABLED_KEYS regset, and this can change dynamically. These
+are per-task state which perf would need to sample.
 
-Thanks,
-Kan
+It's not always feasible for perf to acquire these regsets via ptrace.
+When sampling system-wide or with inherited events this may require a
+large volume of ptrace requests, and by the time the perf tool processes
+a sample for a task, that task might already have terminated.
 
-> "failed to mmap with 22 (Invalid argument)". This patch stops adding dummy
-> events when the option "--per-thread" is enabled, then the option can work
-> on hybrid machines.
-> 
-> Before:
-> 
->   # ./perf record -e cycles:u --per-thread  sleep 1
->   failed to mmap with 22 (Invalid argument)
-> 
-> After:
-> 
->   # ./perf record -e cycles:u --per-thread  sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.002 MB perf.data (6 samples) ]
-> 
-> Fixes: b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems to collect metadata records")
-> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->   tools/perf/builtin-record.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index e1edd4e98358..44ea2dd424fe 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1223,7 +1223,7 @@ static int record__open(struct record *rec)
->   	 * of waiting or event synthesis.
->   	 */
->   	if (opts->initial_delay || target__has_cpu(&opts->target) ||
-> -	    perf_pmu__has_hybrid()) {
-> +	    (perf_pmu__has_hybrid() && !opts->target.per_thread)) {
->   		pos = evlist__get_tracking_event(evlist);
->   		if (!evsel__is_dummy_event(pos)) {
->   			/* Set up dummy event. */
+Instead, these patches allow this state to be sampled into the perf
+ringbuffer, where it can be consumed more easily by the perf tool.
+
+The first patch changes the kernel to send the authentication PAC masks
+to userspace perf via the perf ring buffer.  This is published in the
+sample, using a new sample field PERF_SAMPLE_ARCH_1.
+
+The subsequent patches are changes to userspace perf to
+
+1) request the PERF_SAMPLE_ARCH_1
+2) supply the instruction mask to libunwind
+3) ensure perf can cope with an older kernel that does not know about
+   the PERF_SAMPLE_ARCH_1 sample field.
+4) checks if the version of libunwind has the capability to accept
+   an instruction mask from perf and if so enable the feature.
+
+These changes depend on a change to libunwind, that is yet to be
+released, although the patch has been merged.
+
+  https://github.com/libunwind/libunwind/pull/360
+
+
+Andrew Kilroy (6):
+  perf arm64: Send pointer auth masks to ring buffer
+  perf evsel: Do not request ptrauth sample field if not supported
+  perf tools: arm64: Read ptrauth data from kernel
+  perf libunwind: Feature check for libunwind ptrauth callback
+  perf libunwind: arm64 pointer authentication
+  perf tools: Print ptrauth struct in perf report
+
+German Gomez (2):
+  perf test: Update arm64 tests to expect ptrauth masks
+  perf test arm64: Test unwinding with PACs on gcc & clang compilers
+
+ arch/arm64/include/asm/arch_sample_data.h     |  38 ++++++
+ arch/arm64/kernel/Makefile                    |   2 +-
+ arch/arm64/kernel/arch_sample_data.c          |  37 ++++++
+ include/linux/perf_event.h                    |  24 ++++
+ include/uapi/linux/perf_event.h               |   5 +-
+ kernel/events/core.c                          |  35 ++++++
+ tools/build/Makefile.feature                  |   2 +
+ tools/build/feature/Makefile                  |   4 +
+ tools/build/feature/test-all.c                |   5 +
+ .../feature/test-libunwind-arm64-ptrauth.c    |  26 ++++
+ tools/include/uapi/linux/perf_event.h         |   5 +-
+ tools/perf/Makefile.config                    |  10 ++
+ tools/perf/Makefile.perf                      |   1 +
+ tools/perf/tests/Build                        |   1 +
+ tools/perf/tests/arm_unwind_pac.c             | 113 ++++++++++++++++++
+ tools/perf/tests/arm_unwind_pac.sh            |  57 +++++++++
+ tools/perf/tests/attr/README                  |   1 +
+ .../attr/test-record-graph-default-aarch64    |   3 +-
+ tools/perf/tests/attr/test-record-graph-dwarf |   1 +
+ .../attr/test-record-graph-dwarf-aarch64      |  13 ++
+ .../tests/attr/test-record-graph-fp-aarch64   |   3 +-
+ tools/perf/tests/builtin-test.c               |   1 +
+ tools/perf/tests/sample-parsing.c             |   2 +-
+ tools/perf/tests/tests.h                      |   1 +
+ tools/perf/util/event.h                       |   8 ++
+ tools/perf/util/evsel.c                       |  64 ++++++++++
+ tools/perf/util/evsel.h                       |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c     |   2 +-
+ tools/perf/util/session.c                     |  15 +++
+ tools/perf/util/unwind-libunwind-local.c      |  12 ++
+ 30 files changed, 485 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/include/asm/arch_sample_data.h
+ create mode 100644 arch/arm64/kernel/arch_sample_data.c
+ create mode 100644 tools/build/feature/test-libunwind-arm64-ptrauth.c
+ create mode 100644 tools/perf/tests/arm_unwind_pac.c
+ create mode 100755 tools/perf/tests/arm_unwind_pac.sh
+ create mode 100644 tools/perf/tests/attr/test-record-graph-dwarf-aarch64
+
+-- 
+2.17.1
+
