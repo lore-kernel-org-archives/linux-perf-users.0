@@ -2,69 +2,70 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCEFC43334
-	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Jul 2022 11:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4FCC43334
+	for <linux-perf-users@archiver.kernel.org>; Mon,  4 Jul 2022 12:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233346AbiGDLsD (ORCPT
+        id S232438AbiGDMCc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Jul 2022 07:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
+        Mon, 4 Jul 2022 08:02:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233544AbiGDLre (ORCPT
+        with ESMTP id S233792AbiGDMC3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Jul 2022 07:47:34 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C7412746;
-        Mon,  4 Jul 2022 04:47:02 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lc3pk1VhtzTgWJ;
-        Mon,  4 Jul 2022 19:43:26 +0800 (CST)
+        Mon, 4 Jul 2022 08:02:29 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344551182D;
+        Mon,  4 Jul 2022 05:02:28 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Lc4Cm06sXzYd0r;
+        Mon,  4 Jul 2022 20:01:40 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 4 Jul 2022 19:47:00 +0800
+ 15.1.2375.24; Mon, 4 Jul 2022 20:02:26 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.61) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 4 Jul 2022 19:46:59 +0800
+ 15.1.2375.24; Mon, 4 Jul 2022 20:02:25 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
         <jolsa@kernel.org>, <namhyung@kernel.org>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH] perf/core: Fix data race between perf_event_set_output and perf_mmap_close
-Date:   Mon, 4 Jul 2022 19:44:40 +0800
-Message-ID: <20220704114440.94617-1-yangjihong1@huawei.com>
+Subject: [PATCH v2] perf/core: Fix data race between perf_event_set_output and perf_mmap_close
+Date:   Mon, 4 Jul 2022 20:00:06 +0800
+Message-ID: <20220704120006.98141-1-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.67.174.61]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Data race exists between 1 and 2. The scenario is as follows:
+Data race exists between perf_event_set_output and perf_mmap_close.
+The scenario is as follows:
 
-                  CPU1                                                              CPU2
-
+                  CPU1                                                       CPU2
                                                                     perf_mmap_close(event2)
                                                                       if (atomic_dec_and_test(&event2->rb->mmap_count)  // mmap_count 1 -> 0
                                                                         detach_rest = true;
 ioctl(event1, PERF_EVENT_IOC_SET_OUTPUT, event2)
   perf_event_set_output(event1, event2)
-    ring_buffer_attach(event1, event2->rb)
-      list_add_rcu(&event1->rb_entry, &event2->rb->event_list)
                                                                       if (!detach_rest)
                                                                         goto out_put;
                                                                       list_for_each_entry_rcu(event, &event2->rb->event_list, rb_entry)
                                                                         ring_buffer_attach(event, NULL)
                                                                       // because event1 has not been added to event2->rb->event_list,
                                                                       // event1->rb is not set to NULL in these loops
+
+    ring_buffer_attach(event1, event2->rb)
+      list_add_rcu(&event1->rb_entry, &event2->rb->event_list)
 
 The above data race causes a problem, that is, event1->rb is not NULL, but event1->rb->mmap_count is 0.
 If the perf_mmap interface is invoked for the fd of event1, the kernel keeps in the perf_mmap infinite loop:
@@ -130,6 +131,10 @@ on ring buffer during this period. In this case, we set event->rb to NULL.
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
+
+Changes since v1:
+ - Modify commit message description.
+
  kernel/events/core.c | 24 +++++++++++++++++++++++-
  1 file changed, 23 insertions(+), 1 deletion(-)
 
