@@ -2,221 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCAAC43334
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Jul 2022 02:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4432CCA47B
+	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Jul 2022 12:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231667AbiGECH7 (ORCPT
+        id S234176AbiGEMKU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 4 Jul 2022 22:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41816 "EHLO
+        Tue, 5 Jul 2022 08:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiGECH5 (ORCPT
+        with ESMTP id S233834AbiGEMJR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 4 Jul 2022 22:07:57 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111AF11814;
-        Mon,  4 Jul 2022 19:07:56 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LcQwr14lLz1L8h7;
-        Tue,  5 Jul 2022 10:05:00 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 5 Jul 2022 10:07:23 +0800
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 5 Jul 2022 10:07:23 +0800
-Subject: Re: [PATCH v2] perf/core: Fix data race between perf_event_set_output
- and perf_mmap_close
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20220704120006.98141-1-yangjihong1@huawei.com>
- <YsMGixSL4CDPTTZs@worktop.programming.kicks-ass.net>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <14a8d525-ae36-02c0-0e1c-c865359217eb@huawei.com>
-Date:   Tue, 5 Jul 2022 10:07:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 5 Jul 2022 08:09:17 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAC7183BC;
+        Tue,  5 Jul 2022 05:09:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 28367B817CC;
+        Tue,  5 Jul 2022 12:09:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A71C341C7;
+        Tue,  5 Jul 2022 12:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657022953;
+        bh=gMe2Ijaw82c09SO8FL5eAqBwiWmmaGC/sirYUVrjV4w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Yyp5yggKgTaqkE3lKk9P7EyIRKmhnydHYGEKpT+MqyxZJQ/CDFnMtAOjK8Nhd68pB
+         Np0ekJIh+/4WXcKN6nhGefi7JeHoKEtjvP60/xM75utygTBLSRiz1jf0pNXmwOdvl/
+         lT/rN4D0Mdj8g4d0nHX8jUd4P8ruSZaE9RUBQm9u563I2RBWey14BmVcLMifixTjUe
+         kf6XI33rwEobfKyAK/ZaxoJVByJdldyFyDIYsmCO3SWt55taFfWUphpDdxa4Vlx9Yg
+         8w+MKa+jqvZKSe5jJnZ8QVLL422psnJki1MBMMcFNyfSPOkr2Y0da8WUwRzWLHW7Rh
+         nUeAmjNMkuaTQ==
+Date:   Tue, 5 Jul 2022 13:09:07 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/8] arm64/perf: Enable branch stack sampling
+Message-ID: <20220705120907.GA1012@willie-the-truck>
+References: <20220613100119.684673-1-anshuman.khandual@arm.com>
+ <20220627110105.GF22095@willie-the-truck>
+ <967c0a4f-c864-21ec-33f1-5e3943a42409@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <YsMGixSL4CDPTTZs@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <967c0a4f-c864-21ec-33f1-5e3943a42409@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Tue, Jun 28, 2022 at 01:10:05PM +0530, Anshuman Khandual wrote:
+> 
+> 
+> On 6/27/22 16:31, Will Deacon wrote:
+> > On Mon, Jun 13, 2022 at 03:31:11PM +0530, Anshuman Khandual wrote:
+> >> This series enables perf branch stack sampling support on arm64 platform
+> >> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+> >> relevant register definitions could be accessed here.
+> >>
+> >> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
+> >>
+> >> This series applies on v5.19-rc2 after the BRBE related perf ABI changes series
+> >> (V6) that was posted earlier.
+> >>
+> >> https://lore.kernel.org/linux-arm-kernel/20220610035101.424112-1-anshuman.khandual@arm.com/
+> >>
+> >> Following issues remain inconclusive
+> >>
+> >> - Jame's concerns regarding permission inadequacy related to perfmon_capable()
+> >> - Jame's concerns regarding using perf_event_paranoid along with perfmon_capable()
+> > 
+> > afaict, the capability stuff remains unresolved with the SPE driver, so I'd
+> > really like to see it fixed there first before we add more broken drivers.
+> > 
+> > https://lore.kernel.org/r/20220118100702.GB16547@willie-the-truck
+> 
+> Hello Will,
+> 
+> I did go through the above mentioned thread, but could not understand (clear
+> enough) - what needs to be done. Could you please help summerize the problem
+> and possible solutions which I can start looking into. Thank you.
 
-On 2022/7/4 23:26, Peter Zijlstra wrote:
-> On Mon, Jul 04, 2022 at 08:00:06PM +0800, Yang Jihong wrote:
->> Data race exists between perf_event_set_output and perf_mmap_close.
->> The scenario is as follows:
->>
->>                    CPU1                                                       CPU2
->>                                                                      perf_mmap_close(event2)
->>                                                                        if (atomic_dec_and_test(&event2->rb->mmap_count)  // mmap_count 1 -> 0
->>                                                                          detach_rest = true;
->> ioctl(event1, PERF_EVENT_IOC_SET_OUTPUT, event2)
->>    perf_event_set_output(event1, event2)
->>                                                                        if (!detach_rest)
->>                                                                          goto out_put;
->>                                                                        list_for_each_entry_rcu(event, &event2->rb->event_list, rb_entry)
->>                                                                          ring_buffer_attach(event, NULL)
->>                                                                        // because event1 has not been added to event2->rb->event_list,
->>                                                                        // event1->rb is not set to NULL in these loops
->>
->>      ring_buffer_attach(event1, event2->rb)
->>        list_add_rcu(&event1->rb_entry, &event2->rb->event_list)
->>
->> The above data race causes a problem, that is, event1->rb is not NULL, but event1->rb->mmap_count is 0.
->> If the perf_mmap interface is invoked for the fd of event1, the kernel keeps in the perf_mmap infinite loop:
->>
->> again:
->>          mutex_lock(&event->mmap_mutex);
->>          if (event->rb) {
->> <SNIP>
->>                  if (!atomic_inc_not_zero(&event->rb->mmap_count)) {
->>                          /*
->>                           * Raced against perf_mmap_close() through
->>                           * perf_event_set_output(). Try again, hope for better
->>                           * luck.
->>                           */
->>                          mutex_unlock(&event->mmap_mutex);
->>                          goto again;
->>                  }
->> <SNIP>
-> 
-> Too tired, must look again tomorrow, little feeback below.
-Thanks for reviewing this patch. The perf_mmap_close, 
-perf_event_set_output, and perf_mmap involve complex data race and lock 
-relationships. Therefore, this simple fix is proposed.
-> 
->>   kernel/events/core.c | 24 +++++++++++++++++++++++-
->>   1 file changed, 23 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 80782cddb1da..c67c070f7b39 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -5900,6 +5900,7 @@ static void ring_buffer_attach(struct perf_event *event,
->>   			       struct perf_buffer *rb)
->>   {
->>   	struct perf_buffer *old_rb = NULL;
->> +	struct perf_buffer *new_rb = rb;
->>   	unsigned long flags;
->>   
->>   	WARN_ON_ONCE(event->parent);
->> @@ -5928,6 +5929,20 @@ static void ring_buffer_attach(struct perf_event *event,
->>   
->>   		spin_lock_irqsave(&rb->event_lock, flags);
->>   		list_add_rcu(&event->rb_entry, &rb->event_list);
->> +
->> +		/*
->> +		 * When perf_mmap_close traverses rb->event_list during
->> +		 * detach all other events, new event may not be added to
->> +		 * rb->event_list, let's check again, if rb->mmap_count is 0,
->> +		 * it indicates that perf_mmap_close is executed.
->> +		 * Manually delete event from rb->event_list and
->> +		 * set event->rb to null.
->> +		 */
->> +		if (!atomic_read(&rb->mmap_count)) {
->> +			list_del_rcu(&event->rb_entry);
->> +			new_rb = NULL;
->> +		}
->> +
->>   		spin_unlock_irqrestore(&rb->event_lock, flags);
->>   	}
->>   
->> @@ -5944,7 +5959,7 @@ static void ring_buffer_attach(struct perf_event *event,
->>   	if (has_aux(event))
->>   		perf_event_stop(event, 0);
->>   
->> -	rcu_assign_pointer(event->rb, rb);
->> +	rcu_assign_pointer(event->rb, new_rb);
->>   
->>   	if (old_rb) {
->>   		ring_buffer_put(old_rb);
-> 
-> I'm confused by the above hunks; the below will avoid calling
-> ring_buffer_attach() when !rb->mmap_count, so how can the above ever
-> execute?
-In this patch, !atomic_read(&rb->mmap_count) is checked before the 
-perf_event_set_output function invokes ring_buffer_attach(event, rb). 
-Therefore, !atomic_read(&rb->mmap_count) does not need to be checked in 
-the ring_buffer_attach function.
+I don't recall any details beyond what was discussed in the thread. Your
+best bet is probably to talk to James (Clark) and German, as they reported
+the issue initially and you all work for the same company...
 
-Am I right to understand that?
-
-Because there is no lock parallel protection between ioctl(event1, 
-PERF_EVENT_IOC_SET_OUTPUT, event2) and perf_mmap_close(event2), they can 
-be executed in parallel.
-
-The following scenarios may exist:
-
-                    CPU1 
-        CPU2
- 
-perf_mmap_close(event2)
-																	   ...
-ioctl(event1, PERF_EVENT_IOC_SET_OUTPUT, event2)
-    perf_event_set_output(event1, event2)
-      ...
-      if (rb && !atomic_read(&rb->mmap_count))
-	   goto unlock;
-	 // Here rb->mmap_count = 1, Keep going.
-	 ...
-	                                                                  if 
-(atomic_dec_and_test(&event2->rb->mmap_count)  // mmap_count 1 -> 0
- 
-  detach_rest = true;
-                                                                       ...
- 
-list_for_each_entry_rcu(event, &event2->rb->event_list, rb_entry)
- 
-  ring_buffer_attach(event, NULL)
- 
-  // because event1 has not been added to event2->rb->event_list,
- 
-  // event1->rb is not set to NULL in these loops
-																	  ...
-	 ring_buffer_attach(event1, rb)
-	   ...
-	   list_add_rcu(&event1->rb_entry, &event2->rb->event_list)
-	   ...
-
-In this case, the above problems arise.
-> 
->> @@ -11883,6 +11898,13 @@ perf_event_set_output(struct perf_event *event, struct perf_event *output_event)
->>   			goto unlock;
->>   	}
->>   
->> +	/*
->> +	 * If rb->mmap_count is 0, perf_mmap_close is being executed,
->> +	 * the ring buffer is about to be unmapped and cannot be attached.
->> +	 */
->> +	if (rb && !atomic_read(&rb->mmap_count))
->> +		goto unlock;
->> +
->>   	ring_buffer_attach(event, rb);
->>   
->>   	ret = 0;
-> 
-> This is wrong I think, it'll leak ring_buffer_get().
-Yes, ring_buffer_put(rb) needs to be added before goto unlock.
-I'll fix in next version.
-
-Thanks,
-Yang
-> 
-> 
-> .
-> 
+Will
