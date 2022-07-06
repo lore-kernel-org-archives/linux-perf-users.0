@@ -2,92 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43121C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Jul 2022 05:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A525CCA480
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Jul 2022 09:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230171AbiGFFIc (ORCPT
+        id S232838AbiGFJzP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Jul 2022 01:08:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
+        Wed, 6 Jul 2022 05:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbiGFFIb (ORCPT
+        with ESMTP id S232034AbiGFJyN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Jul 2022 01:08:31 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74C713F6E;
-        Tue,  5 Jul 2022 22:08:29 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id d2so25106896ejy.1;
-        Tue, 05 Jul 2022 22:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fqW8ITr6pkHCWZBrT39EMsBIfhdgMVbMM4TjNULI/38=;
-        b=YsAx5ivwuNl9tLSOYa7dEkxgApDxvzAPmFmc58v+1biY3BiOwjQBT3Czux7A02seZB
-         ZvHwwLyVBJ8/44c+cGpsFt2SjJZ/tPqA3lHoByEU/Lne4SS9UfebmIthgZMu3D+hNhpG
-         ydOwNUwPS1kX9bReAxKxtfDbjLAazrRZp6QJfdhC+YlA9XeCOMTuwDvGYXXKFd3JHEHM
-         rlM4HUi1g1qfRB3E4H5ppWuhzR7zOX4BFh2KZwGJ/ZS20vcAmn2kglgbdb/FrySgFMme
-         0QOfZ1zRQx4r1xdRlwkT1OQvpeFGz5CVK5+TZ1Q6m2l86UI2/HGmBnXWrhbUxOtigsrv
-         /GAw==
+        Wed, 6 Jul 2022 05:54:13 -0400
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CA6725281;
+        Wed,  6 Jul 2022 02:54:10 -0700 (PDT)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-10bf634bc50so11683649fac.3;
+        Wed, 06 Jul 2022 02:54:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fqW8ITr6pkHCWZBrT39EMsBIfhdgMVbMM4TjNULI/38=;
-        b=p18/kAjBOxL3+T5D10aC7TaL6hhfEE68iCXBYbprOgMAxgTi1g6GgxYMbeFbj/8kv2
-         FC/tibwb5S2ooJhgeuO3v0wcP7RXVD6NPFEvRWMlA6J0nlO5nZ9WGGOuo2LtHuZgp+qP
-         OlFSxSrsuH4ZnXa++Zya67TR6AsoKzFtdlhkSFussRcDA1jG2C0BjGGyrywUA6doee/l
-         ljNREmG0yNHuhuc0DVqSLhjifEruIY7EhKAkcHxe0IzAwd2B58JwdEo0Ejye3RjCzrxo
-         /TgYYil88TP3YB985gxEMlVuLzv0oc0D+yU5LY/tOrg4p7JhecTgohXMbh4F5yuvMSEy
-         3rYw==
-X-Gm-Message-State: AJIora+iblham9uN7u8CI7+DYNG05/f8OezOjE3UfwBLVAxsoYGFfC8D
-        mXH5AxSrqnWrno1N5Y7XR1wULIg9VFGDvdgGolg=
-X-Google-Smtp-Source: AGRyM1tHiuUQIegmkhcnzw4aOn0s2ariq+tC53xxAs49MBY6ZpAMRVUYnbv3Gn+5IHRHiXq1jEOx4FGry9WJYCFZ3sI=
-X-Received: by 2002:a17:907:6e05:b0:72a:a141:962 with SMTP id
- sd5-20020a1709076e0500b0072aa1410962mr20770588ejc.545.1657084107247; Tue, 05
- Jul 2022 22:08:27 -0700 (PDT)
+        bh=o8jOPstF035V3JBIGTjyEra8xnCZ4RAIho4NrHeIzoU=;
+        b=ifKui5S5rFjVMq/DNxGGiZYtnihyrIPz+XgGy+287htk2qPkSPTBDT6zU/bqaW0IAj
+         eEIcUuZm8zNyVqggg0vPkfq5SvWboTygMYut/vI30ZWm7OI6knykq5A50cyUN7yxHwbt
+         x3OJkAQz3rS3Y9MtqJ6NwJrgnwi7+6R6OQArw7NoCvrdzt2fl1u+Op6Sk71Eo0mnk7Kf
+         K4jGzZJ9jl69cTwc5fCZkxMTOGQj3eJLQiDqOz0u70kr/hzsHNPD58iNGRUJ3Qra3PtG
+         IF6KKSoTvxIaCco+8PSMr8pK01Kl4c2wWlCyc/+gJQOyWRzB04t4vTh7uCb3o8arKg4q
+         uq5Q==
+X-Gm-Message-State: AJIora8bNvFpKnAMxBIwdfj9hdkzH+LUCtZi660XXnMILcmdqPyTufKv
+        uEDKcQWoKlpivWccpTeeGBiDcGrSKa967ox8
+X-Google-Smtp-Source: AGRyM1uAKY8ZoN6KGv4/toshO1qHFCf+QFQjTKFAVF+YPn4y9ij2Yrnm8jj6CEE8H4m9dwU7r8nybw==
+X-Received: by 2002:a05:6870:b3a7:b0:10c:224c:a0b6 with SMTP id w39-20020a056870b3a700b0010c224ca0b6mr2265078oap.248.1657101249503;
+        Wed, 06 Jul 2022 02:54:09 -0700 (PDT)
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com. [209.85.161.46])
+        by smtp.gmail.com with ESMTPSA id r81-20020acaf354000000b003359fb6609asm8613210oih.22.2022.07.06.02.54.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Jul 2022 02:54:09 -0700 (PDT)
+Received: by mail-oo1-f46.google.com with SMTP id m26-20020a4abc9a000000b00425cd321033so2843821oop.10;
+        Wed, 06 Jul 2022 02:54:09 -0700 (PDT)
+X-Received: by 2002:a05:6902:50e:b0:66e:7f55:7a66 with SMTP id
+ x14-20020a056902050e00b0066e7f557a66mr6648581ybs.365.1657100796735; Wed, 06
+ Jul 2022 02:46:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220704152721.352046-1-jolsa@kernel.org>
-In-Reply-To: <20220704152721.352046-1-jolsa@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 5 Jul 2022 22:08:16 -0700
-Message-ID: <CAEf4Bzb+dK9kBsYZ_j=st9LMgFid6GzivQnbNOJ+nyg7zbD8UQ@mail.gmail.com>
-Subject: Re: [PATCHv2] perf tools: Convert legacy map definition to BTF-defined
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>
+References: <20220608142723.103523089@infradead.org> <20220608144517.124597382@infradead.org>
+In-Reply-To: <20220608144517.124597382@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 6 Jul 2022 11:46:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW4pT+YQfLzLTegFu1M3v9-9vaFDFAama7mc82=x6R__w@mail.gmail.com>
+Message-ID: <CAMuHMdW4pT+YQfLzLTegFu1M3v9-9vaFDFAama7mc82=x6R__w@mail.gmail.com>
+Subject: Re: [PATCH 19/36] objtool/idle: Validate __cpuidle code as noinstr
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, tony@atomide.com,
+        khilman@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, sammy@sammy.net, monstr@monstr.eu,
+        tsbogend@alpha.franken.de, dinguyen@kernel.org, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        James.Bottomley@hansenpartnership.com, deller@gmx.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 4, 2022 at 8:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+On Wed, Jun 8, 2022 at 4:46 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> Idle code is very like entry code in that RCU isn't available. As
+> such, add a little validation.
 >
-> The libbpf is switching off support for legacy map definitions [1],
-> which will break the perf llvm tests.
->
-> Moving the base source map definition to BTF-defined, so we need
-> to use -g compile option for to add debug/BTF info.
->
-> [1] https://lore.kernel.org/bpf/20220627211527.2245459-1-andrii@kernel.org/
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-LGTM. Thanks for taking care of this!
+>  arch/m68k/kernel/vmlinux-nommu.lds   |    1 -
+>  arch/m68k/kernel/vmlinux-std.lds     |    1 -
+>  arch/m68k/kernel/vmlinux-sun3.lds    |    1 -
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+FWIW
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
->  tools/perf/tests/bpf-script-example.c | 35 ++++++++++++++++++---------
->  tools/perf/util/llvm-utils.c          |  2 +-
->  2 files changed, 24 insertions(+), 13 deletions(-)
->
+Gr{oetje,eeting}s,
 
-[...]
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
