@@ -2,102 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C157DC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue,  5 Jul 2022 22:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43121C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Jul 2022 05:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231923AbiGEWmE (ORCPT
+        id S230171AbiGFFIc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 5 Jul 2022 18:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41360 "EHLO
+        Wed, 6 Jul 2022 01:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbiGEWmD (ORCPT
+        with ESMTP id S229849AbiGFFIb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 5 Jul 2022 18:42:03 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B793011C01;
-        Tue,  5 Jul 2022 15:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657060922; x=1688596922;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dcYq/1YuB/JBMWYqjYqQ5YtRYg69/7SayXrUgOGsr6o=;
-  b=dV1tdJEA9imihPnvWVEj5Wr4tYeP+6OeU2IPWGdMQ4P+Bf8J9aQBBhwX
-   0DtP74uI9D8tyxL8uRRbsjOwObn+UMolW0nnDQVfHGeVipnzwBLmTJYel
-   i7Qhi0adXLdXKde6TJsvpax9yk0K0+DMA9Hvr5RGeHfJnoI4DStOvCIK3
-   wwXtQaAN7VIde5SNoi5Xc/jtCva79UdQpgIUzl5ntE3D6bMCDOtyVvpv6
-   sKCGa3pDr9WbGvH/degjIsEUuFsGO2AsHUPsDUIzbwI9NBZrwWfIGQIXS
-   zkyssITR6wpSNpDNDCn2NYKwzS46bLNkO55zdhqHJW7vCDP3JHbdcUj2b
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10399"; a="266576420"
-X-IronPort-AV: E=Sophos;i="5.92,248,1650956400"; 
-   d="scan'208";a="266576420"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 15:42:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,248,1650956400"; 
-   d="scan'208";a="593089358"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 05 Jul 2022 15:42:00 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o8rF1-000Jfc-BY;
-        Tue, 05 Jul 2022 22:41:59 +0000
-Date:   Wed, 6 Jul 2022 06:41:40 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     carsten.haitzler@foss.arm.com, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, leo.yan@linaro.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-Subject: Re: [PATCH 14/14] perf test: Add relevant documentation about
- CoreSight testing
-Message-ID: <202207060615.3jB32CbT-lkp@intel.com>
-References: <20220701120804.3226396-15-carsten.haitzler@foss.arm.com>
+        Wed, 6 Jul 2022 01:08:31 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74C713F6E;
+        Tue,  5 Jul 2022 22:08:29 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id d2so25106896ejy.1;
+        Tue, 05 Jul 2022 22:08:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fqW8ITr6pkHCWZBrT39EMsBIfhdgMVbMM4TjNULI/38=;
+        b=YsAx5ivwuNl9tLSOYa7dEkxgApDxvzAPmFmc58v+1biY3BiOwjQBT3Czux7A02seZB
+         ZvHwwLyVBJ8/44c+cGpsFt2SjJZ/tPqA3lHoByEU/Lne4SS9UfebmIthgZMu3D+hNhpG
+         ydOwNUwPS1kX9bReAxKxtfDbjLAazrRZp6QJfdhC+YlA9XeCOMTuwDvGYXXKFd3JHEHM
+         rlM4HUi1g1qfRB3E4H5ppWuhzR7zOX4BFh2KZwGJ/ZS20vcAmn2kglgbdb/FrySgFMme
+         0QOfZ1zRQx4r1xdRlwkT1OQvpeFGz5CVK5+TZ1Q6m2l86UI2/HGmBnXWrhbUxOtigsrv
+         /GAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fqW8ITr6pkHCWZBrT39EMsBIfhdgMVbMM4TjNULI/38=;
+        b=p18/kAjBOxL3+T5D10aC7TaL6hhfEE68iCXBYbprOgMAxgTi1g6GgxYMbeFbj/8kv2
+         FC/tibwb5S2ooJhgeuO3v0wcP7RXVD6NPFEvRWMlA6J0nlO5nZ9WGGOuo2LtHuZgp+qP
+         OlFSxSrsuH4ZnXa++Zya67TR6AsoKzFtdlhkSFussRcDA1jG2C0BjGGyrywUA6doee/l
+         ljNREmG0yNHuhuc0DVqSLhjifEruIY7EhKAkcHxe0IzAwd2B58JwdEo0Ejye3RjCzrxo
+         /TgYYil88TP3YB985gxEMlVuLzv0oc0D+yU5LY/tOrg4p7JhecTgohXMbh4F5yuvMSEy
+         3rYw==
+X-Gm-Message-State: AJIora+iblham9uN7u8CI7+DYNG05/f8OezOjE3UfwBLVAxsoYGFfC8D
+        mXH5AxSrqnWrno1N5Y7XR1wULIg9VFGDvdgGolg=
+X-Google-Smtp-Source: AGRyM1tHiuUQIegmkhcnzw4aOn0s2ariq+tC53xxAs49MBY6ZpAMRVUYnbv3Gn+5IHRHiXq1jEOx4FGry9WJYCFZ3sI=
+X-Received: by 2002:a17:907:6e05:b0:72a:a141:962 with SMTP id
+ sd5-20020a1709076e0500b0072aa1410962mr20770588ejc.545.1657084107247; Tue, 05
+ Jul 2022 22:08:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220701120804.3226396-15-carsten.haitzler@foss.arm.com>
+References: <20220704152721.352046-1-jolsa@kernel.org>
+In-Reply-To: <20220704152721.352046-1-jolsa@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 5 Jul 2022 22:08:16 -0700
+Message-ID: <CAEf4Bzb+dK9kBsYZ_j=st9LMgFid6GzivQnbNOJ+nyg7zbD8UQ@mail.gmail.com>
+Subject: Re: [PATCHv2] perf tools: Convert legacy map definition to BTF-defined
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On Mon, Jul 4, 2022 at 8:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> The libbpf is switching off support for legacy map definitions [1],
+> which will break the perf llvm tests.
+>
+> Moving the base source map definition to BTF-defined, so we need
+> to use -g compile option for to add debug/BTF info.
+>
+> [1] https://lore.kernel.org/bpf/20220627211527.2245459-1-andrii@kernel.org/
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
 
-Thank you for the patch! Perhaps something to improve:
+LGTM. Thanks for taking care of this!
 
-[auto build test WARNING on acme/perf/core]
-[also build test WARNING on tip/perf/core linus/master v5.19-rc5 next-20220705]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/carsten-haitzler-foss-arm-com/perf-test-Refactor-shell-tests-allowing-subdirs/20220701-210837
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-reproduce: make htmldocs
+>  tools/perf/tests/bpf-script-example.c | 35 ++++++++++++++++++---------
+>  tools/perf/util/llvm-utils.c          |  2 +-
+>  2 files changed, 24 insertions(+), 13 deletions(-)
+>
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> Documentation/trace/coresight/coresight-perf.rst:104: WARNING: Inline emphasis start-string without end-string.
-
-vim +104 Documentation/trace/coresight/coresight-perf.rst
-
-    98	
-    99	    CoreSight / ASM Pure Loop
-   100	    CoreSight / Memcpy 16k 10 Threads
-   101	    CoreSight / Thread Loop 10 Threads - Check TID
-   102	    ...
-   103	
- > 104	These perf record tests will not run if the tool binaries do not exist
-   105	in tests/shell/coresight/*/ and will be skipped. If you do not have
-   106	CoreSight support in hardware then either do not build perf with
-   107	CoreSight support or remove these binaries in order to not have these
-   108	tests fail and have them skip instead.
-   109	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+[...]
