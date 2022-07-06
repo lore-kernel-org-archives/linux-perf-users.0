@@ -2,103 +2,226 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2F6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Jul 2022 21:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AE0C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed,  6 Jul 2022 21:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234150AbiGFVG2 (ORCPT
+        id S232287AbiGFV1V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 6 Jul 2022 17:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35964 "EHLO
+        Wed, 6 Jul 2022 17:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234075AbiGFVG2 (ORCPT
+        with ESMTP id S231510AbiGFV1U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 6 Jul 2022 17:06:28 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE71167C1
-        for <linux-perf-users@vger.kernel.org>; Wed,  6 Jul 2022 14:06:27 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id c7-20020a258807000000b0066d6839741eso12603889ybl.23
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Jul 2022 14:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=e2ErBVv8qaenTIHwGm6BDHlzGLkSDkG7zT48JUlyYnI=;
-        b=pQcEOUnjGosM3FwjtyyePdQ4rz547gcUzlhhrQSACVrGQi+DCeSRewah3af7J025bn
-         ZFSF9xT9Kd2OHSeRtz2p4X9p14gtjkluqRyylFvS0Ze6B4KPf4Lv+40tmck2kh9L1Qd2
-         dlFPCFeoffGzkW1bpmX4aFKTATWyGe8ajPAVOJDBhtTJJCOC12HO25xgVfhK4U3v0HXH
-         LdnIoOmr3Z4zCt4EJ5HqiMpmCDavYlyMwc6BUiAn/lzecxj0s+wGHU5UFMPA2d67qyaR
-         +aWS6ReKKRUUcR9RAUXT7QzYh72+C0hJdOapn66oIEU84Y+QYNpuQZ6Ik98u8ljrJr4t
-         w0gQ==
+        Wed, 6 Jul 2022 17:27:20 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E140B186FF;
+        Wed,  6 Jul 2022 14:27:19 -0700 (PDT)
+Received: by mail-ot1-f49.google.com with SMTP id cb12-20020a056830618c00b00616b871cef3so12692030otb.5;
+        Wed, 06 Jul 2022 14:27:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=e2ErBVv8qaenTIHwGm6BDHlzGLkSDkG7zT48JUlyYnI=;
-        b=JXlZWWLqZD+cHucJZLLBEKbj+QmQnhlydRPRIwXgxHyYGwOfeLtw52x7vvNWJ8osW+
-         Jy/A7w5D/65Pv0fVDJZVCAym+J6k7sI3um1qpJVhzF7HfvEVE8BGDRM2thC2cHztV4P6
-         6DF7V/EcbjrpG/N1SyqjvmzZBo3j60yKKsDmz+UZA40rEMD1etQcjHTzMIzBiP44kx0L
-         O71wHv52F0HaC9pnsbo+APnDXrWwhRB/4odBfOQqiCZeEKJ3cJ2ixn2Nf/YHOO736yrO
-         AKQYaMIIJ+82V1FVgBUyjPjvdyQmVWjNi7ggr3eHOWGfesPqsppvCx7YPnKtpamo8yzP
-         ouwg==
-X-Gm-Message-State: AJIora+UxBkUEDaqdK3xWVwsGPFtJ3GbtQE5AgfqGqynQPqw2yPQdBqO
-        W/kgTsco9h3xwlLjQ5bab0j0TLEt0Ig=
-X-Google-Smtp-Source: AGRyM1vgjtm4BaYhDlSs+0r8gz/TW/c6FhBbWoQPUXmQyhX6ufpPiRdiz8rmvNaWqnqTpwxnDkigT2o/aQA=
-X-Received: from mpratt.nyc.corp.google.com ([2620:0:1003:1213:37b2:830a:e7cc:7548])
- (user=mpratt job=sendgmr) by 2002:a25:f905:0:b0:66e:4ebe:d61d with SMTP id
- q5-20020a25f905000000b0066e4ebed61dmr17976220ybe.647.1657141586876; Wed, 06
- Jul 2022 14:06:26 -0700 (PDT)
-Date:   Wed,  6 Jul 2022 17:06:13 -0400
-Message-Id: <20220706210613.1987767-1-mpratt@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-Subject: [PATCH] perf: uapi: fix PERF_RECORD_SAMPLE format documentation
-From:   Michael Pratt <mpratt@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EWuBIgRQqsKK4bI34QlM4tTrL3F0PP2izqN6syCSCoo=;
+        b=JfAhAQXd2lwrQBPSyiPPztt483txDBVT/ViLT4vwaMlHPrr1BS+z9D520Y6wlEIC3f
+         sQaHsO7+T0fhzgFX4ERge1GjJhNbswq092jmFM9Huc4oqsfcPHsu6BKyqbbQ5U4Cizcn
+         7QXwrY56tFh+OAWfhMb6IFWq63jltllrt/8uSuv2zs19w2Hphb3jbnP5TACEWmbOhPN5
+         BmgQ+IeyeW+Q3dvqnbhDcU/SazdtqlI+49wSQJ+h/bQBwvs+kjKBPeH+mQAIZhygPFF4
+         c4ch+uaAWYWZqFJsOKdgPNAWyX3x/nvVGBRM5K2T1TjnZG/i4oFbHHHdZebTrBNFCBb1
+         dMWg==
+X-Gm-Message-State: AJIora8Qo2ScSsWN4D2uTNf/sbyctlDCWbRms64q+zHEOFVYAvYIN9Zo
+        HnrlIu7t5CdCINSYSRf0u6JF84UpwrGG64ZvDX0=
+X-Google-Smtp-Source: AGRyM1uuILCi/ck8CbOfdLBXQ9ShPv2D8BzGdccSHHejXVP2+sCQRdNVZscwdPGqAXsiAiiVj8AJUYQh5EIDG27qiUw=
+X-Received: by 2002:a9d:620a:0:b0:616:afea:1d62 with SMTP id
+ g10-20020a9d620a000000b00616afea1d62mr18416689otj.124.1657142839172; Wed, 06
+ Jul 2022 14:27:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220630001825.3905089-1-rsilvera@google.com>
+In-Reply-To: <20220630001825.3905089-1-rsilvera@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 6 Jul 2022 14:27:08 -0700
+Message-ID: <CAM9d7cjAHdZ3-NbZQgR5i9NmiBW3U5pY6crtvb7RQWG5QvmHqg@mail.gmail.com>
+Subject: Re: [PATCH] perf inject: Add a command line option to specify build ids.
+To:     Raul Silvera <rsilvera@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Michael Pratt <mpratt@google.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The documented format of PERF_RECORD_SAMPLE does not match the actual
-format emitted by perf_output_sample:
+Hi Raul,
 
-* The cgroup field is missing entirely.
-* The data_page_size and code_page_size fields are output before the aux
-  data, but are documented before.
+On Wed, Jun 29, 2022 at 5:18 PM Raul Silvera <rsilvera@google.com> wrote:
+>
+> This commit adds the option --known-build-ids to perf inject.
+> It allows the user to explicitly specify the build id for a given
+> path, instead of retrieving it from the current system. This is
+> useful in cases where a perf.data file is processed on a different
+> system from where it was collected, or if some of the binaries are
+> no longer available.
+>
+> The build ids and paths are specified in pairs in the command line.
+> Using the file:// specifier, build ids can be loaded from a file
+> directly generated by perf buildid-list. This is convenient to copy
+> build ids from one perf.data file to another.
+>
+> ** Example: In this example we use perf record to create two
+> perf.data files, one with build ids and another without, and use
+> perf buildid-list and perf inject to copy the build ids from the
+> first file to the second.
+>
+> $ perf record ls /tmp                  # Create perf.data file
+> $ perf record --no-buildid ls /tmp -o perf.data.no-buildid
+> $ perf buildid-list > /tmp/build-ids.txt
+> $ perf inject -b --known-build-ids='file:///tmp/build-ids.txt' \
+> $  -i perf.data.no-buildid -o perf.data.buildid
 
-Fixes: 6546b19f95ac ("perf/core: Add PERF_SAMPLE_CGROUP feature")
-Fixes: 8d97e71811aa ("perf/core: Add PERF_SAMPLE_DATA_PAGE_SIZE")
-Fixes: 995f088efebe ("perf/core: Add support for PERF_SAMPLE_CODE_PAGE_SIZE")
-Signed-off-by: Michael Pratt <mpratt@google.com>
----
- include/uapi/linux/perf_event.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+You'd better indent the block for the readability and to prevent
+possible interference from the shell (for comments usually).
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index d37629dbad72f..9a0a9a8678558 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -967,10 +967,11 @@ enum perf_event_type {
- 	 *	{ u64			abi; # enum perf_sample_regs_abi
- 	 *	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
- 	 *	{ u64			phys_addr;} && PERF_SAMPLE_PHYS_ADDR
--	 *	{ u64			size;
--	 *	  char			data[size]; } && PERF_SAMPLE_AUX
-+	 *	{ u64			cgroup;} && PERF_SAMPLE_CGROUP
- 	 *	{ u64			data_page_size;} && PERF_SAMPLE_DATA_PAGE_SIZE
- 	 *	{ u64			code_page_size;} && PERF_SAMPLE_CODE_PAGE_SIZE
-+	 *	{ u64			size;
-+	 *	  char			data[size]; } && PERF_SAMPLE_AUX
- 	 * };
- 	 */
- 	PERF_RECORD_SAMPLE			= 9,
--- 
-2.37.0.rc0.161.g10f37bed90-goog
+The last line is a continuation from the above line and it used
+to print other prompts like ">".
 
+>
+> Signed-off-by: Raul Silvera <rsilvera@google.com>
+> ---
+>  tools/perf/builtin-inject.c | 57 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index a75bf11585b5..667b942f870e 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -21,6 +21,7 @@
+>  #include "util/data.h"
+>  #include "util/auxtrace.h"
+>  #include "util/jit.h"
+> +#include "util/string2.h"
+>  #include "util/symbol.h"
+>  #include "util/synthetic-events.h"
+>  #include "util/thread.h"
+> @@ -35,6 +36,7 @@
+>
+>  #include <linux/list.h>
+>  #include <linux/string.h>
+> +#include <ctype.h>
+>  #include <errno.h>
+>  #include <signal.h>
+>
+> @@ -59,6 +61,8 @@ struct perf_inject {
+>         struct itrace_synth_opts itrace_synth_opts;
+>         char                    event_copy[PERF_SAMPLE_MAX_SIZE];
+>         struct perf_file_section secs[HEADER_FEAT_BITS];
+> +       const char              *known_build_ids_source;
+> +       struct strlist          *known_build_ids;
+>  };
+>
+>  struct event_entry {
+> @@ -570,9 +574,43 @@ static int dso__read_build_id(struct dso *dso)
+>         return dso->has_build_id ? 0 : -1;
+>  }
+>
+> +static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
+> +                                              struct dso *dso)
+> +{
+> +       struct str_node *pos;
+> +       int bid_len;
+> +
+> +       strlist__for_each_entry(pos, inject->known_build_ids) {
+> +               const char *space;
+> +
+> +               pos->s = skip_spaces(pos->s);
+> +               space = strstr(pos->s, " ");
+> +               if (space == NULL ||
+> +                   !strcmp(dso->long_name, skip_spaces(space)))
+> +                       continue;
+> +               bid_len = space - pos->s;
+> +               if (bid_len == 0 || bid_len / 2 > BUILD_ID_SIZE)
+
+I'm not sure how bid_len can be 0.  And you can compare to
+SBUILD_ID_SIZE (without dividing by 2) - but it'd be ">=".
+Also it could be worthwhile to check if bid_len is even.
+
+
+> +                       return false;
+> +               for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
+> +                       if (!isxdigit(pos->s[2 * ix]) ||
+> +                           !isxdigit(pos->s[2 * ix + 1]))
+> +                               return false;
+> +
+> +                       dso->bid.data[ix] = (hex(pos->s[2 * ix]) << 4 |
+> +                                            hex(pos->s[2 * ix + 1]));
+> +               }
+> +               dso->bid.size = bid_len / 2;
+> +               dso->has_build_id = 1;
+> +               return true;
+> +       }
+> +       return false;
+> +}
+> +
+>  static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
+>                                 struct machine *machine, u8 cpumode, u32 flags)
+>  {
+> +       struct perf_inject *inject = container_of(tool, struct perf_inject,
+> +                                                 tool);
+>         int err;
+>
+>         if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
+> @@ -580,6 +618,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
+>         if (is_no_dso_memory(dso->long_name))
+>                 return 0;
+>
+> +       if (inject->known_build_ids != NULL &&
+> +           perf_inject__lookup_known_build_id(inject, dso))
+> +               return 1;
+> +
+>         if (dso__read_build_id(dso) < 0) {
+>                 pr_debug("no build_id found for %s\n", dso->long_name);
+>                 return -1;
+> @@ -1082,6 +1124,9 @@ int cmd_inject(int argc, const char **argv)
+>                             "Inject build-ids into the output stream"),
+>                 OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
+>                             "Inject build-ids of all DSOs into the output stream"),
+> +               OPT_STRING(0, "known-build-ids", &inject.known_build_ids_source,
+> +                          "buildid path [buildid path...]",
+> +                          "build-ids to use for specific files"),
+>                 OPT_STRING('i', "input", &inject.input_name, "file",
+>                            "input file name"),
+>                 OPT_STRING('o', "output", &inject.output.path, "file",
+> @@ -1215,6 +1260,18 @@ int cmd_inject(int argc, const char **argv)
+>                  */
+>                 inject.tool.ordered_events = true;
+>                 inject.tool.ordering_requires_timestamps = true;
+> +               if (inject.known_build_ids_source != NULL) {
+> +                       struct strlist *known_build_ids;
+> +
+> +                       known_build_ids = strlist__new(
+> +                           inject.known_build_ids_source, NULL);
+> +
+> +                       if (known_build_ids == NULL) {
+> +                               pr_err("Couldn't parse known build ids.\n");
+> +                               goto out_delete;
+> +                       }
+> +                       inject.known_build_ids = known_build_ids;
+
+You need to release it after use.  Note that strlist__delete()
+accepts a NULL pointer.
+
+Thanks,
+Namhyung
+
+
+> +               }
+>         }
+>
+>         if (inject.sched_stat) {
+> --
+> 2.37.0.rc0.161.g10f37bed90-goog
+>
