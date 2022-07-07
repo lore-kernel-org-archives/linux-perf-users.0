@@ -2,223 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D2BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 21:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A547DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 22:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236597AbiGGV41 (ORCPT
+        id S236418AbiGGWsf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Jul 2022 17:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
+        Thu, 7 Jul 2022 18:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236155AbiGGV41 (ORCPT
+        with ESMTP id S236393AbiGGWse (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Jul 2022 17:56:27 -0400
-Received: from mail-io1-xd49.google.com (mail-io1-xd49.google.com [IPv6:2607:f8b0:4864:20::d49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 228C65A47D
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Jul 2022 14:56:26 -0700 (PDT)
-Received: by mail-io1-xd49.google.com with SMTP id y10-20020a056602178a00b00678ec1fe52aso685934iox.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Jul 2022 14:56:26 -0700 (PDT)
+        Thu, 7 Jul 2022 18:48:34 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30AAF245
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Jul 2022 15:48:33 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-31cbe6ad44fso68231527b3.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Jul 2022 15:48:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ri5AY5SwLbhVC5p/TahumKhee43SBZlNLqy+ZUco6ig=;
-        b=lmPgZdfN7Gh79v3TGk4Il8Vo1qV9GsbTBrp8014DAaz6sauD8K+WKJJ8F89b2CLGCF
-         bWLCIVYAVlfPnQDbHrcDbRACwLqDzZgXCJo0olHVjXs3bALhJiIonqcXzFFYRDH8yUmD
-         umS0DiWRAR7uKJNqsp6+QOTblfr7K8L5a7j+RM1HnAbIIaB6tWVO59iT9q8ygeZCpfsR
-         N2telE6tmklDdOy0WbAQrQB7dP9gIYUxlcKQBhHb/jGHu+doSiINBGv0cRij7P8a7uJ/
-         A3yy2oEjB+1Zi6om7pKr7vdSAqHx1f3iI79AN3akeW18kC0/50lec/0q7C6dXpkN8lqg
-         QQ4g==
+        bh=eCmCH4ia+FpOlh6Qbg9jUQqKcntQY3qXlKfzy4/h0lc=;
+        b=TN6tkuvWIZfPHJMHNfnojVmKgFrCGV9JCbnlcN1rKkt09Ajuq5uScFkFaRIaUSZ5K2
+         fI+Ad47Yaci0VzXw3y8cTK61A5iogaE7BCGDiamC59iVLBrT/YDDJJ4lJZlZtO3SWTbK
+         +X2DkVc7jFilCAshlOBA7rYLyOra8AC3Jkwx8xE8uYIZloIg4fyQ12p5WQez6UFbQ7Qp
+         bo6Bwl9N3R1w1o+urMfEB/eliWmFTsX7xu0O8klNHk+exLpD45lmt9WDj5gzIGIMtzax
+         FqpVTecJ7tvR4y+VZmtEQZZ5xvdJBKmkt7q6dT3rQgmVmORX2CA+5rbC3ExfrujoCb4o
+         O86Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ri5AY5SwLbhVC5p/TahumKhee43SBZlNLqy+ZUco6ig=;
-        b=h8UEBEVnCxgo/GZmH+rbxIh7IpMGQ7syIXOWUZLipk5jm2I28m4SxjBPu4peyQ79Te
-         FNi0ilWy6Z6E2di6XS8pIH9iMxe3nk5YamzvtZiIyJsCn5aCgBCGiHzKzleT3lmNry2O
-         Nd4QEYMqqTDNI4kKw0RPiPelmYqHCCJUUUbhF2e4+FCUcNwvPCRL3Lnpdb/MyQB63pwJ
-         WQW9HRfK25pmUct+Ud/hR/K/bvG68z8ZLkZvVTnAH/Y24uby8qwgHGA9v/bISAuQoikL
-         ADEtzMI0Mt/if4j40FZNPCTtYh/Y5ss5nTuTIFNOzRBQHrTsYBKaRbxA/EjmmrwwkKUb
-         TaoQ==
-X-Gm-Message-State: AJIora+fXERHe3nn35LOdBM8vIZSTosni+4ROOLkBVg8y094Sy/Xu1/p
-        y1xhKXIYdA+/F9yVShE/PDr/aOVztV+UKw==
-X-Google-Smtp-Source: AGRyM1uO7QVBsH1j2gKzpmtJAG5Lj7xPEqLW5pD1TNv8qWmSC/LpIVdTNrwsWja/8PSQQ9jsVjor1XBKUNCMVg==
-X-Received: from riochico.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:b3e])
- (user=rsilvera job=sendgmr) by 2002:a05:6638:12d6:b0:339:d556:efb4 with SMTP
- id v22-20020a05663812d600b00339d556efb4mr190869jas.215.1657230985632; Thu, 07
- Jul 2022 14:56:25 -0700 (PDT)
-Date:   Thu,  7 Jul 2022 21:56:06 +0000
-Message-Id: <20220707215606.2409166-1-rsilvera@google.com>
+        bh=eCmCH4ia+FpOlh6Qbg9jUQqKcntQY3qXlKfzy4/h0lc=;
+        b=C0uVovLYMPA8/mv4TfRO+EfFmiNf/lXCvZJlFTmhvxF6aIPSS2U4ET/H0rCKheJA3U
+         qM63KjCkyAlim1WsqpIWyq8p/9F4f9t52ygAsZUK4dzSas1h/9kZ5ih+2VUzRHGHXssv
+         edz5YIC6THDseOXrJlD17faTSESttAQsOOOD22mRLtgeypKmElaTEK9e5qMzRWuR1QO4
+         7tSov34Jq+nOQgoSmuqJ+GGaMe2dipiqMiYleJKJn5Bqei8zQkt2fyBlaMZme6Ym2AsV
+         gyhOEeIZ45gv4Tgs8kQP9HRkMNyX+zEfqLSE9Mv0xqteJFZ01dEXq4vGjwyv5QO5SB+7
+         5uww==
+X-Gm-Message-State: AJIora/ePWjhQM0Tt4WoIZBCl4MKNrVRlEh+LTskrXMJgpAEO6x7Nm2O
+        eIsnnV3wm2EnBvN7XDC8oHISh5Asrw/1
+X-Google-Smtp-Source: AGRyM1uMnSSCPUo7n0DmTUbpm1FIc7kPw54Vssxv5GRxmjytG8QzV8DjfLn4ZN+KpK1ndM8pnmztVSn+Omx1
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bf75:f79:d509:a8d1])
+ (user=irogers job=sendgmr) by 2002:a0d:cbd8:0:b0:31d:a46:a1ee with SMTP id
+ n207-20020a0dcbd8000000b0031d0a46a1eemr602758ywd.201.1657234112381; Thu, 07
+ Jul 2022 15:48:32 -0700 (PDT)
+Date:   Thu,  7 Jul 2022 15:48:22 -0700
+Message-Id: <20220707224822.420722-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-Subject: [PATCH v2] perf inject: Add a command line option to specify build ids
-From:   Raul Silvera <rsilvera@google.com>
+Subject: [PATCH] perf vendor events intel: Synchronize cpuids with 01.org
+From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Raul Silvera <rsilvera@google.com>
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Caleb Biggers <caleb.biggers@intel.com>
+Cc:     Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit adds the option --known-build-ids to perf inject.
-It allows the user to explicitly specify the build id for a given
-path, instead of retrieving it from the current system. This is
-useful in cases where a perf.data file is processed on a different
-system from where it was collected, or if some of the binaries are
-no longer available.
+Reduce rows in mapfile.csv by folding the cpuid regular expressions.
+Make the cpuids match mapfile.csv on 01.org:
+  https://download.01.org/perfmon/mapfile.csv
 
-The build ids and paths are specified in pairs in the command line.
-Using the file:// specifier, build ids can be loaded from a file
-directly generated by perf buildid-list. This is convenient to copy
-build ids from one perf.data file to another.
+Note, this reduces the number of cpuids for icelake while increasing the
+number of cpuids for goldmont.
 
-** Example: In this example we use perf record to create two
-perf.data files, one with build ids and another without, and use
-perf buildid-list and perf inject to copy the build ids from the
-first file to the second.
-
- $ perf record ls /tmp
- $ perf record --no-buildid -o perf.data.no-buildid ls /tmp
- $ perf buildid-list > /tmp/build-ids.txt
- $ perf inject -b --known-build-ids='file:///tmp/build-ids.txt' \
-        -i perf.data.no-buildid -o perf.data.buildid
-
-Signed-off-by: Raul Silvera <rsilvera@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- V1 -> V2: Cleaned up patch description, deleted the strlist during
-           cleanup, and updated validation of the build id strings
+ tools/perf/pmu-events/arch/x86/mapfile.csv | 37 ++++++----------------
+ 1 file changed, 10 insertions(+), 27 deletions(-)
 
- tools/perf/builtin-inject.c | 60 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
-
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index a75bf11585b5..4efb992ed1a0 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -21,6 +21,7 @@
- #include "util/data.h"
- #include "util/auxtrace.h"
- #include "util/jit.h"
-+#include "util/string2.h"
- #include "util/symbol.h"
- #include "util/synthetic-events.h"
- #include "util/thread.h"
-@@ -35,6 +36,7 @@
- 
- #include <linux/list.h>
- #include <linux/string.h>
-+#include <ctype.h>
- #include <errno.h>
- #include <signal.h>
- 
-@@ -59,6 +61,8 @@ struct perf_inject {
- 	struct itrace_synth_opts itrace_synth_opts;
- 	char			event_copy[PERF_SAMPLE_MAX_SIZE];
- 	struct perf_file_section secs[HEADER_FEAT_BITS];
-+	const char		*known_build_ids_source;
-+	struct strlist		*known_build_ids;
- };
- 
- struct event_entry {
-@@ -570,9 +574,45 @@ static int dso__read_build_id(struct dso *dso)
- 	return dso->has_build_id ? 0 : -1;
- }
- 
-+static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
-+					       struct dso *dso)
-+{
-+	struct str_node *pos;
-+	int bid_len;
-+
-+	strlist__for_each_entry(pos, inject->known_build_ids) {
-+		const char *build_id, *dso_name;
-+
-+		build_id = skip_spaces(pos->s);
-+		dso_name = strchr(build_id, ' ');
-+		if (dso_name == NULL)
-+			continue;
-+		bid_len = dso_name - pos->s;
-+		dso_name = skip_spaces(dso_name);
-+		if (strcmp(dso->long_name, dso_name))
-+			continue;
-+		if (bid_len % 2 != 0 || bid_len >= SBUILD_ID_SIZE)
-+			return false;
-+		for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
-+			if (!isxdigit(build_id[2 * ix]) ||
-+			    !isxdigit(build_id[2 * ix + 1]))
-+				return false;
-+
-+			dso->bid.data[ix] = (hex(build_id[2 * ix]) << 4 |
-+					     hex(build_id[2 * ix + 1]));
-+		}
-+		dso->bid.size = bid_len / 2;
-+		dso->has_build_id = 1;
-+		return true;
-+	}
-+	return false;
-+}
-+
- static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
- 				struct machine *machine, u8 cpumode, u32 flags)
- {
-+	struct perf_inject *inject = container_of(tool, struct perf_inject,
-+						  tool);
- 	int err;
- 
- 	if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
-@@ -580,6 +620,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
- 	if (is_no_dso_memory(dso->long_name))
- 		return 0;
- 
-+	if (inject->known_build_ids != NULL &&
-+	    perf_inject__lookup_known_build_id(inject, dso))
-+		return 1;
-+
- 	if (dso__read_build_id(dso) < 0) {
- 		pr_debug("no build_id found for %s\n", dso->long_name);
- 		return -1;
-@@ -1082,6 +1126,9 @@ int cmd_inject(int argc, const char **argv)
- 			    "Inject build-ids into the output stream"),
- 		OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
- 			    "Inject build-ids of all DSOs into the output stream"),
-+		OPT_STRING(0, "known-build-ids", &inject.known_build_ids_source,
-+			   "buildid path [buildid path...]",
-+			   "build-ids to use for specific files"),
- 		OPT_STRING('i', "input", &inject.input_name, "file",
- 			   "input file name"),
- 		OPT_STRING('o', "output", &inject.output.path, "file",
-@@ -1215,6 +1262,18 @@ int cmd_inject(int argc, const char **argv)
- 		 */
- 		inject.tool.ordered_events = true;
- 		inject.tool.ordering_requires_timestamps = true;
-+		if (inject.known_build_ids_source != NULL) {
-+			struct strlist *known_build_ids;
-+
-+			known_build_ids = strlist__new(
-+			    inject.known_build_ids_source, NULL);
-+
-+			if (known_build_ids == NULL) {
-+				pr_err("Couldn't parse known build ids.\n");
-+				goto out_delete;
-+			}
-+			inject.known_build_ids = known_build_ids;
-+		}
- 	}
- 
- 	if (inject.sched_stat) {
-@@ -1241,6 +1300,7 @@ int cmd_inject(int argc, const char **argv)
- 	ret = __cmd_inject(&inject);
- 
- out_delete:
-+	strlist__delete(inject.known_build_ids);
- 	zstd_fini(&(inject.session->zstd_data));
- 	perf_session__delete(inject.session);
- out_close_output:
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index f5a382421a60..66dad6947627 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -1,49 +1,32 @@
+ Family-model,Version,Filename,EventType
+ GenuineIntel-6-56,v5,broadwellde,core
+-GenuineIntel-6-3D,v17,broadwell,core
+-GenuineIntel-6-47,v17,broadwell,core
++GenuineIntel-6-(3D|47),v17,broadwell,core
+ GenuineIntel-6-4F,v10,broadwellx,core
+-GenuineIntel-6-1C,v4,bonnell,core
+-GenuineIntel-6-26,v4,bonnell,core
+-GenuineIntel-6-27,v4,bonnell,core
+-GenuineIntel-6-36,v4,bonnell,core
+-GenuineIntel-6-35,v4,bonnell,core
+-GenuineIntel-6-5C,v8,goldmont,core
++GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
++GenuineIntel-6-5[CF],v8,goldmont,core
+ GenuineIntel-6-7A,v1,goldmontplus,core
+-GenuineIntel-6-3C,v24,haswell,core
+-GenuineIntel-6-45,v24,haswell,core
+-GenuineIntel-6-46,v24,haswell,core
++GenuineIntel-6-(3C|45|46),v24,haswell,core
+ GenuineIntel-6-3F,v17,haswellx,core
+ GenuineIntel-6-3A,v18,ivybridge,core
+ GenuineIntel-6-3E,v19,ivytown,core
+ GenuineIntel-6-2D,v20,jaketown,core
+-GenuineIntel-6-57,v9,knightslanding,core
+-GenuineIntel-6-85,v9,knightslanding,core
+-GenuineIntel-6-1E,v2,nehalemep,core
+-GenuineIntel-6-1F,v2,nehalemep,core
+-GenuineIntel-6-1A,v2,nehalemep,core
++GenuineIntel-6-(57|85),v9,knightslanding,core
++GenuineIntel-6-1[AEF],v2,nehalemep,core
+ GenuineIntel-6-2E,v2,nehalemex,core
+-GenuineIntel-6-[4589]E,v24,skylake,core
+-GenuineIntel-6-A[56],v24,skylake,core
+-GenuineIntel-6-37,v13,silvermont,core
+-GenuineIntel-6-4D,v13,silvermont,core
+-GenuineIntel-6-4C,v13,silvermont,core
++GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v24,skylake,core
++GenuineIntel-6-(37|4C|4D),v14,silvermont,core
+ GenuineIntel-6-2A,v15,sandybridge,core
+ GenuineIntel-6-2C,v2,westmereep-dp,core
+ GenuineIntel-6-25,v2,westmereep-sp,core
+ GenuineIntel-6-2F,v2,westmereex,core
+ GenuineIntel-6-55-[01234],v1,skylakex,core
+ GenuineIntel-6-55-[56789ABCDEF],v1,cascadelakex,core
+-GenuineIntel-6-7D,v1,icelake,core
+ GenuineIntel-6-7E,v1,icelake,core
+ GenuineIntel-6-8[CD],v1,tigerlake,core
+-GenuineIntel-6-A7,v1,icelake,core
+-GenuineIntel-6-6A,v1,icelakex,core
+-GenuineIntel-6-6C,v1,icelakex,core
++GenuineIntel-6-6[AC],v1,icelakex,core
+ GenuineIntel-6-86,v1,tremontx,core
+ GenuineIntel-6-96,v1,elkhartlake,core
+-GenuineIntel-6-97,v1,alderlake,core
+-GenuineIntel-6-9A,v1,alderlake,core
++GenuineIntel-6-9[7A],v1,alderlake,core
+ GenuineIntel-6-8F,v1,sapphirerapids,core
+ AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
+ AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
 -- 
 2.37.0.rc0.161.g10f37bed90-goog
 
