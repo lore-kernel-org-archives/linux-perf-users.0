@@ -2,160 +2,223 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2AFC43334
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 20:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D2BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 21:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236113AbiGGUin (ORCPT
+        id S236597AbiGGV41 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Jul 2022 16:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38288 "EHLO
+        Thu, 7 Jul 2022 17:56:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235974AbiGGUim (ORCPT
+        with ESMTP id S236155AbiGGV41 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Jul 2022 16:38:42 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95FB71CFD8
-        for <linux-perf-users@vger.kernel.org>; Thu,  7 Jul 2022 13:38:41 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id j2-20020a2597c2000000b0064b3e54191aso14565403ybo.20
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Jul 2022 13:38:41 -0700 (PDT)
+        Thu, 7 Jul 2022 17:56:27 -0400
+Received: from mail-io1-xd49.google.com (mail-io1-xd49.google.com [IPv6:2607:f8b0:4864:20::d49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 228C65A47D
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Jul 2022 14:56:26 -0700 (PDT)
+Received: by mail-io1-xd49.google.com with SMTP id y10-20020a056602178a00b00678ec1fe52aso685934iox.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Jul 2022 14:56:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:message-id:mime-version:subject:from:to:cc;
-        bh=MtmsWhHJfa7z6EGDAwuHnwZvzmYyvpgdzqZZqyHQmxU=;
-        b=SvBsyqgeUtFCOrwSGE21tf7OVIzDLVqlgjC31Qjwz3eXSGy3keVTu5byI7NFAGM13Z
-         DKHnL2hMKDyFYZseWOr8PLiB0Z0MexDr92vfEzihUDHIDr8H1Xgg+mWVtw7dPggcnx69
-         AagT5Dlkmpn1tzFrNeW84M801vDVhdHqKZMJKndqrF/re3dWM95/ex/dj8vFDlhQr+ge
-         pnWso1m+u2J6AVT+Rh1IqAdfTLTCWAcIAyypt3QQJ65nCETR8nmjDUyelkY856lyCp3z
-         yejGaPAC2scFt6i7Z0k19x9RgCGB1O883p6rUoMhvDnbzoqfrlyiqzrszPLV3O92Dd/j
-         pHVw==
+        bh=ri5AY5SwLbhVC5p/TahumKhee43SBZlNLqy+ZUco6ig=;
+        b=lmPgZdfN7Gh79v3TGk4Il8Vo1qV9GsbTBrp8014DAaz6sauD8K+WKJJ8F89b2CLGCF
+         bWLCIVYAVlfPnQDbHrcDbRACwLqDzZgXCJo0olHVjXs3bALhJiIonqcXzFFYRDH8yUmD
+         umS0DiWRAR7uKJNqsp6+QOTblfr7K8L5a7j+RM1HnAbIIaB6tWVO59iT9q8ygeZCpfsR
+         N2telE6tmklDdOy0WbAQrQB7dP9gIYUxlcKQBhHb/jGHu+doSiINBGv0cRij7P8a7uJ/
+         A3yy2oEjB+1Zi6om7pKr7vdSAqHx1f3iI79AN3akeW18kC0/50lec/0q7C6dXpkN8lqg
+         QQ4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=MtmsWhHJfa7z6EGDAwuHnwZvzmYyvpgdzqZZqyHQmxU=;
-        b=oMNnVGKfJoKQ5jSO1odQeudULCY0aTHtiwHQ5r71EaOFtR4++34IghyXOBrLh2DpT0
-         lXlHLG8t5NybRJQUmxdRgAP1vHsq6RWv6WrHZAoJHa4XQcv5vjxvh+CtkRHHXrxj3Ckm
-         sME2p+udS4GALBtmPcrJ3Hq1WNHLaa9iGmd6jntucsEEGY6YYQWrrhc1K1D4iy1Tm0xa
-         9RDcHjMcAtP+Ofbud6f1XTf9MRvGjkbROWTQ428GoAibDgE4P285PhdPRgQHQ86BVQ70
-         pOuw7tVxy8H9HwvPFzJCjf7uTHlW6kkZRwWoaUfCvVbNyfDxot4hIfbI2Ijkw22D2qY3
-         UY1g==
-X-Gm-Message-State: AJIora9ajPSGVnjmVX4muF89yZmFnAT6UOx0/hxq89Vyd6Hsn+1VlVLp
-        3oUDhgYcW5o4/Qp2La0RlBLEU/P2yKbS
-X-Google-Smtp-Source: AGRyM1vslLtKenxRif28iTau2qVy76RKBRFTYtWiRIc+Cm3GzLY4Tsaqyt6Jd+NeqkRZ7LehqxcUHpVuKay+
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bf75:f79:d509:a8d1])
- (user=irogers job=sendgmr) by 2002:a0d:cc8c:0:b0:31d:1154:b730 with SMTP id
- o134-20020a0dcc8c000000b0031d1154b730mr10257ywd.440.1657226320914; Thu, 07
- Jul 2022 13:38:40 -0700 (PDT)
-Date:   Thu,  7 Jul 2022 13:38:36 -0700
-Message-Id: <20220707203836.345918-1-irogers@google.com>
+        bh=ri5AY5SwLbhVC5p/TahumKhee43SBZlNLqy+ZUco6ig=;
+        b=h8UEBEVnCxgo/GZmH+rbxIh7IpMGQ7syIXOWUZLipk5jm2I28m4SxjBPu4peyQ79Te
+         FNi0ilWy6Z6E2di6XS8pIH9iMxe3nk5YamzvtZiIyJsCn5aCgBCGiHzKzleT3lmNry2O
+         Nd4QEYMqqTDNI4kKw0RPiPelmYqHCCJUUUbhF2e4+FCUcNwvPCRL3Lnpdb/MyQB63pwJ
+         WQW9HRfK25pmUct+Ud/hR/K/bvG68z8ZLkZvVTnAH/Y24uby8qwgHGA9v/bISAuQoikL
+         ADEtzMI0Mt/if4j40FZNPCTtYh/Y5ss5nTuTIFNOzRBQHrTsYBKaRbxA/EjmmrwwkKUb
+         TaoQ==
+X-Gm-Message-State: AJIora+fXERHe3nn35LOdBM8vIZSTosni+4ROOLkBVg8y094Sy/Xu1/p
+        y1xhKXIYdA+/F9yVShE/PDr/aOVztV+UKw==
+X-Google-Smtp-Source: AGRyM1uO7QVBsH1j2gKzpmtJAG5Lj7xPEqLW5pD1TNv8qWmSC/LpIVdTNrwsWja/8PSQQ9jsVjor1XBKUNCMVg==
+X-Received: from riochico.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:b3e])
+ (user=rsilvera job=sendgmr) by 2002:a05:6638:12d6:b0:339:d556:efb4 with SMTP
+ id v22-20020a05663812d600b00339d556efb4mr190869jas.215.1657230985632; Thu, 07
+ Jul 2022 14:56:25 -0700 (PDT)
+Date:   Thu,  7 Jul 2022 21:56:06 +0000
+Message-Id: <20220707215606.2409166-1-rsilvera@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
-Subject: [PATCH v2] perf gtk: Only support --gtk if compiled in
-From:   Ian Rogers <irogers@google.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        xaizek <xaizek@posteo.net>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+Subject: [PATCH v2] perf inject: Add a command line option to specify build ids
+From:   Raul Silvera <rsilvera@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Raul Silvera <rsilvera@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If HAVE_GTK2_SUPPORT isn't defined then --gtk can't succeed, don't
-support it as a command line option in this case.
+This commit adds the option --known-build-ids to perf inject.
+It allows the user to explicitly specify the build id for a given
+path, instead of retrieving it from the current system. This is
+useful in cases where a perf.data file is processed on a different
+system from where it was collected, or if some of the binaries are
+no longer available.
 
-v2. Is a rebase. Patch appears to have been missed in:
-https://lore.kernel.org/lkml/Ygu40djM1MqAfkcF@kernel.org/
+The build ids and paths are specified in pairs in the command line.
+Using the file:// specifier, build ids can be loaded from a file
+directly generated by perf buildid-list. This is convenient to copy
+build ids from one perf.data file to another.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+** Example: In this example we use perf record to create two
+perf.data files, one with build ids and another without, and use
+perf buildid-list and perf inject to copy the build ids from the
+first file to the second.
+
+ $ perf record ls /tmp
+ $ perf record --no-buildid -o perf.data.no-buildid ls /tmp
+ $ perf buildid-list > /tmp/build-ids.txt
+ $ perf inject -b --known-build-ids='file:///tmp/build-ids.txt' \
+        -i perf.data.no-buildid -o perf.data.buildid
+
+Signed-off-by: Raul Silvera <rsilvera@google.com>
 ---
- tools/perf/builtin-annotate.c | 8 ++++++++
- tools/perf/builtin-report.c   | 6 ++++++
- 2 files changed, 14 insertions(+)
+ V1 -> V2: Cleaned up patch description, deleted the strlist during
+           cleanup, and updated validation of the build id strings
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 2ffe071dbcff..f839e69492e8 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -50,7 +50,9 @@ struct perf_annotate {
- 	bool	   use_tui;
- #endif
- 	bool	   use_stdio, use_stdio2;
-+#ifdef HAVE_GTK2_SUPPORT
- 	bool	   use_gtk;
-+#endif
- 	bool	   skip_missing;
- 	bool	   has_br_stack;
- 	bool	   group_set;
-@@ -526,7 +528,9 @@ int cmd_annotate(int argc, const char **argv)
- 	OPT_BOOLEAN('q', "quiet", &quiet, "do now show any message"),
- 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
- 		    "dump raw trace in ASCII"),
-+#ifdef HAVE_GTK2_SUPPORT
- 	OPT_BOOLEAN(0, "gtk", &annotate.use_gtk, "Use the GTK interface"),
-+#endif
- #ifdef HAVE_SLANG_SUPPORT
- 	OPT_BOOLEAN(0, "tui", &annotate.use_tui, "Use the TUI interface"),
- #endif
-@@ -614,10 +618,12 @@ int cmd_annotate(int argc, const char **argv)
- 	if (annotate_check_args(&annotate.opts) < 0)
- 		return -EINVAL;
+ tools/perf/builtin-inject.c | 60 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index a75bf11585b5..4efb992ed1a0 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -21,6 +21,7 @@
+ #include "util/data.h"
+ #include "util/auxtrace.h"
+ #include "util/jit.h"
++#include "util/string2.h"
+ #include "util/symbol.h"
+ #include "util/synthetic-events.h"
+ #include "util/thread.h"
+@@ -35,6 +36,7 @@
  
-+#ifdef HAVE_GTK2_SUPPORT
- 	if (symbol_conf.show_nr_samples && annotate.use_gtk) {
- 		pr_err("--show-nr-samples is not available in --gtk mode at this time\n");
- 		return ret;
+ #include <linux/list.h>
+ #include <linux/string.h>
++#include <ctype.h>
+ #include <errno.h>
+ #include <signal.h>
+ 
+@@ -59,6 +61,8 @@ struct perf_inject {
+ 	struct itrace_synth_opts itrace_synth_opts;
+ 	char			event_copy[PERF_SAMPLE_MAX_SIZE];
+ 	struct perf_file_section secs[HEADER_FEAT_BITS];
++	const char		*known_build_ids_source;
++	struct strlist		*known_build_ids;
+ };
+ 
+ struct event_entry {
+@@ -570,9 +574,45 @@ static int dso__read_build_id(struct dso *dso)
+ 	return dso->has_build_id ? 0 : -1;
+ }
+ 
++static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
++					       struct dso *dso)
++{
++	struct str_node *pos;
++	int bid_len;
++
++	strlist__for_each_entry(pos, inject->known_build_ids) {
++		const char *build_id, *dso_name;
++
++		build_id = skip_spaces(pos->s);
++		dso_name = strchr(build_id, ' ');
++		if (dso_name == NULL)
++			continue;
++		bid_len = dso_name - pos->s;
++		dso_name = skip_spaces(dso_name);
++		if (strcmp(dso->long_name, dso_name))
++			continue;
++		if (bid_len % 2 != 0 || bid_len >= SBUILD_ID_SIZE)
++			return false;
++		for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
++			if (!isxdigit(build_id[2 * ix]) ||
++			    !isxdigit(build_id[2 * ix + 1]))
++				return false;
++
++			dso->bid.data[ix] = (hex(build_id[2 * ix]) << 4 |
++					     hex(build_id[2 * ix + 1]));
++		}
++		dso->bid.size = bid_len / 2;
++		dso->has_build_id = 1;
++		return true;
++	}
++	return false;
++}
++
+ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
+ 				struct machine *machine, u8 cpumode, u32 flags)
+ {
++	struct perf_inject *inject = container_of(tool, struct perf_inject,
++						  tool);
+ 	int err;
+ 
+ 	if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
+@@ -580,6 +620,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
+ 	if (is_no_dso_memory(dso->long_name))
+ 		return 0;
+ 
++	if (inject->known_build_ids != NULL &&
++	    perf_inject__lookup_known_build_id(inject, dso))
++		return 1;
++
+ 	if (dso__read_build_id(dso) < 0) {
+ 		pr_debug("no build_id found for %s\n", dso->long_name);
+ 		return -1;
+@@ -1082,6 +1126,9 @@ int cmd_inject(int argc, const char **argv)
+ 			    "Inject build-ids into the output stream"),
+ 		OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
+ 			    "Inject build-ids of all DSOs into the output stream"),
++		OPT_STRING(0, "known-build-ids", &inject.known_build_ids_source,
++			   "buildid path [buildid path...]",
++			   "build-ids to use for specific files"),
+ 		OPT_STRING('i', "input", &inject.input_name, "file",
+ 			   "input file name"),
+ 		OPT_STRING('o', "output", &inject.output.path, "file",
+@@ -1215,6 +1262,18 @@ int cmd_inject(int argc, const char **argv)
+ 		 */
+ 		inject.tool.ordered_events = true;
+ 		inject.tool.ordering_requires_timestamps = true;
++		if (inject.known_build_ids_source != NULL) {
++			struct strlist *known_build_ids;
++
++			known_build_ids = strlist__new(
++			    inject.known_build_ids_source, NULL);
++
++			if (known_build_ids == NULL) {
++				pr_err("Couldn't parse known build ids.\n");
++				goto out_delete;
++			}
++			inject.known_build_ids = known_build_ids;
++		}
  	}
-+#endif
  
- 	ret = symbol__validate_sym_arguments();
- 	if (ret)
-@@ -656,8 +662,10 @@ int cmd_annotate(int argc, const char **argv)
- 	else if (annotate.use_tui)
- 		use_browser = 1;
- #endif
-+#ifdef HAVE_GTK2_SUPPORT
- 	else if (annotate.use_gtk)
- 		use_browser = 2;
-+#endif
+ 	if (inject.sched_stat) {
+@@ -1241,6 +1300,7 @@ int cmd_inject(int argc, const char **argv)
+ 	ret = __cmd_inject(&inject);
  
- 	setup_browser(true);
- 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index afe4a5539ecc..91ed41cc7d88 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -74,7 +74,9 @@ struct report {
- #ifdef HAVE_SLANG_SUPPORT
- 	bool			use_tui;
- #endif
-+#ifdef HAVE_GTK2_SUPPORT
- 	bool			use_gtk;
-+#endif
- 	bool			use_stdio;
- 	bool			show_full_info;
- 	bool			show_threads;
-@@ -1227,7 +1229,9 @@ int cmd_report(int argc, const char **argv)
- #ifdef HAVE_SLANG_SUPPORT
- 	OPT_BOOLEAN(0, "tui", &report.use_tui, "Use the TUI interface"),
- #endif
-+#ifdef HAVE_GTK2_SUPPORT
- 	OPT_BOOLEAN(0, "gtk", &report.use_gtk, "Use the GTK2 interface"),
-+#endif
- 	OPT_BOOLEAN(0, "stdio", &report.use_stdio,
- 		    "Use the stdio interface"),
- 	OPT_BOOLEAN(0, "header", &report.header, "Show data header."),
-@@ -1516,8 +1520,10 @@ int cmd_report(int argc, const char **argv)
- 	else if (report.use_tui)
- 		use_browser = 1;
- #endif
-+#ifdef HAVE_GTK2_SUPPORT
- 	else if (report.use_gtk)
- 		use_browser = 2;
-+#endif
- 
- 	/* Force tty output for header output and per-thread stat. */
- 	if (report.header || report.header_only || report.show_threads)
+ out_delete:
++	strlist__delete(inject.known_build_ids);
+ 	zstd_fini(&(inject.session->zstd_data));
+ 	perf_session__delete(inject.session);
+ out_close_output:
 -- 
 2.37.0.rc0.161.g10f37bed90-goog
 
