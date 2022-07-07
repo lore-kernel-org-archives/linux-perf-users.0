@@ -2,151 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ED7CCA485
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 14:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60094C43334
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 15:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235661AbiGGODF (ORCPT
+        id S235353AbiGGPfC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Jul 2022 10:03:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
+        Thu, 7 Jul 2022 11:35:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235106AbiGGODC (ORCPT
+        with ESMTP id S235094AbiGGPe7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Jul 2022 10:03:02 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DB9A2408D;
-        Thu,  7 Jul 2022 07:03:01 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id g126so5153510pfb.3;
-        Thu, 07 Jul 2022 07:03:01 -0700 (PDT)
+        Thu, 7 Jul 2022 11:34:59 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F6325E9F
+        for <linux-perf-users@vger.kernel.org>; Thu,  7 Jul 2022 08:34:58 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-31ce88f9ab8so34332577b3.16
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Jul 2022 08:34:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=afbiyF16Fd4Ewaaf3EKKCpvpR7aHAsNAQp7K3TuQXs4=;
-        b=EzpeppBfdoHkOWruUNAYNHzOi8S5lBuVkWR/uarc/O7MDVJ2qM1NUNdy3hxzZeKinw
-         1f6tPe15AftcBiSP1Sugt5jiQpAKlLcyz+gPyHgHTvK6IkiuSg6SYHkmzqBCpGaHkm3K
-         GirawtqITR+EFkG0pF8QxPm0bxzk97EH7JYJxQXFRi4d1kRfsZVOuxKRapjByLByJ3DF
-         qAVqAZfaAfJT+F8T/W2rPtPmXy6/uaYwejGaDWQ5Frl3XCXwsQlqWF67lU3BIXdseGBS
-         CTJ5pH+oR76s++4uNTCxHCZwHNyWF4xdxY3ay2k5fQlKGRbstnEbIjnAVDZkl7wMQgN9
-         oSpA==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=JPNq22s4Sy/o1YYPxoUMk+4EEOxIdHQBfK6EdFJLOOg=;
+        b=SQE2A23hnNI/zu3R8uKGwTvomwdPbUSNZQV/asqSSPx3/cSgi3s0m5iH5rJxmNXeX2
+         TZXk3Y8C22+PbPrk0GFwWIgPORiflwRkXMnWZMqWoE7jiUVIXn2vSPj4USBaFn0idP0c
+         cxSSFBSOXzzDdMUAaPX1iGGuG1Oxi9H9YCWxKSyIMSVbJUyoVa5nyo9RdfDRVxYLxdSW
+         arH1ngRM2kfRw/srdMpTSthm7rndRlWxF0981zsYwcYUsr75PcaQnWbupazsMRy0iqhY
+         eurVD3D0VAOQ2+13JmneX+X+6gIUAKX4b5y4Zr8665YQw4CyRljbzIieuQICXlYDzePe
+         nVqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=afbiyF16Fd4Ewaaf3EKKCpvpR7aHAsNAQp7K3TuQXs4=;
-        b=z/OhwksyOp469scWVs4PaYhNC01pXiyHvOwOAPTqy+pvH2sZnN6XRZ28vSAujPutvg
-         AQGgZhLZ6b3oc+7LSlfFt5U0/C+XJmECqeCtvLa4OnsKYoIxPft0iiHX4dtUOUVVNUB7
-         o72nh0ELJf3U9b+yyqEedzG2zEcK016yJwvgjxBOYlp6WuNXVcI+F2+gmAIiXH9GEXmI
-         e0vcR+88sWEl5sqYG3UvOQtrtLFGVXKrKxZQO0pdrK7dgKYQvLkQtqOvnIUOjXNMCnTL
-         ZOSG6KMdU1kw0QUexsBYdIFk/iqmwXqSO9SNDDktXRZnojoCdRBSKzl/F4iaHlhna0VS
-         T/iA==
-X-Gm-Message-State: AJIora+ocuIwxhLJzHhnnSu+WxjiLc3tnw/dFIKUzzDFT6j9ccAbwr5i
-        VaOjjRnKKhvxqeBmGOblA/WrVTwMxpHjaNmP
-X-Google-Smtp-Source: AGRyM1uGEg1zRLKU3mt/8yK/HfEqKFBdv1eoQpzxhqHLW6DjIp1gLh6JEsU/RWRdBfoHFypH/TfaNQ==
-X-Received: by 2002:a17:90b:4c8f:b0:1ec:cdd0:41b7 with SMTP id my15-20020a17090b4c8f00b001eccdd041b7mr5420238pjb.119.1657202580508;
-        Thu, 07 Jul 2022 07:03:00 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k127-20020a632485000000b004148cbdd4e5sm1215293pgk.57.2022.07.07.07.02.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 07:02:59 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Thu, 7 Jul 2022 07:02:58 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        virtualization@lists.linux-foundation.org,
-        usbb2k-api-dev@nongnu.org, tipc-discussion@lists.sourceforge.net,
-        target-devel@vger.kernel.org, sound-open-firmware@alsa-project.org,
-        samba-technical@lists.samba.org, rds-devel@oss.oracle.com,
-        patches@opensource.cirrus.com, osmocom-net-gprs@lists.osmocom.org,
-        openipmi-developer@lists.sourceforge.net, nvdimm@lists.linux.dev,
-        ntb@lists.linux.dev, netfilter-devel@vger.kernel.org,
-        netdev@vger.kernel.org, mjpeg-users@lists.sourceforge.net,
-        megaraidlinux.pdl@broadcom.com, linuxppc-dev@lists.ozlabs.org,
-        linux1394-devel@lists.sourceforge.net, linux-x25@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
-        linux-sctp@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-parport@lists.infradead.org,
-        linux-parisc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-nfc@lists.01.org, linux-mtd@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mm@kvack.org,
-        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linaro-mm-sig@lists.linaro.org,
-        legousb-devel@lists.sourceforge.net, kvm@vger.kernel.org,
-        keyrings@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
-        iommu@lists.linux.dev, iommu@lists.linux-foundation.org,
-        intel-wired-lan@lists.osuosl.org, greybus-dev@lists.linaro.org,
-        dri-devel@lists.freedesktop.org, dm-devel@redhat.com,
-        devicetree@vger.kernel.org, dev@openvswitch.org,
-        dccp@vger.kernel.org, damon@lists.linux.dev,
-        coreteam@netfilter.org, cgroups@vger.kernel.org,
-        ceph-devel@vger.kernel.org, ath11k@lists.infradead.org,
-        apparmor@lists.ubuntu.com, amd-gfx@lists.freedesktop.org,
-        alsa-devel@alsa-project.org,
-        accessrunner-general@lists.sourceforge.net
-Subject: Re: [linux-next:master] BUILD REGRESSION
- 088b9c375534d905a4d337c78db3b3bfbb52c4a0
-Message-ID: <20220707140258.GA3492673@roeck-us.net>
-References: <62c683a2.g1VSVt6BrQC6ZzOz%lkp@intel.com>
- <YsaUgfPbOg7WuBuB@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YsaUgfPbOg7WuBuB@kroah.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=JPNq22s4Sy/o1YYPxoUMk+4EEOxIdHQBfK6EdFJLOOg=;
+        b=0vuwdtpD2OFScWPWYIqCRruioDXiPvGGGSZqyHS2wMn4S8JhS2lk4eDIWoUU3A3Gi4
+         t565eHB0iGHDv7VXDABuux99WHq7D+mjBzJubPTAcxd19VuxnkViMW2p/u0Z0JxiTxw/
+         2/SDjUYycgWFNdw8LTCAJCx+9dxcQXlaWIu6PkvRVOmq5ytr9j4MwLWNpaTwFkniidNF
+         CCX0YdliJkvlG2F027LIeSbLXqYyZ33ZBZSuKBgz3aLiS6+hsdvCQQ7hHMbpvfYJSaZ2
+         iZhGdCSZUs41/7lH6Miy4rrxOOgVUkVIWdeL0Cm0963nB7tdUZrW9oOUxybG0078ZZVl
+         vFeQ==
+X-Gm-Message-State: AJIora+T5ZG/CJWsqDG3wXSZoL5B/6pE8arNNdblcmjqu2z+xHX0RBa0
+        RnEysucAKyBtV4HAjmJe8/Gj5X1oZaIP
+X-Google-Smtp-Source: AGRyM1s63ZP4o3pRUGb4fsS16tmXLtlehiakB7y0YWBb2jjFDknJa8L16HQjDapCN2DRg5MB+PXZU+UGbiCy
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bf75:f79:d509:a8d1])
+ (user=irogers job=sendgmr) by 2002:a25:1f44:0:b0:66c:8185:7c2e with SMTP id
+ f65-20020a251f44000000b0066c81857c2emr48521849ybf.629.1657208097823; Thu, 07
+ Jul 2022 08:34:57 -0700 (PDT)
+Date:   Thu,  7 Jul 2022 08:34:48 -0700
+Message-Id: <20220707153449.202409-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+Subject: [PATCH 1/2] perf test: Add debug line to diagnose broken metrics
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 10:08:33AM +0200, Greg KH wrote:
+Printing out the metric name and architecture makes finding the source
+of a failure easier.
 
-[ ... ]
-> > 
-> > Unverified Error/Warning (likely false positive, please contact us if interested):
-> > 
-> > arch/x86/events/core.c:2114 init_hw_perf_events() warn: missing error code 'err'
-> > drivers/android/binder.c:1481:19-23: ERROR: from is NULL but dereferenced.
-> > drivers/android/binder.c:2920:29-33: ERROR: target_thread is NULL but dereferenced.
-> > drivers/android/binder.c:353:25-35: ERROR: node -> proc is NULL but dereferenced.
-> > drivers/android/binder.c:4888:16-20: ERROR: t is NULL but dereferenced.
-> > drivers/base/regmap/regmap.c:1996:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/char/random.c:869:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/firmware/arm_scmi/clock.c:394:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/firmware/arm_scmi/powercap.c:376:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_powertune.c:1214:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/gpu/drm/amd/display/dc/os_types.h: drm/drm_print.h is included more than once.
-> > drivers/gpu/drm/bridge/ite-it66121.c:1398:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/greybus/operation.c:617:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> 
-> <snip>
-> 
-> When the compiler crashes, why are you blaming all of these different
-> mailing lists?  Perhaps you need to fix your compiler :)
-> 
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/pmu-events.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-To be fair, it says above "likely false positive, please contact us
-if interested". Also, the 32-bit build errors _are_ real, and the NULL
-dereferences in the binder driver are at the very least suspicious.
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index f13368569d8b..478b33825790 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -1115,6 +1115,7 @@ static int test__parsing_fake(struct test_suite *test __maybe_unused,
+ 				break;
+ 			if (!pe->metric_expr)
+ 				continue;
++			pr_debug("Found metric '%s' for '%s'\n", pe->metric_name, map->cpuid);
+ 			err = metric_parse_fake(pe->metric_expr);
+ 			if (err)
+ 				return err;
+-- 
+2.37.0.rc0.161.g10f37bed90-goog
 
-Guenter
