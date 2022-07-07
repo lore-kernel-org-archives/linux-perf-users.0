@@ -2,189 +2,315 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87027CCA497
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 08:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6FDCCA479
+	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 11:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235293AbiGGIpR (ORCPT
+        id S235158AbiGGLn2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Jul 2022 04:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59360 "EHLO
+        Thu, 7 Jul 2022 07:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232615AbiGGIpJ (ORCPT
+        with ESMTP id S232504AbiGGLn1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Jul 2022 04:45:09 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563D813F9F;
-        Thu,  7 Jul 2022 01:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657183508; x=1688719508;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=edbKoKalbvq90CBmxogPesuIiDjl8rwJ49B+zZvetjQ=;
-  b=BfVKisWKCdx8CvBHxqsYg7j9cXv26yoQXE72HrhvrsHZACMcDf+Q4QeE
-   iezKOt76usGXV+kbwaKO7ucB7IaYA4gBUybR0oLB4xyC1Vm4hlMy3Mfqh
-   9orF/TMUfYsnaA4siDN3OfNN2ZHi8li2Tg62mdzzqPrFaDG0JJbV+DRPP
-   iwpbPp2cvvpvUZ62IKMOCHbcsc96XaEccZnOxR3WRawWvB7mbC3jKctJN
-   8CAuCUDBdHrDFmaFdIMnnGGbzhA6JCPGgQiHYVbqMyi9DeZgOTiWpgxom
-   oJhCT3UL+2okh6qNBEUcmQZZmIof0uguLdB3ImckLr4T46d5mInnCBOBg
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10400"; a="345659129"
-X-IronPort-AV: E=Sophos;i="5.92,252,1650956400"; 
-   d="scan'208";a="345659129"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2022 01:45:06 -0700
-X-IronPort-AV: E=Sophos;i="5.92,252,1650956400"; 
-   d="scan'208";a="651047273"
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.255.31.6]) ([10.255.31.6])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2022 01:44:45 -0700
-Subject: Re: [linux-next:master] BUILD REGRESSION
- 088b9c375534d905a4d337c78db3b3bfbb52c4a0
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        kernel test robot <lkp@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        virtualization@lists.linux-foundation.org,
-        usbb2k-api-dev@nongnu.org, tipc-discussion@lists.sourceforge.net,
-        target-devel@vger.kernel.org, sound-open-firmware@alsa-project.org,
-        samba-technical@lists.samba.org, rds-devel@oss.oracle.com,
-        patches@opensource.cirrus.com, osmocom-net-gprs@lists.osmocom.org,
-        openipmi-developer@lists.sourceforge.net, nvdimm@lists.linux.dev,
-        ntb@lists.linux.dev, netfilter-devel@vger.kernel.org,
-        netdev@vger.kernel.org, mjpeg-users@lists.sourceforge.net,
-        megaraidlinux.pdl@broadcom.com, linuxppc-dev@lists.ozlabs.org,
-        linux1394-devel@lists.sourceforge.net, linux-x25@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
-        linux-sctp@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-parport@lists.infradead.org,
-        linux-parisc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-nfc@lists.01.org, linux-mtd@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mm@kvack.org,
-        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linaro-mm-sig@lists.linaro.org,
-        legousb-devel@lists.sourceforge.net, kvm@vger.kernel.org,
-        keyrings@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
-        iommu@lists.linux.dev, iommu@lists.linux-foundation.org,
-        intel-wired-lan@lists.osuosl.org, greybus-dev@lists.linaro.org,
-        dri-devel@lists.freedesktop.org, dm-devel@redhat.com,
-        devicetree@vger.kernel.org, dev@openvswitch.org,
-        dccp@vger.kernel.org, damon@lists.linux.dev,
-        coreteam@netfilter.org, cgroups@vger.kernel.org,
-        ceph-devel@vger.kernel.org, ath11k@lists.infradead.org,
-        apparmor@lists.ubuntu.com, amd-gfx@lists.freedesktop.org,
-        alsa-devel@alsa-project.org,
-        accessrunner-general@lists.sourceforge.net
-References: <62c683a2.g1VSVt6BrQC6ZzOz%lkp@intel.com>
- <YsaUgfPbOg7WuBuB@kroah.com>
-From:   "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <c86816fd-aaba-01a9-5def-44868f0a46c9@intel.com>
-Date:   Thu, 7 Jul 2022 16:44:43 +0800
+        Thu, 7 Jul 2022 07:43:27 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21BBF28D;
+        Thu,  7 Jul 2022 04:43:24 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Ldvcv1r6zzkWmC;
+        Thu,  7 Jul 2022 19:41:19 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 7 Jul 2022 19:43:22 +0800
+CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
+        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <acme@kernel.org>,
+        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>,
+        <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <suzuki.poulose@arm.com>, <mark.rutland@arm.com>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v9 7/8] docs: trace: Add HiSilicon PTT device driver
+ documentation
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20220606115555.41103-1-yangyicong@hisilicon.com>
+ <20220606115555.41103-8-yangyicong@hisilicon.com>
+ <20220706175751.GA2546265@p14s>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <75afb15e-9fc2-d14a-c72d-dc33589cfc0e@huawei.com>
+Date:   Thu, 7 Jul 2022 19:43:21 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.12.0
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <YsaUgfPbOg7WuBuB@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20220706175751.GA2546265@p14s>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 2022/7/7 1:57, Mathieu Poirier wrote:
+> Hi,
+> 
+> I have started looking at this set.
 
+Thanks!
 
-On 7/7/2022 4:08 PM, Greg KH wrote:
-> On Thu, Jul 07, 2022 at 02:56:34PM +0800, kernel test robot wrote:
->> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
->> branch HEAD: 088b9c375534d905a4d337c78db3b3bfbb52c4a0  Add linux-next specific files for 20220706
->>
->> Error/Warning reports:
->>
->> https://lore.kernel.org/linux-doc/202207070644.x48XOOvs-lkp@intel.com
->>
->> Error/Warning: (recently discovered and may have been fixed)
->>
->> Documentation/arm/google/chromebook-boot-flow.rst: WARNING: document isn't included in any toctree
->> arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1108): undefined reference to `__aeabi_ddiv'
->> arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1124): undefined reference to `__aeabi_ui2d'
->> arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1164): undefined reference to `__aeabi_dmul'
->> arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1170): undefined reference to `__aeabi_dadd'
->> arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1180): undefined reference to `__aeabi_dsub'
->> arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1190): undefined reference to `__aeabi_d2uiz'
->> arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x162c): undefined reference to `__aeabi_d2iz'
->> arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x16b0): undefined reference to `__aeabi_i2d'
->> dc_dmub_srv.c:(.text+0x10f8): undefined reference to `__aeabi_ui2d'
->> dc_dmub_srv.c:(.text+0x464): undefined reference to `__floatunsidf'
->> dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x33c): undefined reference to `__floatunsidf'
->> drivers/pci/endpoint/functions/pci-epf-vntb.c:975:5: warning: no previous prototype for 'pci_read' [-Wmissing-prototypes]
->> drivers/pci/endpoint/functions/pci-epf-vntb.c:984:5: warning: no previous prototype for 'pci_write' [-Wmissing-prototypes]
->> drivers/vfio/vfio_iommu_type1.c:2141:35: warning: cast to smaller integer type 'enum iommu_cap' from 'void *' [-Wvoid-pointer-to-enum-cast]
->> mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x34c): undefined reference to `__floatunsidf'
->> mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x378): undefined reference to `__divdf3'
->> mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x38c): undefined reference to `__muldf3'
->> mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x3a0): undefined reference to `__adddf3'
->> mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x3b4): undefined reference to `__subdf3'
->> mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x3d4): undefined reference to `__fixunsdfsi'
->> mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x750): undefined reference to `__fixdfsi'
->> mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x7c0): undefined reference to `__floatsidf'
->> powerpc-linux-ld: drivers/pci/endpoint/functions/pci-epf-vntb.c:174: undefined reference to `ntb_link_event'
->> xtensa-linux-ld: dc_dmub_srv.c:(.text+0x468): undefined reference to `__divdf3'
->> xtensa-linux-ld: dc_dmub_srv.c:(.text+0x46c): undefined reference to `__muldf3'
->> xtensa-linux-ld: dc_dmub_srv.c:(.text+0x470): undefined reference to `__adddf3'
->> xtensa-linux-ld: dc_dmub_srv.c:(.text+0x474): undefined reference to `__subdf3'
->> xtensa-linux-ld: dc_dmub_srv.c:(.text+0x478): undefined reference to `__fixunsdfsi'
->> xtensa-linux-ld: dc_dmub_srv.c:(.text+0x47c): undefined reference to `__fixdfsi'
->> xtensa-linux-ld: dc_dmub_srv.c:(.text+0x480): undefined reference to `__floatsidf'
->> xtensa-linux-ld: dc_dmub_srv.c:(.text+0x60c): undefined reference to `__floatunsidf'
->>
->> Unverified Error/Warning (likely false positive, please contact us if interested):
->>
->> arch/x86/events/core.c:2114 init_hw_perf_events() warn: missing error code 'err'
->> drivers/android/binder.c:1481:19-23: ERROR: from is NULL but dereferenced.
->> drivers/android/binder.c:2920:29-33: ERROR: target_thread is NULL but dereferenced.
->> drivers/android/binder.c:353:25-35: ERROR: node -> proc is NULL but dereferenced.
->> drivers/android/binder.c:4888:16-20: ERROR: t is NULL but dereferenced.
->> drivers/base/regmap/regmap.c:1996:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
->> drivers/char/random.c:869:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
->> drivers/firmware/arm_scmi/clock.c:394:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
->> drivers/firmware/arm_scmi/powercap.c:376:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
->> drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_powertune.c:1214:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
->> drivers/gpu/drm/amd/display/dc/os_types.h: drm/drm_print.h is included more than once.
->> drivers/gpu/drm/bridge/ite-it66121.c:1398:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
->> drivers/greybus/operation.c:617:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
 > 
-> <snip>
+> On Mon, Jun 06, 2022 at 07:55:54PM +0800, Yicong Yang wrote:
+>> Document the introduction and usage of HiSilicon PTT device driver.
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>  Documentation/trace/hisi-ptt.rst | 307 +++++++++++++++++++++++++++++++
+>>  Documentation/trace/index.rst    |   1 +
 > 
-> When the compiler crashes, why are you blaming all of these different
-> mailing lists?  Perhaps you need to fix your compiler :)
-> 
-> thanks,
-> 
-> greg k-h
+> The "get_maintainer" script clearly indicates that Jonathan Corbet maintains the
+> Documentation directory and yet he is not CC'ed on this patch, nor is the
+> linux-doc mainling list.  As such, it would not be possible to merge this
+> patchset.
 > 
 
-Hi Greg,
+sorry for missing. +cc'ed.
 
-Sorry for the inconvience, we'll fix it ASAP.
+>>  2 files changed, 308 insertions(+)
+>>  create mode 100644 Documentation/trace/hisi-ptt.rst
+>>
+>> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
+>> new file mode 100644
+>> index 000000000000..0a3112244d40
+>> --- /dev/null
+>> +++ b/Documentation/trace/hisi-ptt.rst
+>> @@ -0,0 +1,307 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +======================================
+>> +HiSilicon PCIe Tune and Trace device
+>> +======================================
+>> +
+>> +Introduction
+>> +============
+>> +
+>> +HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
+>> +integrated Endpoint (RCiEP) device, providing the capability
+>> +to dynamically monitor and tune the PCIe link's events (tune),
+>> +and trace the TLP headers (trace). The two functions are independent,
+>> +but is recommended to use them together to analyze and enhance the
+>> +PCIe link's performance.
+>> +
+>> +On Kunpeng 930 SoC, the PCIe Root Complex is composed of several
+>> +PCIe cores. Each PCIe core includes several Root Ports and a PTT
+>> +RCiEP, like below. The PTT device is capable of tuning and
+>> +tracing the links of the PCIe core.
+>> +::
+>> +
+>> +          +--------------Core 0-------+
+>> +          |       |       [   PTT   ] |
+>> +          |       |       [Root Port]---[Endpoint]
+>> +          |       |       [Root Port]---[Endpoint]
+>> +          |       |       [Root Port]---[Endpoint]
+>> +    Root Complex  |------Core 1-------+
+>> +          |       |       [   PTT   ] |
+>> +          |       |       [Root Port]---[ Switch ]---[Endpoint]
+>> +          |       |       [Root Port]---[Endpoint] `-[Endpoint]
+>> +          |       |       [Root Port]---[Endpoint]
+>> +          +---------------------------+
+>> +
+>> +The PTT device driver registers one PMU device for each PTT device.
+>> +The name of each PTT device is composed of 'hisi_ptt' prefix with
+>> +the id of the SICL and the Core where it locates. The Kunpeng 930
+>> +SoC encapsulates multiple CPU dies (SCCL, Super CPU Cluster) and
+>> +IO dies (SICL, Super I/O Cluster), where there's one PCIe Root
+>> +Complex for each SICL.
+>> +::
+>> +
+>> +    /sys/devices/hisi_ptt<sicl_id>_<core_id>
+> 
+> All entries added to sysfs should have corresponding documentation.  See [1] and
+> [2] for details and [3] for an example.
+> 
+> [1]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/README
+> [2]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/testing
+> [3]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/testing/sysfs-bus-coresight-devices-etm4x
+> 
 
-Best Regards,
-Rong Chen
+ok. I'll add a patch for ABI description. Thanks for the reference.
+
+>> +
+>> +Tune
+>> +====
+>> +
+>> +PTT tune is designed for monitoring and adjusting PCIe link parameters (events).
+>> +Currently we support events in 4 classes. The scope of the events
+>> +covers the PCIe core to which the PTT device belongs.
+>> +
+>> +Each event is presented as a file under $(PTT PMU dir)/tune, and
+>> +a simple open/read/write/close cycle will be used to tune the event.
+>> +::
+>> +
+>> +    $ cd /sys/devices/hisi_ptt<sicl_id>_<core_id>/tune
+>> +    $ ls
+>> +    qos_tx_cpl    qos_tx_np    qos_tx_p
+>> +    tx_path_rx_req_alloc_buf_level
+>> +    tx_path_tx_req_alloc_buf_level
+> 
+> These look overly long... How about watermark_rx and watermark_tx?
+> 
+
+These are gotten from the hardware manual and abbreviated. These events are highly connected
+to the hardware desgin so I think it's better to keep consistence. The watermark_{rx, tx} will
+become ambigious when we add more events for Rx path or other Tx path events.
+
+The event code is composed of two parts. First part (tx_path) describes which path it belongs to
+and second part describes the function ({rx,tx}_req_alloc_buf_level). We called the link path
+between CPU and PCIe RC as Rx path and the path between PCIe RC to the PCIe link as Tx path.
+So we need to have tx_path prefix for the Tx path and {rx, tx}_req_alloc_buf_level for the
+requested watermark of {inbound, outbound} buffer allocation. Indeed we have other Tx path
+buffer events which are not exported in this series.
+
+
+>> +    $ cat qos_tx_dp
+>> +    1
+>> +    $ echo 2 > qos_tx_dp
+>> +    $ cat qos_tx_dp
+>> +    2
+>> +
+>> +Current value (numerical value) of the event can be simply read
+>> +from the file, and the desired value written to the file to tune.
+>> +
+>> +1. Tx path QoS control
+>> +------------------------
+>> +
+>> +The following files are provided to tune the QoS of the tx path of
+>> +the PCIe core.
+>> +
+>> +- qos_tx_cpl: weight of Tx completion TLPs
+>> +- qos_tx_np: weight of Tx non-posted TLPs
+>> +- qos_tx_p: weight of Tx posted TLPs
+>> +
+>> +The weight influences the proportion of certain packets on the PCIe link.
+>> +For example, for the storage scenario, increase the proportion
+>> +of the completion packets on the link to enhance the performance as
+>> +more completions are consumed.
+>> +
+>> +The available tune data of these events is [0, 1, 2].
+>> +Writing a negative value will return an error, and out of range
+>> +values will be converted to 2. Note that the event value just
+>> +indicates a probable level, but is not precise.
+>> +
+>> +2. Tx path buffer control
+>> +-------------------------
+>> +
+>> +Following files are provided to tune the buffer of tx path of the PCIe core.
+>> +
+>> +- tx_path_rx_req_alloc_buf_level: watermark of Rx requested
+>> +- tx_path_tx_req_alloc_buf_level: watermark of Tx requested
+>> +
+>> +These events influence the watermark of the buffer allocated for each
+>> +type. Rx means the inbound while Tx means outbound. The packets will
+>> +be stored in the buffer first and then transmitted either when the
+>> +watermark reached or when timed out. For a busy direction, you should
+>> +increase the related buffer watermark to avoid frequently posting and
+>> +thus enhance the performance. In most cases just keep the default value.
+>> +
+>> +The available tune data of above events is [0, 1, 2].
+>> +Writing a negative value will return an error, and out of range
+>> +values will be converted to 2. Note that the event value just
+>> +indicates a probable level, but is not precise.
+> 
+> This is useful documentation but it also should be found in the ABI
+> documentation referred to above.
+> 
+>> +
+>> +Trace
+>> +=====
+>> +
+>> +PTT trace is designed for dumping the TLP headers to the memory, which
+>> +can be used to analyze the transactions and usage condition of the PCIe
+>> +Link. You can choose to filter the traced headers by either requester ID,
+>> +or those downstream of a set of Root Ports on the same core of the PTT
+>> +device. It's also supported to trace the headers of certain type and of
+>> +certain direction.
+>> +
+>> +You can use the perf command `perf record` to set the parameters, start
+>> +trace and get the data. It's also supported to decode the trace
+>> +data with `perf report`. The control parameters for trace is inputted
+>> +as event code for each events, which will be further illustrated later.
+>> +An example usage is like
+>> +::
+>> +
+>> +    $ perf record -e hisi_ptt0_2/filter=0x80001,type=1,direction=1,
+>> +      format=1/ -- sleep 5
+>> +
+>> +This will trace the TLP headers downstream root port 0000:00:10.1 (event
+>> +code for event 'filter' is 0x80001) with type of posted TLP requests,
+>> +direction of inbound and traced data format of 8DW.
+>> +
+>> +1. filter
+>> +---------
+>> +
+>> +The TLP headers to trace can be filtered by the Root Ports or the requester
+>> +ID of the endpoints, which are located on the same core of the PTT device.
+>> +You can set the filter by specifying the `filter` parameter which is required
+>> +to start the trace. The parameter value is 20 bit. The supported filters and
+>> +related values are outputted through `available_root_port_filters` and
+>> +`available_requester_filters` sysfs attributes for Root Ports and Requesters
+>> +respectively.
+>> +::
+>> +
+>> +    $ cat available_root_port_filters
+>> +    0000:00:10.0	0x80001
+>> +    0000:00:11.0	0x80004
+>> +    $ cat available_requester_filters
+>> +    0000:01:00.0	0x00100
+>> +    0000:01:00.1	0x00101
+> 
+> If I remember correctly, one of the rule for sysfs is one line per entry.
+> 
+
+Since one PTT devices may support several Root Ports and Endpoints on its core, I find no better
+way to make this information convenient and easy to use for the users to collect. So maybe this
+canbe an exception and there seems to have some limited examples like
+/sys/devices/system/node/node<N>/{meminfo, vmstat, meminfo}.
+
+>> +
+>> +Note that multiple Root Ports can be specified at one time, but only
+>> +one Endpoint function can be specified in one trace. Specifying both
+>> +Root Port and function at the same time is not supported.
+>> +
+>> +If no filter is available, reading the related filter sysfs attribute
+>> +will get an empty string.
+>> +::
+>> +
+>> +    $ cat available_root_port_filters
+>> +
+>> +    $ cat available_requester_filters
+> 
+> Those too look overly long, and where to find them is not documented.  As such
+> users have to guest that it must be somewhere under
+> /sys/devices/hisi_ptt<sicl_id>_<core_id>/.
+> 
+
+Since Root Port and Requester are PCIe terminologies so it's better to have them
+embedded to make it clear. Maybe 'available' can be removed.
+
+Will have all these sysfs attributes documented.
+
+> More comments tomorrow.
+> 
+
+Thanks,
+Yicong
