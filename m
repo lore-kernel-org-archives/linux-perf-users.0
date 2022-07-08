@@ -2,119 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADFEC43334
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 13:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEA6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 15:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237827AbiGHNlI (ORCPT
+        id S238567AbiGHPj2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 09:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47100 "EHLO
+        Fri, 8 Jul 2022 11:39:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237743AbiGHNlI (ORCPT
+        with ESMTP id S238463AbiGHPj1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 09:41:08 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28DBC2A703;
-        Fri,  8 Jul 2022 06:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ZG0X/u2bNGrOSRwgd/Cf/2JtluWVYNjaS55/gTNyDxw=; b=pbDHg+nEKoKVOqF3TDDxJ06kJ3
-        O4m88Cjk7bksbzNMCeGew8G7e2Hjr8fVMkoZDD/pkMPvQ3nxTa8P2zg/tOn6UIBc1NIdhJ8jYBQB5
-        RcLDzyJhnsNeSaTLJTqYsPzOcHhw32jtpe/le3spGQ+LNOw+iUqd/lnm/0k2wi2h5sdrG6Ss4IgtI
-        nK2orJW28DkUW9K/yE2HB0T2vXWgwYw8V5L0nPxtecVVyKHbgnVpo3xI+LAisa7SSxOkVbVflgSX7
-        aU7REpWJ38CcLNgQ+RS9HLx5+oV7kqlMmWu46iR8rKreOQlf07ufehyKaih8NJyqtjTuAGTm9mbBC
-        caYJn+Vg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o9oE2-001kOL-UQ; Fri, 08 Jul 2022 13:40:56 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CCE2598007C; Fri,  8 Jul 2022 15:31:59 +0200 (CEST)
-Date:   Fri, 8 Jul 2022 15:31:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Fri, 8 Jul 2022 11:39:27 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2338201BD
+        for <linux-perf-users@vger.kernel.org>; Fri,  8 Jul 2022 08:39:25 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id r129-20020a1c4487000000b003a2d053adcbso1371917wma.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Jul 2022 08:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AAkCMAVRf/IwKZSA0BbN8FSNnPqg+F4/qwr/P+jS6Dc=;
+        b=qPAd7gLXdY2AXYJcZ98rIrWY3PxawQwig2bvtzZd/W1Os38w3n2D2BpG/CIlcDdIuG
+         YFXLLXJ9kT1lRVkS7OT58WLQzyvC/+wQrzhdDytp0CSbmz/zVTVSRBtIkbFbphuvSK9z
+         R8WPvaXKDg8j8depN4ngOd0v2fxMAvwOZNhZpS/2Y0mgDUI0EkBiHiIAoeVwLgR9hagT
+         dtLUVd9WWi0UKsu0YqRDjDiFjAmHKhLq0/NR/PSZ9isnKlRQYU+LEDGDEyoXAMg/4UH+
+         NjYHiS8Q1kHjM0SF6ReKgzRqCyPpPFnlSdyvwOMRbs6Y2+q2eeqW2t3thaL3yisjjurr
+         3vLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AAkCMAVRf/IwKZSA0BbN8FSNnPqg+F4/qwr/P+jS6Dc=;
+        b=yHN48jD5/WTrsf1Mht+PucFXWAgaSj90j3MJvfVmZjLb3zye/Vvk3TLCglX1NLK0Xj
+         BDlgajqu7mIBNh0TLh/Kma8uqCArAzJZsI8+KGul26o/aGpwMP2btd7RnGnSUMLEqhAh
+         yYumnMtEQJriDx6bDOg7C7xzycuLeoZDQhrRJVtiugZqMeenlfzluZFYuD2UHg4lp7RI
+         Usd/NfELJChR3z9BZi6B7Td4yiR0C5uXjFCoEwAzPvaIkNY0lodDmzU9l44vkpS+p3sg
+         mVpz9B2PCam3Pj2UoFfRLhEoxUZfVgfFERxAWKB3U0IG+CL7KQPH3egVJeSORlq0sAxO
+         krgw==
+X-Gm-Message-State: AJIora/NYMo7g+rH5tbdfgN0A6bbtVq+sDATtdYtt8Pn2PomMt6ND+wG
+        uwO8eAJMsktJEQoqein2ZZEafjq8c1vBuaNrRdoJgQ==
+X-Google-Smtp-Source: AGRyM1t0iOAGdxPYDSXzho77NeviEc/Zuny8DDJjbAnkwE5ltk9p1KK/FNOEoXQJxAyQLN11jIEj67Y/ZdU5vMR+TVA=
+X-Received: by 2002:a05:600c:4e8f:b0:3a1:8b21:ebbc with SMTP id
+ f15-20020a05600c4e8f00b003a18b21ebbcmr424005wmq.149.1657294764353; Fri, 08
+ Jul 2022 08:39:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220707201213.331663-1-irogers@google.com> <20220707201213.331663-3-irogers@google.com>
+ <0bc35725-43eb-271c-d66e-ca11e5001794@linux.ibm.com>
+In-Reply-To: <0bc35725-43eb-271c-d66e-ca11e5001794@linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 8 Jul 2022 08:39:11 -0700
+Message-ID: <CAP-5=fWAy-agZ=21_uzOWJfD9Da6XVJ05spoXQ8XTLQiE1LmLA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] perf test: Json format checking
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf/core: Add macros for possible
- sysctl_perf_event_paranoid values
-Message-ID: <Ysgxzxl0N7+J8Vbt@worktop.programming.kicks-ass.net>
-References: <20220701063949.1769434-1-anshuman.khandual@arm.com>
- <b9da8d22-6896-68a3-b4e5-e8fd7b82b711@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9da8d22-6896-68a3-b4e5-e8fd7b82b711@arm.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
+        Like Xu <likexu@tencent.com>,
+        James Clark <james.clark@arm.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Claire Jensen <clairej735@gmail.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 08, 2022 at 10:10:15AM +0100, James Clark wrote:
-> 
-> 
-> On 01/07/2022 07:39, Anshuman Khandual wrote:
-> > sysctl_perf_event_paranoid can have values from [-1, 0, 1, 2] which decides
-> > on perf event restrictions for unprivileged users. But using them directly
-> > makes it difficult to correlate exact restriction level they might impose.
-> > This just adds macros for those numerical restriction values, making them
-> > clear and improving readability.
-> > 
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: linux-perf-users@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+On Fri, Jul 8, 2022 at 1:31 AM Thomas Richter <tmricht@linux.ibm.com> wrote=
+:
+>
+> On 7/7/22 22:12, Ian Rogers wrote:
+> > From: Claire Jensen <cjense@google.com>
+> >
+> > Add field checking tests for perf stat JSON output.
+> > Sanity checks the expected number of fields are present, that the
+> > expected keys are present and they have the correct values.
+> >
+> > Signed-off-by: Claire Jensen <cjense@google.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  include/linux/perf_event.h | 22 ++++++++++++++++++----
-> >  kernel/events/core.c       |  9 +--------
-> >  kernel/kallsyms.c          |  3 ++-
-> >  3 files changed, 21 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > index da759560eec5..78156b9154df 100644
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -1359,14 +1359,28 @@ int perf_event_max_stack_handler(struct ctl_table *table, int write,
-> >  #define PERF_SECURITY_KERNEL		2
-> >  #define PERF_SECURITY_TRACEPOINT	3
-> >  
-> > +/*
-> > + * perf event paranoia level:
-> > + *  -1 - not paranoid at all
-> > + *   0 - disallow raw tracepoint access for unpriv
-> > + *   1 - disallow cpu events for unpriv
-> > + *   2 - disallow kernel profiling for unpriv
-> > + */
-> > +enum {
-> > +	PERF_EVENT_DISALLOW_NONE	= -1,
-> > +	PERF_EVENT_DISALLOW_TRACE,
-> > +	PERF_EVENT_DISALLOW_CPU,
-> > +	PERF_EVENT_DISALLOW_KERNEL
-> > +};
-> > +
-> >  static inline int perf_is_paranoid(void)
-> >  {
-> > -	return sysctl_perf_event_paranoid > -1;
-> > +	return sysctl_perf_event_paranoid > PERF_EVENT_DISALLOW_NONE;
-> >  }
-> >  
-> 
-> Hi Anshuman,
-> 
-> There are quite a few other instances of integers left in the tools code.
-> If you search for perf_event_paranoid_check() and perf_event_paranoid()
-> you will find them.
-> 
-> I'm also wondering if it makes sense to return your new enum from all of
-> the helper functions instead of an int and make it explicit that it's
-> an instance of this new type? Although the compiler doesn't seem to warn
-> about using integers so maybe it's not worth doing this.
+> >  .../tests/shell/lib/perf_json_output_lint.py  |  95 +++++++++++
+> >  tools/perf/tests/shell/stat+json_output.sh    | 147 ++++++++++++++++++
+> >  2 files changed, 242 insertions(+)
+> >  create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
+> >  create mode 100755 tools/perf/tests/shell/stat+json_output.sh
+> >
+> ....
+> I wonder if it is really necessary to have a python file to post process =
+the
+> perf stat output?
+>
+> With
+> commit 7473ee56dbc9 ("perf test: Add checking for perf stat CSV output.")
+> the same approach was done which led to issues on s390 and required an ad=
+ditional
+> patch to fix this:
+> commit ec906102e5b7 ("perf test: Fix "perf stat CSV output linter" test o=
+n s390").
+>
+> I wonder if you can do the perf stat output checking using bash/linux too=
+ls as it
+> was done in commit ec906102e5b7. This would make maintenance much easier.
+>
+> Just me 2 cents...
 
-so I don't see the point of all this; it's already wrapped in these
-helper functions that have a descriptive name, why do we need more muck
-on top?
+Hi Thomas,
+
+In this case using python avoids writing a JSON decoder, which would
+be harder to do in bash although there is perhaps a linter or some
+such we could use. That'd wind up being another dependency :-/
+
+Thanks,
+Ian
+
+> --
+> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
+y
+> --
+> Vorsitzender des Aufsichtsrats: Gregor Pillen
+> Gesch=C3=A4ftsf=C3=BChrung: David Faller
+> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
+tgart, HRB 243294
