@@ -2,290 +2,219 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F8ECCA480
-	for <linux-perf-users@archiver.kernel.org>; Thu,  7 Jul 2022 23:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E586ECCA47B
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 08:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236842AbiGGXdR (ORCPT
+        id S237371AbiGHIWP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 7 Jul 2022 19:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39632 "EHLO
+        Fri, 8 Jul 2022 04:22:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236590AbiGGXdQ (ORCPT
+        with ESMTP id S236956AbiGHIWN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 7 Jul 2022 19:33:16 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023772B619;
-        Thu,  7 Jul 2022 16:33:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657236794; x=1688772794;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Zq0IYeQ+zoUL5O2hNpqxGkXI6+bcL6FLvMdsPEh8Dd0=;
-  b=nJIN+HG4bO9TeV277oHESfyfzMteEQDhW0KHrY+3JiWDoxp2FWptH/70
-   nPJuWsiMtQP52DQvKtIssZKIM7hE6YBMoPG5F36Y/+Hwcc9tNwCDQ26p2
-   6BaCYG+EJb5p8ke6JYqhAKbhyTnJPBVzgTFhLpeaRV/H56uyzAPPgzoKQ
-   wR8xKLRugT3vkTWJGijPYPmiIlyOfA3FkxZXXtY+IsxY4FiJcAVCu9yf6
-   895X2V8euHIouawVI+SJufVGqIC4uYxrCaV4lrlla9NQxC/ZmN9nipJ6y
-   Di78M8znkDj8ASfS2MpDZHBfnXkDq07/YF/ClDfHVOYqZ2my0EZNZPXBL
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10401"; a="309705420"
-X-IronPort-AV: E=Sophos;i="5.92,253,1650956400"; 
-   d="scan'208";a="309705420"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2022 16:33:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,253,1650956400"; 
-   d="scan'208";a="568708353"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 07 Jul 2022 16:33:11 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o9aze-000Mbq-Q9;
-        Thu, 07 Jul 2022 23:33:10 +0000
-Date:   Fri, 08 Jul 2022 07:32:17 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 75d7bf5eae277f32dd952276aa41ae7915dba1b2
-Message-ID: <62c76d01.vlHjMvDEG6yYDgx1%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 8 Jul 2022 04:22:13 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0181B8148A
+        for <linux-perf-users@vger.kernel.org>; Fri,  8 Jul 2022 01:22:12 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id r1so15753119plo.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Jul 2022 01:22:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TYvSfrHPstnzZJynd8muvpANEKz59daC1D9QhUGyBsM=;
+        b=8S3yywRTtMIjxIbmB2flA4mlE78K7EBRrgf2m5In+lt0C+3X/5Vf/tTjj1izXHBalu
+         AV0aGsKbi/7a+twTRdFq3yHJKSxcSScq9KBDF747wJ3mngNrnukrV5zIqZuVCjPC6R+L
+         G+cXhQGev+W1XhTy+AG5a8ITD0yxuiWjYhpKqrYL3YMtW/19UueJ9ElQrZljBJbgU7TP
+         BHxnHRGSJE1eNT3N49c/c8W93Unt6EWBX4Z00NySj+KqRC7STeodgQIsmeCdswiuMDKj
+         6g/crwKcDMZBCB4I5tAjUyv0EUG7gEh+dOACEqIOqMdkORqq/ko7odDQiWx+9VBB6ZjM
+         dplg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TYvSfrHPstnzZJynd8muvpANEKz59daC1D9QhUGyBsM=;
+        b=Noa09T3Epyi3faZU0lgkGw5Fw2m1sqIm5JFE/CVn29mlfwt9gSIbNgKqq7c8vM9IW3
+         sTdZ96KNs8Of1TMmujanSNCUoQ3jRI0ag7Pt9FaU/qhARJsIPOLir/xTjyZKEa56ca03
+         S3JGWoWVKEnkmxBfby0fm06TcEYsiRfnFyosTSxDxDjQSeEHC2XW+cV6xfTysFEC+7cp
+         lBMbZtS/i8sGqX/Un3OQPNQiGW2obzIlkw+CikKtsazwRuGQ+hAzo+LN4M9I6jJE0O1M
+         qKqWGxey2x6Z3fyShn/1FNhKaHnIeCkUHWCjR+C1eVDz5GzpaH5qLomXVp2yWiTaRXvO
+         TcbQ==
+X-Gm-Message-State: AJIora9g8fAvE4Zl4hsVduxJ3q+rE7zUK3mzKhtX5jrnoEGJWyUBVHwi
+        g3dtpx4etXbHNlHwNSK4sMEPQg==
+X-Google-Smtp-Source: AGRyM1tcEE95Ekpp4tq/jJm3aTC46fHNhCwmQGo2VLd2iQl+tjB6CnBUyJJtwF4xhqrjmqieK2tKVg==
+X-Received: by 2002:a17:902:a502:b0:16b:fbd9:7fc5 with SMTP id s2-20020a170902a50200b0016bfbd97fc5mr2516757plq.112.1657268531484;
+        Fri, 08 Jul 2022 01:22:11 -0700 (PDT)
+Received: from C02FT5A6MD6R.bytedance.net ([139.177.225.241])
+        by smtp.gmail.com with ESMTPSA id x65-20020a636344000000b00412b1043f33sm3329291pgb.39.2022.07.08.01.21.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Jul 2022 01:22:10 -0700 (PDT)
+From:   Gang Li <ligang.bdlg@bytedance.com>
+To:     mhocko@suse.com, akpm@linux-foundation.org, surenb@google.com
+Cc:     hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+        keescook@chromium.org, rostedt@goodmis.org, mingo@redhat.com,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
+        adobriyan@gmail.com, yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@Oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        Gang Li <ligang.bdlg@bytedance.com>
+Subject: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for CONSTRAINT_{MEMORY_POLICY,CPUSET}
+Date:   Fri,  8 Jul 2022 16:21:24 +0800
+Message-Id: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 75d7bf5eae277f32dd952276aa41ae7915dba1b2  Add linux-next specific files for 20220707
+TLDR
+----
+If a mempolicy or cpuset is in effect, out_of_memory() will select victim
+on specific node to kill. So that kernel can avoid accidental killing on
+NUMA system.
 
-Error/Warning: (recently discovered and may have been fixed)
+Problem
+-------
+Before this patch series, oom will only kill the process with the highest 
+memory usage by selecting process with the highest oom_badness on the
+entire system.
 
-arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x18c4): undefined reference to `__aeabi_ddiv'
-arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x18e8): undefined reference to `__aeabi_ui2d'
-arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1920): undefined reference to `__aeabi_dmul'
-arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1928): undefined reference to `__aeabi_dadd'
-arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1934): undefined reference to `__aeabi_dsub'
-arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1940): undefined reference to `__aeabi_d2uiz'
-arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1dbc): undefined reference to `__aeabi_d2iz'
-arm-linux-gnueabi-ld: dc_dmub_srv.c:(.text+0x1e2c): undefined reference to `__aeabi_i2d'
-dc_dmub_srv.c:(.text+0x18b8): undefined reference to `__aeabi_ui2d'
-dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x33c): undefined reference to `__floatunsidf'
-drivers/pci/endpoint/functions/pci-epf-vntb.c:975:5: warning: no previous prototype for 'pci_read' [-Wmissing-prototypes]
-drivers/pci/endpoint/functions/pci-epf-vntb.c:984:5: warning: no previous prototype for 'pci_write' [-Wmissing-prototypes]
-drivers/scsi/qedi/qedi_fw_api.c:357:17: sparse:    left side has type restricted __le16
-drivers/vfio/vfio_iommu_type1.c:2141:35: warning: cast to smaller integer type 'enum iommu_cap' from 'void *' [-Wvoid-pointer-to-enum-cast]
-mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x34c): undefined reference to `__floatunsidf'
-mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x378): undefined reference to `__divdf3'
-mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x38c): undefined reference to `__muldf3'
-mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x3a0): undefined reference to `__adddf3'
-mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x3b4): undefined reference to `__subdf3'
-mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x3d4): undefined reference to `__fixunsdfsi'
-mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x740): undefined reference to `__fixdfsi'
-mips-linux-ld: dc_dmub_srv.c:(.text.dc_dmub_setup_subvp_dmub_command+0x7b0): undefined reference to `__floatsidf'
+This works fine on UMA system, but may have some accidental killing on NUMA
+system.
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+As shown below, if process c.out is bind to Node1 and keep allocating pages
+from Node1, a.out will be killed first. But killing a.out did't free any
+mem on Node1, so c.out will be killed then.
 
-ERROR: modpost: "usb_hub_find_child" [drivers/usb/dwc3/dwc3-qcom.ko] undefined!
-arch/x86/events/core.c:2114 init_hw_perf_events() warn: missing error code 'err'
-arch/x86/kernel/cpu/rdrand.c:36 x86_init_rdrand() error: uninitialized symbol 'prev'.
-drivers/firmware/arm_scmi/clock.c:394:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/firmware/arm_scmi/powercap.c:376:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_powertune.c:1214:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/gpu/drm/amd/display/dc/os_types.h: drm/drm_print.h is included more than once.
-drivers/gpu/drm/bridge/ite-it66121.c:1398:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/infiniband/hw/irdma/hw.c:1484:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/md/dm-mpath.c:1681:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/media/dvb-frontends/mxl692.c:49:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/media/i2c/ov5647.c:636:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/media/i2c/st-mipid02.c:271:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/media/platform/qcom/venus/vdec.c:1505:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/media/platform/st/sti/delta/delta-v4l2.c:719:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/media/tuners/msi001.c:81:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/mfd/sec-core.c:429:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/mmc/host/sh_mmcif.c:1318:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/bonding/bond_main.c:4647:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:1388:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/faraday/ftgmac100.c:854:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/hisilicon/hns/hnae.c:436:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/intel/i40e/i40e_main.c:9347:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/intel/ice/ice_base.c:1003:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/intel/ice/ice_dcb_lib.c:520:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/intel/ice/ice_vlan_mode.c:379:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/intel/igb/e1000_phy.c:1185:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/microchip/encx24j600.c:827:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/microchip/lan743x_main.c:1238:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/smsc/smsc9420.c:451:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/ethernet/vertexcom/mse102x.c:422:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/phy/dp83640.c:890:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/usb/cdc_ncm.c:195:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/net/usb/rtl8150.c:176:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/parport/ieee1284_ops.c:615:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/scsi/elx/efct/efct_unsol.c:297:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/scsi/elx/libefc/efc_domain.c:692:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/scsi/megaraid/megaraid_sas_fp.c:297:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/soc/mediatek/mtk-mutex.c:820:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/staging/media/zoran/zr36016.c:430:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/staging/media/zoran/zr36050.c:829:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/staging/media/zoran/zr36060.c:869:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/target/iscsi/iscsi_target.c:2348:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/thunderbolt/tmu.c:758:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/thunderbolt/tunnel.c:1264:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/tty/serial/atmel_serial.c:1442:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/usb/host/uhci-q.c:1367:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/usb/serial/digi_acceleport.c:1167:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-drivers/video/backlight/qcom-wled.c:871:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-fs/ext4/mballoc.c:3612:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-fs/kernel_read_file.c:61 kernel_read_file() warn: impossible condition '(i_size > (((~0) >> 1))) => (s64min-s64max > s64max)'
-fs/ubifs/recovery.c:1062:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-kernel/sched/core.c:2076:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-mm/filemap.c:1354:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-mm/page_alloc.c:1115:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-mm/page_alloc.c:7696:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-mm/slub.c:5434:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-net/bluetooth/hci_event.c:5926:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-net/qrtr/mhi.c:102:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-net/wireless/reg.c:205:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-sound/pci/lola/lola.c:178:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-sound/pci/pcxhr/pcxhr_core.c:134:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-sound/pci/rme9652/hdsp.c:666:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-sound/soc/fsl/fsl_spdif.c:1508:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-sound/soc/sh/rcar/core.c:1602:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-sound/soc/sof/intel/mtl.c:547:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-{standard input}:2311: Error: expecting )
+A lot of AMD machines have 8 numa nodes. In these systems, there is a
+greater chance of triggering this problem.
 
-Error/Warning ids grouped by kconfigs:
+OOM before patches:
+```
+Per-node process memory usage (in MBs)
+PID             Node 0        Node 1    Total
+----------- ---------- ------------- --------
+3095 a.out     3073.34          0.11  3073.45(Killed first. Max mem usage)
+3199 b.out      501.35       1500.00  2001.35
+3805 c.out        1.52 (grow)2248.00  2249.52(Killed then. Node1 is full)
+----------- ---------- ------------- --------
+Total          3576.21       3748.11  7324.31
+```
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
-|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
-|-- arc-allyesconfig
-|   |-- block-partitions-efi.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- block-sed-opal.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- crypto-asymmetric_keys-pkcs7_verify.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-ata-libata-core.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-ata-libata-eh.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-ata-sata_dwc_460ex.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-base-power-runtime.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-block-rbd.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-bluetooth-hci_ll.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-bluetooth-hci_qca.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-cdrom-cdrom.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-char-ipmi-ipmi_ssif.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-char-pcmcia-cm4000_cs.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-char-random.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-char-tpm-tpm_tis_core.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-clk-bcm-clk-iproc-armpll.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-clk-clk-bd718x7.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-clk-clk-lochnagar.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-crypto-ccree-cc_request_mgr.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-crypto-qce-sha.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-crypto-qce-skcipher.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-cxl-core-hdm.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-cxl-core-pci.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-dma-buf-dma-buf.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-firmware-arm_scmi-bus.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-firmware-arm_scmi-clock.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-firmware-arm_scmi-powercap.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-firmware-arm_scmi-sensors.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-firmware-arm_scmi-voltage.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-fpga-dfl-fme-mgr.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gnss-usb.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_debug.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_resource.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce112-dce112_resource.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-powerplay-hwmgr-smu7_hwmgr.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-powerplay-hwmgr-smu8_hwmgr.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-powerplay-hwmgr-vega10_powertune.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-powerplay-smumgr-smu7_smumgr.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ttm.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-bridge-cadence-cdns-mhdp8546-hdcp.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-bridge-ite-it66121.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-bridge-lontium-lt9211.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-bridge-sii902x.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-|   |-- drivers-gpu-drm-mcde-mcde_dsi.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
-clang_recent_errors
-|-- arm64-buildonly-randconfig-r006-20220707
-|   `-- drivers-vfio-vfio_iommu_type1.c:warning:cast-to-smaller-integer-type-enum-iommu_cap-from-void
-|-- arm64-randconfig-r013-20220706
-|   `-- ERROR:usb_hub_find_child-drivers-usb-dwc3-dwc3-qcom.ko-undefined
-|-- x86_64-randconfig-a001
-|   `-- drivers-vfio-vfio_iommu_type1.c:warning:cast-to-smaller-integer-type-enum-iommu_cap-from-void
-|-- x86_64-randconfig-a005
-|   `-- drivers-vfio-vfio_iommu_type1.c:warning:cast-to-smaller-integer-type-enum-iommu_cap-from-void
-`-- x86_64-randconfig-a012
-    `-- drivers-vfio-vfio_iommu_type1.c:warning:cast-to-smaller-integer-type-enum-iommu_cap-from-void
+Solution
+--------
+We store per node rss in mm_rss_stat for each process.
 
-elapsed time: 732m
+If a page allocation with mempolicy or cpuset in effect triger oom. We will
+calculate oom_badness with rss counter for the corresponding node. Then
+select the process with the highest oom_badness on the corresponding node
+to kill.
 
-configs tested: 52
-configs skipped: 2
+OOM after patches:
+```
+Per-node process memory usage (in MBs)
+PID             Node 0        Node 1     Total
+----------- ---------- ------------- ----------
+3095 a.out     3073.34          0.11    3073.45
+3199 b.out      501.35       1500.00    2001.35
+3805 c.out        1.52 (grow)2248.00    2249.52(killed)
+----------- ---------- ------------- ----------
+Total          3576.21       3748.11    7324.31
+```
 
-gcc tested configs:
-arm                                 defconfig
-arm                              allyesconfig
-arm64                            allyesconfig
-ia64                             allmodconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-powerpc                           allnoconfig
-i386                                defconfig
-i386                             allyesconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-arc                  randconfig-r043-20220707
-s390                 randconfig-r044-20220707
-riscv                randconfig-r042-20220707
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           rhel-8.3-syz
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
+Overhead
+--------
+CPU:
 
-clang tested configs:
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-hexagon              randconfig-r045-20220707
-hexagon              randconfig-r041-20220707
+According to the result of Unixbench. There is less than one percent
+performance loss in most cases.
+
+On 40c512g machine.
+
+40 parallel copies of tests:
++----------+----------+-----+----------+---------+---------+---------+
+| numastat | FileCopy | ... |   Pipe   |  Fork   | syscall |  total  |
++----------+----------+-----+----------+---------+---------+---------+
+| off      | 2920.24  | ... | 35926.58 | 6980.14 | 2617.18 | 8484.52 |
+| on       | 2919.15  | ... | 36066.07 | 6835.01 | 2724.82 | 8461.24 |
+| overhead | 0.04%    | ... | -0.39%   | 2.12%   | -3.95%  | 0.28%   |
++----------+----------+-----+----------+---------+---------+---------+
+
+1 parallel copy of tests:
++----------+----------+-----+---------+--------+---------+---------+
+| numastat | FileCopy | ... |  Pipe   |  Fork  | syscall |  total  |
++----------+----------+-----+---------+--------+---------+---------+
+| off      | 1515.37  | ... | 1473.97 | 546.88 | 1152.37 | 1671.2  |
+| on       | 1508.09  | ... | 1473.75 | 532.61 | 1148.83 | 1662.72 |
+| overhead | 0.48%    | ... | 0.01%   | 2.68%  | 0.31%   | 0.51%   |
++----------+----------+-----+---------+--------+---------+---------+
+
+MEM:
+
+per task_struct:
+sizeof(int) * num_possible_nodes() + sizeof(int*)
+typically 4 * 2 + 8 bytes
+
+per mm_struct:
+sizeof(atomic_long_t) * num_possible_nodes() + sizeof(atomic_long_t*)
+typically 8 * 2 + 8 bytes
+
+zap_pte_range:
+sizeof(int) * num_possible_nodes() + sizeof(int*)
+typically 4 * 2 + 8 bytes 
+
+Changelog
+----------
+v2:
+  - enable per numa node oom for `CONSTRAINT_CPUSET`.
+  - add benchmark result in cover letter.
+
+Gang Li (5):
+  mm: add a new parameter `node` to `get/add/inc/dec_mm_counter`
+  mm: add numa_count field for rss_stat
+  mm: add numa fields for tracepoint rss_stat
+  mm: enable per numa node rss_stat count
+  mm, oom: enable per numa node oom for
+    CONSTRAINT_{MEMORY_POLICY,CPUSET}
+
+ arch/s390/mm/pgtable.c        |   4 +-
+ fs/exec.c                     |   2 +-
+ fs/proc/base.c                |   6 +-
+ fs/proc/task_mmu.c            |  14 ++--
+ include/linux/mm.h            |  59 ++++++++++++-----
+ include/linux/mm_types_task.h |  16 +++++
+ include/linux/oom.h           |   2 +-
+ include/trace/events/kmem.h   |  27 ++++++--
+ kernel/events/uprobes.c       |   6 +-
+ kernel/fork.c                 |  70 +++++++++++++++++++-
+ mm/huge_memory.c              |  13 ++--
+ mm/khugepaged.c               |   4 +-
+ mm/ksm.c                      |   2 +-
+ mm/madvise.c                  |   2 +-
+ mm/memory.c                   | 119 ++++++++++++++++++++++++----------
+ mm/migrate.c                  |   4 ++
+ mm/migrate_device.c           |   2 +-
+ mm/oom_kill.c                 |  69 +++++++++++++++-----
+ mm/rmap.c                     |  19 +++---
+ mm/swapfile.c                 |   6 +-
+ mm/userfaultfd.c              |   2 +-
+ 21 files changed, 335 insertions(+), 113 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.20.1
+
