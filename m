@@ -2,198 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E913C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 16:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1AFCCA482
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 17:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238234AbiGHQpZ (ORCPT
+        id S238685AbiGHRb5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 12:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58228 "EHLO
+        Fri, 8 Jul 2022 13:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237590AbiGHQpY (ORCPT
+        with ESMTP id S238646AbiGHRb4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 12:45:24 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2B88E005;
-        Fri,  8 Jul 2022 09:45:23 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D78831063;
-        Fri,  8 Jul 2022 09:45:23 -0700 (PDT)
-Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7632B3F66F;
-        Fri,  8 Jul 2022 09:45:22 -0700 (PDT)
-Message-ID: <34db7cf2-32cc-5d9b-d98d-a29928ea898b@foss.arm.com>
-Date:   Fri, 8 Jul 2022 17:45:07 +0100
+        Fri, 8 Jul 2022 13:31:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E3613D1F;
+        Fri,  8 Jul 2022 10:31:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D260062418;
+        Fri,  8 Jul 2022 17:31:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20241C341C0;
+        Fri,  8 Jul 2022 17:31:49 +0000 (UTC)
+Date:   Fri, 8 Jul 2022 13:31:47 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Gang Li <ligang.bdlg@bytedance.com>
+Cc:     mhocko@suse.com, akpm@linux-foundation.org, surenb@google.com,
+        Ingo Molnar <mingo@redhat.com>, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+        keescook@chromium.org, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, david@redhat.com,
+        imbrenda@linux.ibm.com, adobriyan@gmail.com,
+        yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@Oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] mm: add numa fields for tracepoint rss_stat
+Message-ID: <20220708133147.20f3d887@gandalf.local.home>
+In-Reply-To: <20220708082129.80115-4-ligang.bdlg@bytedance.com>
+References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+        <20220708082129.80115-4-ligang.bdlg@bytedance.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 10/14] perf test: Add thread loop test shell scripts
-Content-Language: en-US
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, mathieu.poirier@linaro.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20220701120804.3226396-1-carsten.haitzler@foss.arm.com>
- <20220701120804.3226396-11-carsten.haitzler@foss.arm.com>
- <a14e7015-7446-8cb3-612c-00dcb469c939@arm.com>
- <e55094af-557e-8044-fc14-00189bd392a2@foss.arm.com>
- <CAJ9a7VjQ4B8yudKqHZ_f8pGRGcM9t=6M0zfQK9-LmyTf4pZbZw@mail.gmail.com>
-From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Organization: Arm Ltd.
-In-Reply-To: <CAJ9a7VjQ4B8yudKqHZ_f8pGRGcM9t=6M0zfQK9-LmyTf4pZbZw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Fri,  8 Jul 2022 16:21:27 +0800
+Gang Li <ligang.bdlg@bytedance.com> wrote:
 
+> --- a/include/trace/events/kmem.h
+> +++ b/include/trace/events/kmem.h
+> @@ -363,7 +363,8 @@ static unsigned int __maybe_unused mm_ptr_to_hash(const void *ptr)
+>  	EM(MM_FILEPAGES)	\
+>  	EM(MM_ANONPAGES)	\
+>  	EM(MM_SWAPENTS)		\
+> -	EMe(MM_SHMEMPAGES)
+> +	EM(MM_SHMEMPAGES)	\
+> +	EMe(MM_NO_TYPE)
+>  
+>  #undef EM
+>  #undef EMe
+> @@ -383,29 +384,41 @@ TRACE_EVENT(rss_stat,
+>  
+>  	TP_PROTO(struct mm_struct *mm,
+>  		int member,
+> -		long count),
+> +		long member_count,
+> +		int node,
+> +		long node_count,
+> +		long diff_count),
+>  
+> -	TP_ARGS(mm, member, count),
+> +	TP_ARGS(mm, member, member_count, node, node_count, diff_count),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(unsigned int, mm_id)
+>  		__field(unsigned int, curr)
+>  		__field(int, member)
+> -		__field(long, size)
+> +		__field(long, member_size)
+> +		__field(int, node)
 
-On 7/8/22 11:27, Mike Leach wrote:
-> Hi,
-> 
-> On Fri, 8 Jul 2022 at 10:22, Carsten Haitzler
-> <carsten.haitzler@foss.arm.com> wrote:
->>
->>
->>
->> On 7/5/22 14:53, James Clark wrote:
->>>
->>>
->>> On 01/07/2022 13:07, carsten.haitzler@foss.arm.com wrote:
->>>> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
->>>>
->>>> Add a script to drive the thread loop test that gathers data so
->>>> it passes a minimum bar (in this case do we get any perf context data
->>>> for every thread).
->>>>
->>>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
->>>
->>> Hi Carsten,
->>>
->>> I checked this on N1SDP and I get failures in both threads tests. This is
->>> because it's looking for "CID=..." when in my output threads are shown as
->>> "VMID=...":
->>>
->>>       Idx:628048; ID:10;       I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000AAAAE3BF0B18; Ctxt: AArch64,EL0, NS; VMID=0xa588c;
->>>
->>> I think with a change to the grep it should work.
->>
->> Errrr... I get no VMID= ... it's all
->>
->> Idx:563008; ID:12;      I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64
->> bit, IS0.; Addr=0x0000AAAAE4B00A60; Ctxt: AArch64,EL0, NS; CID=0x00004aff;
->>
->> are you using containers or something? because:
->>
->>               if(context.updated_c)
->>               {
->>                   oss << "CID=0x" << std::hex << std::setfill('0') <<
->> std::setw(8) << context.ctxtID << "; ";
->>               }
->>               if(context.updated_v)
->>               {
->>                   oss << "VMID=0x" << std::hex << std::setfill('0') <<
->> std::setw(4) << context.VMID << "; ";
->>               }
->>
->> I'm running without any containers etc. - bare metal. Haven't bothered
->> with any VM stuff.
->>
->> In OpenOCD the CID should be the the pid/thread id. It seems to not be
->> the same thing as VMID. I haven't traced this beyond here as to exactly
->> what this represents though my first reaction is "This is extra VM info
->> and not the PID/TID being looked for". OpenOCD is full of tests with log
->> dumps that produce CID and VMID:
->>
->> Idx:1676; ID:10;        I_ADDR_CTXT_L_64IS0 : Address & Context, Long,
->> 64 bit, IS0.; Addr=0xFFFFFFC000096A00; Ctxt: AArch64,EL1, NS;
->> CID=0x00000000; VMID=0x0000;
->>
->> A quick git grep CID= in OpenCD will show them all. My understanding is
->> CID is the thread/process ID and thus the test/check "Do we get reported
->> data from all threads? - anything?".
->>
->> I don't think using VMID is right. The fact you are missing a CID is an
->> issue though...
->>
-> 
-> The register used for linux TID trace is dependent on the EL of the kernel.
-> EL1 => CONTEXT_IDR_EL1
-> EL2 => CONTEXT_IDR_EL2.
-> 
-> By design, the trace hardware traces CONTEXT_IDR_EL2 as the VMID packet.
-> 
-> So, depending on your kernel build, TID can validly be traced as CID or VMID
+Please swap the node and member_size fields. I just noticed that size
+should have been before member in the original as well. Because it will
+leave a 4 byte "hole" in the event due to alignment on 64 bit machines.
 
-Ahhh I haven't encountered that. So basically look for CID=xxx OR 
-VMID=xxx if no CID=xxx is there.
+-- Steve
 
-> Regards
-> 
-> Mike
-> 
->>> Thanks
->>> James
->>>
->>>> ---
->>>>    .../coresight/thread_loop_check_tid_10.sh     | 19 +++++++++++++++++++
->>>>    .../coresight/thread_loop_check_tid_2.sh      | 19 +++++++++++++++++++
->>>>    2 files changed, 38 insertions(+)
->>>>    create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
->>>>    create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
->>>>
->>>> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
->>>> new file mode 100755
->>>> index 000000000000..7c13636fc778
->>>> --- /dev/null
->>>> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
->>>> @@ -0,0 +1,19 @@
->>>> +#!/bin/sh -e
->>>> +# CoreSight / Thread Loop 10 Threads - Check TID
->>>> +
->>>> +# SPDX-License-Identifier: GPL-2.0
->>>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
->>>> +
->>>> +TEST="thread_loop"
->>>> +. $(dirname $0)/../lib/coresight.sh
->>>> +ARGS="10 1"
->>>> +DATV="check-tid-10th"
->>>> +DATA="$DATD/perf-$TEST-$DATV.data"
->>>> +STDO="$DATD/perf-$TEST-$DATV.stdout"
->>>> +
->>>> +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
->>>> +
->>>> +perf_dump_aux_tid_verify "$DATA" "$STDO"
->>>> +
->>>> +err=$?
->>>> +exit $err
->>>> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
->>>> new file mode 100755
->>>> index 000000000000..a067145af43c
->>>> --- /dev/null
->>>> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
->>>> @@ -0,0 +1,19 @@
->>>> +#!/bin/sh -e
->>>> +# CoreSight / Thread Loop 2 Threads - Check TID
->>>> +
->>>> +# SPDX-License-Identifier: GPL-2.0
->>>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
->>>> +
->>>> +TEST="thread_loop"
->>>> +. $(dirname $0)/../lib/coresight.sh
->>>> +ARGS="2 20"
->>>> +DATV="check-tid-2th"
->>>> +DATA="$DATD/perf-$TEST-$DATV.data"
->>>> +STDO="$DATD/perf-$TEST-$DATV.stdout"
->>>> +
->>>> +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
->>>> +
->>>> +perf_dump_aux_tid_verify "$DATA" "$STDO"
->>>> +
->>>> +err=$?
->>>> +exit $err
-> 
-> 
-> 
+> +		__field(long, node_size)
+> +		__field(long, diff_size)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__entry->mm_id = mm_ptr_to_hash(mm);
+>  		__entry->curr = !!(current->mm == mm);
+>  		__entry->member = member;
+> -		__entry->size = (count << PAGE_SHIFT);
+> +		__entry->member_size = (member_count << PAGE_SHIFT);
+> +		__entry->node = node;
+> +		__entry->node_size = (node_count << PAGE_SHIFT);
+> +		__entry->diff_size = (diff_count << PAGE_SHIFT);
+>  	),
+>  
+> -	TP_printk("mm_id=%u curr=%d type=%s size=%ldB",
+> +	TP_printk("mm_id=%u curr=%d type=%s type_size=%ldB node=%d node_size=%ldB diff_size=%ldB",
+>  		__entry->mm_id,
+>  		__entry->curr,
+>  		__print_symbolic(__entry->member, TRACE_MM_PAGES),
+> -		__entry->size)
+> +		__entry->member_size,
+> +		__entry->node,
+> +		__entry->node_size,
+> +		__entry->diff_size)
+>  	);
+>  #endif /* _TRACE_KMEM_H */
+>  
