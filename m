@@ -2,134 +2,198 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEA6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 15:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E913C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 16:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238567AbiGHPj2 (ORCPT
+        id S238234AbiGHQpZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 11:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
+        Fri, 8 Jul 2022 12:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238463AbiGHPj1 (ORCPT
+        with ESMTP id S237590AbiGHQpY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 11:39:27 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2338201BD
-        for <linux-perf-users@vger.kernel.org>; Fri,  8 Jul 2022 08:39:25 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id r129-20020a1c4487000000b003a2d053adcbso1371917wma.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Jul 2022 08:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AAkCMAVRf/IwKZSA0BbN8FSNnPqg+F4/qwr/P+jS6Dc=;
-        b=qPAd7gLXdY2AXYJcZ98rIrWY3PxawQwig2bvtzZd/W1Os38w3n2D2BpG/CIlcDdIuG
-         YFXLLXJ9kT1lRVkS7OT58WLQzyvC/+wQrzhdDytp0CSbmz/zVTVSRBtIkbFbphuvSK9z
-         R8WPvaXKDg8j8depN4ngOd0v2fxMAvwOZNhZpS/2Y0mgDUI0EkBiHiIAoeVwLgR9hagT
-         dtLUVd9WWi0UKsu0YqRDjDiFjAmHKhLq0/NR/PSZ9isnKlRQYU+LEDGDEyoXAMg/4UH+
-         NjYHiS8Q1kHjM0SF6ReKgzRqCyPpPFnlSdyvwOMRbs6Y2+q2eeqW2t3thaL3yisjjurr
-         3vLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AAkCMAVRf/IwKZSA0BbN8FSNnPqg+F4/qwr/P+jS6Dc=;
-        b=yHN48jD5/WTrsf1Mht+PucFXWAgaSj90j3MJvfVmZjLb3zye/Vvk3TLCglX1NLK0Xj
-         BDlgajqu7mIBNh0TLh/Kma8uqCArAzJZsI8+KGul26o/aGpwMP2btd7RnGnSUMLEqhAh
-         yYumnMtEQJriDx6bDOg7C7xzycuLeoZDQhrRJVtiugZqMeenlfzluZFYuD2UHg4lp7RI
-         Usd/NfELJChR3z9BZi6B7Td4yiR0C5uXjFCoEwAzPvaIkNY0lodDmzU9l44vkpS+p3sg
-         mVpz9B2PCam3Pj2UoFfRLhEoxUZfVgfFERxAWKB3U0IG+CL7KQPH3egVJeSORlq0sAxO
-         krgw==
-X-Gm-Message-State: AJIora/NYMo7g+rH5tbdfgN0A6bbtVq+sDATtdYtt8Pn2PomMt6ND+wG
-        uwO8eAJMsktJEQoqein2ZZEafjq8c1vBuaNrRdoJgQ==
-X-Google-Smtp-Source: AGRyM1t0iOAGdxPYDSXzho77NeviEc/Zuny8DDJjbAnkwE5ltk9p1KK/FNOEoXQJxAyQLN11jIEj67Y/ZdU5vMR+TVA=
-X-Received: by 2002:a05:600c:4e8f:b0:3a1:8b21:ebbc with SMTP id
- f15-20020a05600c4e8f00b003a18b21ebbcmr424005wmq.149.1657294764353; Fri, 08
- Jul 2022 08:39:24 -0700 (PDT)
+        Fri, 8 Jul 2022 12:45:24 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2B88E005;
+        Fri,  8 Jul 2022 09:45:23 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D78831063;
+        Fri,  8 Jul 2022 09:45:23 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7632B3F66F;
+        Fri,  8 Jul 2022 09:45:22 -0700 (PDT)
+Message-ID: <34db7cf2-32cc-5d9b-d98d-a29928ea898b@foss.arm.com>
+Date:   Fri, 8 Jul 2022 17:45:07 +0100
 MIME-Version: 1.0
-References: <20220707201213.331663-1-irogers@google.com> <20220707201213.331663-3-irogers@google.com>
- <0bc35725-43eb-271c-d66e-ca11e5001794@linux.ibm.com>
-In-Reply-To: <0bc35725-43eb-271c-d66e-ca11e5001794@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 8 Jul 2022 08:39:11 -0700
-Message-ID: <CAP-5=fWAy-agZ=21_uzOWJfD9Da6XVJ05spoXQ8XTLQiE1LmLA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] perf test: Json format checking
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
-        Like Xu <likexu@tencent.com>,
-        James Clark <james.clark@arm.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Claire Jensen <clairej735@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 10/14] perf test: Add thread loop test shell scripts
+Content-Language: en-US
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, mathieu.poirier@linaro.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20220701120804.3226396-1-carsten.haitzler@foss.arm.com>
+ <20220701120804.3226396-11-carsten.haitzler@foss.arm.com>
+ <a14e7015-7446-8cb3-612c-00dcb469c939@arm.com>
+ <e55094af-557e-8044-fc14-00189bd392a2@foss.arm.com>
+ <CAJ9a7VjQ4B8yudKqHZ_f8pGRGcM9t=6M0zfQK9-LmyTf4pZbZw@mail.gmail.com>
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Organization: Arm Ltd.
+In-Reply-To: <CAJ9a7VjQ4B8yudKqHZ_f8pGRGcM9t=6M0zfQK9-LmyTf4pZbZw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 1:31 AM Thomas Richter <tmricht@linux.ibm.com> wrote=
-:
->
-> On 7/7/22 22:12, Ian Rogers wrote:
-> > From: Claire Jensen <cjense@google.com>
-> >
-> > Add field checking tests for perf stat JSON output.
-> > Sanity checks the expected number of fields are present, that the
-> > expected keys are present and they have the correct values.
-> >
-> > Signed-off-by: Claire Jensen <cjense@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  .../tests/shell/lib/perf_json_output_lint.py  |  95 +++++++++++
-> >  tools/perf/tests/shell/stat+json_output.sh    | 147 ++++++++++++++++++
-> >  2 files changed, 242 insertions(+)
-> >  create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
-> >  create mode 100755 tools/perf/tests/shell/stat+json_output.sh
-> >
-> ....
-> I wonder if it is really necessary to have a python file to post process =
-the
-> perf stat output?
->
-> With
-> commit 7473ee56dbc9 ("perf test: Add checking for perf stat CSV output.")
-> the same approach was done which led to issues on s390 and required an ad=
-ditional
-> patch to fix this:
-> commit ec906102e5b7 ("perf test: Fix "perf stat CSV output linter" test o=
-n s390").
->
-> I wonder if you can do the perf stat output checking using bash/linux too=
-ls as it
-> was done in commit ec906102e5b7. This would make maintenance much easier.
->
-> Just me 2 cents...
 
-Hi Thomas,
 
-In this case using python avoids writing a JSON decoder, which would
-be harder to do in bash although there is perhaps a linter or some
-such we could use. That'd wind up being another dependency :-/
+On 7/8/22 11:27, Mike Leach wrote:
+> Hi,
+> 
+> On Fri, 8 Jul 2022 at 10:22, Carsten Haitzler
+> <carsten.haitzler@foss.arm.com> wrote:
+>>
+>>
+>>
+>> On 7/5/22 14:53, James Clark wrote:
+>>>
+>>>
+>>> On 01/07/2022 13:07, carsten.haitzler@foss.arm.com wrote:
+>>>> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
+>>>>
+>>>> Add a script to drive the thread loop test that gathers data so
+>>>> it passes a minimum bar (in this case do we get any perf context data
+>>>> for every thread).
+>>>>
+>>>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+>>>
+>>> Hi Carsten,
+>>>
+>>> I checked this on N1SDP and I get failures in both threads tests. This is
+>>> because it's looking for "CID=..." when in my output threads are shown as
+>>> "VMID=...":
+>>>
+>>>       Idx:628048; ID:10;       I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000AAAAE3BF0B18; Ctxt: AArch64,EL0, NS; VMID=0xa588c;
+>>>
+>>> I think with a change to the grep it should work.
+>>
+>> Errrr... I get no VMID= ... it's all
+>>
+>> Idx:563008; ID:12;      I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64
+>> bit, IS0.; Addr=0x0000AAAAE4B00A60; Ctxt: AArch64,EL0, NS; CID=0x00004aff;
+>>
+>> are you using containers or something? because:
+>>
+>>               if(context.updated_c)
+>>               {
+>>                   oss << "CID=0x" << std::hex << std::setfill('0') <<
+>> std::setw(8) << context.ctxtID << "; ";
+>>               }
+>>               if(context.updated_v)
+>>               {
+>>                   oss << "VMID=0x" << std::hex << std::setfill('0') <<
+>> std::setw(4) << context.VMID << "; ";
+>>               }
+>>
+>> I'm running without any containers etc. - bare metal. Haven't bothered
+>> with any VM stuff.
+>>
+>> In OpenOCD the CID should be the the pid/thread id. It seems to not be
+>> the same thing as VMID. I haven't traced this beyond here as to exactly
+>> what this represents though my first reaction is "This is extra VM info
+>> and not the PID/TID being looked for". OpenOCD is full of tests with log
+>> dumps that produce CID and VMID:
+>>
+>> Idx:1676; ID:10;        I_ADDR_CTXT_L_64IS0 : Address & Context, Long,
+>> 64 bit, IS0.; Addr=0xFFFFFFC000096A00; Ctxt: AArch64,EL1, NS;
+>> CID=0x00000000; VMID=0x0000;
+>>
+>> A quick git grep CID= in OpenCD will show them all. My understanding is
+>> CID is the thread/process ID and thus the test/check "Do we get reported
+>> data from all threads? - anything?".
+>>
+>> I don't think using VMID is right. The fact you are missing a CID is an
+>> issue though...
+>>
+> 
+> The register used for linux TID trace is dependent on the EL of the kernel.
+> EL1 => CONTEXT_IDR_EL1
+> EL2 => CONTEXT_IDR_EL2.
+> 
+> By design, the trace hardware traces CONTEXT_IDR_EL2 as the VMID packet.
+> 
+> So, depending on your kernel build, TID can validly be traced as CID or VMID
 
-Thanks,
-Ian
+Ahhh I haven't encountered that. So basically look for CID=xxx OR 
+VMID=xxx if no CID=xxx is there.
 
-> --
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
-y
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Gesch=C3=A4ftsf=C3=BChrung: David Faller
-> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
-tgart, HRB 243294
+> Regards
+> 
+> Mike
+> 
+>>> Thanks
+>>> James
+>>>
+>>>> ---
+>>>>    .../coresight/thread_loop_check_tid_10.sh     | 19 +++++++++++++++++++
+>>>>    .../coresight/thread_loop_check_tid_2.sh      | 19 +++++++++++++++++++
+>>>>    2 files changed, 38 insertions(+)
+>>>>    create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+>>>>    create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+>>>>
+>>>> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+>>>> new file mode 100755
+>>>> index 000000000000..7c13636fc778
+>>>> --- /dev/null
+>>>> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+>>>> @@ -0,0 +1,19 @@
+>>>> +#!/bin/sh -e
+>>>> +# CoreSight / Thread Loop 10 Threads - Check TID
+>>>> +
+>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>>>> +
+>>>> +TEST="thread_loop"
+>>>> +. $(dirname $0)/../lib/coresight.sh
+>>>> +ARGS="10 1"
+>>>> +DATV="check-tid-10th"
+>>>> +DATA="$DATD/perf-$TEST-$DATV.data"
+>>>> +STDO="$DATD/perf-$TEST-$DATV.stdout"
+>>>> +
+>>>> +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
+>>>> +
+>>>> +perf_dump_aux_tid_verify "$DATA" "$STDO"
+>>>> +
+>>>> +err=$?
+>>>> +exit $err
+>>>> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+>>>> new file mode 100755
+>>>> index 000000000000..a067145af43c
+>>>> --- /dev/null
+>>>> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+>>>> @@ -0,0 +1,19 @@
+>>>> +#!/bin/sh -e
+>>>> +# CoreSight / Thread Loop 2 Threads - Check TID
+>>>> +
+>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>>>> +
+>>>> +TEST="thread_loop"
+>>>> +. $(dirname $0)/../lib/coresight.sh
+>>>> +ARGS="2 20"
+>>>> +DATV="check-tid-2th"
+>>>> +DATA="$DATD/perf-$TEST-$DATV.data"
+>>>> +STDO="$DATD/perf-$TEST-$DATV.stdout"
+>>>> +
+>>>> +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
+>>>> +
+>>>> +perf_dump_aux_tid_verify "$DATA" "$STDO"
+>>>> +
+>>>> +err=$?
+>>>> +exit $err
+> 
+> 
+> 
