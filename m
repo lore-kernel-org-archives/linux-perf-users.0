@@ -2,45 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1326EC43334
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 09:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390DCC433EF
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 09:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237736AbiGHJKU (ORCPT
+        id S237700AbiGHJTI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 05:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35174 "EHLO
+        Fri, 8 Jul 2022 05:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237381AbiGHJKT (ORCPT
+        with ESMTP id S237406AbiGHJTH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 05:10:19 -0400
+        Fri, 8 Jul 2022 05:19:07 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5903DEC;
-        Fri,  8 Jul 2022 02:10:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D853C2A948;
+        Fri,  8 Jul 2022 02:19:06 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C03CFD6E;
-        Fri,  8 Jul 2022 02:10:18 -0700 (PDT)
-Received: from [10.57.42.20] (unknown [10.57.42.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A03E3F792;
-        Fri,  8 Jul 2022 02:10:17 -0700 (PDT)
-Message-ID: <b9da8d22-6896-68a3-b4e5-e8fd7b82b711@arm.com>
-Date:   Fri, 8 Jul 2022 10:10:15 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09CB3D6E;
+        Fri,  8 Jul 2022 02:19:07 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A30FE3F66F;
+        Fri,  8 Jul 2022 02:19:05 -0700 (PDT)
+Message-ID: <5dbda300-2ad3-ca23-6013-f3dd3126ba30@foss.arm.com>
+Date:   Fri, 8 Jul 2022 10:19:04 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] perf/core: Add macros for possible
- sysctl_perf_event_paranoid values
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 08/14] perf test: Add memcpy thread test shell script
 Content-Language: en-US
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org
-References: <20220701063949.1769434-1-anshuman.khandual@arm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220701063949.1769434-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
+To:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
+Cc:     coresight@lists.linaro.org, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20220701120804.3226396-1-carsten.haitzler@foss.arm.com>
+ <20220701120804.3226396-9-carsten.haitzler@foss.arm.com>
+ <f6b21fa9-7e0b-cb0d-d708-cfd7f3f53087@arm.com>
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Organization: Arm Ltd.
+In-Reply-To: <f6b21fa9-7e0b-cb0d-d708-cfd7f3f53087@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -48,131 +47,108 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 01/07/2022 07:39, Anshuman Khandual wrote:
-> sysctl_perf_event_paranoid can have values from [-1, 0, 1, 2] which decides
-> on perf event restrictions for unprivileged users. But using them directly
-> makes it difficult to correlate exact restriction level they might impose.
-> This just adds macros for those numerical restriction values, making them
-> clear and improving readability.
+On 7/5/22 15:25, James Clark wrote:
 > 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  include/linux/perf_event.h | 22 ++++++++++++++++++----
->  kernel/events/core.c       |  9 +--------
->  kernel/kallsyms.c          |  3 ++-
->  3 files changed, 21 insertions(+), 13 deletions(-)
 > 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index da759560eec5..78156b9154df 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1359,14 +1359,28 @@ int perf_event_max_stack_handler(struct ctl_table *table, int write,
->  #define PERF_SECURITY_KERNEL		2
->  #define PERF_SECURITY_TRACEPOINT	3
->  
-> +/*
-> + * perf event paranoia level:
-> + *  -1 - not paranoid at all
-> + *   0 - disallow raw tracepoint access for unpriv
-> + *   1 - disallow cpu events for unpriv
-> + *   2 - disallow kernel profiling for unpriv
-> + */
-> +enum {
-> +	PERF_EVENT_DISALLOW_NONE	= -1,
-> +	PERF_EVENT_DISALLOW_TRACE,
-> +	PERF_EVENT_DISALLOW_CPU,
-> +	PERF_EVENT_DISALLOW_KERNEL
-> +};
-> +
->  static inline int perf_is_paranoid(void)
->  {
-> -	return sysctl_perf_event_paranoid > -1;
-> +	return sysctl_perf_event_paranoid > PERF_EVENT_DISALLOW_NONE;
->  }
->  
+> On 01/07/2022 13:07, carsten.haitzler@foss.arm.com wrote:
+>> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
+>>
+>> Add a script to drive the threaded memcpy test that gathers data so
+>> it passes a minimum bar for amount and quality of content that we
+>> extract from the kernel's perf support.
+>>
+> 
+> On this one I get a failure about 1/50 times on N1SDP (I ran it about 150
 
-Hi Anshuman,
+I also see inconsistent results. The whole point of these tests is to 
+point this out and provide data to track it and then lead eventually to 
+improvements/fixes. A failing test is probably good - it found a 
+problem. Perf test for me has lots of failures so I'm taking the 
+position that failures are OK normally in perf test as long as you know 
+what those failures are and why.
 
-There are quite a few other instances of integers left in the tools code.
-If you search for perf_event_paranoid_check() and perf_event_paranoid()
-you will find them.
+> times and saw 3 failures so it's quite consistent). Usually it records
+> about a 1.4MB file with one aux record. But when it fails the file is
+> only 20K and has one small aux record:
+> 
+>     0 0 0x1a10 [0x30]: PERF_RECORD_AUXTRACE size: 0x1820  offset: 0  ref: 0x1c23126d7ff3d2ab  idx: 3  tid: 682799  cpu: 3
+> 
+> Nothing was dropped, and the load on the system wasn't any different
+> to when it passes. So I'm not sure if this is a real coresight bug
+> or that the test is flaky. There was a bug in SPE before where
 
-I'm also wondering if it makes sense to return your new enum from all of
-the helper functions instead of an int and make it explicit that it's
-an instance of this new type? Although the compiler doesn't seem to warn
-about using integers so maybe it's not worth doing this.
+The binary is the same with the same content running the same perf 
+command every time. Workload doesn't change. The perf data captured does 
+change. It sometimes captures so little it fails even the low pass bar 
+given in the test.
 
-James
+> threads weren't followed after forking, but only very rarely. It feels
+> a bit like that.
 
->  static inline int perf_allow_kernel(struct perf_event_attr *attr)
->  {
-> -	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
-> +	if (sysctl_perf_event_paranoid >= PERF_EVENT_DISALLOW_KERNEL && !perfmon_capable())
->  		return -EACCES;
->  
->  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
-> @@ -1374,7 +1388,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
->  
->  static inline int perf_allow_cpu(struct perf_event_attr *attr)
->  {
-> -	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
-> +	if (sysctl_perf_event_paranoid >= PERF_EVENT_DISALLOW_CPU && !perfmon_capable())
->  		return -EACCES;
->  
->  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
-> @@ -1382,7 +1396,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
->  
->  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
->  {
-> -	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
-> +	if (sysctl_perf_event_paranoid >= PERF_EVENT_DISALLOW_TRACE && !perfmon_capable())
->  		return -EPERM;
->  
->  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 80782cddb1da..6fdfdc731bab 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -408,14 +408,7 @@ static struct srcu_struct pmus_srcu;
->  static cpumask_var_t perf_online_mask;
->  static struct kmem_cache *perf_event_cache;
->  
-> -/*
-> - * perf event paranoia level:
-> - *  -1 - not paranoid at all
-> - *   0 - disallow raw tracepoint access for unpriv
-> - *   1 - disallow cpu events for unpriv
-> - *   2 - disallow kernel profiling for unpriv
-> - */
-> -int sysctl_perf_event_paranoid __read_mostly = 2;
-> +int sysctl_perf_event_paranoid __read_mostly = PERF_EVENT_DISALLOW_KERNEL;
->  
->  /* Minimum for 512 kiB + 1 user control page */
->  int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
-> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-> index fbdf8d3279ac..705f7d7d81dc 100644
-> --- a/kernel/kallsyms.c
-> +++ b/kernel/kallsyms.c
-> @@ -18,6 +18,7 @@
->  #include <linux/fs.h>
->  #include <linux/kdb.h>
->  #include <linux/err.h>
-> +#include <linux/perf_event.h>
->  #include <linux/proc_fs.h>
->  #include <linux/sched.h>	/* for cond_resched */
->  #include <linux/ctype.h>
-> @@ -803,7 +804,7 @@ static inline int kallsyms_for_perf(void)
->  {
->  #ifdef CONFIG_PERF_EVENTS
->  	extern int sysctl_perf_event_paranoid;
-> -	if (sysctl_perf_event_paranoid <= 1)
-> +	if (sysctl_perf_event_paranoid <= PERF_EVENT_DISALLOW_CPU)
->  		return 1;
->  #endif
->  	return 0;
+That ... would be a "CoreSight" bug though I think, not the test.
+
+> It could also be some contention issue because 10 threads are launched
+> but the machine only has 4 cores.
+
+We still should be capturing data reliably (in theory). If you have 10 
+threads on a 4 core machine it'll take longer to run for the same 
+workload as the threads will have to share the same cores, but this 
+should still result in decent data collection as the cores switch 
+between threads. That's the point.
+
+> The failure message from the test looks like this:
+> 
+>     77: CoreSight / Memcpy 16k 10 Threads                               :
+>     --- start ---
+>     Couldn't synthesize bpf events.
+>     [ perf record: Woken up 1 times to write data ]
+>     [ perf record: Captured and wrote 0.012 MB ./perf-memcpy_thread-16k_10.data ]
+>     Sanity check number of ASYNC is too low (3 < 10)
+>      ---- end ----
+>     CoreSight / Memcpy 16k 10 Threads: FAILED!
+> 
+> I didn't see this issue on any of the other tests. Sometimes very small
+> files were made if I loaded the system, but the tests still passed.
+
+For me the "Check TID" tests fails very often... but as I said - the 
+point here is to find issues and ensure they are reported in results. 
+The test even track the results over time/many runs in the csv files so 
+you get a good idea of consistency and even how it may statistically 
+change over time matching that up to changes in the kernel.
+
+Unless of course you think it's acceptable that sometimes perf record + 
+CoreSight will output essentially no data (your 20k example). :)
+
+> Thanks
+> James
+> 
+>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+>> ---
+>>   .../shell/coresight/memcpy_thread_16k_10.sh    | 18 ++++++++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>   create mode 100755 tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+>>
+>> diff --git a/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+>> new file mode 100755
+>> index 000000000000..d21ba8545938
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+>> @@ -0,0 +1,18 @@
+>> +#!/bin/sh -e
+>> +# CoreSight / Memcpy 16k 10 Threads
+>> +
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>> +
+>> +TEST="memcpy_thread"
+>> +. $(dirname $0)/../lib/coresight.sh
+>> +ARGS="16 10 1"
+>> +DATV="16k_10"
+>> +DATA="$DATD/perf-$TEST-$DATV.data"
+>> +
+>> +perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
+>> +
+>> +perf_dump_aux_verify "$DATA" 10 10 10
+>> +
+>> +err=$?
+>> +exit $err
