@@ -2,168 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9AAC43334
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 09:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F13C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 09:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237573AbiGHJWN (ORCPT
+        id S237580AbiGHJZr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 05:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42826 "EHLO
+        Fri, 8 Jul 2022 05:25:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237540AbiGHJWL (ORCPT
+        with ESMTP id S237400AbiGHJZr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 05:22:11 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CCFAE2C677;
-        Fri,  8 Jul 2022 02:22:09 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E950BD6E;
-        Fri,  8 Jul 2022 02:22:09 -0700 (PDT)
-Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AB173F66F;
-        Fri,  8 Jul 2022 02:22:08 -0700 (PDT)
-Message-ID: <e55094af-557e-8044-fc14-00189bd392a2@foss.arm.com>
-Date:   Fri, 8 Jul 2022 10:21:59 +0100
+        Fri, 8 Jul 2022 05:25:47 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD42B7FE
+        for <linux-perf-users@vger.kernel.org>; Fri,  8 Jul 2022 02:25:45 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id c13so12140296pla.6
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Jul 2022 02:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=l76lwu0gnwm/BRNuFyHSAOJEi0ORTe8+eknNAmXKjds=;
+        b=rfzaFQGT5WylU8oFzZ3Bm68tK5cbUJbFE9StIG5s9hhsbRmfmyXpTX1vYAFS6j1sbO
+         54fzhiZV7ncHK4Nr8HGnmkIfr2ytnO8L9enycMsyVsVIL1tiXZVpZqSpKlDbdzlr1hkY
+         5SH3l1JlLCIaVKwtkJN3exq1MhVYULNmdtYE+3L2FEtWtbYyCTh7i5U27YS5hNLZS0Xi
+         TkCdvF8KuNND6fSaeYKOvdHkBq2ajs61bZsAjRcCL57hyN0L81gtcBE6SGAlrMn1jLvp
+         TQMFQ82Z2m2T8NG7gNKsoCwNbcmQba3/hsB+SpuTecMd4FglfijuRPwEi0zcwSVVDuyS
+         /4FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=l76lwu0gnwm/BRNuFyHSAOJEi0ORTe8+eknNAmXKjds=;
+        b=JjVsjBPBAprvec4XY6lHR6ZqJihQ+j0AkxkIgb/kNa34J4Hsc0PTkw5MRys2VOCXci
+         37oumJdzzPXD/xZ4JExrzzGreFcladUsfvEDweWDnGIbL04UklAABefg0BybfRVcO8RE
+         4Z9J8HvEobYJmI88GHmnXvONWNnWtUc27FvAoyGvWZY7e/lMWuJS559XXm098/3+6v98
+         TwvIvasNFfBwL8y3l/2MNu5wTY1uHnFrGsxPYjgCJ5q4RQJRR9aG2UC6n8rafNDWFTUU
+         QVz9PMpmyO5ijACerAIQuDK9GH9T7mfeyyAxGXO+mGNZTZ0SMniTE4TwFZCetNwrm4og
+         bAWA==
+X-Gm-Message-State: AJIora81KN3gXaibShAxKbANuJ5gnRE/uDHzw1/jALIc2iS0oXrL8Zy5
+        ScMzRAcR1Vnxkx8Bv5MsDDS0cQ==
+X-Google-Smtp-Source: AGRyM1uqbelvg6m24YuvTJPV4Xejv5UL/IUxXrRtbsELGOPhY6RycQiwGj2gryVPaBaHnMht6h77RQ==
+X-Received: by 2002:a17:902:e80c:b0:16c:28a6:8aa0 with SMTP id u12-20020a170902e80c00b0016c28a68aa0mr422950plg.119.1657272345465;
+        Fri, 08 Jul 2022 02:25:45 -0700 (PDT)
+Received: from [10.255.210.8] ([139.177.225.241])
+        by smtp.gmail.com with ESMTPSA id z11-20020a1709027e8b00b0016b865ea2ddsm23212195pla.85.2022.07.08.02.25.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Jul 2022 02:25:44 -0700 (PDT)
+Message-ID: <be9303de-3800-c26f-4530-9a29fe044956@bytedance.com>
+Date:   Fri, 8 Jul 2022 17:25:31 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 10/14] perf test: Add thread loop test shell scripts
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.11.0
+Subject: Re: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
+ CONSTRAINT_{MEMORY_POLICY,CPUSET}
 Content-Language: en-US
-To:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
-Cc:     coresight@lists.linaro.org, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20220701120804.3226396-1-carsten.haitzler@foss.arm.com>
- <20220701120804.3226396-11-carsten.haitzler@foss.arm.com>
- <a14e7015-7446-8cb3-612c-00dcb469c939@arm.com>
-From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Organization: Arm Ltd.
-In-Reply-To: <a14e7015-7446-8cb3-612c-00dcb469c939@arm.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     akpm@linux-foundation.org, surenb@google.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+        keescook@chromium.org, rostedt@goodmis.org, mingo@redhat.com,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
+        adobriyan@gmail.com, yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+ <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+From:   Gang Li <ligang.bdlg@bytedance.com>
+In-Reply-To: <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Oh apologize. I just realized what you mean.
 
+I should try a "cpuset cgroup oom killer" selecting victim from a
+specific cpuset cgroup.
 
-On 7/5/22 14:53, James Clark wrote:
+On 2022/7/8 16:54, Michal Hocko wrote:
+> On Fri 08-07-22 16:21:24, Gang Li wrote:
 > 
-> 
-> On 01/07/2022 13:07, carsten.haitzler@foss.arm.com wrote:
->> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
->>
->> Add a script to drive the thread loop test that gathers data so
->> it passes a minimum bar (in this case do we get any perf context data
->> for every thread).
->>
->> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
-> 
-> Hi Carsten,
-> 
-> I checked this on N1SDP and I get failures in both threads tests. This is
-> because it's looking for "CID=..." when in my output threads are shown as
-> "VMID=...":
-> 
->      Idx:628048; ID:10;	I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000AAAAE3BF0B18; Ctxt: AArch64,EL0, NS; VMID=0xa588c;
-> 
-> I think with a change to the grep it should work.
-
-Errrr... I get no VMID= ... it's all
-
-Idx:563008; ID:12;	I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 
-bit, IS0.; Addr=0x0000AAAAE4B00A60; Ctxt: AArch64,EL0, NS; CID=0x00004aff;
-
-are you using containers or something? because:
-
-             if(context.updated_c)
-             {
-                 oss << "CID=0x" << std::hex << std::setfill('0') << 
-std::setw(8) << context.ctxtID << "; ";
-             }
-             if(context.updated_v)
-             {
-                 oss << "VMID=0x" << std::hex << std::setfill('0') << 
-std::setw(4) << context.VMID << "; ";
-             }
-
-I'm running without any containers etc. - bare metal. Haven't bothered 
-with any VM stuff.
-
-In OpenOCD the CID should be the the pid/thread id. It seems to not be 
-the same thing as VMID. I haven't traced this beyond here as to exactly 
-what this represents though my first reaction is "This is extra VM info 
-and not the PID/TID being looked for". OpenOCD is full of tests with log 
-dumps that produce CID and VMID:
-
-Idx:1676; ID:10;        I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 
-64 bit, IS0.; Addr=0xFFFFFFC000096A00; Ctxt: AArch64,EL1, NS; 
-CID=0x00000000; VMID=0x0000;
-
-A quick git grep CID= in OpenCD will show them all. My understanding is 
-CID is the thread/process ID and thus the test/check "Do we get reported 
-data from all threads? - anything?".
-
-I don't think using VMID is right. The fact you are missing a CID is an 
-issue though...
-
-> Thanks
-> James
-> 
->> ---
->>   .../coresight/thread_loop_check_tid_10.sh     | 19 +++++++++++++++++++
->>   .../coresight/thread_loop_check_tid_2.sh      | 19 +++++++++++++++++++
->>   2 files changed, 38 insertions(+)
->>   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
->>   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
->>
->> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
->> new file mode 100755
->> index 000000000000..7c13636fc778
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
->> @@ -0,0 +1,19 @@
->> +#!/bin/sh -e
->> +# CoreSight / Thread Loop 10 Threads - Check TID
->> +
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
->> +
->> +TEST="thread_loop"
->> +. $(dirname $0)/../lib/coresight.sh
->> +ARGS="10 1"
->> +DATV="check-tid-10th"
->> +DATA="$DATD/perf-$TEST-$DATV.data"
->> +STDO="$DATD/perf-$TEST-$DATV.stdout"
->> +
->> +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
->> +
->> +perf_dump_aux_tid_verify "$DATA" "$STDO"
->> +
->> +err=$?
->> +exit $err
->> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
->> new file mode 100755
->> index 000000000000..a067145af43c
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
->> @@ -0,0 +1,19 @@
->> +#!/bin/sh -e
->> +# CoreSight / Thread Loop 2 Threads - Check TID
->> +
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
->> +
->> +TEST="thread_loop"
->> +. $(dirname $0)/../lib/coresight.sh
->> +ARGS="2 20"
->> +DATV="check-tid-2th"
->> +DATA="$DATD/perf-$TEST-$DATV.data"
->> +STDO="$DATD/perf-$TEST-$DATV.stdout"
->> +
->> +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
->> +
->> +perf_dump_aux_tid_verify "$DATA" "$STDO"
->> +
->> +err=$?
->> +exit $err
+> We have discussed this in your previous posting and an alternative
+> proposal was to use cpusets to partition NUMA aware workloads and
+> enhance the oom killer to be cpuset aware instead which should be a much
+> easier solution.
