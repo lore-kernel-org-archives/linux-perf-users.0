@@ -2,102 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D865CCA480
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 08:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1326EC43334
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 09:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237254AbiGHIyk (ORCPT
+        id S237736AbiGHJKU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 04:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51194 "EHLO
+        Fri, 8 Jul 2022 05:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237218AbiGHIyj (ORCPT
+        with ESMTP id S237381AbiGHJKT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 04:54:39 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D56761D47;
-        Fri,  8 Jul 2022 01:54:38 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id F019E1FEFE;
-        Fri,  8 Jul 2022 08:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1657270477; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y09aHnftKgsb755aav+tcisMBqwaGQVPRoF6I/GeksQ=;
-        b=pFEUnbCb+AjEBxNHzdq1IzRE0SheLCfh79/KP/G2SXw3v7NpmirYHy0MKyq6FafCpJoHdC
-        Zbw81wF2FOf/Qk3Ph1hEgS9khYQ4lGrGD+cADZ22SMXc6uOyDMgwsrnnvaOpOJQRDLhzAb
-        HRMxK0Ok91k7A5/A6xLynKW6jrv/yZ0=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 04BBE2C141;
-        Fri,  8 Jul 2022 08:54:33 +0000 (UTC)
-Date:   Fri, 8 Jul 2022 10:54:33 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Gang Li <ligang.bdlg@bytedance.com>
-Cc:     akpm@linux-foundation.org, surenb@google.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        viro@zeniv.linux.org.uk, ebiederm@xmission.com,
-        keescook@chromium.org, rostedt@goodmis.org, mingo@redhat.com,
-        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
-        adobriyan@gmail.com, yang.yang29@zte.com.cn, brauner@kernel.org,
-        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
-        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
-        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
-        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
-        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
-        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
-        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
-        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
-        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
-        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
- CONSTRAINT_{MEMORY_POLICY,CPUSET}
-Message-ID: <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
-References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+        Fri, 8 Jul 2022 05:10:19 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5903DEC;
+        Fri,  8 Jul 2022 02:10:18 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C03CFD6E;
+        Fri,  8 Jul 2022 02:10:18 -0700 (PDT)
+Received: from [10.57.42.20] (unknown [10.57.42.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A03E3F792;
+        Fri,  8 Jul 2022 02:10:17 -0700 (PDT)
+Message-ID: <b9da8d22-6896-68a3-b4e5-e8fd7b82b711@arm.com>
+Date:   Fri, 8 Jul 2022 10:10:15 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] perf/core: Add macros for possible
+ sysctl_perf_event_paranoid values
+Content-Language: en-US
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org
+References: <20220701063949.1769434-1-anshuman.khandual@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220701063949.1769434-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 08-07-22 16:21:24, Gang Li wrote:
-> TLDR
-> ----
-> If a mempolicy or cpuset is in effect, out_of_memory() will select victim
-> on specific node to kill. So that kernel can avoid accidental killing on
-> NUMA system.
 
-We have discussed this in your previous posting and an alternative
-proposal was to use cpusets to partition NUMA aware workloads and
-enhance the oom killer to be cpuset aware instead which should be a much
-easier solution.
 
-> Problem
-> -------
-> Before this patch series, oom will only kill the process with the highest 
-> memory usage by selecting process with the highest oom_badness on the
-> entire system.
+On 01/07/2022 07:39, Anshuman Khandual wrote:
+> sysctl_perf_event_paranoid can have values from [-1, 0, 1, 2] which decides
+> on perf event restrictions for unprivileged users. But using them directly
+> makes it difficult to correlate exact restriction level they might impose.
+> This just adds macros for those numerical restriction values, making them
+> clear and improving readability.
 > 
-> This works fine on UMA system, but may have some accidental killing on NUMA
-> system.
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  include/linux/perf_event.h | 22 ++++++++++++++++++----
+>  kernel/events/core.c       |  9 +--------
+>  kernel/kallsyms.c          |  3 ++-
+>  3 files changed, 21 insertions(+), 13 deletions(-)
 > 
-> As shown below, if process c.out is bind to Node1 and keep allocating pages
-> from Node1, a.out will be killed first. But killing a.out did't free any
-> mem on Node1, so c.out will be killed then.
-> 
-> A lot of AMD machines have 8 numa nodes. In these systems, there is a
-> greater chance of triggering this problem.
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index da759560eec5..78156b9154df 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1359,14 +1359,28 @@ int perf_event_max_stack_handler(struct ctl_table *table, int write,
+>  #define PERF_SECURITY_KERNEL		2
+>  #define PERF_SECURITY_TRACEPOINT	3
+>  
+> +/*
+> + * perf event paranoia level:
+> + *  -1 - not paranoid at all
+> + *   0 - disallow raw tracepoint access for unpriv
+> + *   1 - disallow cpu events for unpriv
+> + *   2 - disallow kernel profiling for unpriv
+> + */
+> +enum {
+> +	PERF_EVENT_DISALLOW_NONE	= -1,
+> +	PERF_EVENT_DISALLOW_TRACE,
+> +	PERF_EVENT_DISALLOW_CPU,
+> +	PERF_EVENT_DISALLOW_KERNEL
+> +};
+> +
+>  static inline int perf_is_paranoid(void)
+>  {
+> -	return sysctl_perf_event_paranoid > -1;
+> +	return sysctl_perf_event_paranoid > PERF_EVENT_DISALLOW_NONE;
+>  }
+>  
 
-Please be more specific about existing usecases which suffer from the
-current OOM handling limitations. 
--- 
-Michal Hocko
-SUSE Labs
+Hi Anshuman,
+
+There are quite a few other instances of integers left in the tools code.
+If you search for perf_event_paranoid_check() and perf_event_paranoid()
+you will find them.
+
+I'm also wondering if it makes sense to return your new enum from all of
+the helper functions instead of an int and make it explicit that it's
+an instance of this new type? Although the compiler doesn't seem to warn
+about using integers so maybe it's not worth doing this.
+
+James
+
+>  static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+> +	if (sysctl_perf_event_paranoid >= PERF_EVENT_DISALLOW_KERNEL && !perfmon_capable())
+>  		return -EACCES;
+>  
+>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+> @@ -1374,7 +1388,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>  
+>  static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
+> +	if (sysctl_perf_event_paranoid >= PERF_EVENT_DISALLOW_CPU && !perfmon_capable())
+>  		return -EACCES;
+>  
+>  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+> @@ -1382,7 +1396,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>  
+>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
+> +	if (sysctl_perf_event_paranoid >= PERF_EVENT_DISALLOW_TRACE && !perfmon_capable())
+>  		return -EPERM;
+>  
+>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 80782cddb1da..6fdfdc731bab 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -408,14 +408,7 @@ static struct srcu_struct pmus_srcu;
+>  static cpumask_var_t perf_online_mask;
+>  static struct kmem_cache *perf_event_cache;
+>  
+> -/*
+> - * perf event paranoia level:
+> - *  -1 - not paranoid at all
+> - *   0 - disallow raw tracepoint access for unpriv
+> - *   1 - disallow cpu events for unpriv
+> - *   2 - disallow kernel profiling for unpriv
+> - */
+> -int sysctl_perf_event_paranoid __read_mostly = 2;
+> +int sysctl_perf_event_paranoid __read_mostly = PERF_EVENT_DISALLOW_KERNEL;
+>  
+>  /* Minimum for 512 kiB + 1 user control page */
+>  int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
+> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+> index fbdf8d3279ac..705f7d7d81dc 100644
+> --- a/kernel/kallsyms.c
+> +++ b/kernel/kallsyms.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/kdb.h>
+>  #include <linux/err.h>
+> +#include <linux/perf_event.h>
+>  #include <linux/proc_fs.h>
+>  #include <linux/sched.h>	/* for cond_resched */
+>  #include <linux/ctype.h>
+> @@ -803,7 +804,7 @@ static inline int kallsyms_for_perf(void)
+>  {
+>  #ifdef CONFIG_PERF_EVENTS
+>  	extern int sysctl_perf_event_paranoid;
+> -	if (sysctl_perf_event_paranoid <= 1)
+> +	if (sysctl_perf_event_paranoid <= PERF_EVENT_DISALLOW_CPU)
+>  		return 1;
+>  #endif
+>  	return 0;
