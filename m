@@ -2,144 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A3FC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 08:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D865CCA480
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 08:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237210AbiGHIcT (ORCPT
+        id S237254AbiGHIyk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 04:32:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35890 "EHLO
+        Fri, 8 Jul 2022 04:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237200AbiGHIcT (ORCPT
+        with ESMTP id S237218AbiGHIyj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 04:32:19 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728458238F;
-        Fri,  8 Jul 2022 01:32:18 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2688Ttqv029870;
-        Fri, 8 Jul 2022 08:31:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=dHzoABMdFE8XEKTymXMUuxjuP3z7HbIjG6GmfQRPD8Q=;
- b=jfPvBh5SeNSwT0AvJCO98SWs9pi+ZnPth2+eZL+CY8HNDkz9lfTpBwZhFNfdGgfdLkHv
- D7kSMgaNO7JFCP78IoHRtUdgzYjLOpRSJvi9d/a/vYMTFFFYNqFoSJMw8/KLjXn4RD7q
- HtXmABzm2ljBIdVU7KyS+atwq72LPQnrx3vzCCBHMZs+hxzTPRUOgIGlOTrXQAI4kPSM
- iTCRAM8Fe9JuYyNW+rvyrA83LJzTSDKW2+WJdYwlzA0hWmgVBZkGW1caPGzbDYn5xNKO
- Orb8+okKcBgtVLne6F8LyYGdmyjwdzU3WWu74KLkJwWWAbnJjvKTAuUDzUg7Q7Mvy7eq EQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h6h4fg15d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Jul 2022 08:31:18 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2688UlSD000429;
-        Fri, 8 Jul 2022 08:31:18 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h6h4fg13x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Jul 2022 08:31:17 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2688LqGo027759;
-        Fri, 8 Jul 2022 08:31:14 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 3h4v4juq71-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Jul 2022 08:31:14 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2688VBds16187856
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Jul 2022 08:31:11 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0C1311C05B;
-        Fri,  8 Jul 2022 08:31:11 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2FEEF11C050;
-        Fri,  8 Jul 2022 08:31:11 +0000 (GMT)
-Received: from [9.145.4.47] (unknown [9.145.4.47])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Jul 2022 08:31:11 +0000 (GMT)
-Message-ID: <0bc35725-43eb-271c-d66e-ca11e5001794@linux.ibm.com>
-Date:   Fri, 8 Jul 2022 10:31:10 +0200
+        Fri, 8 Jul 2022 04:54:39 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D56761D47;
+        Fri,  8 Jul 2022 01:54:38 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id F019E1FEFE;
+        Fri,  8 Jul 2022 08:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1657270477; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y09aHnftKgsb755aav+tcisMBqwaGQVPRoF6I/GeksQ=;
+        b=pFEUnbCb+AjEBxNHzdq1IzRE0SheLCfh79/KP/G2SXw3v7NpmirYHy0MKyq6FafCpJoHdC
+        Zbw81wF2FOf/Qk3Ph1hEgS9khYQ4lGrGD+cADZ22SMXc6uOyDMgwsrnnvaOpOJQRDLhzAb
+        HRMxK0Ok91k7A5/A6xLynKW6jrv/yZ0=
+Received: from suse.cz (unknown [10.100.201.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 04BBE2C141;
+        Fri,  8 Jul 2022 08:54:33 +0000 (UTC)
+Date:   Fri, 8 Jul 2022 10:54:33 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Gang Li <ligang.bdlg@bytedance.com>
+Cc:     akpm@linux-foundation.org, surenb@google.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+        keescook@chromium.org, rostedt@goodmis.org, mingo@redhat.com,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
+        adobriyan@gmail.com, yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
+ CONSTRAINT_{MEMORY_POLICY,CPUSET}
+Message-ID: <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v6 2/2] perf test: Json format checking
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
-        Like Xu <likexu@tencent.com>,
-        James Clark <james.clark@arm.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Claire Jensen <clairej735@gmail.com>
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20220707201213.331663-1-irogers@google.com>
- <20220707201213.331663-3-irogers@google.com>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20220707201213.331663-3-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: mgqVWLhs-H3cIg8cudiINcoDB65u7bOC
-X-Proofpoint-GUID: GjnDGMYcxOkI3bcHwvCMqoxdwPo5WNtx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-08_06,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
- suspectscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
- phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2207080032
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 7/7/22 22:12, Ian Rogers wrote:
-> From: Claire Jensen <cjense@google.com>
+On Fri 08-07-22 16:21:24, Gang Li wrote:
+> TLDR
+> ----
+> If a mempolicy or cpuset is in effect, out_of_memory() will select victim
+> on specific node to kill. So that kernel can avoid accidental killing on
+> NUMA system.
+
+We have discussed this in your previous posting and an alternative
+proposal was to use cpusets to partition NUMA aware workloads and
+enhance the oom killer to be cpuset aware instead which should be a much
+easier solution.
+
+> Problem
+> -------
+> Before this patch series, oom will only kill the process with the highest 
+> memory usage by selecting process with the highest oom_badness on the
+> entire system.
 > 
-> Add field checking tests for perf stat JSON output.
-> Sanity checks the expected number of fields are present, that the
-> expected keys are present and they have the correct values.
+> This works fine on UMA system, but may have some accidental killing on NUMA
+> system.
 > 
-> Signed-off-by: Claire Jensen <cjense@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  .../tests/shell/lib/perf_json_output_lint.py  |  95 +++++++++++
->  tools/perf/tests/shell/stat+json_output.sh    | 147 ++++++++++++++++++
->  2 files changed, 242 insertions(+)
->  create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
->  create mode 100755 tools/perf/tests/shell/stat+json_output.sh
+> As shown below, if process c.out is bind to Node1 and keep allocating pages
+> from Node1, a.out will be killed first. But killing a.out did't free any
+> mem on Node1, so c.out will be killed then.
 > 
-....
-I wonder if it is really necessary to have a python file to post process the
-perf stat output?
+> A lot of AMD machines have 8 numa nodes. In these systems, there is a
+> greater chance of triggering this problem.
 
-With
-commit 7473ee56dbc9 ("perf test: Add checking for perf stat CSV output.")
-the same approach was done which led to issues on s390 and required an additional
-patch to fix this:
-commit ec906102e5b7 ("perf test: Fix "perf stat CSV output linter" test on s390").
-
-I wonder if you can do the perf stat output checking using bash/linux tools as it
-was done in commit ec906102e5b7. This would make maintenance much easier.
-
-Just me 2 cents...
-
+Please be more specific about existing usecases which suffer from the
+current OOM handling limitations. 
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Michal Hocko
+SUSE Labs
