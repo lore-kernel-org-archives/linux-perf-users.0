@@ -2,43 +2,43 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390DCC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 09:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9AAC43334
+	for <linux-perf-users@archiver.kernel.org>; Fri,  8 Jul 2022 09:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237700AbiGHJTI (ORCPT
+        id S237573AbiGHJWN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 05:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
+        Fri, 8 Jul 2022 05:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237406AbiGHJTH (ORCPT
+        with ESMTP id S237540AbiGHJWL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 05:19:07 -0400
+        Fri, 8 Jul 2022 05:22:11 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D853C2A948;
-        Fri,  8 Jul 2022 02:19:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CCFAE2C677;
+        Fri,  8 Jul 2022 02:22:09 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09CB3D6E;
-        Fri,  8 Jul 2022 02:19:07 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E950BD6E;
+        Fri,  8 Jul 2022 02:22:09 -0700 (PDT)
 Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A30FE3F66F;
-        Fri,  8 Jul 2022 02:19:05 -0700 (PDT)
-Message-ID: <5dbda300-2ad3-ca23-6013-f3dd3126ba30@foss.arm.com>
-Date:   Fri, 8 Jul 2022 10:19:04 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AB173F66F;
+        Fri,  8 Jul 2022 02:22:08 -0700 (PDT)
+Message-ID: <e55094af-557e-8044-fc14-00189bd392a2@foss.arm.com>
+Date:   Fri, 8 Jul 2022 10:21:59 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH 08/14] perf test: Add memcpy thread test shell script
+Subject: Re: [PATCH 10/14] perf test: Add thread loop test shell scripts
 Content-Language: en-US
 To:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, mathieu.poirier@linaro.org,
         mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
 References: <20220701120804.3226396-1-carsten.haitzler@foss.arm.com>
- <20220701120804.3226396-9-carsten.haitzler@foss.arm.com>
- <f6b21fa9-7e0b-cb0d-d708-cfd7f3f53087@arm.com>
+ <20220701120804.3226396-11-carsten.haitzler@foss.arm.com>
+ <a14e7015-7446-8cb3-612c-00dcb469c939@arm.com>
 From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
 Organization: Arm Ltd.
-In-Reply-To: <f6b21fa9-7e0b-cb0d-d708-cfd7f3f53087@arm.com>
+In-Reply-To: <a14e7015-7446-8cb3-612c-00dcb469c939@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -47,108 +47,123 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 7/5/22 15:25, James Clark wrote:
+On 7/5/22 14:53, James Clark wrote:
 > 
 > 
 > On 01/07/2022 13:07, carsten.haitzler@foss.arm.com wrote:
 >> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 >>
->> Add a script to drive the threaded memcpy test that gathers data so
->> it passes a minimum bar for amount and quality of content that we
->> extract from the kernel's perf support.
+>> Add a script to drive the thread loop test that gathers data so
+>> it passes a minimum bar (in this case do we get any perf context data
+>> for every thread).
 >>
+>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 > 
-> On this one I get a failure about 1/50 times on N1SDP (I ran it about 150
-
-I also see inconsistent results. The whole point of these tests is to 
-point this out and provide data to track it and then lead eventually to 
-improvements/fixes. A failing test is probably good - it found a 
-problem. Perf test for me has lots of failures so I'm taking the 
-position that failures are OK normally in perf test as long as you know 
-what those failures are and why.
-
-> times and saw 3 failures so it's quite consistent). Usually it records
-> about a 1.4MB file with one aux record. But when it fails the file is
-> only 20K and has one small aux record:
+> Hi Carsten,
 > 
->     0 0 0x1a10 [0x30]: PERF_RECORD_AUXTRACE size: 0x1820  offset: 0  ref: 0x1c23126d7ff3d2ab  idx: 3  tid: 682799  cpu: 3
+> I checked this on N1SDP and I get failures in both threads tests. This is
+> because it's looking for "CID=..." when in my output threads are shown as
+> "VMID=...":
 > 
-> Nothing was dropped, and the load on the system wasn't any different
-> to when it passes. So I'm not sure if this is a real coresight bug
-> or that the test is flaky. There was a bug in SPE before where
-
-The binary is the same with the same content running the same perf 
-command every time. Workload doesn't change. The perf data captured does 
-change. It sometimes captures so little it fails even the low pass bar 
-given in the test.
-
-> threads weren't followed after forking, but only very rarely. It feels
-> a bit like that.
-
-That ... would be a "CoreSight" bug though I think, not the test.
-
-> It could also be some contention issue because 10 threads are launched
-> but the machine only has 4 cores.
-
-We still should be capturing data reliably (in theory). If you have 10 
-threads on a 4 core machine it'll take longer to run for the same 
-workload as the threads will have to share the same cores, but this 
-should still result in decent data collection as the cores switch 
-between threads. That's the point.
-
-> The failure message from the test looks like this:
+>      Idx:628048; ID:10;	I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000AAAAE3BF0B18; Ctxt: AArch64,EL0, NS; VMID=0xa588c;
 > 
->     77: CoreSight / Memcpy 16k 10 Threads                               :
->     --- start ---
->     Couldn't synthesize bpf events.
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.012 MB ./perf-memcpy_thread-16k_10.data ]
->     Sanity check number of ASYNC is too low (3 < 10)
->      ---- end ----
->     CoreSight / Memcpy 16k 10 Threads: FAILED!
-> 
-> I didn't see this issue on any of the other tests. Sometimes very small
-> files were made if I loaded the system, but the tests still passed.
+> I think with a change to the grep it should work.
 
-For me the "Check TID" tests fails very often... but as I said - the 
-point here is to find issues and ensure they are reported in results. 
-The test even track the results over time/many runs in the csv files so 
-you get a good idea of consistency and even how it may statistically 
-change over time matching that up to changes in the kernel.
+Errrr... I get no VMID= ... it's all
 
-Unless of course you think it's acceptable that sometimes perf record + 
-CoreSight will output essentially no data (your 20k example). :)
+Idx:563008; ID:12;	I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 
+bit, IS0.; Addr=0x0000AAAAE4B00A60; Ctxt: AArch64,EL0, NS; CID=0x00004aff;
+
+are you using containers or something? because:
+
+             if(context.updated_c)
+             {
+                 oss << "CID=0x" << std::hex << std::setfill('0') << 
+std::setw(8) << context.ctxtID << "; ";
+             }
+             if(context.updated_v)
+             {
+                 oss << "VMID=0x" << std::hex << std::setfill('0') << 
+std::setw(4) << context.VMID << "; ";
+             }
+
+I'm running without any containers etc. - bare metal. Haven't bothered 
+with any VM stuff.
+
+In OpenOCD the CID should be the the pid/thread id. It seems to not be 
+the same thing as VMID. I haven't traced this beyond here as to exactly 
+what this represents though my first reaction is "This is extra VM info 
+and not the PID/TID being looked for". OpenOCD is full of tests with log 
+dumps that produce CID and VMID:
+
+Idx:1676; ID:10;        I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 
+64 bit, IS0.; Addr=0xFFFFFFC000096A00; Ctxt: AArch64,EL1, NS; 
+CID=0x00000000; VMID=0x0000;
+
+A quick git grep CID= in OpenCD will show them all. My understanding is 
+CID is the thread/process ID and thus the test/check "Do we get reported 
+data from all threads? - anything?".
+
+I don't think using VMID is right. The fact you are missing a CID is an 
+issue though...
 
 > Thanks
 > James
 > 
->> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 >> ---
->>   .../shell/coresight/memcpy_thread_16k_10.sh    | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>   create mode 100755 tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+>>   .../coresight/thread_loop_check_tid_10.sh     | 19 +++++++++++++++++++
+>>   .../coresight/thread_loop_check_tid_2.sh      | 19 +++++++++++++++++++
+>>   2 files changed, 38 insertions(+)
+>>   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+>>   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
 >>
->> diff --git a/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+>> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
 >> new file mode 100755
->> index 000000000000..d21ba8545938
+>> index 000000000000..7c13636fc778
 >> --- /dev/null
->> +++ b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
->> @@ -0,0 +1,18 @@
+>> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+>> @@ -0,0 +1,19 @@
 >> +#!/bin/sh -e
->> +# CoreSight / Memcpy 16k 10 Threads
+>> +# CoreSight / Thread Loop 10 Threads - Check TID
 >> +
 >> +# SPDX-License-Identifier: GPL-2.0
 >> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 >> +
->> +TEST="memcpy_thread"
+>> +TEST="thread_loop"
 >> +. $(dirname $0)/../lib/coresight.sh
->> +ARGS="16 10 1"
->> +DATV="16k_10"
+>> +ARGS="10 1"
+>> +DATV="check-tid-10th"
 >> +DATA="$DATD/perf-$TEST-$DATV.data"
+>> +STDO="$DATD/perf-$TEST-$DATV.stdout"
 >> +
->> +perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
+>> +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
 >> +
->> +perf_dump_aux_verify "$DATA" 10 10 10
+>> +perf_dump_aux_tid_verify "$DATA" "$STDO"
+>> +
+>> +err=$?
+>> +exit $err
+>> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+>> new file mode 100755
+>> index 000000000000..a067145af43c
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+>> @@ -0,0 +1,19 @@
+>> +#!/bin/sh -e
+>> +# CoreSight / Thread Loop 2 Threads - Check TID
+>> +
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>> +
+>> +TEST="thread_loop"
+>> +. $(dirname $0)/../lib/coresight.sh
+>> +ARGS="2 20"
+>> +DATV="check-tid-2th"
+>> +DATA="$DATD/perf-$TEST-$DATV.data"
+>> +STDO="$DATD/perf-$TEST-$DATV.stdout"
+>> +
+>> +SHOW_TID=1 perf record -s $PERFRECOPT -o "$DATA" "$BIN" $ARGS > $STDO
+>> +
+>> +perf_dump_aux_tid_verify "$DATA" "$STDO"
 >> +
 >> +err=$?
 >> +exit $err
