@@ -2,254 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479FDC43334
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Jul 2022 00:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C19C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Jul 2022 01:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbiGIAWO (ORCPT
+        id S229524AbiGIBxD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 8 Jul 2022 20:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46600 "EHLO
+        Fri, 8 Jul 2022 21:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbiGIAWN (ORCPT
+        with ESMTP id S229469AbiGIBxC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 8 Jul 2022 20:22:13 -0400
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43627AC14
-        for <linux-perf-users@vger.kernel.org>; Fri,  8 Jul 2022 17:22:12 -0700 (PDT)
-Received: by mail-vs1-xe2d.google.com with SMTP id t127so112091vsb.8
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Jul 2022 17:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=waymo.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=dWRkMsWdpewDgIm6lFE+X1sR3lKe+BSFG65aDsAFy9c=;
-        b=ipDZHcuEwpdEazaq+Gh4aAIo3A5bN5TOrQZu+7xabPLUGJzUYByOPsAeh8lsvbuOmK
-         U9DqpmkoJeBSlYd+Sp49ewFiIcXSm8zmwiwEaKNSERqSVFqeZuwIS7f/2kiTZZ/pAVbj
-         D3PeVCbMZHC/cTjEc8U1jL8Sr3Y7UduyIGkjBxiFn8cHyWS9gLr4wJF4BV7MlNHmDOyq
-         H9IbjGpX+ct5ZyabqSfDbVPKssipkFxuQvUjUj0Q52ebrjjrzjiX6NfHKXd1RqSVRSyY
-         KubmAU00YhykotHM2xqyVjBf8OTah4sbetdw0N8OcEJhfnbV9rG3pfg4TWCPVdVqK13E
-         ZzWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=dWRkMsWdpewDgIm6lFE+X1sR3lKe+BSFG65aDsAFy9c=;
-        b=6q771GUt98/ba/PfgWYHCf3VvQmIu7MiEpwpkub9bnMfSk/YUvCMrzuGQIV04gLHRQ
-         eQqbrofC6eQWzqtU5xhgrRDfkrwfskzvIutc4y6IU5yfIPvq64jlMzc6W2hP4YtUfLU4
-         j2zpLEqwxC3VQLDTq6W9B9qFXoTY96dpx0hJI4GGbYquQ3c0wbh66BH/suUWRStBzoM1
-         oATsAKby4mQIjP21txCERWSBdfheLIoZj5rpnd8xzWKgWax75O786IdMnTem/OvLolzl
-         uk6Ft4GSCUjSJA4Avv7cCq8d1jk/Yjw5oLbZhLwXOU+kq57UVzSwbU8xBrA7zq+Su9LR
-         X6vQ==
-X-Gm-Message-State: AJIora94gyRPu67FznqgGZYfDtCV+M2VDUByK0BEikoAiyc987TMqG7e
-        asaZgPfk2DXcNSAK+XiqAQ4cgHvXvztfdcLF6CAquw==
-X-Google-Smtp-Source: AGRyM1tNh32YyFSO6yBdwccWw/tHcxyeM51sI4DbuaY7DOmWDfhFh2bIAsz/D9em2zYI7RYZVSFnHT0f6CiY8BHc/Xw=
-X-Received: by 2002:a05:6102:3747:b0:354:6214:8683 with SMTP id
- u7-20020a056102374700b0035462148683mr2675981vst.37.1657326131449; Fri, 08 Jul
- 2022 17:22:11 -0700 (PDT)
+        Fri, 8 Jul 2022 21:53:02 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED77E71721;
+        Fri,  8 Jul 2022 18:53:00 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LftRN5C2tzlW0C;
+        Sat,  9 Jul 2022 09:51:28 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 9 Jul 2022 09:52:58 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 9 Jul 2022 09:52:58 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <pc@us.ibm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [RFC v3 02/17] perf kwork: Add irq kwork record support
+Date:   Sat, 9 Jul 2022 09:50:18 +0800
+Message-ID: <20220709015033.38326-3-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20220709015033.38326-1-yangjihong1@huawei.com>
+References: <20220709015033.38326-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-References: <20220707215606.2409166-1-rsilvera@google.com> <CAM9d7cgcvQTZWPFh+ebC-68CrjuQDw5C8biko+KtWPtN9gYT7Q@mail.gmail.com>
-In-Reply-To: <CAM9d7cgcvQTZWPFh+ebC-68CrjuQDw5C8biko+KtWPtN9gYT7Q@mail.gmail.com>
-Reply-To: rsilvera@waymo.com
-From:   Raul Silvera <rsilvera@waymo.com>
-Date:   Fri, 8 Jul 2022 17:21:45 -0700
-Message-ID: <CA+PGoB9VOoDJJL29nBb08EDjTF8PoN7nNP18Lpqd9mTCNxiOYA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf inject: Add a command line option to specify
- build ids
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thank you. I just uploaded a new version addressing this feedback.
+Record interrupt events irq:irq_handler_entry & irq_handler_exit
 
-Raul E. Silvera
-Software Engineer
-waymo.com
+Test cases:
 
-On Fri, Jul 8, 2022 at 11:51 AM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hi Raul,
->
-> On Thu, Jul 7, 2022 at 2:56 PM Raul Silvera <rsilvera@google.com> wrote:
-> >
-> > This commit adds the option --known-build-ids to perf inject.
-> > It allows the user to explicitly specify the build id for a given
-> > path, instead of retrieving it from the current system. This is
-> > useful in cases where a perf.data file is processed on a different
-> > system from where it was collected, or if some of the binaries are
-> > no longer available.
-> >
-> > The build ids and paths are specified in pairs in the command line.
-> > Using the file:// specifier, build ids can be loaded from a file
-> > directly generated by perf buildid-list. This is convenient to copy
-> > build ids from one perf.data file to another.
-> >
-> > ** Example: In this example we use perf record to create two
-> > perf.data files, one with build ids and another without, and use
-> > perf buildid-list and perf inject to copy the build ids from the
-> > first file to the second.
-> >
-> >  $ perf record ls /tmp
-> >  $ perf record --no-buildid -o perf.data.no-buildid ls /tmp
-> >  $ perf buildid-list > /tmp/build-ids.txt
-> >  $ perf inject -b --known-build-ids='file:///tmp/build-ids.txt' \
-> >         -i perf.data.no-buildid -o perf.data.buildid
->
-> Please add documentation for new options.  Some nit pickings below.
->
-> >
-> > Signed-off-by: Raul Silvera <rsilvera@google.com>
-> > ---
-> >  V1 -> V2: Cleaned up patch description, deleted the strlist during
-> >            cleanup, and updated validation of the build id strings
-> >
-> >  tools/perf/builtin-inject.c | 60 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 60 insertions(+)
-> >
-> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> > index a75bf11585b5..4efb992ed1a0 100644
-> > --- a/tools/perf/builtin-inject.c
-> > +++ b/tools/perf/builtin-inject.c
-> > @@ -21,6 +21,7 @@
-> >  #include "util/data.h"
-> >  #include "util/auxtrace.h"
-> >  #include "util/jit.h"
-> > +#include "util/string2.h"
-> >  #include "util/symbol.h"
-> >  #include "util/synthetic-events.h"
-> >  #include "util/thread.h"
-> > @@ -35,6 +36,7 @@
-> >
-> >  #include <linux/list.h>
-> >  #include <linux/string.h>
-> > +#include <ctype.h>
-> >  #include <errno.h>
-> >  #include <signal.h>
-> >
-> > @@ -59,6 +61,8 @@ struct perf_inject {
-> >         struct itrace_synth_opts itrace_synth_opts;
-> >         char                    event_copy[PERF_SAMPLE_MAX_SIZE];
-> >         struct perf_file_section secs[HEADER_FEAT_BITS];
-> > +       const char              *known_build_ids_source;
->
-> Nit: It doesn't need to be here.  You can use a local variable in
-> cmd_inject for parsing.
->
->
-> > +       struct strlist          *known_build_ids;
-> >  };
-> >
-> >  struct event_entry {
-> > @@ -570,9 +574,45 @@ static int dso__read_build_id(struct dso *dso)
-> >         return dso->has_build_id ? 0 : -1;
-> >  }
-> >
-> > +static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
-> > +                                              struct dso *dso)
-> > +{
-> > +       struct str_node *pos;
-> > +       int bid_len;
-> > +
-> > +       strlist__for_each_entry(pos, inject->known_build_ids) {
-> > +               const char *build_id, *dso_name;
-> > +
-> > +               build_id = skip_spaces(pos->s);
-> > +               dso_name = strchr(build_id, ' ');
-> > +               if (dso_name == NULL)
-> > +                       continue;
-> > +               bid_len = dso_name - pos->s;
-> > +               dso_name = skip_spaces(dso_name);
-> > +               if (strcmp(dso->long_name, dso_name))
-> > +                       continue;
-> > +               if (bid_len % 2 != 0 || bid_len >= SBUILD_ID_SIZE)
-> > +                       return false;
-> > +               for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
-> > +                       if (!isxdigit(build_id[2 * ix]) ||
-> > +                           !isxdigit(build_id[2 * ix + 1]))
-> > +                               return false;
-> > +
-> > +                       dso->bid.data[ix] = (hex(build_id[2 * ix]) << 4 |
-> > +                                            hex(build_id[2 * ix + 1]));
-> > +               }
-> > +               dso->bid.size = bid_len / 2;
-> > +               dso->has_build_id = 1;
-> > +               return true;
-> > +       }
-> > +       return false;
-> > +}
-> > +
-> >  static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
-> >                                 struct machine *machine, u8 cpumode, u32 flags)
-> >  {
-> > +       struct perf_inject *inject = container_of(tool, struct perf_inject,
-> > +                                                 tool);
-> >         int err;
-> >
-> >         if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
-> > @@ -580,6 +620,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
-> >         if (is_no_dso_memory(dso->long_name))
-> >                 return 0;
-> >
-> > +       if (inject->known_build_ids != NULL &&
-> > +           perf_inject__lookup_known_build_id(inject, dso))
-> > +               return 1;
-> > +
-> >         if (dso__read_build_id(dso) < 0) {
-> >                 pr_debug("no build_id found for %s\n", dso->long_name);
-> >                 return -1;
-> > @@ -1082,6 +1126,9 @@ int cmd_inject(int argc, const char **argv)
-> >                             "Inject build-ids into the output stream"),
-> >                 OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
-> >                             "Inject build-ids of all DSOs into the output stream"),
-> > +               OPT_STRING(0, "known-build-ids", &inject.known_build_ids_source,
-> > +                          "buildid path [buildid path...]",
-> > +                          "build-ids to use for specific files"),
-> >                 OPT_STRING('i', "input", &inject.input_name, "file",
-> >                            "input file name"),
-> >                 OPT_STRING('o', "output", &inject.output.path, "file",
-> > @@ -1215,6 +1262,18 @@ int cmd_inject(int argc, const char **argv)
-> >                  */
-> >                 inject.tool.ordered_events = true;
-> >                 inject.tool.ordering_requires_timestamps = true;
-> > +               if (inject.known_build_ids_source != NULL) {
-> > +                       struct strlist *known_build_ids;
->
-> Nit: I think you can use inject.known_build_ids directly.
->
-> Thanks,
-> Namhyung
->
->
-> > +
-> > +                       known_build_ids = strlist__new(
-> > +                           inject.known_build_ids_source, NULL);
-> > +
-> > +                       if (known_build_ids == NULL) {
-> > +                               pr_err("Couldn't parse known build ids.\n");
-> > +                               goto out_delete;
-> > +                       }
-> > +                       inject.known_build_ids = known_build_ids;
-> > +               }
-> >         }
-> >
-> >         if (inject.sched_stat) {
-> > @@ -1241,6 +1300,7 @@ int cmd_inject(int argc, const char **argv)
-> >         ret = __cmd_inject(&inject);
-> >
-> >  out_delete:
-> > +       strlist__delete(inject.known_build_ids);
-> >         zstd_fini(&(inject.session->zstd_data));
-> >         perf_session__delete(inject.session);
-> >  out_close_output:
-> > --
-> > 2.37.0.rc0.161.g10f37bed90-goog
-> >
+ # perf kwork record -o perf_kwork.date -- sleep 1
+  [ perf record: Woken up 0 times to write data ]
+  [ perf record: Captured and wrote 0.556 MB perf_kwork.date ]
+  #
+  # perf evlist -i perf_kwork.date
+  irq:irq_handler_entry
+  irq:irq_handler_exit
+  dummy:HG
+  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
+  #
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/Documentation/perf-kwork.txt |  2 +-
+ tools/perf/builtin-kwork.c              | 15 ++++++++++++++-
+ tools/perf/util/kwork.h                 |  1 +
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+index dc1e36da57bb..57bd5fa7d5c9 100644
+--- a/tools/perf/Documentation/perf-kwork.txt
++++ b/tools/perf/Documentation/perf-kwork.txt
+@@ -32,7 +32,7 @@ OPTIONS
+ 
+ -k::
+ --kwork::
+-	List of kwork to profile
++	List of kwork to profile (irq, etc)
+ 
+ -v::
+ --verbose::
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index f3552c56ede3..a26b7fde1e38 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -25,7 +25,20 @@
+ #include <linux/time64.h>
+ #include <linux/zalloc.h>
+ 
++const struct evsel_str_handler irq_tp_handlers[] = {
++	{ "irq:irq_handler_entry", NULL, },
++	{ "irq:irq_handler_exit",  NULL, },
++};
++
++static struct kwork_class kwork_irq = {
++	.name           = "irq",
++	.type           = KWORK_CLASS_IRQ,
++	.nr_tracepoints = 2,
++	.tp_handlers    = irq_tp_handlers,
++};
++
+ static struct kwork_class *kwork_class_supported_list[KWORK_CLASS_MAX] = {
++	[KWORK_CLASS_IRQ]       = &kwork_irq,
+ };
+ 
+ static void setup_event_list(struct perf_kwork *kwork,
+@@ -132,7 +145,7 @@ int cmd_kwork(int argc, const char **argv)
+ 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
+ 		    "dump raw trace in ASCII"),
+ 	OPT_STRING('k', "kwork", &kwork.event_list_str, "kwork",
+-		   "list of kwork to profile"),
++		   "list of kwork to profile (irq, etc)"),
+ 	OPT_BOOLEAN('f', "force", &kwork.force, "don't complain, do it"),
+ 	OPT_END()
+ 	};
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index 6950636aab2a..f1d89cb058fc 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -13,6 +13,7 @@
+ #include <linux/bitmap.h>
+ 
+ enum kwork_class_type {
++	KWORK_CLASS_IRQ,
+ 	KWORK_CLASS_MAX,
+ };
+ 
+-- 
+2.30.GIT
+
