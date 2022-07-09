@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AD3C43334
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Jul 2022 01:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6A0CCA47B
+	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Jul 2022 01:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbiGIBxO (ORCPT
+        id S229643AbiGIBxO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Fri, 8 Jul 2022 21:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbiGIBxI (ORCPT
+        with ESMTP id S229591AbiGIBxI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 8 Jul 2022 21:53:08 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6DE71721;
-        Fri,  8 Jul 2022 18:53:05 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LftQL5VxVz1L9FN;
-        Sat,  9 Jul 2022 09:50:34 +0800 (CST)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB207AC1E;
+        Fri,  8 Jul 2022 18:53:06 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LftRV2tFFzlW1w;
+        Sat,  9 Jul 2022 09:51:34 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 9 Jul 2022 09:53:03 +0800
+ 15.1.2375.24; Sat, 9 Jul 2022 09:53:04 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.61) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 9 Jul 2022 09:53:02 +0800
+ 15.1.2375.24; Sat, 9 Jul 2022 09:53:03 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
         <jolsa@kernel.org>, <namhyung@kernel.org>, <pc@us.ibm.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [RFC v3 13/17] perf kwork: Implement perf kwork timehist
-Date:   Sat, 9 Jul 2022 09:50:29 +0800
-Message-ID: <20220709015033.38326-14-yangjihong1@huawei.com>
+Subject: [RFC v3 15/17] perf kwork: Add irq trace bpf support
+Date:   Sat, 9 Jul 2022 09:50:31 +0800
+Message-ID: <20220709015033.38326-16-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20220709015033.38326-1-yangjihong1@huawei.com>
 References: <20220709015033.38326-1-yangjihong1@huawei.com>
@@ -50,559 +50,275 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Implements framework of perf kwork timehist,
-to provide an analysis of kernel work events.
+Implements irq trace bpf function.
 
 Test cases:
+Trace irq without filter:
 
-  # perf kwork tim
-   Runtime start      Runtime end        Cpu     Kwork name                      Runtime     Delaytime
-                                                 (TYPE)NAME:NUM                  (msec)      (msec)
-   -----------------  -----------------  ------  ------------------------------  ----------  ----------
-        91576.060290       91576.060344  [0000]  (s)RCU:9                             0.055       0.111
-        91576.061470       91576.061547  [0000]  (s)SCHED:7                           0.077       0.073
-        91576.062604       91576.062697  [0001]  (s)RCU:9                             0.094       0.409
-        91576.064443       91576.064517  [0002]  (s)RCU:9                             0.074       0.114
-        91576.065144       91576.065211  [0000]  (s)SCHED:7                           0.067       0.058
-        91576.066564       91576.066609  [0003]  (s)RCU:9                             0.045       0.110
-        91576.068495       91576.068559  [0000]  (s)SCHED:7                           0.064       0.059
-        91576.068900       91576.068996  [0004]  (s)RCU:9                             0.096       0.726
-        91576.069364       91576.069420  [0002]  (s)RCU:9                             0.056       0.082
-        91576.069649       91576.069701  [0004]  (s)RCU:9                             0.052       0.111
-        91576.070147       91576.070206  [0000]  (s)SCHED:7                           0.060       0.057
-        91576.073147       91576.073202  [0000]  (s)SCHED:7                           0.054       0.060
-  <SNIP>
+  # perf kwork -k irq rep -b
+  Starting trace, Hit <Ctrl+C> to stop and report
+  ^C
+    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+   --------------------------------------------------------------------------------------------------------------------------------
+    virtio0-requests:25            | 0000 |     31.026 ms |       285 |      1.493 ms |     110326.049963 s |     110326.051456 s |
+    eth0:10                        | 0002 |      7.875 ms |        96 |      1.429 ms |     110313.916835 s |     110313.918264 s |
+    ata_piix:14                    | 0002 |      2.510 ms |        28 |      0.396 ms |     110331.367987 s |     110331.368383 s |
+   --------------------------------------------------------------------------------------------------------------------------------
 
-  # perf kwork tim --max-stack 2 -g
-   Runtime start      Runtime end        Cpu     Kwork name                      Runtime     Delaytime
-                                                 (TYPE)NAME:NUM                  (msec)      (msec)
-   -----------------  -----------------  ------  ------------------------------  ----------  ----------
-        91576.060290       91576.060344  [0000]  (s)RCU:9                             0.055       0.111   irq_exit_rcu <- sysvec_apic_timer_interrupt
-        91576.061470       91576.061547  [0000]  (s)SCHED:7                           0.077       0.073   irq_exit_rcu <- sysvec_call_function_single
-        91576.062604       91576.062697  [0001]  (s)RCU:9                             0.094       0.409   irq_exit_rcu <- sysvec_apic_timer_interrupt
-        91576.064443       91576.064517  [0002]  (s)RCU:9                             0.074       0.114   irq_exit_rcu <- sysvec_apic_timer_interrupt
-        91576.065144       91576.065211  [0000]  (s)SCHED:7                           0.067       0.058   irq_exit_rcu <- sysvec_call_function_single
-        91576.066564       91576.066609  [0003]  (s)RCU:9                             0.045       0.110   irq_exit_rcu <- sysvec_apic_timer_interrupt
-        91576.068495       91576.068559  [0000]  (s)SCHED:7                           0.064       0.059   irq_exit_rcu <- sysvec_call_function_single
-        91576.068900       91576.068996  [0004]  (s)RCU:9                             0.096       0.726   irq_exit_rcu <- sysvec_apic_timer_interrupt
-        91576.069364       91576.069420  [0002]  (s)RCU:9                             0.056       0.082   irq_exit_rcu <- sysvec_apic_timer_interrupt
-        91576.069649       91576.069701  [0004]  (s)RCU:9                             0.052       0.111   irq_exit_rcu <- sysvec_apic_timer_interrupt
-  <SNIP>
+Trace irq with cpu filter:
+
+  # perf kwork -k irq rep -b -C 0
+  Starting trace, Hit <Ctrl+C> to stop and report
+  ^C
+    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+   --------------------------------------------------------------------------------------------------------------------------------
+    virtio0-requests:25            | 0000 |     34.288 ms |       282 |      2.061 ms |     110358.078968 s |     110358.081029 s |
+   --------------------------------------------------------------------------------------------------------------------------------
+
+Trace irq with name filter:
+
+  # perf kwork -k irq rep -b -n eth0
+  Starting trace, Hit <Ctrl+C> to stop and report
+  ^C
+    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+   --------------------------------------------------------------------------------------------------------------------------------
+    eth0:10                        | 0002 |      2.184 ms |        21 |      0.572 ms |     110386.541699 s |     110386.542271 s |
+   --------------------------------------------------------------------------------------------------------------------------------
+
+Trace irq with summary:
+
+  # perf kwork -k irq rep -b -S
+  Starting trace, Hit <Ctrl+C> to stop and report
+  ^C
+    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+   --------------------------------------------------------------------------------------------------------------------------------
+    virtio0-requests:25            | 0000 |     42.923 ms |       285 |      1.181 ms |     110418.128867 s |     110418.130049 s |
+    eth0:10                        | 0002 |      2.085 ms |        20 |      0.668 ms |     110416.002935 s |     110416.003603 s |
+    ata_piix:14                    | 0002 |      0.970 ms |         4 |      0.656 ms |     110424.034482 s |     110424.035138 s |
+   --------------------------------------------------------------------------------------------------------------------------------
+    Total count            :       309
+    Total runtime   (msec) :    45.977 (0.003% load average)
+    Total time span (msec) : 17017.655
+   --------------------------------------------------------------------------------------------------------------------------------
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/Documentation/perf-kwork.txt |  65 ++++++
- tools/perf/builtin-kwork.c              | 299 +++++++++++++++++++++++-
- tools/perf/util/kwork.h                 |   3 +
- 3 files changed, 366 insertions(+), 1 deletion(-)
+ tools/perf/util/bpf_kwork.c                |  40 +++++-
+ tools/perf/util/bpf_skel/kwork_trace.bpf.c | 150 +++++++++++++++++++++
+ 2 files changed, 189 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
-index 069981457de1..51c1625bacae 100644
---- a/tools/perf/Documentation/perf-kwork.txt
-+++ b/tools/perf/Documentation/perf-kwork.txt
-@@ -21,10 +21,36 @@ There are several variants of 'perf kwork':
- 
-   'perf kwork latency' to report the per kwork latencies.
- 
-+  'perf kwork timehist' provides an analysis of kernel work events.
-+
-     Example usage:
-         perf kwork record -- sleep 1
-         perf kwork report
-         perf kwork latency
-+        perf kwork timehist
-+
-+   By default it shows the individual work events such as irq, workqeueu,
-+   including the run time and delay (time between raise and actually entry):
-+
-+      Runtime start      Runtime end        Cpu     Kwork name                 Runtime     Delaytime
-+                                                    (TYPE)NAME:NUM             (msec)      (msec)
-+   -----------------  -----------------  ------  -------------------------  ----------  ----------
-+      1811186.976062     1811186.976327  [0000]  (s)RCU:9                        0.266       0.114
-+      1811186.978452     1811186.978547  [0000]  (s)SCHED:7                      0.095       0.171
-+      1811186.980327     1811186.980490  [0000]  (s)SCHED:7                      0.162       0.083
-+      1811186.981221     1811186.981271  [0000]  (s)SCHED:7                      0.050       0.077
-+      1811186.984267     1811186.984318  [0000]  (s)SCHED:7                      0.051       0.075
-+      1811186.987252     1811186.987315  [0000]  (s)SCHED:7                      0.063       0.081
-+      1811186.987785     1811186.987843  [0006]  (s)RCU:9                        0.058       0.645
-+      1811186.988319     1811186.988383  [0000]  (s)SCHED:7                      0.064       0.143
-+      1811186.989404     1811186.989607  [0002]  (s)TIMER:1                      0.203       0.111
-+      1811186.989660     1811186.989732  [0002]  (s)SCHED:7                      0.072       0.310
-+      1811186.991295     1811186.991407  [0002]  eth0:10                         0.112
-+      1811186.991639     1811186.991734  [0002]  (s)NET_RX:3                     0.095       0.277
-+      1811186.989860     1811186.991826  [0002]  (w)vmstat_shepherd              1.966       0.345
-+    ...
-+
-+   Times are in msec.usec.
- 
- OPTIONS
- -------
-@@ -100,6 +126,45 @@ OPTIONS for 'perf kwork latency'
- 	stop time is not given (i.e, time string is 'x.y,') then analysis goes
- 	to end of file.
- 
-+OPTIONS for 'perf kwork timehist'
-+---------------------------------
-+
-+-C::
-+--cpu::
-+	Only show events for the given CPU(s) (comma separated list).
-+
-+-g::
-+--call-graph::
-+	Display call chains if present (default off).
-+
-+-i::
-+--input::
-+	Input file name. (default: perf.data unless stdin is a fifo)
-+
-+-k::
-+--vmlinux=<file>::
-+	Vmlinux pathname
-+
-+-n::
-+--name::
-+	Only show events for the given name.
-+
-+--kallsyms=<file>::
-+	Kallsyms pathname
-+
-+--max-stack::
-+	Maximum number of functions to display in backtrace, default 5.
-+
-+--symfs=<directory>::
-+    Look for files with symbols relative to this directory.
-+
-+--time::
-+	Only analyze samples within given time window: <start>,<stop>. Times
-+	have the format seconds.microseconds. If start is not given (i.e., time
-+	string is ',x.y') then analysis starts at the beginning of the file. If
-+	stop time is not given (i.e, time string is 'x.y,') then analysis goes
-+	to end of file.
-+
- SEE ALSO
- --------
- linkperf:perf-record[1]
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 4902bc73aca1..31dcfcfcc5a1 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -35,10 +35,12 @@
- #define PRINT_TIMESTAMP_WIDTH 17
- #define PRINT_KWORK_NAME_WIDTH 30
- #define RPINT_DECIMAL_WIDTH 3
-+#define PRINT_BRACKETPAIR_WIDTH 2
- #define PRINT_TIME_UNIT_SEC_WIDTH 2
- #define PRINT_TIME_UNIT_MESC_WIDTH 3
- #define PRINT_RUNTIME_HEADER_WIDTH (PRINT_RUNTIME_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
- #define PRINT_LATENCY_HEADER_WIDTH (PRINT_LATENCY_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
-+#define PRINT_TIMEHIST_CPU_WIDTH (PRINT_CPU_WIDTH + PRINT_BRACKETPAIR_WIDTH)
- #define PRINT_TIMESTAMP_HEADER_WIDTH (PRINT_TIMESTAMP_WIDTH + PRINT_TIME_UNIT_SEC_WIDTH)
- 
- struct sort_dimension {
-@@ -574,6 +576,185 @@ static int latency_entry_event(struct perf_kwork *kwork,
- 	return 0;
+diff --git a/tools/perf/util/bpf_kwork.c b/tools/perf/util/bpf_kwork.c
+index 433bfadd3af1..08252fcda1a4 100644
+--- a/tools/perf/util/bpf_kwork.c
++++ b/tools/perf/util/bpf_kwork.c
+@@ -62,9 +62,47 @@ void perf_kwork__trace_finish(void)
+ 	skel->bss->enabled = 0;
  }
  
-+static void timehist_save_callchain(struct perf_kwork *kwork,
-+				    struct perf_sample *sample,
-+				    struct evsel *evsel,
-+				    struct machine *machine)
++static int get_work_name_from_map(struct work_key *key, char **ret_name)
 +{
-+	struct symbol *sym;
-+	struct thread *thread;
-+	struct callchain_cursor_node *node;
-+	struct callchain_cursor *cursor = &callchain_cursor;
++	char name[MAX_KWORKNAME] = { 0 };
++	int fd = bpf_map__fd(skel->maps.perf_kwork_names);
 +
-+	if (!kwork->show_callchain || sample->callchain == NULL)
-+		return;
++	*ret_name = NULL;
 +
-+	/* want main thread for process - has maps */
-+	thread = machine__findnew_thread(machine, sample->pid, sample->pid);
-+	if (thread == NULL) {
-+		pr_debug("Failed to get thread for pid %d\n", sample->pid);
-+		return;
++	if (fd < 0) {
++		pr_debug("Invalid names map fd\n");
++		return 0;
 +	}
 +
-+	if (thread__resolve_callchain(thread, cursor, evsel, sample,
-+				      NULL, NULL, kwork->max_stack + 2) != 0) {
-+		pr_debug("Failed to resolve callchain, skipping\n");
-+		goto out_put;
-+	}
-+
-+	callchain_cursor_commit(cursor);
-+
-+	while (true) {
-+		node = callchain_cursor_current(cursor);
-+		if (node == NULL)
-+			break;
-+
-+		sym = node->ms.sym;
-+		if (sym) {
-+			if (!strcmp(sym->name, "__softirqentry_text_start") ||
-+			    !strcmp(sym->name, "__do_softirq"))
-+				sym->ignore = 1;
++	if ((bpf_map_lookup_elem(fd, key, name) == 0) && (strlen(name) != 0)) {
++		*ret_name = strdup(name);
++		if (*ret_name == NULL) {
++			pr_err("Failed to copy work name\n");
++			return -1;
 +		}
-+
-+		callchain_cursor_advance(cursor);
-+	}
-+
-+out_put:
-+	thread__put(thread);
-+}
-+
-+static void timehist_print_event(struct perf_kwork *kwork,
-+				 struct kwork_work *work,
-+				 struct kwork_atom *atom,
-+				 struct perf_sample *sample,
-+				 struct addr_location *al)
-+{
-+	char entrytime[32], exittime[32];
-+	char kwork_name[PRINT_KWORK_NAME_WIDTH];
-+
-+	/*
-+	 * runtime start
-+	 */
-+	timestamp__scnprintf_usec(atom->time,
-+				  entrytime, sizeof(entrytime));
-+	printf(" %*s ", PRINT_TIMESTAMP_WIDTH, entrytime);
-+
-+	/*
-+	 * runtime end
-+	 */
-+	timestamp__scnprintf_usec(sample->time,
-+				  exittime, sizeof(exittime));
-+	printf(" %*s ", PRINT_TIMESTAMP_WIDTH, exittime);
-+
-+	/*
-+	 * cpu
-+	 */
-+	printf(" [%0*d] ", PRINT_CPU_WIDTH, work->cpu);
-+
-+	/*
-+	 * kwork name
-+	 */
-+	if (work->class && work->class->work_name) {
-+		work->class->work_name(work, kwork_name,
-+				       PRINT_KWORK_NAME_WIDTH);
-+		printf(" %-*s ", PRINT_KWORK_NAME_WIDTH, kwork_name);
-+	} else
-+		printf(" %-*s ", PRINT_KWORK_NAME_WIDTH, "");
-+
-+	/*
-+	 *runtime
-+	 */
-+	printf(" %*.*f ",
-+	       PRINT_RUNTIME_WIDTH, RPINT_DECIMAL_WIDTH,
-+	       (double)(sample->time - atom->time) / NSEC_PER_MSEC);
-+
-+	/*
-+	 * delaytime
-+	 */
-+	if (atom->prev != NULL)
-+		printf(" %*.*f ", PRINT_LATENCY_WIDTH, RPINT_DECIMAL_WIDTH,
-+		       (double)(atom->time - atom->prev->time) / NSEC_PER_MSEC);
-+	else
-+		printf(" %*s ", PRINT_LATENCY_WIDTH, " ");
-+
-+	/*
-+	 * callchain
-+	 */
-+	if (kwork->show_callchain) {
-+		printf(" ");
-+		sample__fprintf_sym(sample, al, 0,
-+				    EVSEL__PRINT_SYM | EVSEL__PRINT_ONELINE |
-+				    EVSEL__PRINT_CALLCHAIN_ARROW |
-+				    EVSEL__PRINT_SKIP_IGNORED,
-+				    &callchain_cursor, symbol_conf.bt_stop_list,
-+				    stdout);
-+	}
-+
-+	printf("\n");
-+}
-+
-+static int timehist_raise_event(struct perf_kwork *kwork,
-+				struct kwork_class *class,
-+				struct evsel *evsel,
-+				struct perf_sample *sample,
-+				struct machine *machine)
-+{
-+	return work_push_atom(kwork, class, KWORK_TRACE_RAISE,
-+			      KWORK_TRACE_MAX, evsel, sample,
-+			      machine, NULL);
-+}
-+
-+static int timehist_entry_event(struct perf_kwork *kwork,
-+				struct kwork_class *class,
-+				struct evsel *evsel,
-+				struct perf_sample *sample,
-+				struct machine *machine)
-+{
-+	int ret;
-+	struct kwork_work *work = NULL;
-+
-+	ret = work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
-+			     KWORK_TRACE_RAISE, evsel, sample,
-+			     machine, &work);
-+	if (ret)
-+		return ret;
-+
-+	if (work != NULL)
-+		timehist_save_callchain(kwork, sample, evsel, machine);
-+
-+	return 0;
-+}
-+
-+static int timehist_exit_event(struct perf_kwork *kwork,
-+			       struct kwork_class *class,
-+			       struct evsel *evsel,
-+			       struct perf_sample *sample,
-+			       struct machine *machine)
-+{
-+	struct kwork_atom *atom = NULL;
-+	struct kwork_work *work = NULL;
-+	struct addr_location al;
-+
-+	if (machine__resolve(machine, &al, sample) < 0) {
-+		pr_debug("Problem processing event, skipping it\n");
-+		return -1;
-+	}
-+
-+	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
-+			     KWORK_TRACE_ENTRY, evsel, sample,
-+			     machine, &work);
-+	if (work == NULL)
-+		return -1;
-+
-+	if (atom != NULL) {
-+		work->nr_atoms++;
-+		timehist_print_event(kwork, work, atom, sample, &al);
-+		atom_del(atom);
 +	}
 +
 +	return 0;
 +}
 +
- static struct kwork_class kwork_irq;
- static int process_irq_handler_entry_event(struct perf_tool *tool,
- 					   struct evsel *evsel,
-@@ -991,6 +1172,42 @@ static int report_print_header(struct perf_kwork *kwork)
- 	return ret;
- }
- 
-+static void timehist_print_header(void)
++static void irq_load_prepare(struct perf_kwork *kwork)
 +{
-+	/*
-+	 * header row
-+	 */
-+	printf(" %-*s  %-*s  %-*s  %-*s  %-*s  %-*s\n",
-+	       PRINT_TIMESTAMP_WIDTH, "Runtime start",
-+	       PRINT_TIMESTAMP_WIDTH, "Runtime end",
-+	       PRINT_TIMEHIST_CPU_WIDTH, "Cpu",
-+	       PRINT_KWORK_NAME_WIDTH, "Kwork name",
-+	       PRINT_RUNTIME_WIDTH, "Runtime",
-+	       PRINT_RUNTIME_WIDTH, "Delaytime");
-+
-+	/*
-+	 * units row
-+	 */
-+	printf(" %-*s  %-*s  %-*s  %-*s  %-*s  %-*s\n",
-+	       PRINT_TIMESTAMP_WIDTH, "",
-+	       PRINT_TIMESTAMP_WIDTH, "",
-+	       PRINT_TIMEHIST_CPU_WIDTH, "",
-+	       PRINT_KWORK_NAME_WIDTH, "(TYPE)NAME:NUM",
-+	       PRINT_RUNTIME_WIDTH, "(msec)",
-+	       PRINT_RUNTIME_WIDTH, "(msec)");
-+
-+	/*
-+	 * separator
-+	 */
-+	printf(" %.*s  %.*s  %.*s  %.*s  %.*s  %.*s\n",
-+	       PRINT_TIMESTAMP_WIDTH, graph_dotted_line,
-+	       PRINT_TIMESTAMP_WIDTH, graph_dotted_line,
-+	       PRINT_TIMEHIST_CPU_WIDTH, graph_dotted_line,
-+	       PRINT_KWORK_NAME_WIDTH, graph_dotted_line,
-+	       PRINT_RUNTIME_WIDTH, graph_dotted_line,
-+	       PRINT_RUNTIME_WIDTH, graph_dotted_line);
++	if (kwork->report == KWORK_REPORT_RUNTIME) {
++		bpf_program__set_autoload(
++			skel->progs.report_irq_handler_entry, true);
++		bpf_program__set_autoload(
++			skel->progs.report_irq_handler_exit, true);
++	}
 +}
 +
- static void print_summary(struct perf_kwork *kwork)
- {
- 	u64 time = kwork->timeend - kwork->timestart;
-@@ -1083,6 +1300,7 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
- 				    struct perf_session *session)
- {
- 	int ret;
-+	struct evsel *evsel;
- 	struct kwork_class *class;
- 
- 	static struct trace_kwork_handler report_ops = {
-@@ -1093,6 +1311,11 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
- 		.raise_event = latency_raise_event,
- 		.entry_event = latency_entry_event,
- 	};
-+	static struct trace_kwork_handler timehist_ops = {
-+		.raise_event = timehist_raise_event,
-+		.entry_event = timehist_entry_event,
-+		.exit_event  = timehist_exit_event,
-+	};
- 
- 	switch (kwork->report) {
- 	case KWORK_REPORT_RUNTIME:
-@@ -1101,6 +1324,9 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
- 	case KWORK_REPORT_LATENCY:
- 		kwork->tp_handler = &latency_ops;
- 		break;
-+	case KWORK_REPORT_TIMEHIST:
-+		kwork->tp_handler = &timehist_ops;
-+		break;
- 	default:
- 		pr_debug("Invalid report type %d\n", kwork->report);
- 		return -1;
-@@ -1129,6 +1355,14 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
- 		}
- 	}
- 
-+	list_for_each_entry(evsel, &session->evlist->core.entries, core.node) {
-+		if (kwork->show_callchain && !evsel__has_callchain(evsel)) {
-+			pr_debug("Samples do not have callchains\n");
-+			kwork->show_callchain = 0;
-+			symbol_conf.use_callchain = 0;
-+		}
-+	}
++static struct kwork_class_bpf kwork_irq_bpf = {
++	.load_prepare  = irq_load_prepare,
++	.get_work_name = get_work_name_from_map,
++};
 +
- 	return 0;
- }
- 
-@@ -1162,6 +1396,9 @@ static int perf_kwork__read_events(struct perf_kwork *kwork)
- 		goto out_delete;
- 	}
- 
-+	if (kwork->report == KWORK_REPORT_TIMEHIST)
-+		timehist_print_header();
-+
- 	ret = perf_session__process_events(session);
- 	if (ret) {
- 		pr_debug("Failed to process events, error %d\n", ret);
-@@ -1255,6 +1492,31 @@ static int perf_kwork__process_tracepoint_sample(struct perf_tool *tool,
- 	return err;
- }
- 
-+static int perf_kwork__timehist(struct perf_kwork *kwork)
-+{
-+	/*
-+	 * event handlers for timehist option
-+	 */
-+	kwork->tool.comm	 = perf_event__process_comm;
-+	kwork->tool.exit	 = perf_event__process_exit;
-+	kwork->tool.fork	 = perf_event__process_fork;
-+	kwork->tool.attr	 = perf_event__process_attr;
-+	kwork->tool.tracing_data = perf_event__process_tracing_data;
-+	kwork->tool.build_id	 = perf_event__process_build_id;
-+	kwork->tool.ordered_events = true;
-+	kwork->tool.ordering_requires_timestamps = true;
-+	symbol_conf.use_callchain = kwork->show_callchain;
-+
-+	if (symbol__validate_sym_arguments()) {
-+		pr_err("Failed to validate sym arguments\n");
-+		return -1;
-+	}
-+
-+	setup_pager();
-+
-+	return perf_kwork__read_events(kwork);
-+}
-+
- static void setup_event_list(struct perf_kwork *kwork,
- 			     const struct option *options,
- 			     const char * const usage_msg[])
-@@ -1367,6 +1629,8 @@ int cmd_kwork(int argc, const char **argv)
- 		.event_list_str      = NULL,
- 		.summary             = false,
- 		.sort_order          = NULL,
-+		.show_callchain      = false,
-+		.max_stack           = 5,
- 
- 		.timestart           = 0,
- 		.timeend             = 0,
-@@ -1418,6 +1682,27 @@ int cmd_kwork(int argc, const char **argv)
- 		   "input file name"),
- 	OPT_PARENT(kwork_options)
- 	};
-+	const struct option timehist_options[] = {
-+	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
-+		   "file", "vmlinux pathname"),
-+	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
-+		   "file", "kallsyms pathname"),
-+	OPT_BOOLEAN('g', "call-graph", &kwork.show_callchain,
-+		    "Display call chains if present"),
-+	OPT_UINTEGER(0, "max-stack", &kwork.max_stack,
-+		   "Maximum number of functions to display backtrace."),
-+	OPT_STRING(0, "symfs", &symbol_conf.symfs, "directory",
-+		    "Look for files with symbols relative to this directory"),
-+	OPT_STRING(0, "time", &kwork.time_str, "str",
-+		   "Time span for analysis (start,stop)"),
-+	OPT_STRING('C', "cpu", &kwork.cpu_list, "cpu",
-+		   "list of cpus to profile"),
-+	OPT_STRING('n', "name", &kwork.profile_name, "name",
-+		   "event name to profile"),
-+	OPT_STRING('i', "input", &input_name, "file",
-+		   "input file name"),
-+	OPT_PARENT(kwork_options)
-+	};
- 
- 	const char *kwork_usage[] = {
- 		NULL,
-@@ -1431,8 +1716,12 @@ int cmd_kwork(int argc, const char **argv)
- 		"perf kwork latency [<options>]",
- 		NULL
- 	};
-+	const char * const timehist_usage[] = {
-+		"perf kwork timehist [<options>]",
-+		NULL
-+	};
- 	const char *const kwork_subcommands[] = {
--		"record", "report", "latency", NULL
-+		"record", "report", "latency", "timehist", NULL
- 	};
- 
- 	argc = parse_options_subcommand(argc, argv, kwork_options,
-@@ -1466,6 +1755,14 @@ int cmd_kwork(int argc, const char **argv)
- 		kwork.report = KWORK_REPORT_LATENCY;
- 		setup_sorting(&kwork, latency_options, latency_usage);
- 		return perf_kwork__report(&kwork);
-+	} else if (strlen(argv[0]) > 2 && strstarts("timehist", argv[0])) {
-+		if (argc > 1) {
-+			argc = parse_options(argc, argv, timehist_options, timehist_usage, 0);
-+			if (argc)
-+				usage_with_options(timehist_usage, timehist_options);
-+		}
-+		kwork.report = KWORK_REPORT_TIMEHIST;
-+		return perf_kwork__timehist(&kwork);
- 	} else
- 		usage_with_options(kwork_usage, kwork_options);
- 
-diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
-index e540373ab14e..6a06194304b8 100644
---- a/tools/perf/util/kwork.h
-+++ b/tools/perf/util/kwork.h
-@@ -22,6 +22,7 @@ enum kwork_class_type {
- enum kwork_report_type {
- 	KWORK_REPORT_RUNTIME,
- 	KWORK_REPORT_LATENCY,
-+	KWORK_REPORT_TIMEHIST,
+ static struct kwork_class_bpf *
+ kwork_class_bpf_supported_list[KWORK_CLASS_MAX] = {
+-	[KWORK_CLASS_IRQ]       = NULL,
++	[KWORK_CLASS_IRQ]       = &kwork_irq_bpf,
+ 	[KWORK_CLASS_SOFTIRQ]   = NULL,
+ 	[KWORK_CLASS_WORKQUEUE] = NULL,
  };
+diff --git a/tools/perf/util/bpf_skel/kwork_trace.bpf.c b/tools/perf/util/bpf_skel/kwork_trace.bpf.c
+index 36112be831e3..1925407d1c16 100644
+--- a/tools/perf/util/bpf_skel/kwork_trace.bpf.c
++++ b/tools/perf/util/bpf_skel/kwork_trace.bpf.c
+@@ -71,4 +71,154 @@ int enabled = 0;
+ int has_cpu_filter = 0;
+ int has_name_filter = 0;
  
- enum kwork_trace_type {
-@@ -200,6 +201,8 @@ struct perf_kwork {
- 	 */
- 	bool summary;
- 	const char *sort_order;
-+	bool show_callchain;
-+	unsigned int max_stack;
- 
- 	/*
- 	 * statistics
++static __always_inline int local_strncmp(const char *s1,
++					 unsigned int sz, const char *s2)
++{
++	int ret = 0;
++	unsigned int i;
++
++	for (i = 0; i < sz; i++) {
++		ret = (unsigned char)s1[i] - (unsigned char)s2[i];
++		if (ret || !s1[i] || !s2[i])
++			break;
++	}
++
++	return ret;
++}
++
++static __always_inline int trace_event_match(struct work_key *key, char *name)
++{
++	__u8 *cpu_val;
++	char *name_val;
++	__u32 zero = 0;
++	__u32 cpu = bpf_get_smp_processor_id();
++
++	if (!enabled)
++		return 0;
++
++	if (has_cpu_filter) {
++		cpu_val = bpf_map_lookup_elem(&perf_kwork_cpu_filter, &cpu);
++		if (!cpu_val)
++			return 0;
++	}
++
++	if (has_name_filter && (name != NULL)) {
++		name_val = bpf_map_lookup_elem(&perf_kwork_name_filter, &zero);
++		if (name_val &&
++		    (local_strncmp(name_val, MAX_KWORKNAME, name) != 0)) {
++			return 0;
++		}
++	}
++
++	return 1;
++}
++
++static __always_inline void do_update_time(void *map, struct work_key *key,
++					   __u64 time_start, __u64 time_end)
++{
++	struct report_data zero, *data;
++	__s64 delta = time_end - time_start;
++
++	if (delta < 0)
++		return;
++
++	data = bpf_map_lookup_elem(map, key);
++	if (!data) {
++		__builtin_memset(&zero, 0, sizeof(zero));
++		bpf_map_update_elem(map, key, &zero, BPF_NOEXIST);
++		data = bpf_map_lookup_elem(map, key);
++		if (!data)
++			return;
++	}
++
++	if ((delta > data->max_time) ||
++	    (data->max_time == 0)) {
++		data->max_time       = delta;
++		data->max_time_start = time_start;
++		data->max_time_end   = time_end;
++	}
++
++	data->total_time += delta;
++	data->nr++;
++}
++
++static __always_inline void do_update_timestart(void *map, struct work_key *key)
++{
++	__u64 ts = bpf_ktime_get_ns();
++
++	bpf_map_update_elem(map, key, &ts, BPF_ANY);
++}
++
++static __always_inline void do_update_timeend(void *report_map, void *time_map,
++					      struct work_key *key)
++{
++	__u64 *time = bpf_map_lookup_elem(time_map, key);
++
++	if (time) {
++		bpf_map_delete_elem(time_map, key);
++		do_update_time(report_map, key, *time, bpf_ktime_get_ns());
++	}
++}
++
++static __always_inline void do_update_name(void *map,
++					   struct work_key *key, char *name)
++{
++	if (!bpf_map_lookup_elem(map, key))
++		bpf_map_update_elem(map, key, name, BPF_ANY);
++}
++
++static __always_inline int update_timestart_and_name(void *time_map,
++						     void *names_map,
++						     struct work_key *key,
++						     char *name)
++{
++	if (!trace_event_match(key, name))
++		return 0;
++
++	do_update_timestart(time_map, key);
++	do_update_name(names_map, key, name);
++
++	return 0;
++}
++
++static __always_inline int update_timeend(void *report_map,
++					  void *time_map, struct work_key *key)
++{
++	if (!trace_event_match(key, NULL))
++		return 0;
++
++	do_update_timeend(report_map, time_map, key);
++
++	return 0;
++}
++
++SEC("tracepoint/irq/irq_handler_entry")
++int report_irq_handler_entry(struct trace_event_raw_irq_handler_entry *ctx)
++{
++	char name[MAX_KWORKNAME];
++	struct work_key key = {
++		.type = KWORK_CLASS_IRQ,
++		.cpu  = bpf_get_smp_processor_id(),
++		.id   = (__u64)ctx->irq,
++	};
++	void *name_addr = (void *)ctx + (ctx->__data_loc_name & 0xffff);
++
++	bpf_probe_read_kernel_str(name, sizeof(name), name_addr);
++
++	return update_timestart_and_name(&perf_kwork_time,
++					 &perf_kwork_names, &key, name);
++}
++
++SEC("tracepoint/irq/irq_handler_exit")
++int report_irq_handler_exit(struct trace_event_raw_irq_handler_exit *ctx)
++{
++	struct work_key key = {
++		.type = KWORK_CLASS_IRQ,
++		.cpu  = bpf_get_smp_processor_id(),
++		.id   = (__u64)ctx->irq,
++	};
++
++	return update_timeend(&perf_kwork_report, &perf_kwork_time, &key);
++}
++
+ char LICENSE[] SEC("license") = "Dual BSD/GPL";
 -- 
 2.30.GIT
 
