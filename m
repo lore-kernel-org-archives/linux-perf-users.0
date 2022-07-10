@@ -2,207 +2,238 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE2DC43334
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Jul 2022 12:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5615C433EF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 10 Jul 2022 01:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229448AbiGIM5g (ORCPT
+        id S229495AbiGJBWP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 9 Jul 2022 08:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        Sat, 9 Jul 2022 21:22:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbiGIM5g (ORCPT
+        with ESMTP id S229470AbiGJBWO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 9 Jul 2022 08:57:36 -0400
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2065.outbound.protection.outlook.com [40.107.22.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC69C4E634
-        for <linux-perf-users@vger.kernel.org>; Sat,  9 Jul 2022 05:57:34 -0700 (PDT)
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
- b=Y42RgvImo8rXjGgZ/aDNFJo6OlDZvbNR8vBUBfsn8vhi53zIpx/Fcbn4PvtJKM6OJPyRfFJI3xohFi5vkd0XkXi3QHuZfeIG3OnzSxfRTJRyDi22DfbALssTNkEjQnx/J+0DRnMEOG82SSlFX0QA3IcRCwV0EnzLVJpTWu8gP4ehiG2/0xR6sLo6cZGFt0dwVEWx/TKvX407wpT5+H1FPBD8gd7K96XU2WcqpHMttHdzxQ4GyQo9XXtJLFBcGaYt7+9tqJiqmyjnbCZWOjneyhsanf87EWqUsGpgy/0VSMS+juoJvYVttIm/oXPVN5OqSaNCW86wQQy6NEO2WiFXBA==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3mYm0nXCOkSPl63PjZyDCT14QTwqHf4/vsUD6Hc6e2k=;
- b=UzX0hWZIOiOJsYFSxLWDSDGPflzw9A53wbq4YFSj5TdBnFS3ra7NNYjbFMiUNQmxc0Q8FkztIfzqkiu81aLJGVYhN8vrEYgNhD7n/4hv0BhGwEPOMuyzraVpFkK9/4ikwk34qA/hY2HXXMK9hBF90dNDt0gyGY20uy0Qush14Uh4w7Z0Y5vWETmubim+w6qIjYBYkLEreRHQ12F3gCoUS9a2p2ImgXo3BJlf0IMEcB+p4PKjWLv+V5qmPBfeYn4/sb30+liOy/84QOEXvCIkOdSsHJ96zu1WJVlQo1QRD4Y+I7U6afTxNML0ijYljk3BzDeT7BPiV33R75Cbi5/4Hg==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=armh.onmicrosoft.com; arc=pass (0
- oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mYm0nXCOkSPl63PjZyDCT14QTwqHf4/vsUD6Hc6e2k=;
- b=ENIF6tz4C7AbA5rpe23U9zCsCnaFLZ1qI1DT1s5jPCVYvdoFGlHO+a2bIxHh+wib1Ws82PrWgkhf/+xPv8xsRSVtrta21xlHWcL+gXIN1wOR5OebxezkQx3rLugg6MVmjf2U0IFSpzuc2ZcP2nxp/m7oRiWyPaBfytg7G1l/JVg=
-Received: from AS9PR06CA0515.eurprd06.prod.outlook.com (2603:10a6:20b:49d::7)
- by AM6PR08MB4262.eurprd08.prod.outlook.com (2603:10a6:20b:b4::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.17; Sat, 9 Jul
- 2022 12:57:31 +0000
-Received: from VE1EUR03FT036.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:49d:cafe::4b) by AS9PR06CA0515.outlook.office365.com
- (2603:10a6:20b:49d::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.20 via Frontend
- Transport; Sat, 9 Jul 2022 12:57:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT036.mail.protection.outlook.com (10.152.19.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5417.15 via Frontend Transport; Sat, 9 Jul 2022 12:57:30 +0000
-Received: ("Tessian outbound 190453a6d737:v122"); Sat, 09 Jul 2022 12:57:30 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: e864767c8cb1f046
-X-CR-MTA-TID: 64aa7808
-Received: from eea507ab861a.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 071B3FD0-495F-46B4-9A75-48E82BDD9A94.1;
-        Sat, 09 Jul 2022 12:57:23 +0000
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id eea507ab861a.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Sat, 09 Jul 2022 12:57:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VX+Yfa3OgIfor90eXkZwB41qEnIFzNjPPr355kzFh7baqTI1AqP29WN0zy4bkeu+No9ToMviezv/J1LNCPBDbrZfDrE3NgdJuWQkA7REsYZJCN0QSrS1N/4P9oBLEzRWdeDTdHbA2ng4SGa8SeK2912jKjG/RxnUzdrHvpJGxbqGY1eORxPehA9T5lhr8y36RldWqp27cwzej0iKLo0PZSJ2JpE4PY4bJVMhkPndlx91w4ExXV0dkKgvob0O6bD971PnVs+ECS8nagcFLzTm35bquCn9i67NP+0SLekLjCkMP8zA39Sf80hp78HBWH8m9JDToUf154E774v/BZ2RrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3mYm0nXCOkSPl63PjZyDCT14QTwqHf4/vsUD6Hc6e2k=;
- b=m24s+O5Un+ODzG2LAQFw1iMipVN6EvQeZ4kO+qvPY/OnCNlvHqvPUsWnq5YNoG/wc9HMTlu9cZLa/Oh90neu1bOeiKnPulKA5CZLendOhxNWh9Vv7MvyEg6R7KSyPCey4o0SBslsHeJU1XMwBqLaKhZmoUE8zBjDibsEd7yiFtY3iGtHLjRZ9MOgQ8hxhzCVwqXhS9ap5UrbeC9baERMVXsD0RV2RW+BGJbGq6QchfidBHd6tK7zqU5llpjePUVOgOVuRBJvrwD3fqsi2TYx994PvroulXSeEcoq0Bp1A+HhRdJsKj+2xSQshgaJk8Ay8qWRt7MU59ulmpOHqmXm1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mYm0nXCOkSPl63PjZyDCT14QTwqHf4/vsUD6Hc6e2k=;
- b=ENIF6tz4C7AbA5rpe23U9zCsCnaFLZ1qI1DT1s5jPCVYvdoFGlHO+a2bIxHh+wib1Ws82PrWgkhf/+xPv8xsRSVtrta21xlHWcL+gXIN1wOR5OebxezkQx3rLugg6MVmjf2U0IFSpzuc2ZcP2nxp/m7oRiWyPaBfytg7G1l/JVg=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from DBAPR08MB5845.eurprd08.prod.outlook.com (2603:10a6:10:1a5::6)
- by AM6PR08MB4294.eurprd08.prod.outlook.com (2603:10a6:20b:bd::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.20; Sat, 9 Jul
- 2022 12:57:18 +0000
-Received: from DBAPR08MB5845.eurprd08.prod.outlook.com
- ([fe80::8c21:3f27:579a:b7bc]) by DBAPR08MB5845.eurprd08.prod.outlook.com
- ([fe80::8c21:3f27:579a:b7bc%6]) with mapi id 15.20.5417.023; Sat, 9 Jul 2022
- 12:57:18 +0000
-Message-ID: <79ea0921-8b3e-c501-7232-8a5c8d5e3ac7@arm.com>
-Date:   Sat, 9 Jul 2022 13:57:16 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.0.1
-From:   =?UTF-8?Q?Adri=c3=a1n_Herrera_Arcila?= <adrian.herrera@arm.com>
-To:     tmricht@linux.ibm.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org
-Cc:     James.Clark@arm.com
-Subject: perf tools: software regression in
- d0a0a511493d269514fcbd852481cdca32c95350
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: LO3P265CA0009.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:bb::14) To DBAPR08MB5845.eurprd08.prod.outlook.com
- (2603:10a6:10:1a5::6)
+        Sat, 9 Jul 2022 21:22:14 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EADB1115D
+        for <linux-perf-users@vger.kernel.org>; Sat,  9 Jul 2022 18:22:13 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id y141so2082310pfb.7
+        for <linux-perf-users@vger.kernel.org>; Sat, 09 Jul 2022 18:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qYoGrbu/lavwm2Al6qo83Dqjha+dsixArTpwHQ6cIJc=;
+        b=OcDjMK2mQbjjBkah53yxyxRIKDOmKb8CFZ7uUmcvlCGp8708Cuyys1scVN2LfeGTGB
+         QlInZDJqFPsTP8YhJDz5c+mvvHq+nKvU2pHFf57bDOYTDyP7BLuc9R273pdjVSYV5HIt
+         avTkL32WmBqOGXtjmJp7jYOsbu7OFbgrB2pTPWHXBELX/nDidObQswwZV8dm0Goqsp55
+         WJb7il+Xit8XnT4EVHmzIS8jpxkqiyHVKUDPa/D3E7qqyOYjaDSr9WajZvtklARFKySi
+         ReSFBTHnpLt8lvvH7moLmK44Yq4DWAJAI87YndRZfi1VAnhtxhK8PT1l5Zzsp6LDBeLe
+         1KNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qYoGrbu/lavwm2Al6qo83Dqjha+dsixArTpwHQ6cIJc=;
+        b=IhveIRNBkj9Tyh+1xSgxAtpUEO835K66JYVfEU/7s5JyRdJ6vxiRkeNPNGtaVv6RgI
+         ofA+I7oC1hGI+SiA21WH+hDAXNa+LZYnzzG/OTakfqiO9tTk7nTW2cx79uRNggZkGWA6
+         XvGTkrvxLnyoKoibSmO9OLW9joYLb24yinMJnkL2nNTrVVjEIhccHpFQ0lj9LUuQbNkk
+         F40GMZQLyv8U4aqnMalgVVu/003yifrUVIyEDd2Bd+nBIvSvqogkFJZIuBwagrf6usx8
+         XPV25N1f6TPP6NMCls31y5JjKq6JRtXXZXwPIqshCLg94W/gprTQ4Xb8ZzkMHJv62Bqj
+         EAzg==
+X-Gm-Message-State: AJIora8vlgSzUPHNfzDLe59EhZtyMKR2W7IwNXyWuw2zwgr+DmlOdxmT
+        aPQyycsKEpQpMlqfhODVC94xqg==
+X-Google-Smtp-Source: AGRyM1ssa+hPKWNqIf5w5Dg+O3CPj7Diw4dUApBmB4+7U10MguqEtl5yWIStKxSKa8nhwDL4z/y0Iw==
+X-Received: by 2002:a63:69c9:0:b0:411:994d:1e12 with SMTP id e192-20020a6369c9000000b00411994d1e12mr9547746pgc.383.1657416132566;
+        Sat, 09 Jul 2022 18:22:12 -0700 (PDT)
+Received: from leo-build-box.lan (n058152077154.netvigator.com. [58.152.77.154])
+        by smtp.gmail.com with ESMTPSA id b73-20020a621b4c000000b0052ab7985e18sm2078331pfb.61.2022.07.09.18.22.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Jul 2022 18:22:12 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>, Chang Rui <changruinj@gmail.com>
+Subject: [RFC PATCH v1] perf symbol: Correct address for bss symbols
+Date:   Sun, 10 Jul 2022 09:22:04 +0800
+Message-Id: <20220710012204.2390293-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Office365-Filtering-Correlation-Id: d6cef4c7-7dd6-4c10-7272-08da61aa9597
-X-MS-TrafficTypeDiagnostic: AM6PR08MB4294:EE_|VE1EUR03FT036:EE_|AM6PR08MB4262:EE_
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 8LLEo4LxkXQtFce5VjrgnBSIuSql0/Hbi/M3OKZagFjk6ZKpNDqU1yRUITgYZRaOmpS1rHapV5n3jAolUdEgkPOiGnsATY3SldISSoH3DlWn1iFAwGrRadSJEiRYOI3I1oSJNQPcCk1blbOtdkPbEYGiAaTMPOsdNfSoTJSflU1dObHy6Fr1U6jw3Wv8BcE8Xb3IbBBoMksxNyEn+K3VNRUw5t6KLKLJ19VYOERV/HKInXCRP2im29dj7Pr54sFinC/mNnxbgZ3X1x7bKi3IGE7WXYMAUdFyFgj0ynTjNlmwY6cSK5WRppClHhITsMnZZXfIQ8Z7CLp7iG+8R71gKaQ/h0ZKn5SFyNnXIdVzzc9S1jq+Fqktodg+WqSIR4ANR1arjbPd54NVQZMaMKNaRFsxmujn8q9sEvuoRtwPWD5q6oB+hDDzvdBJ6lASKmP0kSVFAIDT81sts1DHKcsr4TskwgM+aDrAgGqB2cU0W7iQBLHuKKXzN7gim6UOr6THh9zPhuVSe9yKSQ/+ojeDtzBc++lBPB4CwYW6yh4tkGbjdZIy6pgqC/CgLxhbvSIWbs8Pv8lx26tf7CNqeU7gv1vtK3ge16Mgtu9wTTbICKliw1oc45jJapujHgkr624wO/N8noBmWsj72jVHyFQhaT5GOop0EVHYkFDai7nsqhsQjrZbOU8A7L65Nad9VzQfeauy/MdaHLA0WEp0VA4P4gH0m7IVtJI4EU6OtJ9Jho8YBdn2CGKCYqaZ6+8f3l+DqMqlywHTWK1n4Jd2EI0SgGxvW5Q6Nt47Z8vT2Cul2S8WHwpgisNZ4RTnq2/EKia+2a3c3kQ7UdkcQrDPI2Gio6THqs4jifvrq8P30o7siPAkz73O1ZLQUTsCGUWNfXqz
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBAPR08MB5845.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(2616005)(66574015)(6506007)(86362001)(41300700001)(186003)(31696002)(2906002)(38100700002)(31686004)(316002)(26005)(478600001)(5660300002)(66476007)(66556008)(8936002)(966005)(36756003)(83380400001)(6486002)(8676002)(66946007)(6512007)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4294
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT036.eop-EUR03.prod.protection.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 6e508c4d-f542-4234-7fc4-08da61aa8de1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YnmlhZLKWaKZUyqG/TcA31xZsHHSWagAY9CnNizWZ6VWaLDtDsy1waLYV0fni5cTDsiJkoC4CiTH2+V6Ov5SPFckK2X2KgNPFXgVF2KdMfUQvXC855+nPoXMR9e9UyqmijNm7aKeWpbJk5jEBQh/6GgtESgYWa1phxObv9vNonxUvoi4yiZ4+E3KLupF40YCDwG35hgSmTjh/0Dg+ndPhCG7T+s0xT/bP7GskqNDf3FoWesLcmWrrTRC5I+HdxLN0KQPYe6922fZZhlBPtX+O44I5j0+ONi1O1njGJoVcEAispmn0n3Qh9+sxEtlg7jg/6rADjRzNRi7KlQPAMRNXaMyvk4dJMF4upblZtkc41+P9j/AnyrZE/ghtUtsrxBoqo95wSoy10TjKx3/s8ZaoISbti/3741jdAKyBrY9mtKh+twQvvr4l+3bVgzsNXfFdAcEiYWvg1E63/axX9eNKMcxZiYnD7SoK1Lz4ZI4xDGpaykRscZ3YbVWjUFfipmI4q5mh3ekvL4FgqcRIPeqcBXrb6p6oIAtymf9ZuYm+bDyU2u239jTqSbzh3V57zOviirMM2Aj3LosHQi1+YnZV8DwD7fpo3Keufi383nzuwUmDLSrkDiiSLML1r36SsrnhFkA6W5xBeVv6ccK73msIg5YY4aCvIMy3irQB+2kGw8YYNL8bVJWf4zCUa5cugx304BcYqwTs+mqTKUuWfCW0F4BvU1jJDpmLn1dtqYcS8/i+ayfwXq+sN+5S2p37+BpgXX+DsCJP+PmY+wI9OswOO0HwL3rYhaR0P9TjBdbwnbKfeWyyeY1dXj/2VXWZ40E6C6S0IVOozJ4Aam8hHMhAqVc1oz0iCMTK3TIdUEvOM9chrqeiv4yBv9Z/KNGDLd8
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(376002)(396003)(39860400002)(46966006)(36840700001)(40470700004)(40460700003)(81166007)(86362001)(6486002)(966005)(40480700001)(82310400005)(478600001)(41300700001)(31696002)(6506007)(31686004)(36756003)(316002)(5660300002)(2616005)(6512007)(82740400003)(4326008)(26005)(356005)(36860700001)(70586007)(186003)(8676002)(8936002)(70206006)(83380400001)(66574015)(47076005)(336012)(2906002)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2022 12:57:30.7348
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6cef4c7-7dd6-4c10-7272-08da61aa9597
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: VE1EUR03FT036.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4262
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello all,
+When using 'perf mem' and 'perf c2c', an issue is observed that tool
+reports the wrong offset for global data symbols.  This is a common
+issue on both x86 and Arm64 platforms.
 
-The regression affects the perf command "stat" used with the option "-D
-msecs, --delay msecs". The change was introduced in v5.18 and was
-backported up to v5.15.33 of
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git. In
-v5.18, the behaviour of the affected option is described in
-tools/perf/Documentation/perf-stat.txt as follows:
+Let's see an example, for a test program, below is the disassembly for
+its .bss section which is dumped with objdump:
 
-"After starting the program, wait msecs before measuring (-1: start with
-events disabled). This is useful to filter out the startup phase of the
-program, which is often very different."
+  ...
 
-The program is expected to start without delay. The observed behaviour
-in v5.18 does not correspond, as demonstrated by the following experiments:
+  Disassembly of section .data:
 
-time perf stat --delay 2000 --quiet sleep 2
-v5.18 output:
-Events disabled
-Events enabled
+  0000000000004000 <__data_start>:
+  	...
 
-real    0m4.065s
-user    0m0.019s
-sys    0m0.028s
-v5.17 output:
-Events disabled
-Events enabled
+  0000000000004008 <__dso_handle>:
+      4008:	08 40 00             	or     %al,0x0(%rax)
+      400b:	00 00                	add    %al,(%rax)
+      400d:	00 00                	add    %al,(%rax)
+  	...
 
-real    0m2.028s
-user    0m0.001s
-sys    0m0.008s
+  0000000000004010 <wait_to_begin>:
+      4010:	01 00                	add    %eax,(%rax)
+      4012:	00 00                	add    %al,(%rax)
+      4014:	00 00                	add    %al,(%rax)
+  	...
 
-perf stat --delay 2000 --quiet echo "marking"
-v5.18 output:
-Events disabled
-Events enabled
-marking
-v5.17 output:
-Events disabled
-marking
-Events enabled
+  0000000000004018 <lock_thd_name>:
+      4018:	08 20                	or     %ah,(%rax)
+      401a:	00 00                	add    %al,(%rax)
+      401c:	00 00                	add    %al,(%rax)
+  	...
 
-I think there are two behaviours that are valuable to maintain to enable
-two uses: (1) if no delay is specified, the program should start after
-counters are enabled, to prevent the unexpected behaviour that Thomas
-fixed with this change; (2) if delay is specified, the program should
-start before the delay is engaged.
+  0000000000004020 <reader_thd_name>:
+      4020:	10 20                	adc    %ah,(%rax)
+      4022:	00 00                	add    %al,(%rax)
+      4024:	00 00                	add    %al,(%rax)
+  	...
 
-Two possible solutions are: (1) though conditionals; if delay > 0, start
-the workload, then call enable_counters, which will usleep for the
-delay; if no delay, then behaviour as it is in v5.18; (2) replace
-blocking usleep with asynchronous callback, if that exists in Linux,
-that enables counters after the delay.
+  Disassembly of section .bss:
 
-Any suggestions from more experienced Linux developers on which solution
-to pursue will be appreciated.
+  0000000000004040 <completed.0>:
+  	...
 
-Kind regards,
-Adri=C3=A1n.
+  0000000000004080 <buf1>:
+  	...
 
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+  00000000000040c0 <buf2>:
+  	...
+
+  0000000000004100 <thread>:
+  	...
+
+First we used 'perf mem record' to run the test program and then used
+'perf --debug verbose=4 mem report' to observe what's the symbol info
+for 'buf1' and 'buf2' structures.
+
+  # ./perf mem record -e ldlat-loads,ldlat-stores -- false_sharing.exe 8
+  # ./perf --debug verbose=4 mem report
+    ...
+    dso__load_sym_internal: adjusting symbol: st_value: 0x40c0 sh_addr: 0x4040 sh_offset: 0x3028
+    symbol__new: buf2 0x30a8-0x30e8
+    ...
+    dso__load_sym_internal: adjusting symbol: st_value: 0x4080 sh_addr: 0x4040 sh_offset: 0x3028
+    symbol__new: buf1 0x3068-0x30a8
+    ...
+
+Perf tool relies on libelf to parse symbols, here 'st_value' is the
+address from executable file, 'sh_addr' is the belonged section's linked
+start address, and 'sh_offset' is the dynamic loaded address for this
+section, then perf tool uses below formula to adjust symbol address:
+
+  adjusted_address = st_value - sh_addr + sh_offset
+
+So we can see the final adjusted address ranges for buf1 and buf2 are
+[0x30a8-0x30e8) and [0x3068-0x30a8) respectively, apparently this is
+incorrect, in the code, the structure for 'buf1' and 'buf2' specifies
+compiler attribute with 64-byte alignment.
+
+The problem happens for 'sh_offset', libelf returns it as 0x3028 which
+is not 64-byte aligned, on the other hand, we can see both 'st_value'
+and 'sh_addr' are 64-byte aligned.  Combining with disassembly, it's
+likely libelf uses the .data section end address as .bss section
+start address, therefore, it doesn't respect the alignment attribute for
+structures in .bss section.
+
+Since .data and .bss sections are in the continuous virtual address
+space, and .data section info returned by libelf is reliable, to fix
+this issue, if detects it's a bss symbol, it rolls back to use .data
+section info to adjust symbol's virtual address.
+
+Essentially, we need to fix libelf to return correct offsets for
+sections, on the other hand, we live commonly with existed versions of
+libelf.  So we also need this change in perf tool.
+
+Fixes: f17e04afaff8 ("perf report: Fix ELF symbol parsing")
+Reported-by: Chang Rui <changruinj@gmail.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/util/dso.h        |  1 +
+ tools/perf/util/symbol-elf.c | 26 ++++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 3a9fd4d389b5..00f57f4ac6bc 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -180,6 +180,7 @@ struct dso {
+ 	u8		 rel;
+ 	struct build_id	 bid;
+ 	u64		 text_offset;
++	int		 data_sec_index;
+ 	const char	 *short_name;
+ 	const char	 *long_name;
+ 	u16		 long_name_len;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index ecd377938eea..ed65dd26d58e 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1095,6 +1095,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 	Elf *elf;
+ 	int nr = 0;
+ 	bool remap_kernel = false, adjust_kernel_syms = false;
++	size_t sec_index;
+ 
+ 	if (kmap && !kmaps)
+ 		return -1;
+@@ -1113,6 +1114,10 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 				".text", NULL))
+ 		dso->text_offset = tshdr.sh_addr - tshdr.sh_offset;
+ 
++	if (elf_section_by_name(runtime_ss->elf, &runtime_ss->ehdr, &tshdr,
++				".data", &sec_index))
++		dso->data_sec_index = sec_index;
++
+ 	if (runtime_ss->opdsec)
+ 		opddata = elf_rawdata(runtime_ss->opdsec, NULL);
+ 
+@@ -1227,6 +1232,27 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 
+ 		gelf_getshdr(sec, &shdr);
+ 
++		/*
++		 * When the first data structure in .bss section is attributed
++		 * with alignment (e.g. 64-byte aligned), libelf doesn't reflect
++		 * the alignment in the 'shdr.sh_offset' field, at the end the
++		 * field is filled with the end loading address of a prior
++		 * section rather than the aligned address of .bss section.
++		 * This leads to mess for later parsing .bss symbols.
++		 *
++		 * Since .data and .bss sections are in the continuous virtual
++		 * address space, and .data section's info is reliable.  So if
++		 * detects it's a bss symbol, we retrieve .data section info
++		 * for adjusting address.
++		 */
++		if (!strcmp(elf_sec__name(&shdr, secstrs_sym), ".bss")) {
++			sec = elf_getscn(syms_ss->elf, dso->data_sec_index);
++			if (!sec)
++				goto out_elf_end;
++
++			gelf_getshdr(sec, &shdr);
++		}
++
+ 		secstrs = secstrs_sym;
+ 
+ 		/*
+-- 
+2.25.1
+
