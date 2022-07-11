@@ -2,247 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA2BC43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Jul 2022 16:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDA8C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Jul 2022 16:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231549AbiGKQJx (ORCPT
+        id S231379AbiGKQQr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Jul 2022 12:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34292 "EHLO
+        Mon, 11 Jul 2022 12:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231439AbiGKQJx (ORCPT
+        with ESMTP id S231684AbiGKQQq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Jul 2022 12:09:53 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F3372EF9
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jul 2022 09:09:51 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id bu1so6466881wrb.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jul 2022 09:09:51 -0700 (PDT)
+        Mon, 11 Jul 2022 12:16:46 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98F77AB3E
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jul 2022 09:16:44 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id v67-20020a1cac46000000b003a1888b9d36so5312644wme.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jul 2022 09:16:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oBvw4ZC9v7NRgSQxXD0TtpEyHB//5Lm16tq7nct2k0g=;
-        b=CNPuDJR4PqpWKKKn01Uj9NuFLQjTyS1ToWLKr6/rI2roZYQmpaXpsVXN25WD5WfOTc
-         DWHTTQd1GD3PgjT5f2ceKTxKV+5vJCVippo3MIgfC3p9vh7ILip+N6pcHT2g0NDT9IfS
-         srckuEtfLLDOoykg7MhROYrmXB8DZT73C3j0qWSWzeE0W05reIb2O09/jnSUposZOCwt
-         9jN/RDf/8xYejI43yeajRctAmcGaYzd6WrBSyrlJsRqeRf8X9CJ+Al3QZwKym5bFLNfw
-         yEs804/n1gOj7OjQnOQDgOxKD1OY5VAbsABOUpuvrkGosqx9TNlnqu1mxKgifYYiCAkR
-         QNqw==
+        bh=ac36GHPqLNsKOXcJS/JCbJrssirgqDImIw++AW07FLQ=;
+        b=pXWRziR+xf0tdp3I549Xqt9JU5O3nTo6+wSVg1y007y5PLEbTQOGzKrJGShjdvVtrv
+         8UHQGtmjgrEIg3Tzq2LHpsiULUkwgXbZO7VSx20IfgHUHpJpVeKL6Mzzcqs2BKVmBtbo
+         QeYmy/hbYwxIWvTKMbZREOmGfjFvpN/pVRG9WQslb8/0PUxOwaODlAmK/v/t5DB9cG0A
+         Kumu0fwerixNZioMEy4lbiNYiOkFez3ABXUtc+Nk8Qgf4ikFVAan8pTQh+rdwx3ondzo
+         wqxIDWIF7Q+S8KQc9uB//buebsGFFVU8m2ovJsRX93IdxH5jlNhP+v/IIk53kYZAPqSi
+         aznA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oBvw4ZC9v7NRgSQxXD0TtpEyHB//5Lm16tq7nct2k0g=;
-        b=ra7Ez4+6fMb8FxRBuctPh9ayLxL+aKTpBHvCN8yxDb5lbsybZaBqeIiztn/8LF6ZaA
-         GjItZAxEwoF/fSK1UGQ0cp/zXHOhA4RmW3H39JohkMrNh4XA58yNI/j3NnxurBK466G1
-         Xvu0HFoEB+Pu69OGF+0fGJtB7Z70D2NbbdkDpOPcG0JtRohXP6asUm2qg+XGS9aAw0JU
-         +jPoNDI5r22hpDaOyF/OE+SBIuEifEQkZkkEDanOPP998984OwnJBoEPLh1x3sBwUb6S
-         vmMfCSkvv5sU0oTRTrC8hu5W+WMEt7hjR8TdqFswPLgwAk/h0UEJyrTlMUK/DpiOU+f8
-         7hpg==
-X-Gm-Message-State: AJIora/8/55aVsYSmd6A9bOQU7mLIJbXr4ZtOoDhHTU/VfNIV6b/90ip
-        Men+hCKsGwsJeJHoycCWkCyOloJYBX6E/DlJshceqA==
-X-Google-Smtp-Source: AGRyM1sNJRo+XQx4nvetShl5Vbk7XLUjf19aGTDkXUZ6nL5Ers8QR4ycj57WxYsV7SnRe5GFuegugU0Eo3uGCtjTyC0=
-X-Received: by 2002:a5d:4d8e:0:b0:21d:68d4:56eb with SMTP id
- b14-20020a5d4d8e000000b0021d68d456ebmr16934840wru.40.1657555789787; Mon, 11
- Jul 2022 09:09:49 -0700 (PDT)
+        bh=ac36GHPqLNsKOXcJS/JCbJrssirgqDImIw++AW07FLQ=;
+        b=VYdZeYJ4M+1r9p/Vrngno2ecNCX15gXaENfOQhnMgF5K3fSUAQAHtHi6R1oSxD870u
+         RSKDsvf5BmBWc7vPh/nq/9KgE2aFV11n2Wyuzbd2ItBvcSDAIKl8u1DPlxilAZDDJZ/w
+         esCG6VW8Cc6mmkxy7uvPa5s0UpOOnG8rN76KpsFSRJ8/NkYGxFbH3O+hInncBVy0Smwm
+         HI4hOROSYi4DBJxwrqUQeqitg5Xw+fHqxczoEb0HFq6muvv3RtRvd/vE6h9oua5QA3QH
+         x1LxqgdzBIetStml9CAvjJrwZlKPNN1DvJLicgnQqnsxIVLrdHmgCnGY3sVeOFiWlipG
+         VACw==
+X-Gm-Message-State: AJIora+tDvwSfWwErDtldLBFGNZc+nQ+CLqm8nvLQlwNIvq1F7bpW9c9
+        XZCVnE9ARkfc68pxR5gDjNtOFSfVb3XrdzBa3+M0LQ==
+X-Google-Smtp-Source: AGRyM1sYtHZti/+mAu1TajubUU19ISNKfS6YUhimVsHN0bol+a9rmCs3QIR+qiHePachhZeYRlqYJPEYiHX17TSbzY8=
+X-Received: by 2002:a05:600c:4e4c:b0:3a0:53a2:48b5 with SMTP id
+ e12-20020a05600c4e4c00b003a053a248b5mr16127029wmq.174.1657556203057; Mon, 11
+ Jul 2022 09:16:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220710012204.2390293-1-leo.yan@linaro.org>
-In-Reply-To: <20220710012204.2390293-1-leo.yan@linaro.org>
+References: <20220701063949.1769434-1-anshuman.khandual@arm.com>
+ <b9da8d22-6896-68a3-b4e5-e8fd7b82b711@arm.com> <Ysgxzxl0N7+J8Vbt@worktop.programming.kicks-ass.net>
+ <d03e334a-ec7e-cd87-7f0b-ac7564266d3a@arm.com> <YswVWwwXi6zWaEAy@hirez.programming.kicks-ass.net>
+In-Reply-To: <YswVWwwXi6zWaEAy@hirez.programming.kicks-ass.net>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 11 Jul 2022 09:09:37 -0700
-Message-ID: <CAP-5=fX_fT7e9tqDBKXh_1CQ8w80iOXCGz2kJT_nHpY6wYWqmQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf symbol: Correct address for bss symbols
-To:     Leo Yan <leo.yan@linaro.org>, Fangrui Song <maskray@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
+Date:   Mon, 11 Jul 2022 09:16:30 -0700
+Message-ID: <CAP-5=fW+S3UoqzUc7_+ZmaAj1b=0RtF5p9WHzw23t2AoWZGd9Q@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: Add macros for possible sysctl_perf_event_paranoid
+ values
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chang Rui <changruinj@gmail.com>
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jul 9, 2022 at 6:22 PM Leo Yan <leo.yan@linaro.org> wrote:
+On Mon, Jul 11, 2022 at 5:19 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> When using 'perf mem' and 'perf c2c', an issue is observed that tool
-> reports the wrong offset for global data symbols.  This is a common
-> issue on both x86 and Arm64 platforms.
+> On Mon, Jul 11, 2022 at 02:55:12PM +0530, Anshuman Khandual wrote:
+> > Enumerating [-1, 0, 1, 2] paranoid range values in kernel too, does not add
+> > much value as well ?
 >
-> Let's see an example, for a test program, below is the disassembly for
-> its .bss section which is dumped with objdump:
->
->   ...
->
->   Disassembly of section .data:
->
->   0000000000004000 <__data_start>:
->         ...
->
->   0000000000004008 <__dso_handle>:
->       4008:     08 40 00                or     %al,0x0(%rax)
->       400b:     00 00                   add    %al,(%rax)
->       400d:     00 00                   add    %al,(%rax)
->         ...
->
->   0000000000004010 <wait_to_begin>:
->       4010:     01 00                   add    %eax,(%rax)
->       4012:     00 00                   add    %al,(%rax)
->       4014:     00 00                   add    %al,(%rax)
->         ...
->
->   0000000000004018 <lock_thd_name>:
->       4018:     08 20                   or     %ah,(%rax)
->       401a:     00 00                   add    %al,(%rax)
->       401c:     00 00                   add    %al,(%rax)
->         ...
->
->   0000000000004020 <reader_thd_name>:
->       4020:     10 20                   adc    %ah,(%rax)
->       4022:     00 00                   add    %al,(%rax)
->       4024:     00 00                   add    %al,(%rax)
->         ...
->
->   Disassembly of section .bss:
->
->   0000000000004040 <completed.0>:
->         ...
->
->   0000000000004080 <buf1>:
->         ...
->
->   00000000000040c0 <buf2>:
->         ...
->
->   0000000000004100 <thread>:
->         ...
->
-> First we used 'perf mem record' to run the test program and then used
-> 'perf --debug verbose=4 mem report' to observe what's the symbol info
-> for 'buf1' and 'buf2' structures.
->
->   # ./perf mem record -e ldlat-loads,ldlat-stores -- false_sharing.exe 8
->   # ./perf --debug verbose=4 mem report
->     ...
->     dso__load_sym_internal: adjusting symbol: st_value: 0x40c0 sh_addr: 0x4040 sh_offset: 0x3028
->     symbol__new: buf2 0x30a8-0x30e8
->     ...
->     dso__load_sym_internal: adjusting symbol: st_value: 0x4080 sh_addr: 0x4040 sh_offset: 0x3028
->     symbol__new: buf1 0x3068-0x30a8
->     ...
->
-> Perf tool relies on libelf to parse symbols, here 'st_value' is the
-> address from executable file, 'sh_addr' is the belonged section's linked
-> start address, and 'sh_offset' is the dynamic loaded address for this
-> section, then perf tool uses below formula to adjust symbol address:
->
->   adjusted_address = st_value - sh_addr + sh_offset
->
-> So we can see the final adjusted address ranges for buf1 and buf2 are
-> [0x30a8-0x30e8) and [0x3068-0x30a8) respectively, apparently this is
-> incorrect, in the code, the structure for 'buf1' and 'buf2' specifies
-> compiler attribute with 64-byte alignment.
->
-> The problem happens for 'sh_offset', libelf returns it as 0x3028 which
-> is not 64-byte aligned, on the other hand, we can see both 'st_value'
-> and 'sh_addr' are 64-byte aligned.  Combining with disassembly, it's
-> likely libelf uses the .data section end address as .bss section
-> start address, therefore, it doesn't respect the alignment attribute for
-> structures in .bss section.
->
-> Since .data and .bss sections are in the continuous virtual address
-> space, and .data section info returned by libelf is reliable, to fix
-> this issue, if detects it's a bss symbol, it rolls back to use .data
-> section info to adjust symbol's virtual address.
->
-> Essentially, we need to fix libelf to return correct offsets for
-> sections, on the other hand, we live commonly with existed versions of
-> libelf.  So we also need this change in perf tool.
->
-> Fixes: f17e04afaff8 ("perf report: Fix ELF symbol parsing")
-> Reported-by: Chang Rui <changruinj@gmail.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> That's what the user-interface requires as well. How is obscuring the
+> values the user has to explicitly poke in help things?
 
-This looks good to me, I'm happy to add my:
-Acked-by: Ian Rogers <irogers@google.com>
-I've added Fangrui Song who is more knowledge-able on ELF, libelf,
-etc. than me and may have additional thoughts.
+Perhaps a helper function like ParanoidAndNotRoot that takes the
+failing paranoia level such as here:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/shell/stat+csv_output.sh?h=perf/core#n48
+would help clean this up. Perhaps something that explicitly calls out
+this is a permissions check. Cleaning up permission checking seems
+like useful value add. We've been trying to do something similar in
+tests to make them skip rather than fail due to permission issues -
+this should increase the signal perf test gives.
 
 Thanks,
 Ian
-
-> ---
->  tools/perf/util/dso.h        |  1 +
->  tools/perf/util/symbol-elf.c | 26 ++++++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
->
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index 3a9fd4d389b5..00f57f4ac6bc 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -180,6 +180,7 @@ struct dso {
->         u8               rel;
->         struct build_id  bid;
->         u64              text_offset;
-> +       int              data_sec_index;
->         const char       *short_name;
->         const char       *long_name;
->         u16              long_name_len;
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index ecd377938eea..ed65dd26d58e 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1095,6 +1095,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->         Elf *elf;
->         int nr = 0;
->         bool remap_kernel = false, adjust_kernel_syms = false;
-> +       size_t sec_index;
->
->         if (kmap && !kmaps)
->                 return -1;
-> @@ -1113,6 +1114,10 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->                                 ".text", NULL))
->                 dso->text_offset = tshdr.sh_addr - tshdr.sh_offset;
->
-> +       if (elf_section_by_name(runtime_ss->elf, &runtime_ss->ehdr, &tshdr,
-> +                               ".data", &sec_index))
-> +               dso->data_sec_index = sec_index;
-> +
->         if (runtime_ss->opdsec)
->                 opddata = elf_rawdata(runtime_ss->opdsec, NULL);
->
-> @@ -1227,6 +1232,27 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->
->                 gelf_getshdr(sec, &shdr);
->
-> +               /*
-> +                * When the first data structure in .bss section is attributed
-> +                * with alignment (e.g. 64-byte aligned), libelf doesn't reflect
-> +                * the alignment in the 'shdr.sh_offset' field, at the end the
-> +                * field is filled with the end loading address of a prior
-> +                * section rather than the aligned address of .bss section.
-> +                * This leads to mess for later parsing .bss symbols.
-> +                *
-> +                * Since .data and .bss sections are in the continuous virtual
-> +                * address space, and .data section's info is reliable.  So if
-> +                * detects it's a bss symbol, we retrieve .data section info
-> +                * for adjusting address.
-> +                */
-> +               if (!strcmp(elf_sec__name(&shdr, secstrs_sym), ".bss")) {
-> +                       sec = elf_getscn(syms_ss->elf, dso->data_sec_index);
-> +                       if (!sec)
-> +                               goto out_elf_end;
-> +
-> +                       gelf_getshdr(sec, &shdr);
-> +               }
-> +
->                 secstrs = secstrs_sym;
->
->                 /*
-> --
-> 2.25.1
->
