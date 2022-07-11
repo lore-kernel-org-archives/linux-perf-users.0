@@ -2,124 +2,67 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BBACCA480
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Jul 2022 09:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805FAC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Jul 2022 12:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234006AbiGKJx2 (ORCPT
+        id S230139AbiGKMTt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Jul 2022 05:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33360 "EHLO
+        Mon, 11 Jul 2022 08:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233809AbiGKJxF (ORCPT
+        with ESMTP id S229543AbiGKMTt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Jul 2022 05:53:05 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C6A7ADD51;
-        Mon, 11 Jul 2022 02:25:26 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9865415BF;
-        Mon, 11 Jul 2022 02:25:25 -0700 (PDT)
-Received: from [10.57.43.82] (unknown [10.57.43.82])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E3E43F73D;
-        Mon, 11 Jul 2022 02:25:22 -0700 (PDT)
-Message-ID: <8d282e87-c1c8-f7a0-631b-8d569c2154a6@arm.com>
-Date:   Mon, 11 Jul 2022 10:25:20 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 2/8] perf evsel: Do not request ptrauth sample field if
- not supported
-Content-Language: en-US
-To:     Vince Weaver <vincent.weaver@maine.edu>,
-        Andrew Kilroy <andrew.kilroy@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Mon, 11 Jul 2022 08:19:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC04F10FCE;
+        Mon, 11 Jul 2022 05:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1CaIHvL6+nEQiaxlPjcnhiQDIyPph3HufPUEFJD4tcs=; b=qjg7byljdhcZB8kF+/eLvqe5dL
+        cH1rDfjnkhClhOZbLZJ4IhL+vcs8SDHIBOwePJnTD/Uajz5mhWGhGb31Q/9lh/yUHLf/gOHqb+KL6
+        XHA0c1/of9Fpag0nVee6WlgehTKwOdHF2EJU8zRxy9w0vpPimSdl+r0DUKqmQNBBJ+y8yrBCMHshu
+        tg2TYsKX+67Aj8dUB3HcNuTwBgpOnjPsxGWGRY/6ZUSvumRax33j13gwcHcjBGIoThgpZelfwXBch
+        Sy+YVYibjcGZ5ggwnDFO8Eyx6vDPx2k03r69Vg48zF0KzO5dtAZfjFHoJLV836gZ6wu6EuYbCZZnX
+        /40xKG/w==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oAsO6-005wbz-42; Mon, 11 Jul 2022 12:19:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E321F3001F3;
+        Mon, 11 Jul 2022 14:19:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8BB1020D264F2; Mon, 11 Jul 2022 14:19:39 +0200 (CEST)
+Date:   Mon, 11 Jul 2022 14:19:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Tom Rix <trix@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-References: <20220704145333.22557-1-andrew.kilroy@arm.com>
- <20220704145333.22557-3-andrew.kilroy@arm.com>
- <d67dff7-73c3-e5a-eb7b-f132e8f565cc@maine.edu>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <d67dff7-73c3-e5a-eb7b-f132e8f565cc@maine.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf/core: Add macros for possible
+ sysctl_perf_event_paranoid values
+Message-ID: <YswVWwwXi6zWaEAy@hirez.programming.kicks-ass.net>
+References: <20220701063949.1769434-1-anshuman.khandual@arm.com>
+ <b9da8d22-6896-68a3-b4e5-e8fd7b82b711@arm.com>
+ <Ysgxzxl0N7+J8Vbt@worktop.programming.kicks-ass.net>
+ <d03e334a-ec7e-cd87-7f0b-ac7564266d3a@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d03e334a-ec7e-cd87-7f0b-ac7564266d3a@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Jul 11, 2022 at 02:55:12PM +0530, Anshuman Khandual wrote:
+> Enumerating [-1, 0, 1, 2] paranoid range values in kernel too, does not add
+> much value as well ?
 
-
-On 06/07/2022 17:01, Vince Weaver wrote:
-> On Mon, 4 Jul 2022, Andrew Kilroy wrote:
-> 
->> A subsequent patch alters perf to perf_event_open with the
->> PERF_SAMPLE_ARCH_1 bit on.
->>
->> This patch deals with the case where the kernel does not know about the
->> PERF_SAMPLE_ARCH_1 bit, and does not know to send the pointer
->> authentication masks.  In this case the perf_event_open system call
->> returns -EINVAL (-22) and perf exits with an error.
->>
->> This patch causes userspace process to re-attempt the perf_event_open
->> system call but without asking for the PERF_SAMPLE_ARCH_1 sample
->> field, allowing the perf_event_open system call to succeed.
-> 
-> So in this case you are leaking ARM64-specific info into the generic 
-> perf_event_open() call?  Is there any way the kernel could implement this 
-> without userspace having to deal with the issue?
-
-Hi Vince,
-
-The alternative to this change is just to call it "PERF_SAMPLE_POINTER_AUTH_MASK"
-and then it's not Arm specific, it's just that only Arm implements it for now.
-This is definitely an option.
-
-But if no platform ever implements something similar then that bit is wasted.
-The intention of adding "PERF_SAMPLE_ARCH_1" was to prevent wasting that bit.
-But as you say, maybe making it arch specific isn't the right way either.
-
-I wouldn't say the perf_event_open call is currently generic though, lots of
-it already requires knowledge of the current platform, and searching for 'x86'
-in the docs for it gives 10 matches.
-
-> 
-> There are a few recent ARM64 perf_event related patches that are pushing 
-> ARM specific interfaces into the generic code, with the apparent 
-> assumption that it will just be implemented in the userspace perf tool.  
-> However there are a number of outside-the-kernel codebases that also use 
-> perf_event_open() and it seems a bit onerous if all of them have to start 
-> adding a lot of extra ARM64-specific code, especially because as far as I 
-
-Because pointer auth is a hardware feature, other tools have no choice but
-to implement this if they do Dwarf based stack unwinding. There is no way
-around that. The pointers are stored mangled and they don't make sense
-without masking them. GDB has already implemented support for it. If they
-don't do Dwarf based stack unwinding then they can carry on as they are
-and everything will still work.
-
-> can tell there haven't been any documentation patches included for the 
-> Makefile.
-
-We plan to update the docs for the syscall, but it's in another repo, and
-we'll wait for this change to be finalised first. I'm not sure what you
-mean about the Makefile?
-
-Thanks
-James
-
-> 
-> The other recent change that's annoying for userspace is the addition of 
-> the ARM-specific /proc/sys/kernel/perf_user_access that duplicates 
-> functionality found in /sys/devices/cpu/rdpmc
-> 
-> Vince Weaver
-> vincent.weaver@maine.edu
+That's what the user-interface requires as well. How is obscuring the
+values the user has to explicitly poke in help things?
