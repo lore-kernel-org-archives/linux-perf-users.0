@@ -2,212 +2,78 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA60C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Jul 2022 20:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8009EC43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 02:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229870AbiGKU4p (ORCPT
+        id S229633AbiGLCR5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Jul 2022 16:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47306 "EHLO
+        Mon, 11 Jul 2022 22:17:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbiGKU4o (ORCPT
+        with ESMTP id S229629AbiGLCR5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Jul 2022 16:56:44 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD08C52475;
-        Mon, 11 Jul 2022 13:56:42 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id b11so10835933eju.10;
-        Mon, 11 Jul 2022 13:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6U7gulSRknUpYYWEXTdNp6E6AUAABe5lU5EOH3DspwA=;
-        b=EKqLrhsiTY858/1RPyqyO0iuRPCtvGwsWx8M1aZRypCvf0CTqqjqmfnNQmGi/1gN3v
-         9CYqqZVuCdqcETuxwQjWqHm3f29fKpm0Jh5rmABs53bXrEgXzXFhejuVr7ovtE04wlbe
-         yB1Xm6LNzemy4CAWUKgWkymVFM87zJYr7h70lpzkYJBNKAXBJCdSK+Zh8zOiq4MoMCSp
-         zz6RkTipS4EfRYLvSbeZEKhOH/p4JdtnP9zDpO5GlMa/skxhwi3Y/SC3Q7H1RMLo2Fj3
-         Sshlw0QpEo5GncAMIwFmrK16MAWhiQ5eq85xzCwSkjCIYFnmzcrA8j9qpFmfPFeTblNK
-         tA7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6U7gulSRknUpYYWEXTdNp6E6AUAABe5lU5EOH3DspwA=;
-        b=8R68V7v+by4Hlc3UGwD/kbvZkC2HaOyJ/Qy6GK5fkm/ry+UJrhMdaiUD/DnxS0/At5
-         682AxS1Gz7LBCu/TuQs5QWvcQlStZ30W9hKJPsR7G6L/fGYkT4JrDNp/0zXgHGpozhbY
-         lURaoz0Ed7IFgTGnxbM7OixIa37j2qtyZ5Uf2m5q5Nq/4QHtwxS5OCfiNJKptlpiklx7
-         /JGnnpvgW9sQlBhnAvfahORGYnbcSIaJOH4UN+Jd0y3bXmQAZNh4IB50B8ni2ilhs5+O
-         6ah8Yr6q9zAc9N6IVMLDmHW9QO7SPB9FXbPkwyLnzQb0M1N7Kc7Gv1S5BqbjjoiTuJHp
-         jBPw==
-X-Gm-Message-State: AJIora8HKsttelDN5m9wtVuhM4B8Lcnscdyaqb597JPPYjojmIjTTVcD
-        U0485W35ahuNfLCuw1iSYlM=
-X-Google-Smtp-Source: AGRyM1u5e5V1eCgplzkxCZ8hQAnsEvw+tppiQYaVt6TQ1EJFukthwZqaAbTyVOcL4OI6P1fC1wbfig==
-X-Received: by 2002:a17:907:2d0e:b0:72b:4af7:7ccd with SMTP id gs14-20020a1709072d0e00b0072b4af77ccdmr9351702ejc.209.1657573001345;
-        Mon, 11 Jul 2022 13:56:41 -0700 (PDT)
-Received: from krava ([151.14.22.253])
-        by smtp.gmail.com with ESMTPSA id kv20-20020a17090778d400b0072af6f166c2sm3079328ejc.82.2022.07.11.13.56.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 13:56:40 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 11 Jul 2022 22:56:31 +0200
-To:     German Gomez <german.gomez@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v2 1/1] perf test: Add test for branch stack sampling
-Message-ID: <YsyOfx9D3w5Rfiz8@krava>
-References: <20220705150511.473919-1-german.gomez@arm.com>
- <20220705150511.473919-2-german.gomez@arm.com>
+        Mon, 11 Jul 2022 22:17:57 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC92220FB;
+        Mon, 11 Jul 2022 19:17:56 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LhkpF2lZnzVff6;
+        Tue, 12 Jul 2022 10:14:13 +0800 (CST)
+Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 12 Jul 2022 10:17:54 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.174) by
+ kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 12 Jul 2022 10:17:53 +0800
+From:   Li Huafei <lihuafei1@huawei.com>
+To:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
+        <ardb@kernel.org>, <will@kernel.org>
+CC:     <mark.rutland@arm.com>, <broonie@kernel.org>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <arnd@arndb.de>, <linus.walleij@linaro.org>,
+        <rostedt@goodmis.org>, <nick.hawkins@hpe.com>, <john@phrozen.org>,
+        <mhiramat@kernel.org>, <ast@kernel.org>, <linyujun809@huawei.com>,
+        <ndesaulniers@google.com>, <lihuafei1@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+Subject: [PATCH 0/5] ARM: Convert to ARCH_STACKWALK
+Date:   Tue, 12 Jul 2022 10:15:22 +0800
+Message-ID: <20220712021527.109921-1-lihuafei1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220705150511.473919-2-german.gomez@arm.com>
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.174]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600010.china.huawei.com (7.193.23.86)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 05, 2022 at 04:05:11PM +0100, German Gomez wrote:
-> Add a self test for branch stack sampling, to check that we get the
-> expected branch types, and filters behave as expected.
-> 
-> Suggested-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: German Gomez <german.gomez@arm.com>
+This series mainly updates the ARM stack trace code to use the newer and
+simpler arch_stack_walk() interface. Two issues were fixed before that
+(see patch 1 and 2), as well as allowing stack_trace_save_tsk() to
+trace non-current tasks (see patch 3).
 
-Tested-by: Jiri Olsa <jolsa@kernel.org>
+Li Huafei (5):
+  ARM: stacktrace: Skip frame pointer boundary check for
+    call_with_stack()
+  ARM: stacktrace: Avoid duplicate saving of exception PC value
+  ARM: stacktrace: Allow stack trace saving for non-current tasks
+  ARM: stacktrace: Make stack walk callback consistent with generic code
+  ARM: stacktrace: Convert stacktrace to generic ARCH_STACKWALK
 
-thanks,
-jirka
+ arch/arm/Kconfig                  |   1 +
+ arch/arm/include/asm/stacktrace.h |   8 +-
+ arch/arm/kernel/perf_callchain.c  |   9 +-
+ arch/arm/kernel/return_address.c  |   9 +-
+ arch/arm/kernel/stacktrace.c      | 195 +++++++++++++-----------------
+ arch/arm/lib/call_with_stack.S    |   2 +
+ 6 files changed, 105 insertions(+), 119 deletions(-)
 
-> ---
->  tools/perf/tests/shell/test_brstack.sh | 114 +++++++++++++++++++++++++
->  1 file changed, 114 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_brstack.sh
-> 
-> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-> new file mode 100755
-> index 000000000..5f6f40a77
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/test_brstack.sh
-> @@ -0,0 +1,114 @@
-> +#!/bin/sh
-> +# Check branch stack sampling
-> +
-> +# SPDX-License-Identifier: GPL-2.0
-> +# German Gomez <german.gomez@arm.com>, 2022
-> +
-> +# we need a C compiler to build the test programs
-> +# so bail if none is found
-> +if ! [ -x "$(command -v cc)" ]; then
-> +	echo "failed: no compiler, install gcc"
-> +	exit 2
-> +fi
-> +
-> +# skip the test if the hardware doesn't support branch stack sampling
-> +perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
-> +
-> +TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
-> +
-> +cleanup() {
-> +	rm -rf $TMPDIR
-> +}
-> +
-> +trap cleanup exit term int
-> +
-> +gen_test_program() {
-> +	# generate test program
-> +	cat << EOF > $1
-> +#define BENCH_RUNS 999999
-> +int cnt;
-> +void bar(void) {
-> +}			/* return */
-> +void foo(void) {
-> +	bar();		/* call */
-> +}			/* return */
-> +void bench(void) {
-> +  void (*foo_ind)(void) = foo;
-> +  if ((cnt++) % 3)	/* branch (cond) */
-> +    foo();		/* call */
-> +  bar();		/* call */
-> +  foo_ind();		/* call (ind) */
-> +}
-> +int main(void)
-> +{
-> +  int cnt = 0;
-> +  while (1) {
-> +    if ((cnt++) > BENCH_RUNS)
-> +      break;
-> +    bench();		/* call */
-> +  }			/* branch (uncond) */
-> +  return 0;
-> +}
-> +EOF
-> +}
-> +
-> +test_user_branches() {
-> +	echo "Testing user branch stack sampling"
-> +
-> +	gen_test_program "$TEMPDIR/program.c"
-> +	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
-> +
-> +	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
-> +	perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 > $TMPDIR/perf.script
-> +
-> +	# example of branch entries:
-> +	# 	foo+0x14/bar+0x40/P/-/-/0/CALL
-> +
-> +	set -x
-> +	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
-> +	egrep -m1 "^foo\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
-> +	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
-> +	egrep -m1 "^bench\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
-> +	egrep -m1 "^bar\+[^ ]*/foo\+[^ ]*/RET$"		$TMPDIR/perf.script
-> +	egrep -m1 "^foo\+[^ ]*/bench\+[^ ]*/RET$"	$TMPDIR/perf.script
-> +	egrep -m1 "^bench\+[^ ]*/bench\+[^ ]*/COND$"	$TMPDIR/perf.script
-> +	egrep -m1 "^main\+[^ ]*/main\+[^ ]*/UNCOND$"	$TMPDIR/perf.script
-> +	set +x
-> +
-> +	# some branch types are still not being tested:
-> +	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
-> +}
-> +
-> +# first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
-> +# second argument are the expected branch types for the given filter
-> +test_filter() {
-> +	local filter=$1
-> +	local expect=$2
-> +
-> +	echo "Testing branch stack filtering permutation ($filter,$expect)"
-> +
-> +	gen_test_program "$TEMPDIR/program.c"
-> +	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
-> +
-> +	perf record -o $TMPDIR/perf.data --branch-filter $filter,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
-> +	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
-> +
-> +	# fail if we find any branch type that doesn't match any of the expected ones
-> +	# also consider UNKNOWN branch types (-)
-> +	if egrep -vm1 "^[^ ]*/($expect|-|( *))$" $TMPDIR/perf.script; then
-> +		return 1
-> +	fi
-> +}
-> +
-> +set -e
-> +
-> +test_user_branches
-> +
-> +test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ"
-> +test_filter "call"	"CALL|SYSCALL"
-> +test_filter "cond"	"COND"
-> +test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
-> +
-> +test_filter "call,cond"		"CALL|SYSCALL|COND"
-> +test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
-> +test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
-> -- 
-> 2.25.1
-> 
+-- 
+2.17.1
+
