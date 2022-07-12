@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCA3C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 02:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB70C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 02:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbiGLCR7 (ORCPT
+        id S229872AbiGLCSD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 11 Jul 2022 22:17:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
+        Mon, 11 Jul 2022 22:18:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229872AbiGLCR7 (ORCPT
+        with ESMTP id S229984AbiGLCSA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 11 Jul 2022 22:17:59 -0400
+        Mon, 11 Jul 2022 22:18:00 -0400
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC6BB220FB;
-        Mon, 11 Jul 2022 19:17:57 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LhkqZ2qmvzhYyN;
-        Tue, 12 Jul 2022 10:15:22 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110B72409A;
+        Mon, 11 Jul 2022 19:17:59 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Lhkqb40zgzhZD8;
+        Tue, 12 Jul 2022 10:15:23 +0800 (CST)
 Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 12 Jul 2022 10:17:55 +0800
+ 15.1.2375.24; Tue, 12 Jul 2022 10:17:56 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.174) by
  kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 12 Jul 2022 10:17:54 +0800
+ 15.1.2375.24; Tue, 12 Jul 2022 10:17:55 +0800
 From:   Li Huafei <lihuafei1@huawei.com>
 To:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
         <ardb@kernel.org>, <will@kernel.org>
@@ -39,9 +39,9 @@ CC:     <mark.rutland@arm.com>, <broonie@kernel.org>,
         <ndesaulniers@google.com>, <lihuafei1@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-Subject: [PATCH 1/5] ARM: stacktrace: Skip frame pointer boundary check for call_with_stack()
-Date:   Tue, 12 Jul 2022 10:15:23 +0800
-Message-ID: <20220712021527.109921-2-lihuafei1@huawei.com>
+Subject: [PATCH 3/5] ARM: stacktrace: Allow stack trace saving for non-current tasks
+Date:   Tue, 12 Jul 2022 10:15:25 +0800
+Message-ID: <20220712021527.109921-4-lihuafei1@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220712021527.109921-1-lihuafei1@huawei.com>
 References: <20220712021527.109921-1-lihuafei1@huawei.com>
@@ -55,121 +55,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When using the frame pointer unwinder, it was found that the stack trace
-output of stack_trace_save() is incomplete if the stack contains
-call_with_stack():
-
- [0x7f00002c] dump_stack_task+0x2c/0x90 [hrtimer]
- [0x7f0000a0] hrtimer_hander+0x10/0x18 [hrtimer]
- [0x801a67f0] __hrtimer_run_queues+0x1b0/0x3b4
- [0x801a7350] hrtimer_run_queues+0xc4/0xd8
- [0x801a597c] update_process_times+0x3c/0x88
- [0x801b5a98] tick_periodic+0x50/0xd8
- [0x801b5bf4] tick_handle_periodic+0x24/0x84
- [0x8010ffc4] twd_handler+0x38/0x48
- [0x8017d220] handle_percpu_devid_irq+0xa8/0x244
- [0x80176e9c] generic_handle_domain_irq+0x2c/0x3c
- [0x8052e3a8] gic_handle_irq+0x7c/0x90
- [0x808ab15c] generic_handle_arch_irq+0x60/0x80
- [0x8051191c] call_with_stack+0x1c/0x20
-
-For the frame pointer unwinder, unwind_frame() checks stackframe::fp by
-stackframe::sp. Since call_with_stack() switches the SP from one stack
-to another, stackframe::fp and stackframe: :sp will point to different
-stacks, so we can no longer check stackframe::fp by stackframe::sp. Skip
-checking stackframe::fp at this point to avoid this problem.
+The current ARM implementation of save_stack_trace_tsk() does not allow
+saving stack trace for non-current tasks, which may limit the scenarios
+in which stack_trace_save_tsk() can be used. Like other architectures,
+or like ARM's unwind_backtrace(), we can leave it up to the caller to
+ensure that the task that needs to be unwound is not running.
 
 Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 ---
- arch/arm/kernel/stacktrace.c   | 40 ++++++++++++++++++++++++++++------
- arch/arm/lib/call_with_stack.S |  2 ++
- 2 files changed, 35 insertions(+), 7 deletions(-)
+ arch/arm/kernel/stacktrace.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
 diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
-index d0fa2037460a..af87040b0353 100644
+index 3acf51ee46bb..836420c00938 100644
 --- a/arch/arm/kernel/stacktrace.c
 +++ b/arch/arm/kernel/stacktrace.c
-@@ -9,6 +9,8 @@
- #include <asm/stacktrace.h>
- #include <asm/traps.h>
+@@ -171,19 +171,11 @@ static noinline void __save_stack_trace(struct task_struct *tsk,
+ 	data.no_sched_functions = nosched;
  
-+#include "reboot.h"
-+
- #if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND)
- /*
-  * Unwind the current stack frame and store the new register values in the
-@@ -39,29 +41,53 @@
-  * Note that with framepointer enabled, even the leaf functions have the same
-  * prologue and epilogue, therefore we can ignore the LR value in this case.
-  */
--int notrace unwind_frame(struct stackframe *frame)
-+
-+extern unsigned long call_with_stack_end;
-+
-+static int frame_pointer_check(struct stackframe *frame)
- {
- 	unsigned long high, low;
- 	unsigned long fp = frame->fp;
-+	unsigned long pc = frame->pc;
-+
-+	/*
-+	 * call_with_stack() is the only place we allow SP to jump from one
-+	 * stack to another, with FP and SP pointing to different stacks,
-+	 * skipping the FP boundary check at this point.
-+	 */
-+	if (pc >= (unsigned long)&call_with_stack &&
-+			pc < (unsigned long)&call_with_stack_end)
-+		return 0;
- 
- 	/* only go to a higher address on the stack */
- 	low = frame->sp;
- 	high = ALIGN(low, THREAD_SIZE);
- 
--#ifdef CONFIG_CC_IS_CLANG
- 	/* check current frame pointer is within bounds */
-+#ifdef CONFIG_CC_IS_CLANG
- 	if (fp < low + 4 || fp > high - 4)
- 		return -EINVAL;
--
--	frame->sp = frame->fp;
--	frame->fp = READ_ONCE_NOCHECK(*(unsigned long *)(fp));
--	frame->pc = READ_ONCE_NOCHECK(*(unsigned long *)(fp + 4));
- #else
--	/* check current frame pointer is within bounds */
- 	if (fp < low + 12 || fp > high - 4)
- 		return -EINVAL;
-+#endif
-+
-+	return 0;
-+}
-+
-+int notrace unwind_frame(struct stackframe *frame)
-+{
-+	unsigned long fp = frame->fp;
-+
-+	if (frame_pointer_check(frame))
-+		return -EINVAL;
- 
- 	/* restore the registers from the stack frame */
-+#ifdef CONFIG_CC_IS_CLANG
-+	frame->sp = frame->fp;
-+	frame->fp = READ_ONCE_NOCHECK(*(unsigned long *)(fp));
-+	frame->pc = READ_ONCE_NOCHECK(*(unsigned long *)(fp + 4));
-+#else
- 	frame->fp = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 12));
- 	frame->sp = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 8));
- 	frame->pc = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 4));
-diff --git a/arch/arm/lib/call_with_stack.S b/arch/arm/lib/call_with_stack.S
-index 0a268a6c513c..5030d4e8d126 100644
---- a/arch/arm/lib/call_with_stack.S
-+++ b/arch/arm/lib/call_with_stack.S
-@@ -46,4 +46,6 @@ UNWIND( .setfp	fpreg, sp	)
- 	pop	{fpreg, pc}
- UNWIND( .fnend			)
- #endif
-+	.globl call_with_stack_end
-+call_with_stack_end:
- ENDPROC(call_with_stack)
+ 	if (tsk != current) {
+-#ifdef CONFIG_SMP
+-		/*
+-		 * What guarantees do we have here that 'tsk' is not
+-		 * running on another CPU?  For now, ignore it as we
+-		 * can't guarantee we won't explode.
+-		 */
+-		return;
+-#else
++		/* task blocked in __switch_to */
+ 		frame.fp = thread_saved_fp(tsk);
+ 		frame.sp = thread_saved_sp(tsk);
+ 		frame.lr = 0;		/* recovered from the stack */
+ 		frame.pc = thread_saved_pc(tsk);
+-#endif
+ 	} else {
+ 		/* We don't want this function nor the caller */
+ 		data.skip += 2;
 -- 
 2.17.1
 
