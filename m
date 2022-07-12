@@ -2,138 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6184DC43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 09:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D50FC43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 11:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231952AbiGLJA7 (ORCPT
+        id S232601AbiGLLMm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Jul 2022 05:00:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59018 "EHLO
+        Tue, 12 Jul 2022 07:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbiGLJA6 (ORCPT
+        with ESMTP id S231414AbiGLLMj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Jul 2022 05:00:58 -0400
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2084.outbound.protection.outlook.com [40.107.102.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FDCD4F68B;
-        Tue, 12 Jul 2022 02:00:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C2s+djAv6OMR7XttluIHXbhArGDNM6WTQbR0ytTPvi/pX61oyB3+RtjT2xjDs5gLm9D9deWi9uo4YMG9mK/cv4Q08HDrn9b9xM23bkNmGF+HQngwrS7tTaiV/Lq9O8vk9mdXTxp2MzE46oi13aphEK5d6e4iIydR5S6H4G6N9I4xu0RECHWIerz6fvXh0gMHsqj0hPFNWsK1AmkSXkZ418PBy86V7ZrXcTT0xVDOq5gPFp/jNhLgc7JeYATIXKew16ev8ywyv5M33YqzL3uituUYQYfzzQkRck9a3oW9pPOB5epVZwoaBQFqQ7dLQZGlQmjbmOkDtGwlpjjLvRP9RQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P/4cTYmkfpbKag1vhzPTokLVXyFv3HWc4EwUTQEzMoA=;
- b=OO+yKtJsICwxN027W7gArHzZGqPqs9AAXQwilJYnjvBg8HJRSQduXiRqXgFhwZMkOojslnFtXKZJA5g3cchPLxFwzQupwf2VHvs0pbSOKJrl0J0UBWWluWeBiNym1cufdE845QcsSX2pzo/IZQKLtTzpE/dQgyp0cXy1AeoxawVCvp3Ja6pniEnkVQI3tF+n4XjhmZ3WLshF9xtgBCuWoriYh7OPf8M9OjEMJNLA8KEpcFmUncGLE5dqee9ck7cGyoyKQ8AnOH+vQXnEHkrTXww6L75sknWGIsCtQhInyJwg9pCpjxPLShw20/KEgfW3AivUjnQCXzXfSR0/AlJwFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/4cTYmkfpbKag1vhzPTokLVXyFv3HWc4EwUTQEzMoA=;
- b=NUubOs1mldecZyPDMmPNjf0yj9lnTYdKwyNWnE3ZGN0FzsMgfGq67CdlEN0eO7LtBnZaMv+t1NZ9RfN7ln6tcFQeSWVEdhIHzw8zTR8nKcRRwVWeh0J7Y6roPQKppcvPoAYHl7JYNBlxNrQ3nVllgIaEI0Va4YoVZ6TO+t4a+7A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by CH2PR12MB3976.namprd12.prod.outlook.com (2603:10b6:610:28::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.21; Tue, 12 Jul
- 2022 09:00:55 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::1c48:55fc:da99:87c9]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::1c48:55fc:da99:87c9%3]) with mapi id 15.20.5417.026; Tue, 12 Jul 2022
- 09:00:54 +0000
-Message-ID: <ac23d789-12b5-133a-a2b1-1ea9727b3d97@amd.com>
-Date:   Tue, 12 Jul 2022 14:30:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 00/14] perf mem/c2c: Add support for AMD
-Content-Language: en-US
-To:     peterz@infradead.org, acme@kernel.org
-Cc:     jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
-        irogers@google.com, jmario@redhat.com, leo.yan@linaro.org,
-        alisaidi@amazon.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com, ravi.bangoria@amd.com
-References: <20220616113638.900-1-ravi.bangoria@amd.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20220616113638.900-1-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0150.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:6::35) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Tue, 12 Jul 2022 07:12:39 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CBD5B0FB5
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 04:12:36 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id z1so6982023plb.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 04:12:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Qb55Kbq0y4vwgfIg3wFDxJyNQoImybJoWJeGkFEBt8Y=;
+        b=1j7HJgDk+BOlvIrPto5v/w0UyoFz/lnQv9wgfOdsMphjfRFqT2DIg1DRCHe62jotIw
+         Wcd/TP+YDwzfz1hnJ6brTDEGw2ZuVW3aJM4o1q8Q0gS/+iGgF/XMxyvjeSCbVzLv2yv/
+         AZOOfT7iwDEcacqkH1Rg/gSvMy7ht63jN/2WIxL6byrFEmQFcJ+MCxNo/6iVX5tgrM46
+         jeNMwF7+1ZlSigpdyBSpowNoE2GVGisPcjq7xOSY0ZJs36ILM/NQQSm4zFPQUpdNls/C
+         2lw78hd8AKVpILhM+sGMlgeveyvYN0B+WRx8Por5mmiOEpPIllo6NLOIUa7ziMhmBgP1
+         rMMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Qb55Kbq0y4vwgfIg3wFDxJyNQoImybJoWJeGkFEBt8Y=;
+        b=DPTYmSld/7awS3qNzuhVdXschj3QOYMlGLkTiSAFNy7v4b+/GL7kcIZsEXU2MaBf4F
+         wovz0sx2o+iTkPWLiqo9vJmrm6EnB/AIRYxBRGPDvrl3CjQFNt6dcQtEnE4i8PJLytSk
+         Kjlcx3B85SjYyMsJqON5vO+faHAbd3tsvXzAu920yAiK3UEbWlQavcT+gjjHbDb/+b1p
+         CwfQHEwjvN2/QlJpF7R1upQyPF5qNpVX8mIUEcTT0xC9f9qos7DVNDD3qt9vHBX/rNeH
+         RkmkgQ0uBFYLLPpZChTjz5qRO7GVnibGLBzWLA1xkf9WI82iUOeyyXlkgR5nN53kVmgs
+         Vdvw==
+X-Gm-Message-State: AJIora9HvXVkahiwTs3c/7juGQ/5+MQ7bPnm0gQCPasLZZxGaUjHXVHc
+        mwWNivkMk+kkFaBUZaMQxhNxNQ==
+X-Google-Smtp-Source: AGRyM1uY3FpE7QhDTBbilYTgVnALa3bIqWVrC/zDtaL3RXmhC1OZWn1T+qY6Y660eckXwBBY0oBkyA==
+X-Received: by 2002:a17:90b:2c0b:b0:1ef:aa42:f19b with SMTP id rv11-20020a17090b2c0b00b001efaa42f19bmr3729663pjb.211.1657624355862;
+        Tue, 12 Jul 2022 04:12:35 -0700 (PDT)
+Received: from [10.4.113.6] ([139.177.225.234])
+        by smtp.gmail.com with ESMTPSA id t7-20020a17090340c700b0016c59b38254sm1550585pld.127.2022.07.12.04.12.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Jul 2022 04:12:35 -0700 (PDT)
+Message-ID: <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
+Date:   Tue, 12 Jul 2022 19:12:18 +0800
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 19de081b-55c6-49db-324c-08da63e506cd
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3976:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2dZL3pp/qtPnoBIdZoTfsUkS99dqeA6dtv8eB9d3DwIgm7NXNdM8sDPPVOB7M1iwqASPcBpjr1HWtKkvrNTMPM83Bq33t0biFr+QGZDQBemsZDxNOv/hF0BQpMIM0siUR8H3V75zAe0NrtT3UwdgPN4AbY6MWHBSrJQjEdjbBN2ZdRfSyPXI/s6XuR6GNwt0OpuJVSQEfLYlcZUgrXfKf+3MddUUURrm4Y+ZTePDaSa6posJobWPWqM79IbUNGlIgJDt56FMsLHfbinjfIaKXXBKp54q6G4dhXfnA/4oP44GyMLrnXUUFXlK/bGrPPY1G+VMnWRE+oo4EuCMPWLFCWNmxSOpltSC6fhlzLwGraePqgS1adx96zexyooovGD93Pz/B9Ek7ZQ6F5rT0YX41TaWOBeU2kiFzW9jdu0X/j8clOeB2EnkWOEWdvorc+SBTLWQ0x2puq7qSExx+9GHvaDCYHVExaLcBhwH8lRlFwUMopRnOVshTdxVjfjJHSxMsttYc3lnLGTtDx5qPYihPYwLDghUh6O2xPe/RB0/BgDoXvB1bt/skcPZRnMzkNg3mNmshTssfP3cqpzgx6K06j8pelsf3+r4iCFeIUQX3zYFiaZCDvh9KZirWkg6M7+qETGPTOIMh6FKkg6crZN/jVToIBFaUrvj2qflYbRCzIYmWdO3LmO3hsYypC4vvEIA6pfH++sZtfktaEc5ZuwSnPLqVBGgotoQ7IFSqC3DLYfQNcrF/GvQlifeq4Zt9ohrCloSlEBHhLuTkY6Xizi2yz3FuJrOBXGW6sdPNozastpLhkTgBjtdUh+45hrEsuzFo1Yto5nEysWrZgCHscHVJM7a1M2RpBcXCErHwNx84WY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(39860400002)(366004)(396003)(136003)(346002)(36756003)(31686004)(2906002)(38100700002)(6486002)(4744005)(44832011)(5660300002)(316002)(7416002)(31696002)(8936002)(6666004)(26005)(66476007)(86362001)(66556008)(66946007)(6512007)(6506007)(186003)(8676002)(2616005)(53546011)(478600001)(41300700001)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NjNiSlRrUGs1TE5EczhJdFN4Y1pwbFpyZnZwUDN1bEVQamZOUWE3ZzVYNmJB?=
- =?utf-8?B?YVh4ZXhWNWljUmc1eVZqcXg4SU9xL2NvYVF3YTlzQVJFajBobGo5UjAvY3lU?=
- =?utf-8?B?Nm5EdjBjNkUycHVuOG81RUxBYTZPZ1Z0TFRVSkN0aDRYOHVNWUJDNWFkL2Zo?=
- =?utf-8?B?NkxBMW1SYWQ2THF5azBNRTVRK0Z4Q1YwM2NhNDB5c2hVK1dMekFSaUViNjJp?=
- =?utf-8?B?ZXNHS1Z2K1grSFkyc0VVVm9aclYvalNHZTJQQ1pzNVJXQTk4TlpuMFhYQW1m?=
- =?utf-8?B?RnlMRGpnTXI0ZEI1KytYOXF6U0h0YTVnSUhUR25HRXVPamJHdzluQWtLYTJx?=
- =?utf-8?B?M29QYzVhUC9OcitYY0NnMVpVdUVvaUdUZUV0amxDTGM0ZFJpaDluNGp1SER4?=
- =?utf-8?B?ZTBOZGFTZTc0RW41SWVrVVRHUFBNSTFyMjJqaXU4K3IxVGU5bEU1ZkcxTEN5?=
- =?utf-8?B?MVRvZC80blQwdU1Kak51Mmo5OXhlL3hsVXBJb0I0cW5VYkI3K3U0Q3NkNU9P?=
- =?utf-8?B?UmE4bml3VkJoQi81QUs3ekMvTjhScGNQZWs4UFVKUVNyY0prbVpDRzlrU2JU?=
- =?utf-8?B?blFCazlPVVFjdFVqM3VQWWd3VzZGd21UcnBITEtlZWhRSXMrTTNqSkRzVzVa?=
- =?utf-8?B?dWx0dUlQazNZTlNOdVRsa0x3R2VVbWd0d1pQdFFSWDc5djhPOVZJR3Q4RHEy?=
- =?utf-8?B?cjRReVNqU1lIOC82SkF0YUxvNk93YVFvakU0V1dXNmU4cll5Z01LSkdYQUFp?=
- =?utf-8?B?ZkRJbXpKdTA3eE1zQzBTNWRzdGt1MmllZ0QvL0trRnZBQmN3NGRNNHIrRFd1?=
- =?utf-8?B?bnpNZUVLQnQ1NTRyUDA2eDdLV0MwMUxLanF5QnVGOEJsZGdtZWFtTkdJQS9j?=
- =?utf-8?B?M0lkcGRNUGUra2kzNHhQcC9VbXIxalhvbW8zVFByNWZEbzhOc0R0Y2lUTnUw?=
- =?utf-8?B?UWlUaFJXc3BNcVJLK2IrUjlmVWJlU3BqWEowdW9wVy9yeUdNNWp2VG9Ody9z?=
- =?utf-8?B?ZWxKTjlsS2F2d25PNGRaalAzV2FVNFJ4ZTRkN01FTWFYa29LdWtGK0ZGcmVC?=
- =?utf-8?B?NDdUVTFUS2FVU3QzcFA2UjBWOC9XN2g4UGE0NTE4Um82SEJGR0JoaFFoQjcr?=
- =?utf-8?B?TnIzL3pqeS9oSVNKSFIxcjNZOER4WkVqVnVCUnJRdG95aHB6UVlicTZkZ2FF?=
- =?utf-8?B?bGdTOE1uZXZyY0kwM3hYSzZTUU9iLzdLSGtWVlRMY2I5SVpEQmpIalFkTVVD?=
- =?utf-8?B?YVI2OUpaTklpUG4wSmxaOWx3dHNOUlgybU1PblRsa3ltMTl6S044czIxOWxq?=
- =?utf-8?B?TlBzMWdYMVF5QW00L01MbTdXWjZnVDYrdVBURUx5dk9DMENQTUZqZ2E2UlJl?=
- =?utf-8?B?TEg1dm9STC90ZzBoeTZqcjZFc28xVDdEZTVJdjNCazBlNW5kRzlhUUZOejhr?=
- =?utf-8?B?RXFwYmQ4T2JSd2J0Q0xKWUZhK1NGRm5ObFczWWJVZDNKdENnTHlpMlJFMmNz?=
- =?utf-8?B?NUJPbTF4WG1rQjNEVzhuL3lZaDhEbVN6RDJGTlhyVkFoQjhUVThkenEzNTN1?=
- =?utf-8?B?ZlR0UFNPU2tUN0ppU3J2OHhaekpncGVsNGxaOUtqOE9SNWN6bEdaa3NJY2tU?=
- =?utf-8?B?ZmVDZFJwWGlLRC9aSmhGemxJWjFZZEM2WFUweUtwbmtFWEVLWTBkK3dqd2xU?=
- =?utf-8?B?MEd2S1doKzhVSTkvUXdYUzd3NGJzb1BTSzZIV2RIZHIxMGs2NlBQemVNVkE3?=
- =?utf-8?B?Sk1ZdCsvaTlLNUdkQkhFRWpKeURwc0hpOGRhdnFjL3MzbEh3UnFiWkgxbTVu?=
- =?utf-8?B?TXNIb1RXUGU4NUcra0dLN2NPd1lvM2tZOU5BUWFxcWpoNlc3OVd2QjNSUW13?=
- =?utf-8?B?clNEMENwQ1dDVnhkcUJpdVJMeWMwRExWT2lJYkYzOHZoRWtISWQ0WmY2ei9u?=
- =?utf-8?B?SjdYYjVzS2JEbS9sSEhXaml6eDd6RTF4bEMydVp5MFV2cjBFVzdkMkJsTHd2?=
- =?utf-8?B?eFI5WEd2THpncDhmSlNLeTNlQmo0Mm9RQ2FZZlZBNWpZbFdYeTFEVllVS3hJ?=
- =?utf-8?B?K1UzS2N3WUxHQW13cXhKL0JnbHM1WW4waU9uZHhVdDQ0UzMzZ2FRbVEvYkQ0?=
- =?utf-8?Q?HFsZ+6m+i4+xTCOf/wdz4Q8Kw?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19de081b-55c6-49db-324c-08da63e506cd
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2022 09:00:54.2711
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xXLWyHD1/22+w9IAn/i2TodRO7ToRaLuwzShz2/qhe2GhyD3Mw32pr5BFkZva/Pz7DyB3tFKUbuKfp33V/Twsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3976
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.11.0
+Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
+ CONSTRAINT_{MEMORY_POLICY,CPUSET}
+Content-Language: en-US
+To:     Michal Hocko <mhocko@suse.com>, Gang Li <ligang.bdlg@bytedance.com>
+Cc:     akpm@linux-foundation.org, surenb@google.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+        keescook@chromium.org, rostedt@goodmis.org, mingo@redhat.com,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
+        adobriyan@gmail.com, yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        hezhongkun.hzk@bytedance.com
+References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+ <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+From:   Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Michal,
 
-On 16-Jun-22 5:06 PM, Ravi Bangoria wrote:
-> Perf mem and c2c tools are wrappers around perf record with mem load/
-> store events. IBS tagged load/store sample provides most of the
-> information needed for these tools. Enable support for these tools on
-> AMD Zen processors based on IBS Op pmu.
+On 7/8/22 4:54 PM, Michal Hocko Wrote:
+> On Fri 08-07-22 16:21:24, Gang Li wrote:
+>> TLDR
+>> ----
+>> If a mempolicy or cpuset is in effect, out_of_memory() will select victim
+>> on specific node to kill. So that kernel can avoid accidental killing on
+>> NUMA system.
+> 
+> We have discussed this in your previous posting and an alternative
+> proposal was to use cpusets to partition NUMA aware workloads and
+> enhance the oom killer to be cpuset aware instead which should be a much
+> easier solution.
+> 
+>> Problem
+>> -------
+>> Before this patch series, oom will only kill the process with the highest
+>> memory usage by selecting process with the highest oom_badness on the
+>> entire system.
+>>
+>> This works fine on UMA system, but may have some accidental killing on NUMA
+>> system.
+>>
+>> As shown below, if process c.out is bind to Node1 and keep allocating pages
+>> from Node1, a.out will be killed first. But killing a.out did't free any
+>> mem on Node1, so c.out will be killed then.
+>>
+>> A lot of AMD machines have 8 numa nodes. In these systems, there is a
+>> greater chance of triggering this problem.
+> 
+> Please be more specific about existing usecases which suffer from the
+> current OOM handling limitations.
 
-Gentle ping!
+I was just going through the mail list and happen to see this. There
+is another usecase for us about per-numa memory usage.
 
-Thank,
-Ravi
+Say we have several important latency-critical services sitting inside
+different NUMA nodes without intersection. The need for memory of these
+LC services varies, so the free memory of each node is also different.
+Then we launch several background containers without cpuset constrains
+to eat the left resources. Now the problem is that there doesn't seem
+like a proper memory policy available to balance the usage between the
+nodes, which could lead to memory-heavy LC services suffer from high
+memory pressure and fails to meet the SLOs.
+
+It's quite appreciated if you can shed some light on this!
+
+Thanks & BR,
+Abel
