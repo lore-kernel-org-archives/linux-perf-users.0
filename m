@@ -2,191 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2427CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 07:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6184DC43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 09:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232469AbiGLH7p (ORCPT
+        id S231952AbiGLJA7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Jul 2022 03:59:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32898 "EHLO
+        Tue, 12 Jul 2022 05:00:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232536AbiGLH7b (ORCPT
+        with ESMTP id S230332AbiGLJA6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Jul 2022 03:59:31 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B11D10C4;
-        Tue, 12 Jul 2022 00:59:24 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B4BA1516;
-        Tue, 12 Jul 2022 00:59:24 -0700 (PDT)
-Received: from [10.1.29.134] (e127744.cambridge.arm.com [10.1.29.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BC693F73D;
-        Tue, 12 Jul 2022 00:59:22 -0700 (PDT)
-Subject: Re: [PATCH v2 1/1] perf test: Add test for branch stack sampling
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <20220705150511.473919-1-german.gomez@arm.com>
- <20220705150511.473919-2-german.gomez@arm.com> <YsyOfx9D3w5Rfiz8@krava>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <d4928180-3ef0-4f6a-82c4-6d2592169587@arm.com>
-Date:   Tue, 12 Jul 2022 08:59:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <YsyOfx9D3w5Rfiz8@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Jul 2022 05:00:58 -0400
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2084.outbound.protection.outlook.com [40.107.102.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FDCD4F68B;
+        Tue, 12 Jul 2022 02:00:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C2s+djAv6OMR7XttluIHXbhArGDNM6WTQbR0ytTPvi/pX61oyB3+RtjT2xjDs5gLm9D9deWi9uo4YMG9mK/cv4Q08HDrn9b9xM23bkNmGF+HQngwrS7tTaiV/Lq9O8vk9mdXTxp2MzE46oi13aphEK5d6e4iIydR5S6H4G6N9I4xu0RECHWIerz6fvXh0gMHsqj0hPFNWsK1AmkSXkZ418PBy86V7ZrXcTT0xVDOq5gPFp/jNhLgc7JeYATIXKew16ev8ywyv5M33YqzL3uituUYQYfzzQkRck9a3oW9pPOB5epVZwoaBQFqQ7dLQZGlQmjbmOkDtGwlpjjLvRP9RQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P/4cTYmkfpbKag1vhzPTokLVXyFv3HWc4EwUTQEzMoA=;
+ b=OO+yKtJsICwxN027W7gArHzZGqPqs9AAXQwilJYnjvBg8HJRSQduXiRqXgFhwZMkOojslnFtXKZJA5g3cchPLxFwzQupwf2VHvs0pbSOKJrl0J0UBWWluWeBiNym1cufdE845QcsSX2pzo/IZQKLtTzpE/dQgyp0cXy1AeoxawVCvp3Ja6pniEnkVQI3tF+n4XjhmZ3WLshF9xtgBCuWoriYh7OPf8M9OjEMJNLA8KEpcFmUncGLE5dqee9ck7cGyoyKQ8AnOH+vQXnEHkrTXww6L75sknWGIsCtQhInyJwg9pCpjxPLShw20/KEgfW3AivUjnQCXzXfSR0/AlJwFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P/4cTYmkfpbKag1vhzPTokLVXyFv3HWc4EwUTQEzMoA=;
+ b=NUubOs1mldecZyPDMmPNjf0yj9lnTYdKwyNWnE3ZGN0FzsMgfGq67CdlEN0eO7LtBnZaMv+t1NZ9RfN7ln6tcFQeSWVEdhIHzw8zTR8nKcRRwVWeh0J7Y6roPQKppcvPoAYHl7JYNBlxNrQ3nVllgIaEI0Va4YoVZ6TO+t4a+7A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by CH2PR12MB3976.namprd12.prod.outlook.com (2603:10b6:610:28::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.21; Tue, 12 Jul
+ 2022 09:00:55 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::1c48:55fc:da99:87c9]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::1c48:55fc:da99:87c9%3]) with mapi id 15.20.5417.026; Tue, 12 Jul 2022
+ 09:00:54 +0000
+Message-ID: <ac23d789-12b5-133a-a2b1-1ea9727b3d97@amd.com>
+Date:   Tue, 12 Jul 2022 14:30:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v2 00/14] perf mem/c2c: Add support for AMD
 Content-Language: en-US
+To:     peterz@infradead.org, acme@kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
+        irogers@google.com, jmario@redhat.com, leo.yan@linaro.org,
+        alisaidi@amazon.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, ravi.bangoria@amd.com
+References: <20220616113638.900-1-ravi.bangoria@amd.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20220616113638.900-1-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0150.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:6::35) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 19de081b-55c6-49db-324c-08da63e506cd
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3976:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2dZL3pp/qtPnoBIdZoTfsUkS99dqeA6dtv8eB9d3DwIgm7NXNdM8sDPPVOB7M1iwqASPcBpjr1HWtKkvrNTMPM83Bq33t0biFr+QGZDQBemsZDxNOv/hF0BQpMIM0siUR8H3V75zAe0NrtT3UwdgPN4AbY6MWHBSrJQjEdjbBN2ZdRfSyPXI/s6XuR6GNwt0OpuJVSQEfLYlcZUgrXfKf+3MddUUURrm4Y+ZTePDaSa6posJobWPWqM79IbUNGlIgJDt56FMsLHfbinjfIaKXXBKp54q6G4dhXfnA/4oP44GyMLrnXUUFXlK/bGrPPY1G+VMnWRE+oo4EuCMPWLFCWNmxSOpltSC6fhlzLwGraePqgS1adx96zexyooovGD93Pz/B9Ek7ZQ6F5rT0YX41TaWOBeU2kiFzW9jdu0X/j8clOeB2EnkWOEWdvorc+SBTLWQ0x2puq7qSExx+9GHvaDCYHVExaLcBhwH8lRlFwUMopRnOVshTdxVjfjJHSxMsttYc3lnLGTtDx5qPYihPYwLDghUh6O2xPe/RB0/BgDoXvB1bt/skcPZRnMzkNg3mNmshTssfP3cqpzgx6K06j8pelsf3+r4iCFeIUQX3zYFiaZCDvh9KZirWkg6M7+qETGPTOIMh6FKkg6crZN/jVToIBFaUrvj2qflYbRCzIYmWdO3LmO3hsYypC4vvEIA6pfH++sZtfktaEc5ZuwSnPLqVBGgotoQ7IFSqC3DLYfQNcrF/GvQlifeq4Zt9ohrCloSlEBHhLuTkY6Xizi2yz3FuJrOBXGW6sdPNozastpLhkTgBjtdUh+45hrEsuzFo1Yto5nEysWrZgCHscHVJM7a1M2RpBcXCErHwNx84WY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(39860400002)(366004)(396003)(136003)(346002)(36756003)(31686004)(2906002)(38100700002)(6486002)(4744005)(44832011)(5660300002)(316002)(7416002)(31696002)(8936002)(6666004)(26005)(66476007)(86362001)(66556008)(66946007)(6512007)(6506007)(186003)(8676002)(2616005)(53546011)(478600001)(41300700001)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NjNiSlRrUGs1TE5EczhJdFN4Y1pwbFpyZnZwUDN1bEVQamZOUWE3ZzVYNmJB?=
+ =?utf-8?B?YVh4ZXhWNWljUmc1eVZqcXg4SU9xL2NvYVF3YTlzQVJFajBobGo5UjAvY3lU?=
+ =?utf-8?B?Nm5EdjBjNkUycHVuOG81RUxBYTZPZ1Z0TFRVSkN0aDRYOHVNWUJDNWFkL2Zo?=
+ =?utf-8?B?NkxBMW1SYWQ2THF5azBNRTVRK0Z4Q1YwM2NhNDB5c2hVK1dMekFSaUViNjJp?=
+ =?utf-8?B?ZXNHS1Z2K1grSFkyc0VVVm9aclYvalNHZTJQQ1pzNVJXQTk4TlpuMFhYQW1m?=
+ =?utf-8?B?RnlMRGpnTXI0ZEI1KytYOXF6U0h0YTVnSUhUR25HRXVPamJHdzluQWtLYTJx?=
+ =?utf-8?B?M29QYzVhUC9OcitYY0NnMVpVdUVvaUdUZUV0amxDTGM0ZFJpaDluNGp1SER4?=
+ =?utf-8?B?ZTBOZGFTZTc0RW41SWVrVVRHUFBNSTFyMjJqaXU4K3IxVGU5bEU1ZkcxTEN5?=
+ =?utf-8?B?MVRvZC80blQwdU1Kak51Mmo5OXhlL3hsVXBJb0I0cW5VYkI3K3U0Q3NkNU9P?=
+ =?utf-8?B?UmE4bml3VkJoQi81QUs3ekMvTjhScGNQZWs4UFVKUVNyY0prbVpDRzlrU2JU?=
+ =?utf-8?B?blFCazlPVVFjdFVqM3VQWWd3VzZGd21UcnBITEtlZWhRSXMrTTNqSkRzVzVa?=
+ =?utf-8?B?dWx0dUlQazNZTlNOdVRsa0x3R2VVbWd0d1pQdFFSWDc5djhPOVZJR3Q4RHEy?=
+ =?utf-8?B?cjRReVNqU1lIOC82SkF0YUxvNk93YVFvakU0V1dXNmU4cll5Z01LSkdYQUFp?=
+ =?utf-8?B?ZkRJbXpKdTA3eE1zQzBTNWRzdGt1MmllZ0QvL0trRnZBQmN3NGRNNHIrRFd1?=
+ =?utf-8?B?bnpNZUVLQnQ1NTRyUDA2eDdLV0MwMUxLanF5QnVGOEJsZGdtZWFtTkdJQS9j?=
+ =?utf-8?B?M0lkcGRNUGUra2kzNHhQcC9VbXIxalhvbW8zVFByNWZEbzhOc0R0Y2lUTnUw?=
+ =?utf-8?B?UWlUaFJXc3BNcVJLK2IrUjlmVWJlU3BqWEowdW9wVy9yeUdNNWp2VG9Ody9z?=
+ =?utf-8?B?ZWxKTjlsS2F2d25PNGRaalAzV2FVNFJ4ZTRkN01FTWFYa29LdWtGK0ZGcmVC?=
+ =?utf-8?B?NDdUVTFUS2FVU3QzcFA2UjBWOC9XN2g4UGE0NTE4Um82SEJGR0JoaFFoQjcr?=
+ =?utf-8?B?TnIzL3pqeS9oSVNKSFIxcjNZOER4WkVqVnVCUnJRdG95aHB6UVlicTZkZ2FF?=
+ =?utf-8?B?bGdTOE1uZXZyY0kwM3hYSzZTUU9iLzdLSGtWVlRMY2I5SVpEQmpIalFkTVVD?=
+ =?utf-8?B?YVI2OUpaTklpUG4wSmxaOWx3dHNOUlgybU1PblRsa3ltMTl6S044czIxOWxq?=
+ =?utf-8?B?TlBzMWdYMVF5QW00L01MbTdXWjZnVDYrdVBURUx5dk9DMENQTUZqZ2E2UlJl?=
+ =?utf-8?B?TEg1dm9STC90ZzBoeTZqcjZFc28xVDdEZTVJdjNCazBlNW5kRzlhUUZOejhr?=
+ =?utf-8?B?RXFwYmQ4T2JSd2J0Q0xKWUZhK1NGRm5ObFczWWJVZDNKdENnTHlpMlJFMmNz?=
+ =?utf-8?B?NUJPbTF4WG1rQjNEVzhuL3lZaDhEbVN6RDJGTlhyVkFoQjhUVThkenEzNTN1?=
+ =?utf-8?B?ZlR0UFNPU2tUN0ppU3J2OHhaekpncGVsNGxaOUtqOE9SNWN6bEdaa3NJY2tU?=
+ =?utf-8?B?ZmVDZFJwWGlLRC9aSmhGemxJWjFZZEM2WFUweUtwbmtFWEVLWTBkK3dqd2xU?=
+ =?utf-8?B?MEd2S1doKzhVSTkvUXdYUzd3NGJzb1BTSzZIV2RIZHIxMGs2NlBQemVNVkE3?=
+ =?utf-8?B?Sk1ZdCsvaTlLNUdkQkhFRWpKeURwc0hpOGRhdnFjL3MzbEh3UnFiWkgxbTVu?=
+ =?utf-8?B?TXNIb1RXUGU4NUcra0dLN2NPd1lvM2tZOU5BUWFxcWpoNlc3OVd2QjNSUW13?=
+ =?utf-8?B?clNEMENwQ1dDVnhkcUJpdVJMeWMwRExWT2lJYkYzOHZoRWtISWQ0WmY2ei9u?=
+ =?utf-8?B?SjdYYjVzS2JEbS9sSEhXaml6eDd6RTF4bEMydVp5MFV2cjBFVzdkMkJsTHd2?=
+ =?utf-8?B?eFI5WEd2THpncDhmSlNLeTNlQmo0Mm9RQ2FZZlZBNWpZbFdYeTFEVllVS3hJ?=
+ =?utf-8?B?K1UzS2N3WUxHQW13cXhKL0JnbHM1WW4waU9uZHhVdDQ0UzMzZ2FRbVEvYkQ0?=
+ =?utf-8?Q?HFsZ+6m+i4+xTCOf/wdz4Q8Kw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19de081b-55c6-49db-324c-08da63e506cd
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2022 09:00:54.2711
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xXLWyHD1/22+w9IAn/i2TodRO7ToRaLuwzShz2/qhe2GhyD3Mw32pr5BFkZva/Pz7DyB3tFKUbuKfp33V/Twsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3976
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 11/07/2022 21:56, Jiri Olsa wrote:
-> On Tue, Jul 05, 2022 at 04:05:11PM +0100, German Gomez wrote:
->> Add a self test for branch stack sampling, to check that we get the
->> expected branch types, and filters behave as expected.
->>
->> Suggested-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> Signed-off-by: German Gomez <german.gomez@arm.com>
-> Tested-by: Jiri Olsa <jolsa@kernel.org>
+On 16-Jun-22 5:06 PM, Ravi Bangoria wrote:
+> Perf mem and c2c tools are wrappers around perf record with mem load/
+> store events. IBS tagged load/store sample provides most of the
+> information needed for these tools. Enable support for these tools on
+> AMD Zen processors based on IBS Op pmu.
 
-Thanks a lot, Jiri!
+Gentle ping!
 
->
-> thanks,
-> jirka
->
->> ---
->>  tools/perf/tests/shell/test_brstack.sh | 114 +++++++++++++++++++++++++
->>  1 file changed, 114 insertions(+)
->>  create mode 100755 tools/perf/tests/shell/test_brstack.sh
->>
->> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
->> new file mode 100755
->> index 000000000..5f6f40a77
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/test_brstack.sh
->> @@ -0,0 +1,114 @@
->> +#!/bin/sh
->> +# Check branch stack sampling
->> +
->> +# SPDX-License-Identifier: GPL-2.0
->> +# German Gomez <german.gomez@arm.com>, 2022
->> +
->> +# we need a C compiler to build the test programs
->> +# so bail if none is found
->> +if ! [ -x "$(command -v cc)" ]; then
->> +	echo "failed: no compiler, install gcc"
->> +	exit 2
->> +fi
->> +
->> +# skip the test if the hardware doesn't support branch stack sampling
->> +perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
->> +
->> +TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
->> +
->> +cleanup() {
->> +	rm -rf $TMPDIR
->> +}
->> +
->> +trap cleanup exit term int
->> +
->> +gen_test_program() {
->> +	# generate test program
->> +	cat << EOF > $1
->> +#define BENCH_RUNS 999999
->> +int cnt;
->> +void bar(void) {
->> +}			/* return */
->> +void foo(void) {
->> +	bar();		/* call */
->> +}			/* return */
->> +void bench(void) {
->> +  void (*foo_ind)(void) = foo;
->> +  if ((cnt++) % 3)	/* branch (cond) */
->> +    foo();		/* call */
->> +  bar();		/* call */
->> +  foo_ind();		/* call (ind) */
->> +}
->> +int main(void)
->> +{
->> +  int cnt = 0;
->> +  while (1) {
->> +    if ((cnt++) > BENCH_RUNS)
->> +      break;
->> +    bench();		/* call */
->> +  }			/* branch (uncond) */
->> +  return 0;
->> +}
->> +EOF
->> +}
->> +
->> +test_user_branches() {
->> +	echo "Testing user branch stack sampling"
->> +
->> +	gen_test_program "$TEMPDIR/program.c"
->> +	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
->> +
->> +	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
->> +	perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 > $TMPDIR/perf.script
->> +
->> +	# example of branch entries:
->> +	# 	foo+0x14/bar+0x40/P/-/-/0/CALL
->> +
->> +	set -x
->> +	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
->> +	egrep -m1 "^foo\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
->> +	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
->> +	egrep -m1 "^bench\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
->> +	egrep -m1 "^bar\+[^ ]*/foo\+[^ ]*/RET$"		$TMPDIR/perf.script
->> +	egrep -m1 "^foo\+[^ ]*/bench\+[^ ]*/RET$"	$TMPDIR/perf.script
->> +	egrep -m1 "^bench\+[^ ]*/bench\+[^ ]*/COND$"	$TMPDIR/perf.script
->> +	egrep -m1 "^main\+[^ ]*/main\+[^ ]*/UNCOND$"	$TMPDIR/perf.script
->> +	set +x
->> +
->> +	# some branch types are still not being tested:
->> +	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
->> +}
->> +
->> +# first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
->> +# second argument are the expected branch types for the given filter
->> +test_filter() {
->> +	local filter=$1
->> +	local expect=$2
->> +
->> +	echo "Testing branch stack filtering permutation ($filter,$expect)"
->> +
->> +	gen_test_program "$TEMPDIR/program.c"
->> +	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
->> +
->> +	perf record -o $TMPDIR/perf.data --branch-filter $filter,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
->> +	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
->> +
->> +	# fail if we find any branch type that doesn't match any of the expected ones
->> +	# also consider UNKNOWN branch types (-)
->> +	if egrep -vm1 "^[^ ]*/($expect|-|( *))$" $TMPDIR/perf.script; then
->> +		return 1
->> +	fi
->> +}
->> +
->> +set -e
->> +
->> +test_user_branches
->> +
->> +test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ"
->> +test_filter "call"	"CALL|SYSCALL"
->> +test_filter "cond"	"COND"
->> +test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
->> +
->> +test_filter "call,cond"		"CALL|SYSCALL|COND"
->> +test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
->> +test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
->> -- 
->> 2.25.1
->>
+Thank,
+Ravi
