@@ -2,221 +2,191 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B660C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 04:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2427CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 07:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbiGLEFr (ORCPT
+        id S232469AbiGLH7p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Jul 2022 00:05:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
+        Tue, 12 Jul 2022 03:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbiGLEFr (ORCPT
+        with ESMTP id S232536AbiGLH7b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Jul 2022 00:05:47 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 470B637181
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jul 2022 21:05:45 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 23so6492280pgc.8
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jul 2022 21:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Sz9szSa4PbjdihEuUkN/48M4rjKmKhhNvz2LsBkiT+8=;
-        b=QX15/6NlbhAEeDEbNujQ9sq7v5HZAqpO0vg+ua1cnzwnIdJVmtlO9/lJLOwIQ3876I
-         EzQoy/GEI04wgBhVNZvkh3TJgIluMqdkBfGfvLZy4PVG6LMzzNi24jykMrgQYMXTpNIG
-         vfciD/9f1LcU5h45GdUy3WcEFkeMa324qeX1fkbxn6WZoU2T6B0/K1kch8Dc4rJga8/T
-         xyNYWJwa8xc0gWKMXBmNysDTBGh3uXCNQ0UelxzwNrmyNictyqOsmhTqxP2upNsBfz4T
-         /rJAxYYGV32jkFCvYitlUlSFfRtw0g0LragRs/ohG43/UQYXHueu6jgBBdb7N/qu0DT9
-         9yGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Sz9szSa4PbjdihEuUkN/48M4rjKmKhhNvz2LsBkiT+8=;
-        b=pfssjQLx02NK0j+cg5xpa8Ojwi/12grVWGETTLONqRc5TchBRXL/AvRIqAJEyVkKTU
-         2GAbeASw98QH2dgowTsrZ5JUfhxs2udnb5hJYNeyQDdDX8iD1jCgG+v6R6lgEO06BDc2
-         ndoOT0Yciy1hbE5StXYhXhdk7N/ETyIdiKo/hIDplwf1buXLaQbIok7Jkj7fxXUZYfq6
-         lLOH3rgJa0hyM+Xoim8SdeQIYpH9/BVzmDUCGdVOTIdsAb09V47RzACV7SeDix6v9pQN
-         Fz28bb9KSySA1OD5SW9E1MM1s8wsiBZ4rHJ6NzLQcBA4lt71CkDqF045DAfBMwnNaS5a
-         WlLg==
-X-Gm-Message-State: AJIora+JvlDHeIlPg5KYuEwfb888cPfsIwZKwAqBjUuHpy/UXaFrU6KN
-        /nxHoIwqgdxpCcgIGy6kkMLELQ==
-X-Google-Smtp-Source: AGRyM1up2gx7HxHdTNFwz/N7EM5ljIsXcl9JX4Rr0Y1ZU41hewb5iNJsOePKQTn1z407POCg2DtHSA==
-X-Received: by 2002:a63:a46:0:b0:412:b1d6:94cf with SMTP id z6-20020a630a46000000b00412b1d694cfmr19249022pgk.373.1657598744629;
-        Mon, 11 Jul 2022 21:05:44 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id ce23-20020a17090aff1700b001ef8780f873sm5576182pjb.39.2022.07.11.21.05.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 21:05:44 -0700 (PDT)
-Date:   Tue, 12 Jul 2022 12:05:38 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Fangrui Song <maskray@google.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 12 Jul 2022 03:59:31 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B11D10C4;
+        Tue, 12 Jul 2022 00:59:24 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B4BA1516;
+        Tue, 12 Jul 2022 00:59:24 -0700 (PDT)
+Received: from [10.1.29.134] (e127744.cambridge.arm.com [10.1.29.134])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BC693F73D;
+        Tue, 12 Jul 2022 00:59:22 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] perf test: Add test for branch stack sampling
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, irogers@google.com,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chang Rui <changruinj@gmail.com>
-Subject: Re: [RFC PATCH v1] perf symbol: Correct address for bss symbols
-Message-ID: <20220712040538.GB10379@leoy-ThinkPad-X240s>
-References: <20220710012204.2390293-1-leo.yan@linaro.org>
- <CAP-5=fX_fT7e9tqDBKXh_1CQ8w80iOXCGz2kJT_nHpY6wYWqmQ@mail.gmail.com>
- <20220711172706.rtfd6pp2pochmdre@google.com>
+        Namhyung Kim <namhyung@kernel.org>
+References: <20220705150511.473919-1-german.gomez@arm.com>
+ <20220705150511.473919-2-german.gomez@arm.com> <YsyOfx9D3w5Rfiz8@krava>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <d4928180-3ef0-4f6a-82c4-6d2592169587@arm.com>
+Date:   Tue, 12 Jul 2022 08:59:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
+In-Reply-To: <YsyOfx9D3w5Rfiz8@krava>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220711172706.rtfd6pp2pochmdre@google.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 11, 2022 at 10:27:06AM -0700, Fangrui Song wrote:
 
-Thanks for review, Ian and Fangrui!
+On 11/07/2022 21:56, Jiri Olsa wrote:
+> On Tue, Jul 05, 2022 at 04:05:11PM +0100, German Gomez wrote:
+>> Add a self test for branch stack sampling, to check that we get the
+>> expected branch types, and filters behave as expected.
+>>
+>> Suggested-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Signed-off-by: German Gomez <german.gomez@arm.com>
+> Tested-by: Jiri Olsa <jolsa@kernel.org>
 
-[...]
+Thanks a lot, Jiri!
 
-> > > First we used 'perf mem record' to run the test program and then used
-> > > 'perf --debug verbose=4 mem report' to observe what's the symbol info
-> > > for 'buf1' and 'buf2' structures.
-> > > 
-> > >   # ./perf mem record -e ldlat-loads,ldlat-stores -- false_sharing.exe 8
-> > >   # ./perf --debug verbose=4 mem report
-> > >     ...
-> > >     dso__load_sym_internal: adjusting symbol: st_value: 0x40c0 sh_addr: 0x4040 sh_offset: 0x3028
-> > >     symbol__new: buf2 0x30a8-0x30e8
-> > >     ...
-> > >     dso__load_sym_internal: adjusting symbol: st_value: 0x4080 sh_addr: 0x4040 sh_offset: 0x3028
-> > >     symbol__new: buf1 0x3068-0x30a8
-> > >     ...
-> 
-> It seems unclear how 0x30a8 and 0x3068 are derived,
-
-In perf tool, 0x30a8 and 0x3068 are adjusted address, which are derived
-from 'st_value', 'sh_addr' and 'sh_offset' with the formula:
-
-  adjusted_address = st_value - sh_addr + sh_offset
-
-So perf computes symbol address for buf1:
-
-  adjusted_address = st_value - sh_addr + sh_offset
-                   = 0x4080 - 0x4040 + 0x3028
-                   = 0x3068
-
-> > > Perf tool relies on libelf to parse symbols, here 'st_value' is the
-> > > address from executable file, 'sh_addr' is the belonged section's linked
-> > > start address, and 'sh_offset' is the dynamic loaded address for this
-> > > section, then perf tool uses below formula to adjust symbol address:
-> > > 
-> > >   adjusted_address = st_value - sh_addr + sh_offset
-> > > 
-> > > So we can see the final adjusted address ranges for buf1 and buf2 are
-> > > [0x30a8-0x30e8) and [0x3068-0x30a8) respectively, apparently this is
-> > > incorrect, in the code, the structure for 'buf1' and 'buf2' specifies
-> > > compiler attribute with 64-byte alignment.
-> 
-> so I cannot judge this paragraph.
-> 
-> > > The problem happens for 'sh_offset', libelf returns it as 0x3028 which
-> > > is not 64-byte aligned, on the other hand, we can see both 'st_value'
-> > > and 'sh_addr' are 64-byte aligned.  Combining with disassembly, it's
-> > > likely libelf uses the .data section end address as .bss section
-> > > start address, therefore, it doesn't respect the alignment attribute for
-> > > structures in .bss section.
-> > > 
-> > > Since .data and .bss sections are in the continuous virtual address
-> > > space, and .data section info returned by libelf is reliable, to fix
-> > > this issue, if detects it's a bss symbol, it rolls back to use .data
-> > > section info to adjust symbol's virtual address.
-> 
-> This is not necessarily true.
-> 
-> * In GNU ld's internal linker script, .data1 sits between .data and .bss.
-> * A linker script can add other sections between .data and .bss
-> * A linker script may place .data and .bss in two PT_LOAD program headers.
-
-Agreed the approach in this patch cannot handle all cases.
-
-> % readelf -WS aa
-> There are 13 section headers, starting at offset 0x10a8:
-> 
-> With a linker script like
-> 
-> % cat a/a.lds
-> SECTIONS {
->   .text : { *(.text) }
->   data1 : { *(data1) }
->   data2 : { *(data2) }
->   .bss : { *(.bss) }
-> }
-> 
-> I can get something like
-> 
-> Section Headers:
->   [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
->   [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0
->   [ 1] .text             PROGBITS        0000000000000000 001000 000001 00  AX  0   0  1
->   [ 2] data1             PROGBITS        0000000000000001 001001 000001 00  WA  0   0  1
->   [ 3] data2             PROGBITS        0000000000000002 001002 000001 00  WA  0   0  1
->   [ 4] .data             PROGBITS        0000000000000003 001003 000000 00  WA  0   0  1
->   [ 5] data3             PROGBITS        0000000000000003 001003 000001 00  WA  0   0  1
->   [ 6] .bss              NOBITS          0000000000000020 001004 000001 00  WA  0   0 32
-> 
-> .bss's sh_offset does not need to be aligned per http://www.sco.com/developers/gabi/latest/ch4.sheader.html
-> 
->     sh_offset
->     This member's value gives the byte offset from the beginning of the file to the first byte in the section. One section type, SHT_NOBITS described below, occupies no space in the file, and its sh_offset member locates the conceptual placement in the file.
-
-> I don't have more context why the file offset is needed for a variable in the all-zero section.
-
-We need to create symbol info for not only .text section but also for
-.data section and .bss sectionṡ.  So based on the data address, we can
-know what's the symbol for the data access.
-
-But I need to correct the description for "st_value" [1]: In
-executable and shared object files, st_value holds a virtual address.
-To make these files' symbols more useful for the dynamic linker, the
-section offset (file interpretation) gives way to a virtual address
-(memory interpretation) for which the section number is irrelevant.
-
-So perf tool uses the formula "st_value - sh_addr + sh_offset" to
-convert from the memory address to file address.  But it calculates
-the wrong file address because "sh_offset" doesn't respect the
-alignment.
-
-[1] http://www.sco.com/developers/gabi/latest/ch4.symtab.html#symbol_value
-
-> If the file offset has to be used and we want to use a heuristic, a better one is to find the section index of .bss, say, i.
-> 
-> const uint64_t align = shdr[i].sh_addralign;
-> assert(i > 0);
-> if (shdr[i].offset % align == 0)
->   return shdr[i].offset;
-> return (shdr[i-1].sh_offset + shdr[i-1].sh_size + align - 1) & -align;
-> 
-> Really, it is better to use the program header to derive the virtual address of a variable residing in .bss.
-
-I think we can simplify the code.  Because:
-
-  shdr[i].sh_offset = shdr[i-1].sh_offset + shdr[i-1].sh_size
-
-... thus we can simply fixup "sh_offset":
-
-  const uint64_t align = shdr[i].sh_addralign;
-  aligned_sh_offset = (shdr[i].sh_offset + align - 1) & ~(align - 1);
-
-So:
-
-  symbol_addr = st_value - sh_addr + aligned_sh_offset
-
-If you still see any issue, please let me know.
-
-Thanks a lot for suggestions.
-
-Leo
+>
+> thanks,
+> jirka
+>
+>> ---
+>>  tools/perf/tests/shell/test_brstack.sh | 114 +++++++++++++++++++++++++
+>>  1 file changed, 114 insertions(+)
+>>  create mode 100755 tools/perf/tests/shell/test_brstack.sh
+>>
+>> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+>> new file mode 100755
+>> index 000000000..5f6f40a77
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/test_brstack.sh
+>> @@ -0,0 +1,114 @@
+>> +#!/bin/sh
+>> +# Check branch stack sampling
+>> +
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# German Gomez <german.gomez@arm.com>, 2022
+>> +
+>> +# we need a C compiler to build the test programs
+>> +# so bail if none is found
+>> +if ! [ -x "$(command -v cc)" ]; then
+>> +	echo "failed: no compiler, install gcc"
+>> +	exit 2
+>> +fi
+>> +
+>> +# skip the test if the hardware doesn't support branch stack sampling
+>> +perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
+>> +
+>> +TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
+>> +
+>> +cleanup() {
+>> +	rm -rf $TMPDIR
+>> +}
+>> +
+>> +trap cleanup exit term int
+>> +
+>> +gen_test_program() {
+>> +	# generate test program
+>> +	cat << EOF > $1
+>> +#define BENCH_RUNS 999999
+>> +int cnt;
+>> +void bar(void) {
+>> +}			/* return */
+>> +void foo(void) {
+>> +	bar();		/* call */
+>> +}			/* return */
+>> +void bench(void) {
+>> +  void (*foo_ind)(void) = foo;
+>> +  if ((cnt++) % 3)	/* branch (cond) */
+>> +    foo();		/* call */
+>> +  bar();		/* call */
+>> +  foo_ind();		/* call (ind) */
+>> +}
+>> +int main(void)
+>> +{
+>> +  int cnt = 0;
+>> +  while (1) {
+>> +    if ((cnt++) > BENCH_RUNS)
+>> +      break;
+>> +    bench();		/* call */
+>> +  }			/* branch (uncond) */
+>> +  return 0;
+>> +}
+>> +EOF
+>> +}
+>> +
+>> +test_user_branches() {
+>> +	echo "Testing user branch stack sampling"
+>> +
+>> +	gen_test_program "$TEMPDIR/program.c"
+>> +	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
+>> +
+>> +	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
+>> +	perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 > $TMPDIR/perf.script
+>> +
+>> +	# example of branch entries:
+>> +	# 	foo+0x14/bar+0x40/P/-/-/0/CALL
+>> +
+>> +	set -x
+>> +	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
+>> +	egrep -m1 "^foo\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
+>> +	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
+>> +	egrep -m1 "^bench\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
+>> +	egrep -m1 "^bar\+[^ ]*/foo\+[^ ]*/RET$"		$TMPDIR/perf.script
+>> +	egrep -m1 "^foo\+[^ ]*/bench\+[^ ]*/RET$"	$TMPDIR/perf.script
+>> +	egrep -m1 "^bench\+[^ ]*/bench\+[^ ]*/COND$"	$TMPDIR/perf.script
+>> +	egrep -m1 "^main\+[^ ]*/main\+[^ ]*/UNCOND$"	$TMPDIR/perf.script
+>> +	set +x
+>> +
+>> +	# some branch types are still not being tested:
+>> +	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
+>> +}
+>> +
+>> +# first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
+>> +# second argument are the expected branch types for the given filter
+>> +test_filter() {
+>> +	local filter=$1
+>> +	local expect=$2
+>> +
+>> +	echo "Testing branch stack filtering permutation ($filter,$expect)"
+>> +
+>> +	gen_test_program "$TEMPDIR/program.c"
+>> +	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
+>> +
+>> +	perf record -o $TMPDIR/perf.data --branch-filter $filter,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
+>> +	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
+>> +
+>> +	# fail if we find any branch type that doesn't match any of the expected ones
+>> +	# also consider UNKNOWN branch types (-)
+>> +	if egrep -vm1 "^[^ ]*/($expect|-|( *))$" $TMPDIR/perf.script; then
+>> +		return 1
+>> +	fi
+>> +}
+>> +
+>> +set -e
+>> +
+>> +test_user_branches
+>> +
+>> +test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ"
+>> +test_filter "call"	"CALL|SYSCALL"
+>> +test_filter "cond"	"COND"
+>> +test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
+>> +
+>> +test_filter "call,cond"		"CALL|SYSCALL|COND"
+>> +test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
+>> +test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
+>> -- 
+>> 2.25.1
+>>
