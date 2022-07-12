@@ -2,101 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1802C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 13:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B666EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 13:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233134AbiGLNfm (ORCPT
+        id S233379AbiGLNle (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Jul 2022 09:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50854 "EHLO
+        Tue, 12 Jul 2022 09:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230453AbiGLNfi (ORCPT
+        with ESMTP id S233188AbiGLNk5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Jul 2022 09:35:38 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C360B6DB4;
-        Tue, 12 Jul 2022 06:35:34 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 59F5920151;
-        Tue, 12 Jul 2022 13:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1657632931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+zipOz8mXTXKTOJCGZnBsxuqw/eZ2Vsh+kILV8kuqxE=;
-        b=VWaLz0Zi9WuzNQOHKOhhmJXt/adh3j2q5b/mwzjcUHqDNxLTThxGq10ppyCwcdaoz7LMJG
-        fBbTccaLbUuIIasDGhIXlz9896nN1pgO6K/iJTc8czSOkvt1q+ktZaXXGkXoZPK7wf7wTq
-        M3ccS3h7L6Y79Ux6ZHqhmnY5IB03Juw=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 4DFB72C141;
-        Tue, 12 Jul 2022 13:35:29 +0000 (UTC)
-Date:   Tue, 12 Jul 2022 15:35:28 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Abel Wu <wuyun.abel@bytedance.com>
-Cc:     Gang Li <ligang.bdlg@bytedance.com>, akpm@linux-foundation.org,
-        surenb@google.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, viro@zeniv.linux.org.uk,
-        ebiederm@xmission.com, keescook@chromium.org, rostedt@goodmis.org,
-        mingo@redhat.com, peterz@infradead.org, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, david@redhat.com,
-        imbrenda@linux.ibm.com, adobriyan@gmail.com,
-        yang.yang29@zte.com.cn, brauner@kernel.org,
-        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
-        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
-        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
-        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
-        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
-        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
-        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
-        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
-        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
-        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        hezhongkun.hzk@bytedance.com
-Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
- CONSTRAINT_{MEMORY_POLICY,CPUSET}
-Message-ID: <Ys14oIHL85d/T7s+@dhcp22.suse.cz>
-References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
- <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
- <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
+        Tue, 12 Jul 2022 09:40:57 -0400
+Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CCC3B8531
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 06:40:34 -0700 (PDT)
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-31c9b70c382so81257097b3.6
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 06:40:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ALyPmALyKUZN850RRfbsMebRjTXHId7O0aEtI7++nZc=;
+        b=LSt+DLU33Q6liALS8BuSSMkfOKSlRWDFuTo7po1O26Fv7bk7ore1ydtL7Hkh54hx5B
+         9uSRjCaDwCvwdfWSzS7lnufwTmWr2b2BeYWR5YFP9ZU8F9VUUXmk6Zu5giNcEj2YbgpC
+         uI4p1/JHiKYlEhx0fK1shW+TiQcG27FxZBVsXr+bZEYrVso0bpBwSBWJ2SnXgjmK3o2a
+         TljCQ3HgMAtH+5k9+nmdR7HTEIpmR3g8H3YU3v/0m4e+3pVXNggO7+TOdghExzxY46ET
+         DIp6u0LHdi2CFsZzjm9ZOB6D+HRRffEUqutrzlU2tzRGZr0L4jryw4F7HNyo/VTj61UD
+         CAVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ALyPmALyKUZN850RRfbsMebRjTXHId7O0aEtI7++nZc=;
+        b=4nLLfzRSJ+9OJ06QvS/14nd77GrPG72PaCdgeqAyYjTzd9J7hX2TRTppG2HP7gfVDo
+         s/pkNvXLe1ml+WNtYWY6wkFN5xYY+GWJDWRY1x449ZQq3ldRD31/gagtCDcKSC9McDTa
+         7XTRRZUcfjY9NROWhvasMGn20UkK4hcPiI0N1rqK7IoDhYdoGbd3QCSFEvoqp0Lp7Yo+
+         1cJToZlWNLbJBPxkx8ZI3lbZ5cW6smFkRsBGXLhEmrWjrN3rT3Ng0K9/2cbM92t/qzxB
+         lCO32vkpOQfbyGH30IpZ+hr0SL7SlCw2JPvB9dJzyXpjvixPi3yDjVzuHS+nRzug+UTv
+         wj7w==
+X-Gm-Message-State: AJIora94FtxIcaaOR++iUcwieP4m7BHHrz1IB3/irAsZM6Gqn62mwz3I
+        Y3IKNIk8zBPim81OTVBdPxuTFx+OznNR8P+qAr9elTPNutU31g==
+X-Google-Smtp-Source: AGRyM1vOJbA/kJ593A3ED5ZJMoh4prb03n/Kz2Y5PlZioljval/AgDFA11ABBXVIE5GqjlsCSBB2nghmV/bKBZoaO6Q=
+X-Received: by 2002:a81:98d:0:b0:31c:921c:9783 with SMTP id
+ 135-20020a81098d000000b0031c921c9783mr25237173ywj.316.1657633233606; Tue, 12
+ Jul 2022 06:40:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
+References: <20220704150514.48816-1-elver@google.com>
+In-Reply-To: <20220704150514.48816-1-elver@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 12 Jul 2022 15:39:57 +0200
+Message-ID: <CANpmjNP0hPuhXmZmkX1ytCDh56LOAmxJjf7RyfxOvoaem=2d8Q@mail.gmail.com>
+Subject: Re: [PATCH v3 00/14] perf/hw_breakpoint: Optimize for thousands of tasks
+To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, linux-sh@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue 12-07-22 19:12:18, Abel Wu wrote:
+On Mon, 4 Jul 2022 at 17:05, Marco Elver <elver@google.com> wrote:
+>
+> The hw_breakpoint subsystem's code has seen little change in over 10
+> years. In that time, systems with >100s of CPUs have become common,
+> along with improvements to the perf subsystem: using breakpoints on
+> thousands of concurrent tasks should be a supported usecase.
 [...]
-> I was just going through the mail list and happen to see this. There
-> is another usecase for us about per-numa memory usage.
-> 
-> Say we have several important latency-critical services sitting inside
-> different NUMA nodes without intersection. The need for memory of these
-> LC services varies, so the free memory of each node is also different.
-> Then we launch several background containers without cpuset constrains
-> to eat the left resources. Now the problem is that there doesn't seem
-> like a proper memory policy available to balance the usage between the
-> nodes, which could lead to memory-heavy LC services suffer from high
-> memory pressure and fails to meet the SLOs.
+> Marco Elver (14):
+>   perf/hw_breakpoint: Add KUnit test for constraints accounting
+>   perf/hw_breakpoint: Provide hw_breakpoint_is_used() and use in test
+>   perf/hw_breakpoint: Clean up headers
+>   perf/hw_breakpoint: Optimize list of per-task breakpoints
+>   perf/hw_breakpoint: Mark data __ro_after_init
+>   perf/hw_breakpoint: Optimize constant number of breakpoint slots
+>   perf/hw_breakpoint: Make hw_breakpoint_weight() inlinable
+>   perf/hw_breakpoint: Remove useless code related to flexible
+>     breakpoints
+>   powerpc/hw_breakpoint: Avoid relying on caller synchronization
+>   locking/percpu-rwsem: Add percpu_is_write_locked() and
+>     percpu_is_read_locked()
+>   perf/hw_breakpoint: Reduce contention with large number of tasks
+>   perf/hw_breakpoint: Introduce bp_slots_histogram
+>   perf/hw_breakpoint: Optimize max_bp_pinned_slots() for CPU-independent
+>     task targets
+>   perf/hw_breakpoint: Optimize toggle_bp_slot() for CPU-independent task
+>     targets
+[...]
 
-I do agree that cpusets would be rather clumsy if usable at all in a
-scenario when you are trying to mix NUMA bound workloads with those
-that do not have any NUMA proferences. Could you be more specific about
-requirements here though?
+This is ready from our side, and given the silence, assume it's ready
+to pick up and/or have a maintainer take a look. Since this is mostly
+kernel/events, would -tip/perf/core be appropriate?
 
-Let's say you run those latency critical services with "simple" memory
-policies and mix them with the other workload without any policies in
-place so they compete over memory. It is not really clear to me how can
-you achieve any reasonable QoS in such an environment. Your latency
-critical servises will be more constrained than the non-critical ones
-yet they are more demanding AFAIU.
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+-- Marco
