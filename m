@@ -2,94 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35E8C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 13:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1802C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 13:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233059AbiGLNey (ORCPT
+        id S233134AbiGLNfm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Jul 2022 09:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49962 "EHLO
+        Tue, 12 Jul 2022 09:35:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232398AbiGLNew (ORCPT
+        with ESMTP id S230453AbiGLNfi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Jul 2022 09:34:52 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F528B6548;
-        Tue, 12 Jul 2022 06:34:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Tue, 12 Jul 2022 09:35:38 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C360B6DB4;
+        Tue, 12 Jul 2022 06:35:34 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 59F5920151;
+        Tue, 12 Jul 2022 13:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1657632931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+zipOz8mXTXKTOJCGZnBsxuqw/eZ2Vsh+kILV8kuqxE=;
+        b=VWaLz0Zi9WuzNQOHKOhhmJXt/adh3j2q5b/mwzjcUHqDNxLTThxGq10ppyCwcdaoz7LMJG
+        fBbTccaLbUuIIasDGhIXlz9896nN1pgO6K/iJTc8czSOkvt1q+ktZaXXGkXoZPK7wf7wTq
+        M3ccS3h7L6Y79Ux6ZHqhmnY5IB03Juw=
+Received: from suse.cz (unknown [10.100.201.86])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 30225B818CF;
-        Tue, 12 Jul 2022 13:34:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B09DC3411C;
-        Tue, 12 Jul 2022 13:34:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657632888;
-        bh=TzSrHp9qbWk1PEN/Ge7xLC+/VqfKPUI5qGy6UMlXEVA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h9CcWF5uxJP3KiWUPaf4dhtFm2R7qzTJIV6Ml1eVK6BV90ztxrTzwJDDLKqGmL32r
-         Wnk9ehRZzC+8Hs+9sqP/hTbdGbczNhSWz0ACmoSuNZKLK7lRxJNSDf/fTW1GLYv2+V
-         o7kcNk6GWxva/MKEHzfhfAUguBMVJa0X42KqR5e5LbKsXt29VJXYp/VfiLCR5odTqe
-         PfMU0OxEviY5b5kbiN5I/X3Twubzq51Jel+6rmdjahkEMqxJY8fyKbk6EwwRYXWfBz
-         +ne+/DlBvbIgZqG06lrenhrDlpy4uCxdMxS1q/PvyACG03jCKxv0ZSDVm4tGxgtH/9
-         qFI/VP+wBKZqw==
-Date:   Tue, 12 Jul 2022 14:34:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Li Huafei <lihuafei1@huawei.com>
-Cc:     linux@armlinux.org.uk, rmk+kernel@armlinux.org.uk, ardb@kernel.org,
-        will@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, arnd@arndb.de, linus.walleij@linaro.org,
-        rostedt@goodmis.org, nick.hawkins@hpe.com, john@phrozen.org,
-        mhiramat@kernel.org, ast@kernel.org, linyujun809@huawei.com,
-        ndesaulniers@google.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/5] ARM: stacktrace: Make stack walk callback consistent
- with generic code
-Message-ID: <Ys14cMm0n6EqS/cQ@sirena.org.uk>
-References: <20220712021527.109921-1-lihuafei1@huawei.com>
- <20220712021527.109921-5-lihuafei1@huawei.com>
+        by relay2.suse.de (Postfix) with ESMTPS id 4DFB72C141;
+        Tue, 12 Jul 2022 13:35:29 +0000 (UTC)
+Date:   Tue, 12 Jul 2022 15:35:28 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Abel Wu <wuyun.abel@bytedance.com>
+Cc:     Gang Li <ligang.bdlg@bytedance.com>, akpm@linux-foundation.org,
+        surenb@google.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, viro@zeniv.linux.org.uk,
+        ebiederm@xmission.com, keescook@chromium.org, rostedt@goodmis.org,
+        mingo@redhat.com, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, david@redhat.com,
+        imbrenda@linux.ibm.com, adobriyan@gmail.com,
+        yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        hezhongkun.hzk@bytedance.com
+Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
+ CONSTRAINT_{MEMORY_POLICY,CPUSET}
+Message-ID: <Ys14oIHL85d/T7s+@dhcp22.suse.cz>
+References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+ <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+ <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wJNTOJ4UzKV4TahT"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220712021527.109921-5-lihuafei1@huawei.com>
-X-Cookie: I like your SNOOPY POSTER!!
+In-Reply-To: <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue 12-07-22 19:12:18, Abel Wu wrote:
+[...]
+> I was just going through the mail list and happen to see this. There
+> is another usecase for us about per-numa memory usage.
+> 
+> Say we have several important latency-critical services sitting inside
+> different NUMA nodes without intersection. The need for memory of these
+> LC services varies, so the free memory of each node is also different.
+> Then we launch several background containers without cpuset constrains
+> to eat the left resources. Now the problem is that there doesn't seem
+> like a proper memory policy available to balance the usage between the
+> nodes, which could lead to memory-heavy LC services suffer from high
+> memory pressure and fails to meet the SLOs.
 
---wJNTOJ4UzKV4TahT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I do agree that cpusets would be rather clumsy if usable at all in a
+scenario when you are trying to mix NUMA bound workloads with those
+that do not have any NUMA proferences. Could you be more specific about
+requirements here though?
 
-On Tue, Jul 12, 2022 at 10:15:26AM +0800, Li Huafei wrote:
-
-> In order to use generic arch_stack_walk() code, make stack walk callback
-> consistent with it.
-
-It might be useful to say what the changes are here, if nothing else
-that makes it easier to review and confirm that the changes are doing
-what you intend them to.  See my conversion for arm64 for an example.
-The actual changes here seem OK though
-
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---wJNTOJ4UzKV4TahT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmLNeHAACgkQJNaLcl1U
-h9CN+Af/dZr0LAvp9hTnwJeNYmr/aG/PNwbUty4XnpklzdDW+VL06Jr1GLl8G7l5
-tZ1G3me8EcBHDe25iRucUYOcOEgoXaLl/lRYvCj81jFDNlHwHExWMCvVYtk/ujVP
-+QJs3lhgZKbpIi8Q7YZC2FOPnNFZpy7gzIXFR7ut4wb3hZA2ILULMrp1ydUaHyfd
-RgZ5EEgs8blIFeKFQh7XTYfPaNBi0SKjdkvxe2xUPKE0Z4wm5Cb3+VyHvQqeVUYo
-rY503r6I1IA9tc0p6w4mImr3tzB0mLTAoc/Enp6RkUy9ZqvC02af+VMFowAhUoHW
-e6JFVBF8TSBy6ktGerF0GB4lcjQvyA==
-=6EAy
------END PGP SIGNATURE-----
-
---wJNTOJ4UzKV4TahT--
+Let's say you run those latency critical services with "simple" memory
+policies and mix them with the other workload without any policies in
+place so they compete over memory. It is not really clear to me how can
+you achieve any reasonable QoS in such an environment. Your latency
+critical servises will be more constrained than the non-critical ones
+yet they are more demanding AFAIU.
+-- 
+Michal Hocko
+SUSE Labs
