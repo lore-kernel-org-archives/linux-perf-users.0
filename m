@@ -2,201 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31360C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 14:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40873CCA47F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 15:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbiGLOBD (ORCPT
+        id S234101AbiGLPIE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Jul 2022 10:01:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45044 "EHLO
+        Tue, 12 Jul 2022 11:08:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233473AbiGLN6z (ORCPT
+        with ESMTP id S234077AbiGLPGw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Jul 2022 09:58:55 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2C951A1A7;
-        Tue, 12 Jul 2022 06:58:38 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 343D51A9A;
-        Tue, 12 Jul 2022 06:58:38 -0700 (PDT)
-Received: from e126387.arm.com (unknown [10.57.72.222])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 986B03F73D;
-        Tue, 12 Jul 2022 06:58:36 -0700 (PDT)
-From:   carsten.haitzler@foss.arm.com
-To:     linux-kernel@vger.kernel.org
-Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: [PATCH 11/14] perf test: Add unroll thread test tool
-Date:   Tue, 12 Jul 2022 14:57:47 +0100
-Message-Id: <20220712135750.2212005-12-carsten.haitzler@foss.arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
-References: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
+        Tue, 12 Jul 2022 11:06:52 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DDFC4470
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 08:01:16 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 72so7855933pge.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 08:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=C6szfa/YFuVli7Zl8D3g07FtZCaBqKl0sr0C3s801fw=;
+        b=wvGh1LaGBDR/G4joma/N0cvbJnBEIUQnqZL1xqzrAx2II/seQanvVrR3VC/+z7Zjld
+         zVpL3S1Sbap6Qr3EziCQwuz57jjlFSyqAIG//PrF57ckKsOjYnNA74IslrVRV8nnnvRN
+         3wVRUsNjq8E8LfWdZImw+6t4uy2qdxEczsZkafnLIRX6/tVcYH4YdvtrreW/yTwotczk
+         0N6jnX5GZaEEOxdbD89BmI2kjEa6YY8NeG+QQlMPkGzOPlGhGFtT53OgEj7W2CYR3byM
+         LQOFNKZQ1nRsJMbeAYgWlG0zgQMstkobCqEuCJ2MiVopQxFfrxJf8bduX6B6jN534ryq
+         abmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=C6szfa/YFuVli7Zl8D3g07FtZCaBqKl0sr0C3s801fw=;
+        b=islVgAuKuTHBnOttHsBN4iwwoqcaImw5obN1jF0ZLmk7l+3FwVX1emNPTynnpalb0e
+         g+vMctY9NdDZFT9pCwfos/OJcqEyYCXw8zI96W/MwZPRbuXxS2pCQBAY8cav0TnDi1EG
+         vwdo+N/3G7GSvnVGkIyuAFjr8bNCmMJG4Iio1MwpbhQnvqHEdzfS08Ra7ykYGUtJbeUN
+         5d8Z/QdMJFrYZzZIevFnIUF+p4ImxuIZ8mwxBf/It8+lZo2pgnVpcXTcaxcOtNM91gK4
+         m9XftdfKF7zGlyS1c2R2I/B1WFiGZ94w6KQZf/wRFgOF46i252QpUdlh6O0sqSMozwxL
+         qjzw==
+X-Gm-Message-State: AJIora+UuIRtKpnkQbjPmmfj6ZGOg1zOn5X3XK3xiPtbD+fpbKZTvkej
+        PB2ye7IqRtsbjGQWlj4wbCg1+g==
+X-Google-Smtp-Source: AGRyM1uF2yZ0fhTWiRIzaCuJhrMoYd2YKnjhN3avJPfSwtQ8ASEEXv5DvqmJeYAEZYa99COktBhysA==
+X-Received: by 2002:a63:9752:0:b0:3c6:5a7a:5bd6 with SMTP id d18-20020a639752000000b003c65a7a5bd6mr21070507pgo.390.1657638073175;
+        Tue, 12 Jul 2022 08:01:13 -0700 (PDT)
+Received: from [10.4.113.6] ([139.177.225.234])
+        by smtp.gmail.com with ESMTPSA id l1-20020a170902f68100b0016bfbd99f64sm6892899plg.118.2022.07.12.08.00.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Jul 2022 08:01:12 -0700 (PDT)
+Message-ID: <6f6a2257-3b60-e312-3ee3-fb08b972dbf2@bytedance.com>
+Date:   Tue, 12 Jul 2022 23:00:55 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.11.0
+Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
+ CONSTRAINT_{MEMORY_POLICY,CPUSET}
+Content-Language: en-US
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Gang Li <ligang.bdlg@bytedance.com>, akpm@linux-foundation.org,
+        surenb@google.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, viro@zeniv.linux.org.uk,
+        ebiederm@xmission.com, keescook@chromium.org, rostedt@goodmis.org,
+        mingo@redhat.com, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, david@redhat.com,
+        imbrenda@linux.ibm.com, adobriyan@gmail.com,
+        yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        hezhongkun.hzk@bytedance.com
+References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+ <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+ <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
+ <Ys14oIHL85d/T7s+@dhcp22.suse.cz>
+From:   Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <Ys14oIHL85d/T7s+@dhcp22.suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 
-Add test tool to be driven by further test scripts. This is a simple C
-based test that is for arm64 with some inline ASM to manually unroll a
-lot of code to have a very long sequence of commands.
+On 7/12/22 9:35 PM, Michal Hocko Wrote:
+> On Tue 12-07-22 19:12:18, Abel Wu wrote:
+> [...]
+>> I was just going through the mail list and happen to see this. There
+>> is another usecase for us about per-numa memory usage.
+>>
+>> Say we have several important latency-critical services sitting inside
+>> different NUMA nodes without intersection. The need for memory of these
+>> LC services varies, so the free memory of each node is also different.
+>> Then we launch several background containers without cpuset constrains
+>> to eat the left resources. Now the problem is that there doesn't seem
+>> like a proper memory policy available to balance the usage between the
+>> nodes, which could lead to memory-heavy LC services suffer from high
+>> memory pressure and fails to meet the SLOs.
+> 
+> I do agree that cpusets would be rather clumsy if usable at all in a
+> scenario when you are trying to mix NUMA bound workloads with those
+> that do not have any NUMA proferences. Could you be more specific about
+> requirements here though?
 
-Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
----
- tools/perf/tests/shell/coresight/Makefile     |  3 +-
- .../coresight/unroll_loop_thread/.gitignore   |  1 +
- .../coresight/unroll_loop_thread/Makefile     | 33 +++++++++
- .../unroll_loop_thread/unroll_loop_thread.c   | 74 +++++++++++++++++++
- 4 files changed, 110 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
+Yes, these LC services are highly sensitive to memory access latency
+and bandwidth, so they are provisioned by NUMA node granule to meet
+their performance requirements. While on the other hand, they usually
+do not make full use of cpu/mem resources which increases the TCO of
+our IDCs, so we have to co-locate them with background tasks.
 
-diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-index 004974a71fb8..3b2b876cd9e2 100644
---- a/tools/perf/tests/shell/coresight/Makefile
-+++ b/tools/perf/tests/shell/coresight/Makefile
-@@ -7,7 +7,8 @@ include ../../../../../tools/scripts/utilities.mak
- SUBDIRS = \
- 	asm_pure_loop \
- 	memcpy_thread \
--	thread_loop
-+	thread_loop \
-+	unroll_loop_thread
- 
- all: $(SUBDIRS)
- $(SUBDIRS):
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-new file mode 100644
-index 000000000000..2cb4e996dbf3
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-@@ -0,0 +1 @@
-+unroll_loop_thread
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-new file mode 100644
-index 000000000000..6264c4e3abd1
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-@@ -0,0 +1,33 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+include ../Makefile.miniconfig
-+
-+# Binary to produce
-+BIN=unroll_loop_thread
-+# Any linking/libraries needed for the binary - empty if none needed
-+LIB=-pthread
-+
-+all: $(BIN)
-+
-+$(BIN): $(BIN).c
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+# Build line
-+	$(Q)$(CC) $(BIN).c -o $(BIN) $(LIB)
-+endif
-+endif
-+
-+install-tests: all
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+# Install the test tool in the right place
-+	$(call QUIET_INSTALL, tests) \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)'; \
-+		$(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)/$(BIN)'
-+endif
-+endif
-+
-+clean:
-+	$(Q)$(RM) -f $(BIN)
-+
-+.PHONY: all clean install-tests
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-new file mode 100644
-index 000000000000..cb9d22c7dfb9
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <pthread.h>
-+
-+struct args {
-+	pthread_t th;
-+	unsigned int in, out;
-+	void *ret;
-+};
-+
-+static void *thrfn(void *arg)
-+{
-+	struct args *a = arg;
-+	unsigned int i, in = a->in;
-+
-+	for (i = 0; i < 10000; i++) {
-+		asm volatile (
-+// force an unroll of thia add instruction so we can test long runs of code
-+#define SNIP1 "add %[in], %[in], #1\n"
-+// 10
-+#define SNIP2 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1
-+// 100
-+#define SNIP3 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2
-+// 1000
-+#define SNIP4 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3
-+// 10000
-+#define SNIP5 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4
-+// 100000
-+			SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5
-+			: /* out */
-+			: /* in */ [in] "r" (in)
-+			: /* clobber */
-+		);
-+	}
-+}
-+
-+static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
-+{
-+	pthread_t t;
-+	pthread_attr_t attr;
-+
-+	pthread_attr_init(&attr);
-+	pthread_create(&t, &attr, fn, arg);
-+	return t;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	unsigned int i, thr;
-+	pthread_t threads[256];
-+	struct args args[256];
-+
-+	if (argc < 2) {
-+		printf("ERR: %s [numthreads]\n", argv[0]);
-+		exit(1);
-+	}
-+
-+	thr = atoi(argv[1]);
-+	if ((thr > 256) || (thr < 1)) {
-+		printf("ERR: threads 1-256\n");
-+		exit(1);
-+	}
-+	for (i = 0; i < thr; i++) {
-+		args[i].in = rand();
-+		args[i].th = new_thr(thrfn, &(args[i]));
-+	}
-+	for (i = 0; i < thr; i++)
-+		pthread_join(args[i].th, &(args[i].ret));
-+	return 0;
-+}
--- 
-2.32.0
+Some of these LC services are memory-bound but leave much of cpu's
+capacity unused. In this case we hope the co-located background tasks
+to consume some leftover without introducing obvious mm overhead to
+the LC services.
 
+> 
+> Let's say you run those latency critical services with "simple" memory
+> policies and mix them with the other workload without any policies in
+> place so they compete over memory. It is not really clear to me how can
+> you achieve any reasonable QoS in such an environment. Your latency
+> critical servises will be more constrained than the non-critical ones
+> yet they are more demanding AFAIU.
+
+Yes, the QoS over memory is the biggest block in the way (the other
+resources are relatively easier). For now, we hacked a new mpol to
+achieve weighted-interleave behavior to balance the memory usage across
+NUMA nodes, and only set memcg protections to the LC services. If the
+memory pressure is still high, the background tasks will be killed.
+Ideas? Thanks!
+
+Abel
