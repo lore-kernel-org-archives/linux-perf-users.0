@@ -2,96 +2,252 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659EAC43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Jul 2022 11:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A88C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Jul 2022 12:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235068AbiGMLV4 (ORCPT
+        id S232055AbiGMMtv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Jul 2022 07:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45780 "EHLO
+        Wed, 13 Jul 2022 08:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231422AbiGMLVz (ORCPT
+        with ESMTP id S230303AbiGMMtu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Jul 2022 07:21:55 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1763B102061;
-        Wed, 13 Jul 2022 04:21:54 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LjZrj1ZQmzhZ99;
-        Wed, 13 Jul 2022 19:19:17 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 13 Jul 2022 19:21:52 +0800
-Received: from [10.67.110.237] (10.67.110.237) by
- kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 13 Jul 2022 19:21:51 +0800
-Subject: Re: [PATCH 4/5] ARM: stacktrace: Make stack walk callback consistent
- with generic code
-To:     Mark Brown <broonie@kernel.org>
-CC:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
-        <ardb@kernel.org>, <will@kernel.org>, <mark.rutland@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <arnd@arndb.de>, <linus.walleij@linaro.org>,
-        <rostedt@goodmis.org>, <nick.hawkins@hpe.com>, <john@phrozen.org>,
-        <mhiramat@kernel.org>, <ast@kernel.org>, <linyujun809@huawei.com>,
-        <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-References: <20220712021527.109921-1-lihuafei1@huawei.com>
- <20220712021527.109921-5-lihuafei1@huawei.com>
- <Ys14cMm0n6EqS/cQ@sirena.org.uk>
-From:   Li Huafei <lihuafei1@huawei.com>
-Message-ID: <cbdd6276-4e5c-e983-6b1a-b43863cce9a9@huawei.com>
-Date:   Wed, 13 Jul 2022 19:21:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        Wed, 13 Jul 2022 08:49:50 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF686465
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Jul 2022 05:49:49 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id c15so13398086ljr.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Jul 2022 05:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A9yBvm9Ksb4Rmw74utDmUvOM3nzivfvh+Ern9WSW11A=;
+        b=fmfHunkvcUwHDXNIbByA2pTdl3B3Javrf0cV+/yN857ltbnnM2feoFqUgzNaxtGavd
+         MBTw90v5AmhW+fBn91e6EL37kAqalXI7lGIE0L9vOlbbESf6sWnPlzZTAwFhNAW4NiQ9
+         1lEnfMpnzQB3Xp1nIg+wNlIJJ9cx7AYHSmgVaJ0AsCJxsJlQbfaXFJHY/zU3GCVSZZ1q
+         NAl+SVdj2hf3OXj555/yuvbF/ofSd2LY4ocPU8sV78kvtG1aeqJ8oZVt9/4Q7WpiMbB6
+         wwR1YX99H0RYSL4ew77+8AyCAWuswPVs9pAk96fSOhnsftvbYROUty7J8AETTXY8WJZD
+         FSCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A9yBvm9Ksb4Rmw74utDmUvOM3nzivfvh+Ern9WSW11A=;
+        b=pwHRuKKBRsRHbfUoDVPxS/9U/g4UBrVGEwdOq9lAOuL6sm7YgIon4j+Wjf4nELBcei
+         T79KBNrTMc+VEIsyoufMjXgFxM6MgnIjwgZ6gsOUtK1wWg+mbEALtoDfndUcVAiUASLK
+         flLWYQ7a/plG4DH/hhwU8y2uvmlXvPrxpKqbV3jK/+EJEnfFZzWW+JywRaPtzU9sUnn4
+         7FTtgL0g/hpISbNy6qe7kYWR9v2W/DDadDchV5p0pA8d7gIT5dOYhNSIuNVbAEPs569P
+         z0xl+sBTyabDkIIiYy5Uq2iiew77FgjK2QTOb+/XTaoigJbC+S0Xj5N8DoUXK1hsE6c8
+         lYvg==
+X-Gm-Message-State: AJIora/Pmt+iUOpDO56VPsaBwOVWW0mpxfm1BFMZAZATTci95rugpS6c
+        CnLKgHObcSXoTXzkdnViNx2p0t28hUhkl3S9fsgzcA==
+X-Google-Smtp-Source: AGRyM1sDjUBNHOKmM/gpvsfE0rDu8TqZAtI2mp9kH96cM1M0+vups+gPTszOr5oZpU57NXjtqhTM3zEorKLpiNfL9+o=
+X-Received: by 2002:a2e:b8d6:0:b0:25a:99ce:5c32 with SMTP id
+ s22-20020a2eb8d6000000b0025a99ce5c32mr1592537ljp.95.1657716587457; Wed, 13
+ Jul 2022 05:49:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <Ys14cMm0n6EqS/cQ@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.67.110.237]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
+References: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com> <20220712135750.2212005-3-carsten.haitzler@foss.arm.com>
+In-Reply-To: <20220712135750.2212005-3-carsten.haitzler@foss.arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Wed, 13 Jul 2022 13:49:35 +0100
+Message-ID: <CAJ9a7VjBSouo23J2Ws8hw1Gck2b7W4sbxGN+PzjsLHhDAxSP1Q@mail.gmail.com>
+Subject: Re: [PATCH 02/14] perf test: Add CoreSight shell lib shared code for
+ future tests
+To:     carsten.haitzler@foss.arm.com
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Carsten,
 
-On 2022/7/12 21:34, Mark Brown wrote:
-> On Tue, Jul 12, 2022 at 10:15:26AM +0800, Li Huafei wrote:
+On Tue, 12 Jul 2022 at 14:58, <carsten.haitzler@foss.arm.com> wrote:
 >
->> In order to use generic arch_stack_walk() code, make stack walk callback
->> consistent with it.
-> It might be useful to say what the changes are here, if nothing else
-> that makes it easier to review and confirm that the changes are doing
-> what you intend them to.  See my conversion for arm64 for an example.
-
-
-Thanks for the advice. I've looked at the commit:
-
-   baa2cd417053 ("arm64: stacktrace: Make stack walk callback consistent 
-with generic code")
-
-The description is very clear. It describes the change in detail and
-gives a reason for making that change a separate commit. The same
-description applies to the current changes, so I took the commit message
-directly, just made the s/arm64/ARM/ changes, and updated to v2:
-
-https://lore.kernel.org/lkml/20220713110020.85511-1-lihuafei1@huawei.com/
-
-
-> The actual changes here seem OK though
+> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 >
-> Reviewed-by: Mark Brown <broonie@kernel.org>
+> This adds a library of shell "code" to be shared and used by future
+> tests that target quality testing for Arm CoreSight support in perf
+> and the Linux kernel.
+>
+> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+> ---
+>  tools/perf/tests/shell/lib/coresight.sh | 129 ++++++++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+>  create mode 100644 tools/perf/tests/shell/lib/coresight.sh
+>
+> diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
+> new file mode 100644
+> index 000000000000..8c254d2185bc
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/lib/coresight.sh
+> @@ -0,0 +1,129 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+> +
+> +# This is sourced from a driver script so no need for #!/bin... etc. at the
+> +# top - the assumption below is that it runs as part of sourcing after the
+> +# test sets up some basic env vars to say what it is.
+> +
+> +# perf record options for the perf tests to use
+> +PERFRECMEM="-m ,16M"
+> +PERFRECOPT="$PERFRECMEM -e cs_etm//u"
+> +
+> +TOOLS=$(dirname $0)
+> +DIR="$TOOLS/$TEST"
+> +BIN="$DIR/$TEST"
+> +# If the test tool/binary does not exist and is executable then skip the test
+> +if ! test -x "$BIN"; then exit 2; fi
+> +DATD="."
+> +# If the data dir env is set then make the data dir use that instead of ./
+> +if test -n "$PERF_TEST_CORESIGHT_DATADIR"; then
+> +       DATD="$PERF_TEST_CORESIGHT_DATADIR";
+> +fi
+> +# If the stat dir env is set then make the data dir use that instead of ./
+> +STATD="."
+> +if test -n "$PERF_TEST_CORESIGHT_STATDIR"; then
+> +       STATD="$PERF_TEST_CORESIGHT_STATDIR";
+> +fi
+> +
+> +# Called if the test fails - error code 2
+> +err() {
+> +       echo "$1"
+> +       exit 1
+> +}
 
-Thanks for the review!
+comment and exit 1 don't tie up
+
+> +
+> +# Check that some statistics from our perf
+> +check_val_min() {
+> +       STATF="$4"
+> +       if test "$2" -lt "$3"; then
+> +               echo ", FAILED" >> "$STATF"
+> +               err "Sanity check number of $1 is too low ($2 < $3)"
+> +       fi
+> +}
+> +
+> +perf_dump_aux_verify() {
+> +       # Some basic checking that the AUX chunk contains some sensible data
+> +       # to see that we are recording something and at least a minimum
+> +       # amount of it. We should almost always see F3 atoms in just about
+> +       # anything but certainly we will see some trace info and async atom
+> +       # chunks.
+> +       DUMP="$DATD/perf-tmp-aux-dump.txt"
+> +       perf report --stdio --dump -i "$1" | \
+> +               grep -o -e I_ATOM_F3 -e I_ASYNC -e I_TRACE_INFO > "$DUMP"
+> +       # Simply count how many of these atoms we find to see that we are
+> +       # producing a reasonable amount of data - exact checks are not sane
+> +       # as this is a lossy  process where we may lose some blocks and the
+> +       # compiler may produce different code depending on the compiler and
+> +       # optimization options, so this is rough  just to see if we're
+> +       # either missing almost all the data or all of it
+> +       ATOM_F3_NUM=`grep I_ATOM_F3 "$DUMP" | wc -l`
+> +       ATOM_ASYNC_NUM=`grep I_ASYNC "$DUMP" | wc -l`
+> +       ATOM_TRACE_INFO_NUM=`grep I_TRACE_INFO "$DUMP" | wc -l`
+> +       rm -f "$DUMP"
+> +
+
+Please use correct terminology for the tech - ATOM is a specific form
+of trace packet,
+"ATOM_TRACE_INFO_NUM" makes no sense - TRACE_INFO_NUM is sufficient.
+Same for ATOM_ASYNC_NUM.=> ASYNC_NUM  - and all occurrences below.
+
+Moreover it would be better to just search for all atoms i.e. I_ATOM.
+This way you avoid hardware variations where an platform
+implementation may give different ratios between the different atom
+types for the same trace run.
 
 
-Thanks,
+> +       # Arguments provide minimums for a pass
+> +       CHECK_F3_MIN="$2"
+> +       CHECK_ASYNC_MIN="$3"
+> +       CHECK_TRACE_INFO_MIN="$4"
+> +
+> +       # Write out statistics, so over time you can track results to see if
+> +       # there is a pattern - for example we have less "noisy" results that
+> +       # produce more consistent amounts of data each run, to see if over
+> +       # time any techinques to  minimize data loss are having an effect or
+> +       # not
+> +       STATF="$STATD/stats-$TEST-$DATV.csv"
+> +       if ! test -f "$STATF"; then
+> +               echo "ATOM F3 Count, Minimum, ATOM ASYNC Count, Minimum, TRACE INFO Count, Minimum" > "$STATF"
+> +       fi
+> +       echo -n "$ATOM_F3_NUM, $CHECK_F3_MIN, $ATOM_ASYNC_NUM, $CHECK_ASYNC_MIN, $ATOM_TRACE_INFO_NUM, $CHECK_TRACE_INFO_MIN" >> "$STATF"
+> +
+> +       # Actually check to see if we passed or failed.
+> +       check_val_min "ATOM_F3" "$ATOM_F3_NUM" "$CHECK_F3_MIN" "$STATF"
+> +       check_val_min "ASYNC" "$ATOM_ASYNC_NUM" "$CHECK_ASYNC_MIN" "$STATF"
+> +       check_val_min "TRACE_INFO" "$ATOM_TRACE_INFO_NUM" "$CHECK_TRACE_INFO_MIN" "$STATF"
+> +       echo ", Ok" >> "$STATF"
+> +}
+> +
+> +perf_dump_aux_tid_verify() {
+> +       # Specifically crafted test will produce a list of Tread ID's to
+> +       # stdout that need to be checked to  see that they have had trace
+> +       # info collected in AUX blocks in the perf data. This will go
+> +       # through all the TID's that are listed as CID=0xabcdef and see
+> +       # that all the Thread IDs the test tool reports are  in the perf
+> +       # data AUX chunks
+> +
+> +       # The TID test tools will print a TID per stdout line that are being
+> +       # tested
+> +       TIDS=`cat "$2"`
+> +       # Scan the perf report to find the TIDs that are actually CID in hex
+> +       # and build a list of the ones found
+> +       FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
+> +                       grep -o "CID=0x[0-9a-z]\+" | sed 's/CID=//g' | \
+> +                       uniq | sort | uniq`
+> +       # No CID=xxx found - maybe your kernel is reporting these as
+> +       # VMID=xxx so look there
+> +       if test -z "$FOUND_TIDS"; then
+> +               FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
+> +                               grep -o "VMID=0x[0-9a-z]\+" | sed 's/VMID=//g' | \
+> +                               uniq | sort | uniq`
+> +       fi
+> +
+> +       # Iterate over the list of TIDs that the test says it has and find
+> +       # them in the TIDs found in the perf report
+> +       MISSING=""
+> +       for TID2 in $TIDS; do
+> +               FOUND=""
+> +               for TIDHEX in $FOUND_TIDS; do
+> +                       TID=`printf "%i" $TIDHEX`
+> +                       if test "$TID" -eq "$TID2"; then
+> +                               FOUND="y"
+> +                               break
+> +                       fi
+> +               done
+> +               if test -z "$FOUND"; then
+> +                       MISSING="$MISSING $TID"
+> +               fi
+> +       done
+> +       if test -n "$MISSING"; then
+> +               err "Thread IDs $MISSING not found in perf AUX data"
+> +       fi
+> +}
+> --
+> 2.32.0
+>
 
-Huafei
+I haven't seen it mentioned anywhere but these tests will only work on
+ETMv4 / ETE. Platforms with ETMv3.x and PTM have different output
+packet types.
 
+We don't need to support these at present - and maybe never, but it
+does need to be explicitly stated which trace technologies the tests
+are compatible with.
+
+Regards
+
+Mike
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
