@@ -2,112 +2,264 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077C7C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 12 Jul 2022 21:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B83C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Jul 2022 03:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbiGLVav (ORCPT
+        id S231269AbiGMDaH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 12 Jul 2022 17:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36236 "EHLO
+        Tue, 12 Jul 2022 23:30:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233190AbiGLVau (ORCPT
+        with ESMTP id S231315AbiGMDaG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 12 Jul 2022 17:30:50 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A29D0E38
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 14:30:47 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id z11so5882826qkz.13
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 14:30:47 -0700 (PDT)
+        Tue, 12 Jul 2022 23:30:06 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458D5B8532
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 20:30:04 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id 6so17257562ybc.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 20:30:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=/ov82X9kW39yvbxY1McMir/k+O2+nYDyG4xPScmDyfc=;
-        b=ay3/5lDUwcy1Hcdr2vmHaxiMQwYnvd/iCWseV3Jo2Kp2E/uDYFyEIr76QZQCwA7K+S
-         wi1beA0eG1qxbEBdN7ZT4w6+ri8TWB8pNNplK5yvswScENpVx3UZUWOZYg2+DBlj4gEf
-         YPcT+/qh0IYxNQoeADazl8GnAJqKoTR8qVEaM=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PP/OhW0gPEu1hOVZ+LUBvYiiXRfoCiVcRjdOa19gXfg=;
+        b=fDsANUBNqxqJQSzD5I2/ATj5PCX9C6oYXmSsRDPqIJ45RV85L2ujdW80J+UV2EFYmh
+         /o3RT8Rv27WC8ycz6U7qtk0uvwsITN64jrHZDfy6ZPNpX77n17kKX41JZbD9rSKjJKgV
+         Q4QTWPBPObM8fSN5jn4NI9Ih0wzO0ojEpf5BOwaD9o/E4r5+GV47XqEG2ehqqCmWbAf5
+         4v6ZNR5d2mPZPJOc0TY6MnOwMSq8BdX95606FmAIJC5JsblJHpbjSIEEvdDs7ZmI2X0T
+         ru+0gd1PETSjAdOK84tJdpELjLW+9w4sfgsvIsds4eEzVKAR/TtRXbEGArFTotmDFs2E
+         SfHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=/ov82X9kW39yvbxY1McMir/k+O2+nYDyG4xPScmDyfc=;
-        b=fP98HZxbMeWCiBO6vuWo5BKzrhmw1qMt/N6dbI+gXzNzErRv7Ev1YWENEke+8MJiYy
-         ZvrB7M8pgsS0eCKgC5CMARjOOv9SKrGm64e3WYh9K5AP3h1+DnTuR5DIivQM03AR68Ex
-         3Q+BM/CIir/iU4jqoTYBtGgGpWeecLUuBbRlGpm6n5XsLIy2Gis/6Fh0zdirajTPXUfT
-         I5Pr+jkygqrun3XHfM1fwARYbl71A/Hq83xLTWDvWnVNPsepaC0jlkMCeX0LxpWhRZNj
-         qHBV1SFDs91KsArKVyyXwoCPsZrn6Bx0g8Yg72Ewd8I6SUxtK9yTKPI5AST4YskQNzI6
-         l6tQ==
-X-Gm-Message-State: AJIora9dUNrzWuVldWuXEhDBevmO9m8iTRawQKGQy7WavGV5ito3AbSO
-        c438QMN0W2JX3s3N5/ZMo2+vNA==
-X-Google-Smtp-Source: AGRyM1tPYp1vPM53Xd2cP3aF0HKDN4RijBCYmU7LSYzQBcaeKECQ9LthjfLWLntHfoh9ElULngaJQA==
-X-Received: by 2002:a05:620a:132d:b0:6b5:9575:9080 with SMTP id p13-20020a05620a132d00b006b595759080mr222850qkj.153.1657661446728;
-        Tue, 12 Jul 2022 14:30:46 -0700 (PDT)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id y13-20020a05620a44cd00b006b5a9e53105sm1931238qkp.91.2022.07.12.14.30.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 14:30:46 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Tue, 12 Jul 2022 17:30:44 -0400 (EDT)
-To:     James Clark <james.clark@arm.com>
-cc:     Andrew Kilroy <andrew.kilroy@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PP/OhW0gPEu1hOVZ+LUBvYiiXRfoCiVcRjdOa19gXfg=;
+        b=bCDc4/yKQ+318pwPOkQ3Iu2kItQ/CSwSHDmhgUO3t4MbDP1NnQxCI1yq1Gc3yg1wpb
+         aJrs7rFB3l0y3VjiairUtdHCi468qApTrF3LX1ab8hv5zLVyMA4gtZZ8CrcNN2zZgAi/
+         B37PU5BXupsU0OMxUM5dh8Bp590osC0N6txTUOuGpwnrH7NaXPVq1oGEwEIIFOAVXVa+
+         ki2e7FZ3sKjWPG90rFz+u31ijrwzSF4mAjcw+1CvrG/y1VFEnOUfrL1nJhkxtkqmt9Jv
+         fAEgjU7nKWHUAcN94BI4thF7Fi47Xz25W7Smm4YgSD7ck5wax3EG+dQ4e/q6Nykwwjcf
+         eqhg==
+X-Gm-Message-State: AJIora9sZ247QDPKnZkMnfjTzgV7z7QJH7X0X/dimKiVjfepBJevIxP7
+        r7TJGbT1ovUcyaaJLQGlFA3bXEtzefT/hsIKVJRaVw==
+X-Google-Smtp-Source: AGRyM1sepXKZ1P9DsojICWLKf64xn0nLoGSMru9yJuTGxSqksRWOOShl7umoF9CZdjkI5nzPAVN7tRevwzwT8JNRdv0=
+X-Received: by 2002:a5b:58e:0:b0:66f:2c4f:e542 with SMTP id
+ l14-20020a5b058e000000b0066f2c4fe542mr1635753ybp.572.1657683003374; Tue, 12
+ Jul 2022 20:30:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220710012204.2390293-1-leo.yan@linaro.org> <CAP-5=fX_fT7e9tqDBKXh_1CQ8w80iOXCGz2kJT_nHpY6wYWqmQ@mail.gmail.com>
+ <20220711172706.rtfd6pp2pochmdre@google.com> <20220712040538.GB10379@leoy-ThinkPad-X240s>
+In-Reply-To: <20220712040538.GB10379@leoy-ThinkPad-X240s>
+From:   Fangrui Song <maskray@google.com>
+Date:   Tue, 12 Jul 2022 20:29:52 -0700
+Message-ID: <CAFP8O3+dQi8b6C_f9bTb0TFpEmNjsroBv4agUpRKps2p3hpP+A@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] perf symbol: Correct address for bss symbols
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Tom Rix <trix@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 2/8] perf evsel: Do not request ptrauth sample field if
- not supported
-In-Reply-To: <8d282e87-c1c8-f7a0-631b-8d569c2154a6@arm.com>
-Message-ID: <8b6a583a-4ee0-8097-54e5-7d51a6edaa@maine.edu>
-References: <20220704145333.22557-1-andrew.kilroy@arm.com> <20220704145333.22557-3-andrew.kilroy@arm.com> <d67dff7-73c3-e5a-eb7b-f132e8f565cc@maine.edu> <8d282e87-c1c8-f7a0-631b-8d569c2154a6@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chang Rui <changruinj@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 11 Jul 2022, James Clark wrote:
-> On 06/07/2022 17:01, Vince Weaver wrote:
-> > So in this case you are leaking ARM64-specific info into the generic 
-> > perf_event_open() call?  Is there any way the kernel could implement this 
-> > without userspace having to deal with the issue?
-> 
-> The alternative to this change is just to call it "PERF_SAMPLE_POINTER_AUTH_MASK"
-> and then it's not Arm specific, it's just that only Arm implements it for now.
-> This is definitely an option.
-> 
-> But if no platform ever implements something similar then that bit is wasted.
-> The intention of adding "PERF_SAMPLE_ARCH_1" was to prevent wasting that bit.
-> But as you say, maybe making it arch specific isn't the right way either.
+On Mon, Jul 11, 2022 at 9:05 PM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Mon, Jul 11, 2022 at 10:27:06AM -0700, Fangrui Song wrote:
+>
+> Thanks for review, Ian and Fangrui!
 
-I don't know what the current kernel policy is on this kind of thing, but 
-in the past perf_event_open was meant to be a generic as possible.
-Having architecture-specific magic bits is best avoided.
-However I'm not the maintainer for this so really my opinion doesn't 
-really matter.
+You are welcome:)
 
-I'm just speaking up as a userspace coder who is trying to write 
-cross-platform tools, and having to maintain obscure arch-specific code 
-paths in every single utility ends up being a huge pain.  And isn't the 
-whole point of an operating system to abstract this away?
+> [...]
+>
+> > > > First we used 'perf mem record' to run the test program and then us=
+ed
+> > > > 'perf --debug verbose=3D4 mem report' to observe what's the symbol =
+info
+> > > > for 'buf1' and 'buf2' structures.
+> > > >
+> > > >   # ./perf mem record -e ldlat-loads,ldlat-stores -- false_sharing.=
+exe 8
+> > > >   # ./perf --debug verbose=3D4 mem report
+> > > >     ...
+> > > >     dso__load_sym_internal: adjusting symbol: st_value: 0x40c0 sh_a=
+ddr: 0x4040 sh_offset: 0x3028
+> > > >     symbol__new: buf2 0x30a8-0x30e8
+> > > >     ...
+> > > >     dso__load_sym_internal: adjusting symbol: st_value: 0x4080 sh_a=
+ddr: 0x4040 sh_offset: 0x3028
+> > > >     symbol__new: buf1 0x3068-0x30a8
+> > > >     ...
+> >
+> > It seems unclear how 0x30a8 and 0x3068 are derived,
+>
+> In perf tool, 0x30a8 and 0x3068 are adjusted address, which are derived
+> from 'st_value', 'sh_addr' and 'sh_offset' with the formula:
+>
+>   adjusted_address =3D st_value - sh_addr + sh_offset
+>
+> So perf computes symbol address for buf1:
+>
+>   adjusted_address =3D st_value - sh_addr + sh_offset
+>                    =3D 0x4080 - 0x4040 + 0x3028
+>                    =3D 0x3068
 
-> > can tell there haven't been any documentation patches included for the 
-> > Makefile.
-> 
-> We plan to update the docs for the syscall, but it's in another repo, and
-> we'll wait for this change to be finalised first. I'm not sure what you
-> mean about the Makefile?
+Thanks.
 
-sorry, that was a mis-type.  I meant "manpage" not Makefile.
+> > > > Perf tool relies on libelf to parse symbols, here 'st_value' is the
+> > > > address from executable file, 'sh_addr' is the belonged section's l=
+inked
+> > > > start address, and 'sh_offset' is the dynamic loaded address for th=
+is
+> > > > section, then perf tool uses below formula to adjust symbol address=
+:
+> > > >
+> > > >   adjusted_address =3D st_value - sh_addr + sh_offset
+> > > >
+> > > > So we can see the final adjusted address ranges for buf1 and buf2 a=
+re
+> > > > [0x30a8-0x30e8) and [0x3068-0x30a8) respectively, apparently this i=
+s
+> > > > incorrect, in the code, the structure for 'buf1' and 'buf2' specifi=
+es
+> > > > compiler attribute with 64-byte alignment.
+> >
+> > so I cannot judge this paragraph.
+> >
+> > > > The problem happens for 'sh_offset', libelf returns it as 0x3028 wh=
+ich
+> > > > is not 64-byte aligned, on the other hand, we can see both 'st_valu=
+e'
+> > > > and 'sh_addr' are 64-byte aligned.  Combining with disassembly, it'=
+s
+> > > > likely libelf uses the .data section end address as .bss section
+> > > > start address, therefore, it doesn't respect the alignment attribut=
+e for
+> > > > structures in .bss section.
+> > > >
+> > > > Since .data and .bss sections are in the continuous virtual address
+> > > > space, and .data section info returned by libelf is reliable, to fi=
+x
+> > > > this issue, if detects it's a bss symbol, it rolls back to use .dat=
+a
+> > > > section info to adjust symbol's virtual address.
+> >
+> > This is not necessarily true.
+> >
+> > * In GNU ld's internal linker script, .data1 sits between .data and .bs=
+s.
+> > * A linker script can add other sections between .data and .bss
+> > * A linker script may place .data and .bss in two PT_LOAD program heade=
+rs.
+>
+> Agreed the approach in this patch cannot handle all cases.
+>
+> > % readelf -WS aa
+> > There are 13 section headers, starting at offset 0x10a8:
+> >
+> > With a linker script like
+> >
+> > % cat a/a.lds
+> > SECTIONS {
+> >   .text : { *(.text) }
+> >   data1 : { *(data1) }
+> >   data2 : { *(data2) }
+> >   .bss : { *(.bss) }
+> > }
+> >
+> > I can get something like
+> >
+> > Section Headers:
+> >   [Nr] Name              Type            Address          Off    Size  =
+ ES Flg Lk Inf Al
+> >   [ 0]                   NULL            0000000000000000 000000 000000=
+ 00      0   0  0
+> >   [ 1] .text             PROGBITS        0000000000000000 001000 000001=
+ 00  AX  0   0  1
+> >   [ 2] data1             PROGBITS        0000000000000001 001001 000001=
+ 00  WA  0   0  1
+> >   [ 3] data2             PROGBITS        0000000000000002 001002 000001=
+ 00  WA  0   0  1
+> >   [ 4] .data             PROGBITS        0000000000000003 001003 000000=
+ 00  WA  0   0  1
+> >   [ 5] data3             PROGBITS        0000000000000003 001003 000001=
+ 00  WA  0   0  1
+> >   [ 6] .bss              NOBITS          0000000000000020 001004 000001=
+ 00  WA  0   0 32
+> >
+> > .bss's sh_offset does not need to be aligned per http://www.sco.com/dev=
+elopers/gabi/latest/ch4.sheader.html
+> >
+> >     sh_offset
+> >     This member's value gives the byte offset from the beginning of the=
+ file to the first byte in the section. One section type, SHT_NOBITS descri=
+bed below, occupies no space in the file, and its sh_offset member locates =
+the conceptual placement in the file.
+>
+> > I don't have more context why the file offset is needed for a variable =
+in the all-zero section.
+>
+> We need to create symbol info for not only .text section but also for
+> .data section and .bss section=E1=B9=A1.  So based on the data address, w=
+e can
+> know what's the symbol for the data access.
+>
+> But I need to correct the description for "st_value" [1]: In
+> executable and shared object files, st_value holds a virtual address.
+> To make these files' symbols more useful for the dynamic linker, the
+> section offset (file interpretation) gives way to a virtual address
+> (memory interpretation) for which the section number is irrelevant.
+>
+> So perf tool uses the formula "st_value - sh_addr + sh_offset" to
+> convert from the memory address to file address.  But it calculates
+> the wrong file address because "sh_offset" doesn't respect the
+> alignment.
 
-Vince Weaver
-vincent.weaver@maine.edu
+Thanks for the explanation. I think st_value - p_vaddr + p_offset  may
+be a better formula where p_vaddr/p_offset is from the PT_LOAD program
+header.
+
+For a SHT_NOBITS section, sh_offset may not be accurate, but PT_LOAD
+has precise information.
+
+> [1] http://www.sco.com/developers/gabi/latest/ch4.symtab.html#symbol_valu=
+e
+>
+> > If the file offset has to be used and we want to use a heuristic, a bet=
+ter one is to find the section index of .bss, say, i.
+> >
+> > const uint64_t align =3D shdr[i].sh_addralign;
+> > assert(i > 0);
+> > if (shdr[i].offset % align =3D=3D 0)
+> >   return shdr[i].offset;
+> > return (shdr[i-1].sh_offset + shdr[i-1].sh_size + align - 1) & -align;
+> >
+> > Really, it is better to use the program header to derive the virtual ad=
+dress of a variable residing in .bss.
+>
+> I think we can simplify the code.  Because:
+>
+>   shdr[i].sh_offset =3D shdr[i-1].sh_offset + shdr[i-1].sh_size
+>
+> ... thus we can simply fixup "sh_offset":
+>
+>   const uint64_t align =3D shdr[i].sh_addralign;
+>   aligned_sh_offset =3D (shdr[i].sh_offset + align - 1) & ~(align - 1);
+>
+> So:
+>
+>   symbol_addr =3D st_value - sh_addr + aligned_sh_offset
+>
+> If you still see any issue, please let me know.
+>
+> Thanks a lot for suggestions.
+>
+> Leo
