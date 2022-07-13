@@ -2,104 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBFDC43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Jul 2022 05:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD69EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Jul 2022 05:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232000AbiGMFYK (ORCPT
+        id S232094AbiGMFmN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Jul 2022 01:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
+        Wed, 13 Jul 2022 01:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233727AbiGMFYH (ORCPT
+        with ESMTP id S234064AbiGMFlz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Jul 2022 01:24:07 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DFF599E7
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 22:24:05 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id s206so9495119pgs.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 22:24:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ut+uaIBNWmPiRpGqEhRFI1vh60vpzjIhzJJbDXdJFqA=;
-        b=HMXfCuTvx4TnBNFFgpcFsDLFe1hlKIJA7x8c8dqAe2c/E9vTXPWHQ8JUQi91nRQdXy
-         9vp4LhwOvxd9fuxgBHfT2NNQE+mUbzJp4CHHD+YYsgyBiDgzJSEoRCLhysuARQ14LSrB
-         yt+QmoWnMWFaLYTALTLgHsOzAVp6pi3ow5vmkJYuOpoRPEdwvzEB4ReaJS/jmh/AKzzB
-         PpPlbJEzeeAWR6Up4a3iQM+QsHhFIqzwaTbHvLphECmYdKkApEnSTkkxpfnNaKdEnc8X
-         PBoP/7QYKfvJbjNZIO4PTKOCGQk1L48sbi7SN2KXoFOAUbYgoLTPWfvJ8smAFu5zlLcF
-         h9ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ut+uaIBNWmPiRpGqEhRFI1vh60vpzjIhzJJbDXdJFqA=;
-        b=VEJEkffGT6Lvu035thtvCEZ+Bth+K+7fCGDF7AqIoyxnVVcvNNQvw5l/TbcSr24LEk
-         6pBe1PTHtRfD8gEM5ePdmQFTmThr/m5UcaFC+vHAVPEqfwluzivWrPG6IVXnNPBVhCAb
-         2vYlex2I0tDhMxqTud8TuQNLKlQcI9PTxEk4qE+PfB9Kf90GKLgkyiN094oAE3RTvbOT
-         kDXWAscUZVOVrdOubQLleSm9M1NCSILKjl1IGZHTJzT42omPbltPCnJElLo6AlNVhtvx
-         7TFY+5teP+/HPjFyPVATEGlnlUk8TtfMbpxIy3PgQfoOP9jolGf3gXkJBJb3L/CAL7Or
-         qTHA==
-X-Gm-Message-State: AJIora9dNQvaKu6cYeVCNLRZej0ti+PSVSZwaqs81mViQycgdlqH2coE
-        XfXKJNtZ/EkcExhxqQWS97qEow==
-X-Google-Smtp-Source: AGRyM1tS8AknxcV8aZ7Iz2A8hueX4OaTh7+j7rWcVd0S1GN+RwwiWPPrquyEoWoa+nrMVRTpzesPEQ==
-X-Received: by 2002:a63:f355:0:b0:419:8dfd:45d0 with SMTP id t21-20020a63f355000000b004198dfd45d0mr1531053pgj.226.1657689844535;
-        Tue, 12 Jul 2022 22:24:04 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id h14-20020a056a00000e00b0051bbe085f16sm7792615pfk.104.2022.07.12.22.24.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 22:24:03 -0700 (PDT)
-Date:   Wed, 13 Jul 2022 13:23:59 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     carsten.haitzler@foss.arm.com
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: Re: A patch series improving data quality of perf test for CoreSight
-Message-ID: <20220713052359.GA1354743@leoy-ThinkPad-X240s>
-References: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
+        Wed, 13 Jul 2022 01:41:55 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D43B226C5;
+        Tue, 12 Jul 2022 22:40:39 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2EAF1424;
+        Tue, 12 Jul 2022 22:40:39 -0700 (PDT)
+Received: from [10.162.42.9] (unknown [10.162.42.9])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC5C73F70D;
+        Tue, 12 Jul 2022 22:40:34 -0700 (PDT)
+Message-ID: <ff1e0c31-488a-a054-ebc4-189eabf0b186@arm.com>
+Date:   Wed, 13 Jul 2022 11:10:32 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH V6 0/8] perf: Expand perf_branch_entry
+Content-Language: en-US
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, acme@kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220610035101.424112-1-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20220610035101.424112-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 02:57:36PM +0100, carsten.haitzler@foss.arm.com wrote:
-> This is a prelude to adding more tests to shell tests and in order to
-> support putting those tests into subdirectories, I need to change the
-> test code that scans/finds and runs them.
-> 
-> To support subdirs I have to recurse so it's time to refactor the code to
-> allow this and centralize the shell script finding into one location and
-> only one single scan that builds a list of all the found tests in memory
-> instead of it being duplicated in 3 places.
-> 
-> This code also optimizes things like knowing the max width of desciption
-> strings (as we can do that while we scan instead of a whole new pass
-> of opening files). It also more cleanly filters scripts to see only
-> *.sh files thus skipping random other files in directories like *~
-> backup files, other random junk/data files that may appear and the
-> scripts must be executable to make the cut (this ensures the script
-> lib dir is not seen as scripts to run). This avoids perf test running
-> previous older versions of test scripts that are editor backup files
-> as well as skipping perf.data files that may appear and so on.
-> 
-> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 
-Just remind, you could use the command like below to generate patch
-set with cover letter, version number, etc:
 
-  $ git format-patch -v6 --cover-letter COMMIT_HASH -o patches/
-
-Don't need to resend patch set for only this purpose, but it's good
-later to use cover letter for description for big patch set, and
-version number is important for maintainers to easily know which is
-the latest version for merging your patches.
-
-Thanks,
-Leo
+On 6/10/22 09:20, Anshuman Khandual wrote:
+> Branch Record Buffer Extension (BRBE) implementation on arm64 captures more
+> branch type classification which cannot be accommodated in the current perf
+> branch record format via perf_branch_entry.type element (4 bit field). Also
+> it captures privilege information which does not have a corresponding slot
+> in perf_branch_entry. This series expands struct perf_branch_entry, to meet
+> both these requirements without breaking the existing user space ABI for
+> perf tools.
 > 
+> All architecture specific branch types added via perf_branch_entry.new_type
+> field in [PATCH 3/4] will be used in BRBE implementation on arm64 platform
+> later on with the following map.
 > 
+> #ifdef CONFIG_ARM64
+> #define PERF_BR_FIQ		PERF_BR_NEW_ARCH_1
+> #define PERF_BR_DEBUG_HALT	PERF_BR_NEW_ARCH_2
+> #define PERF_BR_DEBUG_EXIT	PERF_BR_NEW_ARCH_3
+> #define PERF_BR_DEBUG_INST	PERF_BR_NEW_ARCH_4
+> #define PERF_BR_DEBUG_DATA	PERF_BR_NEW_ARCH_5
+> #endif
+> 
+> This series applies on v5.19-rc1
+> 
+> perf API
+> 
+> The series being applied
+> 
+> - Clean : tools/perf/check-headers.sh
+> - Clean : diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+> 
+> References
+> 
+> - BRBE captured branch record information
+> 
+> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers/BRBINF-n--EL1--Branch-Record-Buffer-Information-Register--n-?lang=en
+> 
+> - BRBE based perf branch stack implementation on arm64 platform
+> 
+> https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
+> 
+> Changes in V6:
+> 
+> - Process PERF_BR_EXTEND_ABI in perf tools and fetch from perf_branch_entry.new_type
+> - Modified the commit message for [PATCH 1/8]
+
+Any updates on this series ?
