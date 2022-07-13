@@ -2,152 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E69C43334
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Jul 2022 04:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBFDC43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Jul 2022 05:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229671AbiGMEGe (ORCPT
+        id S232000AbiGMFYK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Jul 2022 00:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43908 "EHLO
+        Wed, 13 Jul 2022 01:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230345AbiGMEGW (ORCPT
+        with ESMTP id S233727AbiGMFYH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Jul 2022 00:06:22 -0400
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C35DA0E2;
-        Tue, 12 Jul 2022 21:06:03 -0700 (PDT)
+        Wed, 13 Jul 2022 01:24:07 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DFF599E7
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 22:24:05 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id s206so9495119pgs.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 12 Jul 2022 22:24:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1657685164; x=1689221164;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=h21pW3u7dmAn7T6DdhtskCVqgHq2DRMMlW5PszHq9Uo=;
-  b=QHCX8PVpBCaWVvUPgVJ2dURo3wxmTU7eRpfsGY8TOmsuXUCTYNH4eKD1
-   UgaiD3F2nXbtEIhS96A2Q2J1dRQIbtp35MVIQDDYroz8/+LkuYNtzOAST
-   sNF3j/Emvo5fyQwHSd1iwsrT1ilhRRwVDrYDNxyfZ1OiaDITpARDu2RsZ
-   o=;
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 12 Jul 2022 21:06:03 -0700
-X-QCInternal: smtphost
-Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
-  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 21:06:03 -0700
-Received: from [10.242.59.11] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Tue, 12 Jul
- 2022 21:05:59 -0700
-Message-ID: <ac0ef25b-b9a9-b4d5-381c-4e970a258cc9@quicinc.com>
-Date:   Wed, 13 Jul 2022 09:35:56 +0530
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ut+uaIBNWmPiRpGqEhRFI1vh60vpzjIhzJJbDXdJFqA=;
+        b=HMXfCuTvx4TnBNFFgpcFsDLFe1hlKIJA7x8c8dqAe2c/E9vTXPWHQ8JUQi91nRQdXy
+         9vp4LhwOvxd9fuxgBHfT2NNQE+mUbzJp4CHHD+YYsgyBiDgzJSEoRCLhysuARQ14LSrB
+         yt+QmoWnMWFaLYTALTLgHsOzAVp6pi3ow5vmkJYuOpoRPEdwvzEB4ReaJS/jmh/AKzzB
+         PpPlbJEzeeAWR6Up4a3iQM+QsHhFIqzwaTbHvLphECmYdKkApEnSTkkxpfnNaKdEnc8X
+         PBoP/7QYKfvJbjNZIO4PTKOCGQk1L48sbi7SN2KXoFOAUbYgoLTPWfvJ8smAFu5zlLcF
+         h9ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ut+uaIBNWmPiRpGqEhRFI1vh60vpzjIhzJJbDXdJFqA=;
+        b=VEJEkffGT6Lvu035thtvCEZ+Bth+K+7fCGDF7AqIoyxnVVcvNNQvw5l/TbcSr24LEk
+         6pBe1PTHtRfD8gEM5ePdmQFTmThr/m5UcaFC+vHAVPEqfwluzivWrPG6IVXnNPBVhCAb
+         2vYlex2I0tDhMxqTud8TuQNLKlQcI9PTxEk4qE+PfB9Kf90GKLgkyiN094oAE3RTvbOT
+         kDXWAscUZVOVrdOubQLleSm9M1NCSILKjl1IGZHTJzT42omPbltPCnJElLo6AlNVhtvx
+         7TFY+5teP+/HPjFyPVATEGlnlUk8TtfMbpxIy3PgQfoOP9jolGf3gXkJBJb3L/CAL7Or
+         qTHA==
+X-Gm-Message-State: AJIora9dNQvaKu6cYeVCNLRZej0ti+PSVSZwaqs81mViQycgdlqH2coE
+        XfXKJNtZ/EkcExhxqQWS97qEow==
+X-Google-Smtp-Source: AGRyM1tS8AknxcV8aZ7Iz2A8hueX4OaTh7+j7rWcVd0S1GN+RwwiWPPrquyEoWoa+nrMVRTpzesPEQ==
+X-Received: by 2002:a63:f355:0:b0:419:8dfd:45d0 with SMTP id t21-20020a63f355000000b004198dfd45d0mr1531053pgj.226.1657689844535;
+        Tue, 12 Jul 2022 22:24:04 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (n058152077182.netvigator.com. [58.152.77.182])
+        by smtp.gmail.com with ESMTPSA id h14-20020a056a00000e00b0051bbe085f16sm7792615pfk.104.2022.07.12.22.24.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 22:24:03 -0700 (PDT)
+Date:   Wed, 13 Jul 2022 13:23:59 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     carsten.haitzler@foss.arm.com
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Subject: Re: A patch series improving data quality of perf test for CoreSight
+Message-ID: <20220713052359.GA1354743@leoy-ThinkPad-X240s>
+References: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH V6] arm64: perf: Make exporting of pmu events configurable
-Content-Language: en-US
-To:     Will Deacon <will@kernel.org>
-CC:     <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <catalin.marinas@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1654779589-19937-1-git-send-email-quic_c_spathi@quicinc.com>
- <20220624121825.GB18561@willie-the-truck>
-From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-In-Reply-To: <20220624121825.GB18561@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, Jul 12, 2022 at 02:57:36PM +0100, carsten.haitzler@foss.arm.com wrote:
+> This is a prelude to adding more tests to shell tests and in order to
+> support putting those tests into subdirectories, I need to change the
+> test code that scans/finds and runs them.
+> 
+> To support subdirs I have to recurse so it's time to refactor the code to
+> allow this and centralize the shell script finding into one location and
+> only one single scan that builds a list of all the found tests in memory
+> instead of it being duplicated in 3 places.
+> 
+> This code also optimizes things like knowing the max width of desciption
+> strings (as we can do that while we scan instead of a whole new pass
+> of opening files). It also more cleanly filters scripts to see only
+> *.sh files thus skipping random other files in directories like *~
+> backup files, other random junk/data files that may appear and the
+> scripts must be executable to make the cut (this ensures the script
+> lib dir is not seen as scripts to run). This avoids perf test running
+> previous older versions of test scripts that are editor backup files
+> as well as skipping perf.data files that may appear and so on.
+> 
+> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 
-On 6/24/2022 5:48 PM, Will Deacon wrote:
-> On Thu, Jun 09, 2022 at 06:29:49PM +0530, Srinivasarao Pathipati wrote:
->> The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
->> Make it configurable using sysctls to enable/disable at runtime.
->>
->> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
->> ---
->> Changes since V5:
->> 	- removed configuring with kernel parameters.
->> Changes since V4:
->> 	- Registering sysctls dynamically for only arm64 as suggested by Will
->> 	- Not removed the code to configure with kernel parameters
->> 	  as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
->> 	  is not working at early bootup. pmu_reset() getting called before
->> 	  sysctl's kernel parameter is set.
->> Changes since V3:
->> 	- export bit is now configurable with sysctl
->> 	- enabling export bit on reset instead of retaining
->>
->> Changes since V2:
->> 	Done below changes as per Will's comments
->> 	- enabling pmcr_x now configurable with kernel parameters and
->> 	  by default it is disabled.
->> 	
->> Changes since V1:
->> 	- Preserving only PMCR_X bit as per Robin Murphy's comment.
->>
->> ---
->>   Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++++
->>   arch/arm64/kernel/perf_event.c              | 13 +++++++++++++
->>   2 files changed, 24 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
->> index ddccd10..c2ecd84 100644
->> --- a/Documentation/admin-guide/sysctl/kernel.rst
->> +++ b/Documentation/admin-guide/sysctl/kernel.rst
->> @@ -267,6 +267,17 @@ domain names are in general different. For a detailed discussion
->>   see the ``hostname(1)`` man page.
->>   
->>   
->> +export_pmu_events (arm64 only)
->> +==============================
->> +
->> +Controls the PMU export bit (PMCR_EL0.X), which enables the exporting of
->> +events over an IMPLEMENTATION DEFINED PMU event export bus to another device.
->> +
->> +0: disables exporting of events (default).
->> +
->> +1: enables exporting of events.
->> +
->> +
->>   firmware_config
->>   ===============
->>   
->> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
->> index cb69ff1..a8c32a0 100644
->> --- a/arch/arm64/kernel/perf_event.c
->> +++ b/arch/arm64/kernel/perf_event.c
->> @@ -298,6 +298,7 @@ PMU_FORMAT_ATTR(long, "config1:0");
->>   PMU_FORMAT_ATTR(rdpmc, "config1:1");
->>   
->>   static int sysctl_perf_user_access __read_mostly;
->> +static int sysctl_export_pmu_events __read_mostly;
->>   
->>   static inline bool armv8pmu_event_is_64bit(struct perf_event *event)
->>   {
->> @@ -1047,6 +1048,9 @@ static void armv8pmu_reset(void *info)
->>   	if (armv8pmu_has_long_event(cpu_pmu))
->>   		pmcr |= ARMV8_PMU_PMCR_LP;
->>   
->> +	if (sysctl_export_pmu_events)
->> +		pmcr |= ARMV8_PMU_PMCR_X;
-> I think we need to do this in armv8pmu_start() rather than armv8pmu_reset(),
-> otherwise any changes to the sysctl at runtime won't take effect unless you
-> do something like re-online the CPU.
->
-> Will
+Just remind, you could use the command like below to generate patch
+set with cover letter, version number, etc:
 
-Hi Will ,
+  $ git format-patch -v6 --cover-letter COMMIT_HASH -o patches/
 
-We think it may not work.   Say for example pmu->reset is called which 
-disables the exporting of events,
-and pmu->start not called. This would lead to missing of events.
+Don't need to resend patch set for only this purpose, but it's good
+later to use cover letter for description for big patch set, and
+version number is important for maintainers to easily know which is
+the latest version for merging your patches.
 
-How about enabling it in both reset and start functions? do you see any 
-issue?
-
---Srinivas
-
+Thanks,
+Leo
+> 
+> 
