@@ -2,122 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C44C43334
-	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Jul 2022 12:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD3ECCA481
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Jul 2022 14:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238584AbiGNMsr (ORCPT
+        id S238459AbiGNOjr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 14 Jul 2022 08:48:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37424 "EHLO
+        Thu, 14 Jul 2022 10:39:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239670AbiGNMs2 (ORCPT
+        with ESMTP id S232147AbiGNOjr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 14 Jul 2022 08:48:28 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5385F131
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Jul 2022 05:46:45 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id b11so3176306eju.10
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Jul 2022 05:46:45 -0700 (PDT)
+        Thu, 14 Jul 2022 10:39:47 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A5F227CC3;
+        Thu, 14 Jul 2022 07:39:46 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id ez10so3749683ejc.13;
+        Thu, 14 Jul 2022 07:39:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jvZurtZKlq4aCcDIj6KW1b11Rl6GOvzgcnfYcBmymiI=;
-        b=X/+BtTwhtwx7YRd73pMKOeZBhoEXrgrtuqVcQN0J34oQAYrSfEUOfou3Ksl3MVSsXN
-         PZJk4AHoZiPVNO1ygCSSqotQsvPpa6RATUQv78AtY2gbgwDSySpaqaDsKCEo20un7jtm
-         S5P3fPS1Ndralh80PbnBNdtn4zSEmh2VCrNeXHjU7g12ZWGzIzB4tynlDe9isa+UmCde
-         vB/LToDIYOxwW4iPDUxbzFiZFMHYrEf54Ul0y/sBxOGl+NwMD6k2iT3WVkM77J0iyLby
-         LfEWFWM6QLCI76oprwfZrJ/bWC9gX6dmV9yy3ug3yRyQcGtQWAvhBXKso3yDLggnU4HI
-         1A1A==
+         :content-disposition:in-reply-to;
+        bh=KgEA5LO4CvmhCgoLBAtNeyJAoBhKeDLP7jeHnXEi3zA=;
+        b=EZve3ztQLIzJCb+dNDIqV8+W8zlCf00irGoihkEi7esDNA7KWFmZRqcQWM70deyZUD
+         XxNsV2YSKYy4FP2EWv7vi8CJHsi9Wm2F9oEBDifrryFF3QJF65KeC4D6ZMFbSR656smz
+         VHbzfjb3q++Qod88OdwMR3W7W1e0Vxc5erB39FRmxzNhBntRGjnt8ztuZIzG/WKZoJvy
+         J12ESsFc55cmzFl1GSAmIgEnWJ7pQy/davEV+Nsn80aJ8zK1YEU/BltrO+eCPRpLNF0k
+         pKGMENF1EmsPTEo7t6IEctia9EZaHfiCcypqvhTIA9Y4FL/GzWABnZv7sgonj1DaLABm
+         bOXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jvZurtZKlq4aCcDIj6KW1b11Rl6GOvzgcnfYcBmymiI=;
-        b=bd42KhP51B44TkYuGkJFV8aRbqw0+PocQXLQ6Bi1ZVHUUQ+O1pGF/gGqp+4eucNbdR
-         R7piN7F+GXIuwTSMeq2qUtifGcuvsFrmRhbqQO5d/x62ZK5gD9Ney1ONGtIJHsPRpb1O
-         2sf1AkoLpAzUvfsUEkFXvwE5rIWcXgiJKgfj8B+UIhYJMxa4M4EPDi3iPv56fVOFHltP
-         j2KeyinS+LGR9+8lmdnj6JEY2obAO5JOwsj6k/z6iIV+QQ36yPLUXNQibv6RihgTUjmR
-         kP2tPjw+ejY2D9oDiUcSLKUoZ6TeSY4w2BE52fXfswmQ1KcQVSxkFkJjmv/dHf1tTjm+
-         +xiQ==
-X-Gm-Message-State: AJIora8HagrLulX0Fp285FKfU1dOynhNucD1Pq6h0WWo3iawjyFNIG8Q
-        3VazppXDj+YuDWouVF1i/AFbAQ==
-X-Google-Smtp-Source: AGRyM1sjcnLAUVfO9UUBCkThTry/i/eoTdA2IjOIuuXxk1IoNFhNjoJmMTL21xR1LOvDGMGHUglXFw==
-X-Received: by 2002:a17:907:e90:b0:72b:d0a7:9dd5 with SMTP id ho16-20020a1709070e9000b0072bd0a79dd5mr7887510ejc.18.1657802803696;
-        Thu, 14 Jul 2022 05:46:43 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.96.49])
-        by smtp.gmail.com with ESMTPSA id uz7-20020a170907118700b0072b6d93b9afsm656288ejb.210.2022.07.14.05.46.41
+         :mime-version:content-disposition:in-reply-to;
+        bh=KgEA5LO4CvmhCgoLBAtNeyJAoBhKeDLP7jeHnXEi3zA=;
+        b=nOrQm51Q4qsib8UjZXQqq0wOd5AYzMJjXfbA1+ay1VFokhOQKOTLE3NhQajvcTj2XV
+         m06pmoKFxDKP1xrlNMD7QSg80q+F7U81bTz7kA8QvBz2L0FdYHMDCBibrugIOpheeBjX
+         fWBbsbWMUTeXSRT7VVoX8vNza3tfsOAzJjJtko1zKrpWkLQzN62zS0SHnvwT499a4F9q
+         IqNrvUAPxNVwBuT0LUO/aeSO1TyqV0ZuBbQQrUY0VXhl3EeY95Ww3SUwMGM4V0Oe9dO/
+         yZmgEvveW1UdKIiGeyAPH1ld7uTQ4Ha2/LXvMpS6OtT7jy2czf6m6PfOjqEDFcMzOhds
+         rnsA==
+X-Gm-Message-State: AJIora+KDuNK8sv8KJrpRkoOxARb1J7b5+oRP5KI/2v0gKs+NQcVlFdm
+        JeiUdSOg7802LCI/0BaFGeU=
+X-Google-Smtp-Source: AGRyM1vGtr9PJFhfUta5S5Awr4EYiKGFN3/Q/BT9rdbvoUJzfoeso+C97C3qT3uz1KyScaLg8JYRRg==
+X-Received: by 2002:a17:907:3e81:b0:726:9615:d14d with SMTP id hs1-20020a1709073e8100b007269615d14dmr8880970ejc.517.1657809584910;
+        Thu, 14 Jul 2022 07:39:44 -0700 (PDT)
+Received: from ddolgov.remote.csb (dslb-094-222-027-106.094.222.pools.vodafone-ip.de. [94.222.27.106])
+        by smtp.gmail.com with ESMTPSA id 18-20020a170906201200b0072b1bb3cc08sm761087ejo.120.2022.07.14.07.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 05:46:43 -0700 (PDT)
-Date:   Thu, 14 Jul 2022 20:46:38 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     =?iso-8859-1?Q?Adri=E1n?= Herrera Arcila <adrian.herrera@arm.com>
-Cc:     tmricht@linux.ibm.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, James.Clark@arm.com, nd@arm.com
-Subject: Re: perf tools: software regression in
- d0a0a511493d269514fcbd852481cdca32c95350
-Message-ID: <20220714124638.GB155077@leoy-ThinkPad-X240s>
-References: <f15afd38-3628-c57a-0735-1342f379b83c@arm.com>
+        Thu, 14 Jul 2022 07:39:44 -0700 (PDT)
+Date:   Thu, 14 Jul 2022 16:39:43 +0200
+From:   Dmitry Dolgov <9erthalion6@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        songliubraving@fb.com, peterz@infradead.org, mingo@redhat.com,
+        alexei.starovoitov@gmail.com
+Subject: Re: [PATCH v4 1/1] perf/kprobe: maxactive for fd-based kprobe
+Message-ID: <20220714143943.lens6itw2rtzqszd@ddolgov.remote.csb>
+References: <20220625152429.27539-1-9erthalion6@gmail.com>
+ <20220627113731.00fa70887d19a163884243fa@kernel.org>
+ <20220703093216.5qpxfvza5dhuknru@erthalion.local>
+ <20220712122930.277cc5d6@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f15afd38-3628-c57a-0735-1342f379b83c@arm.com>
+In-Reply-To: <20220712122930.277cc5d6@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrián,
+> On Tue, Jul 12, 2022 at 12:29:30PM -0400, Steven Rostedt wrote:
+> It should go through the perf tree (if it hasn't already).
+>
+> But you should have Cc'd LKML and not linux-perf-users, as it is a kernel
+> change not a user change.
+>
+> For the tracing parts:
+>
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-On Wed, Jul 13, 2022 at 08:30:37AM +0100, Adrián Herrera Arcila wrote:
-
-[...]
-
-> I think there are two behaviours that are valuable to maintain to enable two
-> uses: (1) if no delay is specified, the program should start after counters
-> are enabled, to prevent the unexpected behaviour that Thomas fixed with this
-> change; (2) if delay is specified, the program should start before the delay
-> is engaged.
-> 
-> Two possible solutions are: (1) though conditionals; if delay > 0, start the
-> workload, then call enable_counters, which will usleep for the delay; if no
-> delay, then behaviour as it is in v5.18; (2) replace blocking usleep with
-> asynchronous callback, if that exists in Linux, that enables counters after
-> the delay.
-
-If we look at other perf sub tools (like 'perf record'), they uses
-your mentioned solution (1) to handle the delay and enabling counters,
-based on the condition checking for 'stat_config.initial_delay', 'perf
-record' enables counters at different time point.
-
-Alternatively, we can start workload based on the condition checking
-for 'stat_config.initial_delay', so we can get a below patch, this patch
-should can fix the issue, but the change is a bit urgly for me, so
-welcome a better fixing; if no, I will send a patch in my tomorrow
-morning.
-
-Thanks,
-Leo
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index d2ecd4d29624..046686a7c8d6 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -970,10 +970,15 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	 * Enable counters and exec the command:
- 	 */
- 	if (forks) {
-+		if (stat_config.initial_delay > 0)
-+			evlist__start_workload(evsel_list);
-+
- 		err = enable_counters();
- 		if (err)
- 			return -1;
--		evlist__start_workload(evsel_list);
-+
-+		if (stat_config.initial_delay <= 0)
-+			evlist__start_workload(evsel_list);
- 
- 		t0 = rdclock();
- 		clock_gettime(CLOCK_MONOTONIC, &ref_time);
+I see, thanks. Will resend it with linux-kernel@vger.kernel.org in Cc.
