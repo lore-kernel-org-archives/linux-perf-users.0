@@ -2,130 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F64CCA479
-	for <linux-perf-users@archiver.kernel.org>; Wed, 13 Jul 2022 19:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58641C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 14 Jul 2022 00:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231817AbiGMTUE (ORCPT
+        id S229842AbiGNAqP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 13 Jul 2022 15:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
+        Wed, 13 Jul 2022 20:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229959AbiGMTUD (ORCPT
+        with ESMTP id S229495AbiGNAqH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 13 Jul 2022 15:20:03 -0400
-Received: from mail.efficios.com (mail.efficios.com [167.114.26.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53F1721818;
-        Wed, 13 Jul 2022 12:20:02 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9E9E242685E;
-        Wed, 13 Jul 2022 15:20:00 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id kKbS3WRHe1BQ; Wed, 13 Jul 2022 15:20:00 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 112C0426C13;
-        Wed, 13 Jul 2022 15:20:00 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 112C0426C13
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1657740000;
-        bh=RMWgUjxlJ5h9ifad36+paV2jGXpFbQkk5sUyLZfsdlU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=EARasB/73KXy5eMCnFCiftad+GY4PfT9vwRYEREFi4KXWiDE0Pa5mTT8LNfVjS2cV
-         aiYjyjO4EfYYiJh3JhkpbEfbHGDHeGYMaLWFM1cGYPp7ggL4rHOR/vnFsZEQCXCpnj
-         41DCR8a6bV6YiAU7NgQSsiqQRRnJZqzH0Mfxu/Nq2Hgmk/TS3NE9ZhFPJnnInRjH/l
-         0aq0BaYpqf91Ko8fKoJb3/XJ4r53Fg1KUcGgtlc0FW0b9iDi80k2C5i5haygpt71Fk
-         3KFZnBttk7V5Zvmc7Cj7jEiT4ha8WdFFBCfaHffiwaXa7vFGpHCosb5KvSbBbwDLP9
-         G/4i3WZQt2r2w==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id LbT8Uuda7r0a; Wed, 13 Jul 2022 15:20:00 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id DBA664268F3;
-        Wed, 13 Jul 2022 15:19:59 -0400 (EDT)
-Date:   Wed, 13 Jul 2022 15:19:59 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Diamon discuss <diamon-discuss@lists.linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-trace-devel <linux-trace-devel@vger.kernel.org>,
-        linux-trace-users <linux-trace-users@vger.kernel.org>,
-        linuxtools-dev@eclipse.org, lttng-dev <lttng-dev@lists.lttng.org>,
-        lwn <lwn@lwn.net>,
-        Trace Compass Developer Discussions 
-        <tracecompass-dev@eclipse.org>
-Message-ID: <1084656607.67311.1657739999848.JavaMail.zimbra@efficios.com>
-Subject: Tracing Summit 2022: Announcement and Call for Proposals, October
- 11th - 13th, 2022, London, United Kingdom
+        Wed, 13 Jul 2022 20:46:07 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B9C93
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Jul 2022 17:46:05 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id l42so86793wms.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Jul 2022 17:46:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=f6spPUblCIvNStxvc9BXTnXfJC2e5EnBS8mAinmLssk=;
+        b=QYwn5tQYK5wzRsdra7vT47cXY16QDcTb3KZPRtj6UG4CtnIktnit0MI7lJb/xAy/rT
+         WxfJrZ5lUptjJ2+n4R7npPQQwART1ym9BHvhh8Xi++F244EgkGjkRgf6YgcZazdpZy+P
+         OfX+5omAVllR6EcgCJZ5ElwMWAXPClqI0+u3btffsjU1L0xEt8ZiIr4Duy/WKPV69AwN
+         IEmuCra47I02COKYQjRxQgYy48D6Sz8rU/31KMeA710AWG96jP0rGSo3YFCrXbMyOfhc
+         TvlMw/0L99hetRZ0fNi5ALuKWFOfcrewaLRZEv/VOrFwoVOfEg1ODeTmzlR9L2KhV5vX
+         xeBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=f6spPUblCIvNStxvc9BXTnXfJC2e5EnBS8mAinmLssk=;
+        b=enbkQdTG9HimHVQA5hKP7sY15PScgoECdmI1eUyM0stjNvu29xJgQQ3kn4750PrVsQ
+         53LCBcwZSYE4QFcnwgT1szqxyyA1hp+NgLJReB8hGa3KoSgK6TDVfcQAXxAxTzo670Ud
+         vjNqhMPd3BOu+gp0UJpJWLzHVC5XiegbRp8GHHs7Wm3ni6lOvSAl6ZaxNgyI9SiFyYgH
+         Fivdpcy2Ez/dEz+57gemMpJ1tuQAZmFnUYVZsQ8vRXjECWfJ3Y4z2RG5xwak60C/aZlL
+         QXhE0f9Vs9vcbrq8SD0FaQOUJqOYxmnMmP+LFtR9xAK5lf8/++qiGJT1VrlVmOCcKwKa
+         5psg==
+X-Gm-Message-State: AJIora9YVhXdxqrXcBOQWZeTUYoYYYGEypklZ8yzKGKfDglZd5Szq438
+        FwKbZJY8L/rKE0gkjuqhTHiL89K6TfpVoeZa9O/9kP5qbuAl1Q==
+X-Google-Smtp-Source: AGRyM1u99N/0oe1TT8oti7NN5bfOOgxwifE9ii0DELdV87d4t0FH/JNQul1j7k4r4lFfT+U6C9QW44eug43gqXZpZYc=
+X-Received: by 2002:a05:600c:4e8f:b0:3a1:8b21:ebbc with SMTP id
+ f15-20020a05600c4e8f00b003a18b21ebbcmr6298851wmq.149.1657759563433; Wed, 13
+ Jul 2022 17:46:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_4304 (ZimbraWebClient - FF100 (Linux)/8.8.15_GA_4304)
-Thread-Index: GhFp6sgYm5dGm85QpgTZYdYT1/wVUg==
-Thread-Topic: Tracing Summit 2022: Announcement and Call for Proposals, October 11th - 13th, 2022, London, United Kingdom
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 13 Jul 2022 17:45:51 -0700
+Message-ID: <CAP-5=fVeuk7eb81KpsTG4_+-ahVcUMR64=zb7gQtkz6yQmLqvQ@mail.gmail.com>
+Subject: July 14th - office hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi all,
+Hi,
 
-This is a Call for Proposals for the Tracing Summit 2022[0] which will be held in London, United Kingdom on 11th to 13th of October, 2022.
+A reminder that there will be another office hours on July14th at 2pm
+GMT*. We should do our usual GSoC contributor check-ins, please feel
+free to suggest additional agenda items! One suggestion has been to
+discuss the json events and the recent python rewrite of jevents.c to
+jevents.py.
 
-- Location: Google, 6 Pancras Sq, London N1C 4AG, UK
-- Event dates: Tuesday the 11th to Thursday the 13th of October, 2022
-- Cost: Free
-- CFP link: [1]
-- Register to attend: [2]
+If you experience problems accessing the meeting then my email can be
+used for Google hangout messages, and I'll try to be on IRC (#perf on
+irc.oftc.net).
 
-Timeline:
+The code of conduct is below**:
+https://www.kernel.org/doc/html/latest/process/code-of-conduct.html
 
-- CFP Opens: July 13th, 2022
-- Registration opens: July 13th, 2022
-- CFP Closes: September 1st, 2022
-- Registration closes: October 3rd, 2022
+The Google meet details are here:
+Linux Perf Tool - Office Hours
+Thursday, July 14 =C2=B7 7:00 =E2=80=93 8:00am
+Google Meet joining info
+Video call link: https://meet.google.com/goj-quks-ydn
+Or dial: =E2=80=AA(US) +1 301-969-4101=E2=80=AC PIN: =E2=80=AA374 496 227=
+=E2=80=AC#
+More phone numbers: https://tel.meet/goj-quks-ydn?pin=3D8067739163431
+Notes (ask to be added to see):
+https://docs.google.com/document/d/1tQZvJ12czMedpmLLZWS0XILAte97zdR6H_tgC3I=
+vafs/edit?usp=3Dsharing&resourcekey=3D0-iV9_8Oc0cSOPl0-NvEYDAA
 
-You can subscribe to the mailing list to get the latest information on the event: [3]
+Thanks,
+Ian
 
-The Tracing Summit is a three-day, single-track conference on the topic of tracing. The event focuses on software and hardware tracing, gathering developers and end-users of tracing and trace analysis tools. The main goal of the Tracing Summit is to provide space for discussion between people of the various areas that benefit from tracing, namely parallel, distributed and/or real-time systems, as well as kernel development.
+*The around the world times I believe are:
+China: 10pm
+India: 7:30pm
+Europe: 4pm
+UK: 3pm
+US east coast: 10am
+Brazil: 11am
+US west coast: 7am
 
-We are welcoming 30 minute presentations on topics covering, but not limited to:
-
-- Investigation workflow of real-time, latency, and throughput issues,
-- Trace collection and extraction,
-- Trace filtering,
-- Trace aggregation,
-- Trace formats,
-- Tracing multi-core systems,
-- Trace abstraction,
-- Trace modeling,
-- Automated trace analysis (e.g. dependency analysis),
-- Tracing large clusters and distributed systems,
-- Hardware-level tracing (e.g. DSP, GPU, bare-metal),
-- Trace visualization,
-- Interaction between debugging and tracing,
-- Tracing remote control,
-- Analysis of large trace datasets,
-- Cloud trace collection and analysis,
-- Integration between trace tools,
-- Live tracing & monitoring,
-- Programmable tracing (e.g. eBPF).
-
-Those can cover available technologies, ongoing work, and yet non-existent technologies (which are compelling to end-users).
-Please understand that this open forum is not the proper place to present sales or marketing pitches, nor technologies which are prevented from being freely used in open source.
-
-This year tickets are free and seating is limited to 80 people.
-
-To register use the following link: [2]
-
-Please send any queries about this conference to info@tracingsummit.org .
-
-[0]: https://tracingsummit.org
-[1]: https://docs.google.com/forms/d/e/1FAIpQLSf65-LaD5EiYSxSN6D6XGRazExSur0SW7oG6ZIpGpDN4ra_rg/viewform
-[2]: https://docs.google.com/forms/d/e/1FAIpQLSdq4whieesZeoHJq1h2CDbWeO5FuQnPk6G257hfSLgnWRenvg/viewform
-[3]: http://eepurl.com/goakfv
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+**More details from the first office hours are here:
+https://lore.kernel.org/linux-perf-users/CAP-5=3DfWkxtm5-Ebwkh4pzA83prvuAJ5=
+yy6CKQYatdkKWu3Tgeg@mail.gmail.com/
