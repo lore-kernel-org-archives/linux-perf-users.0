@@ -2,86 +2,72 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A0EC43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jul 2022 09:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E795C43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jul 2022 13:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234096AbiGSJH1 (ORCPT
+        id S239639AbiGSN3G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jul 2022 05:07:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39170 "EHLO
+        Tue, 19 Jul 2022 09:29:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232986AbiGSJHZ (ORCPT
+        with ESMTP id S235397AbiGSN2x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jul 2022 05:07:25 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9E18010E2;
-        Tue, 19 Jul 2022 02:07:24 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0C841424;
-        Tue, 19 Jul 2022 02:07:24 -0700 (PDT)
-Received: from [10.32.33.51] (e121896.warwick.arm.com [10.32.33.51])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A1953F73D;
-        Tue, 19 Jul 2022 02:07:23 -0700 (PDT)
-Message-ID: <eeec10a3-e9e7-ba7f-34e0-cded9d4af76e@arm.com>
-Date:   Tue, 19 Jul 2022 10:07:22 +0100
+        Tue, 19 Jul 2022 09:28:53 -0400
+Received: from smtpbg.qq.com (biz-43-154-54-12.mail.qq.com [43.154.54.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6208985D65;
+        Tue, 19 Jul 2022 05:44:48 -0700 (PDT)
+X-QQ-mid: bizesmtp74t1658234519tv0i67c6
+Received: from localhost.localdomain ( [171.223.96.21])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Tue, 19 Jul 2022 20:41:57 +0800 (CST)
+X-QQ-SSF: 01000000002000F0U000C00A0000000
+X-QQ-FEAT: ZckECEo/G3XkGMSIvSFZtH5zDde/uBO91twW/L+wKehhGrdm09CWGXolFXYt0
+        NPfhd450IrP+dx0y5VdYgRyJNJJ+PsoN2Yaq/m1EW+eRScp3aGLGbHp9zmZxVGbJyxdzD5F
+        ACKYAHA8w+3Ly1dgoUQ8Zlr0pwsrKNuBFLjb+3SIM0G+kXqt+/tlEwDQj0udbvljUFBxR3M
+        isSEAYbc/f9ApcjDRJ2tmK8vPkjahy2NIIPfNieF33vKzwtCPI/nqy20Qc+YSEsTCwhl8SN
+        zShe8N5CS0RnSSXVanx3DDdflvJiFEWAFpkuZN9WGsdPz6F9+XfAhZPPOPYaVNwCh3v8ytr
+        jrObOezpVRkT3wH81eC0B3dwkrhD3UbQQS0/qewVqf7uYcpTgDi9wa0NxTz3vblcFBfLrHE
+        JJMbzeplf5E=
+X-QQ-GoodBg: 0
+From:   Jason Wang <wangborong@cdjrlc.com>
+To:     alexander.shishkin@linux.intel.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
+        mhiramat@kernel.org, yangjihong1@huawei.com, irogers@google.com,
+        chenzechuan1@huawei.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jason Wang <wangborong@cdjrlc.com>
+Subject: [PATCH] perf probe: Fix comment typo
+Date:   Sat, 16 Jul 2022 12:39:57 +0800
+Message-Id: <20220716043957.42829-1-wangborong@cdjrlc.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: A patch series improving data quality of perf test for CoreSight
-Content-Language: en-US
-To:     carsten.haitzler@foss.arm.com, linux-kernel@vger.kernel.org
-Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-References: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr6
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The double `the' is duplicated in the comment, remove one.
 
+Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+---
+ tools/perf/util/probe-event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 12/07/2022 14:57, carsten.haitzler@foss.arm.com wrote:
-> This is a prelude to adding more tests to shell tests and in order to
-> support putting those tests into subdirectories, I need to change the
-> test code that scans/finds and runs them.
-> 
-> To support subdirs I have to recurse so it's time to refactor the code to
-> allow this and centralize the shell script finding into one location and
-> only one single scan that builds a list of all the found tests in memory
-> instead of it being duplicated in 3 places.
-> 
-> This code also optimizes things like knowing the max width of desciption
-> strings (as we can do that while we scan instead of a whole new pass
-> of opening files). It also more cleanly filters scripts to see only
-> *.sh files thus skipping random other files in directories like *~
-> backup files, other random junk/data files that may appear and the
-> scripts must be executable to make the cut (this ensures the script
-> lib dir is not seen as scripts to run). This avoids perf test running
-> previous older versions of test scripts that are editor backup files
-> as well as skipping perf.data files that may appear and so on.
-> 
-> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
-> 
-> 
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 062b5cbe67af..67c12d5303e7 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1349,7 +1349,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+ 				/*
+ 				 * Adjust the number of lines here.
+ 				 * If the number of lines == 1, the
+-				 * the end of line should be equal to
++				 * end of line should be equal to
+ 				 * the start of line.
+ 				 */
+ 				lr->end--;
+-- 
+2.35.1
 
-Hi Carsten,
-
-What's the plan to move forward with the current test failures? As you
-said in the previous patchset it seems that we're not 100% sure if the
-failures are a Coresight bug or a test bug.
-
-Do you want to investigate to see what the issue might be? Or do you
-intend to leave that to someone else?
-
-Even if it is a Coresight bug rather than a test bug, we shouldn't
-merge them because it will cause anyone running the tests to wonder if
-they have done something wrong or to duplicate the investigation work,
-or that a regression has been added to the kernel.
-
-Thanks
-James
