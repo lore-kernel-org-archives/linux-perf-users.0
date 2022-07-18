@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A08C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 08:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B142CC43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 09:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229888AbiGRI5p (ORCPT
+        id S232882AbiGRJBs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 04:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60406 "EHLO
+        Mon, 18 Jul 2022 05:01:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233585AbiGRI5o (ORCPT
+        with ESMTP id S233786AbiGRJBs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 04:57:44 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D369A11C32
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 01:57:43 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id r3so19656648ybr.6
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 01:57:43 -0700 (PDT)
+        Mon, 18 Jul 2022 05:01:48 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0849211A1F
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:01:45 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id f73so19565293yba.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:01:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=E4hcKXeKDY4mZgkkWrO2UJFIB2+YkvdMpf7oiIiz6Vw=;
-        b=UCIHI1H6TeNg0v3uYSbIuL/VieFk1ImiXQDuN/19M2oYbk+kcyRKEEqHGhqSw3eUut
-         BdnC2zIydmA4KpoHM2EtnVw+ahe4W6zoILmUWR59hch4t38x8wPS53oZhJLwySWmW7Z9
-         vHjEDczIaHH3Qftdg7tdTxUstk77/GJABs7mPAZGyswj7G7P3ikkEgn2C4trLQ+r2mz4
-         RqM4ConzLpmjisWpgCVxPDvqWjg+e+j8PNmJSPgP7WrNbTU46G4nBXIMkB76x6q+uaFm
-         vhOTUvCGzEGEPAprRntYjRsx1Vk6cQXsB+oJPey+mkXfUzy6e25fNM6/jcy+JAkMGsV+
-         vVaA==
+        bh=DwIR57e0FpLcYSgHsIlB7cNnZ4wN4yZUqWvCDFdbb1A=;
+        b=wlKycwQn3NPKJsiygbPpb+xpZQGwblMIPQG+J4zoQskTSg3yPVUBtGxcPWP/c1yZ16
+         /RqkK5G+YTVpneAW0nvxxOAih2jqSXAfkS53i9Y41xvCKo6UFr8ZzDXYYjbkM8KETgRC
+         Sh2clEMrRPex39CjQxfYE8+zbsIbUlXWdKWEF4MhP3FGaB6LLIqAx7dbd6/C1m/QHIlH
+         ZrdEArAp1CRluArreszsjeSeGtY+4b+6wMtmrfftN/WqA+7oYBH2FRsIWIsCO9aKh5cm
+         5muW/BJGoZ+w3Mvr6Fz0CgRZUSTFDe+wsvNXd6allxOWNF1tjkDS3mAnqEfFyCBJDsgc
+         gLug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E4hcKXeKDY4mZgkkWrO2UJFIB2+YkvdMpf7oiIiz6Vw=;
-        b=UK6MWtw5fXEbRwRbL0+WAkHa/s+mbwieP6INu6hy7nBd42fENwDkfoGSNCY2XoyA/Z
-         ZAN+fZHF8GnzjW75lzeTZ7cPFyP21K5ZW/vOCfpEnl/pgFlSJ9HnEp+10amXGhs2pYsA
-         Q91+o1nmivDdb46/AvloRM3nmCSK7k1jI3vRLZ+KRIIJG5YBXuhTT/cFUgqY1EFwgzEh
-         +HX6LTYDRaXEOQ5Smaim8fxlJvElpvwtAgQwgooAXdXF5UbwcIAtQDhWZJ0fEHLcxzSi
-         GxNfgMJH6pblBKcimRvEuu7LuvXJihqWGYbLtIJkzLODen95+bGxthaC/AV2/EQuRejk
-         kzIA==
-X-Gm-Message-State: AJIora+idUsBFUshlz99y90lAuWJ+iVqx4MQ7dMmlYWfLF0hvFuw1u7f
-        H2cyUDghnTxxtCYDmrWGE36FJkMkc2kuP1jJ66XleA==
-X-Google-Smtp-Source: AGRyM1uvQuAYd5Xd3CpqPVNwGhgZoalb7/c9+nWogQm4nDzGun/0TtAYRBVk6lqyyRP8T4PC+GMB4hceI7OvjD3faTY=
-X-Received: by 2002:a5b:9c5:0:b0:66e:cbbf:2904 with SMTP id
- y5-20020a5b09c5000000b0066ecbbf2904mr24557371ybq.220.1658134663023; Mon, 18
- Jul 2022 01:57:43 -0700 (PDT)
+        bh=DwIR57e0FpLcYSgHsIlB7cNnZ4wN4yZUqWvCDFdbb1A=;
+        b=3s1SWhZ71YVaa3I61jqle02btqLtgcJaPFbae5XsSBUG4NiNaI7NTmyiuws++yMJNQ
+         CwR86buoU5xg2VXKRD8UBsXdrVLTFd2OpeTY8saBVX+SUr4wFn4bK+HOyGOK4U9zBCCy
+         Pmn9GDi01K2f4ZpdbcCY58YAeei4veKuCzxpdzAtieoKNwxnXygOGm/AKYI227hOjUwD
+         ++PFuIDQKgSD0sY1PEkNt2VrcVEPPukR2aWsaA7vBBuBOfPfkBhJ2PFQ/hsCpzHy1MUa
+         Q7Cs9HG0i9fIcQGWMC1HpEExE+96su/VppFyguPu56qe4Vuw6k6ecUjWRSa/4R5SqYPI
+         rp5g==
+X-Gm-Message-State: AJIora+DAEpez657pT5x/KlZJCZtvfVnjIlpPafXBhactrDRvmS4etOB
+        2xCHmTK9PCoLWWSIwdUEGUaVr7Aw2eO8FJZhu26KQg==
+X-Google-Smtp-Source: AGRyM1t5Q5wZByTTLxFH8JVS7pwe73tESzwepbBLzJfkt4scpJhV5hBV8XU73ln+CgaRWSYRXmHKb0vTaAqvKeaCFtk=
+X-Received: by 2002:a05:6902:124e:b0:668:222c:e8da with SMTP id
+ t14-20020a056902124e00b00668222ce8damr25009907ybu.383.1658134904805; Mon, 18
+ Jul 2022 02:01:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220712021527.109921-1-lihuafei1@huawei.com> <20220712021527.109921-2-lihuafei1@huawei.com>
-In-Reply-To: <20220712021527.109921-2-lihuafei1@huawei.com>
+References: <20220712021527.109921-1-lihuafei1@huawei.com> <20220712021527.109921-3-lihuafei1@huawei.com>
+In-Reply-To: <20220712021527.109921-3-lihuafei1@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jul 2022 10:57:31 +0200
-Message-ID: <CACRpkdaXDGHLwqXQsEedRt=CLRUe1hei1vJDGAQ+D4U0OPcv8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/5] ARM: stacktrace: Skip frame pointer boundary check
- for call_with_stack()
+Date:   Mon, 18 Jul 2022 11:01:33 +0200
+Message-ID: <CACRpkdY0Jo7rzXjc10dLLrHnDkoBphvNYiyF5q8iHz-8QqaEwA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] ARM: stacktrace: Avoid duplicate saving of exception
+ PC value
 To:     Li Huafei <lihuafei1@huawei.com>
 Cc:     linux@armlinux.org.uk, rmk+kernel@armlinux.org.uk, ardb@kernel.org,
         will@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
@@ -71,52 +71,48 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Tue, Jul 12, 2022 at 4:18 AM Li Huafei <lihuafei1@huawei.com> wrote:
 
-> When using the frame pointer unwinder, it was found that the stack trace
-> output of stack_trace_save() is incomplete if the stack contains
-> call_with_stack():
+> Because an exception stack frame is not created in the exception entry,
+> save_trace() does special handling for the exception PC, but this is
+> only needed when CONFIG_FRAME_POINTER_UNWIND=y. When
+> CONFIG_ARM_UNWIND=y, unwind annotations have been added to the exception
+> entry and save_trace() will repeatedly save the exception PC:
 >
->  [0x7f00002c] dump_stack_task+0x2c/0x90 [hrtimer]
->  [0x7f0000a0] hrtimer_hander+0x10/0x18 [hrtimer]
->  [0x801a67f0] __hrtimer_run_queues+0x1b0/0x3b4
->  [0x801a7350] hrtimer_run_queues+0xc4/0xd8
->  [0x801a597c] update_process_times+0x3c/0x88
->  [0x801b5a98] tick_periodic+0x50/0xd8
->  [0x801b5bf4] tick_handle_periodic+0x24/0x84
->  [0x8010ffc4] twd_handler+0x38/0x48
->  [0x8017d220] handle_percpu_devid_irq+0xa8/0x244
->  [0x80176e9c] generic_handle_domain_irq+0x2c/0x3c
->  [0x8052e3a8] gic_handle_irq+0x7c/0x90
->  [0x808ab15c] generic_handle_arch_irq+0x60/0x80
->  [0x8051191c] call_with_stack+0x1c/0x20
+>     [0x7f000090] hrtimer_hander+0x8/0x10 [hrtimer]
+>     [0x8019ec50] __hrtimer_run_queues+0x18c/0x394
+>     [0x8019f760] hrtimer_run_queues+0xbc/0xd0
+>     [0x8019def0] update_process_times+0x34/0x80
+>     [0x801ad2a4] tick_periodic+0x48/0xd0
+>     [0x801ad3dc] tick_handle_periodic+0x1c/0x7c
+>     [0x8010f2e0] twd_handler+0x30/0x40
+>     [0x80177620] handle_percpu_devid_irq+0xa0/0x23c
+>     [0x801718d0] generic_handle_domain_irq+0x24/0x34
+>     [0x80502d28] gic_handle_irq+0x74/0x88
+>     [0x8085817c] generic_handle_arch_irq+0x58/0x78
+>     [0x80100ba8] __irq_svc+0x88/0xc8
+>     [0x80108114] arch_cpu_idle+0x38/0x3c
+>     [0x80108114] arch_cpu_idle+0x38/0x3c    <==== duplicate saved exception PC
+>     [0x80861bf8] default_idle_call+0x38/0x130
+>     [0x8015d5cc] do_idle+0x150/0x214
+>     [0x8015d978] cpu_startup_entry+0x18/0x1c
+>     [0x808589c0] rest_init+0xd8/0xdc
+>     [0x80c00a44] arch_post_acpi_subsys_init+0x0/0x8
 >
-> For the frame pointer unwinder, unwind_frame() checks stackframe::fp by
-> stackframe::sp. Since call_with_stack() switches the SP from one stack
-> to another, stackframe::fp and stackframe: :sp will point to different
-> stacks, so we can no longer check stackframe::fp by stackframe::sp. Skip
-> checking stackframe::fp at this point to avoid this problem.
+> We can move the special handling of the exception PC in save_trace() to
+> the unwind_frame() of the frame pointer unwinder.
 >
 > Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 
-Very nice catch! Took me some time to realize what was
-going on here.
+This is another very nice patch!
+Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Nitpick:
 
-Nitpick below:
+> +               if ((unsigned long)&regs[1] > ALIGN(frame->sp, THREAD_SIZE))
+> +                       return -EINVAL;
 
-> +       /*
-> +        * call_with_stack() is the only place we allow SP to jump from one
-> +        * stack to another, with FP and SP pointing to different stacks,
-> +        * skipping the FP boundary check at this point.
-> +        */
-> +       if (pc >= (unsigned long)&call_with_stack &&
-> +                       pc < (unsigned long)&call_with_stack_end)
-> +               return 0;
-
-Can we create a local helper macro to do this, if it needs to happen
-some other time?
-
-#define ARM_PC_IN_FUNCTION(pc, func) (pc >=. ...)
+It'd be nice to add a comment saying what is in regs[1] at this point
+so it is easier to understand the code. Not your fault as it is just
+moved code, but if you have time please add a small comment.
 
 Yours,
 Linus Walleij
