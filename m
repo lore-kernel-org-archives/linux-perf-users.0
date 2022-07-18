@@ -2,134 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EF1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 13:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAACCCA479
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 14:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230033AbiGRNdk (ORCPT
+        id S235719AbiGROLi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 09:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
+        Mon, 18 Jul 2022 10:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233699AbiGRNdj (ORCPT
+        with ESMTP id S235219AbiGROLh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 09:33:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8E311C03;
-        Mon, 18 Jul 2022 06:33:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 18 Jul 2022 10:11:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 73EB727170
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 07:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658153495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Vcb7EQNP7nmt18gfIk7EjblaRPAfBOgB5YIPuamopdk=;
+        b=P6LeF3xy/AR8U+qPK2zn8jA2WE0n/eL430TrlyWfryMyq9BJC5L8fvy9mJYjnikzH8PJma
+        HSX4P+p0fJ4MH6sK4llwSdZc161JFaB9iiPFHom4R5dX1/CPMtJk4heJg0JV+2yNH+P06w
+        SpsfjxTDRVpwO5ZMrRXgIPV5SDyp7kQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-665-HEpFr7HLMUadJh7iEE8vwg-1; Mon, 18 Jul 2022 10:11:32 -0400
+X-MC-Unique: HEpFr7HLMUadJh7iEE8vwg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 57FF6615E9;
-        Mon, 18 Jul 2022 13:33:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AAD1C341C0;
-        Mon, 18 Jul 2022 13:33:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658151216;
-        bh=nHiNKNkka8ODegJm3GpruB//oq/yRLOrqdvgbyC08U4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GLIp7Z0G2x2/x//4ZpBoX2pxBM0GzJQdkM/A7jsIc+SLUz9R6lmCee5kNdgaBbDFQ
-         7arWEtN0KI04IflJZpy5NuOvvpqGLUbvKt/ttT7a/ihBkhIFVDYEkqPTFnh0BKRqOk
-         6d9SUku6O/gH0ElC5sglMRLoRtJCz3C4KYwcFaoNJmJkObYLs0/tuTPm9M6UFuLz0E
-         FnjddTPsqCT+J0U++Up5W9340L3H+yz4tTucEXaOb0DcA1RaV21yq56wA9Qmzz5nC/
-         6CsrtebjIROdXOZPOaGo/t6SIYu1TjkF4lcL3m5c8RfGBqEdgnWvbSfeSQEQra4P+n
-         vzQigrSpa/7HQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 33FFF40374; Mon, 18 Jul 2022 10:33:33 -0300 (-03)
-Date:   Mon, 18 Jul 2022 10:33:33 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Ian Rogers <rogers.email@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 43E78801231;
+        Mon, 18 Jul 2022 14:11:30 +0000 (UTC)
+Received: from amdlaptop.tlv.redhat.com (dhcp-4-238.tlv.redhat.com [10.35.4.238])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BD78B2026D64;
+        Mon, 18 Jul 2022 14:11:24 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] perf python: Avoid deprecation warning on distutils
-Message-ID: <YtVhLasCbE/52kYI@kernel.org>
-References: <20220615014206.26651-1-irogers@google.com>
- <c0b64785-55f2-111c-cec7-a7a90f68f8ac@arm.com>
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        linux-crypto@vger.kernel.org (open list:CRYPTO API)
+Subject: [PATCH v2 0/5] x86: cpuid: improve support for broken CPUID configurations
+Date:   Mon, 18 Jul 2022 17:11:18 +0300
+Message-Id: <20220718141123.136106-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c0b64785-55f2-111c-cec7-a7a90f68f8ac@arm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jul 18, 2022 at 01:50:22PM +0100, James Clark escreveu:
-> On 15/06/2022 02:42, Ian Rogers wrote:
-> > Fix the following DeprecationWarning:
-> > 
-> > tools/perf/util/setup.py:31: DeprecationWarning: The distutils
-> > package is deprecated and slated for removal in Python 3.12. Use
-> > setuptools or check PEP 632 for potential alternatives
-> > 
-> > Note: the setuptools module may need installing, for example:
-> > sudo apt install python-setuptools
+This patch series aims to harden the cpuid code against the case when=0D
+the hypervisor exposes a broken CPUID configuration to the guest,=0D
+in the form of having a feature disabled but not features that depend on it=
+.=0D
+=0D
+This is the more generic way to fix kernel panic in aes-ni kernel driver,=0D
+which was triggered by CPUID configuration in which AVX is disabled but=0D
+not AVX2.=0D
+=0D
+https://lore.kernel.org/all/20211103145231.GA4485@gondor.apana.org.au/T/=0D
+=0D
+This was tested by booting a guest with AVX disabled and not AVX2,=0D
+and observing that both a warning is now printed in dmesg, and=0D
+that avx2 is gone from /proc/cpuinfo.=0D
+=0D
+V2:=0D
+=0D
+I hopefully addressed all the (very good) review feedback.=0D
+=0D
+Best regards,=0D
+	Maxim Levitsky=0D
+=0D
+Maxim Levitsky (5):=0D
+  perf/x86/intel/lbr: use setup_clear_cpu_cap instead of clear_cpu_cap=0D
+  x86/cpuid: refactor setup_clear_cpu_cap()/clear_cpu_cap()=0D
+  x86/cpuid: move filter_cpuid_features to cpuid-deps.c=0D
+  x86/cpuid: remove 'warn' parameter from filter_cpuid_features=0D
+  x86/cpuid: check for dependencies violations in CPUID and attempt to=0D
+    fix them=0D
+=0D
+ arch/x86/events/intel/lbr.c       |  2 +-=0D
+ arch/x86/include/asm/cpufeature.h |  1 +=0D
+ arch/x86/kernel/cpu/common.c      | 51 +-------------------=0D
+ arch/x86/kernel/cpu/cpuid-deps.c  | 80 +++++++++++++++++++++++++++----=0D
+ 4 files changed, 74 insertions(+), 60 deletions(-)=0D
+=0D
+-- =0D
+2.34.3=0D
+=0D
 
-Thanks, applied, added this to the cset log:
-
-    Reviewer comments:
-
-    James said:
-
-    Tested it with python 2.7 and 3.8 by running "make install-python_ext PYTHON=..."
-
-    Committer notes:
-
-    Tested with:
-
-     $ make -k BUILD_BPF_SKEL=1 PYTHON=python2 O=/tmp/build/perf-urgent -C tools/perf install-bin ; perf test python
-
-     $ make -k BUILD_BPF_SKEL=1 PYTHON=python3 O=/tmp/build/perf-urgent -C tools/perf install-bin ; perf test python
-
-     $ make -k BUILD_BPF_SKEL=1 O=/tmp/build/perf-urgent -C tools/perf install-bin ; perf test python
-
-
-- Arnaldo
-
- > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/setup.py | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-> > index c255a2c90cd6..5a3c74bce836 100644
-> > --- a/tools/perf/util/setup.py
-> > +++ b/tools/perf/util/setup.py
-> > @@ -11,7 +11,7 @@ def clang_has_option(option):
-> >      return [o for o in cc_output if ((b"unknown argument" in o) or (b"is not supported" in o))] == [ ]
-> >  
-> >  if cc_is_clang:
-> > -    from distutils.sysconfig import get_config_vars
-> > +    from sysconfig import get_config_vars
-> >      vars = get_config_vars()
-> >      for var in ('CFLAGS', 'OPT'):
-> >          vars[var] = sub("-specs=[^ ]+", "", vars[var])
-> > @@ -28,10 +28,10 @@ if cc_is_clang:
-> >          if not clang_has_option("-ffat-lto-objects"):
-> >              vars[var] = sub("-ffat-lto-objects", "", vars[var])
-> >  
-> > -from distutils.core import setup, Extension
-> > +from setuptools import setup, Extension
-> >  
-> > -from distutils.command.build_ext   import build_ext   as _build_ext
-> > -from distutils.command.install_lib import install_lib as _install_lib
-> > +from setuptools.command.build_ext   import build_ext   as _build_ext
-> > +from setuptools.command.install_lib import install_lib as _install_lib
-> >  
-> >  class build_ext(_build_ext):
-> >      def finalize_options(self):
-> 
-> Tested it with python 2.7 and 3.8 by running "make install-python_ext PYTHON=..."
-> 
-> Reviewed-by: James Clark <james.clark@arm.com>
-
--- 
-
-- Arnaldo
