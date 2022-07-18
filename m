@@ -2,43 +2,43 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23153C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 14:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0751DC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 14:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235754AbiGROL5 (ORCPT
+        id S235777AbiGROMQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 10:11:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37040 "EHLO
+        Mon, 18 Jul 2022 10:12:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234306AbiGROL4 (ORCPT
+        with ESMTP id S235761AbiGROL7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 10:11:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 64535275C1
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 07:11:55 -0700 (PDT)
+        Mon, 18 Jul 2022 10:11:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F3873275C4
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 07:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658153514;
+        s=mimecast20190719; t=1658153517;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=w5ar1xL/lWu4+LzORYC79cebbS3mhMxSowTJXzIDy14=;
-        b=ObEPlGUo3z6gOcAtHmJ/HxF5Wj5bQDOLwVscub1iDBfRRH1+rTY9J+NQKYS5jWMlinfFFN
-        BbYLcwqJDyKkm6K0F31GjcE7eLfveKvlb+mjZxNG+NHWMU0hdqYRE3hi2qmJDt4agyPIbB
-        /I0oPXyKAdHSEZR8fl17+mFZeywsn0M=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=T8Z2XJYyS9V8KZ6uFYvGdAv2HuDcr4S84Jovz3Opi0M=;
+        b=QO+0Le9+2gQtnjQjFqQkTZDfzF18iTwrjVVt5g73PgxTsRW3LJd9tXJUrGRPcuRj7n2S3Y
+        3NbqOgU0zY9yWMup7c066hMHvsHsmUSBENNpxB1DWrlVbGQ1qzuI3zpyJTz41MQH/6gC6X
+        K2y2PUiz/DF8Td7lnfrMbPPnMFBd2PQ=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-62-F11jd_UNMn6FzKPX6SELGw-1; Mon, 18 Jul 2022 10:11:42 -0400
-X-MC-Unique: F11jd_UNMn6FzKPX6SELGw-1
+ us-mta-63-Rqy0FaU5MVW-WcZIbWk9Kw-1; Mon, 18 Jul 2022 10:11:52 -0400
+X-MC-Unique: Rqy0FaU5MVW-WcZIbWk9Kw-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3250096AC62;
-        Mon, 18 Jul 2022 14:11:40 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A17003C02B86;
+        Mon, 18 Jul 2022 14:11:50 +0000 (UTC)
 Received: from amdlaptop.tlv.redhat.com (dhcp-4-238.tlv.redhat.com [10.35.4.238])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E7D92026D64;
-        Mon, 18 Jul 2022 14:11:35 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A528D2026D64;
+        Mon, 18 Jul 2022 14:11:45 +0000 (UTC)
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
@@ -67,9 +67,9 @@ Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-perf-users@vger.kernel.org,
         linux-crypto@vger.kernel.org (open list:CRYPTO API)
-Subject: [PATCH v2 2/5] x86/cpuid: refactor setup_clear_cpu_cap()/clear_cpu_cap()
-Date:   Mon, 18 Jul 2022 17:11:20 +0300
-Message-Id: <20220718141123.136106-3-mlevitsk@redhat.com>
+Subject: [PATCH v2 4/5] x86/cpuid: remove 'warn' parameter from filter_cpuid_features
+Date:   Mon, 18 Jul 2022 17:11:22 +0300
+Message-Id: <20220718141123.136106-5-mlevitsk@redhat.com>
 In-Reply-To: <20220718141123.136106-1-mlevitsk@redhat.com>
 References: <20220718141123.136106-1-mlevitsk@redhat.com>
 MIME-Version: 1.0
@@ -79,67 +79,79 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently setup_clear_cpu_cap passes NULL 'struct cpuinfo_x86*'
-to clear_cpu_cap to indicate that capability should be cleared from boot_cpu_data.
+This parameter suppresses the warning if issue is found when
+this function called from early boot cpu identification code, which doesn't
+seem to be useful, except that it actually completely hides the warning,
+because next time this code is called for each CPU and when the warning
+is printed, the issue is already fixed, and so no warning is printed at all.
 
-Later that is used in clear_feature to do recursive call to
-clear_cpu_cap together with clearing the feature bit from 'cpu_caps_cleared'
-
-Remove that code and just call the do_clear_cpu_cap on boot_cpu_data directly
-from the setup_clear_cpu_cap.
-
-The only functional change this introduces is that now calling clear_cpu_cap
-explicitly on boot_cpu_data also sets the bits in cpu_caps_cleared,
-which is the only thing that makes sense anyway.
-
-All callers of both functions were checked for this and fixed.
+Tested by using a broken CPUID with missing leaf and observing no warning printed,
+and with the patch a warning is printed once.
 
 Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kernel/cpu/cpuid-deps.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/cpufeature.h | 2 +-
+ arch/x86/kernel/cpu/common.c      | 4 ++--
+ arch/x86/kernel/cpu/cpuid-deps.c  | 4 +---
+ 3 files changed, 4 insertions(+), 6 deletions(-)
 
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 3eb5fe0d654e63..86d7fbb3f2b592 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -147,7 +147,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ 
+ extern void setup_clear_cpu_cap(unsigned int bit);
+ extern void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int bit);
+-extern void filter_cpuid_features(struct cpuinfo_x86 *c, bool warn);
++extern void filter_cpuid_features(struct cpuinfo_x86 *c);
+ 
+ #define setup_force_cpu_cap(bit) do { \
+ 	set_cpu_cap(&boot_cpu_data, bit);	\
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index beaea42c1b47e1..1a2f4e83e2f312 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1485,7 +1485,7 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 			this_cpu->c_early_init(c);
+ 
+ 		c->cpu_index = 0;
+-		filter_cpuid_features(c, false);
++		filter_cpuid_features(c);
+ 
+ 		if (this_cpu->c_bsp_init)
+ 			this_cpu->c_bsp_init(c);
+@@ -1773,7 +1773,7 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 	 */
+ 
+ 	/* Filter out anything that depends on CPUID levels we don't have */
+-	filter_cpuid_features(c, true);
++	filter_cpuid_features(c);
+ 
+ 	/* If the model name is still unset, do table lookup. */
+ 	if (!c->x86_model_id[0]) {
 diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index c881bcafba7d70..d6777d07ba3302 100644
+index 306f285844aedc..e1b5f5c02c0106 100644
 --- a/arch/x86/kernel/cpu/cpuid-deps.c
 +++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -88,18 +88,16 @@ static inline void clear_feature(struct cpuinfo_x86 *c, unsigned int feature)
- 	 * rest of the cpufeature code uses atomics as well, so keep it for
- 	 * consistency. Cleanup all of it separately.
- 	 */
--	if (!c) {
--		clear_cpu_cap(&boot_cpu_data, feature);
-+	clear_bit(feature, (unsigned long *)c->x86_capability);
-+
-+	if (c == &boot_cpu_data)
- 		set_bit(feature, (unsigned long *)cpu_caps_cleared);
--	} else {
--		clear_bit(feature, (unsigned long *)c->x86_capability);
--	}
- }
+@@ -150,7 +150,7 @@ cpuid_dependent_features[] = {
+ 	{ 0, 0 }
+ };
  
- /* Take the capabilities and the BUG bits into account */
- #define MAX_FEATURE_BITS ((NCAPINTS + NBUGINTS) * sizeof(u32) * 8)
- 
--static void do_clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int feature)
-+void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int feature)
+-void filter_cpuid_features(struct cpuinfo_x86 *c, bool warn)
++void filter_cpuid_features(struct cpuinfo_x86 *c)
  {
- 	DECLARE_BITMAP(disable, MAX_FEATURE_BITS);
- 	const struct cpuid_dep *d;
-@@ -129,12 +127,7 @@ static void do_clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int feature)
- 	} while (changed);
- }
+ 	const struct cpuid_dependent_feature *df;
  
--void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int feature)
--{
--	do_clear_cpu_cap(c, feature);
--}
--
- void setup_clear_cpu_cap(unsigned int feature)
- {
--	do_clear_cpu_cap(NULL, feature);
-+	clear_cpu_cap(&boot_cpu_data, feature);
- }
+@@ -171,8 +171,6 @@ void filter_cpuid_features(struct cpuinfo_x86 *c, bool warn)
+ 			continue;
+ 
+ 		clear_cpu_cap(c, df->feature);
+-		if (!warn)
+-			continue;
+ 
+ 		pr_warn("CPU: CPU feature " X86_CAP_FMT " disabled, no CPUID level 0x%x\n",
+ 			x86_cap_flag(df->feature), df->level);
 -- 
 2.34.3
 
