@@ -2,92 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970D6C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 09:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1F6CCA47F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 12:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233353AbiGRJOy (ORCPT
+        id S234802AbiGRMLy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 05:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
+        Mon, 18 Jul 2022 08:11:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234132AbiGRJOv (ORCPT
+        with ESMTP id S234801AbiGRMLx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 05:14:51 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D34011449
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:14:50 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id l23so20071235ejr.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pwFbbauDX9gsZYxtY8fxgYizduNV3aBKsO3yUHiYWcA=;
-        b=lOzYBZxkWa12PFEYxuRa3esea0uZmAzb/unlVnlRnHnhGEcFOCjG5X8DbepRn1wyTe
-         JoxJDTxc5gvW/Gs1ToHLdEEEHD/HuuzW/ZZFtax6eEzY0qPDWja14ZRctGByO3HY9bbb
-         8GQETaShmaNthrEDIDz5sk72HoLj45JDd4chLJlosTfzpiG0MJMWsXlZXMlOS9/W2Vy6
-         nwOD7j0J64i/6T3zM/DnxFniv+zu7SL+KLPl/kR2adbEsVCLomFDOlIV/Rvj0oqGSSHb
-         J5kYntdMLrmzpvbmIUOTB62LeN4drnmiHLsEPXJEqU1wDXIUmLbycaKfos5QQcNiI10u
-         Icgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pwFbbauDX9gsZYxtY8fxgYizduNV3aBKsO3yUHiYWcA=;
-        b=UiwNeD8p+pbpub62bmy3vbh2cO9WIuqu+zo3xW9UkHOJfdx8Ff6kgZEKNFRhHVnqY1
-         806d7O+NpMtuQk6V7N0AEQ2km1FLOlyv8J0txaApRROCIhrRs0rtSszxDVbMH71xYIDB
-         5Qhqlg1t7USnIbpFJSUFaZ6k0xjLyWbKrPnb+1IC3KdPeLSMiPbzWDNKy39Jo0qnnXBS
-         av5T0Kxw9gfvPpVEo52y3sdZ4x8d1Vlrh1yTPy0SX0B0Jl/M3Q4hSAr8woRTpnELF1Jf
-         QZId40t+hEspDRNog1zS7SS5MtVPY2z28KElGk8K7Jn+Ylx8shYklp/t051V/FDzpfxQ
-         ekFw==
-X-Gm-Message-State: AJIora9mpUhlMsHnV0gKV6ea5VsoLtzVVn4YX0NrM7yVL0zr6Pa9bLDi
-        JHkxY6IiqB/oJYkA5171F1PM3zJzVuQ3e/lAd3QARg==
-X-Google-Smtp-Source: AGRyM1tCH5IixWtJI6STLtZK5K2JWPfTCLpcSnp75RgNnuxfWdyUFS3S8v9F4PaWSdnjzvnIzUM7VsEodFwZl4fW2Sc=
-X-Received: by 2002:a17:906:58c8:b0:6fe:91d5:18d2 with SMTP id
- e8-20020a17090658c800b006fe91d518d2mr24964642ejs.190.1658135688605; Mon, 18
- Jul 2022 02:14:48 -0700 (PDT)
+        Mon, 18 Jul 2022 08:11:53 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15AABF6F;
+        Mon, 18 Jul 2022 05:11:52 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id D8AC71FB7D;
+        Mon, 18 Jul 2022 12:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1658146310; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=V6D6pW7KOU2kPWCiZd07qffFGU6SpyCb2tbQHBnWrPk=;
+        b=EXPnzUbilMMA5F7I79PNHtjTgfbMNI9Re7xNL324QWOc5NRzwccoapCXDua4tdUktLRmBD
+        bqJJ6Pj+LoonmpjEJP9fMbxhYEWaV4vgH0QQoo2JU/UFNvQwduA0OeLIzlzuT7gU37fUAA
+        HHZbVqI9QkVqm/m53IDyVIhn0W+WGW0=
+Received: from suse.cz (unknown [10.100.201.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id E612B2C141;
+        Mon, 18 Jul 2022 12:11:45 +0000 (UTC)
+Date:   Mon, 18 Jul 2022 14:11:44 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Abel Wu <wuyun.abel@bytedance.com>
+Cc:     Gang Li <ligang.bdlg@bytedance.com>, akpm@linux-foundation.org,
+        surenb@google.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, viro@zeniv.linux.org.uk,
+        ebiederm@xmission.com, keescook@chromium.org, rostedt@goodmis.org,
+        mingo@redhat.com, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, david@redhat.com,
+        imbrenda@linux.ibm.com, adobriyan@gmail.com,
+        yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        hezhongkun.hzk@bytedance.com
+Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
+ CONSTRAINT_{MEMORY_POLICY,CPUSET}
+Message-ID: <YtVOAGga+B3CmFKC@dhcp22.suse.cz>
+References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+ <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+ <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
+ <Ys14oIHL85d/T7s+@dhcp22.suse.cz>
+ <6f6a2257-3b60-e312-3ee3-fb08b972dbf2@bytedance.com>
 MIME-Version: 1.0
-References: <20220713110020.85511-1-lihuafei1@huawei.com>
-In-Reply-To: <20220713110020.85511-1-lihuafei1@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jul 2022 11:14:37 +0200
-Message-ID: <CACRpkdYmwojupt_024LKA2B0e7zBKmreYYX3ZMC56i5Vrr3fFA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] ARM: Convert to ARCH_STACKWALK
-To:     Li Huafei <lihuafei1@huawei.com>
-Cc:     linux@armlinux.org.uk, rmk+kernel@armlinux.org.uk, ardb@kernel.org,
-        will@kernel.org, broonie@kernel.org, mark.rutland@arm.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, arnd@arndb.de, rostedt@goodmis.org,
-        nick.hawkins@hpe.com, john@phrozen.org, mhiramat@kernel.org,
-        ast@kernel.org, linyujun809@huawei.com, ndesaulniers@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f6a2257-3b60-e312-3ee3-fb08b972dbf2@bytedance.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 13, 2022 at 1:02 PM Li Huafei <lihuafei1@huawei.com> wrote:
+On Tue 12-07-22 23:00:55, Abel Wu wrote:
+> 
+> On 7/12/22 9:35 PM, Michal Hocko Wrote:
+> > On Tue 12-07-22 19:12:18, Abel Wu wrote:
+> > [...]
+> > > I was just going through the mail list and happen to see this. There
+> > > is another usecase for us about per-numa memory usage.
+> > > 
+> > > Say we have several important latency-critical services sitting inside
+> > > different NUMA nodes without intersection. The need for memory of these
+> > > LC services varies, so the free memory of each node is also different.
+> > > Then we launch several background containers without cpuset constrains
+> > > to eat the left resources. Now the problem is that there doesn't seem
+> > > like a proper memory policy available to balance the usage between the
+> > > nodes, which could lead to memory-heavy LC services suffer from high
+> > > memory pressure and fails to meet the SLOs.
+> > 
+> > I do agree that cpusets would be rather clumsy if usable at all in a
+> > scenario when you are trying to mix NUMA bound workloads with those
+> > that do not have any NUMA proferences. Could you be more specific about
+> > requirements here though?
+> 
+> Yes, these LC services are highly sensitive to memory access latency
+> and bandwidth, so they are provisioned by NUMA node granule to meet
+> their performance requirements. While on the other hand, they usually
+> do not make full use of cpu/mem resources which increases the TCO of
+> our IDCs, so we have to co-locate them with background tasks.
+> 
+> Some of these LC services are memory-bound but leave much of cpu's
+> capacity unused. In this case we hope the co-located background tasks
+> to consume some leftover without introducing obvious mm overhead to
+> the LC services.
 
-> This series mainly updates the ARM stack trace code to use the newer and
-> simpler arch_stack_walk() interface. Two issues were fixed before that
-> (see patch 1 and 2), as well as allowing stack_trace_save_tsk() to
-> trace non-current tasks (see patch 3).
->
-> v2:
->  - As suggested by Mark, the commit logs for patch 4 and 5 were
->    refined for easy review.
+This are some tough requirements and I am afraid far from any typical
+usage. So I believe that you need a careful tunning much more than a
+policy which I really have hard time to imagine wrt semantic TBH.
+ 
+> > Let's say you run those latency critical services with "simple" memory
+> > policies and mix them with the other workload without any policies in
+> > place so they compete over memory. It is not really clear to me how can
+> > you achieve any reasonable QoS in such an environment. Your latency
+> > critical servises will be more constrained than the non-critical ones
+> > yet they are more demanding AFAIU.
+> 
+> Yes, the QoS over memory is the biggest block in the way (the other
+> resources are relatively easier). For now, we hacked a new mpol to
+> achieve weighted-interleave behavior to balance the memory usage across
+> NUMA nodes, and only set memcg protections to the LC services. If the
+> memory pressure is still high, the background tasks will be killed.
+> Ideas? Thanks!
 
-I see I reviewed v1 when v2 was already out but think the
-comments still stand.
+It is not really clear what the new memory policy does and what is the
+semantic of it from your description. Memory protection (via memcg) of
+your sensitive workload makes sense but it would require proper setting
+of background jobs as well. As soon as you hit the global direct reclaim
+then the memory protection won't safe your sensitve workload.
 
-I think you can already add patches 1 & 2 to Russells patch tracker,
-they are straight-forward fixes.
-
-Patches 3-5 may need some elaboration but I trust that you have
-done some serious testing since you found the snags in
-patches 1 & 2.
-
-Yours,
-Linus Walleij
+-- 
+Michal Hocko
+SUSE Labs
