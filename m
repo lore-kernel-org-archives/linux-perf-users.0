@@ -2,135 +2,224 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1F6CCA47F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 12:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2958C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 12:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234802AbiGRMLy (ORCPT
+        id S235030AbiGRMPM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 08:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
+        Mon, 18 Jul 2022 08:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234801AbiGRMLx (ORCPT
+        with ESMTP id S235043AbiGRMPB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 08:11:53 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15AABF6F;
-        Mon, 18 Jul 2022 05:11:52 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id D8AC71FB7D;
-        Mon, 18 Jul 2022 12:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1658146310; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=V6D6pW7KOU2kPWCiZd07qffFGU6SpyCb2tbQHBnWrPk=;
-        b=EXPnzUbilMMA5F7I79PNHtjTgfbMNI9Re7xNL324QWOc5NRzwccoapCXDua4tdUktLRmBD
-        bqJJ6Pj+LoonmpjEJP9fMbxhYEWaV4vgH0QQoo2JU/UFNvQwduA0OeLIzlzuT7gU37fUAA
-        HHZbVqI9QkVqm/m53IDyVIhn0W+WGW0=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 18 Jul 2022 08:15:01 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7018252B5;
+        Mon, 18 Jul 2022 05:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658146493; x=1689682493;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2a9djxvYHwMzKSUq5xazfVjyavQ+n220/gOWPtn17QY=;
+  b=kxPywq749wz2MdfSXFQPMR+BWVnWLZXg/T9CYWFuyf/w5SS6hp/FmiaZ
+   seOENarwhXbiEhmhmazlnCMsUfoLbnddKk7M78oWb9pwLUTFX+t+N23yU
+   fWM1cou/nMjYTzlGDyzwj2bvgHhRgbI3ZekTKJNi2hBwZFfnKPrVH6ktG
+   8PFD4u8opoGsH6MrZnMBzhfW4oNOR/IIujKQBYRRAneVuKH/y6+FqBNU9
+   9o8TNR/GIvWvanuY9w1DeZfWj7Mrv9l8VV+13AiFk8QwhMs0aL+Uc/Qw3
+   gELPhqJNsiHPQopI9dyVqj0Xq8F/cpEzByG8uab9pZ/igSHeAGqmj/l5w
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10411"; a="286222221"
+X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
+   d="scan'208";a="286222221"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 05:14:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
+   d="scan'208";a="547464900"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 18 Jul 2022 05:14:52 -0700
+Received: from [10.252.209.6] (kliang2-mobl1.ccr.corp.intel.com [10.252.209.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id E612B2C141;
-        Mon, 18 Jul 2022 12:11:45 +0000 (UTC)
-Date:   Mon, 18 Jul 2022 14:11:44 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Abel Wu <wuyun.abel@bytedance.com>
-Cc:     Gang Li <ligang.bdlg@bytedance.com>, akpm@linux-foundation.org,
-        surenb@google.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, viro@zeniv.linux.org.uk,
-        ebiederm@xmission.com, keescook@chromium.org, rostedt@goodmis.org,
-        mingo@redhat.com, peterz@infradead.org, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, david@redhat.com,
-        imbrenda@linux.ibm.com, adobriyan@gmail.com,
-        yang.yang29@zte.com.cn, brauner@kernel.org,
-        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
-        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
-        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
-        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
-        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
-        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
-        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
-        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
-        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
-        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        hezhongkun.hzk@bytedance.com
-Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
- CONSTRAINT_{MEMORY_POLICY,CPUSET}
-Message-ID: <YtVOAGga+B3CmFKC@dhcp22.suse.cz>
-References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
- <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
- <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
- <Ys14oIHL85d/T7s+@dhcp22.suse.cz>
- <6f6a2257-3b60-e312-3ee3-fb08b972dbf2@bytedance.com>
+        by linux.intel.com (Postfix) with ESMTPS id 75C665807C9;
+        Mon, 18 Jul 2022 05:14:50 -0700 (PDT)
+Message-ID: <2abcf8c7-610d-a58f-47cb-cd5c2c1c15de@linux.intel.com>
+Date:   Mon, 18 Jul 2022 08:14:49 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f6a2257-3b60-e312-3ee3-fb08b972dbf2@bytedance.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0.2
+Subject: Re: [PATCH v3 1/2] perf metrics: Add literal for system TSC frequency
+To:     Ian Rogers <irogers@google.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220715223521.3389971-1-irogers@google.com>
+ <20220715223521.3389971-2-irogers@google.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220715223521.3389971-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue 12-07-22 23:00:55, Abel Wu wrote:
-> 
-> On 7/12/22 9:35 PM, Michal Hocko Wrote:
-> > On Tue 12-07-22 19:12:18, Abel Wu wrote:
-> > [...]
-> > > I was just going through the mail list and happen to see this. There
-> > > is another usecase for us about per-numa memory usage.
-> > > 
-> > > Say we have several important latency-critical services sitting inside
-> > > different NUMA nodes without intersection. The need for memory of these
-> > > LC services varies, so the free memory of each node is also different.
-> > > Then we launch several background containers without cpuset constrains
-> > > to eat the left resources. Now the problem is that there doesn't seem
-> > > like a proper memory policy available to balance the usage between the
-> > > nodes, which could lead to memory-heavy LC services suffer from high
-> > > memory pressure and fails to meet the SLOs.
-> > 
-> > I do agree that cpusets would be rather clumsy if usable at all in a
-> > scenario when you are trying to mix NUMA bound workloads with those
-> > that do not have any NUMA proferences. Could you be more specific about
-> > requirements here though?
-> 
-> Yes, these LC services are highly sensitive to memory access latency
-> and bandwidth, so they are provisioned by NUMA node granule to meet
-> their performance requirements. While on the other hand, they usually
-> do not make full use of cpu/mem resources which increases the TCO of
-> our IDCs, so we have to co-locate them with background tasks.
-> 
-> Some of these LC services are memory-bound but leave much of cpu's
-> capacity unused. In this case we hope the co-located background tasks
-> to consume some leftover without introducing obvious mm overhead to
-> the LC services.
 
-This are some tough requirements and I am afraid far from any typical
-usage. So I believe that you need a careful tunning much more than a
-policy which I really have hard time to imagine wrt semantic TBH.
- 
-> > Let's say you run those latency critical services with "simple" memory
-> > policies and mix them with the other workload without any policies in
-> > place so they compete over memory. It is not really clear to me how can
-> > you achieve any reasonable QoS in such an environment. Your latency
-> > critical servises will be more constrained than the non-critical ones
-> > yet they are more demanding AFAIU.
+Thanks Ian for working on the issue and coordinate the patches.
+
+On 2022-07-15 6:35 p.m., Ian Rogers wrote:
+> Such a literal is useful to calculate things like the average frequency
+> [1]. The TSC frequency isn't exposed by sysfs although some experimental
+> drivers look to add it [2]. This change computes the value using the
+> frequency in /proc/cpuinfo which is accruate 
+
+%s/accruate/accurate/
+
+> at least on Intel processors.
+
+I googled the cpuinfo of other Archs, e.g., arm and s390. It looks like
+only Intel display the TSC frequency in the "model name".
+
+So it may be better to move it to X86 specific code, arch/x86/util/tsc.c
+
 > 
-> Yes, the QoS over memory is the biggest block in the way (the other
-> resources are relatively easier). For now, we hacked a new mpol to
-> achieve weighted-interleave behavior to balance the memory usage across
-> NUMA nodes, and only set memcg protections to the LC services. If the
-> memory pressure is still high, the background tasks will be killed.
-> Ideas? Thanks!
+> [1] https://github.com/intel/perfmon-metrics/blob/5ad9ef7056f31075e8178b9f1fb732af183b2c8d/SKX/metrics/perf/skx_metric_perf.json#L11
+> [2] https://github.com/trailofbits/tsc_freq_khz
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/expr.c | 15 +++++++++++++
+>  tools/perf/util/expr.c  | 49 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 64 insertions(+)
+> 
+> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> index 5c0032fe93ae..45afe4f24859 100644
+> --- a/tools/perf/tests/expr.c
+> +++ b/tools/perf/tests/expr.c
+> @@ -1,8 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "util/debug.h"
+>  #include "util/expr.h"
+> +#include "util/header.h"
+>  #include "util/smt.h"
+>  #include "tests.h"
+> +#include <math.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <linux/zalloc.h>
+> @@ -69,6 +71,11 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+>  	double val, num_cpus, num_cores, num_dies, num_packages;
+>  	int ret;
+>  	struct expr_parse_ctx *ctx;
+> +	bool is_intel = false;
+> +	char buf[128];
+> +
+> +	if (!get_cpuid(buf, sizeof(buf)))
+> +		is_intel = strstr(buf, "Intel") != NULL;
+>  
+>  	TEST_ASSERT_EQUAL("ids_union", test_ids_union(), 0);
+>  
+> @@ -175,6 +182,14 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+>  	if (num_dies) // Some platforms do not have CPU die support, for example s390
+>  		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
+>  
+> +	if (is_intel) {
+> +		double system_tsc_freq;
+> +
+> +		TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&system_tsc_freq, ctx,
+> +								"#system_tsc_freq") == 0);
 
-It is not really clear what the new memory policy does and what is the
-semantic of it from your description. Memory protection (via memcg) of
-your sensitive workload makes sense but it would require proper setting
-of background jobs as well. As soon as you hit the global direct reclaim
-then the memory protection won't safe your sensitve workload.
 
--- 
-Michal Hocko
-SUSE Labs
+I think we should use arch_get_tsc_freq() to replace here.
+This belong to a separate patch.
+
+
+Thanks,
+Kan
+> +		TEST_ASSERT_VAL("!isnan(#system_tsc_freq)", !isnan(system_tsc_freq));
+> +	}
+> +
+>  	/*
+>  	 * Source count returns the number of events aggregating in a leader
+>  	 * event including the leader. Check parsing yields an id.
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index 675f318ce7c1..4c81533e4b43 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -402,6 +402,50 @@ double expr_id_data__source_count(const struct expr_id_data *data)
+>  	return data->val.source_count;
+>  }
+>  
+> +/*
+> + * Derive the TSC frequency in Hz from the /proc/cpuinfo, for example:
+> + * ...
+> + * model name      : Intel(R) Xeon(R) Gold 6154 CPU @ 3.00GHz
+> + * ...
+> + * will return 3000000000.
+> + */
+> +static double system_tsc_freq(void)
+> +{
+> +	static double result;
+> +	static bool computed;
+> +	FILE *cpuinfo;
+> +	char *line = NULL;
+> +	size_t len = 0;
+> +
+> +	if (computed)
+> +		return result;
+> +
+> +	computed = true;
+> +	result = NAN;
+> +	cpuinfo = fopen("/proc/cpuinfo", "r");
+> +	if (!cpuinfo) {
+> +		pr_err("Failed to read /proc/cpuinfo for TSC frequency");
+> +		return NAN;
+> +	}
+> +	while (getline(&line, &len, cpuinfo) > 0) {
+> +		if (!strncmp(line, "model name", 10)) {
+> +			char *pos = strstr(line + 11, " @ ");
+> +
+> +			if (pos && sscanf(pos, " @ %lfGHz", &result) == 1) {
+> +				result *= 1000000000;
+> +				goto out;
+> +			}
+> +		}
+> +	}
+> +out:
+> +	if (isnan(result))
+> +		pr_err("Failed to find TSC frequency in /proc/cpuinfo");
+> +
+> +	free(line);
+> +	fclose(cpuinfo);
+> +	return result;
+> +}
+> +
+>  double expr__get_literal(const char *literal)
+>  {
+>  	static struct cpu_topology *topology;
+> @@ -417,6 +461,11 @@ double expr__get_literal(const char *literal)
+>  		goto out;
+>  	}
+>  
+> +	if (!strcasecmp("#system_tsc_freq", literal)) {
+> +		result = system_tsc_freq();
+> +		goto out;
+> +	}
+> +
+>  	/*
+>  	 * Assume that topology strings are consistent, such as CPUs "0-1"
+>  	 * wouldn't be listed as "0,1", and so after deduplication the number of
