@@ -2,62 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91386C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 16:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E24C1CCA481
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 17:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235700AbiGRQnc (ORCPT
+        id S233997AbiGRR05 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 12:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40500 "EHLO
+        Mon, 18 Jul 2022 13:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235695AbiGRQn1 (ORCPT
+        with ESMTP id S233660AbiGRR01 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 12:43:27 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A272B1B0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 09:43:25 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id o85-20020a25d758000000b0067030a2d403so2748929ybg.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 09:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=MeQFhDWhw6uJhVAf4SRwsMvd39/eawx4leroeGONoc8=;
-        b=odOfFuywMBJ86ClpGLOJnyTs1vkUPpoBT8uT+btgbpCrf06texWEMIb+CtOWroV+0W
-         jyVmCoiMbUMEmOEpds+6GymsbBdkAoIc7IzGTr/dQQRUSNppsMn47MIJFXEzYGV3KyAj
-         l8eghn2P4ZbzTQKxBavlZnwAQtb1jf+09PnQ8HgLzETmk3+PwvrQGshHwopIbQJZh/Af
-         1aV6H1eiwFxXulYwGJYQkcyO24NMMjsFQaTxgcCy70uCcQGLa1YFdb7TxEkRJeqiM/Pw
-         xHq1F5Xd/KHxqxY5D+ywSeT/FVtNgJ39xHZjmMgsB8botISnbTGGfR8IwQJNMjIcB7wk
-         veaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=MeQFhDWhw6uJhVAf4SRwsMvd39/eawx4leroeGONoc8=;
-        b=jlpMlNmA1F0EH4gvRnlqs8jEG6/Q9o4T9prxr/KeGNZdU7IprlO7uX7eVJGqWOb01d
-         IJQCOHqjQXamKIL4iUO53XnGfsRYFGsMnHWviBE9vwYrPf/K3TZMpQcbtRIQHq/GpxR/
-         7g+eSnUU21QLmJOKGePwtVLbja66BF69ot9BG1HX5q3NQ10DIGL/WHRKt+4y1cI084r4
-         Si+MJFgI4cDRA4g1q+YLeTGMX0swpjscQ+YwzRMUOI1Wl1XcVcmOwjY259WwiF58o7t4
-         JixzT+iGvjVPYT4Rsvzv+3nsS3avfcvdYCAijl9VD7y0u3WK5J1QQ/gwAKEIUeC52REL
-         1/YQ==
-X-Gm-Message-State: AJIora8FaGGGI4EX3zjGDDthU4/+Z+a7Iv8Cv87ziyorYDUuT0TokuA7
-        VTmctLpGlZzSqXkTKcDtKWIguwReQYb8
-X-Google-Smtp-Source: AGRyM1sCFaSaN+OYXwJis87SDXFstBd+j8/M7CzZr1dKfE5Bl/b3JDSsZHKBzslDVbqZbE4BRCTv1jxJVvaJ
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:922:90e9:167f:1ccd])
- (user=irogers job=sendgmr) by 2002:a25:d00b:0:b0:66e:e393:aa68 with SMTP id
- h11-20020a25d00b000000b0066ee393aa68mr27218620ybg.65.1658162604988; Mon, 18
- Jul 2022 09:43:24 -0700 (PDT)
-Date:   Mon, 18 Jul 2022 09:43:12 -0700
-In-Reply-To: <20220718164312.3994191-1-irogers@google.com>
-Message-Id: <20220718164312.3994191-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20220718164312.3994191-1-irogers@google.com>
-X-Mailer: git-send-email 2.37.0.170.g444d1eabd0-goog
-Subject: [PATCH v4 3/3] perf test: Add test for #system_tsc_freq in metrics
-From:   Ian Rogers <irogers@google.com>
-To:     perry.taylor@intel.com, caleb.biggers@intel.com,
-        kshipra.bopardikar@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Mon, 18 Jul 2022 13:26:27 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172252A96B;
+        Mon, 18 Jul 2022 10:26:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658165187; x=1689701187;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DtUN5B7jxpyekGCrTuXMCcL4ou9ZK5JJGNt3LwquMZk=;
+  b=YMOtUQzln3LeymZ/B4mT4C6Mz4oFu/R8oIzhiAUVCbUNW5YueeX0/dk4
+   tsHyIpWqejC5LI1rFik1SS23LGkTb1J8hYjoTkKu7I0wdFEGIMVBLsfea
+   u31NrDOjtdffH1U7Ur+BZCexppRhpmU0JbE3+0BAkW4S7a0GZYxrEfj8y
+   kPkDfXy1omcKCcKdxQAJ5XrJh3OUH1LsTjtzPFeUyyie3THfUdLW20S+n
+   cjUCuSlvOJtU2twKwHuOwuE3uBs+o91vCSxumTwNl9Pp+L64yqV+Ffxn5
+   ryF8lC/IA/Q2SXExpQTSpgpuhzduwf0yAx14T8PH8F9XyYB75ISOzBcWN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10412"; a="311962004"
+X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
+   d="scan'208";a="311962004"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 10:26:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,281,1650956400"; 
+   d="scan'208";a="655376612"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Jul 2022 10:26:25 -0700
+Received: from [10.252.209.6] (kliang2-mobl1.ccr.corp.intel.com [10.252.209.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 7FEE75808A1;
+        Mon, 18 Jul 2022 10:26:23 -0700 (PDT)
+Message-ID: <6dfdeeee-1c28-666d-1385-c4bcc493cc6a@linux.intel.com>
+Date:   Mon, 18 Jul 2022 13:26:22 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0.2
+Subject: Re: [PATCH v4 0/3] Add arch TSC frequency information
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -72,60 +67,56 @@ To:     perry.taylor@intel.com, caleb.biggers@intel.com,
         James Clark <james.clark@arm.com>,
         John Garry <john.garry@huawei.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220718164312.3994191-1-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20220718164312.3994191-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The value should be non-zero on Intel while zero on everything else.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/expr.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 5c0032fe93ae..2efe9e3a63b8 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -1,8 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "util/debug.h"
- #include "util/expr.h"
-+#include "util/header.h"
- #include "util/smt.h"
- #include "tests.h"
-+#include <math.h>
- #include <stdlib.h>
- #include <string.h>
- #include <linux/zalloc.h>
-@@ -69,6 +71,11 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
- 	double val, num_cpus, num_cores, num_dies, num_packages;
- 	int ret;
- 	struct expr_parse_ctx *ctx;
-+	bool is_intel = false;
-+	char buf[128];
-+
-+	if (!get_cpuid(buf, sizeof(buf)))
-+		is_intel = strstr(buf, "Intel") != NULL;
- 
- 	TEST_ASSERT_EQUAL("ids_union", test_ids_union(), 0);
- 
-@@ -175,6 +182,12 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
- 	if (num_dies) // Some platforms do not have CPU die support, for example s390
- 		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
- 
-+	TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
-+	if (is_intel)
-+		TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
-+	else
-+		TEST_ASSERT_VAL("#system_tsc_freq == 0", fpclassify(val) == FP_ZERO);
-+
- 	/*
- 	 * Source count returns the number of events aggregating in a leader
- 	 * event including the leader. Check parsing yields an id.
--- 
-2.37.0.170.g444d1eabd0-goog
+On 2022-07-18 12:43 p.m., Ian Rogers wrote:
+> The first patch adds the #system_tsc_freq literal to expr.c and
+> computes it via cpuid. The second patches adds support for "older"
+> processors by computing the value via /proc/cpuinfo. The third patch
+> adds a test then the computation looks somewhat sensible.
+> 
+> Such a literal is useful to calculate things like the average
+> frequency [1]. The TSC frequency isn't exposed by sysfs although some
+> experimental drivers look to add it [2].
+> 
+> [1] https://github.com/intel/perfmon-metrics/blob/5ad9ef7056f31075e8178b9f1fb732af183b2c8d/SKX/metrics/perf/skx_metric_perf.json#L11
+> [2] https://github.com/trailofbits/tsc_freq_khz
+> 
+> v4. Modified the patch order and separated out the test.
+> v3. Added the cpuid approach from Kan Liang.
+> v2. Adds warnings to make clear if things have changed/broken on future
+>     Intel platforms. It also adds caching and an Intel specific that a
+>     value is computed.
+> 
+> Ian Rogers (2):
+>   perf tsc: Add cpuinfo fall back for arch_get_tsc_freq
+>   perf test: Add test for #system_tsc_freq in metrics
 
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+> 
+> Kan Liang (1):
+>   perf tsc: Add arch TSC frequency information
+> 
+>  tools/perf/arch/x86/util/cpuid.h  | 34 ++++++++++++++
+>  tools/perf/arch/x86/util/header.c | 27 +++++------
+>  tools/perf/arch/x86/util/tsc.c    | 77 +++++++++++++++++++++++++++++++
+>  tools/perf/tests/expr.c           | 13 ++++++
+>  tools/perf/util/expr.c            | 13 ++++++
+>  tools/perf/util/tsc.h             |  1 +
+>  6 files changed, 149 insertions(+), 16 deletions(-)
+>  create mode 100644 tools/perf/arch/x86/util/cpuid.h
+> 
