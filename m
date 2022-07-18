@@ -2,151 +2,314 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D2CC43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 14:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03F2C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 14:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234812AbiGROMQ (ORCPT
+        id S234097AbiGROrj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 10:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37384 "EHLO
+        Mon, 18 Jul 2022 10:47:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235746AbiGROMP (ORCPT
+        with ESMTP id S234096AbiGROri (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 10:12:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 44FB627FCA
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 07:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658153528;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nBIZ5inYKW+z3A/0WRI0HsZbXbpbCq0J/0LeFUWRE6c=;
-        b=gHHsLA7XE95hqLmfgJhw4qy7KbcEXtyMZUkcQ3pwwgrdlM9xpXCNCJR+ow3bmEIyECpnd4
-        jlMTI73qC0Vv6RrFUw87jcdt0di1MTqirBjpOwgkSXixhnupcK0L0cAllfP1SYuNbVSt7X
-        eDd118nqmVyrIV30o5M0k5GyS6C5xZ0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-512-pGEqucTQNjKNyVCGKumkbA-1; Mon, 18 Jul 2022 10:11:57 -0400
-X-MC-Unique: pGEqucTQNjKNyVCGKumkbA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8C6001019C8D;
-        Mon, 18 Jul 2022 14:11:56 +0000 (UTC)
-Received: from amdlaptop.tlv.redhat.com (dhcp-4-238.tlv.redhat.com [10.35.4.238])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07E2C2026D64;
-        Mon, 18 Jul 2022 14:11:50 +0000 (UTC)
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jane Malalane <jane.malalane@citrix.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        linux-crypto@vger.kernel.org (open list:CRYPTO API)
-Subject: [PATCH v2 5/5] x86/cpuid: check for dependencies violations in CPUID and attempt to fix them
-Date:   Mon, 18 Jul 2022 17:11:23 +0300
-Message-Id: <20220718141123.136106-6-mlevitsk@redhat.com>
-In-Reply-To: <20220718141123.136106-1-mlevitsk@redhat.com>
-References: <20220718141123.136106-1-mlevitsk@redhat.com>
+        Mon, 18 Jul 2022 10:47:38 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF17A26E9
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 07:47:36 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id c187-20020a1c35c4000000b003a30d88fe8eso5863351wma.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 07:47:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9N+dD3imMxQIPPnsppdjJv/Cl1xiB5fWoniABYyOdJY=;
+        b=dhZjLB9XJ2+0vPQ+fBTPGejM8X6qyRtv64StC0AnlrxljcE1aAjfJcSHBi/ZvR9VJn
+         KvsUUzhQXVq/FNAPCWdgBiE4AGqRCLd61+hINPm0kUBmTo2wgP3PNeQtSnVcv/oGPa0a
+         TJ/lFiiJVxIYIVUpJbKlql89At9jr433jIMs0d8oI/2Gx7iemY6RCWbYisbCw6U7YdtT
+         ih3xEoCghPvE5MtUSLXzXix7UgsRw/9oY0fBrrH57mFsRiDfF1pp8+v0vfXoL/NOv88A
+         2pyLjMWj3DWI7tvssH8P4Wb2IU+mkRIT1Up/VwuesuC77wJZKtt8aeEEtNat4RjJeSGA
+         swuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9N+dD3imMxQIPPnsppdjJv/Cl1xiB5fWoniABYyOdJY=;
+        b=juVoESjIMA58XhnZJQA1Z4DazXGqFwrrFSWUiV/8eY5UdHOm/WKDFzob3fbeUmBdtp
+         6rrEFFYOxziKLSj4frEQxNogy6wkYV1CHzqzUxjVbruV0DFItjkiciPg3wnu1oCnCoyh
+         osz0y+lR/NbkwaZG0htsB7gTDwnmsU9erjXHokgmwUhY/fJOr895Q/9Ou/YKUi7zdJ4H
+         REfxUnZ1LLaljYz5WfTEaZXRMMhhYja/xb1JAFmatgNQaeR3v+X+OasEfpSmGC3Z8kWF
+         yC+/6hl6K+gVe9tRSrIpikMSukWni2ZGYmCtSasl8dgFI0IppoAQ7+da5xc5JQK6qpOO
+         G+kw==
+X-Gm-Message-State: AJIora9XUHqBYNc6S7zB9tT5zg2iPHff9uA/8kMR3U/DtMuiN0WiNI0J
+        F2wvKzW8cJdDFbGj4CUiPBsRBpmCIP6DF22U9TReCQ==
+X-Google-Smtp-Source: AGRyM1uR4Krgva/jlLP0qN95xwHuIOLb+WaPu5gAUICeIzKNtxncN6UfohC3PgDpFrO8zKSmXnserUnRnFr9eyWABu8=
+X-Received: by 2002:a7b:ce13:0:b0:3a3:102c:23d3 with SMTP id
+ m19-20020a7bce13000000b003a3102c23d3mr13381143wmc.67.1658155654834; Mon, 18
+ Jul 2022 07:47:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+References: <20220715223521.3389971-1-irogers@google.com> <20220715223521.3389971-3-irogers@google.com>
+ <5f86dd4d-e078-4bc6-2d51-df404179ecf6@linux.intel.com>
+In-Reply-To: <5f86dd4d-e078-4bc6-2d51-df404179ecf6@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 18 Jul 2022 07:47:21 -0700
+Message-ID: <CAP-5=fUUG_A8723xAd=Z_6f-p7=+TrjQYEB1JVgB8weKyeRJAQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] perf tsc: Add arch TSC frequency information
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     perry.taylor@intel.com, caleb.biggers@intel.com,
+        kshipra.bopardikar@intel.com,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Due to configuration bugs, sometimes a CPU feature is disabled in CPUID,
-but not features that depend on it.
+On Mon, Jul 18, 2022 at 5:49 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>
+> On 2022-07-15 6:35 p.m., Ian Rogers wrote:
+> > From: Kan Liang <kan.liang@linux.intel.com>
+> >
+> > The TSC frequency information is required for the event metrics with
+> > the literal, system_tsc_freq. For the newer Intel platform, the TSC
+> > frequency information can be retrieved from the CPUID leaf 0x15.
+> > If the TSC frequency information isn't present the /proc/cpuinfo
+> > approach is used.
+> >
+> > Refactor cpuid for this use. Note, the previous stack pushing/popping
+> > approach was broken on x86-64 that has stack red zones that would be
+> > clobbered.
+> >
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/arch/x86/util/cpuid.h  | 34 +++++++++++++++++++++++++++++++
+> >  tools/perf/arch/x86/util/header.c | 27 ++++++++++--------------
+> >  tools/perf/arch/x86/util/tsc.c    | 33 ++++++++++++++++++++++++++++++
+> >  tools/perf/util/expr.c            | 15 +++++++++++++-
+> >  tools/perf/util/tsc.h             |  1 +
+> >  5 files changed, 93 insertions(+), 17 deletions(-)
+> >  create mode 100644 tools/perf/arch/x86/util/cpuid.h
+> >
+> > diff --git a/tools/perf/arch/x86/util/cpuid.h b/tools/perf/arch/x86/util/cpuid.h
+> > new file mode 100644
+> > index 000000000000..0a3ae0ace7e9
+> > --- /dev/null
+> > +++ b/tools/perf/arch/x86/util/cpuid.h
+> > @@ -0,0 +1,34 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef PERF_CPUID_H
+> > +#define PERF_CPUID_H 1
+> > +
+> > +
+> > +static inline void
+> > +cpuid(unsigned int op, unsigned int op2, unsigned int *a, unsigned int *b,
+> > +     unsigned int *c, unsigned int *d)
+> > +{
+> > +     /*
+> > +      * Preserve %ebx/%rbx register by either placing it in %rdi or saving it
+> > +      * on the stack - x86-64 needs to avoid the stack red zone. In PIC
+> > +      * compilations %ebx contains the address of the global offset
+> > +      * table. %rbx is occasionally used to address stack variables in
+> > +      * presence of dynamic allocas.
+> > +      */
+> > +     asm(
+> > +#if defined(__x86_64__)
+> > +             "mov %%rbx, %%rdi\n"
+> > +             "cpuid\n"
+> > +             "xchg %%rdi, %%rbx\n"
+> > +#else
+> > +             "pushl %%ebx\n"
+> > +             "cpuid\n"
+> > +             "movl %%ebx, %%edi\n"
+> > +             "popl %%ebx\n"
+> > +#endif
+> > +             : "=a"(*a), "=D"(*b), "=c"(*c), "=d"(*d)
+> > +             : "a"(op), "2"(op2));
+> > +}
+> > +
+> > +void get_cpuid_0(char *vendor, unsigned int *lvl);
+> > +
+> > +#endif
+> > diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
+> > index 578c8c568ffd..a51444a77a5f 100644
+> > --- a/tools/perf/arch/x86/util/header.c
+> > +++ b/tools/perf/arch/x86/util/header.c
+> > @@ -9,18 +9,17 @@
+> >
+> >  #include "../../../util/debug.h"
+> >  #include "../../../util/header.h"
+> > +#include "cpuid.h"
+> >
+> > -static inline void
+> > -cpuid(unsigned int op, unsigned int *a, unsigned int *b, unsigned int *c,
+> > -      unsigned int *d)
+> > +void get_cpuid_0(char *vendor, unsigned int *lvl)
+> >  {
+> > -     __asm__ __volatile__ (".byte 0x53\n\tcpuid\n\t"
+> > -                           "movl %%ebx, %%esi\n\t.byte 0x5b"
+> > -                     : "=a" (*a),
+> > -                     "=S" (*b),
+> > -                     "=c" (*c),
+> > -                     "=d" (*d)
+> > -                     : "a" (op));
+> > +     unsigned int b, c, d;
+> > +
+> > +     cpuid(0, 0, lvl, &b, &c, &d);
+> > +     strncpy(&vendor[0], (char *)(&b), 4);
+> > +     strncpy(&vendor[4], (char *)(&d), 4);
+> > +     strncpy(&vendor[8], (char *)(&c), 4);
+> > +     vendor[12] = '\0';
+> >  }
+> >
+> >  static int
+> > @@ -31,14 +30,10 @@ __get_cpuid(char *buffer, size_t sz, const char *fmt)
+> >       int nb;
+> >       char vendor[16];
+> >
+> > -     cpuid(0, &lvl, &b, &c, &d);
+> > -     strncpy(&vendor[0], (char *)(&b), 4);
+> > -     strncpy(&vendor[4], (char *)(&d), 4);
+> > -     strncpy(&vendor[8], (char *)(&c), 4);
+> > -     vendor[12] = '\0';
+> > +     get_cpuid_0(vendor, &lvl);
+> >
+> >       if (lvl >= 1) {
+> > -             cpuid(1, &a, &b, &c, &d);
+> > +             cpuid(1, 0, &a, &b, &c, &d);
+> >
+> >               family = (a >> 8) & 0xf;  /* bits 11 - 8 */
+> >               model  = (a >> 4) & 0xf;  /* Bits  7 - 4 */
+> > diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
+> > index 559365f8fe52..b69144f22489 100644
+> > --- a/tools/perf/arch/x86/util/tsc.c
+> > +++ b/tools/perf/arch/x86/util/tsc.c
+> > @@ -1,7 +1,9 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include <linux/types.h>
+> > +#include <string.h>
+> >
+> >  #include "../../../util/tsc.h"
+> > +#include "cpuid.h"
+> >
+> >  u64 rdtsc(void)
+> >  {
+> > @@ -11,3 +13,34 @@ u64 rdtsc(void)
+> >
+> >       return low | ((u64)high) << 32;
+> >  }
+> > +
+> > +double arch_get_tsc_freq(void)
+> > +{
+> > +     unsigned int a, b, c, d, lvl;
+> > +     static bool cached;
+> > +     static double tsc;
+> > +     char vendor[16];
+> > +
+> > +     if (cached)
+> > +             return tsc;
+> > +
+> > +     cached = true;
+> > +     get_cpuid_0(vendor, &lvl);
+> > +     if (!strstr(vendor, "Intel"))
+> > +             return 0;
+> > +
+> > +     /*
+> > +      * Don't support Time Stamp Counter and
+> > +      * Nominal Core Crystal Clock Information Leaf.
+> > +      */
+> > +     if (lvl < 0x15)
+> > +             return 0;
+> > +
+> > +     cpuid(0x15, 0, &a, &b, &c, &d);
+> > +     /* TSC frequency is not enumerated */
+> > +     if (!a || !b || !c)
+> > +             return 0;
+> > +
+> > +     tsc = (double)c * (double)b / (double)a;
+> > +     return tsc;
+> > +}
+> > diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> > index 4c81533e4b43..16f10e6d5ca5 100644
+> > --- a/tools/perf/util/expr.c
+> > +++ b/tools/perf/util/expr.c
+> > @@ -12,6 +12,7 @@
+> >  #include "expr-bison.h"
+> >  #include "expr-flex.h"
+> >  #include "smt.h"
+> > +#include "tsc.h"
+> >  #include <linux/err.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/zalloc.h>
+> > @@ -443,9 +444,19 @@ static double system_tsc_freq(void)
+> >
+> >       free(line);
+> >       fclose(cpuinfo);
+> > +     if (isnan(result))
+> > +             pr_err("Error reading system_tsc_freq");
+> > +
+> >       return result;
+> >  }
+> >
+> > +#if !defined(__i386__) && !defined(__x86_64__)
+> > +double arch_get_tsc_freq(void)
+>
+> Other arch_* functions are __weak functions. I think it's better to keep
+> it consistent. It also avoid to add a new #if defined when adding a new
+> arch. Is there a problem to use __weak here?
 
-For example, when one attempts to disable AVX2 but not AVX in the
-guest's CPUID, the guest kernel crashes in aes-ni driver, when it
-is used.
+There are problems with weak in general and link time optimizations -
+weak is implemented as a C compiler extension. There have been
+patches/threads in the past about avoiding it. In this case it'd be
+easy to get two arch_get_tsc_freq defined or none. Without weak these
+are both linker errors. With weak your mileage varies.
 
-While the aes-ni driver can also be fixed to be more eager to detect this kind
-of situation, it is simpler to fix this in a generic way since the kernel
-has all the required info in the form of a dependency table.
+Thanks,
+Ian
 
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
----
- arch/x86/kernel/cpu/cpuid-deps.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index e1b5f5c02c0106..376296c1f55ab2 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -94,6 +94,11 @@ static inline void clear_feature(struct cpuinfo_x86 *c, unsigned int feature)
- 		set_bit(feature, (unsigned long *)cpu_caps_cleared);
- }
- 
-+static inline bool test_feature(struct cpuinfo_x86 *c, unsigned int feature)
-+{
-+	return test_bit(feature, (unsigned long *)c->x86_capability);
-+}
-+
- /* Take the capabilities and the BUG bits into account */
- #define MAX_FEATURE_BITS ((NCAPINTS + NBUGINTS) * sizeof(u32) * 8)
- 
-@@ -136,6 +141,10 @@ void setup_clear_cpu_cap(unsigned int feature)
-  * Some CPU features depend on higher CPUID levels, which may not always
-  * be available due to CPUID level capping or broken virtualization
-  * software.  Add those features to this table to auto-disable them.
-+ *
-+ * Also due to configuration bugs, some CPUID features might be present
-+ * while CPUID features that they depend on are not present,
-+ * e.g a AVX2 present but AVX is not present.
-  */
- struct cpuid_dependent_feature {
- 	u32 feature;
-@@ -153,6 +162,7 @@ cpuid_dependent_features[] = {
- void filter_cpuid_features(struct cpuinfo_x86 *c)
- {
- 	const struct cpuid_dependent_feature *df;
-+	const struct cpuid_dep *d;
- 
- 	for (df = cpuid_dependent_features; df->feature; df++) {
- 
-@@ -175,4 +185,16 @@ void filter_cpuid_features(struct cpuinfo_x86 *c)
- 		pr_warn("CPU: CPU feature " X86_CAP_FMT " disabled, no CPUID level 0x%x\n",
- 			x86_cap_flag(df->feature), df->level);
- 	}
-+
-+	for (d = cpuid_deps; d->feature; d++) {
-+
-+		if (!test_feature(c, d->feature) || test_feature(c, d->depends))
-+			continue;
-+
-+		clear_cpu_cap(c, d->feature);
-+
-+		pr_warn("CPU: CPU feature " X86_CAP_FMT " disabled, because it depends on "
-+			X86_CAP_FMT " which is not supported in CPUID\n",
-+			x86_cap_flag(d->feature), x86_cap_flag(d->depends));
-+	}
- }
--- 
-2.34.3
-
+> Thanks,
+> Kan
+>
+> > +{
+> > +     return 0.0;
+> > +}
+> > +#endif
+> > +
+> >  double expr__get_literal(const char *literal)
+> >  {
+> >       static struct cpu_topology *topology;
+> > @@ -462,7 +473,9 @@ double expr__get_literal(const char *literal)
+> >       }
+> >
+> >       if (!strcasecmp("#system_tsc_freq", literal)) {
+> > -             result = system_tsc_freq();
+> > +             result = arch_get_tsc_freq();
+> > +             if (fpclassify(result) == FP_ZERO)
+> > +                     result = system_tsc_freq();
+> >               goto out;
+> >       }
+> >
+> > diff --git a/tools/perf/util/tsc.h b/tools/perf/util/tsc.h
+> > index 7d83a31732a7..88fd1c4c1cb8 100644
+> > --- a/tools/perf/util/tsc.h
+> > +++ b/tools/perf/util/tsc.h
+> > @@ -25,6 +25,7 @@ int perf_read_tsc_conversion(const struct perf_event_mmap_page *pc,
+> >  u64 perf_time_to_tsc(u64 ns, struct perf_tsc_conversion *tc);
+> >  u64 tsc_to_perf_time(u64 cyc, struct perf_tsc_conversion *tc);
+> >  u64 rdtsc(void);
+> > +double arch_get_tsc_freq(void);
+> >
+> >  size_t perf_event__fprintf_time_conv(union perf_event *event, FILE *fp);
+> >
