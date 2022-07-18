@@ -2,159 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E53C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 15:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC81C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 16:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234958AbiGRPtb (ORCPT
+        id S233838AbiGRQZm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 11:49:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59268 "EHLO
+        Mon, 18 Jul 2022 12:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234938AbiGRPta (ORCPT
+        with ESMTP id S235852AbiGRQZc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 11:49:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C98C6594;
-        Mon, 18 Jul 2022 08:49:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BF0F26145B;
-        Mon, 18 Jul 2022 15:49:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 874EEC341CA;
-        Mon, 18 Jul 2022 15:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658159367;
-        bh=IfAevGzlpYCavmnr3ns+VPAyXBT6NE4h2pno3np3Oyc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nGCPao167W/S4i0fNSIkzBvgCNkf8Y8RqKtTF8saQLEUstEOL4tdYCAm1ieeZfVWU
-         2rIVnC+hnGwZ8cTIb2zOBJT3c7kzhHgw/FLW3Lcu8YCvBf/kfUpI6/KX7MycQwOB+9
-         /hkZckzOJONozJ23Br0wG+PItJ57+Azmc4jBn/JMLURHTFwbE3pSx01VoRkx4sjofg
-         bjjN0lDcJcgEq3zAqYJHg3cVqO5jTnL/445JVJ53ZMUgl4/i7+a7vX01MHY5Qn5Ywi
-         zYU7Vj64PuMqIQv0sheHmBahZz6tz1Z+bvPwSyNTLCfOg9OG/zS3kTNctQR/cDnOQe
-         wI46ITQXy6cqA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7F21240374; Mon, 18 Jul 2022 12:49:25 -0300 (-03)
-Date:   Mon, 18 Jul 2022 12:49:25 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
-        Like Xu <likexu@tencent.com>,
-        James Clark <james.clark@arm.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Claire Jensen <clairej735@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v6 2/2] perf test: Json format checking
-Message-ID: <YtWBBSHK2hAtykro@kernel.org>
-References: <20220707201213.331663-1-irogers@google.com>
- <20220707201213.331663-3-irogers@google.com>
- <YtV/+yRsA9SJuntp@kernel.org>
- <YtWAQqXFp98+N9ej@kernel.org>
+        Mon, 18 Jul 2022 12:25:32 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111282AC55
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 09:25:30 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-2ef5380669cso112952707b3.9
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 09:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=VpWGg1Z0ItsY17Q4CdwHYBm/NTXahJiG/W0stWad/2Q=;
+        b=n5EUgG9sYycF9rx9k+w17mzIJ3Pj6DrYXTIL5aEPlPpTtjjOdf1l8Igp1lz1jIDJ5u
+         cA2DPALvySRgupdWKOc0onDRiwTQpFXEKgqJDhyTwzaVpWAXlAfpjVEueUBZTNKFyJy4
+         6Nf1q/swRCZ7WE6Z5w3uLnq41J/Q8eviEAMCc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=VpWGg1Z0ItsY17Q4CdwHYBm/NTXahJiG/W0stWad/2Q=;
+        b=vBqrUIH8kb5xMzQjJPdDfdXBX3lQelL9VX+gmQj9thS0/ut26SRLxbLqKDyBAyC7Dh
+         UHfg+B2TmSxNZZnw3T/nEKHiNWbLPeCTkUqSZY6R5QID20gdJ3busY3D13EBS6k8JQFn
+         G4Pkpu3MX6wmIN6sRsj4OhxlqZSD2KMCgOw2wYpQDT+Xevz0bAeqp2SE76khRD+2IqFI
+         r5vHiQj7bplFHhlcTnz+RlUCMsv7IrDCk0/A85wez4OxiNDB9nYj2NhH6uBoPny8EqiV
+         lcDHn25qNJiHzbDLeIyYR5AOv3RCUMkW2yzILt393PpxkPY4emXUxOwyQRPkV9icpB2J
+         oVmg==
+X-Gm-Message-State: AJIora9JsacTvMHOggQ1JM/+x8KdOlKYuwGagbbrTxNu7/SyfEEKXYlV
+        ArfBiJizcNdLEgjwJjxDbBNLtkbHu9n3ahDv7hLonA==
+X-Google-Smtp-Source: AGRyM1vuHM0SfTPb0F/nlCzubE/m1n8j9K1rxYega5fLB3kYc9RJ9h5UWn69E2l7QS82ZzuOj6oMP6Brl3rTdOaLqQM=
+X-Received: by 2002:a81:1b15:0:b0:31d:f87f:7ab5 with SMTP id
+ b21-20020a811b15000000b0031df87f7ab5mr17976514ywb.104.1658161529300; Mon, 18
+ Jul 2022 09:25:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YtWAQqXFp98+N9ej@kernel.org>
-X-Url:  http://acmel.wordpress.com
+From:   Ivan Babrou <ivan@cloudflare.com>
+Date:   Mon, 18 Jul 2022 09:25:18 -0700
+Message-ID: <CABWYdi2NBSv8sUdFONrYyACa60+W6O3+r5D44OXjftxPySKTXQ@mail.gmail.com>
+Subject: Removal of 128MB limit for BPF JIT programs broke perf symbolication
+ on aarch64
+To:     Russell King <russell.king@oracle.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        kernel-team <kernel-team@cloudflare.com>,
+        bpf <bpf@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jul 18, 2022 at 12:46:10PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Jul 18, 2022 at 12:44:59PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, Jul 07, 2022 at 01:12:13PM -0700, Ian Rogers escreveu:
-> > > From: Claire Jensen <cjense@google.com>
-> > > 
-> > > Add field checking tests for perf stat JSON output.
-> > > Sanity checks the expected number of fields are present, that the
-> > > expected keys are present and they have the correct values.
-> > 
-> > it isn't installing the lib:
-> > 
-> > [root@five ~]# perf test -v json
-> >  91: perf stat JSON output linter                                    :
-> > --- start ---
-> > test child forked, pid 4086678
-> > Checking json output: no args python3: can't open file '/var/home/acme/libexec/perf-core/tests/shell/lib/perf_json_output_lint.py': [Errno 2] No such file or directory
-> > test child finished with -2
-> > ---- end ----
-> > perf stat JSON output linter: Skip
-> > [root@five ~]#
-> > 
-> > I'm trying to fix, but please test it after installing...
-> 
-> 
-> It should:
-> 
-> install-tests: all install-gtk
->         $(call QUIET_INSTALL, tests) \
->                 $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
->                 $(INSTALL) tests/attr.py '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
->                 $(INSTALL) tests/pe-file.exe* '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
->                 $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
->                 $(INSTALL) tests/attr/* '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
->                 $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
->                 $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
->                 $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
->                 $(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
-> 
-> /me checking...
+Hello,
 
-The patch below is needed, but then should we mix .py and .sh in that
-directory?
+We noticed that perf symbolication is broken on aarch64:
 
-⬢[acme@toolbox perf]$ git diff
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 8f0b1fb39984fb7b..65e5ba767fd6210e 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1006,6 +1006,7 @@ install-tests: all install-gtk
-                $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
-                $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
-                $(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
-+               $(INSTALL) tests/shell/lib/*.py '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+ivan@vm:~$ sudo perf_5.10 record -e cpu-clock --cpu 3 -g --call-graph
+dwarf -F 11 -- sleep 0.1
+ivan@vm:~$ sudo perf_5.10 script
+swapper     0 [003]    75.516009:   90909090 cpu-clock:
+        ffffffe7fe311808 [unknown] ([unknown])
+        ffffffe7fdaf0a60 [unknown] ([unknown])
+        ffffffe7fdaf0bdc [unknown] ([unknown])
+        ffffffe7fda29538 [unknown] ([unknown])
+        ffffffe7fe3253b8 [unknown] ([unknown])
 
- install-bin: install-tools install-tests install-traceevent-plugins
+On Linux 5.15 I was able to bisect this to 5.15.18, where this commit
+was responsible (b89ddf4cca43 upstream):
 
-⬢[acme@toolbox perf]$
+* 9c82ce593626 arm64/bpf: Remove 128MB limit for BPF JIT programs
 
-And then, after that I'm getting:
+Reverting this commit in 5.15.18 resolves the issue. The issue is also
+present in 5.19-rc6.
 
-[root@five ~]# perf test json
- 91: perf stat JSON output linter                                    : FAILED!
-[root@five ~]# perf test -v json |& tail -20
-{"core" : "S0-D0-C15", "aggregate-number" : 2, "counter-value" : "2675.000000", "unit" : "", "event" : "stalled-cycles-backend", "event-runtime" : 2864158, "pcnt-running" : 100.00, "metric-value" : 0.341252, "metric-unit" : "backend cycles idle"}
+In addition to that, I noticed that on my personal kernel build this
+doesn't happen on any kernel version. After many attempts at config
+reconciliation, I narrowed it down to CONFIG_PROC_KCORE. When the
+option is enabled and the commit b89ddf4cca43 is present, the stacks
+have no kernel symbols.
 
-{"core" : "S0-D0-C15", "aggregate-number" : 2, "counter-value" : "233533.000000", "unit" : "", "event" : "instructions", "event-runtime" : 2865528, "pcnt-running" : 100.00, "metric-value" : 0.297920, "metric-unit" : "insn per cycle"}
-
-{"core" : "S0-D0-C15", "aggregate-number" : 2, "metric-value" : 0.192975, "metric-unit" : "stalled cycles per insn"}
-
-{"core" : "S0-D0-C15", "aggregate-number" : 2, "counter-value" : "50214.000000", "unit" : "", "event" : "branches", "event-runtime" : 2865638, "pcnt-running" : 100.00, "metric-value" : 17.295742, "metric-unit" : "M/sec"}
-
-{"core" : "S0-D0-C15", "aggregate-number" : 2, "counter-value" : "1513.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 1564989, "pcnt-running" : 54.00, "metric-value" : 3.013104, "metric-unit" : "of all branches"}
-
-Traceback (most recent call last):
-  File "/var/home/acme/libexec/perf-core/tests/shell/lib/perf_json_output_lint.py", line 92, in <module>
-    check_json_output(expected_items)
-  File "/var/home/acme/libexec/perf-core/tests/shell/lib/perf_json_output_lint.py", line 53, in check_json_output
-    raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
-RuntimeError: wrong number of fields. counted 3 expected 8 in '{"core" : "S0-D0-C0", "aggregate-number" : 2, "metric-value" : 0.094345, "metric-unit" : "stalled cycles per insn"}
-'
-test child finished with -1
----- end ----
-perf stat JSON output linter: FAILED!
-[root@five ~]#
-
-Can you please check and send a v7?
-
-- Arnaldo
+This seems like a regression.
