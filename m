@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6E6C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 16:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91386C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 16:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235662AbiGRQn2 (ORCPT
+        id S235700AbiGRQnc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 12:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
+        Mon, 18 Jul 2022 12:43:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235656AbiGRQnY (ORCPT
+        with ESMTP id S235695AbiGRQn1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 12:43:24 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB5B183B6
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 09:43:23 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id u15-20020a25ab0f000000b0066e49f6c461so9060148ybi.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 09:43:23 -0700 (PDT)
+        Mon, 18 Jul 2022 12:43:27 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A272B1B0
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 09:43:25 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id o85-20020a25d758000000b0067030a2d403so2748929ybg.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 09:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=6ZhNslhhLNsgEg+FWq588BvRg4wz6Du1TOlV29T7frs=;
-        b=AE1a2A8ktkCPoEaOl2Bjua2K9ctpZygOcIGgjIb7OmzO0HuCrX2VEssYRD0CzVzqeR
-         Ghlv7ypWETR0HVub9zaNjlknRCHKRpKfsYR1BUSFSfqeQZXooaiVnhEhTJBpdQsg2Bxl
-         U6GKtHZEJqRqnMJNabLeTsR/5QyZqCo6PKOaAWXBD5LXHAQGZPxkumXimRjuUvVNtP9N
-         JezohPy9CWfP+fEHCTA8Pr62SmxfKloy1ghz2bLq3C0sAbTyeE+uaotJwS42xWh3rqiY
-         zy/i+8uK7viWEa72tNyQra3m2thf0WpJQerzhr9FXsRjMXQYX84lYmXm/wtiQ4tAZpsw
-         GdXQ==
+        bh=MeQFhDWhw6uJhVAf4SRwsMvd39/eawx4leroeGONoc8=;
+        b=odOfFuywMBJ86ClpGLOJnyTs1vkUPpoBT8uT+btgbpCrf06texWEMIb+CtOWroV+0W
+         jyVmCoiMbUMEmOEpds+6GymsbBdkAoIc7IzGTr/dQQRUSNppsMn47MIJFXEzYGV3KyAj
+         l8eghn2P4ZbzTQKxBavlZnwAQtb1jf+09PnQ8HgLzETmk3+PwvrQGshHwopIbQJZh/Af
+         1aV6H1eiwFxXulYwGJYQkcyO24NMMjsFQaTxgcCy70uCcQGLa1YFdb7TxEkRJeqiM/Pw
+         xHq1F5Xd/KHxqxY5D+ywSeT/FVtNgJ39xHZjmMgsB8botISnbTGGfR8IwQJNMjIcB7wk
+         veaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=6ZhNslhhLNsgEg+FWq588BvRg4wz6Du1TOlV29T7frs=;
-        b=1hodqhhxFFFh0zJq16FnwuDf2AlPgQENdqzJhYvlbr7x7G1wI408xb0qgVGs8w216I
-         pmJUZkBOjznLDoGeyza0g9GPAoy2C6xZXawcPJy/Zq+ToCDVuDPxLhwyHM4r8Vs3T4Vg
-         rdVbkR+QlSSOB/whK8qIxq+6wuh5agEJ6MwsJiaPIOXg0cBhST8nLCj4LXE6Y4qbbCtU
-         pM+E7EwEmyhOizpA1Lm68Bb/26nHfn4QUXTzK/IMAwYMMoZNeFeUwTMBm0KM3bHuMhBy
-         bxp0bgY6wyp1fPfw9oXNRI9rkJLcS9N0yPQWuL2EPNJFZGNYiwlIlxp0W4FakyJEOu3k
-         QGFw==
-X-Gm-Message-State: AJIora8xJpJDTcTI8WhCV/G613NulEfZjW01UoSjPTqc70B6HHhb1OAY
-        Ugd13HoVCPU+/GXd8rVzlIY3bF9p+ZbU
-X-Google-Smtp-Source: AGRyM1vo+bqIlRAK/lQLOqnS2Cls5RI2liOXTblRr6VUX+Jdqlp2anG254SCKfSoUx+7XbTL01bcVQGdocpW
+        bh=MeQFhDWhw6uJhVAf4SRwsMvd39/eawx4leroeGONoc8=;
+        b=jlpMlNmA1F0EH4gvRnlqs8jEG6/Q9o4T9prxr/KeGNZdU7IprlO7uX7eVJGqWOb01d
+         IJQCOHqjQXamKIL4iUO53XnGfsRYFGsMnHWviBE9vwYrPf/K3TZMpQcbtRIQHq/GpxR/
+         7g+eSnUU21QLmJOKGePwtVLbja66BF69ot9BG1HX5q3NQ10DIGL/WHRKt+4y1cI084r4
+         Si+MJFgI4cDRA4g1q+YLeTGMX0swpjscQ+YwzRMUOI1Wl1XcVcmOwjY259WwiF58o7t4
+         JixzT+iGvjVPYT4Rsvzv+3nsS3avfcvdYCAijl9VD7y0u3WK5J1QQ/gwAKEIUeC52REL
+         1/YQ==
+X-Gm-Message-State: AJIora8FaGGGI4EX3zjGDDthU4/+Z+a7Iv8Cv87ziyorYDUuT0TokuA7
+        VTmctLpGlZzSqXkTKcDtKWIguwReQYb8
+X-Google-Smtp-Source: AGRyM1sCFaSaN+OYXwJis87SDXFstBd+j8/M7CzZr1dKfE5Bl/b3JDSsZHKBzslDVbqZbE4BRCTv1jxJVvaJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:922:90e9:167f:1ccd])
- (user=irogers job=sendgmr) by 2002:a0d:e895:0:b0:31c:85a6:1444 with SMTP id
- r143-20020a0de895000000b0031c85a61444mr31886874ywe.493.1658162602493; Mon, 18
- Jul 2022 09:43:22 -0700 (PDT)
-Date:   Mon, 18 Jul 2022 09:43:11 -0700
+ (user=irogers job=sendgmr) by 2002:a25:d00b:0:b0:66e:e393:aa68 with SMTP id
+ h11-20020a25d00b000000b0066ee393aa68mr27218620ybg.65.1658162604988; Mon, 18
+ Jul 2022 09:43:24 -0700 (PDT)
+Date:   Mon, 18 Jul 2022 09:43:12 -0700
 In-Reply-To: <20220718164312.3994191-1-irogers@google.com>
-Message-Id: <20220718164312.3994191-3-irogers@google.com>
+Message-Id: <20220718164312.3994191-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20220718164312.3994191-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.0.170.g444d1eabd0-goog
-Subject: [PATCH v4 2/3] perf tsc: Add cpuinfo fall back for arch_get_tsc_freq
+Subject: [PATCH v4 3/3] perf test: Add test for #system_tsc_freq in metrics
 From:   Ian Rogers <irogers@google.com>
 To:     perry.taylor@intel.com, caleb.biggers@intel.com,
         kshipra.bopardikar@intel.com,
@@ -79,95 +79,53 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The CPUID method of arch_get_tsc_freq fails for older Intel processors,
-such as Skylake. Compute using /proc/cpuinfo.
+The value should be non-zero on Intel while zero on everything else.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/tsc.c | 52 +++++++++++++++++++++++++++++++---
- 1 file changed, 48 insertions(+), 4 deletions(-)
+ tools/perf/tests/expr.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
-index b69144f22489..eb2b5195bd02 100644
---- a/tools/perf/arch/x86/util/tsc.c
-+++ b/tools/perf/arch/x86/util/tsc.c
-@@ -1,7 +1,9 @@
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 5c0032fe93ae..2efe9e3a63b8 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -1,8 +1,10 @@
  // SPDX-License-Identifier: GPL-2.0
- #include <linux/types.h>
+ #include "util/debug.h"
+ #include "util/expr.h"
++#include "util/header.h"
+ #include "util/smt.h"
+ #include "tests.h"
 +#include <math.h>
+ #include <stdlib.h>
  #include <string.h>
- 
-+#include "../../../util/debug.h"
- #include "../../../util/tsc.h"
- #include "cpuid.h"
- 
-@@ -14,6 +16,44 @@ u64 rdtsc(void)
- 	return low | ((u64)high) << 32;
- }
- 
-+/*
-+ * Derive the TSC frequency in Hz from the /proc/cpuinfo, for example:
-+ * ...
-+ * model name      : Intel(R) Xeon(R) Gold 6154 CPU @ 3.00GHz
-+ * ...
-+ * will return 3000000000.
-+ */
-+static double cpuinfo_tsc_freq(void)
-+{
-+	double result = 0;
-+	FILE *cpuinfo;
-+	char *line = NULL;
-+	size_t len = 0;
+ #include <linux/zalloc.h>
+@@ -69,6 +71,11 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 	double val, num_cpus, num_cores, num_dies, num_packages;
+ 	int ret;
+ 	struct expr_parse_ctx *ctx;
++	bool is_intel = false;
++	char buf[128];
 +
-+	cpuinfo = fopen("/proc/cpuinfo", "r");
-+	if (!cpuinfo) {
-+		pr_err("Failed to read /proc/cpuinfo for TSC frequency");
-+		return NAN;
-+	}
-+	while (getline(&line, &len, cpuinfo) > 0) {
-+		if (!strncmp(line, "model name", 10)) {
-+			char *pos = strstr(line + 11, " @ ");
-+
-+			if (pos && sscanf(pos, " @ %lfGHz", &result) == 1) {
-+				result *= 1000000000;
-+				goto out;
-+			}
-+		}
-+	}
-+out:
-+	if (fpclassify(result) == FP_ZERO)
-+		pr_err("Failed to find TSC frequency in /proc/cpuinfo");
-+
-+	free(line);
-+	fclose(cpuinfo);
-+	return result;
-+}
-+
- double arch_get_tsc_freq(void)
- {
- 	unsigned int a, b, c, d, lvl;
-@@ -33,13 +73,17 @@ double arch_get_tsc_freq(void)
- 	 * Don't support Time Stamp Counter and
- 	 * Nominal Core Crystal Clock Information Leaf.
- 	 */
--	if (lvl < 0x15)
--		return 0;
-+	if (lvl < 0x15) {
-+		tsc = cpuinfo_tsc_freq();
-+		return tsc;
-+	}
++	if (!get_cpuid(buf, sizeof(buf)))
++		is_intel = strstr(buf, "Intel") != NULL;
  
- 	cpuid(0x15, 0, &a, &b, &c, &d);
- 	/* TSC frequency is not enumerated */
--	if (!a || !b || !c)
--		return 0;
-+	if (!a || !b || !c) {
-+		tsc = cpuinfo_tsc_freq();
-+		return tsc;
-+	}
+ 	TEST_ASSERT_EQUAL("ids_union", test_ids_union(), 0);
  
- 	tsc = (double)c * (double)b / (double)a;
- 	return tsc;
+@@ -175,6 +182,12 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 	if (num_dies) // Some platforms do not have CPU die support, for example s390
+ 		TEST_ASSERT_VAL("#num_dies >= #num_packages", num_dies >= num_packages);
+ 
++	TEST_ASSERT_VAL("#system_tsc_freq", expr__parse(&val, ctx, "#system_tsc_freq") == 0);
++	if (is_intel)
++		TEST_ASSERT_VAL("#system_tsc_freq > 0", val > 0);
++	else
++		TEST_ASSERT_VAL("#system_tsc_freq == 0", fpclassify(val) == FP_ZERO);
++
+ 	/*
+ 	 * Source count returns the number of events aggregating in a leader
+ 	 * event including the leader. Check parsing yields an id.
 -- 
 2.37.0.170.g444d1eabd0-goog
 
