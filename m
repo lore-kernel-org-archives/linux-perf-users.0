@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B142CC43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 09:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA0BC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 09:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232882AbiGRJBs (ORCPT
+        id S234086AbiGRJH5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 05:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35956 "EHLO
+        Mon, 18 Jul 2022 05:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233786AbiGRJBs (ORCPT
+        with ESMTP id S233954AbiGRJH5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 05:01:48 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0849211A1F
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:01:45 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id f73so19565293yba.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:01:45 -0700 (PDT)
+        Mon, 18 Jul 2022 05:07:57 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734E6120BA
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:07:56 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id n74so19701129yba.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:07:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DwIR57e0FpLcYSgHsIlB7cNnZ4wN4yZUqWvCDFdbb1A=;
-        b=wlKycwQn3NPKJsiygbPpb+xpZQGwblMIPQG+J4zoQskTSg3yPVUBtGxcPWP/c1yZ16
-         /RqkK5G+YTVpneAW0nvxxOAih2jqSXAfkS53i9Y41xvCKo6UFr8ZzDXYYjbkM8KETgRC
-         Sh2clEMrRPex39CjQxfYE8+zbsIbUlXWdKWEF4MhP3FGaB6LLIqAx7dbd6/C1m/QHIlH
-         ZrdEArAp1CRluArreszsjeSeGtY+4b+6wMtmrfftN/WqA+7oYBH2FRsIWIsCO9aKh5cm
-         5muW/BJGoZ+w3Mvr6Fz0CgRZUSTFDe+wsvNXd6allxOWNF1tjkDS3mAnqEfFyCBJDsgc
-         gLug==
+        bh=9eJN+m0pEHtjJ1cyznLRwut5IHeAG8qD1A+Zq2Ji8RE=;
+        b=a28ILWIbndvvHjicaKV1NVvzz3vVS0NEL6I/oMvaX5/7dAEFb7NRO6NFh1gJmzRhjg
+         S7cDPxX9yShHvrtd8+TZ51ZmL8uwlX5cRDVVaECNYg4D8Zbc62fQHXLhFrBJJENJ4v6u
+         kzR43CopMtm1pqMP0OSbhlTtIlZMrv1/q0pq4PTIa0HKg+vNGOlV8pe7y+lydcP1vf8M
+         U1ddaGUxm1eDRD+vr3PN2rZWBXhr6ch2fQsZvGk8zSjLTVFOt1HiSInkS4Z6GhHFQADs
+         HNEiR0CGvpjp+HRQ2UCXxkm8OdgxA0xdMJSBynsOWBIx2M+10rZJe+KjZkKJTc6NjBYv
+         71jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DwIR57e0FpLcYSgHsIlB7cNnZ4wN4yZUqWvCDFdbb1A=;
-        b=3s1SWhZ71YVaa3I61jqle02btqLtgcJaPFbae5XsSBUG4NiNaI7NTmyiuws++yMJNQ
-         CwR86buoU5xg2VXKRD8UBsXdrVLTFd2OpeTY8saBVX+SUr4wFn4bK+HOyGOK4U9zBCCy
-         Pmn9GDi01K2f4ZpdbcCY58YAeei4veKuCzxpdzAtieoKNwxnXygOGm/AKYI227hOjUwD
-         ++PFuIDQKgSD0sY1PEkNt2VrcVEPPukR2aWsaA7vBBuBOfPfkBhJ2PFQ/hsCpzHy1MUa
-         Q7Cs9HG0i9fIcQGWMC1HpEExE+96su/VppFyguPu56qe4Vuw6k6ecUjWRSa/4R5SqYPI
-         rp5g==
-X-Gm-Message-State: AJIora+DAEpez657pT5x/KlZJCZtvfVnjIlpPafXBhactrDRvmS4etOB
-        2xCHmTK9PCoLWWSIwdUEGUaVr7Aw2eO8FJZhu26KQg==
-X-Google-Smtp-Source: AGRyM1t5Q5wZByTTLxFH8JVS7pwe73tESzwepbBLzJfkt4scpJhV5hBV8XU73ln+CgaRWSYRXmHKb0vTaAqvKeaCFtk=
-X-Received: by 2002:a05:6902:124e:b0:668:222c:e8da with SMTP id
- t14-20020a056902124e00b00668222ce8damr25009907ybu.383.1658134904805; Mon, 18
- Jul 2022 02:01:44 -0700 (PDT)
+        bh=9eJN+m0pEHtjJ1cyznLRwut5IHeAG8qD1A+Zq2Ji8RE=;
+        b=jT96zg7ZtfIZgj8LtOLRufq8MsHciI+XBSNb26Ryf+OWBF5jFOx4hr+iW+Q3Jk9MfH
+         cSdCI88FZvFRM7kGJCS5XTQHCilVTd/yYudTO3LNx0Rkaq9py2v4/I9U5nIQhQeYlGmn
+         As76HmBFc6AASUvaouo+7HmdkL+nm+wi1i/41tDRj7jZ5T3yQgkVPjZeE0S2BD3kI5Y4
+         U+kZi1q1AAWYNPES2IyX4lcD224NkxCYYJWNgOUshZYPfPZHpcV4Pz8atwE/R5WOX07R
+         ldPj4t9gxthrFK85qtEt4cJW9vkawlCrCv2/hSb0+LSQU+W12Oaa6EBCuyS2N4vnkyWm
+         6vQw==
+X-Gm-Message-State: AJIora/f8+0khSxjeXuFqJ39mbXBhhjCVOb3yj8BhjyC0jQKwPgboluc
+        IpohtDY6jE7w8kiWaGHrdEqbbx6Ke+soOvhXGMZbaQ==
+X-Google-Smtp-Source: AGRyM1slwFfk5U3IpZzcEo3JyKbDkizozgOVrCNpodmEfJGeCB577KdrlSLcv1KnQ57zoe+PIhqjOgjjp3fZl3K/7dQ=
+X-Received: by 2002:a25:f508:0:b0:66f:3c5f:c39f with SMTP id
+ a8-20020a25f508000000b0066f3c5fc39fmr24891200ybe.374.1658135275708; Mon, 18
+ Jul 2022 02:07:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220712021527.109921-1-lihuafei1@huawei.com> <20220712021527.109921-3-lihuafei1@huawei.com>
-In-Reply-To: <20220712021527.109921-3-lihuafei1@huawei.com>
+References: <20220712021527.109921-1-lihuafei1@huawei.com> <20220712021527.109921-4-lihuafei1@huawei.com>
+In-Reply-To: <20220712021527.109921-4-lihuafei1@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jul 2022 11:01:33 +0200
-Message-ID: <CACRpkdY0Jo7rzXjc10dLLrHnDkoBphvNYiyF5q8iHz-8QqaEwA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] ARM: stacktrace: Avoid duplicate saving of exception
- PC value
+Date:   Mon, 18 Jul 2022 11:07:43 +0200
+Message-ID: <CACRpkdYvOjfmf=Z3pGfD-UPxfTc9PXtOyw2x+ptYiSy=gmGnpQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] ARM: stacktrace: Allow stack trace saving for
+ non-current tasks
 To:     Li Huafei <lihuafei1@huawei.com>
 Cc:     linux@armlinux.org.uk, rmk+kernel@armlinux.org.uk, ardb@kernel.org,
         will@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
@@ -71,48 +71,40 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Tue, Jul 12, 2022 at 4:18 AM Li Huafei <lihuafei1@huawei.com> wrote:
 
-> Because an exception stack frame is not created in the exception entry,
-> save_trace() does special handling for the exception PC, but this is
-> only needed when CONFIG_FRAME_POINTER_UNWIND=y. When
-> CONFIG_ARM_UNWIND=y, unwind annotations have been added to the exception
-> entry and save_trace() will repeatedly save the exception PC:
->
->     [0x7f000090] hrtimer_hander+0x8/0x10 [hrtimer]
->     [0x8019ec50] __hrtimer_run_queues+0x18c/0x394
->     [0x8019f760] hrtimer_run_queues+0xbc/0xd0
->     [0x8019def0] update_process_times+0x34/0x80
->     [0x801ad2a4] tick_periodic+0x48/0xd0
->     [0x801ad3dc] tick_handle_periodic+0x1c/0x7c
->     [0x8010f2e0] twd_handler+0x30/0x40
->     [0x80177620] handle_percpu_devid_irq+0xa0/0x23c
->     [0x801718d0] generic_handle_domain_irq+0x24/0x34
->     [0x80502d28] gic_handle_irq+0x74/0x88
->     [0x8085817c] generic_handle_arch_irq+0x58/0x78
->     [0x80100ba8] __irq_svc+0x88/0xc8
->     [0x80108114] arch_cpu_idle+0x38/0x3c
->     [0x80108114] arch_cpu_idle+0x38/0x3c    <==== duplicate saved exception PC
->     [0x80861bf8] default_idle_call+0x38/0x130
->     [0x8015d5cc] do_idle+0x150/0x214
->     [0x8015d978] cpu_startup_entry+0x18/0x1c
->     [0x808589c0] rest_init+0xd8/0xdc
->     [0x80c00a44] arch_post_acpi_subsys_init+0x0/0x8
->
-> We can move the special handling of the exception PC in save_trace() to
-> the unwind_frame() of the frame pointer unwinder.
+> The current ARM implementation of save_stack_trace_tsk() does not allow
+> saving stack trace for non-current tasks, which may limit the scenarios
+> in which stack_trace_save_tsk() can be used. Like other architectures,
+> or like ARM's unwind_backtrace(), we can leave it up to the caller to
+> ensure that the task that needs to be unwound is not running.
 >
 > Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 
-This is another very nice patch!
-Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
+That sounds good, but:
 
-Nitpick:
+>         if (tsk != current) {
+> -#ifdef CONFIG_SMP
+> -               /*
+> -                * What guarantees do we have here that 'tsk' is not
+> -                * running on another CPU?  For now, ignore it as we
+> -                * can't guarantee we won't explode.
+> -                */
+> -               return;
+> -#else
+> +               /* task blocked in __switch_to */
 
-> +               if ((unsigned long)&regs[1] > ALIGN(frame->sp, THREAD_SIZE))
-> +                       return -EINVAL;
+The commit text is not consistent with the comment you are removing.
 
-It'd be nice to add a comment saying what is in regs[1] at this point
-so it is easier to understand the code. Not your fault as it is just
-moved code, but if you have time please add a small comment.
+The commit is talking about "non-current" tasks which is one thing,
+but the code is avoiding any tasks under SMP because they may be
+running on another CPU. So you need to update the commit
+message to say something like "non-current or running on another CPU".
+
+If this condition will be checked at call sites in following patches,
+then mention
+that in the commit as well, so we know the end result is that we do
+not break it,
+
+I think Russell want to check this commit as well,
 
 Yours,
 Linus Walleij
