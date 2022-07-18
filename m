@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA0BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 09:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEDFC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jul 2022 09:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234086AbiGRJH5 (ORCPT
+        id S234043AbiGRJJn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jul 2022 05:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39990 "EHLO
+        Mon, 18 Jul 2022 05:09:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233954AbiGRJH5 (ORCPT
+        with ESMTP id S233944AbiGRJJm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jul 2022 05:07:57 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734E6120BA
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:07:56 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id n74so19701129yba.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:07:56 -0700 (PDT)
+        Mon, 18 Jul 2022 05:09:42 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35521BC1
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:09:41 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id tk8so8668297ejc.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jul 2022 02:09:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9eJN+m0pEHtjJ1cyznLRwut5IHeAG8qD1A+Zq2Ji8RE=;
-        b=a28ILWIbndvvHjicaKV1NVvzz3vVS0NEL6I/oMvaX5/7dAEFb7NRO6NFh1gJmzRhjg
-         S7cDPxX9yShHvrtd8+TZ51ZmL8uwlX5cRDVVaECNYg4D8Zbc62fQHXLhFrBJJENJ4v6u
-         kzR43CopMtm1pqMP0OSbhlTtIlZMrv1/q0pq4PTIa0HKg+vNGOlV8pe7y+lydcP1vf8M
-         U1ddaGUxm1eDRD+vr3PN2rZWBXhr6ch2fQsZvGk8zSjLTVFOt1HiSInkS4Z6GhHFQADs
-         HNEiR0CGvpjp+HRQ2UCXxkm8OdgxA0xdMJSBynsOWBIx2M+10rZJe+KjZkKJTc6NjBYv
-         71jg==
+        bh=Mdf5q/qVt50lKlbFg9riuF5UqJk6aS++kMHubLi94hU=;
+        b=MyxoSBCz0+4WmzKije06wMMGwlLZnAyOl7DaKvuVIq+B8RQDKReiWmBYgLWrS/REsl
+         r9JB5KFrkHjbbD5Y9e0fKF0myB7/l7z0daobfSOEjZkRqILEa4cJj4vH8ILfqblaZHzh
+         IK7u3wmNUUziPzBJ/15x85nDjmwc7fqqKdXhL7WqVncz9FyWfrfrmzrMEOJhoZ+CLNWR
+         aJOTamW5Ch1XOP3R6aa9FafC7UN7Mvl7sFRvB/fzmxtYAQ1xRfGvokf0+dPOGTIuPbUB
+         f4grt/7hizM1GYX6XUscwQaKRqKBXQDaBKq0CFN3UrlZpC8dFhpWViORoUkC88Osv5Hc
+         T8tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9eJN+m0pEHtjJ1cyznLRwut5IHeAG8qD1A+Zq2Ji8RE=;
-        b=jT96zg7ZtfIZgj8LtOLRufq8MsHciI+XBSNb26Ryf+OWBF5jFOx4hr+iW+Q3Jk9MfH
-         cSdCI88FZvFRM7kGJCS5XTQHCilVTd/yYudTO3LNx0Rkaq9py2v4/I9U5nIQhQeYlGmn
-         As76HmBFc6AASUvaouo+7HmdkL+nm+wi1i/41tDRj7jZ5T3yQgkVPjZeE0S2BD3kI5Y4
-         U+kZi1q1AAWYNPES2IyX4lcD224NkxCYYJWNgOUshZYPfPZHpcV4Pz8atwE/R5WOX07R
-         ldPj4t9gxthrFK85qtEt4cJW9vkawlCrCv2/hSb0+LSQU+W12Oaa6EBCuyS2N4vnkyWm
-         6vQw==
-X-Gm-Message-State: AJIora/f8+0khSxjeXuFqJ39mbXBhhjCVOb3yj8BhjyC0jQKwPgboluc
-        IpohtDY6jE7w8kiWaGHrdEqbbx6Ke+soOvhXGMZbaQ==
-X-Google-Smtp-Source: AGRyM1slwFfk5U3IpZzcEo3JyKbDkizozgOVrCNpodmEfJGeCB577KdrlSLcv1KnQ57zoe+PIhqjOgjjp3fZl3K/7dQ=
-X-Received: by 2002:a25:f508:0:b0:66f:3c5f:c39f with SMTP id
- a8-20020a25f508000000b0066f3c5fc39fmr24891200ybe.374.1658135275708; Mon, 18
- Jul 2022 02:07:55 -0700 (PDT)
+        bh=Mdf5q/qVt50lKlbFg9riuF5UqJk6aS++kMHubLi94hU=;
+        b=sLdzj/S+QPHvw2Ksx5ZmtZPK1lgzcqnawkgiKKJJgjxRCVKdAkQHMVOPCstbe5IlqL
+         ExF27lhkjPXK0D6VdoNnW3/uWVaIDCWy8bKgB0yHNm2Kx2VO5HCmmQ9O0MgnaseXjLUr
+         pHOVh1QG+hb9KZ5Sl+j0LW9IjaHBKKO6nVlaPM2ndwFvfsfs0KjhsuS/+5DhHdEZnm0Y
+         4OyHGolyWW+72XXmKu/1zMkg8SeHBy9mz9Wvm+KnJkQCDRyyhxtw1eJT8lwo32gkh/2o
+         eFTpmDFa0Yg4AUO/xKNrMarnFLqtEM4FS5cx2FLce3wcK+Bj0DEWOx9JhREWk3d3/hbi
+         rJFg==
+X-Gm-Message-State: AJIora+BEdVhx3vCJB4cwGC9AaZ82eDZEgA9lbDnxnZ29HaIGhlyiusb
+        d6R6MPCS4TKV6Lkx18upkB1W1JwXnhKnk/RlLxofeQ==
+X-Google-Smtp-Source: AGRyM1uJqUvLGFX0HYNi7EiX1iff2QTsdFUBsk5ZFgYQlM7pHNjwdtj5TFwxgatScxITOJKZKA/rEeMAD3KXPgHUpfc=
+X-Received: by 2002:a17:907:1ddd:b0:72b:49ff:d39e with SMTP id
+ og29-20020a1709071ddd00b0072b49ffd39emr25082012ejc.500.1658135379803; Mon, 18
+ Jul 2022 02:09:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220712021527.109921-1-lihuafei1@huawei.com> <20220712021527.109921-4-lihuafei1@huawei.com>
-In-Reply-To: <20220712021527.109921-4-lihuafei1@huawei.com>
+References: <20220712021527.109921-1-lihuafei1@huawei.com> <20220712021527.109921-5-lihuafei1@huawei.com>
+In-Reply-To: <20220712021527.109921-5-lihuafei1@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 Jul 2022 11:07:43 +0200
-Message-ID: <CACRpkdYvOjfmf=Z3pGfD-UPxfTc9PXtOyw2x+ptYiSy=gmGnpQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] ARM: stacktrace: Allow stack trace saving for
- non-current tasks
+Date:   Mon, 18 Jul 2022 11:09:18 +0200
+Message-ID: <CACRpkdaF4UXuiH_4StWZLwhrC8H7Le9rbnRtHYaRLrJ+fQT2_g@mail.gmail.com>
+Subject: Re: [PATCH 4/5] ARM: stacktrace: Make stack walk callback consistent
+ with generic code
 To:     Li Huafei <lihuafei1@huawei.com>
 Cc:     linux@armlinux.org.uk, rmk+kernel@armlinux.org.uk, ardb@kernel.org,
         will@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
@@ -69,42 +69,14 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 4:18 AM Li Huafei <lihuafei1@huawei.com> wrote:
+On Tue, Jul 12, 2022 at 4:19 AM Li Huafei <lihuafei1@huawei.com> wrote:
 
-> The current ARM implementation of save_stack_trace_tsk() does not allow
-> saving stack trace for non-current tasks, which may limit the scenarios
-> in which stack_trace_save_tsk() can be used. Like other architectures,
-> or like ARM's unwind_backtrace(), we can leave it up to the caller to
-> ensure that the task that needs to be unwound is not running.
+> In order to use generic arch_stack_walk() code, make stack walk callback
+> consistent with it.
 >
 > Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 
-That sounds good, but:
-
->         if (tsk != current) {
-> -#ifdef CONFIG_SMP
-> -               /*
-> -                * What guarantees do we have here that 'tsk' is not
-> -                * running on another CPU?  For now, ignore it as we
-> -                * can't guarantee we won't explode.
-> -                */
-> -               return;
-> -#else
-> +               /* task blocked in __switch_to */
-
-The commit text is not consistent with the comment you are removing.
-
-The commit is talking about "non-current" tasks which is one thing,
-but the code is avoiding any tasks under SMP because they may be
-running on another CPU. So you need to update the commit
-message to say something like "non-current or running on another CPU".
-
-If this condition will be checked at call sites in following patches,
-then mention
-that in the commit as well, so we know the end result is that we do
-not break it,
-
-I think Russell want to check this commit as well,
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
