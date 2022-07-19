@@ -2,98 +2,72 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FA2C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jul 2022 21:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD8BCCA481
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jul 2022 21:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237195AbiGSVt7 (ORCPT
+        id S240537AbiGSVvC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jul 2022 17:49:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57656 "EHLO
+        Tue, 19 Jul 2022 17:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235393AbiGSVt6 (ORCPT
+        with ESMTP id S240665AbiGSVut (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jul 2022 17:49:58 -0400
+        Tue, 19 Jul 2022 17:50:49 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 816B11145D;
-        Tue, 19 Jul 2022 14:49:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D36D763907;
+        Tue, 19 Jul 2022 14:50:47 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C67741576;
-        Tue, 19 Jul 2022 14:49:57 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B61061576;
+        Tue, 19 Jul 2022 14:50:47 -0700 (PDT)
 Received: from [10.57.42.173] (unknown [10.57.42.173])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99F6F3F70D;
-        Tue, 19 Jul 2022 14:49:55 -0700 (PDT)
-Message-ID: <1c9e4aa4-a619-0614-54ef-0ac77117759d@arm.com>
-Date:   Tue, 19 Jul 2022 22:49:54 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 84C9F3F70D;
+        Tue, 19 Jul 2022 14:50:45 -0700 (PDT)
+Message-ID: <b7f42920-9ca7-ae4e-9c71-34846508cfb1@arm.com>
+Date:   Tue, 19 Jul 2022 22:50:43 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH v2 07/13] coresight: perf: traceid: Add perf notifiers for
- Trace ID
+Subject: Re: [PATCH v2 10/13] kernel: events: Export
+ perf_report_aux_output_id()
 To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
         acme@kernel.org, linux-perf-users@vger.kernel.org,
         leo.yan@linaro.org, quic_jinlmao@quicinc.com
 References: <20220704081149.16797-1-mike.leach@linaro.org>
- <20220704081149.16797-8-mike.leach@linaro.org>
+ <20220704081149.16797-11-mike.leach@linaro.org>
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20220704081149.16797-8-mike.leach@linaro.org>
+In-Reply-To: <20220704081149.16797-11-mike.leach@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Mike,
-
 On 04/07/2022 09:11, Mike Leach wrote:
-> Adds in notifier calls to the trace ID allocator that perf
-> events are starting and stopping.
+> CoreSight trace being updated to use the perf_report_aux_output_id()
+> in a similar way to intel-pt.
 > 
-> This ensures that Trace IDs associated with CPUs remain the same
-> throughout the perf session, and are only released when all perf
-> sessions are complete.
-
-The patch looks fine to me. I think it would be good to add the
-definition of coresight_trace_id_perf_{stop,start}() in this patch.
-
+> This function in needs export visibility to allow it to be called from
+> kernel loadable modules, which CoreSight may configured to be built as.
 > 
 > Signed-off-by: Mike Leach <mike.leach@linaro.org>
 > ---
->   drivers/hwtracing/coresight/coresight-etm-perf.c | 7 +++++++
->   1 file changed, 7 insertions(+)
+>   kernel/events/core.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index c039b6ae206f..ad3fdc07c60b 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -22,6 +22,7 @@
->   #include "coresight-etm-perf.h"
->   #include "coresight-priv.h"
->   #include "coresight-syscfg.h"
-> +#include "coresight-trace-id.h"
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 80782cddb1da..f5835e5833cd 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9117,6 +9117,7 @@ void perf_report_aux_output_id(struct perf_event *event, u64 hw_id)
 >   
->   static struct pmu etm_pmu;
->   static bool etm_perf_up;
-> @@ -228,6 +229,9 @@ static void free_event_data(struct work_struct *work)
->   		*ppath = NULL;
->   	}
->   
-> +	/* mark perf event as done for trace id allocator */
-> +	coresight_trace_id_perf_stop();
-> +
->   	free_percpu(event_data->path);
->   	kfree(event_data);
+>   	perf_output_end(&handle);
 >   }
-> @@ -314,6 +318,9 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
->   		sink = user_sink = coresight_get_sink_by_id(id);
->   	}
+> +EXPORT_SYMBOL_GPL(perf_report_aux_output_id);
 >   
-> +	/* tell the trace ID allocator that a perf event is starting up */
-> +	coresight_trace_id_perf_start();
-> +
->   	/* check if user wants a coresight configuration selected */
->   	cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
->   	if (cfg_hash) {
+>   static int
+>   __perf_event_account_interrupt(struct perf_event *event, int throttle)
 
-Suzuki
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
