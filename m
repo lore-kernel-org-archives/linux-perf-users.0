@@ -2,76 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113A3C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jul 2022 13:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C42C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jul 2022 14:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238254AbiGSN3K (ORCPT
+        id S237103AbiGSOsR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jul 2022 09:29:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
+        Tue, 19 Jul 2022 10:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234727AbiGSN2z (ORCPT
+        with ESMTP id S235040AbiGSOsR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jul 2022 09:28:55 -0400
-Received: from smtpbg.qq.com (unknown [43.155.67.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0B0585FA7;
-        Tue, 19 Jul 2022 05:45:00 -0700 (PDT)
-X-QQ-mid: bizesmtp80t1658234559t2p9cey4
-Received: from localhost.localdomain ( [171.223.96.21])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Tue, 19 Jul 2022 20:42:36 +0800 (CST)
-X-QQ-SSF: 01000000002000F0U000C00A0000000
-X-QQ-FEAT: y5UFFkuhlmK39uWOV5DqxqO5Tj6sfllocKrJ3xpJ4Ql7ghLqcnTFoyRD0Jlz4
-        T9GCnfbcgXnuSaMGurHxa235FaSzMv38wkVLuU5wn5hh5moxRWhflt2EcxO4PpZurlO99os
-        3tGnptID4OLyB/WzTtg8CwV/7dwPVAjxVtcCi11rFauTITrqJC9ld1IdxVKS0DMquctFHBv
-        vtjDI76lHhIK9BTctzalu/a5etFkU1tnzBSQUYkG7JnL4wjKhhEleo1n5sG30QPdEi8jGav
-        GuBgL6bUBOBdynMTCBsePY5n/Jkdlv7fhZQ38XEGr45ECYgswIKL4fKwB3ppOX20Ky8YENf
-        g0zM9OgBUIrSHx9WsAari2C9qBjnoWBxjMwfKG4dXKetEbcEf8tkgKb+62617ca7lQ59AHk
-        ly4VldHOX9o=
-X-QQ-GoodBg: 0
-From:   Jason Wang <wangborong@cdjrlc.com>
-To:     suzuki.poulose@arm.com
-Cc:     mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        leo.yan@linaro.org, john.garry@huawei.com, will@kernel.org,
-        james.clark@arm.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Wang <wangborong@cdjrlc.com>
-Subject: [PATCH] perf cs-etm: Fix comment typo
-Date:   Sat, 16 Jul 2022 12:40:40 +0800
-Message-Id: <20220716044040.43123-1-wangborong@cdjrlc.com>
-X-Mailer: git-send-email 2.35.1
+        Tue, 19 Jul 2022 10:48:17 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CBA0EAC;
+        Tue, 19 Jul 2022 07:48:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D1D7EB81BA8;
+        Tue, 19 Jul 2022 14:48:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7F5C341C6;
+        Tue, 19 Jul 2022 14:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658242093;
+        bh=jQDBpKUPuS4QC3Q9uIzC0xayggwQvXbVDlw0Rl50Qrk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bmcv5Xonpoy6zAUsawNh+VF2BMcBUnGoZfP9iiQ406knP1vTiDBKU1najtsnKDpXF
+         giDdUVdBLAzAkiu3Rt8ntdKLHXVMpb6S4h144nfPQ3T76sHTyoADPBR1FA3Iq4NS+i
+         M8R2UNjGm+RKLY0dAwMLqpEDxZgBYMujDEhz4YjpfPnnOv5MGwIS/+QKJcZVzHk3Ad
+         PnSRZRh2TSBrgDa0KIryvGfF+WCcv2YYFny0iNemnnRENyhdDf6CkTeZr9Tt51Fkm9
+         KQmqPYOtI1E2qyskqtsb2esOKOuXcTsQuSZBXEMnriOy9V2gBi3vlsJomZ5ziiog6Q
+         cn0omvz00q47w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DC3DE40374; Tue, 19 Jul 2022 11:48:10 -0300 (-03)
+Date:   Tue, 19 Jul 2022 11:48:10 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jason Wang <wangborong@cdjrlc.com>
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com, jolsa@kernel.org,
+        namhyung@kernel.org, mhiramat@kernel.org, yangjihong1@huawei.com,
+        irogers@google.com, chenzechuan1@huawei.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: Fix comment typo
+Message-ID: <YtbEKoMgrvNwiiM+@kernel.org>
+References: <20220716043957.42829-1-wangborong@cdjrlc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220716043957.42829-1-wangborong@cdjrlc.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The double `the' is duplicated in the comment, remove one.
+Em Sat, Jul 16, 2022 at 12:39:57PM +0800, Jason Wang escreveu:
+> The double `the' is duplicated in the comment, remove one.
 
-Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
----
- tools/perf/util/cs-etm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks, applied.
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 8b95fb3c4d7b..16db965ac995 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1451,7 +1451,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 		 * tidq->packet->instr_count represents the number of
- 		 * instructions in the current etm packet.
- 		 *
--		 * Period instructions (Pi) contains the the number of
-+		 * Period instructions (Pi) contains the number of
- 		 * instructions executed after the sample point(n) from the
- 		 * previous etm packet.  This will always be less than
- 		 * etm->instructions_sample_period.
+- Arnaldo
+
+ 
+> Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+> ---
+>  tools/perf/util/probe-event.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index 062b5cbe67af..67c12d5303e7 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -1349,7 +1349,7 @@ int parse_line_range_desc(const char *arg, struct line_range *lr)
+>  				/*
+>  				 * Adjust the number of lines here.
+>  				 * If the number of lines == 1, the
+> -				 * the end of line should be equal to
+> +				 * end of line should be equal to
+>  				 * the start of line.
+>  				 */
+>  				lr->end--;
+> -- 
+> 2.35.1
+
 -- 
-2.35.1
 
+- Arnaldo
