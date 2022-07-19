@@ -2,163 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17606C433EF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jul 2022 17:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39801C43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jul 2022 17:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239720AbiGSRgZ (ORCPT
+        id S235442AbiGSRpx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jul 2022 13:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36044 "EHLO
+        Tue, 19 Jul 2022 13:45:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239716AbiGSRgW (ORCPT
+        with ESMTP id S234171AbiGSRpw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jul 2022 13:36:22 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA8B2564D2;
-        Tue, 19 Jul 2022 10:36:21 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF6E91596;
-        Tue, 19 Jul 2022 10:36:21 -0700 (PDT)
-Received: from [10.57.42.173] (unknown [10.57.42.173])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0D243F766;
-        Tue, 19 Jul 2022 10:36:19 -0700 (PDT)
-Message-ID: <1019b931-4d0d-ecea-c170-29e3899acd9b@arm.com>
-Date:   Tue, 19 Jul 2022 18:36:18 +0100
+        Tue, 19 Jul 2022 13:45:52 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249095F4F;
+        Tue, 19 Jul 2022 10:45:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D3F68B81CAD;
+        Tue, 19 Jul 2022 17:45:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EFADC341CE;
+        Tue, 19 Jul 2022 17:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658252748;
+        bh=Iu6171Ov6tYWeYfqKo856Ob0jccBWrdUq3RrbhohZE8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZQrQAXo9l6LBE4PHnnev44PDyHcEAHqL3E87JR/Qm3FBDvy3nb0b9JK+R27gPnZR+
+         zU/Yyt8+jd2SG9TrND6bXGTI2Jz/XjWJVdQzTGjNikmWQxD0QAteh0GL3DRd662arZ
+         WzhAbOU5co0FxDUQYs3XT4e57G54v+EERL/MI43YksefjDxgFNSdp+FR6TlP4Wy1a1
+         1t0R6iUoEHxmDA3zudqPbNOeL9sPwoSR+PYeUCtbo/VftPBFuq4isrxBOwl7BVro0m
+         Ueunjy3A8XKm23dLShoVZWf1GIxoivzQlUdQwW2skenuKRReYGr4jD4umrUdIu6ugE
+         aStqsi5oH69UQ==
+Received: by mail-vs1-f51.google.com with SMTP id l190so14152131vsc.0;
+        Tue, 19 Jul 2022 10:45:48 -0700 (PDT)
+X-Gm-Message-State: AJIora+SHcdg9XwNjWMODMjHYC934SOBM7ATgI7su8EG9JPTFXI5n+Yi
+        zUVuvVibm1qqDlLqAuv0yfOjUuNGxtEUWC7C0w==
+X-Google-Smtp-Source: AGRyM1smPKbVUPDamU+9pu2gLgpmWL2emgLBBBluGP/BWT6sdCHvb0oahmRWmRUrwpPCbIKgh7HQr37S9uuYKLLAUFQ=
+X-Received: by 2002:a67:c088:0:b0:358:bb1:fdf7 with SMTP id
+ x8-20020a67c088000000b003580bb1fdf7mr1192720vsi.85.1658252747373; Tue, 19 Jul
+ 2022 10:45:47 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH v2 02/13] coresight: trace-id: update CoreSight core to
- use Trace ID API
-To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.org, quic_jinlmao@quicinc.com
-References: <20220704081149.16797-1-mike.leach@linaro.org>
- <20220704081149.16797-3-mike.leach@linaro.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20220704081149.16797-3-mike.leach@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20220609052355.1300162-1-irogers@google.com> <20220609052355.1300162-3-irogers@google.com>
+In-Reply-To: <20220609052355.1300162-3-irogers@google.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 19 Jul 2022 11:45:35 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+RSv2_VLdH2bum31cwM3pJuySi4_FhqB4=2vDOHqCdMA@mail.gmail.com>
+Message-ID: <CAL_Jsq+RSv2_VLdH2bum31cwM3pJuySi4_FhqB4=2vDOHqCdMA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] perf: Align user space counter reading with code
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Mike
-
-On 04/07/2022 09:11, Mike Leach wrote:
-> Initialises the default trace ID map.
-> 
-> This will be used by all source drivers to be allocated their trace IDs.
-
-As per previous patch, we may not need an explicit call from here.
-
-> 
-> The checks for sources to have unique IDs has been removed - this is now
-> guaranteed by the ID allocation mechanisms, and inappropriate where
-> multiple ID maps are in use in larger systems
-> 
-
-And this looks like a candidate for a separate patch, as the sources do
-not use the new API yet ? Once they do, in the following patches, we
-could remove this code.
-
-
-All said, this patch could be renamed and moved to the bottom of the 
-series, with :
-
-  "coresight: Remove obsolete trace-id uniqueness checks"
-
-Otherwise, looks good to me.
-
-
-
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+On Wed, Jun 8, 2022 at 11:24 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Align the user space counter reading documentation with the code in
+> perf_mmap__read_self. Previously the documentation was based on the perf
+> rdpmc test, but now general purpose code is provided by libperf.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->   drivers/hwtracing/coresight/coresight-core.c | 49 ++------------------
->   1 file changed, 4 insertions(+), 45 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-> index 1edfec1e9d18..be69e05fde1f 100644
-> --- a/drivers/hwtracing/coresight/coresight-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-core.c
-> @@ -22,6 +22,7 @@
->   #include "coresight-etm-perf.h"
->   #include "coresight-priv.h"
->   #include "coresight-syscfg.h"
-> +#include "coresight-trace-id.h"
->   
->   static DEFINE_MUTEX(coresight_mutex);
->   static DEFINE_PER_CPU(struct coresight_device *, csdev_sink);
-> @@ -84,45 +85,6 @@ struct coresight_device *coresight_get_percpu_sink(int cpu)
->   }
->   EXPORT_SYMBOL_GPL(coresight_get_percpu_sink);
->   
-> -static int coresight_id_match(struct device *dev, void *data)
-> -{
-> -	int trace_id, i_trace_id;
-> -	struct coresight_device *csdev, *i_csdev;
-> -
-> -	csdev = data;
-> -	i_csdev = to_coresight_device(dev);
-> -
-> -	/*
-> -	 * No need to care about oneself and components that are not
-> -	 * sources or not enabled
-> -	 */
-> -	if (i_csdev == csdev || !i_csdev->enable ||
-> -	    i_csdev->type != CORESIGHT_DEV_TYPE_SOURCE)
-> -		return 0;
-> -
-> -	/* Get the source ID for both components */
-> -	trace_id = source_ops(csdev)->trace_id(csdev);
-> -	i_trace_id = source_ops(i_csdev)->trace_id(i_csdev);
-> -
-> -	/* All you need is one */
-> -	if (trace_id == i_trace_id)
-> -		return 1;
-> -
-> -	return 0;
-> -}
-> -
-> -static int coresight_source_is_unique(struct coresight_device *csdev)
-> -{
-> -	int trace_id = source_ops(csdev)->trace_id(csdev);
-> -
-> -	/* this shouldn't happen */
-> -	if (trace_id < 0)
-> -		return 0;
-> -
-> -	return !bus_for_each_dev(&coresight_bustype, NULL,
-> -				 csdev, coresight_id_match);
-> -}
-> -
->   static int coresight_find_link_inport(struct coresight_device *csdev,
->   				      struct coresight_device *parent)
->   {
-> @@ -431,12 +393,6 @@ static int coresight_enable_source(struct coresight_device *csdev, u32 mode)
->   {
->   	int ret;
->   
-> -	if (!coresight_source_is_unique(csdev)) {
-> -		dev_warn(&csdev->dev, "traceID %d not unique\n",
-> -			 source_ops(csdev)->trace_id(csdev));
-> -		return -EINVAL;
-> -	}
-> -
->   	if (!csdev->enable) {
->   		if (source_ops(csdev)->enable) {
->   			ret = coresight_control_assoc_ectdev(csdev, true);
-> @@ -1775,6 +1731,9 @@ static int __init coresight_init(void)
->   	if (ret)
->   		goto exit_bus_unregister;
->   
-> +	/* initialise the default trace ID map */
-> +	coresight_trace_id_init_default_map();
-> +
->   	/* initialise the coresight syscfg API */
->   	ret = cscfg_init();
->   	if (!ret)
+>  include/uapi/linux/perf_event.h       | 32 ++++++++++++++++-----------
+>  tools/include/uapi/linux/perf_event.h | 32 ++++++++++++++++-----------
+>  2 files changed, 38 insertions(+), 26 deletions(-)
+>
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index d37629dbad72..3b84e0ad0723 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -538,9 +538,13 @@ struct perf_event_mmap_page {
+>          *
+>          *     if (pc->cap_usr_time && enabled != running) {
+>          *       cyc = rdtsc();
+> -        *       time_offset = pc->time_offset;
+>          *       time_mult   = pc->time_mult;
+>          *       time_shift  = pc->time_shift;
+> +        *       time_offset = pc->time_offset;
+> +        *       if (pc->cap_user_time_short) {
+> +        *         time_cycles = pc->time_cycles;
+> +        *         time_mask = pc->time_mask;
+> +        *       }
+>          *     }
+>          *
+>          *     index = pc->index;
+> @@ -548,6 +552,9 @@ struct perf_event_mmap_page {
+>          *     if (pc->cap_user_rdpmc && index) {
+>          *       width = pc->pmc_width;
+>          *       pmc = rdpmc(index - 1);
+> +        *       pmc <<= 64 - width;
+> +        *       pmc >>= 64 - width;
+> +        *       count += pmc;
+>          *     }
+>          *
+>          *     barrier();
+> @@ -590,25 +597,24 @@ struct perf_event_mmap_page {
+>          * If cap_usr_time the below fields can be used to compute the time
+>          * delta since time_enabled (in ns) using rdtsc or similar.
+>          *
+> -        *   u64 quot, rem;
+> -        *   u64 delta;
+> -        *
+> -        *   quot = (cyc >> time_shift);
+> -        *   rem = cyc & (((u64)1 << time_shift) - 1);
+> -        *   delta = time_offset + quot * time_mult +
+> -        *              ((rem * time_mult) >> time_shift);
+> +        *   cyc = time_cycles + ((cyc - time_cycles) & time_mask);
+> +        *   delta = time_offset + mul_u64_u32_shr(cyc, time_mult, time_shift);
 
+I still think this chunk should stay as-is because mul_u64_u32_shr
+isn't defined here. At least a comment as to what the C version does:
 
-Suzuki
+/* time_offset + (u64)(((unsigned __int128)cyc * time_mult) >> time_shift) */
+
+>          *
+>          * Where time_offset,time_mult,time_shift and cyc are read in the
+>          * seqcount loop described above. This delta can then be added to
+> -        * enabled and possible running (if index), improving the scaling:
+> +        * enabled and possible running (if index) to improve the scaling. Due
+> +        * to event multiplexing, running maybe zero and so care is needed to
+
+s/maybe/may be/
+
+> +        * avoid division by zero.
+>          *
+>          *   enabled += delta;
+> -        *   if (index)
+> +        *   if (idx)
+
+This should remain 'index'.
+
+>          *     running += delta;
+>          *
+> -        *   quot = count / running;
+> -        *   rem  = count % running;
+> -        *   count = quot * enabled + (rem * enabled) / running;
+> +        *   if (running != 0) {
+> +        *     quot = count / running;
+> +        *     rem  = count % running;
+> +        *     count = quot * enabled + (rem * enabled) / running;
+> +        *   }
+>          */
+>         __u16   time_shift;
+>         __u32   time_mult;
