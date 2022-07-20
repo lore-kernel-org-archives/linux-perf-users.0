@@ -2,152 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475F1C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 16:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52B1C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 16:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbiGTQNY (ORCPT
+        id S232274AbiGTQTf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Jul 2022 12:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44506 "EHLO
+        Wed, 20 Jul 2022 12:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236901AbiGTQNX (ORCPT
+        with ESMTP id S231842AbiGTQTe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Jul 2022 12:13:23 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2221852FDC;
-        Wed, 20 Jul 2022 09:13:22 -0700 (PDT)
+        Wed, 20 Jul 2022 12:19:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC9F4506D;
+        Wed, 20 Jul 2022 09:19:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C9481B82078;
-        Wed, 20 Jul 2022 16:13:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50258C341C7;
-        Wed, 20 Jul 2022 16:13:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5028261D6A;
+        Wed, 20 Jul 2022 16:19:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D32C341CA;
+        Wed, 20 Jul 2022 16:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658333599;
-        bh=wSEX2UuN+q5jlF2IsRuSYl0hA2XlW9/f0OQOD1VuN5Q=;
+        s=k20201202; t=1658333972;
+        bh=hm+C30N+p4hS8b32Z2BKAjSUjZL+YBbDCozWqx7d3N8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ISId+4eARJuS8HyL7M1Gk/HDKmUVYGgTXmFR4u4B+JgEj6wdBewDa2CPDopco1EmL
-         5XsQzNVX14yhsolOLW5n4cHHIip+N/JpfdpgttS9nxlveoOkd2sAtJSYFcJXNOgVmh
-         I6VeHRSCWrNEMtMHUj8L06w/VifXetXzhPCn40dMfJUOLTiy8dB5IlMQ9GVRfRBriv
-         W8hWL+Cz+ZBnny8GAAy9pJNvw5uhAzSKZJQPZKxk0fP4gTKICg6ir6wp4mzEoKmWyz
-         3u15JJ3yASjm0XrwuWS0QJeHio+qWyDU9owtEII+DmkRKfdxOLcODlii4COrlwdcWy
-         KIjYpCdxldl5A==
+        b=RKxSyw+3EKZrvjmoEi4/1S4LOaeSX5rm5F17z20WO1wSH0X2ZcucSFohJTzA6Rdgr
+         t/xgMXNfjoR7rAoqMCt7gTXE+UjUqvbPEFkeRlP6ZofBwvoJo7uijvAtzEvAELCcdk
+         7CN2FW9IR7XWZB6OtmDClIGY3n2wWy3O69iOxxGe8vXieGSMCVzblOMXfNo9M7IK1D
+         nBZ7f4BRaOcoJRM1Ko0cEDrj0wBq36ZwgmmSOWsC+5m9ihOIh67n7ASO+r4qHmF7eh
+         p/nslKeH/HETClFbMZIFxUC5MDFACHyv8aE4KQglpYkD7ujo5ueXGGkbi0nB0wNAq8
+         5+lfIz200SIkQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3CDD440374; Wed, 20 Jul 2022 13:13:16 -0300 (-03)
-Date:   Wed, 20 Jul 2022 13:13:16 -0300
+        id 1A6DF40374; Wed, 20 Jul 2022 13:19:30 -0300 (-03)
+Date:   Wed, 20 Jul 2022 13:19:30 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [PATCH] perf/tests: Fix test case 83 on s390
-Message-ID: <YtgpnIBpt+zNYHyu@kernel.org>
-References: <20220720123419.220953-1-tmricht@linux.ibm.com>
- <CAP-5=fWeUh2hyGAqc4XidJZ7X06f4=MojyQwuOtbL3cs3u+T=w@mail.gmail.com>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     James Clark <james.clark@arm.com>, suzuki.poulose@arm.com,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com,
+        linux-perf-users@vger.kernel.org, quic_jinlmao@quicinc.com
+Subject: Re: [PATCH v2 08/13] perf: cs-etm: Move mapping of Trace ID and cpu
+ into helper function
+Message-ID: <YtgrEoXRblaj0tVy@kernel.org>
+References: <20220704081149.16797-1-mike.leach@linaro.org>
+ <20220704081149.16797-9-mike.leach@linaro.org>
+ <ceed3c67-c9e6-787f-f668-26b57904136e@arm.com>
+ <CAJ9a7VgNO43EhzC-cmxwjEVcN+CKnqoBxiwWJSS3TPC2cEd6aQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWeUh2hyGAqc4XidJZ7X06f4=MojyQwuOtbL3cs3u+T=w@mail.gmail.com>
+In-Reply-To: <CAJ9a7VgNO43EhzC-cmxwjEVcN+CKnqoBxiwWJSS3TPC2cEd6aQ@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jul 20, 2022 at 06:16:44AM -0700, Ian Rogers escreveu:
-> On Wed, Jul 20, 2022, 5:34 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> 
-> > Perf test case 83: perf stat CSV output linter might fail
-> > on s390.
-> > The reason for this is the output of the command
-> >
-> >  ./perf stat -x, -A -a --no-merge true
-> >
-> > which depends on a .config file setting. When CONFIG_SCHED_TOPOLOGY
-> > is set, the output of above perf command is
-> >
-> >    CPU0,1.50,msec,cpu-clock,1502781,100.00,1.052,CPUs utilized
-> >
-> > When CONFIG_SCHED_TOPOLOGY is *NOT* set the output of above perf
-> > command is
-> >
-> >    0.95,msec,cpu-clock,949800,100.00,1.060,CPUs utilized
-> >
-> > Fix the test case to accept both output formats.
-> >
-> > Output before:
-> >  # perf test 83
-> >  83: perf stat CSV output linter       : FAILED!
-> >  #
-> >
-> > Output after:
-> >  # ./perf test 83
-> >  83: perf stat CSV output linter       : Ok
-> >  #
-> >
-> > Fixes: ec906102e5b7 ("perf test: Fix "perf stat CSV output linter" test on
-> > s390")
-> >
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> >
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+Em Wed, Jul 20, 2022 at 11:22:37AM +0100, Mike Leach escreveu:
+> On Tue, 19 Jul 2022 at 15:54, James Clark <james.clark@arm.com> wrote:
+> > I'm starting to look at this set now.
 
-Thanks, applied.
+> > Am I right in thinking that this hard coded value means that new versions
+> > of Perf won't work with older drivers? Does this need to be highlighted
+> > somewhere in a warning that it's not the Perf version that's the issue but
+> > both the Perf and driver version together?
+ 
+> Need to differentiate here between perf record, and perf report.
+ 
+> My understanding is that perf record must always match the version of
+> your kernel. If you use an old version of perf record on a newer
+
+No, that is not what is intended, one should be able to use whatever
+perf (record or otherwise) with whatever kernel version.
+
+perf tries to cope with, and if it is not possible to record the way the
+user asks to then it should emit a helpful error message stating why it
+is not possible, see:
+
+  evsel__disable_missing_features()
+  evsel__detect_missing_features()
+
+Used during a evsel__open()
 
 - Arnaldo
 
- 
-> Thanks,
-> Ian
+> kernel then you are asking for trouble.
+> Indeed, if I run perf on my x86 dev machine at the moment it whinges:
+> WARNING: perf not found for kernel 5.4.0-122
+> because the last version of perf I have is for 5.4.0-120.
 > 
-> ---
-> >  tools/perf/tests/shell/stat+csv_output.sh | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> The new perf report will differentiate between the new and old
+> versions of the perf.data file and act accordingly. For version 1 it
+> will take the IDs from the metadata, for version 2 it will search for
+> the IDs in the packet data.
+> An older perf report will not be able to decode the newer files -
+> though that has always been the case.
+> 
+> Were we to permit and old version of perf report to be used to
+> generate a file using the new drivers, and then attempt to process
+> that file with and older perf report, it would fail miserably.
+> 
+> Regards
+> 
+> Mike
+> 
+> 
+> > I thought the idea was to search through the file to look for
+> > PERF_RECORD_AUX_OUTPUT_HW_ID records (or lack of) and then choose the appropriate
+> > decode method. But maybe that's too complicated and there is no requirement
+> > for backwards compatibility?
 > >
-> > diff --git a/tools/perf/tests/shell/stat+csv_output.sh
-> > b/tools/perf/tests/shell/stat+csv_output.sh
-> > index 38c26f3ef4c1..eb5196f58190 100755
-> > --- a/tools/perf/tests/shell/stat+csv_output.sh
-> > +++ b/tools/perf/tests/shell/stat+csv_output.sh
-> > @@ -8,7 +8,8 @@ set -e
+> > From experience it can be inconvenient when you can't just throw
+> > any build of Perf on a system and it supports everything that it knows
+> > about. Now we will have Perf builds that know about Coresight but don't
+> > work with older drivers.
 > >
-> >  function commachecker()
-> >  {
-> > -       local -i cnt=0 exp=0
-> > +       local -i cnt=0
-> > +       local exp=0
+> > But then as you say the ID allocation is already broken for some people.
+> > It's hard to decide.
 > >
-> >         case "$1"
-> >         in "--no-args")         exp=6
-> > @@ -17,7 +18,7 @@ function commachecker()
-> >         ;; "--interval")        exp=7
-> >         ;; "--per-thread")      exp=7
-> >         ;; "--system-wide-no-aggr")     exp=7
-> > -                               [ $(uname -m) = "s390x" ] && exp=6
-> > +                               [ $(uname -m) = "s390x" ] && exp='^[6-7]$'
-> >         ;; "--per-core")        exp=8
-> >         ;; "--per-socket")      exp=8
-> >         ;; "--per-node")        exp=8
-> > @@ -34,7 +35,7 @@ function commachecker()
-> >                 x=$(echo $line | tr -d -c ',')
-> >                 cnt="${#x}"
-> >                 # echo $line $cnt
-> > -               [ "$cnt" -ne "$exp" ] && {
-> > +               [[ ! "$cnt" =~ $exp ]] && {
-> >                         echo "wrong number of fields. expected $exp in
-> > $line" 1>&2
-> >                         exit 1;
-> >                 }
-> > --
-> > 2.36.1
+> > James
 > >
-> >
+> > >
+> > >  /* Beginning of header common to both ETMv3 and V4 */
+> > >  enum {
+> > > @@ -85,6 +89,12 @@ enum {
+> > >       CS_ETE_PRIV_MAX
+> > >  };
+> > >
+> > > +/*
+> > > + * Check for valid CoreSight trace ID. If an invalid value is present in the metadata,
+> > > + * then IDs are present in the hardware ID packet in the data file.
+> > > + */
+> > > +#define CS_IS_VALID_TRACE_ID(id) ((id > 0) && (id < 0x70))
+> > > +
+> > >  /*
+> > >   * ETMv3 exception encoding number:
+> > >   * See Embedded Trace Macrocell specification (ARM IHI 0014Q)
+> 
+> 
+> 
+> -- 
+> Mike Leach
+> Principal Engineer, ARM Ltd.
+> Manchester Design Centre. UK
 
 -- 
 
