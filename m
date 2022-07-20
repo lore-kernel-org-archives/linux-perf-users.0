@@ -2,46 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3209C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 12:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0336EC433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 14:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231571AbiGTM6F (ORCPT
+        id S229832AbiGTOlq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Jul 2022 08:58:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59012 "EHLO
+        Wed, 20 Jul 2022 10:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbiGTM6D (ORCPT
+        with ESMTP id S229830AbiGTOlo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Jul 2022 08:58:03 -0400
+        Wed, 20 Jul 2022 10:41:44 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2255527FEE;
-        Wed, 20 Jul 2022 05:58:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B63A24D4F7;
+        Wed, 20 Jul 2022 07:41:41 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 678DF1576;
-        Wed, 20 Jul 2022 05:58:01 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC46E1570;
+        Wed, 20 Jul 2022 07:41:41 -0700 (PDT)
 Received: from [10.32.33.51] (e121896.warwick.arm.com [10.32.33.51])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59E963F70D;
-        Wed, 20 Jul 2022 05:57:59 -0700 (PDT)
-Message-ID: <760a1d6e-8e48-0d02-f91a-916b5915cc08@arm.com>
-Date:   Wed, 20 Jul 2022 13:57:57 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC5583F70D;
+        Wed, 20 Jul 2022 07:41:39 -0700 (PDT)
+Message-ID: <5e8981b1-1c32-7ef0-0ef9-93799a8c968b@arm.com>
+Date:   Wed, 20 Jul 2022 15:41:38 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 08/13] perf: cs-etm: Move mapping of Trace ID and cpu
- into helper function
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 09/13] perf: cs-etm: Update record event to use new
+ Trace ID protocol
 Content-Language: en-US
 To:     Mike Leach <mike.leach@linaro.org>
-Cc:     suzuki.poulose@arm.com, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
         acme@kernel.org, linux-perf-users@vger.kernel.org,
-        quic_jinlmao@quicinc.com
+        quic_jinlmao@quicinc.com, suzuki.poulose@arm.com,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 References: <20220704081149.16797-1-mike.leach@linaro.org>
- <20220704081149.16797-9-mike.leach@linaro.org>
- <ceed3c67-c9e6-787f-f668-26b57904136e@arm.com>
- <CAJ9a7VgNO43EhzC-cmxwjEVcN+CKnqoBxiwWJSS3TPC2cEd6aQ@mail.gmail.com>
+ <20220704081149.16797-10-mike.leach@linaro.org>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAJ9a7VgNO43EhzC-cmxwjEVcN+CKnqoBxiwWJSS3TPC2cEd6aQ@mail.gmail.com>
+In-Reply-To: <20220704081149.16797-10-mike.leach@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -50,219 +48,150 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 20/07/2022 11:22, Mike Leach wrote:
-> Hi James
+On 04/07/2022 09:11, Mike Leach wrote:
+> Trace IDs are now dynamically allocated.
 > 
-> On Tue, 19 Jul 2022 at 15:54, James Clark <james.clark@arm.com> wrote:
->>
->>
->>
->> On 04/07/2022 09:11, Mike Leach wrote:
->>> The information to associate Trace ID and CPU will be changing.
->>> Drivers will start outputting this as a hardware ID packet in the data
->>> file and setting the value in AUXINFO to an unused value.
->>>
->>> To prepare for this, we only map Trace ID and CPU data from AUXINFO if the
->>> header version and values are valid, and move the mapping into a
->>> helper function.
->>>
->>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
->>> ---
->>>  tools/perf/util/cs-etm.c | 53 +++++++++++++++++++++++++++-------------
->>>  tools/perf/util/cs-etm.h | 14 +++++++++--
->>>  2 files changed, 48 insertions(+), 19 deletions(-)
->>>
->>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
->>> index 8b95fb3c4d7b..df9d67901f8d 100644
->>> --- a/tools/perf/util/cs-etm.c
->>> +++ b/tools/perf/util/cs-etm.c
->>> @@ -193,6 +193,30 @@ int cs_etm__get_pid_fmt(u8 trace_chan_id, u64 *pid_fmt)
->>>       return 0;
->>>  }
->>>
->>> +static int cs_etm__map_trace_id(u8 trace_chan_id, u64 *cpu_metadata)
->>> +{
->>> +     struct int_node *inode;
->>> +
->>> +     /* Get an RB node for this CPU */
->>> +     inode = intlist__findnew(traceid_list, trace_chan_id);
->>> +
->>> +     /* Something went wrong, no need to continue */
->>> +     if (!inode)
->>> +             return -ENOMEM;
->>> +
->>> +     /*
->>> +      * The node for that CPU should not be taken.
->>> +      * Back out if that's the case.
->>> +      */
->>> +     if (inode->priv)
->>> +             return -EINVAL;
->>> +
->>> +     /* All good, associate the traceID with the metadata pointer */
->>> +     inode->priv = cpu_metadata;
->>> +
->>> +     return 0;
->>> +}
->>> +
->>>  void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
->>>                                             u8 trace_chan_id)
->>>  {
->>> @@ -2886,7 +2910,6 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->>>  {
->>>       struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
->>>       struct cs_etm_auxtrace *etm = NULL;
->>> -     struct int_node *inode;
->>>       unsigned int pmu_type;
->>>       int event_header_size = sizeof(struct perf_event_header);
->>>       int info_header_size;
->>> @@ -2898,6 +2921,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->>>       u64 *ptr, *hdr = NULL;
->>>       u64 **metadata = NULL;
->>>       u64 hdr_version;
->>> +     u8 trace_chan_id;
->>>
->>>       /*
->>>        * sizeof(auxtrace_info_event::type) +
->>> @@ -2991,25 +3015,20 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->>>                       goto err_free_metadata;
->>>               }
->>>
->>> -             /* Get an RB node for this CPU */
->>> -             inode = intlist__findnew(traceid_list, metadata[j][trcidr_idx]);
->>> -
->>> -             /* Something went wrong, no need to continue */
->>> -             if (!inode) {
->>> -                     err = -ENOMEM;
->>> -                     goto err_free_metadata;
->>> -             }
->>> -
->>>               /*
->>> -              * The node for that CPU should not be taken.
->>> -              * Back out if that's the case.
->>> +              * Associate a trace ID with metadata.
->>> +              * Later versions of the drivers will make this association using a
->>> +              * hardware ID packet in the data file, setting the value in AUXINFO to an
->>> +              * invalid trace ID value. Only map here if the value is valid.
->>>                */
->>> -             if (inode->priv) {
->>> -                     err = -EINVAL;
->>> -                     goto err_free_metadata;
->>> +             if (hdr_version <  CS_AUX_HW_ID_VERSION_MIN) {
->>> +                     trace_chan_id = metadata[j][trcidr_idx];
->>> +                     if (CS_IS_VALID_TRACE_ID(trace_chan_id)) {
->>> +                             err = cs_etm__map_trace_id(trace_chan_id, metadata[j]);
->>> +                             if (err)
->>> +                                     goto err_free_metadata;
->>> +                     }
->>>               }
->>> -             /* All good, associate the traceID with the metadata pointer */
->>> -             inode->priv = metadata[j];
->>>       }
->>>
->>>       /*
->>> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
->>> index 90c83f932d9a..712a6f855f0e 100644
->>> --- a/tools/perf/util/cs-etm.h
->>> +++ b/tools/perf/util/cs-etm.h
->>> @@ -28,13 +28,17 @@ enum {
->>>  /*
->>>   * Update the version for new format.
->>>   *
->>> - * New version 1 format adds a param count to the per cpu metadata.
->>> + * Version 1: format adds a param count to the per cpu metadata.
->>>   * This allows easy adding of new metadata parameters.
->>>   * Requires that new params always added after current ones.
->>>   * Also allows client reader to handle file versions that are different by
->>>   * checking the number of params in the file vs the number expected.
->>> + *
->>> + * Version 2: Drivers will use PERF_RECORD_AUX_OUTPUT_HW_ID to output
->>> + * CoreSight Trace ID. ...TRACEIDR metadata will be set to unused ID.
->>>   */
->>> -#define CS_HEADER_CURRENT_VERSION 1
->>> +#define CS_HEADER_CURRENT_VERSION    2
->>> +#define CS_AUX_HW_ID_VERSION_MIN     2
->>
->> Hi Mike,
->>
->> I'm starting to look at this set now.
->>
->> Am I right in thinking that this hard coded value means that new versions
->> of Perf won't work with older drivers? Does this need to be highlighted
->> somewhere in a warning that it's not the Perf version that's the issue but
->> both the Perf and driver version together?
->>
+> Previously used the static association algorithm that is no longer
+> used. The 'cpu * 2 + seed' was outdated and broken for systems with high
+> core counts (>46). as it did not scale and was broken for larger
+> core counts.
 > 
-> Need to differentiate here between perf record, and perf report.
+> Trace ID is  as unknown in AUXINFO record, and the ID / CPU association
+> will now be sent in PERF_RECORD_AUX_OUTPUT_HW_ID record.
 > 
-> My understanding is that perf record must always match the version of
-> your kernel. If you use an old version of perf record on a newer
-> kernel then you are asking for trouble.
+> Remove legacy Trace ID allocation algorithm.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
+>  include/linux/coresight-pmu.h       | 19 +++++++------------
+>  tools/include/linux/coresight-pmu.h | 19 +++++++------------
 
-In that case it's probably ok then. Although there are some users using
-a mainline version of Perf for all the decode fixes, but running on a
-platform with an older production kernel. I suppose they'd have to backport
-the new Coresight driver. In this case having Perf support both older and
-new drivers would simplify this workflow. But if it's not supported then
-it's not supported.
+I usually see mentions that these header updates need to be separate commits
+because they are merged through different trees.
 
-> Indeed, if I run perf on my x86 dev machine at the moment it whinges:
-> WARNING: perf not found for kernel 5.4.0-122
-> because the last version of perf I have is for 5.4.0-120.
->
+>  tools/perf/arch/arm/util/cs-etm.c   | 21 ++++++++++++---------
+>  3 files changed, 26 insertions(+), 33 deletions(-)
+> 
+> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> index 4ac5c081af93..9f7ee380266b 100644
+> --- a/include/linux/coresight-pmu.h
+> +++ b/include/linux/coresight-pmu.h
+> @@ -8,7 +8,13 @@
+>  #define _LINUX_CORESIGHT_PMU_H
+>  
+>  #define CORESIGHT_ETM_PMU_NAME "cs_etm"
+> -#define CORESIGHT_ETM_PMU_SEED  0x10
+> +
+> +/*
+> + * Metadata now contains an unused trace ID - IDs are transmitted using a
+> + * PERF_RECORD_AUX_OUTPUT_HW_ID record.
+> + * Value architecturally defined as reserved in CoreSight.
+> + */
+> +#define CS_UNUSED_TRACE_ID 0x7F
+>  
+>  /*
+>   * Below are the definition of bit offsets for perf option, and works as
+> @@ -32,15 +38,4 @@
+>  #define ETM4_CFG_BIT_RETSTK	12
+>  #define ETM4_CFG_BIT_VMID_OPT	15
+>  
+> -static inline int coresight_get_trace_id(int cpu)
+> -{
+> -	/*
+> -	 * A trace ID of value 0 is invalid, so let's start at some
+> -	 * random value that fits in 7 bits and go from there.  Since
+> -	 * the common convention is to have data trace IDs be I(N) + 1,
+> -	 * set instruction trace IDs as a function of the CPU number.
+> -	 */
+> -	return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
+> -}
+> -
+>  #endif
+> diff --git a/tools/include/linux/coresight-pmu.h b/tools/include/linux/coresight-pmu.h
+> index 6c2fd6cc5a98..31d007fab3a6 100644
+> --- a/tools/include/linux/coresight-pmu.h
+> +++ b/tools/include/linux/coresight-pmu.h
+> @@ -8,7 +8,13 @@
+>  #define _LINUX_CORESIGHT_PMU_H
+>  
+>  #define CORESIGHT_ETM_PMU_NAME "cs_etm"
+> -#define CORESIGHT_ETM_PMU_SEED  0x10
+> +
+> +/*
+> + * Metadata now contains an unused trace ID - IDs are transmitted using a
+> + * PERF_RECORD_AUX_OUTPUT_HW_ID record.
+> + * Value architecturally defined as reserved in CoreSight.
+> + */
+> +#define CS_UNUSED_TRACE_ID 0x7F
+>  
 
-These are printed for the package manager installed version, but not for
-dev builds. If we know there is some incompatibility I wonder if adding
-a warning would be easy. Otherwise you'd get the obscure "This file has
-no samples!" message. Or just leave it to the wrapper script to warn only
-non-devbuild users?
+minor nit: this isn't used in the kernel so only needs to be defined on the
+tools side.
 
-> The new perf report will differentiate between the new and old
-> versions of the perf.data file and act accordingly. For version 1 it
-> will take the IDs from the metadata, for version 2 it will search for
-> the IDs in the packet data.
-> An older perf report will not be able to decode the newer files -
-> though that has always been the case.
-> 
-> Were we to permit and old version of perf report to be used to
-> generate a file using the new drivers, and then attempt to process
-> that file with and older perf report, it would fail miserably.
-> 
-> Regards
-> 
-> Mike
-> 
-> 
->> I thought the idea was to search through the file to look for
->> PERF_RECORD_AUX_OUTPUT_HW_ID records (or lack of) and then choose the appropriate
->> decode method. But maybe that's too complicated and there is no requirement
->> for backwards compatibility?
->>
->> From experience it can be inconvenient when you can't just throw
->> any build of Perf on a system and it supports everything that it knows
->> about. Now we will have Perf builds that know about Coresight but don't
->> work with older drivers.
->>
->> But then as you say the ID allocation is already broken for some people.
->> It's hard to decide.
->>
->> James
->>
->>>
->>>  /* Beginning of header common to both ETMv3 and V4 */
->>>  enum {
->>> @@ -85,6 +89,12 @@ enum {
->>>       CS_ETE_PRIV_MAX
->>>  };
->>>
->>> +/*
->>> + * Check for valid CoreSight trace ID. If an invalid value is present in the metadata,
->>> + * then IDs are present in the hardware ID packet in the data file.
->>> + */
->>> +#define CS_IS_VALID_TRACE_ID(id) ((id > 0) && (id < 0x70))
->>> +
->>>  /*
->>>   * ETMv3 exception encoding number:
->>>   * See Embedded Trace Macrocell specification (ARM IHI 0014Q)
-> 
-> 
-> 
+>  /*
+>   * Below are the definition of bit offsets for perf option, and works as
+> @@ -34,15 +40,4 @@
+>  #define ETM4_CFG_BIT_RETSTK	12
+>  #define ETM4_CFG_BIT_VMID_OPT	15
+>  
+> -static inline int coresight_get_trace_id(int cpu)
+> -{
+> -	/*
+> -	 * A trace ID of value 0 is invalid, so let's start at some
+> -	 * random value that fits in 7 bits and go from there.  Since
+> -	 * the common convention is to have data trace IDs be I(N) + 1,
+> -	 * set instruction trace IDs as a function of the CPU number.
+> -	 */
+> -	return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
+> -}
+> -
+>  #endif
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index 1b54638d53b0..2d68e6a722ed 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -421,13 +421,16 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>  	evlist__to_front(evlist, cs_etm_evsel);
+>  
+>  	/*
+> -	 * In the case of per-cpu mmaps, we need the CPU on the
+> -	 * AUX event.  We also need the contextID in order to be notified
+> +	 * get the CPU on the sample - need it to associate trace ID in the
+> +	 * AUX_OUTPUT_HW_ID event, and the AUX event for per-cpu mmaps.
+> +	 */
+> +	evsel__set_sample_bit(cs_etm_evsel, CPU);
+> +
+> +	/*
+> +	 * Also the case of per-cpu mmaps, need the contextID in order to be notified
+>  	 * when a context switch happened.
+>  	 */
+>  	if (!perf_cpu_map__empty(cpus)) {
+> -		evsel__set_sample_bit(cs_etm_evsel, CPU);
+> -
+>  		err = cs_etm_set_option(itr, cs_etm_evsel,
+>  					BIT(ETM_OPT_CTXTID) | BIT(ETM_OPT_TS));
+>  		if (err)
+> @@ -633,8 +636,9 @@ static void cs_etm_save_etmv4_header(__u64 data[], struct auxtrace_record *itr,
+>  
+>  	/* Get trace configuration register */
+>  	data[CS_ETMV4_TRCCONFIGR] = cs_etmv4_get_config(itr);
+> -	/* Get traceID from the framework */
+> -	data[CS_ETMV4_TRCTRACEIDR] = coresight_get_trace_id(cpu);
+> +	/* traceID set to unused */
+> +	data[CS_ETMV4_TRCTRACEIDR] = CS_UNUSED_TRACE_ID;
+> +
+>  	/* Get read-only information from sysFS */
+>  	data[CS_ETMV4_TRCIDR0] = cs_etm_get_ro(cs_etm_pmu, cpu,
+>  					       metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
+> @@ -681,9 +685,8 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
+>  		magic = __perf_cs_etmv3_magic;
+>  		/* Get configuration register */
+>  		info->priv[*offset + CS_ETM_ETMCR] = cs_etm_get_config(itr);
+> -		/* Get traceID from the framework */
+> -		info->priv[*offset + CS_ETM_ETMTRACEIDR] =
+> -						coresight_get_trace_id(cpu);
+> +		/* traceID set to unused */
+> +		info->priv[*offset + CS_ETM_ETMTRACEIDR] = CS_UNUSED_TRACE_ID;
+>  		/* Get read-only information from sysFS */
+>  		info->priv[*offset + CS_ETM_ETMCCER] =
+>  			cs_etm_get_ro(cs_etm_pmu, cpu,
