@@ -2,72 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33376C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 09:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FD0C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 09:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231247AbiGTJNH (ORCPT
+        id S232260AbiGTJaZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Jul 2022 05:13:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45066 "EHLO
+        Wed, 20 Jul 2022 05:30:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiGTJNG (ORCPT
+        with ESMTP id S234060AbiGTJaW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Jul 2022 05:13:06 -0400
-Received: from m12-17.163.com (m12-17.163.com [220.181.12.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 30C6A31202;
-        Wed, 20 Jul 2022 02:13:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=swMyA
-        Q1wYL/KmkzxV6qPZe+Wkp4Kniua9t03hTRYu0g=; b=VE16iW9f4rpDlkc1DBomq
-        jszlskLV8iLrr47QE0heYaco3KKT+KTscEbrwkO8eqDQSnHIT7k3uoocGT1JwBj4
-        A9JSZ7VSsgsAy1pFxO/cnqdn2u3Ga6UT+9q2KGjSDRkpD8LxuWYgI1Ro3ik4f3+Y
-        NyVDp4Lux1h/ERjeT3E7Z4=
-Received: from localhost.localdomain (unknown [223.104.68.229])
-        by smtp13 (Coremail) with SMTP id EcCowAB3dlj6xtdiBJXxOg--.1197S2;
-        Wed, 20 Jul 2022 17:12:29 +0800 (CST)
-From:   Slark Xiao <slark_xiao@163.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH] perf/core: Fix typo
-Date:   Wed, 20 Jul 2022 17:12:20 +0800
-Message-Id: <20220720091220.14200-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 20 Jul 2022 05:30:22 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B283912D0F;
+        Wed, 20 Jul 2022 02:30:18 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 334571576;
+        Wed, 20 Jul 2022 02:30:18 -0700 (PDT)
+Received: from [10.57.41.17] (unknown [10.57.41.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3F913F73D;
+        Wed, 20 Jul 2022 02:30:15 -0700 (PDT)
+Message-ID: <312bce37-8201-e0a7-0122-77ec1ebef556@arm.com>
+Date:   Wed, 20 Jul 2022 10:30:14 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: EcCowAB3dlj6xtdiBJXxOg--.1197S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrWw4xCw45tr48uF4ktr4rGrg_yoWxXFg_Gw
-        18Xas29r4FyasxKrZ8Xa92qr1jgr4UWa4Fyws7tF98K34jga4Ykws5JrZxAr9xJanrZryU
-        tFsxGwn0qr18CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7VUU0tAtUUUUU==
-X-Originating-IP: [223.104.68.229]
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/xtbBDR1EZFaEKAL21QAAsr
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.11.0
+Subject: Re: [PATCH v2 12/13] coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID
+ used for Trace ID
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, quic_jinlmao@quicinc.com
+References: <20220704081149.16797-1-mike.leach@linaro.org>
+ <20220704081149.16797-13-mike.leach@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20220704081149.16797-13-mike.leach@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove typo.
+On 04/07/2022 09:11, Mike Leach wrote:
+> Use the perf_report_aux_output_id() call to output the CoreSight trace ID
+> and associated CPU as a PERF_RECORD_AUX_OUTPUT_HW_ID record in the
+> perf.data file.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
+>   drivers/hwtracing/coresight/coresight-etm-perf.c | 10 ++++++++++
+>   include/linux/coresight-pmu.h                    | 14 ++++++++++++++
+>   2 files changed, 24 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index ad3fdc07c60b..531f5d42272b 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -4,6 +4,7 @@
+>    * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+>    */
+>   
+> +#include <linux/bitfield.h>
+>   #include <linux/coresight.h>
+>   #include <linux/coresight-pmu.h>
+>   #include <linux/cpumask.h>
+> @@ -437,6 +438,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   	struct perf_output_handle *handle = &ctxt->handle;
+>   	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
+>   	struct list_head *path;
+> +	u64 hw_id;
+>   
+>   	if (!csdev)
+>   		goto fail;
+> @@ -482,6 +484,11 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
+>   		goto fail_disable_path;
+>   
+> +	/* output cpu / trace ID in perf record */
+> +	hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, CS_AUX_HW_ID_CURR_VERSION) |
+> +		FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, coresight_trace_id_get_cpu_id(cpu));
+> +	perf_report_aux_output_id(event, hw_id);
+> +
+>   out:
+>   	/* Tell the perf core the event is alive */
+>   	event->hw.state = 0;
+> @@ -600,6 +607,9 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>   
+>   	/* Disabling the path make its elements available to other sessions */
+>   	coresight_disable_path(path);
+> +
+> +	/* release the trace ID we read on event start */
+> +	coresight_trace_id_put_cpu_id(cpu);
+>   }
+>   
+>   static int etm_event_add(struct perf_event *event, int mode)
+> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> index 9f7ee380266b..5572d0e10822 100644
+> --- a/include/linux/coresight-pmu.h
+> +++ b/include/linux/coresight-pmu.h
+> @@ -7,6 +7,8 @@
+>   #ifndef _LINUX_CORESIGHT_PMU_H
+>   #define _LINUX_CORESIGHT_PMU_H
+>   
+> +#include <linux/bits.h>
+> +
+>   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
+>   
+>   /*
+> @@ -38,4 +40,16 @@
+>   #define ETM4_CFG_BIT_RETSTK	12
+>   #define ETM4_CFG_BIT_VMID_OPT	15
+>   
+> +/*
+> + * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
+> + * Used to associate a CPU with the CoreSight Trace ID.
+> + * [63:16] - unused SBZ
+> + * [15:08] - Trace ID
+> + * [07:00] - Version
 
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Could we please re-arrange the fields, such that it is easier to
+comprehend the TraceID looking at the raw trace dump ? Also to
+accommodate the future changes.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2573673be8f3..7dd15bdb1f22 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4457,7 +4457,7 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
- 
- 	*value = local64_read(&event->count);
- 	if (enabled || running) {
--		u64 __enabled, __running, __now;;
-+		u64 __enabled, __running, __now;
- 
- 		calc_timer_values(event, &__now, &__enabled, &__running);
- 		if (enabled)
--- 
-2.25.1
+e.g,
+       [15:00] - Trace ID	 /* For future expansion, if at all */
+       [59:16] - RES0
+       [63:60] - Trace_ID_Version
+
+I think we *might* (not sure yet) end up adding "sinkid" when we have
+sink specific allocation, so that we can associate the HW_ID of an event
+to the "AUXTRACE" record (i.e., trace buffer).
+
+So if we need to do that we could:
+
+       [15:00] - Trace ID	 /* For future expansion, if at all */
+       [47:16] - Trace Pool ID( == 0 if global, == sink_id if sink based)
+       [59:48] - RES0
+       [63:60] - Trace_ID_Version == 1
+
+Or we could adopt the above straight away.
+
+Thoughts ?
+
+Suzuki
+
+> + */
+> +#define CS_AUX_HW_ID_VERSION_MASK	GENMASK_ULL(7, 0)
+> +#define CS_AUX_HW_ID_TRACE_ID_MASK	GENMASK_ULL(15, 8)
+> +
+> +#define CS_AUX_HW_ID_CURR_VERSION 0
+
+
+> +
+>   #endif
 
