@@ -2,117 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A50BC433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 18:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3E4C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 20:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbiGTSqz (ORCPT
+        id S229524AbiGTUIH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Jul 2022 14:46:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33848 "EHLO
+        Wed, 20 Jul 2022 16:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiGTSqy (ORCPT
+        with ESMTP id S229490AbiGTUIG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Jul 2022 14:46:54 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 438745F11D;
-        Wed, 20 Jul 2022 11:46:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F3653B821B3;
-        Wed, 20 Jul 2022 18:46:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F46C341C7;
-        Wed, 20 Jul 2022 18:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658342811;
-        bh=6JkQqpw0MmTlbMYmqr0ZVhedIMa8/luYWE6ik91JFbE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XOmDb99rEVneVO589It/Ck5dJ/xZOKEAXZL25BZzDy9Yt0s58r29QNcMLuRwipO8O
-         DsTscB4kCggj/R0Zjdb0sO7evdsw/+S/xn3N4crXwuv3FlDR8aZsS3s6DqBf9tpL7O
-         AQifSnoyYy17ME+hCCam/oRCmP7RVehNojDyGotY2+3MbcJ0B+6u8jEsOGKco9A2Jf
-         xTaie09kp8q5i3+C/uMg5VX8pCPP/3zx0KW2sKVsRO28karhdU1Kj1isNp3Q7d7Mm7
-         G+XYUz1CPM2Ewnhud/CBu18EW+nxXbBAp1XBF3KsfhHMKuGlNvKl86u/PgoGgOMIb9
-         JOK6qfBN+Xk9w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3F20340374; Wed, 20 Jul 2022 15:46:49 -0300 (-03)
-Date:   Wed, 20 Jul 2022 15:46:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>, Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
-        Adam Li <adam.li@amperecomputing.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Kajol Jain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v5 01/17] perf: Add SNOOP_PEER flag to perf mem data
- struct
-Message-ID: <YthNmcOJOZitcsjD@kernel.org>
-References: <20220604042820.2270916-1-leo.yan@linaro.org>
- <20220604042820.2270916-2-leo.yan@linaro.org>
- <YthNXweIEdNfcoX1@kernel.org>
+        Wed, 20 Jul 2022 16:08:06 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6984747BA0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Jul 2022 13:08:05 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id i4so4682220qvv.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Jul 2022 13:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bBt2aXduXrk3yTFTMljU9bjqy/gjhF70VjHkOj8ezJQ=;
+        b=fpOe6RRt86snubDzij/nij4d7nEXqB7gZ5vUfuXDSb4mEXI7wFsTEUnHWkadGGT+SV
+         qS+CfCoE5Ak9EtNzmTrS+G1bH3Ag74/yRC8BQjNdDixQOlm9cufa8URUF5fsbgKUUeKo
+         WDJw+qHQONYANM93QWG1sw9uf+4Rdn1X+Kjg0VMn+KupawJfnkDA0o8lSk+xWs5+PzUm
+         JwcBAeybMS+er8/b3SvFrgoCVIBIw0mlK80q/LlmAd0ULWTRwDSOkKNN0tqZZdGiGt68
+         Ord3doXJBGbROeZfkwFVjDZhAwsM/enKr7kzThzTHfLsghQ96ifMMzWPIuSxxRMq/kFa
+         DHYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bBt2aXduXrk3yTFTMljU9bjqy/gjhF70VjHkOj8ezJQ=;
+        b=g9+jpeZjTWaw+9vTrChCnUdfcyRebxTM/lt0hplpmKzkX/qofLwdA5evcSQB25+xX/
+         Zrw7bkfHwEy/i6/YbcZmLV/NkrpxQYYaiPvjyDAHLWkNs87l9xev6hkCFexcNJJ0Vbx4
+         CJj83hj13wgfxu94wdIkYl8fhHKc2YqbIIM7lQCDxQttZGEn1LGOt476EmyvHsETAVDK
+         R5B3vFJlhZQ5Kni2PBN3kPFuniYOWmJY20Gx4YUGOuecPVVGEqIPRXztr4sAt3Mb8nTW
+         1l+zwrF7Xh6mGjlVjoxUXUmgxE0hYSKv5AB5VjzcYy63+/QN4+ijwWD8siytwa1PA750
+         0IjA==
+X-Gm-Message-State: AJIora88neOuZrOf0cx78z+6k/JOdOF5BR2L4wrnBomurxnE0F3pWO6R
+        r6qCQsVv3A5jSUnKHo2E9kBSso0ZB2xAPbLw5JLjkQ==
+X-Google-Smtp-Source: AGRyM1vyf1j8XqVCErCglA0UEjOSGZrnbuaSbmW1xdUCg7HF23L5loulxZKywUcdPsvfRbBWorrP7qBY6KYLgxte8fk=
+X-Received: by 2002:a05:6214:761:b0:470:8558:d1c3 with SMTP id
+ f1-20020a056214076100b004708558d1c3mr31210261qvz.107.1658347684520; Wed, 20
+ Jul 2022 13:08:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YthNXweIEdNfcoX1@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20220719170555.2576993-1-roberto.sassu@huawei.com> <20220719170555.2576993-2-roberto.sassu@huawei.com>
+In-Reply-To: <20220719170555.2576993-2-roberto.sassu@huawei.com>
+From:   Quentin Monnet <quentin@isovalent.com>
+Date:   Wed, 20 Jul 2022 21:07:53 +0100
+Message-ID: <CACdoK4LMvLyV2z5quN1BE4VrxGJK-f1YfuHWoQrJaH_eKyHZog@mail.gmail.com>
+Subject: Re: [PATCH 2/4] bpftool: Complete libbfd feature detection
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        terrelln@fb.com, Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        llvm@lists.linux.dev, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jul 20, 2022 at 03:45:51PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Sat, Jun 04, 2022 at 12:28:04PM +0800, Leo Yan escreveu:
-> > From: Ali Saidi <alisaidi@amazon.com>
-> > 
-> > Add a flag to the perf mem data struct to signal that a request caused a
-> > cache-to-cache transfer of a line from a peer of the requestor and
-> > wasn't sourced from a lower cache level.  The line being moved from one
-> > peer cache to another has latency and performance implications. On Arm64
-> > Neoverse systems the data source can indicate a cache-to-cache transfer
-> > but not if the line is dirty or clean, so instead of overloading HITM
-> > define a new flag that indicates this type of transfer.
-> > 
-> > Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> > Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
-> 
-> Hey, any knews about this going upstream? PeterZ?
+On Tue, 19 Jul 2022 at 18:06, Roberto Sassu <roberto.sassu@huawei.com> wrote:
+>
+> Commit 6e8ccb4f624a7 ("tools/bpf: properly account for libbfd variations")
+> sets the linking flags depending on which flavor of the libbfd feature was
+> detected.
+>
+> However, the flavors except libbfd cannot be detected, as they are not in
+> the feature list.
+>
+> Complete the list of features to detect by adding libbfd-liberty and
+> libbfd-liberty-z.
+>
+> Fixes: 6e8ccb4f624a7 ("tools/bpf: properly account for libbfd variations")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> ---
+>  tools/bpf/bpftool/Makefile | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> index 6b5b3a99f79d..4b09a5c3b9f1 100644
+> --- a/tools/bpf/bpftool/Makefile
+> +++ b/tools/bpf/bpftool/Makefile
+> @@ -93,8 +93,10 @@ INSTALL ?= install
+>  RM ?= rm -f
+>
+>  FEATURE_USER = .bpftool
+> -FEATURE_TESTS = libbfd disassembler-four-args libcap clang-bpf-co-re
+> -FEATURE_DISPLAY = libbfd disassembler-four-args libcap clang-bpf-co-re
+> +FEATURE_TESTS = libbfd libbfd-liberty libbfd-liberty-z \
+> +               disassembler-four-args libcap clang-bpf-co-re
+> +FEATURE_DISPLAY = libbfd libbfd-liberty libbfd-liberty-z \
+> +                 disassembler-four-args libcap clang-bpf-co-re
 
-Just took a look and it isn't in tip/master.
-
-- Arnaldo
- 
-> > ---
-> >  include/uapi/linux/perf_event.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> > index d37629dbad72..7b88bfd097dc 100644
-> > --- a/include/uapi/linux/perf_event.h
-> > +++ b/include/uapi/linux/perf_event.h
-> > @@ -1310,7 +1310,7 @@ union perf_mem_data_src {
-> >  #define PERF_MEM_SNOOP_SHIFT	19
-> >  
-> >  #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
-> > -/* 1 free */
-> > +#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
-> >  #define PERF_MEM_SNOOPX_SHIFT  38
-> >  
-> >  /* locked instruction */
-> > -- 
-> > 2.25.1
-> 
-> -- 
-> 
-> - Arnaldo
-
--- 
-
-- Arnaldo
+Do you know if there is a way to fold the different feature-libbfd-*
+features into a single one for FEATURE_DISPLAY? Or should the various
+features be all moved under feature-libbfd with multiple attempts,
+like you did for disassembler-four-args in patch 1? My concern is that
+users may think some features could be missing when they compile and
+see that detection fails for some items.
