@@ -2,206 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8821DCCA485
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 10:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F157C43334
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 12:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240449AbiGTKyV (ORCPT
+        id S240667AbiGTMeh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Jul 2022 06:54:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37972 "EHLO
+        Wed, 20 Jul 2022 08:34:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240174AbiGTKyM (ORCPT
+        with ESMTP id S240392AbiGTMeg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Jul 2022 06:54:12 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C95146D2CF
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Jul 2022 03:54:10 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id by8so17056157ljb.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Jul 2022 03:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H2liMUhwFLnqblQWVp0+sHkDyBEAsE7r1d29yfl1OwY=;
-        b=ds4nGn7g1cZVWp7jhlV5N1NY02wW5Q8UnPUG1WHCgVhPAf+VFoLzeQ4k0u2FTPwbcW
-         i4O0CJEQEAoYOMaJcLfraX6bLPS+DmXLx5KPuzYD5D5XQpCWE/J1EHv+H1zmrpVL7L1a
-         O3OEacpE2rSGJ5m/IellUPzvnVg27yYOdwEaBSctJUo+44mttt4Jw72a35a0vrnSiap/
-         /LW8/1QLxQwpgMVNiozRTO8xkTycDwXS21Ch+fInSdn98ATu6bx4JwDJbfjgSs1GS9fv
-         icnTuX8QaOqVAWIy7NuQGyS+J1X+I8FgyVS8tpYRZt1/oslksKFbMw8gyMf/idr+CE4N
-         Lj/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H2liMUhwFLnqblQWVp0+sHkDyBEAsE7r1d29yfl1OwY=;
-        b=j7+TJy44T2WwA6/LkEwRJhhThUk48q19Uanc3Ku+mHx+pzCrnSbZ0xGhf01CpLUTrg
-         Rw9iBvfPBDCDfSdfRK+a4cppyCK3Nr6SG5H0780vDLHMngF5ouxlRyHKU4o+39BuCKbn
-         V6f4chEhrA+WEZ645X5cnr3K+3NFV8uvfox+1HyMHPAvQULuqLvejU8xtLLyfN/v3bLe
-         SmQEcJaVgCJsuheC8sU62oM/U62yUimT3+Jg/fz2OR0U86g1eaYGggNqcWOOI0XMium6
-         CbT000/BWf6pQ1ybX05P3Gx9YcnD7PW7+mJTcujSlP229W7Miaj2KxsxBXnlI7A4DRWu
-         lg6g==
-X-Gm-Message-State: AJIora8TQXwcVlLjHTPScL4lpfdK0OmDdj6uFlfjSn4cEPbMzOe5XH/V
-        MIRjDME7HkyKVInQxVaEil+6ptWbTpRMbaSwsxi1iQ==
-X-Google-Smtp-Source: AGRyM1tZtNdan8cMpa7GNKg2eZfKn/Z8LOI40xG7Wuh6cnAsxGvaIZ5YS/kVzCd0qN7L2HqkbsksXCZorqEmzvUlK0c=
-X-Received: by 2002:a05:651c:2102:b0:25a:42ee:49ae with SMTP id
- a2-20020a05651c210200b0025a42ee49aemr16476079ljq.200.1658314449047; Wed, 20
- Jul 2022 03:54:09 -0700 (PDT)
+        Wed, 20 Jul 2022 08:34:36 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922774D80E;
+        Wed, 20 Jul 2022 05:34:34 -0700 (PDT)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26KCCMs2007142;
+        Wed, 20 Jul 2022 12:34:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=vhtEJn21eo8aYWBOVpeGrs5Xb93mVfeDzHtVpcJ/6A4=;
+ b=s7dkmRUHx0RBy/CbFm0Vy8iyPbv6x8FGs6e/QQVTng3SyVouAvkElGqosK6tgIerTwFZ
+ nkpLIbPTgwfFWiXYgWs5ccpP15nzfPrk9lnflSlHWYSQseyjqycSt+3zIeZt9Cc7d+Gi
+ 9NPZ+pPHV98Tr7od+LKPK7db3nXaB3rw5dJchN8YcpVxsmb8wbXeg4qI8IusJZ3Faivw
+ fp4apyBwpIW2d+yCxTYQpyjkftfZdXgfldS4rfnNariQCsdWlThogZtZHZem6giPq6NY
+ 5H/kAH6LG+OPSBTpn/BvFAWVJBicGYY66500cDjkxqewBOdDpd+ZMUaIN0i46VZYB6u0 IQ== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hehggrnh9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Jul 2022 12:34:32 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26KCL5qo019597;
+        Wed, 20 Jul 2022 12:34:29 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04fra.de.ibm.com with ESMTP id 3hbmy8m8hy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Jul 2022 12:34:29 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26KCYQYX18481644
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Jul 2022 12:34:26 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7ACD0A405B;
+        Wed, 20 Jul 2022 12:34:26 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39268A4054;
+        Wed, 20 Jul 2022 12:34:26 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Jul 2022 12:34:26 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/tests: Fix test case 83 on s390
+Date:   Wed, 20 Jul 2022 14:34:19 +0200
+Message-Id: <20220720123419.220953-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220704081149.16797-1-mike.leach@linaro.org> <20220704081149.16797-13-mike.leach@linaro.org>
- <312bce37-8201-e0a7-0122-77ec1ebef556@arm.com>
-In-Reply-To: <312bce37-8201-e0a7-0122-77ec1ebef556@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 20 Jul 2022 11:53:58 +0100
-Message-ID: <CAJ9a7VjG_dRdH63UnwEABoPQ4ofVKuvAU=TrQHcUrpt9gQa2bg@mail.gmail.com>
-Subject: Re: [PATCH v2 12/13] coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID
- used for Trace ID
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: avLJUI8fbXOMuwMSFkUrFMUIyqPNlBDX
+X-Proofpoint-ORIG-GUID: avLJUI8fbXOMuwMSFkUrFMUIyqPNlBDX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-20_05,2022-07-20_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
+ clxscore=1015 bulkscore=0 suspectscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
+ definitions=main-2207200051
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Suzuki,
+Perf test case 83: perf stat CSV output linter might fail
+on s390.
+The reason for this is the output of the command
 
-On Wed, 20 Jul 2022 at 10:30, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> On 04/07/2022 09:11, Mike Leach wrote:
-> > Use the perf_report_aux_output_id() call to output the CoreSight trace ID
-> > and associated CPU as a PERF_RECORD_AUX_OUTPUT_HW_ID record in the
-> > perf.data file.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > ---
-> >   drivers/hwtracing/coresight/coresight-etm-perf.c | 10 ++++++++++
-> >   include/linux/coresight-pmu.h                    | 14 ++++++++++++++
-> >   2 files changed, 24 insertions(+)
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > index ad3fdc07c60b..531f5d42272b 100644
-> > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > @@ -4,6 +4,7 @@
-> >    * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >    */
-> >
-> > +#include <linux/bitfield.h>
-> >   #include <linux/coresight.h>
-> >   #include <linux/coresight-pmu.h>
-> >   #include <linux/cpumask.h>
-> > @@ -437,6 +438,7 @@ static void etm_event_start(struct perf_event *event, int flags)
-> >       struct perf_output_handle *handle = &ctxt->handle;
-> >       struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
-> >       struct list_head *path;
-> > +     u64 hw_id;
-> >
-> >       if (!csdev)
-> >               goto fail;
-> > @@ -482,6 +484,11 @@ static void etm_event_start(struct perf_event *event, int flags)
-> >       if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
-> >               goto fail_disable_path;
-> >
-> > +     /* output cpu / trace ID in perf record */
-> > +     hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, CS_AUX_HW_ID_CURR_VERSION) |
-> > +             FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, coresight_trace_id_get_cpu_id(cpu));
-> > +     perf_report_aux_output_id(event, hw_id);
-> > +
-> >   out:
-> >       /* Tell the perf core the event is alive */
-> >       event->hw.state = 0;
-> > @@ -600,6 +607,9 @@ static void etm_event_stop(struct perf_event *event, int mode)
-> >
-> >       /* Disabling the path make its elements available to other sessions */
-> >       coresight_disable_path(path);
-> > +
-> > +     /* release the trace ID we read on event start */
-> > +     coresight_trace_id_put_cpu_id(cpu);
-> >   }
-> >
-> >   static int etm_event_add(struct perf_event *event, int mode)
-> > diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-> > index 9f7ee380266b..5572d0e10822 100644
-> > --- a/include/linux/coresight-pmu.h
-> > +++ b/include/linux/coresight-pmu.h
-> > @@ -7,6 +7,8 @@
-> >   #ifndef _LINUX_CORESIGHT_PMU_H
-> >   #define _LINUX_CORESIGHT_PMU_H
-> >
-> > +#include <linux/bits.h>
-> > +
-> >   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
-> >
-> >   /*
-> > @@ -38,4 +40,16 @@
-> >   #define ETM4_CFG_BIT_RETSTK 12
-> >   #define ETM4_CFG_BIT_VMID_OPT       15
-> >
-> > +/*
-> > + * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
-> > + * Used to associate a CPU with the CoreSight Trace ID.
-> > + * [63:16] - unused SBZ
-> > + * [15:08] - Trace ID
-> > + * [07:00] - Version
->
-> Could we please re-arrange the fields, such that it is easier to
-> comprehend the TraceID looking at the raw trace dump ? Also to
-> accommodate the future changes.
->
-> e.g,
->        [15:00] - Trace ID        /* For future expansion, if at all */
->        [59:16] - RES0
->        [63:60] - Trace_ID_Version
->
-> I think we *might* (not sure yet) end up adding "sinkid" when we have
-> sink specific allocation, so that we can associate the HW_ID of an event
-> to the "AUXTRACE" record (i.e., trace buffer).
->
+ ./perf stat -x, -A -a --no-merge true
 
-If we go to per sink trace ID maps, then I can't see how we could
-avoid needing some sort of ID in here, unless we can determine some
-other method of specifying which CPUs traced into which trace buffer.
+which depends on a .config file setting. When CONFIG_SCHED_TOPOLOGY
+is set, the output of above perf command is
 
-> So if we need to do that we could:
->
->        [15:00] - Trace ID        /* For future expansion, if at all */
->        [47:16] - Trace Pool ID( == 0 if global, == sink_id if sink based)
->        [59:48] - RES0
->        [63:60] - Trace_ID_Version == 1
->
-> Or we could adopt the above straight away.
->
+   CPU0,1.50,msec,cpu-clock,1502781,100.00,1.052,CPUs utilized
 
-I wouldn't want to commit to a size for the sink ID yet. And I would
-leave trace ID at what it is for now (8 bits).
-Make the fields represent what is and up-version and update when
-changes are actually required.
-I think this packet may be a candidate for delivering other trace
-related info we may need in future - such as the timestamp source that
-is being worked on?
+When CONFIG_SCHED_TOPOLOGY is *NOT* set the output of above perf
+command is
 
-Mike
+   0.95,msec,cpu-clock,949800,100.00,1.060,CPUs utilized
 
-> Thoughts ?
->
-> Suzuki
->
-> > + */
-> > +#define CS_AUX_HW_ID_VERSION_MASK    GENMASK_ULL(7, 0)
-> > +#define CS_AUX_HW_ID_TRACE_ID_MASK   GENMASK_ULL(15, 8)
-> > +
-> > +#define CS_AUX_HW_ID_CURR_VERSION 0
->
->
-> > +
-> >   #endif
->
+Fix the test case to accept both output formats.
 
+Output before:
+ # perf test 83
+ 83: perf stat CSV output linter       : FAILED!
+ #
 
+Output after:
+ # ./perf test 83
+ 83: perf stat CSV output linter       : Ok
+ #
+
+Fixes: ec906102e5b7 ("perf test: Fix "perf stat CSV output linter" test on s390")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ tools/perf/tests/shell/stat+csv_output.sh | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+index 38c26f3ef4c1..eb5196f58190 100755
+--- a/tools/perf/tests/shell/stat+csv_output.sh
++++ b/tools/perf/tests/shell/stat+csv_output.sh
+@@ -8,7 +8,8 @@ set -e
+ 
+ function commachecker()
+ {
+-	local -i cnt=0 exp=0
++	local -i cnt=0
++	local exp=0
+ 
+ 	case "$1"
+ 	in "--no-args")		exp=6
+@@ -17,7 +18,7 @@ function commachecker()
+ 	;; "--interval")	exp=7
+ 	;; "--per-thread")	exp=7
+ 	;; "--system-wide-no-aggr")	exp=7
+-				[ $(uname -m) = "s390x" ] && exp=6
++				[ $(uname -m) = "s390x" ] && exp='^[6-7]$'
+ 	;; "--per-core")	exp=8
+ 	;; "--per-socket")	exp=8
+ 	;; "--per-node")	exp=8
+@@ -34,7 +35,7 @@ function commachecker()
+ 		x=$(echo $line | tr -d -c ',')
+ 		cnt="${#x}"
+ 		# echo $line $cnt
+-		[ "$cnt" -ne "$exp" ] && {
++		[[ ! "$cnt" =~ $exp ]] && {
+ 			echo "wrong number of fields. expected $exp in $line" 1>&2
+ 			exit 1;
+ 		}
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.36.1
+
