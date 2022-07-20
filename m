@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD659C433EF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 15:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9799C433EF
+	for <linux-perf-users@archiver.kernel.org>; Wed, 20 Jul 2022 15:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbiGTPKH (ORCPT
+        id S240992AbiGTPST (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 20 Jul 2022 11:10:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45194 "EHLO
+        Wed, 20 Jul 2022 11:18:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbiGTPKF (ORCPT
+        with ESMTP id S229480AbiGTPSS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 20 Jul 2022 11:10:05 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9B7656B83
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Jul 2022 08:10:03 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id f24-20020a1cc918000000b003a30178c022so1542209wmb.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Jul 2022 08:10:03 -0700 (PDT)
+        Wed, 20 Jul 2022 11:18:18 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A1A599C6
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Jul 2022 08:18:17 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id z12so26602016wrq.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Jul 2022 08:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KWDeKfuhQeqBTNEdFLuO0VKc5GBQc44071+voXhaV/0=;
-        b=kRENxg0s227zlckuCwTrZbl1CjQZk+Py9cqyB+mVr+3cizzIbNfUVUFBw1NOa753TO
-         JiE0mWHxiG2evp1TpS5ZyME++M2ZWqok3qjzeu66t/sQber0KOwfk/neYjwLhdxWbHpU
-         GtNAJEIpS6+DEXwWesmm0dRqEamIovT3djRd7CNrrUqHZPWLhMxP23upbpRI2XknlZ8r
-         xq5lhNH7WhpXVLUh22HCPUAcBglmS4ubvTEMSce0DmrSmGiosu/ePnsksVbl0xLQ9BDV
-         C8xkMnZXZmd/8Z5AGfLTGNT1/wy3BdZm7q5dPyNMQME3NuX+HDlnIHxDoSUkhtHpC+NZ
-         8WPw==
+        bh=XtdCkh5Q9N9knOQNFgtdwyolXJKWft8+CGVuOwEKrH0=;
+        b=tXiU4nSLjpcwpnSJcnt+toLSKL9QSNSCughUnC0e5eI2eeGOGW2fKp6opZwLKyILVX
+         KUV/t+k5DrYVj5dEbntiEe51DmuZGoY/dDGN9d2osYo6W34yk5hJbHf9LgWfpwJtwaad
+         kHJQuFWg/nT55LlisCMEmKrh8jnRXwxWge20GX98gg07Hbl8lwLI8ZhZgrQjeQJhLngq
+         sLc/ojYAKiWsc5KtjNfrk7OT6TA84lGG0chpYhkzXEcWDhYvspDn2A7VMs5dskIbmtPA
+         m5jg/8wDZriLDkAZjDLtcs3cNB6GSftvfjyjG4II7yhq9fY4q4a40/S2sfiS+McWnNQ+
+         /2ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KWDeKfuhQeqBTNEdFLuO0VKc5GBQc44071+voXhaV/0=;
-        b=NS/XeSKlYBvce36sYfIq49wo92SkDpTNMumI4enu44ezf6HH633xWLYhqS1GW4xMXj
-         GzBOdnNpoe32jS0edrvxfoGaICaLHDxvpXkpcOqWdtlw+mHTqBKR8iHe+mq5ag+4ziGS
-         /tqaM6+DYMwc0QkOMgoqqmNRZJZ4B0bohgN4aFAsLSXgVg19jL+RMV4nj4uNGRfZ7AVi
-         1FqSHtLMkuJlF0QBs/gnImKl2aNOO5rRhUQwS5RiOpWvTI+qd66YnwRy3Fq7q2t+58d+
-         QN+kAIpJ1kjXdKbqIoMMuT1g0B9p+VfOBO//9YzXJIJjfGrS+K0SZujJ/woi40KfQ5JO
-         7fwg==
-X-Gm-Message-State: AJIora8DhYL/TIYJrSWTUTZUMu5M0dR0F1ctU4NN3XPsJgiqGLLZPKEn
-        oOe5Vx5B6fQeO4EPHsrgP7fg0vvE7ZTeB33tt0YU8A==
-X-Google-Smtp-Source: AGRyM1s/WLa1ybrSkaUpUHrng9eyqNR75+67EtfVaxMtLS4ZAd9QEs4dwUdo+oB6YRkfOS2KTJc1mVpsO6HcN+EJS0w=
-X-Received: by 2002:a05:600c:19d2:b0:3a3:2cdb:cc02 with SMTP id
- u18-20020a05600c19d200b003a32cdbcc02mr1824874wmq.182.1658329802240; Wed, 20
- Jul 2022 08:10:02 -0700 (PDT)
+        bh=XtdCkh5Q9N9knOQNFgtdwyolXJKWft8+CGVuOwEKrH0=;
+        b=yhRZdv6IvLQl2GQdk7C42OUFbkGH3Jrcx0/MM67ChyMIYCf6k6LoO/lFGkQ/EGmCl5
+         66Pjd9IptgA5kTuLPeYRe4CFM5uq/j4nA6DHC8rOLYp8Yg8ZNkJKibq6rOXEZycKmeqK
+         fGBnwfaXvcXxyTBAQdg+0/lK7T6Zav6lZ/5LoHMAEKh6lZgK916bTg27puqcLQUxbxGX
+         x0gkr89rZHMAnOiopV29bENofyNat9aI79QCon2QrmTL3VkQa7vaVjBP9bv2SGkrVHZJ
+         piNhrLg6+Hi+QFMZ2YCNQ254/LYMFWGDTD0jqrPnydl3ekJFiD5IwzzipBc0EzyK6ssQ
+         87Ig==
+X-Gm-Message-State: AJIora+VgiM3S5GNEbLIbakVPsafG5tcsIDCX4CoLUSdT4u91ayZAnc1
+        XDSvrcFvqPHZWQUDuIqz8U53Inlid+a2ZZ3cBPkSBA==
+X-Google-Smtp-Source: AGRyM1t/1aPyh24DcDcKsSeznYH68QBBjLFKbWUi9XLEvmBhoG5IcdTdq+tu0w5B6sTghlijMhxmXxFCGFPIWjkN4Sc=
+X-Received: by 2002:a05:6000:8e:b0:21d:7e97:67ed with SMTP id
+ m14-20020a056000008e00b0021d7e9767edmr30000082wrx.343.1658330296042; Wed, 20
+ Jul 2022 08:18:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220719223946.176299-1-irogers@google.com> <20220719223946.176299-4-irogers@google.com>
- <b17c9045-80be-f658-d362-f13040ac9484@maine.edu>
-In-Reply-To: <b17c9045-80be-f658-d362-f13040ac9484@maine.edu>
+References: <20220719223946.176299-1-irogers@google.com> <20220719223946.176299-2-irogers@google.com>
+ <ef5125e0-8265-8c16-e904-c95c8ddc2754@maine.edu>
+In-Reply-To: <ef5125e0-8265-8c16-e904-c95c8ddc2754@maine.edu>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 20 Jul 2022 08:09:50 -0700
-Message-ID: <CAP-5=fWFCtXmGukRg2ZDd5Rtf2mzKQ_+fgOrRnOXjD-K13bm0A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] perf test: Add user space counter reading tests
+Date:   Wed, 20 Jul 2022 08:18:04 -0700
+Message-ID: <CAP-5=fVU17DxzdOvr0aob6G4HvjianSuWW4Q-QRWQV=Kd8_+jw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] perf: Align user space counter reading with code
 To:     Vince Weaver <vincent.weaver@maine.edu>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,32 +74,78 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 7:57 AM Vince Weaver <vincent.weaver@maine.edu> wrote:
+On Wed, Jul 20, 2022 at 8:06 AM Vince Weaver <vincent.weaver@maine.edu> wrote:
 >
 > On Tue, 19 Jul 2022, Ian Rogers wrote:
 >
-> > These tests are based on test_stat_user_read in
-> > tools/lib/perf/tests/test-evsel.c. The tests are modified to skip if
-> > perf_event_open fails or rdpmc isn't supported.
+> > Align the user space counter reading documentation with the code in
+> > perf_mmap__read_self. Previously the documentation was based on the perf
+> > rdpmc test, but now general purpose code is provided by libperf.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  include/uapi/linux/perf_event.h       | 35 +++++++++++++++++----------
+> >  tools/include/uapi/linux/perf_event.h | 35 +++++++++++++++++----------
+> >  2 files changed, 44 insertions(+), 26 deletions(-)
+> >
+> > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> > index d37629dbad72..6826dabb7e03 100644
+> > --- a/include/uapi/linux/perf_event.h
+> > +++ b/include/uapi/linux/perf_event.h
+> > @@ -538,9 +538,13 @@ struct perf_event_mmap_page {
+> >        *
+> >        *     if (pc->cap_usr_time && enabled != running) {
+> >        *       cyc = rdtsc();
+> > -      *       time_offset = pc->time_offset;
+> >        *       time_mult   = pc->time_mult;
+> >        *       time_shift  = pc->time_shift;
+> > +      *       time_offset = pc->time_offset;
+> > +      *       if (pc->cap_user_time_short) {
+> > +      *         time_cycles = pc->time_cycles;
+> > +      *         time_mask = pc->time_mask;
+> > +      *       }
 >
-> > +             .type   = PERF_TYPE_HARDWARE,
-> > +             .config = event,
-> > +#ifdef __aarch64__
-> > +             .config1 = 0x2,         /* Request user access */
-> > +#endif
+> From what I've been told, and from what perf_mmap__read_self() actually
+> does, many of these MMAP fields need to be accessed by READ_ONCE()
+> (a GPLv2 only interface) to be correct.
 >
-> should this value have a name rather than being a "magic constant"?
+> Should we update perf_event.h to reflect this?  Otherwise it's confusing
+> when the actual code and the documentation in the header don't match like
+> this.  As an example, see the actual code snippets from
+> perf_mmap__read_self()
+>
+>                 seq = READ_ONCE(pc->lock);
+>                 barrier();
+>
+>                 count->ena = READ_ONCE(pc->time_enabled);
+>                 count->run = READ_ONCE(pc->time_running);
+>
+>                 if (pc->cap_user_time && count->ena != count->run) {
+>                         cyc = read_timestamp();
+>                         time_mult = READ_ONCE(pc->time_mult);
+>                         time_shift = READ_ONCE(pc->time_shift);
+>                         time_offset = READ_ONCE(pc->time_offset);
+>
+>                         if (pc->cap_user_time_short) {
+>                                 time_cycles = READ_ONCE(pc->time_cycles);
+>                                 time_mask = READ_ONCE(pc->time_mask);
+>                         }
+>                 }
+>
+>                 idx = READ_ONCE(pc->index);
+>                 cnt = READ_ONCE(pc->offset);
+>
+> ...
 
-Thanks! Firstly, this is just moving code around and so not a
-regression introduced by this code:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/tests/test-evsel.c?h=perf/core#n134
-I don't believe there is an existing constant for this purpose. The
-kernel isn't using one either:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/kernel/perf_event.c#n309
-
-So I agree with you and hopefully this is something ARM will clean up.
+Thanks! So I think what this patch proposes is an improvement,
+specifically it aligns it better with the code and deals with the
+divide by zero. I think what you're asking for makes sense but as you
+point out READ_ONCE probably isn't the correct API for something
+outside the kernel. Given the kernel is now C11:
+https://lwn.net/Articles/885941/
+This opens the possibility of using stdatomic.h, so perhaps we can
+move these variables to more correct atomic types. So, I think we can
+land this and worry about the atomic API in a follow up.
 
 Thanks,
 Ian
