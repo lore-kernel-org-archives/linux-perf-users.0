@@ -2,153 +2,450 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FC9C433EF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Jul 2022 10:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24A6C433EF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Jul 2022 12:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233252AbiGUK2D (ORCPT
+        id S233617AbiGUMi3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 21 Jul 2022 06:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54988 "EHLO
+        Thu, 21 Jul 2022 08:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233276AbiGUK14 (ORCPT
+        with ESMTP id S233143AbiGUMi3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Jul 2022 06:27:56 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 904E2823BC;
-        Thu, 21 Jul 2022 03:27:53 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D53E71042;
-        Thu, 21 Jul 2022 03:27:53 -0700 (PDT)
-Received: from [10.57.41.123] (unknown [10.57.41.123])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2475C3F70D;
-        Thu, 21 Jul 2022 03:27:49 -0700 (PDT)
-Message-ID: <0b493b49-2657-ad5d-465e-d80b62820613@arm.com>
-Date:   Thu, 21 Jul 2022 11:27:47 +0100
+        Thu, 21 Jul 2022 08:38:29 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDE55B7AC
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Jul 2022 05:38:27 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id z13so1250110ljj.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Jul 2022 05:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N+uyyggTuItHq/CCOgAWB5HeaeiP2kHquA06AVT40Kk=;
+        b=NXhQ6dakz+yQ+NazPO5krx/T0KEhWYDd/aZvNFFn2YUAgYv7/+nu/TvmWl4QbHtnPp
+         4THteswhrvk8mcGdj/pwFUOLOb+x1XJYjcN063sZN8+8ZNXOqyKMVpgD5PUuDg4kZ6Td
+         LGcLYZNI+Gjbo1WNV1ReUa+GPmtBoOQgfGOnz0L2e0piyansbdpfV/s6Xs1c6wvlAx5u
+         BblLAvRnGSjN0WaPSc4fBY7VAJotkqRAsP8peZS5lkQDznrEcopsh5viO1BMnaqzi8gU
+         2Qxqe+hlfi6ORjwXo19PqjY2YMg7dcNdM2DhimSp5yGmvVtipAmqC6ruaW/+WToTs8tO
+         AI8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N+uyyggTuItHq/CCOgAWB5HeaeiP2kHquA06AVT40Kk=;
+        b=E1ybyBjxAQB8WhKI+rDrtEFJ0nkI8abjvf1FAM3lxt+/HWA+BckFDcLoDvDatI9bwD
+         98ZY+PtJhzBaZ8Zir/7j193F4eKHUkcHF+PZAq0RlKW1z8S4T5XVKNXmpTcb+QbD+2s6
+         vmciIipaPXrgHM8fRAV5gMGl6lZ3LULxZ0HQBxddSxVE6taQzYqqbvEizM6YS9TQNGgL
+         W1XCAvu3iVf5UzyYRagb5kCcMJ5Ln1WOkQR1m3AFPqg6CgjJtcMBgVWLetwRHGsHVWRd
+         /eLHEn5ruKTtVCCp5wHaTWCpEUzoMUo3oXWu9j8v9D75T2Jau4W7Ng01VL4n+F2x1ZmO
+         ytMQ==
+X-Gm-Message-State: AJIora8GOUfnHSAxDwnVxRV+89ukq0FQF4iXVVNcnhlyYJhC+mti9I9X
+        XDRgnamc9Ry35h3joop8qvBTQ4Pucg9XlyBNY0xmKQ==
+X-Google-Smtp-Source: AGRyM1sWtbCGS1G55yzHVF0AwYP+Mgip07ZJBNcMZlkvHME/Tuii9pXWAsRql5o94BXw230uPMpnBL9q2JQ9zEQgNxI=
+X-Received: by 2002:a2e:895a:0:b0:25d:6815:98ff with SMTP id
+ b26-20020a2e895a000000b0025d681598ffmr18037485ljk.189.1658407105766; Thu, 21
+ Jul 2022 05:38:25 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 00/13] coresight: Add new API to allocate trace source
- ID values
-Content-Language: en-US
-To:     Mike Leach <mike.leach@linaro.org>
+References: <20220704081149.16797-1-mike.leach@linaro.org> <20220704081149.16797-12-mike.leach@linaro.org>
+ <c7e0acdf-61d8-e442-50aa-9cf7e8a71c0e@arm.com>
+In-Reply-To: <c7e0acdf-61d8-e442-50aa-9cf7e8a71c0e@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Thu, 21 Jul 2022 13:38:14 +0100
+Message-ID: <CAJ9a7VjKnLz43YpGg0_uynTWN-+5uCMT-_rQTzn6ynFRqZm0Vg@mail.gmail.com>
+Subject: Re: [PATCH v2 11/13] perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID
+ packet
+To:     James Clark <james.clark@arm.com>
 Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
         acme@kernel.org, linux-perf-users@vger.kernel.org,
         quic_jinlmao@quicinc.com, suzuki.poulose@arm.com,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-References: <20220704081149.16797-1-mike.leach@linaro.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220704081149.16797-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi James
+
+On Wed, 20 Jul 2022 at 17:07, James Clark <james.clark@arm.com> wrote:
+>
+>
+>
+> On 04/07/2022 09:11, Mike Leach wrote:
+> > When using dynamically assigned CoreSight trace IDs the drivers can output
+> > the ID / CPU association as a PERF_RECORD_AUX_OUTPUT_HW_ID packet.
+> >
+> > Update cs-etm decoder to handle this packet by setting the CPU/Trace ID
+> > mapping.
+> >
+> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > ---
+> >  tools/include/linux/coresight-pmu.h           |  14 ++
+> >  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   9 +
+> >  tools/perf/util/cs-etm.c                      | 167 +++++++++++++++++-
+> >  3 files changed, 185 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/include/linux/coresight-pmu.h b/tools/include/linux/coresight-pmu.h
+> > index 31d007fab3a6..4e8b3148f939 100644
+> > --- a/tools/include/linux/coresight-pmu.h
+> > +++ b/tools/include/linux/coresight-pmu.h
+> > @@ -7,6 +7,8 @@
+> >  #ifndef _LINUX_CORESIGHT_PMU_H
+> >  #define _LINUX_CORESIGHT_PMU_H
+> >
+> > +#include <linux/bits.h>
+> > +
+> >  #define CORESIGHT_ETM_PMU_NAME "cs_etm"
+> >
+> >  /*
+> > @@ -40,4 +42,16 @@
+> >  #define ETM4_CFG_BIT_RETSTK  12
+> >  #define ETM4_CFG_BIT_VMID_OPT        15
+> >
+> > +/*
+> > + * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
+> > + * Used to associate a CPU with the CoreSight Trace ID.
+> > + * [63:16] - unused SBZ
+> > + * [15:08] - Trace ID
+> > + * [07:00] - Version
+> > + */
+> > +#define CS_AUX_HW_ID_VERSION_MASK    GENMASK_ULL(7, 0)
+> > +#define CS_AUX_HW_ID_TRACE_ID_MASK   GENMASK_ULL(15, 8)
+> > +
+> > +#define CS_AUX_HW_ID_CURR_VERSION 0
+> > +
+> >  #endif
+> > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > index 31fa3b45134a..d1dd73310707 100644
+> > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > @@ -611,6 +611,8 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+> >       return resp;
+> >  }
+> >
+> > +#define CS_TRACE_ID_MASK GENMASK(6, 0)
+> > +
+> >  static int
+> >  cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
+> >                                  struct cs_etm_trace_params *t_params,
+> > @@ -625,6 +627,7 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
+> >       switch (t_params->protocol) {
+> >       case CS_ETM_PROTO_ETMV3:
+> >       case CS_ETM_PROTO_PTM:
+> > +             csid = (t_params->etmv3.reg_idr & CS_TRACE_ID_MASK);
+> >               cs_etm_decoder__gen_etmv3_config(t_params, &config_etmv3);
+> >               decoder->decoder_name = (t_params->protocol == CS_ETM_PROTO_ETMV3) ?
+> >                                                       OCSD_BUILTIN_DCD_ETMV3 :
+> > @@ -632,11 +635,13 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
+> >               trace_config = &config_etmv3;
+> >               break;
+> >       case CS_ETM_PROTO_ETMV4i:
+> > +             csid = (t_params->etmv4.reg_traceidr & CS_TRACE_ID_MASK);
+> >               cs_etm_decoder__gen_etmv4_config(t_params, &trace_config_etmv4);
+> >               decoder->decoder_name = OCSD_BUILTIN_DCD_ETMV4I;
+> >               trace_config = &trace_config_etmv4;
+> >               break;
+> >       case CS_ETM_PROTO_ETE:
+> > +             csid = (t_params->ete.reg_traceidr & CS_TRACE_ID_MASK);
+> >               cs_etm_decoder__gen_ete_config(t_params, &trace_config_ete);
+> >               decoder->decoder_name = OCSD_BUILTIN_DCD_ETE;
+> >               trace_config = &trace_config_ete;
+> > @@ -645,6 +650,10 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
+> >               return -1;
+> >       }
+> >
+> > +     /* if the CPU has no trace ID associated, no decoder needed */
+> > +     if (csid == CS_UNUSED_TRACE_ID)
+> > +             return 0;
+> > +
+> >       if (d_params->operation == CS_ETM_OPERATION_DECODE) {
+> >               if (ocsd_dt_create_decoder(decoder->dcd_tree,
+> >                                          decoder->decoder_name,
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index df9d67901f8d..ffce858f21fd 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -217,6 +217,139 @@ static int cs_etm__map_trace_id(u8 trace_chan_id, u64 *cpu_metadata)
+> >       return 0;
+> >  }
+> >
+> > +static int cs_etm__metadata_get_trace_id(u8 *trace_chan_id, u64 *cpu_metadata)
+> > +{
+> > +     u64 cs_etm_magic = cpu_metadata[CS_ETM_MAGIC];
+> > +
+> > +     switch (cs_etm_magic) {
+> > +     case __perf_cs_etmv3_magic:
+> > +             *trace_chan_id = cpu_metadata[CS_ETM_ETMTRACEIDR];
+> > +             break;
+> > +     case __perf_cs_etmv4_magic:
+> > +     case __perf_cs_ete_magic:
+> > +             *trace_chan_id = cpu_metadata[CS_ETMV4_TRCTRACEIDR];
+> > +             break;
+> > +
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> > +static int cs_etm__metadata_set_trace_id(u8 trace_chan_id, u64 *cpu_metadata)
+> > +{
+> > +     u64 cs_etm_magic = cpu_metadata[CS_ETM_MAGIC];
+> > +
+> > +     switch (cs_etm_magic) {
+> > +     case __perf_cs_etmv3_magic:
+> > +              cpu_metadata[CS_ETM_ETMTRACEIDR] = trace_chan_id;
+> > +             break;
+> > +     case __perf_cs_etmv4_magic:
+> > +     case __perf_cs_ete_magic:
+> > +             cpu_metadata[CS_ETMV4_TRCTRACEIDR] = trace_chan_id;
+> > +             break;
+> > +
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> > +/*
+> > + * FIELD_GET (linux/bitfield.h) not available outside kernel code,
+> > + * and the header contains too many dependencies to just copy over,
+> > + * so roll our own based on the original
+> > + */
+> > +#define __bf_shf(x) (__builtin_ffsll(x) - 1)
+> > +#define FIELD_GET(_mask, _reg)                                               \
+> > +     ({                                                              \
+> > +             (typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask)); \
+> > +     })
+> > +> +/*
+> > + * Handle the PERF_RECORD_AUX_OUTPUT_HW_ID event.
+> > + *
+> > + * The payload associates the Trace ID and the CPU.
+> > + * The routine is tolerant of seeing multiple packets with the same association,
+> > + * but a CPU / Trace ID association changing during a session is an error.
+> > + */
+> > +static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
+> > +                                         union perf_event *event)
+> > +{
+> > +     struct cs_etm_auxtrace *etm;
+> > +     struct perf_sample sample;
+> > +     struct int_node *inode;
+> > +     struct evsel *evsel;
+> > +     u64 *cpu_data;
+> > +     u64 hw_id;
+> > +     int cpu, version, err;
+> > +     u8 trace_chan_id, curr_chan_id;
+> > +
+> > +     /* extract and parse the HW ID */
+> > +     hw_id = event->aux_output_hw_id.hw_id;
+> > +     version = FIELD_GET(CS_AUX_HW_ID_VERSION_MASK, hw_id);
+> > +     trace_chan_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
+> > +
+> > +     /* check that we can handle this version */
+> > +     if (version > CS_AUX_HW_ID_CURR_VERSION)
+> > +             return -EINVAL;
+> > +
+> > +     /* get access to the etm metadata */
+> > +     etm = container_of(session->auxtrace, struct cs_etm_auxtrace, auxtrace);
+> > +     if (!etm || !etm->metadata)
+> > +             return -EINVAL;
+> > +
+> > +     /* parse the sample to get the CPU */
+> > +     evsel = evlist__event2evsel(session->evlist, event);
+> > +     if (!evsel)
+> > +             return -EINVAL;
+> > +     err = evsel__parse_sample(evsel, event, &sample);
+> > +     if (err)
+> > +             return err;
+> > +     cpu = sample.cpu;
+> > +     if (cpu == -1) {
+> > +             /* no CPU in the sample - possibly recorded with an old version of perf */
+> > +             pr_err("CS_ETM: no CPU AUX_OUTPUT_HW_ID sample. Use compatible perf to record.");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     /*
+> > +      * look to see if the metadata contains a valid trace ID.
+> > +      * if so we mapped it before and it must be the same as the ID in the packet.
+> > +      */
+> > +     cpu_data = etm->metadata[cpu];
+> > +     err = cs_etm__metadata_get_trace_id(&curr_chan_id, cpu_data);
+> > +     if (err)
+> > +             return err;
+> > +     if (CS_IS_VALID_TRACE_ID(curr_chan_id) && (curr_chan_id != trace_chan_id)) {
+> > +             pr_err("CS_ETM: mismatch between CPU trace ID and HW_ID packet ID\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     /* next see if the ID is mapped to a CPU, and it matches the current CPU */
+> > +     inode = intlist__find(traceid_list, trace_chan_id);
+> > +     if (inode) {
+> > +             cpu_data = inode->priv;
+> > +             if ((int)cpu_data[CS_ETM_CPU] != cpu) {
+> > +                     pr_err("CS_ETM: map mismatch between HW_ID packet CPU and Trace ID\n");
+> > +                     return -EINVAL;
+> > +             }
+> > +             return 0;
+> > +     }
+> > +
+> > +     /* not one we've seen before - lets map it */
+> > +     err = cs_etm__map_trace_id(trace_chan_id, cpu_data);
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     /*
+> > +      * if we are picking up the association from the packet, need to plug
+> > +      * the correct trace ID into the metadata for setting up decoders later.
+> > +      */
+> > +     err = cs_etm__metadata_set_trace_id(trace_chan_id, cpu_data);
+> > +     return err;
+> > +}
+> > +
+> >  void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
+> >                                             u8 trace_chan_id)
+> >  {
+> > @@ -2433,6 +2566,8 @@ static int cs_etm__process_event(struct perf_session *session,
+> >               return cs_etm__process_itrace_start(etm, event);
+> >       else if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
+> >               return cs_etm__process_switch_cpu_wide(etm, event);
+> > +     else if (event->header.type ==  PERF_RECORD_AUX_OUTPUT_HW_ID)
+> > +             return cs_etm__process_aux_output_hw_id(session, event);
+>
+> This shouldn't need to be handled here because of the peek at the beginning. Although
+> it's probably harmless to do it twice, it can make deciphering the flow quite difficult.
+>
+Agreed - this was really belt and braces coding while I was testing -
+and where PT decoded it.
+Given the peek events this can be dropped next time.
+
+> >
+> >       if (!etm->timeless_decoding && event->header.type == PERF_RECORD_AUX) {
+> >               /*
+> > @@ -2662,7 +2797,7 @@ static void cs_etm__print_auxtrace_info(__u64 *val, int num)
+> >       for (i = CS_HEADER_VERSION_MAX; cpu < num; cpu++) {
+> >               if (version == 0)
+> >                       err = cs_etm__print_cpu_metadata_v0(val, &i);
+> > -             else if (version == 1)
+> > +             else if (version == 1 || version == 2)
+> >                       err = cs_etm__print_cpu_metadata_v1(val, &i);
+> >               if (err)
+> >                       return;
+> > @@ -2774,11 +2909,16 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+> >       }
+> >
+> >       /*
+> > -      * In per-thread mode, CPU is set to -1, but TID will be set instead. See
+> > -      * auxtrace_mmap_params__set_idx(). Return 'not found' if neither CPU nor TID match.
+> > +      * In per-thread mode, auxtrace CPU is set to -1, but TID will be set instead. See
+> > +      * auxtrace_mmap_params__set_idx(). However, the sample AUX event will contain a
+> > +      * CPU as we set this always for the AUX_OUTPUT_HW_ID event.
+> > +      * So now compare only TIDs if auxtrace CPU is -1, and CPUs if auxtrace CPU is not -1.
+> > +      * Return 'not found' if mismatch.
+> >        */
+> > -     if ((auxtrace_event->cpu == (__u32) -1 && auxtrace_event->tid != sample->tid) ||
+> > -                     auxtrace_event->cpu != sample->cpu)
+> > +     if (auxtrace_event->cpu == (__u32) -1) {
+> > +             if (auxtrace_event->tid != sample->tid)
+> > +                     return 1;
+> > +     } else if (auxtrace_event->cpu != sample->cpu)
+> >               return 1;
+> >
+> >       if (aux_event->flags & PERF_AUX_FLAG_OVERWRITE) {
+> > @@ -2827,6 +2967,15 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+> >       return 1;
+> >  }
+> >
+> > +static int cs_etm__process_aux_hw_id_cb(struct perf_session *session, union perf_event *event,
+> > +                                     u64 offset __maybe_unused, void *data __maybe_unused)
+> > +{
+> > +     /* look to handle PERF_RECORD_AUX_OUTPUT_HW_ID early to ensure decoders can be set up */
+> > +     if (event->header.type == PERF_RECORD_AUX_OUTPUT_HW_ID)
+> > +             return cs_etm__process_aux_output_hw_id(session, event);
+> > +     return 0;
+> > +}
+>
+> I couldn't see the relationship between the two peeks and why they couldn't be done together
+> in one pass. I changed it so cs_etm__process_aux_hw_id_cb() is also called on the peek
+> to queue the aux records and it seemed to work. At least just opening the file and glancing.
+>
+> If there is some dependency though, I don't think two passes is excessive.
+>
+
+I initially tried this and there are issues.
+
+ During testing I had a --per-thread run with two buffers. One buffer
+had only a single ID, which appeared as a packet before the buffer was
+processed.
+The second had the same ID plus a new ID, which appeared after the
+first buffer and before the second.
+
+Problem is, under the current system, once data is queued, the
+decoders are set and it meant a decoder for the second ID was never
+created, resulting in a bunch of undecoded data.
+It may well be possible to re-examine how and when decoders are
+created, but there is currently a built in assumption that all IDs are
+available before the first buffer is queued, and changing this is well
+beyond the remit of this patch set.
 
 
-On 04/07/2022 09:11, Mike Leach wrote:
-> The current method for allocating trace source ID values to sources is
-> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> The STM is allocated ID 0x1.
-> 
-> This fixed algorithm is used in both the CoreSight driver code, and by
-> perf when writing the trace metadata in the AUXTRACE_INFO record.
-> 
-> The method needs replacing as currently:-
-> 1. It is inefficient in using available IDs.
-> 2. Does not scale to larger systems with many cores and the algorithm
-> has no limits so will generate invalid trace IDs for cpu number > 44.
-> 
-> Additionally requirements to allocate additional system IDs on some
-> systems have been seen.
-> 
-> This patch set  introduces an API that allows the allocation of trace IDs
-> in a dynamic manner.
 
-I've tested this with various commands like with per-thread mode, attaching,
-running the tests and also Carsten's new tests. Apart from the possible
-backwards compatibility issue and the minor code comments it looks good to
-me.
+> > +
+> >  static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf_event *event,
+> >                                       u64 offset __maybe_unused, void *data __maybe_unused)
+> >  {
+> > @@ -3109,6 +3258,14 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+> >       if (err)
+> >               goto err_delete_thread;
+> >
+> > +     /* scan for AUX_OUTPUT_HW_ID records */
+> > +     if (hdr_version >=  CS_AUX_HW_ID_VERSION_MIN) {
+> > +             err = perf_session__peek_events(session, session->header.data_offset,
+> > +                                             session->header.data_size,
+> > +                                             cs_etm__process_aux_hw_id_cb, NULL);
+>
+> This no longer works at all with piping because of this line in peek_events:
+>
+>         if (perf_data__is_pipe(session->data))
+>                 return -1;
+>
 
-> 
-> Architecturally reserved IDs are never allocated, and the system is
-> limited to allocating only valid IDs.
-> 
-> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
-> the new API.
-> 
-> For the ETMx.x devices IDs are allocated on certain events
-> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
-> sysfs TRCTRACEID register and freed when the sysfs reset is written.
-> 
-> b) When using perf, ID is allocated on hardware enable, and freed on
-> hardware disable. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
-> The ID allocator is notified when perf sessions start and stop
-> so CPU based IDs are kept constant throughout any perf session.
-> 
-> 
-> Note: This patchset breaks backward compatibility for perf record and
-> perf report.
-> 
-> Because the method for generating the AUXTRACE_INFO meta data has
-> changed, using an older perf record will result in metadata that
-> does not match the trace IDs used in the recorded trace data.
-> This mismatch will cause subsequent decode to fail.
-> 
-> The version of the AUXTRACE_INFO has been updated to reflect the fact that
-> the trace source IDs are no longer present in the metadata. This will
-> mean older versions of perf report cannot decode the file.
-> 
-> Applies to coresight/next [c06475910b52]
-> Tested on DB410c
-> 
-> Changes since v1:
-> (after feedback & discussion with Mathieu & Suzuki).
-> 
-> 1) API has changed. The global trace ID map is managed internally, so it
-> is no longer passed in to the API functions.
-> 
-> 2) perf record does not use sysfs to find the trace IDs. These are now
-> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
-> have been updated accordingly to generate and handle these events.
-> 
-> Mike Leach (13):
->   coresight: trace-id: Add API to dynamically assign Trace ID values
->   coresight: trace-id: update CoreSight core to use Trace ID API
->   coresight: stm: Update STM driver to use Trace ID API
->   coresight: etm4x: Update ETM4 driver to use Trace ID API
->   coresight: etm3x: Update ETM3 driver to use Trace ID API
->   coresight: etmX.X: stm: Remove unused legacy source Trace ID ops
->   coresight: perf: traceid: Add perf notifiers for Trace ID
->   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
->   perf: cs-etm: Update record event to use new Trace ID protocol
->   kernel: events: Export perf_report_aux_output_id()
->   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
->   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
->   coresight: trace-id: Add debug & test macros to Trace ID allocation
-> 
->  drivers/hwtracing/coresight/Makefile          |   2 +-
->  drivers/hwtracing/coresight/coresight-core.c  |  49 +---
->  .../hwtracing/coresight/coresight-etm-perf.c  |  17 ++
->  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
->  .../coresight/coresight-etm3x-core.c          |  85 +++---
->  .../coresight/coresight-etm3x-sysfs.c         |  28 +-
->  .../coresight/coresight-etm4x-core.c          |  65 ++++-
->  .../coresight/coresight-etm4x-sysfs.c         |  32 ++-
->  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
->  drivers/hwtracing/coresight/coresight-stm.c   |  49 +---
->  .../hwtracing/coresight/coresight-trace-id.c  | 263 ++++++++++++++++++
->  .../hwtracing/coresight/coresight-trace-id.h  |  65 +++++
->  include/linux/coresight-pmu.h                 |  31 ++-
->  include/linux/coresight.h                     |   3 -
->  kernel/events/core.c                          |   1 +
->  tools/include/linux/coresight-pmu.h           |  31 ++-
->  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   9 +
->  tools/perf/util/cs-etm.c                      | 220 +++++++++++++--
->  tools/perf/util/cs-etm.h                      |  14 +-
->  20 files changed, 784 insertions(+), 207 deletions(-)
->  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
->  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
-> 
+Does this not also apply to the:
+cs_etm__queue_aux_records(session);
+call immediately after this, which also uses perf_session__peek_events()?
+
+> So we should change the warning message to an error and exit earlier:
+>
+>         if (!etm->data_queued)
+>                 pr_warning("CS ETM warning: Coresight decode and TRBE support requires random file access.\n"
+>                            "Continuing with best effort decoding in piped mode.\n\n");
+>
+> And then we can also remove all the now dead code and variables related to piping like:
+>
+>    etm->data_queued = etm->queues.populated;
+>    ...
+>
+>    if (!etm->data_queued) {
+>       ...
+>    }
+>
+
+which means that these were already dead code?
+
+>
+> > +             if (err)
+> > +                     goto err_delete_thread;
+> > +     }
+> >       err = cs_etm__queue_aux_records(session);
+> >       if (err)
+> >               goto err_delete_thread;
+
+
+Regards
+
+Mike
+
+--
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
