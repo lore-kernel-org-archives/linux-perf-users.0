@@ -2,252 +2,497 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242B3CCA488
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Jul 2022 15:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C548CC43334
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Jul 2022 16:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233459AbiGUPrh (ORCPT
+        id S229505AbiGUQWX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 21 Jul 2022 11:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43322 "EHLO
+        Thu, 21 Jul 2022 12:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232781AbiGUPrY (ORCPT
+        with ESMTP id S229576AbiGUQWV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Jul 2022 11:47:24 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2950E89659
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Jul 2022 08:44:10 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id k11so2395358wrx.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Jul 2022 08:44:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pH375d3bU1jp1blP9OUsWPpnLAPlPLgde1j9UAw8aIU=;
-        b=KR5jFlimFPd+AkLDoDHt5RiquTz0YP1EyolOlUIuGajh3UX2xBn5LLbTEjZc09ZCK6
-         4N2bmXuvCiLwzNSEIvqP11MfDABNVW/u0CN23FI+vbGs43gB7X+7AO179u+ZLLYTbaB/
-         ihwGYzFmvWBVoZIY2XyXzE+fOkq92m3vJHh0Vj5M28itzwqQbeFsQ78sTAFDvwv03/bk
-         QfAxZOtXEswtWoW9o1DRuo5paof7UW+YcMB8YUOeT21EhRvvpA4nar86+Y06ptCt5qVF
-         73+ahc4V3wk7JSb7Z/nWeELDYUWyJBDUktzaei8JIvzHF9OzPL1GWpHFyN7t72zE2zCj
-         5O8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pH375d3bU1jp1blP9OUsWPpnLAPlPLgde1j9UAw8aIU=;
-        b=APjDRyNdXYpwKhZnEIuixZ66M/GsYPBIV6NLefBJtqaXaqydZfsLsiKxcf/XHRLO2R
-         TPV2hIDcryXCynxvE/3z9YgD9miAO1D+l4f8T1YGz944B8q4VRrGxP+5cXax+85kUGX/
-         vv9c/NPfTadaYLUbpypB2xBNJ/jcWjOtNlcVK8TIYVNpDFqQ85akcb0mbA2dh5jQZhcZ
-         7jhwTXc/EuRAMUl8lTcWXNDT1iEf34pIVBqUdyzHewSD53kyoOtENKJzHUu85VEZgmh8
-         34VCwLBJr8WsMaqCcff3SFjjtDHh/kJSGC6SpHIsBBqZ7F1DtX699OOp2Uq4oR4EUmUw
-         fpDA==
-X-Gm-Message-State: AJIora9jm/EZCjfGZqn6cfLun98+IGpRG/2iAYetX7/l8fx7odUyelae
-        a92f59VdgS7arYnw+i6sN5wnuujEFh7CWBqESCCL0w==
-X-Google-Smtp-Source: AGRyM1v1CI5ASKUMMOe2LYBQ2qxxMT6SUjbCRv3kBmgmbf8vDirKdV5boYsZgos8ZDKXS4jonmVDira8Vogn0zgiPSQ=
-X-Received: by 2002:adf:e30c:0:b0:21e:51b9:113c with SMTP id
- b12-20020adfe30c000000b0021e51b9113cmr4203513wrj.247.1658418248611; Thu, 21
- Jul 2022 08:44:08 -0700 (PDT)
+        Thu, 21 Jul 2022 12:22:21 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8285847B94;
+        Thu, 21 Jul 2022 09:22:19 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F57B13D5;
+        Thu, 21 Jul 2022 09:22:19 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.34.166])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAA2A3F766;
+        Thu, 21 Jul 2022 09:22:16 -0700 (PDT)
+Date:   Thu, 21 Jul 2022 17:22:07 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, linux-sh@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 01/14] perf/hw_breakpoint: Add KUnit test for
+ constraints accounting
+Message-ID: <Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com>
+References: <20220704150514.48816-1-elver@google.com>
+ <20220704150514.48816-2-elver@google.com>
 MIME-Version: 1.0
-References: <20220721130116.43366-1-yangyicong@huawei.com>
-In-Reply-To: <20220721130116.43366-1-yangyicong@huawei.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 21 Jul 2022 09:43:56 -0600
-Message-ID: <CANLsYkwMsmnj4CaqGigmBa4snn75iGkvE6tUDgHiMNsP3003zA@mail.gmail.com>
-Subject: Re: [PATCH v11 0/8] Add support for HiSilicon PCIe Tune and Trace device
-To:     yangyicong@huawei.com
-Cc:     gregkh@linuxfoundation.org, alexander.shishkin@linux.intel.com,
-        leo.yan@linaro.org, james.clark@arm.com, will@kernel.org,
-        robin.murphy@arm.com, acme@kernel.org, peterz@infradead.org,
-        corbet@lwn.net, mark.rutland@arm.com, jonathan.cameron@huawei.com,
-        john.garry@huawei.com, helgaas@kernel.org,
-        lorenzo.pieralisi@arm.com, suzuki.poulose@arm.com, joro@8bytes.org,
-        shameerali.kolothum.thodi@huawei.com, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        iommu@lists.linux-foundation.org, iommu@lists.linux.dev,
-        linux-doc@vger.kernel.org, prime.zeng@huawei.com,
-        liuqi115@huawei.com, zhangshaokun@hisilicon.com,
-        linuxarm@huawei.com, yangyicong@hisilicon.com, bagasdotme@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220704150514.48816-2-elver@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 21 Jul 2022 at 07:03, <yangyicong@huawei.com> wrote:
->
-> From: Yicong Yang <yangyicong@hisilicon.com>
->
-> HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
-> integrated Endpoint (RCiEP) device, providing the capability
-> to dynamically monitor and tune the PCIe traffic (tune),
-> and trace the TLP headers (trace).
->
-> PTT tune is designed for monitoring and adjusting PCIe link parameters.
-> We provide several parameters of the PCIe link. Through the driver,
-> user can adjust the value of certain parameter to affect the PCIe link
-> for the purpose of enhancing the performance in certian situation.
->
-> PTT trace is designed for dumping the TLP headers to the memory, which
-> can be used to analyze the transactions and usage condition of the PCIe
-> Link. Users can choose filters to trace headers, by either requester
-> ID, or those downstream of a set of Root Ports on the same core of the
-> PTT device. It's also supported to trace the headers of certain type and
-> of certain direction.
->
-> The driver registers a PMU device for each PTT device. The trace can
-> be used through `perf record` and the traced headers can be decoded
-> by `perf report`. The perf command support for the device is also
-> added in this patchset. The tune can be used through the sysfs
-> attributes of related PMU device. See the documentation for the
-> detailed usage.
->
-> Change since v10:
-> - Use title case in the documentation
-> - Add RB from Bagas, thanks.
-> Link: https://lore.kernel.org/lkml/20220714092710.53486-1-yangyicong@hisilicon.com/
->
-> Change since v9:
-> - Add sysfs ABI description documentation
-> - Remove the controversial available_{root_port, requester}_filters sysfs file
-> - Shorten 2 tune sysfs attributes name and add some comments
-> - Move hisi_ptt_process_auxtrace_info() to Patch 6.
-> - Add RB from Leo and Ack-by from Mathieu, thanks!
+Hi Marco,
 
-You can add my Ack-by to patch 03 as well.  See below for another comment.
+[adding Will]
 
-> Link: https://lore.kernel.org/lkml/20220606115555.41103-1-yangyicong@hisilicon.com/
->
-> Change since v8:
-> - Cleanups and one minor fix from Jonathan and John, thanks
-> Link: https://lore.kernel.org/lkml/20220516125223.32012-1-yangyicong@hisilicon.com/
->
-> Change since v7:
-> - Configure the DMA in probe rather than in runtime. Also use devres to manage
->   PMU device as we have no order problem now
-> - Refactor the config validation function per John and Leo
-> - Use a spinlock hisi_ptt::pmu_lock instead of mutex to serialize the perf process
->   in pmu::start as it's in atomic context
-> - Only commit the traced data when stop, per Leo and James
-> - Drop the filter dynamically updating patch from this series to simply the review
->   of the driver. That patch will be send separately.
-> - add a cpumask sysfs attribute and handle the cpu hotplug events, follow the
->   uncore PMU convention
-> - Other cleanups and fixes, both in driver and perf tool
-> Link: https://lore.kernel.org/lkml/20220407125841.3678-1-yangyicong@hisilicon.com/
->
-> Change since v6:
-> - Fix W=1 errors reported by lkp test, thanks
->
-> Change since v5:
-> - Squash the PMU patch into PATCH 2 suggested by John
-> - refine the commit message of PATCH 1 and some comments
-> Link: https://lore.kernel.org/lkml/20220308084930.5142-1-yangyicong@hisilicon.com/
->
-> Change since v4:
-> Address the comments from Jonathan, John and Ma Ca, thanks.
-> - Use devm* also for allocating the DMA buffers
-> - Remove the IRQ handler stub in Patch 2
-> - Make functions waiting for hardware state return boolean
-> - Manual remove the PMU device as it should be removed first
-> - Modifier the orders in probe and removal to make them matched well
-> - Make available {directions,type,format} array const and non-global
-> - Using the right filter list in filters show and well protect the
->   list with mutex
-> - Record the trace status with a boolean @started rather than enum
-> - Optimize the process of finding the PTT devices of the perf-tool
-> Link: https://lore.kernel.org/linux-pci/20220221084307.33712-1-yangyicong@hisilicon.com/
->
-> Change since v3:
-> Address the comments from Jonathan and John, thanks.
-> - drop members in the common struct which can be get on the fly
-> - reduce buffer struct and organize the buffers with array instead of list
-> - reduce the DMA reset wait time to avoid long time busy loop
-> - split the available_filters sysfs attribute into two files, for root port
->   and requester respectively. Update the documentation accordingly
-> - make IOMMU mapping check earlier in probe to avoid race condition. Also
->   make IOMMU quirk patch prior to driver in the series
-> - Cleanups and typos fixes from John and Jonathan
-> Link: https://lore.kernel.org/linux-pci/20220124131118.17887-1-yangyicong@hisilicon.com/
->
-> Change since v2:
-> - address the comments from Mathieu, thanks.
->   - rename the directory to ptt to match the function of the device
->   - spinoff the declarations to a separate header
->   - split the trace function to several patches
->   - some other comments.
-> - make default smmu domain type of PTT device to identity
->   Drop the RMR as it's not recommended and use an iommu_def_domain_type
->   quirk to passthrough the device DMA as suggested by Robin.
-> Link: https://lore.kernel.org/linux-pci/20211116090625.53702-1-yangyicong@hisilicon.com/
->
-> Change since v1:
-> - switch the user interface of trace to perf from debugfs
-> - switch the user interface of tune to sysfs from debugfs
-> - add perf tool support to start trace and decode the trace data
-> - address the comments of documentation from Bjorn
-> - add RMR[1] support of the device as trace works in RMR mode or
->   direct DMA mode. RMR support is achieved by common APIs rather
->   than the APIs implemented in [1].
-> Link: https://lore.kernel.org/lkml/1618654631-42454-1-git-send-email-yangyicong@hisilicon.com/
-> [1] https://lore.kernel.org/linux-acpi/20210805080724.480-1-shameerali.kolothum.thodi@huawei.com/
->
-> Qi Liu (3):
->   perf tool: arm: Refactor event list iteration in
->     auxtrace_record__init()
->   perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
->   perf tool: Add support for parsing HiSilicon PCIe Trace packet
->
-> Yicong Yang (5):
->   iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to
->     identity
->   hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe
->     Tune and Trace device
->   hwtracing: hisi_ptt: Add tune function support for HiSilicon PCIe Tune
->     and Trace device
->   docs: trace: Add HiSilicon PTT device driver documentation
->   MAINTAINERS: Add maintainer for HiSilicon PTT driver
->
->  .../ABI/testing/sysfs-devices-hisi_ptt        |   61 +
->  Documentation/trace/hisi-ptt.rst              |  298 +++++
->  Documentation/trace/index.rst                 |    1 +
->  MAINTAINERS                                   |    8 +
->  drivers/Makefile                              |    1 +
->  drivers/hwtracing/Kconfig                     |    2 +
->  drivers/hwtracing/ptt/Kconfig                 |   12 +
->  drivers/hwtracing/ptt/Makefile                |    2 +
->  drivers/hwtracing/ptt/hisi_ptt.c              | 1032 +++++++++++++++++
->  drivers/hwtracing/ptt/hisi_ptt.h              |  200 ++++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   21 +
+On Mon, Jul 04, 2022 at 05:05:01PM +0200, Marco Elver wrote:
+> Add KUnit test for hw_breakpoint constraints accounting, with various
+> interesting mixes of breakpoint targets (some care was taken to catch
+> interesting corner cases via bug-injection).
+> 
+> The test cannot be built as a module because it requires access to
+> hw_breakpoint_slots(), which is not inlinable or exported on all
+> architectures.
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
 
-Everything above needs to go in one patchset and everything below in
-another one.  The first patchset will need to be merged before the
-second one.  Someone already commented on that.
+As mentioned on IRC, I'm seeing these tests fail on arm64 when applied atop
+v5.19-rc7:
 
->  tools/perf/arch/arm/util/auxtrace.c           |  116 +-
->  tools/perf/arch/arm/util/pmu.c                |    3 +
->  tools/perf/arch/arm64/util/Build              |    2 +-
->  tools/perf/arch/arm64/util/hisi-ptt.c         |  188 +++
->  tools/perf/util/Build                         |    2 +
->  tools/perf/util/auxtrace.c                    |    4 +
->  tools/perf/util/auxtrace.h                    |    1 +
->  tools/perf/util/hisi-ptt-decoder/Build        |    1 +
->  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   |  164 +++
->  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |   31 +
->  tools/perf/util/hisi-ptt.c                    |  192 +++
->  tools/perf/util/hisi-ptt.h                    |   19 +
->  23 files changed, 2341 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-devices-hisi_ptt
->  create mode 100644 Documentation/trace/hisi-ptt.rst
->  create mode 100644 drivers/hwtracing/ptt/Kconfig
->  create mode 100644 drivers/hwtracing/ptt/Makefile
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
->  create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
->  create mode 100644 tools/perf/util/hisi-ptt.c
->  create mode 100644 tools/perf/util/hisi-ptt.h
->
-> --
-> 2.24.0
->
+| TAP version 14
+| 1..1
+|     # Subtest: hw_breakpoint
+|     1..9
+|     ok 1 - test_one_cpu
+|     ok 2 - test_many_cpus
+|     # test_one_task_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+|     Expected IS_ERR(bp) to be false, but is true
+|     not ok 3 - test_one_task_on_all_cpus
+|     # test_two_tasks_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+|     Expected IS_ERR(bp) to be false, but is true
+|     not ok 4 - test_two_tasks_on_all_cpus
+|     # test_one_task_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+|     Expected IS_ERR(bp) to be false, but is true
+|     not ok 5 - test_one_task_on_one_cpu
+|     # test_one_task_mixed: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+|     Expected IS_ERR(bp) to be false, but is true
+|     not ok 6 - test_one_task_mixed
+|     # test_two_tasks_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+|     Expected IS_ERR(bp) to be false, but is true
+|     not ok 7 - test_two_tasks_on_one_cpu
+|     # test_two_tasks_on_one_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+|     Expected IS_ERR(bp) to be false, but is true
+|     not ok 8 - test_two_tasks_on_one_all_cpus
+|     # test_task_on_all_and_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+|     Expected IS_ERR(bp) to be false, but is true
+|     not ok 9 - test_task_on_all_and_one_cpu
+| # hw_breakpoint: pass:2 fail:7 skip:0 total:9
+| # Totals: pass:2 fail:7 skip:0 total:9
+
+... which seems to be becasue arm64 currently forbids per-task
+breakpoints/watchpoints in hw_breakpoint_arch_parse(), where we have:
+
+        /*
+         * Disallow per-task kernel breakpoints since these would
+         * complicate the stepping code.
+         */
+        if (hw->ctrl.privilege == AARCH64_BREAKPOINT_EL1 && bp->hw.target)
+                return -EINVAL;
+
+... which has been the case since day one in commit:
+
+  478fcb2cdb2351dc ("arm64: Debugging support")
+
+I'm not immediately sure what would be necessary to support per-task kernel
+breakpoints, but given a lot of that state is currently per-cpu, I imagine it's
+invasive.
+
+Mark.
+
+> ---
+> v3:
+> * Don't use raw_smp_processor_id().
+> 
+> v2:
+> * New patch.
+> ---
+>  kernel/events/Makefile             |   1 +
+>  kernel/events/hw_breakpoint_test.c | 323 +++++++++++++++++++++++++++++
+>  lib/Kconfig.debug                  |  10 +
+>  3 files changed, 334 insertions(+)
+>  create mode 100644 kernel/events/hw_breakpoint_test.c
+> 
+> diff --git a/kernel/events/Makefile b/kernel/events/Makefile
+> index 8591c180b52b..91a62f566743 100644
+> --- a/kernel/events/Makefile
+> +++ b/kernel/events/Makefile
+> @@ -2,4 +2,5 @@
+>  obj-y := core.o ring_buffer.o callchain.o
+>  
+>  obj-$(CONFIG_HAVE_HW_BREAKPOINT) += hw_breakpoint.o
+> +obj-$(CONFIG_HW_BREAKPOINT_KUNIT_TEST) += hw_breakpoint_test.o
+>  obj-$(CONFIG_UPROBES) += uprobes.o
+> diff --git a/kernel/events/hw_breakpoint_test.c b/kernel/events/hw_breakpoint_test.c
+> new file mode 100644
+> index 000000000000..433c5c45e2a5
+> --- /dev/null
+> +++ b/kernel/events/hw_breakpoint_test.c
+> @@ -0,0 +1,323 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * KUnit test for hw_breakpoint constraints accounting logic.
+> + *
+> + * Copyright (C) 2022, Google LLC.
+> + */
+> +
+> +#include <kunit/test.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/hw_breakpoint.h>
+> +#include <linux/kthread.h>
+> +#include <linux/perf_event.h>
+> +#include <asm/hw_breakpoint.h>
+> +
+> +#define TEST_REQUIRES_BP_SLOTS(test, slots)						\
+> +	do {										\
+> +		if ((slots) > get_test_bp_slots()) {					\
+> +			kunit_skip((test), "Requires breakpoint slots: %d > %d", slots,	\
+> +				   get_test_bp_slots());				\
+> +		}									\
+> +	} while (0)
+> +
+> +#define TEST_EXPECT_NOSPC(expr) KUNIT_EXPECT_EQ(test, -ENOSPC, PTR_ERR(expr))
+> +
+> +#define MAX_TEST_BREAKPOINTS 512
+> +
+> +static char break_vars[MAX_TEST_BREAKPOINTS];
+> +static struct perf_event *test_bps[MAX_TEST_BREAKPOINTS];
+> +static struct task_struct *__other_task;
+> +
+> +static struct perf_event *register_test_bp(int cpu, struct task_struct *tsk, int idx)
+> +{
+> +	struct perf_event_attr attr = {};
+> +
+> +	if (WARN_ON(idx < 0 || idx >= MAX_TEST_BREAKPOINTS))
+> +		return NULL;
+> +
+> +	hw_breakpoint_init(&attr);
+> +	attr.bp_addr = (unsigned long)&break_vars[idx];
+> +	attr.bp_len = HW_BREAKPOINT_LEN_1;
+> +	attr.bp_type = HW_BREAKPOINT_RW;
+> +	return perf_event_create_kernel_counter(&attr, cpu, tsk, NULL, NULL);
+> +}
+> +
+> +static void unregister_test_bp(struct perf_event **bp)
+> +{
+> +	if (WARN_ON(IS_ERR(*bp)))
+> +		return;
+> +	if (WARN_ON(!*bp))
+> +		return;
+> +	unregister_hw_breakpoint(*bp);
+> +	*bp = NULL;
+> +}
+> +
+> +static int get_test_bp_slots(void)
+> +{
+> +	static int slots;
+> +
+> +	if (!slots)
+> +		slots = hw_breakpoint_slots(TYPE_DATA);
+> +
+> +	return slots;
+> +}
+> +
+> +static void fill_one_bp_slot(struct kunit *test, int *id, int cpu, struct task_struct *tsk)
+> +{
+> +	struct perf_event *bp = register_test_bp(cpu, tsk, *id);
+> +
+> +	KUNIT_ASSERT_NOT_NULL(test, bp);
+> +	KUNIT_ASSERT_FALSE(test, IS_ERR(bp));
+> +	KUNIT_ASSERT_NULL(test, test_bps[*id]);
+> +	test_bps[(*id)++] = bp;
+> +}
+> +
+> +/*
+> + * Fills up the given @cpu/@tsk with breakpoints, only leaving @skip slots free.
+> + *
+> + * Returns true if this can be called again, continuing at @id.
+> + */
+> +static bool fill_bp_slots(struct kunit *test, int *id, int cpu, struct task_struct *tsk, int skip)
+> +{
+> +	for (int i = 0; i < get_test_bp_slots() - skip; ++i)
+> +		fill_one_bp_slot(test, id, cpu, tsk);
+> +
+> +	return *id + get_test_bp_slots() <= MAX_TEST_BREAKPOINTS;
+> +}
+> +
+> +static int dummy_kthread(void *arg)
+> +{
+> +	return 0;
+> +}
+> +
+> +static struct task_struct *get_other_task(struct kunit *test)
+> +{
+> +	struct task_struct *tsk;
+> +
+> +	if (__other_task)
+> +		return __other_task;
+> +
+> +	tsk = kthread_create(dummy_kthread, NULL, "hw_breakpoint_dummy_task");
+> +	KUNIT_ASSERT_FALSE(test, IS_ERR(tsk));
+> +	__other_task = tsk;
+> +	return __other_task;
+> +}
+> +
+> +static int get_test_cpu(int num)
+> +{
+> +	int cpu;
+> +
+> +	WARN_ON(num < 0);
+> +
+> +	for_each_online_cpu(cpu) {
+> +		if (num-- <= 0)
+> +			break;
+> +	}
+> +
+> +	return cpu;
+> +}
+> +
+> +/* ===== Test cases ===== */
+> +
+> +static void test_one_cpu(struct kunit *test)
+> +{
+> +	int idx = 0;
+> +
+> +	fill_bp_slots(test, &idx, get_test_cpu(0), NULL, 0);
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +}
+> +
+> +static void test_many_cpus(struct kunit *test)
+> +{
+> +	int idx = 0;
+> +	int cpu;
+> +
+> +	/* Test that CPUs are independent. */
+> +	for_each_online_cpu(cpu) {
+> +		bool do_continue = fill_bp_slots(test, &idx, cpu, NULL, 0);
+> +
+> +		TEST_EXPECT_NOSPC(register_test_bp(cpu, NULL, idx));
+> +		if (!do_continue)
+> +			break;
+> +	}
+> +}
+> +
+> +static void test_one_task_on_all_cpus(struct kunit *test)
+> +{
+> +	int idx = 0;
+> +
+> +	fill_bp_slots(test, &idx, -1, current, 0);
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +	/* Remove one and adding back CPU-target should work. */
+> +	unregister_test_bp(&test_bps[0]);
+> +	fill_one_bp_slot(test, &idx, get_test_cpu(0), NULL);
+> +}
+> +
+> +static void test_two_tasks_on_all_cpus(struct kunit *test)
+> +{
+> +	int idx = 0;
+> +
+> +	/* Test that tasks are independent. */
+> +	fill_bp_slots(test, &idx, -1, current, 0);
+> +	fill_bp_slots(test, &idx, -1, get_other_task(test), 0);
+> +
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), get_other_task(test), idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +	/* Remove one from first task and adding back CPU-target should not work. */
+> +	unregister_test_bp(&test_bps[0]);
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +}
+> +
+> +static void test_one_task_on_one_cpu(struct kunit *test)
+> +{
+> +	int idx = 0;
+> +
+> +	fill_bp_slots(test, &idx, get_test_cpu(0), current, 0);
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +	/*
+> +	 * Remove one and adding back CPU-target should work; this case is
+> +	 * special vs. above because the task's constraints are CPU-dependent.
+> +	 */
+> +	unregister_test_bp(&test_bps[0]);
+> +	fill_one_bp_slot(test, &idx, get_test_cpu(0), NULL);
+> +}
+> +
+> +static void test_one_task_mixed(struct kunit *test)
+> +{
+> +	int idx = 0;
+> +
+> +	TEST_REQUIRES_BP_SLOTS(test, 3);
+> +
+> +	fill_one_bp_slot(test, &idx, get_test_cpu(0), current);
+> +	fill_bp_slots(test, &idx, -1, current, 1);
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +
+> +	/* Transition from CPU-dependent pinned count to CPU-independent. */
+> +	unregister_test_bp(&test_bps[0]);
+> +	unregister_test_bp(&test_bps[1]);
+> +	fill_one_bp_slot(test, &idx, get_test_cpu(0), NULL);
+> +	fill_one_bp_slot(test, &idx, get_test_cpu(0), NULL);
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +}
+> +
+> +static void test_two_tasks_on_one_cpu(struct kunit *test)
+> +{
+> +	int idx = 0;
+> +
+> +	fill_bp_slots(test, &idx, get_test_cpu(0), current, 0);
+> +	fill_bp_slots(test, &idx, get_test_cpu(0), get_other_task(test), 0);
+> +
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), get_other_task(test), idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +	/* Can still create breakpoints on some other CPU. */
+> +	fill_bp_slots(test, &idx, get_test_cpu(1), NULL, 0);
+> +}
+> +
+> +static void test_two_tasks_on_one_all_cpus(struct kunit *test)
+> +{
+> +	int idx = 0;
+> +
+> +	fill_bp_slots(test, &idx, get_test_cpu(0), current, 0);
+> +	fill_bp_slots(test, &idx, -1, get_other_task(test), 0);
+> +
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), get_other_task(test), idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +	/* Cannot create breakpoints on some other CPU either. */
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(1), NULL, idx));
+> +}
+> +
+> +static void test_task_on_all_and_one_cpu(struct kunit *test)
+> +{
+> +	int tsk_on_cpu_idx, cpu_idx;
+> +	int idx = 0;
+> +
+> +	TEST_REQUIRES_BP_SLOTS(test, 3);
+> +
+> +	fill_bp_slots(test, &idx, -1, current, 2);
+> +	/* Transitioning from only all CPU breakpoints to mixed. */
+> +	tsk_on_cpu_idx = idx;
+> +	fill_one_bp_slot(test, &idx, get_test_cpu(0), current);
+> +	fill_one_bp_slot(test, &idx, -1, current);
+> +
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +
+> +	/* We should still be able to use up another CPU's slots. */
+> +	cpu_idx = idx;
+> +	fill_one_bp_slot(test, &idx, get_test_cpu(1), NULL);
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(1), NULL, idx));
+> +
+> +	/* Transitioning back to task target on all CPUs. */
+> +	unregister_test_bp(&test_bps[tsk_on_cpu_idx]);
+> +	/* Still have a CPU target breakpoint in get_test_cpu(1). */
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	/* Remove it and try again. */
+> +	unregister_test_bp(&test_bps[cpu_idx]);
+> +	fill_one_bp_slot(test, &idx, -1, current);
+> +
+> +	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
+> +	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(1), NULL, idx));
+> +}
+> +
+> +static struct kunit_case hw_breakpoint_test_cases[] = {
+> +	KUNIT_CASE(test_one_cpu),
+> +	KUNIT_CASE(test_many_cpus),
+> +	KUNIT_CASE(test_one_task_on_all_cpus),
+> +	KUNIT_CASE(test_two_tasks_on_all_cpus),
+> +	KUNIT_CASE(test_one_task_on_one_cpu),
+> +	KUNIT_CASE(test_one_task_mixed),
+> +	KUNIT_CASE(test_two_tasks_on_one_cpu),
+> +	KUNIT_CASE(test_two_tasks_on_one_all_cpus),
+> +	KUNIT_CASE(test_task_on_all_and_one_cpu),
+> +	{},
+> +};
+> +
+> +static int test_init(struct kunit *test)
+> +{
+> +	/* Most test cases want 2 distinct CPUs. */
+> +	return num_online_cpus() < 2 ? -EINVAL : 0;
+> +}
+> +
+> +static void test_exit(struct kunit *test)
+> +{
+> +	for (int i = 0; i < MAX_TEST_BREAKPOINTS; ++i) {
+> +		if (test_bps[i])
+> +			unregister_test_bp(&test_bps[i]);
+> +	}
+> +
+> +	if (__other_task) {
+> +		kthread_stop(__other_task);
+> +		__other_task = NULL;
+> +	}
+> +}
+> +
+> +static struct kunit_suite hw_breakpoint_test_suite = {
+> +	.name = "hw_breakpoint",
+> +	.test_cases = hw_breakpoint_test_cases,
+> +	.init = test_init,
+> +	.exit = test_exit,
+> +};
+> +
+> +kunit_test_suites(&hw_breakpoint_test_suite);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Marco Elver <elver@google.com>");
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 2e24db4bff19..4c87a6edf046 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2513,6 +2513,16 @@ config STACKINIT_KUNIT_TEST
+>  	  CONFIG_GCC_PLUGIN_STRUCTLEAK, CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF,
+>  	  or CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.
+>  
+> +config HW_BREAKPOINT_KUNIT_TEST
+> +	bool "Test hw_breakpoint constraints accounting" if !KUNIT_ALL_TESTS
+> +	depends on HAVE_HW_BREAKPOINT
+> +	depends on KUNIT=y
+> +	default KUNIT_ALL_TESTS
+> +	help
+> +	  Tests for hw_breakpoint constraints accounting.
+> +
+> +	  If unsure, say N.
+> +
+>  config TEST_UDELAY
+>  	tristate "udelay test driver"
+>  	help
+> -- 
+> 2.37.0.rc0.161.g10f37bed90-goog
+> 
