@@ -2,227 +2,252 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A41AC43334
-	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Jul 2022 13:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242B3CCA488
+	for <linux-perf-users@archiver.kernel.org>; Thu, 21 Jul 2022 15:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229763AbiGUNy7 (ORCPT
+        id S233459AbiGUPrh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 21 Jul 2022 09:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36260 "EHLO
+        Thu, 21 Jul 2022 11:47:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbiGUNy6 (ORCPT
+        with ESMTP id S232781AbiGUPrY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 21 Jul 2022 09:54:58 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABDD2CDCC
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Jul 2022 06:54:57 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id k19so1895760lji.10
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Jul 2022 06:54:57 -0700 (PDT)
+        Thu, 21 Jul 2022 11:47:24 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2950E89659
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Jul 2022 08:44:10 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id k11so2395358wrx.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Jul 2022 08:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1Svh48ykFz6FZPDaJbvr0X3QSVsa1sHd8+kMWlEiIAc=;
-        b=xx+rHMyP4qPgY9HXMXMjJoMr4m8zjaLGA5pkqOlRz9/E4CprEqUp7wnTEkEwqC7jRf
-         Rm6vMlKGPQHp1qQsgmLb4AzzH27nKUyxSPUPNIEaJM/z79tNBlxVvxKzployPgqEG/sp
-         szA2oLqalVPZIXBdTCnRe/Z2zKzqhEQARyd7anY/FxP3Pod0oYOzKkkO0IapXvQ6Es0j
-         vkG3YDf42d0pX1a0wzt23Zpn9XDTlIl/+5Nvk0Sk7ktAyDzMqWvlFiA2netx+ViQBQyo
-         KaLa7FtVB0XIvR6tQrwWEFYjJNDliApoezriVyrRMoqliL12Lia3jNY0DwILaVuDDY5t
-         2rqw==
+        bh=pH375d3bU1jp1blP9OUsWPpnLAPlPLgde1j9UAw8aIU=;
+        b=KR5jFlimFPd+AkLDoDHt5RiquTz0YP1EyolOlUIuGajh3UX2xBn5LLbTEjZc09ZCK6
+         4N2bmXuvCiLwzNSEIvqP11MfDABNVW/u0CN23FI+vbGs43gB7X+7AO179u+ZLLYTbaB/
+         ihwGYzFmvWBVoZIY2XyXzE+fOkq92m3vJHh0Vj5M28itzwqQbeFsQ78sTAFDvwv03/bk
+         QfAxZOtXEswtWoW9o1DRuo5paof7UW+YcMB8YUOeT21EhRvvpA4nar86+Y06ptCt5qVF
+         73+ahc4V3wk7JSb7Z/nWeELDYUWyJBDUktzaei8JIvzHF9OzPL1GWpHFyN7t72zE2zCj
+         5O8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1Svh48ykFz6FZPDaJbvr0X3QSVsa1sHd8+kMWlEiIAc=;
-        b=aGhnJZ05Rzx1a0mx8OLp687ONkbGjPT1HTph3TS6kk0o+CocoArlnQPWhugndeggHG
-         wg5EwSmyZ5ZcErmv8gbrC6LAkxDTTy0O8T2mjnSvdgV+XbUPE+ZPpTU+KgygOxwYqa7b
-         /y9+LYA+I8o+6MSJg5IqW3PJnUgqZvTLbOTVygeMyMQl45/zX/xmRVACjfk3HVyoOGQY
-         hoold28Pwd96Hv5XxjpB5I3JmTdDsAv5xe+4UZ0ryjIGdiqwvmI7TS8A/36fJZIiTHhU
-         nzVeEliIPaRiHWAsDEyYmL7TgQ+HaBuAY4jp9nMzRRDC99T/LwMroUZYDulx3lkr4rqN
-         0c0w==
-X-Gm-Message-State: AJIora87BxolWiIDR3WRXVtV+VwqJsqggS2rJdpgf1xaRZBkOdMAeWQJ
-        zf5IDj84iO8778uaZtk7R5CEuvw9osjt4M976dKSpA==
-X-Google-Smtp-Source: AGRyM1vSkGgyIiZxk3eGrerbp2z+/RiOJTriDdXdltxBDPXUwqJLfvQ32oO4Brfu6P2UqeUw/3u9C22AuLJZUo6eHPo=
-X-Received: by 2002:a2e:895a:0:b0:25d:6815:98ff with SMTP id
- b26-20020a2e895a000000b0025d681598ffmr18164174ljk.189.1658411695787; Thu, 21
- Jul 2022 06:54:55 -0700 (PDT)
+        bh=pH375d3bU1jp1blP9OUsWPpnLAPlPLgde1j9UAw8aIU=;
+        b=APjDRyNdXYpwKhZnEIuixZ66M/GsYPBIV6NLefBJtqaXaqydZfsLsiKxcf/XHRLO2R
+         TPV2hIDcryXCynxvE/3z9YgD9miAO1D+l4f8T1YGz944B8q4VRrGxP+5cXax+85kUGX/
+         vv9c/NPfTadaYLUbpypB2xBNJ/jcWjOtNlcVK8TIYVNpDFqQ85akcb0mbA2dh5jQZhcZ
+         7jhwTXc/EuRAMUl8lTcWXNDT1iEf34pIVBqUdyzHewSD53kyoOtENKJzHUu85VEZgmh8
+         34VCwLBJr8WsMaqCcff3SFjjtDHh/kJSGC6SpHIsBBqZ7F1DtX699OOp2Uq4oR4EUmUw
+         fpDA==
+X-Gm-Message-State: AJIora9jm/EZCjfGZqn6cfLun98+IGpRG/2iAYetX7/l8fx7odUyelae
+        a92f59VdgS7arYnw+i6sN5wnuujEFh7CWBqESCCL0w==
+X-Google-Smtp-Source: AGRyM1v1CI5ASKUMMOe2LYBQ2qxxMT6SUjbCRv3kBmgmbf8vDirKdV5boYsZgos8ZDKXS4jonmVDira8Vogn0zgiPSQ=
+X-Received: by 2002:adf:e30c:0:b0:21e:51b9:113c with SMTP id
+ b12-20020adfe30c000000b0021e51b9113cmr4203513wrj.247.1658418248611; Thu, 21
+ Jul 2022 08:44:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220704081149.16797-1-mike.leach@linaro.org> <0b493b49-2657-ad5d-465e-d80b62820613@arm.com>
-In-Reply-To: <0b493b49-2657-ad5d-465e-d80b62820613@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Thu, 21 Jul 2022 14:54:44 +0100
-Message-ID: <CAJ9a7VhXMn+DJ+qgeYRbqgGDm3jV_xNeBGKP=q7eiSe03_7eJw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] coresight: Add new API to allocate trace source
- ID values
-To:     James Clark <james.clark@arm.com>
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        quic_jinlmao@quicinc.com, suzuki.poulose@arm.com,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+References: <20220721130116.43366-1-yangyicong@huawei.com>
+In-Reply-To: <20220721130116.43366-1-yangyicong@huawei.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 21 Jul 2022 09:43:56 -0600
+Message-ID: <CANLsYkwMsmnj4CaqGigmBa4snn75iGkvE6tUDgHiMNsP3003zA@mail.gmail.com>
+Subject: Re: [PATCH v11 0/8] Add support for HiSilicon PCIe Tune and Trace device
+To:     yangyicong@huawei.com
+Cc:     gregkh@linuxfoundation.org, alexander.shishkin@linux.intel.com,
+        leo.yan@linaro.org, james.clark@arm.com, will@kernel.org,
+        robin.murphy@arm.com, acme@kernel.org, peterz@infradead.org,
+        corbet@lwn.net, mark.rutland@arm.com, jonathan.cameron@huawei.com,
+        john.garry@huawei.com, helgaas@kernel.org,
+        lorenzo.pieralisi@arm.com, suzuki.poulose@arm.com, joro@8bytes.org,
+        shameerali.kolothum.thodi@huawei.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        iommu@lists.linux-foundation.org, iommu@lists.linux.dev,
+        linux-doc@vger.kernel.org, prime.zeng@huawei.com,
+        liuqi115@huawei.com, zhangshaokun@hisilicon.com,
+        linuxarm@huawei.com, yangyicong@hisilicon.com, bagasdotme@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
-
-Thanks for looking at this.
-
-On Thu, 21 Jul 2022 at 11:27, James Clark <james.clark@arm.com> wrote:
+On Thu, 21 Jul 2022 at 07:03, <yangyicong@huawei.com> wrote:
 >
+> From: Yicong Yang <yangyicong@hisilicon.com>
 >
+> HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
+> integrated Endpoint (RCiEP) device, providing the capability
+> to dynamically monitor and tune the PCIe traffic (tune),
+> and trace the TLP headers (trace).
 >
-> On 04/07/2022 09:11, Mike Leach wrote:
-> > The current method for allocating trace source ID values to sources is
-> > to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> > The STM is allocated ID 0x1.
-> >
-> > This fixed algorithm is used in both the CoreSight driver code, and by
-> > perf when writing the trace metadata in the AUXTRACE_INFO record.
-> >
-> > The method needs replacing as currently:-
-> > 1. It is inefficient in using available IDs.
-> > 2. Does not scale to larger systems with many cores and the algorithm
-> > has no limits so will generate invalid trace IDs for cpu number > 44.
-> >
-> > Additionally requirements to allocate additional system IDs on some
-> > systems have been seen.
-> >
-> > This patch set  introduces an API that allows the allocation of trace IDs
-> > in a dynamic manner.
+> PTT tune is designed for monitoring and adjusting PCIe link parameters.
+> We provide several parameters of the PCIe link. Through the driver,
+> user can adjust the value of certain parameter to affect the PCIe link
+> for the purpose of enhancing the performance in certian situation.
 >
-> I've tested this with various commands like with per-thread mode, attaching,
-> running the tests and also Carsten's new tests. Apart from the possible
-> backwards compatibility issue and the minor code comments it looks good to
-> me.
+> PTT trace is designed for dumping the TLP headers to the memory, which
+> can be used to analyze the transactions and usage condition of the PCIe
+> Link. Users can choose filters to trace headers, by either requester
+> ID, or those downstream of a set of Root Ports on the same core of the
+> PTT device. It's also supported to trace the headers of certain type and
+> of certain direction.
 >
+> The driver registers a PMU device for each PTT device. The trace can
+> be used through `perf record` and the traced headers can be decoded
+> by `perf report`. The perf command support for the device is also
+> added in this patchset. The tune can be used through the sysfs
+> attributes of related PMU device. See the documentation for the
+> detailed usage.
+>
+> Change since v10:
+> - Use title case in the documentation
+> - Add RB from Bagas, thanks.
+> Link: https://lore.kernel.org/lkml/20220714092710.53486-1-yangyicong@hisilicon.com/
+>
+> Change since v9:
+> - Add sysfs ABI description documentation
+> - Remove the controversial available_{root_port, requester}_filters sysfs file
+> - Shorten 2 tune sysfs attributes name and add some comments
+> - Move hisi_ptt_process_auxtrace_info() to Patch 6.
+> - Add RB from Leo and Ack-by from Mathieu, thanks!
 
-I've looked at the backwards compatibility issue. At present with the
-current set
-(K = kernel drivers, P-rec = perf record, P-rep = perf report)
-::
+You can add my Ack-by to patch 03 as well.  See below for another comment.
 
-K-v1-ids  + P-rec-v1-ids => P-rep-v1 (OK)  P-rep-v2 (OK)
-K-v1-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (fail)
-K-v2-ids  + P-rec-v1-ids => P-rep-v1 (fail)  P-rep-v2 (fail)
-K-v2-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
+> Link: https://lore.kernel.org/lkml/20220606115555.41103-1-yangyicong@hisilicon.com/
+>
+> Change since v8:
+> - Cleanups and one minor fix from Jonathan and John, thanks
+> Link: https://lore.kernel.org/lkml/20220516125223.32012-1-yangyicong@hisilicon.com/
+>
+> Change since v7:
+> - Configure the DMA in probe rather than in runtime. Also use devres to manage
+>   PMU device as we have no order problem now
+> - Refactor the config validation function per John and Leo
+> - Use a spinlock hisi_ptt::pmu_lock instead of mutex to serialize the perf process
+>   in pmu::start as it's in atomic context
+> - Only commit the traced data when stop, per Leo and James
+> - Drop the filter dynamically updating patch from this series to simply the review
+>   of the driver. That patch will be send separately.
+> - add a cpumask sysfs attribute and handle the cpu hotplug events, follow the
+>   uncore PMU convention
+> - Other cleanups and fixes, both in driver and perf tool
+> Link: https://lore.kernel.org/lkml/20220407125841.3678-1-yangyicong@hisilicon.com/
+>
+> Change since v6:
+> - Fix W=1 errors reported by lkp test, thanks
+>
+> Change since v5:
+> - Squash the PMU patch into PATCH 2 suggested by John
+> - refine the commit message of PATCH 1 and some comments
+> Link: https://lore.kernel.org/lkml/20220308084930.5142-1-yangyicong@hisilicon.com/
+>
+> Change since v4:
+> Address the comments from Jonathan, John and Ma Ca, thanks.
+> - Use devm* also for allocating the DMA buffers
+> - Remove the IRQ handler stub in Patch 2
+> - Make functions waiting for hardware state return boolean
+> - Manual remove the PMU device as it should be removed first
+> - Modifier the orders in probe and removal to make them matched well
+> - Make available {directions,type,format} array const and non-global
+> - Using the right filter list in filters show and well protect the
+>   list with mutex
+> - Record the trace status with a boolean @started rather than enum
+> - Optimize the process of finding the PTT devices of the perf-tool
+> Link: https://lore.kernel.org/linux-pci/20220221084307.33712-1-yangyicong@hisilicon.com/
+>
+> Change since v3:
+> Address the comments from Jonathan and John, thanks.
+> - drop members in the common struct which can be get on the fly
+> - reduce buffer struct and organize the buffers with array instead of list
+> - reduce the DMA reset wait time to avoid long time busy loop
+> - split the available_filters sysfs attribute into two files, for root port
+>   and requester respectively. Update the documentation accordingly
+> - make IOMMU mapping check earlier in probe to avoid race condition. Also
+>   make IOMMU quirk patch prior to driver in the series
+> - Cleanups and typos fixes from John and Jonathan
+> Link: https://lore.kernel.org/linux-pci/20220124131118.17887-1-yangyicong@hisilicon.com/
+>
+> Change since v2:
+> - address the comments from Mathieu, thanks.
+>   - rename the directory to ptt to match the function of the device
+>   - spinoff the declarations to a separate header
+>   - split the trace function to several patches
+>   - some other comments.
+> - make default smmu domain type of PTT device to identity
+>   Drop the RMR as it's not recommended and use an iommu_def_domain_type
+>   quirk to passthrough the device DMA as suggested by Robin.
+> Link: https://lore.kernel.org/linux-pci/20211116090625.53702-1-yangyicong@hisilicon.com/
+>
+> Change since v1:
+> - switch the user interface of trace to perf from debugfs
+> - switch the user interface of tune to sysfs from debugfs
+> - add perf tool support to start trace and decode the trace data
+> - address the comments of documentation from Bjorn
+> - add RMR[1] support of the device as trace works in RMR mode or
+>   direct DMA mode. RMR support is achieved by common APIs rather
+>   than the APIs implemented in [1].
+> Link: https://lore.kernel.org/lkml/1618654631-42454-1-git-send-email-yangyicong@hisilicon.com/
+> [1] https://lore.kernel.org/linux-acpi/20210805080724.480-1-shameerali.kolothum.thodi@huawei.com/
+>
+> Qi Liu (3):
+>   perf tool: arm: Refactor event list iteration in
+>     auxtrace_record__init()
+>   perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
+>   perf tool: Add support for parsing HiSilicon PCIe Trace packet
+>
+> Yicong Yang (5):
+>   iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to
+>     identity
+>   hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe
+>     Tune and Trace device
+>   hwtracing: hisi_ptt: Add tune function support for HiSilicon PCIe Tune
+>     and Trace device
+>   docs: trace: Add HiSilicon PTT device driver documentation
+>   MAINTAINERS: Add maintainer for HiSilicon PTT driver
+>
+>  .../ABI/testing/sysfs-devices-hisi_ptt        |   61 +
+>  Documentation/trace/hisi-ptt.rst              |  298 +++++
+>  Documentation/trace/index.rst                 |    1 +
+>  MAINTAINERS                                   |    8 +
+>  drivers/Makefile                              |    1 +
+>  drivers/hwtracing/Kconfig                     |    2 +
+>  drivers/hwtracing/ptt/Kconfig                 |   12 +
+>  drivers/hwtracing/ptt/Makefile                |    2 +
+>  drivers/hwtracing/ptt/hisi_ptt.c              | 1032 +++++++++++++++++
+>  drivers/hwtracing/ptt/hisi_ptt.h              |  200 ++++
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   21 +
 
-So, with a P-rec generating v2 metadata, P rep will cleanly error out.
-Where the Kernel ID version and the perf report ID version differ,
-even the P rep v2 will fail, due to the IDs being different in the
-file and actual drivers. These fails will simply look like no data
-present.
+Everything above needs to go in one patchset and everything below in
+another one.  The first patchset will need to be merged before the
+second one.  Someone already commented on that.
 
-There are two possible fixes that improve this:-
-A) if the v2 kernel uses a sysfs flag to indicate new ID usage, then
-if this is missing the new perf record can degrade to using the old
-algorithm to put IDs directly into metadata as it assumes it is
-running on a v1 kernel.
-This fixes things then for the P-rep v2 that can look for this & we
-know there will be no incoming ID packets.
-B) P-rep v2 can look for new packets irrespective of incoming metadata
-version, and if it sees them, override them
-
-Compatibility matrix then looks like::
-K-v1-ids  + P-rec-v1-ids => P-rep-v1 (OK)  P-rep-v2 (OK)
-K-v1-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-K-v2-ids  + P-rec-v1-ids => P-rep-v1 (fail)  P-rep-v2 (OK)
-K-v2-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-
-There is no solution to using an old version of perf record on a new
-kernel and getting the old version of perf report to correctly decode
-the file.
-
-Thoughts?
-
-Mike
-
-> >
-> > Architecturally reserved IDs are never allocated, and the system is
-> > limited to allocating only valid IDs.
-> >
-> > Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
-> > the new API.
-> >
-> > For the ETMx.x devices IDs are allocated on certain events
-> > a) When using sysfs, an ID will be allocated on hardware enable, or a read of
-> > sysfs TRCTRACEID register and freed when the sysfs reset is written.
-> >
-> > b) When using perf, ID is allocated on hardware enable, and freed on
-> > hardware disable. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
-> > The ID allocator is notified when perf sessions start and stop
-> > so CPU based IDs are kept constant throughout any perf session.
-> >
-> >
-> > Note: This patchset breaks backward compatibility for perf record and
-> > perf report.
-> >
-> > Because the method for generating the AUXTRACE_INFO meta data has
-> > changed, using an older perf record will result in metadata that
-> > does not match the trace IDs used in the recorded trace data.
-> > This mismatch will cause subsequent decode to fail.
-> >
-> > The version of the AUXTRACE_INFO has been updated to reflect the fact that
-> > the trace source IDs are no longer present in the metadata. This will
-> > mean older versions of perf report cannot decode the file.
-> >
-> > Applies to coresight/next [c06475910b52]
-> > Tested on DB410c
-> >
-> > Changes since v1:
-> > (after feedback & discussion with Mathieu & Suzuki).
-> >
-> > 1) API has changed. The global trace ID map is managed internally, so it
-> > is no longer passed in to the API functions.
-> >
-> > 2) perf record does not use sysfs to find the trace IDs. These are now
-> > output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
-> > have been updated accordingly to generate and handle these events.
-> >
-> > Mike Leach (13):
-> >   coresight: trace-id: Add API to dynamically assign Trace ID values
-> >   coresight: trace-id: update CoreSight core to use Trace ID API
-> >   coresight: stm: Update STM driver to use Trace ID API
-> >   coresight: etm4x: Update ETM4 driver to use Trace ID API
-> >   coresight: etm3x: Update ETM3 driver to use Trace ID API
-> >   coresight: etmX.X: stm: Remove unused legacy source Trace ID ops
-> >   coresight: perf: traceid: Add perf notifiers for Trace ID
-> >   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
-> >   perf: cs-etm: Update record event to use new Trace ID protocol
-> >   kernel: events: Export perf_report_aux_output_id()
-> >   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
-> >   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
-> >   coresight: trace-id: Add debug & test macros to Trace ID allocation
-> >
-> >  drivers/hwtracing/coresight/Makefile          |   2 +-
-> >  drivers/hwtracing/coresight/coresight-core.c  |  49 +---
-> >  .../hwtracing/coresight/coresight-etm-perf.c  |  17 ++
-> >  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
-> >  .../coresight/coresight-etm3x-core.c          |  85 +++---
-> >  .../coresight/coresight-etm3x-sysfs.c         |  28 +-
-> >  .../coresight/coresight-etm4x-core.c          |  65 ++++-
-> >  .../coresight/coresight-etm4x-sysfs.c         |  32 ++-
-> >  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
-> >  drivers/hwtracing/coresight/coresight-stm.c   |  49 +---
-> >  .../hwtracing/coresight/coresight-trace-id.c  | 263 ++++++++++++++++++
-> >  .../hwtracing/coresight/coresight-trace-id.h  |  65 +++++
-> >  include/linux/coresight-pmu.h                 |  31 ++-
-> >  include/linux/coresight.h                     |   3 -
-> >  kernel/events/core.c                          |   1 +
-> >  tools/include/linux/coresight-pmu.h           |  31 ++-
-> >  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
-> >  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   9 +
-> >  tools/perf/util/cs-etm.c                      | 220 +++++++++++++--
-> >  tools/perf/util/cs-etm.h                      |  14 +-
-> >  20 files changed, 784 insertions(+), 207 deletions(-)
-> >  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
-> >  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
-> >
-
-
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+>  tools/perf/arch/arm/util/auxtrace.c           |  116 +-
+>  tools/perf/arch/arm/util/pmu.c                |    3 +
+>  tools/perf/arch/arm64/util/Build              |    2 +-
+>  tools/perf/arch/arm64/util/hisi-ptt.c         |  188 +++
+>  tools/perf/util/Build                         |    2 +
+>  tools/perf/util/auxtrace.c                    |    4 +
+>  tools/perf/util/auxtrace.h                    |    1 +
+>  tools/perf/util/hisi-ptt-decoder/Build        |    1 +
+>  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   |  164 +++
+>  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |   31 +
+>  tools/perf/util/hisi-ptt.c                    |  192 +++
+>  tools/perf/util/hisi-ptt.h                    |   19 +
+>  23 files changed, 2341 insertions(+), 20 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-devices-hisi_ptt
+>  create mode 100644 Documentation/trace/hisi-ptt.rst
+>  create mode 100644 drivers/hwtracing/ptt/Kconfig
+>  create mode 100644 drivers/hwtracing/ptt/Makefile
+>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+>  create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
+>  create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
+>  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+>  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
+>  create mode 100644 tools/perf/util/hisi-ptt.c
+>  create mode 100644 tools/perf/util/hisi-ptt.h
+>
+> --
+> 2.24.0
+>
