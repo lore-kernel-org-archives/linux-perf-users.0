@@ -2,186 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE05C43334
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jul 2022 10:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6880FC43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jul 2022 11:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234249AbiGVKiU (ORCPT
+        id S234925AbiGVLDU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Jul 2022 06:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
+        Fri, 22 Jul 2022 07:03:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234497AbiGVKiT (ORCPT
+        with ESMTP id S234639AbiGVLDU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Jul 2022 06:38:19 -0400
-Received: from mail-m973.mail.163.com (mail-m973.mail.163.com [123.126.97.3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB3F0BA267;
-        Fri, 22 Jul 2022 03:38:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qZA/V
-        SBXMttJiclEn3xajTp90qDk6AxMWBxPRPF+xvo=; b=hFDJO2JEPI6xzsHZlDWe+
-        pg7FRIkNCHsaWjT4EFEpnDJQGT04StiPcLRSdEJmKGyNzLoLniqsBdzsuaOnrF9Z
-        DR75RkRoAojms3cv9B7NJkpLvSCzEbcFBS0OysZ6l7BTDi9cEpqv3V9G/VFw1qlB
-        JwAAtuQYyKEiKp3Za3E+j0=
-Received: from localhost.localdomain (unknown [112.97.59.29])
-        by smtp3 (Coremail) with SMTP id G9xpCgA30ZLqfdpiFX2aQg--.5948S2;
-        Fri, 22 Jul 2022 18:37:32 +0800 (CST)
-From:   Slark Xiao <slark_xiao@163.com>
-To:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, mike.leach@linaro.org,
-        leo.yan@linaro.org, john.garry@huawei.com, will@kernel.org,
-        james.clark@arm.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH] perf: Fix typo 'the the' in comment
-Date:   Fri, 22 Jul 2022 18:37:28 +0800
-Message-Id: <20220722103728.82854-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 22 Jul 2022 07:03:20 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A7CFB5560;
+        Fri, 22 Jul 2022 04:03:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3CFC2B827D0;
+        Fri, 22 Jul 2022 11:03:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 583BEC341C6;
+        Fri, 22 Jul 2022 11:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658487793;
+        bh=gajyD+WJ9t3ABvxX9BRkdBmZElhbZ0gxOqXZEcwzeL8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FLZZhI4AskrmWJuqTjEnLzl7OlDfW7QZDHepbLOlKZ9dkU4H6MHPaT2C9eQoT+pbD
+         m6dWfWODUPVQIVIa8+X3Bla19vIpFCKYFGGQeRuBOE4TqVBs3kTQXIzbkhT1ssMCUK
+         ZvR3ZdpVl52M16vAgIcpmr2w86Ju+5Ej0g/y83+FmVxuQaGZltnalBoJEIwiqY9QrU
+         OpV24R93x7+Po9kumEaYY+XgtvJSUhlj+SMOyoj14EfBSxVrvO5D+uqhjbzpULYASd
+         YU6oYeMowXkpsdPof+5cqLPVMTzTFuVtT0clcvPHEViwayDVQlQ8/XhADtEBnIydJo
+         CIRQ3Qy5K962A==
+Date:   Fri, 22 Jul 2022 12:03:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Marco Elver <elver@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, linux-sh@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/14] perf/hw_breakpoint: Add KUnit test for
+ constraints accounting
+Message-ID: <20220722110305.GA18336@willie-the-truck>
+References: <20220704150514.48816-1-elver@google.com>
+ <20220704150514.48816-2-elver@google.com>
+ <Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com>
+ <20220722091044.GC18125@willie-the-truck>
+ <CACT4Y+ZOXXqxhe4U3ZtQPCj2yrf6Qtjg1q0Kfq8+poAOxGgUew@mail.gmail.com>
+ <20220722101053.GA18284@willie-the-truck>
+ <CACT4Y+Z0imEHF0jM-f-uYdpfSpfzMpa+bFZfPeQW1ECBDjD9fA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID: G9xpCgA30ZLqfdpiFX2aQg--.5948S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Gw1xJrW7ZryDtF1xCr13CFg_yoWxKrWDpF
-        s7CwsIyr1kW3ZYq3Z5Aw4xXw1fu3yxAan8Kw1Sy3y7Zr43Xrn2qFWfKw1Yva47Xws5AFWa
-        vws8WryUZFyrCFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pNjg2dUUUUU=
-X-Originating-IP: [112.97.59.29]
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiJQxGZGAJpKgOWQAAs5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Z0imEHF0jM-f-uYdpfSpfzMpa+bFZfPeQW1ECBDjD9fA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Replace 'the the' with 'the' in the comment.
+On Fri, Jul 22, 2022 at 12:31:45PM +0200, Dmitry Vyukov wrote:
+> On Fri, 22 Jul 2022 at 12:11, Will Deacon <will@kernel.org> wrote:
+> > > > > On Mon, Jul 04, 2022 at 05:05:01PM +0200, Marco Elver wrote:
+> > > > > I'm not immediately sure what would be necessary to support per-task kernel
+> > > > > breakpoints, but given a lot of that state is currently per-cpu, I imagine it's
+> > > > > invasive.
+> > > >
+> > > > I would actually like to remove HW_BREAKPOINT completely for arm64 as it
+> > > > doesn't really work and causes problems for other interfaces such as ptrace
+> > > > and kgdb.
+> > >
+> > > Will it be a localized removal of code that will be easy to revert in
+> > > future? Or will it touch lots of code here and there?
+> > > Let's say we come up with a very important use case for HW_BREAKPOINT
+> > > and will need to make it work on arm64 as well in future.
+> >
+> > My (rough) plan is to implement a lower-level abstraction for handling the
+> > underlying hardware resources, so we can layer consumers on top of that
+> > instead of funneling through hw_breakpoint. So if we figure out how to make
+> > bits of hw_breakpoint work on arm64, then it should just go on top.
+> >
+> > The main pain point for hw_breakpoint is kernel-side {break,watch}points
+> > and I think there are open design questions about how they should work
+> > on arm64, particularly when considering the interaction with user
+> > watchpoints triggering on uaccess routines and the possibility of hitting
+> > a kernel watchpoint in irq context.
+> 
+> I see. Our main interest would be break/watchpoints on user addresses
+> firing from both user-space and kernel (uaccess), so at least on irqs.
 
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
----
- tools/perf/Documentation/perf-diff.txt                        | 2 +-
- tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json | 2 +-
- tools/perf/pmu-events/arch/x86/silvermont/pipeline.json       | 2 +-
- tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json     | 2 +-
- tools/perf/util/cs-etm.c                                      | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+Interesting. Do other architectures report watchpoint hits on user
+addresses from kernel uaccess? It feels like this might be surprising to
+some users, and it opens up questions about accesses using different virtual
+aliases (e.g. via GUP) or from other entities as well (e.g. firmware,
+KVM guests, DMA).
 
-diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentat=
-ion/perf-diff.txt
-index be65bd55ab2a..b77957ac288b 100644
---- a/tools/perf/Documentation/perf-diff.txt
-+++ b/tools/perf/Documentation/perf-diff.txt
-@@ -285,7 +285,7 @@ If specified the 'Weighted diff' column is displayed wi=
-th value 'd' computed as:
-=20
-   - period being the hist entry period value
-=20
--  - WEIGHT-A/WEIGHT-B being user supplied weights in the the '-c' option
-+  - WEIGHT-A/WEIGHT-B being user supplied weights in the '-c' option
-     behind ':' separator like '-c wdiff:1,2'.
-     - WEIGHT-A being the weight of the data file
-     - WEIGHT-B being the weight of the baseline data file
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json =
-b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
-index aa460d0c4851..59ab88de1b37 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
-@@ -1923,7 +1923,7 @@
-         "EventCode": "0x25",
-         "EventName": "UNC_UPI_RxL0P_POWER_CYCLES",
-         "PerPkg": "1",
--        "PublicDescription": "Counts cycles when the the receive side (Rx)=
- of the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a m=
-ode where we disable 60% of the UPI lanes, decreasing our bandwidth in orde=
-r to save power.",
-+        "PublicDescription": "Counts cycles when the receive side (Rx) of =
-the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a mode =
-where we disable 60% of the UPI lanes, decreasing our bandwidth in order to=
- save power.",
-         "Unit": "UPI LL"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/silvermont/pipeline.json
-index 03a4c7f26698..3278c7d1654d 100644
---- a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
-@@ -257,7 +257,7 @@
-         "Counter": "0,1",
-         "EventCode": "0xCA",
-         "EventName": "NO_ALLOC_CYCLES.NOT_DELIVERED",
--        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is u=
-sed to measure front-end inefficiencies, i.e. when front-end of the machine=
- is not delivering micro-ops to the back-end and the back-end is not stalle=
-d. This event can be used to identify if the machine is truly front-end bou=
-nd.  When this event occurs, it is an indication that the front-end of the =
-machine is operating at less than its theoretical peak performance.  Backgr=
-ound: We can think of the processor pipeline as being divided into 2 broade=
-r parts: Front-end and Back-end. Front-end is responsible for fetching the =
-instruction, decoding into micro-ops (uops) in machine understandable forma=
-t and putting them into a micro-op queue to be consumed by back end. The ba=
-ck-end then takes these micro-ops, allocates the required resources.  When =
-all resources are ready, micro-ops are executed. If the back-end is not rea=
-dy to accept micro-ops from the front-end, then we do not want to count the=
-se as front-end bottlenecks.  However, whenever we have bottlenecks in the =
-back-end, we will have allocation unit stalls and eventually forcing the fr=
-ont-end to wait until the back-end is ready to receive more UOPS. This even=
-t counts the cycles only when back-end is requesting more uops and front-en=
-d is not able to provide them. Some examples of conditions that cause front=
--end efficiencies are: Icache misses, ITLB misses, and decoder restrictions=
- that limit the the front-end bandwidth.",
-+        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is u=
-sed to measure front-end inefficiencies, i.e. when front-end of the machine=
- is not delivering micro-ops to the back-end and the back-end is not stalle=
-d. This event can be used to identify if the machine is truly front-end bou=
-nd.  When this event occurs, it is an indication that the front-end of the =
-machine is operating at less than its theoretical peak performance.  Backgr=
-ound: We can think of the processor pipeline as being divided into 2 broade=
-r parts: Front-end and Back-end. Front-end is responsible for fetching the =
-instruction, decoding into micro-ops (uops) in machine understandable forma=
-t and putting them into a micro-op queue to be consumed by back end. The ba=
-ck-end then takes these micro-ops, allocates the required resources.  When =
-all resources are ready, micro-ops are executed. If the back-end is not rea=
-dy to accept micro-ops from the front-end, then we do not want to count the=
-se as front-end bottlenecks.  However, whenever we have bottlenecks in the =
-back-end, we will have allocation unit stalls and eventually forcing the fr=
-ont-end to wait until the back-end is ready to receive more UOPS. This even=
-t counts the cycles only when back-end is requesting more uops and front-en=
-d is not able to provide them. Some examples of conditions that cause front=
--end efficiencies are: Icache misses, ITLB misses, and decoder restrictions=
- that limit the front-end bandwidth.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x50"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json b/to=
-ols/perf/pmu-events/arch/x86/skylakex/uncore-other.json
-index aa0f67613c4a..0c96e6924d62 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
-@@ -1852,7 +1852,7 @@
-         "EventCode": "0x25",
-         "EventName": "UNC_UPI_RxL0P_POWER_CYCLES",
-         "PerPkg": "1",
--        "PublicDescription": "Counts cycles when the the receive side (Rx)=
- of the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a m=
-ode where we disable 60% of the UPI lanes, decreasing our bandwidth in orde=
-r to save power.",
-+        "PublicDescription": "Counts cycles when the receive side (Rx) of =
-the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a mode =
-where we disable 60% of the UPI lanes, decreasing our bandwidth in order to=
- save power.",
-         "Unit": "UPI LL"
-     },
-     {
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 8b95fb3c4d7b..16db965ac995 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1451,7 +1451,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 		 * tidq->packet->instr_count represents the number of
- 		 * instructions in the current etm packet.
- 		 *
--		 * Period instructions (Pi) contains the the number of
-+		 * Period instructions (Pi) contains the number of
- 		 * instructions executed after the sample point(n) from the
- 		 * previous etm packet.  This will always be less than
- 		 * etm->instructions_sample_period.
---=20
-2.25.1
-
+Will
