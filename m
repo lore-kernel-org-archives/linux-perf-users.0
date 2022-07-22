@@ -2,223 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F204CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jul 2022 12:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3FACCA489
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jul 2022 13:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232479AbiGVMKk (ORCPT
+        id S235210AbiGVNl5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Jul 2022 08:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38308 "EHLO
+        Fri, 22 Jul 2022 09:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230501AbiGVMKj (ORCPT
+        with ESMTP id S235207AbiGVNl4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Jul 2022 08:10:39 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0AB471C135;
-        Fri, 22 Jul 2022 05:10:37 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 069B61063;
-        Fri, 22 Jul 2022 05:10:38 -0700 (PDT)
-Received: from [10.57.40.210] (unknown [10.57.40.210])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64BB93F70D;
-        Fri, 22 Jul 2022 05:10:35 -0700 (PDT)
-Message-ID: <393c8470-6538-cebe-1c49-cf22ac51e3c5@arm.com>
-Date:   Fri, 22 Jul 2022 13:10:33 +0100
+        Fri, 22 Jul 2022 09:41:56 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725874D801
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jul 2022 06:41:52 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id k19so5477523lji.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jul 2022 06:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dx7D0BqkkDvjmBT9gC4DV9N7HZuC2AWyX/zQVsh2Lhg=;
+        b=Mav9qQe7Hay6uovpG8VBsmTfL/xzD90QiB1XmORe5cOsqAXIlePMrDnpAKjk2SPHlU
+         kb5Ut7GMhYSuGugphdGTCzl4QS6dVbBemaHVAe/68tr5YLIdKH+1dl3Be+60VFt6Mw1X
+         89ZZ7H+XeGTtXT+aoENzLnwYujx0UEFEHIllUI+2lj18vV6lg2lkpPDYX2L9dVq8r5Mu
+         ohtc/xno0dA+uaPEz0e57vbqZPXDLbKUqdzl3NXPeMXzZjWy8P656YDqqiKQAcIZgP12
+         9CxD2oRBzvv/UqkEIIr6I79Mj6do1s20CN+FUt2qGuSgsOMDu5gIKWU0Uw89VqdLMCEK
+         WJOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dx7D0BqkkDvjmBT9gC4DV9N7HZuC2AWyX/zQVsh2Lhg=;
+        b=LmNlZfLh3i1GE2aXPUfUtsR2Bdtx/FihDV7wqPLc3d6HDQJF6buf4TlpUyRCGHE2bj
+         xO3Tq/PQuWj6nKOpVZRygkDDyfBAKUbQORzNUOe0sOxRkV0nFrIC9VYMkZbVSwAS+WFG
+         Uq+fLlAcE3TFU2vDcsWkov/hQbVaufvhnYYT2n2gD/4pOhRIse0CtlPQha3UpZJw3Jtk
+         7wWEV6wGxumMXx1yCEzsS9pCAo3sBAZjF0BUtrUctSoEGKtPqZpVOT8xghsG+TpYa1qJ
+         cg4qqVFkLJv8fQs97GKQ91cJpzJH/MaXTbPZUZYbscnwVeMU7r5rqaVDLxWnyO4ugyf4
+         ExpQ==
+X-Gm-Message-State: AJIora8HMmVruDB2mgvWfZLL9Vohm7T/jeV4bR3/5gLYJY75MpA9zKco
+        RI59Ox47wAVJL6rLzJx7RuFqdyjVgcnOgUs7E3DlqQ==
+X-Google-Smtp-Source: AGRyM1vqDflld4FdeS1YXh0RjgxlOzCf0nGqPxhUwqvkb5F6yDAk/Z183xcr0L3QZpAS70KrFAFPlj5+eHC8c+4k4GY=
+X-Received: by 2002:a2e:bd0e:0:b0:25a:88b3:9af6 with SMTP id
+ n14-20020a2ebd0e000000b0025a88b39af6mr24943ljq.363.1658497309800; Fri, 22 Jul
+ 2022 06:41:49 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 00/13] coresight: Add new API to allocate trace source
- ID values
-Content-Language: en-US
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        quic_jinlmao@quicinc.com, suzuki.poulose@arm.com,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Al Grant <Al.Grant@arm.com>
-References: <20220704081149.16797-1-mike.leach@linaro.org>
- <0b493b49-2657-ad5d-465e-d80b62820613@arm.com>
- <CAJ9a7VhXMn+DJ+qgeYRbqgGDm3jV_xNeBGKP=q7eiSe03_7eJw@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAJ9a7VhXMn+DJ+qgeYRbqgGDm3jV_xNeBGKP=q7eiSe03_7eJw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20220704150514.48816-1-elver@google.com> <20220704150514.48816-2-elver@google.com>
+ <Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com> <20220722091044.GC18125@willie-the-truck>
+ <CACT4Y+ZOXXqxhe4U3ZtQPCj2yrf6Qtjg1q0Kfq8+poAOxGgUew@mail.gmail.com>
+ <20220722101053.GA18284@willie-the-truck> <CACT4Y+Z0imEHF0jM-f-uYdpfSpfzMpa+bFZfPeQW1ECBDjD9fA@mail.gmail.com>
+ <20220722110305.GA18336@willie-the-truck>
+In-Reply-To: <20220722110305.GA18336@willie-the-truck>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 22 Jul 2022 15:41:38 +0200
+Message-ID: <CACT4Y+aLiNNt3ESZUKHT9U8duN-TMK561nC7Htx9y3R7afCV4g@mail.gmail.com>
+Subject: Re: [PATCH v3 01/14] perf/hw_breakpoint: Add KUnit test for
+ constraints accounting
+To:     Will Deacon <will@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Marco Elver <elver@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, linux-sh@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Fri, 22 Jul 2022 at 13:03, Will Deacon <will@kernel.org> wrote:
+> > > > > > On Mon, Jul 04, 2022 at 05:05:01PM +0200, Marco Elver wrote:
+> > > > > > I'm not immediately sure what would be necessary to support per-task kernel
+> > > > > > breakpoints, but given a lot of that state is currently per-cpu, I imagine it's
+> > > > > > invasive.
+> > > > >
+> > > > > I would actually like to remove HW_BREAKPOINT completely for arm64 as it
+> > > > > doesn't really work and causes problems for other interfaces such as ptrace
+> > > > > and kgdb.
+> > > >
+> > > > Will it be a localized removal of code that will be easy to revert in
+> > > > future? Or will it touch lots of code here and there?
+> > > > Let's say we come up with a very important use case for HW_BREAKPOINT
+> > > > and will need to make it work on arm64 as well in future.
+> > >
+> > > My (rough) plan is to implement a lower-level abstraction for handling the
+> > > underlying hardware resources, so we can layer consumers on top of that
+> > > instead of funneling through hw_breakpoint. So if we figure out how to make
+> > > bits of hw_breakpoint work on arm64, then it should just go on top.
+> > >
+> > > The main pain point for hw_breakpoint is kernel-side {break,watch}points
+> > > and I think there are open design questions about how they should work
+> > > on arm64, particularly when considering the interaction with user
+> > > watchpoints triggering on uaccess routines and the possibility of hitting
+> > > a kernel watchpoint in irq context.
+> >
+> > I see. Our main interest would be break/watchpoints on user addresses
+> > firing from both user-space and kernel (uaccess), so at least on irqs.
+>
+> Interesting. Do other architectures report watchpoint hits on user
+> addresses from kernel uaccess? It feels like this might be surprising to
+> some users, and it opens up questions about accesses using different virtual
+> aliases (e.g. via GUP) or from other entities as well (e.g. firmware,
+> KVM guests, DMA).
 
+x86 supports this.
+There is that attr.exclude_kernel flag that requires special permissions:
+https://elixir.bootlin.com/linux/v5.19-rc7/source/kernel/events/core.c#L12061
+https://elixir.bootlin.com/linux/v5.19-rc7/source/kernel/events/core.c#L9323
+But if I understand correctly, it only filters out delivery, the HW
+breakpoint fires even if attr.exclude_kernel is set.
 
-On 21/07/2022 14:54, Mike Leach wrote:
-> Hi James,
-> 
-> Thanks for looking at this.
-> 
-> On Thu, 21 Jul 2022 at 11:27, James Clark <james.clark@arm.com> wrote:
->>
->>
->>
->> On 04/07/2022 09:11, Mike Leach wrote:
->>> The current method for allocating trace source ID values to sources is
->>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
->>> The STM is allocated ID 0x1.
->>>
->>> This fixed algorithm is used in both the CoreSight driver code, and by
->>> perf when writing the trace metadata in the AUXTRACE_INFO record.
->>>
->>> The method needs replacing as currently:-
->>> 1. It is inefficient in using available IDs.
->>> 2. Does not scale to larger systems with many cores and the algorithm
->>> has no limits so will generate invalid trace IDs for cpu number > 44.
->>>
->>> Additionally requirements to allocate additional system IDs on some
->>> systems have been seen.
->>>
->>> This patch set  introduces an API that allows the allocation of trace IDs
->>> in a dynamic manner.
->>
->> I've tested this with various commands like with per-thread mode, attaching,
->> running the tests and also Carsten's new tests. Apart from the possible
->> backwards compatibility issue and the minor code comments it looks good to
->> me.
->>
-> 
-> I've looked at the backwards compatibility issue. At present with the
-> current set
-> (K = kernel drivers, P-rec = perf record, P-rep = perf report)
-> ::
-> 
-> K-v1-ids  + P-rec-v1-ids => P-rep-v1 (OK)  P-rep-v2 (OK)
-> K-v1-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (fail)
-> K-v2-ids  + P-rec-v1-ids => P-rep-v1 (fail)  P-rep-v2 (fail)
-> K-v2-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> 
-> So, with a P-rec generating v2 metadata, P rep will cleanly error out.
-> Where the Kernel ID version and the perf report ID version differ,
-> even the P rep v2 will fail, due to the IDs being different in the
-> file and actual drivers. These fails will simply look like no data
-> present.
-> 
-> There are two possible fixes that improve this:-
-> A) if the v2 kernel uses a sysfs flag to indicate new ID usage, then
-> if this is missing the new perf record can degrade to using the old
-> algorithm to put IDs directly into metadata as it assumes it is
-> running on a v1 kernel.
-> This fixes things then for the P-rep v2 that can look for this & we
-> know there will be no incoming ID packets.
-> B) P-rep v2 can look for new packets irrespective of incoming metadata
-> version, and if it sees them, override them
-> 
-> Compatibility matrix then looks like::
-> K-v1-ids  + P-rec-v1-ids => P-rep-v1 (OK)  P-rep-v2 (OK)
-> K-v1-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> K-v2-ids  + P-rec-v1-ids => P-rep-v1 (fail)  P-rep-v2 (OK)
-> K-v2-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> 
-> There is no solution to using an old version of perf record on a new
-> kernel and getting the old version of perf report to correctly decode
-> the file.
-> 
+We also wanted to relax this permission check somewhat:
+https://lore.kernel.org/all/20220601093502.364142-1-elver@google.com/
 
-We had a discussion about this last point on the Friday AutoFDO call.
-Do you think it's possible to keep the old static ID allocations if
-num_possible_cpus() < Max Trace ID? This is especially important for
-simple perf because Android doesn't even have the more than 128 CPUs
-issue, so technically shouldn't have to have any changes made to it.
-
-Making the dynamic traceID allocation use the same IDs as before
-whenever possible should allow both old Perf and simpleperf to open
-the file as before and ignore the AUX_OUTPUT_HW_ID packets.
-
-James
-
-> Thoughts?
-> 
-> Mike
-> 
->>>
->>> Architecturally reserved IDs are never allocated, and the system is
->>> limited to allocating only valid IDs.
->>>
->>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
->>> the new API.
->>>
->>> For the ETMx.x devices IDs are allocated on certain events
->>> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
->>> sysfs TRCTRACEID register and freed when the sysfs reset is written.
->>>
->>> b) When using perf, ID is allocated on hardware enable, and freed on
->>> hardware disable. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
->>> The ID allocator is notified when perf sessions start and stop
->>> so CPU based IDs are kept constant throughout any perf session.
->>>
->>>
->>> Note: This patchset breaks backward compatibility for perf record and
->>> perf report.
->>>
->>> Because the method for generating the AUXTRACE_INFO meta data has
->>> changed, using an older perf record will result in metadata that
->>> does not match the trace IDs used in the recorded trace data.
->>> This mismatch will cause subsequent decode to fail.
->>>
->>> The version of the AUXTRACE_INFO has been updated to reflect the fact that
->>> the trace source IDs are no longer present in the metadata. This will
->>> mean older versions of perf report cannot decode the file.
->>>
->>> Applies to coresight/next [c06475910b52]
->>> Tested on DB410c
->>>
->>> Changes since v1:
->>> (after feedback & discussion with Mathieu & Suzuki).
->>>
->>> 1) API has changed. The global trace ID map is managed internally, so it
->>> is no longer passed in to the API functions.
->>>
->>> 2) perf record does not use sysfs to find the trace IDs. These are now
->>> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
->>> have been updated accordingly to generate and handle these events.
->>>
->>> Mike Leach (13):
->>>   coresight: trace-id: Add API to dynamically assign Trace ID values
->>>   coresight: trace-id: update CoreSight core to use Trace ID API
->>>   coresight: stm: Update STM driver to use Trace ID API
->>>   coresight: etm4x: Update ETM4 driver to use Trace ID API
->>>   coresight: etm3x: Update ETM3 driver to use Trace ID API
->>>   coresight: etmX.X: stm: Remove unused legacy source Trace ID ops
->>>   coresight: perf: traceid: Add perf notifiers for Trace ID
->>>   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
->>>   perf: cs-etm: Update record event to use new Trace ID protocol
->>>   kernel: events: Export perf_report_aux_output_id()
->>>   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
->>>   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
->>>   coresight: trace-id: Add debug & test macros to Trace ID allocation
->>>
->>>  drivers/hwtracing/coresight/Makefile          |   2 +-
->>>  drivers/hwtracing/coresight/coresight-core.c  |  49 +---
->>>  .../hwtracing/coresight/coresight-etm-perf.c  |  17 ++
->>>  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
->>>  .../coresight/coresight-etm3x-core.c          |  85 +++---
->>>  .../coresight/coresight-etm3x-sysfs.c         |  28 +-
->>>  .../coresight/coresight-etm4x-core.c          |  65 ++++-
->>>  .../coresight/coresight-etm4x-sysfs.c         |  32 ++-
->>>  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
->>>  drivers/hwtracing/coresight/coresight-stm.c   |  49 +---
->>>  .../hwtracing/coresight/coresight-trace-id.c  | 263 ++++++++++++++++++
->>>  .../hwtracing/coresight/coresight-trace-id.h  |  65 +++++
->>>  include/linux/coresight-pmu.h                 |  31 ++-
->>>  include/linux/coresight.h                     |   3 -
->>>  kernel/events/core.c                          |   1 +
->>>  tools/include/linux/coresight-pmu.h           |  31 ++-
->>>  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
->>>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   9 +
->>>  tools/perf/util/cs-etm.c                      | 220 +++++++++++++--
->>>  tools/perf/util/cs-etm.h                      |  14 +-
->>>  20 files changed, 784 insertions(+), 207 deletions(-)
->>>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
->>>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
->>>
-> 
-> 
-> 
+Yes, if the kernel maps the page at a different virtual address, then
+the breakpoint won't fire I think.
+Don't know what are the issues with firmware/KVM.
