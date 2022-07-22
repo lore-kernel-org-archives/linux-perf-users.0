@@ -2,164 +2,186 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79036C433EF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jul 2022 10:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE05C43334
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jul 2022 10:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235395AbiGVKcE (ORCPT
+        id S234249AbiGVKiU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Jul 2022 06:32:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41128 "EHLO
+        Fri, 22 Jul 2022 06:38:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235253AbiGVKcD (ORCPT
+        with ESMTP id S234497AbiGVKiT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Jul 2022 06:32:03 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0321FB505D
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jul 2022 03:32:01 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id z13so4544228ljj.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jul 2022 03:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eXqhKXWkyJJg9+g/9EohedHzzZKAjuqa2sFmi97JD9Y=;
-        b=pnVwjwP2epgqugyqrMAsXv6dkAFuOokeRTDVkC6DsP+qX0N8ti0lIHBdgoQII4uwjh
-         t4naAikyweBC0my1Llr1nYwJ/BPKlspVAbhCwPoCgTMoNwdYypjKVxB+5z3pB//FCb5f
-         Oz3YNzSdFiOyLnc8vSoS+c49UYoX4ct9rex+XVYZL+LGaQEQvsI0oqXiljUx4g/DUwP/
-         XQtr7ntRWMBZtOePBlbIMVp0Nv+RhfrAUWMSyNmcqPRQRLWPqncJJ1296PNqH2EkBNyF
-         xW3C/bLFl6hSGtA+CmQiPZPhOfPQB/4FBfUufX51z8LjtLhFudukcFcWT4Vek59IOBwC
-         jO3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eXqhKXWkyJJg9+g/9EohedHzzZKAjuqa2sFmi97JD9Y=;
-        b=ypPv9G+ufWatP6p1xWQ155GMpwih/1IlzkoXaJuQ8jnfKTzA0/3OValJK251SRRonM
-         6i9kW0BOIhWZKBS02hVbDT9usfvkdCQw+QPM7S2NZl6yytCGvMhL9Hjj58ezlmBnGCpC
-         LMSN22+C4NSk7V4V9Muya/Iz+TXYADsMsWqnNWgjOtZwt6AKVFaQTcyLL9KC8ofd2Hv3
-         JHuo/0nwqA6tyMIJ8zllEr+/185WeEb/3DR+hdMF7rI6Rg52o1a3AuSQPWNB6KxDEMr2
-         ADsX7Yq1KKLUcOrj2p8hYgLdl3t2zi+SGWKfLn+AyxVXatDiqPc0fEhbBHDoTTw+6Zm/
-         j4KQ==
-X-Gm-Message-State: AJIora9EL4IfzwAmn+gURJhKQpS28Zv8yD3BIX5yKihuc+Uo8D7D+y9z
-        3GnfiyT8X0j84pDHteJX/j0ziK+QQDNp1tsreqxKjQ==
-X-Google-Smtp-Source: AGRyM1vQ0cnyWSucVzfKlluxmfyG+Ix//9JlO9f9D6f+QcIc7yr3ZZbF+QXGzK5/C+gU2hxCnErBEvbCnNBO6oH2C1A=
-X-Received: by 2002:a05:651c:1310:b0:25d:efe5:109d with SMTP id
- u16-20020a05651c131000b0025defe5109dmr742781lja.465.1658485917645; Fri, 22
- Jul 2022 03:31:57 -0700 (PDT)
+        Fri, 22 Jul 2022 06:38:19 -0400
+Received: from mail-m973.mail.163.com (mail-m973.mail.163.com [123.126.97.3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB3F0BA267;
+        Fri, 22 Jul 2022 03:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qZA/V
+        SBXMttJiclEn3xajTp90qDk6AxMWBxPRPF+xvo=; b=hFDJO2JEPI6xzsHZlDWe+
+        pg7FRIkNCHsaWjT4EFEpnDJQGT04StiPcLRSdEJmKGyNzLoLniqsBdzsuaOnrF9Z
+        DR75RkRoAojms3cv9B7NJkpLvSCzEbcFBS0OysZ6l7BTDi9cEpqv3V9G/VFw1qlB
+        JwAAtuQYyKEiKp3Za3E+j0=
+Received: from localhost.localdomain (unknown [112.97.59.29])
+        by smtp3 (Coremail) with SMTP id G9xpCgA30ZLqfdpiFX2aQg--.5948S2;
+        Fri, 22 Jul 2022 18:37:32 +0800 (CST)
+From:   Slark Xiao <slark_xiao@163.com>
+To:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, mike.leach@linaro.org,
+        leo.yan@linaro.org, john.garry@huawei.com, will@kernel.org,
+        james.clark@arm.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Slark Xiao <slark_xiao@163.com>
+Subject: [PATCH] perf: Fix typo 'the the' in comment
+Date:   Fri, 22 Jul 2022 18:37:28 +0800
+Message-Id: <20220722103728.82854-1-slark_xiao@163.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220704150514.48816-1-elver@google.com> <20220704150514.48816-2-elver@google.com>
- <Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com> <20220722091044.GC18125@willie-the-truck>
- <CACT4Y+ZOXXqxhe4U3ZtQPCj2yrf6Qtjg1q0Kfq8+poAOxGgUew@mail.gmail.com> <20220722101053.GA18284@willie-the-truck>
-In-Reply-To: <20220722101053.GA18284@willie-the-truck>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 22 Jul 2022 12:31:45 +0200
-Message-ID: <CACT4Y+Z0imEHF0jM-f-uYdpfSpfzMpa+bFZfPeQW1ECBDjD9fA@mail.gmail.com>
-Subject: Re: [PATCH v3 01/14] perf/hw_breakpoint: Add KUnit test for
- constraints accounting
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Marco Elver <elver@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, linux-sh@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID: G9xpCgA30ZLqfdpiFX2aQg--.5948S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Gw1xJrW7ZryDtF1xCr13CFg_yoWxKrWDpF
+        s7CwsIyr1kW3ZYq3Z5Aw4xXw1fu3yxAan8Kw1Sy3y7Zr43Xrn2qFWfKw1Yva47Xws5AFWa
+        vws8WryUZFyrCFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pNjg2dUUUUU=
+X-Originating-IP: [112.97.59.29]
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiJQxGZGAJpKgOWQAAs5
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 22 Jul 2022 at 12:11, Will Deacon <will@kernel.org> wrote:
-> > > > [adding Will]
-> > > >
-> > > > On Mon, Jul 04, 2022 at 05:05:01PM +0200, Marco Elver wrote:
-> > > > > Add KUnit test for hw_breakpoint constraints accounting, with various
-> > > > > interesting mixes of breakpoint targets (some care was taken to catch
-> > > > > interesting corner cases via bug-injection).
-> > > > >
-> > > > > The test cannot be built as a module because it requires access to
-> > > > > hw_breakpoint_slots(), which is not inlinable or exported on all
-> > > > > architectures.
-> > > > >
-> > > > > Signed-off-by: Marco Elver <elver@google.com>
-> > > >
-> > > > As mentioned on IRC, I'm seeing these tests fail on arm64 when applied atop
-> > > > v5.19-rc7:
-> > > >
-> > > > | TAP version 14
-> > > > | 1..1
-> > > > |     # Subtest: hw_breakpoint
-> > > > |     1..9
-> > > > |     ok 1 - test_one_cpu
-> > > > |     ok 2 - test_many_cpus
-> > > > |     # test_one_task_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> > > > |     Expected IS_ERR(bp) to be false, but is true
-> > > > |     not ok 3 - test_one_task_on_all_cpus
-> > > > |     # test_two_tasks_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> > > > |     Expected IS_ERR(bp) to be false, but is true
-> > > > |     not ok 4 - test_two_tasks_on_all_cpus
-> > > > |     # test_one_task_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> > > > |     Expected IS_ERR(bp) to be false, but is true
-> > > > |     not ok 5 - test_one_task_on_one_cpu
-> > > > |     # test_one_task_mixed: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> > > > |     Expected IS_ERR(bp) to be false, but is true
-> > > > |     not ok 6 - test_one_task_mixed
-> > > > |     # test_two_tasks_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> > > > |     Expected IS_ERR(bp) to be false, but is true
-> > > > |     not ok 7 - test_two_tasks_on_one_cpu
-> > > > |     # test_two_tasks_on_one_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> > > > |     Expected IS_ERR(bp) to be false, but is true
-> > > > |     not ok 8 - test_two_tasks_on_one_all_cpus
-> > > > |     # test_task_on_all_and_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> > > > |     Expected IS_ERR(bp) to be false, but is true
-> > > > |     not ok 9 - test_task_on_all_and_one_cpu
-> > > > | # hw_breakpoint: pass:2 fail:7 skip:0 total:9
-> > > > | # Totals: pass:2 fail:7 skip:0 total:9
-> > > >
-> > > > ... which seems to be becasue arm64 currently forbids per-task
-> > > > breakpoints/watchpoints in hw_breakpoint_arch_parse(), where we have:
-> > > >
-> > > >         /*
-> > > >          * Disallow per-task kernel breakpoints since these would
-> > > >          * complicate the stepping code.
-> > > >          */
-> > > >         if (hw->ctrl.privilege == AARCH64_BREAKPOINT_EL1 && bp->hw.target)
-> > > >                 return -EINVAL;
-> > > >
-> > > > ... which has been the case since day one in commit:
-> > > >
-> > > >   478fcb2cdb2351dc ("arm64: Debugging support")
-> > > >
-> > > > I'm not immediately sure what would be necessary to support per-task kernel
-> > > > breakpoints, but given a lot of that state is currently per-cpu, I imagine it's
-> > > > invasive.
-> > >
-> > > I would actually like to remove HW_BREAKPOINT completely for arm64 as it
-> > > doesn't really work and causes problems for other interfaces such as ptrace
-> > > and kgdb.
-> >
-> > Will it be a localized removal of code that will be easy to revert in
-> > future? Or will it touch lots of code here and there?
-> > Let's say we come up with a very important use case for HW_BREAKPOINT
-> > and will need to make it work on arm64 as well in future.
->
-> My (rough) plan is to implement a lower-level abstraction for handling the
-> underlying hardware resources, so we can layer consumers on top of that
-> instead of funneling through hw_breakpoint. So if we figure out how to make
-> bits of hw_breakpoint work on arm64, then it should just go on top.
->
-> The main pain point for hw_breakpoint is kernel-side {break,watch}points
-> and I think there are open design questions about how they should work
-> on arm64, particularly when considering the interaction with user
-> watchpoints triggering on uaccess routines and the possibility of hitting
-> a kernel watchpoint in irq context.
+Replace 'the the' with 'the' in the comment.
 
-I see. Our main interest would be break/watchpoints on user addresses
-firing from both user-space and kernel (uaccess), so at least on irqs.
+Signed-off-by: Slark Xiao <slark_xiao@163.com>
+---
+ tools/perf/Documentation/perf-diff.txt                        | 2 +-
+ tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json | 2 +-
+ tools/perf/pmu-events/arch/x86/silvermont/pipeline.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json     | 2 +-
+ tools/perf/util/cs-etm.c                                      | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentat=
+ion/perf-diff.txt
+index be65bd55ab2a..b77957ac288b 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -285,7 +285,7 @@ If specified the 'Weighted diff' column is displayed wi=
+th value 'd' computed as:
+=20
+   - period being the hist entry period value
+=20
+-  - WEIGHT-A/WEIGHT-B being user supplied weights in the the '-c' option
++  - WEIGHT-A/WEIGHT-B being user supplied weights in the '-c' option
+     behind ':' separator like '-c wdiff:1,2'.
+     - WEIGHT-A being the weight of the data file
+     - WEIGHT-B being the weight of the baseline data file
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json =
+b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
+index aa460d0c4851..59ab88de1b37 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
+@@ -1923,7 +1923,7 @@
+         "EventCode": "0x25",
+         "EventName": "UNC_UPI_RxL0P_POWER_CYCLES",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts cycles when the the receive side (Rx)=
+ of the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a m=
+ode where we disable 60% of the UPI lanes, decreasing our bandwidth in orde=
+r to save power.",
++        "PublicDescription": "Counts cycles when the receive side (Rx) of =
+the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a mode =
+where we disable 60% of the UPI lanes, decreasing our bandwidth in order to=
+ save power.",
+         "Unit": "UPI LL"
+     },
+     {
+diff --git a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/silvermont/pipeline.json
+index 03a4c7f26698..3278c7d1654d 100644
+--- a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
+@@ -257,7 +257,7 @@
+         "Counter": "0,1",
+         "EventCode": "0xCA",
+         "EventName": "NO_ALLOC_CYCLES.NOT_DELIVERED",
+-        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is u=
+sed to measure front-end inefficiencies, i.e. when front-end of the machine=
+ is not delivering micro-ops to the back-end and the back-end is not stalle=
+d. This event can be used to identify if the machine is truly front-end bou=
+nd.  When this event occurs, it is an indication that the front-end of the =
+machine is operating at less than its theoretical peak performance.  Backgr=
+ound: We can think of the processor pipeline as being divided into 2 broade=
+r parts: Front-end and Back-end. Front-end is responsible for fetching the =
+instruction, decoding into micro-ops (uops) in machine understandable forma=
+t and putting them into a micro-op queue to be consumed by back end. The ba=
+ck-end then takes these micro-ops, allocates the required resources.  When =
+all resources are ready, micro-ops are executed. If the back-end is not rea=
+dy to accept micro-ops from the front-end, then we do not want to count the=
+se as front-end bottlenecks.  However, whenever we have bottlenecks in the =
+back-end, we will have allocation unit stalls and eventually forcing the fr=
+ont-end to wait until the back-end is ready to receive more UOPS. This even=
+t counts the cycles only when back-end is requesting more uops and front-en=
+d is not able to provide them. Some examples of conditions that cause front=
+-end efficiencies are: Icache misses, ITLB misses, and decoder restrictions=
+ that limit the the front-end bandwidth.",
++        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is u=
+sed to measure front-end inefficiencies, i.e. when front-end of the machine=
+ is not delivering micro-ops to the back-end and the back-end is not stalle=
+d. This event can be used to identify if the machine is truly front-end bou=
+nd.  When this event occurs, it is an indication that the front-end of the =
+machine is operating at less than its theoretical peak performance.  Backgr=
+ound: We can think of the processor pipeline as being divided into 2 broade=
+r parts: Front-end and Back-end. Front-end is responsible for fetching the =
+instruction, decoding into micro-ops (uops) in machine understandable forma=
+t and putting them into a micro-op queue to be consumed by back end. The ba=
+ck-end then takes these micro-ops, allocates the required resources.  When =
+all resources are ready, micro-ops are executed. If the back-end is not rea=
+dy to accept micro-ops from the front-end, then we do not want to count the=
+se as front-end bottlenecks.  However, whenever we have bottlenecks in the =
+back-end, we will have allocation unit stalls and eventually forcing the fr=
+ont-end to wait until the back-end is ready to receive more UOPS. This even=
+t counts the cycles only when back-end is requesting more uops and front-en=
+d is not able to provide them. Some examples of conditions that cause front=
+-end efficiencies are: Icache misses, ITLB misses, and decoder restrictions=
+ that limit the front-end bandwidth.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x50"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json b/to=
+ols/perf/pmu-events/arch/x86/skylakex/uncore-other.json
+index aa0f67613c4a..0c96e6924d62 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
+@@ -1852,7 +1852,7 @@
+         "EventCode": "0x25",
+         "EventName": "UNC_UPI_RxL0P_POWER_CYCLES",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts cycles when the the receive side (Rx)=
+ of the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a m=
+ode where we disable 60% of the UPI lanes, decreasing our bandwidth in orde=
+r to save power.",
++        "PublicDescription": "Counts cycles when the receive side (Rx) of =
+the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a mode =
+where we disable 60% of the UPI lanes, decreasing our bandwidth in order to=
+ save power.",
+         "Unit": "UPI LL"
+     },
+     {
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 8b95fb3c4d7b..16db965ac995 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1451,7 +1451,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 		 * tidq->packet->instr_count represents the number of
+ 		 * instructions in the current etm packet.
+ 		 *
+-		 * Period instructions (Pi) contains the the number of
++		 * Period instructions (Pi) contains the number of
+ 		 * instructions executed after the sample point(n) from the
+ 		 * previous etm packet.  This will always be less than
+ 		 * etm->instructions_sample_period.
+--=20
+2.25.1
+
