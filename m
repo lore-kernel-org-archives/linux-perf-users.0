@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41BDCCA473
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jul 2022 22:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A56CCA473
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jul 2022 22:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236838AbiGVWcz (ORCPT
+        id S236313AbiGVWdu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Jul 2022 18:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
+        Fri, 22 Jul 2022 18:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236792AbiGVWcy (ORCPT
+        with ESMTP id S230502AbiGVWdn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Jul 2022 18:32:54 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9B54A6FBF
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jul 2022 15:32:53 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id s6-20020a25c206000000b0066ebb148de6so4622155ybf.15
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jul 2022 15:32:53 -0700 (PDT)
+        Fri, 22 Jul 2022 18:33:43 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFC4BA4D6
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jul 2022 15:33:15 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id j2-20020a2597c2000000b0064b3e54191aso4680091ybo.20
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jul 2022 15:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=JzNZf8+4+AkLiixfXHUf0Tr6YoyJNaYpbyf1w4wer88=;
-        b=HXPy3Q7C5JFeD8geWVrtDOj5m6jzJnHuooELgwjqkoEsM6EpZlzGFOVPo3skzttWlr
-         cJIB67AwmO/WGtRlA/FMWxH+BK+c5D+DgOePQaQZSuUY+yWjtgLB7KaOe9E+Fwqpzy20
-         DLkYKAH1mf4XQ6OeECdDAu0CqxqxwFrFJ1uwS9eaJwioqAKgz1n4pJuhc8OIfxnNuAxO
-         4bzQ7Om4x7Z/yve2h5KXPdofNZYLkt69gE8YtMNBY70mUKv8YOBRgtHC/3VJFOPuBmLc
-         ShJnpd2AXE0MX8Qu1aG7wTrWiHjV9fi3jUvgmvr31uNjr3KRHcUTm7xopWVzW2YLPbef
-         LNWQ==
+         :cc:content-transfer-encoding;
+        bh=nI/NmLxFINDhMd/akVgcMLTKY8y4maTSUmteL7UR1os=;
+        b=AQMGgrzCTfWYaPJ2WjfbTPNAy9LNaMu+rHDth68saO38UsWlMCdEAHuz7icUMQLmFT
+         d60ogGfCUiH0HwBC822AGjbubBzZzet+iv+TFu6ctBvLVY7omlc6Am84svrpLlLjzZ+6
+         rtwEayjUkDJQ8k1i6AffR445P82+QMmWqvlCILsw+J4YWD1GDpSHmKY9LIqqfGNZSS6w
+         imDZzRb29hq8lR4iXzsJVP4dVgPBV6x7PSDXVyBoo7yZk1eR5424PvQc3uJk1EAt7U7A
+         lESihdL0TqYDBBYRJh26nOKMQKmh4uETu5YhDUpFiygRY/PA/qnyjX+Gx2UZEITzRO5s
+         IBfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=JzNZf8+4+AkLiixfXHUf0Tr6YoyJNaYpbyf1w4wer88=;
-        b=42jMKCD8heQSBY0sdY2CPxGdTUOjLYD4VcVdlTeqR0Ttms1NjpG5jJMGECJEnbjZto
-         nd84t02YR+Imb9vHYf55VV9nkE/56ixr/1LMRYoxOO5pzHWpYEaxvMbbXlaZYAVdved2
-         dlUiET9k0s7pTtR5xqIWpY87etQM1Hxft7i8CL81U13snB8re7Iw6r5GQEzADuvcauxn
-         mFajuCm5sniFFW0SCKlE9B6f3dzT6ysC+biUMYHNPbaeruOnpnWbJ95l7EdxwsK32ziZ
-         6QAh9kGWWAArFcpHDtwt2ss5Qe3N/Oy/IDbjsTRp2m4vN0xx24e4oCCt95HBWAm9kN8H
-         y+rA==
-X-Gm-Message-State: AJIora/nYNufRsH9X+B10AUbMwgd3vfasjtNphwYy+In9CvFvDCrxeOD
-        oEhFeJuZzNrnGWGkPNK+sO5cDz05aFP/
-X-Google-Smtp-Source: AGRyM1sruwnZKnwPtWtUp67BF9nG0vn8EGplXYGSTiGzRcjThQ4rRs1uXZWCqLqnEtEJOLMHCXDfsGB61dKk
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=nI/NmLxFINDhMd/akVgcMLTKY8y4maTSUmteL7UR1os=;
+        b=dOfS63Lfxp223JnyfdcXQhATRVCbq0Lh8jUMUG1yIX+fdWTkIQBNCeIC9vuSyZiDVi
+         jBxyLK3lOtcuTY7YUD0rHlrC4mCTNBiSBrijRf34z9AS+yPai83AtCyoHQ2wGoD55Rxo
+         aN45orwQcYciOigx2QpGWS+w6dmjek0p45kUdtC3jnPS3QI03f15lov56SAJZr6CUvzc
+         Sy5UVkAuwqNJ90FSLS2VnzFFreVxgRwG3+hx9n9JoItGeCr2meYpFgCI85Ojo4P9wtfW
+         ppm932+EFPIKocCY3PIg5S9FytIfqV6Ky4mcP6ByzzN36/Wc2BJlCA7Ir7uosiuRd/R8
+         qSkw==
+X-Gm-Message-State: AJIora+UkrJNeZfjHsd6zQ8qjNjvjRR70/vyy0jNRGuHDOUL+NXdj7FW
+        9t7gOKq4PvuZBDCpudgrqMNaCr0lYugI
+X-Google-Smtp-Source: AGRyM1uuBI4r0F9D+PcmY+QbCygEwFJ70M3Z0T21sdgaHCsW2W4BB1jG5jmwHgDiJujhsAUulHenJMpB2gVM
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7543:ead8:55fa:3980])
- (user=irogers job=sendgmr) by 2002:a0d:da02:0:b0:31c:a0e9:4165 with SMTP id
- c2-20020a0dda02000000b0031ca0e94165mr1717253ywe.439.1658529173232; Fri, 22
- Jul 2022 15:32:53 -0700 (PDT)
-Date:   Fri, 22 Jul 2022 15:32:10 -0700
+ (user=irogers job=sendgmr) by 2002:a25:1f46:0:b0:670:f3ab:234 with SMTP id
+ f67-20020a251f46000000b00670f3ab0234mr1804594ybf.181.1658529195220; Fri, 22
+ Jul 2022 15:33:15 -0700 (PDT)
+Date:   Fri, 22 Jul 2022 15:32:18 -0700
 In-Reply-To: <20220722223240.1618013-1-irogers@google.com>
-Message-Id: <20220722223240.1618013-2-irogers@google.com>
+Message-Id: <20220722223240.1618013-10-irogers@google.com>
 Mime-Version: 1.0
 References: <20220722223240.1618013-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.1.359.gd136c6c3e2-goog
-Subject: [PATCH v1 01/31] perf test: Avoid sysfs state affecting fake events
+Subject: [PATCH v1 09/31] perf vendor events: Update goldmont mapfile.csv
 From:   Ian Rogers <irogers@google.com>
 To:     perry.taylor@intel.com, caleb.biggers@intel.com,
         kshipra.bopardikar@intel.com,
@@ -76,45 +76,122 @@ To:     perry.taylor@intel.com, caleb.biggers@intel.com,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Icelake has a slots event, on my Skylakex I have CPU events in sysfs
-of topdown-slots-issued and topdown-total-slots. Legacy event parsing
-would try to use '-' to separate parts of an event and so
-perf_pmu__parse_init sets 'slots' to be a PMU_EVENT_SYMBOL_SUFFIX2. As
-such parsing the slots event for a fake PMU fails as a
-PMU_EVENT_SYMBOL_SUFFIX2 isn't made into the PE_PMU_EVENT_FAKE token.
-Resolve this issue by test initializing the PMU parsing state before
-every parse. This must be done every parse as the state is removes after
-each parse_events.
+Align end of file whitespace with what is generated by:
+https://github.com/intel/event-converter-for-linux-perf/blob/master/downloa=
+d_and_gen.py
+
+Modify mapfile.csv to have a missing goldmont cpuid.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu-events.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/pmu-events/arch/x86/goldmont/cache.json          | 2 +-
+ tools/perf/pmu-events/arch/x86/goldmont/floating-point.json | 2 +-
+ tools/perf/pmu-events/arch/x86/goldmont/frontend.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/goldmont/memory.json         | 2 +-
+ tools/perf/pmu-events/arch/x86/goldmont/pipeline.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv                  | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 478b33825790..263cbb67c861 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -812,6 +812,15 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 	for (cur = strchr(dup, '@') ; cur; cur = strchr(++cur, '@'))
- 		*cur = '/';
- 
-+	if (fake_pmu) {
-+		/*
-+		 * Every call to __parse_events will try to initialize the PMU
-+		 * state from sysfs and then clean it up at the end. Reset the
-+		 * PMU events to the test state so that we don't pick up
-+		 * erroneous prefixes and suffixes.
-+		 */
-+		perf_pmu__test_parse_init();
-+	}
- 	ret = __parse_events(evlist, dup, error, fake_pmu);
- 	free(dup);
- 
--- 
+diff --git a/tools/perf/pmu-events/arch/x86/goldmont/cache.json b/tools/per=
+f/pmu-events/arch/x86/goldmont/cache.json
+index 0b887d73b7f3..ed957d4f9c6d 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmont/cache.json
++++ b/tools/perf/pmu-events/arch/x86/goldmont/cache.json
+@@ -1300,4 +1300,4 @@
+         "SampleAfterValue": "100007",
+         "UMask": "0x1"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/goldmont/floating-point.json b/=
+tools/perf/pmu-events/arch/x86/goldmont/floating-point.json
+index bb364a04a75f..37174392a510 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmont/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/goldmont/floating-point.json
+@@ -30,4 +30,4 @@
+         "SampleAfterValue": "2000003",
+         "UMask": "0x8"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/goldmont/frontend.json b/tools/=
+perf/pmu-events/arch/x86/goldmont/frontend.json
+index 120ff65897c0..216da6e121c8 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmont/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/goldmont/frontend.json
+@@ -79,4 +79,4 @@
+         "SampleAfterValue": "200003",
+         "UMask": "0x1"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/goldmont/memory.json b/tools/pe=
+rf/pmu-events/arch/x86/goldmont/memory.json
+index 6252503f68a1..9f6f0328249e 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmont/memory.json
++++ b/tools/perf/pmu-events/arch/x86/goldmont/memory.json
+@@ -31,4 +31,4 @@
+         "SampleAfterValue": "200003",
+         "UMask": "0x4"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json b/tools/=
+perf/pmu-events/arch/x86/goldmont/pipeline.json
+index 5dba4313013f..42ff0b134aeb 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/goldmont/pipeline.json
+@@ -354,7 +354,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0xC3",
+         "EventName": "MACHINE_CLEARS.SMC",
+-        "PublicDescription": "Counts the number of times that the processo=
+r detects that a program is writing to a code section and has to perform a =
+machine clear because of that modification.  Self-modifying code (SMC) caus=
+es a severe penalty in all Intel architecture processors.",
++        "PublicDescription": "Counts the number of times that the processo=
+r detects that a program is writing to a code section and has to perform a =
+machine clear because of that modification.  Self-modifying code (SMC) caus=
+es a severe penalty in all Intel(R) architecture processors.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x1"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json b/=
+tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json
+index d5e89c74a9be..2e17e02e1463 100644
+--- a/tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/goldmont/virtual-memory.json
+@@ -75,4 +75,4 @@
+         "SampleAfterValue": "200003",
+         "UMask": "0x2"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index b105d80d2b7d..ef0beab68a90 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -6,7 +6,7 @@ GenuineIntel-6-56,v23,broadwellde,core
+ GenuineIntel-6-4F,v19,broadwellx,core
+ GenuineIntel-6-55-[56789ABCDEF],v1.16,cascadelakex,core
+ GenuineIntel-6-96,v1.03,elkhartlake,core
+-GenuineIntel-6-5C,v8,goldmont,core
++GenuineIntel-6-5[CF],v13,goldmont,core
+ GenuineIntel-6-7A,v1,goldmontplus,core
+ GenuineIntel-6-3C,v24,haswell,core
+ GenuineIntel-6-45,v24,haswell,core
+--=20
 2.37.1.359.gd136c6c3e2-goog
 
