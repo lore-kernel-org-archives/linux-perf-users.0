@@ -2,204 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0826CC433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 10:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF688C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 11:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234734AbiGYKmd (ORCPT
+        id S234800AbiGYLB2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 06:42:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33314 "EHLO
+        Mon, 25 Jul 2022 07:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbiGYKmc (ORCPT
+        with ESMTP id S234699AbiGYLB1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 06:42:32 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6D417A81
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 03:42:31 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id w7so9999847ply.12
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 03:42:31 -0700 (PDT)
+        Mon, 25 Jul 2022 07:01:27 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E5919016
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 04:01:26 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id 75so19347299ybf.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 04:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vggSN88yvyTH37AE3BHE2CmA8tVQM9HZuT6NW9rbdyA=;
-        b=MXw5MsxLZOCOl+Fs14jwG6AdAy08tQZpjBJ6mVGH2hblw13A1JOidIRr86c+z2iryl
-         UIeNggNqFYr4dTNvHeYzZfi/7+PlKEC2g6KaghR7N4g/e0xwXQW7+gvZMd6qxLimwo2K
-         Wzm0b+dkfQwidEBPPAqWxwG2+4YDUnTk+1p6mWJ1Fe8qwvF+DHYeKPeJE1LT1YZMIWKf
-         /ZqwuTFv9ExA1TzMy97TLlFtcxYT3OdJSP/TgRGHJKH8rSd0aAhRcLERhZeesA7l1BuW
-         3HcyFXF2PXdHKC793+URvXVThrrgpERaSmRlIe8aQyPt0pXN4jNMslv11gBR9IGiiHJq
-         377g==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hnm/5jPi/oqeCaQaqiY7o9Mgs5EnAdp5rIAWl4CX1kc=;
+        b=E3q3Uy+KE30s3i9aCOl8AotGVDDShiXI7tWYkdizXOWArvf4tCCKrrqgQQ+YkeOGMm
+         JDZXyDdGc/Uy1nkQfdfP8PF5dqX8nk6czkkh8l5sGQ583o9cap9IXxSoNArL0baijSwt
+         zxeqokI9/BAh+Kpu6s6ZhCETT0Cktr5+QqYK8cEs+7TfRw5jw7YZ7zwqspzZo5C9BLvR
+         5uISoADuepWhs+rjDzP1giy3xy79mqbzcC3qlpiBZ/VLbqFYtOecxkQkVGrV6aGMsObC
+         ELKTuHvvUvXvFC6VwmucZ+kr2LAnyx0MLuRN/eCgrT7ajUJwPwKB1iGwhNyH/jqqBifR
+         kIuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vggSN88yvyTH37AE3BHE2CmA8tVQM9HZuT6NW9rbdyA=;
-        b=bqrQFiD9ZjKtHMwn5VBMhwUKfulDD+HZJo0vPdtqJcuY0piYYOq3ekve3eIGGsJy1z
-         1pJ9do1raInSb/zvo03p2igo6gCHjAZ1O0LJFwezNtkAhVWrLsVHmj69cr/v9+7N1WL3
-         H4okZpISVSKtEROrpfO/2wGgJwa2BsksWhUKXHxCRp9aErnAWOpEyVXvRIvcn5p4iLJq
-         d6pEX3kToLbjzy7rIojo15fAtDyaJwsGull6oxi81/RnGN8MDn9vPPqmesyyXdE6JYLQ
-         myPzBzAJODI03YW1kxSzdDFI0GBg3absTRyn1IrUQpV9scMcqToRECwo4qoxJkqyW1KV
-         ak5g==
-X-Gm-Message-State: AJIora99qpxfqgL3JYjZDZ548H0TsfiTIa/nzxw/euvQtmuv0cvFKrBn
-        BScah7LQmyyw+emVjhDaj5JCuA==
-X-Google-Smtp-Source: AGRyM1tj/NDFe2VQLn5EKKBO4qBHEv32kZ7qXMbydRktu29i7TikE6lk58qk9S7Jc63xvWRPWMQAsw==
-X-Received: by 2002:a17:902:9043:b0:16c:d862:fdf5 with SMTP id w3-20020a170902904300b0016cd862fdf5mr11690038plz.97.1658745750484;
-        Mon, 25 Jul 2022 03:42:30 -0700 (PDT)
-Received: from leo-build-box.lan (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id n3-20020a170902f60300b0016bdea07b9esm8808510plg.190.2022.07.25.03.42.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 03:42:30 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Akemi Yagi <toracat@elrepo.org>, ElRepo <contact@elrepo.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH] perf scripts python: Let script to be python2 compliant
-Date:   Mon, 25 Jul 2022 18:42:20 +0800
-Message-Id: <20220725104220.1106663-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hnm/5jPi/oqeCaQaqiY7o9Mgs5EnAdp5rIAWl4CX1kc=;
+        b=LZDUhTbR78hA+ySi1k90hifF5ooGdWZ5umDcPEPqDLSfvp5XaWalMlS+sB1UxeT2lt
+         Hcduq0vsX37h/b0h92bxgDRAO9frhpbQuS4iBVvxr8X+ocE7XVBphDC6XcoZZGrRLndg
+         o17L5v4Eb1MWJyt9RSq4ngRvcIsfOmogHokH2k5IKuYECiHKYOyI53+BboB2DSduizeQ
+         ZCgK4B6GEjyiz+TGgegXMgl5XyBJZEA6+PpOYQ4wQtU+QlSauRXKpRhA22/7vX+BmKFg
+         QxOAp4d8zJrBJw3rYZ0+5oCPMyrJOdTvhyqEXwWejWrjhq5/FxYcEgktD71DDvCS454c
+         7XKA==
+X-Gm-Message-State: AJIora/9CyvkclqjeahQ1RTeQ0L2qIgX4WydG1LD4HXK2trut283NBEd
+        cJ2sLgIN3M2VwX5nSumk1zWEdNrp0eLgI/meqJhaqA==
+X-Google-Smtp-Source: AGRyM1s4PTcghivRcD1z3aK99V0VtYiFFUccAGTBIJw4jlLGmDG/y/3ylLenSc8tzgZ6jqSK70Df541MERbbmnr4XaI=
+X-Received: by 2002:a25:c602:0:b0:670:90ba:98fb with SMTP id
+ k2-20020a25c602000000b0067090ba98fbmr8445943ybf.143.1658746885541; Mon, 25
+ Jul 2022 04:01:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220704150514.48816-1-elver@google.com> <20220704150514.48816-2-elver@google.com>
+ <Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 25 Jul 2022 13:00:48 +0200
+Message-ID: <CANpmjNMk+p1bAEKe6Em6n0_6_1O2Aco7g9v1hcVj54hKdGJ4ug@mail.gmail.com>
+Subject: Re: [PATCH v3 01/14] perf/hw_breakpoint: Add KUnit test for
+ constraints accounting
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, linux-sh@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The mainline kernel can be used for relative old distros, e.g. RHEL 7.
-The distro doesn't upgrade from python2 to python3, this causes the
-building error that the python script is not python2 compliant.
+On Thu, 21 Jul 2022 at 18:22, Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> Hi Marco,
+>
+> [adding Will]
+>
+> On Mon, Jul 04, 2022 at 05:05:01PM +0200, Marco Elver wrote:
+> > Add KUnit test for hw_breakpoint constraints accounting, with various
+> > interesting mixes of breakpoint targets (some care was taken to catch
+> > interesting corner cases via bug-injection).
+> >
+> > The test cannot be built as a module because it requires access to
+> > hw_breakpoint_slots(), which is not inlinable or exported on all
+> > architectures.
+> >
+> > Signed-off-by: Marco Elver <elver@google.com>
+>
+> As mentioned on IRC, I'm seeing these tests fail on arm64 when applied atop
+> v5.19-rc7:
+>
+> | TAP version 14
+> | 1..1
+> |     # Subtest: hw_breakpoint
+> |     1..9
+> |     ok 1 - test_one_cpu
+> |     ok 2 - test_many_cpus
+> |     # test_one_task_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> |     Expected IS_ERR(bp) to be false, but is true
+> |     not ok 3 - test_one_task_on_all_cpus
+> |     # test_two_tasks_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> |     Expected IS_ERR(bp) to be false, but is true
+> |     not ok 4 - test_two_tasks_on_all_cpus
+> |     # test_one_task_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> |     Expected IS_ERR(bp) to be false, but is true
+> |     not ok 5 - test_one_task_on_one_cpu
+> |     # test_one_task_mixed: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> |     Expected IS_ERR(bp) to be false, but is true
+> |     not ok 6 - test_one_task_mixed
+> |     # test_two_tasks_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> |     Expected IS_ERR(bp) to be false, but is true
+> |     not ok 7 - test_two_tasks_on_one_cpu
+> |     # test_two_tasks_on_one_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> |     Expected IS_ERR(bp) to be false, but is true
+> |     not ok 8 - test_two_tasks_on_one_all_cpus
+> |     # test_task_on_all_and_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
+> |     Expected IS_ERR(bp) to be false, but is true
+> |     not ok 9 - test_task_on_all_and_one_cpu
+> | # hw_breakpoint: pass:2 fail:7 skip:0 total:9
+> | # Totals: pass:2 fail:7 skip:0 total:9
+>
+> ... which seems to be becasue arm64 currently forbids per-task
+> breakpoints/watchpoints in hw_breakpoint_arch_parse(), where we have:
+>
+>         /*
+>          * Disallow per-task kernel breakpoints since these would
+>          * complicate the stepping code.
+>          */
+>         if (hw->ctrl.privilege == AARCH64_BREAKPOINT_EL1 && bp->hw.target)
+>                 return -EINVAL;
+>
+> ... which has been the case since day one in commit:
+>
+>   478fcb2cdb2351dc ("arm64: Debugging support")
+>
+> I'm not immediately sure what would be necessary to support per-task kernel
+> breakpoints, but given a lot of that state is currently per-cpu, I imagine it's
+> invasive.
 
-To fix the building failure, this patch changes from the python f-string
-format to traditional string format.
+Thanks for investigating - so the test is working as intended. ;-)
 
-Reported-by: Akemi Yagi <toracat@elrepo.org>
-Fixes: 12fdd6c009da ("perf scripts python: Support Arm CoreSight trace data disassembly")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- .../scripts/python/arm-cs-trace-disasm.py     | 34 ++++++++++---------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+However it's a shame that arm64's support is limited. And what Will
+said about possible removal/rework of arm64 hw_breakpoint support
+doesn't sound too reassuring.
 
-diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-index 5f57d9829956..4339692a8d0b 100755
---- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
-+++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-@@ -61,7 +61,7 @@ def get_optional(perf_dict, field):
- 
- def get_offset(perf_dict, field):
- 	if field in perf_dict:
--		return f"+0x{perf_dict[field]:x}"
-+		return "+%#x" % perf_dict[field]
- 	return ""
- 
- def get_dso_file_path(dso_name, dso_build_id):
-@@ -76,7 +76,7 @@ def get_dso_file_path(dso_name, dso_build_id):
- 	else:
- 		append = "/elf"
- 
--	dso_path = f"{os.environ['PERF_BUILDID_DIR']}/{dso_name}/{dso_build_id}{append}"
-+	dso_path = os.environ['PERF_BUILDID_DIR'] + "/" + dso_name + "/" + dso_build_id + append;
- 	# Replace duplicate slash chars to single slash char
- 	dso_path = dso_path.replace('//', '/', 1)
- 	return dso_path
-@@ -94,8 +94,8 @@ def read_disam(dso_fname, dso_start, start_addr, stop_addr):
- 		start_addr = start_addr - dso_start;
- 		stop_addr = stop_addr - dso_start;
- 		disasm = [ options.objdump_name, "-d", "-z",
--			   f"--start-address=0x{start_addr:x}",
--			   f"--stop-address=0x{stop_addr:x}" ]
-+			   "--start-address="+format(start_addr,"#x"),
-+			   "--stop-address="+format(stop_addr,"#x") ]
- 		disasm += [ dso_fname ]
- 		disasm_output = check_output(disasm).decode('utf-8').split('\n')
- 		disasm_cache[addr_range] = disasm_output
-@@ -109,12 +109,14 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
- 			m = disasm_re.search(line)
- 			if m is None:
- 				continue
--		print(f"\t{line}")
-+		print("\t" + line)
- 
- def print_sample(sample):
--	print(f"Sample = {{ cpu: {sample['cpu']:04} addr: 0x{sample['addr']:016x} " \
--	      f"phys_addr: 0x{sample['phys_addr']:016x} ip: 0x{sample['ip']:016x} " \
--	      f"pid: {sample['pid']} tid: {sample['tid']} period: {sample['period']} time: {sample['time']} }}")
-+	print("Sample = { cpu: %04d addr: 0x%016x phys_addr: 0x%016x ip: 0x%016x " \
-+	      "pid: %d tid: %d period: %d time: %d }" % \
-+	      (sample['cpu'], sample['addr'], sample['phys_addr'], \
-+	       sample['ip'], sample['pid'], sample['tid'], \
-+	       sample['period'], sample['time']))
- 
- def trace_begin():
- 	print('ARM CoreSight Trace Data Assembler Dump')
-@@ -131,7 +133,7 @@ def common_start_str(comm, sample):
- 	cpu = sample["cpu"]
- 	pid = sample["pid"]
- 	tid = sample["tid"]
--	return f"{comm:>16} {pid:>5}/{tid:<5} [{cpu:04}] {sec:9}.{ns:09}  "
-+	return "%16s %5u/%-5u [%04u] %9u.%09u  " % (comm, pid, tid, cpu, sec, ns)
- 
- # This code is copied from intel-pt-events.py for printing source code
- # line and symbols.
-@@ -171,7 +173,7 @@ def print_srccode(comm, param_dict, sample, symbol, dso):
- 	glb_line_number = line_number
- 	glb_source_file_name = source_file_name
- 
--	print(f"{start_str}{src_str}")
-+	print(start_str, src_str)
- 
- def process_event(param_dict):
- 	global cache_size
-@@ -188,7 +190,7 @@ def process_event(param_dict):
- 	symbol = get_optional(param_dict, "symbol")
- 
- 	if (options.verbose == True):
--		print(f"Event type: {name}")
-+		print("Event type: %s" % name)
- 		print_sample(sample)
- 
- 	# If cannot find dso so cannot dump assembler, bail out
-@@ -197,7 +199,7 @@ def process_event(param_dict):
- 
- 	# Validate dso start and end addresses
- 	if ((dso_start == '[unknown]') or (dso_end == '[unknown]')):
--		print(f"Failed to find valid dso map for dso {dso}")
-+		print("Failed to find valid dso map for dso %s" % dso)
- 		return
- 
- 	if (name[0:12] == "instructions"):
-@@ -244,15 +246,15 @@ def process_event(param_dict):
- 
- 	# Handle CS_ETM_TRACE_ON packet if start_addr=0 and stop_addr=4
- 	if (start_addr == 0 and stop_addr == 4):
--		print(f"CPU{cpu}: CS_ETM_TRACE_ON packet is inserted")
-+		print("CPU%d: CS_ETM_TRACE_ON packet is inserted" % cpu)
- 		return
- 
- 	if (start_addr < int(dso_start) or start_addr > int(dso_end)):
--		print(f"Start address 0x{start_addr:x} is out of range [ 0x{dso_start:x} .. 0x{dso_end:x} ] for dso {dso}")
-+		print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
- 		return
- 
- 	if (stop_addr < int(dso_start) or stop_addr > int(dso_end)):
--		print(f"Stop address 0x{stop_addr:x} is out of range [ 0x{dso_start:x} .. 0x{dso_end:x} ] for dso {dso}")
-+		print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
- 		return
- 
- 	if (options.objdump_name != None):
-@@ -267,6 +269,6 @@ def process_event(param_dict):
- 		if path.exists(dso_fname):
- 			print_disam(dso_fname, dso_vm_start, start_addr, stop_addr)
- 		else:
--			print(f"Failed to find dso {dso} for address range [ 0x{start_addr:x} .. 0x{stop_addr:x} ]")
-+			print("Failed to find dso %s for address range [ 0x%x .. 0x%x ]" % (dso, start_addr, stop_addr))
- 
- 	print_srccode(comm, param_dict, sample, symbol, dso)
--- 
-2.25.1
+We will definitely want to revisit arm64's hw_breakpoint support in future.
 
+Thanks,
+-- Marco
