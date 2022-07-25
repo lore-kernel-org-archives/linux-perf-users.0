@@ -2,122 +2,201 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D42C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 15:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7D0C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 15:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235582AbiGYPt1 (ORCPT
+        id S234646AbiGYPvf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 11:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33478 "EHLO
+        Mon, 25 Jul 2022 11:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235526AbiGYPtY (ORCPT
+        with ESMTP id S234893AbiGYPve (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 11:49:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 105DE10FCA;
-        Mon, 25 Jul 2022 08:49:24 -0700 (PDT)
+        Mon, 25 Jul 2022 11:51:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C175BDF66;
+        Mon, 25 Jul 2022 08:51:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 95738612D3;
-        Mon, 25 Jul 2022 15:49:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC67C341C6;
-        Mon, 25 Jul 2022 15:49:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 45E4B612D3;
+        Mon, 25 Jul 2022 15:51:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C507C341C6;
+        Mon, 25 Jul 2022 15:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658764163;
-        bh=A6qZ/untHbxlIp2KOs+BpgbUVJKBdBN1BXQ5vjbkYEo=;
+        s=k20201202; t=1658764292;
+        bh=D2wgVTwKzP8TBWzA6DR1j32Ce7EmDFIW2LmXj+GKvNM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yi/5PyKEtN0crh7payLUUz8KbToSKkcQ6NsVpPclFTErXXO8MwQih0VkK1nCVNbax
-         ZhdfQhiPnK+L0js8pO7lGne0SuriLCdMX7z+5LX8ZnD2xnU/mkequTgoS/jzZkBXdk
-         p+kPs7kw8U1spWnMspKwchkMLlAa3n4tsLJ334vyj9xfkweboTwuSyiR/N59MOV7gA
-         AbWDz7Z8bDOirNR/mra/kELJYfqdxIGt5FQLfVuymu4Sj8JUFSCBt+NM2ci+zYbecb
-         gqgw9PUUFJIaTa1xQyd9JPXQvtJZLI5BxyOXg9A+D5oqbOulv6rcEOxDO3YDJsq7uC
-         TDUYXfIItnwxw==
+        b=gXK0FaoMHQ32sj98tTKH7oY94dnvER6p018jQ1LWKeXpJJbKDOuq1jQYj+5XhZOfi
+         fC8hjB93sKZIhJlzvBplcInY/+qKq4HQXUdD47IfzTSpSPqWvb9F8EpE3aj4mlbcvT
+         66vBWdXoHvNKouOeL6U0XQQjUK+CgpXXuXdkh+pTALylqcVfZT/otyLfy+Yq1qtyVA
+         R0zassXG9RGgps57C/nhuCSAQPDgrYpM6ThzIJtz2hG8XkVUVCrUzOfJzOt4gL442Y
+         pa5tn2CbpXbyVO3ER600g/2FqlTnuew1Nx2+98WGoEAzBTkffAN3iPhoa7IiTX+mkK
+         PogEiHLzwFAhQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 213F640374; Mon, 25 Jul 2022 12:49:20 -0300 (-03)
-Date:   Mon, 25 Jul 2022 12:49:20 -0300
+        id 007D740374; Mon, 25 Jul 2022 12:51:29 -0300 (-03)
+Date:   Mon, 25 Jul 2022 12:51:29 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/4] SUNRPC: Replace dprintk() call site in xs_data_ready
-Message-ID: <Yt67gCcZfOEJizay@kernel.org>
-References: <165851065336.361126.17865870911497306083.stgit@morisot.1015granger.net>
- <165851074247.361126.17205394769981595871.stgit@morisot.1015granger.net>
- <66371b9db4210fe853e98a8ec68b0f780ba886af.camel@hammerspace.com>
- <9FDA46D8-4D6E-49B0-A583-D0FF739111BF@oracle.com>
- <20220722162212.3d080c23@gandalf.local.home>
+        Ian Rogers <irogers@google.com>,
+        Akemi Yagi <toracat@elrepo.org>, ElRepo <contact@elrepo.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf scripts python: Let script to be python2 compliant
+Message-ID: <Yt68AZA2VV9d02xZ@kernel.org>
+References: <20220725104220.1106663-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220722162212.3d080c23@gandalf.local.home>
+In-Reply-To: <20220725104220.1106663-1-leo.yan@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jul 22, 2022 at 04:22:12PM -0400, Steven Rostedt escreveu:
-> [ Added the user space perf folks ]
+Em Mon, Jul 25, 2022 at 06:42:20PM +0800, Leo Yan escreveu:
+> The mainline kernel can be used for relative old distros, e.g. RHEL 7.
+> The distro doesn't upgrade from python2 to python3, this causes the
+> building error that the python script is not python2 compliant.
 > 
-> On Fri, 22 Jul 2022 18:45:30 +0000
-> Chuck Lever III <chuck.lever@oracle.com> wrote:
-> 
-> > >> +TRACE_EVENT(xs_data_ready,
-> > >> +  TP_PROTO(
-> > >> +  const struct rpc_xprt *xprt
-> > >> +  ),
-> > >> +
-> > >> +  TP_ARGS(xprt),
-> > >> +
-> > >> +  TP_STRUCT__entry(
-> > >> +  __sockaddr(addr, xprt->addrlen)
-> > >> +  ),
-> > >> +
-> > >> +  TP_fast_assign(
-> > >> +  __assign_sockaddr(addr, &xprt->addr, xprt->addrlen);
-> > >> +  ),
-> > >> +
-> > >> +  TP_printk("peer=%pISpc", __get_sockaddr(addr))  
-> > > 
-> > > NACK. Please resolve and store the string up front instead of storing
-> > > the sockaddr. Most versions of perf can't resolve those kernel-specific
-> > > %p printks and just end up barfing on them.  
-> > 
-> > Interesting. We added get_sockaddr() to avoid this issue in
-> > trace-cmd. Sounds like perf needs to be fixed up too, or
-> > maybe this is another case of having an old libtraceevent?
-> > 
-> > Meanwhile, I can revert this back to the old way of handling
-> > presentation addresses.
-> > 
-> 
-> Hmm, I thought that perf now uses the external libtraceevent.
-> 
-> Perhaps it hasn't been updated to the latest release that has the ability
-> to parse this.
-> 
-> Maybe just install
-> 
->   git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git
+> To fix the building failure, this patch changes from the python f-string
+> format to traditional string format.
 
-To use it one has to use:
+Thanks, applied.
 
-  make -C tools/perf LIBTRACEEVENT_DYNAMIC=1
+- Arnaldo
 
-Then we get it linked with libtraceevent-devel:
+ 
+> Reported-by: Akemi Yagi <toracat@elrepo.org>
+> Fixes: 12fdd6c009da ("perf scripts python: Support Arm CoreSight trace data disassembly")
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  .../scripts/python/arm-cs-trace-disasm.py     | 34 ++++++++++---------
+>  1 file changed, 18 insertions(+), 16 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> index 5f57d9829956..4339692a8d0b 100755
+> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> @@ -61,7 +61,7 @@ def get_optional(perf_dict, field):
+>  
+>  def get_offset(perf_dict, field):
+>  	if field in perf_dict:
+> -		return f"+0x{perf_dict[field]:x}"
+> +		return "+%#x" % perf_dict[field]
+>  	return ""
+>  
+>  def get_dso_file_path(dso_name, dso_build_id):
+> @@ -76,7 +76,7 @@ def get_dso_file_path(dso_name, dso_build_id):
+>  	else:
+>  		append = "/elf"
+>  
+> -	dso_path = f"{os.environ['PERF_BUILDID_DIR']}/{dso_name}/{dso_build_id}{append}"
+> +	dso_path = os.environ['PERF_BUILDID_DIR'] + "/" + dso_name + "/" + dso_build_id + append;
+>  	# Replace duplicate slash chars to single slash char
+>  	dso_path = dso_path.replace('//', '/', 1)
+>  	return dso_path
+> @@ -94,8 +94,8 @@ def read_disam(dso_fname, dso_start, start_addr, stop_addr):
+>  		start_addr = start_addr - dso_start;
+>  		stop_addr = stop_addr - dso_start;
+>  		disasm = [ options.objdump_name, "-d", "-z",
+> -			   f"--start-address=0x{start_addr:x}",
+> -			   f"--stop-address=0x{stop_addr:x}" ]
+> +			   "--start-address="+format(start_addr,"#x"),
+> +			   "--stop-address="+format(stop_addr,"#x") ]
+>  		disasm += [ dso_fname ]
+>  		disasm_output = check_output(disasm).decode('utf-8').split('\n')
+>  		disasm_cache[addr_range] = disasm_output
+> @@ -109,12 +109,14 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
+>  			m = disasm_re.search(line)
+>  			if m is None:
+>  				continue
+> -		print(f"\t{line}")
+> +		print("\t" + line)
+>  
+>  def print_sample(sample):
+> -	print(f"Sample = {{ cpu: {sample['cpu']:04} addr: 0x{sample['addr']:016x} " \
+> -	      f"phys_addr: 0x{sample['phys_addr']:016x} ip: 0x{sample['ip']:016x} " \
+> -	      f"pid: {sample['pid']} tid: {sample['tid']} period: {sample['period']} time: {sample['time']} }}")
+> +	print("Sample = { cpu: %04d addr: 0x%016x phys_addr: 0x%016x ip: 0x%016x " \
+> +	      "pid: %d tid: %d period: %d time: %d }" % \
+> +	      (sample['cpu'], sample['addr'], sample['phys_addr'], \
+> +	       sample['ip'], sample['pid'], sample['tid'], \
+> +	       sample['period'], sample['time']))
+>  
+>  def trace_begin():
+>  	print('ARM CoreSight Trace Data Assembler Dump')
+> @@ -131,7 +133,7 @@ def common_start_str(comm, sample):
+>  	cpu = sample["cpu"]
+>  	pid = sample["pid"]
+>  	tid = sample["tid"]
+> -	return f"{comm:>16} {pid:>5}/{tid:<5} [{cpu:04}] {sec:9}.{ns:09}  "
+> +	return "%16s %5u/%-5u [%04u] %9u.%09u  " % (comm, pid, tid, cpu, sec, ns)
+>  
+>  # This code is copied from intel-pt-events.py for printing source code
+>  # line and symbols.
+> @@ -171,7 +173,7 @@ def print_srccode(comm, param_dict, sample, symbol, dso):
+>  	glb_line_number = line_number
+>  	glb_source_file_name = source_file_name
+>  
+> -	print(f"{start_str}{src_str}")
+> +	print(start_str, src_str)
+>  
+>  def process_event(param_dict):
+>  	global cache_size
+> @@ -188,7 +190,7 @@ def process_event(param_dict):
+>  	symbol = get_optional(param_dict, "symbol")
+>  
+>  	if (options.verbose == True):
+> -		print(f"Event type: {name}")
+> +		print("Event type: %s" % name)
+>  		print_sample(sample)
+>  
+>  	# If cannot find dso so cannot dump assembler, bail out
+> @@ -197,7 +199,7 @@ def process_event(param_dict):
+>  
+>  	# Validate dso start and end addresses
+>  	if ((dso_start == '[unknown]') or (dso_end == '[unknown]')):
+> -		print(f"Failed to find valid dso map for dso {dso}")
+> +		print("Failed to find valid dso map for dso %s" % dso)
+>  		return
+>  
+>  	if (name[0:12] == "instructions"):
+> @@ -244,15 +246,15 @@ def process_event(param_dict):
+>  
+>  	# Handle CS_ETM_TRACE_ON packet if start_addr=0 and stop_addr=4
+>  	if (start_addr == 0 and stop_addr == 4):
+> -		print(f"CPU{cpu}: CS_ETM_TRACE_ON packet is inserted")
+> +		print("CPU%d: CS_ETM_TRACE_ON packet is inserted" % cpu)
+>  		return
+>  
+>  	if (start_addr < int(dso_start) or start_addr > int(dso_end)):
+> -		print(f"Start address 0x{start_addr:x} is out of range [ 0x{dso_start:x} .. 0x{dso_end:x} ] for dso {dso}")
+> +		print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
+>  		return
+>  
+>  	if (stop_addr < int(dso_start) or stop_addr > int(dso_end)):
+> -		print(f"Stop address 0x{stop_addr:x} is out of range [ 0x{dso_start:x} .. 0x{dso_end:x} ] for dso {dso}")
+> +		print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
+>  		return
+>  
+>  	if (options.objdump_name != None):
+> @@ -267,6 +269,6 @@ def process_event(param_dict):
+>  		if path.exists(dso_fname):
+>  			print_disam(dso_fname, dso_vm_start, start_addr, stop_addr)
+>  		else:
+> -			print(f"Failed to find dso {dso} for address range [ 0x{start_addr:x} .. 0x{stop_addr:x} ]")
+> +			print("Failed to find dso %s for address range [ 0x%x .. 0x%x ]" % (dso, start_addr, stop_addr))
+>  
+>  	print_srccode(comm, param_dict, sample, symbol, dso)
+> -- 
+> 2.25.1
 
-$ ldd ~/bin/perf | grep traceevent
-	libtraceevent.so.1 => /lib64/libtraceevent.so.1 (0x00007faa50f93000)
-$
-
-Perhaps it'd be better to check if libtracevent-devel is installed and
-use it, falling back to tools/lib/traceevent/ and then adding a warning
-that the in-tree codebase is being used?
+-- 
 
 - Arnaldo
