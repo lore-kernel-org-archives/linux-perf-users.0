@@ -2,127 +2,233 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA77C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 16:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB64C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 18:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233730AbiGYQ4P convert rfc822-to-8bit (ORCPT
+        id S229544AbiGYS3w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 12:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50104 "EHLO
+        Mon, 25 Jul 2022 14:29:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236522AbiGYQ4O (ORCPT
+        with ESMTP id S235327AbiGYS3w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 12:56:14 -0400
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F04B1E0;
-        Mon, 25 Jul 2022 09:56:13 -0700 (PDT)
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-10d845dcf92so15437084fac.12;
-        Mon, 25 Jul 2022 09:56:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jQ/YFxfV00z7+mUQYiCapUw6QbltoYDNq4t//YArlGk=;
-        b=RLyqRnp3re2ZO/GYapNHFmN/kr7O9rTv/aTj27nauZquU7W3oOzKLKUUEdtpaXx4UU
-         g4AtRMXWOC+SJBCPlz4bZDfU+M2ywoxWKL14H6u02/xJx+GqjDo0fLjrwtS3Sis3qz66
-         zr6fNU9Qru2vtDV+9ihzF4sZjVESh5UAXrgmkRouQIHXvRUE0NbH3cfHlfUEPoZAnp/M
-         CL9+9AbJeGWaXjYqXfDtKZUNeajZRP5GCNuG/Ixq/tm8nt902N2oX7BhxMluFxoS3dKN
-         0BX5a/uHhmooRUYpEL8jDXzMSLfMG81uPXBMzsx3xCwHVgj3U77qenk3Eaq4qqWoPqcZ
-         2DkA==
-X-Gm-Message-State: AJIora8E2CpVNqOl0+GIPM85FQtUb2GLwqz5ALXTiu2j0KG2ZoBT53xZ
-        781pd1m1xg23lti8UzlaKuuY62psSyAbrmNDZRc=
-X-Google-Smtp-Source: AGRyM1vs7wCCECVpdS8yAZ8TMcS0GvLf9g3hu2m0ezMk6WrIfveH7DQ6PkARQKhUWBYS7e0OSBEFTErdaHnqxeV8ez8=
-X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
- em4-20020a0568705b8400b0010cd1fa2f52mr7016483oab.92.1658768172916; Mon, 25
- Jul 2022 09:56:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220721043644.153718-1-namhyung@kernel.org> <20220721043644.153718-4-namhyung@kernel.org>
- <Ytmi4otIpXA+zNSx@kernel.org> <YtmjkCbvemjvlPBN@kernel.org>
-In-Reply-To: <YtmjkCbvemjvlPBN@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 25 Jul 2022 09:56:02 -0700
-Message-ID: <CAM9d7cjstn7KHKXhHzQRoNoEFosC0XZM5VpR37rH3i7B+Pcjbg@mail.gmail.com>
-Subject: Re: [PATCH 3/6] perf lock: Add lock aggregation enum
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Mon, 25 Jul 2022 14:29:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D581F2E1;
+        Mon, 25 Jul 2022 11:29:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B5012613F7;
+        Mon, 25 Jul 2022 18:29:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1DBC341C6;
+        Mon, 25 Jul 2022 18:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658773788;
+        bh=bkX5XWZwuPnMLgUAndfCdzgha0AbwCCiEfVFScvVnz4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZvyVaXhH+Qec7u/tbgmzG1N9uwT1MWtibX97kCenk8sb39YQOZ9wB+eZACTomYlDU
+         nakGyLWIumeLUgqGA1gvtddChQHx7GpmVq84T0qEVrPTOKrach6/KHIGsI+NdXojb8
+         Nl/SlfXLlkYt0/9yH5roHotSiHlVv9HWGYiloVMczX6jyt+Bb4r9G6cYcygwk9VfJ4
+         RB3RlevowQk+07Eoi9HwP9eLfakwUVXVmv3f6QE5J161bb0ZgVo/3Mzv35dnv2tn08
+         pfOVf1Z1Yppi3CmRx7pk7Dglipm4sC7XRL5o4LFiHFmZDZraAdQ1D53Kbp/TCB1end
+         4ixewRm0Z+cLA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 45F4C40374; Mon, 25 Jul 2022 15:29:45 -0300 (-03)
+Date:   Mon, 25 Jul 2022 15:29:45 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Fangrui Song <maskray@google.com>,
+        Chang Rui <changruinj@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] perf symbol: Correct address for bss symbols
+Message-ID: <Yt7hGepLBAJJuvII@kernel.org>
+References: <20220724060013.171050-1-leo.yan@linaro.org>
+ <20220724060013.171050-2-leo.yan@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220724060013.171050-2-leo.yan@linaro.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+Em Sun, Jul 24, 2022 at 02:00:12PM +0800, Leo Yan escreveu:
+> When using 'perf mem' and 'perf c2c', an issue is observed that tool
+> reports the wrong offset for global data symbols.  This is a common
+> issue on both x86 and Arm64 platforms.
+> 
+> Let's see an example, for a test program, below is the disassembly for
+> its .bss section which is dumped with objdump:
+> 
+>   ...
+> 
+>   Disassembly of section .bss:
+> 
+>   0000000000004040 <completed.0>:
+>   	...
+> 
+>   0000000000004080 <buf1>:
+>   	...
+> 
+>   00000000000040c0 <buf2>:
+>   	...
+> 
+>   0000000000004100 <thread>:
+>   	...
+> 
+> First we used 'perf mem record' to run the test program and then used
+> 'perf --debug verbose=4 mem report' to observe what's the symbol info
+> for 'buf1' and 'buf2' structures.
+> 
+>   # ./perf mem record -e ldlat-loads,ldlat-stores -- false_sharing.exe 8
 
-On Thu, Jul 21, 2022 at 12:05 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Thu, Jul 21, 2022 at 04:02:58PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, Jul 20, 2022 at 09:36:41PM -0700, Namhyung Kim escreveu:
-> > > Introduce the aggr_mode variable to prepare the later code change.
-> > > The default is LOCK_AGGR_ADDR which aggregate the result for the lock
-> > > instances.  When -t/--threads option is given, it'd be set to
-> > > LOCK_AGGR_TASK.  The LOCK_AGGR_CALLER is for the contention analysis
-> > > and it'd aggregate the stat by comparing the callstacks.
-> >
-> > builtin-lock.c: In function ‘report_lock_contention_end_event’:
-> > builtin-lock.c:1113:13: error: variable ‘key’ set but not used [-Werror=unused-but-set-variable]
-> >  1113 |         u64 key;
-> >       |             ^~~
-> > cc1: all warnings being treated as errors
-> >
-> >
-> > trying to fix
->
-> Please take a look at this:
->
-> builtin-lock.c: In function ‘report_lock_contention_end_event’:
-> builtin-lock.c:1113:13: error: variable ‘key’ set but not used [-Werror=unused-but-set-variable]
->  1113 |         u64 key;
->       |             ^~~
-> cc1: all warnings being treated as errors
+Can you share the source code for your false sharing proggie? We need to
+have something in 'perf test' exercising these routines :-)
 
-Ooops, sorry.  Will fix!
+>   # ./perf --debug verbose=4 mem report
+>     ...
+>     dso__load_sym_internal: adjusting symbol: st_value: 0x40c0 sh_addr: 0x4040 sh_offset: 0x3028
+>     symbol__new: buf2 0x30a8-0x30e8
+>     ...
+>     dso__load_sym_internal: adjusting symbol: st_value: 0x4080 sh_addr: 0x4040 sh_offset: 0x3028
+>     symbol__new: buf1 0x3068-0x30a8
+>     ...
+> 
+> Perf tool relies on libelf to parse symbols, in executable and shared
+> object files, 'st_value' holds a virtual address; 'sh_addr' is the
+> address at which section's first byte should reside in memory, and
+> 'sh_offset' is the byte offset from the beginning of the file to the
+> first byte in the section.  Perf tool uses below formula to convert
+> symbol's memory address to file address:
+> 
+>   file_address = st_value - sh_addr + sh_offset
+>                     ^
+>                     ` Memory address
+> 
+> We can see the final adjusted address ranges for buf1 and buf2 are
+> [0x30a8-0x30e8) and [0x3068-0x30a8) respectively, apparently this is
+> incorrect, in the code, the structure for 'buf1' and 'buf2' specifies
+> compiler attribute with 64-byte alignment.
+> 
+> The problem happens for 'sh_offset', libelf returns it as 0x3028 which
+> is not 64-byte aligned, combining with disassembly, it's likely libelf
+> doesn't respect the alignment for .bss section, therefore, it doesn't
+> return the aligned value for 'sh_offset'.
+> 
+> Suggested by Fangrui Song, elf file contains program header which
+> contains PT_LOAD segments, the fields p_vaddr and p_offset in PT_LOAD
+> segments contain the execution info.  A better choice for converting
+> memory address to file address is using the formula:
+> 
+>   file_address = st_value - p_vaddr + p_offset
+> 
+> This patch introduces function elf_read_program_header() which returns
+> out the program header based on the passed 'st_value', then it uses
+> above formula to calculate the symbol file address; and the debugging
+> log is updated respectively.
+> 
+> After applying the change:
+> 
+>   # ./perf --debug verbose=4 mem report
+>     ...
+>     dso__load_sym_internal: adjusting symbol: st_value: 0x40c0 p_vaddr: 0x3d28 p_offset: 0x2d28
+>     symbol__new: buf2 0x30c0-0x3100
+>     ...
+>     dso__load_sym_internal: adjusting symbol: st_value: 0x4080 p_vaddr: 0x3d28 p_offset: 0x2d28
+>     symbol__new: buf1 0x3080-0x30c0
+>     ...
+> 
+> Fixes: f17e04afaff8 ("perf report: Fix ELF symbol parsing")
+> Reported-by: Chang Rui <changruinj@gmail.com>
+> Suggested-by: Fangrui Song <maskray@google.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/symbol-elf.c | 45 ++++++++++++++++++++++++++++++++----
+>  1 file changed, 41 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index ecd377938eea..ef6ced5c5746 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -233,6 +233,33 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
+>  	return NULL;
+>  }
+>  
+> +static int elf_read_program_header(Elf *elf, u64 vaddr, GElf_Phdr *phdr)
+> +{
+> +	size_t i, phdrnum;
+> +	u64 sz;
+> +
+> +	if (elf_getphdrnum(elf, &phdrnum))
+> +		return -1;
+> +
+> +	for (i = 0; i < phdrnum; i++) {
+> +		if (gelf_getphdr(elf, i, phdr) == NULL)
+> +			return -1;
+> +
+> +		if (phdr->p_type != PT_LOAD)
+> +			continue;
+> +
+> +		sz = max(phdr->p_memsz, phdr->p_filesz);
+> +		if (!sz)
+> +			continue;
+> +
+> +		if (vaddr >= phdr->p_vaddr && (vaddr < phdr->p_vaddr + sz))
+> +			return 0;
+> +	}
+> +
+> +	/* Not found any valid program header */
+> +	return -1;
+> +}
+> +
+>  static bool want_demangle(bool is_kernel_sym)
+>  {
+>  	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
+> @@ -1209,6 +1236,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  					sym.st_value);
+>  			used_opd = true;
+>  		}
+> +
+>  		/*
+>  		 * When loading symbols in a data mapping, ABS symbols (which
+>  		 * has a value of SHN_ABS in its st_shndx) failed at
+> @@ -1262,11 +1290,20 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  				goto out_elf_end;
+>  		} else if ((used_opd && runtime_ss->adjust_symbols) ||
+>  			   (!used_opd && syms_ss->adjust_symbols)) {
+> +			GElf_Phdr phdr;
+> +
+> +			if (elf_read_program_header(syms_ss->elf,
+> +						    (u64)sym.st_value, &phdr)) {
+> +				pr_warning("%s: failed to find program header for "
+> +					   "symbol: %s st_value: %#" PRIx64 "\n",
+> +					   __func__, elf_name, (u64)sym.st_value);
+> +				continue;
+> +			}
+>  			pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
+> -				  "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n", __func__,
+> -				  (u64)sym.st_value, (u64)shdr.sh_addr,
+> -				  (u64)shdr.sh_offset);
+> -			sym.st_value -= shdr.sh_addr - shdr.sh_offset;
+> +				  "p_vaddr: %#" PRIx64 " p_offset: %#" PRIx64 "\n",
+> +				  __func__, (u64)sym.st_value, (u64)phdr.p_vaddr,
+> +				  (u64)phdr.p_offset);
+> +			sym.st_value -= phdr.p_vaddr - phdr.p_offset;
+>  		}
+>  
+>  		demangled = demangle_sym(dso, kmodule, elf_name);
+> -- 
+> 2.25.1
 
-Thanks,
-Namhyung
+-- 
 
-
-> make[3]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/builtin-lock.o] Error 1
-> make[2]: *** [Makefile.perf:660: /tmp/build/perf/perf-in.o] Error 2
-> make[1]: *** [Makefile.perf:240: sub-make] Error 2
-> make: *** [Makefile:113: install-bin] Error 2
-> make: Leaving directory '/var/home/acme/git/perf/tools/perf'
->
->  Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 PYTHON=python3 O=/tmp/build/perf -C tools/perf install-bin':
->
->      6,642,782,729      cycles:u
->     12,246,940,928      instructions:u            #    1.84  insn per cycle
->
->        2.513486078 seconds time elapsed
->
->        1.649124000 seconds user
->        1.272055000 seconds sys
->
->
-> ⬢[acme@toolbox perf]$ gcc -v
-> Using built-in specs.
-> COLLECT_GCC=/usr/bin/gcc
-> COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/12/lto-wrapper
-> OFFLOAD_TARGET_NAMES=nvptx-none
-> OFFLOAD_TARGET_DEFAULT=1
-> Target: x86_64-redhat-linux
-> Configured with: ../configure --enable-bootstrap --enable-languages=c,c++,fortran,objc,obj-c++,ada,go,d,lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=http://bugzilla.redhat.com/bugzilla --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-12.1.1-20220507/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none --without-cuda-driver --enable-offload-defaulted --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1
-> Thread model: posix
-> Supported LTO compression algorithms: zlib zstd
-> gcc version 12.1.1 20220507 (Red Hat 12.1.1-1) (GCC)
-> ⬢[acme@toolbox perf]$ cat /etc/fedora-release
-> Fedora release 36 (Thirty Six)
-> ⬢[acme@toolbox perf]$
+- Arnaldo
