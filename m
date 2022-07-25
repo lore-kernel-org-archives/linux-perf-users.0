@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79551C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 22:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03303C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 22:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237719AbiGYWlZ (ORCPT
+        id S237630AbiGYWl0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 18:41:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
+        Mon, 25 Jul 2022 18:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237546AbiGYWjn (ORCPT
+        with ESMTP id S237629AbiGYWjo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 18:39:43 -0400
+        Mon, 25 Jul 2022 18:39:44 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24CF526104
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:38:13 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-31e65a848daso98357927b3.20
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:38:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177FC26109
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:38:16 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-31e619dcbbaso96551857b3.14
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:38:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=vYop/36g/yykonb5z3RIa4/ddpNbZ9Brm5+6oNXMkfg=;
-        b=opgmj/+9iLFe4hb76ppJ35cz4z30LsnCTNZOXTbzOf+9OSwyY17uRHgj5FgcYcHCpM
-         X0Dq9M2a1xxxiA3+WY4pI9IBF5H5LIXGOLSCyM+GIDPEk5Th55zaLzN9xQflepdleM3A
-         9YzHcJnZp185hZTtYYUYMdmM4+XKGv1stAshSiZAbkAGL4k8HkQNB0/T2nS4zprr+yJG
-         /ua9FGXn5EgvXbGlqJorT0g3WrIl5ecp/Mn++G5lACbUX49o4LZdfm+MECTXPGn5A6zj
-         gx+GdAcXk6vWvnZOX5KNZSlV96EWkqkpiQHSPr5xBJ2M1vzH8vhNoraA9w+1n+kbE08D
-         5haA==
+        bh=0r3HjsQD2+mb0wsEzIakMgBjDsOoNwszNIkiBQ7nAXY=;
+        b=S9EUsYTZwhR6CPCBNnM0vibmcEI78YknZJu6QIUxRwfi8v4ImQJTCfcL8zKRGoSYkK
+         7WwkA72kep0BQa128skm5JZFi1ysRM2siDYpZXGV3S5GkBi1ssYDynpmurb8EhgoDhzU
+         ww6IoOQi/JAjVKKOgCmd8cKKQdF37OCwZC9uvfSc+SaunWDj64pczNT3UxWC0IebkT4t
+         fZ9VKzu3G0qgBRBQIqhVhhsC4waZRRnXah2f7tsfnOqjzJA9gjKe9BRzEkjanmyN7kss
+         ZlB255aLtWvqXlYilDwLS7JejRiLoF/0It3OrzjWpY3lqs9/R7SD8lm1mkp9uKNP519G
+         SsYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=vYop/36g/yykonb5z3RIa4/ddpNbZ9Brm5+6oNXMkfg=;
-        b=ws+oEyqY9+EHWPIF/6kTID54PFGSJY9a+Gv4wHyoY9Pr6HlpwVEB5qX8Dpxzv8t6Cz
-         tre4yfI/fkAwrklPBOcSeAQSHE+8Dl90yZDiHel+b7lFoOS77iCSFWaoRNfmA2zqftgV
-         fvDWla/M47Mue2yq/diVDQM+QWRtveFEb19Zmx+WVC5J2+Nr7dnRFw41OC4wY7QZVFWt
-         blsgcxygTqz9kGnOp2p1U89rBx/1Hg3SppCyMVwBrIIWeJ5ctqzrHsECBb2yqI9iYfzA
-         oJcgSQoXYNXH0ail3KF71Mfy7osL+zqd7n11s5kzV5ADjc6BkCATjtw+RAnfl5xDeCek
-         JouA==
-X-Gm-Message-State: AJIora9vpHfTAd1R0UZ4d1K2HLzlvUk+mrdjVfn9EO2MNiUux6usiRgR
-        0DV0sSU8Y4YTm/CmqJpJ7XgOsNhCEvNi
-X-Google-Smtp-Source: AGRyM1tkoAYwAco3zWEjJFQMMLL4oKIuWJZ6p/HNurz7GoPqEoiKPKntVF3pB7m2ocpG9YWmzx1zV+lCzKXS
+        bh=0r3HjsQD2+mb0wsEzIakMgBjDsOoNwszNIkiBQ7nAXY=;
+        b=W4pkDc26stqfAQaTdXm4na1pDQFjp855hCU6rNTXfmL3qlDAnMr3N/2H5IUG2eiyXG
+         wpuKEk0ZOOvImplGua4P170Rqnem+k97KWXNgFuSkbF7x42X066R5hManVqSxWTMSHGl
+         Z8+3bePcVjdRds2XA3Ee1Ow8j8OURqiUZqBtHgiJWNZDdJpyVDpE1OjjPGKvYNu7qOfU
+         6F9KDbsu/iNi3qYDAtG/3qpgTyAzpFn/7Da0J6FBQl2wnYI0Wn7VYkU7UxpwRCeNdYoz
+         Zem6aZ/a9FJPf6TO4kHqpXOA7uMIhXSpIdQA4zx76fSBh7R4o2qgCKNz3dTzkynxFQUX
+         o6Aw==
+X-Gm-Message-State: AJIora+ZMg89cYgb+aitzwNijbe2Hk+QhDLsOQhDHJrXiPQ520n8dCiK
+        6XJ4seO0I+8bYZWkvCakd3dZ7Bt/B5Iv
+X-Google-Smtp-Source: AGRyM1sBEiKwTqirqb0r0WooZIhScMRsn+/AtAKFxZ6scFO8jt80M5g6Z0CE9Rzq8PIP6g5h14LkhtOCuPwB
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7fbf:ee64:7f7:3631])
- (user=irogers job=sendgmr) by 2002:a5b:ad0:0:b0:670:81c5:1b52 with SMTP id
- a16-20020a5b0ad0000000b0067081c51b52mr10490668ybr.20.1658788681556; Mon, 25
- Jul 2022 15:38:01 -0700 (PDT)
-Date:   Mon, 25 Jul 2022 15:36:30 -0700
+ (user=irogers job=sendgmr) by 2002:a25:9208:0:b0:66e:b73f:cdf4 with SMTP id
+ b8-20020a259208000000b0066eb73fcdf4mr10579288ybo.300.1658788683969; Mon, 25
+ Jul 2022 15:38:03 -0700 (PDT)
+Date:   Mon, 25 Jul 2022 15:36:31 -0700
 In-Reply-To: <20220725223633.2301737-1-irogers@google.com>
-Message-Id: <20220725223633.2301737-30-irogers@google.com>
+Message-Id: <20220725223633.2301737-31-irogers@google.com>
 Mime-Version: 1.0
 References: <20220725223633.2301737-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.1.359.gd136c6c3e2-goog
-Subject: [PATCH v2 29/32] perf vendor events: Update Intel westmereep-sp
+Subject: [PATCH v2 30/32] perf vendor events: Update Intel westmereex
 From:   Ian Rogers <irogers@google.com>
 To:     perry.taylor@intel.com, caleb.biggers@intel.com,
         kshipra.bopardikar@intel.com,
@@ -86,35 +86,34 @@ Use script at:
 https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
 
 to download and generate the latest events and metrics. Manually
-copy the westmereep-sp files into perf and update
-mapfile.csv. This change just aligns whitespace and updates the
-version number.
+copy the westmereex files into perf and update mapfile.csv. This
+change just aligns whitespace and updates the version number.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv                      | 2 +-
- .../perf/pmu-events/arch/x86/westmereep-sp/floating-point.json  | 2 +-
- tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json      | 2 +-
- .../perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json  | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv                    | 2 +-
+ tools/perf/pmu-events/arch/x86/westmereex/floating-point.json | 2 +-
+ tools/perf/pmu-events/arch/x86/westmereex/frontend.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json | 2 +-
  4 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index ddb504a626d3..4c00b050ebc6 100644
+index 4c00b050ebc6..4cf708477680 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -26,7 +26,7 @@ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v53,skylake,core
- GenuineIntel-6-55-[01234],v1.28,skylakex,core
+@@ -27,7 +27,7 @@ GenuineIntel-6-55-[01234],v1.28,skylakex,core
  GenuineIntel-6-8[CD],v1.07,tigerlake,core
  GenuineIntel-6-2C,v2,westmereep-dp,core
--GenuineIntel-6-25,v2,westmereep-sp,core
-+GenuineIntel-6-25,v3,westmereep-sp,core
- GenuineIntel-6-2F,v2,westmereex,core
+ GenuineIntel-6-25,v3,westmereep-sp,core
+-GenuineIntel-6-2F,v2,westmereex,core
++GenuineIntel-6-2F,v3,westmereex,core
  GenuineIntel-6-86,v1,tremontx,core
  AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
+ AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
 index 39af1329224a..666e466d351c 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
+--- a/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
 @@ -226,4 +226,4 @@
          "SampleAfterValue": "200000",
          "UMask": "0x8"
@@ -122,10 +121,10 @@ index 39af1329224a..666e466d351c 100644
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/frontend.json b/tools/perf/pmu-events/arch/x86/westmereex/frontend.json
 index 8ac5c24888c5..c561ac24d91d 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json
+--- a/tools/perf/pmu-events/arch/x86/westmereex/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/frontend.json
 @@ -23,4 +23,4 @@
          "SampleAfterValue": "2000000",
          "UMask": "0x1"
@@ -133,11 +132,11 @@ index 8ac5c24888c5..c561ac24d91d 100644
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
-index 0252f77a844b..e7affdf7f41b 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
-@@ -146,4 +146,4 @@
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
+index 5d1e017d1261..0c3501e6e5a3 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
+@@ -170,4 +170,4 @@
          "SampleAfterValue": "200000",
          "UMask": "0x1"
      }
