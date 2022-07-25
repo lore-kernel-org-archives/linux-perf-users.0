@@ -2,154 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF688C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 11:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2456C43334
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 11:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234800AbiGYLB2 (ORCPT
+        id S234468AbiGYLuk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 07:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
+        Mon, 25 Jul 2022 07:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234699AbiGYLB1 (ORCPT
+        with ESMTP id S230032AbiGYLuj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 07:01:27 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E5919016
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 04:01:26 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id 75so19347299ybf.4
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 04:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hnm/5jPi/oqeCaQaqiY7o9Mgs5EnAdp5rIAWl4CX1kc=;
-        b=E3q3Uy+KE30s3i9aCOl8AotGVDDShiXI7tWYkdizXOWArvf4tCCKrrqgQQ+YkeOGMm
-         JDZXyDdGc/Uy1nkQfdfP8PF5dqX8nk6czkkh8l5sGQ583o9cap9IXxSoNArL0baijSwt
-         zxeqokI9/BAh+Kpu6s6ZhCETT0Cktr5+QqYK8cEs+7TfRw5jw7YZ7zwqspzZo5C9BLvR
-         5uISoADuepWhs+rjDzP1giy3xy79mqbzcC3qlpiBZ/VLbqFYtOecxkQkVGrV6aGMsObC
-         ELKTuHvvUvXvFC6VwmucZ+kr2LAnyx0MLuRN/eCgrT7ajUJwPwKB1iGwhNyH/jqqBifR
-         kIuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hnm/5jPi/oqeCaQaqiY7o9Mgs5EnAdp5rIAWl4CX1kc=;
-        b=LZDUhTbR78hA+ySi1k90hifF5ooGdWZ5umDcPEPqDLSfvp5XaWalMlS+sB1UxeT2lt
-         Hcduq0vsX37h/b0h92bxgDRAO9frhpbQuS4iBVvxr8X+ocE7XVBphDC6XcoZZGrRLndg
-         o17L5v4Eb1MWJyt9RSq4ngRvcIsfOmogHokH2k5IKuYECiHKYOyI53+BboB2DSduizeQ
-         ZCgK4B6GEjyiz+TGgegXMgl5XyBJZEA6+PpOYQ4wQtU+QlSauRXKpRhA22/7vX+BmKFg
-         QxOAp4d8zJrBJw3rYZ0+5oCPMyrJOdTvhyqEXwWejWrjhq5/FxYcEgktD71DDvCS454c
-         7XKA==
-X-Gm-Message-State: AJIora/9CyvkclqjeahQ1RTeQ0L2qIgX4WydG1LD4HXK2trut283NBEd
-        cJ2sLgIN3M2VwX5nSumk1zWEdNrp0eLgI/meqJhaqA==
-X-Google-Smtp-Source: AGRyM1s4PTcghivRcD1z3aK99V0VtYiFFUccAGTBIJw4jlLGmDG/y/3ylLenSc8tzgZ6jqSK70Df541MERbbmnr4XaI=
-X-Received: by 2002:a25:c602:0:b0:670:90ba:98fb with SMTP id
- k2-20020a25c602000000b0067090ba98fbmr8445943ybf.143.1658746885541; Mon, 25
- Jul 2022 04:01:25 -0700 (PDT)
+        Mon, 25 Jul 2022 07:50:39 -0400
+X-Greylist: delayed 521 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 25 Jul 2022 04:50:37 PDT
+Received: from dd14210.kasserver.com (dd14210.kasserver.com [85.13.138.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE581383
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 04:50:37 -0700 (PDT)
+Received: from agathemoarbauer.localnet (p54a1bbed.dip0.t-ipconnect.de [84.161.187.237])
+        by dd14210.kasserver.com (Postfix) with ESMTPSA id 8C12B240044;
+        Mon, 25 Jul 2022 13:41:53 +0200 (CEST)
+From:   Milian Wolff <mail@milianw.de>
+To:     linux-perf-users@vger.kernel.org,
+        Markus Stange <mstange.moz@gmail.com>
+Subject: Re: USER_REGS inconsistency in the presence of PEBS - current status
+Date:   Mon, 25 Jul 2022 13:41:53 +0200
+Message-ID: <12169462.O9o76ZdvQC@agathemoarbauer>
+In-Reply-To: <CAL2j+_NtaO=sHpJPOyyKqY1d3T=E4PZiOwDvW5YRi7LB=01Jpg@mail.gmail.com>
+References: <CAL2j+_NtaO=sHpJPOyyKqY1d3T=E4PZiOwDvW5YRi7LB=01Jpg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220704150514.48816-1-elver@google.com> <20220704150514.48816-2-elver@google.com>
- <Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 25 Jul 2022 13:00:48 +0200
-Message-ID: <CANpmjNMk+p1bAEKe6Em6n0_6_1O2Aco7g9v1hcVj54hKdGJ4ug@mail.gmail.com>
-Subject: Re: [PATCH v3 01/14] perf/hw_breakpoint: Add KUnit test for
- constraints accounting
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, linux-sh@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spamd-Bar: /
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 21 Jul 2022 at 18:22, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> Hi Marco,
->
-> [adding Will]
->
-> On Mon, Jul 04, 2022 at 05:05:01PM +0200, Marco Elver wrote:
-> > Add KUnit test for hw_breakpoint constraints accounting, with various
-> > interesting mixes of breakpoint targets (some care was taken to catch
-> > interesting corner cases via bug-injection).
-> >
-> > The test cannot be built as a module because it requires access to
-> > hw_breakpoint_slots(), which is not inlinable or exported on all
-> > architectures.
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
->
-> As mentioned on IRC, I'm seeing these tests fail on arm64 when applied atop
-> v5.19-rc7:
->
-> | TAP version 14
-> | 1..1
-> |     # Subtest: hw_breakpoint
-> |     1..9
-> |     ok 1 - test_one_cpu
-> |     ok 2 - test_many_cpus
-> |     # test_one_task_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> |     Expected IS_ERR(bp) to be false, but is true
-> |     not ok 3 - test_one_task_on_all_cpus
-> |     # test_two_tasks_on_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> |     Expected IS_ERR(bp) to be false, but is true
-> |     not ok 4 - test_two_tasks_on_all_cpus
-> |     # test_one_task_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> |     Expected IS_ERR(bp) to be false, but is true
-> |     not ok 5 - test_one_task_on_one_cpu
-> |     # test_one_task_mixed: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> |     Expected IS_ERR(bp) to be false, but is true
-> |     not ok 6 - test_one_task_mixed
-> |     # test_two_tasks_on_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> |     Expected IS_ERR(bp) to be false, but is true
-> |     not ok 7 - test_two_tasks_on_one_cpu
-> |     # test_two_tasks_on_one_all_cpus: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> |     Expected IS_ERR(bp) to be false, but is true
-> |     not ok 8 - test_two_tasks_on_one_all_cpus
-> |     # test_task_on_all_and_one_cpu: ASSERTION FAILED at kernel/events/hw_breakpoint_test.c:70
-> |     Expected IS_ERR(bp) to be false, but is true
-> |     not ok 9 - test_task_on_all_and_one_cpu
-> | # hw_breakpoint: pass:2 fail:7 skip:0 total:9
-> | # Totals: pass:2 fail:7 skip:0 total:9
->
-> ... which seems to be becasue arm64 currently forbids per-task
-> breakpoints/watchpoints in hw_breakpoint_arch_parse(), where we have:
->
->         /*
->          * Disallow per-task kernel breakpoints since these would
->          * complicate the stepping code.
->          */
->         if (hw->ctrl.privilege == AARCH64_BREAKPOINT_EL1 && bp->hw.target)
->                 return -EINVAL;
->
-> ... which has been the case since day one in commit:
->
->   478fcb2cdb2351dc ("arm64: Debugging support")
->
-> I'm not immediately sure what would be necessary to support per-task kernel
-> breakpoints, but given a lot of that state is currently per-cpu, I imagine it's
-> invasive.
+On Samstag, 23. Juli 2022 21:36:31 CEST Markus Stange wrote:
+> Hi all,
 
-Thanks for investigating - so the test is working as intended. ;-)
+Hey Markus!
 
-However it's a shame that arm64's support is limited. And what Will
-said about possible removal/rework of arm64 hw_breakpoint support
-doesn't sound too reassuring.
+> I'd like to follow up to a thread from 2018 titled "PEBS level 2/3
+> breaks dwarf unwinding! [WAS: Re: Broken dwarf unwinding - wrong stack
+> pointer register value?]"
+> https://lore.kernel.org/lkml/6310843.N4ooJGWzKY@agathebauer/T/
+> 
+> In that email thread, it was determined that the kernel will overwrite
+> the RIP value in the user registers with the "earlier value" from
+> PEBS, making it inconsistent with the other register values in
+> USER_REGS and also inconsistent with the USER_STACK memory.
+> This means that, any time the instruction pointer is near a push/pop
+> instruction, RIP and RSP are at the risk of being inconsistent with
+> each other. These inconsistencies break DWARF unwinding.
+> For example, if RIP points *before* a push instruction, and RSP has
+> the value *after* that push instruction, and the DWARF unwind rule for
+> RIP says "The return address is at the top of the stack" but RSP
+> already reflects the push, then the wrong return address is read.
+> 
+> There was a proposed patch in the referenced thread. Has something
+> like it been considered for inclusion in the kernel? Has any other
+> work on this issue happened since the discussion?
 
-We will definitely want to revisit arm64's hw_breakpoint support in future.
+I have not had any chance to further work on this feature. I fear others have 
+not (knowingly) run into this and thus noone else saw the need to fix this 
+issue. I for one would still very much welcome an improvement to this 
+situation, as it regularly leads to broken backtraces in my profiling 
+setups...
 
-Thanks,
--- Marco
+> I ran into this problem today, with a perf.data file captured on a
+> system with a 5.15 kernel.
+
+I don't think it's kernel specific, afair any kernel will exhibit the broken 
+behavior when you use DWARF unwinding and PEBS.
+
+Cheers
+
+-- 
+Milian Wolff
+http://milianw.de
+
+
