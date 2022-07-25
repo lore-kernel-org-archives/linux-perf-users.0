@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C72CCA48B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 22:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A89C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 22:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237268AbiGYWgt (ORCPT
+        id S237396AbiGYWhq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 18:36:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
+        Mon, 25 Jul 2022 18:37:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237273AbiGYWgt (ORCPT
+        with ESMTP id S237333AbiGYWho (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 18:36:49 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CDD725C74
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:36:48 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id z1-20020a5b0201000000b006712e0c865bso3321755ybl.21
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:36:48 -0700 (PDT)
+        Mon, 25 Jul 2022 18:37:44 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C292B25EB7
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:37:01 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-31cb93cadf2so96926157b3.11
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=JzNZf8+4+AkLiixfXHUf0Tr6YoyJNaYpbyf1w4wer88=;
-        b=tnK2CIQUOLdZ4NZbW8ydd9eU6zUbz9glKlcJuST5dbUiptR3O3ThSFAQ0hzTsFgi/M
-         NowDcyhR/WYcZKYDTuF1UVqvddi196NDL7h9B56XWeG81+krSHJrJ8UIe+OYUoEtgkBT
-         Sjw5ZB1LhlZbf00O4oBY8b54KtTpH66DLTo0T3iej+xnCLkeqC4UcUaH96Z6w/Cdtgu6
-         O9HrspLmFrWmdNqUYZ9oBf6BeyX/dTlc9k4AFkpyvt0AkV3/YxTnega/9g4bPTYQMixZ
-         GF/DdFwc+4dnmAs5s9jzaL5f72uVil7XyXEWodIPwFGAaEdqOMb5E3LBKqG8ePhK1q5y
-         c+rg==
+        bh=Uhp7YkSNg1cF2I0XyjzHixlgwvVrFKwEv/GHhnbsJYI=;
+        b=mhMaZ/XOd6PMRNLW2vXmz1bJkZ58LjS+rUdyFpIIoFNpSKOcMB/o+QSRnCGX2NV0+H
+         pF1q8n0Tien036n/Kdgnhh4+7jvEH1tM4IHA9n6OXUoPb9kU89wGmWmdb/zOG8TVC1Px
+         /UACgQC6WYaTKT+cwNyJyLHqHK0o6QMJ55h0X2pJSZsthPq+Hv6fhe+824b9sVLoDRr3
+         kVoRg/npXu358qPw7cdSX3dgZ5g2y9upTwKv+WzrOacJXfyl7vbCBYMNdvoDlUX8HuFl
+         ipqABHhM8Xg0tXYs0OIkmAgmT+MCobzV7LwDN3CBZgIzg+IHPengHy/kCjmkUvGI8pl2
+         iQSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=JzNZf8+4+AkLiixfXHUf0Tr6YoyJNaYpbyf1w4wer88=;
-        b=r0PxTJh3YH3b12zKKIeUzG0+8nTrksIHAfYet+wc/ckVz1KvBHr3vPkV6YIhISTQM7
-         H2SHjRN0pcRsvbQRkr/gXm9ESlIJ9xbRA8IqXKpNm7GK2TqujxY+V6NMZghLZLoFj+rW
-         SZV845XQZ5EJo3+7I76JHoBwpYZBDMvNhM3qyW1E2JPuo78qKPCxxGc/vDJYhRGrX1jh
-         m3whEecK6dSlU46nKmSif9yMSFITwya7zJQISgTIdt1yqOKzvfz76PdiMsDHDBL9Lgp0
-         53f6mjgpnh9YfWoqgCmbt8sPvjybLtL8ncobVu2cszHYpoTEqk8vKIa/q0Z17PblbNwf
-         J/qg==
-X-Gm-Message-State: AJIora8oUbagLW0RuBoZPF9UQk91y8OxmKbZCeCSruyV6zLAYpcpYIOD
-        5ut7KUjP6+SNLQesuk8M2WfUFZ18qQe1
-X-Google-Smtp-Source: AGRyM1vrR5j1FUsCLO6h9AJRqbE3AEW5WaFKcvcXiCX4fT2x1gRBbyeIwKk70N2Wu6tK3NlPhG7Ygx/KIhDa
+        bh=Uhp7YkSNg1cF2I0XyjzHixlgwvVrFKwEv/GHhnbsJYI=;
+        b=4/m4g/vz6CSYePiPKExsAZgh2LK0R9lNxCm9k5rGBrDQaSHoE4rWRGQ+dlsWysENA2
+         kWJ45baK+p0czhJTK0c5bnrIyQ6i+vVw++yI3RVlQ3ld5hOwqsSAxQoJyLIMGaExM6n5
+         SS+BK6dCVjq7ZQ+wdkPFexD7KqUGilcsT7wrEeBWtkikSrjnl6AGl7vOHkyQH8wS4leJ
+         1xZEHgIJ3etFw271UwOuhCfKwqkdYuAoxwiXNpxpcpyrvoRU844pontGvEqMC9q0scAZ
+         w8Z8uLbuplBig+YHtX3Qwq4drCW5/dCQTxkS3za9gQTkDnMhtH8tTIEHf8MzoMW7oDt/
+         XOQw==
+X-Gm-Message-State: AJIora/Uw7qfwphfRzsTxq5En6LYxYX1Lpd37dcHnkUVsKkmoG3chGaJ
+        GQg7jAm+6PkVm8xdSqINOQoEK+qBA1fq
+X-Google-Smtp-Source: AGRyM1sTqk2hgjaj8+V1Yqkwwud4HrMqg4XhTqPTeSmPiKMNzccHK2jhP/jSii+HLMXRJkymZ6nI/6WeifKg
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7fbf:ee64:7f7:3631])
- (user=irogers job=sendgmr) by 2002:a81:250f:0:b0:31c:3c38:d3cc with SMTP id
- l15-20020a81250f000000b0031c3c38d3ccmr11998077ywl.306.1658788607534; Mon, 25
- Jul 2022 15:36:47 -0700 (PDT)
-Date:   Mon, 25 Jul 2022 15:36:02 -0700
+ (user=irogers job=sendgmr) by 2002:a25:514:0:b0:671:6bc3:49c5 with SMTP id
+ 20-20020a250514000000b006716bc349c5mr1545372ybf.176.1658788621037; Mon, 25
+ Jul 2022 15:37:01 -0700 (PDT)
+Date:   Mon, 25 Jul 2022 15:36:07 -0700
 In-Reply-To: <20220725223633.2301737-1-irogers@google.com>
-Message-Id: <20220725223633.2301737-2-irogers@google.com>
+Message-Id: <20220725223633.2301737-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20220725223633.2301737-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.1.359.gd136c6c3e2-goog
-Subject: [PATCH v2 01/32] perf test: Avoid sysfs state affecting fake events
+Subject: [PATCH v2 06/32] perf vendor events: Update bonnell mapfile.csv
 From:   Ian Rogers <irogers@google.com>
 To:     perry.taylor@intel.com, caleb.biggers@intel.com,
         kshipra.bopardikar@intel.com,
@@ -80,41 +80,121 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Icelake has a slots event, on my Skylakex I have CPU events in sysfs
-of topdown-slots-issued and topdown-total-slots. Legacy event parsing
-would try to use '-' to separate parts of an event and so
-perf_pmu__parse_init sets 'slots' to be a PMU_EVENT_SYMBOL_SUFFIX2. As
-such parsing the slots event for a fake PMU fails as a
-PMU_EVENT_SYMBOL_SUFFIX2 isn't made into the PE_PMU_EVENT_FAKE token.
-Resolve this issue by test initializing the PMU parsing state before
-every parse. This must be done every parse as the state is removes after
-each parse_events.
+Align end of file whitespace with what is generated by:
+https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
+
+Fold the mapfile.csv entries together with a more complex regular
+expression. This will reduce the pmu-events.c table size.
+The files following this change are still at v4.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu-events.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/pmu-events/arch/x86/bonnell/cache.json          | 2 +-
+ tools/perf/pmu-events/arch/x86/bonnell/floating-point.json | 2 +-
+ tools/perf/pmu-events/arch/x86/bonnell/frontend.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/bonnell/memory.json         | 2 +-
+ tools/perf/pmu-events/arch/x86/bonnell/other.json          | 2 +-
+ tools/perf/pmu-events/arch/x86/bonnell/pipeline.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv                 | 6 +-----
+ 8 files changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 478b33825790..263cbb67c861 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -812,6 +812,15 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 	for (cur = strchr(dup, '@') ; cur; cur = strchr(++cur, '@'))
- 		*cur = '/';
- 
-+	if (fake_pmu) {
-+		/*
-+		 * Every call to __parse_events will try to initialize the PMU
-+		 * state from sysfs and then clean it up at the end. Reset the
-+		 * PMU events to the test state so that we don't pick up
-+		 * erroneous prefixes and suffixes.
-+		 */
-+		perf_pmu__test_parse_init();
-+	}
- 	ret = __parse_events(evlist, dup, error, fake_pmu);
- 	free(dup);
- 
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/cache.json b/tools/perf/pmu-events/arch/x86/bonnell/cache.json
+index 71653bfe7093..86582bb8aa39 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/cache.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/cache.json
+@@ -743,4 +743,4 @@
+         "SampleAfterValue": "10000",
+         "UMask": "0x2"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/floating-point.json b/tools/perf/pmu-events/arch/x86/bonnell/floating-point.json
+index f8055ff47f19..1fa347d07c98 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/floating-point.json
+@@ -258,4 +258,4 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x2"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/frontend.json b/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
+index e852eb2cc878..21fe5fe229aa 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
+@@ -88,4 +88,4 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x1"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/memory.json b/tools/perf/pmu-events/arch/x86/bonnell/memory.json
+index 2aa4c41f528e..f8b45b6fb4d3 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/memory.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/memory.json
+@@ -151,4 +151,4 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0x86"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/other.json b/tools/perf/pmu-events/arch/x86/bonnell/other.json
+index 114c062e7e96..e0bdcfbfa9dc 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/other.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/other.json
+@@ -447,4 +447,4 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0xc0"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
+index 896b738e59b6..f5123c99a7ba 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
+@@ -353,4 +353,4 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x10"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json b/tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json
+index c2363b8e61b4..e8512c585572 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json
+@@ -121,4 +121,4 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0x3"
+     }
+-]
+\ No newline at end of file
++]
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 1fe376b3624d..d3c0cc6eff8c 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -1,13 +1,9 @@
+ Family-model,Version,Filename,EventType
+ GenuineIntel-6-9[7A],v1.13,alderlake,core
++GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
+ GenuineIntel-6-(3D|47),v26,broadwell,core
+ GenuineIntel-6-56,v23,broadwellde,core
+ GenuineIntel-6-4F,v19,broadwellx,core
+-GenuineIntel-6-1C,v4,bonnell,core
+-GenuineIntel-6-26,v4,bonnell,core
+-GenuineIntel-6-27,v4,bonnell,core
+-GenuineIntel-6-36,v4,bonnell,core
+-GenuineIntel-6-35,v4,bonnell,core
+ GenuineIntel-6-5C,v8,goldmont,core
+ GenuineIntel-6-7A,v1,goldmontplus,core
+ GenuineIntel-6-3C,v24,haswell,core
 -- 
 2.37.1.359.gd136c6c3e2-goog
 
