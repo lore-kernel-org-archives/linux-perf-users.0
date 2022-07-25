@@ -2,66 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB44C43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 16:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335C7C433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 16:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235783AbiGYQHH (ORCPT
+        id S235791AbiGYQye (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 12:07:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44252 "EHLO
+        Mon, 25 Jul 2022 12:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235742AbiGYQHG (ORCPT
+        with ESMTP id S233730AbiGYQyd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 12:07:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496B9BE22;
-        Mon, 25 Jul 2022 09:07:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 00283B81011;
-        Mon, 25 Jul 2022 16:07:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 859CCC341C6;
-        Mon, 25 Jul 2022 16:07:01 +0000 (UTC)
-Date:   Mon, 25 Jul 2022 12:06:59 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/4] SUNRPC: Replace dprintk() call site in
- xs_data_ready
-Message-ID: <20220725120659.1a00a3e2@gandalf.local.home>
-In-Reply-To: <Yt67gCcZfOEJizay@kernel.org>
-References: <165851065336.361126.17865870911497306083.stgit@morisot.1015granger.net>
-        <165851074247.361126.17205394769981595871.stgit@morisot.1015granger.net>
-        <66371b9db4210fe853e98a8ec68b0f780ba886af.camel@hammerspace.com>
-        <9FDA46D8-4D6E-49B0-A583-D0FF739111BF@oracle.com>
-        <20220722162212.3d080c23@gandalf.local.home>
-        <Yt67gCcZfOEJizay@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 25 Jul 2022 12:54:33 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0289F1D311;
+        Mon, 25 Jul 2022 09:54:33 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id u76so14181178oie.3;
+        Mon, 25 Jul 2022 09:54:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jixhLRXWZLkPKYEPDWgQPh6SGq09TVIqqu6cu1z6t7k=;
+        b=YuHTg+pfPwb6ajwrekCUuNPITe9RjMHUh0ViLjsgf4uTKn/O+PnJ5Lp5LHHmKmlRG9
+         axgRFXviZ7XhXSO9oaCUeX/Jn7njkcvkFb5N0no1968VgUpAAZBv0wcPCuMWEjh7fdQx
+         Mn0dbDR7mZsZqBEcKmiBAZ4lX6Ll0w1OoCeVk2ovoJM0rrE05VX2ue/8A0u37nRy2l+7
+         6J0ENX3lzCDfzXO9qybK8ZivP7oDQjzmOpoO2H4EqKkfjMwboUACS6YsF/v1Vo0nwQiY
+         t1na3aNUyWdrHmWY216bayRZsCywWhAcYfBRqXqaX6grZ2SogNA6mMpvmb2Hs2Uv/u3+
+         ZLDw==
+X-Gm-Message-State: AJIora8oH7P9QbgcjxU9WWEqNbcsdiJ0w2SyRIXRvQ8BOJAz9J/KS7OI
+        TnYQ1CCZLzzzWyREpxNkTMSNHhZM+oZl2YnEtAo=
+X-Google-Smtp-Source: AGRyM1sY9XQjlieNOPS1xj8ijNpJJYffrn3LQVtSb+4IZMinDmFXOwpvpYSyMljfnuQLz9VNmJBzf5u5EugoiFtb3AQ=
+X-Received: by 2002:a05:6808:1492:b0:33a:7448:8b98 with SMTP id
+ e18-20020a056808149200b0033a74488b98mr6228395oiw.92.1658768072284; Mon, 25
+ Jul 2022 09:54:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20220724060013.171050-1-leo.yan@linaro.org>
+In-Reply-To: <20220724060013.171050-1-leo.yan@linaro.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 25 Jul 2022 09:54:21 -0700
+Message-ID: <CAM9d7chkrqr4P5AMRYw48JcDNsrGSMRKhwyamY5NAWbuF6jttw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] perf symbol: Minor fixing
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Chang Rui <changruinj@gmail.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 25 Jul 2022 12:49:20 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Hi Leo,
 
-> Perhaps it'd be better to check if libtracevent-devel is installed and
-> use it, falling back to tools/lib/traceevent/ and then adding a warning
-> that the in-tree codebase is being used?
+On Sat, Jul 23, 2022 at 11:00 PM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> This patch set contains two minor fixing for parsing symbols.
+>
+> The first patch changes to use program header for parsing symbols of
+> user space executable and shared objects.  Since kernel's symbol parsing
+> is more complex than userspace for support both kernel symbols and module
+> symbols, this is why this patch set uses conservative way and doesn't
+> change kernel symbols parsing.
+>
+> The second patch is to detect symbols from sections without setting
+> attribute flag SHF_ALLOC, these symbols are used for linker warning,
+> skip to record them to avoid spurious symbols.
+>
+> Changes from v2:
+> - Changed to use more gernal way to check the attribute bit SHF_ALLOC
+>   for sections rather than check the section string name (Fangrui).
+>
+> Changes from v1:
+> - Changed to use program header / PT_LOAD segments to parse symbols for
+>   userspace executable and shared object files (Fangrui).
+>
+>
+> Leo Yan (2):
+>   perf symbol: Correct address for bss symbols
+>   perf symbol: Skip symbols if SHF_ALLOC flag is not set
 
-Yeah, this is the way trace-cmd went. For a few releases, it would just
-warn that it couldn't find the system libraries, and then fall back to the
-internals, and then it finally just removed the internals and failed with a
-message stating where to get the necessary libraries.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
--- Steve
+Thanks,
+Namhyung
+
+
+>
+>  tools/perf/util/symbol-elf.c | 56 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 52 insertions(+), 4 deletions(-)
+>
+> --
+> 2.25.1
+>
