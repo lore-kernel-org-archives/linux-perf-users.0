@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEFAC43334
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 22:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67870CCA48B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 22:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237561AbiGYWju (ORCPT
+        id S237679AbiGYWkT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 18:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44462 "EHLO
+        Mon, 25 Jul 2022 18:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237567AbiGYWix (ORCPT
+        with ESMTP id S237611AbiGYWjK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 18:38:53 -0400
+        Mon, 25 Jul 2022 18:39:10 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7D526AFD
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:37:49 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-31f4450c963so4470937b3.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:37:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2922714D
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:37:59 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-31e619dcbbaso96549257b3.14
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 15:37:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc:content-transfer-encoding;
-        bh=bfVzhZ96EzompuyTda9KA6Q5+ZcShGgCbKXcbg8IJss=;
-        b=UGCWCsPskB+0ThgDWJXldDIcVfhxhCCSGiNUQ83FRswr/eJ4L1ex8OtbrKmIC117ZK
-         lZQ6eYr2zPGY1DxM6mqmPcc8xMg96POPrhrQlQH6Ns0BOkHeCCoQBwOedAcqWRiWewtg
-         wZ9kssIFvTKQS5wJjsDb5BbcRmjyJd8GvdsESkbRFrLw+96kQ78Ygh+fI1aX7JFhu4qz
-         z0b1K3fq6yL1nAeJPCMNhBHhySTA62qvqM+PU/oYeCFVkAO6MV57pJWnWNwlekKywkfh
-         HXCWn4n5DcKm3vR62lT9WOnjV0lnKJ7VUsUkpyBMXaHxA+drBd7vt18+uB0Dc9549Nu7
-         Dxew==
+        bh=pExQZIKseCiazocE9IHS2v1WoP284Jp9mmV1zcvWwsQ=;
+        b=aQst3LCbInm31I/itpHD3E6fn9f9UPfgEZF4p1q6IlH0RfMDaBUFuLS6d+qwJ0FM8r
+         TLMkudNADKhI+8CMZOid3Ivtd5G9m7wZUAgemoAwJ+dXqGxCc7/WltlinSDgEDzpyH37
+         nEKC0mCE1FRgAQDtYbcaN4ZhGxS263zXO26Bml2/k8Y6Qa+76/RuaaW2sxXGoeM/RpDA
+         Oknt5BN09jaa0952ld5fKzvL6fCqBALxvH6pB8gAu2uQtVdu6Q7TgZeiY5RKLmoLzDzm
+         eong/Idvco+zNxpR8n6Z3AdLi8DwciKzHci+4+pJ1fLwexqLYNKYHQDvFRiYrPE8nMZo
+         wu+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc:content-transfer-encoding;
-        bh=bfVzhZ96EzompuyTda9KA6Q5+ZcShGgCbKXcbg8IJss=;
-        b=rw3Bj3TQRFBUfCC8hUSqc4S09/oCVhLzL1EFo9VJFBECq/C2AuyttU8ucbRKhOwMqZ
-         zcit3Slu1zhf3g1r8KZlmlWiKqLvZn6DhS9E3T5p9s/cujT9jXk/bgPlCNNrVKaAJAvF
-         BGbYPAJkSX7Y5rLJJk8OZQKMAEQkXGQQitPOpTohiPt2/1RrnOp2hCAN+LHLETZDMjtm
-         Je4iwVz6yoG63Q3ubjqnnMxyDhp5WPSXPIxurSnVHAEkDVEgtNIsMPq3y90LWdHBaT9u
-         eZUpOnGNmxvAMrEQtIykf89s2J3dVbBLaTq50lr1/SoV06PDLhGIvYWpG+GbIS3tYZlj
-         YWaQ==
-X-Gm-Message-State: AJIora+oeCMpSe8+iblY6FsSQUVULCV17audgFuq1NKGacXMGtdblNkw
-        lGytAgS6FQoLA76qlg3IRKsxycg3Bv4t
-X-Google-Smtp-Source: AGRyM1v39RmO2YyNpYHAPxY7IP5xQpGF+a5iV7lzCzpGyvp/x5hBffd6/L46JLGBmfkFFc+xAevCCOdOMNuU
+        bh=pExQZIKseCiazocE9IHS2v1WoP284Jp9mmV1zcvWwsQ=;
+        b=2b3823GeJbnshQakozJwJCe0ge4gpfpksHy3thpFWZeOX4RUAa87OQQbs2BNn8+6tH
+         fwy6QxgKVgagVBu25mDDElNfmSdnwgvURkL6e5wwT0r3rG098icXiNeApeI0ZCdIQi2M
+         3738NttscmHX2Nokr51Us6HFi2ot2M3l27TIpVV2BPkjGXg5PU+J8PeOhFpg1r666E++
+         H3kH6UECZwKWmY03U+YTqkANLhaepIzW5aQKL1HfuKVEP+58PU1UCdanhc8/8UWiFSS1
+         vLQ9AlnO/1SHLuKUNx32jYkU4qM26wXmHkbl3T9r01fW1fwgmcZZ0rAd/ZJN54O5nDCj
+         kiDQ==
+X-Gm-Message-State: AJIora/zIIHESXcFVbi4X9kzFcuyMg4udTKcLUi2jcK42enGMI5avxrD
+        yHox7D53BoVdJSG9fXmeIWytcNh7dYc8
+X-Google-Smtp-Source: AGRyM1sfHiRajBDEWH6aqPzr53JVtJKg/41iZwlbR+h7tgm9F6sSvpWASfnrxyRClKfb7/DpCPvdJps1x5XZ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7fbf:ee64:7f7:3631])
- (user=irogers job=sendgmr) by 2002:a0d:f082:0:b0:31f:1d1d:118d with SMTP id
- z124-20020a0df082000000b0031f1d1d118dmr4005582ywe.124.1658788663377; Mon, 25
- Jul 2022 15:37:43 -0700 (PDT)
-Date:   Mon, 25 Jul 2022 15:36:23 -0700
+ (user=irogers job=sendgmr) by 2002:a25:ba47:0:b0:670:adad:4847 with SMTP id
+ z7-20020a25ba47000000b00670adad4847mr11535706ybj.474.1658788671221; Mon, 25
+ Jul 2022 15:37:51 -0700 (PDT)
+Date:   Mon, 25 Jul 2022 15:36:26 -0700
 In-Reply-To: <20220725223633.2301737-1-irogers@google.com>
-Message-Id: <20220725223633.2301737-23-irogers@google.com>
+Message-Id: <20220725223633.2301737-26-irogers@google.com>
 Mime-Version: 1.0
 References: <20220725223633.2301737-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.1.359.gd136c6c3e2-goog
-Subject: [PATCH v2 22/32] perf vendor events: Update Intel sandybridge
+Subject: [PATCH v2 25/32] perf vendor events: Update Intel skylake
 From:   Ian Rogers <irogers@google.com>
 To:     perry.taylor@intel.com, caleb.biggers@intel.com,
         kshipra.bopardikar@intel.com,
@@ -81,16 +81,16 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update to v17, the metrics are based on TMA 4.4 full.
+Update to v53, the metrics are based on TMA 4.4 full.
 
 Use script at:
 https://github.com/intel/event-converter-for-linux-perf/blob/master/downloa=
 d_and_gen.py
 
 to download and generate the latest events and metrics. Manually copy
-the sandybridge files into perf and update mapfile.csv.
+the skylake files into perf and update mapfile.csv.
 
-Tested on a non-sandybridge with 'perf test':
+Tested on a non-skylake with 'perf test':
  10: PMU events                                                      :
  10.1: PMU event table sanity                                        : Ok
  10.2: PMU event map aliases                                         : Ok
@@ -99,224 +99,362 @@ Tested on a non-sandybridge with 'perf test':
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv            |  2 +-
- tools/perf/pmu-events/arch/x86/sandybridge/cache.json |  2 +-
- .../arch/x86/sandybridge/floating-point.json          |  2 +-
- .../pmu-events/arch/x86/sandybridge/frontend.json     |  4 ++--
- .../perf/pmu-events/arch/x86/sandybridge/memory.json  |  2 +-
- tools/perf/pmu-events/arch/x86/sandybridge/other.json |  2 +-
- .../pmu-events/arch/x86/sandybridge/pipeline.json     | 10 +++++-----
- .../pmu-events/arch/x86/sandybridge/snb-metrics.json  | 11 +++++++++--
- .../pmu-events/arch/x86/sandybridge/uncore-other.json |  2 +-
- .../arch/x86/sandybridge/virtual-memory.json          |  2 +-
- 10 files changed, 23 insertions(+), 16 deletions(-)
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +-
+ .../arch/x86/skylake/floating-point.json      |   2 +-
+ .../pmu-events/arch/x86/skylake/frontend.json |   2 +-
+ .../pmu-events/arch/x86/skylake/other.json    |   2 +-
+ .../arch/x86/skylake/skl-metrics.json         | 178 ++++++++----
+ .../arch/x86/skylake/uncore-cache.json        | 142 ++++++++++
+ .../arch/x86/skylake/uncore-other.json        |  79 ++++++
+ .../pmu-events/arch/x86/skylake/uncore.json   | 254 ------------------
+ .../arch/x86/skylake/virtual-memory.json      |   2 +-
+ 9 files changed, 345 insertions(+), 319 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylake/uncore-cache.jso=
+n
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylake/uncore-other.jso=
+n
+ delete mode 100644 tools/perf/pmu-events/arch/x86/skylake/uncore.json
 
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index ab070ba3ad48..eae103022077 100644
+index d224d59e3c72..4a38edc7c270 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -19,12 +19,12 @@ GenuineIntel-6-(57|85),v9,knightslanding,core
- GenuineIntel-6-AA,v1.00,meteorlake,core
- GenuineIntel-6-1[AEF],v3,nehalemep,core
- GenuineIntel-6-2E,v3,nehalemex,core
-+GenuineIntel-6-2A,v17,sandybridge,core
- GenuineIntel-6-[4589]E,v24,skylake,core
- GenuineIntel-6-A[56],v24,skylake,core
- GenuineIntel-6-37,v13,silvermont,core
- GenuineIntel-6-4D,v13,silvermont,core
- GenuineIntel-6-4C,v13,silvermont,core
--GenuineIntel-6-2A,v15,sandybridge,core
+@@ -22,8 +22,7 @@ GenuineIntel-6-2E,v3,nehalemex,core
+ GenuineIntel-6-2A,v17,sandybridge,core
+ GenuineIntel-6-8F,v1.04,sapphirerapids,core
+ GenuineIntel-6-(37|4C|4D),v14,silvermont,core
+-GenuineIntel-6-[4589]E,v24,skylake,core
+-GenuineIntel-6-A[56],v24,skylake,core
++GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v53,skylake,core
  GenuineIntel-6-2C,v2,westmereep-dp,core
  GenuineIntel-6-25,v2,westmereep-sp,core
  GenuineIntel-6-2F,v2,westmereex,core
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/cache.json b/tools/=
-perf/pmu-events/arch/x86/sandybridge/cache.json
-index 92a7269eb444..a1d622352131 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/cache.json
-@@ -1876,4 +1876,4 @@
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/floating-point.json b/t=
+ools/perf/pmu-events/arch/x86/skylake/floating-point.json
+index 73cfb2a39722..d6cee5ae4402 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/floating-point.json
+@@ -70,4 +70,4 @@
          "SampleAfterValue": "100003",
-         "UMask": "0x10"
+         "UMask": "0x1e"
      }
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.json=
- b/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.json
-index 713878fd062b..eb2ff2cfdf6b 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.json
-@@ -135,4 +135,4 @@
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/frontend.json b/tools/p=
+erf/pmu-events/arch/x86/skylake/frontend.json
+index ecce4273ae52..8633ee406813 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/frontend.json
+@@ -527,4 +527,4 @@
          "SampleAfterValue": "2000003",
          "UMask": "0x1"
      }
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json b/too=
-ls/perf/pmu-events/arch/x86/sandybridge/frontend.json
-index fa22f9463b66..e2c82e43a2de 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json
-@@ -176,7 +176,7 @@
-         "CounterMask": "1",
-         "EventCode": "0x79",
-         "EventName": "IDQ.MS_CYCLES",
--        "PublicDescription": "This event counts cycles during which the mi=
-crocode sequencer assisted the front-end in delivering uops.  Microcode ass=
-ists are used for complex instructions or scenarios that can't be handled b=
-y the standard decoder.  Using other instructions, if possible, will usuall=
-y improve performance.  See the Intel 64 and IA-32 Architectures Optimizati=
-on Reference Manual for more information.",
-+        "PublicDescription": "This event counts cycles during which the mi=
-crocode sequencer assisted the front-end in delivering uops.  Microcode ass=
-ists are used for complex instructions or scenarios that can't be handled b=
-y the standard decoder.  Using other instructions, if possible, will usuall=
-y improve performance.  See the Intel(R) 64 and IA-32 Architectures Optimiz=
-ation Reference Manual for more information.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x30"
-     },
-@@ -311,4 +311,4 @@
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/other.json b/tools/perf=
+/pmu-events/arch/x86/skylake/other.json
+index 4f4839024915..8f4bc8892c47 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/other.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/other.json
+@@ -17,4 +17,4 @@
          "SampleAfterValue": "2000003",
          "UMask": "0x1"
      }
 -]
 \ No newline at end of file
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/memory.json b/tools=
-/perf/pmu-events/arch/x86/sandybridge/memory.json
-index 931892d34076..3c283ca309f3 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/memory.json
-@@ -442,4 +442,4 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     }
--]
-\ No newline at end of file
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/other.json b/tools/=
-perf/pmu-events/arch/x86/sandybridge/other.json
-index e251f535ec09..2f873ab14156 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/other.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/other.json
-@@ -55,4 +55,4 @@
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     }
--]
-\ No newline at end of file
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json b/too=
-ls/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-index b9a3f194a00a..2c3b6c92aa6b 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-@@ -609,7 +609,7 @@
-         "UMask": "0x3"
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tool=
+s/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+index defbca9a6038..73fa72d3dcb1 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+@@ -95,13 +95,13 @@
+     {
+         "BriefDescription": "Total pipeline cost of Memory Address Transla=
+tion related bottlenecks (data-side TLBs)",
+         "MetricExpr": "100 * ((( CYCLE_ACTIVITY.STALLS_MEM_ANY + EXE_ACTIV=
+ITY.BOUND_ON_STORES ) / (CYCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORT=
+S_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * CPU_CLK_UNHALTED.THREAD)) * EXE_=
+ACTIVITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STORES)) * (1 - (IDQ_UOPS_NO=
+T_DELIVERED.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) - ( UOPS_ISSUED.ANY + 4 *=
+ INT_MISC.RECOVERY_CYCLES ) / (4 * CPU_CLK_UNHALTED.THREAD))) * ( ( (max( (=
+ CYCLE_ACTIVITY.STALLS_MEM_ANY - CYCLE_ACTIVITY.STALLS_L1D_MISS ) / CPU_CLK=
+_UNHALTED.THREAD , 0 )) / ((( CYCLE_ACTIVITY.STALLS_MEM_ANY + EXE_ACTIVITY.=
+BOUND_ON_STORES ) / (CYCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UT=
+IL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * CPU_CLK_UNHALTED.THREAD)) * EXE_ACTI=
+VITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STORES)) * (1 - (IDQ_UOPS_NOT_DE=
+LIVERED.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) - ( UOPS_ISSUED.ANY + 4 * INT=
+_MISC.RECOVERY_CYCLES ) / (4 * CPU_CLK_UNHALTED.THREAD))) ) * ( (min( 9 * c=
+pu@DTLB_LOAD_MISSES.STLB_HIT\\,cmask\\=3D1@ + DTLB_LOAD_MISSES.WALK_ACTIVE =
+, max( CYCLE_ACTIVITY.CYCLES_MEM_ANY - CYCLE_ACTIVITY.CYCLES_L1D_MISS , 0 )=
+ ) / CPU_CLK_UNHALTED.THREAD) / (max( ( CYCLE_ACTIVITY.STALLS_MEM_ANY - CYC=
+LE_ACTIVITY.STALLS_L1D_MISS ) / CPU_CLK_UNHALTED.THREAD , 0 )) ) + ( (EXE_A=
+CTIVITY.BOUND_ON_STORES / CPU_CLK_UNHALTED.THREAD) / #((( CYCLE_ACTIVITY.ST=
+ALLS_MEM_ANY + EXE_ACTIVITY.BOUND_ON_STORES ) / (CYCLE_ACTIVITY.STALLS_TOTA=
+L + (EXE_ACTIVITY.1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * CPU_CLK_=
+UNHALTED.THREAD)) * EXE_ACTIVITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STOR=
+ES)) * (1 - (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) -=
+ ( UOPS_ISSUED.ANY + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * CPU_CLK_UNHALTED=
+.THREAD))) ) * ( (( 9 * cpu@DTLB_STORE_MISSES.STLB_HIT\\,cmask\\=3D1@ + DTL=
+B_STORE_MISSES.WALK_ACTIVE ) / CPU_CLK_UNHALTED.THREAD) / #(EXE_ACTIVITY.BO=
+UND_ON_STORES / CPU_CLK_UNHALTED.THREAD) ) ) ",
+-        "MetricGroup": "Mem;MemoryTLB",
++        "MetricGroup": "Mem;MemoryTLB;Offcore",
+         "MetricName": "Memory_Data_TLBs"
      },
      {
--        "BriefDescription": "Number of occurences waiting for the checkpoi=
-nts in Resource Allocation Table (RAT) to be recovered after Nuke due to al=
-l other cases except JEClear (e.g. whenever a ucode assist is needed like S=
-SE exception, memory disambiguation, etc...).",
-+        "BriefDescription": "Number of occurrences waiting for the checkpo=
-ints in Resource Allocation Table (RAT) to be recovered after Nuke due to a=
-ll other cases except JEClear (e.g. whenever a ucode assist is needed like =
-SSE exception, memory disambiguation, etc...).",
-         "Counter": "0,1,2,3",
-         "CounterHTOff": "0,1,2,3,4,5,6,7",
-         "CounterMask": "1",
-@@ -652,7 +652,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7",
-         "EventCode": "0x03",
-         "EventName": "LD_BLOCKS.STORE_FORWARD",
--        "PublicDescription": "This event counts loads that followed a stor=
-e to the same address, where the data could not be forwarded inside the pip=
-eline from the store to the load.  The most common reason why store forward=
-ing would be blocked is when a load's address range overlaps with a preceed=
-ing smaller uncompleted store.  See the table of not supported store forwar=
-ds in the Intel 64 and IA-32 Architectures Optimization Reference Manual.  =
-The penalty for blocked store forwarding is that the load must wait for the=
- store to complete before it can be issued.",
-+        "PublicDescription": "This event counts loads that followed a stor=
-e to the same address, where the data could not be forwarded inside the pip=
-eline from the store to the load.  The most common reason why store forward=
-ing would be blocked is when a load's address range overlaps with a preceed=
-ing smaller uncompleted store.  See the table of not supported store forwar=
-ds in the Intel(R) 64 and IA-32 Architectures Optimization Reference Manual=
-.  The penalty for blocked store forwarding is that the load must wait for =
-the store to complete before it can be issued.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x2"
+         "BriefDescription": "Total pipeline cost of Memory Address Transla=
+tion related bottlenecks (data-side TLBs)",
+         "MetricExpr": "100 * ((( CYCLE_ACTIVITY.STALLS_MEM_ANY + EXE_ACTIV=
+ITY.BOUND_ON_STORES ) / (CYCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORT=
+S_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 =
+) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) =
+))) * EXE_ACTIVITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STORES)) * (1 - (I=
+DQ_UOPS_NOT_DELIVERED.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 +=
+ CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) - ( U=
+OPS_ISSUED.ANY + 4 * ( INT_MISC.RECOVERY_CYCLES_ANY / 2 ) ) / (4 * ( ( CPU_=
+CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_=
+CLK_UNHALTED.REF_XCLK ) )))) * ( ( (max( ( CYCLE_ACTIVITY.STALLS_MEM_ANY - =
+CYCLE_ACTIVITY.STALLS_L1D_MISS ) / CPU_CLK_UNHALTED.THREAD , 0 )) / ((( CYC=
+LE_ACTIVITY.STALLS_MEM_ANY + EXE_ACTIVITY.BOUND_ON_STORES ) / (CYCLE_ACTIVI=
+TY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS /=
+ (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD=
+_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * EXE_ACTIVITY.2_PORTS_UTIL) + EX=
+E_ACTIVITY.BOUND_ON_STORES)) * (1 - (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * ( (=
+ CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE /=
+ CPU_CLK_UNHALTED.REF_XCLK ) ))) - ( UOPS_ISSUED.ANY + 4 * ( INT_MISC.RECOV=
+ERY_CYCLES_ANY / 2 ) ) / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU=
+_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) ) * ( (m=
+in( 9 * cpu@DTLB_LOAD_MISSES.STLB_HIT\\,cmask\\=3D1@ + DTLB_LOAD_MISSES.WAL=
+K_ACTIVE , max( CYCLE_ACTIVITY.CYCLES_MEM_ANY - CYCLE_ACTIVITY.CYCLES_L1D_M=
+ISS , 0 ) ) / CPU_CLK_UNHALTED.THREAD) / (max( ( CYCLE_ACTIVITY.STALLS_MEM_=
+ANY - CYCLE_ACTIVITY.STALLS_L1D_MISS ) / CPU_CLK_UNHALTED.THREAD , 0 )) ) +=
+ ( (EXE_ACTIVITY.BOUND_ON_STORES / CPU_CLK_UNHALTED.THREAD) / #((( CYCLE_AC=
+TIVITY.STALLS_MEM_ANY + EXE_ACTIVITY.BOUND_ON_STORES ) / (CYCLE_ACTIVITY.ST=
+ALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 *=
+ ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTI=
+VE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * EXE_ACTIVITY.2_PORTS_UTIL) + EXE_ACT=
+IVITY.BOUND_ON_STORES)) * (1 - (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * ( ( CPU_=
+CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_=
+CLK_UNHALTED.REF_XCLK ) ))) - ( UOPS_ISSUED.ANY + 4 * ( INT_MISC.RECOVERY_C=
+YCLES_ANY / 2 ) ) / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_=
+UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) ) * ( (( 9 * =
+cpu@DTLB_STORE_MISSES.STLB_HIT\\,cmask\\=3D1@ + DTLB_STORE_MISSES.WALK_ACTI=
+VE ) / ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREA=
+D_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) / #(EXE_ACTIVITY.BOUND_ON_STORES =
+/ CPU_CLK_UNHALTED.THREAD) ) ) ",
+-        "MetricGroup": "Mem;MemoryTLB;_SMT",
++        "MetricGroup": "Mem;MemoryTLB;Offcore_SMT",
+         "MetricName": "Memory_Data_TLBs_SMT"
      },
-@@ -778,7 +778,7 @@
-         "CounterMask": "1",
-         "EventCode": "0x59",
-         "EventName": "PARTIAL_RAT_STALLS.FLAGS_MERGE_UOP_CYCLES",
--        "PublicDescription": "This event counts the number of cycles spent=
- executing performance-sensitive flags-merging uops. For example, shift CL =
-(merge_arith_flags). For more details, See the Intel 64 and IA-32 Architect=
-ures Optimization Reference Manual.",
-+        "PublicDescription": "This event counts the number of cycles spent=
- executing performance-sensitive flags-merging uops. For example, shift CL =
-(merge_arith_flags). For more details, See the Intel(R) 64 and IA-32 Archit=
-ectures Optimization Reference Manual.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x20"
-     },
-@@ -797,7 +797,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7",
-         "EventCode": "0x59",
-         "EventName": "PARTIAL_RAT_STALLS.SLOW_LEA_WINDOW",
--        "PublicDescription": "This event counts the number of cycles with =
-at least one slow LEA uop being allocated. A uop is generally considered as=
- slow LEA if it has three sources (for example, two sources and immediate) =
-regardless of whether it is a result of LEA instruction or not. Examples of=
- the slow LEA uop are or uops with base, index, and offset source operands =
-using base and index reqisters, where base is EBR/RBP/R13, using RIP relati=
-ve or 16-bit addressing modes. See the Intel 64 and IA-32 Architectures Opt=
-imization Reference Manual for more details about slow LEA instructions.",
-+        "PublicDescription": "This event counts the number of cycles with =
-at least one slow LEA uop being allocated. A uop is generally considered as=
- slow LEA if it has three sources (for example, two sources and immediate) =
-regardless of whether it is a result of LEA instruction or not. Examples of=
- the slow LEA uop are or uops with base, index, and offset source operands =
-using base and index reqisters, where base is EBR/RBP/R13, using RIP relati=
-ve or 16-bit addressing modes. See the Intel(R) 64 and IA-32 Architectures =
-Optimization Reference Manual for more details about slow LEA instructions.=
-",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x40"
-     },
-@@ -1209,4 +1209,4 @@
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     }
--]
-\ No newline at end of file
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json b/=
-tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-index c8e7050d9c26..ae7ed267b2a2 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-@@ -124,7 +124,7 @@
+     {
+@@ -214,42 +214,36 @@
          "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "BriefDescription": "Actual per-core usage of the Floating Point e=
+xecution units (regardless of the vector width)",
++        "BriefDescription": "Actual per-core usage of the Floating Point n=
+on-X87 execution units (regardless of precision or vector-width)",
+         "MetricExpr": "( (FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_I=
+NST_RETIRED.SCALAR_DOUBLE) + (FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP=
+_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_=
+DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE) ) / ( 2 * CPU_CLK_UNHALT=
+ED.THREAD )",
+         "MetricGroup": "Cor;Flops;HPC",
+         "MetricName": "FP_Arith_Utilization",
+-        "PublicDescription": "Actual per-core usage of the Floating Point =
+execution units (regardless of the vector width). Values > 1 are possible d=
+ue to Fused-Multiply Add (FMA) counting."
++        "PublicDescription": "Actual per-core usage of the Floating Point =
+non-X87 execution units (regardless of precision or vector-width). Values >=
+ 1 are possible due to ([BDW+] Fused-Multiply Add (FMA) counting - common; =
+[ADL+] use all of ADD/MUL/FMA in Scalar or 128/256-bit vectors - less commo=
+n)."
+     },
+     {
+-        "BriefDescription": "Actual per-core usage of the Floating Point e=
+xecution units (regardless of the vector width). SMT version; use when SMT =
+is enabled and measuring per logical CPU.",
++        "BriefDescription": "Actual per-core usage of the Floating Point n=
+on-X87 execution units (regardless of precision or vector-width). SMT versi=
+on; use when SMT is enabled and measuring per logical CPU.",
+         "MetricExpr": "( (FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_I=
+NST_RETIRED.SCALAR_DOUBLE) + (FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP=
+_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_=
+DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE) ) / ( 2 * ( ( CPU_CLK_UN=
+HALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UN=
+HALTED.REF_XCLK ) ) )",
+         "MetricGroup": "Cor;Flops;HPC_SMT",
+         "MetricName": "FP_Arith_Utilization_SMT",
+-        "PublicDescription": "Actual per-core usage of the Floating Point =
+execution units (regardless of the vector width). Values > 1 are possible d=
+ue to Fused-Multiply Add (FMA) counting. SMT version; use when SMT is enabl=
+ed and measuring per logical CPU."
++        "PublicDescription": "Actual per-core usage of the Floating Point =
+non-X87 execution units (regardless of precision or vector-width). Values >=
+ 1 are possible due to ([BDW+] Fused-Multiply Add (FMA) counting - common; =
+[ADL+] use all of ADD/MUL/FMA in Scalar or 128/256-bit vectors - less commo=
+n). SMT version; use when SMT is enabled and measuring per logical CPU."
      },
      {
 -        "BriefDescription": "Instruction-Level-Parallelism (average number=
  of uops executed when there is at least 1 uop executed)",
 +        "BriefDescription": "Instruction-Level-Parallelism (average number=
  of uops executed when there is execution) per-core",
-         "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPATCHED.COR=
-E\\,cmask\\=3D1@ / 2 ) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cmask\\=
-=3D1@)",
+         "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES=
+_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
          "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
          "MetricName": "ILP"
-@@ -141,6 +141,12 @@
+     },
+     {
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TMA sl=
+ots wasted per non-speculative branch misprediction (retired JEClear)",
+-        "MetricExpr": " ( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIR=
+ED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIR=
+ED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * CPU_CLK_UNHALTED.TH=
+READ))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * CPU_C=
+LK_UNHALTED.THREAD)) * ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.A=
+LL_BRANCHES + MACHINE_CLEARS.COUNT )) * INT_MISC.CLEAR_RESTEER_CYCLES / CPU=
+_CLK_UNHALTED.THREAD) / #(4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CO=
+RE / (4 * CPU_CLK_UNHALTED.THREAD)) ) * (4 * CPU_CLK_UNHALTED.THREAD) / BR_=
+MISP_RETIRED.ALL_BRANCHES",
+-        "MetricGroup": "Bad;BrMispredicts",
+-        "MetricName": "Branch_Misprediction_Cost"
+-    },
+-    {
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TMA sl=
+ots wasted per non-speculative branch misprediction (retired JEClear)",
+-        "MetricExpr": " ( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIR=
+ED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIR=
+ED.RETIRE_SLOTS + 4 * ( INT_MISC.RECOVERY_CYCLES_ANY / 2 ) ) / (4 * ( ( CPU=
+_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU=
+_CLK_UNHALTED.REF_XCLK ) )))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_D=
+ELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED=
+.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * ((BR_MISP_RETIRED.AL=
+L_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * INT=
+_MISC.CLEAR_RESTEER_CYCLES / CPU_CLK_UNHALTED.THREAD) / #(4 * IDQ_UOPS_NOT_=
+DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 )=
+ * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )=
+)) ) * (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_=
+THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) / BR_MISP_RETIRED.ALL_BRANCH=
+ES",
+-        "MetricGroup": "Bad;BrMispredicts_SMT",
+-        "MetricName": "Branch_Misprediction_Cost_SMT"
++        "BriefDescription": "Probability of Core Bound bottleneck hidden b=
+y SMT-profiling artifacts",
++        "MetricExpr": "( 1 - ((1 - (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * CPU=
+_CLK_UNHALTED.THREAD)) - ( UOPS_ISSUED.ANY + 4 * INT_MISC.RECOVERY_CYCLES )=
+ / (4 * CPU_CLK_UNHALTED.THREAD)) - ((( CYCLE_ACTIVITY.STALLS_MEM_ANY + EXE=
+_ACTIVITY.BOUND_ON_STORES ) / (CYCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.=
+1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * CPU_CLK_UNHALTED.THREAD)) =
+* EXE_ACTIVITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STORES)) * (1 - (IDQ_U=
+OPS_NOT_DELIVERED.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) - ( UOPS_ISSUED.ANY=
+ + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * CPU_CLK_UNHALTED.THREAD)))) / ((EX=
+E_ACTIVITY.EXE_BOUND_0_PORTS + (EXE_ACTIVITY.1_PORTS_UTIL + (UOPS_RETIRED.R=
+ETIRE_SLOTS / (4 * CPU_CLK_UNHALTED.THREAD)) * EXE_ACTIVITY.2_PORTS_UTIL)) =
+/ CPU_CLK_UNHALTED.THREAD if ( ARITH.DIVIDER_ACTIVE < ( CYCLE_ACTIVITY.STAL=
+LS_TOTAL - CYCLE_ACTIVITY.STALLS_MEM_ANY ) ) else (EXE_ACTIVITY.1_PORTS_UTI=
+L + (UOPS_RETIRED.RETIRE_SLOTS / (4 * CPU_CLK_UNHALTED.THREAD)) * EXE_ACTIV=
+ITY.2_PORTS_UTIL) / CPU_CLK_UNHALTED.THREAD) if ((1 - (IDQ_UOPS_NOT_DELIVER=
+ED.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) - ( UOPS_ISSUED.ANY + 4 * INT_MISC=
+.RECOVERY_CYCLES ) / (4 * CPU_CLK_UNHALTED.THREAD)) - ((( CYCLE_ACTIVITY.ST=
+ALLS_MEM_ANY + EXE_ACTIVITY.BOUND_ON_STORES ) / (CYCLE_ACTIVITY.STALLS_TOTA=
+L + (EXE_ACTIVITY.1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * CPU_CLK_=
+UNHALTED.THREAD)) * EXE_ACTIVITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STOR=
+ES)) * (1 - (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) -=
+ ( UOPS_ISSUED.ANY + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * CPU_CLK_UNHALTED=
+.THREAD)))) < ((EXE_ACTIVITY.EXE_BOUND_0_PORTS + (EXE_ACTIVITY.1_PORTS_UTIL=
+ + (UOPS_RETIRED.RETIRE_SLOTS / (4 * CPU_CLK_UNHALTED.THREAD)) * EXE_ACTIVI=
+TY.2_PORTS_UTIL)) / CPU_CLK_UNHALTED.THREAD if ( ARITH.DIVIDER_ACTIVE < ( C=
+YCLE_ACTIVITY.STALLS_TOTAL - CYCLE_ACTIVITY.STALLS_MEM_ANY ) ) else (EXE_AC=
+TIVITY.1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * CPU_CLK_UNHALTED.TH=
+READ)) * EXE_ACTIVITY.2_PORTS_UTIL) / CPU_CLK_UNHALTED.THREAD) else 1 ) if =
+0 > 0.5 else 0",
++        "MetricGroup": "Cor;SMT",
++        "MetricName": "Core_Bound_Likely"
+     },
+     {
+-        "BriefDescription": "Number of Instructions per non-speculative Br=
+anch Misprediction (JEClear)",
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "MetricGroup": "Bad;BadSpec;BrMispredicts",
+-        "MetricName": "IpMispredict"
++        "BriefDescription": "Probability of Core Bound bottleneck hidden b=
+y SMT-profiling artifacts",
++        "MetricExpr": "( 1 - ((1 - (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * ( (=
+ CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE /=
+ CPU_CLK_UNHALTED.REF_XCLK ) ))) - ( UOPS_ISSUED.ANY + 4 * ( INT_MISC.RECOV=
+ERY_CYCLES_ANY / 2 ) ) / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU=
+_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) - ((( CYC=
+LE_ACTIVITY.STALLS_MEM_ANY + EXE_ACTIVITY.BOUND_ON_STORES ) / (CYCLE_ACTIVI=
+TY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS /=
+ (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD=
+_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * EXE_ACTIVITY.2_PORTS_UTIL) + EX=
+E_ACTIVITY.BOUND_ON_STORES)) * (1 - (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * ( (=
+ CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE /=
+ CPU_CLK_UNHALTED.REF_XCLK ) ))) - ( UOPS_ISSUED.ANY + 4 * ( INT_MISC.RECOV=
+ERY_CYCLES_ANY / 2 ) ) / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU=
+_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))))) / ((EXE=
+_ACTIVITY.EXE_BOUND_0_PORTS + (EXE_ACTIVITY.1_PORTS_UTIL + (UOPS_RETIRED.RE=
+TIRE_SLOTS / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTE=
+D.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * EXE_ACTIVITY.2_PORT=
+S_UTIL)) / CPU_CLK_UNHALTED.THREAD if ( ARITH.DIVIDER_ACTIVE < ( CYCLE_ACTI=
+VITY.STALLS_TOTAL - CYCLE_ACTIVITY.STALLS_MEM_ANY ) ) else (EXE_ACTIVITY.1_=
+PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * ( ( CPU_CLK_UNHALTED.THREAD =
+/ 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCL=
+K ) ))) * EXE_ACTIVITY.2_PORTS_UTIL) / CPU_CLK_UNHALTED.THREAD) if ((1 - (I=
+DQ_UOPS_NOT_DELIVERED.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 +=
+ CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) - ( U=
+OPS_ISSUED.ANY + 4 * ( INT_MISC.RECOVERY_CYCLES_ANY / 2 ) ) / (4 * ( ( CPU_=
+CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_=
+CLK_UNHALTED.REF_XCLK ) ))) - ((( CYCLE_ACTIVITY.STALLS_MEM_ANY + EXE_ACTIV=
+ITY.BOUND_ON_STORES ) / (CYCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORT=
+S_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 =
+) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) =
+))) * EXE_ACTIVITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STORES)) * (1 - (I=
+DQ_UOPS_NOT_DELIVERED.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 +=
+ CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) - ( U=
+OPS_ISSUED.ANY + 4 * ( INT_MISC.RECOVERY_CYCLES_ANY / 2 ) ) / (4 * ( ( CPU_=
+CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_=
+CLK_UNHALTED.REF_XCLK ) ))))) < ((EXE_ACTIVITY.EXE_BOUND_0_PORTS + (EXE_ACT=
+IVITY.1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOTS / (4 * ( ( CPU_CLK_UNHALTED=
+.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED=
+.REF_XCLK ) ))) * EXE_ACTIVITY.2_PORTS_UTIL)) / CPU_CLK_UNHALTED.THREAD if =
+( ARITH.DIVIDER_ACTIVE < ( CYCLE_ACTIVITY.STALLS_TOTAL - CYCLE_ACTIVITY.STA=
+LLS_MEM_ANY ) ) else (EXE_ACTIVITY.1_PORTS_UTIL + (UOPS_RETIRED.RETIRE_SLOT=
+S / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THR=
+EAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * EXE_ACTIVITY.2_PORTS_UTIL) /=
+ CPU_CLK_UNHALTED.THREAD) else 1 ) if (1 - CPU_CLK_UNHALTED.ONE_THREAD_ACTI=
+VE / ( CPU_CLK_UNHALTED.REF_XCLK_ANY / 2 )) > 0.5 else 0",
++        "MetricGroup": "Cor;SMT_SMT",
++        "MetricName": "Core_Bound_Likely_SMT"
+     },
+     {
+         "BriefDescription": "Core actual clocks when any Logical Processor=
+ is active on the Physical Core",
+@@ -334,12 +328,30 @@
+         "MetricName": "IpArith_AVX256",
+         "PublicDescription": "Instructions per FP Arithmetic AVX* 256-bit =
+instruction (lower number means higher occurrence rate). May undercount due=
+ to FMA double counting."
+     },
++    {
++        "BriefDescription": "Instructions per Software prefetch instructio=
+n (of any type: NTA/T0/T1/T2/Prefetch) (lower number means higher occurrenc=
+e rate)",
++        "MetricExpr": "INST_RETIRED.ANY / cpu@SW_PREFETCH_ACCESS.T0\\,umas=
+k\\=3D0xF@",
++        "MetricGroup": "Prefetches",
++        "MetricName": "IpSWPF"
++    },
+     {
+         "BriefDescription": "Total number of retired Instructions, Sample =
+with: INST_RETIRED.PREC_DIST",
+         "MetricExpr": "INST_RETIRED.ANY",
          "MetricGroup": "Summary;TmaL1",
          "MetricName": "Instructions"
      },
@@ -328,17 +466,326 @@ _SLOTS\\,cmask\\=3D1@",
 +        "MetricGroup": "Pipeline;Ret",
 +        "MetricName": "Retire"
 +    },
++    {
++        "BriefDescription": "",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / cpu@UOPS_EXECUTED.THREAD\\,c=
+mask\\=3D1@",
++        "MetricGroup": "Cor;Pipeline;PortsUtil;SMT",
++        "MetricName": "Execute"
++    },
      {
-         "BriefDescription": "Fraction of Uops delivered by the DSB (aka De=
-coded ICache; or Uop Cache)",
-         "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MIT=
-E_UOPS + IDQ.MS_UOPS ) )",
-@@ -163,7 +169,8 @@
+         "BriefDescription": "Average number of Uops issued by front-end wh=
+en it issued something",
+         "MetricExpr": "UOPS_ISSUED.ANY / cpu@UOPS_ISSUED.ANY\\,cmask\\=3D1=
+@",
+@@ -353,23 +365,47 @@
+         "MetricName": "DSB_Coverage"
+     },
+     {
+-        "BriefDescription": "Total penalty related to DSB (uop cache) miss=
+es - subset/see of/the Instruction_Fetch_BW Bottleneck.",
+-        "MetricExpr": "(4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.COR=
+E / (4 * CPU_CLK_UNHALTED.THREAD)) * (DSB2MITE_SWITCHES.PENALTY_CYCLES / CP=
+U_CLK_UNHALTED.THREAD) / #(4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.C=
+ORE / (4 * CPU_CLK_UNHALTED.THREAD)) + ((IDQ_UOPS_NOT_DELIVERED.CORE / (4 *=
+ CPU_CLK_UNHALTED.THREAD)) - (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELI=
+V.CORE / (4 * CPU_CLK_UNHALTED.THREAD))) * (( IDQ.ALL_MITE_CYCLES_ANY_UOPS =
+- IDQ.ALL_MITE_CYCLES_4_UOPS ) / CPU_CLK_UNHALTED.THREAD / 2) / #((IDQ_UOPS=
+_NOT_DELIVERED.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) - (4 * IDQ_UOPS_NOT_DE=
+LIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * CPU_CLK_UNHALTED.THREAD)))",
++        "BriefDescription": "Average number of cycles of a switch from the=
+ DSB fetch-unit to MITE fetch unit - see DSB_Switches tree node for details=
+.",
++        "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / DSB2MITE_SWITCHE=
+S.COUNT",
++        "MetricGroup": "DSBmiss",
++        "MetricName": "DSB_Switch_Cost"
++    },
++    {
++        "BriefDescription": "Total penalty related to DSB (uop cache) miss=
+es - subset of the Instruction_Fetch_BW Bottleneck.",
++        "MetricExpr": "100 * ( (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_D=
+ELIV.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) * (DSB2MITE_SWITCHES.PENALTY_CYC=
+LES / CPU_CLK_UNHALTED.THREAD) / #(4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS=
+_DELIV.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) + ((IDQ_UOPS_NOT_DELIVERED.COR=
+E / (4 * CPU_CLK_UNHALTED.THREAD)) - (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_U=
+OPS_DELIV.CORE / (4 * CPU_CLK_UNHALTED.THREAD))) * (( IDQ.ALL_MITE_CYCLES_A=
+NY_UOPS - IDQ.ALL_MITE_CYCLES_4_UOPS ) / CPU_CLK_UNHALTED.THREAD / 2) / #((=
+IDQ_UOPS_NOT_DELIVERED.CORE / (4 * CPU_CLK_UNHALTED.THREAD)) - (4 * IDQ_UOP=
+S_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * CPU_CLK_UNHALTED.THREAD))) =
+)",
+         "MetricGroup": "DSBmiss;Fed",
+-        "MetricName": "DSB_Misses_Cost"
++        "MetricName": "DSB_Misses"
+     },
+     {
+-        "BriefDescription": "Total penalty related to DSB (uop cache) miss=
+es - subset/see of/the Instruction_Fetch_BW Bottleneck.",
+-        "MetricExpr": "(4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.COR=
+E / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THR=
+EAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * (DSB2MITE_SWITCHES.PENALTY_C=
+YCLES / CPU_CLK_UNHALTED.THREAD) / #(4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UO=
+PS_DELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHA=
+LTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) + ((IDQ_UOPS_NOT_D=
+ELIVERED.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHA=
+LTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) - (4 * IDQ_UOPS_NO=
+T_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2=
+ ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK )=
+ )))) * (( IDQ.ALL_MITE_CYCLES_ANY_UOPS - IDQ.ALL_MITE_CYCLES_4_UOPS ) / ( =
+( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE =
+/ CPU_CLK_UNHALTED.REF_XCLK ) ) / 2) / #((IDQ_UOPS_NOT_DELIVERED.CORE / (4 =
+* ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACT=
+IVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) - (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_=
+0_UOPS_DELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_=
+UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))))",
++        "BriefDescription": "Total penalty related to DSB (uop cache) miss=
+es - subset of the Instruction_Fetch_BW Bottleneck.",
++        "MetricExpr": "100 * ( (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_D=
+ELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED=
+.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * (DSB2MITE_SWITCHES.P=
+ENALTY_CYCLES / CPU_CLK_UNHALTED.THREAD) / #(4 * IDQ_UOPS_NOT_DELIVERED.CYC=
+LES_0_UOPS_DELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_=
+CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) + ((IDQ_UO=
+PS_NOT_DELIVERED.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_=
+CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) - (4 * IDQ=
+_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.TH=
+READ / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.RE=
+F_XCLK ) )))) * (( IDQ.ALL_MITE_CYCLES_ANY_UOPS - IDQ.ALL_MITE_CYCLES_4_UOP=
+S ) / ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD=
+_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ) / 2) / #((IDQ_UOPS_NOT_DELIVERED.CO=
+RE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_TH=
+READ_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) - (4 * IDQ_UOPS_NOT_DELIVERED=
+.CYCLES_0_UOPS_DELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + =
+CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "DSBmiss;Fed_SMT",
+-        "MetricName": "DSB_Misses_Cost_SMT"
++        "MetricName": "DSB_Misses_SMT"
+     },
+     {
+-        "BriefDescription": "Number of Instructions per non-speculative DS=
+B miss",
++        "BriefDescription": "Number of Instructions per non-speculative DS=
+B miss (lower number means higher occurrence rate)",
+         "MetricExpr": "INST_RETIRED.ANY / FRONTEND_RETIRED.ANY_DSB_MISS",
+         "MetricGroup": "DSBmiss;Fed",
+         "MetricName": "IpDSB_Miss_Ret"
+     },
++    {
++        "BriefDescription": "Number of Instructions per non-speculative Br=
+anch Misprediction (JEClear) (lower number means higher occurrence rate)",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "Bad;BadSpec;BrMispredicts",
++        "MetricName": "IpMispredict"
++    },
++    {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TMA sl=
+ots wasted per non-speculative branch misprediction (retired JEClear)",
++        "MetricExpr": " ( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIR=
+ED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIR=
+ED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * CPU_CLK_UNHALTED.TH=
+READ))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * CPU_C=
+LK_UNHALTED.THREAD)) * ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.A=
+LL_BRANCHES + MACHINE_CLEARS.COUNT )) * INT_MISC.CLEAR_RESTEER_CYCLES / CPU=
+_CLK_UNHALTED.THREAD) / #(4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CO=
+RE / (4 * CPU_CLK_UNHALTED.THREAD)) ) * (4 * CPU_CLK_UNHALTED.THREAD) / BR_=
+MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "Bad;BrMispredicts",
++        "MetricName": "Branch_Misprediction_Cost"
++    },
++    {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TMA sl=
+ots wasted per non-speculative branch misprediction (retired JEClear)",
++        "MetricExpr": " ( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIR=
+ED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIR=
+ED.RETIRE_SLOTS + 4 * ( INT_MISC.RECOVERY_CYCLES_ANY / 2 ) ) / (4 * ( ( CPU=
+_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU=
+_CLK_UNHALTED.REF_XCLK ) )))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_D=
+ELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED=
+.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) * ((BR_MISP_RETIRED.AL=
+L_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * INT=
+_MISC.CLEAR_RESTEER_CYCLES / CPU_CLK_UNHALTED.THREAD) / #(4 * IDQ_UOPS_NOT_=
+DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 )=
+ * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )=
+)) ) * (4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_=
+THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) / BR_MISP_RETIRED.ALL_BRANCH=
+ES",
++        "MetricGroup": "Bad;BrMispredicts_SMT",
++        "MetricName": "Branch_Misprediction_Cost_SMT"
++    },
+     {
+         "BriefDescription": "Fraction of branches that are non-taken condi=
+tionals",
+         "MetricExpr": "BR_INST_RETIRED.NOT_TAKEN / BR_INST_RETIRED.ALL_BRA=
+NCHES",
+@@ -395,11 +431,10 @@
+         "MetricName": "Jump"
+     },
+     {
+-        "BriefDescription": "Actual Average Latency for L1 data-cache miss=
+ demand load instructions (in core cycles)",
++        "BriefDescription": "Actual Average Latency for L1 data-cache miss=
+ demand load operations (in core cycles)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS =
++ MEM_LOAD_RETIRED.FB_HIT )",
+         "MetricGroup": "Mem;MemoryBound;MemoryLat",
+-        "MetricName": "Load_Miss_Real_Latency",
+-        "PublicDescription": "Actual Average Latency for L1 data-cache mis=
+s demand load instructions (in core cycles). Latency may be overestimated f=
+or multi-load instructions - e.g. repeat strings."
++        "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
+         "BriefDescription": "Memory-Level-Parallelism (average number of L=
+1 miss demand load when there is at least one such miss. Per-Logical Proces=
+sor)",
+@@ -407,30 +442,6 @@
+         "MetricGroup": "Mem;MemoryBound;MemoryBW",
+         "MetricName": "MLP"
+     },
+-    {
+-        "BriefDescription": "Average data fill bandwidth to the L1 data ca=
+che [GB / sec]",
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+-        "MetricGroup": "Mem;MemoryBW",
+-        "MetricName": "L1D_Cache_Fill_BW"
+-    },
+-    {
+-        "BriefDescription": "Average data fill bandwidth to the L2 cache [=
+GB / sec]",
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+-        "MetricGroup": "Mem;MemoryBW",
+-        "MetricName": "L2_Cache_Fill_BW"
+-    },
+-    {
+-        "BriefDescription": "Average per-core data fill bandwidth to the L=
+3 cache [GB / sec]",
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration=
+_time",
+-        "MetricGroup": "Mem;MemoryBW",
+-        "MetricName": "L3_Cache_Fill_BW"
+-    },
+-    {
+-        "BriefDescription": "Average per-core data access bandwidth to the=
+ L3 cache [GB / sec]",
+-        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / d=
+uration_time",
+-        "MetricGroup": "Mem;MemoryBW;Offcore",
+-        "MetricName": "L3_Cache_Access_BW"
+-    },
+     {
+         "BriefDescription": "L1 cache true misses per kilo instruction for=
+ retired demand loads",
+         "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY"=
+,
+@@ -450,13 +461,13 @@
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "BriefDescription": "L2 cache misses per kilo instruction for all =
+request types (including speculative)",
++        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo instru=
+ction for all request types (including speculative)",
+         "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
+         "MetricGroup": "Mem;CacheMisses;Offcore",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "BriefDescription": "L2 cache misses per kilo instruction for all =
+demand loads  (including speculative)",
++        "BriefDescription": "L2 cache ([RKL+] true) misses per kilo instru=
+ction for all demand loads  (including speculative)",
+         "MetricExpr": "1000 * L2_RQSTS.DEMAND_DATA_RD_MISS / INST_RETIRED.=
+ANY",
+         "MetricGroup": "Mem;CacheMisses",
+         "MetricName": "L2MPKI_Load"
+@@ -480,7 +491,7 @@
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "BriefDescription": "Fill Buffer (FB) true hits per kilo instructi=
+ons for retired demand loads",
++        "BriefDescription": "Fill Buffer (FB) hits per kilo instructions f=
+or retired demand loads (L1D misses that merge into ongoing miss-handling e=
+ntries)",
+         "MetricExpr": "1000 * MEM_LOAD_RETIRED.FB_HIT / INST_RETIRED.ANY",
+         "MetricGroup": "Mem;CacheMisses",
+         "MetricName": "FB_HPKI"
+@@ -498,6 +509,54 @@
+         "MetricGroup": "Mem;MemoryTLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
++    {
++        "BriefDescription": "Average per-core data fill bandwidth to the L=
+1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
++        "MetricGroup": "Mem;MemoryBW",
++        "MetricName": "L1D_Cache_Fill_BW"
++    },
++    {
++        "BriefDescription": "Average per-core data fill bandwidth to the L=
+2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
++        "MetricGroup": "Mem;MemoryBW",
++        "MetricName": "L2_Cache_Fill_BW"
++    },
++    {
++        "BriefDescription": "Average per-core data fill bandwidth to the L=
+3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration=
+_time",
++        "MetricGroup": "Mem;MemoryBW",
++        "MetricName": "L3_Cache_Fill_BW"
++    },
++    {
++        "BriefDescription": "Average per-core data access bandwidth to the=
+ L3 cache [GB / sec]",
++        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / d=
+uration_time",
++        "MetricGroup": "Mem;MemoryBW;Offcore",
++        "MetricName": "L3_Cache_Access_BW"
++    },
++    {
++        "BriefDescription": "Average per-thread data fill bandwidth to the=
+ L1 data cache [GB / sec]",
++        "MetricExpr": "(64 * L1D.REPLACEMENT / 1000000000 / duration_time)=
+",
++        "MetricGroup": "Mem;MemoryBW",
++        "MetricName": "L1D_Cache_Fill_BW_1T"
++    },
++    {
++        "BriefDescription": "Average per-thread data fill bandwidth to the=
+ L2 cache [GB / sec]",
++        "MetricExpr": "(64 * L2_LINES_IN.ALL / 1000000000 / duration_time)=
+",
++        "MetricGroup": "Mem;MemoryBW",
++        "MetricName": "L2_Cache_Fill_BW_1T"
++    },
++    {
++        "BriefDescription": "Average per-thread data fill bandwidth to the=
+ L3 cache [GB / sec]",
++        "MetricExpr": "(64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duratio=
+n_time)",
++        "MetricGroup": "Mem;MemoryBW",
++        "MetricName": "L3_Cache_Fill_BW_1T"
++    },
++    {
++        "BriefDescription": "Average per-thread data access bandwidth to t=
+he L3 cache [GB / sec]",
++        "MetricExpr": "(64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / =
+duration_time)",
++        "MetricGroup": "Mem;MemoryBW;Offcore",
++        "MetricName": "L3_Cache_Access_BW_1T"
++    },
+     {
+         "BriefDescription": "Average CPU Utilization",
+         "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+@@ -514,7 +573,8 @@
          "BriefDescription": "Giga Floating Point Operations Per Second",
-         "MetricExpr": "( ( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_CO=
-MP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 =
-* ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * S=
-IMD_FP_256.PACKED_SINGLE ) / 1000000000 ) / duration_time",
+         "MetricExpr": "( ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_=
+ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_=
+DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RET=
+IRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE ) =
+/ 1000000000 ) / duration_time",
          "MetricGroup": "Cor;Flops;HPC",
 -        "MetricName": "GFLOPs"
 +        "MetricName": "GFLOPs",
@@ -349,31 +796,624 @@ instructions, vector-width and AMX engine."
      {
          "BriefDescription": "Average Frequency Utilization relative nomina=
 l frequency",
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json b=
-/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
-index 6278068908cf..88f1e326205f 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
-@@ -82,10 +82,10 @@
-     {
-         "BriefDescription": "This 48-bit fixed counter counts the UCLK cyc=
-les.",
-         "Counter": "Fixed",
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/uncore-cache.json b/too=
+ls/perf/pmu-events/arch/x86/skylake/uncore-cache.json
+new file mode 100644
+index 000000000000..edb1014bee0f
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/skylake/uncore-cache.json
+@@ -0,0 +1,142 @@
++[
++    {
++        "BriefDescription": "L3 Lookup any request that access cache and f=
+ound line in E or S-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_ES",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup any request that access cache and =
+found line in E or S-state.",
++        "UMask": "0x86",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup any request that access cache and f=
+ound line in I-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_I",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup any request that access cache and =
+found line in I-state.",
++        "UMask": "0x88",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup any request that access cache and f=
+ound line in M-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_M",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup any request that access cache and =
+found line in M-state.",
++        "UMask": "0x81",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup any request that access cache and f=
+ound line in MESI-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_MESI",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup any request that access cache and =
+found line in MESI-state.",
++        "UMask": "0x8f",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup read request that access cache and =
+found line in E or S-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.READ_ES",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup read request that access cache and=
+ found line in E or S-state.",
++        "UMask": "0x16",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup read request that access cache and =
+found line in I-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.READ_I",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup read request that access cache and=
+ found line in I-state.",
++        "UMask": "0x18",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup read request that access cache and =
+found line in any MESI-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.READ_MESI",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup read request that access cache and=
+ found line in any MESI-state.",
++        "UMask": "0x1f",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup write request that access cache and=
+ found line in E or S-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_ES",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup write request that access cache an=
+d found line in E or S-state.",
++        "UMask": "0x26",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup write request that access cache and=
+ found line in M-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_M",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup write request that access cache an=
+d found line in M-state.",
++        "UMask": "0x21",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "L3 Lookup write request that access cache and=
+ found line in MESI-state",
++        "Counter": "0,1",
++        "EventCode": "0x34",
++        "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_MESI",
++        "PerPkg": "1",
++        "PublicDescription": "L3 Lookup write request that access cache an=
+d found line in MESI-state.",
++        "UMask": "0x2f",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "A cross-core snoop initiated by this Cbox due=
+ to processor core memory request which hits a modified line in some proces=
+sor core.",
++        "Counter": "0,1",
++        "EventCode": "0x22",
++        "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_XCORE",
++        "PerPkg": "1",
++        "PublicDescription": "A cross-core snoop initiated by this Cbox du=
+e to processor core memory request which hits a modified line in some proce=
+ssor core.",
++        "UMask": "0x48",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "A cross-core snoop initiated by this Cbox due=
+ to processor core memory request which hits a non-modified line in some pr=
+ocessor core.",
++        "Counter": "0,1",
++        "EventCode": "0x22",
++        "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_XCORE",
++        "PerPkg": "1",
++        "PublicDescription": "A cross-core snoop initiated by this Cbox du=
+e to processor core memory request which hits a non-modified line in some p=
+rocessor core.",
++        "UMask": "0x44",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "A cross-core snoop resulted from L3 Eviction =
+which misses in some processor core.",
++        "Counter": "0,1",
++        "EventCode": "0x22",
++        "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_EVICTION",
++        "PerPkg": "1",
++        "PublicDescription": "A cross-core snoop resulted from L3 Eviction=
+ which misses in some processor core.",
++        "UMask": "0x81",
++        "Unit": "CBO"
++    },
++    {
++        "BriefDescription": "A cross-core snoop initiated by this Cbox due=
+ to processor core memory request which misses in some processor core.",
++        "Counter": "0,1",
++        "EventCode": "0x22",
++        "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_XCORE",
++        "PerPkg": "1",
++        "PublicDescription": "A cross-core snoop initiated by this Cbox du=
+e to processor core memory request which misses in some processor core.",
++        "UMask": "0x41",
++        "Unit": "CBO"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/uncore-other.json b/too=
+ls/perf/pmu-events/arch/x86/skylake/uncore-other.json
+new file mode 100644
+index 000000000000..bf5d4acdd6b8
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/skylake/uncore-other.json
+@@ -0,0 +1,79 @@
++[
++    {
++        "BriefDescription": "Number of entries allocated. Account for Any =
+type: e.g. Snoop, Core aperture, etc.",
++        "Counter": "0,1",
++        "EventCode": "0x84",
++        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
++        "PerPkg": "1",
++        "PublicDescription": "Number of entries allocated. Account for Any=
+ type: e.g. Snoop, Core aperture, etc.",
++        "UMask": "0x01",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Number of all Core entries outstanding for th=
+e memory controller. The outstanding interval starts after LLC miss till re=
+turn of first data chunk. Accounts for Coherent and non-coherent traffic.",
++        "EventCode": "0x80",
++        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
++        "PerPkg": "1",
++        "PublicDescription": "Number of all Core entries outstanding for t=
+he memory controller. The outstanding interval starts after LLC miss till r=
+eturn of first data chunk. Accounts for Coherent and non-coherent traffic."=
+,
++        "UMask": "0x01",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Cycles with at least one request outstanding =
+is waiting for data return from memory controller. Account for coherent and=
+ non-coherent requests initiated by IA Cores, Processor Graphics Unit, or L=
+LC.",
++        "CounterMask": "1",
++        "EventCode": "0x80",
++        "EventName": "UNC_ARB_TRK_OCCUPANCY.CYCLES_WITH_ANY_REQUEST",
++        "PerPkg": "1",
++        "PublicDescription": "Cycles with at least one request outstanding=
+ is waiting for data return from memory controller. Account for coherent an=
+d non-coherent requests initiated by IA Cores, Processor Graphics Unit, or =
+LLC.",
++        "UMask": "0x01",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Number of Core Data Read entries outstanding =
+for the memory controller. The outstanding interval starts after LLC miss t=
+ill return of first data chunk.",
++        "EventCode": "0x80",
++        "EventName": "UNC_ARB_TRK_OCCUPANCY.DATA_READ",
++        "PerPkg": "1",
++        "PublicDescription": "Number of Core Data Read entries outstanding=
+ for the memory controller. The outstanding interval starts after LLC miss =
+till return of first data chunk.",
++        "UMask": "0x02",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Number of Core coherent Data Read requests se=
+nt to memory controller whose data is returned directly to requesting agent=
+.",
++        "Counter": "0,1",
++        "EventCode": "0x81",
++        "EventName": "UNC_ARB_TRK_REQUESTS.DATA_READ",
++        "PerPkg": "1",
++        "PublicDescription": "Number of Core coherent Data Read requests s=
+ent to memory controller whose data is returned directly to requesting agen=
+t.",
++        "UMask": "0x02",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Number of Core coherent Data Read requests se=
+nt to memory controller whose data is returned directly to requesting agent=
+.",
++        "Counter": "0,1",
++        "EventCode": "0x81",
++        "EventName": "UNC_ARB_TRK_REQUESTS.DRD_DIRECT",
++        "PerPkg": "1",
++        "PublicDescription": "Number of Core coherent Data Read requests s=
+ent to memory controller whose data is returned directly to requesting agen=
+t.",
++        "UMask": "0x02",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Number of Writes allocated - any write transa=
+ctions: full/partials writes and evictions.",
++        "Counter": "0,1",
++        "EventCode": "0x81",
++        "EventName": "UNC_ARB_TRK_REQUESTS.WRITES",
++        "PerPkg": "1",
++        "PublicDescription": "Number of Writes allocated - any write trans=
+actions: full/partials writes and evictions.",
++        "UMask": "0x20",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "This 48-bit fixed counter counts the UCLK cyc=
+les",
++        "Counter": "FIXED",
 +        "EventCode": "0xff",
-         "EventName": "UNC_CLOCK.SOCKET",
-         "PerPkg": "1",
-         "PublicDescription": "This 48-bit fixed counter counts the UCLK cy=
++        "EventName": "UNC_CLOCK.SOCKET",
++        "PerPkg": "1",
++        "PublicDescription": "This 48-bit fixed counter counts the UCLK cy=
 cles.",
--        "UMask": "0x01",
-         "Unit": "ARB"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.json=
- b/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.json
-index 4dd136d00a10..98362abba1a7 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.json
-@@ -146,4 +146,4 @@
++        "Unit": "CLOCK"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/uncore.json b/tools/per=
+f/pmu-events/arch/x86/skylake/uncore.json
+deleted file mode 100644
+index dbc193252fb3..000000000000
+--- a/tools/perf/pmu-events/arch/x86/skylake/uncore.json
++++ /dev/null
+@@ -1,254 +0,0 @@
+-[
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x22",
+-    "UMask": "0x41",
+-    "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_XCORE",
+-    "BriefDescription": "A cross-core snoop initiated by this Cbox due to =
+processor core memory request which misses in some processor core.",
+-    "PublicDescription": "A cross-core snoop initiated by this Cbox due to=
+ processor core memory request which misses in some processor core.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x22",
+-    "UMask": "0x81",
+-    "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_EVICTION",
+-    "BriefDescription": "A cross-core snoop resulted from L3 Eviction whic=
+h misses in some processor core.",
+-    "PublicDescription": "A cross-core snoop resulted from L3 Eviction whi=
+ch misses in some processor core.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x22",
+-    "UMask": "0x44",
+-    "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_XCORE",
+-    "BriefDescription": "A cross-core snoop initiated by this Cbox due to =
+processor core memory request which hits a non-modified line in some proces=
+sor core.",
+-    "PublicDescription": "A cross-core snoop initiated by this Cbox due to=
+ processor core memory request which hits a non-modified line in some proce=
+ssor core.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x22",
+-    "UMask": "0x48",
+-    "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_XCORE",
+-    "BriefDescription": "A cross-core snoop initiated by this Cbox due to =
+processor core memory request which hits a modified line in some processor =
+core.",
+-    "PublicDescription": "A cross-core snoop initiated by this Cbox due to=
+ processor core memory request which hits a modified line in some processor=
+ core.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x21",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_M",
+-    "BriefDescription": "L3 Lookup write request that access cache and fou=
+nd line in M-state",
+-    "PublicDescription": "L3 Lookup write request that access cache and fo=
+und line in M-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x81",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_M",
+-    "BriefDescription": "L3 Lookup any request that access cache and found=
+ line in M-state",
+-    "PublicDescription": "L3 Lookup any request that access cache and foun=
+d line in M-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x18",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.READ_I",
+-    "BriefDescription": "L3 Lookup read request that access cache and foun=
+d line in I-state",
+-    "PublicDescription": "L3 Lookup read request that access cache and fou=
+nd line in I-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x88",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_I",
+-    "BriefDescription": "L3 Lookup any request that access cache and found=
+ line in I-state",
+-    "PublicDescription": "L3 Lookup any request that access cache and foun=
+d line in I-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x1f",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.READ_MESI",
+-    "BriefDescription": "L3 Lookup read request that access cache and foun=
+d line in any MESI-state",
+-    "PublicDescription": "L3 Lookup read request that access cache and fou=
+nd line in any MESI-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x2f",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_MESI",
+-    "BriefDescription": "L3 Lookup write request that access cache and fou=
+nd line in MESI-state",
+-    "PublicDescription": "L3 Lookup write request that access cache and fo=
+und line in MESI-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x8f",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_MESI",
+-    "BriefDescription": "L3 Lookup any request that access cache and found=
+ line in MESI-state",
+-    "PublicDescription": "L3 Lookup any request that access cache and foun=
+d line in MESI-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x86",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_ES",
+-    "BriefDescription": "L3 Lookup any request that access cache and found=
+ line in E or S-state",
+-    "PublicDescription": "L3 Lookup any request that access cache and foun=
+d line in E or S-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x16",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.READ_ES",
+-    "BriefDescription": "L3 Lookup read request that access cache and foun=
+d line in E or S-state",
+-    "PublicDescription": "L3 Lookup read request that access cache and fou=
+nd line in E or S-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "CBO",
+-    "EventCode": "0x34",
+-    "UMask": "0x26",
+-    "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_ES",
+-    "BriefDescription": "L3 Lookup write request that access cache and fou=
+nd line in E or S-state",
+-    "PublicDescription": "L3 Lookup write request that access cache and fo=
+und line in E or S-state.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "iMPH-U",
+-    "EventCode": "0x80",
+-    "UMask": "0x01",
+-    "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
+-    "BriefDescription": "Each cycle count number of all Core outgoing vali=
+d entries. Such entry is defined as valid from its allocation till first of=
+ IDI0 or DRS0 messages is sent out. Accounts for Coherent and non-coherent =
+traffic.",
+-    "PublicDescription": "Each cycle count number of all Core outgoing val=
+id entries. Such entry is defined as valid from its allocation till first o=
+f IDI0 or DRS0 messages is sent out. Accounts for Coherent and non-coherent=
+ traffic.",
+-    "Counter": "0",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "iMPH-U",
+-    "EventCode": "0x81",
+-    "UMask": "0x01",
+-    "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
+-    "BriefDescription": "Total number of Core outgoing entries allocated. =
+Accounts for Coherent and non-coherent traffic.",
+-    "PublicDescription": "Total number of Core outgoing entries allocated.=
+ Accounts for Coherent and non-coherent traffic.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "iMPH-U",
+-    "EventCode": "0x81",
+-    "UMask": "0x02",
+-    "EventName": "UNC_ARB_TRK_REQUESTS.DRD_DIRECT",
+-    "BriefDescription": "Number of Core coherent Data Read entries allocat=
+ed in DirectData mode",
+-    "PublicDescription": "Number of Core coherent Data Read entries alloca=
+ted in DirectData mode.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "iMPH-U",
+-    "EventCode": "0x81",
+-    "UMask": "0x20",
+-    "EventName": "UNC_ARB_TRK_REQUESTS.WRITES",
+-    "BriefDescription": "Number of Writes allocated - any write transactio=
+ns: full/partials writes and evictions.",
+-    "PublicDescription": "Number of Writes allocated - any write transacti=
+ons: full/partials writes and evictions.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "iMPH-U",
+-    "EventCode": "0x84",
+-    "UMask": "0x01",
+-    "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
+-    "BriefDescription": "Number of entries allocated. Account for Any type=
+: e.g. Snoop, Core aperture, etc.",
+-    "PublicDescription": "Number of entries allocated. Account for Any typ=
+e: e.g. Snoop, Core aperture, etc.",
+-    "Counter": "0,1",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "iMPH-U",
+-    "EventCode": "0x80",
+-    "UMask": "0x01",
+-    "EventName": "UNC_ARB_TRK_OCCUPANCY.CYCLES_WITH_ANY_REQUEST",
+-    "BriefDescription": "Cycles with at least one request outstanding is w=
+aiting for data return from memory controller. Account for coherent and non=
+-coherent requests initiated by IA Cores, Processor Graphics Unit, or LLC.;=
+",
+-    "PublicDescription": "Cycles with at least one request outstanding is =
+waiting for data return from memory controller. Account for coherent and no=
+n-coherent requests initiated by IA Cores, Processor Graphics Unit, or LLC.=
+",
+-    "Counter": "0",
+-    "CounterMask": "1",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  },
+-  {
+-    "Unit": "NCU",
+-    "EventCode": "0x0",
+-    "UMask": "0x01",
+-    "EventName": "UNC_CLOCK.SOCKET",
+-    "BriefDescription": "This 48-bit fixed counter counts the UCLK cycles"=
+,
+-    "PublicDescription": "This 48-bit fixed counter counts the UCLK cycles=
+.",
+-    "Counter": "FIXED",
+-    "CounterMask": "0",
+-    "Invert": "0",
+-    "EdgeDetect": "0"
+-  }
+-]
+\ No newline at end of file
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/virtual-memory.json b/t=
+ools/perf/pmu-events/arch/x86/skylake/virtual-memory.json
+index 792ca39f013a..dd334b416c57 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/virtual-memory.json
+@@ -281,4 +281,4 @@
          "SampleAfterValue": "100007",
          "UMask": "0x20"
      }
