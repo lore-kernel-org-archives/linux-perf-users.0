@@ -2,307 +2,204 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AB4C433EF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 08:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0826CC433EF
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jul 2022 10:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233936AbiGYIUU (ORCPT
+        id S234734AbiGYKmd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jul 2022 04:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37940 "EHLO
+        Mon, 25 Jul 2022 06:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233924AbiGYIUD (ORCPT
+        with ESMTP id S229694AbiGYKmc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jul 2022 04:20:03 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882551401C
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 01:19:49 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id m9so12194025ljp.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 01:19:49 -0700 (PDT)
+        Mon, 25 Jul 2022 06:42:32 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6D417A81
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 03:42:31 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id w7so9999847ply.12
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Jul 2022 03:42:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PmOvJ7TU2aN0pPelGFvgzHlfOMqchEtVeIWJWu5ZWWo=;
-        b=wrLELC1Lp2J9RVXZS2/Y9yRyzDgMkYxS0bL2c/WhzXXuK0afzTlK6kNm7feVZU+NOM
-         LD+xh3/nB1RHSpxPnkONeWBWODxGSNeyD55LKaLMsQoLACT4LT+zh9DC7/MQlrefcMeG
-         cHJL/nWIJzyboz+fOLZPo6Plzuihr0ThkovE2z8127+hQ5XjAgJU9dTWH85AnmOEWcLo
-         Pltfa8kx4Wvp97vggiqF26aW5ex127fds447DR14DRnb84xNhFjQgalWbOKMmrk83eIl
-         GwQAlgq/wMAjYG3a4ottshxoUonRKRXTY4PjUfKhl+Vrwx7gAjb33kY6jFHL+46mqCod
-         LQ7A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vggSN88yvyTH37AE3BHE2CmA8tVQM9HZuT6NW9rbdyA=;
+        b=MXw5MsxLZOCOl+Fs14jwG6AdAy08tQZpjBJ6mVGH2hblw13A1JOidIRr86c+z2iryl
+         UIeNggNqFYr4dTNvHeYzZfi/7+PlKEC2g6KaghR7N4g/e0xwXQW7+gvZMd6qxLimwo2K
+         Wzm0b+dkfQwidEBPPAqWxwG2+4YDUnTk+1p6mWJ1Fe8qwvF+DHYeKPeJE1LT1YZMIWKf
+         /ZqwuTFv9ExA1TzMy97TLlFtcxYT3OdJSP/TgRGHJKH8rSd0aAhRcLERhZeesA7l1BuW
+         3HcyFXF2PXdHKC793+URvXVThrrgpERaSmRlIe8aQyPt0pXN4jNMslv11gBR9IGiiHJq
+         377g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PmOvJ7TU2aN0pPelGFvgzHlfOMqchEtVeIWJWu5ZWWo=;
-        b=d8fnKxp/Yu30IKDxjSXqge24dvfn2FiBO+8FOp7PmO37tqOMQwdTIA8X0Ycx1kHx9d
-         NWI7iGeECo8CLSHKeZ7kcgcRilRhh8AFx507e8UwklwBT7Znm2uCdMJ0qwfYNhf/etbG
-         3hXsLkCc3OjxDpFbG1hPVOjnWdMeDrMx2HxcQdLdm1LU16fMFNREWX/+OBNrmsjWEP1b
-         qKKBpskjl0bDjKVM/1f1MqNBGlEFYZ/uzw46KkUyic/Vz1U2ypFtrvaH9JilfDNV66It
-         cC9xFgQpw6Dcqj7dmpTpQCDk5HcqbN4b+4ZpfQ0ZFXM9YTub6umXvMId4cPBiWB5c7n8
-         ZXIg==
-X-Gm-Message-State: AJIora999gHTcMJ8cT7oL1pXB0fluhScl46yD+X/KYc+fR9YPp+oJfqV
-        pzI4UDdWBCMCvpS2Ms0zqNkGelYM7yZdVSUnC/g3EQ==
-X-Google-Smtp-Source: AGRyM1skOJAtrNlhLRJESyARVRT4D/k8IPfz9+YixQQuEa14gbwdBis2vBDSp4aycNT8mf7K32GjHdZmqua7HkDzqas=
-X-Received: by 2002:a2e:895a:0:b0:25d:6815:98ff with SMTP id
- b26-20020a2e895a000000b0025d681598ffmr3667468ljk.189.1658737187589; Mon, 25
- Jul 2022 01:19:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vggSN88yvyTH37AE3BHE2CmA8tVQM9HZuT6NW9rbdyA=;
+        b=bqrQFiD9ZjKtHMwn5VBMhwUKfulDD+HZJo0vPdtqJcuY0piYYOq3ekve3eIGGsJy1z
+         1pJ9do1raInSb/zvo03p2igo6gCHjAZ1O0LJFwezNtkAhVWrLsVHmj69cr/v9+7N1WL3
+         H4okZpISVSKtEROrpfO/2wGgJwa2BsksWhUKXHxCRp9aErnAWOpEyVXvRIvcn5p4iLJq
+         d6pEX3kToLbjzy7rIojo15fAtDyaJwsGull6oxi81/RnGN8MDn9vPPqmesyyXdE6JYLQ
+         myPzBzAJODI03YW1kxSzdDFI0GBg3absTRyn1IrUQpV9scMcqToRECwo4qoxJkqyW1KV
+         ak5g==
+X-Gm-Message-State: AJIora99qpxfqgL3JYjZDZ548H0TsfiTIa/nzxw/euvQtmuv0cvFKrBn
+        BScah7LQmyyw+emVjhDaj5JCuA==
+X-Google-Smtp-Source: AGRyM1tj/NDFe2VQLn5EKKBO4qBHEv32kZ7qXMbydRktu29i7TikE6lk58qk9S7Jc63xvWRPWMQAsw==
+X-Received: by 2002:a17:902:9043:b0:16c:d862:fdf5 with SMTP id w3-20020a170902904300b0016cd862fdf5mr11690038plz.97.1658745750484;
+        Mon, 25 Jul 2022 03:42:30 -0700 (PDT)
+Received: from leo-build-box.lan (n058152077182.netvigator.com. [58.152.77.182])
+        by smtp.gmail.com with ESMTPSA id n3-20020a170902f60300b0016bdea07b9esm8808510plg.190.2022.07.25.03.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jul 2022 03:42:30 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Akemi Yagi <toracat@elrepo.org>, ElRepo <contact@elrepo.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] perf scripts python: Let script to be python2 compliant
+Date:   Mon, 25 Jul 2022 18:42:20 +0800
+Message-Id: <20220725104220.1106663-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220704081149.16797-1-mike.leach@linaro.org> <0b493b49-2657-ad5d-465e-d80b62820613@arm.com>
- <CAJ9a7VhXMn+DJ+qgeYRbqgGDm3jV_xNeBGKP=q7eiSe03_7eJw@mail.gmail.com> <393c8470-6538-cebe-1c49-cf22ac51e3c5@arm.com>
-In-Reply-To: <393c8470-6538-cebe-1c49-cf22ac51e3c5@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Mon, 25 Jul 2022 09:19:36 +0100
-Message-ID: <CAJ9a7VicZW0z9fgMObmRKGeNOiW=cjDKG1GHwh3_nLuLd87G-g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] coresight: Add new API to allocate trace source
- ID values
-To:     James Clark <james.clark@arm.com>
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        quic_jinlmao@quicinc.com, suzuki.poulose@arm.com,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Al Grant <Al.Grant@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James
+The mainline kernel can be used for relative old distros, e.g. RHEL 7.
+The distro doesn't upgrade from python2 to python3, this causes the
+building error that the python script is not python2 compliant.
 
-On Fri, 22 Jul 2022 at 13:10, James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 21/07/2022 14:54, Mike Leach wrote:
-> > Hi James,
-> >
-> > Thanks for looking at this.
-> >
-> > On Thu, 21 Jul 2022 at 11:27, James Clark <james.clark@arm.com> wrote:
-> >>
-> >>
-> >>
-> >> On 04/07/2022 09:11, Mike Leach wrote:
-> >>> The current method for allocating trace source ID values to sources is
-> >>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> >>> The STM is allocated ID 0x1.
-> >>>
-> >>> This fixed algorithm is used in both the CoreSight driver code, and by
-> >>> perf when writing the trace metadata in the AUXTRACE_INFO record.
-> >>>
-> >>> The method needs replacing as currently:-
-> >>> 1. It is inefficient in using available IDs.
-> >>> 2. Does not scale to larger systems with many cores and the algorithm
-> >>> has no limits so will generate invalid trace IDs for cpu number > 44.
-> >>>
-> >>> Additionally requirements to allocate additional system IDs on some
-> >>> systems have been seen.
-> >>>
-> >>> This patch set  introduces an API that allows the allocation of trace IDs
-> >>> in a dynamic manner.
-> >>
-> >> I've tested this with various commands like with per-thread mode, attaching,
-> >> running the tests and also Carsten's new tests. Apart from the possible
-> >> backwards compatibility issue and the minor code comments it looks good to
-> >> me.
-> >>
-> >
-> > I've looked at the backwards compatibility issue. At present with the
-> > current set
-> > (K = kernel drivers, P-rec = perf record, P-rep = perf report)
-> > ::
-> >
-> > K-v1-ids  + P-rec-v1-ids => P-rep-v1 (OK)  P-rep-v2 (OK)
-> > K-v1-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (fail)
-> > K-v2-ids  + P-rec-v1-ids => P-rep-v1 (fail)  P-rep-v2 (fail)
-> > K-v2-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> >
-> > So, with a P-rec generating v2 metadata, P rep will cleanly error out.
-> > Where the Kernel ID version and the perf report ID version differ,
-> > even the P rep v2 will fail, due to the IDs being different in the
-> > file and actual drivers. These fails will simply look like no data
-> > present.
-> >
-> > There are two possible fixes that improve this:-
-> > A) if the v2 kernel uses a sysfs flag to indicate new ID usage, then
-> > if this is missing the new perf record can degrade to using the old
-> > algorithm to put IDs directly into metadata as it assumes it is
-> > running on a v1 kernel.
-> > This fixes things then for the P-rep v2 that can look for this & we
-> > know there will be no incoming ID packets.
-> > B) P-rep v2 can look for new packets irrespective of incoming metadata
-> > version, and if it sees them, override them
-> >
-> > Compatibility matrix then looks like::
-> > K-v1-ids  + P-rec-v1-ids => P-rep-v1 (OK)  P-rep-v2 (OK)
-> > K-v1-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> > K-v2-ids  + P-rec-v1-ids => P-rep-v1 (fail)  P-rep-v2 (OK)
-> > K-v2-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> >
-> > There is no solution to using an old version of perf record on a new
-> > kernel and getting the old version of perf report to correctly decode
-> > the file.
-> >
->
-> We had a discussion about this last point on the Friday AutoFDO call.
+To fix the building failure, this patch changes from the python f-string
+format to traditional string format.
 
-Sorry I missed that - I was on holiday.
+Reported-by: Akemi Yagi <toracat@elrepo.org>
+Fixes: 12fdd6c009da ("perf scripts python: Support Arm CoreSight trace data disassembly")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ .../scripts/python/arm-cs-trace-disasm.py     | 34 ++++++++++---------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-> Do you think it's possible to keep the old static ID allocations if
-> num_possible_cpus() < Max Trace ID? This is especially important for
-> simple perf because Android doesn't even have the more than 128 CPUs
-> issue, so technically shouldn't have to have any changes made to it.
->
-
-If android never runs high core count hardware, then that could work.
-The actual CPU limit is in fact 47, after which point the static
-algorithm fails.
-
-The question arises what do the kernel drivers do then?
-
-The old perf -record will not realise things are about to go wrong,
-and continue to blindly allocate incorrect trace IDs.
-Realistically the new drivers will then switch to use the previously
-unused IDs, whereby they will mismatch with the blindly allocated perf
-IDs and the old perf decode process will silently fail to decode any
-data with IDs that do not match.
-
-If we also removed the metadata version update that goes alongside the
-ID changes, then old perf-reports would continue to try to decode
-newer files - again silently failing once the static algorithm has
-failed.
-Legacy ID allocation support must be added as a kernel CONFIG option -
-so that it is up front an obvious to users what is being selected. And
-we can output appropriate error messages.
-
-This would be a temporary solution at best as there are upcoming
-issues that will need attention:-
-1 ) We need to deal with the fact that customers are adding new CS
-compatible hardware to their systems, some of which they have
-hardcoded trace IDs. These hardware allocations will become
-reservations in the dynamic allocator, with no guarantee they will not
-clash with the static algorithm.
-
-2) There may be a point in the future where we need to use per Sink ID
-allocation.
-
-3) We have an outstanding perf issue with ETE + TRBE which never use
-trace IDs - at present decode works here because all the ETE
-capabilities on the current systems are identical. Once that changes,
-perf will need updating to look at the trace metadata on a CPU number
-basis, not on a trace ID basis.
-
-4) Future architecture updates will render newer trace un-decodable by
-old perf versions.
-
-The question here is why would Android build an up to date kernel
-version with the updated CoreSight drivers, but insist on using an
-outdated perf / simpleperf version?
-
-Regards
-
-Mike
-
-
-> Making the dynamic traceID allocation use the same IDs as before
-> whenever possible should allow both old Perf and simpleperf to open
-> the file as before and ignore the AUX_OUTPUT_HW_ID packets.
->
-> James
->
-> > Thoughts?
-> >
-> > Mike
-> >
-> >>>
-> >>> Architecturally reserved IDs are never allocated, and the system is
-> >>> limited to allocating only valid IDs.
-> >>>
-> >>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
-> >>> the new API.
-> >>>
-> >>> For the ETMx.x devices IDs are allocated on certain events
-> >>> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
-> >>> sysfs TRCTRACEID register and freed when the sysfs reset is written.
-> >>>
-> >>> b) When using perf, ID is allocated on hardware enable, and freed on
-> >>> hardware disable. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
-> >>> The ID allocator is notified when perf sessions start and stop
-> >>> so CPU based IDs are kept constant throughout any perf session.
-> >>>
-> >>>
-> >>> Note: This patchset breaks backward compatibility for perf record and
-> >>> perf report.
-> >>>
-> >>> Because the method for generating the AUXTRACE_INFO meta data has
-> >>> changed, using an older perf record will result in metadata that
-> >>> does not match the trace IDs used in the recorded trace data.
-> >>> This mismatch will cause subsequent decode to fail.
-> >>>
-> >>> The version of the AUXTRACE_INFO has been updated to reflect the fact that
-> >>> the trace source IDs are no longer present in the metadata. This will
-> >>> mean older versions of perf report cannot decode the file.
-> >>>
-> >>> Applies to coresight/next [c06475910b52]
-> >>> Tested on DB410c
-> >>>
-> >>> Changes since v1:
-> >>> (after feedback & discussion with Mathieu & Suzuki).
-> >>>
-> >>> 1) API has changed. The global trace ID map is managed internally, so it
-> >>> is no longer passed in to the API functions.
-> >>>
-> >>> 2) perf record does not use sysfs to find the trace IDs. These are now
-> >>> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
-> >>> have been updated accordingly to generate and handle these events.
-> >>>
-> >>> Mike Leach (13):
-> >>>   coresight: trace-id: Add API to dynamically assign Trace ID values
-> >>>   coresight: trace-id: update CoreSight core to use Trace ID API
-> >>>   coresight: stm: Update STM driver to use Trace ID API
-> >>>   coresight: etm4x: Update ETM4 driver to use Trace ID API
-> >>>   coresight: etm3x: Update ETM3 driver to use Trace ID API
-> >>>   coresight: etmX.X: stm: Remove unused legacy source Trace ID ops
-> >>>   coresight: perf: traceid: Add perf notifiers for Trace ID
-> >>>   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
-> >>>   perf: cs-etm: Update record event to use new Trace ID protocol
-> >>>   kernel: events: Export perf_report_aux_output_id()
-> >>>   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
-> >>>   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
-> >>>   coresight: trace-id: Add debug & test macros to Trace ID allocation
-> >>>
-> >>>  drivers/hwtracing/coresight/Makefile          |   2 +-
-> >>>  drivers/hwtracing/coresight/coresight-core.c  |  49 +---
-> >>>  .../hwtracing/coresight/coresight-etm-perf.c  |  17 ++
-> >>>  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
-> >>>  .../coresight/coresight-etm3x-core.c          |  85 +++---
-> >>>  .../coresight/coresight-etm3x-sysfs.c         |  28 +-
-> >>>  .../coresight/coresight-etm4x-core.c          |  65 ++++-
-> >>>  .../coresight/coresight-etm4x-sysfs.c         |  32 ++-
-> >>>  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
-> >>>  drivers/hwtracing/coresight/coresight-stm.c   |  49 +---
-> >>>  .../hwtracing/coresight/coresight-trace-id.c  | 263 ++++++++++++++++++
-> >>>  .../hwtracing/coresight/coresight-trace-id.h  |  65 +++++
-> >>>  include/linux/coresight-pmu.h                 |  31 ++-
-> >>>  include/linux/coresight.h                     |   3 -
-> >>>  kernel/events/core.c                          |   1 +
-> >>>  tools/include/linux/coresight-pmu.h           |  31 ++-
-> >>>  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
-> >>>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   9 +
-> >>>  tools/perf/util/cs-etm.c                      | 220 +++++++++++++--
-> >>>  tools/perf/util/cs-etm.h                      |  14 +-
-> >>>  20 files changed, 784 insertions(+), 207 deletions(-)
-> >>>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
-> >>>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
-> >>>
-> >
-> >
-> >
-
-
-
+diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+index 5f57d9829956..4339692a8d0b 100755
+--- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
++++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+@@ -61,7 +61,7 @@ def get_optional(perf_dict, field):
+ 
+ def get_offset(perf_dict, field):
+ 	if field in perf_dict:
+-		return f"+0x{perf_dict[field]:x}"
++		return "+%#x" % perf_dict[field]
+ 	return ""
+ 
+ def get_dso_file_path(dso_name, dso_build_id):
+@@ -76,7 +76,7 @@ def get_dso_file_path(dso_name, dso_build_id):
+ 	else:
+ 		append = "/elf"
+ 
+-	dso_path = f"{os.environ['PERF_BUILDID_DIR']}/{dso_name}/{dso_build_id}{append}"
++	dso_path = os.environ['PERF_BUILDID_DIR'] + "/" + dso_name + "/" + dso_build_id + append;
+ 	# Replace duplicate slash chars to single slash char
+ 	dso_path = dso_path.replace('//', '/', 1)
+ 	return dso_path
+@@ -94,8 +94,8 @@ def read_disam(dso_fname, dso_start, start_addr, stop_addr):
+ 		start_addr = start_addr - dso_start;
+ 		stop_addr = stop_addr - dso_start;
+ 		disasm = [ options.objdump_name, "-d", "-z",
+-			   f"--start-address=0x{start_addr:x}",
+-			   f"--stop-address=0x{stop_addr:x}" ]
++			   "--start-address="+format(start_addr,"#x"),
++			   "--stop-address="+format(stop_addr,"#x") ]
+ 		disasm += [ dso_fname ]
+ 		disasm_output = check_output(disasm).decode('utf-8').split('\n')
+ 		disasm_cache[addr_range] = disasm_output
+@@ -109,12 +109,14 @@ def print_disam(dso_fname, dso_start, start_addr, stop_addr):
+ 			m = disasm_re.search(line)
+ 			if m is None:
+ 				continue
+-		print(f"\t{line}")
++		print("\t" + line)
+ 
+ def print_sample(sample):
+-	print(f"Sample = {{ cpu: {sample['cpu']:04} addr: 0x{sample['addr']:016x} " \
+-	      f"phys_addr: 0x{sample['phys_addr']:016x} ip: 0x{sample['ip']:016x} " \
+-	      f"pid: {sample['pid']} tid: {sample['tid']} period: {sample['period']} time: {sample['time']} }}")
++	print("Sample = { cpu: %04d addr: 0x%016x phys_addr: 0x%016x ip: 0x%016x " \
++	      "pid: %d tid: %d period: %d time: %d }" % \
++	      (sample['cpu'], sample['addr'], sample['phys_addr'], \
++	       sample['ip'], sample['pid'], sample['tid'], \
++	       sample['period'], sample['time']))
+ 
+ def trace_begin():
+ 	print('ARM CoreSight Trace Data Assembler Dump')
+@@ -131,7 +133,7 @@ def common_start_str(comm, sample):
+ 	cpu = sample["cpu"]
+ 	pid = sample["pid"]
+ 	tid = sample["tid"]
+-	return f"{comm:>16} {pid:>5}/{tid:<5} [{cpu:04}] {sec:9}.{ns:09}  "
++	return "%16s %5u/%-5u [%04u] %9u.%09u  " % (comm, pid, tid, cpu, sec, ns)
+ 
+ # This code is copied from intel-pt-events.py for printing source code
+ # line and symbols.
+@@ -171,7 +173,7 @@ def print_srccode(comm, param_dict, sample, symbol, dso):
+ 	glb_line_number = line_number
+ 	glb_source_file_name = source_file_name
+ 
+-	print(f"{start_str}{src_str}")
++	print(start_str, src_str)
+ 
+ def process_event(param_dict):
+ 	global cache_size
+@@ -188,7 +190,7 @@ def process_event(param_dict):
+ 	symbol = get_optional(param_dict, "symbol")
+ 
+ 	if (options.verbose == True):
+-		print(f"Event type: {name}")
++		print("Event type: %s" % name)
+ 		print_sample(sample)
+ 
+ 	# If cannot find dso so cannot dump assembler, bail out
+@@ -197,7 +199,7 @@ def process_event(param_dict):
+ 
+ 	# Validate dso start and end addresses
+ 	if ((dso_start == '[unknown]') or (dso_end == '[unknown]')):
+-		print(f"Failed to find valid dso map for dso {dso}")
++		print("Failed to find valid dso map for dso %s" % dso)
+ 		return
+ 
+ 	if (name[0:12] == "instructions"):
+@@ -244,15 +246,15 @@ def process_event(param_dict):
+ 
+ 	# Handle CS_ETM_TRACE_ON packet if start_addr=0 and stop_addr=4
+ 	if (start_addr == 0 and stop_addr == 4):
+-		print(f"CPU{cpu}: CS_ETM_TRACE_ON packet is inserted")
++		print("CPU%d: CS_ETM_TRACE_ON packet is inserted" % cpu)
+ 		return
+ 
+ 	if (start_addr < int(dso_start) or start_addr > int(dso_end)):
+-		print(f"Start address 0x{start_addr:x} is out of range [ 0x{dso_start:x} .. 0x{dso_end:x} ] for dso {dso}")
++		print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
+ 		return
+ 
+ 	if (stop_addr < int(dso_start) or stop_addr > int(dso_end)):
+-		print(f"Stop address 0x{stop_addr:x} is out of range [ 0x{dso_start:x} .. 0x{dso_end:x} ] for dso {dso}")
++		print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
+ 		return
+ 
+ 	if (options.objdump_name != None):
+@@ -267,6 +269,6 @@ def process_event(param_dict):
+ 		if path.exists(dso_fname):
+ 			print_disam(dso_fname, dso_vm_start, start_addr, stop_addr)
+ 		else:
+-			print(f"Failed to find dso {dso} for address range [ 0x{start_addr:x} .. 0x{stop_addr:x} ]")
++			print("Failed to find dso %s for address range [ 0x%x .. 0x%x ]" % (dso, start_addr, stop_addr))
+ 
+ 	print_srccode(comm, param_dict, sample, symbol, dso)
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.25.1
+
