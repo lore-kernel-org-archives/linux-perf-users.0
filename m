@@ -2,86 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F590C00140
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 16:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C17C00140
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 17:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230132AbiGZQ5J (ORCPT
+        id S238906AbiGZR2G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Jul 2022 12:57:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35702 "EHLO
+        Tue, 26 Jul 2022 13:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbiGZQ5J (ORCPT
+        with ESMTP id S239239AbiGZR2F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Jul 2022 12:57:09 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E37A2A71A;
-        Tue, 26 Jul 2022 09:57:06 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id c3so14221739vsc.6;
-        Tue, 26 Jul 2022 09:57:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NI6yWHtpqaqV6N9zf15hGVC4lywK5v9X+zT0pxAIPRk=;
-        b=ztzxZoKp3dtcKGRWsV9nZ812625EgjJuQ1kKLB8WG457YHmne19Ogt7/sdTE0/olcz
-         6X0a9OhkKsjuFLuvGOGxsV3I9+6xUrHLGzEPl9TTYT7fgIIjgzmuG8flrpfUzGv4022b
-         CSAGT0GHG+mt7KAs5PVLujYcOpapD7d5N+FLkmkW0blxdC5qzSli0R7OXjT+sxJnKtBm
-         O3Irn9nSLZDQZsw7G610gKm7CgpL21bGXHR5Ct4pHYnmTDBdNoBdMbFzCImsGnnnVjWc
-         Lxj3PfI8PgjGxp3W60hoCDW6//wa9jcK1kvJGpVxuETik+KmYec9GaYQ2Lj/iN3wEc9T
-         xPdA==
-X-Gm-Message-State: AJIora8P7MeO/NNnqe5c42uB5+7YNOLlh1wf7xL16NBJsiP0gVFzWqLh
-        Ij9y0g5T8u1PmxSDPGmfoijFbOVOQeJgqjYGuIE=
-X-Google-Smtp-Source: AGRyM1sMUwZtonS+KStbsSP3Gc+vXL7V2hRpgkxCk6qdCNZ3Lm0qEZRgnEBhiblWlxEKK8kdt8+AeFOtzRhPbUEn3Mw=
-X-Received: by 2002:a67:c886:0:b0:358:539d:e1a4 with SMTP id
- v6-20020a67c886000000b00358539de1a4mr3984652vsk.78.1658854625094; Tue, 26 Jul
- 2022 09:57:05 -0700 (PDT)
+        Tue, 26 Jul 2022 13:28:05 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 326022B61F;
+        Tue, 26 Jul 2022 10:28:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D5029B818CD;
+        Tue, 26 Jul 2022 17:28:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68AA4C433C1;
+        Tue, 26 Jul 2022 17:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658856481;
+        bh=OeeqVHYRFCRbXXvIvZzsym2JbtgrWaLKkYhMqGRpjJE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k9eddGvQJFqGOuIQ2REO2OYJRFgIOT9X+E58uAQEPkzOPfXfWJtpazo6h1dt9AxAC
+         THF+oCj0DmzdZyS6Pq4N/r1h+fb/rmiVmzxWGzAHoRiohbfoMZh3nfi88fvktNwcHW
+         UnZrnLpUSNFY1lzZVe+LITZnDwlWH4mOkxc5EzI+Q8g6mZnrT9IjedMKqGRumt5pnW
+         chJIuHnhAcIr1uT60UPDidE9BTur9y9N8ejqQmn2o25IGXoxZyzeafPv+g7ZowXM+t
+         AhK1KyACXAQhnciLvjbfeHUnroqXQ6yQHYwj2xjmcgsUl2eLxV/uvCZ/SwMD7+bm4y
+         MWDHPzzDpwGqA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2FF7140374; Tue, 26 Jul 2022 14:27:58 -0300 (-03)
+Date:   Tue, 26 Jul 2022 14:27:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, pc@us.ibm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [RFC v3 01/17] perf kwork: New tool
+Message-ID: <YuAkHkxgYyvdHKOO@kernel.org>
+References: <20220709015033.38326-1-yangjihong1@huawei.com>
+ <20220709015033.38326-2-yangjihong1@huawei.com>
 MIME-Version: 1.0
-References: <20220725104220.1106663-1-leo.yan@linaro.org> <Yt68AZA2VV9d02xZ@kernel.org>
-In-Reply-To: <Yt68AZA2VV9d02xZ@kernel.org>
-From:   Alan Bartlett <ajb@elrepo.org>
-Date:   Tue, 26 Jul 2022 17:56:49 +0100
-Message-ID: <CA+_WhHyZZC=3gtzetEAQQrjtGujHmY5azwtQNZEc90gyOAwUDg@mail.gmail.com>
-Subject: Re: [PATCH] perf scripts python: Let script to be python2 compliant
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Akemi Yagi <toracat@elrepo.org>, ElRepo <contact@elrepo.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220709015033.38326-2-yangjihong1@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 25 Jul 2022 at 16:51, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
-> Em Mon, Jul 25, 2022 at 06:42:20PM +0800, Leo Yan escreveu:
-> > The mainline kernel can be used for relative old distros, e.g. RHEL 7.
-> > The distro doesn't upgrade from python2 to python3, this causes the
-> > building error that the python script is not python2 compliant.
-> >
-> > To fix the building failure, this patch changes from the python f-string
-> > format to traditional string format.
->
-> Thanks, applied.
->
-> - Arnaldo
+Em Sat, Jul 09, 2022 at 09:50:17AM +0800, Yang Jihong escreveu:
+> The perf-kwork tool is used to trace time properties of kernel work
+> (such as irq, softirq, and workqueue), including runtime, latency,
+> and timehist, using the infrastructure in the perf tools to allow
+> tracing extra targets.
+> 
+> This is the first commit to reuse perf_record framework code to
+> implement a simple record function, kwork is not supported currently.
 
-Leo / Arnaldo,
+So, since I have to fix some issues I'm adding small stylistic changes,
+starting with this:
 
-Applying the patch on top of -5.19-rc8 fixes the problem that we (the
-ELRepo Project) experienced when attempting to build on RHEL7.
 
-So --
+- multiline if/for blocks need {}
 
-Tested-by: Alan Bartlett <ajb@elrepo.org>
+- remove needless spaces between variable declaration + initialization.
 
-Hopefully you will get it to Linus in time for -5.19 GA.
+- Arnaldo
 
-Thanks,
-Alan.
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index f3552c56ede3c501..bfa5c53f1273c631 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -49,9 +49,10 @@ static void setup_event_list(struct perf_kwork *kwork,
+ 				break;
+ 			}
+ 		}
+-		if (i == KWORK_CLASS_MAX)
++		if (i == KWORK_CLASS_MAX) {
+ 			usage_with_options_msg(usage_msg, options,
+ 					       "Unknown --event key: `%s'", tok);
++		}
+ 	}
+ 	free(str);
+ 
+@@ -59,10 +60,12 @@ static void setup_event_list(struct perf_kwork *kwork,
+ 	/*
+ 	 * config all kwork events if not specified
+ 	 */
+-	if (list_empty(&kwork->class_list))
+-		for (i = 0; i < KWORK_CLASS_MAX; i++)
++	if (list_empty(&kwork->class_list)) {
++		for (i = 0; i < KWORK_CLASS_MAX; i++) {
+ 			list_add_tail(&kwork_class_supported_list[i]->list,
+ 				      &kwork->class_list);
++		}
++	}
+ 
+ 	pr_debug("Config event list:");
+ 	list_for_each_entry(class, &kwork->class_list, list)
+@@ -125,7 +128,6 @@ int cmd_kwork(int argc, const char **argv)
+ 		.force               = false,
+ 		.event_list_str      = NULL,
+ 	};
+-
+ 	const struct option kwork_options[] = {
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		 "be more verbose (show symbol address, etc)"),
