@@ -2,33 +2,33 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1A4C43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 09:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C374C43334
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 09:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237617AbiGZJPn (ORCPT
+        id S232030AbiGZJTi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Jul 2022 05:15:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53570 "EHLO
+        Tue, 26 Jul 2022 05:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231864AbiGZJPm (ORCPT
+        with ESMTP id S231384AbiGZJTh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Jul 2022 05:15:42 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5C9237EB;
-        Tue, 26 Jul 2022 02:15:40 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LsWRx4mlwzgYgW;
-        Tue, 26 Jul 2022 17:13:49 +0800 (CST)
+        Tue, 26 Jul 2022 05:19:37 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F5F2981A;
+        Tue, 26 Jul 2022 02:19:35 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LsWV51YLdzWfV6;
+        Tue, 26 Jul 2022 17:15:41 +0800 (CST)
 Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
  dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 26 Jul 2022 17:15:04 +0800
+ 15.1.2375.24; Tue, 26 Jul 2022 17:19:10 +0800
 Received: from [10.67.110.237] (10.67.110.237) by
  kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 26 Jul 2022 17:15:03 +0800
-Subject: Re: [PATCH 5/5] ARM: stacktrace: Convert stacktrace to generic
- ARCH_STACKWALK
+ 15.1.2375.24; Tue, 26 Jul 2022 17:19:09 +0800
+Subject: Re: [PATCH 4/5] ARM: stacktrace: Make stack walk callback consistent
+ with generic code
 To:     Linus Walleij <linus.walleij@linaro.org>
 CC:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
         <ardb@kernel.org>, <will@kernel.org>, <mark.rutland@arm.com>,
@@ -38,22 +38,23 @@ CC:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
         <rostedt@goodmis.org>, <nick.hawkins@hpe.com>, <john@phrozen.org>,
         <mhiramat@kernel.org>, <ast@kernel.org>, <linyujun809@huawei.com>,
         <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        Li Huafei <lihuafei1@huawei.com>
 References: <20220712021527.109921-1-lihuafei1@huawei.com>
- <20220712021527.109921-6-lihuafei1@huawei.com>
- <CACRpkdZVxyCsENJQ_-KZBMHjVrYCHzFG2UdCAe=mt_5Ts8_RFw@mail.gmail.com>
+ <20220712021527.109921-5-lihuafei1@huawei.com>
+ <CACRpkdaF4UXuiH_4StWZLwhrC8H7Le9rbnRtHYaRLrJ+fQT2_g@mail.gmail.com>
 From:   Li Huafei <lihuafei1@huawei.com>
-Message-ID: <1771ac18-8b6a-46ae-c610-afecb28bd21c@huawei.com>
-Date:   Tue, 26 Jul 2022 17:15:03 +0800
+Message-ID: <5ab8be26-c6d3-c420-23e3-41e2bc9630e1@huawei.com>
+Date:   Tue, 26 Jul 2022 17:19:09 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.9.0
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZVxyCsENJQ_-KZBMHjVrYCHzFG2UdCAe=mt_5Ts8_RFw@mail.gmail.com>
+In-Reply-To: <CACRpkdaF4UXuiH_4StWZLwhrC8H7Le9rbnRtHYaRLrJ+fQT2_g@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.110.237]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemm600010.china.huawei.com (7.193.23.86)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -62,29 +63,19 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 2022/7/18 17:12, Linus Walleij wrote:
+On 2022/7/18 17:09, Linus Walleij wrote:
 > On Tue, Jul 12, 2022 at 4:19 AM Li Huafei <lihuafei1@huawei.com> wrote:
 > 
->> This patch converts ARM stacktrace to the generic ARCH_STACKWALK
->> implemented by commit 214d8ca6ee85 ("stacktrace: Provide common
->> infrastructure").
+>> In order to use generic arch_stack_walk() code, make stack walk callback
+>> consistent with it.
 >>
 >> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 > 
-> Looks good to me:
 > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thanks!
+
 > 
-> What I want to know is if this commit will avoid the problem mentioned
-> in review of commit 3? I.e. the generic stackwalk code will make sure we are
-> not running the task on another CPU, so that is why we could remove
-> that check?
-> 
-
-It was explained in commit 3, thank you very much.
-
-Thanks,
-Huafei
-
 > Yours,
 > Linus Walleij
 > .
