@@ -2,33 +2,33 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCFFC43334
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 09:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3507C433EF
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 09:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230370AbiGZJKa (ORCPT
+        id S232410AbiGZJM5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Jul 2022 05:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49106 "EHLO
+        Tue, 26 Jul 2022 05:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiGZJK3 (ORCPT
+        with ESMTP id S231492AbiGZJM4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Jul 2022 05:10:29 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 441C311146;
-        Tue, 26 Jul 2022 02:10:27 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LsWHW4DqlzWfMc;
-        Tue, 26 Jul 2022 17:06:31 +0800 (CST)
+        Tue, 26 Jul 2022 05:12:56 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 461EA2E9C6;
+        Tue, 26 Jul 2022 02:12:55 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LsWMY0W42z1M8PF;
+        Tue, 26 Jul 2022 17:10:01 +0800 (CST)
 Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 26 Jul 2022 17:10:24 +0800
+ 15.1.2375.24; Tue, 26 Jul 2022 17:12:40 +0800
 Received: from [10.67.110.237] (10.67.110.237) by
  kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 26 Jul 2022 17:10:23 +0800
-Subject: Re: [PATCH 2/5] ARM: stacktrace: Avoid duplicate saving of exception
- PC value
+ 15.1.2375.24; Tue, 26 Jul 2022 17:12:39 +0800
+Subject: Re: [PATCH 3/5] ARM: stacktrace: Allow stack trace saving for
+ non-current tasks
 To:     Linus Walleij <linus.walleij@linaro.org>
 CC:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
         <ardb@kernel.org>, <will@kernel.org>, <mark.rutland@arm.com>,
@@ -41,20 +41,20 @@ CC:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         Li Huafei <lihuafei1@huawei.com>
 References: <20220712021527.109921-1-lihuafei1@huawei.com>
- <20220712021527.109921-3-lihuafei1@huawei.com>
- <CACRpkdY0Jo7rzXjc10dLLrHnDkoBphvNYiyF5q8iHz-8QqaEwA@mail.gmail.com>
+ <20220712021527.109921-4-lihuafei1@huawei.com>
+ <CACRpkdYvOjfmf=Z3pGfD-UPxfTc9PXtOyw2x+ptYiSy=gmGnpQ@mail.gmail.com>
 From:   Li Huafei <lihuafei1@huawei.com>
-Message-ID: <f7654dfb-15cb-6563-4669-ad2457daa9d1@huawei.com>
-Date:   Tue, 26 Jul 2022 17:10:23 +0800
+Message-ID: <1288c73b-cf29-707d-47cb-4e2737300a29@huawei.com>
+Date:   Tue, 26 Jul 2022 17:12:39 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.9.0
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdY0Jo7rzXjc10dLLrHnDkoBphvNYiyF5q8iHz-8QqaEwA@mail.gmail.com>
+In-Reply-To: <CACRpkdYvOjfmf=Z3pGfD-UPxfTc9PXtOyw2x+ptYiSy=gmGnpQ@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.110.237]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemm600010.china.huawei.com (7.193.23.86)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -63,62 +63,57 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 2022/7/18 17:01, Linus Walleij wrote:
+On 2022/7/18 17:07, Linus Walleij wrote:
 > On Tue, Jul 12, 2022 at 4:18 AM Li Huafei <lihuafei1@huawei.com> wrote:
 > 
->> Because an exception stack frame is not created in the exception entry,
->> save_trace() does special handling for the exception PC, but this is
->> only needed when CONFIG_FRAME_POINTER_UNWIND=y. When
->> CONFIG_ARM_UNWIND=y, unwind annotations have been added to the exception
->> entry and save_trace() will repeatedly save the exception PC:
->>
->>     [0x7f000090] hrtimer_hander+0x8/0x10 [hrtimer]
->>     [0x8019ec50] __hrtimer_run_queues+0x18c/0x394
->>     [0x8019f760] hrtimer_run_queues+0xbc/0xd0
->>     [0x8019def0] update_process_times+0x34/0x80
->>     [0x801ad2a4] tick_periodic+0x48/0xd0
->>     [0x801ad3dc] tick_handle_periodic+0x1c/0x7c
->>     [0x8010f2e0] twd_handler+0x30/0x40
->>     [0x80177620] handle_percpu_devid_irq+0xa0/0x23c
->>     [0x801718d0] generic_handle_domain_irq+0x24/0x34
->>     [0x80502d28] gic_handle_irq+0x74/0x88
->>     [0x8085817c] generic_handle_arch_irq+0x58/0x78
->>     [0x80100ba8] __irq_svc+0x88/0xc8
->>     [0x80108114] arch_cpu_idle+0x38/0x3c
->>     [0x80108114] arch_cpu_idle+0x38/0x3c    <==== duplicate saved exception PC
->>     [0x80861bf8] default_idle_call+0x38/0x130
->>     [0x8015d5cc] do_idle+0x150/0x214
->>     [0x8015d978] cpu_startup_entry+0x18/0x1c
->>     [0x808589c0] rest_init+0xd8/0xdc
->>     [0x80c00a44] arch_post_acpi_subsys_init+0x0/0x8
->>
->> We can move the special handling of the exception PC in save_trace() to
->> the unwind_frame() of the frame pointer unwinder.
+>> The current ARM implementation of save_stack_trace_tsk() does not allow
+>> saving stack trace for non-current tasks, which may limit the scenarios
+>> in which stack_trace_save_tsk() can be used. Like other architectures,
+>> or like ARM's unwind_backtrace(), we can leave it up to the caller to
+>> ensure that the task that needs to be unwound is not running.
 >>
 >> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 > 
-> This is another very nice patch!
-> Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
+> That sounds good, but:
 > 
-> Nitpick:
+>>         if (tsk != current) {
+>> -#ifdef CONFIG_SMP
+>> -               /*
+>> -                * What guarantees do we have here that 'tsk' is not
+>> -                * running on another CPU?  For now, ignore it as we
+>> -                * can't guarantee we won't explode.
+>> -                */
+>> -               return;
+>> -#else
+>> +               /* task blocked in __switch_to */
 > 
->> +               if ((unsigned long)&regs[1] > ALIGN(frame->sp, THREAD_SIZE))
->> +                       return -EINVAL;
+> The commit text is not consistent with the comment you are removing.
 > 
-> It'd be nice to add a comment saying what is in regs[1] at this point
-> so it is easier to understand the code. Not your fault as it is just
-> moved code, but if you have time please add a small comment.
+> The commit is talking about "non-current" tasks which is one thing,
+> but the code is avoiding any tasks under SMP because they may be
+> running on another CPU. So you need to update the commit
+> message to say something like "non-current or running on another CPU".
 > 
+> If this condition will be checked at call sites in following patches,
+> then mention
+> that in the commit as well, so we know the end result is that we do
+> not break it,
 
-It is necessary to add the comment. This check is to ensure that 'regs +
-sizeof(struct pt_regs)' (that is, &regs[1]) does not go beyond the
-bottom of the stack, to avoid accessing data outside the task's stack,
-see commit 40ff1ddb5570 ("ARM: 8948/1: Prevent OOB access in
-stacktrace") for details. I will add a comment in the next version.
+The generic code stack_trace_save_tsk() does not have this check, and by
+'caller' I mean the caller of stack_trace_save_tsk(), expecting the
+'caller' to ensure that the task is not running. So in effect this check
+has been dropped and there is no more guarantee. Sorry for not
+clarifying the change here.
+
+But can we assume that the user should know that the stacktrace is
+unreliable for a task that is running on another CPU? If not, I should
+remove this patch and keep the check.
 
 Thanks,
 Huafei
-
+> 
+> I think Russell want to check this commit as well,
+> 
 > Yours,
 > Linus Walleij
 > .
