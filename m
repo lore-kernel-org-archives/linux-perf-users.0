@@ -2,55 +2,65 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E054FC00140
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 20:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCE5C00140
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 20:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239766AbiGZUfz (ORCPT
+        id S239813AbiGZUnr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Jul 2022 16:35:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36310 "EHLO
+        Tue, 26 Jul 2022 16:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231529AbiGZUfy (ORCPT
+        with ESMTP id S229932AbiGZUnp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Jul 2022 16:35:54 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D173910CB;
-        Tue, 26 Jul 2022 13:35:53 -0700 (PDT)
-Received: by mail-wm1-f41.google.com with SMTP id v67-20020a1cac46000000b003a1888b9d36so66518wme.0;
-        Tue, 26 Jul 2022 13:35:53 -0700 (PDT)
+        Tue, 26 Jul 2022 16:43:45 -0400
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B3A37FA8
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jul 2022 13:43:44 -0700 (PDT)
+Received: by mail-vk1-xa2f.google.com with SMTP id a7so5684684vkl.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jul 2022 13:43:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rAOnLnHZyIth2TqTmFOgq+Z+bAsblLR9SrGgqZeR0D0=;
+        b=cvaFdKE5ZB/XV/CGB1waPiQNZ4gpv9aVbiOXy2ltf9/MJpYkvq+xVMPQ/ncoXb2a89
+         MwhHbLzPeYIdRHDfFl8pk88jSKtqEUj+ohCj/RtGRSYA2DCCOyre8rVt93Xz4YKbmeNJ
+         nK4wpp9EoSu/StOvQsyF4RjYEHUNfpKEk7KjTgzzrQDBkRm3lfDVsmN2r4ydnls/i3Qv
+         5T65mB1Csa7S4a1PnEobPA7dzurXleHZpdXG5NNEXCVHpjNpFEUgNRJCnh84a725jrEg
+         6y/STxq3XGePOXmhuVikzfRtwVmPkfnA/h8vmeZdiSpUxiYXRMEpXGBFkx6JHKXineYI
+         uwww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rzfldDnwiZ1L6vukyYNiW1lGtHYIp/Q69JeDkFAi97M=;
-        b=NrBKrq5r54CNRqCiHqc+b0XCUq+6TNDZRGDtHsxLbYGlx7g2URPcV3bKsqigURnhDk
-         xLN9L/OSOiI/ApnuRADRiey8zBDOAl16OsZwMWxB1hqQRRG4YiaBpMPfqKa7RxArAB9C
-         1iLMkphn+eyY77ecHJ50QhdbGN3LdA0aBrjJ24Ll8FjNbs+o+aswEBenYfCoXpK/9hgM
-         wAo5uts4yAa8FDtmUNPMEGS9A9WUE+mdXgAXgwHKYFqFd0LufUcOScwhdX4TotHCdNkW
-         51xMUhp8Pu8RBrQrx0Q1LnBpWIBOo4sMe043enOzzBITyUBbqa2K6+QgJOeOQiIDWhGy
-         6vyw==
-X-Gm-Message-State: AJIora8G2l+MeNPHMiNgOxDa/BBLsbbykbEu3UxotVVNZ65Io3v2eAnA
-        bQC60pfwV0LSJj6sVy3q1foilSrtg5ohocCOJhw=
-X-Google-Smtp-Source: AGRyM1tmpHDUGYkF3Pa0LuFMVPwSUfzWWt+oKsCfgWxV9rShxvWw0PrOPEUryVbTGeQlSFOd0x7JI+YXckH6bcc0s5E=
-X-Received: by 2002:a05:600c:2d4c:b0:3a3:22c0:c3dd with SMTP id
- a12-20020a05600c2d4c00b003a322c0c3ddmr618767wmg.107.1658867752308; Tue, 26
- Jul 2022 13:35:52 -0700 (PDT)
+        bh=rAOnLnHZyIth2TqTmFOgq+Z+bAsblLR9SrGgqZeR0D0=;
+        b=CnqHRDVDja/M0xS6lQtiSjMkNbfhvjJr7XAZ0e2e/BVUCaR6CFTbcyU4spIMbF9AOO
+         FvHmUwFX59hAY0rTNQz8JuRRBlcOiZrAQ/2T0EdIEpkagVr0B8Jm62WMjaPzG8ywb2nl
+         7yvgLXzxe0HLKGZXfgdxwG27aYPhGB6lueXMpEh44lmOdslAX9gSENWtD3LMq5RVxCbx
+         JAumvGyl7yyKcTMw1qUUgdBs1ddSo9B4JjZrsCJEjLmjs2fDj40rwV51lJ/77le7s/lc
+         b5PcMuDfZdTQbrDy6UYy0LuT6ntu8NBGV99F4o+rosy/E0P/3SDDqaJceuOIfN5bYcPE
+         jejw==
+X-Gm-Message-State: AJIora8VzWzdU+ROwP3jj8XuE5i4MlIrf4wAAuJOrxQ8PXcdlSWdw6ms
+        PsFzlw6bWYdHe1Ti4iIuUKDgAupq6ubQyRxwrRE21Q==
+X-Google-Smtp-Source: AGRyM1uey2hGDe9hEDhGPZ6SNcUTNZWyZKvCjaPBXkOtTR+MzkBuAdm3THgiwKVKqu4Zhpnmaem+zKFn17peWJQhJZQ=
+X-Received: by 2002:a05:6122:628:b0:376:1878:16ea with SMTP id
+ g8-20020a056122062800b00376187816eamr5936849vkp.37.1658868223010; Tue, 26 Jul
+ 2022 13:43:43 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220725104220.1106663-1-leo.yan@linaro.org> <Yt68AZA2VV9d02xZ@kernel.org>
  <CA+_WhHyZZC=3gtzetEAQQrjtGujHmY5azwtQNZEc90gyOAwUDg@mail.gmail.com>
  <CAP-5=fWiNdnEawdj_3ExCrcwRSnRxeV8=8RhA6pwbw_bJdPJFg@mail.gmail.com> <YuBDw/+7McESS05X@kernel.org>
 In-Reply-To: <YuBDw/+7McESS05X@kernel.org>
-From:   Akemi Yagi <toracat@elrepo.org>
-Date:   Tue, 26 Jul 2022 13:35:40 -0700
-Message-ID: <CABA31DoEJEyVeUgzROzzj_OA2exmj69WamaavQWi=7nWq52dxw@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 26 Jul 2022 13:43:31 -0700
+Message-ID: <CAP-5=fV4+KeGcyyODTNjS01dw1iTXpFyaLXwZ8nBkek+NHL37w@mail.gmail.com>
 Subject: Re: [PATCH] perf scripts python: Let script to be python2 compliant
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, Alan Bartlett <ajb@elrepo.org>,
-        Leo Yan <leo.yan@linaro.org>,
+Cc:     Alan Bartlett <ajb@elrepo.org>, Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         linux-perf-users@vger.kernel.org, ElRepo <contact@elrepo.org>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Akemi Yagi <toracat@elrepo.org>, Jiri Olsa <jolsa@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -64,40 +74,102 @@ On Tue, Jul 26, 2022 at 12:43 PM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
 > Em Tue, Jul 26, 2022 at 10:52:31AM -0700, Ian Rogers escreveu:
-
+> > On Tue, Jul 26, 2022 at 9:57 AM Alan Bartlett <ajb@elrepo.org> wrote:
+> > >
+> > > On Mon, 25 Jul 2022 at 16:51, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > >
+> > > > Em Mon, Jul 25, 2022 at 06:42:20PM +0800, Leo Yan escreveu:
+> > > > > The mainline kernel can be used for relative old distros, e.g. RHEL 7.
+> > > > > The distro doesn't upgrade from python2 to python3, this causes the
+> > > > > building error that the python script is not python2 compliant.
+> > > > >
+> > > > > To fix the building failure, this patch changes from the python f-string
+> > > > > format to traditional string format.
+> > > >
+> > > > Thanks, applied.
+> > > >
+> > > > - Arnaldo
+> > >
+> > > Leo / Arnaldo,
+> > >
+> > > Applying the patch on top of -5.19-rc8 fixes the problem that we (the
+> > > ELRepo Project) experienced when attempting to build on RHEL7.
+> > >
+> > > So --
+> > >
+> > > Tested-by: Alan Bartlett <ajb@elrepo.org>
+> > >
+> > > Hopefully you will get it to Linus in time for -5.19 GA.
+>
 > > So I'm somewhat concerned about perf supporting unsupported
 > > distributions and this holding the code base back. RHEL7 was launched
 > > 8 years ago (June 10, 2014) and full support ended 3 years ago (August
 > > 6, 2019) [1]. Currently RHEL7 is in "Maintenance Support or
 > > Maintenance Support 2" phase which is defined to mean [2]:
-[...]
-
+> >
+> > ```
+> > During the Maintenance Support Phase for Red Hat Enterprise Linux
+> > Version 8 & 9, and Maintenance Support 2 Phase for Red Hat Enterprise
+> > Linux version 7, Red Hat defined Critical and Important impact
+> > Security Advisories (RHSAs) and selected (at Red Hat discretion)
+> > Urgent Priority Bug Fix Advisories (RHBAs) may be released as they
+> > become available. Other errata advisories may be delivered as
+> > appropriate.
+> >
+> > New functionality and new hardware enablement are not planned for
+> > availability in the Maintenance Support (RHEL 8 & 9) Phase and
+> > Maintenance Support 2 (RHEL 7) Phase.
+> > ```
+> >
+> > >From this definition, why would RHEL7 pick up a new perf tool? I don't
+> > think they would and as such we don't need to worry about supporting
+> > it. RHEL8 defaults to python 3 and full support ends for it next year.
+> > Let's set the bar at RHEL8 and not worry about RHEL7 breakages like
+> > this in future. I think the bar for caring should be "will the distro
+> > pick up our code", if we don't do this then we're signing up to not
+> > allowing tools to update for 10 years! If someone is building a kernel
+> > and perf tool on RHEL7 then they should be signing up to also deal
+> > with tool chain issues, which in this case can mean installing
+> > python3.
+>
 > In this specific supporting things that people report using, like was
 > done in this case, isn't such a big problem.
->
+
+So there are linters will fire for this code and say it is not
+pythonic. It is only a linter warning vs asking to support an 8 year
+old out of support distribution. There are other cases, such as
+improving the C code structure, where we've failed to land changes
+because of build errors on old distributions. This could indicate perf
+code is wrong or the distribution is wrong. I'm saying that if we
+believe in the perf code being correct and the distribution is out of
+support, then we should keep the perf code as-is and the issue is one
+for user of the out-of-support distribution.
+
 > Someone reported a problem in a system they used, the author of the code
 > in question posted a patch allowing perf to be used in such old systems,
 > doesn't get in the way of newer systems, small patch, merged, life goes
 > on.
->
+
+Right, but we're setting a precedent for supporting out of support
+distributions. If we can say "life goes on" can we land this *current*
+Debian fix?
+https://lore.kernel.org/lkml/20220629034007.332804-1-irogers@google.com/
+
 > Sometimes some organizations are stuck with some distro till they can go
 > thru re-certifications, bidding for new hardware, whatever, and then
 > they want to continue using the latest perf on those systems because
 > they want to benefit from new features we're working on that work on
 > such systems. If the cost is small, like in this case, I see no problems
 > to have perf working on such older systems.
->
-> - Arnaldo
 
-Just wanted to make a note about the "old" systems.
+So there's no problem with perf working on old systems. The issue is
+supporting 10 year old unsupported build infrastructure. The fact that
+the build infrastructure is unsupported means we need to carry all the
+fixes in the tools tree and that can mean doing some questionably sane
+things, like supporting python 2 (end of life for 2.5 years) on RHEL7
+(end of full support 3 years ago). RHEL8 still has a year of support,
+so great test that. RHEL7 then fix your tools and perf will work for
+you - where fix means "rpm -i python3", hardly a huge chore.
 
-While RHEL 7 might be regarded as "old" in general, it may not be so
-in the world of Enterprise Linux. A graph of EPEL mirror stats [1],
-while it is from about a year ago, shows EL 7 (RHEL 7 and its
-rebuilds) has a huge user base and was still growing quite fast.
-
-By the way, my main workstation runs RHEL 7. ;-)
-
-Akemi
-
-[1] https://twitter.com/mattdm/status/1447224008831811588
+Thanks,
+Ian
