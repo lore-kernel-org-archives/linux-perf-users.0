@@ -2,418 +2,218 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EABBC00140
-	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 14:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86BDC00140
+	for <linux-perf-users@archiver.kernel.org>; Tue, 26 Jul 2022 15:04:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239238AbiGZO53 (ORCPT
+        id S234171AbiGZPEn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Jul 2022 10:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60430 "EHLO
+        Tue, 26 Jul 2022 11:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233894AbiGZO52 (ORCPT
+        with ESMTP id S230132AbiGZPEn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Jul 2022 10:57:28 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DEE2C641
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jul 2022 07:57:26 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id g2so12473559wru.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jul 2022 07:57:26 -0700 (PDT)
+        Tue, 26 Jul 2022 11:04:43 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B36242CC98
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jul 2022 08:04:41 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id u5so20566565wrm.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jul 2022 08:04:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ztjOAGyjzDQFurCZz46kBnkKRQhBA6zZDQI+NCd3zkg=;
-        b=GntYwp95AzI4lbyvSwx0QhKwLtnLOsz6KiUfLhr32O7S3YiUHf3J4tfSENNXe2kHIL
-         2TNC4uGTrOpyWGPVkvmn3WMyj0EaqJnVjOhWcGpdgFWUlUmD04TS/Qfm1oKitYzSnpeb
-         Xiv8V6dEkmT2xF6YfDrMMCiCT/iLuh6XAV0wjYPXf6gkvd2RzgZefwA2f1RlspIMLNCU
-         OIXCZeo5tqJDeuCRKg7/OUNyW2IFg6Y+bR7+3UNIw1IZEdBkn71J7HGKd+e1ZU0Q0KaQ
-         2jN6GAsKQauAFEzYYF7l6R3NgTqMnSyo4DzNF3Cwvg0CSv3nEeNTkE+Io9HctxJFJStd
-         NHOA==
+         :cc:content-transfer-encoding;
+        bh=d62iRhJsBE8gihoV8LYMDZuvUneCUypE/tyaJuWYA+4=;
+        b=tU/cyq5nHL5B4HPtfMhT82SrXE8DssFJnICWBAwGcy0SN7KjkG5/zdKCtU3YWNpyZC
+         uLWTJOpa/hHm4JfU1D9lQdp+4RswJ5fGwLBC/drIyXsU55LstDo8WolHF4XMBsErZ0rn
+         K9MspvXiOPNR7+v8XtxoC8fGrHDeZ9mgAy7OuIgq8f8uSyHkwXYuHp7GS68EWEYHoR1c
+         ydeyk6fmegQsLGp+ro1t9HRzda3Q+tpIhfx6Al8CuasOk5g6aR/SthR6kPWnESWtoQbU
+         i13XcoSlNmxKqZ4NY0XBFbe0auZFDjPmzFdAn97zjJCGlSrOkE4Ldx4hbyL46fsH5Q9q
+         McRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ztjOAGyjzDQFurCZz46kBnkKRQhBA6zZDQI+NCd3zkg=;
-        b=r1tK19nF+Eqxo+fqt8IbCmKeK9YpyrN4mgh++DLTyv1Dcb+sMha79KsfI74DhIHIDe
-         W22uHzso1udV1jqxbgsdq37Zj5+WIFS27h3HDO8WdO4R2Oo+QmciARN7dBwEdGDo6kwe
-         cfEAd9eGCUs+HA6tuionBcb0laTMYTLJXOFZc33GjnX5IZapJ0XONEvXp9wXXJmDsV7g
-         B/cAjSybvkeTNorIGxxsCatilKm/fEsfoqW0+nONI5pULjMEsRycCY6THVAk3cnMrb7r
-         y84yQmAUm348hbGy6SUbATeARpzZ8JfvTYD8OFxa0svXP6ujAR4MnlBK8d0kyxHqoj8e
-         pOIw==
-X-Gm-Message-State: AJIora+Am0rS5KR4v+Q6snnPHs7peOawiG5WmA2XW9QSHL9SvroycPee
-        D1+zlMZqTcLb51IX/m0uYisoZtgkHvdnGgCVk9TlwQ==
-X-Google-Smtp-Source: AGRyM1tN5aci7DigOoOCR3PdZyMBANXOlc1uDfl0eNChCMu+M6/GlEm2tydq7UknShsAAHXAejzt6cBbanICnozSlVQ=
-X-Received: by 2002:a5d:4f81:0:b0:21e:2cd7:25df with SMTP id
- d1-20020a5d4f81000000b0021e2cd725dfmr11667188wru.439.1658847444946; Tue, 26
- Jul 2022 07:57:24 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=d62iRhJsBE8gihoV8LYMDZuvUneCUypE/tyaJuWYA+4=;
+        b=F+7RGJ7TKuGT63eb7IIlwj/oiRhyPjGFijhRzNEJ/q/ofCsB/eoe6Ao16dr+5v44vW
+         5MRdYbeUgHJ9IPdoogF5ewS6e1sjLYRCagw2AFBjbZQcAWBQvvzCxfYJdKS46aW+PpXK
+         4+UwVw2RHMoW/imLWfuKnF70Y4E1BkLdpSeBOcy86aw4edEIDt/8s54jiQcv2Lzo6WTf
+         T/44OLtICOmDp4/NjpWf//aRo8ucyI7b7zroRLOVMBcnLBxhtTfUE165ts4F2ANjBjia
+         SHn860XWgz6CNCOoZ7fOcdWYeg0Vv0AC0zGzCCnXOJl/aWartmj7RQLOHyBxRUmHofYN
+         LCBg==
+X-Gm-Message-State: AJIora/ax82DR+mFHtpz7z131ax/5rQ+LPp/S/ZV2KcclvNi1lwlSFcg
+        tBRA8/1YjtiMeQYYNG+IsptDXTJltTeHcHMlEnV7FQ==
+X-Google-Smtp-Source: AGRyM1tp+/6Hl7fo0jRX6p9QAA2mJOCbZznD5EmfQhXLjda5kyhEkl9FT4cEijP8XdlDqZ2RrdLWFwJ9yr1HKxM7uqI=
+X-Received: by 2002:adf:e28d:0:b0:21e:4c3b:b446 with SMTP id
+ v13-20020adfe28d000000b0021e4c3bb446mr10875569wri.300.1658847880006; Tue, 26
+ Jul 2022 08:04:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220704081149.16797-1-mike.leach@linaro.org> <0b493b49-2657-ad5d-465e-d80b62820613@arm.com>
- <CAJ9a7VhXMn+DJ+qgeYRbqgGDm3jV_xNeBGKP=q7eiSe03_7eJw@mail.gmail.com>
- <393c8470-6538-cebe-1c49-cf22ac51e3c5@arm.com> <CAJ9a7VicZW0z9fgMObmRKGeNOiW=cjDKG1GHwh3_nLuLd87G-g@mail.gmail.com>
- <9a84d943-6c78-799b-98a9-4a9c02773fa3@arm.com>
-In-Reply-To: <9a84d943-6c78-799b-98a9-4a9c02773fa3@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 26 Jul 2022 15:57:13 +0100
-Message-ID: <CAJ9a7VjuRf3RoDFEpMbSRq3jQDAur0sZ9w0i2WzjbW6OzFoB7A@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] coresight: Add new API to allocate trace source
- ID values
-To:     James Clark <james.clark@arm.com>
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        quic_jinlmao@quicinc.com, suzuki.poulose@arm.com,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Al Grant <Al.Grant@arm.com>
+References: <20220722103728.82854-1-slark_xiao@163.com>
+In-Reply-To: <20220722103728.82854-1-slark_xiao@163.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 26 Jul 2022 08:04:27 -0700
+Message-ID: <CAP-5=fWhJse5xJzCS=zCCXQ_vjJWFKwSmkjfJLe0ArpLWWtjNw@mail.gmail.com>
+Subject: Re: [PATCH] perf: Fix typo 'the the' in comment
+To:     Slark Xiao <slark_xiao@163.com>,
+        "Biggers, Caleb" <caleb.biggers@intel.com>,
+        "Taylor, Perry" <perry.taylor@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        "Alt, Samantha" <samantha.alt@intel.com>
+Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, mike.leach@linaro.org,
+        leo.yan@linaro.org, john.garry@huawei.com, will@kernel.org,
+        james.clark@arm.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+On Fri, Jul 22, 2022 at 3:38 AM Slark Xiao <slark_xiao@163.com> wrote:
+>
+> Replace 'the the' with 'the' in the comment.
 
-On Tue, 26 Jul 2022 at 14:53, James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 25/07/2022 09:19, Mike Leach wrote:
-> > Hi James
-> >
-> > On Fri, 22 Jul 2022 at 13:10, James Clark <james.clark@arm.com> wrote:
-> >>
-> >>
-> >>
-> >> On 21/07/2022 14:54, Mike Leach wrote:
-> >>> Hi James,
-> >>>
-> >>> Thanks for looking at this.
-> >>>
-> >>> On Thu, 21 Jul 2022 at 11:27, James Clark <james.clark@arm.com> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 04/07/2022 09:11, Mike Leach wrote:
-> >>>>> The current method for allocating trace source ID values to sources is
-> >>>>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> >>>>> The STM is allocated ID 0x1.
-> >>>>>
-> >>>>> This fixed algorithm is used in both the CoreSight driver code, and by
-> >>>>> perf when writing the trace metadata in the AUXTRACE_INFO record.
-> >>>>>
-> >>>>> The method needs replacing as currently:-
-> >>>>> 1. It is inefficient in using available IDs.
-> >>>>> 2. Does not scale to larger systems with many cores and the algorithm
-> >>>>> has no limits so will generate invalid trace IDs for cpu number > 44.
-> >>>>>
-> >>>>> Additionally requirements to allocate additional system IDs on some
-> >>>>> systems have been seen.
-> >>>>>
-> >>>>> This patch set  introduces an API that allows the allocation of trace IDs
-> >>>>> in a dynamic manner.
-> >>>>
-> >>>> I've tested this with various commands like with per-thread mode, attaching,
-> >>>> running the tests and also Carsten's new tests. Apart from the possible
-> >>>> backwards compatibility issue and the minor code comments it looks good to
-> >>>> me.
-> >>>>
-> >>>
-> >>> I've looked at the backwards compatibility issue. At present with the
-> >>> current set
-> >>> (K = kernel drivers, P-rec = perf record, P-rep = perf report)
-> >>> ::
-> >>>
-> >>> K-v1-ids  + P-rec-v1-ids => P-rep-v1 (OK)  P-rep-v2 (OK)
-> >>> K-v1-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (fail)
-> >>> K-v2-ids  + P-rec-v1-ids => P-rep-v1 (fail)  P-rep-v2 (fail)
-> >>> K-v2-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> >>>
-> >>> So, with a P-rec generating v2 metadata, P rep will cleanly error out.
-> >>> Where the Kernel ID version and the perf report ID version differ,
-> >>> even the P rep v2 will fail, due to the IDs being different in the
-> >>> file and actual drivers. These fails will simply look like no data
-> >>> present.
-> >>>
-> >>> There are two possible fixes that improve this:-
-> >>> A) if the v2 kernel uses a sysfs flag to indicate new ID usage, then
-> >>> if this is missing the new perf record can degrade to using the old
-> >>> algorithm to put IDs directly into metadata as it assumes it is
-> >>> running on a v1 kernel.
-> >>> This fixes things then for the P-rep v2 that can look for this & we
-> >>> know there will be no incoming ID packets.
-> >>> B) P-rep v2 can look for new packets irrespective of incoming metadata
-> >>> version, and if it sees them, override them
-> >>>
-> >>> Compatibility matrix then looks like::
-> >>> K-v1-ids  + P-rec-v1-ids => P-rep-v1 (OK)  P-rep-v2 (OK)
-> >>> K-v1-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> >>> K-v2-ids  + P-rec-v1-ids => P-rep-v1 (fail)  P-rep-v2 (OK)
-> >>> K-v2-ids  + P-rec-v2-ids => P-rep-v1 (error message)  P-rep-v2 (OK)
-> >>>
-> >>> There is no solution to using an old version of perf record on a new
-> >>> kernel and getting the old version of perf report to correctly decode
-> >>> the file.
-> >>>
-> >>
-> >> We had a discussion about this last point on the Friday AutoFDO call.
-> >
-> > Sorry I missed that - I was on holiday.
-> >
->
-> I think I didn't realise it at the time but I was thinking of two
-> separate requirements relating to this, rather than one. So I will
-> list them here first to avoid confusion:
->
->  1. New perfs fall back to the legacy ID mappings if they don't see
->     any HW_IDs.
->
->     This is to support the AutoFDO workflow when using new (fixed) perfs
->     on old kernels. This only affects the Perf side changes in this
->     patch, not any of the kernel changes.
->
+Thanks, these files are generated from files here:
+https://download.01.org/perfmon/
+I've added Intel folks to the e-mail, so they can update those files.
 
-Agreed - if the new perf record fills in the trace ID metadata as it
-did before using the old static algorithm, then the file generated on
-an old kernel can be correctly interpreted by the new perf report, as
-the absence of the new HW_ID packets can trigger it to use the
-metadata instead.
+Thanks,
+Ian
 
->  2. Wherever possible (absent of any reserved ID clashes or CPUs > 47),
->     the new driver continues to use the old static ID allocation.
+> Signed-off-by: Slark Xiao <slark_xiao@163.com>
+> ---
+>  tools/perf/Documentation/perf-diff.txt                        | 2 +-
+>  tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json | 2 +-
+>  tools/perf/pmu-events/arch/x86/silvermont/pipeline.json       | 2 +-
+>  tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json     | 2 +-
+>  tools/perf/util/cs-etm.c                                      | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
 >
->     This is to support not making any changes to simpleperf (or any
->     other tools if they exist) until there is an actual need to. As you
->     say, this is only a temporary measure. This requirement can also be
->     dropped if we make the simpleperf changes at the same time as these
->     driver updates. But it would buy some time. But we can't fix any
->     tools that we don't know about.
+> diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Document=
+ation/perf-diff.txt
+> index be65bd55ab2a..b77957ac288b 100644
+> --- a/tools/perf/Documentation/perf-diff.txt
+> +++ b/tools/perf/Documentation/perf-diff.txt
+> @@ -285,7 +285,7 @@ If specified the 'Weighted diff' column is displayed =
+with value 'd' computed as:
 >
-> There is no requirement to support old perfs on new kernels as far as I
-> can see.
+>    - period being the hist entry period value
 >
-
-The _only_ reason to get the ID allocator in the driver to mimic the
-old allocation numbers is if you _are_ using an old perf to record and
-then read the data generated on a new kernel.
-The ID allocator is only visible to the drivers, not perf record. perf
-record simply makes assumptions about what the ID values are when
-filling in the file metadata. The old version uses a static
-calculation on the cpu number, the new version assumes that
-responsibility has been passed on to the HW_ID packets.
-
-You state below that the version of the metadata should remain updated
-(@2) so old versions of perf / simpleperf can never read a file
-generated by new versions of perf.
-You state above that old versions of perf a not needed to be supported
-on new kernels, so will never run on a system that uses  the new
-allocation mechanism and thereby never generate an old version of file
-that mis-matches the new ID allocation mechanism.
-
-So I am confused about precisely what the requirements are here.
-
-Regards
-
-Mike
-
-> >> Do you think it's possible to keep the old static ID allocations if
-> >> num_possible_cpus() < Max Trace ID? This is especially important for
-> >> simple perf because Android doesn't even have the more than 128 CPUs
-> >> issue, so technically shouldn't have to have any changes made to it.
-> >>
-> >
-> > If android never runs high core count hardware, then that could work.
-> > The actual CPU limit is in fact 47, after which point the static
-> > algorithm fails.
-> >
-> > The question arises what do the kernel drivers do then?
-> >
-> > The old perf -record will not realise things are about to go wrong,
-> > and continue to blindly allocate incorrect trace IDs.
-> > Realistically the new drivers will then switch to use the previously
-> > unused IDs, whereby they will mismatch with the blindly allocated perf
-> > IDs and the old perf decode process will silently fail to decode any
-> > data with IDs that do not match.
-> >
+> -  - WEIGHT-A/WEIGHT-B being user supplied weights in the the '-c' option
+> +  - WEIGHT-A/WEIGHT-B being user supplied weights in the '-c' option
+>      behind ':' separator like '-c wdiff:1,2'.
+>      - WEIGHT-A being the weight of the data file
+>      - WEIGHT-B being the weight of the baseline data file
+> diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.jso=
+n b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
+> index aa460d0c4851..59ab88de1b37 100644
+> --- a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
+> +++ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
+> @@ -1923,7 +1923,7 @@
+>          "EventCode": "0x25",
+>          "EventName": "UNC_UPI_RxL0P_POWER_CYCLES",
+>          "PerPkg": "1",
+> -        "PublicDescription": "Counts cycles when the the receive side (R=
+x) of the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a=
+ mode where we disable 60% of the UPI lanes, decreasing our bandwidth in or=
+der to save power.",
+> +        "PublicDescription": "Counts cycles when the receive side (Rx) o=
+f the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a mod=
+e where we disable 60% of the UPI lanes, decreasing our bandwidth in order =
+to save power.",
+>          "Unit": "UPI LL"
+>      },
+>      {
+> diff --git a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json b/to=
+ols/perf/pmu-events/arch/x86/silvermont/pipeline.json
+> index 03a4c7f26698..3278c7d1654d 100644
+> --- a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
+> @@ -257,7 +257,7 @@
+>          "Counter": "0,1",
+>          "EventCode": "0xCA",
+>          "EventName": "NO_ALLOC_CYCLES.NOT_DELIVERED",
+> -        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is=
+ used to measure front-end inefficiencies, i.e. when front-end of the machi=
+ne is not delivering micro-ops to the back-end and the back-end is not stal=
+led. This event can be used to identify if the machine is truly front-end b=
+ound.  When this event occurs, it is an indication that the front-end of th=
+e machine is operating at less than its theoretical peak performance.  Back=
+ground: We can think of the processor pipeline as being divided into 2 broa=
+der parts: Front-end and Back-end. Front-end is responsible for fetching th=
+e instruction, decoding into micro-ops (uops) in machine understandable for=
+mat and putting them into a micro-op queue to be consumed by back end. The =
+back-end then takes these micro-ops, allocates the required resources.  Whe=
+n all resources are ready, micro-ops are executed. If the back-end is not r=
+eady to accept micro-ops from the front-end, then we do not want to count t=
+hese as front-end bottlenecks.  However, whenever we have bottlenecks in th=
+e back-end, we will have allocation unit stalls and eventually forcing the =
+front-end to wait until the back-end is ready to receive more UOPS. This ev=
+ent counts the cycles only when back-end is requesting more uops and front-=
+end is not able to provide them. Some examples of conditions that cause fro=
+nt-end efficiencies are: Icache misses, ITLB misses, and decoder restrictio=
+ns that limit the the front-end bandwidth.",
+> +        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is=
+ used to measure front-end inefficiencies, i.e. when front-end of the machi=
+ne is not delivering micro-ops to the back-end and the back-end is not stal=
+led. This event can be used to identify if the machine is truly front-end b=
+ound.  When this event occurs, it is an indication that the front-end of th=
+e machine is operating at less than its theoretical peak performance.  Back=
+ground: We can think of the processor pipeline as being divided into 2 broa=
+der parts: Front-end and Back-end. Front-end is responsible for fetching th=
+e instruction, decoding into micro-ops (uops) in machine understandable for=
+mat and putting them into a micro-op queue to be consumed by back end. The =
+back-end then takes these micro-ops, allocates the required resources.  Whe=
+n all resources are ready, micro-ops are executed. If the back-end is not r=
+eady to accept micro-ops from the front-end, then we do not want to count t=
+hese as front-end bottlenecks.  However, whenever we have bottlenecks in th=
+e back-end, we will have allocation unit stalls and eventually forcing the =
+front-end to wait until the back-end is ready to receive more UOPS. This ev=
+ent counts the cycles only when back-end is requesting more uops and front-=
+end is not able to provide them. Some examples of conditions that cause fro=
+nt-end efficiencies are: Icache misses, ITLB misses, and decoder restrictio=
+ns that limit the front-end bandwidth.",
+>          "SampleAfterValue": "200003",
+>          "UMask": "0x50"
+>      },
+> diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json b/=
+tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
+> index aa0f67613c4a..0c96e6924d62 100644
+> --- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
+> +++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
+> @@ -1852,7 +1852,7 @@
+>          "EventCode": "0x25",
+>          "EventName": "UNC_UPI_RxL0P_POWER_CYCLES",
+>          "PerPkg": "1",
+> -        "PublicDescription": "Counts cycles when the the receive side (R=
+x) of the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a=
+ mode where we disable 60% of the UPI lanes, decreasing our bandwidth in or=
+der to save power.",
+> +        "PublicDescription": "Counts cycles when the receive side (Rx) o=
+f the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a mod=
+e where we disable 60% of the UPI lanes, decreasing our bandwidth in order =
+to save power.",
+>          "Unit": "UPI LL"
+>      },
+>      {
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 8b95fb3c4d7b..16db965ac995 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1451,7 +1451,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq=
+,
+>                  * tidq->packet->instr_count represents the number of
+>                  * instructions in the current etm packet.
+>                  *
+> -                * Period instructions (Pi) contains the the number of
+> +                * Period instructions (Pi) contains the number of
+>                  * instructions executed after the sample point(n) from t=
+he
+>                  * previous etm packet.  This will always be less than
+>                  * etm->instructions_sample_period.
+> --
+> 2.25.1
 >
-> Do you mean this situation occurs if there are more than 47 cores?
-> I think it's fine for things to go wrong in this case because it's
-> already broken. Regardless of whether the perf and kernel versions match
-> or don't match.
->
-> The user would have to upgrade both parts in that case no matter what
-> we do.
->
-> > If we also removed the metadata version update that goes alongside the
-> > ID changes, then old perf-reports would continue to try to decode
-> > newer files - again silently failing once the static algorithm has
-> > failed.
->
-> That's true, but I don't think we need to drop the metaversion update.
-> There's no requirement for an old perf-report to open new files, so we
-> can still make this change.
->
-
-
-
-> > Legacy ID allocation support must be added as a kernel CONFIG option -
-> > so that it is up front an obvious to users what is being selected. And
-> > we can output appropriate error messages.
-> >
-> > This would be a temporary solution at best as there are upcoming
-> > issues that will need attention:-
-> > 1 ) We need to deal with the fact that customers are adding new CS
-> > compatible hardware to their systems, some of which they have
-> > hardcoded trace IDs. These hardware allocations will become
-> > reservations in the dynamic allocator, with no guarantee they will not
-> > clash with the static algorithm.
-> >
->
-> Maybe instead of the temporary solution we can just make the change to
-> simpleperf at the same time. The only reason to do this would be to buy
-> some time or make the transition period smoother.
->
-> But does it need to be a CONFIG option if it only happens when CPUs < 47
-> or if there is a clash? We can still output the AUX_OUTPUT_HW_ID, but
-> use the old ID allocation scheme. So it would appear to be the new
-> scheme for anyone looking for HW_IDs, but is also compatible with old
-> simpleperf until there is a clash.
->
-> > 2) There may be a point in the future where we need to use per Sink ID
-> > allocation.
-> >
-> > 3) We have an outstanding perf issue with ETE + TRBE which never use
-> > trace IDs - at present decode works here because all the ETE
-> > capabilities on the current systems are identical. Once that changes,
-> > perf will need updating to look at the trace metadata on a CPU number
-> > basis, not on a trace ID basis.
->
-> That's true, I have this one on my list but didn't get to it yet.
->
-> >
-> > 4) Future architecture updates will render newer trace un-decodable by
-> > old perf versions.
-> >
-> > The question here is why would Android build an up to date kernel
-> > version with the updated CoreSight drivers, but insist on using an
-> > outdated perf / simpleperf version?
->
-> I suppose I was thinking that it might be convenient to not have to make
-> any changes to simpleperf because it will always run on low core counts.
-> But with the other issues about clashes, it looks like changing it is
-> unavoidable.
->
-> But for the opposite (old kernel, new perf), supporting that should be
-> pretty easy and the reason for using that combo is to get a perf with
-> decode fixes and run it somewhere that the kernel can't be easily updated.
->
-> James
->
-> >
-> > Regards
-> >
-> > Mike
-> >
-> >
-> >> Making the dynamic traceID allocation use the same IDs as before
-> >> whenever possible should allow both old Perf and simpleperf to open
-> >> the file as before and ignore the AUX_OUTPUT_HW_ID packets.
-> >>
-> >> James
-> >>
-> >>> Thoughts?
-> >>>
-> >>> Mike
-> >>>
-> >>>>>
-> >>>>> Architecturally reserved IDs are never allocated, and the system is
-> >>>>> limited to allocating only valid IDs.
-> >>>>>
-> >>>>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
-> >>>>> the new API.
-> >>>>>
-> >>>>> For the ETMx.x devices IDs are allocated on certain events
-> >>>>> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
-> >>>>> sysfs TRCTRACEID register and freed when the sysfs reset is written.
-> >>>>>
-> >>>>> b) When using perf, ID is allocated on hardware enable, and freed on
-> >>>>> hardware disable. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
-> >>>>> The ID allocator is notified when perf sessions start and stop
-> >>>>> so CPU based IDs are kept constant throughout any perf session.
-> >>>>>
-> >>>>>
-> >>>>> Note: This patchset breaks backward compatibility for perf record and
-> >>>>> perf report.
-> >>>>>
-> >>>>> Because the method for generating the AUXTRACE_INFO meta data has
-> >>>>> changed, using an older perf record will result in metadata that
-> >>>>> does not match the trace IDs used in the recorded trace data.
-> >>>>> This mismatch will cause subsequent decode to fail.
-> >>>>>
-> >>>>> The version of the AUXTRACE_INFO has been updated to reflect the fact that
-> >>>>> the trace source IDs are no longer present in the metadata. This will
-> >>>>> mean older versions of perf report cannot decode the file.
-> >>>>>
-> >>>>> Applies to coresight/next [c06475910b52]
-> >>>>> Tested on DB410c
-> >>>>>
-> >>>>> Changes since v1:
-> >>>>> (after feedback & discussion with Mathieu & Suzuki).
-> >>>>>
-> >>>>> 1) API has changed. The global trace ID map is managed internally, so it
-> >>>>> is no longer passed in to the API functions.
-> >>>>>
-> >>>>> 2) perf record does not use sysfs to find the trace IDs. These are now
-> >>>>> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
-> >>>>> have been updated accordingly to generate and handle these events.
-> >>>>>
-> >>>>> Mike Leach (13):
-> >>>>>   coresight: trace-id: Add API to dynamically assign Trace ID values
-> >>>>>   coresight: trace-id: update CoreSight core to use Trace ID API
-> >>>>>   coresight: stm: Update STM driver to use Trace ID API
-> >>>>>   coresight: etm4x: Update ETM4 driver to use Trace ID API
-> >>>>>   coresight: etm3x: Update ETM3 driver to use Trace ID API
-> >>>>>   coresight: etmX.X: stm: Remove unused legacy source Trace ID ops
-> >>>>>   coresight: perf: traceid: Add perf notifiers for Trace ID
-> >>>>>   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
-> >>>>>   perf: cs-etm: Update record event to use new Trace ID protocol
-> >>>>>   kernel: events: Export perf_report_aux_output_id()
-> >>>>>   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
-> >>>>>   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
-> >>>>>   coresight: trace-id: Add debug & test macros to Trace ID allocation
-> >>>>>
-> >>>>>  drivers/hwtracing/coresight/Makefile          |   2 +-
-> >>>>>  drivers/hwtracing/coresight/coresight-core.c  |  49 +---
-> >>>>>  .../hwtracing/coresight/coresight-etm-perf.c  |  17 ++
-> >>>>>  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
-> >>>>>  .../coresight/coresight-etm3x-core.c          |  85 +++---
-> >>>>>  .../coresight/coresight-etm3x-sysfs.c         |  28 +-
-> >>>>>  .../coresight/coresight-etm4x-core.c          |  65 ++++-
-> >>>>>  .../coresight/coresight-etm4x-sysfs.c         |  32 ++-
-> >>>>>  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
-> >>>>>  drivers/hwtracing/coresight/coresight-stm.c   |  49 +---
-> >>>>>  .../hwtracing/coresight/coresight-trace-id.c  | 263 ++++++++++++++++++
-> >>>>>  .../hwtracing/coresight/coresight-trace-id.h  |  65 +++++
-> >>>>>  include/linux/coresight-pmu.h                 |  31 ++-
-> >>>>>  include/linux/coresight.h                     |   3 -
-> >>>>>  kernel/events/core.c                          |   1 +
-> >>>>>  tools/include/linux/coresight-pmu.h           |  31 ++-
-> >>>>>  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
-> >>>>>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   9 +
-> >>>>>  tools/perf/util/cs-etm.c                      | 220 +++++++++++++--
-> >>>>>  tools/perf/util/cs-etm.h                      |  14 +-
-> >>>>>  20 files changed, 784 insertions(+), 207 deletions(-)
-> >>>>>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
-> >>>>>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
-> >>>>>
-> >>>
-> >>>
-> >>>
-> >
-> >
-> >
-
-
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
