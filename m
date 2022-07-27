@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD96AC19F21
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 09:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA920C04A68
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 09:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231608AbiG0JHN (ORCPT
+        id S231618AbiG0JHP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Jul 2022 05:07:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
+        Wed, 27 Jul 2022 05:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231379AbiG0JGj (ORCPT
+        with ESMTP id S231499AbiG0JGj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Wed, 27 Jul 2022 05:06:39 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4F8A474EA;
-        Wed, 27 Jul 2022 02:06:23 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lt78M4vbLzWfff;
-        Wed, 27 Jul 2022 17:02:27 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37585474D5;
+        Wed, 27 Jul 2022 02:06:21 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lt79t0PWgzkXdL;
+        Wed, 27 Jul 2022 17:03:46 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
  dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 17:06:21 +0800
+ 15.1.2375.24; Wed, 27 Jul 2022 17:06:18 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.61) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 17:06:20 +0800
+ 15.1.2375.24; Wed, 27 Jul 2022 17:06:18 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -34,9 +34,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <pc@us.ibm.com>, <yhs@fb.com>, <andrii.nakryiko@gmail.com>,
         <songliubraving@fb.com>, <yangjihong1@huawei.com>
-Subject: [RFC v4 16/17] perf kwork: Add softirq trace bpf support
-Date:   Wed, 27 Jul 2022 17:03:29 +0800
-Message-ID: <20220727090330.107760-17-yangjihong1@huawei.com>
+Subject: [RFC v4 10/17] perf kwork: Implement perf kwork latency
+Date:   Wed, 27 Jul 2022 17:03:23 +0800
+Message-ID: <20220727090330.107760-11-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20220727090330.107760-1-yangjihong1@huawei.com>
 References: <20220727090330.107760-1-yangjihong1@huawei.com>
@@ -51,184 +51,447 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Implements softirq trace bpf function.
+Implements framework of perf kwork latency, which is used to report time
+properties such as delay time and frequency.
 
 Test cases:
-Trace softirq latency without filter:
 
-  # perf kwork -k softirq lat -b
-  Starting trace, Hit <Ctrl+C> to stop and report
-  ^C
-    Kwork Name                     | Cpu  | Avg delay     | Count     | Max delay     | Max delay start     | Max delay end       |
-   --------------------------------------------------------------------------------------------------------------------------------
-    (s)RCU:9                       | 0005 |      0.281 ms |         3 |      0.338 ms |     111295.752222 s |     111295.752560 s |
-    (s)RCU:9                       | 0002 |      0.262 ms |        24 |      1.400 ms |     111301.335986 s |     111301.337386 s |
-    (s)SCHED:7                     | 0005 |      0.177 ms |        14 |      0.212 ms |     111295.752270 s |     111295.752481 s |
-    (s)RCU:9                       | 0007 |      0.161 ms |        47 |      2.022 ms |     111295.402159 s |     111295.404181 s |
-    (s)NET_RX:3                    | 0003 |      0.149 ms |        12 |      1.261 ms |     111301.192964 s |     111301.194225 s |
-    (s)TIMER:1                     | 0001 |      0.105 ms |         9 |      0.198 ms |     111301.180191 s |     111301.180389 s |
-    ... <SNIP> ...
-    (s)NET_RX:3                    | 0002 |      0.098 ms |         6 |      0.124 ms |     111295.403760 s |     111295.403884 s |
-    (s)SCHED:7                     | 0001 |      0.093 ms |        19 |      0.242 ms |     111301.180256 s |     111301.180498 s |
-    (s)SCHED:7                     | 0007 |      0.078 ms |        15 |      0.188 ms |     111300.064226 s |     111300.064415 s |
-    (s)SCHED:7                     | 0004 |      0.077 ms |        11 |      0.213 ms |     111301.361759 s |     111301.361973 s |
-    (s)SCHED:7                     | 0000 |      0.063 ms |        33 |      0.805 ms |     111295.401811 s |     111295.402616 s |
-    (s)SCHED:7                     | 0003 |      0.063 ms |        14 |      0.085 ms |     111301.192255 s |     111301.192340 s |
-   --------------------------------------------------------------------------------------------------------------------------------
+  # perf kwork lat -h
 
-Trace softirq latency with cpu filter:
+   Usage: perf kwork latency [<options>]
 
-  # perf kwork -k softirq lat -b -C 1
-  Starting trace, Hit <Ctrl+C> to stop and report
-  ^C
-    Kwork Name                     | Cpu  | Avg delay     | Count     | Max delay     | Max delay start     | Max delay end       |
-   --------------------------------------------------------------------------------------------------------------------------------
-    (s)RCU:9                       | 0001 |      0.178 ms |         5 |      0.572 ms |     111435.534135 s |     111435.534707 s |
-   --------------------------------------------------------------------------------------------------------------------------------
+      -C, --cpu <cpu>       list of cpus to profile
+      -i, --input <file>    input file name
+      -n, --name <name>     event name to profile
+      -s, --sort <key[,key2...]>
+                            sort by key(s): avg, max, count
+          --time <str>      Time span for analysis (start,stop)
 
-Trace softirq latency with name filter:
+  # perf kwork lat -C 199
+  Requested CPU 199 too large. Consider raising MAX_NR_CPUS
+  Invalid cpu bitmap
 
-  # perf kwork -k softirq lat -b -n SCHED
-  Starting trace, Hit <Ctrl+C> to stop and report
-  ^C
-    Kwork Name                     | Cpu  | Avg delay     | Count     | Max delay     | Max delay start     | Max delay end       |
+  # perf kwork lat -i perf_no_exist.data
+  failed to open perf_no_exist.data: No such file or directory
+
+  # perf kwork lat -s avg1
+    Error: Unknown --sort key: `avg1'
+
+   Usage: perf kwork latency [<options>]
+
+      -C, --cpu <cpu>       list of cpus to profile
+      -i, --input <file>    input file name
+      -n, --name <name>     event name to profile
+      -s, --sort <key[,key2...]>
+                            sort by key(s): avg, max, count
+          --time <str>      Time span for analysis (start,stop)
+
+  # perf kwork lat --time FFFF,
+  Invalid time span
+
+  # perf kwork lat
+
+    Kwork Name                     | Cpu  | Avg delay     | Count    | Max delay     | Max delay start     | Max delay end       |
    --------------------------------------------------------------------------------------------------------------------------------
-    (s)SCHED:7                     | 0001 |      0.295 ms |        15 |      2.183 ms |     111452.534950 s |     111452.537133 s |
-    (s)SCHED:7                     | 0002 |      0.215 ms |        10 |      0.315 ms |     111460.000238 s |     111460.000553 s |
-    (s)SCHED:7                     | 0005 |      0.190 ms |        29 |      0.338 ms |     111457.032538 s |     111457.032876 s |
-    (s)SCHED:7                     | 0003 |      0.097 ms |        10 |      0.319 ms |     111452.434351 s |     111452.434670 s |
-    (s)SCHED:7                     | 0006 |      0.089 ms |         1 |      0.089 ms |     111450.737450 s |     111450.737539 s |
-    (s)SCHED:7                     | 0007 |      0.085 ms |        17 |      0.169 ms |     111452.471333 s |     111452.471502 s |
-    (s)SCHED:7                     | 0004 |      0.071 ms |        15 |      0.221 ms |     111452.535252 s |     111452.535473 s |
-    (s)SCHED:7                     | 0000 |      0.044 ms |        32 |      0.130 ms |     111460.001982 s |     111460.002112 s |
    --------------------------------------------------------------------------------------------------------------------------------
+    INFO: 36.570% skipped events (31537 including 0 raise, 31537 entry, 0 exit)
+
+Since there are no latency-enabled events, the output is empty.
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/util/bpf_kwork.c                | 22 ++++++-
- tools/perf/util/bpf_skel/kwork_trace.bpf.c | 75 ++++++++++++++++++++++
- 2 files changed, 96 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-kwork.txt |  29 ++++
+ tools/perf/builtin-kwork.c              | 167 +++++++++++++++++++++++-
+ tools/perf/util/kwork.h                 |  14 ++
+ 3 files changed, 209 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/bpf_kwork.c b/tools/perf/util/bpf_kwork.c
-index 08252fcda1a4..1d76ca499ff6 100644
---- a/tools/perf/util/bpf_kwork.c
-+++ b/tools/perf/util/bpf_kwork.c
-@@ -100,10 +100,30 @@ static struct kwork_class_bpf kwork_irq_bpf = {
- 	.get_work_name = get_work_name_from_map,
- };
+diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+index b79b2c0d047e..069981457de1 100644
+--- a/tools/perf/Documentation/perf-kwork.txt
++++ b/tools/perf/Documentation/perf-kwork.txt
+@@ -19,9 +19,12 @@ There are several variants of 'perf kwork':
  
-+static void softirq_load_prepare(struct perf_kwork *kwork)
-+{
-+	if (kwork->report == KWORK_REPORT_RUNTIME) {
-+		bpf_program__set_autoload(
-+			skel->progs.report_softirq_entry, true);
-+		bpf_program__set_autoload(
-+			skel->progs.report_softirq_exit, true);
-+	} else if (kwork->report == KWORK_REPORT_LATENCY) {
-+		bpf_program__set_autoload(
-+			skel->progs.latency_softirq_raise, true);
-+		bpf_program__set_autoload(
-+			skel->progs.latency_softirq_entry, true);
-+	}
-+}
-+
-+static struct kwork_class_bpf kwork_softirq_bpf = {
-+	.load_prepare  = softirq_load_prepare,
-+	.get_work_name = get_work_name_from_map,
-+};
-+
- static struct kwork_class_bpf *
- kwork_class_bpf_supported_list[KWORK_CLASS_MAX] = {
- 	[KWORK_CLASS_IRQ]       = &kwork_irq_bpf,
--	[KWORK_CLASS_SOFTIRQ]   = NULL,
-+	[KWORK_CLASS_SOFTIRQ]   = &kwork_softirq_bpf,
- 	[KWORK_CLASS_WORKQUEUE] = NULL,
- };
+   'perf kwork report' to report the per kwork runtime.
  
-diff --git a/tools/perf/util/bpf_skel/kwork_trace.bpf.c b/tools/perf/util/bpf_skel/kwork_trace.bpf.c
-index 7e9fd64c8484..73a0acd6f636 100644
---- a/tools/perf/util/bpf_skel/kwork_trace.bpf.c
-+++ b/tools/perf/util/bpf_skel/kwork_trace.bpf.c
-@@ -220,4 +220,79 @@ int report_irq_handler_exit(struct trace_event_raw_irq_handler_exit *ctx)
- 	return update_timeend(&perf_kwork_report, &perf_kwork_time, &key);
++  'perf kwork latency' to report the per kwork latencies.
++
+     Example usage:
+         perf kwork record -- sleep 1
+         perf kwork report
++        perf kwork latency
+ 
+ OPTIONS
+ -------
+@@ -71,6 +74,32 @@ OPTIONS for 'perf kwork report'
+ 	stop time is not given (i.e, time string is 'x.y,') then analysis goes
+ 	to end of file.
+ 
++OPTIONS for 'perf kwork latency'
++----------------------------
++
++-C::
++--cpu::
++	Only show events for the given CPU(s) (comma separated list).
++
++-i::
++--input::
++	Input file name. (default: perf.data unless stdin is a fifo)
++
++-n::
++--name::
++	Only show events for the given name.
++
++-s::
++--sort::
++	Sort by key(s): avg, max, count
++
++--time::
++	Only analyze samples within given time window: <start>,<stop>. Times
++	have the format seconds.microseconds. If start is not given (i.e., time
++	string is ',x.y') then analysis starts at the beginning of the file. If
++	stop time is not given (i.e, time string is 'x.y,') then analysis goes
++	to end of file.
++
+ SEE ALSO
+ --------
+ linkperf:perf-record[1]
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 0a9d28fc9e97..acf87f929f01 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -31,12 +31,14 @@
+ #define PRINT_CPU_WIDTH 4
+ #define PRINT_COUNT_WIDTH 9
+ #define PRINT_RUNTIME_WIDTH 10
++#define PRINT_LATENCY_WIDTH 10
+ #define PRINT_TIMESTAMP_WIDTH 17
+ #define PRINT_KWORK_NAME_WIDTH 30
+ #define RPINT_DECIMAL_WIDTH 3
+ #define PRINT_TIME_UNIT_SEC_WIDTH 2
+ #define PRINT_TIME_UNIT_MESC_WIDTH 3
+ #define PRINT_RUNTIME_HEADER_WIDTH (PRINT_RUNTIME_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
++#define PRINT_LATENCY_HEADER_WIDTH (PRINT_LATENCY_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
+ #define PRINT_TIMESTAMP_HEADER_WIDTH (PRINT_TIMESTAMP_WIDTH + PRINT_TIME_UNIT_SEC_WIDTH)
+ 
+ struct sort_dimension {
+@@ -90,6 +92,36 @@ static int max_runtime_cmp(struct kwork_work *l, struct kwork_work *r)
+ 	return 0;
  }
  
-+static char softirq_name_list[NR_SOFTIRQS][MAX_KWORKNAME] = {
-+	{ "HI"       },
-+	{ "TIMER"    },
-+	{ "NET_TX"   },
-+	{ "NET_RX"   },
-+	{ "BLOCK"    },
-+	{ "IRQ_POLL" },
-+	{ "TASKLET"  },
-+	{ "SCHED"    },
-+	{ "HRTIMER"  },
-+	{ "RCU"      },
-+};
-+
-+SEC("tracepoint/irq/softirq_entry")
-+int report_softirq_entry(struct trace_event_raw_softirq *ctx)
++static int avg_latency_cmp(struct kwork_work *l, struct kwork_work *r)
 +{
-+	unsigned int vec = ctx->vec;
-+	struct work_key key = {
-+		.type = KWORK_CLASS_SOFTIRQ,
-+		.cpu  = bpf_get_smp_processor_id(),
-+		.id   = (__u64)vec,
-+	};
++	u64 avgl, avgr;
 +
-+	if (vec < NR_SOFTIRQS) {
-+		return update_timestart_and_name(&perf_kwork_time,
-+						 &perf_kwork_names, &key,
-+						 softirq_name_list[vec]);
++	if (!r->nr_atoms)
++		return 1;
++	if (!l->nr_atoms)
++		return -1;
++
++	avgl = l->total_latency / l->nr_atoms;
++	avgr = r->total_latency / r->nr_atoms;
++
++	if (avgl > avgr)
++		return 1;
++	if (avgl < avgr)
++		return -1;
++
++	return 0;
++}
++
++static int max_latency_cmp(struct kwork_work *l, struct kwork_work *r)
++{
++	if (l->max_latency > r->max_latency)
++		return 1;
++	if (l->max_latency < r->max_latency)
++		return -1;
++
++	return 0;
++}
++
+ static int sort_dimension__add(struct perf_kwork *kwork __maybe_unused,
+ 			       const char *tok, struct list_head *list)
+ {
+@@ -110,13 +142,21 @@ static int sort_dimension__add(struct perf_kwork *kwork __maybe_unused,
+ 		.name = "count",
+ 		.cmp  = count_cmp,
+ 	};
++	static struct sort_dimension avg_sort_dimension = {
++		.name = "avg",
++		.cmp  = avg_latency_cmp,
++	};
+ 	struct sort_dimension *available_sorts[] = {
+ 		&id_sort_dimension,
+ 		&max_sort_dimension,
+ 		&count_sort_dimension,
+ 		&runtime_sort_dimension,
++		&avg_sort_dimension,
+ 	};
+ 
++	if (kwork->report == KWORK_REPORT_LATENCY)
++		max_sort_dimension.cmp = max_latency_cmp;
++
+ 	for (i = 0; i < ARRAY_SIZE(available_sorts); i++) {
+ 		if (!strcmp(available_sorts[i]->name, tok)) {
+ 			list_add_tail(&available_sorts[i]->list, list);
+@@ -480,6 +520,61 @@ static int report_exit_event(struct perf_kwork *kwork,
+ 	return 0;
+ }
+ 
++static void latency_update_entry_event(struct kwork_work *work,
++				       struct kwork_atom *atom,
++				       struct perf_sample *sample)
++{
++	u64 delta;
++	u64 entry_time = sample->time;
++	u64 raise_time = atom->time;
++
++	if ((raise_time != 0) && (entry_time >= raise_time)) {
++		delta = entry_time - raise_time;
++		if ((delta > work->max_latency) ||
++		    (work->max_latency == 0)) {
++			work->max_latency = delta;
++			work->max_latency_start = raise_time;
++			work->max_latency_end = entry_time;
++		}
++		work->total_latency += delta;
++		work->nr_atoms++;
++	}
++}
++
++static int latency_raise_event(struct perf_kwork *kwork,
++			       struct kwork_class *class,
++			       struct evsel *evsel,
++			       struct perf_sample *sample,
++			       struct machine *machine)
++{
++	return work_push_atom(kwork, class, KWORK_TRACE_RAISE,
++			      KWORK_TRACE_MAX, evsel, sample,
++			      machine, NULL);
++}
++
++static int latency_entry_event(struct perf_kwork *kwork,
++			       struct kwork_class *class,
++			       struct evsel *evsel,
++			       struct perf_sample *sample,
++			       struct machine *machine)
++{
++	struct kwork_atom *atom = NULL;
++	struct kwork_work *work = NULL;
++
++	atom = work_pop_atom(kwork, class, KWORK_TRACE_ENTRY,
++			     KWORK_TRACE_RAISE, evsel, sample,
++			     machine, &work);
++	if (work == NULL)
++		return -1;
++
++	if (atom != NULL) {
++		latency_update_entry_event(work, atom, sample);
++		atom_del(atom);
 +	}
 +
 +	return 0;
 +}
 +
-+SEC("tracepoint/irq/softirq_exit")
-+int report_softirq_exit(struct trace_event_raw_softirq *ctx)
-+{
-+	struct work_key key = {
-+		.type = KWORK_CLASS_SOFTIRQ,
-+		.cpu  = bpf_get_smp_processor_id(),
-+		.id   = (__u64)ctx->vec,
-+	};
-+
-+	return update_timeend(&perf_kwork_report, &perf_kwork_time, &key);
-+}
-+
-+SEC("tracepoint/irq/softirq_raise")
-+int latency_softirq_raise(struct trace_event_raw_softirq *ctx)
-+{
-+	unsigned int vec = ctx->vec;
-+	struct work_key key = {
-+		.type = KWORK_CLASS_SOFTIRQ,
-+		.cpu  = bpf_get_smp_processor_id(),
-+		.id   = (__u64)vec,
-+	};
-+
-+	if (vec < NR_SOFTIRQS) {
-+		return update_timestart_and_name(&perf_kwork_time,
-+						 &perf_kwork_names, &key,
-+						 softirq_name_list[vec]);
+ static struct kwork_class kwork_irq;
+ static int process_irq_handler_entry_event(struct perf_tool *tool,
+ 					   struct evsel *evsel,
+@@ -766,6 +861,7 @@ static int report_print_work(struct perf_kwork *kwork,
+ 	int ret = 0;
+ 	char kwork_name[PRINT_KWORK_NAME_WIDTH];
+ 	char max_runtime_start[32], max_runtime_end[32];
++	char max_latency_start[32], max_latency_end[32];
+ 
+ 	printf(" ");
+ 
+@@ -792,6 +888,15 @@ static int report_print_work(struct perf_kwork *kwork,
+ 			      PRINT_RUNTIME_WIDTH, RPINT_DECIMAL_WIDTH,
+ 			      (double)work->total_runtime / NSEC_PER_MSEC);
+ 	}
++	/*
++	 * avg delay
++	 */
++	else if (kwork->report == KWORK_REPORT_LATENCY) {
++		ret += printf(" %*.*f ms |",
++			      PRINT_LATENCY_WIDTH, RPINT_DECIMAL_WIDTH,
++			      (double)work->total_latency /
++			      work->nr_atoms / NSEC_PER_MSEC);
 +	}
-+
-+	return 0;
-+}
-+
-+SEC("tracepoint/irq/softirq_entry")
-+int latency_softirq_entry(struct trace_event_raw_softirq *ctx)
-+{
-+	struct work_key key = {
-+		.type = KWORK_CLASS_SOFTIRQ,
-+		.cpu  = bpf_get_smp_processor_id(),
-+		.id   = (__u64)ctx->vec,
+ 
+ 	/*
+ 	 * count
+@@ -814,6 +919,22 @@ static int report_print_work(struct perf_kwork *kwork,
+ 			      PRINT_TIMESTAMP_WIDTH, max_runtime_start,
+ 			      PRINT_TIMESTAMP_WIDTH, max_runtime_end);
+ 	}
++	/*
++	 * max delay, max delay start, max delay end
++	 */
++	else if (kwork->report == KWORK_REPORT_LATENCY) {
++		timestamp__scnprintf_usec(work->max_latency_start,
++					  max_latency_start,
++					  sizeof(max_latency_start));
++		timestamp__scnprintf_usec(work->max_latency_end,
++					  max_latency_end,
++					  sizeof(max_latency_end));
++		ret += printf(" %*.*f ms | %*s s | %*s s |",
++			      PRINT_LATENCY_WIDTH, RPINT_DECIMAL_WIDTH,
++			      (double)work->max_latency / NSEC_PER_MSEC,
++			      PRINT_TIMESTAMP_WIDTH, max_latency_start,
++			      PRINT_TIMESTAMP_WIDTH, max_latency_end);
++	}
+ 
+ 	printf("\n");
+ 	return ret;
+@@ -831,6 +952,9 @@ static int report_print_header(struct perf_kwork *kwork)
+ 	if (kwork->report == KWORK_REPORT_RUNTIME) {
+ 		ret += printf(" %-*s |",
+ 			      PRINT_RUNTIME_HEADER_WIDTH, "Total Runtime");
++	} else if (kwork->report == KWORK_REPORT_LATENCY) {
++		ret += printf(" %-*s |",
++			      PRINT_LATENCY_HEADER_WIDTH, "Avg delay");
+ 	}
+ 
+ 	ret += printf(" %-*s |", PRINT_COUNT_WIDTH, "Count");
+@@ -840,6 +964,11 @@ static int report_print_header(struct perf_kwork *kwork)
+ 			      PRINT_RUNTIME_HEADER_WIDTH, "Max runtime",
+ 			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max runtime start",
+ 			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max runtime end");
++	} else if (kwork->report == KWORK_REPORT_LATENCY) {
++		ret += printf(" %-*s | %-*s | %-*s |",
++			      PRINT_LATENCY_HEADER_WIDTH, "Max delay",
++			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max delay start",
++			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max delay end");
+ 	}
+ 
+ 	printf("\n");
+@@ -874,6 +1003,7 @@ static void print_skipped_events(struct perf_kwork *kwork)
+ {
+ 	int i;
+ 	const char *const kwork_event_str[] = {
++		[KWORK_TRACE_RAISE] = "raise",
+ 		[KWORK_TRACE_ENTRY] = "entry",
+ 		[KWORK_TRACE_EXIT]  = "exit",
+ 	};
+@@ -947,11 +1077,18 @@ static int perf_kwork__check_config(struct perf_kwork *kwork,
+ 		.entry_event = report_entry_event,
+ 		.exit_event  = report_exit_event,
+ 	};
++	static struct trace_kwork_handler latency_ops = {
++		.raise_event = latency_raise_event,
++		.entry_event = latency_entry_event,
 +	};
+ 
+ 	switch (kwork->report) {
+ 	case KWORK_REPORT_RUNTIME:
+ 		kwork->tp_handler = &report_ops;
+ 		break;
++	case KWORK_REPORT_LATENCY:
++		kwork->tp_handler = &latency_ops;
++		break;
+ 	default:
+ 		pr_debug("Invalid report type %d\n", kwork->report);
+ 		return -1;
+@@ -1202,6 +1339,7 @@ static int perf_kwork__record(struct perf_kwork *kwork,
+ int cmd_kwork(int argc, const char **argv)
+ {
+ 	static const char default_report_sort_order[] = "runtime, max, count";
++	static const char default_latency_sort_order[] = "avg, max, count";
+ 	static struct perf_kwork kwork = {
+ 		.tool = {
+ 			.mmap    = perf_event__process_mmap,
+@@ -1258,6 +1396,19 @@ int cmd_kwork(int argc, const char **argv)
+ 		    "Show summary with statistics"),
+ 	OPT_PARENT(kwork_options)
+ 	};
++	const struct option latency_options[] = {
++	OPT_STRING('s', "sort", &kwork.sort_order, "key[,key2...]",
++		   "sort by key(s): avg, max, count"),
++	OPT_STRING('C', "cpu", &kwork.cpu_list, "cpu",
++		   "list of cpus to profile"),
++	OPT_STRING('n', "name", &kwork.profile_name, "name",
++		   "event name to profile"),
++	OPT_STRING(0, "time", &kwork.time_str, "str",
++		   "Time span for analysis (start,stop)"),
++	OPT_STRING('i', "input", &input_name, "file",
++		   "input file name"),
++	OPT_PARENT(kwork_options)
++	};
+ 	const char *kwork_usage[] = {
+ 		NULL,
+ 		NULL
+@@ -1266,8 +1417,12 @@ int cmd_kwork(int argc, const char **argv)
+ 		"perf kwork report [<options>]",
+ 		NULL
+ 	};
++	const char * const latency_usage[] = {
++		"perf kwork latency [<options>]",
++		NULL
++	};
+ 	const char *const kwork_subcommands[] = {
+-		"record", "report", NULL
++		"record", "report", "latency", NULL
+ 	};
+ 
+ 	argc = parse_options_subcommand(argc, argv, kwork_options,
+@@ -1291,6 +1446,16 @@ int cmd_kwork(int argc, const char **argv)
+ 		kwork.report = KWORK_REPORT_RUNTIME;
+ 		setup_sorting(&kwork, report_options, report_usage);
+ 		return perf_kwork__report(&kwork);
++	} else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) {
++		kwork.sort_order = default_latency_sort_order;
++		if (argc > 1) {
++			argc = parse_options(argc, argv, latency_options, latency_usage, 0);
++			if (argc)
++				usage_with_options(latency_usage, latency_options);
++		}
++		kwork.report = KWORK_REPORT_LATENCY;
++		setup_sorting(&kwork, latency_options, latency_usage);
++		return perf_kwork__report(&kwork);
+ 	} else
+ 		usage_with_options(kwork_usage, kwork_options);
+ 
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index 0a86bf47c74d..e540373ab14e 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -21,9 +21,11 @@ enum kwork_class_type {
+ 
+ enum kwork_report_type {
+ 	KWORK_REPORT_RUNTIME,
++	KWORK_REPORT_LATENCY,
+ };
+ 
+ enum kwork_trace_type {
++	KWORK_TRACE_RAISE,
+ 	KWORK_TRACE_ENTRY,
+ 	KWORK_TRACE_EXIT,
+ 	KWORK_TRACE_MAX,
+@@ -116,6 +118,14 @@ struct kwork_work {
+ 	u64 max_runtime_start;
+ 	u64 max_runtime_end;
+ 	u64 total_runtime;
 +
-+	return update_timeend(&perf_kwork_report, &perf_kwork_time, &key);
-+}
++	/*
++	 * latency report
++	 */
++	u64 max_latency;
++	u64 max_latency_start;
++	u64 max_latency_end;
++	u64 total_latency;
+ };
+ 
+ struct kwork_class {
+@@ -143,6 +153,10 @@ struct kwork_class {
+ 
+ struct perf_kwork;
+ struct trace_kwork_handler {
++	int (*raise_event)(struct perf_kwork *kwork,
++			   struct kwork_class *class, struct evsel *evsel,
++			   struct perf_sample *sample, struct machine *machine);
 +
- char LICENSE[] SEC("license") = "Dual BSD/GPL";
+ 	int (*entry_event)(struct perf_kwork *kwork,
+ 			   struct kwork_class *class, struct evsel *evsel,
+ 			   struct perf_sample *sample, struct machine *machine);
 -- 
 2.30.GIT
 
