@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B950C04A68
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 09:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698C0C19F21
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 09:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231628AbiG0JHS (ORCPT
+        id S231634AbiG0JHS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Wed, 27 Jul 2022 05:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48026 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231384AbiG0JGj (ORCPT
+        with ESMTP id S231205AbiG0JGj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Wed, 27 Jul 2022 05:06:39 -0400
 Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C76543329;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03DF474E4;
         Wed, 27 Jul 2022 02:06:28 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Lt79R1b7Mz1M8JS;
-        Wed, 27 Jul 2022 17:03:23 +0800 (CST)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Lt79Q4CrMz1M8Ly;
+        Wed, 27 Jul 2022 17:03:22 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 17:06:15 +0800
+ 15.1.2375.24; Wed, 27 Jul 2022 17:06:14 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.61) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 17:06:14 +0800
+ 15.1.2375.24; Wed, 27 Jul 2022 17:06:13 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -34,9 +34,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <pc@us.ibm.com>, <yhs@fb.com>, <andrii.nakryiko@gmail.com>,
         <songliubraving@fb.com>, <yangjihong1@huawei.com>
-Subject: [RFC v4 03/17] perf kwork: Add softirq kwork record support
-Date:   Wed, 27 Jul 2022 17:03:16 +0800
-Message-ID: <20220727090330.107760-4-yangjihong1@huawei.com>
+Subject: [RFC v4 01/17] perf kwork: New tool
+Date:   Wed, 27 Jul 2022 17:03:14 +0800
+Message-ID: <20220727090330.107760-2-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20220727090330.107760-1-yangjihong1@huawei.com>
 References: <20220727090330.107760-1-yangjihong1@huawei.com>
@@ -51,106 +51,374 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Record softirq events irq:softirq_raise, irq:softirq_entry &
-irq:softirq_exit.
+The perf-kwork tool is used to trace time properties of kernel work
+(such as irq, softirq, and workqueue), including runtime, latency,
+and timehist, using the infrastructure in the perf tools to allow
+tracing extra targets.
+
+This is the first commit to reuse perf_record framework code to
+implement a simple record function, kwork is not supported currently.
 
 Test cases:
-Record all events:
 
-  # perf kwork record -o perf_kwork.date -- sleep 1
+  # perf
+
+   usage: perf [--version] [--help] [OPTIONS] COMMAND [ARGS]
+
+   The most commonly used perf commands are:
+  <SNIP>
+     iostat          Show I/O performance metrics
+     kallsyms        Searches running kernel for symbols
+     kmem            Tool to trace/measure kernel memory properties
+     kvm             Tool to trace/measure kvm guest os
+     kwork           Tool to trace/measure kernel work properties (latencies)
+     list            List all symbolic event types
+     lock            Analyze lock events
+     mem             Profile memory accesses
+     record          Run a command and record its profile into perf.data
+  <SNIP>
+   See 'perf help COMMAND' for more information on a specific command.
+
+  # perf kwork
+
+   Usage: perf kwork [<options>] {record}
+
+      -D, --dump-raw-trace  dump raw trace in ASCII
+      -f, --force           don't complain, do it
+      -k, --kwork <kwork>   list of kwork to profile
+      -v, --verbose         be more verbose (show symbol address, etc)
+
+  # perf kwork record -- sleep 1
   [ perf record: Woken up 0 times to write data ]
-  [ perf record: Captured and wrote 0.897 MB perf_kwork.date ]
-  #
-  # perf evlist -i perf_kwork.date
-  irq:irq_handler_entry
-  irq:irq_handler_exit
-  irq:softirq_raise
-  irq:softirq_entry
-  irq:softirq_exit
-  dummy:HG
-  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
-
-Record softirq events:
-
-  # perf kwork -k softirq record -o perf_kwork.date -- sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.141 MB perf_kwork.date ]
-  #
-  # perf evlist -i perf_kwork.date
-  irq:softirq_raise
-  irq:softirq_entry
-  irq:softirq_exit
-  dummy:HG
-  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
+  [ perf record: Captured and wrote 1.787 MB perf.data ]
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/Documentation/perf-kwork.txt |  2 +-
- tools/perf/builtin-kwork.c              | 16 +++++++++++++++-
- tools/perf/util/kwork.h                 |  1 +
- 3 files changed, 17 insertions(+), 2 deletions(-)
+ tools/perf/Build                        |   1 +
+ tools/perf/Documentation/perf-kwork.txt |  43 +++++++
+ tools/perf/builtin-kwork.c              | 163 ++++++++++++++++++++++++
+ tools/perf/builtin.h                    |   1 +
+ tools/perf/command-list.txt             |   1 +
+ tools/perf/perf.c                       |   1 +
+ tools/perf/util/kwork.h                 |  41 ++++++
+ 7 files changed, 251 insertions(+)
+ create mode 100644 tools/perf/Documentation/perf-kwork.txt
+ create mode 100644 tools/perf/builtin-kwork.c
+ create mode 100644 tools/perf/util/kwork.h
 
+diff --git a/tools/perf/Build b/tools/perf/Build
+index db61dbe2b543..496b096153bb 100644
+--- a/tools/perf/Build
++++ b/tools/perf/Build
+@@ -25,6 +25,7 @@ perf-y += builtin-data.o
+ perf-y += builtin-version.o
+ perf-y += builtin-c2c.o
+ perf-y += builtin-daemon.o
++perf-y += builtin-kwork.o
+ 
+ perf-$(CONFIG_TRACE) += builtin-trace.o
+ perf-$(CONFIG_LIBELF) += builtin-probe.o
 diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
-index 57bd5fa7d5c9..abfdeca2ad39 100644
---- a/tools/perf/Documentation/perf-kwork.txt
+new file mode 100644
+index 000000000000..dc1e36da57bb
+--- /dev/null
 +++ b/tools/perf/Documentation/perf-kwork.txt
-@@ -32,7 +32,7 @@ OPTIONS
- 
- -k::
- --kwork::
--	List of kwork to profile (irq, etc)
-+	List of kwork to profile (irq, softirq, etc)
- 
- -v::
- --verbose::
+@@ -0,0 +1,43 @@
++perf-kowrk(1)
++=============
++
++NAME
++----
++perf-kwork - Tool to trace/measure kernel work properties (latencies)
++
++SYNOPSIS
++--------
++[verse]
++'perf kwork' {record}
++
++DESCRIPTION
++-----------
++There are several variants of 'perf kwork':
++
++  'perf kwork record <command>' to record the kernel work
++  of an arbitrary workload.
++
++    Example usage:
++        perf kwork record -- sleep 1
++
++OPTIONS
++-------
++-D::
++--dump-raw-trace=::
++	Display verbose dump of the sched data.
++
++-f::
++--force::
++	Don't complain, do it.
++
++-k::
++--kwork::
++	List of kwork to profile
++
++-v::
++--verbose::
++	Be more verbose. (show symbol address, etc)
++
++SEE ALSO
++--------
++linkperf:perf-record[1]
 diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 8c7ba0b96354..539e3f2ddc84 100644
---- a/tools/perf/builtin-kwork.c
+new file mode 100644
+index 000000000000..f3def74ddbd2
+--- /dev/null
 +++ b/tools/perf/builtin-kwork.c
-@@ -37,8 +37,22 @@ static struct kwork_class kwork_irq = {
- 	.tp_handlers    = irq_tp_handlers,
- };
- 
-+const struct evsel_str_handler softirq_tp_handlers[] = {
-+	{ "irq:softirq_raise", NULL, },
-+	{ "irq:softirq_entry", NULL, },
-+	{ "irq:softirq_exit",  NULL, },
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * builtin-kwork.c
++ *
++ * Copyright (c) 2022  Huawei Inc,  Yang Jihong <yangjihong1@huawei.com>
++ */
++
++#include "builtin.h"
++
++#include "util/data.h"
++#include "util/kwork.h"
++#include "util/debug.h"
++#include "util/symbol.h"
++#include "util/thread.h"
++#include "util/string2.h"
++#include "util/callchain.h"
++#include "util/evsel_fprintf.h"
++
++#include <subcmd/pager.h>
++#include <subcmd/parse-options.h>
++
++#include <errno.h>
++#include <inttypes.h>
++#include <linux/err.h>
++#include <linux/time64.h>
++#include <linux/zalloc.h>
++
++static struct kwork_class *kwork_class_supported_list[KWORK_CLASS_MAX] = {
 +};
 +
-+static struct kwork_class kwork_softirq = {
-+	.name           = "softirq",
-+	.type           = KWORK_CLASS_SOFTIRQ,
-+	.nr_tracepoints = 3,
-+	.tp_handlers    = softirq_tp_handlers,
-+};
++static void setup_event_list(struct perf_kwork *kwork,
++			     const struct option *options,
++			     const char * const usage_msg[])
++{
++	int i;
++	struct kwork_class *class;
++	char *tmp, *tok, *str;
 +
- static struct kwork_class *kwork_class_supported_list[KWORK_CLASS_MAX] = {
- 	[KWORK_CLASS_IRQ]       = &kwork_irq,
-+	[KWORK_CLASS_SOFTIRQ]   = &kwork_softirq,
++	if (kwork->event_list_str == NULL)
++		goto null_event_list_str;
++
++	str = strdup(kwork->event_list_str);
++	for (tok = strtok_r(str, ", ", &tmp);
++	     tok; tok = strtok_r(NULL, ", ", &tmp)) {
++		for (i = 0; i < KWORK_CLASS_MAX; i++) {
++			class = kwork_class_supported_list[i];
++			if (strcmp(tok, class->name) == 0) {
++				list_add_tail(&class->list, &kwork->class_list);
++				break;
++			}
++		}
++		if (i == KWORK_CLASS_MAX) {
++			usage_with_options_msg(usage_msg, options,
++					       "Unknown --event key: `%s'", tok);
++		}
++	}
++	free(str);
++
++null_event_list_str:
++	/*
++	 * config all kwork events if not specified
++	 */
++	if (list_empty(&kwork->class_list)) {
++		for (i = 0; i < KWORK_CLASS_MAX; i++) {
++			list_add_tail(&kwork_class_supported_list[i]->list,
++				      &kwork->class_list);
++		}
++	}
++
++	pr_debug("Config event list:");
++	list_for_each_entry(class, &kwork->class_list, list)
++		pr_debug(" %s", class->name);
++	pr_debug("\n");
++}
++
++static int perf_kwork__record(struct perf_kwork *kwork,
++			      int argc, const char **argv)
++{
++	const char **rec_argv;
++	unsigned int rec_argc, i, j;
++	struct kwork_class *class;
++
++	const char *const record_args[] = {
++		"record",
++		"-a",
++		"-R",
++		"-m", "1024",
++		"-c", "1",
++	};
++
++	rec_argc = ARRAY_SIZE(record_args) + argc - 1;
++
++	list_for_each_entry(class, &kwork->class_list, list)
++		rec_argc += 2 * class->nr_tracepoints;
++
++	rec_argv = calloc(rec_argc + 1, sizeof(char *));
++	if (rec_argv == NULL)
++		return -ENOMEM;
++
++	for (i = 0; i < ARRAY_SIZE(record_args); i++)
++		rec_argv[i] = strdup(record_args[i]);
++
++	list_for_each_entry(class, &kwork->class_list, list) {
++		for (j = 0; j < class->nr_tracepoints; j++) {
++			rec_argv[i++] = strdup("-e");
++			rec_argv[i++] = strdup(class->tp_handlers[j].name);
++		}
++	}
++
++	for (j = 1; j < (unsigned int)argc; j++, i++)
++		rec_argv[i] = argv[j];
++
++	BUG_ON(i != rec_argc);
++
++	pr_debug("record comm: ");
++	for (j = 0; j < rec_argc; j++)
++		pr_debug("%s ", rec_argv[j]);
++	pr_debug("\n");
++
++	return cmd_record(i, rec_argv);
++}
++
++int cmd_kwork(int argc, const char **argv)
++{
++	static struct perf_kwork kwork = {
++		.class_list          = LIST_HEAD_INIT(kwork.class_list),
++
++		.force               = false,
++		.event_list_str      = NULL,
++	};
++	const struct option kwork_options[] = {
++	OPT_INCR('v', "verbose", &verbose,
++		 "be more verbose (show symbol address, etc)"),
++	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
++		    "dump raw trace in ASCII"),
++	OPT_STRING('k', "kwork", &kwork.event_list_str, "kwork",
++		   "list of kwork to profile"),
++	OPT_BOOLEAN('f', "force", &kwork.force, "don't complain, do it"),
++	OPT_END()
++	};
++	const char *kwork_usage[] = {
++		NULL,
++		NULL
++	};
++	const char *const kwork_subcommands[] = {
++		"record", NULL
++	};
++
++	argc = parse_options_subcommand(argc, argv, kwork_options,
++					kwork_subcommands, kwork_usage,
++					PARSE_OPT_STOP_AT_NON_OPTION);
++	if (!argc)
++		usage_with_options(kwork_usage, kwork_options);
++
++	setup_event_list(&kwork, kwork_options, kwork_usage);
++
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
++		return perf_kwork__record(&kwork, argc, argv);
++	else
++		usage_with_options(kwork_usage, kwork_options);
++
++	return 0;
++}
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index 7303e80a639c..d03afea86217 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -38,6 +38,7 @@ int cmd_mem(int argc, const char **argv);
+ int cmd_data(int argc, const char **argv);
+ int cmd_ftrace(int argc, const char **argv);
+ int cmd_daemon(int argc, const char **argv);
++int cmd_kwork(int argc, const char **argv);
+ 
+ int find_scripts(char **scripts_array, char **scripts_path_array, int num,
+ 		 int pathlen);
+diff --git a/tools/perf/command-list.txt b/tools/perf/command-list.txt
+index 4aa034aefa33..8fcab5ad00c5 100644
+--- a/tools/perf/command-list.txt
++++ b/tools/perf/command-list.txt
+@@ -18,6 +18,7 @@ perf-iostat			mainporcelain common
+ perf-kallsyms			mainporcelain common
+ perf-kmem			mainporcelain common
+ perf-kvm			mainporcelain common
++perf-kwork			mainporcelain common
+ perf-list			mainporcelain common
+ perf-lock			mainporcelain common
+ perf-mem			mainporcelain common
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index 0170cb0819d6..c21b3973641a 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -91,6 +91,7 @@ static struct cmd_struct commands[] = {
+ 	{ "data",	cmd_data,	0 },
+ 	{ "ftrace",	cmd_ftrace,	0 },
+ 	{ "daemon",	cmd_daemon,	0 },
++	{ "kwork",	cmd_kwork,	0 },
  };
  
- static void setup_event_list(struct perf_kwork *kwork,
-@@ -147,7 +161,7 @@ int cmd_kwork(int argc, const char **argv)
- 	OPT_BOOLEAN('D', "dump-raw-trace", &dump_trace,
- 		    "dump raw trace in ASCII"),
- 	OPT_STRING('k', "kwork", &kwork.event_list_str, "kwork",
--		   "list of kwork to profile (irq, etc)"),
-+		   "list of kwork to profile (irq, softirq, etc)"),
- 	OPT_BOOLEAN('f', "force", &kwork.force, "don't complain, do it"),
- 	OPT_END()
- 	};
+ struct pager_config {
 diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
-index f1d89cb058fc..669a81626cb4 100644
---- a/tools/perf/util/kwork.h
+new file mode 100644
+index 000000000000..6950636aab2a
+--- /dev/null
 +++ b/tools/perf/util/kwork.h
-@@ -14,6 +14,7 @@
- 
- enum kwork_class_type {
- 	KWORK_CLASS_IRQ,
-+	KWORK_CLASS_SOFTIRQ,
- 	KWORK_CLASS_MAX,
- };
- 
+@@ -0,0 +1,41 @@
++#ifndef PERF_UTIL_KWORK_H
++#define PERF_UTIL_KWORK_H
++
++#include "perf.h"
++
++#include "util/tool.h"
++#include "util/event.h"
++#include "util/evlist.h"
++#include "util/session.h"
++#include "util/time-utils.h"
++
++#include <linux/list.h>
++#include <linux/bitmap.h>
++
++enum kwork_class_type {
++	KWORK_CLASS_MAX,
++};
++
++struct kwork_class {
++	struct list_head list;
++	const char *name;
++	enum kwork_class_type type;
++
++	unsigned int nr_tracepoints;
++	const struct evsel_str_handler *tp_handlers;
++};
++
++struct perf_kwork {
++	/*
++	 * metadata
++	 */
++	struct list_head class_list;
++
++	/*
++	 * options for command
++	 */
++	bool force;
++	const char *event_list_str;
++};
++
++#endif  /* PERF_UTIL_KWORK_H */
 -- 
 2.30.GIT
 
