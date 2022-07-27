@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393BFC19F2B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 04:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B29C19F21
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 04:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240225AbiG0EDL (ORCPT
+        id S240212AbiG0EDV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Jul 2022 00:03:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45886 "EHLO
+        Wed, 27 Jul 2022 00:03:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233855AbiG0EDK (ORCPT
+        with ESMTP id S240231AbiG0EDP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Jul 2022 00:03:10 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F04581835C;
-        Tue, 26 Jul 2022 21:03:08 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Lt0Td1ffRz9swx;
-        Wed, 27 Jul 2022 12:01:57 +0800 (CST)
+        Wed, 27 Jul 2022 00:03:15 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97280175B0;
+        Tue, 26 Jul 2022 21:03:14 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lt0QZ3vsXzWfxn;
+        Wed, 27 Jul 2022 11:59:18 +0800 (CST)
 Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 12:03:06 +0800
+ 15.1.2375.24; Wed, 27 Jul 2022 12:03:04 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.174) by
  kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 12:03:05 +0800
+ 15.1.2375.24; Wed, 27 Jul 2022 12:03:03 +0800
 From:   Li Huafei <lihuafei1@huawei.com>
 To:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
         <ardb@kernel.org>, <will@kernel.org>, <broonie@kernel.org>,
@@ -39,12 +39,10 @@ CC:     <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
         <ndesaulniers@google.com>, <lihuafei1@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v3 2/4] ARM: stacktrace: Avoid duplicate saving of exception PC value
-Date:   Wed, 27 Jul 2022 12:00:20 +0800
-Message-ID: <20220727040022.139387-3-lihuafei1@huawei.com>
+Subject: [PATCH v3 0/4] ARM: Convert to ARCH_STACKWALK
+Date:   Wed, 27 Jul 2022 12:00:18 +0800
+Message-ID: <20220727040022.139387-1-lihuafei1@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220727040022.139387-1-lihuafei1@huawei.com>
-References: <20220727040022.139387-1-lihuafei1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.174.174]
@@ -55,169 +53,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Because an exception stack frame is not created in the exception entry,
-save_trace() does special handling for the exception PC, but this is
-only needed when CONFIG_FRAME_POINTER_UNWIND=y. When
-CONFIG_ARM_UNWIND=y, unwind annotations have been added to the exception
-entry and save_trace() will repeatedly save the exception PC:
+This series mainly updates the ARM stack trace code to use the newer and
+simpler arch_stack_walk() interface (see patches 3 and 4). Two issues
+were fixed before that (see patches 1 and 2).
 
-    [0x7f000090] hrtimer_hander+0x8/0x10 [hrtimer]
-    [0x8019ec50] __hrtimer_run_queues+0x18c/0x394
-    [0x8019f760] hrtimer_run_queues+0xbc/0xd0
-    [0x8019def0] update_process_times+0x34/0x80
-    [0x801ad2a4] tick_periodic+0x48/0xd0
-    [0x801ad3dc] tick_handle_periodic+0x1c/0x7c
-    [0x8010f2e0] twd_handler+0x30/0x40
-    [0x80177620] handle_percpu_devid_irq+0xa0/0x23c
-    [0x801718d0] generic_handle_domain_irq+0x24/0x34
-    [0x80502d28] gic_handle_irq+0x74/0x88
-    [0x8085817c] generic_handle_arch_irq+0x58/0x78
-    [0x80100ba8] __irq_svc+0x88/0xc8
-    [0x80108114] arch_cpu_idle+0x38/0x3c
-    [0x80108114] arch_cpu_idle+0x38/0x3c    <==== duplicate saved exception PC
-    [0x80861bf8] default_idle_call+0x38/0x130
-    [0x8015d5cc] do_idle+0x150/0x214
-    [0x8015d978] cpu_startup_entry+0x18/0x1c
-    [0x808589c0] rest_init+0xd8/0xdc
-    [0x80c00a44] arch_post_acpi_subsys_init+0x0/0x8
+v3:
+ - According to the discussion with Linus and Russell in v1:
+   - Add a comment about "regs[1]" in patch 2, and remove the
+     unnecessary ternary operator in the initialization of
+     "frame->ex_frame".
+   - Remove the patch "ARM: stacktrace: Allow stack trace saving for
+     non-current tasks", and keep the check for not being able to
+     unwind non-current tasks (including tasks running on other CPUs)
+     when CONFIG_SMP=y in patch 4.
+ - Rebase to linux-5.19-rc8.
 
-We can move the special handling of the exception PC in save_trace() to
-the unwind_frame() of the frame pointer unwinder.
+v2: https://lore.kernel.org/lkml/20220713110020.85511-1-lihuafei1@huawei.com/
+ - As suggested by Mark, the commit logs for patch 4 and 5 were
+   refined for easy review.
 
-Signed-off-by: Li Huafei <lihuafei1@huawei.com>
-Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
----
- arch/arm/include/asm/stacktrace.h |  6 +++++
- arch/arm/kernel/return_address.c  |  1 +
- arch/arm/kernel/stacktrace.c      | 44 +++++++++++++++++++++----------
- 3 files changed, 37 insertions(+), 14 deletions(-)
+v1: https://lore.kernel.org/lkml/20220712021527.109921-1-lihuafei1@huawei.com/
 
-diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
-index 3e78f921b8b2..39be2d1aa27b 100644
---- a/arch/arm/include/asm/stacktrace.h
-+++ b/arch/arm/include/asm/stacktrace.h
-@@ -21,6 +21,9 @@ struct stackframe {
- 	struct llist_node *kr_cur;
- 	struct task_struct *tsk;
- #endif
-+#ifdef CONFIG_UNWINDER_FRAME_POINTER
-+	bool ex_frame;
-+#endif
- };
- 
- static __always_inline
-@@ -34,6 +37,9 @@ void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
- 		frame->kr_cur = NULL;
- 		frame->tsk = current;
- #endif
-+#ifdef CONFIG_UNWINDER_FRAME_POINTER
-+		frame->ex_frame = in_entry_text(frame->pc);
-+#endif
- }
- 
- extern int unwind_frame(struct stackframe *frame);
-diff --git a/arch/arm/kernel/return_address.c b/arch/arm/kernel/return_address.c
-index 8aac1e10b117..38f1ea9c724d 100644
---- a/arch/arm/kernel/return_address.c
-+++ b/arch/arm/kernel/return_address.c
-@@ -47,6 +47,7 @@ void *return_address(unsigned int level)
- 	frame.kr_cur = NULL;
- 	frame.tsk = current;
- #endif
-+	frame.ex_frame = false;
- 
- 	walk_stackframe(&frame, save_return_addr, &data);
- 
-diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
-index af87040b0353..85443b5d1922 100644
---- a/arch/arm/kernel/stacktrace.c
-+++ b/arch/arm/kernel/stacktrace.c
-@@ -82,6 +82,27 @@ int notrace unwind_frame(struct stackframe *frame)
- 	if (frame_pointer_check(frame))
- 		return -EINVAL;
- 
-+	/*
-+	 * When we unwind through an exception stack, include the saved PC
-+	 * value into the stack trace.
-+	 */
-+	if (frame->ex_frame) {
-+		struct pt_regs *regs = (struct pt_regs *)frame->sp;
-+
-+		/*
-+		 * We check that 'regs + sizeof(struct pt_regs)' (that is,
-+		 * &regs[1]) does not exceed the bottom of the stack to avoid
-+		 * accessing data outside the task's stack. This may happen
-+		 * when frame->ex_frame is a false positive.
-+		 */
-+		if ((unsigned long)&regs[1] > ALIGN(frame->sp, THREAD_SIZE))
-+			return -EINVAL;
-+
-+		frame->pc = regs->ARM_pc;
-+		frame->ex_frame = false;
-+		return 0;
-+	}
-+
- 	/* restore the registers from the stack frame */
- #ifdef CONFIG_CC_IS_CLANG
- 	frame->sp = frame->fp;
-@@ -98,6 +119,9 @@ int notrace unwind_frame(struct stackframe *frame)
- 					(void *)frame->fp, &frame->kr_cur);
- #endif
- 
-+	if (in_entry_text(frame->pc))
-+		frame->ex_frame = true;
-+
- 	return 0;
- }
- #endif
-@@ -128,7 +152,6 @@ static int save_trace(struct stackframe *frame, void *d)
- {
- 	struct stack_trace_data *data = d;
- 	struct stack_trace *trace = data->trace;
--	struct pt_regs *regs;
- 	unsigned long addr = frame->pc;
- 
- 	if (data->no_sched_functions && in_sched_functions(addr))
-@@ -139,19 +162,6 @@ static int save_trace(struct stackframe *frame, void *d)
- 	}
- 
- 	trace->entries[trace->nr_entries++] = addr;
--
--	if (trace->nr_entries >= trace->max_entries)
--		return 1;
--
--	if (!in_entry_text(frame->pc))
--		return 0;
--
--	regs = (struct pt_regs *)frame->sp;
--	if ((unsigned long)&regs[1] > ALIGN(frame->sp, THREAD_SIZE))
--		return 0;
--
--	trace->entries[trace->nr_entries++] = regs->ARM_pc;
--
- 	return trace->nr_entries >= trace->max_entries;
- }
- 
-@@ -193,6 +203,9 @@ static noinline void __save_stack_trace(struct task_struct *tsk,
- 	frame.kr_cur = NULL;
- 	frame.tsk = tsk;
- #endif
-+#ifdef CONFIG_UNWINDER_FRAME_POINTER
-+	frame.ex_frame = false;
-+#endif
- 
- 	walk_stackframe(&frame, save_trace, &data);
- }
-@@ -214,6 +227,9 @@ void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
- 	frame.kr_cur = NULL;
- 	frame.tsk = current;
- #endif
-+#ifdef CONFIG_UNWINDER_FRAME_POINTER
-+	frame.ex_frame = in_entry_text(frame.pc);
-+#endif
- 
- 	walk_stackframe(&frame, save_trace, &data);
- }
+Li Huafei (4):
+  ARM: stacktrace: Skip frame pointer boundary check for
+    call_with_stack()
+  ARM: stacktrace: Avoid duplicate saving of exception PC value
+  ARM: stacktrace: Make stack walk callback consistent with generic code
+  ARM: stacktrace: Convert stacktrace to generic ARCH_STACKWALK
+
+ arch/arm/Kconfig                  |   1 +
+ arch/arm/include/asm/stacktrace.h |   8 +-
+ arch/arm/kernel/perf_callchain.c  |   9 +-
+ arch/arm/kernel/return_address.c  |   9 +-
+ arch/arm/kernel/stacktrace.c      | 191 ++++++++++++++----------------
+ arch/arm/lib/call_with_stack.S    |   2 +
+ 6 files changed, 110 insertions(+), 110 deletions(-)
+
 -- 
 2.17.1
 
