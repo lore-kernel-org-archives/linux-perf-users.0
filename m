@@ -2,546 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1209C19F2B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 04:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BB4C04A68
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 06:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240424AbiG0Ex5 (ORCPT
+        id S229532AbiG0G3h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Jul 2022 00:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49422 "EHLO
+        Wed, 27 Jul 2022 02:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240321AbiG0Ex4 (ORCPT
+        with ESMTP id S229501AbiG0G3f (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Jul 2022 00:53:56 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D063E77A
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jul 2022 21:53:53 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id f24-20020a1cc918000000b003a30178c022so494144wmb.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Jul 2022 21:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VfIlsxK1VlIloX47nwajbiVHF3hEhwMYcSlo1ktsUCQ=;
-        b=tdHCFvUCkoZV0I0vri/AeWYibyP34zUuYSbOAuRJxK5wPXmj+fBAHtZXJjPc4dSspu
-         C8ZyxS/DVWo9qIuGnPi2N3fM02H4b+f+8EttYop2KHjg6qdcsJOxnuVYVcAdvvixpInU
-         lHGoijq6c6SjoZYQRM0Hu23OtRUkNJpNjzoYSbG2eIGO7Itai1MbUtYzHIoxMt7bQNpx
-         Tu/t/HvZfrytDRygpro/Mr0Fr8hbr2MowT8Nv+dciPagqX0LQFY6hnD3MS/NrBnUcAoA
-         h47MWTGCtOzYv/Jc3K7hGZa0wiJaXhJN6PbUyomW3xdg0I6vo+JP31H22FkqvxVEEtOD
-         SWeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VfIlsxK1VlIloX47nwajbiVHF3hEhwMYcSlo1ktsUCQ=;
-        b=gaZAn7bz9OL2XtSPf1yczhU1tnlbs2LQI5oxEtqJvQDmRl5e4q6AamlQnNbV4kgbSG
-         0TTXxqgKlrTbj+hXcR8qEH8ETvvv/q/dildD4dJAQafG1CxbpUOUjQD+jP7DAC48um84
-         NvRbOrjpiW7eNztl6v/uTaJSjn03+ZPqLdOHfH80e8CIKhyIGAq2k58TZwyHZFDsy+eH
-         8iHUWl7h67ttyeWdPHwuMFmEKjlvI20TKK6fJNhN7yrMopYCKykf7U2J6+V9+x/Lf7bh
-         xW5m3rz9H/+pbYSbugEiF/2WtsgmOvaDunEoOv08MxBh5gZkHrFJMvCKCttky0Kfd8A+
-         t/UA==
-X-Gm-Message-State: AJIora/EB3NpL7o8DHh++TJCYBPcN9Dz/s0aaivKWmz0CH2jMA/etYQR
-        5IsHamiPbMbi9aLesqhuDVr8JS4ro+pLSSFXQCjaKA==
-X-Google-Smtp-Source: AGRyM1src0SO+YNtTeVThg0n7AG9r+ESwkyTepNhpLMcMryMbH1rQcTjKXsrv9YMTSDgBpJjStqq7J7mkHQZP/AWMu0=
-X-Received: by 2002:a05:600c:2854:b0:3a3:1551:d7d with SMTP id
- r20-20020a05600c285400b003a315510d7dmr1431530wmb.174.1658897631699; Tue, 26
- Jul 2022 21:53:51 -0700 (PDT)
+        Wed, 27 Jul 2022 02:29:35 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0751EAFD;
+        Tue, 26 Jul 2022 23:29:34 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Lt3kX65Ygz9sxl;
+        Wed, 27 Jul 2022 14:28:20 +0800 (CST)
+Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 27 Jul 2022 14:29:31 +0800
+Received: from [10.67.110.237] (10.67.110.237) by
+ kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 27 Jul 2022 14:29:29 +0800
+Subject: Re: [PATCH 5/5] ARM: stacktrace: Convert stacktrace to generic
+ ARCH_STACKWALK
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
+        <ardb@kernel.org>, <will@kernel.org>, <mark.rutland@arm.com>,
+        <broonie@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <arnd@arndb.de>,
+        <rostedt@goodmis.org>, <nick.hawkins@hpe.com>, <john@phrozen.org>,
+        <mhiramat@kernel.org>, <ast@kernel.org>, <linyujun809@huawei.com>,
+        <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+References: <20220712021527.109921-1-lihuafei1@huawei.com>
+ <20220712021527.109921-6-lihuafei1@huawei.com>
+ <CACRpkdZVxyCsENJQ_-KZBMHjVrYCHzFG2UdCAe=mt_5Ts8_RFw@mail.gmail.com>
+From:   Li Huafei <lihuafei1@huawei.com>
+Message-ID: <ecc9376b-694b-e42c-977c-813be0a76792@huawei.com>
+Date:   Wed, 27 Jul 2022 14:29:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-References: <20220715063653.3203761-1-irogers@google.com> <20220715063653.3203761-16-irogers@google.com>
- <CAM9d7cigU9Sq2T3i3M1vA_vU+MrqCEbhOZPQ4D13dO+WomKP_A@mail.gmail.com>
-In-Reply-To: <CAM9d7cigU9Sq2T3i3M1vA_vU+MrqCEbhOZPQ4D13dO+WomKP_A@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 26 Jul 2022 21:53:39 -0700
-Message-ID: <CAP-5=fWqJkytGTCRsxUzJgAOUYmqwgh_bp_01HrwLQMPZmiOig@mail.gmail.com>
-Subject: Re: [PATCH v1 15/15] perf jevents: Compress the pmu_events_table
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdZVxyCsENJQ_-KZBMHjVrYCHzFG2UdCAe=mt_5Ts8_RFw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.237]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600010.china.huawei.com (7.193.23.86)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 9:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hi Ian,
->
-> On Thu, Jul 14, 2022 at 11:37 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > The pmu_events array requires 15 pointers per entry which in position
-> > independent code need relocating. Change the array to be an array of
-> > offsets within a big C string. Only the offset of the first variable is
-> > required, subsequent variables are stored in order after the \0
-> > terminator (requiring a byte per variable rather than 4 bytes per
-> > offset).
-> >
-> > The file size savings are:
-> > no jevents - the same 19,579,104bytes
-> > x86 jevents - ~12.5% file size saving 22,088,944bytes vs 25,235,048bytes
-> > all jevents - ~15.8% file size saving 22,821,896bytes vs 27,106,648bytes
-> > default build options plus NO_LIBBFD=1.
-> >
-> > For example, the x86 build savings come from .rela.dyn and
-> > .data.rel.ro becoming smaller by 1,911,072bytes and 2,022,656bytes
-> > respectively. .rodata increases by 789,600bytes, giving an overall
-> > 3,146,104bytes saving.
->
-> Great!  I also noticed my build has fairly large reloc sections.
->
-> >
-> > To make metric strings more shareable, the topic is changed from say
-> > 'skx metrics' to just 'metrics'.
-> >
-> > To try to help with the memory layout the pmu_events are ordered as used
-> > by perf qsort comparator functions.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/pmu-events/jevents.py | 236 +++++++++++++++++++++++++------
-> >  1 file changed, 193 insertions(+), 43 deletions(-)
-> >
-> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> > index d7e03864ca6a..b5bc25790695 100755
-> > --- a/tools/perf/pmu-events/jevents.py
-> > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -6,8 +6,8 @@ import csv
-> >  import json
-> >  import os
-> >  import sys
-> > -from typing import Callable
-> > -from typing import Sequence
-> > +from typing import (Callable, Dict, Sequence, Set)
-> > +import collections
-> >
-> >  # Global command line arguments.
-> >  _args = None
-> > @@ -21,6 +21,19 @@ _arch_std_events = {}
-> >  _close_table = False
-> >  # Events to write out when the table is closed
-> >  _pending_events = []
-> > +# Global BigCString shared by all structures.
-> > +_bcs = None
-> > +# Order specific JsonEvent attributes will be visited.
-> > +_json_event_attributes = [
-> > +    # cmp_sevent related attributes.
-> > +    'name', 'pmu', 'topic', 'desc', 'metric_name', 'metric_group',
-> > +    # Seems useful, put it early.
-> > +    'event',
-> > +    # Short things in alphabetical order.
-> > +    'aggr_mode', 'compat', 'deprecated', 'perpkg', 'unit',
-> > +    # Longer things (the last won't be iterated over during decompress).
-> > +    'metric_constraint', 'metric_expr', 'long_desc'
-> > +]
-> >
-> >
-> >  def removesuffix(s: str, suffix: str) -> str:
-> > @@ -40,6 +53,100 @@ def file_name_to_table_name(parents: Sequence[str], dirname: str) -> str:
-> >    tblname += '_' + dirname
-> >    return tblname.replace('-', '_')
-> >
-> > +def c_len(s: str) -> int:
-> > +  """Return the length of s a C string
-> > +
-> > +  This doesn't handle all escape characters properly. It first assumes
-> > +  all \ are for escaping, it then adjusts as it will have over counted
-> > +  \\. The code uses \000 rather than \0 as a terminator as an adjacent
-> > +  number would be folded into a string of \0 (ie. "\0" + "5" doesn't
-> > +  equal a terminator followed by the number 5 but the escape of
-> > +  \05). The code adjusts for \000 but not properly for all octal, hex
-> > +  or unicode values.
-> > +  """
-> > +  try:
-> > +    utf = s.encode(encoding='utf-8',errors='strict')
-> > +  except:
-> > +    print(f'broken string {s}')
-> > +    raise
-> > +  return len(utf) - utf.count(b'\\') + utf.count(b'\\\\') - (utf.count(b'\\000') * 2)
->
-> Sorry, I don't understand why it needs the last utf.count * 2.
-> Could you elaborate more?
 
-Yep, so
-1) start with the length of the string
-2) \ will escape the next character, e.g. \n, so instead of counting
-that as 2 count it as 1
-3) but, \\ will now get counted as 0 and it should be 1
-4) but also, a numeric escape like \000 will get counted as 3 rather
-than 1 so adjust that.
+Hi Linus,
 
-Obviously this isn't full C string parsing, but it is sufficient for
-what comes in the json files.
+On 2022/7/18 17:12, Linus Walleij wrote:
+> On Tue, Jul 12, 2022 at 4:19 AM Li Huafei <lihuafei1@huawei.com> wrote:
+> 
+>> This patch converts ARM stacktrace to the generic ARCH_STACKWALK
+>> implemented by commit 214d8ca6ee85 ("stacktrace: Provide common
+>> infrastructure").
+>>
+>> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+> 
+> Looks good to me:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> What I want to know is if this commit will avoid the problem mentioned
+> in review of commit 3? I.e. the generic stackwalk code will make sure we are
+> not running the task on another CPU, so that is why we could remove
+> that check?
+> 
 
->
-> > +
-> > +class BigCString:
-> > +  """A class to hold many strings concatenated together.
-> > +
-> > +  Generating a large number of stand-alone C strings creates a large
-> > +  number of relocations in position independent code. The BigCString
-> > +  is a helper for this case. It builds a single string which within it
-> > +  are all the other C strings (to avoid memory issues the string
-> > +  itself is held as a list of strings). The offsets within the big
-> > +  string are recorded and when stored to disk these don't need
-> > +  relocation. To reduce the size of the string further, identical
-> > +  strings are merged. If a longer string ends-with the same value as a
-> > +  shorter string, these entries are also merged.
-> > +  """
-> > +  strings: Set[str]
-> > +  big_string: Sequence[str]
-> > +  offsets: Dict[str, int]
-> > +
-> > +  def __init__(self):
-> > +    self.strings = set()
-> > +
-> > +  def add(self, s: str) -> None:
-> > +    """Called to add to the big string."""
-> > +    self.strings.add(s)
-> > +
-> > +  def compute(self) -> None:
-> > +    """Called once all strings are added to compute the string and offsets."""
-> > +
-> > +    folded_strings = {}
-> > +    # Determine if two strings can be folded, ie. let 1 string use the
-> > +    # end of another. First reverse all strings and sort them.
-> > +    sorted_reversed_strings = sorted([x[::-1] for x in self.strings])
->
-> I think some blank lines would increase readability a bit.
+In v3, I removed patch 3 of v1 and kept that check, see
 
-Ack. Can add in v2.
+  https://lore.kernel.org/lkml/20220727040022.139387-1-lihuafei1@huawei.com/
 
-> IIUC these strings are already concatenated with \\000
-> by build_c_string(), right?
-
-They are, but this code is agnostic to that. The code must give every
-string an offset, but it also tries as much as possible to combine
-strings. The \\000 defeats that in all but 1 case for x86, but if we
-were to have 1 offset per field it does better.
-
-> > +    # Strings 'xyz' and 'yz' will now be [ 'zy', 'zyx' ]. Scan forward
-> > +    # for each string to see if there is a better candidate to fold it
-> > +    # into, in the example rather than using 'yz' we can use'xyz' at
-> > +    # an offset of 1.
-> > +    for pos,s in enumerate(sorted_reversed_strings):
-> > +      best_pos = pos
-> > +      for check_pos in range(pos + 1, len(sorted_reversed_strings)):
-> > +        if sorted_reversed_strings[check_pos].startswith(s):
-> > +          best_pos = check_pos
-> > +        else:
-> > +          break
->
-> That means the best pos is the last match?  I guess python
-> string comparison can deal with strings with NUL bytes in it.
->
-> Also I'm not sure how much it actually hits?
-
-Once for x86 currently. The code runs quickly so I didn't disable it.
-In other situations it hits more, as mentioned above.
-
-> In my understanding, each string contains a name, description
-> and many other fields.  Does it have some duplication?
-
-There may be, and having an offset per variable would mean we could
-take advantage of that. What I found was that a majority of the
-variables are empty/NULL so what we lose by not having sharing is more
-than gained by reducing a variable down to 1 byte rather than 4 (in
-the order of 100s of KB).
-
-> Maybe I'm missing but not sure it's worth the complexity.
-
-Agreed. There's limited utility in finding 1 string inside another for
-the current string representation. The code is still necessary to give
-every string an offset. The code to find 1 string inside another isn't
-that large nor that slow, so I kept it around.
+Given this change, I did not add your reviewed-by to patch 4 of v3. If 
+you think patch 4 of v3 is still ok, please do let me know. Thank you 
+very much!
 
 Thanks,
-Ian
+Huafei
 
-> Thanks,
-> Namhyung
->
->
-> > +      if pos != best_pos:
-> > +        folded_strings[s[::-1]] = sorted_reversed_strings[best_pos][::-1]
-> > +    # Compute reverse mappings for debugging.
-> > +    fold_into_strings = collections.defaultdict(set)
-> > +    for key, val in folded_strings.items():
-> > +      if key != val:
-> > +        fold_into_strings[val].add(key)
-> > +    # big_string_offset is the current location within the C string
-> > +    # being appended to - comments, etc. don't count. big_string is
-> > +    # the string contents represented as a list. Strings are immutable
-> > +    # in Python and so appending to one causes memory issues, while
-> > +    # lists are mutable.
-> > +    big_string_offset = 0
-> > +    self.big_string = []
-> > +    self.offsets = {}
-> > +    # Emit all strings that aren't folded in a sorted manner.
-> > +    for s in sorted(self.strings):
-> > +      if s not in folded_strings:
-> > +        self.offsets[s] = big_string_offset
-> > +        self.big_string.append(f'/* offset={big_string_offset} */ "')
-> > +        self.big_string.append(s)
-> > +        self.big_string.append('"')
-> > +        if s in fold_into_strings:
-> > +          self.big_string.append(' /* also: ' + ', '.join(fold_into_strings[s]) + ' */')
-> > +        self.big_string.append('\n')
-> > +        big_string_offset += c_len(s)
-> > +        continue
-> > +    # Compute the offsets of the folded strings.
-> > +    for s in folded_strings.keys():
-> > +      assert s not in self.offsets
-> > +      folded_s = folded_strings[s]
-> > +      self.offsets[s] = self.offsets[folded_s] + c_len(folded_s) - c_len(s)
-> > +
-> > +_bcs = BigCString()
-> >
-> >  class JsonEvent:
-> >    """Representation of an event loaded from a json file dictionary."""
-> > @@ -203,26 +310,18 @@ class JsonEvent:
-> >          s += f'\t{attr} = {value},\n'
-> >      return s + '}'
-> >
-> > +  def build_c_string(self):
-> > +    s = ''
-> > +    for attr in _json_event_attributes:
-> > +      x = getattr(self, attr)
-> > +      s += f'{x}\\000' if x else '\\000'
-> > +    return s
-> > +
-> >    def to_c_string(self) -> str:
-> >      """Representation of the event as a C struct initializer."""
-> >
-> > -    def attr_string(attr: str, value: str) -> str:
-> > -      return f'\t.{attr} = \"{value}\",\n'
-> > -
-> > -    def str_if_present(self, attr: str) -> str:
-> > -      if not getattr(self, attr):
-> > -        return ''
-> > -      return attr_string(attr, getattr(self, attr))
-> > -
-> > -    s = '{\n'
-> > -    for attr in [
-> > -        'aggr_mode', 'compat', 'deprecated', 'desc', 'event', 'long_desc',
-> > -        'metric_constraint', 'metric_expr', 'metric_group', 'metric_name',
-> > -        'name', 'perpkg', 'pmu', 'topic', 'unit'
-> > -    ]:
-> > -      s += str_if_present(self, attr)
-> > -    s += '},\n'
-> > -    return s
-> > +    s = self.build_c_string()
-> > +    return f'{{ { _bcs.offsets[s] } }}, /* {s} */\n'
-> >
-> >
-> >  def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
-> > @@ -237,7 +336,6 @@ def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
-> >      event.topic = topic
-> >    return result
-> >
-> > -
-> >  def preprocess_arch_std_files(archpath: str) -> None:
-> >    """Read in all architecture standard events."""
-> >    global _arch_std_events
-> > @@ -253,7 +351,7 @@ def print_events_table_prefix(tblname: str) -> None:
-> >    global _close_table
-> >    if _close_table:
-> >      raise IOError('Printing table prefix but last table has no suffix')
-> > -  _args.output_file.write(f'static const struct pmu_event {tblname}[] = {{\n')
-> > +  _args.output_file.write(f'static const struct compact_pmu_event {tblname}[] = {{\n')
-> >    _close_table = True
-> >
-> >
-> > @@ -286,23 +384,37 @@ def print_events_table_suffix() -> None:
-> >      _args.output_file.write(event.to_c_string())
-> >      _pending_events = []
-> >
-> > -  _args.output_file.write("""{
-> > -\t.name = 0,
-> > -\t.event = 0,
-> > -\t.desc = 0,
-> > -},
-> > -};
-> > -""")
-> > +  _args.output_file.write('};\n\n')
-> >    _close_table = False
-> >
-> > +def get_topic(topic: str) -> str:
-> > +  if topic.endswith('metrics.json'):
-> > +    return 'metrics'
-> > +  return removesuffix(topic, '.json').replace('-', ' ')
-> > +
-> > +def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
-> > +
-> > +  if item.is_dir():
-> > +    return
-> > +
-> > +  # base dir or too deep
-> > +  level = len(parents)
-> > +  if level == 0 or level > 4:
-> > +    return
-> > +
-> > +  # Ignore other directories. If the file name does not have a .json
-> > +  # extension, ignore it. It could be a readme.txt for instance.
-> > +  if not item.is_file() or not item.name.endswith('.json'):
-> > +    return
-> > +
-> > +  topic = get_topic(item.name)
-> > +  for event in read_json_events(item.path, topic):
-> > +    _bcs.add(event.build_c_string())
-> >
-> >  def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
-> >    """Process a JSON file during the main walk."""
-> >    global _sys_event_tables
-> >
-> > -  def get_topic(topic: str) -> str:
-> > -    return removesuffix(topic, '.json').replace('-', ' ')
-> > -
-> >    def is_leaf_dir(path: str) -> bool:
-> >      for item in os.scandir(path):
-> >        if item.is_dir():
-> > @@ -337,7 +449,8 @@ def print_mapping_table(archs: Sequence[str]) -> None:
-> >    _args.output_file.write("""
-> >  /* Struct used to make the PMU event table implementation opaque to callers. */
-> >  struct pmu_events_table {
-> > -        const struct pmu_event *entries;
-> > +        const struct compact_pmu_event *entries;
-> > +        size_t length;
-> >  };
-> >
-> >  /*
-> > @@ -365,7 +478,10 @@ const struct pmu_events_map pmu_events_map[] = {
-> >        _args.output_file.write("""{
-> >  \t.arch = "testarch",
-> >  \t.cpuid = "testcpu",
-> > -\t.table = { pme_test_soc_cpu },
-> > +\t.table = {
-> > +\t.entries = pme_test_soc_cpu,
-> > +\t.length = ARRAY_SIZE(pme_test_soc_cpu),
-> > +\t}
-> >  },
-> >  """)
-> >      else:
-> > @@ -380,7 +496,10 @@ const struct pmu_events_map pmu_events_map[] = {
-> >              _args.output_file.write(f"""{{
-> >  \t.arch = "{arch}",
-> >  \t.cpuid = "{cpuid}",
-> > -\t.table = {{ {tblname} }}
-> > +\t.table = {{
-> > +\t\t.entries = {tblname},
-> > +\t\t.length = ARRAY_SIZE({tblname})
-> > +\t}}
-> >  }},
-> >  """)
-> >            first = False
-> > @@ -388,7 +507,7 @@ const struct pmu_events_map pmu_events_map[] = {
-> >    _args.output_file.write("""{
-> >  \t.arch = 0,
-> >  \t.cpuid = 0,
-> > -\t.table = { 0 },
-> > +\t.table = { 0, 0 },
-> >  }
-> >  };
-> >  """)
-> > @@ -406,23 +525,41 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
-> >  """)
-> >    for tblname in _sys_event_tables:
-> >      _args.output_file.write(f"""\t{{
-> > -\t\t.table = {{ {tblname} }},
-> > +\t\t.table = {{
-> > +\t\t\t.entries = {tblname},
-> > +\t\t\t.length = ARRAY_SIZE({tblname})
-> > +\t\t}},
-> >  \t\t.name = \"{tblname}\",
-> >  \t}},
-> >  """)
-> >    _args.output_file.write("""\t{
-> > -\t\t.table = { 0 }
-> > +\t\t.table = { 0, 0 }
-> >  \t},
-> >  };
-> >
-> > -int pmu_events_table_for_each_event(const struct pmu_events_table *table, pmu_event_iter_fn fn,
-> > +static void decompress(int offset, struct pmu_event *pe)
-> > +{
-> > +\tconst char *p = &big_c_string[offset];
-> > +""")
-> > +  for attr in _json_event_attributes:
-> > +    _args.output_file.write(f"""
-> > +\tpe->{attr} = (*p == '\\0' ? NULL : p);
-> > +""")
-> > +    if attr == _json_event_attributes[-1]:
-> > +      continue
-> > +    _args.output_file.write('\twhile (*p++);')
-> > +  _args.output_file.write("""}
-> > +
-> > +int pmu_events_table_for_each_event(const struct pmu_events_table *table,
-> > +                                    pmu_event_iter_fn fn,
-> >                                      void *data)
-> >  {
-> > -        for (const struct pmu_event *pe = &table->entries[0];
-> > -             pe->name || pe->metric_group || pe->metric_name;
-> > -             pe++) {
-> > -                int ret = fn(pe, table, data);
-> > +        for (size_t i = 0; i < table->length; i++) {
-> > +                struct pmu_event pe;
-> > +                int ret;
-> >
-> > +                decompress(table->entries[i].offset, &pe);
-> > +                ret = fn(&pe, table, data);
-> >                  if (ret)
-> >                          return ret;
-> >          }
-> > @@ -531,7 +668,7 @@ def main() -> None:
-> >        help='Root of tree containing architecture directories containing json files'
-> >    )
-> >    ap.add_argument(
-> > -      'output_file', type=argparse.FileType('w'), nargs='?', default=sys.stdout)
-> > +      'output_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=sys.stdout)
-> >    _args = ap.parse_args()
-> >
-> >    _args.output_file.write("""
-> > @@ -541,6 +678,10 @@ def main() -> None:
-> >  #include <string.h>
-> >  #include <stddef.h>
-> >
-> > +struct compact_pmu_event {
-> > +  int offset;
-> > +};
-> > +
-> >  """)
-> >    archs = []
-> >    for item in os.scandir(_args.starting_dir):
-> > @@ -556,6 +697,15 @@ def main() -> None:
-> >    for arch in archs:
-> >      arch_path = f'{_args.starting_dir}/{arch}'
-> >      preprocess_arch_std_files(arch_path)
-> > +    ftw(arch_path, [], preprocess_one_file)
-> > +
-> > +  _bcs.compute()
-> > +  _args.output_file.write('static const char *const big_c_string =\n')
-> > +  for s in _bcs.big_string:
-> > +    _args.output_file.write(s)
-> > +  _args.output_file.write(';\n\n')
-> > +  for arch in archs:
-> > +    arch_path = f'{_args.starting_dir}/{arch}'
-> >      ftw(arch_path, [], process_one_file)
-> >      print_events_table_suffix()
-> >
-> > --
-> > 2.37.0.170.g444d1eabd0-goog
-> >
+> Yours,
+> Linus Walleij
+> .
+> 
