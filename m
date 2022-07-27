@@ -2,239 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CEBC04A68
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 23:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1104BC19F29
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 23:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231626AbiG0XVR (ORCPT
+        id S231886AbiG0Xdp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Jul 2022 19:21:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
+        Wed, 27 Jul 2022 19:33:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbiG0XUw (ORCPT
+        with ESMTP id S231228AbiG0Xdo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Jul 2022 19:20:52 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0039252FE1;
-        Wed, 27 Jul 2022 16:20:50 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id l9-20020a056830268900b006054381dd35so102666otu.4;
-        Wed, 27 Jul 2022 16:20:50 -0700 (PDT)
+        Wed, 27 Jul 2022 19:33:44 -0400
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E2613E30;
+        Wed, 27 Jul 2022 16:33:43 -0700 (PDT)
+Received: by mail-oo1-f53.google.com with SMTP id p5-20020a4a4805000000b0043548dba757so17215ooa.8;
+        Wed, 27 Jul 2022 16:33:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=s2JTmq+1X28LPGAmzTd38TcIzshbob0NrRj+A202vME=;
-        b=A0sv2pjxLoxoaFYZ0F+sroPWMh4VPiUdjVfb25swtI00uJGI/Nc2XSeODFDUTkjW1m
-         1Sw0JYCfInDakt9+KPeeVZ5igiqDAYiPgApDlb1ZgwRzZ7LDkCrvAgjiN8YV+Z2C+w7F
-         109N8vicBCnqsNntG0IK5oJXkMnacOB7cbOAvM35rsQfYTqZC4cgmOzfhPgcNFNNkDW6
-         JFwycU4740hIIxgBGoVcm3wAd7weTb1QRCqmrik3qLKgPFGBUGndDldimeU0zlP9tnBI
-         t2T+ziW9ebZ++aklok4ym/lDkwuXKtHTL1TaUJ/MooA1satVNhvej1KtSXL7jN6nhSUf
-         oljQ==
-X-Gm-Message-State: AJIora/5EvaXKE/96BskGGmWcI86q68SxCCJbFJl8iGYBaDj9oT2+jvQ
-        Keog/vFXfYirMJzNafE7sMz4MsSiK0ppCAbmG8A=
-X-Google-Smtp-Source: AGRyM1uhQ+9fd0LaVu6oL7FJixoUp2Lt/Tf22opt/zS1DEXnsHQGuGQdi1aV9+8BnpZUMo49nQgTMg+EPjmz0D0cpuY=
-X-Received: by 2002:a9d:3cc:0:b0:61c:7d1d:2056 with SMTP id
- f70-20020a9d03cc000000b0061c7d1d2056mr9626340otf.247.1658964050223; Wed, 27
- Jul 2022 16:20:50 -0700 (PDT)
+        bh=Y6mNGbKG32EZj+pRu9k63GQMtitbdxrC5+KmXFQp3Ho=;
+        b=IAPOwnTsAdHaIB9rSWHV/diDkTpxY2MVJMJq4wHHrVNQQn6gEXWFz9a/saiv/Eoj10
+         GdEhYxG0b8ROID6SnGyC2fg/IG8bN7VLdVoDG+gzZUVuv4j3mDqzsP2U4vBJgyvAHL5q
+         g6XdV18xUNv4aUK7t3aNDY1rSIPQB/MZDL+NpjKSlSOjOqPiXc6/gQ48FjdYmrtwLo2O
+         BpDvppxbbBpjLTLk7q7KAJ91oo8K3IvEc0MpEywRbcRM2lyud1006OtisMdIqTAHW+J2
+         ++pZAXjFBkUH/WbvQva8qaZ4XBYVcPQqFofbm/WOS1nQAOCjSvB8TQolRVQi09jqDDak
+         D9ig==
+X-Gm-Message-State: AJIora+PBURQ1XYErUY2ykmMDLdcA57hoqU4KmAx5SvpOoIyROJGyJxy
+        5Wbk2c+/EWJdtqDlKb91VZWXJGRYpxSLWbwR8ok=
+X-Google-Smtp-Source: AGRyM1v689DudA8J5K9PJqMq422qOAMA/3CE+F3AeykWp8IPzVdloadbmvDr3aQsYiK5A7SnQILyMbRmEfbW2lBtF8Q=
+X-Received: by 2002:a4a:d8d2:0:b0:435:66f0:c931 with SMTP id
+ c18-20020a4ad8d2000000b0043566f0c931mr8503901oov.97.1658964823011; Wed, 27
+ Jul 2022 16:33:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220715063653.3203761-1-irogers@google.com> <20220715063653.3203761-16-irogers@google.com>
- <CAM9d7cigU9Sq2T3i3M1vA_vU+MrqCEbhOZPQ4D13dO+WomKP_A@mail.gmail.com> <CAP-5=fWqJkytGTCRsxUzJgAOUYmqwgh_bp_01HrwLQMPZmiOig@mail.gmail.com>
-In-Reply-To: <CAP-5=fWqJkytGTCRsxUzJgAOUYmqwgh_bp_01HrwLQMPZmiOig@mail.gmail.com>
+References: <20220709015033.38326-1-yangjihong1@huawei.com> <20220709015033.38326-2-yangjihong1@huawei.com>
+In-Reply-To: <20220709015033.38326-2-yangjihong1@huawei.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 27 Jul 2022 16:20:39 -0700
-Message-ID: <CAM9d7ciB+d3d7ZRtcBcb-fkAx2SJ84hrhXLazt6YLNieZzORGg@mail.gmail.com>
-Subject: Re: [PATCH v1 15/15] perf jevents: Compress the pmu_events_table
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Date:   Wed, 27 Jul 2022 16:33:32 -0700
+Message-ID: <CAM9d7cjRPSsoAk22xTO=BFQTVn+HmMZkcm7grNehHkbtRWwhgw@mail.gmail.com>
+Subject: Re: [RFC v3 01/17] perf kwork: New tool
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Paul Clarke <pc@us.ibm.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        linux-perf-users <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 9:53 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Tue, Jul 26, 2022 at 9:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Thu, Jul 14, 2022 at 11:37 PM Ian Rogers <irogers@google.com> wrote:
-> > > +def c_len(s: str) -> int:
-> > > +  """Return the length of s a C string
-> > > +
-> > > +  This doesn't handle all escape characters properly. It first assumes
-> > > +  all \ are for escaping, it then adjusts as it will have over counted
-> > > +  \\. The code uses \000 rather than \0 as a terminator as an adjacent
-> > > +  number would be folded into a string of \0 (ie. "\0" + "5" doesn't
-> > > +  equal a terminator followed by the number 5 but the escape of
-> > > +  \05). The code adjusts for \000 but not properly for all octal, hex
-> > > +  or unicode values.
-> > > +  """
-> > > +  try:
-> > > +    utf = s.encode(encoding='utf-8',errors='strict')
-> > > +  except:
-> > > +    print(f'broken string {s}')
-> > > +    raise
-> > > +  return len(utf) - utf.count(b'\\') + utf.count(b'\\\\') - (utf.count(b'\\000') * 2)
-> >
-> > Sorry, I don't understand why it needs the last utf.count * 2.
-> > Could you elaborate more?
->
-> Yep, so
-> 1) start with the length of the string
-> 2) \ will escape the next character, e.g. \n, so instead of counting
-> that as 2 count it as 1
-> 3) but, \\ will now get counted as 0 and it should be 1
-> 4) but also, a numeric escape like \000 will get counted as 3 rather
-> than 1 so adjust that.
+Hello,
 
-Ah, ok.  Thanks for the explanation.  I think it'd be nice to
-have it in the comment.
+On Fri, Jul 8, 2022 at 6:53 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>
+> The perf-kwork tool is used to trace time properties of kernel work
+> (such as irq, softirq, and workqueue), including runtime, latency,
+> and timehist, using the infrastructure in the perf tools to allow
+> tracing extra targets.
+>
+> This is the first commit to reuse perf_record framework code to
+> implement a simple record function, kwork is not supported currently.
+>
+> Test cases:
+>
+>   # perf
+>
+>    usage: perf [--version] [--help] [OPTIONS] COMMAND [ARGS]
+>
+>    The most commonly used perf commands are:
+>   <SNIP>
+>      iostat          Show I/O performance metrics
+>      kallsyms        Searches running kernel for symbols
+>      kmem            Tool to trace/measure kernel memory properties
+>      kvm             Tool to trace/measure kvm guest os
+>      kwork           Tool to trace/measure kernel work properties (latencies)
+>      list            List all symbolic event types
+>      lock            Analyze lock events
+>      mem             Profile memory accesses
+>      record          Run a command and record its profile into perf.data
+>   <SNIP>
+>    See 'perf help COMMAND' for more information on a specific command.
+>
+>   # perf kwork
+>
+>    Usage: perf kwork [<options>] {record}
+>
+>       -D, --dump-raw-trace  dump raw trace in ASCII
+>       -f, --force           don't complain, do it
+>       -k, --kwork <kwork>   list of kwork to profile
+>       -v, --verbose         be more verbose (show symbol address, etc)
+>
+>   # perf kwork record -- sleep 1
+>   [ perf record: Woken up 0 times to write data ]
+>   [ perf record: Captured and wrote 1.787 MB perf.data ]
+>
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+[SNIP]
+> +
+> +static int perf_kwork__record(struct perf_kwork *kwork,
+> +                             int argc, const char **argv)
+> +{
+> +       const char **rec_argv;
+> +       unsigned int rec_argc, i, j;
+> +       struct kwork_class *class;
+> +
+> +       const char *const record_args[] = {
+> +               "record",
+> +               "-a",
+> +               "-R",
+> +               "-m", "1024",
+> +               "-c", "1",
 
->
-> Obviously this isn't full C string parsing, but it is sufficient for
-> what comes in the json files.
->
-> >
-> > > +
-> > > +class BigCString:
-> > > +  """A class to hold many strings concatenated together.
-> > > +
-> > > +  Generating a large number of stand-alone C strings creates a large
-> > > +  number of relocations in position independent code. The BigCString
-> > > +  is a helper for this case. It builds a single string which within it
-> > > +  are all the other C strings (to avoid memory issues the string
-> > > +  itself is held as a list of strings). The offsets within the big
-> > > +  string are recorded and when stored to disk these don't need
-> > > +  relocation. To reduce the size of the string further, identical
-> > > +  strings are merged. If a longer string ends-with the same value as a
-> > > +  shorter string, these entries are also merged.
-> > > +  """
-> > > +  strings: Set[str]
-> > > +  big_string: Sequence[str]
-> > > +  offsets: Dict[str, int]
-> > > +
-> > > +  def __init__(self):
-> > > +    self.strings = set()
-> > > +
-> > > +  def add(self, s: str) -> None:
-> > > +    """Called to add to the big string."""
-> > > +    self.strings.add(s)
-> > > +
-> > > +  def compute(self) -> None:
-> > > +    """Called once all strings are added to compute the string and offsets."""
-> > > +
-> > > +    folded_strings = {}
-> > > +    # Determine if two strings can be folded, ie. let 1 string use the
-> > > +    # end of another. First reverse all strings and sort them.
-> > > +    sorted_reversed_strings = sorted([x[::-1] for x in self.strings])
-> >
-> > I think some blank lines would increase readability a bit.
->
-> Ack. Can add in v2.
->
-> > IIUC these strings are already concatenated with \\000
-> > by build_c_string(), right?
->
-> They are, but this code is agnostic to that. The code must give every
-> string an offset, but it also tries as much as possible to combine
-> strings. The \\000 defeats that in all but 1 case for x86, but if we
-> were to have 1 offset per field it does better.
+Please consider adding '--synth task' to skip costly synthesis
+if you don't need user space symbols.
 
-Do you want to have per field offset on other arch?
-
->
-> > > +    # Strings 'xyz' and 'yz' will now be [ 'zy', 'zyx' ]. Scan forward
-> > > +    # for each string to see if there is a better candidate to fold it
-> > > +    # into, in the example rather than using 'yz' we can use'xyz' at
-> > > +    # an offset of 1.
-> > > +    for pos,s in enumerate(sorted_reversed_strings):
-> > > +      best_pos = pos
-> > > +      for check_pos in range(pos + 1, len(sorted_reversed_strings)):
-> > > +        if sorted_reversed_strings[check_pos].startswith(s):
-> > > +          best_pos = check_pos
-> > > +        else:
-> > > +          break
-> >
-> > That means the best pos is the last match?  I guess python
-> > string comparison can deal with strings with NUL bytes in it.
-> >
-> > Also I'm not sure how much it actually hits?
->
-> Once for x86 currently. The code runs quickly so I didn't disable it.
-> In other situations it hits more, as mentioned above.
->
-> > In my understanding, each string contains a name, description
-> > and many other fields.  Does it have some duplication?
->
-> There may be, and having an offset per variable would mean we could
-> take advantage of that. What I found was that a majority of the
-> variables are empty/NULL so what we lose by not having sharing is more
-> than gained by reducing a variable down to 1 byte rather than 4 (in
-> the order of 100s of KB).
->
-> > Maybe I'm missing but not sure it's worth the complexity.
->
-> Agreed. There's limited utility in finding 1 string inside another for
-> the current string representation. The code is still necessary to give
-> every string an offset. The code to find 1 string inside another isn't
-> that large nor that slow, so I kept it around.
-
-But my main concern is code complexity.  Although it's not very
-complex, it'd be better to start with something simple.  We can
-always add it back if needed. :)
-
-Thanks,
-Namhyung
-
-> >
-> >
-> > > +      if pos != best_pos:
-> > > +        folded_strings[s[::-1]] = sorted_reversed_strings[best_pos][::-1]
-> > > +    # Compute reverse mappings for debugging.
-> > > +    fold_into_strings = collections.defaultdict(set)
-> > > +    for key, val in folded_strings.items():
-> > > +      if key != val:
-> > > +        fold_into_strings[val].add(key)
-> > > +    # big_string_offset is the current location within the C string
-> > > +    # being appended to - comments, etc. don't count. big_string is
-> > > +    # the string contents represented as a list. Strings are immutable
-> > > +    # in Python and so appending to one causes memory issues, while
-> > > +    # lists are mutable.
-> > > +    big_string_offset = 0
-> > > +    self.big_string = []
-> > > +    self.offsets = {}
-> > > +    # Emit all strings that aren't folded in a sorted manner.
-> > > +    for s in sorted(self.strings):
-> > > +      if s not in folded_strings:
-> > > +        self.offsets[s] = big_string_offset
-> > > +        self.big_string.append(f'/* offset={big_string_offset} */ "')
-> > > +        self.big_string.append(s)
-> > > +        self.big_string.append('"')
-> > > +        if s in fold_into_strings:
-> > > +          self.big_string.append(' /* also: ' + ', '.join(fold_into_strings[s]) + ' */')
-> > > +        self.big_string.append('\n')
-> > > +        big_string_offset += c_len(s)
-> > > +        continue
-> > > +    # Compute the offsets of the folded strings.
-> > > +    for s in folded_strings.keys():
-> > > +      assert s not in self.offsets
-> > > +      folded_s = folded_strings[s]
-> > > +      self.offsets[s] = self.offsets[folded_s] + c_len(folded_s) - c_len(s)
-> > > +
-> > > +_bcs = BigCString()
+> +       };
+> +
+> +       rec_argc = ARRAY_SIZE(record_args) + argc - 1;
+> +
+> +       list_for_each_entry(class, &kwork->class_list, list)
+> +               rec_argc += 2 * class->nr_tracepoints;
+> +
+> +       rec_argv = calloc(rec_argc + 1, sizeof(char *));
+> +       if (rec_argv == NULL)
+> +               return -ENOMEM;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(record_args); i++)
+> +               rec_argv[i] = strdup(record_args[i]);
+> +
+> +       list_for_each_entry(class, &kwork->class_list, list) {
+> +               for (j = 0; j < class->nr_tracepoints; j++) {
+> +                       rec_argv[i++] = strdup("-e");
+> +                       rec_argv[i++] = strdup(class->tp_handlers[j].name);
+> +               }
+> +       }
+> +
+> +       for (j = 1; j < (unsigned int)argc; j++, i++)
+> +               rec_argv[i] = argv[j];
+> +
+> +       BUG_ON(i != rec_argc);
+> +
+> +       pr_debug("record comm: ");
+> +       for (j = 0; j < rec_argc; j++)
+> +               pr_debug("%s ", rec_argv[j]);
+> +       pr_debug("\n");
+> +
+> +       return cmd_record(i, rec_argv);
+> +}
