@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CB5C04A68
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 09:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1921C19F2C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 09:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231367AbiG0JG5 (ORCPT
+        id S231564AbiG0JHC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Jul 2022 05:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48894 "EHLO
+        Wed, 27 Jul 2022 05:07:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231463AbiG0JGa (ORCPT
+        with ESMTP id S231373AbiG0JGd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Jul 2022 05:06:30 -0400
+        Wed, 27 Jul 2022 05:06:33 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DED4332F;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5072947BAB;
         Wed, 27 Jul 2022 02:06:19 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lt78G0wDpzWfgx;
-        Wed, 27 Jul 2022 17:02:22 +0800 (CST)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lt79r10GtzkYLq;
+        Wed, 27 Jul 2022 17:03:44 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
  dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 17:06:13 +0800
+ 15.1.2375.24; Wed, 27 Jul 2022 17:06:16 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.61) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 17:06:13 +0800
+ 15.1.2375.24; Wed, 27 Jul 2022 17:06:16 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -34,10 +34,12 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
 CC:     <pc@us.ibm.com>, <yhs@fb.com>, <andrii.nakryiko@gmail.com>,
         <songliubraving@fb.com>, <yangjihong1@huawei.com>
-Subject: [RFC v4 00/17] perf: Add perf kwork
-Date:   Wed, 27 Jul 2022 17:03:13 +0800
-Message-ID: <20220727090330.107760-1-yangjihong1@huawei.com>
+Subject: [RFC v4 06/17] perf kwork: Implement perf kwork report
+Date:   Wed, 27 Jul 2022 17:03:19 +0800
+Message-ID: <20220727090330.107760-7-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20220727090330.107760-1-yangjihong1@huawei.com>
+References: <20220727090330.107760-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -49,242 +51,1253 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sometimes, we need to analyze time properties of kernel work such as irq,
-softirq, and workqueue, including delay and running time of specific interrupts.
-Currently, these events have kernel tracepoints, but perf tool does not
-directly analyze the delay of these events
+Implements framework of perf kwork report, which is used to report time
+properties such as run time and frequency:
 
-The perf-kwork tool is used to trace time properties of kernel work
-(such as irq, softirq, and workqueue), including runtime, latency,
-and timehist, using the infrastructure in the perf tools to allow
-tracing extra targets
+Test cases:
 
-We also use bpf trace to collect and filter data in kernel to solve
-problem of large perf data volume and extra file system interruptions.
+  # perf kwork
 
-Example usage:
+   Usage: perf kwork [<options>] {record|report}
 
-1. Kwork record:
+      -D, --dump-raw-trace  dump raw trace in ASCII
+      -f, --force           don't complain, do it
+      -k, --kwork <kwork>   list of kwork to profile (irq, softirq, workqueue, etc)
+      -v, --verbose         be more verbose (show symbol address, etc)
 
-  # perf kwork record -- sleep 10
-  [ perf record: Woken up 0 times to write data ]
-  [ perf record: Captured and wrote 6.825 MB perf.data ]
+  # perf kwork report -h
 
-2. Kwork report:
+   Usage: perf kwork report [<options>]
+
+      -C, --cpu <cpu>       list of cpus to profile
+      -i, --input <file>    input file name
+      -n, --name <name>     event name to profile
+      -s, --sort <key[,key2...]>
+                            sort by key(s): runtime, max, count
+      -S, --with-summary    Show summary with statistics
+          --time <str>      Time span for analysis (start,stop)
+
+  # perf kwork report
+
+    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
+   --------------------------------------------------------------------------------------------------------------------------------
+   --------------------------------------------------------------------------------------------------------------------------------
 
   # perf kwork report -S
 
     Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
    --------------------------------------------------------------------------------------------------------------------------------
-    virtio0-requests:25            | 0000 |   1347.861 ms |     25049 |      1.417 ms |     121235.524083 s |     121235.525499 s |
-    (s)TIMER:1                     | 0005 |    151.033 ms |      2545 |      0.153 ms |     121237.454591 s |     121237.454744 s |
-    (s)RCU:9                       | 0005 |    117.254 ms |      2754 |      0.223 ms |     121239.461024 s |     121239.461246 s |
-    (s)SCHED:7                     | 0005 |     58.714 ms |      1773 |      0.075 ms |     121237.702345 s |     121237.702419 s |
-    (s)RCU:9                       | 0007 |     43.359 ms |       945 |      0.861 ms |     121237.702984 s |     121237.703845 s |
-    (s)SCHED:7                     | 0000 |     33.389 ms |       549 |      4.121 ms |     121235.521379 s |     121235.525499 s |
-    (s)RCU:9                       | 0002 |     21.419 ms |       484 |      0.281 ms |     121244.629001 s |     121244.629282 s |
-    (w)mix_interrupt_randomness    | 0000 |     21.047 ms |       391 |      1.016 ms |     121237.934008 s |     121237.935024 s |
-    (s)SCHED:7                     | 0007 |     19.903 ms |       570 |      0.065 ms |     121235.523360 s |     121235.523426 s |
-    (s)RCU:9                       | 0000 |     19.017 ms |       472 |      0.507 ms |     121244.634002 s |     121244.634510 s |
-    ... <SNIP> ...
-    (s)SCHED:7                     | 0003 |      0.049 ms |         1 |      0.049 ms |     121240.018631 s |     121240.018680 s |
-    (w)vmstat_update               | 0003 |      0.046 ms |         1 |      0.046 ms |     121240.916200 s |     121240.916246 s |
-    (s)RCU:9                       | 0004 |      0.045 ms |         2 |      0.024 ms |     121235.522876 s |     121235.522900 s |
-    (w)neigh_managed_work          | 0001 |      0.044 ms |         1 |      0.044 ms |     121235.513929 s |     121235.513973 s |
-    (w)vmstat_update               | 0006 |      0.031 ms |         1 |      0.031 ms |     121245.673914 s |     121245.673945 s |
-    (w)vmstat_update               | 0004 |      0.028 ms |         1 |      0.028 ms |     121235.522743 s |     121235.522770 s |
-    (w)wb_update_bandwidth_workfn  | 0000 |      0.024 ms |         1 |      0.024 ms |     121244.842660 s |     121244.842683 s |
    --------------------------------------------------------------------------------------------------------------------------------
-    Total count            :     36071
-    Total runtime   (msec) :  1887.188 (0.185% load average)
-    Total time span (msec) : 10185.012
+    Total count            :         0
+    Total runtime   (msec) :     0.000 (0.000% load average)
+    Total time span (msec) :     0.000
    --------------------------------------------------------------------------------------------------------------------------------
 
-3. Kwork latency:
+  # perf kwork report -C 0,100
+  Requested CPU 100 too large. Consider raising MAX_NR_CPUS
+  Invalid cpu bitmap
 
-  # perf kwork latency
+  # perf kwork report -s runtime1
+    Error: Unknown --sort key: `runtime1'
 
-    Kwork Name                     | Cpu  | Avg delay     | Count     | Max delay     | Max delay start     | Max delay end       |
-   --------------------------------------------------------------------------------------------------------------------------------
-    (s)TIMER:1                     | 0004 |      3.903 ms |         1 |      3.903 ms |     121235.517068 s |     121235.520971 s |
-    (s)RCU:9                       | 0004 |      3.252 ms |         2 |      5.809 ms |     121235.517068 s |     121235.522876 s |
-    (s)RCU:9                       | 0001 |      3.238 ms |         2 |      5.832 ms |     121235.514494 s |     121235.520326 s |
-    (w)vmstat_update               | 0004 |      1.738 ms |         1 |      1.738 ms |     121235.521005 s |     121235.522743 s |
-    (s)SCHED:7                     | 0004 |      0.978 ms |         2 |      1.899 ms |     121235.520940 s |     121235.522840 s |
-    (w)wb_update_bandwidth_workfn  | 0000 |      0.834 ms |         1 |      0.834 ms |     121244.841826 s |     121244.842660 s |
-    (s)RCU:9                       | 0003 |      0.479 ms |         3 |      0.752 ms |     121240.027521 s |     121240.028273 s |
-    (s)TIMER:1                     | 0001 |      0.465 ms |         1 |      0.465 ms |     121235.513107 s |     121235.513572 s |
-    (w)vmstat_update               | 0000 |      0.391 ms |         5 |      1.275 ms |     121236.814938 s |     121236.816213 s |
-    (w)mix_interrupt_randomness    | 0002 |      0.317 ms |         5 |      0.874 ms |     121244.628034 s |     121244.628908 s |
-    (w)neigh_managed_work          | 0001 |      0.315 ms |         1 |      0.315 ms |     121235.513614 s |     121235.513929 s |
-    ... <SNIP> ...
-    (s)TIMER:1                     | 0005 |      0.061 ms |      2545 |      0.506 ms |     121237.136113 s |     121237.136619 s |
-    (s)SCHED:7                     | 0001 |      0.052 ms |        21 |      0.437 ms |     121237.711014 s |     121237.711451 s |
-    (s)SCHED:7                     | 0002 |      0.045 ms |       309 |      0.145 ms |     121237.137184 s |     121237.137329 s |
-    (s)SCHED:7                     | 0003 |      0.045 ms |         1 |      0.045 ms |     121240.018586 s |     121240.018631 s |
-    (s)SCHED:7                     | 0007 |      0.044 ms |       570 |      0.173 ms |     121238.161161 s |     121238.161334 s |
-    (s)BLOCK:4                     | 0003 |      0.030 ms |         4 |      0.056 ms |     121240.028255 s |     121240.028311 s |
-   --------------------------------------------------------------------------------------------------------------------------------
-    INFO: 28.761% skipped events (27674 including 2607 raise, 25067 entry, 0 exit)
+   Usage: perf kwork report [<options>]
 
-4. Kwork timehist:
+      -C, --cpu <cpu>       list of cpus to profile
+      -i, --input <file>    input file name
+      -n, --name <name>     event name to profile
+      -s, --sort <key[,key2...]>
+                            sort by key(s): runtime, max, count
+      -S, --with-summary    Show summary with statistics
+          --time <str>      Time span for analysis (start,stop)
 
-  # perf kwork timehist
-   Runtime start      Runtime end        Cpu     Kwork name                      Runtime     Delaytime
-                                                 (TYPE)NAME:NUM                  (msec)      (msec)
-   -----------------  -----------------  ------  ------------------------------  ----------  ----------
-       121235.513572      121235.513674  [0001]  (s)TIMER:1                           0.102       0.465
-       121235.513688      121235.513738  [0001]  (s)SCHED:7                           0.050       0.172
-       121235.513750      121235.513777  [0001]  (s)RCU:9                             0.027       0.643
-       121235.513929      121235.513973  [0001]  (w)neigh_managed_work                0.044       0.315
-       121235.520326      121235.520386  [0001]  (s)RCU:9                             0.060       5.832
-       121235.520672      121235.520716  [0002]  (s)SCHED:7                           0.044       0.048
-       121235.520729      121235.520753  [0002]  (s)RCU:9                             0.024       5.651
-       121235.521213      121235.521249  [0005]  (s)TIMER:1                           0.036       0.064
-       121235.520166      121235.521379  [0000]  (s)SCHED:7                           1.213       0.056
-    ... <SNIP> ...
-       121235.533256      121235.533296  [0000]  virtio0-requests:25                  0.040
-       121235.533322      121235.533359  [0000]  (s)SCHED:7                           0.037       0.095
-       121235.533018      121235.533452  [0006]  (s)RCU:9                             0.434       0.348
-       121235.534653      121235.534698  [0000]  virtio0-requests:25                  0.046
-       121235.535657      121235.535702  [0000]  virtio0-requests:25                  0.044
-       121235.535857      121235.535916  [0005]  (s)TIMER:1                           0.059       0.055
-       121235.535927      121235.535947  [0005]  (s)RCU:9                             0.020       0.113
-       121235.536178      121235.536196  [0006]  (s)RCU:9                             0.018       0.410
-       121235.537406      121235.537445  [0006]  (s)SCHED:7                           0.039       0.049
-       121235.537457      121235.537481  [0006]  (s)RCU:9                             0.024       0.334
-       121235.538199      121235.538254  [0007]  (s)RCU:9                             0.055       0.066
+  # perf kwork report -i perf_no_exist.data
+  failed to open perf_no_exist.data: No such file or directory
 
-5. Kwork report use bpf:
+  # perf kwork report --time 00FFF,
+  Invalid time span
 
-  # perf kwork report -b
-  Starting trace, Hit <Ctrl+C> to stop and report
-  ^C
-    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
-   --------------------------------------------------------------------------------------------------------------------------------
-    (w)flush_to_ldisc              | 0000 |      2.279 ms |         2 |      2.219 ms |     121293.080933 s |     121293.083152 s |
-    (s)SCHED:7                     | 0001 |      2.141 ms |         2 |      2.100 ms |     121293.082064 s |     121293.084164 s |
-    (s)RCU:9                       | 0003 |      2.137 ms |         3 |      2.046 ms |     121293.081348 s |     121293.083394 s |
-    (s)TIMER:1                     | 0007 |      1.882 ms |        12 |      0.249 ms |     121295.632211 s |     121295.632460 s |
-    (w)e1000_watchdog              | 0002 |      1.136 ms |         3 |      0.428 ms |     121294.496559 s |     121294.496987 s |
-    (s)SCHED:7                     | 0007 |      0.995 ms |        12 |      0.139 ms |     121295.632483 s |     121295.632621 s |
-    (s)NET_RX:3                    | 0002 |      0.727 ms |         5 |      0.391 ms |     121299.044624 s |     121299.045016 s |
-    (s)TIMER:1                     | 0002 |      0.696 ms |         5 |      0.164 ms |     121294.496172 s |     121294.496337 s |
-    (s)SCHED:7                     | 0002 |      0.427 ms |         6 |      0.077 ms |     121295.840321 s |     121295.840398 s |
-    (s)SCHED:7                     | 0000 |      0.366 ms |         3 |      0.156 ms |     121296.545389 s |     121296.545545 s |
-    eth0:10                        | 0002 |      0.353 ms |         5 |      0.122 ms |     121293.084796 s |     121293.084919 s |
-    (w)flush_to_ldisc              | 0000 |      0.298 ms |         1 |      0.298 ms |     121299.046236 s |     121299.046534 s |
-    (w)mix_interrupt_randomness    | 0002 |      0.215 ms |         4 |      0.077 ms |     121293.086747 s |     121293.086823 s |
-    (s)RCU:9                       | 0002 |      0.128 ms |         3 |      0.060 ms |     121293.087348 s |     121293.087409 s |
-    (w)vmstat_shepherd             | 0000 |      0.098 ms |         1 |      0.098 ms |     121293.083901 s |     121293.083999 s |
-    (s)TIMER:1                     | 0001 |      0.089 ms |         1 |      0.089 ms |     121293.085709 s |     121293.085798 s |
-    (w)vmstat_update               | 0003 |      0.071 ms |         1 |      0.071 ms |     121293.085227 s |     121293.085298 s |
-    (w)wq_barrier_func             | 0000 |      0.064 ms |         1 |      0.064 ms |     121293.083688 s |     121293.083752 s |
-    (w)vmstat_update               | 0000 |      0.041 ms |         1 |      0.041 ms |     121293.083829 s |     121293.083869 s |
-    (s)RCU:9                       | 0001 |      0.038 ms |         1 |      0.038 ms |     121293.085818 s |     121293.085856 s |
-    (s)RCU:9                       | 0007 |      0.035 ms |         1 |      0.035 ms |     121293.112322 s |     121293.112357 s |
-   --------------------------------------------------------------------------------------------------------------------------------
+Since there are no report supported events, the output is empty.
 
-6. Kwork latency use bpf:
+Briefly describe the data structure:
+1. "class" indicates event type. For example, irq and softiq correspond
+to different types.
+2. "cluster" refers to a specific event corresponding to a type. For
+example, RCU and TIMER in softirq correspond to different clusters,
+which contains three types of events: raise, entry, and exit.
+3. "atom" includes time of each sample and sample of the previous phase.
+(For example, exit corresponds to entry, which is used for timehist.)
 
-  # perf kwork latency -b
-  Starting trace, Hit <Ctrl+C> to stop and report
-  ^C
-    Kwork Name                     | Cpu  | Avg delay     | Count     | Max delay     | Max delay start     | Max delay end       |
-   --------------------------------------------------------------------------------------------------------------------------------
-    (w)vmstat_shepherd             | 0000 |      2.044 ms |         2 |      2.764 ms |     121314.942758 s |     121314.945522 s |
-    (w)flush_to_ldisc              | 0000 |      1.008 ms |         1 |      1.008 ms |     121317.335508 s |     121317.336516 s |
-    (w)vmstat_update               | 0002 |      0.879 ms |         1 |      0.879 ms |     121317.024405 s |     121317.025284 s |
-    (w)mix_interrupt_randomness    | 0002 |      0.328 ms |         5 |      0.383 ms |     121308.832944 s |     121308.833327 s |
-    (w)e1000_watchdog              | 0002 |      0.304 ms |         5 |      0.368 ms |     121317.024305 s |     121317.024673 s |
-    (s)RCU:9                       | 0001 |      0.172 ms |        41 |      0.728 ms |     121308.308187 s |     121308.308915 s |
-    (s)TIMER:1                     | 0000 |      0.149 ms |         3 |      0.195 ms |     121317.334255 s |     121317.334449 s |
-    (s)NET_RX:3                    | 0001 |      0.143 ms |        40 |      1.213 ms |     121315.030992 s |     121315.032205 s |
-    (s)RCU:9                       | 0002 |      0.139 ms |        27 |      0.187 ms |     121315.077388 s |     121315.077576 s |
-    (s)NET_RX:3                    | 0002 |      0.130 ms |         7 |      0.283 ms |     121308.832917 s |     121308.833201 s |
-    (s)SCHED:7                     | 0007 |      0.123 ms |        34 |      0.191 ms |     121308.736240 s |     121308.736431 s |
-    (s)TIMER:1                     | 0007 |      0.116 ms |        18 |      0.145 ms |     121308.736168 s |     121308.736313 s |
-    (s)RCU:9                       | 0007 |      0.111 ms |        68 |      0.318 ms |     121308.736194 s |     121308.736512 s |
-    (s)SCHED:7                     | 0002 |      0.110 ms |        22 |      0.292 ms |     121308.832197 s |     121308.832489 s |
-    (s)TIMER:1                     | 0001 |      0.107 ms |         1 |      0.107 ms |     121314.948230 s |     121314.948337 s |
-    (w)neigh_managed_work          | 0001 |      0.103 ms |         1 |      0.103 ms |     121314.948381 s |     121314.948484 s |
-    (s)RCU:9                       | 0000 |      0.099 ms |        49 |      0.289 ms |     121308.520167 s |     121308.520456 s |
-    (s)NET_RX:3                    | 0007 |      0.096 ms |        40 |      1.227 ms |     121315.022994 s |     121315.024220 s |
-    (s)RCU:9                       | 0003 |      0.093 ms |        37 |      0.261 ms |     121314.950651 s |     121314.950913 s |
-    (w)flush_to_ldisc              | 0000 |      0.090 ms |         1 |      0.090 ms |     121317.336737 s |     121317.336827 s |
-    (s)TIMER:1                     | 0002 |      0.078 ms |        36 |      0.115 ms |     121310.880172 s |     121310.880288 s |
-    (s)SCHED:7                     | 0001 |      0.071 ms |        27 |      0.180 ms |     121314.953571 s |     121314.953751 s |
-    (s)SCHED:7                     | 0000 |      0.066 ms |        28 |      0.344 ms |     121317.334345 s |     121317.334689 s |
-    (s)SCHED:7                     | 0003 |      0.063 ms |        14 |      0.119 ms |     121314.978808 s |     121314.978927 s |
-   --------------------------------------------------------------------------------------------------------------------------------
-
-7. Kwork report with filter:
-
-  # perf kwork report -b -n RCU
-  Starting trace, Hit <Ctrl+C> to stop and report
-  ^C
-    Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
-   --------------------------------------------------------------------------------------------------------------------------------
-    (s)RCU:9                       | 0006 |      2.266 ms |         3 |      2.158 ms |     121335.008290 s |     121335.010449 s |
-    (s)RCU:9                       | 0002 |      0.158 ms |         3 |      0.063 ms |     121335.011914 s |     121335.011977 s |
-    (s)RCU:9                       | 0007 |      0.082 ms |         1 |      0.082 ms |     121335.448378 s |     121335.448460 s |
-    (s)RCU:9                       | 0000 |      0.058 ms |         1 |      0.058 ms |     121335.011350 s |     121335.011408 s |
-   --------------------------------------------------------------------------------------------------------------------------------
-
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
-Changes since v3:
-  - Add some {} for multiline for/if blocks (Committer notes).
-  - Fix compiler complain in report_print_work (Committer notes).
-  - Remove needless spaces between variable declaration + initialization (Committer notes).
+ tools/perf/Documentation/perf-kwork.txt |  33 +
+ tools/perf/builtin-kwork.c              | 867 +++++++++++++++++++++++-
+ tools/perf/util/kwork.h                 | 161 +++++
+ 3 files changed, 1059 insertions(+), 2 deletions(-)
 
-Changes since v2:
-  - Update commit messages.
-
-Changes since v1:
-  - Add options and document when actually add the functionality later.
-  - Replace "cluster" with "work".
-  - Add workqueue symbolizing function support.
-  - Replace "frequency" with "count" in report header.
-  - Add bpf trace support.
-
-Yang Jihong (17):
-  perf kwork: New tool
-  perf kwork: Add irq kwork record support
-  perf kwork: Add softirq kwork record support
-  perf kwork: Add workqueue kwork record support
-  tools lib: Add list_last_entry_or_null
-  perf kwork: Implement perf kwork report
-  perf kwork: Add irq report support
-  perf kwork: Add softirq report support
-  perf kwork: Add workqueue report support
-  perf kwork: Implement perf kwork latency
-  perf kwork: Add softirq latency support
-  perf kwork: Add workqueue latency support
-  perf kwork: Implement perf kwork timehist
-  perf kwork: Implement bpf trace
-  perf kwork: Add irq trace bpf support
-  perf kwork: Add softirq trace bpf support
-  perf kwork: Add workqueue trace bpf support
-
- tools/include/linux/list.h                 |   11 +
- tools/perf/Build                           |    1 +
- tools/perf/Documentation/perf-kwork.txt    |  180 ++
- tools/perf/Makefile.perf                   |    1 +
- tools/perf/builtin-kwork.c                 | 1854 ++++++++++++++++++++
- tools/perf/builtin.h                       |    1 +
- tools/perf/command-list.txt                |    1 +
- tools/perf/perf.c                          |    1 +
- tools/perf/util/Build                      |    1 +
- tools/perf/util/bpf_kwork.c                |  356 ++++
- tools/perf/util/bpf_skel/kwork_trace.bpf.c |  382 ++++
- tools/perf/util/kwork.h                    |  257 +++
- 12 files changed, 3046 insertions(+)
- create mode 100644 tools/perf/Documentation/perf-kwork.txt
- create mode 100644 tools/perf/builtin-kwork.c
- create mode 100644 tools/perf/util/bpf_kwork.c
- create mode 100644 tools/perf/util/bpf_skel/kwork_trace.bpf.c
- create mode 100644 tools/perf/util/kwork.h
-
+diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+index c5b52f61da99..b79b2c0d047e 100644
+--- a/tools/perf/Documentation/perf-kwork.txt
++++ b/tools/perf/Documentation/perf-kwork.txt
+@@ -17,8 +17,11 @@ There are several variants of 'perf kwork':
+   'perf kwork record <command>' to record the kernel work
+   of an arbitrary workload.
+ 
++  'perf kwork report' to report the per kwork runtime.
++
+     Example usage:
+         perf kwork record -- sleep 1
++        perf kwork report
+ 
+ OPTIONS
+ -------
+@@ -38,6 +41,36 @@ OPTIONS
+ --verbose::
+ 	Be more verbose. (show symbol address, etc)
+ 
++OPTIONS for 'perf kwork report'
++----------------------------
++
++-C::
++--cpu::
++	Only show events for the given CPU(s) (comma separated list).
++
++-i::
++--input::
++	Input file name. (default: perf.data unless stdin is a fifo)
++
++-n::
++--name::
++	Only show events for the given name.
++
++-s::
++--sort::
++	Sort by key(s): runtime, max, count
++
++-S::
++--with-summary::
++	Show summary with statistics
++
++--time::
++	Only analyze samples within given time window: <start>,<stop>. Times
++	have the format seconds.microseconds. If start is not given (i.e., time
++	string is ',x.y') then analysis starts at the beginning of the file. If
++	stop time is not given (i.e, time string is 'x.y,') then analysis goes
++	to end of file.
++
+ SEE ALSO
+ --------
+ linkperf:perf-record[1]
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 656f4c2fc1d5..42c905537e22 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -25,6 +25,461 @@
+ #include <linux/time64.h>
+ #include <linux/zalloc.h>
+ 
++/*
++ * report header elements width
++ */
++#define PRINT_CPU_WIDTH 4
++#define PRINT_COUNT_WIDTH 9
++#define PRINT_RUNTIME_WIDTH 10
++#define PRINT_TIMESTAMP_WIDTH 17
++#define PRINT_KWORK_NAME_WIDTH 30
++#define RPINT_DECIMAL_WIDTH 3
++#define PRINT_TIME_UNIT_SEC_WIDTH 2
++#define PRINT_TIME_UNIT_MESC_WIDTH 3
++#define PRINT_RUNTIME_HEADER_WIDTH (PRINT_RUNTIME_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
++#define PRINT_TIMESTAMP_HEADER_WIDTH (PRINT_TIMESTAMP_WIDTH + PRINT_TIME_UNIT_SEC_WIDTH)
++
++struct sort_dimension {
++	const char      *name;
++	int             (*cmp)(struct kwork_work *l, struct kwork_work *r);
++	struct          list_head list;
++};
++
++static int id_cmp(struct kwork_work *l, struct kwork_work *r)
++{
++	if (l->cpu > r->cpu)
++		return 1;
++	if (l->cpu < r->cpu)
++		return -1;
++
++	if (l->id > r->id)
++		return 1;
++	if (l->id < r->id)
++		return -1;
++
++	return 0;
++}
++
++static int count_cmp(struct kwork_work *l, struct kwork_work *r)
++{
++	if (l->nr_atoms > r->nr_atoms)
++		return 1;
++	if (l->nr_atoms < r->nr_atoms)
++		return -1;
++
++	return 0;
++}
++
++static int runtime_cmp(struct kwork_work *l, struct kwork_work *r)
++{
++	if (l->total_runtime > r->total_runtime)
++		return 1;
++	if (l->total_runtime < r->total_runtime)
++		return -1;
++
++	return 0;
++}
++
++static int max_runtime_cmp(struct kwork_work *l, struct kwork_work *r)
++{
++	if (l->max_runtime > r->max_runtime)
++		return 1;
++	if (l->max_runtime < r->max_runtime)
++		return -1;
++
++	return 0;
++}
++
++static int sort_dimension__add(struct perf_kwork *kwork __maybe_unused,
++			       const char *tok, struct list_head *list)
++{
++	size_t i;
++	static struct sort_dimension max_sort_dimension = {
++		.name = "max",
++		.cmp  = max_runtime_cmp,
++	};
++	static struct sort_dimension id_sort_dimension = {
++		.name = "id",
++		.cmp  = id_cmp,
++	};
++	static struct sort_dimension runtime_sort_dimension = {
++		.name = "runtime",
++		.cmp  = runtime_cmp,
++	};
++	static struct sort_dimension count_sort_dimension = {
++		.name = "count",
++		.cmp  = count_cmp,
++	};
++	struct sort_dimension *available_sorts[] = {
++		&id_sort_dimension,
++		&max_sort_dimension,
++		&count_sort_dimension,
++		&runtime_sort_dimension,
++	};
++
++	for (i = 0; i < ARRAY_SIZE(available_sorts); i++) {
++		if (!strcmp(available_sorts[i]->name, tok)) {
++			list_add_tail(&available_sorts[i]->list, list);
++			return 0;
++		}
++	}
++
++	return -1;
++}
++
++static void setup_sorting(struct perf_kwork *kwork,
++			  const struct option *options,
++			  const char * const usage_msg[])
++{
++	char *tmp, *tok, *str = strdup(kwork->sort_order);
++
++	for (tok = strtok_r(str, ", ", &tmp);
++	     tok; tok = strtok_r(NULL, ", ", &tmp)) {
++		if (sort_dimension__add(kwork, tok, &kwork->sort_list) < 0) {
++			usage_with_options_msg(usage_msg, options,
++					       "Unknown --sort key: `%s'", tok);
++		}
++	}
++
++	pr_debug("Sort order: %s\n", kwork->sort_order);
++	free(str);
++}
++
++static struct kwork_atom *atom_new(struct perf_kwork *kwork,
++				   struct perf_sample *sample)
++{
++	unsigned long i;
++	struct kwork_atom_page *page;
++	struct kwork_atom *atom = NULL;
++
++	list_for_each_entry(page, &kwork->atom_page_list, list) {
++		if (!bitmap_full(page->bitmap, NR_ATOM_PER_PAGE)) {
++			i = find_first_zero_bit(page->bitmap, NR_ATOM_PER_PAGE);
++			BUG_ON(i >= NR_ATOM_PER_PAGE);
++			atom = &page->atoms[i];
++			goto found_atom;
++		}
++	}
++
++	/*
++	 * new page
++	 */
++	page = zalloc(sizeof(*page));
++	if (page == NULL) {
++		pr_err("Failed to zalloc kwork atom page\n");
++		return NULL;
++	}
++
++	i = 0;
++	atom = &page->atoms[0];
++	list_add_tail(&page->list, &kwork->atom_page_list);
++
++found_atom:
++	set_bit(i, page->bitmap);
++	atom->time = sample->time;
++	atom->prev = NULL;
++	atom->page_addr = page;
++	atom->bit_inpage = i;
++	return atom;
++}
++
++static void atom_free(struct kwork_atom *atom)
++{
++	if (atom->prev != NULL)
++		atom_free(atom->prev);
++
++	clear_bit(atom->bit_inpage,
++		  ((struct kwork_atom_page *)atom->page_addr)->bitmap);
++}
++
++static void atom_del(struct kwork_atom *atom)
++{
++	list_del(&atom->list);
++	atom_free(atom);
++}
++
++static int work_cmp(struct list_head *list,
++		    struct kwork_work *l, struct kwork_work *r)
++{
++	int ret = 0;
++	struct sort_dimension *sort;
++
++	BUG_ON(list_empty(list));
++
++	list_for_each_entry(sort, list, list) {
++		ret = sort->cmp(l, r);
++		if (ret)
++			return ret;
++	}
++
++	return ret;
++}
++
++static struct kwork_work *work_search(struct rb_root_cached *root,
++				      struct kwork_work *key,
++				      struct list_head *sort_list)
++{
++	int cmp;
++	struct kwork_work *work;
++	struct rb_node *node = root->rb_root.rb_node;
++
++	while (node) {
++		work = container_of(node, struct kwork_work, node);
++		cmp = work_cmp(sort_list, key, work);
++		if (cmp > 0)
++			node = node->rb_left;
++		else if (cmp < 0)
++			node = node->rb_right;
++		else {
++			if (work->name == NULL)
++				work->name = key->name;
++			return work;
++		}
++	}
++	return NULL;
++}
++
++static void work_insert(struct rb_root_cached *root,
++			struct kwork_work *key, struct list_head *sort_list)
++{
++	int cmp;
++	bool leftmost = true;
++	struct kwork_work *cur;
++	struct rb_node **new = &(root->rb_root.rb_node), *parent = NULL;
++
++	while (*new) {
++		cur = container_of(*new, struct kwork_work, node);
++		parent = *new;
++		cmp = work_cmp(sort_list, key, cur);
++
++		if (cmp > 0)
++			new = &((*new)->rb_left);
++		else {
++			new = &((*new)->rb_right);
++			leftmost = false;
++		}
++	}
++
++	rb_link_node(&key->node, parent, new);
++	rb_insert_color_cached(&key->node, root, leftmost);
++}
++
++static struct kwork_work *work_new(struct kwork_work *key)
++{
++	int i;
++	struct kwork_work *work = zalloc(sizeof(*work));
++
++	if (work == NULL) {
++		pr_err("Failed to zalloc kwork work\n");
++		return NULL;
++	}
++
++	for (i = 0; i < KWORK_TRACE_MAX; i++)
++		INIT_LIST_HEAD(&work->atom_list[i]);
++
++	work->id = key->id;
++	work->cpu = key->cpu;
++	work->name = key->name;
++	work->class = key->class;
++	return work;
++}
++
++static struct kwork_work *work_findnew(struct rb_root_cached *root,
++				       struct kwork_work *key,
++				       struct list_head *sort_list)
++{
++	struct kwork_work *work = NULL;
++
++	work = work_search(root, key, sort_list);
++	if (work != NULL)
++		return work;
++
++	work = work_new(key);
++	if (work == NULL)
++		return NULL;
++
++	work_insert(root, work, sort_list);
++	return work;
++}
++
++static void profile_update_timespan(struct perf_kwork *kwork,
++				    struct perf_sample *sample)
++{
++	if (!kwork->summary)
++		return;
++
++	if ((kwork->timestart == 0) || (kwork->timestart > sample->time))
++		kwork->timestart = sample->time;
++
++	if (kwork->timeend < sample->time)
++		kwork->timeend = sample->time;
++}
++
++static bool profile_event_match(struct perf_kwork *kwork,
++				struct kwork_work *work,
++				struct perf_sample *sample)
++{
++	int cpu = work->cpu;
++	u64 time = sample->time;
++	struct perf_time_interval *ptime = &kwork->ptime;
++
++	if ((kwork->cpu_list != NULL) && !test_bit(cpu, kwork->cpu_bitmap))
++		return false;
++
++	if (((ptime->start != 0) && (ptime->start > time)) ||
++	    ((ptime->end != 0) && (ptime->end < time)))
++		return false;
++
++	if ((kwork->profile_name != NULL) &&
++	    (work->name != NULL) &&
++	    (strcmp(work->name, kwork->profile_name) != 0))
++		return false;
++
++	profile_update_timespan(kwork, sample);
++	return true;
++}
++
++static int work_push_atom(struct perf_kwork *kwork,
++			  struct kwork_class *class,
++			  enum kwork_trace_type src_type,
++			  enum kwork_trace_type dst_type,
++			  struct evsel *evsel,
++			  struct perf_sample *sample,
++			  struct machine *machine,
++			  struct kwork_work **ret_work)
++{
++	struct kwork_atom *atom, *dst_atom;
++	struct kwork_work *work, key;
++
++	BUG_ON(class->work_init == NULL);
++	class->work_init(class, &key, evsel, sample, machine);
++
++	atom = atom_new(kwork, sample);
++	if (atom == NULL)
++		return -1;
++
++	work = work_findnew(&class->work_root, &key, &kwork->cmp_id);
++	if (work == NULL) {
++		free(atom);
++		return -1;
++	}
++
++	if (!profile_event_match(kwork, work, sample))
++		return 0;
++
++	if ((dst_type >= 0) && (dst_type < KWORK_TRACE_MAX)) {
++		dst_atom = list_last_entry_or_null(&work->atom_list[dst_type],
++						   struct kwork_atom, list);
++		if (dst_atom != NULL) {
++			atom->prev = dst_atom;
++			list_del(&dst_atom->list);
++		}
++	}
++
++	if (ret_work != NULL)
++		*ret_work = work;
++
++	list_add_tail(&atom->list, &work->atom_list[src_type]);
++
++	return 0;
++}
++
++static struct kwork_atom *work_pop_atom(struct perf_kwork *kwork,
++					struct kwork_class *class,
++					enum kwork_trace_type src_type,
++					enum kwork_trace_type dst_type,
++					struct evsel *evsel,
++					struct perf_sample *sample,
++					struct machine *machine,
++					struct kwork_work **ret_work)
++{
++	struct kwork_atom *atom, *src_atom;
++	struct kwork_work *work, key;
++
++	BUG_ON(class->work_init == NULL);
++	class->work_init(class, &key, evsel, sample, machine);
++
++	work = work_findnew(&class->work_root, &key, &kwork->cmp_id);
++	if (ret_work != NULL)
++		*ret_work = work;
++
++	if (work == NULL)
++		return NULL;
++
++	if (!profile_event_match(kwork, work, sample))
++		return NULL;
++
++	atom = list_last_entry_or_null(&work->atom_list[dst_type],
++				       struct kwork_atom, list);
++	if (atom != NULL)
++		return atom;
++
++	src_atom = atom_new(kwork, sample);
++	if (src_atom != NULL)
++		list_add_tail(&src_atom->list, &work->atom_list[src_type]);
++	else {
++		if (ret_work != NULL)
++			*ret_work = NULL;
++	}
++
++	return NULL;
++}
++
++static void report_update_exit_event(struct kwork_work *work,
++				     struct kwork_atom *atom,
++				     struct perf_sample *sample)
++{
++	u64 delta;
++	u64 exit_time = sample->time;
++	u64 entry_time = atom->time;
++
++	if ((entry_time != 0) && (exit_time >= entry_time)) {
++		delta = exit_time - entry_time;
++		if ((delta > work->max_runtime) ||
++		    (work->max_runtime == 0)) {
++			work->max_runtime = delta;
++			work->max_runtime_start = entry_time;
++			work->max_runtime_end = exit_time;
++		}
++		work->total_runtime += delta;
++		work->nr_atoms++;
++	}
++}
++
++static int report_entry_event(struct perf_kwork *kwork,
++			      struct kwork_class *class,
++			      struct evsel *evsel,
++			      struct perf_sample *sample,
++			      struct machine *machine)
++{
++	return work_push_atom(kwork, class, KWORK_TRACE_ENTRY,
++			      KWORK_TRACE_MAX, evsel, sample,
++			      machine, NULL);
++}
++
++static int report_exit_event(struct perf_kwork *kwork,
++			     struct kwork_class *class,
++			     struct evsel *evsel,
++			     struct perf_sample *sample,
++			     struct machine *machine)
++{
++	struct kwork_atom *atom = NULL;
++	struct kwork_work *work = NULL;
++
++	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
++			     KWORK_TRACE_ENTRY, evsel, sample,
++			     machine, &work);
++	if (work == NULL)
++		return -1;
++
++	if (atom != NULL) {
++		report_update_exit_event(work, atom, sample);
++		atom_del(atom);
++	}
++
++	return 0;
++}
++
+ const struct evsel_str_handler irq_tp_handlers[] = {
+ 	{ "irq:irq_handler_entry", NULL, },
+ 	{ "irq:irq_handler_exit",  NULL, },
+@@ -69,6 +524,358 @@ static struct kwork_class *kwork_class_supported_list[KWORK_CLASS_MAX] = {
+ 	[KWORK_CLASS_WORKQUEUE] = &kwork_workqueue,
+ };
+ 
++static void print_separator(int len)
++{
++	printf(" %.*s\n", len, graph_dotted_line);
++}
++
++static int report_print_work(struct perf_kwork *kwork,
++			     struct kwork_work *work)
++{
++	int ret = 0;
++	char kwork_name[PRINT_KWORK_NAME_WIDTH];
++	char max_runtime_start[32], max_runtime_end[32];
++
++	printf(" ");
++
++	/*
++	 * kwork name
++	 */
++	if (work->class && work->class->work_name) {
++		work->class->work_name(work, kwork_name,
++				       PRINT_KWORK_NAME_WIDTH);
++		ret += printf(" %-*s |", PRINT_KWORK_NAME_WIDTH, kwork_name);
++	} else
++		ret += printf(" %-*s |", PRINT_KWORK_NAME_WIDTH, "");
++
++	/*
++	 * cpu
++	 */
++	ret += printf(" %0*d |", PRINT_CPU_WIDTH, work->cpu);
++
++	/*
++	 * total runtime
++	 */
++	if (kwork->report == KWORK_REPORT_RUNTIME) {
++		ret += printf(" %*.*f ms |",
++			      PRINT_RUNTIME_WIDTH, RPINT_DECIMAL_WIDTH,
++			      (double)work->total_runtime / NSEC_PER_MSEC);
++	}
++
++	/*
++	 * count
++	 */
++	ret += printf(" %*" PRIu64 " |", PRINT_COUNT_WIDTH, work->nr_atoms);
++
++	/*
++	 * max runtime, max runtime start, max runtime end
++	 */
++	if (kwork->report == KWORK_REPORT_RUNTIME) {
++		timestamp__scnprintf_usec(work->max_runtime_start,
++					  max_runtime_start,
++					  sizeof(max_runtime_start));
++		timestamp__scnprintf_usec(work->max_runtime_end,
++					  max_runtime_end,
++					  sizeof(max_runtime_end));
++		ret += printf(" %*.*f ms | %*s s | %*s s |",
++			      PRINT_RUNTIME_WIDTH, RPINT_DECIMAL_WIDTH,
++			      (double)work->max_runtime / NSEC_PER_MSEC,
++			      PRINT_TIMESTAMP_WIDTH, max_runtime_start,
++			      PRINT_TIMESTAMP_WIDTH, max_runtime_end);
++	}
++
++	printf("\n");
++	return ret;
++}
++
++static int report_print_header(struct perf_kwork *kwork)
++{
++	int ret;
++
++	printf("\n ");
++	ret = printf(" %-*s | %-*s |",
++		     PRINT_KWORK_NAME_WIDTH, "Kwork Name",
++		     PRINT_CPU_WIDTH, "Cpu");
++
++	if (kwork->report == KWORK_REPORT_RUNTIME) {
++		ret += printf(" %-*s |",
++			      PRINT_RUNTIME_HEADER_WIDTH, "Total Runtime");
++	}
++
++	ret += printf(" %-*s |", PRINT_COUNT_WIDTH, "Count");
++
++	if (kwork->report == KWORK_REPORT_RUNTIME) {
++		ret += printf(" %-*s | %-*s | %-*s |",
++			      PRINT_RUNTIME_HEADER_WIDTH, "Max runtime",
++			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max runtime start",
++			      PRINT_TIMESTAMP_HEADER_WIDTH, "Max runtime end");
++	}
++
++	printf("\n");
++	print_separator(ret);
++	return ret;
++}
++
++static void print_summary(struct perf_kwork *kwork)
++{
++	u64 time = kwork->timeend - kwork->timestart;
++
++	printf("  Total count            : %9" PRIu64 "\n", kwork->all_count);
++	printf("  Total runtime   (msec) : %9.3f (%.3f%% load average)\n",
++	       (double)kwork->all_runtime / NSEC_PER_MSEC,
++	       time == 0 ? 0 : (double)kwork->all_runtime / time);
++	printf("  Total time span (msec) : %9.3f\n",
++	       (double)time / NSEC_PER_MSEC);
++}
++
++static unsigned long long nr_list_entry(struct list_head *head)
++{
++	struct list_head *pos;
++	unsigned long long n = 0;
++
++	list_for_each(pos, head)
++		n++;
++
++	return n;
++}
++
++static void print_skipped_events(struct perf_kwork *kwork)
++{
++	int i;
++	const char *const kwork_event_str[] = {
++		[KWORK_TRACE_ENTRY] = "entry",
++		[KWORK_TRACE_EXIT]  = "exit",
++	};
++
++	if ((kwork->nr_skipped_events[KWORK_TRACE_MAX] != 0) &&
++	    (kwork->nr_events != 0)) {
++		printf("  INFO: %.3f%% skipped events (%" PRIu64 " including ",
++		       (double)kwork->nr_skipped_events[KWORK_TRACE_MAX] /
++		       (double)kwork->nr_events * 100.0,
++		       kwork->nr_skipped_events[KWORK_TRACE_MAX]);
++
++		for (i = 0; i < KWORK_TRACE_MAX; i++) {
++			printf("%" PRIu64 " %s%s",
++			       kwork->nr_skipped_events[i],
++			       kwork_event_str[i],
++			       (i == KWORK_TRACE_MAX - 1) ? ")\n" : ", ");
++		}
++	}
++
++	if (verbose > 0) {
++		printf("  INFO: use %lld atom pages\n",
++		       nr_list_entry(&kwork->atom_page_list));
++	}
++}
++
++static void print_bad_events(struct perf_kwork *kwork)
++{
++	if ((kwork->nr_lost_events != 0) && (kwork->nr_events != 0)) {
++		printf("  INFO: %.3f%% lost events (%ld out of %ld, in %ld chunks)\n",
++		       (double)kwork->nr_lost_events /
++		       (double)kwork->nr_events * 100.0,
++		       kwork->nr_lost_events, kwork->nr_events,
++		       kwork->nr_lost_chunks);
++	}
++}
++
++static void work_sort(struct perf_kwork *kwork, struct kwork_class *class)
++{
++	struct rb_node *node;
++	struct kwork_work *data;
++	struct rb_root_cached *root = &class->work_root;
++
++	pr_debug("Sorting %s ...\n", class->name);
++	for (;;) {
++		node = rb_first_cached(root);
++		if (!node)
++			break;
++
++		rb_erase_cached(node, root);
++		data = rb_entry(node, struct kwork_work, node);
++		work_insert(&kwork->sorted_work_root,
++			       data, &kwork->sort_list);
++	}
++}
++
++static void perf_kwork__sort(struct perf_kwork *kwork)
++{
++	struct kwork_class *class;
++
++	list_for_each_entry(class, &kwork->class_list, list)
++		work_sort(kwork, class);
++}
++
++static int perf_kwork__check_config(struct perf_kwork *kwork,
++				    struct perf_session *session)
++{
++	int ret;
++	struct kwork_class *class;
++
++	static struct trace_kwork_handler report_ops = {
++		.entry_event = report_entry_event,
++		.exit_event  = report_exit_event,
++	};
++
++	switch (kwork->report) {
++	case KWORK_REPORT_RUNTIME:
++		kwork->tp_handler = &report_ops;
++		break;
++	default:
++		pr_debug("Invalid report type %d\n", kwork->report);
++		return -1;
++	}
++
++	list_for_each_entry(class, &kwork->class_list, list) {
++		if ((class->class_init != NULL) &&
++		    (class->class_init(class, session) != 0))
++			return -1;
++	}
++
++	if (kwork->cpu_list != NULL) {
++		ret = perf_session__cpu_bitmap(session,
++					       kwork->cpu_list,
++					       kwork->cpu_bitmap);
++		if (ret < 0) {
++			pr_err("Invalid cpu bitmap\n");
++			return -1;
++		}
++	}
++
++	if (kwork->time_str != NULL) {
++		ret = perf_time__parse_str(&kwork->ptime, kwork->time_str);
++		if (ret != 0) {
++			pr_err("Invalid time span\n");
++			return -1;
++		}
++	}
++
++	return 0;
++}
++
++static int perf_kwork__read_events(struct perf_kwork *kwork)
++{
++	int ret = -1;
++	struct perf_session *session = NULL;
++
++	struct perf_data data = {
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = kwork->force,
++	};
++
++	session = perf_session__new(&data, &kwork->tool);
++	if (IS_ERR(session)) {
++		pr_debug("Error creating perf session\n");
++		return PTR_ERR(session);
++	}
++
++	symbol__init(&session->header.env);
++
++	if (perf_kwork__check_config(kwork, session) != 0)
++		goto out_delete;
++
++	if (session->tevent.pevent &&
++	    tep_set_function_resolver(session->tevent.pevent,
++				      machine__resolve_kernel_addr,
++				      &session->machines.host) < 0) {
++		pr_err("Failed to set libtraceevent function resolver\n");
++		goto out_delete;
++	}
++
++	ret = perf_session__process_events(session);
++	if (ret) {
++		pr_debug("Failed to process events, error %d\n", ret);
++		goto out_delete;
++	}
++
++	kwork->nr_events      = session->evlist->stats.nr_events[0];
++	kwork->nr_lost_events = session->evlist->stats.total_lost;
++	kwork->nr_lost_chunks = session->evlist->stats.nr_events[PERF_RECORD_LOST];
++
++out_delete:
++	perf_session__delete(session);
++	return ret;
++}
++
++static void process_skipped_events(struct perf_kwork *kwork,
++				   struct kwork_work *work)
++{
++	int i;
++	unsigned long long count;
++
++	for (i = 0; i < KWORK_TRACE_MAX; i++) {
++		count = nr_list_entry(&work->atom_list[i]);
++		kwork->nr_skipped_events[i] += count;
++		kwork->nr_skipped_events[KWORK_TRACE_MAX] += count;
++	}
++}
++
++static int perf_kwork__report(struct perf_kwork *kwork)
++{
++	int ret;
++	struct rb_node *next;
++	struct kwork_work *work;
++
++	ret = perf_kwork__read_events(kwork);
++	if (ret != 0)
++		return -1;
++
++	perf_kwork__sort(kwork);
++
++	setup_pager();
++
++	ret = report_print_header(kwork);
++	next = rb_first_cached(&kwork->sorted_work_root);
++	while (next) {
++		work = rb_entry(next, struct kwork_work, node);
++		process_skipped_events(kwork, work);
++
++		if (work->nr_atoms != 0) {
++			(void)report_print_work(kwork, work);
++			if (kwork->summary) {
++				kwork->all_runtime += work->total_runtime;
++				kwork->all_count += work->nr_atoms;
++			}
++		}
++		next = rb_next(next);
++	}
++	print_separator(ret);
++
++	if (kwork->summary) {
++		print_summary(kwork);
++		print_separator(ret);
++	}
++
++	print_bad_events(kwork);
++	print_skipped_events(kwork);
++	printf("\n");
++
++	return 0;
++}
++
++typedef int (*tracepoint_handler)(struct perf_tool *tool,
++				  struct evsel *evsel,
++				  struct perf_sample *sample,
++				  struct machine *machine);
++
++static int perf_kwork__process_tracepoint_sample(struct perf_tool *tool,
++						 union perf_event *event __maybe_unused,
++						 struct perf_sample *sample,
++						 struct evsel *evsel,
++						 struct machine *machine)
++{
++	int err = 0;
++
++	if (evsel->handler != NULL) {
++		tracepoint_handler f = evsel->handler;
++
++		err = f(tool, evsel, sample, machine);
++	}
++
++	return err;
++}
++
+ static void setup_event_list(struct perf_kwork *kwork,
+ 			     const struct option *options,
+ 			     const char * const usage_msg[])
+@@ -163,11 +970,37 @@ static int perf_kwork__record(struct perf_kwork *kwork,
+ 
+ int cmd_kwork(int argc, const char **argv)
+ {
++	static const char default_report_sort_order[] = "runtime, max, count";
+ 	static struct perf_kwork kwork = {
++		.tool = {
++			.mmap    = perf_event__process_mmap,
++			.mmap2   = perf_event__process_mmap2,
++			.sample  = perf_kwork__process_tracepoint_sample,
++		},
++
+ 		.class_list          = LIST_HEAD_INIT(kwork.class_list),
++		.atom_page_list      = LIST_HEAD_INIT(kwork.atom_page_list),
++		.sort_list           = LIST_HEAD_INIT(kwork.sort_list),
++		.cmp_id              = LIST_HEAD_INIT(kwork.cmp_id),
++		.sorted_work_root    = RB_ROOT_CACHED,
++		.tp_handler          = NULL,
+ 
++		.profile_name        = NULL,
++		.cpu_list            = NULL,
++		.time_str            = NULL,
+ 		.force               = false,
+ 		.event_list_str      = NULL,
++		.summary             = false,
++		.sort_order          = NULL,
++
++		.timestart           = 0,
++		.timeend             = 0,
++		.nr_events           = 0,
++		.nr_lost_chunks      = 0,
++		.nr_lost_events      = 0,
++		.all_runtime         = 0,
++		.all_count           = 0,
++		.nr_skipped_events   = { 0 },
+ 	};
+ 	const struct option kwork_options[] = {
+ 	OPT_INCR('v', "verbose", &verbose,
+@@ -179,12 +1012,31 @@ int cmd_kwork(int argc, const char **argv)
+ 	OPT_BOOLEAN('f', "force", &kwork.force, "don't complain, do it"),
+ 	OPT_END()
+ 	};
++	const struct option report_options[] = {
++	OPT_STRING('s', "sort", &kwork.sort_order, "key[,key2...]",
++		   "sort by key(s): runtime, max, count"),
++	OPT_STRING('C', "cpu", &kwork.cpu_list, "cpu",
++		   "list of cpus to profile"),
++	OPT_STRING('n', "name", &kwork.profile_name, "name",
++		   "event name to profile"),
++	OPT_STRING(0, "time", &kwork.time_str, "str",
++		   "Time span for analysis (start,stop)"),
++	OPT_STRING('i', "input", &input_name, "file",
++		   "input file name"),
++	OPT_BOOLEAN('S', "with-summary", &kwork.summary,
++		    "Show summary with statistics"),
++	OPT_PARENT(kwork_options)
++	};
+ 	const char *kwork_usage[] = {
+ 		NULL,
+ 		NULL
+ 	};
++	const char * const report_usage[] = {
++		"perf kwork report [<options>]",
++		NULL
++	};
+ 	const char *const kwork_subcommands[] = {
+-		"record", NULL
++		"record", "report", NULL
+ 	};
+ 
+ 	argc = parse_options_subcommand(argc, argv, kwork_options,
+@@ -194,10 +1046,21 @@ int cmd_kwork(int argc, const char **argv)
+ 		usage_with_options(kwork_usage, kwork_options);
+ 
+ 	setup_event_list(&kwork, kwork_options, kwork_usage);
++	sort_dimension__add(&kwork, "id", &kwork.cmp_id);
+ 
+ 	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
+ 		return perf_kwork__record(&kwork, argc, argv);
+-	else
++	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
++		kwork.sort_order = default_report_sort_order;
++		if (argc > 1) {
++			argc = parse_options(argc, argv, report_options, report_usage, 0);
++			if (argc)
++				usage_with_options(report_usage, report_options);
++		}
++		kwork.report = KWORK_REPORT_RUNTIME;
++		setup_sorting(&kwork, report_options, report_usage);
++		return perf_kwork__report(&kwork);
++	} else
+ 		usage_with_options(kwork_usage, kwork_options);
+ 
+ 	return 0;
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index 03203c4deb34..0a86bf47c74d 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -19,6 +19,105 @@ enum kwork_class_type {
+ 	KWORK_CLASS_MAX,
+ };
+ 
++enum kwork_report_type {
++	KWORK_REPORT_RUNTIME,
++};
++
++enum kwork_trace_type {
++	KWORK_TRACE_ENTRY,
++	KWORK_TRACE_EXIT,
++	KWORK_TRACE_MAX,
++};
++
++/*
++ * data structure:
++ *
++ *                 +==================+ +============+ +======================+
++ *                 |      class       | |    work    | |         atom         |
++ *                 +==================+ +============+ +======================+
++ * +------------+  |  +-----+         | |  +------+  | |  +-------+   +-----+ |
++ * | perf_kwork | +-> | irq | --------|+-> | eth0 | --+-> | raise | - | ... | --+   +-----------+
++ * +-----+------+ ||  +-----+         |||  +------+  |||  +-------+   +-----+ | |   |           |
++ *       |        ||                  |||            |||                      | +-> | atom_page |
++ *       |        ||                  |||            |||  +-------+   +-----+ |     |           |
++ *       |  class_list                |||            |+-> | entry | - | ... | ----> |           |
++ *       |        ||                  |||            |||  +-------+   +-----+ |     |           |
++ *       |        ||                  |||            |||                      | +-> |           |
++ *       |        ||                  |||            |||  +-------+   +-----+ | |   |           |
++ *       |        ||                  |||            |+-> | exit  | - | ... | --+   +-----+-----+
++ *       |        ||                  |||            | |  +-------+   +-----+ |           |
++ *       |        ||                  |||            | |                      |           |
++ *       |        ||                  |||  +-----+   | |                      |           |
++ *       |        ||                  |+-> | ... |   | |                      |           |
++ *       |        ||                  | |  +-----+   | |                      |           |
++ *       |        ||                  | |            | |                      |           |
++ *       |        ||  +---------+     | |  +-----+   | |  +-------+   +-----+ |           |
++ *       |        +-> | softirq | -------> | RCU | ---+-> | raise | - | ... | --+   +-----+-----+
++ *       |        ||  +---------+     | |  +-----+   |||  +-------+   +-----+ | |   |           |
++ *       |        ||                  | |            |||                      | +-> | atom_page |
++ *       |        ||                  | |            |||  +-------+   +-----+ |     |           |
++ *       |        ||                  | |            |+-> | entry | - | ... | ----> |           |
++ *       |        ||                  | |            |||  +-------+   +-----+ |     |           |
++ *       |        ||                  | |            |||                      | +-> |           |
++ *       |        ||                  | |            |||  +-------+   +-----+ | |   |           |
++ *       |        ||                  | |            |+-> | exit  | - | ... | --+   +-----+-----+
++ *       |        ||                  | |            | |  +-------+   +-----+ |           |
++ *       |        ||                  | |            | |                      |           |
++ *       |        ||  +-----------+   | |  +-----+   | |                      |           |
++ *       |        +-> | workqueue | -----> | ... |   | |                      |           |
++ *       |         |  +-----------+   | |  +-----+   | |                      |           |
++ *       |         +==================+ +============+ +======================+           |
++ *       |                                                                                |
++ *       +---->  atom_page_list  ---------------------------------------------------------+
++ *
++ */
++
++struct kwork_atom {
++	struct list_head list;
++	u64 time;
++	struct kwork_atom *prev;
++
++	void *page_addr;
++	unsigned long bit_inpage;
++};
++
++#define NR_ATOM_PER_PAGE 128
++struct kwork_atom_page {
++	struct list_head list;
++	struct kwork_atom atoms[NR_ATOM_PER_PAGE];
++	DECLARE_BITMAP(bitmap, NR_ATOM_PER_PAGE);
++};
++
++struct kwork_class;
++struct kwork_work {
++	/*
++	 * class field
++	 */
++	struct rb_node node;
++	struct kwork_class *class;
++
++	/*
++	 * work field
++	 */
++	u64 id;
++	int cpu;
++	char *name;
++
++	/*
++	 * atom field
++	 */
++	u64 nr_atoms;
++	struct list_head atom_list[KWORK_TRACE_MAX];
++
++	/*
++	 * runtime report
++	 */
++	u64 max_runtime;
++	u64 max_runtime_start;
++	u64 max_runtime_end;
++	u64 total_runtime;
++};
++
+ struct kwork_class {
+ 	struct list_head list;
+ 	const char *name;
+@@ -26,19 +125,81 @@ struct kwork_class {
+ 
+ 	unsigned int nr_tracepoints;
+ 	const struct evsel_str_handler *tp_handlers;
++
++	struct rb_root_cached work_root;
++
++	int (*class_init)(struct kwork_class *class,
++			  struct perf_session *session);
++
++	void (*work_init)(struct kwork_class *class,
++			  struct kwork_work *work,
++			  struct evsel *evsel,
++			  struct perf_sample *sample,
++			  struct machine *machine);
++
++	void (*work_name)(struct kwork_work *work,
++			  char *buf, int len);
++};
++
++struct perf_kwork;
++struct trace_kwork_handler {
++	int (*entry_event)(struct perf_kwork *kwork,
++			   struct kwork_class *class, struct evsel *evsel,
++			   struct perf_sample *sample, struct machine *machine);
++
++	int (*exit_event)(struct perf_kwork *kwork,
++			  struct kwork_class *class, struct evsel *evsel,
++			  struct perf_sample *sample, struct machine *machine);
+ };
+ 
+ struct perf_kwork {
+ 	/*
+ 	 * metadata
+ 	 */
++	struct perf_tool tool;
+ 	struct list_head class_list;
++	struct list_head atom_page_list;
++	struct list_head sort_list, cmp_id;
++	struct rb_root_cached sorted_work_root;
++	const struct trace_kwork_handler *tp_handler;
++
++	/*
++	 * profile filters
++	 */
++	const char *profile_name;
++
++	const char *cpu_list;
++	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
++
++	const char *time_str;
++	struct perf_time_interval ptime;
+ 
+ 	/*
+ 	 * options for command
+ 	 */
+ 	bool force;
+ 	const char *event_list_str;
++	enum kwork_report_type report;
++
++	/*
++	 * options for subcommand
++	 */
++	bool summary;
++	const char *sort_order;
++
++	/*
++	 * statistics
++	 */
++	u64 timestart;
++	u64 timeend;
++
++	unsigned long nr_events;
++	unsigned long nr_lost_chunks;
++	unsigned long nr_lost_events;
++
++	u64 all_runtime;
++	u64 all_count;
++	u64 nr_skipped_events[KWORK_TRACE_MAX + 1];
+ };
+ 
+ #endif  /* PERF_UTIL_KWORK_H */
 -- 
 2.30.GIT
 
