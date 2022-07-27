@@ -2,143 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592DAC19F2B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 14:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE417C19F2B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 14:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233425AbiG0OPA (ORCPT
+        id S232524AbiG0OQ7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Jul 2022 10:15:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41390 "EHLO
+        Wed, 27 Jul 2022 10:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233421AbiG0OO7 (ORCPT
+        with ESMTP id S231767AbiG0OQ6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Jul 2022 10:14:59 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65C23D5A1;
-        Wed, 27 Jul 2022 07:14:58 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26RECiqx008649;
-        Wed, 27 Jul 2022 14:14:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=9UvBoKjveAd8vWIz26CXlNFNnDhnua88gOlDU7zqGVg=;
- b=k6pzpnbqy2FUeJYFNcY/2K5Ux3LgKfOfx/KaP49k1LWAt6udyP3s5oZBmbiI/16Q9Wq3
- zfFcupVsslxpGy4j4WUII4a984OEYLQi8NqnYGDPCVm4jPHpyY3YF7f6aRMbg3lsNEVG
- qMJpmO6ssXmPoEim+FsJLTKDg3Mz58saDVXJ4tNwJg/ADsBE+jMW5UsZKRTHhCQJpjyS
- lvTVbhXISABrog/iOnNOoj7nKylgdW6hGOCc9YBLutaDVlpVb5rGQukuoxXmNCVZlnDi
- HonGfarsEWoYrb4EB3jyGV2ZkRroaVRyKImFiqb2Z1gcs4eepykHLXyFkr7wbB6ZIBRQ Qw== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3hk6gf1d4m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Jul 2022 14:14:53 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26RE7RPs002840;
-        Wed, 27 Jul 2022 14:14:49 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 3hh6eukun2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Jul 2022 14:14:49 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26REEk2C24707430
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Jul 2022 14:14:46 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7FC34A4051;
-        Wed, 27 Jul 2022 14:14:46 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D7A8A4053;
-        Wed, 27 Jul 2022 14:14:46 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Jul 2022 14:14:46 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, james.clark@arm.com, german.gomez@arm.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/tests: Fix test case 95 on s390 and use same event
-Date:   Wed, 27 Jul 2022 16:14:39 +0200
-Message-Id: <20220727141439.712582-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 27 Jul 2022 10:16:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E5D26D5;
+        Wed, 27 Jul 2022 07:16:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D21D617C0;
+        Wed, 27 Jul 2022 14:16:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B58CFC433D6;
+        Wed, 27 Jul 2022 14:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658931416;
+        bh=gIDMcqNCaRR8LmuzfgBqCB914E1w1kgLj7kbJfKcQaU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SlClN9KNnNHbE2ZN05xmkOP04lErHEV5K3Vw0XT2glqnmXDbU6zF7TW54OB+aE6fn
+         xNh7xvl47F1s+NfX3SuruFcYHEJj+KE9JWl6r4yRDIPiAwhyCiChCh17lpJdKjbU2B
+         xIvRrVRfPkhwW26jjI6qzpRkAp91jGbQKAtvcD/5z1F0qayVbAGt1L0TA44k5M7s7o
+         jAIhHsXkpQMgRF1WeMfbso9m7t/z2vMAl1LBKcaFSleUT2brAkA+fIXpmGBg8zQtGd
+         /f1U6O3+aGiSPm6IQO9dNltlFvh9so0VOfAicCSZHNvVJQBNM766vTnX69OCMW9QKK
+         qVled27QP8LzQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E77CB405DD; Wed, 27 Jul 2022 11:16:53 -0300 (-03)
+Date:   Wed, 27 Jul 2022 11:16:53 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+        Christy Lee <christylee@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf bpf: Remove undefined behavior from
+ bpf_perf_object__next
+Message-ID: <YuFI1Thhls+dYE2I@kernel.org>
+References: <20220726220921.2567761-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: EkiA4MTTwO57ch-xc9SbOaQI9DZX2IGI
-X-Proofpoint-ORIG-GUID: EkiA4MTTwO57ch-xc9SbOaQI9DZX2IGI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-27_05,2022-07-27_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- mlxscore=0 mlxlogscore=999 adultscore=0 phishscore=0 lowpriorityscore=0
- spamscore=0 impostorscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
- definitions=main-2207270056
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220726220921.2567761-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On linux-next tree perf test 95 was added recently.
-s390 does not support branch sampling at all and the test case fails
-despite for checking branch support before hand.
-The check for support of branching
-uses the software event named dummy, as seen in the line:
+Em Tue, Jul 26, 2022 at 03:09:21PM -0700, Ian Rogers escreveu:
+> bpf_perf_object__next folded the last element in the list test with the
+> empty list test. However, this meant that offsets were computed against
+> null and that a struct list_head was compared against a struct
+> bpf_perf_object. Working around this with clang's undefined behavior
+> sanitizer required -fno-sanitize=null and -fno-sanitize=object-size.
+> in 
+> Remove the undefined behav(ior by using the regular Linux list APIs and
+> handling the starting case separately from the end testing case. Looking
+> at uses like bpf_perf_object__for_each, as the constant NULL or non-NULL
+> argument can be constant propagated the code is no less efficient.
 
- perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
+Nicely spotted!
 
-However when the branch recording is actually done, a different
-event is used, as seen in the line:
+In some places people solve this with list_first_entry_or_null(), like
+in cs_etm__queue_aux_records().
 
- perf record -o $TMPDIR/... --branch-filter any,save_type,u -- ...
+Applied.
 
-The event is omitted and for perf record the default event is
-cycles, which is not supported by s390 and this fails when executed
-on s390:
-
- # perf record --branch-filter any,save_type,u -- \
-	/tmp/__perf_test.program.iDSmQ/a.out
- Error:
- cycles: PMU Hardware or event type doesn't support branch stack sampling.
- #
-
-Therefore fix this and use the same event cycles for testing support
-and actually running the test.
-
-Output before:
- # ./perf test -Fv 95
- 95: Check branch stack sampling                                     :
- --- start ---
- Testing user branch stack sampling
- ---- end ----
- Check branch stack sampling: FAILED!
- #
-
-Output after:
- # ./perf test -Fv 95
- 95: Check branch stack sampling                                     :
- --- start ---
- ---- end ----
- Check branch stack sampling: Skip
- #
-
-Fixes: b55878c90ab9 ("perf test: Add test for branch stack sampling")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/test_brstack.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index 113ccd17bf03..c644f94a6500 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -12,7 +12,7 @@ if ! [ -x "$(command -v cc)" ]; then
- fi
+- Arnado
  
- # skip the test if the hardware doesn't support branch stack sampling
--perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
-+perf record -b -o- -B true > /dev/null 2>&1 || exit 2
- 
- TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
- 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/bpf-loader.c | 18 +++++++-----------
+>  1 file changed, 7 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> indelx f8ad581ea247..cdd6463a5b68 100644
+> --- a/tools/perf/util/bpf-loader.c
+> +++ b/tools/perf/util/bpf-loader.c
+> @@ -63,20 +63,16 @@ static struct hashmap *bpf_map_hash;
+>  static struct bpf_perf_object *
+>  bpf_perf_object__next(struct bpf_perf_object *prev)
+>  {
+> -	struct bpf_perf_object *next;
+> -
+> -	if (!prev)
+> -		next = list_first_entry(&bpf_objects_list,
+> -					struct bpf_perf_object,
+> -					list);
+> -	else
+> -		next = list_next_entry(prev, list);
+> +	if (!prev) {
+> +		if (list_empty(&bpf_objects_list))
+> +			return NULL;
+>  
+> -	/* Empty list is noticed here so don't need checking on entry. */
+> -	if (&next->list == &bpf_objects_list)
+> +		return list_first_entry(&bpf_objects_list, struct bpf_perf_object, list);
+> +	}
+> +	if (list_is_last(&prev->list, &bpf_objects_list))
+>  		return NULL;
+>  
+> -	return next;
+> +	return list_next_entry(prev, list);
+>  }
+>  
+>  #define bpf_perf_object__for_each(perf_obj, tmp)	\
+> -- 
+> 2.37.1.359.gd136c6c3e2-goog
+
 -- 
-2.36.1
 
+- Arnaldo
