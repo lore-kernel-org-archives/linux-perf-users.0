@@ -2,83 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C980C00144
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 00:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0610C19F21
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 04:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240028AbiG0Aji (ORCPT
+        id S240209AbiG0EDK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 26 Jul 2022 20:39:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45214 "EHLO
+        Wed, 27 Jul 2022 00:03:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239958AbiG0Ajh (ORCPT
+        with ESMTP id S240175AbiG0EDJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 26 Jul 2022 20:39:37 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C443A3AB34;
-        Tue, 26 Jul 2022 17:39:36 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Lsvyn2YnSz9ssq;
-        Wed, 27 Jul 2022 08:38:25 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+        Wed, 27 Jul 2022 00:03:09 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C086A18346;
+        Tue, 26 Jul 2022 21:03:08 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lt0QS3VCVzWfxD;
+        Wed, 27 Jul 2022 11:59:12 +0800 (CST)
+Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 08:39:35 +0800
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ 15.1.2375.24; Wed, 27 Jul 2022 12:03:05 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.174) by
+ kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Jul 2022 08:39:34 +0800
-Subject: Re: [RFC v3 06/17] perf kwork: Implement perf kwork report
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <pc@us.ibm.com>,
+ 15.1.2375.24; Wed, 27 Jul 2022 12:03:04 +0800
+From:   Li Huafei <lihuafei1@huawei.com>
+To:     <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
+        <ardb@kernel.org>, <will@kernel.org>, <broonie@kernel.org>,
+        <linus.walleij@linaro.org>
+CC:     <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <arnd@arndb.de>,
+        <rostedt@goodmis.org>, <nick.hawkins@hpe.com>, <john@phrozen.org>,
+        <mhiramat@kernel.org>, <ast@kernel.org>, <linyujun809@huawei.com>,
+        <ndesaulniers@google.com>, <lihuafei1@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-References: <20220709015033.38326-1-yangjihong1@huawei.com>
- <20220709015033.38326-7-yangjihong1@huawei.com> <YuAnEBpYSf53PkXI@kernel.org>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <b865f96a-856c-6a7d-a66a-c3343097ee5a@huawei.com>
-Date:   Wed, 27 Jul 2022 08:39:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+Subject: [PATCH v3 1/4] ARM: stacktrace: Skip frame pointer boundary check for call_with_stack()
+Date:   Wed, 27 Jul 2022 12:00:19 +0800
+Message-ID: <20220727040022.139387-2-lihuafei1@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220727040022.139387-1-lihuafei1@huawei.com>
+References: <20220727040022.139387-1-lihuafei1@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <YuAnEBpYSf53PkXI@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.174]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600010.china.huawei.com (7.193.23.86)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+When using the frame pointer unwinder, it was found that the stack trace
+output of stack_trace_save() is incomplete if the stack contains
+call_with_stack():
 
-On 2022/7/27 1:40, Arnaldo Carvalho de Melo wrote:
-> Em Sat, Jul 09, 2022 at 09:50:22AM +0800, Yang Jihong escreveu:
->> +
->> +static void report_print_work(struct perf_kwork *kwork,
->> +			      struct kwork_work *work)
->> +{
->> +	int ret = 0;
->> +	char kwork_name[PRINT_KWORK_NAME_WIDTH];
->> +	char max_runtime_start[32], max_runtime_end[32];
-> 
-> Committer notes:
-> 
-> - Add some {} for multiline for/if blocks
-> 
-> - Return the calculated number of printed bytes in report_print_work,
->    otherwise soem compilers will complain that variable isn't used, e.g.:
-> 
->     2    92.64 almalinux:9                   : FAIL clang version 13.0.1 (Red Hat 13.0.1-1.el9)
->      builtin-kwork.c:1061:6: error: variable 'ret' set but not used [-Werror,-Wunused-but-set-variable]
->              int ret = 0;
-> 
-> 
-OK, I'll fix it in next version.
+ [0x7f00002c] dump_stack_task+0x2c/0x90 [hrtimer]
+ [0x7f0000a0] hrtimer_hander+0x10/0x18 [hrtimer]
+ [0x801a67f0] __hrtimer_run_queues+0x1b0/0x3b4
+ [0x801a7350] hrtimer_run_queues+0xc4/0xd8
+ [0x801a597c] update_process_times+0x3c/0x88
+ [0x801b5a98] tick_periodic+0x50/0xd8
+ [0x801b5bf4] tick_handle_periodic+0x24/0x84
+ [0x8010ffc4] twd_handler+0x38/0x48
+ [0x8017d220] handle_percpu_devid_irq+0xa8/0x244
+ [0x80176e9c] generic_handle_domain_irq+0x2c/0x3c
+ [0x8052e3a8] gic_handle_irq+0x7c/0x90
+ [0x808ab15c] generic_handle_arch_irq+0x60/0x80
+ [0x8051191c] call_with_stack+0x1c/0x20
 
-Regards,
-Jihong
+For the frame pointer unwinder, unwind_frame() checks stackframe::fp by
+stackframe::sp. Since call_with_stack() switches the SP from one stack
+to another, stackframe::fp and stackframe: :sp will point to different
+stacks, so we can no longer check stackframe::fp by stackframe::sp. Skip
+checking stackframe::fp at this point to avoid this problem.
+
+Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
+---
+ arch/arm/kernel/stacktrace.c   | 40 ++++++++++++++++++++++++++++------
+ arch/arm/lib/call_with_stack.S |  2 ++
+ 2 files changed, 35 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
+index d0fa2037460a..af87040b0353 100644
+--- a/arch/arm/kernel/stacktrace.c
++++ b/arch/arm/kernel/stacktrace.c
+@@ -9,6 +9,8 @@
+ #include <asm/stacktrace.h>
+ #include <asm/traps.h>
+ 
++#include "reboot.h"
++
+ #if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND)
+ /*
+  * Unwind the current stack frame and store the new register values in the
+@@ -39,29 +41,53 @@
+  * Note that with framepointer enabled, even the leaf functions have the same
+  * prologue and epilogue, therefore we can ignore the LR value in this case.
+  */
+-int notrace unwind_frame(struct stackframe *frame)
++
++extern unsigned long call_with_stack_end;
++
++static int frame_pointer_check(struct stackframe *frame)
+ {
+ 	unsigned long high, low;
+ 	unsigned long fp = frame->fp;
++	unsigned long pc = frame->pc;
++
++	/*
++	 * call_with_stack() is the only place we allow SP to jump from one
++	 * stack to another, with FP and SP pointing to different stacks,
++	 * skipping the FP boundary check at this point.
++	 */
++	if (pc >= (unsigned long)&call_with_stack &&
++			pc < (unsigned long)&call_with_stack_end)
++		return 0;
+ 
+ 	/* only go to a higher address on the stack */
+ 	low = frame->sp;
+ 	high = ALIGN(low, THREAD_SIZE);
+ 
+-#ifdef CONFIG_CC_IS_CLANG
+ 	/* check current frame pointer is within bounds */
++#ifdef CONFIG_CC_IS_CLANG
+ 	if (fp < low + 4 || fp > high - 4)
+ 		return -EINVAL;
+-
+-	frame->sp = frame->fp;
+-	frame->fp = READ_ONCE_NOCHECK(*(unsigned long *)(fp));
+-	frame->pc = READ_ONCE_NOCHECK(*(unsigned long *)(fp + 4));
+ #else
+-	/* check current frame pointer is within bounds */
+ 	if (fp < low + 12 || fp > high - 4)
+ 		return -EINVAL;
++#endif
++
++	return 0;
++}
++
++int notrace unwind_frame(struct stackframe *frame)
++{
++	unsigned long fp = frame->fp;
++
++	if (frame_pointer_check(frame))
++		return -EINVAL;
+ 
+ 	/* restore the registers from the stack frame */
++#ifdef CONFIG_CC_IS_CLANG
++	frame->sp = frame->fp;
++	frame->fp = READ_ONCE_NOCHECK(*(unsigned long *)(fp));
++	frame->pc = READ_ONCE_NOCHECK(*(unsigned long *)(fp + 4));
++#else
+ 	frame->fp = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 12));
+ 	frame->sp = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 8));
+ 	frame->pc = READ_ONCE_NOCHECK(*(unsigned long *)(fp - 4));
+diff --git a/arch/arm/lib/call_with_stack.S b/arch/arm/lib/call_with_stack.S
+index 0a268a6c513c..5030d4e8d126 100644
+--- a/arch/arm/lib/call_with_stack.S
++++ b/arch/arm/lib/call_with_stack.S
+@@ -46,4 +46,6 @@ UNWIND( .setfp	fpreg, sp	)
+ 	pop	{fpreg, pc}
+ UNWIND( .fnend			)
+ #endif
++	.globl call_with_stack_end
++call_with_stack_end:
+ ENDPROC(call_with_stack)
+-- 
+2.17.1
 
