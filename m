@@ -2,46 +2,46 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EB1C04A68
-	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 22:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0AEC04A68
+	for <linux-perf-users@archiver.kernel.org>; Wed, 27 Jul 2022 22:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229920AbiG0WeX (ORCPT
+        id S236566AbiG0WnN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Jul 2022 18:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45404 "EHLO
+        Wed, 27 Jul 2022 18:43:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229830AbiG0WeW (ORCPT
+        with ESMTP id S231199AbiG0WnM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Jul 2022 18:34:22 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5283558F7;
-        Wed, 27 Jul 2022 15:34:21 -0700 (PDT)
-Received: by mail-qt1-f172.google.com with SMTP id c20so13669632qtw.8;
-        Wed, 27 Jul 2022 15:34:21 -0700 (PDT)
+        Wed, 27 Jul 2022 18:43:12 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38745C9DC;
+        Wed, 27 Jul 2022 15:43:11 -0700 (PDT)
+Received: by mail-qt1-f179.google.com with SMTP id b21so737qte.12;
+        Wed, 27 Jul 2022 15:43:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bamaAy7O7niPVirX1xMmIvvusqm/a9l82Aqy7GRrkkg=;
-        b=idm8yOZI7eGCwwcC974nZkBBpviJQ24lExeZsLppnGfuXYOKCPlQMv+enqfoCe6g2j
-         3D+rVLeA50hi1yoIwh1ZyafQoTpuyFEnGU4E7Nt7w5vH7KfCBfqYCxn+0UEKwF+yaTI6
-         dODqqQEibG5lNhXUgMj+bblmncLos+e7GPgsrrInrajECvavjO1qBbwZM0g/msb6nV6Q
-         I9MrOvt7UbeQxlou8M34RfQmKfxXnbip0rl26L551aKH5teEIhzYv/XXEj2XM6Mtll9R
-         Aadts7HBDeT/7nsi/Tho3pSYbO+orjwrDIAe45kDQX1WRVPMKXDwB4splBXBuqJJxWm8
-         y2HQ==
-X-Gm-Message-State: AJIora9FmFciGixC9kEShWlJq/5IACvP4HKGnl+3ct/J2H6KyQJzkCng
-        5XbnzVj6L6n7VLohJ3YJ8o3zNj9dUI6hKbAppdnpVuI6t2cQinG2
-X-Google-Smtp-Source: AGRyM1sIwlcWEF7k08orHbM1e4dSfe+U2xi4u0nV/d5iHGU8v/D4QxnS+8syB/7lUREBEleVblRMsovZk9hHMxWiQyI=
-X-Received: by 2002:ac8:5e09:0:b0:31f:44f5:5331 with SMTP id
- h9-20020ac85e09000000b0031f44f55331mr7328057qtx.66.1658961260872; Wed, 27 Jul
- 2022 15:34:20 -0700 (PDT)
+        bh=m0JygPca+Z1fPoiib7T7Cj4rvDSqJp8OQBczobRUF3E=;
+        b=hohLD6VNHfYjjpslfgLTnGstI5czOgE1mqUjkUThOL4N584LrC4848Pxb9eN9xYy1k
+         TkVUxKRAenZcfMoxZZC0RxXCCNav6n/GJCp4Re7WXeW3F/9GaLieluzD3XIDfatBn+bJ
+         zeTvmIsF0AP2SfsK9UoO7FEKXaw12LjZzT5m17/Xcj1PCqwZ15SFpBCIIR3UxKxjxJiM
+         +ZWVfpVZOVzg8QohAp/7odOipVeABd3VmGUxfsjuJlU4MdswjFlOpKoHfJytlqT1aZYi
+         JU7/3mHxw6QwYhIuIMvm/a3UcMsESeKWXoWvi13EAOnk3XmjtDWKk9oSdWRvk7JDD6jk
+         mp/Q==
+X-Gm-Message-State: AJIora8ExPQWphrokaFJTyFolLGWGAW/j8CAOoERtgf9NbTpHz3qag/Z
+        Ij2IPMLALSBE6sBZX/07AAgdK19zpyN/ELJdWwI=
+X-Google-Smtp-Source: AGRyM1s8ecY09zoVnNG1wuZMfVNGLiUzdFDLfLIfkkOR6vxaUMjhFfOKO+nR9N77Wr/u0hvc+k8oi+kriTCTQizF4zk=
+X-Received: by 2002:a05:622a:178c:b0:31e:f628:f4ab with SMTP id
+ s12-20020a05622a178c00b0031ef628f4abmr20992947qtk.82.1658961790864; Wed, 27
+ Jul 2022 15:43:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220727111954.105118-1-gpavithrasha@gmail.com> <20220727111954.105118-2-gpavithrasha@gmail.com>
-In-Reply-To: <20220727111954.105118-2-gpavithrasha@gmail.com>
+References: <20220727111954.105118-1-gpavithrasha@gmail.com> <20220727111954.105118-3-gpavithrasha@gmail.com>
+In-Reply-To: <20220727111954.105118-3-gpavithrasha@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 27 Jul 2022 15:34:10 -0700
-Message-ID: <CAM9d7cgqhFdoHneDe0h-i-c5WM+BLiuSpvfTyczCKGJQk8bwMQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf mutex with nsinfo: Updated pthread_mutex_t usage
+Date:   Wed, 27 Jul 2022 15:43:00 -0700
+Message-ID: <CAM9d7chRyvYQMYaPSiem8_9wwh6+p0mgF3qMD++17QNpbWGGeg@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] perf mutex and cond: Updated files mutex.h & mutex.c
 To:     gpavithrasha@gmail.com
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -61,106 +61,122 @@ On Wed, Jul 27, 2022 at 4:20 AM <gpavithrasha@gmail.com> wrote:
 >
 > From: pavithra <gpavithrasha@gmail.com>
 >
-> Updated usage of pthread_mutex_t with nsinfo
-> with the new wrapped lock(struct) in mutex.h
-> (remove data races).
-
-It doesn't look like you updated the usage with new wrapping.
-Instead you introduced new usage.  Then I think you need to
-describe why it's needed and what problems it solves.
-
+> Added new struct and corresponding
+> functions to wrap usage of pthread_cond_t.
+> Added a new function for mutex_trylock-similar to
+> mutex_lock.
 >
 > Signed-off-by: pavithra <gpavithrasha@gmail.com>
 > ---
->  tools/perf/builtin-inject.c   | 6 +++---
->  tools/perf/util/map.c         | 2 ++
->  tools/perf/util/probe-event.c | 6 +++++-
->  tools/perf/util/symbol.c      | 2 +-
->  4 files changed, 11 insertions(+), 5 deletions(-)
+>  tools/perf/util/mutex.c | 37 ++++++++++++++++++++++++++++++++-----
+>  tools/perf/util/mutex.h | 13 +++++++++++--
+>  2 files changed, 43 insertions(+), 7 deletions(-)
 >
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index 372ecb3e2c06..81eaed8da207 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -388,10 +388,10 @@ static int perf_event__repipe_id_index(struct perf_session *session,
->  static int dso__read_build_id(struct dso *dso)
+> diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
+> index b7264a1438c4..9dc37a3f374f 100644
+> --- a/tools/perf/util/mutex.c
+> +++ b/tools/perf/util/mutex.c
+> @@ -1,8 +1,8 @@
+>  #include <mutex.h>
+>  #include <pthread.h>
+>
+> -//to avoid the warning : implicit declaration of BUG_ON,
+> -//we add the following 2 headers.
+> +/*to avoid the warning : implicit declaration of BUG_ON*/
+> +/*we add the following 2 headers*/
+>  #include <linux/compiler.h>
+>  #include <linux/kernel.h>
+>
+> @@ -11,14 +11,15 @@ void mutex_init(struct mutex *mtx)
+>  pthread_mutexattr_t lock_attr;
+>  pthread_mutexattr_init(&lock_attr);
+>  pthread_mutexattr_settype(&lock_attr, PTHREAD_MUTEX_ERRORCHECK);
+> -BUG_ON(pthread_mutex_init(&mtx->lock, &lock_attr));
+> -//on success, returns 0.
+> +/*pthread_mutex_init:on success, returns 0*/
+> +BUG_ON(pthread_mutex_init(&mtx->lock, &lock_attr));
+>  pthread_mutexattr_destroy(&lock_attr);
+>  }
+>
+>  void mutex_destroy(struct mutex *mtx)
 >  {
->         if (dso->has_build_id)
-> -               return 0;
-> -
-> +               return 0;
+> -BUG_ON(pthread_mutex_destroy(&mtx->lock));     //on success, returns 0.
+> +/*pthread_mutex_destroy:on success, returns 0*/
+> +BUG_ON(pthread_mutex_destroy(&mtx->lock));
+
+Above changes should belong to the patch 1.
+
+>  }
+>
+>  void mutex_lock(struct mutex *mtx)
+> @@ -30,3 +31,29 @@ void mutex_unlock(struct mutex *mtx)
+>  {
+>  BUG_ON(pthread_mutex_unlock(&mtx->lock) != 0);
+>  }
 > +
->         if (filename__read_build_id(dso->long_name, dso->build_id,
-> -                                   sizeof(dso->build_id)) > 0) {
-> +                                  sizeof(dso->build_id)) > 0) {
+> +bool mutex_trylock(struct mutex *mtx)
+> +{
+> +return pthread_mutex_trylock(&mtx->lock)!=0;
+> +}
+> +
+> +void cond_wait(struct cond *cnd, struct mutex *mtx)
+> +{
+> +BUG_ON(pthread_cond_wait(&cnd->cond, &mtx->lock) != 0);
+> +}
+> +
+> +void cond_signal(struct cond *cnd)
+> +{
+> +BUG_ON(pthread_cond_signal(&cnd->cond) != 0);
+> +}
+> +
+> +void cond_init(struct cond *cnd)
+> +{
+> +pthread_condattr_t attr;
+> +
+> +pthread_condattr_init(&attr);
+> +
+> +/*pthread_cond_init:on success, returns 0*/
+> +BUG_ON(pthread_cond_init(&cnd->cond, &attr));
 
-Unrelated whitespace changes.. is it really needed?
-
-Also I'm not sure you are working on acme/perf/core branch.
-
->                 dso->has_build_id = true;
->                 return 0;
->         }
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 5b83ed1ebbd6..2ef5fe0cc53c 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -214,8 +214,10 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
->                         if (!(prot & PROT_EXEC))
->                                 dso__set_loaded(dso);
->                 }
-> +               mutex_lock(&dso->lock);
->                 dso->nsinfo = nsi;
->                 dso__put(dso);
-> +               mutex_unlock(&dso->lock);
->         }
->         return map;
->  out_delete:
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 91cab5f669d2..e527f2612ba4 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -38,6 +38,7 @@
->  #include "session.h"
->  #include "string2.h"
->  #include "strbuf.h"
-> +#include "mutex.h"
->
->  #include <subcmd/pager.h>
->  #include <linux/ctype.h>
-> @@ -171,8 +172,11 @@ struct map *get_target_map(const char *target, struct nsinfo *nsi, bool user)
->                 struct map *map;
->
->                 map = dso__new_map(target);
-> -               if (map && map->dso)
-> +               if (map && map->dso) {
-> +                       mutex_lock(&map->dso->lock);
->                         map->dso->nsinfo = nsinfo__get(nsi);
-> +                       mutex_unlock(&map->dso->lock);
-> +               }
->                 return map;
->         } else {
->                 return kernel_get_module_map(target);
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 342be12cfa1e..4b711b13f915 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1619,7 +1619,7 @@ int dso__load(struct dso *dso, struct map *map)
->         struct nscookie nsc;
->         char newmapname[PATH_MAX];
->         const char *map_path = dso->long_name;
-> -
-> +       mutex_lock(&dso->lock);
-
-No matching unlock?
+Please be consistent with != 0.
 
 Thanks,
 Namhyung
 
 
->         perfmap = strncmp(dso->name, "/tmp/perf-", 10) == 0;
->         if (perfmap) {
->                 if (dso->nsinfo && (dso__find_perf_map(newmapname,
+> +pthread_condattr_destroy(&attr);
+> +}
+> diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+> index ab2ebb98b24a..f1b4aaa151be 100644
+> --- a/tools/perf/util/mutex.h
+> +++ b/tools/perf/util/mutex.h
+> @@ -1,15 +1,24 @@
+>  #ifndef __PERF_MUTEX_H
+> -#define _PERF_MUTEX_H
+> +#define __PERF_MUTEX_H
+>
+>  #include <pthread.h>
+> +#include <stdbool.h>
+>
+>  struct mutex {
+>  pthread_mutex_t lock;
+>  };
+>
+> +struct cond {
+> +pthread_cond_t cond;
+> +};
+> +
+>  void mutex_lock(struct mutex *mtx);
+>  void mutex_unlock(struct mutex *mtx);
+> +bool mutex_trylock(struct mutex *mtx);
+>  void mutex_init(struct mutex *mtx);
+>  void mutex_destroy(struct mutex *mtx);
+>
+> -#endif /* _PERF_MUTEX_H */
+> +void cond_wait(struct cond *cnd, struct mutex *mtx);
+> +void cond_signal(struct cond *cnd);
+> +void cond_init(struct cond *cnd);
+> +#endif /* __PERF_MUTEX_H */
 > --
 > 2.25.1
 >
