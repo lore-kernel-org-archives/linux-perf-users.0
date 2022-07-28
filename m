@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E5FC19F2C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 14:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1605CC04A68
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 14:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233007AbiG1Oxt (ORCPT
+        id S229696AbiG1Oxx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 10:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
+        Thu, 28 Jul 2022 10:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232832AbiG1OxY (ORCPT
+        with ESMTP id S233108AbiG1Oxp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 10:53:24 -0400
+        Thu, 28 Jul 2022 10:53:45 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 305D35FACA;
-        Thu, 28 Jul 2022 07:53:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A0EAA68DE8;
+        Thu, 28 Jul 2022 07:53:19 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E46A6113E;
-        Thu, 28 Jul 2022 07:53:16 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5C65168F;
+        Thu, 28 Jul 2022 07:53:19 -0700 (PDT)
 Received: from e126387.arm.com (unknown [10.57.11.24])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF1613F70D;
-        Thu, 28 Jul 2022 07:53:14 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07BF73F70D;
+        Thu, 28 Jul 2022 07:53:17 -0700 (PDT)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: [PATCH v5 01/14] perf test: Refactor shell tests allowing subdirs
-Date:   Thu, 28 Jul 2022 15:52:43 +0100
-Message-Id: <20220728145256.2985298-2-carsten.haitzler@foss.arm.com>
+Subject: [PATCH v5 03/14] perf test: Add build infra for perf test tools for CoreSight tests
+Date:   Thu, 28 Jul 2022 15:52:45 +0100
+Message-Id: <20220728145256.2985298-4-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
 References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
@@ -42,502 +42,142 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 
-This is a prelude to adding more tests to shell tests and in order to
-support putting those tests into subdirectories, I need to change the
-test code that scans/finds and runs them.
-
-To support subdirs I have to recurse so it's time to refactor the code to
-allow this and centralize the shell script finding into one location and
-only one single scan that builds a list of all the found tests in memory
-instead of it being duplicated in 3 places.
-
-This code also optimizes things like knowing the max width of desciption
-strings (as we can do that while we scan instead of a whole new pass
-of opening files). It also more cleanly filters scripts to see only
-*.sh files thus skipping random other files in directories like *~
-backup files, other random junk/data files that may appear and the
-scripts must be executable to make the cut (this ensures the script
-lib dir is not seen as scripts to run). This avoids perf test running
-previous older versions of test scripts that are editor backup files
-as well as skipping perf.data files that may appear and so on.
+This adds the initial build infrastructure (makefiles maintainers
+information) for adding follow-on tests for CoreSight.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
- tools/perf/tests/Build               |   1 +
- tools/perf/tests/builtin-test-list.c | 207 +++++++++++++++++++++++++++
- tools/perf/tests/builtin-test-list.h |  12 ++
- tools/perf/tests/builtin-test.c      | 152 +++-----------------
- 4 files changed, 238 insertions(+), 134 deletions(-)
- create mode 100644 tools/perf/tests/builtin-test-list.c
- create mode 100644 tools/perf/tests/builtin-test-list.h
+ MAINTAINERS                                   |  1 +
+ tools/perf/Makefile.perf                      | 18 ++++++++++---
+ tools/perf/tests/shell/coresight/Makefile     | 26 +++++++++++++++++++
+ .../tests/shell/coresight/Makefile.miniconfig | 24 +++++++++++++++++
+ 4 files changed, 66 insertions(+), 3 deletions(-)
+ create mode 100644 tools/perf/tests/shell/coresight/Makefile
+ create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index af2b37ef7c70..2064a640facb 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 171563d8dc14..87e4ac463429 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1989,6 +1989,7 @@ F:	drivers/hwtracing/coresight/*
+ F:	include/dt-bindings/arm/coresight-cti-dt.h
+ F:	include/linux/coresight*
+ F:	samples/coresight/*
++F:	tools/perf/tests/shell/coresight/*
+ F:	tools/perf/arch/arm/util/auxtrace.c
+ F:	tools/perf/arch/arm/util/cs-etm.c
+ F:	tools/perf/arch/arm/util/cs-etm.h
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 8f738e11356d..edb621ace2e2 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -629,7 +629,15 @@ sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
+ $(sync_file_range_arrays): $(linux_uapi_dir)/fs.h $(sync_file_range_tbls)
+ 	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(linux_uapi_dir) > $@
  
- perf-y += builtin-test.o
-+perf-y += builtin-test-list.o
- perf-y += parse-events.o
- perf-y += dso-data.o
- perf-y += attr.o
-diff --git a/tools/perf/tests/builtin-test-list.c b/tools/perf/tests/builtin-test-list.c
+-all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
++TESTS_CORESIGHT_DIR := $(srctree)/tools/perf/tests/shell/coresight
++
++tests-coresight-targets: FORCE
++	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR)
++
++tests-coresight-targets-clean:
++	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) clean
++
++all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
+ 
+ # Create python binding output directory if not already present
+ _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+@@ -1015,7 +1023,10 @@ install-tests: all install-gtk
+ 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+ 		$(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+ 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+-		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
++		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
++		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
++		$(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
++	$(Q)$(MAKE) -C tests/shell/coresight install-tests
+ 
+ install-bin: install-tools install-tests install-traceevent-plugins
+ 
+@@ -1085,7 +1096,7 @@ endif # BUILD_BPF_SKEL
+ bpf-skel-clean:
+ 	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+ 
+-clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean
++clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+ 	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT).config-detected
+@@ -1143,5 +1154,6 @@ FORCE:
+ .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
+ .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare
+ .PHONY: libtraceevent_plugins archheaders
++.PHONY: $(TESTS_CORESIGHT_TARGETS)
+ 
+ endif # force_fixdep
+diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
 new file mode 100644
-index 000000000000..7d31e2222474
+index 000000000000..3b816bb4ced3
 --- /dev/null
-+++ b/tools/perf/tests/builtin-test-list.c
-@@ -0,0 +1,207 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <dirent.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/ctype.h>
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <linux/zalloc.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <sys/types.h>
-+#include <unistd.h>
-+#include <subcmd/exec-cmd.h>
-+#include <subcmd/parse-options.h>
-+#include <sys/wait.h>
-+#include <sys/stat.h>
-+#include "builtin.h"
-+#include "builtin-test-list.h"
-+#include "color.h"
-+#include "debug.h"
-+#include "hist.h"
-+#include "intlist.h"
-+#include "string2.h"
-+#include "symbol.h"
-+#include "tests.h"
-+#include "util/rlimit.h"
++++ b/tools/perf/tests/shell/coresight/Makefile
+@@ -0,0 +1,26 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
++include ../../../../../tools/scripts/Makefile.include
++include ../../../../../tools/scripts/Makefile.arch
++include ../../../../../tools/scripts/utilities.mak
 +
++SUBDIRS =
 +
-+/* 
-+ * As this is a singleton built once for the run of the process, there is
-+ * no value in trying to free it and just let it stay around until process
-+ * exits when it's cleaned up.
-+ */
-+static size_t files_num = 0;
-+static struct script_file *files = NULL;
-+static int files_max_width = 0;
++all: $(SUBDIRS)
++$(SUBDIRS):
++	$(Q)$(MAKE) -C $@
 +
-+static const char *shell_tests__dir(char *path, size_t size)
-+{
-+	const char *devel_dirs[] = { "./tools/perf/tests", "./tests", };
-+	char *exec_path;
-+	unsigned int i;
++INSTALLDIRS = $(SUBDIRS:%=install-%)
 +
-+	for (i = 0; i < ARRAY_SIZE(devel_dirs); ++i) {
-+		struct stat st;
++install-tests: $(INSTALLDIRS)
++$(INSTALLDIRS):
++	$(Q)$(MAKE) -C $(@:install-%=%) install-tests
 +
-+		if (!lstat(devel_dirs[i], &st)) {
-+			scnprintf(path, size, "%s/shell", devel_dirs[i]);
-+			if (!lstat(devel_dirs[i], &st))
-+				return path;
-+		}
-+	}
++CLEANDIRS = $(SUBDIRS:%=clean-%)
 +
-+	/* Then installed path. */
-+	exec_path = get_argv_exec_path();
-+	scnprintf(path, size, "%s/tests/shell", exec_path);
-+	free(exec_path);
-+	return path;
-+}
++clean: $(CLEANDIRS)
++$(CLEANDIRS):
++	$(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
 +
-+static const char *shell_test__description(char *description, size_t size,
-+                                           const char *path, const char *name)
-+{
-+	FILE *fp;
-+	char filename[PATH_MAX];
-+	int ch;
++.PHONY: all clean $(SUBDIRS) $(CLEANDIRS) $(INSTALLDIRS)
 +
-+	path__join(filename, sizeof(filename), path, name);
-+	fp = fopen(filename, "r");
-+	if (!fp)
-+		return NULL;
-+
-+	/* Skip first line - should be #!/bin/sh Shebang */
-+	do {
-+		ch = fgetc(fp);
-+	} while (ch != EOF && ch != '\n');
-+
-+	description = fgets(description, size, fp);
-+	fclose(fp);
-+
-+	/* Assume first char on line is omment everything after that desc */
-+	return description ? strim(description + 1) : NULL;
-+}
-+
-+/* Is this full file path a shell script */
-+static bool is_shell_script(const char *path)
-+{
-+	const char *ext;
-+
-+	ext = strrchr(path, '.');
-+	if (!ext)
-+		return false;
-+	if (!strcmp(ext, ".sh")) { /* Has .sh extension */
-+		if (access(path, R_OK | X_OK) == 0) /* Is executable */
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/* Is this file in this dir a shell script (for test purposes) */
-+static bool is_test_script(const char *path, const char *name)
-+{
-+	char filename[PATH_MAX];
-+
-+	path__join(filename, sizeof(filename), path, name);
-+	if (!is_shell_script(filename)) return false;
-+	return true;
-+}
-+
-+/* Duplicate a string and fall over and die if we run out of memory */
-+static char *strdup_check(const char *str)
-+{
-+	char *newstr;
-+
-+	newstr = strdup(str);
-+	if (!newstr) {
-+		pr_err("Out of memory while duplicating test script string\n");
-+		abort();
-+	}
-+	return newstr;
-+}
-+
-+static void append_script(const char *dir, const char *file, const char *desc)
-+{
-+	struct script_file *files_tmp;
-+	size_t files_num_tmp;
-+	int width;
-+
-+	files_num_tmp = files_num + 1;
-+	if (files_num_tmp >= SIZE_MAX) {
-+		pr_err("Too many script files\n");
-+		abort();
-+	}
-+	/* Realloc is good enough, though we could realloc by chunks, not that
-+	 * anyone will ever measure performance here */
-+	files_tmp = realloc(files,
-+			    (files_num_tmp + 1) * sizeof(struct script_file));
-+	if (files_tmp == NULL) {
-+		pr_err("Out of memory while building test list\n");
-+		abort();
-+	}
-+	/* Add file to end and NULL terminate the struct array */
-+	files = files_tmp;
-+	files_num = files_num_tmp;
-+	files[files_num - 1].dir = strdup_check(dir);
-+	files[files_num - 1].file = strdup_check(file);
-+	files[files_num - 1].desc = strdup_check(desc);
-+	files[files_num].dir = NULL;
-+	files[files_num].file = NULL;
-+	files[files_num].desc = NULL;
-+
-+	width = strlen(desc); /* Track max width of desc */
-+	if (width > files_max_width)
-+		files_max_width = width;
-+}
-+
-+static void append_scripts_in_dir(const char *path)
-+{
-+	struct dirent **entlist;
-+	struct dirent *ent;
-+	int n_dirs, i;
-+	char filename[PATH_MAX];
-+
-+	/* List files, sorted by alpha */
-+	n_dirs = scandir(path, &entlist, NULL, alphasort);
-+	if (n_dirs == -1)
-+		return;
-+	for (i = 0; i < n_dirs && (ent = entlist[i]); i++) {
-+		if (ent->d_name[0] == '.')
-+			continue; /* Skip hidden files */
-+		if (is_test_script(path, ent->d_name)) { /* It's a test */
-+			char bf[256];
-+			const char *desc = shell_test__description
-+				(bf, sizeof(bf), path, ent->d_name);
-+
-+			if (desc) /* It has a desc line - valid script */
-+				append_script(path, ent->d_name, desc);
-+		} else if (is_directory(path, ent)) { /* Scan the subdir */
-+			path__join(filename, sizeof(filename),
-+				   path, ent->d_name);
-+			append_scripts_in_dir(filename);
-+		}
-+	}
-+	for (i = 0; i < n_dirs; i++) /* Clean up */
-+		zfree(&entlist[i]);
-+	free(entlist);
-+}
-+
-+const struct script_file *list_script_files(void)
-+{
-+	char path_dir[PATH_MAX];
-+	const char *path;
-+
-+	if (files)
-+		return files; /* Singleton - we already know our list */
-+
-+	path = shell_tests__dir(path_dir, sizeof(path_dir)); /* Walk  dir */
-+	append_scripts_in_dir(path);
-+
-+	return files;
-+}
-+
-+int list_script_max_width(void)
-+{
-+	list_script_files(); /* Ensure we have scanned all scriptd */
-+	return files_max_width;
-+}
-diff --git a/tools/perf/tests/builtin-test-list.h b/tools/perf/tests/builtin-test-list.h
+diff --git a/tools/perf/tests/shell/coresight/Makefile.miniconfig b/tools/perf/tests/shell/coresight/Makefile.miniconfig
 new file mode 100644
-index 000000000000..eb81f3aa6683
+index 000000000000..a65482d769ab
 --- /dev/null
-+++ b/tools/perf/tests/builtin-test-list.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/tools/perf/tests/shell/coresight/Makefile.miniconfig
+@@ -0,0 +1,24 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 +
-+struct script_file {
-+	char *dir;
-+	char *file;
-+	char *desc;
-+};
++ifndef DESTDIR
++prefix ?= $(HOME)
++endif
 +
-+/* List available script tests to run - singleton - never freed */
-+const struct script_file *list_script_files(void);
-+/* Get maximum width of description string */
-+int list_script_max_width(void);
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 81cf241cd109..7122eae1d98d 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -28,6 +28,8 @@
- #include <subcmd/exec-cmd.h>
- #include <linux/zalloc.h>
- 
-+#include "builtin-test-list.h"
++DESTDIR_SQ = $(subst ','\'',$(DESTDIR))
++perfexecdir = libexec/perf-core
++perfexec_instdir = $(perfexecdir)
 +
- static bool dont_fork;
- 
- struct test_suite *__weak arch_tests[] = {
-@@ -274,91 +276,6 @@ static int test_and_print(struct test_suite *t, int subtest)
- 	return err;
- }
- 
--static const char *shell_test__description(char *description, size_t size,
--					   const char *path, const char *name)
--{
--	FILE *fp;
--	char filename[PATH_MAX];
--	int ch;
--
--	path__join(filename, sizeof(filename), path, name);
--	fp = fopen(filename, "r");
--	if (!fp)
--		return NULL;
--
--	/* Skip shebang */
--	do {
--		ch = fgetc(fp);
--	} while (ch != EOF && ch != '\n');
--
--	description = fgets(description, size, fp);
--	fclose(fp);
--
--	return description ? strim(description + 1) : NULL;
--}
--
--#define for_each_shell_test(entlist, nr, base, ent)	                \
--	for (int __i = 0; __i < nr && (ent = entlist[__i]); __i++)	\
--		if (!is_directory(base, ent) && \
--			is_executable_file(base, ent) && \
--			ent->d_name[0] != '.')
--
--static const char *shell_tests__dir(char *path, size_t size)
--{
--	const char *devel_dirs[] = { "./tools/perf/tests", "./tests", };
--        char *exec_path;
--	unsigned int i;
--
--	for (i = 0; i < ARRAY_SIZE(devel_dirs); ++i) {
--		struct stat st;
--		if (!lstat(devel_dirs[i], &st)) {
--			scnprintf(path, size, "%s/shell", devel_dirs[i]);
--			if (!lstat(devel_dirs[i], &st))
--				return path;
--		}
--	}
--
--        /* Then installed path. */
--        exec_path = get_argv_exec_path();
--        scnprintf(path, size, "%s/tests/shell", exec_path);
--	free(exec_path);
--	return path;
--}
--
--static int shell_tests__max_desc_width(void)
--{
--	struct dirent **entlist;
--	struct dirent *ent;
--	int n_dirs, e;
--	char path_dir[PATH_MAX];
--	const char *path = shell_tests__dir(path_dir, sizeof(path_dir));
--	int width = 0;
--
--	if (path == NULL)
--		return -1;
--
--	n_dirs = scandir(path, &entlist, NULL, alphasort);
--	if (n_dirs == -1)
--		return -1;
--
--	for_each_shell_test(entlist, n_dirs, path, ent) {
--		char bf[256];
--		const char *desc = shell_test__description(bf, sizeof(bf), path, ent->d_name);
--
--		if (desc) {
--			int len = strlen(desc);
--
--			if (width < len)
--				width = len;
--		}
--	}
--
--	for (e = 0; e < n_dirs; e++)
--		zfree(&entlist[e]);
--	free(entlist);
--	return width;
--}
--
- struct shell_test {
- 	const char *dir;
- 	const char *file;
-@@ -385,33 +302,17 @@ static int shell_test__run(struct test_suite *test, int subdir __maybe_unused)
- static int run_shell_tests(int argc, const char *argv[], int i, int width,
- 				struct intlist *skiplist)
- {
--	struct dirent **entlist;
--	struct dirent *ent;
--	int n_dirs, e;
--	char path_dir[PATH_MAX];
--	struct shell_test st = {
--		.dir = shell_tests__dir(path_dir, sizeof(path_dir)),
--	};
--
--	if (st.dir == NULL)
--		return -1;
-+	struct shell_test st;
-+	const struct script_file *files, *file;
- 
--	n_dirs = scandir(st.dir, &entlist, NULL, alphasort);
--	if (n_dirs == -1) {
--		pr_err("failed to open shell test directory: %s\n",
--			st.dir);
--		return -1;
--	}
--
--	for_each_shell_test(entlist, n_dirs, st.dir, ent) {
-+	files = list_script_files();
-+	if (!files)
-+		return 0;
-+	for (file = files; file->dir; file++) {
- 		int curr = i++;
--		char desc[256];
- 		struct test_case test_cases[] = {
- 			{
--				.desc = shell_test__description(desc,
--								sizeof(desc),
--								st.dir,
--								ent->d_name),
-+				.desc = file->desc,
- 				.run_case = shell_test__run,
- 			},
- 			{ .name = NULL, }
-@@ -421,12 +322,13 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
- 			.test_cases = test_cases,
- 			.priv = &st,
- 		};
-+		st.dir = file->dir;
- 
- 		if (test_suite.desc == NULL ||
- 		    !perf_test__matches(test_suite.desc, curr, argc, argv))
- 			continue;
- 
--		st.file = ent->d_name;
-+		st.file = file->file;
- 		pr_info("%3d: %-*s:", i, width, test_suite.desc);
- 
- 		if (intlist__find(skiplist, i)) {
-@@ -436,10 +338,6 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
- 
- 		test_and_print(&test_suite, 0);
- 	}
--
--	for (e = 0; e < n_dirs; e++)
--		zfree(&entlist[e]);
--	free(entlist);
- 	return 0;
- }
- 
-@@ -448,7 +346,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- 	struct test_suite *t;
- 	unsigned int j, k;
- 	int i = 0;
--	int width = shell_tests__max_desc_width();
-+	int width = list_script_max_width();
- 
- 	for_each_test(j, k, t) {
- 		int len = strlen(test_description(t, -1));
-@@ -529,36 +427,22 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
- 
- static int perf_test__list_shell(int argc, const char **argv, int i)
- {
--	struct dirent **entlist;
--	struct dirent *ent;
--	int n_dirs, e;
--	char path_dir[PATH_MAX];
--	const char *path = shell_tests__dir(path_dir, sizeof(path_dir));
--
--	if (path == NULL)
--		return -1;
-+	const struct script_file *files, *file;
- 
--	n_dirs = scandir(path, &entlist, NULL, alphasort);
--	if (n_dirs == -1)
--		return -1;
--
--	for_each_shell_test(entlist, n_dirs, path, ent) {
-+	files = list_script_files();
-+	if (!files)
-+		return 0;
-+	for (file = files; file->dir; file++) {
- 		int curr = i++;
--		char bf[256];
- 		struct test_suite t = {
--			.desc = shell_test__description(bf, sizeof(bf), path, ent->d_name),
-+			.desc = file->desc
- 		};
- 
- 		if (!perf_test__matches(t.desc, curr, argc, argv))
- 			continue;
- 
- 		pr_info("%3d: %s\n", i, t.desc);
--
- 	}
--
--	for (e = 0; e < n_dirs; e++)
--		zfree(&entlist[e]);
--	free(entlist);
- 	return 0;
- }
- 
++ifneq ($(filter /%,$(firstword $(perfexecdir))),)
++perfexec_instdir = $(perfexecdir)
++else
++perfexec_instdir = $(prefix)/$(perfexecdir)
++endif
++
++perfexec_instdir_SQ = $(subst ','\'',$(perfexec_instdir))
++INSTALL = install
++INSTDIR_SUB = tests/shell/coresight
++
++include ../../../../../scripts/Makefile.include
++include ../../../../../scripts/Makefile.arch
++include ../../../../../scripts/utilities.mak
 -- 
 2.32.0
 
