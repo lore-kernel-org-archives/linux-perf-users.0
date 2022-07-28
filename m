@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4EDC19F2D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 14:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13491C19F2B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 14:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232936AbiG1OyY (ORCPT
+        id S233405AbiG1Oyc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 10:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34214 "EHLO
+        Thu, 28 Jul 2022 10:54:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232907AbiG1Oxw (ORCPT
+        with ESMTP id S233421AbiG1OyD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 10:53:52 -0400
+        Thu, 28 Jul 2022 10:54:03 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AE5816A9E6;
-        Thu, 28 Jul 2022 07:53:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 64B8F6AA01;
+        Thu, 28 Jul 2022 07:53:28 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6F861692;
-        Thu, 28 Jul 2022 07:53:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A488D106F;
+        Thu, 28 Jul 2022 07:53:28 -0700 (PDT)
 Received: from e126387.arm.com (unknown [10.57.11.24])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC7303F70D;
-        Thu, 28 Jul 2022 07:53:23 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC4CC3F70D;
+        Thu, 28 Jul 2022 07:53:26 -0700 (PDT)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: [PATCH v5 07/14] perf test: Add memcpy thread test tool
-Date:   Thu, 28 Jul 2022 15:52:49 +0100
-Message-Id: <20220728145256.2985298-8-carsten.haitzler@foss.arm.com>
+Subject: [PATCH v5 09/14] perf test: Add thread loop test tool
+Date:   Thu, 28 Jul 2022 15:52:51 +0100
+Message-Id: <20220728145256.2985298-10-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
 References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
@@ -43,52 +43,53 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 
 Add test tool to be driven by further test scripts. This is a simple C
-based memcpy with threads test to drive from scripts.
+based loop with threads test to drive from scripts that can output TIDs
+for tracking/checking.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
  tools/perf/tests/shell/coresight/Makefile     |  3 +-
- .../shell/coresight/memcpy_thread/.gitignore  |  1 +
- .../shell/coresight/memcpy_thread/Makefile    | 33 ++++++++
- .../coresight/memcpy_thread/memcpy_thread.c   | 79 +++++++++++++++++++
- 4 files changed, 115 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
+ .../shell/coresight/thread_loop/.gitignore    |  1 +
+ .../shell/coresight/thread_loop/Makefile      | 33 +++++++
+ .../shell/coresight/thread_loop/thread_loop.c | 86 +++++++++++++++++++
+ 4 files changed, 122 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/tests/shell/coresight/thread_loop/.gitignore
+ create mode 100644 tools/perf/tests/shell/coresight/thread_loop/Makefile
+ create mode 100644 tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
 
 diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-index d4f868d55773..561c807022ec 100644
+index 561c807022ec..004974a71fb8 100644
 --- a/tools/perf/tests/shell/coresight/Makefile
 +++ b/tools/perf/tests/shell/coresight/Makefile
-@@ -5,7 +5,8 @@ include ../../../../../tools/scripts/Makefile.arch
- include ../../../../../tools/scripts/utilities.mak
+@@ -6,7 +6,8 @@ include ../../../../../tools/scripts/utilities.mak
  
  SUBDIRS = \
--	asm_pure_loop
-+	asm_pure_loop \
-+	memcpy_thread
+ 	asm_pure_loop \
+-	memcpy_thread
++	memcpy_thread \
++	thread_loop
  
  all: $(SUBDIRS)
  $(SUBDIRS):
-diff --git a/tools/perf/tests/shell/coresight/memcpy_thread/.gitignore b/tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
+diff --git a/tools/perf/tests/shell/coresight/thread_loop/.gitignore b/tools/perf/tests/shell/coresight/thread_loop/.gitignore
 new file mode 100644
-index 000000000000..f8217e56091e
+index 000000000000..6d4c33eaa9e8
 --- /dev/null
-+++ b/tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
++++ b/tools/perf/tests/shell/coresight/thread_loop/.gitignore
 @@ -0,0 +1 @@
-+memcpy_thread
-diff --git a/tools/perf/tests/shell/coresight/memcpy_thread/Makefile b/tools/perf/tests/shell/coresight/memcpy_thread/Makefile
++thread_loop
+diff --git a/tools/perf/tests/shell/coresight/thread_loop/Makefile b/tools/perf/tests/shell/coresight/thread_loop/Makefile
 new file mode 100644
-index 000000000000..2db637eb2c26
+index 000000000000..ea846c038e7a
 --- /dev/null
-+++ b/tools/perf/tests/shell/coresight/memcpy_thread/Makefile
++++ b/tools/perf/tests/shell/coresight/thread_loop/Makefile
 @@ -0,0 +1,33 @@
 +# SPDX-License-Identifier: GPL-2.0
 +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 +include ../Makefile.miniconfig
 +
 +# Binary to produce
-+BIN=memcpy_thread
++BIN=thread_loop
 +# Any linking/libraries needed for the binary - empty if none needed
 +LIB=-pthread
 +
@@ -116,23 +117,32 @@ index 000000000000..2db637eb2c26
 +	$(Q)$(RM) -f $(BIN)
 +
 +.PHONY: all clean install-tests
-diff --git a/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c b/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
+diff --git a/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
 new file mode 100644
-index 000000000000..a7e169d1bf64
+index 000000000000..c0158fac7d0b
 --- /dev/null
-+++ b/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
-@@ -0,0 +1,79 @@
++++ b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+@@ -0,0 +1,86 @@
 +// SPDX-License-Identifier: GPL-2.0
 +// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
++
++// define this for gettid()
++#define _GNU_SOURCE
++
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <unistd.h>
 +#include <string.h>
 +#include <pthread.h>
++#include <sys/syscall.h>
++#ifndef SYS_gettid
++// gettid is 178 on arm64
++# define SYS_gettid 178
++#endif
++#define gettid() syscall(SYS_gettid)
 +
 +struct args {
-+	unsigned long loops;
-+	unsigned long size;
++	unsigned int loops;
 +	pthread_t th;
 +	void *ret;
 +};
@@ -140,17 +150,23 @@ index 000000000000..a7e169d1bf64
 +static void *thrfn(void *arg)
 +{
 +	struct args *a = arg;
-+	unsigned long i, len = a->loops;
-+	unsigned char *src, *dst;
++	int i = 0, len = a->loops;
 +
-+	src = malloc(a->size * 1024);
-+	dst = malloc(a->size * 1024);
-+	if ((!src) || (!dst)) {
-+		printf("ERR: Can't allocate memory\n");
-+		exit(1);
++	if (getenv("SHOW_TID")) {
++		unsigned long long tid = gettid();
++
++		printf("%llu\n", tid);
 +	}
-+	for (i = 0; i < len; i++)
-+		memcpy(dst, src, a->size * 1024);
++	asm volatile(
++		"loop:\n"
++		"add %[i], %[i], #1\n"
++		"cmp %[i], %[len]\n"
++		"blt loop\n"
++		: /* out */
++		: /* in */ [i] "r" (i), [len] "r" (len)
++		: /* clobber */
++	);
++	return (void *)(long)i;
 +}
 +
 +static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
@@ -165,36 +181,28 @@ index 000000000000..a7e169d1bf64
 +
 +int main(int argc, char **argv)
 +{
-+	unsigned long i, len, size, thr;
++	unsigned int i, len, thr;
 +	pthread_t threads[256];
 +	struct args args[256];
-+	long long v;
 +
-+	if (argc < 4) {
-+		printf("ERR: %s [copysize Kb] [numthreads] [numloops (hundreds)]\n", argv[0]);
++	if (argc < 3) {
++		printf("ERR: %s [numthreads] [numloops (millions)]\n", argv[0]);
 +		exit(1);
 +	}
 +
-+	v = atoll(argv[1]);
-+	if ((v < 1) || (v > (1024 * 1024))) {
-+		printf("ERR: max memory 1GB (1048576 KB)\n");
-+		exit(1);
-+	}
-+	size = v;
-+	thr = atol(argv[2]);
++	thr = atoi(argv[1]);
 +	if ((thr < 1) || (thr > 256)) {
 +		printf("ERR: threads 1-256\n");
 +		exit(1);
 +	}
-+	v = atoll(argv[3]);
-+	if ((v < 1) || (v > 40000000000ll)) {
-+		printf("ERR: loops 1-40000000000 (hundreds)\n");
++	len = atoi(argv[2]);
++	if ((len < 1) || (len > 4000)) {
++		printf("ERR: max loops 4000 (millions)\n");
 +		exit(1);
 +	}
-+	len = v * 100;
++	len *= 1000000;
 +	for (i = 0; i < thr; i++) {
 +		args[i].loops = len;
-+		args[i].size = size;
 +		args[i].th = new_thr(thrfn, &(args[i]));
 +	}
 +	for (i = 0; i < thr; i++)
