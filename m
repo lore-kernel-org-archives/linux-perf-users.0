@@ -2,227 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1803C04A68
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 00:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2F7C04A68
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 07:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234273AbiG1AAw (ORCPT
+        id S234482AbiG1Hau (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 27 Jul 2022 20:00:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46682 "EHLO
+        Thu, 28 Jul 2022 03:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234253AbiG1AAv (ORCPT
+        with ESMTP id S234417AbiG1Hat (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 27 Jul 2022 20:00:51 -0400
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF773BE06;
-        Wed, 27 Jul 2022 17:00:47 -0700 (PDT)
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-10e49d9a59bso480174fac.5;
-        Wed, 27 Jul 2022 17:00:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X+oQUWY05StzsJvhE+BaApcn8j4FoC6AtwezEzT7oX0=;
-        b=rWkjMr9Sa7TN0ybcv5H4lp5PBUrfb6s5tWC00sWKLmwpx3yir/8gMKAYZDlb0KcyTE
-         gwslKIeMPb2/cWg+nndgYQq76qlPIRXD4kNUcMLejUJ0YiTFerPk/UCgHQy6mu0xpqwz
-         p/fhMEHc+aAanMMboaKHngt0pH1UvFueq/wkCRWwoy5b8AMbP54mTck4Xa5a6LBlvn5m
-         R2EgDtPzswp3ReZnU1qUq0/AQ7xl7aI6XzOWz3xor2vaK+FscII4hPiuy54BuBhAOhPl
-         aL0IAtyfhMFZ53WpH8ox9zoyhDvannOiV7aJ1Bm81/FgK15zgwF4cV317wIbi3+0ptLJ
-         R/Bw==
-X-Gm-Message-State: AJIora+3lPSIeM/dagvQV/lTPheigsHvO5GAYFXa9kn1TMC8+etl38a1
-        00RGB0kfW98eZwj7p8u92ydU38wAlyZvl3B/Jls=
-X-Google-Smtp-Source: AGRyM1viIoXr0rlMUG/E0FM08nH62aWSlzNyzw1mjtt3Ds673zB0a1i9H/FYZP+R2SCW7l7K6CLmAJubY4b6PdcNMgI=
-X-Received: by 2002:a05:6870:a182:b0:10b:efbe:e65d with SMTP id
- a2-20020a056870a18200b0010befbee65dmr3466726oaf.5.1658966447128; Wed, 27 Jul
- 2022 17:00:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220709015033.38326-1-yangjihong1@huawei.com> <20220709015033.38326-7-yangjihong1@huawei.com>
-In-Reply-To: <20220709015033.38326-7-yangjihong1@huawei.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 27 Jul 2022 17:00:36 -0700
-Message-ID: <CAM9d7chkZzYmuuo3XZ4NdpAErv-5ermDBtOQ+ZaO30t=KuTNQg@mail.gmail.com>
-Subject: Re: [RFC v3 06/17] perf kwork: Implement perf kwork report
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 28 Jul 2022 03:30:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1B31E57234
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 00:30:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658993448;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ux6VwMtMxHO2mepOlWLk/n9XMR06YLsuanCnSO2VUjI=;
+        b=EWH0svMqrd1xmc8XfKXT2oLjHJfGoWEKiWiJQQyiRb/6TCBBQv4Qh7bfdsBIbdYr+gZUUR
+        WACwjhGvFe0sVuwHAZV8FH5WgmXuKo39QI6Hrm0Ho/M9e9gikU0FUgw8TMHMVATazGJJB3
+        khkW06sdV0TqnzIeuROCAOyS5mLIheg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-204-fvFAbU1_PgCryZqHIMMp5w-1; Thu, 28 Jul 2022 03:30:42 -0400
+X-MC-Unique: fvFAbU1_PgCryZqHIMMp5w-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC6E2185A79C;
+        Thu, 28 Jul 2022 07:30:41 +0000 (UTC)
+Received: from starship (unknown [10.40.192.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 332ED492C3B;
+        Thu, 28 Jul 2022 07:30:34 +0000 (UTC)
+Message-ID: <fad05f161cc6425d8c36fb6322de2bbaa683dcb3.camel@redhat.com>
+Subject: Re: [PATCH v2 0/5] x86: cpuid: improve support for broken CPUID
+ configurations
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Paul Clarke <pc@us.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Date:   Thu, 28 Jul 2022 10:30:33 +0300
+In-Reply-To: <20220718141123.136106-1-mlevitsk@redhat.com>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 8, 2022 at 6:53 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->
-> Implements framework of perf kwork report, which is used to report time
-> properties such as run time and frequency:
->
-> Test cases:
->
->   # perf kwork
->
->    Usage: perf kwork [<options>] {record|report}
->
->       -D, --dump-raw-trace  dump raw trace in ASCII
->       -f, --force           don't complain, do it
->       -k, --kwork <kwork>   list of kwork to profile (irq, softirq, workqueue, etc)
->       -v, --verbose         be more verbose (show symbol address, etc)
->
->   # perf kwork report -h
->
->    Usage: perf kwork report [<options>]
->
->       -C, --cpu <cpu>       list of cpus to profile
->       -i, --input <file>    input file name
->       -n, --name <name>     event name to profile
->       -s, --sort <key[,key2...]>
->                             sort by key(s): runtime, max, count
->       -S, --with-summary    Show summary with statistics
->           --time <str>      Time span for analysis (start,stop)
->
->   # perf kwork report
->
->     Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
->    --------------------------------------------------------------------------------------------------------------------------------
->    --------------------------------------------------------------------------------------------------------------------------------
->
->   # perf kwork report -S
->
->     Kwork Name                     | Cpu  | Total Runtime | Count     | Max runtime   | Max runtime start   | Max runtime end     |
->    --------------------------------------------------------------------------------------------------------------------------------
->    --------------------------------------------------------------------------------------------------------------------------------
->     Total count            :         0
->     Total runtime   (msec) :     0.000 (0.000% load average)
->     Total time span (msec) :     0.000
->    --------------------------------------------------------------------------------------------------------------------------------
->
->   # perf kwork report -C 0,100
->   Requested CPU 100 too large. Consider raising MAX_NR_CPUS
->   Invalid cpu bitmap
->
->   # perf kwork report -s runtime1
->     Error: Unknown --sort key: `runtime1'
->
->    Usage: perf kwork report [<options>]
->
->       -C, --cpu <cpu>       list of cpus to profile
->       -i, --input <file>    input file name
->       -n, --name <name>     event name to profile
->       -s, --sort <key[,key2...]>
->                             sort by key(s): runtime, max, count
->       -S, --with-summary    Show summary with statistics
->           --time <str>      Time span for analysis (start,stop)
->
->   # perf kwork report -i perf_no_exist.data
->   failed to open perf_no_exist.data: No such file or directory
->
->   # perf kwork report --time 00FFF,
->   Invalid time span
->
-> Since there are no report supported events, the output is empty.
->
-> Briefly describe the data structure:
-> 1. "class" indicates event type. For example, irq and softiq correspond
-> to different types.
-> 2. "cluster" refers to a specific event corresponding to a type. For
-> example, RCU and TIMER in softirq correspond to different clusters,
-> which contains three types of events: raise, entry, and exit.
+On Mon, 2022-07-18 at 17:11 +0300, Maxim Levitsky wrote:
+> This patch series aims to harden the cpuid code against the case when
+> the hypervisor exposes a broken CPUID configuration to the guest,
+> in the form of having a feature disabled but not features that depend on it.
+> 
+> This is the more generic way to fix kernel panic in aes-ni kernel driver,
+> which was triggered by CPUID configuration in which AVX is disabled but
+> not AVX2.
+> 
+> https://lore.kernel.org/all/20211103145231.GA4485@gondor.apana.org.au/T/
+> 
+> This was tested by booting a guest with AVX disabled and not AVX2,
+> and observing that both a warning is now printed in dmesg, and
+> that avx2 is gone from /proc/cpuinfo.
+> 
+> V2:
+> 
+> I hopefully addressed all the (very good) review feedback.
+> 
+> Best regards,
+> 	Maxim Levitsky
+> 
+> Maxim Levitsky (5):
+>   perf/x86/intel/lbr: use setup_clear_cpu_cap instead of clear_cpu_cap
+>   x86/cpuid: refactor setup_clear_cpu_cap()/clear_cpu_cap()
+>   x86/cpuid: move filter_cpuid_features to cpuid-deps.c
+>   x86/cpuid: remove 'warn' parameter from filter_cpuid_features
+>   x86/cpuid: check for dependencies violations in CPUID and attempt to
+>     fix them
+> 
+>  arch/x86/events/intel/lbr.c       |  2 +-
+>  arch/x86/include/asm/cpufeature.h |  1 +
+>  arch/x86/kernel/cpu/common.c      | 51 +-------------------
+>  arch/x86/kernel/cpu/cpuid-deps.c  | 80 +++++++++++++++++++++++++++----
+>  4 files changed, 74 insertions(+), 60 deletions(-)
+> 
+> -- 
+> 2.34.3
+> 
+> 
+A very kind ping on these patches.
 
-Maybe I'm too late... but it's now "work", right?
+Best regards,
+	Maxim Levitsky
 
-> 3. "atom" includes time of each sample and sample of the previous phase.
-> (For example, exit corresponds to entry, which is used for timehist.)
->
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/Documentation/perf-kwork.txt |  33 +
->  tools/perf/builtin-kwork.c              | 859 +++++++++++++++++++++++-
->  tools/perf/util/kwork.h                 | 161 +++++
->  3 files changed, 1051 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
-> index c5b52f61da99..b79b2c0d047e 100644
-> --- a/tools/perf/Documentation/perf-kwork.txt
-> +++ b/tools/perf/Documentation/perf-kwork.txt
-> @@ -17,8 +17,11 @@ There are several variants of 'perf kwork':
->    'perf kwork record <command>' to record the kernel work
->    of an arbitrary workload.
->
-> +  'perf kwork report' to report the per kwork runtime.
-> +
->      Example usage:
->          perf kwork record -- sleep 1
-> +        perf kwork report
->
->  OPTIONS
->  -------
-> @@ -38,6 +41,36 @@ OPTIONS
->  --verbose::
->         Be more verbose. (show symbol address, etc)
->
-> +OPTIONS for 'perf kwork report'
-> +----------------------------
-> +
-> +-C::
-> +--cpu::
-> +       Only show events for the given CPU(s) (comma separated list).
-> +
-> +-i::
-> +--input::
-> +       Input file name. (default: perf.data unless stdin is a fifo)
-> +
-> +-n::
-> +--name::
-> +       Only show events for the given name.
-> +
-> +-s::
-> +--sort::
-> +       Sort by key(s): runtime, max, count
-> +
-> +-S::
-> +--with-summary::
-> +       Show summary with statistics
-> +
-> +--time::
-> +       Only analyze samples within given time window: <start>,<stop>. Times
-> +       have the format seconds.microseconds. If start is not given (i.e., time
-> +       string is ',x.y') then analysis starts at the beginning of the file. If
-> +       stop time is not given (i.e, time string is 'x.y,') then analysis goes
-> +       to end of file.
-> +
->  SEE ALSO
->  --------
->  linkperf:perf-record[1]
-> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-> index 8086236b7513..9c488d647995 100644
-> --- a/tools/perf/builtin-kwork.c
-> +++ b/tools/perf/builtin-kwork.c
-> @@ -25,6 +25,460 @@
->  #include <linux/time64.h>
->  #include <linux/zalloc.h>
->
-> +/*
-> + * report header elements width
-> + */
-> +#define PRINT_CPU_WIDTH 4
-> +#define PRINT_COUNT_WIDTH 9
-> +#define PRINT_RUNTIME_WIDTH 10
-> +#define PRINT_TIMESTAMP_WIDTH 17
-> +#define PRINT_KWORK_NAME_WIDTH 30
-> +#define RPINT_DECIMAL_WIDTH 3
-> +#define PRINT_TIME_UNIT_SEC_WIDTH 2
-> +#define PRINT_TIME_UNIT_MESC_WIDTH 3
-
-MSEC ?
-
-Thanks,
-Namhyung
-
-
-> +#define PRINT_RUNTIME_HEADER_WIDTH (PRINT_RUNTIME_WIDTH + PRINT_TIME_UNIT_MESC_WIDTH)
-> +#define PRINT_TIMESTAMP_HEADER_WIDTH (PRINT_TIMESTAMP_WIDTH + PRINT_TIME_UNIT_SEC_WIDTH)
-> +
