@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED8DC04A68
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 14:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A457C19F29
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 14:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232515AbiG1Oyo (ORCPT
+        id S229462AbiG1Oyp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 10:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34324 "EHLO
+        Thu, 28 Jul 2022 10:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231724AbiG1OyP (ORCPT
+        with ESMTP id S233293AbiG1OyP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Thu, 28 Jul 2022 10:54:15 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C6FED6BC39;
-        Thu, 28 Jul 2022 07:53:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D6D5B6BD48;
+        Thu, 28 Jul 2022 07:53:38 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13045169C;
-        Thu, 28 Jul 2022 07:53:33 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 842E8169E;
+        Thu, 28 Jul 2022 07:53:34 -0700 (PDT)
 Received: from e126387.arm.com (unknown [10.57.11.24])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AA183F70D;
-        Thu, 28 Jul 2022 07:53:31 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC6ED3F70D;
+        Thu, 28 Jul 2022 07:53:32 -0700 (PDT)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: [PATCH v5 12/14] perf test: Add unroll thread test shell script
-Date:   Thu, 28 Jul 2022 15:52:54 +0100
-Message-Id: <20220728145256.2985298-13-carsten.haitzler@foss.arm.com>
+Subject: [PATCH v5 13/14] perf test: Add git ignore for tmp and output files of CoreSight tests
+Date:   Thu, 28 Jul 2022 15:52:55 +0100
+Message-Id: <20220728145256.2985298-14-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
 References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
@@ -42,39 +42,34 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 
-This adds scripts to drive the unroll thread tests to compare perf
-output against a minimum bar of content/quality.
+Ignore other output files of the new CoreSight tests so they don't
+fill git status with noise we don't need or want.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
- .../shell/coresight/unroll_loop_thread_10.sh   | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100755 tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+ tools/perf/.gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-new file mode 100755
-index 000000000000..f48c85230b15
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-@@ -0,0 +1,18 @@
-+#!/bin/sh -e
-+# CoreSight / Unroll Loop Thread 10
-+
-+# SPDX-License-Identifier: GPL-2.0
-+# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+
-+TEST="unroll_loop_thread"
-+. $(dirname $0)/../lib/coresight.sh
-+ARGS="10"
-+DATV="10"
-+DATA="$DATD/perf-$TEST-$DATV.data"
-+
-+perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
-+
-+perf_dump_aux_verify "$DATA" 10 10 10
-+
-+err=$?
-+exit $err
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index faa23b5d32f5..a653311d9693 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -22,6 +22,7 @@ perf-archive
+ perf-iostat
+ tags
+ TAGS
++stats-*.csv
+ cscope*
+ config.mak
+ config.mak.autogen
+@@ -29,6 +30,7 @@ config.mak.autogen
+ *-flex.*
+ *.pyc
+ *.pyo
++*.stdout
+ .config-detected
+ util/intel-pt-decoder/inat-tables.c
+ arch/*/include/generated/
 -- 
 2.32.0
 
