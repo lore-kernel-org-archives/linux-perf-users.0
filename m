@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3427C04A68
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 11:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F09C04A68
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 11:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236131AbiG1LtB (ORCPT
+        id S229781AbiG1LvK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 07:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
+        Thu, 28 Jul 2022 07:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235656AbiG1LtA (ORCPT
+        with ESMTP id S236572AbiG1Luu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 07:49:00 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4CA691ED;
-        Thu, 28 Jul 2022 04:48:57 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Ltpkc2pKQzjXVh;
-        Thu, 28 Jul 2022 19:46:00 +0800 (CST)
+        Thu, 28 Jul 2022 07:50:50 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5F7422E9;
+        Thu, 28 Jul 2022 04:50:48 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LtplZ2ws8zWf1Q;
+        Thu, 28 Jul 2022 19:46:50 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
  dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 28 Jul 2022 19:48:55 +0800
+ 15.1.2375.24; Thu, 28 Jul 2022 19:50:45 +0800
 Received: from [10.67.111.205] (10.67.111.205) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 28 Jul 2022 19:48:54 +0800
-Subject: Re: [RFC v3 01/17] perf kwork: New tool
+ 15.1.2375.24; Thu, 28 Jul 2022 19:50:44 +0800
+Subject: Re: [RFC v3 02/17] perf kwork: Add irq kwork record support
 To:     Namhyung Kim <namhyung@kernel.org>
 CC:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -38,15 +38,15 @@ CC:     Peter Zijlstra <peterz@infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>
 References: <20220709015033.38326-1-yangjihong1@huawei.com>
- <20220709015033.38326-2-yangjihong1@huawei.com>
- <CAM9d7cjRPSsoAk22xTO=BFQTVn+HmMZkcm7grNehHkbtRWwhgw@mail.gmail.com>
+ <20220709015033.38326-3-yangjihong1@huawei.com>
+ <CAM9d7civBT2-u0C1rK6OvSLAT7fzXRb8ku4xaHbF3wbUv+m1rw@mail.gmail.com>
 From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <289300c6-f822-03de-9a6b-f2352421097b@huawei.com>
-Date:   Thu, 28 Jul 2022 19:48:53 +0800
+Message-ID: <a88bb1f9-546a-53c4-9e37-c8dbb4ff5cb6@huawei.com>
+Date:   Thu, 28 Jul 2022 19:50:44 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7cjRPSsoAk22xTO=BFQTVn+HmMZkcm7grNehHkbtRWwhgw@mail.gmail.com>
+In-Reply-To: <CAM9d7civBT2-u0C1rK6OvSLAT7fzXRb8ku4xaHbF3wbUv+m1rw@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,77 +60,67 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello Namhyung,
 
-On 2022/7/28 7:33, Namhyung Kim wrote:
-> Hello,
-> 
+On 2022/7/28 7:42, Namhyung Kim wrote:
 > On Fri, Jul 8, 2022 at 6:53 PM Yang Jihong <yangjihong1@huawei.com> wrote:
 >>
->> The perf-kwork tool is used to trace time properties of kernel work
->> (such as irq, softirq, and workqueue), including runtime, latency,
->> and timehist, using the infrastructure in the perf tools to allow
->> tracing extra targets.
->>
->> This is the first commit to reuse perf_record framework code to
->> implement a simple record function, kwork is not supported currently.
+>> Record interrupt events irq:irq_handler_entry & irq_handler_exit
 >>
 >> Test cases:
 >>
->>    # perf
->>
->>     usage: perf [--version] [--help] [OPTIONS] COMMAND [ARGS]
->>
->>     The most commonly used perf commands are:
->>    <SNIP>
->>       iostat          Show I/O performance metrics
->>       kallsyms        Searches running kernel for symbols
->>       kmem            Tool to trace/measure kernel memory properties
->>       kvm             Tool to trace/measure kvm guest os
->>       kwork           Tool to trace/measure kernel work properties (latencies)
->>       list            List all symbolic event types
->>       lock            Analyze lock events
->>       mem             Profile memory accesses
->>       record          Run a command and record its profile into perf.data
->>    <SNIP>
->>     See 'perf help COMMAND' for more information on a specific command.
->>
->>    # perf kwork
->>
->>     Usage: perf kwork [<options>] {record}
->>
->>        -D, --dump-raw-trace  dump raw trace in ASCII
->>        -f, --force           don't complain, do it
->>        -k, --kwork <kwork>   list of kwork to profile
->>        -v, --verbose         be more verbose (show symbol address, etc)
->>
->>    # perf kwork record -- sleep 1
+>>   # perf kwork record -o perf_kwork.date -- sleep 1
 >>    [ perf record: Woken up 0 times to write data ]
->>    [ perf record: Captured and wrote 1.787 MB perf.data ]
+>>    [ perf record: Captured and wrote 0.556 MB perf_kwork.date ]
+>>    #
+>>    # perf evlist -i perf_kwork.date
+>>    irq:irq_handler_entry
+>>    irq:irq_handler_exit
+>>    dummy:HG
+>>    # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
+>>    #
 >>
 >> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 >> ---
-> [SNIP]
+>>   tools/perf/Documentation/perf-kwork.txt |  2 +-
+>>   tools/perf/builtin-kwork.c              | 15 ++++++++++++++-
+>>   tools/perf/util/kwork.h                 |  1 +
+>>   3 files changed, 16 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+>> index dc1e36da57bb..57bd5fa7d5c9 100644
+>> --- a/tools/perf/Documentation/perf-kwork.txt
+>> +++ b/tools/perf/Documentation/perf-kwork.txt
+>> @@ -32,7 +32,7 @@ OPTIONS
+>>
+>>   -k::
+>>   --kwork::
+>> -       List of kwork to profile
+>> +       List of kwork to profile (irq, etc)
+>>
+>>   -v::
+>>   --verbose::
+>> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+>> index f3552c56ede3..a26b7fde1e38 100644
+>> --- a/tools/perf/builtin-kwork.c
+>> +++ b/tools/perf/builtin-kwork.c
+>> @@ -25,7 +25,20 @@
+>>   #include <linux/time64.h>
+>>   #include <linux/zalloc.h>
+>>
+>> +const struct evsel_str_handler irq_tp_handlers[] = {
+>> +       { "irq:irq_handler_entry", NULL, },
+>> +       { "irq:irq_handler_exit",  NULL, },
+>> +};
 >> +
->> +static int perf_kwork__record(struct perf_kwork *kwork,
->> +                             int argc, const char **argv)
->> +{
->> +       const char **rec_argv;
->> +       unsigned int rec_argc, i, j;
->> +       struct kwork_class *class;
->> +
->> +       const char *const record_args[] = {
->> +               "record",
->> +               "-a",
->> +               "-R",
->> +               "-m", "1024",
->> +               "-c", "1",
+>> +static struct kwork_class kwork_irq = {
+>> +       .name           = "irq",
+>> +       .type           = KWORK_CLASS_IRQ,
+>> +       .nr_tracepoints = 2,
 > 
-> Please consider adding '--synth task' to skip costly synthesis
-> if you don't need user space symbols.
+> Nit: I don't think it's gonna change frequently but
+> it'd be better to use ARRAY_SIZE(irq_tp_handlers)
+> for future changes.
 > 
-Yes, we don't need user space symbols now, I'll add this option in next 
-fix patch,thanks for your suggestion.
+OK, I'll fix in next patch,thanks for your review.
 
 Regards,
 Jihong
-> .
-> 
