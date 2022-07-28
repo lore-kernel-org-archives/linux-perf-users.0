@@ -2,112 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA49DC04A68
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 19:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E9CC04A68
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 19:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230115AbiG1TOn (ORCPT
+        id S231194AbiG1T0X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 15:14:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
+        Thu, 28 Jul 2022 15:26:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbiG1TOn (ORCPT
+        with ESMTP id S229482AbiG1T0W (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 15:14:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C378276E81;
-        Thu, 28 Jul 2022 12:14:41 -0700 (PDT)
+        Thu, 28 Jul 2022 15:26:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647E31D307;
+        Thu, 28 Jul 2022 12:26:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5515061DE5;
-        Thu, 28 Jul 2022 19:14:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C4CC433D6;
-        Thu, 28 Jul 2022 19:14:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1D838B81E8E;
+        Thu, 28 Jul 2022 19:26:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B275C43470;
+        Thu, 28 Jul 2022 19:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659035680;
-        bh=bSq6pHNBJXc4FkdLzeoUweLnmHWG1wHVkkQKCwFpV64=;
+        s=k20201202; t=1659036378;
+        bh=G5RmgkQuI/HuMNQZK4HcIFiZADuFadEIvY/ZvFD18KQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q2FT1fs0E4yAmmQP74plKSIR67wYUyS8klL6SdmaeVo26wD+8JIRuIWowyS7mHgV6
-         GPsl5tSoe/KzOCsTiUDCXgOwq2w/Lo+i4Ow86kzjGnWINCYJJBwkSWmHTgZjI7NpvW
-         LXVdrctvsC8OzW+cWx3bPBRCIYlfzlbgR87hM1z/L/HOeOATDNIV6RqZsrdJ1zKdos
-         urBIPciDO6X03wkwtUWQJqw3Vv3cKDnXsVcqOKCwibhmAnbFLUPRI6AyJ0+79I81n6
-         52Z9GhSrPp4g6K9ZX7kHILfwsz3y52Y4q+DrCwmOhpo3QMTApVV3/Q8aPHCCOOuWwB
-         5bAuU7j+LqsQA==
+        b=Agou3H6BzcOJqyM2EOPksIhTLMHGBBzj4AHHMnp7OO9qUK6/CWD82/Zo6bFeqbBmx
+         yqYjBT6K40oYDOMlqC508+fLObM1dxqrswojO9EbyOCYWHoY7zWO1QFBT/j7Ysz4ZO
+         4WHn+8Vtt46oifLmyXbVP4h0El4NHIBvuoPKxbEYvRPw85ycIBAAyuVfFBoxlavo7Z
+         dblUgOA0qwnRgY2bo7C0W1yg3PNAKrvHokTW0dLM97sdQNVBROJxnRinsCFpPqh1IQ
+         TNRqAi89mDQdbB+1qk4qfKPfawjwGNzCMecL//NhZKnnIRYzSjoD77inDeWMfkIxDm
+         9sHo1gyCHVn3w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DDB7B405DD; Thu, 28 Jul 2022 16:14:37 -0300 (-03)
-Date:   Thu, 28 Jul 2022 16:14:37 -0300
+        id 8E68C405DD; Thu, 28 Jul 2022 16:26:15 -0300 (-03)
+Date:   Thu, 28 Jul 2022 16:26:15 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     perry.taylor@intel.com, caleb.biggers@intel.com,
-        kshipra.bopardikar@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 00/30] Add generated latest Intel events and metrics
-Message-ID: <YuLgHanwHD1IUyrg@kernel.org>
-References: <20220727220832.2865794-1-irogers@google.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: python: Fix build when PYTHON_CONFIG is user
+ supplied
+Message-ID: <YuLi14u3DQ+ShH9w@kernel.org>
+References: <20220728093946.1337642-1-james.clark@arm.com>
+ <CAP-5=fXnR=LSk-bO02V7HzWTTCrsbnM1w63_YYqSMEgy0vM-PQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220727220832.2865794-1-irogers@google.com>
+In-Reply-To: <CAP-5=fXnR=LSk-bO02V7HzWTTCrsbnM1w63_YYqSMEgy0vM-PQ@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jul 27, 2022 at 03:08:02PM -0700, Ian Rogers escreveu:
-> The goal of this patch series is to align the json events for Intel
-> platforms with those generated by:
-> https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
-> This script takes the latest event json and TMA metrics from:
-> https://download.01.org/perfmon/ and adds to these metrics, in
-> particular uncore ones, from: https://github.com/intel/perfmon-metrics
+Em Thu, Jul 28, 2022 at 09:37:32AM -0700, Ian Rogers escreveu:
+> On Thu, Jul 28, 2022 at 2:40 AM James Clark <james.clark@arm.com> wrote:
+> >
+> > The previous change to Python autodetection had a small mistake where
+> > the auto value was used to determine the Python binary, rather than the
+> > user supplied value. The Python binary is only used for one part of the
+> > build process, rather than the final linking, so it was producing
+> > correct builds in most scenarios, especially when the auto detected
+> > value matched what the user wanted, or the system only had a valid set
+> > of Pythons.
+> >
+> > Change it so that the Python binary path is derived from either the
+> > PYTHON_CONFIG value or PYTHON value, depending on what is specified by
+> > the user. This was the original intention.
+> >
+> > This error was spotted in a build failure an odd cross compilation
+> > environment after commit 4c41cb46a732fe82 ("perf python: Prefer
+> > python3") was merged.
+> >
+> > Fixes: 630af16eee495f58 ("perf tools: Use Python devtools for version autodetection rather than runtime")
+> > Signed-off-by: James Clark <james.clark@arm.com>
 > 
-> Some fixes were needed to the script for generating the json and are
-> contained in this pull request:
-> https://github.com/intel/event-converter-for-linux-perf/pull/15
-> 
-> The json files were first downloaded before being used to generate the
-> perf json files. This fixes non-ascii characters for (R) and (TM) in
-> the source json files. This can be reproduced with:
-> $ download_and_gen.py --hermetic-download --outdir data
-> $ download_and_gen.py --url=file://`pwd`/data/01 --metrics-url=file://`pwd`/data/github
-> 
-> A minor correction is made in the generated json of:
-> tools/perf/pmu-events/arch/x86/ivytown/uncore-other.json
-> changing "\\Inbound\\" to just "Inbound" to avoid compilation errors
-> caused by \I.
-> 
-> The elkhartlake metrics file is basic and not generated by scripts. It
-> is retained here although it causes a difference from the generated
-> files.
-> 
-> The mapfile.csv is the third and final difference from the generated
-> version due to a bug in 01.org's models for icelake. The existing
-> models are preferred and retained.
-> 
-> Compared to the previous json, the major changes are:
->  - the inclusion of basic meteorlake events,
->  - the inclusion of server uncore metrics,
->  - the inclusion of previously ungenerated and experimental uncore events.
-> 
-> v3. Rebase on top of Zhengjun Xing's updates. Remove merged test fix
->     and tremontx rename patches.
+> Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks, applied.
 
 - Arnaldo
 
+ 
+> Thanks,
+> Ian
+> 
+> > ---
+> >  tools/perf/Makefile.config | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index d3c254c0f5c6..a69da9f34486 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -265,7 +265,7 @@ endif
+> >  # defined. get-executable-or-default fails with an error if the first argument is supplied but
+> >  # doesn't exist.
+> >  override PYTHON_CONFIG := $(call get-executable-or-default,PYTHON_CONFIG,$(PYTHON_AUTO))
+> > -override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_AUTO)))
+> > +override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_CONFIG)))
+> >
+> >  grep-libs  = $(filter -l%,$(1))
+> >  strip-libs  = $(filter-out -l%,$(1))
+> > --
+> > 2.28.0
+> >
+
+-- 
+
+- Arnaldo
