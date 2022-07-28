@@ -2,127 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2F7C04A68
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 07:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC53C04A68
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 09:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234482AbiG1Hau (ORCPT
+        id S235272AbiG1JJy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 03:30:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
+        Thu, 28 Jul 2022 05:09:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234417AbiG1Hat (ORCPT
+        with ESMTP id S233460AbiG1JJy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 03:30:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1B31E57234
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 00:30:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658993448;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ux6VwMtMxHO2mepOlWLk/n9XMR06YLsuanCnSO2VUjI=;
-        b=EWH0svMqrd1xmc8XfKXT2oLjHJfGoWEKiWiJQQyiRb/6TCBBQv4Qh7bfdsBIbdYr+gZUUR
-        WACwjhGvFe0sVuwHAZV8FH5WgmXuKo39QI6Hrm0Ho/M9e9gikU0FUgw8TMHMVATazGJJB3
-        khkW06sdV0TqnzIeuROCAOyS5mLIheg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-204-fvFAbU1_PgCryZqHIMMp5w-1; Thu, 28 Jul 2022 03:30:42 -0400
-X-MC-Unique: fvFAbU1_PgCryZqHIMMp5w-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC6E2185A79C;
-        Thu, 28 Jul 2022 07:30:41 +0000 (UTC)
-Received: from starship (unknown [10.40.192.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 332ED492C3B;
-        Thu, 28 Jul 2022 07:30:34 +0000 (UTC)
-Message-ID: <fad05f161cc6425d8c36fb6322de2bbaa683dcb3.camel@redhat.com>
-Subject: Re: [PATCH v2 0/5] x86: cpuid: improve support for broken CPUID
- configurations
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jane Malalane <jane.malalane@citrix.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
-Date:   Thu, 28 Jul 2022 10:30:33 +0300
-In-Reply-To: <20220718141123.136106-1-mlevitsk@redhat.com>
-References: <20220718141123.136106-1-mlevitsk@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+        Thu, 28 Jul 2022 05:09:54 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B9FD6655A6;
+        Thu, 28 Jul 2022 02:09:52 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26A01106F;
+        Thu, 28 Jul 2022 02:09:53 -0700 (PDT)
+Received: from [10.57.43.118] (unknown [10.57.43.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34EDC3F73B;
+        Thu, 28 Jul 2022 02:09:51 -0700 (PDT)
+Message-ID: <3adff726-c3a1-e1db-0506-a3c2b742c9ea@arm.com>
+Date:   Thu, 28 Jul 2022 10:09:49 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] perf/tests: Fix test case 95 on s390 and use same event
+Content-Language: en-US
+To:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, german.gomez@arm.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+References: <20220727141439.712582-1-tmricht@linux.ibm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220727141439.712582-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 2022-07-18 at 17:11 +0300, Maxim Levitsky wrote:
-> This patch series aims to harden the cpuid code against the case when
-> the hypervisor exposes a broken CPUID configuration to the guest,
-> in the form of having a feature disabled but not features that depend on it.
-> 
-> This is the more generic way to fix kernel panic in aes-ni kernel driver,
-> which was triggered by CPUID configuration in which AVX is disabled but
-> not AVX2.
-> 
-> https://lore.kernel.org/all/20211103145231.GA4485@gondor.apana.org.au/T/
-> 
-> This was tested by booting a guest with AVX disabled and not AVX2,
-> and observing that both a warning is now printed in dmesg, and
-> that avx2 is gone from /proc/cpuinfo.
-> 
-> V2:
-> 
-> I hopefully addressed all the (very good) review feedback.
-> 
-> Best regards,
-> 	Maxim Levitsky
-> 
-> Maxim Levitsky (5):
->   perf/x86/intel/lbr: use setup_clear_cpu_cap instead of clear_cpu_cap
->   x86/cpuid: refactor setup_clear_cpu_cap()/clear_cpu_cap()
->   x86/cpuid: move filter_cpuid_features to cpuid-deps.c
->   x86/cpuid: remove 'warn' parameter from filter_cpuid_features
->   x86/cpuid: check for dependencies violations in CPUID and attempt to
->     fix them
-> 
->  arch/x86/events/intel/lbr.c       |  2 +-
->  arch/x86/include/asm/cpufeature.h |  1 +
->  arch/x86/kernel/cpu/common.c      | 51 +-------------------
->  arch/x86/kernel/cpu/cpuid-deps.c  | 80 +++++++++++++++++++++++++++----
->  4 files changed, 74 insertions(+), 60 deletions(-)
-> 
-> -- 
-> 2.34.3
-> 
-> 
-A very kind ping on these patches.
 
-Best regards,
-	Maxim Levitsky
 
+On 27/07/2022 15:14, Thomas Richter wrote:
+> On linux-next tree perf test 95 was added recently.
+> s390 does not support branch sampling at all and the test case fails
+> despite for checking branch support before hand.
+> The check for support of branching
+> uses the software event named dummy, as seen in the line:
+> 
+>  perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
+> 
+> However when the branch recording is actually done, a different
+> event is used, as seen in the line:
+> 
+>  perf record -o $TMPDIR/... --branch-filter any,save_type,u -- ...
+> 
+> The event is omitted and for perf record the default event is
+> cycles, which is not supported by s390 and this fails when executed
+> on s390:
+> 
+>  # perf record --branch-filter any,save_type,u -- \
+> 	/tmp/__perf_test.program.iDSmQ/a.out
+>  Error:
+>  cycles: PMU Hardware or event type doesn't support branch stack sampling.
+>  #
+> 
+> Therefore fix this and use the same event cycles for testing support
+> and actually running the test.
+> 
+> Output before:
+>  # ./perf test -Fv 95
+>  95: Check branch stack sampling                                     :
+>  --- start ---
+>  Testing user branch stack sampling
+>  ---- end ----
+>  Check branch stack sampling: FAILED!
+>  #
+> 
+> Output after:
+>  # ./perf test -Fv 95
+>  95: Check branch stack sampling                                     :
+>  --- start ---
+>  ---- end ----
+>  Check branch stack sampling: Skip
+>  #
+> 
+> Fixes: b55878c90ab9 ("perf test: Add test for branch stack sampling")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+
+Looks good to me.
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
+> ---
+>  tools/perf/tests/shell/test_brstack.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+> index 113ccd17bf03..c644f94a6500 100755
+> --- a/tools/perf/tests/shell/test_brstack.sh
+> +++ b/tools/perf/tests/shell/test_brstack.sh
+> @@ -12,7 +12,7 @@ if ! [ -x "$(command -v cc)" ]; then
+>  fi
+>  
+>  # skip the test if the hardware doesn't support branch stack sampling
+> -perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
+> +perf record -b -o- -B true > /dev/null 2>&1 || exit 2
+>  
+>  TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
+>  
