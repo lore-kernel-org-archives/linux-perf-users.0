@@ -2,80 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396FBC04A68
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 16:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296F4C04A68
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 16:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232942AbiG1QR0 (ORCPT
+        id S229627AbiG1Qhs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 12:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60670 "EHLO
+        Thu, 28 Jul 2022 12:37:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233247AbiG1QRP (ORCPT
+        with ESMTP id S229450AbiG1Qhr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 12:17:15 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E74396F7EC;
-        Thu, 28 Jul 2022 09:17:11 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5348D106F;
-        Thu, 28 Jul 2022 09:17:12 -0700 (PDT)
-Received: from [10.57.11.98] (unknown [10.57.11.98])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9482E3F70D;
-        Thu, 28 Jul 2022 09:17:09 -0700 (PDT)
-Message-ID: <3379eac1-d398-60be-b606-10098702d7aa@arm.com>
-Date:   Thu, 28 Jul 2022 17:17:08 +0100
+        Thu, 28 Jul 2022 12:37:47 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D425019D
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 09:37:46 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id l22so2923386wrz.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 09:37:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N+zLZ68jPdsuV8kFRBtjgcPpirHKM1P6CnnyplyyLyI=;
+        b=DDTQuRELXLh1k4gyHA8vFZ8znx7BXomr3wiMDHCERPtV4ZNv5f9E24HkaWlHX+GtQC
+         7Ff7SBHctIQbgAsAz25N65Z3pkeFSit/NoaLj981hc+uMIpGJPEPZ+5nseVnO4WMGQ7R
+         pLqXWcUAtJNBUcSdxVXpsQqf18WlvNV8G0slJ5IjT6/1tcLOGzD70dD/5JF9m5BGUFL0
+         zzjC867fRnlSqSaw6CQ5J+58f6NwGfUyHNdjZuP0yVI9Ts+wJ2qH+5Eg0REIf5echHgW
+         30TafkiHcqU++AMKVczpSDYMana6W7Ikw2DeX56ltcaZ0pAD8Z+hOmTHtCJJ+F/hqcEZ
+         unDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N+zLZ68jPdsuV8kFRBtjgcPpirHKM1P6CnnyplyyLyI=;
+        b=3KMAgAVAzjsFac8CzgTFIs+cSrt/JiMoDRUazNa+mkc+n7Aj0ZuegvK+S7upPJYEe5
+         XlMKNMSH2/C3bvlf5MDEGQGNnVUAxJzr0Qlpgj7Guan/5eZcye0azxMMi2n8R5+iKKin
+         jfqKRiY/WRjFuNwuRPXVeEm1Q3Ja/63NdTYd7e3YL0O34BGGRWkKLJB9Un6LdDmuBsyN
+         G8W8zBIwMF/sScytUuh5FSh7D4xVAmNwwxnOoS2Znxc2GpL2CAgXyVla739fv9enSpwN
+         vuJZOo9c7e7bNtNY9VB34NhG1E0gJSkyNMk4ZNTynnRCNWuRTuyA1hKs8NFxCh/rdnOy
+         Wmrg==
+X-Gm-Message-State: AJIora+fYOveZ9MIG5yulX3J45hIfnXHD1k7O/GtJC7zcOD7po6IXeOJ
+        QMHGbRq0garV0mx4g0PrYI7FXKUB7nYEqEp5T5MCkA==
+X-Google-Smtp-Source: AGRyM1smna+ZfJhYTIWoof3XK54TZmaXaOEPdOqkur2Wi27qoVSejJOVtZaYEmitwiOoUssoWrSdAG85317+Uh0Zl70=
+X-Received: by 2002:adf:e28d:0:b0:21e:4c3b:b446 with SMTP id
+ v13-20020adfe28d000000b0021e4c3bb446mr17491154wri.300.1659026264488; Thu, 28
+ Jul 2022 09:37:44 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH] perf vendor events arm64: Arm Cortex-A78C and X1C
-To:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+References: <20220728093946.1337642-1-james.clark@arm.com>
+In-Reply-To: <20220728093946.1337642-1-james.clark@arm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 28 Jul 2022 09:37:32 -0700
+Message-ID: <CAP-5=fXnR=LSk-bO02V7HzWTTCrsbnM1w63_YYqSMEgy0vM-PQ@mail.gmail.com>
+Subject: Re: [PATCH] perf: python: Fix build when PYTHON_CONFIG is user supplied
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220610174459.615995-1-nick.forrington@arm.com>
- <2955958b-4982-42bc-7c68-82cd23462b35@huawei.com>
-From:   Nick Forrington <nick.forrington@arm.com>
-In-Reply-To: <2955958b-4982-42bc-7c68-82cd23462b35@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 13/06/2022 11:09, John Garry wrote:
-> On 10/06/2022 18:44, Nick Forrington wrote:
->> Add PMU events for the Arm Cortex-A78C and Arm Cortex-X1C CPUs.
->>
->> Events for Arm Cortex-A78C match those for Arm Cortex-A78.
->> Events for Arm Cortex-X1C match those for Arm Cortex- X1.
->>
->> As such, this is just a mapfile change.
->>
->> Main ID Register (MIDR) and event data is sourced from the corresponding
->> Arm Technical Reference Manuals:
->>
->> Arm Cortex-A78C
->> https://developer.arm.com/documentation/102226/
->>
->> Arm Cortex-X1C
->> https://developer.arm.com/documentation/101968/
->>
->> Signed-off-by: Nick Forrington<nick.forrington@arm.com>
+On Thu, Jul 28, 2022 at 2:40 AM James Clark <james.clark@arm.com> wrote:
 >
-> Reviewed-by: John Garry <john.garry@huawei.com>
+> The previous change to Python autodetection had a small mistake where
+> the auto value was used to determine the Python binary, rather than the
+> user supplied value. The Python binary is only used for one part of the
+> build process, rather than the final linking, so it was producing
+> correct builds in most scenarios, especially when the auto detected
+> value matched what the user wanted, or the system only had a valid set
+> of Pythons.
+>
+> Change it so that the Python binary path is derived from either the
+> PYTHON_CONFIG value or PYTHON value, depending on what is specified by
+> the user. This was the original intention.
+>
+> This error was spotted in a build failure an odd cross compilation
+> environment after commit 4c41cb46a732fe82 ("perf python: Prefer
+> python3") was merged.
+>
+> Fixes: 630af16eee495f58 ("perf tools: Use Python devtools for version autodetection rather than runtime")
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Could this be applied please?
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Nick
+Ian
 
-
+> ---
+>  tools/perf/Makefile.config | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index d3c254c0f5c6..a69da9f34486 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -265,7 +265,7 @@ endif
+>  # defined. get-executable-or-default fails with an error if the first argument is supplied but
+>  # doesn't exist.
+>  override PYTHON_CONFIG := $(call get-executable-or-default,PYTHON_CONFIG,$(PYTHON_AUTO))
+> -override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_AUTO)))
+> +override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_CONFIG)))
+>
+>  grep-libs  = $(filter -l%,$(1))
+>  strip-libs  = $(filter-out -l%,$(1))
+> --
+> 2.28.0
+>
