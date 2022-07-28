@@ -2,88 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568F9C3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 11:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9A2C04A68
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 12:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235460AbiG1L5K (ORCPT
+        id S236816AbiG1MBS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 07:57:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33564 "EHLO
+        Thu, 28 Jul 2022 08:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbiG1L5J (ORCPT
+        with ESMTP id S235664AbiG1MBS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 07:57:09 -0400
+        Thu, 28 Jul 2022 08:01:18 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E4767C92;
-        Thu, 28 Jul 2022 04:57:08 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Ltptv3W9yzWfWt;
-        Thu, 28 Jul 2022 19:53:11 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCEC1D6;
+        Thu, 28 Jul 2022 05:01:16 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Ltpzg6SlXzWfZT;
+        Thu, 28 Jul 2022 19:57:19 +0800 (CST)
 Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
  dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 28 Jul 2022 19:57:05 +0800
+ 15.1.2375.24; Thu, 28 Jul 2022 20:01:08 +0800
 Received: from [10.67.111.205] (10.67.111.205) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 28 Jul 2022 19:57:04 +0800
-Subject: Re: [PATCH][next] perf kwork: Fix spelling mistake "Captuer" ->
- "Capture"
-To:     Colin Ian King <colin.i.king@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20220727124126.222137-1-colin.i.king@gmail.com>
+ 15.1.2375.24; Thu, 28 Jul 2022 20:01:07 +0800
+Subject: Re: [RFC v3 06/17] perf kwork: Implement perf kwork report
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <pc@us.ibm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+References: <20220709015033.38326-1-yangjihong1@huawei.com>
+ <20220709015033.38326-7-yangjihong1@huawei.com> <YuAnEBpYSf53PkXI@kernel.org>
+ <b865f96a-856c-6a7d-a66a-c3343097ee5a@huawei.com>
+ <YuFF83qDSyzBrhBm@kernel.org>
 From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <a4aab976-d930-612c-38cb-b6f413f3654e@huawei.com>
-Date:   Thu, 28 Jul 2022 19:57:03 +0800
+Message-ID: <e3be9062-ade9-56c7-71f3-a8cce1db0583@huawei.com>
+Date:   Thu, 28 Jul 2022 20:01:07 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <20220727124126.222137-1-colin.i.king@gmail.com>
+In-Reply-To: <YuFF83qDSyzBrhBm@kernel.org>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Colin,
+Hello Arnaldo,
 
-On 2022/7/27 20:41, Colin Ian King wrote:
-> There is a spelling mistake in a pr_debug message. Fix it.
+On 2022/7/27 22:04, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Jul 27, 2022 at 08:39:33AM +0800, Yang Jihong escreveu:
+>> Hello,
+>>
+>> On 2022/7/27 1:40, Arnaldo Carvalho de Melo wrote:
+>>> Em Sat, Jul 09, 2022 at 09:50:22AM +0800, Yang Jihong escreveu:
+>>>> +
+>>>> +static void report_print_work(struct perf_kwork *kwork,
+>>>> +			      struct kwork_work *work)
+>>>> +{
+>>>> +	int ret = 0;
+>>>> +	char kwork_name[PRINT_KWORK_NAME_WIDTH];
+>>>> +	char max_runtime_start[32], max_runtime_end[32];
+>>>
+>>> Committer notes:
+>>>
+>>> - Add some {} for multiline for/if blocks
+>>>
+>>> - Return the calculated number of printed bytes in report_print_work,
+>>>     otherwise soem compilers will complain that variable isn't used, e.g.:
+>>>
+>>>      2    92.64 almalinux:9                   : FAIL clang version 13.0.1 (Red Hat 13.0.1-1.el9)
+>>>       builtin-kwork.c:1061:6: error: variable 'ret' set but not used [-Werror,-Wunused-but-set-variable]
+>>>               int ret = 0;
+>>>
+>>>
+>> OK, I'll fix it in next version.
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->   tools/perf/builtin-kwork.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> your work with these fixups is already at acme/perf/core:
 > 
-> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-> index fb8c63656ad8..d5906e939756 100644
-> --- a/tools/perf/builtin-kwork.c
-> +++ b/tools/perf/builtin-kwork.c
-> @@ -1447,7 +1447,7 @@ static void sig_handler(int sig)
->   	 * Simply capture termination signal so that
->   	 * the program can continue after pause returns
->   	 */
-> -	pr_debug("Captuer signal %d\n", sig);
-> +	pr_debug("Capture signal %d\n", sig);
->   }
->   
->   static int perf_kwork__report_bpf(struct perf_kwork *kwork)
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
 > 
-OK, I'll fix in next patch,thanks for your review.
+> Please continue from there. Please let me know if I made some mistake.
+> 
+> Thanks for working on this!
+>
+Thanks to these fixups.
+OK, I'll send fix patches according to review comments based on this branch.
 
 Regards,
 Jihong
-.
