@@ -2,123 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58C2C04A68
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 09:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6125C04A68
+	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 09:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235461AbiG1JZ1 (ORCPT
+        id S235632AbiG1Jj7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 05:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34324 "EHLO
+        Thu, 28 Jul 2022 05:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234702AbiG1JZ1 (ORCPT
+        with ESMTP id S235239AbiG1Jj6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 05:25:27 -0400
+        Thu, 28 Jul 2022 05:39:58 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C29EA2AE4;
-        Thu, 28 Jul 2022 02:25:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D2EB765D46;
+        Thu, 28 Jul 2022 02:39:57 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5654106F;
-        Thu, 28 Jul 2022 02:25:25 -0700 (PDT)
-Received: from [10.1.31.137] (e127744.cambridge.arm.com [10.1.31.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 408FA3F73B;
-        Thu, 28 Jul 2022 02:25:23 -0700 (PDT)
-Subject: Re: [PATCH] perf/tests: Fix test case 95 on s390 and use same event
-To:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, james.clark@arm.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-References: <20220727141439.712582-1-tmricht@linux.ibm.com>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <3dc28d5e-46ce-fd33-82c1-4e27b60dfef0@arm.com>
-Date:   Thu, 28 Jul 2022 10:25:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C601106F;
+        Thu, 28 Jul 2022 02:39:58 -0700 (PDT)
+Received: from e121896.arm.com (unknown [10.57.43.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CB97C3F73B;
+        Thu, 28 Jul 2022 02:39:55 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, acme@kernel.org,
+        irogers@google.com
+Cc:     James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: python: Fix build when PYTHON_CONFIG is user supplied
+Date:   Thu, 28 Jul 2022 10:39:46 +0100
+Message-Id: <20220728093946.1337642-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20220727141439.712582-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thanks for the fix, Thomas
+The previous change to Python autodetection had a small mistake where
+the auto value was used to determine the Python binary, rather than the
+user supplied value. The Python binary is only used for one part of the
+build process, rather than the final linking, so it was producing
+correct builds in most scenarios, especially when the auto detected
+value matched what the user wanted, or the system only had a valid set
+of Pythons.
 
-On 27/07/2022 15:14, Thomas Richter wrote:
-> On linux-next tree perf test 95 was added recently.
-> s390 does not support branch sampling at all and the test case fails
-> despite for checking branch support before hand.
-> The check for support of branching
-> uses the software event named dummy, as seen in the line:
->
->  perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
+Change it so that the Python binary path is derived from either the
+PYTHON_CONFIG value or PYTHON value, depending on what is specified by
+the user. This was the original intention.
 
-Just curious, do you know why the command succeeds in this platform (and
-potentially others)?
+This error was spotted in a build failure an odd cross compilation
+environment after commit 4c41cb46a732fe82 ("perf python: Prefer
+python3") was merged.
 
-I got the idea of using "dummy" from [1] but only tested on arm64 and
-x86. I thought the platforms would reject it if -b was not implemented
-regardless of the event. Did I misunderstand the use of dummy?
+Fixes: 630af16eee495f58 ("perf tools: Use Python devtools for version autodetection rather than runtime")
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-German
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index d3c254c0f5c6..a69da9f34486 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -265,7 +265,7 @@ endif
+ # defined. get-executable-or-default fails with an error if the first argument is supplied but
+ # doesn't exist.
+ override PYTHON_CONFIG := $(call get-executable-or-default,PYTHON_CONFIG,$(PYTHON_AUTO))
+-override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_AUTO)))
++override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_CONFIG)))
+ 
+ grep-libs  = $(filter -l%,$(1))
+ strip-libs  = $(filter-out -l%,$(1))
+-- 
+2.28.0
 
-[1] https://lore.kernel.org/all/20220617073840.GA45710@leoy-ThinkPad-X240s/
-
->
-> However when the branch recording is actually done, a different
-> event is used, as seen in the line:
->
->  perf record -o $TMPDIR/... --branch-filter any,save_type,u -- ...
->
-> The event is omitted and for perf record the default event is
-> cycles, which is not supported by s390 and this fails when executed
-> on s390:
->
->  # perf record --branch-filter any,save_type,u -- \
-> 	/tmp/__perf_test.program.iDSmQ/a.out
->  Error:
->  cycles: PMU Hardware or event type doesn't support branch stack sampling.
->  #
->
-> Therefore fix this and use the same event cycles for testing support
-> and actually running the test.
->
-> Output before:
->  # ./perf test -Fv 95
->  95: Check branch stack sampling                                     :
->  --- start ---
->  Testing user branch stack sampling
->  ---- end ----
->  Check branch stack sampling: FAILED!
->  #
->
-> Output after:
->  # ./perf test -Fv 95
->  95: Check branch stack sampling                                     :
->  --- start ---
->  ---- end ----
->  Check branch stack sampling: Skip
->  #
->
-> Fixes: b55878c90ab9 ("perf test: Add test for branch stack sampling")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/tests/shell/test_brstack.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-> index 113ccd17bf03..c644f94a6500 100755
-> --- a/tools/perf/tests/shell/test_brstack.sh
-> +++ b/tools/perf/tests/shell/test_brstack.sh
-> @@ -12,7 +12,7 @@ if ! [ -x "$(command -v cc)" ]; then
->  fi
->  
->  # skip the test if the hardware doesn't support branch stack sampling
-> -perf record -b -o- -e dummy -B true > /dev/null 2>&1 || exit 2
-> +perf record -b -o- -B true > /dev/null 2>&1 || exit 2
->  
->  TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
->  
