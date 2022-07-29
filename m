@@ -2,168 +2,467 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF89C00144
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 14:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDACC00144
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 14:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237087AbiG2O2x (ORCPT
+        id S236834AbiG2OgI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Jul 2022 10:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37136 "EHLO
+        Fri, 29 Jul 2022 10:36:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237082AbiG2O2w (ORCPT
+        with ESMTP id S236684AbiG2OgI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Jul 2022 10:28:52 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6152931DC3
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 07:28:50 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id v17so6200960wrr.10
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 07:28:50 -0700 (PDT)
+        Fri, 29 Jul 2022 10:36:08 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B2A2A735
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 07:36:06 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id b26so6267953wrc.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 07:36:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sSCRUzqHEeshRCXk0c46IYD/2B5v+syWELOAjW4JLl8=;
-        b=ht+dLOTBjToDS/+UkuMYt6260/Cg9KmnKO7XPvOPdsrk7keccvGCS2sa0dK4ivOoda
-         WwP87v/UcnAi+HpCgtaUMVc321imz5QObRqhFHnDQwbG/SarxZvLE2U24YsozI1hcGVF
-         D5G2cgoJ8cnB8lSQZQfC1ZH9nUoyrwai/sTsLWHvxT+QO6fM/ZE/J2doHTnFtNVuKZZk
-         hZwerSx//XqShJnS6yeyzO11muejbNczCrFsDKTl0qh9zMA40Yq+5ZGFSQkQhVKXL0Az
-         WXfDRBZyxHtz26kzz+tFSegtY4SOBB46T8TYmk8v86bY/rqQq1/a8bhi6NXBCQOahz2z
-         Rz+Q==
+         :cc:content-transfer-encoding;
+        bh=etHKF10ZT6NurWAKswk0Y5LKAfvV44h7I2ZlKpv2IkY=;
+        b=CIGV/jS6m2ZmnHL+auFqxkArKwit3mmSngkTzrjDbxrw+i1rwOJGxFE3rGqaUX7NXO
+         pQ/LMW/jzZKIJ0Qfo4a9x5ajBCsG1pzTc+T0moia15QzYN9XV10L2uUv53FtBP9dKVdD
+         i1ds1/wUVzadZ18avEhoVzTDRHbbu5pu/MtBihMh3Wsz8YBw5bf909YoTk/Fn2o+8iJh
+         cHj4XfRJ5ENVpDFcsUUQTBUepEJSqMJzADGeRHctmny5Q3FPqo2oc7NpI3771mmCkxgs
+         7PsFvssvekwY+sBB+O8mSSgqScM4khrFCTAk6vOIm1zrI8qOLj20JUZ1yoE/IeqwoFwW
+         Q6CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sSCRUzqHEeshRCXk0c46IYD/2B5v+syWELOAjW4JLl8=;
-        b=Pq/s0lTGE1eLGOzoMhXfb5idT8Yq/r1o0w5WBwPnrB1O67J1SzTmu6Sw2Pqonu+pOr
-         P/tTYZwqYRgV3zXLD4M0eKNTvu8omHFcknoPgtQJHBzNNuRS92PvgN17epwIbsLBzdWA
-         HT2kCv280mIdX1qM+AM/C6e4fEHtPtJLY6TG9FCFzICIrcr+jlWG3GPlZvsxvI41keOx
-         muKpHDRtJuglgyTwfag0zCcTyLgvww+Rlzgec/MH0IAvYCfxTduNXqYickVGwlLDXEoJ
-         mwtG8S4+9Os0LqBpi5zIpdfJioDi2zk+A01LbsZWT1E9ZgU8ebVunVtP3ITqKA3HCCCx
-         1Ygg==
-X-Gm-Message-State: ACgBeo3jwNKN9hahXrV7LdQQnDqRLCJHn309O63da7lS4FfMR1t+JANM
-        7v8NZrg3BNCtXIzACidg90SOOANFd1xLyhm1hVIk3stcQ6gZfo+m
-X-Google-Smtp-Source: AA6agR7SF8L2zGkGQ8Oi2s4j6CMeJzn0PTlELJABR3Z3tcIstQ9HpPnm0kwIyZFk86W12xyZOV981Bp6rSI3Bx96yA0=
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=etHKF10ZT6NurWAKswk0Y5LKAfvV44h7I2ZlKpv2IkY=;
+        b=NjcSAqge3q+l6+euYwlkZyfuVFthijmpJSDkB+bcvBdhyfjj6Uit48sQR7G43OCHRm
+         zSmFkJ8JODOoDTdoXobta7t7XEjKEhfh1Djs2mEd/qcK8yNcVjqZAW/tpyNz7YBoTK5p
+         I3UrHrcrKeW69l+YK5H0VziC2GNBNv/LTaQRm8wjxQkBSCXjTR/CSi71/Hhxip3N/55K
+         NQS0X+RiH4b5qDBe98x4lyCf5c95UkMBtOKgn4vbpdizu7zX5PAESt2pwP+4/m6ykwEg
+         BBtMUWFfEXuPAS9BAZoFUUAjlcfQY3MAeqeDpedEt8VvZPT+iV2r9JrSwBnff64kSyxx
+         YGqQ==
+X-Gm-Message-State: ACgBeo32YjmsLE6h3F9rTg1Md6Xwn1aMCmFmu294fwBMmvXJwfh92F+I
+        Fs10TE2kxzKeTCHDT0oRTEUrNxu3THJ4WyxLTJX9EA==
+X-Google-Smtp-Source: AA6agR6j5/kHI8JOWZb3gtk/UBSzzmEXTwoimA4eLd2IH5paJPIuZNK+i2cuHZWTPeKHHr71UTrjOCuGcoFhpDg7Gi0=
 X-Received: by 2002:a5d:6481:0:b0:21e:6c01:95a2 with SMTP id
- o1-20020a5d6481000000b0021e6c0195a2mr2592575wri.40.1659104928546; Fri, 29 Jul
- 2022 07:28:48 -0700 (PDT)
+ o1-20020a5d6481000000b0021e6c0195a2mr2613741wri.40.1659105364476; Fri, 29 Jul
+ 2022 07:36:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220614143353.1559597-1-irogers@google.com> <CAP-5=fVwWDyD5R7mkdGEqP1dchDOsdmrAPbaZFE7bUjYM3pYFA@mail.gmail.com>
- <CAP-5=fVyyj4nwam3grTAw94w8Ad+qZP6LDxYZv17vP2ph6pXwA@mail.gmail.com> <YuPGFNZNF+hAGWOa@krava>
-In-Reply-To: <YuPGFNZNF+hAGWOa@krava>
+References: <20220727220832.2865794-1-irogers@google.com> <20220727220832.2865794-22-irogers@google.com>
+ <CA+icZUU-AmzdkWqBCWw=izbWJfpw4GP+UUaOE6SRs3tiAtmKng@mail.gmail.com> <CA+icZUUG6GajshrWUsH-KDnwYc-C19k0hZ9uNUH3b=E32e2TUA@mail.gmail.com>
+In-Reply-To: <CA+icZUUG6GajshrWUsH-KDnwYc-C19k0hZ9uNUH3b=E32e2TUA@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 29 Jul 2022 07:28:36 -0700
-Message-ID: <CAP-5=fUTX37VS949zKKkXA+a8rtWY_fSjZG+J2gRcqd6uhCw8w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] Corrections to cpu map event encoding
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Fri, 29 Jul 2022 07:35:52 -0700
+Message-ID: <CAP-5=fVG0ANhft6NL-J4TQgP63nGrUjj=cSxyw46iYLen9LqpA@mail.gmail.com>
+Subject: Re: [PATCH v3 21/30] perf vendor events: Update Intel sandybridge
+To:     sedat.dilek@gmail.com
+Cc:     perry.taylor@intel.com, caleb.biggers@intel.com,
+        kshipra.bopardikar@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andi Kleen <ak@linux.intel.com>,
         James Clark <james.clark@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        Colin Ian King <colin.king@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 29, 2022 at 4:35 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Fri, Jul 29, 2022 at 1:48 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
 >
-> On Thu, Jul 28, 2022 at 07:01:09PM -0700, Ian Rogers wrote:
-> > On Fri, Jul 15, 2022 at 10:01 AM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Tue, Jun 14, 2022 at 7:33 AM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > A mask encoding of a cpu map is laid out as:
-> > > >   u16 nr
-> > > >   u16 long_size
-> > > >   unsigned long mask[];
-> > > > However, the mask may be 8-byte aligned meaning there is a 4-byte pad
-> > > > after long_size. This means 32-bit and 64-bit builds see the mask as
-> > > > being at different offsets. On top of this the structure is in the byte
-> > > > data[] encoded as:
-> > > >   u16 type
-> > > >   char data[]
-> > > > This means the mask's struct isn't the required 4 or 8 byte aligned, but
-> > > > is offset by 2. Consequently the long reads and writes are causing
-> > > > undefined behavior as the alignment is broken.
-> > > >
-> > > > These changes do minor clean up with const, visibility of functions
-> > > > and using the constant time max function. It then adds 32 and 64-bit
-> > > > mask encoding variants, packed to match current alignment. Taking the
-> > > > address of a packed struct leads to unaligned data, so function
-> > > > arguments are altered to be passed the packed struct. To compact the
-> > > > mask encoding further and drop the padding, the 4-byte variant is
-> > > > preferred. Finally a new range encoding is added, that reduces the
-> > > > size of the common case of a range of CPUs to a single u64.
-> > > >
-> > > > On a 72 CPU (hyperthread) machine the original encoding of all CPUs is:
-> > > > 0x9a98 [0x28]: event: 74
-> > > > .
-> > > > . ... raw event: size 40 bytes
-> > > > .  0000:  4a 00 00 00 00 00 28 00 01 00 02 00 08 00 00 00  J.....(.........
-> > > > .  0010:  00 00 ff ff ff ff ff ff ff ff ff 00 00 00 00 00  ................
-> > > > .  0020:  00 00 00 00 00 00 00 00                          ........
-> > > >
-> > > > 0 0 0x9a98 [0x28]: PERF_RECORD_CPU_MAP
-> > > >
-> > > > Using the 4-byte encoding it is:
-> > > > 0x9a98@pipe [0x20]: event: 74
-> > > > .
-> > > > . ... raw event: size 32 bytes
-> > > > .  0000:  4a 00 00 00 00 00 20 00 01 00 03 00 04 00 ff ff  J..... .........
-> > > > .  0010:  ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00  ................
-> > > >
-> > > > 0 0 0x9a98 [0x20]: PERF_RECORD_CPU_MAP
-> > > >
-> > > > Finally, with the range encoding it is:
-> > > > 0x9ab8@pipe [0x10]: event: 74
-> > > > .
-> > > > . ... raw event: size 16 bytes
-> > > > .  0000:  4a 00 00 00 00 00 10 00 02 00 00 00 00 00 47 00  J.............G.
-> > > >
-> > > > 0 0 0x9ab8 [0x10]: PERF_RECORD_CPU_MAP
-> > > >
-> > > > v2. Fixes a bug in the size computation of the update header
-> > > >     introduced by the last patch (Add range data encoding) and caught
-> > > >     by address sanitizer.
-> > > >
-> > > > Ian Rogers (6):
-> > > >   perf cpumap: Const map for max
-> > > >   perf cpumap: Synthetic events and const/static
-> > > >   perf cpumap: Compute mask size in constant time
-> > > >   perf cpumap: Fix alignment for masks in event encoding
-> > > >   perf events: Prefer union over variable length array
-> > > >   perf cpumap: Add range data encoding
-> > >
-> > > Ping. There was some feedback on this change but nothing to create a
-> > > v3. Feedback/acked-by/reviewed-by appreciated.
+> On Fri, Jul 29, 2022 at 10:41 AM Sedat Dilek <sedat.dilek@gmail.com> wrot=
+e:
 > >
-> > Ping. Feedback appreciated.
+> > On Thu, Jul 28, 2022 at 12:09 AM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > Update to v17, the metrics are based on TMA 4.4 full.
+> > >
+> > > Use script at:
+> > > https://github.com/intel/event-converter-for-linux-perf/blob/master/d=
+ownload_and_gen.py
+> > >
+> > > to download and generate the latest events and metrics. Manually copy
+> > > the sandybridge files into perf and update mapfile.csv.
+> > >
+> > > Tested on a non-sandybridge with 'perf test':
+> > >  10: PMU events                                                      =
+:
+> > >  10.1: PMU event table sanity                                        =
+: Ok
+> > >  10.2: PMU event map aliases                                         =
+: Ok
+> > >  10.3: Parsing of PMU event table metrics                            =
+: Ok
+> > >  10.4: Parsing of PMU event table metrics with fake PMUs             =
+: Ok
+> > >
+> >
+> > Hi Ian,
+> >
+> > thanks for v3 patchset.
+> >
+> > I used latest perf/core Git branch from Arnaldo's tree plus some
+> > custom patches (to fix binutils v2.38.90 and opennssl-v3 issues plus
+> > gnu11 tools patches) and build with LLVM-14.
+> >
+> > When I run on my Intel SandyBridge CPU...
+> >
+> > $ ~/bin/perf test
+> > ...
+> >  10: PMU events                                                      :
+> > 10.1: PMU event table sanity                                        : O=
+k
+> > 10.2: PMU event map aliases                                         : O=
+k
+> > 10.3: Parsing of PMU event table metrics                            : O=
+k
+> > 10.4: Parsing of PMU event table metrics with fake PMUs             : O=
+k
+> > ...
+> >
+> > First time I ran perf with option test.
+> >
+> > Looks that good to you?
+> >
 >
-> hi,
-> there's some unanswered feedback:
-> https://lore.kernel.org/linux-perf-users/YrwY3SP+jsTwrRBw@krava/
+> Nice.
 >
-> jirka
+> $~/bin/perf test list
+> ...
+>  10: PMU events
+> 10:1: PMU event table sanity
+> 10:2: PMU event map aliases
+> 10:3: Parsing of PMU event table metrics
+> 10:4: Parsing of PMU event table metrics with fake PMUs
+> ...
+>
+> $ ~/bin/perf test 10
+> 10: PMU events                                                      :
+> 10.1: PMU event table sanity                                        : Ok
+> 10.2: PMU event map aliases                                         : Ok
+> 10.3: Parsing of PMU event table metrics                            : Ok
+> 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+>
+> New perf lessons learned.
 
-Thanks Jirka,
+Thanks. There are also tests that iterate and run the events/metrics
+on your hardware:
 
-Was there a comment in particular? My reply was here:
-https://lore.kernel.org/linux-perf-users/CAP-5=fU=BpP4OT2axZLSfRnKxQxmv-HXj8khBgmx3XQMS+abgA@mail.gmail.com/
-I double checked, everyone of your comments was answered.
+$ perf test list
+...
+ 93: perf all metricgroups test
+94: perf all metrics test
+...
+ 96: perf all PMU test
+...
+
+Test 10 is a unit test and tests 93, 94 and 96 (your numbers may vary)
+are more like integration tests.
 
 Thanks,
 Ian
+
+
+> -Sedat-
+> >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/pmu-events/arch/x86/mapfile.csv            |  2 +-
+> > >  tools/perf/pmu-events/arch/x86/sandybridge/cache.json |  2 +-
+> > >  .../arch/x86/sandybridge/floating-point.json          |  2 +-
+> > >  .../pmu-events/arch/x86/sandybridge/frontend.json     |  4 ++--
+> > >  .../perf/pmu-events/arch/x86/sandybridge/memory.json  |  2 +-
+> > >  tools/perf/pmu-events/arch/x86/sandybridge/other.json |  2 +-
+> > >  .../pmu-events/arch/x86/sandybridge/pipeline.json     | 10 +++++----=
+-
+> > >  .../pmu-events/arch/x86/sandybridge/snb-metrics.json  | 11 +++++++++=
+--
+> > >  .../pmu-events/arch/x86/sandybridge/uncore-other.json |  2 +-
+> > >  .../arch/x86/sandybridge/virtual-memory.json          |  2 +-
+> > >  10 files changed, 23 insertions(+), 16 deletions(-)
+> > >
+> > > diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/=
+pmu-events/arch/x86/mapfile.csv
+> > > index 2f9419ee2d29..0b56c4a8a3a8 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > > +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > > @@ -19,12 +19,12 @@ GenuineIntel-6-(57|85),v9,knightslanding,core
+> > >  GenuineIntel-6-AA,v1.00,meteorlake,core
+> > >  GenuineIntel-6-1[AEF],v3,nehalemep,core
+> > >  GenuineIntel-6-2E,v3,nehalemex,core
+> > > +GenuineIntel-6-2A,v17,sandybridge,core
+> > >  GenuineIntel-6-[4589]E,v24,skylake,core
+> > >  GenuineIntel-6-A[56],v24,skylake,core
+> > >  GenuineIntel-6-37,v13,silvermont,core
+> > >  GenuineIntel-6-4D,v13,silvermont,core
+> > >  GenuineIntel-6-4C,v13,silvermont,core
+> > > -GenuineIntel-6-2A,v15,sandybridge,core
+> > >  GenuineIntel-6-2C,v2,westmereep-dp,core
+> > >  GenuineIntel-6-25,v2,westmereep-sp,core
+> > >  GenuineIntel-6-2F,v2,westmereex,core
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/cache.json b/=
+tools/perf/pmu-events/arch/x86/sandybridge/cache.json
+> > > index 92a7269eb444..a1d622352131 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/cache.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/cache.json
+> > > @@ -1876,4 +1876,4 @@
+> > >          "SampleAfterValue": "100003",
+> > >          "UMask": "0x10"
+> > >      }
+> > > -]
+> > > \ No newline at end of file
+> > > +]
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/floating-poin=
+t.json b/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.json
+> > > index 713878fd062b..eb2ff2cfdf6b 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.json
+> > > @@ -135,4 +135,4 @@
+> > >          "SampleAfterValue": "2000003",
+> > >          "UMask": "0x1"
+> > >      }
+> > > -]
+> > > \ No newline at end of file
+> > > +]
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json=
+ b/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json
+> > > index fa22f9463b66..e2c82e43a2de 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json
+> > > @@ -176,7 +176,7 @@
+> > >          "CounterMask": "1",
+> > >          "EventCode": "0x79",
+> > >          "EventName": "IDQ.MS_CYCLES",
+> > > -        "PublicDescription": "This event counts cycles during which =
+the microcode sequencer assisted the front-end in delivering uops.  Microco=
+de assists are used for complex instructions or scenarios that can't be han=
+dled by the standard decoder.  Using other instructions, if possible, will =
+usually improve performance.  See the Intel 64 and IA-32 Architectures Opti=
+mization Reference Manual for more information.",
+> > > +        "PublicDescription": "This event counts cycles during which =
+the microcode sequencer assisted the front-end in delivering uops.  Microco=
+de assists are used for complex instructions or scenarios that can't be han=
+dled by the standard decoder.  Using other instructions, if possible, will =
+usually improve performance.  See the Intel(R) 64 and IA-32 Architectures O=
+ptimization Reference Manual for more information.",
+> > >          "SampleAfterValue": "2000003",
+> > >          "UMask": "0x30"
+> > >      },
+> > > @@ -311,4 +311,4 @@
+> > >          "SampleAfterValue": "2000003",
+> > >          "UMask": "0x1"
+> > >      }
+> > > -]
+> > > \ No newline at end of file
+> > > +]
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/memory.json b=
+/tools/perf/pmu-events/arch/x86/sandybridge/memory.json
+> > > index 931892d34076..3c283ca309f3 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/memory.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/memory.json
+> > > @@ -442,4 +442,4 @@
+> > >          "SampleAfterValue": "100003",
+> > >          "UMask": "0x1"
+> > >      }
+> > > -]
+> > > \ No newline at end of file
+> > > +]
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/other.json b/=
+tools/perf/pmu-events/arch/x86/sandybridge/other.json
+> > > index e251f535ec09..2f873ab14156 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/other.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/other.json
+> > > @@ -55,4 +55,4 @@
+> > >          "SampleAfterValue": "2000003",
+> > >          "UMask": "0x1"
+> > >      }
+> > > -]
+> > > \ No newline at end of file
+> > > +]
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json=
+ b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+> > > index b9a3f194a00a..2c3b6c92aa6b 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+> > > @@ -609,7 +609,7 @@
+> > >          "UMask": "0x3"
+> > >      },
+> > >      {
+> > > -        "BriefDescription": "Number of occurences waiting for the ch=
+eckpoints in Resource Allocation Table (RAT) to be recovered after Nuke due=
+ to all other cases except JEClear (e.g. whenever a ucode assist is needed =
+like SSE exception, memory disambiguation, etc...).",
+> > > +        "BriefDescription": "Number of occurrences waiting for the c=
+heckpoints in Resource Allocation Table (RAT) to be recovered after Nuke du=
+e to all other cases except JEClear (e.g. whenever a ucode assist is needed=
+ like SSE exception, memory disambiguation, etc...).",
+> > >          "Counter": "0,1,2,3",
+> > >          "CounterHTOff": "0,1,2,3,4,5,6,7",
+> > >          "CounterMask": "1",
+> > > @@ -652,7 +652,7 @@
+> > >          "CounterHTOff": "0,1,2,3,4,5,6,7",
+> > >          "EventCode": "0x03",
+> > >          "EventName": "LD_BLOCKS.STORE_FORWARD",
+> > > -        "PublicDescription": "This event counts loads that followed =
+a store to the same address, where the data could not be forwarded inside t=
+he pipeline from the store to the load.  The most common reason why store f=
+orwarding would be blocked is when a load's address range overlaps with a p=
+receeding smaller uncompleted store.  See the table of not supported store =
+forwards in the Intel 64 and IA-32 Architectures Optimization Reference Man=
+ual.  The penalty for blocked store forwarding is that the load must wait f=
+or the store to complete before it can be issued.",
+> > > +        "PublicDescription": "This event counts loads that followed =
+a store to the same address, where the data could not be forwarded inside t=
+he pipeline from the store to the load.  The most common reason why store f=
+orwarding would be blocked is when a load's address range overlaps with a p=
+receeding smaller uncompleted store.  See the table of not supported store =
+forwards in the Intel(R) 64 and IA-32 Architectures Optimization Reference =
+Manual.  The penalty for blocked store forwarding is that the load must wai=
+t for the store to complete before it can be issued.",
+> > >          "SampleAfterValue": "100003",
+> > >          "UMask": "0x2"
+> > >      },
+> > > @@ -778,7 +778,7 @@
+> > >          "CounterMask": "1",
+> > >          "EventCode": "0x59",
+> > >          "EventName": "PARTIAL_RAT_STALLS.FLAGS_MERGE_UOP_CYCLES",
+> > > -        "PublicDescription": "This event counts the number of cycles=
+ spent executing performance-sensitive flags-merging uops. For example, shi=
+ft CL (merge_arith_flags). For more details, See the Intel 64 and IA-32 Arc=
+hitectures Optimization Reference Manual.",
+> > > +        "PublicDescription": "This event counts the number of cycles=
+ spent executing performance-sensitive flags-merging uops. For example, shi=
+ft CL (merge_arith_flags). For more details, See the Intel(R) 64 and IA-32 =
+Architectures Optimization Reference Manual.",
+> > >          "SampleAfterValue": "2000003",
+> > >          "UMask": "0x20"
+> > >      },
+> > > @@ -797,7 +797,7 @@
+> > >          "CounterHTOff": "0,1,2,3,4,5,6,7",
+> > >          "EventCode": "0x59",
+> > >          "EventName": "PARTIAL_RAT_STALLS.SLOW_LEA_WINDOW",
+> > > -        "PublicDescription": "This event counts the number of cycles=
+ with at least one slow LEA uop being allocated. A uop is generally conside=
+red as slow LEA if it has three sources (for example, two sources and immed=
+iate) regardless of whether it is a result of LEA instruction or not. Examp=
+les of the slow LEA uop are or uops with base, index, and offset source ope=
+rands using base and index reqisters, where base is EBR/RBP/R13, using RIP =
+relative or 16-bit addressing modes. See the Intel 64 and IA-32 Architectur=
+es Optimization Reference Manual for more details about slow LEA instructio=
+ns.",
+> > > +        "PublicDescription": "This event counts the number of cycles=
+ with at least one slow LEA uop being allocated. A uop is generally conside=
+red as slow LEA if it has three sources (for example, two sources and immed=
+iate) regardless of whether it is a result of LEA instruction or not. Examp=
+les of the slow LEA uop are or uops with base, index, and offset source ope=
+rands using base and index reqisters, where base is EBR/RBP/R13, using RIP =
+relative or 16-bit addressing modes. See the Intel(R) 64 and IA-32 Architec=
+tures Optimization Reference Manual for more details about slow LEA instruc=
+tions.",
+> > >          "SampleAfterValue": "2000003",
+> > >          "UMask": "0x40"
+> > >      },
+> > > @@ -1209,4 +1209,4 @@
+> > >          "SampleAfterValue": "2000003",
+> > >          "UMask": "0x1"
+> > >      }
+> > > -]
+> > > \ No newline at end of file
+> > > +]
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.j=
+son b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
+> > > index c8e7050d9c26..ae7ed267b2a2 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
+> > > @@ -124,7 +124,7 @@
+> > >          "MetricName": "FLOPc_SMT"
+> > >      },
+> > >      {
+> > > -        "BriefDescription": "Instruction-Level-Parallelism (average =
+number of uops executed when there is at least 1 uop executed)",
+> > > +        "BriefDescription": "Instruction-Level-Parallelism (average =
+number of uops executed when there is execution) per-core",
+> > >          "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPATCH=
+ED.CORE\\,cmask\\=3D1@ / 2 ) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cma=
+sk\\=3D1@)",
+> > >          "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
+> > >          "MetricName": "ILP"
+> > > @@ -141,6 +141,12 @@
+> > >          "MetricGroup": "Summary;TmaL1",
+> > >          "MetricName": "Instructions"
+> > >      },
+> > > +    {
+> > > +        "BriefDescription": "Average number of Uops retired in cycle=
+s where at least one uop has retired.",
+> > > +        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / cpu@UOPS_RETIRED.=
+RETIRE_SLOTS\\,cmask\\=3D1@",
+> > > +        "MetricGroup": "Pipeline;Ret",
+> > > +        "MetricName": "Retire"
+> > > +    },
+> > >      {
+> > >          "BriefDescription": "Fraction of Uops delivered by the DSB (=
+aka Decoded ICache; or Uop Cache)",
+> > >          "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + I=
+DQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+> > > @@ -163,7 +169,8 @@
+> > >          "BriefDescription": "Giga Floating Point Operations Per Seco=
+nd",
+> > >          "MetricExpr": "( ( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE +=
+ FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBL=
+E + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) +=
+ 8 * SIMD_FP_256.PACKED_SINGLE ) / 1000000000 ) / duration_time",
+> > >          "MetricGroup": "Cor;Flops;HPC",
+> > > -        "MetricName": "GFLOPs"
+> > > +        "MetricName": "GFLOPs",
+> > > +        "PublicDescription": "Giga Floating Point Operations Per Sec=
+ond. Aggregate across all supported options of: FP precisions, scalar and v=
+ector instructions, vector-width and AMX engine."
+> > >      },
+> > >      {
+> > >          "BriefDescription": "Average Frequency Utilization relative =
+nominal frequency",
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.=
+json b/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
+> > > index 6278068908cf..88f1e326205f 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
+> > > @@ -82,10 +82,10 @@
+> > >      {
+> > >          "BriefDescription": "This 48-bit fixed counter counts the UC=
+LK cycles.",
+> > >          "Counter": "Fixed",
+> > > +        "EventCode": "0xff",
+> > >          "EventName": "UNC_CLOCK.SOCKET",
+> > >          "PerPkg": "1",
+> > >          "PublicDescription": "This 48-bit fixed counter counts the U=
+CLK cycles.",
+> > > -        "UMask": "0x01",
+> > >          "Unit": "ARB"
+> > >      }
+> > >  ]
+> > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memor=
+y.json b/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.json
+> > > index 4dd136d00a10..98362abba1a7 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.json
+> > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.json
+> > > @@ -146,4 +146,4 @@
+> > >          "SampleAfterValue": "100007",
+> > >          "UMask": "0x20"
+> > >      }
+> > > -]
+> > > \ No newline at end of file
+> > > +]
+> > > --
+> > > 2.37.1.359.gd136c6c3e2-goog
+> > >
