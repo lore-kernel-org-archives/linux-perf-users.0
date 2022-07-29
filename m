@@ -2,81 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19120C3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 18:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A501EC00144
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 20:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238593AbiG2Sfn (ORCPT
+        id S229564AbiG2UID (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Jul 2022 14:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34074 "EHLO
+        Fri, 29 Jul 2022 16:08:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238184AbiG2Sfl (ORCPT
+        with ESMTP id S239046AbiG2UIC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Jul 2022 14:35:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08EAB5F980;
-        Fri, 29 Jul 2022 11:35:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DE80061EE2;
-        Fri, 29 Jul 2022 18:35:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 40F5FC43470;
-        Fri, 29 Jul 2022 18:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659119740;
-        bh=lwv+MbYrK6JLE7Y7SWT6cble7Rc7yIdjYWcHDtCV5t0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=EEzu43+tirwfHVsMAYkVPy+Se57Ewv0olUnoBxME6SvE0+gIzR0ti9QkZNB+k4YMT
-         VWNwkEvde53Z8or7YKctYI319pvQ2D0p/hm/c3IIQ0ojQnwlxOnU3MoM/tiCn7xF8n
-         GxV6h3geld2wRS232iL+VbnUBLSkRDP1x21cgVwz4SvviudhgDdDJXOFCazu/iX5EL
-         FEFYIoFF87HMUaDOPiLrcGwHOCPokOX9VEwoqZEV25LevfJDCMRCwFVcm37YRaDj2y
-         G02IPAjlLM9dm/ocdHJuE1C42gv1604CQndr/WNOF+6lB0yS0+eMutdA1KoJrv9Kk+
-         Gr5ndEhs8b/Ww==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2C754C43143;
-        Fri, 29 Jul 2022 18:35:40 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v5.19: 5th batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220729161521.363308-1-acme@kernel.org>
-References: <20220729161521.363308-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220729161521.363308-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.19-2022-07-29
-X-PR-Tracked-Commit-Id: 9a241805673ec0a826b7ddf84b00f4e03adb0a5e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bb83c99d3d0aa2f51ba0b2abd7115002620118e6
-Message-Id: <165911974017.994.12135608885822974957.pr-tracker-bot@kernel.org>
-Date:   Fri, 29 Jul 2022 18:35:40 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Akemi Yagi <toracat@elrepo.org>,
-        Chang Rui <changruinj@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Fri, 29 Jul 2022 16:08:02 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADE07CB51;
+        Fri, 29 Jul 2022 13:08:01 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id o3so5529277ple.5;
+        Fri, 29 Jul 2022 13:08:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc;
+        bh=ek+Ls/Nc1cCImKTTFp3CMyhusWpQs8VhRYTO+ff+y+4=;
+        b=VGwDDVVWgD+Qs3NIGLdIQi05fC3drE9GxCopUDL2KFilHBA6Hf5PUFhx/ijHB+//ri
+         i7iY3VjOtiT0gW6uvZI+g1nuW0jb2eHPfSXxAPjZnACQRCAnUwfJci5sblNeC5saM8xN
+         hciKTpTWh63AKwFYfnwL0+1SdMwV1yNWPstS0+IvWvsw8eca4PPBm6V4EtewOxjzgw5g
+         S91dtYJyeu888Hl+oZ+vYNJRtx9hR9A1kAAAe9uZ/OHjKzRefk1IHMbA/6L79OxWCtGs
+         HyKW1MhnJHkg8w93hUIz4EHcXdedz9yCaakOym1IjjMzm3LTN6fO5lzshPG8D0u2LiOT
+         VlnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc;
+        bh=ek+Ls/Nc1cCImKTTFp3CMyhusWpQs8VhRYTO+ff+y+4=;
+        b=ruwpt54SlUBYTbn/smYursuTLBCikr7qOQbPgKXqsfudZk1WzJ+HMwiC8B3aNw6w73
+         6cEpGH/Rh+dsMi01HIdHftFc3q3d14x5PirG7SB9WQ1X3dE6cZfOw+AMkfgl38uVM4ah
+         TB3BLcYWdFEEp2CQvr7OmLHRNzG3xVTpgmBmpVHU6VxUNQ1n6yHJcmDmtgYn+cxJkUAt
+         Ed8a4eOL2R7dcM9M0hKIQzpuRTDF5xa/quVGm8dXW6MwxS9eR+z3qNr1V/36KbuKzumU
+         AzeC9WQNnX9nWzEWSNwundTrfNOgI9nfTr6iwUP7zLWJS+KblBKCwbruqx145fZlVv1v
+         WIzQ==
+X-Gm-Message-State: ACgBeo0kO8d1ZNcW2tUnE3vIujOEys1nN2WInehlZ6ru+5zOcJGLm9bF
+        v7mX3khSdostXQyvVAUFbYxGrmSBhe4=
+X-Google-Smtp-Source: AA6agR5roehGZYzs6TUhV5HbzfkapFS1wL6KKdunD5/pXZoBE1eR3xon8t6Qvk1Ot8I7eiXXnXPwiQ==
+X-Received: by 2002:a17:90a:9dc7:b0:1f3:1a8:41a1 with SMTP id x7-20020a17090a9dc700b001f301a841a1mr5977098pjv.23.1659125280379;
+        Fri, 29 Jul 2022 13:08:00 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1010:c01e:2ed5:25ca:3acb])
+        by smtp.gmail.com with ESMTPSA id o18-20020a170903211200b0016be14a776asm3929823ple.286.2022.07.29.13.07.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Jul 2022 13:08:00 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Stephane Eranian <eranian@google.com>,
+        Blake Jones <blakejones@google.com>
+Subject: [PATCH 1/3] perf lock: Pass machine pointer to is_lock_function()
+Date:   Fri, 29 Jul 2022 13:07:54 -0700
+Message-Id: <20220729200756.666106-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.1.455.g008518b4e5-goog
+In-Reply-To: <20220729200756.666106-1-namhyung@kernel.org>
+References: <20220729200756.666106-1-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Fri, 29 Jul 2022 13:15:21 -0300:
+This is a preparation for later change to expose the function externally
+so that it can be used without the implicit session data.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.19-2022-07-29
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-lock.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bb83c99d3d0aa2f51ba0b2abd7115002620118e6
-
-Thank you!
-
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 041801d8b6ac..10b854315b7a 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -947,10 +947,9 @@ static int report_lock_release_event(struct evsel *evsel,
+ 	return 0;
+ }
+ 
+-static bool is_lock_function(u64 addr)
++static bool is_lock_function(struct machine *machine, u64 addr)
+ {
+ 	if (!sched_text_start) {
+-		struct machine *machine = &session->machines.host;
+ 		struct map *kmap;
+ 		struct symbol *sym;
+ 
+@@ -1002,6 +1001,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
+ {
+ 	struct thread *thread;
+ 	struct callchain_cursor *cursor = &callchain_cursor;
++	struct machine *machine = &session->machines.host;
+ 	struct symbol *sym;
+ 	int skip = 0;
+ 	int ret;
+@@ -1010,8 +1010,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
+ 	if (show_thread_stats)
+ 		return -1;
+ 
+-	thread = machine__findnew_thread(&session->machines.host,
+-					 -1, sample->pid);
++	thread = machine__findnew_thread(machine, -1, sample->pid);
+ 	if (thread == NULL)
+ 		return -1;
+ 
+@@ -1038,7 +1037,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
+ 			goto next;
+ 
+ 		sym = node->ms.sym;
+-		if (sym && !is_lock_function(node->ip)) {
++		if (sym && !is_lock_function(machine, node->ip)) {
+ 			struct map *map = node->ms.map;
+ 			u64 offset;
+ 
+@@ -1060,13 +1059,13 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
+ static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	struct callchain_cursor *cursor = &callchain_cursor;
++	struct machine *machine = &session->machines.host;
+ 	struct thread *thread;
+ 	u64 hash = 0;
+ 	int skip = 0;
+ 	int ret;
+ 
+-	thread = machine__findnew_thread(&session->machines.host,
+-					 -1, sample->pid);
++	thread = machine__findnew_thread(machine, -1, sample->pid);
+ 	if (thread == NULL)
+ 		return -1;
+ 
+@@ -1091,7 +1090,7 @@ static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
+ 		if (++skip <= CONTENTION_STACK_SKIP)
+ 			goto next;
+ 
+-		if (node->ms.sym && is_lock_function(node->ip))
++		if (node->ms.sym && is_lock_function(machine, node->ip))
+ 			goto next;
+ 
+ 		hash ^= hash_long((unsigned long)node->ip, 64);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.37.1.455.g008518b4e5-goog
+
