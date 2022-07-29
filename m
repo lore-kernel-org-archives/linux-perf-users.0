@@ -2,1848 +2,819 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC8CC00140
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 02:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C042C3F6B0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 07:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231277AbiG2CH5 (ORCPT
+        id S234548AbiG2H3W (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 22:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
+        Fri, 29 Jul 2022 03:29:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230228AbiG2CH4 (ORCPT
+        with ESMTP id S234316AbiG2H3V (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 22:07:56 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25937A511
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 19:07:52 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id i8so4327759wro.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 19:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2TsSloMo9X9JB2Zc2anTY5efE+VYUd6fzf6ONi9Vae8=;
-        b=cuRJ4s2NXMRwMSFBA5JjISRMIdwewiJ5TQ9QK6QVbUF7pGjznfB9SnJhUVIvMYyxGm
-         gBsOUeJqgE/JLD7EjRNArEBHHlovLN8mftzq052DQ6DssOJAA8JBqQ+7ficeg+5rRYiT
-         QQ29ZplatGMNhHUZM+k8cjMDmJwm/RGdg/NP1/mtdiIm+OeRZzrAON55mC4O7K+KQt/Y
-         /TKtobp+TvcHEVeQEyjQnWPCMOiI9i3ucvhtqguRZkl978M1QLpJp9wBIJ97Y2XSJB3N
-         3XGwGNGu+hKuDdDGei4yK5IE+t64ONpsIXISaK1T+7t0oBPsABrpsubRUHvdFN9CSea6
-         6KCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2TsSloMo9X9JB2Zc2anTY5efE+VYUd6fzf6ONi9Vae8=;
-        b=NT7lqWp/Vc4Kx8V8BXu7MZbaLraO1UfhYuhYk8ZaXoM2WJV8zqgna7FyvgRV5NKE13
-         ijTS0rQlOsdLbI9wGUnZru6x6C7jI8OqdOv91U83m2BeRpcr7XsugBHbqdGq7cygxPaS
-         X7jx739hcFvHPk8zeibNNBj2pNJDJR8rYIZnhIbgFho4hgFObdgCr5HkuuONskNvd/iZ
-         jJDKz4vkDYhKaGUv13JSgWxv/EHgcJyVdI+7AMCuQqpAdnn8z7Gn16xADaUeihIyfY0C
-         E2TWDZQ8eb4+J23aU3q5chHIETflKQMkoojTW5fiKF4VXPB8V/UwTnCLZquLTFzVdva4
-         Q7MQ==
-X-Gm-Message-State: ACgBeo3Sw/2TvRnHmzmwBh0wLetFHDZw5sqYa8wQ+fFcFEWCVCBU2O4e
-        N/OPhgbPDoVpRSJvJ8HvjQBre9/WmalFPFiUMyQ30A==
-X-Google-Smtp-Source: AA6agR6RfMqieOLVsg9pcI1oKJZWjY50RYUEtYpn4A9DYjYkxRTNi43xHlJxAhDZpEFLoXp1n6D4yXnO5Z3GW5UckE4=
-X-Received: by 2002:a05:6000:1a8e:b0:21d:a7a8:54f4 with SMTP id
- f14-20020a0560001a8e00b0021da7a854f4mr887741wry.654.1659060470546; Thu, 28
- Jul 2022 19:07:50 -0700 (PDT)
+        Fri, 29 Jul 2022 03:29:21 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E659A8049B;
+        Fri, 29 Jul 2022 00:29:17 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LvJyV4cJkz9sym;
+        Fri, 29 Jul 2022 15:28:02 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 29 Jul 2022 15:29:14 +0800
+CC:     <yangyicong@hisilicon.com>, <alexander.shishkin@linux.intel.com>,
+        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <acme@kernel.org>, <peterz@infradead.org>,
+        <corbet@lwn.net>, <mathieu.poirier@linaro.org>,
+        <mark.rutland@arm.com>, <jonathan.cameron@huawei.com>,
+        <john.garry@huawei.com>, <helgaas@kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <suzuki.poulose@arm.com>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <iommu@lists.linux.dev>,
+        <linux-doc@vger.kernel.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <bagasdotme@gmail.com>
+Subject: Re: [PATCH v11 2/8] hwtracing: hisi_ptt: Add trace function support
+ for HiSilicon PCIe Tune and Trace device
+To:     Greg KH <gregkh@linuxfoundation.org>
+References: <20220721130116.43366-1-yangyicong@huawei.com>
+ <20220721130116.43366-3-yangyicong@huawei.com> <YuKZKGKMz+UcbETM@kroah.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <33f372f6-36bf-f84e-bca0-86347fa4d579@huawei.com>
+Date:   Fri, 29 Jul 2022 15:29:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-References: <20220707191209.273065-1-irogers@google.com>
-In-Reply-To: <20220707191209.273065-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 28 Jul 2022 19:07:38 -0700
-Message-ID: <CAP-5=fXHAc+JCPUF4LgmCCxTqnGJXT+rAJax+fjK_L3o8DTYrg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf parse-events: Break out tracepoint and printing.
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YuKZKGKMz+UcbETM@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 7, 2022 at 12:12 PM Ian Rogers <irogers@google.com> wrote:
->
-> Move print_*_events functions out of parse-events.c into a new
-> print-events.c. Move tracepoint code into tracepoint.c or
-> trace-event-info.c (sole user). This reduces the dependencies of
-> parse-events.c and makes it more amenable to being a library in the
-> future.
-> Remove some unnecessary definitions from parse-events.h. Fix a
-> checkpatch.pl warning on using unsigned rather than unsigned int.
-> Fix some line length warnings too.
->
-> v2. Rebase in particular after hybrid PMU changes.
+On 2022/7/28 22:11, Greg KH wrote:
+> On Thu, Jul 21, 2022 at 09:01:10PM +0800, yangyicong@huawei.com wrote:
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex integrated
+>> Endpoint(RCiEP) device, providing the capability to dynamically monitor and
+>> tune the PCIe traffic and trace the TLP headers.
+>>
+>> Add the driver for the device to enable the trace function. Register PMU
+>> device of PTT trace, then users can use trace through perf command. The
+>> driver makes use of perf AUX trace function and support the following
+>> events to configure the trace:
+>>
+>> - filter: select Root port or Endpoint to trace
+>> - type: select the type of traced TLP headers
+>> - direction: select the direction of traced TLP headers
+>> - format: select the data format of the traced TLP headers
+>>
+>> This patch initially add basic trace support of PTT device.
+>>
+>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: John Garry <john.garry@huawei.com>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>>  drivers/Makefile                 |   1 +
+>>  drivers/hwtracing/Kconfig        |   2 +
+>>  drivers/hwtracing/ptt/Kconfig    |  12 +
+>>  drivers/hwtracing/ptt/Makefile   |   2 +
+>>  drivers/hwtracing/ptt/hisi_ptt.c | 901 +++++++++++++++++++++++++++++++
+>>  drivers/hwtracing/ptt/hisi_ptt.h | 177 ++++++
+>>  6 files changed, 1095 insertions(+)
+>>  create mode 100644 drivers/hwtracing/ptt/Kconfig
+>>  create mode 100644 drivers/hwtracing/ptt/Makefile
+>>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+>>
+>> diff --git a/drivers/Makefile b/drivers/Makefile
+>> index 9a30842b22c5..bf67e0e23c18 100644
+>> --- a/drivers/Makefile
+>> +++ b/drivers/Makefile
+>> @@ -176,6 +176,7 @@ obj-$(CONFIG_USB4)		+= thunderbolt/
+>>  obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
+>>  obj-y				+= hwtracing/intel_th/
+>>  obj-$(CONFIG_STM)		+= hwtracing/stm/
+>> +obj-$(CONFIG_HISI_PTT)		+= hwtracing/ptt/
+>>  obj-$(CONFIG_ANDROID)		+= android/
+>>  obj-$(CONFIG_NVMEM)		+= nvmem/
+>>  obj-$(CONFIG_FPGA)		+= fpga/
+>> diff --git a/drivers/hwtracing/Kconfig b/drivers/hwtracing/Kconfig
+>> index 13085835a636..911ee977103c 100644
+>> --- a/drivers/hwtracing/Kconfig
+>> +++ b/drivers/hwtracing/Kconfig
+>> @@ -5,4 +5,6 @@ source "drivers/hwtracing/stm/Kconfig"
+>>  
+>>  source "drivers/hwtracing/intel_th/Kconfig"
+>>  
+>> +source "drivers/hwtracing/ptt/Kconfig"
+>> +
+>>  endmenu
+>> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
+>> new file mode 100644
+>> index 000000000000..6d46a09ffeb9
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/Kconfig
+>> @@ -0,0 +1,12 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +config HISI_PTT
+>> +	tristate "HiSilicon PCIe Tune and Trace Device"
+>> +	depends on ARM64 || (COMPILE_TEST && 64BIT)
+>> +	depends on PCI && HAS_DMA && HAS_IOMEM && PERF_EVENTS
+>> +	help
+>> +	  HiSilicon PCIe Tune and Trace device exists as a PCIe RCiEP
+>> +	  device, and it provides support for PCIe traffic tuning and
+>> +	  tracing TLP headers to the memory.
+>> +
+>> +	  This driver can also be built as a module. If so, the module
+>> +	  will be called hisi_ptt.
+>> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
+>> new file mode 100644
+>> index 000000000000..908c09a98161
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/Makefile
+>> @@ -0,0 +1,2 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
+>> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+>> new file mode 100644
+>> index 000000000000..c64642097f8b
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+>> @@ -0,0 +1,901 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Driver for HiSilicon PCIe tune and trace device
+>> + *
+>> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+>> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+>> + */
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/bitops.h>
+>> +#include <linux/cpuhotplug.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/dma-iommu.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/iommu.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/module.h>
+>> +#include <linux/sysfs.h>
+>> +#include <linux/vmalloc.h>
+>> +
+>> +#include "hisi_ptt.h"
+>> +
+>> +/* Dynamic CPU hotplug state used by PTT */
+>> +static enum cpuhp_state hisi_ptt_pmu_online;
+>> +
+>> +static u16 hisi_ptt_get_filter_val(u16 devid, bool is_port)
+>> +{
+>> +	if (is_port)
+>> +		return BIT(HISI_PCIE_CORE_PORT_ID(devid & 0xff));
+>> +
+>> +	return devid;
+>> +}
+>> +
+>> +static bool hisi_ptt_wait_trace_hw_idle(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	u32 val;
+>> +
+>> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_STS,
+>> +					  val, val & HISI_PTT_TRACE_IDLE,
+>> +					  HISI_PTT_WAIT_POLL_INTERVAL_US,
+>> +					  HISI_PTT_WAIT_TRACE_TIMEOUT_US);
+>> +}
+>> +
+>> +static void hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	u32 val;
+>> +
+>> +	readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS,
+>> +				  val, !val, HISI_PTT_RESET_POLL_INTERVAL_US,
+>> +				  HISI_PTT_RESET_TIMEOUT_US);
+>> +}
+>> +
+>> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	hisi_ptt->trace_ctrl.started = false;
+>> +}
+>> +
+>> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	u32 val;
+>> +	int i;
+>> +
+>> +	/* Check device idle before start trace */
+>> +	if (!hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
+>> +		pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	ctrl->started = true;
+>> +
+>> +	/* Reset the DMA before start tracing */
+>> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	val |= HISI_PTT_TRACE_CTRL_RST;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	hisi_ptt_wait_dma_reset_done(hisi_ptt);
+>> +
+>> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +	val &= ~HISI_PTT_TRACE_CTRL_RST;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	/* Reset the index of current buffer */
+>> +	hisi_ptt->trace_ctrl.buf_index = 0;
+>> +
+>> +	/* Zero the trace buffers */
+>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
+>> +		memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
+>> +
+>> +	/* Clear the interrupt status */
+>> +	writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+>> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
+>> +
+>> +	/* Set the trace control register */
+>> +	val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
+>> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
+>> +	if (!hisi_ptt->trace_ctrl.is_port)
+>> +		val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
+>> +
+>> +	/* Start the Trace */
+>> +	val |= HISI_PTT_TRACE_CTRL_EN;
+>> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_ptt_update_aux(struct hisi_ptt *hisi_ptt, int index, bool stop)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	struct perf_output_handle *handle = &ctrl->handle;
+>> +	struct perf_event *event = handle->event;
+>> +	struct hisi_ptt_pmu_buf *buf;
+>> +	size_t size;
+>> +	void *addr;
+>> +
+>> +	buf = perf_get_aux(handle);
+>> +	if (!buf || !handle->size)
+>> +		return -EINVAL;
+>> +
+>> +	addr = ctrl->trace_buf[ctrl->buf_index].addr;
+>> +
+>> +	/*
+>> +	 * If we're going to stop, read the size of already traced data from
+>> +	 * HISI_PTT_TRACE_WR_STS. Otherwise we're coming from the interrupt,
+>> +	 * the data size is always HISI_PTT_TRACE_BUF_SIZE.
+>> +	 */
+>> +	if (stop) {
+>> +		u32 reg;
+>> +
+>> +		reg = readl(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS);
+>> +		size = FIELD_GET(HISI_PTT_TRACE_WR_STS_WRITE, reg);
+>> +	} else {
+>> +		size = HISI_PTT_TRACE_BUF_SIZE;
+>> +	}
+>> +
+>> +	memcpy(buf->base + buf->pos, addr, size);
+>> +	buf->pos += size;
+>> +
+>> +	/*
+>> +	 * Just commit the traced data if we're going to stop. Otherwise if the
+>> +	 * resident AUX buffer cannot contain the data of next trace buffer,
+>> +	 * apply a new one.
+>> +	 */
+>> +	if (stop) {
+>> +		perf_aux_output_end(handle, buf->pos);
+>> +	} else if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
+>> +		perf_aux_output_end(handle, buf->pos);
+>> +
+>> +		buf = perf_aux_output_begin(handle, event);
+>> +		if (!buf)
+>> +			return -EINVAL;
+>> +
+>> +		buf->pos = handle->head % buf->length;
+>> +		if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
+>> +			perf_aux_output_end(handle, 0);
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static irqreturn_t hisi_ptt_isr(int irq, void *context)
+>> +{
+>> +	struct hisi_ptt *hisi_ptt = context;
+>> +	u32 status, buf_idx;
+>> +
+>> +	status = readl(hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+>> +	if (!(status & HISI_PTT_TRACE_INT_STAT_MASK))
+>> +		return IRQ_NONE;
+>> +
+>> +	buf_idx = ffs(status) - 1;
+>> +
+>> +	/* Clear the interrupt status of buffer @buf_idx */
+>> +	writel(status, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+>> +
+>> +	/*
+>> +	 * Update the AUX buffer and cache the current buffer index,
+>> +	 * as we need to know this and save the data when the trace
+>> +	 * is ended out of the interrupt handler. End the trace
+>> +	 * if the updating fails.
+>> +	 */
+>> +	if (hisi_ptt_update_aux(hisi_ptt, buf_idx, false))
+>> +		hisi_ptt_trace_end(hisi_ptt);
+>> +	else
+>> +		hisi_ptt->trace_ctrl.buf_index = (buf_idx + 1) % HISI_PTT_TRACE_BUF_CNT;
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static void hisi_ptt_irq_free_vectors(void *pdev)
+>> +{
+>> +	pci_free_irq_vectors(pdev);
+>> +}
+>> +
+>> +static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct pci_dev *pdev = hisi_ptt->pdev;
+>> +	int ret;
+>> +
+>> +	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
+>> +	if (ret < 0) {
+>> +		pci_err(pdev, "failed to allocate irq vector, ret = %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_irq_free_vectors, pdev);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = devm_request_threaded_irq(&pdev->dev,
+>> +					pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ),
+>> +					NULL, hisi_ptt_isr, 0,
+>> +					DRV_NAME, hisi_ptt);
+>> +	if (ret) {
+>> +		pci_err(pdev, "failed to request irq %d, ret = %d\n",
+>> +			pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ), ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
+>> +{
+>> +	struct hisi_ptt_filter_desc *filter;
+>> +	struct hisi_ptt *hisi_ptt = data;
+>> +
+>> +	/*
+>> +	 * We won't fail the probe if filter allocation failed here. The filters
+>> +	 * should be partial initialized and users would know which filter fails
+>> +	 * through the log. Other functions of PTT device are still available.
+>> +	 */
+>> +	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
+>> +	if (!filter) {
+>> +		pci_err(hisi_ptt->pdev, "failed to add filter %s\n", pci_name(pdev));
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	filter->devid = PCI_DEVID(pdev->bus->number, pdev->devfn);
+>> +
+>> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) {
+>> +		filter->is_port = true;
+>> +		list_add_tail(&filter->list, &hisi_ptt->port_filters);
+>> +
+>> +		/* Update the available port mask */
+>> +		hisi_ptt->port_mask |= hisi_ptt_get_filter_val(filter->devid, true);
+>> +	} else {
+>> +		list_add_tail(&filter->list, &hisi_ptt->req_filters);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void hisi_ptt_release_filters(void *data)
+>> +{
+>> +	struct hisi_ptt_filter_desc *filter, *tmp;
+>> +	struct hisi_ptt *hisi_ptt = data;
+>> +
+>> +	list_for_each_entry_safe(filter, tmp, &hisi_ptt->req_filters, list) {
+>> +		list_del(&filter->list);
+>> +		kfree(filter);
+>> +	}
+>> +
+>> +	list_for_each_entry_safe(filter, tmp, &hisi_ptt->port_filters, list) {
+>> +		list_del(&filter->list);
+>> +		kfree(filter);
+>> +	}
+>> +}
+>> +
+>> +static int hisi_ptt_config_trace_buf(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	struct device *dev = &hisi_ptt->pdev->dev;
+>> +	int i;
+>> +
+>> +	ctrl->trace_buf = devm_kcalloc(dev, HISI_PTT_TRACE_BUF_CNT,
+>> +				       sizeof(*ctrl->trace_buf), GFP_KERNEL);
+>> +	if (!ctrl->trace_buf)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
+>> +		ctrl->trace_buf[i].addr = dmam_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+>> +							     &ctrl->trace_buf[i].dma,
+>> +							     GFP_KERNEL);
+>> +		if (!ctrl->trace_buf[i].addr)
+>> +			return -ENOMEM;
+>> +	}
+>> +
+>> +	/* Configure the trace DMA buffer */
+>> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
+>> +		writel(lower_32_bits(ctrl->trace_buf[i].dma),
+>> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
+>> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+>> +		writel(upper_32_bits(ctrl->trace_buf[i].dma),
+>> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
+>> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+>> +	}
+>> +	writel(HISI_PTT_TRACE_BUF_SIZE, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct pci_dev *pdev = hisi_ptt->pdev;
+>> +	struct pci_bus *bus;
+>> +	int ret;
+>> +	u32 reg;
+>> +
+>> +	INIT_LIST_HEAD(&hisi_ptt->port_filters);
+>> +	INIT_LIST_HEAD(&hisi_ptt->req_filters);
+>> +
+>> +	ret = hisi_ptt_config_trace_buf(hisi_ptt);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * The device range register provides the information about the root
+>> +	 * ports which the RCiEP can control and trace. The RCiEP and the root
+>> +	 * ports which it supports are on the same PCIe core, with same domain
+>> +	 * number but maybe different bus number. The device range register
+>> +	 * will tell us which root ports we can support, Bit[31:16] indicates
+>> +	 * the upper BDF numbers of the root port, while Bit[15:0] indicates
+>> +	 * the lower.
+>> +	 */
+>> +	reg = readl(hisi_ptt->iobase + HISI_PTT_DEVICE_RANGE);
+>> +	hisi_ptt->upper_bdf = FIELD_GET(HISI_PTT_DEVICE_RANGE_UPPER, reg);
+>> +	hisi_ptt->lower_bdf = FIELD_GET(HISI_PTT_DEVICE_RANGE_LOWER, reg);
+>> +
+>> +	bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper_bdf));
+>> +	if (bus)
+>> +		pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
+>> +
+>> +	ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_release_filters, hisi_ptt);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	hisi_ptt->trace_ctrl.on_cpu = -1;
+>> +	return 0;
+>> +}
+>> +
+>> +static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+>> +			    char *buf)
+>> +{
+>> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+>> +	const cpumask_t *cpumask = cpumask_of_node(dev_to_node(&hisi_ptt->pdev->dev));
+>> +
+>> +	return cpumap_print_to_pagebuf(true, buf, cpumask);
+>> +}
+>> +static DEVICE_ATTR_RO(cpumask);
+>> +
+>> +static struct attribute *hisi_ptt_cpumask_attrs[] = {
+>> +	&dev_attr_cpumask.attr,
+>> +	NULL
+>> +};
+>> +
+>> +static const struct attribute_group hisi_ptt_cpumask_attr_group = {
+>> +	.attrs = hisi_ptt_cpumask_attrs,
+>> +};
+>> +
+>> +/*
+>> + * Bit 19 indicates the filter type, 1 for Root Port filter and 0 for Requester
+>> + * filter. Bit[15:0] indicates the filter value, for Root Port filter it's
+>> + * a bit mask of desired ports and for Requester filter it's the Requester ID
+>> + * of the desired PCIe function. Bit[18:16] is reserved for extension.
+>> + *
+>> + * See hisi_ptt.rst documentation for detailed information.
+>> + */
+>> +PMU_FORMAT_ATTR(filter,		"config:0-19");
+>> +PMU_FORMAT_ATTR(direction,	"config:20-23");
+>> +PMU_FORMAT_ATTR(type,		"config:24-31");
+>> +PMU_FORMAT_ATTR(format,		"config:32-35");
+>> +
+>> +static struct attribute *hisi_ptt_pmu_format_attrs[] = {
+>> +	&format_attr_filter.attr,
+>> +	&format_attr_direction.attr,
+>> +	&format_attr_type.attr,
+>> +	&format_attr_format.attr,
+>> +	NULL
+>> +};
+>> +
+>> +static struct attribute_group hisi_ptt_pmu_format_group = {
+>> +	.name = "format",
+>> +	.attrs = hisi_ptt_pmu_format_attrs,
+>> +};
+>> +
+>> +static const struct attribute_group *hisi_ptt_pmu_groups[] = {
+>> +	&hisi_ptt_cpumask_attr_group,
+>> +	&hisi_ptt_pmu_format_group,
+>> +	NULL
+>> +};
+>> +
+>> +static int hisi_ptt_trace_valid_direction(u32 val)
+>> +{
+>> +	/*
+>> +	 * The direction values have different effects according to the data
+>> +	 * format (specified in the parentheses). TLP set A/B means different
+>> +	 * set of TLP types. See hisi_ptt.rst documentation for more details.
+>> +	 */
+>> +	static const u32 hisi_ptt_trace_available_direction[] = {
+>> +		0,	/* inbound(4DW) or reserved(8DW) */
+>> +		1,	/* outbound(4DW) */
+>> +		2,	/* {in, out}bound(4DW) or inbound(8DW), TLP set A */
+>> +		3,	/* {in, out}bound(4DW) or inbound(8DW), TLP set B */
+>> +	};
+>> +	int i;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_available_direction); i++) {
+>> +		if (val == hisi_ptt_trace_available_direction[i])
+>> +			return 0;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static int hisi_ptt_trace_valid_type(u32 val)
+>> +{
+>> +	/* Different types can be set simultaneously */
+>> +	static const u32 hisi_ptt_trace_available_type[] = {
+>> +		1,	/* posted_request */
+>> +		2,	/* non-posted_request */
+>> +		4,	/* completion */
+>> +	};
+>> +	int i;
+>> +
+>> +	if (!val)
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * Walk the available list and clear the valid bits of
+>> +	 * the config. If there is any resident bit after the
+>> +	 * walk then the config is invalid.
+>> +	 */
+>> +	for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_available_type); i++)
+>> +		val &= ~hisi_ptt_trace_available_type[i];
+>> +
+>> +	if (val)
+>> +		return -EINVAL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_ptt_trace_valid_format(u32 val)
+>> +{
+>> +	static const u32 hisi_ptt_trace_availble_format[] = {
+>> +		0,	/* 4DW */
+>> +		1,	/* 8DW */
+>> +	};
+>> +	int i;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_availble_format); i++) {
+>> +		if (val == hisi_ptt_trace_availble_format[i])
+>> +			return 0;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static int hisi_ptt_trace_valid_filter(struct hisi_ptt *hisi_ptt, u64 config)
+>> +{
+>> +	unsigned long val, port_mask = hisi_ptt->port_mask;
+>> +	struct hisi_ptt_filter_desc *filter;
+>> +
+>> +	hisi_ptt->trace_ctrl.is_port = FIELD_GET(HISI_PTT_PMU_FILTER_IS_PORT, config);
+>> +	val = FIELD_GET(HISI_PTT_PMU_FILTER_VAL_MASK, config);
+>> +
+>> +	/*
+>> +	 * Port filters are defined as bit mask. For port filters, check
+>> +	 * the bits in the @val are within the range of hisi_ptt->port_mask
+>> +	 * and whether it's empty or not, otherwise user has specified
+>> +	 * some unsupported root ports.
+>> +	 *
+>> +	 * For Requester ID filters, walk the available filter list to see
+>> +	 * whether we have one matched.
+>> +	 */
+>> +	if (!hisi_ptt->trace_ctrl.is_port) {
+>> +		list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+>> +			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port))
+>> +				return 0;
+>> +		}
+>> +	} else if (bitmap_subset(&val, &port_mask, BITS_PER_LONG)) {
+>> +		return 0;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static void hisi_ptt_pmu_init_configs(struct hisi_ptt *hisi_ptt, struct perf_event *event)
+>> +{
+>> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>> +	u32 val;
+>> +
+>> +	val = FIELD_GET(HISI_PTT_PMU_FILTER_VAL_MASK, event->attr.config);
+>> +	hisi_ptt->trace_ctrl.filter = val;
+>> +
+>> +	val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+>> +	ctrl->direction = val;
+>> +
+>> +	val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+>> +	ctrl->type = val;
+>> +
+>> +	val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+>> +	ctrl->format = val;
+>> +}
+>> +
+>> +static int hisi_ptt_pmu_event_init(struct perf_event *event)
+>> +{
+>> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+>> +	int ret;
+>> +	u32 val;
+>> +
+>> +	if (event->cpu < 0) {
+>> +		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
+>> +		return -EOPNOTSUPP;
+>> +	}
+>> +
+>> +	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
+>> +		return -ENOENT;
+>> +
+>> +	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+>> +	ret = hisi_ptt_trace_valid_direction(val);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+>> +	ret = hisi_ptt_trace_valid_type(val);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+>> +	return hisi_ptt_trace_valid_format(val);
+>> +}
+>> +
+>> +static void *hisi_ptt_pmu_setup_aux(struct perf_event *event, void **pages,
+>> +				    int nr_pages, bool overwrite)
+>> +{
+>> +	struct hisi_ptt_pmu_buf *buf;
+>> +	struct page **pagelist;
+>> +	int i;
+>> +
+>> +	if (overwrite) {
+>> +		dev_warn(event->pmu->dev, "Overwrite mode is not supported\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	/* If the pages size less than buffers, we cannot start trace */
+>> +	if (nr_pages < HISI_PTT_TRACE_TOTAL_BUF_SIZE / PAGE_SIZE)
+>> +		return NULL;
+>> +
+>> +	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+>> +	if (!buf)
+>> +		return NULL;
+>> +
+>> +	pagelist = kcalloc(nr_pages, sizeof(*pagelist), GFP_KERNEL);
+>> +	if (!pagelist)
+>> +		goto err;
+>> +
+>> +	for (i = 0; i < nr_pages; i++)
+>> +		pagelist[i] = virt_to_page(pages[i]);
+>> +
+>> +	buf->base = vmap(pagelist, nr_pages, VM_MAP, PAGE_KERNEL);
+>> +	if (!buf->base) {
+>> +		kfree(pagelist);
+>> +		goto err;
+>> +	}
+>> +
+>> +	buf->nr_pages = nr_pages;
+>> +	buf->length = nr_pages * PAGE_SIZE;
+>> +	buf->pos = 0;
+>> +
+>> +	kfree(pagelist);
+>> +	return buf;
+>> +err:
+>> +	kfree(buf);
+>> +	return NULL;
+>> +}
+>> +
+>> +static void hisi_ptt_pmu_free_aux(void *aux)
+>> +{
+>> +	struct hisi_ptt_pmu_buf *buf = aux;
+>> +
+>> +	vunmap(buf->base);
+>> +	kfree(buf);
+>> +}
+>> +
+>> +static void hisi_ptt_pmu_start(struct perf_event *event, int flags)
+>> +{
+>> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+>> +	struct perf_output_handle *handle = &hisi_ptt->trace_ctrl.handle;
+>> +	struct hw_perf_event *hwc = &event->hw;
+>> +	struct device *dev = event->pmu->dev;
+>> +	struct hisi_ptt_pmu_buf *buf;
+>> +	int cpu = event->cpu;
+>> +	int ret;
+>> +
+>> +	hwc->state = 0;
+>> +
+>> +	/* Serialize the perf process if user specified several CPUs */
+>> +	spin_lock(&hisi_ptt->pmu_lock);
+>> +	if (hisi_ptt->trace_ctrl.started) {
+>> +		dev_dbg(dev, "trace has already started\n");
+>> +		goto stop;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Handle the interrupt on the same cpu which starts the trace to avoid
+>> +	 * context mismatch. Otherwise we'll trigger the WARN from the perf
+>> +	 * core in event_function_local().
+>> +	 */
+>> +	WARN_ON(irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+>> +				 cpumask_of(cpu)));
+> 
+> If this hits, you just crashed the machine :(
+> 
 
-Ping. Feedback appreciated.
+We'll likely to have a calltrace here without crash the machine and reboot in
+most time, unless user has set panic_on_warn.
 
-Thanks,
-Ian
+> Please properly recover from errors if you hit them, like this.  Don't
+> just give up and throw a message to userspace and watch the machine
+> reboot with all data lost.
+> 
+> Same for the other WARN_ON() instances here.  Handle the error and
+> report it properly up the call chain.
+> 
 
+The driver use WARN_ON() in two places, once in pmu::start() and another in cpu teardown's
+callback, both when the irq_set_affinity() failed. This is common to behave so when driver
+fails to set irq affinity in pmu::start() and cpu_teardown():
 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-list.c          |   2 +-
->  tools/perf/builtin-lock.c          |   1 +
->  tools/perf/builtin-timechart.c     |   1 +
->  tools/perf/builtin-trace.c         |   1 +
->  tools/perf/util/Build              |   2 +
->  tools/perf/util/parse-events.c     | 714 +----------------------------
->  tools/perf/util/parse-events.h     |  31 --
->  tools/perf/util/print-events.c     | 571 +++++++++++++++++++++++
->  tools/perf/util/print-events.h     |  22 +
->  tools/perf/util/trace-event-info.c |  96 ++++
->  tools/perf/util/tracepoint.c       |  63 +++
->  tools/perf/util/tracepoint.h       |  25 +
->  12 files changed, 790 insertions(+), 739 deletions(-)
->  create mode 100644 tools/perf/util/print-events.c
->  create mode 100644 tools/perf/util/print-events.h
->  create mode 100644 tools/perf/util/tracepoint.c
->  create mode 100644 tools/perf/util/tracepoint.h
->
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index 468958154ed9..744dd3520584 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -10,7 +10,7 @@
->   */
->  #include "builtin.h"
->
-> -#include "util/parse-events.h"
-> +#include "util/print-events.h"
->  #include "util/pmu.h"
->  #include "util/pmu-hybrid.h"
->  #include "util/debug.h"
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 23a33ac15e68..dcc079a80585 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -13,6 +13,7 @@
->  #include <subcmd/pager.h>
->  #include <subcmd/parse-options.h>
->  #include "util/trace-event.h"
-> +#include "util/tracepoint.h"
->
->  #include "util/debug.h"
->  #include "util/session.h"
-> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-> index afce731cec16..e2e9ad929baf 100644
-> --- a/tools/perf/builtin-timechart.c
-> +++ b/tools/perf/builtin-timechart.c
-> @@ -36,6 +36,7 @@
->  #include "util/data.h"
->  #include "util/debug.h"
->  #include "util/string2.h"
-> +#include "util/tracepoint.h"
->  #include <linux/err.h>
->
->  #ifdef LACKS_OPEN_MEMSTREAM_PROTOTYPE
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 897fc504918b..f031bb9c287b 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -53,6 +53,7 @@
->  #include "trace-event.h"
->  #include "util/parse-events.h"
->  #include "util/bpf-loader.h"
-> +#include "util/tracepoint.h"
->  #include "callchain.h"
->  #include "print_binary.h"
->  #include "string2.h"
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index a51267d88ca9..038e4cf8f488 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -26,6 +26,8 @@ perf-y += mmap.o
->  perf-y += memswap.o
->  perf-y += parse-events.o
->  perf-y += parse-events-hybrid.o
-> +perf-y += print-events.o
-> +perf-y += tracepoint.o
->  perf-y += perf_regs.o
->  perf-y += path.o
->  perf-y += print_binary.o
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 7ed235740431..206c76623c06 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -5,18 +5,12 @@
->  #include <dirent.h>
->  #include <errno.h>
->  #include <sys/ioctl.h>
-> -#include <sys/types.h>
-> -#include <sys/stat.h>
-> -#include <fcntl.h>
->  #include <sys/param.h>
->  #include "term.h"
-> -#include "build-id.h"
->  #include "evlist.h"
->  #include "evsel.h"
-> -#include <subcmd/pager.h>
->  #include <subcmd/parse-options.h>
->  #include "parse-events.h"
-> -#include <subcmd/exec-cmd.h>
->  #include "string2.h"
->  #include "strlist.h"
->  #include "bpf-loader.h"
-> @@ -24,23 +18,24 @@
->  #include <api/fs/tracing_path.h>
->  #include <perf/cpumap.h>
->  #include "parse-events-bison.h"
-> -#define YY_EXTRA_TYPE void*
->  #include "parse-events-flex.h"
->  #include "pmu.h"
-> -#include "thread_map.h"
-> -#include "probe-file.h"
->  #include "asm/bug.h"
->  #include "util/parse-branch-options.h"
-> -#include "metricgroup.h"
->  #include "util/evsel_config.h"
->  #include "util/event.h"
-> -#include "util/pfm.h"
-> +#include "perf.h"
->  #include "util/parse-events-hybrid.h"
->  #include "util/pmu-hybrid.h"
-> -#include "perf.h"
-> +#include "tracepoint.h"
->
->  #define MAX_NAME_LEN 100
->
-> +struct perf_pmu_event_symbol {
-> +       char    *symbol;
-> +       enum perf_pmu_event_symbol_type type;
-> +};
-> +
->  #ifdef PARSER_DEBUG
->  extern int parse_events_debug;
->  #endif
-> @@ -154,21 +149,6 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
->         },
->  };
->
-> -struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
-> -       [PERF_TOOL_DURATION_TIME] = {
-> -               .symbol = "duration_time",
-> -               .alias  = "",
-> -       },
-> -       [PERF_TOOL_USER_TIME] = {
-> -               .symbol = "user_time",
-> -               .alias  = "",
-> -       },
-> -       [PERF_TOOL_SYSTEM_TIME] = {
-> -               .symbol = "system_time",
-> -               .alias  = "",
-> -       },
-> -};
-> -
->  #define __PERF_EVENT_FIELD(config, name) \
->         ((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
->
-> @@ -177,121 +157,6 @@ struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
->  #define PERF_EVENT_TYPE(config)                __PERF_EVENT_FIELD(config, TYPE)
->  #define PERF_EVENT_ID(config)          __PERF_EVENT_FIELD(config, EVENT)
->
-> -#define for_each_subsystem(sys_dir, sys_dirent)                        \
-> -       while ((sys_dirent = readdir(sys_dir)) != NULL)         \
-> -               if (sys_dirent->d_type == DT_DIR &&             \
-> -                   (strcmp(sys_dirent->d_name, ".")) &&        \
-> -                   (strcmp(sys_dirent->d_name, "..")))
-> -
-> -static int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
-> -{
-> -       char evt_path[MAXPATHLEN];
-> -       int fd;
-> -
-> -       snprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path, evt_dir->d_name);
-> -       fd = open(evt_path, O_RDONLY);
-> -       if (fd < 0)
-> -               return -EINVAL;
-> -       close(fd);
-> -
-> -       return 0;
-> -}
-> -
-> -#define for_each_event(dir_path, evt_dir, evt_dirent)          \
-> -       while ((evt_dirent = readdir(evt_dir)) != NULL)         \
-> -               if (evt_dirent->d_type == DT_DIR &&             \
-> -                   (strcmp(evt_dirent->d_name, ".")) &&        \
-> -                   (strcmp(evt_dirent->d_name, "..")) &&       \
-> -                   (!tp_event_has_id(dir_path, evt_dirent)))
-> -
-> -#define MAX_EVENT_LENGTH 512
-> -
-> -struct tracepoint_path *tracepoint_id_to_path(u64 config)
-> -{
-> -       struct tracepoint_path *path = NULL;
-> -       DIR *sys_dir, *evt_dir;
-> -       struct dirent *sys_dirent, *evt_dirent;
-> -       char id_buf[24];
-> -       int fd;
-> -       u64 id;
-> -       char evt_path[MAXPATHLEN];
-> -       char *dir_path;
-> -
-> -       sys_dir = tracing_events__opendir();
-> -       if (!sys_dir)
-> -               return NULL;
-> -
-> -       for_each_subsystem(sys_dir, sys_dirent) {
-> -               dir_path = get_events_file(sys_dirent->d_name);
-> -               if (!dir_path)
-> -                       continue;
-> -               evt_dir = opendir(dir_path);
-> -               if (!evt_dir)
-> -                       goto next;
-> -
-> -               for_each_event(dir_path, evt_dir, evt_dirent) {
-> -
-> -                       scnprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path,
-> -                                 evt_dirent->d_name);
-> -                       fd = open(evt_path, O_RDONLY);
-> -                       if (fd < 0)
-> -                               continue;
-> -                       if (read(fd, id_buf, sizeof(id_buf)) < 0) {
-> -                               close(fd);
-> -                               continue;
-> -                       }
-> -                       close(fd);
-> -                       id = atoll(id_buf);
-> -                       if (id == config) {
-> -                               put_events_file(dir_path);
-> -                               closedir(evt_dir);
-> -                               closedir(sys_dir);
-> -                               path = zalloc(sizeof(*path));
-> -                               if (!path)
-> -                                       return NULL;
-> -                               if (asprintf(&path->system, "%.*s", MAX_EVENT_LENGTH, sys_dirent->d_name) < 0) {
-> -                                       free(path);
-> -                                       return NULL;
-> -                               }
-> -                               if (asprintf(&path->name, "%.*s", MAX_EVENT_LENGTH, evt_dirent->d_name) < 0) {
-> -                                       zfree(&path->system);
-> -                                       free(path);
-> -                                       return NULL;
-> -                               }
-> -                               return path;
-> -                       }
-> -               }
-> -               closedir(evt_dir);
-> -next:
-> -               put_events_file(dir_path);
-> -       }
-> -
-> -       closedir(sys_dir);
-> -       return NULL;
-> -}
-> -
-> -struct tracepoint_path *tracepoint_name_to_path(const char *name)
-> -{
-> -       struct tracepoint_path *path = zalloc(sizeof(*path));
-> -       char *str = strchr(name, ':');
-> -
-> -       if (path == NULL || str == NULL) {
-> -               free(path);
-> -               return NULL;
-> -       }
-> -
-> -       path->system = strndup(name, str - name);
-> -       path->name = strdup(str+1);
-> -
-> -       if (path->system == NULL || path->name == NULL) {
-> -               zfree(&path->system);
-> -               zfree(&path->name);
-> -               zfree(&path);
-> -       }
-> -
-> -       return path;
-> -}
-> -
->  const char *event_type(int type)
->  {
->         switch (type) {
-> @@ -2666,571 +2531,6 @@ int exclude_perf(const struct option *opt,
->                                           NULL);
->  }
->
-> -static const char * const event_type_descriptors[] = {
-> -       "Hardware event",
-> -       "Software event",
-> -       "Tracepoint event",
-> -       "Hardware cache event",
-> -       "Raw hardware event descriptor",
-> -       "Hardware breakpoint",
-> -};
-> -
-> -static int cmp_string(const void *a, const void *b)
-> -{
-> -       const char * const *as = a;
-> -       const char * const *bs = b;
-> -
-> -       return strcmp(*as, *bs);
-> -}
-> -
-> -/*
-> - * Print the events from <debugfs_mount_point>/tracing/events
-> - */
-> -
-> -void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
-> -                            bool name_only)
-> -{
-> -       DIR *sys_dir, *evt_dir;
-> -       struct dirent *sys_dirent, *evt_dirent;
-> -       char evt_path[MAXPATHLEN];
-> -       char *dir_path;
-> -       char **evt_list = NULL;
-> -       unsigned int evt_i = 0, evt_num = 0;
-> -       bool evt_num_known = false;
-> -
-> -restart:
-> -       sys_dir = tracing_events__opendir();
-> -       if (!sys_dir)
-> -               return;
-> -
-> -       if (evt_num_known) {
-> -               evt_list = zalloc(sizeof(char *) * evt_num);
-> -               if (!evt_list)
-> -                       goto out_close_sys_dir;
-> -       }
-> -
-> -       for_each_subsystem(sys_dir, sys_dirent) {
-> -               if (subsys_glob != NULL &&
-> -                   !strglobmatch(sys_dirent->d_name, subsys_glob))
-> -                       continue;
-> -
-> -               dir_path = get_events_file(sys_dirent->d_name);
-> -               if (!dir_path)
-> -                       continue;
-> -               evt_dir = opendir(dir_path);
-> -               if (!evt_dir)
-> -                       goto next;
-> -
-> -               for_each_event(dir_path, evt_dir, evt_dirent) {
-> -                       if (event_glob != NULL &&
-> -                           !strglobmatch(evt_dirent->d_name, event_glob))
-> -                               continue;
-> -
-> -                       if (!evt_num_known) {
-> -                               evt_num++;
-> -                               continue;
-> -                       }
-> -
-> -                       snprintf(evt_path, MAXPATHLEN, "%s:%s",
-> -                                sys_dirent->d_name, evt_dirent->d_name);
-> -
-> -                       evt_list[evt_i] = strdup(evt_path);
-> -                       if (evt_list[evt_i] == NULL) {
-> -                               put_events_file(dir_path);
-> -                               goto out_close_evt_dir;
-> -                       }
-> -                       evt_i++;
-> -               }
-> -               closedir(evt_dir);
-> -next:
-> -               put_events_file(dir_path);
-> -       }
-> -       closedir(sys_dir);
-> -
-> -       if (!evt_num_known) {
-> -               evt_num_known = true;
-> -               goto restart;
-> -       }
-> -       qsort(evt_list, evt_num, sizeof(char *), cmp_string);
-> -       evt_i = 0;
-> -       while (evt_i < evt_num) {
-> -               if (name_only) {
-> -                       printf("%s ", evt_list[evt_i++]);
-> -                       continue;
-> -               }
-> -               printf("  %-50s [%s]\n", evt_list[evt_i++],
-> -                               event_type_descriptors[PERF_TYPE_TRACEPOINT]);
-> -       }
-> -       if (evt_num && pager_in_use())
-> -               printf("\n");
-> -
-> -out_free:
-> -       evt_num = evt_i;
-> -       for (evt_i = 0; evt_i < evt_num; evt_i++)
-> -               zfree(&evt_list[evt_i]);
-> -       zfree(&evt_list);
-> -       return;
-> -
-> -out_close_evt_dir:
-> -       closedir(evt_dir);
-> -out_close_sys_dir:
-> -       closedir(sys_dir);
-> -
-> -       printf("FATAL: not enough memory to print %s\n",
-> -                       event_type_descriptors[PERF_TYPE_TRACEPOINT]);
-> -       if (evt_list)
-> -               goto out_free;
-> -}
-> -
-> -/*
-> - * Check whether event is in <debugfs_mount_point>/tracing/events
-> - */
-> -
-> -int is_valid_tracepoint(const char *event_string)
-> -{
-> -       DIR *sys_dir, *evt_dir;
-> -       struct dirent *sys_dirent, *evt_dirent;
-> -       char evt_path[MAXPATHLEN];
-> -       char *dir_path;
-> -
-> -       sys_dir = tracing_events__opendir();
-> -       if (!sys_dir)
-> -               return 0;
-> -
-> -       for_each_subsystem(sys_dir, sys_dirent) {
-> -               dir_path = get_events_file(sys_dirent->d_name);
-> -               if (!dir_path)
-> -                       continue;
-> -               evt_dir = opendir(dir_path);
-> -               if (!evt_dir)
-> -                       goto next;
-> -
-> -               for_each_event(dir_path, evt_dir, evt_dirent) {
-> -                       snprintf(evt_path, MAXPATHLEN, "%s:%s",
-> -                                sys_dirent->d_name, evt_dirent->d_name);
-> -                       if (!strcmp(evt_path, event_string)) {
-> -                               closedir(evt_dir);
-> -                               closedir(sys_dir);
-> -                               return 1;
-> -                       }
-> -               }
-> -               closedir(evt_dir);
-> -next:
-> -               put_events_file(dir_path);
-> -       }
-> -       closedir(sys_dir);
-> -       return 0;
-> -}
-> -
-> -static bool is_event_supported(u8 type, u64 config)
-> -{
-> -       bool ret = true;
-> -       int open_return;
-> -       struct evsel *evsel;
-> -       struct perf_event_attr attr = {
-> -               .type = type,
-> -               .config = config,
-> -               .disabled = 1,
-> -       };
-> -       struct perf_thread_map *tmap = thread_map__new_by_tid(0);
-> -
-> -       if (tmap == NULL)
-> -               return false;
-> -
-> -       evsel = evsel__new(&attr);
-> -       if (evsel) {
-> -               open_return = evsel__open(evsel, NULL, tmap);
-> -               ret = open_return >= 0;
-> -
-> -               if (open_return == -EACCES) {
-> -                       /*
-> -                        * This happens if the paranoid value
-> -                        * /proc/sys/kernel/perf_event_paranoid is set to 2
-> -                        * Re-run with exclude_kernel set; we don't do that
-> -                        * by default as some ARM machines do not support it.
-> -                        *
-> -                        */
-> -                       evsel->core.attr.exclude_kernel = 1;
-> -                       ret = evsel__open(evsel, NULL, tmap) >= 0;
-> -               }
-> -               evsel__delete(evsel);
-> -       }
-> -
-> -       perf_thread_map__put(tmap);
-> -       return ret;
-> -}
-> -
-> -void print_sdt_events(const char *subsys_glob, const char *event_glob,
-> -                     bool name_only)
-> -{
-> -       struct probe_cache *pcache;
-> -       struct probe_cache_entry *ent;
-> -       struct strlist *bidlist, *sdtlist;
-> -       struct strlist_config cfg = {.dont_dupstr = true};
-> -       struct str_node *nd, *nd2;
-> -       char *buf, *path, *ptr = NULL;
-> -       bool show_detail = false;
-> -       int ret;
-> -
-> -       sdtlist = strlist__new(NULL, &cfg);
-> -       if (!sdtlist) {
-> -               pr_debug("Failed to allocate new strlist for SDT\n");
-> -               return;
-> -       }
-> -       bidlist = build_id_cache__list_all(true);
-> -       if (!bidlist) {
-> -               pr_debug("Failed to get buildids: %d\n", errno);
-> -               return;
-> -       }
-> -       strlist__for_each_entry(nd, bidlist) {
-> -               pcache = probe_cache__new(nd->s, NULL);
-> -               if (!pcache)
-> -                       continue;
-> -               list_for_each_entry(ent, &pcache->entries, node) {
-> -                       if (!ent->sdt)
-> -                               continue;
-> -                       if (subsys_glob &&
-> -                           !strglobmatch(ent->pev.group, subsys_glob))
-> -                               continue;
-> -                       if (event_glob &&
-> -                           !strglobmatch(ent->pev.event, event_glob))
-> -                               continue;
-> -                       ret = asprintf(&buf, "%s:%s@%s", ent->pev.group,
-> -                                       ent->pev.event, nd->s);
-> -                       if (ret > 0)
-> -                               strlist__add(sdtlist, buf);
-> -               }
-> -               probe_cache__delete(pcache);
-> -       }
-> -       strlist__delete(bidlist);
-> -
-> -       strlist__for_each_entry(nd, sdtlist) {
-> -               buf = strchr(nd->s, '@');
-> -               if (buf)
-> -                       *(buf++) = '\0';
-> -               if (name_only) {
-> -                       printf("%s ", nd->s);
-> -                       continue;
-> -               }
-> -               nd2 = strlist__next(nd);
-> -               if (nd2) {
-> -                       ptr = strchr(nd2->s, '@');
-> -                       if (ptr)
-> -                               *ptr = '\0';
-> -                       if (strcmp(nd->s, nd2->s) == 0)
-> -                               show_detail = true;
-> -               }
-> -               if (show_detail) {
-> -                       path = build_id_cache__origname(buf);
-> -                       ret = asprintf(&buf, "%s@%s(%.12s)", nd->s, path, buf);
-> -                       if (ret > 0) {
-> -                               printf("  %-50s [%s]\n", buf, "SDT event");
-> -                               free(buf);
-> -                       }
-> -                       free(path);
-> -               } else
-> -                       printf("  %-50s [%s]\n", nd->s, "SDT event");
-> -               if (nd2) {
-> -                       if (strcmp(nd->s, nd2->s) != 0)
-> -                               show_detail = false;
-> -                       if (ptr)
-> -                               *ptr = '@';
-> -               }
-> -       }
-> -       strlist__delete(sdtlist);
-> -}
-> -
-> -int print_hwcache_events(const char *event_glob, bool name_only)
-> -{
-> -       unsigned int type, op, i, evt_i = 0, evt_num = 0, npmus = 0;
-> -       char name[64], new_name[128];
-> -       char **evt_list = NULL, **evt_pmus = NULL;
-> -       bool evt_num_known = false;
-> -       struct perf_pmu *pmu = NULL;
-> -
-> -       if (perf_pmu__has_hybrid()) {
-> -               npmus = perf_pmu__hybrid_pmu_num();
-> -               evt_pmus = zalloc(sizeof(char *) * npmus);
-> -               if (!evt_pmus)
-> -                       goto out_enomem;
-> -       }
-> -
-> -restart:
-> -       if (evt_num_known) {
-> -               evt_list = zalloc(sizeof(char *) * evt_num);
-> -               if (!evt_list)
-> -                       goto out_enomem;
-> -       }
-> -
-> -       for (type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++) {
-> -               for (op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
-> -                       /* skip invalid cache type */
-> -                       if (!evsel__is_cache_op_valid(type, op))
-> -                               continue;
-> -
-> -                       for (i = 0; i < PERF_COUNT_HW_CACHE_RESULT_MAX; i++) {
-> -                               unsigned int hybrid_supported = 0, j;
-> -                               bool supported;
-> -
-> -                               __evsel__hw_cache_type_op_res_name(type, op, i, name, sizeof(name));
-> -                               if (event_glob != NULL && !strglobmatch(name, event_glob))
-> -                                       continue;
-> -
-> -                               if (!perf_pmu__has_hybrid()) {
-> -                                       if (!is_event_supported(PERF_TYPE_HW_CACHE,
-> -                                                               type | (op << 8) | (i << 16))) {
-> -                                               continue;
-> -                                       }
-> -                               } else {
-> -                                       perf_pmu__for_each_hybrid_pmu(pmu) {
-> -                                               if (!evt_num_known) {
-> -                                                       evt_num++;
-> -                                                       continue;
-> -                                               }
-> -
-> -                                               supported = is_event_supported(
-> -                                                                       PERF_TYPE_HW_CACHE,
-> -                                                                       type | (op << 8) | (i << 16) |
-> -                                                                       ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT));
-> -                                               if (supported) {
-> -                                                       snprintf(new_name, sizeof(new_name), "%s/%s/",
-> -                                                                pmu->name, name);
-> -                                                       evt_pmus[hybrid_supported] = strdup(new_name);
-> -                                                       hybrid_supported++;
-> -                                               }
-> -                                       }
-> -
-> -                                       if (hybrid_supported == 0)
-> -                                               continue;
-> -                               }
-> -
-> -                               if (!evt_num_known) {
-> -                                       evt_num++;
-> -                                       continue;
-> -                               }
-> -
-> -                               if ((hybrid_supported == 0) ||
-> -                                   (hybrid_supported == npmus)) {
-> -                                       evt_list[evt_i] = strdup(name);
-> -                                       if (npmus > 0) {
-> -                                               for (j = 0; j < npmus; j++)
-> -                                                       zfree(&evt_pmus[j]);
-> -                                       }
-> -                               } else {
-> -                                       for (j = 0; j < hybrid_supported; j++) {
-> -                                               evt_list[evt_i++] = evt_pmus[j];
-> -                                               evt_pmus[j] = NULL;
-> -                                       }
-> -                                       continue;
-> -                               }
-> -
-> -                               if (evt_list[evt_i] == NULL)
-> -                                       goto out_enomem;
-> -                               evt_i++;
-> -                       }
-> -               }
-> -       }
-> -
-> -       if (!evt_num_known) {
-> -               evt_num_known = true;
-> -               goto restart;
-> -       }
-> -
-> -       for (evt_i = 0; evt_i < evt_num; evt_i++) {
-> -               if (!evt_list[evt_i])
-> -                       break;
-> -       }
-> -
-> -       evt_num = evt_i;
-> -       qsort(evt_list, evt_num, sizeof(char *), cmp_string);
-> -       evt_i = 0;
-> -       while (evt_i < evt_num) {
-> -               if (name_only) {
-> -                       printf("%s ", evt_list[evt_i++]);
-> -                       continue;
-> -               }
-> -               printf("  %-50s [%s]\n", evt_list[evt_i++],
-> -                               event_type_descriptors[PERF_TYPE_HW_CACHE]);
-> -       }
-> -       if (evt_num && pager_in_use())
-> -               printf("\n");
-> -
-> -out_free:
-> -       evt_num = evt_i;
-> -       for (evt_i = 0; evt_i < evt_num; evt_i++)
-> -               zfree(&evt_list[evt_i]);
-> -       zfree(&evt_list);
-> -
-> -       for (evt_i = 0; evt_i < npmus; evt_i++)
-> -               zfree(&evt_pmus[evt_i]);
-> -       zfree(&evt_pmus);
-> -       return evt_num;
-> -
-> -out_enomem:
-> -       printf("FATAL: not enough memory to print %s\n", event_type_descriptors[PERF_TYPE_HW_CACHE]);
-> -       if (evt_list)
-> -               goto out_free;
-> -       return evt_num;
-> -}
-> -
-> -static void print_tool_event(const struct event_symbol *syms, const char *event_glob,
-> -                            bool name_only)
-> -{
-> -       if (syms->symbol == NULL)
-> -               return;
-> -
-> -       if (event_glob && !(strglobmatch(syms->symbol, event_glob) ||
-> -             (syms->alias && strglobmatch(syms->alias, event_glob))))
-> -               return;
-> -
-> -       if (name_only)
-> -               printf("%s ", syms->symbol);
-> -       else {
-> -               char name[MAX_NAME_LEN];
-> -               if (syms->alias && strlen(syms->alias))
-> -                       snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
-> -               else
-> -                       strlcpy(name, syms->symbol, MAX_NAME_LEN);
-> -               printf("  %-50s [%s]\n", name, "Tool event");
-> -       }
-> -}
-> -
-> -void print_tool_events(const char *event_glob, bool name_only)
-> -{
-> -       // Start at 1 because the first enum entry symbols no tool event
-> -       for (int i = 1; i < PERF_TOOL_MAX; ++i) {
-> -               print_tool_event(event_symbols_tool + i, event_glob, name_only);
-> -       }
-> -       if (pager_in_use())
-> -               printf("\n");
-> -}
-> -
-> -void print_symbol_events(const char *event_glob, unsigned type,
-> -                               struct event_symbol *syms, unsigned max,
-> -                               bool name_only)
-> -{
-> -       unsigned int i, evt_i = 0, evt_num = 0;
-> -       char name[MAX_NAME_LEN];
-> -       char **evt_list = NULL;
-> -       bool evt_num_known = false;
-> -
-> -restart:
-> -       if (evt_num_known) {
-> -               evt_list = zalloc(sizeof(char *) * evt_num);
-> -               if (!evt_list)
-> -                       goto out_enomem;
-> -               syms -= max;
-> -       }
-> -
-> -       for (i = 0; i < max; i++, syms++) {
-> -               /*
-> -                * New attr.config still not supported here, the latest
-> -                * example was PERF_COUNT_SW_CGROUP_SWITCHES
-> -                */
-> -               if (syms->symbol == NULL)
-> -                       continue;
-> -
-> -               if (event_glob != NULL && !(strglobmatch(syms->symbol, event_glob) ||
-> -                     (syms->alias && strglobmatch(syms->alias, event_glob))))
-> -                       continue;
-> -
-> -               if (!is_event_supported(type, i))
-> -                       continue;
-> -
-> -               if (!evt_num_known) {
-> -                       evt_num++;
-> -                       continue;
-> -               }
-> -
-> -               if (!name_only && strlen(syms->alias))
-> -                       snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
-> -               else
-> -                       strlcpy(name, syms->symbol, MAX_NAME_LEN);
-> -
-> -               evt_list[evt_i] = strdup(name);
-> -               if (evt_list[evt_i] == NULL)
-> -                       goto out_enomem;
-> -               evt_i++;
-> -       }
-> -
-> -       if (!evt_num_known) {
-> -               evt_num_known = true;
-> -               goto restart;
-> -       }
-> -       qsort(evt_list, evt_num, sizeof(char *), cmp_string);
-> -       evt_i = 0;
-> -       while (evt_i < evt_num) {
-> -               if (name_only) {
-> -                       printf("%s ", evt_list[evt_i++]);
-> -                       continue;
-> -               }
-> -               printf("  %-50s [%s]\n", evt_list[evt_i++], event_type_descriptors[type]);
-> -       }
-> -       if (evt_num && pager_in_use())
-> -               printf("\n");
-> -
-> -out_free:
-> -       evt_num = evt_i;
-> -       for (evt_i = 0; evt_i < evt_num; evt_i++)
-> -               zfree(&evt_list[evt_i]);
-> -       zfree(&evt_list);
-> -       return;
-> -
-> -out_enomem:
-> -       printf("FATAL: not enough memory to print %s\n", event_type_descriptors[type]);
-> -       if (evt_list)
-> -               goto out_free;
-> -}
-> -
-> -/*
-> - * Print the help text for the event symbols:
-> - */
-> -void print_events(const char *event_glob, bool name_only, bool quiet_flag,
-> -                       bool long_desc, bool details_flag, bool deprecated,
-> -                       const char *pmu_name)
-> -{
-> -       print_symbol_events(event_glob, PERF_TYPE_HARDWARE,
-> -                           event_symbols_hw, PERF_COUNT_HW_MAX, name_only);
-> -
-> -       print_symbol_events(event_glob, PERF_TYPE_SOFTWARE,
-> -                           event_symbols_sw, PERF_COUNT_SW_MAX, name_only);
-> -       print_tool_events(event_glob, name_only);
-> -
-> -       print_hwcache_events(event_glob, name_only);
-> -
-> -       print_pmu_events(event_glob, name_only, quiet_flag, long_desc,
-> -                       details_flag, deprecated, pmu_name);
-> -
-> -       if (event_glob != NULL)
-> -               return;
-> -
-> -       if (!name_only) {
-> -               printf("  %-50s [%s]\n",
-> -                      "rNNN",
-> -                      event_type_descriptors[PERF_TYPE_RAW]);
-> -               printf("  %-50s [%s]\n",
-> -                      "cpu/t1=v1[,t2=v2,t3 ...]/modifier",
-> -                      event_type_descriptors[PERF_TYPE_RAW]);
-> -               if (pager_in_use())
-> -                       printf("   (see 'man perf-list' on how to encode it)\n\n");
-> -
-> -               printf("  %-50s [%s]\n",
-> -                      "mem:<addr>[/len][:access]",
-> -                       event_type_descriptors[PERF_TYPE_BREAKPOINT]);
-> -               if (pager_in_use())
-> -                       printf("\n");
-> -       }
-> -
-> -       print_tracepoint_events(NULL, NULL, name_only);
-> -
-> -       print_sdt_events(NULL, NULL, name_only);
-> -
-> -       metricgroup__print(true, true, NULL, name_only, details_flag,
-> -                          pmu_name);
-> -
-> -       print_libpfm_events(name_only, long_desc);
-> -}
-> -
->  int parse_events__is_hardcoded_term(struct parse_events_term *term)
->  {
->         return term->type_term != PARSE_EVENTS__TERM_TYPE_USER;
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index a38b8b160e80..ba9fa3ddaf6e 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -11,7 +11,6 @@
->  #include <linux/perf_event.h>
->  #include <string.h>
->
-> -struct list_head;
->  struct evsel;
->  struct evlist;
->  struct parse_events_error;
-> @@ -19,14 +18,6 @@ struct parse_events_error;
->  struct option;
->  struct perf_pmu;
->
-> -struct tracepoint_path {
-> -       char *system;
-> -       char *name;
-> -       struct tracepoint_path *next;
-> -};
-> -
-> -struct tracepoint_path *tracepoint_id_to_path(u64 config);
-> -struct tracepoint_path *tracepoint_name_to_path(const char *name);
->  bool have_tracepoints(struct list_head *evlist);
->
->  const char *event_type(int type);
-> @@ -46,8 +37,6 @@ int parse_events_terms(struct list_head *terms, const char *str);
->  int parse_filter(const struct option *opt, const char *str, int unset);
->  int exclude_perf(const struct option *opt, const char *arg, int unset);
->
-> -#define EVENTS_HELP_MAX (128*1024)
-> -
->  enum perf_pmu_event_symbol_type {
->         PMU_EVENT_SYMBOL_ERR,           /* not a PMU EVENT */
->         PMU_EVENT_SYMBOL,               /* normal style PMU event */
-> @@ -56,11 +45,6 @@ enum perf_pmu_event_symbol_type {
->         PMU_EVENT_SYMBOL_SUFFIX2,       /* suffix of pre-suf2 style event */
->  };
->
-> -struct perf_pmu_event_symbol {
-> -       char    *symbol;
-> -       enum perf_pmu_event_symbol_type type;
-> -};
-> -
->  enum {
->         PARSE_EVENTS__TERM_TYPE_NUM,
->         PARSE_EVENTS__TERM_TYPE_STR,
-> @@ -219,28 +203,13 @@ void parse_events_update_lists(struct list_head *list_event,
->  void parse_events_evlist_error(struct parse_events_state *parse_state,
->                                int idx, const char *str);
->
-> -void print_events(const char *event_glob, bool name_only, bool quiet,
-> -                 bool long_desc, bool details_flag, bool deprecated,
-> -                 const char *pmu_name);
-> -
->  struct event_symbol {
->         const char      *symbol;
->         const char      *alias;
->  };
->  extern struct event_symbol event_symbols_hw[];
->  extern struct event_symbol event_symbols_sw[];
-> -void print_symbol_events(const char *event_glob, unsigned type,
-> -                               struct event_symbol *syms, unsigned max,
-> -                               bool name_only);
-> -void print_tool_events(const char *event_glob, bool name_only);
-> -void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
-> -                            bool name_only);
-> -int print_hwcache_events(const char *event_glob, bool name_only);
-> -void print_sdt_events(const char *subsys_glob, const char *event_glob,
-> -                     bool name_only);
-> -int is_valid_tracepoint(const char *event_string);
->
-> -int valid_event_mount(const char *eventfs);
->  char *parse_events_formats_error_string(char *additional_terms);
->
->  void parse_events_error__init(struct parse_events_error *err);
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> new file mode 100644
-> index 000000000000..3b071e57b4a0
-> --- /dev/null
-> +++ b/tools/perf/util/print-events.c
-> @@ -0,0 +1,571 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <dirent.h>
-> +#include <errno.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/param.h>
-> +
-> +#include <api/fs/tracing_path.h>
-> +#include <linux/perf_event.h>
-> +#include <linux/zalloc.h>
-> +#include <subcmd/pager.h>
-> +
-> +#include "build-id.h"
-> +#include "debug.h"
-> +#include "evsel.h"
-> +#include "metricgroup.h"
-> +#include "parse-events.h"
-> +#include "pmu.h"
-> +#include "print-events.h"
-> +#include "probe-file.h"
-> +#include "string2.h"
-> +#include "strlist.h"
-> +#include "thread_map.h"
-> +#include "tracepoint.h"
-> +#include "pfm.h"
-> +#include "pmu-hybrid.h"
-> +
-> +#define MAX_NAME_LEN 100
-> +
-> +static const char * const event_type_descriptors[] = {
-> +       "Hardware event",
-> +       "Software event",
-> +       "Tracepoint event",
-> +       "Hardware cache event",
-> +       "Raw hardware event descriptor",
-> +       "Hardware breakpoint",
-> +};
-> +
-> +static const struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
-> +       [PERF_TOOL_DURATION_TIME] = {
-> +               .symbol = "duration_time",
-> +               .alias  = "",
-> +       },
-> +       [PERF_TOOL_USER_TIME] = {
-> +               .symbol = "user_time",
-> +               .alias  = "",
-> +       },
-> +       [PERF_TOOL_SYSTEM_TIME] = {
-> +               .symbol = "system_time",
-> +               .alias  = "",
-> +       },
-> +};
-> +
-> +static int cmp_string(const void *a, const void *b)
-> +{
-> +       const char * const *as = a;
-> +       const char * const *bs = b;
-> +
-> +       return strcmp(*as, *bs);
-> +}
-> +
-> +/*
-> + * Print the events from <debugfs_mount_point>/tracing/events
-> + */
-> +void print_tracepoint_events(const char *subsys_glob,
-> +                            const char *event_glob, bool name_only)
-> +{
-> +       DIR *sys_dir, *evt_dir;
-> +       struct dirent *sys_dirent, *evt_dirent;
-> +       char evt_path[MAXPATHLEN];
-> +       char *dir_path;
-> +       char **evt_list = NULL;
-> +       unsigned int evt_i = 0, evt_num = 0;
-> +       bool evt_num_known = false;
-> +
-> +restart:
-> +       sys_dir = tracing_events__opendir();
-> +       if (!sys_dir)
-> +               return;
-> +
-> +       if (evt_num_known) {
-> +               evt_list = zalloc(sizeof(char *) * evt_num);
-> +               if (!evt_list)
-> +                       goto out_close_sys_dir;
-> +       }
-> +
-> +       for_each_subsystem(sys_dir, sys_dirent) {
-> +               if (subsys_glob != NULL &&
-> +                   !strglobmatch(sys_dirent->d_name, subsys_glob))
-> +                       continue;
-> +
-> +               dir_path = get_events_file(sys_dirent->d_name);
-> +               if (!dir_path)
-> +                       continue;
-> +               evt_dir = opendir(dir_path);
-> +               if (!evt_dir)
-> +                       goto next;
-> +
-> +               for_each_event(dir_path, evt_dir, evt_dirent) {
-> +                       if (event_glob != NULL &&
-> +                           !strglobmatch(evt_dirent->d_name, event_glob))
-> +                               continue;
-> +
-> +                       if (!evt_num_known) {
-> +                               evt_num++;
-> +                               continue;
-> +                       }
-> +
-> +                       snprintf(evt_path, MAXPATHLEN, "%s:%s",
-> +                                sys_dirent->d_name, evt_dirent->d_name);
-> +
-> +                       evt_list[evt_i] = strdup(evt_path);
-> +                       if (evt_list[evt_i] == NULL) {
-> +                               put_events_file(dir_path);
-> +                               goto out_close_evt_dir;
-> +                       }
-> +                       evt_i++;
-> +               }
-> +               closedir(evt_dir);
-> +next:
-> +               put_events_file(dir_path);
-> +       }
-> +       closedir(sys_dir);
-> +
-> +       if (!evt_num_known) {
-> +               evt_num_known = true;
-> +               goto restart;
-> +       }
-> +       qsort(evt_list, evt_num, sizeof(char *), cmp_string);
-> +       evt_i = 0;
-> +       while (evt_i < evt_num) {
-> +               if (name_only) {
-> +                       printf("%s ", evt_list[evt_i++]);
-> +                       continue;
-> +               }
-> +               printf("  %-50s [%s]\n", evt_list[evt_i++],
-> +                               event_type_descriptors[PERF_TYPE_TRACEPOINT]);
-> +       }
-> +       if (evt_num && pager_in_use())
-> +               printf("\n");
-> +
-> +out_free:
-> +       evt_num = evt_i;
-> +       for (evt_i = 0; evt_i < evt_num; evt_i++)
-> +               zfree(&evt_list[evt_i]);
-> +       zfree(&evt_list);
-> +       return;
-> +
-> +out_close_evt_dir:
-> +       closedir(evt_dir);
-> +out_close_sys_dir:
-> +       closedir(sys_dir);
-> +
-> +       printf("FATAL: not enough memory to print %s\n",
-> +                       event_type_descriptors[PERF_TYPE_TRACEPOINT]);
-> +       if (evt_list)
-> +               goto out_free;
-> +}
-> +
-> +void print_sdt_events(const char *subsys_glob, const char *event_glob,
-> +                     bool name_only)
-> +{
-> +       struct probe_cache *pcache;
-> +       struct probe_cache_entry *ent;
-> +       struct strlist *bidlist, *sdtlist;
-> +       struct strlist_config cfg = {.dont_dupstr = true};
-> +       struct str_node *nd, *nd2;
-> +       char *buf, *path, *ptr = NULL;
-> +       bool show_detail = false;
-> +       int ret;
-> +
-> +       sdtlist = strlist__new(NULL, &cfg);
-> +       if (!sdtlist) {
-> +               pr_debug("Failed to allocate new strlist for SDT\n");
-> +               return;
-> +       }
-> +       bidlist = build_id_cache__list_all(true);
-> +       if (!bidlist) {
-> +               pr_debug("Failed to get buildids: %d\n", errno);
-> +               return;
-> +       }
-> +       strlist__for_each_entry(nd, bidlist) {
-> +               pcache = probe_cache__new(nd->s, NULL);
-> +               if (!pcache)
-> +                       continue;
-> +               list_for_each_entry(ent, &pcache->entries, node) {
-> +                       if (!ent->sdt)
-> +                               continue;
-> +                       if (subsys_glob &&
-> +                           !strglobmatch(ent->pev.group, subsys_glob))
-> +                               continue;
-> +                       if (event_glob &&
-> +                           !strglobmatch(ent->pev.event, event_glob))
-> +                               continue;
-> +                       ret = asprintf(&buf, "%s:%s@%s", ent->pev.group,
-> +                                       ent->pev.event, nd->s);
-> +                       if (ret > 0)
-> +                               strlist__add(sdtlist, buf);
-> +               }
-> +               probe_cache__delete(pcache);
-> +       }
-> +       strlist__delete(bidlist);
-> +
-> +       strlist__for_each_entry(nd, sdtlist) {
-> +               buf = strchr(nd->s, '@');
-> +               if (buf)
-> +                       *(buf++) = '\0';
-> +               if (name_only) {
-> +                       printf("%s ", nd->s);
-> +                       continue;
-> +               }
-> +               nd2 = strlist__next(nd);
-> +               if (nd2) {
-> +                       ptr = strchr(nd2->s, '@');
-> +                       if (ptr)
-> +                               *ptr = '\0';
-> +                       if (strcmp(nd->s, nd2->s) == 0)
-> +                               show_detail = true;
-> +               }
-> +               if (show_detail) {
-> +                       path = build_id_cache__origname(buf);
-> +                       ret = asprintf(&buf, "%s@%s(%.12s)", nd->s, path, buf);
-> +                       if (ret > 0) {
-> +                               printf("  %-50s [%s]\n", buf, "SDT event");
-> +                               free(buf);
-> +                       }
-> +                       free(path);
-> +               } else
-> +                       printf("  %-50s [%s]\n", nd->s, "SDT event");
-> +               if (nd2) {
-> +                       if (strcmp(nd->s, nd2->s) != 0)
-> +                               show_detail = false;
-> +                       if (ptr)
-> +                               *ptr = '@';
-> +               }
-> +       }
-> +       strlist__delete(sdtlist);
-> +}
-> +
-> +static bool is_event_supported(u8 type, unsigned int config)
-> +{
-> +       bool ret = true;
-> +       int open_return;
-> +       struct evsel *evsel;
-> +       struct perf_event_attr attr = {
-> +               .type = type,
-> +               .config = config,
-> +               .disabled = 1,
-> +       };
-> +       struct perf_thread_map *tmap = thread_map__new_by_tid(0);
-> +
-> +       if (tmap == NULL)
-> +               return false;
-> +
-> +       evsel = evsel__new(&attr);
-> +       if (evsel) {
-> +               open_return = evsel__open(evsel, NULL, tmap);
-> +               ret = open_return >= 0;
-> +
-> +               if (open_return == -EACCES) {
-> +                       /*
-> +                        * This happens if the paranoid value
-> +                        * /proc/sys/kernel/perf_event_paranoid is set to 2
-> +                        * Re-run with exclude_kernel set; we don't do that
-> +                        * by default as some ARM machines do not support it.
-> +                        *
-> +                        */
-> +                       evsel->core.attr.exclude_kernel = 1;
-> +                       ret = evsel__open(evsel, NULL, tmap) >= 0;
-> +               }
-> +               evsel__delete(evsel);
-> +       }
-> +
-> +       perf_thread_map__put(tmap);
-> +       return ret;
-> +}
-> +
-> +int print_hwcache_events(const char *event_glob, bool name_only)
-> +{
-> +       unsigned int type, op, i, evt_i = 0, evt_num = 0, npmus = 0;
-> +       char name[64], new_name[128];
-> +       char **evt_list = NULL, **evt_pmus = NULL;
-> +       bool evt_num_known = false;
-> +       struct perf_pmu *pmu = NULL;
-> +
-> +       if (perf_pmu__has_hybrid()) {
-> +               npmus = perf_pmu__hybrid_pmu_num();
-> +               evt_pmus = zalloc(sizeof(char *) * npmus);
-> +               if (!evt_pmus)
-> +                       goto out_enomem;
-> +       }
-> +
-> +restart:
-> +       if (evt_num_known) {
-> +               evt_list = zalloc(sizeof(char *) * evt_num);
-> +               if (!evt_list)
-> +                       goto out_enomem;
-> +       }
-> +
-> +       for (type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++) {
-> +               for (op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
-> +                       /* skip invalid cache type */
-> +                       if (!evsel__is_cache_op_valid(type, op))
-> +                               continue;
-> +
-> +                       for (i = 0; i < PERF_COUNT_HW_CACHE_RESULT_MAX; i++) {
-> +                               unsigned int hybrid_supported = 0, j;
-> +                               bool supported;
-> +
-> +                               __evsel__hw_cache_type_op_res_name(type, op, i, name, sizeof(name));
-> +                               if (event_glob != NULL && !strglobmatch(name, event_glob))
-> +                                       continue;
-> +
-> +                               if (!perf_pmu__has_hybrid()) {
-> +                                       if (!is_event_supported(PERF_TYPE_HW_CACHE,
-> +                                                               type | (op << 8) | (i << 16))) {
-> +                                               continue;
-> +                                       }
-> +                               } else {
-> +                                       perf_pmu__for_each_hybrid_pmu(pmu) {
-> +                                               if (!evt_num_known) {
-> +                                                       evt_num++;
-> +                                                       continue;
-> +                                               }
-> +
-> +                                               supported = is_event_supported(
-> +                                                       PERF_TYPE_HW_CACHE,
-> +                                                       type | (op << 8) | (i << 16) |
-> +                                                       ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT));
-> +                                               if (supported) {
-> +                                                       snprintf(new_name, sizeof(new_name),
-> +                                                                "%s/%s/", pmu->name, name);
-> +                                                       evt_pmus[hybrid_supported] =
-> +                                                               strdup(new_name);
-> +                                                       hybrid_supported++;
-> +                                               }
-> +                                       }
-> +
-> +                                       if (hybrid_supported == 0)
-> +                                               continue;
-> +                               }
-> +
-> +                               if (!evt_num_known) {
-> +                                       evt_num++;
-> +                                       continue;
-> +                               }
-> +
-> +                               if ((hybrid_supported == 0) ||
-> +                                   (hybrid_supported == npmus)) {
-> +                                       evt_list[evt_i] = strdup(name);
-> +                                       if (npmus > 0) {
-> +                                               for (j = 0; j < npmus; j++)
-> +                                                       zfree(&evt_pmus[j]);
-> +                                       }
-> +                               } else {
-> +                                       for (j = 0; j < hybrid_supported; j++) {
-> +                                               evt_list[evt_i++] = evt_pmus[j];
-> +                                               evt_pmus[j] = NULL;
-> +                                       }
-> +                                       continue;
-> +                               }
-> +
-> +                               if (evt_list[evt_i] == NULL)
-> +                                       goto out_enomem;
-> +                               evt_i++;
-> +                       }
-> +               }
-> +       }
-> +
-> +       if (!evt_num_known) {
-> +               evt_num_known = true;
-> +               goto restart;
-> +       }
-> +
-> +       for (evt_i = 0; evt_i < evt_num; evt_i++) {
-> +               if (!evt_list[evt_i])
-> +                       break;
-> +       }
-> +
-> +       evt_num = evt_i;
-> +       qsort(evt_list, evt_num, sizeof(char *), cmp_string);
-> +       evt_i = 0;
-> +       while (evt_i < evt_num) {
-> +               if (name_only) {
-> +                       printf("%s ", evt_list[evt_i++]);
-> +                       continue;
-> +               }
-> +               printf("  %-50s [%s]\n", evt_list[evt_i++],
-> +                               event_type_descriptors[PERF_TYPE_HW_CACHE]);
-> +       }
-> +       if (evt_num && pager_in_use())
-> +               printf("\n");
-> +
-> +out_free:
-> +       evt_num = evt_i;
-> +       for (evt_i = 0; evt_i < evt_num; evt_i++)
-> +               zfree(&evt_list[evt_i]);
-> +       zfree(&evt_list);
-> +
-> +       for (evt_i = 0; evt_i < npmus; evt_i++)
-> +               zfree(&evt_pmus[evt_i]);
-> +       zfree(&evt_pmus);
-> +       return evt_num;
-> +
-> +out_enomem:
-> +       printf("FATAL: not enough memory to print %s\n",
-> +               event_type_descriptors[PERF_TYPE_HW_CACHE]);
-> +       if (evt_list)
-> +               goto out_free;
-> +       return evt_num;
-> +}
-> +
-> +static void print_tool_event(const struct event_symbol *syms, const char *event_glob,
-> +                            bool name_only)
-> +{
-> +       if (syms->symbol == NULL)
-> +               return;
-> +
-> +       if (event_glob && !(strglobmatch(syms->symbol, event_glob) ||
-> +             (syms->alias && strglobmatch(syms->alias, event_glob))))
-> +               return;
-> +
-> +       if (name_only)
-> +               printf("%s ", syms->symbol);
-> +       else {
-> +               char name[MAX_NAME_LEN];
-> +
-> +               if (syms->alias && strlen(syms->alias))
-> +                       snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
-> +               else
-> +                       strlcpy(name, syms->symbol, MAX_NAME_LEN);
-> +               printf("  %-50s [%s]\n", name, "Tool event");
-> +       }
-> +}
-> +
-> +void print_tool_events(const char *event_glob, bool name_only)
-> +{
-> +       // Start at 1 because the first enum entry means no tool event.
-> +       for (int i = 1; i < PERF_TOOL_MAX; ++i)
-> +               print_tool_event(event_symbols_tool + i, event_glob, name_only);
-> +
-> +       if (pager_in_use())
-> +               printf("\n");
-> +}
-> +
-> +void print_symbol_events(const char *event_glob, unsigned int type,
-> +                        struct event_symbol *syms, unsigned int max,
-> +                        bool name_only)
-> +{
-> +       unsigned int i, evt_i = 0, evt_num = 0;
-> +       char name[MAX_NAME_LEN];
-> +       char **evt_list = NULL;
-> +       bool evt_num_known = false;
-> +
-> +restart:
-> +       if (evt_num_known) {
-> +               evt_list = zalloc(sizeof(char *) * evt_num);
-> +               if (!evt_list)
-> +                       goto out_enomem;
-> +               syms -= max;
-> +       }
-> +
-> +       for (i = 0; i < max; i++, syms++) {
-> +               /*
-> +                * New attr.config still not supported here, the latest
-> +                * example was PERF_COUNT_SW_CGROUP_SWITCHES
-> +                */
-> +               if (syms->symbol == NULL)
-> +                       continue;
-> +
-> +               if (event_glob != NULL && !(strglobmatch(syms->symbol, event_glob) ||
-> +                     (syms->alias && strglobmatch(syms->alias, event_glob))))
-> +                       continue;
-> +
-> +               if (!is_event_supported(type, i))
-> +                       continue;
-> +
-> +               if (!evt_num_known) {
-> +                       evt_num++;
-> +                       continue;
-> +               }
-> +
-> +               if (!name_only && strlen(syms->alias))
-> +                       snprintf(name, MAX_NAME_LEN, "%s OR %s", syms->symbol, syms->alias);
-> +               else
-> +                       strlcpy(name, syms->symbol, MAX_NAME_LEN);
-> +
-> +               evt_list[evt_i] = strdup(name);
-> +               if (evt_list[evt_i] == NULL)
-> +                       goto out_enomem;
-> +               evt_i++;
-> +       }
-> +
-> +       if (!evt_num_known) {
-> +               evt_num_known = true;
-> +               goto restart;
-> +       }
-> +       qsort(evt_list, evt_num, sizeof(char *), cmp_string);
-> +       evt_i = 0;
-> +       while (evt_i < evt_num) {
-> +               if (name_only) {
-> +                       printf("%s ", evt_list[evt_i++]);
-> +                       continue;
-> +               }
-> +               printf("  %-50s [%s]\n", evt_list[evt_i++], event_type_descriptors[type]);
-> +       }
-> +       if (evt_num && pager_in_use())
-> +               printf("\n");
-> +
-> +out_free:
-> +       evt_num = evt_i;
-> +       for (evt_i = 0; evt_i < evt_num; evt_i++)
-> +               zfree(&evt_list[evt_i]);
-> +       zfree(&evt_list);
-> +       return;
-> +
-> +out_enomem:
-> +       printf("FATAL: not enough memory to print %s\n", event_type_descriptors[type]);
-> +       if (evt_list)
-> +               goto out_free;
-> +}
-> +
-> +/*
-> + * Print the help text for the event symbols:
-> + */
-> +void print_events(const char *event_glob, bool name_only, bool quiet_flag,
-> +                       bool long_desc, bool details_flag, bool deprecated,
-> +                       const char *pmu_name)
-> +{
-> +       print_symbol_events(event_glob, PERF_TYPE_HARDWARE,
-> +                           event_symbols_hw, PERF_COUNT_HW_MAX, name_only);
-> +
-> +       print_symbol_events(event_glob, PERF_TYPE_SOFTWARE,
-> +                           event_symbols_sw, PERF_COUNT_SW_MAX, name_only);
-> +       print_tool_events(event_glob, name_only);
-> +
-> +       print_hwcache_events(event_glob, name_only);
-> +
-> +       print_pmu_events(event_glob, name_only, quiet_flag, long_desc,
-> +                       details_flag, deprecated, pmu_name);
-> +
-> +       if (event_glob != NULL)
-> +               return;
-> +
-> +       if (!name_only) {
-> +               printf("  %-50s [%s]\n",
-> +                      "rNNN",
-> +                      event_type_descriptors[PERF_TYPE_RAW]);
-> +               printf("  %-50s [%s]\n",
-> +                      "cpu/t1=v1[,t2=v2,t3 ...]/modifier",
-> +                      event_type_descriptors[PERF_TYPE_RAW]);
-> +               if (pager_in_use())
-> +                       printf("   (see 'man perf-list' on how to encode it)\n\n");
-> +
-> +               printf("  %-50s [%s]\n",
-> +                      "mem:<addr>[/len][:access]",
-> +                       event_type_descriptors[PERF_TYPE_BREAKPOINT]);
-> +               if (pager_in_use())
-> +                       printf("\n");
-> +       }
-> +
-> +       print_tracepoint_events(NULL, NULL, name_only);
-> +
-> +       print_sdt_events(NULL, NULL, name_only);
-> +
-> +       metricgroup__print(true, true, NULL, name_only, details_flag,
-> +                          pmu_name);
-> +
-> +       print_libpfm_events(name_only, long_desc);
-> +}
-> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-> new file mode 100644
-> index 000000000000..1da9910d83a6
-> --- /dev/null
-> +++ b/tools/perf/util/print-events.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __PERF_PRINT_EVENTS_H
-> +#define __PERF_PRINT_EVENTS_H
-> +
-> +#include <stdbool.h>
-> +
-> +struct event_symbol;
-> +
-> +void print_events(const char *event_glob, bool name_only, bool quiet_flag,
-> +                 bool long_desc, bool details_flag, bool deprecated,
-> +                 const char *pmu_name);
-> +int print_hwcache_events(const char *event_glob, bool name_only);
-> +void print_sdt_events(const char *subsys_glob, const char *event_glob,
-> +                     bool name_only);
-> +void print_symbol_events(const char *event_glob, unsigned int type,
-> +                        struct event_symbol *syms, unsigned int max,
-> +                        bool name_only);
-> +void print_tool_events(const char *event_glob, bool name_only);
-> +void print_tracepoint_events(const char *subsys_glob, const char *event_glob,
-> +                            bool name_only);
-> +
-> +#endif /* __PERF_PRINT_EVENTS_H */
-> diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-> index a65f65d0857e..892c323b4ac9 100644
-> --- a/tools/perf/util/trace-event-info.c
-> +++ b/tools/perf/util/trace-event-info.c
-> @@ -19,16 +19,24 @@
->  #include <linux/kernel.h>
->  #include <linux/zalloc.h>
->  #include <internal/lib.h> // page_size
-> +#include <sys/param.h>
->
->  #include "trace-event.h"
-> +#include "tracepoint.h"
->  #include <api/fs/tracing_path.h>
->  #include "evsel.h"
->  #include "debug.h"
->
->  #define VERSION "0.6"
-> +#define MAX_EVENT_LENGTH 512
->
->  static int output_fd;
->
-> +struct tracepoint_path {
-> +       char *system;
-> +       char *name;
-> +       struct tracepoint_path *next;
-> +};
->
->  int bigendian(void)
->  {
-> @@ -400,6 +408,94 @@ put_tracepoints_path(struct tracepoint_path *tps)
->         }
->  }
->
-> +static struct tracepoint_path *tracepoint_id_to_path(u64 config)
-> +{
-> +       struct tracepoint_path *path = NULL;
-> +       DIR *sys_dir, *evt_dir;
-> +       struct dirent *sys_dirent, *evt_dirent;
-> +       char id_buf[24];
-> +       int fd;
-> +       u64 id;
-> +       char evt_path[MAXPATHLEN];
-> +       char *dir_path;
-> +
-> +       sys_dir = tracing_events__opendir();
-> +       if (!sys_dir)
-> +               return NULL;
-> +
-> +       for_each_subsystem(sys_dir, sys_dirent) {
-> +               dir_path = get_events_file(sys_dirent->d_name);
-> +               if (!dir_path)
-> +                       continue;
-> +               evt_dir = opendir(dir_path);
-> +               if (!evt_dir)
-> +                       goto next;
-> +
-> +               for_each_event(dir_path, evt_dir, evt_dirent) {
-> +
-> +                       scnprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path,
-> +                                 evt_dirent->d_name);
-> +                       fd = open(evt_path, O_RDONLY);
-> +                       if (fd < 0)
-> +                               continue;
-> +                       if (read(fd, id_buf, sizeof(id_buf)) < 0) {
-> +                               close(fd);
-> +                               continue;
-> +                       }
-> +                       close(fd);
-> +                       id = atoll(id_buf);
-> +                       if (id == config) {
-> +                               put_events_file(dir_path);
-> +                               closedir(evt_dir);
-> +                               closedir(sys_dir);
-> +                               path = zalloc(sizeof(*path));
-> +                               if (!path)
-> +                                       return NULL;
-> +                               if (asprintf(&path->system, "%.*s",
-> +                                            MAX_EVENT_LENGTH, sys_dirent->d_name) < 0) {
-> +                                       free(path);
-> +                                       return NULL;
-> +                               }
-> +                               if (asprintf(&path->name, "%.*s",
-> +                                            MAX_EVENT_LENGTH, evt_dirent->d_name) < 0) {
-> +                                       zfree(&path->system);
-> +                                       free(path);
-> +                                       return NULL;
-> +                               }
-> +                               return path;
-> +                       }
-> +               }
-> +               closedir(evt_dir);
-> +next:
-> +               put_events_file(dir_path);
-> +       }
-> +
-> +       closedir(sys_dir);
-> +       return NULL;
-> +}
-> +
-> +static struct tracepoint_path *tracepoint_name_to_path(const char *name)
-> +{
-> +       struct tracepoint_path *path = zalloc(sizeof(*path));
-> +       char *str = strchr(name, ':');
-> +
-> +       if (path == NULL || str == NULL) {
-> +               free(path);
-> +               return NULL;
-> +       }
-> +
-> +       path->system = strndup(name, str - name);
-> +       path->name = strdup(str+1);
-> +
-> +       if (path->system == NULL || path->name == NULL) {
-> +               zfree(&path->system);
-> +               zfree(&path->name);
-> +               zfree(&path);
-> +       }
-> +
-> +       return path;
-> +}
-> +
->  static struct tracepoint_path *
->  get_tracepoints_path(struct list_head *pattrs)
->  {
-> diff --git a/tools/perf/util/tracepoint.c b/tools/perf/util/tracepoint.c
-> new file mode 100644
-> index 000000000000..89ef56c43311
-> --- /dev/null
-> +++ b/tools/perf/util/tracepoint.c
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "tracepoint.h"
-> +
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <stdio.h>
-> +#include <sys/param.h>
-> +#include <unistd.h>
-> +
-> +#include <api/fs/tracing_path.h>
-> +
-> +int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
-> +{
-> +       char evt_path[MAXPATHLEN];
-> +       int fd;
-> +
-> +       snprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path, evt_dir->d_name);
-> +       fd = open(evt_path, O_RDONLY);
-> +       if (fd < 0)
-> +               return -EINVAL;
-> +       close(fd);
-> +
-> +       return 0;
-> +}
-> +
-> +/*
-> + * Check whether event is in <debugfs_mount_point>/tracing/events
-> + */
-> +int is_valid_tracepoint(const char *event_string)
-> +{
-> +       DIR *sys_dir, *evt_dir;
-> +       struct dirent *sys_dirent, *evt_dirent;
-> +       char evt_path[MAXPATHLEN];
-> +       char *dir_path;
-> +
-> +       sys_dir = tracing_events__opendir();
-> +       if (!sys_dir)
-> +               return 0;
-> +
-> +       for_each_subsystem(sys_dir, sys_dirent) {
-> +               dir_path = get_events_file(sys_dirent->d_name);
-> +               if (!dir_path)
-> +                       continue;
-> +               evt_dir = opendir(dir_path);
-> +               if (!evt_dir)
-> +                       goto next;
-> +
-> +               for_each_event(dir_path, evt_dir, evt_dirent) {
-> +                       snprintf(evt_path, MAXPATHLEN, "%s:%s",
-> +                                sys_dirent->d_name, evt_dirent->d_name);
-> +                       if (!strcmp(evt_path, event_string)) {
-> +                               closedir(evt_dir);
-> +                               closedir(sys_dir);
-> +                               return 1;
-> +                       }
-> +               }
-> +               closedir(evt_dir);
-> +next:
-> +               put_events_file(dir_path);
-> +       }
-> +       closedir(sys_dir);
-> +       return 0;
-> +}
-> diff --git a/tools/perf/util/tracepoint.h b/tools/perf/util/tracepoint.h
-> new file mode 100644
-> index 000000000000..c4a110fe87d7
-> --- /dev/null
-> +++ b/tools/perf/util/tracepoint.h
-> @@ -0,0 +1,25 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __PERF_TRACEPOINT_H
-> +#define __PERF_TRACEPOINT_H
-> +
-> +#include <dirent.h>
-> +#include <string.h>
-> +
-> +int tp_event_has_id(const char *dir_path, struct dirent *evt_dir);
-> +
-> +#define for_each_event(dir_path, evt_dir, evt_dirent)          \
-> +       while ((evt_dirent = readdir(evt_dir)) != NULL)         \
-> +               if (evt_dirent->d_type == DT_DIR &&             \
-> +                   (strcmp(evt_dirent->d_name, ".")) &&        \
-> +                   (strcmp(evt_dirent->d_name, "..")) &&       \
-> +                   (!tp_event_has_id(dir_path, evt_dirent)))
-> +
-> +#define for_each_subsystem(sys_dir, sys_dirent)                        \
-> +       while ((sys_dirent = readdir(sys_dir)) != NULL)         \
-> +               if (sys_dirent->d_type == DT_DIR &&             \
-> +                   (strcmp(sys_dirent->d_name, ".")) &&        \
-> +                   (strcmp(sys_dirent->d_name, "..")))
-> +
-> +int is_valid_tracepoint(const char *event_string);
-> +
-> +#endif /* __PERF_TRACEPOINT_H */
-> --
-> 2.37.0.rc0.161.g10f37bed90-goog
->
+yangyicong@ubuntu:~/mainline_linux/linux/drivers$ grep -rn WARN_ON ./ | grep irq_set_affinity
+./perf/arm_smmuv3_pmu.c:649:    WARN_ON(irq_set_affinity(smmu_pmu->irq, cpumask_of(target)));
+./perf/arm_smmuv3_pmu.c:895:    WARN_ON(irq_set_affinity(smmu_pmu->irq, cpumask_of(smmu_pmu->on_cpu)));
+./perf/arm-ccn.c:1214:          WARN_ON(irq_set_affinity(ccn->irq, cpumask_of(dt->cpu)));
+./perf/qcom_l2_pmu.c:796:       WARN_ON(irq_set_affinity(cluster->irq, cpumask_of(cpu)));
+./perf/qcom_l2_pmu.c:834:       WARN_ON(irq_set_affinity(cluster->irq, cpumask_of(target)));
+./perf/arm_dmc620_pmu.c:624:    WARN_ON(irq_set_affinity(irq->irq_num, cpumask_of(target)));
+./perf/fsl_imx8_ddr_perf.c:674: WARN_ON(irq_set_affinity(pmu->irq, cpumask_of(pmu->cpu)));
+./perf/xgene_pmu.c:1793:        WARN_ON(irq_set_affinity(xgene_pmu->irq, &xgene_pmu->cpu));
+./perf/xgene_pmu.c:1826:        WARN_ON(irq_set_affinity(xgene_pmu->irq, &xgene_pmu->cpu));
+./perf/hisilicon/hisi_pcie_pmu.c:658:           WARN_ON(irq_set_affinity(pcie_pmu->irq, cpumask_of(cpu)));
+./perf/hisilicon/hisi_pcie_pmu.c:684:   WARN_ON(irq_set_affinity(pcie_pmu->irq, cpumask_of(target)));
+./perf/hisilicon/hisi_uncore_pmu.c:495: WARN_ON(irq_set_affinity(hisi_pmu->irq, cpumask_of(cpu)));
+./perf/hisilicon/hisi_uncore_pmu.c:528: WARN_ON(irq_set_affinity(hisi_pmu->irq, cpumask_of(target)));
+
+The perf core needs the interrupt to be handled on the same cpu which starts the trace to
+avoid "context" mismatch. Otherwise we'll trigger the WARN_ON_ONCE() in perf core [1], which
+may *crash* the machine as well. So the driver needs to bind the IRQ on the CPU start the
+trace here and trigger the warn earlier which is easier to find the reason. The pmu::start()
+is void so we cannot report it to the caller. Indeed I think the condition is unlikely to be
+reached since the irq_set_affinity() will fail when there's no online cpu in the mask, but we
+always get the cpu from the online list.
+
+[1] https://github.com/torvalds/linux/blob/68e3c69803dada336893640110cb87221bb01dcf/kernel/events/core.c#L341
+
+Thanks.
