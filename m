@@ -2,173 +2,174 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF075C04A68
-	for <linux-perf-users@archiver.kernel.org>; Thu, 28 Jul 2022 22:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF46C00140
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 02:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232169AbiG1Wil (ORCPT
+        id S233806AbiG2CBZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 28 Jul 2022 18:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46578 "EHLO
+        Thu, 28 Jul 2022 22:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231612AbiG1Wil (ORCPT
+        with ESMTP id S232420AbiG2CBY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 28 Jul 2022 18:38:41 -0400
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA4A31921
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 15:38:36 -0700 (PDT)
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26SIAm2t032376
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 15:38:35 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=sDE5izN9/yp/xIYryQkVhQvZwqgFIiHBtBdTSymiWfc=;
- b=WiqHFzJk2TXq19d+lU5oyadtkWQygNOVl4iF9A4y632UfjrE1WxoGojDpD8CM3I4nOtI
- 3R7CUTMPk3tObj/p6c2NHA7tK1rR7MwOXSGnyLFyrzBYNxU4CYL3/WjixKE8YA+aozWw
- 6uHUVtAd2kDnfYyh/yQnZtORluQRDGwvX+8= 
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3hkst14m81-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 15:38:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CeMenEsy+Wlc5ThAbWCAiZeZwSD09bVdZUIyPT2Ijk7vfnd29h1SzBQn9T2lf1x8RD7rMe94cHN1C4iFuS4lI7sFK6Tw9kvWcV7XgUmNcme9JPwUpOZ3UEY1ko6Am8GJC4uiBwiIXbHU2Npn3GiaE2rWdKlQq9rp2srVmio7Bqu0b47I63Q7seiV3jlGSzsxEvy+VRl5Rxl7dB6Ly4oZBbr6rM7oc5FRKRf6ZEI2wLmFfZaoy5RIBLMlex21eYRZdKqXfAD8qQvpwg2ye6yjjm0slgu0hP7yOKevD1Xm4uiKpmWGa78jWcB6wG6UtdkT9BGYjKLjbsNhu9xsQI6Ivg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sDE5izN9/yp/xIYryQkVhQvZwqgFIiHBtBdTSymiWfc=;
- b=LZ4gar8fuYiufIwNU1kC9kesnUa2DGFAfg4ZWv9LfDBPkTjYU23OzpHJZFF5t8GqbU1qbFuFKcDX9NlhHElNmKDHwF+N3Xr1lix4BPjOalKV0WMWn1zdTFfFEkWMbi9pP2Kv5oUmyhzQoGVIeyUnSvuo8ZmWfyziZWomPaTCG+qOlYhuCBKMooL2io6/hpkBIHn1Up1EdOhfNFHNJu1fl2Q8n3IdZr7AJXdIzh2xKLbfmnnpHtBC6iMMitANp+XRDsC0bUp39Xlf1NHo5S0JTJ3YFJn1SK8ZczrX22ghailDqs+ZmFqIoPzcyurb90YpH+qss62tzsTJ453uLYoqvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-Received: from PH0PR15MB5117.namprd15.prod.outlook.com (2603:10b6:510:c4::8)
- by MN2PR15MB3086.namprd15.prod.outlook.com (2603:10b6:208:f0::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.25; Thu, 28 Jul
- 2022 22:38:29 +0000
-Received: from PH0PR15MB5117.namprd15.prod.outlook.com
- ([fe80::30c6:e0a8:a568:6bf2]) by PH0PR15MB5117.namprd15.prod.outlook.com
- ([fe80::30c6:e0a8:a568:6bf2%7]) with mapi id 15.20.5458.025; Thu, 28 Jul 2022
- 22:38:28 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Leo Yan <leo.yan@linaro.org>
-CC:     =?utf-8?B?QWRyacOhbiBIZXJyZXJhIEFyY2lsYQ==?= 
-        <adrian.herrera@arm.com>,
-        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "James.Clark@arm.com" <James.Clark@arm.com>,
-        "nd@arm.com" <nd@arm.com>
-Subject: Re: perf tools: software regression in
- d0a0a511493d269514fcbd852481cdca32c95350
-Thread-Topic: perf tools: software regression in
- d0a0a511493d269514fcbd852481cdca32c95350
-Thread-Index: AQHYon/pLvs81e78AkKYyML6ZvRcBK2T0bWAgACOzIA=
-Date:   Thu, 28 Jul 2022 22:38:28 +0000
-Message-ID: <7BFD066E-B0A8-49D4-B635-379328F0CF4C@fb.com>
-References: <f15afd38-3628-c57a-0735-1342f379b83c@arm.com>
- <20220714124638.GB155077@leoy-ThinkPad-X240s>
- <ee574459-f2e3-ff9a-5da5-a634952a726f@arm.com>
- <20220728140721.GA52489@leoy-ThinkPad-X240s>
-In-Reply-To: <20220728140721.GA52489@leoy-ThinkPad-X240s>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.100.31)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 72ec8e42-74bf-4944-dcad-08da70e9e474
-x-ms-traffictypediagnostic: MN2PR15MB3086:EE_
-x-fb-source: Internal
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KO8FL1kxmNOLDN6Zt5WhAju3w3+pUFAEgINpUO0JAf1gW8ZTNby4dTg/BcjhttOow0SsnKQSEJcKSE5Kp0uEEMdz01CKrn7lcpAox+s2b8DLZJoie93gE5Nfft7tI3w1JPB2xGBvYKBPcOLoRGlFVaKHMox+jKl3ZPTQX2hnfqsq6wJWrQuvsSU8lCcXQbQ6ON98Msvt/JpzxHb53iImip04dqCEjnunVUmzpeYctH2ira+d3GmMqoqABAUek0Q7ajAoYCEEuZV7S2DU50iozYaM87argxhXbxii9J1Gl0lXug0nIgXbd7mMD4ns172K/4tEx01uPDFvIbnfJzB1Nh3l7y5CmU7kTCPeNZEchjQJHgSANj+6lVvioZmUZxtpl4dDeu6pOe+wji+JSl6NDD3R1SwuwZ3BOugLzG/EuCAIihPnaR4gO1WmYQq2Mi0zgoEsPw2lU7tIFZQi9cwHpqe64YNNQK9GiFp5CGylgA+nvWMoaXG+rz7CvW3EZXFk0bR++VfSQH4Y+HyCjO7mSLyV+Xyhfyt4rtV/POstHfYadoEU0ixm56II0oDFXpr+dcVpsXlE9xDe7KWVlQXqUdvEEUwPzzj5moyGBSZ72yn8cBz2YkXqCOozjbwJYSIaNQHhGuaJ8So7KD5F1+jEk7DTU1RT4QPxB2omeJcVQ4Fe9L+YMXu426kWmuevpFhHLwv23bJ5rJMwO/dcBcGAoHARYMumPy1lvnyC/H00PgBExLVVtjOccQC2gFcGyhwNnklKMzdPgbqHaIlaQLLg/esh0uuoVWaNCd12IgrmgHQBUwvwFmsmbPQeYyJ/EEkYDMIeW7/H0YW/GAqC/eXoXg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR15MB5117.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(86362001)(33656002)(36756003)(8676002)(38100700002)(122000001)(66946007)(66476007)(38070700005)(66556008)(66446008)(316002)(478600001)(6486002)(53546011)(4326008)(5660300002)(71200400001)(8936002)(83380400001)(66574015)(76116006)(64756008)(186003)(2616005)(91956017)(6512007)(6916009)(41300700001)(6506007)(54906003)(2906002)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UXZoMWJueU9qbnFpN3A4Q1czVFloTUorVStCWUt2MzZDdTREL0Ftdm9rQkhX?=
- =?utf-8?B?Q3g4ZThYaFBXQUl6QmFZVEVReFRQZkZyVWtvUzh3Mm83c1VUb3Y2bUtPekhP?=
- =?utf-8?B?czMvaDcvQm9DMXpkcHBFN090YWJvQTZ3eWU1SCtreG43NFNpT1kyS2I4dzE5?=
- =?utf-8?B?RkJhdFBoazRuZ2JISUd6bVZ3OVJZRUpCQmtDN2lQcDVvek8wRDEweU9Oem5i?=
- =?utf-8?B?bGJCS2NyMk1oY0pvaUVNNmpwd2MwZDRjcmxjaFhzNUxrVlRDMzJ6WU9SRi93?=
- =?utf-8?B?VWQ1RUZ4TzFIVkR6ZHlvVjlhV2tqaGxTMFJ6TWM1bE1ab2NMM2ZMVExRTndl?=
- =?utf-8?B?cEdzQmJxRGdyZkpwYlZHbXhPQ25lcUtvZWFDZmdySm00ZUdoQUJKRjJhZURn?=
- =?utf-8?B?YnVlcHhnU2VxUS9iNWNZeGpHSGZJd3JQbCtIdml2RTRGd0xNTHh6MzE1YWls?=
- =?utf-8?B?a2lEWHpNR2lwU1dBZ29WTVhHaDZjMTBEVXBFUHVVaUJVZzZqdS9IdVIxbHZo?=
- =?utf-8?B?d0h4dkFmdW81eEx1SlVuYkR2a3ErbmFQRm1sRUd1eU1NY3RHMEd1cEMrQWUr?=
- =?utf-8?B?eGFIOTZnM2pjMFJBT09iT2NVS0d4c1JiM0Vlcm5NY29rVVNrMmJpLzdJU3Bk?=
- =?utf-8?B?QVBMT3Rtd0oyTDVmVURvUnFpRy9NNW9KMVZqL3R4UGo1dDJFOGRPa0dER3ll?=
- =?utf-8?B?cUgzUkxabklNN0tscEJBbDhMdHdLaEd2VmZqVDdrWFNvV2hINTFQRGZTY1lY?=
- =?utf-8?B?bm03eU85SzhzaVlRcE93d016SzRxUTJ4dUxVSVNDY2dHcHZUWHVPNnJCUFZT?=
- =?utf-8?B?ZVlYSjN3aTV2ay9YMUFWVjRFd1o2NFpaVmY5d2QwczNmYUNDajY1RXljWjRx?=
- =?utf-8?B?eGxtZ1NPWDdTc2FQYm9NN2lCN2dvYW5RSGVFVjIrUXVkOGJaVzVJb25SSVhO?=
- =?utf-8?B?TFV6QXljWW82TlN4ZnQ4YndaUzZDRmxqckFpUWZwLzFHT1d2VFVvbk9SWFJU?=
- =?utf-8?B?eUxGYlYvZXorU2hoK1czakhKL3duMm93WlhzWFBHSWY2L3UySG8zcG9XUkRz?=
- =?utf-8?B?SnhmZVE4QnFHcG9HYlgrNEdPTXBjdm9MemdLNW1ycWVOWEx2bUxWMGcreEJw?=
- =?utf-8?B?cnZER0MzdGg2c2hYbHYrZ05oM21QUE9pK3dtYlg2TkJBbXlqSS82Ny91U2FR?=
- =?utf-8?B?Q0tqdmFUek9EV3MwZW4rNGFYMUpCaWVpUWEwem4vK2pQN0lDYjh6aEJmdTA2?=
- =?utf-8?B?Z0IxckZjRDJ0RzROV216VGpCZDRLMFY3MzZaWjhVQ1hDVDhzVGJVWVNWV0Vu?=
- =?utf-8?B?d3pSMjhlbW9XeDFXSWtZS01Dak9HTnp2cG95QWlZbnBTTG56SjFQV28ydXMz?=
- =?utf-8?B?WWJ0b0NxS0ROeVBNM2FnT0orNkRwdnZwNjUwOXNZck9KK3d3eU5TZHBQTC9l?=
- =?utf-8?B?SkhrbTJUVU04QkV5bWw5T2ZSZHFkRnRpRVI2eUhzd1FKdzRCbjdmWVlWa0I2?=
- =?utf-8?B?cXFrTENYZVhrRHE2d0FEMk9SVkdITGY2eFBJak1xaXl0OGkrN2ZFMkpRa3ZO?=
- =?utf-8?B?U3NTcTZnOHNtWThQVTM5VHcxWWkwb2lPMFJqa0xSZHhOOFhDL0N4SXlzQnlG?=
- =?utf-8?B?WmJkcXBDRXpwYUxRdGpMQWE2MlV6VXA2RFd6TG9xazVmaWRVc1owT2tmeCtK?=
- =?utf-8?B?Q0xLdXpUNEw2ZHdzeERjQzY5Rm9qSDNYdlY1MTFnYTUybmZDbUU2ZjhNVVFx?=
- =?utf-8?B?SFdEN0UyZXVpcG1MWE1COWRDZ2ZHQTBZWnhJSDhBS0ZJWEpQOUJKTzl2WHd2?=
- =?utf-8?B?MmdOTU1aMUowL1puVnp3NzRMQjFGVlpjdmR0bFpmK1cvMlRTVTNvV3dvNUIx?=
- =?utf-8?B?ZHlVSTJ1ZmwwLzRiai9uUjQvMTBXTTJON1VqNk95enc2ZDRmTDZCSWkyV1RW?=
- =?utf-8?B?dHlGeVFlTk1hQm1WQU4xOVZ6cmJTZUliMmpQMCs4eC93bnQ0bTQxbmxRbmxL?=
- =?utf-8?B?cnduQVk2ZlRUMlBodmVrQzZyZWpOTk1mSlVCT2l0U09iRjBhVmYwRldNVHU0?=
- =?utf-8?B?VnV0UmlBT0FJZ1dXN2hmMTk2QmxRZWdpczNqcnhDY0ZIZ0ErYm1xM21nbU40?=
- =?utf-8?B?Q0cyaDF5bnhGbW1JQi9FaDVVeUxHUkVvVCs0bGRkOTNHb2RQT1FpeE9MV1hK?=
- =?utf-8?Q?2lsqxosDZrrci7Bt3jEiWz8=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <23E1DF132BFBCA428EA7CF7869A55CAB@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 28 Jul 2022 22:01:24 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B92A78DFA
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 19:01:23 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id p10so118957wru.8
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Jul 2022 19:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fKo8b4je0iqGq0uiZqH7zNlb83Vh1FNB/a+r4AK80T8=;
+        b=qh/wY2GLSdmFq98iuNUcPy+KISCMDt6bBos/1GYLClu9zYRT/nXaP5i+OJ8hXmfVO6
+         UXskbmrAJp4z/3BdcnKPVmml7oVvCQ7bXKvfMOYp9kt2psTEm3gGWndKuoWJzn4nq/Xr
+         RO77QEI12dSndxUphWJJYr6AR2gmPIa4wKvB286Z92abF3FDI/bREF0n1EK7gZ20GbXk
+         j+C1LiRus03zDSAWa5zspECdBRh0egOKxK4KH0/Y9Jsl5mnGCa8EOl1u2pYUJf3Tcwtt
+         zzhJVyewPd6rv6b9xZvVXMMAGskp7iBeqCnx2dmhiyMaX/9z7WZyyfn9xEDHdsKfyzVu
+         mURw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fKo8b4je0iqGq0uiZqH7zNlb83Vh1FNB/a+r4AK80T8=;
+        b=lHERMzHJFgwYblRxcO7YaTmx+9ciPr7rYkI6Qt5SfUm0A6tIWESTzgWx00TtdL4OjA
+         sPCjk5Pvx4NcoqbbP6TPbgdmBoTsFXiazHGXKjwR5e28fnLTunxUTaTDPK68lbXu2XRP
+         J3rmA88gEfcqL31kZ7JFj8aWfO8lEPcDmIx/Cb/TQl37ontpP76C41bv4wkuc2DbVnzD
+         AnZTeoAB46WecZLy6TIbzz+07NpfCHBOmkJHCz3VJIb+tBDxHsQfwFQmceyzEDlLrK/Q
+         HgEpnLfRGZpojLPKQIBphzVTe1iBATeoBP9qOkzQnMxuTWhRgV8po4x3815LHPXfgCuJ
+         uRvw==
+X-Gm-Message-State: ACgBeo3f2r6yk55xnAnkIT3YjqE4Xz7v2KcpqqWtkdg+G6hOq4vngna7
+        G3ULuIgO3pXg0cQfr5GtKJHv5z2VhAC6XaaHTSk6Ng==
+X-Google-Smtp-Source: AA6agR5cPNsIfML6yyQKPbDjRDBRwyuxiIL3O1NzD4HMAqamz2pbk6MDyllQ67IBlyD/TQOOtay5gTHQrQvjOVSig1Y=
+X-Received: by 2002:a5d:6d4e:0:b0:21e:660e:55bf with SMTP id
+ k14-20020a5d6d4e000000b0021e660e55bfmr824800wri.343.1659060081456; Thu, 28
+ Jul 2022 19:01:21 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: fb.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR15MB5117.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72ec8e42-74bf-4944-dcad-08da70e9e474
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2022 22:38:28.8745
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dzn3capgE1fVKRpMMOIfgdNu8rOAScQvrwWpI6pzFcyBweZpXNx1cCdhkrsnIDeVvDXf2dxgHwDe3D06IsPY0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB3086
-X-Proofpoint-GUID: WJfDOO5Vi51w5OQa-pdIzuGe_fPcDCVI
-X-Proofpoint-ORIG-GUID: WJfDOO5Vi51w5OQa-pdIzuGe_fPcDCVI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-28_06,2022-07-28_02,2022-06-22_01
+References: <20220614143353.1559597-1-irogers@google.com> <CAP-5=fVwWDyD5R7mkdGEqP1dchDOsdmrAPbaZFE7bUjYM3pYFA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVwWDyD5R7mkdGEqP1dchDOsdmrAPbaZFE7bUjYM3pYFA@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 28 Jul 2022 19:01:09 -0700
+Message-ID: <CAP-5=fVyyj4nwam3grTAw94w8Ad+qZP6LDxYZv17vP2ph6pXwA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Corrections to cpu map event encoding
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-SGkgQWRyacOhbiBhbmQgTGVvLA0KDQpUaGFua3MgZm9yIHRoZSBDQy4gDQoNCj4gT24gSnVsIDI4
-LCAyMDIyLCBhdCA3OjA3IEFNLCBMZW8gWWFuIDxsZW8ueWFuQGxpbmFyby5vcmc+IHdyb3RlOg0K
-PiANCj4gSGkgQWRyacOhbiwNCj4gDQo+IE9uIFRodSwgSnVsIDI4LCAyMDIyIGF0IDAxOjQ0OjU3
-UE0gKzAxMDAsIEFkcmnDoW4gSGVycmVyYSBBcmNpbGEgd3JvdGU6DQo+PiBUaGFuayB5b3UgTGVv
-Lg0KPiANCj4gV2VsY29tZSwgSSByZWNvZ25pemVkIHRoYXQgSSBhbSBub3QgdGhlIGJlc3QgcGVy
-c29uIHRvIGFuc3dlcg0KPiB5b3VyIHF1ZXN0aW9uIDopDQo+IA0KPj4gSSB0aGluayB0aGUgc291
-cmNlIGNvZGUgZnJhZ21lbnQgaW4gcGVyZi1yZWNvcmQgaXMgbW9yZSByZWFkYWJsZSAobG9naWNh
-bCkNCj4+IHRoYW4gaW4gcGVyZi1zdGF0LCBzbyByZXBsaWNhdGluZyBpdCB3b3VsZCBiZSBiZXR0
-ZXIsIGFsc28gZm9yIGNvbnNpc3RlbmN5Lg0KPiANCj4gTWFrZXMgc2Vuc2UgZm9yIG1lLg0KPiAN
-Cj4+IEkgaGF2ZSBwcmVwYXJlZCBhIHBhdGNoIGZvciB0aGF0IHdoaWNoIEkgd2lsbCBzZW5kIGZv
-ciByZXZpZXcuDQo+IA0KPiBWZXJ5IGdvb2QhICBJIHdpbGwgcmV2aWV3IGFuZCB0ZXN0IHlvdXIg
-cGF0Y2guDQo+IA0KPj4gcGVyZi1zdGF0IGRpZmZlcnMgZnJvbSBwZXJmLXJlY29yZCBpbiB0aGUg
-cHJlc2VuY2Ugb2YgQlBGIGNvdW50ZXJzOyB0aGVzZQ0KPj4gYXJlIGVuYWJsZWQgaW5zaWRlIGVu
-YWJsZV9jb3VudGVycyBpbW1lZGlhdGVseSwgaW5kZXBlbmRlbnQgb2YgdGhlIGRlbGF5OyBJDQo+
-PiByZXNwZWN0ZWQgdGhhdCBiZWhhdmlvdXIsIGJ1dCBpZiBpdCBpcyBub3QgYSBwcm9ibGVtIHRv
-IGRlbGF5IHRoZWlyDQo+PiBlbmFibGVtZW50IGFzIHdlbGwsIHRoZSBjb2RlIHdvdWxkIGJlIHNs
-aWdodGx5IHNpbXBsaWZpZWQuIEkgaGF2ZSBhZGRlZCBTb25nDQo+PiBMaXUgKGF1dGhvciBvZiBC
-UEYgY291bnRlcnMpLCBpbiBjYXNlIG9mIGFueSBjb21tZW50cyBvbiB0aGlzLg0KPiANCj4gWWVh
-aCwgSSBhbHNvIG5vdGljZWQgdGhhdCBCUEYgY291bnRlciBlbmFibGluZyBpbiBwZXJmLXN0YXQu
-DQo+IA0KPiBUbyBiZSBob25lc3QsIEkgYW0gYWxzbyB3YW5kZXJpbmcgd2h5IEJQRiBjb3VudGVy
-IGNhbm5vdCBiZSBlbmFibGVkIGF0DQo+IHRoZSBzYW1lIHBvaW50IHdpdGggb3RoZXIgZXZlbnRz
-LiAgV291bGQgbGVhdmUgdGhpcyBxdWVzdGlvbiBpZiBTb25nDQo+IGhhcyBjaGFuY2UgdG8gY29u
-ZmlybSBmb3IgdGhpcy4NCg0KSSBkb24ndCByZWNhbGwgdmVyeSBnb29kIHJlYXNvbiB3aHkgYnBm
-IGNvdW50ZXJzIGFyZSBlbmFibGVkIGluIA0KZW5hYmxlX2NvdW50ZXJzLCBzbyBJIHRoaW5rIGl0
-IGlzIE9LIHRvIG1ha2UgaXQgYXdhcmUgb2YgaW5pdGlhbF9kZWxheS4gDQoNClRoYW5rcywNClNv
-bmcNCg0K
+On Fri, Jul 15, 2022 at 10:01 AM Ian Rogers <irogers@google.com> wrote:
+>
+> On Tue, Jun 14, 2022 at 7:33 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > A mask encoding of a cpu map is laid out as:
+> >   u16 nr
+> >   u16 long_size
+> >   unsigned long mask[];
+> > However, the mask may be 8-byte aligned meaning there is a 4-byte pad
+> > after long_size. This means 32-bit and 64-bit builds see the mask as
+> > being at different offsets. On top of this the structure is in the byte
+> > data[] encoded as:
+> >   u16 type
+> >   char data[]
+> > This means the mask's struct isn't the required 4 or 8 byte aligned, but
+> > is offset by 2. Consequently the long reads and writes are causing
+> > undefined behavior as the alignment is broken.
+> >
+> > These changes do minor clean up with const, visibility of functions
+> > and using the constant time max function. It then adds 32 and 64-bit
+> > mask encoding variants, packed to match current alignment. Taking the
+> > address of a packed struct leads to unaligned data, so function
+> > arguments are altered to be passed the packed struct. To compact the
+> > mask encoding further and drop the padding, the 4-byte variant is
+> > preferred. Finally a new range encoding is added, that reduces the
+> > size of the common case of a range of CPUs to a single u64.
+> >
+> > On a 72 CPU (hyperthread) machine the original encoding of all CPUs is:
+> > 0x9a98 [0x28]: event: 74
+> > .
+> > . ... raw event: size 40 bytes
+> > .  0000:  4a 00 00 00 00 00 28 00 01 00 02 00 08 00 00 00  J.....(.........
+> > .  0010:  00 00 ff ff ff ff ff ff ff ff ff 00 00 00 00 00  ................
+> > .  0020:  00 00 00 00 00 00 00 00                          ........
+> >
+> > 0 0 0x9a98 [0x28]: PERF_RECORD_CPU_MAP
+> >
+> > Using the 4-byte encoding it is:
+> > 0x9a98@pipe [0x20]: event: 74
+> > .
+> > . ... raw event: size 32 bytes
+> > .  0000:  4a 00 00 00 00 00 20 00 01 00 03 00 04 00 ff ff  J..... .........
+> > .  0010:  ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00  ................
+> >
+> > 0 0 0x9a98 [0x20]: PERF_RECORD_CPU_MAP
+> >
+> > Finally, with the range encoding it is:
+> > 0x9ab8@pipe [0x10]: event: 74
+> > .
+> > . ... raw event: size 16 bytes
+> > .  0000:  4a 00 00 00 00 00 10 00 02 00 00 00 00 00 47 00  J.............G.
+> >
+> > 0 0 0x9ab8 [0x10]: PERF_RECORD_CPU_MAP
+> >
+> > v2. Fixes a bug in the size computation of the update header
+> >     introduced by the last patch (Add range data encoding) and caught
+> >     by address sanitizer.
+> >
+> > Ian Rogers (6):
+> >   perf cpumap: Const map for max
+> >   perf cpumap: Synthetic events and const/static
+> >   perf cpumap: Compute mask size in constant time
+> >   perf cpumap: Fix alignment for masks in event encoding
+> >   perf events: Prefer union over variable length array
+> >   perf cpumap: Add range data encoding
+>
+> Ping. There was some feedback on this change but nothing to create a
+> v3. Feedback/acked-by/reviewed-by appreciated.
+
+Ping. Feedback appreciated.
+
+Thanks,
+Ian
+
+> Thanks,
+> Ian
+>
+> >  tools/lib/perf/cpumap.c              |   2 +-
+> >  tools/lib/perf/include/perf/cpumap.h |   2 +-
+> >  tools/lib/perf/include/perf/event.h  |  61 ++++++++-
+> >  tools/perf/tests/cpumap.c            |  71 ++++++++---
+> >  tools/perf/tests/event_update.c      |  14 +--
+> >  tools/perf/util/cpumap.c             | 111 +++++++++++++---
+> >  tools/perf/util/cpumap.h             |   4 +-
+> >  tools/perf/util/event.h              |   4 -
+> >  tools/perf/util/header.c             |  24 ++--
+> >  tools/perf/util/session.c            |  35 +++---
+> >  tools/perf/util/synthetic-events.c   | 182 +++++++++++++--------------
+> >  tools/perf/util/synthetic-events.h   |   2 +-
+> >  12 files changed, 327 insertions(+), 185 deletions(-)
+> >
+> > --
+> > 2.36.1.476.g0c4daa206d-goog
+> >
