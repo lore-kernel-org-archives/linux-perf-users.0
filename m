@@ -2,204 +2,168 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35B9C00144
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 14:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF89C00144
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 14:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236989AbiG2OY1 (ORCPT
+        id S237087AbiG2O2x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Jul 2022 10:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60964 "EHLO
+        Fri, 29 Jul 2022 10:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236975AbiG2OY0 (ORCPT
+        with ESMTP id S237082AbiG2O2w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Jul 2022 10:24:26 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2162E79EDC
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 07:24:25 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id r83-20020a1c4456000000b003a3a22178beso732560wma.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 07:24:25 -0700 (PDT)
+        Fri, 29 Jul 2022 10:28:52 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6152931DC3
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 07:28:50 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id v17so6200960wrr.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 07:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LypYebNOHjfta90jCiEF7l4jJITyPo34Kh+cxFf5b7k=;
-        b=o/VoIs1FYnbSYgcdN1Mey6VbgelHyJu1ATCEWwD53mdKhrXpjQui5rDM7ZZlXtE+fS
-         MUVqTmYxWlsowO+bpTuzy/oVsaembdjMiLzApJgcq5dArVqtptZevLreiKLD8CgRs3kr
-         MvGq1W04Uy8IEEITpzUTp2vB2QhQnKKJbVTNG/vMkIIndei2g1G9H7zRpNz4iiHkULmI
-         aLRqDypMhjfFvunZDaLYNnqjmaQ2WYJwoTKglmL55DegwMx48k5zXYGUUqM2NuAYGUGM
-         qrHPV7ks4LLs2lJBqSSgv7wmY90Cr7frvWqbTwKpyYEZDWXTz9+9QBM7I40bXPwPR1Na
-         1OBw==
+        bh=sSCRUzqHEeshRCXk0c46IYD/2B5v+syWELOAjW4JLl8=;
+        b=ht+dLOTBjToDS/+UkuMYt6260/Cg9KmnKO7XPvOPdsrk7keccvGCS2sa0dK4ivOoda
+         WwP87v/UcnAi+HpCgtaUMVc321imz5QObRqhFHnDQwbG/SarxZvLE2U24YsozI1hcGVF
+         D5G2cgoJ8cnB8lSQZQfC1ZH9nUoyrwai/sTsLWHvxT+QO6fM/ZE/J2doHTnFtNVuKZZk
+         hZwerSx//XqShJnS6yeyzO11muejbNczCrFsDKTl0qh9zMA40Yq+5ZGFSQkQhVKXL0Az
+         WXfDRBZyxHtz26kzz+tFSegtY4SOBB46T8TYmk8v86bY/rqQq1/a8bhi6NXBCQOahz2z
+         Rz+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LypYebNOHjfta90jCiEF7l4jJITyPo34Kh+cxFf5b7k=;
-        b=Pzt9MpMOomjwOXhd7V+aW0yqwcrmEJeYMXaQmb1vyTj/aA2vEsGVkwKIW+GQOMMMBG
-         VQqrvgKNZzZrnCPde4PsT62P9CgfUA7YXFGzIL+6UIQ+7VipRkAi8Ab2k2sQ1dLx49QK
-         N47hyqDBQIZ5jSsdupwem6v6HXAX1jELsfHyV910LT4jqf+k1H3BvWhJlJOoxMElLKos
-         3c0aheMkfb46/jLRAnr37fbLuPRdqo5YvvYuyDeQX+qoWlnDf6sltVM8FWdjv/HmnE7/
-         NcXteALd5KX8bZ/LX72DYo+WLowYYfeCU9AfqgHeq0JatX61bca5Xzo6IqHVHzm6fW1B
-         zPlQ==
-X-Gm-Message-State: AJIora/57JtLpampu4F6Jpp++XjdEP8ZQPSyID57bKGJdwSyJuFSN23U
-        CrFclg8JEVbgaCDLmW59zlwQMxPUbprwia7rEBKpEg==
-X-Google-Smtp-Source: AGRyM1vcvoixpQIqXoSvh3g/D9PPji8zVRLepMsp2jSLV0A+j/g1kK1tqIHam+9nDFHK6ZhaYv+FN2GWeQvomzERy5c=
-X-Received: by 2002:a05:600c:19d2:b0:3a3:2cdb:cc02 with SMTP id
- u18-20020a05600c19d200b003a32cdbcc02mr3018045wmq.182.1659104663337; Fri, 29
- Jul 2022 07:24:23 -0700 (PDT)
+        bh=sSCRUzqHEeshRCXk0c46IYD/2B5v+syWELOAjW4JLl8=;
+        b=Pq/s0lTGE1eLGOzoMhXfb5idT8Yq/r1o0w5WBwPnrB1O67J1SzTmu6Sw2Pqonu+pOr
+         P/tTYZwqYRgV3zXLD4M0eKNTvu8omHFcknoPgtQJHBzNNuRS92PvgN17epwIbsLBzdWA
+         HT2kCv280mIdX1qM+AM/C6e4fEHtPtJLY6TG9FCFzICIrcr+jlWG3GPlZvsxvI41keOx
+         muKpHDRtJuglgyTwfag0zCcTyLgvww+Rlzgec/MH0IAvYCfxTduNXqYickVGwlLDXEoJ
+         mwtG8S4+9Os0LqBpi5zIpdfJioDi2zk+A01LbsZWT1E9ZgU8ebVunVtP3ITqKA3HCCCx
+         1Ygg==
+X-Gm-Message-State: ACgBeo3jwNKN9hahXrV7LdQQnDqRLCJHn309O63da7lS4FfMR1t+JANM
+        7v8NZrg3BNCtXIzACidg90SOOANFd1xLyhm1hVIk3stcQ6gZfo+m
+X-Google-Smtp-Source: AA6agR7SF8L2zGkGQ8Oi2s4j6CMeJzn0PTlELJABR3Z3tcIstQ9HpPnm0kwIyZFk86W12xyZOV981Bp6rSI3Bx96yA0=
+X-Received: by 2002:a5d:6481:0:b0:21e:6c01:95a2 with SMTP id
+ o1-20020a5d6481000000b0021e6c0195a2mr2592575wri.40.1659104928546; Fri, 29 Jul
+ 2022 07:28:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220729074351.138260-1-irogers@google.com> <20220729074351.138260-6-irogers@google.com>
- <393770c6-8469-a5b5-5106-a98420bb6e00@huawei.com>
-In-Reply-To: <393770c6-8469-a5b5-5106-a98420bb6e00@huawei.com>
+References: <20220614143353.1559597-1-irogers@google.com> <CAP-5=fVwWDyD5R7mkdGEqP1dchDOsdmrAPbaZFE7bUjYM3pYFA@mail.gmail.com>
+ <CAP-5=fVyyj4nwam3grTAw94w8Ad+qZP6LDxYZv17vP2ph6pXwA@mail.gmail.com> <YuPGFNZNF+hAGWOa@krava>
+In-Reply-To: <YuPGFNZNF+hAGWOa@krava>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 29 Jul 2022 07:24:10 -0700
-Message-ID: <CAP-5=fUQ2nAHyN5Egxfpyotc0u4O1wsZ8VKzwffOhGhV++L6=Q@mail.gmail.com>
-Subject: Re: [PATCH v3 05/17] perf jevents: Remove the type/version variables
-To:     John Garry <john.garry@huawei.com>
-Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Date:   Fri, 29 Jul 2022 07:28:36 -0700
+Message-ID: <CAP-5=fUTX37VS949zKKkXA+a8rtWY_fSjZG+J2gRcqd6uhCw8w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Corrections to cpu map event encoding
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        Riccardo Mancini <rickyman7@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 29, 2022 at 1:30 AM John Garry <john.garry@huawei.com> wrote:
+On Fri, Jul 29, 2022 at 4:35 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 >
-> On 29/07/2022 08:43, Ian Rogers wrote:
-> > pmu_events_map has a type variable that is always initialized to "core"
-> > and a version variable that is never read. Remove these from the API as
-> > it is straightforward to add them back when necessary.
+> On Thu, Jul 28, 2022 at 07:01:09PM -0700, Ian Rogers wrote:
+> > On Fri, Jul 15, 2022 at 10:01 AM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Tue, Jun 14, 2022 at 7:33 AM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > A mask encoding of a cpu map is laid out as:
+> > > >   u16 nr
+> > > >   u16 long_size
+> > > >   unsigned long mask[];
+> > > > However, the mask may be 8-byte aligned meaning there is a 4-byte pad
+> > > > after long_size. This means 32-bit and 64-bit builds see the mask as
+> > > > being at different offsets. On top of this the structure is in the byte
+> > > > data[] encoded as:
+> > > >   u16 type
+> > > >   char data[]
+> > > > This means the mask's struct isn't the required 4 or 8 byte aligned, but
+> > > > is offset by 2. Consequently the long reads and writes are causing
+> > > > undefined behavior as the alignment is broken.
+> > > >
+> > > > These changes do minor clean up with const, visibility of functions
+> > > > and using the constant time max function. It then adds 32 and 64-bit
+> > > > mask encoding variants, packed to match current alignment. Taking the
+> > > > address of a packed struct leads to unaligned data, so function
+> > > > arguments are altered to be passed the packed struct. To compact the
+> > > > mask encoding further and drop the padding, the 4-byte variant is
+> > > > preferred. Finally a new range encoding is added, that reduces the
+> > > > size of the common case of a range of CPUs to a single u64.
+> > > >
+> > > > On a 72 CPU (hyperthread) machine the original encoding of all CPUs is:
+> > > > 0x9a98 [0x28]: event: 74
+> > > > .
+> > > > . ... raw event: size 40 bytes
+> > > > .  0000:  4a 00 00 00 00 00 28 00 01 00 02 00 08 00 00 00  J.....(.........
+> > > > .  0010:  00 00 ff ff ff ff ff ff ff ff ff 00 00 00 00 00  ................
+> > > > .  0020:  00 00 00 00 00 00 00 00                          ........
+> > > >
+> > > > 0 0 0x9a98 [0x28]: PERF_RECORD_CPU_MAP
+> > > >
+> > > > Using the 4-byte encoding it is:
+> > > > 0x9a98@pipe [0x20]: event: 74
+> > > > .
+> > > > . ... raw event: size 32 bytes
+> > > > .  0000:  4a 00 00 00 00 00 20 00 01 00 03 00 04 00 ff ff  J..... .........
+> > > > .  0010:  ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00  ................
+> > > >
+> > > > 0 0 0x9a98 [0x20]: PERF_RECORD_CPU_MAP
+> > > >
+> > > > Finally, with the range encoding it is:
+> > > > 0x9ab8@pipe [0x10]: event: 74
+> > > > .
+> > > > . ... raw event: size 16 bytes
+> > > > .  0000:  4a 00 00 00 00 00 10 00 02 00 00 00 00 00 47 00  J.............G.
+> > > >
+> > > > 0 0 0x9ab8 [0x10]: PERF_RECORD_CPU_MAP
+> > > >
+> > > > v2. Fixes a bug in the size computation of the update header
+> > > >     introduced by the last patch (Add range data encoding) and caught
+> > > >     by address sanitizer.
+> > > >
+> > > > Ian Rogers (6):
+> > > >   perf cpumap: Const map for max
+> > > >   perf cpumap: Synthetic events and const/static
+> > > >   perf cpumap: Compute mask size in constant time
+> > > >   perf cpumap: Fix alignment for masks in event encoding
+> > > >   perf events: Prefer union over variable length array
+> > > >   perf cpumap: Add range data encoding
+> > >
+> > > Ping. There was some feedback on this change but nothing to create a
+> > > v3. Feedback/acked-by/reviewed-by appreciated.
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Ping. Feedback appreciated.
 >
-> Reviewed-by: John Garry <john.garry@huawei.com>
+> hi,
+> there's some unanswered feedback:
+> https://lore.kernel.org/linux-perf-users/YrwY3SP+jsTwrRBw@krava/
 >
-> Please note the questions, below.
->
-> > ---
-> >   tools/perf/pmu-events/empty-pmu-events.c | 6 ++----
-> >   tools/perf/pmu-events/jevents.py         | 6 ------
-> >   tools/perf/pmu-events/pmu-events.h       | 2 --
-> >   tools/perf/tests/expand-cgroup.c         | 2 --
-> >   tools/perf/tests/parse-metric.c          | 2 --
-> >   5 files changed, 2 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-> > index 77e655c6f116..4182a986f505 100644
-> > --- a/tools/perf/pmu-events/empty-pmu-events.c
-> > +++ b/tools/perf/pmu-events/empty-pmu-events.c
-> > @@ -110,15 +110,13 @@ static const struct pmu_event pme_test_soc_cpu[] = {
-> >
-> >   const struct pmu_events_map pmu_events_map[] = {
-> >       {
-> > +             .arch = "testarch",
->
-> Is this really supposed to be part of this patch?
+> jirka
 
-Agreed. Looks like it should have been in the previous.
+Thanks Jirka,
+
+Was there a comment in particular? My reply was here:
+https://lore.kernel.org/linux-perf-users/CAP-5=fU=BpP4OT2axZLSfRnKxQxmv-HXj8khBgmx3XQMS+abgA@mail.gmail.com/
+I double checked, everyone of your comments was answered.
 
 Thanks,
 Ian
-
-> >               .cpuid = "testcpu",
-> > -             .version = "v1",
-> > -             .type = "core",
-> >               .table = pme_test_soc_cpu,
-> >       },
-> >       {
-> > +             .arch = 0,
->
-> Same as above
->
-> >               .cpuid = 0,
-> > -             .version = 0,
-> > -             .type = 0,
-> >               .table = 0,
-> >       },
-> >   };
-> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> > index e6e6c42c3f8a..98d18d5c3830 100755
-> > --- a/tools/perf/pmu-events/jevents.py
-> > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -312,8 +312,6 @@ def print_mapping_table(archs: Sequence[str]) -> None:
-> >         _args.output_file.write("""{
-> >   \t.arch = "testarch",
-> >   \t.cpuid = "testcpu",
-> > -\t.version = "v1",
-> > -\t.type = "core",
-> >   \t.table = pme_test_soc_cpu,
-> >   },
-> >   """)
-> > @@ -329,8 +327,6 @@ def print_mapping_table(archs: Sequence[str]) -> None:
-> >               _args.output_file.write(f"""{{
-> >   \t.arch = "{arch}",
-> >   \t.cpuid = "{cpuid}",
-> > -\t.version = "{row[1]}",
-> > -\t.type = "{row[3]}",
-> >   \t.table = {tblname}
-> >   }},
-> >   """)
-> > @@ -339,8 +335,6 @@ def print_mapping_table(archs: Sequence[str]) -> None:
-> >     _args.output_file.write("""{
-> >   \t.arch = 0,
-> >   \t.cpuid = 0,
-> > -\t.version = 0,
-> > -\t.type = 0,
-> >   \t.table = 0,
-> >   }
-> >   };
-> > diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-> > index 7a360792635f..a491b117c8ac 100644
-> > --- a/tools/perf/pmu-events/pmu-events.h
-> > +++ b/tools/perf/pmu-events/pmu-events.h
-> > @@ -40,8 +40,6 @@ struct pmu_event {
-> >   struct pmu_events_map {
-> >       const char *arch;
-> >       const char *cpuid;
-> > -     const char *version;
-> > -     const char *type;               /* core, uncore etc */
-> >       const struct pmu_event *table;
-> >   };
-> >
-> > diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-> > index dfefe5b60eb2..dc4038f997d7 100644
-> > --- a/tools/perf/tests/expand-cgroup.c
-> > +++ b/tools/perf/tests/expand-cgroup.c
-> > @@ -197,8 +197,6 @@ static int expand_metric_events(void)
-> >       };
-> >       const struct pmu_events_map ev_map = {
-> >               .cpuid          = "test",
-> > -             .version        = "1",
-> > -             .type           = "core",
-> >               .table          = pme_test,
-> >       };
-> >
-> > diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-> > index 07b6f4ec024f..1b811a26f4ee 100644
-> > --- a/tools/perf/tests/parse-metric.c
-> > +++ b/tools/perf/tests/parse-metric.c
-> > @@ -81,8 +81,6 @@ static struct pmu_event pme_test[] = {
-> >
-> >   static const struct pmu_events_map map = {
-> >       .cpuid          = "test",
-> > -     .version        = "1",
-> > -     .type           = "core",
-> >       .table          = pme_test,
-> >   };
-> >
->
