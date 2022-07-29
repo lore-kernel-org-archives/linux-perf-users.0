@@ -2,54 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62FCC00144
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 20:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33213C19F2A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 20:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239267AbiG2Umc (ORCPT
+        id S239260AbiG2Ume (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Jul 2022 16:42:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43586 "EHLO
+        Fri, 29 Jul 2022 16:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239247AbiG2Umb (ORCPT
+        with ESMTP id S238666AbiG2Umd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Jul 2022 16:42:31 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD1E5A15B
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 13:42:29 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id s14-20020a5b044e000000b00672caf96368so4638200ybp.21
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 13:42:29 -0700 (PDT)
+        Fri, 29 Jul 2022 16:42:33 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DFD387343
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 13:42:31 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-31edbd801b5so49587957b3.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 13:42:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=rKpsJkAvhpK46Oj026Hnlt3lw23B8Cir0Qd7OTp8i94=;
-        b=dss7HY6AV15fZ2XVOxvesgo5Sb3jz0aFRmH+hnMlXqSzfuD+WfMczxtF7b51UR+JGR
-         bqMVPJUdIjCNjGjapGnP29VAASb528hSsSUDRiR7R3vmJB4PYH/jjFTLK/0K1fGYVaHl
-         YHlGBAxkkkwhp8Z2vwDzB3XAB8xaUIE0wqIBTZaOdrqYUACzJrcc3OMuLGle5j5EYvls
-         0PqBkgTGwB5xFUBEekhdjbPQQ3ZBZId3h4FnsnGoYf3Kjl5p4RdYu/B55aTARyiiObYx
-         HYSPEEw4idJ704KeZSjcb9KxXwEzVCEVa3laqZBLAlmrxXmDymAf2reDnRIwjt1fEUHv
-         OYDg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=JAvx/aPZFM84K2VRXkCj96/gkqr/BAMXs6GSNp+VJYo=;
+        b=V53PMEE0lrxOpWpkbZ7I3MSGsA160CxKl8siF2oiGa7PW5vM5/pqsAHTNN2Gt+Rpte
+         qY+T1os5lqgqtSd902UfCKyx0wTLCHruevYXFkvQMd5aC86+i8Q1mxBLZqO+LH/CV9pQ
+         aGGeeOgmVwoSHwEfINbUeDfc/86o17CTZtiLaAY5Al64/bO6jm6kISdaay2uziNqrmTC
+         xoYLllCO0Z6xMytEW7DjIKGBN3Nz8QGTxuVGUa0J0gDUs3TZLbXAu6vOJAoqLv11qRYT
+         5NzczsptV05uCOrtvHC3kmGRh8KxaAk5WTxNd+240bSl9kCdf1y7KWL9LwkpkeSXTrcQ
+         /6tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=rKpsJkAvhpK46Oj026Hnlt3lw23B8Cir0Qd7OTp8i94=;
-        b=iQ9fa5EB4aPO+nUUQPdkHIyrcHDiZnj7uQjZqCQtJlUja3jasQtGu1E0o+tbfWMWd9
-         4kwDmyVkhTzauc6uTUkGTz+ZGsKXuykl+SbLoHVQMD5HNJc7hR3/UtURJqeCtcMhFJjl
-         R3aRBaYrD9yyHqHJL5VbotDMFoGpNj+mbOUWre1G28oejgb823J5r/Mmz8bnel/8HrD3
-         uoIcAkuXxwm5masuO4pEdo/kViUJEpEPREdTGFUrfwbvvfZH6iRHeJ83yB0rD4eo+4I4
-         kg9gc29vZUyPb1tpiIzgp5qJlLp1B3xRmdNcBcBoZDiWWqHcOf/mFogSPrKGvlHxtlV5
-         k+pw==
-X-Gm-Message-State: ACgBeo3f0t9KIcqS6m6JBp4C5B3IowYwnWR4AhgWZe85brd5hTagTjl/
-        39DP/2xH2SYPrmBiSt1DzAfN3V3si7d2
-X-Google-Smtp-Source: AA6agR4ZZ4/L/oV7IUKIC48Wz9Yb4rYjAYbL1P2OxP2WEskCqZufqLL2yZR+AapD+iMe9y2Gco2or6qcmyuL
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=JAvx/aPZFM84K2VRXkCj96/gkqr/BAMXs6GSNp+VJYo=;
+        b=wHyy1v36W4qBg+PgQo1eG41KnYv1JCkBUNm2xk1y2nnZCIOg8MTXtlAChZ4JZvcnxe
+         DgQtWNamhnkW497I4RXf1V8E5ucghMYCvmhvzDYVh9/WdLsC8ayJvW18NEGGlIjwVMgr
+         soeC4ujYJbTvNu4ciVK+gmOj0Yajoy1RYk1toC+8jr1cVc4wsbrZjv5AmurHIU4rGgPv
+         1mG0j5fQakdd03ZM+HxZ/36kDL+XWR61R48sm2ldP8j23BGhhcIMEG343VbP9lJD/Xdh
+         W7V6knYqJon/EcwBkZvdE+oauvrh/dhDU+3gVDlgLemythhwfJKuviC78DQy0w+Gebky
+         jU9g==
+X-Gm-Message-State: ACgBeo2zAco06wo8d1NnrBjnqgL5I94yyrOOZoeck4iGdxTJmTmGGJ1L
+        Xci7P68NeZFoNXjeKFnwgkcMYnzOR6Fp
+X-Google-Smtp-Source: AA6agR7goZ0xK7lT1FUtE0B0l2MHYOZtcNWCfBwg0hQxOMoZ1IyhHxvrev0p66aRtZea+/26eX0/Puq2GP37
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:524b:47b4:2aeb:1b49])
- (user=irogers job=sendgmr) by 2002:a25:230e:0:b0:676:a887:3006 with SMTP id
- j14-20020a25230e000000b00676a8873006mr4122720ybj.558.1659127348323; Fri, 29
- Jul 2022 13:42:28 -0700 (PDT)
-Date:   Fri, 29 Jul 2022 13:42:15 -0700
-Message-Id: <20220729204217.250166-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:8c03:0:b0:66f:8a7:5a07 with SMTP id
+ k3-20020a258c03000000b0066f08a75a07mr3864093ybl.272.1659127350832; Fri, 29
+ Jul 2022 13:42:30 -0700 (PDT)
+Date:   Fri, 29 Jul 2022 13:42:16 -0700
+In-Reply-To: <20220729204217.250166-1-irogers@google.com>
+Message-Id: <20220729204217.250166-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220729204217.250166-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.1.455.g008518b4e5-goog
-Subject: [PATCH v3 0/2] perf parse-events: Break out tracepoint and printing
+Subject: [PATCH v3 1/2] perf parse-events: Don't #define YY_EXTRA_TYPE
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -66,36 +70,27 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-parse-events.c is a large piece of code that doesn't need to contain the
-printing (perf list) and tracepoint functionality. Split apart.
+Adding a #define to side-effect a local include isn't clean, for
+example, it inhibits header precompilation. YY_EXTRA_TYPE is
+defined to be void* by default, so just remove.
 
-v3. Split removal of #define to its own change as suggested by Jiri
-    Olsa <jolsa@kernel.org>.
-v2. Rebase in particular after hybrid PMU changes.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-
-Ian Rogers (2):
-  perf parse-events: Don't #define YY_EXTRA_TYPE
-  perf parse-events: Break out tracepoint and printing.
-
- tools/perf/builtin-list.c          |   2 +-
- tools/perf/builtin-lock.c          |   1 +
- tools/perf/builtin-timechart.c     |   1 +
- tools/perf/builtin-trace.c         |   1 +
- tools/perf/util/Build              |   2 +
- tools/perf/util/parse-events.c     | 714 +----------------------------
- tools/perf/util/parse-events.h     |  31 --
- tools/perf/util/print-events.c     | 571 +++++++++++++++++++++++
- tools/perf/util/print-events.h     |  22 +
- tools/perf/util/trace-event-info.c |  96 ++++
- tools/perf/util/tracepoint.c       |  63 +++
- tools/perf/util/tracepoint.h       |  25 +
- 12 files changed, 790 insertions(+), 739 deletions(-)
- create mode 100644 tools/perf/util/print-events.c
- create mode 100644 tools/perf/util/print-events.h
- create mode 100644 tools/perf/util/tracepoint.c
- create mode 100644 tools/perf/util/tracepoint.h
-
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 7ed235740431..8012db830814 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -24,7 +24,6 @@
+ #include <api/fs/tracing_path.h>
+ #include <perf/cpumap.h>
+ #include "parse-events-bison.h"
+-#define YY_EXTRA_TYPE void*
+ #include "parse-events-flex.h"
+ #include "pmu.h"
+ #include "thread_map.h"
 -- 
 2.37.1.455.g008518b4e5-goog
 
