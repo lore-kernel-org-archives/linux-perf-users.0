@@ -2,61 +2,39 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64172C3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 07:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602A1C00144
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 08:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235419AbiG2Hpf (ORCPT
+        id S235105AbiG2IaA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Jul 2022 03:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53532 "EHLO
+        Fri, 29 Jul 2022 04:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235233AbiG2Ho7 (ORCPT
+        with ESMTP id S235025AbiG2I37 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Jul 2022 03:44:59 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56164820FF
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 00:44:45 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id m5-20020a2598c5000000b0066faab590c5so3290485ybo.7
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Jul 2022 00:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=vsVx0RXggVgT0Vzeq33Ge2ECpCDo8PPDDZprUlFUzbU=;
-        b=d7tM7m3wSx+Nl3LsHF3Qkp1URtOSaRrhcRzOpGhMvuDIzsJ6ORKxe9qw5CIL7pLEi+
-         DV986YF3a/OamH6P50M+iW7ja+NNZIQ7c65kuRHpi7trc7GXOzI0a+4GqbPXR20O63Wp
-         gM5mSRJsf0xkjfsmmhaW0JsdpFPTMIzAi5arSo5Gqmkw4E6NtXmjicsj89vV5RPOzdCs
-         SwnikVqD2c4lL0LQLpfcwfNdvi18dCIFcH/XWMAL9HoYlW1NfWScpIXCpZMC5nROT1Qm
-         rbwloGq+SwztiHqkJfpMc3X2e+GdNcLApSmmAU4H7gRB/zrPyPU5j/YUGapUwZWBlTuA
-         pmTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=vsVx0RXggVgT0Vzeq33Ge2ECpCDo8PPDDZprUlFUzbU=;
-        b=yHH41VwCoAw1crrh9MCJzMAzXsUpLhs3xvck3XoUMKiy73EGsgALC/A9LhUiUKviP7
-         mCvSkFBfR0PS9lHtaSRgiKJk81cge9HWB4X/XjVYu26AZ6RyHlFGq25GuWYakoUtfupK
-         dRDqOqxDBAE3wFLN/WnhLWT4tX9itwJn7gJDzH3lIpP+QkkTgXWOpi1el5vtNTg2bnl1
-         O4SnmkdTa666HruPAZ1I31jTiAp8x3b5/sR3B2HS0+/8/qvZRY/IugFLAZ36+JHnkaES
-         9iqAQSNHoVNUfiWvu3Z4VCvXP52TDXzqghR56lxdkPN6XTjMEt9SJcsENo8b4JJ08qYM
-         KJWQ==
-X-Gm-Message-State: ACgBeo0wpKki8blIHXaSk8ARVM3ih+pFH5XSWTWfQfz4E7Lbk5qVj9st
-        2J0YgQZu8FxP5mP2Vm+1W1MXKiJNlDnb
-X-Google-Smtp-Source: AA6agR4Gdae2DAr0F8eHUkZlTJOf6KliV4pgoBZPuV2HWpQnhPdzjdAaC/qIhk5RnUThfkaBsRPBs6u1CKjy
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:524b:47b4:2aeb:1b49])
- (user=irogers job=sendgmr) by 2002:a5b:585:0:b0:671:2b80:9d42 with SMTP id
- l5-20020a5b0585000000b006712b809d42mr1689021ybp.154.1659080685054; Fri, 29
- Jul 2022 00:44:45 -0700 (PDT)
-Date:   Fri, 29 Jul 2022 00:43:51 -0700
-In-Reply-To: <20220729074351.138260-1-irogers@google.com>
-Message-Id: <20220729074351.138260-18-irogers@google.com>
-Mime-Version: 1.0
-References: <20220729074351.138260-1-irogers@google.com>
-X-Mailer: git-send-email 2.37.1.455.g008518b4e5-goog
-Subject: [PATCH v3 17/17] perf jevents: Fold strings optimization
-From:   Ian Rogers <irogers@google.com>
-To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
+        Fri, 29 Jul 2022 04:29:59 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E295A8A9;
+        Fri, 29 Jul 2022 01:29:57 -0700 (PDT)
+Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LvLFP1j6vz67XvQ;
+        Fri, 29 Jul 2022 16:26:01 +0800 (CST)
+Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
+ fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 29 Jul 2022 10:29:54 +0200
+Received: from [10.195.35.4] (10.195.35.4) by lhrpeml500003.china.huawei.com
+ (7.191.162.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 29 Jul
+ 2022 09:29:53 +0100
+Message-ID: <393770c6-8469-a5b5-5106-a98420bb6e00@huawei.com>
+Date:   Fri, 29 Jul 2022 09:29:52 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 05/17] perf jevents: Remove the type/version variables
+To:     Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        "James Clark" <james.clark@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -65,133 +43,145 @@ To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        "Kan Liang" <kan.liang@linux.intel.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>
+CC:     Stephane Eranian <eranian@google.com>
+References: <20220729074351.138260-1-irogers@google.com>
+ <20220729074351.138260-6-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220729074351.138260-6-irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.195.35.4]
+X-ClientProxiedBy: lhreml734-chm.china.huawei.com (10.201.108.85) To
+ lhrpeml500003.china.huawei.com (7.191.162.67)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If a shorter string ends a longer string then the shorter string may
-reuse the longer string at an offset. For example, on x86 the event
-arith.cycles_div_busy and cycles_div_busy can be folded, even though
-they have difference names the strings are identical after 6
-characters. cycles_div_busy can reuse the arith.cycles_div_busy string
-at an offset of 6.
+On 29/07/2022 08:43, Ian Rogers wrote:
+> pmu_events_map has a type variable that is always initialized to "core"
+> and a version variable that is never read. Remove these from the API as
+> it is straightforward to add them back when necessary.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-In pmu-events.c this looks like the following where the 'also:' lists
-folded strings:
-/* offset=3D177541 */ "arith.cycles_div_busy\000\000pipeline\000Cycles the =
-divider is busy\000\000\000event=3D0x14,period=3D2000000,umask=3D0x1\000\00=
-0\000\000\000\000\000\000\000" /* also: cycles_div_busy\000\000pipeline\000=
-Cycles the divider is busy\000\000\000event=3D0x14,period=3D2000000,umask=
-=3D0x1\000\000\000\000\000\000\000\000\000 */
+Reviewed-by: John Garry <john.garry@huawei.com>
 
-As jevents.py combines multiple strings for an event into a larger
-string, the amount of folding is minimal as all parts of the event must
-align. Other organizations can benefit more from folding, but lose space
-by say recording more offsets.
+Please note the questions, below.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/jevents.py | 55 ++++++++++++++++++++++++++++----
- 1 file changed, 48 insertions(+), 7 deletions(-)
+> ---
+>   tools/perf/pmu-events/empty-pmu-events.c | 6 ++----
+>   tools/perf/pmu-events/jevents.py         | 6 ------
+>   tools/perf/pmu-events/pmu-events.h       | 2 --
+>   tools/perf/tests/expand-cgroup.c         | 2 --
+>   tools/perf/tests/parse-metric.c          | 2 --
+>   5 files changed, 2 insertions(+), 16 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+> index 77e655c6f116..4182a986f505 100644
+> --- a/tools/perf/pmu-events/empty-pmu-events.c
+> +++ b/tools/perf/pmu-events/empty-pmu-events.c
+> @@ -110,15 +110,13 @@ static const struct pmu_event pme_test_soc_cpu[] = {
+>   
+>   const struct pmu_events_map pmu_events_map[] = {
+>   	{
+> +		.arch = "testarch",
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jeven=
-ts.py
-index a5e162558994..e5545758c92d 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -80,7 +80,9 @@ class BigCString:
-   are all the other C strings (to avoid memory issues the string
-   itself is held as a list of strings). The offsets within the big
-   string are recorded and when stored to disk these don't need
--  relocation.
-+  relocation. To reduce the size of the string further, identical
-+  strings are merged. If a longer string ends-with the same value as a
-+  shorter string, these entries are also merged.
-   """
-   strings: Set[str]
-   big_string: Sequence[str]
-@@ -96,6 +98,33 @@ class BigCString:
-   def compute(self) -> None:
-     """Called once all strings are added to compute the string and offsets=
-."""
-=20
-+    folded_strings =3D {}
-+    # Determine if two strings can be folded, ie. let 1 string use the
-+    # end of another. First reverse all strings and sort them.
-+    sorted_reversed_strings =3D sorted([x[::-1] for x in self.strings])
-+
-+    # Strings 'xyz' and 'yz' will now be [ 'zy', 'zyx' ]. Scan forward
-+    # for each string to see if there is a better candidate to fold it
-+    # into, in the example rather than using 'yz' we can use'xyz' at
-+    # an offset of 1. We record which string can be folded into which
-+    # in folded_strings, we don't need to record the offset as it is
-+    # trivially computed from the string lengths.
-+    for pos,s in enumerate(sorted_reversed_strings):
-+      best_pos =3D pos
-+      for check_pos in range(pos + 1, len(sorted_reversed_strings)):
-+        if sorted_reversed_strings[check_pos].startswith(s):
-+          best_pos =3D check_pos
-+        else:
-+          break
-+      if pos !=3D best_pos:
-+        folded_strings[s[::-1]] =3D sorted_reversed_strings[best_pos][::-1=
-]
-+
-+    # Compute reverse mappings for debugging.
-+    fold_into_strings =3D collections.defaultdict(set)
-+    for key, val in folded_strings.items():
-+      if key !=3D val:
-+        fold_into_strings[val].add(key)
-+
-     # big_string_offset is the current location within the C string
-     # being appended to - comments, etc. don't count. big_string is
-     # the string contents represented as a list. Strings are immutable
-@@ -104,13 +133,25 @@ class BigCString:
-     big_string_offset =3D 0
-     self.big_string =3D []
-     self.offsets =3D {}
--    # Emit all strings in a sorted manner.
-+
-+    # Emit all strings that aren't folded in a sorted manner.
-     for s in sorted(self.strings):
--      self.offsets[s] =3D big_string_offset
--      self.big_string.append(f'/* offset=3D{big_string_offset} */ "')
--      self.big_string.append(s)
--      self.big_string.append('"\n')
--      big_string_offset +=3D c_len(s)
-+      if s not in folded_strings:
-+        self.offsets[s] =3D big_string_offset
-+        self.big_string.append(f'/* offset=3D{big_string_offset} */ "')
-+        self.big_string.append(s)
-+        self.big_string.append('"')
-+        if s in fold_into_strings:
-+          self.big_string.append(' /* also: ' + ', '.join(fold_into_string=
-s[s]) + ' */')
-+        self.big_string.append('\n')
-+        big_string_offset +=3D c_len(s)
-+        continue
-+
-+    # Compute the offsets of the folded strings.
-+    for s in folded_strings.keys():
-+      assert s not in self.offsets
-+      folded_s =3D folded_strings[s]
-+      self.offsets[s] =3D self.offsets[folded_s] + c_len(folded_s) - c_len=
-(s)
-=20
- _bcs =3D BigCString()
-=20
---=20
-2.37.1.455.g008518b4e5-goog
+Is this really supposed to be part of this patch?
+
+>   		.cpuid = "testcpu",
+> -		.version = "v1",
+> -		.type = "core",
+>   		.table = pme_test_soc_cpu,
+>   	},
+>   	{
+> +		.arch = 0,
+
+Same as above
+
+>   		.cpuid = 0,
+> -		.version = 0,
+> -		.type = 0,
+>   		.table = 0,
+>   	},
+>   };
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index e6e6c42c3f8a..98d18d5c3830 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -312,8 +312,6 @@ def print_mapping_table(archs: Sequence[str]) -> None:
+>         _args.output_file.write("""{
+>   \t.arch = "testarch",
+>   \t.cpuid = "testcpu",
+> -\t.version = "v1",
+> -\t.type = "core",
+>   \t.table = pme_test_soc_cpu,
+>   },
+>   """)
+> @@ -329,8 +327,6 @@ def print_mapping_table(archs: Sequence[str]) -> None:
+>               _args.output_file.write(f"""{{
+>   \t.arch = "{arch}",
+>   \t.cpuid = "{cpuid}",
+> -\t.version = "{row[1]}",
+> -\t.type = "{row[3]}",
+>   \t.table = {tblname}
+>   }},
+>   """)
+> @@ -339,8 +335,6 @@ def print_mapping_table(archs: Sequence[str]) -> None:
+>     _args.output_file.write("""{
+>   \t.arch = 0,
+>   \t.cpuid = 0,
+> -\t.version = 0,
+> -\t.type = 0,
+>   \t.table = 0,
+>   }
+>   };
+> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+> index 7a360792635f..a491b117c8ac 100644
+> --- a/tools/perf/pmu-events/pmu-events.h
+> +++ b/tools/perf/pmu-events/pmu-events.h
+> @@ -40,8 +40,6 @@ struct pmu_event {
+>   struct pmu_events_map {
+>   	const char *arch;
+>   	const char *cpuid;
+> -	const char *version;
+> -	const char *type;		/* core, uncore etc */
+>   	const struct pmu_event *table;
+>   };
+>   
+> diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
+> index dfefe5b60eb2..dc4038f997d7 100644
+> --- a/tools/perf/tests/expand-cgroup.c
+> +++ b/tools/perf/tests/expand-cgroup.c
+> @@ -197,8 +197,6 @@ static int expand_metric_events(void)
+>   	};
+>   	const struct pmu_events_map ev_map = {
+>   		.cpuid		= "test",
+> -		.version	= "1",
+> -		.type		= "core",
+>   		.table		= pme_test,
+>   	};
+>   
+> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+> index 07b6f4ec024f..1b811a26f4ee 100644
+> --- a/tools/perf/tests/parse-metric.c
+> +++ b/tools/perf/tests/parse-metric.c
+> @@ -81,8 +81,6 @@ static struct pmu_event pme_test[] = {
+>   
+>   static const struct pmu_events_map map = {
+>   	.cpuid		= "test",
+> -	.version	= "1",
+> -	.type		= "core",
+>   	.table		= pme_test,
+>   };
+>   
 
