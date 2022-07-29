@@ -2,285 +2,235 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7146C00144
-	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 15:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A28EC25B08
+	for <linux-perf-users@archiver.kernel.org>; Fri, 29 Jul 2022 15:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236413AbiG2PDp (ORCPT
+        id S237507AbiG2P01 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 29 Jul 2022 11:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
+        Fri, 29 Jul 2022 11:26:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbiG2PDp (ORCPT
+        with ESMTP id S237397AbiG2P0Y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 29 Jul 2022 11:03:45 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008F81582F;
-        Fri, 29 Jul 2022 08:03:41 -0700 (PDT)
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LvVyj4VRjz67PfY;
-        Fri, 29 Jul 2022 22:58:53 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Fri, 29 Jul 2022 17:03:38 +0200
-Received: from [10.195.35.4] (10.195.35.4) by lhrpeml500003.china.huawei.com
- (7.191.162.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 29 Jul
- 2022 16:03:37 +0100
-Message-ID: <d8356ddc-56e7-7324-5330-ff2bd54bcba4@huawei.com>
-Date:   Fri, 29 Jul 2022 16:03:36 +0100
+        Fri, 29 Jul 2022 11:26:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9FC32E;
+        Fri, 29 Jul 2022 08:26:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ED18961B69;
+        Fri, 29 Jul 2022 15:26:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 583E9C433D6;
+        Fri, 29 Jul 2022 15:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659108382;
+        bh=u7iMRCibJGPgHojnAneRfpJQLfO1v9UeCr7NEqXA5r0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=j/ssGM4UwMLUBLCP78RosSv+xdTA5IxQuurJEQkAk0bXcmXPO93JJUXNFsdGh+1wg
+         +oQu9G8HFTFvq7oWLnSNFUXfz91zcbExFBxbHvUUrLwuFGec8y0pgDI7OkmIEUiDsJ
+         xuSOA0nMD0LfFRMzO/hFHpmNupsJvKL62OZ7Ogs2Sct+xobNCKamTbCGFqWe+ziWO5
+         X1ZeZmjvoSs9jG1zXifbRaMvzpG1WXKjUcVgoHT0G2I9F3u+FSVuGP4WeqriMREnTB
+         5LhXtVu1diWGmPLJYP56buqhIf3r1Jp2kzJeotpuUGt61TvxvtDbwosjkjOrYw33Op
+         oX8J8MWyCJV3g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id 0AF325C033E; Fri, 29 Jul 2022 08:26:22 -0700 (PDT)
+Date:   Fri, 29 Jul 2022 08:26:22 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Michel Lespinasse <michel@lespinasse.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com, vgupta@kernel.org,
+        linux@armlinux.org.uk, ulli.kroll@googlemail.com,
+        linus.walleij@linaro.org, shawnguo@kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
+        khilman@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
+        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org, rh0@fb.com
+Subject: Re: [PATCH 04/36] cpuidle,intel_idle: Fix CPUIDLE_FLAG_IRQ_ENABLE
+Message-ID: <20220729152622.GM2860372@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
+References: <20220608142723.103523089@infradead.org>
+ <20220608144516.172460444@infradead.org>
+ <20220725194306.GA14746@lespinasse.org>
+ <20220728172053.GA3607379@paulmck-ThinkPad-P17-Gen-1>
+ <20220729102458.GA1695@lespinasse.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v3 00/17] Compress the pmu_event tables
-To:     Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        "James Clark" <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Kan Liang" <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     Stephane Eranian <eranian@google.com>
-References: <20220729074351.138260-1-irogers@google.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220729074351.138260-1-irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.195.35.4]
-X-ClientProxiedBy: lhreml734-chm.china.huawei.com (10.201.108.85) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220729102458.GA1695@lespinasse.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29/07/2022 08:43, Ian Rogers wrote:
-> jevents.py creates a number of large arrays from the json events. The
-> arrays contain pointers to strings that need relocating. The
-> relocations have file size, run time and memory costs. These changes
-> refactor the pmu_events API so that the storage of the pmu_event
-> struct isn't exposed. The format is then changed to an offset within a
-> combined big string, with adjacent pmu_event struct variables being
-> next to each other in the string separated by \0 - meaning only the
-> first variable of the struct needs its offset recording.
+On Fri, Jul 29, 2022 at 03:24:58AM -0700, Michel Lespinasse wrote:
+> On Thu, Jul 28, 2022 at 10:20:53AM -0700, Paul E. McKenney wrote:
+> > On Mon, Jul 25, 2022 at 12:43:06PM -0700, Michel Lespinasse wrote:
+> > > On Wed, Jun 08, 2022 at 04:27:27PM +0200, Peter Zijlstra wrote:
+> > > > Commit c227233ad64c ("intel_idle: enable interrupts before C1 on
+> > > > Xeons") wrecked intel_idle in two ways:
+> > > > 
+> > > >  - must not have tracing in idle functions
+> > > >  - must return with IRQs disabled
+> > > > 
+> > > > Additionally, it added a branch for no good reason.
+> > > > 
+> > > > Fixes: c227233ad64c ("intel_idle: enable interrupts before C1 on Xeons")
+> > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > 
+> > > After this change was introduced, I am seeing "WARNING: suspicious RCU
+> > > usage" when booting a kernel with debug options compiled in. Please
+> > > see the attached dmesg output. The issue starts with commit 32d4fd5751ea
+> > > and is still present in v5.19-rc8.
+> > > 
+> > > I'm not sure, is this too late to fix or revert in v5.19 final ?
+> > 
+> > I finally got a chance to take a quick look at this.
+> > 
+> > The rcu_eqs_exit() function is making a lockdep complaint about
+> > being invoked with interrupts enabled.  This function is called from
+> > rcu_idle_exit(), which is an expected code path from cpuidle_enter_state()
+> > via its call to rcu_idle_exit().  Except that rcu_idle_exit() disables
+> > interrupts before invoking rcu_eqs_exit().
+> > 
+> > The only other call to rcu_idle_exit() does not disable interrupts,
+> > but it is via rcu_user_exit(), which would be a very odd choice for
+> > cpuidle_enter_state().
+> > 
+> > It seems unlikely, but it might be that it is the use of local_irq_save()
+> > instead of raw_local_irq_save() within rcu_idle_exit() that is causing
+> > the trouble.  If this is the case, then the commit shown below would
+> > help.  Note that this commit removes the warning from lockdep, so it
+> > is necessary to build the kernel with CONFIG_RCU_EQS_DEBUG=y to enable
+> > equivalent debugging.
+> > 
+> > Could you please try your test with the -rce commit shown below applied?
 > 
-> Some related fixes are contained with the patches. The architecture
-> jevents.py creates tables for can now be set by the JEVENTS_ARCH make
-> variable, with a new 'all' that generates the events and metrics for
-> all architectures.
+> Thanks for looking into it.
 
-Hi Ian,
+And thank you for trying this shot in the dark!
 
-I am going through this series currently.
-
-But I just wanted to mention my idea again on how to compress the 
-tables. Maybe you thought that there was no value in my idea or didn't 
-get it, but I'll mention it again just in case...
-
-Background:
-There is much duplication in events between cores. And currently we have 
-something like this:
-
-pmu-events/pmu-events.c:
-struct pmu_event core0[] {
-{
-	.name = event0,
-	.event = "event=0x0",
-},
-{
-	.name = event1,
-	.event = "event=0x1",
-},
-{
-	.name = event2,
-	.event = "event=0x2",
-	.desc = "event2 common desc",
-},
-...
-};
-
-struct pmu_event core1[] {
-{
-	.name = event0,
-	.event = "event=0x0",
-},
-{
-	.name = event1,
-	.event = "event=0x1",
-},
-{
-	.name = event2,
-	.event = "event=0x2",
-	.desc = "event2 desc for core1",
-},
-...
-};
-
-
-struct pmu_evenets_map map[] = {
-{
-	.cpuid = "0000",
-	.table = core0,
-},
-{
-	.cpuid = "0001",
-	.table = core1,
-},
-...
-};
-
-If you check broadwell and broadwellde frontent.json you will notice 
-that they are identical, which is an extreme example of duplication.
-
-Proposal for change:
-Make each event in the per-core pmu event table point to common event. 
-Each common event is unique, and each event per-core will point to a 
-common event. So if 2x cores have same event but small difference, then 
-there would be still 2x common events.
-
-pmu-events/pmu-events.c:
-struct pmu_event common_events[] {
-{
-	.name = event0,
-	.event = "event=0x0",
-},
-{
-	.name = event1,
-	.event = "event=0x1",
-},
-{
-	.name = event2,
-	.event = "event=0x2",
-	.desc = "event2 common desc",
-},
-{
-	.name = event2,
-	.event = "event=0x2",
-	.desc = "event2 desc for core1",
-},
-...
-};
-
-struct pmu_event_ptr {
-	struct pmu_event *pmu_event;
-}
-
-struct pmu_event_ptr core0[] {
-{
-	.pmu_event = &common_events[0],
-},
-{
-	.pmu_event = &common_events[1],
-},
-{
-	.pmu_event = &common_events[2],
-},
-...
-};
-
-struct pmu_event_ptr core0[] {
-{
-	.pmu_event = &common_events[0],
-},
-{
-	.pmu_event = &common_events[1],
-},
-{
-	.pmu_event = &common_events[3],
-},
-...
-};
-
-struct pmu_evenets_map map[] = {
-{
-	.cpuid = "0000",
-	.table = core0,
-},
-{
-	.cpuid = "0001",
-	.table = core1,
-},
-...
-};
-
-For x86, first step in JSON parsing would be to go through the JSON 
-files and compile a list of unique events. Then second step is to 
-process each per-core JSON to create the pmu events table, using the 
-common events. Using a per common event hash would make the lookup quicker.
-
-I'm not sure what you think. From figures below you seem to be saving 
-~20% at best - I would guess (with a capital G) that my method could 
-save a lot more.
-
-This implementation would require core pmu.c to be changed, but there is 
-ways that this could be done without needing to change core pmu.c
-
-Thanks,
-John
-
+> After checking out Peter's commit 32d4fd5751ea,
+> cherry picking your commit ed4ae5eff4b3,
+> and setting CONFIG_RCU_EQS_DEBUG=y in addition of my usual debug config,
+> I am now seeing this a few seconds into the boot:
 > 
-> An example of the improvement to the file size on x86 is:
-> no jevents - the same 19,788,464bytes
-> x86 jevents - ~16.7% file size saving 23,744,288bytes vs 28,502,632bytes
-> all jevents - ~19.5% file size saving 24,469,056bytes vs 30,379,920bytes
-> default build options plus NO_LIBBFD=1.
-> 
-> I originally suggested fixing this problem in:
-> https://lore.kernel.org/linux-perf-users/CAP-5=fVB8G4bdb9T=FncRTh9oBVKCS=+=eowAO+YSgAhab+Dtg@mail.gmail.com/
-> 
-> v3. Fix an ARM build issue with a missed weak symbol. Perform some
->      pytype clean up.
-> v2. Split the substring folding optimization to its own patch and
->      comment tweaks as suggested by Namhyung Kim
->      <namhyung@kernel.org>. Recompute the file size savings with the
->      latest json events and metrics.
-> 
-> Ian Rogers (17):
->    perf jevents: Clean up pytype warnings
->    perf jevents: Simplify generation of C-string
->    perf jevents: Add JEVENTS_ARCH make option
->    perf jevent: Add an 'all' architecture argument
->    perf jevents: Remove the type/version variables
->    perf jevents: Provide path to json file on error
->    perf jevents: Sort json files entries
->    perf pmu-events: Hide pmu_sys_event_tables
->    perf pmu-events: Avoid passing pmu_events_map
->    perf pmu-events: Hide pmu_events_map
->    perf test: Use full metric resolution
->    perf pmu-events: Move test events/metrics to json
->    perf pmu-events: Don't assume pmu_event is an array
->    perf pmu-events: Hide the pmu_events
->    perf metrics: Copy entire pmu_event in find metric
->    perf jevents: Compress the pmu_events_table
->    perf jevents: Fold strings optimization
-> 
->   tools/perf/arch/arm64/util/pmu.c              |   4 +-
->   tools/perf/pmu-events/Build                   |   6 +-
->   .../arch/test/test_soc/cpu/metrics.json       |  64 +++
->   tools/perf/pmu-events/empty-pmu-events.c      | 204 +++++++-
->   tools/perf/pmu-events/jevents.py              | 495 ++++++++++++++----
->   tools/perf/pmu-events/pmu-events.h            |  40 +-
->   tools/perf/tests/expand-cgroup.c              |  25 +-
->   tools/perf/tests/parse-metric.c               |  77 +--
->   tools/perf/tests/pmu-events.c                 | 466 +++++++----------
->   tools/perf/util/metricgroup.c                 | 275 ++++++----
->   tools/perf/util/metricgroup.h                 |   5 +-
->   tools/perf/util/pmu.c                         | 139 ++---
->   tools/perf/util/pmu.h                         |   8 +-
->   tools/perf/util/s390-sample-raw.c             |  50 +-
->   14 files changed, 1140 insertions(+), 718 deletions(-)
->   create mode 100644 tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json
-> 
+> [    3.010650] ------------[ cut here ]------------
+> [    3.010651] WARNING: CPU: 0 PID: 0 at kernel/sched/clock.c:397 sched_clock_tick+0x27/0x60
 
+And this is again a complaint about interrupts not being disabled.
+
+But it does appear that the problem was the lockdep complaint, and
+eliminating that did take care of part of the problem.  But lockdep
+remained enabled, and you therefore hit the next complaint.
+
+> [    3.010657] Modules linked in:
+> [    3.010660] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.19.0-rc1-test-00005-g1be22fea0611 #1
+> [    3.010662] Hardware name: LENOVO 30BFS44D00/1036, BIOS S03KT51A 01/17/2022
+> [    3.010663] RIP: 0010:sched_clock_tick+0x27/0x60
+
+The most straightforward way to get to sched_clock_tick() from
+cpuidle_enter_state() is via the call to sched_clock_idle_wakeup_event().
+
+Except that it disables interrupts before invoking sched_clock_tick().
+
+> [    3.010665] Code: 1f 40 00 53 eb 02 5b c3 66 90 8b 05 2f c3 40 01 85 c0 74 18 65 8b 05 60 88 8f 4e 85 c0 75 0d 65 8b 05 a9 85 8f 4e 85 c0 74 02 <0f> 0b e8 e2 6c 89 00 48 c7 c3 40 d5 02 00
+>  89 c0 48 03 1c c5 c0 98
+> [    3.010667] RSP: 0000:ffffffffb2803e28 EFLAGS: 00010002
+> [    3.010670] RAX: 0000000000000001 RBX: ffffc8ce7fa07060 RCX: 0000000000000001
+> [    3.010671] RDX: 0000000000000000 RSI: ffffffffb268dd21 RDI: ffffffffb269ab13
+> [    3.010673] RBP: 0000000000000001 R08: ffffffffffc300d5 R09: 000000000002be80
+> [    3.010674] R10: 000003625b53183a R11: ffffa012b802b7a4 R12: ffffffffb2aa9e80
+> [    3.010675] R13: ffffffffb2aa9e00 R14: 0000000000000001 R15: 0000000000000000
+> [    3.010677] FS:  0000000000000000(0000) GS:ffffa012b8000000(0000) knlGS:0000000000000000
+> [    3.010678] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    3.010680] CR2: ffffa012f81ff000 CR3: 0000000c99612001 CR4: 00000000003706f0
+> [    3.010681] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    3.010682] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [    3.010683] Call Trace:
+> [    3.010685]  <TASK>
+> [    3.010688]  cpuidle_enter_state+0xb7/0x4b0
+> [    3.010694]  cpuidle_enter+0x29/0x40
+> [    3.010697]  do_idle+0x1d4/0x210
+> [    3.010702]  cpu_startup_entry+0x19/0x20
+> [    3.010704]  rest_init+0x117/0x1a0
+> [    3.010708]  arch_call_rest_init+0xa/0x10
+> [    3.010711]  start_kernel+0x6d8/0x6ff
+> [    3.010716]  secondary_startup_64_no_verify+0xce/0xdb
+> [    3.010728]  </TASK>
+> [    3.010729] irq event stamp: 44179
+> [    3.010730] hardirqs last  enabled at (44179): [<ffffffffb2000ccb>] asm_sysvec_apic_timer_interrupt+0x1b/0x20
+> [    3.010734] hardirqs last disabled at (44177): [<ffffffffb22003f0>] __do_softirq+0x3f0/0x498
+> [    3.010736] softirqs last  enabled at (44178): [<ffffffffb2200332>] __do_softirq+0x332/0x498
+> [    3.010738] softirqs last disabled at (44171): [<ffffffffb16c760b>] irq_exit_rcu+0xab/0xf0
+> [    3.010741] ---[ end trace 0000000000000000 ]---
+
+Would you be willing to try another shot in the dark, but untested
+this time?  I freely admit that this is getting strange.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
+index e374c0c923dae..279f557bf60bb 100644
+--- a/kernel/sched/clock.c
++++ b/kernel/sched/clock.c
+@@ -394,7 +394,7 @@ notrace void sched_clock_tick(void)
+ 	if (!static_branch_likely(&sched_clock_running))
+ 		return;
+ 
+-	lockdep_assert_irqs_disabled();
++	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !raw_irqs_disabled());
+ 
+ 	scd = this_scd();
+ 	__scd_stamp(scd);
