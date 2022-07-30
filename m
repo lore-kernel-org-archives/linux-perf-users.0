@@ -2,519 +2,278 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5972EC19F2A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 30 Jul 2022 18:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A282C25B07
+	for <linux-perf-users@archiver.kernel.org>; Sat, 30 Jul 2022 19:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235047AbiG3SpX (ORCPT
+        id S235674AbiG3Tww (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 30 Jul 2022 14:45:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55764 "EHLO
+        Sat, 30 Jul 2022 15:52:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230266AbiG3SpW (ORCPT
+        with ESMTP id S230337AbiG3Tws (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 30 Jul 2022 14:45:22 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB2BB4B1;
-        Sat, 30 Jul 2022 11:45:20 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id br15-20020a056830390f00b0061c9d73b8bdso5435763otb.6;
-        Sat, 30 Jul 2022 11:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=91nI5nGqkyBoMtq0q/p2fAJ6oWWk0Kj03GHUdAft3yM=;
-        b=cuVSw1c60frLr2bnzcuG3kNe/7ZKNatgC0pQtxPbcgdVFQVLt8hOkfpCGggWlM6aA7
-         h2Xek0sXvSBh+BYoE2Si11/fWR95FCHHSDj2RW2azZqthQ4uyZ+tshvHRjSsypYnDRF0
-         YSgZsYjHLmS9Pr7OxSwniPeINl7sX7YQkcrAf/TNqM0Rnl+O8Iz5fZ1POgAn/2Tx+XI0
-         lGeNaZV1vXevYIfAK+WUr9kiOqDuY8vKNkk5bKfo27SaTK7a4FB6I0LsUJL6z0eUtSRT
-         YoPPX2Yu2eHeQpbM4g8qaWbuWSeIl4J2buFzzquH8lZwLOOCNuvhlhZgJvxqcXYelXTa
-         E1FA==
+        Sat, 30 Jul 2022 15:52:48 -0400
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0127E13F39;
+        Sat, 30 Jul 2022 12:52:46 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id n8so13219366yba.2;
+        Sat, 30 Jul 2022 12:52:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=91nI5nGqkyBoMtq0q/p2fAJ6oWWk0Kj03GHUdAft3yM=;
-        b=0LxeP7Jt9cf3kdGIvnnCFoWNkqVtY1IvPsZfwEmIpX9gBBsoPHyKIPyCK8St6pCHJE
-         euXBYfQiqm+643ycD2/3vJLtVw+rQxRnDnpZuS3XLaNOXrynxHAe28fRq4aw/jgIYNHN
-         bfgnkk5r9SpApiibPBEQUJMvdmbSCLgeLxeahMPir4DAZbg0ishCKjSjwuKdFifV17Bk
-         jbfzUvRlLQrOxvCRIzGq8EOdvPU9UHOw+hPNTgeop8hNri5nupd44RZJIVdYm++rYD26
-         XJc1BjLDO6pF/kGGO0FZWvX7n3oHreuxh1g9s4AKBo2YUFRBQe/fMgTO4wmrOcx4W+5o
-         40vw==
-X-Gm-Message-State: AJIora+yQsBq4z9VZVSeTIWO0od7ufoiOOyi5tz7rfd9EALMmXCIsk4W
-        GSn/SaPqOBR7TQtkxny0L0t9aJdx5/E2kV94/aI=
-X-Google-Smtp-Source: AGRyM1smbhJVVsZI/I9peD7g/STva9BeeJdwzUFZ+EBvbbaVxiERzJsnDWk+K8xKoPguD7Z5qHjksbQFEoHdXZ55XvY=
-X-Received: by 2002:a05:6830:650b:b0:61c:95e7:2118 with SMTP id
- cm11-20020a056830650b00b0061c95e72118mr3692877otb.367.1659206719925; Sat, 30
- Jul 2022 11:45:19 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=0QwwjVOIVs4sR9ljVmsJX6Xu2S4+tvcr+oBVAjM+ePA=;
+        b=e8a+uAA9tupGiL3yo8EkLFat/Yo8hfOL0dEjkN03EunifrpH5WDt1ik8Q1l2EEocjT
+         fVLKUVbPQ9p/jM9rZc9eF9zc1WhebYD91WFyUJRwIVfjf9eCUMB2ZXT2bKXo1vYd8xMc
+         50i0dubF4/84MjJhKF4f85UL/b1J0h+2706rL4zlKw4tJHsRIFOrc5kAycR6TXvyhJ9j
+         CllXK+t+T+a1NuZN8RfaIE0i+YPlr+Ffb4JjIxKgdpkG9WV3WEADKavvYeM3AYhjh8Iu
+         gcsyrORxqg7xbZQpjRPJZ9seachiStWce2u60xdb874MBo8w5IRxW8i7Qr+4fXWv/6+q
+         E64w==
+X-Gm-Message-State: ACgBeo3OxYk4mfg72HXbMBbEY4LajVRBqucZ4mdHqCYye8RS04nh7S16
+        hmWROudYRZmXM0tYeJDe4uYZSSldbIvoGgz0A8I=
+X-Google-Smtp-Source: AA6agR5p+lnEO42NEIBehm6hZLFrmXewKv2ogwUWOYz3LvGYShyipeAc9YxoFpIxLibrvw9Jcl6WeqKY+cLq4G0/mNE=
+X-Received: by 2002:a25:3458:0:b0:673:5bca:3b45 with SMTP id
+ b85-20020a253458000000b006735bca3b45mr6304433yba.633.1659210766011; Sat, 30
+ Jul 2022 12:52:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220727220832.2865794-1-irogers@google.com> <20220727220832.2865794-22-irogers@google.com>
- <CA+icZUU-AmzdkWqBCWw=izbWJfpw4GP+UUaOE6SRs3tiAtmKng@mail.gmail.com>
- <CA+icZUUG6GajshrWUsH-KDnwYc-C19k0hZ9uNUH3b=E32e2TUA@mail.gmail.com> <CAP-5=fVG0ANhft6NL-J4TQgP63nGrUjj=cSxyw46iYLen9LqpA@mail.gmail.com>
-In-Reply-To: <CAP-5=fVG0ANhft6NL-J4TQgP63nGrUjj=cSxyw46iYLen9LqpA@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sat, 30 Jul 2022 20:44:43 +0200
-Message-ID: <CA+icZUVoWAhWe8dyr8=7Yjc+Qs78p4BsPTgc_UZEN8bKOGtEnw@mail.gmail.com>
-Subject: Re: [PATCH v3 21/30] perf vendor events: Update Intel sandybridge
-To:     Ian Rogers <irogers@google.com>
-Cc:     perry.taylor@intel.com, caleb.biggers@intel.com,
-        kshipra.bopardikar@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+References: <20220608142723.103523089@infradead.org> <20220608144516.172460444@infradead.org>
+ <20220725194306.GA14746@lespinasse.org> <20220728172053.GA3607379@paulmck-ThinkPad-P17-Gen-1>
+ <20220729102458.GA1695@lespinasse.org> <CAJZ5v0gyPtX=ksCibo2ZN_BztCqUn9KRtRu+gsJ5KetB_1MwEQ@mail.gmail.com>
+ <20220730094800.GB1587@lespinasse.org>
+In-Reply-To: <20220730094800.GB1587@lespinasse.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 30 Jul 2022 21:52:34 +0200
+Message-ID: <CAJZ5v0hXVjsWab=qYZfXBTqcjkpWV0CFT9_oQBKQ28rFG3_VLw@mail.gmail.com>
+Subject: Re: [PATCH 04/36] cpuidle,intel_idle: Fix CPUIDLE_FLAG_IRQ_ENABLE
+To:     Michel Lespinasse <michel@lespinasse.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, vgupta@kernel.org,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        ulli.kroll@googlemail.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        bcain@quicinc.com, Huacai Chen <chenhuacai@kernel.org>,
+        kernel@xen0n.name, Geert Uytterhoeven <geert@linux-m68k.org>,
+        sammy@sammy.net, Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        dinguyen@kernel.org, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi,
+        Stafford Horne <shorne@gmail.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        David Miller <davem@davemloft.net>,
+        Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, acme@kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        jolsa@kernel.org, namhyung@kernel.org,
+        Juergen Gross <jgross@suse.com>, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>, Len Brown <lenb@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Anup Patel <anup@brainfault.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Petr Mladek <pmladek@suse.com>, senozhatsky@chromium.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        quic_neeraju@quicinc.com, Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Benjamin Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-snps-arc@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        openrisc@lists.librecores.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-s390@vger.kernel.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>, rcu@vger.kernel.org,
+        rh0@fb.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 29, 2022 at 4:36 PM Ian Rogers <irogers@google.com> wrote:
+On Sat, Jul 30, 2022 at 11:48 AM Michel Lespinasse
+<michel@lespinasse.org> wrote:
 >
-> On Fri, Jul 29, 2022 at 1:48 AM Sedat Dilek <sedat.dilek@gmail.com> wrote=
-:
-> >
-> > On Fri, Jul 29, 2022 at 10:41 AM Sedat Dilek <sedat.dilek@gmail.com> wr=
-ote:
+> On Fri, Jul 29, 2022 at 04:59:50PM +0200, Rafael J. Wysocki wrote:
+> > On Fri, Jul 29, 2022 at 12:25 PM Michel Lespinasse
+> > <michel@lespinasse.org> wrote:
 > > >
-> > > On Thu, Jul 28, 2022 at 12:09 AM Ian Rogers <irogers@google.com> wrot=
-e:
+> > > On Thu, Jul 28, 2022 at 10:20:53AM -0700, Paul E. McKenney wrote:
+> > > > On Mon, Jul 25, 2022 at 12:43:06PM -0700, Michel Lespinasse wrote:
+> > > > > On Wed, Jun 08, 2022 at 04:27:27PM +0200, Peter Zijlstra wrote:
+> > > > > > Commit c227233ad64c ("intel_idle: enable interrupts before C1 on
+> > > > > > Xeons") wrecked intel_idle in two ways:
+> > > > > >
+> > > > > >  - must not have tracing in idle functions
+> > > > > >  - must return with IRQs disabled
+> > > > > >
+> > > > > > Additionally, it added a branch for no good reason.
+> > > > > >
+> > > > > > Fixes: c227233ad64c ("intel_idle: enable interrupts before C1 on Xeons")
+> > > > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > >
+> > > > > After this change was introduced, I am seeing "WARNING: suspicious RCU
+> > > > > usage" when booting a kernel with debug options compiled in. Please
+> > > > > see the attached dmesg output. The issue starts with commit 32d4fd5751ea
+> > > > > and is still present in v5.19-rc8.
+> > > > >
+> > > > > I'm not sure, is this too late to fix or revert in v5.19 final ?
 > > > >
-> > > > Update to v17, the metrics are based on TMA 4.4 full.
+> > > > I finally got a chance to take a quick look at this.
 > > > >
-> > > > Use script at:
-> > > > https://github.com/intel/event-converter-for-linux-perf/blob/master=
-/download_and_gen.py
+> > > > The rcu_eqs_exit() function is making a lockdep complaint about
+> > > > being invoked with interrupts enabled.  This function is called from
+> > > > rcu_idle_exit(), which is an expected code path from cpuidle_enter_state()
+> > > > via its call to rcu_idle_exit().  Except that rcu_idle_exit() disables
+> > > > interrupts before invoking rcu_eqs_exit().
 > > > >
-> > > > to download and generate the latest events and metrics. Manually co=
-py
-> > > > the sandybridge files into perf and update mapfile.csv.
+> > > > The only other call to rcu_idle_exit() does not disable interrupts,
+> > > > but it is via rcu_user_exit(), which would be a very odd choice for
+> > > > cpuidle_enter_state().
 > > > >
-> > > > Tested on a non-sandybridge with 'perf test':
-> > > >  10: PMU events                                                    =
-  :
-> > > >  10.1: PMU event table sanity                                      =
-  : Ok
-> > > >  10.2: PMU event map aliases                                       =
-  : Ok
-> > > >  10.3: Parsing of PMU event table metrics                          =
-  : Ok
-> > > >  10.4: Parsing of PMU event table metrics with fake PMUs           =
-  : Ok
+> > > > It seems unlikely, but it might be that it is the use of local_irq_save()
+> > > > instead of raw_local_irq_save() within rcu_idle_exit() that is causing
+> > > > the trouble.  If this is the case, then the commit shown below would
+> > > > help.  Note that this commit removes the warning from lockdep, so it
+> > > > is necessary to build the kernel with CONFIG_RCU_EQS_DEBUG=y to enable
+> > > > equivalent debugging.
 > > > >
+> > > > Could you please try your test with the -rce commit shown below applied?
 > > >
-> > > Hi Ian,
+> > > Thanks for looking into it.
 > > >
-> > > thanks for v3 patchset.
+> > > After checking out Peter's commit 32d4fd5751ea,
+> > > cherry picking your commit ed4ae5eff4b3,
+> > > and setting CONFIG_RCU_EQS_DEBUG=y in addition of my usual debug config,
+> > > I am now seeing this a few seconds into the boot:
 > > >
-> > > I used latest perf/core Git branch from Arnaldo's tree plus some
-> > > custom patches (to fix binutils v2.38.90 and opennssl-v3 issues plus
-> > > gnu11 tools patches) and build with LLVM-14.
-> > >
-> > > When I run on my Intel SandyBridge CPU...
-> > >
-> > > $ ~/bin/perf test
-> > > ...
-> > >  10: PMU events                                                      =
-:
-> > > 10.1: PMU event table sanity                                        :=
- Ok
-> > > 10.2: PMU event map aliases                                         :=
- Ok
-> > > 10.3: Parsing of PMU event table metrics                            :=
- Ok
-> > > 10.4: Parsing of PMU event table metrics with fake PMUs             :=
- Ok
-> > > ...
-> > >
-> > > First time I ran perf with option test.
-> > >
-> > > Looks that good to you?
-> > >
+> > > [    3.010650] ------------[ cut here ]------------
+> > > [    3.010651] WARNING: CPU: 0 PID: 0 at kernel/sched/clock.c:397 sched_clock_tick+0x27/0x60
+> > > [    3.010657] Modules linked in:
+> > > [    3.010660] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.19.0-rc1-test-00005-g1be22fea0611 #1
+> > > [    3.010662] Hardware name: LENOVO 30BFS44D00/1036, BIOS S03KT51A 01/17/2022
+> > > [    3.010663] RIP: 0010:sched_clock_tick+0x27/0x60
+> > > [    3.010665] Code: 1f 40 00 53 eb 02 5b c3 66 90 8b 05 2f c3 40 01 85 c0 74 18 65 8b 05 60 88 8f 4e 85 c0 75 0d 65 8b 05 a9 85 8f 4e 85 c0 74 02 <0f> 0b e8 e2 6c 89 00 48 c7 c3 40 d5 02 00
+> > >  89 c0 48 03 1c c5 c0 98
+> > > [    3.010667] RSP: 0000:ffffffffb2803e28 EFLAGS: 00010002
+> > > [    3.010670] RAX: 0000000000000001 RBX: ffffc8ce7fa07060 RCX: 0000000000000001
+> > > [    3.010671] RDX: 0000000000000000 RSI: ffffffffb268dd21 RDI: ffffffffb269ab13
+> > > [    3.010673] RBP: 0000000000000001 R08: ffffffffffc300d5 R09: 000000000002be80
+> > > [    3.010674] R10: 000003625b53183a R11: ffffa012b802b7a4 R12: ffffffffb2aa9e80
+> > > [    3.010675] R13: ffffffffb2aa9e00 R14: 0000000000000001 R15: 0000000000000000
+> > > [    3.010677] FS:  0000000000000000(0000) GS:ffffa012b8000000(0000) knlGS:0000000000000000
+> > > [    3.010678] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [    3.010680] CR2: ffffa012f81ff000 CR3: 0000000c99612001 CR4: 00000000003706f0
+> > > [    3.010681] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > [    3.010682] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > [    3.010683] Call Trace:
+> > > [    3.010685]  <TASK>
+> > > [    3.010688]  cpuidle_enter_state+0xb7/0x4b0
+> > > [    3.010694]  cpuidle_enter+0x29/0x40
+> > > [    3.010697]  do_idle+0x1d4/0x210
+> > > [    3.010702]  cpu_startup_entry+0x19/0x20
+> > > [    3.010704]  rest_init+0x117/0x1a0
+> > > [    3.010708]  arch_call_rest_init+0xa/0x10
+> > > [    3.010711]  start_kernel+0x6d8/0x6ff
+> > > [    3.010716]  secondary_startup_64_no_verify+0xce/0xdb
+> > > [    3.010728]  </TASK>
+> > > [    3.010729] irq event stamp: 44179
+> > > [    3.010730] hardirqs last  enabled at (44179): [<ffffffffb2000ccb>] asm_sysvec_apic_timer_interrupt+0x1b/0x20
+> > > [    3.010734] hardirqs last disabled at (44177): [<ffffffffb22003f0>] __do_softirq+0x3f0/0x498
+> > > [    3.010736] softirqs last  enabled at (44178): [<ffffffffb2200332>] __do_softirq+0x332/0x498
+> > > [    3.010738] softirqs last disabled at (44171): [<ffffffffb16c760b>] irq_exit_rcu+0xab/0xf0
+> > > [    3.010741] ---[ end trace 0000000000000000 ]---
 > >
-> > Nice.
-> >
-> > $~/bin/perf test list
-> > ...
-> >  10: PMU events
-> > 10:1: PMU event table sanity
-> > 10:2: PMU event map aliases
-> > 10:3: Parsing of PMU event table metrics
-> > 10:4: Parsing of PMU event table metrics with fake PMUs
-> > ...
-> >
-> > $ ~/bin/perf test 10
-> > 10: PMU events                                                      :
-> > 10.1: PMU event table sanity                                        : O=
-k
-> > 10.2: PMU event map aliases                                         : O=
-k
-> > 10.3: Parsing of PMU event table metrics                            : O=
-k
-> > 10.4: Parsing of PMU event table metrics with fake PMUs             : O=
-k
-> >
-> > New perf lessons learned.
+> > Can you please give this patch a go:
+> > https://patchwork.kernel.org/project/linux-pm/patch/Yt/AxPFi88neW7W5@e126311.manchester.arm.com/
+> > ?
 >
-> Thanks. There are also tests that iterate and run the events/metrics
-> on your hardware:
+> I tried, but it didn't change the picture for me.
 >
-> $ perf test list
-> ...
->  93: perf all metricgroups test
-> 94: perf all metrics test
-> ...
->  96: perf all PMU test
-> ...
->
-> Test 10 is a unit test and tests 93, 94 and 96 (your numbers may vary)
-> are more like integration tests.
->
+> I'm not sure if that was the patch you meant to send though, as it
+> seems it's only adding a tracepoint so shouldn't make any difference
+> if I'm not actually using the tracepoint ?
 
-Hi Ian,
+You are right, it looks like I pasted a link to a different patch by
+mistake.  Sorry about that.
 
-thanks for the hints.
+I meant this one:
 
-I tried like that:
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=pm&id=d295ad34f236c3518634fb6403d4c0160456e470
 
-$ ~/bin/perf test list 93 94 95
-93: perf all metricgroups test
-94: perf all metrics test
-95: perf all PMU test
-
-$ ~/bin/perf test 93 94 95
-93: perf all metricgroups test                                      : Ok
-94: perf all metrics test                                           : Ok
-95: perf all PMU test                                               : Ok
-
-Looks good.
-
-The tests FAILED when /proc/sys/kernel/perf_event_paranoid is not
-appropriate set.
-
-From my build_linux-llvm.sh:
-
-317:echo "##### Starting Linux-kernel build ..."
-318:echo "linux-perf: Adjust limited access to performance monitoring
-and observability operations"
-319:echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
-/proc/sys/kernel/perf_event_paranoid
-...
-321:echo 1 | sudo tee /proc/sys/kernel/kptr_restrict
-/proc/sys/kernel/perf_event_paranoid
-322:echo "linux-perf: Reset limited access to performance monitoring
-and observability operations"
-
-In Debian-kernels the default is 3 (Debian has some additional patches
-for perf restrictions).
-
-Best regards,
--Sedat-
-
-> > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/pmu-events/arch/x86/mapfile.csv            |  2 +-
-> > > >  tools/perf/pmu-events/arch/x86/sandybridge/cache.json |  2 +-
-> > > >  .../arch/x86/sandybridge/floating-point.json          |  2 +-
-> > > >  .../pmu-events/arch/x86/sandybridge/frontend.json     |  4 ++--
-> > > >  .../perf/pmu-events/arch/x86/sandybridge/memory.json  |  2 +-
-> > > >  tools/perf/pmu-events/arch/x86/sandybridge/other.json |  2 +-
-> > > >  .../pmu-events/arch/x86/sandybridge/pipeline.json     | 10 +++++--=
----
-> > > >  .../pmu-events/arch/x86/sandybridge/snb-metrics.json  | 11 +++++++=
-++--
-> > > >  .../pmu-events/arch/x86/sandybridge/uncore-other.json |  2 +-
-> > > >  .../arch/x86/sandybridge/virtual-memory.json          |  2 +-
-> > > >  10 files changed, 23 insertions(+), 16 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/per=
-f/pmu-events/arch/x86/mapfile.csv
-> > > > index 2f9419ee2d29..0b56c4a8a3a8 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > > > +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > > > @@ -19,12 +19,12 @@ GenuineIntel-6-(57|85),v9,knightslanding,core
-> > > >  GenuineIntel-6-AA,v1.00,meteorlake,core
-> > > >  GenuineIntel-6-1[AEF],v3,nehalemep,core
-> > > >  GenuineIntel-6-2E,v3,nehalemex,core
-> > > > +GenuineIntel-6-2A,v17,sandybridge,core
-> > > >  GenuineIntel-6-[4589]E,v24,skylake,core
-> > > >  GenuineIntel-6-A[56],v24,skylake,core
-> > > >  GenuineIntel-6-37,v13,silvermont,core
-> > > >  GenuineIntel-6-4D,v13,silvermont,core
-> > > >  GenuineIntel-6-4C,v13,silvermont,core
-> > > > -GenuineIntel-6-2A,v15,sandybridge,core
-> > > >  GenuineIntel-6-2C,v2,westmereep-dp,core
-> > > >  GenuineIntel-6-25,v2,westmereep-sp,core
-> > > >  GenuineIntel-6-2F,v2,westmereex,core
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/cache.json =
-b/tools/perf/pmu-events/arch/x86/sandybridge/cache.json
-> > > > index 92a7269eb444..a1d622352131 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/cache.json
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/cache.json
-> > > > @@ -1876,4 +1876,4 @@
-> > > >          "SampleAfterValue": "100003",
-> > > >          "UMask": "0x10"
-> > > >      }
-> > > > -]
-> > > > \ No newline at end of file
-> > > > +]
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/floating-po=
-int.json b/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.json
-> > > > index 713878fd062b..eb2ff2cfdf6b 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.jso=
-n
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/floating-point.jso=
-n
-> > > > @@ -135,4 +135,4 @@
-> > > >          "SampleAfterValue": "2000003",
-> > > >          "UMask": "0x1"
-> > > >      }
-> > > > -]
-> > > > \ No newline at end of file
-> > > > +]
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/frontend.js=
-on b/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json
-> > > > index fa22f9463b66..e2c82e43a2de 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/frontend.json
-> > > > @@ -176,7 +176,7 @@
-> > > >          "CounterMask": "1",
-> > > >          "EventCode": "0x79",
-> > > >          "EventName": "IDQ.MS_CYCLES",
-> > > > -        "PublicDescription": "This event counts cycles during whic=
-h the microcode sequencer assisted the front-end in delivering uops.  Micro=
-code assists are used for complex instructions or scenarios that can't be h=
-andled by the standard decoder.  Using other instructions, if possible, wil=
-l usually improve performance.  See the Intel 64 and IA-32 Architectures Op=
-timization Reference Manual for more information.",
-> > > > +        "PublicDescription": "This event counts cycles during whic=
-h the microcode sequencer assisted the front-end in delivering uops.  Micro=
-code assists are used for complex instructions or scenarios that can't be h=
-andled by the standard decoder.  Using other instructions, if possible, wil=
-l usually improve performance.  See the Intel(R) 64 and IA-32 Architectures=
- Optimization Reference Manual for more information.",
-> > > >          "SampleAfterValue": "2000003",
-> > > >          "UMask": "0x30"
-> > > >      },
-> > > > @@ -311,4 +311,4 @@
-> > > >          "SampleAfterValue": "2000003",
-> > > >          "UMask": "0x1"
-> > > >      }
-> > > > -]
-> > > > \ No newline at end of file
-> > > > +]
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/memory.json=
- b/tools/perf/pmu-events/arch/x86/sandybridge/memory.json
-> > > > index 931892d34076..3c283ca309f3 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/memory.json
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/memory.json
-> > > > @@ -442,4 +442,4 @@
-> > > >          "SampleAfterValue": "100003",
-> > > >          "UMask": "0x1"
-> > > >      }
-> > > > -]
-> > > > \ No newline at end of file
-> > > > +]
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/other.json =
-b/tools/perf/pmu-events/arch/x86/sandybridge/other.json
-> > > > index e251f535ec09..2f873ab14156 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/other.json
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/other.json
-> > > > @@ -55,4 +55,4 @@
-> > > >          "SampleAfterValue": "2000003",
-> > > >          "UMask": "0x1"
-> > > >      }
-> > > > -]
-> > > > \ No newline at end of file
-> > > > +]
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.js=
-on b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-> > > > index b9a3f194a00a..2c3b6c92aa6b 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
-> > > > @@ -609,7 +609,7 @@
-> > > >          "UMask": "0x3"
-> > > >      },
-> > > >      {
-> > > > -        "BriefDescription": "Number of occurences waiting for the =
-checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke d=
-ue to all other cases except JEClear (e.g. whenever a ucode assist is neede=
-d like SSE exception, memory disambiguation, etc...).",
-> > > > +        "BriefDescription": "Number of occurrences waiting for the=
- checkpoints in Resource Allocation Table (RAT) to be recovered after Nuke =
-due to all other cases except JEClear (e.g. whenever a ucode assist is need=
-ed like SSE exception, memory disambiguation, etc...).",
-> > > >          "Counter": "0,1,2,3",
-> > > >          "CounterHTOff": "0,1,2,3,4,5,6,7",
-> > > >          "CounterMask": "1",
-> > > > @@ -652,7 +652,7 @@
-> > > >          "CounterHTOff": "0,1,2,3,4,5,6,7",
-> > > >          "EventCode": "0x03",
-> > > >          "EventName": "LD_BLOCKS.STORE_FORWARD",
-> > > > -        "PublicDescription": "This event counts loads that followe=
-d a store to the same address, where the data could not be forwarded inside=
- the pipeline from the store to the load.  The most common reason why store=
- forwarding would be blocked is when a load's address range overlaps with a=
- preceeding smaller uncompleted store.  See the table of not supported stor=
-e forwards in the Intel 64 and IA-32 Architectures Optimization Reference M=
-anual.  The penalty for blocked store forwarding is that the load must wait=
- for the store to complete before it can be issued.",
-> > > > +        "PublicDescription": "This event counts loads that followe=
-d a store to the same address, where the data could not be forwarded inside=
- the pipeline from the store to the load.  The most common reason why store=
- forwarding would be blocked is when a load's address range overlaps with a=
- preceeding smaller uncompleted store.  See the table of not supported stor=
-e forwards in the Intel(R) 64 and IA-32 Architectures Optimization Referenc=
-e Manual.  The penalty for blocked store forwarding is that the load must w=
-ait for the store to complete before it can be issued.",
-> > > >          "SampleAfterValue": "100003",
-> > > >          "UMask": "0x2"
-> > > >      },
-> > > > @@ -778,7 +778,7 @@
-> > > >          "CounterMask": "1",
-> > > >          "EventCode": "0x59",
-> > > >          "EventName": "PARTIAL_RAT_STALLS.FLAGS_MERGE_UOP_CYCLES",
-> > > > -        "PublicDescription": "This event counts the number of cycl=
-es spent executing performance-sensitive flags-merging uops. For example, s=
-hift CL (merge_arith_flags). For more details, See the Intel 64 and IA-32 A=
-rchitectures Optimization Reference Manual.",
-> > > > +        "PublicDescription": "This event counts the number of cycl=
-es spent executing performance-sensitive flags-merging uops. For example, s=
-hift CL (merge_arith_flags). For more details, See the Intel(R) 64 and IA-3=
-2 Architectures Optimization Reference Manual.",
-> > > >          "SampleAfterValue": "2000003",
-> > > >          "UMask": "0x20"
-> > > >      },
-> > > > @@ -797,7 +797,7 @@
-> > > >          "CounterHTOff": "0,1,2,3,4,5,6,7",
-> > > >          "EventCode": "0x59",
-> > > >          "EventName": "PARTIAL_RAT_STALLS.SLOW_LEA_WINDOW",
-> > > > -        "PublicDescription": "This event counts the number of cycl=
-es with at least one slow LEA uop being allocated. A uop is generally consi=
-dered as slow LEA if it has three sources (for example, two sources and imm=
-ediate) regardless of whether it is a result of LEA instruction or not. Exa=
-mples of the slow LEA uop are or uops with base, index, and offset source o=
-perands using base and index reqisters, where base is EBR/RBP/R13, using RI=
-P relative or 16-bit addressing modes. See the Intel 64 and IA-32 Architect=
-ures Optimization Reference Manual for more details about slow LEA instruct=
-ions.",
-> > > > +        "PublicDescription": "This event counts the number of cycl=
-es with at least one slow LEA uop being allocated. A uop is generally consi=
-dered as slow LEA if it has three sources (for example, two sources and imm=
-ediate) regardless of whether it is a result of LEA instruction or not. Exa=
-mples of the slow LEA uop are or uops with base, index, and offset source o=
-perands using base and index reqisters, where base is EBR/RBP/R13, using RI=
-P relative or 16-bit addressing modes. See the Intel(R) 64 and IA-32 Archit=
-ectures Optimization Reference Manual for more details about slow LEA instr=
-uctions.",
-> > > >          "SampleAfterValue": "2000003",
-> > > >          "UMask": "0x40"
-> > > >      },
-> > > > @@ -1209,4 +1209,4 @@
-> > > >          "SampleAfterValue": "2000003",
-> > > >          "UMask": "0x1"
-> > > >      }
-> > > > -]
-> > > > \ No newline at end of file
-> > > > +]
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics=
-.json b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-> > > > index c8e7050d9c26..ae7ed267b2a2 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-> > > > @@ -124,7 +124,7 @@
-> > > >          "MetricName": "FLOPc_SMT"
-> > > >      },
-> > > >      {
-> > > > -        "BriefDescription": "Instruction-Level-Parallelism (averag=
-e number of uops executed when there is at least 1 uop executed)",
-> > > > +        "BriefDescription": "Instruction-Level-Parallelism (averag=
-e number of uops executed when there is execution) per-core",
-> > > >          "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPAT=
-CHED.CORE\\,cmask\\=3D1@ / 2 ) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,c=
-mask\\=3D1@)",
-> > > >          "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
-> > > >          "MetricName": "ILP"
-> > > > @@ -141,6 +141,12 @@
-> > > >          "MetricGroup": "Summary;TmaL1",
-> > > >          "MetricName": "Instructions"
-> > > >      },
-> > > > +    {
-> > > > +        "BriefDescription": "Average number of Uops retired in cyc=
-les where at least one uop has retired.",
-> > > > +        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / cpu@UOPS_RETIRE=
-D.RETIRE_SLOTS\\,cmask\\=3D1@",
-> > > > +        "MetricGroup": "Pipeline;Ret",
-> > > > +        "MetricName": "Retire"
-> > > > +    },
-> > > >      {
-> > > >          "BriefDescription": "Fraction of Uops delivered by the DSB=
- (aka Decoded ICache; or Uop Cache)",
-> > > >          "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS +=
- IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
-> > > > @@ -163,7 +169,8 @@
-> > > >          "BriefDescription": "Giga Floating Point Operations Per Se=
-cond",
-> > > >          "MetricExpr": "( ( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE=
- + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOU=
-BLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE )=
- + 8 * SIMD_FP_256.PACKED_SINGLE ) / 1000000000 ) / duration_time",
-> > > >          "MetricGroup": "Cor;Flops;HPC",
-> > > > -        "MetricName": "GFLOPs"
-> > > > +        "MetricName": "GFLOPs",
-> > > > +        "PublicDescription": "Giga Floating Point Operations Per S=
-econd. Aggregate across all supported options of: FP precisions, scalar and=
- vector instructions, vector-width and AMX engine."
-> > > >      },
-> > > >      {
-> > > >          "BriefDescription": "Average Frequency Utilization relativ=
-e nominal frequency",
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-othe=
-r.json b/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
-> > > > index 6278068908cf..88f1e326205f 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
-> > > > @@ -82,10 +82,10 @@
-> > > >      {
-> > > >          "BriefDescription": "This 48-bit fixed counter counts the =
-UCLK cycles.",
-> > > >          "Counter": "Fixed",
-> > > > +        "EventCode": "0xff",
-> > > >          "EventName": "UNC_CLOCK.SOCKET",
-> > > >          "PerPkg": "1",
-> > > >          "PublicDescription": "This 48-bit fixed counter counts the=
- UCLK cycles.",
-> > > > -        "UMask": "0x01",
-> > > >          "Unit": "ARB"
-> > > >      }
-> > > >  ]
-> > > > diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/virtual-mem=
-ory.json b/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.json
-> > > > index 4dd136d00a10..98362abba1a7 100644
-> > > > --- a/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.jso=
-n
-> > > > +++ b/tools/perf/pmu-events/arch/x86/sandybridge/virtual-memory.jso=
-n
-> > > > @@ -146,4 +146,4 @@
-> > > >          "SampleAfterValue": "100007",
-> > > >          "UMask": "0x20"
-> > > >      }
-> > > > -]
-> > > > \ No newline at end of file
-> > > > +]
-> > > > --
-> > > > 2.37.1.359.gd136c6c3e2-goog
-> > > >
+which will appear in the final 5.19.
