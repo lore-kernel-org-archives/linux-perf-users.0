@@ -2,205 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957F3C04A68
-	for <linux-perf-users@archiver.kernel.org>; Sat, 30 Jul 2022 09:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225E1C19F2B
+	for <linux-perf-users@archiver.kernel.org>; Sat, 30 Jul 2022 09:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232625AbiG3Ji3 (ORCPT
+        id S233954AbiG3Jkt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 30 Jul 2022 05:38:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38592 "EHLO
+        Sat, 30 Jul 2022 05:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbiG3Ji2 (ORCPT
+        with ESMTP id S234181AbiG3Jkn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 30 Jul 2022 05:38:28 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A3C18E07
-        for <linux-perf-users@vger.kernel.org>; Sat, 30 Jul 2022 02:38:27 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id os14so12238437ejb.4
-        for <linux-perf-users@vger.kernel.org>; Sat, 30 Jul 2022 02:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1QFiAl5mkhApEL9gxobGZqygkCmC9fEtDEUIIEoetyI=;
-        b=x9q8s+afLiAddh7OeVRthXZuuCg/l/9AxmeqgaKW8J2hje57V/KclrAgBV/DegMX5y
-         f+2vU8PqP2Uo5mwBYzs/rfFwptSe9XUZXoBmFRs4nbRMNMt4OiH8jCwHWr+xz0SEw+Bt
-         RNtverRMkCGF94QrZJt+P2zTiHmwW4Kf9434lMDuCCljXgU6g4cmKfPf2p68AFUkxtfw
-         +Z7/A2lMQhXaCTQJwbEhvKyI8nQD5gd7elo8q5w9kUMN3lbNCFIhDYzz9an0hvkBNIyx
-         Q22aNmT79O6iIlMPtDq0CAW2WHQwlqx8xGrvOictVv/JRcsNSd4wANg/Vd+92lBq3tMS
-         TL5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1QFiAl5mkhApEL9gxobGZqygkCmC9fEtDEUIIEoetyI=;
-        b=KNRW3BkjPMfDUy6FKyGaKb1ZUfrRTRQC8orBO3Vc9qlK40h80zIwY07kKuqURpr/EU
-         BzgBLID3Z30nwcEEESflZHZomIesOE0QiIRimZef71W/ahmEgsNbgGxPfou7ZpmWA/h1
-         aILUQettYgaCHIOe5I0qGWBmiLaRheIPjLp7Ypf1XoudFlUUbFPR6iwjbCC8Z218o4TJ
-         lTUxy2/tgeE481dZwYGLqr/X8UBwKmfoxz2f4Mfo8OW/8j0ZURWq1OZAztM9ZaDEeOuq
-         iZZskMCEQVq0qUeMio7ONwqlL7Lou4PkdFJFKixevVqZz2levyqgv9nNGpCraAlumglQ
-         DHMQ==
-X-Gm-Message-State: AJIora//XJKrMOKfykApEKvoCzuvldau++1/C9XGLYMWeKw9N6FhgeFA
-        vfgGQmrdk5i7vBEkWUsbRHD9Yg==
-X-Google-Smtp-Source: AGRyM1v04iFdelPx45SAFt0tcMSTFwbriOuRv91g919AH34DqD9g+YUbdIbEaJk9+a+SWrd7tGEUdg==
-X-Received: by 2002:a17:907:2bd3:b0:72b:44ed:6d6b with SMTP id gv19-20020a1709072bd300b0072b44ed6d6bmr5827662ejc.632.1659173905586;
-        Sat, 30 Jul 2022 02:38:25 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.98.208])
-        by smtp.gmail.com with ESMTPSA id b14-20020a1709064d4e00b007304d084c5esm464637ejv.166.2022.07.30.02.38.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Jul 2022 02:38:24 -0700 (PDT)
-Date:   Sat, 30 Jul 2022 17:38:19 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Fangrui Song <maskray@google.com>,
-        Chang Rui <changruinj@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] perf symbol: Correct address for bss symbols
-Message-ID: <20220730093819.GA574473@leoy-ThinkPad-X240s>
-References: <20220724060013.171050-1-leo.yan@linaro.org>
- <20220724060013.171050-2-leo.yan@linaro.org>
- <CAP-5=fVY=_WUpke0sRMpvbJFu9JuYwqiwAmKdCS+=u7vEG-2uA@mail.gmail.com>
+        Sat, 30 Jul 2022 05:40:43 -0400
+Received: from server.lespinasse.org (server.lespinasse.org [63.205.204.226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2888B11446;
+        Sat, 30 Jul 2022 02:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+ d=lespinasse.org; i=@lespinasse.org; q=dns/txt; s=srv-79-ed;
+ t=1659174032; h=date : from : to : cc : subject : message-id :
+ references : mime-version : content-type : in-reply-to : from;
+ bh=weCa4etYCrU0JKpJO/Ui+2clGa/1cbP+1Ce8uxB4Z2U=;
+ b=x/Ziq42GBYdLObjVTEjRxMr42JGNj1S6ikUonHkCSS9+QUAEIEusirhrUb1NLAhWCN9I/
+ 26gXmKmVFCvOvm8Ag==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lespinasse.org;
+ i=@lespinasse.org; q=dns/txt; s=srv-79-rsa; t=1659174032; h=date :
+ from : to : cc : subject : message-id : references : mime-version :
+ content-type : in-reply-to : from;
+ bh=weCa4etYCrU0JKpJO/Ui+2clGa/1cbP+1Ce8uxB4Z2U=;
+ b=xjlyRJ2PLCvlHddIpET9xkdQ9b2YJIlAuRmqVD4Zi9LYcfMqzgs3mU4rkm/FKHLXNUOaJ
+ LyyP89/nFeA6CHdOEfvoMWe+2hvIc5qWIl7OAgthzIj8J1BY1lyEpfvyFmhVmffdeRhfjdo
+ vMuxuuddA8OZu54a34mTh9dLsyNfUY1VEPbkQXmB5bXD5tY51a2x0Dy7lPzCrgrdbPY9jea
+ g6bR8AptJZSZjsf3hgGuxahRdvKbF0nVgvjROX7b4fAX0R64UDLs/zIoRFldyB9Yfr1EawK
+ tm9ki9L5Z6WkfftzLymxjgxhP/KXmf4WU+QM/fsd13mCq3dze1SIRx1wUOGA==
+Received: by server.lespinasse.org (Postfix, from userid 1000)
+        id 1452116096D; Sat, 30 Jul 2022 02:40:32 -0700 (PDT)
+Date:   Sat, 30 Jul 2022 02:40:32 -0700
+From:   Michel Lespinasse <michel@lespinasse.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Michel Lespinasse <michel@lespinasse.org>,
+        Peter Zijlstra <peterz@infradead.org>, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com, vgupta@kernel.org,
+        linux@armlinux.org.uk, ulli.kroll@googlemail.com,
+        linus.walleij@linaro.org, shawnguo@kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
+        khilman@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
+        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org, rh0@fb.com
+Subject: Re: [PATCH 04/36] cpuidle,intel_idle: Fix CPUIDLE_FLAG_IRQ_ENABLE
+Message-ID: <20220730094032.GA1587@lespinasse.org>
+References: <20220608142723.103523089@infradead.org>
+ <20220608144516.172460444@infradead.org>
+ <20220725194306.GA14746@lespinasse.org>
+ <20220728172053.GA3607379@paulmck-ThinkPad-P17-Gen-1>
+ <20220729102458.GA1695@lespinasse.org>
+ <20220729152622.GM2860372@paulmck-ThinkPad-P17-Gen-1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fVY=_WUpke0sRMpvbJFu9JuYwqiwAmKdCS+=u7vEG-2uA@mail.gmail.com>
+In-Reply-To: <20220729152622.GM2860372@paulmck-ThinkPad-P17-Gen-1>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Fri, Jul 29, 2022 at 10:13:04PM -0700, Ian Rogers wrote:
-
-[...]
-
-> I am seeing a problem with this patch with jvmti. To repro:
+On Fri, Jul 29, 2022 at 08:26:22AM -0700, Paul E. McKenney wrote:> Would you be willing to try another shot in the dark, but untested
+> this time?  I freely admit that this is getting strange.
 > 
-> 1) download a Java workload dacapo-9.12-MR1-bach.jar from
-> https://sourceforge.net/projects/dacapobench/
-> 2) build perf such as "make -C tools/perf O=/tmp/perf NO_LIBBFD=1" it
-> should detect Java and create /tmp/perf/libperf-jvmti.so
-> 3) run perf with the jvmti agent:
-> /tmp/perf/perf record -k 1 java -agentpath:/tmp/perf/libperf-jvmti.so
-> -jar dacapo-9.12-MR1-bach.jar -n 10 fop
-> 4) run perf inject:
-> /tmp/perf/perf inject -i perf.data -o perf-injected.data -j
-> 5) run perf report
-> /tmp/perf/perf report -i  perf-injected.data | grep org.apache.fop
+> 							Thanx, Paul
+
+Yes, adding this second change got rid of the boot time warning for me.
+
+> ------------------------------------------------------------------------
 > 
-> With this patch reverted I see lots of symbols like:
->      0.00%  java             jitted-388040-4656.so  [.]
-> org.apache.fop.fo.FObj.bind(org.apache.fop.fo.PropertyList)
-> 
-> With the patch I see lots of:
-> dso__load_sym_internal: failed to find program header for symbol:
-> Lorg/apache/fop/fo/FObj;bind(Lorg/apache/fop/fo/PropertyList;)V
-> st_value: 0x40
-
-Thanks for sharing the steps, I can reproduce the issue.
-
-I tried to add more logs to dump and hope can find specific pattern for
-these symbols, one thing I observed that if a symbol fails to find
-program header, it has the same values for st_value, shdr.sh_addr and
-shdr.sh_offset: all of them are 0x40.  So that means if with you
-proposed change in below, then we will get the file address is:
-
-  file_addr = st_value - shdr.sh_addr + shdr.sh_offset = 0x40
-
-Seems to me this is not reasonable: perf tries to add many symbols
-with the same file address 0x40.
-
-> Combining the old and new behaviors fixes the issue for me, wdyt?
-
-So far we don't answer a question is what's the purpose for these JAVA
-symbols.  I checked these symbols and concluded as:
-
-- They are not label, this is because sym.st_info is 0x2, so its
-  symbol type is STT_FUNC;
-- They are from ".text" section;
-- Symbol visibility is STV_DEFAULT;
-- Symbol's section index number is 0x1, which is different from some
-  special sections (STV_DEFAULT/SHN_COMMON/SHN_UNDEF/SHN_XINDEX).
-
-This is a rough summary, these symbols are likewise the normal function
-symbols, but they have special st_value (0x40) and has no matched the
-program header for them.
-
-If we rollback to use old offsets to calculate the symbol file address,
-it still is incorrect.
-
-I list all relevant symbols in: https://termbin.com/s0fb, for a reliable
-fixing, could anyone with java experience shed some lights for handling
-the symbols?
-
-On the other hand, I can accept to simply change pr_warning() to
-pr_debug4() to avoid warning flood, the log still can help us to find
-potential symbol parsing issue, so far they are not false-positive
-reporting.
-
-Thanks,
-Leo
-
-> ```
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1305,16 +1305,21 @@ dso__load_sym_internal(struct dso *dso, struct
-> map *map, struct symsrc *syms
-> _ss,
-> 
->                        if (elf_read_program_header(syms_ss->elf,
->                                                    (u64)sym.st_value, &phdr)) {
-> -                               pr_warning("%s: failed to find program
-> header for "
-> +                               pr_debug4("%s: failed to find program
-> header for "
->                                           "symbol: %s st_value: %#" PRIx64 "\n",
->                                           __func__, elf_name,
-> (u64)sym.st_value);
-> -                               continue;
-> +                               pr_debug4("%s: adjusting symbol:
-> st_value: %#" PRIx64 " "
-> +                                       "sh_addr: %#" PRIx64 "
-> sh_offset: %#" PRIx64 "\n",
-> +                                       __func__, (u64)sym.st_value,
-> (u64)shdr.sh_addr,
-> +                                       (u64)shdr.sh_offset);
-> +                               sym.st_value -= shdr.sh_addr - shdr.sh_offset;
-> +                       } else {
-> +                               pr_debug4("%s: adjusting symbol:
-> st_value: %#" PRIx64 " "
-> +                                       "p_vaddr: %#" PRIx64 "
-> p_offset: %#" PRIx64 "\n",
-> +                                       __func__, (u64)sym.st_value,
-> (u64)phdr.p_vaddr,
-> +                                       (u64)phdr.p_offset);
-> +                               sym.st_value -= phdr.p_vaddr - phdr.p_offset;
->                        }
-> -                       pr_debug4("%s: adjusting symbol: st_value: %#"
-> PRIx64 " "
-> -                                 "p_vaddr: %#" PRIx64 " p_offset: %#"
-> PRIx64 "\n",
-> -                                 __func__, (u64)sym.st_value,
-> (u64)phdr.p_vaddr,
-> -                                 (u64)phdr.p_offset);
-> -                       sym.st_value -= phdr.p_vaddr - phdr.p_offset;
->                }
-> 
->                demangled = demangle_sym(dso, kmodule, elf_name);
-> ```
-> 
-> Thanks,
-> Ian
-> 
-> >
-> >                 demangled = demangle_sym(dso, kmodule, elf_name);
-> > --
-> > 2.25.1
-> >
+> diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
+> index e374c0c923dae..279f557bf60bb 100644
+> --- a/kernel/sched/clock.c
+> +++ b/kernel/sched/clock.c
+> @@ -394,7 +394,7 @@ notrace void sched_clock_tick(void)
+>  	if (!static_branch_likely(&sched_clock_running))
+>  		return;
+>  
+> -	lockdep_assert_irqs_disabled();
+> +	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !raw_irqs_disabled());
+>  
+>  	scd = this_scd();
+>  	__scd_stamp(scd);
