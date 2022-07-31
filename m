@@ -2,194 +2,202 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6293C19F29
-	for <linux-perf-users@archiver.kernel.org>; Sat, 30 Jul 2022 23:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5F8C00140
+	for <linux-perf-users@archiver.kernel.org>; Sun, 31 Jul 2022 12:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236271AbiG3Xpi (ORCPT
+        id S232548AbiGaMhN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 30 Jul 2022 19:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
+        Sun, 31 Jul 2022 08:37:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233302AbiG3Xpd (ORCPT
+        with ESMTP id S236863AbiGaMhM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 30 Jul 2022 19:45:33 -0400
-Received: from server.lespinasse.org (server.lespinasse.org [63.205.204.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF717DFAB;
-        Sat, 30 Jul 2022 16:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
- d=lespinasse.org; i=@lespinasse.org; q=dns/txt; s=srv-79-ed;
- t=1659224730; h=date : from : to : cc : subject : message-id :
- references : mime-version : content-type : in-reply-to : from;
- bh=nAVqtDkPyoGTnjQOsobKhENqaeU5rNiWFfP8mKVev5k=;
- b=HFFhCK7R4iKO9dp7xadnNvlJ3TFgnIFCD+mWF8YiQOWKhEk/dwPTWNRYWGC9XfN1WRDf2
- g306xaRkvMw+dqoAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lespinasse.org;
- i=@lespinasse.org; q=dns/txt; s=srv-79-rsa; t=1659224730; h=date :
- from : to : cc : subject : message-id : references : mime-version :
- content-type : in-reply-to : from;
- bh=nAVqtDkPyoGTnjQOsobKhENqaeU5rNiWFfP8mKVev5k=;
- b=xEm4vrS+nhrfg16KlTSOz6xKHVgl2anxivbQOaQ8iyITrSIXx3k7S+7DNm3/9PE3/hP5/
- weBfs5WCmns8PrJOUh5+LyucC170rSw2K/NgNrAjDpputAJGflo+dG36LsXYxD+GZSSZKbP
- Pj/N5DYITgz/J3aBedmEOjvEEcNa6ityOyI32KA+gNj6htWosOb+QOsIsRx/2q9SXnXOMQE
- CoO7nRU+J2kcBx1HiMTnfjr/eN+QixQZGT0tRp8own4vN9hl237pUBRGLyuycFtncUUh4v4
- MsO6ge1ke2qwlIabxdvLZxjhahuiQC5BaBfCoCYkudJkUo4tS5HM55MrUsVw==
-Received: by server.lespinasse.org (Postfix, from userid 1000)
-        id F117B160977; Sat, 30 Jul 2022 16:45:29 -0700 (PDT)
-Date:   Sat, 30 Jul 2022 16:45:29 -0700
-From:   Michel Lespinasse <michel@lespinasse.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Michel Lespinasse <michel@lespinasse.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sun, 31 Jul 2022 08:37:12 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E55ACDFA4
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jul 2022 05:37:10 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id 8-20020a05600c024800b003a2fe343db1so4415217wmj.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jul 2022 05:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zxVdgJ1vux8TImW4FL6YxoljQySxzKuzGy0keBd2VZs=;
+        b=hrxQFkCZKXjrqETbsKn775YJhevjC8fXOkPKFmvJIwughHVOAc0Va5Ye54CexdAbjU
+         NhRt1YEQDznNumcmFp+UjMxYVDOd404Js2SfF+oFtYKBQ6e3hYH3OBK4n9xTE3fhv98R
+         lZkK6e+f0bQT3XIG/Gy7kuPsY5HPUKvXcyx/xBlGA4cKrnNLhPeYY4Xurza93Y05b39F
+         RP6aSFjh+LEzSrMZNZ+Y2TvrVZwiB8bkiKs7Q2c+mBODFvezaRUw8S51st6XhCRQF5t2
+         uQn90+eK9GQQP4KDnBO102rdeHEXrvk98b4fp9W6BJ3vK+/7lVVolXTt5vGCjMTW6s5w
+         QO2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zxVdgJ1vux8TImW4FL6YxoljQySxzKuzGy0keBd2VZs=;
+        b=BzJ2TnFiVmFSKmcWkvNUhk0RuoisUJANxXC3T3oNZLFBjJAHUcj0m8ETHj6kWTgkEn
+         7ALG1JdHOt9dHuS5lFaPPySq51IUJISIw6JhMTqzj/ocUB6g+4rUnVBMaNtwQrEMqNVw
+         IqmJaRLReY98AQicAoev9VtrMC3s0GTSrVgwkjQHBPHgZxz8O8hwWa2G1vMjavRj0Frl
+         SBHK5H6wPY4wJEpIz9aZRQltQzc+oyrHvKrsSng0CFLWVCLVK7E4SjDKKgvWTPl0eL3N
+         Csqau1NzV5Pqip9XJcvtVk9HEaxtikb6yyVtWTvfNjKyKa5LDaKOgtQPGz9tCv1dTcH2
+         ohYA==
+X-Gm-Message-State: AJIora+s/3b90K1dmvzmAuNnSYNd97gRx2fKbDHHLhPAjdjm70DYQ7KZ
+        D1JE1Q/RWOIWBTeUm37d8CtVqw==
+X-Google-Smtp-Source: AGRyM1uiZQBU3njm4/rwDhMvt2ByyGuE7PQ1bFjwUy9QZiIxSdge1D+P60ZNqQre1WQneMtuWhlx4A==
+X-Received: by 2002:a05:600c:2652:b0:3a3:2a3e:a2de with SMTP id 18-20020a05600c265200b003a32a3ea2demr8460316wmy.174.1659271029326;
+        Sun, 31 Jul 2022 05:37:09 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([167.71.129.183])
+        by smtp.gmail.com with ESMTPSA id n186-20020a1ca4c3000000b003a2d87aea57sm15175048wme.10.2022.07.31.05.37.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 Jul 2022 05:37:08 -0700 (PDT)
+Date:   Sun, 31 Jul 2022 20:37:02 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>, vgupta@kernel.org,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        ulli.kroll@googlemail.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        bcain@quicinc.com, Huacai Chen <chenhuacai@kernel.org>,
-        kernel@xen0n.name, Geert Uytterhoeven <geert@linux-m68k.org>,
-        sammy@sammy.net, Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi,
-        Stafford Horne <shorne@gmail.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        David Miller <davem@davemloft.net>,
-        Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, acme@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        jolsa@kernel.org, namhyung@kernel.org,
-        Juergen Gross <jgross@suse.com>, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>, Len Brown <lenb@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Anup Patel <anup@brainfault.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Petr Mladek <pmladek@suse.com>, senozhatsky@chromium.org,
-        John Ogness <john.ogness@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        quic_neeraju@quicinc.com, Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Benjamin Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        vschneid@redhat.com, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-snps-arc@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        openrisc@lists.librecores.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-s390@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, rcu@vger.kernel.org,
-        rh0@fb.com
-Subject: Re: [PATCH 04/36] cpuidle,intel_idle: Fix CPUIDLE_FLAG_IRQ_ENABLE
-Message-ID: <20220730234529.GC1587@lespinasse.org>
-References: <20220608142723.103523089@infradead.org>
- <20220608144516.172460444@infradead.org>
- <20220725194306.GA14746@lespinasse.org>
- <20220728172053.GA3607379@paulmck-ThinkPad-P17-Gen-1>
- <20220729102458.GA1695@lespinasse.org>
- <CAJZ5v0gyPtX=ksCibo2ZN_BztCqUn9KRtRu+gsJ5KetB_1MwEQ@mail.gmail.com>
- <20220730094800.GB1587@lespinasse.org>
- <CAJZ5v0hXVjsWab=qYZfXBTqcjkpWV0CFT9_oQBKQ28rFG3_VLw@mail.gmail.com>
+        Fangrui Song <maskray@google.com>,
+        Chang Rui <changruinj@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] perf symbol: Correct address for bss symbols
+Message-ID: <20220731123702.GA205142@leoy-ThinkPad-X240s>
+References: <20220724060013.171050-1-leo.yan@linaro.org>
+ <20220724060013.171050-2-leo.yan@linaro.org>
+ <CAP-5=fVY=_WUpke0sRMpvbJFu9JuYwqiwAmKdCS+=u7vEG-2uA@mail.gmail.com>
+ <20220730093819.GA574473@leoy-ThinkPad-X240s>
+ <CAP-5=fWA8R9Ee5L9xgPtva9dvQ12uKqC1o4zgzPs0B9XWSMxhQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hXVjsWab=qYZfXBTqcjkpWV0CFT9_oQBKQ28rFG3_VLw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAP-5=fWA8R9Ee5L9xgPtva9dvQ12uKqC1o4zgzPs0B9XWSMxhQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jul 30, 2022 at 09:52:34PM +0200, Rafael J. Wysocki wrote:
-> On Sat, Jul 30, 2022 at 11:48 AM Michel Lespinasse
-> <michel@lespinasse.org> wrote:
-> > I'm not sure if that was the patch you meant to send though, as it
-> > seems it's only adding a tracepoint so shouldn't make any difference
-> > if I'm not actually using the tracepoint ?
-> 
-> You are right, it looks like I pasted a link to a different patch by
-> mistake.  Sorry about that.
-> 
-> I meant this one:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=pm&id=d295ad34f236c3518634fb6403d4c0160456e470
-> 
-> which will appear in the final 5.19.
+On Sat, Jul 30, 2022 at 08:21:10AM -0700, Ian Rogers wrote:
 
-Thanks. I can confirm that this patch fixes the boot time debug
-warnings for me. And I see that linus already merged it, nice!
+[...]
 
---
-Michel "walken" Lespinasse.
+> > On the other hand, I can accept to simply change pr_warning() to
+> > pr_debug4() to avoid warning flood, the log still can help us to find
+> > potential symbol parsing issue, so far they are not false-positive
+> > reporting.
+> 
+> Thanks, I suspect the ELF that the Java agent has created isn't good.
+> The Java agent is part of perf as and so is the ELF file generation
+> code:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/genelf.c?h=perf/core#n367
+
+I think it's no need to change the function jit_write_elf(), please see
+below comment.
+
+> I took a quick look but most of the logic is in libelf - it seems less
+> obvious the bug would be there rather than perf. Could you take a
+> look? Ideally there'd be a quick fix that keeps all the benefits of
+> your change and the jvmti code working.
+
+A bit more finding for java JIT symbols.  Let's see below two samples:
+
+     6.72%  java             /home/leoy/.debug/jit/java-jit-20220731.XXKRpgmR/jitted-214330-29.so    0x5b54             B [.] Interpreter
+     0.90%  java             /home/leoy/.debug/jit/java-jit-20220731.XXKRpgmR/jitted-214330-3475.so  0x4fc              B [.] jdk.internal.math.FloatingDecimal$BinaryToASCIIBuffer.dtoa(int, long, int, boolean)
+
+I can see the DSO "jitted-214330-29.so" only contains a java JIT symbol
+"Interpreter", and I also observed the same behavior for other JIT
+symbols, e.g. jitted-214330-3475.so only contains the symbol
+"jdk.internal.math.FloatingDecimal$BinaryToASCIIBuffer.dtoa(int, long,
+int, boolean)".
+
+We always see these JIT symbols always have the consistent start file
+address, but this would not introduce conflit since every JIT symbol has
+its own DSO rather than share the same DSO.
+
+I think now I understand your meaning, and your below change is fine for
+me, I tested it and confirmed it can show up java JIT symbols properly.
+Just a comment, it would be better to add a comment for why we need to
+add symbols when failed to find program header, like:
+
+  if (elf_read_program_header(syms_ss->elf,
+                            (u64)sym.st_value, &phdr)) {
+        pr_debug4("%s: failed to find program header for "
+                  "symbol: %s\n", __func__, elf_name);
+        pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
+                  "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n",
+                  __func__, (u64)sym.st_value, (u64)shdr.sh_addr,
+                  (u64)shdr.sh_offset);
+        /*
+         * Fail to find program header, let's rollback to use shdr.sh_addr
+         * and shdr.sh_offset to calibrate symbol's file address, though
+         * this is not necessary for normal C ELF file, we still need to
+         * handle java JIT symbols in this case.
+         */
+        sym.st_value -= shdr.sh_addr - shdr.sh_offset;
+  } else {
+        ...
+  }
+
+Could you send a formal patch for this?  Thanks!
+
+Leo
+
+> > Thanks,
+> > Leo
+> >
+> > > ```
+> > > --- a/tools/perf/util/symbol-elf.c
+> > > +++ b/tools/perf/util/symbol-elf.c
+> > > @@ -1305,16 +1305,21 @@ dso__load_sym_internal(struct dso *dso, struct
+> > > map *map, struct symsrc *syms
+> > > _ss,
+> > >
+> > >                        if (elf_read_program_header(syms_ss->elf,
+> > >                                                    (u64)sym.st_value, &phdr)) {
+> > > -                               pr_warning("%s: failed to find program
+> > > header for "
+> > > +                               pr_debug4("%s: failed to find program
+> > > header for "
+> > >                                           "symbol: %s st_value: %#" PRIx64 "\n",
+> > >                                           __func__, elf_name,
+> > > (u64)sym.st_value);
+> > > -                               continue;
+> > > +                               pr_debug4("%s: adjusting symbol:
+> > > st_value: %#" PRIx64 " "
+> > > +                                       "sh_addr: %#" PRIx64 "
+> > > sh_offset: %#" PRIx64 "\n",
+> > > +                                       __func__, (u64)sym.st_value,
+> > > (u64)shdr.sh_addr,
+> > > +                                       (u64)shdr.sh_offset);
+> > > +                               sym.st_value -= shdr.sh_addr - shdr.sh_offset;
+> > > +                       } else {
+> > > +                               pr_debug4("%s: adjusting symbol:
+> > > st_value: %#" PRIx64 " "
+> > > +                                       "p_vaddr: %#" PRIx64 "
+> > > p_offset: %#" PRIx64 "\n",
+> > > +                                       __func__, (u64)sym.st_value,
+> > > (u64)phdr.p_vaddr,
+> > > +                                       (u64)phdr.p_offset);
+> > > +                               sym.st_value -= phdr.p_vaddr - phdr.p_offset;
+> > >                        }
+> > > -                       pr_debug4("%s: adjusting symbol: st_value: %#"
+> > > PRIx64 " "
+> > > -                                 "p_vaddr: %#" PRIx64 " p_offset: %#"
+> > > PRIx64 "\n",
+> > > -                                 __func__, (u64)sym.st_value,
+> > > (u64)phdr.p_vaddr,
+> > > -                                 (u64)phdr.p_offset);
+> > > -                       sym.st_value -= phdr.p_vaddr - phdr.p_offset;
+> > >                }
+> > >
+> > >                demangled = demangle_sym(dso, kmodule, elf_name);
+> > > ```
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > > >
+> > > >                 demangled = demangle_sym(dso, kmodule, elf_name);
+> > > > --
+> > > > 2.25.1
+> > > >
