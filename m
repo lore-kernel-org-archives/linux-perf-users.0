@@ -2,149 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F55C00140
-	for <linux-perf-users@archiver.kernel.org>; Sun, 31 Jul 2022 12:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B141C00140
+	for <linux-perf-users@archiver.kernel.org>; Sun, 31 Jul 2022 16:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236763AbiGaMjl (ORCPT
+        id S233471AbiGaQt3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 31 Jul 2022 08:39:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
+        Sun, 31 Jul 2022 12:49:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232268AbiGaMjk (ORCPT
+        with ESMTP id S231641AbiGaQt2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 31 Jul 2022 08:39:40 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944F4DF8A;
-        Sun, 31 Jul 2022 05:39:39 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id i13so10609201edj.11;
-        Sun, 31 Jul 2022 05:39:39 -0700 (PDT)
+        Sun, 31 Jul 2022 12:49:28 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCB8D101DB
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jul 2022 09:49:27 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z7-20020a25ba47000000b00677405b2d2dso4948ybj.13
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jul 2022 09:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc;
-        bh=j65sAOKYqI+Uxv1jBk/p69AEquNqVjyqeGyH/PlKGl8=;
-        b=QT7G8U6c2KAKqExmH16DbFOxqVACF96FT1etnfZAfBZRoPQqRi2oCom07LVhIxYtuT
-         Wv6i4E4sEjG32iqikZ5yEi/A8tKid6IETe7/q8y1Owd4pTGtWGc7ESXBJETppN3xESpc
-         2GPpeyHCGGMRvgppDMP+dKJ+aYc9nf4Z9uDNTg5ARUtrGs2cCC5SbeliplKXAFBDirkM
-         dESBNN18pyTMWZKNSTqJq8I4Abz95cgxfYJg1E1U4m8z6d8KjOkgxjh6imL7lsNioQ8U
-         ZMiL08M/0HlzNmAJmDbXSICE6QV+eUVZCQjD28EM+cY0qYM6+nUfzzCWzzrJKdc95H6E
-         cm+A==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=OL+B7EnrTdtYNwErJE1sbP32av4EoWUFSVKH32bLKO8=;
+        b=pSG7/nw8odGOnNOLEY5o8A3KB0ajMWFg7ohAU7dxO2o0hGn/pK2D8CBmses/8VUNPY
+         XIh3C0cChzkPEleG4M+S5cE4j0Mh5EY10K6ENXENdA+6VVmEPob5uhbsvS4ki4qdWdaY
+         bwmpQVWKMqY+P0/ToTW4PxFYZIh538j1ns1Cvjl9BToJyju/qikF/spXALYsLzJXW1r8
+         B9w/vwB5uE3VmJUEpqnWOs95+3sJ4ojGrzbyvba1TRxYA5U0sBCaok/1ANfzlLY2eLcJ
+         jDSfffzyyw7qe9/UqmY8lhFKkeDPeG1jtmWT7cJxnYDm8qLGndZhU66xY5K6YcAWw5YK
+         TU5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc;
-        bh=j65sAOKYqI+Uxv1jBk/p69AEquNqVjyqeGyH/PlKGl8=;
-        b=eklihG/jdlRygjR6cT4mUIXpvD5bcmZNb0kzloC/2n4rnVRgzIzE2YsZ9hCID+eZEi
-         YRetrDok8zT97vFnjZlm9Xp5Yg9gjw9weNwVe/koDGvt2o/WP/0VUYvRFKjEl0seNjlg
-         1c7zphQstuogKsIyoDT8dQBjKCrc7d/QrffTrzGXXyO9eQDjvII5JR1ul2ucHKpOlVqC
-         oXsVZuOY0n4g/5bW2hbAh3NMGPyatwBCQXCYpy3jhebCB08K8dcyu94LJ5BH1FRyk67n
-         bM2HZUGbazZo5VzxYPRHga8tLKHyo2PyRTF4XXbS37fzt2Msvz0SJmn077rhL2c3Jwuu
-         1JIQ==
-X-Gm-Message-State: AJIora+i+9MkNij18Jnb5kFpfywyW+yiZlcrOCE1oEc3LkC8FJziEyL3
-        O993DixvIq4ezpxQ+zMicp4=
-X-Google-Smtp-Source: AGRyM1uKxYs2rRscg8zn4DVKKdNeX1xhPibA8eIExfAl5Slk9njR0VsLOwgGlsD3DNinYFXH2rE7Mw==
-X-Received: by 2002:a05:6402:294c:b0:43a:91a9:a691 with SMTP id ed12-20020a056402294c00b0043a91a9a691mr11513929edb.182.1659271178098;
-        Sun, 31 Jul 2022 05:39:38 -0700 (PDT)
-Received: from krava ([83.240.61.175])
-        by smtp.gmail.com with ESMTPSA id u10-20020a17090626ca00b007262b7afa05sm3993497ejc.213.2022.07.31.05.39.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Jul 2022 05:39:37 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Sun, 31 Jul 2022 14:39:36 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=OL+B7EnrTdtYNwErJE1sbP32av4EoWUFSVKH32bLKO8=;
+        b=dsoFJ+MThdz26uzkdaFgOIFVglZvtQGuV6cG+9bTdfpKUfYjbpRbiCqDhpIjVnZD7i
+         wYeihhsIVnsnNWFudFLDhOV86/J/tnOMaKemmnIHtoj8L3Pavo2+1QzRLlr6hsK/evq0
+         HcZAVfXQ3SakxhKXrn59x0s38r43d64JSmvDhVNI7c3ALwXlQbFSvIXJHlWGatudZgNy
+         Hy9YWl+lxdN2gl9Q/GOJYWK30cGOVd4EGvMtMV/JcWemCQzmk9rpRDTX9KM0EECnxhbR
+         qG0uutM37lbFTSMfhFbCnlybOS7KOieUnkoE07D60azoSpwicEdLBwaNgSeguB1ne6vf
+         LaDg==
+X-Gm-Message-State: ACgBeo1zR4yVy1ytGbBE/SatK6nyRQOS1gOIGa5ASgUL0OPfjX39G6oD
+        rVCgvJdqsUYJaurd8XVMoZLvq20AVt0U
+X-Google-Smtp-Source: AA6agR5GKiV0bGJ4FU5pWdN7yoW6QtCV+zJv0pHXYRfCu1+5rvOT2My0ig8e2zZRCiD+MSDI3MHg8x8ZM3v7
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:839c:1c69:c3d6:1570])
+ (user=irogers job=sendgmr) by 2002:a05:6902:154e:b0:676:b762:cd7d with SMTP
+ id r14-20020a056902154e00b00676b762cd7dmr7746252ybu.179.1659286167135; Sun,
+ 31 Jul 2022 09:49:27 -0700 (PDT)
+Date:   Sun, 31 Jul 2022 09:49:23 -0700
+Message-Id: <20220731164923.691193-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.1.455.g008518b4e5-goog
+Subject: [PATCH] perf symbol: Fail to read phdr workaround
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        Colin Ian King <colin.king@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 6/6] perf cpumap: Add range data encoding
-Message-ID: <YuZ4CEnken8U4HO5@krava>
-References: <20220614143353.1559597-1-irogers@google.com>
- <20220614143353.1559597-7-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220614143353.1559597-7-irogers@google.com>
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 07:33:53AM -0700, Ian Rogers wrote:
+The perf jvmti agent doesn't create program headers, in this case
+fallback on section headers as happened previously.
 
-SNIP
+Fixes: 882528d2e776 ("perf symbol: Skip symbols if SHF_ALLOC flag is not set")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/symbol-elf.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-> +	event = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header));
->  	if (!event)
->  		return NULL;
->  
-> +	syn_data.data = &event->data;
->  	event->header.type = PERF_RECORD_CPU_MAP;
-> -	event->header.size = size;
-> -	event->data.type   = type;
-> -
-> -	cpu_map_data__synthesize(&event->data, map, type, max);
-> +	event->header.size = syn_data.size;
-> +	cpu_map_data__synthesize(&syn_data);
->  	return event;
->  }
->  
-> +
->  int perf_event__synthesize_cpu_map(struct perf_tool *tool,
->  				   const struct perf_cpu_map *map,
->  				   perf_event__handler_t process,
-> @@ -1891,24 +1894,20 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
->  int perf_event__synthesize_event_update_cpus(struct perf_tool *tool, struct evsel *evsel,
->  					     perf_event__handler_t process)
->  {
-> -	size_t size = sizeof(struct perf_event_header) + sizeof(u64) + sizeof(u64);
-> +	struct synthesize_cpu_map_data syn_data = { .map = evsel->core.own_cpus };
->  	struct perf_record_event_update *ev;
-> -	int max, err;
-> -	u16 type;
-> -
-> -	if (!evsel->core.own_cpus)
-> -		return 0;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index b3be5b1d9dbb..75bec32d4f57 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1305,16 +1305,29 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 
+ 			if (elf_read_program_header(syms_ss->elf,
+ 						    (u64)sym.st_value, &phdr)) {
+-				pr_warning("%s: failed to find program header for "
++				pr_debug4("%s: failed to find program header for "
+ 					   "symbol: %s st_value: %#" PRIx64 "\n",
+ 					   __func__, elf_name, (u64)sym.st_value);
+-				continue;
++				pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
++					"sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n",
++					__func__, (u64)sym.st_value, (u64)shdr.sh_addr,
++					(u64)shdr.sh_offset);
++				/*
++				 * Fail to find program header, let's rollback
++				 * to use shdr.sh_addr and shdr.sh_offset to
++				 * calibrate symbol's file address, though this
++				 * is not necessary for normal C ELF file, we
++				 * still need to handle java JIT symbols in this
++				 * case.
++				 */
++				sym.st_value -= shdr.sh_addr - shdr.sh_offset;
++			} else {
++				pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
++					"p_vaddr: %#" PRIx64 " p_offset: %#" PRIx64 "\n",
++					__func__, (u64)sym.st_value, (u64)phdr.p_vaddr,
++					(u64)phdr.p_offset);
++				sym.st_value -= phdr.p_vaddr - phdr.p_offset;
+ 			}
+-			pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
+-				  "p_vaddr: %#" PRIx64 " p_offset: %#" PRIx64 "\n",
+-				  __func__, (u64)sym.st_value, (u64)phdr.p_vaddr,
+-				  (u64)phdr.p_offset);
+-			sym.st_value -= phdr.p_vaddr - phdr.p_offset;
+ 		}
+ 
+ 		demangled = demangle_sym(dso, kmodule, elf_name);
+-- 
+2.37.1.455.g008518b4e5-goog
 
-all seems fine, just looks like we no longer do this check,
-might not be needed anymore, as that changed in past
-
-thanks,
-jirka
-
-> +	int err;
->  
-> -	ev = cpu_map_data__alloc(evsel->core.own_cpus, &size, &type, &max);
-> +	ev = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header) + 2 * sizeof(u64));
->  	if (!ev)
->  		return -ENOMEM;
->  
-> +	syn_data.data = &ev->cpus.cpus;
->  	ev->header.type = PERF_RECORD_EVENT_UPDATE;
-> -	ev->header.size = (u16)size;
-> +	ev->header.size = (u16)syn_data.size;
->  	ev->type	= PERF_EVENT_UPDATE__CPUS;
->  	ev->id		= evsel->core.id[0];
-> -
-> -	cpu_map_data__synthesize(&ev->cpus.cpus, evsel->core.own_cpus, type, max);
-> +	cpu_map_data__synthesize(&syn_data);
->  
->  	err = process(tool, (union perf_event *)ev, NULL, NULL);
->  	free(ev);
-> -- 
-> 2.36.1.476.g0c4daa206d-goog
-> 
