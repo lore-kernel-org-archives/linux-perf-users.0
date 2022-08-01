@@ -2,109 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DC3C00144
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 13:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DCBC19F2A
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 14:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231343AbiHANZU (ORCPT
+        id S233212AbiHAOn2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Aug 2022 09:25:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56242 "EHLO
+        Mon, 1 Aug 2022 10:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbiHANZT (ORCPT
+        with ESMTP id S232983AbiHAOnK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Aug 2022 09:25:19 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C7AB6589
-        for <linux-perf-users@vger.kernel.org>; Mon,  1 Aug 2022 06:25:18 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id rq15so14311167ejc.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Aug 2022 06:25:18 -0700 (PDT)
+        Mon, 1 Aug 2022 10:43:10 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D873F31B;
+        Mon,  1 Aug 2022 07:42:27 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id k26so5033695ejx.5;
+        Mon, 01 Aug 2022 07:42:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HFfO1HMBlAYBBkGgrC3Zdil9m8wfHsNvxnffG7KMRuo=;
-        b=NmziJKJz1JfpVQc2os/blbsd+CkXJlYxuJ4vDzaF7b39G295OU5bumPkdwFdj6bDit
-         EqmAmQZ2KTW3KWsUS3rmNaXkL0x69Wa7iBop+DaPrcbnajH+V+Y55VyU65Q8YaNth8uJ
-         rf9XupigkmQo98VrQknB34nkIzsO1Pl8qtJdUdzIHia4Ijr86w2r10dRJAd6IioMBH48
-         VsimMUdUpwI7rKonMC0GX4dnt1vAmtBKQUjNcYh1a3JGUmWg8D1e9TI65QKQw4mebBDq
-         Uh6baa7v1mTSQUnzOPvinTGpFuPFRan99auvMCWRiZ2coKShMA2h9e9vZUnK+2jkIA4J
-         430Q==
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=h2Fh+iK1e/QXgWo5H0E1vU8kQtq/DJDwu1GYW3hBz3Y=;
+        b=U1bGqNNi1488a5iQcjmUPIAFQYYL00jEn92UgvoN7kGOXtK556evaWQRjGHI6vxWty
+         ZzJRqCGQz9VhJ48p+UaAhe6QFoOc1zDBUQDUs/HH8yBOAiF6xpDRPe+eiaTutbL3GkBI
+         U5aRJm2f9gRSzde23vRXcOcazq/x2oqh0J56ORWu9wpnBAbDWeNpH6Ya/64EiAfklM8r
+         8tqqRrrszfAE1oAoPQ1dhB9Tf1T+YfiOAxqtA1fWCyKRPLrRvoMv1/T8ccMhWBRP5p9C
+         dlCdhPM8O3OdrsqifZH+Da8RPxA6SxRk+I2yUNk8ohJGpOHBqLngQvjfbDu5q0R4tuo5
+         S/sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HFfO1HMBlAYBBkGgrC3Zdil9m8wfHsNvxnffG7KMRuo=;
-        b=3U0UI2eMqCtx0YmzZIzcBLqnayE/QEhUuWhBHeC5WdL0+f8HPub6SZK1oA15h7ISwF
-         QS+tZyAlKSiADaPYqLs0MNBCVrQeFoXH53gP5oQOAV1Q7ebFBgTIT11Uk+WgY4ykKt+w
-         XPJKbykKNBq4N9NZEWejmXZpD1F4YC5TKN2Yq7BPfjj2ZKSUY5VRFOPL345AbrRCNb0P
-         su0hfIFdU/qlVLc9UK1e+sR3zDO4dow8+exTeSB8BJwmzO7SZBSQihOA1F6vq5U/ivpf
-         TFY7gBBcDzDMsLfXuf+Evimbw70SwNsgQrl0OrArARmLPnRMLstq18IZoomGxp6pfIXv
-         uG3Q==
-X-Gm-Message-State: AJIora/wTl2qEOKU8HsakStEN7zM6s3+LwpErpo0MMhNYzAkCDgSkNy+
-        HTJs3fob26SLNSgdBdhhghGmTg==
-X-Google-Smtp-Source: AGRyM1s67iEUBhHkvP0MHbGo0vD5PEpxwXHO/mMEOKvBcb/StnN9Hw6N6KaDK84FWUk/YPlKNqRnGQ==
-X-Received: by 2002:a17:906:cc17:b0:72b:4561:9153 with SMTP id ml23-20020a170906cc1700b0072b45619153mr12127952ejb.249.1659360316572;
-        Mon, 01 Aug 2022 06:25:16 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([104.245.98.208])
-        by smtp.gmail.com with ESMTPSA id 10-20020a170906218a00b006fe8b456672sm5171255eju.3.2022.08.01.06.25.13
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=h2Fh+iK1e/QXgWo5H0E1vU8kQtq/DJDwu1GYW3hBz3Y=;
+        b=Cdy+mLQ4WbjS88XC2IulXc6YKUTaVF2drFIjNUtGxGsgHCPRrxv9w/maRsIbB3wX1r
+         bAiraJq7O2UeiGmN3C6hJXAiWpNzmgyJC10FX4OPNniEOQMz4xNcoq+g1BliLZO8P0X1
+         fBkp9Zj904vdnlKC5JK9w8jVNufzbR2OTJQfbPvNpzCPlXkXiPOIRlFquXnT2Qeu4CCk
+         18avLUrTCWhNichomhjVVMDsFHMhw7zm5r2EKWI0pBMtPcbpEqADInAuKkArNRamkyti
+         0E9+8ud0xWrbazLRoZRa0CQO13Sypv87QYvFVw/bRvSn7MkTFnwpQ23eTwcpYoVZPCx6
+         RusQ==
+X-Gm-Message-State: ACgBeo3UoUX2Pf2Sh0Ehz4cWgt+dxmGWOZHtdlzPipsQICtGZbNmL2Fu
+        JyEICeSAV06wl36FHylKHCc=
+X-Google-Smtp-Source: AA6agR4rew6sHeQa75WoyFDHFnmrBC5+biAhpvP3kI83fB/IPFaMC+sxN5BhASmkuiO/lt8aR2v2/Q==
+X-Received: by 2002:a17:907:2c54:b0:730:984d:70b6 with SMTP id hf20-20020a1709072c5400b00730984d70b6mr1225561ejc.102.1659364945535;
+        Mon, 01 Aug 2022 07:42:25 -0700 (PDT)
+Received: from gmail.com (84-236-113-167.pool.digikabel.hu. [84.236.113.167])
+        by smtp.gmail.com with ESMTPSA id e24-20020a170906315800b007246492658asm5283190eje.117.2022.08.01.07.42.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Aug 2022 06:25:16 -0700 (PDT)
-Date:   Mon, 1 Aug 2022 21:25:11 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+        Mon, 01 Aug 2022 07:42:24 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date:   Mon, 1 Aug 2022 16:42:22 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf symbol: Fail to read phdr workaround
-Message-ID: <20220801132511.GC73228@leoy-ThinkPad-X240s>
-References: <20220731164923.691193-1-irogers@google.com>
- <20220801015259.GA101027@leoy-ThinkPad-X240s>
- <CAP-5=fVSjCQ4jeAeyP5THnQVyXDpKd6Ob33C7PDwFB_6+YSXuw@mail.gmail.com>
- <YufJP5YqeEBM51HL@kernel.org>
+        linux-perf-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] Perf events updates for v6.0
+Message-ID: <YufmTs3WbIcjlfyV@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YufJP5YqeEBM51HL@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 01, 2022 at 09:38:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Sun, Jul 31, 2022 at 11:19:15PM -0700, Ian Rogers escreveu:
-> > On Sun, Jul 31, 2022, 6:53 PM Leo Yan <leo.yan@linaro.org> wrote:
-> > 
-> > > On Sun, Jul 31, 2022 at 09:49:23AM -0700, Ian Rogers wrote:
-> > > > The perf jvmti agent doesn't create program headers, in this case
-> > > > fallback on section headers as happened previously.
-> > > >
-> > > > Fixes: 882528d2e776 ("perf symbol: Skip symbols if SHF_ALLOC flag is not
-> > > set")
-> > >
-> > > It's good to change fix tag as:
-> > > Fixes: 2d86612aacb7 ("perf symbol: Correct address for bss symbols")
-> > >
-> > 
-> > Doh! I was rushing this morning. Thanks for catching and reviewing!
-> 
-> I made the adjustments and added a note with the repro, to help in the
-> future when trying to test this area.
+Linus,
 
-Thanks, Arnaldo.
+Please pull the latest perf/core git tree from:
 
-> I also think we could have something like a 'perf test' mode where, when
-> asked to, it would enable tests that involve downloading such files to
-> perform tests, such as this dacapo benchmark, and then would test if the
-> output matches expectations.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2022-08-01
 
-I will add a testing based on the steps, alongside with the discussed
-testing for data symbols.  Will share out after get ready.
+   # HEAD: 326ecc15c61c349cd49d1700ff9e3e31c6fd1cd5 perf/x86/ibs: Add new IBS register bits into header
 
-Thanks,
-Leo
+Perf events updates for this cycle are:
+
+- Fix Intel Alder Lake PEBS memory access latency & data source profiling info bugs.
+
+- Use Intel large-PEBS hardware feature in more circumstances, to reduce
+  PMI overhead & reduce sampling data.
+
+- Extend the lost-sample profiling output with the PERF_FORMAT_LOST ABI variant,
+  which tells tooling the exact number of samples lost.
+
+- Add new IBS register bits definitions.
+
+- AMD uncore events: Add PerfMonV2 DF (Data Fabric) enhancements.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Kan Liang (2):
+      perf/x86/intel: Fix PEBS memory access info encoding for ADL
+      perf/x86/intel: Fix PEBS data source encoding for ADL
+
+Like Xu (1):
+      x86/events/intel/ds: Enable large PEBS for PERF_SAMPLE_WEIGHT_TYPE
+
+Namhyung Kim (1):
+      perf/core: Add a new read format to get a number of lost samples
+
+Ravi Bangoria (1):
+      perf/x86/ibs: Add new IBS register bits into header
+
+Sandipan Das (5):
+      perf/x86/amd/uncore: Use dynamic events array
+      perf/x86/amd/uncore: Use attr_update for format attributes
+      perf/x86/amd/uncore: Detect available DF counters
+      perf/x86/amd/uncore: Add PerfMonV2 DF event format
+      perf/x86/amd/uncore: Add PerfMonV2 RDPMC assignments
+
+
+ arch/x86/events/amd/uncore.c      | 146 +++++++++++++++++++++++++++++++-------
+ arch/x86/events/intel/core.c      |   7 +-
+ arch/x86/events/intel/ds.c        | 129 ++++++++++++++++++++++-----------
+ arch/x86/events/perf_event.h      |  17 ++++-
+ arch/x86/include/asm/amd-ibs.h    |  16 +++--
+ arch/x86/include/asm/perf_event.h |  16 +++++
+ include/linux/perf_event.h        |   2 +
+ include/uapi/linux/perf_event.h   |   5 +-
+ kernel/events/core.c              |  21 +++++-
+ kernel/events/ring_buffer.c       |   5 +-
+ 10 files changed, 280 insertions(+), 84 deletions(-)
