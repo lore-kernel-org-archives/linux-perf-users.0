@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD0C00144
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 12:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483BFC00144
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 12:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231734AbiHAMkz (ORCPT
+        id S234855AbiHAMnB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Aug 2022 08:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39378 "EHLO
+        Mon, 1 Aug 2022 08:43:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234775AbiHAMk2 (ORCPT
+        with ESMTP id S234786AbiHAMmr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Aug 2022 08:40:28 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0838A2216;
-        Mon,  1 Aug 2022 05:19:14 -0700 (PDT)
+        Mon, 1 Aug 2022 08:42:47 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A734B493;
+        Mon,  1 Aug 2022 05:23:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1E46CB81171;
-        Mon,  1 Aug 2022 12:19:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E30C433C1;
-        Mon,  1 Aug 2022 12:19:11 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D59F0CE13B6;
+        Mon,  1 Aug 2022 12:23:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98276C433D6;
+        Mon,  1 Aug 2022 12:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659356351;
-        bh=/JIoU00r94QDCZUqD6rkY8cyNH+bBS6iM28uY6dkenE=;
+        s=k20201202; t=1659356598;
+        bh=DxjdDw3En4qFuOqWhLneEyFYNcSQm9VdlV/1jaOa144=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rc+ynB+RKD+kOJeWfVtq1xFjW5bpKJZrq4ecv9FH/zodcDtkcQ9lf4S6Jag3FnsBd
-         kKbZCqPWeJK3mEopOyfn27+72NAO3vuiEeQIz+iLQDeha30Mzw044LWAkzlPLqAYGa
-         LFneXUFS6OT3H5yharDuacU/o0S7CugvzMx9kKWobhi30jAmTSRKCv0x310ILtTLkI
-         gBcUh4kAtM3aqVWw7ADTCs71Dp2VTvKBT2Cx56T4m2Vu4InRZYFjZPok9pbpCZThjf
-         FyFMmrn8CpZnUUIshwFRbV/scF3PYTCi0bdiEpRXWTn7njkLMzjUxijyUJDpuNNgoI
-         iIjGqqs6D++qA==
+        b=ZEFLiqHito8NFeCy4MfSdZ3niQlWcswl0Xo97Tt5+of1YzYx64Pv6IvHK1vu8VHrs
+         kWXvHbwz2C13qwCRhkwed8pbuYApNKXB2HyC3NCviT5tFoLVhel6MBPd1CL4yo2ISZ
+         Vmmb/Apn+scKkPGPh74k8JySvvgiSI2cHPuU+ZrD5Ocy+0oye3Ax22+ys57+kNmcDK
+         qHMyCbGDFdcAPRdhHyoPWVLhXscTZRaH6lHwAN0AsRMLVKdtTs2Xec+LuyagmOILen
+         cxA5O8asGzHsRaL9rgzA9Rh2rL/EzRKIvDqzRhL4C2CVeKa/05Mr+q2CkCsPjRv0C/
+         MN6RXRGavShfQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2202B40736; Mon,  1 Aug 2022 09:19:09 -0300 (-03)
-Date:   Mon, 1 Aug 2022 09:19:09 -0300
+        id 1E4C440736; Mon,  1 Aug 2022 09:23:15 -0300 (-03)
+Date:   Mon, 1 Aug 2022 09:23:15 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -51,259 +51,179 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Rob Herring <robh@kernel.org>,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 2/3] perf test: Remove x86 rdpmc test
-Message-ID: <YufEvRknYcalPEQ1@kernel.org>
+Subject: Re: [PATCH v3 3/3] perf test: Add user space counter reading tests
+Message-ID: <YufFs0yZvUc+9wbp@kernel.org>
 References: <20220719223946.176299-1-irogers@google.com>
- <20220719223946.176299-3-irogers@google.com>
+ <20220719223946.176299-4-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220719223946.176299-3-irogers@google.com>
+In-Reply-To: <20220719223946.176299-4-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jul 19, 2022 at 03:39:45PM -0700, Ian Rogers escreveu:
-> This test has been superseded by test_stat_user_read in:
-> tools/lib/perf/tests/test-evsel.c
-> The updated test doesn't divide-by-0 when running time of a counter is
-> 0. It also supports ARM64.
+Em Tue, Jul 19, 2022 at 03:39:46PM -0700, Ian Rogers escreveu:
+> These tests are based on test_stat_user_read in
+> tools/lib/perf/tests/test-evsel.c. The tests are modified to skip if
+> perf_event_open fails or rdpmc isn't supported.
 
-Thanks, applied.
+Thanks, tested and applied.
 
 - Arnaldo
 
  
-> Acked-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/arch/x86/tests/Build        |   1 -
->  tools/perf/arch/x86/tests/arch-tests.c |   2 -
->  tools/perf/arch/x86/tests/rdpmc.c      | 182 -------------------------
->  3 files changed, 185 deletions(-)
->  delete mode 100644 tools/perf/arch/x86/tests/rdpmc.c
+>  tools/perf/tests/mmap-basic.c | 127 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 126 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
-> index 28d793390198..70b5bcbc15df 100644
-> --- a/tools/perf/arch/x86/tests/Build
-> +++ b/tools/perf/arch/x86/tests/Build
-> @@ -2,7 +2,6 @@ perf-$(CONFIG_DWARF_UNWIND) += regs_load.o
->  perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+> index 30bbe144648a..dfb6173b2a82 100644
+> --- a/tools/perf/tests/mmap-basic.c
+> +++ b/tools/perf/tests/mmap-basic.c
+> @@ -170,14 +170,139 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
+>  	return err;
+>  }
 >  
->  perf-y += arch-tests.o
-> -perf-y += rdpmc.o
->  perf-y += sample-parsing.o
->  perf-$(CONFIG_AUXTRACE) += insn-x86.o intel-pt-pkt-decoder-test.o
->  perf-$(CONFIG_X86_64) += bp-modify.o
-> diff --git a/tools/perf/arch/x86/tests/arch-tests.c b/tools/perf/arch/x86/tests/arch-tests.c
-> index 64fb73d14d2f..04018b8aa85b 100644
-> --- a/tools/perf/arch/x86/tests/arch-tests.c
-> +++ b/tools/perf/arch/x86/tests/arch-tests.c
-> @@ -3,7 +3,6 @@
->  #include "tests/tests.h"
->  #include "arch-tests.h"
+> +static int test_stat_user_read(int event)
+> +{
+> +	struct perf_counts_values counts = { .val = 0 };
+> +	struct perf_thread_map *threads;
+> +	struct perf_evsel *evsel;
+> +	struct perf_event_mmap_page *pc;
+> +	struct perf_event_attr attr = {
+> +		.type	= PERF_TYPE_HARDWARE,
+> +		.config	= event,
+> +#ifdef __aarch64__
+> +		.config1 = 0x2,		/* Request user access */
+> +#endif
+> +	};
+> +	int err, i, ret = TEST_FAIL;
+> +	bool opened = false, mapped = false;
+> +
+> +	threads = perf_thread_map__new_dummy();
+> +	TEST_ASSERT_VAL("failed to create threads", threads);
+> +
+> +	perf_thread_map__set_pid(threads, 0, 0);
+> +
+> +	evsel = perf_evsel__new(&attr);
+> +	TEST_ASSERT_VAL("failed to create evsel", evsel);
+> +
+> +	err = perf_evsel__open(evsel, NULL, threads);
+> +	if (err) {
+> +		pr_err("failed to open evsel: %s\n", strerror(-err));
+> +		ret = TEST_SKIP;
+> +		goto out;
+> +	}
+> +	opened = true;
+> +
+> +	err = perf_evsel__mmap(evsel, 0);
+> +	if (err) {
+> +		pr_err("failed to mmap evsel: %s\n", strerror(-err));
+> +		goto out;
+> +	}
+> +	mapped = true;
+> +
+> +	pc = perf_evsel__mmap_base(evsel, 0, 0);
+> +	if (!pc) {
+> +		pr_err("failed to get mmapped address\n");
+> +		goto out;
+> +	}
+> +
+> +	if (!pc->cap_user_rdpmc || !pc->index) {
+> +		pr_err("userspace counter access not %s\n",
+> +			!pc->cap_user_rdpmc ? "supported" : "enabled");
+> +		ret = TEST_SKIP;
+> +		goto out;
+> +	}
+> +	if (pc->pmc_width < 32) {
+> +		pr_err("userspace counter width not set (%d)\n", pc->pmc_width);
+> +		goto out;
+> +	}
+> +
+> +	perf_evsel__read(evsel, 0, 0, &counts);
+> +	if (counts.val == 0) {
+> +		pr_err("failed to read value for evsel\n");
+> +		goto out;
+> +	}
+> +
+> +	for (i = 0; i < 5; i++) {
+> +		volatile int count = 0x10000 << i;
+> +		__u64 start, end, last = 0;
+> +
+> +		pr_debug("\tloop = %u, ", count);
+> +
+> +		perf_evsel__read(evsel, 0, 0, &counts);
+> +		start = counts.val;
+> +
+> +		while (count--) ;
+> +
+> +		perf_evsel__read(evsel, 0, 0, &counts);
+> +		end = counts.val;
+> +
+> +		if ((end - start) < last) {
+> +			pr_err("invalid counter data: end=%llu start=%llu last= %llu\n",
+> +				end, start, last);
+> +			goto out;
+> +		}
+> +		last = end - start;
+> +		pr_debug("count = %llu\n", end - start);
+> +	}
+> +	ret = TEST_OK;
+> +
+> +out:
+> +	if (mapped)
+> +		perf_evsel__munmap(evsel);
+> +	if (opened)
+> +		perf_evsel__close(evsel);
+> +	perf_evsel__delete(evsel);
+> +
+> +	perf_thread_map__put(threads);
+> +	return ret;
+> +}
+> +
+> +static int test__mmap_user_read_instr(struct test_suite *test __maybe_unused,
+> +				      int subtest __maybe_unused)
+> +{
+> +	return test_stat_user_read(PERF_COUNT_HW_INSTRUCTIONS);
+> +}
+> +
+> +static int test__mmap_user_read_cycles(struct test_suite *test __maybe_unused,
+> +				       int subtest __maybe_unused)
+> +{
+> +	return test_stat_user_read(PERF_COUNT_HW_CPU_CYCLES);
+> +}
+> +
+>  static struct test_case tests__basic_mmap[] = {
+>  	TEST_CASE_REASON("Read samples using the mmap interface",
+>  			 basic_mmap,
+>  			 "permissions"),
+> +	TEST_CASE_REASON("User space counter reading of instructions",
+> +			 mmap_user_read_instr,
+> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
+> +			 "permissions"
+> +#else
+> +			 "unsupported"
+> +#endif
+> +		),
+> +	TEST_CASE_REASON("User space counter reading of cycles",
+> +			 mmap_user_read_cycles,
+> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
+> +			 "permissions"
+> +#else
+> +			 "unsupported"
+> +#endif
+> +		),
+>  	{	.name = NULL, }
+>  };
 >  
-> -DEFINE_SUITE("x86 rdpmc", rdpmc);
->  #ifdef HAVE_AUXTRACE_SUPPORT
->  DEFINE_SUITE("x86 instruction decoder - new instructions", insn_x86);
->  DEFINE_SUITE("Intel PT packet decoder", intel_pt_pkt_decoder);
-> @@ -14,7 +13,6 @@ DEFINE_SUITE("x86 bp modify", bp_modify);
->  DEFINE_SUITE("x86 Sample parsing", x86_sample_parsing);
->  
->  struct test_suite *arch_tests[] = {
-> -	&suite__rdpmc,
->  #ifdef HAVE_DWARF_UNWIND_SUPPORT
->  	&suite__dwarf_unwind,
->  #endif
-> diff --git a/tools/perf/arch/x86/tests/rdpmc.c b/tools/perf/arch/x86/tests/rdpmc.c
-> deleted file mode 100644
-> index 498413ad9c97..000000000000
-> --- a/tools/perf/arch/x86/tests/rdpmc.c
-> +++ /dev/null
-> @@ -1,182 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#include <errno.h>
-> -#include <unistd.h>
-> -#include <stdlib.h>
-> -#include <signal.h>
-> -#include <sys/mman.h>
-> -#include <sys/types.h>
-> -#include <sys/wait.h>
-> -#include <linux/string.h>
-> -#include <linux/types.h>
-> -#include "perf-sys.h"
-> -#include "debug.h"
-> -#include "tests/tests.h"
-> -#include "cloexec.h"
-> -#include "event.h"
-> -#include <internal/lib.h> // page_size
-> -#include "arch-tests.h"
-> -
-> -static u64 rdpmc(unsigned int counter)
-> -{
-> -	unsigned int low, high;
-> -
-> -	asm volatile("rdpmc" : "=a" (low), "=d" (high) : "c" (counter));
-> -
-> -	return low | ((u64)high) << 32;
-> -}
-> -
-> -static u64 rdtsc(void)
-> -{
-> -	unsigned int low, high;
-> -
-> -	asm volatile("rdtsc" : "=a" (low), "=d" (high));
-> -
-> -	return low | ((u64)high) << 32;
-> -}
-> -
-> -static u64 mmap_read_self(void *addr)
-> -{
-> -	struct perf_event_mmap_page *pc = addr;
-> -	u32 seq, idx, time_mult = 0, time_shift = 0;
-> -	u64 count, cyc = 0, time_offset = 0, enabled, running, delta;
-> -
-> -	do {
-> -		seq = pc->lock;
-> -		barrier();
-> -
-> -		enabled = pc->time_enabled;
-> -		running = pc->time_running;
-> -
-> -		if (enabled != running) {
-> -			cyc = rdtsc();
-> -			time_mult = pc->time_mult;
-> -			time_shift = pc->time_shift;
-> -			time_offset = pc->time_offset;
-> -		}
-> -
-> -		idx = pc->index;
-> -		count = pc->offset;
-> -		if (idx)
-> -			count += rdpmc(idx - 1);
-> -
-> -		barrier();
-> -	} while (pc->lock != seq);
-> -
-> -	if (enabled != running) {
-> -		u64 quot, rem;
-> -
-> -		quot = (cyc >> time_shift);
-> -		rem = cyc & (((u64)1 << time_shift) - 1);
-> -		delta = time_offset + quot * time_mult +
-> -			((rem * time_mult) >> time_shift);
-> -
-> -		enabled += delta;
-> -		if (idx)
-> -			running += delta;
-> -
-> -		quot = count / running;
-> -		rem = count % running;
-> -		count = quot * enabled + (rem * enabled) / running;
-> -	}
-> -
-> -	return count;
-> -}
-> -
-> -/*
-> - * If the RDPMC instruction faults then signal this back to the test parent task:
-> - */
-> -static void segfault_handler(int sig __maybe_unused,
-> -			     siginfo_t *info __maybe_unused,
-> -			     void *uc __maybe_unused)
-> -{
-> -	exit(-1);
-> -}
-> -
-> -static int __test__rdpmc(void)
-> -{
-> -	volatile int tmp = 0;
-> -	u64 i, loops = 1000;
-> -	int n;
-> -	int fd;
-> -	void *addr;
-> -	struct perf_event_attr attr = {
-> -		.type = PERF_TYPE_HARDWARE,
-> -		.config = PERF_COUNT_HW_INSTRUCTIONS,
-> -		.exclude_kernel = 1,
-> -	};
-> -	u64 delta_sum = 0;
-> -        struct sigaction sa;
-> -	char sbuf[STRERR_BUFSIZE];
-> -
-> -	sigfillset(&sa.sa_mask);
-> -	sa.sa_sigaction = segfault_handler;
-> -	sa.sa_flags = 0;
-> -	sigaction(SIGSEGV, &sa, NULL);
-> -
-> -	fd = sys_perf_event_open(&attr, 0, -1, -1,
-> -				 perf_event_open_cloexec_flag());
-> -	if (fd < 0) {
-> -		pr_err("Error: sys_perf_event_open() syscall returned "
-> -		       "with %d (%s)\n", fd,
-> -		       str_error_r(errno, sbuf, sizeof(sbuf)));
-> -		return -1;
-> -	}
-> -
-> -	addr = mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
-> -	if (addr == (void *)(-1)) {
-> -		pr_err("Error: mmap() syscall returned with (%s)\n",
-> -		       str_error_r(errno, sbuf, sizeof(sbuf)));
-> -		goto out_close;
-> -	}
-> -
-> -	for (n = 0; n < 6; n++) {
-> -		u64 stamp, now, delta;
-> -
-> -		stamp = mmap_read_self(addr);
-> -
-> -		for (i = 0; i < loops; i++)
-> -			tmp++;
-> -
-> -		now = mmap_read_self(addr);
-> -		loops *= 10;
-> -
-> -		delta = now - stamp;
-> -		pr_debug("%14d: %14Lu\n", n, (long long)delta);
-> -
-> -		delta_sum += delta;
-> -	}
-> -
-> -	munmap(addr, page_size);
-> -	pr_debug("   ");
-> -out_close:
-> -	close(fd);
-> -
-> -	if (!delta_sum)
-> -		return -1;
-> -
-> -	return 0;
-> -}
-> -
-> -int test__rdpmc(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-> -{
-> -	int status = 0;
-> -	int wret = 0;
-> -	int ret;
-> -	int pid;
-> -
-> -	pid = fork();
-> -	if (pid < 0)
-> -		return -1;
-> -
-> -	if (!pid) {
-> -		ret = __test__rdpmc();
-> -
-> -		exit(ret);
-> -	}
-> -
-> -	wret = waitpid(pid, &status, 0);
-> -	if (wret < 0 || status)
-> -		return -1;
-> -
-> -	return 0;
-> -}
+>  struct test_suite suite__basic_mmap = {
+> -	.desc = "Read samples using the mmap interface",
+> +	.desc = "mmap interface tests",
+>  	.test_cases = tests__basic_mmap,
+>  };
 > -- 
 > 2.37.0.170.g444d1eabd0-goog
 
