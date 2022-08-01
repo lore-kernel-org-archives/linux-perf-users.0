@@ -2,133 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DCBC19F2A
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 14:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896CBC00144
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 16:05:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233212AbiHAOn2 (ORCPT
+        id S231579AbiHAQFo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Aug 2022 10:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
+        Mon, 1 Aug 2022 12:05:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232983AbiHAOnK (ORCPT
+        with ESMTP id S232363AbiHAQFn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Aug 2022 10:43:10 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D873F31B;
-        Mon,  1 Aug 2022 07:42:27 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id k26so5033695ejx.5;
-        Mon, 01 Aug 2022 07:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=h2Fh+iK1e/QXgWo5H0E1vU8kQtq/DJDwu1GYW3hBz3Y=;
-        b=U1bGqNNi1488a5iQcjmUPIAFQYYL00jEn92UgvoN7kGOXtK556evaWQRjGHI6vxWty
-         ZzJRqCGQz9VhJ48p+UaAhe6QFoOc1zDBUQDUs/HH8yBOAiF6xpDRPe+eiaTutbL3GkBI
-         U5aRJm2f9gRSzde23vRXcOcazq/x2oqh0J56ORWu9wpnBAbDWeNpH6Ya/64EiAfklM8r
-         8tqqRrrszfAE1oAoPQ1dhB9Tf1T+YfiOAxqtA1fWCyKRPLrRvoMv1/T8ccMhWBRP5p9C
-         dlCdhPM8O3OdrsqifZH+Da8RPxA6SxRk+I2yUNk8ohJGpOHBqLngQvjfbDu5q0R4tuo5
-         S/sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=h2Fh+iK1e/QXgWo5H0E1vU8kQtq/DJDwu1GYW3hBz3Y=;
-        b=Cdy+mLQ4WbjS88XC2IulXc6YKUTaVF2drFIjNUtGxGsgHCPRrxv9w/maRsIbB3wX1r
-         bAiraJq7O2UeiGmN3C6hJXAiWpNzmgyJC10FX4OPNniEOQMz4xNcoq+g1BliLZO8P0X1
-         fBkp9Zj904vdnlKC5JK9w8jVNufzbR2OTJQfbPvNpzCPlXkXiPOIRlFquXnT2Qeu4CCk
-         18avLUrTCWhNichomhjVVMDsFHMhw7zm5r2EKWI0pBMtPcbpEqADInAuKkArNRamkyti
-         0E9+8ud0xWrbazLRoZRa0CQO13Sypv87QYvFVw/bRvSn7MkTFnwpQ23eTwcpYoVZPCx6
-         RusQ==
-X-Gm-Message-State: ACgBeo3UoUX2Pf2Sh0Ehz4cWgt+dxmGWOZHtdlzPipsQICtGZbNmL2Fu
-        JyEICeSAV06wl36FHylKHCc=
-X-Google-Smtp-Source: AA6agR4rew6sHeQa75WoyFDHFnmrBC5+biAhpvP3kI83fB/IPFaMC+sxN5BhASmkuiO/lt8aR2v2/Q==
-X-Received: by 2002:a17:907:2c54:b0:730:984d:70b6 with SMTP id hf20-20020a1709072c5400b00730984d70b6mr1225561ejc.102.1659364945535;
-        Mon, 01 Aug 2022 07:42:25 -0700 (PDT)
-Received: from gmail.com (84-236-113-167.pool.digikabel.hu. [84.236.113.167])
-        by smtp.gmail.com with ESMTPSA id e24-20020a170906315800b007246492658asm5283190eje.117.2022.08.01.07.42.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Aug 2022 07:42:24 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Mon, 1 Aug 2022 16:42:22 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Mon, 1 Aug 2022 12:05:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 30097A475
+        for <linux-perf-users@vger.kernel.org>; Mon,  1 Aug 2022 09:05:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659369941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YjwnPcemFdKzS6S36gsMhGgEGUlUL1WuNW85mhTQ5/s=;
+        b=NYXKTHhZI1rkJZDabEcxbL7llaCZq6vErcJbZM/7Iizn/1DcEGkR7StuD8n28qQDDVS4qw
+        1dXk3dN2QTloGVqXhptNwc7eJbwKCJ6BZO5UwoWa4VfR1w22CpDap72ZHAVZUeqBlpOMvo
+        bQqyYsfV3V8UNGcm081heiBXONxskNA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-573-XmrRqtr3MD6uq2OG3uJbAw-1; Mon, 01 Aug 2022 12:05:38 -0400
+X-MC-Unique: XmrRqtr3MD6uq2OG3uJbAw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63CCE101A58E;
+        Mon,  1 Aug 2022 16:05:36 +0000 (UTC)
+Received: from starship (unknown [10.40.194.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 391A32166B26;
+        Mon,  1 Aug 2022 16:05:30 +0000 (UTC)
+Message-ID: <4a327f06f6e5da6f3badb5ccf80d22a5c9e18b97.camel@redhat.com>
+Subject: Re: [PATCH v2 0/5] x86: cpuid: improve support for broken CPUID
+ configurations
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
         Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] Perf events updates for v6.0
-Message-ID: <YufmTs3WbIcjlfyV@gmail.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Date:   Mon, 01 Aug 2022 19:05:29 +0300
+In-Reply-To: <fad05f161cc6425d8c36fb6322de2bbaa683dcb3.camel@redhat.com>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+         <fad05f161cc6425d8c36fb6322de2bbaa683dcb3.camel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Linus,
+On Thu, 2022-07-28 at 10:30 +0300, Maxim Levitsky wrote:
+> On Mon, 2022-07-18 at 17:11 +0300, Maxim Levitsky wrote:
+> > This patch series aims to harden the cpuid code against the case when
+> > the hypervisor exposes a broken CPUID configuration to the guest,
+> > in the form of having a feature disabled but not features that depend on it.
+> > 
+> > This is the more generic way to fix kernel panic in aes-ni kernel driver,
+> > which was triggered by CPUID configuration in which AVX is disabled but
+> > not AVX2.
+> > 
+> > https://lore.kernel.org/all/20211103145231.GA4485@gondor.apana.org.au/T/
+> > 
+> > This was tested by booting a guest with AVX disabled and not AVX2,
+> > and observing that both a warning is now printed in dmesg, and
+> > that avx2 is gone from /proc/cpuinfo.
+> > 
+> > V2:
+> > 
+> > I hopefully addressed all the (very good) review feedback.
+> > 
+> > Best regards,
+> > 	Maxim Levitsky
+> > 
+> > Maxim Levitsky (5):
+> >   perf/x86/intel/lbr: use setup_clear_cpu_cap instead of clear_cpu_cap
+> >   x86/cpuid: refactor setup_clear_cpu_cap()/clear_cpu_cap()
+> >   x86/cpuid: move filter_cpuid_features to cpuid-deps.c
+> >   x86/cpuid: remove 'warn' parameter from filter_cpuid_features
+> >   x86/cpuid: check for dependencies violations in CPUID and attempt to
+> >     fix them
+> > 
+> >  arch/x86/events/intel/lbr.c       |  2 +-
+> >  arch/x86/include/asm/cpufeature.h |  1 +
+> >  arch/x86/kernel/cpu/common.c      | 51 +-------------------
+> >  arch/x86/kernel/cpu/cpuid-deps.c  | 80 +++++++++++++++++++++++++++----
+> >  4 files changed, 74 insertions(+), 60 deletions(-)
+> > 
+> > -- 
+> > 2.34.3
+> > 
+> > 
+> A very kind ping on these patches.
 
-Please pull the latest perf/core git tree from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2022-08-01
-
-   # HEAD: 326ecc15c61c349cd49d1700ff9e3e31c6fd1cd5 perf/x86/ibs: Add new IBS register bits into header
-
-Perf events updates for this cycle are:
-
-- Fix Intel Alder Lake PEBS memory access latency & data source profiling info bugs.
-
-- Use Intel large-PEBS hardware feature in more circumstances, to reduce
-  PMI overhead & reduce sampling data.
-
-- Extend the lost-sample profiling output with the PERF_FORMAT_LOST ABI variant,
-  which tells tooling the exact number of samples lost.
-
-- Add new IBS register bits definitions.
-
-- AMD uncore events: Add PerfMonV2 DF (Data Fabric) enhancements.
-
- Thanks,
-
-	Ingo
-
------------------->
-Kan Liang (2):
-      perf/x86/intel: Fix PEBS memory access info encoding for ADL
-      perf/x86/intel: Fix PEBS data source encoding for ADL
-
-Like Xu (1):
-      x86/events/intel/ds: Enable large PEBS for PERF_SAMPLE_WEIGHT_TYPE
-
-Namhyung Kim (1):
-      perf/core: Add a new read format to get a number of lost samples
-
-Ravi Bangoria (1):
-      perf/x86/ibs: Add new IBS register bits into header
-
-Sandipan Das (5):
-      perf/x86/amd/uncore: Use dynamic events array
-      perf/x86/amd/uncore: Use attr_update for format attributes
-      perf/x86/amd/uncore: Detect available DF counters
-      perf/x86/amd/uncore: Add PerfMonV2 DF event format
-      perf/x86/amd/uncore: Add PerfMonV2 RDPMC assignments
+Another kind ping on these patches.
 
 
- arch/x86/events/amd/uncore.c      | 146 +++++++++++++++++++++++++++++++-------
- arch/x86/events/intel/core.c      |   7 +-
- arch/x86/events/intel/ds.c        | 129 ++++++++++++++++++++++-----------
- arch/x86/events/perf_event.h      |  17 ++++-
- arch/x86/include/asm/amd-ibs.h    |  16 +++--
- arch/x86/include/asm/perf_event.h |  16 +++++
- include/linux/perf_event.h        |   2 +
- include/uapi/linux/perf_event.h   |   5 +-
- kernel/events/core.c              |  21 +++++-
- kernel/events/ring_buffer.c       |   5 +-
- 10 files changed, 280 insertions(+), 84 deletions(-)
+Best regards,
+	Maxim Levitsky
+> 
+> Best regards,
+> 	Maxim Levitsky
+
+
