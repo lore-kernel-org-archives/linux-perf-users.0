@@ -2,99 +2,79 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E353C00144
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 17:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69481C00144
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 19:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234107AbiHAR6E (ORCPT
+        id S235384AbiHATzc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Aug 2022 13:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35718 "EHLO
+        Mon, 1 Aug 2022 15:55:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234139AbiHAR5c (ORCPT
+        with ESMTP id S235369AbiHATzV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Aug 2022 13:57:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55738B1DC;
-        Mon,  1 Aug 2022 10:56:27 -0700 (PDT)
+        Mon, 1 Aug 2022 15:55:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B32B9B6F;
+        Mon,  1 Aug 2022 12:55:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BFF1561160;
-        Mon,  1 Aug 2022 17:56:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2A0BC433C1;
-        Mon,  1 Aug 2022 17:56:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 71BFA61373;
+        Mon,  1 Aug 2022 19:55:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D4BE5C43142;
+        Mon,  1 Aug 2022 19:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659376583;
-        bh=sgF7Ila5Go50G/Z0YwLeetdlAZaIQSPpQ4eGRIrjUfQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eQTYpYq2X9p4/bUFs31elGwHf3bxE9a0XO/ulP0WVFoHMvP3pBDsTMQejLTPyc2N3
-         U0fHcZyyUzs/hhoGl63QeTyCgHAAWQZe5PVcW3pUX6PHoCVWvrN7qmCR175zqC2h5i
-         6yEdsEwEqFKRGuM4hKs3bzMgYHLh3cS7AmlMpItHucbTG+v8TztGV6kKSsW1wrdAoz
-         jDJBZwDTV9oi3kQt+hKPYgo9brBELv4brGpE+pT9HyEmJI2p/7/4DShfeKyk/IagAY
-         VirBQTb9SHpfzfBi8+biYsCRl6uS+abxZJMAkSqhtHs9YjBiHqk5FiyIi0wd7aKtOp
-         VqQoQ40Kai+IA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5DE0940736; Mon,  1 Aug 2022 14:56:20 -0300 (-03)
-Date:   Mon, 1 Aug 2022 14:56:20 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Ian Rogers <irogers@google.com>,
+        s=k20201202; t=1659383717;
+        bh=BekN5jAjj47WwzmSZBRvLlshdjxJFDD9d0mvWw6oXRQ=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=cLZRxIBt1u8/uTeVa+O40/DGkzzoVXYQ0EaoW/wyv9tGf3qZfKtgr5LnDpc+cDkde
+         JAPlgO5CL5wPz6ObOOnamMOIkv1Vh+s/P8ZbxAqkBBRvkcEsgqp4WlzI5PmBUTldFU
+         RDXbh31D+emlOQN+6Q1URgMhHemCcslMKG8aB1Cb2QoKXhulgU3X7PIXLh2l/99CHj
+         XnT4HLTKJI81epXOVHIopYF1zJnBm0XjgZedeIPIeFu8vgCjE0cVWdnyVSO8G1+TSn
+         KsJyDEGUov0awiTcqYjkiSTTahTn4Qlp6tBHHWbJxWhwhRE+3RQ1rMGbUrn9xJaBPn
+         l2U/lskaFNLhQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C4A46C43143;
+        Mon,  1 Aug 2022 19:55:17 +0000 (UTC)
+Subject: Re: [GIT PULL] Perf events updates for v6.0
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <YufmTs3WbIcjlfyV@gmail.com>
+References: <YufmTs3WbIcjlfyV@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <YufmTs3WbIcjlfyV@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2022-08-01
+X-PR-Tracked-Commit-Id: 326ecc15c61c349cd49d1700ff9e3e31c6fd1cd5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 63e6053add5a6cec4dbfa3dec12e0d4439daac4a
+Message-Id: <165938371780.14399.1950720570642156126.pr-tracker-bot@kernel.org>
+Date:   Mon, 01 Aug 2022 19:55:17 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf symbol: Fail to read phdr workaround
-Message-ID: <YugTxE/O0SmTb9FI@kernel.org>
-References: <20220731164923.691193-1-irogers@google.com>
- <20220801015259.GA101027@leoy-ThinkPad-X240s>
- <CAP-5=fVSjCQ4jeAeyP5THnQVyXDpKd6Ob33C7PDwFB_6+YSXuw@mail.gmail.com>
- <YufJP5YqeEBM51HL@kernel.org>
- <20220801132511.GC73228@leoy-ThinkPad-X240s>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220801132511.GC73228@leoy-ThinkPad-X240s>
-X-Url:  http://acmel.wordpress.com
+        linux-perf-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 01, 2022 at 09:25:11PM +0800, Leo Yan escreveu:
-> On Mon, Aug 01, 2022 at 09:38:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Sun, Jul 31, 2022 at 11:19:15PM -0700, Ian Rogers escreveu:
-> > > On Sun, Jul 31, 2022, 6:53 PM Leo Yan <leo.yan@linaro.org> wrote:
-> > > 
-> > > > On Sun, Jul 31, 2022 at 09:49:23AM -0700, Ian Rogers wrote:
-> > > > > The perf jvmti agent doesn't create program headers, in this case
-> > > > > fallback on section headers as happened previously.
-> > > > >
-> > > > > Fixes: 882528d2e776 ("perf symbol: Skip symbols if SHF_ALLOC flag is not
-> > > > set")
-> > > >
-> > > > It's good to change fix tag as:
-> > > > Fixes: 2d86612aacb7 ("perf symbol: Correct address for bss symbols")
-> > > >
-> > > 
-> > > Doh! I was rushing this morning. Thanks for catching and reviewing!
-> > 
-> > I made the adjustments and added a note with the repro, to help in the
-> > future when trying to test this area.
-> 
-> Thanks, Arnaldo.
-> 
-> > I also think we could have something like a 'perf test' mode where, when
-> > asked to, it would enable tests that involve downloading such files to
-> > perform tests, such as this dacapo benchmark, and then would test if the
-> > output matches expectations.
-> 
-> I will add a testing based on the steps, alongside with the discussed
-> testing for data symbols.  Will share out after get ready.
+The pull request you sent on Mon, 1 Aug 2022 16:42:22 +0200:
 
-Great! Thanks in advance,
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2022-08-01
 
-- Arnaldo
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/63e6053add5a6cec4dbfa3dec12e0d4439daac4a
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
