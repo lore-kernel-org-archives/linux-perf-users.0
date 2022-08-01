@@ -2,230 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483BFC00144
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 12:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0438C00144
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 12:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234855AbiHAMnB (ORCPT
+        id S230298AbiHAMo1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Aug 2022 08:43:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44078 "EHLO
+        Mon, 1 Aug 2022 08:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234786AbiHAMmr (ORCPT
+        with ESMTP id S234834AbiHAMoO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Aug 2022 08:42:47 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A734B493;
-        Mon,  1 Aug 2022 05:23:21 -0700 (PDT)
+        Mon, 1 Aug 2022 08:44:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A3C43333;
+        Mon,  1 Aug 2022 05:29:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id D59F0CE13B6;
-        Mon,  1 Aug 2022 12:23:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98276C433D6;
-        Mon,  1 Aug 2022 12:23:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BBC5F61154;
+        Mon,  1 Aug 2022 12:29:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA35C433D6;
+        Mon,  1 Aug 2022 12:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659356598;
-        bh=DxjdDw3En4qFuOqWhLneEyFYNcSQm9VdlV/1jaOa144=;
+        s=k20201202; t=1659356969;
+        bh=wQPlnOBKLUu2iVhWWb5NoWsKOqr0w9KrM8psmRXpxWY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZEFLiqHito8NFeCy4MfSdZ3niQlWcswl0Xo97Tt5+of1YzYx64Pv6IvHK1vu8VHrs
-         kWXvHbwz2C13qwCRhkwed8pbuYApNKXB2HyC3NCviT5tFoLVhel6MBPd1CL4yo2ISZ
-         Vmmb/Apn+scKkPGPh74k8JySvvgiSI2cHPuU+ZrD5Ocy+0oye3Ax22+ys57+kNmcDK
-         qHMyCbGDFdcAPRdhHyoPWVLhXscTZRaH6lHwAN0AsRMLVKdtTs2Xec+LuyagmOILen
-         cxA5O8asGzHsRaL9rgzA9Rh2rL/EzRKIvDqzRhL4C2CVeKa/05Mr+q2CkCsPjRv0C/
-         MN6RXRGavShfQ==
+        b=XPumKYa4Nnt/xfqIKRSrhMiJv69+aGMQcazBQMcHG3z/fh9BvG2sPDHzm/7OrcXHb
+         txhsxGGQ/IZnxTF7lvSJdM3lG4MJvGOShsC6J1Rbn5C9zUt4N/ewBAQ7y0cvT4IpSQ
+         vIPYBeTgsShJnDqfY5w41zEFyjF883G2lqaHXxOH2L7T6hQ5xG2PdGUqUFjkGxlWq1
+         cCuedFsDTKlUsMy7IROD7iyo2u7qHDP7hpTBqyax4yofNEglw4rbuLR4v5FjMJUv+j
+         cFcq8epYT6njDXTD9pmpoKypgblz00ICGQRkiWjhrbNqXRpMqJShB2ZaQ6UEhqVW61
+         rE83RLJ5VydOA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1E4C440736; Mon,  1 Aug 2022 09:23:15 -0300 (-03)
-Date:   Mon, 1 Aug 2022 09:23:15 -0300
+        id C973640736; Mon,  1 Aug 2022 09:29:26 -0300 (-03)
+Date:   Mon, 1 Aug 2022 09:29:26 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 3/3] perf test: Add user space counter reading tests
-Message-ID: <YufFs0yZvUc+9wbp@kernel.org>
-References: <20220719223946.176299-1-irogers@google.com>
- <20220719223946.176299-4-irogers@google.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Stephane Eranian <eranian@google.com>,
+        Blake Jones <blakejones@google.com>
+Subject: Re: [PATCH 0/3] perf lock contention: Add BPF support (v1)
+Message-ID: <YufHJpDvhsYg3btG@kernel.org>
+References: <20220729200756.666106-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220719223946.176299-4-irogers@google.com>
+In-Reply-To: <20220729200756.666106-1-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jul 19, 2022 at 03:39:46PM -0700, Ian Rogers escreveu:
-> These tests are based on test_stat_user_read in
-> tools/lib/perf/tests/test-evsel.c. The tests are modified to skip if
-> perf_event_open fails or rdpmc isn't supported.
+Em Fri, Jul 29, 2022 at 01:07:53PM -0700, Namhyung Kim escreveu:
+> Hello,
+> 
+> This patchset adds -b/--use-bpf option and others to use BPF to
+> collect kernel lock contention stats.  With this option it doesn't
+> require a separate `perf lock record` step.  Basic filtering on cpu
+> (with -a or -C option) and on task (with -p and --tid option) is
+> supported as usual.
+> 
+>   $ sudo perf lock con -a -b sleep 1
+>      contended   total wait     max wait     avg wait         type   caller
+> 
+>             42    192.67 us     13.64 us      4.59 us     spinlock   queue_work_on+0x20
+>             23     85.54 us     10.28 us      3.72 us     spinlock   worker_thread+0x14a
+>              6     13.92 us      6.51 us      2.32 us        mutex   kernfs_iop_permission+0x30
+>              3     11.59 us     10.04 us      3.86 us        mutex   kernfs_dop_revalidate+0x3c
+>              1      7.52 us      7.52 us      7.52 us     spinlock   kthread+0x115
+>              1      7.24 us      7.24 us      7.24 us     rwlock:W   sys_epoll_wait+0x148
+>              2      7.08 us      3.99 us      3.54 us     spinlock   delayed_work_timer_fn+0x1b
+>              1      6.41 us      6.41 us      6.41 us     spinlock   idle_balance+0xa06
+>              2      2.50 us      1.83 us      1.25 us        mutex   kernfs_iop_lookup+0x2f
+>              1      1.71 us      1.71 us      1.71 us        mutex   kernfs_iop_getattr+0x2c
+> 
+> It seems my system had some contentions on the workqueue spinlock and
+> the kernfs mutex.
+> 
+> The code is available at perf/lock-bpf-v1 branch in
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
-Thanks, tested and applied.
+Thanks, applied.
 
 - Arnaldo
 
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/mmap-basic.c | 127 +++++++++++++++++++++++++++++++++-
->  1 file changed, 126 insertions(+), 1 deletion(-)
+> Thanks,
+> Namhyung
 > 
-> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-> index 30bbe144648a..dfb6173b2a82 100644
-> --- a/tools/perf/tests/mmap-basic.c
-> +++ b/tools/perf/tests/mmap-basic.c
-> @@ -170,14 +170,139 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
->  	return err;
->  }
->  
-> +static int test_stat_user_read(int event)
-> +{
-> +	struct perf_counts_values counts = { .val = 0 };
-> +	struct perf_thread_map *threads;
-> +	struct perf_evsel *evsel;
-> +	struct perf_event_mmap_page *pc;
-> +	struct perf_event_attr attr = {
-> +		.type	= PERF_TYPE_HARDWARE,
-> +		.config	= event,
-> +#ifdef __aarch64__
-> +		.config1 = 0x2,		/* Request user access */
-> +#endif
-> +	};
-> +	int err, i, ret = TEST_FAIL;
-> +	bool opened = false, mapped = false;
-> +
-> +	threads = perf_thread_map__new_dummy();
-> +	TEST_ASSERT_VAL("failed to create threads", threads);
-> +
-> +	perf_thread_map__set_pid(threads, 0, 0);
-> +
-> +	evsel = perf_evsel__new(&attr);
-> +	TEST_ASSERT_VAL("failed to create evsel", evsel);
-> +
-> +	err = perf_evsel__open(evsel, NULL, threads);
-> +	if (err) {
-> +		pr_err("failed to open evsel: %s\n", strerror(-err));
-> +		ret = TEST_SKIP;
-> +		goto out;
-> +	}
-> +	opened = true;
-> +
-> +	err = perf_evsel__mmap(evsel, 0);
-> +	if (err) {
-> +		pr_err("failed to mmap evsel: %s\n", strerror(-err));
-> +		goto out;
-> +	}
-> +	mapped = true;
-> +
-> +	pc = perf_evsel__mmap_base(evsel, 0, 0);
-> +	if (!pc) {
-> +		pr_err("failed to get mmapped address\n");
-> +		goto out;
-> +	}
-> +
-> +	if (!pc->cap_user_rdpmc || !pc->index) {
-> +		pr_err("userspace counter access not %s\n",
-> +			!pc->cap_user_rdpmc ? "supported" : "enabled");
-> +		ret = TEST_SKIP;
-> +		goto out;
-> +	}
-> +	if (pc->pmc_width < 32) {
-> +		pr_err("userspace counter width not set (%d)\n", pc->pmc_width);
-> +		goto out;
-> +	}
-> +
-> +	perf_evsel__read(evsel, 0, 0, &counts);
-> +	if (counts.val == 0) {
-> +		pr_err("failed to read value for evsel\n");
-> +		goto out;
-> +	}
-> +
-> +	for (i = 0; i < 5; i++) {
-> +		volatile int count = 0x10000 << i;
-> +		__u64 start, end, last = 0;
-> +
-> +		pr_debug("\tloop = %u, ", count);
-> +
-> +		perf_evsel__read(evsel, 0, 0, &counts);
-> +		start = counts.val;
-> +
-> +		while (count--) ;
-> +
-> +		perf_evsel__read(evsel, 0, 0, &counts);
-> +		end = counts.val;
-> +
-> +		if ((end - start) < last) {
-> +			pr_err("invalid counter data: end=%llu start=%llu last= %llu\n",
-> +				end, start, last);
-> +			goto out;
-> +		}
-> +		last = end - start;
-> +		pr_debug("count = %llu\n", end - start);
-> +	}
-> +	ret = TEST_OK;
-> +
-> +out:
-> +	if (mapped)
-> +		perf_evsel__munmap(evsel);
-> +	if (opened)
-> +		perf_evsel__close(evsel);
-> +	perf_evsel__delete(evsel);
-> +
-> +	perf_thread_map__put(threads);
-> +	return ret;
-> +}
-> +
-> +static int test__mmap_user_read_instr(struct test_suite *test __maybe_unused,
-> +				      int subtest __maybe_unused)
-> +{
-> +	return test_stat_user_read(PERF_COUNT_HW_INSTRUCTIONS);
-> +}
-> +
-> +static int test__mmap_user_read_cycles(struct test_suite *test __maybe_unused,
-> +				       int subtest __maybe_unused)
-> +{
-> +	return test_stat_user_read(PERF_COUNT_HW_CPU_CYCLES);
-> +}
-> +
->  static struct test_case tests__basic_mmap[] = {
->  	TEST_CASE_REASON("Read samples using the mmap interface",
->  			 basic_mmap,
->  			 "permissions"),
-> +	TEST_CASE_REASON("User space counter reading of instructions",
-> +			 mmap_user_read_instr,
-> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> +			 "permissions"
-> +#else
-> +			 "unsupported"
-> +#endif
-> +		),
-> +	TEST_CASE_REASON("User space counter reading of cycles",
-> +			 mmap_user_read_cycles,
-> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> +			 "permissions"
-> +#else
-> +			 "unsupported"
-> +#endif
-> +		),
->  	{	.name = NULL, }
->  };
->  
->  struct test_suite suite__basic_mmap = {
-> -	.desc = "Read samples using the mmap interface",
-> +	.desc = "mmap interface tests",
->  	.test_cases = tests__basic_mmap,
->  };
+> 
+> Namhyung Kim (3):
+>   perf lock: Pass machine pointer to is_lock_function()
+>   perf lock: Use BPF for lock contention analysis
+>   perf lock: Implement cpu and task filters for BPF
+> 
+>  tools/perf/Documentation/perf-lock.txt        |  22 ++
+>  tools/perf/Makefile.perf                      |   2 +-
+>  tools/perf/builtin-lock.c                     | 226 ++++++++----------
+>  tools/perf/util/Build                         |   1 +
+>  tools/perf/util/bpf_lock_contention.c         | 181 ++++++++++++++
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 170 +++++++++++++
+>  tools/perf/util/lock-contention.h             | 140 +++++++++++
+>  7 files changed, 614 insertions(+), 128 deletions(-)
+>  create mode 100644 tools/perf/util/bpf_lock_contention.c
+>  create mode 100644 tools/perf/util/bpf_skel/lock_contention.bpf.c
+>  create mode 100644 tools/perf/util/lock-contention.h
+> 
 > -- 
-> 2.37.0.170.g444d1eabd0-goog
+> 2.37.1.455.g008518b4e5-goog
 
 -- 
 
