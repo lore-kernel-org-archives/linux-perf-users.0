@@ -2,206 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8E6C00140
-	for <linux-perf-users@archiver.kernel.org>; Sun, 31 Jul 2022 16:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC0BC00140
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 01:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233290AbiGaQwJ (ORCPT
+        id S236991AbiHABxI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 31 Jul 2022 12:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48934 "EHLO
+        Sun, 31 Jul 2022 21:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231146AbiGaQwI (ORCPT
+        with ESMTP id S229569AbiHABxI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 31 Jul 2022 12:52:08 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BAB22F
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jul 2022 09:52:06 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id v5so4743487wmj.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jul 2022 09:52:06 -0700 (PDT)
+        Sun, 31 Jul 2022 21:53:08 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3586712085
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jul 2022 18:53:07 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id y13so3767364ejp.13
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 Jul 2022 18:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z1WQwnH+vUxlQu9SIjMUORiE1pIB6GKovp797CtaNYY=;
-        b=GK+W5L3VdcugavZwk0SoDUmRg9mNxloRY59ml4fk+OiIArlIEgxhgehmr+jEr+dCha
-         W53vW4JWF9sXMus7ySClo1QPGScpIWT/SX2D3KgC2JdVJw91D5ikKgxGtlTUaKQ1pomu
-         /HALESqpmFJD1h7WmxJDJ/kGYlZJItNJb0dKSeRhRsCZOHRp2wz9Z7iJr/1bVRMMYCsg
-         DJhxUUxZL8mfhZ9OSs5SzS2qv4dCYTNTnVPNYs7Xw9hanP21LwuASvP7FpmgWnp4rOd3
-         OYVdKj/dZvaWf7AmnRPhClWgOgbySUcd4nH9/RA3wZ4N1cGRWgrYnHrIhSXmshrz1IA/
-         yu8A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yTvm3wwagmTX69a1KC3CUigiKtFCy3zwt67VVBZyDak=;
+        b=GPqW1cTLq5YaJ7qIRYRVxx9+6cQZp1Moby7K1w3+gO0s7t18ND9NWqsag2/40InWoK
+         frmyFWE9D6dlG3SRq6yPU3uRZ9Q6Wgx273hlmzeamoXLcqIvI15Emjaa07ckgKpiRLy7
+         ujzHufZKrkUfcQgC1OCDvBe0/DZ3tumedxGlufI5ZEkC0creBoIhLcJ4S8mBx+bEeJ3b
+         RuW3SvhyOFWT12JUy0oJkTlk7gJmkS6hBfklSHiVGI/06hRu3m+H5kE4AtoI95230Gjo
+         Q9Z3vxklJJXLUUQeeu9FJHY2xA46Tb2LU2FiI8cN/JFuHu6BJu4FQTuNjaog7wmZq5Ul
+         giLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z1WQwnH+vUxlQu9SIjMUORiE1pIB6GKovp797CtaNYY=;
-        b=vG0z4pCEcbp4VqTmUppPX0SyIxOGaKnFdQJJFPjvMvY/cAU22jOeduFekzd+dWfxQw
-         COVqwt+6y3DoMoO3TqBxZFxSSPKJdfkG8Dp0gBu3soV/MOGHa/tbiNYD5CrrstlEQun6
-         Fov5asHLSEPNDVjfS+e4pWHDagDOC3vLLwpDcPiEXfZqZvuz+dmsRTxZOjr/CbLAXjsF
-         bhg3p+T+qRq1GcOtp3lMNjopzjmDXxKb+9ulFfpCSdR9GUoC7N+och+6vEDWRXM1mmSJ
-         eT1VnyA6OhNnAJ4I+szwOGKj+++OD+Xa/dGE1oSv059jH+zHYa62I0rYBU7mACld5dFQ
-         r8aA==
-X-Gm-Message-State: AJIora/H3pWfSC185d1FWGrgdnH6SVSPk92Gg9t+ytnX8gn95QwzGXpD
-        7Yo05Uvk6u1aiWWBAWcfKHvG6WXJNVSpng1IlgD9tQ==
-X-Google-Smtp-Source: AGRyM1vHe6Iv2uRPLoSH6jtHqRgVzhI/OO7bpECxIb/3aG3FQonSmRDAbDjem7FdSDeQLKOL9U+l8eAqGLDY/VQR0/I=
-X-Received: by 2002:a05:600c:4e86:b0:3a3:417a:2fcd with SMTP id
- f6-20020a05600c4e8600b003a3417a2fcdmr8933328wmq.149.1659286325289; Sun, 31
- Jul 2022 09:52:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220724060013.171050-1-leo.yan@linaro.org> <20220724060013.171050-2-leo.yan@linaro.org>
- <CAP-5=fVY=_WUpke0sRMpvbJFu9JuYwqiwAmKdCS+=u7vEG-2uA@mail.gmail.com>
- <20220730093819.GA574473@leoy-ThinkPad-X240s> <CAP-5=fWA8R9Ee5L9xgPtva9dvQ12uKqC1o4zgzPs0B9XWSMxhQ@mail.gmail.com>
- <20220731123702.GA205142@leoy-ThinkPad-X240s>
-In-Reply-To: <20220731123702.GA205142@leoy-ThinkPad-X240s>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 31 Jul 2022 09:51:53 -0700
-Message-ID: <CAP-5=fVKkd92FP9D2qccmRHMJHbYNNpVC-XAuh5i7jrrTWHg8g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] perf symbol: Correct address for bss symbols
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yTvm3wwagmTX69a1KC3CUigiKtFCy3zwt67VVBZyDak=;
+        b=WTrA1aQSOP1t9A/RNAYh2epOFHwW+zO6T/J3KKnIwmm6vs2jefZUTfphKISb49v7t8
+         oP53Y7J2tsVT8Dkd7Udzw847OEdmzOkKnQGEM08mLbEtTIDPKOIURCUC1grfDgjI7awA
+         HqF5XzDZ5YBOJ1uuXJE705U6WgYEB5xmyyyTtsoEl+6QOT1ktl234kUVyMRfdbMwtPgq
+         KMO13zyhncmhQuNFEoBRRQMh5w/KjNm1dTAl3ro6CoI1JW2hEwPFugf1uoKnLo6ofhv9
+         5v5ghvItvOzyCdP8r2DYCJUO0vnREdcglU7n+fhjjNpor5d8slXqfDCD+nq3Jb9GpSxa
+         Ai7g==
+X-Gm-Message-State: AJIora8+F3OTuh7CjSPsFG1vPyRcm0GcHJSsBt338hsEaooZba2Mwe/5
+        uDcLxlG5KVjB2yLrTNPAQNxv2Q==
+X-Google-Smtp-Source: AGRyM1sYxTmAAq2ftLjn15qJjzoPeYDwFeWVqT5gRbWJYURnOvZmEA+/36cenRUMOT6AnJ4ECGUniw==
+X-Received: by 2002:a17:906:7950:b0:72f:d4a4:564d with SMTP id l16-20020a170906795000b0072fd4a4564dmr10730422ejo.479.1659318785656;
+        Sun, 31 Jul 2022 18:53:05 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([104.245.98.208])
+        by smtp.gmail.com with ESMTPSA id b1-20020a05640202c100b0043cf2e0ce1csm6043374edx.48.2022.07.31.18.53.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 Jul 2022 18:53:05 -0700 (PDT)
+Date:   Mon, 1 Aug 2022 09:52:59 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Fangrui Song <maskray@google.com>,
-        Chang Rui <changruinj@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf symbol: Fail to read phdr workaround
+Message-ID: <20220801015259.GA101027@leoy-ThinkPad-X240s>
+References: <20220731164923.691193-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220731164923.691193-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jul 31, 2022 at 5:37 AM Leo Yan <leo.yan@linaro.org> wrote:
->
-> On Sat, Jul 30, 2022 at 08:21:10AM -0700, Ian Rogers wrote:
->
-> [...]
->
-> > > On the other hand, I can accept to simply change pr_warning() to
-> > > pr_debug4() to avoid warning flood, the log still can help us to find
-> > > potential symbol parsing issue, so far they are not false-positive
-> > > reporting.
-> >
-> > Thanks, I suspect the ELF that the Java agent has created isn't good.
-> > The Java agent is part of perf as and so is the ELF file generation
-> > code:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/genelf.c?h=perf/core#n367
->
-> I think it's no need to change the function jit_write_elf(), please see
-> below comment.
->
-> > I took a quick look but most of the logic is in libelf - it seems less
-> > obvious the bug would be there rather than perf. Could you take a
-> > look? Ideally there'd be a quick fix that keeps all the benefits of
-> > your change and the jvmti code working.
->
-> A bit more finding for java JIT symbols.  Let's see below two samples:
->
->      6.72%  java             /home/leoy/.debug/jit/java-jit-20220731.XXKRpgmR/jitted-214330-29.so    0x5b54             B [.] Interpreter
->      0.90%  java             /home/leoy/.debug/jit/java-jit-20220731.XXKRpgmR/jitted-214330-3475.so  0x4fc              B [.] jdk.internal.math.FloatingDecimal$BinaryToASCIIBuffer.dtoa(int, long, int, boolean)
->
-> I can see the DSO "jitted-214330-29.so" only contains a java JIT symbol
-> "Interpreter", and I also observed the same behavior for other JIT
-> symbols, e.g. jitted-214330-3475.so only contains the symbol
-> "jdk.internal.math.FloatingDecimal$BinaryToASCIIBuffer.dtoa(int, long,
-> int, boolean)".
->
-> We always see these JIT symbols always have the consistent start file
-> address, but this would not introduce conflit since every JIT symbol has
-> its own DSO rather than share the same DSO.
->
-> I think now I understand your meaning, and your below change is fine for
-> me, I tested it and confirmed it can show up java JIT symbols properly.
-> Just a comment, it would be better to add a comment for why we need to
-> add symbols when failed to find program header, like:
->
->   if (elf_read_program_header(syms_ss->elf,
->                             (u64)sym.st_value, &phdr)) {
->         pr_debug4("%s: failed to find program header for "
->                   "symbol: %s\n", __func__, elf_name);
->         pr_debug4("%s: adjusting symbol: st_value: %#" PRIx64 " "
->                   "sh_addr: %#" PRIx64 " sh_offset: %#" PRIx64 "\n",
->                   __func__, (u64)sym.st_value, (u64)shdr.sh_addr,
->                   (u64)shdr.sh_offset);
->         /*
->          * Fail to find program header, let's rollback to use shdr.sh_addr
->          * and shdr.sh_offset to calibrate symbol's file address, though
->          * this is not necessary for normal C ELF file, we still need to
->          * handle java JIT symbols in this case.
->          */
->         sym.st_value -= shdr.sh_addr - shdr.sh_offset;
->   } else {
->         ...
->   }
->
-> Could you send a formal patch for this?  Thanks!
+On Sun, Jul 31, 2022 at 09:49:23AM -0700, Ian Rogers wrote:
+> The perf jvmti agent doesn't create program headers, in this case
+> fallback on section headers as happened previously.
+> 
+> Fixes: 882528d2e776 ("perf symbol: Skip symbols if SHF_ALLOC flag is not set")
 
-Done. Thanks for sanity checking all of this! Please double check and
-add the reviewed/acked-by:
-https://lore.kernel.org/lkml/20220731164923.691193-1-irogers@google.com/
+It's good to change fix tag as:
+Fixes: 2d86612aacb7 ("perf symbol: Correct address for bss symbols")
 
-Thanks,
-Ian
+I saw stable kernel maintainers have back ported patch "perf symbol:
+Correct address for bss symbols" for stable kernel branches, the
+suggested fix tag would allow this patch to be landed on stable kernels
+as well.
 
-> Leo
->
-> > > Thanks,
-> > > Leo
-> > >
-> > > > ```
-> > > > --- a/tools/perf/util/symbol-elf.c
-> > > > +++ b/tools/perf/util/symbol-elf.c
-> > > > @@ -1305,16 +1305,21 @@ dso__load_sym_internal(struct dso *dso, struct
-> > > > map *map, struct symsrc *syms
-> > > > _ss,
-> > > >
-> > > >                        if (elf_read_program_header(syms_ss->elf,
-> > > >                                                    (u64)sym.st_value, &phdr)) {
-> > > > -                               pr_warning("%s: failed to find program
-> > > > header for "
-> > > > +                               pr_debug4("%s: failed to find program
-> > > > header for "
-> > > >                                           "symbol: %s st_value: %#" PRIx64 "\n",
-> > > >                                           __func__, elf_name,
-> > > > (u64)sym.st_value);
-> > > > -                               continue;
-> > > > +                               pr_debug4("%s: adjusting symbol:
-> > > > st_value: %#" PRIx64 " "
-> > > > +                                       "sh_addr: %#" PRIx64 "
-> > > > sh_offset: %#" PRIx64 "\n",
-> > > > +                                       __func__, (u64)sym.st_value,
-> > > > (u64)shdr.sh_addr,
-> > > > +                                       (u64)shdr.sh_offset);
-> > > > +                               sym.st_value -= shdr.sh_addr - shdr.sh_offset;
-> > > > +                       } else {
-> > > > +                               pr_debug4("%s: adjusting symbol:
-> > > > st_value: %#" PRIx64 " "
-> > > > +                                       "p_vaddr: %#" PRIx64 "
-> > > > p_offset: %#" PRIx64 "\n",
-> > > > +                                       __func__, (u64)sym.st_value,
-> > > > (u64)phdr.p_vaddr,
-> > > > +                                       (u64)phdr.p_offset);
-> > > > +                               sym.st_value -= phdr.p_vaddr - phdr.p_offset;
-> > > >                        }
-> > > > -                       pr_debug4("%s: adjusting symbol: st_value: %#"
-> > > > PRIx64 " "
-> > > > -                                 "p_vaddr: %#" PRIx64 " p_offset: %#"
-> > > > PRIx64 "\n",
-> > > > -                                 __func__, (u64)sym.st_value,
-> > > > (u64)phdr.p_vaddr,
-> > > > -                                 (u64)phdr.p_offset);
-> > > > -                       sym.st_value -= phdr.p_vaddr - phdr.p_offset;
-> > > >                }
-> > > >
-> > > >                demangled = demangle_sym(dso, kmodule, elf_name);
-> > > > ```
-> > > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > >
-> > > > >                 demangled = demangle_sym(dso, kmodule, elf_name);
-> > > > > --
-> > > > > 2.25.1
-> > > > >
+I think I need to manually send the patch "perf symbol: Skip symbols
+if SHF_ALLOC flag is not set" to stable kernel mailing list, this
+patch missed fix tag.
+
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+With updating fix tag:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
